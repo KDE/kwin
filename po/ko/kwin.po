@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-03 00:44+0000\n"
+"POT-Creation-Date: 2025-09-04 00:44+0000\n"
 "PO-Revision-Date: 2025-07-20 01:41+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2392,7 +2392,7 @@ msgstr "스크린캐스팅에는 OpenGL 컴포지팅이 필요함"
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire 스트림을 만들 수 없음"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:525
+#: plugins/screenshot/screenshotdbusinterface2.cpp:403
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2401,7 +2401,7 @@ msgstr ""
 "왼쪽 단추를 누르거나 Enter 키를 눌러서 스크린샷을 찍을 창을 선택합니다.\n"
 "Esc 키나 오른쪽 단추를 누르면 취소합니다."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:543
+#: plugins/screenshot/screenshotdbusinterface2.cpp:421
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2835,32 +2835,32 @@ msgstr "덜 보기"
 msgid "More"
 msgstr "더 보기"
 
-#: plugins/zoom/zoom.cpp:79
+#: plugins/zoom/zoom.cpp:82
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "크기 조정된 영역을 왼쪽으로 이동"
 
-#: plugins/zoom/zoom.cpp:86
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "크기 조정된 영역을 오른쪽으로 이동"
 
-#: plugins/zoom/zoom.cpp:93
+#: plugins/zoom/zoom.cpp:96
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "크기 조정된 영역을 위로 이동"
 
-#: plugins/zoom/zoom.cpp:100
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "크기 조정된 영역을 아래로 이동"
 
-#: plugins/zoom/zoom.cpp:108
+#: plugins/zoom/zoom.cpp:111
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "마우스를 포커스로 이동"
 
-#: plugins/zoom/zoom.cpp:115
+#: plugins/zoom/zoom.cpp:118
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "마우스를 가운데로 이동"
@@ -3429,19 +3429,19 @@ msgstr "대화 상자"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:479
+#: sm.cpp:430
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "로그아웃 취소"
 
-#: sm.cpp:480
+#: sm.cpp:431
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "그래도 로그아웃"
 
-#: sm.cpp:526
+#: sm.cpp:477
 #, kde-format
 msgid ""
 "The following applications did not close:\n"

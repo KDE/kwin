@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-03 00:44+0000\n"
+"POT-Creation-Date: 2025-09-04 00:44+0000\n"
 "PO-Revision-Date: 2025-05-30 18:47+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2421,7 +2421,7 @@ msgstr "Compositor de OpenGL es requirite per screencasting"
 msgid "Failed to create PipeWire stream"
 msgstr "Falleva a crear fluxo (stream) de PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:525
+#: plugins/screenshot/screenshotdbusinterface2.cpp:403
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2430,7 +2430,7 @@ msgstr ""
 "Selige fenestra pro captura de schermo per cliccar a sinistra o Enter.\n"
 "Escappa o clicca a dextera pro cancellar."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:543
+#: plugins/screenshot/screenshotdbusinterface2.cpp:421
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2875,32 +2875,32 @@ msgstr "Minus"
 msgid "More"
 msgstr "Altere"
 
-#: plugins/zoom/zoom.cpp:79
+#: plugins/zoom/zoom.cpp:82
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Move area sub zoom a sinistra"
 
-#: plugins/zoom/zoom.cpp:86
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Move area sub zoom a dextera"
 
-#: plugins/zoom/zoom.cpp:93
+#: plugins/zoom/zoom.cpp:96
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Move area sub zoom in alto"
 
-#: plugins/zoom/zoom.cpp:100
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Move area sub zoom a basso"
 
-#: plugins/zoom/zoom.cpp:108
+#: plugins/zoom/zoom.cpp:111
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Move mus pro focalisar"
 
-#: plugins/zoom/zoom.cpp:115
+#: plugins/zoom/zoom.cpp:118
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Move mus pro centrar"
@@ -3469,19 +3469,19 @@ msgstr "Dialogo"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:479
+#: sm.cpp:430
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Cancella Clauder session"
 
-#: sm.cpp:480
+#: sm.cpp:431
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Claude session tamen"
 
-#: sm.cpp:526
+#: sm.cpp:477
 #, kde-format
 msgid ""
 "The following applications did not close:\n"

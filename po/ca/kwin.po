@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-03 00:44+0000\n"
+"POT-Creation-Date: 2025-09-04 00:44+0000\n"
 "PO-Revision-Date: 2025-07-08 11:37+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2428,7 +2428,7 @@ msgstr ""
 msgid "Failed to create PipeWire stream"
 msgstr "Ha fallat en crear el flux del PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:525
+#: plugins/screenshot/screenshotdbusinterface2.cpp:403
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2438,7 +2438,7 @@ msgstr ""
 "retorn.\n"
 "La tecla d'escapada o clic dret per a cancel·lar."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:543
+#: plugins/screenshot/screenshotdbusinterface2.cpp:421
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2884,32 +2884,32 @@ msgstr "Menys"
 msgid "More"
 msgstr "Més"
 
-#: plugins/zoom/zoom.cpp:79
+#: plugins/zoom/zoom.cpp:82
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Mou l'àrea ampliada a l'esquerra"
 
-#: plugins/zoom/zoom.cpp:86
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Mou l'àrea ampliada a la dreta"
 
-#: plugins/zoom/zoom.cpp:93
+#: plugins/zoom/zoom.cpp:96
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Mou l'àrea ampliada cap a dalt"
 
-#: plugins/zoom/zoom.cpp:100
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Mou l'àrea ampliada cap a baix"
 
-#: plugins/zoom/zoom.cpp:108
+#: plugins/zoom/zoom.cpp:111
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Mou el ratolí al focus"
 
-#: plugins/zoom/zoom.cpp:115
+#: plugins/zoom/zoom.cpp:118
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mou el ratolí al centre"
@@ -3478,19 +3478,19 @@ msgstr "Diàleg"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:479
+#: sm.cpp:430
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Cancel·la la sortida"
 
-#: sm.cpp:480
+#: sm.cpp:431
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Surt igualment"
 
-#: sm.cpp:526
+#: sm.cpp:477
 #, kde-format
 msgid ""
 "The following applications did not close:\n"

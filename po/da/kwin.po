@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-03 00:44+0000\n"
+"POT-Creation-Date: 2025-09-04 00:44+0000\n"
 "PO-Revision-Date: 2024-10-21 13:14+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -2421,7 +2421,7 @@ msgstr "OpenGL-compositing er nødvendigt for skærmcasting"
 msgid "Failed to create PipeWire stream"
 msgstr "Kunne ikke starte PipeWire-stream"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:525
+#: plugins/screenshot/screenshotdbusinterface2.cpp:403
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2430,7 +2430,7 @@ msgstr ""
 "Vælg vinduet til skærmbillede med venstreklik eller Retur.\n"
 "Esc eller højreklik for at annullere."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:543
+#: plugins/screenshot/screenshotdbusinterface2.cpp:421
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2866,32 +2866,32 @@ msgstr "Mindre"
 msgid "More"
 msgstr "Mere"
 
-#: plugins/zoom/zoom.cpp:79
+#: plugins/zoom/zoom.cpp:82
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Flyt zommede område til venstre"
 
-#: plugins/zoom/zoom.cpp:86
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Flyt zommede område til højre"
 
-#: plugins/zoom/zoom.cpp:93
+#: plugins/zoom/zoom.cpp:96
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Flyt zoomet område opad"
 
-#: plugins/zoom/zoom.cpp:100
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Flyt zoomet område nedad"
 
-#: plugins/zoom/zoom.cpp:108
+#: plugins/zoom/zoom.cpp:111
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Flyt mus til fokus"
 
-#: plugins/zoom/zoom.cpp:115
+#: plugins/zoom/zoom.cpp:118
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Flyt mus til centrum"
@@ -3463,19 +3463,19 @@ msgstr "Dialog"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:479
+#: sm.cpp:430
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Annullér log ud"
 
-#: sm.cpp:480
+#: sm.cpp:431
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Log ud alligevel"
 
-#: sm.cpp:526
+#: sm.cpp:477
 #, fuzzy, kde-format
 #| msgid ""
 #| "The following applications did not close:\n"
