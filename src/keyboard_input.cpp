@@ -333,7 +333,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
     if (event.modifiersRelevantForGlobalShortcuts == Qt::KeyboardModifier::NoModifier && state != KeyboardKeyState::Released) {
         m_keyboardLayout->checkLayoutChange(previousLayout);
     }
-    if (state == KeyboardKeyState::Pressed && !std::ranges::contains(s_modifierKeys, key)) {
+    if (state == KeyboardKeyState::Pressed && !std::ranges::contains(s_modifierKeys, event.key)) {
         input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
         if (auto f = pickFocus()) {
             f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
