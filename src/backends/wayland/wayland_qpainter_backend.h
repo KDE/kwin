@@ -91,15 +91,8 @@ public:
 private:
     void createOutput(Output *waylandOutput);
 
-    struct Layers
-    {
-        std::unique_ptr<WaylandQPainterPrimaryLayer> primaryLayer;
-        std::unique_ptr<WaylandQPainterCursorLayer> cursorLayer;
-    };
-
     WaylandBackend *m_backend;
     std::unique_ptr<GraphicsBufferAllocator> m_allocator;
-    std::map<Output *, Layers> m_outputs;
 };
 
 } // namespace Wayland

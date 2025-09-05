@@ -149,27 +149,28 @@ WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     , m_backend(b)
     , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
-
     const auto waylandOutputs = m_backend->waylandOutputs();
     for (auto *output : waylandOutputs) {
         createOutput(output);
     }
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandQPainterBackend::createOutput);
-    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *waylandOutput) {
-        m_outputs.erase(waylandOutput);
-    });
 }
 
 WaylandQPainterBackend::~WaylandQPainterBackend()
 {
+    const auto waylandOutputs = m_backend->waylandOutputs();
+    for (auto *output : waylandOutputs) {
+        output->setOutputLayers({});
+    }
 }
 
-void WaylandQPainterBackend::createOutput(Output *waylandOutput)
+void WaylandQPainterBackend::createOutput(Output *output)
 {
-    m_outputs[waylandOutput] = Layers{
-        .primaryLayer = std::make_unique<WaylandQPainterPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
-        .cursorLayer = std::make_unique<WaylandQPainterCursorLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
-    };
+    const auto waylandOutput = static_cast<WaylandOutput *>(output);
+    std::vector<std::unique_ptr<OutputLayer>> layers;
+    layers.push_back(std::make_unique<WaylandQPainterPrimaryLayer>(waylandOutput, this));
+    layers.push_back(std::make_unique<WaylandQPainterCursorLayer>(waylandOutput, this));
+    waylandOutput->setOutputLayers(std::move(layers));
 }
 
 GraphicsBufferAllocator *WaylandQPainterBackend::graphicsBufferAllocator() const
@@ -179,7 +180,7 @@ GraphicsBufferAllocator *WaylandQPainterBackend::graphicsBufferAllocator() const
 
 QList<OutputLayer *> WaylandQPainterBackend::compatibleOutputLayers(Output *output)
 {
-    return {m_outputs[output].primaryLayer.get(), m_outputs[output].cursorLayer.get()};
+    return static_cast<WaylandOutput *>(output)->outputLayers();
 }
 }
 }

@@ -105,11 +105,10 @@ public:
 private:
     bool initializeEgl();
     bool initRenderingContext();
-    bool createEglWaylandOutput(Output *output);
+    void createOutputLayers(Output *output);
     void cleanupSurfaces() override;
 
     WaylandBackend *m_backend;
-    std::map<Output *, std::vector<std::unique_ptr<OutputLayer>>> m_outputs;
 };
 
 } // namespace Wayland
