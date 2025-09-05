@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-04 00:44+0000\n"
+"POT-Creation-Date: 2025-09-05 00:43+0000\n"
 "PO-Revision-Date: 2006-12-17 12:27+0000\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -1358,7 +1358,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:173 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:169 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
@@ -1369,69 +1369,69 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:175 main.cpp:199
+#: main.cpp:171 main.cpp:195
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE ойна бошқарувчиси"
 
-#: main.cpp:177
+#: main.cpp:173
 #, fuzzy, kde-format
 #| msgid "(c) 1999-2005, The KDE Developers"
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(C) 1999 - 2005, KDE тузувчилари"
 
-#: main.cpp:179
+#: main.cpp:175
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr ""
 
-#: main.cpp:180
+#: main.cpp:176
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr ""
 
-#: main.cpp:181
+#: main.cpp:177
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr ""
 
-#: main.cpp:182
+#: main.cpp:178
 #, kde-format
 msgid "Luboš Luňák"
 msgstr ""
 
-#: main.cpp:183
+#: main.cpp:179
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:184
+#: main.cpp:180
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:185
+#: main.cpp:181
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:186
+#: main.cpp:182
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:187
+#: main.cpp:183
 #, fuzzy, kde-format
 #| msgid "Large"
 msgid "Xaver Hugl"
 msgstr "Катта"
 
-#: main.cpp:196
+#: main.cpp:192
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Мослаш параметрларни ўчириш"
 
-#: main.cpp:197
+#: main.cpp:193
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr ""

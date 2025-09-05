@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-04 00:44+0000\n"
+"POT-Creation-Date: 2025-09-05 00:43+0000\n"
 "PO-Revision-Date: 2024-12-15 19:31+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -1370,7 +1370,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:173 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:169 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
@@ -1381,69 +1381,69 @@ msgstr ""
 msgid "KWin"
 msgstr "के-विन"
 
-#: main.cpp:175 main.cpp:199
+#: main.cpp:171 main.cpp:195
 #, kde-format
 msgid "KDE window manager"
 msgstr "केडीई विंडो प्रबंधक"
 
-#: main.cpp:177
+#: main.cpp:173
 #, fuzzy, kde-format
 #| msgid "(c) 1999-2005, The KDE Developers"
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2005, केडीई डेवलपर्स"
 
-#: main.cpp:179
+#: main.cpp:175
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "मेथियास एट्रिच"
 
-#: main.cpp:180
+#: main.cpp:176
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "क्रिश्चियन टिबरिना"
 
-#: main.cpp:181
+#: main.cpp:177
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "डेनियल एम. डुले"
 
-#: main.cpp:182
+#: main.cpp:178
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:183
+#: main.cpp:179
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:184
+#: main.cpp:180
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:185
+#: main.cpp:181
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:186
+#: main.cpp:182
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:187
+#: main.cpp:183
 #, fuzzy, kde-format
 #| msgid "Very Huge"
 msgid "Xaver Hugl"
 msgstr "अत्यंत विशाल"
 
-#: main.cpp:196
+#: main.cpp:192
 #, kde-format
 msgid "Disable configuration options"
 msgstr "कॉन्फ़िगरेशन विकल्प अक्षम करें"
 
-#: main.cpp:197
+#: main.cpp:193
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "इंगित करता है कि के-विन हाल ही में बहुत बार क्रैश हुआ है"
