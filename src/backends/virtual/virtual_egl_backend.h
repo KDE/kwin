@@ -29,6 +29,7 @@ class VirtualEglLayer : public OutputLayer
 {
 public:
     VirtualEglLayer(Output *output, VirtualEglBackend *backend);
+    ~VirtualEglLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
@@ -65,10 +66,8 @@ private:
     bool initRenderingContext();
 
     void addOutput(Output *output);
-    void removeOutput(Output *output);
 
     VirtualBackend *m_backend;
-    std::map<Output *, std::unique_ptr<VirtualEglLayer>> m_outputs;
 };
 
 } // namespace KWin

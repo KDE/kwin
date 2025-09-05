@@ -36,12 +36,15 @@ public:
 
     void applyChanges(const OutputConfiguration &config) override;
 
+    void setOutputLayer(std::unique_ptr<OutputLayer> &&layer);
+    OutputLayer *outputLayer() const;
+
 private:
     void vblank(std::chrono::nanoseconds timestamp);
 
-    Q_DISABLE_COPY(VirtualOutput);
     friend class VirtualBackend;
 
+    std::unique_ptr<OutputLayer> m_layer;
     VirtualBackend *m_backend;
     std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;

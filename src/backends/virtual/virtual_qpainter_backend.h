@@ -60,10 +60,9 @@ public:
 
 private:
     void addOutput(Output *output);
-    void removeOutput(Output *output);
 
+    VirtualBackend *const m_backend;
     std::unique_ptr<GraphicsBufferAllocator> m_allocator;
-    std::map<Output *, std::unique_ptr<VirtualQPainterLayer>> m_outputs;
 };
 
 } // namespace KWin
