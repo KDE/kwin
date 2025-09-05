@@ -97,6 +97,9 @@ public:
 
     void applyChanges(const OutputConfiguration &config) override;
 
+    void setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&layers);
+    QList<OutputLayer *> outputLayers() const;
+
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();
@@ -106,6 +109,7 @@ private:
     static const wp_fractional_scale_v1_listener s_fractionalScaleListener;
     static void handleFractionalScaleChanged(void *data, struct wp_fractional_scale_v1 *wp_fractional_scale_v1, uint32_t scale120);
 
+    std::vector<std::unique_ptr<OutputLayer>> m_layers;
     std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<KWayland::Client::XdgShellSurface> m_xdgShellSurface;

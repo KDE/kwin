@@ -223,10 +223,7 @@ void WaylandEglCursorLayer::releaseBuffers()
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
     : m_backend(b)
 {
-    connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createEglWaylandOutput);
-    connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *output) {
-        m_outputs.erase(output);
-    });
+    connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createOutputLayers);
 
     b->setEglBackend(this);
 }
@@ -248,18 +245,22 @@ DrmDevice *WaylandEglBackend::drmDevice() const
 
 void WaylandEglBackend::cleanupSurfaces()
 {
-    m_outputs.clear();
+    const auto outputs = m_backend->outputs();
+    for (Output *output : outputs) {
+        static_cast<WaylandOutput *>(output)->setOutputLayers({});
+    }
 }
 
-bool WaylandEglBackend::createEglWaylandOutput(Output *waylandOutput)
+void WaylandEglBackend::createOutputLayers(Output *output)
 {
-    auto &layers = m_outputs[waylandOutput];
-    layers.push_back(std::make_unique<WaylandEglLayer>(static_cast<WaylandOutput *>(waylandOutput), this, OutputLayerType::Primary, 0));
-    layers.push_back(std::make_unique<WaylandEglCursorLayer>(static_cast<WaylandOutput *>(waylandOutput), this));
+    const auto waylandOutput = static_cast<WaylandOutput *>(output);
+    std::vector<std::unique_ptr<OutputLayer>> layers;
+    layers.push_back(std::make_unique<WaylandEglLayer>(waylandOutput, this, OutputLayerType::Primary, 0));
+    layers.push_back(std::make_unique<WaylandEglCursorLayer>(waylandOutput, this));
     for (int z = 1; z < 5; z++) {
-        layers.push_back(std::make_unique<WaylandEglLayer>(static_cast<WaylandOutput *>(waylandOutput), this, OutputLayerType::GenericLayer, z));
+        layers.push_back(std::make_unique<WaylandEglLayer>(waylandOutput, this, OutputLayerType::GenericLayer, z));
     }
-    return true;
+    waylandOutput->setOutputLayers(std::move(layers));
 }
 
 bool WaylandEglBackend::initializeEgl()
@@ -313,14 +314,7 @@ bool WaylandEglBackend::initRenderingContext()
     }
 
     for (auto *out : waylandOutputs) {
-        if (!createEglWaylandOutput(out)) {
-            return false;
-        }
-    }
-
-    if (m_outputs.empty()) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "Create Window Surfaces failed";
-        return false;
+        createOutputLayers(out);
     }
 
     return openglContext()->makeCurrent();
@@ -328,7 +322,7 @@ bool WaylandEglBackend::initRenderingContext()
 
 QList<OutputLayer *> WaylandEglBackend::compatibleOutputLayers(Output *output)
 {
-    return m_outputs[output] | std::views::transform(&std::unique_ptr<OutputLayer>::get) | std::ranges::to<QList>();
+    return static_cast<WaylandOutput *>(output)->outputLayers();
 }
 
 }

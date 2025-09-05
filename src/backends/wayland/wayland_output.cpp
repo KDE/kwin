@@ -508,6 +508,15 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
     });
 }
 
+void WaylandOutput::setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&layers)
+{
+    m_layers = std::move(layers);
+}
+
+QList<OutputLayer *> WaylandOutput::outputLayers() const
+{
+    return m_layers | std::views::transform(&std::unique_ptr<OutputLayer>::get) | std::ranges::to<QList>();
+}
 }
 }
 
