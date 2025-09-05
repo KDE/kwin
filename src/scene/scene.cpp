@@ -474,9 +474,7 @@ ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, LogicalOutput *log
 
 ItemTreeView::~ItemTreeView()
 {
-    if (m_exclusive && m_item) {
-        m_item->scheduleRepaint(m_item->boundingRect());
-    }
+    setExclusive(false);
 }
 
 RectF ItemTreeView::viewport() const
