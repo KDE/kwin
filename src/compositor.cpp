@@ -865,6 +865,16 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
+    // Ensure that we always send frame events for the scene,
+    // as it sends frame callbacks even for surfaces that are entirely off-screen
+    // FIXME send a frame callback together with configure events instead?
+    // We don't actually want to send frame callbacks to off-screen or currently invisible surfaces...
+    const bool hasScene = std::ranges::any_of(layers, [primaryView](const auto &layer) {
+        return layer.view == primaryView;
+    });
+    if (!hasScene) {
+        primaryView->frame(frame.get());
+    }
     primaryView->postPaint();
 
     // the layers have to stay valid until after postPaint, so this needs to happen after it
