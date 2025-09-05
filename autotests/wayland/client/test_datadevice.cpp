@@ -169,7 +169,7 @@ void TestDataDevice::testCreate()
 
     // this will probably fail, we need to make a selection client side
     QVERIFY(!m_seatInterface->selection());
-    m_seatInterface->setSelection(deviceInterface->selection(), m_display->nextSerial());
+    m_seatInterface->setSelection(deviceInterface->selection(), m_seatInterface->nextSerial());
     QCOMPARE(m_seatInterface->selection(), deviceInterface->selection());
 
     // and destroy

@@ -176,10 +176,10 @@ void Clipboard::setMimeData(QMimeData *data, QClipboard::Mode mode)
         if (data) {
             auto oldSelection = std::move(m_ownSelection);
             m_ownSelection = std::make_unique<ClipboardDataSource>(data);
-            waylandServer()->seat()->setSelection(m_ownSelection.get(), waylandServer()->display()->nextSerial());
+            waylandServer()->seat()->setSelection(m_ownSelection.get(), waylandServer()->seat()->nextSerial());
         } else {
             if (waylandServer()->seat()->selection() == m_ownSelection.get()) {
-                waylandServer()->seat()->setSelection(nullptr, waylandServer()->display()->nextSerial());
+                waylandServer()->seat()->setSelection(nullptr, waylandServer()->seat()->nextSerial());
             }
             m_ownSelection.reset();
         }

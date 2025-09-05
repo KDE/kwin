@@ -151,11 +151,11 @@ void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &re
         connect(newSelection.get(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
         // we keep the old selection around because setSelection needs it to be still alive
         std::swap(m_selectionSource, newSelection);
-        waylandServer()->seat()->setSelection(m_selectionSource.get(), waylandServer()->display()->nextSerial());
+        waylandServer()->seat()->setSelection(m_selectionSource.get(), waylandServer()->seat()->nextSerial());
     } else {
         AbstractDataSource *currentSelection = waylandServer()->seat()->selection();
         if (!ownsSelection(currentSelection)) {
-            waylandServer()->seat()->setSelection(nullptr, waylandServer()->display()->nextSerial());
+            waylandServer()->seat()->setSelection(nullptr, waylandServer()->seat()->nextSerial());
             m_selectionSource.reset();
         }
     }

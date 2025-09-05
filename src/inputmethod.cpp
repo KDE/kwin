@@ -849,7 +849,7 @@ void InputMethod::forwardModifiers(ForwardModifiersForce force)
     }
     auto xkb = input()->keyboard()->xkb();
     if (m_keyboardGrab) {
-        m_keyboardGrab->sendModifiers(waylandServer()->display()->nextSerial(),
+        m_keyboardGrab->sendModifiers(waylandServer()->seat()->nextSerial(),
                                       xkb->modifierState().depressed,
                                       xkb->modifierState().latched,
                                       xkb->modifierState().locked,

@@ -396,7 +396,7 @@ void TestWaylandSeat::testPointer()
 
     QVERIFY(!p->enteredSurface());
     QVERIFY(!cp.enteredSurface());
-    uint32_t serial = m_display->serial();
+    uint32_t serial = m_seatInterface->serial();
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(20, 18), QPointF(10, 15));
     QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
     QVERIFY(enteredSpy.wait());
@@ -451,19 +451,19 @@ void TestWaylandSeat::testPointer()
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 8);
-    QCOMPARE(buttonSpy.at(0).at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(buttonSpy.at(0).at(0).value<quint32>(), m_seatInterface->serial());
     m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerButton(2, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 9);
-    QCOMPARE(buttonSpy.at(1).at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(buttonSpy.at(1).at(0).value<quint32>(), m_seatInterface->serial());
     m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerButton(2, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 10);
-    QCOMPARE(buttonSpy.at(2).at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(buttonSpy.at(2).at(0).value<quint32>(), m_seatInterface->serial());
     m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
@@ -498,7 +498,7 @@ void TestWaylandSeat::testPointer()
     QCOMPARE(buttonSpy.at(3).at(3).value<KWayland::Client::Pointer::ButtonState>(), KWayland::Client::Pointer::ButtonState::Released);
 
     // leave the surface
-    serial = m_display->serial();
+    serial = m_seatInterface->serial();
     m_seatInterface->notifyPointerLeave();
     QVERIFY(leftSpy.wait());
     QCOMPARE(frameSpy.count(), 12);
@@ -578,7 +578,7 @@ void TestWaylandSeat::testPointerTransformation()
 
     QVERIFY(!p->enteredSurface());
     QVERIFY(!cp.enteredSurface());
-    uint32_t serial = m_display->serial();
+    uint32_t serial = m_seatInterface->serial();
     QFETCH(QMatrix4x4, enterTransformation);
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(20, 18), enterTransformation);
     QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
@@ -597,7 +597,7 @@ void TestWaylandSeat::testPointerTransformation()
     QCOMPARE(motionSpy.first().last().value<quint32>(), quint32(1));
 
     // leave the surface
-    serial = m_display->serial();
+    serial = m_seatInterface->serial();
     m_seatInterface->notifyPointerLeave();
     QVERIFY(leftSpy.wait());
     QCOMPARE_GT(leftSpy.first().first().value<quint32>(), serial);
@@ -858,7 +858,7 @@ void TestWaylandSeat::testPointerSwipeGesture()
     m_seatInterface->startPointerSwipeGesture(2);
     QVERIFY(startSpy.wait());
     QCOMPARE(startSpy.count(), 1);
-    QCOMPARE(startSpy.first().at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(startSpy.first().at(0).value<quint32>(), m_seatInterface->serial());
     QCOMPARE(startSpy.first().at(1).value<quint32>(), 1u);
     QCOMPARE(gesture->fingerCount(), 2u);
     QCOMPARE(gesture->surface().data(), surface.get());
@@ -898,7 +898,7 @@ void TestWaylandSeat::testPointerSwipeGesture()
     QFETCH(int, expectedCancelCount);
     QCOMPARE(cancelledSpy.count(), expectedCancelCount);
     QCOMPARE(spy->count(), 1);
-    QCOMPARE(spy->first().at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(spy->first().at(0).value<quint32>(), m_seatInterface->serial());
     QCOMPARE(spy->first().at(1).value<quint32>(), 4u);
 
     QCOMPARE(gesture->fingerCount(), 0u);
@@ -979,7 +979,7 @@ void TestWaylandSeat::testPointerPinchGesture()
     m_seatInterface->startPointerPinchGesture(3);
     QVERIFY(startSpy.wait());
     QCOMPARE(startSpy.count(), 1);
-    QCOMPARE(startSpy.first().at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(startSpy.first().at(0).value<quint32>(), m_seatInterface->serial());
     QCOMPARE(startSpy.first().at(1).value<quint32>(), 1u);
     QCOMPARE(gesture->fingerCount(), 3u);
     QCOMPARE(gesture->surface().data(), surface.get());
@@ -1023,7 +1023,7 @@ void TestWaylandSeat::testPointerPinchGesture()
     QFETCH(int, expectedCancelCount);
     QCOMPARE(cancelledSpy.count(), expectedCancelCount);
     QCOMPARE(spy->count(), 1);
-    QCOMPARE(spy->first().at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(spy->first().at(0).value<quint32>(), m_seatInterface->serial());
     QCOMPARE(spy->first().at(1).value<quint32>(), 4u);
 
     QCOMPARE(gesture->fingerCount(), 0u);
@@ -1125,7 +1125,7 @@ void TestWaylandSeat::testPointerHoldGesture()
     m_seatInterface->startPointerHoldGesture(3);
     QVERIFY(startSpy.wait());
     QCOMPARE(startSpy.count(), 1);
-    QCOMPARE(startSpy.first().at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(startSpy.first().at(0).value<quint32>(), m_seatInterface->serial());
     QCOMPARE(startSpy.first().at(1).value<quint32>(), 1u);
     QCOMPARE(startSpy.first().at(2).value<void *>(), *surface.get());
     QCOMPARE(startSpy.first().at(3).value<quint32>(), 3);
@@ -1152,7 +1152,7 @@ void TestWaylandSeat::testPointerHoldGesture()
     QFETCH(int, expectedCancelCount);
     QCOMPARE(cancelledSpy.count(), expectedCancelCount);
     QCOMPARE(spy->count(), 1);
-    QCOMPARE(spy->first().at(0).value<quint32>(), m_display->serial());
+    QCOMPARE(spy->first().at(0).value<quint32>(), m_seatInterface->serial());
     QCOMPARE(spy->first().at(1).value<quint32>(), 2);
 
     // now a start should be possible again
@@ -1300,7 +1300,7 @@ void TestWaylandSeat::testCursor()
 
     QSignalSpy enteredSpy(p.get(), &KWayland::Client::Pointer::entered);
 
-    uint32_t serial = m_seatInterface->display()->serial();
+    uint32_t serial = m_seatInterface->serial();
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(20, 18), QPointF(10, 15));
     QVERIFY(enteredSpy.wait());
     QCOMPARE_GT(enteredSpy.first().first().value<quint32>(), serial);
@@ -1401,7 +1401,7 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(modifierSpy.first().at(3).value<quint32>(), quint32(1));
     QCOMPARE(enteredSpy.count(), 1);
     // TODO: get through API
-    QCOMPARE(enteredSpy.first().first().value<quint32>(), m_display->serial() - 1);
+    QCOMPARE(enteredSpy.first().first().value<quint32>(), m_seatInterface->serial() - 1);
 
     QSignalSpy keyChangedSpy(keyboard, &KWayland::Client::Keyboard::keyChanged);
 
@@ -1470,7 +1470,7 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
     // TODO: get through API
-    QCOMPARE(leftSpy.first().first().value<quint32>(), m_display->serial() - 1);
+    QCOMPARE(leftSpy.first().first().value<quint32>(), m_seatInterface->serial() - 1);
 
     QVERIFY(!keyboard->enteredSurface());
     QVERIFY(!ckeyboard.enteredSurface());
@@ -1545,7 +1545,7 @@ void TestWaylandSeat::testSelection()
     std::unique_ptr<KWayland::Client::DataSource> ds(ddm->createDataSource());
     QVERIFY(ds->isValid());
     ds->offer(QStringLiteral("text/plain"));
-    dd1->setSelection(m_display->nextSerial(), ds.get());
+    dd1->setSelection(m_seatInterface->nextSerial(), ds.get());
     QVERIFY(selectionSpy.wait());
     QCOMPARE(selectionSpy.count(), 1);
     auto ddi = m_seatInterface->selection();
@@ -1555,7 +1555,7 @@ void TestWaylandSeat::testSelection()
     QCOMPARE(df->offeredMimeTypes().first().name(), QStringLiteral("text/plain"));
 
     // try to clear
-    dd1->setSelection(m_display->nextSerial());
+    dd1->setSelection(m_seatInterface->nextSerial());
     QVERIFY(selectionClearedSpy.wait());
     QCOMPARE(selectionClearedSpy.count(), 1);
     QCOMPARE(selectionSpy.count(), 1);
@@ -1568,30 +1568,30 @@ void TestWaylandSeat::testSelection()
     QCoreApplication::processEvents();
 
     // try to set Selection
-    dd1->setSelection(m_display->nextSerial(), ds.get());
+    dd1->setSelection(m_seatInterface->nextSerial(), ds.get());
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
     QCoreApplication::processEvents();
     QCOMPARE(selectionSpy.count(), 1);
 
     // let's unset the selection on the seat
-    m_seatInterface->setSelection(nullptr, m_display->nextSerial());
+    m_seatInterface->setSelection(nullptr, m_seatInterface->nextSerial());
     // and pass focus back on our surface
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     // we don't have a selection, so it should not send a selection
     QVERIFY(sync());
     QCOMPARE(selectionSpy.count(), 1);
     // now let's set it manually
-    m_seatInterface->setSelection(ddi, m_display->nextSerial());
+    m_seatInterface->setSelection(ddi, m_seatInterface->nextSerial());
     QCOMPARE(m_seatInterface->selection(), ddi);
     QVERIFY(selectionSpy.wait());
     QCOMPARE(selectionSpy.count(), 2);
     // setting the same again should not change
-    m_seatInterface->setSelection(ddi, m_display->nextSerial());
+    m_seatInterface->setSelection(ddi, m_seatInterface->nextSerial());
     QVERIFY(sync());
     QCOMPARE(selectionSpy.count(), 2);
     // now clear it manually
-    m_seatInterface->setSelection(nullptr, m_display->nextSerial());
+    m_seatInterface->setSelection(nullptr, m_seatInterface->nextSerial());
     QVERIFY(selectionClearedSpy.wait());
     QCOMPARE(selectionSpy.count(), 2);
 
@@ -1601,10 +1601,10 @@ void TestWaylandSeat::testSelection()
     std::unique_ptr<KWayland::Client::DataSource> ds2(ddm->createDataSource());
     QVERIFY(ds2->isValid());
     ds2->offer(QStringLiteral("text/plain"));
-    dd2->setSelection(m_display->nextSerial(), ds2.get());
+    dd2->setSelection(m_seatInterface->nextSerial(), ds2.get());
     QVERIFY(selectionSpy.wait());
     QSignalSpy cancelledSpy(ds2.get(), &KWayland::Client::DataSource::cancelled);
-    m_seatInterface->setSelection(ddi, m_display->nextSerial());
+    m_seatInterface->setSelection(ddi, m_seatInterface->nextSerial());
     QVERIFY(cancelledSpy.wait());
 }
 
@@ -1654,7 +1654,7 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     QVERIFY(ddiCreatedSpy.wait());
     auto ddi = ddiCreatedSpy.first().first().value<DataDeviceInterface *>();
     QVERIFY(ddi);
-    m_seatInterface->setSelection(ddi->selection(), m_display->nextSerial());
+    m_seatInterface->setSelection(ddi->selection(), m_seatInterface->nextSerial());
 
     // switch to other client
     // create a surface and pass it keyboard focus
@@ -1745,7 +1745,7 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(pointRemovedSpy.count(), 0);
     KWayland::Client::TouchPoint *tp = sequenceStartedSpy.first().first().value<KWayland::Client::TouchPoint *>();
     QVERIFY(tp);
-    QCOMPARE(tp->downSerial(), m_seatInterface->display()->serial());
+    QCOMPARE(tp->downSerial(), m_seatInterface->serial());
     QCOMPARE(tp->id(), 0);
     QVERIFY(tp->isDown());
     QCOMPARE(tp->position(), QPointF(5, 6));
@@ -1830,7 +1830,7 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(tp2->positions().size(), 1);
     QCOMPARE(tp2->time(), 4u);
     QCOMPARE(tp2->timestamps().count(), 2);
-    QCOMPARE(tp2->upSerial(), m_seatInterface->display()->serial());
+    QCOMPARE(tp2->upSerial(), m_seatInterface->serial());
     QCOMPARE(tp2->surface().data(), s);
 
     // send another down and up

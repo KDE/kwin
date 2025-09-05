@@ -162,11 +162,11 @@ void Primary::x11OffersChanged(const QStringList &added, const QStringList &remo
         connect(newSelection.get(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
         // we keep the old selection around because setPrimarySelection needs it to be still alive
         std::swap(m_primarySelectionSource, newSelection);
-        waylandServer()->seat()->setPrimarySelection(m_primarySelectionSource.get(), waylandServer()->display()->nextSerial());
+        waylandServer()->seat()->setPrimarySelection(m_primarySelectionSource.get(), waylandServer()->seat()->nextSerial());
     } else {
         AbstractDataSource *currentSelection = waylandServer()->seat()->primarySelection();
         if (!ownsSelection(currentSelection)) {
-            waylandServer()->seat()->setPrimarySelection(nullptr, waylandServer()->display()->nextSerial());
+            waylandServer()->seat()->setPrimarySelection(nullptr, waylandServer()->seat()->nextSerial());
             m_primarySelectionSource.reset();
         }
     }

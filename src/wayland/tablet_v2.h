@@ -149,7 +149,7 @@ Q_SIGNALS:
 private:
     friend class TabletSeatV2InterfacePrivate;
     friend class TabletSeatV2Interface;
-    explicit TabletToolV2Interface(Display *display,
+    explicit TabletToolV2Interface(SeatInterface *seat,
                                    Type type,
                                    quint32 hsh,
                                    quint32 hsl,
@@ -180,7 +180,7 @@ private:
     explicit TabletPadV2Interface(const QString &path,
                                   quint32 buttons,
                                   const QList<InputDeviceTabletPadModeGroup> &groups,
-                                  Display *display,
+                                  SeatInterface *seat,
                                   TabletSeatV2Interface *parent);
     std::unique_ptr<TabletPadV2InterfacePrivate> d;
 };
@@ -266,7 +266,7 @@ private:
     friend class TabletPadV2Interface;
     friend class TabletPadV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
-    explicit TabletPadGroupV2Interface(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, const QList<int> &dials, Display *display, TabletPadV2Interface *parent);
+    explicit TabletPadGroupV2Interface(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, const QList<int> &dials, SeatInterface *seat, TabletPadV2Interface *parent);
     std::unique_ptr<TabletPadGroupV2InterfacePrivate> d;
 };
 
@@ -312,7 +312,7 @@ public:
 
 private:
     friend class TabletManagerV2InterfacePrivate;
-    explicit TabletSeatV2Interface(Display *display, QObject *parent);
+    explicit TabletSeatV2Interface(SeatInterface *seat, QObject *parent);
     std::unique_ptr<TabletSeatV2InterfacePrivate> d;
 };
 

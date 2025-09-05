@@ -105,6 +105,9 @@ public:
     explicit SeatInterface(Display *display, const QString &name, QObject *parent = nullptr);
     virtual ~SeatInterface();
 
+    quint32 serial() const;
+    quint32 nextSerial();
+
     Display *display() const;
     QString name() const;
     bool hasPointer() const;

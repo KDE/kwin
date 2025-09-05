@@ -92,7 +92,7 @@ void TestWaylandServerSeat::testPointerButton()
     seat->notifyPointerButton(0, PointerButtonState::Pressed);
     seat->notifyPointerFrame();
     QVERIFY(seat->isPointerButtonPressed(0));
-    QCOMPARE(seat->pointerButtonSerial(0), display.serial());
+    QCOMPARE(seat->pointerButtonSerial(0), seat->serial());
 
     // other button should still be unpressed
     QVERIFY(!seat->isPointerButtonPressed(1));
@@ -102,7 +102,7 @@ void TestWaylandServerSeat::testPointerButton()
     seat->notifyPointerButton(0, PointerButtonState::Released);
     seat->notifyPointerFrame();
     QVERIFY(!seat->isPointerButtonPressed(0));
-    QCOMPARE(seat->pointerButtonSerial(0), display.serial());
+    QCOMPARE(seat->pointerButtonSerial(0), seat->serial());
 }
 
 void TestWaylandServerSeat::testPointerPos()
