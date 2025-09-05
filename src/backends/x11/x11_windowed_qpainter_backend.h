@@ -80,17 +80,9 @@ public:
 
 private:
     void addOutput(Output *output);
-    void removeOutput(Output *output);
-
-    struct Layers
-    {
-        std::unique_ptr<X11WindowedQPainterPrimaryLayer> primaryLayer;
-        std::unique_ptr<X11WindowedQPainterCursorLayer> cursorLayer;
-    };
 
     X11WindowedBackend *m_backend;
     std::unique_ptr<GraphicsBufferAllocator> m_allocator;
-    std::map<Output *, Layers> m_outputs;
 };
 
 } // namespace KWin

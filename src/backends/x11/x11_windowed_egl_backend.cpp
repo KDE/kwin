@@ -168,7 +168,10 @@ X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
 
 X11WindowedEglBackend::~X11WindowedEglBackend()
 {
-    m_outputs.clear();
+    const auto outputs = m_backend->outputs();
+    for (Output *output : outputs) {
+        static_cast<X11WindowedOutput *>(output)->setOutputLayers({});
+    }
     cleanup();
 }
 
@@ -232,16 +235,16 @@ void X11WindowedEglBackend::init()
     const auto &outputs = m_backend->outputs();
     for (const auto &output : outputs) {
         X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
-        m_outputs[output] = Layers{
-            .primaryLayer = std::make_unique<X11WindowedEglPrimaryLayer>(this, x11Output),
-            .cursorLayer = std::make_unique<X11WindowedEglCursorLayer>(this, x11Output),
-        };
+        std::vector<std::unique_ptr<OutputLayer>> layers;
+        layers.push_back(std::make_unique<X11WindowedEglPrimaryLayer>(this, x11Output));
+        layers.push_back(std::make_unique<X11WindowedEglCursorLayer>(this, x11Output));
+        x11Output->setOutputLayers(std::move(layers));
     }
 }
 
 QList<OutputLayer *> X11WindowedEglBackend::compatibleOutputLayers(Output *output)
 {
-    return {m_outputs[output].primaryLayer.get(), m_outputs[output].cursorLayer.get()};
+    return static_cast<X11WindowedOutput *>(output)->outputLayers();
 }
 
 } // namespace

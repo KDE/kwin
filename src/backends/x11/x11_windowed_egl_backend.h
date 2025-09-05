@@ -85,13 +85,6 @@ private:
     bool initializeEgl();
     bool initRenderingContext();
 
-    struct Layers
-    {
-        std::unique_ptr<X11WindowedEglPrimaryLayer> primaryLayer;
-        std::unique_ptr<X11WindowedEglCursorLayer> cursorLayer;
-    };
-
-    std::map<Output *, Layers> m_outputs;
     X11WindowedBackend *m_backend;
 };
 
