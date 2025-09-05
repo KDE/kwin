@@ -134,26 +134,23 @@ X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backe
     }
 
     connect(backend, &X11WindowedBackend::outputAdded, this, &X11WindowedQPainterBackend::addOutput);
-    connect(backend, &X11WindowedBackend::outputRemoved, this, &X11WindowedQPainterBackend::removeOutput);
 }
 
 X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
 {
-    m_outputs.clear();
+    const auto outputs = m_backend->outputs();
+    for (Output *output : outputs) {
+        static_cast<X11WindowedOutput *>(output)->setOutputLayers({});
+    }
 }
 
 void X11WindowedQPainterBackend::addOutput(Output *output)
 {
     X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
-    m_outputs[output] = Layers{
-        .primaryLayer = std::make_unique<X11WindowedQPainterPrimaryLayer>(x11Output, this),
-        .cursorLayer = std::make_unique<X11WindowedQPainterCursorLayer>(x11Output),
-    };
-}
-
-void X11WindowedQPainterBackend::removeOutput(Output *output)
-{
-    m_outputs.erase(output);
+    std::vector<std::unique_ptr<OutputLayer>> layers;
+    layers.push_back(std::make_unique<X11WindowedQPainterPrimaryLayer>(x11Output, this));
+    layers.push_back(std::make_unique<X11WindowedQPainterCursorLayer>(x11Output));
+    x11Output->setOutputLayers(std::move(layers));
 }
 
 GraphicsBufferAllocator *X11WindowedQPainterBackend::graphicsBufferAllocator() const
@@ -163,7 +160,7 @@ GraphicsBufferAllocator *X11WindowedQPainterBackend::graphicsBufferAllocator() c
 
 QList<OutputLayer *> X11WindowedQPainterBackend::compatibleOutputLayers(Output *output)
 {
-    return {m_outputs[output].primaryLayer.get(), m_outputs[output].cursorLayer.get()};
+    return static_cast<X11WindowedOutput *>(output)->outputLayers();
 }
 
 }

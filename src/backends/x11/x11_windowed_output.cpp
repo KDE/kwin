@@ -494,6 +494,16 @@ bool X11WindowedOutput::present(const QList<OutputLayer *> &layersToUpdate, cons
     return true;
 }
 
+void X11WindowedOutput::setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&layers)
+{
+    m_layers = std::move(layers);
+}
+
+QList<OutputLayer *> X11WindowedOutput::outputLayers() const
+{
+    return m_layers | std::views::transform(&std::unique_ptr<OutputLayer>::get) | std::ranges::to<QList>();
+}
+
 } // namespace KWin
 
 #include "moc_x11_windowed_output.cpp"

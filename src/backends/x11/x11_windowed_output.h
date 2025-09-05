@@ -116,12 +116,16 @@ public:
     bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
+    void setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&layers);
+    QList<OutputLayer *> outputLayers() const;
+
 private:
     void initXInputForWindow();
 
     xcb_pixmap_t importDmaBufBuffer(const DmaBufAttributes *attributes);
     xcb_pixmap_t importShmBuffer(const ShmAttributes *attributes);
 
+    std::vector<std::unique_ptr<OutputLayer>> m_layers;
     xcb_window_t m_window = XCB_WINDOW_NONE;
     xcb_present_event_t m_presentEvent = XCB_NONE;
     xcb_pixmap_t m_pendingBuffer = XCB_PIXMAP_NONE;
