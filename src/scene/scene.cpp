@@ -217,11 +217,6 @@ double SceneView::desiredHdrHeadroom() const
     return m_scene->desiredHdrHeadroom();
 }
 
-void SceneView::frame(OutputFrame *frame)
-{
-    m_scene->frame(this, frame);
-}
-
 void SceneView::setViewport(const RectF &viewport)
 {
     if (viewport == m_viewport) {
@@ -378,12 +373,6 @@ QList<SurfaceItem *> ItemView::scanoutCandidates(ssize_t maxCount) const
     } else {
         return {};
     }
-}
-
-void ItemView::frame(OutputFrame *frame)
-{
-    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(m_logicalOutput->backendOutput()->renderLoop()->lastPresentationTimestamp());
-    m_item->framePainted(this, m_logicalOutput, frame, frameTime);
 }
 
 void ItemView::prePaint()
@@ -707,15 +696,6 @@ void Scene::removeView(RenderView *view)
 QList<SurfaceItem *> Scene::scanoutCandidates(ssize_t maxCount) const
 {
     return {};
-}
-
-void Scene::frame(SceneView *view, OutputFrame *frame)
-{
-}
-
-double Scene::desiredHdrHeadroom() const
-{
-    return 1;
 }
 
 } // namespace KWin

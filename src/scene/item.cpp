@@ -706,7 +706,7 @@ void Item::framePainted(RenderView *view, LogicalOutput *output, OutputFrame *fr
     // things like screncasts or thumbnails
     handleFramePainted(output, frame, timestamp);
     for (const auto child : std::as_const(m_childItems)) {
-        if (child->explicitVisible() && (!view || view->shouldRenderItem(child)) && workspace()->outputAt(child->mapToScene(child->boundingRect()).center()) == output) {
+        if (child->explicitVisible() && workspace()->outputAt(child->mapToScene(child->boundingRect()).center()) == output) {
             child->framePainted(view, output, frame, timestamp);
         }
     }
