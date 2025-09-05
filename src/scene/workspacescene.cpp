@@ -473,13 +473,12 @@ double WorkspaceScene::desiredHdrHeadroom() const
     return maxHeadroom;
 }
 
-void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
+void WorkspaceScene::frame(LogicalOutput *logicalOutput, OutputFrame *frame)
 {
-    LogicalOutput *logicalOutput = delegate->logicalOutput();
     const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(logicalOutput->backendOutput()->renderLoop()->lastPresentationTimestamp());
-    m_containerItem->framePainted(delegate, logicalOutput, frame, frameTime);
+    m_containerItem->framePainted(logicalOutput, frame, frameTime);
     if (m_overlayItem) {
-        m_overlayItem->framePainted(delegate, logicalOutput, frame, frameTime);
+        m_overlayItem->framePainted(logicalOutput, frame, frameTime);
     }
 }
 

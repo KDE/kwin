@@ -44,7 +44,7 @@ public:
     QRegion collectDamage() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &deviceRegion) override;
-    void frame(SceneView *delegate, OutputFrame *frame) override;
+    void frame(LogicalOutput *logicalOutput, OutputFrame *frame) override;
     double desiredHdrHeadroom() const override;
 
     EglContext *openglContext() const;

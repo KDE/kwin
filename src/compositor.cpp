@@ -927,11 +927,9 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
+    m_scene->frame(logicalOutput, frame.get());
     for (auto &layer : layers) {
         layer.view->postPaint();
-        if (layer.view->layer()->isEnabled()) {
-            layer.view->frame(frame.get());
-        }
     }
 
     // the layers have to stay valid until after postPaint, so this needs to happen after it

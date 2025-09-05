@@ -89,6 +89,7 @@ QRegion RegionScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
     if (!m_layer->endFrame(repaints, bufferDamage, nullptr)) {
         return QRegion{};
     }
+    m_sceneView->scene()->frame(workspace()->outputAt(m_region.center()), nullptr);
     return bufferDamage;
 }
 

@@ -48,7 +48,6 @@ public:
     virtual QRectF viewport() const = 0;
     virtual qreal scale() const = 0;
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const = 0;
-    virtual void frame(OutputFrame *frame) = 0;
     virtual void prePaint() = 0;
     virtual QRegion collectDamage() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &logicalRegion) = 0;
@@ -112,7 +111,6 @@ public:
     void setScale(qreal scale);
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
-    void frame(OutputFrame *frame) override;
     void prePaint() override;
     QRegion collectDamage() override;
     void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &deviceRegion) override;
@@ -154,7 +152,6 @@ public:
     QRectF viewport() const override;
     bool isVisible() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
-    void frame(OutputFrame *frame) override;
     void prePaint() override;
     QRegion collectDamage() override;
     void postPaint() override;
@@ -250,8 +247,8 @@ public:
     virtual QRegion collectDamage() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &deviceRegion) = 0;
     virtual void postPaint() = 0;
-    virtual void frame(SceneView *delegate, OutputFrame *frame);
-    virtual double desiredHdrHeadroom() const;
+    virtual void frame(LogicalOutput *logicalOutput, OutputFrame *frame) = 0;
+    virtual double desiredHdrHeadroom() const = 0;
 
 Q_SIGNALS:
     void viewRemoved(RenderView *delegate);
