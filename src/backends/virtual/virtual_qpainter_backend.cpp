@@ -78,10 +78,10 @@ void VirtualQPainterLayer::releaseBuffers()
 }
 
 VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
-    : m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
+    : m_backend(backend)
+    , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
     connect(backend, &VirtualBackend::outputAdded, this, &VirtualQPainterBackend::addOutput);
-    connect(backend, &VirtualBackend::outputRemoved, this, &VirtualQPainterBackend::removeOutput);
 
     const auto outputs = backend->outputs();
     for (Output *output : outputs) {
@@ -89,16 +89,17 @@ VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
     }
 }
 
-VirtualQPainterBackend::~VirtualQPainterBackend() = default;
+VirtualQPainterBackend::~VirtualQPainterBackend()
+{
+    const auto outputs = m_backend->outputs();
+    for (Output *output : outputs) {
+        static_cast<VirtualOutput *>(output)->setOutputLayer(nullptr);
+    }
+}
 
 void VirtualQPainterBackend::addOutput(Output *output)
 {
-    m_outputs[output] = std::make_unique<VirtualQPainterLayer>(output, this);
-}
-
-void VirtualQPainterBackend::removeOutput(Output *output)
-{
-    m_outputs.erase(output);
+    static_cast<VirtualOutput *>(output)->setOutputLayer(std::make_unique<VirtualQPainterLayer>(output, this));
 }
 
 GraphicsBufferAllocator *VirtualQPainterBackend::graphicsBufferAllocator() const
@@ -108,7 +109,7 @@ GraphicsBufferAllocator *VirtualQPainterBackend::graphicsBufferAllocator() const
 
 QList<OutputLayer *> VirtualQPainterBackend::compatibleOutputLayers(Output *output)
 {
-    return {m_outputs[output].get()};
+    return {static_cast<VirtualOutput *>(output)->outputLayer()};
 }
 }
 

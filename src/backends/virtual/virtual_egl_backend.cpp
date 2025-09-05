@@ -28,6 +28,11 @@ VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
 {
 }
 
+VirtualEglLayer::~VirtualEglLayer()
+{
+    m_backend->openglContext()->makeCurrent();
+}
+
 std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
 {
     m_backend->openglContext()->makeCurrent();
@@ -85,7 +90,10 @@ VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
 
 VirtualEglBackend::~VirtualEglBackend()
 {
-    m_outputs.clear();
+    const auto outputs = m_backend->outputs();
+    for (Output *output : outputs) {
+        static_cast<VirtualOutput *>(output)->setOutputLayer(nullptr);
+    }
     cleanup();
 }
 
@@ -146,7 +154,6 @@ void VirtualEglBackend::init()
     }
 
     connect(m_backend, &VirtualBackend::outputAdded, this, &VirtualEglBackend::addOutput);
-    connect(m_backend, &VirtualBackend::outputRemoved, this, &VirtualEglBackend::removeOutput);
 }
 
 bool VirtualEglBackend::initRenderingContext()
@@ -157,18 +164,12 @@ bool VirtualEglBackend::initRenderingContext()
 void VirtualEglBackend::addOutput(Output *output)
 {
     openglContext()->makeCurrent();
-    m_outputs[output] = std::make_unique<VirtualEglLayer>(output, this);
-}
-
-void VirtualEglBackend::removeOutput(Output *output)
-{
-    openglContext()->makeCurrent();
-    m_outputs.erase(output);
+    static_cast<VirtualOutput *>(output)->setOutputLayer(std::make_unique<VirtualEglLayer>(output, this));
 }
 
 QList<OutputLayer *> VirtualEglBackend::compatibleOutputLayers(Output *output)
 {
-    return {m_outputs[output].get()};
+    return {static_cast<VirtualOutput *>(output)->outputLayer()};
 }
 
 } // namespace

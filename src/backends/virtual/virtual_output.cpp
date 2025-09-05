@@ -116,6 +116,16 @@ void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
         m_frame.reset();
     }
 }
+
+void VirtualOutput::setOutputLayer(std::unique_ptr<OutputLayer> &&layer)
+{
+    m_layer = std::move(layer);
+}
+
+OutputLayer *VirtualOutput::outputLayer() const
+{
+    return m_layer.get();
+}
 }
 
 #include "moc_virtual_output.cpp"
