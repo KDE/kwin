@@ -362,9 +362,7 @@ ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, Output *output, Ou
 
 ItemTreeView::~ItemTreeView()
 {
-    if (m_exclusive && m_item) {
-        m_item->scheduleRepaint(m_item->boundingRect());
-    }
+    setExclusive(false);
 }
 
 QRectF ItemTreeView::viewport() const
