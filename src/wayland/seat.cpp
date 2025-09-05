@@ -107,6 +107,16 @@ SeatInterface::~SeatInterface()
     }
 }
 
+quint32 SeatInterface::serial() const
+{
+    return d->serial;
+}
+
+quint32 SeatInterface::nextSerial()
+{
+    return ++d->serial;
+}
+
 void SeatInterfacePrivate::updatePointerButtonSerial(quint32 button, quint32 serial)
 {
     auto it = globalPointer.buttonSerials.find(button);
@@ -204,7 +214,7 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
             dataDevice->sendSelection(currentSelection);
             return;
         }
-        q->setSelection(dataDevice->selection(), display->nextSerial());
+        q->setSelection(dataDevice->selection(), q->nextSerial());
     });
 
     QObject::connect(dataDevice, &DataControlDeviceV1Interface::primarySelectionChanged, q, [this, dataDevice] {
@@ -218,7 +228,7 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
             dataDevice->sendPrimarySelection(currentPrimarySelection);
             return;
         }
-        q->setPrimarySelection(dataDevice->primarySelection(), display->nextSerial());
+        q->setPrimarySelection(dataDevice->primarySelection(), q->nextSerial());
     });
 
     dataDevice->sendSelection(currentSelection);
@@ -437,7 +447,7 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
     const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(focusedPointerSurfaceTransformation().map(pos));
 
     if (d->pointer->focusedSurface() != effectiveFocusedSurface) {
-        d->pointer->sendEnter(effectiveFocusedSurface, localPosition, display()->nextSerial());
+        d->pointer->sendEnter(effectiveFocusedSurface, localPosition, nextSerial());
         if (d->keyboard) {
             d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
         }
@@ -465,7 +475,7 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
         // no change
         return;
     }
-    const quint32 serial = d->display->nextSerial();
+    const quint32 serial = nextSerial();
     if (d->drag.target) {
         d->drag.target->updateDragTarget(nullptr, QPointF(), serial);
     }
@@ -514,7 +524,7 @@ void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF 
         return;
     }
 
-    const quint32 serial = d->display->nextSerial();
+    const quint32 serial = nextSerial();
 
     if (d->globalPointer.focus.surface) {
         disconnect(d->globalPointer.focus.destroyConnection);
@@ -547,7 +557,7 @@ void SeatInterface::notifyPointerLeave()
     }
     d->globalPointer.focus = SeatInterfacePrivate::Pointer::Focus();
 
-    const quint32 serial = d->display->nextSerial();
+    const quint32 serial = nextSerial();
     d->pointer->sendLeave(serial);
     if (d->keyboard) {
         d->keyboard->setModifierFocusSurface(nullptr);
@@ -649,7 +659,7 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
     if (!d->pointer) {
         return;
     }
-    const quint32 serial = d->display->nextSerial();
+    const quint32 serial = nextSerial();
 
     if (state == PointerButtonState::Pressed) {
         d->updatePointerButtonSerial(button, serial);
@@ -726,7 +736,7 @@ void SeatInterface::startPointerSwipeGesture(quint32 fingerCount)
 
     auto swipeGesture = PointerSwipeGestureV1Interface::get(pointer());
     if (swipeGesture) {
-        swipeGesture->sendBegin(d->display->nextSerial(), fingerCount);
+        swipeGesture->sendBegin(nextSerial(), fingerCount);
     }
 }
 
@@ -750,7 +760,7 @@ void SeatInterface::endPointerSwipeGesture()
 
     auto swipeGesture = PointerSwipeGestureV1Interface::get(pointer());
     if (swipeGesture) {
-        swipeGesture->sendEnd(d->display->nextSerial());
+        swipeGesture->sendEnd(nextSerial());
     }
 }
 
@@ -762,7 +772,7 @@ void SeatInterface::cancelPointerSwipeGesture()
 
     auto swipeGesture = PointerSwipeGestureV1Interface::get(pointer());
     if (swipeGesture) {
-        swipeGesture->sendCancel(d->display->nextSerial());
+        swipeGesture->sendCancel(nextSerial());
     }
 }
 
@@ -774,7 +784,7 @@ void SeatInterface::startPointerPinchGesture(quint32 fingerCount)
 
     auto pinchGesture = PointerPinchGestureV1Interface::get(pointer());
     if (pinchGesture) {
-        pinchGesture->sendBegin(d->display->nextSerial(), fingerCount);
+        pinchGesture->sendBegin(nextSerial(), fingerCount);
     }
 }
 
@@ -798,7 +808,7 @@ void SeatInterface::endPointerPinchGesture()
 
     auto pinchGesture = PointerPinchGestureV1Interface::get(pointer());
     if (pinchGesture) {
-        pinchGesture->sendEnd(d->display->nextSerial());
+        pinchGesture->sendEnd(nextSerial());
     }
 }
 
@@ -810,7 +820,7 @@ void SeatInterface::cancelPointerPinchGesture()
 
     auto pinchGesture = PointerPinchGestureV1Interface::get(pointer());
     if (pinchGesture) {
-        pinchGesture->sendCancel(d->display->nextSerial());
+        pinchGesture->sendCancel(nextSerial());
     }
 }
 
@@ -822,7 +832,7 @@ void SeatInterface::startPointerHoldGesture(quint32 fingerCount)
 
     auto holdGesture = PointerHoldGestureV1Interface::get(pointer());
     if (holdGesture) {
-        holdGesture->sendBegin(d->display->nextSerial(), fingerCount);
+        holdGesture->sendBegin(nextSerial(), fingerCount);
     }
 }
 
@@ -834,7 +844,7 @@ void SeatInterface::endPointerHoldGesture()
 
     auto holdGesture = PointerHoldGestureV1Interface::get(pointer());
     if (holdGesture) {
-        holdGesture->sendEnd(d->display->nextSerial());
+        holdGesture->sendEnd(nextSerial());
     }
 }
 
@@ -846,7 +856,7 @@ void SeatInterface::cancelPointerHoldGesture()
 
     auto holdGesture = PointerHoldGestureV1Interface::get(pointer());
     if (holdGesture) {
-        holdGesture->sendCancel(d->display->nextSerial());
+        holdGesture->sendCancel(nextSerial());
     }
 }
 
@@ -862,7 +872,7 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface, const Q
     }
 
     Q_EMIT focusedKeyboardSurfaceAboutToChange(surface);
-    const quint32 serial = d->display->nextSerial();
+    const quint32 serial = nextSerial();
 
     if (d->globalKeyboard.focus.surface) {
         disconnect(d->globalKeyboard.focus.destroyConnection);
@@ -985,7 +995,7 @@ TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPoi
     }
 
     const auto [effectiveTouchedSurface, pos] = surface->mapToInputSurface(globalPosition - surfacePosition);
-    const quint32 serial = display()->nextSerial();
+    const quint32 serial = nextSerial();
     d->touch->sendDown(effectiveTouchedSurface, id, serial, pos);
 
     auto touchPoint = std::make_unique<TouchPoint>(serial, surface, this);
@@ -1044,7 +1054,7 @@ void SeatInterface::notifyTouchUp(qint32 id)
     }
 
     if (touchPoint->client) {
-        d->touch->sendUp(touchPoint->client, id, d->display->nextSerial());
+        d->touch->sendUp(touchPoint->client, id, nextSerial());
     }
 
     d->touchPoints.erase(it);
@@ -1121,7 +1131,7 @@ XdgToplevelDragV1Interface *SeatInterface::xdgTopleveldrag() const
 
 void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
 {
-    const quint32 serial = d->display->nextSerial();
+    const quint32 serial = nextSerial();
 
     if (d->focusedTextInputSurface == surface) {
         return;
@@ -1277,7 +1287,7 @@ bool SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
         if (d->dragInhibitsPointer(originSurface)) {
             notifyPointerLeave();
         }
-        d->drag.target->updateDragTarget(originSurface, position, display()->nextSerial());
+        d->drag.target->updateDragTarget(originSurface, position, nextSerial());
     }
     Q_EMIT dragStarted();
     return true;

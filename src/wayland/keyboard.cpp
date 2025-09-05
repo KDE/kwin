@@ -38,7 +38,7 @@ void KeyboardInterfacePrivate::keyboard_bind_resource(Resource *resource)
 
     if (focusedClient && focusedClient->client() == resource->client()) {
         const QByteArray keysData = QByteArray::fromRawData(reinterpret_cast<const char *>(pressedKeys.data()), sizeof(quint32) * pressedKeys.count());
-        const quint32 serial = seat->display()->nextSerial();
+        const quint32 serial = seat->nextSerial();
 
         send_enter(resource->handle, serial, focusedSurface->resource(), keysData);
         send_modifiers(resource->handle, serial, modifiers.depressed, modifiers.latched, modifiers.locked, modifiers.group);
@@ -167,7 +167,7 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, const QList
         return;
     }
     d->destroyConnection = connect(d->focusedSurface, &SurfaceInterface::aboutToBeDestroyed, this, [this] {
-        d->sendLeave(d->focusedSurface, d->seat->display()->nextSerial());
+        d->sendLeave(d->focusedSurface, d->seat->nextSerial());
         d->focusedSurface = nullptr;
     });
 
@@ -182,7 +182,7 @@ void KeyboardInterface::setModifierFocusSurface(SurfaceInterface *surface)
     }
     d->modifierFocusSurface = surface;
     if (d->modifierFocusSurface && d->focusedSurface != d->modifierFocusSurface) {
-        d->modifiers.serial = d->seat->display()->nextSerial();
+        d->modifiers.serial = d->seat->nextSerial();
         d->sendModifiers(d->modifierFocusSurface);
     }
 }
@@ -203,7 +203,7 @@ void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, ClientConne
     }
 
     const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(client);
-    const quint32 serial = d->seat->display()->nextSerial();
+    const quint32 serial = d->seat->nextSerial();
     for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
         if (keyboardResource->version() < WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION && state == KeyboardKeyState::Repeated) {
             continue;
@@ -249,11 +249,11 @@ void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint3
     }
 
     if (d->focusedSurface) {
-        d->modifiers.serial = d->seat->display()->nextSerial();
+        d->modifiers.serial = d->seat->nextSerial();
         d->sendModifiers(d->focusedSurface, depressed, latched, locked, group, d->modifiers.serial);
     }
     if (d->modifierFocusSurface && d->focusedSurface != d->modifierFocusSurface) {
-        d->modifiers.serial = d->seat->display()->nextSerial();
+        d->modifiers.serial = d->seat->nextSerial();
         d->sendModifiers(d->modifierFocusSurface, depressed, latched, locked, group, d->modifiers.serial);
     }
 }
@@ -261,7 +261,7 @@ void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint3
 void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, ClientConnection *client)
 {
     const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(client);
-    const quint32 serial = d->seat->display()->nextSerial();
+    const quint32 serial = d->seat->nextSerial();
     for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
         d->send_modifiers(keyboardResource->handle, serial, depressed, latched, locked, group);
     }

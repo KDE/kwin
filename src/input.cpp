@@ -255,7 +255,7 @@ bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
     }
     if (auto keyboardGrab = kwinApp()->inputMethod()->keyboardGrab()) {
         const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
-        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count(), event->nativeScanCode, event->state);
+        keyboardGrab->sendKey(waylandServer()->seat()->nextSerial(), std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count(), event->nativeScanCode, event->state);
         return true;
     } else {
         kwinApp()->inputMethod()->commitPendingText();

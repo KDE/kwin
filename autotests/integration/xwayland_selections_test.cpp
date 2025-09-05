@@ -114,8 +114,9 @@ void XwaylandSelectionsTest::testSync()
     QCOMPARE(workspace()->activeWindow(), copyWindow);
     // Wait until the window has a surface so we can pass input to it
     QTRY_VERIFY(copyWindow->surface());
-    Test::keyboardKeyPressed(KEY_C, waylandServer()->display()->nextSerial());
-    Test::keyboardKeyReleased(KEY_C, waylandServer()->display()->nextSerial());
+    quint32 timestamp = 0;
+    Test::keyboardKeyPressed(KEY_C, ++timestamp);
+    Test::keyboardKeyReleased(KEY_C, ++timestamp);
     clipboardChangedSpy.wait();
 
     // start the paste process

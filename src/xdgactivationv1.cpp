@@ -14,6 +14,7 @@
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland/plasmawindowmanagement.h"
+#include "wayland/seat.h"
 #include "wayland/surface.h"
 #include "wayland/xdgactivation_v1.h"
 #include "wayland_server.h"
@@ -56,7 +57,7 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
     if (!isPrivileged) {
         const bool allowed = !workspace()->activeWindow()
             || workspace()->activeWindow()->surface() == surface
-            || (input()->lastInputSerial() <= serial && waylandServer()->display()->serial() >= serial);
+            || (input()->lastInputSerial() <= serial && seat->serial() >= serial);
         if (!allowed) {
             qCDebug(KWIN_CORE) << "Cannot grant a token to" << window;
             return QStringLiteral("not-granted-666");

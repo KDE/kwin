@@ -80,7 +80,7 @@ void KillPrompt::start(quint32 timestamp)
         wid = exported->handle();
 
         auto *seat = waylandServer()->seat();
-        const QString token = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, QStringLiteral("org.kde.kwin.killer"));
+        const QString token = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->serial(), seat, QStringLiteral("org.kde.kwin.killer"));
         env.insert(QStringLiteral("XDG_ACTIVATION_TOKEN"), token);
 
         env.remove(QStringLiteral("QT_WAYLAND_RECONNECT"));

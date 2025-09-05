@@ -74,6 +74,8 @@ public:
     AbstractDataSource *currentPrimarySelection = nullptr;
     quint32 currentPrimarySelectionSerial = 0;
 
+    quint32 serial = 0;
+
     // Pointer related members
     struct Pointer
     {

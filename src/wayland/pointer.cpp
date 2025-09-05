@@ -102,7 +102,7 @@ void PointerInterfacePrivate::pointer_bind_resource(Resource *resource)
     const ClientConnection *focusedClient = focusedSurface ? focusedSurface->client() : nullptr;
 
     if (focusedClient && focusedClient->client() == resource->client()) {
-        const quint32 serial = seat->display()->nextSerial();
+        const quint32 serial = seat->nextSerial();
         send_enter(resource->handle, serial, focusedSurface->resource(), wl_fixed_from_double(lastPosition.x()), wl_fixed_from_double(lastPosition.y()));
         if (resource->version() >= WL_POINTER_FRAME_SINCE_VERSION) {
             send_frame(resource->handle);
@@ -182,7 +182,7 @@ void PointerInterface::sendEnter(SurfaceInterface *surface, const QPointF &posit
     d->focusedSurface = surface;
     d->focusedSerial = serial;
     d->destroyConnection = connect(d->focusedSurface, &SurfaceInterface::aboutToBeDestroyed, this, [this]() {
-        d->sendLeave(d->seat->display()->nextSerial());
+        d->sendLeave(d->seat->nextSerial());
         d->sendFrame();
         d->focusedSurface = nullptr;
         Q_EMIT focusedSurfaceChanged();
@@ -239,7 +239,7 @@ void PointerInterface::sendButton(quint32 button, PointerButtonState state, Clie
 {
     const auto pointerResources = d->pointersForClient(client);
     const quint32 waylandState = pointerButtonStateToWaylandState(state);
-    const quint32 serial = d->seat->display()->nextSerial();
+    const quint32 serial = d->seat->nextSerial();
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
         d->send_button(resource->handle, serial, d->seat->timestamp().count(), button, waylandState);
     }

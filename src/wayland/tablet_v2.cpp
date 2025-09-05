@@ -124,7 +124,7 @@ class TabletToolV2InterfacePrivate : public QtWaylandServer::zwp_tablet_tool_v2
 {
 public:
     TabletToolV2InterfacePrivate(TabletToolV2Interface *q,
-                                 Display *display,
+                                 SeatInterface *seat,
                                  TabletToolV2Interface::Type type,
                                  uint32_t hsh,
                                  uint32_t hsl,
@@ -132,7 +132,7 @@ public:
                                  uint32_t hil,
                                  const QList<TabletToolV2Interface::Capability> &capabilities)
         : zwp_tablet_tool_v2()
-        , m_display(display)
+        , m_seat(seat)
         , m_type(type)
         , m_hardwareSerialHigh(hsh)
         , m_hardwareSerialLow(hsl)
@@ -212,7 +212,7 @@ public:
         wl_resource_destroy(resource->handle);
     }
 
-    Display *const m_display;
+    SeatInterface *const m_seat;
     quint32 m_proximitySerial = 0;
     std::optional<quint32> m_downSerial;
     bool m_cleanup = false;
@@ -227,14 +227,14 @@ public:
     TabletToolV2Interface *const q;
 };
 
-TabletToolV2Interface::TabletToolV2Interface(Display *display,
+TabletToolV2Interface::TabletToolV2Interface(SeatInterface *seat,
                                              Type type,
                                              uint32_t hsh,
                                              uint32_t hsl,
                                              uint32_t hih,
                                              uint32_t hil,
                                              const QList<Capability> &capabilities)
-    : d(new TabletToolV2InterfacePrivate(this, display, type, hsh, hsl, hih, hil, capabilities))
+    : d(new TabletToolV2InterfacePrivate(this, seat, type, hsh, hsl, hih, hil, capabilities))
 {
 }
 
@@ -307,7 +307,7 @@ bool TabletToolV2Interface::isClientSupported() const
 
 void TabletToolV2Interface::sendButton(uint32_t button, bool pressed)
 {
-    const auto serial = d->m_display->nextSerial();
+    const auto serial = d->m_seat->nextSerial();
     for (auto *resource : d->targetResources()) {
         d->send_button(resource->handle,
                        serial,
@@ -382,7 +382,7 @@ void TabletToolV2Interface::sendWheel(int32_t degrees, int32_t clicks)
 void TabletToolV2Interface::sendProximityIn(TabletV2Interface *tablet)
 {
     wl_resource *tabletResource = tablet->d->resourceForSurface(d->m_surface);
-    const auto serial = d->m_display->nextSerial();
+    const auto serial = d->m_seat->nextSerial();
     for (auto *resource : d->targetResources()) {
         d->send_proximity_in(resource->handle, serial, tabletResource, d->m_surface->resource());
     }
@@ -400,7 +400,7 @@ void TabletToolV2Interface::sendProximityOut()
 
 void TabletToolV2Interface::sendDown()
 {
-    const auto serial = d->m_display->nextSerial();
+    const auto serial = d->m_seat->nextSerial();
     for (auto *resource : d->targetResources()) {
         d->send_down(resource->handle, serial);
     }
@@ -587,12 +587,12 @@ void TabletPadDialV2Interface::sendFrame(quint32 time)
 class TabletPadGroupV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_group_v2
 {
 public:
-    TabletPadGroupV2InterfacePrivate(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, const QList<int> &dials, TabletPadV2Interface *pad, Display *display, TabletPadGroupV2Interface *q)
+    TabletPadGroupV2InterfacePrivate(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, const QList<int> &dials, TabletPadV2Interface *pad, SeatInterface *seat, TabletPadGroupV2Interface *q)
         : zwp_tablet_pad_group_v2()
         , q(q)
         , m_modeCount(modeCount)
         , m_buttons(buttons)
-        , m_display(display)
+        , m_seat(seat)
     {
         for (int ring : rings) {
             m_rings[ring] = new TabletPadRingV2Interface(pad);
@@ -634,12 +634,12 @@ public:
     QHash<int, TabletPadRingV2Interface *> m_rings;
     QHash<int, TabletPadStripV2Interface *> m_strips;
     QHash<int, TabletPadDialV2Interface *> m_dials;
-    Display *const m_display;
+    SeatInterface *const m_seat;
 };
 
-TabletPadGroupV2Interface::TabletPadGroupV2Interface(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, const QList<int> &dials, Display *display, TabletPadV2Interface *parent)
+TabletPadGroupV2Interface::TabletPadGroupV2Interface(quint32 modeCount, const QList<int> &buttons, const QList<int> &rings, const QList<int> &strips, const QList<int> &dials, SeatInterface *seat, TabletPadV2Interface *parent)
     : QObject(parent)
-    , d(new TabletPadGroupV2InterfacePrivate(modeCount, buttons, rings, strips, dials, parent, display, this))
+    , d(new TabletPadGroupV2InterfacePrivate(modeCount, buttons, rings, strips, dials, parent, seat, this))
 {
     d->m_pad = parent;
 }
@@ -654,7 +654,7 @@ void TabletPadGroupV2Interface::setCurrentMode(quint32 mode)
 void TabletPadGroupV2Interface::sendModeSwitch(quint32 time)
 {
     for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
-        d->send_mode_switch(resource->handle, time, d->m_display->nextSerial(), d->m_currentMode);
+        d->send_mode_switch(resource->handle, time, d->m_seat->nextSerial(), d->m_currentMode);
     }
 }
 
@@ -679,17 +679,17 @@ public:
     TabletPadV2InterfacePrivate(const QString &path,
                                 quint32 buttons,
                                 QList<InputDeviceTabletPadModeGroup> groups,
-                                Display *display,
+                                SeatInterface *seat,
                                 TabletPadV2Interface *q)
         : zwp_tablet_pad_v2()
         , q(q)
         , m_path(path)
         , m_buttons(buttons)
-        , m_display(display)
+        , m_seat(seat)
     {
         m_groups.reserve(groups.size());
         for (const InputDeviceTabletPadModeGroup &group : std::as_const(groups)) {
-            m_groups += new TabletPadGroupV2Interface(group.modeCount, group.buttons, group.rings, group.strips, group.dials, m_display, q);
+            m_groups += new TabletPadGroupV2Interface(group.modeCount, group.buttons, group.rings, group.strips, group.dials, seat, q);
         }
     }
 
@@ -720,20 +720,18 @@ public:
     const QString m_path;
     quint32 m_buttons;
     QList<TabletPadGroupV2Interface *> m_groups;
-    TabletSeatV2Interface *m_seat = nullptr;
+    SeatInterface *m_seat = nullptr;
     QPointer<SurfaceInterface> m_currentSurface;
-    Display *const m_display;
 };
 
 TabletPadV2Interface::TabletPadV2Interface(const QString &path,
                                            quint32 buttons,
                                            const QList<InputDeviceTabletPadModeGroup> &groups,
-                                           Display *display,
+                                           SeatInterface *seat,
                                            TabletSeatV2Interface *parent)
     : QObject(parent)
-    , d(new TabletPadV2InterfacePrivate(path, buttons, groups, display, this))
+    , d(new TabletPadV2InterfacePrivate(path, buttons, groups, seat, this))
 {
-    d->m_seat = parent;
 }
 
 TabletPadV2Interface::~TabletPadV2Interface()
@@ -764,7 +762,7 @@ void TabletPadV2Interface::setCurrentSurface(SurfaceInterface *surface, TabletV2
     }
 
     if (d->m_currentSurface) {
-        auto serial = d->m_display->nextSerial();
+        auto serial = d->m_seat->nextSerial();
         for (auto *resource : d->resourcesForSurface(d->m_currentSurface)) {
             d->send_leave(resource->handle, serial, d->m_currentSurface->resource());
         }
@@ -774,7 +772,7 @@ void TabletPadV2Interface::setCurrentSurface(SurfaceInterface *surface, TabletV2
     if (surface) {
         wl_resource *tabletResource = tablet->d->resourceForSurface(surface);
 
-        auto serial = d->m_display->nextSerial();
+        auto serial = d->m_seat->nextSerial();
         for (auto *resource : d->resourcesForSurface(surface)) {
             d->send_enter(resource->handle, serial, tabletResource, surface->resource());
         }
@@ -793,10 +791,10 @@ SurfaceInterface *TabletPadV2Interface::currentSurface() const
 class TabletSeatV2InterfacePrivate : public QtWaylandServer::zwp_tablet_seat_v2
 {
 public:
-    TabletSeatV2InterfacePrivate(Display *display, TabletSeatV2Interface *q)
+    TabletSeatV2InterfacePrivate(SeatInterface *seat, TabletSeatV2Interface *q)
         : zwp_tablet_seat_v2()
         , q(q)
-        , m_display(display)
+        , m_seat(seat)
     {
     }
 
@@ -899,12 +897,12 @@ public:
     QHash<InputDeviceTabletTool *, TabletToolV2Interface *> m_tools;
     QHash<InputDevice *, TabletV2Interface *> m_tablets;
     QHash<InputDevice *, TabletPadV2Interface *> m_pads;
-    Display *const m_display;
+    SeatInterface *const m_seat;
 };
 
-TabletSeatV2Interface::TabletSeatV2Interface(Display *display, QObject *parent)
+TabletSeatV2Interface::TabletSeatV2Interface(SeatInterface *seat, QObject *parent)
     : QObject(parent)
-    , d(new TabletSeatV2InterfacePrivate(display, this))
+    , d(new TabletSeatV2InterfacePrivate(seat, this))
 {
 }
 
@@ -971,7 +969,7 @@ TabletToolV2Interface *TabletSeatV2Interface::addTool(InputDeviceTabletTool *dev
     }
 
     constexpr auto MAX_UINT_32 = std::numeric_limits<quint32>::max();
-    auto tool = new TabletToolV2Interface(d->m_display,
+    auto tool = new TabletToolV2Interface(d->m_seat,
                                           type,
                                           device->serialId() >> 32,
                                           device->serialId() & MAX_UINT_32,
@@ -1003,8 +1001,7 @@ TabletSeatV2Interface::addTablet(InputDevice *device)
 
 TabletPadV2Interface *TabletSeatV2Interface::addPad(InputDevice *device)
 {
-    auto iface = new TabletPadV2Interface(device->sysPath(), device->tabletPadButtonCount(), device->modeGroups(), d->m_display, this);
-    iface->d->m_seat = this;
+    auto iface = new TabletPadV2Interface(device->sysPath(), device->tabletPadButtonCount(), device->modeGroups(), d->m_seat, this);
     for (auto r : d->resourceMap()) {
         d->sendPadAdded(r, iface);
     }
@@ -1071,7 +1068,7 @@ public:
     {
         TabletSeatV2Interface *&tabletSeat = m_seats[seat];
         if (!tabletSeat) {
-            tabletSeat = new TabletSeatV2Interface(m_display, q);
+            tabletSeat = new TabletSeatV2Interface(seat, q);
         }
         return tabletSeat;
     }

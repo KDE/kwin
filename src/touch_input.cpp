@@ -121,9 +121,9 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, std::chro
     input()->processSpies(&InputEventSpy::touchDown, id, pos, time);
     input()->processFilters(&InputEventFilter::touchDown, id, pos, time);
     m_windowUpdatedInCycle = false;
-    input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
+    input()->setLastInputSerial(waylandServer()->seat()->serial());
     if (auto f = focus()) {
-        f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+        f->setLastUsageSerial(waylandServer()->seat()->serial());
     }
 }
 

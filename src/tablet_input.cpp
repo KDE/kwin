@@ -366,9 +366,9 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
     input()->processFilters(&InputEventFilter::tabletToolTipEvent, &ev);
     input()->setLastInputHandler(this);
     if (tipDown) {
-        input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
+        input()->setLastInputSerial(waylandServer()->seat()->serial());
         if (auto f = focus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+            f->setLastUsageSerial(waylandServer()->seat()->serial());
         }
     }
 }
@@ -391,9 +391,9 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
     input()->processFilters(&InputEventFilter::tabletToolButtonEvent, &event);
     input()->setLastInputHandler(this);
     if (isPressed) {
-        input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
+        input()->setLastInputSerial(waylandServer()->seat()->serial());
         if (auto f = focus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+            f->setLastUsageSerial(waylandServer()->seat()->serial());
         }
     }
 }
@@ -413,9 +413,9 @@ void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPres
     input()->processFilters(&InputEventFilter::tabletPadButtonEvent, &event);
     input()->setLastInputHandler(this);
     if (isPressed) {
-        input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
+        input()->setLastInputSerial(waylandServer()->seat()->serial());
         if (auto f = focus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+            f->setLastUsageSerial(waylandServer()->seat()->serial());
         }
     }
 }

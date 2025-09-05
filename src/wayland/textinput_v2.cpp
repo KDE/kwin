@@ -134,7 +134,7 @@ void TextInputManagerV2InterfacePrivate::zwp_text_input_manager_v2_get_text_inpu
     TextInputV2InterfacePrivate *textInputPrivate = TextInputV2InterfacePrivate::get(s->textInputV2());
     auto *textInputResource = textInputPrivate->add(resource->client(), id, resource->version());
     // Send enter to this new text input object if the surface is already focused.
-    const quint32 serial = s->display()->nextSerial();
+    const quint32 serial = s->nextSerial();
     if (textInputPrivate->surface && textInputPrivate->surface->client()->client() == resource->client()) {
         textInputPrivate->send_enter(textInputResource->handle, serial, textInputPrivate->surface->resource());
     }
