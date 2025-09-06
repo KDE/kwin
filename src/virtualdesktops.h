@@ -602,8 +602,6 @@ private:
     PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     KSharedConfig::Ptr m_config;
 
-    std::unique_ptr<QAction> m_swipeGestureReleasedY;
-    std::unique_ptr<QAction> m_swipeGestureReleasedX;
     QPointF m_currentDesktopOffset = QPointF(0, 0);
 
     KWIN_SINGLETON_VARIABLE(VirtualDesktopManager, s_manager)
