@@ -722,8 +722,10 @@ void DndTest::noAcceptedMimeTypePointerDrag()
     QCOMPARE(dataDevice->dragSurface(), surface.get());
 
     // Without accepted mime type, the drag should be canceled when the LMB is released.
+    QSignalSpy dataSourceSelectedDragAndDropActionChangedSpy(dataSource, &KWayland::Client::DataSource::selectedDragAndDropActionChanged);
     auto offer = dataDevice->takeDragOffer();
     offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
+    QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
 
     // Finish the drag-and-drop operation.
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
@@ -1333,8 +1335,10 @@ void DndTest::noAcceptedMimeTypeTouchDrag()
     QCOMPARE(dataDevice->dragSurface(), surface.get());
 
     // Without accepted mime type, the drag should be canceled when the finger is lifted.
+    QSignalSpy dataSourceSelectedDragAndDropActionChangedSpy(dataSource, &KWayland::Client::DataSource::selectedDragAndDropActionChanged);
     auto offer = dataDevice->takeDragOffer();
     offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
+    QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
 
     // Drop.
     Test::touchUp(0, timestamp++);
