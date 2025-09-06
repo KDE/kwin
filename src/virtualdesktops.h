@@ -400,14 +400,14 @@ Q_SIGNALS:
 
     /**
      * A new desktop has been created
-     * @param desktop the new just crated desktop
+     * @param desktop the newly created desktop
      */
     void desktopAdded(KWin::VirtualDesktop *desktop);
 
     /**
      * A desktop has been removed and is about to be deleted
      * @param desktop the desktop that has been removed.
-     *          It's guaranteed to stil la valid pointer when the signal arrives,
+     *          It's guaranteed to still be a valid pointer when the signal arrives,
      *          but it's about to be deleted.
      */
     void desktopRemoved(KWin::VirtualDesktop *desktop);

@@ -698,7 +698,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // Maximization for oversized windows must happen NOW.
     // If we effectively pass keepInArea(), the window will resizeWithChecks() - i.e. constrained
     // to the combo of all screen MINUS all struts on the edges
-    // If only one screen struts, this will affect screens as a side-effect, the window is artificailly shrinked
+    // If only one screen struts, this will affect screens as a side-effect, the window is artificially shrinked
     // below the screen size and as result no more maximized what breaks KMainWindow's stupid width+1, height+1 hack
     // TODO: get KMainWindow a correct state storage what will allow to store the restore size as well.
 
@@ -725,7 +725,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
             // NOTICE
             // i intended a second check on cs < area.size() ("the managed client ("minus border") is smaller
             // than the workspace") but gtk / gimp seems to store it's size including the decoration,
-            // thus a former maximized window wil become non-maximized
+            // thus a former maximized window will become non-maximized
             bool keepInFsArea = false;
             if (width() < fsa.width() && (cs.width() > ss.width() + 1)) {
                 pseudo_max &= ~MaximizeHorizontal;
@@ -1864,7 +1864,7 @@ void X11Window::getSyncCounter()
 void X11Window::sendSyncRequest()
 {
     if (!m_syncRequest.enabled || m_syncRequest.pending) {
-        return; // do NOT, NEVER send a sync request when there's one on the stack. the clients will just stop respoding. FOREVER! ...
+        return; // do NOT, NEVER send a sync request when there's one on the stack. the clients will just stop responding. FOREVER! ...
     }
 
     if (!m_syncRequest.timeout) {
@@ -2367,7 +2367,7 @@ bool X11Window::sameAppWindowRoleMatch(const X11Window *c1, const X11Window *c2,
  X11Window::transient_for_id is the value of the WM_TRANSIENT_FOR property, after
  possibly being adjusted by KWin. X11Window::transient_for points to the Client
  this Client is transient for, or is NULL. If X11Window::transient_for_id is
- poiting to the root window, the window is considered to be transient
+ pointing to the root window, the window is considered to be transient
  for the whole window group, as suggested in NETWM 7.3.
 
  In the case of group transient window, X11Window::transient_for is NULL,
@@ -2387,7 +2387,7 @@ bool X11Window::sameAppWindowRoleMatch(const X11Window *c1, const X11Window *c2,
  by the same process. They should ideally appear like two independent applications
  to the user. This should be accomplished by all windows in the same process
  having the same window group (needs to be changed in Qt at the moment), and
- using non-group transients poiting to their relevant mainwindow for toolwindows
+ using non-group transients pointing to their relevant mainwindow for toolwindows
  etc. KWin should handle both group and non-group transient dialogs well.
 
  In other words:
@@ -2560,7 +2560,7 @@ xcb_window_t X11Window::verifyTransientFor(xcb_window_t new_transient_for, bool 
     }
     if (new_transient_for == window()) { // pointing to self
         // also fix the property itself
-        qCWarning(KWIN_CORE) << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself.";
+        qCWarning(KWIN_CORE) << "Client " << this << " has WM_TRANSIENT_FOR pointing to itself.";
         new_property_value = new_transient_for = kwinApp()->x11RootWindow();
     }
     //  The transient_for window may be embedded in another application,
@@ -2578,7 +2578,7 @@ xcb_window_t X11Window::verifyTransientFor(xcb_window_t new_transient_for, bool 
     }
     if (X11Window *new_transient_for_client = workspace()->findClient(new_transient_for)) {
         if (new_transient_for != before_search) {
-            qCDebug(KWIN_CORE) << "Client " << this << " has WM_TRANSIENT_FOR poiting to non-toplevel window "
+            qCDebug(KWIN_CORE) << "Client " << this << " has WM_TRANSIENT_FOR pointing to non-toplevel window "
                                << before_search << ", child of " << new_transient_for_client << ", adjusting.";
             new_property_value = new_transient_for; // also fix the property
         }
@@ -3260,7 +3260,7 @@ const QPointF X11Window::calculateGravitation(bool invert) const
     }
 }
 
-// co-ordinate are in kwin logical
+// coordinates are in kwin logical
 void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, qreal rh, int gravity, bool from_tool)
 {
     const int configurePositionMask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
@@ -3439,7 +3439,7 @@ QRectF X11Window::resizeWithChecks(const QRectF &geometry, qreal w, qreal h, xcb
 }
 
 // _NET_MOVERESIZE_WINDOW
-// note co-ordinates are kwin logical
+// note coordinates are kwin logical
 void X11Window::NETMoveResizeWindow(int flags, qreal x, qreal y, qreal width, qreal height)
 {
     int gravity = flags & 0xff;
@@ -3715,7 +3715,7 @@ void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
 
     if (options->borderlessMaximizedWindows()) {
         // triggers a maximize change.
-        // The next setNoBorder interation will exit since there's no change but the first recursion pullutes the restore geometry
+        // The next setNoBorder iteration will exit since there's no change but the first recursion pullutes the restore geometry
         changeMaximizeRecursion = true;
         setNoBorder(rules()->checkNoBorder(app_noborder || (m_motif.hasDecorationsFlag() && m_motif.noDecorations()) || max_mode == MaximizeFull));
         changeMaximizeRecursion = false;
@@ -4387,7 +4387,7 @@ bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
         return false;
     }
 
-    // Low or medium FSP, usertime comparism is possible
+    // Low or medium FSP, usertime comparison is possible
     const xcb_timestamp_t user_time = ac->userTime();
     qCDebug(KWIN_CORE) << "Activation, compared:" << window << ":" << time << ":" << user_time
                        << ":" << (NET::timestampCompare(time, user_time) >= 0);

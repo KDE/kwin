@@ -111,7 +111,7 @@ void DesktopBackgroundItem::updateWindow()
     for (Window *client : clients) {
         if (client->isDesktop() && client->isOnOutput(m_output) && client->isOnDesktop(desktop) && client->isOnActivity(activity)) {
             // In the unlikely event there are multiple desktop windows (e.g. conky's floating panel is of type "desktop")
-            // choose the one which matches the ouptut size, if possible.
+            // choose the one which matches the output size, if possible.
             if (!clientCandidate || client->size() == m_output->geometry().size()) {
                 clientCandidate = client;
             }

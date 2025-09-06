@@ -498,7 +498,7 @@ void RulesModel::populateRuleList()
                                          QIcon::fromTheme("activities")));
     activity->setOptionsData(activitiesModelData());
 
-    // Activites consumer may update the available activities later
+    // Activities consumer may update the available activities later
     auto updateActivities = [this]() {
         m_rules["activity"]->setOptionsData(activitiesModelData());
         const QModelIndex index = indexOf("activity");

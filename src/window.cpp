@@ -2270,7 +2270,7 @@ bool Window::isTransient() const
 }
 
 // check whether a transient should be actually kept above its mainwindow
-// there may be some special cases where this rule shouldn't be enfored
+// there may be some special cases where this rule shouldn't be enforced
 static bool shouldKeepTransientAbove(const Window *parent, const Window *transient)
 {
     // #93832 - don't keep splashscreens above dialogs

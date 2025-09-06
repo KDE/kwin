@@ -211,7 +211,7 @@ void DimInactiveEffect::scheduleInTransition(EffectWindow *w)
     timeLine.setDuration(
         std::chrono::milliseconds(static_cast<int>(animationTime(160ms))));
     if (timeLine.done()) {
-        // If the Out animation is still active, then we're trucating
+        // If the Out animation is still active, then we're truncating
         // duration of the timeline(from 250ms to 160ms). If the timeline
         // is about to be finished with the old duration, then after
         // changing duration it will be in the "done" state. Thus, we

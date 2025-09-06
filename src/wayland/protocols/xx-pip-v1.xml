@@ -95,7 +95,7 @@
       attributes (e.g. title, state, stacking, ...) are discarded for
       an xx_pip_v1 surface when it is unmapped. The xx_pip_v1 returns to
       the state it had right after xx_pip_shell_v1.get_pip. The client
-      can re-map the pip by perfoming a commit without any buffer
+      can re-map the pip by performing a commit without any buffer
       attached, waiting for a configure event and handling it as usual (see
       xdg_surface description).
 

@@ -238,7 +238,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 // => catch the typical pattern (though we don't want the focus on the root anyway) #348935
                 const bool lostFocusPointerToRoot = currentInput->focus == kwinApp()->x11RootWindow() && event->detail == XCB_NOTIFY_DETAIL_INFERIOR;
                 if (currentInput->focus == XCB_WINDOW_NONE || currentInput->focus == XCB_INPUT_FOCUS_POINTER_ROOT || lostFocusPointerToRoot) {
-                    // kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" ;
+                    // kWarning( 1212 ) << "X focus set to None/PointerRoot, resetting focus" ;
                     Window *window = mostRecentlyActivatedWindow();
                     if (window != nullptr) {
                         requestFocus(window, true);
@@ -611,7 +611,7 @@ void X11Window::focusOutEvent(xcb_focus_out_event_t *e)
         return; // hack for motif apps like netscape
     }
 
-    // When a window loses focus, FocusOut events are usually immediatelly
+    // When a window loses focus, FocusOut events are usually immediately
     // followed by FocusIn events for another window that gains the focus
     // (unless the focus goes to another screen, or to the nofocus widget).
     // Without this check, the former focused window would have to be

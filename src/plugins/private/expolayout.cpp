@@ -480,7 +480,7 @@ static bool isDominated(size_t candidate, size_t alternativeSmall, size_t altern
         return true;
     }
 
-    // We assumed that the weigth function is concave, i.e., for all i <= j < k <= l,
+    // We assumed that the weight function is concave, i.e., for all i <= j < k <= l,
     //     weight(i,k) + weight(j,l) <= weight(i,l) + weight(j,k)
     // This implies the following about leastWeightCandidate:
     // For all i <= j < k <= l

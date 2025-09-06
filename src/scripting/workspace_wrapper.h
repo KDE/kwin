@@ -278,7 +278,7 @@ public:
     Q_SCRIPTABLE QString supportInformation() const;
 
     /**
-     * List of Clients currently managed by KWin, orderd by
+     * List of Clients currently managed by KWin, ordered by
      * their visibility (later ones cover earlier ones).
      */
     QList<KWin::Window *> stackingOrder() const;

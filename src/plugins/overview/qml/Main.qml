@@ -108,7 +108,7 @@ FocusScope {
         // If neither is active, we are in the initial state.
         if (effect.overviewPartialActivationFactor + effect.gridPartialActivationFactor === 0) return "initial";
 
-        // If we are inbetween a state but no gesture is going on, we snap to
+        // If we are in between a state but no gesture is going on, we snap to
         // the closest state
         if (overviewVal >= 0.5) return "overview";
         if (gridVal >= 0.5) return "grid";
@@ -497,7 +497,7 @@ FocusScope {
                         y: row * (height / rows) * gridVal
                     },
                     // Initially places transition desktops in a grid around the current one,
-                    // and moves them slighly to avoid overlapping the UI
+                    // and moves them slightly to avoid overlapping the UI
                     Translate {
                         id: desktopTranslation
                         x: minX * 0.5 * overviewVal + deltaColumn * width * (1 - gridVal)
@@ -576,7 +576,7 @@ FocusScope {
                             if (!mainBackground.contains(mainBackground.mapFromItem(null, pos.x, pos.y))) {
                                 return;
                             }
-                            // moving the window to the client screen is handled by WindowHeap's similiarly named function that is also run
+                            // moving the window to the client screen is handled by WindowHeap's similarly named function that is also run
                             item.client.desktops = [mainBackground.desktop];
                         }
                     }
@@ -792,7 +792,7 @@ FocusScope {
 
     Component.onCompleted: {
         // The following line unbinds the verticalDesktopBar, meaning that it
-        // won't react to changes in number of desktops or rows. This is beacuse we
+        // won't react to changes in number of desktops or rows. This is because we
         // don't want the desktop bar changing screenside whilst the user is
         // interacting with it, e.g. by adding desktops
         container.verticalDesktopBar = container.verticalDesktopBar

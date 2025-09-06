@@ -66,7 +66,7 @@ class ScaleEffect {
             return false;
         }
 
-        // Dont't animate the outline and the screenlocker as it looks bad.
+        // Don't animate the outline and the screenlocker as it looks bad.
         if (window.lockScreen || window.outline) {
             return false;
         }

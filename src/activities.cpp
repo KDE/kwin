@@ -143,7 +143,7 @@ void Activities::toggleWindowOnActivity(Window *window, const QString &activity,
 
     Workspace *ws = Workspace::self();
     if (window->isOnCurrentActivity()) {
-        if (window->wantsTabFocus() && options->focusPolicyIsReasonable() && !was_on_activity && // for stickyness changes
+        if (window->wantsTabFocus() && options->focusPolicyIsReasonable() && !was_on_activity && // for stickiness changes
                                                                                                  // FIXME not sure if the line above refers to the correct activity
             !dont_activate) {
             ws->requestFocus(window);

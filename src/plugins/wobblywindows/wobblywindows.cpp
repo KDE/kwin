@@ -17,7 +17,7 @@
 
 // if you enable it and run kwin in a terminal from the session it manages,
 // be sure to redirect the output of kwin in a file or
-// you'll propably get deadlocks.
+// you'll probably get deadlocks.
 //#define VERBOSE_MODE
 
 #if defined COMPUTE_STATS && !defined VERBOSE_MODE
@@ -459,7 +459,7 @@ void WobblyWindowsEffect::stepMovedResized(EffectWindow *w)
         }
     }
 
-    // constrain the middle of the window, so that any asymetry wont cause it to drift off-center
+    // constrain the middle of the window, so that any asymmetry wont cause it to drift off-center
     for (unsigned int j = 1; j < wwi.height - 1; ++j) {
         for (unsigned int i = 1; i < wwi.width - 1; ++i) {
             wwi.constraint[j * wwi.width + i] = true;

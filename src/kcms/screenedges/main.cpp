@@ -236,7 +236,7 @@ void KWinScreenEdgesConfig::monitorLoadSettings()
     // Alternative TabBox
     m_form->monitorChangeEdge(m_data->settings()->borderAlternativeActivate(), TabBoxAlternative);
 
-    // Dinamically loaded effects
+    // Dynamically loaded effects
     int lastIndex = EffectCount;
     for (int i = 0; i < m_effects.size(); i++) {
         m_form->monitorChangeEdge(m_effectSettings[m_effects[i]]->borderActivate(), lastIndex);
@@ -310,7 +310,7 @@ void KWinScreenEdgesConfig::monitorSaveSettings()
     m_data->settings()->setBorderActivateTabBox(m_form->monitorCheckEffectHasEdge(TabBox));
     m_data->settings()->setBorderAlternativeActivate(m_form->monitorCheckEffectHasEdge(TabBoxAlternative));
 
-    // Dinamically loaded effects
+    // Dynamically loaded effects
     int lastIndex = EffectCount;
     for (int i = 0; i < m_effects.size(); i++) {
         m_effectSettings[m_effects[i]]->setBorderActivate(m_form->monitorCheckEffectHasEdge(lastIndex));

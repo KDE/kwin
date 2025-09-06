@@ -20,7 +20,7 @@ target_link_libraries(mouseclick PRIVATE
 )
 
 ##########################
-## configurtion dialog
+## configuration dialog
 ##########################
 if (KWIN_BUILD_KCMS)
     set(kwin_mouseclick_config_SRCS mouseclick_config.cpp)

@@ -470,9 +470,9 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
         d->drag.target->updateDragTarget(nullptr, QPointF(), serial);
     }
 
-    // TODO: technically we can have mulitple data devices
+    // TODO: technically we can have multiple data devices
     // and we should send the drag to all of them, but that seems overly complicated
-    // in practice so far the only case for mulitple data devices is for clipboard overriding
+    // in practice so far the only case for multiple data devices is for clipboard overriding
     d->drag.target = dropTarget;
 
     if (d->drag.target) {

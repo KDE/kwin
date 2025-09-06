@@ -103,7 +103,7 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
     if (!usingGl) {
         qCDebug(LIBKWINEFFECTS) << "QtQuick Software rendering mode detected";
         d->m_useBlit = true;
-        // explicilty do not call QQuickRenderControl::initialize, see Qt docs
+        // explicitly do not call QQuickRenderControl::initialize, see Qt docs
     } else {
         QSurfaceFormat format;
         format.setOption(QSurfaceFormat::ResetNotification);

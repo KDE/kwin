@@ -26,7 +26,7 @@ OverviewEffect::OverviewEffect()
     : m_overviewState(new EffectTogglableState(this))
     // manages the transition between overview -> grid
     , m_transitionState(new EffectTogglableState(this))
-    // manages the transition betwee inactive -> overview
+    // manages the transition between inactive -> overview
     , m_gridState(new EffectTogglableState(this))
     , m_border(new EffectTogglableTouchBorder(m_overviewState))
     , m_gridBorder(new EffectTogglableTouchBorder(m_gridState))

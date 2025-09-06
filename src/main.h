@@ -179,7 +179,7 @@ public:
     }
     /**
      * Inheriting classes should use this method to set the X11 root window
-     * before accessing any X11 specific code pathes.
+     * before accessing any X11 specific code paths.
      */
     void setX11RootWindow(xcb_window_t root)
     {
@@ -187,7 +187,7 @@ public:
     }
     /**
      * Inheriting classes should use this method to set the xcb connection
-     * before accessing any X11 specific code pathes.
+     * before accessing any X11 specific code paths.
      */
     void setX11Connection(xcb_connection_t *c)
     {

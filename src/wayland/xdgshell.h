@@ -346,7 +346,7 @@ Q_SIGNALS:
     void aboutToBeDestroyed();
 
     /**
-     * This signal is emitted when the xdg-toplevel has commited the initial state and wants to
+     * This signal is emitted when the xdg-toplevel has committed the initial state and wants to
      * be configured. After initializing the toplevel, you must send a configure event.
      */
     void initializeRequested();
@@ -368,7 +368,7 @@ Q_SIGNALS:
 
     /**
      * This signal is emitted when the toplevel has requested the window menu to be shown at
-     * \a pos. The \a seat and the \a serial indicate the user action that triggerred the request.
+     * \a pos. The \a seat and the \a serial indicate the user action that triggered the request.
      */
     void windowMenuRequested(KWin::SeatInterface *seat, const QPoint &pos, quint32 serial);
 
@@ -575,7 +575,7 @@ Q_SIGNALS:
     void aboutToBeDestroyed();
 
     /**
-     * This signal is emitted when the xdg-popup has commited the initial state and wants to
+     * This signal is emitted when the xdg-popup has committed the initial state and wants to
      * be configured. After initializing the popup, you must send a configure event.
      */
     void initializeRequested();

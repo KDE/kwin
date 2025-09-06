@@ -149,7 +149,7 @@ ExpoCell {
             }
             function restoreDND(oldGlobalRect: rect) {
                 const newGlobalRect = mapFromItem(null, oldGlobalRect);
-                // We need proper mapping for the heap geometry becuase they are positioned with
+                // We need proper mapping for the heap geometry because they are positioned with
                 // translation transformations
                 const heapRect = thumb.windowHeap.mapToItem(null, Qt.size(thumb.windowHeap.width, thumb.windowHeap.height));
                 // Disable bindings

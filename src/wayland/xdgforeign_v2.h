@@ -69,7 +69,7 @@ Q_SIGNALS:
      * @param parent is the surface exported by one client and imported into another, which will act as parent.
      * @param child is the surface that the importer client did set as child of the surface
      * that it imported.
-     * If one of the two paramenters is nullptr, it means that a previously relation is not
+     * If one of the two parameters is nullptr, it means that a previously relation is not
      * valid anymore and either one of the surfaces has been unmapped, or the parent surface
      * is not exported anymore.
      */

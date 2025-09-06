@@ -112,8 +112,8 @@ public:
     void destroy();
 
     /**
-     * Set an additional mapping between kwin's logical co-ordinate space and
-     * the client's logical co-ordinate space.
+     * Set an additional mapping between kwin's logical coordinate space and
+     * the client's logical coordinate space.
      *
      * This is used in the same way as if the client was setting the
      * surface.buffer_scale on every surface i.e a value of 2.0 will make

@@ -31,7 +31,7 @@ class X11Source;
  * Wayland counter-parts.
  *
  * The class needs to be subclassed and adjusted according to the
- * selection, but provides common fucntionality to be expected of all
+ * selection, but provides common functionality to be expected of all
  * selections.
  *
  * A selection should exist through the whole runtime of an Xwayland

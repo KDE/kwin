@@ -624,7 +624,7 @@ public:
     /**
      * Called for every window before the actual paint pass
      * In this method you can:
-     * @li enable or disable painting of the window (e.g. enable paiting of minimized window)
+     * @li enable or disable painting of the window (e.g. enable painting of minimized window)
      * @li set window to be painted with translucency
      * @li set window to be transformed
      * @li request the window to be divided into multiple parts
@@ -973,7 +973,7 @@ public:
  *
  * If the Effect to be created does not need the isSupported or enabledByDefault methods prefer
  * the simplified KWIN_EFFECT_FACTORY, KWIN_EFFECT_FACTORY_SUPPORTED or KWIN_EFFECT_FACTORY_ENABLED
- * macros which create an EffectPluginFactory with a useable default value.
+ * macros which create an EffectPluginFactory with a usable default value.
  *
  * This API is not providing binary compatibility and thus the effect plugin must be compiled against
  * the same kwineffects library version as KWin.

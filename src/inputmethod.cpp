@@ -317,7 +317,7 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
 
 void InputMethod::setTrackedWindow(Window *trackedWindow)
 {
-    // Reset the old window virtual keybaord geom if necessary
+    // Reset the old window virtual keyboard geom if necessary
     // Old and new windows could be the same if focus moves between subsurfaces
     if (m_trackedWindow == trackedWindow) {
         return;
@@ -667,7 +667,7 @@ void InputMethod::deleteSurroundingText(int32_t index, uint32_t length)
     // zwp_input_method_v1 Delete surrounding text interface is designed for text-input-v1.
     // The parameter has different meaning in text-input-v{2,3}.
     // Current cursor is at index 0.
-    // The actualy deleted text range is [index, index + length].
+    // The actually deleted text range is [index, index + length].
     // In v{2,3}'s before/after style, text to be deleted with v{2,3} interface is [-before, after].
     // And before/after are all unsigned, which make it impossible to do certain things.
     // Those request will be ignored.

@@ -10,7 +10,7 @@ In the drm API there is a few objects that we care about:
 - `crtc`s. A drm crtc represents hardware that can drive a connector uniquely - be it physical or virtual. Crtcs can also drive multiple connectors by cloning, aka showing the same stuff on all of them. The number of crtcs on your GPU or display device is a hard limit of how many display you can drive with it
 - `plane`s. A drm plane represents scanout hardware that can be used for hardware composition, so cropping, scaling and rotation. There is multiple types of planes:
 
-    * `primary`: it can be asssumed that without the primary plane the output won't work. The kernel will always expose one per crtc
+    * `primary`: it can be assumed that without the primary plane the output won't work. The kernel will always expose one per crtc
     * `cursor`: cursor planes are what they sound like, they allow to use special hardware built for cursors. They have special restrictions like size (DRM_CAP_CURSOR_WIDTH, DRM_CAP_CURSOR_HEIGHT), scaling (on AMD gpus its scaling must be the same as with the primary scale) and even position on some very funky hardware (Apple stuff). Cursor planes are always optional
     * `overlay`: overlay planes are what they sound like as well, they allow to use special hardware built for overlays (or underlays). The restrictions on this are of arbitrary complexity, you can never just assume they work. Overlay planes are also always optional
 - `framebuffer`s, fb for short. These represent some sort of buffer that we'd like to show up on the screen and have to be created and destroyed by us

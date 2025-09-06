@@ -122,7 +122,7 @@ public:
         Force, // force the given value
         Apply, // apply only after initial mapping
         Remember, // like apply, and remember the value when the window is withdrawn
-        ApplyNow, // apply immediatelly, then forget the setting
+        ApplyNow, // apply immediately, then forget the setting
         ForceTemporarily // apply and force until the window is withdrawn
     };
     enum StringMatch {

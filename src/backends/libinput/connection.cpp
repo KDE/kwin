@@ -252,7 +252,7 @@ void Connection::processEvents()
 
             connect(device, &Device::outputNameChanged, this, [this, device] {
                 // If the output name changes from something to empty we need to
-                // re-run the assignment heuristic so that an output is assinged
+                // re-run the assignment heuristic so that an output is assigned
                 if (device->outputName().isEmpty()) {
                     applyScreenToDevice(device);
                 }

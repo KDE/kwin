@@ -231,7 +231,7 @@ public:
     }
 
     /**
-     * Retrieve the current tranformed geometry of a registered
+     * Retrieve the current transformed geometry of a registered
      * window.
      */
     QRectF transformedGeometry(EffectWindow *w) const;

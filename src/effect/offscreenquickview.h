@@ -48,7 +48,7 @@ class KWIN_EXPORT OffscreenQuickView : public QObject
 
 public:
     enum class ExportMode {
-        /** The contents will be available as a texture in the shared contexts. Image will be blank*/
+        /** The contents will be available as a texture in the shared contexts. Image will be blank */
         Texture,
         /** The contents will be blit during the update into a QImage buffer. */
         Image
@@ -81,14 +81,14 @@ public:
     /**
      * Render the current scene graph into the FBO.
      * This is typically done automatically when the scene changes
-     * albeit deffered by a timer
+     * albeit deferred by a timer
      *
      * It can be manually invoked to update the contents immediately.
      * Note this will change the GL context
      */
     void update();
 
-    /** The invisble root item of the window*/
+    /** The invisible root item of the window */
     QQuickItem *contentItem() const;
     QQuickWindow *window() const;
 
@@ -121,7 +121,7 @@ public:
 
     /**
      * Inject any mouse event into the QQuickWindow.
-     * Local co-ordinates are transformed
+     * Local coordinates are transformed
      * If it is handled the event will be accepted
      */
     void forwardMouseEvent(QEvent *mouseEvent);

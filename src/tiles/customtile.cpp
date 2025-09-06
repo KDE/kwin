@@ -78,7 +78,7 @@ void CustomTile::setRelativeGeometry(const QRectF &geom)
                     return;
                 }
                 tile->setRelativeGeometry(tileGeom);
-                // The other tile gometry may be not what we set due to size constraints
+                // The other tile geometry may not be what we set due to size constraints
                 finalGeom.setLeft(tile->relativeGeometry().right());
             } else {
                 // We are at the left border of the screen, we are always at 0

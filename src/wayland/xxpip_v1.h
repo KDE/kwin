@@ -123,7 +123,7 @@ Q_SIGNALS:
     void aboutToBeDestroyed();
 
     /**
-     * This signal is emitted when the xx-pip-v1 has commited the initial state and wants to
+     * This signal is emitted when the xx-pip-v1 has committed the initial state and wants to
      * be configured. After initializing the pip surface, you must send a configure event.
      */
     void initializeRequested();

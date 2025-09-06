@@ -56,7 +56,7 @@ AnimationEffect::AnimationEffect()
         s_clock.start();
     }
     /* this is the same as the QTimer::singleShot(0, SLOT(init())) kludge
-     * defering the init and esp. the connection to the windowClosed slot */
+     * deferring the init and esp. the connection to the windowClosed slot */
     QMetaObject::invokeMethod(this, &AnimationEffect::init, Qt::QueuedConnection);
 }
 
@@ -935,7 +935,7 @@ void AnimationEffect::_windowExpandedGeometryChanged(KWin::EffectWindow *w)
         auto &[data, rect] = entry->second;
         rect = QRect();
         updateLayerRepaints();
-        if (!rect.isNull()) { // actually got updated, ie. is in use - ensure it get's a repaint
+        if (!rect.isNull()) { // actually got updated, ie. is in use - ensure it gets a repaint
             w->addLayerRepaint(rect);
         }
     }

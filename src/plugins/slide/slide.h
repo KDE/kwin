@@ -22,15 +22,15 @@ namespace KWin
 /*
  * How it Works:
  *
- * This effect doesn't change the current desktop, only recieves changes from the VirtualDesktopManager.
- * The only visually aparent inputs are desktopChanged() and desktopChanging().
+ * This effect doesn't change the current desktop, only receives changes from the VirtualDesktopManager.
+ * The only visually apparent inputs are desktopChanged() and desktopChanging().
  *
- * When responding to desktopChanging(), the draw position is only affected by what's recieved from there.
+ * When responding to desktopChanging(), the draw position is only affected by what's received from there.
  * After desktopChanging() is done, or without desktopChanging() having been called at all, desktopChanged() is called.
  * The desktopChanged() function configures the m_startPos and m_endPos for the animation, and the duration.
  *
  * m_currentPosition and everything else not labeled "drawCoordinate" uses desktops as a unit.
- * Exmp: 1.2 means the dekstop at index 1 shifted over by .2 desktops.
+ * Exmp: 1.2 means the desktop at index 1 shifted over by .2 desktops.
  * All coords must be positive.
  *
  * For the wrapping effect, the render loop has to handle desktop coordinates larger than the total grid's width.

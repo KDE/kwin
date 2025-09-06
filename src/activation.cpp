@@ -83,7 +83,7 @@ namespace KWin
    the timestamp of the action that originally caused mapping of the new window
    (e.g. when the application was started). If the first time is newer than
    the second one, the window will not be activated, as that indicates
-   futher user actions took place after the action leading to this new
+   further user actions took place after the action leading to this new
    mapped window. This check is done by Workspace::allowWindowActivation().
     There are several ways how to get the timestamp of action that caused
    the new mapped window (done in X11Window::readUserTimeMapTimestamp()) :

@@ -151,7 +151,7 @@ void DrmGpu::initDrmResources()
         qCWarning(KWIN_DRM) << "Atomic Mode Setting requested off via environment variable. Using legacy mode on GPU" << this;
     } else if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0) {
         if (m_isVirtualMachine) {
-            // ATOMIC must be set before attemping CURSOR_PLANE_HOTSPOT
+            // ATOMIC must be set before attempting CURSOR_PLANE_HOTSPOT
             if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT, 1) != 0) {
                 qCWarning(KWIN_DRM, "Atomic Mode Setting disabled on GPU %s because of cursor offset issues in virtual machines", qPrintable(m_drmDevice->path()));
                 drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 0);

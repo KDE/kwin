@@ -31,7 +31,7 @@ void main(void)
     // Cancel out any floating point errors below what we want to measure.
     screenPosition = round(screenPosition * errorCorrection) / errorCorrection;
 
-    // Dermine how far off the pixel grid this vertex is.
+    // Determine how far off the pixel grid this vertex is.
     vec2 error = fract(screenPosition);
 
     vertexFractional = dot(error, vec2(1.0)) > fractionalPrecision ? 1.0 : 0.0;

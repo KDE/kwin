@@ -1004,7 +1004,7 @@ Window *Workspace::findWindowToActivateOnDesktop(VirtualDesktop *desktop)
         // A requestFocus call will fail, as the window is already active
         return m_activeWindow;
     }
-    // from actiavtion.cpp
+    // from activation.cpp
     if (options->isNextFocusPrefersMouse()) {
         auto it = stackingOrder().constEnd();
         while (it != stackingOrder().constBegin()) {
@@ -1438,7 +1438,7 @@ void Workspace::sendWindowToDesktops(Window *window, const QList<VirtualDesktop 
     }
 
     if (window->isOnCurrentDesktop()) {
-        if (window->wantsTabFocus() && options->focusPolicyIsReasonable() && !wasOnCurrent && // for stickyness changes
+        if (window->wantsTabFocus() && options->focusPolicyIsReasonable() && !wasOnCurrent && // for stickiness changes
             !dont_activate) {
             requestFocus(window);
         } else {

@@ -108,7 +108,7 @@ protected:
 
 /**
  * The GraphicsBufferRef type holds a reference to a GraphicsBuffer. While the reference
- * exists, the graphics buffer cannot be destroyed and the client cannnot modify it.
+ * exists, the graphics buffer cannot be destroyed and the client cannot modify it.
  */
 class GraphicsBufferRef
 {

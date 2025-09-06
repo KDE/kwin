@@ -190,7 +190,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow *w)
 {
     if (motionManager.isManaging(w)) {
         if (destinationList.contains(w)) {
-            if (!motionManager.isWindowMoving(w)) { // has window reched its destination?
+            if (!motionManager.isWindowMoving(w)) { // has window reached its destination?
                 // If we are still intersecting with the upmostWindow it is moving. slide to somewhere else
                 // restore the stacking order of all windows not intersecting any more except panels
                 if (coveringWindows.contains(w)) {

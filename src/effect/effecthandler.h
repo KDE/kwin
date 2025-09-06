@@ -278,7 +278,7 @@ public:
      * If the @p border gets triggered through a touch swipe gesture the QAction::triggered
      * signal gets invoked.
      *
-     * progressCallback will be dinamically called each time the touch position is updated
+     * progressCallback will be dynamically called each time the touch position is updated
      * to show the effect "partially" activated
      *
      * To unregister the touch screen action either delete the @p action or
@@ -836,7 +836,7 @@ Q_SIGNALS:
      */
     void windowClosed(KWin::EffectWindow *w);
     /**
-     * Signal emitted when a window get's activated.
+     * Signal emitted when a window gets activated.
      * @param w The new active window, or @c NULL if there is no active window.
      * @since 4.7
      */

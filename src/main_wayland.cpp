@@ -151,7 +151,7 @@ void ApplicationWayland::performStartup()
 
     // Note that we start accepting client connections after creating the Workspace.
     if (!waylandServer()->start()) {
-        qFatal("Failed to initialze the Wayland server, exiting now");
+        qFatal("Failed to initialize the Wayland server, exiting now");
     }
 
 #if KWIN_BUILD_X11

@@ -591,7 +591,7 @@ bool TabBox::handleMouseEvent(QMouseEvent *event)
         // fall through
     case QEvent::MouseButtonRelease:
     default:
-        // we do not filter it out, the intenal filter takes care
+        // we do not filter it out, the internal filter takes care
         return false;
     }
     return false;
@@ -888,7 +888,7 @@ TabBox::Direction TabBox::matchShortcuts(const KeyboardKeyEvent &keyEvent, const
     }
 
     // if the shortcuts do not match, try matching again after filtering the shift key
-    // it is needed to handle correctly the ALT+~ shorcut for example as it is coded as ALT+SHIFT+~ in keyQt
+    // it is needed to handle correctly the ALT+~ shortcut for example as it is coded as ALT+SHIFT+~ in keyQt
     if (contains(forward, (keyEvent.modifiers & ~Qt::ShiftModifier) | keyEvent.key)) {
         return Forward;
     }

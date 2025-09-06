@@ -191,7 +191,7 @@ public:
      * This enum type is used to specify the focus policy.
      *
      * Note that FocusUnderMouse and FocusStrictlyUnderMouse are not
-     * particulary useful. They are only provided for old-fashined
+     * particularly useful. They are only provided for old-fashined
      * die-hard UNIX people ;-)
      */
     enum FocusPolicy {
@@ -209,7 +209,7 @@ public:
          * The window that happens to be under the mouse pointer becomes active.
          * The invariant is: no window can have focus that is not under the mouse.
          * This also means that Alt-Tab won't work properly and popup dialogs are
-         * usually unsable with the keyboard. Note that the desktop and windows on
+         * usually unusable with the keyboard. Note that the desktop and windows on
          * the dock are excluded for convenience. They get focus only when clicking
          * on it.
          */

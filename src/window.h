@@ -801,7 +801,7 @@ public:
     void blockActivityUpdates(bool b = true);
 
     /**
-     * Refresh Window's cache of activites
+     * Refresh Window's cache of activities
      * Called when activity daemon status changes
      */
     virtual void checkActivities(){};
@@ -1231,7 +1231,7 @@ public:
     QRectF virtualKeyboardGeometry() const;
 
     /**
-     * Sets the geometry of the virtual keyboard, The window may resize itself in order to make space for the keybaord
+     * Sets the geometry of the virtual keyboard, The window may resize itself in order to make space for the keyboard
      * This geometry is in global coordinates
      */
     virtual void setVirtualKeyboardGeometry(const QRectF &geo);

@@ -137,9 +137,9 @@ public:
     /**
      * Returns the distance from the anchor edge that should not be occluded.
      *
-     * An exlusive zone of 0 means that the layer surface has to be moved to avoid occluding
+     * An exclusive zone of 0 means that the layer surface has to be moved to avoid occluding
      * surfaces with a positive exclusion zone. If the exclusive zone is -1, the layer surface
-     * indicates that it doesn't want to be moved to accomodate for other surfaces.
+     * indicates that it doesn't want to be moved to accommodate for other surfaces.
      */
     int exclusiveZone() const;
 

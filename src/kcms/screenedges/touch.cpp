@@ -198,7 +198,7 @@ void KWinScreenEdgesConfig::monitorLoadSettings()
     // Alternative TabBox
     m_form->monitorChangeEdge(m_data->settings()->touchBorderAlternativeActivate(), TabBoxAlternative);
 
-    // Dinamically loaded effects
+    // Dynamically loaded effects
     int lastIndex = EffectCount;
     for (int i = 0; i < m_effects.size(); i++) {
         m_form->monitorChangeEdge(m_effectSettings[m_effects[i]]->touchBorderActivate(), lastIndex);
@@ -259,7 +259,7 @@ void KWinScreenEdgesConfig::monitorSaveSettings()
     m_data->settings()->setTouchBorderActivateTabBox(m_form->monitorCheckEffectHasEdge(TabBox));
     m_data->settings()->setTouchBorderAlternativeActivate(m_form->monitorCheckEffectHasEdge(TabBoxAlternative));
 
-    // Dinamically loaded effects
+    // Dynamically loaded effects
     int lastIndex = EffectCount;
     for (int i = 0; i < m_effects.size(); i++) {
         m_effectSettings[m_effects[i]]->setTouchBorderActivate(m_form->monitorCheckEffectHasEdge(lastIndex));

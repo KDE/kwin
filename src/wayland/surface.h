@@ -300,12 +300,12 @@ public:
      */
     qreal scaleOverride() const;
     /**
-     * Convert a co-ordinate from kwin logical space to surface logical space
+     * Convert a coordinate from kwin logical space to surface logical space
      * @internal
      */
     QPoint toSurfaceLocal(const QPoint &point) const;
     /**
-     * Convert a co-ordinate from kwin logical space to surface logical space
+     * Convert a coordinate from kwin logical space to surface logical space
      * @internal
      */
     QPointF toSurfaceLocal(const QPointF &point) const;
@@ -440,7 +440,7 @@ Q_SIGNALS:
      */
     void childSubSurfaceAdded(SubSurfaceInterface *subSurface);
     /**
-     * Emitted whenver the child sub-surface @p subSurface is removed.
+     * Emitted whenever the child sub-surface @p subSurface is removed.
      */
     void childSubSurfaceRemoved(SubSurfaceInterface *subSurface);
     /**

@@ -662,7 +662,7 @@ Q_SIGNALS:
      * @see dragStarted
      */
     void dragEnded();
-    /** Emitted when a drop ocurrs in a drag'n'drop operation. This is emitted
+    /** Emitted when a drop occurs in a drag'n'drop operation. This is emitted
      * before dragEnded
      */
     void dragDropped();

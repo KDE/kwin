@@ -62,7 +62,7 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_get_surfac
 {
     auto surface = SurfaceInterface::get(surfaceResource);
     if (!surface) {
-        qCWarning(KWIN_CORE) << "requested surface feedback for nonexistant surface!";
+        qCWarning(KWIN_CORE) << "requested surface feedback for nonexistent surface!";
         return;
     }
     auto surfacePrivate = SurfaceInterfacePrivate::get(surface);

@@ -31,7 +31,7 @@ class InputPanelSurfaceV1InterfacePrivate;
 class InputMethodGrabV1;
 class InputKeyboardV1InterfacePrivate;
 
-// This file's classes implment input_method_unstable_v1
+// This file's classes implement input_method_unstable_v1
 
 /**
  * Implements zwp_input_method_v1 and allows to activate and deactivate a context
