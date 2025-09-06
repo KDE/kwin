@@ -81,6 +81,19 @@ Q_SIGNALS:
     void wIdChanged();
     void clientChanged();
 
+private Q_SLOTS:
+   /**
+    * @brief Releases graphics resources of this object.
+    *
+    * This slot is called on the scene graph rendering thread to free graphics
+    * resources associated with this object, typically when QQuickWindow is closed
+    * or hidden. The OpenGL context is bound when this slot is called.
+    *
+    * @note Do not remove this slot. It is called directly by the scene graph
+    * system via Qt's meta-object mechanism, not through signal-slot connections.
+    */
+    void invalidateSceneGraph();
+
 private:
     QRectF paintedRect() const;
     void updateImplicitSize();

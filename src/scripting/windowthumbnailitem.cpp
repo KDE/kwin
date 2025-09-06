@@ -250,6 +250,12 @@ void WindowThumbnailItem::releaseResources()
     }
 }
 
+void WindowThumbnailItem::invalidateSceneGraph()
+{
+    delete m_provider;
+    m_provider = nullptr;
+}
+
 void WindowThumbnailItem::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value)
 {
     if (change == QQuickItem::ItemSceneChange) {
