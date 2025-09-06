@@ -31,7 +31,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="label_OrganizedGrid">
      <property name="text">
       <string>Organize windows in the Grid View:</string>
      </property>
