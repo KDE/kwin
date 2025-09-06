@@ -19,6 +19,17 @@ KGlobalAccelImpl::KGlobalAccelImpl()
 
 KGlobalAccelImpl::~KGlobalAccelImpl() = default;
 
+bool KGlobalAccelImpl::setTriggerActive(const KGlobalShortcutTrigger &trigger,
+                                        bool active,
+                                        const QString &componentName,
+                                        const QString &actionId,
+                                        const QString &componentFriendlyName,
+                                        const QString &actionFriendlyName)
+{
+    Q_EMIT triggerActive(trigger.toString(), active, componentName, actionId, componentFriendlyName, actionFriendlyName);
+    return true;
+}
+
 bool KGlobalAccelImpl::checkKeyPressed(int keyQt, KWin::KeyboardKeyState state)
 {
     switch (state) {
@@ -41,6 +52,12 @@ bool KGlobalAccelImpl::checkPointerPressed(Qt::MouseButtons buttons)
 bool KGlobalAccelImpl::checkAxisTriggered(int axis)
 {
     return axisTriggered(axis);
+}
+
+bool KGlobalAccelImpl::checkTriggerEvent(const QString &triggerId, int shortcutTriggerEventEnum)
+{
+    return triggerEvent(KGlobalShortcutTrigger::fromString(triggerId),
+                        static_cast<ShortcutTriggerEvent>(shortcutTriggerEventEnum));
 }
 
 void KGlobalAccelImpl::cancelModiferOnlySequence()

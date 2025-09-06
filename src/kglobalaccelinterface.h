@@ -22,9 +22,25 @@ public:
     KGlobalAccelImpl();
     ~KGlobalAccelImpl() override;
 
+    bool setTriggerActive(const KGlobalShortcutTrigger &trigger,
+                          bool active,
+                          const QString &componentName,
+                          const QString &actionId,
+                          const QString &componentFriendlyName,
+                          const QString &actionFriendlyName) override;
+
+Q_SIGNALS:
+    void triggerActive(const QString &triggerId,
+                       bool active,
+                       const QString &componentName,
+                       const QString &actionId,
+                       const QString &componentFriendlyName,
+                       const QString &actionFriendlyName);
+
 public Q_SLOTS:
     bool checkKeyPressed(int keyQt, KWin::KeyboardKeyState state);
     bool checkPointerPressed(Qt::MouseButtons buttons);
     bool checkAxisTriggered(int axis);
+    bool checkTriggerEvent(const QString &triggerId, int shortcutTriggerEventEnum);
     void cancelModiferOnlySequence();
 };

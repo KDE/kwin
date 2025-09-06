@@ -42,6 +42,7 @@ target_sources(kwin PRIVATE
     appmenu.cpp
     client_machine.cpp
     compositor.cpp
+    configurablegesture.cpp
     core/backendoutput.cpp
     core/colorlut3d.cpp
     core/colorpipeline.cpp
@@ -483,6 +484,7 @@ install(FILES
     appmenu.h
     client_machine.h
     compositor.h
+    configurablegesture.h
     cursor.h
     cursorsource.h
     dbusinterface.h

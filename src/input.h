@@ -32,8 +32,8 @@ class QWheelEvent;
 namespace KWin
 {
 
+class ConfigurableGesture;
 class IdleDetector;
-class Window;
 class GlobalShortcutsManager;
 class InputEventFilter;
 class InputEventSpy;
@@ -42,6 +42,7 @@ class PointerInputRedirection;
 class SeatInterface;
 class TabletInputRedirection;
 class TouchInputRedirection;
+class Window;
 class WindowSelectorFilter;
 struct SwitchEvent;
 struct TabletToolTipEvent;
@@ -112,6 +113,7 @@ public:
     void registerTouchpadPinchShortcut(PinchDirection direction, uint32_t fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
     void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
     void forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+    ConfigurableGesture *registerGesture(QAction *shortcutAction);
 
     bool supportsPointerWarping() const;
     void warpPointer(const QPointF &pos);

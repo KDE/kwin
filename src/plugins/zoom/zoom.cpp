@@ -10,6 +10,7 @@
 */
 
 #include "zoom.h"
+#include "configurablegesture.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "cursor.h"
@@ -73,12 +74,16 @@ ZoomEffect::ZoomEffect()
         }
         m_lastPinchProgress = 0;
     });
-    effects->registerTouchpadPinchShortcut(PinchDirection::Expanding, 3, m_touchpadAction.get(), [this](qreal progress) {
+    ConfigurableGesture *zoomInGesture = effects->registerGesture(zoomInAction);
+    ConfigurableGesture *zoomOutGesture = effects->registerGesture(zoomOutAction);
+    connect(zoomInGesture, &ConfigurableGesture::released, m_touchpadAction.get(), &QAction::triggered);
+    connect(zoomOutGesture, &ConfigurableGesture::released, m_touchpadAction.get(), &QAction::triggered);
+    connect(zoomInGesture, &ConfigurableGesture::progress, this, [this](qreal progress) {
         const qreal delta = progress - m_lastPinchProgress;
         m_lastPinchProgress = progress;
         realtimeZoom(delta);
     });
-    effects->registerTouchpadPinchShortcut(PinchDirection::Contracting, 3, m_touchpadAction.get(), [this](qreal progress) {
+    connect(zoomOutGesture, &ConfigurableGesture::progress, this, [this](qreal progress) {
         const qreal delta = progress - m_lastPinchProgress;
         m_lastPinchProgress = progress;
         realtimeZoom(-delta);

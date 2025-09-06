@@ -13,6 +13,7 @@
 namespace KWin
 {
 class VirtualDesktop;
+class ConfigurableGesture;
 
 class OverviewEffect : public QuickSceneEffect
 {
