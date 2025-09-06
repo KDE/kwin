@@ -5,6 +5,7 @@
 */
 
 #include "overvieweffect.h"
+#include "configurablegesture.h"
 #include "effect/effecthandler.h"
 #include "overviewconfig.h"
 
@@ -32,18 +33,7 @@ OverviewEffect::OverviewEffect()
     , m_shutdownTimer(new QTimer(this))
     , m_manager(new KRunner::RunnerManager(this))
 {
-    auto gesture = new EffectTogglableGesture(m_overviewState);
-    gesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
-    gesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
-
-    auto transitionGesture = new EffectTogglableGesture(m_transitionState);
-    transitionGesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
-    transitionGesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
     m_transitionState->stop();
-
-    auto gridGesture = new EffectTogglableGesture(m_gridState);
-    gridGesture->addTouchpadSwipeGesture(SwipeDirection::Down, 4);
-    gridGesture->addTouchscreenSwipeGesture(SwipeDirection::Down, 3);
 
     connect(m_overviewState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::overviewGestureInProgressChanged);
     connect(m_overviewState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::overviewPartialActivationFactorChanged);
@@ -146,6 +136,12 @@ OverviewEffect::OverviewEffect()
     KGlobalAccel::setGlobalShortcut(reverseCycleAction, QList<QKeySequence>{});
 
     KGlobalAccel::setInverseShortcutActions(cycleAction, reverseCycleAction);
+
+    ConfigurableGesture *forwardGesture = effects->registerGesture(cycleAction);
+    ConfigurableGesture *backwardGesture = effects->registerGesture(reverseCycleAction);
+    m_overviewState->addGesture(forwardGesture, backwardGesture);
+    m_transitionState->addGesture(forwardGesture, backwardGesture);
+    m_gridState->addGesture(backwardGesture, forwardGesture);
 
     auto overviewAction = m_overviewState->toggleAction();
     overviewAction->setObjectName(QStringLiteral("Overview"));
