@@ -13,6 +13,7 @@ namespace KWin
 {
 
 class VirtualDesktop;
+class ConfigurableGesture;
 
 class OverviewEffect : public QuickSceneEffect
 {
@@ -84,6 +85,7 @@ private:
     EffectTogglableState *const m_gridState;
     EffectTogglableTouchBorder *const m_border;
     EffectTogglableTouchBorder *const m_gridBorder;
+    std::unique_ptr<ConfigurableGesture> m_gesture;
 
     QTimer *m_shutdownTimer;
     QList<QKeySequence> m_cycleShortcut;

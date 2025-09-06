@@ -15,6 +15,7 @@ namespace KWin
 {
 
 class Effect;
+class ConfigurableGesture;
 
 /**
  * It's common to have effects that get activated and deactivated.
@@ -68,6 +69,9 @@ public:
     {
         return m_status;
     }
+
+    void addGesture(ConfigurableGesture *gesture);
+    void addInverseGesture(ConfigurableGesture *gesture);
 
 Q_SIGNALS:
     void inProgressChanged();
