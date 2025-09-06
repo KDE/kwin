@@ -5,6 +5,7 @@
 */
 
 #include "overvieweffect.h"
+#include "configurablegesture.h"
 #include "effect/effecthandler.h"
 #include "overviewconfig.h"
 
@@ -30,20 +31,13 @@ OverviewEffect::OverviewEffect()
     , m_gridState(new EffectTogglableState(this))
     , m_border(new EffectTogglableTouchBorder(m_overviewState))
     , m_gridBorder(new EffectTogglableTouchBorder(m_gridState))
+    , m_gesture(effects->registerGesture("builtin_overview", "overview effect"))
     , m_shutdownTimer(new QTimer(this))
 {
-    auto gesture = new EffectTogglableGesture(m_overviewState);
-    gesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
-    gesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
-
-    auto transitionGesture = new EffectTogglableGesture(m_transitionState);
-    transitionGesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
-    transitionGesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
+    m_overviewState->addGesture(m_gesture.get());
+    m_transitionState->addGesture(m_gesture.get());
+    m_gridState->addInverseGesture(m_gesture.get());
     m_transitionState->stop();
-
-    auto gridGesture = new EffectTogglableGesture(m_gridState);
-    gridGesture->addTouchpadSwipeGesture(SwipeDirection::Down, 4);
-    gridGesture->addTouchscreenSwipeGesture(SwipeDirection::Down, 3);
 
     connect(m_overviewState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::overviewGestureInProgressChanged);
     connect(m_overviewState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::overviewPartialActivationFactorChanged);
