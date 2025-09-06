@@ -23,6 +23,7 @@
 #include "effect/effectloader.h"
 #include "effect/offscreenquickview.h"
 #include "effectsadaptor.h"
+#include "globalshortcuts.h"
 #include "input.h"
 #include "input_event.h"
 #include "inputmethod.h"
@@ -1594,6 +1595,11 @@ void EffectsHandler::configChanged(const KConfigGroup &group, const QByteArrayLi
     for (const QString &effect : std::as_const(toLoad)) {
         loadEffect(effect);
     }
+}
+
+ConfigurableGesture *EffectsHandler::registerGesture(QAction *shortcutAction)
+{
+    return input()->shortcuts()->registerGesture(shortcutAction);
 }
 
 EffectsHandler *effects = nullptr;

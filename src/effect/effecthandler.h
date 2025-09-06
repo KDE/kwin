@@ -87,6 +87,7 @@ struct PointerMotionEvent;
 struct PointerButtonEvent;
 class InputDevice;
 class InputDeviceTabletTool;
+class ConfigurableGesture;
 
 typedef QPair<QString, Effect *> EffectPair;
 
@@ -754,6 +755,8 @@ public:
         return registered_atoms.contains(atom);
     }
 #endif
+
+    ConfigurableGesture *registerGesture(QAction *shortcutAction);
 
 Q_SIGNALS:
     /**

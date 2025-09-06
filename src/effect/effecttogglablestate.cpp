@@ -5,6 +5,7 @@
 */
 
 #include "effect/effecttogglablestate.h"
+#include "configurablegesture.h"
 #include "effect/effecthandler.h"
 
 namespace KWin
@@ -200,6 +201,14 @@ std::function<void(qreal progress)> EffectTogglableState::regressCallback()
     return [this](qreal progress) {
         setRegress(progress);
     };
+}
+
+void EffectTogglableState::addGesture(ConfigurableGesture *gesture, ConfigurableGesture *inverseGesture)
+{
+    connect(gesture, &ConfigurableGesture::progress, this, &EffectTogglableState::setProgress);
+    connect(inverseGesture, &ConfigurableGesture::progress, this, &EffectTogglableState::setRegress);
+    connect(gesture, &ConfigurableGesture::released, activateAction(), &QAction::trigger);
+    connect(inverseGesture, &ConfigurableGesture::released, deactivateAction(), &QAction::trigger);
 }
 
 void EffectTogglableGesture::addTouchpadPinchGesture(PinchDirection direction, uint fingerCount)
