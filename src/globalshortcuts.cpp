@@ -340,6 +340,32 @@ void GlobalShortcutsManager::cancelModiferOnlySequence()
 #endif
 }
 
+std::unique_ptr<ConfigurableGesture> GlobalShortcutsManager::registerGesture(const QByteArray &uniqueHandle, const QString &userString)
+{
+    auto ret = std::make_unique<ConfigurableGesture>(this);
+    // TODO add an actual config for this
+    if (uniqueHandle == "builtin_overview") {
+        registerTouchpadSwipe(SwipeDirection::Up, 4, ret->forwardAction(), [gesture = ret.get()](qreal progress) {
+            Q_EMIT gesture->forwardProgress(progress);
+        });
+        registerTouchpadSwipe(SwipeDirection::Down, 4, ret->reverseAction(), [gesture = ret.get()](qreal progress) {
+            Q_EMIT gesture->reverseProgress(progress);
+        });
+        registerTouchscreenSwipe(SwipeDirection::Up, 3, ret->forwardAction(), [gesture = ret.get()](qreal progress) {
+            Q_EMIT gesture->forwardProgress(progress);
+        });
+        registerTouchscreenSwipe(SwipeDirection::Down, 3, ret->reverseAction(), [gesture = ret.get()](qreal progress) {
+            Q_EMIT gesture->reverseProgress(progress);
+        });
+    }
+    return ret;
+}
+
+void GlobalShortcutsManager::unregisterGesture(ConfigurableGesture *gesture)
+{
+    // TODO for later
+}
+
 } // namespace
 
 #include "moc_globalshortcuts.cpp"

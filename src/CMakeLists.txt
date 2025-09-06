@@ -36,6 +36,7 @@ target_sources(kwin PRIVATE
     colors/colordevice.cpp
     colors/colormanager.cpp
     compositor.cpp
+    configurablegesture.cpp
     core/backendoutput.cpp
     core/colorlut3d.cpp
     core/colorpipeline.cpp
@@ -453,6 +454,7 @@ install(FILES
     appmenu.h
     client_machine.h
     compositor.h
+    configurablegesture.h
     cursor.h
     cursorsource.h
     dbusinterface.h
