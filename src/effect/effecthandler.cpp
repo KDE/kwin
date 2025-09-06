@@ -23,6 +23,7 @@
 #include "effect/effectloader.h"
 #include "effect/offscreenquickview.h"
 #include "effectsadaptor.h"
+#include "globalshortcuts.h"
 #include "input.h"
 #include "input_event.h"
 #include "inputmethod.h"
@@ -1655,6 +1656,11 @@ bool EffectsHandler::isInputPanelOverlay() const
 QQmlEngine *EffectsHandler::qmlEngine() const
 {
     return Scripting::self()->qmlEngine();
+}
+
+std::unique_ptr<ConfigurableGesture> EffectsHandler::registerGesture(const QByteArray &uniqueHandle, const QString &userString)
+{
+    return input()->shortcuts()->registerGesture(uniqueHandle, userString);
 }
 
 EffectsHandler *effects = nullptr;

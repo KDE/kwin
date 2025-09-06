@@ -81,6 +81,7 @@ class VirtualDesktop;
 class EglContext;
 class InputDevice;
 class InputDeviceTabletTool;
+class ConfigurableGesture;
 
 typedef QPair<QString, Effect *> EffectPair;
 
@@ -763,6 +764,8 @@ public:
         return registered_atoms.contains(atom);
     }
 #endif
+
+    std::unique_ptr<ConfigurableGesture> registerGesture(const QByteArray &uniqueHandle, const QString &userString);
 
 Q_SIGNALS:
     /**

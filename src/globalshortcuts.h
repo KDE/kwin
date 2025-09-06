@@ -10,9 +10,11 @@
 // KWin
 #include "effect/globals.h"
 // Qt
+#include "configurablegesture.h"
 #include "core/inputdevice.h"
 
 #include <QKeySequence>
+#include <QPointer>
 
 #include <memory>
 
@@ -42,7 +44,7 @@ enum class DeviceType {
  * For internal shortcut handling (those which are delivered inside KWin) QActions are used and
  * triggered if the shortcut matches. For external shortcut handling a DBus interface is used.
  */
-class GlobalShortcutsManager : public QObject
+class KWIN_EXPORT GlobalShortcutsManager : public QObject
 {
     Q_OBJECT
 public:
@@ -74,6 +76,9 @@ public:
     void registerTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
     void registerTouchscreenSwipe(SwipeGesture *swipeGesture);
     void forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+
+    std::unique_ptr<ConfigurableGesture> registerGesture(const QByteArray &uniqueHandle, const QString &userString);
+    void unregisterGesture(ConfigurableGesture *gesture);
 
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
