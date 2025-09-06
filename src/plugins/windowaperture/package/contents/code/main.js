@@ -13,187 +13,220 @@
 var badBadWindowsEffect = {
     duration: animationTime(250),
     showingDesktop: false,
+    animations: new Map(),
     loadConfig: function () {
         badBadWindowsEffect.duration = animationTime(250);
     },
     setShowingDesktop: function (showing) {
         badBadWindowsEffect.showingDesktop = showing;
     },
-    offToCorners: function (showing, frozenTime) {
-        if (typeof frozenTime === "undefined") {
-            frozenTime = -1;
-        }
-        var stackingOrder = effects.stackingOrder;
-        var screenGeo = effects.virtualScreenGeometry;
-        var xOffset = screenGeo.width / 16;
-        var yOffset = screenGeo.height / 16;
-        if (showing) {
-            var closestWindows = [ undefined, undefined, undefined, undefined ];
-            var movedWindowsCount = 0;
-            for (var i = 0; i < stackingOrder.length; ++i) {
-                var w = stackingOrder[i];
+    showDesktop: function(frozenTime) {
+        const stackingOrder = effects.stackingOrder;
+        const screenGeometry = effects.virtualScreenGeometry;
+        const xOffset = screenGeometry.width / 16;
+        const yOffset = screenGeometry.height / 16;
 
-                if (!w.hiddenByShowDesktop) {
-                    continue;
-                }
+        let closestWindows = [undefined, undefined, undefined, undefined];
+        let movedWindowsCount = 0;
+        let apertureCorner = new Map();
+        let apertureDistances = new Map();
 
-                // ignore invisible windows and such that do not have to be restored
-                if (!w.visible) {
-                    if (w.offToCornerId) {
-                        // if it was visible when the effect was activated delete its animation data
-                        cancel(w.offToCornerId);
-                        delete w.offToCornerId;
-                        delete w.apertureCorner;
-                    }
-                    continue;
-                }
-
-                // Don't touch docks
-                if (w.dock) {
-                    continue;
-                }
-
-                // calculate the corner distances
-                var geo = w.geometry;
-                var dl = geo.x + geo.width - screenGeo.x;
-                var dr = screenGeo.x + screenGeo.width - geo.x;
-                var dt = geo.y + geo.height - screenGeo.y;
-                var db = screenGeo.y + screenGeo.height - geo.y;
-                w.apertureDistances = [ dl + dt, dr + dt, dr + db, dl + db ];
-                movedWindowsCount += 1;
-
-                // if this window is the closest one to any corner, set it as preferred there
-                var nearest = 0;
-                for (var j = 1; j < 4; ++j) {
-                    if (w.apertureDistances[j] < w.apertureDistances[nearest] ||
-                        (w.apertureDistances[j] == w.apertureDistances[nearest] && closestWindows[j] === undefined)) {
-                        nearest = j;
-                    }
-                }
-                if (closestWindows[nearest] === undefined ||
-                    closestWindows[nearest].apertureDistances[nearest] > w.apertureDistances[nearest])
-                    closestWindows[nearest] = w;
-            }
-
-            // second pass, select corners
-
-            // 1st off, move the nearest windows to their nearest corners
-            // this will ensure that if there's only on window in the lower right
-            // it won't be moved out to the upper left
-            var movedWindowsDec = [ 0, 0, 0, 0 ];
-            for (var i = 0; i < 4; ++i) {
-                if (closestWindows[i] === undefined)
-                    continue;
-                closestWindows[i].apertureCorner = i;
-                delete closestWindows[i].apertureDistances;
-                movedWindowsDec[i] = 1;
-            }
-
-            // 2nd, distribute the remainders according to their preferences
-            // this doesn't exactly have heapsort performance ;-)
-            movedWindowsCount = Math.floor((movedWindowsCount + 3) / 4);
-            for (var i = 0; i < 4; ++i) {
-                for (var j = 0; j < movedWindowsCount - movedWindowsDec[i]; ++j) {
-                    var bestWindow = undefined;
-                    for (var k = 0; k < stackingOrder.length; ++k) {
-                        if (stackingOrder[k].apertureDistances === undefined)
-                            continue;
-                        if (bestWindow === undefined ||
-                            stackingOrder[k].apertureDistances[i] < bestWindow.apertureDistances[i])
-                            bestWindow = stackingOrder[k];
-                    }
-                    if (bestWindow === undefined)
-                        break;
-                    bestWindow.apertureCorner = i;
-                    delete bestWindow.apertureDistances;
-                }
-            }
-
-        }
-
-        // actually re/move windows from/to assigned corners
-        for (var i = 0; i < stackingOrder.length; ++i) {
-            var w = stackingOrder[i];
-            if (w.apertureCorner === undefined && w.offToCornerId === undefined)
+        for (const window of stackingOrder) {
+            if (!window.hiddenByShowDesktop) {
                 continue;
+            }
 
-            if (w.dock) {
+            // ignore invisible windows and such that do not have to be restored
+            if (!window.visible) {
+                continue;
+            }
+
+            // Don't touch docks
+            if (window.dock) {
+                continue;
+            }
+
+            // calculate the corner distances
+            const geo = window.geometry;
+            const dl = geo.x + geo.width - screenGeometry.x;
+            const dr = screenGeometry.x + screenGeometry.width - geo.x;
+            const dt = geo.y + geo.height - screenGeometry.y;
+            const db = screenGeometry.y + screenGeometry.height - geo.y;
+
+            const distances = [dl + dt, dr + dt, dr + db, dl + db];
+            apertureDistances.set(window, distances);
+            movedWindowsCount += 1;
+
+            // if this window is the closest one to any corner, set it as preferred there
+            let nearest = 0;
+            for (let j = 1; j < 4; ++j) {
+                if (distances[j] < distances[nearest] ||
+                    (distances[j] == distances[nearest] && closestWindows[j] === undefined)) {
+                    nearest = j;
+                }
+            }
+            if (closestWindows[nearest] === undefined ||
+                apertureDistances.get(closestWindows[nearest])[nearest] > distances[nearest])
+                closestWindows[nearest] = window;
+        }
+
+        // second pass, select corners
+
+        // 1st off, move the nearest windows to their nearest corners
+        // this will ensure that if there's only on window in the lower right
+        // it won't be moved out to the upper left
+        let movedWindowsDec = [ 0, 0, 0, 0 ];
+        for (var i = 0; i < 4; ++i) {
+            if (closestWindows[i] === undefined)
+                continue;
+            apertureCorner.set(closestWindows[i], i);
+            apertureDistances.delete(closestWindows[i]);
+            movedWindowsDec[i] = 1;
+        }
+
+        // 2nd, distribute the remainders according to their preferences
+        // this doesn't exactly have heapsort performance ;-)
+        movedWindowsCount = Math.floor((movedWindowsCount + 3) / 4);
+        for (let i = 0; i < 4; ++i) {
+            for (let j = 0; j < movedWindowsCount - movedWindowsDec[i]; ++j) {
+                let bestWindow = undefined;
+                for (let k = 0; k < stackingOrder.length; ++k) {
+                    const candidateDistances = apertureDistances.get(stackingOrder[k]);
+                    if (candidateDistances === undefined) {
+                        continue;
+                    }
+                    if (bestWindow === undefined ||
+                        candidateDistances[i] < apertureDistances.get(bestWindow)[i])
+                        bestWindow = stackingOrder[k];
+                }
+                if (bestWindow === undefined)
+                    break;
+                apertureCorner.set(bestWindow, i);
+                apertureDistances.delete(bestWindow);
+            }
+        }
+
+        for (const window of stackingOrder) {
+            if (window.dock) {
+                continue;
+            }
+
+            const corner = apertureCorner.get(window);
+            if (corner === undefined) {
                 continue;
             }
 
             var anchor, tx, ty;
-            var geo = w.geometry;
-            if (w.apertureCorner == 1 || w.apertureCorner == 2) {
-                tx = screenGeo.x + screenGeo.width - xOffset;
+            if (corner == 1 || corner == 2) {
+                tx = screenGeometry.x + screenGeometry.width - xOffset;
                 anchor = Effect.Left;
             } else {
                 tx = xOffset;
                 anchor = Effect.Right;
             }
-            if (w.apertureCorner > 1) {
-                ty = screenGeo.y + screenGeo.height - yOffset;
+            if (corner > 1) {
+                ty = screenGeometry.y + screenGeometry.height - yOffset;
                 anchor |= Effect.Top;
             } else {
                 ty = yOffset;
                 anchor |= Effect.Bottom;
             }
 
-            if (showing) {
-                if (!w.offToCornerId || !freezeInTime(w.offToCornerId, frozenTime)) {
-
-                    w.offToCornerId = set({
-                        window: w,
-                        duration: badBadWindowsEffect.duration,
-                        curve: QEasingCurve.InOutCubic,
-                        animations: [{
-                            type: Effect.Position,
-                            targetAnchor: anchor,
-                            to: { value1: tx, value2: ty },
-                            frozenTime: frozenTime
-                        },{
-                            type: Effect.Opacity,
-                            to: 0.0,
-                            frozenTime: frozenTime
-                        }]
-                    });
-                }
-            } else {
-                // Reset if the window has become invisible in the meantime
-                if (!w.visible) {
-                    cancel(w.offToCornerId);
-                    delete w.offToCornerId;
-                    delete w.apertureCorner;
-                // This if the window was invisible and has become visible in the meantime
-                } else if (!w.offToCornerId || !redirect(w.offToCornerId, Effect.Backward) || !freezeInTime(w.offToCornerId, frozenTime)) {
-                    animate({
-                        window: w,
-                        duration: badBadWindowsEffect.duration,
-                        curve: QEasingCurve.InOutCubic,
-                        animations: [{
-                            type: Effect.Position,
-                            sourceAnchor: anchor,
-                            gesture: true,
-                            from: { value1: tx, value2: ty }
-                        },{
-                            type: Effect.Opacity,
-                            from: 0.0
-                        }]
-                    });
-                }
+            let animation = badBadWindowsEffect.animations.get(window);
+            if (!animation) {
+                animation = {};
             }
+
+            let animationId = animation.id;
+            if (!animationId || !freezeInTime(animationId, frozenTime)) {
+                animationId = set({
+                    window: window,
+                    duration: badBadWindowsEffect.duration,
+                    curve: QEasingCurve.InOutCubic,
+                    animations: [{
+                        type: Effect.Position,
+                        targetAnchor: anchor,
+                        to: { value1: tx, value2: ty },
+                        frozenTime: frozenTime
+                    },{
+                        type: Effect.Opacity,
+                        to: 0.0,
+                        frozenTime: frozenTime
+                    }]
+                });
+            }
+
+            badBadWindowsEffect.animations.set(window, {
+                id: animationId,
+                apertureCorner: corner,
+            });
         }
     },
-    animationEnded: function (w, a, meta) {
-        // After the animation that closes the effect, reset all the parameters
-        if (!badBadWindowsEffect.showingDesktop) {
-            cancel(w.offToCornerId);
-            delete w.offToCornerId;
-            delete w.apertureCorner;
+    hideDesktop: function(frozenTime) {
+        const stackingOrder = effects.stackingOrder;
+        const screenGeometry = effects.virtualScreenGeometry;
+        const xOffset = screenGeometry.width / 16;
+        const yOffset = screenGeometry.height / 16;
+
+        for (const window of stackingOrder) {
+            const animation = badBadWindowsEffect.animations.get(window);
+            if (!animation) {
+                continue;
+            }
+
+            let anchor, tx, ty;
+            if (animation.apertureCorner == 1 || animation.apertureCorner == 2) {
+                tx = screenGeometry.x + screenGeometry.width - xOffset;
+                anchor = Effect.Left;
+            } else {
+                tx = xOffset;
+                anchor = Effect.Right;
+            }
+
+            if (animation.apertureCorner > 1) {
+                ty = screenGeometry.y + screenGeometry.height - yOffset;
+                anchor |= Effect.Top;
+            } else {
+                ty = yOffset;
+                anchor |= Effect.Bottom;
+            }
+
+            if (!window.visible) {
+                cancel(animation.id);
+            } else if (!redirect(animation.id, Effect.Backward) || !freezeInTime(animation.id, frozenTime)) {
+                animate({
+                    window: window,
+                    duration: badBadWindowsEffect.duration,
+                    curve: QEasingCurve.InOutCubic,
+                    animations: [{
+                        type: Effect.Position,
+                        sourceAnchor: anchor,
+                        gesture: true,
+                        from: { value1: tx, value2: ty }
+                    },{
+                        type: Effect.Opacity,
+                        from: 0.0
+                    }]
+                });
+            }
+
+            badBadWindowsEffect.animations.delete(window);
+        }
+    },
+    showOrHideDesktop: function(frozenTime) {
+        if (typeof frozenTime === "undefined") {
+            frozenTime = -1;
+        }
+
+        if (badBadWindowsEffect.showingDesktop) {
+            badBadWindowsEffect.showDesktop(frozenTime);
+        } else {
+            badBadWindowsEffect.hideDesktop(frozenTime);
         }
     },
     realtimeScreenEdgeCallback: function (border, deltaProgress, effectScreen) {
         if (!deltaProgress || !effectScreen) {
-            badBadWindowsEffect.offToCorners(badBadWindowsEffect.showingDesktop, -1);
+            badBadWindowsEffect.showOrHideDesktop();
             return;
         }
         let time = 0;
@@ -214,13 +247,15 @@ var badBadWindowsEffect = {
             time = badBadWindowsEffect.duration - time;
         }
 
-        badBadWindowsEffect.offToCorners(true, time)
+        badBadWindowsEffect.showOrHideDesktop(time);
     },
     init: function () {
         badBadWindowsEffect.loadConfig();
         effects.showingDesktopChanged.connect(badBadWindowsEffect.setShowingDesktop);
-        effects.showingDesktopChanged.connect(badBadWindowsEffect.offToCorners);
-        effect.animationEnded.connect(badBadWindowsEffect.animationEnded);
+        effects.showingDesktopChanged.connect(() => badBadWindowsEffect.showOrHideDesktop());
+        effects.windowDeleted.connect(window => {
+            badBadWindowsEffect.animations.delete(window);
+        });
 
         let edges = effect.touchEdgesForAction("show-desktop");
 
