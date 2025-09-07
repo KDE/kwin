@@ -458,6 +458,43 @@ void DebugConsoleFilter::swipeGestureCancelled(PointerSwipeGestureCancelEvent *e
     m_textEdit->ensureCursorVisible();
 }
 
+void DebugConsoleFilter::holdGestureBegin(PointerHoldGestureBeginEvent *event)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A hold gesture is started", "Hold start")));
+    text.append(timestampRow(event->time));
+    text.append(tableRow(i18nc("Number of fingers in this hold gesture", "Finger count"), event->fingerCount));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
+void DebugConsoleFilter::holdGestureEnd(PointerHoldGestureEndEvent *event)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A hold gesture ended", "Hold end")));
+    text.append(timestampRow(event->time));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
+void DebugConsoleFilter::holdGestureCancelled(PointerHoldGestureCancelEvent *event)
+{
+    QString text = s_hr;
+    text.append(s_tableStart);
+    text.append(tableHeaderRow(i18nc("A hold gesture got cancelled", "Hold cancelled")));
+    text.append(timestampRow(event->time));
+    text.append(s_tableEnd);
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
 void DebugConsoleFilter::switchEvent(SwitchEvent *event)
 {
     QString text = s_hr;

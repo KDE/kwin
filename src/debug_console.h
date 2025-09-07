@@ -136,6 +136,10 @@ public:
     void swipeGestureEnd(PointerSwipeGestureEndEvent *event) override;
     void swipeGestureCancelled(PointerSwipeGestureCancelEvent *event) override;
 
+    void holdGestureBegin(PointerHoldGestureBeginEvent *event) override;
+    void holdGestureEnd(PointerHoldGestureEndEvent *event) override;
+    void holdGestureCancelled(PointerHoldGestureCancelEvent *event) override;
+
     void switchEvent(SwitchEvent *event) override;
 
     void tabletToolProximityEvent(TabletToolProximityEvent *event) override;
