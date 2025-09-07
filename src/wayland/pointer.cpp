@@ -234,11 +234,10 @@ void PointerInterface::sendButton(quint32 button, PointerButtonState state, quin
     }
 }
 
-void PointerInterface::sendButton(quint32 button, PointerButtonState state, ClientConnection *client)
+void PointerInterface::sendButton(quint32 button, PointerButtonState state, quint32 serial, ClientConnection *client)
 {
     const auto pointerResources = d->pointersForClient(client);
     const quint32 waylandState = pointerButtonStateToWaylandState(state);
-    const quint32 serial = d->seat->nextSerial();
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
         d->send_button(resource->handle, serial, d->seat->timestamp().count(), button, waylandState);
     }

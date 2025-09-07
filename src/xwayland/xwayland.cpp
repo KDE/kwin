@@ -323,7 +323,7 @@ public:
             }
         }
 
-        pointer->sendButton(event->nativeButton, event->state, xwaylandClient);
+        pointer->sendButton(event->nativeButton, event->state, waylandServer()->seat()->nextSerial(), xwaylandClient);
         return false;
     }
 
