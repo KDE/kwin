@@ -358,6 +358,7 @@ void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, std::chr
     if (!inited()) {
         return;
     }
+    update();
 
     input()->processSpies(&InputEventSpy::swipeGestureBegin, fingerCount, time);
     input()->processFilters(&InputEventFilter::swipeGestureBegin, fingerCount, time);
