@@ -496,6 +496,11 @@ public:
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
+    bool holdGestureCancelled(PointerHoldGestureCancelEvent *event) override
+    {
+        // no touchpad multi-finger gestures on lock screen
+        return waylandServer()->isScreenLocked();
+    }
 
 private:
     bool surfaceAllowed(SurfaceInterface *s) const
