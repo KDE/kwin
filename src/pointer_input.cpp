@@ -358,6 +358,7 @@ void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, std::chr
     if (!inited()) {
         return;
     }
+    update();
 
     PointerSwipeGestureBeginEvent event{
         .fingerCount = fingerCount,
