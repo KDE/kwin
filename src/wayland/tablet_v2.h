@@ -119,7 +119,7 @@ public:
      *
      * @see TabletV2Interface::isSurfaceSupported
      */
-    void setCurrentSurface(SurfaceInterface *surface);
+    void setCurrentSurface(SurfaceInterface *surface, quint32 serial);
     SurfaceInterface *currentSurface() const;
 
     bool isClientSupported() const;
@@ -127,17 +127,17 @@ public:
     quint32 proximitySerial() const;
     std::optional<quint32> downSerial() const;
 
-    void sendProximityIn(TabletV2Interface *tablet);
+    void sendProximityIn(TabletV2Interface *tablet, quint32 serial);
     void sendProximityOut();
     void sendUp();
-    void sendDown();
+    void sendDown(quint32 serial);
     void sendPressure(qreal pressure);
     void sendDistance(qreal distance);
     void sendTilt(qreal degreesX, qreal degreesY);
     void sendRotation(qreal degrees);
     void sendSlider(qreal position);
     void sendWheel(qint32 degrees, qint32 clicks);
-    void sendButton(quint32 button, bool pressed);
+    void sendButton(quint32 button, bool pressed, quint32 serial);
     void sendFrame(quint32 time);
     void sendMotion(const QPointF &pos);
 
@@ -168,7 +168,7 @@ public:
     TabletPadGroupV2Interface *group(uint at) const;
     void sendButton(std::chrono::microseconds time, quint32 button, bool pressed);
 
-    void setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet);
+    void setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet, quint32 serial);
     SurfaceInterface *currentSurface() const;
 
 Q_SIGNALS:
@@ -256,7 +256,7 @@ public:
     virtual ~TabletPadGroupV2Interface();
 
     void setCurrentMode(quint32 mode);
-    void sendModeSwitch(quint32 time);
+    void sendModeSwitch(quint32 serial, quint32 time);
 
     TabletPadRingV2Interface *ring(uint at) const;
     TabletPadStripV2Interface *strip(uint at) const;

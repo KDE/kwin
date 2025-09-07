@@ -2253,16 +2253,17 @@ public:
         TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
         TabletToolV2Interface *tool = seat->tool(event->tool);
         TabletV2Interface *tablet = seat->tablet(event->device);
+        const quint32 serial = waylandServer()->seat()->nextSerial();
 
         const auto [surface, surfaceLocalPos] = window->surface()->mapToInputSurface(window->mapToLocal(event->position));
-        tool->setCurrentSurface(surface);
+        tool->setCurrentSurface(surface, serial);
 
         if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
             return emulateTabletEvent(event);
         }
 
         if (event->type == TabletToolProximityEvent::EnterProximity) {
-            tool->sendProximityIn(tablet);
+            tool->sendProximityIn(tablet, serial);
             tool->sendMotion(surfaceLocalPos);
         } else {
             tool->sendProximityOut();
@@ -2295,9 +2296,10 @@ public:
         TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
         TabletToolV2Interface *tool = seat->tool(event->tool);
         TabletV2Interface *tablet = seat->tablet(event->device);
+        const quint32 serial = waylandServer()->seat()->nextSerial();
 
         const auto [surface, surfaceLocalPos] = window->surface()->mapToInputSurface(window->mapToLocal(event->position));
-        tool->setCurrentSurface(surface);
+        tool->setCurrentSurface(surface, serial);
 
         if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
             return emulateTabletEvent(event);
@@ -2335,9 +2337,10 @@ public:
         TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
         TabletToolV2Interface *tool = seat->tool(event->tool);
         TabletV2Interface *tablet = seat->tablet(event->device);
+        const quint32 serial = waylandServer()->seat()->nextSerial();
 
         const auto [surface, surfaceLocalPos] = window->surface()->mapToInputSurface(window->mapToLocal(event->position));
-        tool->setCurrentSurface(surface);
+        tool->setCurrentSurface(surface, serial);
 
         if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
             return emulateTabletEvent(event);
@@ -2345,7 +2348,7 @@ public:
 
         if (event->type == TabletToolTipEvent::Press) {
             tool->sendMotion(surfaceLocalPos);
-            tool->sendDown();
+            tool->sendDown(serial);
         } else {
             tool->sendUp();
         }
@@ -2428,7 +2431,7 @@ public:
         if (!tool->isClientSupported()) {
             return false;
         }
-        tool->sendButton(event->button, event->pressed);
+        tool->sendButton(event->button, event->pressed, waylandServer()->seat()->nextSerial());
         return true;
     }
 
@@ -2450,7 +2453,7 @@ public:
             return nullptr;
         }
 
-        pad->setCurrentSurface(window->surface(), tablet);
+        pad->setCurrentSurface(window->surface(), tablet, waylandServer()->seat()->nextSerial());
         return pad;
     }
 
@@ -2465,7 +2468,7 @@ public:
         if (event->isModeSwitch) {
             group->setCurrentMode(event->mode);
             const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(event->time).count();
-            group->sendModeSwitch(milliseconds);
+            group->sendModeSwitch(waylandServer()->seat()->nextSerial(), milliseconds);
             // TODO send button to app?
         }
 

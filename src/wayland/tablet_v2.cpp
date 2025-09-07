@@ -264,7 +264,7 @@ SurfaceInterface *TabletToolV2Interface::currentSurface() const
     return d->m_surface;
 }
 
-void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface)
+void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface, quint32 serial)
 {
     if (d->m_surface == surface)
         return;
@@ -278,7 +278,7 @@ void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface)
     d->m_surface = surface;
 
     if (lastTablet && lastTablet->d->resourceForSurface(surface)) {
-        sendProximityIn(lastTablet);
+        sendProximityIn(lastTablet, serial);
     } else {
         d->m_lastTablet = lastTablet;
     }
@@ -305,9 +305,8 @@ bool TabletToolV2Interface::isClientSupported() const
     return d->m_surface && !d->targetResources().empty();
 }
 
-void TabletToolV2Interface::sendButton(uint32_t button, bool pressed)
+void TabletToolV2Interface::sendButton(uint32_t button, bool pressed, quint32 serial)
 {
-    const auto serial = d->m_seat->nextSerial();
     for (auto *resource : d->targetResources()) {
         d->send_button(resource->handle,
                        serial,
@@ -379,10 +378,9 @@ void TabletToolV2Interface::sendWheel(int32_t degrees, int32_t clicks)
     }
 }
 
-void TabletToolV2Interface::sendProximityIn(TabletV2Interface *tablet)
+void TabletToolV2Interface::sendProximityIn(TabletV2Interface *tablet, quint32 serial)
 {
     wl_resource *tabletResource = tablet->d->resourceForSurface(d->m_surface);
-    const auto serial = d->m_seat->nextSerial();
     for (auto *resource : d->targetResources()) {
         d->send_proximity_in(resource->handle, serial, tabletResource, d->m_surface->resource());
     }
@@ -398,9 +396,8 @@ void TabletToolV2Interface::sendProximityOut()
     d->m_cleanup = true;
 }
 
-void TabletToolV2Interface::sendDown()
+void TabletToolV2Interface::sendDown(quint32 serial)
 {
-    const auto serial = d->m_seat->nextSerial();
     for (auto *resource : d->targetResources()) {
         d->send_down(resource->handle, serial);
     }
@@ -651,10 +648,10 @@ void TabletPadGroupV2Interface::setCurrentMode(quint32 mode)
     d->m_currentMode = mode;
 }
 
-void TabletPadGroupV2Interface::sendModeSwitch(quint32 time)
+void TabletPadGroupV2Interface::sendModeSwitch(quint32 serial, quint32 time)
 {
     for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
-        d->send_mode_switch(resource->handle, time, d->m_seat->nextSerial(), d->m_currentMode);
+        d->send_mode_switch(resource->handle, time, serial, d->m_currentMode);
     }
 }
 
@@ -755,14 +752,13 @@ TabletPadGroupV2Interface *TabletPadV2Interface::group(uint at) const
     return d->m_groups[at];
 }
 
-void TabletPadV2Interface::setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet)
+void TabletPadV2Interface::setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet, quint32 serial)
 {
     if (surface == d->m_currentSurface) {
         return;
     }
 
     if (d->m_currentSurface) {
-        auto serial = d->m_seat->nextSerial();
         for (auto *resource : d->resourcesForSurface(d->m_currentSurface)) {
             d->send_leave(resource->handle, serial, d->m_currentSurface->resource());
         }
@@ -772,13 +768,12 @@ void TabletPadV2Interface::setCurrentSurface(SurfaceInterface *surface, TabletV2
     if (surface) {
         wl_resource *tabletResource = tablet->d->resourceForSurface(surface);
 
-        auto serial = d->m_seat->nextSerial();
         for (auto *resource : d->resourcesForSurface(surface)) {
             d->send_enter(resource->handle, serial, tabletResource, surface->resource());
         }
 
         for (TabletPadGroupV2Interface *group : std::as_const(d->m_groups)) {
-            group->sendModeSwitch(0);
+            group->sendModeSwitch(0, serial);
         }
     }
 }
