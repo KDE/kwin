@@ -1,7 +1,6 @@
-#######################################
-# Effect
+kwin_add_builtin_effect(zoom)
 
-set(zoom_SOURCES
+target_sources(zoom PRIVATE
     focustracker.cpp
     main.cpp
     textcarettracker.cpp
@@ -9,11 +8,8 @@ set(zoom_SOURCES
     zoom.qrc
 )
 
-kconfig_add_kcfg_files(zoom_SOURCES
-    zoomconfig.kcfgc
-)
+kconfig_add_kcfg_files(zoom zoomconfig.kcfgc)
 
-kwin_add_builtin_effect(zoom ${zoom_SOURCES})
 target_link_libraries(zoom PRIVATE
     kwin
 
