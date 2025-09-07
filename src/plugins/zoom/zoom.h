@@ -114,20 +114,15 @@ private:
     void trackTextCaret();
     void trackFocus();
 
-    std::unique_ptr<TextCaretTracker> m_textCaretTracker;
-    std::unique_ptr<FocusTracker> m_focusTracker;
     double m_zoom = 1.0;
     double m_targetZoom = 1.0;
     double m_sourceZoom = 1.0;
     double m_zoomFactor = 1.25;
     MouseTrackingType m_mouseTracking = MouseTrackingProportional;
     MousePointerType m_mousePointer = MousePointerScale;
-    int m_focusDelay = 350; // in milliseconds
     QPoint m_cursorPoint;
-    std::optional<QPoint> m_focusPoint = std::nullopt;
     QPoint m_prevPoint;
     QTime m_lastMouseEvent;
-    QTime m_lastFocusEvent;
     std::unique_ptr<CursorItem> m_cursorItem;
     bool m_cursorHidden = false;
     QTimeLine m_timeline;
@@ -145,6 +140,12 @@ private:
     Qt::KeyboardModifiers m_axisModifiers;
     std::unique_ptr<QAction> m_touchpadAction;
     double m_lastPinchProgress = 0;
+
+    std::unique_ptr<TextCaretTracker> m_textCaretTracker;
+    std::unique_ptr<FocusTracker> m_focusTracker;
+    std::optional<QPoint> m_focusPoint = std::nullopt;
+    QTime m_lastFocusEvent;
+    int m_focusDelay = 350; // in milliseconds
 };
 
 } // namespace
