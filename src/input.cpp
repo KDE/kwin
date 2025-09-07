@@ -309,7 +309,7 @@ public:
         if (pointerSurfaceAllowed()) {
             // TODO: should the pointer position always stay in sync, i.e. not do the check?
             seat->setTimestamp(event->timestamp);
-            seat->notifyPointerMotion(event->position);
+            seat->notifyPointerMotion(event->position, seat->nextSerial());
         }
         return true;
     }
@@ -331,7 +331,7 @@ public:
             // TODO: can we leak presses/releases here when we move the mouse in between from an allowed surface to
             //       disallowed one or vice versa?
             seat->setTimestamp(event->timestamp);
-            seat->notifyPointerButton(event->nativeButton, event->state);
+            seat->notifyPointerButton(event->nativeButton, event->state, seat->nextSerial());
         }
         return true;
     }
@@ -400,7 +400,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyKeyboardKey(event->nativeScanCode, event->state);
+        seat->notifyKeyboardKey(event->nativeScanCode, event->state, seat->nextSerial());
         return true;
     }
     bool touchDown(TouchDownEvent *event) override
@@ -415,7 +415,7 @@ public:
         if (window && surfaceAllowed(window->surface())) {
             auto seat = waylandServer()->seat();
             seat->setTimestamp(event->time);
-            seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), event->id, event->pos);
+            seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), event->id, event->pos, seat->nextSerial());
         }
         return true;
     }
@@ -442,7 +442,7 @@ public:
 
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->notifyTouchUp(event->id);
+        seat->notifyTouchUp(event->id, seat->nextSerial());
         return true;
     }
     bool pinchGestureBegin(PointerPinchGestureBeginEvent *event) override
@@ -582,7 +582,7 @@ public:
         if (!effects || !effects->hasKeyboardGrab()) {
             return false;
         }
-        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
+        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr, waylandServer()->seat()->nextSerial());
         if (!passToInputMethod(event)) {
             QKeyEvent keyEvent(event->state == KeyboardKeyState::Released ? QEvent::KeyRelease : QEvent::KeyPress,
                                event->key,
@@ -847,7 +847,7 @@ public:
         if (!m_active) {
             return false;
         }
-        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
+        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr, waylandServer()->seat()->nextSerial());
 
         if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             // x11 variant does this on key press, so do the same
@@ -2083,7 +2083,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyPointerMotion(event->position);
+        seat->notifyPointerMotion(event->position, seat->nextSerial());
         // absolute motion events confuse games and Wayland doesn't have a warp event yet
         // -> send a relative motion event with a zero delta to signal the warp instead
         if (event->warp) {
@@ -2097,7 +2097,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyPointerButton(event->nativeButton, event->state);
+        seat->notifyPointerButton(event->nativeButton, event->state, seat->nextSerial());
         return true;
     }
     bool pointerFrame() override
@@ -2118,7 +2118,7 @@ public:
         input()->keyboard()->update();
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyKeyboardKey(event->nativeScanCode, event->state);
+        seat->notifyKeyboardKey(event->nativeScanCode, event->state, seat->nextSerial());
         return true;
     }
     bool touchDown(TouchDownEvent *event) override
@@ -2130,7 +2130,7 @@ public:
             return false;
         }
         seat->setTimestamp(event->time);
-        auto tp = seat->notifyTouchDown(w->surface(), w->bufferGeometry().topLeft(), event->id, event->pos);
+        auto tp = seat->notifyTouchDown(w->surface(), w->bufferGeometry().topLeft(), event->id, event->pos, seat->nextSerial());
         if (!tp) {
             qCCritical(KWIN_CORE) << "Could not touch down" << event->pos;
             return false;
@@ -2151,7 +2151,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->notifyTouchUp(event->id);
+        seat->notifyTouchUp(event->id, seat->nextSerial());
         return true;
     }
     bool touchCancel() override
@@ -2168,7 +2168,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->startPointerPinchGesture(event->fingerCount);
+        seat->startPointerPinchGesture(event->fingerCount, seat->nextSerial());
         return true;
     }
     bool pinchGestureUpdate(PointerPinchGestureUpdateEvent *event) override
@@ -2182,14 +2182,14 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->endPointerPinchGesture();
+        seat->endPointerPinchGesture(seat->nextSerial());
         return true;
     }
     bool pinchGestureCancelled(PointerPinchGestureCancelEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->cancelPointerPinchGesture();
+        seat->cancelPointerPinchGesture(seat->nextSerial());
         return true;
     }
 
@@ -2197,7 +2197,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->startPointerSwipeGesture(event->fingerCount);
+        seat->startPointerSwipeGesture(event->fingerCount, seat->nextSerial());
         return true;
     }
     bool swipeGestureUpdate(PointerSwipeGestureUpdateEvent *event) override
@@ -2211,35 +2211,35 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->endPointerSwipeGesture();
+        seat->endPointerSwipeGesture(seat->nextSerial());
         return true;
     }
     bool swipeGestureCancelled(PointerSwipeGestureCancelEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->cancelPointerSwipeGesture();
+        seat->cancelPointerSwipeGesture(seat->nextSerial());
         return true;
     }
     bool holdGestureBegin(PointerHoldGestureBeginEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->startPointerHoldGesture(event->fingerCount);
+        seat->startPointerHoldGesture(event->fingerCount, seat->nextSerial());
         return true;
     }
     bool holdGestureEnd(PointerHoldGestureEndEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->endPointerHoldGesture();
+        seat->endPointerHoldGesture(seat->nextSerial());
         return true;
     }
     bool holdGestureCancelled(PointerHoldGestureCancelEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->cancelPointerHoldGesture();
+        seat->cancelPointerHoldGesture(seat->nextSerial());
         return true;
     }
 
@@ -2632,20 +2632,21 @@ public:
             }
         }
 
+        const quint32 serial = seat->nextSerial();
         if (dragTarget) {
             const auto [effectiveSurface, offset] = dragTarget->surface()->mapToInputSurface(dragTarget->mapToLocal(pos));
             if (seat->dragSurface() != effectiveSurface) {
                 QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
                 inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
-                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, pos, inputTransformation);
+                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, pos, inputTransformation, serial);
             }
         } else {
             // no window at that place, if we have a surface we need to reset
-            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
+            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4(), serial);
             m_dragTarget = nullptr;
         }
 
-        seat->notifyPointerMotion(pos);
+        seat->notifyPointerMotion(pos, serial);
 
         return true;
     }
@@ -2661,11 +2662,11 @@ public:
         }
         seat->setTimestamp(event->timestamp);
         if (event->state == PointerButtonState::Pressed) {
-            seat->notifyPointerButton(event->nativeButton, event->state);
+            seat->notifyPointerButton(event->nativeButton, event->state, seat->nextSerial());
         } else {
             raiseDragTarget();
             m_dragTarget = nullptr;
-            seat->notifyPointerButton(event->nativeButton, event->state);
+            seat->notifyPointerButton(event->nativeButton, event->state, seat->nextSerial());
         }
         // TODO: should we pass through effects?
         return true;
@@ -2699,7 +2700,7 @@ public:
         }
         Window *window = input()->findToplevel(event->pos);
         seat->setTimestamp(event->time);
-        seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), event->id, event->pos);
+        seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), event->id, event->pos, seat->nextSerial());
         m_lastPos = event->pos;
         return true;
     }
@@ -2729,6 +2730,7 @@ public:
         seat->setTimestamp(event->time);
         seat->notifyTouchMotion(event->id, event->pos);
 
+        const quint32 serial = seat->nextSerial();
         if (Window *dragTarget = pickDragTarget(event->pos)) {
             if (m_dragTarget != dragTarget) {
                 workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
@@ -2745,13 +2747,13 @@ public:
             if (seat->dragSurface() != effectiveSurface) {
                 QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
                 inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
-                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, event->pos, inputTransformation);
+                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, event->pos, inputTransformation, serial);
             }
 
             m_dragTarget = dragTarget;
         } else {
             // no window at that place, if we have a surface we need to reset
-            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
+            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4(), serial);
             m_dragTarget = nullptr;
         }
         return true;
@@ -2763,7 +2765,7 @@ public:
             return false;
         }
         seat->setTimestamp(event->time);
-        seat->notifyTouchUp(event->id);
+        seat->notifyTouchUp(event->id, seat->nextSerial());
         if (m_touchId == event->id) {
             m_touchId = -1;
             raiseDragTarget();

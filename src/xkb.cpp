@@ -858,7 +858,8 @@ void Xkb::forwardModifiers()
     m_seat->notifyKeyboardModifiers(m_modifierState.depressed,
                                     m_modifierState.latched,
                                     m_modifierState.locked,
-                                    m_currentLayout);
+                                    m_currentLayout,
+                                    m_seat->nextSerial());
 }
 
 QString Xkb::layoutName(xkb_layout_index_t index) const

@@ -101,7 +101,7 @@ bool PopupInputFilter::keyboardKey(KeyboardKeyEvent *event)
     } else if (qobject_cast<WaylandWindow *>(last)) {
         if (!passToInputMethod(event)) {
             waylandServer()->seat()->setTimestamp(event->timestamp);
-            waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, event->state);
+            waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, event->state, waylandServer()->seat()->nextSerial());
         }
     }
 
@@ -157,7 +157,7 @@ bool PopupInputFilter::tabletToolTipEvent(TabletToolTipEvent *event)
 void PopupInputFilter::focus(Window *popup)
 {
     if (auto internalWindow = qobject_cast<InternalWindow *>(m_popupWindows.constLast())) {
-        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
+        waylandServer()->seat()->setFocusedKeyboardSurface(nullptr, waylandServer()->seat()->nextSerial());
         if (QGuiApplication::focusWindow() != internalWindow->handle()) {
             QWindowSystemInterface::handleFocusWindowChanged(internalWindow->handle());
         }
@@ -165,7 +165,7 @@ void PopupInputFilter::focus(Window *popup)
         if (QGuiApplication::focusWindow()) {
             QWindowSystemInterface::handleFocusWindowChanged(nullptr);
         }
-        waylandServer()->seat()->setFocusedKeyboardSurface(waylandWindow->surface(), input()->keyboard()->unfilteredKeys());
+        waylandServer()->seat()->setFocusedKeyboardSurface(waylandWindow->surface(), waylandServer()->seat()->nextSerial(), input()->keyboard()->unfilteredKeys());
     }
 }
 

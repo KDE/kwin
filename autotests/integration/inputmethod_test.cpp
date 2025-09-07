@@ -280,7 +280,7 @@ void InputMethodTest::testHidePanel()
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
-    waylandServer()->seat()->setFocusedTextInputSurface(window->surface());
+    waylandServer()->seat()->setFocusedTextInputSurface(window->surface(), waylandServer()->seat()->nextSerial());
 
     textInput->enable(surface.get());
     QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
@@ -322,7 +322,7 @@ void InputMethodTest::testUnmapPanel()
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
-    waylandServer()->seat()->setFocusedTextInputSurface(window->surface());
+    waylandServer()->seat()->setFocusedTextInputSurface(window->surface(), waylandServer()->seat()->nextSerial());
 
     textInput->enable(surface.get());
     QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
@@ -416,20 +416,20 @@ void InputMethodTest::testSwitchFocusedSurfaces()
         toplevels.push_back(std::move(shellSurface));
     }
     QCOMPARE(windowAddedSpy.count(), 3);
-    waylandServer()->seat()->setFocusedTextInputSurface(windows.constFirst()->surface());
+    waylandServer()->seat()->setFocusedTextInputSurface(windows.constFirst()->surface(), waylandServer()->seat()->nextSerial());
 
     QVERIFY(!kwinApp()->inputMethod()->isActive());
     textInput->enable(surfaces.back().get());
     QVERIFY(!kwinApp()->inputMethod()->isActive());
-    waylandServer()->seat()->setFocusedTextInputSurface(windows.first()->surface());
+    waylandServer()->seat()->setFocusedTextInputSurface(windows.first()->surface(), waylandServer()->seat()->nextSerial());
     QVERIFY(!kwinApp()->inputMethod()->isActive());
     activateSpy.clear();
-    waylandServer()->seat()->setFocusedTextInputSurface(windows.last()->surface());
+    waylandServer()->seat()->setFocusedTextInputSurface(windows.last()->surface(), waylandServer()->seat()->nextSerial());
     QVERIFY(activateSpy.count() || activateSpy.wait());
     QVERIFY(kwinApp()->inputMethod()->isActive());
 
     activateSpy.clear();
-    waylandServer()->seat()->setFocusedTextInputSurface(windows.first()->surface());
+    waylandServer()->seat()->setFocusedTextInputSurface(windows.first()->surface(), waylandServer()->seat()->nextSerial());
     QVERIFY(activateSpy.count() || activateSpy.wait());
     QVERIFY(!kwinApp()->inputMethod()->isActive());
 }
@@ -453,7 +453,7 @@ void InputMethodTest::testV2V3SameClient()
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
     QCOMPARE(workspace()->activeWindow(), window);
     QCOMPARE(windowAddedSpy.count(), 1);
-    waylandServer()->seat()->setFocusedTextInputSurface(window->surface());
+    waylandServer()->seat()->setFocusedTextInputSurface(window->surface(), waylandServer()->seat()->nextSerial());
     QVERIFY(!kwinApp()->inputMethod()->isActive());
 
     // Enable and disable v2
@@ -822,7 +822,7 @@ void InputMethodTest::testOverlayPositioning()
     // Make the window smaller than the screen and move it.
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1080, 824), Qt::red);
     window->move(QPointF(50, 100));
-    waylandServer()->seat()->setFocusedTextInputSurface(window->surface());
+    waylandServer()->seat()->setFocusedTextInputSurface(window->surface(), waylandServer()->seat()->nextSerial());
 
     textInput->setCursorRectangle(cursorRectangle);
     textInput->enable(surface.get());

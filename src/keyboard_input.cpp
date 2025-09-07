@@ -260,10 +260,10 @@ void KeyboardInputRedirection::update()
     Window *found = pickFocus();
     if (found && found->surface()) {
         if (found->surface() != seat->focusedKeyboardSurface()) {
-            seat->setFocusedKeyboardSurface(found->surface(), unfilteredKeys());
+            seat->setFocusedKeyboardSurface(found->surface(), seat->nextSerial(), unfilteredKeys());
         }
     } else {
-        seat->setFocusedKeyboardSurface(nullptr);
+        seat->setFocusedKeyboardSurface(nullptr, seat->nextSerial());
     }
 }
 

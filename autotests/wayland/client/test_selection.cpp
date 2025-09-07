@@ -206,7 +206,7 @@ void SelectionTest::testClearOnEnter()
     QVERIFY(serverSurface1);
 
     // pass this surface keyboard focus
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface1);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface1, m_seatInterface->nextSerial());
     // should get a clear
     QVERIFY(selectionClearedClient1Spy.wait());
 
@@ -225,7 +225,7 @@ void SelectionTest::testClearOnEnter()
     QVERIFY(serverSurface2);
 
     // entering that surface should give a selection offer
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface2);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface2, m_seatInterface->nextSerial());
     QVERIFY(selectionOfferedClient2Spy.wait());
     QVERIFY(selectionClearedClient2Spy.isEmpty());
 
@@ -238,7 +238,7 @@ void SelectionTest::testClearOnEnter()
     QVERIFY(selectionClearedClient2Spy.wait());
 
     // now pass focus to first surface
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface1);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface1, m_seatInterface->nextSerial());
     // we should get a clear
     QVERIFY(selectionClearedClient1Spy.wait());
 }

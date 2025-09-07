@@ -225,15 +225,15 @@ void TestPointerConstraints::testLockPointer()
 
     // let's lock the surface
     QSignalSpy lockedChangedSpy(serverLockedPointer, &LockedPointerV1Interface::lockedChanged);
-    m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
+    m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0), m_seatInterface->nextSerial());
     QSignalSpy pointerMotionSpy(m_pointer, &KWayland::Client::Pointer::motion);
-    m_seatInterface->notifyPointerMotion(QPoint(0, 1));
+    m_seatInterface->notifyPointerMotion(QPoint(0, 1), m_seatInterface->nextSerial());
     m_seatInterface->notifyPointerFrame();
     QVERIFY(pointerMotionSpy.wait());
 
     serverLockedPointer->setLocked(true);
     QCOMPARE(serverLockedPointer->isLocked(), true);
-    m_seatInterface->notifyPointerMotion(QPoint(1, 1));
+    m_seatInterface->notifyPointerMotion(QPoint(1, 1), m_seatInterface->nextSerial());
     m_seatInterface->notifyPointerFrame();
     QCOMPARE(lockedChangedSpy.count(), 1);
     QCOMPARE(pointerMotionSpy.count(), 1);
@@ -262,7 +262,7 @@ void TestPointerConstraints::testLockPointer()
     QCOMPARE(lockedSpy.count(), 1);
 
     // now motion should work again
-    m_seatInterface->notifyPointerMotion(QPoint(0, 1));
+    m_seatInterface->notifyPointerMotion(QPoint(0, 1), m_seatInterface->nextSerial());
     m_seatInterface->notifyPointerFrame();
     QVERIFY(pointerMotionSpy.wait());
     QCOMPARE(pointerMotionSpy.count(), 2);
@@ -341,7 +341,7 @@ void TestPointerConstraints::testConfinePointer()
 
     // let's confine the surface
     QSignalSpy confinedChangedSpy(serverConfinedPointer, &ConfinedPointerV1Interface::confinedChanged);
-    m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
+    m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0), m_seatInterface->nextSerial());
     serverConfinedPointer->setConfined(true);
     QCOMPARE(serverConfinedPointer->isConfined(), true);
     QCOMPARE(confinedChangedSpy.count(), 1);

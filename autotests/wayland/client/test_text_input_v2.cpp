@@ -196,7 +196,7 @@ void TextInputTest::testEnterLeave()
 
     // now let's try to enter it
     QVERIFY(!m_seatInterface->focusedTextInputSurface());
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     QCOMPARE(m_seatInterface->focusedTextInputSurface(), serverSurface);
     // text input not yet set for the surface
     QFETCH(bool, updatesDirectly);
@@ -226,14 +226,14 @@ void TextInputTest::testEnterLeave()
     QCOMPARE(textInput->enteredSurface(), surface.get());
 
     // now trigger a leave
-    m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    m_seatInterface->setFocusedKeyboardSurface(nullptr, m_seatInterface->nextSerial());
     QCOMPARE(textInputChangedSpy.count(), 2);
     QVERIFY(leftSpy.wait());
     QVERIFY(!textInput->enteredSurface());
     QVERIFY(!serverTextInput->isEnabled());
 
     // if we enter again we should directly get the text input as it's still activated
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     QCOMPARE(textInputChangedSpy.count(), 3);
     QVERIFY(m_seatInterface->textInputV2());
     QVERIFY(enteredSpy.wait());
@@ -270,7 +270,7 @@ void TextInputTest::testFocusedBeforeCreateTextInput()
     // now let's try to enter it
     QSignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputSurfaceChanged);
     QVERIFY(!m_seatInterface->focusedTextInputSurface());
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     QCOMPARE(m_seatInterface->focusedTextInputSurface(), serverSurface);
     QCOMPARE(textInputChangedSpy.count(), 1);
 
@@ -294,7 +294,7 @@ void TextInputTest::testFocusedBeforeCreateTextInput()
     QCOMPARE(m_seatInterface->textInputV2()->surface(), serverSurface);
 
     // now trigger a leave
-    m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    m_seatInterface->setFocusedKeyboardSurface(nullptr, m_seatInterface->nextSerial());
     QCOMPARE(textInputChangedSpy.count(), 2);
     QVERIFY(leftSpy.wait());
     QVERIFY(!textInput->enteredSurface());
@@ -317,7 +317,7 @@ void TextInputTest::testShowHidePanel()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
@@ -353,7 +353,7 @@ void TextInputTest::testCursorRectangle()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
     QCOMPARE(ti->cursorRectangle(), QRect());
@@ -377,7 +377,7 @@ void TextInputTest::testPreferredLanguage()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
     QVERIFY(ti->preferredLanguage().isEmpty());
@@ -401,7 +401,7 @@ void TextInputTest::testReset()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
@@ -424,7 +424,7 @@ void TextInputTest::testSurroundingText()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
     QVERIFY(ti->surroundingText().isEmpty());
@@ -495,7 +495,7 @@ void TextInputTest::testContentHints()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
     QCOMPARE(ti->contentHints(), KWin::TextInputContentHints());
@@ -548,7 +548,7 @@ void TextInputTest::testContentPurpose()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
     QCOMPARE(ti->contentPurpose(), KWin::TextInputContentPurpose::Normal);
@@ -595,7 +595,7 @@ void TextInputTest::testTextDirection()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
@@ -630,7 +630,7 @@ void TextInputTest::testLanguage()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
@@ -663,7 +663,7 @@ void TextInputTest::testKeyEvent()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
@@ -705,7 +705,7 @@ void TextInputTest::testPreEdit()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
@@ -748,7 +748,7 @@ void TextInputTest::testCommit()
     m_connection->flush();
     m_display->dispatchEvents();
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 

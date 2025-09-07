@@ -211,7 +211,7 @@ void TestTextInputV1Interface::testEnableDisable()
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
 
     // Make sure that entering surface does not trigger the text input
-    m_seat->setFocusedTextInputSurface(serverSurface);
+    m_seat->setFocusedTextInputSurface(serverSurface, m_seat->nextSerial());
     QCOMPARE(focusedSurfaceChangedSpy.count(), 1);
     QCOMPARE(surfaceEnterSpy.count(), 0);
     QCOMPARE(textInputEnabledSpy.count(), 0);
@@ -236,7 +236,7 @@ void TestTextInputV1Interface::testEnableDisable()
     QVERIFY(surfaceLeaveSpy.wait());
 
     // Lets try leaving the surface and make sure event propogage
-    m_seat->setFocusedTextInputSurface(nullptr);
+    m_seat->setFocusedTextInputSurface(nullptr, m_seat->nextSerial());
     QCOMPARE(surfaceLeaveSpy.count(), 1);
 }
 
@@ -259,7 +259,7 @@ void TestTextInputV1Interface::testEvents()
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
 
     // Make sure that entering surface does not trigger the text input
-    m_seat->setFocusedTextInputSurface(serverSurface);
+    m_seat->setFocusedTextInputSurface(serverSurface, m_seat->nextSerial());
     // FIXME: somehow this triggers BEFORE setFocusedTextInputSurface returns :(
     //  QVERIFY(focusedSurfaceChangedSpy.wait());
     QCOMPARE(focusedSurfaceChangedSpy.count(), 1);
@@ -328,7 +328,7 @@ void TestTextInputV1Interface::testContentPurpose()
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
 
     // Make sure that entering surface does not trigger the text input
-    m_seat->setFocusedTextInputSurface(serverSurface);
+    m_seat->setFocusedTextInputSurface(serverSurface, m_seat->nextSerial());
     // FIXME: somehow this triggers BEFORE setFocusedTextInputSurface returns :(
     //  QVERIFY(focusedSurfaceChangedSpy.wait());
     QCOMPARE(focusedSurfaceChangedSpy.count(), 1);
@@ -413,7 +413,7 @@ void TestTextInputV1Interface::testContentHints()
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
 
     // Make sure that entering surface does not trigger the text input
-    m_seat->setFocusedTextInputSurface(serverSurface);
+    m_seat->setFocusedTextInputSurface(serverSurface, m_seat->nextSerial());
     // FIXME: somehow this triggers BEFORE setFocusedTextInputSurface returns :(
     //  QVERIFY(focusedSurfaceChangedSpy.wait());
     QCOMPARE(focusedSurfaceChangedSpy.count(), 1);

@@ -116,7 +116,8 @@ XToWlDrag::~XToWlDrag()
 bool XToWlDrag::moveFilter(Window *target, const QPointF &position)
 {
     auto *seat = waylandServer()->seat();
-    seat->notifyPointerMotion(position);
+    const quint32 serial = seat->nextSerial();
+    seat->notifyPointerMotion(position, serial);
 
     if (m_visit && m_visit->target() == target) {
         // still same Wl target, wait for X events
@@ -142,7 +143,7 @@ bool XToWlDrag::moveFilter(Window *target, const QPointF &position)
         if (hasCurrent) {
             // last received enter event is now void,
             // wait for the next one
-            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
+            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4(), serial);
         }
         return true;
     }
@@ -218,7 +219,7 @@ void XToWlDrag::setDragTarget()
     if (!dropTarget || !ac->surface()) {
         return;
     }
-    seat->setDragTarget(dropTarget, ac->surface(), seat->pointerPos(), ac->inputTransformation());
+    seat->setDragTarget(dropTarget, ac->surface(), seat->pointerPos(), ac->inputTransformation(), seat->nextSerial());
 }
 
 bool XToWlDrag::checkForFinished()

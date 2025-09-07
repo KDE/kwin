@@ -135,8 +135,8 @@ void CompositorWindow::updateFocus()
     if (it == m_stackingOrder.constEnd()) {
         return;
     }
-    m_seat->notifyPointerEnter((*it)->surface(), m_seat->pointerPos());
-    m_seat->setFocusedKeyboardSurface((*it)->surface());
+    m_seat->notifyPointerEnter((*it)->surface(), m_seat->pointerPos(), m_seat->nextSerial());
+    m_seat->setFocusedKeyboardSurface((*it)->surface(), m_seat->nextSerial());
 }
 
 void CompositorWindow::setSeat(const QPointer<KWin::SeatInterface> &seat)
@@ -171,7 +171,7 @@ void CompositorWindow::keyPressEvent(QKeyEvent *event)
         updateFocus();
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Pressed);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Pressed, m_seat->nextSerial());
 }
 
 void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
@@ -181,7 +181,7 @@ void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
         return;
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Released);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Released, m_seat->nextSerial());
 }
 
 void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
@@ -191,7 +191,7 @@ void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
         updateFocus();
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyPointerMotion(event->position().toPoint());
+    m_seat->notifyPointerMotion(event->position().toPoint(), m_seat->nextSerial());
     m_seat->notifyPointerFrame();
 }
 
@@ -200,11 +200,11 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
     QWidget::mousePressEvent(event);
     if (!m_seat->focusedPointerSurface()) {
         if (!m_stackingOrder.isEmpty()) {
-            m_seat->notifyPointerEnter(m_stackingOrder.last()->surface(), event->globalPosition());
+            m_seat->notifyPointerEnter(m_stackingOrder.last()->surface(), event->globalPosition(), m_seat->nextSerial());
         }
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyPointerButton(event->button(), KWin::PointerButtonState::Pressed);
+    m_seat->notifyPointerButton(event->button(), KWin::PointerButtonState::Pressed, m_seat->nextSerial());
     m_seat->notifyPointerFrame();
 }
 
@@ -212,7 +212,7 @@ void CompositorWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent(event);
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyPointerButton(event->button(), KWin::PointerButtonState::Released);
+    m_seat->notifyPointerButton(event->button(), KWin::PointerButtonState::Released, m_seat->nextSerial());
     m_seat->notifyPointerFrame();
 }
 

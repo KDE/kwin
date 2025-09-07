@@ -175,7 +175,7 @@ public:
      * Sends a drag leave event to the current target and an enter event to @p surface.
      * The enter position is derived from @p globalPosition and transformed by @p inputTransformation.
      */
-    void setDragTarget(AbstractDropHandler *dropTarget, SurfaceInterface *surface, const QPointF &globalPosition, const QMatrix4x4 &inputTransformation);
+    void setDragTarget(AbstractDropHandler *dropTarget, SurfaceInterface *surface, const QPointF &globalPosition, const QMatrix4x4 &inputTransformation, quint32 serial);
     ///@}
 
     AbstractDropHandler *dropHandlerForSurface(SurfaceInterface *surface) const;
@@ -194,7 +194,7 @@ public:
      *
      * Sends a pointer motion event to the focused pointer surface.
      */
-    void notifyPointerMotion(const QPointF &pos);
+    void notifyPointerMotion(const QPointF &pos, quint32 serial);
     /**
      * @returns the global pointer position
      */
@@ -225,7 +225,7 @@ public:
      * @see setFocusedPointerSurfaceTransformation
      * @see focusedPointerSurfaceTransformation
      */
-    void notifyPointerEnter(SurfaceInterface *surface, const QPointF &position, const QPointF &surfacePosition = QPointF());
+    void notifyPointerEnter(SurfaceInterface *surface, const QPointF &position, quint32 serial, const QPointF &surfacePosition = QPointF());
     /**
      * Sets the focused pointer @p surface.
      * All pointer events will be sent to the @p surface till a new focused pointer surface gets
@@ -249,8 +249,8 @@ public:
      * @see setFocusedPointerSurfaceTransformation
      * @see focusedPointerSurfaceTransformation
      */
-    void notifyPointerEnter(SurfaceInterface *surface, const QPointF &position, const QMatrix4x4 &transformation);
-    void notifyPointerLeave();
+    void notifyPointerEnter(SurfaceInterface *surface, const QPointF &position, const QMatrix4x4 &transformation, quint32 serial);
+    void notifyPointerLeave(quint32 serial);
     /**
      * @returns The currently focused pointer surface, that is the surface receiving pointer events.
      * @see notifyPointerEnter
@@ -297,11 +297,11 @@ public:
     /**
      * Marks the specified @a button as pressed or released based on @a state.
      */
-    void notifyPointerButton(quint32 button, PointerButtonState state);
+    void notifyPointerButton(quint32 button, PointerButtonState state, quint32 serial);
     /**
      * @overload
      */
-    void notifyPointerButton(Qt::MouseButton button, PointerButtonState state);
+    void notifyPointerButton(Qt::MouseButton button, PointerButtonState state, quint32 serial);
     void notifyPointerFrame();
     /**
      * @returns whether the @p button is pressed
@@ -389,7 +389,7 @@ public:
      * @see cancelPointerSwipeGesture
      * @see startPointerPinchGesture
      */
-    void startPointerSwipeGesture(quint32 fingerCount);
+    void startPointerSwipeGesture(quint32 fingerCount, quint32 serial);
 
     /**
      * The position of the logical center of the currently active multi-finger swipe gesture changes.
@@ -408,7 +408,7 @@ public:
      * @see cancelPointerSwipeGesture
      * @see 5.29
      */
-    void endPointerSwipeGesture();
+    void endPointerSwipeGesture(quint32 serial);
 
     /**
      * The multi-finger swipe gestures ended and got cancelled by the Wayland compositor.
@@ -416,7 +416,7 @@ public:
      * @see updatePointerSwipeGesture
      * @see endPointerSwipeGesture
      */
-    void cancelPointerSwipeGesture();
+    void cancelPointerSwipeGesture(quint32 serial);
 
     /**
      * Starts a multi-finch pinch gesture for the currently focused pointer surface.
@@ -439,7 +439,7 @@ public:
      * @see cancelPointerPinchGesture
      * @see startPointerSwipeGesture
      */
-    void startPointerPinchGesture(quint32 fingerCount);
+    void startPointerPinchGesture(quint32 fingerCount, quint32 serial);
 
     /**
      * The position of the logical center, the rotation or the relative scale of this
@@ -460,7 +460,7 @@ public:
      * @see updatePointerPinchGesture
      * @see cancelPointerPinchGesture
      */
-    void endPointerPinchGesture();
+    void endPointerPinchGesture(quint32 serial);
 
     /**
      *
@@ -468,7 +468,7 @@ public:
      * @see updatePointerPinchGesture
      * @see endPointerPinchGesture
      */
-    void cancelPointerPinchGesture();
+    void cancelPointerPinchGesture(quint32 serial);
 
     /**
      * Starts a multi-finger hold gesture for the currently focused pointer surface.
@@ -488,21 +488,21 @@ public:
      * @see endPointerHoldeGesture
      * @see cancelPointerHoldGesture
      */
-    void startPointerHoldGesture(quint32 fingerCount);
+    void startPointerHoldGesture(quint32 fingerCount, quint32 serial);
 
     /**
      * The multi-finger hold gesture ended. This may happen when one or more fingers are lifted.
      * @see startPointerHoldGesture
      * @see cancelPointerHoldGesture
      */
-    void endPointerHoldGesture();
+    void endPointerHoldGesture(quint32 serial);
 
     /**
      * The multi-finger swipe gestures ended and got cancelled by the Wayland compositor.
      * @see startPointerHoldGesture
      * @see endPointerHoldGesture
      */
-    void cancelPointerHoldGesture();
+    void cancelPointerHoldGesture(quint32 serial);
     ///@}
 
     /**
@@ -515,11 +515,11 @@ public:
      * @see hasKeyboard
      * @see setFocusedTextInputSurface
      */
-    void setFocusedKeyboardSurface(SurfaceInterface *surface, const QList<quint32> &keys = {});
+    void setFocusedKeyboardSurface(SurfaceInterface *surface, quint32 serial, const QList<quint32> &keys = {});
     SurfaceInterface *focusedKeyboardSurface() const;
     KeyboardInterface *keyboard() const;
-    void notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state);
-    void notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
+    void notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state, quint32 serial);
+    void notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);
     ///@}
 
     /**
@@ -527,8 +527,8 @@ public:
      */
     ///@{
     TouchInterface *touch() const;
-    TouchPoint *notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition);
-    void notifyTouchUp(qint32 id);
+    TouchPoint *notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition, quint32 serial);
+    void notifyTouchUp(qint32 id, quint32 serial);
     void notifyTouchMotion(qint32 id, const QPointF &globalPosition);
     void notifyTouchFrame();
     void notifyTouchCancel();
@@ -562,7 +562,7 @@ public:
      * @see focusedTextInputChanged
      * @see setFocusedKeyboardSurface
      */
-    void setFocusedTextInputSurface(SurfaceInterface *surface);
+    void setFocusedTextInputSurface(SurfaceInterface *surface, quint32 serial);
     /**
      * @returns The SurfaceInterface which is currently focused for text input.
      * @see setFocusedTextInputSurface

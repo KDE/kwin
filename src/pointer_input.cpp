@@ -116,8 +116,9 @@ void PointerInputRedirection::init()
     if (kwinApp()->supportsLockScreen()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, [this]() {
             if (waylandServer()->seat()->hasPointer()) {
-                waylandServer()->seat()->cancelPointerPinchGesture();
-                waylandServer()->seat()->cancelPointerSwipeGesture();
+                const quint32 serial = waylandServer()->seat()->nextSerial();
+                waylandServer()->seat()->cancelPointerPinchGesture(serial);
+                waylandServer()->seat()->cancelPointerSwipeGesture(serial);
             }
             update();
         });
@@ -632,12 +633,13 @@ void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
     }
 
     auto seat = waylandServer()->seat();
+    const quint32 serial = seat->nextSerial();
     if (!focusNow || !focusNow->surface()) {
-        seat->notifyPointerLeave();
+        seat->notifyPointerLeave(serial);
         return;
     }
 
-    seat->notifyPointerEnter(focusNow->surface(), m_pos, focusNow->inputTransformation());
+    seat->notifyPointerEnter(focusNow->surface(), m_pos, focusNow->inputTransformation(), serial);
 
     m_focusGeometryConnection = connect(focusNow, &Window::inputTransformationChanged, this, [this]() {
         waylandServer()->seat()->setFocusedPointerSurfaceTransformation(focus()->inputTransformation());

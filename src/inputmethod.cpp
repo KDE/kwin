@@ -243,7 +243,7 @@ void InputMethod::forwardKeyToEffects(bool pressed, int keyCode, int keySym)
                     keySym,
                     0,
                     xkb->toString(keySym));
-    waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
+    waylandServer()->seat()->setFocusedKeyboardSurface(nullptr, waylandServer()->seat()->nextSerial());
     effects->grabbedKeyboardEvent(&event);
 }
 
@@ -610,7 +610,7 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
     } else {
         state = KeyboardKeyState::Released;
     }
-    waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state);
+    waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state, waylandServer()->seat()->nextSerial()); // TODO: use serial?
 }
 
 void InputMethod::commitString(qint32 serial, const QString &text)
@@ -645,7 +645,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
 
         // First, send all the extracted keys as pressed keys to the client.
         for (const auto &key : keys) {
-            waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Pressed);
+            waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Pressed, waylandServer()->seat()->nextSerial()); // TODO: use serial?
         }
 
         // Then, send key release for those keys in reverse.
@@ -656,7 +656,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
             auto key = *itr;
             QMetaObject::invokeMethod(
                 this, [key]() {
-                waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Released);
+                waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Released, waylandServer()->seat()->nextSerial()); // TODO: use serial?
             }, Qt::QueuedConnection);
         }
     }
@@ -831,7 +831,7 @@ void InputMethod::key(quint32 /*serial*/, quint32 time, quint32 keyCode, bool pr
     }
 
     waylandServer()->seat()->notifyKeyboardKey(keyCode,
-                                               pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released);
+                                               pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released, waylandServer()->seat()->nextSerial()); // TODO: use serial?
 }
 
 void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)

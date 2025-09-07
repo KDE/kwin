@@ -274,7 +274,7 @@ void TestDataDevice::testSendSelectionOnSeat()
 
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
 
     // now set the selection
     std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
@@ -287,18 +287,18 @@ void TestDataDevice::testSendSelectionOnSeat()
     QCOMPARE(selectionOfferedSpy.count(), 1);
 
     // now unfocus the keyboard
-    m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    m_seatInterface->setFocusedKeyboardSurface(nullptr, m_seatInterface->nextSerial());
     // if setting the same surface again, we should get another offer
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
     QVERIFY(selectionOfferedSpy.wait());
     QCOMPARE(selectionOfferedSpy.count(), 2);
 
     // now let's try to destroy the data device and set a focused keyboard just while the data device is being destroyedd
-    m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    m_seatInterface->setFocusedKeyboardSurface(nullptr, m_seatInterface->nextSerial());
     QSignalSpy unboundSpy(serverDataDevice, &QObject::destroyed);
     dataDevice.reset();
     QVERIFY(unboundSpy.wait());
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
 }
 
 void TestDataDevice::testReplaceSource()
@@ -325,7 +325,7 @@ void TestDataDevice::testReplaceSource()
 
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface, m_seatInterface->nextSerial());
 
     // now set the selection
     std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
