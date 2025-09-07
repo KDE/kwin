@@ -4,12 +4,12 @@
 
     SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
     SPDX-FileCopyrightText: 2010 Sebastian Sauer <sebsauer@kdab.com>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #pragma once
-#include "config-kwin.h"
 
 #include "core/colorspace.h"
 #include "effect/effect.h"
@@ -21,15 +21,13 @@
 namespace KWin
 {
 
-#if HAVE_ACCESSIBILITY
-class ZoomAccessibilityIntegration;
-#endif
-
 class CursorItem;
 class GLFramebuffer;
 class GLTexture;
 class GLVertexBuffer;
 class GLShader;
+class FocusTracker;
+class TextCaretTracker;
 
 class ZoomEffect : public Effect
 {
@@ -37,8 +35,6 @@ class ZoomEffect : public Effect
     Q_PROPERTY(qreal zoomFactor READ configuredZoomFactor)
     Q_PROPERTY(int mousePointer READ configuredMousePointer)
     Q_PROPERTY(int mouseTracking READ configuredMouseTracking)
-    Q_PROPERTY(bool focusTrackingEnabled READ isFocusTrackingEnabled)
-    Q_PROPERTY(bool textCaretTrackingEnabled READ isTextCaretTrackingEnabled)
     Q_PROPERTY(int focusDelay READ configuredFocusDelay)
     Q_PROPERTY(qreal moveFactor READ configuredMoveFactor)
     Q_PROPERTY(qreal targetZoom READ targetZoom)
@@ -58,8 +54,6 @@ public:
     qreal configuredZoomFactor() const;
     int configuredMousePointer() const;
     int configuredMouseTracking() const;
-    bool isFocusTrackingEnabled() const;
-    bool isTextCaretTrackingEnabled() const;
     int configuredFocusDelay() const;
     qreal configuredMoveFactor() const;
     qreal targetZoom() const;
@@ -76,7 +70,7 @@ private Q_SLOTS:
     void moveMouseToFocus();
     void moveMouseToCenter();
     void timelineFrameChanged(int frame);
-    void moveFocus(const QPoint &point);
+    void moveFocus(const QPointF &point);
     void slotMouseChanged(const QPointF &pos, const QPointF &old);
     void slotWindowAdded(EffectWindow *w);
     void slotWindowDamaged();
@@ -117,10 +111,11 @@ private:
     void markCursorTextureDirty();
 
     GLShader *shaderForZoom(double zoom);
+    void trackTextCaret();
+    void trackFocus();
 
-#if HAVE_ACCESSIBILITY
-    ZoomAccessibilityIntegration *m_accessibilityIntegration = nullptr;
-#endif
+    std::unique_ptr<TextCaretTracker> m_textCaretTracker;
+    std::unique_ptr<FocusTracker> m_focusTracker;
     double m_zoom = 1.0;
     double m_targetZoom = 1.0;
     double m_sourceZoom = 1.0;
@@ -129,7 +124,7 @@ private:
     MousePointerType m_mousePointer = MousePointerScale;
     int m_focusDelay = 350; // in milliseconds
     QPoint m_cursorPoint;
-    QPoint m_focusPoint;
+    std::optional<QPoint> m_focusPoint = std::nullopt;
     QPoint m_prevPoint;
     QTime m_lastMouseEvent;
     QTime m_lastFocusEvent;

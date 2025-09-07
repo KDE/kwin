@@ -2,16 +2,12 @@
 # Effect
 
 set(zoom_SOURCES
+    focustracker.cpp
     main.cpp
+    textcarettracker.cpp
     zoom.cpp
     zoom.qrc
 )
-
-if (HAVE_ACCESSIBILITY)
-    set(zoom_SOURCES ${zoom_SOURCES}
-        accessibilityintegration.cpp
-    )
-endif()
 
 kconfig_add_kcfg_files(zoom_SOURCES
     zoomconfig.kcfgc
