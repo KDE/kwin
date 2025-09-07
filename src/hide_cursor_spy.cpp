@@ -31,7 +31,7 @@ void HideCursorSpy::pointerAxis(KWin::PointerAxisEvent *event)
     showCursor();
 }
 
-void HideCursorSpy::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+void HideCursorSpy::touchDown(TouchDownEvent *event)
 {
     hideCursor();
 }

@@ -121,6 +121,26 @@ struct PointerHoldGestureCancelEvent
     std::chrono::microseconds time;
 };
 
+struct TouchDownEvent
+{
+    qint32 id;
+    QPointF pos;
+    std::chrono::microseconds time;
+};
+
+struct TouchMotionEvent
+{
+    qint32 id;
+    QPointF pos;
+    std::chrono::microseconds time;
+};
+
+struct TouchUpEvent
+{
+    qint32 id;
+    std::chrono::microseconds time;
+};
+
 struct KeyboardKeyEvent
 {
     InputDevice *device;

@@ -18,7 +18,7 @@ public:
     void pointerMotion(KWin::PointerMotionEvent *event) override;
     void pointerButton(KWin::PointerButtonEvent *event) override;
     void pointerAxis(KWin::PointerAxisEvent *event) override;
-    void touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
+    void touchDown(TouchDownEvent *event) override;
     void tabletToolProximityEvent(KWin::TabletToolProximityEvent *event) override;
 
 private:

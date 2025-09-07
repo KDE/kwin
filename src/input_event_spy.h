@@ -40,6 +40,9 @@ struct TabletPadButtonEvent;
 struct TabletPadStripEvent;
 struct TabletPadRingEvent;
 struct TabletPadDialEvent;
+struct TouchDownEvent;
+struct TouchMotionEvent;
+struct TouchUpEvent;
 
 /**
  * Base class for spying on input events inside InputRedirection.
@@ -71,9 +74,10 @@ public:
      * @param event The event information about the key event
      */
     virtual void keyboardKey(KeyboardKeyEvent *event);
-    virtual void touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
-    virtual void touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
-    virtual void touchUp(qint32 id, std::chrono::microseconds time);
+
+    virtual void touchDown(TouchDownEvent *event);
+    virtual void touchMotion(TouchMotionEvent *event);
+    virtual void touchUp(TouchUpEvent *event);
 
     virtual void pinchGestureBegin(PointerPinchGestureBeginEvent *event);
     virtual void pinchGestureUpdate(PointerPinchGestureUpdateEvent *event);
