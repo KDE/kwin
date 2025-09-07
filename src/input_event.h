@@ -59,6 +59,68 @@ struct PointerAxisEvent
     std::chrono::microseconds timestamp;
 };
 
+struct PointerSwipeGestureBeginEvent
+{
+    int fingerCount;
+    std::chrono::microseconds time;
+};
+
+struct PointerSwipeGestureUpdateEvent
+{
+    QPointF delta;
+    std::chrono::microseconds time;
+};
+
+struct PointerSwipeGestureEndEvent
+{
+    std::chrono::microseconds time;
+};
+
+struct PointerSwipeGestureCancelEvent
+{
+    std::chrono::microseconds time;
+};
+
+struct PointerPinchGestureBeginEvent
+{
+    int fingerCount;
+    std::chrono::microseconds time;
+};
+
+struct PointerPinchGestureUpdateEvent
+{
+    qreal scale;
+    qreal angleDelta;
+    const QPointF &delta;
+    std::chrono::microseconds time;
+};
+
+struct PointerPinchGestureEndEvent
+{
+    std::chrono::microseconds time;
+};
+
+struct PointerPinchGestureCancelEvent
+{
+    std::chrono::microseconds time;
+};
+
+struct PointerHoldGestureBeginEvent
+{
+    int fingerCount;
+    std::chrono::microseconds time;
+};
+
+struct PointerHoldGestureEndEvent
+{
+    std::chrono::microseconds time;
+};
+
+struct PointerHoldGestureCancelEvent
+{
+    std::chrono::microseconds time;
+};
+
 struct KeyboardKeyEvent
 {
     InputDevice *device;

@@ -148,57 +148,57 @@ bool InputEventFilter::touchFrame()
     return false;
 }
 
-bool InputEventFilter::pinchGestureBegin(int fingerCount, std::chrono::microseconds time)
+bool InputEventFilter::pinchGestureBegin(PointerPinchGestureBeginEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time)
+bool InputEventFilter::pinchGestureUpdate(PointerPinchGestureUpdateEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::pinchGestureEnd(std::chrono::microseconds time)
+bool InputEventFilter::pinchGestureEnd(PointerPinchGestureEndEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::pinchGestureCancelled(std::chrono::microseconds time)
+bool InputEventFilter::pinchGestureCancelled(PointerPinchGestureCancelEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::swipeGestureBegin(int fingerCount, std::chrono::microseconds time)
+bool InputEventFilter::swipeGestureBegin(PointerSwipeGestureBeginEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time)
+bool InputEventFilter::swipeGestureUpdate(PointerSwipeGestureUpdateEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::swipeGestureEnd(std::chrono::microseconds time)
+bool InputEventFilter::swipeGestureEnd(PointerSwipeGestureEndEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::swipeGestureCancelled(std::chrono::microseconds time)
+bool InputEventFilter::swipeGestureCancelled(PointerSwipeGestureCancelEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::holdGestureBegin(int fingerCount, std::chrono::microseconds time)
+bool InputEventFilter::holdGestureBegin(PointerHoldGestureBeginEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::holdGestureEnd(std::chrono::microseconds time)
+bool InputEventFilter::holdGestureEnd(PointerHoldGestureEndEvent *event)
 {
     return false;
 }
 
-bool InputEventFilter::holdGestureCancelled(std::chrono::microseconds time)
+bool InputEventFilter::holdGestureCancelled(PointerHoldGestureCancelEvent *event)
 {
     return false;
 }
@@ -445,53 +445,53 @@ public:
         seat->notifyTouchUp(id);
         return true;
     }
-    bool pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    bool pinchGestureBegin(PointerPinchGestureBeginEvent *event) override
     {
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time) override
+    bool pinchGestureUpdate(PointerPinchGestureUpdateEvent *event) override
     {
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool pinchGestureEnd(std::chrono::microseconds time) override
+    bool pinchGestureEnd(PointerPinchGestureEndEvent *event) override
     {
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool pinchGestureCancelled(std::chrono::microseconds time) override
+    bool pinchGestureCancelled(PointerPinchGestureCancelEvent *event) override
     {
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
 
-    bool swipeGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    bool swipeGestureBegin(PointerSwipeGestureBeginEvent *event) override
     {
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time) override
+    bool swipeGestureUpdate(PointerSwipeGestureUpdateEvent *event) override
     {
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool swipeGestureEnd(std::chrono::microseconds time) override
+    bool swipeGestureEnd(PointerSwipeGestureEndEvent *event) override
     {
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool swipeGestureCancelled(std::chrono::microseconds time) override
+    bool swipeGestureCancelled(PointerSwipeGestureCancelEvent *event) override
     {
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool holdGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    bool holdGestureBegin(PointerHoldGestureBeginEvent *event) override
     {
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool holdGestureEnd(std::chrono::microseconds time) override
+    bool holdGestureEnd(PointerHoldGestureEndEvent *event) override
     {
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
@@ -1086,26 +1086,26 @@ public:
         }
         return false;
     }
-    bool swipeGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    bool swipeGestureBegin(PointerSwipeGestureBeginEvent *event) override
     {
-        m_touchpadGestureFingerCount = fingerCount;
+        m_touchpadGestureFingerCount = event->fingerCount;
         if (m_touchpadGestureFingerCount >= 3) {
-            input()->shortcuts()->processSwipeStart(DeviceType::Touchpad, fingerCount);
+            input()->shortcuts()->processSwipeStart(DeviceType::Touchpad, event->fingerCount);
             return true;
         } else {
             return false;
         }
     }
-    bool swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time) override
+    bool swipeGestureUpdate(PointerSwipeGestureUpdateEvent *event) override
     {
         if (m_touchpadGestureFingerCount >= 3) {
-            input()->shortcuts()->processSwipeUpdate(DeviceType::Touchpad, delta);
+            input()->shortcuts()->processSwipeUpdate(DeviceType::Touchpad, event->delta);
             return true;
         } else {
             return false;
         }
     }
-    bool swipeGestureCancelled(std::chrono::microseconds time) override
+    bool swipeGestureCancelled(PointerSwipeGestureCancelEvent *event) override
     {
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processSwipeCancel(DeviceType::Touchpad);
@@ -1114,7 +1114,7 @@ public:
             return false;
         }
     }
-    bool swipeGestureEnd(std::chrono::microseconds time) override
+    bool swipeGestureEnd(PointerSwipeGestureEndEvent *event) override
     {
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processSwipeEnd(DeviceType::Touchpad);
@@ -1123,26 +1123,26 @@ public:
             return false;
         }
     }
-    bool pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    bool pinchGestureBegin(PointerPinchGestureBeginEvent *event) override
     {
-        m_touchpadGestureFingerCount = fingerCount;
+        m_touchpadGestureFingerCount = event->fingerCount;
         if (m_touchpadGestureFingerCount >= 3) {
-            input()->shortcuts()->processPinchStart(fingerCount);
+            input()->shortcuts()->processPinchStart(event->fingerCount);
             return true;
         } else {
             return false;
         }
     }
-    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time) override
+    bool pinchGestureUpdate(PointerPinchGestureUpdateEvent *event) override
     {
         if (m_touchpadGestureFingerCount >= 3) {
-            input()->shortcuts()->processPinchUpdate(scale, angleDelta, delta);
+            input()->shortcuts()->processPinchUpdate(event->scale, event->angleDelta, event->delta);
             return true;
         } else {
             return false;
         }
     }
-    bool pinchGestureEnd(std::chrono::microseconds time) override
+    bool pinchGestureEnd(PointerPinchGestureEndEvent *event) override
     {
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processPinchEnd();
@@ -1151,7 +1151,7 @@ public:
             return false;
         }
     }
-    bool pinchGestureCancelled(std::chrono::microseconds time) override
+    bool pinchGestureCancelled(PointerPinchGestureCancelEvent *event) override
     {
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processPinchCancel();
@@ -2159,81 +2159,81 @@ public:
         waylandServer()->seat()->notifyTouchFrame();
         return true;
     }
-    bool pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    bool pinchGestureBegin(PointerPinchGestureBeginEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->startPointerPinchGesture(fingerCount);
+        seat->setTimestamp(event->time);
+        seat->startPointerPinchGesture(event->fingerCount);
         return true;
     }
-    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time) override
+    bool pinchGestureUpdate(PointerPinchGestureUpdateEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->updatePointerPinchGesture(delta, scale, angleDelta);
+        seat->setTimestamp(event->time);
+        seat->updatePointerPinchGesture(event->delta, event->scale, event->angleDelta);
         return true;
     }
-    bool pinchGestureEnd(std::chrono::microseconds time) override
+    bool pinchGestureEnd(PointerPinchGestureEndEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
+        seat->setTimestamp(event->time);
         seat->endPointerPinchGesture();
         return true;
     }
-    bool pinchGestureCancelled(std::chrono::microseconds time) override
+    bool pinchGestureCancelled(PointerPinchGestureCancelEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
+        seat->setTimestamp(event->time);
         seat->cancelPointerPinchGesture();
         return true;
     }
 
-    bool swipeGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    bool swipeGestureBegin(PointerSwipeGestureBeginEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->startPointerSwipeGesture(fingerCount);
+        seat->setTimestamp(event->time);
+        seat->startPointerSwipeGesture(event->fingerCount);
         return true;
     }
-    bool swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time) override
+    bool swipeGestureUpdate(PointerSwipeGestureUpdateEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->updatePointerSwipeGesture(delta);
+        seat->setTimestamp(event->time);
+        seat->updatePointerSwipeGesture(event->delta);
         return true;
     }
-    bool swipeGestureEnd(std::chrono::microseconds time) override
+    bool swipeGestureEnd(PointerSwipeGestureEndEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
+        seat->setTimestamp(event->time);
         seat->endPointerSwipeGesture();
         return true;
     }
-    bool swipeGestureCancelled(std::chrono::microseconds time) override
+    bool swipeGestureCancelled(PointerSwipeGestureCancelEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
+        seat->setTimestamp(event->time);
         seat->cancelPointerSwipeGesture();
         return true;
     }
-    bool holdGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    bool holdGestureBegin(PointerHoldGestureBeginEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->startPointerHoldGesture(fingerCount);
+        seat->setTimestamp(event->time);
+        seat->startPointerHoldGesture(event->fingerCount);
         return true;
     }
-    bool holdGestureEnd(std::chrono::microseconds time) override
+    bool holdGestureEnd(PointerHoldGestureEndEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
+        seat->setTimestamp(event->time);
         seat->endPointerHoldGesture();
         return true;
     }
-    bool holdGestureCancelled(std::chrono::microseconds time) override
+    bool holdGestureCancelled(PointerHoldGestureCancelEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
+        seat->setTimestamp(event->time);
         seat->cancelPointerHoldGesture();
         return true;
     }
@@ -2989,49 +2989,49 @@ public:
         notifyActivity();
     }
 
-    void pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    void pinchGestureBegin(PointerPinchGestureBeginEvent *event) override
     {
         notifyActivity();
     }
-    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time) override
+    void pinchGestureUpdate(PointerPinchGestureUpdateEvent *event) override
     {
         notifyActivity();
     }
-    void pinchGestureEnd(std::chrono::microseconds time) override
+    void pinchGestureEnd(PointerPinchGestureEndEvent *event) override
     {
         notifyActivity();
     }
-    void pinchGestureCancelled(std::chrono::microseconds time) override
-    {
-        notifyActivity();
-    }
-
-    void swipeGestureBegin(int fingerCount, std::chrono::microseconds time) override
-    {
-        notifyActivity();
-    }
-    void swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time) override
-    {
-        notifyActivity();
-    }
-    void swipeGestureEnd(std::chrono::microseconds time) override
-    {
-        notifyActivity();
-    }
-    void swipeGestureCancelled(std::chrono::microseconds time) override
+    void pinchGestureCancelled(PointerPinchGestureCancelEvent *event) override
     {
         notifyActivity();
     }
 
-    void holdGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    void swipeGestureBegin(PointerSwipeGestureBeginEvent *event) override
     {
         notifyActivity();
     }
-    void holdGestureEnd(std::chrono::microseconds time) override
+    void swipeGestureUpdate(PointerSwipeGestureUpdateEvent *event) override
     {
         notifyActivity();
     }
-    void holdGestureCancelled(std::chrono::microseconds time) override
+    void swipeGestureEnd(PointerSwipeGestureEndEvent *event) override
+    {
+        notifyActivity();
+    }
+    void swipeGestureCancelled(PointerSwipeGestureCancelEvent *event) override
+    {
+        notifyActivity();
+    }
+
+    void holdGestureBegin(PointerHoldGestureBeginEvent *event) override
+    {
+        notifyActivity();
+    }
+    void holdGestureEnd(PointerHoldGestureEndEvent *event) override
+    {
+        notifyActivity();
+    }
+    void holdGestureCancelled(PointerHoldGestureCancelEvent *event) override
     {
         notifyActivity();
     }
