@@ -276,6 +276,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
         .buttons = m_qtButtons,
         .modifiers = input()->keyboardModifiers(),
         .modifiersRelevantForShortcuts = input()->modifiersRelevantForGlobalShortcuts(),
+        .serial = waylandServer()->seat()->nextSerial(),
         .timestamp = time,
     };
 
@@ -306,6 +307,7 @@ void PointerInputRedirection::processButton(uint32_t button, PointerButtonState 
         .buttons = m_qtButtons,
         .modifiers = input()->keyboardModifiers(),
         .modifiersRelevantForShortcuts = input()->modifiersRelevantForGlobalShortcuts(),
+        .serial = waylandServer()->seat()->nextSerial(),
         .timestamp = time,
     };
 
@@ -346,6 +348,7 @@ void PointerInputRedirection::processAxis(PointerAxis axis, qreal delta, qint32 
         .modifiers = input()->keyboardModifiers(),
         .modifiersRelevantForGlobalShortcuts = input()->modifiersRelevantForGlobalShortcuts(),
         .inverted = inverted,
+        .serial = waylandServer()->seat()->nextSerial(),
         .timestamp = time,
     };
 
@@ -363,6 +366,7 @@ void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, std::chr
 
     PointerSwipeGestureBeginEvent event{
         .fingerCount = fingerCount,
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -380,6 +384,7 @@ void PointerInputRedirection::processSwipeGestureUpdate(const QPointF &delta, st
 
     PointerSwipeGestureUpdateEvent event{
         .delta = delta,
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -396,6 +401,7 @@ void PointerInputRedirection::processSwipeGestureEnd(std::chrono::microseconds t
     update();
 
     PointerSwipeGestureEndEvent event{
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -412,6 +418,7 @@ void PointerInputRedirection::processSwipeGestureCancelled(std::chrono::microsec
     update();
 
     PointerSwipeGestureCancelEvent event{
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -429,6 +436,7 @@ void PointerInputRedirection::processPinchGestureBegin(int fingerCount, std::chr
 
     PointerPinchGestureBeginEvent event{
         .fingerCount = fingerCount,
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -448,6 +456,7 @@ void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angle
         .scale = scale,
         .angleDelta = angleDelta,
         .delta = delta,
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -464,6 +473,7 @@ void PointerInputRedirection::processPinchGestureEnd(std::chrono::microseconds t
     update();
 
     PointerPinchGestureEndEvent event{
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -480,6 +490,7 @@ void PointerInputRedirection::processPinchGestureCancelled(std::chrono::microsec
     update();
 
     PointerPinchGestureCancelEvent event{
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -496,6 +507,7 @@ void PointerInputRedirection::processHoldGestureBegin(int fingerCount, std::chro
 
     PointerHoldGestureBeginEvent event{
         .fingerCount = fingerCount,
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -511,6 +523,7 @@ void PointerInputRedirection::processHoldGestureEnd(std::chrono::microseconds ti
     update();
 
     PointerHoldGestureEndEvent event{
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -526,6 +539,7 @@ void PointerInputRedirection::processHoldGestureCancelled(std::chrono::microseco
     update();
 
     PointerHoldGestureCancelEvent event{
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 

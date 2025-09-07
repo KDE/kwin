@@ -325,7 +325,7 @@ public:
             }
         }
 
-        pointer->sendButton(event->nativeButton, event->state, waylandServer()->seat()->nextSerial(), xwaylandClient);
+        pointer->sendButton(event->nativeButton, event->state, event->serial, xwaylandClient);
         return false;
     }
 

@@ -309,7 +309,7 @@ public:
         if (pointerSurfaceAllowed()) {
             // TODO: should the pointer position always stay in sync, i.e. not do the check?
             seat->setTimestamp(event->timestamp);
-            seat->notifyPointerMotion(event->position, seat->nextSerial());
+            seat->notifyPointerMotion(event->position, event->serial);
         }
         return true;
     }
@@ -331,7 +331,7 @@ public:
             // TODO: can we leak presses/releases here when we move the mouse in between from an allowed surface to
             //       disallowed one or vice versa?
             seat->setTimestamp(event->timestamp);
-            seat->notifyPointerButton(event->nativeButton, event->state, seat->nextSerial());
+            seat->notifyPointerButton(event->nativeButton, event->state, event->serial);
         }
         return true;
     }
@@ -2083,7 +2083,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyPointerMotion(event->position, seat->nextSerial());
+        seat->notifyPointerMotion(event->position, event->serial);
         // absolute motion events confuse games and Wayland doesn't have a warp event yet
         // -> send a relative motion event with a zero delta to signal the warp instead
         if (event->warp) {
@@ -2097,7 +2097,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyPointerButton(event->nativeButton, event->state, seat->nextSerial());
+        seat->notifyPointerButton(event->nativeButton, event->state, event->serial);
         return true;
     }
     bool pointerFrame() override
@@ -2168,7 +2168,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->startPointerPinchGesture(event->fingerCount, seat->nextSerial());
+        seat->startPointerPinchGesture(event->fingerCount, event->serial);
         return true;
     }
     bool pinchGestureUpdate(PointerPinchGestureUpdateEvent *event) override
@@ -2182,14 +2182,14 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->endPointerPinchGesture(seat->nextSerial());
+        seat->endPointerPinchGesture(event->serial);
         return true;
     }
     bool pinchGestureCancelled(PointerPinchGestureCancelEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->cancelPointerPinchGesture(seat->nextSerial());
+        seat->cancelPointerPinchGesture(event->serial);
         return true;
     }
 
@@ -2197,7 +2197,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->startPointerSwipeGesture(event->fingerCount, seat->nextSerial());
+        seat->startPointerSwipeGesture(event->fingerCount, event->serial);
         return true;
     }
     bool swipeGestureUpdate(PointerSwipeGestureUpdateEvent *event) override
@@ -2211,35 +2211,35 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->endPointerSwipeGesture(seat->nextSerial());
+        seat->endPointerSwipeGesture(event->serial);
         return true;
     }
     bool swipeGestureCancelled(PointerSwipeGestureCancelEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->cancelPointerSwipeGesture(seat->nextSerial());
+        seat->cancelPointerSwipeGesture(event->serial);
         return true;
     }
     bool holdGestureBegin(PointerHoldGestureBeginEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->startPointerHoldGesture(event->fingerCount, seat->nextSerial());
+        seat->startPointerHoldGesture(event->fingerCount, event->serial);
         return true;
     }
     bool holdGestureEnd(PointerHoldGestureEndEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->endPointerHoldGesture(seat->nextSerial());
+        seat->endPointerHoldGesture(event->serial);
         return true;
     }
     bool holdGestureCancelled(PointerHoldGestureCancelEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->cancelPointerHoldGesture(seat->nextSerial());
+        seat->cancelPointerHoldGesture(event->serial);
         return true;
     }
 
@@ -2632,21 +2632,20 @@ public:
             }
         }
 
-        const quint32 serial = seat->nextSerial();
         if (dragTarget) {
             const auto [effectiveSurface, offset] = dragTarget->surface()->mapToInputSurface(dragTarget->mapToLocal(pos));
             if (seat->dragSurface() != effectiveSurface) {
                 QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
                 inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
-                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, pos, inputTransformation, serial);
+                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, pos, inputTransformation, event->serial);
             }
         } else {
             // no window at that place, if we have a surface we need to reset
-            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4(), serial);
+            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4(), event->serial);
             m_dragTarget = nullptr;
         }
 
-        seat->notifyPointerMotion(pos, serial);
+        seat->notifyPointerMotion(pos, event->serial);
 
         return true;
     }
@@ -2662,11 +2661,11 @@ public:
         }
         seat->setTimestamp(event->timestamp);
         if (event->state == PointerButtonState::Pressed) {
-            seat->notifyPointerButton(event->nativeButton, event->state, seat->nextSerial());
+            seat->notifyPointerButton(event->nativeButton, event->state, event->serial);
         } else {
             raiseDragTarget();
             m_dragTarget = nullptr;
-            seat->notifyPointerButton(event->nativeButton, event->state, seat->nextSerial());
+            seat->notifyPointerButton(event->nativeButton, event->state, event->serial);
         }
         // TODO: should we pass through effects?
         return true;

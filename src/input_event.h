@@ -28,6 +28,7 @@ struct PointerMotionEvent
     Qt::MouseButtons buttons;
     Qt::KeyboardModifiers modifiers;
     Qt::KeyboardModifiers modifiersRelevantForShortcuts;
+    quint32 serial;
     std::chrono::microseconds timestamp;
 };
 
@@ -41,6 +42,7 @@ struct PointerButtonEvent
     Qt::MouseButtons buttons;
     Qt::KeyboardModifiers modifiers;
     Qt::KeyboardModifiers modifiersRelevantForShortcuts;
+    quint32 serial;
     std::chrono::microseconds timestamp;
 };
 
@@ -56,34 +58,40 @@ struct PointerAxisEvent
     Qt::KeyboardModifiers modifiers;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts;
     bool inverted;
+    quint32 serial;
     std::chrono::microseconds timestamp;
 };
 
 struct PointerSwipeGestureBeginEvent
 {
     int fingerCount;
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
 struct PointerSwipeGestureUpdateEvent
 {
     QPointF delta;
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
 struct PointerSwipeGestureEndEvent
 {
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
 struct PointerSwipeGestureCancelEvent
 {
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
 struct PointerPinchGestureBeginEvent
 {
     int fingerCount;
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
@@ -92,32 +100,38 @@ struct PointerPinchGestureUpdateEvent
     qreal scale;
     qreal angleDelta;
     const QPointF &delta;
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
 struct PointerPinchGestureEndEvent
 {
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
 struct PointerPinchGestureCancelEvent
 {
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
 struct PointerHoldGestureBeginEvent
 {
     int fingerCount;
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
 struct PointerHoldGestureEndEvent
 {
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
 struct PointerHoldGestureCancelEvent
 {
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
