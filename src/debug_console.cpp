@@ -354,104 +354,104 @@ void DebugConsoleFilter::touchUp(qint32 id, std::chrono::microseconds time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::pinchGestureBegin(int fingerCount, std::chrono::microseconds time)
+void DebugConsoleFilter::pinchGestureBegin(PointerPinchGestureBeginEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A pinch gesture is started", "Pinch start")));
-    text.append(timestampRow(time));
-    text.append(tableRow(i18nc("Number of fingers in this pinch gesture", "Finger count"), fingerCount));
+    text.append(timestampRow(event->time));
+    text.append(tableRow(i18nc("Number of fingers in this pinch gesture", "Finger count"), event->fingerCount));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time)
+void DebugConsoleFilter::pinchGestureUpdate(PointerPinchGestureUpdateEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A pinch gesture is updated", "Pinch update")));
-    text.append(timestampRow(time));
-    text.append(tableRow(i18nc("Current scale in pinch gesture", "Scale"), scale));
-    text.append(tableRow(i18nc("Current angle in pinch gesture", "Angle delta"), angleDelta));
-    text.append(tableRow(i18nc("Current delta in pinch gesture", "Delta x"), delta.x()));
-    text.append(tableRow(i18nc("Current delta in pinch gesture", "Delta y"), delta.y()));
+    text.append(timestampRow(event->time));
+    text.append(tableRow(i18nc("Current scale in pinch gesture", "Scale"), event->scale));
+    text.append(tableRow(i18nc("Current angle in pinch gesture", "Angle delta"), event->angleDelta));
+    text.append(tableRow(i18nc("Current delta in pinch gesture", "Delta x"), event->delta.x()));
+    text.append(tableRow(i18nc("Current delta in pinch gesture", "Delta y"), event->delta.y()));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::pinchGestureEnd(std::chrono::microseconds time)
+void DebugConsoleFilter::pinchGestureEnd(PointerPinchGestureEndEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A pinch gesture ended", "Pinch end")));
-    text.append(timestampRow(time));
+    text.append(timestampRow(event->time));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::pinchGestureCancelled(std::chrono::microseconds time)
+void DebugConsoleFilter::pinchGestureCancelled(PointerPinchGestureCancelEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A pinch gesture got cancelled", "Pinch cancelled")));
-    text.append(timestampRow(time));
+    text.append(timestampRow(event->time));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::swipeGestureBegin(int fingerCount, std::chrono::microseconds time)
+void DebugConsoleFilter::swipeGestureBegin(PointerSwipeGestureBeginEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A swipe gesture is started", "Swipe start")));
-    text.append(timestampRow(time));
-    text.append(tableRow(i18nc("Number of fingers in this swipe gesture", "Finger count"), fingerCount));
+    text.append(timestampRow(event->time));
+    text.append(tableRow(i18nc("Number of fingers in this swipe gesture", "Finger count"), event->fingerCount));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time)
+void DebugConsoleFilter::swipeGestureUpdate(PointerSwipeGestureUpdateEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A swipe gesture is updated", "Swipe update")));
-    text.append(timestampRow(time));
-    text.append(tableRow(i18nc("Current delta in swipe gesture", "Delta x"), delta.x()));
-    text.append(tableRow(i18nc("Current delta in swipe gesture", "Delta y"), delta.y()));
+    text.append(timestampRow(event->time));
+    text.append(tableRow(i18nc("Current delta in swipe gesture", "Delta x"), event->delta.x()));
+    text.append(tableRow(i18nc("Current delta in swipe gesture", "Delta y"), event->delta.y()));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::swipeGestureEnd(std::chrono::microseconds time)
+void DebugConsoleFilter::swipeGestureEnd(PointerSwipeGestureEndEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A swipe gesture ended", "Swipe end")));
-    text.append(timestampRow(time));
+    text.append(timestampRow(event->time));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::swipeGestureCancelled(std::chrono::microseconds time)
+void DebugConsoleFilter::swipeGestureCancelled(PointerSwipeGestureCancelEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A swipe gesture got cancelled", "Swipe cancelled")));
-    text.append(timestampRow(time));
+    text.append(timestampRow(event->time));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);

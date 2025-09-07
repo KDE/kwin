@@ -48,6 +48,17 @@ struct TabletToolAxisEvent;
 struct PointerAxisEvent;
 struct PointerButtonEvent;
 struct PointerMotionEvent;
+struct PointerSwipeGestureBeginEvent;
+struct PointerSwipeGestureUpdateEvent;
+struct PointerSwipeGestureEndEvent;
+struct PointerSwipeGestureCancelEvent;
+struct PointerPinchGestureBeginEvent;
+struct PointerPinchGestureUpdateEvent;
+struct PointerPinchGestureEndEvent;
+struct PointerPinchGestureCancelEvent;
+struct PointerHoldGestureBeginEvent;
+struct PointerHoldGestureEndEvent;
+struct PointerHoldGestureCancelEvent;
 struct KeyboardKeyEvent;
 struct TabletToolProximityEvent;
 struct TabletToolTipEvent;
@@ -396,19 +407,19 @@ public:
     virtual bool touchCancel();
     virtual bool touchFrame();
 
-    virtual bool pinchGestureBegin(int fingerCount, std::chrono::microseconds time);
-    virtual bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time);
-    virtual bool pinchGestureEnd(std::chrono::microseconds time);
-    virtual bool pinchGestureCancelled(std::chrono::microseconds time);
+    virtual bool pinchGestureBegin(PointerPinchGestureBeginEvent *event);
+    virtual bool pinchGestureUpdate(PointerPinchGestureUpdateEvent *event);
+    virtual bool pinchGestureEnd(PointerPinchGestureEndEvent *event);
+    virtual bool pinchGestureCancelled(PointerPinchGestureCancelEvent *event);
 
-    virtual bool swipeGestureBegin(int fingerCount, std::chrono::microseconds time);
-    virtual bool swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time);
-    virtual bool swipeGestureEnd(std::chrono::microseconds time);
-    virtual bool swipeGestureCancelled(std::chrono::microseconds time);
+    virtual bool swipeGestureBegin(PointerSwipeGestureBeginEvent *event);
+    virtual bool swipeGestureUpdate(PointerSwipeGestureUpdateEvent *event);
+    virtual bool swipeGestureEnd(PointerSwipeGestureEndEvent *event);
+    virtual bool swipeGestureCancelled(PointerSwipeGestureCancelEvent *event);
 
-    virtual bool holdGestureBegin(int fingerCount, std::chrono::microseconds time);
-    virtual bool holdGestureEnd(std::chrono::microseconds time);
-    virtual bool holdGestureCancelled(std::chrono::microseconds time);
+    virtual bool holdGestureBegin(PointerHoldGestureBeginEvent *event);
+    virtual bool holdGestureEnd(PointerHoldGestureEndEvent *event);
+    virtual bool holdGestureCancelled(PointerHoldGestureCancelEvent *event);
 
     virtual bool switchEvent(SwitchEvent *event);
 

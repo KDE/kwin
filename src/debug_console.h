@@ -126,15 +126,15 @@ public:
     void touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
     void touchUp(qint32 id, std::chrono::microseconds time) override;
 
-    void pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override;
-    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time) override;
-    void pinchGestureEnd(std::chrono::microseconds time) override;
-    void pinchGestureCancelled(std::chrono::microseconds time) override;
+    void pinchGestureBegin(PointerPinchGestureBeginEvent *event) override;
+    void pinchGestureUpdate(PointerPinchGestureUpdateEvent *event) override;
+    void pinchGestureEnd(PointerPinchGestureEndEvent *event) override;
+    void pinchGestureCancelled(PointerPinchGestureCancelEvent *event) override;
 
-    void swipeGestureBegin(int fingerCount, std::chrono::microseconds time) override;
-    void swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time) override;
-    void swipeGestureEnd(std::chrono::microseconds time) override;
-    void swipeGestureCancelled(std::chrono::microseconds time) override;
+    void swipeGestureBegin(PointerSwipeGestureBeginEvent *event) override;
+    void swipeGestureUpdate(PointerSwipeGestureUpdateEvent *event) override;
+    void swipeGestureEnd(PointerSwipeGestureEndEvent *event) override;
+    void swipeGestureCancelled(PointerSwipeGestureCancelEvent *event) override;
 
     void switchEvent(SwitchEvent *event) override;
 
