@@ -190,7 +190,7 @@ static QByteArray shapeName(uint32_t shape)
 
 void CursorShapeDeviceV1Interface::wp_cursor_shape_device_v1_set_shape(Resource *resource, uint32_t serial, uint32_t shape)
 {
-    if (shape < shape_default || shape > shape_zoom_out) {
+    if (shape < shape_default || shape > shape_all_resize) {
         wl_resource_post_error(resource->handle, error_invalid_shape, "unknown cursor shape");
         return;
     }
