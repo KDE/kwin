@@ -24,7 +24,7 @@ public:
 
     void sendRepeatInfo(Resource *resource);
     void sendKeymap(Resource *resource);
-    void sendModifiers(SurfaceInterface *surface);
+    void sendModifiers(SurfaceInterface *surface, quint32 serial);
     void sendModifiers(SurfaceInterface *surface, quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);
 
     QList<Resource *> keyboardsForClient(ClientConnection *client) const;
@@ -38,6 +38,7 @@ public:
 
     SeatInterface *seat;
     SurfaceInterface *focusedSurface = nullptr;
+    quint32 focusedSerial = 0;
     QList<quint32> pressedKeys;
     QMetaObject::Connection destroyConnection;
     QPointer<SurfaceInterface> modifierFocusSurface;
@@ -56,7 +57,6 @@ public:
         quint32 latched = 0;
         quint32 locked = 0;
         quint32 group = 0;
-        quint32 serial = 0;
     };
     Modifiers modifiers;
 

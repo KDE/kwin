@@ -101,7 +101,7 @@ public:
                 // Xwayland client and the state is correctly restored.
                 for (auto it = m_states.constBegin(); it != m_states.constEnd(); ++it) {
                     if (it.value() == KeyboardKeyState::Pressed) {
-                        keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
+                        keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->seat()->nextSerial(), waylandServer()->xWaylandConnection());
                     }
                 }
                 m_modifiers = {};
@@ -267,7 +267,8 @@ public:
 
         auto xkb = input()->keyboard()->xkb();
 
-        keyboard->sendKey(event->nativeScanCode, event->state, xwaylandClient);
+        const quint32 serial = waylandServer()->seat()->nextSerial();
+        keyboard->sendKey(event->nativeScanCode, event->state, serial, xwaylandClient);
 
         bool changed = false;
         if (m_modifiers.depressed != xkb->modifierState().depressed) {
@@ -294,6 +295,7 @@ public:
                                 xkb->modifierState().latched,
                                 xkb->modifierState().locked,
                                 xkb->currentLayout(),
+                                serial,
                                 xwaylandClient);
         return false;
     }

@@ -361,8 +361,9 @@ QList<KeyAction> X11KeyReadTest::recievedX11EventsForInput(const QList<KeyAction
     }
     // special case, explicitly send key 0, to use as a fence
     ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
-    waylandServer()->seat()->keyboard()->sendKey(0, KeyboardKeyState::Pressed, xwaylandClient);
-    waylandServer()->seat()->keyboard()->sendKey(0, KeyboardKeyState::Released, xwaylandClient);
+    const quint32 serial = waylandServer()->seat()->nextSerial();
+    waylandServer()->seat()->keyboard()->sendKey(0, KeyboardKeyState::Pressed, serial, xwaylandClient);
+    waylandServer()->seat()->keyboard()->sendKey(0, KeyboardKeyState::Released, serial, xwaylandClient);
 
     bool fenceComplete = fenceEventSpy.wait();
     Q_ASSERT(fenceComplete);

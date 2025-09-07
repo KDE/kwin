@@ -447,9 +447,10 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
     const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(focusedPointerSurfaceTransformation().map(pos));
 
     if (d->pointer->focusedSurface() != effectiveFocusedSurface) {
-        d->pointer->sendEnter(effectiveFocusedSurface, localPosition, nextSerial());
+        const quint32 serial = nextSerial();
+        d->pointer->sendEnter(effectiveFocusedSurface, localPosition, serial);
         if (d->keyboard) {
-            d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
+            d->keyboard->setModifierFocusSurface(effectiveFocusedSurface, serial);
         }
     }
 
@@ -542,7 +543,7 @@ void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF 
     const auto [effectiveFocusedSurface, localPosition] = surface->mapToInputSurface(focusedPointerSurfaceTransformation().map(position));
     d->pointer->sendEnter(effectiveFocusedSurface, localPosition, serial);
     if (d->keyboard) {
-        d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
+        d->keyboard->setModifierFocusSurface(effectiveFocusedSurface, serial);
     }
 }
 
@@ -560,7 +561,7 @@ void SeatInterface::notifyPointerLeave()
     const quint32 serial = nextSerial();
     d->pointer->sendLeave(serial);
     if (d->keyboard) {
-        d->keyboard->setModifierFocusSurface(nullptr);
+        d->keyboard->setModifierFocusSurface(nullptr, serial);
     }
 }
 
@@ -923,7 +924,7 @@ void SeatInterface::notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state)
     if (!d->keyboard) {
         return;
     }
-    d->keyboard->sendKey(keyCode, state);
+    d->keyboard->sendKey(keyCode, state, nextSerial());
 }
 
 void SeatInterface::notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
@@ -931,7 +932,7 @@ void SeatInterface::notifyKeyboardModifiers(quint32 depressed, quint32 latched, 
     if (!d->keyboard) {
         return;
     }
-    d->keyboard->sendModifiers(depressed, latched, locked, group);
+    d->keyboard->sendModifiers(depressed, latched, locked, group, nextSerial());
 }
 
 void SeatInterface::notifyTouchCancel()
