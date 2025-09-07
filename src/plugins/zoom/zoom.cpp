@@ -4,6 +4,7 @@
 
     SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
     SPDX-FileCopyrightText: 2010 Sebastian Sauer <sebsauer@kdab.com>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -13,14 +14,12 @@
 #include "core/renderviewport.h"
 #include "cursor.h"
 #include "effect/effecthandler.h"
+#include "focustracker.h"
 #include "opengl/glutils.h"
 #include "scene/cursoritem.h"
 #include "scene/workspacescene.h"
+#include "textcarettracker.h"
 #include "zoomconfig.h"
-
-#if HAVE_ACCESSIBILITY
-#include "accessibilityintegration.h"
-#endif
 
 #include <KConfigGroup>
 #include <KGlobalAccel>
@@ -126,15 +125,6 @@ ZoomEffect::ZoomEffect()
     connect(effects, &EffectsHandler::windowAdded, this, &ZoomEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::screenRemoved, this, &ZoomEffect::slotScreenRemoved);
 
-#if HAVE_ACCESSIBILITY
-    // TODO: Decide what to do about it.
-    if (!effects->waylandDisplay()) {
-        // on Wayland, the accessibility integration can cause KWin to hang
-        m_accessibilityIntegration = new ZoomAccessibilityIntegration(this);
-        connect(m_accessibilityIntegration, &ZoomAccessibilityIntegration::focusPointChanged, this, &ZoomEffect::moveFocus);
-    }
-#endif
-
     const auto windows = effects->stackingOrder();
     for (EffectWindow *w : windows) {
         slotWindowAdded(w);
@@ -155,24 +145,6 @@ ZoomEffect::~ZoomEffect()
     // Save the zoom value.
     ZoomConfig::setInitialZoom(m_targetZoom);
     ZoomConfig::self()->save();
-}
-
-bool ZoomEffect::isFocusTrackingEnabled() const
-{
-#if HAVE_ACCESSIBILITY
-    return m_accessibilityIntegration && m_accessibilityIntegration->isFocusTrackingEnabled();
-#else
-    return false;
-#endif
-}
-
-bool ZoomEffect::isTextCaretTrackingEnabled() const
-{
-#if HAVE_ACCESSIBILITY
-    return m_accessibilityIntegration && m_accessibilityIntegration->isTextCaretTrackingEnabled();
-#else
-    return false;
-#endif
 }
 
 QPointF ZoomEffect::calculateCursorItemPosition() const
@@ -242,14 +214,27 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     m_mousePointer = MousePointerType(ZoomConfig::mousePointer());
     // Track moving of the mouse.
     m_mouseTracking = MouseTrackingType(ZoomConfig::mouseTracking());
-#if HAVE_ACCESSIBILITY
-    if (m_accessibilityIntegration) {
-        // Enable tracking of the focused location.
-        m_accessibilityIntegration->setFocusTrackingEnabled(ZoomConfig::enableFocusTracking());
-        // Enable tracking of the text caret.
-        m_accessibilityIntegration->setTextCaretTrackingEnabled(ZoomConfig::enableTextCaretTracking());
+
+    if (ZoomConfig::enableFocusTracking()) {
+        if (m_targetZoom > 1) {
+            trackFocus();
+        }
+    } else {
+        m_focusTracker.reset();
     }
-#endif
+
+    if (ZoomConfig::enableTextCaretTracking()) {
+        if (m_targetZoom > 1) {
+            trackTextCaret();
+        }
+    } else {
+        m_textCaretTracker.reset();
+    }
+
+    if (!ZoomConfig::enableFocusTracking() && !ZoomConfig::enableTextCaretTracking()) {
+        m_focusPoint.reset();
+    }
+
     // The time in milliseconds to wait before a focus-event takes away a mouse-move.
     m_focusDelay = std::max(uint(0), ZoomConfig::focusDelay());
     // The factor the zoom-area will be moved on touching an edge on push-mode or using the navigation KAction's.
@@ -292,6 +277,8 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
     }
 
     if (m_zoom == 1.0) {
+        m_focusPoint.reset();
+
         showCursor();
     } else {
         hideCursor();
@@ -362,7 +349,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
     }
 
     // use the focusPoint if focus tracking is enabled
-    if (isFocusTrackingEnabled() || isTextCaretTrackingEnabled()) {
+    if (m_focusPoint) {
         bool acceptFocus = true;
         if (m_mouseTracking != MouseTrackingDisabled && m_focusDelay > 0) {
             // Wait some time for the mouse before doing the switch. This serves as threshold
@@ -371,9 +358,9 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
             acceptFocus = msecs > m_focusDelay;
         }
         if (acceptFocus) {
-            m_xTranslation = -int(m_focusPoint.x() * (m_zoom - 1.0));
-            m_yTranslation = -int(m_focusPoint.y() * (m_zoom - 1.0));
-            m_prevPoint = m_focusPoint;
+            m_xTranslation = -int(m_focusPoint->x() * (m_zoom - 1.0));
+            m_yTranslation = -int(m_focusPoint->y() * (m_zoom - 1.0));
+            m_prevPoint = *m_focusPoint;
         }
     }
 
@@ -612,12 +599,12 @@ void ZoomEffect::slotScreenRemoved(Output *screen)
     }
 }
 
-void ZoomEffect::moveFocus(const QPoint &point)
+void ZoomEffect::moveFocus(const QPointF &point)
 {
     if (m_zoom == 1.0) {
         return;
     }
-    m_focusPoint = point;
+    m_focusPoint = point.toPoint();
     m_lastFocusEvent = QTime::currentTime();
     effects->addRepaintFull();
 }
@@ -677,9 +664,18 @@ void ZoomEffect::setTargetZoom(double value)
     const bool newActive = value != 1.0;
     const bool oldActive = m_targetZoom != 1.0;
     if (newActive && !oldActive) {
+        if (ZoomConfig::enableTextCaretTracking()) {
+            trackTextCaret();
+        }
+        if (ZoomConfig::enableFocusTracking()) {
+            trackFocus();
+        }
+
         connect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
         m_cursorPoint = effects->cursorPos().toPoint();
     } else if (!newActive && oldActive) {
+        m_textCaretTracker.reset();
+        m_focusTracker.reset();
         disconnect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
     }
     m_targetZoom = value;
@@ -697,6 +693,26 @@ void ZoomEffect::realtimeZoom(double delta)
     if (m_zoom == 1.0) {
         showCursor();
     }
+}
+
+void ZoomEffect::trackTextCaret()
+{
+    m_textCaretTracker = std::make_unique<TextCaretTracker>();
+    connect(m_textCaretTracker.get(), &TextCaretTracker::moved, this, &ZoomEffect::moveFocus);
+}
+
+void ZoomEffect::trackFocus()
+{
+    // Dbus-based focus tracking is disabled on wayland because libqaccessibilityclient has
+    // blocking dbus calls, which can result in kwin_wayland lockups.
+
+    static bool forceFocusTracking = qEnvironmentVariableIntValue("KWIN_WAYLAND_ZOOM_FORCE_LEGACY_FOCUS_TRACKING");
+    if (!forceFocusTracking) {
+        return;
+    }
+
+    m_focusTracker = std::make_unique<FocusTracker>();
+    connect(m_focusTracker.get(), &FocusTracker::moved, this, &ZoomEffect::moveFocus);
 }
 
 } // namespace

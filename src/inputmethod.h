@@ -91,6 +91,7 @@ Q_SIGNALS:
     void availableChanged();
     void activeClientSupportsTextInputChanged();
     void cursorRectangleChanged();
+    void activeWindowChanged();
 
 private Q_SLOTS:
     // textinput interface slots

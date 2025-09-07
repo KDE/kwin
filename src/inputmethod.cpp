@@ -363,6 +363,7 @@ void InputMethod::setTrackedWindow(Window *trackedWindow)
         connect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::cursorRectangleChanged);
     }
     updateInputPanelState();
+    Q_EMIT activeWindowChanged();
 }
 
 void InputMethod::handleFocusedSurfaceChanged()
