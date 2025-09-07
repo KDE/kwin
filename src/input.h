@@ -67,6 +67,9 @@ struct TabletPadButtonEvent;
 struct TabletPadStripEvent;
 struct TabletPadRingEvent;
 struct TabletPadDialEvent;
+struct TouchDownEvent;
+struct TouchMotionEvent;
+struct TouchUpEvent;
 
 namespace Decoration
 {
@@ -401,9 +404,9 @@ public:
      * @return @c true to stop further event processing, @c false to pass to next filter.
      */
     virtual bool keyboardKey(KeyboardKeyEvent *event);
-    virtual bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
-    virtual bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
-    virtual bool touchUp(qint32 id, std::chrono::microseconds time);
+    virtual bool touchDown(TouchDownEvent *event);
+    virtual bool touchMotion(TouchMotionEvent *event);
+    virtual bool touchUp(TouchUpEvent *event);
     virtual bool touchCancel();
     virtual bool touchFrame();
 

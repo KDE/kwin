@@ -89,7 +89,7 @@ bool DpmsInputEventFilter::keyboardKey(KeyboardKeyEvent *event)
     return true;
 }
 
-bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+bool DpmsInputEventFilter::touchDown(TouchDownEvent *event)
 {
     if (m_enableDoubleTap) {
         if (m_touchPoints.isEmpty()) {
@@ -109,15 +109,15 @@ bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono:
             m_doubleTapTimer.invalidate();
             m_secondTap = false;
         }
-        m_touchPoints << id;
+        m_touchPoints << event->id;
     }
     return true;
 }
 
-bool DpmsInputEventFilter::touchUp(qint32 id, std::chrono::microseconds time)
+bool DpmsInputEventFilter::touchUp(TouchUpEvent *event)
 {
     if (m_enableDoubleTap) {
-        m_touchPoints.removeAll(id);
+        m_touchPoints.removeAll(event->id);
         if (m_touchPoints.isEmpty() && m_doubleTapTimer.isValid() && m_secondTap) {
             // if device in pocket, do not wake device up
             if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval() && !m_proximityClose) {
@@ -130,7 +130,7 @@ bool DpmsInputEventFilter::touchUp(qint32 id, std::chrono::microseconds time)
     return true;
 }
 
-bool DpmsInputEventFilter::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+bool DpmsInputEventFilter::touchMotion(TouchMotionEvent *event)
 {
     // ignore the event
     return true;

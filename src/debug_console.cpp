@@ -311,43 +311,43 @@ void DebugConsoleFilter::keyboardKey(KeyboardKeyEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+void DebugConsoleFilter::touchDown(TouchDownEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A touch down event", "Touch down")));
-    text.append(timestampRow(time));
-    text.append(tableRow(i18nc("The id of the touch point in the touch event", "Point identifier"), id));
+    text.append(timestampRow(event->time));
+    text.append(tableRow(i18nc("The id of the touch point in the touch event", "Point identifier"), event->id));
     text.append(tableRow(i18nc("The global position of the touch point", "Global position"),
-                         QStringLiteral("%1/%2").arg(pos.x()).arg(pos.y())));
+                         QStringLiteral("%1/%2").arg(event->pos.x()).arg(event->pos.y())));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+void DebugConsoleFilter::touchMotion(TouchMotionEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A touch motion event", "Touch Motion")));
-    text.append(timestampRow(time));
-    text.append(tableRow(i18nc("The id of the touch point in the touch event", "Point identifier"), id));
+    text.append(timestampRow(event->time));
+    text.append(tableRow(i18nc("The id of the touch point in the touch event", "Point identifier"), event->id));
     text.append(tableRow(i18nc("The global position of the touch point", "Global position"),
-                         QStringLiteral("%1/%2").arg(pos.x()).arg(pos.y())));
+                         QStringLiteral("%1/%2").arg(event->pos.x()).arg(event->pos.y())));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::touchUp(qint32 id, std::chrono::microseconds time)
+void DebugConsoleFilter::touchUp(TouchUpEvent *event)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A touch up event", "Touch Up")));
-    text.append(timestampRow(time));
-    text.append(tableRow(i18nc("The id of the touch point in the touch event", "Point identifier"), id));
+    text.append(timestampRow(event->time));
+    text.append(tableRow(i18nc("The id of the touch point in the touch event", "Point identifier"), event->id));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);

@@ -105,36 +105,36 @@ bool EisInputCaptureFilter::keyboardKey(KeyboardKeyEvent *event)
     return true;
 }
 
-bool EisInputCaptureFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+bool EisInputCaptureFilter::touchDown(TouchDownEvent *event)
 {
     if (!m_manager->activeCapture()) {
         return false;
     }
     if (const auto abs = m_manager->activeCapture()->absoluteDevice()) {
         auto touch = eis_device_touch_new(abs);
-        m_touches.insert(id, touch);
-        eis_touch_down(touch, pos.x(), pos.y());
+        m_touches.insert(event->id, touch);
+        eis_touch_down(touch, event->pos.x(), event->pos.y());
     }
     return true;
 }
 
-bool EisInputCaptureFilter::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+bool EisInputCaptureFilter::touchMotion(TouchMotionEvent *event)
 {
     if (!m_manager->activeCapture()) {
         return false;
     }
-    if (auto touch = m_touches.value(id)) {
-        eis_touch_motion(touch, pos.x(), pos.y());
+    if (auto touch = m_touches.value(event->id)) {
+        eis_touch_motion(touch, event->pos.x(), event->pos.y());
     }
     return true;
 }
 
-bool EisInputCaptureFilter::touchUp(qint32 id, std::chrono::microseconds time)
+bool EisInputCaptureFilter::touchUp(TouchUpEvent *event)
 {
     if (!m_manager->activeCapture()) {
         return false;
     }
-    if (auto touch = m_touches.take(id)) {
+    if (auto touch = m_touches.take(event->id)) {
         eis_touch_up(touch);
         eis_touch_unref(touch);
     }

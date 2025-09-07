@@ -39,15 +39,15 @@ void InputEventSpy::keyboardKey(KeyboardKeyEvent *event)
 {
 }
 
-void InputEventSpy::touchDown(qint32 id, const QPointF &point, std::chrono::microseconds time)
+void InputEventSpy::touchDown(TouchDownEvent *event)
 {
 }
 
-void InputEventSpy::touchMotion(qint32 id, const QPointF &point, std::chrono::microseconds time)
+void InputEventSpy::touchMotion(TouchMotionEvent *event)
 {
 }
 
-void InputEventSpy::touchUp(qint32 id, std::chrono::microseconds time)
+void InputEventSpy::touchUp(TouchUpEvent *event)
 {
 }
 

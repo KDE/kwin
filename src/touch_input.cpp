@@ -12,6 +12,7 @@
 #include "config-kwin.h"
 
 #include "decorations/decoratedwindow.h"
+#include "input_event.h"
 #include "input_event_spy.h"
 #include "pointer_input.h"
 #include "wayland/display.h"
@@ -118,8 +119,15 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, std::chro
         workspace()->setActiveOutput(pos);
     }
     input()->setLastInputHandler(this);
-    input()->processSpies(&InputEventSpy::touchDown, id, pos, time);
-    input()->processFilters(&InputEventFilter::touchDown, id, pos, time);
+
+    TouchDownEvent event{
+        .id = id,
+        .pos = pos,
+        .time = time,
+    };
+
+    input()->processSpies(&InputEventSpy::touchDown, &event);
+    input()->processFilters(&InputEventFilter::touchDown, &event);
     m_windowUpdatedInCycle = false;
     input()->setLastInputSerial(waylandServer()->seat()->display()->serial());
     if (auto f = focus()) {
@@ -136,9 +144,15 @@ void TouchInputRedirection::processUp(qint32 id, std::chrono::microseconds time,
         return;
     }
     input()->setLastInputHandler(this);
+
+    TouchUpEvent event{
+        .id = id,
+        .time = time,
+    };
+
     m_windowUpdatedInCycle = false;
-    input()->processSpies(&InputEventSpy::touchUp, id, time);
-    input()->processFilters(&InputEventFilter::touchUp, id, time);
+    input()->processSpies(&InputEventSpy::touchUp, &event);
+    input()->processFilters(&InputEventFilter::touchUp, &event);
     m_windowUpdatedInCycle = false;
     if (m_activeTouchPoints.count() == 0) {
         update();
@@ -155,9 +169,16 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, std::ch
     }
     input()->setLastInputHandler(this);
     m_lastPosition = pos;
+
+    TouchMotionEvent event{
+        .id = id,
+        .pos = pos,
+        .time = time,
+    };
+
     m_windowUpdatedInCycle = false;
-    input()->processSpies(&InputEventSpy::touchMotion, id, pos, time);
-    input()->processFilters(&InputEventFilter::touchMotion, id, pos, time);
+    input()->processSpies(&InputEventSpy::touchMotion, &event);
+    input()->processFilters(&InputEventFilter::touchMotion, &event);
     m_windowUpdatedInCycle = false;
 }
 
