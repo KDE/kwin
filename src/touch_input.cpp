@@ -123,6 +123,7 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, std::chro
     TouchDownEvent event{
         .id = id,
         .pos = pos,
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -147,6 +148,7 @@ void TouchInputRedirection::processUp(qint32 id, std::chrono::microseconds time,
 
     TouchUpEvent event{
         .id = id,
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 
@@ -173,6 +175,7 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, std::ch
     TouchMotionEvent event{
         .id = id,
         .pos = pos,
+        .serial = waylandServer()->seat()->nextSerial(),
         .time = time,
     };
 

@@ -415,7 +415,7 @@ public:
         if (window && surfaceAllowed(window->surface())) {
             auto seat = waylandServer()->seat();
             seat->setTimestamp(event->time);
-            seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), event->id, event->pos, seat->nextSerial());
+            seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), event->id, event->pos, event->serial);
         }
         return true;
     }
@@ -442,7 +442,7 @@ public:
 
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->notifyTouchUp(event->id, seat->nextSerial());
+        seat->notifyTouchUp(event->id, event->serial);
         return true;
     }
     bool pinchGestureBegin(PointerPinchGestureBeginEvent *event) override
@@ -2130,7 +2130,7 @@ public:
             return false;
         }
         seat->setTimestamp(event->time);
-        auto tp = seat->notifyTouchDown(w->surface(), w->bufferGeometry().topLeft(), event->id, event->pos, seat->nextSerial());
+        auto tp = seat->notifyTouchDown(w->surface(), w->bufferGeometry().topLeft(), event->id, event->pos, event->serial);
         if (!tp) {
             qCCritical(KWIN_CORE) << "Could not touch down" << event->pos;
             return false;
@@ -2151,7 +2151,7 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->time);
-        seat->notifyTouchUp(event->id, seat->nextSerial());
+        seat->notifyTouchUp(event->id, event->serial);
         return true;
     }
     bool touchCancel() override
@@ -2699,7 +2699,7 @@ public:
         }
         Window *window = input()->findToplevel(event->pos);
         seat->setTimestamp(event->time);
-        seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), event->id, event->pos, seat->nextSerial());
+        seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), event->id, event->pos, event->serial);
         m_lastPos = event->pos;
         return true;
     }
@@ -2729,7 +2729,6 @@ public:
         seat->setTimestamp(event->time);
         seat->notifyTouchMotion(event->id, event->pos);
 
-        const quint32 serial = seat->nextSerial();
         if (Window *dragTarget = pickDragTarget(event->pos)) {
             if (m_dragTarget != dragTarget) {
                 workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
@@ -2746,13 +2745,13 @@ public:
             if (seat->dragSurface() != effectiveSurface) {
                 QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
                 inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
-                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, event->pos, inputTransformation, serial);
+                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, event->pos, inputTransformation, event->serial);
             }
 
             m_dragTarget = dragTarget;
         } else {
             // no window at that place, if we have a surface we need to reset
-            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4(), serial);
+            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4(), event->serial);
             m_dragTarget = nullptr;
         }
         return true;
@@ -2764,7 +2763,7 @@ public:
             return false;
         }
         seat->setTimestamp(event->time);
-        seat->notifyTouchUp(event->id, seat->nextSerial());
+        seat->notifyTouchUp(event->id, event->serial);
         if (m_touchId == event->id) {
             m_touchId = -1;
             raiseDragTarget();

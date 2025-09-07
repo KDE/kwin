@@ -139,6 +139,7 @@ struct TouchDownEvent
 {
     qint32 id;
     const QPointF &pos;
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
@@ -146,12 +147,14 @@ struct TouchMotionEvent
 {
     qint32 id;
     const QPointF &pos;
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
 struct TouchUpEvent
 {
     qint32 id;
+    quint32 serial;
     std::chrono::microseconds time;
 };
 
