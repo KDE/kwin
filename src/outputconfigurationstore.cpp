@@ -1043,6 +1043,25 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("sharpness"); it != data.end() && it->isDouble()) {
             state.sharpness = std::clamp(it->toDouble(), 0.0, 1.0);
         }
+        if (const auto it = data.find("customModes"); it != data.end() && it->isArray()) {
+            const auto arr = it->toArray();
+            QList<CustomModeDefinition> modes;
+            for (const auto &value : arr) {
+                const auto obj = value.toObject();
+                const int width = obj["width"].toInt(0);
+                const int height = obj["height"].toInt(0);
+                const int refreshRate = obj["refreshRate"].toInt(0);
+                const int flags = obj["flags"].toInt(0);
+                if (width > 0 && height > 0 && refreshRate > 0) {
+                    modes.push_back(CustomModeDefinition{
+                        .size = QSize(width, height),
+                        .refreshRate = uint32_t(refreshRate),
+                        .flags = OutputMode::Flags(flags),
+                    });
+                }
+            }
+            state.customModes = modes;
+        }
         outputDatas.push_back(state);
     }
 
@@ -1328,6 +1347,17 @@ void OutputConfigurationStore::save()
         }
         if (output.sharpness) {
             o["sharpness"] = *output.sharpness;
+        }
+        if (output.customModes.has_value()) {
+            QJsonArray modes;
+            for (const auto &mode : *output.customModes) {
+                QJsonObject obj;
+                obj["width"] = mode.size.width();
+                obj["height"] = mode.size.width();
+                obj["refreshRate"] = int(mode.refreshRate);
+                obj["flags"] = int(mode.flags);
+                modes.append(obj);
+            }
         }
         outputsData.append(o);
     }

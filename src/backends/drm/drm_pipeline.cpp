@@ -391,7 +391,10 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
             } else if (m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
                 commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::None);
             }
-        } else if (m_connector->isInternal() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::Full_Aspect) && (m_pending.mode->flags() & OutputMode::Flag::Generated)) {
+        } else if (m_connector->isInternal()
+                   && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::Full_Aspect)
+                   && (m_pending.mode->flags() & OutputMode::Flag::Generated)
+                   && !(m_pending.mode->flags() & OutputMode::Flag::Custom)) {
             commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::Full_Aspect);
         } else if (m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
             commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::None);

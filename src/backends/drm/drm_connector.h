@@ -72,7 +72,7 @@ public:
     QByteArray mstPath() const;
 
     QList<std::shared_ptr<DrmConnectorMode>> modes() const;
-    std::shared_ptr<DrmConnectorMode> findMode(const drmModeModeInfo &modeInfo) const;
+    std::shared_ptr<DrmConnectorMode> generateMode(const QSize &size, float refreshRate, OutputMode::Flags flags);
 
     BackendOutput::SubPixel subpixel() const;
 
@@ -143,7 +143,6 @@ public:
 
 private:
     QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes();
-    std::shared_ptr<DrmConnectorMode> generateMode(const QSize &size, float refreshRate);
 
     DrmUniquePtr<drmModeConnector> m_conn;
     Edid m_edid;

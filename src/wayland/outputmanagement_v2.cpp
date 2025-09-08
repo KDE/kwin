@@ -13,6 +13,7 @@
 #include "outputdevice_v2.h"
 #include "outputmanagement_v2.h"
 #include "utils/common.h"
+#include "utils/resource.h"
 #include "workspace.h"
 
 #include "qwayland-server-kde-output-management-v2.h"
@@ -24,7 +25,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 17;
+static const quint32 s_version = 18;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -33,6 +34,7 @@ public:
 
 protected:
     void kde_output_management_v2_create_configuration(Resource *resource, uint32_t id) override;
+    void kde_output_management_v2_create_mode_list(Resource *resource, uint32_t id) override;
 };
 
 class OutputConfigurationV2Interface : public QObject, QtWaylandServer::kde_output_configuration_v2
@@ -76,8 +78,29 @@ protected:
     void kde_output_configuration_v2_set_max_bits_per_color(Resource *resource, struct ::wl_resource *outputdevice, uint32_t max_bpc) override;
     void kde_output_configuration_v2_set_edr_policy(Resource *resource, struct ::wl_resource *outputdevice, uint32_t edrPolicy) override;
     void kde_output_configuration_v2_set_sharpness(Resource *resource, wl_resource *outputdevice, uint32_t sharpness) override;
+    void kde_output_configuration_v2_set_custom_modes(Resource *resource, struct ::wl_resource *outputdevice, struct ::wl_resource *modes) override;
 
     void sendFailure(Resource *resource, const QString &reason);
+};
+
+class OutputModeListV2 : public QtWaylandServer::kde_mode_list_v2
+{
+public:
+    explicit OutputModeListV2(wl_resource *resource);
+
+    QList<CustomModeDefinition> modes;
+
+private:
+    void kde_mode_list_v2_destroy_resource(Resource *resource) override;
+    void kde_mode_list_v2_destroy(Resource *resource) override;
+    void kde_mode_list_v2_add_mode(Resource *resource) override;
+    void kde_mode_list_v2_set_resolution(Resource *resource, uint32_t width, uint32_t height) override;
+    void kde_mode_list_v2_set_refresh_rate(Resource *resource, uint32_t rate) override;
+    void kde_mode_list_v2_set_reduced_blanking(Resource *resource, uint32_t reduced) override;
+
+    std::optional<QSize> m_resolution;
+    std::optional<uint32_t> m_refreshRate;
+    OutputMode::Flags m_flags = OutputMode::Flag::Custom;
 };
 
 OutputManagementV2InterfacePrivate::OutputManagementV2InterfacePrivate(Display *display)
@@ -93,6 +116,11 @@ void OutputManagementV2InterfacePrivate::kde_output_management_v2_create_configu
         return;
     }
     new OutputConfigurationV2Interface(config_resource);
+}
+
+void OutputManagementV2InterfacePrivate::kde_output_management_v2_create_mode_list(Resource *resource, uint32_t id)
+{
+    new OutputModeListV2(wl_resource_create(resource->client(), &kde_mode_list_v2_interface, resource->version(), id));
 }
 
 OutputManagementV2Interface::OutputManagementV2Interface(Display *display, QObject *parent)
@@ -479,6 +507,16 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_sharpness(R
     }
 }
 
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_custom_modes(Resource *resource, ::wl_resource *outputdevice, ::wl_resource *modes)
+{
+    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
+    auto r = resource_cast<OutputModeListV2 *>(modes);
+    if (invalid || !output || !r) {
+        return;
+    }
+    config.changeSet(output->handle())->customModes = r->modes;
+}
+
 void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
@@ -487,6 +525,49 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy(Resourc
 void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy_resource(Resource *resource)
 {
     delete this;
+}
+
+OutputModeListV2::OutputModeListV2(wl_resource *resource)
+    : QtWaylandServer::kde_mode_list_v2(resource)
+{
+}
+
+void OutputModeListV2::kde_mode_list_v2_destroy_resource(Resource *resource)
+{
+    delete this;
+}
+
+void OutputModeListV2::kde_mode_list_v2_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+void OutputModeListV2::kde_mode_list_v2_add_mode(Resource *resource)
+{
+    if (!m_resolution.has_value() || !m_refreshRate.has_value()) {
+        wl_resource_post_error(resource->handle, error_missing_parameters, "Resolution or refresh rate were not set");
+        return;
+    }
+    modes.push_back(CustomModeDefinition{
+        .size = *m_resolution,
+        .refreshRate = *m_refreshRate,
+        .flags = m_flags,
+    });
+}
+
+void OutputModeListV2::kde_mode_list_v2_set_resolution(Resource *resource, uint32_t width, uint32_t height)
+{
+    m_resolution = QSize(width, height);
+}
+
+void OutputModeListV2::kde_mode_list_v2_set_refresh_rate(Resource *resource, uint32_t rate)
+{
+    m_refreshRate = rate;
+}
+
+void OutputModeListV2::kde_mode_list_v2_set_reduced_blanking(Resource *resource, uint32_t reduced)
+{
+    m_flags.setFlag(OutputMode::Flag::ReducedBlanking, reduced == 1);
 }
 
 void OutputConfigurationV2Interface::sendFailure(Resource *resource, const QString &reason)
@@ -526,6 +607,24 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
     if (allDisabled) {
         sendFailure(resource, i18n("Disabling all outputs through configuration changes is not allowed"));
         return;
+    }
+    for (BackendOutput *output : allOutputs) {
+        const auto changeset = config.constChangeSet(output);
+        if (!changeset) {
+            continue;
+        }
+        if (changeset->customModes.has_value()) {
+            for (const auto &info : *changeset->customModes) {
+                if (info.size.isEmpty()) {
+                    sendFailure(resource, i18n("Cannot add a custom mode with an empty size"));
+                    return;
+                }
+                if (info.refreshRate == 0) {
+                    sendFailure(resource, i18n("Cannot add a custom mode with a refresh rate of zero Hz"));
+                    return;
+                }
+            }
+        }
     }
 
     switch (workspace()->applyOutputConfiguration(config)) {

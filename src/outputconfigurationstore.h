@@ -90,6 +90,7 @@ private:
         std::optional<uint32_t> maxBitsPerColor;
         std::optional<BackendOutput::EdrPolicy> edrPolicy;
         std::optional<double> sharpness;
+        std::optional<QList<CustomModeDefinition>> customModes;
     };
     struct SetupState
     {

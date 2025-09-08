@@ -77,6 +77,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(BackendOutput::Capabi
     if (caps & BackendOutput::Capability::SharpnessControl) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_sharpness;
     }
+    if (caps & BackendOutput::Capability::CustomModes) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_custom_modes;
+    }
     return ret;
 }
 
@@ -207,7 +210,7 @@ public:
     Resource *createResource(OutputDeviceV2InterfacePrivate::Resource *output);
     Resource *findResource(OutputDeviceV2InterfacePrivate::Resource *output) const;
 
-    void bindResource(wl_resource *resource);
+    void bindResource(Resource *resource);
 
     static OutputDeviceModeV2InterfacePrivate *get(OutputDeviceModeV2Interface *mode)
     {
@@ -218,7 +221,7 @@ public:
     std::weak_ptr<OutputMode> m_handle;
     QSize m_size;
     int m_refreshRate = 60000;
-    bool m_preferred = false;
+    OutputMode::Flags m_flags;
 
 protected:
     Resource *kde_output_device_mode_v2_allocate() override;
@@ -422,7 +425,7 @@ wl_resource *OutputDeviceV2InterfacePrivate::sendNewMode(Resource *resource, Out
 
     send_mode(resource->handle, modeResource->handle);
 
-    privateMode->bindResource(modeResource->handle);
+    privateMode->bindResource(modeResource);
 
     return modeResource->handle;
 }
@@ -1117,7 +1120,7 @@ OutputDeviceModeV2InterfacePrivate::OutputDeviceModeV2InterfacePrivate(OutputDev
     , m_handle(handle)
     , m_size(handle->size())
     , m_refreshRate(handle->refreshRate())
-    , m_preferred(handle->flags() & OutputMode::Flag::Preferred)
+    , m_flags(handle->flags())
 {
 }
 
@@ -1166,13 +1169,23 @@ std::weak_ptr<OutputMode> OutputDeviceModeV2Interface::handle() const
     return d->m_handle;
 }
 
-void OutputDeviceModeV2InterfacePrivate::bindResource(wl_resource *resource)
+void OutputDeviceModeV2InterfacePrivate::bindResource(Resource *resource)
 {
-    send_size(resource, m_size.width(), m_size.height());
-    send_refresh(resource, m_refreshRate);
+    send_size(resource->handle, m_size.width(), m_size.height());
+    send_refresh(resource->handle, m_refreshRate);
 
-    if (m_preferred) {
-        send_preferred(resource);
+    if (m_flags & OutputMode::Flag::Preferred) {
+        send_preferred(resource->handle);
+    }
+    if (resource->version() >= KDE_OUTPUT_DEVICE_MODE_V2_FLAGS_CUSTOM) {
+        uint32_t flags = 0;
+        if (m_flags & OutputMode::Flag::Custom) {
+            flags |= KDE_OUTPUT_DEVICE_MODE_V2_FLAGS_CUSTOM;
+        }
+        if (m_flags & OutputMode::Flag::ReducedBlanking) {
+            flags |= KDE_OUTPUT_DEVICE_MODE_V2_FLAGS_REDUCED_BLANKING;
+        }
+        send_flags(resource->handle, flags);
     }
 }
 

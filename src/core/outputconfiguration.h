@@ -63,6 +63,7 @@ public:
     std::optional<double> sharpness;
     std::optional<BackendOutput::DpmsMode> dpmsMode;
     std::optional<uint32_t> priority;
+    std::optional<QList<CustomModeDefinition>> customModes;
 };
 
 class KWIN_EXPORT OutputConfiguration
