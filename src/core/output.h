@@ -113,6 +113,8 @@ public:
         Preferred = 0x1,
         Generated = 0x2,
         Removed = 0x4,
+        Custom = 0x8,
+        ReducedBlanking = 0x10,
     };
     Q_DECLARE_FLAGS(Flags, Flag)
 
@@ -129,6 +131,13 @@ private:
     const QSize m_size;
     const uint32_t m_refreshRate;
     Flags m_flags;
+};
+
+struct CustomModeDefinition
+{
+    QSize size;
+    uint32_t refreshRate;
+    OutputMode::Flags flags;
 };
 
 /**
@@ -169,6 +178,7 @@ public:
         DdcCi = 1 << 11,
         MaxBitsPerColor = 1 << 12,
         Edr = 1 << 13,
+        CustomModes = 1 << 14,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -442,6 +452,8 @@ public:
      */
     const std::shared_ptr<ColorDescription> &colorDescription() const;
 
+    QList<CustomModeDefinition> customModes() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.
@@ -589,6 +601,7 @@ protected:
         uint32_t maxBitsPerColor = 0;
         std::optional<uint32_t> automaticMaxBitsPerColorLimit;
         EdrPolicy edrPolicy = EdrPolicy::Always;
+        QList<CustomModeDefinition> customModes;
     };
 
     void setInformation(const Information &information);

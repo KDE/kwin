@@ -82,7 +82,7 @@ private:
     void maybeScheduleRepaints(const State &next);
     std::optional<uint32_t> decideAutomaticBpcLimit() const;
 
-    QList<std::shared_ptr<OutputMode>> getModes() const;
+    QList<std::shared_ptr<OutputMode>> getModes(const State &state) const;
 
     DrmGpu *const m_gpu;
     DrmPipeline *m_pipeline;

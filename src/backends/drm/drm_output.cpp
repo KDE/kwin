@@ -139,7 +139,7 @@ bool DrmOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nano
     return m_pipeline->presentAsync(layer, allowedVrrDelay);
 }
 
-QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const
+QList<std::shared_ptr<OutputMode>> DrmOutput::getModes(const State &state) const
 {
     const auto drmModes = m_pipeline->connector()->modes();
 
@@ -147,6 +147,9 @@ QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const
     ret.reserve(drmModes.count());
     for (const auto &drmMode : drmModes) {
         ret.append(drmMode);
+    }
+    for (const auto &custom : state.customModes) {
+        ret.append(m_pipeline->connector()->generateMode(custom.size, custom.refreshRate / 1000.0f, custom.flags | OutputMode::Flag::Custom));
     }
     return ret;
 }
@@ -243,7 +246,7 @@ void DrmOutput::updateConnectorProperties()
     updateInformation();
 
     State next = m_state;
-    next.modes = getModes();
+    next.modes = getModes(next);
     if (!next.currentMode) {
         // some mode needs to be set
         next.currentMode = next.modes.constFirst();
@@ -619,6 +622,10 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.maxBitsPerColor = props->maxBitsPerColor.value_or(m_state.maxBitsPerColor);
     next.automaticMaxBitsPerColorLimit = decideAutomaticBpcLimit();
     next.edrPolicy = props->edrPolicy.value_or(m_state.edrPolicy);
+    if (props->customModes.has_value()) {
+        next.customModes = *props->customModes;
+        next.modes = getModes(next);
+    }
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     tryKmsColorOffloading(next);
