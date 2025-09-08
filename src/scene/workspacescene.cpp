@@ -115,27 +115,15 @@ void WorkspaceScene::createDndIconItem()
         return;
     }
     m_dndIcon = std::make_unique<DragAndDropIconItem>(dragIcon, m_overlayItem.get());
-    if (waylandServer()->seat()->isDragPointer()) {
-        auto updatePosition = [this]() {
-            const auto pointerPos = waylandServer()->seat()->pointerPos();
-            m_dndIcon->setPosition(pointerPos);
-            m_dndIcon->setOutput(workspace()->outputAt(pointerPos));
-        };
 
-        updatePosition();
-        connect(waylandServer()->seat(), &SeatInterface::pointerPosChanged, m_dndIcon.get(), updatePosition);
-    } else if (waylandServer()->seat()->isDragTouch()) {
-        auto updatePosition = [this]() {
-            auto seat = waylandServer()->seat();
-            if (const auto touchPoint = seat->touchPointByImplicitGrabSerial(*seat->dragSerial())) {
-                m_dndIcon->setPosition(touchPoint->position);
-                m_dndIcon->setOutput(workspace()->outputAt(touchPoint->position));
-            }
-        };
+    auto updatePosition = [this]() {
+        const auto position = waylandServer()->seat()->dragPosition();
+        m_dndIcon->setPosition(position);
+        m_dndIcon->setOutput(workspace()->outputAt(position));
+    };
 
-        updatePosition();
-        connect(waylandServer()->seat(), &SeatInterface::touchMoved, m_dndIcon.get(), updatePosition);
-    }
+    updatePosition();
+    connect(waylandServer()->seat(), &SeatInterface::dragMoved, m_dndIcon.get(), updatePosition);
 }
 
 void WorkspaceScene::destroyDndIconItem()

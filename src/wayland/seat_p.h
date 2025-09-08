@@ -125,6 +125,7 @@ public:
         QPointer<SurfaceInterface> surface;
         QPointer<AbstractDropHandler> target;
         QPointer<DragAndDropIcon> dragIcon;
+        QPointF position;
         QMatrix4x4 transformation;
         std::optional<quint32> dragImplicitGrabSerial;
         QMetaObject::Connection dragSourceDestroyConnection;

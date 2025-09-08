@@ -175,6 +175,8 @@ public:
     void setDragTarget(AbstractDropHandler *dropTarget, SurfaceInterface *surface, const QPointF &globalPosition, const QMatrix4x4 &inputTransformation);
     ///@}
 
+    QPointF dragPosition() const;
+
     void notifyDragMotion(const QPointF &position);
 
     AbstractDropHandler *dropHandlerForSurface(SurfaceInterface *surface) const;
@@ -668,6 +670,7 @@ Q_SIGNALS:
      * before dragEnded
      */
     void dragDropped();
+    void dragMoved(const QPointF &position);
     /**
      * Emitted whenever the focused text input changed.
      * @see focusedTextInput

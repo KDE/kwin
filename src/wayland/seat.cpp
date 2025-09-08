@@ -489,11 +489,18 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
     }
 }
 
+QPointF SeatInterface::dragPosition() const
+{
+    return d->drag.position;
+}
+
 void SeatInterface::notifyDragMotion(const QPointF &position)
 {
+    d->drag.position = position;
     if (d->drag.target) {
         d->drag.target->motion(position);
     }
+    Q_EMIT dragMoved(position);
 }
 
 SurfaceInterface *SeatInterface::focusedPointerSurface() const
@@ -1251,13 +1258,12 @@ bool SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
         return false;
     }
 
-    QPointF position;
     if (hasImplicitPointerGrab(dragSerial)) {
         d->drag.mode = SeatInterfacePrivate::Drag::Mode::Pointer;
-        position = d->globalPointer.pos;
+        d->drag.position = d->globalPointer.pos;
     } else if (const auto touchPoint = touchPointByImplicitGrabSerial(dragSerial)) {
         d->drag.mode = SeatInterfacePrivate::Drag::Mode::Touch;
-        position = touchPoint->position;
+        d->drag.position = touchPoint->position;
     } else {
         // no implicit grab, abort drag
         return false;
@@ -1284,7 +1290,7 @@ bool SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
         if (d->dragInhibitsPointer(originSurface)) {
             notifyPointerLeave();
         }
-        d->drag.target->updateDragTarget(originSurface, position, display()->nextSerial());
+        d->drag.target->updateDragTarget(originSurface, d->drag.position, display()->nextSerial());
     }
     Q_EMIT dragStarted();
     return true;
