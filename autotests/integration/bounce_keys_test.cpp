@@ -105,7 +105,7 @@ void BounceKeysTest::testBounce()
     QVERIFY(!keySpy.wait(100));
     keySpy.clear();
 
-    // Press it again after the bouce interval, verify that it does go through
+    // Press it again after the bounce interval, verify that it does go through
     timestamp += 1000;
     Test::keyboardKeyPressed(KEY_A, timestamp);
     QVERIFY(keySpy.wait());

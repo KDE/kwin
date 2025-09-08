@@ -774,7 +774,7 @@ void TilesTest::tileAndMaximize()
         Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
     };
 
-    // Add the window to a quick tile in desktop 1 and a cutom tile on desktop 2
+    // Add the window to a quick tile in desktop 1 and a custom tile on desktop 2
     {
         leftQuickTileD1->manage(window);
         rightTileD2->manage(window);

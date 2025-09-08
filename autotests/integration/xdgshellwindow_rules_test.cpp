@@ -2080,7 +2080,7 @@ void TestXdgShellWindowRules::testKeepAboveForce()
     // Initially, the window should be kept above.
     QVERIFY(m_window->keepAbove());
 
-    // Any attemt to unset the keep-above should not succeed.
+    // Any attempt to unset the keep-above should not succeed.
     m_window->setKeepAbove(false);
     QVERIFY(m_window->keepAbove());
 
@@ -2203,7 +2203,7 @@ void TestXdgShellWindowRules::testKeepBelowForce()
     // Initially, the window should be kept below.
     QVERIFY(m_window->keepBelow());
 
-    // Any attemt to unset the keep-below should not succeed.
+    // Any attempt to unset the keep-below should not succeed.
     m_window->setKeepBelow(false);
     QVERIFY(m_window->keepBelow());
 

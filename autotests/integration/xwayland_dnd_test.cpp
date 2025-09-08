@@ -1134,10 +1134,10 @@ void XwaylandDndTest::x11ToWayland_data()
     const QMimeType fontOtf = m_mimeDb.mimeTypeForName(QStringLiteral("font/otf"));
     const QMimeType plainText = m_mimeDb.mimeTypeForName(QStringLiteral("text/plain"));
 
-    // This checks a case where the data is transfered with a single XChangeProperty() call.
+    // This checks a case where the data is transferred with a single XChangeProperty() call.
     QTest::addRow("short text") << QList<QMimeType>{plainText} << plainText << generateText(16);
 
-    // This checks a case where the data is transfered using multiple XChangeProperty() calls.
+    // This checks a case where the data is transferred using multiple XChangeProperty() calls.
     QTest::addRow("long text") << QList<QMimeType>{plainText} << plainText << generateText(1024);
 
     // This checks the XdndTypeList code path.

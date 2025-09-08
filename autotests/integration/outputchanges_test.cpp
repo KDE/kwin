@@ -435,7 +435,7 @@ void OutputChangesTest::testMaximizedWindowRestoredAfterEnablingOutput()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
-    // kwin will send a configure event with the actived state.
+    // kwin will send a configure event with the activated state.
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -502,7 +502,7 @@ void OutputChangesTest::testFullScreenWindowRestoredAfterEnablingOutput()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
-    // kwin will send a configure event with the actived state.
+    // kwin will send a configure event with the activated state.
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -569,7 +569,7 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
-    // kwin will send a configure event with the actived state.
+    // kwin will send a configure event with the activated state.
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QSignalSpy tileChangedSpy(window, &Window::tileChanged);
@@ -761,7 +761,7 @@ void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
     const auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
-    // kwin will send a configure event with the actived state.
+    // kwin will send a configure event with the activated state.
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -916,7 +916,7 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
 
-    // kwin will send a configure event with the actived state.
+    // kwin will send a configure event with the activated state.
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -1117,7 +1117,7 @@ void OutputChangesTest::testMaximizedWindowDoesntDisappear()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(500, 300), Qt::blue);
     QVERIFY(window);
 
-    // kwin will send a configure event with the actived state.
+    // kwin will send a configure event with the activated state.
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
