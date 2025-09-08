@@ -219,14 +219,6 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::modes() const
     return m_modes;
 }
 
-std::shared_ptr<DrmConnectorMode> DrmConnector::findMode(const drmModeModeInfo &modeInfo) const
-{
-    const auto it = std::ranges::find_if(m_modes, [&modeInfo](const auto &mode) {
-        return checkIfEqual(mode->nativeMode(), &modeInfo);
-    });
-    return it == m_modes.constEnd() ? nullptr : *it;
-}
-
 BackendOutput::SubPixel DrmConnector::subpixel() const
 {
     switch (m_conn->subpixel) {
@@ -404,7 +396,7 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
             if (size.width() > maxSize.width() || size.height() > maxSize.height() || bandwidthEstimation > maxBandwidthEstimation) {
                 continue;
             }
-            const auto generatedMode = generateMode(size, refreshRate / 1000.0);
+            const auto generatedMode = generateMode(size, refreshRate / 1000.0, OutputMode::Flags{});
             const bool alreadyExists = std::ranges::any_of(m_driverModes, [generatedMode](const auto &mode) {
                 return mode->size() == generatedMode->size()
                     && std::round(mode->refreshRate() / 1000.0) == std::round(generatedMode->refreshRate() / 1000.0);
@@ -418,9 +410,9 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
     return ret;
 }
 
-std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, float refreshRate)
+std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, float refreshRate, OutputMode::Flags flags)
 {
-    auto modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate, false, false);
+    auto modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate, flags & OutputMode::Flag::ReducedBlanking, false);
 
     drmModeModeInfo mode{
         .clock = uint32_t(modeInfo->dot_clock),
@@ -441,7 +433,7 @@ std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, 
     sprintf(mode.name, "%dx%d@%d", size.width(), size.height(), mode.vrefresh);
 
     free(modeInfo);
-    return std::make_shared<DrmConnectorMode>(this, mode, OutputMode::Flag::Generated);
+    return std::make_shared<DrmConnectorMode>(this, mode, flags | OutputMode::Flag::Generated);
 }
 
 QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj)

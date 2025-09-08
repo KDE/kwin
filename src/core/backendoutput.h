@@ -48,6 +48,7 @@ public:
         MaxBitsPerColor = 1 << 12,
         Edr = 1 << 13,
         SharpnessControl = 1 << 14,
+        CustomModes = 1 << 15,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -453,6 +454,7 @@ protected:
         EdrPolicy edrPolicy = EdrPolicy::Always;
         double sharpnessSetting = 0;
         uint32_t priority = 0;
+        QList<CustomModeDefinition> customModes;
     };
 
     void setInformation(const Information &information);

@@ -113,6 +113,8 @@ public:
         Preferred = 0x1,
         Generated = 0x2,
         Removed = 0x4,
+        Custom = 0x8,
+        ReducedBlanking = 0x10,
     };
     Q_DECLARE_FLAGS(Flags, Flag)
 
@@ -129,6 +131,13 @@ private:
     const QSize m_size;
     const uint32_t m_refreshRate;
     Flags m_flags;
+};
+
+struct CustomModeDefinition
+{
+    QSize size;
+    uint32_t refreshRate;
+    OutputMode::Flags flags;
 };
 
 /**
