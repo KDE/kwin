@@ -13,6 +13,8 @@
 
 #include "config-kwin.h"
 
+#include "kwin_export.h"
+
 #if !KWIN_BUILD_X11
 #error Do not include on non-X11 builds
 #endif
@@ -32,11 +34,14 @@ class X11Window;
 /**
  * NET WM Protocol handler class
  */
-class RootInfo : public NETRootInfo
+class KWIN_EXPORT RootInfo : public NETRootInfo
 {
 public:
     static RootInfo *create();
     static void destroy();
+
+    static bool desktopEnabled();
+
     RootInfo(xcb_window_t w, const char *name, NET::Properties properties, NET::WindowTypes types,
              NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr = -1);
 

@@ -533,7 +533,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
             if (maincl) {
                 setOnActivities(maincl->activities());
             }
-        } else { // a transient shall appear on its leader and not drag that around
+        } else if (RootInfo::desktopEnabled()) { // a transient shall appear on its leader and not drag that around
             int desktopId = 0;
             if (info->desktop()) {
                 desktopId = info->desktop(); // Window had the initial desktop property, force it
@@ -576,7 +576,11 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         }
     }
     setDesktops(rules()->checkDesktops(*initialDesktops, !isMapped));
-    info->setDesktop(desktopId());
+    if (RootInfo::desktopEnabled()) {
+        info->setDesktop(desktopId());
+    } else {
+        info->setDesktop(1);
+    }
     workspace()->updateOnAllDesktopsOfTransients(this); // SELI TODO
     // onAllDesktopsChange(); // Decoration doesn't exist here yet
 
@@ -1493,7 +1497,9 @@ void X11Window::updateNetWmDesktopId()
     if (isDeleted()) {
         return;
     }
-    info->setDesktop(m_netWmDesktop ? m_netWmDesktop->x11DesktopNumber() : -1);
+    if (RootInfo::desktopEnabled()) {
+        info->setDesktop(m_netWmDesktop ? m_netWmDesktop->x11DesktopNumber() : -1);
+    }
 }
 
 void X11Window::doSetDemandsAttention()
@@ -4269,16 +4275,19 @@ void X11Window::startupIdChanged()
     if (!asn_valid) {
         return;
     }
-    // If the ASN contains desktop, move it to the desktop, otherwise move it to the current
-    // desktop (since the new ASN should make the window act like if it's a new application
-    // launched). However don't affect the window's desktop if it's set to be on all desktops.
 
-    if (asn_data.desktop() != 0 && !isOnAllDesktops()) {
-        if (asn_data.desktop() == -1) {
-            workspace()->sendWindowToDesktops(this, {}, true);
-        } else {
-            if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(asn_data.desktop())) {
-                workspace()->sendWindowToDesktops(this, {desktop}, true);
+    if (RootInfo::desktopEnabled()) {
+        // If the ASN contains desktop, move it to the desktop, otherwise move it to the current
+        // desktop (since the new ASN should make the window act like if it's a new application
+        // launched). However don't affect the window's desktop if it's set to be on all desktops.
+
+        if (asn_data.desktop() != 0 && !isOnAllDesktops()) {
+            if (asn_data.desktop() == -1) {
+                workspace()->sendWindowToDesktops(this, {}, true);
+            } else {
+                if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(asn_data.desktop())) {
+                    workspace()->sendWindowToDesktops(this, {desktop}, true);
+                }
             }
         }
     }

@@ -12,10 +12,11 @@
 #include "netinfo.h"
 // kwin
 #include "rootinfo_filter.h"
+#include "utils/envvar.h"
 #include "virtualdesktops.h"
+#include "waylandwindow.h"
 #include "workspace.h"
 #include "x11window.h"
-#include "waylandwindow.h"
 // Qt
 #include <QDebug>
 
@@ -125,6 +126,12 @@ void RootInfo::destroy()
     xcb_window_t supportWindow = s_self->supportWindow();
     s_self.reset();
     xcb_destroy_window(kwinApp()->x11Connection(), supportWindow);
+}
+
+bool RootInfo::desktopEnabled()
+{
+    static const bool enabled = environmentVariableIntValue("KWIN_XWAYLAND_ENABLE_NETWM_DESKTOP").value_or(0);
+    return enabled;
 }
 
 RootInfo::RootInfo(xcb_window_t w, const char *name, NET::Properties properties, NET::WindowTypes types,
@@ -260,10 +267,12 @@ WinInfo::WinInfo(X11Window *c, xcb_window_t window,
 
 void WinInfo::changeDesktop(int desktopId)
 {
-    if (desktopId == NET::OnAllDesktops) {
-        Workspace::self()->sendWindowToDesktops(m_client, {}, true);
-    } else if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId)) {
-        Workspace::self()->sendWindowToDesktops(m_client, {desktop}, true);
+    if (RootInfo::desktopEnabled()) {
+        if (desktopId == NET::OnAllDesktops) {
+            Workspace::self()->sendWindowToDesktops(m_client, {}, true);
+        } else if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId)) {
+            Workspace::self()->sendWindowToDesktops(m_client, {desktop}, true);
+        }
     }
 }
 
