@@ -543,6 +543,11 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
                 c->sessionManager = std::make_unique<XdgSessionManagerV1>(*c->registry, name, version);
             }
         }
+        if (flags & AdditionalWaylandInterface::WpTabletV2) {
+            if (interface == zwp_tablet_manager_v2_interface.name) {
+                c->tabletManager = std::make_unique<WpTabletManagerV2>(*c->registry, name, version);
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -683,6 +688,7 @@ Connection::~Connection()
     presentationTime.reset();
     xdgActivation.reset();
     sessionManager.reset();
+    tabletManager.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -862,6 +868,11 @@ XdgActivation *xdgActivation()
     return s_waylandConnection->xdgActivation.get();
 }
 
+WpTabletManagerV2 *tabletManager()
+{
+    return s_waylandConnection->tabletManager.get();
+}
+
 bool waitForWaylandSurface(Window *window)
 {
     if (window->surface()) {
@@ -911,6 +922,15 @@ bool waitForWaylandKeyboard(KWayland::Client::Seat *seat)
 {
     QSignalSpy hasKeyboardSpy(seat, &KWayland::Client::Seat::hasKeyboardChanged);
     return hasKeyboardSpy.wait();
+}
+
+bool waitForWaylandTabletTool(Test::WpTabletToolV2 *tool)
+{
+    if (tool->ready()) {
+        return true;
+    }
+    QSignalSpy doneSpy(tool, &WpTabletToolV2::done);
+    return doneSpy.wait();
 }
 
 void render(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format)
@@ -1958,6 +1978,103 @@ XdgSessionManagerV1::~XdgSessionManagerV1()
     destroy();
 }
 
+WpTabletManagerV2::WpTabletManagerV2(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::zwp_tablet_manager_v2(registry, id, version)
+{
+}
+
+WpTabletManagerV2::~WpTabletManagerV2()
+{
+    destroy();
+}
+
+std::unique_ptr<WpTabletSeatV2> WpTabletManagerV2::createSeat(KWayland::Client::Seat *seat)
+{
+    return std::make_unique<WpTabletSeatV2>(get_tablet_seat(*seat));
+}
+
+WpTabletSeatV2::WpTabletSeatV2(::zwp_tablet_seat_v2 *seat)
+    : QtWayland::zwp_tablet_seat_v2(seat)
+{
+}
+
+WpTabletSeatV2::~WpTabletSeatV2()
+{
+    destroy();
+}
+
+void WpTabletSeatV2::zwp_tablet_seat_v2_tablet_added(::zwp_tablet_v2 *id)
+{
+    m_tablets.emplace_back(std::make_unique<WpTabletV2>(id));
+}
+
+void WpTabletSeatV2::zwp_tablet_seat_v2_tool_added(::zwp_tablet_tool_v2 *id)
+{
+    auto &tool = m_tools.emplace_back(std::make_unique<WpTabletToolV2>(id));
+    Q_EMIT toolAdded(tool.get());
+}
+
+void WpTabletSeatV2::zwp_tablet_seat_v2_pad_added(::zwp_tablet_pad_v2 *id)
+{
+    m_pads.emplace_back(std::make_unique<WpTabletPadV2>(id));
+}
+
+WpTabletV2::WpTabletV2(::zwp_tablet_v2 *id)
+    : QtWayland::zwp_tablet_v2(id)
+{
+}
+
+WpTabletV2::~WpTabletV2()
+{
+    destroy();
+}
+
+WpTabletToolV2::WpTabletToolV2(::zwp_tablet_tool_v2 *id)
+    : QtWayland::zwp_tablet_tool_v2(id)
+{
+}
+
+WpTabletToolV2::~WpTabletToolV2()
+{
+    destroy();
+}
+
+bool WpTabletToolV2::ready() const
+{
+    return m_ready;
+}
+
+void WpTabletToolV2::zwp_tablet_tool_v2_done()
+{
+    m_ready = true;
+    Q_EMIT done();
+}
+
+void WpTabletToolV2::zwp_tablet_tool_v2_down(uint32_t serial)
+{
+    Q_EMIT down(serial);
+}
+
+void WpTabletToolV2::zwp_tablet_tool_v2_up()
+{
+    Q_EMIT up();
+}
+
+void WpTabletToolV2::zwp_tablet_tool_v2_motion(wl_fixed_t x, wl_fixed_t y)
+{
+    Q_EMIT motion(QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)));
+}
+
+WpTabletPadV2::WpTabletPadV2(::zwp_tablet_pad_v2 *id)
+    : QtWayland::zwp_tablet_pad_v2(id)
+{
+}
+
+WpTabletPadV2::~WpTabletPadV2()
+{
+    destroy();
+}
+
 void keyboardKeyPressed(quint32 key, quint32 time)
 {
     auto virtualKeyboard = static_cast<WaylandTestApplication *>(kwinApp())->virtualKeyboard();
@@ -2079,6 +2196,20 @@ void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qrea
     auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
     auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
     Q_EMIT tablet->tabletToolProximityEvent(pos, xTilt, yTilt, rotation, distance, tipNear, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
+}
+
+void tabletToolAxisEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, quint32 time)
+{
+    auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
+    auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
+    Q_EMIT tablet->tabletToolAxisEvent(pos, pressure, xTilt, yTilt, rotation, distance, tipDown, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
+}
+
+void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, quint32 time)
+{
+    auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
+    auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
+    Q_EMIT tablet->tabletToolTipEvent(pos, pressure, xTilt, yTilt, rotation, distance, tipDown, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
 }
 }
 }

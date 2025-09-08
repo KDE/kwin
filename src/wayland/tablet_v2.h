@@ -110,6 +110,8 @@ public:
     };
     Q_ENUM(Capability)
 
+    InputDeviceTabletTool *device() const;
+
     bool hasCapability(Capability capability) const;
 
     /**
@@ -155,7 +157,8 @@ private:
                                    quint32 hsl,
                                    quint32 hih,
                                    quint32 hil,
-                                   const QList<Capability> &capability);
+                                   const QList<Capability> &capability,
+                                   InputDeviceTabletTool *device);
     std::unique_ptr<TabletToolV2InterfacePrivate> d;
 };
 
@@ -309,6 +312,7 @@ public:
     bool isClientSupported(ClientConnection *client) const;
 
     bool hasImplicitGrab(quint32 serial) const;
+    TabletToolV2Interface *toolByImplicitGrabSerial(quint32 serial) const;
 
 private:
     friend class TabletManagerV2InterfacePrivate;

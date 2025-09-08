@@ -130,9 +130,11 @@ public:
                                  uint32_t hsl,
                                  uint32_t hih,
                                  uint32_t hil,
-                                 const QList<TabletToolV2Interface::Capability> &capabilities)
+                                 const QList<TabletToolV2Interface::Capability> &capabilities,
+                                 InputDeviceTabletTool *device)
         : zwp_tablet_tool_v2()
         , m_display(display)
+        , m_device(device)
         , m_type(type)
         , m_hardwareSerialHigh(hsh)
         , m_hardwareSerialLow(hsl)
@@ -217,6 +219,7 @@ public:
     std::optional<quint32> m_downSerial;
     bool m_cleanup = false;
     bool m_removed = false;
+    QPointer<InputDeviceTabletTool> m_device;
     QPointer<SurfaceInterface> m_surface;
     QPointer<TabletV2Interface> m_lastTablet;
     const uint32_t m_type;
@@ -233,8 +236,9 @@ TabletToolV2Interface::TabletToolV2Interface(Display *display,
                                              uint32_t hsl,
                                              uint32_t hih,
                                              uint32_t hil,
-                                             const QList<Capability> &capabilities)
-    : d(new TabletToolV2InterfacePrivate(this, display, type, hsh, hsl, hih, hil, capabilities))
+                                             const QList<Capability> &capabilities,
+                                             InputDeviceTabletTool *device)
+    : d(new TabletToolV2InterfacePrivate(this, display, type, hsh, hsl, hih, hil, capabilities, device))
 {
 }
 
@@ -252,6 +256,11 @@ TabletToolV2Interface *TabletToolV2Interface::get(wl_resource *resource)
         return tabletToolPrivate->q;
     }
     return nullptr;
+}
+
+InputDeviceTabletTool *TabletToolV2Interface::device() const
+{
+    return d->m_device;
 }
 
 bool TabletToolV2Interface::hasCapability(Capability capability) const
@@ -977,7 +986,8 @@ TabletToolV2Interface *TabletSeatV2Interface::addTool(InputDeviceTabletTool *dev
                                           device->serialId() & MAX_UINT_32,
                                           device->uniqueId() >> 32,
                                           device->uniqueId() & MAX_UINT_32,
-                                          capabilities);
+                                          capabilities,
+                                          device);
     for (QtWaylandServer::zwp_tablet_seat_v2::Resource *resource : d->resourceMap()) {
         d->sendToolAdded(resource, tool);
     }
@@ -1102,6 +1112,16 @@ bool TabletSeatV2Interface::hasImplicitGrab(quint32 serial) const
     return std::any_of(d->m_tools.cbegin(), d->m_tools.cend(), [serial](const TabletToolV2Interface *tool) {
         return tool->downSerial() == serial;
     });
+}
+
+TabletToolV2Interface *TabletSeatV2Interface::toolByImplicitGrabSerial(quint32 serial) const
+{
+    for (const auto &[nativeTool, tool] : d->m_tools.asKeyValueRange()) {
+        if (tool->downSerial() == serial) {
+            return tool;
+        }
+    }
+    return nullptr;
 }
 
 TabletManagerV2Interface::~TabletManagerV2Interface() = default;

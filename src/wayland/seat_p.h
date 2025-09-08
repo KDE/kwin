@@ -119,6 +119,7 @@ public:
             None,
             Pointer,
             Touch,
+            Tablet,
         };
         Mode mode = Mode::None;
         AbstractDataSource *source = nullptr;

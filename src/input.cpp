@@ -2568,6 +2568,12 @@ public:
                         return;
                     }
                 }
+
+                if (waylandServer()->tabletManagerV2()->seat(waylandServer()->seat())->hasImplicitGrab(serial)) {
+                    if (waylandServer()->seat()->startTabletDrag(source, origin, input()->tablet()->position(), transformation, serial, dragIcon)) {
+                        return;
+                    }
+                }
             }
 
             if (source) {
@@ -2779,6 +2785,87 @@ public:
         }
 
         seat->cancelDrag();
+
+        return true;
+    }
+
+    bool tabletToolProximityEvent(TabletToolProximityEvent *event) override
+    {
+        SeatInterface *seat = waylandServer()->seat();
+        if (!seat->isDragTablet()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool tabletToolAxisEvent(TabletToolAxisEvent *event) override
+    {
+        SeatInterface *seat = waylandServer()->seat();
+        if (!seat->isDragTablet()) {
+            return false;
+        }
+
+        TabletToolV2Interface *dragTool = waylandServer()->tabletManagerV2()->seat(seat)->toolByImplicitGrabSerial(*seat->dragSerial());
+        if (!dragTool || dragTool->device() != event->tool) {
+            return true;
+        }
+
+        if (seat->xdgTopleveldrag()) {
+            dragToplevel(event->position, seat->xdgTopleveldrag());
+        }
+
+        if (Window *dragTarget = pickDragTarget(event->position)) {
+            if (m_dragTarget != dragTarget) {
+                workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
+                m_raiseTimer.start();
+            }
+
+            if ((event->position - m_lastPos).manhattanLength() > 10) {
+                m_lastPos = event->position;
+                // reset timer to delay raising the window
+                m_raiseTimer.start();
+            }
+
+            const auto [effectiveSurface, offset] = dragTarget->surface()->mapToInputSurface(dragTarget->mapToLocal(event->position));
+            if (seat->dragSurface() != effectiveSurface) {
+                QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
+                inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
+                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, event->position, inputTransformation);
+            } else {
+                seat->notifyDragMotion(event->position);
+            }
+
+            m_dragTarget = dragTarget;
+        } else {
+            // no window at that place, if we have a surface we need to reset
+            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
+            m_dragTarget = nullptr;
+        }
+
+        return true;
+    }
+
+    bool tabletToolTipEvent(TabletToolTipEvent *event) override
+    {
+        SeatInterface *seat = waylandServer()->seat();
+        if (!seat->isDragTablet()) {
+            return false;
+        }
+
+        if (event->type == TabletToolTipEvent::Release) {
+            seat->endDrag();
+        }
+
+        return true;
+    }
+
+    bool tabletToolButtonEvent(TabletToolButtonEvent *event) override
+    {
+        SeatInterface *seat = waylandServer()->seat();
+        if (!seat->isDragTablet()) {
+            return false;
+        }
 
         return true;
     }
