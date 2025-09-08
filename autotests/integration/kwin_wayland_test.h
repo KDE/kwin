@@ -32,6 +32,7 @@
 #include "qwayland-kde-screen-edge-v1.h"
 #include "qwayland-presentation-time.h"
 #include "qwayland-security-context-v1.h"
+#include "qwayland-tablet-v2.h"
 #include "qwayland-text-input-unstable-v3.h"
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
 #include "qwayland-xdg-activation-v1.h"
@@ -144,6 +145,10 @@ namespace Test
 
 class ScreencastingV1;
 class MockInputMethod;
+class WpTabletV2;
+class WpTabletPadV2;
+class WpTabletSeatV2;
+class WpTabletToolV2;
 
 class TextInputManagerV3 : public QtWayland::zwp_text_input_manager_v3
 {
@@ -589,6 +594,77 @@ public:
     ~XdgDialogV1() override;
 };
 
+class WpTabletManagerV2 : public QtWayland::zwp_tablet_manager_v2
+{
+public:
+    WpTabletManagerV2(::wl_registry *registry, uint32_t id, int version);
+    ~WpTabletManagerV2() override;
+
+    std::unique_ptr<WpTabletSeatV2> createSeat(KWayland::Client::Seat *seat);
+};
+
+class WpTabletSeatV2 : public QObject, public QtWayland::zwp_tablet_seat_v2
+{
+    Q_OBJECT
+
+public:
+    explicit WpTabletSeatV2(::zwp_tablet_seat_v2 *seat);
+    ~WpTabletSeatV2() override;
+
+Q_SIGNALS:
+    void toolAdded(WpTabletToolV2 *tool);
+
+protected:
+    void zwp_tablet_seat_v2_tablet_added(::zwp_tablet_v2 *id) override;
+    void zwp_tablet_seat_v2_tool_added(::zwp_tablet_tool_v2 *id) override;
+    void zwp_tablet_seat_v2_pad_added(::zwp_tablet_pad_v2 *id) override;
+
+private:
+    std::vector<std::unique_ptr<WpTabletV2>> m_tablets;
+    std::vector<std::unique_ptr<WpTabletToolV2>> m_tools;
+    std::vector<std::unique_ptr<WpTabletPadV2>> m_pads;
+};
+
+class WpTabletV2 : public QtWayland::zwp_tablet_v2
+{
+public:
+    explicit WpTabletV2(::zwp_tablet_v2 *id);
+    ~WpTabletV2() override;
+};
+
+class WpTabletPadV2 : public QtWayland::zwp_tablet_pad_v2
+{
+public:
+    explicit WpTabletPadV2(::zwp_tablet_pad_v2 *id);
+    ~WpTabletPadV2() override;
+};
+
+class WpTabletToolV2 : public QObject, public QtWayland::zwp_tablet_tool_v2
+{
+    Q_OBJECT
+
+public:
+    explicit WpTabletToolV2(::zwp_tablet_tool_v2 *id);
+    ~WpTabletToolV2() override;
+
+    bool ready() const;
+
+Q_SIGNALS:
+    void done();
+    void down(uint32_t serial);
+    void up();
+    void motion(const QPointF &position);
+
+protected:
+    void zwp_tablet_tool_v2_done() override;
+    void zwp_tablet_tool_v2_down(uint32_t serial) override;
+    void zwp_tablet_tool_v2_up() override;
+    void zwp_tablet_tool_v2_motion(wl_fixed_t x, wl_fixed_t y) override;
+
+private:
+    bool m_ready = false;
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     DataDeviceManager = 1 << 1,
@@ -617,6 +693,7 @@ enum class AdditionalWaylandInterface {
     PresentationTime = 1 << 24,
     XdgActivation = 1 << 25,
     XdgSessionV1 = 1 << 26,
+    WpTabletV2 = 1 << 27,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -839,6 +916,7 @@ struct Connection
     std::unique_ptr<PresentationTime> presentationTime;
     std::unique_ptr<XdgActivation> xdgActivation;
     std::unique_ptr<XdgSessionManagerV1> sessionManager;
+    std::unique_ptr<WpTabletManagerV2> tabletManager;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -866,6 +944,8 @@ void tabletPadRingEvent(int position, int number, quint32 group, quint32 mode, q
 void tabletToolButtonPressed(quint32 button, quint32 time);
 void tabletToolButtonReleased(quint32 button, quint32 time);
 void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipNear, qreal sliderPosition, quint32 time);
+void tabletToolAxisEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, quint32 time);
+void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, quint32 time);
 
 /**
  * Creates a Wayland Connection in a dedicated thread and creates various
@@ -906,6 +986,7 @@ ColorManagerV1 *colorManager();
 FifoManagerV1 *fifoManager();
 PresentationTime *presentationTime();
 XdgActivation *xdgActivation();
+WpTabletManagerV2 *tabletManager();
 
 bool waitForWaylandSurface(Window *window);
 
@@ -915,6 +996,7 @@ bool waitForWaylandTouch();
 bool waitForWaylandTouch(KWayland::Client::Seat *seat);
 bool waitForWaylandKeyboard();
 bool waitForWaylandKeyboard(KWayland::Client::Seat *seat);
+bool waitForWaylandTabletTool(Test::WpTabletToolV2 *tool);
 
 void flushWaylandConnection();
 

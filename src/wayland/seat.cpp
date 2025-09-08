@@ -176,6 +176,13 @@ AbstractDropHandler *SeatInterface::dropHandlerForSurface(SurfaceInterface *surf
     return list.first();
 }
 
+void SeatInterface::endDrag()
+{
+    if (d->drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
+        d->endDrag();
+    }
+}
+
 void SeatInterface::cancelDrag()
 {
     if (d->drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
@@ -1094,6 +1101,11 @@ bool SeatInterface::isDragTouch() const
     return d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch;
 }
 
+bool SeatInterface::isDragTablet() const
+{
+    return d->drag.mode == SeatInterfacePrivate::Drag::Mode::Tablet;
+}
+
 bool SeatInterface::hasImplicitPointerGrab(quint32 serial) const
 {
     const auto &serials = d->globalPointer.buttonSerials;
@@ -1293,6 +1305,11 @@ bool SeatInterface::startPointerDrag(AbstractDataSource *dragSource, SurfaceInte
 bool SeatInterface::startTouchDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, const QPointF &position, const QMatrix4x4 &inputTransformation, quint32 dragSerial, DragAndDropIcon *dragIcon)
 {
     return d->startDrag(SeatInterfacePrivate::Drag::Mode::Touch, dragSource, originSurface, position, inputTransformation, dragSerial, dragIcon);
+}
+
+bool SeatInterface::startTabletDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, const QPointF &position, const QMatrix4x4 &inputTransformation, quint32 dragSerial, DragAndDropIcon *dragIcon)
+{
+    return d->startDrag(SeatInterfacePrivate::Drag::Mode::Tablet, dragSource, originSurface, position, inputTransformation, dragSerial, dragIcon);
 }
 
 DragAndDropIcon *SeatInterface::dragIcon() const
