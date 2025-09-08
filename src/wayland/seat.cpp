@@ -178,17 +178,50 @@ AbstractDropHandler *SeatInterface::dropHandlerForSurface(SurfaceInterface *surf
 
 void SeatInterface::endDrag()
 {
-    if (d->drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
-        d->endDrag();
+    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::None) {
+        return;
     }
+
+    QObject::disconnect(d->drag.dragSourceDestroyConnection);
+
+    AbstractDropHandler *dragTargetDevice = d->drag.target.data();
+    AbstractDataSource *dragSource = d->drag.source;
+
+    if (dragSource) {
+        if (dragTargetDevice && dragSource->isAccepted() && dragSource->selectedDndAction() != DataDeviceManagerInterface::DnDAction::None) {
+            Q_EMIT dragDropped();
+            dragTargetDevice->drop();
+            dragSource->dropPerformed();
+        } else {
+            dragSource->dropPerformed();
+            dragSource->dndCancelled();
+        }
+    }
+
+    if (dragTargetDevice) {
+        dragTargetDevice->updateDragTarget(nullptr, QPointF(), 0);
+    }
+
+    d->drag = {};
+    Q_EMIT dragEnded();
 }
 
 void SeatInterface::cancelDrag()
 {
-    if (d->drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
-        // cancel the drag, don't drop. serial does not matter
-        d->cancelDrag();
+    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::None) {
+        return;
     }
+
+    QObject::disconnect(d->drag.dragSourceDestroyConnection);
+    if (d->drag.source) {
+        d->drag.source->dndCancelled();
+    }
+    if (d->drag.target) {
+        d->drag.target->updateDragTarget(nullptr, QPointF(), 0);
+        d->drag.target = nullptr;
+    }
+    d->drag = {};
+    Q_EMIT dragEnded();
 }
 
 void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interface *dataDevice)
@@ -257,20 +290,6 @@ void SeatInterfacePrivate::registerPrimarySelectionDevice(PrimarySelectionDevice
     }
 }
 
-void SeatInterfacePrivate::cancelDrag()
-{
-    QObject::disconnect(drag.dragSourceDestroyConnection);
-    if (drag.source) {
-        drag.source->dndCancelled();
-    }
-    if (drag.target) {
-        drag.target->updateDragTarget(nullptr, QPointF(), 0);
-        drag.target = nullptr;
-    }
-    drag = Drag();
-    Q_EMIT q->dragEnded();
-}
-
 bool SeatInterfacePrivate::dragInhibitsPointer(SurfaceInterface *surface) const
 {
     if (drag.mode != SeatInterfacePrivate::Drag::Mode::Pointer) {
@@ -278,32 +297,6 @@ bool SeatInterfacePrivate::dragInhibitsPointer(SurfaceInterface *surface) const
     }
     const bool targetHasDataDevice = !dataDevicesForSurface(surface).isEmpty();
     return targetHasDataDevice;
-}
-
-void SeatInterfacePrivate::endDrag()
-{
-    QObject::disconnect(drag.dragSourceDestroyConnection);
-
-    AbstractDropHandler *dragTargetDevice = drag.target.data();
-    AbstractDataSource *dragSource = drag.source;
-
-    if (dragSource) {
-        if (dragTargetDevice && dragSource->isAccepted() && dragSource->selectedDndAction() != DataDeviceManagerInterface::DnDAction::None) {
-            Q_EMIT q->dragDropped();
-            dragTargetDevice->drop();
-            dragSource->dropPerformed();
-        } else {
-            dragSource->dropPerformed();
-            dragSource->dndCancelled();
-        }
-    }
-
-    if (dragTargetDevice) {
-        dragTargetDevice->updateDragTarget(nullptr, QPointF(), 0);
-    }
-
-    drag = Drag();
-    Q_EMIT q->dragEnded();
 }
 
 void SeatInterfacePrivate::updateSelection(DataSourceInterface *dataSource, quint32 serial)
@@ -693,7 +686,7 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
             if (focusedSurface && !d->dragInhibitsPointer(focusedSurface)) {
                 d->pointer->sendButton(button, state, serial);
             }
-            d->endDrag();
+            endDrag();
             return;
         }
     }
@@ -958,7 +951,7 @@ void SeatInterface::notifyTouchCancel()
 
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch) {
         // cancel the drag, don't drop. serial does not matter
-        d->cancelDrag();
+        cancelDrag();
     }
     d->touchPoints.clear();
 }
@@ -1061,7 +1054,7 @@ void SeatInterface::notifyTouchUp(qint32 id)
     TouchPoint *touchPoint = it->second.get();
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && d->drag.dragImplicitGrabSerial == touchPoint->serial) {
         // the implicitly grabbing touch point has been upped
-        d->endDrag();
+        endDrag();
     }
 
     if (touchPoint->client) {

@@ -43,8 +43,6 @@ public:
     void registerPrimarySelectionDevice(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
     void registerDataDevice(DataDeviceInterface *dataDevice);
     void registerDataControlDevice(DataControlDeviceV1Interface *dataDevice);
-    void endDrag();
-    void cancelDrag();
     bool dragInhibitsPointer(SurfaceInterface *surface) const;
 
     SeatInterface *q;
