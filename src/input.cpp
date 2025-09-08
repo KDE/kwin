@@ -2557,8 +2557,16 @@ public:
                 QMatrix4x4 transformation = window->inputTransformation();
                 transformation.translate(-QVector3D(origin->mapToMainSurface(QPointF(0, 0))));
 
-                if (waylandServer()->seat()->startDrag(source, origin, transformation, serial, dragIcon)) {
-                    return;
+                if (waylandServer()->seat()->hasImplicitPointerGrab(serial)) {
+                    if (waylandServer()->seat()->startPointerDrag(source, origin, waylandServer()->seat()->pointerPos(), transformation, serial, dragIcon)) {
+                        return;
+                    }
+                }
+
+                if (const auto touchPoint = waylandServer()->seat()->touchPointByImplicitGrabSerial(serial)) {
+                    if (waylandServer()->seat()->startTouchDrag(source, origin, touchPoint->position, transformation, serial, dragIcon)) {
+                        return;
+                    }
                 }
             }
 

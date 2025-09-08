@@ -132,6 +132,8 @@ public:
     };
     Drag drag;
 
+    bool startDrag(Drag::Mode mode, AbstractDataSource *source, SurfaceInterface *sourceSurface, const QPointF &position, const QMatrix4x4 &inputTransformation, quint32 dragSerial, DragAndDropIcon *dragIcon);
+
 protected:
     void seat_bind_resource(Resource *resource) override;
     void seat_get_pointer(Resource *resource, uint32_t id) override;

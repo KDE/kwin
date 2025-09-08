@@ -1252,48 +1252,47 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection, quint32 s
     Q_EMIT primarySelectionChanged(selection);
 }
 
-bool SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, const QMatrix4x4 &inputTransformation, quint32 dragSerial, DragAndDropIcon *dragIcon)
+bool SeatInterfacePrivate::startDrag(Drag::Mode mode, AbstractDataSource *dragSource, SurfaceInterface *originSurface, const QPointF &position, const QMatrix4x4 &inputTransformation, quint32 dragSerial, DragAndDropIcon *dragIcon)
 {
-    if (d->drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
+    if (drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
         return false;
     }
 
-    if (hasImplicitPointerGrab(dragSerial)) {
-        d->drag.mode = SeatInterfacePrivate::Drag::Mode::Pointer;
-        d->drag.position = d->globalPointer.pos;
-    } else if (const auto touchPoint = touchPointByImplicitGrabSerial(dragSerial)) {
-        d->drag.mode = SeatInterfacePrivate::Drag::Mode::Touch;
-        d->drag.position = touchPoint->position;
-    } else {
-        // no implicit grab, abort drag
-        return false;
-    }
+    drag.mode = mode;
+    drag.position = position;
+    drag.dragImplicitGrabSerial = dragSerial;
+    drag.surface = originSurface;
+    drag.transformation = inputTransformation;
 
-    d->drag.dragImplicitGrabSerial = dragSerial;
-
-    // set initial drag target to ourself
-    d->drag.surface = originSurface;
-    d->drag.transformation = inputTransformation;
-
-    d->drag.source = dragSource;
+    drag.source = dragSource;
     if (dragSource) {
-        d->drag.dragSourceDestroyConnection = QObject::connect(dragSource, &AbstractDataSource::aboutToBeDestroyed, this, [this] {
-            d->cancelDrag();
+        drag.dragSourceDestroyConnection = QObject::connect(dragSource, &AbstractDataSource::aboutToBeDestroyed, q, [this] {
+            q->cancelDrag();
         });
     }
-    d->drag.dragIcon = dragIcon;
+    drag.dragIcon = dragIcon;
 
-    if (!d->dataDevicesForSurface(originSurface).isEmpty()) {
-        d->drag.target = d->dataDevicesForSurface(originSurface)[0];
+    if (!dataDevicesForSurface(originSurface).isEmpty()) {
+        drag.target = dataDevicesForSurface(originSurface)[0];
     }
-    if (d->drag.target) {
-        if (d->dragInhibitsPointer(originSurface)) {
-            notifyPointerLeave();
+    if (drag.target) {
+        if (dragInhibitsPointer(originSurface)) {
+            q->notifyPointerLeave();
         }
-        d->drag.target->updateDragTarget(originSurface, d->drag.position, display()->nextSerial());
+        drag.target->updateDragTarget(originSurface, drag.position, display->nextSerial());
     }
-    Q_EMIT dragStarted();
+    Q_EMIT q->dragStarted();
     return true;
+}
+
+bool SeatInterface::startPointerDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, const QPointF &position, const QMatrix4x4 &inputTransformation, quint32 dragSerial, DragAndDropIcon *dragIcon)
+{
+    return d->startDrag(SeatInterfacePrivate::Drag::Mode::Pointer, dragSource, originSurface, position, inputTransformation, dragSerial, dragIcon);
+}
+
+bool SeatInterface::startTouchDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, const QPointF &position, const QMatrix4x4 &inputTransformation, quint32 dragSerial, DragAndDropIcon *dragIcon)
+{
+    return d->startDrag(SeatInterfacePrivate::Drag::Mode::Touch, dragSource, originSurface, position, inputTransformation, dragSerial, dragIcon);
 }
 
 DragAndDropIcon *SeatInterface::dragIcon() const
