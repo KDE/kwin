@@ -219,9 +219,6 @@ void TestWaylandSurface::testStaticAccessor()
     QCOMPARE(KWin::SurfaceInterface::get(serverSurface1->resource()), serverSurface1);
     QCOMPARE(KWin::SurfaceInterface::get(serverSurface2->resource()), serverSurface2);
 
-    const quint32 surfaceId1 = serverSurface1->id();
-    const quint32 surfaceId2 = serverSurface2->id();
-
     // delete s2 again
     s2.reset();
     QCOMPARE(KWayland::Client::Surface::all().count(), 1);
