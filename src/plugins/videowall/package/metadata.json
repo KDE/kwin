@@ -48,7 +48,6 @@
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
                 "Name[vi]": "Martin Gräßlin",
-                "Name[x-test]": "xxMartin Gräßlinxx",
                 "Name[zh_CN]": "Martin Gräßlin",
                 "Name[zh_TW]": "Martin Gräßlin"
             }
@@ -95,7 +94,6 @@
         "Description[tr]": "Tam ekran video oynatıcılarını tüm bağlı ekranlara genişleterek bir tür Video Duvarı oluşturur",
         "Description[uk]": "Розподіл зображення відеопрогравача у повноекранному режимі на всі екрани з метою створення відеостіни",
         "Description[vi]": "Trải trình phát phim toàn màn hình ra tất cả các màn hình đang được gắn vào để tạo nên một màn hình ghép",
-        "Description[x-test]": "xxSpans fullscreen video player over all attached screens to create a Video Wallxx",
         "Description[zh_CN]": "视频播放器在全屏时将显示在全部已连接的屏幕上，组成视频墙",
         "Description[zh_TW]": "將全螢幕的影片播放器擴展到所有的螢幕，建立一個影片牆",
         "Icon": "preferences-system-windows-script-test",
@@ -144,7 +142,6 @@
         "Name[tr]": "Video Duvarı",
         "Name[uk]": "Відеостіна",
         "Name[vi]": "Màn hình ghép",
-        "Name[x-test]": "xxVideo Wallxx",
         "Name[zh_CN]": "视频墙",
         "Name[zh_TW]": "影片牆"
     },

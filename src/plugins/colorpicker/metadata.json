@@ -46,7 +46,6 @@
         "Description[tr]": "Bir renk seçmeyi destekler",
         "Description[uk]": "Підтримка взяття кольору з екрана",
         "Description[vi]": "Hỗ trợ nhặt màu",
-        "Description[x-test]": "xxSupports picking a colorxx",
         "Description[zh_CN]": "拾色器专用辅助特效",
         "Description[zh_TW]": "支援挑選顏色",
         "EnabledByDefault": true,
@@ -96,7 +95,6 @@
         "Name[tr]": "Renk Seçicisi",
         "Name[uk]": "Піпетка",
         "Name[vi]": "Trình nhặt màu",
-        "Name[x-test]": "xxColor Pickerxx",
         "Name[zh_CN]": "拾色器",
         "Name[zh_TW]": "取色工具"
     },

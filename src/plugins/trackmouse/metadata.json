@@ -35,7 +35,6 @@
         "Description[sv]": "Visa en lokaliseringseffekt för muspekaren om aktiverad, aktiveras med en snabbtangent",
         "Description[tr]": "Etkinleştirildiğinde bir fare imleci bulma efekti görüntüle; klavye kısayoluyla etkinleştirilir",
         "Description[uk]": "Показ наближення вказівника миші; активується клавіатурним скороченням",
-        "Description[x-test]": "xxDisplay a mouse cursor locating effect; activated with a keyboard shortcutxx",
         "Description[zh_CN]": "显示用于定位鼠标光标位置的特效；使用键盘快捷键激活",
         "Description[zh_TW]": "強調顯示滑鼠游標讓它比較容易被找到——需要用鍵盤快捷鍵觸發",
         "EnabledByDefault": false,
@@ -85,7 +84,6 @@
         "Name[tr]": "Fareyi İzle",
         "Name[uk]": "Сліди мишки",
         "Name[vi]": "Theo dõi chuột",
-        "Name[x-test]": "xxTrack Mousexx",
         "Name[zh_CN]": "鼠标定位",
         "Name[zh_TW]": "滑鼠追蹤"
     },

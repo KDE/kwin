@@ -47,7 +47,6 @@
         "Description[tr]": "Bireysel Pencere Davranışı",
         "Description[uk]": "Поведінка окремих вікон",
         "Description[vi]": "Ứng xử của riêng từng cửa sổ",
-        "Description[x-test]": "xxIndividual Window Behaviorxx",
         "Description[zh_CN]": "个别窗口行为",
         "Description[zh_TW]": "個別視窗行為",
         "FormFactors": [
@@ -100,7 +99,6 @@
         "Name[tr]": "Pencere Kuralları",
         "Name[uk]": "Правила вікон",
         "Name[vi]": "Luật cửa sổ",
-        "Name[x-test]": "xxWindow Rulesxx",
         "Name[zh_CN]": "窗口规则",
         "Name[zh_TW]": "視窗規則"
     },
@@ -136,7 +134,6 @@
     "X-KDE-Keywords[sv]": "storlek,position,tillstånd,fönsterbeteende,fönster,specifik,lösningar,komma ihåg,regler,fönsterregler,program,applikationer",
     "X-KDE-Keywords[tr]": "boyut,konum,durum,davranış,pencereler,başka yöntem,anımsa,kural,uygulama,app,uygulamalar",
     "X-KDE-Keywords[uk]": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications,розмір,розташування,місце,стан,поведінка,вікно,вікна,поведінка вікон,окрема,специфічна,окремо,запам’ятати,пам’ять,правило,правила,правила вікон,програми",
-    "X-KDE-Keywords[x-test]": "xxsizexx,xxpositionxx,xxstatexx,xxwindow behaviorxx,xxwindowsxx,xxspecificxx,xxworkaroundsxx,xxrememberxx,xxrulesxx,xxwindow rulesxx,xxappsxx,xxapplicationsxx",
     "X-KDE-Keywords[zh_CN]": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,daxiao,weizhi,chuangkouxingwei,teding,gebie,zhiding,jizhu,jiyi,jilu,guize,chuangkouguize,yingyong,yingyongchengxu,大小,位置,窗口行为,特定,个别,指定,记住,记忆,记录,规则,窗口规则,应用,应用程序",
     "X-KDE-Keywords[zh_TW]": "大小,尺寸,位置,狀態,視窗行為,視窗,特定,專用,記住,規則,視窗規則,應用程式,程式",
     "X-KDE-OnlyShowOnQtPlatforms": [

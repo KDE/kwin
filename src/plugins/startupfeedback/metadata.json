@@ -46,7 +46,6 @@
         "Description[tr]": "Başlangıç geri bildirimi için yardımcı efekti",
         "Description[uk]": "Допоміжний ефект перегляду повідомлень, що надсилаються програмою під час запуску",
         "Description[vi]": "Hiệu ứng trợ giúp cho phản hồi khởi động",
-        "Description[x-test]": "xxHelper effect for startup feedbackxx",
         "Description[zh_CN]": "程序启动动效反馈辅助效果",
         "Description[zh_TW]": "啟動回饋輔助效果",
         "EnabledByDefault": true,
@@ -96,7 +95,6 @@
         "Name[tr]": "Başlangıç Geri Bildirimi",
         "Name[uk]": "Повідомлення під час запуску",
         "Name[vi]": "Phản hồi khởi động",
-        "Name[x-test]": "xxStartup Feedbackxx",
         "Name[zh_CN]": "程序启动动效",
         "Name[zh_TW]": "啟動回饋"
     },

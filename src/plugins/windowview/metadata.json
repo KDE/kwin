@@ -46,7 +46,6 @@
         "Description[tr]": "Tüm açık pencereler yan yana görüntülenebilene dek uzaklaştır",
         "Description[uk]": "Зменшення масштабу вікон так, щоб всі відкриті вікна можна було розташувати поряд",
         "Description[vi]": "Thu nhỏ cho đến khi tất cả các cửa sổ đang mở hiển thị được cạnh nhau",
-        "Description[x-test]": "xxZoom out until all opened windows can be displayed side-by-sidexx",
         "Description[zh_CN]": "所有窗口缩小后平铺显示在一个画面上",
         "Description[zh_TW]": "縮小顯示讓所有開啟的視窗都同時顯示",
         "EnabledByDefault": true,
@@ -97,7 +96,6 @@
         "Name[tr]": "Pencereleri Sun",
         "Name[uk]": "Показ вікон",
         "Name[vi]": "Các cửa sổ hiện thời",
-        "Name[x-test]": "xxPresent Windowsxx",
         "Name[zh_CN]": "窗口平铺展示",
         "Name[zh_TW]": "展示視窗"
     },

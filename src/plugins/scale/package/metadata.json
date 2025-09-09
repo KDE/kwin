@@ -49,7 +49,6 @@
                 "Name[tr]": "Vlad Zahorodnii",
                 "Name[uk]": "Влад Загородній",
                 "Name[vi]": "Vlad Zahorodnii",
-                "Name[x-test]": "xxVlad Zahorodniixx",
                 "Name[zh_CN]": "Vlad Zahorodnii",
                 "Name[zh_TW]": "Vlad Zahorodnii"
             }
@@ -79,7 +78,6 @@
         "Description[sv]": "Gör att fönster skalas in eller ut när de visas eller döljs",
         "Description[tr]": "Pencereler gösterilirken veya gizlenirken onları ölçekle",
         "Description[uk]": "Масштабування вікон при появі або приховуванні",
-        "Description[x-test]": "xxMake windows scale in and out when they are shown or hiddenxx",
         "Description[zh_CN]": "窗口显示/隐藏时呈现等比例缩放过渡动效",
         "Description[zh_TW]": "讓視窗在顯示或隱藏的時候以比例縮放方式出現或消失",
         "EnabledByDefault": true,
@@ -130,7 +128,6 @@
         "Name[tr]": "Ölçeklendir",
         "Name[uk]": "Масштабування",
         "Name[vi]": "Đổi cỡ",
-        "Name[x-test]": "xxScalexx",
         "Name[zh_CN]": "按比例缩放",
         "Name[zh_TW]": "縮放"
     },

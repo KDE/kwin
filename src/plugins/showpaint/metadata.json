@@ -34,7 +34,6 @@
         "Description[sv]": "Markera områden på skärmen som nyligen har uppdaterats, aktiveras med en snabbtangent",
         "Description[tr]": "Masaüstünün yeni güncellenen alanlarını vurgula; klavye kısayoluyla etkinleştirilir",
         "Description[uk]": "Підсвічує області екрана, у яких спостерігалося оновлення; активується клавіатурним скороченням",
-        "Description[x-test]": "xxHighlight areas of the desktop that have been recently updated; activated with a keyboard shortcutxx",
         "Description[zh_CN]": "高亮显示最近更新的桌面区域；使用键盘快捷键激活",
         "Description[zh_TW]": "突顯桌面上剛被更新的區域——需要用鍵盤快捷鍵觸發",
         "EnabledByDefault": false,
@@ -84,7 +83,6 @@
         "Name[tr]": "Boyamayı Göster",
         "Name[uk]": "Показ малювання",
         "Name[vi]": "Hiện sơn",
-        "Name[x-test]": "xxShow Paintxx",
         "Name[zh_CN]": "突出显示画面更新区域",
         "Name[zh_TW]": "顯示塗繪"
     },

@@ -48,7 +48,6 @@
                 "Name[tr]": "Thomas Lübking",
                 "Name[uk]": "Thomas Lübking",
                 "Name[vi]": "Thomas Lübking",
-                "Name[x-test]": "xxThomas Lübkingxx",
                 "Name[zh_CN]": "Thomas Lübking",
                 "Name[zh_TW]": "Thomas Lübking"
             }
@@ -98,7 +97,6 @@
         "Description[tr]": "Pencereleri masaüstüne çek",
         "Description[uk]": "Засмоктування вікон до стільниці",
         "Description[vi]": "Hút các cửa sổ vào bàn làm việc",
-        "Description[x-test]": "xxSuck windows into the desktopxx",
         "Description[zh_CN]": "按下显示桌面时所有窗口被内收到桌面中心消失",
         "Description[zh_TW]": "將視窗吸進桌面",
         "EnabledByDefault": false,
@@ -149,7 +147,6 @@
         "Name[tr]": "Göz Ekranda",
         "Name[uk]": "Око на екрані",
         "Name[vi]": "Theo dõi màn hình",
-        "Name[x-test]": "xxEye on Screenxx",
         "Name[zh_CN]": "窗口内收",
         "Name[zh_TW]": "螢幕之眼"
     },

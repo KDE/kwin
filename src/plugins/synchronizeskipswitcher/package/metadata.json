@@ -48,7 +48,6 @@
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
                 "Name[vi]": "Martin Gräßlin",
-                "Name[x-test]": "xxMartin Gräßlinxx",
                 "Name[zh_CN]": "Martin Gräßlin",
                 "Name[zh_TW]": "Martin Gräßlin"
             }
@@ -96,7 +95,6 @@
         "Description[tr]": "Görev Çubuğunu Atla olarak imlenen tüm pencerelerin, değiştiricilerden de (örn. Seçenek+Sekme) dışlanmasını sağlar",
         "Description[uk]": "Приховує всі вікна, позначені як такі, що не показуються на панелі задач, так, щоб їх не було показано у списках перемикання вікон (наприклад Alt+Tab)",
         "Description[vi]": "Ẩn tất cả các cửa sổ được đánh dấu là \"Bỏ qua thanh tác vụ\" khỏi các trình chuyển cửa sổ (vd.: Alt+Tab)",
-        "Description[x-test]": "xxHides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)xx",
         "Description[zh_CN]": "窗口切换器 (Alt+Tab) 将不会显示标记为跳过任务栏的窗口",
         "Description[zh_TW]": "隱藏所有標記為忽略工作列的視窗，讓它們也從視窗切換器（如 Alt+Tab）中排除",
         "Icon": "preferences-system-windows-script-synchronizeskipswitcher",
@@ -145,7 +143,6 @@
         "Name[tr]": "Değiştiricide Gösterilmeyenleri Çubukta da Gösterme",
         "Name[uk]": "Синхронізувати виключення вікон у перемикачі з панеллю задач",
         "Name[vi]": "Đồng bộ hoá việc bỏ qua trình chuyển với thanh tác vụ",
-        "Name[x-test]": "xxSynchronize Skip Switcher with Taskbarxx",
         "Name[zh_CN]": "窗口切换器与任务栏同步跳过窗口设置",
         "Name[zh_TW]": "同步忽略切換器標記與忽略工作列標記"
     },

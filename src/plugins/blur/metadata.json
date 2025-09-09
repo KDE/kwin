@@ -46,7 +46,6 @@
         "Description[tr]": "Yarısaydam pencerelerin ardını bulanıklaştırır",
         "Description[uk]": "Розмивання тла напівпрозорих вікон",
         "Description[vi]": "Làm mờ phần nền phía sau các cửa sổ bán trong suốt",
-        "Description[x-test]": "xxBlurs the background behind semi-transparent windowsxx",
         "Description[zh_CN]": "对半透明窗口的背景进行虚化处理",
         "Description[zh_TW]": "模糊半透明視窗的背景",
         "EnabledByDefault": true,
@@ -96,7 +95,6 @@
         "Name[tr]": "Bulanıklaştır",
         "Name[uk]": "Розмиття",
         "Name[vi]": "Mờ",
-        "Name[x-test]": "xxBlurxx",
         "Name[zh_CN]": "窗口背景虚化",
         "Name[zh_TW]": "模糊"
     },

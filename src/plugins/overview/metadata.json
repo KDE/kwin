@@ -34,7 +34,6 @@
         "Description[sv]": "Ger dig en översikt av virtuella skrivbord och fönster, aktiveras med en snabbtangent",
         "Description[tr]": "Sanal masaüstlerini ve pencerelerin genel bir görünümünü sağlar; klavye kısayoluyla etkinleştirilir",
         "Description[uk]": "Надає вам змогу оглядати віртуальні стільниці і вікна; активується клавіатурним скороченням",
-        "Description[x-test]": "xxAllows you to overview virtual desktops and windows; activated with a keyboard shortcutxx",
         "Description[zh_CN]": "用于显示虚拟桌面和窗口的概览；使用键盘快捷键激活",
         "Description[zh_TW]": "讓您一覽虛擬桌面與視窗的總覽——需要用鍵盤快捷鍵觸發",
         "EnabledByDefault": true,
@@ -85,7 +84,6 @@
         "Name[tr]": "Genel Görünüm",
         "Name[uk]": "Огляд",
         "Name[vi]": "Tổng quan",
-        "Name[x-test]": "xxOverviewxx",
         "Name[zh_CN]": "桌面概览",
         "Name[zh_TW]": "總覽"
     },

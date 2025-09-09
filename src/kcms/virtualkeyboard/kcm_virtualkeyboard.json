@@ -47,7 +47,6 @@
         "Description[tr]": "Hangi sanal klavyenin kullanılacağını seçin",
         "Description[uk]": "Вибір віртуальної клавіатури",
         "Description[vi]": "Chọn bàn phím ảo để dùng",
-        "Description[x-test]": "xxSelect which virtual keyboard to usexx",
         "Description[zh_CN]": "选择要使用的虚拟键盘",
         "Description[zh_TW]": "選取要使用的虛擬鍵盤",
         "Icon": "input-keyboard-virtual",
@@ -97,7 +96,6 @@
         "Name[tr]": "Sanal Klavye",
         "Name[uk]": "Віртуальна клавіатура",
         "Name[vi]": "Bàn phím ảo",
-        "Name[x-test]": "xxVirtual Keyboardxx",
         "Name[zh_CN]": "虚拟键盘",
         "Name[zh_TW]": "虛擬鍵盤"
     },
@@ -133,7 +131,6 @@
     "X-KDE-Keywords[sv]": "programvarutangentbord,virtuellt tangentbord,pektangentbord,skärmtangentbord,inmatningsmetoder",
     "X-KDE-Keywords[tr]": "yazılım klavyesi,sanal klavye,dokunmatik klavye,ekran klavyesi,giriş yöntemi,giriş yöntemleri",
     "X-KDE-Keywords[uk]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,програмна клавіатура,віртуальна клавіатура,сенсорна клавіатура,екранна клавіатура,способи введення",
-    "X-KDE-Keywords[x-test]": "xxsoftware keyboardxx,xxvirtual keyboardxx,xxtouch keyboardxx,xxon screen keyboardxx,xxinput methodsxx",
     "X-KDE-Keywords[zh_CN]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,ruanjianjianpan,xunijianpan,pingmujianpan,pingshangjianpan,shurufangshi,shurufa,软件键盘,虚拟键盘,屏幕键盘,屏上键盘,输入方式,输入法",
     "X-KDE-Keywords[zh_TW]": "軟體鍵盤,虛擬鍵盤,觸控鍵盤,螢幕鍵盤,輸入法",
     "X-KDE-OnlyShowOnQtPlatforms": [

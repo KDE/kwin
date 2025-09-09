@@ -46,7 +46,6 @@
         "Description[tr]": "Pencereler Arası Dolaşım",
         "Description[uk]": "Навігація вікнами",
         "Description[vi]": "Điều hướng qua các cửa sổ",
-        "Description[x-test]": "xxNavigation Through Windowsxx",
         "Description[zh_CN]": "配置窗口切换器选项",
         "Description[zh_TW]": "在視窗間探索",
         "Icon": "preferences-system-tabbox",
@@ -95,7 +94,6 @@
         "Name[tr]": "Görev Değiştiricisi",
         "Name[uk]": "Перемикання задач",
         "Name[vi]": "Trình chuyển tác vụ",
-        "Name[x-test]": "xxTask Switcherxx",
         "Name[zh_CN]": "任务切换器",
         "Name[zh_TW]": "工作切換器"
     },
@@ -131,7 +129,6 @@
     "X-KDE-Keywords[sv]": "fönster,byte,fönsterbyte,alttabulator,alt-tabulator,alt+tabulator,alt tabulator,programbytare,program,aktivitet,aktivitetsbyte",
     "X-KDE-Keywords[tr]": "pencere,pencereler,değiştirici,pencere değiştiricisi,değiştirme,alttab,alt-tab,alt+tab,alt tab, uygulama değiştiricisi,uygulama,app,görev,değiştir,görev değiştiricisi,commandtab,command-tab,command+tab,command tab",
     "X-KDE-Keywords[uk]": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher,вікно,вікна,перемикач,перемикач вікон,перемикання,перемикання вікон,альттаб,альт-таб,альт+таб,зміна програм,програма,завдання,перемикання,перемикання завдань",
-    "X-KDE-Keywords[x-test]": "xxwindowxx,xxwindowsxx,xxswitcherxx,xxwindow switcherxx,xxswitchingxx,xxwindow switchingxx,xxalttabxx,xxalt-tabxx,xxalt+tabxx,xxalt tabxx,xxapps changerxx,xxapplication changerxx,xxappxx,xxtaskxx,xxswitchxx,xxtask switcherxx",
     "X-KDE-Keywords[zh_CN]": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher,chuangkou,qiehuanqi,chuangkouqiehuanqi,qiehuan,chuangkouqiehuan,yingyongqiehuanqi,yingyongchengxuqiehuanqi,yingyong,yingyongchengxu,renwu,renwuqiehuanqi,窗口,切换器,窗口切换器,切换,窗口切换,应用切换器,应用程序切换器,应用,应用程序,任务,任务切换器",
     "X-KDE-Keywords[zh_TW]": "視窗,切換器,切換,視窗切換,alttab,應用程式切換,應用程式,程式,工作,工作切換",
     "X-KDE-OnlyShowOnQtPlatforms": [

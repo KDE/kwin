@@ -48,7 +48,6 @@
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
                 "Name[vi]": "Martin Gräßlin",
-                "Name[x-test]": "xxMartin Gräßlinxx",
                 "Name[zh_CN]": "Martin Gräßlin",
                 "Name[zh_TW]": "Martin Gräßlin"
             }
@@ -78,7 +77,6 @@
         "Description[sv]": "Sträck ut fönster som går till och lämnar fullskärmsläge",
         "Description[tr]": "Tam ekran kipine giren veya çıkan pencereleri ger",
         "Description[uk]": "Розтягування вікон під час входу до повноекранного режиму і виходу з нього",
-        "Description[x-test]": "xxStretch windows going to and leaving full screen modexx",
         "Description[zh_CN]": "窗口进入/退出全屏模式时呈现拉伸动效",
         "Description[zh_TW]": "拉伸正在進入或離開全螢幕的視窗",
         "EnabledByDefault": true,
@@ -110,7 +108,6 @@
         "Name[sv]": "Sträck",
         "Name[tr]": "Ger",
         "Name[uk]": "Розтягнути",
-        "Name[x-test]": "xxStretchxx",
         "Name[zh_CN]": "拉伸动效",
         "Name[zh_TW]": "拉伸"
     },
