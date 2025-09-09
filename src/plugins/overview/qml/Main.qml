@@ -282,7 +282,7 @@ FocusScope {
         // the origin to the "gridVal" direction, which has angle 0,
         // whilst still animating when the point moves from overviewVal to
         // gridVal too.
-        opacity: Math.atan2(overviewVal, gridVal) / Math.PI * 2
+        opacity: overviewVal * Math.atan2(overviewVal, gridVal) / Math.PI * 2
 
         anchors.top: parent.top
         anchors.left: parent.left
