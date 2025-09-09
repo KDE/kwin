@@ -79,12 +79,12 @@ class KWIN_EXPORT Window : public QObject
      * occupies on the screen. This rectangle includes invisible portions of the
      * window, e.g. client-side drop shadows, etc.
      */
-    Q_PROPERTY(QRectF bufferGeometry READ bufferGeometry)
+    Q_PROPERTY(QRectF bufferGeometry READ bufferGeometry NOTIFY bufferGeometryChanged)
 
     /**
      * The geometry of the Window without frame borders.
      */
-    Q_PROPERTY(QRectF clientGeometry READ clientGeometry)
+    Q_PROPERTY(QRectF clientGeometry READ clientGeometry NOTIFY clientGeometryChanged)
 
     /**
      * This property holds the position of the Window's frame geometry.
