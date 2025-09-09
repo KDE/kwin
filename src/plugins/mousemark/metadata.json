@@ -35,7 +35,6 @@
         "Description[sv]": "Låter dig rita linjer på skrivbordet, aktiveras med en snabbtangent",
         "Description[tr]": "Masaüstünde çizgiler çizmenize izin verir; klavye kısayoluyla etkinleştirilir",
         "Description[uk]": "Можливість малювання ліній на стільниці; активується клавіатурним скороченням",
-        "Description[x-test]": "xxAllows you to draw lines on the desktop; activated with a keyboard shortcutxx",
         "Description[zh_CN]": "用于在桌面上绘制线条；使用键盘快捷键激活",
         "Description[zh_TW]": "讓您能在桌面上畫線——需要用鍵盤快捷鍵觸發",
         "EnabledByDefault": false,
@@ -86,7 +85,6 @@
         "Name[tr]": "Fare İmi",
         "Name[uk]": "Позначки мишкою",
         "Name[vi]": "Vết chuột",
-        "Name[x-test]": "xxMouse Markxx",
         "Name[zh_CN]": "鼠标屏幕画线",
         "Name[zh_TW]": "滑鼠標記"
     },

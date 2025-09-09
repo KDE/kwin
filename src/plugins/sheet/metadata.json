@@ -46,7 +46,6 @@
         "Description[tr]": "Kipsel iletişim kutuları gösterilirken veya gizlenirken pürüzsüzce uçmalarını sağlar",
         "Description[uk]": "Плавне влітання або відлітання вікон під час їх появи або приховування",
         "Description[vi]": "Làm các hộp thoại chế độ bay vào và ra một cách êm dịu khi chúng hiện ra và biến mất",
-        "Description[x-test]": "xxMake modal dialogs smoothly fly in and out when they are shown or hiddenxx",
         "Description[zh_CN]": "对话框显示/隐藏时绘制过渡动画",
         "Description[zh_TW]": "讓情境對話框在顯示或隱藏的時候平滑地飛入或飛出",
         "EnabledByDefault": false,
@@ -95,7 +94,6 @@
         "Name[tr]": "Sayfa",
         "Name[uk]": "Аркуш",
         "Name[vi]": "Tấm mỏng",
-        "Name[x-test]": "xxSheetxx",
         "Name[zh_CN]": "对话框显隐过渡",
         "Name[zh_TW]": "薄紙"
     }

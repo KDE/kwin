@@ -35,7 +35,6 @@
         "Description[sv]": "Förstorar den del av skärmen som är nära muspekaren, aktiveras med en snabbtangent",
         "Description[tr]": "Ekranın fare imlecinin yakınında olan kısımlarını büyüt; klavye kısayoluyla etkinleştirilir",
         "Description[uk]": "Збільшення частини екрана поруч з вказівником миші; активується клавіатурним скороченням",
-        "Description[x-test]": "xxMagnify the section of the screen that is near the mouse cursor; activated with a keyboard shortcutxx",
         "Description[zh_CN]": "放大鼠标光标附近的屏幕区域；使用键盘快捷键激活",
         "Description[zh_TW]": "放大在滑鼠游標附近的部分——需要用鍵盤快捷鍵觸發",
         "EnabledByDefault": false,
@@ -85,7 +84,6 @@
         "Name[tr]": "Büyüteç",
         "Name[uk]": "Лупа",
         "Name[vi]": "Trình phóng đại",
-        "Name[x-test]": "xxMagnifierxx",
         "Name[zh_CN]": "放大镜 (方形)",
         "Name[zh_TW]": "放大鏡"
     },

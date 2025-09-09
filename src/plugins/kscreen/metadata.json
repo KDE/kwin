@@ -46,7 +46,6 @@
         "Description[tr]": "KScreen için Yardımcı Etkisi",
         "Description[uk]": "Допоміжний ефект KScreen",
         "Description[vi]": "Hiệu ứng trợ giúp cho KScreen",
-        "Description[x-test]": "xxHelper Effect for KScreenxx",
         "Description[zh_CN]": "KScreen 的辅助特效",
         "Description[zh_TW]": "KScreen 輔助效果",
         "EnabledByDefault": true,
@@ -97,7 +96,6 @@
         "Name[tr]": "Kscreen",
         "Name[uk]": "Kscreen",
         "Name[vi]": "Kscreen",
-        "Name[x-test]": "xxKscreenxx",
         "Name[zh_CN]": "Kscreen 辅助特效",
         "Name[zh_TW]": "KScreen"
     },

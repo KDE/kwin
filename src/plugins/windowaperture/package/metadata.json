@@ -48,7 +48,6 @@
                 "Name[tr]": "Thomas Lübking",
                 "Name[uk]": "Thomas Lübking",
                 "Name[vi]": "Thomas Lübking",
-                "Name[x-test]": "xxThomas Lübkingxx",
                 "Name[zh_CN]": "Thomas Lübking",
                 "Name[zh_TW]": "Thomas Lübking"
             }
@@ -97,7 +96,6 @@
         "Description[tr]": "Pencereleri ekran kenarlarına taşı",
         "Description[uk]": "Пересування вікон до кутів екрана",
         "Description[vi]": "Di chuyển các cửa sổ đến các góc màn hình",
-        "Description[x-test]": "xxMove windows into screen cornersxx",
         "Description[zh_CN]": "按下显示桌面时所有窗口被外推到桌面之外消失",
         "Description[zh_TW]": "將視窗移至螢幕角落",
         "EnabledByDefault": true,
@@ -147,7 +145,6 @@
         "Name[tr]": "Pencere Açıklığı",
         "Name[uk]": "Апертура вікна",
         "Name[vi]": "Độ mở cửa sổ",
-        "Name[x-test]": "xxWindow Aperturexx",
         "Name[zh_CN]": "窗口外推",
         "Name[zh_TW]": "視窗光圈"
     },

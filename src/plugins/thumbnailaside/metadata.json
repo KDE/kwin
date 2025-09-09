@@ -34,7 +34,6 @@
         "Description[sv]": "Visa miniatyrbilder av fönster vid skärmkanten, aktiveras med en snabbtangent",
         "Description[tr]": "Pencere küçük görsellerini ekranın kenarında görüntüle; klavye kısayoluyla etkinleştirilir",
         "Description[uk]": "Показ мініатюр вікон при наведенні на край екрана; активується клавіатурним скороченням",
-        "Description[x-test]": "xxDisplay window thumbnails on the edge of the screen; activated with a keyboard shortcutxx",
         "Description[zh_CN]": "在屏幕边缘显示窗口缩略图；使用键盘快捷键激活",
         "Description[zh_TW]": "在螢幕邊緣顯示視窗縮圖——需要用鍵盤快捷鍵觸發",
         "EnabledByDefault": false,
@@ -84,7 +83,6 @@
         "Name[tr]": "Küçük Görsel Kenarda",
         "Name[uk]": "Мініатюри збоку",
         "Name[vi]": "Hình nhỏ ở cạnh",
-        "Name[x-test]": "xxThumbnail Asidexx",
         "Name[zh_CN]": "缩略图置边",
         "Name[zh_TW]": "在一旁的縮圖"
     },

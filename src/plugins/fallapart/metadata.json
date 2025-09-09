@@ -46,7 +46,6 @@
         "Description[tr]": "Kapanan pencereler parçalara ayrılırlar",
         "Description[uk]": "Розпадання вікон на шматочки під час закриття вікон",
         "Description[vi]": "Cửa sổ bị đóng sẽ vỡ thành nhiều mảnh",
-        "Description[x-test]": "xxClosed windows fall into piecesxx",
         "Description[zh_CN]": "窗口关闭时绘制粉碎飞散动画",
         "Description[zh_TW]": "關閉的視窗會呈現粉碎效果",
         "EnabledByDefault": false,
@@ -96,7 +95,6 @@
         "Name[tr]": "Parçalara Ayır",
         "Name[uk]": "Розпадання",
         "Name[vi]": "Tan vỡ",
-        "Name[x-test]": "xxFall Apartxx",
         "Name[zh_CN]": "窗口粉碎动画",
         "Name[zh_TW]": "粉碎"
     }

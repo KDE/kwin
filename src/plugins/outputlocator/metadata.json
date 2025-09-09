@@ -48,7 +48,6 @@
                 "Name[tr]": "David Redondo",
                 "Name[uk]": "David Redondo",
                 "Name[vi]": "David Redondo",
-                "Name[x-test]": "xxDavid Redondoxx",
                 "Name[zh_CN]": "David Redondo",
                 "Name[zh_TW]": "David Redondo"
             }
@@ -94,7 +93,6 @@
         "Description[ta]": "திரைகளின் பெயர்களைக் காட்டும்",
         "Description[tr]": "Ekran adlarını göster",
         "Description[uk]": "Показувати назви екранів",
-        "Description[x-test]": "xxShow screen namesxx",
         "Description[zh_CN]": "显示屏幕名称",
         "Description[zh_TW]": "顯示螢幕名稱",
         "EnabledByDefault": true,
@@ -136,7 +134,6 @@
         "Name[ta]": "திரை கண்டுபிடிப்பி",
         "Name[tr]": "Çıktı Bulucusu",
         "Name[uk]": "Локатор виведення",
-        "Name[x-test]": "xxOutput Locatorxx",
         "Name[zh_CN]": "输出定位器",
         "Name[zh_TW]": "輸出位置檢測器"
     },

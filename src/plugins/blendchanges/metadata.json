@@ -46,7 +46,6 @@
         "Description[tr]": "Sistem biçemi değişikliklerini canlandırır",
         "Description[uk]": "Анімація змін у стилі системи",
         "Description[vi]": "Tạo hiệu ứng động cho các thay đổi kiểu cách hệ thống",
-        "Description[x-test]": "xxAnimates system style changesxx",
         "Description[zh_CN]": "动画过渡系统风格更改",
         "Description[zh_TW]": "為系統風格變化使用動畫效果",
         "EnabledByDefault": true,
@@ -96,7 +95,6 @@
         "Name[tr]": "Değişiklikleri Harmanla",
         "Name[uk]": "Злиття змін",
         "Name[vi]": "Pha trộn các thay đổi",
-        "Name[x-test]": "xxBlend Changesxx",
         "Name[zh_CN]": "平滑过渡更改",
         "Name[zh_TW]": "混合變化"
     },

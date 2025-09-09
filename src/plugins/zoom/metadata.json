@@ -34,7 +34,6 @@
         "Description[sv]": "Förstora hela skrivbordet, aktiveras med en snabbtangent",
         "Description[tr]": "Tüm masaüstünü büyüt; klavye kısayoluyla etkinleştirilir",
         "Description[uk]": "Збільшення цілої стільниці; активується клавіатурним скороченням",
-        "Description[x-test]": "xxMagnify the entire desktop; activated with a keyboard shortcutxx",
         "Description[zh_CN]": "放大整个桌面；使用键盘快捷键激活",
         "Description[zh_TW]": "放大整個桌面——需要用鍵盤快捷鍵觸發",
         "EnabledByDefault": true,
@@ -85,7 +84,6 @@
         "Name[tr]": "Yakınlaştır",
         "Name[uk]": "Масштабування",
         "Name[vi]": "Thu phóng",
-        "Name[x-test]": "xxZoomxx",
         "Name[zh_CN]": "缩放",
         "Name[zh_TW]": "縮放"
     },

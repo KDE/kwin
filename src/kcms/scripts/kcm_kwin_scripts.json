@@ -46,7 +46,6 @@
         "Description[tr]": "KWin Betiklerini Yönet",
         "Description[uk]": "Керування скриптами KWin",
         "Description[vi]": "Quản lí các kịch bản KWin",
-        "Description[x-test]": "xxManage KWin scriptsxx",
         "Description[zh_CN]": "管理 KWin 脚本",
         "Description[zh_TW]": "管理 KWin 文稿",
         "Icon": "preferences-system-windows-actions",
@@ -95,7 +94,6 @@
         "Name[tr]": "KWin Betikleri",
         "Name[uk]": "Скрипти KWin",
         "Name[vi]": "Kịch bản KWin",
-        "Name[x-test]": "xxKWin Scriptsxx",
         "Name[zh_CN]": "KWin 脚本",
         "Name[zh_TW]": "KWin 文稿"
     },
@@ -132,7 +130,6 @@
     "X-KDE-Keywords[sv]": "kwin-skript,insticksprogram,fönsterhanterare",
     "X-KDE-Keywords[tr]": "kwin betiği,eklentiler,pencere yöneticisi",
     "X-KDE-Keywords[uk]": "kwin script,plugins,window manager,скрипт квін,додатки,керування,вікна",
-    "X-KDE-Keywords[x-test]": "xxkwin scriptxx,xxpluginsxx,xxwindow managerxx",
     "X-KDE-Keywords[zh_CN]": "kwin script,plugins,window manager,jiaoben,chajian,chuangkouguanliqi,kwin 脚本,插件,窗口管理器",
     "X-KDE-Keywords[zh_TW]": "kwin 文稿,kwin 指令稿,插件,外掛程式,視窗管理員",
     "X-KDE-OnlyShowOnQtPlatforms": [

@@ -46,7 +46,6 @@
         "Description[tr]": "Yarısaydam pencerelerin ardında karşıtlığı ve okunabilirlilği iyileştir",
         "Description[uk]": "Покращення контрастності та придатності до читання тексту під напівпрозорими вікнами",
         "Description[vi]": "Cải thiện độ tương phản và tính dễ đọc phía sau các cửa sổ bán trong suốt",
-        "Description[x-test]": "xxImprove contrast and readability behind semi-transparent windowsxx",
         "Description[zh_CN]": "增强半透明窗口背景区域内容的对比度，改善其可读性",
         "Description[zh_TW]": "改善半透明視窗後方的對比與可讀性",
         "EnabledByDefault": true,
@@ -94,7 +93,6 @@
         "Name[tr]": "Arka Plan Karşıtlığı",
         "Name[uk]": "Контрастність тла",
         "Name[vi]": "Tương phản nền",
-        "Name[x-test]": "xxBackground Contrastxx",
         "Name[zh_CN]": "背景对比度",
         "Name[zh_TW]": "背景對比"
     },

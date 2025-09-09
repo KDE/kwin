@@ -47,7 +47,6 @@
         "Description[tr]": "Dolaşımı, sanal masaüstlerinin sayısını ve yerleşimini yapılandır",
         "Description[uk]": "Налаштовування навігації, кількості та компонування віртуальних стільниць",
         "Description[vi]": "Cấu hình điều hướng, số lượng và bố cục của các bàn làm việc ảo",
-        "Description[x-test]": "xxConfigure navigation, number and layout of virtual desktopsxx",
         "Description[zh_CN]": "配置虚拟桌面的数量、排列方式和切换方式",
         "Description[zh_TW]": "設定虛擬桌面的導覽、數量與佈局",
         "FormFactors": [
@@ -100,7 +99,6 @@
         "Name[tr]": "Sanal Masaüstleri",
         "Name[uk]": "Віртуальні стільниці",
         "Name[vi]": "Bàn làm việc ảo",
-        "Name[x-test]": "xxVirtual Desktopsxx",
         "Name[zh_CN]": "虚拟桌面",
         "Name[zh_TW]": "虛擬桌面"
     },
@@ -136,7 +134,6 @@
     "X-KDE-Keywords[sv]": "skrivbord,nummer,virtuellt skrivbord,flera skrivbord,skrivbordsväljare,skrivbordsväljarkomponent, skrivbordsväljarminiprogram, skrivbordsväljarinställningar,indikator,navigering,kub,bild,arbetsytor",
     "X-KDE-Keywords[tr]": "masaüstü,masaüstleri,sayı,numara,sanal masaüstü,çoklu masaüstleri,sayfalayıcı,araç takımı,uygulamacık,ayarlar,gösterge,dolaşım,gezinti,küp,kaydır,çalışma alanları",
     "X-KDE-Keywords[uk]": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces,стільниця,стільниці,кількість,віртуальна стільниця,перемикач,пейджер,віджет перемикача,віджет пейджера,аплет перемикання,аплет перемикача,параметри перемикання,параметри перемикача,індикатор,навігація,куб,ковзання,слайд,простори",
-    "X-KDE-Keywords[x-test]": "xxdesktopxx,xxdesktopsxx,xxnumberxx,xxvirtual desktopxx,xxmultiple desktopsxx,xxpagerxx,xxpager widgetxx,xxpager appletxx,xxpager settingsxx,xxindicatorxx,xxnavigationxx,xxcubexx,xxslidexx,xxworkspacesxx",
     "X-KDE-Keywords[zh_CN]": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,zhuomian,xunizhuomian,duozhuomian,qiehuan,xunizhuomianqiehuanqi,qiehuanqi,qiehuanqizujian,qiehuanqishezhi,zhishiqi,zhishise,tishiqi,tishise,daohang,fangkuai,zhengfangti,huadong,gongzuoqu,gongzuokongjian,桌面,虚拟桌面,多桌面,切换,虚拟桌面切换器,切换器,切换器组件,切换器设置,指示器,指示色,提示器,提示色,导航,方块,正方体,滑动,工作区,工作空间",
     "X-KDE-Keywords[zh_TW]": "桌面,虛擬桌面,桌面管理器,虛擬桌面管理器,指示器,瀏覽,工作空間",
     "X-KDE-OnlyShowOnQtPlatforms": [

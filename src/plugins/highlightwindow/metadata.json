@@ -46,7 +46,6 @@
         "Description[tr]": "Görev çubuğu girdilere arasında gezinirken uygun pencereleri vurgula",
         "Description[uk]": "Підсвічування відповідного вікна у відповідь на наведення вказівника миші на елементи панелі задач",
         "Description[vi]": "Tô sáng cửa sổ thích hợp khi đảo chuột trên các mục thanh tác vụ",
-        "Description[x-test]": "xxHighlight the appropriate window when hovering over taskbar entriesxx",
         "Description[zh_CN]": "鼠标悬停在任务栏项上时突出显示对应的窗口",
         "Description[zh_TW]": "滑鼠移至工作列項目上時突顯其對應的視窗",
         "EnabledByDefault": true,
@@ -96,7 +95,6 @@
         "Name[tr]": "Pencereyi Vurgula",
         "Name[uk]": "Підсвічування вікна",
         "Name[vi]": "Tô sáng cửa sổ",
-        "Name[x-test]": "xxHighlight Windowxx",
         "Name[zh_CN]": "突出显示窗口",
         "Name[zh_TW]": "突顯視窗"
     },

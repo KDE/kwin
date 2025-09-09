@@ -41,7 +41,6 @@
         "Description[ta]": "சுட்டியை வேகமாக ஆட்டும்போது சுட்டிக்குறியைப் பெரிதாக்கும்",
         "Description[tr]": "İşaretçi tez ileri geri hareket ettirildiğinde imleci büyütür",
         "Description[uk]": "Робити курсор більшим, коли вказівник швидко рухається туди-сюди",
-        "Description[x-test]": "xxMakes the cursor larger when the pointer is quickly moved back and forthxx",
         "Description[zh_CN]": "快速往返移动指针后加大显示光标",
         "Description[zh_TW]": "快速來回移動游標時讓游標變大",
         "EnabledByDefault": true,
@@ -87,7 +86,6 @@
         "Name[ta]": "சுட்டிக்குறியை ஆட்டு",
         "Name[tr]": "İmleci Salla",
         "Name[uk]": "Бовтанка курсора",
-        "Name[x-test]": "xxShake Cursorxx",
         "Name[zh_CN]": "抖动后放大光标",
         "Name[zh_TW]": "甩動游標"
     },

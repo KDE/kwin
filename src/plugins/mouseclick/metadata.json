@@ -35,7 +35,6 @@
         "Description[sv]": "Skapar en animering så fort en musknapp klickas. Det är användbart för skärminspelningar och presentationer. Aktiveras med en snabbtangent",
         "Description[tr]": "Ne zaman bir fare düğmesi tıklansa bir canlandırma oluşturur. Bu ekran kaydı ve sunumlar için yararlıdır; klavye kısayoluyla etkinleştirilir",
         "Description[uk]": "Створення анімацій у відповідь на клацання кнопкою миші. Корисне для записів демонстрацій та презентацій. Активується клавіатурним скороченням",
-        "Description[x-test]": "xxCreates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations. Activated with a keyboard shortcutxx",
         "Description[zh_CN]": "鼠标按键按下时显示动效，在进行录屏演示时非常有用；使用键盘快捷键激活",
         "Description[zh_TW]": "點擊滑鼠按鍵時顯示一個動畫。這在螢幕錄影或投影片播放時很有用。——需要用鍵盤快捷鍵觸發",
         "EnabledByDefault": false,
@@ -85,7 +84,6 @@
         "Name[tr]": "Fare Tıklama Canlandırması",
         "Name[uk]": "Анімація за клацанням миші",
         "Name[vi]": "Hiệu ứng động khi bấm chuột",
-        "Name[x-test]": "xxMouse Click Animationxx",
         "Name[zh_CN]": "鼠标点击动效",
         "Name[zh_TW]": "滑鼠點擊動畫"
     },

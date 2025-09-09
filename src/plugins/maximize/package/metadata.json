@@ -48,7 +48,6 @@
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
                 "Name[vi]": "Martin Gräßlin",
-                "Name[x-test]": "xxMartin Gräßlinxx",
                 "Name[zh_CN]": "Martin Gräßlin",
                 "Name[zh_TW]": "Martin Gräßlin"
             }
@@ -78,7 +77,6 @@
         "Description[sv]": "Sträck ut fönster när de maximeras eller återställs",
         "Description[tr]": "Pencereler ekranı kapladığında veya eski hallerine döndüğünde onları ger",
         "Description[uk]": "Розтягування вікон при максимізації або відновленні",
-        "Description[x-test]": "xxStretch windows when they are maximized or restoredxx",
         "Description[zh_CN]": "最大化或恢复窗口时显示窗口拉伸动效",
         "Description[zh_TW]": "最大化或復原視窗時拉伸它們",
         "EnabledByDefault": true,
@@ -110,7 +108,6 @@
         "Name[sv]": "Sträck",
         "Name[tr]": "Ger",
         "Name[uk]": "Розтягнути",
-        "Name[x-test]": "xxStretchxx",
         "Name[zh_CN]": "拉伸动效",
         "Name[zh_TW]": "拉伸"
     },

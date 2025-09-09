@@ -35,7 +35,6 @@
         "Description[sv]": "Invertera skrivbordets och fönstrens färg, aktiveras med en snabbtangent",
         "Description[tr]": "Masaüstünün ve pencerelerin rengini tersine çevir; klavye kısayoluyla etkinleştirilir",
         "Description[uk]": "Обернення кольорів стільниці і вікон; активується клавіатурним скороченням",
-        "Description[x-test]": "xxInverts the color of the desktop and windows; activated with a keyboard shortcutxx",
         "Description[zh_CN]": "反相显示桌面和窗口的颜色；使用键盘快捷键激活",
         "Description[zh_TW]": "反轉桌面和視窗的顏色——需要用鍵盤快捷鍵觸發",
         "EnabledByDefault": false,
@@ -85,7 +84,6 @@
         "Name[tr]": "Ters Çevir",
         "Name[uk]": "Інверсія",
         "Name[vi]": "Đảo",
-        "Name[x-test]": "xxInvertxx",
         "Name[zh_CN]": "颜色反相",
         "Name[zh_TW]": "反轉"
     },

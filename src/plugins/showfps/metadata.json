@@ -46,7 +46,6 @@
         "Description[tr]": "KWin başarımını pencerenin bir köşesinde görüntüle",
         "Description[uk]": "Показ параметра швидкодії KWin (частоти кадрів) у куті екрана",
         "Description[vi]": "Hiện hiệu suất hoạt động của KWin ở góc màn hình",
-        "Description[x-test]": "xxDisplay KWin's performance in the corner of the screenxx",
         "Description[zh_CN]": "在屏幕一角显示 KWin 的每秒帧数图表",
         "Description[zh_TW]": "在螢幕角落顯示 KWin 的效能資訊",
         "EnabledByDefault": false,
@@ -96,7 +95,6 @@
         "Name[tr]": "FPS’yi Göster",
         "Name[uk]": "Показ частоти кадрів",
         "Name[vi]": "Hiện FPS",
-        "Name[x-test]": "xxShow FPSxx",
         "Name[zh_CN]": "显示每秒帧数",
         "Name[zh_TW]": "顯示 FPS"
     }

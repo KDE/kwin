@@ -46,7 +46,6 @@
         "Description[tr]": "Ekran görüntüsü araçları için yardımcı etkisi",
         "Description[uk]": "Допоміжний ефект для створення знімків екрана",
         "Description[vi]": "Hiệu ứng trợ giúp cho các công cụ chụp ảnh màn hình",
-        "Description[x-test]": "xxHelper effect for screenshot toolsxx",
         "Description[zh_CN]": "屏幕截图工具的辅助效果",
         "Description[zh_TW]": "螢幕快照工具輔助效果",
         "EnabledByDefault": true,
@@ -96,7 +95,6 @@
         "Name[tr]": "Ekran Görüntüsü",
         "Name[uk]": "Знімок вікна",
         "Name[vi]": "Ảnh chụp màn hình",
-        "Name[x-test]": "xxScreenshotxx",
         "Name[zh_CN]": "屏幕截图",
         "Name[zh_TW]": "螢幕快照"
     },

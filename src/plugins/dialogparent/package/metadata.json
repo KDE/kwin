@@ -48,7 +48,6 @@
                 "Name[tr]": "Rivo Laks, Martin Gräßlin",
                 "Name[uk]": "Rivo Laks, Martin Gräßlin",
                 "Name[vi]": "Rivo Laks, Martin Gräßlin",
-                "Name[x-test]": "xxRivo Laks, Martin Gräßlinxx",
                 "Name[zh_CN]": "Rivo Laks, Martin Gräßlin",
                 "Name[zh_TW]": "Rivo Laks, Martin Gräßlin"
             }
@@ -98,7 +97,6 @@
         "Description[tr]": "Geçerli etkin iletişim kutusunun üst penceresini karartır",
         "Description[uk]": "Затемнення батьківських вікон активних діалогових вікон",
         "Description[vi]": "Làm tối cửa sổ cha của hộp thoại hiện đang hoạt động",
-        "Description[x-test]": "xxDarkens the parent window of the currently active dialogxx",
         "Description[zh_CN]": "当前活动对话框的父窗口将会变暗",
         "Description[zh_TW]": "將目前對話框的親視窗變暗",
         "EnabledByDefault": true,
@@ -149,7 +147,6 @@
         "Name[tr]": "Üst İletişim Kutusu",
         "Name[uk]": "Батьківське вікно",
         "Name[vi]": "Cha hộp thoại",
-        "Name[x-test]": "xxDialog Parentxx",
         "Name[zh_CN]": "对话框父级窗口变暗",
         "Name[zh_TW]": "對話框上層"
     },

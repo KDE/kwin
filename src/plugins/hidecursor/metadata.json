@@ -39,7 +39,6 @@
         "Description[ta]": "ஒன்றும் செய்யாதபோதோ தட்டச்சிடும்போதோ சுட்டிக்குறியை மறைப்பது",
         "Description[tr]": "Hareketsizlikte veya klavye girişinde fare imlecini gizle",
         "Description[uk]": "Приховати вказівник миші при бездіяльності або введенні з клавіатури",
-        "Description[x-test]": "xxHide mouse cursor on inactivity or keyboard inputxx",
         "Description[zh_CN]": "闲置或者键盘输入时隐藏鼠标光标",
         "Description[zh_TW]": "在沒有動作或是有鍵盤輸入時隱藏滑鼠游標",
         "EnabledByDefault": false,
@@ -83,7 +82,6 @@
         "Name[ta]": "சுட்டிக்குறியை மறை",
         "Name[tr]": "İmleci Gizle",
         "Name[uk]": "Приховувати вказівник",
-        "Name[x-test]": "xxHide Cursorxx",
         "Name[zh_CN]": "隐藏光标",
         "Name[zh_TW]": "隱藏游標"
     },

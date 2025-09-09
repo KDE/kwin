@@ -39,7 +39,6 @@
         "Description[ta]": "கணினி மணியை வழங்கும்",
         "Description[tr]": "Zili çalar",
         "Description[uk]": "Надає сигнал",
-        "Description[x-test]": "xxProvides the bellxx",
         "Description[zh_CN]": "提供系统提示",
         "Description[zh_TW]": "提供系統響鈴",
         "EnabledByDefault": true,
@@ -82,7 +81,6 @@
         "Name[ta]": "கணினி மணி",
         "Name[tr]": "Sistem Zili",
         "Name[uk]": "Системний дзвінок",
-        "Name[x-test]": "xxSystem Bellxx",
         "Name[zh_CN]": "系统提示",
         "Name[zh_TW]": "系統響鈴"
     },

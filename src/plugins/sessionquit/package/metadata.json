@@ -48,7 +48,6 @@
                 "Name[tr]": "David Edmundson",
                 "Name[uk]": "David Edmundson",
                 "Name[vi]": "David Edmundson",
-                "Name[x-test]": "xxDavid Edmundsonxx",
                 "Name[zh_CN]": "David Edmundson",
                 "Name[zh_TW]": "David Edmundson"
             }
@@ -97,7 +96,6 @@
         "Description[tr]": "Oturum kapatma sırasında masaüstü arka planını sonuna kadar canlı tut",
         "Description[uk]": "Не вимикати тло стільниці до кінця процедури виходу із облікового запису",
         "Description[vi]": "Giữ nền bàn làm việc hiện cho đến cuối quá trình đăng xuất",
-        "Description[x-test]": "xxKeep the desktop background alive during logout until the endxx",
         "Description[zh_CN]": "注销时继续显示桌面背景，直到完全退出会话",
         "Description[zh_TW]": "直到登出完成前皆保留桌面背景圖片",
         "EnabledByDefault": true,
@@ -147,7 +145,6 @@
         "Name[tr]": "Oturum Çıkışı",
         "Name[uk]": "Вихід з сеансу",
         "Name[vi]": "Thoát phiên",
-        "Name[x-test]": "xxSession Quitxx",
         "Name[zh_CN]": "会话退出优化",
         "Name[zh_TW]": "離開工作階段"
     },

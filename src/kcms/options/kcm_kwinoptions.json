@@ -47,7 +47,6 @@
         "Description[tr]": "Pencere eylemlerini ve davranışını yapılandır",
         "Description[uk]": "Налаштовування реакції та поведінки вікон",
         "Description[vi]": "Cấu hình các hành động và ứng xử của cửa sổ",
-        "Description[x-test]": "xxConfigure window actions and behaviorxx",
         "Description[zh_CN]": "配置窗口操作和行为",
         "Description[zh_TW]": "設定視窗動作與行為",
         "Icon": "preferences-system-windows-actions",
@@ -96,7 +95,6 @@
         "Name[tr]": "Pencere Davranışı",
         "Name[uk]": "Поведінка вікон",
         "Name[vi]": "Ứng xử của cửa sổ",
-        "Name[x-test]": "xxWindow Behaviorxx",
         "Name[zh_CN]": "窗口行为",
         "Name[zh_TW]": "視窗行為"
     },
@@ -132,7 +130,6 @@
     "X-KDE-Keywords[sv]": "fokus,placering,fönsterbeteende,fönsteråtgärder,animering,höjning,automatisk höjning,fönster,ram,namnlist,dubbelklicka,skrivbord,lås,rörelse,rulla upp, rulla ner,aktivering,aktivera",
     "X-KDE-Keywords[tr]": "odak,yerleşim,pencere davranışı,pencere eylemleri,canlandırma,animasyon,yükselt,çerçeve,başlık çubuğu,çift tık,masaüstü,tuttur,hareket,taşı,panjur,etkinleştir",
     "X-KDE-Keywords[uk]": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate,фокус,розташування,місце,вікно,поведінка,поведінка вікон,дії,реакція,дії з вікнами,реакція вікон,анімація,підняти,підняття,автоматична,автоматично,рамка,заголовок,смужка заголовка,клацання,подвійне,стільниця,прилипання,рух,тіні,тінь,активація,активувати",
-    "X-KDE-Keywords[x-test]": "xxfocusxx,xxplacementxx,xxwindow behaviorxx,xxwindow actionsxx,xxanimationxx,xxraisexx,xxauto raisexx,xxwindowsxx,xxframexx,xxtitlebarxx,xxdoubleclickxx,xxdesktopxx,xxsnapxx,xxmovementxx,xxshadingxx,xxshadexx,xxunshadexx,xxunshadingxx,xxactivationxx,xxactivatexx",
     "X-KDE-Keywords[zh_CN]": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate,jiaodian,fangzhi,weizhi,chuangkouxingwei,chuangkoucaozuo,donghua,tisheng,zidongtisheng,chuangkou,kuangjia,biaotilan,shuangji,zhuomian,xifu,yidong,juanqi,zhankai,jihuo,焦点,放置,位置,窗口行为,窗口操作,动画,提升,自动提升,窗口,框架,标题栏,双击,桌面,吸附,移动,卷起,展开,激活",
     "X-KDE-Keywords[zh_TW]": "焦點,聚焦,視窗行為,視窗動作,動畫,抬升,提升,自動抬升,視窗,框架,邊框,標題列,標題欄,雙擊,連點,桌面,貼齊,移動,隱藏,觸發",
     "X-KDE-OnlyShowOnQtPlatforms": [

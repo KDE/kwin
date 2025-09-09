@@ -41,7 +41,6 @@
         "Description[tr]": "Döşeme alanları için düzenleyicisi",
         "Description[uk]": "Редактор для мозаїчних областей",
         "Description[vi]": "Trình biên tập các vùng lát",
-        "Description[x-test]": "xxEditor for the tiling areasxx",
         "Description[zh_CN]": "磁贴区域编辑器",
         "Description[zh_TW]": "平鋪方塊區域的編輯器",
         "EnabledByDefault": true,
@@ -86,7 +85,6 @@
         "Name[tr]": "Döşeme Düzenleyicisi",
         "Name[uk]": "Редактор мозаїк",
         "Name[vi]": "Trình biên tập lát",
-        "Name[x-test]": "xxTiling Editorxx",
         "Name[zh_CN]": "磁贴编辑器",
         "Name[zh_TW]": "平鋪方塊編輯器"
     },

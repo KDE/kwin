@@ -48,7 +48,6 @@
                 "Name[tr]": "Luboš Luňák, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
                 "Name[uk]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
                 "Name[vi]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
-                "Name[x-test]": "xxLubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martinxx",
                 "Name[zh_CN]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
                 "Name[zh_TW]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin"
             }
@@ -78,7 +77,6 @@
         "Description[sv]": "Tona till utloggningsskärmen",
         "Description[tr]": "Oturumu kapatırken masaüstünden solarak çık",
         "Description[uk]": "Затемнення до вікна виходу з системи",
-        "Description[x-test]": "xxFade to the logout screenxx",
         "Description[zh_CN]": "注销时平滑地过渡到注销屏幕",
         "Description[zh_TW]": "淡入至登出畫面",
         "EnabledByDefault": true,
@@ -129,7 +127,6 @@
         "Name[tr]": "Oturumu Kapat",
         "Name[uk]": "Вихід",
         "Name[vi]": "Đăng xuất",
-        "Name[x-test]": "xxLogoutxx",
         "Name[zh_CN]": "注销过渡动画",
         "Name[zh_TW]": "登出"
     },
