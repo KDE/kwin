@@ -40,7 +40,6 @@
         "Description[tr]": "Etkinleştirildiğinde bir fare imleci bulma efekti görüntüle",
         "Description[uk]": "Показ наближення вказівника миші",
         "Description[vi]": "Khi được kích hoạt, hiển thị một hiệu ứng định vị con trỏ chuột",
-        "Description[x-test]": "xxDisplay a mouse cursor locating effect when activatedxx",
         "Description[zh_CN]": "激活时突出显示鼠标所在位置",
         "Description[zh_TW]": "觸發時強調顯示滑鼠游標讓它比較容易被找到",
         "EnabledByDefault": false,
@@ -85,7 +84,6 @@
         "Name[tr]": "Fareyi İzle",
         "Name[uk]": "Сліди мишки",
         "Name[vi]": "Theo dõi chuột",
-        "Name[x-test]": "xxTrack Mousexx",
         "Name[zh_CN]": "鼠标定位",
         "Name[zh_TW]": "滑鼠追蹤"
     },

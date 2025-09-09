@@ -39,7 +39,6 @@
         "Description[tr]": "Uzaklaştır, böylece tüm masaüstleri bir ızgarada yan yana görüntülenirler",
         "Description[uk]": "Зменшення стільниць так, щоб всі стільниці було показано поруч у форматі таблиці",
         "Description[vi]": "Thu nhỏ để tất cả các bàn làm việc được hiển thị cạnh nhau trong một lưới",
-        "Description[x-test]": "xxZoom out so all desktops are displayed side-by-side in a gridxx",
         "Description[zh_CN]": "所有虚拟桌面缩小后显示在一套网格中",
         "Description[zh_TW]": "縮小顯示讓所有桌面都同時顯示在格線內",
         "EnabledByDefault": true,
@@ -83,7 +82,6 @@
         "Name[tr]": "Masaüstü Izgarası",
         "Name[uk]": "Таблиця стільниць",
         "Name[vi]": "Lưới bàn làm việc",
-        "Name[x-test]": "xxDesktop Gridxx",
         "Name[zh_CN]": "虚拟桌面平铺网格",
         "Name[zh_TW]": "桌面格線"
     },

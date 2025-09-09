@@ -40,7 +40,6 @@
         "Description[tr]": "Pencere küçük görsellerini ekranın kenarında görüntüle",
         "Description[uk]": "Показ мініатюр вікон при наведенні на край екрана",
         "Description[vi]": "Hiển thị các hình nhỏ cửa sổ ở cạnh màn hình",
-        "Description[x-test]": "xxDisplay window thumbnails on the edge of the screenxx",
         "Description[zh_CN]": "在屏幕边缘显示窗口的缩略图",
         "Description[zh_TW]": "在螢幕邊緣顯示視窗縮圖",
         "EnabledByDefault": false,
@@ -85,7 +84,6 @@
         "Name[tr]": "Küçük Görsel Kenarda",
         "Name[uk]": "Мініатюри збоку",
         "Name[vi]": "Hình nhỏ ở cạnh",
-        "Name[x-test]": "xxThumbnail Asidexx",
         "Name[zh_CN]": "缩略图置边",
         "Name[zh_TW]": "在一旁的縮圖"
     },

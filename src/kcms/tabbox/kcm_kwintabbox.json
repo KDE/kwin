@@ -39,7 +39,6 @@
         "Description[tr]": "Pencereler Arası Dolaşım",
         "Description[uk]": "Навігація вікнами",
         "Description[vi]": "Điều hướng qua các cửa sổ",
-        "Description[x-test]": "xxNavigation Through Windowsxx",
         "Description[zh_CN]": "配置窗口切换器选项",
         "Description[zh_TW]": "在視窗間探索",
         "Icon": "preferences-system-tabbox",
@@ -81,7 +80,6 @@
         "Name[tr]": "Görev Değiştirici",
         "Name[uk]": "Перемикання задач",
         "Name[vi]": "Trình chuyển tác vụ",
-        "Name[x-test]": "xxTask Switcherxx",
         "Name[zh_CN]": "任务切换器",
         "Name[zh_TW]": "工作切換器"
     },
@@ -108,7 +106,6 @@
     "X-KDE-Keywords[sl]": "okno,okna,preklopnik,preklopnik oken,preklapljanje,preklop oken,alttab,alt-tab,alt+tab,alt zavihek,izmenjevalec aplikacij,izmenjevalnik aplikacij, aplikacija,opravilo,stikalo,preklopnik opravil",
     "X-KDE-Keywords[sv]": "fönster,byte,fönsterbyte,alttabulator,alt-tabulator,alt+tabulator,alt tabulator,programbytare,program,aktivitet,aktivitetsbyte",
     "X-KDE-Keywords[uk]": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher,вікно,вікна,перемикач,перемикач вікон,перемикання,перемикання вікон,альттаб,альт-таб,альт+таб,зміна програм,програма,завдання,перемикання,перемикання завдань",
-    "X-KDE-Keywords[x-test]": "xxwindowxx,xxwindowsxx,xxswitcherxx,xxwindow switcherxx,xxswitchingxx,xxwindow switchingxx,xxalttabxx,xxalt-tabxx,xxalt+tabxx,xxalt tabxx,xxapps changerxx,xxapplication changerxx,xxappxx,xxtaskxx,xxswitchxx,xxtask switcherxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 60

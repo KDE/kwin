@@ -40,7 +40,6 @@
         "Description[tr]": "Dokunma noktalarını görselleştir",
         "Description[uk]": "Візуалізувати точки дотику",
         "Description[vi]": "Trực quan hoá các điểm chạm",
-        "Description[x-test]": "xxVisualize touch pointsxx",
         "Description[zh_CN]": "高亮显示在触控屏幕上的触摸点",
         "Description[zh_TW]": "視覺化觸控點",
         "EnabledByDefault": false,
@@ -85,7 +84,6 @@
         "Name[tr]": "Dokunma Noktaları",
         "Name[uk]": "Точки дотику",
         "Name[vi]": "Điểm chạm",
-        "Name[x-test]": "xxTouch Pointsxx",
         "Name[zh_CN]": "触摸点高亮",
         "Name[zh_TW]": "觸控點"
     }

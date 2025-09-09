@@ -40,7 +40,6 @@
         "Description[tr]": "Bireysel Pencere Davranışı",
         "Description[uk]": "Поведінка окремих вікон",
         "Description[vi]": "Ứng xử của riêng từng cửa sổ",
-        "Description[x-test]": "xxIndividual Window Behaviorxx",
         "Description[zh_CN]": "个别窗口行为",
         "Description[zh_TW]": "個別視窗行為",
         "FormFactors": [
@@ -86,7 +85,6 @@
         "Name[tr]": "Pencere Kuralları",
         "Name[uk]": "Правила вікон",
         "Name[vi]": "Luật cửa sổ",
-        "Name[x-test]": "xxWindow Rulesxx",
         "Name[zh_CN]": "窗口规则",
         "Name[zh_TW]": "視窗規則"
     },
@@ -113,7 +111,6 @@
     "X-KDE-Keywords[sl]": "velikost,položaj,stanje,vedenje oken,okna,specifično,rešitve,zapomni si,pravila,pravila oken,aplikacije,programi",
     "X-KDE-Keywords[sv]": "storlek,position,tillstånd,fönsterbeteende,fönster,specifik,lösningar,komma ihåg,regler,fönsterregler,program,applikationer",
     "X-KDE-Keywords[uk]": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications,розмір,розташування,місце,стан,поведінка,вікно,вікна,поведінка вікон,окрема,специфічна,окремо,запам’ятати,пам’ять,правило,правила,правила вікон,програми",
-    "X-KDE-Keywords[x-test]": "xxsizexx,xxpositionxx,xxstatexx,xxwindow behaviorxx,xxwindowsxx,xxspecificxx,xxworkaroundsxx,xxrememberxx,xxrulesxx,xxwindow rulesxx,xxappsxx,xxapplicationsxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 120

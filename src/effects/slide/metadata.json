@@ -39,7 +39,6 @@
         "Description[tr]": "Sanal masaüstleri değiştirilirken masaüstlerini kaydır",
         "Description[uk]": "Ковзання стільниць під час час перемикання стільниць",
         "Description[vi]": "Trượt qua các bàn làm việc khi chuyển bàn làm việc ảo",
-        "Description[x-test]": "xxSlide desktops when switching virtual desktopsxx",
         "Description[zh_CN]": "虚拟桌面切换时呈现滑动动效",
         "Description[zh_TW]": "在虛擬桌面間切換時使用滑動效果",
         "EnabledByDefault": true,
@@ -83,7 +82,6 @@
         "Name[tr]": "Kaydır",
         "Name[uk]": "Ковзання",
         "Name[vi]": "Trượt",
-        "Name[x-test]": "xxSlidexx",
         "Name[zh_CN]": "滑动",
         "Name[zh_TW]": "滑動"
     },

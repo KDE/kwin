@@ -43,7 +43,6 @@
                 "Name[tr]": "Demitrius Belai",
                 "Name[uk]": "Demitrius Belai",
                 "Name[vi]": "Demitrius Belai",
-                "Name[x-test]": "xxDemitrius Belaixx",
                 "Name[zh_CN]": "Demitrius Belai",
                 "Name[zh_TW]": "Demitrius Belai"
             }
@@ -86,7 +85,6 @@
         "Name[tr]": "Kwin Aurorae",
         "Name[uk]": "KWin Aurorae",
         "Name[vi]": "Aurorae của KWin",
-        "Name[x-test]": "xxKWin Auroraexx",
         "Name[zh_CN]": "KWin Aurorae 极光",
         "Name[zh_TW]": "KWin Aurorae",
         "Version": "1"

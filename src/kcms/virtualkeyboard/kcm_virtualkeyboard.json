@@ -40,7 +40,6 @@
         "Description[tr]": "Hangi sanal klavyenin kullanılacağını seçin",
         "Description[uk]": "Вибір віртуальної клавіатури",
         "Description[vi]": "Chọn bàn phím ảo để dùng",
-        "Description[x-test]": "xxSelect which virtual keyboard to usexx",
         "Description[zh_CN]": "选择要使用的虚拟键盘",
         "Description[zh_TW]": "選取要使用的虛擬鍵盤",
         "Icon": "input-keyboard-virtual",
@@ -82,7 +81,6 @@
         "Name[tr]": "Sanal Klavye",
         "Name[uk]": "Віртуальна клавіатура",
         "Name[vi]": "Bàn phím ảo",
-        "Name[x-test]": "xxVirtual Keyboardxx",
         "Name[zh_CN]": "虚拟键盘",
         "Name[zh_TW]": "虛擬鍵盤"
     },
@@ -109,7 +107,6 @@
     "X-KDE-Keywords[sl]": "programska tipkovnica,virtualna tipkovnica,tipkovnica na dotik,zaslonska tipkovnica,načini vnosa",
     "X-KDE-Keywords[sv]": "programvarutangentbord,virtuellt tangentbord,pektangentbord,skärmtangentbord,inmatningsmetoder",
     "X-KDE-Keywords[uk]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,програмна клавіатура,віртуальна клавіатура,сенсорна клавіатура,екранна клавіатура,способи введення",
-    "X-KDE-Keywords[x-test]": "xxsoftware keyboardxx,xxvirtual keyboardxx,xxtouch keyboardxx,xxon screen keyboardxx,xxinput methodsxx",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],

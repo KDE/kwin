@@ -40,7 +40,6 @@
         "Description[tr]": "Masaüstü ve pencerelerin renklerini ters çevirir",
         "Description[uk]": "Обернення кольорів стільниці і вікон",
         "Description[vi]": "Đảo màu bàn làm việc và các cửa sổ",
-        "Description[x-test]": "xxInverts the color of the desktop and windowsxx",
         "Description[zh_CN]": "对桌面和窗口的颜色进行反相显示",
         "Description[zh_TW]": "反轉桌面和視窗的顏色",
         "EnabledByDefault": false,
@@ -85,7 +84,6 @@
         "Name[tr]": "Ters Çevir",
         "Name[uk]": "Інверсія",
         "Name[vi]": "Đảo",
-        "Name[x-test]": "xxInvertxx",
         "Name[zh_CN]": "颜色反相",
         "Name[zh_TW]": "反轉"
     },

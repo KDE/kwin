@@ -40,7 +40,6 @@
         "Description[tr]": "Tüm masaüstünü büyüt",
         "Description[uk]": "Збільшення цілої стільниці",
         "Description[vi]": "Phóng đại toàn bộ bàn làm việc",
-        "Description[x-test]": "xxMagnify the entire desktopxx",
         "Description[zh_CN]": "放大显示整个桌面，视图跟随鼠标移动",
         "Description[zh_TW]": "放大整個桌面",
         "EnabledByDefault": true,
@@ -85,7 +84,6 @@
         "Name[tr]": "Yakınlaştır",
         "Name[uk]": "Масштабування",
         "Name[vi]": "Thu phóng",
-        "Name[x-test]": "xxZoomxx",
         "Name[zh_CN]": "缩放",
         "Name[zh_TW]": "縮放"
     },

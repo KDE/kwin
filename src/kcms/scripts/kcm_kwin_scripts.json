@@ -39,7 +39,6 @@
         "Description[tr]": "KWin Betiklerini Yönet",
         "Description[uk]": "Керування скриптами KWin",
         "Description[vi]": "Quản lí các kịch bản KWin",
-        "Description[x-test]": "xxManage KWin scriptsxx",
         "Description[zh_CN]": "管理 KWin 脚本",
         "Description[zh_TW]": "管理 KWin 文稿",
         "Icon": "preferences-system-windows-actions",
@@ -81,7 +80,6 @@
         "Name[tr]": "KWin Betikleri",
         "Name[uk]": "Скрипти KWin",
         "Name[vi]": "Kịch bản KWin",
-        "Name[x-test]": "xxKWin Scriptsxx",
         "Name[zh_CN]": "KWin 脚本",
         "Name[zh_TW]": "KWin 文稿"
     },
@@ -108,7 +106,6 @@
     "X-KDE-Keywords[sl]": "skript kwin,vtičniki,upravljalnik okna",
     "X-KDE-Keywords[sv]": "kwin-skript,insticksprogram,fönsterhanterare",
     "X-KDE-Keywords[uk]": "kwin script,plugins,window manager,скрипт квін,додатки,керування,вікна",
-    "X-KDE-Keywords[x-test]": "xxkwin scriptxx,xxpluginsxx,xxwindow managerxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 70

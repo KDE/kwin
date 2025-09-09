@@ -40,7 +40,6 @@
         "Description[tr]": "Fare imlecinin yakınındaki ekran bölümünü büyüt",
         "Description[uk]": "Збільшення частини екрана поруч з вказівником миші",
         "Description[vi]": "Phóng đại khu vực màn hình gần với con trỏ chuột",
-        "Description[x-test]": "xxMagnify the section of the screen that is near the mouse cursorxx",
         "Description[zh_CN]": "放大显示鼠标光标附近的一块方形区域的屏幕内容",
         "Description[zh_TW]": "放大在滑鼠游標附近的部分",
         "EnabledByDefault": false,
@@ -85,7 +84,6 @@
         "Name[tr]": "Büyüteç",
         "Name[uk]": "Лупа",
         "Name[vi]": "Trình phóng đại",
-        "Name[x-test]": "xxMagnifierxx",
         "Name[zh_CN]": "放大镜 (方形)",
         "Name[zh_TW]": "放大鏡"
     },

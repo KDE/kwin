@@ -40,7 +40,6 @@
         "Description[tr]": "Masaüstünün yeni güncellenen alanlarını vurgula",
         "Description[uk]": "Підсвічує області екрана, у яких спостерігалося оновлення",
         "Description[vi]": "Tô sáng những vùng bàn làm việc mới được cập nhật",
-        "Description[x-test]": "xxHighlight areas of the desktop that have been recently updatedxx",
         "Description[zh_CN]": "突出显示最近更新过的桌面区域",
         "Description[zh_TW]": "突顯桌面上剛被更新的區域",
         "EnabledByDefault": false,
@@ -85,7 +84,6 @@
         "Name[tr]": "Boyamayı Göster",
         "Name[uk]": "Показ малювання",
         "Name[vi]": "Hiện sơn",
-        "Name[x-test]": "xxShow Paintxx",
         "Name[zh_CN]": "突出显示画面更新区域",
         "Name[zh_TW]": "顯示塗繪"
     },

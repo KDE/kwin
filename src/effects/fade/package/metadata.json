@@ -41,7 +41,6 @@
                 "Name[tr]": "Philip Falkner, Martin Gräßlin",
                 "Name[uk]": "Philip Falkner, Martin Gräßlin",
                 "Name[vi]": "Philip Falkner, Martin Gräßlin",
-                "Name[x-test]": "xxPhilip Falkner, Martin Gräßlinxx",
                 "Name[zh_CN]": "Philip Falkner, Martin Gräßlin",
                 "Name[zh_TW]": "Philip Falkner, Martin Gräßlin"
             }
@@ -84,7 +83,6 @@
         "Description[tr]": "Pencereler gösterilirken veya gizlenirken pürüzsüzce geçiş yapmalarını sağlar",
         "Description[uk]": "Плавна поява або зникнення вікон",
         "Description[vi]": "Làm cửa sổ hiện dần và mờ dần một cách êm dịu khi chúng hiện ra và biến mất",
-        "Description[x-test]": "xxMake windows smoothly fade in and out when they are shown or hiddenxx",
         "Description[zh_CN]": "窗口显示/隐藏时呈现渐入渐出过渡动效",
         "Description[zh_TW]": "讓視窗在顯示或隱藏的時候平滑地淡入或淡出",
         "EnabledByDefault": false,
@@ -128,7 +126,6 @@
         "Name[tr]": "Soldur",
         "Name[uk]": "Згасання",
         "Name[vi]": "Làm mờ dần",
-        "Name[x-test]": "xxFadexx",
         "Name[zh_CN]": "淡出淡入动画",
         "Name[zh_TW]": "淡化",
         "Version": "0.2.0"

@@ -44,7 +44,6 @@
                 "Name[tr]": "Marco Martin",
                 "Name[uk]": "Marco Martin",
                 "Name[vi]": "Marco Martin",
-                "Name[x-test]": "xxMarco Martinxx",
                 "Name[zh_CN]": "Marco Martin",
                 "Name[zh_TW]": "Marco Martin"
             }
@@ -84,7 +83,6 @@
         "Description[tr]": "Araç ipuçları veya bildirimler boyutları değiştiğinde gösterilecek çapraz geçiş canlandırması",
         "Description[uk]": "Анімація зі зміною освітленості під час зміни геометрії панелей підказок і сповіщень",
         "Description[vi]": "Hiệu ứng động mờ dần khi các chú giải hay thông báo thay đổi hình dạng",
-        "Description[x-test]": "xxCross fade animation when Tooltips or Notifications change their geometryxx",
         "Description[zh_CN]": "工具提示/通知信息框大小变化时呈现过渡动效",
         "Description[zh_TW]": "當工具提示或通知變更位置時交錯淡出動畫",
         "EnabledByDefault": true,
@@ -124,7 +122,6 @@
         "Name[tr]": "Dönüşen Açılır Pencereler",
         "Name[uk]": "Аморфні контекстні панелі",
         "Name[vi]": "Ô bật lên biến dạng",
-        "Name[x-test]": "xxMorphing Popupsxx",
         "Name[zh_CN]": "气泡大小渐变动画",
         "Name[zh_TW]": "交錯彈出視窗",
         "Version": "1",

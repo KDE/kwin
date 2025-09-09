@@ -39,7 +39,6 @@
         "Description[tr]": "Etkin ekran köşeleri ve kenarlarını yapılandır",
         "Description[uk]": "Налаштовування активних кутів і країв екрана",
         "Description[vi]": "Cấu hình các góc và cạnh của màn hình hoạt động",
-        "Description[x-test]": "xxConfigure active screen corners and edgesxx",
         "Description[zh_CN]": "配置活动屏幕的四角和边缘操作",
         "Description[zh_TW]": "設定作用中螢幕角落與邊緣",
         "Icon": "preferences-desktop-gestures-screenedges",
@@ -81,7 +80,6 @@
         "Name[tr]": "Ekran Kenarları",
         "Name[uk]": "Краї екрана",
         "Name[vi]": "Cạnh màn hình",
-        "Name[x-test]": "xxScreen Edgesxx",
         "Name[zh_CN]": "屏幕边缘",
         "Name[zh_TW]": "螢幕邊緣"
     },
@@ -108,7 +106,6 @@
     "X-KDE-Keywords[sl]": "kwin,okno,upravitelj,učinek,vogal,rob,obroba,dejanje,stikalo,namizje,kwin robovi zaslona,robovi namizja,robovi zaslona,​​povečaj okna,okna z ploščicami,stran zaslona,​​obnašanje zaslona,​​preklop namizja,navidezno namizje,koti zaslona obrobe,obrobe zaslona,​​obrobe namizja,vogali namizja,vogali",
     "X-KDE-Keywords[sv]": "kwin,fönster,hanterare,effekt,hörn,kant,kant,åtgärd,byta,skrivbord,kwin-skärmkanter,skrivbordskanter,skärmkanter,maximera fönster,fönster sida vid sida,sidan av skärmen,skärmbeteende,byt skrivbord,virtuellt skrivbord,skärmhörn,kanter,skärmkanter,skrivbordskanter,skrivbordshörn,hörn",
     "X-KDE-Keywords[uk]": "kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,borders,screen borders,desktop borders,desktop corners,corners,sticky corners,sticky edges,edge barriers,corner barriers,квін,вікно,керування,засіб,ефект,кут,край,рамка,дія,перемикання,стільниця,краї екрана,краї стільниці,максимізація,максимізувати,мозаїка,бік екрана,поведінка,перемикання,віртуальна,кути екрана,рамки,кути,липкі кути,бар'єри краю,бар'єри кута",
-    "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxeffectxx,xxcornerxx,xxedgexx,xxborderxx,xxactionxx,xxswitchxx,xxdesktopxx,xxkwin screen edgesxx,xxdesktop edgesxx,xxscreen edgesxx,xxmaximize windowsxx,xxtile windowsxx,xxside of screenxx,xxscreen behaviorxx,xxswitch desktopxx,xxvirtual desktopxx,xxscreen cornersxx,xxbordersxx,xxscreen bordersxx,xxdesktop bordersxx,xxdesktop cornersxx,xxcornersxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "desktopbehavior",
     "X-KDE-Weight": 50

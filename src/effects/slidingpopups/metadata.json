@@ -39,7 +39,6 @@
         "Description[tr]": "Plasma açılır pencereleri için kayma canlandırması",
         "Description[uk]": "Анімація з ковзанням для контекстних вікон Плазми",
         "Description[vi]": "Hiệu ứng động dạng trượt cho các ô bật lên Plasma",
-        "Description[x-test]": "xxSliding animation for Plasma popupsxx",
         "Description[zh_CN]": "气泡显示/隐藏时呈现滑动动效",
         "Description[zh_TW]": "提供滑動動畫予 Plasma 彈出視窗",
         "EnabledByDefault": true,
@@ -79,7 +78,6 @@
         "Name[tr]": "Kayan Açılır Pencereler",
         "Name[uk]": "Ковзні контекстні вікна",
         "Name[vi]": "Ô bật lên dạng trượt",
-        "Name[x-test]": "xxSliding Popupsxx",
         "Name[zh_CN]": "气泡滑动动效",
         "Name[zh_TW]": "滑動的彈出視窗"
     },

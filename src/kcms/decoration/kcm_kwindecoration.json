@@ -40,7 +40,6 @@
         "Description[tr]": "Masaüstü pencere başlık çubukları ve kenarlıklarını yapılandır",
         "Description[uk]": "Налаштовування смужок заголовків та рамок вікон",
         "Description[vi]": "Cấu hình thanh tiêu đề và viền của cửa sổ",
-        "Description[x-test]": "xxConfigure window titlebars and bordersxx",
         "Description[zh_CN]": "配置窗口标题栏和边框",
         "Description[zh_TW]": "設定視窗標題列和邊框",
         "FormFactors": [
@@ -87,7 +86,6 @@
         "Name[tr]": "Pencere Dekorasyonları",
         "Name[uk]": "Обрамлення вікон",
         "Name[vi]": "Trang trí cửa sổ",
-        "Name[x-test]": "xxWindow Decorationsxx",
         "Name[zh_CN]": "窗口装饰元素",
         "Name[zh_TW]": "視窗裝飾"
     },
@@ -115,7 +113,6 @@
     "X-KDE-Keywords[sl]": "kwin,okno,upravljalnik,meja,slog,tema,videz,občutek,postaviten,gumb,ročka,rob,kwm,dekoracija,okenske dekoracije,naslovna vrstica,okenski gumbi,meje oken,preobleka,senca",
     "X-KDE-Keywords[sv]": "kwin,fönster,hanterare,kant,stil,tema,utseende,känsla,layout,knapp,grepp,kant,kwm,dekoration,fönsterdekorationer,namnlist,fönsterknappar,fönsterkant,skal,skugga",
     "X-KDE-Keywords[uk]": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,shadow,вікно,вікна,керування,менеджер,рамка,межа,стиль,тема,вигляд,поведінка,компонування,кнопка,елемент,край,декорації,обрамлення,смужка заголовка,кнопки,рамка,оформлення,тінь",
-    "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxborderxx,xxstylexx,xxthemexx,xxlookxx,xxfeelxx,xxlayoutxx,xxbuttonxx,xxhandlexx,xxedgexx,xxkwmxx,xxdecorationxx,xxwindow decorationsxx,xxtitlebarxx,xxwindow buttonsxx,xxwindow borderxx,xxskinxx,xxshadowxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "appearance",
     "X-KDE-Weight": 40

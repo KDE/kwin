@@ -37,7 +37,6 @@
         "Description[tr]": "Eski X11 uygulamalarına hangi düğmelerin global olarak kullanılabilir olacağını seç",
         "Description[uk]": "Вибір клавіш, які будуть доступні на загальному рівні програмам X11",
         "Description[vi]": "Chọn các phím khả dụng toàn cục cho các ứng dụng X11 đời cũ",
-        "Description[x-test]": "xxSelect which keys will be globally available to legacy X11 appsxx",
         "Description[zh_CN]": "选择对旧式 X11 应用程序全局可用的按键",
         "Description[zh_TW]": "選擇舊式 X11 應用程式可以全域使用的按鍵",
         "Icon": "xorg",
@@ -77,7 +76,6 @@
         "Name[tr]": "Eski X11 Uygulamaları Desteği",
         "Name[uk]": "Підтримка застарілих програм X11",
         "Name[vi]": "Hỗ trợ ứng dụng X11 đời cũ",
-        "Name[x-test]": "xxLegacy X11 App Supportxx",
         "Name[zh_CN]": "旧式 X11 应用程序支持",
         "Name[zh_TW]": "舊式 X11 應用程式支援"
     },
@@ -103,7 +101,6 @@
     "X-KDE-Keywords[sl]": "xwayland,globalno,tipke,naprej",
     "X-KDE-Keywords[sv]": "xwayland,global,tangenter,vidarebefordra",
     "X-KDE-Keywords[uk]": "xwayland,global,keys,forward,іксвейленд,загальне,клавіші,переспрямування,вперед",
-    "X-KDE-Keywords[x-test]": "xxxwaylandxx,xxglobalxx,xxkeysxx,xxforwardxx",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],

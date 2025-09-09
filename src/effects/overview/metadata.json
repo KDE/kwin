@@ -40,7 +40,6 @@
         "Description[tr]": "Sanal masaüstlerini ve pencerelerin genel bir görünümünü sağlar",
         "Description[uk]": "Надає вам змогу оглядати віртуальні стільниці і вікна",
         "Description[vi]": "Cho phép bạn xem tổng quan các bàn làm việc ảo và các cửa sổ",
-        "Description[x-test]": "xxAllows you to overview virtual desktops and windowsxx",
         "Description[zh_CN]": "显示包含当前所有虚拟桌面和窗口的桌面概览",
         "Description[zh_TW]": "讓您一覽虛擬桌面與視窗的總覽",
         "EnabledByDefault": true,
@@ -85,7 +84,6 @@
         "Name[tr]": "Genel Görünüm",
         "Name[uk]": "Огляд",
         "Name[vi]": "Tổng quan",
-        "Name[x-test]": "xxOverviewxx",
         "Name[zh_CN]": "桌面概览",
         "Name[zh_TW]": "總覽"
     },

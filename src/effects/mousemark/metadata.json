@@ -40,7 +40,6 @@
         "Description[tr]": "Masaüstünde çizgiler çizmenize izin verir.",
         "Description[uk]": "Можливість малювання ліній на стільниці",
         "Description[vi]": "Cho phép bạn vẽ các nét trên bàn làm việc",
-        "Description[x-test]": "xxAllows you to draw lines on the desktopxx",
         "Description[zh_CN]": "用鼠标光标直接在屏幕上画出线条",
         "Description[zh_TW]": "讓您能在桌面上畫線",
         "EnabledByDefault": false,
@@ -85,7 +84,6 @@
         "Name[tr]": "Fare İmi",
         "Name[uk]": "Позначки мишкою",
         "Name[vi]": "Vết chuột",
-        "Name[x-test]": "xxMouse Markxx",
         "Name[zh_CN]": "鼠标屏幕画线",
         "Name[zh_TW]": "滑鼠標記"
     },

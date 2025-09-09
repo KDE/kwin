@@ -41,7 +41,6 @@
                 "Name[tr]": "Luboš Luňák, Kai Uwe Broulik, Martin Gräßlin",
                 "Name[uk]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
                 "Name[vi]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
-                "Name[x-test]": "xxLubos Lunak, Kai Uwe Broulik, Martin Gräßlinxx",
                 "Name[zh_CN]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
                 "Name[zh_TW]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin"
             }
@@ -84,7 +83,6 @@
         "Description[tr]": "Oturum açarken masaüstüne pürüzsüzce geçiş yap",
         "Description[uk]": "Плавна поява стільниці під час входу",
         "Description[vi]": "Làm mờ dần sang bàn làm việc một cách êm dịu khi đăng nhập",
-        "Description[x-test]": "xxSmoothly fade to the desktop when logging inxx",
         "Description[zh_CN]": "登录时平滑地过渡到桌面",
         "Description[zh_TW]": "登入時平順地淡入桌面",
         "EnabledByDefault": true,
@@ -128,7 +126,6 @@
         "Name[tr]": "Oturumu Aç",
         "Name[uk]": "Вхід",
         "Name[vi]": "Đăng nhập",
-        "Name[x-test]": "xxLoginxx",
         "Name[zh_CN]": "登录渐变动画",
         "Name[zh_TW]": "登入",
         "Version": "0.2.0"

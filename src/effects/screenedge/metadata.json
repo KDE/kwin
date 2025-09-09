@@ -40,7 +40,6 @@
         "Description[tr]": "Yaklaşırken bir ekran kenarını vurgular",
         "Description[uk]": "Підсвічує край екрана у разі наближення вказівника",
         "Description[vi]": "Tô sáng cạnh màn hình khi tiến lại gần",
-        "Description[x-test]": "xxHighlights a screen edge when approachingxx",
         "Description[zh_CN]": "接近屏幕边缘时高亮显示",
         "Description[zh_TW]": "接近一個螢幕邊緣時突顯它",
         "EnabledByDefault": true,
@@ -85,7 +84,6 @@
         "Name[tr]": "Ekran Kenarı",
         "Name[uk]": "Край екрана",
         "Name[vi]": "Cạnh màn hình",
-        "Name[x-test]": "xxScreen Edgexx",
         "Name[zh_CN]": "屏幕边缘高亮",
         "Name[zh_TW]": "螢幕角落"
     }
