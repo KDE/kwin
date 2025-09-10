@@ -2714,13 +2714,9 @@ public:
         if (!seat->isDragTouch()) {
             return false;
         }
-        if (m_touchId < 0) {
-            // We take for now the first id appearing as a move after a drag
-            // started. We can optimize by specifying the id the drag is
-            // associated with by implementing a key-value getter in KWayland.
-            m_touchId = event->id;
-        }
-        if (m_touchId != event->id) {
+
+        const auto touchPoint = seat->touchPointByImplicitGrabSerial(*seat->dragSerial());
+        if (!touchPoint || touchPoint->id != event->id) {
             return true;
         }
 
@@ -2767,11 +2763,22 @@ public:
             return false;
         }
         seat->setTimestamp(event->time);
-        seat->notifyTouchUp(event->id);
-        if (m_touchId == event->id) {
-            m_touchId = -1;
+        const auto touchPoint = seat->touchPointByImplicitGrabSerial(*seat->dragSerial());
+        if (touchPoint && touchPoint->id == event->id) {
+            seat->endDrag();
             raiseDragTarget();
         }
+        seat->notifyTouchUp(event->id);
+        return true;
+    }
+    bool touchCancel() override
+    {
+        auto seat = waylandServer()->seat();
+        if (!seat->isDragTouch()) {
+            return false;
+        }
+        seat->cancelDrag();
+        seat->notifyTouchCancel();
         return true;
     }
     bool keyboardKey(KeyboardKeyEvent *event) override
@@ -2933,7 +2940,6 @@ private:
         }
     }
 
-    qint32 m_touchId = -1;
     std::optional<QPointF> m_lastPos = std::nullopt;
     QPointer<Window> m_dragTarget;
     QTimer m_raiseTimer;

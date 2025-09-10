@@ -39,10 +39,11 @@ class TouchPoint : public QObject
 {
     Q_OBJECT
 public:
-    TouchPoint(quint32 serial, SurfaceInterface *surface, SeatInterface *seat);
+    TouchPoint(qint32 id, quint32 serial, SurfaceInterface *surface, SeatInterface *seat);
 
     void setSurfacePosition(const QPointF &offset);
 
+    qint32 id;
     quint32 serial = 0;
     QPointer<ClientConnection> client;
     QPointer<SurfaceInterface> surface;
