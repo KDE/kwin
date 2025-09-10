@@ -6,7 +6,7 @@
 # Henrique Pinto <stampede@coltec.ufmg.br>, 2003.
 # Lisiane Sztoltz Teixeira <lisiane@conectiva.com.br>, 2004.
 # Lisiane Sztoltz Teixeira <lisiane@kdemail.net>, 2004, 2005.
-# Marcus Gama <marcus.gama@gmail.com>, 2004, 2012.
+# SPDX-FileCopyrightText: 2004, 2012, 2025 Marcus Gama <marcus.gama@gmail.com>
 # Diniz Bortolotto <diniz.bortolotto@gmail.com>, 2007, 2008.
 # doutor.zero <doutor.zero@gmail.com>, 2007.
 # Fernando Boaglio <boaglio@kde.org>, 2008.
@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-09 00:59+0000\n"
-"PO-Revision-Date: 2025-08-20 20:36-0300\n"
-"Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
+"PO-Revision-Date: 2025-09-09 08:23-0300\n"
+"Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -664,12 +664,10 @@ msgstr "Gesto de deslizar cancelado"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "Início do pegar"
 
 #: debug_console.cpp:467
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "Contagem de dedos"
@@ -678,15 +676,13 @@ msgstr "Contagem de dedos"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "Fim do pegar"
 
 #: debug_console.cpp:490
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "Pinça cancelada"
+msgstr "Pegada cancelada"
 
 #: debug_console.cpp:502
 #, kde-format

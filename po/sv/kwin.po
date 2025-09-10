@@ -12,14 +12,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-09 00:59+0000\n"
-"PO-Revision-Date: 2025-07-28 22:41+0200\n"
+"PO-Revision-Date: 2025-09-09 16:03+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.04.2\n"
+"X-Generator: Lokalize 25.08.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -646,12 +646,10 @@ msgstr "Svep avbrutet"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "Starta håll"
 
 #: debug_console.cpp:467
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "Antal fingrar"
@@ -660,15 +658,13 @@ msgstr "Antal fingrar"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "Håll avslutad"
 
 #: debug_console.cpp:490
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "Kläm avbruten"
+msgstr "Håll avbruten"
 
 #: debug_console.cpp:502
 #, kde-format

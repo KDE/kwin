@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-09 00:59+0000\n"
-"PO-Revision-Date: 2025-07-08 04:00+0100\n"
+"PO-Revision-Date: 2025-09-09 22:18+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 25.04.2\n"
+"X-Generator: Lokalize 25.08.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -660,29 +660,25 @@ msgstr "Deslizamiento cancelado"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "Inicio de pulsación"
 
 #: debug_console.cpp:467
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
-msgstr "Contador de dedos"
+msgstr "Número de dedos"
 
 #: debug_console.cpp:478
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "Fin de pulsación"
 
 #: debug_console.cpp:490
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "Pellizco cancelado"
+msgstr "Pulsación cancelada"
 
 #: debug_console.cpp:502
 #, kde-format
