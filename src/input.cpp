@@ -2688,17 +2688,7 @@ public:
         if (seat->isDragPointer()) {
             return true;
         }
-        if (!seat->isDragTouch()) {
-            return false;
-        }
-        if (m_touchId != event->id) {
-            return true;
-        }
-        Window *window = input()->findToplevel(event->pos);
-        seat->setTimestamp(event->time);
-        seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), event->id, event->pos);
-        m_lastPos = event->pos;
-        return true;
+        return seat->isDragTouch();
     }
     bool touchMotion(TouchMotionEvent *event) override
     {
