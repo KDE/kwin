@@ -949,10 +949,6 @@ void SeatInterface::notifyTouchCancel()
         d->touch->sendCancel(touchPoint->surface);
     }
 
-    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch) {
-        // cancel the drag, don't drop. serial does not matter
-        cancelDrag();
-    }
     d->touchPoints.clear();
 }
 
@@ -976,8 +972,9 @@ TouchPoint *SeatInterface::touchPointByImplicitGrabSerial(quint32 serial) const
     return nullptr;
 }
 
-TouchPoint::TouchPoint(quint32 serial, SurfaceInterface *surface, SeatInterface *seat)
-    : serial(serial)
+TouchPoint::TouchPoint(qint32 id, quint32 serial, SurfaceInterface *surface, SeatInterface *seat)
+    : id(id)
+    , serial(serial)
     , client(surface->client())
     , surface(surface)
     , seat(seat)
@@ -1002,7 +999,7 @@ TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPoi
     const quint32 serial = display()->nextSerial();
     d->touch->sendDown(effectiveTouchedSurface, id, serial, pos);
 
-    auto touchPoint = std::make_unique<TouchPoint>(serial, surface, this);
+    auto touchPoint = std::make_unique<TouchPoint>(id, serial, surface, this);
     touchPoint->position = globalPosition;
     touchPoint->offset = surfacePosition;
     touchPoint->transformation = QMatrix4x4();
@@ -1028,9 +1025,7 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
     TouchPoint *touchPoint = it->second.get();
     touchPoint->position = globalPosition;
 
-    if (isDragTouch()) {
-        // handled by DataDevice
-    } else if (touchPoint->surface) {
+    if (touchPoint->surface) {
         const auto [effectiveTouchedSurface, pos] = touchPoint->surface->mapToInputSurface(globalPosition - touchPoint->offset);
         d->touch->sendMotion(effectiveTouchedSurface, id, pos);
     }
@@ -1052,11 +1047,6 @@ void SeatInterface::notifyTouchUp(qint32 id)
     }
 
     TouchPoint *touchPoint = it->second.get();
-    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && d->drag.dragImplicitGrabSerial == touchPoint->serial) {
-        // the implicitly grabbing touch point has been upped
-        endDrag();
-    }
-
     if (touchPoint->client) {
         d->touch->sendUp(touchPoint->client, id, d->display->nextSerial());
     }
