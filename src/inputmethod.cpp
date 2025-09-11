@@ -37,6 +37,7 @@
 #include "wayland/textinput_v3.h"
 #include "xkb.h"
 
+#include <KDesktopFile>
 #include <KLocalizedString>
 #include <KShell>
 
@@ -958,6 +959,12 @@ void InputMethod::updateInputPanelState()
         return;
     }
     t->setInputPanelState(m_panel && m_panel->isShown(), overlap.toRect());
+}
+
+void InputMethod::setInputMethodDesktopFile(const QString &desktopFile)
+{
+    KDesktopFile file(desktopFile);
+    kwinApp()->inputMethod()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
 }
 
 void InputMethod::setInputMethodCommand(const QString &command)

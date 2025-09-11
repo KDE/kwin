@@ -171,24 +171,12 @@ void ApplicationWayland::performStartup()
     startSession();
 }
 
-void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteArrayList &names)
-{
-    if (group.name() == "Wayland" && names.contains("InputMethod")) {
-        KDesktopFile file(group.readPathEntry("InputMethod", QString()));
-        kwinApp()->inputMethod()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
-    }
-}
-
 void ApplicationWayland::startSession()
 {
     KSharedConfig::Ptr kwinSettings = kwinApp()->config();
     m_settingsWatcher = KConfigWatcher::create(kwinSettings);
-    connect(m_settingsWatcher.data(), &KConfigWatcher::configChanged, this, &ApplicationWayland::refreshSettings);
-
     if (!m_inputMethodServerToStart.isEmpty()) {
         kwinApp()->inputMethod()->setInputMethodCommand(m_inputMethodServerToStart);
-    } else {
-        refreshSettings(kwinSettings->group(QStringLiteral("Wayland")), {"InputMethod"});
     }
 
     // start session

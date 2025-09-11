@@ -74,7 +74,6 @@ protected:
 
 private:
     void startSession();
-    void refreshSettings(const KConfigGroup &group, const QByteArrayList &names);
 
     QStringList m_applicationsToStart;
     QString m_inputMethodServerToStart;

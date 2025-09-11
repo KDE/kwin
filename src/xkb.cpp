@@ -23,6 +23,7 @@
 // xkbcommon
 #include <xkbcommon/xkbcommon-compose.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
+#include <xkbcommon/xkbregistry.h>
 // system
 #include "main.h"
 #include <bitset>
@@ -603,6 +604,7 @@ xkb_keymap *Xkb::loadKeymapFromConfig()
     applyEnvironmentRules(ruleNames);
 
     m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
+    m_variantList = QString::fromLatin1(ruleNames.variant).split(QLatin1Char(','));
 
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
@@ -612,6 +614,7 @@ xkb_keymap *Xkb::loadDefaultKeymap()
     xkb_rule_names ruleNames = {};
     applyEnvironmentRules(ruleNames);
     m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
+    m_variantList = QString::fromLatin1(ruleNames.variant).split(QLatin1Char(','));
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
@@ -1017,6 +1020,10 @@ bool Xkb::switchToLayout(xkb_layout_index_t layout)
     xkb_state_update_mask(m_state, depressed, latched, locked, 0, 0, layout);
     updateModifiers();
     forwardModifiers();
+
+    const QString layoutFullName = m_layoutList[layout] + u'_' + m_variantList[layout];
+    const QString desktopFile = kwinApp()->inputConfig()->group("KeyboardInputMethod").readEntry(layoutFullName, QString());
+    kwinApp()->inputMethod()->setInputMethodDesktopFile(desktopFile);
     return true;
 }
 
