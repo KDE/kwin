@@ -354,8 +354,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         if (m_mouseTracking != MouseTrackingDisabled && m_focusDelay > 0) {
             // Wait some time for the mouse before doing the switch. This serves as threshold
             // to prevent the focus from jumping around to much while working with the mouse.
-            const int msecs = m_lastMouseEvent.msecsTo(m_lastFocusEvent);
-            acceptFocus = msecs > m_focusDelay;
+            acceptFocus = m_lastMouseEvent.isNull() || m_lastMouseEvent.msecsTo(m_lastFocusEvent) > m_focusDelay;
         }
         if (acceptFocus) {
             m_xTranslation = -int(m_focusPoint->x() * (m_zoom - 1.0));
