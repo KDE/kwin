@@ -63,6 +63,7 @@ public:
 
     InputPanelV1Window *panel() const;
     void setPanel(InputPanelV1Window *panel);
+    void setInputMethodDesktopFile(const QString &path);
     void setInputMethodCommand(const QString &path);
 
     InputMethodGrabV1 *keyboardGrab();
