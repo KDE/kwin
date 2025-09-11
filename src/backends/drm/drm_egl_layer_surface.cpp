@@ -515,7 +515,7 @@ std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu
     allowModifiers &= m_gpu == gpu;
 #endif
     const bool linearSupported = modifiers.contains(DRM_FORMAT_MOD_LINEAR);
-    const bool preferLinear = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Linear;
+    const bool preferLinear = importMode == MultiGpuImportMode::DumbBuffer;
     const bool forceLinear = importMode == MultiGpuImportMode::LinearDmabuf || (importMode != MultiGpuImportMode::None && importMode != MultiGpuImportMode::DumbBuffer && !allowModifiers);
     if (forceLinear && !linearSupported) {
         return nullptr;

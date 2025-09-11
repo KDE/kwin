@@ -31,13 +31,11 @@ namespace KWin
 
 static EglGbmLayerSurface::BufferTarget targetFor(DrmGpu *gpu, DrmPlane::TypeIndex planeType)
 {
-    if (planeType != DrmPlane::TypeIndex::Cursor) {
+    if (gpu->isVirtualMachine() && planeType == DrmPlane::TypeIndex::Cursor) {
+        return EglGbmLayerSurface::BufferTarget::Dumb;
+    } else {
         return EglGbmLayerSurface::BufferTarget::Normal;
     }
-    if (gpu->atomicModeSetting() && !gpu->isVirtualMachine()) {
-        return EglGbmLayerSurface::BufferTarget::Linear;
-    }
-    return EglGbmLayerSurface::BufferTarget::Dumb;
 }
 
 EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPlane *plane)

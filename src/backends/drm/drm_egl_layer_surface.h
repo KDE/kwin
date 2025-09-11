@@ -46,7 +46,6 @@ class EglGbmLayerSurface : public QObject
 public:
     enum class BufferTarget {
         Normal,
-        Linear,
         Dumb
     };
     explicit EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
