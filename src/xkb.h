@@ -161,6 +161,7 @@ private:
     xkb_context *m_context;
     xkb_keymap *m_keymap;
     QStringList m_layoutList;
+    QStringList m_variantList;
     xkb_state *m_state;
     xkb_mod_index_t m_shiftModifier;
     xkb_mod_index_t m_capsModifier;
