@@ -633,7 +633,7 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
     } else {
         state = KeyboardKeyState::Released;
     }
-    waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state);
+    waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state, waylandServer()->display()->nextSerial());
 }
 
 void InputMethod::commitString(qint32 serial, const QString &text)
@@ -675,13 +675,13 @@ void InputMethod::commitString(qint32 serial, const QString &text)
                     continue;
                 }
                 waylandServer()->seat()->keyboard()->setKeymap(temporaryKeymap);
-                waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Pressed);
-                waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Released);
+                waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
+                waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
                 waylandServer()->seat()->keyboard()->setKeymap(input()->keyboard()->xkb()->keymapContents());
             } else {
                 waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers , 0, 0, input()->keyboard()->xkb()->currentLayout());
-                waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Pressed);
-                waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Released);
+                waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
+                waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
             }
         }
 
@@ -859,7 +859,8 @@ void InputMethod::key(quint32 /*serial*/, quint32 time, quint32 keyCode, bool pr
     }
 
     waylandServer()->seat()->notifyKeyboardKey(keyCode,
-                                               pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released);
+                                               pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released,
+                                               waylandServer()->display()->nextSerial());
 }
 
 void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)

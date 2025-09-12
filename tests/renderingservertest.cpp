@@ -171,7 +171,7 @@ void CompositorWindow::keyPressEvent(QKeyEvent *event)
         updateFocus();
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Pressed);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Pressed, m_seat->display()->nextSerial());
 }
 
 void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
@@ -181,7 +181,7 @@ void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
         return;
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Released);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Released, m_seat->display()->nextSerial());
 }
 
 void CompositorWindow::mouseMoveEvent(QMouseEvent *event)

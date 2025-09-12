@@ -522,7 +522,7 @@ public:
     void setFocusedKeyboardSurface(SurfaceInterface *surface, const QList<quint32> &keys = {});
     SurfaceInterface *focusedKeyboardSurface() const;
     KeyboardInterface *keyboard() const;
-    void notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state);
+    void notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state, uint32_t serial);
     void notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
     ///@}
 

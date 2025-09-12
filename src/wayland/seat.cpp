@@ -922,12 +922,12 @@ KeyboardInterface *SeatInterface::keyboard() const
     return d->keyboard.get();
 }
 
-void SeatInterface::notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state)
+void SeatInterface::notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state, uint32_t serial)
 {
     if (!d->keyboard) {
         return;
     }
-    d->keyboard->sendKey(keyCode, state);
+    d->keyboard->sendKey(keyCode, state, serial);
 }
 
 void SeatInterface::notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)

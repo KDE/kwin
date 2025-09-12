@@ -16,10 +16,12 @@
 #include "qabstracteventdispatcher.h"
 #include "qsocketnotifier.h"
 #include "utils/xcbutils.h"
+#include "wayland/display.h"
 #include "wayland/keyboard.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
+
 #include <KConfigGroup>
 #include <linux/input.h>
 
@@ -361,8 +363,8 @@ QList<KeyAction> X11KeyReadTest::recievedX11EventsForInput(const QList<KeyAction
     }
     // special case, explicitly send key 0, to use as a fence
     ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
-    waylandServer()->seat()->keyboard()->sendKey(0, KeyboardKeyState::Pressed, xwaylandClient);
-    waylandServer()->seat()->keyboard()->sendKey(0, KeyboardKeyState::Released, xwaylandClient);
+    waylandServer()->seat()->keyboard()->sendKey(0, KeyboardKeyState::Pressed, xwaylandClient, waylandServer()->display()->nextSerial());
+    waylandServer()->seat()->keyboard()->sendKey(0, KeyboardKeyState::Released, xwaylandClient, waylandServer()->display()->nextSerial());
 
     bool fenceComplete = fenceEventSpy.wait();
     Q_ASSERT(fenceComplete);

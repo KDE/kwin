@@ -316,7 +316,14 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
         .modifiers = m_xkb->modifiers(),
         .modifiersRelevantForGlobalShortcuts = m_xkb->modifiersRelevantForGlobalShortcuts(key),
         .timestamp = time,
+        .serial = waylandServer()->display()->nextSerial(),
     };
+    if (state == KeyboardKeyState::Pressed && !std::ranges::contains(s_modifierKeys, event.key)) {
+        input()->setLastInteractionSerial(event.serial);
+        if (auto f = pickFocus()) {
+            f->setLastUsageSerial(event.serial);
+        }
+    }
 
     m_input->processSpies(&InputEventSpy::keyboardKey, &event);
     m_input->processFilters(&InputEventFilter::keyboardKey, &event);
@@ -332,12 +339,6 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
 
     if (event.modifiersRelevantForGlobalShortcuts == Qt::KeyboardModifier::NoModifier && state != KeyboardKeyState::Released) {
         m_keyboardLayout->checkLayoutChange(previousLayout);
-    }
-    if (state == KeyboardKeyState::Pressed && !std::ranges::contains(s_modifierKeys, event.key)) {
-        input()->setLastInteractionSerial(waylandServer()->seat()->display()->serial());
-        if (auto f = pickFocus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
-        }
     }
 }
 

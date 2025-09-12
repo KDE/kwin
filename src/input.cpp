@@ -400,7 +400,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyKeyboardKey(event->nativeScanCode, event->state);
+        seat->notifyKeyboardKey(event->nativeScanCode, event->state, event->serial);
         return true;
     }
     bool touchDown(TouchDownEvent *event) override
@@ -2118,7 +2118,7 @@ public:
         input()->keyboard()->update();
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
-        seat->notifyKeyboardKey(event->nativeScanCode, event->state);
+        seat->notifyKeyboardKey(event->nativeScanCode, event->state, event->serial);
         return true;
     }
     bool touchDown(TouchDownEvent *event) override
