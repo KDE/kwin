@@ -101,7 +101,7 @@ bool PopupInputFilter::keyboardKey(KeyboardKeyEvent *event)
     } else if (qobject_cast<WaylandWindow *>(last)) {
         if (!passToInputMethod(event)) {
             waylandServer()->seat()->setTimestamp(event->timestamp);
-            waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, event->state);
+            waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, event->state, event->serial);
         }
     }
 

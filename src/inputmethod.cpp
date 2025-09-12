@@ -610,7 +610,7 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
     } else {
         state = KeyboardKeyState::Released;
     }
-    waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state);
+    waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state, waylandServer()->display()->nextSerial());
 }
 
 void InputMethod::commitString(qint32 serial, const QString &text)
@@ -645,7 +645,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
 
         // First, send all the extracted keys as pressed keys to the client.
         for (const auto &key : keys) {
-            waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Pressed);
+            waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
         }
 
         // Then, send key release for those keys in reverse.
@@ -656,7 +656,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
             auto key = *itr;
             QMetaObject::invokeMethod(
                 this, [key]() {
-                waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Released);
+                waylandServer()->seat()->notifyKeyboardKey(key, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
             }, Qt::QueuedConnection);
         }
     }
@@ -831,7 +831,8 @@ void InputMethod::key(quint32 /*serial*/, quint32 time, quint32 keyCode, bool pr
     }
 
     waylandServer()->seat()->notifyKeyboardKey(keyCode,
-                                               pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released);
+                                               pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released,
+                                               waylandServer()->display()->nextSerial());
 }
 
 void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)

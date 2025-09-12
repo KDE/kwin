@@ -23,6 +23,7 @@
 #include "main_wayland.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
+#include "wayland/display.h"
 #include "wayland_server.h"
 #include "waylandwindow.h"
 #include "workspace.h"
@@ -101,7 +102,8 @@ public:
                 // Xwayland client and the state is correctly restored.
                 for (auto it = m_states.constBegin(); it != m_states.constEnd(); ++it) {
                     if (it.value() == KeyboardKeyState::Pressed) {
-                        keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
+                        keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection(),
+                                          waylandServer()->display()->nextSerial());
                     }
                 }
                 m_modifiers = {};
@@ -267,7 +269,7 @@ public:
 
         auto xkb = input()->keyboard()->xkb();
 
-        keyboard->sendKey(event->nativeScanCode, event->state, xwaylandClient);
+        keyboard->sendKey(event->nativeScanCode, event->state, xwaylandClient, event->serial);
 
         bool changed = false;
         if (m_modifiers.depressed != xkb->modifierState().depressed) {

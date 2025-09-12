@@ -152,6 +152,7 @@ struct KeyboardKeyEvent
     Qt::KeyboardModifiers modifiers;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts;
     std::chrono::microseconds timestamp;
+    uint32_t serial;
 };
 
 struct SwitchEvent
