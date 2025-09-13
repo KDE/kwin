@@ -28,6 +28,8 @@
 #include <QLoggingCategory>
 #include <QStack>
 
+#include <KConfigWatcher>
+
 #include <functional>
 
 #if KWIN_BUILD_X11
@@ -1079,6 +1081,7 @@ protected:
     void registerPropertyType(long atom, bool reg);
     void destroyEffect(Effect *effect);
     void reconfigureEffects();
+    void configChanged(const KConfigGroup &group, const QByteArrayList &names);
 
     typedef QList<Effect *> EffectsList;
     typedef EffectsList::const_iterator EffectsIterator;
@@ -1112,6 +1115,7 @@ protected:
     QList<Effect *> m_grabbedMouseEffects;
     EffectLoader *m_effectLoader;
     std::unique_ptr<WindowPropertyNotifyX11Filter> m_x11WindowPropertyNotify;
+    KConfigWatcher::Ptr m_configWatcher;
 };
 
 /**

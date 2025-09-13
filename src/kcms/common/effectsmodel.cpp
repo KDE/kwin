@@ -495,8 +495,6 @@ void EffectsModel::save()
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), QStringLiteral("Plugins"));
 
-    QList<EffectData> dirtyEffects;
-
     for (EffectData &effect : m_effects) {
         if (!effect.changed) {
             continue;
@@ -511,41 +509,13 @@ void EffectsModel::save()
             ? effect.status == Status::EnabledUndeterminded
             : shouldEnable == effect.enabledByDefault;
         if (restoreToDefault) {
-            kwinConfig.deleteEntry(key);
+            kwinConfig.deleteEntry(key, KConfig::Notify);
         } else {
-            kwinConfig.writeEntry(key, shouldEnable);
+            kwinConfig.writeEntry(key, shouldEnable, KConfig::Notify);
         }
-
-        dirtyEffects.append(effect);
-    }
-
-    if (dirtyEffects.isEmpty()) {
-        return;
     }
 
     kwinConfig.sync();
-
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
-                                         QStringLiteral("/Effects"),
-                                         QDBusConnection::sessionBus());
-
-    if (!interface.isValid()) {
-        return;
-    }
-
-    // Unload effects first, it's need to ensure that switching between mutually exclusive
-    // effects works as expected, for example so global shortcuts are handed over, etc.
-    auto split = std::partition(dirtyEffects.begin(), dirtyEffects.end(), [](const EffectData &data) {
-        return data.status == Status::Disabled;
-    });
-
-    for (auto it = dirtyEffects.begin(); it != split; ++it) {
-        interface.unloadEffect(it->serviceName);
-    }
-
-    for (auto it = split; it != dirtyEffects.end(); ++it) {
-        interface.loadEffect(it->serviceName);
-    }
 }
 
 void EffectsModel::defaults(const QModelIndex &index)

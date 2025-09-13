@@ -148,6 +148,10 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
         effectsChanged();
     });
     m_effectLoader->setConfig(kwinApp()->config());
+
+    m_configWatcher = KConfigWatcher::create(kwinApp()->config());
+    connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, &EffectsHandler::configChanged);
+
     new EffectsAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject(QStringLiteral("/Effects"), this);
@@ -1655,6 +1659,44 @@ bool EffectsHandler::isInputPanelOverlay() const
 QQmlEngine *EffectsHandler::qmlEngine() const
 {
     return Scripting::self()->qmlEngine();
+}
+
+void EffectsHandler::configChanged(const KConfigGroup &group, const QByteArrayList &names)
+{
+    if (group.name() != QLatin1String("Plugins")) {
+        return;
+    }
+
+    QStringList toLoad;
+    QStringList toUnload;
+
+    for (const QByteArray &key : names) {
+        if (!key.endsWith("Enabled")) {
+            continue;
+        }
+        const QString effectName = QString::fromUtf8(key).replace(QStringLiteral("Enabled"), QString());
+        auto md = m_effectLoader->findEffect(effectName);
+
+        if (md.isValid()) {
+            const auto result = m_effectLoader->readConfig(effectName, md.isEnabledByDefault());
+
+            if (result.testFlag(LoadEffectFlag::Load)) {
+                toLoad << effectName;
+            } else {
+                toUnload << effectName;
+            }
+        }
+    }
+
+    // Unload effects first, it's need to ensure that switching between mutually exclusive
+    // effects works as expected, for example so global shortcuts are handed over, etc.
+    for (const QString &effect : std::as_const(toUnload)) {
+        unloadEffect(effect);
+    }
+
+    for (const QString &effect : std::as_const(toLoad)) {
+        loadEffect(effect);
+    }
 }
 
 EffectsHandler *effects = nullptr;
