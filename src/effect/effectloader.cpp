@@ -485,6 +485,16 @@ void EffectLoader::clear()
     }
 }
 
+KPluginMetaData EffectLoader::findEffect(const QString &name) const
+{
+    for (const auto loader : m_loaders) {
+        if (auto result = loader->findEffect(name); result.isValid()) {
+            return result;
+        }
+    }
+    return {};
+}
+
 } // namespace KWin
 
 #include "moc_effectloader.cpp"
