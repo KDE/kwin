@@ -70,6 +70,7 @@ static EffectsModel::Status effectStatus(bool enabled)
 
 EffectsModel::EffectsModel(QObject *parent)
     : QAbstractItemModel(parent)
+    , m_config(KSharedConfig::openConfig("kwinrc"))
 {
 }
 
@@ -376,7 +377,7 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
 
 void EffectsModel::load(LoadOptions options)
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), QStringLiteral("Plugins"));
+    KConfigGroup kwinConfig(m_config, QStringLiteral("Plugins"));
 
     m_pendingEffects.clear();
     loadBuiltInEffects(kwinConfig);
@@ -493,7 +494,7 @@ void EffectsModel::updateEffectStatus(const QModelIndex &rowIndex, Status effect
 
 void EffectsModel::save()
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), QStringLiteral("Plugins"));
+    KConfigGroup kwinConfig(m_config, QStringLiteral("Plugins"));
 
     for (EffectData &effect : m_effects) {
         if (!effect.changed) {
@@ -505,13 +506,26 @@ void EffectsModel::save()
 
         const QString key = effect.serviceName + QStringLiteral("Enabled");
         const bool shouldEnable = (effect.status != Status::Disabled);
-        const bool restoreToDefault = effect.enabledByDefaultFunction
-            ? effect.status == Status::EnabledUndeterminded
-            : shouldEnable == effect.enabledByDefault;
-        if (restoreToDefault) {
-            kwinConfig.deleteEntry(key, KConfig::Notify);
+        if (kwinConfig.hasDefault(key)) {
+            kwinConfig.config()->setReadDefaults(true);
+            if (shouldEnable == kwinConfig.readEntry(key, false)) {
+                kwinConfig.revertToDefault(key, KConfig::Notify);
+            } else {
+                kwinConfig.writeEntry(key, shouldEnable, KConfig::Notify);
+            }
+            kwinConfig.config()->setReadDefaults(false);
+        } else if (effect.enabledByDefaultFunction) {
+            if (effect.status == Status::EnabledUndeterminded) {
+                kwinConfig.revertToDefault(key, KConfig::Notify);
+            } else {
+                kwinConfig.writeEntry(key, shouldEnable, KConfig::Notify);
+            }
         } else {
-            kwinConfig.writeEntry(key, shouldEnable, KConfig::Notify);
+            if (shouldEnable == effect.enabledByDefault) {
+                kwinConfig.revertToDefault(key, KConfig::Notify);
+            } else {
+                kwinConfig.writeEntry(key, shouldEnable, KConfig::Notify);
+            }
         }
     }
 
@@ -521,7 +535,14 @@ void EffectsModel::save()
 void EffectsModel::defaults(const QModelIndex &index)
 {
     const auto &effect = m_effects.at(index.row());
-    if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
+    KConfigGroup kwinConfig(m_config, QStringLiteral("Plugins"));
+
+    if (kwinConfig.hasDefault(effect.serviceName + "Enabled")) {
+        kwinConfig.config()->setReadDefaults(true);
+        const bool enabled = kwinConfig.readEntry(effect.serviceName + "Enabled", false);
+        updateEffectStatus(index, enabled ? Status::Enabled : Status::Disabled);
+        kwinConfig.config()->setReadDefaults(false);
+    } else if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
         updateEffectStatus(index, Status::EnabledUndeterminded);
     } else if (static_cast<bool>(effect.status) != effect.enabledByDefault) {
         updateEffectStatus(index, effect.enabledByDefault ? Status::Enabled : Status::Disabled);
@@ -538,10 +559,19 @@ void EffectsModel::defaults()
 bool EffectsModel::isDefaults(const QModelIndex &index) const
 {
     const auto &effect = m_effects.at(index.row());
+
+    KConfigGroup kwinConfig(m_config, QStringLiteral("Plugins"));
+
+    const QString enabledKey = QStringLiteral("%1Enabled").arg(effect.serviceName);
+
+    kwinConfig.config()->setReadDefaults(true);
+    bool enabledByDefault = kwinConfig.readEntry(enabledKey, effect.enabledByDefault);
+    kwinConfig.config()->setReadDefaults(false);
+
     if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
         return false;
     }
-    if (static_cast<bool>(effect.status) != effect.enabledByDefault) {
+    if (static_cast<bool>(effect.status) != enabledByDefault) {
         return false;
     }
     return true;
