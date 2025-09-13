@@ -279,6 +279,7 @@ private:
     QStringList m_excludeExclusiveGroups;
     QStringList m_excludeEffects;
     int m_lastSerial = -1;
+    KSharedConfig::Ptr m_config;
 
     Q_DISABLE_COPY(EffectsModel)
 };
