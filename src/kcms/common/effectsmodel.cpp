@@ -507,13 +507,27 @@ void EffectsModel::save()
 
         const QString key = effect.serviceName + QStringLiteral("Enabled");
         const bool shouldEnable = (effect.status != Status::Disabled);
-        const bool restoreToDefault = effect.enabledByDefaultFunction
-            ? effect.status == Status::EnabledUndeterminded
-            : shouldEnable == effect.enabledByDefault;
-        if (restoreToDefault) {
-            kwinConfig.deleteEntry(key);
+
+        if (kwinConfig.hasDefault(key)) {
+            kwinConfig.config()->setReadDefaults(true);
+            if (shouldEnable == kwinConfig.readEntry(key, false)) {
+                kwinConfig.revertToDefault(key);
+            } else {
+                kwinConfig.writeEntry(key, shouldEnable);
+            }
+            kwinConfig.config()->setReadDefaults(false);
+        } else if (effect.enabledByDefaultFunction) {
+            if (effect.status == Status::EnabledUndeterminded) {
+                kwinConfig.revertToDefault(key);
+            } else {
+                kwinConfig.writeEntry(key, shouldEnable);
+            }
         } else {
-            kwinConfig.writeEntry(key, shouldEnable);
+            if (shouldEnable == effect.enabledByDefault) {
+                kwinConfig.revertToDefault(key);
+            } else {
+                kwinConfig.writeEntry(key, shouldEnable);
+            }
         }
 
         dirtyEffects.append(effect);
@@ -551,7 +565,14 @@ void EffectsModel::save()
 void EffectsModel::defaults(const QModelIndex &index)
 {
     const auto &effect = m_effects.at(index.row());
-    if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), QStringLiteral("Plugins"));
+
+    if (kwinConfig.hasDefault(effect.serviceName + "Enabled")) {
+        kwinConfig.config()->setReadDefaults(true);
+        const bool enabled = kwinConfig.readEntry(effect.serviceName + "Enabled", false);
+        updateEffectStatus(index, enabled ? Status::Enabled : Status::Disabled);
+        kwinConfig.config()->setReadDefaults(false);
+    } else if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
         updateEffectStatus(index, Status::EnabledUndeterminded);
     } else if (static_cast<bool>(effect.status) != effect.enabledByDefault) {
         updateEffectStatus(index, effect.enabledByDefault ? Status::Enabled : Status::Disabled);
@@ -568,6 +589,25 @@ void EffectsModel::defaults()
 bool EffectsModel::isDefaults(const QModelIndex &index) const
 {
     const auto &effect = m_effects.at(index.row());
+
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), QStringLiteral("Plugins"));
+
+    const QString enabledKey = QStringLiteral("%1Enabled").arg(effect.serviceName);
+
+    if (kwinConfig.hasDefault(enabledKey)) {
+        kwinConfig.config()->setReadDefaults(true);
+        const bool defaultEnabled = kwinConfig.readEntry(enabledKey, false);
+        kwinConfig.config()->setReadDefaults(false);
+
+        if (defaultEnabled && effect.status == Status::Enabled) {
+            return true;
+        }
+
+        if (!defaultEnabled && effect.status == Status::Disabled) {
+            return true;
+        }
+    }
+
     if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
         return false;
     }
