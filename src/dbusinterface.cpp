@@ -81,16 +81,6 @@ QString DBusInterface::activeOutputName()
     return Workspace::self()->activeOutput()->name();
 }
 
-bool DBusInterface::startActivity(const QString &in0)
-{
-    return false;
-}
-
-bool DBusInterface::stopActivity(const QString &in0)
-{
-    return false;
-}
-
 int DBusInterface::currentDesktop()
 {
     return VirtualDesktopManager::self()->current();

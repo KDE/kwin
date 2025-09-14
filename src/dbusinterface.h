@@ -55,8 +55,6 @@ public Q_SLOTS: // METHODS
     void previousDesktop();
     Q_NOREPLY void reconfigure();
     bool setCurrentDesktop(int desktop);
-    bool startActivity(const QString &in0);
-    bool stopActivity(const QString &in0);
     QString supportInformation();
     QString activeOutputName();
     Q_NOREPLY void showDebugConsole();

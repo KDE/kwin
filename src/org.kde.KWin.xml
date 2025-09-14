@@ -18,14 +18,6 @@
     <method name="nextDesktop"/>
     <method name="previousDesktop"/>
     <signal name="reloadConfig"/>
-    <method name="stopActivity">
-      <arg type="s" direction="in"/>
-      <arg type="b" direction="out"/>
-    </method>
-    <method name="startActivity">
-      <arg type="s" direction="in"/>
-      <arg type="b" direction="out"/>
-    </method>
     <method name="supportInformation">
         <arg type="s" direction="out"/>
     </method>
