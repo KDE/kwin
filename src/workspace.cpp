@@ -124,7 +124,7 @@ Workspace::Workspace()
 
 #if KWIN_BUILD_ACTIVITIES
     if (kwinApp()->usesKActivities()) {
-        m_activities = std::make_unique<Activities>(kwinApp()->config());
+        m_activities = std::make_unique<Activities>();
     }
     if (m_activities) {
         connect(m_activities.get(), &Activities::currentChanged, this, &Workspace::updateCurrentActivity);
