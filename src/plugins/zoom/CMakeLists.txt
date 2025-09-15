@@ -18,6 +18,6 @@ target_link_libraries(zoom PRIVATE
     KF6::I18n
 )
 
-if (HAVE_ACCESSIBILITY)
+if (KWIN_BUILD_QACCESSIBILITYCLIENT)
     target_link_libraries(zoom PRIVATE QAccessibilityClient6)
 endif()

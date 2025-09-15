@@ -142,7 +142,7 @@ private:
     double m_lastPinchProgress = 0;
 
     std::unique_ptr<TextCaretTracker> m_textCaretTracker;
-#if HAVE_ACCESSIBILITY
+#if KWIN_BUILD_QACCESSIBILITYCLIENT
     std::unique_ptr<FocusTracker> m_focusTracker;
 #endif
     std::optional<QPoint> m_focusPoint = std::nullopt;

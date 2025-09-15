@@ -13,7 +13,7 @@
 #include <QPointer>
 #include <QRectF>
 
-#if HAVE_ACCESSIBILITY
+#if KWIN_BUILD_QACCESSIBILITYCLIENT
 #include <qaccessibilityclient/registry.h>
 #endif
 
@@ -42,7 +42,7 @@ private:
 
     void tryUpdate();
 
-#if HAVE_ACCESSIBILITY
+#if KWIN_BUILD_QACCESSIBILITYCLIENT
     QAccessibleClient::Registry *m_registry = nullptr;
 #endif
     std::optional<QRectF> m_cursorRectangle;

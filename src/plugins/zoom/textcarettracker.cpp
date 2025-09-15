@@ -62,7 +62,7 @@ void TextCaretTracker::tryUpdate()
 
 void TextCaretTracker::subscribeLegacyTextCaretMoved()
 {
-#if HAVE_ACCESSIBILITY
+#if KWIN_BUILD_QACCESSIBILITYCLIENT
     // Dbus-based text caret tracking is disabled on wayland because libqaccessibilityclient has
     // blocking dbus calls, which can result in kwin_wayland lockups.
 
@@ -84,7 +84,7 @@ void TextCaretTracker::subscribeLegacyTextCaretMoved()
 
 void TextCaretTracker::unsubscribeLegacyTextCaretMoved()
 {
-#if HAVE_ACCESSIBILITY
+#if KWIN_BUILD_QACCESSIBILITYCLIENT
     if (m_registry) {
         m_registry->subscribeEventListeners(QAccessibleClient::Registry::NoEventListeners);
     }

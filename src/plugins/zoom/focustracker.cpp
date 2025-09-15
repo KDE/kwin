@@ -6,7 +6,7 @@
 
 #include "focustracker.h"
 
-#if HAVE_ACCESSIBILITY
+#if KWIN_BUILD_QACCESSIBILITYCLIENT
 
 namespace KWin
 {

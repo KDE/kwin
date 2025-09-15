@@ -220,7 +220,7 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
             trackFocus();
         }
     } else {
-#if HAVE_ACCESSIBILITY
+#if KWIN_BUILD_QACCESSIBILITYCLIENT
         m_focusTracker.reset();
 #endif
     }
@@ -676,7 +676,7 @@ void ZoomEffect::setTargetZoom(double value)
         m_cursorPoint = effects->cursorPos().toPoint();
     } else if (!newActive && oldActive) {
         m_textCaretTracker.reset();
-#if HAVE_ACCESSIBILITY
+#if KWIN_BUILD_QACCESSIBILITYCLIENT
         m_focusTracker.reset();
 #endif
         disconnect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
@@ -706,7 +706,7 @@ void ZoomEffect::trackTextCaret()
 
 void ZoomEffect::trackFocus()
 {
-#if HAVE_ACCESSIBILITY
+#if KWIN_BUILD_QACCESSIBILITYCLIENT
     // Dbus-based focus tracking is disabled on wayland because libqaccessibilityclient has
     // blocking dbus calls, which can result in kwin_wayland lockups.
 

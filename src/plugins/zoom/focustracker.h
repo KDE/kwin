@@ -8,7 +8,7 @@
 
 #include "config-kwin.h"
 
-#if HAVE_ACCESSIBILITY
+#if KWIN_BUILD_QACCESSIBILITYCLIENT
 
 #include <qaccessibilityclient/registry.h>
 
