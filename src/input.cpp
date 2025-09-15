@@ -2593,18 +2593,18 @@ public:
             });
         });
 
+        connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, [this] {
+            m_dragTarget = nullptr;
+            if (m_currentToplevelDragWindow) {
+                m_currentToplevelDragWindow->setKeepAbove(m_wasKeepAbove);
+                workspace()->takeActivity(m_currentToplevelDragWindow, Workspace::ActivityFlag::ActivityFocus | Workspace::ActivityFlag::ActivityRaise);
+                m_currentToplevelDragWindow = nullptr;
+            }
+        });
+
         m_raiseTimer.setSingleShot(true);
         m_raiseTimer.setInterval(1000);
         connect(&m_raiseTimer, &QTimer::timeout, this, &DragAndDropInputFilter::raiseDragTarget);
-
-        connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, [this] {
-            if (!m_currentToplevelDragWindow) {
-                return;
-            }
-            m_currentToplevelDragWindow->setKeepAbove(m_wasKeepAbove);
-            workspace()->takeActivity(m_currentToplevelDragWindow, Workspace::ActivityFlag::ActivityFocus | Workspace::ActivityFlag::ActivityRaise);
-            m_currentToplevelDragWindow = nullptr;
-        });
     }
 
     bool pointerMotion(PointerMotionEvent *event) override
