@@ -220,7 +220,9 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
             trackFocus();
         }
     } else {
+#if HAVE_ACCESSIBILITY
         m_focusTracker.reset();
+#endif
     }
 
     if (ZoomConfig::enableTextCaretTracking()) {
@@ -674,7 +676,9 @@ void ZoomEffect::setTargetZoom(double value)
         m_cursorPoint = effects->cursorPos().toPoint();
     } else if (!newActive && oldActive) {
         m_textCaretTracker.reset();
+#if HAVE_ACCESSIBILITY
         m_focusTracker.reset();
+#endif
         disconnect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
     }
     m_targetZoom = value;
@@ -702,6 +706,7 @@ void ZoomEffect::trackTextCaret()
 
 void ZoomEffect::trackFocus()
 {
+#if HAVE_ACCESSIBILITY
     // Dbus-based focus tracking is disabled on wayland because libqaccessibilityclient has
     // blocking dbus calls, which can result in kwin_wayland lockups.
 
@@ -712,6 +717,7 @@ void ZoomEffect::trackFocus()
 
     m_focusTracker = std::make_unique<FocusTracker>();
     connect(m_focusTracker.get(), &FocusTracker::moved, this, &ZoomEffect::moveFocus);
+#endif
 }
 
 } // namespace

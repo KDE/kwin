@@ -9,7 +9,9 @@
 #include "config-kwin.h"
 
 #include <QObject>
+#include <QPointF>
 #include <QPointer>
+#include <QRectF>
 
 #if HAVE_ACCESSIBILITY
 #include <qaccessibilityclient/registry.h>
