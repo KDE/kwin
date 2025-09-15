@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-09 00:59+0000\n"
+"POT-Creation-Date: 2025-09-15 00:43+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -3451,19 +3451,19 @@ msgstr "对话框"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:430
+#: sm.cpp:425
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "取消注销"
 
-#: sm.cpp:431
+#: sm.cpp:426
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "仍要注销"
 
-#: sm.cpp:477
+#: sm.cpp:472
 #, kde-format
 msgid ""
 "The following applications did not close:\n"

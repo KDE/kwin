@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-09 00:59+0000\n"
-"PO-Revision-Date: 2025-07-21 00:08+0200\n"
+"POT-Creation-Date: 2025-09-15 00:43+0000\n"
+"PO-Revision-Date: 2025-09-14 11:32+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -649,12 +649,10 @@ msgstr "Плъзгането е отменено"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "Захващането е започнато"
 
 #: debug_console.cpp:467
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "Брой пръсти"
@@ -663,12 +661,10 @@ msgstr "Брой пръсти"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "Захващането е завършено"
 
 #: debug_console.cpp:490
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
 msgstr "Захващането е отменено"
@@ -3480,19 +3476,19 @@ msgstr "Диалогов прозорец"
 msgid "..."
 msgstr "…"
 
-#: sm.cpp:430
+#: sm.cpp:425
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Отмяна на Излизане от сесия"
 
-#: sm.cpp:431
+#: sm.cpp:426
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Излизане от системата независимо от това"
 
-#: sm.cpp:477
+#: sm.cpp:472
 #, kde-format
 msgid ""
 "The following applications did not close:\n"

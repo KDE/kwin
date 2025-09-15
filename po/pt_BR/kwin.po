@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-09 00:59+0000\n"
-"PO-Revision-Date: 2025-09-09 08:23-0300\n"
+"POT-Creation-Date: 2025-09-15 00:43+0000\n"
+"PO-Revision-Date: 2025-09-14 08:45-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1948,7 +1948,7 @@ msgstr "maximizar"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "fullscreen"
-msgstr "tela inteira"
+msgstr "tela cheia"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:62
 #, kde-format
@@ -2016,7 +2016,7 @@ msgstr "Maximizar/restaurar a janela em execução em %1"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr "Alterar tela inteira para a janela em execução em %1"
+msgstr "Alterar tela cheia para a janela em execução em %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
@@ -2042,7 +2042,7 @@ msgstr "Ativar a janela em execução em %1"
 #: plugins/login/package/contents/ui/config.ui:17
 #, kde-format
 msgid "Fade to black (fullscreen splash screens only)"
-msgstr "Mudar para preto (apenas nas telas iniciais em tela inteira)"
+msgstr "Mudar para preto (apenas nas telas iniciais em tela cheia)"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: plugins/magiclamp/magiclamp_config.ui:36
@@ -3281,13 +3281,13 @@ msgstr "Tipo de regra do manter abaixo"
 #: rulesettings.kcfg:285
 #, kde-format
 msgid "Fullscreen"
-msgstr "Tela inteira"
+msgstr "Tela cheia"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:289
 #, kde-format
 msgid "Fullscreen rule type"
-msgstr "Tipo de regra de tela inteira"
+msgstr "Tipo de regra de tela cheia"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:296
@@ -3505,19 +3505,19 @@ msgstr "Caixa de diálogo"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:430
+#: sm.cpp:425
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Cancelar encerramento de sessão"
 
-#: sm.cpp:431
+#: sm.cpp:426
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Encerrar sessão de qualquer maneira"
 
-#: sm.cpp:477
+#: sm.cpp:472
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -3617,7 +3617,7 @@ msgid ""
 "mode off you will not be able to disable it again using the mouse: use the "
 "window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
-"Você selecionou mostrar uma janela em modo em tela inteira.\n"
+"Você selecionou mostrar uma janela em modo em tela cheia.\n"
 "Se o aplicativo sozinho não possui uma opção para desabilitar este modo, "
 "você não será capaz de desabilitar novamente, usando o mouse. Em vez disto "
 "use o menu da janela, ativado utilizando o atalho de teclado %1."
@@ -3645,7 +3645,7 @@ msgstr "Manter a&baixo das outras"
 #: useractions.cpp:238
 #, kde-format
 msgid "&Fullscreen"
-msgstr "&Tela inteira"
+msgstr "&Tela cheia"
 
 #: useractions.cpp:244
 #, kde-format
@@ -3812,7 +3812,7 @@ msgstr "Alternar entre elevar/diminuir janela"
 #: useractions.cpp:840
 #, kde-format
 msgid "Make Window Fullscreen"
-msgstr "Janela em tela inteira"
+msgstr "Janela em tela cheia"
 
 #: useractions.cpp:842
 #, kde-format
