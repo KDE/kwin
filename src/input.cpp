@@ -2595,6 +2595,7 @@ public:
 
         connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, [this] {
             m_dragTarget = nullptr;
+            m_lastPos.reset();
             if (m_currentToplevelDragWindow) {
                 m_currentToplevelDragWindow->setKeepAbove(m_wasKeepAbove);
                 workspace()->takeActivity(m_currentToplevelDragWindow, Workspace::ActivityFlag::ActivityFocus | Workspace::ActivityFlag::ActivityRaise);
@@ -2629,7 +2630,7 @@ public:
                 workspace()->takeActivity(dragTarget, Workspace::ActivityFlag::ActivityFocus);
                 m_raiseTimer.start();
             }
-            if ((pos - m_lastPos).manhattanLength() > 10) {
+            if (!m_lastPos || (pos - *m_lastPos).manhattanLength() > 10) {
                 m_lastPos = pos;
                 // reset timer to delay raising the window
                 m_raiseTimer.start();
@@ -2735,7 +2736,7 @@ public:
                 m_raiseTimer.start();
             }
 
-            if ((event->pos - m_lastPos).manhattanLength() > 10) {
+            if (!m_lastPos || (event->pos - *m_lastPos).manhattanLength() > 10) {
                 m_lastPos = event->pos;
                 // reset timer to delay raising the window
                 m_raiseTimer.start();
@@ -2821,7 +2822,7 @@ public:
                 m_raiseTimer.start();
             }
 
-            if ((event->position - m_lastPos).manhattanLength() > 10) {
+            if (!m_lastPos || (event->position - *m_lastPos).manhattanLength() > 10) {
                 m_lastPos = event->position;
                 // reset timer to delay raising the window
                 m_raiseTimer.start();
@@ -2933,7 +2934,7 @@ private:
     }
 
     qint32 m_touchId = -1;
-    QPointF m_lastPos = QPointF(-1, -1);
+    std::optional<QPointF> m_lastPos = std::nullopt;
     QPointer<Window> m_dragTarget;
     QTimer m_raiseTimer;
     QPointer<Window> m_currentToplevelDragWindow = nullptr;
