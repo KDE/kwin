@@ -39,6 +39,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 // drm
+#include <fcntl.h>
 #include <gbm.h>
 #include <libdrm/drm_mode.h>
 #include <xf86drm.h>
@@ -210,8 +211,11 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
 {
     int fd = m_session->openRestricted(fileName);
     if (fd < 0) {
-        qCWarning(KWIN_DRM) << "failed to open drm device at" << fileName;
-        return nullptr;
+        fd = ::open(fileName.toLocal8Bit(), O_RDWR | O_CLOEXEC);
+        if (fd < 0) {
+            qCWarning(KWIN_DRM) << "failed to open drm device at" << fileName;
+            return nullptr;
+        }
     }
 
     if (!drmIsKMS(fd)) {
