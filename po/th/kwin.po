@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-15 00:43+0000\n"
+"POT-Creation-Date: 2025-09-16 00:43+0000\n"
 "PO-Revision-Date: 2025-03-01 14:53+0700\n"
 "Last-Translator: Pongsakorn S. <kde@xerusion.me>\n"
 "Language-Team: Thai\n"
@@ -2963,35 +2963,35 @@ msgstr "น้อย"
 msgid "More"
 msgstr "มาก"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:81
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านซ้ายหนึ่งระดับ"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:88
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านขวาหนึ่งระดับ"
 
-#: plugins/zoom/zoom.cpp:96
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:102
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:111
+#: plugins/zoom/zoom.cpp:110
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Move Mouse to Focus"
 msgstr "การจำลองเมาส์"
 
-#: plugins/zoom/zoom.cpp:118
+#: plugins/zoom/zoom.cpp:117
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Mouse to Center"
@@ -4249,42 +4249,42 @@ msgstr "เรียกใช้งานหน้าต่าง (%1)"
 msgid "unknown"
 msgstr ""
 
-#: virtualdesktops.cpp:706 virtualdesktops.cpp:781
+#: virtualdesktops.cpp:729 virtualdesktops.cpp:808
 #, kde-format
 msgid "Desktop %1"
 msgstr "เดสก์ท็อป %1"
 
-#: virtualdesktops.cpp:788
+#: virtualdesktops.cpp:815
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "สลับไปยังพื้นที่ทำงานถัดไป"
 
-#: virtualdesktops.cpp:789
+#: virtualdesktops.cpp:816
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "สลับไปยังพื้นที่ทำงานก่อนหน้า"
 
-#: virtualdesktops.cpp:792
+#: virtualdesktops.cpp:819
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "สลับไปด้านขวาหนึ่งพื้นที่ทำงาน"
 
-#: virtualdesktops.cpp:793
+#: virtualdesktops.cpp:820
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "สลับไปด้านซ้ายหนึ่งพื้นที่ทำงาน"
 
-#: virtualdesktops.cpp:794
+#: virtualdesktops.cpp:821
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "สลับไปด้านบนหนึ่งพื้นที่ทำงาน"
 
-#: virtualdesktops.cpp:795
+#: virtualdesktops.cpp:822
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "สลับไปด้านล่างหนึ่งพื้นที่ทำงาน"
 
-#: virtualdesktops.cpp:883
+#: virtualdesktops.cpp:910
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Desktop %1"

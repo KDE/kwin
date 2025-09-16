@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-15 00:43+0000\n"
+"POT-Creation-Date: 2025-09-16 00:43+0000\n"
 "PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2901,32 +2901,32 @@ msgstr "Malpli"
 msgid "More"
 msgstr "Pli"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:81
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Movu Zomitan Areon maldekstren"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Movu Zomitan Areon dekstren"
 
-#: plugins/zoom/zoom.cpp:96
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Movu Zomitan Areon Supren"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:102
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Movu Zomitan Areon Malsupren"
 
-#: plugins/zoom/zoom.cpp:111
+#: plugins/zoom/zoom.cpp:110
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Movu Muson al Fokuso"
 
-#: plugins/zoom/zoom.cpp:118
+#: plugins/zoom/zoom.cpp:117
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Movu la muson al Centro"
@@ -4107,42 +4107,42 @@ msgstr "Aktivigi Fenestron (%1)"
 msgid "unknown"
 msgstr "nekonata"
 
-#: virtualdesktops.cpp:706 virtualdesktops.cpp:781
+#: virtualdesktops.cpp:729 virtualdesktops.cpp:808
 #, kde-format
 msgid "Desktop %1"
 msgstr "Labortablo %1"
 
-#: virtualdesktops.cpp:788
+#: virtualdesktops.cpp:815
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Iri al sekva labortablo"
 
-#: virtualdesktops.cpp:789
+#: virtualdesktops.cpp:816
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Iri al antaŭa labortablo"
 
-#: virtualdesktops.cpp:792
+#: virtualdesktops.cpp:819
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Iri al labortablo dekstrapuda"
 
-#: virtualdesktops.cpp:793
+#: virtualdesktops.cpp:820
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Iri al labortablo maldekstrapuda"
 
-#: virtualdesktops.cpp:794
+#: virtualdesktops.cpp:821
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Iri al supra labortablo"
 
-#: virtualdesktops.cpp:795
+#: virtualdesktops.cpp:822
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Iri al suba labortablo"
 
-#: virtualdesktops.cpp:883
+#: virtualdesktops.cpp:910
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Ŝanĝi al labortablo %1"
