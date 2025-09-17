@@ -46,6 +46,7 @@ private Q_SLOTS:
     void testSwitchToWindowFullScreen();
     void testActiveFullscreen();
     void testXdgActivation();
+    void testGlobalShortcutActivation();
 
 private:
     void stackScreensHorizontally();
@@ -842,6 +843,63 @@ void ActivationTest::testXdgActivation()
     Test::xdgActivation()->activate(QString(), *windows[1].surface);
     QVERIFY(activationSpy.wait());
     QCOMPARE(workspace()->activeWindow(), windows[1].window);
+}
+
+class TokenSpy : public InputEventSpy
+{
+public:
+    void keyboardKey(KeyboardKeyEvent *event) override
+    {
+        if (event->state == KeyboardKeyState::Pressed && event->key == Qt::Key::Key_A) {
+            latestToken = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(
+                nullptr, input()->lastInteractionSerial(), waylandServer()->seat(), "test");
+        }
+    }
+
+    QString latestToken;
+};
+
+void ActivationTest::testGlobalShortcutActivation()
+{
+    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::Extreme);
+
+    // This spy needs to be used because normal keyboard shortcuts are signaled asynchronously,
+    // while the shortcut for launching an application creates the token immediately.
+    // The spy emulates the latter behavior.
+    TokenSpy tokenSpy;
+    input()->installInputEventSpy(&tokenSpy);
+    QSignalSpy activationSpy(workspace(), &Workspace::windowActivated);
+
+    uint32_t time = 0;
+
+    // just triggering the shortcut normally should have working activation
+    auto windows = setupWindows(time);
+
+    Test::keyboardKeyPressed(KEY_LEFTSHIFT, time++);
+    Test::keyboardKeyPressed(KEY_A, time++);
+    Test::keyboardKeyReleased(KEY_A, time++);
+    Test::keyboardKeyReleased(KEY_LEFTSHIFT, time++);
+
+    Test::xdgActivation()->activate(tokenSpy.latestToken, *windows[1].surface);
+    QVERIFY(activationSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), windows[1].window);
+
+    // if we press a non-shift key after triggering the shortcut,
+    // activation should fail
+    windows = setupWindows(time);
+
+    Test::keyboardKeyPressed(KEY_LEFTSHIFT, time++);
+    Test::keyboardKeyPressed(KEY_A, time++);
+    Test::keyboardKeyReleased(KEY_A, time++);
+    Test::keyboardKeyReleased(KEY_LEFTSHIFT, time++);
+
+    Test::keyboardKeyPressed(KEY_B, time++);
+    Test::keyboardKeyReleased(KEY_B, time++);
+
+    Test::xdgActivation()->activate(tokenSpy.latestToken, *windows[1].surface);
+    QVERIFY(!activationSpy.wait(10));
+    QCOMPARE(workspace()->activeWindow(), windows[2].window);
 }
 }
 
