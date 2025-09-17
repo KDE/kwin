@@ -92,9 +92,8 @@ EffectWindow::EffectWindow(WindowItem *windowItem)
     connect(d->m_window, &Window::opacityChanged, this, [this](Window *window, qreal oldOpacity) {
         Q_EMIT windowOpacityChanged(this, oldOpacity, window->opacity());
     });
-    connect(d->m_window, &Window::minimizedChanged, this, [this]() {
-        Q_EMIT minimizedChanged(this);
-    });
+    // NOTE that minimizedChanged is intentionally not handled here.
+    // The WindowItem is explicitly taking care of it instead!
     connect(d->m_window, &Window::modalChanged, this, [this]() {
         Q_EMIT windowModalityChanged(this);
     });

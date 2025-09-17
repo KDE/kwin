@@ -58,6 +58,8 @@ public:
     void elevate();
     void deelevate();
 
+    void updateMinimized();
+
 protected:
     explicit WindowItem(Window *window, Item *parent = nullptr);
     void updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem);

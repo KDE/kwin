@@ -420,7 +420,6 @@ private:
 
     QTimer *m_focusOutTimer;
     QTimer m_releaseTimer;
-    QTimer m_unmapTimer;
     QPointer<VirtualDesktop> m_netWmDesktop;
 
     QMetaObject::Connection m_edgeGeometryTrackingConnection;

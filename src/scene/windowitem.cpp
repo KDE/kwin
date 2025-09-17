@@ -44,7 +44,6 @@ WindowItem::WindowItem(Window *window, Item *parent)
         connect(window, &Window::readyForPaintingChanged, this, &WindowItem::updateVisibility);
     }
     connect(window, &Window::lockScreenOverlayChanged, this, &WindowItem::updateVisibility);
-    connect(window, &Window::minimizedChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::hiddenChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::hiddenByShowDesktopChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::activitiesChanged, this, &WindowItem::updateVisibility);
@@ -92,6 +91,16 @@ Window *WindowItem::window() const
 EffectWindow *WindowItem::effectWindow() const
 {
     return m_effectWindow.get();
+}
+
+void WindowItem::updateMinimized()
+{
+    if (m_effectWindow) {
+        // give effects a chance to reference visibility
+        // before potentially suspending the window
+        Q_EMIT m_effectWindow->minimizedChanged(m_effectWindow.get());
+    }
+    updateVisibility();
 }
 
 void WindowItem::refVisible(int reason)

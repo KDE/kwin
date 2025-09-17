@@ -153,9 +153,6 @@ X11Window::X11Window()
         releaseWindow();
     });
 
-    m_unmapTimer.setSingleShot(true);
-    connect(&m_unmapTimer, &QTimer::timeout, this, &X11Window::updateVisibility);
-
     // SELI TODO: Initialize xsizehints??
 }
 
@@ -1207,14 +1204,7 @@ void X11Window::updateVisibility()
 
 void X11Window::doSetSuspended()
 {
-    if (isSuspended()) {
-        // unmapping+immediately mapping again can cause flicker,
-        // for example when minimizing -> unmap -> effect updates visibility -> map
-        // Avoid that by simply delaying unmapping a bit
-        m_unmapTimer.start(0);
-    } else {
-        updateVisibility();
-    }
+    updateVisibility();
 }
 
 /**

@@ -875,6 +875,9 @@ void Window::setMinimized(bool set)
     }
 
     m_minimized = effectiveSet;
+    if (m_windowItem) {
+        m_windowItem->updateMinimized();
+    }
     doMinimize();
 
     updateWindowRules(Rules::Minimize);
