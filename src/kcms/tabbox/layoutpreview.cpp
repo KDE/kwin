@@ -174,7 +174,7 @@ void ExampleClientModel::init()
 
 void ExampleClientModel::showDesktopThumbnail(bool showDesktop)
 {
-    const ThumbnailInfo desktopThumbnail = ThumbnailInfo{WindowThumbnailItem::Desktop, i18n("Show Desktop"), QStringLiteral("desktop")};
+    const ThumbnailInfo desktopThumbnail = ThumbnailInfo{WindowThumbnailItem::Desktop, i18n("Peek at Desktop"), QStringLiteral("desktop")};
     const int desktopIndex = m_thumbnails.indexOf(desktopThumbnail);
     if (showDesktop == (desktopIndex >= 0)) {
         return;

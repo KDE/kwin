@@ -75,7 +75,7 @@
 
 <para>The <guilabel>Sort Order</guilabel> drop-down list specifies whether the windows should be listed in <guilabel>Stacking Order</guilabel> or <guilabel>Recently Used</guilabel> order.  <guilabel>Stacking Order</guilabel> is the order in which the windows appear on top of each other on the screen, while <guilabel>Recently Used</guilabel> order is the order in which the windows have been used. <guilabel>Recently Used</guilabel> order makes it very easy to switch between the two most frequently used windows because they will always appear in the top 2 positions in the list.</para>
 
-<para>The <guilabel>Include "Show Desktop" icon</guilabel> option will add a Show Desktop option to the window list. This allows the user to easily select the Desktop as the 'window' to show.</para>
+<para>The <guilabel>Include "Peek at Desktop" icon</guilabel> option will add a Peek at Desktop option to the window list. This allows the user to easily select the Desktop as the 'window' to show.</para>
 
 <para>The <guilabel>Only one window per application</guilabel> option reduces clutter by only showing one window for each open application.  If an application has multiple windows open, then its most recently activated window will be shown in the list and the others will not be shown.</para>
 
