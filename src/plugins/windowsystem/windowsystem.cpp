@@ -70,18 +70,14 @@ quint32 WindowSystem::lastInputSerial(QWindow *window)
 
 void WindowSystem::exportWindow(QWindow *window)
 {
-    Q_UNUSED(window);
 }
 
 void WindowSystem::unexportWindow(QWindow *window)
 {
-    Q_UNUSED(window);
 }
 
 void WindowSystem::setMainWindow(QWindow *window, const QString &handle)
 {
-    Q_UNUSED(window);
-    Q_UNUSED(handle);
 }
 
 QFuture<QString> WindowSystem::xdgActivationToken(QWindow *window, uint32_t serial, const QString &appId)
