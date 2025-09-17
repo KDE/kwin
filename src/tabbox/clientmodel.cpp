@@ -54,8 +54,8 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
     case Qt::DisplayRole:
     case CaptionRole: {
         if (client->isDesktop()) {
-            return i18nc("Special entry in alt+tab list for minimizing all windows",
-                         "Show Desktop");
+            return i18nc("Special entry in alt+tab list for temporarily hiding all windows",
+                         "Peek at Desktop");
         }
         return client->caption();
     }
