@@ -6,6 +6,7 @@
 
 #include "eisinputcapturefilter.h"
 
+#include "config-eis.h"
 #include "eisinputcapture.h"
 #include "eisinputcapturemanager.h"
 
@@ -145,6 +146,13 @@ bool EisInputCaptureFilter::touchCancel()
     if (!m_manager->activeCapture()) {
         return false;
     }
+#if EIS_HAVE_TOUCH_CANCEL
+    for (const auto touch : m_touches) {
+        eis_touch_cancel(touch);
+        eis_touch_unref(touch);
+    }
+    m_touches.clear();
+#endif
     return true;
 }
 bool EisInputCaptureFilter::touchFrame()
