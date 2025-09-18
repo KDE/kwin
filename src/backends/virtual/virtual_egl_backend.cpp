@@ -22,6 +22,8 @@
 namespace KWin
 {
 
+static const bool s_bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
+
 VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
     : OutputLayer(output, OutputLayerType::Primary)
     , m_backend(backend)
@@ -55,7 +57,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
 
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_current->framebuffer()),
-        .repaint = infiniteRegion(),
+        .repaint = s_bufferAgeEnabled ? m_damageJournal.accumulate(m_current->age(), infiniteRegion()) : infiniteRegion(),
     };
 }
 
@@ -64,6 +66,8 @@ bool VirtualEglLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &d
     m_query->end();
     frame->addRenderTimeQuery(std::move(m_query));
     glFlush(); // flush pending rendering commands.
+    m_swapchain->release(m_current, FileDescriptor{});
+    m_damageJournal.add(damagedRegion);
     return true;
 }
 
@@ -81,6 +85,11 @@ void VirtualEglLayer::releaseBuffers()
 {
     m_current.reset();
     m_swapchain.reset();
+}
+
+GLTexture *VirtualEglLayer::texture() const
+{
+    return m_current ? m_current->texture().get() : nullptr;
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)

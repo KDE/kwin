@@ -10,6 +10,8 @@
 
 #include "core/outputlayer.h"
 #include "opengl/eglbackend.h"
+#include "utils/damagejournal.h"
+
 #include <chrono>
 #include <memory>
 
@@ -25,7 +27,7 @@ class GLTexture;
 class VirtualEglBackend;
 class GLRenderTimeQuery;
 
-class VirtualEglLayer : public OutputLayer
+class KWIN_EXPORT VirtualEglLayer : public OutputLayer
 {
 public:
     VirtualEglLayer(Output *output, VirtualEglBackend *backend);
@@ -38,11 +40,14 @@ public:
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
     void releaseBuffers() override;
 
+    GLTexture *texture() const;
+
 private:
     VirtualEglBackend *const m_backend;
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_current;
     std::unique_ptr<GLRenderTimeQuery> m_query;
+    DamageJournal m_damageJournal;
 };
 
 /**

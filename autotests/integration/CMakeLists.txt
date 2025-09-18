@@ -152,6 +152,7 @@ integrationTest(NAME testFifo SRCS test_fifo.cpp)
 integrationTest(NAME testMouseKeys SRCS mouse_keys_test.cpp)
 integrationTest(NAME testXdgSession SRCS xdgsession_test.cpp)
 integrationTest(NAME testDnd SRCS dnd_test.cpp)
+integrationTest(NAME testFractionalRepaint SRCS fractional_repaint_test.cpp)
 
 if(KWIN_BUILD_X11)
     integrationTest(NAME testDontCrashEmptyDeco SRCS dont_crash_empty_deco.cpp LIBS KDecoration3::KDecoration)
