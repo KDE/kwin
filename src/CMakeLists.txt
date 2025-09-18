@@ -279,7 +279,6 @@ if (KWIN_BUILD_X11)
     target_link_libraries(kwin
         PRIVATE
             XCB::COMPOSITE
-            XCB::CURSOR
             XCB::ICCCM
             XCB::KEYSYMS
             XCB::RANDR
