@@ -127,5 +127,9 @@ KWayland::Client::Surface *WaylandLayer::surface() const
     return m_surface.get();
 }
 
+KWayland::Client::SubSurface *WaylandLayer::subSurface() const
+{
+    return m_subSurface.get();
+}
 }
 }
