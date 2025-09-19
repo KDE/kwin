@@ -22,6 +22,7 @@
 #include <KWayland/Client/pointergestures.h>
 #include <KWayland/Client/relativepointer.h>
 #include <KWayland/Client/seat.h>
+#include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
 
@@ -101,7 +102,9 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
     connect(pointer, &Pointer::motion, this, [this](const QPointF &relativeToSurface, quint32 time) {
         WaylandOutput *output = m_seat->backend()->findOutput(m_pointer->enteredSurface());
         Q_ASSERT(output);
-        const QPointF absolutePos = output->geometry().topLeft() + relativeToSurface;
+        const auto subsurface = m_seat->backend()->findSubSurface(m_pointer->enteredSurface());
+        const QPointF absolutePos = output->geometry().topLeft() + relativeToSurface
+            + (subsurface ? subsurface->position() : QPoint());
         Q_EMIT pointerMotionAbsolute(absolutePos, std::chrono::milliseconds(time), this);
     });
     connect(pointer, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState nativeState) {
@@ -524,6 +527,28 @@ WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurfa
         }
         if (output->surface() == nativeSurface) {
             return output;
+        }
+    }
+    return nullptr;
+}
+
+KWayland::Client::SubSurface *WaylandBackend::findSubSurface(KWayland::Client::Surface *nativeSurface) const
+{
+    for (WaylandOutput *output : m_outputs) {
+        const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
+        const auto it = std::ranges::find_if(layers, [nativeSurface](OutputLayer *layer) {
+            // cursor-only layers are a different class
+            // and can't be a subsurface
+            if (layer->type() == OutputLayerType::CursorOnly) {
+                return false;
+            }
+            return static_cast<WaylandLayer *>(layer)->surface() == nativeSurface;
+        });
+        if (it != layers.end()) {
+            return static_cast<WaylandLayer *>(*it)->subSurface();
+        }
+        if (output->surface() == nativeSurface) {
+            return nullptr;
         }
     }
     return nullptr;

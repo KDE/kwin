@@ -45,6 +45,7 @@ public:
     void commit(PresentationMode presentationMode);
 
     KWayland::Client::Surface *surface() const;
+    KWayland::Client::SubSurface *subSurface() const;
 
 private:
     std::unique_ptr<KWayland::Client::Surface> m_surface;
