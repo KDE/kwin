@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf6-trunk/messages/kwin/kcmkwm.pot\n"
-"X-Crowdin-File-ID: 42723\n"
+"X-Crowdin-File: /kf6-stable/messages/kwin/kcmkwm.pot\n"
+"X-Crowdin-File-ID: 51788\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
