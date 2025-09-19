@@ -39,6 +39,7 @@ class RelativePointer;
 class Seat;
 class Surface;
 class Touch;
+class SubSurface;
 }
 }
 
@@ -227,6 +228,7 @@ public:
     QList<CompositingType> supportedCompositors() const override;
 
     WaylandOutput *findOutput(KWayland::Client::Surface *nativeSurface) const;
+    KWayland::Client::SubSurface *findSubSurface(KWayland::Client::Surface *nativeSurface) const;
     Outputs outputs() const override;
     QList<WaylandOutput *> waylandOutputs() const
     {

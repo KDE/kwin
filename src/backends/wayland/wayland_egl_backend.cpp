@@ -21,6 +21,7 @@
 #include "wayland_logging.h"
 #include "wayland_output.h"
 
+#include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 
 #include <cmath>
@@ -255,11 +256,15 @@ void WaylandEglBackend::createOutputLayers(Output *output)
 {
     const auto waylandOutput = static_cast<WaylandOutput *>(output);
     std::vector<std::unique_ptr<OutputLayer>> layers;
-    layers.push_back(std::make_unique<WaylandEglLayer>(waylandOutput, this, OutputLayerType::Primary, 0));
-    layers.push_back(std::make_unique<WaylandEglCursorLayer>(waylandOutput, this));
+    auto primary = std::make_unique<WaylandEglLayer>(waylandOutput, this, OutputLayerType::Primary, 0);
+    primary->subSurface()->placeAbove(waylandOutput->surface());
+    layers.push_back(std::move(primary));
     for (int z = 1; z < 5; z++) {
-        layers.push_back(std::make_unique<WaylandEglLayer>(waylandOutput, this, OutputLayerType::GenericLayer, z));
+        auto layer = std::make_unique<WaylandEglLayer>(waylandOutput, this, OutputLayerType::GenericLayer, z);
+        layer->subSurface()->placeAbove(static_cast<WaylandEglLayer *>(layers.back().get())->surface());
+        layers.push_back(std::move(layer));
     }
+    layers.push_back(std::make_unique<WaylandEglCursorLayer>(waylandOutput, this));
     waylandOutput->setOutputLayers(std::move(layers));
 }
 
