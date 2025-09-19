@@ -21,7 +21,6 @@ set_property(TARGET KWinRulesObjects PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 if (KWIN_BUILD_X11)
     set(kwin_kcm_rules_XCB_LIBS
-        XCB::CURSOR
         XCB::XCB
         XCB::XFIXES
     )
