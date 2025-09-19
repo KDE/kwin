@@ -13,6 +13,7 @@
 
 #include "core/colorspace.h"
 #include "effect/effect.h"
+#include "input.h"
 
 #include <QAction>
 #include <QTime>
@@ -29,7 +30,7 @@ class GLShader;
 class FocusTracker;
 class TextCaretTracker;
 
-class ZoomEffect : public Effect
+class ZoomEffect : public Effect, public InputEventFilter
 {
     Q_OBJECT
     Q_PROPERTY(qreal zoomFactor READ configuredZoomFactor)
@@ -57,6 +58,10 @@ public:
     int configuredFocusDelay() const;
     qreal configuredMoveFactor() const;
     qreal targetZoom() const;
+
+    // from InputEventFilter
+    bool touchDown(TouchDownEvent *event) override;
+    bool touchMotion(TouchMotionEvent *event) override;
 
 private Q_SLOTS:
     void zoomIn();

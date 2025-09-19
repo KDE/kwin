@@ -336,6 +336,7 @@ enum Order {
     WindowSelector,
     TabBox,
     GlobalShortcut,
+    EffectsTransform,
     Effects,
     InteractiveMoveResize,
     Popup,

@@ -15,6 +15,7 @@
 #include "cursor.h"
 #include "effect/effecthandler.h"
 #include "focustracker.h"
+#include "input_event.h"
 #include "opengl/glutils.h"
 #include "scene/cursoritem.h"
 #include "scene/workspacescene.h"
@@ -40,6 +41,7 @@ namespace KWin
 {
 
 ZoomEffect::ZoomEffect()
+    : InputEventFilter(InputFilterOrder::Order::Effects)
 {
     ensureResources();
 
@@ -650,6 +652,18 @@ qreal ZoomEffect::targetZoom() const
     return m_targetZoom;
 }
 
+bool ZoomEffect::touchDown(TouchDownEvent *event)
+{
+    event->pos = (event->pos - QPoint(m_xTranslation, m_yTranslation)) / m_zoom;
+    return false;
+}
+
+bool ZoomEffect::touchMotion(TouchMotionEvent *event)
+{
+    event->pos = (event->pos - QPoint(m_xTranslation, m_yTranslation)) / m_zoom;
+    return false;
+}
+
 bool ZoomEffect::screenExistsAt(const QPoint &point) const
 {
     const Output *output = effects->screenAt(point);
@@ -671,6 +685,7 @@ void ZoomEffect::setTargetZoom(double value)
         if (ZoomConfig::enableFocusTracking()) {
             trackFocus();
         }
+        input()->installInputEventFilter(this);
 
         connect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
         m_cursorPoint = effects->cursorPos().toPoint();
@@ -680,6 +695,7 @@ void ZoomEffect::setTargetZoom(double value)
         m_focusTracker.reset();
 #endif
         disconnect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
+        input()->uninstallInputEventFilter(this);
     }
     m_targetZoom = value;
     effects->addRepaintFull();
