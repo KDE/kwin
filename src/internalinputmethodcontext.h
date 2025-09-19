@@ -8,7 +8,9 @@
 */
 
 #include <QObject>
+#include <QPointer>
 #include <QRect>
+#include <QWindow>
 #include <qpa/qplatforminputcontext.h>
 
 namespace KWin
@@ -62,6 +64,7 @@ private:
     uint32_t m_contentHint = 0;
     uint32_t m_contentPurpose = 0;
     QRect m_cursorRect;
+    QPointer<QWindow> m_focusWindow;
 };
 
 }
