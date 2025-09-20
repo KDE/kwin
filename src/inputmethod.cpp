@@ -341,14 +341,17 @@ void InputMethod::handleFocusedSurfaceChanged()
     setTrackedWindow(waylandServer()->findWindow(focusedSurface));
 
     const auto client = focusedSurface ? focusedSurface->client() : nullptr;
-    bool ret = seat->textInputV2()->clientSupportsTextInput(client)
-            || seat->textInputV3()->clientSupportsTextInput(client)
-            || m_internalContext->isEnabled();
+    bool ret = seat->textInputV1()->clientSupportsTextInput(client)
+        || seat->textInputV2()->clientSupportsTextInput(client)
+        || seat->textInputV3()->clientSupportsTextInput(client)
+        || m_internalContext->isEnabled();
 
     if (ret != m_activeClientSupportsTextInput) {
         m_activeClientSupportsTextInput = ret;
         Q_EMIT activeClientSupportsTextInputChanged();
     }
+
+    refreshActive();
 }
 
 void InputMethod::surroundingTextChanged()
