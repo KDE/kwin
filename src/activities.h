@@ -45,7 +45,6 @@ public:
      */
     void toggleWindowOnActivity(Window *window, const QString &activity, bool dont_activate);
 
-    QStringList running() const;
     QStringList all() const;
     const QString &current() const;
     const QString &previous() const;
@@ -106,11 +105,6 @@ inline const QString &Activities::current() const
 inline const QString &Activities::previous() const
 {
     return m_previous;
-}
-
-inline QStringList Activities::running() const
-{
-    return m_controller->activities(KActivities::Info::Running);
 }
 
 inline QString Activities::nullUuid()
