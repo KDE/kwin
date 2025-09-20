@@ -858,7 +858,7 @@ QList<OptionsModel::Data> RulesModel::activitiesModelData() const
         OptionsModel::ExclusiveOption,
     };
 
-    const auto activities = m_activities->activities(KActivities::Info::Running);
+    const auto activities = m_activities->activities();
     if (m_activities->serviceStatus() == KActivities::Consumer::Running) {
         for (const QString &activityId : activities) {
             const KActivities::Info info(activityId);
