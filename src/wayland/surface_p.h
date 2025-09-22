@@ -84,7 +84,7 @@ struct SurfaceState
     PresentationModeHint presentationHint = PresentationModeHint::VSync;
     std::shared_ptr<ColorDescription> colorDescription = ColorDescription::sRGB;
     RenderingIntent renderingIntent = RenderingIntent::Perceptual;
-    std::unique_ptr<PresentationTimeFeedback> presentationFeedback;
+    std::shared_ptr<PresentationTimeFeedback> presentationFeedback;
     struct
     {
         std::shared_ptr<SyncTimeline> timeline;

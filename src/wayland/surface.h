@@ -138,7 +138,7 @@ public:
     void frameRendered(quint32 msec);
     bool hasFrameCallbacks() const;
 
-    std::unique_ptr<PresentationFeedback> takePresentationFeedback(Output *output);
+    std::shared_ptr<PresentationFeedback> presentationFeedback(Output *output);
     bool hasPresentationFeedback() const;
 
     QRegion opaque() const;

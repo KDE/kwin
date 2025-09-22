@@ -236,7 +236,7 @@ void SurfaceItemWayland::handleFramePainted(Output *output, OutputFrame *frame, 
     m_surface->frameRendered(timestamp.count());
     if (frame) {
         // FIXME make frame always valid
-        if (auto feedback = m_surface->takePresentationFeedback(output)) {
+        if (auto feedback = m_surface->presentationFeedback(output)) {
             frame->addFeedback(std::move(feedback));
         }
     }

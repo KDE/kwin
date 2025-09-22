@@ -76,7 +76,7 @@ public:
 
     void presented(std::chrono::nanoseconds timestamp, PresentationMode mode);
 
-    void addFeedback(std::unique_ptr<PresentationFeedback> &&feedback);
+    void addFeedback(std::shared_ptr<PresentationFeedback> &&feedback);
 
     void setContentType(ContentType type);
     std::optional<ContentType> contentType() const;
@@ -103,7 +103,7 @@ private:
     const std::chrono::nanoseconds m_refreshDuration;
     const std::chrono::steady_clock::time_point m_targetPageflipTime;
     const std::chrono::nanoseconds m_predictedRenderTime;
-    std::vector<std::unique_ptr<PresentationFeedback>> m_feedbacks;
+    std::vector<std::shared_ptr<PresentationFeedback>> m_feedbacks;
     std::optional<ContentType> m_contentType;
     PresentationMode m_presentationMode = PresentationMode::VSync;
     std::vector<std::unique_ptr<RenderTimeQuery>> m_renderTimeQueries;
