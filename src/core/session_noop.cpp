@@ -6,6 +6,9 @@
 
 #include "session_noop.h"
 
+#include <fcntl.h>
+#include <unistd.h>
+
 namespace KWin
 {
 
@@ -40,11 +43,12 @@ uint NoopSession::terminal() const
 
 int NoopSession::openRestricted(const QString &fileName)
 {
-    return -1;
+    return ::open(fileName.toUtf8().data(), O_RDWR | O_CLOEXEC);
 }
 
 void NoopSession::closeRestricted(int fileDescriptor)
 {
+    ::close(fileDescriptor);
 }
 
 void NoopSession::switchTo(uint terminal)
