@@ -375,7 +375,7 @@ void UserActionsMenu::showHideActivityMenu()
     if (!Workspace::self()->activities()) {
         return;
     }
-    const QStringList &openActivities_ = Workspace::self()->activities()->running();
+    const QStringList &openActivities_ = Workspace::self()->activities()->all();
     qCDebug(KWIN_CORE) << "activities:" << openActivities_.size();
     if (openActivities_.size() < 2) {
         delete m_activityMenu;
@@ -583,7 +583,7 @@ void UserActionsMenu::activityPopupAboutToShow()
     }
     m_activityMenu->addSeparator();
 
-    const auto activities = Workspace::self()->activities()->running();
+    const auto activities = Workspace::self()->activities()->all();
     for (const QString &id : activities) {
         KActivities::Info activity(id);
         QString name = activity.name();
