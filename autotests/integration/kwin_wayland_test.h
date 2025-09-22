@@ -35,6 +35,7 @@
 #include "qwayland-kde-output-device-v2.h"
 #include "qwayland-kde-output-management-v2.h"
 #include "qwayland-kde-screen-edge-v1.h"
+#include "qwayland-keystate.h"
 #include "qwayland-presentation-time.h"
 #include "qwayland-security-context-v1.h"
 #include "qwayland-tablet-v2.h"
@@ -699,6 +700,7 @@ enum class AdditionalWaylandInterface {
     XdgActivation = 1 << 25,
     XdgSessionV1 = 1 << 26,
     WpTabletV2 = 1 << 27,
+    KeyState = 1 << 28,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -876,6 +878,22 @@ public:
     ~XdgSessionManagerV1() override;
 };
 
+class KeyStateV1 : public QObject, public QtWayland::org_kde_kwin_keystate
+{
+    Q_OBJECT
+public:
+    explicit KeyStateV1(::wl_registry *registry, uint32_t id, int version);
+    ~KeyStateV1() override;
+
+    QHash<uint32_t, uint32_t> keyToState;
+
+Q_SIGNALS:
+    void stateChanged();
+
+private:
+    void org_kde_kwin_keystate_stateChanged(uint32_t key, uint32_t state) override;
+};
+
 struct Connection
 {
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
@@ -922,6 +940,7 @@ struct Connection
     std::unique_ptr<XdgActivation> xdgActivation;
     std::unique_ptr<XdgSessionManagerV1> sessionManager;
     std::unique_ptr<WpTabletManagerV2> tabletManager;
+    std::unique_ptr<KeyStateV1> keyState;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -992,6 +1011,7 @@ FifoManagerV1 *fifoManager();
 PresentationTime *presentationTime();
 XdgActivation *xdgActivation();
 WpTabletManagerV2 *tabletManager();
+KeyStateV1 *keyState();
 
 bool waitForWaylandSurface(Window *window);
 
