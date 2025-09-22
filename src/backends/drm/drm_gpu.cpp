@@ -106,6 +106,10 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     } else {
         m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
     }
+
+    m_delayedModesetTimer.setInterval(0);
+    m_delayedModesetTimer.setSingleShot(true);
+    connect(&m_delayedModesetTimer, &QTimer::timeout, this, &DrmGpu::doModeset);
 }
 
 DrmGpu::~DrmGpu()
@@ -791,14 +795,25 @@ void DrmGpu::maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFra
         // doing a modeset with pending pageflips would crash
         return;
     }
-    // if the commit succeeds, it'll call DrmAtomicCommit::pageFlipped, which calls this method again...
-    // this is ugly, but at least simple and prevents the recursion
     if (m_inModeset) {
         return;
     }
+    // Modesets need to be done asynchronously, to match how presentation
+    // normally works. This is necessary because the Compositor adds presentation
+    // time feedbacks to the OutputFrame after calling Output::present
+    m_delayedModesetTimer.start();
+}
+
+void DrmGpu::doModeset()
+{
     m_inModeset = true;
+    auto pipelines = m_pipelines;
+    for (const DrmOutput *output : std::as_const(m_drmOutputs)) {
+        if (output->lease()) {
+            pipelines.removeOne(output->pipeline());
+        }
+    }
     const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
-    m_inModeset = false;
     for (DrmPipeline *pipeline : std::as_const(pipelines)) {
         if (pipeline->modesetPresentPending()) {
             pipeline->resetModesetPresentPending();
@@ -815,6 +830,7 @@ void DrmGpu::maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFra
         }
     }
     m_pendingModesetFrames.clear();
+    m_inModeset = false;
 }
 
 QList<DrmObject *> DrmGpu::unusedModesetObjects() const

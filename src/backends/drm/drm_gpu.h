@@ -18,7 +18,7 @@
 #include <QPointer>
 #include <QSize>
 #include <QSocketNotifier>
-#include <qobject.h>
+#include <QTimer>
 
 #include <chrono>
 #include <epoxy/egl.h>
@@ -138,6 +138,7 @@ private:
     void removeOutput(DrmOutput *output);
     void initDrmResources();
     void forgetBufferObject(QObject *buf);
+    void doModeset();
 
     DrmPipeline::Error checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs);
     DrmPipeline::Error testPipelines();
@@ -185,6 +186,7 @@ private:
     bool m_inModeset = false;
     QHash<GraphicsBuffer *, std::weak_ptr<DrmFramebufferData>> m_fbCache;
     std::vector<std::unique_ptr<DrmCommit>> m_defunctCommits;
+    QTimer m_delayedModesetTimer;
 };
 
 }
