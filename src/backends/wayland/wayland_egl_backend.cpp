@@ -15,6 +15,7 @@
 #include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
 #include "scene/surfaceitem_wayland.h"
+#include "wayland-client/linuxdmabuf.h"
 #include "wayland/surface.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
