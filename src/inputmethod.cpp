@@ -74,7 +74,7 @@ static QList<xkb_keysym_t> textToKey(const QString &inputString)
         if (ks != XKB_KEY_NoSymbol) {
             result.append(ks);
         } else {
-            qCWarning(KWIN_VIRTUALKEYBOARD) << "No keysym for U+" << &std::hex << (int)cp << "\n";
+            qCWarning(KWIN_VIRTUALKEYBOARD) << "No keysym for U+" << Qt::hex << (int)cp << "\n";
         }
     }
     return result;
