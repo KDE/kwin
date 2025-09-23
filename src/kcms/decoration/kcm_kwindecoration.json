@@ -113,6 +113,7 @@
     "X-KDE-Keywords[sl]": "kwin,okno,upravljalnik,meja,slog,tema,videz,občutek,postaviten,gumb,ročka,rob,kwm,dekoracija,okenske dekoracije,naslovna vrstica,okenski gumbi,meje oken,preobleka,senca",
     "X-KDE-Keywords[sv]": "kwin,fönster,hanterare,kant,stil,tema,utseende,känsla,layout,knapp,grepp,kant,kwm,dekoration,fönsterdekorationer,namnlist,fönsterknappar,fönsterkant,skal,skugga",
     "X-KDE-Keywords[uk]": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,shadow,вікно,вікна,керування,менеджер,рамка,межа,стиль,тема,вигляд,поведінка,компонування,кнопка,елемент,край,декорації,обрамлення,смужка заголовка,кнопки,рамка,оформлення,тінь",
+    "X-KDE-Keywords[zh_TW]": "kwin,視窗,視窗管理員,邊框,風格,樣式,主題,佈局,配置,按鈕,邊緣,視窗裝飾,裝飾,標題列,標題欄,標題按鈕,視窗按鈕,陰影",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "appearance",
     "X-KDE-Weight": 40

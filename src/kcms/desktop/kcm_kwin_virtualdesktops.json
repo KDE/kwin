@@ -110,6 +110,7 @@
     "X-KDE-Keywords[sl]": "namizje,namizja,število,navidezno namizje,več namizij,pozivnik,pripomoček pozivnika,aplet pozivnika,nastavitve pozivnika,indikator,krmarjenje,kocka,diapozitiv,delovni prostori",
     "X-KDE-Keywords[sv]": "skrivbord,nummer,virtuellt skrivbord,flera skrivbord,skrivbordsväljare,skrivbordsväljarkomponent, skrivbordsväljarminiprogram, skrivbordsväljarinställningar,indikator,navigering,kub,bild,arbetsytor",
     "X-KDE-Keywords[uk]": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces,стільниця,стільниці,кількість,віртуальна стільниця,перемикач,пейджер,віджет перемикача,віджет пейджера,аплет перемикання,аплет перемикача,параметри перемикання,параметри перемикача,індикатор,навігація,куб,ковзання,слайд,простори",
+    "X-KDE-Keywords[zh_TW]": "桌面,虛擬桌面,桌面管理器,虛擬桌面管理器,指示器,瀏覽,工作空間",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "desktopbehavior",
     "X-KDE-Weight": 60
