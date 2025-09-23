@@ -332,6 +332,7 @@ add_subdirectory(backends)
 add_subdirectory(plugins)
 add_subdirectory(utils)
 add_subdirectory(wayland)
+add_subdirectory(wayland-client)
 
 if (KWIN_BUILD_X11)
     add_subdirectory(xwayland)

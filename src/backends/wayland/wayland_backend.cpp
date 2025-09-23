@@ -11,6 +11,7 @@
 #include "compositor.h"
 #include "core/drmdevice.h"
 #include "input.h"
+#include "wayland-client/linuxdmabuf.h"
 #include "wayland_display.h"
 #include "wayland_egl_backend.h"
 #include "wayland_logging.h"
@@ -435,7 +436,7 @@ bool WaylandBackend::initialize()
         return false;
     }
 
-    if (WaylandLinuxDmabufV1 *dmabuf = m_display->linuxDmabuf()) {
+    if (WaylandClient::LinuxDmabufV1 *dmabuf = m_display->linuxDmabuf()) {
         m_drmDevice = DrmDevice::open(dmabuf->mainDevice());
         if (!m_drmDevice) {
             qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << dmabuf->mainDevice();

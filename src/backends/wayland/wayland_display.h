@@ -38,6 +38,11 @@ class SubCompositor;
 }
 }
 
+namespace KWin::WaylandClient
+{
+class LinuxDmabufV1;
+}
+
 namespace KWin
 {
 namespace Wayland
@@ -46,24 +51,6 @@ namespace Wayland
 class WaylandEventThread;
 class WaylandLinuxDmabufFeedbackV1;
 class ColorManager;
-
-class WaylandLinuxDmabufV1
-{
-public:
-    WaylandLinuxDmabufV1(wl_registry *registry, uint32_t name, uint32_t version);
-    ~WaylandLinuxDmabufV1();
-
-    zwp_linux_dmabuf_v1 *handle() const;
-    QByteArray mainDevice() const;
-    QHash<uint32_t, QList<uint64_t>> formats() const;
-
-private:
-    static void format(void *data, struct zwp_linux_dmabuf_v1 *zwp_linux_dmabuf_v1, uint32_t format);
-    static void modifier(void *data, struct zwp_linux_dmabuf_v1 *zwp_linux_dmabuf_v1, uint32_t format, uint32_t modifier_hi, uint32_t modifier_lo);
-
-    zwp_linux_dmabuf_v1 *m_dmabuf;
-    std::unique_ptr<WaylandLinuxDmabufFeedbackV1> m_defaultFeedback;
-};
 
 class WaylandDisplay : public QObject
 {
@@ -85,7 +72,7 @@ public:
     KWayland::Client::SubCompositor *subCompositor() const;
     wl_shm *shm() const;
     KWayland::Client::XdgShell *xdgShell() const;
-    WaylandLinuxDmabufV1 *linuxDmabuf() const;
+    WaylandClient::LinuxDmabufV1 *linuxDmabuf() const;
     wp_presentation *presentationTime() const;
     wp_tearing_control_manager_v1 *tearingControl() const;
     ColorManager *colorManager() const;
@@ -114,7 +101,7 @@ private:
     zwp_keyboard_shortcuts_inhibit_manager_v1 *m_keyboardShortcutsInhibitManager = nullptr;
     std::unique_ptr<ColorManager> m_colorManager;
     std::unique_ptr<WaylandEventThread> m_eventThread;
-    std::unique_ptr<WaylandLinuxDmabufV1> m_linuxDmabuf;
+    std::unique_ptr<WaylandClient::LinuxDmabufV1> m_linuxDmabuf;
     std::unique_ptr<KWayland::Client::Compositor> m_compositor;
     std::unique_ptr<KWayland::Client::SubCompositor> m_subCompositor;
     std::unique_ptr<KWayland::Client::PointerConstraints> m_pointerConstraints;
