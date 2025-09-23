@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2025-05-31 14:32+0200\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -59,9 +59,10 @@ msgid "System Settings"
 msgstr "Impostazioni di sistema"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Mostra desktop"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "Desktop attuale"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -100,8 +101,9 @@ msgstr "Contenuto"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Includi la voce «Mostra il desktop»"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -324,6 +326,9 @@ msgstr "Percorri le finestre dell'applicazione attuale alternativo"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Percorri le finestre dell'applicazione attuale alternativo (all'indietro)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "Mostra desktop"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2025-05-08 16:36+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -60,9 +60,10 @@ msgid "System Settings"
 msgstr "Sistēmas iestatījumi"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Parādīt darbvirsmu"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "Pašreizējā darbvirsma"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -101,8 +102,9 @@ msgstr "Saturs"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Iekļaut „Parādīt darbvirsmu“ ierakstu"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -321,6 +323,9 @@ msgstr "Iet caur pašreizējās programmas logiem, alternatīva"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Iet caur pašreizējās programmas logiem, alternatīva (pretējā virzienā)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "Parādīt darbvirsmu"
 
 #, fuzzy
 #~| msgid "Show outline of selected window"

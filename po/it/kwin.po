@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-16 00:43+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2025-07-08 16:49+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -3532,10 +3532,11 @@ msgstr ""
 "Chiusura della sessione comunque tra 2 minuti."
 
 #: tabbox/clientmodel.cpp:58
-#, kde-format
-msgctxt "Special entry in alt+tab list for minimizing all windows"
-msgid "Show Desktop"
-msgstr "Mostra il desktop"
+#, fuzzy, kde-format
+#| msgid "Peek at Desktop"
+msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
+msgid "Peek at Desktop"
+msgstr "Dai un'occhiata al desktop"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, kde-format
@@ -4215,6 +4216,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland è stato terminato in modo inatteso"
+
+#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
+#~ msgid "Show Desktop"
+#~ msgstr "Mostra il desktop"
 
 #~ msgid "Shaded"
 #~ msgstr "Arrotolata"

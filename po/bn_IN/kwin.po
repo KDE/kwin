@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-16 00:43+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2008-12-22 16:10+0530\n"
 "Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
 "Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
@@ -3577,8 +3577,8 @@ msgstr ""
 #: tabbox/clientmodel.cpp:58
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
-msgctxt "Special entry in alt+tab list for minimizing all windows"
-msgid "Show Desktop"
+msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
+msgid "Peek at Desktop"
 msgstr "চিহ্নিত ডেস্কটপে স্থানান্তর (&D)"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
@@ -4297,6 +4297,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "To &Desktop"
+#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
+#~ msgid "Show Desktop"
+#~ msgstr "চিহ্নিত ডেস্কটপে স্থানান্তর (&D)"
 
 #, fuzzy
 #~| msgid "Shade"

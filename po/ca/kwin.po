@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-16 00:43+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2025-09-09 09:21+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -3526,10 +3526,11 @@ msgstr ""
 "Se sortirà igualment d'aquí a 2 minuts."
 
 #: tabbox/clientmodel.cpp:58
-#, kde-format
-msgctxt "Special entry in alt+tab list for minimizing all windows"
-msgid "Show Desktop"
-msgstr "Mostra l'escriptori"
+#, fuzzy, kde-format
+#| msgid "Peek at Desktop"
+msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
+msgid "Peek at Desktop"
+msgstr "Ullada a l'escriptori"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, kde-format
@@ -4203,3 +4204,7 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "L'Xwayland ha fallat"
+
+#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
+#~ msgid "Show Desktop"
+#~ msgstr "Mostra l'escriptori"

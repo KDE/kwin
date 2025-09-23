@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2025-08-04 21:06+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -58,9 +58,10 @@ msgid "System Settings"
 msgstr "إعدادات النّظام"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "أظهر سطح المكتب"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "سطح المكتب الحاليّ"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -97,8 +98,9 @@ msgstr "المحتوى"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "ضمّن مدخلة \"أظهر سطح المكتب\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -317,6 +319,9 @@ msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البدي�
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البديلة (بالعكس)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "أظهر سطح المكتب"
 
 #~ msgid "KWin"
 #~ msgstr "ك.وين"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2010-10-22 18:28+0200\n"
 "Last-Translator: Jean Cayron <jean.cayron@gmail.com>\n"
 "Language-Team: Walloon <linux@walon.org>\n"
@@ -58,9 +58,9 @@ msgstr ""
 
 #: layoutpreview.cpp:177
 #, fuzzy, kde-format
-#| msgid "All Desktops"
-msgid "Show Desktop"
-msgstr "Tos les scribannes"
+#| msgid "Current Desktop"
+msgid "Peek at Desktop"
+msgstr "Sicribanne do moumint"
 
 #: layoutpreview.cpp:207
 #, fuzzy, kde-format
@@ -102,7 +102,7 @@ msgstr ""
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Include desktop"
-msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Mete sicribanne didins"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -337,6 +337,11 @@ msgstr "Naivyî emey les purneas alternatif"
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Naivyî emey les purneas alternatif (å rvier)"
+
+#, fuzzy
+#~| msgid "All Desktops"
+#~ msgid "Show Desktop"
+#~ msgstr "Tos les scribannes"
 
 #, fuzzy
 #~| msgid "Show outline of selected window"

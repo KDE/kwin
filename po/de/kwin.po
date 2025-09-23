@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-16 00:43+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2025-07-19 11:32+0200\n"
 "Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -3541,10 +3541,11 @@ msgstr ""
 "Die Abmeldung wird trotzdem in 2 Minuten durchgeführt."
 
 #: tabbox/clientmodel.cpp:58
-#, kde-format
-msgctxt "Special entry in alt+tab list for minimizing all windows"
-msgid "Show Desktop"
-msgstr "Arbeitsfläche anzeigen"
+#, fuzzy, kde-format
+#| msgid "Peek at Desktop"
+msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
+msgid "Peek at Desktop"
+msgstr "Blick auf die Arbeitsfläche"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, kde-format
@@ -4222,6 +4223,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ist abgestürzt"
+
+#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
+#~ msgid "Show Desktop"
+#~ msgstr "Arbeitsfläche anzeigen"
 
 # Eingerollt?
 #~ msgid "Shaded"

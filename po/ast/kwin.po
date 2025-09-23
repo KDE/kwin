@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-16 00:43+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2023-12-14 22:56+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
 "Language-Team: Assamese <alministradores@softastur.org>\n"
@@ -3462,10 +3462,12 @@ msgid ""
 msgstr ""
 
 #: tabbox/clientmodel.cpp:58
-#, kde-format
-msgctxt "Special entry in alt+tab list for minimizing all windows"
-msgid "Show Desktop"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and move the window there"
+#| msgid "&New Desktop"
+msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
+msgid "Peek at Desktop"
+msgstr "Escritoriu &nuevu"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, kde-format
@@ -4121,10 +4123,6 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland cascó"
-
-#~ msgctxt "Create a new desktop and move the window there"
-#~ msgid "&New Desktop"
-#~ msgstr "Escritoriu &nuevu"
 
 #~ msgid "Size"
 #~ msgstr "Tamañu"

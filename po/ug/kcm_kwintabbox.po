@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2013-09-08 07:05+0900\n"
 "Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -58,9 +58,9 @@ msgstr ""
 
 #: layoutpreview.cpp:177
 #, fuzzy, kde-format
-#| msgid "Desktop:"
-msgid "Show Desktop"
-msgstr "بارلىق ئۈستەلئۈستىلىرى"
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "نۆۋەتتىكى ئۈستەلئۈستى"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -99,7 +99,7 @@ msgstr "مەزمۇن"
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Desktop:"
-msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "بارلىق ئۈستەلئۈستىلىرى"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -316,6 +316,11 @@ msgstr "باشقىچە كۆزنەكتىن كۆزنەككە ئۆتۈش"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "باشقىچە كۆزنەكتىن كۆزنەككە ئۆتۈش(تەتۈرى)"
+
+#, fuzzy
+#~| msgid "Desktop:"
+#~ msgid "Show Desktop"
+#~ msgstr "بارلىق ئۈستەلئۈستىلىرى"
 
 #~| msgid "Highlight selected window"
 #~ msgid "Outline selected window"

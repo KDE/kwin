@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2025-04-20 15:12+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -62,9 +62,10 @@ msgid "System Settings"
 msgstr "系統設定"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "顯示桌面"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "目前的桌面"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -101,8 +102,9 @@ msgstr "內容"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "包含「顯示桌面」項目"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -319,6 +321,9 @@ msgstr "瀏覽目前應用程式視窗（替代按鍵）"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "瀏覽目前應用程式視窗（替代按鍵/反向）"
+
+#~ msgid "Show Desktop"
+#~ msgstr "顯示桌面"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

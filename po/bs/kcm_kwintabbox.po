@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2014-10-20 19:41+0000\n"
 "Last-Translator: Admir Salkanović <asalkanovi2@etf.unsa.ba>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -61,10 +61,9 @@ msgstr ""
 
 #: layoutpreview.cpp:177
 #, fuzzy, kde-format
-#| msgctxt "An example Desktop Name"
-#| msgid "Desktop 1"
-msgid "Show Desktop"
-msgstr "Desktop 1"
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "Tekuća površ"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -105,7 +104,7 @@ msgstr "Sadržaj"
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Include \"Show Desktop\" icon"
-msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Ukljući \"Prikaži Površ\" ikonu"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -324,3 +323,9 @@ msgstr ""
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
+
+#, fuzzy
+#~| msgctxt "An example Desktop Name"
+#~| msgid "Desktop 1"
+#~ msgid "Show Desktop"
+#~ msgstr "Desktop 1"

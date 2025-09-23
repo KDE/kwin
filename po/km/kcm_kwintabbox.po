@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2012-06-13 15:38+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -59,10 +59,9 @@ msgstr ""
 
 #: layoutpreview.cpp:177
 #, fuzzy, kde-format
-#| msgctxt "An example Desktop Name"
-#| msgid "Desktop 1"
-msgid "Show Desktop"
-msgstr "ផ្ទៃតុ ១"
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "ផ្ទៃតុ​បច្ចុប្បន្ន"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -102,7 +101,7 @@ msgstr "ខ្លឹមសារ"
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Include \"Show Desktop\" icon"
-msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "រួម​បញ្ចួល​រូបតំណាង \"បង្ហាញ​បង្អួច\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -321,6 +320,12 @@ msgstr ""
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
+
+#, fuzzy
+#~| msgctxt "An example Desktop Name"
+#~| msgid "Desktop 1"
+#~ msgid "Show Desktop"
+#~ msgstr "ផ្ទៃតុ ១"
 
 #~ msgid "Tabbox layout preview"
 #~ msgstr "មើល​ប្លង់​ប្រអប់​ថេប​ជា​មុន"

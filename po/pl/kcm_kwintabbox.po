@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2025-07-19 08:48+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -61,9 +61,10 @@ msgid "System Settings"
 msgstr "Ustawienia systemowe"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Pokaż pulpit"
+#, fuzzy, kde-format
+#| msgid "Desktop:"
+msgid "Peek at Desktop"
+msgstr "Pulpit:"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -101,8 +102,9 @@ msgstr "Zawartość"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Dodaj wpis \"Pokaż Pulpit\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -325,6 +327,9 @@ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Alternatywne przechodzenie pomiędzy oknami bieżącego programu (odwrotne)"
 
+#~ msgid "Show Desktop"
+#~ msgstr "Pokaż pulpit"
+
 #~ msgid "KWin"
 #~ msgstr "KWin"
 
@@ -359,9 +364,6 @@ msgstr ""
 
 #~ msgid "These settings are used by the \"Walk Through Windows\" actions."
 #~ msgstr "Te ustawienia są używane przez akcje \"Zwiedzanie okine\"."
-
-#~ msgid "Desktop:"
-#~ msgstr "Pulpit:"
 
 #~ msgid "Windows from all desktops"
 #~ msgstr "Okna ze wszystkich pulpitów"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2025-04-19 04:28+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -58,9 +58,10 @@ msgid "System Settings"
 msgstr "სისტემის მორგება"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "სამუშაო მაგიდის ჩვენება"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "მიმდინარე სამუშაო მაგიდა"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -98,8 +99,9 @@ msgstr "შემცველობა"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "\"სამუშაო მაგიდის ჩვენების\" ელემენტის ჩასმა"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -318,6 +320,9 @@ msgstr "მიმდინარე აპლიკაციის ფანჯ�
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "მიმდინარე აპლიკაციის ფანჯრებში ალტერნატიული გავლა (პირიქით)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "სამუშაო მაგიდის ჩვენება"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

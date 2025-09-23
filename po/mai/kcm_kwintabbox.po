@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2010-01-05 10:43+0530\n"
 "Last-Translator: Sangeeta Kumari <sangeeta09@gmail.com>\n"
 "Language-Team: Maithili <www.bhasharghar.in>\n"
@@ -60,10 +60,9 @@ msgid "System Settings"
 msgstr ""
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "All Desktops"
-msgid "Show Desktop"
-msgstr "सभ डेस्कटॉप"
+#, kde-format
+msgid "Peek at Desktop"
+msgstr ""
 
 #: layoutpreview.cpp:207
 #, fuzzy, kde-format
@@ -103,7 +102,7 @@ msgstr ""
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "All Desktops"
-msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "सभ डेस्कटॉप"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -329,6 +328,11 @@ msgstr "विंडोज केर आरपार चलू (उनटू)"
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "विंडोज केर आरपार चलू (उनटू)"
+
+#, fuzzy
+#~| msgid "All Desktops"
+#~ msgid "Show Desktop"
+#~ msgstr "सभ डेस्कटॉप"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2024-02-27 21:29+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -59,9 +59,10 @@ msgid "System Settings"
 msgstr ""
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Arată biroul"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "Biroul curent"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -101,8 +102,9 @@ msgstr "Conținut"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Include înregistrarea „Arată biroul”"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -323,6 +325,9 @@ msgstr "Comută printre ferestrele aplicației actuale alternativ"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Comută printre ferestrele aplicației actuale alternativ (invers)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "Arată biroul"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

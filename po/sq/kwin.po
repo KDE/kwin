@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-16 00:43+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2010-02-21 05:14+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -3553,10 +3553,10 @@ msgstr ""
 
 #: tabbox/clientmodel.cpp:58
 #, fuzzy, kde-format
-#| msgid "Show desktop"
-msgctxt "Special entry in alt+tab list for minimizing all windows"
-msgid "Show Desktop"
-msgstr "Shfaq desktopin"
+#| msgid "To &Desktop"
+msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
+msgid "Peek at Desktop"
+msgstr "Tek &Desktopi"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, fuzzy, kde-format
@@ -4240,6 +4240,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Show desktop"
+#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
+#~ msgid "Show Desktop"
+#~ msgstr "Shfaq desktopin"
 
 #, fuzzy
 #~| msgid "Shade"

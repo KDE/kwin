@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2024-09-19 02:02+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
@@ -63,9 +63,10 @@ msgid "System Settings"
 msgstr ""
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Rodyti darbalaukį"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "Dabartinis darbalaukis"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -103,8 +104,9 @@ msgstr "Turinys"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Įtraukti įrašą „Rodyti darbalaukį“"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -324,6 +326,9 @@ msgstr "Eiti per dabartinės programos langus alternatyva"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Eiti per dabartinės programos langus alternatyva (Atvirkštine tvarka)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "Rodyti darbalaukį"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

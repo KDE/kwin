@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-23 00:44+0000\n"
 "PO-Revision-Date: 2025-05-18 10:05+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -60,9 +60,10 @@ msgid "System Settings"
 msgstr "Configuración do sistema"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Amosar o escritorio"
+#, fuzzy, kde-format
+#| msgid "Desktop:"
+msgid "Peek at Desktop"
+msgstr "Escritorio"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -101,8 +102,9 @@ msgstr "Contido"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Incluír a entrada de «Amosar o escritorio»."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -324,6 +326,9 @@ msgstr "Percorrer as xanelas da aplicación actual, alternativo"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Percorrer as xanelas da aplicación actual, alternativo (inverso)"
 
+#~ msgid "Show Desktop"
+#~ msgstr "Amosar o escritorio"
+
 #~ msgid "KWin"
 #~ msgstr "KWin"
 
@@ -358,9 +363,6 @@ msgstr "Percorrer as xanelas da aplicación actual, alternativo (inverso)"
 
 #~ msgid "These settings are used by the \"Walk Through Windows\" actions."
 #~ msgstr "Estes parámetros úsanse polas accións «Percorrer as xanelas»."
-
-#~ msgid "Desktop:"
-#~ msgstr "Escritorio"
 
 #~ msgid "Windows from all desktops"
 #~ msgstr "As xanelas de todos os escritorios"
