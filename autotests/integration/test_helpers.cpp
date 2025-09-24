@@ -548,6 +548,9 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
                 c->tabletManager = std::make_unique<WpTabletManagerV2>(*c->registry, name, version);
             }
         }
+        if (flags & AdditionalWaylandInterface::KeyState && interface == org_kde_kwin_keystate_interface.name) {
+            c->keyState = std::make_unique<KeyStateV1>(*c->registry, name, version);
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -689,6 +692,7 @@ Connection::~Connection()
     xdgActivation.reset();
     sessionManager.reset();
     tabletManager.reset();
+    keyState.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -871,6 +875,11 @@ XdgActivation *xdgActivation()
 WpTabletManagerV2 *tabletManager()
 {
     return s_waylandConnection->tabletManager.get();
+}
+
+KeyStateV1 *keyState()
+{
+    return s_waylandConnection->keyState.get();
 }
 
 bool waitForWaylandSurface(Window *window)
@@ -1976,6 +1985,23 @@ XdgSessionManagerV1::XdgSessionManagerV1(::wl_registry *registry, uint32_t id, i
 XdgSessionManagerV1::~XdgSessionManagerV1()
 {
     destroy();
+}
+
+KeyStateV1::KeyStateV1(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::org_kde_kwin_keystate(registry, id, version)
+{
+    fetchStates();
+}
+
+KeyStateV1::~KeyStateV1()
+{
+    destroy();
+}
+
+void KeyStateV1::org_kde_kwin_keystate_stateChanged(uint32_t key, uint32_t state)
+{
+    keyToState[key] = state;
+    Q_EMIT stateChanged();
 }
 
 WpTabletManagerV2::WpTabletManagerV2(::wl_registry *registry, uint32_t id, int version)
