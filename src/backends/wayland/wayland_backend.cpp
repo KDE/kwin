@@ -612,25 +612,6 @@ void WaylandBackend::removeVirtualOutput(Output *output)
     }
 }
 
-static wl_buffer *importDmaBufBuffer(WaylandDisplay *display, const DmaBufAttributes *attributes)
-{
-    zwp_linux_buffer_params_v1 *params = zwp_linux_dmabuf_v1_create_params(display->linuxDmabuf()->handle());
-    for (int i = 0; i < attributes->planeCount; ++i) {
-        zwp_linux_buffer_params_v1_add(params,
-                                       attributes->fd[i].get(),
-                                       i,
-                                       attributes->offset[i],
-                                       attributes->pitch[i],
-                                       attributes->modifier >> 32,
-                                       attributes->modifier & 0xffffffff);
-    }
-
-    wl_buffer *buffer = zwp_linux_buffer_params_v1_create_immed(params, attributes->width, attributes->height, attributes->format, 0);
-    zwp_linux_buffer_params_v1_destroy(params);
-
-    return buffer;
-}
-
 static wl_buffer *importShmBuffer(WaylandDisplay *display, const ShmAttributes *attributes)
 {
     wl_shm_format format;
@@ -664,7 +645,7 @@ wl_buffer *WaylandBackend::importBuffer(GraphicsBuffer *graphicsBuffer)
     if (!buffer) {
         wl_buffer *handle = nullptr;
         if (const DmaBufAttributes *attributes = graphicsBuffer->dmabufAttributes()) {
-            handle = importDmaBufBuffer(m_display.get(), attributes);
+            handle = m_display->linuxDmabuf()->importBuffer(graphicsBuffer);
         } else if (const ShmAttributes *attributes = graphicsBuffer->shmAttributes()) {
             handle = importShmBuffer(m_display.get(), attributes);
         } else {
