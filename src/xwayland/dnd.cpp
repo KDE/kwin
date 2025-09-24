@@ -149,8 +149,7 @@ void Dnd::startDrag()
         m_currentDrag = new XToWlDrag(x11Source(), this);
     } else {
         m_currentDrag = new WlToXDrag(this);
-        auto source = new WlSource(this);
-        source->setDataSourceIface(dragSource);
+        auto source = new WlSource(dragSource, this);
         connect(dragSource, &AbstractDataSource::aboutToBeDestroyed, this, [this, source] {
             if (source == wlSource()) {
                 setWlSource(nullptr);
