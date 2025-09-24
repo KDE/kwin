@@ -616,8 +616,6 @@ void SurfaceState::mergeInto(SurfaceState *target)
     if (committed & SurfaceState::Field::Buffer) {
         target->buffer = buffer;
         target->offset = offset;
-        target->damage = std::move(damage);
-        target->bufferDamage = std::move(bufferDamage);
         target->acquirePoint = std::move(acquirePoint);
         target->releasePoint = std::move(releasePoint);
     }
@@ -625,6 +623,8 @@ void SurfaceState::mergeInto(SurfaceState *target)
     wl_list_insert_list(&target->frameCallbacks, &frameCallbacks);
     wl_list_init(&frameCallbacks);
 
+    target->damage = std::move(damage);
+    target->bufferDamage = std::move(bufferDamage);
     target->viewport.sourceGeometry = viewport.sourceGeometry;
     target->viewport.destinationSize = viewport.destinationSize;
     target->subsurface = subsurface;
