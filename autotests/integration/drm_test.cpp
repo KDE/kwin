@@ -49,6 +49,10 @@ void DrmTest::init()
 
 void DrmTest::initTestCase()
 {
+#ifdef FORCE_DRM_LEGACY
+    qputenv("KWIN_DRM_NO_AMS", "1");
+#endif
+
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
 
