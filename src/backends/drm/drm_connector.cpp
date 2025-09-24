@@ -81,7 +81,21 @@ drmModeModeInfo *DrmConnectorMode::nativeMode()
 
 static inline bool checkIfEqual(const drmModeModeInfo *one, const drmModeModeInfo *two)
 {
-    return std::memcmp(one, two, sizeof(drmModeModeInfo)) == 0;
+    // NOTE that
+    // - the struct contains a name, so doing memcmp would yield false negatives!
+    // - vrefresh is a redundant value that the kernel seems to round differently from us,
+    //   so that's not checked either
+    return one->clock == two->clock
+        && one->hdisplay == two->hdisplay
+        && one->hsync_start == two->hsync_start
+        && one->hsync_end == two->hsync_end
+        && one->htotal == two->htotal
+        && one->hskew == two->hskew
+        && one->vdisplay == two->vdisplay
+        && one->vsync_start == two->vsync_start
+        && one->vsync_end == two->vsync_end
+        && one->vtotal == two->vtotal
+        && one->vscan == two->vscan;
 }
 
 bool DrmConnectorMode::operator==(const DrmConnectorMode &otherMode)
