@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-23 00:44+0000\n"
-"PO-Revision-Date: 2025-04-19 16:23+0200\n"
+"PO-Revision-Date: 2025-09-23 16:19+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.08.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: layoutpreview.cpp:28
@@ -59,10 +59,9 @@ msgid "System Settings"
 msgstr "Systeeminstellingen"
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Desktop:"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Bureaublad:"
+msgstr "Naar het bureaublad gluren"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -101,10 +100,9 @@ msgstr "Inhoud"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" entry"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "Item \"Bureaublad tonen\" invoegen"
+msgstr "Item \"Naar het Bureaublad gluren\" invoegen"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55

@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-23 00:44+0000\n"
-"PO-Revision-Date: 2025-09-20 16:45+0100\n"
+"PO-Revision-Date: 2025-09-23 14:25+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -3529,8 +3529,7 @@ msgstr ""
 "No obstante, se cerrará la sesión en 2 minutos."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "Dar un vistazo al escritorio"
@@ -4209,7 +4208,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
-
-#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
-#~ msgid "Show Desktop"
-#~ msgstr "Mostrar el escritorio"

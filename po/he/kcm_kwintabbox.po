@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-23 00:44+0000\n"
-"PO-Revision-Date: 2025-04-19 18:23+0300\n"
+"PO-Revision-Date: 2025-09-23 15:02+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.08.0\n"
 
 #: layoutpreview.cpp:28
 #, kde-format
@@ -64,10 +64,9 @@ msgid "System Settings"
 msgstr "הגדרות מערכת"
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "שולחן עבודה נוכחי"
+msgstr "הצצה על שולחן העבודה"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -104,10 +103,9 @@ msgstr "תוכן"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" entry"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "לכלול את רשומת „הצגת שולחן העבודה”"
+msgstr "לכלול את רשומת „הצצה על שולחן העבודה”"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
