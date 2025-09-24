@@ -48,25 +48,10 @@ Primary::Primary(xcb_atom_t atom, QObject *parent)
     registerXfixes();
     xcb_flush(xcbConn);
 
-    connect(waylandServer()->seat(), &SeatInterface::primarySelectionChanged,
-            this, &Primary::wlPrimarySelectionChanged);
+    connect(waylandServer()->seat(), &SeatInterface::primarySelectionChanged, this, &Primary::checkWlSource);
 }
 
 Primary::~Primary() = default;
-
-void Primary::wlPrimarySelectionChanged(AbstractDataSource *dsi)
-{
-    if (!ownsSelection(dsi)) {
-        // Wayland native window provides new selection
-        if (!m_checkConnection) {
-            m_checkConnection = connect(workspace(), &Workspace::windowActivated,
-                                        this, &Primary::checkWlSource);
-        }
-        // remove previous source so checkWlSource() can create a new one
-        setWlSource(nullptr);
-    }
-    checkWlSource();
-}
 
 bool Primary::ownsSelection(AbstractDataSource *dsi) const
 {
@@ -75,45 +60,19 @@ bool Primary::ownsSelection(AbstractDataSource *dsi) const
 
 void Primary::checkWlSource()
 {
-    auto dsi = waylandServer()->seat()->primarySelection();
-    auto removeSource = [this] {
+    auto currentSelection = waylandServer()->seat()->primarySelection();
+
+    if (!currentSelection || ownsSelection(currentSelection)) {
         if (wlSource()) {
             setWlSource(nullptr);
             ownSelection(false);
         }
-    };
+        return;
+    }
 
-    // Wayland source gets created when:
-    // - the Wl selection exists,
-    // - its source is not Xwayland,
-    // - a window is active,
-    // - this window is an Xwayland one.
-    //
-    // Otherwise the Wayland source gets destroyed to shield
-    // against snooping X windows.
-
-    if (!dsi || ownsSelection(dsi)) {
-        // Xwayland source or no source
-        disconnect(m_checkConnection);
-        m_checkConnection = QMetaObject::Connection();
-        removeSource();
-        return;
-    }
-    if (!qobject_cast<X11Window *>(workspace()->activeWindow())) {
-        // no active window or active window is Wayland native
-        removeSource();
-        return;
-    }
-    // Xwayland window is active and we need a Wayland source
-    if (wlSource()) {
-        // source already exists, nothing more to do
-        return;
-    }
-    auto *wls = new WlSource(this);
-    setWlSource(wls);
-    if (dsi) {
-        wls->setDataSourceIface(dsi);
-    }
+    auto *source = new WlSource(this);
+    source->setDataSourceIface(currentSelection);
+    setWlSource(source);
     ownSelection(true);
 }
 

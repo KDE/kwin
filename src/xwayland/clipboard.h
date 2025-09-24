@@ -37,10 +37,6 @@ private:
     void x11OfferLost() override;
     void x11OffersChanged(const QStringList &added, const QStringList &removed) override;
     /**
-     * React to Wl selection change.
-     */
-    void wlSelectionChanged(AbstractDataSource *dsi);
-    /**
      * Check the current state of the selection and if a source needs
      * to be created or destroyed.
      */
@@ -50,8 +46,6 @@ private:
      * Returns if dsi is managed by our data bridge
      */
     bool ownsSelection(AbstractDataSource *dsi) const;
-
-    QMetaObject::Connection m_checkConnection;
 
     Q_DISABLE_COPY(Clipboard)
     std::unique_ptr<XwlDataSource> m_selectionSource;
