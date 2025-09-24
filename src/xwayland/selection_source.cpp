@@ -35,27 +35,14 @@ SelectionSource::SelectionSource(Selection *selection)
 {
 }
 
-WlSource::WlSource(Selection *selection)
+WlSource::WlSource(AbstractDataSource *dataSource, Selection *selection)
     : SelectionSource(selection)
+    , m_dsi(dataSource)
+    , m_offers(dataSource->mimeTypes())
 {
-}
-
-void WlSource::setDataSourceIface(AbstractDataSource *dsi)
-{
-    if (m_dsi == dsi) {
-        return;
-    }
-    for (const auto &mime : dsi->mimeTypes()) {
-        m_offers << mime;
-    }
-
     // TODO, this can probably be removed after some testing
     // all mime types should be constant after a data source is set
-    m_offerConnection = connect(dsi,
-                                &DataSourceInterface::mimeTypeOffered,
-                                this, &WlSource::receiveOffer);
-
-    m_dsi = dsi;
+    connect(dataSource, &DataSourceInterface::mimeTypeOffered, this, &WlSource::receiveOffer);
 }
 
 void WlSource::receiveOffer(const QString &mime)
