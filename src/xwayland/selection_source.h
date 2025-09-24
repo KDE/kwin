@@ -78,8 +78,7 @@ class WlSource : public SelectionSource
     Q_OBJECT
 
 public:
-    WlSource(Selection *selection);
-    void setDataSourceIface(AbstractDataSource *dsi);
+    WlSource(AbstractDataSource *dataSource, Selection *selection);
 
     bool handleSelectionRequest(xcb_selection_request_event_t *event);
     void sendTargets(xcb_selection_request_event_t *event);
@@ -95,9 +94,7 @@ private:
     bool checkStartTransfer(xcb_selection_request_event_t *event);
 
     AbstractDataSource *m_dsi = nullptr;
-
-    QList<QString> m_offers;
-    QMetaObject::Connection m_offerConnection;
+    QStringList m_offers;
 
     Q_DISABLE_COPY(WlSource)
 };

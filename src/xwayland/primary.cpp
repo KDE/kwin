@@ -70,9 +70,7 @@ void Primary::checkWlSource()
         return;
     }
 
-    auto *source = new WlSource(this);
-    source->setDataSourceIface(currentSelection);
-    setWlSource(source);
+    setWlSource(new WlSource(currentSelection, this));
     ownSelection(true);
 }
 
