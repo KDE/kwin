@@ -17,10 +17,12 @@
 #endif
 #include "input_event.h"
 #include "inputmethod.h"
+#include "wayland-client/linuxdmabuf.h"
+#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
+#include "wayland-zkde-screencast-unstable-v1-client-protocol.h"
 #include "wayland/display.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include <wayland-zkde-screencast-unstable-v1-client-protocol.h>
 
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/compositor.h>
@@ -557,6 +559,9 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
                 c->primarySelectionManager = std::make_unique<WpPrimarySelectionDeviceManagerV1>(*c->registry, name, version);
             }
         }
+        if (flags & AdditionalWaylandInterface::LinuxDmabuf && interface == zwp_linux_dmabuf_v1_interface.name) {
+            c->linuxDmabuf = std::make_unique<WaylandClient::LinuxDmabufV1>(*c->registry, name, version);
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -700,6 +705,7 @@ Connection::~Connection()
     tabletManager.reset();
     keyState.reset();
     primarySelectionManager.reset();
+    linuxDmabuf.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -892,6 +898,11 @@ KeyStateV1 *keyState()
 WpPrimarySelectionDeviceManagerV1 *primarySelectionManager()
 {
     return s_waylandConnection->primarySelectionManager.get();
+}
+
+WaylandClient::LinuxDmabufV1 *linuxDmabuf()
+{
+    return s_waylandConnection->linuxDmabuf.get();
 }
 
 bool waitForWaylandSurface(Window *window)
