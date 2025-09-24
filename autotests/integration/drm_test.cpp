@@ -7,11 +7,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "compositor.h"
+#include "core/drmdevice.h"
+#include "core/graphicsbuffer.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
 #include "kwin_wayland_test.h"
+#include "scene/surfaceitem.h"
+#include "wayland-client/linuxdmabuf.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -40,11 +44,89 @@ private Q_SLOTS:
     void testOverlay();
 };
 
+class DmabufWindow : public QObject
+{
+    Q_OBJECT
+public:
+    explicit DmabufWindow(std::function<void(Test::XdgToplevel *toplevel)> setup = [](Test::XdgToplevel *toplevel) { })
+        : m_surface(Test::createSurface())
+        , m_shellSurface(Test::createXdgToplevelSurface(m_surface.get(), setup))
+        , m_device(DrmDevice::open(Test::linuxDmabuf()->mainDevice()))
+        , m_surfaceFeedback(Test::linuxDmabuf()->getSurfaceFeedback(*m_surface))
+    {
+        connect(m_surfaceFeedback.get(), &WaylandClient::LinuxDmabufFeedbackV1::changed, this, &DmabufWindow::reactToDmabufFeedback);
+    }
+
+    bool renderAndWaitForShown(const QSize &size)
+    {
+        const auto formats = m_surfaceFeedback->formats().empty() ? Test::linuxDmabuf()->formats() : m_surfaceFeedback->formats();
+        m_buffer = m_device->allocator()->allocate(GraphicsBufferOptions{
+            .size = size,
+            .format = DRM_FORMAT_XRGB8888,
+            .modifiers = formats[DRM_FORMAT_XRGB8888],
+            .software = false,
+        });
+        auto wlbuffer = Test::linuxDmabuf()->importBuffer(m_buffer.buffer());
+        m_surface->attachBuffer(wlbuffer);
+        m_surface->damage(QRect(QPoint(0, 0), size));
+        m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+        wl_buffer_destroy(wlbuffer);
+        m_window = Test::waitForWaylandWindowShown();
+        return m_window;
+    }
+
+    void presentWait()
+    {
+        wl_buffer *wlbuffer = nullptr;
+        if (m_needsRealloc) {
+            const auto tranches = m_surfaceFeedback->tranches();
+            for (const auto &tranche : tranches) {
+                if (!tranche.formats.contains(m_buffer->dmabufAttributes()->format)) {
+                    continue;
+                }
+                // scanout flag is currently implicit in GraphicsBufferOptions
+                m_buffer = m_device->allocator()->allocate(GraphicsBufferOptions{
+                    .size = m_buffer->size(),
+                    .format = m_buffer->dmabufAttributes()->format,
+                    .modifiers = tranche.formats[m_buffer->dmabufAttributes()->format],
+                    .software = false,
+                });
+                auto wlbuffer = Test::linuxDmabuf()->importBuffer(m_buffer.buffer());
+                m_surface->attachBuffer(wlbuffer);
+                m_surface->damage(QRect(QPoint(0, 0), m_buffer->size()));
+                m_needsRealloc = false;
+                break;
+            }
+        }
+        auto feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*m_surface));
+        m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+        if (wlbuffer) {
+            wl_buffer_destroy(wlbuffer);
+        }
+        QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
+        QVERIFY(spy.wait());
+    }
+
+    void reactToDmabufFeedback()
+    {
+        m_needsRealloc = bool(m_buffer);
+    }
+
+    std::unique_ptr<KWayland::Client::Surface> m_surface;
+    std::unique_ptr<Test::XdgToplevel> m_shellSurface;
+    std::unique_ptr<DrmDevice> m_device;
+    std::unique_ptr<WaylandClient::LinuxDmabufFeedbackV1> m_surfaceFeedback;
+    GraphicsBufferRef m_buffer;
+    bool m_needsRealloc = false;
+    Window *m_window = nullptr;
+};
+
 void DrmTest::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::PresentationTime
                                          | Test::AdditionalWaylandInterface::Seat
-                                         | Test::AdditionalWaylandInterface::CursorShapeV1));
+                                         | Test::AdditionalWaylandInterface::CursorShapeV1
+                                         | Test::AdditionalWaylandInterface::LinuxDmabuf));
 }
 
 void DrmTest::initTestCase()
@@ -52,6 +134,8 @@ void DrmTest::initTestCase()
 #ifdef FORCE_DRM_LEGACY
     qputenv("KWIN_DRM_NO_AMS", "1");
 #endif
+    // make sure overlays are allowed
+    qputenv("KWIN_USE_OVERLAYS", "1");
 
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
@@ -159,7 +243,9 @@ void DrmTest::testCursorLayer()
 
 void DrmTest::testDirectScanout()
 {
-    QSKIP("Need the test client to attach a dmabuf and implement dmabuf feedback first...");
+    if (!Test::linuxDmabuf()) {
+        QSKIP("No dmabuf available, skipping test!");
+    }
     uint32_t time = 0;
     Output *output = kwinApp()->outputBackend()->outputs().front();
 
@@ -168,14 +254,11 @@ void DrmTest::testDirectScanout()
         QSKIP("The driver only advertises a primary plane");
     }
 
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), [](Test::XdgToplevel *toplevel) {
+    DmabufWindow window{[](Test::XdgToplevel *toplevel) {
         toplevel->set_fullscreen(nullptr);
-    }));
-    auto window = Test::renderAndWaitForShown(surface.get(), output->pixelSize(), Qt::blue);
-    QVERIFY(window);
-    window->move(output->geometryF().center());
-    std::unique_ptr<Test::WpPresentationFeedback> feedback;
+    }};
+    QVERIFY(window.renderAndWaitForShown(output->pixelSize()));
+    window.m_window->move(output->geometryF().center());
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
@@ -184,11 +267,7 @@ void DrmTest::testDirectScanout()
     QVERIFY(enteredSpy.wait());
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_default);
-
-    feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-    surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
-    QVERIFY(spy.wait());
+    window.presentWait();
 
     const int enabledLayers = std::ranges::count_if(layers, [](OutputLayer *layer) {
         return layer->isEnabled();
@@ -199,7 +278,9 @@ void DrmTest::testDirectScanout()
 
 void DrmTest::testOverlay()
 {
-    QSKIP("Need the test client to attach a dmabuf and implement dmabuf feedback first...");
+    if (!Test::linuxDmabuf()) {
+        QSKIP("No dmabuf available, skipping test!");
+    }
     uint32_t time = 0;
     Output *output = kwinApp()->outputBackend()->outputs().front();
 
@@ -207,13 +288,9 @@ void DrmTest::testOverlay()
     if (layers.size() < 3) {
         QSKIP("The driver doesn't advertise an overlay plane");
     }
-
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(window);
-    window->move(output->geometryF().center());
-    std::unique_ptr<Test::WpPresentationFeedback> feedback;
+    DmabufWindow window;
+    QVERIFY(window.renderAndWaitForShown(QSize(100, 100)));
+    window.m_window->move(output->geometryF().center());
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
@@ -225,12 +302,10 @@ void DrmTest::testOverlay()
 
     // emulate a quickly updating surface
     for (int i = 0; i < 100; i++) {
-        feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        surface->damage(QRect(0, 0, 10, 10));
-        surface->commit(KWayland::Client::Surface::CommitFlag::None);
-        QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
-        QVERIFY(spy.wait());
+        window.m_surface->damageBuffer(QRect(QPoint(), QSize(100, 100)));
+        window.presentWait();
     }
+    QCOMPARE_LE(window.m_window->surfaceItem()->frameTimeEstimation(), std::chrono::milliseconds(50));
 
     const int enabledLayers = std::ranges::count_if(layers, [](OutputLayer *layer) {
         return layer->isEnabled();
