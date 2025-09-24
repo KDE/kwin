@@ -47,6 +47,7 @@
 #endif
 
 #include <QFutureWatcher>
+#include <QMimeDatabase>
 #include <QThread>
 #include <QtConcurrentRun>
 
@@ -551,6 +552,11 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
         if (flags & AdditionalWaylandInterface::KeyState && interface == org_kde_kwin_keystate_interface.name) {
             c->keyState = std::make_unique<KeyStateV1>(*c->registry, name, version);
         }
+        if (flags & AdditionalWaylandInterface::WpPrimarySelectionV1) {
+            if (interface == zwp_primary_selection_device_manager_v1_interface.name) {
+                c->primarySelectionManager = std::make_unique<WpPrimarySelectionDeviceManagerV1>(*c->registry, name, version);
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -693,6 +699,7 @@ Connection::~Connection()
     sessionManager.reset();
     tabletManager.reset();
     keyState.reset();
+    primarySelectionManager.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -880,6 +887,11 @@ WpTabletManagerV2 *tabletManager()
 KeyStateV1 *keyState()
 {
     return s_waylandConnection->keyState.get();
+}
+
+WpPrimarySelectionDeviceManagerV1 *primarySelectionManager()
+{
+    return s_waylandConnection->primarySelectionManager.get();
 }
 
 bool waitForWaylandSurface(Window *window)
@@ -2099,6 +2111,96 @@ WpTabletPadV2::WpTabletPadV2(::zwp_tablet_pad_v2 *id)
 WpTabletPadV2::~WpTabletPadV2()
 {
     destroy();
+}
+
+WpPrimarySelectionOfferV1::WpPrimarySelectionOfferV1(::zwp_primary_selection_offer_v1 *id)
+    : QtWayland::zwp_primary_selection_offer_v1(id)
+{
+}
+
+WpPrimarySelectionOfferV1::~WpPrimarySelectionOfferV1()
+{
+    destroy();
+}
+
+QList<QMimeType> WpPrimarySelectionOfferV1::mimeTypes() const
+{
+    return m_mimeTypes;
+}
+
+void WpPrimarySelectionOfferV1::zwp_primary_selection_offer_v1_offer(const QString &mime_type)
+{
+    m_mimeTypes.append(QMimeDatabase().mimeTypeForName(mime_type));
+}
+
+WpPrimarySelectionSourceV1::WpPrimarySelectionSourceV1(::zwp_primary_selection_source_v1 *id)
+    : QtWayland::zwp_primary_selection_source_v1(id)
+{
+}
+
+WpPrimarySelectionSourceV1::~WpPrimarySelectionSourceV1()
+{
+    destroy();
+}
+
+void WpPrimarySelectionSourceV1::zwp_primary_selection_source_v1_send(const QString &mime_type, int32_t fd)
+{
+    Q_EMIT sendDataRequested(mime_type, fd);
+}
+
+void WpPrimarySelectionSourceV1::zwp_primary_selection_source_v1_cancelled()
+{
+    Q_EMIT cancelled();
+}
+
+WpPrimarySelectionDeviceV1::WpPrimarySelectionDeviceV1(::zwp_primary_selection_device_v1 *id)
+    : QtWayland::zwp_primary_selection_device_v1(id)
+{
+}
+
+WpPrimarySelectionDeviceV1::~WpPrimarySelectionDeviceV1()
+{
+    destroy();
+}
+
+WpPrimarySelectionOfferV1 *WpPrimarySelectionDeviceV1::offer() const
+{
+    return m_offer.get();
+}
+
+void WpPrimarySelectionDeviceV1::zwp_primary_selection_device_v1_data_offer(::zwp_primary_selection_offer_v1 *offer)
+{
+    m_offer = std::make_unique<WpPrimarySelectionOfferV1>(offer);
+}
+
+void WpPrimarySelectionDeviceV1::zwp_primary_selection_device_v1_selection(::zwp_primary_selection_offer_v1 *id)
+{
+    if (id) {
+        Q_EMIT selectionOffered(m_offer.get());
+    } else {
+        m_offer.reset();
+        Q_EMIT selectionCleared();
+    }
+}
+
+WpPrimarySelectionDeviceManagerV1::WpPrimarySelectionDeviceManagerV1(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::zwp_primary_selection_device_manager_v1(registry, id, version)
+{
+}
+
+WpPrimarySelectionDeviceManagerV1::~WpPrimarySelectionDeviceManagerV1()
+{
+    destroy();
+}
+
+std::unique_ptr<WpPrimarySelectionDeviceV1> WpPrimarySelectionDeviceManagerV1::getDevice(KWayland::Client::Seat *seat)
+{
+    return std::make_unique<WpPrimarySelectionDeviceV1>(get_device(*seat));
+}
+
+std::unique_ptr<WpPrimarySelectionSourceV1> WpPrimarySelectionDeviceManagerV1::createSource()
+{
+    return std::make_unique<WpPrimarySelectionSourceV1>(create_source());
 }
 
 void keyboardKeyPressed(quint32 key, quint32 time)

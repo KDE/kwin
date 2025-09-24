@@ -18,6 +18,7 @@
 #include <KWayland/Client/surface.h>
 
 // Qt
+#include <QMimeType>
 #include <QSignalSpy>
 #include <QTest>
 
@@ -37,6 +38,7 @@
 #include "qwayland-kde-screen-edge-v1.h"
 #include "qwayland-keystate.h"
 #include "qwayland-presentation-time.h"
+#include "qwayland-primary-selection-unstable-v1.h"
 #include "qwayland-security-context-v1.h"
 #include "qwayland-tablet-v2.h"
 #include "qwayland-text-input-unstable-v3.h"
@@ -671,6 +673,72 @@ private:
     bool m_ready = false;
 };
 
+class WpPrimarySelectionOfferV1 : public QObject, public QtWayland::zwp_primary_selection_offer_v1
+{
+    Q_OBJECT
+
+public:
+    explicit WpPrimarySelectionOfferV1(::zwp_primary_selection_offer_v1 *id);
+    ~WpPrimarySelectionOfferV1() override;
+
+    QList<QMimeType> mimeTypes() const;
+
+protected:
+    void zwp_primary_selection_offer_v1_offer(const QString &mime_type) override;
+
+private:
+    QList<QMimeType> m_mimeTypes;
+};
+
+class WpPrimarySelectionSourceV1 : public QObject, public QtWayland::zwp_primary_selection_source_v1
+{
+    Q_OBJECT
+
+public:
+    explicit WpPrimarySelectionSourceV1(::zwp_primary_selection_source_v1 *id);
+    ~WpPrimarySelectionSourceV1() override;
+
+Q_SIGNALS:
+    void sendDataRequested(const QString &mimeType, int32_t fd);
+    void cancelled();
+
+protected:
+    void zwp_primary_selection_source_v1_send(const QString &mime_type, int32_t fd) override;
+    void zwp_primary_selection_source_v1_cancelled() override;
+};
+
+class WpPrimarySelectionDeviceV1 : public QObject, public QtWayland::zwp_primary_selection_device_v1
+{
+    Q_OBJECT
+
+public:
+    explicit WpPrimarySelectionDeviceV1(::zwp_primary_selection_device_v1 *id);
+    ~WpPrimarySelectionDeviceV1() override;
+
+    WpPrimarySelectionOfferV1 *offer() const;
+
+Q_SIGNALS:
+    void selectionOffered(WpPrimarySelectionOfferV1 *offer);
+    void selectionCleared();
+
+protected:
+    void zwp_primary_selection_device_v1_data_offer(::zwp_primary_selection_offer_v1 *offer) override;
+    void zwp_primary_selection_device_v1_selection(::zwp_primary_selection_offer_v1 *id) override;
+
+private:
+    std::unique_ptr<WpPrimarySelectionOfferV1> m_offer;
+};
+
+class WpPrimarySelectionDeviceManagerV1 : public QtWayland::zwp_primary_selection_device_manager_v1
+{
+public:
+    WpPrimarySelectionDeviceManagerV1(::wl_registry *registry, uint32_t id, int version);
+    ~WpPrimarySelectionDeviceManagerV1() override;
+
+    std::unique_ptr<WpPrimarySelectionDeviceV1> getDevice(KWayland::Client::Seat *seat);
+    std::unique_ptr<WpPrimarySelectionSourceV1> createSource();
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     DataDeviceManager = 1 << 1,
@@ -701,6 +769,7 @@ enum class AdditionalWaylandInterface {
     XdgSessionV1 = 1 << 26,
     WpTabletV2 = 1 << 27,
     KeyState = 1 << 28,
+    WpPrimarySelectionV1 = 1 << 29,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -941,6 +1010,7 @@ struct Connection
     std::unique_ptr<XdgSessionManagerV1> sessionManager;
     std::unique_ptr<WpTabletManagerV2> tabletManager;
     std::unique_ptr<KeyStateV1> keyState;
+    std::unique_ptr<WpPrimarySelectionDeviceManagerV1> primarySelectionManager;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -1012,6 +1082,7 @@ PresentationTime *presentationTime();
 XdgActivation *xdgActivation();
 WpTabletManagerV2 *tabletManager();
 KeyStateV1 *keyState();
+WpPrimarySelectionDeviceManagerV1 *primarySelectionManager();
 
 bool waitForWaylandSurface(Window *window);
 
