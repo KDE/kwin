@@ -17,10 +17,12 @@
 #endif
 #include "input_event.h"
 #include "inputmethod.h"
+#include "wayland-client/linuxdmabuf.h"
+#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
+#include "wayland-zkde-screencast-unstable-v1-client-protocol.h"
 #include "wayland/display.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include <wayland-zkde-screencast-unstable-v1-client-protocol.h>
 
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/compositor.h>
@@ -561,6 +563,9 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
                 c->toplevelDragManager = std::make_unique<XdgToplevelDragManagerV1>(*c->registry, name, version);
             }
         }
+        if (flags & AdditionalWaylandInterface::LinuxDmabuf && interface == zwp_linux_dmabuf_v1_interface.name) {
+            c->linuxDmabuf = std::make_unique<WaylandClient::LinuxDmabufV1>(*c->registry, name, version);
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -705,6 +710,7 @@ Connection::~Connection()
     keyState.reset();
     primarySelectionManager.reset();
     toplevelDragManager.reset();
+    linuxDmabuf.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -902,6 +908,11 @@ WpPrimarySelectionDeviceManagerV1 *primarySelectionManager()
 XdgToplevelDragManagerV1 *toplevelDragManager()
 {
     return s_waylandConnection->toplevelDragManager.get();
+}
+
+WaylandClient::LinuxDmabufV1 *linuxDmabuf()
+{
+    return s_waylandConnection->linuxDmabuf.get();
 }
 
 bool waitForWaylandSurface(Window *window)

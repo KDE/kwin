@@ -89,6 +89,11 @@ class ScreencastingV1;
 namespace KWin
 {
 
+namespace WaylandClient
+{
+class LinuxDmabufV1;
+}
+
 class WaylandServer;
 
 #if KWIN_BUILD_X11
@@ -790,6 +795,7 @@ enum class AdditionalWaylandInterface {
     KeyState = 1 << 28,
     WpPrimarySelectionV1 = 1 << 29,
     XdgToplevelDragV1 = 1 << 30,
+    LinuxDmabuf = 1 << 31,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -1032,6 +1038,7 @@ struct Connection
     std::unique_ptr<KeyStateV1> keyState;
     std::unique_ptr<WpPrimarySelectionDeviceManagerV1> primarySelectionManager;
     std::unique_ptr<XdgToplevelDragManagerV1> toplevelDragManager;
+    std::unique_ptr<WaylandClient::LinuxDmabufV1> linuxDmabuf;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -1105,6 +1112,7 @@ WpTabletManagerV2 *tabletManager();
 KeyStateV1 *keyState();
 WpPrimarySelectionDeviceManagerV1 *primarySelectionManager();
 XdgToplevelDragManagerV1 *toplevelDragManager();
+WaylandClient::LinuxDmabufV1 *linuxDmabuf();
 
 bool waitForWaylandSurface(Window *window);
 

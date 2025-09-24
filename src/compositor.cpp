@@ -38,6 +38,8 @@
 #include "window.h"
 #include "workspace.h"
 
+#include "utils/drm_format_helper.h"
+
 #include <KCrash>
 #if KWIN_BUILD_NOTIFICATIONS
 #include <KLocalizedString>
@@ -67,6 +69,7 @@ Compositor *Compositor::self()
 
 Compositor::Compositor(QObject *workspace)
     : QObject(workspace)
+    , m_allowOverlaysEnv(environmentVariableBoolValue("KWIN_USE_OVERLAYS"))
 {
     // register DBus
     new CompositorDBusInterface(this);
@@ -468,15 +471,13 @@ static OutputLayer *findLayer(std::span<OutputLayer *const> layers, OutputLayerT
 }
 
 static const bool s_forceSoftwareCursor = environmentVariableBoolValue("KWIN_FORCE_SW_CURSOR").value_or(false);
-static const auto s_enableOverlays = environmentVariableBoolValue("KWIN_USE_OVERLAYS");
 
 /**
  * items and layers need to be sorted top to bottom
  */
 static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderView *sceneView, std::span<SurfaceItem *const> underlays, std::span<SurfaceItem *const> overlays, std::span<OutputLayer *const> layers)
 {
-    const bool allowed = s_enableOverlays.value_or(!sceneView->output()->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80);
-    if (layers.empty() || (underlays.empty() && overlays.empty()) || !allowed) {
+    if (layers.empty() || (underlays.empty() && overlays.empty())) {
         return {};
     }
     // TODO also allow assigning the primary view to a different plane
@@ -747,7 +748,10 @@ void Compositor::composite(RenderLoop *renderLoop)
         return layer->minZpos() < primaryView->layer()->zpos();
     });
     const auto [overlayCandidates, underlayCandidates] = m_scene->overlayCandidates(specialLayers.size(), maxOverlayCount, maxUnderlayCount);
-    const auto overlayAssignments = assignOverlays(primaryView, underlayCandidates, overlayCandidates, specialLayers);
+    std::unordered_map<SurfaceItem *, OutputLayer *> overlayAssignments;
+    if (m_allowOverlaysEnv.value_or(!output->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80)) {
+        overlayAssignments = assignOverlays(primaryView, underlayCandidates, overlayCandidates, specialLayers);
+    }
     for (const auto &[item, layer] : overlayAssignments) {
         auto &view = m_overlayViews[output->renderLoop()][layer];
         if (!view || view->item() != item) {
