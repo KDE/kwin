@@ -17,6 +17,8 @@ OutputLayer::OutputLayer(Output *output, OutputLayerType type)
     , m_output(output)
     , m_renderLoop(output ? output->renderLoop() : nullptr)
     , m_zpos(type == OutputLayerType::Primary ? 0 : 1)
+    , m_minZpos(m_zpos)
+    , m_maxZpos(m_zpos)
 {
 }
 
