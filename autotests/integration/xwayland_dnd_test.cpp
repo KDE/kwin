@@ -515,10 +515,14 @@ private:
 
     void sendTargets(xcb_window_t requestor, xcb_atom_t property)
     {
-        std::array<xcb_atom_t, 2> targets = {
+        QList<xcb_atom_t> targets{
             atoms->targets,
             atoms->timestamp,
         };
+
+        for (const QMimeType &mimeType : std::as_const(m_mimeTypes)) {
+            targets.append(m_display->mimeTypeToAtom(mimeType));
+        }
 
         xcb_change_property(m_display->connection(), XCB_PROP_MODE_REPLACE, requestor, property, XCB_ATOM_ATOM, 32, targets.size(), targets.data());
     }
