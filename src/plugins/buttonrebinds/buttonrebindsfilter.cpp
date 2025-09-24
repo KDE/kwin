@@ -310,7 +310,23 @@ bool ButtonRebindsFilter::tabletPadRingEvent(KWin::TabletPadRingEvent *event)
             m_initialRingPosition = event->position;
         }
 
-        const int delta = m_initialRingPosition - event->position;
+        // The maximum number of degrees a device could ever go from one position to the other. This is completely arbitrary.
+        // I would guarantee that most devices emit ring events in small, ~5 degree increments, but *we don't know* how big their increments are but it's safe to assume it's less than this.
+        constexpr int maximumIncrement = 180;
+
+        int delta = m_initialRingPosition - event->position;
+
+        // If the delta is something crazy, and could never be feasibly emitted by the device, then it's probably
+        // because we made a complete circle.
+        // For example, going from 0->355. That's a delta of 5 degrees, not -355 degrees!
+        if (abs(delta) > maximumIncrement) {
+            if (delta < 0) {
+                delta += 360;
+            } else {
+                delta -= 360;
+            }
+        }
+
         // Rings seem to have a minimum delta of 5 degrees, so we can assume that's one "unit".
         const bool sent = send(TabletRing, {event->device->name(), static_cast<uint>(event->number), event->mode}, false, delta * 120, event->time);
         // If accepted (that means the threshold is met) then we want to reset ourselves
