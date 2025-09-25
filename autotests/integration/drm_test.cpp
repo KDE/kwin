@@ -230,9 +230,7 @@ void DrmTest::testCursorLayer()
 
 void DrmTest::testDirectScanout()
 {
-    if (!Test::linuxDmabuf()) {
-        QSKIP("No dmabuf available, skipping test!");
-    }
+    QVERIFY2(Test::linuxDmabuf(), "This test needs dmabuf support");
     uint32_t time = 0;
     Output *output = kwinApp()->outputBackend()->outputs().front();
 
@@ -266,9 +264,7 @@ void DrmTest::testDirectScanout()
 
 void DrmTest::testOverlay()
 {
-    if (!Test::linuxDmabuf()) {
-        QSKIP("No dmabuf available, skipping test!");
-    }
+    QVERIFY2(Test::linuxDmabuf(), "This test needs dmabuf support");
     uint32_t time = 0;
     Output *output = kwinApp()->outputBackend()->outputs().front();
 
