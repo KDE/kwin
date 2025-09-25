@@ -35,7 +35,7 @@ public:
     FakeInputDevice *findDevice(Resource *resource);
     void removeDeviceByResource(Resource *resource);
     void removeDeviceByIterator(FakeInputDeviceMap::iterator it);
-    std::chrono::microseconds currentTime() const;
+    static void sendKey(FakeInputDevice *device, uint32_t keyCode, KeyboardKeyState state);
 
     FakeInputBackend *q;
     Display *display;
@@ -58,6 +58,11 @@ protected:
     void org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t keysym, uint32_t state) override;
     void org_kde_kwin_fake_input_destroy(Resource *resource) override;
 };
+
+static std::chrono::microseconds currentTime()
+{
+    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch());
+}
 
 FakeInputBackendPrivate::FakeInputBackendPrivate(FakeInputBackend *q, Display *display)
     : q(q)
@@ -108,11 +113,6 @@ void FakeInputBackendPrivate::removeDeviceByIterator(FakeInputDeviceMap::iterato
     }
     devices.erase(it);
     Q_EMIT q->deviceRemoved(device.get());
-}
-
-std::chrono::microseconds FakeInputBackendPrivate::currentTime() const
-{
-    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch());
 }
 
 void FakeInputBackendPrivate::org_kde_kwin_fake_input_authenticate(Resource *resource, const QString &application, const QString &reason)
@@ -263,48 +263,96 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_key(Resource *res
     if (!device->isAuthenticated()) {
         return;
     }
-
     KeyboardKeyState nativeState;
     switch (state) {
     case WL_KEYBOARD_KEY_STATE_PRESSED:
         nativeState = KeyboardKeyState::Pressed;
-        if (device->pressedKeys.contains(key)) {
-            return;
-        }
-        device->pressedKeys.insert(key);
         break;
 
     case WL_KEYBOARD_KEY_STATE_RELEASED:
-        if (!device->pressedKeys.remove(key)) {
-            return;
-        }
         nativeState = KeyboardKeyState::Released;
         break;
 
     default:
         return;
     }
-
-    Q_EMIT device->keyChanged(key, nativeState, currentTime(), device);
+    sendKey(device, key, nativeState);
 }
 
-void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t keysym, uint32_t state)
+void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t keySym, uint32_t state)
 {
-    const auto result = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(keysym);
-
-    if (result) {
-        if (result->level == 1) {
-            org_kde_kwin_fake_input_keyboard_key(resource, KEY_LEFTSHIFT, state);
-        } else if (result->level == 2) {
-            org_kde_kwin_fake_input_keyboard_key(resource, KEY_RIGHTALT, state);
-        } else if (result->level != 0) {
-            qCWarning(KWIN_FAKEINPUT) << "Did not handle key level" << result->level;
-        }
-
-        org_kde_kwin_fake_input_keyboard_key(resource, result->keyCode, state);
-    } else {
-        qCWarning(KWIN_FAKEINPUT) << "Could not resolve keycode for keysym" << keysym;
+    FakeInputDevice *device = findDevice(resource);
+    if (!device->isAuthenticated()) {
+        return;
     }
+
+    KeyboardKeyState nativeState;
+    switch (state) {
+    case WL_KEYBOARD_KEY_STATE_PRESSED:
+        nativeState = KeyboardKeyState::Pressed;
+        break;
+    case WL_KEYBOARD_KEY_STATE_RELEASED:
+        nativeState = KeyboardKeyState::Released;
+        break;
+    default:
+        return;
+    }
+
+    std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
+    if (keyCode) {
+        // grab the current modifier state, cache it, send our key with our own modifiers at a known state, then reset back
+        xkb_state *state = input()->keyboard()->xkb()->state();
+        xkb_mod_mask_t formerDepressed = xkb_state_serialize_mods(state, XKB_STATE_MODS_DEPRESSED);
+        xkb_mod_mask_t formerLatched = xkb_state_serialize_mods(state, XKB_STATE_MODS_LATCHED);
+        xkb_mod_mask_t formerLocked = xkb_state_serialize_mods(state, XKB_STATE_MODS_LOCKED);
+        xkb_layout_index_t formerLayout = xkb_state_serialize_layout(state, XKB_STATE_LAYOUT_EFFECTIVE);
+
+        input()->keyboard()->xkb()->updateModifiers(keyCode->modifiers, 0, 0, 0);
+        sendKey(device, keyCode->keyCode, nativeState);
+
+        input()->keyboard()->xkb()->updateModifiers(formerDepressed, formerLatched, formerLocked, formerLayout);
+        return;
+    }
+
+    // otherwise create a new keymap and send that one key
+    // clients don't seem to like having a keymap change whilst a key is pressed
+    // for now send a fake release with every press and ignore other releases. We can make the keymap resetting more lazy if it's an issue IRL
+    if (nativeState == KeyboardKeyState::Pressed) {
+        static const uint unmappedKeyCode = 247;
+        bool keymapUpdated = input()->keyboard()->xkb()->updateToKeymapForKeySym(unmappedKeyCode, keySym);
+        if (!keymapUpdated) {
+            return;
+        }
+        sendKey(device, unmappedKeyCode, KeyboardKeyState::Pressed);
+
+        for (quint32 key : std::as_const(device->pressedKeys)) {
+            sendKey(device, key, KeyboardKeyState::Released);
+        }
+        // reset keyboard back
+        input()->keyboard()->xkb()->reconfigure();
+    }
+}
+
+void FakeInputBackendPrivate::sendKey(FakeInputDevice *device, uint32_t keyCode, KeyboardKeyState state)
+{
+    switch (state) {
+    case KeyboardKeyState::Pressed:
+        if (device->pressedKeys.contains(keyCode)) {
+            return;
+        }
+        device->pressedKeys.insert(keyCode);
+        break;
+
+    case KeyboardKeyState::Released:
+        if (!device->pressedKeys.remove(keyCode)) {
+            return;
+        }
+        break;
+    default:
+        return;
+    }
+
+    Q_EMIT device->keyChanged(keyCode, state, currentTime(), device);
 }
 
 FakeInputBackend::FakeInputBackend(Display *display)
