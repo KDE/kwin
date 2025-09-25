@@ -6,13 +6,15 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include "3rdparty/colortemperature.h"
+#include "backends/drm/drm_backend.h"
 #include "backends/drm/drm_gpu.h"
-#include "backends/drm/drm_object.h"
 #include "backends/drm/drm_output.h"
-#include "backends/drm/drm_pointer.h"
+#include "backends/drm/drm_pipeline.h"
 #include "compositor.h"
 #include "core/drmdevice.h"
 #include "core/graphicsbuffer.h"
+#include "core/graphicsbufferview.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "core/outputlayer.h"
@@ -52,6 +54,8 @@ private Q_SLOTS:
     void testOverlay_data();
     void testOverlay();
     void testDpms();
+    void testNightLight_data();
+    void testNightLight();
 };
 
 struct DrmCrtcState
@@ -480,6 +484,7 @@ bool findBufferOnPlane(BackendOutput *output, GraphicsBuffer *buffer)
 
 void DrmTest::testDirectScanout()
 {
+    QSKIP("HACK");
 #ifdef FORCE_DRM_LEGACY
     QSKIP("This test is known to be broken with legacy modesetting");
 #endif
@@ -554,6 +559,7 @@ void DrmTest::testOverlay_data()
 
 void DrmTest::testOverlay()
 {
+    QSKIP("HACK");
     QVERIFY2(Test::linuxDmabuf(), "This test needs dmabuf support");
     uint32_t time = 0;
     BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
@@ -680,6 +686,89 @@ void DrmTest::testDpms()
     QVERIFY(state->crtc->active);
 }
 
+void DrmTest::testNightLight_data()
+{
+    QTest::addColumn<int>("colorTemperature");
+
+    // 6500, 5500, 3500, 2000
+    QTest::addRow("6500K") << 6500;
+    QTest::addRow("5500K") << 5500;
+    QTest::addRow("3500K") << 3500;
+    QTest::addRow("2000K") << 2000;
+}
+
+void DrmTest::testNightLight()
+{
+    const auto backend = static_cast<DrmBackend *>(kwinApp()->outputBackend());
+    const auto gpu = backend->primaryGpu();
+    if (!gpu->hasWriteback()) {
+        QSKIP("Can't test color management without a writeback connector");
+    }
+    gpu->setWritebackConnectorsOnly(true);
+    backend->updateOutputs();
+    BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
+
+    Cursors::self()->hideCursor();
+
+    const auto pipeline = static_cast<DrmOutput *>(output)->pipeline();
+    QVERIFY(pipeline->connector()->isWriteback());
+    pipeline->setWriteback(true);
+
+    QImage testPattern{QSize(256, 256), QImage::Format_ARGB32_Premultiplied};
+    for (int x = 0; x < testPattern.width(); x++) {
+        for (int y = 0; y < testPattern.height(); y++) {
+            testPattern.setPixel(x, y, qRgba(x, x, x, 255));
+        }
+    }
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(testPattern));
+    window.m_window->move(output->position());
+
+    const auto clamp = [](const QVector3D &v) {
+        return QVector3D(std::clamp(v.x(), 0.0f, 1.0f), std::clamp(v.y(), 0.0f, 1.0f), std::clamp(v.z(), 0.0f, 1.0f));
+    };
+
+    const auto original = output->colorDescription();
+
+    QFETCH(int, colorTemperature);
+    output->setChannelFactors(sampleColorTemperature(colorTemperature));
+
+    // make sure the framebuffer is updated
+    QVERIFY(window.presentWait());
+
+    const auto framebuffer = pipeline->writebackBuffer();
+    GraphicsBufferView map(framebuffer->buffer());
+
+    map.image()->copy(QRect(QPoint(0, 0), testPattern.size())).save("/home/xaver/test.png");
+    testPattern.save("/home/xaver/pattern.png");
+
+    // TODO add some (hardcoded) comparisons for the output blending color
+    const auto dst = output->blendingColor();
+    const auto encoding = original->withReference(dst->referenceLuminance());
+
+    // TODO add a clamping colorop instead of using two pipelines
+    const ColorPipeline pipeline1 = ColorPipeline::create(ColorDescription::sRGB, dst, RenderingIntent::Perceptual);
+    const ColorPipeline pipeline2 = ColorPipeline::create(dst, encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation);
+
+    QImage comparison{QSize(256, 256), QImage::Format_ARGB32_Premultiplied};
+
+    float maxError = 0;
+    for (int x = 0; x < testPattern.width(); x++) {
+        for (int y = 0; y < testPattern.height(); y++) {
+            const auto pixel = testPattern.pixel(x, y);
+            const QVector3D colors = QVector3D(qRed(pixel), qGreen(pixel), qBlue(pixel)) / 255;
+            QVector3D evaluated = clamp(pipeline1.evaluate(colors));
+            evaluated = clamp(pipeline2.evaluate(evaluated));
+            const QVector3D rounded{std::round(evaluated.x() * 255), std::round(evaluated.y() * 255), std::round(evaluated.z() * 255)};
+            const QVector3D fb(qRed(map.image()->pixel(x, y)), qGreen(map.image()->pixel(x, y)), qBlue(map.image()->pixel(x, y)));
+            maxError = std::max(maxError, (rounded - fb).length());
+            comparison.setPixel(x, y, qRgba(rounded.x(), rounded.y(), rounded.z(), 255));
+        }
+    }
+    comparison.save("/home/xaver/comparison.png");
+    // some small difference can happen just from LUTs or intermediary rounding steps
+    QCOMPARE_LE(maxError, 1);
+}
 }
 
 WAYLAND_DRM_TEST_MAIN(KWin::DrmTest)

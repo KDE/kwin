@@ -131,6 +131,9 @@ public:
 
     void addDefunctCommit(std::unique_ptr<DrmCommit> &&commit);
 
+    bool hasWriteback() const;
+    void setWritebackConnectorsOnly(bool useWritebackConnectors);
+
 Q_SIGNALS:
     void activeChanged(bool active);
     void outputAdded(DrmAbstractOutput *output);
@@ -169,6 +172,7 @@ private:
     bool m_forceLowBandwidthMode = false;
     bool m_forceImplicitModifiers = false;
     bool m_sharpnessSupported = false;
+    bool m_useWriteback = false;
     clockid_t m_presentationClock;
     std::unique_ptr<EglDisplay> m_eglDisplay;
     DrmBackend *const m_platform;

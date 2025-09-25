@@ -56,6 +56,7 @@ public:
     explicit DrmAtomicCommit(DrmGpu *gpu);
     explicit DrmAtomicCommit(const QList<DrmPipeline *> &pipelines);
     explicit DrmAtomicCommit(const DrmAtomicCommit &copy) = default;
+    ~DrmAtomicCommit() override;
 
     void addProperty(const DrmProperty &prop, uint64_t value);
     template<typename T>
@@ -89,6 +90,8 @@ public:
     bool isReadyFor(std::chrono::steady_clock::time_point pageflipTarget) const;
     bool isTearing() const;
 
+    void addWritebackBuffer(DrmConnector *connector, const std::shared_ptr<DrmFramebuffer> &buffer);
+
 private:
     bool doCommit(uint32_t flags);
 
@@ -103,6 +106,7 @@ private:
     std::unordered_map<uint32_t /* object */, std::unordered_map<uint32_t /* property */, uint64_t /* value */>> m_properties;
     bool m_modeset = false;
     PresentationMode m_mode = PresentationMode::VSync;
+    std::unordered_map<DrmConnector *, std::shared_ptr<DrmFramebuffer>> m_writebackBuffers;
 };
 
 class DrmLegacyCommit : public DrmCommit

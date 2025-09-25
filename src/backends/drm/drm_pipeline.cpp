@@ -84,10 +84,13 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
                 return err;
             }
         }
+        prepareWriteback(partialUpdate.get());
         if (m_pending.needsModesetProperties && !prepareAtomicModeset(partialUpdate.get())) {
             return Error::InvalidArguments;
         }
         m_next.needsModesetProperties = m_pending.needsModesetProperties = false;
+        // make sure each commit has its own writeback buffer
+        m_writeback.pending.reset();
         m_commitThread->addCommit(std::move(partialUpdate));
         return Error::None;
     } else {
@@ -164,6 +167,8 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
         }
         for (const auto pipeline : pipelines) {
             pipeline->m_next.needsModeset = pipeline->m_pending.needsModeset = false;
+            // make sure each commit has its own writeback buffer
+            pipeline->m_writeback.pending.reset();
         }
         commit->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
         return Error::None;
@@ -195,6 +200,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicCommit(DrmAtomicCommit *commit, Com
                 return Error::InvalidArguments;
             }
         }
+        prepareWriteback(commit);
     } else {
         prepareAtomicDisable(commit);
     }
@@ -321,6 +327,23 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
         break;
     }
     return Error::None;
+}
+
+void DrmPipeline::prepareWriteback(DrmAtomicCommit *commit)
+{
+    if (!m_connector->isWriteback() || !m_writeback.enabled) {
+        return;
+    }
+    if (!m_writeback.pending || (m_writeback.pending->buffer()->size() != m_pending.mode->size())) {
+        GraphicsBufferRef buffer = gpu()->drmDevice()->allocator()->allocate(GraphicsBufferOptions{
+            .size = m_output->pixelSize(),
+            .format = m_connector->writebackFormats().front(),
+            .modifiers = {DRM_FORMAT_MOD_LINEAR},
+            .software = false,
+        });
+        m_writeback.pending = gpu()->importBuffer(buffer.buffer(), FileDescriptor{});
+    }
+    commit->addWritebackBuffer(m_connector, m_writeback.pending);
 }
 
 void DrmPipeline::prepareAtomicDisable(DrmAtomicCommit *commit)
@@ -491,8 +514,9 @@ DrmGpu *DrmPipeline::gpu() const
     return m_connector->gpu();
 }
 
-void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
+void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp, const std::shared_ptr<DrmFramebuffer> &writeback)
 {
+    m_writeback.presented = writeback;
     RenderLoopPrivate::get(m_output->renderLoop())->notifyVblank(timestamp);
     m_commitThread->pageFlipped(timestamp);
     // the commit thread adjusts the safety margin on every commit
@@ -667,6 +691,16 @@ void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
 void DrmPipeline::setIccProfile(const std::shared_ptr<IccProfile> &profile)
 {
     m_pending.iccProfile = profile;
+}
+
+void DrmPipeline::setWriteback(bool enable)
+{
+    m_writeback.enabled = enable;
+}
+
+std::shared_ptr<DrmFramebuffer> DrmPipeline::writebackBuffer() const
+{
+    return m_writeback.presented;
 }
 
 std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction::Type transferFunction) const
