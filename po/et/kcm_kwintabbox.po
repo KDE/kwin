@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2019-10-30 14:30+0200\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -58,9 +58,9 @@ msgstr ""
 
 #: layoutpreview.cpp:177
 #, fuzzy, kde-format
-#| msgid "Show desktop:"
-msgid "Show Desktop"
-msgstr "Töölaua näitamine:"
+#| msgid "Desktop:"
+msgid "Peek at Desktop"
+msgstr "Töölaud:"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -100,7 +100,7 @@ msgstr "Sisu"
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Include \"Show Desktop\" icon"
-msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Kaasa arvatud \"Näita töölauda\" ikoon"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -320,6 +320,11 @@ msgstr "Aktiivse rakenduse akende alternatiivne läbijalutamine"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Aktiivse rakenduse akende alternatiivne läbijalutamine (tagurpidi)"
 
+#, fuzzy
+#~| msgid "Show desktop:"
+#~ msgid "Show Desktop"
+#~ msgstr "Töölaua näitamine:"
+
 #~ msgid "KWin"
 #~ msgstr "KWin"
 
@@ -355,9 +360,6 @@ msgstr "Aktiivse rakenduse akende alternatiivne läbijalutamine (tagurpidi)"
 
 #~ msgid "These settings are used by the \"Walk Through Windows\" actions."
 #~ msgstr "Neid seadistusi kasutavad \"akende läbijalutamise\" toimingud."
-
-#~ msgid "Desktop:"
-#~ msgstr "Töölaud:"
 
 #~ msgid "Windows from all desktops"
 #~ msgstr "Kõigi töölaudade aknad"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2024-09-15 04:00+0200\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -59,9 +59,10 @@ msgid "System Settings"
 msgstr ""
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Montri labortablon"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "Nuna labortablo"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -99,8 +100,9 @@ msgstr "Enhavo"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Inkluzivi eron \"Montri Labortablon\"."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -321,3 +323,6 @@ msgstr "Iri Tra Fenestroj de Nuna Aplikaĵa Alternativo"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Retroiri Tra Fenestroj de Nuna Aplika Alternativo"
+
+#~ msgid "Show Desktop"
+#~ msgstr "Montri labortablon"

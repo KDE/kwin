@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2025-04-22 12:31+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -59,9 +59,10 @@ msgid "System Settings"
 msgstr "Preferentias de systema"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Monstra Scriptorio"
+#, fuzzy, kde-format
+#| msgid "Desktop:"
+msgid "Peek at Desktop"
+msgstr "Scriptorio:"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -100,8 +101,9 @@ msgstr "Contento"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Include entrata de \"Monstra scriptorio\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -323,6 +325,9 @@ msgstr "Transversa Fenestras de Application Currente Alternative"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Transversa Fenestras de Application Currente Alternative (reverse)"
 
+#~ msgid "Show Desktop"
+#~ msgstr "Monstra Scriptorio"
+
 #~ msgid "KWin"
 #~ msgstr "KWin"
 
@@ -359,9 +364,6 @@ msgstr "Transversa Fenestras de Application Currente Alternative (reverse)"
 #~ msgid "These settings are used by the \"Walk Through Windows\" actions."
 #~ msgstr ""
 #~ "Iste preferentias es usate per le actiones de \"Transversar Fenestras\"."
-
-#~ msgid "Desktop:"
-#~ msgstr "Scriptorio:"
 
 #~ msgid "Windows from all desktops"
 #~ msgstr "Fenestras ex omne scriptorios"

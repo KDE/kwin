@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2010-06-17 13:22+0530\n"
 "Last-Translator: Sweta Kothari <swkothar@redhat.com>\n"
 "Language-Team: Gujarati\n"
@@ -59,9 +59,9 @@ msgstr ""
 
 #: layoutpreview.cpp:177
 #, fuzzy, kde-format
-#| msgid "All Desktops"
-msgid "Show Desktop"
-msgstr "બધા ડેસ્કટોપ"
+#| msgid "Current Desktop"
+msgid "Peek at Desktop"
+msgstr "હાલનું ડેસ્કટોપ"
 
 #: layoutpreview.cpp:207
 #, fuzzy, kde-format
@@ -101,7 +101,7 @@ msgstr ""
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Include desktop"
-msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "ડેસ્કટોપ સમાવો"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -324,6 +324,11 @@ msgstr ""
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
+
+#, fuzzy
+#~| msgid "All Desktops"
+#~ msgid "Show Desktop"
+#~ msgstr "બધા ડેસ્કટોપ"
 
 #, fuzzy
 #~| msgid "Highlight selected window"

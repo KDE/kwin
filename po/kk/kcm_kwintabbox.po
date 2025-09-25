@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2013-03-12 04:44+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -58,10 +58,9 @@ msgstr ""
 
 #: layoutpreview.cpp:177
 #, fuzzy, kde-format
-#| msgctxt "An example Desktop Name"
-#| msgid "Desktop 1"
-msgid "Show Desktop"
-msgstr "1-үстел"
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "Назардағы Үстел"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -101,7 +100,7 @@ msgstr "Мазмұны"
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Include \"Show Desktop\" icon"
-msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "\"Үстелді көрсету\" таңбашасын қоса"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -324,6 +323,12 @@ msgstr "Терезелерді басқаша аралау"
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Терезелерді басқаша аралау (кері)"
+
+#, fuzzy
+#~| msgctxt "An example Desktop Name"
+#~| msgid "Desktop 1"
+#~ msgid "Show Desktop"
+#~ msgstr "1-үстел"
 
 #~ msgid "Tabbox layout preview"
 #~ msgstr "Қойындымен келбетін қарап шығу"

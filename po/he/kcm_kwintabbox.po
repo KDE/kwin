@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2025-04-19 18:23+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -64,9 +64,10 @@ msgid "System Settings"
 msgstr "הגדרות מערכת"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "הצגת שולחן עבודה"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "שולחן עבודה נוכחי"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -103,8 +104,9 @@ msgstr "תוכן"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "לכלול את רשומת „הצגת שולחן העבודה”"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -323,3 +325,6 @@ msgstr "עלעול חלופי בין חלונות היישום הנוכחי"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "עלעול חלופי בין חלונות היישום הנוכחי (אחורה)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "הצגת שולחן עבודה"

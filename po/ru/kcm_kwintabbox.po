@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2025-06-25 12:32+0300\n"
 "Last-Translator: Olesya Gerasimenko <goa@altlinux.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -65,9 +65,10 @@ msgid "System Settings"
 msgstr "Параметры системы"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Показать рабочий стол"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "С текущего рабочего стола"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -105,8 +106,9 @@ msgstr "Содержание списка окон"
 # BUGME: item->icon, because it's a full-featured item with text rather than just an icon (with some of the visualization modes). --aspotashev
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Добавлять значок «Показать рабочий стол»"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -327,6 +329,9 @@ msgstr "На одно окно вперёд текущего приложени�
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "На одно окно назад текущего приложения (альтернативный режим)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "Показать рабочий стол"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

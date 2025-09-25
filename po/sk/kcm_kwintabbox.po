@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2023-05-06 17:53+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -60,9 +60,10 @@ msgid "System Settings"
 msgstr ""
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Zobraziť plochu"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "Aktuálna plocha"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -104,7 +105,7 @@ msgstr "Obsah"
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Include \"Show Desktop\" icon"
-msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Vrátane ikony \"Zobraziť plochu\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -323,6 +324,9 @@ msgstr "Prepínať medzi oknami aktuálnej aplikácie alternatívne"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Prepínať medzi oknami aktuálnej aplikácie alternatívne (opačne)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "Zobraziť plochu"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2009-12-24 06:59-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -58,10 +58,9 @@ msgstr ""
 
 #: layoutpreview.cpp:177
 #, fuzzy, kde-format
-#| msgctxt "An example Desktop Name"
-#| msgid "Desktop 1"
-msgid "Show Desktop"
-msgstr "Deasc 1"
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "An deasc reatha"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -100,7 +99,7 @@ msgstr "Ábhar"
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Include \"Show Desktop\" icon"
-msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Cuir deilbhín \"Taispeáin an Deasc\" san áireamh"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -325,6 +324,12 @@ msgstr ""
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Céimnigh trí na Fuinneoga (ag cúlú)"
+
+#, fuzzy
+#~| msgctxt "An example Desktop Name"
+#~| msgid "Desktop 1"
+#~ msgid "Show Desktop"
+#~ msgstr "Deasc 1"
 
 #~ msgid "Outline selected window"
 #~ msgstr "Aibhsigh an fhuinneog roghnaithe"

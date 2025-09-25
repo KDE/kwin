@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -62,9 +62,10 @@ msgid "System Settings"
 msgstr ""
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Паказаць працоўны стол"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "Бягучы працоўны стол"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -102,8 +103,9 @@ msgstr "Змесціва"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Уключыць запіс \"Паказаць працоўны стол\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -322,6 +324,9 @@ msgstr "Альтэрнатыўны пераход па вокнах бягуча
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Альтэрнатыўны пераход па вокнах бягучай праграмы ў адваротным кірунку"
+
+#~ msgid "Show Desktop"
+#~ msgstr "Паказаць працоўны стол"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

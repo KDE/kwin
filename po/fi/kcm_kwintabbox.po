@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2025-05-25 17:49+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -63,9 +63,10 @@ msgid "System Settings"
 msgstr "Järjestelmäasetukset"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Näytä työpöytä"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "Nykyinen työpöytä"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -104,8 +105,9 @@ msgstr "Sisältö"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Lisää ”Näytä työpöytä\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -325,6 +327,9 @@ msgstr "Selaa nykyisen sovelluksen ikkunoita (vaihtoehtoinen)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Selaa nykyisen sovelluksen ikkunoita taaksepäin (vaihtoehtoinen käänteinen)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "Näytä työpöytä"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2025-04-20 08:58+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -65,9 +65,10 @@ msgid "System Settings"
 msgstr "Configuration du système"
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "Afficher un bureau"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "Bureau courant"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -106,8 +107,9 @@ msgstr "Contenu"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "Inclure l'entrée « Afficher le bureau »"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -332,6 +334,9 @@ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Naviguer parmi les fenêtres de l'alternative courante de l'application (En "
 "ordre inverse)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "Afficher un bureau"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

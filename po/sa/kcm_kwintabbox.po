@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-05 00:45+0000\n"
+"POT-Creation-Date: 2025-09-25 02:40+0000\n"
 "PO-Revision-Date: 2024-12-20 21:52+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -59,9 +59,10 @@ msgid "System Settings"
 msgstr ""
 
 #: layoutpreview.cpp:177
-#, kde-format
-msgid "Show Desktop"
-msgstr "डेस्कटॉप् दर्शयतु"
+#, fuzzy, kde-format
+#| msgid "Current desktop"
+msgid "Peek at Desktop"
+msgstr "वर्तमान डेस्कटॉप"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -98,8 +99,9 @@ msgstr "विषयः"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" entry"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" entry"
+msgid "Include \"Peek at Desktop\" entry"
 msgstr "\"Show Desktop\" इति प्रविष्टिः समाविष्टा"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
@@ -318,3 +320,6 @@ msgstr "वर्तमान अनुप्रयोग विकल्पस�
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "वर्तमान अनुप्रयोगस्य विकल्पस्य विण्डोजद्वारा चलन्तु (विपरीतम्)"
+
+#~ msgid "Show Desktop"
+#~ msgstr "डेस्कटॉप् दर्शयतु"
