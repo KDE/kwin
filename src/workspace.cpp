@@ -219,9 +219,9 @@ void Workspace::init()
                 applyOutputConfiguration(config, order);
             }
         };
-        connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
-        connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges);
-        connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
+        connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges, Qt::QueuedConnection);
+        connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges, Qt::QueuedConnection);
+        connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges, Qt::QueuedConnection);
         m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
         connect(m_orientationSensor.get(), &OrientationSensor::availableChanged, this, [this]() {
             const auto outputs = kwinApp()->outputBackend()->outputs();
