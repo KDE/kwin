@@ -61,6 +61,7 @@ class KWIN_EXPORT GraphicsBuffer : public QObject
 
 public:
     explicit GraphicsBuffer(QObject *parent = nullptr);
+    ~GraphicsBuffer() override;
 
     bool isReferenced() const;
     bool isDropped() const;
