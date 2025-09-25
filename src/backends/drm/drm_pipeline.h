@@ -8,6 +8,7 @@
 */
 
 #pragma once
+#include "kwin_export.h"
 
 #include <QList>
 #include <QPoint>
@@ -35,7 +36,7 @@ class DrmPipelineLayer;
 class DrmCommitThread;
 class OutputFrame;
 
-class DrmPipeline
+class KWIN_EXPORT DrmPipeline
 {
 public:
     DrmPipeline(DrmConnector *conn);
@@ -72,7 +73,7 @@ public:
     DrmConnector *connector() const;
     DrmGpu *gpu() const;
 
-    void pageFlipped(std::chrono::nanoseconds timestamp);
+    void pageFlipped(std::chrono::nanoseconds timestamp, const std::shared_ptr<DrmFramebuffer> &writeback);
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
     DrmCommitThread *commitThread() const;
@@ -109,6 +110,9 @@ public:
     void setWideColorGamut(bool wcg);
     void setMaxBpc(uint32_t max);
 
+    void setWriteback(bool enable);
+    std::shared_ptr<DrmFramebuffer> writebackBuffer() const;
+
     enum class CommitMode {
         Test,
         TestAllowModeset,
@@ -132,6 +136,7 @@ private:
     static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects);
 
     // atomic modesetting only
+    void prepareWriteback(DrmAtomicCommit *commit);
     Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode, const std::shared_ptr<OutputFrame> &frame);
     bool prepareAtomicModeset(DrmAtomicCommit *commit);
     Error prepareAtomicPresentation(DrmAtomicCommit *commit, const std::shared_ptr<OutputFrame> &frame);
@@ -170,6 +175,13 @@ private:
     State m_pending;
     // the state that will be applied at the next real atomic commit
     State m_next;
+
+    struct
+    {
+        bool enabled = false;
+        std::shared_ptr<DrmFramebuffer> pending;
+        std::shared_ptr<DrmFramebuffer> presented;
+    } m_writeback;
 
     std::unique_ptr<DrmCommitThread> m_commitThread;
 };

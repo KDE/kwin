@@ -161,6 +161,9 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                                             QByteArrayLiteral("BT2020_YCC"),
                                                         })
     , path(this, QByteArrayLiteral("PATH"))
+    , writebackOutFencePtr(this, QByteArrayLiteral("WRITEBACK_OUT_FENCE_PTR"))
+    , writebackFbId(this, QByteArrayLiteral("WRITEBACK_FB_ID"))
+    , writebackPixelFormats(this, QByteArrayLiteral("WRITEBACK_PIXEL_FORMATS"))
 {
 }
 
@@ -173,6 +176,11 @@ bool DrmConnector::init()
     m_possibleCrtcs = drmModeConnectorGetPossibleCrtcs(gpu()->fd(), m_conn.get());
 
     return true;
+}
+
+bool DrmConnector::isWriteback() const
+{
+    return m_conn && m_conn->connector_type == DRM_MODE_CONNECTOR_WRITEBACK;
 }
 
 bool DrmConnector::isConnected() const
@@ -239,6 +247,16 @@ BackendOutput::SubPixel DrmConnector::subpixel() const
     }
 }
 
+QList<uint32_t> DrmConnector::writebackFormats() const
+{
+    return m_writebackFormats;
+}
+
+int *DrmConnector::writebackFencePtr()
+{
+    return &m_writebackFence;
+}
+
 bool DrmConnector::updateProperties()
 {
     if (auto connector = drmModeGetConnector(gpu()->fd(), id())) {
@@ -269,6 +287,9 @@ bool DrmConnector::updateProperties()
     scalingMode.update(props);
     colorspace.update(props);
     path.update(props);
+    writebackOutFencePtr.update(props);
+    writebackFbId.update(props);
+    writebackPixelFormats.update(props);
 
     if (gpu()->atomicModeSetting() && !crtcId.isValid()) {
         qCWarning(KWIN_DRM) << "Failed to update the basic connector properties (CRTC_ID)";
@@ -328,6 +349,11 @@ bool DrmConnector::updateProperties()
         } else {
             qCWarning(KWIN_DRM) << "Unknown path type detected:" << value;
         }
+    }
+
+    if (auto blob = writebackPixelFormats.immutableBlob()) {
+        auto asUints = std::span(reinterpret_cast<const uint32_t *>(blob->data), blob->length / sizeof(uint32_t));
+        m_writebackFormats = asUints | std::ranges::to<QList>();
     }
 
     return true;

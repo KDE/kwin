@@ -6,13 +6,15 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include "3rdparty/colortemperature.h"
+#include "backends/drm/drm_backend.h"
 #include "backends/drm/drm_gpu.h"
-#include "backends/drm/drm_object.h"
 #include "backends/drm/drm_output.h"
-#include "backends/drm/drm_pointer.h"
+#include "backends/drm/drm_pipeline.h"
 #include "compositor.h"
 #include "core/drmdevice.h"
 #include "core/graphicsbuffer.h"
+#include "core/graphicsbufferview.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "core/outputlayer.h"
@@ -53,6 +55,8 @@ private Q_SLOTS:
     void testOverlay_data();
     void testOverlay();
     void testDpms();
+    void testNightLight_data();
+    void testNightLight();
 };
 
 struct DrmCrtcState
@@ -313,26 +317,6 @@ void DrmTest::init()
                                          | Test::AdditionalWaylandInterface::CursorShapeV1
                                          | Test::AdditionalWaylandInterface::LinuxDmabuf
                                          | Test::AdditionalWaylandInterface::Viewporter));
-}
-
-void DrmTest::initTestCase()
-{
-    if (!Test::primaryNodeAvailable()) {
-        QSKIP("no primary node available");
-        return;
-    }
-
-#ifdef FORCE_DRM_LEGACY
-    qputenv("KWIN_DRM_NO_AMS", "1");
-#endif
-#ifdef FORCE_NO_DRM_MODIFIERS
-    qputenv("KWIN_DRM_USE_MODIFIERS", "0");
-#endif
-    // make sure overlays are allowed
-    qputenv("KWIN_USE_OVERLAYS", "1");
-
-    QVERIFY(waylandServer()->init(s_socketName));
-    kwinApp()->start();
 
     const auto allOutputs = kwinApp()->outputBackend()->outputs();
     QVERIFY(!allOutputs.isEmpty());
@@ -355,6 +339,29 @@ void DrmTest::initTestCase()
         QVERIFY(state.has_value());
         QVERIFY(!state->crtc.has_value());
     }
+
+    // also reset night light
+    allOutputs.front()->setChannelFactors(QVector3D(1, 1, 1));
+}
+
+void DrmTest::initTestCase()
+{
+    if (!Test::primaryNodeAvailable()) {
+        QSKIP("no primary node available");
+        return;
+    }
+
+#ifdef FORCE_DRM_LEGACY
+    qputenv("KWIN_DRM_NO_AMS", "1");
+#endif
+#ifdef FORCE_NO_DRM_MODIFIERS
+    qputenv("KWIN_DRM_USE_MODIFIERS", "0");
+#endif
+    // make sure overlays are allowed
+    qputenv("KWIN_USE_OVERLAYS", "1");
+
+    QVERIFY(waylandServer()->init(s_socketName));
+    kwinApp()->start();
 }
 
 void DrmTest::cleanup()
@@ -712,6 +719,86 @@ void DrmTest::testDpms()
     QVERIFY(state->crtc->active);
 }
 
+void DrmTest::testNightLight_data()
+{
+    QTest::addColumn<int>("colorTemperature");
+    QTest::addColumn<double>("maxAcceptedError");
+
+    QTest::addRow("6500K") << 6500 << 0.0;
+    QTest::addRow("5500K") << 5500 << 2.0;
+    QTest::addRow("3500K") << 3500 << 2.0;
+    QTest::addRow("2000K") << 2000 << 5.5;
+}
+
+void DrmTest::testNightLight()
+{
+    QFETCH(int, colorTemperature);
+    QFETCH(double, maxAcceptedError);
+
+    const auto backend = static_cast<DrmBackend *>(kwinApp()->outputBackend());
+    const auto gpu = backend->primaryGpu();
+    if (!gpu->hasWriteback()) {
+        QSKIP("Can't test color management without a writeback connector");
+    }
+    gpu->setWritebackConnectorsOnly(true);
+    backend->updateOutputs();
+    BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
+
+    Cursors::self()->hideCursor();
+
+    const auto drmPipeline = static_cast<DrmOutput *>(output)->pipeline();
+    QVERIFY(drmPipeline->connector()->isWriteback());
+
+    QImage testPattern{QSize(256, 256), QImage::Format_ARGB32_Premultiplied};
+    for (int x = 0; x < testPattern.width(); x++) {
+        for (int y = 0; y < testPattern.height(); y++) {
+            testPattern.setPixel(x, y, qRgba(x, y, (x + y) / 2, 255));
+        }
+    }
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(testPattern));
+    window.m_window->move(output->position());
+
+    const auto original = output->colorDescription();
+
+    output->setChannelFactors(sampleColorTemperature(colorTemperature));
+
+    drmPipeline->setWriteback(true);
+    QVERIFY(window.presentWait());
+    drmPipeline->setWriteback(false);
+
+    const auto framebuffer = drmPipeline->writebackBuffer();
+    GraphicsBufferView map(framebuffer->buffer());
+
+    // TODO add some (hardcoded) comparisons for the output blending color
+    const auto dst = output->blendingColor();
+    const auto encoding = original->withReference(dst->referenceLuminance());
+
+    ColorPipeline pipeline = ColorPipeline::create(ColorDescription::sRGB, dst, RenderingIntent::Perceptual);
+    pipeline.addClamp(ValueRange{
+        .min = 0,
+        .max = 1,
+    });
+    pipeline.add(ColorPipeline::create(dst, encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation));
+
+    QImage comparison{QSize(256, 256), QImage::Format_ARGB32_Premultiplied};
+
+    float maxError = 0;
+    for (int x = 0; x < testPattern.width(); x++) {
+        for (int y = 0; y < testPattern.height(); y++) {
+            const auto pixel = testPattern.pixel(x, y);
+            const QVector3D colors = QVector3D(qRed(pixel), qGreen(pixel), qBlue(pixel)) / 255;
+            const QVector3D evaluated = pipeline.evaluate(colors) * 255;
+            const QVector3D rounded{std::round(evaluated.x()), std::round(evaluated.y()), std::round(evaluated.z())};
+            const QVector3D fb(qRed(map.image()->pixel(x, y)), qGreen(map.image()->pixel(x, y)), qBlue(map.image()->pixel(x, y)));
+            maxError = std::max(maxError, (rounded - fb).length());
+            comparison.setPixel(x, y, qRgba(rounded.x(), rounded.y(), rounded.z(), 255));
+        }
+    }
+
+    qWarning() << "max error:" << maxError;
+    QCOMPARE_LE(maxError, maxAcceptedError);
+}
 }
 
 WAYLAND_DRM_TEST_MAIN(KWin::DrmTest)

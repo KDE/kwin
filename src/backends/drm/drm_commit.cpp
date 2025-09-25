@@ -18,7 +18,9 @@
 
 #include <QCoreApplication>
 #include <QThread>
+#include <poll.h>
 #include <set>
+#include <unistd.h>
 
 using namespace std::chrono_literals;
 
@@ -53,6 +55,10 @@ DrmAtomicCommit::DrmAtomicCommit(DrmGpu *gpu)
 DrmAtomicCommit::DrmAtomicCommit(const QList<DrmPipeline *> &pipelines)
     : DrmCommit(pipelines.front()->gpu())
     , m_pipelines(pipelines)
+{
+}
+
+DrmAtomicCommit::~DrmAtomicCommit()
 {
 }
 
@@ -169,6 +175,28 @@ bool DrmAtomicCommit::doCommit(uint32_t flags)
 void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
+    for (const auto &[connector, buffer] : m_writebackBuffers) {
+        if (*connector->writebackFencePtr() == -1) {
+            continue;
+        }
+        // Writeback connectors are have the strict requirement that no other
+        // commit may be done until the fence is signaled.
+        // As writeback connectors are only used for autotests, just do a
+        // blocking wait here to keep the code simpler
+        pollfd pfd = {
+            .fd = *connector->writebackFencePtr(),
+            .events = POLLIN,
+            .revents = 0,
+        };
+        const int ready = poll(&pfd, 1, 5'000);
+        if (ready < 0) {
+            qCFatal(KWIN_DRM, "Error while waiting on writeback fence: %s", strerror(errno));
+        } else if (ready == 0) {
+            qCFatal(KWIN_DRM, "Waiting on the writeback fence timed out");
+        }
+        ::close(*connector->writebackFencePtr());
+        *connector->writebackFencePtr() = -1;
+    }
     for (const auto &[plane, buffer] : m_buffers) {
         plane->setCurrentBuffer(buffer);
     }
@@ -188,7 +216,8 @@ void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
     }
     m_frames.clear();
     for (const auto pipeline : std::as_const(m_pipelines)) {
-        pipeline->pageFlipped(timestamp);
+        const auto it = m_writebackBuffers.find(pipeline->connector());
+        pipeline->pageFlipped(timestamp, it == m_writebackBuffers.end() ? nullptr : it->second);
     }
 }
 
@@ -248,6 +277,9 @@ void DrmAtomicCommit::merge(DrmAtomicCommit *onTop)
     } else {
         m_allowedVrrDelay.reset();
     }
+    for (const auto &[conn, buffer] : onTop->m_writebackBuffers) {
+        m_writebackBuffers[conn] = buffer;
+    }
 }
 
 void DrmAtomicCommit::setAllowedVrrDelay(std::optional<std::chrono::nanoseconds> allowedDelay)
@@ -274,6 +306,13 @@ bool DrmAtomicCommit::isReadyFor(std::chrono::steady_clock::time_point pageflipT
 bool DrmAtomicCommit::isTearing() const
 {
     return m_mode == PresentationMode::Async || m_mode == PresentationMode::AdaptiveAsync;
+}
+
+void DrmAtomicCommit::addWritebackBuffer(DrmConnector *connector, const std::shared_ptr<DrmFramebuffer> &buffer)
+{
+    addProperty(connector->writebackOutFencePtr, reinterpret_cast<uint64_t>(connector->writebackFencePtr()));
+    addProperty(connector->writebackFbId, buffer->framebufferId());
+    m_writebackBuffers[connector] = buffer;
 }
 
 DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame)
@@ -317,6 +356,6 @@ void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp)
         m_frame->presented(timestamp, m_mode);
         m_frame.reset();
     }
-    m_pipeline->pageFlipped(timestamp);
+    m_pipeline->pageFlipped(timestamp, nullptr);
 }
 }
