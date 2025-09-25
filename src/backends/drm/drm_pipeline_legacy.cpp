@@ -101,7 +101,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *>
         for (DrmPipeline *pipeline : pipelines) {
             pipeline->applyPendingChanges();
             if (mode == CommitMode::CommitModeset && pipeline->activePending()) {
-                pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
+                pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch(), nullptr);
             }
         }
         for (DrmObject *obj : unusedObjects) {

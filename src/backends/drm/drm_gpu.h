@@ -135,6 +135,9 @@ public:
 
     void addDefunctCommit(std::unique_ptr<DrmCommit> &&commit);
 
+    bool hasWriteback() const;
+    void setWritebackConnectorsOnly(bool useWritebackConnectors);
+
 Q_SIGNALS:
     void activeChanged(bool active);
     void outputAdded(DrmAbstractOutput *output);
@@ -176,6 +179,7 @@ private:
     bool m_forceLowBandwidthMode = false;
     bool m_forceImplicitModifiers = false;
     bool m_sharpnessSupported = false;
+    bool m_useWriteback = false;
     clockid_t m_presentationClock;
     RenderDevice *m_renderDevice = nullptr;
     std::unique_ptr<RenderDevice> m_softwareRenderDevice;

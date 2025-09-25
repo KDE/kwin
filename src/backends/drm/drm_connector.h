@@ -54,6 +54,7 @@ public:
     DrmConnector(DrmGpu *gpu, uint32_t connectorId);
 
     bool init();
+    bool isWriteback() const;
 
     bool updateProperties() override;
     void disable(DrmAtomicCommit *commit) override;
@@ -76,6 +77,9 @@ public:
     std::shared_ptr<DrmConnectorMode> generateMode(const QSize &size, float refreshRate, OutputMode::Flags flags);
 
     BackendOutput::SubPixel subpixel() const;
+
+    QList<uint32_t> writebackFormats() const;
+    int *writebackFencePtr();
 
     enum class UnderscanOptions : uint64_t {
         Off = 0,
@@ -137,6 +141,10 @@ public:
     DrmEnumProperty<Colorspace> colorspace;
     DrmProperty path;
 
+    DrmProperty writebackOutFencePtr;
+    DrmProperty writebackFbId;
+    DrmProperty writebackPixelFormats;
+
     static DrmContentType kwinToDrmContentType(ContentType type);
     static OutputTransform toKWinTransform(PanelOrientation orientation);
     static BroadcastRgbOptions rgbRangeToBroadcastRgb(BackendOutput::RgbRange rgbRange);
@@ -153,6 +161,8 @@ private:
     QList<std::shared_ptr<DrmConnectorMode>> m_modes;
     uint32_t m_possibleCrtcs = 0;
     QByteArray m_mstPath;
+    QList<uint32_t> m_writebackFormats;
+    int m_writebackFence = -1;
 
     friend QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj);
 };

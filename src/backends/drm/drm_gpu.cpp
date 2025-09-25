@@ -115,10 +115,11 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
 
     initDrmResources();
 
-    if (m_atomicModeSetting == false) {
-        m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
-    } else {
+    if (m_atomicModeSetting) {
         m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
+        drmSetClientCap(fd, DRM_CLIENT_CAP_WRITEBACK_CONNECTORS, 1);
+    } else {
+        m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
     }
 
     m_colorPipelineSupported = s_colorPipelineEnv.value_or(true) && drmSetClientCap(fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
@@ -317,7 +318,8 @@ bool DrmGpu::updateOutputs()
         DrmConnector *conn = it->get();
         const auto output = findOutput(conn->id());
         const bool stillExists = existing.contains(conn);
-        if (!stillExists || !conn->isConnected()) {
+        const bool connected = m_useWriteback ? conn->isWriteback() : (!conn->isWriteback() && conn->isConnected());
+        if (!stillExists || !connected) {
             if (output) {
                 removeOutput(output);
             }
@@ -1105,6 +1107,18 @@ void DrmGpu::updateRenderDevice()
         }
     }
     setRenderDevice(m_softwareRenderDevice.get());
+}
+
+bool DrmGpu::hasWriteback() const
+{
+    return std::ranges::any_of(m_connectors, [](const auto &conn) {
+        return conn->isWriteback();
+    });
+}
+
+void DrmGpu::setWritebackConnectorsOnly(bool useWritebackConnectors)
+{
+    m_useWriteback = useWritebackConnectors;
 }
 
 DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QList<DrmOutput *> &outputs)
