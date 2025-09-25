@@ -19,6 +19,11 @@ GraphicsBuffer::GraphicsBuffer(QObject *parent)
 {
 }
 
+GraphicsBuffer::~GraphicsBuffer()
+{
+    Q_ASSERT(m_dropped);
+}
+
 bool GraphicsBuffer::isReferenced() const
 {
     return m_refCount > 0;
