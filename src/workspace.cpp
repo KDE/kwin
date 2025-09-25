@@ -220,7 +220,9 @@ void Workspace::init()
             }
         };
         connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
-        connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges);
+        // NOTE that enabling or disabling the orientation sensor can trigger the orientation to change immediately.
+        // As we do enable or disable it in applySensorChanges, it must be done asynchronously / with a queued connection!
+        connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges, Qt::QueuedConnection);
         connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
         m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
         connect(m_orientationSensor.get(), &OrientationSensor::availableChanged, this, [this]() {
