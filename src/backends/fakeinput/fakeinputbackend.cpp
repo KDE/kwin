@@ -35,7 +35,8 @@ public:
     FakeInputDevice *findDevice(Resource *resource);
     void removeDeviceByResource(Resource *resource);
     void removeDeviceByIterator(FakeInputDeviceMap::iterator it);
-    std::chrono::microseconds currentTime() const;
+    static std::chrono::microseconds currentTime();
+    static void sendKey(FakeInputDevice *device, uint32_t keyCode, KeyboardKeyState state);
 
     FakeInputBackend *q;
     Display *display;
@@ -110,7 +111,7 @@ void FakeInputBackendPrivate::removeDeviceByIterator(FakeInputDeviceMap::iterato
     Q_EMIT q->deviceRemoved(device.get());
 }
 
-std::chrono::microseconds FakeInputBackendPrivate::currentTime() const
+std::chrono::microseconds FakeInputBackendPrivate::currentTime()
 {
     return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch());
 }
@@ -263,48 +264,91 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_key(Resource *res
     if (!device->isAuthenticated()) {
         return;
     }
-
     KeyboardKeyState nativeState;
     switch (state) {
     case WL_KEYBOARD_KEY_STATE_PRESSED:
         nativeState = KeyboardKeyState::Pressed;
-        if (device->pressedKeys.contains(key)) {
-            return;
-        }
-        device->pressedKeys.insert(key);
         break;
 
     case WL_KEYBOARD_KEY_STATE_RELEASED:
-        if (!device->pressedKeys.remove(key)) {
-            return;
-        }
         nativeState = KeyboardKeyState::Released;
         break;
 
     default:
         return;
     }
-
-    Q_EMIT device->keyChanged(key, nativeState, currentTime(), device);
+    sendKey(device, key, nativeState);
 }
 
-void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t keysym, uint32_t state)
+void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_keysym(Resource *resource, uint32_t keySym, uint32_t state)
 {
-    const auto result = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(keysym);
-
-    if (result) {
-        if (result->level == 1) {
-            org_kde_kwin_fake_input_keyboard_key(resource, KEY_LEFTSHIFT, state);
-        } else if (result->level == 2) {
-            org_kde_kwin_fake_input_keyboard_key(resource, KEY_RIGHTALT, state);
-        } else if (result->level != 0) {
-            qCWarning(KWIN_FAKEINPUT) << "Did not handle key level" << result->level;
-        }
-
-        org_kde_kwin_fake_input_keyboard_key(resource, result->keyCode, state);
-    } else {
-        qCWarning(KWIN_FAKEINPUT) << "Could not resolve keycode for keysym" << keysym;
+    FakeInputDevice *device = findDevice(resource);
+    if (!device->isAuthenticated()) {
+        return;
     }
+
+    KeyboardKeyState nativeState;
+    switch (state) {
+    case WL_KEYBOARD_KEY_STATE_PRESSED:
+        nativeState = KeyboardKeyState::Pressed;
+        break;
+    case WL_KEYBOARD_KEY_STATE_RELEASED:
+        nativeState = KeyboardKeyState::Released;
+        break;
+    default:
+        return;
+    }
+
+    std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
+    auto keymap = input()->keyboard()->xkb()->keymap();
+
+    if (keyCode) {
+        if (keyCode->modifiers | xkb_keymap_mod_get_index(keymap, XKB_MOD_NAME_SHIFT)) {
+            std::optional<Xkb::KeyCode> shiftKeyCode = input()->keyboard()->xkb()->keycodeFromKeysym(XKB_KEY_Shift_L);
+            sendKey(device, shiftKeyCode->keyCode, nativeState);
+        }
+        if (keyCode->modifiers | xkb_keymap_mod_get_index(keymap, XKB_MOD_NAME_ALT)) {
+            std::optional<Xkb::KeyCode> shiftKeyCode = input()->keyboard()->xkb()->keycodeFromKeysym(XKB_KEY_Alt_L);
+            sendKey(device, shiftKeyCode->keyCode, nativeState);
+        }
+        sendKey(device, keyCode->keyCode, nativeState);
+        return;
+    }
+
+    // otherwise create a new keymap and send that one key
+    // clients don't seem to like having a keymap change whilst a key is pressed
+    // for now send a fake release with every press and ignore other releases. We can make the keymap resetting more lazy if it's an issue IRL
+    if (nativeState == KeyboardKeyState::Pressed) {
+        static const uint unmappedKeyCode = 247;
+        bool keymapUpdated = input()->keyboard()->xkb()->updateToKeymapForKeySym(unmappedKeyCode, keySym);
+        if (!keymapUpdated) {
+            return;
+        }
+        sendKey(device, unmappedKeyCode, KeyboardKeyState::Pressed);
+        sendKey(device, unmappedKeyCode, KeyboardKeyState::Released);
+
+        // reset keyboard back
+        input()->keyboard()->xkb()->reconfigure();
+    }
+}
+
+void FakeInputBackendPrivate::sendKey(FakeInputDevice *device, uint32_t keyCode, KeyboardKeyState state)
+{
+    switch (state) {
+    case KeyboardKeyState::Pressed:
+        device->pressedKeys.insert(keyCode);
+        break;
+
+    case KeyboardKeyState::Released:
+        if (!device->pressedKeys.remove(keyCode)) {
+            return;
+        }
+        break;
+    default:
+        return;
+    }
+
+    Q_EMIT device->keyChanged(keyCode, state, currentTime(), device);
 }
 
 FakeInputBackend::FakeInputBackend(Display *display)
