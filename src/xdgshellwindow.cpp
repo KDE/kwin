@@ -1426,6 +1426,7 @@ void XdgToplevelWindow::initialize()
     scheduleConfigure();
     updateColorScheme();
     updateCapabilities();
+    updateIcon();
     setupWindowManagementInterface();
 
     m_isInitialized = true;
