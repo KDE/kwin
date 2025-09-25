@@ -130,7 +130,7 @@ public:
         : m_buffer(other.m_buffer)
     {
         if (m_buffer) {
-            m_buffer->unref();
+            m_buffer->ref();
         }
     }
 
