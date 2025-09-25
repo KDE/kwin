@@ -138,9 +138,20 @@ public:
      */
     static QList<xkb_keysym_t> keysymsFromQtKey(QKeyCombination keyQt);
 
-    // Create a new keymap with one custom keysym bound to a given keycode.
-    QByteArray createKeymapForKeysym(xkb_keycode_t newKeycode,
-                                     xkb_keysym_t customSym);
+    /**
+     *  Create a temporary keymap with one custom keysym bound to a given keycode.
+     *  The underlying keymap used by Xkb is unchanged
+     */
+    QByteArray keymapContentsForKeysym(xkb_keycode_t newKeycode,
+                                       xkb_keysym_t customSym);
+
+    /**
+     * Create a temporary keymap with one custom keysym bound to a given keycode.
+     * The underlying keymap used in this XKb object is changed.
+     */
+    bool updateToKeymapForKeySym(xkb_keycode_t newKeycode,
+                                 xkb_keysym_t customSym);
+
 
 public Q_SLOTS:
     void reconfigure();
@@ -154,6 +165,7 @@ private:
     xkb_keymap *loadKeymapFromConfig();
     xkb_keymap *loadDefaultKeymap();
     xkb_keymap *loadKeymapFromLocale1();
+    xkb_keymap *createKeymapForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t customSym);
     void updateKeymap(xkb_keymap *keymap);
     void createKeymapFile();
     void updateModifiers();

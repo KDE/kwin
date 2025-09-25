@@ -13,6 +13,7 @@
 #include "wayland_server.h"
 
 #include <linux/input-event-codes.h>
+#include <xkbcommon/xkbcommon-keysyms.h>
 
 namespace KWin
 {
@@ -36,6 +37,7 @@ private Q_SLOTS:
     void testTouch();
     void testKeyboardKey_data();
     void testKeyboardKey();
+    void testKeySym();
 
 private:
     InputDevice *m_inputDevice = nullptr;
@@ -54,7 +56,7 @@ void FakeInputTest::initTestCase()
 void FakeInputTest::init()
 {
     QSignalSpy deviceAddedSpy(input(), &InputRedirection::deviceAdded);
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::FakeInput));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::FakeInput | Test::AdditionalWaylandInterface::Seat));
 
     QVERIFY(deviceAddedSpy.wait());
     m_inputDevice = deviceAddedSpy.last().at(0).value<InputDevice *>();
@@ -295,6 +297,48 @@ void FakeInputTest::testKeyboardKey()
     QVERIFY(keyboardKeySpy.wait());
     QCOMPARE(keyboardKeySpy.last().at(0).value<quint32>(), linuxKey);
     QCOMPARE(keyboardKeySpy.last().at(1).value<KeyboardKeyState>(), KeyboardKeyState::Released);
+}
+
+void FakeInputTest::testKeySym()
+{
+    // as keyboard input is complex, test the client gets the right keys as well as kwin
+    Test::FakeInput *fakeInput = Test::waylandFakeInput();
+    fakeInput->authenticate(QStringLiteral("org.kde.foobar"), QStringLiteral("foobar"));
+
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+    QCOMPARE(window->frameGeometry().size(), QSize(1280, 1024));
+
+    auto keyboard = new Test::SimpleKeyboard(window);
+
+    auto sendKey = [fakeInput](uint32_t keySym) {
+        fakeInput->keyboard_keysym(keySym, WL_KEYBOARD_KEY_STATE_PRESSED);
+        fakeInput->keyboard_keysym(keySym, WL_KEYBOARD_KEY_STATE_RELEASED);
+    };
+
+    sendKey(XKB_KEY_a);
+    sendKey(XKB_KEY_B);
+    sendKey(XKB_KEY_space);
+    sendKey(XKB_KEY_adiaeresis); // lowercase a with umlauts
+    sendKey(XKB_KEY_Adiaeresis); // uppercase a with umlauts
+    sendKey(XKB_KEY_space);
+    sendKey(0x01000000 | 0xC548); // korean symbol
+    sendKey(0x01000000 | 0x1F60A); // smily face
+    sendKey(XKB_KEY_f);
+
+    QSignalSpy receivedTextChangedSpy(keyboard, &Test::SimpleKeyboard::receviedTextChanged);
+    bool matched = false;
+    for (int i = 0; i < 10; ++i) {
+        if (keyboard->receviedText() == "aB äÄ 안😊f") {
+            matched = true;
+            break;
+        }
+        receivedTextChangedSpy.wait();
+    }
+    QVERIFY(matched);
 }
 
 } // namespace KWin

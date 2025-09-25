@@ -672,7 +672,7 @@ void InputMethod::commitString(qint32 serial, const QString &text)
             if (!keyCode) {
                 qCWarning(KWIN_VIRTUALKEYBOARD) << "Could not map keysym " << keySym << "to keycode. Trying custom keymap";
                 static const uint unmappedKeyCode = 247;
-                auto temporaryKeymap = input()->keyboard()->xkb()->createKeymapForKeysym(unmappedKeyCode, keySym);
+                auto temporaryKeymap = input()->keyboard()->xkb()->keymapContentsForKeysym(unmappedKeyCode, keySym);
                 if (temporaryKeymap.isEmpty()) {
                     continue;
                 }

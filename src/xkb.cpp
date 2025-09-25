@@ -1322,8 +1322,31 @@ QList<xkb_keysym_t> Xkb::keysymsFromQtKey(QKeyCombination keyQt)
     return syms;
 }
 
-QByteArray Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
-                                      xkb_keysym_t customSym)
+QByteArray Xkb::keymapContentsForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t customSym)
+{
+    auto keymap = createKeymapForKeysym(newKeycode, customSym);
+    if (!keymap) {
+        return {};
+    }
+    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(keymap, XKB_KEYMAP_FORMAT_TEXT_V1));
+    if (!keymapString) {
+        return {};
+    }
+    return keymapString.get();
+}
+
+bool Xkb::updateToKeymapForKeySym(xkb_keycode_t newKeycode, xkb_keysym_t customSym)
+{
+    auto keymap = createKeymapForKeysym(newKeycode, customSym);
+    if (!keymap) {
+        return false;
+    }
+    updateKeymap(keymap);
+    return true;
+}
+
+xkb_keymap *Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
+                                       xkb_keysym_t customSym)
 {
     char symName[64];
     if (xkb_keysym_get_name(customSym, symName, sizeof(symName)) <= 0) {
@@ -1358,12 +1381,7 @@ QByteArray Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
         qWarning() << "Could not create new keymap for keysym" << customSym;
         return {};
     }
-
-    UniqueCPtr<char> keymapString(xkb_keymap_get_as_string(newMap, XKB_KEYMAP_FORMAT_TEXT_V1));
-    if (!keymapString) {
-        return {};
-    }
-    return keymapString.get();
+    return newMap;
 }
 }
 
