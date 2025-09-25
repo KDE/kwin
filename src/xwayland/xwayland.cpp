@@ -545,7 +545,6 @@ void Xwayland::updatePrimary()
             return;
         }
     }
-    qCWarning(KWIN_XWL) << "Could not find a matching X RandR CRTC/output to set as primary for" << primaryOutput;
 }
 
 bool Xwayland::createX11Connection()
