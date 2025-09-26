@@ -111,10 +111,14 @@ ButtonRebindsFilter::ButtonRebindsFilter()
 {
     const QLatin1String groupName("ButtonRebinds");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
-        if (group.parent().name() == groupName) {
-            loadConfig(group.parent());
-        } else if (group.parent().parent().name() == groupName) {
-            loadConfig(group.parent().parent());
+        // We want to get the top-most parent in the config file, since our ButtonRebinds configs tend to be very nested
+        auto parent = group.parent();
+        while (parent.isValid()) {
+            if (parent.name() == groupName) {
+                loadConfig(parent);
+                return;
+            }
+            parent = parent.parent();
         }
     });
     loadConfig(m_configWatcher->config()->group(groupName));
