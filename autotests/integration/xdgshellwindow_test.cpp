@@ -683,16 +683,25 @@ void TestXdgShellWindow::testDesktopFileName()
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     // only xdg-shell as ShellSurface misses the setter
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
+
+    // A client that never call set_app_id still gets the default icon
+    QCOMPARE(window->desktopFileName(), QString());
+    QVERIFY(window->resourceClass().startsWith("testXdgShellWindow"));
+    QVERIFY(window->resourceName().startsWith("testXdgShellWindow"));
+    QCOMPARE(window->icon().name(), QStringLiteral("wayland"));
+
+    QSignalSpy desktopFileNameChangedSpy(window, &Window::desktopFileNameChanged);
+
+    shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
+    QVERIFY(desktopFileNameChangedSpy.wait());
     QCOMPARE(window->desktopFileName(), QStringLiteral("org.kde.foo"));
     QCOMPARE(window->resourceClass(), QStringLiteral("org.kde.foo"));
     QVERIFY(window->resourceName().startsWith("testXdgShellWindow"));
     // the desktop file does not exist, so icon should be generic Wayland
     QCOMPARE(window->icon().name(), QStringLiteral("wayland"));
 
-    QSignalSpy desktopFileNameChangedSpy(window, &Window::desktopFileNameChanged);
     QSignalSpy iconChangedSpy(window, &Window::iconChanged);
     shellSurface->set_app_id(QStringLiteral("org.kde.bar"));
     QVERIFY(desktopFileNameChangedSpy.wait());
