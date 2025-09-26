@@ -307,8 +307,8 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         break;
     case MouseTrackingPush: {
         // touching an edge of the screen moves the zoom-area in that direction.
-        const int x = m_cursorPoint.x() * m_zoom - m_prevPoint.x() * (m_zoom - 1.0);
-        const int y = m_cursorPoint.y() * m_zoom - m_prevPoint.y() * (m_zoom - 1.0);
+        const int x = screenSize.width() / 2 + m_cursorPoint.x() * m_zoom - m_prevPoint.x() * (m_zoom);
+        const int y = screenSize.height() / 2 + m_cursorPoint.y() * m_zoom - m_prevPoint.y() * (m_zoom);
         const int threshold = 4;
         const QRectF currScreen = effects->screenAt(QPoint(x, y))->geometry();
 
@@ -344,8 +344,8 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         if (m_yMove) {
             m_prevPoint.setY(m_prevPoint.y() + m_yMove);
         }
-        m_xTranslation = -int(m_prevPoint.x() * (m_zoom - 1.0));
-        m_yTranslation = -int(m_prevPoint.y() * (m_zoom - 1.0));
+        m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - m_prevPoint.x() * m_zoom)));
+        m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - m_prevPoint.y() * m_zoom)));
         break;
     }
     }
@@ -474,7 +474,7 @@ void ZoomEffect::zoomTo(double to)
         setTargetZoom(to);
     }
     m_cursorPoint = effects->cursorPos().toPoint();
-    if (m_mouseTracking == MouseTrackingDisabled) {
+    if (m_mouseTracking == MouseTrackingDisabled || m_mouseTracking == MouseTrackingPush) {
         m_prevPoint = m_cursorPoint;
     }
 }
