@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-25 02:40+0000\n"
-"PO-Revision-Date: 2025-04-19 07:36+0200\n"
+"PO-Revision-Date: 2025-09-25 07:04+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.7\n"
 
 #: layoutpreview.cpp:28
 #, kde-format
@@ -62,10 +62,9 @@ msgid "System Settings"
 msgstr "Nastavitve sistema"
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Trenutno namizje"
+msgstr "Pokukaj na namizje"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -103,10 +102,9 @@ msgstr "Vsebina"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" entry"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "Vključi vnos \"Pokaži namizje\""
+msgstr "Vključi vnos \"Pokukaj na namizje\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55

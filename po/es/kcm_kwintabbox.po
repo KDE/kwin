@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-25 02:40+0000\n"
-"PO-Revision-Date: 2025-05-18 15:01+0100\n"
+"PO-Revision-Date: 2025-09-25 16:27+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-Country: SPAIN\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.08.1\n"
 
 #: layoutpreview.cpp:28
 #, kde-format
@@ -62,10 +62,9 @@ msgid "System Settings"
 msgstr "Preferencias del sistema"
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Escritorio actual"
+msgstr "Dar un vistazo al escritorio"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -104,10 +103,9 @@ msgstr "Contenido"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" entry"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "Incluir la entrada «Mostrar escritorio»"
+msgstr "Incluir la entrada «Dar un vistazo al escritorio»"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
@@ -330,6 +328,3 @@ msgstr "Recorrer las ventanas de la aplicación actual alternativo"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Recorrer las ventanas de la aplicación actual alternativo (en orden inverso)"
-
-#~ msgid "Show Desktop"
-#~ msgstr "Mostrar el escritorio"
