@@ -94,6 +94,7 @@ private Q_SLOTS:
     void noAcceptedMimeTypeTouchDrag();
     void noSelectedActionTouchDrag();
     void secondTouchDrag();
+    void cancelTouchSequence();
     void tabletDrag();
     void tabletSubSurfaceDrag();
     void tabletDragAction_data();
@@ -1514,6 +1515,51 @@ void DndTest::secondTouchDrag()
     QCOMPARE(dataDeviceDroppedSpy.count(), 0);
     QCOMPARE(dataSourceCancelledSpy.count(), 1);
     QCOMPARE(dataSourceDropPerformedSpy.count(), 1);
+}
+
+void DndTest::cancelTouchSequence()
+{
+    // This test verifies that a drag-and-drop session will be cancelled when the input backend generates a touch cancel event.
+
+    QVERIFY(Test::waitForWaylandTouch());
+
+    // Setup the data source.
+    auto touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
+    auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
+    auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
+    dataSource->offer(QStringLiteral("text/plain"));
+    dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
+    QSignalSpy touchSequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
+    QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
+    QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
+    QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
+    QSignalSpy dataSourceCancelledSpy(dataSource, &KWayland::Client::DataSource::cancelled);
+    QSignalSpy dataSourceDropPerformedSpy(dataSource, &KWayland::Client::DataSource::dragAndDropPerformed);
+
+    // Create a surface.
+    auto surface = Test::createSurface();
+    auto shellSurface = Test::createXdgToplevelSurface(surface.get());
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::red);
+    QVERIFY(window);
+    window->move(QPointF(0, 0));
+
+    // Tap the surface.
+    quint32 timestamp = 0;
+    Test::touchDown(0, QPointF(50, 50), timestamp++);
+    QVERIFY(touchSequenceStartedSpy.wait());
+
+    // Start a drag-and-drop operation.
+    dataDevice->startDrag(touchSequenceStartedSpy.last().at(0).value<KWayland::Client::TouchPoint *>()->downSerial(), dataSource, surface.get());
+    QVERIFY(dataDeviceDragEnteredSpy.wait());
+    QCOMPARE(dataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(50, 50));
+    QCOMPARE(dataDevice->dragSurface(), surface.get());
+
+    // Cancel the touch sequence.
+    Test::touchCancel();
+    QVERIFY(dataDeviceDragLeftSpy.wait());
+    QCOMPARE(dataDeviceDroppedSpy.count(), 0);
+    QCOMPARE(dataSourceCancelledSpy.count(), 1);
+    QCOMPARE(dataSourceDropPerformedSpy.count(), 0);
 }
 
 void DndTest::tabletDrag()
