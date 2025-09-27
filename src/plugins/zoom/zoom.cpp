@@ -296,19 +296,19 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
     case MouseTrackingProportional:
         m_xTranslation = -int(m_cursorPoint.x() * (m_zoom - 1.0));
         m_yTranslation = -int(m_cursorPoint.y() * (m_zoom - 1.0));
-        m_prevPoint = m_cursorPoint;
+        m_zoomPosition = m_cursorPoint;
         break;
     case MouseTrackingCentered:
-        m_prevPoint = m_cursorPoint;
+        m_zoomPosition = m_cursorPoint;
         // fall through
     case MouseTrackingDisabled:
-        m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - m_prevPoint.x() * m_zoom)));
-        m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - m_prevPoint.y() * m_zoom)));
+        m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - m_zoomPosition.x() * m_zoom)));
+        m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - m_zoomPosition.y() * m_zoom)));
         break;
     case MouseTrackingPush: {
         // touching an edge of the screen moves the zoom-area in that direction.
-        const int x = screenSize.width() / 2 + m_cursorPoint.x() * m_zoom - m_prevPoint.x() * (m_zoom);
-        const int y = screenSize.height() / 2 + m_cursorPoint.y() * m_zoom - m_prevPoint.y() * (m_zoom);
+        const int x = screenSize.width() / 2 + m_cursorPoint.x() * m_zoom - m_zoomPosition.x() * (m_zoom);
+        const int y = screenSize.height() / 2 + m_cursorPoint.y() * m_zoom - m_zoomPosition.y() * (m_zoom);
         const int threshold = 4;
         const QRectF currScreen = effects->screenAt(QPoint(x, y))->geometry();
 
@@ -339,13 +339,13 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
             m_yMove = (y + threshold - screenBottom) / m_zoom;
         }
         if (m_xMove) {
-            m_prevPoint.setX(m_prevPoint.x() + m_xMove);
+            m_zoomPosition.setX(m_zoomPosition.x() + m_xMove);
         }
         if (m_yMove) {
-            m_prevPoint.setY(m_prevPoint.y() + m_yMove);
+            m_zoomPosition.setY(m_zoomPosition.y() + m_yMove);
         }
-        m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - m_prevPoint.x() * m_zoom)));
-        m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - m_prevPoint.y() * m_zoom)));
+        m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - m_zoomPosition.x() * m_zoom)));
+        m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - m_zoomPosition.y() * m_zoom)));
         break;
     }
     }
@@ -361,7 +361,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         if (acceptFocus) {
             m_xTranslation = -int(m_focusPoint->x() * (m_zoom - 1.0));
             m_yTranslation = -int(m_focusPoint->y() * (m_zoom - 1.0));
-            m_prevPoint = *m_focusPoint;
+            m_zoomPosition = *m_focusPoint;
         }
     }
 
@@ -475,7 +475,7 @@ void ZoomEffect::zoomTo(double to)
     }
     m_cursorPoint = effects->cursorPos().toPoint();
     if (m_mouseTracking == MouseTrackingDisabled || m_mouseTracking == MouseTrackingPush) {
-        m_prevPoint = m_cursorPoint;
+        m_zoomPosition = m_cursorPoint;
     }
 }
 
@@ -487,7 +487,7 @@ void ZoomEffect::zoomOut()
         setTargetZoom(1);
     }
     if (m_mouseTracking == MouseTrackingDisabled) {
-        m_prevPoint = effects->cursorPos().toPoint();
+        m_zoomPosition = effects->cursorPos().toPoint();
     }
 }
 
@@ -500,9 +500,9 @@ void ZoomEffect::actualSize()
 void ZoomEffect::timelineFrameChanged(int /* frame */)
 {
     const QSize screenSize = effects->virtualScreenSize();
-    m_prevPoint.setX(std::max(0, std::min(screenSize.width(), m_prevPoint.x() + m_xMove)));
-    m_prevPoint.setY(std::max(0, std::min(screenSize.height(), m_prevPoint.y() + m_yMove)));
-    m_cursorPoint = m_prevPoint;
+    m_zoomPosition.setX(std::max(0, std::min(screenSize.width(), m_zoomPosition.x() + m_xMove)));
+    m_zoomPosition.setY(std::max(0, std::min(screenSize.height(), m_zoomPosition.y() + m_yMove)));
+    m_cursorPoint = m_zoomPosition;
     effects->addRepaintFull();
 }
 
