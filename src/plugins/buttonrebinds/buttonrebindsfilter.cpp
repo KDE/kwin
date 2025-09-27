@@ -113,7 +113,7 @@ ButtonRebindsFilter::ButtonRebindsFilter()
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
         // We want to get the top-most parent in the config file, since our ButtonRebinds configs tend to be very nested
         auto parent = group.parent();
-        while (parent.isValid()) {
+        while (parent.name() != "<default>") {
             if (parent.name() == groupName) {
                 loadConfig(parent);
                 return;
