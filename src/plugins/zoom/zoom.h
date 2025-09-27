@@ -121,7 +121,7 @@ private:
     MouseTrackingType m_mouseTracking = MouseTrackingProportional;
     MousePointerType m_mousePointer = MousePointerScale;
     QPoint m_cursorPoint;
-    QPoint m_prevPoint;
+    QPoint m_zoomPosition;
     QTime m_lastMouseEvent;
     std::unique_ptr<CursorItem> m_cursorItem;
     bool m_cursorHidden = false;
