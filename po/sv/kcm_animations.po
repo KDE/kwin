@@ -88,7 +88,7 @@ msgstr "Fullskärm:"
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Peek at desktop:"
-msgstr "Titta på skrivbordet:"
+msgstr "Kika på skrivbordet:"
 
 #: ui/main.qml:102
 #, kde-format

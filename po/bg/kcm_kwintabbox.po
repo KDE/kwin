@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-23 00:44+0000\n"
-"PO-Revision-Date: 2025-04-19 12:35+0200\n"
+"PO-Revision-Date: 2025-09-26 15:06+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -58,10 +58,9 @@ msgid "System Settings"
 msgstr "Системни настройки"
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Текущ работен плот"
+msgstr "Поглед върху работния плот"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -100,10 +99,9 @@ msgstr "Съдържание"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" entry"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "Включване на елемента \"Показване на работния плот\""
+msgstr "Включване на елемента „Поглед върху работния плот“"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
