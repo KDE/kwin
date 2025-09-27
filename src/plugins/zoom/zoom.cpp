@@ -271,10 +271,24 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         m_lastPresentTime = presentTime;
 
         const float zoomDist = std::abs(m_targetZoom - m_sourceZoom);
+        const QPoint panDist = QPoint(std::abs(m_targetZoomPosition.x() - m_previousZoomPosition.x()), std::abs(m_targetZoomPosition.y() - m_previousZoomPosition.y()));
+
         if (m_targetZoom > m_zoom) {
             m_zoom = std::min(m_zoom + ((zoomDist * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor)))), m_targetZoom);
         } else {
             m_zoom = std::max(m_zoom - ((zoomDist * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor)))), m_targetZoom);
+        }
+
+        if (m_targetZoomPosition.x() > m_zoomPosition.x()) {
+            m_zoomPosition.setX(std::min(int(m_zoomPosition.x() + ((panDist.x() * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor))))), m_targetZoomPosition.x()));
+        } else {
+            m_zoomPosition.setX(std::max(int(m_zoomPosition.x() - ((panDist.x() * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor))))), m_targetZoomPosition.x()));
+        }
+
+        if (m_targetZoomPosition.y() > m_zoomPosition.y()) {
+            m_zoomPosition.setY(std::min(int(m_zoomPosition.y() + ((panDist.y() * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor))))), m_targetZoomPosition.y()));
+        } else {
+            m_zoomPosition.setY(std::max(int(m_zoomPosition.y() - ((panDist.y() * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor))))), m_targetZoomPosition.y()));
         }
     }
 
@@ -467,6 +481,7 @@ void ZoomEffect::zoomIn()
 
 void ZoomEffect::zoomTo(double to)
 {
+    m_previousZoomPosition = m_zoomPosition;
     m_sourceZoom = m_zoom;
     if (to < 0.0) {
         setTargetZoom(m_targetZoom * m_zoomFactor);
@@ -474,7 +489,8 @@ void ZoomEffect::zoomTo(double to)
         setTargetZoom(to);
     }
     m_cursorPoint = effects->cursorPos().toPoint();
-    if (m_mouseTracking == MouseTrackingDisabled || m_mouseTracking == MouseTrackingPush) {
+    m_targetZoomPosition = m_cursorPoint;
+    if (m_mouseTracking == MouseTrackingDisabled) {
         m_zoomPosition = m_cursorPoint;
     }
 }
