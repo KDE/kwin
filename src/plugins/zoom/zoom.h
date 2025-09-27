@@ -122,6 +122,8 @@ private:
     MousePointerType m_mousePointer = MousePointerScale;
     QPoint m_cursorPoint;
     QPoint m_zoomPosition;
+    QPoint m_previousZoomPosition;
+    QPoint m_targetZoomPosition;
     QTime m_lastMouseEvent;
     std::unique_ptr<CursorItem> m_cursorItem;
     bool m_cursorHidden = false;
