@@ -5,6 +5,7 @@
 */
 
 #include "inputmethod_v1.h"
+#include "core/inputdevice.h"
 #include "display.h"
 #include "keyboard.h"
 #include "keyboard_p.h"
@@ -134,17 +135,51 @@ public:
     }
     void zwp_input_method_context_v1_keysym(Resource *, uint32_t serial, uint32_t time, uint32_t sym, uint32_t state, uint32_t modifiers) override
     {
-        Q_EMIT q->keysym(serial, time, sym, state == WL_KEYBOARD_KEY_STATE_PRESSED, modifiers);
+        KeyboardKeyState nativeState;
+        switch (state) {
+        case WL_KEYBOARD_KEY_STATE_PRESSED:
+            nativeState = KeyboardKeyState::Pressed;
+            break;
+
+        case WL_KEYBOARD_KEY_STATE_RELEASED:
+            nativeState = KeyboardKeyState::Released;
+            break;
+
+        case WL_KEYBOARD_KEY_STATE_REPEATED:
+            nativeState = KeyboardKeyState::Repeated;
+            break;
+        default:
+            Q_UNREACHABLE();
+        }
+
+        Q_EMIT q->keysym(serial, time, sym, nativeState, modifiers);
     }
     void zwp_input_method_context_v1_grab_keyboard(Resource *resource, uint32_t id) override
     {
         m_keyboardGrab.reset(new InputMethodGrabV1(q));
-        m_keyboardGrab->d->add(resource->client(), id, 1);
+        m_keyboardGrab->d->add(resource->client(), id, 10);
         Q_EMIT q->keyboardGrabRequested(m_keyboardGrab.get());
     }
     void zwp_input_method_context_v1_key(Resource *, uint32_t serial, uint32_t time, uint32_t key, uint32_t state) override
     {
-        Q_EMIT q->key(serial, time, key, state == WL_KEYBOARD_KEY_STATE_PRESSED);
+        KeyboardKeyState nativeState;
+        switch (state) {
+        case WL_KEYBOARD_KEY_STATE_PRESSED:
+            nativeState = KeyboardKeyState::Pressed;
+            break;
+
+        case WL_KEYBOARD_KEY_STATE_RELEASED:
+            nativeState = KeyboardKeyState::Released;
+            break;
+
+        case WL_KEYBOARD_KEY_STATE_REPEATED:
+            nativeState = KeyboardKeyState::Repeated;
+            break;
+        default:
+            Q_UNREACHABLE();
+        }
+
+        Q_EMIT q->key(serial, time, key, nativeState);
     }
     void zwp_input_method_context_v1_modifiers(Resource *,
                                                uint32_t serial,
