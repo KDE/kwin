@@ -221,14 +221,14 @@ void InputMethod::refreshActive()
     setActive(active);
 }
 
-void InputMethod::forwardKeyToEffects(bool pressed, int keyCode, int keySym)
+void InputMethod::forwardKeyToEffects(KWin::KeyboardKeyState state, int keyCode, int keySym)
 {
     if (!input()->keyboard()) {
         return;
     }
     auto xkb = input()->keyboard()->xkb();
 
-    QKeyEvent event(pressed ? QEvent::KeyPress : QEvent::KeyRelease,
+    QKeyEvent event(state == KWin::KeyboardKeyState::Released ? QEvent::KeyRelease : QEvent::KeyPress,
                     xkb->toQtKey(keySym, keyCode, Qt::KeyboardModifiers()),
                     xkb->modifiers(),
                     keyCode,
@@ -582,10 +582,10 @@ void InputMethod::setEnabled(bool enabled)
     kwinApp()->config()->sync();
 }
 
-void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, quint32 modifiers)
+void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, KeyboardKeyState state, quint32 modifiers)
 {
     if (auto t1 = waylandServer()->seat()->textInputV1(); t1 && t1->isEnabled()) {
-        if (pressed) {
+        if (state != KeyboardKeyState::Released) {
             t1->keysymPressed(time, sym, modifiers);
         } else {
             t1->keysymReleased(time, sym, modifiers);
@@ -595,7 +595,7 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
 
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
-        if (pressed) {
+        if (state != KeyboardKeyState::Released) {
             t2->keysymPressed(sym, modifiers);
         } else {
             t2->keysymReleased(sym, modifiers);
@@ -605,11 +605,11 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
 
     if (effects && effects->hasKeyboardGrab()) {
         std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(sym);
-        forwardKeyToEffects(pressed, keyCode.value_or(Xkb::KeyCode{}).keyCode, sym);
+        forwardKeyToEffects(state, keyCode.value_or(Xkb::KeyCode{}).keyCode, sym);
         return;
     }
 
-    if (pressed) {
+    if (state == KeyboardKeyState::Pressed) {
         forwardKeySym(sym);
         // reset any modifiers to the actual state
         input()->keyboard()->xkb()->forwardModifiers();
@@ -831,7 +831,7 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
     resetPendingPreedit();
 }
 
-void InputMethod::key(quint32 /*serial*/, quint32 time, quint32 keyCode, bool pressed)
+void InputMethod::key(quint32 /*serial*/, quint32 time, quint32 keyCode, KeyboardKeyState state)
 {
     if (!input()->keyboard()) {
         return;
@@ -839,12 +839,12 @@ void InputMethod::key(quint32 /*serial*/, quint32 time, quint32 keyCode, bool pr
     if (effects && effects->hasKeyboardGrab()) {
         Xkb *xkb = input()->keyboard()->xkb();
         const xkb_keysym_t keySym = xkb->toKeysym(keyCode);
-        forwardKeyToEffects(pressed, keyCode, keySym);
+        forwardKeyToEffects(state, keyCode, keySym);
         return;
     }
 
     waylandServer()->seat()->notifyKeyboardKey(keyCode,
-                                               pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released,
+                                               state,
                                                waylandServer()->display()->nextSerial());
 }
 

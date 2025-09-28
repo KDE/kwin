@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "input_event.h"
 #include "wayland/textinput_v2.h"
 
 #include <QObject>
@@ -107,14 +108,14 @@ private Q_SLOTS:
     void setPreeditString(uint32_t serial, const QString &text, const QString &commit);
     void setPreeditStyling(quint32 index, quint32 length, quint32 style);
     void setPreeditCursor(qint32 index);
-    void key(quint32 serial, quint32 time, quint32 key, bool pressed);
+    void key(quint32 serial, quint32 time, quint32 key, KWin::KeyboardKeyState state);
     void modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group);
 
 private:
     void updateInputPanelState();
     void adoptInputMethodContext();
     void commitString(qint32 serial, const QString &text);
-    void keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, quint32 modifiers);
+    void keysymReceived(quint32 serial, quint32 time, quint32 sym, KeyboardKeyState state, quint32 modifiers);
     void deleteSurroundingText(int32_t index, uint32_t length);
     void setCursorPosition(qint32 index, qint32 anchor);
     void setLanguage(uint32_t serial, const QString &language);
@@ -128,7 +129,7 @@ private:
     bool touchEventTriggered() const;
     void resetPendingPreedit();
     void refreshActive();
-    void forwardKeyToEffects(bool pressed, int keyCode, int keySym);
+    void forwardKeyToEffects(KWin::KeyboardKeyState state, int keyCode, int keySym);
     void forwardKeySym(int keySym);
 
     // buffered till the preedit text is set
