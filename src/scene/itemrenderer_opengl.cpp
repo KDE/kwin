@@ -216,36 +216,33 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             }
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
-        SurfacePixmap *pixmap = surfaceItem->pixmap();
-        if (pixmap) {
+        auto texture = static_cast<OpenGLSurfaceTexture *>(surfaceItem->texture());
+        if (texture && texture->isValid()) {
             if (!geometry.isEmpty()) {
-                OpenGLSurfaceTexture *surfaceTexture = static_cast<OpenGLSurfaceTexture *>(pixmap->texture());
-                if (surfaceTexture->isValid()) {
-                    RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                        .traits = surfaceTexture->texture().planes.count() == 1 ? ShaderTrait::MapTexture : ShaderTrait::MapYUVTexture,
-                        .textures = surfaceTexture->texture().toVarLengthArray(),
-                        .geometry = geometry,
-                        .transformMatrix = context->transformStack.top(),
-                        .opacity = context->opacityStack.top(),
-                        .hasAlpha = pixmap->hasAlphaChannel(),
-                        .colorDescription = item->colorDescription(),
-                        .renderingIntent = item->renderingIntent(),
-                        .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
-                        .paintHole = hole,
-                    });
-                    renderNode.geometry.postProcessTextureCoordinates(surfaceTexture->texture().planes.at(0)->matrix(UnnormalizedCoordinates));
+                RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
+                    .traits = texture->texture().planes.count() == 1 ? ShaderTrait::MapTexture : ShaderTrait::MapYUVTexture,
+                    .textures = texture->texture().toVarLengthArray(),
+                    .geometry = geometry,
+                    .transformMatrix = context->transformStack.top(),
+                    .opacity = context->opacityStack.top(),
+                    .hasAlpha = surfaceItem->hasAlphaChannel(),
+                    .colorDescription = item->colorDescription(),
+                    .renderingIntent = item->renderingIntent(),
+                    .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
+                    .paintHole = hole,
+                });
+                renderNode.geometry.postProcessTextureCoordinates(texture->texture().planes.at(0)->matrix(UnnormalizedCoordinates));
 
-                    if (!context->cornerStack.isEmpty()) {
-                        const auto &top = context->cornerStack.top();
+                if (!context->cornerStack.isEmpty()) {
+                    const auto &top = context->cornerStack.top();
 
-                        renderNode.traits |= ShaderTrait::RoundedCorners;
-                        renderNode.hasAlpha = true;
-                        renderNode.box = QVector4D(top.box.x() + top.box.width() * 0.5,
-                                                   top.box.y() + top.box.height() * 0.5,
-                                                   top.box.width() * 0.5,
-                                                   top.box.height() * 0.5),
-                        renderNode.borderRadius = top.radius.toVector();
-                    }
+                    renderNode.traits |= ShaderTrait::RoundedCorners;
+                    renderNode.hasAlpha = true;
+                    renderNode.box = QVector4D(top.box.x() + top.box.width() * 0.5,
+                                               top.box.y() + top.box.height() * 0.5,
+                                               top.box.width() * 0.5,
+                                               top.box.height() * 0.5),
+                    renderNode.borderRadius = top.radius.toVector();
                 }
             }
         }

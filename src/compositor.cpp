@@ -416,7 +416,7 @@ static bool prepareDirectScanout(RenderView *view, Output *output, const std::sh
     if (ret) {
         candidate->resetDamage();
         // ensure the pixmap is updated when direct scanout ends
-        candidate->destroyPixmap();
+        candidate->destroyTexture();
     }
     return ret;
 }
