@@ -102,6 +102,9 @@ KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data)
     layout->addLayout(buttonBar);
     widget()->setLayout(layout);
 
+    // Hide the separator if KNS is disabled.
+    separator->setVisible(ghnsButton->isHidden() == false);
+
     addConfig(m_data->tabBoxConfig(), m_primaryTabBoxUi);
     addConfig(m_data->tabBoxAlternativeConfig(), m_alternativeTabBoxUi);
 
