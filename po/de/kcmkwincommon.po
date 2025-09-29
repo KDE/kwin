@@ -1,8 +1,8 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# Burkhard Lück <lueck@hube-lueck.de>, 2019.
-# Jannick Kuhr <opensource@kuhr.org>, 2023.
-# Frederik Schwarzer <schwarzer@kde.org>, 2023.
+# SPDX-FileCopyrightText: 2019 Burkhard Lück <lueck@hube-lueck.de>
+# SPDX-FileCopyrightText: 2023 Jannick Kuhr <opensource@kuhr.org>
+# SPDX-FileCopyrightText: 2023 Frederik Schwarzer <schwarzer@kde.org>
 #
 msgid ""
 msgstr ""

@@ -323,6 +323,3 @@ msgstr "Bla gjennom vinduer til gjeldende program (alternativ)"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Bla gjennom vinduer til gjeldende program (alternativ, baklengs)"
-
-#~ msgid "Show Desktop"
-#~ msgstr "Vis skrivebord"

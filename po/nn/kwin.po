@@ -4200,7 +4200,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
-#~ msgid "Show Desktop"
-#~ msgstr "Vis skrivebordet"
