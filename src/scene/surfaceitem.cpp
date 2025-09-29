@@ -53,9 +53,11 @@ void SurfaceItem::setBuffer(GraphicsBuffer *buffer)
 {
     if (buffer) {
         m_bufferRef = buffer;
+        m_hasAlphaChannel = buffer->hasAlphaChannel();
         setBufferSize(buffer->size());
     } else {
         m_bufferRef = nullptr;
+        m_hasAlphaChannel = false;
         setBufferSize(QSize(0, 0));
     }
 }
@@ -172,43 +174,35 @@ QRegion SurfaceItem::damage() const
     return m_damage;
 }
 
-SurfacePixmap *SurfaceItem::pixmap() const
+SurfaceTexture *SurfaceItem::texture() const
 {
-    if (m_pixmap && m_pixmap->isValid()) {
-        return m_pixmap.get();
-    }
-    return nullptr;
+    return m_texture.get();
 }
 
-void SurfaceItem::destroyPixmap()
+void SurfaceItem::destroyTexture()
 {
-    m_pixmap.reset();
+    m_texture.reset();
 }
 
 void SurfaceItem::preprocess()
 {
-    if (!m_pixmap || m_pixmap->size() != m_bufferSize) {
-        m_pixmap = std::make_unique<SurfacePixmap>(this);
+    if (!m_texture || m_texture->size() != m_bufferSize) {
+        if (auto backend = qobject_cast<EglBackend *>(Compositor::self()->backend())) {
+            m_texture = std::make_unique<OpenGLSurfaceTexture>(backend, this);
+        } else if (auto backend = qobject_cast<QPainterBackend *>(Compositor::self()->backend())) {
+            m_texture = std::make_unique<QPainterSurfaceTexture>(backend, this);
+        }
     }
 
-    if (m_pixmap->isValid()) {
-        m_pixmap->update();
+    if (m_texture->isValid()) {
+        const QRegion region = damage();
+        if (!region.isEmpty()) {
+            m_texture->update(region);
+            resetDamage();
+        }
     } else {
-        m_pixmap->create();
-    }
-
-    if (m_pixmap->isValid()) {
-        SurfaceTexture *surfaceTexture = m_pixmap->texture();
-        if (surfaceTexture->isValid()) {
-            const QRegion region = damage();
-            if (!region.isEmpty()) {
-                surfaceTexture->update(region);
-                resetDamage();
-            }
-        } else {
-            if (surfaceTexture->create()) {
-                resetDamage();
-            }
+        if (m_texture->create()) {
+            resetDamage();
         }
     }
 }
@@ -280,62 +274,23 @@ std::shared_ptr<SyncReleasePoint> SurfaceItem::bufferReleasePoint() const
     return m_bufferReleasePoint;
 }
 
-SurfaceTexture::~SurfaceTexture()
-{
-}
-
-SurfacePixmap::SurfacePixmap(SurfaceItem *item)
-    : m_item(item)
-{
-    if (auto backend = qobject_cast<EglBackend *>(Compositor::self()->backend())) {
-        m_texture = std::make_unique<OpenGLSurfaceTexture>(backend, this);
-    } else if (auto backend = qobject_cast<QPainterBackend *>(Compositor::self()->backend())) {
-        m_texture = std::make_unique<QPainterSurfaceTexture>(backend, this);
-    }
-}
-
-void SurfacePixmap::create()
-{
-    update();
-}
-
-void SurfacePixmap::update()
-{
-    if (GraphicsBuffer *buffer = m_item->buffer()) {
-        m_size = buffer->size();
-        m_hasAlphaChannel = buffer->hasAlphaChannel();
-        m_valid = true;
-    }
-}
-
-bool SurfacePixmap::isValid() const
-{
-    return m_valid;
-}
-
-SurfaceItem *SurfacePixmap::item() const
-{
-    return m_item;
-}
-
-SurfaceTexture *SurfacePixmap::texture() const
-{
-    return m_texture.get();
-}
-
-bool SurfacePixmap::hasAlphaChannel() const
+bool SurfaceItem::hasAlphaChannel() const
 {
     return m_hasAlphaChannel;
 }
 
-QSize SurfacePixmap::size() const
+SurfaceTexture::~SurfaceTexture()
+{
+}
+
+QSize SurfaceTexture::size() const
 {
     return m_size;
 }
 
-OpenGLSurfaceTexture::OpenGLSurfaceTexture(EglBackend *backend, SurfacePixmap *pixmap)
+OpenGLSurfaceTexture::OpenGLSurfaceTexture(EglBackend *backend, SurfaceItem *item)
     : m_backend(backend)
-    , m_pixmap(pixmap)
+    , m_item(item)
 {
 }
 
@@ -356,7 +311,7 @@ OpenGLSurfaceContents OpenGLSurfaceTexture::texture() const
 
 bool OpenGLSurfaceTexture::create()
 {
-    GraphicsBuffer *buffer = m_pixmap->item()->buffer();
+    GraphicsBuffer *buffer = m_item->buffer();
     if (buffer->dmabufAttributes()) {
         return loadDmabufTexture(buffer);
     } else if (buffer->shmAttributes()) {
@@ -373,11 +328,12 @@ void OpenGLSurfaceTexture::destroy()
 {
     m_texture.reset();
     m_bufferType = BufferType::None;
+    m_size = QSize();
 }
 
 void OpenGLSurfaceTexture::update(const QRegion &region)
 {
-    GraphicsBuffer *buffer = m_pixmap->item()->buffer();
+    GraphicsBuffer *buffer = m_item->buffer();
     if (buffer->dmabufAttributes()) {
         updateDmabufTexture(buffer);
     } else if (buffer->shmAttributes()) {
@@ -408,6 +364,7 @@ bool OpenGLSurfaceTexture::loadShmTexture(GraphicsBuffer *buffer)
     m_texture = {{texture}};
 
     m_bufferType = BufferType::Shm;
+    m_size = buffer->size();
 
     return true;
 }
@@ -488,6 +445,7 @@ bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
         m_texture = {{texture}};
     }
     m_bufferType = BufferType::DmaBuf;
+    m_size = buffer->size();
 
     return true;
 }
@@ -532,6 +490,7 @@ bool OpenGLSurfaceTexture::loadSinglePixelTexture(GraphicsBuffer *buffer)
     }
     m_texture = {{texture}};
     m_bufferType = BufferType::SinglePixel;
+    m_size = QSize(1, 1);
     return true;
 }
 
@@ -546,26 +505,27 @@ void OpenGLSurfaceTexture::updateSinglePixelTexture(GraphicsBuffer *buffer)
     m_texture.planes[0]->update(*view.image(), QRect(0, 0, 1, 1));
 }
 
-QPainterSurfaceTexture::QPainterSurfaceTexture(QPainterBackend *backend, SurfacePixmap *pixmap)
+QPainterSurfaceTexture::QPainterSurfaceTexture(QPainterBackend *backend, SurfaceItem *item)
     : m_backend(backend)
-    , m_pixmap(pixmap)
+    , m_item(item)
 {
 }
 
 bool QPainterSurfaceTexture::create()
 {
-    const GraphicsBufferView view(m_pixmap->item()->buffer());
+    const GraphicsBufferView view(m_item->buffer());
     if (Q_LIKELY(!view.isNull())) {
         // The buffer data is copied as the buffer interface returns a QImage
         // which doesn't own the data of the underlying wl_shm_buffer object.
         m_image = view.image()->copy();
     }
+    m_size = m_image.size();
     return !m_image.isNull();
 }
 
 void QPainterSurfaceTexture::update(const QRegion &region)
 {
-    const GraphicsBufferView view(m_pixmap->item()->buffer());
+    const GraphicsBufferView view(m_item->buffer());
     if (Q_UNLIKELY(view.isNull())) {
         return;
     }

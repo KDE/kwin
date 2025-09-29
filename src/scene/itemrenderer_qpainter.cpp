@@ -130,13 +130,10 @@ void ItemRendererQPainter::renderItem(QPainter *painter, Item *item, const std::
 
 void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const
 {
-    const SurfacePixmap *surfaceTexture = surfaceItem->pixmap();
+    const auto surfaceTexture = static_cast<QPainterSurfaceTexture *>(surfaceItem->texture());
     if (!surfaceTexture || !surfaceTexture->isValid()) {
         return;
     }
-
-    QPainterSurfaceTexture *platformSurfaceTexture =
-        static_cast<QPainterSurfaceTexture *>(surfaceTexture->texture());
 
     const OutputTransform surfaceToBufferTransform = surfaceItem->bufferTransform();
     const QSizeF transformedSize = surfaceToBufferTransform.map(surfaceItem->destinationSize());
@@ -189,7 +186,7 @@ void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *sur
                             target.width() * xSourceBoxScale,
                             target.height() * ySourceBoxScale);
 
-        painter->drawImage(target, platformSurfaceTexture->image(), source);
+        painter->drawImage(target, surfaceTexture->image(), source);
     }
 
     painter->restore();
