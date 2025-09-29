@@ -1,6 +1,6 @@
-# Burkhard Lück <lueck@hube-lueck.de>, 2013, 2017.
-# Frederik Schwarzer <schwarzer@kde.org>, 2013.
-# Jannick Kuhr <opensource@kuhr.org>, 2023.
+# SPDX-FileCopyrightText: 2013, 2017 Burkhard Lück <lueck@hube-lueck.de>
+# SPDX-FileCopyrightText: 2013 Frederik Schwarzer <schwarzer@kde.org>
+# SPDX-FileCopyrightText: 2023 Jannick Kuhr <opensource@kuhr.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_scripting\n"

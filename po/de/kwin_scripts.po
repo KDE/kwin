@@ -1,4 +1,4 @@
-# Burkhard Lück <lueck@hube-lueck.de>, 2015.
+# SPDX-FileCopyrightText: 2015 Burkhard Lück <lueck@hube-lueck.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_scripts\n"

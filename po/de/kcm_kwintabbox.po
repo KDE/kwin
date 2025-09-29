@@ -1,26 +1,27 @@
+# SPDX-FileCopyrightText: 2009, 2011, 2012, 2022 Frederik Schwarzer <schwarzer@kde.org>
+# SPDX-FileCopyrightText: 2009 Markus Slopianka <markus.s@kdemail.net>
+# SPDX-FileCopyrightText: 2010 Panagiotis Papadopoulos <pano_90@gmx.net>
+# SPDX-FileCopyrightText: 2010 Thomas Reitelbach <tr@erdfunkstelle.de>
+# SPDX-FileCopyrightText: 2010 Johannes Obermayr <johannesobermayr@gmx.de>
+# SPDX-FileCopyrightText: 2010, 2012, 2014, 2015, 2018, 2020 Burkhard Lück <lueck@hube-lueck.de>
+# SPDX-FileCopyrightText: 2011 Frank Steinmetzger <Warp_7@gmx.de>
+# SPDX-FileCopyrightText: 2023 Jannick Kuhr <opensource@kuhr.org>
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
-# Frederik Schwarzer <schwarzer@kde.org>, 2009, 2011, 2012, 2022.
-# Markus Slopianka <markus.s@kdemail.net>, 2009.
-# Panagiotis Papadopoulos <pano_90@gmx.net>, 2010.
-# Thomas Reitelbach <tr@erdfunkstelle.de>, 2010.
-# Johannes Obermayr <johannesobermayr@gmx.de>, 2010.
-# Burkhard Lück <lueck@hube-lueck.de>, 2010, 2012, 2014, 2015, 2018, 2020.
-# Frank Steinmetzger <Warp_7@gmx.de>, 2011.
-# Jannick Kuhr <opensource@kuhr.org>, 2023.
+# SPDX-FileCopyrightText: 2025 Philipp Kiemle <l10n@prly.mozmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-13 00:58+0000\n"
-"PO-Revision-Date: 2022-07-02 12:32+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"PO-Revision-Date: 2025-09-07 19:34+0200\n"
+"Last-Translator: Philipp Kiemle <l10n@prly.mozmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.07.70\n"
+"X-Generator: Lokalize 25.08.0\n"
 
 #: kwintabboxconfigform.cpp:80
 #, kde-format
@@ -51,7 +52,7 @@ msgstr "Alternativ"
 #: main.cpp:61
 #, kde-format
 msgid "Get New Task Switchers..."
-msgstr "Neue Anwendungsumschalter holen ..."
+msgstr "Neue Anwendungsumschalter holen …"
 
 #: main.cpp:75
 #, kde-format

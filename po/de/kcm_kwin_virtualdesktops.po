@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2024 Flori G <Renner03@protonmail.com>
-# Thomas Reitelbach <tr@erdfunkstelle.de>, 2007, 2009.
-# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2012, 2023.
-# Burkhard Lück <lueck@hube-lueck.de>, 2013, 2014, 2018, 2019, 2021.
-# Jannick Kuhr <opensource@kuhr.org>, 2023.
+# SPDX-FileCopyrightText: 2007, 2009 Thomas Reitelbach <tr@erdfunkstelle.de>
+# SPDX-FileCopyrightText: 2010, 2012, 2023 Frederik Schwarzer <schwarzer@kde.org>
+# SPDX-FileCopyrightText: 2013, 2014, 2018, 2019, 2021 Burkhard Lück <lueck@hube-lueck.de>
+# SPDX-FileCopyrightText: 2023 Jannick Kuhr <opensource@kuhr.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_virtualdesktops\n"

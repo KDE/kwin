@@ -1,9 +1,9 @@
 # SPDX-FileCopyrightText: 2009, 2010, 2023 Johannes Obermayr <johannesobermayr@gmx.de>
-# Burkhard Lück <lueck@hube-lueck.de>, 2009, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021.
-# Thomas Reitelbach <tr@erdfunkstelle.de>, 2009.
-# Frederik Schwarzer <schwarzer@kde.org>, 2012, 2016, 2020, 2022.
-# Frank Steinmetzger <dev-kde@felsenfleischer.de>, 2022.
-# Jannick Kuhr <opensource@kuhr.org>, 2023.
+# SPDX-FileCopyrightText: 2009, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021 Burkhard Lück <lueck@hube-lueck.de>
+# SPDX-FileCopyrightText: 2009 Thomas Reitelbach <tr@erdfunkstelle.de>
+# SPDX-FileCopyrightText: 2012, 2016, 2020, 2022 Frederik Schwarzer <schwarzer@kde.org>
+# SPDX-FileCopyrightText: 2022 Frank Steinmetzger <dev-kde@felsenfleischer.de>
+# SPDX-FileCopyrightText: 2023 Jannick Kuhr <opensource@kuhr.org>
 # SPDX-FileCopyrightText: 2024 Nicolai Weitkemper <kontakt@nicolaiweitkemper.de>
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
 msgid ""
