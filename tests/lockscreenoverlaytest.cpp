@@ -17,7 +17,7 @@ public:
     WaylandAboveLockscreen()
         : QWaylandClientExtensionTemplate<WaylandAboveLockscreen>(1)
     {
-        QMetaObject::invokeMethod(this, "addRegistryListener");
+        initialize();
     }
 
     void allowWindow(QWindow *window)
