@@ -117,6 +117,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::doBeginFram
 
 bool WaylandQPainterCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
+    m_renderTime->end();
     if (frame) {
         frame->addRenderTimeQuery(std::move(m_renderTime));
     }
