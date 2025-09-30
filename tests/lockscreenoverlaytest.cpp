@@ -71,12 +71,12 @@ int main(int argc, char *argv[])
 
     new WidgetAllower(&window2);
     auto raiseWindow2 = [&] {
-        KWaylandExtras::requestXdgActivationToken(window2.windowHandle(), 0, "lockscreenoverlaytest.desktop");
+        auto tokenFuture = KWaylandExtras::xdgActivationToken(window2.windowHandle(), "lockscreenoverlaytest.desktop");
+        tokenFuture.then(&window2, [&window2](const QString &token) {
+            KWindowSystem::setCurrentXdgActivationToken(token);
+            KWindowSystem::activateWindow(window2.windowHandle());
+        });
     };
-    QObject::connect(KWaylandExtras::self(), &KWaylandExtras::xdgActivationTokenArrived, &window2, [&window2](int, const QString &token) {
-        KWindowSystem::setCurrentXdgActivationToken(token);
-        KWindowSystem::activateWindow(window2.windowHandle());
-    });
 
     QObject::connect(&p, &QPushButton::clicked, &app, [&] {
         QProcess::execute("loginctl", {"lock-session"});
