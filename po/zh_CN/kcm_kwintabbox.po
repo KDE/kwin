@@ -57,10 +57,9 @@ msgid "System Settings"
 msgstr "系统设置"
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "当前桌面"
+msgstr "暂时显示桌面"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -97,10 +96,9 @@ msgstr "内容"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" entry"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "包含“显示桌面”项目"
+msgstr "包含“暂时显示桌面”项目"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
@@ -316,6 +314,3 @@ msgstr "遍历当前应用程序窗口备选"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "遍历当前应用程序窗口备选 (反向)"
-
-#~ msgid "Show Desktop"
-#~ msgstr "显示桌面"

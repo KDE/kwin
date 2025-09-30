@@ -636,12 +636,10 @@ msgstr "划动手势取消"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "按住开始"
 
 #: debug_console.cpp:467
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "手指数目"
@@ -650,15 +648,13 @@ msgstr "手指数目"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "按住结束"
 
 #: debug_console.cpp:490
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "捏合手势取消"
+msgstr "按住取消"
 
 #: debug_console.cpp:502
 #, kde-format
@@ -2785,7 +2781,7 @@ msgstr "忽略最小化窗口(&M)"
 #: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr "无匹配项"
+msgstr "没有匹配的内容"
 
 #: plugins/windowview/qml/Main.qml:107
 #, kde-format
@@ -3475,8 +3471,7 @@ msgstr ""
 "仍将在 2 分钟内注销。"
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "暂时显示桌面"
@@ -4145,7 +4140,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
-#~ msgid "Show Desktop"
-#~ msgstr "显示桌面"
