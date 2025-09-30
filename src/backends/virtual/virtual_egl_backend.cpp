@@ -41,7 +41,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
 
     const QSize nativeSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        m_swapchain = EglSwapchain::create(m_backend->drmDevice()->allocator(), m_backend->openglContext(), nativeSize, DRM_FORMAT_XRGB8888, m_backend->supportedFormats()[DRM_FORMAT_XRGB8888]);
+        m_swapchain = EglSwapchain::create(m_backend->scanoutDevice()->allocator(), m_backend->openglContext(), nativeSize, DRM_FORMAT_XRGB8888, m_backend->supportedFormats()[DRM_FORMAT_XRGB8888]);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -73,7 +73,7 @@ bool VirtualEglLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &d
 
 DrmDevice *VirtualEglLayer::scanoutDevice() const
 {
-    return m_backend->drmDevice();
+    return m_backend->scanoutDevice();
 }
 
 QHash<uint32_t, QList<uint64_t>> VirtualEglLayer::supportedDrmFormats() const
@@ -93,7 +93,8 @@ GLTexture *VirtualEglLayer::texture() const
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
-    : m_backend(b)
+    : EglBackend(b->drmDevice()->shared_from_this())
+    , m_backend(b)
 {
 }
 
@@ -111,7 +112,7 @@ VirtualBackend *VirtualEglBackend::backend() const
     return m_backend;
 }
 
-DrmDevice *VirtualEglBackend::drmDevice() const
+DrmDevice *VirtualEglBackend::scanoutDevice() const
 {
     return m_backend->drmDevice();
 }
@@ -119,24 +120,9 @@ DrmDevice *VirtualEglBackend::drmDevice() const
 bool VirtualEglBackend::initializeEgl()
 {
     initClientExtensions();
-
-    if (!m_backend->sceneEglDisplayObject()) {
-        for (const QByteArray &extension : {QByteArrayLiteral("EGL_EXT_platform_base"), QByteArrayLiteral("EGL_KHR_platform_gbm")}) {
-            if (!hasClientExtension(extension)) {
-                qCWarning(KWIN_VIRTUAL) << extension << "client extension is not supported by the platform";
-                return false;
-            }
-        }
-
-        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->drmDevice()->gbmDevice(), nullptr)));
-    }
-
-    auto display = m_backend->sceneEglDisplayObject();
-    if (!display) {
-        return false;
-    }
-    setEglDisplay(display);
-    return true;
+    setEglDisplay(eglDisplayForDevice(m_backend->drmDevice()));
+    m_backend->setEglDisplay(eglDisplayObject());
+    return eglDisplayObject() != nullptr;
 }
 
 void VirtualEglBackend::init()
@@ -167,7 +153,7 @@ void VirtualEglBackend::init()
 
 bool VirtualEglBackend::initRenderingContext()
 {
-    return createContext(EGL_NO_CONFIG_KHR) && openglContext()->makeCurrent();
+    return createContext() && openglContext()->makeCurrent();
 }
 
 void VirtualEglBackend::addOutput(Output *output)

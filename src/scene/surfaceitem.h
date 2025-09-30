@@ -20,6 +20,7 @@ class GLTexture;
 class QPainterBackend;
 class SurfaceTexture;
 class Window;
+class EglMultiGpuSwapchain;
 
 /**
  * The SurfaceItem class represents a surface with some contents.
@@ -170,6 +171,7 @@ private:
     EglBackend *m_backend;
     SurfaceItem *m_item;
     OpenGLSurfaceContents m_texture;
+    std::unique_ptr<EglMultiGpuSwapchain> m_mgpuSwapchain;
 };
 
 class KWIN_EXPORT QPainterSurfaceTexture : public SurfaceTexture

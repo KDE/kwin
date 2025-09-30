@@ -44,7 +44,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::doBeginFram
         if (!formatTable.contains(format)) {
             return std::nullopt;
         }
-        m_swapchain = EglSwapchain::create(m_backend->drmDevice()->allocator(), m_backend->openglContext(), bufferSize, format, formatTable[format]);
+        m_swapchain = EglSwapchain::create(m_backend->scanoutDevice()->allocator(), m_backend->openglContext(), bufferSize, format, formatTable[format]);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -78,7 +78,7 @@ bool X11WindowedEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const
 
 DrmDevice *X11WindowedEglPrimaryLayer::scanoutDevice() const
 {
-    return m_backend->drmDevice();
+    return m_backend->scanoutDevice();
 }
 
 QHash<uint32_t, QList<uint64_t>> X11WindowedEglPrimaryLayer::supportedDrmFormats() const
@@ -149,7 +149,7 @@ bool X11WindowedEglCursorLayer::doEndFrame(const QRegion &renderedRegion, const 
 
 DrmDevice *X11WindowedEglCursorLayer::scanoutDevice() const
 {
-    return m_backend->drmDevice();
+    return m_backend->scanoutDevice();
 }
 
 QHash<uint32_t, QList<uint64_t>> X11WindowedEglCursorLayer::supportedDrmFormats() const
@@ -162,7 +162,8 @@ void X11WindowedEglCursorLayer::releaseBuffers()
 }
 
 X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
-    : m_backend(backend)
+    : EglBackend(backend->drmDevice()->shared_from_this())
+    , m_backend(backend)
 {
 }
 
@@ -180,7 +181,7 @@ X11WindowedBackend *X11WindowedEglBackend::backend() const
     return m_backend;
 }
 
-DrmDevice *X11WindowedEglBackend::drmDevice() const
+DrmDevice *X11WindowedEglBackend::scanoutDevice() const
 {
     return m_backend->drmDevice();
 }
@@ -188,29 +189,14 @@ DrmDevice *X11WindowedEglBackend::drmDevice() const
 bool X11WindowedEglBackend::initializeEgl()
 {
     initClientExtensions();
-
-    if (!m_backend->sceneEglDisplayObject()) {
-        for (const QByteArray &extension : {QByteArrayLiteral("EGL_EXT_platform_base"), QByteArrayLiteral("EGL_KHR_platform_gbm")}) {
-            if (!hasClientExtension(extension)) {
-                qCWarning(KWIN_X11WINDOWED) << extension << "client extension is not supported by the platform";
-                return false;
-            }
-        }
-
-        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->drmDevice()->gbmDevice(), nullptr)));
-    }
-
-    const auto display = m_backend->sceneEglDisplayObject();
-    if (!display) {
-        return false;
-    }
-    setEglDisplay(display);
-    return true;
+    setEglDisplay(eglDisplayForDevice(m_backend->drmDevice()));
+    m_backend->setEglDisplay(eglDisplayObject());
+    return eglDisplayObject() != nullptr;
 }
 
 bool X11WindowedEglBackend::initRenderingContext()
 {
-    if (!createContext(EGL_NO_CONFIG_KHR)) {
+    if (!createContext()) {
         return false;
     }
 

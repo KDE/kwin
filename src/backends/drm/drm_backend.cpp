@@ -11,6 +11,7 @@
 #include "config-kwin.h"
 
 #include "backends/libinput/libinputbackend.h"
+#include "core/gpumanager.h"
 #include "core/outputconfiguration.h"
 #include "core/session.h"
 #include "drm_egl_backend.h"
@@ -22,6 +23,7 @@
 #include "drm_qpainter_backend.h"
 #include "drm_render_backend.h"
 #include "drm_virtual_output.h"
+#include "main.h"
 #include "utils/envvar.h"
 #include "utils/udev.h"
 // KF5
@@ -151,6 +153,13 @@ bool DrmBackend::initialize()
         });
         qCDebug(KWIN_DRM) << "chose" << m_gpus.front()->drmDevice()->path() << "as the primary GPU";
     }
+
+    // This is necessary to ensure that we properly initialize hardware accelerated multi GPU copies
+    // even when GPU hot(un)plugging is involved
+    // TODO remove once we do compositing on each GPU
+    connect(kwinApp()->gpuManager(), &GpuManager::deviceAdded, this, &DrmBackend::createLayers);
+    connect(kwinApp()->gpuManager(), &GpuManager::deviceRemoved, this, &DrmBackend::createLayers);
+
     return true;
 }
 
@@ -481,7 +490,12 @@ const std::vector<std::unique_ptr<DrmGpu>> &DrmBackend::gpus() const
 
 EglDisplay *DrmBackend::sceneEglDisplayObject() const
 {
-    return m_gpus.front()->eglDisplay();
+    return m_sceneEglDisplayObject;
+}
+
+void DrmBackend::setSceneEglDisplayObject(EglDisplay *obj)
+{
+    m_sceneEglDisplayObject = obj;
 }
 }
 

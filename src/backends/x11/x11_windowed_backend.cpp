@@ -144,7 +144,6 @@ X11WindowedBackend::~X11WindowedBackend()
     m_pointerDevice.reset();
     m_keyboardDevice.reset();
     m_touchDevice.reset();
-    m_eglDisplay.reset();
 
     if (m_connection) {
         if (m_keySymbols) {
@@ -787,14 +786,14 @@ void X11WindowedBackend::destroyOutputs()
     }
 }
 
-void X11WindowedBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
+void X11WindowedBackend::setEglDisplay(EglDisplay *display)
 {
-    m_eglDisplay = std::move(display);
+    m_eglDisplay = display;
 }
 
 EglDisplay *X11WindowedBackend::sceneEglDisplayObject() const
 {
-    return m_eglDisplay.get();
+    return m_eglDisplay;
 }
 
 } // namespace KWin

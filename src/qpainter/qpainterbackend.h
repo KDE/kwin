@@ -30,6 +30,7 @@ public:
     virtual ~QPainterBackend();
 
     CompositingType compositingType() const override final;
+    DrmDevice *renderDevice() const override;
 
     /**
      * @brief Whether the creation of the Backend failed.

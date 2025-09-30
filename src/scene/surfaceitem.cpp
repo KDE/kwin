@@ -6,19 +6,22 @@
 
 #include "scene/surfaceitem.h"
 #include "compositor.h"
+#include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/graphicsbufferview.h"
 #include "core/pixelgrid.h"
 #include "core/renderbackend.h"
+#include "main.h"
 #include "opengl/eglbackend.h"
+#include "opengl/eglmultigpuswapchain.h"
 #include "opengl/gltexture.h"
 #include "qpainter/qpainterbackend.h"
 #include "scene/scene.h"
 #include "utils/common.h"
+#include "utils/drm_format_helper.h"
 
 #include <QPainter>
-
 #include <epoxy/egl.h>
-#include <utils/drm_format_helper.h>
 
 using namespace std::chrono_literals;
 
@@ -327,6 +330,7 @@ bool OpenGLSurfaceTexture::create()
 void OpenGLSurfaceTexture::destroy()
 {
     m_texture.reset();
+    m_mgpuSwapchain.reset();
     m_bufferType = BufferType::None;
     m_size = QSize();
 }
@@ -365,6 +369,7 @@ bool OpenGLSurfaceTexture::loadShmTexture(GraphicsBuffer *buffer)
 
     m_bufferType = BufferType::Shm;
     m_size = buffer->size();
+    m_mgpuSwapchain.reset();
 
     return true;
 }
@@ -396,6 +401,21 @@ void OpenGLSurfaceTexture::updateShmTexture(GraphicsBuffer *buffer, const QRegio
 
 bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
 {
+    const auto compat = kwinApp()->gpuManager()->findCompatibleDevice(buffer->dmabufAttributes()->device.get());
+    if (!m_backend->renderDevice()) {
+        // software renderer, no copies required / possible
+        m_mgpuSwapchain.reset();
+    } else if (!compat || compat->device.get() != m_backend->renderDevice()) {
+        // need to do a multi gpu copy
+        if (!m_mgpuSwapchain) {
+            m_mgpuSwapchain = std::make_unique<EglMultiGpuSwapchain>(m_backend->renderDevice()->allocator(), m_backend->openglContextRef());
+        }
+        // FIXME integrate the color description for YUV support!
+        buffer = m_mgpuSwapchain->importBuffer(m_backend->eglContextForDevice(buffer->dmabufAttributes()->device.get()), buffer, ColorDescription::sRGB).first;
+    } else if (m_mgpuSwapchain) {
+        // same device, or directly accessible. No copies required!
+        m_mgpuSwapchain.reset();
+    }
     auto createTexture = [](EGLImageKHR image, const QSize &size, bool isExternalOnly) -> std::shared_ptr<GLTexture> {
         if (Q_UNLIKELY(image == EGL_NO_IMAGE_KHR)) {
             qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
@@ -418,6 +438,7 @@ bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
     };
 
     const auto attribs = buffer->dmabufAttributes();
+    DrmDevice *device = m_backend->renderDevice() ? m_backend->renderDevice() : m_backend->scanoutDevice();
     if (auto itConv = s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != s_drmConversions.end()) {
         QList<std::shared_ptr<GLTexture>> textures;
         Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
@@ -429,7 +450,7 @@ bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
             size.rheight() /= currentPlane.heightDivisor;
 
             const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(currentPlane.format, attribs->modifier);
-            auto t = createTexture(m_backend->importBufferAsImage(buffer, plane, currentPlane.format, size), size, isExternal);
+            auto t = createTexture(m_backend->importBufferAsImage(device, buffer, plane, currentPlane.format, size), size, isExternal);
             if (!t) {
                 return false;
             }
@@ -438,7 +459,7 @@ bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
         m_texture = {textures};
     } else {
         const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(attribs->format, attribs->modifier);
-        auto texture = createTexture(m_backend->importBufferAsImage(buffer), buffer->size(), isExternal);
+        auto texture = createTexture(m_backend->importBufferAsImage(device, buffer), buffer->size(), isExternal);
         if (!texture) {
             return false;
         }
@@ -458,7 +479,12 @@ void OpenGLSurfaceTexture::updateDmabufTexture(GraphicsBuffer *buffer)
         return;
     }
 
+    if (m_mgpuSwapchain) {
+        buffer = m_mgpuSwapchain->importBuffer(m_backend->eglContextForDevice(buffer->dmabufAttributes()->device.get()), buffer, ColorDescription::sRGB).first;
+    }
+
     const GLint target = GL_TEXTURE_2D;
+    DrmDevice *device = m_backend->renderDevice() ? m_backend->renderDevice() : m_backend->scanoutDevice();
     if (auto itConv = s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != s_drmConversions.end()) {
         Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
         for (uint plane = 0; plane < itConv->plane.count(); ++plane) {
@@ -468,13 +494,13 @@ void OpenGLSurfaceTexture::updateDmabufTexture(GraphicsBuffer *buffer)
             size.rheight() /= currentPlane.heightDivisor;
 
             m_texture.planes[plane]->bind();
-            glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer, plane, currentPlane.format, size)));
+            glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(m_backend->importBufferAsImage(device, buffer, plane, currentPlane.format, size)));
             m_texture.planes[plane]->unbind();
         }
     } else {
         Q_ASSERT(m_texture.planes.count() == 1);
         m_texture.planes[0]->bind();
-        glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer)));
+        glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(m_backend->importBufferAsImage(device, buffer)));
         m_texture.planes[0]->unbind();
     }
 }
@@ -491,6 +517,7 @@ bool OpenGLSurfaceTexture::loadSinglePixelTexture(GraphicsBuffer *buffer)
     m_texture = {{texture}};
     m_bufferType = BufferType::SinglePixel;
     m_size = QSize(1, 1);
+    m_mgpuSwapchain.reset();
     return true;
 }
 

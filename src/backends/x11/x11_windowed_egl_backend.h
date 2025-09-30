@@ -75,7 +75,7 @@ public:
     ~X11WindowedEglBackend() override;
 
     X11WindowedBackend *backend() const;
-    DrmDevice *drmDevice() const override;
+    DrmDevice *scanoutDevice() const override;
 
     void init() override;
     void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);

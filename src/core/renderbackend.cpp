@@ -163,12 +163,7 @@ bool RenderBackend::checkGraphicsReset()
     return false;
 }
 
-DrmDevice *RenderBackend::drmDevice() const
-{
-    return nullptr;
-}
-
-bool RenderBackend::testImportBuffer(GraphicsBuffer *buffer)
+bool RenderBackend::testImportBuffer(DrmDevice *device, GraphicsBuffer *buffer)
 {
     return false;
 }

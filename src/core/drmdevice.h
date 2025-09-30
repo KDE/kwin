@@ -14,6 +14,7 @@
 
 #include <QString>
 
+#include <memory>
 #include <sys/types.h>
 #include <xf86drm.h>
 
@@ -22,9 +23,10 @@ struct gbm_device;
 namespace KWin
 {
 
-class KWIN_EXPORT DrmDevice
+class KWIN_EXPORT DrmDevice : public std::enable_shared_from_this<DrmDevice>
 {
 public:
+    explicit DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_device *gbmDevice, drmDevice *libdrmDevice);
     ~DrmDevice();
 
     QString path() const;
@@ -34,19 +36,21 @@ public:
     int fileDescriptor() const;
     bool supportsSyncObjTimelines() const;
     std::optional<drmPciDeviceInfo> pciDeviceInfo() const;
+    drmDevice *libdrmDevice() const;
 
-    static std::unique_ptr<DrmDevice> open(const QString &path);
-    static std::unique_ptr<DrmDevice> openWithAuthentication(const QString &path, int authenticatedFd);
+    bool isSameDevice(DrmDevice *other) const;
+
+    static std::shared_ptr<DrmDevice> open(const QString &path);
+    static std::shared_ptr<DrmDevice> openWithAuthentication(const QString &path, int authenticatedFd);
 
 private:
-    explicit DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_device *gbmDevice);
-
     const QString m_path;
     const dev_t m_id;
     const FileDescriptor m_fd;
     gbm_device *const m_gbmDevice;
     const std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     bool m_supportsSyncObjTimelines;
+    drmDevice *m_libdrmDevice = nullptr;
 };
 
 }

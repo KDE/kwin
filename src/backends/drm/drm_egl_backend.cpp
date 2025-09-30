@@ -8,6 +8,7 @@
 */
 #include "drm_egl_backend.h"
 // kwin
+#include "core/gpumanager.h"
 #include "core/syncobjtimeline.h"
 #include "drm_abstract_output.h"
 #include "drm_backend.h"
@@ -18,6 +19,8 @@
 #include "drm_pipeline.h"
 #include "drm_virtual_egl_layer.h"
 #include "drm_virtual_output.h"
+#include "main.h"
+
 // system
 #include <drm_fourcc.h>
 #include <gbm.h>
@@ -27,18 +30,15 @@ namespace KWin
 {
 
 EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
-    : m_backend(drmBackend)
+    : EglBackend(kwinApp()->gpuManager()->findCompatibleDevice(drmBackend->primaryGpu()->drmDevice())->device)
+    , m_backend(drmBackend)
 {
     drmBackend->setRenderBackend(this);
-    connect(m_backend, &DrmBackend::gpuRemoved, this, [this](DrmGpu *gpu) {
-        m_contexts.erase(gpu->eglDisplay());
-    });
 }
 
 EglGbmBackend::~EglGbmBackend()
 {
     m_backend->releaseBuffers();
-    m_contexts.clear();
     cleanup();
     m_backend->setRenderBackend(nullptr);
 }
@@ -46,31 +46,9 @@ EglGbmBackend::~EglGbmBackend()
 bool EglGbmBackend::initializeEgl()
 {
     initClientExtensions();
-    auto display = m_backend->primaryGpu()->eglDisplay();
-
-    // Use eglGetPlatformDisplayEXT() to get the display pointer
-    // if the implementation supports it.
-    if (!display) {
-        display = createEglDisplay(m_backend->primaryGpu());
-        if (!display) {
-            return false;
-        }
-    }
-    setEglDisplay(display);
+    setEglDisplay(eglDisplayForDevice(m_backend->primaryGpu()->drmDevice()));
+    m_backend->setSceneEglDisplayObject(eglDisplayObject());
     return true;
-}
-
-EglDisplay *EglGbmBackend::createEglDisplay(DrmGpu *gpu) const
-{
-    for (const QByteArray &extension : {QByteArrayLiteral("EGL_EXT_platform_base"), QByteArrayLiteral("EGL_KHR_platform_gbm")}) {
-        if (!hasClientExtension(extension)) {
-            qCWarning(KWIN_DRM) << extension << "client extension is not supported by the platform";
-            return nullptr;
-        }
-    }
-
-    gpu->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gpu->drmDevice()->gbmDevice(), nullptr)));
-    return gpu->eglDisplay();
 }
 
 void EglGbmBackend::init()
@@ -90,48 +68,10 @@ void EglGbmBackend::init()
 
 bool EglGbmBackend::initRenderingContext()
 {
-    return createContext(EGL_NO_CONFIG_KHR) && openglContext()->makeCurrent();
+    return createContext() && openglContext()->makeCurrent();
 }
 
-EglDisplay *EglGbmBackend::displayForGpu(DrmGpu *gpu)
-{
-    if (gpu == m_backend->primaryGpu()) {
-        return eglDisplayObject();
-    }
-    auto display = gpu->eglDisplay();
-    if (!display) {
-        display = createEglDisplay(gpu);
-    }
-    return display;
-}
-
-std::shared_ptr<EglContext> EglGbmBackend::contextForGpu(DrmGpu *gpu)
-{
-    if (gpu == m_backend->primaryGpu()) {
-        return m_context;
-    }
-    auto display = gpu->eglDisplay();
-    if (!display) {
-        display = createEglDisplay(gpu);
-        if (!display) {
-            return nullptr;
-        }
-    }
-    auto &context = m_contexts[display];
-    if (const auto c = context.lock()) {
-        return c;
-    }
-    const auto ret = std::shared_ptr<EglContext>(EglContext::create(display, EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT));
-    context = ret;
-    return ret;
-}
-
-void EglGbmBackend::resetContextForGpu(DrmGpu *gpu)
-{
-    m_contexts.erase(gpu->eglDisplay());
-}
-
-DrmDevice *EglGbmBackend::drmDevice() const
+DrmDevice *EglGbmBackend::scanoutDevice() const
 {
     return gpu()->drmDevice();
 }

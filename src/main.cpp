@@ -16,6 +16,7 @@
 #endif
 #include "colors/colormanager.h"
 #include "compositor.h"
+#include "core/gpumanager.h"
 #include "core/outputbackend.h"
 #include "core/rendertarget.h"
 #include "core/session.h"
@@ -88,6 +89,7 @@ Application::Application(int &argc, char **argv)
     , m_config(KSharedConfig::openConfig(QStringLiteral("kwinrc")))
     , m_kxkbConfig()
     , m_kdeglobals(KSharedConfig::openConfig(QStringLiteral("kdeglobals")))
+    , m_gpuManager(std::make_unique<GpuManager>())
 {
     qRegisterMetaType<Options::WindowOperation>("Options::WindowOperation");
     qRegisterMetaType<KWin::EffectWindow *>();
@@ -714,6 +716,11 @@ void Application::startInteractivePositionSelection(std::function<void(const QPo
         return;
     }
     input()->startInteractivePositionSelection(callback);
+}
+
+GpuManager *Application::gpuManager() const
+{
+    return m_gpuManager.get();
 }
 
 } // namespace

@@ -65,7 +65,7 @@ bool X11WindowedQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, 
 
 DrmDevice *X11WindowedQPainterPrimaryLayer::scanoutDevice() const
 {
-    return m_backend->drmDevice();
+    return m_backend->scanoutDevice();
 }
 
 QHash<uint32_t, QList<uint64_t>> X11WindowedQPainterPrimaryLayer::supportedDrmFormats() const
@@ -142,6 +142,11 @@ X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
     for (Output *output : outputs) {
         static_cast<X11WindowedOutput *>(output)->setOutputLayers({});
     }
+}
+
+DrmDevice *X11WindowedQPainterBackend::scanoutDevice() const
+{
+    return m_backend->drmDevice();
 }
 
 void X11WindowedQPainterBackend::addOutput(Output *output)

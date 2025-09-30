@@ -50,7 +50,7 @@
 namespace KWin
 {
 
-DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
+DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::shared_ptr<DrmDevice> &&device)
     : m_fd(fd)
     , m_drmDevice(std::move(device))
     , m_atomicModeSetting(false)
@@ -115,7 +115,6 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
 DrmGpu::~DrmGpu()
 {
     removeOutputs();
-    m_eglDisplay.reset();
     m_crtcs.clear();
     m_connectors.clear();
     m_planes.clear();
@@ -669,16 +668,6 @@ DrmDevice *DrmGpu::drmDevice() const
 bool DrmGpu::atomicModeSetting() const
 {
     return m_atomicModeSetting;
-}
-
-EglDisplay *DrmGpu::eglDisplay() const
-{
-    return m_eglDisplay.get();
-}
-
-void DrmGpu::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
-{
-    m_eglDisplay = std::move(display);
 }
 
 bool DrmGpu::addFB2ModifiersSupported() const

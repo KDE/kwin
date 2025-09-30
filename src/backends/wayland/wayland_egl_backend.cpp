@@ -67,7 +67,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::doBeginFrame()
             if (it == formatTable.constEnd()) {
                 continue;
             }
-            m_swapchain = EglSwapchain::create(m_backend->drmDevice()->allocator(), m_backend->openglContext(), nativeSize, it.key(), it.value());
+            m_swapchain = EglSwapchain::create(m_backend->scanoutDevice()->allocator(), m_backend->openglContext(), nativeSize, it.key(), it.value());
             if (m_swapchain) {
                 break;
             }
@@ -122,7 +122,7 @@ bool WaylandEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::sha
 
 DrmDevice *WaylandEglLayer::scanoutDevice() const
 {
-    return m_backend->drmDevice();
+    return m_backend->scanoutDevice();
 }
 
 QHash<uint32_t, QList<uint64_t>> WaylandEglLayer::supportedDrmFormats() const
@@ -163,7 +163,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::doBeginFrame()
             if (it == formatTable.constEnd()) {
                 continue;
             }
-            m_swapchain = EglSwapchain::create(m_backend->drmDevice()->allocator(), m_backend->openglContext(), bufferSize, it.key(), it.value());
+            m_swapchain = EglSwapchain::create(m_backend->scanoutDevice()->allocator(), m_backend->openglContext(), bufferSize, it.key(), it.value());
             if (m_swapchain) {
                 break;
             }
@@ -207,7 +207,7 @@ bool WaylandEglCursorLayer::doEndFrame(const QRegion &renderedRegion, const QReg
 
 DrmDevice *WaylandEglCursorLayer::scanoutDevice() const
 {
-    return m_backend->drmDevice();
+    return m_backend->scanoutDevice();
 }
 
 QHash<uint32_t, QList<uint64_t>> WaylandEglCursorLayer::supportedDrmFormats() const
@@ -222,7 +222,8 @@ void WaylandEglCursorLayer::releaseBuffers()
 }
 
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
-    : m_backend(b)
+    : EglBackend(b->drmDevice()->shared_from_this())
+    , m_backend(b)
 {
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createOutputLayers);
 
@@ -239,7 +240,7 @@ WaylandBackend *WaylandEglBackend::backend() const
     return m_backend;
 }
 
-DrmDevice *WaylandEglBackend::drmDevice() const
+DrmDevice *WaylandEglBackend::scanoutDevice() const
 {
     return m_backend->drmDevice();
 }
@@ -271,24 +272,9 @@ void WaylandEglBackend::createOutputLayers(Output *output)
 bool WaylandEglBackend::initializeEgl()
 {
     initClientExtensions();
-
-    if (!m_backend->sceneEglDisplayObject()) {
-        for (const QByteArray &extension : {QByteArrayLiteral("EGL_EXT_platform_base"), QByteArrayLiteral("EGL_KHR_platform_gbm")}) {
-            if (!hasClientExtension(extension)) {
-                qCWarning(KWIN_WAYLAND_BACKEND) << extension << "client extension is not supported by the platform";
-                return false;
-            }
-        }
-
-        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->drmDevice()->gbmDevice(), nullptr)));
-    }
-
-    const auto display = m_backend->sceneEglDisplayObject();
-    if (!display) {
-        return false;
-    }
-    setEglDisplay(display);
-    return true;
+    setEglDisplay(eglDisplayForDevice(m_backend->drmDevice()));
+    m_backend->setEglDisplay(eglDisplayObject());
+    return eglDisplayObject() != nullptr;
 }
 
 void WaylandEglBackend::init()
@@ -307,7 +293,7 @@ void WaylandEglBackend::init()
 
 bool WaylandEglBackend::initRenderingContext()
 {
-    if (!createContext(EGL_NO_CONFIG_KHR)) {
+    if (!createContext()) {
         return false;
     }
 

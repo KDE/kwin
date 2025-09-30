@@ -24,7 +24,7 @@ class Session;
 class Udev;
 class UdevMonitor;
 class UdevDevice;
-
+class EglDisplay;
 class DrmAbstractOutput;
 class Cursor;
 class DrmGpu;
@@ -43,6 +43,7 @@ public:
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
     std::unique_ptr<EglBackend> createOpenGLBackend() override;
     EglDisplay *sceneEglDisplayObject() const override;
+    void setSceneEglDisplayObject(EglDisplay *obj);
 
     bool initialize() override;
 
@@ -93,6 +94,7 @@ private:
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;
     QList<DrmVirtualOutput *> m_virtualOutputs;
     DrmRenderBackend *m_renderBackend = nullptr;
+    EglDisplay *m_sceneEglDisplayObject = nullptr;
 };
 
 }

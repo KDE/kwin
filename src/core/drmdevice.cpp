@@ -19,12 +19,13 @@
 namespace KWin
 {
 
-DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_device *gbmDevice)
+DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_device *gbmDevice, drmDevice *libdrmDevice)
     : m_path(path)
     , m_id(id)
     , m_fd(std::move(fd))
     , m_gbmDevice(gbmDevice)
-    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(gbmDevice))
+    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(this))
+    , m_libdrmDevice(libdrmDevice)
 {
     uint64_t value = 0;
     m_supportsSyncObjTimelines = drmGetCap(m_fd.get(), DRM_CAP_SYNCOBJ_TIMELINE, &value) == 0 && value != 0;
@@ -33,6 +34,7 @@ DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_dev
 DrmDevice::~DrmDevice()
 {
     gbm_device_destroy(m_gbmDevice);
+    drmFreeDevice(&m_libdrmDevice);
 }
 
 QString DrmDevice::path() const
@@ -83,12 +85,22 @@ std::optional<drmPciDeviceInfo> DrmDevice::pciDeviceInfo() const
     return *nativeDevice->deviceinfo.pci;
 }
 
-std::unique_ptr<DrmDevice> DrmDevice::open(const QString &path)
+bool DrmDevice::isSameDevice(DrmDevice *other) const
+{
+    return other == this || drmDevicesEqual(m_libdrmDevice, other->m_libdrmDevice);
+}
+
+drmDevice *DrmDevice::libdrmDevice() const
+{
+    return m_libdrmDevice;
+}
+
+std::shared_ptr<DrmDevice> DrmDevice::open(const QString &path)
 {
     return openWithAuthentication(path, -1);
 }
 
-std::unique_ptr<DrmDevice> DrmDevice::openWithAuthentication(const QString &path, int authenticatedFd)
+std::shared_ptr<DrmDevice> DrmDevice::openWithAuthentication(const QString &path, int authenticatedFd)
 {
     FileDescriptor fd(::open(path.toLocal8Bit(), O_RDWR | O_CLOEXEC));
     if (!fd.isValid()) {
@@ -109,11 +121,16 @@ std::unique_ptr<DrmDevice> DrmDevice::openWithAuthentication(const QString &path
             qCWarning(KWIN_CORE) << "Failed to authenticate the drm magic token. path:" << path << "error:" << strerror(errno);
         }
     }
-    gbm_device *device = gbm_create_device(fd.get());
-    if (!device) {
-        qCWarning(KWIN_CORE) << "Failed to create gbm device for" << path;
+    drmDevice *nativeDevice = nullptr;
+    if (drmGetDeviceFromDevId(buf.st_rdev, 0, &nativeDevice) != 0) {
         return nullptr;
     }
-    return std::unique_ptr<DrmDevice>(new DrmDevice(path, buf.st_rdev, std::move(fd), device));
+    gbm_device *gbmDevice = gbm_create_device(fd.get());
+    if (!gbmDevice) {
+        qCWarning(KWIN_CORE) << "Failed to create gbm device for" << path;
+        drmFreeDevice(&nativeDevice);
+        return nullptr;
+    }
+    return std::make_shared<DrmDevice>(path, buf.st_rdev, std::move(fd), gbmDevice, nativeDevice);
 }
 }

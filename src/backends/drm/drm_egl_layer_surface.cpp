@@ -133,7 +133,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
                     }
                     modifiers = {DRM_FORMAT_MOD_LINEAR};
                 }
-                m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->drmDevice()->allocator(), m_eglBackend->openglContext(), m_surface->gbmSwapchain->size(), format.drmFormat, modifiers);
+                m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->scanoutDevice()->allocator(), m_eglBackend->openglContext(), m_surface->gbmSwapchain->size(), format.drmFormat, modifiers);
                 if (m_surface->shadowSwapchain) {
                     break;
                 }
@@ -421,7 +421,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         return doTestFormats(sortedFormats, MultiGpuImportMode::None);
     }
     // special case, we're using different display devices but the same render device
-    const auto display = m_eglBackend->displayForGpu(m_gpu);
+    const auto display = m_eglBackend->eglDisplayForDevice(m_gpu->drmDevice());
     if (display && !display->renderNode().isEmpty() && display->renderNode() == m_eglBackend->eglDisplayObject()->renderNode()) {
         if (auto surface = doTestFormats(sortedFormats, MultiGpuImportMode::None)) {
             return surface;
@@ -463,7 +463,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     auto ret = std::make_unique<Surface>();
     const auto drmFormat = m_eglBackend->eglDisplayObject()->allSupportedDrmFormats()[format];
     if (importMode == MultiGpuImportMode::Egl) {
-        ret->importContext = m_eglBackend->contextForGpu(m_gpu);
+        ret->importContext = m_eglBackend->eglContextForDevice(m_gpu->drmDevice());
         if (!ret->importContext || ret->importContext->isSoftwareRenderer()) {
             return nullptr;
         }
@@ -483,7 +483,8 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     if (renderModifiers.empty()) {
         return nullptr;
     }
-    ret->context = m_eglBackend->contextForGpu(m_eglBackend->gpu());
+    // FIXME change this to fetch the renderer egl context instead
+    ret->context = m_eglBackend->eglContextForDevice(m_eglBackend->gpu()->drmDevice());
     ret->bufferTarget = bufferTarget;
     ret->importMode = importMode;
     ret->gbmSwapchain = createGbmSwapchain(m_eglBackend->gpu(), m_eglBackend->openglContext(), size, format, renderModifiers, importMode, bufferTarget);
@@ -518,6 +519,9 @@ std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu
     const bool preferLinear = importMode == MultiGpuImportMode::DumbBuffer;
     const bool forceLinear = importMode == MultiGpuImportMode::LinearDmabuf || (importMode != MultiGpuImportMode::None && importMode != MultiGpuImportMode::DumbBuffer && !allowModifiers);
     if (forceLinear && !linearSupported) {
+        return nullptr;
+    }
+    if (EglContext::currentContext() != context && !context->makeCurrent()) {
         return nullptr;
     }
     if (linearSupported && (preferLinear || forceLinear)) {
@@ -579,7 +583,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
 {
     Q_ASSERT(surface->importGbmSwapchain);
 
-    const auto display = m_eglBackend->displayForGpu(m_gpu);
+    const auto display = m_eglBackend->eglDisplayForDevice(m_gpu->drmDevice());
     // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
     if (!readFence.isValid() || !display->supportsNativeFence()) {
         glFinish();
@@ -589,7 +593,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
         qCWarning(KWIN_DRM, "Failed to make import context current");
         // this is probably caused by a GPU reset, let's not take any chances
         surface->needsRecreation = true;
-        m_eglBackend->resetContextForGpu(m_gpu);
+        m_eglBackend->resetContextForDevice(m_gpu->drmDevice());
         return nullptr;
     }
     const auto restoreContext = qScopeGuard([this]() {
@@ -598,7 +602,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     if (surface->importContext->checkGraphicsResetStatus() != GL_NO_ERROR) {
         qCWarning(KWIN_DRM, "Detected GPU reset on secondary GPU %s", qPrintable(m_gpu->drmDevice()->path()));
         surface->needsRecreation = true;
-        m_eglBackend->resetContextForGpu(m_gpu);
+        m_eglBackend->resetContextForDevice(m_gpu->drmDevice());
         return nullptr;
     }
     std::unique_ptr<GLRenderTimeQuery> renderTime;

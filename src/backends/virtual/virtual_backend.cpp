@@ -20,7 +20,7 @@
 namespace KWin
 {
 
-static std::unique_ptr<DrmDevice> findRenderDevice()
+static std::shared_ptr<DrmDevice> findRenderDevice()
 {
     const int deviceCount = drmGetDevices2(0, nullptr, 0);
     if (deviceCount <= 0) {
@@ -133,14 +133,14 @@ void VirtualBackend::setVirtualOutputs(const QList<OutputInfo> &infos)
     Q_EMIT outputsQueried();
 }
 
-void VirtualBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
+void VirtualBackend::setEglDisplay(EglDisplay *display)
 {
-    m_display = std::move(display);
+    m_display = display;
 }
 
 EglDisplay *VirtualBackend::sceneEglDisplayObject() const
 {
-    return m_display.get();
+    return m_display;
 }
 
 } // namespace KWin

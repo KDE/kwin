@@ -25,6 +25,7 @@ class Output;
 class GLTexture;
 class EglContext;
 class EglDisplay;
+struct RenderDevice;
 
 struct DmaBufAttributes;
 
@@ -72,8 +73,9 @@ public:
         return m_extensions.contains(extension);
     }
 
-    bool testImportBuffer(GraphicsBuffer *buffer) override;
+    bool testImportBuffer(DrmDevice *device, GraphicsBuffer *buffer) override;
     QHash<uint32_t, QList<uint64_t>> supportedFormats() const override;
+    DrmDevice *renderDevice() const override;
 
     QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
 
@@ -82,18 +84,25 @@ public:
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes, int plane, int format, const QSize &size) const;
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
+    EGLImageKHR importBufferAsImage(DrmDevice *device, GraphicsBuffer *buffer);
+    EGLImageKHR importBufferAsImage(DrmDevice *device, GraphicsBuffer *buffer, int plane, int format, const QSize &size);
+
+    EglDisplay *eglDisplayForDevice(DrmDevice *device);
+    std::shared_ptr<EglContext> eglContextForDevice(DrmDevice *device);
+    void resetContextForDevice(DrmDevice *device);
 
 protected:
-    EglBackend();
+    EglBackend(const std::shared_ptr<DrmDevice> &renderDevice);
 
     void cleanup();
     virtual void cleanupSurfaces();
     void setEglDisplay(EglDisplay *display);
     void initClientExtensions();
     void initWayland();
+    void updateDmabufFeedback();
     bool hasClientExtension(const QByteArray &ext) const;
     bool isOpenGLES() const;
-    bool createContext(EGLConfig config);
+    bool createContext();
 
     bool ensureGlobalShareContext(EGLConfig config);
     void destroyGlobalShareContext();
@@ -114,13 +123,22 @@ protected:
     std::shared_ptr<EglContext> m_context;
     QList<QByteArray> m_clientExtensions;
     QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;
-    QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
 
     /**
      * @brief Whether the initialization failed, of course default to @c false.
      */
     bool m_failed = false;
     QList<QByteArray> m_extensions;
+
+    struct Gpu
+    {
+        std::weak_ptr<EglContext> context;
+        QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> importedBuffers;
+    };
+    std::unordered_map<RenderDevice *, Gpu> m_devices;
+    std::unique_ptr<EglDisplay> m_softwareDisplay;
+
+    std::shared_ptr<DrmDevice> m_renderDevice;
 };
 
 }

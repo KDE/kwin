@@ -72,7 +72,7 @@ bool WaylandQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, cons
 
 DrmDevice *WaylandQPainterPrimaryLayer::scanoutDevice() const
 {
-    return m_backend->drmDevice();
+    return m_backend->scanoutDevice();
 }
 
 QHash<uint32_t, QList<uint64_t>> WaylandQPainterPrimaryLayer::supportedDrmFormats() const
@@ -131,7 +131,7 @@ bool WaylandQPainterCursorLayer::doEndFrame(const QRegion &renderedRegion, const
 
 DrmDevice *WaylandQPainterCursorLayer::scanoutDevice() const
 {
-    return m_backend->drmDevice();
+    return m_backend->scanoutDevice();
 }
 
 QHash<uint32_t, QList<uint64_t>> WaylandQPainterCursorLayer::supportedDrmFormats() const
@@ -163,6 +163,11 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
     for (auto *output : waylandOutputs) {
         output->setOutputLayers({});
     }
+}
+
+DrmDevice *WaylandQPainterBackend::scanoutDevice() const
+{
+    return m_backend->drmDevice();
 }
 
 void WaylandQPainterBackend::createOutput(Output *output)

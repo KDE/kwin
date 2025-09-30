@@ -43,6 +43,7 @@ target_sources(kwin PRIVATE
     core/colortransformation.cpp
     core/drmdevice.cpp
     core/gbmgraphicsbufferallocator.cpp
+    core/gpumanager.cpp
     core/graphicsbuffer.cpp
     core/graphicsbufferallocator.cpp
     core/graphicsbufferview.cpp
@@ -122,6 +123,7 @@ target_sources(kwin PRIVATE
     opengl/eglcontext.cpp
     opengl/egldisplay.cpp
     opengl/eglimagetexture.cpp
+    opengl/eglmultigpuswapchain.cpp
     opengl/eglnativefence.cpp
     opengl/eglswapchain.cpp
     opengl/glframebuffer.cpp
@@ -591,12 +593,13 @@ install(FILES
     opengl/eglcontext.h
     opengl/egldisplay.h
     opengl/eglimagetexture.h
+    opengl/eglmultigpuswapchain.h
     opengl/eglnativefence.h
     opengl/eglswapchain.h
     opengl/eglutils_p.h
     opengl/glframebuffer.h
-    opengl/gllut3D.h
     opengl/gllut.h
+    opengl/gllut3D.h
     opengl/glplatform.h
     opengl/glrendertimequery.h
     opengl/glshader.h

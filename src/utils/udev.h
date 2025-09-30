@@ -83,6 +83,7 @@ public:
         return m_udev != nullptr;
     }
     std::vector<std::unique_ptr<UdevDevice>> listGPUs();
+    std::vector<std::unique_ptr<UdevDevice>> listRenderDevices();
     std::unique_ptr<UdevDevice> deviceFromSyspath(const char *syspath);
     std::unique_ptr<UdevMonitor> monitor();
     operator udev *() const

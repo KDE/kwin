@@ -28,6 +28,11 @@ CompositingType QPainterBackend::compositingType() const
     return QPainterCompositing;
 }
 
+DrmDevice *QPainterBackend::renderDevice() const
+{
+    return nullptr;
+}
+
 void QPainterBackend::setFailed(const QString &reason)
 {
     qCWarning(KWIN_QPAINTER) << "Creating the QPainter backend failed: " << reason;

@@ -418,7 +418,6 @@ WaylandBackend::WaylandBackend(const WaylandBackendOptions &options, QObject *pa
 
 WaylandBackend::~WaylandBackend()
 {
-    m_eglDisplay.reset();
     destroyOutputs();
 
     m_buffers.clear();
@@ -689,14 +688,14 @@ wl_buffer *WaylandBackend::importBuffer(GraphicsBuffer *graphicsBuffer)
     return buffer->handle();
 }
 
-void WaylandBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
+void WaylandBackend::setEglDisplay(EglDisplay *display)
 {
-    m_eglDisplay = std::move(display);
+    m_eglDisplay = display;
 }
 
 EglDisplay *WaylandBackend::sceneEglDisplayObject() const
 {
-    return m_eglDisplay.get();
+    return m_eglDisplay;
 }
 
 DrmDevice *WaylandBackend::drmDevice() const

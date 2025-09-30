@@ -74,6 +74,7 @@ public:
     X11WindowedQPainterBackend(X11WindowedBackend *backend);
     ~X11WindowedQPainterBackend() override;
 
+    DrmDevice *scanoutDevice() const;
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
     QList<OutputLayer *> compatibleOutputLayers(Output *output) override;

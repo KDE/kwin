@@ -9,6 +9,7 @@
 #include "config-kwin.h"
 
 #include "core/graphicsbuffer.h"
+#include "drmdevice.h"
 #include "utils/common.h"
 
 #include <drm_fourcc.h>
@@ -20,9 +21,10 @@
 namespace KWin
 {
 
-static inline std::optional<DmaBufAttributes> dmaBufAttributesForBo(gbm_bo *bo)
+static inline std::optional<DmaBufAttributes> dmaBufAttributesForBo(DrmDevice *device, gbm_bo *bo)
 {
     DmaBufAttributes attributes;
+    attributes.device = device->shared_from_this();
     attributes.planeCount = gbm_bo_get_plane_count(bo);
     attributes.width = gbm_bo_get_width(bo);
     attributes.height = gbm_bo_get_height(bo);
@@ -106,8 +108,8 @@ private:
     bool m_hasAlphaChannel;
 };
 
-GbmGraphicsBufferAllocator::GbmGraphicsBufferAllocator(gbm_device *device)
-    : m_gbmDevice(device)
+GbmGraphicsBufferAllocator::GbmGraphicsBufferAllocator(DrmDevice *device)
+    : m_device(device)
 {
 }
 
@@ -115,7 +117,7 @@ GbmGraphicsBufferAllocator::~GbmGraphicsBufferAllocator()
 {
 }
 
-static GraphicsBuffer *allocateDumb(gbm_device *device, const GraphicsBufferOptions &options)
+static GraphicsBuffer *allocateDumb(DrmDevice *device, const GraphicsBufferOptions &options)
 {
     if (!options.modifiers.isEmpty()) {
         return nullptr;
@@ -126,44 +128,45 @@ static GraphicsBuffer *allocateDumb(gbm_device *device, const GraphicsBufferOpti
         .width = uint32_t(options.size.width()),
         .bpp = 32,
     };
-    if (drmIoctl(gbm_device_get_fd(device), DRM_IOCTL_MODE_CREATE_DUMB, &createArgs) != 0) {
+    if (drmIoctl(gbm_device_get_fd(device->gbmDevice()), DRM_IOCTL_MODE_CREATE_DUMB, &createArgs) != 0) {
         qCWarning(KWIN_CORE) << "DRM_IOCTL_MODE_CREATE_DUMB failed:" << strerror(errno);
         return nullptr;
     }
 
     int primeFd;
-    if (drmPrimeHandleToFD(gbm_device_get_fd(device), createArgs.handle, DRM_CLOEXEC, &primeFd) != 0) {
+    if (drmPrimeHandleToFD(gbm_device_get_fd(device->gbmDevice()), createArgs.handle, DRM_CLOEXEC, &primeFd) != 0) {
         qCWarning(KWIN_CORE) << "drmPrimeHandleToFD() failed:" << strerror(errno);
         drm_mode_destroy_dumb destroyArgs{
             .handle = createArgs.handle,
         };
-        drmIoctl(gbm_device_get_fd(device), DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
+        drmIoctl(gbm_device_get_fd(device->gbmDevice()), DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
         return nullptr;
     }
 
-    return new DumbGraphicsBuffer(gbm_device_get_fd(device), createArgs.handle, DmaBufAttributes{
-        .planeCount = 1,
-        .width = options.size.width(),
-        .height = options.size.height(),
-        .format = options.format,
-        .modifier = DRM_FORMAT_MOD_LINEAR,
-        .fd = {FileDescriptor(primeFd), FileDescriptor{}, FileDescriptor{}, FileDescriptor{}},
-        .offset = {0, 0, 0, 0},
-        .pitch = {createArgs.pitch, 0, 0, 0},
-    });
+    return new DumbGraphicsBuffer(gbm_device_get_fd(device->gbmDevice()), createArgs.handle, DmaBufAttributes{
+                                                                                                 .device = device->shared_from_this(),
+                                                                                                 .planeCount = 1,
+                                                                                                 .width = options.size.width(),
+                                                                                                 .height = options.size.height(),
+                                                                                                 .format = options.format,
+                                                                                                 .modifier = DRM_FORMAT_MOD_LINEAR,
+                                                                                                 .fd = {FileDescriptor(primeFd), FileDescriptor{}, FileDescriptor{}, FileDescriptor{}},
+                                                                                                 .offset = {0, 0, 0, 0},
+                                                                                                 .pitch = {createArgs.pitch, 0, 0, 0},
+                                                                                             });
 }
 
-static GraphicsBuffer *allocateDmaBuf(gbm_device *device, const GraphicsBufferOptions &options)
+static GraphicsBuffer *allocateDmaBuf(DrmDevice *device, const GraphicsBufferOptions &options)
 {
     if (!options.modifiers.isEmpty() && !(options.modifiers.size() == 1 && options.modifiers.first() == DRM_FORMAT_MOD_INVALID)) {
-        gbm_bo *bo = gbm_bo_create_with_modifiers(device,
+        gbm_bo *bo = gbm_bo_create_with_modifiers(device->gbmDevice(),
                                                   options.size.width(),
                                                   options.size.height(),
                                                   options.format,
                                                   options.modifiers.constData(),
                                                   options.modifiers.size());
         if (bo) {
-            std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
+            std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(device, bo);
             if (!attributes.has_value()) {
                 gbm_bo_destroy(bo);
                 return nullptr;
@@ -179,13 +182,13 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, const GraphicsBufferOp
         return nullptr;
     }
 
-    gbm_bo *bo = gbm_bo_create(device,
+    gbm_bo *bo = gbm_bo_create(device->gbmDevice(),
                                options.size.width(),
                                options.size.height(),
                                options.format,
                                flags);
     if (bo) {
-        std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
+        std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(device, bo);
         if (!attributes.has_value()) {
             gbm_bo_destroy(bo);
             return nullptr;
@@ -204,10 +207,10 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, const GraphicsBufferOp
 GraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
     if (options.software) {
-        return allocateDumb(m_gbmDevice, options);
+        return allocateDumb(m_device, options);
     }
 
-    return allocateDmaBuf(m_gbmDevice, options);
+    return allocateDmaBuf(m_device, options);
 }
 
 GbmGraphicsBuffer::GbmGraphicsBuffer(DmaBufAttributes attributes, gbm_bo *handle)

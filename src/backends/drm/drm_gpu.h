@@ -36,7 +36,6 @@ class EglGbmBackend;
 class DrmAbstractOutput;
 class DrmRenderBackend;
 class DrmVirtualOutput;
-class EglDisplay;
 class GraphicsBuffer;
 class GraphicsBufferAllocator;
 class OutputFrame;
@@ -71,7 +70,7 @@ public:
      */
     static constexpr std::chrono::milliseconds s_pageflipTimeout = std::chrono::seconds(1);
 
-    DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device);
+    DrmGpu(DrmBackend *backend, int fd, std::shared_ptr<DrmDevice> &&device);
     ~DrmGpu();
 
     int fd() const;
@@ -93,7 +92,6 @@ public:
     bool isVirtualMachine() const;
     std::optional<Version> nvidiaDriverVersion() const;
     QString driverName() const;
-    EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;
     /**
      * Returns the clock from which presentation timestamps are sourced. The returned value
@@ -104,8 +102,6 @@ public:
 
     QList<DrmOutput *> drmOutputs() const;
     const QList<DrmPipeline *> pipelines() const;
-
-    void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
 
     bool updateOutputs();
     void removeOutputs();
@@ -148,7 +144,7 @@ private:
     static void pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data);
 
     const int m_fd;
-    const std::unique_ptr<DrmDevice> m_drmDevice;
+    const std::shared_ptr<DrmDevice> m_drmDevice;
     bool m_atomicModeSetting;
     bool m_addFB2ModifiersSupported = false;
     bool m_isNVidia;
@@ -164,7 +160,6 @@ private:
     bool m_forceModeset = false;
     bool m_forceImplicitModifiers = false;
     clockid_t m_presentationClock;
-    std::unique_ptr<EglDisplay> m_eglDisplay;
     DrmBackend *const m_platform;
     std::optional<Version> m_nvidiaDriverVersion;
 

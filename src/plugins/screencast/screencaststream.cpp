@@ -878,7 +878,7 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         return std::nullopt;
     }
 
-    GraphicsBuffer *buffer = backend->drmDevice()->allocator()->allocate(GraphicsBufferOptions{
+    GraphicsBuffer *buffer = backend->scanoutDevice()->allocator()->allocate(GraphicsBufferOptions{
         .size = size,
         .format = format,
         .modifiers = modifiers,
@@ -901,7 +901,7 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         .height = attrs->height,
         .format = attrs->format,
         .modifier = attrs->modifier,
-        .supportsSyncObj = backend->drmDevice()->supportsSyncObjTimelines(),
+        .supportsSyncObj = backend->scanoutDevice()->supportsSyncObjTimelines(),
     };
 }
 

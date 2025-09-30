@@ -32,12 +32,13 @@ public:
 
     enum class TrancheFlag : uint32_t {
         Scanout = 1,
+        Sampling = 2,
     };
     Q_DECLARE_FLAGS(TrancheFlags, TrancheFlag)
 
     struct Tranche
     {
-        dev_t device;
+        std::shared_ptr<DrmDevice> device;
         TrancheFlags flags;
         QHash<uint32_t, QList<uint64_t>> formatTable;
     };
@@ -50,7 +51,7 @@ public:
     void setTranches(const QList<Tranche> &tranches);
 
 private:
-    static QList<Tranche> createScanoutTranches(const QList<Tranche> &tranches, DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &formats);
+    static QList<Tranche> createScanoutTranches(const QList<Tranche> &tranches, const std::shared_ptr<DrmDevice> &device, const QHash<uint32_t, QList<uint64_t>> &formats);
 
     LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegrationPrivate *integration);
     friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;
@@ -71,6 +72,7 @@ public:
 
     RenderBackend *renderBackend() const;
     void setRenderBackend(RenderBackend *renderBackend);
+    std::shared_ptr<DrmDevice> mainDevice() const;
 
     void setSupportedFormatsWithModifiers(const QList<LinuxDmaBufV1Feedback::Tranche> &tranches);
 

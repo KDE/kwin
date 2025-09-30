@@ -54,6 +54,7 @@ public:
     VirtualQPainterBackend(VirtualBackend *backend);
     ~VirtualQPainterBackend() override;
 
+    DrmDevice *scanoutDevice() const override;
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
     QList<OutputLayer *> compatibleOutputLayers(Output *output) override;

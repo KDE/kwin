@@ -35,11 +35,14 @@ DmaBufScreenCastBuffer::DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::shar
 DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, const GraphicsBufferOptions &options)
 {
     EglBackend *backend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
-    if (!backend || !backend->drmDevice()) {
+    if (!backend) {
         return nullptr;
     }
-
-    GraphicsBuffer *buffer = backend->drmDevice()->allocator()->allocate(options);
+    DrmDevice *device = backend->renderDevice() ? backend->renderDevice() : backend->scanoutDevice();
+    if (!device) {
+        return nullptr;
+    }
+    GraphicsBuffer *buffer = device->allocator()->allocate(options);
     if (!buffer) {
         return nullptr;
     }
@@ -86,7 +89,7 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, cons
 
     std::unique_ptr<SyncTimeline> synctimeline;
     if (syncTimelineMeta) {
-        synctimeline = std::make_unique<SyncTimeline>(backend->drmDevice()->fileDescriptor());
+        synctimeline = std::make_unique<SyncTimeline>(backend->scanoutDevice()->fileDescriptor());
         const FileDescriptor &syncobjfd = synctimeline->fileDescriptor();
         if (!syncobjfd.isValid()) {
             buffer->drop();

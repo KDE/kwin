@@ -98,14 +98,14 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
         // it's likely not worth making this code more complicated to handle those edge cases
         return false;
     }
-    if (gpu() != gpu()->platform()->primaryGpu()) {
+    // FIXME this check only works for "conventional" GPUs. render-only + scanout-only in combination should still get direct scanout!
+    // Maybe the same "compatibility" checks the GpuManager does could be applied here too
+    if (!buffer->dmabufAttributes() || !buffer->dmabufAttributes()->device->isSameDevice(gpu()->drmDevice())) {
         // Disable direct scanout between GPUs, as
         // - there are some significant driver bugs with direct scanout from other GPUs,
         //   like https://gitlab.freedesktop.org/drm/amd/-/issues/2075
         // - with implicit modifiers, direct scanout on secondary GPUs
         //   is also very unlikely to yield the correct results.
-        // TODO once we know what buffer a GPU is meant for, loosen this check again
-        // Right now this just assumes all buffers are on the primary GPU
         return false;
     }
     if (!m_colorPipeline.isIdentity() && drmOutput()->colorPowerTradeoff() == Output::ColorPowerTradeoff::PreferAccuracy) {

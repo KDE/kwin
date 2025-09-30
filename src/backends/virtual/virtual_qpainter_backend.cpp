@@ -63,7 +63,7 @@ QImage *VirtualQPainterLayer::image()
 
 DrmDevice *VirtualQPainterLayer::scanoutDevice() const
 {
-    return m_backend->drmDevice();
+    return m_backend->scanoutDevice();
 }
 
 QHash<uint32_t, QList<uint64_t>> VirtualQPainterLayer::supportedDrmFormats() const
@@ -95,6 +95,11 @@ VirtualQPainterBackend::~VirtualQPainterBackend()
     for (Output *output : outputs) {
         static_cast<VirtualOutput *>(output)->setOutputLayer(nullptr);
     }
+}
+
+DrmDevice *VirtualQPainterBackend::scanoutDevice() const
+{
+    return m_backend->drmDevice();
 }
 
 void VirtualQPainterBackend::addOutput(Output *output)

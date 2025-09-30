@@ -85,6 +85,7 @@ public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;
 
+    DrmDevice *scanoutDevice() const override;
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
     QList<OutputLayer *> compatibleOutputLayers(Output *output) override;
 

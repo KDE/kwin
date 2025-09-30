@@ -150,6 +150,26 @@ std::vector<std::unique_ptr<UdevDevice>> Udev::listGPUs()
 #endif
 }
 
+std::vector<std::unique_ptr<UdevDevice>> Udev::listRenderDevices()
+{
+    if (!m_udev) {
+        return {};
+    }
+#if defined(Q_OS_FREEBSD)
+    std::vector<std::unique_ptr<UdevDevice>> r;
+    if (auto d = deviceFromSyspath("/dev/dri/renderD128")) {
+        r.push_back(std::move(d));
+    }
+    return r;
+#else
+    UdevEnumerate enumerate(this);
+    enumerate.addMatch(UdevEnumerate::Match::SubSystem, "drm");
+    enumerate.addMatch(UdevEnumerate::Match::SysName, "renderD1*");
+    enumerate.scan();
+    return enumerate.find();
+#endif
+}
+
 std::unique_ptr<UdevDevice> Udev::deviceFromSyspath(const char *syspath)
 {
     auto dev = udev_device_new_from_syspath(m_udev, syspath);

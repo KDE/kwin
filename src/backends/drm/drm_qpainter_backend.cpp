@@ -33,7 +33,7 @@ DrmQPainterBackend::~DrmQPainterBackend()
     m_backend->setRenderBackend(nullptr);
 }
 
-DrmDevice *DrmQPainterBackend::drmDevice() const
+DrmDevice *DrmQPainterBackend::scanoutDevice() const
 {
     return m_backend->primaryGpu()->drmDevice();
 }

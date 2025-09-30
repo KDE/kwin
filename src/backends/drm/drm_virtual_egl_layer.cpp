@@ -155,7 +155,7 @@ void VirtualEglGbmLayer::releaseBuffers()
 
 DrmDevice *VirtualEglGbmLayer::scanoutDevice() const
 {
-    return m_eglBackend->drmDevice();
+    return m_eglBackend->scanoutDevice();
 }
 
 QHash<uint32_t, QList<uint64_t>> VirtualEglGbmLayer::supportedDrmFormats() const

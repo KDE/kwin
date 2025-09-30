@@ -17,9 +17,12 @@ namespace KWin
 {
 
 class SyncReleasePoint;
+class DrmDevice;
 
 struct DmaBufAttributes
 {
+    std::shared_ptr<DrmDevice> device;
+
     int planeCount = 0;
     int width = 0;
     int height = 0;

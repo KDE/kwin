@@ -13,6 +13,7 @@
 #include <QObject>
 #include <QPointer>
 #include <memory>
+#include <optional>
 
 namespace KWin
 {
@@ -126,9 +127,10 @@ public:
 
     virtual QList<OutputLayer *> compatibleOutputLayers(Output *output) = 0;
 
-    virtual DrmDevice *drmDevice() const;
+    virtual DrmDevice *scanoutDevice() const = 0;
+    virtual DrmDevice *renderDevice() const = 0;
 
-    virtual bool testImportBuffer(GraphicsBuffer *buffer);
+    virtual bool testImportBuffer(DrmDevice *device, GraphicsBuffer *buffer);
     virtual QHash<uint32_t, QList<uint64_t>> supportedFormats() const;
 };
 

@@ -64,7 +64,7 @@ public:
     void init() override;
 
     VirtualBackend *backend() const;
-    DrmDevice *drmDevice() const override;
+    DrmDevice *scanoutDevice() const override;
 
 private:
     bool initializeEgl();
