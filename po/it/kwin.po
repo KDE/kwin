@@ -3528,8 +3528,7 @@ msgstr ""
 "Chiusura della sessione comunque tra 2 minuti."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "Dai un'occhiata al desktop"

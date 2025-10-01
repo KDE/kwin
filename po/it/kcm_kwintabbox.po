@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-25 02:40+0000\n"
-"PO-Revision-Date: 2025-05-31 14:32+0200\n"
+"PO-Revision-Date: 2025-09-23 18:51+0200\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -59,10 +59,9 @@ msgid "System Settings"
 msgstr "Impostazioni di sistema"
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Desktop attuale"
+msgstr "Dai un'occhiata al desktop"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -101,10 +100,9 @@ msgstr "Contenuto"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" entry"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "Includi la voce «Mostra il desktop»"
+msgstr "Includi la voce «Dai un'occhiata al desktop»"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
