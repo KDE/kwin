@@ -122,7 +122,7 @@ void Primary::x11OffersChanged(const QStringList &added, const QStringList &remo
         waylandServer()->seat()->setPrimarySelection(m_primarySelectionSource.get(), waylandServer()->display()->nextSerial());
     } else {
         AbstractDataSource *currentSelection = waylandServer()->seat()->primarySelection();
-        if (!ownsSelection(currentSelection)) {
+        if (ownsSelection(currentSelection)) {
             waylandServer()->seat()->setPrimarySelection(nullptr, waylandServer()->display()->nextSerial());
             m_primarySelectionSource.reset();
         }
