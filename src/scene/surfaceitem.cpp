@@ -261,9 +261,9 @@ std::chrono::nanoseconds SurfaceItem::recursiveFrameTimeEstimation() const
 
 std::chrono::nanoseconds SurfaceItem::frameTimeEstimation() const
 {
-    if (m_lastDamage) {
-        const auto diff = std::chrono::steady_clock::now() - *m_lastDamage;
-        return std::max(m_frameTimeEstimation, diff);
+    if (m_lastDamage && std::chrono::steady_clock::now() - *m_lastDamage > std::chrono::milliseconds(100)) {
+        // the surface seems to have stopped rendering entirely
+        return std::chrono::days(1000);
     } else {
         return m_frameTimeEstimation;
     }
