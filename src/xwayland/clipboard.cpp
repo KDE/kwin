@@ -86,7 +86,7 @@ void Clipboard::x11OfferLost()
     m_selectionSource.reset();
 }
 
-void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &removed)
+void Clipboard::x11OffersChanged(const QStringList &mimeTypes)
 {
     X11Source *source = x11Source();
     if (!source) {
@@ -94,14 +94,7 @@ void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &re
         return;
     }
 
-    const Mimes offers = source->offers();
-
-    if (!offers.isEmpty()) {
-        QStringList mimeTypes;
-        mimeTypes.reserve(offers.size());
-        std::transform(offers.begin(), offers.end(), std::back_inserter(mimeTypes), [](const Mimes::value_type &pair) {
-            return pair.first;
-        });
+    if (!mimeTypes.isEmpty()) {
         auto newSelection = std::make_unique<XwlDataSource>();
         newSelection->setMimeTypes(mimeTypes);
         connect(newSelection.get(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);

@@ -196,9 +196,6 @@ void X11Source::handleTargets()
         return;
     }
 
-    QStringList added;
-    QStringList removed;
-
     Mimes all;
     xcb_atom_t *value = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
     for (xcb_atom_t value : std::span(value, reply->value_len)) {
@@ -212,27 +209,19 @@ void X11Source::handleTargets()
             continue;
         }
 
-        const auto mimeIt = std::find_if(m_offers.begin(), m_offers.end(),
-                                         [value](const Mime &mime) {
-            return mime.second == value;
+        all << Mime(mimeStrings[0], value);
+    }
+
+    if (m_offers != all) {
+        QStringList mimeTypes;
+        mimeTypes.reserve(all.size());
+        std::transform(all.begin(), all.end(), std::back_inserter(mimeTypes), [](const Mimes::value_type &pair) {
+            return pair.first;
         });
 
-        auto mimePair = Mime(mimeStrings[0], value);
-        if (mimeIt == m_offers.end()) {
-            added << mimePair.first;
-        } else {
-            m_offers.removeAll(mimePair);
-        }
-        all << std::move(mimePair);
-    }
-    // all left in m_offers are not in the updated targets
-    for (const auto &mimePair : std::as_const(m_offers)) {
-        removed << mimePair.first;
-    }
-    m_offers = std::move(all);
+        m_offers = std::move(all);
 
-    if (!added.isEmpty() || !removed.isEmpty()) {
-        Q_EMIT offersChanged(added, removed);
+        Q_EMIT offersChanged(mimeTypes);
     }
 
     free(reply);

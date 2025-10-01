@@ -116,7 +116,7 @@ void Dnd::x11OfferLost()
 {
 }
 
-void Dnd::x11OffersChanged(const QStringList &added, const QStringList &removed)
+void Dnd::x11OffersChanged(const QStringList &mimeTypes)
 {
 }
 
