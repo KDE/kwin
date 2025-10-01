@@ -30,7 +30,7 @@ ExpoCell {
 
     // no desktops is a special value which means "All Desktops"
     readonly property bool presentOnCurrentDesktop: !window.desktops.length || window.desktops.indexOf(KWinComponents.Workspace.currentDesktop) !== -1
-    readonly property bool initialHidden: window.minimized || !presentOnCurrentDesktop
+    readonly property bool initialHidden: window.minimized
     readonly property bool activeHidden: {
         if (window.skipSwitcher) {
             return true;
