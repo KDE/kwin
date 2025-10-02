@@ -208,6 +208,8 @@ public:
     void removeInputDevice(InputDevice *device);
     void addInputBackend(std::unique_ptr<InputBackend> &&inputBackend);
 
+    bool syncTabletWithMouse() const;
+
 Q_SIGNALS:
     void deviceAdded(InputDevice *device);
     void deviceRemoved(InputDevice *device);
@@ -310,6 +312,7 @@ private:
     bool m_hasPointer = false;
     bool m_hasTouch = false;
     bool m_hasTabletModeSwitch = false;
+    bool m_syncTabletWithMouse = false;
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();

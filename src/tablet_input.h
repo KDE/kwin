@@ -63,6 +63,11 @@ public:
 
     bool haveImplicitGrab() const;
 
+    void resetPosition()
+    {
+        m_lastPosition = QPointF{};
+    }
+
 private:
     void cleanupDecoration(Decoration::DecoratedWindowImpl *old,
                            Decoration::DecoratedWindowImpl *now) override;

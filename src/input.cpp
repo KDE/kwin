@@ -3022,6 +3022,8 @@ void InputRedirection::init()
     m_inputConfigWatcher = KConfigWatcher::create(kwinApp()->inputConfig());
     connect(m_inputConfigWatcher.data(), &KConfigWatcher::configChanged,
             this, &InputRedirection::handleInputConfigChanged);
+    const KConfigGroup tabletGroup(kwinApp()->inputConfig(), QStringLiteral("Tablet"));
+    m_syncTabletWithMouse = tabletGroup.readEntry(QStringLiteral("SyncWithMouse"), false);
 #if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->init();
 #endif
@@ -3263,6 +3265,9 @@ void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)
 {
     if (group.name() == QLatin1String("Keyboard")) {
         m_keyboard->reconfigure();
+    } else if (group.name() == QLatin1String("Tablet")) {
+        const KConfigGroup tabletGroup(kwinApp()->inputConfig(), QStringLiteral("Tablet"));
+        m_syncTabletWithMouse = tabletGroup.readEntry(QStringLiteral("SyncWithMouse"), false);
     }
 }
 
@@ -3409,6 +3414,11 @@ void InputRedirection::addInputBackend(std::unique_ptr<InputBackend> &&inputBack
     inputBackend->initialize();
 
     m_inputBackends.push_back(std::move(inputBackend));
+}
+
+bool InputRedirection::syncTabletWithMouse() const
+{
+    return m_syncTabletWithMouse;
 }
 
 void InputRedirection::setupInputBackends()
