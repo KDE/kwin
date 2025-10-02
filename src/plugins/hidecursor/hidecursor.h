@@ -29,6 +29,7 @@ public:
 
     void pointerMotion(PointerMotionEvent *event) override;
     void pointerButton(PointerButtonEvent *event) override;
+    void pointerAxis(PointerAxisEvent *event) override;
     void keyboardKey(KeyboardKeyEvent *event) override;
     void tabletToolProximityEvent(TabletToolProximityEvent *event) override;
     void tabletToolAxisEvent(TabletToolAxisEvent *event) override;

@@ -68,6 +68,11 @@ void HideCursorEffect::pointerButton(PointerButtonEvent *event)
     activity();
 }
 
+void HideCursorEffect::pointerAxis(PointerAxisEvent *event)
+{
+    activity();
+}
+
 void HideCursorEffect::tabletToolProximityEvent(TabletToolProximityEvent *event)
 {
     activity();
