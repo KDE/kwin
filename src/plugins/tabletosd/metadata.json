@@ -1,0 +1,9 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "PLACEHOLDER",
+        "EnabledByDefault": true,
+        "License": "GPL",
+        "Name": "Tablet OSD"
+    }
+}

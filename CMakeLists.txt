@@ -321,6 +321,9 @@ endif()
 pkg_check_modules(Libxcvt IMPORTED_TARGET libxcvt>=0.1.1 REQUIRED)
 add_feature_info(Libxcvt Libxcvt_FOUND "Required for generating modes in the drm backend")
 
+# for kcm_tablet
+pkg_check_modules(LIBWACOM libwacom REQUIRED IMPORTED_TARGET)
+
 add_feature_info("XInput" X11_Xi_FOUND "Required for poll-free mouse cursor updates")
 set(HAVE_X11_XINPUT ${X11_Xinput_FOUND})
 

@@ -114,6 +114,7 @@ add_subdirectory(windowsystem)
 add_subdirectory(windowview)
 add_subdirectory(wobblywindows)
 add_subdirectory(zoom)
+add_subdirectory(tabletosd)
 
 if (KWIN_BUILD_NOTIFICATIONS)
     add_subdirectory(keynotification)
