@@ -22,6 +22,7 @@
 #include "mousebuttons.h"
 #include "osd.h"
 #include "screenedge.h"
+#include "tablet_input.h"
 #include "wayland/abstract_data_source.h"
 #include "wayland/display.h"
 #include "wayland/pointer.h"
@@ -249,6 +250,11 @@ void PointerInputRedirection::processWarp(const QPointF &pos, std::chrono::micro
 
 void PointerInputRedirection::processMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device)
 {
+    if (input()->tablet()->positionValid() && input()->syncTabletWithMouse()) {
+        m_pos = input()->tablet()->position();
+        input()->tablet()->resetPosition();
+    }
+
     processMotionInternal(m_pos + delta, delta, deltaNonAccelerated, time, device, MotionType::Motion);
 }
 

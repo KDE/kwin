@@ -61,6 +61,11 @@ public:
         return m_lastPosition;
     }
 
+    void resetPosition()
+    {
+        m_lastPosition = QPointF{};
+    }
+
 private:
     void cleanupDecoration(Decoration::DecoratedWindowImpl *old,
                            Decoration::DecoratedWindowImpl *now) override;

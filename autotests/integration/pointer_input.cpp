@@ -108,6 +108,8 @@ private Q_SLOTS:
     void testDefaultInputRegion();
     void testEmptyInputRegion();
     void testUnfocusedModifiers();
+    void testTabletNoCursorSync();
+    void testTabletCursorSync();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -140,7 +142,7 @@ void PointerInputTest::initTestCase()
 
 void PointerInputTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1 | Test::AdditionalWaylandInterface::CursorShapeV1));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1 | Test::AdditionalWaylandInterface::CursorShapeV1 | Test::AdditionalWaylandInterface::WpTabletV2));
     QVERIFY(Test::waitForWaylandPointer());
     m_compositor = Test::waylandCompositor();
     m_seat = Test::waylandSeat();
@@ -1937,6 +1939,88 @@ void PointerInputTest::testUnfocusedModifiers()
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(waylandWindow));
 #endif
+}
+
+void PointerInputTest::testTabletNoCursorSync()
+{
+    // This test verifies that moving the stylus cursor doesn't reflect the mouse pointer.
+
+    // create pointer and signal spy for enter and leave signals
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+
+    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
+
+    // create a window
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    QVERIFY(surface);
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    QVERIFY(shellSurface);
+    render(surface.get());
+    QVERIFY(windowAddedSpy.wait());
+    Window *window = workspace()->activeWindow();
+    QVERIFY(window);
+
+    // currently there should not be a focused pointer surface
+    QVERIFY(!waylandServer()->seat()->focusedPointerSurface());
+    QVERIFY(!pointer->enteredSurface());
+
+    quint32 timestamp = 0;
+    Test::tabletToolProximityEvent(window->frameGeometry().center(), 0, 0, 0, 0, true, 0, timestamp++);
+    Test::tabletToolProximityEvent(window->frameGeometry().center(), 0, 0, 0, 0, false, 0, timestamp++);
+
+    QVERIFY(!enteredSpy.wait(std::chrono::seconds{1}));
+    QCOMPARE(enteredSpy.count(), 0);
+}
+
+void PointerInputTest::testTabletCursorSync()
+{
+    // This test verifies that moving the stylus cursor doesn't reflect the mouse pointer, because it was explicitly requested.
+    auto cfg = kwinApp()->inputConfig();
+    KConfigGroup tabletGroup = cfg->group(QStringLiteral("Tablet"));
+    tabletGroup.writeEntry(QStringLiteral("SyncWithMouse"), true, KConfig::Notify);
+    cfg->sync();
+
+    // create pointer and signal spy for enter and leave signals
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+
+    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
+
+    // create a window
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    QVERIFY(surface);
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    QVERIFY(shellSurface);
+    render(surface.get());
+    QVERIFY(windowAddedSpy.wait());
+    Window *window = workspace()->activeWindow();
+    QVERIFY(window);
+
+    // currently there should not be a focused pointer surface
+    QVERIFY(!waylandServer()->seat()->focusedPointerSurface());
+    QVERIFY(!pointer->enteredSurface());
+
+    quint32 timestamp = 0;
+    Test::tabletToolProximityEvent(window->frameGeometry().center(), 0, 0, 0, 0, true, 0, timestamp++);
+    Test::tabletToolProximityEvent(window->frameGeometry().center(), 0, 0, 0, 0, false, 0, timestamp++);
+
+    // Move the cursor 25px up
+    Test::pointerMotionRelative({0, 5}, timestamp++);
+
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 1);
+
+    // It will be 30px since the center is 25px, and we moved 5px with the mouse.
+    QCOMPARE(enteredSpy.first().at(1).toPointF(), QPointF(50, 30));
+    // window should have focus
+    QCOMPARE(pointer->enteredSurface(), surface.get());
+    // also on the server
+    QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
 }
 }
 
