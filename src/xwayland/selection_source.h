@@ -114,10 +114,7 @@ public:
 
     void getTargets();
 
-    Mimes offers() const
-    {
-        return m_offers;
-    }
+    // TODO: Drop it, it is kept because dnd code calls it in order to cache "mime type -> atom" mappings.
     void setOffers(const Mimes &offers);
 
     XwlDataSource *dataSource() const
@@ -134,7 +131,7 @@ public:
 
     void startTransfer(const QString &mimeName, qint32 fd);
 Q_SIGNALS:
-    void offersChanged(const QStringList &mimeTypes);
+    void targetsReceived(const QStringList &mimeTypes);
     void transferReady(xcb_atom_t target, qint32 fd);
 
 private:
