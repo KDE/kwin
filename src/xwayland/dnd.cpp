@@ -116,7 +116,7 @@ void Dnd::x11OfferLost()
 {
 }
 
-void Dnd::x11OffersChanged(const QStringList &mimeTypes)
+void Dnd::x11TargetsReceived(const QStringList &mimeTypes)
 {
 }
 

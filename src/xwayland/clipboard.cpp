@@ -86,7 +86,7 @@ void Clipboard::x11OfferLost()
     m_selectionSource.reset();
 }
 
-void Clipboard::x11OffersChanged(const QStringList &mimeTypes)
+void Clipboard::x11TargetsReceived(const QStringList &mimeTypes)
 {
     X11Source *source = x11Source();
     if (!source) {
@@ -94,20 +94,12 @@ void Clipboard::x11OffersChanged(const QStringList &mimeTypes)
         return;
     }
 
-    if (!mimeTypes.isEmpty()) {
-        auto newSelection = std::make_unique<XwlDataSource>();
-        newSelection->setMimeTypes(mimeTypes);
-        connect(newSelection.get(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
-        // we keep the old selection around because setSelection needs it to be still alive
-        std::swap(m_selectionSource, newSelection);
-        waylandServer()->seat()->setSelection(m_selectionSource.get(), waylandServer()->display()->nextSerial());
-    } else {
-        AbstractDataSource *currentSelection = waylandServer()->seat()->selection();
-        if (ownsSelection(currentSelection)) {
-            waylandServer()->seat()->setSelection(nullptr, waylandServer()->display()->nextSerial());
-            m_selectionSource.reset();
-        }
-    }
+    auto newSelection = std::make_unique<XwlDataSource>();
+    newSelection->setMimeTypes(mimeTypes);
+    connect(newSelection.get(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
+    // we keep the old selection around because setSelection needs it to be still alive
+    std::swap(m_selectionSource, newSelection);
+    waylandServer()->seat()->setSelection(m_selectionSource.get(), waylandServer()->display()->nextSerial());
 }
 
 } // namespace Xwl

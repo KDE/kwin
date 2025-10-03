@@ -536,16 +536,20 @@ private Q_SLOTS:
 
     void clipboardX11ToWayland_data();
     void clipboardX11ToWayland();
+    void emptyClipboardX11ToWayland();
     void clipboardX11ToWaylandSwitchFocusBeforeTargets();
     void clipboardWaylandToX11_data();
     void clipboardWaylandToX11();
+    void emptyClipboardWaylandToX11();
     void snoopClipboard();
 
     void primarySelectionX11ToWayland_data();
     void primarySelectionX11ToWayland();
+    void emptyPrimarySelectionX11ToWayland();
     void primarySelectionX11ToWaylandSwitchFocusBeforeTargets();
     void primarySelectionWaylandToX11_data();
     void primarySelectionWaylandToX11();
+    void emptyPrimarySelectionWaylandToX11();
     void snoopPrimarySelection();
 
 private:
@@ -641,6 +645,54 @@ void XwaylandSelectionTest::clipboardX11ToWayland()
     const QFuture<QByteArray> data = readMimeTypeData(offer, acceptedMimeType);
     QVERIFY(waitFuture(data));
     QCOMPARE(data.result(), acceptedMimeData);
+
+    // Clear selection.
+    QSignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionCleared);
+    x11Selection->setOwner(false);
+    QVERIFY(waylandDataDeviceSelectionClearedSpy.wait());
+}
+
+void XwaylandSelectionTest::emptyClipboardX11ToWayland()
+{
+    // This test verifies that an empty selection owned by an X11 client is properly announced to Wayland clients.
+
+    // Show a Wayland window.
+    KWayland::Client::DataDevice *waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
+    std::unique_ptr<KWayland::Client::Surface> waylandSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> waylandShellSurface = Test::createXdgToplevelSurface(waylandSurface.get());
+    Window *waylandWindow = Test::renderAndWaitForShown(waylandSurface.get(), QSize(100, 100), Qt::red);
+    QVERIFY(waylandWindow);
+
+    // Show an X11 window.
+    std::unique_ptr<X11Display> x11Display = X11Display::create();
+    QVERIFY(x11Display);
+    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    QVERIFY(x11Window);
+
+    // Copy.
+    auto x11Selection = std::make_unique<X11SelectionOwner>(x11Display.get(), atoms->clipboard, QList<QMimeType>{}, [](const QMimeType &mimeType) {
+        return X11SelectionData{
+            .data = QByteArrayLiteral("foobar"),
+            .type = atoms->text,
+            .format = 8,
+        };
+    });
+
+    QSignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
+    x11Selection->setOwner(true);
+    QVERIFY(seatSelectionChangedSpy.wait());
+
+    // Paste.
+    QSignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionOffered);
+    workspace()->activateWindow(waylandWindow);
+    QVERIFY(waylandDataDeviceSelectionOfferedSpy.wait());
+    KWayland::Client::DataOffer *offer = waylandDataDevice->offeredSelection();
+    QCOMPARE(offer->offeredMimeTypes(), QList<QMimeType>{});
+
+    const QMimeType plainText = m_mimeDatabase.mimeTypeForName(QStringLiteral("text/plain"));
+    const QFuture<QByteArray> data = readMimeTypeData(offer, plainText);
+    QVERIFY(waitFuture(data));
+    QCOMPARE(data.result(), QByteArray());
 
     // Clear selection.
     QSignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionCleared);
@@ -777,6 +829,61 @@ void XwaylandSelectionTest::clipboardWaylandToX11()
     QCOMPARE(clearedData, QByteArray());
 }
 
+void XwaylandSelectionTest::emptyClipboardWaylandToX11()
+{
+    // This test verifies that an empty selection owned by a Wayland client is properly announced to X11 clients.
+
+    QVERIFY(Test::waitForWaylandKeyboard());
+
+    // Show an X11 window.
+    std::unique_ptr<X11Display> x11Display = X11Display::create();
+    QVERIFY(x11Display);
+    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    QVERIFY(x11Window);
+
+    // Show a Wayland window.
+    KWayland::Client::DataDevice *waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
+    KWayland::Client::Pointer *waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    std::unique_ptr<KWayland::Client::Surface> waylandSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> waylandShellSurface = Test::createXdgToplevelSurface(waylandSurface.get());
+    Window *waylandWindow = Test::renderAndWaitForShown(waylandSurface.get(), QSize(100, 100), Qt::red);
+    QVERIFY(waylandWindow);
+
+    // Copy.
+    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    quint32 timestamp = 0;
+    Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    QVERIFY(waylandPointerButtonSpy.wait());
+
+    KWayland::Client::DataSource *waylandDataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
+    connect(waylandDataSource, &KWayland::Client::DataSource::sendDataRequested, this, [](const QString &requestedMimeType, int fd) {
+        const auto data = QByteArrayLiteral("foobar");
+        write(fd, data.data(), data.size());
+        close(fd);
+    });
+
+    QSignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
+    waylandDataDevice->setSelection(waylandPointerButtonSpy.constFirst().at(0).value<quint32>(), waylandDataSource);
+    QVERIFY(seatSelectionChangedSpy.wait());
+
+    // Paste.
+    workspace()->activateWindow(x11Window);
+
+    const QMimeType plainText = m_mimeDatabase.mimeTypeForName(QStringLiteral("text/plain"));
+    const QByteArray actualData = X11SelectionReader::read(x11Display.get(), x11Window->window(), atoms->clipboard, x11Display->mimeTypeToAtom(plainText), atoms->wl_selection, XCB_CURRENT_TIME);
+    QCOMPARE(actualData, QByteArray());
+
+    // Clear selection.
+    delete waylandDataSource;
+    waylandDataSource = nullptr;
+    QVERIFY(seatSelectionChangedSpy.wait());
+
+    const QByteArray clearedData = X11SelectionReader::read(x11Display.get(), x11Window->window(), atoms->clipboard, x11Display->mimeTypeToAtom(plainText), atoms->wl_selection, XCB_CURRENT_TIME);
+    QCOMPARE(clearedData, QByteArray());
+}
+
 void XwaylandSelectionTest::snoopClipboard()
 {
     // This test verifies that an inactive X11 window can't read clipboard contents.
@@ -899,6 +1006,54 @@ void XwaylandSelectionTest::primarySelectionX11ToWayland()
     const QFuture<QByteArray> data = readMimeTypeData(offer, acceptedMimeType);
     QVERIFY(waitFuture(data));
     QCOMPARE(data.result(), acceptedMimeData);
+
+    // Clear selection.
+    QSignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
+    x11Selection->setOwner(false);
+    QVERIFY(waylandDataDeviceSelectionClearedSpy.wait());
+}
+
+void XwaylandSelectionTest::emptyPrimarySelectionX11ToWayland()
+{
+    // This test verifies that an empty primary selection owned by an X11 client is properly announced to Wayland clients.
+
+    // Show a Wayland window.
+    std::unique_ptr<Test::WpPrimarySelectionDeviceV1> waylandDataDevice = Test::primarySelectionManager()->getDevice(Test::waylandSeat());
+    std::unique_ptr<KWayland::Client::Surface> waylandSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> waylandShellSurface = Test::createXdgToplevelSurface(waylandSurface.get());
+    Window *waylandWindow = Test::renderAndWaitForShown(waylandSurface.get(), QSize(100, 100), Qt::red);
+    QVERIFY(waylandWindow);
+
+    // Show an X11 window.
+    std::unique_ptr<X11Display> x11Display = X11Display::create();
+    QVERIFY(x11Display);
+    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    QVERIFY(x11Window);
+
+    // Copy.
+    auto x11Selection = std::make_unique<X11SelectionOwner>(x11Display.get(), atoms->primary, QList<QMimeType>{}, [](const QMimeType &mimeType) {
+        return X11SelectionData{
+            .data = QByteArrayLiteral("foobar"),
+            .type = atoms->text,
+            .format = 8,
+        };
+    });
+
+    QSignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
+    x11Selection->setOwner(true);
+    QVERIFY(seatPrimarySelectionChangedSpy.wait());
+
+    // Paste.
+    QSignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    workspace()->activateWindow(waylandWindow);
+    QVERIFY(waylandDataDeviceSelectionOfferedSpy.wait());
+    Test::WpPrimarySelectionOfferV1 *offer = waylandDataDevice->offer();
+    QCOMPARE(offer->mimeTypes(), QList<QMimeType>{});
+
+    const QMimeType plainText = m_mimeDatabase.mimeTypeForName(QStringLiteral("text/plain"));
+    const QFuture<QByteArray> data = readMimeTypeData(offer, plainText);
+    QVERIFY(waitFuture(data));
+    QCOMPARE(data.result(), QByteArray());
 
     // Clear selection.
     QSignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
@@ -1031,6 +1186,60 @@ void XwaylandSelectionTest::primarySelectionWaylandToX11()
     QVERIFY(seatPrimarySelectionChangedSpy.wait());
 
     const QByteArray clearedData = X11SelectionReader::read(x11Display.get(), x11Window->window(), atoms->primary, x11Display->mimeTypeToAtom(acceptedMimeType), atoms->wl_selection, XCB_CURRENT_TIME);
+    QCOMPARE(clearedData, QByteArray());
+}
+
+void XwaylandSelectionTest::emptyPrimarySelectionWaylandToX11()
+{
+    // This test verifies that an empty primary selection owned by a Wayland client is properly announced to X11 clients.
+
+    QVERIFY(Test::waitForWaylandKeyboard());
+
+    // Show an X11 window.
+    std::unique_ptr<X11Display> x11Display = X11Display::create();
+    QVERIFY(x11Display);
+    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    QVERIFY(x11Window);
+
+    // Show a Wayland window.
+    std::unique_ptr<Test::WpPrimarySelectionDeviceV1> waylandDataDevice = Test::primarySelectionManager()->getDevice(Test::waylandSeat());
+    KWayland::Client::Pointer *waylandPointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    std::unique_ptr<KWayland::Client::Surface> waylandSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> waylandShellSurface = Test::createXdgToplevelSurface(waylandSurface.get());
+    Window *waylandWindow = Test::renderAndWaitForShown(waylandSurface.get(), QSize(100, 100), Qt::red);
+    QVERIFY(waylandWindow);
+
+    // Copy.
+    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    quint32 timestamp = 0;
+    Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
+    Test::pointerButtonPressed(BTN_MIDDLE, timestamp++);
+    Test::pointerButtonReleased(BTN_MIDDLE, timestamp++);
+    QVERIFY(waylandPointerButtonSpy.wait());
+
+    std::unique_ptr<Test::WpPrimarySelectionSourceV1> waylandDataSource = Test::primarySelectionManager()->createSource();
+    connect(waylandDataSource.get(), &Test::WpPrimarySelectionSourceV1::sendDataRequested, this, [](const QString &requestedMimeType, int32_t fd) {
+        const auto data = QByteArrayLiteral("foobar");
+        write(fd, data.data(), data.size());
+        close(fd);
+    });
+
+    QSignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
+    waylandDataDevice->set_selection(waylandDataSource->object(), waylandPointerButtonSpy.constFirst().at(0).value<quint32>());
+    QVERIFY(seatPrimarySelectionChangedSpy.wait());
+
+    // Paste.
+    workspace()->activateWindow(x11Window);
+
+    const QMimeType plainText = m_mimeDatabase.mimeTypeForName(QStringLiteral("text/plain"));
+    const QByteArray actualData = X11SelectionReader::read(x11Display.get(), x11Window->window(), atoms->primary, x11Display->mimeTypeToAtom(plainText), atoms->wl_selection, XCB_CURRENT_TIME);
+    QCOMPARE(actualData, QByteArray());
+
+    // Clear selection.
+    waylandDataSource.reset();
+    QVERIFY(seatPrimarySelectionChangedSpy.wait());
+
+    const QByteArray clearedData = X11SelectionReader::read(x11Display.get(), x11Window->window(), atoms->primary, x11Display->mimeTypeToAtom(plainText), atoms->wl_selection, XCB_CURRENT_TIME);
     QCOMPARE(clearedData, QByteArray());
 }
 

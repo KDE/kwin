@@ -181,7 +181,7 @@ void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
     setWlSource(nullptr);
 
     m_xSource = new X11Source(this, event);
-    connect(m_xSource, &X11Source::offersChanged, this, &Selection::x11OffersChanged);
+    connect(m_xSource, &X11Source::targetsReceived, this, &Selection::x11TargetsReceived);
     connect(m_xSource, &X11Source::transferReady, this, &Selection::startTransferToWayland);
 }
 

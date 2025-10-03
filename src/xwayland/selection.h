@@ -71,7 +71,7 @@ protected:
 
     virtual void doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event) = 0;
     virtual void x11OfferLost() = 0;
-    virtual void x11OffersChanged(const QStringList &mimeTypes) = 0;
+    virtual void x11TargetsReceived(const QStringList &mimeTypes) = 0;
 
     virtual bool handleClientMessage(xcb_client_message_event_t *event)
     {

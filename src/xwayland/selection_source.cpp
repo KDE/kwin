@@ -212,17 +212,15 @@ void X11Source::handleTargets()
         all << Mime(mimeStrings[0], value);
     }
 
-    if (m_offers != all) {
-        QStringList mimeTypes;
-        mimeTypes.reserve(all.size());
-        std::transform(all.begin(), all.end(), std::back_inserter(mimeTypes), [](const Mimes::value_type &pair) {
-            return pair.first;
-        });
+    QStringList mimeTypes;
+    mimeTypes.reserve(all.size());
+    std::transform(all.begin(), all.end(), std::back_inserter(mimeTypes), [](const Mimes::value_type &pair) {
+        return pair.first;
+    });
 
-        m_offers = std::move(all);
+    m_offers = std::move(all);
 
-        Q_EMIT offersChanged(mimeTypes);
-    }
+    Q_EMIT targetsReceived(mimeTypes);
 
     free(reply);
 }

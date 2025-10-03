@@ -98,7 +98,7 @@ void Primary::x11OfferLost()
     m_primarySelectionSource.reset();
 }
 
-void Primary::x11OffersChanged(const QStringList &mimeTypes)
+void Primary::x11TargetsReceived(const QStringList &mimeTypes)
 {
     X11Source *source = x11Source();
     if (!source) {
@@ -106,20 +106,12 @@ void Primary::x11OffersChanged(const QStringList &mimeTypes)
         return;
     }
 
-    if (!mimeTypes.isEmpty()) {
-        auto newSelection = std::make_unique<XwlDataSource>();
-        newSelection->setMimeTypes(mimeTypes);
-        connect(newSelection.get(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
-        // we keep the old selection around because setPrimarySelection needs it to be still alive
-        std::swap(m_primarySelectionSource, newSelection);
-        waylandServer()->seat()->setPrimarySelection(m_primarySelectionSource.get(), waylandServer()->display()->nextSerial());
-    } else {
-        AbstractDataSource *currentSelection = waylandServer()->seat()->primarySelection();
-        if (ownsSelection(currentSelection)) {
-            waylandServer()->seat()->setPrimarySelection(nullptr, waylandServer()->display()->nextSerial());
-            m_primarySelectionSource.reset();
-        }
-    }
+    auto newSelection = std::make_unique<XwlDataSource>();
+    newSelection->setMimeTypes(mimeTypes);
+    connect(newSelection.get(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
+    // we keep the old selection around because setPrimarySelection needs it to be still alive
+    std::swap(m_primarySelectionSource, newSelection);
+    waylandServer()->seat()->setPrimarySelection(m_primarySelectionSource.get(), waylandServer()->display()->nextSerial());
 }
 
 } // namespace Xwl
