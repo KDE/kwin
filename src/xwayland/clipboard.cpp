@@ -154,7 +154,7 @@ void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &re
         waylandServer()->seat()->setSelection(m_selectionSource.get(), waylandServer()->display()->nextSerial());
     } else {
         AbstractDataSource *currentSelection = waylandServer()->seat()->selection();
-        if (!ownsSelection(currentSelection)) {
+        if (ownsSelection(currentSelection)) {
             waylandServer()->seat()->setSelection(nullptr, waylandServer()->display()->nextSerial());
             m_selectionSource.reset();
         }
