@@ -2617,48 +2617,8 @@ public:
         if (seat->isDragTouch()) {
             return true;
         }
-        seat->setTimestamp(event->timestamp);
-        const auto pos = input()->globalPointer();
 
-        if (seat->xdgTopleveldrag()) {
-            dragToplevel(pos, seat->xdgTopleveldrag());
-        }
-
-        Window *dragTarget = pickDragTarget(pos);
-        if (dragTarget) {
-            if (dragTarget != m_dragTarget) {
-                workspace()->takeActivity(dragTarget, Workspace::ActivityFlag::ActivityFocus);
-                m_raiseTimer.start();
-            }
-            if (!m_lastPos || (pos - *m_lastPos).manhattanLength() > 10) {
-                m_lastPos = pos;
-                // reset timer to delay raising the window
-                m_raiseTimer.start();
-            }
-        }
-        m_dragTarget = dragTarget;
-
-        if (auto *xwl = kwinApp()->xwayland()) {
-            if (xwl->dragMoveFilter(dragTarget, pos)) {
-                return true;
-            }
-        }
-
-        if (dragTarget) {
-            const auto [effectiveSurface, offset] = dragTarget->surface()->mapToInputSurface(dragTarget->mapToLocal(pos));
-            if (seat->dragSurface() != effectiveSurface) {
-                QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
-                inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
-                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, pos, inputTransformation);
-            } else {
-                seat->notifyDragMotion(pos);
-            }
-        } else {
-            // no window at that place, if we have a surface we need to reset
-            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
-            m_dragTarget = nullptr;
-        }
-
+        motion(event->position, event->timestamp);
         return true;
     }
 
@@ -2724,40 +2684,7 @@ public:
             return true;
         }
 
-        if (seat->xdgTopleveldrag()) {
-            dragToplevel(event->pos, seat->xdgTopleveldrag());
-        }
-
-        seat->setTimestamp(event->time);
-
-        if (Window *dragTarget = pickDragTarget(event->pos)) {
-            if (m_dragTarget != dragTarget) {
-                workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
-                m_raiseTimer.start();
-            }
-
-            if (!m_lastPos || (event->pos - *m_lastPos).manhattanLength() > 10) {
-                m_lastPos = event->pos;
-                // reset timer to delay raising the window
-                m_raiseTimer.start();
-            }
-
-            const auto [effectiveSurface, offset] = dragTarget->surface()->mapToInputSurface(dragTarget->mapToLocal(event->pos));
-            if (seat->dragSurface() != effectiveSurface) {
-                QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
-                inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
-                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, event->pos, inputTransformation);
-            } else {
-                seat->notifyDragMotion(event->pos);
-            }
-
-            m_dragTarget = dragTarget;
-        } else {
-            // no window at that place, if we have a surface we need to reset
-            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
-            m_dragTarget = nullptr;
-        }
-
+        motion(event->pos, event->time);
         return true;
     }
     bool touchUp(TouchUpEvent *event) override
@@ -2812,38 +2739,7 @@ public:
             return true;
         }
 
-        if (seat->xdgTopleveldrag()) {
-            dragToplevel(event->position, seat->xdgTopleveldrag());
-        }
-
-        if (Window *dragTarget = pickDragTarget(event->position)) {
-            if (m_dragTarget != dragTarget) {
-                workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
-                m_raiseTimer.start();
-            }
-
-            if (!m_lastPos || (event->position - *m_lastPos).manhattanLength() > 10) {
-                m_lastPos = event->position;
-                // reset timer to delay raising the window
-                m_raiseTimer.start();
-            }
-
-            const auto [effectiveSurface, offset] = dragTarget->surface()->mapToInputSurface(dragTarget->mapToLocal(event->position));
-            if (seat->dragSurface() != effectiveSurface) {
-                QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
-                inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
-                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, event->position, inputTransformation);
-            } else {
-                seat->notifyDragMotion(event->position);
-            }
-
-            m_dragTarget = dragTarget;
-        } else {
-            // no window at that place, if we have a surface we need to reset
-            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
-            m_dragTarget = nullptr;
-        }
-
+        motion(event->position, event->timestamp);
         return true;
     }
 
@@ -2930,6 +2826,51 @@ private:
 
         if (window) {
             window->move(pos - toplevelDrag->offset());
+        }
+    }
+
+    void motion(const QPointF &position, std::chrono::microseconds time)
+    {
+        SeatInterface *seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+
+        if (seat->xdgTopleveldrag()) {
+            dragToplevel(position, seat->xdgTopleveldrag());
+        }
+
+        Window *dragTarget = pickDragTarget(position);
+        if (dragTarget) {
+            if (dragTarget != m_dragTarget) {
+                workspace()->takeActivity(dragTarget, Workspace::ActivityFlag::ActivityFocus);
+                m_raiseTimer.start();
+            }
+            if (!m_lastPos || (position - *m_lastPos).manhattanLength() > 10) {
+                m_lastPos = position;
+                // reset timer to delay raising the window
+                m_raiseTimer.start();
+            }
+        }
+        m_dragTarget = dragTarget;
+
+        if (auto *xwl = kwinApp()->xwayland()) {
+            if (xwl->dragMoveFilter(dragTarget, position)) {
+                return;
+            }
+        }
+
+        if (dragTarget) {
+            const auto [effectiveSurface, offset] = dragTarget->surface()->mapToInputSurface(dragTarget->mapToLocal(position));
+            if (seat->dragSurface() != effectiveSurface) {
+                QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
+                inputTransformation.translate(-QVector3D(effectiveSurface->mapToMainSurface(QPointF(0, 0))));
+                seat->setDragTarget(dropHandler(dragTarget), effectiveSurface, position, inputTransformation);
+            } else {
+                seat->notifyDragMotion(position);
+            }
+        } else {
+            // no window at that place, if we have a surface we need to reset
+            seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
+            m_dragTarget = nullptr;
         }
     }
 

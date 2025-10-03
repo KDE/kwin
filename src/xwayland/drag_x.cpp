@@ -116,6 +116,10 @@ XToWlDrag::~XToWlDrag()
 bool XToWlDrag::moveFilter(Window *target, const QPointF &position)
 {
     auto *seat = waylandServer()->seat();
+    if (!seat->isDragPointer()) {
+        return false;
+    }
+
     seat->notifyPointerMotion(position);
     seat->notifyDragMotion(position);
 
