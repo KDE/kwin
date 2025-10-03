@@ -2858,7 +2858,7 @@ private:
             }
         }
 
-        if (dragTarget) {
+        if (dragTarget && dragTarget->surface()) {
             const auto [effectiveSurface, offset] = dragTarget->surface()->mapToInputSurface(dragTarget->mapToLocal(position));
             if (seat->dragSurface() != effectiveSurface) {
                 QMatrix4x4 inputTransformation = dragTarget->inputTransformation();
@@ -2870,7 +2870,6 @@ private:
         } else {
             // no window at that place, if we have a surface we need to reset
             seat->setDragTarget(nullptr, nullptr, QPointF(), QMatrix4x4());
-            m_dragTarget = nullptr;
         }
     }
 
