@@ -10,17 +10,16 @@
 
 #pragma once
 
+#include "effect/animationeffect.h"
 #include "effect/effect.h"
 #include "effect/effectwindow.h"
-#include "effect/timeline.h"
-#include "scene/item.h"
 
 namespace KWin
 {
 
 class SlideManagerInterface;
 
-class SlidingPopupsEffect : public Effect
+class SlidingPopupsEffect : public AnimationEffect
 {
     Q_OBJECT
     Q_PROPERTY(int slideInDuration READ slideInDuration)
@@ -30,11 +29,11 @@ public:
     SlidingPopupsEffect();
     ~SlidingPopupsEffect() override;
 
-    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
-    void postPaintWindow(EffectWindow *w) override;
+    // void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    // void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    // void postPaintWindow(EffectWindow *w) override;
     void reconfigure(ReconfigureFlags flags) override;
-    bool isActive() const override;
+    // bool isActive() const override;
 
     int requestedEffectChainPosition() const override
     {
@@ -48,6 +47,9 @@ public:
 
     bool eventFilter(QObject *watched, QEvent *event) override;
     bool blocksDirectScanout() const override;
+
+protected:
+    void animationEnded(EffectWindow *w, Attribute a, uint meta) override;
 
 private Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
@@ -73,20 +75,7 @@ private:
     std::chrono::milliseconds m_slideInDuration;
     std::chrono::milliseconds m_slideOutDuration;
 
-    enum class AnimationKind {
-        In,
-        Out
-    };
-
-    struct Animation
-    {
-        EffectWindowDeletedRef deletedRef;
-        EffectWindowVisibleRef visibleRef;
-        AnimationKind kind;
-        TimeLine timeLine;
-        ItemEffect windowEffect;
-    };
-    std::unordered_map<EffectWindow *, Animation> m_animations;
+    QHash<const EffectWindow *, quint64> m_animations;
 
     enum class Location {
         Left,
@@ -104,6 +93,8 @@ private:
         int slideLength;
     };
     QHash<const EffectWindow *, AnimationData> m_animationsData;
+
+    QPointF translation(const AnimationData &animData);
 };
 
 inline int SlidingPopupsEffect::slideInDuration() const

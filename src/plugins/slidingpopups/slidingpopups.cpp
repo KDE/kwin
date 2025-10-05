@@ -80,7 +80,6 @@ SlidingPopupsEffect::~SlidingPopupsEffect()
 
     // Cancel animations here while both m_animations and m_animationsData are still valid.
     // slotWindowDeleted may access m_animationsData when an animation is removed.
-    m_animations.clear();
     m_animationsData.clear();
 }
 
@@ -91,6 +90,8 @@ bool SlidingPopupsEffect::supported()
 
 void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
 {
+    AnimationEffect::reconfigure(flags);
+
     SlidingPopupsConfig::self()->read();
     // Keep these durations in sync with the value of Kirigami.Units.longDuration
     m_slideInDuration = std::chrono::milliseconds(
@@ -98,101 +99,12 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
     m_slideOutDuration = std::chrono::milliseconds(
         static_cast<int>(animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? std::chrono::milliseconds(SlidingPopupsConfig::slideOutTime()) : 200ms)));
 
-    for (auto &[window, animation] : m_animations) {
-        animation.timeLine.setDuration(animation.kind == AnimationKind::In ? m_slideInDuration : m_slideOutDuration);
-    }
-
     auto dataIt = m_animationsData.begin();
     while (dataIt != m_animationsData.end()) {
         (*dataIt).slideInDuration = m_slideInDuration;
         (*dataIt).slideOutDuration = m_slideOutDuration;
         ++dataIt;
     }
-}
-
-void SlidingPopupsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
-{
-    auto animationIt = m_animations.find(w);
-    if (animationIt == m_animations.end()) {
-        effects->prePaintWindow(w, data, presentTime);
-        return;
-    }
-
-    animationIt->second.timeLine.advance(presentTime);
-    data.setTransformed();
-
-    effects->prePaintWindow(w, data, presentTime);
-}
-
-void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
-{
-    auto animationIt = m_animations.find(w);
-    if (animationIt == m_animations.end()) {
-        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
-        return;
-    }
-
-    const AnimationData &animData = m_animationsData[w];
-    const qreal slideLength = (animData.slideLength > 0) ? animData.slideLength : m_slideLength;
-
-    const QRectF screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
-    int splitPoint = 0;
-    const QRectF geo = w->expandedGeometry();
-    const qreal t = animationIt->second.timeLine.value();
-
-    switch (animData.location) {
-    case Location::Left:
-        if (slideLength < geo.width()) {
-            data.multiplyOpacity(t);
-        }
-        data.translate(-interpolate(std::min(geo.width(), slideLength), 0.0, t));
-        splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - animData.offset);
-        region &= QRegion(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height());
-        break;
-    case Location::Top:
-        if (slideLength < geo.height()) {
-            data.multiplyOpacity(t);
-        }
-        data.translate(0.0, -interpolate(std::min(geo.height(), slideLength), 0.0, t));
-        splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - animData.offset);
-        region &= QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint);
-        break;
-    case Location::Right:
-        if (slideLength < geo.width()) {
-            data.multiplyOpacity(t);
-        }
-        data.translate(interpolate(std::min(geo.width(), slideLength), 0.0, t));
-        splitPoint = screenRect.x() + screenRect.width() - geo.x() - animData.offset;
-        region &= QRegion(geo.x(), geo.y(), splitPoint, geo.height());
-        break;
-    case Location::Bottom:
-    default:
-        if (slideLength < geo.height()) {
-            data.multiplyOpacity(t);
-        }
-        data.translate(0.0, interpolate(std::min(geo.height(), slideLength), 0.0, t));
-        splitPoint = screenRect.y() + screenRect.height() - geo.y() - animData.offset;
-        region &= QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
-    }
-
-    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
-}
-
-void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
-{
-    auto animationIt = m_animations.find(w);
-    if (animationIt != m_animations.end()) {
-        effects->addRepaint(w->expandedGeometry());
-        if (animationIt->second.timeLine.done()) {
-            if (!w->isDeleted()) {
-                w->setData(WindowForceBackgroundContrastRole, QVariant());
-                w->setData(WindowForceBlurRole, QVariant());
-            }
-            m_animations.erase(animationIt);
-        }
-    }
-
-    effects->postPaintWindow(w);
 }
 
 void SlidingPopupsEffect::setupSlideData(EffectWindow *w)
@@ -247,6 +159,7 @@ void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
 {
     const QRectF screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
     const QRectF windowGeo = w->frameGeometry();
+
     AnimationData &animData = m_animationsData[w];
 
     if (animData.offset == -1) {
@@ -282,6 +195,10 @@ void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
         animData.offset = std::max<qreal>(0, animData.offset);
         break;
     }
+
+    // Dave, WTF is offset for?
+
+    // why don't we do slideLenghth here too?
 
     animData.slideInDuration = (animData.slideInDuration.count() != 0)
         ? animData.slideInDuration
@@ -396,6 +313,26 @@ void SlidingPopupsEffect::setupInputPanelSlide()
     setupAnimData(w);
 }
 
+QPointF SlidingPopupsEffect::translation(const AnimationData &animData)
+{
+    // TODO this is more confusing. There's a length and an offset
+
+    int slideLength = animData.slideLength;
+    if (slideLength <= 0) {
+        slideLength = m_slideLength;
+    }
+    switch (animData.location) {
+    case Location::Top:
+        return QPointF(0, -slideLength);
+    case Location::Left:
+        return QPointF(-slideLength, 0);
+    case Location::Bottom:
+        return QPointF(0, slideLength);
+    case Location::Right:
+        return QPointF(slideLength, 0);
+    }
+}
+
 bool SlidingPopupsEffect::eventFilter(QObject *watched, QEvent *event)
 {
     auto internal = qobject_cast<QWindow *>(watched);
@@ -425,19 +362,17 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
         return;
     }
 
-    Animation &animation = m_animations[w];
-    animation.kind = AnimationKind::In;
-    animation.timeLine.setDirection(TimeLine::Forward);
-    animation.timeLine.setDuration((*dataIt).slideInDuration);
-    animation.timeLine.setEasingCurve(QEasingCurve::OutCubic);
-    animation.windowEffect = ItemEffect(w->windowItem());
+    const QPointF from = translation(*dataIt);
 
-    // If the opposite animation (Out) was active and it had shorter duration,
-    // at this point, the timeline can end up in the "done" state. Thus, we have
-    // to reset it.
-    if (animation.timeLine.done()) {
-        animation.timeLine.reset();
+    if (m_animations.contains(w)) {
+        retarget(m_animations[w], FPx2(QPointF()), dataIt->slideInDuration.count()); // DAVE duration. Should we just change direction?
+    } else {
+        //(EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true, GLShader *shader = nullptr)
+        m_animations[w] = set(w, AnimationEffect::Translation, 0, dataIt->slideInDuration.count(), FPx2(QPointF()), QEasingCurve::OutCubic, 0, FPx2(from), false, false);
     }
+    qDebug() << "in " << w;
+
+    // TODO opacity
 
     w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
     w->setData(WindowForceBackgroundContrastRole, QVariant(true));
@@ -461,22 +396,16 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
         return;
     }
 
-    Animation &animation = m_animations[w];
-    animation.deletedRef = EffectWindowDeletedRef(w);
-    animation.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED);
-    animation.kind = AnimationKind::Out;
-    animation.timeLine.setDirection(TimeLine::Backward);
-    animation.timeLine.setDuration((*dataIt).slideOutDuration);
-    // this is effectively InCubic because the direction is reversed
-    animation.timeLine.setEasingCurve(QEasingCurve::OutCubic);
-    animation.windowEffect = ItemEffect(w->windowItem());
+    const QPointF to = translation(*dataIt);
 
-    // If the opposite animation (In) was active and it had shorter duration,
-    // at this point, the timeline can end up in the "done" state. Thus, we have
-    // to reset it.
-    if (animation.timeLine.done()) {
-        animation.timeLine.reset();
+    if (m_animations.contains(w)) {
+        retarget(m_animations[w], FPx2(to), dataIt->slideOutDuration.count());
+    } else {
+        //(EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true, GLShader *shader = nullptr)
+        m_animations[w] = set(w, AnimationEffect::Position, 0, dataIt->slideOutDuration.count(), FPx2(to), QEasingCurve::OutCubic, 0, FPx2(QPointF()), false, false);
     }
+
+    qDebug() << "out " << w;
 
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
     w->setData(WindowForceBackgroundContrastRole, QVariant(true));
@@ -487,24 +416,27 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
 
 void SlidingPopupsEffect::stopAnimations()
 {
-    for (const auto &[window, animation] : m_animations) {
-        if (!window->isDeleted()) {
-            window->setData(WindowForceBackgroundContrastRole, QVariant());
-            window->setData(WindowForceBlurRole, QVariant());
-        }
+    for (const quint64 animationId : std::as_const(m_animations)) {
+        qDebug() << "complete";
+        complete(animationId);
     }
 
     m_animations.clear();
 }
 
-bool SlidingPopupsEffect::isActive() const
-{
-    return !m_animations.empty();
-}
-
 bool SlidingPopupsEffect::blocksDirectScanout() const
 {
     return false;
+}
+
+void SlidingPopupsEffect::animationEnded(EffectWindow *w, Attribute a, uint meta)
+{
+    Q_UNUSED(a);
+    Q_UNUSED(meta);
+    m_animations.remove(w);
+
+    // WHY IS THIS NOT BEING CALLED?
+    qDebug() << "done " << w;
 }
 
 } // namespace

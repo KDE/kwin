@@ -651,6 +651,7 @@ void AnimationEffect::postPaintScreen()
             })) {
                 unredirect(window);
             }
+
             animationEnded(window, anim->attribute, anim->meta);
             d->m_justEndedAnimation = 0;
             // NOTICE animationEnded is an external call and might have called "::animate"
