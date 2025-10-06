@@ -135,8 +135,6 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
     const AnimationData &animData = m_animationsData[w];
     const qreal slideLength = (animData.slideLength > 0) ? animData.slideLength : m_slideLength;
 
-    const QRectF screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
-    int splitPoint = 0;
     const QRectF geo = w->expandedGeometry();
     const qreal t = animationIt->second.timeLine.value();
 
@@ -146,24 +144,18 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
             data.multiplyOpacity(t);
         }
         data.translate(-interpolate(std::min(geo.width(), slideLength), 0.0, t));
-        splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - animData.offset);
-        region &= QRegion(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height());
         break;
     case Location::Top:
         if (slideLength < geo.height()) {
             data.multiplyOpacity(t);
         }
         data.translate(0.0, -interpolate(std::min(geo.height(), slideLength), 0.0, t));
-        splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - animData.offset);
-        region &= QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint);
         break;
     case Location::Right:
         if (slideLength < geo.width()) {
             data.multiplyOpacity(t);
         }
         data.translate(interpolate(std::min(geo.width(), slideLength), 0.0, t));
-        splitPoint = screenRect.x() + screenRect.width() - geo.x() - animData.offset;
-        region &= QRegion(geo.x(), geo.y(), splitPoint, geo.height());
         break;
     case Location::Bottom:
     default:
@@ -171,9 +163,9 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
             data.multiplyOpacity(t);
         }
         data.translate(0.0, interpolate(std::min(geo.height(), slideLength), 0.0, t));
-        splitPoint = screenRect.y() + screenRect.height() - geo.y() - animData.offset;
-        region &= QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
     }
+
+    region &= damagedArea(w, animData).toRect();
 
     effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
@@ -182,7 +174,9 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
 {
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
-        effects->addRepaint(w->expandedGeometry());
+        const AnimationData &animData = m_animationsData[w];
+        effects->addRepaint(damagedArea(w, animData));
+
         if (animationIt->second.timeLine.done()) {
             if (!w->isDeleted()) {
                 w->setData(WindowForceBackgroundContrastRole, QVariant());
@@ -394,6 +388,31 @@ void SlidingPopupsEffect::setupInputPanelSlide()
     animData.slideOutDuration = m_slideOutDuration;
 
     setupAnimData(w);
+}
+
+QRectF SlidingPopupsEffect::damagedArea(EffectWindow *w, const AnimationData animData)
+{
+    const QRectF screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
+    qreal splitPoint = 0;
+    const QRectF geo = w->expandedGeometry();
+
+    switch (animData.location) {
+    case Location::Left:
+        splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - animData.offset);
+        return QRectF(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height());
+    case Location::Top:
+        splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - animData.offset);
+        return QRectF(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint);
+    case Location::Right:
+        splitPoint = screenRect.x() + screenRect.width() - geo.x() - animData.offset;
+        return QRectF(geo.x(), geo.y(), splitPoint, geo.height());
+        break;
+    case Location::Bottom:
+    default:
+        splitPoint = screenRect.y() + screenRect.height() - geo.y() - animData.offset;
+        return QRectF(geo.x(), geo.y(), geo.width(), splitPoint);
+        break;
+    }
 }
 
 bool SlidingPopupsEffect::eventFilter(QObject *watched, QEvent *event)

@@ -104,6 +104,8 @@ private:
         int slideLength;
     };
     QHash<const EffectWindow *, AnimationData> m_animationsData;
+
+    QRectF damagedArea(EffectWindow *w, const AnimationData animData);
 };
 
 inline int SlidingPopupsEffect::slideInDuration() const
