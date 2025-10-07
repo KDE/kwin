@@ -249,21 +249,29 @@ void SurfaceItem::freeze()
 {
 }
 
-std::chrono::nanoseconds SurfaceItem::recursiveFrameTimeEstimation() const
+std::optional<std::chrono::nanoseconds> SurfaceItem::recursiveFrameTimeEstimation() const
 {
-    std::chrono::nanoseconds ret = frameTimeEstimation();
+    std::optional<std::chrono::nanoseconds> ret = frameTimeEstimation();
     const auto children = childItems();
     for (Item *child : children) {
-        ret = std::min(ret, static_cast<SurfaceItem *>(child)->frameTimeEstimation());
+        const auto other = static_cast<SurfaceItem *>(child)->recursiveFrameTimeEstimation();
+        if (!other.has_value()) {
+            continue;
+        }
+        if (ret.has_value()) {
+            ret = std::min(*ret, *other);
+        } else {
+            ret = other;
+        }
     }
     return ret;
 }
 
-std::chrono::nanoseconds SurfaceItem::frameTimeEstimation() const
+std::optional<std::chrono::nanoseconds> SurfaceItem::frameTimeEstimation() const
 {
     if (m_lastDamage && std::chrono::steady_clock::now() - *m_lastDamage > std::chrono::milliseconds(100)) {
         // the surface seems to have stopped rendering entirely
-        return std::chrono::days(1000);
+        return std::nullopt;
     } else {
         return m_frameTimeEstimation;
     }
