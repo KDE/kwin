@@ -67,7 +67,7 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
             });
 
             QTimer::singleShot(2000, this, [this] {
-                if (m_visit->entered() && m_visit->dropHandled()) {
+                if (m_visit->isEntered() && m_visit->isDropHandled()) {
                     m_visit->sendFinished();
                 }
                 Q_EMIT finish(this);
@@ -211,7 +211,7 @@ void XToWlDrag::tryFinish()
     }
 
     // Avoid sending XdndFinish if neither XdndDrop nor XdndLeave event has been received yet.
-    if (!m_visit->finished()) {
+    if (!m_visit->isFinished()) {
         return;
     }
 

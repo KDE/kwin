@@ -85,15 +85,15 @@ public:
     {
         return m_window;
     }
-    bool entered() const
+    bool isEntered() const
     {
         return m_entered;
     }
-    bool dropHandled() const
+    bool isDropHandled() const
     {
         return m_dropHandled;
     }
-    bool finished() const
+    bool isFinished() const
     {
         return m_finished;
     }
