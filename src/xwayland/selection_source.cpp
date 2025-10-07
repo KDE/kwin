@@ -95,9 +95,18 @@ void WlSource::sendTimestamp(xcb_selection_request_event_t *event)
     sendSelectionNotify(event, true);
 }
 
+static QString selectMimeType(const QStringList &interested, const QStringList &available)
+{
+    for (const QString &mimeType : interested) {
+        if (available.contains(mimeType)) {
+            return mimeType;
+        }
+    }
+    return QString();
+}
+
 bool WlSource::checkStartTransfer(xcb_selection_request_event_t *event)
 {
-    // check interfaces available
     if (!m_dsi) {
         return false;
     }
@@ -107,20 +116,9 @@ bool WlSource::checkStartTransfer(xcb_selection_request_event_t *event)
         qCDebug(KWIN_XWL) << "Unknown selection atom. Ignoring request.";
         return false;
     }
-    const auto firstTarget = targets[0];
 
-    auto cmp = [firstTarget](const QString &b) {
-        if (firstTarget == "text/uri-list") {
-            // Wayland sources might announce the old mime or the new standard
-            return firstTarget == b || b == "text/x-uri";
-        }
-        return firstTarget == b;
-    };
-    // check supported mimes
-    const auto offers = m_dsi->mimeTypes();
-    const auto mimeIt = std::find_if(offers.begin(), offers.end(), cmp);
-    if (mimeIt == offers.end()) {
-        // Requested Mime not supported. Not sending selection.
+    const QString mimeType = selectMimeType(targets, m_dsi->mimeTypes());
+    if (mimeType.isEmpty()) {
         return false;
     }
 
@@ -130,7 +128,7 @@ bool WlSource::checkStartTransfer(xcb_selection_request_event_t *event)
         return false;
     }
 
-    m_dsi->requestData(*mimeIt, p[1]);
+    m_dsi->requestData(mimeType, p[1]);
 
     Q_EMIT transferReady(new xcb_selection_request_event_t(*event), p[0]);
     return true;
