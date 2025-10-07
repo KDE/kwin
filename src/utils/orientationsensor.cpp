@@ -23,7 +23,7 @@ OrientationSensor::~OrientationSensor() = default;
 
 bool OrientationSensor::isAvailable() const
 {
-    return m_sensor->isConnectedToBackend() && !m_sensor->sensorsForType(m_sensor->type()).isEmpty();
+    return !m_sensor->sensorsForType(m_sensor->type()).isEmpty();
 }
 
 void OrientationSensor::setEnabled(bool enable)
