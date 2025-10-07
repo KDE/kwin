@@ -334,7 +334,9 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalC
     const QRect deviceRect = mapToDevice(view, item, item->rect());
     if (surfaceItem
         && !surfaceItem->rect().isEmpty()
-        && surfaceItem->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 20
+        && surfaceItem->frameTimeEstimation().transform([](const auto t) {
+        return t < std::chrono::nanoseconds(1'000'000'000) / 20;
+    }).value_or(false)
         && surfaceItem->buffer()->dmabufAttributes()
         // TODO make the compositor handle item opacity as well
         && surfaceItem->opacity() == 1.0

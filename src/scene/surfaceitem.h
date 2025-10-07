@@ -66,8 +66,8 @@ public:
     /**
      * like frameTimeEstimation, but takes child items into account
      */
-    std::chrono::nanoseconds recursiveFrameTimeEstimation() const;
-    std::chrono::nanoseconds frameTimeEstimation() const;
+    std::optional<std::chrono::nanoseconds> recursiveFrameTimeEstimation() const;
+    std::optional<std::chrono::nanoseconds> frameTimeEstimation() const;
 
 Q_SIGNALS:
     void damaged();
@@ -89,7 +89,7 @@ protected:
     std::unique_ptr<SurfaceTexture> m_texture;
     std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;
-    std::chrono::nanoseconds m_frameTimeEstimation = std::chrono::days(1000);
+    std::optional<std::chrono::nanoseconds> m_frameTimeEstimation;
     std::shared_ptr<SyncReleasePoint> m_bufferReleasePoint;
 };
 
