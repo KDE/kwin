@@ -83,8 +83,6 @@ public:
     bool handleSelectionRequest(xcb_selection_request_event_t *event);
     void sendTargets(xcb_selection_request_event_t *event);
     void sendTimestamp(xcb_selection_request_event_t *event);
-
-    void receiveOffer(const QString &mime);
     void sendSelectionNotify(xcb_selection_request_event_t *event, bool success);
 
 Q_SIGNALS:

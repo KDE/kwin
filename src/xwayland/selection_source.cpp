@@ -12,10 +12,7 @@
 #include "transfer.h"
 
 #include "atoms.h"
-#include "wayland/datadevice.h"
-#include "wayland/datasource.h"
-#include "wayland/seat.h"
-#include "wayland_server.h"
+#include "wayland/abstract_data_source.h"
 
 #include <fcntl.h>
 #include <span>
@@ -40,14 +37,6 @@ WlSource::WlSource(AbstractDataSource *dataSource, Selection *selection)
     , m_dsi(dataSource)
     , m_offers(dataSource->mimeTypes())
 {
-    // TODO, this can probably be removed after some testing
-    // all mime types should be constant after a data source is set
-    connect(dataSource, &DataSourceInterface::mimeTypeOffered, this, &WlSource::receiveOffer);
-}
-
-void WlSource::receiveOffer(const QString &mime)
-{
-    m_offers << mime;
 }
 
 void WlSource::sendSelectionNotify(xcb_selection_request_event_t *event, bool success)
