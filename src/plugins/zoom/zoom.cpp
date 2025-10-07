@@ -491,6 +491,7 @@ void ZoomEffect::zoomTo(double to)
     m_cursorPoint = effects->cursorPos().toPoint();
     m_targetZoomPosition = m_cursorPoint;
     if (m_mouseTracking == MouseTrackingDisabled) {
+        m_previousZoomPosition = m_cursorPoint;
         m_zoomPosition = m_cursorPoint;
     }
 }
@@ -503,6 +504,7 @@ void ZoomEffect::zoomOut()
         setTargetZoom(1);
     }
     if (m_mouseTracking == MouseTrackingDisabled) {
+        m_previousZoomPosition = m_cursorPoint;
         m_zoomPosition = effects->cursorPos().toPoint();
     }
 }
