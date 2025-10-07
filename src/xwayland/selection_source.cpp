@@ -172,8 +172,6 @@ void X11Source::getTargets()
     xcb_flush(xcbConn);
 }
 
-using Mime = QPair<QString, xcb_atom_t>;
-
 void X11Source::handleTargets()
 {
     // receive targets
@@ -196,7 +194,7 @@ void X11Source::handleTargets()
         return;
     }
 
-    Mimes all;
+    QStringList mimeTypes;
     xcb_atom_t *value = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
     for (xcb_atom_t value : std::span(value, reply->value_len)) {
         if (value == XCB_ATOM_NONE) {
@@ -209,25 +207,12 @@ void X11Source::handleTargets()
             continue;
         }
 
-        all << Mime(mimeStrings[0], value);
+        mimeTypes << mimeStrings[0];
     }
-
-    QStringList mimeTypes;
-    mimeTypes.reserve(all.size());
-    std::transform(all.begin(), all.end(), std::back_inserter(mimeTypes), [](const Mimes::value_type &pair) {
-        return pair.first;
-    });
-
-    m_offers = std::move(all);
 
     Q_EMIT targetsReceived(mimeTypes);
 
     free(reply);
-}
-
-void X11Source::setOffers(const Mimes &offers)
-{
-    m_offers = offers;
 }
 
 bool X11Source::handleSelectionNotify(xcb_selection_notify_event_t *event)
@@ -251,17 +236,14 @@ bool X11Source::handleSelectionNotify(xcb_selection_notify_event_t *event)
 
 void X11Source::startTransfer(const QString &mimeName, qint32 fd)
 {
-    const auto mimeIt = std::find_if(m_offers.begin(), m_offers.end(),
-                                     [mimeName](const Mime &mime) {
-                                         return mime.first == mimeName;
-                                     });
-    if (mimeIt == m_offers.end()) {
+    const xcb_atom_t atom = Selection::mimeTypeToAtom(mimeName);
+    if (atom == XCB_ATOM_NONE) {
         qCDebug(KWIN_XWL) << "Sending X11 clipboard to Wayland failed: unsupported MIME.";
         close(fd);
         return;
     }
 
-    Q_EMIT transferReady((*mimeIt).second, fd);
+    Q_EMIT transferReady(atom, fd);
 }
 
 } // namespace Xwl

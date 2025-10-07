@@ -99,8 +99,6 @@ private:
     Q_DISABLE_COPY(WlSource)
 };
 
-using Mimes = QList<QPair<QString, xcb_atom_t>>;
-
 /**
  * Representing an X data source.
  */
@@ -113,9 +111,6 @@ public:
     ~X11Source() override;
 
     void getTargets();
-
-    // TODO: Drop it, it is kept because dnd code calls it in order to cache "mime type -> atom" mappings.
-    void setOffers(const Mimes &offers);
 
     XwlDataSource *dataSource() const
     {
@@ -137,7 +132,6 @@ Q_SIGNALS:
 private:
     void handleTargets();
 
-    Mimes m_offers;
     std::unique_ptr<XwlDataSource> m_dataSource;
 
     Q_DISABLE_COPY(X11Source)

@@ -160,7 +160,6 @@ DnDAction XToWlDrag::selectedDragAndDropAction()
 
 void XToWlDrag::setOffers(const Mimes &offers)
 {
-    m_source->setOffers(offers);
     if (offers.isEmpty()) {
         // There are no offers, so just directly set the drag target,
         // no transfer possible anyways.
