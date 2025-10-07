@@ -58,6 +58,7 @@ public:
     void processEvents();
 
     QStringList devicesSysNames() const;
+    QStringList devicesSysNamesByKind(const QString &kind) const;
 
     static Connection *create(Session *session);
 

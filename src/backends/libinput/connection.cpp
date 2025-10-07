@@ -62,7 +62,7 @@ public:
         QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice"),
                                                      QStringLiteral("org.kde.KWin.InputDeviceManager"),
                                                      this,
-                                                     QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals);
+                                                     QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllInvokables);
     }
 
     ~ConnectionAdaptor() override
@@ -73,6 +73,11 @@ public:
     QStringList devicesSysNames()
     {
         return m_con->devicesSysNames();
+    }
+
+    Q_INVOKABLE QStringList devicesSysNamesByKind(const QString &kind)
+    {
+        return m_con->devicesSysNamesByKind(kind);
     }
 
 Q_SIGNALS:
@@ -720,6 +725,17 @@ QStringList Connection::devicesSysNames() const
     return sl;
 }
 
+QStringList Connection::devicesSysNamesByKind(const QString &kind) const
+{
+    const auto propertyName = kind.toUtf8().constData();
+    QStringList names;
+    for (Device *device : m_devices) {
+        if (device->property(propertyName).toBool()) {
+            names.append(device->sysName());
+        }
+    }
+    return names;
+}
 }
 }
 
