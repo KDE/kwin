@@ -27,8 +27,6 @@ class X11Source;
 class WlVisit;
 class Dnd;
 
-using Mimes = QList<QPair<QString, xcb_atom_t>>;
-
 class XToWlDrag : public Drag
 {
     Q_OBJECT
@@ -49,13 +47,11 @@ public:
     }
 
 private:
-    void setOffers(const Mimes &offers);
+    void setMimeTypes(const QStringList &offers);
     void setDragTarget();
     void tryFinish();
 
     Dnd *const m_dnd;
-    Mimes m_offers;
-
     X11Source *m_source;
 
     WlVisit *m_visit = nullptr;
@@ -100,7 +96,7 @@ public:
     void sendFinished();
 
 Q_SIGNALS:
-    void offersReceived(const Mimes &offers);
+    void entered(const QStringList &mimeTypes);
     void finish(WlVisit *self);
 
 private:
@@ -110,8 +106,6 @@ private:
     bool handleLeave(xcb_client_message_event_t *event);
 
     void sendStatus();
-
-    void getMimesFromWinProperty(Mimes &offers);
 
     bool targetAcceptsAction() const;
 

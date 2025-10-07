@@ -131,7 +131,7 @@ bool XToWlDrag::moveFilter(Window *target, const QPointF &position)
     // new Wl native target
     auto *ac = static_cast<Window *>(target);
     m_visit = new WlVisit(ac, this, m_dnd);
-    connect(m_visit, &WlVisit::offersReceived, this, &XToWlDrag::setOffers);
+    connect(m_visit, &WlVisit::entered, this, &XToWlDrag::setMimeTypes);
     return true;
 }
 
@@ -158,32 +158,11 @@ DnDAction XToWlDrag::selectedDragAndDropAction()
     return m_source->dataSource()->selectedDndAction();
 }
 
-void XToWlDrag::setOffers(const Mimes &offers)
+void XToWlDrag::setMimeTypes(const QStringList &mimeTypes)
 {
-    if (offers.isEmpty()) {
-        // There are no offers, so just directly set the drag target,
-        // no transfer possible anyways.
-        setDragTarget();
-        return;
-    }
-    if (m_offers == offers) {
-        // offers had been set already by a previous visit
-        // Wl side is already configured
-        setDragTarget();
-        return;
-    }
-
-    m_offers = offers;
-    QStringList mimeTypes;
-    mimeTypes.reserve(offers.size());
-    for (const auto &mimePair : offers) {
-        mimeTypes.append(mimePair.first);
-    }
     m_source->dataSource()->setMimeTypes(mimeTypes);
     setDragTarget();
 }
-
-using Mime = QPair<QString, xcb_atom_t>;
 
 void XToWlDrag::setDragTarget()
 {
@@ -297,12 +276,20 @@ bool WlVisit::handleClientMessage(xcb_client_message_event_t *event)
     return false;
 }
 
-static bool hasMimeName(const Mimes &mimes, const QString &name)
+static QList<xcb_atom_t> mimeTypeListFromWindow(xcb_window_t window)
 {
-    return std::any_of(mimes.begin(), mimes.end(),
-                       [name](const Mime &m) {
-                           return m.first == name;
-                       });
+    const uint32_t length = 0x1fffffff;
+    xcb_get_property_cookie_t cookie = xcb_get_property(kwinApp()->x11Connection(), 0, window, atoms->xdnd_type_list, XCB_ATOM_ATOM, 0, length);
+    xcb_get_property_reply_t *reply = xcb_get_property_reply(kwinApp()->x11Connection(), cookie, nullptr);
+    if (!reply) {
+        return QList<xcb_atom_t>();
+    }
+
+    const xcb_atom_t *mimeAtoms = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
+    const QList<xcb_atom_t> atoms(mimeAtoms, mimeAtoms + reply->value_len);
+    free(reply);
+
+    return atoms;
 }
 
 bool WlVisit::handleEnter(xcb_client_message_event_t *event)
@@ -317,58 +304,24 @@ bool WlVisit::handleEnter(xcb_client_message_event_t *event)
     m_srcWindow = data->data32[0];
     m_version = data->data32[1] >> 24;
 
-    // get types
-    Mimes offers;
-    if (!(data->data32[1] & 1)) {
-        // message has only max 3 types (which are directly in data)
-        for (size_t i = 0; i < 3; i++) {
-            xcb_atom_t mimeAtom = data->data32[2 + i];
-            const auto mimeStrings = atomToMimeTypes(mimeAtom);
-            for (const auto &mime : mimeStrings) {
-                if (!hasMimeName(offers, mime)) {
-                    offers << Mime(mime, mimeAtom);
-                }
-            }
+    // Bit 0 in data32[1] indicates whether mime types are stored in the XdndTypeList property or in data32[2..5].
+    QStringList mimeTypes;
+    if (data->data32[1] & 1) {
+        const auto atoms = mimeTypeListFromWindow(m_srcWindow);
+        for (const xcb_atom_t &atom : atoms) {
+            mimeTypes += atomToMimeTypes(atom);
         }
     } else {
-        // more than 3 types -> in window property
-        getMimesFromWinProperty(offers);
-    }
-
-    Q_EMIT offersReceived(offers);
-    return true;
-}
-
-void WlVisit::getMimesFromWinProperty(Mimes &offers)
-{
-    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
-    auto cookie = xcb_get_property(xcbConn,
-                                   0,
-                                   m_srcWindow,
-                                   atoms->xdnd_type_list,
-                                   XCB_GET_PROPERTY_TYPE_ANY,
-                                   0, 0x1fffffff);
-
-    auto *reply = xcb_get_property_reply(xcbConn, cookie, nullptr);
-    if (reply == nullptr) {
-        return;
-    }
-    if (reply->type != XCB_ATOM_ATOM || reply->value_len == 0) {
-        // invalid reply value
-        free(reply);
-        return;
-    }
-
-    xcb_atom_t *mimeAtoms = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
-    for (size_t i = 0; i < reply->value_len; ++i) {
-        const auto mimeStrings = atomToMimeTypes(mimeAtoms[i]);
-        for (const auto &mime : mimeStrings) {
-            if (!hasMimeName(offers, mime)) {
-                offers << Mime(mime, mimeAtoms[i]);
+        for (int i = 2; i < 5; i++) {
+            const xcb_atom_t atom = data->data32[i];
+            if (atom != XCB_ATOM_NONE) {
+                mimeTypes += atomToMimeTypes(atom);
             }
         }
     }
-    free(reply);
+
+    Q_EMIT entered(mimeTypes);
+    return true;
 }
 
 bool WlVisit::handlePosition(xcb_client_message_event_t *event)
