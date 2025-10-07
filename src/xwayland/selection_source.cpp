@@ -197,17 +197,9 @@ void X11Source::handleTargets()
     QStringList mimeTypes;
     xcb_atom_t *value = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
     for (xcb_atom_t value : std::span(value, reply->value_len)) {
-        if (value == XCB_ATOM_NONE) {
-            continue;
+        if (value != XCB_ATOM_NONE) {
+            mimeTypes += Selection::atomToMimeTypes(value);
         }
-
-        const auto mimeStrings = Selection::atomToMimeTypes(value);
-        if (mimeStrings.isEmpty()) {
-            // Skip invalid/internal mime types
-            continue;
-        }
-
-        mimeTypes << mimeStrings[0];
     }
 
     Q_EMIT targetsReceived(mimeTypes);
