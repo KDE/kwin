@@ -8,20 +8,20 @@
 # Svanur Palsson <svanur@tern.is>, 2004.
 # Arnar Leosson <leosson@frisurf.no>, 2005.
 # Sveinn í Felli <sveinki@nett.is>, 2008, 2009, 2011.
-# SPDX-FileCopyrightText: 2022, 2023, 2024 gummi <gudmundure@gmail.com>
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 gummi <gudmundure@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-08-02 00:44+0000\n"
-"PO-Revision-Date: 2024-03-25 14:32+0000\n"
-"Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
+"PO-Revision-Date: 2025-10-05 12:35+0000\n"
+"Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 25.04.3\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 "\n"
@@ -52,10 +52,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:46
-#, fuzzy, kde-format
-#| msgid "Activate and raise"
+#, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr "Virkja og setja fremst"
+msgstr "Virkja, senda smell og setja fremst þegar sleppt"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -253,7 +252,7 @@ msgstr "Virkja, setja fremst og færa"
 #: mouse.ui:347 mouse.ui:404 mouse.ui:452 mouse.ui:509
 #, kde-format
 msgid "Toggle raise and lower"
-msgstr "Víxla setja fremst og færa aftar"
+msgstr "Víxla að setja fremst og færa aftar"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -339,10 +338,9 @@ msgstr "Draga úr gagnsæi"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:321 actions.ui:396 actions.ui:471 mouse.ui:257 mouse.ui:314
 #: mouse.ui:362 mouse.ui:419 mouse.ui:467 mouse.ui:524
-#, fuzzy, kde-format
-#| msgid "Window &placement:"
+#, kde-format
 msgid "Window menu"
-msgstr "&Staðsetning glugga:"
+msgstr "Gluggavalmynd"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -491,21 +489,21 @@ msgstr ""
 "\">Snjallt</span> reynir að láta gluggana skarast sem minnst</li><li style="
 "\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
 "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Fullstækka</span> reynir að fullstækka gluggana svo þeir nái yfir allan "
-"skjáinn. Það getur verið gagnlegt að velja staðsetningu sumra glugga með því "
-"að nota stillingar fyrir tiltekna glugga.</li><li style=\" margin-top:0px; "
+"\">Fullstækka</span> reynir að fullstækka alla glugga svo þeir nái yfir "
+"allan skjáinn. Það getur verið gagnlegt að velja staðsetningu sumra glugga "
+"með því að nota stillingar fyrir tiltekna glugga.</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Slembið</"
+"span> velur tilviljanakennda staðsetningu</li><li style=\" margin-top:0px; "
 "margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
-"text-indent:0px;\"><span style=\" font-style:italic;\">Slembið</span> velur "
-"tilviljanakennda staðsetningu</li><li style=\" margin-top:0px; margin-"
+"text-indent:0px;\"><span style=\"font-style:italic;\">Miðja</span> setur "
+"gluggann á mitt skjáborðið</li><li style=\" margin-top:0px; margin-"
 "bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\"font-style:italic;\">Miðja</span> setur gluggann "
-"á mitt skjáborðið</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-"style=\" font-style:italic;\">Út í horn</span> setur gluggann efst í vinstra "
-"hornið</li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; "
-"margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-"style:italic;\">Undir mús</span> setur gluggann undir músarbendilinn</li></"
-"ul></body></html>"
+"indent:0px;\"><span style=\" font-style:italic;\">Út í horn</span> setur "
+"gluggann efst í vinstra hornið</li><li style=\" margin-top:0px; margin-"
+"bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Undir mús</span> setur "
+"gluggann undir músarbendilinn</li></ul></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:34
@@ -535,7 +533,7 @@ msgstr "Miðja"
 #: advanced.ui:54
 #, kde-format
 msgid "In Top-Left Corner"
-msgstr "Efst í vinstra horn"
+msgstr "Efst í vinstra horni"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:59
@@ -683,7 +681,7 @@ msgstr " msek."
 #: focus.ui:101
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr "Vörn gegn fókusstuldi:"
+msgstr "Vörn gegn fókus&stuldi:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
@@ -731,7 +729,7 @@ msgstr ""
 "italic;\">Engin:</span> Slökkt er á vörninni og nýir gluggar fá alltaf fókus."
 "</li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Lág:</span> Kveikt er á vörninni. Þegar einhver gluggi styður ekki "
+"italic;\">Lág:</span> Kveikt er á vörninni. Ef einhver gluggi styður ekki "
 "þessa virkni og KWin getur ekki ákveðið með áreiðanlegum hætti hvort á að "
 "virkja gluggann eða ekki, þá er glugginn virkjaður. Þessi stilling getur "
 "bæði skilað verri og betri útkomu en miðlungsstillingin, allt eftir forritum."
@@ -745,10 +743,11 @@ msgstr ""
 "músarfókusregla er ekki í notkun.</li><li style=\" margin-top:0px; margin-"
 "bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
 "indent:0px;\"><span style=\" font-style:italic;\">Mjög há:</span> Notandinn "
-"verður að virkja alla glugga sérstaklega.</li></ul><p>Gluggar sem fá ekki "
-"fókus eru merktir þannig að það sjáist að þeir biðji um athygli sem að "
-"sjálfgefnu þýðir að tákn þeirra á verkstikunni er uppljómað. Hægt er að "
-"breyta þessu í stjórneiningunni fyrir tilkynningar.</p></body></html>"
+"verður að virkja alla glugga sérstaklega.</li></ul><p>Gluggar sem eru "
+"hindraðir í að stela fókus eru merktir þannig að það sjáist að þeir biðji um "
+"athygli sem að sjálfgefnu þýðir að tákn þeirra á verkstikunni er uppljómað. "
+"Hægt er að breyta þessu í stjórneiningunni fyrir tilkynningar.</p></body></"
+"html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -758,14 +757,14 @@ msgstr ""
 #: focus.ui:118 moving.ui:33 moving.ui:65 moving.ui:97
 #, kde-format
 msgid "None"
-msgstr "Engin"
+msgstr "Ekkert"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:123
 #, kde-format
 msgid "Low"
-msgstr "Lág"
+msgstr "Lágt"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
@@ -779,14 +778,14 @@ msgstr "Miðlungs"
 #: focus.ui:133
 #, kde-format
 msgid "High"
-msgstr "Há"
+msgstr "Hátt"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:138
 #, kde-format
 msgid "Extreme"
-msgstr "Mjög há"
+msgstr "Mjög hátt"
 
 #. i18n: ectx: property (text), widget (QLabel, raisingWindowsLabel)
 #: focus.ui:146
@@ -857,7 +856,7 @@ msgstr ""
 #: focus.ui:209
 #, kde-format
 msgid "&Separate screen focus"
-msgstr "Aðs&kilja skjáfókus"
+msgstr "Að&skilja skjáfókus"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:222
@@ -873,7 +872,7 @@ msgstr "&Fókus"
 #: main.cpp:53
 #, kde-format
 msgid "Titlebar A&ctions"
-msgstr "&Titilstikuaðgerðir"
+msgstr "Titilsti&kuaðgerðir"
 
 #: main.cpp:58
 #, kde-format
@@ -883,17 +882,17 @@ msgstr "&Gluggaaðgerðir"
 #: main.cpp:63
 #, kde-format
 msgid "Mo&vement"
-msgstr "&Tilfærsla"
+msgstr "Til&færsla"
 
 #: main.cpp:68
 #, kde-format
 msgid "Adva&nced"
-msgstr "Í&tarlegt"
+msgstr "Íta&rlegt"
 
 #: main.cpp:74
 #, kde-format
 msgid "&Picture-in-picture"
-msgstr ""
+msgstr "&Mynd-í-mynd"
 
 #: main.cpp:165
 #, kde-format
@@ -915,13 +914,13 @@ msgstr "Titilstikuaðgerðir"
 #: mouse.ui:29
 #, kde-format
 msgid "&Double-click:"
-msgstr "&Tvísmellt:"
+msgstr "&Tvísmellur:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
 #: mouse.ui:39
 #, kde-format
 msgid "Behavior on <em>double</em> click into the titlebar."
-msgstr "Hvað gerist þegar <em>tvísmellt</em> er á titilstiku."
+msgstr "Viðbrögð þegar <em>tvísmellt</em> er á titilstiku."
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -972,13 +971,13 @@ msgstr "Loka"
 #: mouse.ui:73
 #, kde-format
 msgid "Show on all desktops"
-msgstr "Birta á öllum skjáborðum"
+msgstr "Sýna á öllum skjáborðum"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: mouse.ui:96
 #, kde-format
 msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
-msgstr "Hvað gerist þegar skrunað er með <em>músarhjóli</em> á titilstiku."
+msgstr "Viðbrögð þegar skrunað er með <em>músarhjóli</em> yfir titilstiku."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: mouse.ui:136
@@ -990,13 +989,13 @@ msgstr "Aðgerðir titilstiku og ramma"
 #: mouse.ui:163
 #, kde-format
 msgid "Active"
-msgstr "Virkt"
+msgstr "Virkur"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: mouse.ui:186
 #, kde-format
 msgid "Inactive"
-msgstr "Óvirkt"
+msgstr "Óvirkur"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
@@ -1007,8 +1006,8 @@ msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
 "em> window."
 msgstr ""
-"Hvað gerist þegar smellt er með <em>vinstri</em> músarhnappi á titilstiku "
-"eða ramma <em>virks</em> glugga."
+"Viðbrögð þegar smellt er með <em>vinstri</em> músarhnappi á titilstiku eða "
+"ramma <em>virks</em> glugga."
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
@@ -1019,8 +1018,8 @@ msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an "
 "<em>inactive</em> window."
 msgstr ""
-"Hvað gerist þegar smellt er með <em>vinstri</em> músarhnappi á titilstiku "
-"eða ramma <em>óvirks</em> glugga."
+"Viðbrögð þegar smellt er með <em>vinstri</em> músarhnappi á titilstiku eða "
+"ramma <em>óvirks</em> glugga."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
@@ -1034,7 +1033,7 @@ msgstr "Virkja og færa aftar"
 #: mouse.ui:537
 #, kde-format
 msgid "Maximize window by double clicking its frame"
-msgstr ""
+msgstr "Fullstækka glugga með því að tvísmella á ramma hans"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:562
@@ -1047,14 +1046,14 @@ msgstr "Aðgerðir fullstækkunarhnapps"
 #: mouse.ui:574 mouse.ui:587
 #, kde-format
 msgid "Behavior on <em>left</em> click onto the maximize button."
-msgstr "Hvað gerist þegar <em>vinstrismellt</em> er á fullstækkunarhnappinn."
+msgstr "Viðbrögð þegar <em>vinstrismellt</em> er á fullstækkunarhnappinn."
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #: mouse.ui:609 mouse.ui:622
 #, kde-format
 msgid "Behavior on <em>middle</em> click onto the maximize button."
-msgstr "Hvað gerist þegar <em>miðjusmellt</em> er á fullstækkunarhnappinn."
+msgstr "Viðbrögð þegar <em>miðjusmellt</em> er á fullstækkunarhnappinn."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: mouse.ui:612
@@ -1067,7 +1066,7 @@ msgstr "Miðjusmellur:"
 #: mouse.ui:644 mouse.ui:657
 #, kde-format
 msgid "Behavior on <em>right</em> click onto the maximize button."
-msgstr "Hvað gerist þegar <em>hægrismellt</em> er á fullstækkunarhnappinn."
+msgstr "Viðbrögð þegar <em>hægrismellt</em> er á fullstækkunarhnappinn."
 
 #. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
 #: moving.ui:20
@@ -1083,7 +1082,7 @@ msgid ""
 "magnetic field which will make windows snap to the border when moved near it."
 msgstr ""
 "Hér getur þú stillt gripsvæði fyrir jaðra skjásins, þ.e. 'styrkleika' "
-"segulsviðsins sem fær gluggana til að festast við jaðrana þegar þeir eru "
+"segulsviðsins sem fær gluggana til að festast á jaðrana þegar þeir eru "
 "færðir að þeim."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -1110,8 +1109,7 @@ msgid ""
 "moved near another window."
 msgstr ""
 "Hér getur þú stillt gripsvæði fyrir glugga, þ.e. 'styrkleika' segulsviðsins "
-"sem fær glugga til að smella hver við annan þegar þeir eru færðir að öðrum "
-"gluggum."
+"sem fær glugga til að smella saman þegar þeir eru færðir að öðrum gluggum."
 
 #. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
 #: moving.ui:84
@@ -1128,14 +1126,14 @@ msgid ""
 "when moved near it."
 msgstr ""
 "Hér getur þú stillt gripsvæði fyrir miðju skjásins, þ.e. 'styrkleika' "
-"segulsviðsins sem fær gluggana til að festast við mðjuna á skjánum þegar "
+"segulsviðsins sem fær gluggana til að festast við miðjuna á skjánum þegar "
 "þeir eru færðir að henni."
 
 #. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
 #: moving.ui:113
 #, kde-format
 msgid "&Snap windows:"
-msgstr "&Grip glugga:"
+msgstr "&Smella saman gluggum:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:123
@@ -1145,9 +1143,9 @@ msgid ""
 "them, i.e. they will not be snapped if the windows comes only near another "
 "window or border."
 msgstr ""
-"Hér getur þú valið að gluggar grípi í aðra glugga ef þú reynir að láta þá "
-"skarast, þ.e. þeir grípa ekki í aðra glugga ef gluggarnir koma einungis "
-"nálægt öðrum glugga eða jöðrum."
+"Hér getur þú valið að gluggar smelli bara saman þegar þú reynir að láta þá "
+"skarast, þ.e. þeir smella ekki saman ef gluggarnir koma bara nálægt öðrum "
+"glugga eða skjájaðri."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:126
@@ -1159,37 +1157,37 @@ msgstr "Aðeins þegar skarast"
 #: pip.ui:20
 #, kde-format
 msgid "Open in screen corner:"
-msgstr ""
+msgstr "Opna í skjáhorni:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:31
 #, kde-format
 msgid "Top-left"
-msgstr ""
+msgstr "Efst til vinstri"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:36
 #, kde-format
 msgid "Top-right"
-msgstr ""
+msgstr "Efst til hægri"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:41
 #, kde-format
 msgid "Bottom-left"
-msgstr ""
+msgstr "Neðst til vinstri"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_PictureInPictureHomeCorner)
 #: pip.ui:46
 #, kde-format
 msgid "Bottom-right"
-msgstr ""
+msgstr "Neðst til hægri"
 
 #. i18n: ectx: property (text), widget (QLabel, marginLabel)
 #: pip.ui:54
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "Mörk:"
 
 #: windows.cpp:91
 #, kde-format

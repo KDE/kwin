@@ -1,21 +1,21 @@
 # Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2023 Guðmundur Erlingsson <gudmundure@gmail.com>
+# SPDX-FileCopyrightText: 2023, 2025 Guðmundur Erlingsson <gudmundure@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-26 00:43+0000\n"
-"PO-Revision-Date: 2023-12-03 21:34+0000\n"
-"Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
+"PO-Revision-Date: 2025-10-04 21:32+0000\n"
+"Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 25.04.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -49,7 +49,7 @@ msgstr "Fókus"
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
-msgstr "Hreyfiáhrif við að kíkja á skjáborðið"
+msgstr "Hreyfiáhrif þegar kíkt er á skjáborðið"
 
 #: effectsmodel.cpp:52
 #, kde-format
@@ -61,7 +61,7 @@ msgstr "Verkfæri"
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Virtual Desktop Switching Animation"
-msgstr "Hreyfiáhrif við að skipta á milli sýndarskjáborða"
+msgstr "Hreyfiáhrif þegar skipt er á milli sýndarskjáborða"
 
 #: effectsmodel.cpp:54
 #, kde-format
@@ -78,7 +78,7 @@ msgstr "Hreyfiáhrif við að opna/loka glugga"
 #: effectsmodel.cpp:231
 #, kde-format
 msgid "KWin development team"
-msgstr "KWin þróunarteymið"
+msgstr "KWin-þróunarteymið"
 
 #: genericscriptedconfig.cpp:76
 #, kde-format
