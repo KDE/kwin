@@ -550,6 +550,8 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
         EglContext::currentContext()->popFramebuffer();
     }
     if (const auto ret = importBuffer(surface, slot.get(), FileDescriptor{}, nullptr, infiniteRegion())) {
+        // clear the render journal, because this was just a nonsense frame
+        surface->importDamageJournal.clear();
         surface->currentSlot = slot;
         surface->currentFramebuffer = ret;
         return ret;
