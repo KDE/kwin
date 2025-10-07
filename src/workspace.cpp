@@ -2425,6 +2425,7 @@ Output *Workspace::activeOutput() const
 
 void Workspace::setActiveOutput(Output *output)
 {
+    Q_ASSERT(m_outputs.contains(output));
     m_activeOutput = output;
 }
 
