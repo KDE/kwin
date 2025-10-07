@@ -226,18 +226,6 @@ bool X11Source::handleSelectionNotify(xcb_selection_notify_event_t *event)
     return false;
 }
 
-void X11Source::startTransfer(const QString &mimeName, qint32 fd)
-{
-    const xcb_atom_t atom = Selection::mimeTypeToAtom(mimeName);
-    if (atom == XCB_ATOM_NONE) {
-        qCDebug(KWIN_XWL) << "Sending X11 clipboard to Wayland failed: unsupported MIME.";
-        close(fd);
-        return;
-    }
-
-    Q_EMIT transferReady(atom, fd);
-}
-
 } // namespace Xwl
 } // namespace KWin
 

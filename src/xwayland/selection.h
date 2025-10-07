@@ -100,7 +100,7 @@ private:
     bool handleSelectionNotify(xcb_selection_notify_event_t *event);
     bool handlePropertyNotify(xcb_property_notify_event_t *event);
 
-    void startTransferToWayland(xcb_atom_t target, qint32 fd);
+    void startTransferToWayland(const QString &mimeType, qint32 fd);
     void startTransferToX(xcb_selection_request_event_t *event, qint32 fd);
 
     // Timeout transfers, which have become inactive due to client errors.

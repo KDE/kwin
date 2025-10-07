@@ -10,12 +10,14 @@
 #include "databridge.h"
 #include "selection_source.h"
 #include "transfer.h"
+#include "xwayland_logging.h"
 
 #include "atoms.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
 #include "x11window.h"
 
+#include <unistd.h>
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>
 
@@ -182,7 +184,7 @@ void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
 
     m_xSource = new X11Source(this, event);
     connect(m_xSource, &X11Source::targetsReceived, this, &Selection::x11TargetsReceived);
-    connect(m_xSource, &X11Source::transferReady, this, &Selection::startTransferToWayland);
+    connect(m_xSource, &X11Source::transferRequested, this, &Selection::startTransferToWayland);
 }
 
 void Selection::ownSelection(bool own)
@@ -267,10 +269,16 @@ bool Selection::handlePropertyNotify(xcb_property_notify_event_t *event)
     return false;
 }
 
-void Selection::startTransferToWayland(xcb_atom_t target, qint32 fd)
+void Selection::startTransferToWayland(const QString &mimeType, qint32 fd)
 {
-    // create new x to wl data transfer object
-    auto *transfer = new TransferXtoWl(m_atom, target, fd, m_xSource->timestamp(), m_requestorWindow, this);
+    const xcb_atom_t mimeAtom = mimeTypeToAtom(mimeType);
+    if (mimeAtom == XCB_ATOM_NONE) {
+        qCDebug(KWIN_XWL) << "Sending X11 clipboard to Wayland failed: unsupported MIME.";
+        close(fd);
+        return;
+    }
+
+    auto *transfer = new TransferXtoWl(m_atom, mimeAtom, fd, m_xSource->timestamp(), m_requestorWindow, this);
     m_xToWlTransfers << transfer;
 
     connect(transfer, &TransferXtoWl::finished, this, [this, transfer]() {

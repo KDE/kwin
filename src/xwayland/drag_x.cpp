@@ -83,7 +83,7 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
         }
         tryFinish();
     });
-    connect(source->dataSource(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
+    connect(source->dataSource(), &XwlDataSource::dataRequested, source, &X11Source::transferRequested);
 }
 
 XToWlDrag::~XToWlDrag()

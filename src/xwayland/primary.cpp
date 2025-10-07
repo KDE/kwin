@@ -108,7 +108,7 @@ void Primary::x11TargetsReceived(const QStringList &mimeTypes)
 
     auto newSelection = std::make_unique<XwlDataSource>();
     newSelection->setMimeTypes(mimeTypes);
-    connect(newSelection.get(), &XwlDataSource::dataRequested, source, &X11Source::startTransfer);
+    connect(newSelection.get(), &XwlDataSource::dataRequested, source, &X11Source::transferRequested);
     // we keep the old selection around because setPrimarySelection needs it to be still alive
     std::swap(m_primarySelectionSource, newSelection);
     waylandServer()->seat()->setPrimarySelection(m_primarySelectionSource.get(), waylandServer()->display()->nextSerial());

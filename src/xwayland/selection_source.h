@@ -124,10 +124,9 @@ public:
         setWindow(window);
     }
 
-    void startTransfer(const QString &mimeName, qint32 fd);
 Q_SIGNALS:
     void targetsReceived(const QStringList &mimeTypes);
-    void transferReady(xcb_atom_t target, qint32 fd);
+    void transferRequested(const QString &mimeType, qint32 fd);
 
 private:
     void handleTargets();
