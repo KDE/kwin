@@ -64,14 +64,13 @@ bool WlSource::handleSelectionRequest(xcb_selection_request_event_t *event)
 void WlSource::sendTargets(xcb_selection_request_event_t *event)
 {
     QList<xcb_atom_t> targets;
-    targets.resize(m_offers.size() + 2);
-    targets[0] = atoms->timestamp;
-    targets[1] = atoms->targets;
+    targets.reserve(m_offers.size() + 2);
 
-    size_t cnt = 2;
+    targets.append(atoms->timestamp);
+    targets.append(atoms->targets);
+
     for (const auto &mime : std::as_const(m_offers)) {
-        targets[cnt] = Selection::mimeTypeToAtom(mime);
-        cnt++;
+        targets.append(Selection::mimeTypeToAtom(mime));
     }
 
     xcb_change_property(kwinApp()->x11Connection(),
@@ -79,7 +78,7 @@ void WlSource::sendTargets(xcb_selection_request_event_t *event)
                         event->requestor,
                         event->property,
                         XCB_ATOM_ATOM,
-                        32, cnt, targets.data());
+                        32, targets.size(), targets.data());
     sendSelectionNotify(event, true);
 }
 
