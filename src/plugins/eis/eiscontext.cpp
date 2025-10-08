@@ -5,7 +5,6 @@
 */
 
 #include "eiscontext.h"
-#include "config-eis.h"
 #include "eisbackend.h"
 #include "eisdevice.h"
 #include "libeis_logging.h"
@@ -332,12 +331,10 @@ void EisContext::handleEvents()
             const auto id = eis_event_touch_get_id(event);
             qCDebug(KWIN_EIS) << device->name() << "touch up" << id;
             std::erase(device->activeTouches, id);
-#if EIS_HAVE_TOUCH_CANCEL
             if (eis_event_touch_get_is_cancel(event)) {
                 Q_EMIT device->touchCanceled(device);
                 break;
             }
-#endif
             Q_EMIT device->touchUp(id, currentTime(), device);
             break;
         }
@@ -350,11 +347,9 @@ void EisContext::handleEvents()
             Q_EMIT device->touchMotion(id, {x, y}, currentTime(), device);
             break;
         }
-#if EIS_HAVE_PONG_AND_SYNC
         case EIS_EVENT_PONG:
         case EIS_EVENT_SYNC:
             break;
-#endif
         }
         eis_event_unref(event);
     }

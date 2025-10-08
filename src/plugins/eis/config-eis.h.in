@@ -1,3 +1,0 @@
-#pragma once
-#cmakedefine01 EIS_HAVE_TOUCH_CANCEL
-#cmakedefine01 EIS_HAVE_PONG_AND_SYNC
