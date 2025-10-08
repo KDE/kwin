@@ -230,7 +230,7 @@ void Xvisit::sendEnter()
         if (totalCnt == 3) {
             break;
         }
-        const auto atom = Selection::mimeTypeToAtom(mimeName);
+        const auto atom = Xcb::mimeTypeToAtom(mimeName);
 
         if (atom != XCB_ATOM_NONE) {
             data.data32[cnt] = atom;
@@ -251,7 +251,7 @@ void Xvisit::sendEnter()
 
         size_t cnt = 0;
         for (const auto &mimeName : mimeTypesNames) {
-            const auto atom = Selection::mimeTypeToAtom(mimeName);
+            const auto atom = Xcb::mimeTypeToAtom(mimeName);
             if (atom != XCB_ATOM_NONE) {
                 targets[cnt] = atom;
                 cnt++;

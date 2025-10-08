@@ -70,7 +70,7 @@ void WlSource::sendTargets(xcb_selection_request_event_t *event)
     targets.append(atoms->targets);
 
     for (const auto &mime : std::as_const(m_offers)) {
-        targets.append(Selection::mimeTypeToAtom(mime));
+        targets.append(Xcb::mimeTypeToAtom(mime));
     }
 
     xcb_change_property(kwinApp()->x11Connection(),
@@ -111,7 +111,7 @@ bool WlSource::checkStartTransfer(xcb_selection_request_event_t *event)
         return false;
     }
 
-    const auto targets = Selection::atomToMimeTypes(event->target);
+    const auto targets = Xcb::atomToMimeTypes(event->target);
     if (targets.isEmpty()) {
         qCDebug(KWIN_XWL) << "Unknown selection atom. Ignoring request.";
         return false;
@@ -183,8 +183,9 @@ void X11Source::handleTargets()
     QStringList mimeTypes;
     xcb_atom_t *value = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
     for (xcb_atom_t value : std::span(value, reply->value_len)) {
-        if (value != XCB_ATOM_NONE) {
-            mimeTypes += Selection::atomToMimeTypes(value);
+        // TARGETS and TIMESTAMP are special atoms that are included in the targets list.
+        if (value != atoms->targets && value != atoms->timestamp) {
+            mimeTypes += Xcb::atomToMimeTypes(value);
         }
     }
 

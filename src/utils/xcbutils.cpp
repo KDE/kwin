@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "utils/xcbutils.h"
+#include "atoms.h"
 #include "utils/common.h"
 #include <core/output.h>
 #include <workspace.h>
@@ -602,6 +603,47 @@ QString atomName(xcb_atom_t atom)
     QString name = QString::fromLatin1(xcb_get_atom_name_name(nameReply), length);
     free(nameReply);
     return name;
+}
+
+QStringList atomToMimeTypes(xcb_atom_t atom)
+{
+    QStringList mimeTypes;
+
+    if (atom == XCB_ATOM_NONE) {
+        // Nothing
+    } else if (atom == atoms->utf8_string) {
+        mimeTypes << QStringLiteral("text/plain;charset=utf-8");
+    } else if (atom == atoms->text) {
+        mimeTypes << QStringLiteral("text/plain");
+    } else if (atom == atoms->uri_list) {
+        mimeTypes << QStringLiteral("text/uri-list") << QStringLiteral("text/x-uri");
+    } else if (atom == atoms->moz_url) {
+        mimeTypes << QStringLiteral("text/x-moz-url");
+    } else if (atom == atoms->netscape_url) {
+        mimeTypes << QStringLiteral("_NETSCAPE_URL");
+    } else {
+        mimeTypes << Xcb::atomName(atom);
+    }
+    return mimeTypes;
+}
+
+xcb_atom_t mimeTypeToAtom(const QString &mimeType)
+{
+    if (mimeType.isEmpty()) {
+        return XCB_ATOM_NONE;
+    } else if (mimeType == QStringLiteral("text/plain;charset=utf-8")) {
+        return atoms->utf8_string;
+    } else if (mimeType == QStringLiteral("text/plain")) {
+        return atoms->text;
+    } else if (mimeType == QStringLiteral("text/uri-list") || mimeType == QStringLiteral("text/x-uri")) {
+        return atoms->uri_list;
+    } else if (mimeType == QStringLiteral("text/x-moz-url")) {
+        return atoms->moz_url;
+    } else if (mimeType == QStringLiteral("_NETSCAPE_URL")) {
+        return atoms->netscape_url;
+    } else {
+        return Xcb::Atom(mimeType.toLatin1(), false, connection());
+    }
 }
 
 } // namespace Xcb

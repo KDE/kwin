@@ -63,6 +63,9 @@ QRectF KWIN_EXPORT nativeFloor(const QRectF &value);
 
 QString KWIN_EXPORT atomName(xcb_atom_t atom);
 
+QStringList KWIN_EXPORT atomToMimeTypes(xcb_atom_t atom);
+xcb_atom_t KWIN_EXPORT mimeTypeToAtom(const QString &mimeType);
+
 // forward declaration of methods
 static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
 static void setInputFocus(xcb_window_t window, uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());

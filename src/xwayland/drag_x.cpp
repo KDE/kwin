@@ -36,26 +36,6 @@ namespace Xwl
 using DnDAction = KWin::DataDeviceManagerInterface::DnDAction;
 using DnDActions = KWin::DataDeviceManagerInterface::DnDActions;
 
-static QStringList atomToMimeTypes(xcb_atom_t atom)
-{
-    QStringList mimeTypes;
-
-    if (atom == atoms->utf8_string) {
-        mimeTypes << QString::fromLatin1("text/plain;charset=utf-8");
-    } else if (atom == atoms->text) {
-        mimeTypes << QString::fromLatin1("text/plain");
-    } else if (atom == atoms->uri_list) {
-        mimeTypes << QString::fromLatin1("text/uri-list") << QString::fromLatin1("text/x-uri");
-    } else if (atom == atoms->moz_url) {
-        mimeTypes << QStringLiteral("text/x-moz-url");
-    } else if (atom == atoms->netscape_url) {
-        mimeTypes << QStringLiteral("_NETSCAPE_URL");
-    } else {
-        mimeTypes << Xcb::atomName(atom);
-    }
-    return mimeTypes;
-}
-
 XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
     : m_dnd(dnd)
     , m_source(source)
@@ -309,14 +289,11 @@ bool WlVisit::handleEnter(xcb_client_message_event_t *event)
     if (data->data32[1] & 1) {
         const auto atoms = mimeTypeListFromWindow(m_srcWindow);
         for (const xcb_atom_t &atom : atoms) {
-            mimeTypes += atomToMimeTypes(atom);
+            mimeTypes += Xcb::atomToMimeTypes(atom);
         }
     } else {
         for (int i = 2; i < 5; i++) {
-            const xcb_atom_t atom = data->data32[i];
-            if (atom != XCB_ATOM_NONE) {
-                mimeTypes += atomToMimeTypes(atom);
-            }
+            mimeTypes += Xcb::atomToMimeTypes(data->data32[i]);
         }
     }
 

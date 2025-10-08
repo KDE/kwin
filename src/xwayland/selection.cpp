@@ -28,48 +28,6 @@ namespace KWin
 namespace Xwl
 {
 
-xcb_atom_t Selection::mimeTypeToAtom(const QString &mimeType)
-{
-    if (mimeType == QLatin1String("text/plain;charset=utf-8")) {
-        return atoms->utf8_string;
-    }
-    if (mimeType == QLatin1String("text/plain")) {
-        return atoms->text;
-    }
-    if (mimeType == QLatin1String("text/x-uri")) {
-        return atoms->uri_list;
-    }
-    return mimeTypeToAtomLiteral(mimeType);
-}
-
-xcb_atom_t Selection::mimeTypeToAtomLiteral(const QString &mimeType)
-{
-    return Xcb::Atom(mimeType.toLatin1(), false, kwinApp()->x11Connection());
-}
-
-QStringList Selection::atomToMimeTypes(xcb_atom_t atom)
-{
-    QStringList mimeTypes;
-
-    if (atom == atoms->utf8_string) {
-        mimeTypes << QStringLiteral("text/plain;charset=utf-8");
-    } else if (atom == atoms->text) {
-        mimeTypes << QStringLiteral("text/plain");
-    } else if (atom == atoms->uri_list) {
-        mimeTypes << QStringLiteral("text/uri-list")
-                  << QStringLiteral("text/x-uri");
-    } else if (atom == atoms->targets || atom == atoms->timestamp) {
-        // Ignore known ICCCM internal atoms
-    } else {
-        const QString atomNameName = Xcb::atomName(atom);
-        // Ignore other non-mimetype atoms
-        if (atomNameName.contains(QLatin1Char('/'))) {
-            mimeTypes << atomNameName;
-        }
-    }
-    return mimeTypes;
-}
-
 Selection::Selection(xcb_atom_t atom, QObject *parent)
     : QObject(parent)
     , m_atom(atom)
@@ -271,7 +229,7 @@ bool Selection::handlePropertyNotify(xcb_property_notify_event_t *event)
 
 void Selection::startTransferToWayland(const QString &mimeType, qint32 fd)
 {
-    const xcb_atom_t mimeAtom = mimeTypeToAtom(mimeType);
+    const xcb_atom_t mimeAtom = Xcb::mimeTypeToAtom(mimeType);
     if (mimeAtom == XCB_ATOM_NONE) {
         qCDebug(KWIN_XWL) << "Sending X11 clipboard to Wayland failed: unsupported MIME.";
         close(fd);
