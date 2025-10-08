@@ -67,7 +67,7 @@ void DimInactiveEffect::reconfigure(ReconfigureFlags flags)
     DimInactiveConfig::self()->read();
 
     // TODO: Use normalized strength param.
-    m_dimStrength = DimInactiveConfig::strength() / 100.0;
+    m_dimStrength = std::clamp(DimInactiveConfig::strength() / 100.0, 0.1, 0.9);
     m_dimPanels = DimInactiveConfig::dimPanels();
     m_dimDesktop = DimInactiveConfig::dimDesktop();
     m_dimKeepAbove = DimInactiveConfig::dimKeepAbove();
