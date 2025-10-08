@@ -285,9 +285,14 @@ void DndTest::pointerDrag()
     QCOMPARE(dataDeviceDroppedSpy.count(), 1);
 
     // Ask for data.
-    const QFuture<QByteArray> data = readMimeTypeData(targetOffer.get(), QStringLiteral("text/plain"));
-    QVERIFY(waitFuture(data));
-    QCOMPARE(data.result(), QByteArrayLiteral("foo"));
+    const QFuture<QByteArray> plainData = readMimeTypeData(targetOffer.get(), QStringLiteral("text/plain"));
+    QVERIFY(waitFuture(plainData));
+    QCOMPARE(plainData.result(), QByteArrayLiteral("foo"));
+
+    // text/html hasn't been offered, so this should fail.
+    const QFuture<QByteArray> htmlData = readMimeTypeData(targetOffer.get(), QStringLiteral("text/html"));
+    QVERIFY(waitFuture(htmlData));
+    QCOMPARE(htmlData.result(), QByteArray());
 
     // Finish drag-and-drop.
     QSignalSpy dragAndDropFinishedSpy(dataSource, &KWayland::Client::DataSource::dragAndDropFinished);
@@ -970,9 +975,14 @@ void DndTest::touchDrag()
     QCOMPARE(dataDeviceDroppedSpy.count(), 1);
 
     // Ask for data.
-    const QFuture<QByteArray> data = readMimeTypeData(targetOffer.get(), QStringLiteral("text/plain"));
-    QVERIFY(waitFuture(data));
-    QCOMPARE(data.result(), QByteArrayLiteral("foo"));
+    const QFuture<QByteArray> plainData = readMimeTypeData(targetOffer.get(), QStringLiteral("text/plain"));
+    QVERIFY(waitFuture(plainData));
+    QCOMPARE(plainData.result(), QByteArrayLiteral("foo"));
+
+    // text/html hasn't been offered, so this should fail.
+    const QFuture<QByteArray> htmlData = readMimeTypeData(targetOffer.get(), QStringLiteral("text/html"));
+    QVERIFY(waitFuture(htmlData));
+    QCOMPARE(htmlData.result(), QByteArray());
 
     // Finish drag-and-drop.
     QSignalSpy dragAndDropFinishedSpy(dataSource, &KWayland::Client::DataSource::dragAndDropFinished);
@@ -1598,9 +1608,14 @@ void DndTest::tabletDrag()
     QCOMPARE(dataDeviceDroppedSpy.count(), 1);
 
     // Ask for data.
-    const QFuture<QByteArray> data = readMimeTypeData(targetOffer.get(), QStringLiteral("text/plain"));
-    QVERIFY(waitFuture(data));
-    QCOMPARE(data.result(), QByteArrayLiteral("foo"));
+    const QFuture<QByteArray> plainData = readMimeTypeData(targetOffer.get(), QStringLiteral("text/plain"));
+    QVERIFY(waitFuture(plainData));
+    QCOMPARE(plainData.result(), QByteArrayLiteral("foo"));
+
+    // text/html hasn't been offered, so this should fail.
+    const QFuture<QByteArray> htmlData = readMimeTypeData(targetOffer.get(), QStringLiteral("text/html"));
+    QVERIFY(waitFuture(htmlData));
+    QCOMPARE(htmlData.result(), QByteArray());
 
     // Finish drag-and-drop.
     QSignalSpy dragAndDropFinishedSpy(dataSource, &KWayland::Client::DataSource::dragAndDropFinished);
