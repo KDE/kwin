@@ -27,7 +27,7 @@ class StrokeEffect : public QuickSceneEffect
 {
     Q_OBJECT
     Q_PROPERTY(bool active READ isStrokeActive NOTIFY strokeActiveChanged) // not to be mixed up with Effect::isActive()
-    Q_PROPERTY(int animationDurationMsec READ animationDurationMsec NOTIFY animationDurationMsecChanged)
+    Q_PROPERTY(int strokeFadeOutMsec READ strokeFadeOutMsec NOTIFY strokeFadeOutMsecChanged)
 
 public:
     StrokeEffect();
@@ -42,8 +42,8 @@ public:
 
     bool isStrokeActive() const;
 
-    int animationDurationMsec() const;
-    void setAnimationDurationMsec(int msec);
+    int strokeFadeOutMsec() const;
+    void setStrokeFadeOutMsec(int msec);
 
 public Q_SLOTS:
     void activate();
@@ -51,7 +51,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void strokeActiveChanged();
-    void animationDurationMsecChanged();
+    void strokeFadeOutMsecChanged();
 
     void strokeStarted(const QPointF &initial);
     void strokePointAdded(const QPointF &latest);
@@ -68,7 +68,7 @@ private:
 private:
     // configuration
     std::vector<std::unique_ptr<QAction>> m_actions;
-    int m_animationDurationMsec = 200;
+    int m_strokeFadeOutMsec = 200;
 
     // visualization
     std::unique_ptr<QTimer> m_shutdownTimer;

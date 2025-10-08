@@ -11,8 +11,8 @@
                           http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile arg="true"/>
     <group name="Effect-stroke">
-        <entry name="AnimationDurationMsec" type="UInt">
-            <label>Effect animation time</label>
+        <entry name="StrokeFadeOutMsec" type="UInt">
+            <label>Stroke fade-out time, in milliseconds</label>
             <min>100</min>
             <default>200</default>
         </entry>

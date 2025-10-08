@@ -62,7 +62,7 @@ void StrokeEffect::reconfigure(ReconfigureFlags)
 {
     StrokeEffectConfig::self()->read();
 
-    setAnimationDurationMsec(animationTime(std::chrono::milliseconds(StrokeEffectConfig::animationDurationMsec())));
+    setStrokeFadeOutMsec(animationTime(std::chrono::milliseconds(StrokeEffectConfig::strokeFadeOutMsec())));
 
     // FIXME: example strokes, until we get them through some other means (config, D-Bus, etc.)
     qDebug() << "StrokeEffect::reconfigure(): registering example strokes";
@@ -114,16 +114,16 @@ bool StrokeEffect::isStrokeActive() const
     return m_isStrokeActive;
 }
 
-int StrokeEffect::animationDurationMsec() const
+int StrokeEffect::strokeFadeOutMsec() const
 {
-    return m_animationDurationMsec;
+    return m_strokeFadeOutMsec;
 }
 
-void StrokeEffect::setAnimationDurationMsec(int msec)
+void StrokeEffect::setStrokeFadeOutMsec(int msec)
 {
-    if (m_animationDurationMsec != msec) {
-        m_animationDurationMsec = msec;
-        Q_EMIT animationDurationMsecChanged();
+    if (m_strokeFadeOutMsec != msec) {
+        m_strokeFadeOutMsec = msec;
+        Q_EMIT strokeFadeOutMsecChanged();
     }
 }
 
@@ -146,13 +146,13 @@ void StrokeEffect::strokeGestureUpdate(const StrokeGestureUpdateEvent *event)
 
 void StrokeEffect::strokeGestureEnd(const StrokeGestureEndEvent *event)
 {
-    deactivate(m_animationDurationMsec);
+    deactivate(m_strokeFadeOutMsec);
     Q_EMIT strokeEnded();
 }
 
 void StrokeEffect::strokeGestureCancelled(const StrokeGestureCancelEvent *event)
 {
-    deactivate(m_animationDurationMsec);
+    deactivate(m_strokeFadeOutMsec);
     Q_EMIT strokeCancelled();
 }
 

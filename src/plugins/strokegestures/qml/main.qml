@@ -48,7 +48,7 @@ Item {
             radius: blurredWindows.blurRadius
             Behavior on radius {
                 NumberAnimation {
-                    duration: effect.animationDurationMsec
+                    duration: effect.strokeFadeOutMsec
                     easing.type: Easing.OutCubic
                 }
             }
@@ -61,7 +61,7 @@ Item {
         opacity: root.active ? 0.4 : 0
         Behavior on opacity {
             OpacityAnimator {
-                duration: effect.animationDurationMsec
+                duration: effect.strokeFadeOutMsec
                 easing.type: Easing.OutCubic
             }
         }
@@ -98,17 +98,17 @@ Item {
                 }
             }
             function onStrokeEnded() {
-                effect.deactivate(effect.animationDurationMsec);
+                effect.deactivate(effect.strokeFadeOutMsec);
             }
             function onStrokeCancelled() {
-                effect.deactivate(effect.animationDurationMsec);
+                effect.deactivate(effect.strokeFadeOutMsec);
             }
         }
 
         opacity: effect.active ? 1 : 0
         Behavior on opacity {
             OpacityAnimator {
-                duration: effect.animationDurationMsec
+                duration: effect.strokeFadeOutMsec
                 easing.type: Easing.OutCubic
             }
         }
