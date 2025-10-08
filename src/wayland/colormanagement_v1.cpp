@@ -103,7 +103,7 @@ void ColorManagerV1::wp_color_manager_v1_create_windows_scrgb(Resource *resource
         Colorimetry::BT2020,
         Colorimetry::BT709,
     });
-    ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), scrgb);
+    ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), scrgb, false);
 }
 
 ColorFeedbackSurfaceV1::ColorFeedbackSurfaceV1(wl_client *client, uint32_t id, uint32_t version, SurfaceInterface *surface)
@@ -140,12 +140,12 @@ void ColorFeedbackSurfaceV1::wp_color_management_surface_feedback_v1_destroy(Res
 
 void ColorFeedbackSurfaceV1::wp_color_management_surface_feedback_v1_get_preferred(Resource *resource, uint32_t image_description)
 {
-    ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), m_preferred);
+    ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), m_preferred, true);
 }
 
 void ColorFeedbackSurfaceV1::wp_color_management_surface_feedback_v1_get_preferred_parametric(Resource *resource, uint32_t image_description)
 {
-    ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), m_preferred);
+    ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), m_preferred, true);
 }
 
 ColorSurfaceV1::ColorSurfaceV1(wl_client *client, uint32_t id, uint32_t version, SurfaceInterface *surface)
@@ -275,7 +275,8 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_create(Res
                                                                                                         maxHdrLuminance.value_or(func.maxLuminance),
                                                                                                         m_masteringColorimetry,
                                                                                                         Colorimetry::BT709,
-                                                                                                    }));
+                                                                                                    }),
+                                        false);
     } else {
         ImageDescriptionV1::createFailed(resource->client(), image_description, resource->version(), WP_IMAGE_DESCRIPTION_V1_CAUSE_UNSUPPORTED, QStringLiteral("The provided image description failed to verify as usable"));
     }
@@ -446,23 +447,27 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_max_fa
 
 uint64_t ImageDescriptionV1::s_idCounter = 1;
 
-ImageDescriptionV1 *ImageDescriptionV1::createReady(wl_client *client, uint32_t id, uint32_t version, const std::shared_ptr<ColorDescription> &colorDescription)
+ImageDescriptionV1 *ImageDescriptionV1::createReady(wl_client *client, uint32_t id, uint32_t version,
+                                                    const std::shared_ptr<ColorDescription> &colorDescription, bool allowGetInformation)
 {
-    auto description = new ImageDescriptionV1(client, id, version, colorDescription);
+    auto description = new ImageDescriptionV1(client, id, version, colorDescription, allowGetInformation);
     description->send_ready(s_idCounter++);
     return description;
 }
 
-ImageDescriptionV1 *ImageDescriptionV1::createFailed(wl_client *client, uint32_t id, uint32_t version, wp_image_description_v1_cause error, const QString &message)
+ImageDescriptionV1 *ImageDescriptionV1::createFailed(wl_client *client, uint32_t id, uint32_t version,
+                                                     wp_image_description_v1_cause error, const QString &message)
 {
-    auto description = new ImageDescriptionV1(client, id, version, std::nullopt);
+    auto description = new ImageDescriptionV1(client, id, version, std::nullopt, false);
     description->send_failed(error, message);
     return description;
 }
 
-ImageDescriptionV1::ImageDescriptionV1(wl_client *client, uint32_t id, uint32_t version, const std::optional<std::shared_ptr<ColorDescription>> &color)
+ImageDescriptionV1::ImageDescriptionV1(wl_client *client, uint32_t id, uint32_t version,
+                                       const std::optional<std::shared_ptr<ColorDescription>> &color, bool allowGetInformation)
     : QtWaylandServer::wp_image_description_v1(client, id, version)
     , m_description(color)
+    , m_allowGetInformation(allowGetInformation)
 {
 }
 
@@ -543,7 +548,11 @@ static std::optional<uint32_t> kwinPrimariesToProtoPrimaires(const Colorimetry &
 void ImageDescriptionV1::wp_image_description_v1_get_information(Resource *qtResource, uint32_t information)
 {
     if (!m_description.has_value()) {
-        wl_resource_post_error(qtResource->handle, error_no_information, "Can't request information from a failed image description");
+        wl_resource_post_error(qtResource->handle, error_not_ready, "Can't request information from a failed image description");
+        return;
+    }
+    if (!m_allowGetInformation) {
+        wl_resource_post_error(qtResource->handle, error_no_information, "Calling get_information on this image description is not allowed");
         return;
     }
     const auto &color = *m_description;
@@ -627,7 +636,7 @@ void ColorManagementOutputV1::wp_color_management_output_v1_get_image_descriptio
     if (!m_output || m_output->isRemoved()) {
         ImageDescriptionV1::createFailed(resource->client(), image_description, resource->version(), WP_IMAGE_DESCRIPTION_V1_CAUSE_NO_OUTPUT, QStringLiteral("wl_output has been removed"));
     } else {
-        ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), m_output->handle()->colorDescription());
+        ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), m_output->handle()->colorDescription(), true);
     }
 }
 
