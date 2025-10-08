@@ -350,9 +350,11 @@ void EisContext::handleEvents()
             Q_EMIT device->touchMotion(id, {x, y}, currentTime(), device);
             break;
         }
+#if EIS_HAVE_PONG_AND_SYNC
         case EIS_EVENT_PONG:
         case EIS_EVENT_SYNC:
             break;
+#endif
         }
         eis_event_unref(event);
     }
