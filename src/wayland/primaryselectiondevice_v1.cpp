@@ -61,9 +61,7 @@ void PrimarySelectionDeviceV1InterfacePrivate::zwp_primary_selection_device_v1_s
         selection->cancel();
     }
     selection = dataSource;
-    if (selection) {
-        Q_EMIT q->selectionChanged(selection, serial);
-    }
+    Q_EMIT q->selectionChanged(selection, serial);
 }
 
 void PrimarySelectionDeviceV1InterfacePrivate::zwp_primary_selection_device_v1_destroy(QtWaylandServer::zwp_primary_selection_device_v1::Resource *resource)
