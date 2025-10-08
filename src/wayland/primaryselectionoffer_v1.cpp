@@ -51,7 +51,7 @@ void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_des
 
 void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_receive(Resource *resource, const QString &mimeType, qint32 fd)
 {
-    if (!source) {
+    if (!source || !source->mimeTypes().contains(mimeType)) {
         close(fd);
         return;
     }

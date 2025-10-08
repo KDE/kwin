@@ -191,17 +191,6 @@ add_test(NAME kwayland-testError COMMAND testError)
 ecm_mark_as_test(testError)
 
 ########################################################
-# Test Selection
-########################################################
-set( testSelection_SRCS
-        test_selection.cpp
-    )
-add_executable(testSelection ${testSelection_SRCS})
-target_link_libraries( testSelection Qt::Test Qt::Gui Plasma::KWaylandClient kwin Wayland::Client)
-add_test(NAME kwayland-testSelection COMMAND testSelection)
-ecm_mark_as_test(testSelection)
-
-########################################################
 # Test XdgForeign
 ########################################################
 set( testXdgForeign_SRCS

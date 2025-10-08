@@ -59,7 +59,7 @@ void DataOfferInterfacePrivate::data_offer_accept(Resource *resource, uint32_t s
 
 void DataOfferInterfacePrivate::data_offer_receive(Resource *resource, const QString &mime_type, int32_t fd)
 {
-    if (!source) {
+    if (!source || !source->mimeTypes().contains(mime_type)) {
         close(fd);
         return;
     }
