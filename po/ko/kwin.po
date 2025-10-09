@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-25 02:40+0000\n"
-"PO-Revision-Date: 2025-07-20 01:41+0200\n"
+"PO-Revision-Date: 2025-10-09 01:06+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -597,7 +597,7 @@ msgstr "핀치 취소됨"
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
-msgstr "문지르기 시작"
+msgstr "스와이프 시작"
 
 #: debug_console.cpp:416
 #, kde-format
@@ -609,7 +609,7 @@ msgstr "손가락 개수"
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
-msgstr "문지르기 업데이트"
+msgstr "스와이프 업데이트"
 
 #: debug_console.cpp:429
 #, kde-format
@@ -627,24 +627,22 @@ msgstr "y 차이"
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
-msgstr "문지르기 끝"
+msgstr "스와이프 끝"
 
 #: debug_console.cpp:453
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
-msgstr "문지르기 취소됨"
+msgstr "스와이프 취소됨"
 
 #: debug_console.cpp:465
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "누르기 시작됨"
 
 #: debug_console.cpp:467
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "손가락 개수"
@@ -653,15 +651,13 @@ msgstr "손가락 개수"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "누르기 끝남"
 
 #: debug_console.cpp:490
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "핀치 취소됨"
+msgstr "누르기 취소됨"
 
 #: debug_console.cpp:502
 #, kde-format
@@ -3481,11 +3477,10 @@ msgstr ""
 "2분 후에 강제로 로그아웃합니다."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
-msgstr "바탕 화면 멀리 보기"
+msgstr "바탕 화면 엿보기"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, kde-format
