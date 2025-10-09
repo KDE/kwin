@@ -175,6 +175,7 @@ void InputPanelV1Window::destroyWindow()
     m_panelSurface->disconnect(this);
     m_panelSurface->surface()->disconnect(this);
     disconnect(workspace(), &Workspace::outputsChanged, this, &InputPanelV1Window::reposition);
+    disconnect(kwinApp()->inputMethod(), &InputMethod::cursorRectangleChanged, this, &InputPanelV1Window::reposition);
 
     markAsDeleted();
     Q_EMIT closed();
