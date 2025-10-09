@@ -177,6 +177,8 @@ bool EglContext::makeCurrent(EGLSurface surface)
     const bool ret = eglMakeCurrent(m_display->handle(), surface, surface, m_handle) == EGL_TRUE;
     if (ret) {
         s_currentContext = this;
+    } else {
+        qCWarning(KWIN_OPENGL, "Could not make egl context current! %s", qPrintable(getEglErrorString()));
     }
     return ret;
 }
