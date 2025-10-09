@@ -22,6 +22,13 @@ namespace KWin
 
 static std::unique_ptr<DrmDevice> findRenderDevice()
 {
+#if defined(Q_OS_LINUX)
+    // Workaround for libdrm being unaware of faux bus.
+    if (qEnvironmentVariableIsSet("CI")) {
+        return DrmDevice::open(QStringLiteral("/dev/dri/card1"));
+    }
+#endif
+
     const int deviceCount = drmGetDevices2(0, nullptr, 0);
     if (deviceCount <= 0) {
         return nullptr;

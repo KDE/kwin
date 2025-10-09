@@ -1355,6 +1355,13 @@ bool unlockScreen()
 
 bool renderNodeAvailable()
 {
+#if defined(Q_OS_LINUX)
+    // Workaround for libdrm being unaware of faux bus.
+    if (qEnvironmentVariableIsSet("CI")) {
+        return true;
+    }
+#endif
+
     const int deviceCount = drmGetDevices2(0, nullptr, 0);
     if (deviceCount <= 0) {
         return false;

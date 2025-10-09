@@ -34,6 +34,18 @@ using namespace KWin;
 
 static std::unique_ptr<MockGpu> findPrimaryDevice(int crtcCount)
 {
+#if defined(Q_OS_LINUX)
+    // Workaround for libdrm being unaware of faux bus.
+    if (qEnvironmentVariableIsSet("CI")) {
+        int fd = open("/dev/dri/card1", O_RDWR | O_CLOEXEC);
+        if (fd == -1) {
+            return nullptr;
+        } else {
+            return std::make_unique<MockGpu>(fd, "/dev/dri/card1", crtcCount);
+        }
+    }
+#endif
+
     const int deviceCount = drmGetDevices2(0, nullptr, 0);
     if (deviceCount <= 0) {
         return nullptr;
