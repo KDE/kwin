@@ -223,29 +223,37 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     }
     primary->set(commit, m_primaryLayer->sourceRect().toRect(), m_primaryLayer->targetRect());
     commit->addBuffer(m_pending.crtc->primaryPlane(), fb, frame);
+
+    DrmPlane::ColorRange range = DrmPlane::ColorRange::Limited_YCbCr;
+    if (m_primaryLayer->colorDescription().range() == EncodingRange::Full) {
+        range = DrmPlane::ColorRange::Full_YCbCr;
+    }
     switch (m_primaryLayer->colorDescription().yuvCoefficients()) {
     case YUVMatrixCoefficients::Identity:
+        if (m_primaryLayer->colorDescription().range() == EncodingRange::Limited) {
+            return Error::InvalidArguments;
+        }
         break;
     case YUVMatrixCoefficients::BT601:
         if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {
             return Error::InvalidArguments;
         }
         commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT601_YCbCr);
-        commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+        commit->addEnum(primary->colorRange, range);
         break;
     case YUVMatrixCoefficients::BT709:
         if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {
             return Error::InvalidArguments;
         }
         commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT709_YCbCr);
-        commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+        commit->addEnum(primary->colorRange, range);
         break;
     case YUVMatrixCoefficients::BT2020:
         if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {
             return Error::InvalidArguments;
         }
         commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT2020_YCbCr);
-        commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+        commit->addEnum(primary->colorRange, range);
         break;
     }
     return Error::None;

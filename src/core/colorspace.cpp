@@ -515,6 +515,11 @@ YUVMatrixCoefficients ColorDescription::yuvCoefficients() const
     return m_yuvCoefficients;
 }
 
+EncodingRange ColorDescription::range() const
+{
+    return m_range;
+}
+
 /**
  * @returns a matrix that converts colors in the specified YCbCr (full range: Y[0; 1] and CbCr[-0.5; 0.5]) to RGB ([0; 1])
  */
