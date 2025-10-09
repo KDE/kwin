@@ -112,6 +112,7 @@ void ColorRepresentationSurfaceV1::wp_color_representation_surface_v1_set_coeffi
     }
     auto surfPrivate = SurfaceInterfacePrivate::get(m_surface);
     surfPrivate->pending->yuvCoefficients = it->second;
+    surfPrivate->pending->range = range == WP_COLOR_REPRESENTATION_SURFACE_V1_RANGE_FULL ? EncodingRange::Full : EncodingRange::Limited;
     surfPrivate->pending->committed |= SurfaceState::Field::YuvCoefficients;
 }
 
