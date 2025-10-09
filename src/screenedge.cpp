@@ -1184,7 +1184,6 @@ std::unique_ptr<Edge> ScreenEdges::createEdge(ElectricBorder border, int x, int 
     }
     edge->checkBlocking();
     connect(edge.get(), &Edge::approaching, this, &ScreenEdges::approaching);
-    connect(this, &ScreenEdges::checkBlocking, edge.get(), &Edge::checkBlocking);
     return edge;
 }
 
@@ -1428,6 +1427,13 @@ void ScreenEdges::setRemainActiveOnFullscreen(bool remainActive)
 const std::vector<std::unique_ptr<Edge>> &ScreenEdges::edges() const
 {
     return m_edges;
+}
+
+void ScreenEdges::checkBlocking()
+{
+    for (const auto &edge : m_edges) {
+        edge->checkBlocking();
+    }
 }
 
 } // namespace

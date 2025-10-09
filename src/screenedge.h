@@ -88,6 +88,7 @@ public:
     Output *output() const;
     const QRect &geometry() const;
     void setTouchAction(ElectricBorderAction action);
+    void checkBlocking();
 
     bool activatesForPointer() const;
     bool activatesForTouchGesture() const;
@@ -100,7 +101,6 @@ public Q_SLOTS:
     void setAction(ElectricBorderAction action);
     void setGeometry(const QRect &geometry);
     void updateApproaching(const QPointF &point);
-    void checkBlocking();
 Q_SIGNALS:
     void approaching(ElectricBorder border, qreal factor, const QRect &geometry);
     void activatesForTouchGestureChanged();
@@ -327,6 +327,8 @@ public:
     bool remainActiveOnFullscreen() const;
     const std::vector<std::unique_ptr<Edge>> &edges() const;
 
+    void checkBlocking();
+
 public Q_SLOTS:
     void reconfigure();
     /**
@@ -346,7 +348,6 @@ Q_SIGNALS:
      * @c 0.0 meaning far away from the border, @c 1.0 in trigger distance.
      */
     void approaching(ElectricBorder border, qreal factor, const QRect &geometry);
-    void checkBlocking();
 
 private:
     enum {
