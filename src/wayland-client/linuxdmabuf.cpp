@@ -223,6 +223,27 @@ wl_buffer *LinuxDmabufV1::importBuffer(GraphicsBuffer *graphicsBuffer) const
     return buffer;
 }
 
+wl_buffer *LinuxDmabufV1::importBuffer(uint32_t format, const std::vector<GraphicsBuffer *> &planes) const
+{
+    zwp_linux_buffer_params_v1 *params = zwp_linux_dmabuf_v1_create_params(m_dmabuf);
+    for (size_t i = 0; i < planes.size(); ++i) {
+        const auto attributes = planes[i]->dmabufAttributes();
+        Q_ASSERT(attributes->planeCount == 1);
+        zwp_linux_buffer_params_v1_add(params,
+                                       attributes->fd[0].get(),
+                                       i,
+                                       attributes->offset[0],
+                                       attributes->pitch[0],
+                                       attributes->modifier >> 32,
+                                       attributes->modifier & 0xffffffff);
+    }
+    // first plane is unscaled
+    const auto size = planes[0]->size();
+    wl_buffer *buffer = zwp_linux_buffer_params_v1_create_immed(params, size.width(), size.height(), format, 0);
+    zwp_linux_buffer_params_v1_destroy(params);
+    return buffer;
+}
+
 std::unique_ptr<LinuxDmabufFeedbackV1> LinuxDmabufV1::getSurfaceFeedback(wl_surface *surface) const
 {
     return std::make_unique<LinuxDmabufFeedbackV1>(zwp_linux_dmabuf_v1_get_surface_feedback(m_dmabuf, surface));

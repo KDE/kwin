@@ -27,6 +27,7 @@
 #include <xkbcommon/xkbcommon.h>
 
 #include "qwayland-color-management-v1.h"
+#include "qwayland-color-representation-v1.h"
 #include "qwayland-cursor-shape-v1.h"
 #include "qwayland-fake-input.h"
 #include "qwayland-fifo-v1.h"
@@ -776,6 +777,7 @@ enum class AdditionalWaylandInterface {
     KeyState = 1 << 28,
     WpPrimarySelectionV1 = 1 << 29,
     LinuxDmabuf = 1 << 30,
+    ColorRepresentation = 1 << 31,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -969,6 +971,20 @@ private:
     void org_kde_kwin_keystate_stateChanged(uint32_t key, uint32_t state) override;
 };
 
+class ColorRepresentationV1 : public QtWayland::wp_color_representation_manager_v1
+{
+public:
+    explicit ColorRepresentationV1(::wl_registry *registry, uint32_t id, int version);
+    ~ColorRepresentationV1() override;
+};
+
+class ColorRepresentationSurfaceV1 : public QtWayland::wp_color_representation_surface_v1
+{
+public:
+    explicit ColorRepresentationSurfaceV1(::wp_color_representation_surface_v1 *object);
+    ~ColorRepresentationSurfaceV1() override;
+};
+
 struct Connection
 {
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
@@ -1018,6 +1034,7 @@ struct Connection
     std::unique_ptr<KeyStateV1> keyState;
     std::unique_ptr<WpPrimarySelectionDeviceManagerV1> primarySelectionManager;
     std::unique_ptr<WaylandClient::LinuxDmabufV1> linuxDmabuf;
+    std::unique_ptr<ColorRepresentationV1> colorRepresentation;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -1091,6 +1108,7 @@ WpTabletManagerV2 *tabletManager();
 KeyStateV1 *keyState();
 WpPrimarySelectionDeviceManagerV1 *primarySelectionManager();
 WaylandClient::LinuxDmabufV1 *linuxDmabuf();
+ColorRepresentationV1 *colorRepresentation();
 
 bool waitForWaylandSurface(Window *window);
 

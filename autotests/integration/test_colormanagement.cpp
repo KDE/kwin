@@ -7,12 +7,15 @@
 #include "kwin_wayland_test.h"
 
 #include "core/colorpipeline.h"
+#include "core/drmdevice.h"
+#include "core/graphicsbuffer.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "outputconfigurationstore.h"
 #include "pointer_input.h"
 #include "tiles/tilemanager.h"
+#include "wayland-client/linuxdmabuf.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -20,9 +23,11 @@
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/surface.h>
+#include <drm_fourcc.h>
 #include <format>
 
 #include "qwayland-color-management-v1.h"
+#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
 
 using namespace std::chrono_literals;
 
@@ -95,7 +100,7 @@ private Q_SLOTS:
 
 void ColorManagementTest::initTestCase()
 {
-    qRegisterMetaType<Window *>();
+    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
 
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
@@ -115,7 +120,9 @@ void ColorManagementTest::init()
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
     });
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ColorManagement));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ColorManagement
+                                         | Test::AdditionalWaylandInterface::ColorRepresentation
+                                         | Test::AdditionalWaylandInterface::LinuxDmabuf));
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
@@ -288,6 +295,37 @@ void ColorManagementTest::testSetImageDescription_data()
         << RenderingIntent::Perceptual
         << false << true
         << std::optional<std::shared_ptr<ColorDescription>>();
+
+    QTest::addRow("rec601 limited range YUV")
+        << std::make_shared<ColorDescription>(ColorDescription{
+               Colorimetry::BT709,
+               TransferFunction(TransferFunction::BT1886),
+               YUVMatrixCoefficients::BT601,
+               EncodingRange::Limited,
+           })
+        << RenderingIntent::Perceptual
+        << false << true
+        << std::optional<std::shared_ptr<ColorDescription>>();
+    QTest::addRow("rec709 full range YUV")
+        << std::make_shared<ColorDescription>(ColorDescription{
+               Colorimetry::BT709,
+               TransferFunction(TransferFunction::BT1886),
+               YUVMatrixCoefficients::BT709,
+               EncodingRange::Full,
+           })
+        << RenderingIntent::Perceptual
+        << false << true
+        << std::optional<std::shared_ptr<ColorDescription>>();
+    QTest::addRow("rec2020 limited range YUV")
+        << std::make_shared<ColorDescription>(ColorDescription{
+               Colorimetry::BT709,
+               TransferFunction(TransferFunction::PerceptualQuantizer),
+               YUVMatrixCoefficients::BT2020,
+               EncodingRange::Limited,
+           })
+        << RenderingIntent::Perceptual
+        << false << true
+        << std::optional<std::shared_ptr<ColorDescription>>();
 }
 
 static ImageDescription createImageDescription(ColorManagementSurface *surface, const ColorDescription &color)
@@ -327,6 +365,45 @@ static ImageDescription createImageDescription(ColorManagementSurface *surface, 
     return ImageDescription(wp_image_description_creator_params_v1_create(creator.object()));
 }
 
+static const std::unordered_map<YUVMatrixCoefficients, wp_color_representation_surface_v1_coefficients> s_coefficientsMap = {
+    {YUVMatrixCoefficients::Identity, WP_COLOR_REPRESENTATION_SURFACE_V1_COEFFICIENTS_IDENTITY},
+    {YUVMatrixCoefficients::BT601, WP_COLOR_REPRESENTATION_SURFACE_V1_COEFFICIENTS_BT601},
+    {YUVMatrixCoefficients::BT709, WP_COLOR_REPRESENTATION_SURFACE_V1_COEFFICIENTS_BT709},
+    {YUVMatrixCoefficients::BT2020, WP_COLOR_REPRESENTATION_SURFACE_V1_COEFFICIENTS_BT2020},
+};
+static const std::unordered_map<EncodingRange, wp_color_representation_surface_v1_range> s_rangeMap = {
+    {EncodingRange::Limited, WP_COLOR_REPRESENTATION_SURFACE_V1_RANGE_LIMITED},
+    {EncodingRange::Full, WP_COLOR_REPRESENTATION_SURFACE_V1_RANGE_FULL},
+};
+
+static std::unique_ptr<Test::ColorRepresentationSurfaceV1> createRepresentation(KWayland::Client::Surface *surf,
+                                                                                const std::shared_ptr<ColorDescription> &color)
+{
+    auto ret = std::make_unique<Test::ColorRepresentationSurfaceV1>(Test::colorRepresentation()->get_surface(*surf));
+    ret->set_coefficients_and_range(s_coefficientsMap.at(color->yuvCoefficients()), s_rangeMap.at(color->range()));
+    return ret;
+}
+
+static wl_buffer *createYuvBuffer(const QSize &size)
+{
+    auto device = DrmDevice::open(Test::linuxDmabuf()->mainDevice());
+    GraphicsBufferRef Y = device->allocator()->allocate(GraphicsBufferOptions{
+        .size = size,
+        .format = DRM_FORMAT_R8,
+        .modifiers = {DRM_FORMAT_MOD_LINEAR},
+        .software = false,
+    });
+    Q_ASSERT(Y.buffer());
+    GraphicsBufferRef CrCb = device->allocator()->allocate(GraphicsBufferOptions{
+        .size = size / 2,
+        .format = DRM_FORMAT_GR88,
+        .modifiers = {DRM_FORMAT_MOD_LINEAR},
+        .software = false,
+    });
+    Q_ASSERT(CrCb.buffer());
+    return Test::linuxDmabuf()->importBuffer(DRM_FORMAT_NV12, {Y.buffer(), CrCb.buffer()});
+}
+
 void ColorManagementTest::testSetImageDescription()
 {
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -340,6 +417,14 @@ void ColorManagementTest::testSetImageDescription()
     QFETCH(RenderingIntent, renderingIntent);
 
     ImageDescription imageDescr = createImageDescription(cmSurf.get(), *input);
+    auto representation = createRepresentation(surface.get(), input);
+
+    // YUV color descriptions require YUV buffers
+    if (input->yuvCoefficients() != YUVMatrixCoefficients::Identity) {
+        auto buffer = createYuvBuffer(QSize(100, 50));
+        surface->attachBuffer(buffer);
+        wl_buffer_destroy(buffer);
+    }
 
     QFETCH(bool, protocolError);
     if (protocolError) {
