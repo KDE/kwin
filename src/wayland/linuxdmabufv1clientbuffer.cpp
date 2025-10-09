@@ -165,14 +165,14 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
     auto clientBuffer = new LinuxDmaBufV1ClientBuffer(std::move(m_attrs));
     if (!renderBackend->testImportBuffer(clientBuffer)) {
         send_failed(resource->handle);
-        delete clientBuffer;
+        clientBuffer->drop();
         return;
     }
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, 0);
     if (!bufferResource) {
         wl_resource_post_no_memory(resource->handle);
-        delete clientBuffer;
+        clientBuffer->drop();
         return;
     }
 
@@ -216,14 +216,14 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
     auto clientBuffer = new LinuxDmaBufV1ClientBuffer(std::move(m_attrs));
     if (!renderBackend->testImportBuffer(clientBuffer)) {
         wl_resource_post_error(resource->handle, error_invalid_wl_buffer, "importing the supplied dmabufs failed");
-        delete clientBuffer;
+        clientBuffer->drop();
         return;
     }
 
     wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, buffer_id);
     if (!bufferResource) {
         wl_resource_post_no_memory(resource->handle);
-        delete clientBuffer;
+        clientBuffer->drop();
         return;
     }
 
