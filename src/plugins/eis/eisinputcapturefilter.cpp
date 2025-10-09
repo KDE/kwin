@@ -139,7 +139,7 @@ bool EisInputCaptureFilter::touchUp(TouchUpEvent *event)
         eis_touch_up(touch);
         eis_touch_unref(touch);
     }
-    return false;
+    return true;
 }
 bool EisInputCaptureFilter::touchCancel()
 {
