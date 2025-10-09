@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-07-05 05:54+0000\n"
-"PO-Revision-Date: 2025-06-10 22:56+0200\n"
+"PO-Revision-Date: 2025-10-09 01:06+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -506,7 +506,7 @@ msgstr "핀치 취소됨"
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
-msgstr "문지르기 시작"
+msgstr "스와이프 시작"
 
 #: debug_console.cpp:422
 #, kde-format
@@ -518,7 +518,7 @@ msgstr "손가락 개수"
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
-msgstr "문지르기 업데이트"
+msgstr "스와이프 업데이트"
 
 #: debug_console.cpp:435
 #, kde-format
@@ -536,13 +536,13 @@ msgstr "y 차이"
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
-msgstr "문지르기 끝"
+msgstr "스와이프 끝"
 
 #: debug_console.cpp:459
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
-msgstr "문지르기 취소됨"
+msgstr "스와이프 취소됨"
 
 #: debug_console.cpp:471
 #, kde-format
