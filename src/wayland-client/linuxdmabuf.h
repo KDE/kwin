@@ -24,6 +24,7 @@ struct zwp_linux_dmabuf_v1;
 namespace KWin
 {
 class GraphicsBuffer;
+class DmaBufAttributes;
 
 namespace WaylandClient
 {
@@ -83,6 +84,10 @@ public:
      * life time of the graphics buffer and wl_buffer!
      */
     wl_buffer *importBuffer(GraphicsBuffer *graphicsBuffer) const;
+    /**
+     * imports multiple buffers as planes into one Wayland buffer
+     */
+    wl_buffer *importBuffer(uint32_t format, const std::vector<GraphicsBuffer *> &planes) const;
 
     std::unique_ptr<LinuxDmabufFeedbackV1> getSurfaceFeedback(wl_surface *surface) const;
 
