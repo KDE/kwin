@@ -2175,6 +2175,11 @@ WpPrimarySelectionOfferV1 *WpPrimarySelectionDeviceV1::offer() const
     return m_offer.get();
 }
 
+std::unique_ptr<WpPrimarySelectionOfferV1> WpPrimarySelectionDeviceV1::takeOffer()
+{
+    return std::move(m_offer);
+}
+
 void WpPrimarySelectionDeviceV1::zwp_primary_selection_device_v1_data_offer(::zwp_primary_selection_offer_v1 *offer)
 {
     m_offer = std::make_unique<WpPrimarySelectionOfferV1>(offer);

@@ -716,6 +716,7 @@ public:
     ~WpPrimarySelectionDeviceV1() override;
 
     WpPrimarySelectionOfferV1 *offer() const;
+    std::unique_ptr<WpPrimarySelectionOfferV1> takeOffer();
 
 Q_SIGNALS:
     void selectionOffered(WpPrimarySelectionOfferV1 *offer);

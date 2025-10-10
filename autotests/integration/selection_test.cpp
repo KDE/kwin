@@ -77,12 +77,14 @@ private Q_SLOTS:
     void destroySelection();
     void invalidSerialForSelection();
     void unsetSupersededSelection();
+    void receiveFromWithdrawnSelectionOffer();
 
     void primarySelection();
     void internalPrimarySelection();
     void destroyPrimarySelection();
     void invalidSerialForPrimarySelection();
     void unsetSupersededPrimarySelection();
+    void receiveFromWithdrawnPrimarySelectionOffer();
 
 private:
     QMimeDatabase m_mimeDatabase;
@@ -384,6 +386,65 @@ void SelectionTest::unsetSupersededSelection()
     QVERIFY(secondDataDeviceSelectionClearedSpy.wait());
 }
 
+void SelectionTest::receiveFromWithdrawnSelectionOffer()
+{
+    // This test verifies that a client cannot receive data from a withdrawn selection offer.
+
+    const QMimeType plainText = m_mimeDatabase.mimeTypeForName(QStringLiteral("text/plain"));
+
+    auto sourceConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::DataDeviceManager);
+    auto targetConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::DataDeviceManager);
+
+    // Setup the source side.
+    std::unique_ptr<KWayland::Client::DataDevice> sourceDataDevice(sourceConnection->dataDeviceManager->getDataDevice(sourceConnection->seat));
+    std::unique_ptr<KWayland::Client::DataSource> dataSource(sourceConnection->dataDeviceManager->createDataSource());
+    dataSource->offer(plainText);
+    connect(dataSource.get(), &KWayland::Client::DataSource::sendDataRequested, this, [](const QString &mimeType, int fd) {
+        const auto data = QByteArrayLiteral("foo");
+        write(fd, data.data(), data.size());
+        close(fd);
+    });
+
+    auto sourceSurface = Test::createSurface(sourceConnection->compositor);
+    auto sourceShellSurface = Test::createXdgToplevelSurface(sourceConnection->xdgShell, sourceSurface.get());
+    auto sourceWindow = Test::renderAndWaitForShown(sourceConnection->shm, sourceSurface.get(), QSize(100, 100), Qt::red);
+
+    // Setup the target side.
+    std::unique_ptr<KWayland::Client::DataDevice> targetDataDevice(targetConnection->dataDeviceManager->getDataDevice(targetConnection->seat));
+
+    auto targetSurface = Test::createSurface(targetConnection->compositor);
+    auto targetShellSurface = Test::createXdgToplevelSurface(targetConnection->xdgShell, targetSurface.get());
+    auto targetWindow = Test::renderAndWaitForShown(targetConnection->shm, targetSurface.get(), QSize(100, 100), Qt::blue);
+
+    // Focus the source window, and set the selection.
+    std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
+    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    workspace()->activateWindow(sourceWindow);
+    QVERIFY(sourceKeyboardEnteredSpy.wait());
+    const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
+    sourceDataDevice->setSelection(sourceEnteredSerial, dataSource.get());
+
+    // The target client should be offered the selection when its window gets focused.
+    QSignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
+    workspace()->activateWindow(targetWindow);
+    QVERIFY(targetDataDeviceSelectionOfferedSpy.wait());
+    std::unique_ptr<KWayland::Client::DataOffer> offer = targetDataDevice->takeOfferedSelection();
+    QCOMPARE(offer->offeredMimeTypes(), QList<QMimeType>{plainText});
+
+    // Ask for data.
+    const QFuture<QByteArray> plainData = readMimeTypeData(offer, plainText);
+    QVERIFY(waitFuture(plainData));
+    QCOMPARE(plainData.result(), QByteArrayLiteral("foo"));
+
+    // Remove focus from the target window, it should not be able to receive data anymore.
+    workspace()->activateWindow(nullptr);
+
+    const QFuture<QByteArray> emptyData = readMimeTypeData(offer, plainText);
+    QVERIFY(waitFuture(emptyData));
+    QEXPECT_FAIL("", "data offers are incorrectly managed now", Continue);
+    QCOMPARE(emptyData.result(), QByteArray());
+}
+
 void SelectionTest::primarySelection()
 {
     // This test verifies that the primary selection works as expected between two clients.
@@ -656,6 +717,65 @@ void SelectionTest::unsetSupersededPrimarySelection()
     // Attempt to unset the second selection.
     secondDataDevice->set_selection(nullptr, secondEnteredSerial);
     QVERIFY(secondDataDeviceSelectionClearedSpy.wait());
+}
+
+void SelectionTest::receiveFromWithdrawnPrimarySelectionOffer()
+{
+    // This test verifies that a client cannot receive data from a withdrawn primary selection offer.
+
+    const QMimeType plainText = m_mimeDatabase.mimeTypeForName(QStringLiteral("text/plain"));
+
+    auto sourceConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::WpPrimarySelectionV1);
+    auto targetConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::WpPrimarySelectionV1);
+
+    // Setup the source side.
+    std::unique_ptr<Test::WpPrimarySelectionDeviceV1> sourceDataDevice(sourceConnection->primarySelectionManager->getDevice(sourceConnection->seat));
+    std::unique_ptr<Test::WpPrimarySelectionSourceV1> dataSource(sourceConnection->primarySelectionManager->createSource());
+    dataSource->offer(plainText.name());
+    connect(dataSource.get(), &Test::WpPrimarySelectionSourceV1::sendDataRequested, this, [](const QString &mimeType, int fd) {
+        const auto data = QByteArrayLiteral("foo");
+        write(fd, data.data(), data.size());
+        close(fd);
+    });
+
+    auto sourceSurface = Test::createSurface(sourceConnection->compositor);
+    auto sourceShellSurface = Test::createXdgToplevelSurface(sourceConnection->xdgShell, sourceSurface.get());
+    auto sourceWindow = Test::renderAndWaitForShown(sourceConnection->shm, sourceSurface.get(), QSize(100, 100), Qt::red);
+
+    // Setup the target side.
+    std::unique_ptr<Test::WpPrimarySelectionDeviceV1> targetDataDevice(targetConnection->primarySelectionManager->getDevice(targetConnection->seat));
+
+    auto targetSurface = Test::createSurface(targetConnection->compositor);
+    auto targetShellSurface = Test::createXdgToplevelSurface(targetConnection->xdgShell, targetSurface.get());
+    auto targetWindow = Test::renderAndWaitForShown(targetConnection->shm, targetSurface.get(), QSize(100, 100), Qt::blue);
+
+    // Focus the source window, and set the primary selection.
+    std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
+    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    workspace()->activateWindow(sourceWindow);
+    QVERIFY(sourceKeyboardEnteredSpy.wait());
+    const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
+    sourceDataDevice->set_selection(dataSource->object(), sourceEnteredSerial);
+
+    // The target client should be offered the selection when its window gets focused.
+    QSignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    workspace()->activateWindow(targetWindow);
+    QVERIFY(targetDataDeviceSelectionOfferedSpy.wait());
+    std::unique_ptr<Test::WpPrimarySelectionOfferV1> offer = targetDataDevice->takeOffer();
+    QCOMPARE(offer->mimeTypes(), QList<QMimeType>{plainText});
+
+    // Ask for data.
+    const QFuture<QByteArray> plainData = readMimeTypeData(offer, plainText);
+    QVERIFY(waitFuture(plainData));
+    QCOMPARE(plainData.result(), QByteArrayLiteral("foo"));
+
+    // Remove focus from the target window, it should not be able to receive data anymore.
+    workspace()->activateWindow(nullptr);
+
+    const QFuture<QByteArray> emptyData = readMimeTypeData(offer, plainText);
+    QVERIFY(waitFuture(emptyData));
+    QEXPECT_FAIL("", "data offers are incorrectly managed now", Continue);
+    QCOMPARE(emptyData.result(), QByteArray());
 }
 
 } // namespace KWin
