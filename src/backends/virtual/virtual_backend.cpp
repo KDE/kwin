@@ -51,6 +51,13 @@ static std::unique_ptr<DrmDevice> findRenderDevice()
                 nodeType = DRM_NODE_PRIMARY;
             }
         }
+#if HAVE_LIBDRM_FAUX
+        if (device->bustype == DRM_BUS_FAUX) {
+            if (strcmp(device->businfo.faux->name, "vgem") == 0) {
+                nodeType = DRM_NODE_PRIMARY;
+            }
+        }
+#endif
 
         if (device->available_nodes & (1 << nodeType)) {
             if (auto ret = DrmDevice::open(device->nodes[nodeType])) {

@@ -304,6 +304,12 @@ set_package_properties(UDev PROPERTIES
 
 find_package(Libdrm 2.4.118)
 set_package_properties(Libdrm PROPERTIES TYPE REQUIRED PURPOSE "Required for drm output on Wayland.")
+if (Libdrm_VERSION VERSION_GREATER_EQUAL 2.4.127)
+    set(HAVE_LIBDRM_FAUX 1)
+else()
+    set(HAVE_LIBDRM_FAUX 0)
+endif()
+
 
 find_package(gbm)
 set_package_properties(gbm PROPERTIES TYPE REQUIRED PURPOSE "Required for egl output of drm backend.")
