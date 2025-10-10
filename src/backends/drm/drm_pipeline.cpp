@@ -273,29 +273,36 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
         commit->addProperty(plane->zpos, layer->zpos());
     }
 
+    DrmPlane::ColorRange range = DrmPlane::ColorRange::Limited_YCbCr;
+    if (layer->colorDescription()->range() == EncodingRange::Full) {
+        range = DrmPlane::ColorRange::Full_YCbCr;
+    }
     switch (layer->colorDescription()->yuvCoefficients()) {
     case YUVMatrixCoefficients::Identity:
+        if (layer->colorDescription()->range() == EncodingRange::Limited) {
+            return Error::InvalidArguments;
+        }
         break;
     case YUVMatrixCoefficients::BT601:
         if (!plane->colorEncoding.isValid() || !plane->colorRange.isValid()) {
             return Error::InvalidArguments;
         }
         commit->addEnum(plane->colorEncoding, DrmPlane::ColorEncoding::BT601_YCbCr);
-        commit->addEnum(plane->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+        commit->addEnum(plane->colorRange, range);
         break;
     case YUVMatrixCoefficients::BT709:
         if (!plane->colorEncoding.isValid() || !plane->colorRange.isValid()) {
             return Error::InvalidArguments;
         }
         commit->addEnum(plane->colorEncoding, DrmPlane::ColorEncoding::BT709_YCbCr);
-        commit->addEnum(plane->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+        commit->addEnum(plane->colorRange, range);
         break;
     case YUVMatrixCoefficients::BT2020:
         if (!plane->colorEncoding.isValid() || !plane->colorRange.isValid()) {
             return Error::InvalidArguments;
         }
         commit->addEnum(plane->colorEncoding, DrmPlane::ColorEncoding::BT2020_YCbCr);
-        commit->addEnum(plane->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+        commit->addEnum(plane->colorRange, range);
         break;
     }
     return Error::None;
