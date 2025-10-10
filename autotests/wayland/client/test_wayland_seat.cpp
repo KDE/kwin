@@ -1654,7 +1654,6 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     QVERIFY(ddiCreatedSpy.wait());
     auto ddi = ddiCreatedSpy.first().first().value<DataDeviceInterface *>();
     QVERIFY(ddi);
-    m_seatInterface->setSelection(ddi->selection(), m_display->nextSerial());
 
     // switch to other client
     // create a surface and pass it keyboard focus

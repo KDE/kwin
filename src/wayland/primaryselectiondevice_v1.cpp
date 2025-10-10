@@ -25,7 +25,6 @@ public:
 
     PrimarySelectionDeviceV1Interface *q;
     SeatInterface *seat;
-    QPointer<PrimarySelectionSourceV1Interface> selection;
 
 private:
     void setSelection(PrimarySelectionSourceV1Interface *dataSource);
@@ -54,14 +53,7 @@ void PrimarySelectionDeviceV1InterfacePrivate::zwp_primary_selection_device_v1_s
         Q_ASSERT(dataSource);
     }
 
-    if (selection == dataSource) {
-        return;
-    }
-    if (selection) {
-        selection->cancel();
-    }
-    selection = dataSource;
-    Q_EMIT q->selectionChanged(selection, serial);
+    Q_EMIT q->selectionChanged(dataSource, serial);
 }
 
 void PrimarySelectionDeviceV1InterfacePrivate::zwp_primary_selection_device_v1_destroy(QtWaylandServer::zwp_primary_selection_device_v1::Resource *resource)
@@ -107,11 +99,6 @@ PrimarySelectionDeviceV1Interface::~PrimarySelectionDeviceV1Interface() = defaul
 SeatInterface *PrimarySelectionDeviceV1Interface::seat() const
 {
     return d->seat;
-}
-
-PrimarySelectionSourceV1Interface *PrimarySelectionDeviceV1Interface::selection() const
-{
-    return d->selection;
 }
 
 void PrimarySelectionDeviceV1Interface::sendSelection(AbstractDataSource *other)
