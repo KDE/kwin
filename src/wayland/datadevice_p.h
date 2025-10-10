@@ -16,7 +16,6 @@ namespace KWin
 class AbstractDataSource;
 class DataDeviceInterface;
 class DataOfferInterface;
-class DataSourceInterface;
 class DragAndDropIcon;
 class SeatInterface;
 class SurfaceInterface;
@@ -32,7 +31,6 @@ public:
 
     SeatInterface *seat;
     DataDeviceInterface *q;
-    QPointer<DataSourceInterface> selection;
 
     struct Drag
     {
