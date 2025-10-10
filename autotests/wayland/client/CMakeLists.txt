@@ -120,17 +120,6 @@ add_test(NAME kwayland-testDataSource COMMAND testDataSource)
 ecm_mark_as_test(testDataSource)
 
 ########################################################
-# Test DataDevice
-########################################################
-set( testDataDevice_SRCS
-        test_datadevice.cpp
-    )
-add_executable(testDataDevice ${testDataDevice_SRCS})
-target_link_libraries( testDataDevice Qt::Test Qt::Gui Plasma::KWaylandClient kwin Wayland::Client)
-add_test(NAME kwayland-testDataDevice COMMAND testDataDevice)
-ecm_mark_as_test(testDataDevice)
-
-########################################################
 # Test ServerSideDecoration
 ########################################################
 set( testServerSideDecoration_SRCS
