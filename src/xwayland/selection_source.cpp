@@ -158,6 +158,11 @@ void X11Source::getTargets()
     xcb_flush(xcbConn);
 }
 
+static bool isSpecialSelectionTarget(xcb_atom_t atom)
+{
+    return atom == atoms->targets || atom == atoms->multiple || atom == atoms->timestamp || atom == atoms->save_targets;
+}
+
 void X11Source::handleTargets()
 {
     // receive targets
@@ -183,8 +188,7 @@ void X11Source::handleTargets()
     QStringList mimeTypes;
     xcb_atom_t *value = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
     for (xcb_atom_t value : std::span(value, reply->value_len)) {
-        // TARGETS and TIMESTAMP are special atoms that are included in the targets list.
-        if (value != atoms->targets && value != atoms->timestamp) {
+        if (!isSpecialSelectionTarget(value)) {
             mimeTypes += Xcb::atomToMimeTypes(value);
         }
     }

@@ -75,6 +75,8 @@ public:
     Xcb::Atom clipboard;
     Xcb::Atom timestamp;
     Xcb::Atom targets;
+    Xcb::Atom multiple;
+    Xcb::Atom save_targets;
     Xcb::Atom delete_atom;
     Xcb::Atom incr;
     Xcb::Atom wl_selection;
