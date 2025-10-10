@@ -13,7 +13,7 @@
 <author>
 <personname
 ><firstname
->Частину цієї документації було створено на основі сторінки UserBase KDE <ulink url="https://userbase.kde.org/KWin Rules"
+>Частину цієї документації було створено на основі сторінки UserBase KDE <ulink url="https://userbase.kde.org/KWin_Rules"
 >Правила KWin</ulink
 >. Згодом документацію оновлено командою з документування &kde;.</firstname
 > <surname
@@ -2210,7 +2210,7 @@
 <title
 >Авторські права та ліцензування</title>
       <para
->Список власників авторських прав на документацію до програми можна знайти у <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>Список власників авторських прав на документацію до програми можна знайти у <ulink url="https://userbase.kde.org/index.php?title=KWin_Rules&amp;action=history"
 >журналі сторінки KWin Rules</ulink
 > UserBase.</para>
       <para
