@@ -219,7 +219,6 @@ WlVisit::WlVisit(Window *target, XToWlDrag *drag, Dnd *dnd)
     workspace()->addManualOverlay(m_window);
     workspace()->updateStackingOrder(true);
 
-    xcb_flush(xcbConn);
     m_mapped = true;
 }
 
@@ -227,7 +226,6 @@ WlVisit::~WlVisit()
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_destroy_window(xcbConn, m_window);
-    xcb_flush(xcbConn);
 }
 
 bool WlVisit::leave()
@@ -410,7 +408,6 @@ void WlVisit::unmapProxyWindow()
     xcb_unmap_window(xcbConn, m_window);
     workspace()->removeManualOverlay(m_window);
     workspace()->updateStackingOrder(true);
-    xcb_flush(xcbConn);
     m_mapped = false;
 }
 

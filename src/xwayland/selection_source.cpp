@@ -147,15 +147,13 @@ X11Source::~X11Source()
 
 void X11Source::getTargets()
 {
-    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     /* will lead to a selection request event for the new owner */
-    xcb_convert_selection(xcbConn,
+    xcb_convert_selection(kwinApp()->x11Connection(),
                           window(),
                           selection()->atom(),
                           atoms->targets,
                           atoms->wl_selection,
                           timestamp());
-    xcb_flush(xcbConn);
 }
 
 static bool isSpecialSelectionTarget(xcb_atom_t atom)

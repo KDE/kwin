@@ -43,7 +43,6 @@ void Drag::sendClientMessage(xcb_window_t target, xcb_atom_t type, xcb_client_me
                    target,
                    XCB_EVENT_MASK_NO_EVENT,
                    reinterpret_cast<const char *>(&event));
-    xcb_flush(xcbConn);
 }
 
 } // namespace Xwl

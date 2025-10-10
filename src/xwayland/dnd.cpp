@@ -71,7 +71,6 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
                         atoms->xdnd_aware,
                         XCB_ATOM_ATOM,
                         32, 1, &s_version);
-    xcb_flush(xcbConn);
 
     connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &Dnd::startDrag);
     connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &Dnd::endDrag);
