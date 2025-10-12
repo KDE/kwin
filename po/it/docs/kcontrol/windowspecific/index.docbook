@@ -13,7 +13,7 @@
 <author>
 <personname
 ><firstname
->Parti di questa documentazione sono state convertite dalla pagina <ulink url="https://userbase.kde.org/KWin Rules"
+>Parti di questa documentazione sono state convertite dalla pagina <ulink url="https://userbase.kde.org/KWin_Rules"
 >Regole di KWin</ulink
 > di KDE UserBase e aggiornate dalla squadra di documentazione di &kde; a Plasma 5.8</firstname
 > <surname
@@ -2190,7 +2190,7 @@
 <title
 >Riconoscimenti e licenza</title>
       <para
->Per il copyright della documentazione vedi <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>Per il copyright della documentazione vedi <ulink url="https://userbase.kde.org/index.php?title=KWin_Rules&amp;action=history"
 >cronologia della pagina sulle regole di KWin</ulink
 > su UserBase.</para>
       <para
