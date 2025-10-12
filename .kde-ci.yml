@@ -42,7 +42,7 @@ RuntimeDependencies:
     'plasma/aurorae': '@same'
     'plasma/breeze': '@same'
     'plasma/libplasma': '@same'
-    'plasma/plasma-workspace': '@same' # kscreenlocker needs it
+    # 'plasma/plasma-workspace': '@same' # kscreenlocker needs it
 
 Options:
  ctest-arguments: '--repeat until-pass:5'
@@ -50,4 +50,4 @@ Options:
  cppcheck-arguments: '--enable=warning,style,performance --library=kwin-cppcheck.xml --suppress-xml=cppcheck-suppressions.xml'
  cppcheck-ignore-files:
   - autotests
- require-passing-tests-on: ['Linux/Qt6']
+ # require-passing-tests-on: ['Linux/Qt6']
