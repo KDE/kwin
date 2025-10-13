@@ -49,7 +49,9 @@ public:
     bool dragInhibitsPointer(SurfaceInterface *surface) const;
 
     void offerSelection(DataDeviceInterface *device);
+    void offerSelection(DataControlDeviceV1Interface *device);
     void offerPrimarySelection(PrimarySelectionDeviceV1Interface *device);
+    void offerPrimarySelection(DataControlDeviceV1Interface *device);
 
     SeatInterface *q;
     QPointer<Display> display;
