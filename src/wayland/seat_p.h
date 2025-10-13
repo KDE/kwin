@@ -103,7 +103,6 @@ public:
         struct Focus
         {
             QPointer<SurfaceInterface> surface;
-            quint32 serial = 0;
             QList<DataDeviceInterface *> selections;
             QList<PrimarySelectionDeviceV1Interface *> primarySelections;
         };
