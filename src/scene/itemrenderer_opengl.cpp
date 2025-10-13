@@ -401,9 +401,14 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         if (data.saturation() != 1.0) {
             traits |= ShaderTrait::AdjustSaturation;
         }
-        const auto colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
-        if (!colorTransformation.isIdentity()) {
+        if (data.brightness() != 1.0 || data.saturation() != 1.0) {
+            // make sure that brightness and saturation adjustments are always applied in linear space
             traits |= ShaderTrait::TransformColorspace;
+        } else {
+            const auto colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
+            if (!colorTransformation.isIdentity()) {
+                traits |= ShaderTrait::TransformColorspace;
+            }
         }
 
         if (renderNode.paintHole) {
