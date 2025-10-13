@@ -891,20 +891,14 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface, const Q
     }
 
     Q_EMIT focusedKeyboardSurfaceAboutToChange(surface);
-    const quint32 serial = d->display->nextSerial();
 
-    if (d->globalKeyboard.focus.surface) {
-        disconnect(d->globalKeyboard.focus.destroyConnection);
-    }
     d->globalKeyboard.focus = SeatInterfacePrivate::Keyboard::Focus();
     d->globalKeyboard.focus.surface = surface;
 
+    const quint32 serial = d->display->nextSerial();
     d->keyboard->setFocusedSurface(surface, keys, serial);
 
     if (d->globalKeyboard.focus.surface) {
-        d->globalKeyboard.focus.destroyConnection = connect(surface, &QObject::destroyed, this, [this]() {
-            d->globalKeyboard.focus = SeatInterfacePrivate::Keyboard::Focus();
-        });
         d->globalKeyboard.focus.serial = serial;
 
         const QList<DataDeviceInterface *> dataDevices = d->dataDevicesForSurface(surface);

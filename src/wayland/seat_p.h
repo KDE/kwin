@@ -102,8 +102,7 @@ public:
     {
         struct Focus
         {
-            SurfaceInterface *surface = nullptr;
-            QMetaObject::Connection destroyConnection;
+            QPointer<SurfaceInterface> surface;
             quint32 serial = 0;
             QList<DataDeviceInterface *> selections;
             QList<PrimarySelectionDeviceV1Interface *> primarySelections;
