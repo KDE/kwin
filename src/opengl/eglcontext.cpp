@@ -178,6 +178,8 @@ bool EglContext::makeCurrent(EGLSurface surface)
     if (ret) {
         s_currentContext = this;
     } else {
+        // QOpenGLContext::doneCurrent unset the context, we need to mirror that here!
+        s_currentContext = nullptr;
         qCWarning(KWIN_OPENGL, "Could not make egl context current! %s", qPrintable(getEglErrorString()));
     }
     return ret;
