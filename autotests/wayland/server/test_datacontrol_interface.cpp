@@ -135,6 +135,7 @@ class DataControlInterfaceTest : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
+    void initTestCase();
     void init();
     void cleanup();
     void testCopyToControl();
@@ -162,6 +163,11 @@ private:
 };
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-datacontrol-test-0");
+
+void DataControlInterfaceTest::initTestCase()
+{
+    qRegisterMetaType<::ext_data_control_offer_v1 *>();
+}
 
 void DataControlInterfaceTest::init()
 {
