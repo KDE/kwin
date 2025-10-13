@@ -240,26 +240,18 @@ void Workspace::setActiveWindow(Window *window)
         should_get_focus.clear();
     }
 
-    if (m_activeWindow != nullptr) {
-        // note that this may call setActiveWindow( NULL ), therefore the recursion counter
-        m_activeWindow->setActive(false);
-    }
+    Window *previousActiveWindow = m_activeWindow;
     m_activeWindow = window;
-    Q_ASSERT(window == nullptr || window->isActive());
+
+    if (previousActiveWindow) {
+        previousActiveWindow->setActive(false);
+    }
 
     if (m_activeWindow) {
         m_lastActiveWindow = m_activeWindow;
         m_focusChain->update(m_activeWindow, FocusChain::MakeFirst);
         m_activeWindow->demandAttention(false);
-
-        // activating a client can cause a non active fullscreen window to loose the ActiveLayer status on > 1 screens
-        if (outputs().count() > 1) {
-            for (auto it = m_windows.begin(); it != m_windows.end(); ++it) {
-                if (*it != m_activeWindow && (*it)->layer() == ActiveLayer && (*it)->output() == m_activeWindow->output()) {
-                    (*it)->updateLayer();
-                }
-            }
-        }
+        m_activeWindow->setActive(true);
     }
 
     if (window) {
@@ -267,8 +259,6 @@ void Workspace::setActiveWindow(Window *window)
     } else {
         disableGlobalShortcutsForClient(false);
     }
-
-    updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 
 #if KWIN_BUILD_X11
     if (rootInfo()) {

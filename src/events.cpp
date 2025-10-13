@@ -589,13 +589,13 @@ void X11Window::focusInEvent(xcb_focus_in_event_t *e)
     bool activate = allowWindowActivation(-1U, true);
     workspace()->gotFocusIn(this); // remove from should_get_focus list
     if (activate) {
-        setActive(true);
+        workspace()->setActiveWindow(this);
     } else {
         if (workspace()->restoreFocus()) {
             demandAttention();
         } else {
             qCWarning(KWIN_CORE, "Failed to restore focus. Activating 0x%x", window());
-            setActive(true);
+            workspace()->setActiveWindow(this);
         }
     }
 }
@@ -631,7 +631,9 @@ void X11Window::focusOutEvent(xcb_focus_out_event_t *e)
         m_focusOutTimer->setSingleShot(true);
         m_focusOutTimer->setInterval(0);
         connect(m_focusOutTimer, &QTimer::timeout, this, [this]() {
-            setActive(false);
+            if (workspace()->activeWindow() == this) {
+                workspace()->setActiveWindow(nullptr);
+            }
         });
     }
     m_focusOutTimer->start();

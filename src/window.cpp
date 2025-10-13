@@ -498,7 +498,6 @@ void Window::setActive(bool act)
         ? rules()->checkOpacityActive(qRound(opacity() * 100.0))
         : rules()->checkOpacityInactive(qRound(opacity() * 100.0));
     setOpacity(ruledOpacity / 100.0);
-    workspace()->setActiveWindow(act ? this : nullptr);
 
     if (!m_active) {
         cancelAutoRaise();

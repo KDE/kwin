@@ -954,7 +954,7 @@ bool XdgToplevelWindow::takeFocus()
 {
     if (wantsInput()) {
         sendPing(PingReason::FocusWindow);
-        setActive(true);
+        workspace()->setActiveWindow(this);
     }
     return true;
 }
