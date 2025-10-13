@@ -617,6 +617,8 @@ public:
     AbstractDataSource *primarySelection() const;
     void setPrimarySelection(AbstractDataSource *selection, quint32 serial);
 
+    void setFocusedDataDeviceSurface(SurfaceInterface *surface);
+
     /**
      * Attempts to start a drag-and-drop operation. The @a source specifies the source data source,
      * it may be @c null. The @a sourceSurface specifies the surface where the dnd operation origantes.
