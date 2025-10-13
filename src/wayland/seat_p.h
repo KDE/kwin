@@ -40,6 +40,7 @@ public:
 
     void sendCapabilities();
     QList<DataDeviceInterface *> dataDevicesForSurface(SurfaceInterface *surface) const;
+    QList<PrimarySelectionDeviceV1Interface *> primarySelectionDevicesForSurface(SurfaceInterface *surface) const;
     void registerPrimarySelectionDevice(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
     void registerDataDevice(DataDeviceInterface *dataDevice);
     void registerDataControlDevice(DataControlDeviceV1Interface *dataDevice);
