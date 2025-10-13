@@ -33,6 +33,14 @@ public:
     void sendAllOffers();
     wl_resource *resource() const;
 
+Q_SIGNALS:
+    /**
+     * This signal is emitted when the data offer is discarded by the client, for example
+     * due to the zwp_primary_selection_offer_v1.destroy request. It is not emitted when the
+     * data offer object is deleted by the compositor.
+     */
+    void discarded();
+
 private:
     friend class PrimarySelectionDeviceV1InterfacePrivate;
     explicit PrimarySelectionOfferV1Interface(AbstractDataSource *source, wl_resource *resource);

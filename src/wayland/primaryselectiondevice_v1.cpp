@@ -101,10 +101,11 @@ SeatInterface *PrimarySelectionDeviceV1Interface::seat() const
     return d->seat;
 }
 
-void PrimarySelectionDeviceV1Interface::sendSelection(AbstractDataSource *other)
+PrimarySelectionOfferV1Interface *PrimarySelectionDeviceV1Interface::sendSelection(AbstractDataSource *other)
 {
     PrimarySelectionOfferV1Interface *offer = d->createDataOffer(other);
     d->send_selection(offer ? offer->resource() : nullptr);
+    return offer;
 }
 
 wl_client *PrimarySelectionDeviceV1Interface::client() const
