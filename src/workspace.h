@@ -197,6 +197,7 @@ public:
     void stackAbove(Window *window, Window *reference);
     void raiseOrLowerWindow(Window *window);
     void updateStackingOrder(bool propagate_new_windows = false);
+    void forceRestacking();
 
     void constrain(Window *below, Window *above);
     void unconstrain(Window *below, Window *above);
@@ -655,6 +656,7 @@ private:
 
     QList<Window *> unconstrained_stacking_order; // Topmost last
     QList<Window *> stacking_order; // Topmost last
+    bool force_restacking;
     QList<Window *> should_get_focus; // Last is most recent
     QList<Window *> attention_chain;
 
@@ -666,6 +668,7 @@ private:
 #if KWIN_BUILD_X11
     QList<xcb_window_t> manual_overlays; // Topmost last
     std::unique_ptr<Xcb::Window> m_nullFocus;
+    std::unique_ptr<Xcb::Window> m_guardWindow;
     std::unique_ptr<X11EventFilter> m_syncAlarmFilter;
 #endif
 
@@ -816,6 +819,12 @@ inline bool Workspace::showingDesktop() const
 inline bool Workspace::globalShortcutsDisabled() const
 {
     return m_globalShortcutsDisabledForWindow;
+}
+
+inline void Workspace::forceRestacking()
+{
+    force_restacking = true;
+    StackingUpdatesBlocker blocker(this); // Do restacking if not blocked
 }
 
 inline void Workspace::updateFocusMousePosition(const QPointF &pos)
