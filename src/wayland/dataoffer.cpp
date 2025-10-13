@@ -151,6 +151,7 @@ void DataOfferInterface::sendSourceActions()
 
 void DataOfferInterfacePrivate::data_offer_destroy_resource(QtWaylandServer::wl_data_offer::Resource *resource)
 {
+    Q_EMIT q->discarded();
     delete q;
 }
 

@@ -441,7 +441,6 @@ void SelectionTest::receiveFromWithdrawnSelectionOffer()
 
     const QFuture<QByteArray> emptyData = readMimeTypeData(offer, plainText);
     QVERIFY(waitFuture(emptyData));
-    QEXPECT_FAIL("", "data offers are incorrectly managed now", Continue);
     QCOMPARE(emptyData.result(), QByteArray());
 }
 
@@ -774,7 +773,6 @@ void SelectionTest::receiveFromWithdrawnPrimarySelectionOffer()
 
     const QFuture<QByteArray> emptyData = readMimeTypeData(offer, plainText);
     QVERIFY(waitFuture(emptyData));
-    QEXPECT_FAIL("", "data offers are incorrectly managed now", Continue);
     QCOMPARE(emptyData.result(), QByteArray());
 }
 

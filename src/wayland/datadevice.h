@@ -84,7 +84,7 @@ public:
 
     SeatInterface *seat() const;
 
-    void sendSelection(KWin::AbstractDataSource *other);
+    DataOfferInterface *sendSelection(KWin::AbstractDataSource *other);
     /**
      * The event is sent when a drag-and-drop operation is ended because the implicit grab is removed.
      */
