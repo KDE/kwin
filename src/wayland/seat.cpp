@@ -898,8 +898,6 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface, const Q
     d->keyboard->setFocusedSurface(surface, keys, serial);
 
     if (d->globalKeyboard.focus.surface) {
-        d->globalKeyboard.focus.serial = serial;
-
         const QList<DataDeviceInterface *> dataDevices = d->dataDevicesForSurface(surface);
         d->globalKeyboard.focus.selections = dataDevices;
         for (auto dataDevice : dataDevices) {
