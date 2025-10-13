@@ -141,6 +141,20 @@ QList<DataDeviceInterface *> SeatInterfacePrivate::dataDevicesForSurface(Surface
     return primarySelectionDevices;
 }
 
+QList<PrimarySelectionDeviceV1Interface *> SeatInterfacePrivate::primarySelectionDevicesForSurface(SurfaceInterface *surface) const
+{
+    if (!surface) {
+        return {};
+    }
+    QList<PrimarySelectionDeviceV1Interface *> devices;
+    for (auto it = primarySelectionDevices.constBegin(); it != primarySelectionDevices.constEnd(); ++it) {
+        if ((*it)->client() == *surface->client()) {
+            devices << *it;
+        }
+    }
+    return devices;
+}
+
 void SeatInterfacePrivate::registerDataDevice(DataDeviceInterface *dataDevice)
 {
     Q_ASSERT(dataDevice->seat() == q);
@@ -891,20 +905,14 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface, const Q
             d->globalKeyboard.focus = SeatInterfacePrivate::Keyboard::Focus();
         });
         d->globalKeyboard.focus.serial = serial;
-        // selection?
+
         const QList<DataDeviceInterface *> dataDevices = d->dataDevicesForSurface(surface);
         d->globalKeyboard.focus.selections = dataDevices;
         for (auto dataDevice : dataDevices) {
             dataDevice->sendSelection(d->currentSelection);
         }
-        // primary selection
-        QList<PrimarySelectionDeviceV1Interface *> primarySelectionDevices;
-        for (auto it = d->primarySelectionDevices.constBegin(); it != d->primarySelectionDevices.constEnd(); ++it) {
-            if ((*it)->client() == *surface->client()) {
-                primarySelectionDevices << *it;
-            }
-        }
 
+        const QList<PrimarySelectionDeviceV1Interface *> primarySelectionDevices = d->primarySelectionDevicesForSurface(surface);
         d->globalKeyboard.focus.primarySelections = primarySelectionDevices;
         for (auto primaryDataDevice : primarySelectionDevices) {
             primaryDataDevice->sendSelection(d->currentPrimarySelection);
