@@ -46,6 +46,7 @@ void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_des
 void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_destroy_resource(
     QtWaylandServer::zwp_primary_selection_offer_v1::Resource *resource)
 {
+    Q_EMIT q->discarded();
     delete q;
 }
 

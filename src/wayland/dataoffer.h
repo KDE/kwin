@@ -52,6 +52,12 @@ public:
 
 Q_SIGNALS:
     /**
+     * This signal is emitted when the data offer is discarded by the client, for example
+     * due to the wl_data_offer.destroy request. It is not emitted when the data offer object is deleted
+     * by the compositor.
+     */
+    void discarded();
+    /**
      * Emitted whenever the supported or preferred Drag and Drop actions changed.
      */
     void dragAndDropActionsChanged();

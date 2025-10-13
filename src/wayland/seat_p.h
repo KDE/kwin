@@ -22,12 +22,14 @@ namespace KWin
 {
 class AbstractDataSource;
 class DataDeviceInterface;
+class DataOfferInterface;
 class DataSourceInterface;
 class DataControlDeviceV1Interface;
 class TextInputV1Interface;
 class TextInputV2Interface;
 class TextInputV3Interface;
 class PrimarySelectionDeviceV1Interface;
+class PrimarySelectionOfferV1Interface;
 class PrimarySelectionSourceV1Interface;
 class DragAndDropIcon;
 
@@ -45,6 +47,9 @@ public:
     void registerDataDevice(DataDeviceInterface *dataDevice);
     void registerDataControlDevice(DataControlDeviceV1Interface *dataDevice);
     bool dragInhibitsPointer(SurfaceInterface *surface) const;
+
+    void offerSelection(DataDeviceInterface *device);
+    void offerPrimarySelection(PrimarySelectionDeviceV1Interface *device);
 
     SeatInterface *q;
     QPointer<Display> display;
@@ -104,7 +109,9 @@ public:
         {
             QPointer<SurfaceInterface> surface;
             QList<DataDeviceInterface *> selections;
+            QList<DataOfferInterface *> selectionOffers;
             QList<PrimarySelectionDeviceV1Interface *> primarySelections;
+            QList<PrimarySelectionOfferV1Interface *> primarySelectionOffers;
         };
         Focus focus;
     };
