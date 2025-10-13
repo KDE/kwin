@@ -156,6 +156,7 @@ public:
     bool providesContextHelp() const override;
 
     void updateVisibility();
+    bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
 
     QString captionNormal() const override
     {
@@ -321,6 +322,7 @@ private:
 
     void internalShow();
     void internalHide();
+    void internalKeep();
     void map();
     void unmap();
 
@@ -356,6 +358,7 @@ private:
         Withdrawn, ///< Not handled, as per ICCCM WithdrawnState
         Mapped, ///< The frame is mapped
         Unmapped, ///< The frame is not mapped
+        Kept ///< The frame should be unmapped, but is kept (For compositing)
     };
     MappingState mapping_state;
 
@@ -518,6 +521,11 @@ inline RectF X11Window::resizeWithChecks(const RectF &geometry, const QSizeF &s,
 inline bool X11Window::hasUserTimeSupport() const
 {
     return info->userTime() != -1U;
+}
+
+inline bool X11Window::hiddenPreview() const
+{
+    return mapping_state == Kept;
 }
 
 inline quint64 X11Window::surfaceSerial() const

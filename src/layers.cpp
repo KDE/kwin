@@ -100,7 +100,8 @@ void Workspace::updateStackingOrder(bool propagate_new_windows)
         return;
     }
     QList<Window *> new_stacking_order = constrainedStackingOrder();
-    bool changed = new_stacking_order != stacking_order;
+    bool changed = (force_restacking || new_stacking_order != stacking_order);
+    force_restacking = false;
     stacking_order = new_stacking_order;
     if (changed || propagate_new_windows) {
 #if KWIN_BUILD_X11
@@ -143,10 +144,23 @@ void Workspace::propagateWindows(bool propagate_new_windows)
 
     for (int i = stacking_order.size() - 1; i >= 0; --i) {
         X11Window *window = qobject_cast<X11Window *>(stacking_order.at(i));
-        if (!window || window->isDeleted() || window->isUnmanaged()) {
+        if (!window || window->isDeleted() || window->isUnmanaged() || window->hiddenPreview()) {
             continue;
         }
 
+        newWindowStack << window->window();
+    }
+
+    newWindowStack << *m_guardWindow;
+
+    // when having hidden previews, stack hidden windows below everything else
+    // (as far as pure X stacking order is concerned), in order to avoid having
+    // these windows that should be unmapped to interfere with other windows
+    for (int i = stacking_order.size() - 1; i >= 0; --i) {
+        X11Window *window = qobject_cast<X11Window *>(stacking_order.at(i));
+        if (!window || window->isDeleted() || window->isUnmanaged() || !window->hiddenPreview()) {
+            continue;
+        }
         newWindowStack << window->window();
     }
 

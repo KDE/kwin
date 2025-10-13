@@ -1182,11 +1182,11 @@ void X11Window::updateVisibility()
     }
     info->setState(NET::States(), NET::Hidden);
     if (!isOnCurrentDesktop()) {
-        internalHide();
+        internalKeep();
         return;
     }
     if (!isOnCurrentActivity()) {
-        internalHide();
+        internalKeep();
         return;
     }
     internalShow();
@@ -1222,6 +1222,9 @@ void X11Window::internalShow()
     if (old == Unmapped || old == Withdrawn) {
         map();
     }
+    if (old == Kept) {
+        workspace()->forceRestacking();
+    }
 }
 
 void X11Window::internalHide()
@@ -1231,9 +1234,28 @@ void X11Window::internalHide()
     }
     MappingState old = mapping_state;
     mapping_state = Unmapped;
-    if (old == Mapped) {
+    if (old == Mapped || old == Kept) {
         unmap();
     }
+    if (old == Kept) {
+        workspace()->forceRestacking();
+    }
+}
+
+void X11Window::internalKeep()
+{
+    if (mapping_state == Kept) {
+        return;
+    }
+    MappingState old = mapping_state;
+    mapping_state = Kept;
+    if (old == Unmapped || old == Withdrawn) {
+        map();
+    }
+    if (isActive()) {
+        workspace()->focusToNull(); // get rid of input focus, bug #317484
+    }
+    workspace()->forceRestacking();
 }
 
 void X11Window::map()

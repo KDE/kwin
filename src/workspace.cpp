@@ -111,6 +111,7 @@ Workspace::Workspace()
     , m_lastActiveWindow(nullptr)
     , m_moveResizeWindow(nullptr)
     , m_delayFocusWindow(nullptr)
+    , force_restacking(false)
     , showing_desktop(false)
     , was_user_interaction(false)
     , block_focus(0)
@@ -408,6 +409,10 @@ void Workspace::initializeX11()
     m_nullFocus = std::make_unique<Xcb::Window>(Rect(-1, -1, 1, 1), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, nullFocusValues);
     m_nullFocus->map();
 
+    const uint32_t guardWindowValues[] = {true};
+    m_guardWindow = std::make_unique<Xcb::Window>(Xcb::toXNative(geometry()), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, guardWindowValues);
+    m_guardWindow->map();
+
     RootInfo *rootInfo = RootInfo::create();
     rootInfo->activate();
 
@@ -455,6 +460,7 @@ void Workspace::cleanupX11()
 
     m_startup.reset();
     m_nullFocus.reset();
+    m_guardWindow.reset();
     m_syncAlarmFilter.reset();
 }
 #endif
@@ -2215,6 +2221,10 @@ void Workspace::desktopResized()
         desktop_geometry.width = Xcb::toXNative(m_geometry.width());
         desktop_geometry.height = Xcb::toXNative(m_geometry.height());
         rootInfo()->setDesktopGeometry(desktop_geometry);
+    }
+
+    if (m_guardWindow) {
+        m_guardWindow->setGeometry(Xcb::toXNative(geometry()));
     }
 #endif
 
