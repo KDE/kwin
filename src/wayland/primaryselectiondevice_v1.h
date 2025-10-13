@@ -40,7 +40,7 @@ public:
 
     PrimarySelectionSourceV1Interface *selection() const;
 
-    void sendSelection(AbstractDataSource *other);
+    PrimarySelectionOfferV1Interface *sendSelection(AbstractDataSource *other);
 
     wl_client *client() const;
 

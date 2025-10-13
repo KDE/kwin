@@ -183,10 +183,11 @@ DataSourceInterface *DataDeviceInterface::selection() const
     return d->selection;
 }
 
-void DataDeviceInterface::sendSelection(AbstractDataSource *other)
+DataOfferInterface *DataDeviceInterface::sendSelection(AbstractDataSource *other)
 {
     auto r = other ? d->createDataOffer(other) : nullptr;
     d->send_selection(r ? r->resource() : nullptr);
+    return r;
 }
 
 void DataDeviceInterface::drop()
