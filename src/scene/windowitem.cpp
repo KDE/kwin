@@ -201,6 +201,8 @@ void WindowItem::addSurfaceItemDamageConnects(Item *item)
     auto surfaceItem = static_cast<SurfaceItem *>(item);
     connect(surfaceItem, &SurfaceItem::damaged, this, &WindowItem::markDamaged);
     connect(surfaceItem, &SurfaceItem::childAdded, this, &WindowItem::addSurfaceItemDamageConnects);
+    connect(surfaceItem, &SurfaceItem::childRemoved, this, &WindowItem::markDamaged);
+    connect(surfaceItem, &SurfaceItem::visibleChanged, this, &WindowItem::markDamaged);
     const auto childItems = item->childItems();
     for (const auto &child : childItems) {
         addSurfaceItemDamageConnects(child);

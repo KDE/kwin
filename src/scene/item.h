@@ -172,6 +172,8 @@ public:
 
 Q_SIGNALS:
     void childAdded(Item *item);
+    void childRemoved(Item *item);
+    void visibleChanged();
     /**
      * This signal is emitted when the position of this item has changed.
      */
