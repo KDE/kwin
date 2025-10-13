@@ -912,10 +912,7 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface, const Q
         d->offerPrimarySelection(device);
     }
 
-    // focused text input surface follows keyboard
-    if (hasKeyboard()) {
-        setFocusedTextInputSurface(surface);
-    }
+    setFocusedTextInputSurface(surface);
 }
 
 void SeatInterfacePrivate::offerSelection(DataDeviceInterface *device)
