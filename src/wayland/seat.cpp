@@ -163,7 +163,7 @@ void SeatInterfacePrivate::registerDataDevice(DataDeviceInterface *dataDevice)
     dataDevices << dataDevice;
     auto dataDeviceCleanup = [this, dataDevice] {
         dataDevices.removeOne(dataDevice);
-        globalKeyboard.focus.selections.removeOne(dataDevice);
+        globalDataDevice.selections.removeOne(dataDevice);
     };
     QObject::connect(dataDevice, &QObject::destroyed, q, dataDeviceCleanup);
     QObject::connect(dataDevice, &DataDeviceInterface::selectionChanged, q, [this](DataSourceInterface *source, quint32 serial) {
@@ -171,14 +171,10 @@ void SeatInterfacePrivate::registerDataDevice(DataDeviceInterface *dataDevice)
     });
     QObject::connect(dataDevice, &DataDeviceInterface::dragRequested, q, &SeatInterface::dragRequested);
 
-    // is the new DataDevice for the current keyoard focus?
-    if (globalKeyboard.focus.surface) {
-        // same client?
-        if (*globalKeyboard.focus.surface->client() == dataDevice->client()) {
-            globalKeyboard.focus.selections.append(dataDevice);
-            if (currentSelection) {
-                offerSelection(dataDevice);
-            }
+    if (globalDataDevice.client && *globalDataDevice.client == dataDevice->client()) {
+        globalDataDevice.selections.append(dataDevice);
+        if (currentSelection) {
+            offerSelection(dataDevice);
         }
     }
 }
@@ -289,20 +285,17 @@ void SeatInterfacePrivate::registerPrimarySelectionDevice(PrimarySelectionDevice
     primarySelectionDevices << primarySelectionDevice;
     auto dataDeviceCleanup = [this, primarySelectionDevice] {
         primarySelectionDevices.removeOne(primarySelectionDevice);
-        globalKeyboard.focus.primarySelections.removeOne(primarySelectionDevice);
+        globalDataDevice.primarySelections.removeOne(primarySelectionDevice);
     };
     QObject::connect(primarySelectionDevice, &QObject::destroyed, q, dataDeviceCleanup);
     QObject::connect(primarySelectionDevice, &PrimarySelectionDeviceV1Interface::selectionChanged, q, [this](PrimarySelectionSourceV1Interface *source, quint32 serial) {
         updatePrimarySelection(source, serial);
     });
-    // is the new DataDevice for the current keyoard focus?
-    if (globalKeyboard.focus.surface) {
-        // same client?
-        if (*globalKeyboard.focus.surface->client() == primarySelectionDevice->client()) {
-            globalKeyboard.focus.primarySelections.append(primarySelectionDevice);
-            if (currentPrimarySelection) {
-                offerPrimarySelection(primarySelectionDevice);
-            }
+
+    if (globalDataDevice.client && *globalDataDevice.client == primarySelectionDevice->client()) {
+        globalDataDevice.primarySelections.append(primarySelectionDevice);
+        if (currentPrimarySelection) {
+            offerPrimarySelection(primarySelectionDevice);
         }
     }
 }
@@ -894,56 +887,11 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface, const Q
 
     Q_EMIT focusedKeyboardSurfaceAboutToChange(surface);
 
-    qDeleteAll(d->globalKeyboard.focus.selectionOffers);
-    d->globalKeyboard.focus.selectionOffers.clear();
-
-    qDeleteAll(d->globalKeyboard.focus.primarySelectionOffers);
-    d->globalKeyboard.focus.primarySelectionOffers.clear();
-
     d->globalKeyboard.focus.surface = surface;
     d->keyboard->setFocusedSurface(surface, keys, d->display->nextSerial());
 
-    d->globalKeyboard.focus.selections = d->dataDevicesForSurface(surface);
-    for (DataDeviceInterface *device : std::as_const(d->globalKeyboard.focus.selections)) {
-        d->offerSelection(device);
-    }
-
-    d->globalKeyboard.focus.primarySelections = d->primarySelectionDevicesForSurface(surface);
-    for (PrimarySelectionDeviceV1Interface *device : std::as_const(d->globalKeyboard.focus.primarySelections)) {
-        d->offerPrimarySelection(device);
-    }
-
+    setFocusedDataDeviceSurface(surface);
     setFocusedTextInputSurface(surface);
-}
-
-void SeatInterfacePrivate::offerSelection(DataDeviceInterface *device)
-{
-    if (DataOfferInterface *offer = device->sendSelection(currentSelection)) {
-        globalKeyboard.focus.selectionOffers.append(offer);
-        QObject::connect(offer, &DataOfferInterface::discarded, q, [this, offer]() {
-            globalKeyboard.focus.selectionOffers.removeOne(offer);
-        });
-    }
-}
-
-void SeatInterfacePrivate::offerSelection(DataControlDeviceV1Interface *device)
-{
-    device->sendSelection(currentSelection);
-}
-
-void SeatInterfacePrivate::offerPrimarySelection(PrimarySelectionDeviceV1Interface *device)
-{
-    if (PrimarySelectionOfferV1Interface *offer = device->sendSelection(currentPrimarySelection)) {
-        globalKeyboard.focus.primarySelectionOffers.append(offer);
-        QObject::connect(offer, &PrimarySelectionOfferV1Interface::discarded, q, [this, offer]() {
-            globalKeyboard.focus.primarySelectionOffers.removeOne(offer);
-        });
-    }
-}
-
-void SeatInterfacePrivate::offerPrimarySelection(DataControlDeviceV1Interface *device)
-{
-    device->sendPrimarySelection(currentPrimarySelection);
 }
 
 KeyboardInterface *SeatInterface::keyboard() const
@@ -1226,8 +1174,8 @@ void SeatInterface::setSelection(AbstractDataSource *selection, quint32 serial)
     }
 
     if (d->currentSelection) {
-        qDeleteAll(d->globalKeyboard.focus.selectionOffers);
-        d->globalKeyboard.focus.selectionOffers.clear();
+        qDeleteAll(d->globalDataDevice.selectionOffers);
+        d->globalDataDevice.selectionOffers.clear();
 
         d->currentSelection->cancel();
         disconnect(d->currentSelection, nullptr, this, nullptr);
@@ -1243,7 +1191,7 @@ void SeatInterface::setSelection(AbstractDataSource *selection, quint32 serial)
     d->currentSelection = selection;
     d->currentSelectionSerial = serial;
 
-    for (auto focussedSelection : std::as_const(d->globalKeyboard.focus.selections)) {
+    for (auto focussedSelection : std::as_const(d->globalDataDevice.selections)) {
         d->offerSelection(focussedSelection);
     }
 
@@ -1265,8 +1213,8 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection, quint32 s
         return;
     }
     if (d->currentPrimarySelection) {
-        qDeleteAll(d->globalKeyboard.focus.primarySelectionOffers);
-        d->globalKeyboard.focus.primarySelectionOffers.clear();
+        qDeleteAll(d->globalDataDevice.primarySelectionOffers);
+        d->globalDataDevice.primarySelectionOffers.clear();
 
         d->currentPrimarySelection->cancel();
         disconnect(d->currentPrimarySelection, nullptr, this, nullptr);
@@ -1282,7 +1230,7 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection, quint32 s
     d->currentPrimarySelection = selection;
     d->currentPrimarySelectionSerial = serial;
 
-    for (auto focussedSelection : std::as_const(d->globalKeyboard.focus.primarySelections)) {
+    for (auto focussedSelection : std::as_const(d->globalDataDevice.primarySelections)) {
         d->offerPrimarySelection(focussedSelection);
     }
     for (auto control : std::as_const(d->dataControlDevices)) {
@@ -1290,6 +1238,62 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection, quint32 s
     }
 
     Q_EMIT primarySelectionChanged(selection);
+}
+
+void SeatInterface::setFocusedDataDeviceSurface(SurfaceInterface *surface)
+{
+    ClientConnection *client = surface ? surface->client() : nullptr;
+    if (d->globalDataDevice.client == client) {
+        return;
+    }
+
+    d->globalDataDevice.client = client;
+
+    qDeleteAll(d->globalDataDevice.selectionOffers);
+    d->globalDataDevice.selectionOffers.clear();
+
+    qDeleteAll(d->globalDataDevice.primarySelectionOffers);
+    d->globalDataDevice.primarySelectionOffers.clear();
+
+    d->globalDataDevice.selections = d->dataDevicesForSurface(surface);
+    for (DataDeviceInterface *device : std::as_const(d->globalDataDevice.selections)) {
+        d->offerSelection(device);
+    }
+
+    d->globalDataDevice.primarySelections = d->primarySelectionDevicesForSurface(surface);
+    for (PrimarySelectionDeviceV1Interface *device : std::as_const(d->globalDataDevice.primarySelections)) {
+        d->offerPrimarySelection(device);
+    }
+}
+
+void SeatInterfacePrivate::offerSelection(DataDeviceInterface *device)
+{
+    if (DataOfferInterface *offer = device->sendSelection(currentSelection)) {
+        globalDataDevice.selectionOffers.append(offer);
+        QObject::connect(offer, &DataOfferInterface::discarded, q, [this, offer]() {
+            globalDataDevice.selectionOffers.removeOne(offer);
+        });
+    }
+}
+
+void SeatInterfacePrivate::offerSelection(DataControlDeviceV1Interface *device)
+{
+    device->sendSelection(currentSelection);
+}
+
+void SeatInterfacePrivate::offerPrimarySelection(PrimarySelectionDeviceV1Interface *device)
+{
+    if (PrimarySelectionOfferV1Interface *offer = device->sendSelection(currentPrimarySelection)) {
+        globalDataDevice.primarySelectionOffers.append(offer);
+        QObject::connect(offer, &PrimarySelectionOfferV1Interface::discarded, q, [this, offer]() {
+            globalDataDevice.primarySelectionOffers.removeOne(offer);
+        });
+    }
+}
+
+void SeatInterfacePrivate::offerPrimarySelection(DataControlDeviceV1Interface *device)
+{
+    device->sendPrimarySelection(currentPrimarySelection);
 }
 
 bool SeatInterfacePrivate::startDrag(Drag::Mode mode, AbstractDataSource *dragSource, SurfaceInterface *originSurface, const QPointF &position, const QMatrix4x4 &inputTransformation, quint32 dragSerial, DragAndDropIcon *dragIcon)
