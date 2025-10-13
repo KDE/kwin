@@ -258,7 +258,7 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
         const bool isKlipperEmptyReplacement = dataDevice->selection() && dataDevice->selection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty"));
         if (isKlipperEmptyReplacement && currentSelection && !currentSelection->mimeTypes().isEmpty()) {
             dataDevice->selection()->cancel();
-            dataDevice->sendSelection(currentSelection);
+            offerSelection(dataDevice);
             return;
         }
         q->setSelection(dataDevice->selection(), display->nextSerial());
@@ -272,14 +272,14 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
         const bool isKlipperEmptyReplacement = dataDevice->primarySelection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty"));
         if (isKlipperEmptyReplacement && currentPrimarySelection && !currentPrimarySelection->mimeTypes().isEmpty()) {
             dataDevice->primarySelection()->cancel();
-            dataDevice->sendPrimarySelection(currentPrimarySelection);
+            offerPrimarySelection(dataDevice);
             return;
         }
         q->setPrimarySelection(dataDevice->primarySelection(), display->nextSerial());
     });
 
-    dataDevice->sendSelection(currentSelection);
-    dataDevice->sendPrimarySelection(currentPrimarySelection);
+    offerSelection(dataDevice);
+    offerPrimarySelection(dataDevice);
 }
 
 void SeatInterfacePrivate::registerPrimarySelectionDevice(PrimarySelectionDeviceV1Interface *primarySelectionDevice)
@@ -929,6 +929,11 @@ void SeatInterfacePrivate::offerSelection(DataDeviceInterface *device)
     }
 }
 
+void SeatInterfacePrivate::offerSelection(DataControlDeviceV1Interface *device)
+{
+    device->sendSelection(currentSelection);
+}
+
 void SeatInterfacePrivate::offerPrimarySelection(PrimarySelectionDeviceV1Interface *device)
 {
     if (PrimarySelectionOfferV1Interface *offer = device->sendSelection(currentPrimarySelection)) {
@@ -937,6 +942,11 @@ void SeatInterfacePrivate::offerPrimarySelection(PrimarySelectionDeviceV1Interfa
             globalKeyboard.focus.primarySelectionOffers.removeOne(offer);
         });
     }
+}
+
+void SeatInterfacePrivate::offerPrimarySelection(DataControlDeviceV1Interface *device)
+{
+    device->sendPrimarySelection(currentPrimarySelection);
 }
 
 KeyboardInterface *SeatInterface::keyboard() const
@@ -1241,7 +1251,7 @@ void SeatInterface::setSelection(AbstractDataSource *selection, quint32 serial)
     }
 
     for (auto control : std::as_const(d->dataControlDevices)) {
-        control->sendSelection(selection);
+        d->offerSelection(control);
     }
 
     Q_EMIT selectionChanged(selection);
@@ -1279,7 +1289,7 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection, quint32 s
         d->offerPrimarySelection(focussedSelection);
     }
     for (auto control : std::as_const(d->dataControlDevices)) {
-        control->sendPrimarySelection(selection);
+        d->offerPrimarySelection(control);
     }
 
     Q_EMIT primarySelectionChanged(selection);
