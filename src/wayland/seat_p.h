@@ -110,14 +110,20 @@ public:
         struct Focus
         {
             QPointer<SurfaceInterface> surface;
-            QList<DataDeviceInterface *> selections;
-            QList<DataOfferInterface *> selectionOffers;
-            QList<PrimarySelectionDeviceV1Interface *> primarySelections;
-            QList<PrimarySelectionOfferV1Interface *> primarySelectionOffers;
         };
         Focus focus;
     };
     Keyboard globalKeyboard;
+
+    struct DataDevice
+    {
+        QPointer<ClientConnection> client;
+        QList<DataDeviceInterface *> selections;
+        QList<DataOfferInterface *> selectionOffers;
+        QList<PrimarySelectionDeviceV1Interface *> primarySelections;
+        QList<PrimarySelectionOfferV1Interface *> primarySelectionOffers;
+    };
+    DataDevice globalDataDevice;
 
     struct Drag
     {
