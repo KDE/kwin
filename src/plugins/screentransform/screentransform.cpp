@@ -93,8 +93,24 @@ void ScreenTransformEffect::addScreen(Output *screen)
         auto &state = m_states[screen];
         state.m_oldTransform = screen->transform();
         state.m_oldGeometry = screen->geometry();
-        state.m_timeLine.setDuration(std::chrono::milliseconds(long(animationTime(250ms))));
-        state.m_timeLine.setEasingCurve(QEasingCurve::InOutCubic);
+        state.m_rotateTimeLine.setDuration(std::chrono::milliseconds(long(animationTime(400ms))));
+        state.m_rotateTimeLine.setEasingCurve(QEasingCurve::InOutCubic);
+
+        state.m_blendTimeLine.setDuration(std::chrono::milliseconds(long(animationTime(400ms))));
+        // create an easing curve that does nothing for half the timeline, then eases
+        // this is because we need the rotated wallpaper loaded when we start blending or we see a non-smooth snap
+        QEasingCurve deferredCubic;
+        deferredCubic.setCustomType([](qreal t) -> qreal {
+            if (t < 0.5) {
+                return 0.0;
+            } else {
+                QEasingCurve cubic(QEasingCurve::InOutCubic);
+                qreal mappedT = (t - 0.5) * 2.0;
+                return cubic.valueForProgress(mappedT);
+            }
+        });
+        state.m_blendTimeLine.setEasingCurve(deferredCubic);
+
         state.m_angle = transformAngle(changeSet->transform.value(), state.m_oldTransform);
         state.m_prev.texture = std::move(texture);
         state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
@@ -123,8 +139,10 @@ void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
 {
     auto it = m_states.find(data.screen);
     if (it != m_states.end()) {
-        it->m_timeLine.advance(presentTime);
-        if (it->m_timeLine.done()) {
+        it->m_rotateTimeLine.advance(presentTime);
+        it->m_blendTimeLine.advance(presentTime);
+
+        if (it->m_rotateTimeLine.done()) {
             m_states.remove(data.screen);
         }
     }
@@ -218,9 +236,9 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     effects->paintScreen(fboRenderTarget, fboViewport, mask, region, screen);
     GLFramebuffer::popFramebuffer();
 
-    const qreal blendFactor = it->m_timeLine.value();
+    const qreal blendFactor = it->m_blendTimeLine.value();
     const QRectF screenRect = screen->geometry();
-    const qreal angle = it->m_angle * (1 - blendFactor);
+    const qreal angle = it->m_angle * (1 - it->m_rotateTimeLine.value());
 
     const auto scale = viewport.scale();
 

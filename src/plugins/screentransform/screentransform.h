@@ -46,7 +46,8 @@ private:
 
     struct ScreenState
     {
-        TimeLine m_timeLine;
+        TimeLine m_rotateTimeLine;
+        TimeLine m_blendTimeLine;
         Snapshot m_prev;
         Snapshot m_current;
         QRect m_oldGeometry;
