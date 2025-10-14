@@ -2427,7 +2427,9 @@ Output *Workspace::activeOutput() const
 
 void Workspace::setActiveOutput(Output *output)
 {
-    Q_ASSERT(m_outputs.contains(output));
+    if (!m_outputs.contains(output)) {
+        qFatal("unknown active output");
+    }
     m_activeOutput = output;
 }
 
