@@ -78,6 +78,7 @@ private Q_SLOTS:
     void invalidSerialForSelection();
     void unsetSupersededSelection();
     void receiveFromWithdrawnSelectionOffer();
+    void singleSelectionPerClient();
 
     void primarySelection();
     void internalPrimarySelection();
@@ -85,6 +86,7 @@ private Q_SLOTS:
     void invalidSerialForPrimarySelection();
     void unsetSupersededPrimarySelection();
     void receiveFromWithdrawnPrimarySelectionOffer();
+    void singlePrimarySelectionPerClient();
 
 private:
     QMimeDatabase m_mimeDatabase;
@@ -444,6 +446,120 @@ void SelectionTest::receiveFromWithdrawnSelectionOffer()
     QCOMPARE(emptyData.result(), QByteArray());
 }
 
+void SelectionTest::singleSelectionPerClient()
+{
+    // This test verifies that only one selection event will be sent when switching between two
+    // surfaces that belong to the same client.
+
+    const QMimeType plainText = m_mimeDatabase.mimeTypeForName(QStringLiteral("text/plain"));
+
+    // Setup the first client.
+    auto firstConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::DataDeviceManager);
+    QVERIFY(Test::waitForWaylandKeyboard(firstConnection->seat));
+
+    std::unique_ptr<KWayland::Client::Keyboard> firstKeyboard(firstConnection->seat->createKeyboard());
+    std::unique_ptr<KWayland::Client::DataDevice> firstDataDevice(firstConnection->dataDeviceManager->getDataDevice(firstConnection->seat));
+    std::unique_ptr<KWayland::Client::DataSource> firstDataSource(firstConnection->dataDeviceManager->createDataSource());
+    firstDataSource->offer(plainText);
+    connect(firstDataSource.get(), &KWayland::Client::DataSource::sendDataRequested, this, [](const QString &mimeType, int fd) {
+        const auto data = QByteArrayLiteral("foo");
+        write(fd, data.data(), data.size());
+        close(fd);
+    });
+
+    auto firstSurface = Test::createSurface(firstConnection->compositor);
+    auto firstShellSurface = Test::createXdgToplevelSurface(firstConnection->xdgShell, firstSurface.get());
+    auto firstWindow = Test::renderAndWaitForShown(firstConnection->shm, firstSurface.get(), QSize(100, 100), Qt::red);
+
+    // Setup the second client.
+    auto secondConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::DataDeviceManager);
+    QVERIFY(Test::waitForWaylandKeyboard(secondConnection->seat));
+
+    std::unique_ptr<KWayland::Client::Keyboard> secondKeyboard(secondConnection->seat->createKeyboard());
+    std::unique_ptr<KWayland::Client::DataDevice> secondDataDevice(secondConnection->dataDeviceManager->getDataDevice(secondConnection->seat));
+
+    auto secondSurface = Test::createSurface(secondConnection->compositor);
+    auto secondShellSurface = Test::createXdgToplevelSurface(secondConnection->xdgShell, secondSurface.get());
+    auto secondWindow = Test::renderAndWaitForShown(secondConnection->shm, secondSurface.get(), QSize(100, 100), Qt::blue);
+
+    auto thirdSurface = Test::createSurface(secondConnection->compositor);
+    auto thirdShellSurface = Test::createXdgToplevelSurface(secondConnection->xdgShell, thirdSurface.get());
+    auto thirdWindow = Test::renderAndWaitForShown(secondConnection->shm, thirdSurface.get(), QSize(100, 100), Qt::green);
+
+    // Activate the first window and set the selection.
+    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    workspace()->activateWindow(firstWindow);
+    QVERIFY(firstKeyboardEnteredSpy.wait());
+    const quint32 firstEnteredSerial = firstKeyboardEnteredSpy.last().at(0).value<quint32>();
+    firstDataDevice->setSelection(firstEnteredSerial, firstDataSource.get());
+
+    QSignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
+    QSignalSpy firstDataDeviceSelectionClearedSpy(firstDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
+    QSignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
+    QSignalSpy secondDataDeviceSelectionClearedSpy(secondDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
+
+    QVERIFY(firstDataDeviceSelectionOfferedSpy.wait());
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Activate the 2nd window.
+    workspace()->activateWindow(secondWindow);
+    QVERIFY(secondDataDeviceSelectionOfferedSpy.wait());
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Activate the 3rd window (the 2nd and the 3rd window belong to the same client).
+    workspace()->activateWindow(thirdWindow);
+    QVERIFY(!secondDataDeviceSelectionOfferedSpy.wait(100));
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Activate the 2nd window (the 2nd and the 3rd window belong to the same client).
+    workspace()->activateWindow(secondWindow);
+    QVERIFY(!secondDataDeviceSelectionOfferedSpy.wait(100));
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Activate the 1st window (different connection from the 2nd and 3rd window).
+    workspace()->activateWindow(firstWindow);
+    QVERIFY(firstDataDeviceSelectionOfferedSpy.wait());
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 2);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Clear the selection.
+    firstDataDevice->setSelection(firstEnteredSerial, nullptr);
+    QVERIFY(firstDataDeviceSelectionClearedSpy.wait());
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 2);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Activate the 2nd window (different connection from the 1st window).
+    workspace()->activateWindow(secondWindow);
+    QVERIFY(!secondDataDeviceSelectionOfferedSpy.wait(100));
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 2);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 1); // 1 because a null selection is sent
+}
+
 void SelectionTest::primarySelection()
 {
     // This test verifies that the primary selection works as expected between two clients.
@@ -774,6 +890,120 @@ void SelectionTest::receiveFromWithdrawnPrimarySelectionOffer()
     const QFuture<QByteArray> emptyData = readMimeTypeData(offer, plainText);
     QVERIFY(waitFuture(emptyData));
     QCOMPARE(emptyData.result(), QByteArray());
+}
+
+void SelectionTest::singlePrimarySelectionPerClient()
+{
+    // This test verifies that only one selection event will be sent when switching between two
+    // surfaces that belong to the same client.
+
+    const QMimeType plainText = m_mimeDatabase.mimeTypeForName(QStringLiteral("text/plain"));
+
+    // Setup the first client.
+    auto firstConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::WpPrimarySelectionV1);
+    QVERIFY(Test::waitForWaylandKeyboard(firstConnection->seat));
+
+    std::unique_ptr<KWayland::Client::Keyboard> firstKeyboard(firstConnection->seat->createKeyboard());
+    std::unique_ptr<Test::WpPrimarySelectionDeviceV1> firstDataDevice(firstConnection->primarySelectionManager->getDevice(firstConnection->seat));
+    std::unique_ptr<Test::WpPrimarySelectionSourceV1> firstDataSource(firstConnection->primarySelectionManager->createSource());
+    firstDataSource->offer(plainText.name());
+    connect(firstDataSource.get(), &Test::WpPrimarySelectionSourceV1::sendDataRequested, this, [](const QString &mimeType, int fd) {
+        const auto data = QByteArrayLiteral("foo");
+        write(fd, data.data(), data.size());
+        close(fd);
+    });
+
+    auto firstSurface = Test::createSurface(firstConnection->compositor);
+    auto firstShellSurface = Test::createXdgToplevelSurface(firstConnection->xdgShell, firstSurface.get());
+    auto firstWindow = Test::renderAndWaitForShown(firstConnection->shm, firstSurface.get(), QSize(100, 100), Qt::red);
+
+    // Setup the second client.
+    auto secondConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::WpPrimarySelectionV1);
+    QVERIFY(Test::waitForWaylandKeyboard(secondConnection->seat));
+
+    std::unique_ptr<KWayland::Client::Keyboard> secondKeyboard(secondConnection->seat->createKeyboard());
+    std::unique_ptr<Test::WpPrimarySelectionDeviceV1> secondDataDevice(secondConnection->primarySelectionManager->getDevice(secondConnection->seat));
+
+    auto secondSurface = Test::createSurface(secondConnection->compositor);
+    auto secondShellSurface = Test::createXdgToplevelSurface(secondConnection->xdgShell, secondSurface.get());
+    auto secondWindow = Test::renderAndWaitForShown(secondConnection->shm, secondSurface.get(), QSize(100, 100), Qt::blue);
+
+    auto thirdSurface = Test::createSurface(secondConnection->compositor);
+    auto thirdShellSurface = Test::createXdgToplevelSurface(secondConnection->xdgShell, thirdSurface.get());
+    auto thirdWindow = Test::renderAndWaitForShown(secondConnection->shm, thirdSurface.get(), QSize(100, 100), Qt::green);
+
+    // Activate the first window and set the selection.
+    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    workspace()->activateWindow(firstWindow);
+    QVERIFY(firstKeyboardEnteredSpy.wait());
+    const quint32 firstEnteredSerial = firstKeyboardEnteredSpy.last().at(0).value<quint32>();
+    firstDataDevice->set_selection(firstDataSource->object(), firstEnteredSerial);
+
+    QSignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    QSignalSpy firstDataDeviceSelectionClearedSpy(firstDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
+    QSignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    QSignalSpy secondDataDeviceSelectionClearedSpy(secondDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
+
+    QVERIFY(firstDataDeviceSelectionOfferedSpy.wait());
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Activate the 2nd window.
+    workspace()->activateWindow(secondWindow);
+    QVERIFY(secondDataDeviceSelectionOfferedSpy.wait());
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Activate the 3rd window (the 2nd and the 3rd window belong to the same client).
+    workspace()->activateWindow(thirdWindow);
+    QVERIFY(!secondDataDeviceSelectionOfferedSpy.wait(100));
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Activate the 2nd window (the 2nd and the 3rd window belong to the same client).
+    workspace()->activateWindow(secondWindow);
+    QVERIFY(!secondDataDeviceSelectionOfferedSpy.wait(100));
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Activate the 1st window (different connection from the 2nd and 3rd window).
+    workspace()->activateWindow(firstWindow);
+    QVERIFY(firstDataDeviceSelectionOfferedSpy.wait());
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 2);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 0);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Clear the selection.
+    firstDataDevice->set_selection(nullptr, firstEnteredSerial);
+    QVERIFY(firstDataDeviceSelectionClearedSpy.wait());
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 2);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 0);
+
+    // Activate the 2nd window (different connection from the 1st window).
+    workspace()->activateWindow(secondWindow);
+    QVERIFY(!secondDataDeviceSelectionOfferedSpy.wait(100));
+
+    QCOMPARE(firstDataDeviceSelectionOfferedSpy.count(), 2);
+    QCOMPARE(firstDataDeviceSelectionClearedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionOfferedSpy.count(), 1);
+    QCOMPARE(secondDataDeviceSelectionClearedSpy.count(), 1); // 1 because a null selection is sent
 }
 
 } // namespace KWin
