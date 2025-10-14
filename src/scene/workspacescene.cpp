@@ -587,6 +587,8 @@ void WorkspaceScene::postPaint()
 
     effects->postPaintScreen();
 
+    painted_delegate = nullptr;
+    painted_screen = nullptr;
     clearStackingOrder();
 }
 
@@ -704,10 +706,12 @@ void WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, const Re
 // will be eventually called from drawWindow()
 void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
+    // TODO: Reconsider how the CrossFadeEffect captures the initial window contents to remove
+    // null pointer delegate checks in "should render item" and "should render hole" checks.
     m_renderer->renderItem(renderTarget, viewport, w->windowItem(), mask, region, data, [this](Item *item) {
-        return !painted_delegate->shouldRenderItem(item);
+        return painted_delegate && !painted_delegate->shouldRenderItem(item);
     }, [this](Item *item) {
-        return painted_delegate->shouldRenderHole(item);
+        return painted_delegate && painted_delegate->shouldRenderHole(item);
     });
 }
 
