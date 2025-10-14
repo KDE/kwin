@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-10 00:43+0000\n"
+"POT-Creation-Date: 2025-10-14 00:43+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -1625,41 +1625,41 @@ msgid "Strength:"
 msgstr "កម្លាំង ៖"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
-#: plugins/diminactive/diminactive_config.ui:40
+#: plugins/diminactive/diminactive_config.ui:43
 #, kde-format
 msgid "Dim:"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
-#: plugins/diminactive/diminactive_config.ui:47
+#: plugins/diminactive/diminactive_config.ui:50
 #, fuzzy, kde-format
 #| msgid "Do not animate panels"
 msgid "Docks and panels"
 msgstr "កុំ​ធ្វើ​ឲ្យ​បន្ទះមាន​ចលនា"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
-#: plugins/diminactive/diminactive_config.ui:54
+#: plugins/diminactive/diminactive_config.ui:57
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "Desktop"
 msgstr "ផ្ទៃតុ​ទាំងអស់"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
-#: plugins/diminactive/diminactive_config.ui:61
+#: plugins/diminactive/diminactive_config.ui:64
 #, fuzzy, kde-format
 #| msgid "Keep &Above Others"
 msgid "Keep above windows"
 msgstr "ដាក់​លើ​គេ"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
-#: plugins/diminactive/diminactive_config.ui:68
+#: plugins/diminactive/diminactive_config.ui:71
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "By window group"
 msgstr "បង្អួច"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
-#: plugins/diminactive/diminactive_config.ui:75
+#: plugins/diminactive/diminactive_config.ui:78
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgid "Fullscreen windows"

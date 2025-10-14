@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-10 00:43+0000\n"
+"POT-Creation-Date: 2025-10-14 00:43+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -1799,41 +1799,41 @@ msgid "Strength:"
 msgstr "&Јачина:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
-#: plugins/diminactive/diminactive_config.ui:40
+#: plugins/diminactive/diminactive_config.ui:43
 #, kde-format
 msgid "Dim:"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
-#: plugins/diminactive/diminactive_config.ui:47
+#: plugins/diminactive/diminactive_config.ui:50
 #, fuzzy, kde-format
 #| msgid "Do not animate panels"
 msgid "Docks and panels"
 msgstr "Не анимирај панеле"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
-#: plugins/diminactive/diminactive_config.ui:54
+#: plugins/diminactive/diminactive_config.ui:57
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "Desktop"
 msgstr "&Све површи"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
-#: plugins/diminactive/diminactive_config.ui:61
+#: plugins/diminactive/diminactive_config.ui:64
 #, fuzzy, kde-format
 #| msgid "Keep &Above Others"
 msgid "Keep above windows"
 msgstr "Држи из&над осталих"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
-#: plugins/diminactive/diminactive_config.ui:68
+#: plugins/diminactive/diminactive_config.ui:71
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "By window group"
 msgstr "Помери прозор"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
-#: plugins/diminactive/diminactive_config.ui:75
+#: plugins/diminactive/diminactive_config.ui:78
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgid "Fullscreen windows"

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-10 00:43+0000\n"
+"POT-Creation-Date: 2025-10-14 00:43+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -1674,37 +1674,37 @@ msgid "Strength:"
 msgstr "Sila:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
-#: plugins/diminactive/diminactive_config.ui:40
+#: plugins/diminactive/diminactive_config.ui:43
 #, kde-format
 msgid "Dim:"
 msgstr "Stmavenie:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
-#: plugins/diminactive/diminactive_config.ui:47
+#: plugins/diminactive/diminactive_config.ui:50
 #, kde-format
 msgid "Docks and panels"
 msgstr "Doky a panely"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
-#: plugins/diminactive/diminactive_config.ui:54
+#: plugins/diminactive/diminactive_config.ui:57
 #, kde-format
 msgid "Desktop"
 msgstr "Plocha"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
-#: plugins/diminactive/diminactive_config.ui:61
+#: plugins/diminactive/diminactive_config.ui:64
 #, kde-format
 msgid "Keep above windows"
 msgstr "Držať nad oknami"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
-#: plugins/diminactive/diminactive_config.ui:68
+#: plugins/diminactive/diminactive_config.ui:71
 #, kde-format
 msgid "By window group"
 msgstr "Podľa skupiny okna"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
-#: plugins/diminactive/diminactive_config.ui:75
+#: plugins/diminactive/diminactive_config.ui:78
 #, kde-format
 msgid "Fullscreen windows"
 msgstr "Okná na celú obrazovku"
