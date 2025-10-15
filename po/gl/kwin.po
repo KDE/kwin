@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-14 00:43+0000\n"
+"POT-Creation-Date: 2025-10-15 00:44+0000\n"
 "PO-Revision-Date: 2025-06-19 10:31+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -2435,17 +2435,26 @@ msgstr "Non se puido crear o contexto de PipeWire"
 msgid "Failed to connect PipeWire context"
 msgstr "Non foi posíbel conectar o contexto de PipeWire"
 
-#: plugins/screencast/screencastmanager.cpp:45
+#: plugins/screencast/screencastmanager.cpp:54
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:95
+#: plugins/screencast/screencastmanager.cpp:140
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgid "Unsupported compositing type"
+msgstr "Suspender a composición"
+
+#: plugins/screencast/screencastmanager.cpp:60
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Non foi posíbel atopar o identificador de xanela %1"
 
-#: plugins/screencast/screencastmanager.cpp:82
+#: plugins/screencast/screencastmanager.cpp:107
 #, kde-format
 msgid "Could not find output"
 msgstr "Non foi posíbel atopar a saída"
 
-#: plugins/screencast/screencastmanager.cpp:115
+#: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
 msgid "Invalid region"
 msgstr "Rexión non válida"
@@ -4345,9 +4354,6 @@ msgstr "Xwayland quebrou."
 
 #~ msgid "Touchpad"
 #~ msgstr "Área táctil"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Suspender a composición"
 
 #~ msgid ""
 #~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"

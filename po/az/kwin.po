@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-14 00:43+0000\n"
+"POT-Creation-Date: 2025-10-15 00:44+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -2501,18 +2501,27 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:45
+#: plugins/screencast/screencastmanager.cpp:54
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:95
+#: plugins/screencast/screencastmanager.cpp:140
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgid "Unsupported compositing type"
+msgstr "Kompozit Effektləri Dayandırmaq"
+
+#: plugins/screencast/screencastmanager.cpp:60
 #, fuzzy, kde-format
 #| msgid "Close running window on %1"
 msgid "Could not find window id %1"
 msgstr "%1 üzərində işlək olan pəncərəni bağlamaq"
 
-#: plugins/screencast/screencastmanager.cpp:82
+#: plugins/screencast/screencastmanager.cpp:107
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:115
+#: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4495,9 +4504,6 @@ msgstr ""
 
 #~ msgid "Touchpad"
 #~ msgstr "Toxunma Paneli"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Kompozit Effektləri Dayandırmaq"
 
 #~ msgid "Quit Debug Console"
 #~ msgstr "Sazlayıcı Konsolu bağlamaq"

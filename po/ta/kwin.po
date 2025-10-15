@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-14 00:43+0000\n"
+"POT-Creation-Date: 2025-10-15 00:44+0000\n"
 "PO-Revision-Date: 2025-04-13 18:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -2430,17 +2430,26 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:45
+#: plugins/screencast/screencastmanager.cpp:54
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:95
+#: plugins/screencast/screencastmanager.cpp:140
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgid "Unsupported compositing type"
+msgstr "சாளரவரைவை முடக்கு"
+
+#: plugins/screencast/screencastmanager.cpp:60
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "%1 எனும் அடையாளமுள்ள சாளரத்தை கண்டுபிடிக்க முடியவில்லை"
 
-#: plugins/screencast/screencastmanager.cpp:82
+#: plugins/screencast/screencastmanager.cpp:107
 #, kde-format
 msgid "Could not find output"
 msgstr "திரையை கண்டுபிடிக்க முடியவில்லை"
 
-#: plugins/screencast/screencastmanager.cpp:115
+#: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
 msgid "Invalid region"
 msgstr "செல்லுபடியாகாத பரப்பளவு"
@@ -4349,9 +4358,6 @@ msgstr "Xwayland முறிவடைந்துள்ளது"
 
 #~ msgid "Touchpad"
 #~ msgstr "தொடுபலகை"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "சாளரவரைவை முடக்கு"
 
 #~ msgid ""
 #~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"

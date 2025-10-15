@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-14 00:43+0000\n"
+"POT-Creation-Date: 2025-10-15 00:44+0000\n"
 "PO-Revision-Date: 2025-06-25 13:18+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -2462,17 +2462,26 @@ msgstr "Не удалось создать контекст PipeWire"
 msgid "Failed to connect PipeWire context"
 msgstr "Не удалось подключиться к контексту PipeWire"
 
-#: plugins/screencast/screencastmanager.cpp:45
+#: plugins/screencast/screencastmanager.cpp:54
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:95
+#: plugins/screencast/screencastmanager.cpp:140
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgid "Unsupported compositing type"
+msgstr "Приостановить композитное расширение"
+
+#: plugins/screencast/screencastmanager.cpp:60
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Не удалось найти окно с идентификатором %1"
 
-#: plugins/screencast/screencastmanager.cpp:82
+#: plugins/screencast/screencastmanager.cpp:107
 #, kde-format
 msgid "Could not find output"
 msgstr "Не удалось найти поток вывода"
 
-#: plugins/screencast/screencastmanager.cpp:115
+#: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
 msgid "Invalid region"
 msgstr "Недопустимая область"
@@ -4374,9 +4383,6 @@ msgstr "Произошло аварийное завершение Xwayland"
 
 #~ msgid "Touchpad"
 #~ msgstr "Сенсорная панель"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Приостановить композитное расширение"
 
 #~ msgid ""
 #~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-14 00:43+0000\n"
+"POT-Creation-Date: 2025-10-15 00:44+0000\n"
 "PO-Revision-Date: 2025-10-01 17:08+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -2440,18 +2440,27 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:45
+#: plugins/screencast/screencastmanager.cpp:54
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:95
+#: plugins/screencast/screencastmanager.cpp:140
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgid "Unsupported compositing type"
+msgstr "Suspendă compoziționarea"
+
+#: plugins/screencast/screencastmanager.cpp:60
 #, fuzzy, kde-format
 #| msgid "Close running window on %1"
 msgid "Could not find window id %1"
 msgstr "Închide fereastra rulând pe %1"
 
-#: plugins/screencast/screencastmanager.cpp:82
+#: plugins/screencast/screencastmanager.cpp:107
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:115
+#: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4509,9 +4518,6 @@ msgstr ""
 
 #~ msgid "Touchpad"
 #~ msgstr "Zonă tactilă"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Suspendă compoziționarea"
 
 #, fuzzy
 #~| msgid ""

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-14 00:43+0000\n"
+"POT-Creation-Date: 2025-10-15 00:44+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -2451,17 +2451,26 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:45
+#: plugins/screencast/screencastmanager.cpp:54
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:95
+#: plugins/screencast/screencastmanager.cpp:140
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgid "Unsupported compositing type"
+msgstr "Αναστολή σύνθεσης"
+
+#: plugins/screencast/screencastmanager.cpp:60
 #, kde-format
 msgid "Could not find window id %1"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:82
+#: plugins/screencast/screencastmanager.cpp:107
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:115
+#: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4446,9 +4455,6 @@ msgstr "Το Xwayland κατάρρευσε"
 
 #~ msgid "Touchpad"
 #~ msgstr "Επιφάνεια αφής"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Αναστολή σύνθεσης"
 
 #~ msgid ""
 #~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"

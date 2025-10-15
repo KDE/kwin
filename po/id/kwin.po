@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-14 00:43+0000\n"
+"POT-Creation-Date: 2025-10-15 00:44+0000\n"
 "PO-Revision-Date: 2023-12-03 14:01+0700\n"
 "Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -2530,18 +2530,27 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:45
+#: plugins/screencast/screencastmanager.cpp:54
+#: plugins/screencast/screencastmanager.cpp:79
+#: plugins/screencast/screencastmanager.cpp:95
+#: plugins/screencast/screencastmanager.cpp:140
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgid "Unsupported compositing type"
+msgstr "Suspensi Pengompositan"
+
+#: plugins/screencast/screencastmanager.cpp:60
 #, fuzzy, kde-format
 #| msgid "Close running window on %1"
 msgid "Could not find window id %1"
 msgstr "Tutup jendela yang berjalan pada %1"
 
-#: plugins/screencast/screencastmanager.cpp:82
+#: plugins/screencast/screencastmanager.cpp:107
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:115
+#: plugins/screencast/screencastmanager.cpp:145
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -4611,9 +4620,6 @@ msgstr ""
 
 #~ msgid "Touchpad"
 #~ msgstr "Touchpad"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Suspensi Pengompositan"
 
 #~ msgid ""
 #~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
