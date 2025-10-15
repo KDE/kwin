@@ -58,7 +58,6 @@ option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
     Core
-    Core5Compat
     DBus
     Quick
     UiTools
