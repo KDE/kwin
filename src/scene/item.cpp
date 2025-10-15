@@ -132,6 +132,8 @@ void Item::removeChild(Item *item)
     markSortedChildItemsDirty();
 
     updateBoundingRect();
+
+    Q_EMIT childRemoved(item);
 }
 
 QList<Item *> Item::childItems() const
@@ -643,6 +645,7 @@ void Item::updateEffectiveVisibility()
     for (Item *childItem : std::as_const(m_childItems)) {
         childItem->updateEffectiveVisibility();
     }
+    Q_EMIT visibleChanged();
 }
 
 static bool compareZ(const Item *a, const Item *b)
