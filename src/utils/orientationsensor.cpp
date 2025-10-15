@@ -16,18 +16,28 @@ OrientationSensor::OrientationSensor()
     , m_reading(std::make_unique<QOrientationReading>())
 {
     m_reading->setOrientation(QOrientationReading::Orientation::Undefined);
-    connect(m_sensor.get(), &QOrientationSensor::availableSensorsChanged, this, &OrientationSensor::availableChanged);
+    connect(m_sensor.get(), &QOrientationSensor::readingChanged, this, [this]() {
+        m_isAvailable = true;
+        Q_EMIT availableChanged();
+        setEnabled(m_enabled);
+    }, Qt::SingleShotConnection);
+    m_sensor->start();
 }
 
 OrientationSensor::~OrientationSensor() = default;
 
 bool OrientationSensor::isAvailable() const
 {
-    return !m_sensor->sensorsForType(m_sensor->type()).isEmpty();
+    return m_isAvailable;
 }
 
 void OrientationSensor::setEnabled(bool enable)
 {
+    m_enabled = enable;
+    if (!m_isAvailable) {
+        // haven't received the first reading, this won't do anything
+        return;
+    }
     if (enable) {
         connect(m_sensor.get(), &QOrientationSensor::readingChanged, this, &OrientationSensor::update, Qt::UniqueConnection);
         m_sensor->start();
