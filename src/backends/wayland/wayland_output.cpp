@@ -20,10 +20,12 @@
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/pointerconstraints.h>
+#include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgdecoration.h>
 
 #include "wayland-fractional-scale-v1-client-protocol.h"
+#include "wayland-keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h"
 #include "wayland-presentation-time-client-protocol.h"
 #include "wayland-single-pixel-buffer-v1-client-protocol.h"
 #include "wayland-tearing-control-v1-client-protocol.h"
@@ -189,6 +191,9 @@ WaylandOutput::~WaylandOutput()
     if (m_presentationFeedback) {
         wp_presentation_feedback_destroy(m_presentationFeedback);
         m_presentationFeedback = nullptr;
+    }
+    if (m_shortcutInhibition) {
+        zwp_keyboard_shortcuts_inhibitor_v1_destroy(m_shortcutInhibition);
     }
     wp_viewport_destroy(m_viewport);
     m_xdgDecoration.reset();
@@ -483,6 +488,7 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
         m_pointerLock.reset();
         m_hasPointerLock = false;
         if (surfaceWasLocked) {
+            inhibitShortcuts(false);
             updateWindowTitle();
             Q_EMIT m_backend->pointerLockChanged(false);
         }
@@ -497,15 +503,36 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
     }
     connect(m_pointerLock.get(), &LockedPointer::locked, this, [this]() {
         m_hasPointerLock = true;
+        inhibitShortcuts(true);
         updateWindowTitle();
         Q_EMIT m_backend->pointerLockChanged(true);
     });
     connect(m_pointerLock.get(), &LockedPointer::unlocked, this, [this]() {
         m_pointerLock.reset();
+        inhibitShortcuts(false);
         m_hasPointerLock = false;
         updateWindowTitle();
         Q_EMIT m_backend->pointerLockChanged(false);
     });
+}
+
+void WaylandOutput::inhibitShortcuts(bool inhibit)
+{
+    if (!inhibit) {
+        if (m_shortcutInhibition) {
+            zwp_keyboard_shortcuts_inhibitor_v1_destroy(m_shortcutInhibition);
+            m_shortcutInhibition = nullptr;
+        }
+        return;
+    }
+
+    auto *inhibitionManager = m_backend->display()->keyboardShortcutsInhibitManager();
+    if (!inhibitionManager) {
+        return;
+    }
+
+    Q_ASSERT(!m_shortcutInhibition);
+    m_shortcutInhibition = zwp_keyboard_shortcuts_inhibit_manager_v1_inhibit_shortcuts(inhibitionManager, *m_surface, *(m_backend->display()->seat()));
 }
 
 void WaylandOutput::setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&layers)

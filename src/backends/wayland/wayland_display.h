@@ -20,6 +20,7 @@ struct wp_tearing_control_manager_v1;
 struct wp_fractional_scale_manager_v1;
 struct wp_viewporter;
 struct wp_single_pixel_buffer_manager_v1;
+struct zwp_keyboard_shortcuts_inhibit_manager_v1;
 
 namespace KWayland
 {
@@ -90,6 +91,7 @@ public:
     wp_fractional_scale_manager_v1 *fractionalScale() const;
     wp_viewporter *viewporter() const;
     wp_single_pixel_buffer_manager_v1 *singlePixelManager() const;
+    zwp_keyboard_shortcuts_inhibit_manager_v1 *keyboardShortcutsInhibitManager() const;
 
 public Q_SLOTS:
     void flush();
@@ -106,6 +108,7 @@ private:
     wp_fractional_scale_manager_v1 *m_fractionalScaleV1 = nullptr;
     wp_viewporter *m_viewporter = nullptr;
     wp_single_pixel_buffer_manager_v1 *m_singlePixelManager = nullptr;
+    zwp_keyboard_shortcuts_inhibit_manager_v1 *m_keyboardShortcutsInhibitManager = nullptr;
     std::unique_ptr<ColorManager> m_colorManager;
     std::unique_ptr<WaylandEventThread> m_eventThread;
     std::unique_ptr<WaylandLinuxDmabufV1> m_linuxDmabuf;

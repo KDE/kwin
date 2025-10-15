@@ -33,6 +33,7 @@ struct wp_tearing_control_v1;
 struct wp_color_management_surface_v1;
 struct wp_fractional_scale_v1;
 struct wp_fractional_scale_v1_listener;
+struct zwp_keyboard_shortcuts_inhibitor_v1;
 struct wp_viewport;
 
 namespace KWin
@@ -105,6 +106,7 @@ private:
     void updateWindowTitle();
     void applyConfigure(const QSize &size, quint32 serial);
     void updateColor();
+    void inhibitShortcuts(bool inhibit);
 
     static const wp_fractional_scale_v1_listener s_fractionalScaleListener;
     static void handleFractionalScaleChanged(void *data, struct wp_fractional_scale_v1 *wp_fractional_scale_v1, uint32_t scale120);
@@ -129,6 +131,7 @@ private:
     std::unique_ptr<ColorSurfaceFeedback> m_colorSurfaceFeedback;
     wp_fractional_scale_v1 *m_fractionalScale = nullptr;
     wp_viewport *m_viewport = nullptr;
+    zwp_keyboard_shortcuts_inhibitor_v1 *m_shortcutInhibition = nullptr;
     uint32_t m_refreshRate = 60'000;
     qreal m_pendingScale = 1.0;
 };
