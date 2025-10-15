@@ -22,11 +22,13 @@ namespace KWin
 
 static std::unique_ptr<DrmDevice> findRenderDevice()
 {
+#if !HAVE_LIBDRM_FAUX
 #if defined(Q_OS_LINUX)
     // Workaround for libdrm being unaware of faux bus.
     if (qEnvironmentVariableIsSet("CI")) {
         return DrmDevice::open(QStringLiteral("/dev/dri/card1"));
     }
+#endif
 #endif
 
     const int deviceCount = drmGetDevices2(0, nullptr, 0);
@@ -51,6 +53,13 @@ static std::unique_ptr<DrmDevice> findRenderDevice()
                 nodeType = DRM_NODE_PRIMARY;
             }
         }
+#if HAVE_LIBDRM_FAUX
+        if (device->bustype == DRM_BUS_FAUX) {
+            if (strcmp(device->businfo.faux->name, "vgem") == 0) {
+                nodeType = DRM_NODE_PRIMARY;
+            }
+        }
+#endif
 
         if (device->available_nodes & (1 << nodeType)) {
             if (auto ret = DrmDevice::open(device->nodes[nodeType])) {
