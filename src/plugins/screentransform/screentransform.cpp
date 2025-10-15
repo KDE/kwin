@@ -85,7 +85,7 @@ void ScreenTransformEffect::addScreen(Output *screen)
         });
 
         effects->makeOpenGLContextCurrent();
-        auto texture = GLTexture::allocate(GL_RGBA8, screen->pixelSize());
+        auto texture = GLTexture::allocate(GL_RGBA16F, screen->pixelSize());
         if (!texture) {
             m_states.remove(screen);
             return;
@@ -98,7 +98,7 @@ void ScreenTransformEffect::addScreen(Output *screen)
         state.m_angle = transformAngle(changeSet->transform.value(), state.m_oldTransform);
         state.m_prev.texture = std::move(texture);
         state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
-        RenderTarget renderTarget(state.m_prev.framebuffer.get());
+        RenderTarget renderTarget(state.m_prev.framebuffer.get(), screen->blendingColor());
 
         Scene *scene = effects->scene();
         SceneView delegate(scene, screen, nullptr);
@@ -202,8 +202,9 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
 
     // Render the screen in an offscreen texture.
     const QSize nativeSize = screen->geometry().size() * screen->scale();
-    if (!it->m_current.texture || it->m_current.texture->size() != nativeSize) {
-        it->m_current.texture = GLTexture::allocate(GL_RGBA8, nativeSize);
+    if (!it->m_current.texture || it->m_current.texture->size() != nativeSize
+        || it->m_current.texture->internalFormat() != renderTarget.texture()->internalFormat()) {
+        it->m_current.texture = GLTexture::allocate(renderTarget.texture()->internalFormat(), nativeSize);
         if (!it->m_current.texture) {
             m_states.remove(screen);
             return;
@@ -211,7 +212,7 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
         it->m_current.framebuffer = std::make_unique<GLFramebuffer>(it->m_current.texture.get());
     }
 
-    RenderTarget fboRenderTarget(it->m_current.framebuffer.get());
+    RenderTarget fboRenderTarget(it->m_current.framebuffer.get(), renderTarget.colorDescription());
     RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget);
 
     GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
