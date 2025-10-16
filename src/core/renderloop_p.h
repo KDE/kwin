@@ -34,7 +34,7 @@ public:
     void scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp);
 
     void notifyFrameDropped();
-    void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<RenderTimeSpan> renderTime, PresentationMode mode, OutputFrame *frame);
+    void notifyFrameCompleted(std::chrono::nanoseconds timestamp, RenderStats renderTime, PresentationMode mode, OutputFrame *frame);
     void notifyVblank(std::chrono::nanoseconds timestamp);
 
     RenderLoop *const q;

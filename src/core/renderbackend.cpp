@@ -64,22 +64,37 @@ void OutputFrame::addFeedback(std::shared_ptr<PresentationFeedback> &&feedback)
     m_feedbacks.push_back(std::move(feedback));
 }
 
-std::optional<RenderTimeSpan> OutputFrame::queryRenderTime() const
+RenderStats OutputFrame::queryRenderTime() const
 {
+    RenderStats ret;
     if (m_renderTimeQueries.empty()) {
-        return RenderTimeSpan{};
+        return ret;
     }
     const auto first = m_renderTimeQueries.front()->query();
     if (!first) {
-        return std::nullopt;
+        return ret;
     }
-    RenderTimeSpan ret = *first;
+    ret.totalTime = *first;
+    if (dynamic_cast<CpuRenderTimeQuery *>(m_renderTimeQueries.front().get())) {
+        ret.cpuTime = *first;
+    } else {
+        ret.gpuTime = *first;
+    }
     for (const auto &query : m_renderTimeQueries | std::views::drop(1)) {
         const auto opt = query->query();
         if (!opt) {
-            return std::nullopt;
+            return RenderStats{};
         }
-        ret = ret | *opt;
+        ret.totalTime = *ret.totalTime | *opt;
+        if (dynamic_cast<CpuRenderTimeQuery *>(query.get())) {
+            ret.cpuTime = ret.cpuTime.transform([&opt](const auto &t) {
+                return t | *opt;
+            }).value_or(*opt);
+        } else {
+            ret.gpuTime = ret.gpuTime.transform([&opt](const auto &t) {
+                return t | *opt;
+            }).value_or(*opt);
+        }
     }
     return ret;
 }
@@ -89,9 +104,8 @@ void OutputFrame::presented(std::chrono::nanoseconds timestamp, PresentationMode
     Q_ASSERT(!m_presented);
     m_presented = true;
 
-    const auto renderTime = queryRenderTime();
     if (m_loop) {
-        RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode, this);
+        RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, queryRenderTime(), mode, this);
     }
     for (const auto &feedback : m_feedbacks) {
         feedback->presented(m_refreshDuration, timestamp, mode);

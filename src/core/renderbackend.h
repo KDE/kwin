@@ -68,6 +68,13 @@ private:
     std::optional<std::chrono::steady_clock::time_point> m_end;
 };
 
+struct KWIN_EXPORT RenderStats
+{
+    std::optional<RenderTimeSpan> cpuTime;
+    std::optional<RenderTimeSpan> gpuTime;
+    std::optional<RenderTimeSpan> totalTime;
+};
+
 class KWIN_EXPORT OutputFrame
 {
 public:
@@ -97,7 +104,7 @@ public:
     void setArtificialHdrHeadroom(double edr);
 
 private:
-    std::optional<RenderTimeSpan> queryRenderTime() const;
+    RenderStats queryRenderTime() const;
 
     const QPointer<RenderLoop> m_loop;
     const std::chrono::nanoseconds m_refreshDuration;
