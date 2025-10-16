@@ -58,11 +58,7 @@ Integration::Integration()
     , QPlatformIntegration()
     , m_fontDb(new QGenericUnixFontDatabase())
     , m_nativeInterface(new QPlatformNativeInterface())
-#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
     , m_services(new QDesktopUnixServices())
-#else
-    , m_services(new QGenericUnixServices())
-#endif
     , m_clipboard(new Clipboard())
 {
     QWindowSystemInterface::setSynchronousWindowSystemEvents(true);
