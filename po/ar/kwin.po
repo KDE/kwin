@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-15 00:44+0000\n"
-"PO-Revision-Date: 2025-10-05 10:27+0400\n"
+"POT-Creation-Date: 2025-10-16 00:43+0000\n"
+"PO-Revision-Date: 2025-10-15 20:48+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -26,29 +26,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "zayed.alsaidi@gmail.com,safa1996alfulaij@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:461
+#: backends/wayland/wayland_output.cpp:466
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "اضغط على مفتاح التحكم الأيمن لفك المؤشر"
 
-#: backends/wayland/wayland_output.cpp:463
+#: backends/wayland/wayland_output.cpp:468
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "اضغط على مفتاح التحكم الأيمن للحصول على المؤشر"
 
-#: backends/wayland/wayland_output.cpp:467
+#: backends/wayland/wayland_output.cpp:472
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "مراكب ويلاند كيدي %1"
 
-#: backends/wayland/wayland_output.cpp:470
+#: backends/wayland/wayland_output.cpp:475
 #, kde-format
 msgid "- Output disabled"
 msgstr "- الخرج معطّل"
 
-#: backends/wayland/wayland_output.cpp:472
+#: backends/wayland/wayland_output.cpp:477
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- الخرج معتم"
@@ -2400,10 +2400,9 @@ msgstr "فشل الاتصال بسياق PipeWire"
 #: plugins/screencast/screencastmanager.cpp:79
 #: plugins/screencast/screencastmanager.cpp:95
 #: plugins/screencast/screencastmanager.cpp:140
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "علّق التّركيب"
+msgstr "نوع تركيب غير متاح"
 
 #: plugins/screencast/screencastmanager.cpp:60
 #, kde-format
@@ -4130,7 +4129,7 @@ msgstr "ترتيب الإخراج المقدم غير صالح"
 msgid "The driver rejected the output configuration"
 msgstr "رفض السائق ضبط الإخراج"
 
-#: window.cpp:3117
+#: window.cpp:3116
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

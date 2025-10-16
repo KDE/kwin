@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-15 00:44+0000\n"
+"POT-Creation-Date: 2025-10-16 00:43+0000\n"
 "PO-Revision-Date: 2025-06-25 13:18+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -50,29 +50,29 @@ msgid "Your emails"
 msgstr ""
 "asm@som.kiev.ua,mokhin@bog.msu.ru,kekcuHa@gmail.com,gammaray@basealt.ru"
 
-#: backends/wayland/wayland_output.cpp:461
+#: backends/wayland/wayland_output.cpp:466
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Чтобы освободить указатель нажмите правую клавишу Ctrl"
 
-#: backends/wayland/wayland_output.cpp:463
+#: backends/wayland/wayland_output.cpp:468
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Чтобы захватить указатель нажмите правую клавишу Ctrl"
 
-#: backends/wayland/wayland_output.cpp:467
+#: backends/wayland/wayland_output.cpp:472
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Графический сервер Wayland для KDE %1"
 
-#: backends/wayland/wayland_output.cpp:470
+#: backends/wayland/wayland_output.cpp:475
 #, kde-format
 msgid "- Output disabled"
 msgstr "- вывод отключён"
 
-#: backends/wayland/wayland_output.cpp:472
+#: backends/wayland/wayland_output.cpp:477
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- вывод затемнён"
@@ -4210,7 +4210,7 @@ msgstr "Предоставленный порядок вывода некорр�
 msgid "The driver rejected the output configuration"
 msgstr "Конфигурация вывода отклонена драйвером"
 
-#: window.cpp:3117
+#: window.cpp:3116
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
