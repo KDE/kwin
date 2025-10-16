@@ -172,6 +172,9 @@ void InputPanelV1Window::reposition()
 
 void InputPanelV1Window::destroyWindow()
 {
+    if (isDeleted()) {
+        return;
+    }
     m_panelSurface->disconnect(this);
     m_panelSurface->surface()->disconnect(this);
     disconnect(workspace(), &Workspace::outputsChanged, this, &InputPanelV1Window::reposition);
