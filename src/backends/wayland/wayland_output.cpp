@@ -18,6 +18,7 @@
 #include "wayland_layer.h"
 
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/output.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/seat.h>
@@ -26,7 +27,6 @@
 
 #include "wayland-fractional-scale-v1-client-protocol.h"
 #include "wayland-keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h"
-#include "wayland-presentation-time-client-protocol.h"
 #include "wayland-single-pixel-buffer-v1-client-protocol.h"
 #include "wayland-tearing-control-v1-client-protocol.h"
 #include "wayland-viewporter-client-protocol.h"
@@ -172,6 +172,8 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         applyConfigure(m_pendingConfigureSize, m_pendingConfigureSerial);
     });
 
+    connect(m_surface.get(), &KWayland::Client::Surface::outputEntered, this, &WaylandOutput::onOutputEntered);
+    connect(m_surface.get(), &KWayland::Client::Surface::outputLeft, this, &WaylandOutput::onOutputLeft);
     connect(m_surface.get(), &KWayland::Client::Surface::frameRendered, this, [this]() {
         Q_ASSERT(m_frame);
         m_frame->presented(std::chrono::steady_clock::now().time_since_epoch(), PresentationMode::VSync);
@@ -188,10 +190,6 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
 
 WaylandOutput::~WaylandOutput()
 {
-    if (m_presentationFeedback) {
-        wp_presentation_feedback_destroy(m_presentationFeedback);
-        m_presentationFeedback = nullptr;
-    }
     if (m_shortcutInhibition) {
         zwp_keyboard_shortcuts_inhibitor_v1_destroy(m_shortcutInhibition);
     }
@@ -220,41 +218,6 @@ void WaylandOutput::updateColor()
     next.layerBlendingColor = next.colorDescription;
     setState(next);
 }
-
-static void handleDiscarded(void *data,
-                            struct wp_presentation_feedback *wp_presentation_feedback)
-{
-    reinterpret_cast<WaylandOutput *>(data)->frameDiscarded();
-}
-
-static void handlePresented(void *data,
-                            struct wp_presentation_feedback *wp_presentation_feedback,
-                            uint32_t tv_sec_hi,
-                            uint32_t tv_sec_lo,
-                            uint32_t tv_nsec,
-                            uint32_t refresh,
-                            uint32_t seq_hi,
-                            uint32_t seq_lo,
-                            uint32_t flags)
-{
-    const auto timestamp = std::chrono::seconds((uint64_t(tv_sec_hi) << 32) | tv_sec_lo) + std::chrono::nanoseconds(tv_nsec);
-    uint32_t refreshRate = 60'000;
-    if (refresh != 0) {
-        refreshRate = 1'000'000'000'000 / refresh;
-    }
-    reinterpret_cast<WaylandOutput *>(data)->framePresented(timestamp, refreshRate);
-}
-
-static void handleSyncOutput(void *data, struct wp_presentation_feedback *, struct wl_output *)
-{
-    // intentionally ignored
-}
-
-static constexpr struct wp_presentation_feedback_listener s_presentationListener{
-    .sync_output = handleSyncOutput,
-    .presented = handlePresented,
-    .discarded = handleDiscarded,
-};
 
 bool WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
@@ -297,43 +260,9 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
     if (m_backend->display()->tearingControl()) {
         m_renderLoop->setPresentationMode(frame->presentationMode());
     }
-    if (auto presentationTime = m_backend->display()->presentationTime()) {
-        m_presentationFeedback = wp_presentation_feedback(presentationTime, *m_surface);
-        wp_presentation_feedback_add_listener(m_presentationFeedback, &s_presentationListener, this);
-        m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    } else {
-        m_surface->commit(KWayland::Client::Surface::CommitFlag::FrameCallback);
-    }
+    m_surface->commit(KWayland::Client::Surface::CommitFlag::FrameCallback);
     m_frame = frame;
     return true;
-}
-
-void WaylandOutput::frameDiscarded()
-{
-    m_frame.reset();
-    if (m_presentationFeedback) {
-        wp_presentation_feedback_destroy(m_presentationFeedback);
-        m_presentationFeedback = nullptr;
-    }
-}
-
-void WaylandOutput::framePresented(std::chrono::nanoseconds timestamp, uint32_t refreshRate)
-{
-    if (refreshRate != this->refreshRate()) {
-        m_refreshRate = refreshRate;
-        const auto mode = std::make_shared<OutputMode>(pixelSize(), m_refreshRate);
-        State next = m_state;
-        next.modes = {mode};
-        next.currentMode = mode;
-        setState(next);
-        m_renderLoop->setRefreshRate(m_refreshRate);
-    }
-    m_frame->presented(timestamp, PresentationMode::VSync);
-    m_frame.reset();
-    if (m_presentationFeedback) {
-        wp_presentation_feedback_destroy(m_presentationFeedback);
-        m_presentationFeedback = nullptr;
-    }
 }
 
 void WaylandOutput::applyChanges(const OutputConfiguration &config)
@@ -389,9 +318,11 @@ bool WaylandOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::
 
 void WaylandOutput::init(const QSize &pixelSize, qreal scale, bool fullscreen)
 {
-    m_renderLoop->setRefreshRate(m_refreshRate);
+    const uint32_t initialRefreshRate = 60000;
 
-    auto mode = std::make_shared<OutputMode>(pixelSize, m_refreshRate);
+    m_renderLoop->setRefreshRate(initialRefreshRate);
+
+    auto mode = std::make_shared<OutputMode>(pixelSize, initialRefreshRate);
 
     State initialState;
     initialState.modes = {mode};
@@ -447,7 +378,7 @@ void WaylandOutput::applyConfigure(const QSize &size, quint32 serial)
 {
     m_xdgShellSurface->ackConfigure(serial);
     if (!size.isEmpty()) {
-        auto mode = std::make_shared<OutputMode>(size * m_pendingScale, m_refreshRate);
+        auto mode = std::make_shared<OutputMode>(size * m_pendingScale, refreshRate());
 
         State next = m_state;
         next.modes = {mode};
@@ -479,6 +410,28 @@ void WaylandOutput::updateWindowTitle()
         title += QStringLiteral(" — ") + grab;
     }
     m_xdgShellSurface->setTitle(title);
+}
+
+void WaylandOutput::updateRefreshRate()
+{
+    uint32_t maxRefreshRate = 60000;
+
+    const auto outputs = m_surface->outputs();
+    for (const KWayland::Client::Output *output : outputs) {
+        const uint32_t refreshRate = output->refreshRate();
+        if (refreshRate > maxRefreshRate) {
+            maxRefreshRate = refreshRate;
+        }
+    }
+
+    if (refreshRate() != maxRefreshRate) {
+        const auto mode = std::make_shared<OutputMode>(pixelSize(), maxRefreshRate);
+        State next = m_state;
+        next.modes = {mode};
+        next.currentMode = mode;
+        setState(next);
+        m_renderLoop->setRefreshRate(maxRefreshRate);
+    }
 }
 
 void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
@@ -543,6 +496,18 @@ void WaylandOutput::setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&
 QList<OutputLayer *> WaylandOutput::outputLayers() const
 {
     return m_layers | std::views::transform(&std::unique_ptr<OutputLayer>::get) | std::ranges::to<QList>();
+}
+
+void WaylandOutput::onOutputEntered(KWayland::Client::Output *output)
+{
+    connect(output, &KWayland::Client::Output::changed, this, &WaylandOutput::updateRefreshRate);
+    updateRefreshRate();
+}
+
+void WaylandOutput::onOutputLeft(KWayland::Client::Output *output)
+{
+    disconnect(output, &KWayland::Client::Output::changed, this, &WaylandOutput::updateRefreshRate);
+    updateRefreshRate();
 }
 }
 }

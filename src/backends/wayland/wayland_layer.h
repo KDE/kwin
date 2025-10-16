@@ -19,7 +19,6 @@ class SubSurface;
 }
 
 struct wl_buffer;
-struct wp_presentation_feedback;
 struct wp_tearing_control_v1;
 struct wp_color_management_surface_v1;
 struct wp_fractional_scale_v1;
@@ -50,7 +49,6 @@ public:
 private:
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<KWayland::Client::SubSurface> m_subSurface;
-    wp_presentation_feedback *m_presentationFeedback = nullptr;
     wp_tearing_control_v1 *m_tearingControl = nullptr;
     wp_color_management_surface_v1 *m_colorSurface = nullptr;
     wp_fractional_scale_v1 *m_fractionalScale = nullptr;

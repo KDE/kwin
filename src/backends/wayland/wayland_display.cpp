@@ -9,6 +9,7 @@
 #include "wayland_logging.h"
 
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/output.h>
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/pointergestures.h>
 #include <KWayland/Client/registry.h>
@@ -340,6 +341,7 @@ WaylandDisplay::~WaylandDisplay()
     m_xdgShell.reset();
     m_linuxDmabuf.reset();
     m_colorManager.reset();
+    m_outputs.clear();
 
     if (m_shm) {
         wl_shm_destroy(m_shm);
@@ -574,11 +576,21 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
         display->m_singlePixelManager = reinterpret_cast<wp_single_pixel_buffer_manager_v1 *>(wl_registry_bind(registry, name, &wp_single_pixel_buffer_manager_v1_interface, 1));
     } else if (strcmp(interface, zwp_keyboard_shortcuts_inhibit_manager_v1_interface.name) == 0) {
         display->m_keyboardShortcutsInhibitManager = reinterpret_cast<zwp_keyboard_shortcuts_inhibit_manager_v1 *>(wl_registry_bind(registry, name, &zwp_keyboard_shortcuts_inhibit_manager_v1_interface, 1));
+    } else if (strcmp(interface, wl_output_interface.name) == 0) {
+        auto output = std::make_unique<KWayland::Client::Output>();
+        output->setup(static_cast<wl_output *>(wl_registry_bind(registry, name, &wl_output_interface, std::min(version, 4u))));
+        display->m_outputs[name] = std::move(output);
     }
 }
 
 void WaylandDisplay::registry_global_remove(void *data, wl_registry *registry, uint32_t name)
 {
+    WaylandDisplay *display = static_cast<WaylandDisplay *>(data);
+
+    if (auto it = display->m_outputs.find(name); it != display->m_outputs.end()) {
+        Q_EMIT it->second->removed();
+        display->m_outputs.erase(it);
+    }
 }
 
 }

@@ -28,7 +28,6 @@ class XdgDecoration;
 }
 
 struct wl_buffer;
-struct wp_presentation_feedback;
 struct wp_tearing_control_v1;
 struct wp_color_management_surface_v1;
 struct wp_fractional_scale_v1;
@@ -93,9 +92,6 @@ public:
     bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
-    void frameDiscarded();
-    void framePresented(std::chrono::nanoseconds timestamp, uint32_t refreshRate);
-
     void applyChanges(const OutputConfiguration &config) override;
 
     void setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&layers);
@@ -104,9 +100,13 @@ public:
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();
+    void updateRefreshRate();
     void applyConfigure(const QSize &size, quint32 serial);
     void updateColor();
     void inhibitShortcuts(bool inhibit);
+
+    void onOutputEntered(KWayland::Client::Output *output);
+    void onOutputLeft(KWayland::Client::Output *output);
 
     static const wp_fractional_scale_v1_listener s_fractionalScaleListener;
     static void handleFractionalScaleChanged(void *data, struct wp_fractional_scale_v1 *wp_fractional_scale_v1, uint32_t scale120);
@@ -127,12 +127,10 @@ private:
     quint32 m_pendingConfigureSerial = 0;
     QSize m_pendingConfigureSize;
     QTimer m_configureThrottleTimer;
-    wp_presentation_feedback *m_presentationFeedback = nullptr;
     std::unique_ptr<ColorSurfaceFeedback> m_colorSurfaceFeedback;
     wp_fractional_scale_v1 *m_fractionalScale = nullptr;
     wp_viewport *m_viewport = nullptr;
     zwp_keyboard_shortcuts_inhibitor_v1 *m_shortcutInhibition = nullptr;
-    uint32_t m_refreshRate = 60'000;
     qreal m_pendingScale = 1.0;
 };
 

@@ -27,6 +27,7 @@ namespace KWayland
 namespace Client
 {
 class Compositor;
+class Output;
 class PointerConstraints;
 class PointerGestures;
 class RelativePointerManager;
@@ -120,6 +121,7 @@ private:
     std::unique_ptr<KWayland::Client::Seat> m_seat;
     std::unique_ptr<KWayland::Client::XdgDecorationManager> m_xdgDecorationManager;
     std::unique_ptr<KWayland::Client::XdgShell> m_xdgShell;
+    std::map<uint32_t, std::unique_ptr<KWayland::Client::Output>> m_outputs;
 };
 
 }
