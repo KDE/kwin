@@ -172,7 +172,7 @@ if(KWIN_BUILD_X11)
     integrationTest(NAME testXwaylandServerCrash SRCS xwaylandserver_crash_test.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testXwaylandServerRestart SRCS xwaylandserver_restart_test.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testWindowRules SRCS window_rules_test.cpp LIBS XCB::ICCCM)
-    integrationTest(NAME testX11Window SRCS x11_window_test.cpp LIBS XCB::ICCCM)
+    integrationTest(NAME testX11Window SRCS x11_window_test.cpp LIBS XCB::ICCCM XCB::PRESENT XCB::SHM)
     integrationTest(NAME testDontCrashAuroraeDestroyDeco SRCS dont_crash_aurorae_destroy_deco.cpp LIBS KDecoration3::KDecoration LIBS XCB::ICCCM)
 endif()
 

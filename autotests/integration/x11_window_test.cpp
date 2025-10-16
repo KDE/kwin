@@ -10,20 +10,27 @@
 
 #include "atoms.h"
 #include "compositor.h"
+#include "core/graphicsbuffer.h"
+#include "core/shmgraphicsbufferallocator.h"
 #include "cursor.h"
 #include "pointer_input.h"
 #include "virtualdesktops.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
 
 #include <KWayland/Client/surface.h>
-
+#include <QSocketNotifier>
+#include <drm_fourcc.h>
 #include <linux/input-event-codes.h>
 #include <netwm.h>
+#include <xcb/present.h>
 #include <xcb/xcb_icccm.h>
 
 using namespace KWin;
+using namespace std::chrono_literals;
+
 static const QString s_socketName = QStringLiteral("wayland_test_x11_window-0");
 
 class X11WindowTest : public QObject
@@ -120,6 +127,7 @@ private Q_SLOTS:
     void testOverrideRedirectReparent();
     void testOverrideRedirectStackingAbove();
     void testOverrideRedirectStackingBelow();
+    void testRandrEmulation();
 };
 
 void X11WindowTest::initTestCase_data()
@@ -136,7 +144,10 @@ void X11WindowTest::initTestCase()
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
     kwinApp()->start();
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
     QVERIFY(KWin::Compositor::self());
 }
 
@@ -1921,7 +1932,6 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
 {
     // this test verifies that an X11 fullscreen window does not stay in the active layer
     // when a Wayland window is active, see BUG: 375759
-    QCOMPARE(workspace()->outputs().count(), 1);
 
     // first create an X11 window
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -3424,6 +3434,321 @@ void X11WindowTest::testOverrideRedirectStackingBelow()
     QVERIFY(workspace()->windows().count() == 2);
     QVERIFY(workspace()->stackingOrder().indexOf(windowA) == 1);
     QVERIFY(workspace()->stackingOrder().indexOf(windowB) == 0);
+}
+
+class X11Display;
+
+class X11Object
+{
+public:
+    explicit X11Object(X11Display *display);
+    virtual ~X11Object();
+
+    virtual void handle(xcb_generic_event_t *event) = 0;
+
+    X11Display *m_display;
+};
+
+class X11Display : public QObject
+{
+    Q_OBJECT
+
+public:
+    static std::unique_ptr<X11Display> create()
+    {
+        auto connection = Test::createX11Connection();
+        if (!connection) {
+            return nullptr;
+        }
+        return std::unique_ptr<X11Display>(new X11Display(std::move(connection)));
+    }
+
+    xcb_connection_t *connection() const
+    {
+        return m_connection.get();
+    }
+
+    void addObject(X11Object *object)
+    {
+        m_objects.append(object);
+    }
+
+    void removeObject(X11Object *object)
+    {
+        m_objects.removeOne(object);
+    }
+
+private:
+    X11Display(Test::XcbConnectionPtr connection)
+        : m_connection(std::move(connection))
+        , m_notifier(new QSocketNotifier(xcb_get_file_descriptor(m_connection.get()), QSocketNotifier::Read))
+    {
+        xcb_screen_t *screen = xcb_setup_roots_iterator(xcb_get_setup(m_connection.get())).data;
+
+        connect(m_notifier.get(), &QSocketNotifier::activated, this, &X11Display::dispatchEvents);
+        connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &X11Display::dispatchEvents);
+        connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::awake, this, &X11Display::dispatchEvents);
+    }
+
+    void dispatchEvents()
+    {
+        xcb_generic_event_t *event;
+        while ((event = xcb_poll_for_event(m_connection.get()))) {
+            const auto objects = m_objects; // The object list can change while handling events.
+            for (X11Object *object : objects) {
+                object->handle(event);
+            }
+            std::free(event);
+        }
+
+        xcb_flush(m_connection.get());
+    }
+
+    Test::XcbConnectionPtr m_connection;
+    std::unique_ptr<QSocketNotifier> m_notifier;
+    QList<X11Object *> m_objects;
+};
+
+X11Object::X11Object(X11Display *display)
+    : m_display(display)
+{
+    m_display->addObject(this);
+}
+
+X11Object::~X11Object()
+{
+    m_display->removeObject(this);
+}
+
+class X11TestWindow : public QObject, public X11Object
+{
+    Q_OBJECT
+public:
+    X11TestWindow(X11Display *display, const QSize &size)
+        : X11Object(display)
+        , m_window(createWindow(m_display->connection(), QRect(QPoint(), size)))
+        , m_size(size)
+    {
+        // request confgure events
+        uint32_t value = XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+        xcb_change_window_attributes_checked(m_display->connection(), m_window->window(), XCB_CW_EVENT_MASK, &value);
+    }
+
+    void handle(xcb_generic_event_t *event) override
+    {
+        const uint8_t eventType = event->response_type & ~0x80;
+        if (eventType != XCB_CONFIGURE_NOTIFY) {
+            return;
+        }
+        auto configureEvent = reinterpret_cast<xcb_configure_notify_event_t *>(event);
+        present(QSize(configureEvent->width, configureEvent->height));
+        Q_EMIT handledConfigure();
+    }
+
+    bool waitForAndProcessConfigure(const QSize &expectedSize)
+    {
+        QSignalSpy configure(this, &X11TestWindow::handledConfigure);
+        const auto t = std::chrono::steady_clock::now();
+        while (std::chrono::steady_clock::now() < t + 5s) {
+            if (!configure.wait()) {
+                return false;
+            }
+            if (m_size == expectedSize) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool present(const QSize &size)
+    {
+        m_size = size;
+        ShmGraphicsBufferAllocator allocator;
+        GraphicsBufferRef buffer = allocator.allocate(GraphicsBufferOptions{
+            .size = size,
+            .format = DRM_FORMAT_XRGB8888,
+            .modifiers = QList<uint64_t>{DRM_FORMAT_MOD_LINEAR},
+            .software = true,
+        });
+        if (!buffer) {
+            return false;
+        }
+        // xcb_shm_attach_fd() takes the ownership of the passed shm file descriptor.
+        FileDescriptor poolFileDescriptor = buffer->shmAttributes()->fd.duplicate();
+        if (!poolFileDescriptor.isValid()) {
+            return false;
+        }
+
+        xcb_shm_seg_t segment = xcb_generate_id(m_display->connection());
+        xcb_shm_attach_fd(m_display->connection(), segment, poolFileDescriptor.take(), 0);
+
+        xcb_pixmap_t pixmap = xcb_generate_id(m_display->connection());
+        xcb_shm_create_pixmap(m_display->connection(), pixmap, m_window->window(), size.width(), size.height(), 24, segment, 0);
+        xcb_shm_detach(m_display->connection(), segment);
+
+        xcb_xfixes_region_t valid = 0;
+        xcb_xfixes_region_t update = 0;
+        uint32_t serial = 0;
+        uint32_t options = 0;
+        uint64_t targetMsc = 0;
+
+        xcb_present_pixmap(m_display->connection(),
+                           m_window->window(),
+                           pixmap,
+                           serial,
+                           valid,
+                           update,
+                           0,
+                           0,
+                           XCB_NONE,
+                           XCB_NONE,
+                           XCB_NONE,
+                           options,
+                           targetMsc,
+                           0,
+                           0,
+                           0,
+                           nullptr);
+        return true;
+    }
+
+Q_SIGNALS:
+    void handledConfigure();
+
+public:
+    X11Window *const m_window;
+    QSize m_size;
+};
+
+void X11WindowTest::testRandrEmulation()
+{
+    // This test verifies that randr mode emulation for fullscreen X11 clients works
+    const auto x11Display = X11Display::create();
+    QVERIFY(x11Display);
+
+    xcb_randr_select_input(x11Display->connection(), rootWindow(), XCB_RANDR_NOTIFY_MASK_OUTPUT_CHANGE);
+
+    X11TestWindow window(x11Display.get(), QSize(100, 100));
+
+    // present something, so that Xwayland creates a surface for the window
+    QSignalSpy surface(window.m_window, &X11Window::surfaceChanged);
+    QVERIFY(window.present(QSize(100, 100)));
+    QVERIFY(window.m_window->surface() || surface.wait());
+    QVERIFY(window.m_window->surface());
+
+    window.m_window->move(QPointF(0, 0));
+
+    // change the resolution through randr, to any non-current mode
+    // NOTE that randr emulation is per connection, this doesn't affect other X11 clients!
+    auto screenResources = xcb_randr_get_screen_resources_reply(x11Display->connection(),
+                                                                xcb_randr_get_screen_resources(x11Display->connection(), kwinApp()->x11RootWindow()),
+                                                                nullptr);
+    auto x11Outputs = xcb_randr_get_screen_resources_outputs(screenResources);
+    auto allModes = xcb_randr_get_screen_resources_modes(screenResources);
+
+    // find the correct output
+    xcb_randr_get_output_info_reply_t *outputInfo = nullptr;
+    xcb_randr_get_crtc_info_reply_t *crtcInfo = nullptr;
+    int outputNum = 0;
+    for (; outputNum < screenResources->num_outputs; outputNum++) {
+        outputInfo = xcb_randr_get_output_info_reply(x11Display->connection(),
+                                                     xcb_randr_get_output_info(x11Display->connection(), x11Outputs[outputNum], screenResources->config_timestamp),
+                                                     nullptr);
+        QVERIFY(outputInfo);
+        crtcInfo = xcb_randr_get_crtc_info_reply(x11Display->connection(),
+                                                 xcb_randr_get_crtc_info(x11Display->connection(), outputInfo->crtc, screenResources->config_timestamp),
+                                                 nullptr);
+        QVERIFY(crtcInfo);
+        if (crtcInfo->x == 0 && crtcInfo->y == 0) {
+            break;
+        }
+    }
+
+    auto outputModes = xcb_randr_get_output_info_modes(outputInfo);
+    const auto originalModeSize = QSize(crtcInfo->width, crtcInfo->height);
+    xcb_randr_mode_t emulatedMode = 0;
+    QSize emulatedSize;
+    for (int i = 0; i < screenResources->num_modes; i++) {
+        const bool isOutputMode = std::ranges::any_of(std::span(outputModes, outputInfo->num_modes), [id = allModes[i].id](xcb_randr_mode_t mode) {
+            return mode == id;
+        });
+        if (!isOutputMode) {
+            continue;
+        }
+        QSize size(allModes[i].width, allModes[i].height);
+        if (size != originalModeSize) {
+            emulatedMode = allModes[i].id;
+            emulatedSize = size;
+            auto cookie = xcb_randr_set_crtc_config(x11Display->connection(),
+                                                    outputInfo->crtc,
+                                                    screenResources->config_timestamp,
+                                                    screenResources->config_timestamp,
+                                                    crtcInfo->x,
+                                                    crtcInfo->y,
+                                                    allModes[i].id,
+                                                    XCB_RANDR_ROTATION_ROTATE_0,
+                                                    1,
+                                                    &x11Outputs[outputNum]);
+            xcb_generic_error_t *err = nullptr;
+            auto reply = xcb_randr_set_crtc_config_reply(x11Display->connection(), cookie, &err);
+            QVERIFY(reply);
+            QCOMPARE(reply->status, XCB_RANDR_SET_CONFIG_SUCCESS);
+            break;
+        }
+    }
+    QVERIFY(emulatedMode != 0);
+
+    // Now make the window fullscreen
+    {
+        NETWinInfo info(x11Display->connection(), window.m_window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::FullScreen, NET::FullScreen);
+        xcb_flush(x11Display->connection());
+    }
+
+    // wait for the window to be reconfigured, and react to it
+    QSignalSpy commit(window.m_window->surface(), &SurfaceInterface::committed);
+    QVERIFY(window.waitForAndProcessConfigure(emulatedSize));
+    QCOMPARE(window.m_window->isFullScreen(), true);
+    QCOMPARE(window.m_window->moveResizeGeometry().size(), workspace()->outputs().front()->geometryF().size());
+
+    // Xwayland should set the viewport to scale it up to fullscreen.
+    // Note that Xwayland could be doing other commits in between,
+    // so we can't just wait for the first commit
+    auto t = std::chrono::steady_clock::now();
+    while (std::chrono::steady_clock::now() < t + 5s) {
+        if (window.m_window->surface()->bufferSourceBox().size() == emulatedSize
+            && window.m_window->surface()->size() == workspace()->outputs().front()->geometryF().size()) {
+            break;
+        }
+        QVERIFY(commit.wait());
+    }
+
+    // if the window is moved to the other screen, which does not have an emulated mode,
+    // the window should get resized back to the normal screen size
+    const auto outputs = workspace()->outputs();
+    const auto it = std::ranges::find_if(outputs, [&window](LogicalOutput *output) {
+        return output != window.m_window->moveResizeOutput();
+    });
+    QCOMPARE_NE(it, outputs.end());
+    LogicalOutput *otherOutput = *it;
+    window.m_window->sendToOutput(otherOutput);
+
+    // wait for the window to be reconfigured, and react to it
+    QVERIFY(window.waitForAndProcessConfigure(originalModeSize));
+    QCOMPARE(window.m_window->isFullScreen(), true);
+    QCOMPARE(window.m_window->moveResizeGeometry(), otherOutput->geometryF());
+
+    // Xwayland should reset the viewport to the new fullscreen size.
+    // Note that Xwayland could be doing other commits in between,
+    // so we can't just wait for the first commit
+    t = std::chrono::steady_clock::now();
+    while (std::chrono::steady_clock::now() < t + 5s) {
+        if (window.m_window->surface()->bufferSourceBox().size() == originalModeSize
+            && window.m_window->surface()->size() == otherOutput->geometryF().size()) {
+            break;
+        }
+        QVERIFY(commit.wait());
+    }
 }
 
 WAYLANDTEST_MAIN(X11WindowTest)
