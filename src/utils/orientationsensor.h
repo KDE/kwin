@@ -36,6 +36,8 @@ private:
 
     const std::unique_ptr<QOrientationSensor> m_sensor;
     const std::unique_ptr<QOrientationReading> m_reading;
+    bool m_isAvailable = false;
+    bool m_enabled = false;
 };
 
 }
