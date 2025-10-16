@@ -83,6 +83,7 @@ public:
     Xcb::Atom primary;
     Xcb::Atom edid;
     Xcb::Atom xwayland_allow_commits;
+    Xcb::Atom xwayland_xrandr_emulation;
 
     /**
      * @internal

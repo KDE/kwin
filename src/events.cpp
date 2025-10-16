@@ -566,6 +566,8 @@ void X11Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
             updateShadow();
         } else if (e->atom == atoms->kde_skip_close_animation) {
             getSkipCloseAnimation();
+        } else if (e->atom == atoms->xwayland_xrandr_emulation) {
+            configure(Xcb::toXNative(m_bufferGeometry));
         }
         break;
     }
