@@ -419,6 +419,10 @@ bool WaylandDisplay::initialize(const QString &socketName)
         qCWarning(KWIN_WAYLAND_BACKEND, "zwp_pointer_constraints_v1 isn't supported by the host compositor");
         return false;
     }
+    if (!m_presentationTime) {
+        qCWarning(KWIN_WAYLAND_BACKEND, "wp_presentation_time isn't supported by the host compositor");
+        return false;
+    }
     return true;
 }
 

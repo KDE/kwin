@@ -11,10 +11,10 @@
 #include "core/output.h"
 
 #include <KWayland/Client/xdgshell.h>
-
 #include <QObject>
 #include <QSize>
 #include <QTimer>
+#include <deque>
 
 namespace KWayland
 {
@@ -34,6 +34,8 @@ struct wp_color_management_surface_v1;
 struct wp_fractional_scale_v1;
 struct wp_fractional_scale_v1_listener;
 struct wp_viewport;
+struct wl_callback;
+struct wl_callback_listener;
 
 namespace KWin
 {
@@ -108,6 +110,8 @@ private:
 
     static const wp_fractional_scale_v1_listener s_fractionalScaleListener;
     static void handleFractionalScaleChanged(void *data, struct wp_fractional_scale_v1 *wp_fractional_scale_v1, uint32_t scale120);
+    static const wl_callback_listener s_frameCallbackListener;
+    static void handleFrame(void *data, wl_callback *callback, uint32_t time);
 
     std::vector<std::unique_ptr<OutputLayer>> m_layers;
     std::unique_ptr<RenderLoop> m_renderLoop;
@@ -121,11 +125,21 @@ private:
     bool m_hasPointerLock = false;
     bool m_ready = false;
     bool m_mapped = false;
-    std::shared_ptr<OutputFrame> m_frame;
+    struct FrameData
+    {
+        explicit FrameData(const std::shared_ptr<OutputFrame> &frame, struct wp_presentation_feedback *presentationFeedback, struct wl_callback *frameCallback);
+        FrameData(FrameData &&move);
+        ~FrameData();
+
+        std::shared_ptr<OutputFrame> outputFrame;
+        wp_presentation_feedback *presentationFeedback;
+        wl_callback *frameCallback;
+        std::optional<std::chrono::steady_clock::time_point> frameCallbackTime;
+    };
+    std::deque<FrameData> m_frames;
     quint32 m_pendingConfigureSerial = 0;
     QSize m_pendingConfigureSize;
     QTimer m_configureThrottleTimer;
-    wp_presentation_feedback *m_presentationFeedback = nullptr;
     std::unique_ptr<ColorSurfaceFeedback> m_colorSurfaceFeedback;
     wp_fractional_scale_v1 *m_fractionalScale = nullptr;
     wp_viewport *m_viewport = nullptr;

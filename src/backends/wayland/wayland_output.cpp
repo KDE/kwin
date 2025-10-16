@@ -130,6 +130,7 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
     , m_backend(backend)
     , m_cursor(std::make_unique<WaylandCursor>(backend))
 {
+    m_renderLoop->setMaxPendingFrameCount(2);
     if (KWayland::Client::XdgDecorationManager *manager = m_backend->display()->xdgDecorationManager()) {
         m_xdgDecoration.reset(manager->getToplevelDecoration(m_xdgShellSurface.get()));
         m_xdgDecoration->setMode(KWayland::Client::XdgDecoration::Mode::ServerSide);
@@ -170,12 +171,6 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         applyConfigure(m_pendingConfigureSize, m_pendingConfigureSerial);
     });
 
-    connect(m_surface.get(), &KWayland::Client::Surface::frameRendered, this, [this]() {
-        Q_ASSERT(m_frame);
-        m_frame->presented(std::chrono::steady_clock::now().time_since_epoch(), PresentationMode::VSync);
-        m_frame.reset();
-    });
-
     updateWindowTitle();
 
     connect(m_xdgShellSurface.get(), &XdgShellSurface::configureRequested, this, &WaylandOutput::handleConfigure);
@@ -186,10 +181,7 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
 
 WaylandOutput::~WaylandOutput()
 {
-    if (m_presentationFeedback) {
-        wp_presentation_feedback_destroy(m_presentationFeedback);
-        m_presentationFeedback = nullptr;
-    }
+    m_frames.clear();
     wp_viewport_destroy(m_viewport);
     m_xdgDecoration.reset();
     m_xdgShellSurface.reset();
@@ -251,6 +243,22 @@ static constexpr struct wp_presentation_feedback_listener s_presentationListener
     .discarded = handleDiscarded,
 };
 
+void WaylandOutput::handleFrame(void *data, wl_callback *callback, uint32_t time)
+{
+    auto output = reinterpret_cast<WaylandOutput *>(data);
+    auto it = std::ranges::find_if(output->m_frames, [callback](const auto &frame) {
+        return frame.frameCallback == callback;
+    });
+    if (it != output->m_frames.end()) {
+        // don't use the "time" argument for this, as it's in an unspecified base.
+        it->frameCallbackTime = std::chrono::steady_clock::now();
+    }
+}
+
+const wl_callback_listener WaylandOutput::s_frameCallbackListener{
+    .done = &WaylandOutput::handleFrame,
+};
+
 bool WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
     auto cursorLayers = Compositor::self()->backend()->compatibleOutputLayers(this) | std::views::filter([](OutputLayer *layer) {
@@ -260,6 +268,31 @@ bool WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
         return false;
     }
     return true;
+}
+
+WaylandOutput::FrameData::FrameData(const std::shared_ptr<OutputFrame> &frame, struct wp_presentation_feedback *presentationFeedback, struct wl_callback *frameCallback)
+    : outputFrame(frame)
+    , presentationFeedback(presentationFeedback)
+    , frameCallback(frameCallback)
+{
+}
+
+WaylandOutput::FrameData::FrameData(FrameData &&move)
+    : outputFrame(std::move(move.outputFrame))
+    , presentationFeedback(std::exchange(move.presentationFeedback, nullptr))
+    , frameCallback(std::exchange(move.frameCallback, nullptr))
+    , frameCallbackTime(std::exchange(move.frameCallbackTime, std::nullopt))
+{
+}
+
+WaylandOutput::FrameData::~FrameData()
+{
+    if (presentationFeedback) {
+        wp_presentation_feedback_destroy(presentationFeedback);
+    }
+    if (frameCallback) {
+        wl_callback_destroy(frameCallback);
+    }
 }
 
 bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
@@ -292,24 +325,21 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
     if (m_backend->display()->tearingControl()) {
         m_renderLoop->setPresentationMode(frame->presentationMode());
     }
-    if (auto presentationTime = m_backend->display()->presentationTime()) {
-        m_presentationFeedback = wp_presentation_feedback(presentationTime, *m_surface);
-        wp_presentation_feedback_add_listener(m_presentationFeedback, &s_presentationListener, this);
-        m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    } else {
-        m_surface->commit(KWayland::Client::Surface::CommitFlag::FrameCallback);
-    }
-    m_frame = frame;
+    FrameData frameData{
+        frame,
+        wp_presentation_feedback(m_backend->display()->presentationTime(), *m_surface),
+        wl_surface_frame(*m_surface),
+    };
+    wp_presentation_feedback_add_listener(frameData.presentationFeedback, &s_presentationListener, this);
+    wl_callback_add_listener(frameData.frameCallback, &s_frameCallbackListener, this);
+    m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    m_frames.push_back(std::move(frameData));
     return true;
 }
 
 void WaylandOutput::frameDiscarded()
 {
-    m_frame.reset();
-    if (m_presentationFeedback) {
-        wp_presentation_feedback_destroy(m_presentationFeedback);
-        m_presentationFeedback = nullptr;
-    }
+    m_frames.pop_front();
 }
 
 void WaylandOutput::framePresented(std::chrono::nanoseconds timestamp, uint32_t refreshRate)
@@ -323,12 +353,17 @@ void WaylandOutput::framePresented(std::chrono::nanoseconds timestamp, uint32_t 
         setState(next);
         m_renderLoop->setRefreshRate(m_refreshRate);
     }
-    m_frame->presented(timestamp, PresentationMode::VSync);
-    m_frame.reset();
-    if (m_presentationFeedback) {
-        wp_presentation_feedback_destroy(m_presentationFeedback);
-        m_presentationFeedback = nullptr;
+    const auto &frame = m_frames.front();
+    if (auto t = frame.frameCallbackTime) {
+        // NOTE that the frame callback gets signaled *after* the host compositor
+        // is done compositing the frame on the CPU side, not before!
+        // This is the best estimate we currently have for the commit deadline, but
+        // it should be replaced with something more accurate when possible.
+        const auto difference = timestamp - t->time_since_epoch();
+        m_renderLoop->setPresentationSafetyMargin(difference + std::chrono::milliseconds(1));
     }
+    frame.outputFrame->presented(timestamp, PresentationMode::VSync);
+    m_frames.pop_front();
 }
 
 void WaylandOutput::applyChanges(const OutputConfiguration &config)
