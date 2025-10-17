@@ -417,9 +417,8 @@ QRegion ItemTreeView::collectDamage()
     QRegion ret;
     accumulateRepaints(m_item, this, &ret);
     // FIXME damage tracking for this layer still has some bugs, this effectively disables it
-    ret = viewport().toAlignedRect();
-    // FIXME this offset should really not be rounded
-    return ret.translated(-viewport().topLeft().toPoint());
+    ret = infiniteRegion();
+    return ret;
 }
 
 void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &region)
