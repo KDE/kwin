@@ -1287,13 +1287,15 @@ QModelIndex DebugConsoleModel::parent(const QModelIndex &child) const
     return QModelIndex();
 }
 
-QVariant DebugConsoleModel::propertyData(QObject *object, const QModelIndex &index, int role) const
+QVariant DebugConsoleModel::propertyData(KWin::Window *window, const QModelIndex &index, int role) const
 {
-    const auto property = object->metaObject()->property(index.row());
+    const auto property = window->metaObject()->property(index.row());
     if (index.column() == 0) {
         return property.name();
     } else {
-        const QVariant value = property.read(object);
+        const QVariant value = property.read(window);
+
+        const auto property = window->metaObject()->property(index.row());
         if (qstrcmp(property.name(), "windowType") == 0) {
             switch (value.toInt()) {
             case NET::Normal:
