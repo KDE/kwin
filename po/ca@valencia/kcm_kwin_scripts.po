@@ -3,9 +3,9 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Josep M. Ferrer <txemaq@gmail.com>, 2012, 2013, 2015, 2017, 2018, 2020, 2022.
-# Empar Montoro Martín <montoro_mde@gva.es>, 2019.
-# Antoni Bella Pérez <antonibella5@yahoo.com>, 2020.
+# SPDX-FileCopyrightText: 2012, 2013, 2015, 2017, 2018, 2020, 2022 Josep M. Ferrer <txemaq@gmail.com>
+# SPDX-FileCopyrightText: 2019 Empar Montoro Martín <montoro_mde@gva.es>
+# SPDX-FileCopyrightText: 2020 Antoni Bella Pérez <antonibella5@yahoo.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
@@ -25,7 +25,7 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Empar Montoro Martín,Josep M. Ferrer"
+msgstr "SPDX-FileCopyrightText: 2019 Empar Montoro Martín,Josep M. Ferrer"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -67,14 +67,14 @@ msgstr "S'ha produït un error en desinstal·lar l'Script de KWin: %1"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete..."
-msgstr "Suprimix..."
+msgstr "Suprimix…"
 
 #: package/contents/ui/main.qml:60
 #, kde-format
 msgid "Install from File..."
-msgstr "Instal·la des d'un fitxer..."
+msgstr "Instal·la des d'un fitxer…"
 
 #: package/contents/ui/main.qml:64
 #, kde-format
 msgid "Get New Scripts..."
-msgstr "Obtín scripts nous..."
+msgstr "Obtín scripts nous…"

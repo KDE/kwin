@@ -3,7 +3,7 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Josep M. Ferrer <txemaq@gmail.com>, 2021.
+# SPDX-FileCopyrightText: 2021 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
@@ -37,7 +37,7 @@ msgstr "Teclat virtual"
 #: kcmvirtualkeyboard.cpp:31
 #, kde-format
 msgid "Choose Virtual Keyboard"
-msgstr "Seleccioneu el teclat virtual"
+msgstr "Selecció de teclat virtual"
 
 #: kcmvirtualkeyboard.cpp:68
 #, kde-format
