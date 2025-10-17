@@ -10,17 +10,22 @@
 
 #include "atoms.h"
 #include "compositor.h"
+#include "core/graphicsbuffer.h"
+#include "core/shmgraphicsbufferallocator.h"
 #include "cursor.h"
 #include "pointer_input.h"
 #include "virtualdesktops.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
 
 #include <KWayland/Client/surface.h>
-
+#include <QSocketNotifier>
+#include <drm_fourcc.h>
 #include <linux/input-event-codes.h>
 #include <netwm.h>
+#include <xcb/present.h>
 #include <xcb/xcb_icccm.h>
 
 using namespace KWin;
@@ -120,6 +125,7 @@ private Q_SLOTS:
     void testOverrideRedirectReparent();
     void testOverrideRedirectStackingAbove();
     void testOverrideRedirectStackingBelow();
+    void testRandrEmulation();
 };
 
 void X11WindowTest::initTestCase_data()
@@ -3424,6 +3430,161 @@ void X11WindowTest::testOverrideRedirectStackingBelow()
     QVERIFY(workspace()->windows().count() == 2);
     QVERIFY(workspace()->stackingOrder().indexOf(windowA) == 1);
     QVERIFY(workspace()->stackingOrder().indexOf(windowB) == 0);
+}
+
+static bool present(xcb_connection_t *connection, xcb_window_t window, const QSize &size)
+{
+    ShmGraphicsBufferAllocator allocator;
+    GraphicsBufferRef buffer = allocator.allocate(GraphicsBufferOptions{
+        .size = size,
+        .format = DRM_FORMAT_XRGB8888,
+        .modifiers = QList<uint64_t>{DRM_FORMAT_MOD_LINEAR},
+        .software = true,
+    });
+    if (!buffer) {
+        return false;
+    }
+    // xcb_shm_attach_fd() takes the ownership of the passed shm file descriptor.
+    FileDescriptor poolFileDescriptor = buffer->shmAttributes()->fd.duplicate();
+    if (!poolFileDescriptor.isValid()) {
+        return false;
+    }
+
+    xcb_shm_seg_t segment = xcb_generate_id(connection);
+    xcb_shm_attach_fd(connection, segment, poolFileDescriptor.take(), 0);
+
+    xcb_pixmap_t pixmap = xcb_generate_id(connection);
+    xcb_shm_create_pixmap(connection, pixmap, window, size.width(), size.height(), 24, segment, 0);
+    xcb_shm_detach(connection, segment);
+
+    xcb_xfixes_region_t valid = 0;
+    xcb_xfixes_region_t update = 0;
+    uint32_t serial = 0;
+    uint32_t options = 0;
+    uint64_t targetMsc = 0;
+
+    xcb_present_pixmap(connection,
+                       window,
+                       pixmap,
+                       serial,
+                       valid,
+                       update,
+                       0,
+                       0,
+                       XCB_NONE,
+                       XCB_NONE,
+                       XCB_NONE,
+                       options,
+                       targetMsc,
+                       0,
+                       0,
+                       0,
+                       nullptr);
+    return true;
+}
+
+void X11WindowTest::testRandrEmulation()
+{
+    // This test verifies that randr mode emulation for fullscreen X11 clients works
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 100));
+
+    // present something, so that Xwayland creates a surface for the window
+    QSignalSpy surface(window, &X11Window::surfaceChanged);
+    QVERIFY(present(c.get(), window->window(), QSize(100, 100)));
+    QVERIFY(surface.wait());
+    QVERIFY(window->surface());
+
+    // change the resolution through randr, to any non-current mode
+    auto screenResources = xcb_randr_get_screen_resources_reply(c.get(),
+                                                                xcb_randr_get_screen_resources(c.get(), kwinApp()->x11RootWindow()),
+                                                                nullptr);
+    auto x11Outputs = xcb_randr_get_screen_resources_outputs(screenResources);
+    auto allModes = xcb_randr_get_screen_resources_modes(screenResources);
+    auto outputInfo = xcb_randr_get_output_info_reply(c.get(),
+                                                      xcb_randr_get_output_info(c.get(), x11Outputs[0], screenResources->config_timestamp),
+                                                      nullptr);
+    auto outputModes = xcb_randr_get_output_info_modes(outputInfo);
+    auto crtcInfo = xcb_randr_get_crtc_info_reply(c.get(),
+                                                  xcb_randr_get_crtc_info(c.get(), outputInfo->crtc, screenResources->config_timestamp),
+                                                  nullptr);
+    const auto currentModeSize = QSize(crtcInfo->width, crtcInfo->height);
+    xcb_randr_mode_t emulatedMode = 0;
+    QSize emulatedSize;
+    for (int i = 0; i < outputInfo->num_modes && !emulatedMode; i++) {
+        for (int j = 0; j < screenResources->num_modes; j++) {
+            if (allModes[j].id != outputModes[i]) {
+                continue;
+            }
+            QSize size(allModes[j].width, allModes[j].height);
+            if (size != currentModeSize) {
+                emulatedMode = allModes[j].id;
+                emulatedSize = size;
+                auto cookie = xcb_randr_set_crtc_config(c.get(),
+                                                        outputInfo->crtc,
+                                                        screenResources->config_timestamp,
+                                                        screenResources->config_timestamp,
+                                                        crtcInfo->x,
+                                                        crtcInfo->y,
+                                                        allModes[j].id,
+                                                        XCB_RANDR_ROTATION_ROTATE_0,
+                                                        1,
+                                                        x11Outputs);
+                xcb_generic_error_t *err = nullptr;
+                auto reply = xcb_randr_set_crtc_config_reply(c.get(), cookie, &err);
+                QVERIFY(reply);
+                QCOMPARE(reply->status, XCB_RANDR_SET_CONFIG_SUCCESS);
+                break;
+            }
+        }
+    }
+    QVERIFY(emulatedMode != 0);
+
+    // request confgure events
+    uint32_t value = XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+    xcb_change_window_attributes_checked(c.get(), window->window(), XCB_CW_EVENT_MASK, &value);
+
+    // Now make the window fullscreen
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::FullScreen, NET::FullScreen);
+        xcb_flush(c.get());
+    }
+
+    // wait for the window to be reconfigured, and react to it
+    QSignalSpy commit(window->surface(), &SurfaceInterface::committed);
+    QSocketNotifier connectionNotifier(xcb_get_file_descriptor(c.get()), QSocketNotifier::Type::Read);
+    QSignalSpy socketSpy(&connectionNotifier, &QSocketNotifier::activated);
+    while (true) {
+        QVERIFY(FileDescriptor::isReadable(xcb_get_file_descriptor(c.get())) || socketSpy.wait());
+        auto event = xcb_poll_for_event(c.get());
+        QVERIFY(event);
+        const uint8_t eventType = event->response_type & ~0x80;
+        if (eventType != XCB_CONFIGURE_NOTIFY) {
+            continue;
+        }
+        auto configureEvent = reinterpret_cast<xcb_configure_notify_event_t *>(event);
+        QCOMPARE(configureEvent->width, emulatedSize.width());
+        QCOMPARE(configureEvent->height, emulatedSize.height());
+        QVERIFY(present(c.get(), window->window(), emulatedSize));
+        break;
+    }
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->moveResizeGeometry().size(), workspace()->outputs().front()->geometryF().size());
+
+    // Xwayland should set the viewport to scale it up to fullscreen
+    // Note that Xwayland could be doing other commits in between,
+    // so we can't just wait for the first commit
+    while (true) {
+        if (window->surface()->bufferSourceBox().size() == emulatedSize
+            && window->surface()->size() == workspace()->outputs().front()->geometryF().size()) {
+            break;
+        }
+        QVERIFY(commit.wait());
+    }
 }
 
 WAYLANDTEST_MAIN(X11WindowTest)
