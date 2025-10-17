@@ -544,8 +544,8 @@ std::optional<std::pair<OutputConfiguration, QList<Output *>>> OutputConfigurati
         const auto scale = changeset->scale.value_or(output->scale());
         return QSize(std::ceil(mode->size().width() / scale), std::ceil(mode->size().height() / scale));
     };
-    const QPoint internalPos = internalChangeset->pos.value_or(internalOutput->geometry().topLeft());
-    const QSize internalSize = getSize(internalChangeset.get(), internalOutput);
+    const QPoint internalPos = internalOutput->isEnabled() ? internalChangeset->pos.value_or(internalOutput->geometry().topLeft()) : QPoint();
+    const QSize internalSize = internalOutput->isEnabled() ? getSize(internalChangeset.get(), internalOutput) : QSize();
     for (Output *otherOutput : outputs) {
         auto changeset = config.changeSet(otherOutput);
         QPoint otherPos = changeset->pos.value_or(otherOutput->geometry().topLeft());
