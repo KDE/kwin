@@ -1290,60 +1290,71 @@ QModelIndex DebugConsoleModel::parent(const QModelIndex &child) const
 QVariant DebugConsoleModel::propertyData(KWin::Window *window, const QModelIndex &index, int role) const
 {
     const auto property = window->metaObject()->property(index.row());
-    if (index.column() == 0) {
-        return property.name();
-    } else {
-        const QVariant value = property.read(window);
-
-        const auto property = window->metaObject()->property(index.row());
-        if (qstrcmp(property.name(), "windowType") == 0) {
-            switch (value.toInt()) {
-            case NET::Normal:
-                return QStringLiteral("NET::Normal");
-            case NET::Desktop:
-                return QStringLiteral("NET::Desktop");
-            case NET::Dock:
-                return QStringLiteral("NET::Dock");
-            case NET::Toolbar:
-                return QStringLiteral("NET::Toolbar");
-            case NET::Menu:
-                return QStringLiteral("NET::Menu");
-            case NET::Dialog:
-                return QStringLiteral("NET::Dialog");
-            case NET::Override:
-                return QStringLiteral("NET::Override");
-            case NET::TopMenu:
-                return QStringLiteral("NET::TopMenu");
-            case NET::Utility:
-                return QStringLiteral("NET::Utility");
-            case NET::Splash:
-                return QStringLiteral("NET::Splash");
-            case NET::DropdownMenu:
-                return QStringLiteral("NET::DropdownMenu");
-            case NET::PopupMenu:
-                return QStringLiteral("NET::PopupMenu");
-            case NET::Tooltip:
-                return QStringLiteral("NET::Tooltip");
-            case NET::Notification:
-                return QStringLiteral("NET::Notification");
-            case NET::ComboBox:
-                return QStringLiteral("NET::ComboBox");
-            case NET::DNDIcon:
-                return QStringLiteral("NET::DNDIcon");
-            case NET::OnScreenDisplay:
-                return QStringLiteral("NET::OnScreenDisplay");
-            case NET::CriticalNotification:
-                return QStringLiteral("NET::CriticalNotification");
-            case NET::AppletPopup:
-                return QStringLiteral("NET::AppletPopup");
-            case NET::Unknown:
-            default:
-                return QStringLiteral("NET::Unknown");
+    if (role == Qt::DisplayRole) {
+        if (index.column() == 0) {
+            return property.name();
+        } else {
+            const QVariant value = property.read(window);
+            if (qstrcmp(property.name(), "windowType") == 0) {
+                switch (value.toInt()) {
+                case NET::Normal:
+                    return QStringLiteral("NET::Normal");
+                case NET::Desktop:
+                    return QStringLiteral("NET::Desktop");
+                case NET::Dock:
+                    return QStringLiteral("NET::Dock");
+                case NET::Toolbar:
+                    return QStringLiteral("NET::Toolbar");
+                case NET::Menu:
+                    return QStringLiteral("NET::Menu");
+                case NET::Dialog:
+                    return QStringLiteral("NET::Dialog");
+                case NET::Override:
+                    return QStringLiteral("NET::Override");
+                case NET::TopMenu:
+                    return QStringLiteral("NET::TopMenu");
+                case NET::Utility:
+                    return QStringLiteral("NET::Utility");
+                case NET::Splash:
+                    return QStringLiteral("NET::Splash");
+                case NET::DropdownMenu:
+                    return QStringLiteral("NET::DropdownMenu");
+                case NET::PopupMenu:
+                    return QStringLiteral("NET::PopupMenu");
+                case NET::Tooltip:
+                    return QStringLiteral("NET::Tooltip");
+                case NET::Notification:
+                    return QStringLiteral("NET::Notification");
+                case NET::ComboBox:
+                    return QStringLiteral("NET::ComboBox");
+                case NET::DNDIcon:
+                    return QStringLiteral("NET::DNDIcon");
+                case NET::OnScreenDisplay:
+                    return QStringLiteral("NET::OnScreenDisplay");
+                case NET::CriticalNotification:
+                    return QStringLiteral("NET::CriticalNotification");
+                case NET::AppletPopup:
+                    return QStringLiteral("NET::AppletPopup");
+                case NET::Unknown:
+                default:
+                    return QStringLiteral("NET::Unknown");
+                }
+            } else if (qstrcmp(property.name(), "layer") == 0) {
+                return QMetaEnum::fromType<Layer>().valueToKey(value.value<Layer>());
             }
-        } else if (qstrcmp(property.name(), "layer") == 0) {
-            return QMetaEnum::fromType<Layer>().valueToKey(value.value<Layer>());
+            return value;
         }
-        return value;
+    } else if (role == Qt::DecorationRole) {
+        if (index.column() == 1) {
+            const QVariant value = property.read(window);
+            if (value.userType() == qMetaTypeId<QIcon>()) {
+                return value;
+            } else if (value.userType() == qMetaTypeId<KWin::Window *>()) {
+                if (auto window = value.value<KWin::Window *>()) {
+                    return window->icon();
+                }
+            }
+        }
     }
     return QVariant();
 }
@@ -1387,7 +1398,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
         }
     }
     if (index.internalId() & s_propertyBitMask) {
-        if (index.column() >= 2 || role != Qt::DisplayRole) {
+        if (index.column() >= 2) {
             return QVariant();
         }
         if (Window *w = waylandWindow(index)) {
