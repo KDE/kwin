@@ -48,6 +48,8 @@
 #include <QMetaProperty>
 #include <QMetaType>
 #include <QMouseEvent>
+#include <QPainter>
+#include <QPixmap>
 #include <QPushButton>
 #include <QScopeGuard>
 #include <QSortFilterProxyModel>
@@ -1353,6 +1355,20 @@ QVariant DebugConsoleModel::propertyData(KWin::Window *window, const QModelIndex
                 if (auto window = value.value<KWin::Window *>()) {
                     return window->icon();
                 }
+            } else if (qstrcmp(property.name(), "colorScheme") == 0) {
+                const QPalette palette = window->palette();
+
+                // Draw a little color scheme preview,
+                // inspired by KColorSchemeManagerPrivate::createPreview.
+                QPixmap pixmap(16, 16);
+                pixmap.fill(Qt::black);
+                QPainter painter(&pixmap);
+                constexpr int itemSize = 16 / 2 - 1;
+                painter.fillRect(1, 1, itemSize, itemSize, palette.window().color());
+                painter.fillRect(1 + itemSize, 1, itemSize, itemSize, palette.button().color());
+                painter.fillRect(1, 1 + itemSize, itemSize, itemSize, palette.base().color());
+                painter.fillRect(1 + itemSize, 1 + itemSize, itemSize, itemSize, palette.highlight().color());
+                return pixmap;
             }
         }
     }
