@@ -914,6 +914,8 @@ void OutputConfigurationStore::load()
             } else if (str == "Flipped270") {
                 state.transform = state.manualTransform = OutputTransform::Kind::FlipX270;
             }
+        } else {
+            state.transform = state.manualTransform = OutputTransform::Kind::Normal;
         }
         if (const auto it = data.find("overscan"); it != data.end()) {
             const int overscan = it->toInt(-1);
@@ -1199,7 +1201,7 @@ void OutputConfigurationStore::save()
             o["scale"] = *output.scale;
         }
         if (output.manualTransform == OutputTransform::Kind::Normal) {
-            o["transform"] = "Normal";
+            // don't write that's the default value
         } else if (output.manualTransform == OutputTransform::Kind::Rotate90) {
             o["transform"] = "Rotated90";
         } else if (output.manualTransform == OutputTransform::Kind::Rotate180) {
@@ -1342,7 +1344,9 @@ void OutputConfigurationStore::save()
             pos["x"] = output.position.x();
             pos["y"] = output.position.y();
             o["position"] = pos;
-            o["replicationSource"] = output.replicationSource;
+            if (!output.replicationSource.isEmpty()) {
+                o["replicationSource"] = output.replicationSource;
+            }
 
             outputs.append(o);
         }
