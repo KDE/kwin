@@ -84,7 +84,7 @@ public:
 
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
-    bool forceImplicitModifiers() const;
+    bool forceLowBandwidthMode() const;
     bool asyncPageflipSupported() const;
     bool isI915() const;
     bool isNVidia() const;
@@ -162,7 +162,7 @@ private:
     bool m_isRemoved = false;
     bool m_isActive = true;
     bool m_forceModeset = false;
-    bool m_forceImplicitModifiers = false;
+    bool m_forceLowBandwidthMode = false;
     clockid_t m_presentationClock;
     std::unique_ptr<EglDisplay> m_eglDisplay;
     DrmBackend *const m_platform;

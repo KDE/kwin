@@ -413,15 +413,18 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
             return c1->crtcId.value() > c2->crtcId.value();
         });
     }
-    m_forceImplicitModifiers = false;
+    m_forceLowBandwidthMode = false;
     auto err = checkCrtcAssignment(connectors, crtcs);
     if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
         return err;
     }
-    if (m_addFB2ModifiersSupported) {
-        // Mesa usually picks the modifier with lowest bandwidth requirements
-        // so implicit modifiers might work where explicit ones don't
-        m_forceImplicitModifiers = true;
+    const bool hasPreferAccuracy = std::ranges::any_of(m_drmOutputs, [](const auto &output) {
+        return output->colorPowerTradeoff() == Output::ColorPowerTradeoff::PreferAccuracy;
+    });
+    if (m_addFB2ModifiersSupported || hasPreferAccuracy) {
+        // We currently don't have any information about why the output config
+        // got rejected; one possibility is missing memory bandwidth.
+        m_forceLowBandwidthMode = true;
         err = checkCrtcAssignment(connectors, crtcs);
     }
     return err;
@@ -686,9 +689,9 @@ bool DrmGpu::addFB2ModifiersSupported() const
     return m_addFB2ModifiersSupported;
 }
 
-bool DrmGpu::forceImplicitModifiers() const
+bool DrmGpu::forceLowBandwidthMode() const
 {
-    return m_forceImplicitModifiers;
+    return m_forceLowBandwidthMode;
 }
 
 bool DrmGpu::asyncPageflipSupported() const
