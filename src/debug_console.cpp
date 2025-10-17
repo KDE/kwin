@@ -18,7 +18,10 @@
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
 #include "scene/workspacescene.h"
+#include "tiles/customtile.h"
+#include "tiles/tile.h"
 #include "utils/filedescriptor.h"
+#include "virtualdesktops.h"
 #include "wayland/abstract_data_source.h"
 #include "wayland/clientconnection.h"
 #include "wayland/datacontrolsource_v1.h"
@@ -852,7 +855,25 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
         const QRectF r = value.toRectF();
         return QStringLiteral("%1,%2 %3x%4").arg(r.x()).arg(r.y()).arg(r.width()).arg(r.height());
     }
+    case QMetaType::QIcon: {
+        const QIcon icon = value.value<QIcon>();
+        if (!icon.isNull()) {
+            const auto sizes = icon.availableSizes();
+
+            QStringList sizesStringList;
+            sizesStringList.reserve(sizes.size());
+            for (const auto &size : sizes) {
+                sizesStringList.append(QString::number(size.width()));
+            }
+            return QStringLiteral("%1 (%2)").arg(icon.name(), displayText(sizesStringList, locale));
+        } else {
+            return QStringLiteral("null");
+        }
+    }
     default:
+        if (value.userType() == qMetaTypeId<QStringList>()) {
+            return value.toStringList().join(QLatin1String(", "));
+        }
         if (value.userType() == qMetaTypeId<KWin::SurfaceInterface *>()) {
             if (auto s = value.value<KWin::SurfaceInterface *>()) {
                 return QStringLiteral("KWin::SurfaceInterface(0x%1)").arg(qulonglong(s), 0, 16);
@@ -866,6 +887,45 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
             } else {
                 return QStringLiteral("nullptr");
             }
+        }
+        if (value.userType() == qMetaTypeId<KWin::Output *>()) {
+            if (auto output = value.value<KWin::Output *>()) {
+                return QStringLiteral("%1 (%2@%3x)").arg(output->name(), displayText(output->geometry(), locale), QString::number(output->scale()));
+            } else {
+                return QStringLiteral("nullptr");
+            }
+        }
+        if (value.userType() == qMetaTypeId<KWin::Tile *>()) {
+            if (auto tile = value.value<KWin::Tile *>()) {
+                const QString tileGeometry = displayText(tile->absoluteGeometry(), locale);
+
+                if (auto customTile = qobject_cast<KWin::CustomTile *>(tile)) {
+                    const QString direction = QMetaEnum::fromType<KWin::Tile::LayoutDirection>().valueToKey(static_cast<quint64>(customTile->layoutDirection()));
+                    return QStringLiteral("Custom (%1: %2)").arg(direction, tileGeometry);
+                } else {
+                    const QString quickTileMode = QMetaEnum::fromType<KWin::QuickTileFlag>().valueToKey(tile->quickTileMode());
+                    return QStringLiteral("%1 (%2)").arg(quickTileMode, tileGeometry);
+                }
+            } else {
+                return QStringLiteral("nullptr");
+            }
+        }
+        if (value.userType() == qMetaTypeId<KWin::VirtualDesktop *>()) {
+            if (auto desktop = value.value<KWin::VirtualDesktop *>()) {
+                return desktop->name();
+            } else {
+                return QStringLiteral("nullptr");
+            }
+        }
+        if (value.userType() == qMetaTypeId<QList<KWin::VirtualDesktop *>>()) {
+            const auto desktops = value.value<QList<KWin::VirtualDesktop *>>();
+
+            QStringList result;
+            result.reserve(desktops.size());
+            for (auto *desktop : desktops) {
+                result.append(displayText(QVariant::fromValue(desktop), locale));
+            }
+            return displayText(result, locale);
         }
         if (value.userType() == qMetaTypeId<Qt::MouseButtons>()) {
             const auto buttons = value.value<Qt::MouseButtons>();
