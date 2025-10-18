@@ -4,16 +4,16 @@
 # version 3 or later versions approved by the membership of KDE e.V.
 #
 # SPDX-FileCopyrightText: 2013, 2014, 2015, 2016, 2017, 2019, 2020, 2022, 2024 Antoni Bella Pérez <antonibella5@yahoo.com>
-# Sebastià Pla i Sanz <sps@sastia.com>, 1999, 2000, 2001, 2002, 2004, 2005, 2006.
-# Albert Astals Cid <aacid@kde.org>, 2005.
-# Alfredo Vicente <alviboi@gmail.com>, 2019.
+# SPDX-FileCopyrightText: 1999, 2000, 2001, 2002, 2004, 2005, 2006 Sebastià Pla i Sanz <sps@sastia.com>
+# SPDX-FileCopyrightText: 2005 Albert Astals Cid <aacid@kde.org>
+# SPDX-FileCopyrightText: 2019 Alfredo Vicente <alviboi@gmail.com>
 # SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-16 00:43+0000\n"
-"PO-Revision-Date: 2025-09-23 11:41+0200\n"
+"POT-Creation-Date: 2025-10-18 00:43+0000\n"
+"PO-Revision-Date: 2025-10-15 09:40+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -34,29 +34,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "alviboi@gmail.com,sps@sastia.com"
 
-#: backends/wayland/wayland_output.cpp:466
+#: backends/wayland/wayland_output.cpp:501
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Premeu la tecla «Ctrl» dret per a deixar anar el punter"
 
-#: backends/wayland/wayland_output.cpp:468
+#: backends/wayland/wayland_output.cpp:503
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Premeu la tecla «Ctrl» dret per a agafar el punter"
 
-#: backends/wayland/wayland_output.cpp:472
+#: backends/wayland/wayland_output.cpp:507
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Compositor de Wayland de KDE %1"
 
-#: backends/wayland/wayland_output.cpp:475
+#: backends/wayland/wayland_output.cpp:510
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Eixida desactivada"
 
-#: backends/wayland/wayland_output.cpp:477
+#: backends/wayland/wayland_output.cpp:512
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Eixida enfosquida"
@@ -2432,10 +2432,9 @@ msgstr "No s'ha pogut connectar amb el context de PipeWire"
 #: plugins/screencast/screencastmanager.cpp:79
 #: plugins/screencast/screencastmanager.cpp:95
 #: plugins/screencast/screencastmanager.cpp:140
-#, fuzzy, kde-format
-#| msgid "Block Compositing rule type"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "Tipus de regla de bloquejar la composició"
+msgstr "Tipus de composició no acceptada"
 
 #: plugins/screencast/screencastmanager.cpp:60
 #, kde-format
