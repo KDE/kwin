@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-25 02:40+0000\n"
-"PO-Revision-Date: 2025-05-25 17:49+0300\n"
+"PO-Revision-Date: 2025-10-15 19:31+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #: layoutpreview.cpp:28
 #, kde-format
@@ -63,10 +63,9 @@ msgid "System Settings"
 msgstr "Järjestelmäasetukset"
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Nykyinen työpöytä"
+msgstr "Kurkista työpöydälle"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -105,10 +104,9 @@ msgstr "Sisältö"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" entry"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "Lisää ”Näytä työpöytä\""
+msgstr "Lisää ”Kurkista työpöydälle\" -kohta"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
