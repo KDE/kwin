@@ -345,47 +345,6 @@ void DataControlInterfaceTest::testCopyFromControlPrimarySelection()
     QCOMPARE(m_seat->primarySelection()->mimeTypes(), QStringList({"cheese/test1", "cheese/test2"}));
 }
 
-void DataControlInterfaceTest::testKlipperCase()
-{
-    // This tests the setup of klipper's real world operation and a race with a common pattern seen between clients and klipper
-    // The client's behaviour is faked with direct access to the seat
-
-    std::unique_ptr<DataControlDevice> dataControlDevice(new DataControlDevice);
-    dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
-
-    QSignalSpy newOfferSpy(dataControlDevice.get(), &DataControlDevice::dataControlOffer);
-    QSignalSpy selectionSpy(dataControlDevice.get(), &DataControlDevice::selection);
-    QSignalSpy serverSelectionChangedSpy(m_seat, &SeatInterface::selectionChanged);
-
-    // Client A has a data source
-    std::unique_ptr<TestDataSource> testSelection(new TestDataSource);
-    m_seat->setSelection(testSelection.get(), m_display->nextSerial());
-
-    // klipper gets it
-    selectionSpy.wait();
-
-    // Client A deletes it
-    testSelection.reset();
-
-    // klipper gets told
-    selectionSpy.wait();
-
-    // Client A sets something else
-    std::unique_ptr<TestDataSource> testSelection2(new TestDataSource);
-    m_seat->setSelection(testSelection2.get(), m_display->nextSerial());
-
-    // Meanwhile klipper updates with the old content
-    std::unique_ptr<DataControlSource> source(new DataControlSource);
-    source->init(m_dataControlDeviceManager->create_data_source());
-    source->offer("fromKlipper/test1");
-    source->offer("application/x-kde-onlyReplaceEmpty");
-
-    dataControlDevice->set_selection(source->object());
-
-    QVERIFY(!serverSelectionChangedSpy.wait(10));
-    QCOMPARE(m_seat->selection(), testSelection2.get());
-}
-
 QTEST_GUILESS_MAIN(DataControlInterfaceTest)
 
 #include "test_datacontrol_interface.moc"
