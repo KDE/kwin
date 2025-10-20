@@ -954,10 +954,8 @@ EffectWindow *EffectsHandler::findWindow(WId id) const
 }
 EffectWindow *EffectsHandler::findWindow(SurfaceInterface *surf) const
 {
-    if (waylandServer()) {
-        if (Window *w = waylandServer()->findWindow(surf)) {
-            return w->effectWindow();
-        }
+    if (Window *w = waylandServer()->findWindow(surf)) {
+        return w->effectWindow();
     }
     return nullptr;
 }
@@ -1373,10 +1371,7 @@ bool EffectsHandler::blocksDirectScanout() const
 
 Display *EffectsHandler::waylandDisplay() const
 {
-    if (waylandServer()) {
-        return waylandServer()->display();
-    }
-    return nullptr;
+    return waylandServer()->display();
 }
 
 QVariant EffectsHandler::kwinOption(KWinOption kwopt)

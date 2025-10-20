@@ -13,7 +13,6 @@
 #include "internalwindow.h"
 #include "wayland/shadow.h"
 #include "wayland/surface.h"
-#include "wayland_server.h"
 #include "window.h"
 #if KWIN_BUILD_X11
 #include "atoms.h"
@@ -45,7 +44,7 @@ Shadow::~Shadow()
 std::unique_ptr<Shadow> Shadow::createShadow(Window *window)
 {
     auto shadow = createShadowFromDecoration(window);
-    if (!shadow && waylandServer()) {
+    if (!shadow) {
         shadow = createShadowFromWayland(window);
     }
 #if KWIN_BUILD_X11
@@ -290,12 +289,10 @@ bool Shadow::updateShadow()
         return false;
     }
 
-    if (waylandServer()) {
-        if (m_window && m_window->surface()) {
-            if (const auto &s = m_window->surface()->shadow()) {
-                if (init(s)) {
-                    return true;
-                }
+    if (m_window && m_window->surface()) {
+        if (const auto &s = m_window->surface()->shadow()) {
+            if (init(s)) {
+                return true;
             }
         }
     }

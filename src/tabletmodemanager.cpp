@@ -14,7 +14,6 @@
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "main.h"
-#include "wayland_server.h"
 
 #include <QDBusConnection>
 
@@ -106,12 +105,10 @@ private:
 
 TabletModeManager::TabletModeManager()
 {
-    if (waylandServer()) {
-        if (input()->hasTabletModeSwitch()) {
-            input()->installInputEventSpy(new TabletModeSwitchEventSpy(this));
-        } else {
-            hasTabletModeInputChanged(false);
-        }
+    if (input()->hasTabletModeSwitch()) {
+        input()->installInputEventSpy(new TabletModeSwitchEventSpy(this));
+    } else {
+        hasTabletModeInputChanged(false);
     }
 
     KSharedConfig::Ptr kwinSettings = kwinApp()->config();
@@ -125,9 +122,7 @@ TabletModeManager::TabletModeManager()
                                                  // NOTE: slots must be exported for properties to work correctly
                                                  QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots);
 
-    if (waylandServer()) {
-        connect(input(), &InputRedirection::hasTabletModeSwitchChanged, this, &TabletModeManager::hasTabletModeInputChanged);
-    }
+    connect(input(), &InputRedirection::hasTabletModeSwitchChanged, this, &TabletModeManager::hasTabletModeInputChanged);
 }
 
 void KWin::TabletModeManager::refreshSettings()
@@ -180,11 +175,7 @@ bool TabletModeManager::effectiveTabletMode() const
         return true;
     case ConfiguredMode::Auto:
     default:
-        if (!waylandServer()) {
-            return false;
-        } else {
-            return m_isTabletMode;
-        }
+        return m_isTabletMode;
     }
 }
 

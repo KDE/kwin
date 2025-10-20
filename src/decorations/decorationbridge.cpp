@@ -82,9 +82,7 @@ void DecorationBridge::init()
 {
     m_noPlugin = readNoPlugin();
     if (m_noPlugin) {
-        if (waylandServer()) {
-            waylandServer()->decorationManager()->setDefaultMode(ServerSideDecorationManagerInterface::Mode::None);
-        }
+        waylandServer()->decorationManager()->setDefaultMode(ServerSideDecorationManagerInterface::Mode::None);
         return;
     }
     m_settings = std::make_shared<KDecoration3::DecorationSettings>(this);
@@ -101,9 +99,7 @@ void DecorationBridge::init()
         }
     }
 
-    if (waylandServer()) {
-        waylandServer()->decorationManager()->setDefaultMode(m_factory ? ServerSideDecorationManagerInterface::Mode::Server : ServerSideDecorationManagerInterface::Mode::None);
-    }
+    waylandServer()->decorationManager()->setDefaultMode(m_factory ? ServerSideDecorationManagerInterface::Mode::Server : ServerSideDecorationManagerInterface::Mode::None);
 }
 
 bool DecorationBridge::initPlugin(const QString &pluginId)

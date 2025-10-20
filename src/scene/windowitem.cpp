@@ -37,9 +37,6 @@ WindowItem::WindowItem(Window *window, Item *parent)
     connect(window, &Window::frameGeometryChanged, this, &WindowItem::updatePosition);
     updatePosition();
 
-    if (waylandServer()) {
-        connect(waylandServer(), &WaylandServer::lockStateChanged, this, &WindowItem::updateVisibility);
-    }
     if (!window->readyForPainting()) {
         connect(window, &Window::readyForPaintingChanged, this, &WindowItem::updateVisibility);
     }
@@ -50,6 +47,7 @@ WindowItem::WindowItem(Window *window, Item *parent)
     connect(window, &Window::activitiesChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::desktopsChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::offscreenRenderingChanged, this, &WindowItem::updateVisibility);
+    connect(waylandServer(), &WaylandServer::lockStateChanged, this, &WindowItem::updateVisibility);
     connect(workspace(), &Workspace::currentActivityChanged, this, &WindowItem::updateVisibility);
     connect(workspace(), &Workspace::currentDesktopChanged, this, &WindowItem::updateVisibility);
     updateVisibility();

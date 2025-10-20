@@ -563,13 +563,10 @@ Layer Window::belongsToLayer() const
     if (isPictureInPicture()) {
         return OverlayLayer;
     }
-    if (isLockScreen() && !waylandServer()) {
-        return OverlayLayer;
-    }
     if (isInputMethod()) {
         return OverlayLayer;
     }
-    if (isLockScreenOverlay() && waylandServer() && waylandServer()->isScreenLocked()) {
+    if (isLockScreenOverlay() && waylandServer()->isScreenLocked()) {
         return OverlayLayer;
     }
     if (isDesktop()) {

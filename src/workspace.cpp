@@ -208,30 +208,28 @@ void Workspace::init()
     //  load is needed to be called again when starting xwayalnd to sync to RootInfo, see BUG 385260
     vds->save();
 
-    if (waylandServer()) {
-        m_outputConfigStore = std::make_unique<OutputConfigurationStore>();
+    m_outputConfigStore = std::make_unique<OutputConfigurationStore>();
 
-        const auto applySensorChanges = [this]() {
-            m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
-            auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
-            if (opt) {
-                auto &[config, order, type] = *opt;
-                applyOutputConfiguration(config, order);
-            }
-        };
-        connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
-        // NOTE that enabling or disabling the orientation sensor can trigger the orientation to change immediately.
-        // As we do enable or disable it in applySensorChanges, it must be done asynchronously / with a queued connection!
-        connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges, Qt::QueuedConnection);
-        connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
+    const auto applySensorChanges = [this]() {
         m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
-        connect(m_orientationSensor.get(), &OrientationSensor::availableChanged, this, [this]() {
-            const auto outputs = kwinApp()->outputBackend()->outputs();
-            for (const auto output : outputs) {
-                output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
-            }
-        });
-    }
+        auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+        if (opt) {
+            auto &[config, order, type] = *opt;
+            applyOutputConfiguration(config, order);
+        }
+    };
+    connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
+    // NOTE that enabling or disabling the orientation sensor can trigger the orientation to change immediately.
+    // As we do enable or disable it in applySensorChanges, it must be done asynchronously / with a queued connection!
+    connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges, Qt::QueuedConnection);
+    connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
+    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+    connect(m_orientationSensor.get(), &OrientationSensor::availableChanged, this, [this]() {
+        const auto outputs = kwinApp()->outputBackend()->outputs();
+        for (const auto output : outputs) {
+            output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
+        }
+    });
 
     slotOutputBackendOutputsQueried();
     connect(kwinApp()->outputBackend(), &OutputBackend::outputsQueried, this, &Workspace::slotOutputBackendOutputsQueried);
@@ -262,10 +260,8 @@ void Workspace::init()
 
     Scripting::create(this);
 
-    if (auto server = waylandServer()) {
-        connect(server, &WaylandServer::windowAdded, this, &Workspace::addWaylandWindow);
-        connect(server, &WaylandServer::windowRemoved, this, &Workspace::removeWaylandWindow);
-    }
+    connect(waylandServer(), &WaylandServer::windowAdded, this, &Workspace::addWaylandWindow);
+    connect(waylandServer(), &WaylandServer::windowRemoved, this, &Workspace::removeWaylandWindow);
 
     // broadcast that Workspace is ready, but first process all events.
     QMetaObject::invokeMethod(this, &Workspace::workspaceInitialized, Qt::QueuedConnection);
@@ -276,16 +272,14 @@ void Workspace::init()
     connect(this, &Workspace::windowRemoved, m_placementTracker.get(), &PlacementTracker::remove);
     m_placementTracker->init(outputLayoutId());
 
-    if (waylandServer()) {
-        connect(waylandServer()->externalBrightness(), &ExternalBrightnessV1::devicesChanged, this, &Workspace::updateOutputConfiguration);
+    connect(waylandServer()->externalBrightness(), &ExternalBrightnessV1::devicesChanged, this, &Workspace::updateOutputConfiguration);
 
-        m_kdeglobalsWatcher = KConfigWatcher::create(kwinApp()->kdeglobals());
-        connect(m_kdeglobalsWatcher.get(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
-            if (group.name() == "KScreen" && names.contains(QByteArrayLiteral("XwaylandClientsScale"))) {
-                updateXwaylandScale();
-            }
-        });
-    }
+    m_kdeglobalsWatcher = KConfigWatcher::create(kwinApp()->kdeglobals());
+    connect(m_kdeglobalsWatcher.get(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
+        if (group.name() == "KScreen" && names.contains(QByteArrayLiteral("XwaylandClientsScale"))) {
+            updateXwaylandScale();
+        }
+    });
 
 #if KWIN_BUILD_SCREENLOCKER
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::locked, this, &Workspace::slotEndInteractiveMoveResize);
@@ -395,10 +389,8 @@ Workspace::~Workspace()
     cleanupX11();
 #endif
 
-    if (waylandServer()) {
-        while (!waylandServer()->windows().isEmpty()) {
-            waylandServer()->windows()[0]->destroyWindow();
-        }
+    while (!waylandServer()->windows().isEmpty()) {
+        waylandServer()->windows()[0]->destroyWindow();
     }
 
     while (!m_windows.isEmpty()) {
@@ -1138,9 +1130,7 @@ Output *Workspace::findOutput(Output *reference, Direction direction, bool wrapA
 
 void Workspace::slotOutputBackendOutputsQueried()
 {
-    if (waylandServer()) {
-        updateOutputConfiguration();
-    }
+    updateOutputConfiguration();
     updateOutputs();
 }
 
@@ -1149,11 +1139,8 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldOutputs = m_outputs;
 
-    // On X11, we receive spurious output change events when windows move around.
-    if (waylandServer()) {
-        if (m_moveResizeWindow) {
-            m_moveResizeWindow->cancelInteractiveMoveResize();
-        }
+    if (m_moveResizeWindow) {
+        m_moveResizeWindow->cancelInteractiveMoveResize();
     }
 
     m_outputs.clear();
@@ -1389,16 +1376,10 @@ void Workspace::selectWmInputEventMask()
         presentMask = attr->your_event_mask;
     }
 
-    uint32_t wmMask = XCB_EVENT_MASK_PROPERTY_CHANGE
+    const uint32_t wmMask = XCB_EVENT_MASK_PROPERTY_CHANGE
         | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
         | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY
         | XCB_EVENT_MASK_FOCUS_CHANGE; // For NotifyDetailNone
-
-    if (!waylandServer()) {
-        wmMask |= XCB_EVENT_MASK_KEY_PRESS
-            | XCB_EVENT_MASK_COLOR_MAP_CHANGE
-            | XCB_EVENT_MASK_EXPOSURE;
-    }
 
     Xcb::selectInput(kwinApp()->x11RootWindow(), presentMask | wmMask);
 }
@@ -2106,13 +2087,11 @@ void Workspace::desktopResized()
         window->setOutput(outputAt(window->frameGeometry().center()));
     }
 
-    if (waylandServer()) {
-        // TODO: Track uninitialized windows in the Workspace too.
-        const auto windows = waylandServer()->windows();
-        for (Window *window : windows) {
-            window->setMoveResizeOutput(outputAt(window->moveResizeGeometry().center()));
-            window->setOutput(outputAt(window->frameGeometry().center()));
-        }
+    // TODO: Track uninitialized windows in the Workspace too.
+    const auto windows = waylandServer()->windows();
+    for (Window *window : windows) {
+        window->setMoveResizeOutput(outputAt(window->moveResizeGeometry().center()));
+        window->setOutput(outputAt(window->frameGeometry().center()));
     }
 
     // restore cursor position

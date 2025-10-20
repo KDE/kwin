@@ -79,29 +79,27 @@ SystemBellEffect::SystemBellEffect()
         }
     }
 
-    if (waylandServer()) {
-        if (!s_systemBellRemoveTimer) {
-            s_systemBellRemoveTimer = new QTimer(QCoreApplication::instance());
-            s_systemBellRemoveTimer->setSingleShot(true);
-            s_systemBellRemoveTimer->callOnTimeout([]() {
-                s_systemBell->remove();
-                s_systemBell = nullptr;
-            });
-        }
-        s_systemBellRemoveTimer->stop();
-        if (!s_systemBell) {
-            s_systemBell = new XdgSystemBellV1Interface(waylandServer()->display(), s_systemBellRemoveTimer);
-            connect(s_systemBell, &XdgSystemBellV1Interface::ringSurface, this, [this](SurfaceInterface *surface) {
-                triggerWindow(effects->findWindow(surface));
-            });
-            connect(s_systemBell, &XdgSystemBellV1Interface::ring, this, [this](ClientConnection *client) {
-                if (effects->activeWindow()) {
-                    if (effects->activeWindow()->surface() && effects->activeWindow()->surface()->client() == client) {
-                        triggerWindow(effects->activeWindow());
-                    }
+    if (!s_systemBellRemoveTimer) {
+        s_systemBellRemoveTimer = new QTimer(QCoreApplication::instance());
+        s_systemBellRemoveTimer->setSingleShot(true);
+        s_systemBellRemoveTimer->callOnTimeout([]() {
+            s_systemBell->remove();
+            s_systemBell = nullptr;
+        });
+    }
+    s_systemBellRemoveTimer->stop();
+    if (!s_systemBell) {
+        s_systemBell = new XdgSystemBellV1Interface(waylandServer()->display(), s_systemBellRemoveTimer);
+        connect(s_systemBell, &XdgSystemBellV1Interface::ringSurface, this, [this](SurfaceInterface *surface) {
+            triggerWindow(effects->findWindow(surface));
+        });
+        connect(s_systemBell, &XdgSystemBellV1Interface::ring, this, [this](ClientConnection *client) {
+            if (effects->activeWindow()) {
+                if (effects->activeWindow()->surface() && effects->activeWindow()->surface()->client() == client) {
+                    triggerWindow(effects->activeWindow());
                 }
-            });
-        }
+            }
+        });
     }
 
     m_audioThrottleTimer.setInterval(100ms);

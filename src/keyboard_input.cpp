@@ -46,9 +46,7 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     , m_xkb(new Xkb(kwinApp()->followLocale1()))
 {
     connect(m_xkb.get(), &Xkb::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
-    if (waylandServer()) {
-        m_xkb->setSeat(waylandServer()->seat());
-    }
+    m_xkb->setSeat(waylandServer()->seat());
 }
 
 KeyboardInputRedirection::~KeyboardInputRedirection() = default;

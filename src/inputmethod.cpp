@@ -115,52 +115,50 @@ void InputMethod::init()
     new VirtualKeyboardDBus(this);
     qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the DBus interface";
 
-    if (waylandServer()) {
-        new TextInputManagerV1Interface(waylandServer()->display(), this);
-        new TextInputManagerV2Interface(waylandServer()->display(), this);
-        new TextInputManagerV3Interface(waylandServer()->display(), this);
+    new TextInputManagerV1Interface(waylandServer()->display(), this);
+    new TextInputManagerV2Interface(waylandServer()->display(), this);
+    new TextInputManagerV3Interface(waylandServer()->display(), this);
 
-        connect(waylandServer()->seat(), &SeatInterface::focusedKeyboardSurfaceAboutToChange, this, &InputMethod::commitPendingText);
-        connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceChanged, this, &InputMethod::handleFocusedSurfaceChanged);
+    connect(waylandServer()->seat(), &SeatInterface::focusedKeyboardSurfaceAboutToChange, this, &InputMethod::commitPendingText);
+    connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceChanged, this, &InputMethod::handleFocusedSurfaceChanged);
 
-        TextInputV1Interface *textInputV1 = waylandServer()->seat()->textInputV1();
-        connect(textInputV1, &TextInputV1Interface::requestShowInputPanel, this, &InputMethod::show);
-        connect(textInputV1, &TextInputV1Interface::requestHideInputPanel, this, &InputMethod::hide);
-        connect(textInputV1, &TextInputV1Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
-        connect(textInputV1, &TextInputV1Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
-        connect(textInputV1, &TextInputV1Interface::stateUpdated, this, &InputMethod::textInputInterfaceV1StateUpdated);
-        connect(textInputV1, &TextInputV1Interface::reset, this, &InputMethod::textInputInterfaceV1Reset);
-        connect(textInputV1, &TextInputV1Interface::invokeAction, this, &InputMethod::invokeAction);
-        connect(textInputV1, &TextInputV1Interface::enabledChanged, this, &InputMethod::textInputInterfaceV1EnabledChanged);
-        connect(textInputV1, &TextInputV1Interface::cursorRectangleChanged, this, &InputMethod::cursorRectangleChanged);
+    TextInputV1Interface *textInputV1 = waylandServer()->seat()->textInputV1();
+    connect(textInputV1, &TextInputV1Interface::requestShowInputPanel, this, &InputMethod::show);
+    connect(textInputV1, &TextInputV1Interface::requestHideInputPanel, this, &InputMethod::hide);
+    connect(textInputV1, &TextInputV1Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
+    connect(textInputV1, &TextInputV1Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
+    connect(textInputV1, &TextInputV1Interface::stateUpdated, this, &InputMethod::textInputInterfaceV1StateUpdated);
+    connect(textInputV1, &TextInputV1Interface::reset, this, &InputMethod::textInputInterfaceV1Reset);
+    connect(textInputV1, &TextInputV1Interface::invokeAction, this, &InputMethod::invokeAction);
+    connect(textInputV1, &TextInputV1Interface::enabledChanged, this, &InputMethod::textInputInterfaceV1EnabledChanged);
+    connect(textInputV1, &TextInputV1Interface::cursorRectangleChanged, this, &InputMethod::cursorRectangleChanged);
 
-        TextInputV2Interface *textInputV2 = waylandServer()->seat()->textInputV2();
-        connect(textInputV2, &TextInputV2Interface::requestShowInputPanel, this, &InputMethod::show);
-        connect(textInputV2, &TextInputV2Interface::requestHideInputPanel, this, &InputMethod::hide);
-        connect(textInputV2, &TextInputV2Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
-        connect(textInputV2, &TextInputV2Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
-        connect(textInputV2, &TextInputV2Interface::stateUpdated, this, &InputMethod::textInputInterfaceV2StateUpdated);
-        connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged);
-        connect(textInputV2, &TextInputV2Interface::cursorRectangleChanged, this, &InputMethod::cursorRectangleChanged);
+    TextInputV2Interface *textInputV2 = waylandServer()->seat()->textInputV2();
+    connect(textInputV2, &TextInputV2Interface::requestShowInputPanel, this, &InputMethod::show);
+    connect(textInputV2, &TextInputV2Interface::requestHideInputPanel, this, &InputMethod::hide);
+    connect(textInputV2, &TextInputV2Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
+    connect(textInputV2, &TextInputV2Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
+    connect(textInputV2, &TextInputV2Interface::stateUpdated, this, &InputMethod::textInputInterfaceV2StateUpdated);
+    connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged);
+    connect(textInputV2, &TextInputV2Interface::cursorRectangleChanged, this, &InputMethod::cursorRectangleChanged);
 
-        TextInputV3Interface *textInputV3 = waylandServer()->seat()->textInputV3();
-        connect(textInputV3, &TextInputV3Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
-        connect(textInputV3, &TextInputV3Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
-        connect(textInputV3, &TextInputV3Interface::stateCommitted, this, &InputMethod::stateCommitted);
-        connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
-        connect(textInputV3, &TextInputV3Interface::enableRequested, this, &InputMethod::textInputInterfaceV3EnableRequested);
-        connect(textInputV3, &TextInputV3Interface::cursorRectangleChanged, this, &InputMethod::cursorRectangleChanged);
+    TextInputV3Interface *textInputV3 = waylandServer()->seat()->textInputV3();
+    connect(textInputV3, &TextInputV3Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
+    connect(textInputV3, &TextInputV3Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
+    connect(textInputV3, &TextInputV3Interface::stateCommitted, this, &InputMethod::stateCommitted);
+    connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
+    connect(textInputV3, &TextInputV3Interface::enableRequested, this, &InputMethod::textInputInterfaceV3EnableRequested);
+    connect(textInputV3, &TextInputV3Interface::cursorRectangleChanged, this, &InputMethod::cursorRectangleChanged);
 
-        connect(m_internalContext, &InternalInputMethodContext::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
-        connect(m_internalContext, &InternalInputMethodContext::contentTypeChanged, this, &InputMethod::contentTypeChanged);
-        connect(m_internalContext, &InternalInputMethodContext::enabledChanged, this, &InputMethod::refreshActive);
-        connect(m_internalContext, &InternalInputMethodContext::showInputPanelRequested, this, &InputMethod::show);
-        connect(m_internalContext, &InternalInputMethodContext::hideInputPanelRequested, this, &InputMethod::hide);
+    connect(m_internalContext, &InternalInputMethodContext::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
+    connect(m_internalContext, &InternalInputMethodContext::contentTypeChanged, this, &InputMethod::contentTypeChanged);
+    connect(m_internalContext, &InternalInputMethodContext::enabledChanged, this, &InputMethod::refreshActive);
+    connect(m_internalContext, &InternalInputMethodContext::showInputPanelRequested, this, &InputMethod::show);
+    connect(m_internalContext, &InternalInputMethodContext::hideInputPanelRequested, this, &InputMethod::hide);
 
-        connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
-            m_hasPendingModifiers = true;
-        });
-    }
+    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
+        m_hasPendingModifiers = true;
+    });
 }
 
 void InputMethod::show()
@@ -940,10 +938,6 @@ void InputMethod::adoptInputMethodContext()
 
 void InputMethod::updateInputPanelState()
 {
-    if (!waylandServer()) {
-        return;
-    }
-
     if (m_panel && shouldShowOnActive()) {
         m_panel->allow();
     }

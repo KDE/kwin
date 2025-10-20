@@ -368,9 +368,6 @@ void SessionManager::finishSaveSession(const QString &name)
 bool SessionManager::closeWaylandWindows()
 {
     Q_ASSERT(calledFromDBus());
-    if (!waylandServer()) {
-        return true;
-    }
 
     if (m_closingWindowsGuard) {
         sendErrorReply(QDBusError::Failed, u"Operation already in progress"_s);

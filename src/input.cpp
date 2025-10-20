@@ -2950,18 +2950,17 @@ void InputRedirection::init()
 void InputRedirection::setupWorkspace()
 {
     connect(workspace(), &Workspace::outputsChanged, this, &InputRedirection::updateScreens);
-    if (waylandServer()) {
-        m_keyboard->init();
-        m_pointer->init();
-        m_touch->init();
-        m_tablet->init();
 
-        updateLeds(m_keyboard->xkb()->leds());
-        connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, this, &InputRedirection::updateLeds);
+    m_keyboard->init();
+    m_pointer->init();
+    m_touch->init();
+    m_tablet->init();
 
-        setupInputFilters();
-        updateScreens();
-    }
+    updateLeds(m_keyboard->xkb()->leds());
+    connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, this, &InputRedirection::updateLeds);
+
+    setupInputFilters();
+    updateScreens();
 }
 
 void InputRedirection::updateScreens()
@@ -3338,9 +3337,7 @@ void InputRedirection::setupInputBackends()
     if (inputBackend) {
         addInputBackend(std::move(inputBackend));
     }
-    if (waylandServer()) {
-        addInputBackend(std::make_unique<FakeInputBackend>(waylandServer()->display()));
-    }
+    addInputBackend(std::make_unique<FakeInputBackend>(waylandServer()->display()));
 }
 
 bool InputRedirection::hasPointer() const
