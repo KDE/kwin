@@ -2360,6 +2360,14 @@ XdgToplevelWindow::XdgToplevelWindow(const std::function<void(XdgToplevel *tople
 {
 }
 
+XdgToplevelWindow::XdgToplevelWindow(const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup)
+    : m_surface(createSurface())
+    , m_toplevel(createXdgToplevelSurface(m_surface.get(), [this, &setup](XdgToplevel *toplevel) {
+        setup(m_surface.get(), toplevel);
+    }))
+{
+}
+
 XdgToplevelWindow::~XdgToplevelWindow()
 {
     if (m_window) {
@@ -2381,12 +2389,26 @@ bool XdgToplevelWindow::show(const QImage &image)
     return m_window != nullptr;
 }
 
+void XdgToplevelWindow::unmap()
+{
+    m_surface->attachBuffer((wl_buffer *)nullptr);
+    m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    // unmapping destroys the KWin::Window
+    m_window = nullptr;
+}
+
 bool XdgToplevelWindow::presentWait()
 {
     const auto feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*m_surface));
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
     return spy.wait();
+}
+
+bool XdgToplevelWindow::waitSurfaceConfigure()
+{
+    QSignalSpy surfaceConfigure(m_toplevel->xdgSurface(), &Test::XdgSurface::configureRequested);
+    return surfaceConfigure.wait();
 }
 
 std::optional<QSize> XdgToplevelWindow::handleConfigure(const QColor &color)
@@ -2396,9 +2418,17 @@ std::optional<QSize> XdgToplevelWindow::handleConfigure(const QColor &color)
     if (!toplevelConfigure.wait()) {
         return std::nullopt;
     }
-    const QSize ret = toplevelConfigure.last().at(0).toSize();
     m_toplevel->xdgSurface()->ack_configure(surfaceConfigure.last().at(0).value<quint32>());
+    const QSize ret = toplevelConfigure.last().at(0).toSize();
+    if (ret == m_surface->size()) {
+        m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+        return ret;
+    }
     Test::render(m_surface.get(), toplevelConfigure.last().at(0).toSize(), color);
+    QSignalSpy frameGeometryChanged(m_window, &KWin::Window::frameGeometryChanged);
+    if (!frameGeometryChanged.wait()) {
+        return std::nullopt;
+    }
     return ret;
 }
 }

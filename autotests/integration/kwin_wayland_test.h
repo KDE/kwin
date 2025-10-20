@@ -1364,17 +1364,21 @@ void setOutputConfig(const QList<OutputInfo> &infos);
 class XdgToplevelWindow
 {
 public:
+    explicit XdgToplevelWindow(const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup);
     explicit XdgToplevelWindow(const std::function<void(XdgToplevel *toplevel)> &setup = {});
+    XdgToplevelWindow(const XdgToplevelWindow &copy) = delete;
     ~XdgToplevelWindow();
 
     bool show(const QSize &size = QSize(100, 100), const QColor &color = Qt::blue);
     bool show(const QImage &image);
+    void unmap();
 
     /**
      * Commits and waits for the commit to be presented.
      * NOTE that this requires the presentation time protocol!
      */
     bool presentWait();
+    bool waitSurfaceConfigure();
     std::optional<QSize> handleConfigure(const QColor &color = Qt::blue);
 
     std::unique_ptr<KWayland::Client::Surface> m_surface;
