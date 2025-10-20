@@ -2369,9 +2369,9 @@ XdgToplevelWindow::~XdgToplevelWindow()
     }
 }
 
-bool XdgToplevelWindow::show(const QSize &size)
+bool XdgToplevelWindow::show(const QSize &size, const QColor &color)
 {
-    m_window = renderAndWaitForShown(m_surface.get(), size, Qt::blue);
+    m_window = renderAndWaitForShown(m_surface.get(), size, color);
     return m_window != nullptr;
 }
 
@@ -2381,6 +2381,19 @@ bool XdgToplevelWindow::presentWait()
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
     return spy.wait();
+}
+
+std::optional<QSize> XdgToplevelWindow::handleConfigure(const QColor &color)
+{
+    QSignalSpy toplevelConfigure(m_toplevel.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigure(m_toplevel->xdgSurface(), &Test::XdgSurface::configureRequested);
+    if (!toplevelConfigure.wait()) {
+        return std::nullopt;
+    }
+    const QSize ret = toplevelConfigure.last().at(0).toSize();
+    m_toplevel->xdgSurface()->ack_configure(surfaceConfigure.last().at(0).value<quint32>());
+    Test::render(m_surface.get(), toplevelConfigure.last().at(0).toSize(), color);
+    return ret;
 }
 }
 }
