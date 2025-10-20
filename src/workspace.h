@@ -272,7 +272,7 @@ public:
     RootTile *rootTile(Output *output, VirtualDesktop *desktop) const;
 
 public:
-    QPoint cascadeOffset(const QRectF &area) const;
+    QPointF cascadeOffset(const QRectF &area) const;
 
     //-------------------------------------------------
     // Unsorted

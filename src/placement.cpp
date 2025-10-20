@@ -331,9 +331,9 @@ std::optional<PlacementCommand> Placement::placeSmart(const Window *window, cons
     return QPointF(x_optimal, y_optimal);
 }
 
-QPoint Workspace::cascadeOffset(const QRectF &area) const
+QPointF Workspace::cascadeOffset(const QRectF &area) const
 {
-    return QPoint(area.width() / 48, area.height() / 48);
+    return QPointF(area.width() / 48.0, area.height() / 48.0);
 }
 
 /**
@@ -501,7 +501,8 @@ std::optional<PlacementCommand> Placement::placeMaximizing(const Window *c, cons
  */
 QRectF Placement::cascadeIfCovering(const Window *window, const QRectF &geometry, const QRectF &area) const
 {
-    const QPoint offset = workspace()->cascadeOffset(area);
+    const QPointF offset = workspace()->cascadeOffset(area);
+    Q_ASSERT(!offset.isNull());
 
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
 
