@@ -1360,6 +1360,25 @@ struct OutputInfo
 };
 void setOutputConfig(const QList<QRect> &geometries);
 void setOutputConfig(const QList<OutputInfo> &infos);
+
+class XdgToplevelWindow
+{
+public:
+    explicit XdgToplevelWindow(const std::function<void(XdgToplevel *toplevel)> &setup = {});
+    ~XdgToplevelWindow();
+
+    bool show(const QSize &size = QSize(100, 100));
+
+    /**
+     * Commits and waits for the commit to be presented.
+     * NOTE that this requires the presentation time protocol!
+     */
+    bool presentWait();
+
+    std::unique_ptr<KWayland::Client::Surface> m_surface;
+    std::unique_ptr<XdgToplevel> m_toplevel;
+    Window *m_window = nullptr;
+};
 }
 
 }

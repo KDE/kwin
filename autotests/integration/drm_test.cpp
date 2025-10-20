@@ -78,45 +78,32 @@ void DrmTest::testModesets()
 {
     // verify that modesetting works as expected
     // and doesn't cause crashes or issues with presentation time
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(window);
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
 
     Output *output = kwinApp()->outputBackend()->outputs().front();
-    window->move(output->geometryF().center());
+    window.m_window->move(output->geometryF().center());
 
     // verify that we can cycle through modes
-    std::unique_ptr<Test::WpPresentationFeedback> feedback;
     for (const auto &mode : output->modes()) {
         OutputConfiguration cfg;
         cfg.changeSet(output)->mode = mode;
         QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
-
-        feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        surface->commit(KWayland::Client::Surface::CommitFlag::None);
-        QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
-        QVERIFY(spy.wait());
+        QVERIFY(window.presentWait());
     }
 }
 
 void DrmTest::testPresentation()
 {
     // verify that normal presentation works as expected
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(window);
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
 
     Output *output = kwinApp()->outputBackend()->outputs().front();
-    window->move(output->geometryF().center());
+    window.m_window->move(output->geometryF().center());
 
-    std::unique_ptr<Test::WpPresentationFeedback> feedback;
     for (int i = 0; i < 5; i++) {
-        feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        surface->commit(KWayland::Client::Surface::CommitFlag::None);
-        QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
-        QVERIFY(spy.wait());
+        QVERIFY(window.presentWait());
     }
 }
 
@@ -131,11 +118,9 @@ void DrmTest::testCursorLayer()
         QSKIP("The driver only advertises a primary plane");
     }
 
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(window);
-    window->move(output->geometryF().center());
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
+    window.m_window->move(output->geometryF().center());
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
@@ -145,11 +130,7 @@ void DrmTest::testCursorLayer()
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_default);
 
-    std::unique_ptr<Test::WpPresentationFeedback> feedback;
-    feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-    surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
-    QVERIFY(spy.wait());
+    QVERIFY(window.presentWait());
 
     const int enabledLayers = std::ranges::count_if(layers, [](OutputLayer *layer) {
         return layer->isEnabled();
@@ -168,14 +149,11 @@ void DrmTest::testDirectScanout()
         QSKIP("The driver only advertises a primary plane");
     }
 
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), [](Test::XdgToplevel *toplevel) {
+    Test::XdgToplevelWindow window{[](Test::XdgToplevel *toplevel) {
         toplevel->set_fullscreen(nullptr);
-    }));
-    auto window = Test::renderAndWaitForShown(surface.get(), output->pixelSize(), Qt::blue);
-    QVERIFY(window);
-    window->move(output->geometryF().center());
-    std::unique_ptr<Test::WpPresentationFeedback> feedback;
+    }};
+    QVERIFY(window.show(output->pixelSize()));
+    window.m_window->move(output->geometryF().center());
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
@@ -185,10 +163,7 @@ void DrmTest::testDirectScanout()
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_default);
 
-    feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-    surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
-    QVERIFY(spy.wait());
+    QVERIFY(window.presentWait());
 
     const int enabledLayers = std::ranges::count_if(layers, [](OutputLayer *layer) {
         return layer->isEnabled();
@@ -208,12 +183,9 @@ void DrmTest::testOverlay()
         QSKIP("The driver doesn't advertise an overlay plane");
     }
 
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(window);
-    window->move(output->geometryF().center());
-    std::unique_ptr<Test::WpPresentationFeedback> feedback;
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
+    window.m_window->move(output->geometryF().center());
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
@@ -225,11 +197,8 @@ void DrmTest::testOverlay()
 
     // emulate a quickly updating surface
     for (int i = 0; i < 100; i++) {
-        feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-        surface->damage(QRect(0, 0, 10, 10));
-        surface->commit(KWayland::Client::Surface::CommitFlag::None);
-        QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
-        QVERIFY(spy.wait());
+        window.m_surface->damage(QRect(0, 0, 10, 10));
+        QVERIFY(window.presentWait());
     }
 
     const int enabledLayers = std::ranges::count_if(layers, [](OutputLayer *layer) {
