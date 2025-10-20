@@ -1368,6 +1368,7 @@ public:
     ~XdgToplevelWindow();
 
     bool show(const QSize &size = QSize(100, 100), const QColor &color = Qt::blue);
+    bool show(const QImage &image);
 
     /**
      * Commits and waits for the commit to be presented.

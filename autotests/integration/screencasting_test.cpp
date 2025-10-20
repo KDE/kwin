@@ -131,19 +131,12 @@ std::optional<QImage> ScreencastingTest::oneFrameAndClose(Test::ScreencastingStr
 
 void ScreencastingTest::testWindowCasting()
 {
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(surface != nullptr);
-
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    QVERIFY(shellSurface != nullptr);
-
     QImage sourceImage(QSize(30, 10), QImage::Format_RGBA8888_Premultiplied);
     sourceImage.fill(Qt::red);
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(sourceImage));
 
-    Window *window = Test::renderAndWaitForShown(surface.get(), sourceImage);
-    QVERIFY(window);
-
-    auto stream = KWin::Test::screencasting()->createWindowStream(window->internalId().toString(), QtWayland::zkde_screencast_unstable_v1::pointer_hidden);
+    auto stream = KWin::Test::screencasting()->createWindowStream(window.m_window->internalId().toString(), QtWayland::zkde_screencast_unstable_v1::pointer_hidden);
 
     std::optional<QImage> img = oneFrameAndClose(stream);
     QVERIFY(img);
@@ -153,15 +146,10 @@ void ScreencastingTest::testWindowCasting()
 
 void ScreencastingTest::testWindowWithPopup()
 {
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(surface != nullptr);
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    QVERIFY(shellSurface != nullptr);
-
     QImage windowImage(QSize(30, 10), QImage::Format_RGBA8888_Premultiplied);
     windowImage.fill(Qt::red);
-    Window *window = Test::renderAndWaitForShown(surface.get(), windowImage);
-    QVERIFY(window);
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(windowImage));
 
     QSize popupSize(5, 5);
     QRect anchoRect(0, 0, 1, 1);
@@ -170,14 +158,14 @@ void ScreencastingTest::testWindowWithPopup()
     positioner->set_size(popupSize.width(), popupSize.height());
     positioner->set_anchor_rect(anchoRect.x(), anchoRect.y(), anchoRect.width(), anchoRect.height());
     positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
-    std::unique_ptr<Test::XdgPopup> popup(Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get()));
+    std::unique_ptr<Test::XdgPopup> popup(Test::createXdgPopupSurface(popupSurface.get(), window.m_toplevel->xdgSurface(), positioner.get()));
 
     QImage popupImage(popupSize, QImage::Format_RGBA8888_Premultiplied);
     popupImage.fill(Qt::blue);
     auto popupWindow = Test::renderAndWaitForShown(popupSurface.get(), popupImage);
     QVERIFY(popupWindow);
 
-    std::unique_ptr<Test::ScreencastingStreamV1> stream(KWin::Test::screencasting()->createWindowStream(window->internalId().toString(), Test::ScreencastingV1::pointer_hidden));
+    std::unique_ptr<Test::ScreencastingStreamV1> stream(KWin::Test::screencasting()->createWindowStream(window.m_window->internalId().toString(), Test::ScreencastingV1::pointer_hidden));
 
     QImage expectedImage = windowImage;
     QPainter(&expectedImage).drawImage(QRectF(anchoRect).bottomRight(), popupImage);
@@ -190,18 +178,12 @@ void ScreencastingTest::testWindowWithPopup()
 
 void ScreencastingTest::testWindowWithPopupDynamic()
 {
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(surface != nullptr);
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    QVERIFY(shellSurface != nullptr);
-
     QImage windowImage(QSize(30, 10), QImage::Format_RGBA8888_Premultiplied);
     windowImage.fill(Qt::red);
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(windowImage));
 
-    Window *window = Test::renderAndWaitForShown(surface.get(), windowImage);
-    QVERIFY(window);
-
-    std::unique_ptr<Test::ScreencastingStreamV1> stream(KWin::Test::screencasting()->createWindowStream(window->internalId().toString(), Test::ScreencastingV1::pointer_hidden));
+    std::unique_ptr<Test::ScreencastingStreamV1> stream(KWin::Test::screencasting()->createWindowStream(window.m_window->internalId().toString(), Test::ScreencastingV1::pointer_hidden));
 
     PipeWireSourceStream pwStream;
     connect(stream.get(), &Test::ScreencastingStreamV1::failed, qGuiApp, [](const QString &error) {
@@ -235,7 +217,7 @@ void ScreencastingTest::testWindowWithPopupDynamic()
     positioner->set_size(popupSize.width(), popupSize.height());
     positioner->set_anchor_rect(anchoRect.x(), anchoRect.y(), anchoRect.width(), anchoRect.height());
     positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
-    std::unique_ptr<Test::XdgPopup> popup(Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get()));
+    std::unique_ptr<Test::XdgPopup> popup(Test::createXdgPopupSurface(popupSurface.get(), window.m_toplevel->xdgSurface(), positioner.get()));
 
     QImage popupImage(popupSize, QImage::Format_RGBA8888_Premultiplied);
     popupImage.fill(Qt::blue);
@@ -258,12 +240,9 @@ void ScreencastingTest::testOutputCasting()
 {
     auto theOutput = KWin::Test::waylandOutputs().constFirst();
 
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    QVERIFY(surface != nullptr);
-
-    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get(), [theOutput](Test::XdgToplevel *toplevel) {
+    Test::XdgToplevelWindow window{[theOutput](Test::XdgToplevel *toplevel) {
         toplevel->set_fullscreen(theOutput->output());
-    });
+    }};
 
     QImage sourceImage(theOutput->pixelSize(), QImage::Format_RGBA8888_Premultiplied);
     sourceImage.fill(Qt::green);
@@ -272,15 +251,11 @@ void ScreencastingTest::testOutputCasting()
         p.drawRect(100, 100, 100, 100);
     }
 
-    Window *window = Test::renderAndWaitForShown(surface.get(), sourceImage);
-    QVERIFY(window);
-    QVERIFY(window->isFullScreen());
-    QCOMPARE(window->frameGeometry(), window->output()->geometry());
+    QVERIFY(window.show(sourceImage));
+    QVERIFY(window.m_window->isFullScreen());
+    QCOMPARE(window.m_window->frameGeometry(), window.m_window->output()->geometry());
 
-    const auto feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
-    QSignalSpy waitForPresented(feedback.get(), &Test::WpPresentationFeedback::presented);
-    surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QVERIFY(waitForPresented.wait());
+    QVERIFY(window.presentWait());
 
     auto stream = KWin::Test::screencasting()->createOutputStream(theOutput->output(), QtWayland::zkde_screencast_unstable_v1::pointer_hidden);
 
