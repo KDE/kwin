@@ -1367,13 +1367,14 @@ public:
     explicit XdgToplevelWindow(const std::function<void(XdgToplevel *toplevel)> &setup = {});
     ~XdgToplevelWindow();
 
-    bool show(const QSize &size = QSize(100, 100));
+    bool show(const QSize &size = QSize(100, 100), const QColor &color = Qt::blue);
 
     /**
      * Commits and waits for the commit to be presented.
      * NOTE that this requires the presentation time protocol!
      */
     bool presentWait();
+    std::optional<QSize> handleConfigure(const QColor &color = Qt::blue);
 
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<XdgToplevel> m_toplevel;
