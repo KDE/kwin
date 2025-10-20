@@ -529,10 +529,8 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
                 c->fifoManager = std::make_unique<FifoManagerV1>(*c->registry, name, version);
             }
         }
-        if (flags & AdditionalWaylandInterface::PresentationTime) {
-            if (interface == wp_presentation_interface.name) {
-                c->presentationTime = std::make_unique<PresentationTime>(*c->registry, name, version);
-            }
+        if (interface == wp_presentation_interface.name) {
+            c->presentationTime = std::make_unique<PresentationTime>(*c->registry, name, version);
         }
         if (flags & AdditionalWaylandInterface::XdgActivation) {
             if (interface == xdg_activation_v1_interface.name) {
@@ -1174,7 +1172,9 @@ std::unique_ptr<XdgToplevel> createXdgToplevelSurface(XdgShell *shell, KWayland:
     XdgSurface *xdgSurface = new XdgSurface(shell, surface);
     std::unique_ptr<XdgToplevel> xdgToplevel = std::make_unique<XdgToplevel>(xdgSurface);
 
-    setup(xdgToplevel.get());
+    if (setup) {
+        setup(xdgToplevel.get());
+    }
     waitForConfigured(xdgSurface);
 
     return xdgToplevel;
@@ -2352,6 +2352,35 @@ void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal y
     auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
     auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
     Q_EMIT tablet->tabletToolTipEvent(pos, pressure, xTilt, yTilt, rotation, distance, tipDown, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
+}
+
+XdgToplevelWindow::XdgToplevelWindow(const std::function<void(XdgToplevel *toplevel)> &setup)
+    : m_surface(createSurface())
+    , m_toplevel(createXdgToplevelSurface(m_surface.get(), setup))
+{
+}
+
+XdgToplevelWindow::~XdgToplevelWindow()
+{
+    if (m_window) {
+        m_toplevel.reset();
+        m_surface.reset();
+        waitForWindowClosed(m_window);
+    }
+}
+
+bool XdgToplevelWindow::show(const QSize &size)
+{
+    m_window = renderAndWaitForShown(m_surface.get(), size, Qt::blue);
+    return m_window != nullptr;
+}
+
+bool XdgToplevelWindow::presentWait()
+{
+    const auto feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*m_surface));
+    m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
+    return spy.wait();
 }
 }
 }
