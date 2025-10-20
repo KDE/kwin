@@ -1186,7 +1186,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
         }
     }
 
-    if (!m_activeOutput || !m_outputs.contains(m_activeOutput)) {
+    if (!m_activeOutput) {
         setActiveOutput(m_outputs[0]);
     }
 
@@ -2105,6 +2105,10 @@ void Workspace::desktopResized()
 #endif
 
     rearrange();
+
+    if (!m_outputs.contains(m_activeOutput)) {
+        setActiveOutput(m_outputs[0]);
+    }
 
     const auto stack = stackingOrder();
     for (Window *window : stack) {

@@ -34,6 +34,9 @@ private Q_SLOTS:
     void activeOutputFollowsActiveWindow();
     void activeOutputDoesntFollowInactiveWindow();
     void disableActiveOutput();
+    void activeOutputAfterActivateNextWindowOnOutputAdded();
+    void activeOutputAfterActivateNextWindowOnOutputRemoved_data();
+    void activeOutputAfterActivateNextWindowOnOutputRemoved();
 };
 
 void WorkspaceTest::initTestCase()
@@ -276,6 +279,119 @@ void WorkspaceTest::disableActiveOutput()
     }
     workspace()->applyOutputConfiguration(config);
     QCOMPARE(workspace()->activeOutput(), secondOutput);
+}
+
+void WorkspaceTest::activeOutputAfterActivateNextWindowOnOutputAdded()
+{
+    // This test verifies that the workspace doesn't end up with corrupted state when the Workspace::outputAdded() signal is emitted.
+    // activateNextWindow() is interesting because it changes the active output.
+
+    const auto firstOutput = workspace()->outputs()[0];
+    const auto secondOutput = workspace()->outputs()[1];
+
+    {
+        OutputConfiguration config;
+        {
+            auto changeSet = config.changeSet(firstOutput);
+            changeSet->enabled = false;
+        }
+        {
+            auto changeSet = config.changeSet(secondOutput);
+            changeSet->enabled = false;
+        }
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    std::unique_ptr<KWayland::Client::Surface> firstSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> firstShellSurface(Test::createXdgToplevelSurface(firstSurface.get()));
+    auto firstWindow = Test::renderAndWaitForShown(firstSurface.get(), QSize(100, 50), Qt::blue);
+
+    std::unique_ptr<KWayland::Client::Surface> secondSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> secondShellSurface(Test::createXdgToplevelSurface(secondSurface.get()));
+    auto secondWindow = Test::renderAndWaitForShown(secondSurface.get(), QSize(100, 50), Qt::red);
+    QCOMPARE(workspace()->activeWindow(), secondWindow);
+
+    connect(workspace(), &Workspace::outputAdded, secondWindow, [secondWindow]() {
+        workspace()->activateNextWindow(secondWindow);
+    });
+
+    {
+        OutputConfiguration config;
+        {
+            auto changeSet = config.changeSet(firstOutput);
+            changeSet->enabled = true;
+        }
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    QCOMPARE(workspace()->activeWindow(), firstWindow);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+}
+
+void WorkspaceTest::activeOutputAfterActivateNextWindowOnOutputRemoved_data()
+{
+    QTest::addColumn<bool>("separateScreenFocus");
+
+    QTest::addRow("split screen focus") << true;
+    QTest::addRow("unified screen focus") << false;
+}
+
+void WorkspaceTest::activeOutputAfterActivateNextWindowOnOutputRemoved()
+{
+    // This test verifies that the workspace doesn't end up with corrupted state when the Workspace::outputAdded() signal is emitted.
+    // activateNextWindow() is interesting because it changes the active output.
+
+    QFETCH(bool, separateScreenFocus);
+    options->setSeparateScreenFocus(separateScreenFocus);
+
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+        QRect(2560, 0, 1280, 1024),
+    });
+
+    const auto firstOutput = workspace()->outputs()[0];
+    const auto secondOutput = workspace()->outputs()[1];
+    const auto thirdOutput = workspace()->outputs()[2];
+
+    std::unique_ptr<KWayland::Client::Surface> firstSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> firstShellSurface(Test::createXdgToplevelSurface(firstSurface.get()));
+    auto firstWindow = Test::renderAndWaitForShown(firstSurface.get(), QSize(100, 50), Qt::blue);
+    firstWindow->sendToOutput(firstOutput);
+
+    std::unique_ptr<KWayland::Client::Surface> secondSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> secondShellSurface(Test::createXdgToplevelSurface(secondSurface.get()));
+    auto secondWindow = Test::renderAndWaitForShown(secondSurface.get(), QSize(100, 50), Qt::red);
+    secondWindow->sendToOutput(secondOutput);
+
+    workspace()->activateWindow(firstWindow);
+    QCOMPARE(workspace()->activeWindow(), firstWindow);
+
+    connect(workspace(), &Workspace::outputRemoved, firstWindow, [firstOutput, firstWindow](Output *output) {
+        if (output == firstOutput) {
+            workspace()->activateNextWindow(firstWindow);
+        }
+    });
+
+    {
+        OutputConfiguration config;
+        {
+            auto changeSet = config.changeSet(firstOutput);
+            changeSet->enabled = false;
+        }
+        {
+            auto changeSet = config.changeSet(secondOutput);
+            changeSet->enabled = false;
+        }
+        {
+            auto changeSet = config.changeSet(thirdOutput);
+            changeSet->pos = QPoint(0, 0);
+        }
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    QCOMPARE(workspace()->activeWindow(), separateScreenFocus ? nullptr : secondWindow);
+    QCOMPARE(workspace()->activeOutput(), thirdOutput);
 }
 
 WAYLANDTEST_MAIN(WorkspaceTest)
