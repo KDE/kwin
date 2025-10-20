@@ -361,6 +361,10 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_destroy_global()
 
 void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource *resource)
 {
+    if (isGlobalRemoved()) {
+        return;
+    }
+
     sendGeometry(resource);
     sendScale(resource);
     sendEisaId(resource);
