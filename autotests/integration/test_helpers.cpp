@@ -2375,6 +2375,12 @@ bool XdgToplevelWindow::show(const QSize &size, const QColor &color)
     return m_window != nullptr;
 }
 
+bool XdgToplevelWindow::show(const QImage &image)
+{
+    m_window = renderAndWaitForShown(m_surface.get(), image);
+    return m_window != nullptr;
+}
+
 bool XdgToplevelWindow::presentWait()
 {
     const auto feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*m_surface));
