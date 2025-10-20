@@ -156,6 +156,10 @@ void DrmOutput::setDpmsMode(DpmsMode mode)
     if (mode == dpmsMode()) {
         return;
     }
+    if (!isEnabled()) {
+        updateDpmsMode(mode);
+        return;
+    }
     if (mode == DpmsMode::Off) {
         if (!m_turnOffTimer.isActive()) {
             updateDpmsMode(DpmsMode::AboutToTurnOff);

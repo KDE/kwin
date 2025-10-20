@@ -1282,6 +1282,13 @@ void Workspace::aboutToTurnOff()
     if (!m_dpmsFilter) {
         m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
         input()->installInputEventFilter(m_dpmsFilter.get());
+        // Make sure all displays are dpms off, even those that are disabled.
+        // This is necessary to make sure that changing output configs don't
+        // accidentally disable display power saving
+        const auto outputs = kwinApp()->outputBackend()->outputs();
+        for (Output *output : outputs) {
+            output->setDpmsMode(Output::DpmsMode::Off);
+        }
     }
     // When dpms mode for display changes, we need to trigger checking if dpms mode should be enabled/disabled.
     m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
