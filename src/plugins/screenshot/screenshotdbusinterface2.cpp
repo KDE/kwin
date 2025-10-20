@@ -139,6 +139,8 @@ static const QString s_errorCancelled = QStringLiteral("org.kde.KWin.ScreenShot2
 static const QString s_errorCancelledMessage = QStringLiteral("Screenshot got cancelled");
 static const QString s_errorInvalidWindow = QStringLiteral("org.kde.KWin.ScreenShot2.Error.InvalidWindow");
 static const QString s_errorInvalidWindowMessage = QStringLiteral("Invalid window requested");
+static const QString s_errorNoActiveWindow = QStringLiteral("org.kde.KWin.ScreenShot2.Error.NoActiveWindow");
+static const QString s_errorNoActiveWindowMessage = QStringLiteral("No active window");
 static const QString s_errorInvalidArea = QStringLiteral("org.kde.KWin.ScreenShot2.Error.InvalidArea");
 static const QString s_errorInvalidAreaMessage = QStringLiteral("Invalid area requested");
 static const QString s_errorInvalidScreen = QStringLiteral("org.kde.KWin.ScreenShot2.Error.InvalidScreen");
@@ -250,7 +252,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveWindow(const QVariantMap &opt
 
     Window *window = workspace()->activeWindow();
     if (!window) {
-        sendErrorReply(s_errorInvalidWindow, s_errorInvalidWindowMessage);
+        sendErrorReply(s_errorNoActiveWindow, s_errorNoActiveWindowMessage);
         return QVariantMap();
     }
 
