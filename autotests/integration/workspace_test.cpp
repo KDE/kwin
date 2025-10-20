@@ -28,6 +28,12 @@ private Q_SLOTS:
 
     void evacuateMappedWindowFromRemovedOutput();
     void evacuateUnmappedWindowFromRemovedOutput();
+    void activeOutputFollowsPointer();
+    void activeOutputFollowsTouch();
+    void activeOutputFollowsTablet();
+    void activeOutputFollowsActiveWindow();
+    void activeOutputDoesntFollowInactiveWindow();
+    void disableActiveOutput();
 };
 
 void WorkspaceTest::initTestCase()
@@ -107,6 +113,169 @@ void WorkspaceTest::evacuateUnmappedWindowFromRemovedOutput()
     QCOMPARE(outputChangedSpy.count(), 1);
     QCOMPARE(window->output(), secondOutput);
     QCOMPARE(window->moveResizeOutput(), secondOutput);
+}
+
+void WorkspaceTest::activeOutputFollowsPointer()
+{
+    // This test verifies that the active output follows pointer input.
+
+    const auto firstOutput = workspace()->outputs()[0];
+    const auto secondOutput = workspace()->outputs()[1];
+
+    quint32 timestamp = 0;
+    Test::pointerMotion(firstOutput->geometry().center(), timestamp++);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+    Test::pointerMotion(secondOutput->geometry().center(), timestamp++);
+    QCOMPARE(workspace()->activeOutput(), secondOutput);
+
+    Test::pointerMotion(firstOutput->geometry().center(), timestamp++);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+}
+
+void WorkspaceTest::activeOutputFollowsTouch()
+{
+    // This test verifies that the active output follows touch input.
+
+    const auto firstOutput = workspace()->outputs()[0];
+    const auto secondOutput = workspace()->outputs()[1];
+
+    quint32 timestamp = 0;
+
+    {
+        Test::touchDown(0, firstOutput->geometry().center(), timestamp++);
+        QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+        Test::touchMotion(0, firstOutput->geometry().center() + QPointF(10, 10), timestamp++);
+        QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+        Test::touchUp(0, timestamp++);
+        QCOMPARE(workspace()->activeOutput(), firstOutput);
+    }
+
+    {
+        Test::touchDown(0, secondOutput->geometry().center(), timestamp++);
+        QCOMPARE(workspace()->activeOutput(), secondOutput);
+
+        Test::touchMotion(0, secondOutput->geometry().center() + QPointF(10, 10), timestamp++);
+        QCOMPARE(workspace()->activeOutput(), secondOutput);
+
+        Test::touchUp(0, timestamp++);
+        QCOMPARE(workspace()->activeOutput(), secondOutput);
+    }
+}
+
+void WorkspaceTest::activeOutputFollowsTablet()
+{
+    // This test verifies that the active output follows tablet input.
+
+    const auto firstOutput = workspace()->outputs()[0];
+    const auto secondOutput = workspace()->outputs()[1];
+
+    quint32 timestamp = 0;
+    Test::tabletToolProximityEvent(firstOutput->geometry().center(), 0, 0, 0, 0, true, 0, timestamp++);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+    Test::tabletToolTipEvent(firstOutput->geometry().center(), 1, 0, 0, 0, 0, true, 0, timestamp++);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+    Test::tabletToolAxisEvent(firstOutput->geometry().center(), 1, 0, 0, 0, 0, true, 0, timestamp++);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+    Test::tabletToolAxisEvent(secondOutput->geometry().center(), 1, 0, 0, 0, 0, true, 0, timestamp++);
+    QCOMPARE(workspace()->activeOutput(), secondOutput);
+
+    Test::tabletToolAxisEvent(firstOutput->geometry().center(), 1, 0, 0, 0, 0, true, 0, timestamp++);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+    Test::tabletToolTipEvent(firstOutput->geometry().center(), 0, 0, 0, 0, 0, false, 0, timestamp++);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+    Test::tabletToolProximityEvent(firstOutput->geometry().center(), 0, 0, 0, 0, false, 0, timestamp++);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+}
+
+void WorkspaceTest::activeOutputFollowsActiveWindow()
+{
+    // This test verifies that the active output follows the active window.
+
+    const auto firstOutput = workspace()->outputs()[0];
+    const auto secondOutput = workspace()->outputs()[1];
+
+    std::unique_ptr<KWayland::Client::Surface> firstSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> firstShellSurface(Test::createXdgToplevelSurface(firstSurface.get()));
+    auto firstWindow = Test::renderAndWaitForShown(firstSurface.get(), QSize(100, 50), Qt::blue);
+    firstWindow->sendToOutput(firstOutput);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+    std::unique_ptr<KWayland::Client::Surface> secondSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> secondShellSurface(Test::createXdgToplevelSurface(secondSurface.get()));
+    auto secondWindow = Test::renderAndWaitForShown(secondSurface.get(), QSize(100, 50), Qt::red);
+    secondWindow->sendToOutput(secondOutput);
+    QCOMPARE(workspace()->activeOutput(), secondOutput);
+
+    workspace()->activateWindow(firstWindow);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+    workspace()->activateWindow(secondWindow);
+    QCOMPARE(workspace()->activeOutput(), secondOutput);
+
+    workspace()->activateWindow(firstWindow);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+    quint32 timestamp = 0;
+    Test::pointerMotion(secondOutput->geometry().center(), timestamp++);
+    QCOMPARE(workspace()->activeOutput(), secondOutput);
+}
+
+void WorkspaceTest::activeOutputDoesntFollowInactiveWindow()
+{
+    // This test verifies that the active output doesn't follow inactive windows.
+
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+        QRect(2560, 0, 1280, 1024),
+    });
+
+    const auto firstOutput = workspace()->outputs()[0];
+    const auto secondOutput = workspace()->outputs()[1];
+    const auto thirdOutput = workspace()->outputs()[2];
+
+    std::unique_ptr<KWayland::Client::Surface> firstSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> firstShellSurface(Test::createXdgToplevelSurface(firstSurface.get()));
+    auto firstWindow = Test::renderAndWaitForShown(firstSurface.get(), QSize(100, 50), Qt::blue);
+    firstWindow->sendToOutput(firstOutput);
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+    std::unique_ptr<KWayland::Client::Surface> secondSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> secondShellSurface(Test::createXdgToplevelSurface(secondSurface.get()));
+    auto secondWindow = Test::renderAndWaitForShown(secondSurface.get(), QSize(100, 50), Qt::red);
+    secondWindow->sendToOutput(secondOutput);
+    QCOMPARE(workspace()->activeOutput(), secondOutput);
+
+    firstWindow->sendToOutput(thirdOutput);
+    QCOMPARE(workspace()->activeOutput(), secondOutput);
+
+    firstWindow->sendToOutput(firstOutput);
+    QCOMPARE(workspace()->activeOutput(), secondOutput);
+}
+
+void WorkspaceTest::disableActiveOutput()
+{
+    // This test verifies that the active output property will be reset when the corresponding output is disabled.
+
+    const auto firstOutput = workspace()->outputs()[0];
+    const auto secondOutput = workspace()->outputs()[1];
+    QCOMPARE(workspace()->activeOutput(), firstOutput);
+
+    OutputConfiguration config;
+    {
+        auto changeSet = config.changeSet(workspace()->activeOutput());
+        changeSet->enabled = false;
+    }
+    workspace()->applyOutputConfiguration(config);
+    QCOMPARE(workspace()->activeOutput(), secondOutput);
 }
 
 WAYLANDTEST_MAIN(WorkspaceTest)
