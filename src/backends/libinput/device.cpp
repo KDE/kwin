@@ -901,11 +901,21 @@ void Device::setOutputName(const QString &name)
     if (name == m_outputName) {
         return;
     }
-    setConfigOutputName(name);
-    writeEntry(ConfigKey::OutputName, name);
-    if (m_output) {
-        setOutputUuid(m_output->uuid());
+    m_outputName = name;
+    const auto outputs = workspace()->outputs();
+    const auto it = std::ranges::find_if(outputs, [&name](Output *output) {
+        return output->name() == name;
+    });
+    if (it == outputs.end()) {
+        setOutput(nullptr);
+        m_outputUuid.clear();
+    } else {
+        auto *output = *it;
+        setOutput(output);
+        m_outputUuid = output->uuid();
+        writeEntry(ConfigKey::OutputUuid, m_outputUuid);
     }
+    Q_EMIT outputNameChanged();
 #endif
 }
 
@@ -916,14 +926,8 @@ void Device::setConfigOutputName(const QString &name)
         return;
     }
     if (m_outputUuid.isEmpty()) {
-        const auto outputs = workspace()->outputs();
-        const auto it = std::ranges::find_if(outputs, [&name](Output *output) {
-            return output->name() == name;
-        });
-        setOutput(it == outputs.end() ? nullptr : *it);
+        setOutputName(name);
     }
-    m_outputName = name;
-    Q_EMIT outputNameChanged();
 #endif
 }
 
@@ -938,7 +942,15 @@ void Device::setOutputUuid(const QString &uuid)
     const auto it = std::ranges::find_if(outputs, [&uuid](Output *output) {
         return output->uuid() == uuid;
     });
-    setOutput(it == outputs.end() ? nullptr : *it);
+    if (it == outputs.end()) {
+        setOutput(nullptr);
+        m_outputName.clear();
+    } else {
+        auto *output = *it;
+        setOutput(output);
+        m_outputName = output->name();
+    }
+    Q_EMIT outputNameChanged();
     writeEntry(ConfigKey::OutputUuid, uuid);
 #endif
 }
