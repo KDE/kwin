@@ -265,6 +265,7 @@ public:
     std::shared_ptr<ColorDescription> withWhitepoint(xyY newWhitePoint) const;
     std::shared_ptr<ColorDescription> dimmed(double brightnessFactor) const;
     std::shared_ptr<ColorDescription> withReference(double referenceLuminance) const;
+    std::shared_ptr<ColorDescription> withHdrMetadata(double maxAverageLuminance, double maxLuminance) const;
     std::shared_ptr<ColorDescription> withYuvCoefficients(YUVMatrixCoefficients coefficient, EncodingRange range) const;
 
     /**

@@ -50,6 +50,7 @@ public:
     virtual void postPaint() = 0;
     virtual bool shouldRenderItem(Item *item) const;
     virtual bool shouldRenderHole(Item *item) const;
+    virtual double desiredHdrHeadroom() const = 0;
 
     /**
      * add a repaint in layer-local logical coordinates
@@ -89,7 +90,7 @@ public:
     QRegion collectDamage() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     void postPaint() override;
-    double desiredHdrHeadroom() const;
+    double desiredHdrHeadroom() const override;
 
     void addExclusiveView(RenderView *view);
     void removeExclusiveView(RenderView *view);
@@ -134,6 +135,7 @@ public:
 
     virtual bool needsRepaint();
     bool canSkipMoveRepaint(Item *item) override;
+    double desiredHdrHeadroom() const override;
 
 protected:
     QRectF calculateViewport(const QRectF &itemRect) const;
@@ -159,6 +161,7 @@ public:
     void setExclusive(bool enable) override;
     bool needsRepaint() override;
     bool canSkipMoveRepaint(Item *item) override;
+    double desiredHdrHeadroom() const override;
 };
 
 class KWIN_EXPORT Scene : public QObject

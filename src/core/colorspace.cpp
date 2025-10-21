@@ -676,6 +676,20 @@ std::shared_ptr<ColorDescription> ColorDescription::withReference(double referen
     });
 }
 
+std::shared_ptr<ColorDescription> ColorDescription::withHdrMetadata(double maxAverageLuminance, double maxLuminance) const
+{
+    return std::make_shared<ColorDescription>(ColorDescription{
+        m_containerColorimetry,
+        m_transferFunction,
+        m_referenceLuminance,
+        m_minLuminance,
+        maxAverageLuminance,
+        maxLuminance,
+        m_masteringColorimetry,
+        m_sdrColorimetry,
+    });
+}
+
 std::shared_ptr<ColorDescription> ColorDescription::withYuvCoefficients(YUVMatrixCoefficients coefficient, EncodingRange range) const
 {
     return std::make_shared<ColorDescription>(ColorDescription{
