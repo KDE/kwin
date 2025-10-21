@@ -367,43 +367,6 @@ std::optional<uint32_t> DrmOutput::decideAutomaticBpcLimit() const
     return std::nullopt;
 }
 
-bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
-{
-    const auto mode = props->mode.value_or(currentMode()).lock();
-    if (!mode) {
-        return false;
-    }
-    const bool bt2020 = props->wideColorGamut.value_or(m_state.wideColorGamut) && (capabilities() & Capability::WideColorGamut);
-    const bool hdr = props->highDynamicRange.value_or(m_state.highDynamicRange) && (capabilities() & Capability::HighDynamicRange);
-    m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(mode));
-    m_pipeline->setOverscan(props->overscan.value_or(m_pipeline->overscan()));
-    m_pipeline->setRgbRange(props->rgbRange.value_or(m_pipeline->rgbRange()));
-    m_pipeline->setEnable(props->enabled.value_or(m_pipeline->enabled()));
-    m_pipeline->setActive(m_pipeline->enabled() && props->dpmsMode.value_or(m_state.dpmsMode) != DpmsMode::Off);
-    m_pipeline->setHighDynamicRange(hdr);
-    m_pipeline->setWideColorGamut(bt2020);
-
-    if (uint32_t bpcSetting = props->maxBitsPerColor.value_or(maxBitsPerColor())) {
-        m_pipeline->setMaxBpc(bpcSetting);
-    } else {
-        const auto tradeoff = props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff);
-        m_pipeline->setMaxBpc(decideAutomaticBpcLimit().value_or(tradeoff == ColorPowerTradeoff::PreferAccuracy ? 16 : 10));
-    }
-
-    if (bt2020 || hdr || props->colorProfileSource.value_or(m_state.colorProfileSource) != ColorProfileSource::ICC) {
-        // ICC profiles don't support HDR (yet)
-        m_pipeline->setIccProfile(nullptr);
-    } else {
-        m_pipeline->setIccProfile(props->iccProfile.value_or(m_state.iccProfile));
-    }
-    // remove the color pipeline for the atomic test
-    // otherwise it could potentially fail
-    if (m_gpu->atomicModeSetting()) {
-        m_pipeline->setCrtcColorPipeline(ColorPipeline{});
-    }
-    return true;
-}
-
 static QVector3D adaptChannelFactors(const std::shared_ptr<ColorDescription> &originalColor, const QVector3D &sRGBchannelFactors)
 {
     QVector3D adaptedChannelFactors = ColorDescription::sRGB->containerColorimetry().relativeColorimetricTo(originalColor->containerColorimetry()) * sRGBchannelFactors;
@@ -483,6 +446,100 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
     });
 }
 
+bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
+{
+    const auto mode = props->mode.value_or(currentMode()).lock();
+    if (!mode) {
+        return false;
+    }
+
+    m_nextState = m_state;
+    m_nextState->enabled = props->enabled.value_or(m_state.enabled);
+    m_nextState->position = props->pos.value_or(m_state.position);
+    m_nextState->scale = props->scale.value_or(m_state.scale);
+    m_nextState->scaleSetting = props->scaleSetting.value_or(m_state.scaleSetting);
+    m_nextState->transform = props->transform.value_or(m_state.transform);
+    m_nextState->manualTransform = props->manualTransform.value_or(m_state.manualTransform);
+    m_nextState->currentMode = mode;
+    m_nextState->overscan = props->overscan.value_or(m_state.overscan);
+    m_nextState->rgbRange = props->rgbRange.value_or(m_state.rgbRange);
+    m_nextState->highDynamicRange = props->highDynamicRange.value_or(m_state.highDynamicRange);
+    m_nextState->referenceLuminance = props->referenceLuminance.value_or(m_state.referenceLuminance);
+    m_nextState->wideColorGamut = props->wideColorGamut.value_or(m_state.wideColorGamut);
+    m_nextState->autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
+    m_nextState->maxPeakBrightnessOverride = props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride);
+    m_nextState->maxAverageBrightnessOverride = props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride);
+    m_nextState->minBrightnessOverride = props->minBrightnessOverride.value_or(m_state.minBrightnessOverride);
+    m_nextState->sdrGamutWideness = props->sdrGamutWideness.value_or(m_state.sdrGamutWideness);
+    m_nextState->iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
+    m_nextState->iccProfile = props->iccProfile.value_or(m_state.iccProfile);
+    m_nextState->vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
+    m_nextState->colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
+    m_nextState->brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
+    m_nextState->currentBrightness = props->currentBrightness.has_value() ? props->currentBrightness : m_state.currentBrightness;
+    m_nextState->desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
+    m_nextState->desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
+    m_nextState->allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
+    m_nextState->colorPowerTradeoff = props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff);
+    m_nextState->dimming = props->dimming.value_or(m_state.dimming);
+    m_nextState->brightnessDevice = props->brightnessDevice.value_or(m_state.brightnessDevice);
+    m_nextState->uuid = props->uuid.value_or(m_state.uuid);
+    m_nextState->replicationSource = props->replicationSource.value_or(m_state.replicationSource);
+    m_nextState->detectedDdcCi = props->detectedDdcCi.value_or(m_state.detectedDdcCi);
+    m_nextState->allowDdcCi = props->allowDdcCi.value_or(m_state.allowDdcCi);
+    if (m_nextState->allowSdrSoftwareBrightness != m_state.allowSdrSoftwareBrightness) {
+        // make sure that we set the brightness again next frame
+        m_nextState->currentBrightness.reset();
+    }
+    m_nextState->maxBitsPerColor = props->maxBitsPerColor.value_or(m_state.maxBitsPerColor);
+    m_nextState->automaticMaxBitsPerColorLimit = decideAutomaticBpcLimit();
+    m_nextState->edrPolicy = props->edrPolicy.value_or(m_state.edrPolicy);
+    m_nextState->dpmsMode = props->dpmsMode.value_or(m_state.dpmsMode);
+    if (props->customModes.has_value()) {
+        m_nextState->customModes = *props->customModes;
+        m_nextState->modes = getModes(*m_nextState);
+    }
+    m_nextState->originalColorDescription = createColorDescription(*m_nextState);
+    m_nextState->colorDescription = applyNightLight(m_nextState->originalColorDescription, m_sRgbChannelFactors);
+    m_nextState->sharpnessSetting = props->sharpness.value_or(m_state.sharpnessSetting);
+    m_nextState->priority = props->priority.value_or(m_state.priority);
+    m_nextState->deviceOffset = props->deviceOffset.value_or(m_state.deviceOffset);
+    m_nextState->automaticBrightness = props->automaticBrightness.value_or(m_state.automaticBrightness);
+    m_nextState->lastBrightnessAdjustmentReason = props->brightnessReason.value_or(m_state.lastBrightnessAdjustmentReason);
+    m_nextState->autoBrightnessCurve = props->autoBrightnessCurve.value_or(m_state.autoBrightnessCurve);
+
+    const bool bt2020 = m_nextState->wideColorGamut && (capabilities() & Capability::WideColorGamut);
+    const bool hdr = m_nextState->highDynamicRange && (capabilities() & Capability::HighDynamicRange);
+    m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(mode));
+    m_pipeline->setOverscan(m_nextState->overscan);
+    m_pipeline->setRgbRange(m_nextState->rgbRange);
+    m_pipeline->setEnable(m_nextState->enabled);
+    m_pipeline->setActive(m_nextState->enabled && m_nextState->dpmsMode == DpmsMode::On);
+    m_pipeline->setHighDynamicRange(hdr);
+    m_pipeline->setWideColorGamut(bt2020);
+
+    if (uint32_t bpcSetting = props->maxBitsPerColor.value_or(maxBitsPerColor())) {
+        m_pipeline->setMaxBpc(bpcSetting);
+    } else {
+        const auto tradeoff = props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff);
+        m_pipeline->setMaxBpc(decideAutomaticBpcLimit().value_or(tradeoff == ColorPowerTradeoff::PreferAccuracy ? 16 : 10));
+    }
+
+    if (bt2020 || hdr || props->colorProfileSource.value_or(m_state.colorProfileSource) != ColorProfileSource::ICC) {
+        // ICC profiles don't support HDR (yet)
+        m_pipeline->setIccProfile(nullptr);
+    } else {
+        m_pipeline->setIccProfile(m_nextState->iccProfile);
+    }
+    // remove the color pipeline for the atomic test
+    // otherwise it could potentially fail
+    if (m_gpu->atomicModeSetting()) {
+        m_pipeline->setCrtcColorPipeline(ColorPipeline{});
+    }
+
+    return true;
+}
+
 void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)
 {
     if (!m_connector->isConnected()) {
@@ -491,77 +548,24 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     Q_EMIT aboutToChange(props.get());
     m_pipeline->applyPendingChanges();
 
-    State next = m_state;
-    next.enabled = props->enabled.value_or(m_state.enabled) && m_pipeline->crtc();
-    next.position = props->pos.value_or(m_state.position);
-    next.scale = props->scale.value_or(m_state.scale);
-    next.scaleSetting = props->scaleSetting.value_or(m_state.scaleSetting);
-    next.transform = props->transform.value_or(m_state.transform);
-    next.manualTransform = props->manualTransform.value_or(m_state.manualTransform);
-    next.currentMode = m_pipeline->mode();
-    next.overscan = m_pipeline->overscan();
-    next.rgbRange = m_pipeline->rgbRange();
-    next.highDynamicRange = props->highDynamicRange.value_or(m_state.highDynamicRange);
-    next.referenceLuminance = props->referenceLuminance.value_or(m_state.referenceLuminance);
-    next.wideColorGamut = props->wideColorGamut.value_or(m_state.wideColorGamut);
-    next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
-    next.maxPeakBrightnessOverride = props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride);
-    next.maxAverageBrightnessOverride = props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride);
-    next.minBrightnessOverride = props->minBrightnessOverride.value_or(m_state.minBrightnessOverride);
-    next.sdrGamutWideness = props->sdrGamutWideness.value_or(m_state.sdrGamutWideness);
-    next.iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
-    next.iccProfile = props->iccProfile.value_or(m_state.iccProfile);
-    next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
-    next.colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
-    next.brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
-    next.currentBrightness = props->currentBrightness.has_value() ? props->currentBrightness : m_state.currentBrightness;
-    next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
-    next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
-    next.allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
-    next.colorPowerTradeoff = props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff);
-    next.dimming = props->dimming.value_or(m_state.dimming);
-    next.brightnessDevice = props->brightnessDevice.value_or(m_state.brightnessDevice);
-    next.uuid = props->uuid.value_or(m_state.uuid);
-    next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
-    next.detectedDdcCi = props->detectedDdcCi.value_or(m_state.detectedDdcCi);
-    next.allowDdcCi = props->allowDdcCi.value_or(m_state.allowDdcCi);
-    if (next.allowSdrSoftwareBrightness != m_state.allowSdrSoftwareBrightness) {
-        // make sure that we set the brightness again next frame
-        next.currentBrightness.reset();
-    }
-    next.maxBitsPerColor = props->maxBitsPerColor.value_or(m_state.maxBitsPerColor);
-    next.automaticMaxBitsPerColorLimit = decideAutomaticBpcLimit();
-    next.edrPolicy = props->edrPolicy.value_or(m_state.edrPolicy);
-    next.dpmsMode = props->dpmsMode.value_or(m_state.dpmsMode);
-    if (props->customModes.has_value()) {
-        next.customModes = *props->customModes;
-        next.modes = getModes(next);
-    }
-    next.originalColorDescription = createColorDescription(next);
-    next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
-    next.sharpnessSetting = props->sharpness.value_or(m_state.sharpnessSetting);
-    next.priority = props->priority.value_or(m_state.priority);
-    next.deviceOffset = props->deviceOffset.value_or(m_state.deviceOffset);
-    next.automaticBrightness = props->automaticBrightness.value_or(m_state.automaticBrightness);
-    next.lastBrightnessAdjustmentReason = props->brightnessReason.value_or(m_state.lastBrightnessAdjustmentReason);
-    next.autoBrightnessCurve = props->autoBrightnessCurve.value_or(m_state.autoBrightnessCurve);
-    tryKmsColorOffloading(next);
-    maybeScheduleRepaints(next);
-    const bool nextOff = next.dpmsMode != DpmsMode::On;
+    tryKmsColorOffloading(*m_nextState);
+    maybeScheduleRepaints(*m_nextState);
+    const bool nextOff = m_nextState->dpmsMode != DpmsMode::On;
     const bool currentOff = m_state.dpmsMode != DpmsMode::On;
     if (nextOff != currentOff) {
-        if (next.dpmsMode == DpmsMode::On) {
+        if (m_nextState->dpmsMode == DpmsMode::On) {
             m_renderLoop->uninhibit();
         } else {
             // NOTE that legacy modesetting applies dpms in the "test" before this
             // method gets called, so we have to special case legacy vs. atomic here
             if (m_state.dpmsMode == DpmsMode::On && m_gpu->atomicModeSetting()) {
-                next.dpmsMode = DpmsMode::TurningOff;
+                m_nextState->dpmsMode = DpmsMode::TurningOff;
             }
             m_renderLoop->inhibit();
         }
     }
-    setState(next);
+    setState(*m_nextState);
+    m_nextState.reset();
 
     // allowSdrSoftwareBrightness, the brightness device or detectedDdcCi might change our capabilities
     Information newInfo = m_information;
@@ -612,6 +616,7 @@ void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHe
 
 void DrmOutput::revertQueuedChanges()
 {
+    m_nextState.reset();
     m_pipeline->revertPendingChanges();
 }
 
@@ -750,6 +755,11 @@ void DrmOutput::setAutoBrightnessAvailable(bool isAvailable)
     Information next = m_information;
     next.capabilities = computeCapabilities();
     setInformation(next);
+}
+
+const BackendOutput::State &DrmOutput::nextState() const
+{
+    return m_nextState ? *m_nextState : m_state;
 }
 }
 

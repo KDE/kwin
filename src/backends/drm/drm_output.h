@@ -71,6 +71,8 @@ public:
     void removePipeline();
     void maybeUpdateDpmsState();
 
+    const State &nextState() const;
+
 private:
     void tryKmsColorOffloading(State &next);
     std::shared_ptr<ColorDescription> createColorDescription(const State &next) const;
@@ -94,6 +96,8 @@ private:
     PresentationMode m_desiredPresentationMode = PresentationMode::VSync;
     bool m_autoRotateAvailable = false;
     bool m_autoBrightnessAvailable = false;
+
+    std::optional<State> m_nextState;
 };
 
 }

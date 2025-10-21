@@ -75,7 +75,7 @@ bool EglGbmLayer::preparePresentationTest()
         return false;
     }
     m_scanoutBuffer.reset();
-    return m_surface.renderTestBuffer(targetRect().size(), supportedDrmFormats(), drmOutput()->colorPowerTradeoff(), m_requiredAlphaBits) != nullptr;
+    return m_surface.renderTestBuffer(targetRect().size(), supportedDrmFormats(), drmOutput()->nextState().colorPowerTradeoff, m_requiredAlphaBits) != nullptr;
 }
 
 bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
