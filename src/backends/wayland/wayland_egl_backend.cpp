@@ -58,6 +58,11 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::doBeginFrame()
         return std::nullopt;
     }
 
+    if (m_color != m_previousColor) {
+        // need to force a full repaint
+        m_damageJournal.clear();
+    }
+
     const QSize nativeSize = targetRect().size();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
         const QHash<uint32_t, QList<uint64_t>> formatTable = m_backend->backend()->display()->linuxDmabuf()->formats();

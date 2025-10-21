@@ -47,7 +47,7 @@ public:
     KWayland::Client::Surface *surface() const;
     KWayland::Client::SubSurface *subSurface() const;
 
-private:
+protected:
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<KWayland::Client::SubSurface> m_subSurface;
     wp_presentation_feedback *m_presentationFeedback = nullptr;
