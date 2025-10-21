@@ -70,6 +70,8 @@ public:
 
     void removePipeline();
 
+    const State &nextState() const;
+
 private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
@@ -96,6 +98,8 @@ private:
     bool m_needsShadowBuffer = false;
     PresentationMode m_desiredPresentationMode = PresentationMode::VSync;
     bool m_autoRotateAvailable = false;
+
+    std::optional<State> m_nextState;
 };
 
 }
