@@ -169,6 +169,11 @@ QRectF RegionScreenCastSource::mapFromGlobal(const QRectF &rect) const
     return rect.translated(-m_region.topLeft());
 }
 
+void RegionScreenCastSource::setColor(const std::shared_ptr<ColorDescription> &color)
+{
+    m_layer->setColor(color);
+}
+
 } // namespace KWin
 
 #include "moc_regionscreencastsource.cpp"

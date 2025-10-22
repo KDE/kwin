@@ -14,6 +14,15 @@ ScreencastLayer::ScreencastLayer(Output *output, const QHash<uint32_t, QList<uin
 {
 }
 
+void ScreencastLayer::setColor(const std::shared_ptr<ColorDescription> &color)
+{
+    if (color == m_color) {
+        return;
+    }
+    m_color = color;
+    addRepaint(QRect(QPoint(), m_sourceRect.toAlignedRect().size()));
+}
+
 void ScreencastLayer::setFramebuffer(GLFramebuffer *buffer, const QRegion &bufferDamage)
 {
     // TODO is there a better way to deal with this?
@@ -34,7 +43,7 @@ QHash<uint32_t, QList<uint64_t>> ScreencastLayer::supportedDrmFormats() const
 std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::doBeginFrame()
 {
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer),
+        .renderTarget = RenderTarget(m_buffer, m_color),
         .repaint = m_bufferDamage,
     };
 }

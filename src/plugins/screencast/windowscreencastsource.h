@@ -29,6 +29,7 @@ public:
     uint refreshRate() const override;
 
     void setRenderCursor(bool enable) override;
+    void setColor(const std::shared_ptr<ColorDescription> &color) override;
     QRegion render(GLFramebuffer *target, const QRegion &bufferDamage) override;
     QRegion render(QImage *target, const QRegion &bufferDamage) override;
     std::chrono::nanoseconds clock() const override;
@@ -50,6 +51,7 @@ private:
     QList<Window *> m_windows;
     bool m_active = false;
     bool m_renderCursor = false;
+    std::shared_ptr<ColorDescription> m_color = ColorDescription::sRGB;
 };
 
 } // namespace KWin

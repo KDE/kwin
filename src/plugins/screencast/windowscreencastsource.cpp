@@ -104,6 +104,11 @@ void WindowScreenCastSource::setRenderCursor(bool enable)
     m_renderCursor = enable;
 }
 
+void WindowScreenCastSource::setColor(const std::shared_ptr<ColorDescription> &color)
+{
+    m_color = color;
+}
+
 QRegion WindowScreenCastSource::render(QImage *target, const QRegion &bufferDamage)
 {
     const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, target->size());
@@ -120,7 +125,7 @@ QRegion WindowScreenCastSource::render(QImage *target, const QRegion &bufferDama
 
 QRegion WindowScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferDamage)
 {
-    RenderTarget renderTarget(target);
+    RenderTarget renderTarget(target, m_color);
     RenderViewport viewport(boundingRect(), devicePixelRatio(), renderTarget);
 
     WorkspaceScene *scene = Compositor::self()->scene();

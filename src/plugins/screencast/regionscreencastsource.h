@@ -34,6 +34,7 @@ public:
     uint refreshRate() const override;
 
     void setRenderCursor(bool enable) override;
+    void setColor(const std::shared_ptr<ColorDescription> &color) override;
     QRegion render(GLFramebuffer *target, const QRegion &bufferRepair) override;
     QRegion render(QImage *target, const QRegion &bufferRepair) override;
     std::chrono::nanoseconds clock() const override;
