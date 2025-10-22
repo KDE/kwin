@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "core/colorspace.h"
 #include "core/drm_formats.h"
 #include "utils/damagejournal.h"
 #include "wayland/screencast_v1.h"
@@ -116,6 +117,7 @@ private:
     bool m_closed = false;
 
     spa_video_info_raw m_videoFormat;
+    std::shared_ptr<ColorDescription> m_videoColor = ColorDescription::sRGB;
     QString m_error;
     ModifierList m_modifiers;
     std::optional<ScreenCastDmaBufTextureParams> m_dmabufParams; // when fixated

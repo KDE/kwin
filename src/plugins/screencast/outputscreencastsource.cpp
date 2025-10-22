@@ -66,6 +66,12 @@ void OutputScreenCastSource::setRenderCursor(bool enable)
     }
 }
 
+void OutputScreenCastSource::setColorDescription(const std::shared_ptr<ColorDescription> &color)
+{
+    Q_ASSERT(m_layer);
+    m_layer->setColorDescription(color);
+}
+
 Region OutputScreenCastSource::render(QImage *target, const Region &bufferRepair)
 {
     auto texture = GLTexture::allocate(GL_RGBA8, target->size());

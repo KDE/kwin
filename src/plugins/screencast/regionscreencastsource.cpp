@@ -178,6 +178,12 @@ RectF RegionScreenCastSource::mapFromGlobal(const RectF &rect) const
     return rect.translated(-m_region.topLeft());
 }
 
+void RegionScreenCastSource::setColorDescription(const std::shared_ptr<ColorDescription> &color)
+{
+    Q_ASSERT(m_layer);
+    m_layer->setColorDescription(color);
+}
+
 } // namespace KWin
 
 #include "moc_regionscreencastsource.cpp"

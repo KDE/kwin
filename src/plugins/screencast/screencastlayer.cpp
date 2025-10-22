@@ -16,6 +16,15 @@ ScreencastLayer::ScreencastLayer(LogicalOutput *output, const FormatModifierMap 
     setRenderLoop(nullptr);
 }
 
+void ScreencastLayer::setColorDescription(const std::shared_ptr<ColorDescription> &color)
+{
+    if (color == m_color) {
+        return;
+    }
+    m_color = color;
+    addDeviceRepaint(Rect(QPoint(), m_targetRect.size()));
+}
+
 void ScreencastLayer::setFramebuffer(GLFramebuffer *buffer, const Region &bufferDamage)
 {
     // TODO is there a better way to deal with this?
@@ -36,7 +45,7 @@ FormatModifierMap ScreencastLayer::supportedDrmFormats() const
 std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::doBeginFrame()
 {
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer),
+        .renderTarget = RenderTarget(m_buffer, m_color),
         .repaint = m_bufferDamage,
     };
 }

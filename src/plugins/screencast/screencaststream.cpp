@@ -168,6 +168,51 @@ void ScreenCastStream::newStreamParams()
     qCDebug(KWIN_SCREENCAST) << objectName() << "announcing stream params. with dmabuf:" << m_dmabufParams.has_value();
     const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) : (1 << SPA_DATA_MemFd);
 
+    Colorimetry primaries = Colorimetry::BT709;
+    switch (m_videoFormat.color_primaries) {
+    case SPA_VIDEO_COLOR_PRIMARIES_UNKNOWN:
+    case SPA_VIDEO_COLOR_PRIMARIES_BT709:
+        primaries = Colorimetry::BT709;
+        break;
+    case SPA_VIDEO_COLOR_PRIMARIES_BT2020:
+        primaries = Colorimetry::BT2020;
+        break;
+    case SPA_VIDEO_COLOR_PRIMARIES_ADOBERGB:
+        primaries = Colorimetry::AdobeRGB;
+        break;
+    case SPA_VIDEO_COLOR_PRIMARIES_BT470BG:
+        primaries = Colorimetry::PAL;
+        break;
+    case SPA_VIDEO_COLOR_PRIMARIES_BT470M:
+        primaries = Colorimetry::PAL_M;
+        break;
+        // not sure why Pipewire has these as separate entries,
+        // they're the same actual primaries
+    case SPA_VIDEO_COLOR_PRIMARIES_SMPTE170M:
+    case SPA_VIDEO_COLOR_PRIMARIES_SMPTE240M:
+        primaries = Colorimetry::NTSC;
+        break;
+    case SPA_VIDEO_COLOR_PRIMARIES_FILM:
+        primaries = Colorimetry::GenericFilm;
+        break;
+    default:
+        break;
+    }
+    TransferFunction::Type transfer = TransferFunction::gamma22;
+    switch (m_videoFormat.transfer_function) {
+    case SPA_VIDEO_TRANSFER_BT601:
+    case SPA_VIDEO_TRANSFER_BT709:
+    case SPA_VIDEO_TRANSFER_BT2020_10:
+        transfer = TransferFunction::BT1886;
+        break;
+    case SPA_VIDEO_TRANSFER_GAMMA22:
+    default:
+        break;
+    }
+    m_videoColor = std::make_shared<ColorDescription>(primaries, TransferFunction{transfer});
+
+    qCDebug(KWIN_SCREENCAST) << "chose" << *m_videoColor << "for the stream";
+
     struct spa_pod_dynamic_builder pod_builder;
     struct spa_pod_frame f;
     spa_pod_dynamic_builder_init(&pod_builder, nullptr, 0, 1024);
@@ -673,6 +718,8 @@ void ScreenCastStream::record(Contents contents)
         break;
     }
 
+    m_source->setColorDescription(m_videoColor);
+
     EglContext *context = backend->openglContext();
     context->makeCurrent();
 
@@ -849,6 +896,30 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
                             SPA_POD_Fraction(minFramerate),
                             SPA_POD_Fraction(maxFramerate)),
                         0);
+
+    struct spa_pod_frame primariesFrame;
+    spa_pod_builder_prop(b, SPA_FORMAT_VIDEO_colorPrimaries, 0);
+    spa_pod_builder_push_choice(b, &primariesFrame, SPA_CHOICE_Enum, 0);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_BT709); // default
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_BT709);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_BT2020);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_ADOBERGB);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_BT470M);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_BT470BG);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_SMPTE170M);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_SMPTE240M);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_FILM);
+    spa_pod_builder_pop(b, &primariesFrame);
+
+    struct spa_pod_frame transferFrame;
+    spa_pod_builder_prop(b, SPA_FORMAT_VIDEO_transferFunction, 0);
+    spa_pod_builder_push_choice(b, &transferFrame, SPA_CHOICE_Enum, 0);
+    spa_pod_builder_id(b, SPA_VIDEO_TRANSFER_GAMMA22); // default
+    spa_pod_builder_id(b, SPA_VIDEO_TRANSFER_GAMMA22);
+    // SPA_VIDEO_TRANSFER_SRGB is intentionally not supported,
+    // as it would almost certainly yield wrong results.
+    spa_pod_builder_id(b, SPA_VIDEO_TRANSFER_BT709);
+    spa_pod_builder_pop(b, &transferFrame);
 
     if (format == SPA_VIDEO_FORMAT_BGRA) {
         /* announce equivalent format without alpha */

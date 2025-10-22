@@ -31,6 +31,7 @@ public:
     bool needsAlpha() const override;
 
     void setRenderCursor(bool enable) override;
+    void setColorDescription(const std::shared_ptr<ColorDescription> &color) override;
     Region render(GLFramebuffer *target, const Region &bufferRepair) override;
     Region render(QImage *target, const Region &bufferRepair) override;
     std::chrono::nanoseconds clock() const override;

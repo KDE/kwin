@@ -29,6 +29,7 @@ public:
     bool needsAlpha() const override;
 
     void setRenderCursor(bool enable) override;
+    void setColorDescription(const std::shared_ptr<ColorDescription> &color) override;
     Region render(GLFramebuffer *target, const Region &bufferDamage) override;
     Region render(QImage *target, const Region &bufferDamage) override;
     std::chrono::nanoseconds clock() const override;
@@ -50,6 +51,7 @@ private:
     QList<Window *> m_windows;
     bool m_active = false;
     bool m_renderCursor = false;
+    std::shared_ptr<ColorDescription> m_color = ColorDescription::sRGB;
 };
 
 } // namespace KWin
