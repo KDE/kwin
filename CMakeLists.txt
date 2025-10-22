@@ -378,6 +378,11 @@ add_feature_info(libdisplayinfo libdisplayinfo_FOUND "EDID and DisplayID library
 
 pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=1.0.9)
 add_feature_info(PipeWire PipeWire_FOUND "Required for Wayland screencasting")
+if (PipeWire_VERSION VERSION_GREATER_EQUAL 1.5.81)
+    set(HAVE_PIPEWIRE_ST2084 1)
+else()
+    set(HAVE_PIPEWIRE_ST2084 0)
+endif()
 
 if (KWIN_BUILD_NOTIFICATIONS)
     find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Notifications)

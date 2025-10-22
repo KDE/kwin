@@ -187,6 +187,11 @@ void ScreenCastStream::newStreamParams()
     case SPA_VIDEO_TRANSFER_BT709:
         transfer = TransferFunction::BT1886;
         break;
+#if HAVE_PIPEWIRE_ST2084
+    case SPA_VIDEO_TRANSFER_SMPTE2084:
+        transfer = TransferFunction::PerceptualQuantizer;
+        break;
+#endif
     case SPA_VIDEO_TRANSFER_GAMMA22:
     default:
         transfer = TransferFunction::gamma22;
@@ -838,6 +843,9 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
     struct spa_pod_frame transfer_frame;
     spa_pod_builder_prop(b, SPA_FORMAT_VIDEO_transferFunction, 0);
     spa_pod_builder_push_choice(b, &transfer_frame, SPA_CHOICE_Enum, 0);
+#if HAVE_PIPEWIRE_ST2084
+    spa_pod_builder_id(b, SPA_VIDEO_TRANSFER_SMPTE2084);
+#endif
     spa_pod_builder_id(b, SPA_VIDEO_TRANSFER_GAMMA22);
     // SPA_VIDEO_TRANSFER_SRGB is intentionally not supported,
     // as it would almost certainly yield wrong results.
