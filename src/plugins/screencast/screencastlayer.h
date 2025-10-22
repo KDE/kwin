@@ -14,6 +14,7 @@ class ScreencastLayer : public OutputLayer
 public:
     explicit ScreencastLayer(LogicalOutput *output, const QHash<uint32_t, QList<uint64_t>> &formats);
 
+    void setColor(const std::shared_ptr<ColorDescription> &color);
     void setFramebuffer(GLFramebuffer *buffer, const Region &bufferDamage);
 
     DrmDevice *scanoutDevice() const override;
@@ -27,6 +28,7 @@ private:
     const QHash<uint32_t, QList<uint64_t>> m_formats;
     GLFramebuffer *m_buffer = nullptr;
     Region m_bufferDamage;
+    std::shared_ptr<ColorDescription> m_color = ColorDescription::sRGB;
 };
 
 }

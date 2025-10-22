@@ -154,6 +154,48 @@ void ScreenCastStream::newStreamParams()
     const int bpp = m_videoFormat.format == SPA_VIDEO_FORMAT_RGB || m_videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
     const int stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
 
+    Colorimetry primaries = Colorimetry::BT709;
+    switch (m_videoFormat.color_primaries) {
+    case SPA_VIDEO_COLOR_PRIMARIES_UNKNOWN:
+    case SPA_VIDEO_COLOR_PRIMARIES_BT709:
+        primaries = Colorimetry::BT709;
+        break;
+    case SPA_VIDEO_COLOR_PRIMARIES_BT2020:
+        primaries = Colorimetry::BT2020;
+        break;
+    case SPA_VIDEO_COLOR_PRIMARIES_ADOBERGB:
+        primaries = Colorimetry::AdobeRGB;
+        break;
+    case SPA_VIDEO_COLOR_PRIMARIES_BT470BG:
+        primaries = Colorimetry::PAL;
+        break;
+    case SPA_VIDEO_COLOR_PRIMARIES_BT470M:
+        primaries = Colorimetry::PAL_M;
+        break;
+        // not sure why Pipewire has these as separate entries,
+        // they're the same actual primaries
+    case SPA_VIDEO_COLOR_PRIMARIES_SMPTE170M:
+    case SPA_VIDEO_COLOR_PRIMARIES_SMPTE240M:
+        primaries = Colorimetry::NTSC;
+        break;
+    case SPA_VIDEO_COLOR_PRIMARIES_FILM:
+        primaries = Colorimetry::GenericFilm;
+        break;
+    }
+    TransferFunction::Type transfer;
+    switch (m_videoFormat.transfer_function) {
+    case SPA_VIDEO_TRANSFER_BT709:
+        transfer = TransferFunction::BT1886;
+        break;
+    case SPA_VIDEO_TRANSFER_GAMMA22:
+    default:
+        transfer = TransferFunction::gamma22;
+        break;
+    }
+    m_videoColor = std::make_shared<ColorDescription>(primaries, TransferFunction{transfer});
+
+    qCDebug(KWIN_SCREENCAST) << "chose" << *m_videoColor << "for the stream";
+
     struct spa_pod_dynamic_builder pod_builder;
     struct spa_pod_frame f;
     spa_pod_dynamic_builder_init(&pod_builder, nullptr, 0, 1024);
@@ -601,6 +643,8 @@ void ScreenCastStream::record(Contents contents)
         break;
     }
 
+    m_source->setColor(m_videoColor);
+
     EglContext *context = backend->openglContext();
     context->makeCurrent();
 
@@ -777,6 +821,28 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
                             SPA_POD_Fraction(minFramerate),
                             SPA_POD_Fraction(maxFramerate)),
                         0);
+
+    struct spa_pod_frame primaries_frame;
+    spa_pod_builder_prop(b, SPA_FORMAT_VIDEO_colorPrimaries, 0);
+    spa_pod_builder_push_choice(b, &primaries_frame, SPA_CHOICE_Enum, 0);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_BT2020);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_BT709);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_ADOBERGB);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_BT470M);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_BT470BG);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_SMPTE170M);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_SMPTE240M);
+    spa_pod_builder_id(b, SPA_VIDEO_COLOR_PRIMARIES_FILM);
+    spa_pod_builder_pop(b, &primaries_frame);
+
+    struct spa_pod_frame transfer_frame;
+    spa_pod_builder_prop(b, SPA_FORMAT_VIDEO_transferFunction, 0);
+    spa_pod_builder_push_choice(b, &transfer_frame, SPA_CHOICE_Enum, 0);
+    spa_pod_builder_id(b, SPA_VIDEO_TRANSFER_GAMMA22);
+    // SPA_VIDEO_TRANSFER_SRGB is intentionally not supported,
+    // as it would almost certainly yield wrong results.
+    spa_pod_builder_id(b, SPA_VIDEO_TRANSFER_BT709);
+    spa_pod_builder_pop(b, &transfer_frame);
 
     if (format == SPA_VIDEO_FORMAT_BGRA) {
         /* announce equivalent format without alpha */

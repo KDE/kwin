@@ -18,6 +18,7 @@ class GLFramebuffer;
 class GLTexture;
 class RectF;
 class Region;
+class ColorDescription;
 
 class ScreenCastSource : public QObject
 {
@@ -32,6 +33,7 @@ public:
     virtual qreal devicePixelRatio() const = 0;
 
     virtual void setRenderCursor(bool enable) = 0;
+    virtual void setColor(const std::shared_ptr<ColorDescription> &color) = 0;
     virtual Region render(GLFramebuffer *target, const Region &bufferRepair) = 0;
     virtual Region render(QImage *target, const Region &bufferRepair) = 0;
     virtual std::chrono::nanoseconds clock() const = 0;
