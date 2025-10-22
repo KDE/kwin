@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-18 00:43+0000\n"
+"POT-Creation-Date: 2025-10-22 00:45+0000\n"
 "PO-Revision-Date: 2025-10-19 11:08+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -2447,7 +2447,7 @@ msgstr "Изисква се OpenGL композитор за предаване�
 msgid "Failed to create PipeWire stream"
 msgstr "Неуспешно създаване на PipeWire поток"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:403
+#: plugins/screenshot/screenshotdbusinterface2.cpp:405
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2456,7 +2456,7 @@ msgstr ""
 "Изберете прозорец за екранна снимка с левия бутон или въвеждане.\n"
 "Натиснете клавиш Escape  или десния бутон на мишката, за да отмените."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:421
+#: plugins/screenshot/screenshotdbusinterface2.cpp:423
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

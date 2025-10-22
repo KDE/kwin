@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1720584 $
+# Version: $Revision: 1720818 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-18 00:43+0000\n"
+"POT-Creation-Date: 2025-10-22 00:45+0000\n"
 "PO-Revision-Date: 2025-07-19 08:49+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -2466,7 +2466,7 @@ msgstr "Do nagrywania ekranu wymagane jest komponowanie OpenGL"
 msgid "Failed to create PipeWire stream"
 msgstr "Nie udało się utworzyć strumienia PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:403
+#: plugins/screenshot/screenshotdbusinterface2.cpp:405
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2476,7 +2476,7 @@ msgstr ""
 "lub enter.\n"
 "Klawisz Escape lub kliknięcie prawym przyciskiem myszy zaniecha."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:421
+#: plugins/screenshot/screenshotdbusinterface2.cpp:423
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

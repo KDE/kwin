@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-18 00:43+0000\n"
+"POT-Creation-Date: 2025-10-22 00:45+0000\n"
 "PO-Revision-Date: 2025-10-01 17:08+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -2476,7 +2476,7 @@ msgstr "Nu rulează niciun compozitor OpenGL"
 msgid "Failed to create PipeWire stream"
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:403
+#: plugins/screenshot/screenshotdbusinterface2.cpp:405
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -2488,7 +2488,7 @@ msgstr ""
 "Alegeți fereastra de închis forțat cu clic stâng sau Enter.\n"
 "Apăsați Escape sau clic drept pentru a renunța."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:421
+#: plugins/screenshot/screenshotdbusinterface2.cpp:423
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-18 00:43+0000\n"
+"POT-Creation-Date: 2025-10-22 00:45+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -2463,7 +2463,7 @@ msgstr "Krever OpenGL-sammensetting for skjermdeling"
 msgid "Failed to create PipeWire stream"
 msgstr "Klarte ikke starte PipeWire-strøm"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:403
+#: plugins/screenshot/screenshotdbusinterface2.cpp:405
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2472,7 +2472,7 @@ msgstr ""
 "Velg vindu å ta skjermbilde av med venstreklikk eller «Enter».\n"
 "Høyreklikk eller trykk «Escape» for å avbryte."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:421
+#: plugins/screenshot/screenshotdbusinterface2.cpp:423
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
