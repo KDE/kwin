@@ -319,6 +319,7 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
 
     m_panel = panel;
     connect(m_panel, &Window::closed, this, [this]() {
+        m_panel.clear();
         updateInputPanelState();
         Q_EMIT visibleChanged();
     });
