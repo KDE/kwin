@@ -442,7 +442,6 @@ int main(int argc, char *argv[])
     };
 
     BackendType backendType;
-    QString pluginName;
     QSize initialWindowSize;
     int outputCount = 1;
     qreal outputScale = 1;
