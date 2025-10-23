@@ -125,7 +125,7 @@ static const QHash<uint32_t, QList<uint64_t>> s_legacyCursorFormats = {{DRM_FORM
 QHash<uint32_t, QList<uint64_t>> DrmPipelineLayer::supportedDrmFormats() const
 {
     if (m_plane) {
-        return gpu()->forceLowBandwidthMode() ? m_plane->lowBandwidthFormats() : m_plane->formats();
+        return m_plane->gpu()->forceLowBandwidthMode() ? m_plane->lowBandwidthFormats() : m_plane->formats();
     } else if (m_type == OutputLayerType::CursorOnly) {
         return s_legacyCursorFormats;
     } else {
@@ -146,7 +146,7 @@ QList<QSize> DrmPipelineLayer::recommendedSizes() const
 {
     if (m_plane) {
         return m_plane->recommendedSizes();
-    } else if (m_type == OutputLayerType::CursorOnly) {
+    } else if (m_type == OutputLayerType::CursorOnly && pipeline()) {
         return {gpu()->cursorSize()};
     } else {
         return {};
