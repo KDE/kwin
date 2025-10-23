@@ -29,6 +29,8 @@
 #include <xcb/xcb_icccm.h>
 
 using namespace KWin;
+using namespace std::chrono_literals;
+
 static const QString s_socketName = QStringLiteral("wayland_test_x11_window-0");
 
 class X11WindowTest : public QObject
@@ -3432,56 +3434,98 @@ void X11WindowTest::testOverrideRedirectStackingBelow()
     QVERIFY(workspace()->stackingOrder().indexOf(windowB) == 0);
 }
 
-static bool present(xcb_connection_t *connection, xcb_window_t window, const QSize &size)
+class X11TestWindow
 {
-    ShmGraphicsBufferAllocator allocator;
-    GraphicsBufferRef buffer = allocator.allocate(GraphicsBufferOptions{
-        .size = size,
-        .format = DRM_FORMAT_XRGB8888,
-        .modifiers = QList<uint64_t>{DRM_FORMAT_MOD_LINEAR},
-        .software = true,
-    });
-    if (!buffer) {
-        return false;
-    }
-    // xcb_shm_attach_fd() takes the ownership of the passed shm file descriptor.
-    FileDescriptor poolFileDescriptor = buffer->shmAttributes()->fd.duplicate();
-    if (!poolFileDescriptor.isValid()) {
-        return false;
+public:
+    X11TestWindow(xcb_connection_t *connection, const QSize &size)
+        : m_connection(connection)
+        , m_window(createWindow(connection, QRect(QPoint(), size)))
+        , m_size(size)
+    {
+        // request confgure events
+        uint32_t value = XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+        xcb_change_window_attributes_checked(connection, m_window->window(), XCB_CW_EVENT_MASK, &value);
     }
 
-    xcb_shm_seg_t segment = xcb_generate_id(connection);
-    xcb_shm_attach_fd(connection, segment, poolFileDescriptor.take(), 0);
+    bool handleConfigure(const QSize &expectedSize)
+    {
+        QSocketNotifier connectionNotifier(xcb_get_file_descriptor(m_connection), QSocketNotifier::Type::Read);
+        QSignalSpy socketSpy(&connectionNotifier, &QSocketNotifier::activated);
+        const auto t = std::chrono::steady_clock::now();
+        while (std::chrono::steady_clock::now() < t + 5s) {
+            if (!FileDescriptor::isReadable(xcb_get_file_descriptor(m_connection)) && !socketSpy.wait()) {
+                return false;
+            }
+            auto event = xcb_poll_for_event(m_connection);
+            const uint8_t eventType = event->response_type & ~0x80;
+            if (eventType != XCB_CONFIGURE_NOTIFY) {
+                continue;
+            }
+            auto configureEvent = reinterpret_cast<xcb_configure_notify_event_t *>(event);
+            const QSize size{configureEvent->width, configureEvent->height};
+            if (size == expectedSize) {
+                return present(size);
+            }
+        }
+        return false;
+    }
 
-    xcb_pixmap_t pixmap = xcb_generate_id(connection);
-    xcb_shm_create_pixmap(connection, pixmap, window, size.width(), size.height(), 24, segment, 0);
-    xcb_shm_detach(connection, segment);
+    bool present(const QSize &size)
+    {
+        m_size = size;
+        ShmGraphicsBufferAllocator allocator;
+        GraphicsBufferRef buffer = allocator.allocate(GraphicsBufferOptions{
+            .size = size,
+            .format = DRM_FORMAT_XRGB8888,
+            .modifiers = QList<uint64_t>{DRM_FORMAT_MOD_LINEAR},
+            .software = true,
+        });
+        if (!buffer) {
+            return false;
+        }
+        // xcb_shm_attach_fd() takes the ownership of the passed shm file descriptor.
+        FileDescriptor poolFileDescriptor = buffer->shmAttributes()->fd.duplicate();
+        if (!poolFileDescriptor.isValid()) {
+            return false;
+        }
 
-    xcb_xfixes_region_t valid = 0;
-    xcb_xfixes_region_t update = 0;
-    uint32_t serial = 0;
-    uint32_t options = 0;
-    uint64_t targetMsc = 0;
+        xcb_shm_seg_t segment = xcb_generate_id(m_connection);
+        xcb_shm_attach_fd(m_connection, segment, poolFileDescriptor.take(), 0);
 
-    xcb_present_pixmap(connection,
-                       window,
-                       pixmap,
-                       serial,
-                       valid,
-                       update,
-                       0,
-                       0,
-                       XCB_NONE,
-                       XCB_NONE,
-                       XCB_NONE,
-                       options,
-                       targetMsc,
-                       0,
-                       0,
-                       0,
-                       nullptr);
-    return true;
-}
+        xcb_pixmap_t pixmap = xcb_generate_id(m_connection);
+        xcb_shm_create_pixmap(m_connection, pixmap, m_window->window(), size.width(), size.height(), 24, segment, 0);
+        xcb_shm_detach(m_connection, segment);
+
+        xcb_xfixes_region_t valid = 0;
+        xcb_xfixes_region_t update = 0;
+        uint32_t serial = 0;
+        uint32_t options = 0;
+        uint64_t targetMsc = 0;
+
+        xcb_present_pixmap(m_connection,
+                           m_window->window(),
+                           pixmap,
+                           serial,
+                           valid,
+                           update,
+                           0,
+                           0,
+                           XCB_NONE,
+                           XCB_NONE,
+                           XCB_NONE,
+                           options,
+                           targetMsc,
+                           0,
+                           0,
+                           0,
+                           nullptr);
+        return true;
+    }
+
+    xcb_connection_t *const m_connection;
+    X11Window *const m_window;
+    QSize m_size;
+};
 
 void X11WindowTest::testRandrEmulation()
 {
@@ -3490,13 +3534,13 @@ void X11WindowTest::testRandrEmulation()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11TestWindow window(c.get(), QSize(100, 100));
 
     // present something, so that Xwayland creates a surface for the window
-    QSignalSpy surface(window, &X11Window::surfaceChanged);
-    QVERIFY(present(c.get(), window->window(), QSize(100, 100)));
+    QSignalSpy surface(window.m_window, &X11Window::surfaceChanged);
+    QVERIFY(window.present(QSize(100, 100)));
     QVERIFY(surface.wait());
-    QVERIFY(window->surface());
+    QVERIFY(window.m_window->surface());
 
     // change the resolution through randr, to any non-current mode
     auto screenResources = xcb_randr_get_screen_resources_reply(c.get(),
@@ -3543,44 +3587,26 @@ void X11WindowTest::testRandrEmulation()
     }
     QVERIFY(emulatedMode != 0);
 
-    // request confgure events
-    uint32_t value = XCB_EVENT_MASK_STRUCTURE_NOTIFY;
-    xcb_change_window_attributes_checked(c.get(), window->window(), XCB_CW_EVENT_MASK, &value);
-
     // Now make the window fullscreen
     {
-        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        NETWinInfo info(c.get(), window.m_window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         info.setState(NET::FullScreen, NET::FullScreen);
         xcb_flush(c.get());
     }
 
     // wait for the window to be reconfigured, and react to it
-    QSignalSpy commit(window->surface(), &SurfaceInterface::committed);
-    QSocketNotifier connectionNotifier(xcb_get_file_descriptor(c.get()), QSocketNotifier::Type::Read);
-    QSignalSpy socketSpy(&connectionNotifier, &QSocketNotifier::activated);
-    while (true) {
-        QVERIFY(FileDescriptor::isReadable(xcb_get_file_descriptor(c.get())) || socketSpy.wait());
-        auto event = xcb_poll_for_event(c.get());
-        QVERIFY(event);
-        const uint8_t eventType = event->response_type & ~0x80;
-        if (eventType != XCB_CONFIGURE_NOTIFY) {
-            continue;
-        }
-        auto configureEvent = reinterpret_cast<xcb_configure_notify_event_t *>(event);
-        QCOMPARE(configureEvent->width, emulatedSize.width());
-        QCOMPARE(configureEvent->height, emulatedSize.height());
-        QVERIFY(present(c.get(), window->window(), emulatedSize));
-        break;
-    }
-    QCOMPARE(window->isFullScreen(), true);
-    QCOMPARE(window->moveResizeGeometry().size(), workspace()->outputs().front()->geometryF().size());
+    QSignalSpy commit(window.m_window->surface(), &SurfaceInterface::committed);
+    QVERIFY(window.handleConfigure(emulatedSize));
+    QCOMPARE(window.m_window->isFullScreen(), true);
+    QCOMPARE(window.m_window->moveResizeGeometry().size(), workspace()->outputs().front()->geometryF().size());
 
-    // Xwayland should set the viewport to scale it up to fullscreen
+    // Xwayland should set the viewport to scale it up to fullscreen.
     // Note that Xwayland could be doing other commits in between,
     // so we can't just wait for the first commit
-    while (true) {
-        if (window->surface()->bufferSourceBox().size() == emulatedSize
-            && window->surface()->size() == workspace()->outputs().front()->geometryF().size()) {
+    const auto t = std::chrono::steady_clock::now();
+    while (std::chrono::steady_clock::now() < t + 5s) {
+        if (window.m_window->surface()->bufferSourceBox().size() == emulatedSize
+            && window.m_window->surface()->size() == workspace()->outputs().front()->geometryF().size()) {
             break;
         }
         QVERIFY(commit.wait());
