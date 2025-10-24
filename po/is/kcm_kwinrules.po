@@ -3,21 +3,21 @@
 #
 # Richard Allen <ra@ra.is>, 2004.
 # Arnar Leosson <leosson@frisurf.no>, 2005.
-# Sveinn í Felli <sveinki@nett.is>, 2008, 2009, 2010, 2011, 2022.
+# SPDX-FileCopyrightText: 2008, 2009, 2010, 2011, 2022, 2025 Sveinn í Felli <sveinki@nett.is>
 # SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 gummi <gudmundure@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-24 00:43+0000\n"
-"PO-Revision-Date: 2025-10-04 20:52+0000\n"
-"Last-Translator: Gummi <gudmundure@gmail.com>\n"
-"Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2025-10-23 09:13+0000\n"
+"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
+"Language-Team: Icelandic\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.04.3\n"
+"X-Generator: Lokalize 23.08.5\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 "\n"
@@ -585,7 +585,7 @@ msgstr "Heiti skjáborðsskrár"
 #: rulesmodel.cpp:711
 #, kde-format
 msgid "Block compositing"
-msgstr "Loka á myndsmíði"
+msgstr "Loka á skjásamsetningu"
 
 #: rulesmodel.cpp:716
 #, kde-format

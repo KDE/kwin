@@ -7,20 +7,20 @@
 # Richard Allen <ra@ra.is>, 2000.
 # Pjetur G. Hjaltason <pjetur@pjetur.net>, 2003.
 # Arnar Leosson <leosson@frisurf.no>, 2005.
-# Sveinn í Felli <sveinki@nett.is>, 2008, 2009, 2010, 2022, 2024.
+# SPDX-FileCopyrightText: 2008, 2009, 2010, 2022, 2024, 2025 Sveinn í Felli <sveinki@nett.is>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-23 00:43+0000\n"
-"PO-Revision-Date: 2025-10-06 11:00+0000\n"
-"Last-Translator: Gummi <gudmundure@gmail.com>\n"
-"Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
+"POT-Creation-Date: 2025-10-24 00:44+0000\n"
+"PO-Revision-Date: 2025-10-23 08:05+0000\n"
+"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
+"Language-Team: Icelandic\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.04.3\n"
+"X-Generator: Lokalize 23.08.5\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 "\n"
@@ -80,7 +80,7 @@ msgstr "Ýttu á hægri Ctrl-lykil til að grípa inntak"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland myndsmiður"
 
-#: compositor.cpp:575
+#: compositor.cpp:578
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Skjáborðsbrellur voru endurræstar vegna endurstillingar á myndvinnslu"
@@ -2415,10 +2415,9 @@ msgstr "Mistókst að tengja PipeWire samhengi"
 #: plugins/screencast/screencastmanager.cpp:79
 #: plugins/screencast/screencastmanager.cpp:95
 #: plugins/screencast/screencastmanager.cpp:140
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "Fresta myndsmíði"
+msgstr "Óstudd tegund skjásamsetningar"
 
 #: plugins/screencast/screencastmanager.cpp:60
 #, kde-format
@@ -2438,7 +2437,7 @@ msgstr "Ógilt svæði"
 #: plugins/screencast/screencaststream.cpp:376
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "OpenGL-myndsmíði er nauðsynleg fyrir skjávörpun"
+msgstr "OpenGL-skjásamsetning er nauðsynleg fyrir skjávörpun"
 
 #: plugins/screencast/screencaststream.cpp:384
 #, kde-format
@@ -2467,7 +2466,7 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "Myndsmíði"
+msgstr "Skjásamsetning"
 
 #: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
@@ -3299,13 +3298,13 @@ msgstr "Regla af gerðinni Litastef titilstiku"
 #: rulesettings.kcfg:315
 #, kde-format
 msgid "Block Compositing"
-msgstr "Loka á myndsmíði"
+msgstr "Loka á skjásamsetningu"
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:319
 #, kde-format
 msgid "Block Compositing rule type"
-msgstr "Regla af gerðinni Loka á myndsmíði"
+msgstr "Regla af gerðinni Loka á skjásamsetningu"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:324
