@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-24 00:44+0000\n"
+"POT-Creation-Date: 2025-10-25 00:43+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -3456,19 +3456,19 @@ msgstr "对话框"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:425
+#: sm.cpp:422
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "取消注销"
 
-#: sm.cpp:426
+#: sm.cpp:423
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "仍要注销"
 
-#: sm.cpp:472
+#: sm.cpp:469
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -4118,13 +4118,13 @@ msgstr "提供的输出顺序无效"
 msgid "The driver rejected the output configuration"
 msgstr "驱动程序拒绝了输出配置"
 
-#: window.cpp:3116
+#: window.cpp:3113
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(没有响应)"
 
-#: workspace.cpp:1591
+#: workspace.cpp:1572
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

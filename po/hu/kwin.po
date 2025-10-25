@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-24 00:44+0000\n"
+"POT-Creation-Date: 2025-10-25 00:43+0000\n"
 "PO-Revision-Date: 2025-05-30 23:12+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -3488,19 +3488,19 @@ msgstr "Párbeszédablak"
 msgid "..."
 msgstr "…"
 
-#: sm.cpp:425
+#: sm.cpp:422
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Kijelentkezés megszakítása"
 
-#: sm.cpp:426
+#: sm.cpp:423
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Kijelentkezés mindenképp"
 
-#: sm.cpp:472
+#: sm.cpp:469
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -4169,13 +4169,13 @@ msgstr "A megadott kimenetsorrend érvénytelen"
 msgid "The driver rejected the output configuration"
 msgstr "Az illesztőprogram elutasította a kimenetbeállítást"
 
-#: window.cpp:3116
+#: window.cpp:3113
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nem válaszol)"
 
-#: workspace.cpp:1591
+#: workspace.cpp:1572
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-24 00:44+0000\n"
+"POT-Creation-Date: 2025-10-25 00:43+0000\n"
 "PO-Revision-Date: 2025-09-25 01:51+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -3471,19 +3471,19 @@ msgstr "對話框"
 msgid "..."
 msgstr "…"
 
-#: sm.cpp:425
+#: sm.cpp:422
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "取消登出"
 
-#: sm.cpp:426
+#: sm.cpp:423
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "還是要登出"
 
-#: sm.cpp:472
+#: sm.cpp:469
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -4133,13 +4133,13 @@ msgstr "提供的輸出順序是無效的"
 msgid "The driver rejected the output configuration"
 msgstr "驅動程式回絕了提供的輸出配置"
 
-#: window.cpp:3116
+#: window.cpp:3113
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "（沒有回應）"
 
-#: workspace.cpp:1591
+#: workspace.cpp:1572
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

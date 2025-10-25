@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1720951 2025-10-24 01:23:56Z scripty $
+# $Id: kwin.po 1721031 2025-10-25 01:24:07Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-24 00:44+0000\n"
+"POT-Creation-Date: 2025-10-25 00:43+0000\n"
 "PO-Revision-Date: 2025-10-15 07:22+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -3506,19 +3506,19 @@ msgstr "Dialog"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:425
+#: sm.cpp:422
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Prekliči odjavo"
 
-#: sm.cpp:426
+#: sm.cpp:423
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Kljub temu se odjavi"
 
-#: sm.cpp:472
+#: sm.cpp:469
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -4169,13 +4169,13 @@ msgstr "Navedeni izhodni vrstni red je neveljaven"
 msgid "The driver rejected the output configuration"
 msgstr "Gonilnik je zavrnil konfiguracijo izhoda"
 
-#: window.cpp:3116
+#: window.cpp:3113
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(se ne odziva)"
 
-#: workspace.cpp:1591
+#: workspace.cpp:1572
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-24 00:44+0000\n"
+"POT-Creation-Date: 2025-10-25 00:43+0000\n"
 "PO-Revision-Date: 2025-10-15 18:54+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -3506,19 +3506,19 @@ msgstr "Вікно"
 msgid "..."
 msgstr "…"
 
-#: sm.cpp:425
+#: sm.cpp:422
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Скасувати вихід"
 
-#: sm.cpp:426
+#: sm.cpp:423
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Вийти попри це"
 
-#: sm.cpp:472
+#: sm.cpp:469
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -4171,13 +4171,13 @@ msgstr "Наданий порядок виведення є некоректни
 msgid "The driver rejected the output configuration"
 msgstr "Драйвером відмовлено у налаштовування виведення"
 
-#: window.cpp:3116
+#: window.cpp:3113
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не відповідає)"
 
-#: workspace.cpp:1591
+#: workspace.cpp:1572
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
