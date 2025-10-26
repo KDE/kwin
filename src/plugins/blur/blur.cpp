@@ -235,6 +235,10 @@ void BlurEffect::initBlurStrengthValues()
 
 QMatrix4x4 BlurEffect::colorMatrix(qreal contrast, qreal saturation)
 {
+    if (!BlurConfig::useContrast()) {
+        return QMatrix4x4();
+    }
+
     QMatrix4x4 satMatrix; // saturation
     QMatrix4x4 contMatrix; // contrast
 
