@@ -13,14 +13,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-25 00:43+0000\n"
-"PO-Revision-Date: 2025-10-23 08:05+0000\n"
-"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
-"Language-Team: Icelandic\n"
+"PO-Revision-Date: 2025-10-25 11:06+0000\n"
+"Last-Translator: Gummi <gudmundure@gmail.com>\n"
+"Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.08.1\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 "\n"
@@ -53,7 +53,7 @@ msgstr "Ýttu á hægri Ctrl-lykil til að grípa bendil"
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "KDE Wayland myndsmiður %1"
+msgstr "KDE Wayland skjásamsetning %1"
 
 #: backends/wayland/wayland_output.cpp:510
 #, kde-format
@@ -78,7 +78,7 @@ msgstr "Ýttu á hægri Ctrl-lykil til að grípa inntak"
 #: backends/x11/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr "KDE Wayland myndsmiður"
+msgstr "KDE Wayland skjásamsetning"
 
 #: compositor.cpp:578
 #, kde-format
@@ -1120,7 +1120,7 @@ msgstr "OpenGL"
 #: debug_console.ui:91
 #, kde-format
 msgid "No OpenGL compositor running"
-msgstr "Enginn OpenGL-myndsmiður í gangi"
+msgstr "Engin OpenGL-skjásamsetning í gangi"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
 #: debug_console.ui:119
@@ -2587,7 +2587,7 @@ msgstr " px"
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68
 #, kde-format
 msgid "&Opacity:"
-msgstr "Ó&gagnsæi:"
+msgstr "&Gagnsæi:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:87
@@ -2711,7 +2711,7 @@ msgstr "Valmyndir:"
 #: plugins/translucency/package/contents/ui/config.ui:207
 #, kde-format
 msgid "Moving windows:"
-msgstr "Hreyfanlegir gluggar:"
+msgstr "Gluggar á hreyfingu:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
@@ -3094,25 +3094,25 @@ msgstr "Regla af gerðinni Hámarksstærð glugga"
 #: rulesettings.kcfg:132
 #, kde-format
 msgid "Active opacity"
-msgstr "Virkt ógagnsæi"
+msgstr "Gagnsæi virks glugga"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:138
 #, kde-format
 msgid "Active opacity rule type"
-msgstr "Regla af gerðinni Virkt ógagnsæi"
+msgstr "Regla af gerðinni Gagnsæi virks glugga"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:143
 #, kde-format
 msgid "Inactive opacity"
-msgstr "Óvirkt ógagnsæi"
+msgstr "Gagnsæi óvirks glugga"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:149
 #, kde-format
 msgid "Inactive opacity rule type"
-msgstr "Regla af gerðinni Óvirkt ógagnsæi"
+msgstr "Regla af gerðinni Gagnsæi óvirks glugga"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:154
@@ -3927,12 +3927,12 @@ msgstr "Skipta yfir í glugga til vinstri"
 #: useractions.cpp:894
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "Auka ógagnsæi virks glugga um 5%"
+msgstr "Minnka gagnsæi virks glugga um 5%"
 
 #: useractions.cpp:896
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Minnka ógagnsæi virks glugga um 5%"
+msgstr "Auka gagnsæi virks glugga um 5%"
 
 #: useractions.cpp:899
 #, kde-format
@@ -3952,7 +3952,7 @@ msgstr "Sérsniðin flýtireitaröðun glugga til hægri"
 #: useractions.cpp:906
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Sérstniðin flýtireitaröðun glugga efst"
+msgstr "Sérsniðin flýtireitaröðun glugga efst"
 
 #: useractions.cpp:908
 #, kde-format
@@ -4133,8 +4133,7 @@ msgstr "Eitt af úttökunum sem á við er ekki lengur tiltækt"
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
-"Ekki er leyfilegt að gera öll úttök óvirk í gegnum breytingar á "
-"grunnstillingum"
+"Ekki er leyfilegt að gera öll úttök óvirk með breytingum á grunnstillingum"
 
 #: wayland/outputmanagement_v2.cpp:527
 #, kde-format
