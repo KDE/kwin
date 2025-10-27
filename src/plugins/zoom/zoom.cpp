@@ -27,7 +27,9 @@
 #include <KStandardActions>
 
 #include <QAction>
+#include <QDBusConnection>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono_literals;
 
 static void ensureResources()
@@ -136,10 +138,16 @@ ZoomEffect::ZoomEffect()
     if (initialZoom > 1.0) {
         zoomTo(initialZoom);
     }
+
+    QDBusConnection::sessionBus().connect(u"org.kde.kglobalaccel"_s, u"/component/kwin"_s, u"org.kde.kglobalaccel.Component"_s, u"globalShortcutPressed"_s, this, SLOT(globalShortcutPressed(QString, QString, qlonglong)));
+    QDBusConnection::sessionBus().connect(u"org.kde.kglobalaccel"_s, u"/component/kwin"_s, u"org.kde.kglobalaccel.Component"_s, u"globalShortcutReleased"_s, this, SLOT(globalShortcutReleased(QString, QString, qlonglong)));
 }
 
 ZoomEffect::~ZoomEffect()
 {
+    QDBusConnection::sessionBus().disconnect(u"org.kde.kglobalaccel"_s, u"/component/kwin"_s, u"org.kde.kglobalaccel.Component"_s, u"globalShortcutPressed"_s, this, SLOT(globalShortcutPressed(QString, QString, qlonglong)));
+    QDBusConnection::sessionBus().disconnect(u"org.kde.kglobalaccel"_s, u"/component/kwin"_s, u"org.kde.kglobalaccel.Component"_s, u"globalShortcutReleased"_s, this, SLOT(globalShortcutReleased(QString, QString, qlonglong)));
+
     // switch off and free resources
     showCursor();
     // Save the zoom value.
@@ -458,6 +466,14 @@ void ZoomEffect::postPaintScreen()
     }
 
     effects->postPaintScreen();
+}
+
+void ZoomEffect::globalShortcutPressed(const QString &componentUnique, const QString &actionUnique, qlonglong timestamp)
+{
+}
+
+void ZoomEffect::globalShortcutReleased(const QString &componentUnique, const QString &actionUnique, qlonglong timestamp)
+{
 }
 
 void ZoomEffect::zoomIn()

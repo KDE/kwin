@@ -13,7 +13,6 @@
 
 #include "core/colorspace.h"
 #include "effect/effect.h"
-
 #include <QAction>
 #include <QTime>
 #include <QTimeLine>
@@ -59,6 +58,8 @@ public:
     qreal targetZoom() const;
 
 private Q_SLOTS:
+    void globalShortcutPressed(const QString &componentUnique, const QString &actionUnique, qlonglong timestamp);
+    void globalShortcutReleased(const QString &componentUnique, const QString &actionUnique, qlonglong timestamp);
     void zoomIn();
     void zoomTo(double to);
     void zoomOut();
