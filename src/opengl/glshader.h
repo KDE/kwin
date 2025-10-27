@@ -9,6 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/colorpipeline.h"
 #include "core/colorspace.h"
 
 #include <QColor>
@@ -18,9 +19,13 @@
 #include <QVector2D>
 #include <QVector3D>
 #include <epoxy/gl.h>
+#include <vector>
 
 namespace KWin
 {
+
+class GlLookUpTable;
+class GlLookUpTable3D;
 
 class KWIN_EXPORT GLShader
 {
@@ -147,6 +152,8 @@ public:
 
     void setColorspaceUniforms(const std::shared_ptr<ColorDescription> &src, const std::shared_ptr<ColorDescription> &dst, RenderingIntent intent);
 
+    void setColorPipeline(const ColorPipeline &pipeline);
+
 protected:
     GLShader(unsigned int flags = NoFlags);
     bool loadFromFiles(const QString &vertexfile, const QString &fragmentfile);
@@ -170,6 +177,32 @@ private:
     QHash<FloatUniform, int> m_floatLocations;
     QHash<IntUniform, int> m_intLocations;
     QHash<ColorUniform, int> m_colorLocations;
+
+    struct ColorPipelineUniforms
+    {
+        QList<int> matrices;
+        QList<int> multipliers;
+        // TF
+        QList<int> transferFunctionType;
+        QList<int> transferFunctionParams;
+        // inverse TF
+        QList<int> invTransferFunctionType;
+        QList<int> invTransferFunctionParams;
+        // tonemapper
+        QList<int> toneMappingReference;
+        QList<int> toneMappingV;
+        // 1D LUT
+        QList<int> lut1dSampler;
+        QList<int> lut1dSize;
+        std::vector<std::unique_ptr<GlLookUpTable>> lut1dCache;
+        // 3D LUT
+        QList<int> lut3dSampler;
+        QList<int> lut3dSize;
+        std::vector<std::unique_ptr<GlLookUpTable3D>> lut3dCache;
+
+        ColorPipeline lastPipeline;
+    };
+    ColorPipelineUniforms m_pipelineUniforms;
 
     friend class ShaderManager;
 };

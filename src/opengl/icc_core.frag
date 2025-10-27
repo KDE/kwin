@@ -29,15 +29,6 @@ uniform sampler3D Csampler;
 uniform int Asize;
 uniform sampler2D Asampler;
 
-vec3 sample1DLut(in vec3 srcColor, in sampler2D lut, in int lutSize) {
-    float lutOffset = 0.5 / float(lutSize);
-    float lutScale = 1.0 - lutOffset * 2.0;
-    float lutR = texture(lut, vec2(lutOffset + srcColor.r * lutScale, 0.5)).r;
-    float lutG = texture(lut, vec2(lutOffset + srcColor.g * lutScale, 0.5)).g;
-    float lutB = texture(lut, vec2(lutOffset + srcColor.b * lutScale, 0.5)).b;
-    return vec3(lutR, lutG, lutB);
-}
-
 void main()
 {
     vec4 tex = texture(src, texcoord0);

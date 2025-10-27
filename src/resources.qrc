@@ -1,6 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/">
   <file>opengl/colormanagement.glsl</file>
+  <file>opengl/color_helpers.glsl</file>
   <file>opengl/icc.frag</file>
   <file>opengl/icc_core.frag</file>
   <file>opengl/saturation.glsl</file>

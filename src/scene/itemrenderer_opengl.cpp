@@ -63,14 +63,6 @@ void ItemRendererOpenGL::endFrame()
     m_releasePoints.clear();
 }
 
-QVector4D ItemRendererOpenGL::modulate(float opacity, float brightness) const
-{
-    const float a = opacity;
-    const float rgb = opacity * brightness;
-
-    return QVector4D(rgb, rgb, rgb, a);
-}
-
 void ItemRendererOpenGL::setBlendEnabled(bool enabled)
 {
     if (enabled && !m_blendingEnabled) {
@@ -387,26 +379,16 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     }
 
     ShaderTraits lastTraits;
+    ColorPipeline lastPipeline;
     GLShader *shader = nullptr;
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
 
         ShaderTraits traits = renderNode.traits;
-        if (renderNode.opacity != 1.0 || data.brightness() != 1.0) {
+        if (renderNode.opacity != 1.0) {
             traits |= ShaderTrait::Modulate;
         }
-        if (data.saturation() != 1.0) {
-            traits |= ShaderTrait::AdjustSaturation;
-        }
-        if (data.brightness() != 1.0 || data.saturation() != 1.0) {
-            // make sure that brightness and saturation adjustments are always applied in linear space
-            traits |= ShaderTrait::TransformColorspace;
-        } else {
-            const auto colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
-            if (!colorTransformation.isIdentity()) {
-                traits |= ShaderTrait::TransformColorspace;
-            }
-        }
+        ColorPipeline colorTransformation;
 
         if (renderNode.paintHole) {
             traits = (traits & ShaderTrait::RoundedCorners) | ShaderTrait::UniformColor;
@@ -415,19 +397,18 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         } else {
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             setBlendEnabled(renderNode.hasAlpha || renderNode.opacity < 1.0);
+
+            colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
+            colorTransformation.addModulation(renderTarget.colorDescription(), data.brightness(), data.saturation());
         }
 
-        if (!shader || traits != lastTraits) {
+        if (!shader || traits != lastTraits || lastPipeline != colorTransformation) {
+            lastPipeline = colorTransformation;
             lastTraits = traits;
             if (shader) {
                 ShaderManager::instance()->popShader();
             }
-            shader = ShaderManager::instance()->pushShader(traits);
-            if (traits & ShaderTrait::AdjustSaturation) {
-                const auto toXYZ = renderTarget.colorDescription()->containerColorimetry().toXYZ();
-                shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
-                shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
-            }
+            shader = ShaderManager::instance()->pushShader(traits, colorTransformation);
 
             if (traits & ShaderTrait::MapTexture) {
                 shader->setUniform(GLShader::IntUniform::Sampler, 0);
@@ -438,11 +419,9 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         }
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
         if (traits & ShaderTrait::Modulate) {
-            shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, modulate(renderNode.opacity, data.brightness()));
+            shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(renderNode.opacity, renderNode.opacity, renderNode.opacity, renderNode.opacity));
         }
-        if (traits & ShaderTrait::TransformColorspace) {
-            shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
-        }
+        shader->setColorPipeline(colorTransformation);
         if (traits & ShaderTrait::MapYUVTexture) {
             shader->setUniform(GLShader::Mat4Uniform::YuvToRgb, renderNode.colorDescription->yuvMatrix());
         }

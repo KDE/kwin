@@ -9,6 +9,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "glshader.h"
+#include "gllut.h"
+#include "gllut3D.h"
 #include "glplatform.h"
 #include "glutils.h"
 #include "utils/common.h"
@@ -250,6 +252,77 @@ void GLShader::resolveLocations()
     m_intLocations[IntUniform::SourceNamedTransferFunction] = uniformLocation("sourceNamedTransferFunction");
     m_intLocations[IntUniform::DestinationNamedTransferFunction] = uniformLocation("destinationNamedTransferFunction");
     m_intLocations[IntUniform::Thickness] = uniformLocation("thickness");
+
+    // color pipeline uniforms
+    constexpr int maxUniformCount = 50;
+    for (int i = 0; i < maxUniformCount; i++) {
+        int location = uniformLocation(std::format("colorPipelineMatrix{}", i).c_str());
+        if (location >= 0) {
+            m_pipelineUniforms.matrices.push_back(location);
+        } else {
+            break;
+        }
+    }
+    for (int i = 0; i < maxUniformCount; i++) {
+        int location = uniformLocation(std::format("colorPipelineMultiplier{}", i).c_str());
+        if (location >= 0) {
+            m_pipelineUniforms.multipliers.push_back(location);
+        } else {
+            break;
+        }
+    }
+    for (int i = 0; i < maxUniformCount; i++) {
+        int location = uniformLocation(std::format("colorPipelineTF{}_type", i).c_str());
+        int location2 = uniformLocation(std::format("colorPipelineTF{}_params", i).c_str());
+        if (location >= 0 && location2 >= 0) {
+            m_pipelineUniforms.transferFunctionType.push_back(location);
+            m_pipelineUniforms.transferFunctionParams.push_back(location2);
+        } else {
+            break;
+        }
+    }
+    for (int i = 0; i < maxUniformCount; i++) {
+        int location = uniformLocation(std::format("colorPipelineInvTF{}_type", i).c_str());
+        int location2 = uniformLocation(std::format("colorPipelineInvTF{}_params", i).c_str());
+        if (location >= 0 && location2 >= 0) {
+            m_pipelineUniforms.invTransferFunctionType.push_back(location);
+            m_pipelineUniforms.invTransferFunctionParams.push_back(location2);
+        } else {
+            break;
+        }
+    }
+    for (int i = 0; i < maxUniformCount; i++) {
+        int location = uniformLocation(std::format("colorPipelineTonemapper{}_reference", i).c_str());
+        int location2 = uniformLocation(std::format("colorPipelineTonemapper{}_v", i).c_str());
+        if (location >= 0 && location2 >= 0) {
+            m_pipelineUniforms.toneMappingReference.push_back(location);
+            m_pipelineUniforms.toneMappingV.push_back(location2);
+        } else {
+            break;
+        }
+    }
+    for (int i = 0; i < maxUniformCount; i++) {
+        int location = uniformLocation(std::format("colorPipeline1DLut{}_sampler", i).c_str());
+        int location2 = uniformLocation(std::format("colorPipeline1DLut{}_size", i).c_str());
+        if (location >= 0 && location2 >= 0) {
+            m_pipelineUniforms.lut1dSampler.push_back(location);
+            m_pipelineUniforms.lut1dSize.push_back(location2);
+            m_pipelineUniforms.lut1dCache.push_back(nullptr);
+        } else {
+            break;
+        }
+    }
+    for (int i = 0; i < maxUniformCount; i++) {
+        int location = uniformLocation(std::format("colorPipeline3DLut{}_sampler", i).c_str());
+        int location2 = uniformLocation(std::format("colorPipeline3DLut{}_size", i).c_str());
+        if (location >= 0 && location2 >= 0) {
+            m_pipelineUniforms.lut3dSampler.push_back(location);
+            m_pipelineUniforms.lut3dSize.push_back(location2);
+            m_pipelineUniforms.lut3dCache.push_back(nullptr);
+        } else {
+            break;
+        }
+    }
 
     m_locationsResolved = true;
 }
@@ -507,5 +580,84 @@ void GLShader::setColorspaceUniforms(const std::shared_ptr<ColorDescription> &sr
     }
     setUniform(Mat4Uniform::DestinationToLMS, dst->containerColorimetry().toLMS());
     setUniform(Mat4Uniform::LMSToDestination, dst->containerColorimetry().fromLMS());
+}
+
+void GLShader::setColorPipeline(const ColorPipeline &pipeline)
+{
+    resolveLocations();
+    if (pipeline == m_pipelineUniforms.lastPipeline) {
+        return;
+    }
+    uint32_t matrixCount = 0;
+    uint32_t multiplierCount = 0;
+    uint32_t transferCount = 0;
+    uint32_t inverseTransferCount = 0;
+    uint32_t toneMapCount = 0;
+    uint32_t lut1DCount = 0;
+    uint32_t lut3DCount = 0;
+
+    int textureIndex = 2;
+    for (const auto &op : pipeline.ops) {
+        auto &operation = op.operation;
+        if (const auto mat = std::get_if<ColorMatrix>(&operation)) {
+            setUniform(m_pipelineUniforms.matrices[matrixCount], mat->mat);
+            matrixCount++;
+        } else if (const auto mult = std::get_if<ColorMultiplier>(&operation)) {
+            setUniform(m_pipelineUniforms.multipliers[multiplierCount], mult->factors);
+            multiplierCount++;
+        } else if (const auto tf = std::get_if<ColorTransferFunction>(&operation)) {
+            setUniform(m_pipelineUniforms.transferFunctionType[transferCount], int(tf->tf.type));
+            if (tf->tf.type == TransferFunction::BT1886) {
+                setUniform(m_pipelineUniforms.transferFunctionParams[transferCount], QVector2D(tf->tf.bt1886B(), tf->tf.bt1886A()));
+            } else {
+                setUniform(m_pipelineUniforms.transferFunctionParams[transferCount], QVector2D(tf->tf.minLuminance, tf->tf.maxLuminance - tf->tf.minLuminance));
+            }
+            transferCount++;
+        } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&operation)) {
+            setUniform(m_pipelineUniforms.invTransferFunctionType[inverseTransferCount], int(tf->tf.type));
+            if (tf->tf.type == TransferFunction::BT1886) {
+                setUniform(m_pipelineUniforms.invTransferFunctionParams[inverseTransferCount], QVector2D(tf->tf.bt1886B(), tf->tf.bt1886A()));
+            } else {
+                setUniform(m_pipelineUniforms.invTransferFunctionParams[inverseTransferCount], QVector2D(tf->tf.minLuminance, tf->tf.maxLuminance - tf->tf.minLuminance));
+            }
+            inverseTransferCount++;
+        } else if (const auto tonemap = std::get_if<ColorTonemapper>(&operation)) {
+            setUniform(m_pipelineUniforms.toneMappingReference[toneMapCount], tonemap->m_referenceLuminance);
+            setUniform(m_pipelineUniforms.toneMappingV[toneMapCount], tonemap->m_v);
+            toneMapCount++;
+        } else if (const auto lut = std::get_if<std::shared_ptr<ColorTransformation>>(&operation)) {
+            constexpr uint32_t size = 4096;
+            setUniform(m_pipelineUniforms.lut1dSampler[lut1DCount], textureIndex);
+            setUniform(m_pipelineUniforms.lut1dSize[lut1DCount], int(size));
+            // TODO this needs a better caching mechanism!
+            auto &cache = m_pipelineUniforms.lut1dCache[lut1DCount];
+            cache = GlLookUpTable::create([&lut](size_t index) {
+                const float v = index / float(size - 1);
+                return (*lut)->transform(QVector3D(v, v, v));
+            }, size);
+            glActiveTexture(GL_TEXTURE0 + textureIndex);
+            cache->bind();
+            lut1DCount++;
+            textureIndex++;
+        } else if (const auto lut = std::get_if<std::shared_ptr<ColorLUT3D>>(&operation)) {
+            constexpr uint32_t size = 33;
+            setUniform(m_pipelineUniforms.lut3dSampler[lut3DCount], textureIndex);
+            setUniform(m_pipelineUniforms.lut3dSize[lut3DCount], int(size));
+            // TODO this needs a better caching mechanism!
+            auto &cache = m_pipelineUniforms.lut3dCache[lut3DCount];
+            cache = GlLookUpTable3D::create([&lut](size_t x, size_t y, size_t z) {
+                return (*lut)->sample(QVector3D(x / float(size - 1), y / float(size - 1), z / float(size - 1)));
+            }, size, size, size);
+            glActiveTexture(GL_TEXTURE0 + textureIndex);
+            cache->bind();
+            lut3DCount++;
+            textureIndex++;
+        } else {
+            Q_UNREACHABLE();
+        }
+    }
+    if (textureIndex > 0) {
+        glActiveTexture(GL_TEXTURE0);
+    }
 }
 }

@@ -95,7 +95,7 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     return source;
 }
 
-QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
+QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits, const ColorPipeline &pipeline) const
 {
     QByteArray source;
     QTextStream stream(&source);
@@ -178,6 +178,9 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     if (output != QByteArrayLiteral("gl_FragColor")) {
         stream << "\nout vec4 " << output << ";\n";
     }
+    if (!pipeline.isIdentity()) {
+        stream << generateColorPipelineShader(pipeline);
+    }
 
     stream << "\nvoid main(void)\n{\n";
     stream << "    vec4 result;\n";
@@ -216,6 +219,11 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     if (traits & ShaderTrait::TransformColorspace) {
         stream << "    result = nitsToDestinationEncoding(result);\n";
     }
+    if (!pipeline.isIdentity()) {
+        stream << "    result = applyColorPipeline(result);\n";
+    }
+    // these should not be used together
+    Q_ASSERT(pipeline.isIdentity() || !(traits & ShaderTrait::TransformColorspace));
 
     stream << "    " << output << " = result;\n";
     stream << "}";
@@ -406,4 +414,106 @@ std::unique_ptr<GLShader> ShaderManager::loadShaderFromCode(const QByteArray &ve
     return shader;
 }
 
+GLShader *ShaderManager::pushShader(ShaderTraits traits, const ColorPipeline &pipeline)
+{
+    if (pipeline.isIdentity()) {
+        return pushShader(traits);
+    }
+    const size_t hash = generateColorPipelineHash(traits, pipeline);
+    auto &shader = m_colorPipelineShaders[hash];
+    if (!shader) {
+        shader = generateCustomShader(traits, generateVertexSource(traits), generateFragmentSource(traits, pipeline));
+    }
+    shader->bind();
+    return shader.get();
+}
+
+size_t ShaderManager::generateColorPipelineHash(ShaderTraits traits, const ColorPipeline &pipeline)
+{
+    size_t ret = qHash(traits);
+    for (const auto &op : pipeline.ops) {
+        ret = qHash(op.operation.index(), ret);
+    }
+    return ret;
+}
+
+QByteArray ShaderManager::generateColorPipelineShader(const ColorPipeline &pipeline)
+{
+    QByteArray ret = QByteArrayLiteral(R"(
+#include "color_helpers.glsl"
+
+vec4 applyColorPipeline(vec4 color)
+{
+    vec4 ret = color;
+)");
+    uint32_t matrixCount = 0;
+    uint32_t multiplierCount = 0;
+    uint32_t transferCount = 0;
+    uint32_t inverseTransferCount = 0;
+    uint32_t toneMapCount = 0;
+    uint32_t lut1DCount = 0;
+    uint32_t lut3DCount = 0;
+
+    // TODO combine consecutive TFs and luts and tonemapper in here?
+
+    for (const auto &op : pipeline.ops) {
+        const auto &operation = op.operation;
+        if (std::holds_alternative<ColorMatrix>(operation)) {
+            ret += std::format("    ret.rgb = (colorPipelineMatrix{} * vec4(ret.rgb, 1.0)).rgb;\n", matrixCount);
+            matrixCount++;
+        } else if (std::holds_alternative<ColorMultiplier>(operation)) {
+            ret += std::format("    ret.rgb *= colorPipelineMultiplier{};\n", multiplierCount);
+            multiplierCount++;
+        } else if (std::holds_alternative<ColorTransferFunction>(operation)) {
+            ret += std::format("    ret = encodingToNits(ret, colorPipelineTF{}_type, colorPipelineTF{}_params.x, colorPipelineTF{}_params.y);\n",
+                               transferCount, transferCount, transferCount);
+            transferCount++;
+        } else if (std::holds_alternative<InverseColorTransferFunction>(operation)) {
+            ret += std::format("    ret = nitsToEncoding(ret, colorPipelineInvTF{}_type, colorPipelineInvTF{}_params.x, colorPipelineInvTF{}_params.y);\n",
+                               inverseTransferCount, inverseTransferCount, inverseTransferCount);
+            inverseTransferCount++;
+        } else if (std::holds_alternative<ColorTonemapper>(operation)) {
+            ret += std::format("    ret.r = applyTonemapper(ret.r, colorPipelineTonemapper{}_reference, colorPipelineTonemapper{}_v);\n", toneMapCount, toneMapCount);
+            toneMapCount++;
+        } else if (std::holds_alternative<std::shared_ptr<ColorTransformation>>(operation)) {
+            ret += std::format("    ret.rgb = sample1DLut(ret.rgb, colorPipeline1DLut{}_sampler, colorPipeline1DLut{}_size);\n", lut1DCount, lut1DCount);
+            lut1DCount++;
+        } else if (std::holds_alternative<std::shared_ptr<ColorLUT3D>>(operation)) {
+            ret += std::format("    ret.rgb = sample3DLut(ret.rgb, colorPipeline3DLut{}_sampler, colorPipeline3DLut{}_size);\n", lut3DCount, lut3DCount);
+            lut3DCount++;
+        } else {
+            Q_UNREACHABLE();
+        }
+    }
+    ret += "    return ret;\n}\n";
+
+    QByteArray uniforms;
+    for (uint32_t i = 0; i < matrixCount; i++) {
+        uniforms += std::format("uniform mat4 colorPipelineMatrix{};\n", i);
+    }
+    for (uint32_t i = 0; i < multiplierCount; i++) {
+        uniforms += std::format("uniform vec3 colorPipelineMultiplier{};\n", i);
+    }
+    for (uint32_t i = 0; i < transferCount; i++) {
+        uniforms += std::format("uniform int colorPipelineTF{}_type;\n", i);
+        uniforms += std::format("uniform vec2 colorPipelineTF{}_params;\n", i);
+    }
+    for (uint32_t i = 0; i < inverseTransferCount; i++) {
+        uniforms += std::format("uniform int colorPipelineInvTF{}_type;\n", i);
+        uniforms += std::format("uniform vec2 colorPipelineInvTF{}_params;\n", i);
+    }
+    for (uint32_t i = 0; i < toneMapCount; i++) {
+        uniforms += std::format("uniform float colorPipelineTonemapper{}_reference;\n", i);
+        uniforms += std::format("uniform float colorPipelineTonemapper{}_v;\n", i);
+    }
+    for (uint32_t i = 0; i < lut1DCount; i++) {
+        uniforms += std::format("uniform sampler2D colorPipeline1DLut{}_sampler;\n", i);
+        uniforms += std::format("uniform int colorPipeline1DLut{}_size;\n", i);
+    }
+    for (uint32_t i = 0; i < lut3DCount; i++) {
+        uniforms += std::format("uniform sampler3D colorPipeline3DLut{}_sampler;\n", i);
+        uniforms += std::format("uniform int colorPipeline3DLut{}_size;\n", i);
+    }
+    return uniforms + ret;
+}
 }

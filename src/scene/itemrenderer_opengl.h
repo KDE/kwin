@@ -70,7 +70,6 @@ public:
     std::unique_ptr<ImageItem> createImageItem(Item *parent = nullptr) override;
 
 private:
-    QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
     void createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter);
     void visualizeFractional(const RenderViewport &viewport, const QRegion &region, const RenderContext &renderContext);

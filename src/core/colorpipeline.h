@@ -136,6 +136,9 @@ public:
     void add(const ColorOp &op);
     void add(const ColorPipeline &pipeline);
     void add1DLUT(const std::shared_ptr<ColorTransformation> &transform, ColorspaceType outputType);
+    void addRgbToICtCp(const Colorimetry &containerColorimetry);
+    void addICtCpToRgb(const Colorimetry &containerColorimetry);
+    void addModulation(const std::shared_ptr<ColorDescription> &outputColorDescription, double brightness, double saturation);
 
     ValueRange inputRange;
     ColorspaceType inputSpace;

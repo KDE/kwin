@@ -9,6 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/colorpipeline.h"
 #include "kwin_export.h"
 
 #include <QByteArray>
@@ -73,6 +74,12 @@ public:
      * with the given traits.
      */
     GLShader *pushShader(ShaderTraits traits);
+
+    /**
+     * Pushes the current shader onto the stack and binds a shader
+     * with the given traits, which can represent the pipeline in question
+     */
+    GLShader *pushShader(ShaderTraits traits, const ColorPipeline &pipeline);
 
     /**
      * Binds the @p shader.
@@ -150,13 +157,17 @@ private:
     void bindFragDataLocations(GLShader *shader);
     void bindAttributeLocations(GLShader *shader) const;
 
+    static size_t generateColorPipelineHash(ShaderTraits traits, const ColorPipeline &pipeline);
+    static QByteArray generateColorPipelineShader(const ColorPipeline &pipeline);
+
     std::optional<QByteArray> preprocess(const QByteArray &src, int recursionDepth = 0) const;
     QByteArray generateVertexSource(ShaderTraits traits) const;
-    QByteArray generateFragmentSource(ShaderTraits traits) const;
+    QByteArray generateFragmentSource(ShaderTraits traits, const ColorPipeline &pipeline = ColorPipeline{}) const;
     std::unique_ptr<GLShader> generateShader(ShaderTraits traits);
 
     QStack<GLShader *> m_boundShaders;
     std::map<ShaderTraits, std::unique_ptr<GLShader>> m_shaderHash;
+    std::unordered_map<size_t, std::unique_ptr<GLShader>> m_colorPipelineShaders;
 };
 
 /**

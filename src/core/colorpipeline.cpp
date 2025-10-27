@@ -325,15 +325,27 @@ static const QMatrix4x4 s_toICtCp = QMatrix4x4(
     0.0, 0.0, 0.0, 1.0);
 static const QMatrix4x4 s_fromICtCp = s_toICtCp.inverted();
 
-void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance)
+void ColorPipeline::addRgbToICtCp(const Colorimetry &containerColorimetry)
 {
-    // convert from rgb to ICtCp
     Q_ASSERT(currentOutputSpace() == ColorspaceType::LinearRGB);
     addMatrix(containerColorimetry.toLMS(), currentOutputRange(), currentOutputSpace());
     const TransferFunction PQ(TransferFunction::PerceptualQuantizer, 0, 10'000);
     addInverseTransferFunction(PQ, ColorspaceType::AnyNonRGB);
     addMatrix(s_toICtCp, currentOutputRange(), ColorspaceType::ICtCp);
-    // apply the tone mapping to the intensity component
+}
+
+void ColorPipeline::addICtCpToRgb(const Colorimetry &containerColorimetry)
+{
+    const TransferFunction PQ(TransferFunction::PerceptualQuantizer, 0, 10'000);
+    addMatrix(s_fromICtCp, currentOutputRange(), ColorspaceType::AnyNonRGB);
+    addTransferFunction(PQ, ColorspaceType::AnyNonRGB);
+    addMatrix(containerColorimetry.fromLMS(), currentOutputRange(), ColorspaceType::LinearRGB);
+}
+
+void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance)
+{
+    addRgbToICtCp(containerColorimetry);
+    const TransferFunction PQ(TransferFunction::PerceptualQuantizer, 0, 10'000);
     ops.push_back(ColorOp{
         .input = currentOutputRange(),
         .operation = ColorTonemapper(referenceLuminance, maxInputLuminance, maxOutputLuminance),
@@ -342,10 +354,7 @@ void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, doubl
             .max = PQ.nitsToEncoded(maxOutputLuminance),
         },
     });
-    // convert back to rgb
-    addMatrix(s_fromICtCp, currentOutputRange(), ColorspaceType::AnyNonRGB);
-    addTransferFunction(PQ, ColorspaceType::AnyNonRGB);
-    addMatrix(containerColorimetry.fromLMS(), currentOutputRange(), ColorspaceType::LinearRGB);
+    addICtCpToRgb(containerColorimetry);
 }
 
 void ColorPipeline::add1DLUT(const std::shared_ptr<ColorTransformation> &transform, ColorspaceType outputType)
@@ -362,6 +371,19 @@ void ColorPipeline::add1DLUT(const std::shared_ptr<ColorTransformation> &transfo
         },
         .outputSpace = outputType,
     });
+}
+
+void ColorPipeline::addModulation(const std::shared_ptr<ColorDescription> &outputColorDescription, double brightness, double saturation)
+{
+    if (brightness == 1.0 && saturation == 1.0) {
+        return;
+    }
+    const auto originalOutputType = currentOutputSpace();
+    addTransferFunction(outputColorDescription->transferFunction(), ColorspaceType::LinearRGB);
+    addRgbToICtCp(outputColorDescription->containerColorimetry());
+    addMultiplier(QVector3D(brightness, saturation, saturation));
+    addICtCpToRgb(outputColorDescription->containerColorimetry());
+    addInverseTransferFunction(outputColorDescription->transferFunction(), originalOutputType);
 }
 
 bool ColorPipeline::isIdentity() const
