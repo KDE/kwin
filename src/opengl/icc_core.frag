@@ -3,6 +3,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "colormanagement.glsl"
 
+precision highp float;
+precision highp sampler2D;
+precision highp sampler3D;
+
 in vec2 texcoord0;
 
 out vec4 fragColor;
@@ -41,7 +45,7 @@ void main()
     }
     if (Csize.x > 0) {
         vec3 lutOffset = vec3(0.5) / vec3(Csize);
-        vec3 lutScale = vec3(1.0) - lutOffset * 2.0;
+        vec3 lutScale = vec3(1) - lutOffset * 2.0;
         tex.rgb = texture(Csampler, lutOffset + tex.rgb * lutScale).rgb;
     }
     if (Asize > 0) {

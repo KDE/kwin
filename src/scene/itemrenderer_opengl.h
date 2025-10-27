@@ -89,7 +89,6 @@ public:
     void setLayerDebugging(bool enable) override;
 
 private:
-    QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
     bool createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter);
     void visualizeFractional(const RenderViewport &viewport, const Region &logicalRegion, const RenderContext &renderContext);

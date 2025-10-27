@@ -332,7 +332,7 @@ void TestColorspaces::testOpenglShader_data()
         1000,
     });
     QTest::addRow("Perceptual HLG") << hlg << linear << RenderingIntent::Perceptual << 1.5;
-    QTest::addRow("Perceptual HLG inverse") << linear << hlg << RenderingIntent::Perceptual << 0.0;
+    QTest::addRow("Perceptual HLG inverse") << linear << hlg << RenderingIntent::Perceptual << 3.0;
 }
 
 void TestColorspaces::testOpenglShader()
@@ -352,13 +352,15 @@ void TestColorspaces::testOpenglShader()
         }
     }
 
+    const auto pipeline = ColorPipeline::create(src, dst, intent);
+
     QImage openGlResult;
     {
-        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        ShaderBinder binder(ShaderTrait::MapTexture, pipeline);
         QMatrix4x4 proj;
         proj.ortho(QRectF(0, 0, input.width(), input.height()));
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
-        binder.shader()->setColorspaceUniforms(src, dst, intent);
+        binder.shader()->setColorPipeline(pipeline);
         const auto target = GLTexture::allocate(GL_RGBA8, input.size());
         GLFramebuffer buffer(target.get());
         context->pushFramebuffer(&buffer);
@@ -372,7 +374,6 @@ void TestColorspaces::testOpenglShader()
     }
     QImage pipelineResult(input.width(), input.height(), QImage::Format_RGBA8888_Premultiplied);
     {
-        const auto pipeline = ColorPipeline::create(src, dst, intent);
         for (int x = 0; x < input.width(); x++) {
             for (int y = 0; y < input.height(); y++) {
                 const auto pixel = input.pixel(x, y);

@@ -102,5 +102,9 @@ void main(void)
     result = nitsToDestinationEncoding(result);
 #endif
 
+#if TRAIT_COLORPIPELINE
+    result = applyColorPipeline(result);
+#endif
+
     fragColor = result;
 }

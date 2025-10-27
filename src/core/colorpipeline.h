@@ -154,6 +154,8 @@ public:
     void add1DLUT(const std::shared_ptr<ColorTransformation> &transform, ColorspaceType outputType);
     void addClamp(const ValueRange &range);
 
+    void addModulation(const std::shared_ptr<ColorDescription> &outputColorDescription, double brightness, double saturation);
+
     ValueRange inputRange;
     ColorspaceType inputSpace;
     std::vector<ColorOp> ops;

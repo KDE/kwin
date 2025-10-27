@@ -9,6 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/colorpipeline.h"
 #include "kwin_export.h"
 
 #include <QByteArray>
@@ -76,6 +77,12 @@ public:
     GLShader *pushShader(ShaderTraits traits);
 
     /**
+     * Pushes the current shader onto the stack and binds a shader
+     * with the given traits, which can represent the pipeline in question
+     */
+    GLShader *pushShader(ShaderTraits traits, const ColorPipeline &pipeline);
+
+    /**
      * Binds the @p shader.
      * To unbind the shader use popShader. A previous bound shader will be rebound.
      * To bind a built-in shader use the more specific method.
@@ -118,7 +125,7 @@ public:
      * @return new generated shader
      * @since 5.6
      */
-    std::unique_ptr<GLShader> generateCustomShader(ShaderTraits traits, const QByteArray &vertexSource = QByteArray(), const QByteArray &fragmentSource = QByteArray());
+    std::unique_ptr<GLShader> generateCustomShader(ShaderTraits traits, const QByteArray &vertexSource = QByteArray(), const QByteArray &fragmentSource = QByteArray(), const ColorPipeline &colorPipeline = ColorPipeline{});
 
     /**
      * Creates a custom shader with the given @p traits and custom @p vertexFile and or @p fragmentFile.
@@ -150,12 +157,16 @@ public:
 private:
     void bindAttributeLocations(GLShader *shader) const;
 
+    static size_t generateColorPipelineHash(ShaderTraits traits, const ColorPipeline &pipeline);
+    static QByteArray generateColorPipelineShader(const ColorPipeline &pipeline);
+
     QByteArray generateVertexSource(ShaderTraits traits) const;
-    QByteArray generateFragmentSource(ShaderTraits traits) const;
+    QByteArray generateFragmentSource(ShaderTraits traits, const ColorPipeline &pipeline = ColorPipeline{}) const;
     std::unique_ptr<GLShader> generateShader(ShaderTraits traits);
 
     QStack<GLShader *> m_boundShaders;
     std::map<ShaderTraits, std::unique_ptr<GLShader>> m_shaderHash;
+    std::unordered_map<size_t, std::unique_ptr<GLShader>> m_colorPipelineShaders;
 };
 
 /**
@@ -191,7 +202,7 @@ public:
      * @see ShaderManager::pushShader
      * @since 5.6
      */
-    explicit ShaderBinder(ShaderTraits traits);
+    explicit ShaderBinder(ShaderTraits traits, const ColorPipeline &pipeline = ColorPipeline{});
     ~ShaderBinder();
 
     /**
@@ -209,10 +220,10 @@ inline ShaderBinder::ShaderBinder(GLShader *shader)
     ShaderManager::instance()->pushShader(shader);
 }
 
-inline ShaderBinder::ShaderBinder(ShaderTraits traits)
+inline ShaderBinder::ShaderBinder(ShaderTraits traits, const ColorPipeline &pipeline)
     : m_shader(nullptr)
 {
-    m_shader = ShaderManager::instance()->pushShader(traits);
+    m_shader = ShaderManager::instance()->pushShader(traits, pipeline);
 }
 
 inline ShaderBinder::~ShaderBinder()

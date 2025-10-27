@@ -414,6 +414,18 @@ void ColorPipeline::addClamp(const ValueRange &range)
     });
 }
 
+void ColorPipeline::addModulation(const std::shared_ptr<ColorDescription> &outputColorDescription, double brightness, double saturation)
+{
+    if (brightness == 1.0 && saturation == 1.0) {
+        return;
+    }
+    const auto originalOutputType = currentOutputSpace();
+    addTransferFunction(outputColorDescription->transferFunction(), ColorspaceType::LinearRGB);
+    addMultiplier(QVector3D(brightness, brightness, brightness));
+    // addSaturation(); FIXME
+    addInverseTransferFunction(outputColorDescription->transferFunction(), originalOutputType);
+}
+
 bool ColorPipeline::isIdentity() const
 {
     return ops.empty();
