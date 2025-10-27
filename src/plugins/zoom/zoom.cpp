@@ -21,11 +21,13 @@
 #include "textcarettracker.h"
 #include "utils/keys.h"
 #include "zoomconfig.h"
+#include "zoomeventfilter.h"
 
 #include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KStandardActions>
+#include <input.h>
 
 #include <QAction>
 #include <QTimer>
@@ -49,6 +51,9 @@ ZoomEffect::ZoomEffect()
     m_configurationTimer->setInterval(1s);
     m_configurationTimer->setSingleShot(true);
     connect(m_configurationTimer.get(), &QTimer::timeout, this, &ZoomEffect::saveInitialZoom);
+
+    m_eventFilter = std::make_unique<ZoomEventFilter>();
+    input()->installInputEventFilter(m_eventFilter.get());
 
     ZoomConfig::instance(effects->config());
     QAction *a = nullptr;
@@ -83,34 +88,6 @@ ZoomEffect::ZoomEffect()
         realtimeZoom(-delta);
     });
 
-    a = new QAction(this);
-    a->setObjectName(QStringLiteral("MoveZoomLeft"));
-    a->setText(i18n("Move Zoomed Area to Left"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>());
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
-    connect(a, &QAction::triggered, this, &ZoomEffect::moveZoomLeft);
-
-    a = new QAction(this);
-    a->setObjectName(QStringLiteral("MoveZoomRight"));
-    a->setText(i18n("Move Zoomed Area to Right"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>());
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
-    connect(a, &QAction::triggered, this, &ZoomEffect::moveZoomRight);
-
-    a = new QAction(this);
-    a->setObjectName(QStringLiteral("MoveZoomUp"));
-    a->setText(i18n("Move Zoomed Area Upwards"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>());
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
-    connect(a, &QAction::triggered, this, &ZoomEffect::moveZoomUp);
-
-    a = new QAction(this);
-    a->setObjectName(QStringLiteral("MoveZoomDown"));
-    a->setText(i18n("Move Zoomed Area Downwards"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>());
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
-    connect(a, &QAction::triggered, this, &ZoomEffect::moveZoomDown);
-
     // TODO: these two actions don't belong into the effect. They need to be moved into KWin core
     a = new QAction(this);
     a->setObjectName(QStringLiteral("MoveMouseToFocus"));
@@ -143,6 +120,8 @@ ZoomEffect::ZoomEffect()
     if (initialZoom > 1.0) {
         zoomTo(initialZoom);
     }
+
+    connect(m_eventFilter.get(), &ZoomEventFilter::panDirectionChanged, this, &ZoomEffect::handlePanDirectionChanged);
 }
 
 ZoomEffect::~ZoomEffect()
@@ -244,6 +223,10 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
+    if (m_panDirection != QPoint(0, 0)) {
+        this->moveZoom(m_panDirection.x(), m_panDirection.y());
+    }
+
     data.mask |= PAINT_SCREEN_TRANSFORMED;
     if (m_zoom != m_targetZoom) {
         int time = 0;
@@ -482,8 +465,8 @@ void ZoomEffect::actualSize()
 void ZoomEffect::timelineFrameChanged(int /* frame */)
 {
     const QSize screenSize = effects->virtualScreenSize();
-    m_prevPoint.setX(std::max(0, std::min(screenSize.width(), m_prevPoint.x() + m_xMove)));
-    m_prevPoint.setY(std::max(0, std::min(screenSize.height(), m_prevPoint.y() + m_yMove)));
+    m_prevPoint.setX(std::max(0.0, std::min(static_cast<qreal>(screenSize.width()), m_prevPoint.x() + m_xMove)));
+    m_prevPoint.setY(std::max(0.0, std::min(static_cast<qreal>(screenSize.height()), m_prevPoint.y() + m_yMove)));
     m_cursorPoint = m_prevPoint;
     effects->addRepaintFull();
 }
@@ -636,6 +619,12 @@ void ZoomEffect::saveInitialZoom()
 {
     ZoomConfig::setInitialZoom(m_targetZoom);
     ZoomConfig::self()->save();
+}
+
+void ZoomEffect::handlePanDirectionChanged(const QPoint &panDirection)
+{
+    this->m_panDirection = panDirection;
+    effects->addRepaintFull();
 }
 
 bool ZoomEffect::screenExistsAt(const QPoint &point) const

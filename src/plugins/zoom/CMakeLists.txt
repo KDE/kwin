@@ -4,6 +4,7 @@ target_sources(zoom PRIVATE
     focustracker.cpp
     main.cpp
     textcarettracker.cpp
+    zoomeventfilter.cpp
     zoom.cpp
     zoom.qrc
 )

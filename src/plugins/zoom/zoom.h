@@ -13,7 +13,6 @@
 
 #include "core/colorspace.h"
 #include "effect/effect.h"
-
 #include <QAction>
 #include <QTime>
 #include <QTimeLine>
@@ -21,6 +20,7 @@
 namespace KWin
 {
 
+class ZoomEventFilter;
 class CursorItem;
 class GLFramebuffer;
 class GLTexture;
@@ -60,6 +60,7 @@ public:
 
 private Q_SLOTS:
     void saveInitialZoom();
+    void handlePanDirectionChanged(const QPoint &panDirection);
     void zoomIn();
     void zoomTo(double to);
     void zoomOut();
@@ -116,14 +117,16 @@ private:
     void trackFocus();
 
     std::unique_ptr<QTimer> m_configurationTimer;
+    std::unique_ptr<ZoomEventFilter> m_eventFilter;
     double m_zoom = 1.0;
     double m_targetZoom = 1.0;
     double m_sourceZoom = 1.0;
     double m_zoomFactor = 1.25;
     MouseTrackingType m_mouseTracking = MouseTrackingProportional;
     MousePointerType m_mousePointer = MousePointerScale;
-    QPoint m_cursorPoint;
-    QPoint m_prevPoint;
+    QPointF m_cursorPoint;
+    QPointF m_prevPoint;
+    QPoint m_panDirection;
     QTime m_lastMouseEvent;
     std::unique_ptr<CursorItem> m_cursorItem;
     bool m_cursorHidden = false;
