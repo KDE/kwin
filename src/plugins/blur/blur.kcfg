@@ -11,5 +11,8 @@
         <entry name="NoiseStrength" type="Int">
             <default>5</default>
         </entry>
+        <entry name="Saturation" type="Int">
+            <default>3</default>
+        </entry>
     </group>
 </kcfg>

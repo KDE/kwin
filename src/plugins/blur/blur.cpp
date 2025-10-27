@@ -233,10 +233,9 @@ void BlurEffect::initBlurStrengthValues()
     }
 }
 
-QMatrix4x4 BlurEffect::colorMatrix(qreal contrast, qreal saturation)
+QMatrix4x4 BlurEffect::colorMatrix(qreal saturation)
 {
     QMatrix4x4 satMatrix; // saturation
-    QMatrix4x4 contMatrix; // contrast
 
     // Saturation matrix
     if (!qFuzzyCompare(saturation, 1.0)) {
@@ -250,19 +249,7 @@ QMatrix4x4 BlurEffect::colorMatrix(qreal contrast, qreal saturation)
                                0, 0, 0, 1.0);
     }
 
-    // Contrast Matrix
-    if (!qFuzzyCompare(contrast, 1.0)) {
-        const float transl = (1.0 - contrast) / 2.0;
-
-        contMatrix = QMatrix4x4(contrast, 0, 0, 0.0,
-                                0, contrast, 0, 0.0,
-                                0, 0, contrast, 0.0,
-                                transl, transl, transl, 1.0);
-    }
-
-    QMatrix4x4 colorMatrix = contMatrix * satMatrix;
-
-    return colorMatrix;
+    return satMatrix;
 }
 
 void BlurEffect::reconfigure(ReconfigureFlags flags)
@@ -274,6 +261,7 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
     m_offset = blurStrengthValues[blurStrength].offset;
     m_expandSize = blurOffsets[m_iterationCount - 1].expandSize;
     m_noiseStrength = BlurConfig::noiseStrength();
+    m_saturation = BlurConfig::saturation();
 
     // Update all windows for the blur to take effect
     effects->addRepaintFull();
@@ -860,7 +848,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
         projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
 
-        const QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(m_contrast, m_saturation);
+        const QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(m_saturation);
 
         GLFramebuffer::popFramebuffer();
         const auto &read = renderInfo.framebuffers[1];
@@ -902,7 +890,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
         projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
 
-        QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(m_contrast, m_saturation);
+        QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(m_saturation);
 
         GLFramebuffer::popFramebuffer();
         const auto &read = renderInfo.framebuffers[1];
