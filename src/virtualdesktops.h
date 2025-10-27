@@ -559,7 +559,7 @@ inline const QSize &VirtualDesktopGrid::size() const
 
 inline uint VirtualDesktopManager::maximum()
 {
-    return 20;
+    return 25;
 }
 
 inline uint VirtualDesktopManager::count() const
