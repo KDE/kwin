@@ -7,15 +7,28 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpicker.h"
+#include "colorpickerlayer.h"
+
+#include "compositor.h"
+#include "core/output.h"
+#include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "effect/effect.h"
 #include "effect/effecthandler.h"
-#include "opengl/eglcontext.h"
+#include "opengl/eglbackend.h"
+#include "opengl/glplatform.h"
+#include "opengl/glutils.h"
+#include "scene/item.h"
+#include "scene/itemrenderer.h"
+#include "scene/windowitem.h"
+#include "scene/workspacescene.h"
+#include "window.h"
+#include "workspace.h"
+
 #include <KLocalizedString>
 #include <QDBusConnection>
 #include <QDBusMetaType>
-
-#include <epoxy/gl.h>
 
 Q_DECLARE_METATYPE(QColor)
 
@@ -46,7 +59,6 @@ bool ColorPickerEffect::supported()
 }
 
 ColorPickerEffect::ColorPickerEffect()
-    : m_scheduledPosition(QPoint(-1, -1))
 {
     qDBusRegisterMetaType<QColor>();
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/ColorPicker"), this, QDBusConnection::ExportScriptableContents);
@@ -55,25 +67,6 @@ ColorPickerEffect::ColorPickerEffect()
 ColorPickerEffect::~ColorPickerEffect()
 {
     setPicking(false);
-}
-
-void ColorPickerEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, Output *screen)
-{
-    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
-
-    const QRectF geo = viewport.renderRect();
-    if (m_scheduledPosition != QPoint(-1, -1) && exclusiveContains(geo, m_scheduledPosition)) {
-        std::array<float, 4> data;
-        constexpr GLsizei PIXEL_SIZE = 1;
-        const QPoint texturePosition = viewport.mapToRenderTarget(m_scheduledPosition).toPoint();
-        EglContext *context = effects->openglContext();
-
-        context->glReadnPixels(texturePosition.x(), renderTarget.size().height() - texturePosition.y() - PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, GL_RGBA, GL_FLOAT, sizeof(float) * data.size(), data.data());
-        QVector3D sRGB = 255 * renderTarget.colorDescription()->mapTo(QVector3D(data[0], data[1], data[2]), *ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
-        QDBusConnection::sessionBus().send(m_replyMessage.createReply(QColor(std::round(sRGB.x()), std::round(sRGB.y()), std::round(sRGB.z()))));
-        setPicking(false);
-        m_scheduledPosition = QPoint(-1, -1);
-    }
 }
 
 QColor ColorPickerEffect::pick()
@@ -97,8 +90,59 @@ QColor ColorPickerEffect::pick()
                 QDBusConnection::sessionBus().send(m_replyMessage.createErrorReply(QStringLiteral("org.kde.kwin.ColorPicker.Error.Cancelled"), "Color picking got cancelled"));
                 setPicking(false);
             } else {
-                m_scheduledPosition = p;
-                effects->addRepaintFull();
+                const auto turnOffPicking = qScopeGuard([this] {
+                    setPicking(false);
+                });
+
+                const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
+                if (!eglBackend) {
+                    return;
+                }
+                const auto context = eglBackend->openglContext();
+                if (!context || !context->makeCurrent()) {
+                    return;
+                }
+
+                const auto offscreenTexture = GLTexture::allocate(GL_RGB8, QSize(1, 1));
+                if (!offscreenTexture) {
+                    return;
+                }
+                const auto target = std::make_unique<GLFramebuffer>(offscreenTexture.get());
+                if (!target->valid()) {
+                    return;
+                }
+
+                auto screen = effects->screenAt(p.toPoint());
+                if (!screen) {
+                    return;
+                }
+
+                ColorPickerLayer layer(screen, target.get());
+                if (!layer.preparePresentationTest()) {
+                    return;
+                }
+                const auto beginInfo = layer.beginFrame();
+                if (!beginInfo) {
+                    return;
+                }
+                SceneView sceneView(Compositor::self()->scene(), screen, &layer);
+                auto cursorView = std::make_unique<ItemTreeView>(&sceneView, Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr);
+                cursorView->setExclusive(true);
+                const QRect pixelDamage = QRect(QPoint(), QSize(1, 1));
+                sceneView.setViewport(QRectF(p, QSizeF(1, 1)));
+                sceneView.prePaint();
+                sceneView.paint(beginInfo->renderTarget, pixelDamage);
+                sceneView.postPaint();
+                if (!layer.endFrame(pixelDamage, pixelDamage, nullptr)) {
+                    return;
+                }
+
+                GLFramebuffer::pushFramebuffer(target.get());
+                QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGB888);
+                context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGB, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
+                GLFramebuffer::popFramebuffer();
+
+                QDBusConnection::sessionBus().send(m_replyMessage.createReply(snapshot.pixelColor(0, 0)));
             }
         });
     return QColor();
