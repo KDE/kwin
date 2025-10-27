@@ -19,6 +19,7 @@
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
 #include "wayland/blur.h"
+#include "wayland/contrast.h"
 #include "wayland/display.h"
 #include "wayland/surface.h"
 #include "window.h"
@@ -56,6 +57,9 @@ static const QByteArray s_blurAtomName = QByteArrayLiteral("_KDE_NET_WM_BLUR_BEH
 
 BlurManagerInterface *BlurEffect::s_blurManager = nullptr;
 QTimer *BlurEffect::s_blurManagerRemoveTimer = nullptr;
+
+ContrastManagerInterface *BlurEffect::s_contrastManager = nullptr;
+QTimer *BlurEffect::s_contrastManagerRemoveTimer = nullptr;
 
 BlurEffect::BlurEffect()
 {
@@ -148,6 +152,19 @@ BlurEffect::BlurEffect()
         s_blurManager = new BlurManagerInterface(effects->waylandDisplay(), s_blurManagerRemoveTimer);
     }
 
+    if (!s_contrastManagerRemoveTimer) {
+        s_contrastManagerRemoveTimer = new QTimer(QCoreApplication::instance());
+        s_contrastManagerRemoveTimer->setSingleShot(true);
+        s_contrastManagerRemoveTimer->callOnTimeout([]() {
+            s_contrastManager->remove();
+            s_contrastManager = nullptr;
+        });
+    }
+    s_contrastManagerRemoveTimer->stop();
+    if (!s_contrastManager) {
+        s_contrastManager = new ContrastManagerInterface(effects->waylandDisplay(), s_contrastManagerRemoveTimer);
+    }
+
     connect(effects, &EffectsHandler::windowAdded, this, &BlurEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &BlurEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::viewRemoved, this, &BlurEffect::slotViewRemoved);
@@ -172,6 +189,10 @@ BlurEffect::~BlurEffect()
     // When compositing is restarted, avoid removing the manager immediately.
     if (s_blurManager) {
         s_blurManagerRemoveTimer->start(1000);
+    }
+
+    if (s_contrastManager) {
+        s_contrastManagerRemoveTimer->start(1000);
     }
 }
 
@@ -283,6 +304,8 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
 {
     std::optional<QRegion> content;
     std::optional<QRegion> frame;
+    qreal saturation = 1.0;
+    qreal contrast = 1.0;
 
 #if KWIN_BUILD_X11
     if (net_wm_blur_region != XCB_ATOM_NONE) {
@@ -304,10 +327,14 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
     }
 #endif
 
-    SurfaceInterface *surf = w->surface();
-
-    if (surf && surf->blur()) {
-        content = surf->blur()->region();
+    if (SurfaceInterface *surface = w->surface()) {
+        if (surface->blur()) {
+            content = surface->blur()->region();
+        }
+        if (surface->contrast()) {
+            saturation = surface->contrast()->saturation();
+            contrast = surface->contrast()->contrast();
+        }
     }
 
     if (auto internal = w->internalWindow()) {
@@ -325,6 +352,8 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
         BlurEffectData &data = m_windows[w];
         data.content = content;
         data.frame = frame;
+        data.contrast = contrast;
+        data.saturation = saturation;
         data.windowEffect = ItemEffect(w->windowItem());
     } else {
         if (auto it = m_windows.find(w); it != m_windows.end()) {
@@ -340,6 +369,11 @@ void BlurEffect::slotWindowAdded(EffectWindow *w)
 
     if (surf) {
         windowBlurChangedConnections[w] = connect(surf, &SurfaceInterface::blurChanged, this, [this, w]() {
+            if (w) {
+                updateBlurRegion(w);
+            }
+        });
+        windowContrastChangedConnections[w] = connect(surf, &SurfaceInterface::contrastChanged, this, [this, w]() {
             if (w) {
                 updateBlurRegion(w);
             }
@@ -367,6 +401,10 @@ void BlurEffect::slotWindowDeleted(EffectWindow *w)
     if (auto it = windowBlurChangedConnections.find(w); it != windowBlurChangedConnections.end()) {
         disconnect(*it);
         windowBlurChangedConnections.erase(it);
+    }
+    if (auto it = windowContrastChangedConnections.find(w); it != windowContrastChangedConnections.end()) {
+        disconnect(*it);
+        windowContrastChangedConnections.erase(it);
     }
 }
 
@@ -860,7 +898,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
         projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
 
-        const QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(m_contrast, m_saturation);
+        const QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(blurInfo.contrast, blurInfo.saturation);
 
         GLFramebuffer::popFramebuffer();
         const auto &read = renderInfo.framebuffers[1];
@@ -902,7 +940,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
         projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
 
-        QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(m_contrast, m_saturation);
+        QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(blurInfo.contrast, blurInfo.saturation);
 
         GLFramebuffer::popFramebuffer();
         const auto &read = renderInfo.framebuffers[1];
