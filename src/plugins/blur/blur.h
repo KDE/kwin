@@ -19,6 +19,7 @@ namespace KWin
 {
 
 class BlurManagerInterface;
+class ContrastManagerInterface;
 
 struct BlurRenderData
 {
@@ -43,6 +44,9 @@ struct BlurEffectData
     std::unordered_map<RenderView *, BlurRenderData> render;
 
     ItemEffect windowEffect;
+
+    qreal contrast = 1.0;
+    qreal saturation = 1.0;
 };
 
 class BlurEffect : public KWin::Effect
@@ -173,13 +177,14 @@ private:
     QList<BlurValuesStruct> blurStrengthValues;
 
     QMap<EffectWindow *, QMetaObject::Connection> windowBlurChangedConnections;
+    QMap<EffectWindow *, QMetaObject::Connection> windowContrastChangedConnections;
     std::unordered_map<EffectWindow *, BlurEffectData> m_windows;
-
-    const qreal m_contrast = 0.2;
-    const qreal m_saturation = 10;
 
     static BlurManagerInterface *s_blurManager;
     static QTimer *s_blurManagerRemoveTimer;
+
+    static ContrastManagerInterface *s_contrastManager;
+    static QTimer *s_contrastManagerRemoveTimer;
 };
 
 inline bool BlurEffect::provides(Effect::Feature feature)
