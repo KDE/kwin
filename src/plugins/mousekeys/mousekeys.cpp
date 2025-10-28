@@ -221,11 +221,11 @@ bool MouseKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
         const auto time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch());
         if (event->state == KWin::KeyboardKeyState::Pressed) {
             Q_EMIT m_inputDevice->pointerButtonChanged(m_mouseButton, KWin::PointerButtonState::Pressed, time, m_inputDevice.get());
-        } else {
+            Q_EMIT m_inputDevice->pointerFrame(m_inputDevice.get());
+        } else if (event->state == KWin::KeyboardKeyState::Released) {
             Q_EMIT m_inputDevice->pointerButtonChanged(m_mouseButton, KWin::PointerButtonState::Released, time, m_inputDevice.get());
+            Q_EMIT m_inputDevice->pointerFrame(m_inputDevice.get());
         }
-
-        Q_EMIT m_inputDevice->pointerFrame(m_inputDevice.get());
 
         return true;
     }
