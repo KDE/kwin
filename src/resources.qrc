@@ -4,7 +4,6 @@
   <file>opengl/base.vert</file>
   <file>opengl/colormanagement.glsl</file>
   <file>opengl/color_helpers.glsl</file>
-  <file>opengl/icc.frag</file>
   <file>opengl/saturation.glsl</file>
   <file>opengl/sdf.glsl</file>
   <file>scene/opengl/shaders/debug_fractional.frag</file>

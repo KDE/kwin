@@ -134,6 +134,7 @@ public:
         FloatingPoint,
     };
     static ColorPipeline create(const std::shared_ptr<ColorDescription> &from, const std::shared_ptr<ColorDescription> &to, RenderingIntent intent, InputType inputType = InputType::FixedPoint);
+    static ColorPipeline create(const std::shared_ptr<ColorDescription> &from, const IccProfile *to, RenderingIntent intent, InputType inputType = InputType::FixedPoint);
 
     ColorPipeline merged(const ColorPipeline &onTop) const;
 

@@ -15,7 +15,6 @@
 #include "opengl/glframebuffer.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
-#include "opengl/icc_shader.h"
 
 #include <lcms2.h>
 
@@ -511,9 +510,9 @@ void TestColorspaces::testIccShader()
 
     QImage openGlResult;
     {
-        auto shader = IccShader::create();
-        ShaderBinder binder{shader->shader()};
-        shader->setUniforms(profile, imageColorspace, Colorimetry::BT709, TransferFunction::gamma22, intent);
+        const ColorPipeline pipeline = ColorPipeline::create(imageColorspace, profile.get(), intent);
+        ShaderBinder binder(ShaderManager::instance()->pushShader(ShaderTrait::MapTexture, pipeline));
+        binder.shader()->setColorPipeline(pipeline);
 
         QMatrix4x4 proj;
         proj.ortho(QRectF(0, 0, input.width(), input.height()));

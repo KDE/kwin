@@ -30,7 +30,7 @@ static const Colorimetry CIEXYZD50 = Colorimetry{
     XYZ(0.9642, 1.0, 0.8249),
 };
 
-const ColorDescription IccProfile::s_connectionSpace = ColorDescription(CIEXYZD50, TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
+const std::shared_ptr<ColorDescription> IccProfile::s_connectionSpace = std::make_shared<ColorDescription>(CIEXYZD50, TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
 
 IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry,
                        std::optional<ColorPipeline> &&bToA0Tag, std::optional<ColorPipeline> &&bToA1Tag,

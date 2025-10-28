@@ -36,7 +36,6 @@ class GLRenderTimeQuery;
 class ColorTransformation;
 class GlLookUpTable;
 class IccProfile;
-class IccShader;
 class MultiGpuSwapchain;
 class RenderDevice;
 
@@ -101,7 +100,6 @@ private:
         std::shared_ptr<ColorDescription> layerBlendingColor = ColorDescription::sRGB;
         std::shared_ptr<ColorDescription> blendingColor = ColorDescription::sRGB;
         double brightness = 1.0;
-        std::unique_ptr<IccShader> iccShader;
         std::shared_ptr<IccProfile> iccProfile;
         Colorimetry wireColor = Colorimetry::BT709;
         TransferFunction::Type wireTransfer = TransferFunction::Type::gamma22;
