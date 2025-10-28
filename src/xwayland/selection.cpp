@@ -130,8 +130,7 @@ void Selection::setWlSource(WlSource *source)
     }
 
     if (source) {
-        delete m_xSource;
-        m_xSource = nullptr;
+        m_xSource.reset();
 
         m_waylandSource = source;
         connect(source, &WlSource::transferReady, this, &Selection::startTransferToX);
@@ -142,17 +141,15 @@ void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
 {
     if (!event || event->owner == XCB_WINDOW_NONE) {
         x11OfferLost();
-
-        delete m_xSource;
-        m_xSource = nullptr;
+        m_xSource.reset();
         return;
     }
 
     setWlSource(nullptr);
 
-    m_xSource = new X11Source(this, event);
-    connect(m_xSource, &X11Source::targetsReceived, this, &Selection::x11TargetsReceived);
-    connect(m_xSource, &X11Source::transferRequested, this, &Selection::startTransferToWayland);
+    m_xSource = std::make_unique<X11Source>(this, event);
+    connect(m_xSource.get(), &X11Source::targetsReceived, this, &Selection::x11TargetsReceived);
+    connect(m_xSource.get(), &X11Source::transferRequested, this, &Selection::startTransferToWayland);
 }
 
 void Selection::ownSelection(bool own)
