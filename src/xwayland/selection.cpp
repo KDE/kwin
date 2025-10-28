@@ -86,6 +86,11 @@ bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
     if (event->selection != m_atom) {
         return false;
     }
+
+    m_owner = event->owner;
+
+    // TODO: Since we track the selection owner window, m_disownPending should be unnecessary now.
+    // If event->owner is None and m_owner != m_window, it means selection got unset by a real client.
     if (m_disownPending) {
         // notify of our own disown - ignore it
         m_disownPending = false;
@@ -163,9 +168,11 @@ void Selection::setWlSource(WlSource *source)
         m_waylandSource->deleteLater();
         m_waylandSource = nullptr;
     }
-    delete m_xSource;
-    m_xSource = nullptr;
+
     if (source) {
+        delete m_xSource;
+        m_xSource = nullptr;
+
         m_waylandSource = source;
         connect(source, &WlSource::transferReady, this, &Selection::startTransferToX);
     }
@@ -175,9 +182,12 @@ void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
 {
     if (!event || event->owner == XCB_WINDOW_NONE) {
         x11OfferLost();
-        setWlSource(nullptr);
+
+        delete m_xSource;
+        m_xSource = nullptr;
         return;
     }
+
     setWlSource(nullptr);
 
     m_xSource = new X11Source(this, event);
@@ -194,11 +204,13 @@ void Selection::ownSelection(bool own)
                                 m_atom,
                                 XCB_TIME_CURRENT_TIME);
     } else {
-        m_disownPending = true;
-        xcb_set_selection_owner(xcbConn,
-                                XCB_WINDOW_NONE,
-                                m_atom,
-                                m_timestamp);
+        if (m_owner == m_window) {
+            m_disownPending = true;
+            xcb_set_selection_owner(xcbConn,
+                                    XCB_WINDOW_NONE,
+                                    m_atom,
+                                    m_timestamp);
+        }
     }
     xcb_flush(xcbConn);
 }

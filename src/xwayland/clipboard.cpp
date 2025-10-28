@@ -15,6 +15,8 @@
 #include "wayland/display.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
+#include "workspace.h"
+#include "x11window.h"
 
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>
@@ -46,7 +48,8 @@ Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
     registerXfixes();
     xcb_flush(xcbConn);
 
-    connect(waylandServer()->seat(), &SeatInterface::selectionChanged, this, &Clipboard::checkWlSource);
+    connect(waylandServer()->seat(), &SeatInterface::selectionChanged, this, &Clipboard::onSelectionChanged);
+    connect(workspace(), &Workspace::windowActivated, this, &Clipboard::onActiveWindowChanged);
 }
 
 bool Clipboard::ownsSelection(AbstractDataSource *dsi) const
@@ -54,10 +57,18 @@ bool Clipboard::ownsSelection(AbstractDataSource *dsi) const
     return dsi && dsi == m_selectionSource.get();
 }
 
-void Clipboard::checkWlSource()
+bool Clipboard::x11ClientsCanAccessSelection() const
 {
-    auto currentSelection = waylandServer()->seat()->selection();
+    return qobject_cast<X11Window *>(workspace()->activeWindow());
+}
 
+void Clipboard::onSelectionChanged()
+{
+    if (!x11ClientsCanAccessSelection()) {
+        return;
+    }
+
+    auto currentSelection = waylandServer()->seat()->selection();
     if (!currentSelection || ownsSelection(currentSelection)) {
         if (wlSource()) {
             setWlSource(nullptr);
@@ -68,6 +79,28 @@ void Clipboard::checkWlSource()
 
     setWlSource(new WlSource(currentSelection, this));
     ownSelection(true);
+}
+
+void Clipboard::onActiveWindowChanged()
+{
+    auto currentSelection = waylandServer()->seat()->selection();
+    if (!currentSelection) {
+        return;
+    }
+
+    // If the current selection is owned by an X11 client => do nothing. If the selection is
+    // owned by a Wayland client, X11 clients can access it only when they are focused.
+    if (!ownsSelection(currentSelection)) {
+        if (x11ClientsCanAccessSelection()) {
+            setWlSource(new WlSource(currentSelection, this));
+            ownSelection(true);
+        } else {
+            if (wlSource()) {
+                setWlSource(nullptr);
+                ownSelection(false);
+            }
+        }
+    }
 }
 
 void Clipboard::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)

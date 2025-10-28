@@ -112,6 +112,7 @@ private:
     void endTimeoutTransfersTimer();
 
     xcb_atom_t m_atom = XCB_ATOM_NONE;
+    xcb_window_t m_owner = XCB_WINDOW_NONE;
     xcb_window_t m_window = XCB_WINDOW_NONE;
     xcb_window_t m_requestorWindow = XCB_WINDOW_NONE;
     xcb_timestamp_t m_timestamp;

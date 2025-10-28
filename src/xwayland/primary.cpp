@@ -48,7 +48,8 @@ Primary::Primary(xcb_atom_t atom, QObject *parent)
     registerXfixes();
     xcb_flush(xcbConn);
 
-    connect(waylandServer()->seat(), &SeatInterface::primarySelectionChanged, this, &Primary::checkWlSource);
+    connect(waylandServer()->seat(), &SeatInterface::primarySelectionChanged, this, &Primary::onSelectionChanged);
+    connect(workspace(), &Workspace::windowActivated, this, &Primary::onActiveWindowChanged);
 }
 
 Primary::~Primary() = default;
@@ -58,10 +59,18 @@ bool Primary::ownsSelection(AbstractDataSource *dsi) const
     return dsi && dsi == m_primarySelectionSource.get();
 }
 
-void Primary::checkWlSource()
+bool Primary::x11ClientsCanAccessSelection() const
 {
-    auto currentSelection = waylandServer()->seat()->primarySelection();
+    return qobject_cast<X11Window *>(workspace()->activeWindow());
+}
 
+void Primary::onSelectionChanged()
+{
+    if (!x11ClientsCanAccessSelection()) {
+        return;
+    }
+
+    auto currentSelection = waylandServer()->seat()->primarySelection();
     if (!currentSelection || ownsSelection(currentSelection)) {
         if (wlSource()) {
             setWlSource(nullptr);
@@ -72,6 +81,28 @@ void Primary::checkWlSource()
 
     setWlSource(new WlSource(currentSelection, this));
     ownSelection(true);
+}
+
+void Primary::onActiveWindowChanged()
+{
+    auto currentSelection = waylandServer()->seat()->primarySelection();
+    if (!currentSelection) {
+        return;
+    }
+
+    // If the current selection is owned by an X11 client => do nothing. If the selection is
+    // owned by a Wayland client, X11 clients can access it only when they are focused.
+    if (!ownsSelection(currentSelection)) {
+        if (x11ClientsCanAccessSelection()) {
+            setWlSource(new WlSource(currentSelection, this));
+            ownSelection(true);
+        } else {
+            if (wlSource()) {
+                setWlSource(nullptr);
+                ownSelection(false);
+            }
+        }
+    }
 }
 
 void Primary::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
