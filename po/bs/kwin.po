@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-25 00:43+0000\n"
+"POT-Creation-Date: 2025-10-28 00:44+0000\n"
 "PO-Revision-Date: 2014-10-20 20:21+0000\n"
 "Last-Translator: Lejla Agic <lagic1@etf.unsa.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -1611,7 +1611,9 @@ msgstr "&Jačina:"
 # >> @item:inrange Strength of the effect:
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
+#: plugins/blur/blur_config.ui:171
 #, kde-format
 msgid "Light"
 msgstr "Slab"
@@ -1619,7 +1621,9 @@ msgstr "Slab"
 # >> @item:inrange Strength of the effect:
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
+#: plugins/blur/blur_config.ui:203
 #, kde-format
 msgid "Strong"
 msgstr "Jak"
@@ -1629,6 +1633,13 @@ msgstr "Jak"
 #, fuzzy, kde-format
 #| msgid "&Strength:"
 msgid "Noise strength:"
+msgstr "&Jačina:"
+
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
+#: plugins/blur/blur_config.ui:146
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Saturation strength:"
 msgstr "&Jačina:"
 
 #: plugins/colorpicker/colorpicker.cpp:109

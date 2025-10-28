@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-25 00:43+0000\n"
+"POT-Creation-Date: 2025-10-28 00:44+0000\n"
 "PO-Revision-Date: 2025-10-15 19:32+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -1623,14 +1623,18 @@ msgstr "Sumennuksen voimakkuus:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
+#: plugins/blur/blur_config.ui:171
 #, kde-format
 msgid "Light"
 msgstr "Vaalea"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
+#: plugins/blur/blur_config.ui:203
 #, kde-format
 msgid "Strong"
 msgstr "Vahva"
@@ -1640,6 +1644,13 @@ msgstr "Vahva"
 #, kde-format
 msgid "Noise strength:"
 msgstr "Kohinan voimakkuus:"
+
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
+#: plugins/blur/blur_config.ui:146
+#, fuzzy, kde-format
+#| msgid "Blur strength:"
+msgid "Saturation strength:"
+msgstr "Sumennuksen voimakkuus:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format

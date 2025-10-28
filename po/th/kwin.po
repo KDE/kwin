@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-25 00:43+0000\n"
+"POT-Creation-Date: 2025-10-28 00:44+0000\n"
 "PO-Revision-Date: 2025-03-01 14:53+0700\n"
 "Last-Translator: Pongsakorn S. <kde@xerusion.me>\n"
 "Language-Team: Thai\n"
@@ -1607,7 +1607,9 @@ msgstr "ความเ&ข้ม:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
+#: plugins/blur/blur_config.ui:171
 #, fuzzy, kde-format
 #| msgid "Top-Right"
 msgid "Light"
@@ -1615,7 +1617,9 @@ msgstr "บนขวา"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
+#: plugins/blur/blur_config.ui:203
 #, kde-format
 msgid "Strong"
 msgstr "แรง"
@@ -1625,6 +1629,13 @@ msgstr "แรง"
 #, fuzzy, kde-format
 #| msgid "&Strength:"
 msgid "Noise strength:"
+msgstr "ความเ&ข้ม:"
+
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
+#: plugins/blur/blur_config.ui:146
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Saturation strength:"
 msgstr "ความเ&ข้ม:"
 
 #: plugins/colorpicker/colorpicker.cpp:109

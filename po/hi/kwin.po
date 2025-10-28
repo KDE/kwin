@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-25 00:43+0000\n"
+"POT-Creation-Date: 2025-10-28 00:44+0000\n"
 "PO-Revision-Date: 2024-12-15 19:31+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -1608,7 +1608,9 @@ msgstr "सामर्थ्य (&S):"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
+#: plugins/blur/blur_config.ui:171
 #, fuzzy, kde-format
 #| msgid "Top-right"
 msgid "Light"
@@ -1616,7 +1618,9 @@ msgstr "ऊपरी दायां"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
+#: plugins/blur/blur_config.ui:203
 #, fuzzy, kde-format
 #| msgid "&Strength:"
 msgid "Strong"
@@ -1627,6 +1631,13 @@ msgstr "सामर्थ्य (&S):"
 #, fuzzy, kde-format
 #| msgid "&Strength:"
 msgid "Noise strength:"
+msgstr "सामर्थ्य (&S):"
+
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
+#: plugins/blur/blur_config.ui:146
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Saturation strength:"
 msgstr "सामर्थ्य (&S):"
 
 #: plugins/colorpicker/colorpicker.cpp:109
