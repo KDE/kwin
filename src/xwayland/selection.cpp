@@ -124,17 +124,15 @@ void Selection::registerXfixes()
 
 void Selection::setWlSource(WlSource *source)
 {
-    if (m_waylandSource) {
-        m_waylandSource->deleteLater();
-        m_waylandSource = nullptr;
+    if (!source) {
+        m_waylandSource.reset();
+        return;
     }
 
-    if (source) {
-        m_xSource.reset();
+    m_xSource.reset();
 
-        m_waylandSource = source;
-        connect(source, &WlSource::transferReady, this, &Selection::startTransferToX);
-    }
+    m_waylandSource.reset(source);
+    connect(m_waylandSource.get(), &WlSource::transferReady, this, &Selection::startTransferToX);
 }
 
 void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
@@ -145,7 +143,7 @@ void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
         return;
     }
 
-    setWlSource(nullptr);
+    m_waylandSource.reset();
 
     m_xSource = std::make_unique<X11Source>(this, event);
     connect(m_xSource.get(), &X11Source::targetsReceived, this, &Selection::x11TargetsReceived);

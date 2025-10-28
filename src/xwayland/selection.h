@@ -78,7 +78,7 @@ protected:
     void setWlSource(WlSource *source);
     WlSource *wlSource() const
     {
-        return m_waylandSource;
+        return m_waylandSource.get();
     }
     void createX11Source(xcb_xfixes_selection_notify_event_t *event);
     X11Source *x11Source() const
@@ -113,7 +113,7 @@ private:
 
     // Active source, if any. Only one of them at max can exist
     // at the same time.
-    WlSource *m_waylandSource = nullptr;
+    std::unique_ptr<WlSource> m_waylandSource;
     std::unique_ptr<X11Source> m_xSource;
 
     // active transfers
