@@ -134,7 +134,6 @@ target_sources(kwin PRIVATE
     opengl/gltexture.cpp
     opengl/glutils.cpp
     opengl/glvertexbuffer.cpp
-    opengl/icc_shader.cpp
     options.cpp
     osd.cpp
     outline.cpp

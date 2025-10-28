@@ -15,7 +15,6 @@
 #include "opengl/glframebuffer.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
-#include "opengl/icc_shader.h"
 
 #include <lcms2.h>
 
@@ -333,13 +332,14 @@ void TestColorspaces::testOpenglShader()
         }
     }
 
+    const auto pipeline = ColorPipeline::create(src, dst, intent);
     QImage openGlResult;
     {
-        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        ShaderBinder binder(ShaderManager::instance()->pushShader(ShaderTrait::MapTexture, pipeline));
         QMatrix4x4 proj;
         proj.ortho(QRectF(0, 0, input.width(), input.height()));
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
-        binder.shader()->setColorspaceUniforms(src, dst, intent);
+        binder.shader()->setColorPipeline(pipeline);
         const auto target = GLTexture::allocate(GL_RGBA8, input.size());
         GLFramebuffer buffer(target.get());
         context->pushFramebuffer(&buffer);
@@ -353,7 +353,6 @@ void TestColorspaces::testOpenglShader()
     }
     QImage pipelineResult(input.width(), input.height(), QImage::Format_RGBA8888_Premultiplied);
     {
-        const auto pipeline = ColorPipeline::create(src, dst, intent);
         for (int x = 0; x < input.width(); x++) {
             for (int y = 0; y < input.height(); y++) {
                 const auto pixel = input.pixel(x, y);
@@ -476,9 +475,9 @@ void TestColorspaces::testIccShader()
 
     QImage openGlResult;
     {
-        IccShader shader;
-        ShaderBinder binder{shader.shader()};
-        shader.setUniforms(profile, imageColorspace, intent);
+        const ColorPipeline pipeline = ColorPipeline::create(imageColorspace, profile.get(), intent);
+        ShaderBinder binder(ShaderManager::instance()->pushShader(ShaderTrait::MapTexture, pipeline));
+        binder.shader()->setColorPipeline(pipeline);
 
         QMatrix4x4 proj;
         proj.ortho(QRectF(0, 0, input.width(), input.height()));

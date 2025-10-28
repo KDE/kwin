@@ -118,6 +118,7 @@ public:
     explicit ColorPipeline(const ValueRange &inputRange, ColorspaceType inputType);
 
     static ColorPipeline create(const std::shared_ptr<ColorDescription> &from, const std::shared_ptr<ColorDescription> &to, RenderingIntent intent);
+    static ColorPipeline create(const std::shared_ptr<ColorDescription> &from, const IccProfile *to, RenderingIntent intent);
 
     ColorPipeline merged(const ColorPipeline &onTop) const;
 

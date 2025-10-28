@@ -49,7 +49,7 @@ public:
     std::optional<double> maxBrightness() const;
 
     static std::expected<std::unique_ptr<IccProfile>, QString> load(const QString &path);
-    static const ColorDescription s_connectionSpace;
+    static const std::shared_ptr<ColorDescription> s_connectionSpace;
 
 private:
     cmsHPROFILE const m_handle;

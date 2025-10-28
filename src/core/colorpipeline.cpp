@@ -79,6 +79,58 @@ ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &fro
     return ret;
 }
 
+ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &source, const IccProfile *destination, RenderingIntent intent)
+{
+    const auto linearizedProfile = std::make_shared<ColorDescription>(ColorDescription{
+        destination->colorimetry(),
+        TransferFunction(TransferFunction::linear, 0, source->transferFunction().maxLuminance),
+        source->referenceLuminance(),
+        0,
+        source->transferFunction().maxLuminance,
+        source->transferFunction().maxLuminance,
+    });
+    if (const auto tag = destination->BToATag(intent)) {
+        // NOTE that we can't use IccProfile::s_connectionSpace directly, as the reference luminance has to be carried over
+        const auto iccConnectionSpace = std::make_shared<ColorDescription>(ColorDescription{
+            IccProfile::s_connectionSpace->containerColorimetry(),
+            TransferFunction(TransferFunction::linear, 0, source->transferFunction().maxLuminance),
+            source->referenceLuminance(),
+            0,
+            source->transferFunction().maxLuminance,
+            source->transferFunction().maxLuminance,
+        });
+        ColorPipeline ret;
+        if (intent == RenderingIntent::AbsoluteColorimetricNoAdaptation) {
+            // There's no BToA tag for absolute colorimetric, we have to piece it together ourselves with
+            // input white point -(absolute colorimetric)-> display white point
+            // -(relative colorimetric)-> XYZ D50 -(BToA1, also relative colorimetric)-> display white point
+
+            // First, transform from the input color to the display color space in absolute colorimetric mode
+            ret = create(source, linearizedProfile, RenderingIntent::AbsoluteColorimetricNoAdaptation);
+
+            // Now transform that display color space to XYZ D50 in relative colorimetric mode.
+            // the BToA1 tag goes from XYZ D50 to the native white point of the display,
+            // so this matrix gets reverted by it
+            ret.add(create(linearizedProfile, iccConnectionSpace, RenderingIntent::RelativeColorimetric));
+        } else {
+            ret = create(source, iccConnectionSpace, intent);
+        }
+        // while the above converts to XYZ D50, the encoding the ICC profile tag
+        // wants is CIEXYZ -> add the (absolute colorimetric) transform to that
+        ret.addMatrix(iccConnectionSpace->containerColorimetry().toXYZ(), ret.currentOutputRange(), ColorspaceType::AnyNonRGB);
+        // now just convert from that XYZ D50 to the display
+        ret.add(*tag);
+        return ret;
+    } else {
+        ColorPipeline ret = create(source, linearizedProfile, intent);
+        ret.add1DLUT(destination->inverseTransferFunction(), ColorspaceType::NonLinearRGB);
+        if (destination->vcgt()) {
+            ret.add1DLUT(destination->vcgt(), ColorspaceType::NonLinearRGB);
+        }
+        return ret;
+    }
+}
+
 ColorPipeline::ColorPipeline()
     : inputRange(ValueRange{
           .min = 0,

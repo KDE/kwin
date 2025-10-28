@@ -38,7 +38,6 @@ class GLRenderTimeQuery;
 class ColorTransformation;
 class GlLookUpTable;
 class IccProfile;
-class IccShader;
 
 class EglGbmLayerSurface : public QObject
 {
@@ -99,7 +98,6 @@ private:
         std::shared_ptr<ColorDescription> layerBlendingColor = ColorDescription::sRGB;
         std::shared_ptr<ColorDescription> blendingColor = ColorDescription::sRGB;
         double brightness = 1.0;
-        std::unique_ptr<IccShader> iccShader;
         std::shared_ptr<IccProfile> iccProfile;
         DamageJournal shadowDamageJournal;
         Output::ColorPowerTradeoff tradeoff = Output::ColorPowerTradeoff::PreferEfficiency;

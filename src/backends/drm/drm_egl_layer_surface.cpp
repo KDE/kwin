@@ -20,7 +20,6 @@
 #include "opengl/eglswapchain.h"
 #include "opengl/gllut.h"
 #include "opengl/glrendertimequery.h"
-#include "opengl/icc_shader.h"
 #include "qpainter/qpainterswapchain.h"
 #include "utils/drm_format_helper.h"
 
@@ -109,13 +108,6 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         m_surface->blendingColor = blendingColor;
         m_surface->layerBlendingColor = layerBlendingColor;
         m_surface->iccProfile = iccProfile;
-        if (iccProfile) {
-            if (!m_surface->iccShader) {
-                m_surface->iccShader = std::make_unique<IccShader>();
-            }
-        } else {
-            m_surface->iccShader.reset();
-        }
     }
 
     m_surface->compositingTimeQuery = std::make_unique<GLRenderTimeQuery>(m_surface->context);
@@ -234,19 +226,19 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
             }
         }
 
+        ColorPipeline pipeline;
+        if (m_surface->iccProfile) {
+            pipeline = ColorPipeline::create(m_surface->blendingColor, m_surface->iccProfile.get(), RenderingIntent::AbsoluteColorimetricNoAdaptation);
+        } else {
+            pipeline = ColorPipeline::create(m_surface->blendingColor, m_surface->layerBlendingColor, RenderingIntent::AbsoluteColorimetricNoAdaptation);
+        }
         GLFramebuffer *fbo = m_surface->currentSlot->framebuffer();
         GLFramebuffer::pushFramebuffer(fbo);
-        ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
-        // this transform is absolute colorimetric, whitepoint adjustment is done in compositing already
-        if (m_surface->iccShader) {
-            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->blendingColor, RenderingIntent::AbsoluteColorimetricNoAdaptation);
-        } else {
-            binder.shader()->setColorspaceUniforms(m_surface->blendingColor, m_surface->layerBlendingColor, RenderingIntent::AbsoluteColorimetricNoAdaptation);
-        }
+        GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture, pipeline);
         QMatrix4x4 mat;
         mat.scale(1, -1);
         mat.ortho(QRectF(QPointF(), fbo->size()));
-        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
+        shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
         glDisable(GL_BLEND);
         if (const auto vbo = uploadGeometry(repaint, m_surface->gbmSwapchain->size())) {
             m_surface->currentShadowSlot->texture()->bind();
@@ -256,6 +248,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         EGLNativeFence fence(m_surface->context->displayObject());
         m_surface->shadowSwapchain->release(m_surface->currentShadowSlot, fence.takeFileDescriptor());
         GLFramebuffer::popFramebuffer();
+        ShaderManager::instance()->popShader();
     } else {
         m_surface->damageJournal.add(damagedRegion);
     }
