@@ -894,13 +894,17 @@ void DrmGpu::assignOutputLayers()
 {
     if (m_atomicModeSetting) {
         auto enabledPipelines = std::as_const(m_pipelines) | std::views::filter(&DrmPipeline::enabled);
+        QList<DrmPlane *> freePlanes = m_planes | std::views::transform([](const auto &plane) {
+            return plane.get();
+        }) | std::ranges::to<QList>();
         const size_t enabledPipelinesCount = std::distance(enabledPipelines.begin(), enabledPipelines.end());
         for (DrmPipeline *pipeline : enabledPipelines) {
             QList<DrmPipelineLayer *> layers = {m_planeLayerMap[pipeline->crtc()->primaryPlane()].get()};
-            for (const auto &plane : m_planes) {
+            for (DrmPlane *plane : freePlanes) {
                 if (plane->isCrtcSupported(pipeline->crtc()->pipeIndex())
                     && plane->type.enumValue() == DrmPlane::TypeIndex::Cursor) {
-                    layers.push_back(m_planeLayerMap[plane.get()].get());
+                    layers.push_back(m_planeLayerMap[plane].get());
+                    freePlanes.removeOne(plane);
                     break;
                 }
             }
@@ -908,10 +912,10 @@ void DrmGpu::assignOutputLayers()
                 // To avoid having to deal with GPU-wide bandwidth restrictions
                 // and switching planes between outputs, for now only use overlay
                 // planes with single-output setups
-                for (const auto &plane : m_planes) {
+                for (DrmPlane *plane : freePlanes) {
                     if (plane->isCrtcSupported(pipeline->crtc()->pipeIndex())
                         && plane->type.enumValue() == DrmPlane::TypeIndex::Overlay) {
-                        layers.push_back(m_planeLayerMap[plane.get()].get());
+                        layers.push_back(m_planeLayerMap[plane].get());
                     }
                 }
             }
