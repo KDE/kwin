@@ -893,7 +893,46 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         ShaderManager::instance()->popShader();
     }
 
-    const float modulation = opacity * opacity;
+    // When a window animates between opacities 0 and 1, we would like the
+    // mix between the contrast effect and the transparent to change
+    // linearly with the given opacity. This ensures that the animation set
+    // by the application is respected. We can achieve that by
+    // setting the opacity of the contrast effect to the value that will
+    // produce, when drawn underneath the window, the required overall color.
+    //
+    // In order to find that opacity, some math is required.
+    // Let c be the background and foreground color brightness.
+    // Let w be the color brightness of the contrast effect.
+    // Let t be the transparency of the window when rendered fully opaque by kwin.
+    // Let a be the opacity of the window.
+    // Let f be the opacity of the contrast effect, which we want to solve for.
+    //
+    // When a=0, the resulting color is just "c" (the background color). When
+    // a=1, the resulting color is ct + w(1-t) (a mix between the foreground
+    // and contrast effect). This means that our goal is to achieve the following
+    // interpolation: c(1 - a) + (ct + w(1 - t))a = c(1 - a + ta) + w(a - ta) = C_id.
+    //
+    // However, the color brightness after applying the contrast effect will be
+    // C_mid = c(1 - f) + wf
+    // And the color brightess after drawing the window on top of that will be
+    // C_tot = cat + C_mid(1 - at) = c(at + (1 - at)(1 - f)) + w(f(1 - at))
+    //
+    // We can now impose C_tot = C_id and solve for f. This gives us:
+    // f(a, t) = a(1 - t) / (1 - at)
+    // This value for the opacity of the contrast effect gives us the perfect
+    // interpolation when animating window opacities, regardless of all variables
+    // except a and t.
+    //
+    // a is given to us, however t is not. We set it to t = 0.85 as that is the
+    // transparency of the default Plasma theme; if t < 0.85 then the resulting
+    // interpolation curve is convex, which will result in a slightly faster
+    // animation curve and should be acceptable. If t > 0.85 then the curve is
+    // concave, which might result in a flash during the animation. However this
+    // is only noticeable for high values of t, e.g. t > 0.95, when contrast
+    // effect is not necessary.
+    const float t = 0.85;
+    const float mix = t * opacity;
+    const float modulation = (opacity - mix) / (1 - mix);
 
     if (const BorderRadius cornerRadius = w->window()->borderRadius(); !cornerRadius.isNull()) {
         ShaderManager::instance()->pushShader(m_roundedContrastPass.shader.get());
