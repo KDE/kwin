@@ -475,7 +475,7 @@ void ScreenCastStream::close()
     disconnect(m_cursor.positionChangedConnection);
     m_cursor.positionChangedConnection = {};
 
-    m_source->pause();
+    m_source.reset();
 
     Q_EMIT closed();
 }
