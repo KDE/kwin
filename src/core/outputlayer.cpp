@@ -47,7 +47,7 @@ void OutputLayer::setOutput(Output *output)
     m_output = output;
     if (output) {
         m_renderLoop = output->renderLoop();
-        addRepaint(infiniteRegion());
+        addDeviceRepaint(infiniteRegion());
     } else {
         m_renderLoop = nullptr;
     }
@@ -68,7 +68,7 @@ QList<QSize> OutputLayer::recommendedSizes() const
     return {};
 }
 
-QRegion OutputLayer::repaints() const
+QRegion OutputLayer::deviceRepaints() const
 {
     return m_repaints;
 }
@@ -85,7 +85,7 @@ void OutputLayer::scheduleRepaint(Item *item)
     Q_EMIT repaintScheduled();
 }
 
-void OutputLayer::addRepaint(const QRegion &region)
+void OutputLayer::addDeviceRepaint(const QRegion &region)
 {
     if (region.isEmpty() || !m_output) {
         return;

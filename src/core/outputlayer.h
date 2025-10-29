@@ -76,13 +76,10 @@ public:
      */
     virtual QList<QSize> recommendedSizes() const;
 
-    QRegion repaints() const;
+    QRegion deviceRepaints() const;
     void resetRepaints();
     void scheduleRepaint(Item *item);
-    /**
-     * adds a repaint in layer-local logical coordinates
-     */
-    void addRepaint(const QRegion &region);
+    void addDeviceRepaint(const QRegion &region);
     bool needsRepaint() const;
 
     /**

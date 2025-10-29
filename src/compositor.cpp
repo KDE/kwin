@@ -690,7 +690,7 @@ void Compositor::composite(RenderLoop *renderLoop)
                     // enabling, disabling and updating the cursor image still happen in composite()
                     const auto outputLayer = cursorView->layer();
                     if (!outputLayer->isEnabled()
-                        || !outputLayer->repaints().isEmpty()
+                        || !outputLayer->deviceRepaints().isEmpty()
                         || !cursorView->isVisible()
                         || cursorView->needsRepaint()) {
                         // composite() handles this
@@ -847,8 +847,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             }
             toUpdate.push_back(layer.view->layer());
             layer.surfaceDamage |= layer.view->collectDamage();
-            // TODO change output layer repaints to device coordinates too
-            layer.surfaceDamage |= scaleRegionAligned(layer.view->layer()->repaints(), output->scale());
+            layer.surfaceDamage |= layer.view->layer()->deviceRepaints();
             layer.view->layer()->resetRepaints();
             if (layer.view->layer()->isEnabled() && !layer.directScanout) {
                 result &= renderLayer(layer.view, output, frame, layer.surfaceDamage);

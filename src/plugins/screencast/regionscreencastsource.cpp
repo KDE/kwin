@@ -86,7 +86,7 @@ QRegion RegionScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
         return QRegion{};
     }
     m_sceneView->prePaint();
-    const auto bufferDamage = scaleRegion(m_layer->repaints(), m_sceneView->scale(), QRect(QPoint(), target->size())) | m_sceneView->collectDamage();
+    const auto bufferDamage = (m_layer->deviceRepaints() | m_sceneView->collectDamage()) & QRect(QPoint(), target->size());
     const auto repaints = beginInfo->repaint | bufferDamage;
     m_layer->resetRepaints();
     m_sceneView->paint(beginInfo->renderTarget, repaints);

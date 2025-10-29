@@ -53,9 +53,10 @@ public:
     virtual double desiredHdrHeadroom() const = 0;
 
     /**
-     * add a repaint in layer-local logical coordinates
+     * add a repaint in layer-local device coordinates
      */
-    void addRepaint(const QRegion &logicalRegion);
+    void addDeviceRepaint(const QRegion &deviceRegion);
+    void addLogicalRepaint(const QRegion &globalLogicalRegion);
     void scheduleRepaint(Item *item);
     /**
      * @returns true if the layer can be moved with the Item
