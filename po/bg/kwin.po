@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-28 00:44+0000\n"
-"PO-Revision-Date: 2025-10-19 11:08+0200\n"
+"PO-Revision-Date: 2025-10-28 15:32+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -82,78 +82,76 @@ msgstr ""
 #: core/iccprofile.cpp:252
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr "Неуспешно отваряне на ICC профил \"%1\""
+msgstr "Неуспешно отваряне на ICC профил „%1“"
 
 #: core/iccprofile.cpp:254
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr "ICC профил \"%1\" не съществува"
+msgstr "ICC профил „%1“ не съществува"
 
 #: core/iccprofile.cpp:258
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr "ICC профил \"%1\" не е подходящ за екрани"
+msgstr "ICC профил „%1“ не е подходящ за екрани"
 
 #: core/iccprofile.cpp:261
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
-"ICC профил \"%1\" има неподдържано пространство за връзка, поддържа се само "
-"XYZ"
+"ICC профил „%1“ има неподдържано пространство за връзка, поддържа се само XYZ"
 
 #: core/iccprofile.cpp:264
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
-"ICC профилът \"%1\" е повреден, входно/изходното цветово пространство не е "
-"RGB"
+"ICC профилът „%1“ е повреден, входно/изходното цветово пространство не е RGB"
 
 #: core/iccprofile.cpp:277
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr "ICC профилът \"%1\" е повреден, няма бяла точка"
+msgstr "ICC профилът „%1“ е повреден, няма бяла точка"
 
 #: core/iccprofile.cpp:280
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr "ICC профилът \"%1\" е повреден, неговата бяла точка е невалидна"
+msgstr "ICC профилът „%1“ е повреден, неговата бяла точка е невалидна"
 
 #: core/iccprofile.cpp:293
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
-"ICC профилът \"%1\" е повреден, разборът на матрицата за хроматична "
-"адаптация е неуспешен"
+"ICC профилът „%1“ е повреден, разборът на матрицата за хроматична адаптация "
+"е неуспешен"
 
 #: core/iccprofile.cpp:298
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
-"ICC профилът \"%1\" е повреден, обръщането на матрицата за хроматична "
+"ICC профилът „%1“ е повреден, обръщането на матрицата за хроматична "
 "адаптация е неуспешно"
 
 #: core/iccprofile.cpp:311
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr "ICC профил \"%1\" е повреден, няма първични данни"
+msgstr "ICC профил „%1“ е повреден, няма първични данни"
 
 #: core/iccprofile.cpp:326
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr "ICC профилът \"%1\" е повреден, не можа да изчисли първичните си данни"
+msgstr "ICC профилът „%1“ е повреден, не можа да изчисли първичните си данни"
 
 #: core/iccprofile.cpp:335
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr "ICC профилът \"%1\" е повреден, първичните му данни са невалидни"
+msgstr "ICC профилът „%1“ е повреден, първичните му данни са невалидни"
 
 #: core/iccprofile.cpp:351
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr "ICC профил \"%1\" само с BToD тагове не се поддържа"
+msgstr "ICC профил „%1“ само с BToD тагове не се поддържа"
 
 #: core/iccprofile.cpp:390
 #, kde-format
@@ -1341,7 +1339,7 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>\"%1\" на <application>%2</application> не отговаря. Искате ли да "
+"<para>„%1“ на <application>%2</application> не отговаря. Искате ли да "
 "прекратите това приложение?</para><para><emphasis "
 "strong='true'>Прекратяването на това приложение ще затвори всички негови "
 "прозорци. Незаписаните данни ще бъдат загубени.</emphasis></para>"
@@ -1636,10 +1634,9 @@ msgstr "Сила на шума:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
 #: plugins/blur/blur_config.ui:146
-#, fuzzy, kde-format
-#| msgid "Blur strength:"
+#, kde-format
 msgid "Saturation strength:"
-msgstr "Сила на замъгляване:"
+msgstr "Степен на насищане:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format

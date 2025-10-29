@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1721506 2025-10-28 01:25:37Z scripty $
+# $Id: kwin.po 1721590 2025-10-29 01:25:51Z scripty $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-28 00:44+0000\n"
-"PO-Revision-Date: 2025-10-15 07:22+0200\n"
+"PO-Revision-Date: 2025-10-28 06:54+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.8\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1646,10 +1646,9 @@ msgstr "Moč šuma:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
 #: plugins/blur/blur_config.ui:146
-#, fuzzy, kde-format
-#| msgid "Blur strength:"
+#, kde-format
 msgid "Saturation strength:"
-msgstr "Moč zamegljenosti:"
+msgstr "Moč nasičenosti:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
