@@ -771,7 +771,7 @@ void DrmOutput::maybeScheduleRepaints(const State &next)
     if (next.blendingColor != m_state.blendingColor || next.layerBlendingColor != m_state.layerBlendingColor) {
         const auto layers = m_pipeline->layers();
         for (const auto &layer : layers) {
-            layer->addRepaint(infiniteRegion());
+            layer->addDeviceRepaint(infiniteRegion());
         }
     }
 }
