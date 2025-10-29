@@ -142,13 +142,9 @@ bool DrmPlane::updateProperties()
     for (auto it = m_supportedFormats.begin(); it != m_supportedFormats.end(); it++) {
         const auto info = FormatInfo::get(it.key());
         if (info && info->bitsPerPixel <= 32) {
-            if (it.value().contains(DRM_FORMAT_MOD_INVALID)) {
-                // Mesa usually picks the modifier with lowest bandwidth requirements,
-                // so prefer implicit modifiers for low bandwidth if supported
-                m_lowBandwidthFormats.insert(it.key(), {DRM_FORMAT_MOD_INVALID});
-            } else {
-                m_lowBandwidthFormats.insert(it.key(), it.value());
-            }
+            // Mesa usually picks the modifier with lowest bandwidth requirements,
+            // so prefer implicit modifiers for low bandwidth if supported
+            m_lowBandwidthFormats.insert(it.key(), {DRM_FORMAT_MOD_INVALID});
         }
     }
 
