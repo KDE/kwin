@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-10-24 13:01+0300\n"
+"PO-Revision-Date: 2025-10-28 19:39+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -40,6 +40,11 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
+"Устаревшие приложения X11, использующие глобальные комбинации клавиш и "
+"другие функции при работе в фоновом режиме, должны иметь возможность "
+"постоянно отслеживать нажатия клавиш.<nl/><nl/>Если используются такие "
+"приложения, здесь можно выбрать предпочтительный баланс между безопасностью "
+"и совместимостью."
 
 #: ui/main.qml:73
 #, kde-format
@@ -74,30 +79,30 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"Высокая безопасность; в приложениях X11 будут работать только комбинации "
+"клавиш, основанные на модификаторах (например, push-to-talk)."
 
 #: ui/main.qml:140
-#, fuzzy, kde-format
-#| msgid ""
-#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
-#| "pressed"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
 "pressed"
-msgstr "Указанное выше, но только в сочетании с Meta, Ctrl, Alt или Shift"
+msgstr "Как и выше, но только в сочетании с Meta, Ctrl, Alt или Shift"
 
 #: ui/main.qml:156
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
+"Умеренная безопасность; в приложениях X11 будут работать все глобальные "
+"комбинации клавиш"
 
 #: ui/main.qml:170
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "Нажатия всех клавиш без ограничений"
+msgstr "Всегда разрешено"
 
 #: ui/main.qml:186
 #, kde-format
@@ -106,13 +111,11 @@ msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
 msgstr ""
+"Наименее безопасно; каждое приложение X11 сможет получать текст, вводимый в "
+"любое другое приложение"
 
 #: ui/main.qml:200
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
@@ -120,16 +123,14 @@ msgid ""
 "Make sure you understand and accept this risk."
 msgstr ""
 "Примите к сведению, что включение этого параметра снижает безопасность "
-"системы до уровня сеанса X11, позволяя вредоносным программам красть пароли "
-"и отслеживать вводимый вами текст. Убедитесь, что вы понимаете и принимаете "
-"этот риск."
+"системы, позволяя вредоносным программам красть пароли и отслеживать "
+"вводимый вами текст. Убедитесь, что вы понимаете и принимаете этот риск."
 
 #: ui/main.qml:216
-#, fuzzy, kde-format
-#| msgid "Additionally include mouse buttons"
+#, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "Также нажатия кнопок мыши"
+msgstr "Получение нажатий кнопок мыши:"
 
 #: ui/main.qml:222
 #, kde-format
@@ -144,6 +145,8 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"Умеренная безопасность; в приложениях X11 будут работать глобальные "
+"комбинации клавиш, включающие нажатия кнопки мыши."
 
 #: ui/main.qml:252
 #, kde-format
@@ -164,13 +167,11 @@ msgstr "Разрешить без запроса"
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
+"Минимальная безопасность; все приложения X11 смогут получать полный доступ к "
+"управлению компьютером."
 
 #: ui/main.qml:282
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
@@ -178,9 +179,8 @@ msgid ""
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
 "Примите к сведению, что включение этого параметра снижает безопасность "
-"системы до уровня сеанса X11, позволяя вредоносным программам красть пароли "
-"и отслеживать вводимый вами текст. Убедитесь, что вы понимаете и принимаете "
-"этот риск."
+"системы, позволяя вредоносным программам выполнять ввод с клавиатуры и "
+"управлять курсором мыши. Убедитесь, что вы понимаете и принимаете этот риск."
 
 #~ msgid ""
 #~ "Some legacy X11 apps require the ability to read keystrokes typed in "
