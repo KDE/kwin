@@ -82,6 +82,7 @@ DrmOutputLayer *DrmVirtualOutput::primaryLayer() const
 void DrmVirtualOutput::recreateSurface()
 {
     m_layer = m_backend->renderBackend()->createLayer(this);
+    Q_EMIT outputLayersChanged();
 }
 
 }
