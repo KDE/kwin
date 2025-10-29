@@ -41,12 +41,10 @@ void CursorItem::setSurface(SurfaceInterface *surface, const QPointF &hotspot)
 {
     m_imageItem.reset();
 
-    if (!m_surfaceItem || m_surfaceItem->surface() != surface) {
-        if (surface) {
-            m_surfaceItem = std::make_unique<SurfaceItemWayland>(surface, this);
-        } else {
-            m_surfaceItem.reset();
-        }
+    if (!surface) {
+        m_surfaceItem.reset();
+    } else if (!m_surfaceItem || m_surfaceItem->surface() != surface) {
+        m_surfaceItem = std::make_unique<SurfaceItemWayland>(surface, this);
     }
     if (m_surfaceItem) {
         m_surfaceItem->setPosition(-hotspot);
