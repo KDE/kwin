@@ -27,6 +27,20 @@ Qt::KeyboardModifiers AbstractDataSource::keyboardModifiers() const
 {
     return m_heldModifiers;
 }
+
+void AbstractDataSource::setExclusiveAction(DataDeviceManagerInterface::DnDAction action)
+{
+    if (m_exclusiveAction != action) {
+        m_exclusiveAction = action;
+        Q_EMIT exclusiveActionChanged();
+    }
+}
+
+std::optional<DataDeviceManagerInterface::DnDAction> AbstractDataSource::exclusiveAction() const
+{
+    return m_exclusiveAction;
+}
+
 } // namespace KWin
 
 #include "moc_abstract_data_source.cpp"

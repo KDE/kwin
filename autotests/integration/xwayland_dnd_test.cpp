@@ -1240,8 +1240,7 @@ void XwaylandDndTest::x11ToWayland()
     // Accept the offer.
     auto offer = waylandDataDevice->takeDragOffer();
     QCOMPARE(offer->offeredMimeTypes(), offeredMimeTypes);
-    QEXPECT_FAIL("", "source actions are not exposed properly to wayland clients", Continue);
-    QCOMPARE(offer->sourceDragAndDropActions(), KWayland::Client::DataDeviceManager::DnDAction::Copy);
+    QCOMPARE(offer->sourceDragAndDropActions(), KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move | KWayland::Client::DataDeviceManager::DnDAction::Ask);
     offer->accept(acceptedMimeType, waylandDataDeviceDragEnteredSpy.last().at(0).value<quint32>());
     offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
     QVERIFY(Test::waylandSync());

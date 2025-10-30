@@ -40,6 +40,7 @@ public:
         QMetaObject::Connection sourceActionConnection;
         QMetaObject::Connection targetActionConnection;
         QMetaObject::Connection keyboardModifiersConnection;
+        QMetaObject::Connection exclusiveActionConnection;
     };
     Drag drag;
 

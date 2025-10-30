@@ -104,6 +104,13 @@ public:
     void setKeyboardModifiers(Qt::KeyboardModifiers heldModifiers);
     Qt::KeyboardModifiers keyboardModifiers() const;
 
+    /**
+     * Action forced by the data source. Its primary purpose is to support XDND where supported
+     * source actions are unknown until some specific action arrives with an XdndPosition message.
+     */
+    void setExclusiveAction(DataDeviceManagerInterface::DnDAction action);
+    std::optional<DataDeviceManagerInterface::DnDAction> exclusiveAction() const;
+
 Q_SIGNALS:
     void aboutToBeDestroyed();
 
@@ -111,12 +118,14 @@ Q_SIGNALS:
     void supportedDragAndDropActionsChanged();
     void keyboardModifiersChanged();
     void dndActionChanged();
+    void exclusiveActionChanged();
     void acceptedChanged();
 
 protected:
     explicit AbstractDataSource(QObject *parent = nullptr);
 
 private:
+    std::optional<DataDeviceManagerInterface::DnDAction> m_exclusiveAction;
     Qt::KeyboardModifiers m_heldModifiers;
     bool m_dndCancelled = false;
     bool m_dndDropped = false;

@@ -40,6 +40,12 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
     : m_dnd(dnd)
     , m_source(source)
 {
+    // Supported source actions are not known for sure, so we set all actions. When an XdndPosition
+    // message arrives, the user action in it will be forced. If the target surface doesn't support
+    // the user action, "none" action will be chosen instead.
+    m_source->dataSource()->setSupportedDndActions(DataDeviceManagerInterface::DnDAction::Copy | DataDeviceManagerInterface::DnDAction::Move | DataDeviceManagerInterface::DnDAction::Ask);
+    m_source->dataSource()->setExclusiveAction(DataDeviceManagerInterface::DnDAction::None);
+
     connect(source->dataSource(), &XwlDataSource::dropped, this, [this] {
         if (m_visit) {
             connect(m_visit, &WlVisit::finish, this, [this](WlVisit *visit) {
@@ -130,7 +136,7 @@ bool XToWlDrag::handleClientMessage(xcb_client_message_event_t *event)
 
 void XToWlDrag::setDragAndDropAction(DnDAction action)
 {
-    m_source->dataSource()->setSupportedDndActions(action);
+    m_source->dataSource()->setExclusiveAction(action);
 }
 
 DnDAction XToWlDrag::selectedDragAndDropAction()
