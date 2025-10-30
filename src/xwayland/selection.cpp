@@ -32,10 +32,8 @@ Selection::Selection(xcb_atom_t atom, QObject *parent)
     : QObject(parent)
     , m_atom(atom)
 {
-    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     m_window = xcb_generate_id(kwinApp()->x11Connection());
     m_requestorWindow = m_window;
-    xcb_flush(xcbConn);
 }
 
 bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
@@ -110,7 +108,6 @@ void Selection::sendSelectionNotify(xcb_selection_request_event_t *event, bool s
 
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_send_event(xcbConn, 0, event->requestor, XCB_EVENT_MASK_NO_EVENT, (const char *)&u);
-    xcb_flush(xcbConn);
 }
 
 void Selection::registerXfixes()
@@ -121,7 +118,6 @@ void Selection::registerXfixes()
                                       m_window,
                                       m_atom,
                                       mask);
-    xcb_flush(xcbConn);
 }
 
 void Selection::setWlSource(WlSource *source)
@@ -168,7 +164,6 @@ void Selection::ownSelection(bool own)
                                     m_timestamp);
         }
     }
-    xcb_flush(xcbConn);
 }
 
 void Selection::overwriteRequestorWindow(xcb_window_t window)
