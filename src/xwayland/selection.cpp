@@ -96,11 +96,13 @@ bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
         }
     }
 
-    if (event->owner == m_window && m_waylandSource) {
+    if (event->owner == m_window) {
         // When we claim a selection we must use XCB_TIME_CURRENT,
         // grab the actual timestamp here to answer TIMESTAMP requests
         // correctly
-        m_waylandSource->setTimestamp(event->timestamp);
+        if (m_waylandSource) {
+            m_waylandSource->setTimestamp(event->timestamp);
+        }
         m_timestamp = event->timestamp;
         return true;
     }
