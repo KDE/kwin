@@ -185,7 +185,16 @@ void DataDeviceInterface::drop()
 
 static DataDeviceManagerInterface::DnDAction chooseDndAction(AbstractDataSource *source, DataOfferInterface *offer, Qt::KeyboardModifiers keyboardModifiers)
 {
-    // first compositor picks an action if modifiers are pressed and it's supported both sides
+    // first the compositor picks an action forced by the data source
+    if (const auto exclusiveAction = source->exclusiveAction()) {
+        if (source->supportedDragAndDropActions().testFlag(*exclusiveAction) && offer->supportedDragAndDropActions().has_value() && offer->supportedDragAndDropActions()->testFlag(*exclusiveAction)) {
+            return *exclusiveAction;
+        } else {
+            return DataDeviceManagerInterface::DnDAction::None;
+        }
+    }
+
+    // then the compositor picks an action if modifiers are pressed and it's supported both sides
     if (keyboardModifiers.testFlag(Qt::ControlModifier)) {
         if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy) && offer->supportedDragAndDropActions().has_value() && offer->supportedDragAndDropActions()->testFlag(DataDeviceManagerInterface::DnDAction::Copy)) {
             return DataDeviceManagerInterface::DnDAction::Copy;
@@ -241,6 +250,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
                 disconnect(d->drag.sourceActionConnection);
                 disconnect(d->drag.targetActionConnection);
                 disconnect(d->drag.keyboardModifiersConnection);
+                disconnect(d->drag.exclusiveActionConnection);
             }
         } else {
             delete d->drag.offer;
@@ -251,6 +261,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
         d->drag.sourceActionConnection = QMetaObject::Connection();
         d->drag.targetActionConnection = QMetaObject::Connection();
         d->drag.keyboardModifiersConnection = QMetaObject::Connection();
+        d->drag.exclusiveActionConnection = QMetaObject::Connection();
     }
 
     if (!surface || !dragSource) {
@@ -294,6 +305,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
         d->drag.targetActionConnection = connect(d->drag.offer, &DataOfferInterface::dragAndDropActionsChanged, dragSource, matchOffers);
         d->drag.sourceActionConnection = connect(dragSource, &AbstractDataSource::supportedDragAndDropActionsChanged, d->drag.offer, matchOffers);
         d->drag.keyboardModifiersConnection = connect(dragSource, &AbstractDataSource::keyboardModifiersChanged, d->drag.offer, matchOffers);
+        d->drag.exclusiveActionConnection = connect(dragSource, &AbstractDataSource::exclusiveActionChanged, d->drag.offer, matchOffers);
     }
 
     const QPointF pos = d->seat->dragSurfaceTransformation().map(position);
