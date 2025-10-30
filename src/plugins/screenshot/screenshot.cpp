@@ -20,8 +20,11 @@
 #include "opengl/eglbackend.h"
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
+#include "scene/decorationitem.h"
 #include "scene/item.h"
 #include "scene/itemrenderer.h"
+#include "scene/shadowitem.h"
+#include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
 #include "screenshotlayer.h"
@@ -219,7 +222,13 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     }
 
     const qreal scale = window->targetScale();
-    const QSize nativeSize = (window->visibleGeometry().size() * scale).toSize();
+    QRectF geometry = window->visibleGeometry();
+    if (window->windowItem()->decorationItem() && !(flags & ScreenShotIncludeDecoration)) {
+        geometry = window->clientGeometry();
+    } else if (!(flags & ScreenShotIncludeShadow)) {
+        geometry = window->frameGeometry();
+    }
+    const QSize nativeSize = (geometry.size() * scale).toSize();
     const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, nativeSize);
     if (!offscreenTexture) {
         return std::nullopt;
@@ -235,7 +244,12 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     scene->renderer()->beginFrame(renderTarget, viewport);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    scene->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, {}, {});
+    scene->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, [flags, w = window->windowItem()](Item *item) {
+        const bool deco = flags & ScreenShotFlag::ScreenShotIncludeDecoration;
+        const bool shadow = deco && (flags & ScreenShotFlag::ScreenShotIncludeShadow);
+        return (!deco && item == w->decorationItem())
+            || (!shadow && item == w->shadowItem());
+    }, {});
     if ((flags & ScreenShotFlag::ScreenShotIncludeCursor) && scene->cursorItem()->isVisible()) {
         scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), 0, infiniteRegion(), WindowPaintData{}, {}, {});
     }
