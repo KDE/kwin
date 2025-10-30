@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-28 00:44+0000\n"
-"PO-Revision-Date: 2025-10-15 17:51+0100\n"
+"PO-Revision-Date: 2025-10-29 12:00+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -1652,10 +1652,9 @@ msgstr "Fuerza del ruido:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
 #: plugins/blur/blur_config.ui:146
-#, fuzzy, kde-format
-#| msgid "Blur strength:"
+#, kde-format
 msgid "Saturation strength:"
-msgstr "Fuerza del desenfoque:"
+msgstr "Fuerza de la saturación:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format

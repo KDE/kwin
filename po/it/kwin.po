@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-28 00:44+0000\n"
-"PO-Revision-Date: 2025-09-23 14:16+0200\n"
+"PO-Revision-Date: 2025-10-28 14:33+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.1\n"
+"X-Generator: Lokalize 25.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1648,10 +1648,9 @@ msgstr "Intensità del rumore:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
 #: plugins/blur/blur_config.ui:146
-#, fuzzy, kde-format
-#| msgid "Blur strength:"
+#, kde-format
 msgid "Saturation strength:"
-msgstr "Intensità della sfocatura:"
+msgstr "Intensità della saturazione:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
@@ -2444,10 +2443,9 @@ msgstr "Impossibile connettere il contesto PipeWire"
 #: plugins/screencast/screencastmanager.cpp:79
 #: plugins/screencast/screencastmanager.cpp:95
 #: plugins/screencast/screencastmanager.cpp:140
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "Sospendi composizione"
+msgstr "Tip di composizione non supportato"
 
 #: plugins/screencast/screencastmanager.cpp:60
 #, kde-format
