@@ -264,7 +264,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
     }
 
     PositionUpdateBlocker blocker(this);
-    updatePosition(pos, time);
+    updatePosition(pos, delta, time);
 
     PointerMotionEvent event{
         .device = device,
@@ -871,15 +871,94 @@ qreal PointerInputRedirection::edgeBarrier(EdgeBarrierType type) const
     }
 }
 
-QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const Output *currentOutput, std::chrono::microseconds time)
+static std::optional<double> optMin(std::optional<double> l, std::optional<double> r)
 {
-    // optimization to avoid looping over all outputs
-    if (exclusiveContains(currentOutput->geometry(), m_pos)) {
-        m_movementInEdgeBarrier = QPointF();
+    if (l && r) {
+        return std::min(*l, *r);
+    } else if (l) {
+        return l;
+    } else {
+        return r;
+    }
+}
+
+static std::optional<double> closestIntersection(const QRectF &geometry, const QPointF &start, const QPointF &delta)
+{
+    const auto checkVertical = [&geometry, &start, &delta](double x) -> std::optional<double> {
+        const double d = (x - start.x()) / delta.x();
+        const double y = start.y() + d * delta.y();
+        if (d >= 0 && y >= geometry.y() && y <= geometry.y() + geometry.height()) {
+            return d;
+        } else {
+            return std::nullopt;
+        }
+    };
+    const auto checkHorizontal = [&geometry, &start, &delta](double y) -> std::optional<double> {
+        const double d = (y - start.y()) / delta.y();
+        const double x = start.x() + d * delta.x();
+        if (d >= 0 && x >= geometry.x() && x <= geometry.x() + geometry.width()) {
+            return d;
+        } else {
+            return std::nullopt;
+        }
+    };
+
+    const auto dx1 = checkVertical(geometry.x());
+    const auto dx2 = checkVertical(geometry.x() + geometry.width() - 1);
+    const auto dy1 = checkHorizontal(geometry.y());
+    const auto dy2 = checkHorizontal(geometry.y() + geometry.height() - 1);
+    return optMin(optMin(dx1, dx2), optMin(dy1, dy2));
+}
+
+static std::optional<double> distanceToNextOutput(const Output *current, const QPointF &currentPos, const QPointF &normalizedDelta)
+{
+    if (normalizedDelta.isNull()) {
+        return std::nullopt;
+    }
+    const auto outputs = workspace()->outputs();
+    std::optional<double> closest;
+    Output *o = nullptr;
+    for (Output *output : outputs) {
+        if (output == current) {
+            continue;
+        }
+        if (auto intersection = closestIntersection(output->geometryF(), currentPos, normalizedDelta)) {
+            if (closest.has_value()) {
+                if (*intersection <= *closest) {
+                    o = output;
+                }
+                closest = std::min(*closest, *intersection);
+            } else {
+                closest = intersection;
+                o = output;
+            }
+        }
+    }
+    return closest;
+}
+
+QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const QPointF &delta, std::chrono::microseconds time)
+{
+    if (delta.isNull()) {
+        // absolute motion, nothing to do
         return pos;
     }
-    const Output *lastOutput = workspace()->outputAt(m_pos);
-    QPointF newPos = confineToBoundingBox(pos, lastOutput->geometry());
+    const double deltaLength = std::hypot(delta.x(), delta.y());
+    const auto normalizedDelta = delta / deltaLength;
+    // step from the last position to the next output intersection
+    // (including intersections with the current output)
+    auto distance = distanceToNextOutput(nullptr, m_pos, normalizedDelta);
+    if (!distance.has_value()) {
+        // something went wrong, fall back to just confining to the closest output
+        return confineToBoundingBox(pos, workspace()->outputAt(pos)->geometryF());
+    }
+    if (*distance > std::hypot(delta.x(), delta.y())) {
+        // no intersection in this movement step
+        return pos;
+    }
+    // we intersected some screen edge, step to it and apply the edge barrier
+    const auto lastOutput = workspace()->outputAt(m_pos);
+    QPointF newPos = m_pos + *distance * normalizedDelta;
     const auto type = edgeBarrierType(newPos, lastOutput->geometry());
     if (m_lastEdgeBarrierType != type) {
         m_movementInEdgeBarrier = QPointF();
@@ -891,7 +970,7 @@ QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const Outp
     qreal returnDistance = returnSpeed * timeDiff.count();
 
     const auto euclideanLength = [](const QPointF &point) {
-        return std::sqrt(point.x() * point.x() + point.y() * point.y());
+        return std::hypot(point.x(), point.y());
     };
     const auto shorten = [euclideanLength](const QPointF &point, const qreal distance) {
         const qreal length = euclideanLength(point);
@@ -904,25 +983,31 @@ QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const Outp
     m_movementInEdgeBarrier += (pos - newPos);
     m_movementInEdgeBarrier = shorten(m_movementInEdgeBarrier, returnDistance);
 
-    if (euclideanLength(m_movementInEdgeBarrier) > barrierWidth) {
+    if (euclideanLength(m_movementInEdgeBarrier) >= barrierWidth) {
+        // Ensure that stepping between outputs works, no matter how small the delta of a given
+        // pointer event is. This is especially important with high resolution mice and touchpads.
+        // To avoid skipping across outputs diagonally, only allow this step to be fully horizontal or fully vertical.
+        if (const auto horizontalDistance = distanceToNextOutput(lastOutput, newPos, QPointF(normalizedDelta.x(), 0))) {
+            newPos.setX(newPos.x() + *horizontalDistance * normalizedDelta.x());
+        } else if (const auto verticalDistance = distanceToNextOutput(lastOutput, newPos, QPointF(0, normalizedDelta.y()))) {
+            newPos.setY(newPos.y() + *verticalDistance * normalizedDelta.y());
+        }
         newPos += shorten(m_movementInEdgeBarrier, barrierWidth);
         m_movementInEdgeBarrier = QPointF();
     }
     return newPos;
 }
 
-void PointerInputRedirection::updatePosition(const QPointF &pos, std::chrono::microseconds time)
+void PointerInputRedirection::updatePosition(const QPointF &pos, const QPointF &delta, std::chrono::microseconds time)
 {
-    m_lastMoveTime = time;
     if (m_locked) {
         // locked pointer should not move
         return;
     }
-    // verify that at least one screen contains the pointer position
-    const Output *currentOutput = workspace()->outputAt(pos);
-    QPointF p = confineToBoundingBox(pos, currentOutput->geometry());
-    p = applyEdgeBarrier(p, currentOutput, time);
+    QPointF p = applyEdgeBarrier(pos, delta, time);
+    p = confineToBoundingBox(p, workspace()->outputAt(p)->geometry());
     p = applyPointerConfinement(p);
+    m_lastMoveTime = time;
     if (p == m_pos) {
         // didn't change due to confinement
         return;

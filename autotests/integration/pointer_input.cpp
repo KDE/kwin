@@ -104,6 +104,8 @@ private Q_SLOTS:
     void testDefaultInputRegion();
     void testEmptyInputRegion();
     void testUnfocusedModifiers();
+    void moveBetweenScaledScreens_data();
+    void moveBetweenScaledScreens();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -1558,9 +1560,9 @@ void PointerInputTest::testEdgeBarrier_data()
     // screen layout:
     //
     // +----------+----------+---------+
-    // |   left   |    top   |  right  |
+    // | 0 left   |  1 top   | 2 right |
     // +----------+----------+---------+
-    //            |  bottom  |
+    //            | 3 bottom |
     //            +----------+
     //
     QTest::newRow("move right - barred") << QPoint(1270, 512) << QList<QPoint>{QPoint(20, 0)} << 0 << false;
@@ -1597,7 +1599,8 @@ void PointerInputTest::testEdgeBarrier()
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
         QRect(2560, 0, 1280, 1024),
-        QRect(1280, 1024, 1280, 1024)};
+        QRect(1280, 1024, 1280, 1024),
+    };
     Test::setOutputConfig(geometries);
 
     const auto outputs = workspace()->outputs();
@@ -1627,7 +1630,7 @@ void PointerInputTest::testEdgeBarrier()
         timestamp += 1000;
     }
     QFETCH(int, targetOutputId);
-    QCOMPARE(workspace()->outputAt(Cursors::self()->mouse()->pos()), workspace()->outputs().at(targetOutputId));
+    QCOMPARE(workspace()->outputAt(Cursors::self()->mouse()->pos())->geometry(), workspace()->outputs().at(targetOutputId)->geometry());
 }
 
 void PointerInputTest::testResizeCursor_data()
@@ -1931,6 +1934,43 @@ void PointerInputTest::testUnfocusedModifiers()
     // Destroy the Wayland window.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(waylandWindow));
+}
+
+void PointerInputTest::moveBetweenScaledScreens_data()
+{
+    QTest::addColumn<double>("pointerSpeed");
+
+    QTest::addRow("one logical per event") << 1.0;
+    QTest::addRow("1/2 logical per event") << 0.5;
+    QTest::addRow("1/10 logical per event") << 0.1;
+}
+
+void PointerInputTest::moveBetweenScaledScreens()
+{
+    options->setEdgeBarrier(0);
+    options->setCornerBarrier(0);
+    QFETCH(double, pointerSpeed);
+
+    const uint32_t logicalWidth = std::round(3840 / 1.25);
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, logicalWidth, 2160 / 1.25),
+            .scale = 1.25,
+        },
+        Test::OutputInfo{
+            .geometry = QRect(logicalWidth, 0, logicalWidth, 2160 / 1.25),
+            .scale = 1.25,
+        },
+    });
+
+    const auto outputs = workspace()->outputs();
+
+    uint32_t time = 0;
+    input()->pointer()->warp(QPoint(logicalWidth - 1, 1000));
+    for (int i = 0; i < std::ceil(1.0 / pointerSpeed); i++) {
+        Test::pointerMotionRelative(QPointF(pointerSpeed, 0), time++);
+    }
+    QCOMPARE_GE(input()->pointer()->pos().x(), logicalWidth);
 }
 }
 
