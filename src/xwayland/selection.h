@@ -93,10 +93,6 @@ protected:
     }
     // must be called in order to provide data from Wl to X
     void ownSelection(bool own);
-    void setWindow(xcb_window_t window)
-    {
-        m_window = window;
-    }
 
 private:
     bool handleSelectionRequest(xcb_selection_request_event_t *event);
