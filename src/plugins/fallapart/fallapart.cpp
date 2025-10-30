@@ -20,12 +20,6 @@ using namespace std::chrono_literals;
 
 Q_LOGGING_CATEGORY(KWIN_FALLAPART, "kwin_effect_fallapart", QtWarningMsg)
 
-static const QSet<QString> s_blacklist{
-    // Spectacle needs to be blacklisted in order to stay out of its own screenshots.
-    QStringLiteral("spectacle spectacle"), // x11
-    QStringLiteral("spectacle org.kde.spectacle"), // wayland
-};
-
 namespace KWin
 {
 
@@ -186,9 +180,6 @@ void FallApartEffect::slotWindowClosed(EffectWindow *c)
         return;
     }
     if (!c->isVisible()) {
-        return;
-    }
-    if (s_blacklist.contains(c->windowClass())) {
         return;
     }
     const void *e = c->data(WindowClosedGrabRole).value<void *>();

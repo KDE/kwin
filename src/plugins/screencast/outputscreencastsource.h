@@ -25,7 +25,7 @@ class OutputScreenCastSource : public ScreenCastSource
     Q_OBJECT
 
 public:
-    explicit OutputScreenCastSource(Output *output, QObject *parent = nullptr);
+    explicit OutputScreenCastSource(Output *output, std::optional<pid_t> pidToHide);
     ~OutputScreenCastSource() override;
 
     uint refreshRate() const override;

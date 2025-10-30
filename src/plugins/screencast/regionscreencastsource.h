@@ -25,7 +25,7 @@ class RegionScreenCastSource : public ScreenCastSource
     Q_OBJECT
 
 public:
-    explicit RegionScreenCastSource(const QRect &region, qreal scale, QObject *parent = nullptr);
+    explicit RegionScreenCastSource(const QRect &region, qreal scale, std::optional<pid_t> pidToHide);
     ~RegionScreenCastSource() override;
 
     quint32 drmFormat() const override;

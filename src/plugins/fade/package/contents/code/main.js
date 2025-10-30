@@ -16,10 +16,6 @@ const blacklist = [
 
     // The splash screen has to be animated only by the login effect.
     "ksplashqml ksplashqml",
-
-    // Spectacle needs to be blacklisted in order to stay out of its own screenshots.
-    "spectacle spectacle", // x11
-    "spectacle org.kde.spectacle", // wayland
 ];
 
 class FadeEffect {

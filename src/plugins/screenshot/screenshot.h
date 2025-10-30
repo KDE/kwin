@@ -40,8 +40,8 @@ public:
     ScreenShotManager();
     ~ScreenShotManager() override;
 
-    std::optional<QImage> takeScreenShot(Output *screen, ScreenShotFlags flags = {});
-    std::optional<QImage> takeScreenShot(const QRect &area, ScreenShotFlags flags = {});
+    std::optional<QImage> takeScreenShot(Output *screen, ScreenShotFlags flags, std::optional<pid_t> pidToHide);
+    std::optional<QImage> takeScreenShot(const QRect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide);
     std::optional<QImage> takeScreenShot(Window *window, ScreenShotFlags flags = {});
 
 private:
