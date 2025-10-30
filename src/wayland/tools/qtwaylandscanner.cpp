@@ -882,7 +882,7 @@ bool Scanner::process()
             printf("\n");
             printf("        struct wl_event_loop *event_loop = wl_display_get_event_loop(m_display);\n");
             printf("        m_globalRemovedEvent = wl_event_loop_add_timer(event_loop, deferred_destroy_global_func, this);\n");
-            printf("        wl_event_source_timer_update(m_globalRemovedEvent, 5000);\n");
+            printf("        wl_event_source_timer_update(m_globalRemovedEvent, 300000);\n");
             printf("    }\n");
             printf("\n");
 
