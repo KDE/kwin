@@ -47,15 +47,15 @@ bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
         return false;
     }
 
+    const xcb_window_t previousOwner = m_owner;
     m_owner = event->owner;
 
-    // TODO: Since we track the selection owner window, m_disownPending should be unnecessary now.
-    // If event->owner is None and m_owner != m_window, it means selection got unset by a real client.
-    if (m_disownPending) {
-        // notify of our own disown - ignore it
-        m_disownPending = false;
-        return true;
+    if (m_owner == XCB_WINDOW_NONE) {
+        if (previousOwner == m_window) {
+            return true;
+        }
     }
+
     if (event->owner == m_window && m_waylandSource) {
         // When we claim a selection we must use XCB_TIME_CURRENT,
         // grab the actual timestamp here to answer TIMESTAMP requests
@@ -160,7 +160,6 @@ void Selection::ownSelection(bool own)
                                 XCB_TIME_CURRENT_TIME);
     } else {
         if (m_owner == m_window) {
-            m_disownPending = true;
             xcb_set_selection_owner(xcbConn,
                                     XCB_WINDOW_NONE,
                                     m_atom,

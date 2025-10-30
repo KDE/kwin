@@ -121,8 +121,6 @@ private:
     QList<TransferXtoWl *> m_xToWlTransfers;
     QTimer *m_timeoutTransfers = nullptr;
 
-    bool m_disownPending = false;
-
     Q_DISABLE_COPY(Selection)
 };
 
