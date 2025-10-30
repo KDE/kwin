@@ -32,8 +32,8 @@ Selection::Selection(xcb_atom_t atom, QObject *parent)
     : QObject(parent)
     , m_atom(atom)
 {
+    // TODO: Make sub-classes generate the window id.
     m_window = xcb_generate_id(kwinApp()->x11Connection());
-    m_requestorWindow = m_window;
 }
 
 bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
@@ -166,17 +166,6 @@ void Selection::ownSelection(bool own)
     }
 }
 
-void Selection::overwriteRequestorWindow(xcb_window_t window)
-{
-    Q_ASSERT(m_xSource);
-    if (window == XCB_WINDOW_NONE) {
-        // reset
-        window = m_window;
-    }
-    m_requestorWindow = window;
-    m_xSource->setRequestor(window);
-}
-
 bool Selection::handleSelectionRequest(xcb_selection_request_event_t *event)
 {
     if (event->selection != m_atom) {
@@ -239,7 +228,7 @@ void Selection::startTransferToWayland(const QString &mimeType, qint32 fd)
         return;
     }
 
-    auto *transfer = new TransferXtoWl(m_atom, mimeAtom, fd, m_xSource->timestamp(), m_requestorWindow, this);
+    auto *transfer = new TransferXtoWl(m_atom, mimeAtom, fd, m_xSource->timestamp(), m_window, this);
     m_xToWlTransfers << transfer;
 
     connect(transfer, &TransferXtoWl::finished, this, [this, transfer]() {

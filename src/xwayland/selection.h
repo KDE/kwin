@@ -60,7 +60,6 @@ public:
     {
         return m_window;
     }
-    void overwriteRequestorWindow(xcb_window_t window);
 
 protected:
     Selection(xcb_atom_t atom, QObject *parent);
@@ -104,7 +103,6 @@ private:
     xcb_atom_t m_atom = XCB_ATOM_NONE;
     xcb_window_t m_owner = XCB_WINDOW_NONE;
     xcb_window_t m_window = XCB_WINDOW_NONE;
-    xcb_window_t m_requestorWindow = XCB_WINDOW_NONE;
     xcb_timestamp_t m_timestamp = 0;
 
     // Active source, if any. Only one of them at max can exist

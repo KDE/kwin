@@ -192,7 +192,6 @@ WlVisit::WlVisit(Window *target, XToWlDrag *drag, Dnd *dnd)
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
     m_window = xcb_generate_id(xcbConn);
-    m_dnd->overwriteRequestorWindow(m_window);
 
     const uint32_t dndValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE};
     xcb_create_window(xcbConn,
@@ -230,7 +229,6 @@ WlVisit::~WlVisit()
 
 bool WlVisit::leave()
 {
-    m_dnd->overwriteRequestorWindow(XCB_WINDOW_NONE);
     unmapProxyWindow();
     return m_finished;
 }

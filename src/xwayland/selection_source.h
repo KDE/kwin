@@ -53,10 +53,6 @@ protected:
     {
         return m_selection;
     }
-    void setWindow(xcb_window_t window)
-    {
-        m_window = window;
-    }
     xcb_window_t window() const
     {
         return m_window;
@@ -116,11 +112,6 @@ public:
     }
 
     bool handleSelectionNotify(xcb_selection_notify_event_t *event);
-
-    void setRequestor(xcb_window_t window)
-    {
-        setWindow(window);
-    }
 
 Q_SIGNALS:
     void targetsReceived(const QStringList &mimeTypes);
