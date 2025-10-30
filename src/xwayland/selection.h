@@ -111,7 +111,7 @@ private:
     xcb_window_t m_owner = XCB_WINDOW_NONE;
     xcb_window_t m_window = XCB_WINDOW_NONE;
     xcb_window_t m_requestorWindow = XCB_WINDOW_NONE;
-    xcb_timestamp_t m_timestamp;
+    xcb_timestamp_t m_timestamp = 0;
 
     // Active source, if any. Only one of them at max can exist
     // at the same time.
