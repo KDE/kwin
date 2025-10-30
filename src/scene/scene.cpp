@@ -273,6 +273,18 @@ Scene *SceneView::scene() const
     return m_scene;
 }
 
+void SceneView::addWindowFilter(std::function<bool(Window *)> filter)
+{
+    m_windowFilters.push_back(filter);
+}
+
+bool SceneView::shouldHideWindow(Window *window) const
+{
+    return std::ranges::any_of(m_windowFilters, [window](const auto filter) {
+        return filter(window);
+    });
+}
+
 ItemView::ItemView(SceneView *parentView, Item *item, Output *output, OutputLayer *layer)
     : RenderView(output, layer)
     , m_parentView(parentView)

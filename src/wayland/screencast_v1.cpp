@@ -5,6 +5,7 @@
 */
 
 #include "screencast_v1.h"
+#include "clientconnection.h"
 #include "display.h"
 #include "output.h"
 
@@ -68,6 +69,11 @@ void ScreencastStreamV1Interface::sendClosed()
     if (!d->stopped) {
         d->send_closed();
     }
+}
+
+ClientConnection *ScreencastStreamV1Interface::connection() const
+{
+    return ClientConnection::get(d->resource()->client());
 }
 
 class ScreencastV1InterfacePrivate : public QtWaylandServer::zkde_screencast_unstable_v1

@@ -22,7 +22,7 @@ class ScreenCastSource : public QObject
     Q_OBJECT
 
 public:
-    explicit ScreenCastSource(QObject *parent = nullptr);
+    explicit ScreenCastSource();
 
     virtual uint refreshRate() const = 0;
     virtual quint32 drmFormat() const = 0;

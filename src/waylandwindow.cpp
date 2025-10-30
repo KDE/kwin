@@ -34,6 +34,7 @@ Q_DECLARE_FLAGS(WaylandGeometryTypes, WaylandGeometryType)
 
 WaylandWindow::WaylandWindow(SurfaceInterface *surface)
     : m_isScreenLocker(surface->client() == waylandServer()->screenLockerClientConnection())
+    , m_pid(surface->client()->processId())
 {
     setSurface(surface);
 
@@ -64,7 +65,7 @@ QString WaylandWindow::captionSuffix() const
 
 pid_t WaylandWindow::pid() const
 {
-    return surface() ? surface()->client()->processId() : -1;
+    return m_pid;
 }
 
 bool WaylandWindow::isClient() const

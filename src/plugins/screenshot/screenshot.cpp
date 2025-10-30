@@ -83,7 +83,7 @@ ScreenShotManager::~ScreenShotManager()
 
 // TODO share code with the screencast plugin?
 
-std::optional<QImage> ScreenShotManager::takeScreenShot(Output *screen, ScreenShotFlags flags)
+std::optional<QImage> ScreenShotManager::takeScreenShot(Output *screen, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
 {
     const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
     if (!eglBackend) {
@@ -125,6 +125,11 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Output *screen, ScreenSh
         cursorView = std::make_unique<ItemTreeView>(&sceneView, Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr);
         cursorView->setExclusive(true);
     }
+    if (pidToHide.has_value()) {
+        sceneView.addWindowFilter([pid = *pidToHide](Window *window) {
+            return window->pid() == pid;
+        });
+    }
     const QRect fullDamage = QRect(QPoint(), target->size());
     sceneView.setViewport(screen->geometryF());
     sceneView.setScale(scale);
@@ -145,7 +150,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Output *screen, ScreenSh
     return snapshot;
 }
 
-std::optional<QImage> ScreenShotManager::takeScreenShot(const QRect &area, ScreenShotFlags flags)
+std::optional<QImage> ScreenShotManager::takeScreenShot(const QRect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
 {
     const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
     if (!eglBackend) {
@@ -189,6 +194,11 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const QRect &area, Scree
     if (!(flags & ScreenShotIncludeCursor)) {
         cursorView = std::make_unique<ItemTreeView>(&sceneView, Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr);
         cursorView->setExclusive(true);
+    }
+    if (pidToHide.has_value()) {
+        sceneView.addWindowFilter([pid = *pidToHide](Window *window) {
+            return window->pid() == pid;
+        });
     }
     const QRect fullDamage = QRect(QPoint(), target->size());
     sceneView.setViewport(area);

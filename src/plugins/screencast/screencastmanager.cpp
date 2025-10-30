@@ -15,6 +15,7 @@
 #include "pipewirecore.h"
 #include "regionscreencastsource.h"
 #include "screencaststream.h"
+#include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland/output.h"
 #include "wayland_server.h"
@@ -108,7 +109,7 @@ void ScreencastManager::streamOutput(ScreencastStreamV1Interface *waylandStream,
         return;
     }
 
-    auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), getPipewireConnection(), this);
+    auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput, waylandStream->connection()->processId()), getPipewireConnection(), this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode);
 
@@ -150,7 +151,7 @@ void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream,
         scale = devicePixelRatioForRegion(geometry);
     }
 
-    auto source = new RegionScreenCastSource(geometry, scale);
+    auto source = new RegionScreenCastSource(geometry, scale, waylandStream->connection()->processId());
     auto stream = new ScreenCastStream(source, getPipewireConnection(), this);
     stream->setObjectName(rectToString(geometry));
     stream->setCursorMode(mode);

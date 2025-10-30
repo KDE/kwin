@@ -18,6 +18,7 @@
 #include "opengl/glutils.h"
 #include "scene/workspacescene.h"
 #include "screencastlayer.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <drm_fourcc.h>
@@ -25,13 +26,18 @@
 namespace KWin
 {
 
-OutputScreenCastSource::OutputScreenCastSource(Output *output, QObject *parent)
-    : ScreenCastSource(parent)
+OutputScreenCastSource::OutputScreenCastSource(Output *output, std::optional<pid_t> pidToHide)
+    : ScreenCastSource()
     , m_output(output)
     , m_layer(std::make_unique<ScreencastLayer>(output, static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats()))
     , m_sceneView(std::make_unique<SceneView>(Compositor::self()->scene(), output, m_layer.get()))
     , m_cursorView(std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), output, nullptr))
 {
+    if (pidToHide) {
+        m_sceneView->addWindowFilter([pidToHide](Window *window) {
+            return window->pid() == *pidToHide;
+        });
+    }
     updateView();
     connect(output, &Output::changed, this, &OutputScreenCastSource::updateView);
     // prevent the layer from scheduling frames on the actual output

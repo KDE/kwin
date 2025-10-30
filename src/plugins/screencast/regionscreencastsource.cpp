@@ -16,6 +16,7 @@
 #include "opengl/glutils.h"
 #include "scene/workspacescene.h"
 #include "screencastlayer.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <QPainter>
@@ -24,14 +25,19 @@
 namespace KWin
 {
 
-RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale, QObject *parent)
-    : ScreenCastSource(parent)
+RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale, std::optional<pid_t> pidToHide)
+    : ScreenCastSource()
     , m_region(region)
     , m_scale(scale)
     , m_layer(std::make_unique<ScreencastLayer>(workspace()->outputs().front(), static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats()))
     , m_sceneView(std::make_unique<SceneView>(Compositor::self()->scene(), workspace()->outputs().front(), m_layer.get()))
     , m_cursorView(std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr))
 {
+    if (pidToHide) {
+        m_sceneView->addWindowFilter([pidToHide](Window *window) {
+            return window->pid() == *pidToHide;
+        });
+    }
     m_sceneView->setViewport(m_region);
     m_sceneView->setScale(m_scale);
     // prevent the layer from scheduling frames on the actual output

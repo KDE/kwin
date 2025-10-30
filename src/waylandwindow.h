@@ -50,6 +50,7 @@ private:
     QString m_captionNormal;
     QString m_captionSuffix;
     bool m_isScreenLocker = false;
+    const pid_t m_pid;
 };
 
 } // namespace KWin

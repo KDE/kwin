@@ -9,8 +9,7 @@
 namespace KWin
 {
 
-ScreenCastSource::ScreenCastSource(QObject *parent)
-    : QObject(parent)
+ScreenCastSource::ScreenCastSource()
 {
 }
 

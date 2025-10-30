@@ -26,6 +26,7 @@ class OutputLayer;
 class OutputFrame;
 class Item;
 class SurfaceItem;
+class Window;
 
 class KWIN_EXPORT RenderView : public QObject
 {
@@ -119,6 +120,9 @@ public:
     bool shouldRenderItem(Item *item) const override;
     bool shouldRenderHole(Item *item) const override;
 
+    void addWindowFilter(std::function<bool(Window *)> filter);
+    bool shouldHideWindow(Window *window) const;
+
 private:
     Scene *m_scene;
     Output *m_output = nullptr;
@@ -127,6 +131,7 @@ private:
     qreal m_scale = 1.0;
     QList<RenderView *> m_exclusiveViews;
     QList<RenderView *> m_underlayViews;
+    QList<std::function<bool(Window *)>> m_windowFilters;
 };
 
 class KWIN_EXPORT ItemView : public RenderView

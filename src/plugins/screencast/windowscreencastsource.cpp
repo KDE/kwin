@@ -26,8 +26,8 @@
 namespace KWin
 {
 
-WindowScreenCastSource::WindowScreenCastSource(Window *window, QObject *parent)
-    : ScreenCastSource(parent)
+WindowScreenCastSource::WindowScreenCastSource(Window *window)
+    : ScreenCastSource()
 {
     add(window);
 

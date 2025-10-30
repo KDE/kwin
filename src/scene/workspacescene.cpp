@@ -451,10 +451,10 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 
 void WorkspaceScene::prePaint(SceneView *delegate)
 {
-    createStackingOrder();
-
     painted_delegate = delegate;
     painted_screen = painted_delegate->output();
+
+    createStackingOrder();
 
     const RenderLoop *renderLoop = painted_screen->renderLoop();
     const std::chrono::milliseconds presentTime =
@@ -682,6 +682,9 @@ void WorkspaceScene::createStackingOrder()
     QList<Item *> items = m_containerItem->sortedChildItems();
     for (Item *item : std::as_const(items)) {
         WindowItem *windowItem = static_cast<WindowItem *>(item);
+        if (painted_delegate && painted_delegate->shouldHideWindow(windowItem->window())) {
+            continue;
+        }
         if (windowItem->isVisible()) {
             stacking_order.append(windowItem);
         }

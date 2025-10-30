@@ -217,36 +217,40 @@ int ScreenShotDBusInterface2::version() const
     return 4;
 }
 
-bool ScreenShotDBusInterface2::checkPermissions() const
+std::optional<pid_t> ScreenShotDBusInterface2::determineCallerPid() const
 {
     if (!calledFromDBus()) {
-        return false;
+        return std::nullopt;
     }
+    const QDBusReply<uint> reply = connection().interface()->servicePid(message().service());
+    if (reply.isValid()) {
+        return reply.value();
+    } else {
+        return std::nullopt;
+    }
+}
 
+bool ScreenShotDBusInterface2::checkPermissions(std::optional<pid_t> pid) const
+{
     static bool permissionCheckDisabled = qEnvironmentVariableIntValue("KWIN_SCREENSHOT_NO_PERMISSION_CHECKS") == 1;
     if (permissionCheckDisabled) {
         return true;
     }
-
-    const QDBusReply<uint> reply = connection().interface()->servicePid(message().service());
-    if (reply.isValid()) {
-        const uint pid = reply.value();
-        const auto interfaces = KWin::fetchRestrictedDBusInterfacesFromPid(pid);
-        if (!interfaces.contains(s_dbusInterface)) {
-            sendErrorReply(s_errorNotAuthorized, s_errorNotAuthorizedMessage);
-            return false;
-        }
-    } else {
+    if (!pid.has_value()) {
         return false;
     }
-
+    const auto interfaces = KWin::fetchRestrictedDBusInterfacesFromPid(*pid);
+    if (!interfaces.contains(s_dbusInterface)) {
+        sendErrorReply(s_errorNotAuthorized, s_errorNotAuthorizedMessage);
+        return false;
+    }
     return true;
 }
 
 QVariantMap ScreenShotDBusInterface2::CaptureActiveWindow(const QVariantMap &options,
                                                           QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
+    if (!checkPermissions(determineCallerPid())) {
         return QVariantMap();
     }
 
@@ -273,7 +277,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureWindow(const QString &handle,
                                                     const QVariantMap &options,
                                                     QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
+    if (!checkPermissions(determineCallerPid())) {
         return QVariantMap();
     }
 
@@ -300,7 +304,8 @@ QVariantMap ScreenShotDBusInterface2::CaptureArea(int x, int y, int width, int h
                                                   const QVariantMap &options,
                                                   QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
+    const auto pid = determineCallerPid();
+    if (!checkPermissions(pid)) {
         return QVariantMap();
     }
 
@@ -317,7 +322,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureArea(int x, int y, int width, int h
     }
 
     takeScreenShot(area, screenShotFlagsFromOptions(options),
-                   new ScreenShotSinkPipe2(fileDescriptor, message()));
+                   new ScreenShotSinkPipe2(fileDescriptor, message()), pid);
 
     setDelayedReply(true);
     return QVariantMap();
@@ -327,7 +332,8 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
                                                     const QVariantMap &options,
                                                     QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
+    const auto pid = determineCallerPid();
+    if (!checkPermissions(pid)) {
         return QVariantMap();
     }
 
@@ -344,7 +350,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
     }
 
     takeScreenShot(screen, screenShotFlagsFromOptions(options),
-                   new ScreenShotSinkPipe2(fileDescriptor, message()));
+                   new ScreenShotSinkPipe2(fileDescriptor, message()), pid);
 
     setDelayedReply(true);
     return QVariantMap();
@@ -353,7 +359,8 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
 QVariantMap ScreenShotDBusInterface2::CaptureActiveScreen(const QVariantMap &options,
                                                           QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
+    const auto pid = determineCallerPid();
+    if (!checkPermissions(pid)) {
         return QVariantMap();
     }
 
@@ -370,7 +377,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveScreen(const QVariantMap &opt
     }
 
     takeScreenShot(screen, screenShotFlagsFromOptions(options),
-                   new ScreenShotSinkPipe2(fileDescriptor, message()));
+                   new ScreenShotSinkPipe2(fileDescriptor, message()), pid);
 
     setDelayedReply(true);
     return QVariantMap();
@@ -380,6 +387,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                                                          const QVariantMap &options,
                                                          QDBusUnixFileDescriptor pipe)
 {
+    const auto pid = determineCallerPid();
     const int fileDescriptor = fcntl(pipe.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (fileDescriptor == -1) {
         sendErrorReply(s_errorFileDescriptor, s_errorFileDescriptorMessage);
@@ -417,7 +425,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
             } else {
                 Output *screen = effects->screenAt(point.toPoint());
                 takeScreenShot(screen, screenShotFlagsFromOptions(options),
-                               new ScreenShotSinkPipe2(fileDescriptor, replyMessage));
+                               new ScreenShotSinkPipe2(fileDescriptor, replyMessage), pid);
             }
         });
         effects->showOnScreenMessage(i18n("Create screen shot with left click or enter.\n"
@@ -431,7 +439,8 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
 
 QVariantMap ScreenShotDBusInterface2::CaptureWorkspace(const QVariantMap &options, QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
+    const auto pid = determineCallerPid();
+    if (!checkPermissions(pid)) {
         return QVariantMap();
     }
 
@@ -442,16 +451,16 @@ QVariantMap ScreenShotDBusInterface2::CaptureWorkspace(const QVariantMap &option
     }
 
     takeScreenShot(effects->virtualScreenGeometry(), screenShotFlagsFromOptions(options),
-                   new ScreenShotSinkPipe2(fileDescriptor, message()));
+                   new ScreenShotSinkPipe2(fileDescriptor, message()), pid);
 
     setDelayedReply(true);
     return QVariantMap();
 }
 
 void ScreenShotDBusInterface2::takeScreenShot(Output *screen, ScreenShotFlags flags,
-                                              ScreenShotSinkPipe2 *sink)
+                                              ScreenShotSinkPipe2 *sink, std::optional<pid_t> pid)
 {
-    if (const auto result = m_effect->takeScreenShot(screen, flags)) {
+    if (const auto result = m_effect->takeScreenShot(screen, flags, pid)) {
         sink->flush(*result, QVariantMap{
                                  {QStringLiteral("screen"), screen->name()},
                              });
@@ -462,9 +471,9 @@ void ScreenShotDBusInterface2::takeScreenShot(Output *screen, ScreenShotFlags fl
 }
 
 void ScreenShotDBusInterface2::takeScreenShot(const QRect &area, ScreenShotFlags flags,
-                                              ScreenShotSinkPipe2 *sink)
+                                              ScreenShotSinkPipe2 *sink, std::optional<pid_t> pid)
 {
-    if (const auto result = m_effect->takeScreenShot(area, flags)) {
+    if (const auto result = m_effect->takeScreenShot(area, flags, pid)) {
         sink->flush(*result, {});
     } else {
         sink->cancel();
