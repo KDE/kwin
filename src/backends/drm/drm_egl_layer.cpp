@@ -85,7 +85,7 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
     if (directScanoutDisabled) {
         return false;
     }
-    if (m_type == OutputLayerType::Primary && drmOutput()->shouldDisableNonPrimaryPlanes()) {
+    if (m_type != OutputLayerType::Primary && drmOutput()->shouldDisableNonPrimaryPlanes()) {
         return false;
     }
     if (gpu()->needsModeset()) {
