@@ -11,19 +11,20 @@
 # Dušan Kazik <prescott66@gmail.com>, 2020.
 # Ferdinand Galko <galko.ferdinand@gmail.com>, 2023.
 # Matej Mrenica <matejm98mthw@gmail.com>, 2023.
+# SPDX-FileCopyrightText: 2025 Lucia Mrenica <lucia.mrenica@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-24 02:35+0000\n"
-"PO-Revision-Date: 2023-12-02 20:09+0100\n"
-"Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
+"PO-Revision-Date: 2025-10-30 21:42+0100\n"
+"Last-Translator: Lucia Mrenica <lucia.mrenica@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.01.80\n"
+"X-Generator: Lokalize 25.08.2\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #, kde-format
@@ -89,7 +90,7 @@ msgstr "Efekty plochy boli reštartované kvôli grafickému vynulovaniu"
 #: core/iccprofile.cpp:252
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "Zlyhalo otvorenie ICC profilu \"%1\""
 
 #: core/iccprofile.cpp:254
 #, kde-format
@@ -427,14 +428,12 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:245
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:260
 #, kde-format
@@ -491,12 +490,10 @@ msgid "Repeat"
 msgstr "Opakovanie"
 
 #: debug_console.cpp:302
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Qt::Key kód"
+msgstr "Kód klávesy"
 
 #: debug_console.cpp:303
 #, kde-format
@@ -655,9 +652,7 @@ msgid "Hold start"
 msgstr ""
 
 #: debug_console.cpp:467
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "Počet prstov"
@@ -732,12 +727,12 @@ msgstr ""
 #: debug_console.cpp:534
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Dnu"
 
 #: debug_console.cpp:534
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Von"
 
 #: debug_console.cpp:535 debug_console.cpp:549 debug_console.cpp:566
 #: debug_console.cpp:615 debug_console.cpp:631
@@ -784,21 +779,19 @@ msgid "Tip"
 msgstr "Hore"
 
 #: debug_console.cpp:565
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Posunúť dolu"
+msgstr "Dolu"
 
 #: debug_console.cpp:565
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Hore"
 
 #: debug_console.cpp:572
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Vzdialenosť:"
+msgstr "Vzdialenosť"
 
 #: debug_console.cpp:573
 #, fuzzy, kde-format
@@ -835,14 +828,12 @@ msgstr "Tlačidlo na tablete"
 #: debug_console.cpp:600 debug_console.cpp:617 debug_console.cpp:633
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Skupina"
 
 #: debug_console.cpp:601 debug_console.cpp:618 debug_console.cpp:634
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Mode:"
+#, kde-format
 msgid "Mode"
-msgstr "Režim:"
+msgstr "Režim"
 
 #: debug_console.cpp:602
 #, kde-format
@@ -876,9 +867,7 @@ msgid "Tablet Pad Dial"
 msgstr "Koliesko na tablete"
 
 #: debug_console.cpp:647
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -886,7 +875,7 @@ msgstr "Delta"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Efekty"
 
 #: debug_console.cpp:873
 #, kde-format
@@ -1103,7 +1092,7 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Načítať"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
@@ -1811,17 +1800,16 @@ msgstr "Animácia zatvorenia okna"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "Nikdy"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " milisekúnd"
-msgstr[1] " milisekúnd"
-msgstr[2] " milisekúnd"
+msgstr[0] "%1 sekunda"
+msgstr[1] "%1 sekundy"
+msgstr[2] "%1 sekúnd"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
@@ -1833,7 +1821,7 @@ msgstr ""
 #: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Skryť kurzor počas písania"
 
 #: plugins/invert/invert.cpp:44
 #, kde-format
@@ -1853,72 +1841,72 @@ msgstr "Invertovať farby obrazovky"
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Kláves Caps Lock bol aktivovaný"
 
 #: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Kláves Caps Lock bol deaktivovaný"
 
 #: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Kláves Num Lock bol aktivovaný"
 
 #: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Kláves Num Lock bol deaktivovaný"
 
 #: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Kláves Scroll Lock bol aktivovaný"
 
 #: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Kláves Scroll Lock bol deaktivovaný"
 
 #: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Kláves Shift je teraz aktívny."
 
 #: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Kláves Shift je teraz neaktívny."
 
 #: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Kláves Ctrl je teraz aktívny."
 
 #: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Kláves Ctrl je teraz neaktívny."
 
 #: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Kláves Alt je teraz aktívny."
 
 #: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Kláves Alt je teraz neaktívny."
 
 #: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Kláves Meta je teraz aktívny."
 
 #: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Kláves Meta je teraz neaktívny."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2286,26 +2274,22 @@ msgid "Arrow draw modifier keys:"
 msgstr "Modifikačné klávesy:"
 
 #: plugins/nightlight/nightlightmanager.cpp:55
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Nočná farba zapnutá"
+msgstr "Nočná farba pozastavená"
 
 #: plugins/nightlight/nightlightmanager.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Nočná farba zapnutá"
+msgstr "Nočná farba obnovená"
 
 #: plugins/nightlight/nightlightmanager.cpp:77
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Pozastaviť/Obnoviť nočnú farbu"
 
 #: plugins/nightlight/nightlightmanager.cpp:393
 #, kde-format
@@ -2499,11 +2483,10 @@ msgstr ""
 "Kliknutím pravým tlačidlom myši alebo klávesom Escape zrušíte."
 
 #: plugins/showcompositing/qml/Main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "Bloková kompozícia"
+msgstr "Kompozícia"
 
 #: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
@@ -2564,24 +2547,32 @@ msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Kláves Shift bol uzamknutý a je teraz aktívny pre všetky nasledujúce "
+"stlačenia kláves."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Kláves Ctrl bol uzamknutý a je teraz aktívny pre všetky nasledujúce "
+"stlačenia kláves."
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Kláves Alt bol uzamknutý a je teraz aktívny pre všetky nasledujúce stlačenia "
+"kláves."
 
 #: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Kláves Meta bol uzamknutý a je teraz aktívny pre všetky nasledujúce "
+"stlačenia kláves."
 
 #: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
@@ -2639,10 +2630,9 @@ msgid "Padding:"
 msgstr "Výplň:"
 
 #: plugins/tileseditor/qml/Main.qml:163
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "Načítať rozloženie..."
+msgstr "Načítať rozloženie…"
 
 #: plugins/tileseditor/qml/Main.qml:270
 #, kde-format
@@ -2652,12 +2642,12 @@ msgstr "Zavrieť"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Rozdeliť vertikálne"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Rozdeliť horizontálne"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -3477,7 +3467,7 @@ msgstr "Typ pravidla pre názov súboru pracovnej plochy"
 #: rulesettings.kcfg:428
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Vrstva"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:444
@@ -3490,21 +3480,19 @@ msgstr "Zrolovaný typ pravidla"
 #: rulesettings.kcfg:449
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "AdaptiveSync"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:453
-#, fuzzy, kde-format
-#| msgid "Activity rule type"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "Typ pravidla pre aktivitu"
+msgstr "Typ pravidla AdaptiveSync"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:458
-#, fuzzy, kde-format
-#| msgid "Allow Rotation"
+#, kde-format
 msgid "Allow Tearing"
-msgstr "Povoliť rotáciu"
+msgstr "Povoliť trhanie"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:462
@@ -3553,11 +3541,10 @@ msgid "Peek at Desktop"
 msgstr "Nazrieť na plochu"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "Žiadne okná"
+msgstr "Žiadne otvorené okná"
 
 #: tabbox/tabbox.cpp:310
 msgid "Walk Through Windows"
