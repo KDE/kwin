@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-28 00:44+0000\n"
+"POT-Creation-Date: 2025-10-31 00:43+0000\n"
 "PO-Revision-Date: 2025-10-28 06:56-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -1630,18 +1630,14 @@ msgstr "Intensidade do borrado:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#: plugins/blur/blur_config.ui:171
 #, kde-format
 msgid "Light"
 msgstr "Suave"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
-#: plugins/blur/blur_config.ui:203
 #, kde-format
 msgid "Strong"
 msgstr "Forte"
@@ -1651,12 +1647,6 @@ msgstr "Forte"
 #, kde-format
 msgid "Noise strength:"
 msgstr "Intensidade do ruído:"
-
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
-#: plugins/blur/blur_config.ui:146
-#, kde-format
-msgid "Saturation strength:"
-msgstr "Força da saturação:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
@@ -4224,6 +4214,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "O Xwayland falhou"
+
+#~ msgid "Saturation strength:"
+#~ msgstr "Força da saturação:"
 
 #~ msgctxt "Special entry in alt+tab list for minimizing all windows"
 #~ msgid "Show Desktop"

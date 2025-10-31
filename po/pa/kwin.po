@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-28 00:44+0000\n"
+"POT-Creation-Date: 2025-10-31 00:43+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -1618,9 +1618,7 @@ msgstr "ਤਾਕਤ(&S):"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#: plugins/blur/blur_config.ui:171
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Right"
@@ -1629,9 +1627,7 @@ msgstr "ਸੱਜੇ"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
-#: plugins/blur/blur_config.ui:203
 #, kde-format
 msgid "Strong"
 msgstr "ਜ਼ੋਰਦਾਰ"
@@ -1641,13 +1637,6 @@ msgstr "ਜ਼ੋਰਦਾਰ"
 #, fuzzy, kde-format
 #| msgid "&Strength:"
 msgid "Noise strength:"
-msgstr "ਤਾਕਤ(&S):"
-
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
-#: plugins/blur/blur_config.ui:146
-#, fuzzy, kde-format
-#| msgid "&Strength:"
-msgid "Saturation strength:"
 msgstr "ਤਾਕਤ(&S):"
 
 #: plugins/colorpicker/colorpicker.cpp:109
@@ -4339,6 +4328,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "&Strength:"
+#~ msgid "Saturation strength:"
+#~ msgstr "ਤਾਕਤ(&S):"
 
 #~ msgctxt "Special entry in alt+tab list for minimizing all windows"
 #~ msgid "Show Desktop"

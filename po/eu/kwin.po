@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-28 00:44+0000\n"
+"POT-Creation-Date: 2025-10-31 00:43+0000\n"
 "PO-Revision-Date: 2025-10-18 12:06+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1623,18 +1623,14 @@ msgstr "Lausoaren sendotasuna:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#: plugins/blur/blur_config.ui:171
 #, kde-format
 msgid "Light"
 msgstr "Arina"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
-#: plugins/blur/blur_config.ui:203
 #, kde-format
 msgid "Strong"
 msgstr "Sendoa"
@@ -1644,13 +1640,6 @@ msgstr "Sendoa"
 #, kde-format
 msgid "Noise strength:"
 msgstr "Zarataren sendotasuna:"
-
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
-#: plugins/blur/blur_config.ui:146
-#, fuzzy, kde-format
-#| msgid "Blur strength:"
-msgid "Saturation strength:"
-msgstr "Lausoaren sendotasuna:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
@@ -4216,6 +4205,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland kraskatu egin da"
+
+#, fuzzy
+#~| msgid "Blur strength:"
+#~ msgid "Saturation strength:"
+#~ msgstr "Lausoaren sendotasuna:"
 
 #~ msgctxt "Special entry in alt+tab list for minimizing all windows"
 #~ msgid "Show Desktop"

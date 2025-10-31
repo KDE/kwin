@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-28 00:44+0000\n"
+"POT-Creation-Date: 2025-10-31 00:43+0000\n"
 "PO-Revision-Date: 2025-10-29 12:00+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1628,18 +1628,14 @@ msgstr "Fuerza del desenfoque:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#: plugins/blur/blur_config.ui:171
 #, kde-format
 msgid "Light"
 msgstr "Ligera"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
-#: plugins/blur/blur_config.ui:203
 #, kde-format
 msgid "Strong"
 msgstr "Fuerte"
@@ -1649,12 +1645,6 @@ msgstr "Fuerte"
 #, kde-format
 msgid "Noise strength:"
 msgstr "Fuerza del ruido:"
-
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
-#: plugins/blur/blur_config.ui:146
-#, kde-format
-msgid "Saturation strength:"
-msgstr "Fuerza de la saturación:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
@@ -4226,3 +4216,6 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
+
+#~ msgid "Saturation strength:"
+#~ msgstr "Fuerza de la saturación:"

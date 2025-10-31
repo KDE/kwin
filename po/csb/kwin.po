@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-28 00:44+0000\n"
+"POT-Creation-Date: 2025-10-31 00:43+0000\n"
 "PO-Revision-Date: 2009-12-15 22:22+0100\n"
 "Last-Translator: Mark Kwidzińśczi <mark@linuxcsb.org>\n"
 "Language-Team: Kaszëbsczi <i18n-csb@linuxcsb.org>\n"
@@ -1601,9 +1601,7 @@ msgstr "&Mòc:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#: plugins/blur/blur_config.ui:171
 #, fuzzy, kde-format
 #| msgid "Top-Right"
 msgid "Light"
@@ -1611,9 +1609,7 @@ msgstr "Góra-prawò"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
-#: plugins/blur/blur_config.ui:203
 #, fuzzy, kde-format
 #| msgid "&Strength:"
 msgid "Strong"
@@ -1624,13 +1620,6 @@ msgstr "&Mòc:"
 #, fuzzy, kde-format
 #| msgid "&Strength:"
 msgid "Noise strength:"
-msgstr "&Mòc:"
-
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
-#: plugins/blur/blur_config.ui:146
-#, fuzzy, kde-format
-#| msgid "&Strength:"
-msgid "Saturation strength:"
 msgstr "&Mòc:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
@@ -4356,6 +4345,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "&Strength:"
+#~ msgid "Saturation strength:"
+#~ msgstr "&Mòc:"
 
 #, fuzzy
 #~| msgid "Show Desktop"

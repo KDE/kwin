@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-28 00:44+0000\n"
+"POT-Creation-Date: 2025-10-31 00:43+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -1633,9 +1633,7 @@ msgstr "Hägu tugevus:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#: plugins/blur/blur_config.ui:171
 #, fuzzy, kde-format
 #| msgctxt "A mouse button"
 #| msgid "Right"
@@ -1644,9 +1642,7 @@ msgstr "Parem"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
-#: plugins/blur/blur_config.ui:203
 #, kde-format
 msgid "Strong"
 msgstr "Tugev"
@@ -1656,13 +1652,6 @@ msgstr "Tugev"
 #, kde-format
 msgid "Noise strength:"
 msgstr "Müra tugevus:"
-
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
-#: plugins/blur/blur_config.ui:146
-#, fuzzy, kde-format
-#| msgid "Blur strength:"
-msgid "Saturation strength:"
-msgstr "Hägu tugevus:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, fuzzy, kde-format
@@ -4377,6 +4366,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Blur strength:"
+#~ msgid "Saturation strength:"
+#~ msgstr "Hägu tugevus:"
 
 #~ msgctxt "Special entry in alt+tab list for minimizing all windows"
 #~ msgid "Show Desktop"

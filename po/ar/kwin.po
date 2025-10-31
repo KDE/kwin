@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-28 00:44+0000\n"
-"PO-Revision-Date: 2025-10-15 20:48+0400\n"
+"POT-Creation-Date: 2025-10-31 00:43+0000\n"
+"PO-Revision-Date: 2025-10-30 10:04+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1588,18 +1588,14 @@ msgstr "القوّة الغشاوة:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#: plugins/blur/blur_config.ui:171
 #, kde-format
 msgid "Light"
 msgstr "خفيف"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
-#: plugins/blur/blur_config.ui:203
 #, kde-format
 msgid "Strong"
 msgstr "قوي"
@@ -1609,13 +1605,6 @@ msgstr "قوي"
 #, kde-format
 msgid "Noise strength:"
 msgstr "قوة الضوضاء:"
-
-#. i18n: ectx: property (text), widget (QLabel, labelSaturationDescription)
-#: plugins/blur/blur_config.ui:146
-#, fuzzy, kde-format
-#| msgid "Blur strength:"
-msgid "Saturation strength:"
-msgstr "القوّة الغشاوة:"
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
@@ -4173,6 +4162,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "إنهار ويلاند_اكس"
+
+#~ msgid "Saturation strength:"
+#~ msgstr "القوّة التشبع:"
 
 #~ msgctxt "Special entry in alt+tab list for minimizing all windows"
 #~ msgid "Show Desktop"
