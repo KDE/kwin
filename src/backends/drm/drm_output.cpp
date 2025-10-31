@@ -386,31 +386,8 @@ bool DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::s
         m_pipeline->maybeModeset(frame);
         success = true;
     } else {
-        m_pipeline->setPresentationMode(frame->presentationMode());
-        const auto layers = m_pipeline->layers();
-        const bool nonPrimaryEnabled = std::ranges::any_of(layers, [](OutputLayer *layer) {
-            return layer->isEnabled() && layer->type() != OutputLayerType::Primary;
-        });
-        if (nonPrimaryEnabled) {
-            // the cursor plane needs to be disabled before we enable tearing; see DrmOutput::presentAsync
-            if (frame->presentationMode() == PresentationMode::AdaptiveAsync) {
-                m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
-            } else if (frame->presentationMode() == PresentationMode::Async) {
-                m_pipeline->setPresentationMode(PresentationMode::VSync);
-            }
-        }
-        DrmPipeline::Error err = m_pipeline->present(layersToUpdate, frame);
-        if (err != DrmPipeline::Error::None && frame->presentationMode() == PresentationMode::AdaptiveAsync) {
-            // tearing can fail in various circumstances, but vrr shouldn't
-            m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
-            err = m_pipeline->present(layersToUpdate, frame);
-        }
-        if (err != DrmPipeline::Error::None && frame->presentationMode() != PresentationMode::VSync) {
-            // retry with the most basic presentation mode
-            m_pipeline->setPresentationMode(PresentationMode::VSync);
-            err = m_pipeline->present(layersToUpdate, frame);
-        }
-        success = err == DrmPipeline::Error::None;
+        // the presentation mode of the pipeline is already set in testPresentation
+        success = m_pipeline->present(layersToUpdate, frame) == DrmPipeline::Error::None;
     }
     m_renderLoop->setPresentationMode(m_pipeline->presentationMode());
     if (!success) {

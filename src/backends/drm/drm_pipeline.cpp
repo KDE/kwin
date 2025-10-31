@@ -65,11 +65,7 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
 {
     Q_ASSERT(m_pending.crtc);
     if (gpu()->atomicModeSetting()) {
-        // TODO once the compositor tests presentation,
-        // drop this unnecessary additional test
-        if (auto err = testPresent(frame); err != Error::None) {
-            return err;
-        }
+        // NOTE that this assumes testPresentation has been called before and succeeded
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
         auto partialUpdate = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
         if (Error err = prepareAtomicPresentation(partialUpdate.get(), frame); err != Error::None) {
