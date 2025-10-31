@@ -672,7 +672,10 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     OutputLayer *cursorLayer = nullptr;
     Item *cursorItem = m_scene->cursorItem();
-    if (!m_brokenCursors.contains(renderLoop) && cursorItem->isVisible() && cursorItem->mapToView(cursorItem->boundingRect(), primaryView).intersects(output->geometryF())) {
+    if (!s_forceSoftwareCursor
+        && !m_brokenCursors.contains(renderLoop)
+        && cursorItem->isVisible()
+        && cursorItem->mapToView(cursorItem->boundingRect(), primaryView).intersects(output->geometryF())) {
         cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::CursorOnly, primaryView->layer()->zpos() + 1);
         if (!cursorLayer) {
             cursorLayer = findLayer(unusedOutputLayers, OutputLayerType::EfficientOverlay, primaryView->layer()->zpos() + 1);
