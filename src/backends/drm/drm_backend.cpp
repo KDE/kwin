@@ -29,6 +29,7 @@
 #include <KLocalizedString>
 // Qt
 #include <QCoreApplication>
+#include <QElapsedTimer>
 #include <QFileInfo>
 #include <QSocketNotifier>
 #include <QStringBuilder>
@@ -42,6 +43,8 @@
 #include <gbm.h>
 #include <libdrm/drm_mode.h>
 #include <xf86drm.h>
+
+using namespace std::chrono_literals;
 
 namespace KWin
 {
@@ -208,25 +211,34 @@ void DrmBackend::handleUdevEvent()
 
 DrmGpu *DrmBackend::addGpu(const QString &fileName)
 {
-    int fd = m_session->openRestricted(fileName);
-    if (fd < 0) {
-        qCWarning(KWIN_DRM) << "failed to open drm device at" << fileName;
+    std::expected<int, Session::Error> fd = m_session->openRestricted(fileName);
+    QElapsedTimer timer;
+    timer.start();
+    // Switching between sessions / drm masters seems to be racy in some situations.
+    // Lacking a proper solution for that, retry opening the node for up to 5s.
+    while (!fd.has_value() && fd.error() == Session::Error::EBusy && timer.durationElapsed() < 5s) {
+        qCDebug(KWIN_DRM, "Retrying openRestricted(%s)", qPrintable(fileName));
+        std::this_thread::sleep_for(100ms);
+        fd = m_session->openRestricted(fileName);
+    }
+    if (!fd.has_value()) {
+        qCWarning(KWIN_DRM, "Failed to open drm device %s", qPrintable(fileName));
         return nullptr;
     }
 
-    if (!drmIsKMS(fd)) {
+    if (!drmIsKMS(*fd)) {
         qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << fileName;
-        m_session->closeRestricted(fd);
+        m_session->closeRestricted(*fd);
         return nullptr;
     }
 
-    auto drmDevice = DrmDevice::openWithAuthentication(fileName, fd);
+    auto drmDevice = DrmDevice::openWithAuthentication(fileName, *fd);
     if (!drmDevice) {
-        m_session->closeRestricted(fd);
+        m_session->closeRestricted(*fd);
         return nullptr;
     }
 
-    m_gpus.push_back(std::make_unique<DrmGpu>(this, fd, std::move(drmDevice)));
+    m_gpus.push_back(std::make_unique<DrmGpu>(this, *fd, std::move(drmDevice)));
     auto gpu = m_gpus.back().get();
     qCDebug(KWIN_DRM, "adding GPU %s", qPrintable(fileName));
     connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);

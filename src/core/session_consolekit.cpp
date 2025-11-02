@@ -160,11 +160,11 @@ uint ConsoleKitSession::terminal() const
     return m_terminal;
 }
 
-int ConsoleKitSession::openRestricted(const QString &fileName)
+std::expected<int, Session::Error> ConsoleKitSession::openRestricted(const QString &fileName)
 {
     struct stat st;
     if (stat(fileName.toUtf8(), &st) < 0) {
-        return -1;
+        return std::unexpected(errorFromErrno());
     }
 
     QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, m_sessionPath,
@@ -177,15 +177,24 @@ int ConsoleKitSession::openRestricted(const QString &fileName)
     if (reply.type() == QDBusMessage::ErrorMessage) {
         qCDebug(KWIN_CORE, "Failed to open %s device (%s)",
                 qPrintable(fileName), qPrintable(reply.errorMessage()));
-        return -1;
+        if (reply.errorName() == "System.Error.EBUSY") {
+            return std::unexpected(Error::EBusy);
+        } else {
+            return std::unexpected(Error::Other);
+        }
     }
 
     const QDBusUnixFileDescriptor descriptor = reply.arguments().constFirst().value<QDBusUnixFileDescriptor>();
     if (!descriptor.isValid()) {
-        return -1;
+        return std::unexpected(Error::Other);
     }
 
-    return fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
+    const int ret = fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
+    if (ret == -1) {
+        return std::unexpected(errorFromErrno());
+    } else {
+        return ret;
+    }
 }
 
 void ConsoleKitSession::closeRestricted(int fileDescriptor)
