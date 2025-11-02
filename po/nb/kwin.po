@@ -4218,8 +4218,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland krasjet"
-
-#, fuzzy
-#~| msgid "Blur strength:"
-#~ msgid "Saturation strength:"
-#~ msgstr "Sløringsstyrke:"
