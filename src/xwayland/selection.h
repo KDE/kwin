@@ -60,6 +60,14 @@ public:
     {
         return m_window;
     }
+    xcb_timestamp_t timestamp() const
+    {
+        return m_timestamp;
+    }
+    void setTimestamp(xcb_timestamp_t timestamp)
+    {
+        m_timestamp = timestamp;
+    }
 
 protected:
     Selection(xcb_atom_t atom, QObject *parent);

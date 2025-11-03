@@ -311,7 +311,7 @@ bool WlVisit::handlePosition(xcb_client_message_event_t *event)
     }
 
     const xcb_timestamp_t timestamp = data->data32[3];
-    m_drag->x11Source()->setTimestamp(timestamp);
+    m_drag->selection()->setTimestamp(timestamp);
 
     xcb_atom_t actionAtom = m_version > 1 ? data->data32[4] : atoms->xdnd_action_copy;
     auto action = Dnd::atomToClientAction(actionAtom);
@@ -339,7 +339,7 @@ bool WlVisit::handleDrop(xcb_client_message_event_t *event)
     xcb_client_message_data_t *data = &event->data;
     m_srcWindow = data->data32[0];
     const xcb_timestamp_t timestamp = data->data32[2];
-    m_drag->x11Source()->setTimestamp(timestamp);
+    m_drag->selection()->setTimestamp(timestamp);
 
     // we do nothing more here, the drop is being processed
     // through the X11Source object

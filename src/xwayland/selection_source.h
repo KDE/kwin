@@ -39,16 +39,6 @@ class SelectionSource : public QObject
 public:
     SelectionSource(Selection *selection);
 
-    xcb_timestamp_t timestamp() const
-    {
-        return m_timestamp;
-    }
-    void setTimestamp(xcb_timestamp_t time)
-    {
-        m_timestamp = time;
-    }
-
-protected:
     Selection *selection() const
     {
         return m_selection;
@@ -59,7 +49,6 @@ protected:
     }
 
 private:
-    xcb_timestamp_t m_timestamp = XCB_CURRENT_TIME;
     Selection *m_selection;
     xcb_window_t m_window;
 
@@ -101,7 +90,7 @@ class X11Source : public SelectionSource
     Q_OBJECT
 
 public:
-    X11Source(Selection *selection, xcb_xfixes_selection_notify_event_t *event);
+    X11Source(Selection *selection);
     ~X11Source() override;
 
     void getTargets();

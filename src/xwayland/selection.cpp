@@ -58,9 +58,6 @@ bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
         // When we claim a selection we must use XCB_TIME_CURRENT,
         // grab the actual timestamp here to answer TIMESTAMP requests
         // correctly
-        if (m_waylandSource) {
-            m_waylandSource->setTimestamp(event->timestamp);
-        }
         m_timestamp = event->timestamp;
         return true;
     }
@@ -144,7 +141,7 @@ void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
     m_waylandSource.reset();
     m_timestamp = event->timestamp;
 
-    m_xSource = std::make_unique<X11Source>(this, event);
+    m_xSource = std::make_unique<X11Source>(this);
     connect(m_xSource.get(), &X11Source::targetsReceived, this, &Selection::x11TargetsReceived);
     connect(m_xSource.get(), &X11Source::transferRequested, this, &Selection::startTransferToWayland);
 }
@@ -229,7 +226,7 @@ void Selection::startTransferToWayland(const QString &mimeType, qint32 fd)
         return;
     }
 
-    auto *transfer = new TransferXtoWl(m_atom, mimeAtom, fd, m_xSource->timestamp(), m_window, this);
+    auto *transfer = new TransferXtoWl(m_atom, mimeAtom, fd, m_timestamp, m_window, this);
     m_xToWlTransfers << transfer;
 
     connect(transfer, &TransferXtoWl::finished, this, [this, transfer]() {

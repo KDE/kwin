@@ -40,9 +40,9 @@ public:
     void setDragAndDropAction(DnDAction action);
     DnDAction selectedDragAndDropAction();
 
-    X11Source *x11Source() const
+    Dnd *selection() const
     {
-        return m_source;
+        return m_dnd;
     }
 
 private:

@@ -84,7 +84,7 @@ void WlSource::sendTargets(xcb_selection_request_event_t *event)
 
 void WlSource::sendTimestamp(xcb_selection_request_event_t *event)
 {
-    const xcb_timestamp_t time = timestamp();
+    const xcb_timestamp_t time = selection()->timestamp();
     xcb_change_property(kwinApp()->x11Connection(),
                         XCB_PROP_MODE_REPLACE,
                         event->requestor,
@@ -134,11 +134,10 @@ bool WlSource::checkStartTransfer(xcb_selection_request_event_t *event)
     return true;
 }
 
-X11Source::X11Source(Selection *selection, xcb_xfixes_selection_notify_event_t *event)
+X11Source::X11Source(Selection *selection)
     : SelectionSource(selection)
     , m_dataSource(std::make_unique<XwlDataSource>())
 {
-    setTimestamp(event->timestamp);
 }
 
 X11Source::~X11Source()
@@ -153,7 +152,7 @@ void X11Source::getTargets()
                           selection()->atom(),
                           atoms->targets,
                           atoms->wl_selection,
-                          timestamp());
+                          selection()->timestamp());
 }
 
 static bool isSpecialSelectionTarget(xcb_atom_t atom)
