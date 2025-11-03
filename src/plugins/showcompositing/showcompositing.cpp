@@ -34,7 +34,7 @@ void ShowCompositingEffect::paintScreen(const RenderTarget &renderTarget, const 
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
     const auto rect = viewport.renderRect();
-    m_scene->setGeometry(QRect(rect.x() + rect.width() - 300, 0, 300, 150));
+    m_scene->setGeometry(QRect(rect.x() + rect.width() - 300, rect.y(), 300, 150));
     effects->renderOffscreenQuickView(renderTarget, viewport, m_scene.get());
 }
 
