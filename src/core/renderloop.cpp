@@ -241,6 +241,10 @@ void RenderLoop::setRefreshRate(int refreshRate)
     }
     d->refreshRate = refreshRate;
     Q_EMIT refreshRateChanged();
+
+    if (d->compositeTimer.isActive()) {
+        d->scheduleRepaint(d->lastPresentationTimestamp);
+    }
 }
 
 void RenderLoop::setPresentationSafetyMargin(std::chrono::nanoseconds safetyMargin)
