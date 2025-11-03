@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-06-20 00:43+0000\n"
-"PO-Revision-Date: 2025-07-19 08:46+0200\n"
+"PO-Revision-Date: 2025-11-01 09:22+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 25.04.3\n"
+"X-Generator: Lokalize 25.08.2\n"
 
 #: ui/AnimationComboBox.qml:49
 #, kde-format
@@ -71,13 +71,13 @@ msgstr "Otwieranie/zamykanie okien:"
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window maximize:"
-msgstr "Zmaksymalizuj okno:"
+msgstr "Maksymalizowanie okien:"
 
 #: ui/main.qml:99
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window minimize:"
-msgstr "Zminimalizuj okno:"
+msgstr "Minimalizowanie okien:"
 
 #: ui/main.qml:100
 #, kde-format
@@ -89,7 +89,7 @@ msgstr "Okno na całym ekranie:"
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Peek at desktop:"
-msgstr "Podejrzyj pulpit:"
+msgstr "Podglądanie pulpitu:"
 
 #: ui/main.qml:102
 #, kde-format
