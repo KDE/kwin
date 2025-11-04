@@ -54,7 +54,7 @@ private:
     std::unique_ptr<QProximitySensor> m_sensor;
 
     bool m_secondTap = false;
-    bool m_enableDoubleTap;
+    bool m_enableDoubleTap = false;
     bool m_proximityClose = false;
 };
 
