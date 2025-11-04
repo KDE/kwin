@@ -29,7 +29,9 @@ DpmsInputEventFilter::DpmsInputEventFilter()
     KSharedConfig::Ptr kwinSettings = kwinApp()->config();
     m_enableDoubleTap = kwinSettings->group(QStringLiteral("Wayland")).readEntry<bool>("DoubleTapWakeup", true);
 
-    if (m_enableDoubleTap) {
+    // TODO: Disabled due to https://bugreports.qt.io/browse/QTBUG-141672, this call hangs on some devices (OnePlus 6)
+    static bool useProximitySensor = qEnvironmentVariableIntValue("KWIN_WAYLAND_USE_PROXIMITY_SENSOR");
+    if (useProximitySensor && m_enableDoubleTap) {
         m_sensor = std::make_unique<QProximitySensor>();
         connect(m_sensor.get(), &QProximitySensor::readingChanged, this, &DpmsInputEventFilter::updateProximitySensor, Qt::UniqueConnection);
         m_sensor->start();
@@ -39,7 +41,7 @@ DpmsInputEventFilter::DpmsInputEventFilter()
 
 DpmsInputEventFilter::~DpmsInputEventFilter()
 {
-    if (m_enableDoubleTap) {
+    if (m_sensor) {
         m_sensor->stop();
         m_proximityClose = false;
     }
