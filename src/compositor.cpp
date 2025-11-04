@@ -630,7 +630,17 @@ void Compositor::composite(RenderLoop *renderLoop)
         || (!output->highDynamicRange() && output->brightnessDevice() && output->brightnessDevice()->brightnessSteps() < 5)) {
         frame->setBrightness(output->brightnessSetting() * output->dimming());
     } else {
-        constexpr double changePerSecond = 3;
+        // animate much slower for automatic brightness
+        double changePerSecond = 3;
+        if (output->lastBrightnessAdjustmentReason() == BackendOutput::BrightnessReason::AutomaticBrightness) {
+            if (output->brightnessSetting() < output->currentBrightness()) {
+                // brightness should be reduced slowly, or it'll be annoying
+                changePerSecond = 0.1;
+            } else {
+                // but increased more quickly, so that you can still read your screen
+                changePerSecond = 0.5;
+            }
+        }
         const double maxChangePerFrame = changePerSecond * 1'000.0 / renderLoop->refreshRate();
         // brightness perception is non-linear, gamma 2.2 encoding *roughly* represents that
         const double current = std::pow(*output->currentBrightness(), 1.0 / 2.2);

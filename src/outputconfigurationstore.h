@@ -40,6 +40,7 @@ public:
 
     void applyMirroring(OutputConfiguration &config, const QList<BackendOutput *> &outputs);
     bool isAutoRotateActive(const QList<BackendOutput *> &outputs, bool isTabletMode) const;
+    bool isAutoBrightnessActive(const QList<BackendOutput *> &outputs) const;
 
 private:
     OutputConfiguration generateConfig(const QList<BackendOutput *> &outputs, bool isLidClosed);
@@ -91,6 +92,8 @@ private:
         std::optional<BackendOutput::EdrPolicy> edrPolicy;
         std::optional<double> sharpness;
         std::optional<QList<CustomModeDefinition>> customModes;
+        std::optional<bool> automaticBrightness;
+        std::optional<AutoBrightnessCurve> autoBrightnessCurve;
     };
     struct SetupState
     {

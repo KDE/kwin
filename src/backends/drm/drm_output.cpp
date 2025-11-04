@@ -224,6 +224,10 @@ BackendOutput::Capabilities DrmOutput::computeCapabilities() const
     }
     if (m_state.highDynamicRange || m_state.brightnessDevice || m_state.allowSdrSoftwareBrightness) {
         capabilities |= Capability::BrightnessControl;
+        // TODO also allow for external screens?
+        if (m_autoBrightnessAvailable && m_information.internal) {
+            capabilities |= Capability::AutomaticBrightness;
+        }
     }
     if (m_connector->edid()->isValid() && m_connector->edid()->defaultColorimetry().has_value()) {
         capabilities |= Capability::BuiltInColorProfile;
@@ -536,6 +540,9 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.sharpnessSetting = props->sharpness.value_or(m_state.sharpnessSetting);
     next.priority = props->priority.value_or(m_state.priority);
     next.deviceOffset = props->deviceOffset.value_or(m_state.deviceOffset);
+    next.automaticBrightness = props->automaticBrightness.value_or(m_state.automaticBrightness);
+    next.lastBrightnessAdjustmentReason = props->brightnessReason.value_or(m_state.lastBrightnessAdjustmentReason);
+    next.autoBrightnessCurve = props->autoBrightnessCurve.value_or(m_state.autoBrightnessCurve);
     tryKmsColorOffloading(next);
     maybeScheduleRepaints(next);
     const bool nextOff = next.dpmsMode != DpmsMode::On;
@@ -732,6 +739,14 @@ void DrmOutput::maybeUpdateDpmsState()
         next.dpmsMode = DpmsMode::Off;
         setState(next);
     }
+}
+
+void DrmOutput::setAutoBrightnessAvailable(bool isAvailable)
+{
+    m_autoBrightnessAvailable = isAvailable;
+    Information next = m_information;
+    next.capabilities = computeCapabilities();
+    setInformation(next);
 }
 }
 

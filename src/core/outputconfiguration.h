@@ -66,6 +66,9 @@ public:
     std::optional<uint32_t> priority;
     std::optional<QList<CustomModeDefinition>> customModes;
     std::optional<QPoint> deviceOffset;
+    std::optional<bool> automaticBrightness;
+    std::optional<AutoBrightnessCurve> autoBrightnessCurve;
+    std::optional<BackendOutput::BrightnessReason> brightnessReason;
 };
 
 class KWIN_EXPORT OutputConfiguration
@@ -73,6 +76,20 @@ class KWIN_EXPORT OutputConfiguration
 public:
     std::shared_ptr<OutputChangeSet> changeSet(BackendOutput *output);
     std::shared_ptr<OutputChangeSet> constChangeSet(BackendOutput *output) const;
+
+    enum class Source {
+        /**
+         * The output configuration is provided by the user, for example after changing
+         * display settings in system settings.
+         */
+        User,
+        /**
+         * The output configuration is provided by the system/compositor, for example
+         * when automatically adjusting the brightness of a monitor, etc.
+         */
+        System,
+    };
+    Source source = Source::System;
 
 private:
     QMap<BackendOutput *, std::shared_ptr<OutputChangeSet>> m_properties;

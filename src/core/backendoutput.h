@@ -10,6 +10,8 @@
 
 #include "output.h"
 
+class QJsonArray;
+
 namespace KWin
 {
 
@@ -21,6 +23,30 @@ class OutputChangeSet;
 class BrightnessDevice;
 class OutputFrame;
 class OutputLayer;
+
+class KWIN_EXPORT AutoBrightnessCurve
+{
+public:
+    AutoBrightnessCurve();
+
+    /**
+     * Returns the brightness value for the given @a lux light sensor reading.
+     */
+    double sample(double lux) const;
+    /**
+     * Adjusts the curve making it report the given @a brightness for the specified @a lux light sensor reading.
+     * NOTE this may affect other sensor readings as well, for example to keep the curve monotonic
+     */
+    void adjust(double brightness, double lux);
+
+    QJsonArray toArray() const;
+    static std::optional<AutoBrightnessCurve> fromArray(const QJsonArray &array);
+
+private:
+    static constexpr size_t s_controlPointCount = 6;
+    // brightness in lux. First value is 0% brightness, last is 100%
+    std::array<double, s_controlPointCount> m_luxAtBrightness;
+};
 
 class KWIN_EXPORT BackendOutput : public QObject
 {
@@ -50,6 +76,7 @@ public:
         Edr = 1 << 13,
         SharpnessControl = 1 << 14,
         CustomModes = 1 << 15,
+        AutomaticBrightness = 1 << 16,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -92,6 +119,12 @@ public:
         Always,
     };
     Q_ENUM(EdrPolicy);
+
+    enum class BrightnessReason {
+        ManualAdjustment,
+        AutomaticBrightness,
+    };
+    Q_ENUM(BrightnessReason);
 
     explicit BackendOutput();
     ~BackendOutput() override;
@@ -248,6 +281,7 @@ public:
     double sharpnessSetting() const;
 
     virtual void setAutoRotateAvailable(bool isAvailable);
+    virtual void setAutoBrightnessAvailable(bool isAvailable);
 
     virtual bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay);
     virtual bool testPresentation(const std::shared_ptr<OutputFrame> &frame) = 0;
@@ -276,6 +310,9 @@ public:
     const std::shared_ptr<ColorDescription> &colorDescription() const;
 
     uint32_t priority() const;
+    const AutoBrightnessCurve &autoBrightnessCurve() const;
+    bool automaticBrightness() const;
+    BrightnessReason lastBrightnessAdjustmentReason() const;
 
     /**
      * The setting for the scale factor, which may differ from scale
@@ -358,6 +395,7 @@ Q_SIGNALS:
     void edrPolicyChanged();
     void sharpnessChanged();
     void priorityChanged();
+    void automaticBrightnessChanged();
 
 protected:
     struct Information
@@ -437,6 +475,9 @@ protected:
         QList<CustomModeDefinition> customModes;
         double scaleSetting = 1;
         QPoint deviceOffset;
+        bool automaticBrightness = false;
+        AutoBrightnessCurve autoBrightnessCurve;
+        BrightnessReason lastBrightnessAdjustmentReason = BrightnessReason::ManualAdjustment;
     };
 
     void setInformation(const Information &information);

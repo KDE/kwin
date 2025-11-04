@@ -59,6 +59,7 @@
 #include "useractions.h"
 #include "utils/envvar.h"
 #include "utils/kernel.h"
+#include "utils/lightsensor.h"
 #include "utils/orientationsensor.h"
 #include "virtualdesktops.h"
 #include "wayland/externalbrightness_v1.h"
@@ -120,6 +121,7 @@ Workspace::Workspace()
     , m_placementTracker(std::make_unique<PlacementTracker>(this))
     , m_lidSwitchTracker(std::make_unique<LidSwitchTracker>())
     , m_orientationSensor(std::make_unique<OrientationSensor>())
+    , m_lightSensor(std::make_unique<LightSensor>())
 {
     _self = this;
 
@@ -225,25 +227,45 @@ void Workspace::init()
     m_outputConfigStore = std::make_unique<OutputConfigurationStore>();
 
     const auto applySensorChanges = [this]() {
-        m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
-        auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
-        if (opt) {
-            auto &[config, type] = *opt;
-            applyOutputConfiguration(config);
+        const auto outputs = kwinApp()->outputBackend()->outputs();
+        m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(outputs, kwinApp()->tabletModeManager()->effectiveTabletMode()));
+        m_lightSensor->setEnabled(m_outputConfigStore->isAutoBrightnessActive(outputs));
+        auto opt = m_outputConfigStore->queryConfig(outputs, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+        if (!opt) {
+            return;
         }
+        auto &[config, type] = *opt;
+        if (m_lightSensor->isAvailable()) {
+            const auto lux = m_lightSensor->lux();
+            for (BackendOutput *output : outputs) {
+                if ((output->capabilities() & BackendOutput::Capability::AutomaticBrightness) && output->automaticBrightness()) {
+                    const auto change = config.changeSet(output);
+                    change->brightness = output->autoBrightnessCurve().sample(lux);
+                    change->brightnessReason = BackendOutput::BrightnessReason::AutomaticBrightness;
+                }
+            }
+        }
+        applyOutputConfiguration(config);
     };
     connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
     // NOTE that enabling or disabling the orientation sensor can trigger the orientation to change immediately.
     // As we do enable or disable it in applySensorChanges, it must be done asynchronously / with a queued connection!
     connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges, Qt::QueuedConnection);
+    connect(m_lightSensor.get(), &LightSensor::brightnessChanged, this, applySensorChanges, Qt::QueuedConnection);
     connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
     m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
-    connect(m_orientationSensor.get(), &OrientationSensor::availableChanged, this, [this]() {
+    m_lightSensor->setEnabled(m_outputConfigStore->isAutoBrightnessActive(kwinApp()->outputBackend()->outputs()));
+
+    const auto updateSensorAvailability = [this]() {
         const auto outputs = kwinApp()->outputBackend()->outputs();
         for (const auto output : outputs) {
             output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
+            output->setAutoBrightnessAvailable(m_lightSensor->isAvailable());
         }
-    });
+    };
+    updateSensorAvailability();
+    connect(m_lightSensor.get(), &LightSensor::availableChanged, this, updateSensorAvailability);
+    connect(m_orientationSensor.get(), &OrientationSensor::availableChanged, this, updateSensorAvailability);
 
     slotOutputBackendOutputsQueried();
     connect(kwinApp()->outputBackend(), &OutputBackend::outputsQueried, this, &Workspace::slotOutputBackendOutputsQueried);
@@ -443,10 +465,25 @@ Workspace::~Workspace()
 OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config)
 {
     assignBrightnessDevices(config);
+    const auto backendOutputs = kwinApp()->outputBackend()->outputs();
+    if (config.source == OutputConfiguration::Source::User) {
+        // if the user adjusted brightness setting of an output,
+        // adjust its brightness map to fit the new preference
+        for (BackendOutput *output : backendOutputs) {
+            if (!(output->capabilities() & BackendOutput::Capability::AutomaticBrightness) || !output->automaticBrightness() || !m_lightSensor->isAvailable()) {
+                continue;
+            }
+            auto changeSet = config.changeSet(output);
+            if (!changeSet->brightness) {
+                continue;
+            }
+            changeSet->autoBrightnessCurve = output->autoBrightnessCurve();
+            changeSet->autoBrightnessCurve->adjust(*changeSet->brightness, m_lightSensor->lux());
+        }
+    }
 
-    m_outputConfigStore->applyMirroring(config, kwinApp()->outputBackend()->outputs());
-    const auto allOutputs = kwinApp()->outputBackend()->outputs();
-    for (BackendOutput *output : allOutputs) {
+    m_outputConfigStore->applyMirroring(config, backendOutputs);
+    for (BackendOutput *output : backendOutputs) {
         if (m_dpms == DpmsState::Off || m_dpms == DpmsState::TurningOff) {
             config.changeSet(output)->dpmsMode = BackendOutput::DpmsMode::Off;
         } else {
@@ -458,8 +495,9 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
         return error;
     }
     updateOutputs();
-    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config);
-    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+    m_outputConfigStore->storeConfig(backendOutputs, m_lidSwitchTracker->isLidClosed(), config);
+    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(backendOutputs, kwinApp()->tabletModeManager()->effectiveTabletMode()));
+    m_lightSensor->setEnabled(m_outputConfigStore->isAutoBrightnessActive(backendOutputs));
 
     updateXwaylandScale();
 
@@ -499,8 +537,6 @@ void Workspace::requestDpmsState(DpmsState state)
         // TODO only do this if sleep is actually requested
         m_sleepInhibitor = kwinApp()->outputBackend()->session()->delaySleep("dpms animation");
     }
-    // When dpms mode for display changes, we need to trigger checking if dpms mode should be enabled/disabled.
-    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
 
     Q_EMIT dpmsStateChanged(animationTime);
 }
@@ -1218,6 +1254,7 @@ void Workspace::updateOutputs()
 
     for (BackendOutput *output : availableOutputs) {
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
+        output->setAutoBrightnessAvailable(m_lightSensor->isAvailable());
         if (output->isNonDesktop() || !output->isEnabled()) {
             continue;
         }

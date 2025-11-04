@@ -25,7 +25,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 18;
+static const quint32 s_version = 19;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -79,6 +79,7 @@ protected:
     void kde_output_configuration_v2_set_edr_policy(Resource *resource, struct ::wl_resource *outputdevice, uint32_t edrPolicy) override;
     void kde_output_configuration_v2_set_sharpness(Resource *resource, wl_resource *outputdevice, uint32_t sharpness) override;
     void kde_output_configuration_v2_set_custom_modes(Resource *resource, struct ::wl_resource *outputdevice, struct ::wl_resource *modes) override;
+    void kde_output_configuration_v2_set_auto_brightness(Resource *resource, ::wl_resource *outputdevice, uint32_t enabled) override;
 
     void sendFailure(Resource *resource, const QString &reason);
 };
@@ -408,6 +409,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_brightness(
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
         config.changeSet(output->handle())->brightness = brightness / 10'000.0;
+        config.changeSet(output->handle())->brightnessReason = BackendOutput::BrightnessReason::ManualAdjustment;
     }
 }
 
@@ -515,6 +517,16 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_custom_mode
         return;
     }
     config.changeSet(output->handle())->customModes = r->modes;
+}
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_auto_brightness(Resource *resource, ::wl_resource *outputdevice, uint32_t enabled)
+{
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->automaticBrightness = bool(enabled);
+    }
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy(Resource *resource)
@@ -637,6 +649,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         }
     }
 
+    config.source = OutputConfiguration::Source::User;
     switch (workspace()->applyOutputConfiguration(config)) {
     case OutputConfigurationError::None:
         send_applied();

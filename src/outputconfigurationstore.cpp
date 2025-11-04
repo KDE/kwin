@@ -358,6 +358,8 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                 .maxBitsPerColor = changeSet->maxBitsPerColor.value_or(output->maxBitsPerColor()),
                 .edrPolicy = changeSet->edrPolicy.value_or(output->edrPolicy()),
                 .sharpness = changeSet->sharpness.value_or(output->sharpnessSetting()),
+                .automaticBrightness = changeSet->automaticBrightness.value_or(output->automaticBrightness()),
+                .autoBrightnessCurve = changeSet->autoBrightnessCurve.value_or(output->autoBrightnessCurve()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -409,6 +411,8 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                 .maxBitsPerColor = output->maxBitsPerColor(),
                 .edrPolicy = output->edrPolicy(),
                 .sharpness = output->sharpnessSetting(),
+                .automaticBrightness = output->automaticBrightness(),
+                .autoBrightnessCurve = output->autoBrightnessCurve(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -479,6 +483,8 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
             .edrPolicy = state.edrPolicy,
             .sharpness = state.sharpness,
             .priority = setupState.priority,
+            .automaticBrightness = state.automaticBrightness,
+            .autoBrightnessCurve = state.autoBrightnessCurve,
         };
     }
     return ret;
@@ -606,6 +612,9 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .edrPolicy = existingData.edrPolicy.value_or(BackendOutput::EdrPolicy::Always),
             .sharpness = existingData.sharpness.value_or(0),
             .priority = priority,
+            .automaticBrightness = existingData.automaticBrightness.value_or(false),
+            // TODO generate a more fitting brightness map per screen?
+            .autoBrightnessCurve = existingData.autoBrightnessCurve,
         };
         priority++;
         if (enable) {
@@ -1042,6 +1051,12 @@ void OutputConfigurationStore::load()
             }
             state.customModes = modes;
         }
+        if (const auto it = data.find("automaticBrightness"); it != data.end() && it->isBool()) {
+            state.automaticBrightness = it->toBool();
+        }
+        if (const auto it = data.find("autoBrightnessCurve"); it != data.end() && it->isArray()) {
+            state.autoBrightnessCurve = AutoBrightnessCurve::fromArray(it->toArray());
+        }
         outputDatas.push_back(state);
     }
 
@@ -1339,6 +1354,12 @@ void OutputConfigurationStore::save()
                 modes.append(obj);
             }
         }
+        if (output.automaticBrightness) {
+            o["automaticBrightness"] = *output.automaticBrightness;
+        }
+        if (output.autoBrightnessCurve) {
+            o["autoBrightnessCurve"] = output.autoBrightnessCurve->toArray();
+        }
         outputsData.append(o);
     }
     outputs["data"] = outputsData;
@@ -1405,5 +1426,14 @@ bool OutputConfigurationStore::isAutoRotateActive(const QList<BackendOutput *> &
         return true;
     }
     Q_UNREACHABLE();
+}
+
+bool OutputConfigurationStore::isAutoBrightnessActive(const QList<BackendOutput *> &outputs) const
+{
+    return std::ranges::any_of(outputs, [](BackendOutput *output) {
+        return output->isEnabled()
+            && output->automaticBrightness()
+            && output->dpmsMode() == BackendOutput::DpmsMode::On;
+    });
 }
 }

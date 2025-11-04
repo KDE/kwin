@@ -14,9 +14,92 @@
 
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <QJsonArray>
 
 namespace KWin
 {
+
+AutoBrightnessCurve::AutoBrightnessCurve()
+    : m_luxAtBrightness({0, 0, 5, 15, 45, 55})
+{
+}
+
+double AutoBrightnessCurve::sample(double lux) const
+{
+    if (lux >= m_luxAtBrightness.back()) {
+        return 1.0;
+    }
+    for (int i = m_luxAtBrightness.size() - 1; i > 0; i--) {
+        const double low = m_luxAtBrightness[i - 1];
+        const double high = m_luxAtBrightness[i];
+        if (lux > low && lux <= high) {
+            const double factor = (lux - low) / (high - low);
+            const double highPercent = i / double(m_luxAtBrightness.size() - 1);
+            const double lowPercent = (i - 1) / double(m_luxAtBrightness.size() - 1);
+            return std::clamp(std::lerp(lowPercent, highPercent, factor), 0.0, 1.0);
+        }
+    }
+    // lux is <= m_luxAtBrightness[0] -> always 0% brightness
+    return 0;
+}
+
+void AutoBrightnessCurve::adjust(double brightness, double lux)
+{
+    // This is the really difficult part about automatic brightness:
+    // Adjust the brightness curve in a way that's intuitive for the user,
+    // without the user having to care about how it works
+
+    const size_t lowMatch = std::floor(brightness * (m_luxAtBrightness.size() - 1));
+    if (lowMatch == m_luxAtBrightness.size() - 1) {
+        // == 100% brightness
+        m_luxAtBrightness.back() = lux;
+        for (size_t i = 0; i < m_luxAtBrightness.size() - 1; i++) {
+            m_luxAtBrightness[i] = std::min(m_luxAtBrightness[i], lux);
+        }
+        return;
+    }
+    double &low = m_luxAtBrightness[lowMatch];
+    double &high = m_luxAtBrightness[lowMatch + 1];
+
+    const double highFactor = brightness * (m_luxAtBrightness.size() - 1) - lowMatch;
+    const double lowFactor = 1.0 - highFactor;
+    const double currentLuxAtBrightness = low * lowFactor + high * highFactor;
+    const double difference = lux - currentLuxAtBrightness;
+    low = std::max(low + difference * lowFactor, 0.0);
+    high = std::max(high + difference * highFactor, 0.0);
+
+    // ensure the curve stays monotonic
+    // TODO maybe do something smarter here?
+    for (size_t i = 0; i < lowMatch; i++) {
+        m_luxAtBrightness[i] = std::min(m_luxAtBrightness[i], low);
+    }
+    for (size_t i = lowMatch + 1; i < m_luxAtBrightness.size(); i++) {
+        m_luxAtBrightness[i] = std::max(m_luxAtBrightness[i], high);
+    }
+}
+
+QJsonArray AutoBrightnessCurve::toArray() const
+{
+    QJsonArray ret;
+    for (const double lux : m_luxAtBrightness) {
+        ret.push_back(lux);
+    }
+    return ret;
+}
+
+std::optional<AutoBrightnessCurve> AutoBrightnessCurve::fromArray(const QJsonArray &array)
+{
+    if (array.size() != s_controlPointCount) {
+        return std::nullopt;
+    }
+    size_t index = 0;
+    AutoBrightnessCurve ret;
+    for (const auto &value : array) {
+        ret.m_luxAtBrightness[index] = value.toDouble(0.0);
+        index++;
+    }
+    return ret;
+}
 
 BackendOutput::BackendOutput()
 {
@@ -312,6 +395,9 @@ void BackendOutput::setState(const State &state)
     if (oldState.deviceOffset != state.deviceOffset) {
         Q_EMIT deviceOffsetChanged();
     }
+    if (oldState.automaticBrightness != state.automaticBrightness) {
+        Q_EMIT automaticBrightnessChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -536,6 +622,10 @@ void BackendOutput::setAutoRotateAvailable(bool isAvailable)
 {
 }
 
+void BackendOutput::setAutoBrightnessAvailable(bool isAvailable)
+{
+}
+
 std::optional<uint32_t> BackendOutput::minVrrRefreshRateHz() const
 {
     return m_information.minVrrRefreshRateHz;
@@ -591,6 +681,21 @@ bool BackendOutput::isDdcCiKnownBroken() const
 bool BackendOutput::overlayLayersLikelyBroken() const
 {
     return false;
+}
+
+const AutoBrightnessCurve &BackendOutput::autoBrightnessCurve() const
+{
+    return m_state.autoBrightnessCurve;
+}
+
+bool BackendOutput::automaticBrightness() const
+{
+    return m_state.automaticBrightness;
+}
+
+BackendOutput::BrightnessReason BackendOutput::lastBrightnessAdjustmentReason() const
+{
+    return m_state.lastBrightnessAdjustmentReason;
 }
 
 } // namespace KWin

@@ -87,6 +87,7 @@ private:
     void updateEdrPolicy();
     void updateSharpness();
     void updatePriority();
+    void updateAutoBrightness();
 
     void scheduleDone();
 
