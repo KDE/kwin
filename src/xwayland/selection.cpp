@@ -244,25 +244,13 @@ void Selection::startTransferToX(xcb_selection_request_event_t *event, qint32 fd
 
     connect(transfer, &TransferWltoX::selectionNotify, this, &Selection::sendSelectionNotify);
     connect(transfer, &TransferWltoX::finished, this, [this, transfer]() {
-        // TODO: serialize? see comment below.
-        //        const bool wasActive = (transfer == m_wlToXTransfers[0]);
         transfer->deleteLater();
         m_wlToXTransfers.removeOne(transfer);
         endTimeoutTransfersTimer();
-        //        if (wasActive && !m_wlToXTransfers.isEmpty()) {
-        //            m_wlToXTransfers[0]->startTransferFromSource();
-        //        }
     });
 
-    // add it to list of queued transfers
     m_wlToXTransfers.append(transfer);
-
-    // TODO: Do we need to serialize the transfers, or can we do
-    //       them in parallel as we do it right now?
     transfer->startTransferFromSource();
-    //    if (m_wlToXTransfers.size() == 1) {
-    //        transfer->startTransferFromSource();
-    //    }
     startTimeoutTransfersTimer();
 }
 
