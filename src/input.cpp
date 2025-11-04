@@ -2581,7 +2581,7 @@ public:
             }
         });
 
-        connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, []() {
+        connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, [this]() {
             AbstractDataSource *dragSource = waylandServer()->seat()->dragSource();
             if (!dragSource) {
                 return;
@@ -2591,6 +2591,12 @@ public:
             connect(input(), &InputRedirection::keyboardModifiersChanged, dragSource, [dragSource](Qt::KeyboardModifiers mods) {
                 dragSource->setKeyboardModifiers(mods);
             });
+            auto toplevelDrag = waylandServer()->seat()->xdgTopleveldrag();
+            if (!toplevelDrag) {
+                return;
+            }
+            setupDraggedToplevel();
+            connect(toplevelDrag, &XdgToplevelDragV1Interface::toplevelChanged, this, &DragAndDropInputFilter::setupDraggedToplevel);
         });
 
         connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, [this] {
@@ -2598,6 +2604,7 @@ public:
             m_lastPos.reset();
             if (m_currentToplevelDragWindow) {
                 m_currentToplevelDragWindow->setKeepAbove(m_wasKeepAbove);
+                m_currentToplevelDragWindow->endInteractiveMoveResize();
                 workspace()->takeActivity(m_currentToplevelDragWindow, Workspace::ActivityFlag::ActivityFocus | Workspace::ActivityFlag::ActivityRaise);
                 m_currentToplevelDragWindow = nullptr;
             }
@@ -2815,25 +2822,26 @@ private:
         return nullptr;
     }
 
-    void dragToplevel(const QPointF &pos, const XdgToplevelDragV1Interface *toplevelDrag)
+    void setupDraggedToplevel()
     {
-
+        auto toplevelDrag = waylandServer()->seat()->xdgTopleveldrag();
+        if (!toplevelDrag) {
+            return;
+        }
         auto window = toplevelDrag->toplevel() ? waylandServer()->findWindow(toplevelDrag->toplevel()->surface()) : nullptr;
-
-        if (m_currentToplevelDragWindow != window) {
-            if (m_currentToplevelDragWindow) {
-                m_currentToplevelDragWindow->setKeepAbove(m_wasKeepAbove);
-            }
-            m_currentToplevelDragWindow = window;
-            if (window) {
-                m_wasKeepAbove = window->keepAbove();
-                window->setKeepAbove(true);
-            }
+        if (window == m_currentToplevelDragWindow || !window) {
+            return;
         }
-
-        if (window) {
-            window->move(pos - toplevelDrag->offset());
+        if (!window->readyForPainting()) {
+            connect(window, &Window::readyForPaintingChanged, this, &DragAndDropInputFilter::setupDraggedToplevel, Qt::SingleShotConnection);
+            return;
         }
+        const auto currentPosition = waylandServer()->seat()->isDragPointer() ? input()->pointer()->pos() : input()->tablet()->position();
+        m_wasKeepAbove = window->keepAbove();
+        window->move(currentPosition - waylandServer()->seat()->xdgTopleveldrag()->offset());
+        window->setKeepAbove(true);
+        window->performMousePressCommand(Options::MouseMove, currentPosition);
+        m_currentToplevelDragWindow = window;
     }
 
     void motion(const QPointF &position, std::chrono::microseconds time)
@@ -2841,8 +2849,8 @@ private:
         SeatInterface *seat = waylandServer()->seat();
         seat->setTimestamp(time);
 
-        if (seat->xdgTopleveldrag()) {
-            dragToplevel(position, seat->xdgTopleveldrag());
+        if (auto window = m_currentToplevelDragWindow) {
+            window->updateInteractiveMoveResize(position, input()->keyboardModifiers());
         }
 
         Window *dragTarget = pickDragTarget(position);
