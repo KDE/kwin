@@ -27,7 +27,7 @@ msgstr ""
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
-msgstr "Lancer un aperçu interactif pour un commutateur de boîte à onglets"
+msgstr "Lancer un aperçu interactif pour un commutateur de boite à onglets"
 
 #: layoutpreview.cpp:29
 #, kde-format
