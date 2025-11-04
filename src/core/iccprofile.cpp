@@ -27,15 +27,21 @@ static const Colorimetry CIEXYZD50 = Colorimetry{
 
 const ColorDescription IccProfile::s_connectionSpace = ColorDescription(CIEXYZD50, TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
 
-IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, std::optional<ColorPipeline> &&bToA0Tag, std::optional<ColorPipeline> &&bToA1Tag, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> relativeBlackPoint, std::optional<double> maxBrightness)
+IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry,
+                       std::optional<ColorPipeline> &&bToA0Tag, std::optional<ColorPipeline> &&bToA1Tag,
+                       const std::shared_ptr<ColorTransformation> &inverseEOTF,
+                       const QMatrix4x4 &xyzMatrix, const std::shared_ptr<ColorTransformation> &vcgt,
+                       std::optional<double> relativeBlackPoint, std::optional<double> maxFALL, std::optional<double> maxCLL)
     : m_handle(handle)
     , m_colorimetry(colorimetry)
     , m_bToA0Tag(std::move(bToA0Tag))
     , m_bToA1Tag(std::move(bToA1Tag))
     , m_inverseEOTF(inverseEOTF)
+    , m_xyzMatrix(xyzMatrix)
     , m_vcgt(vcgt)
     , m_relativeBlackPoint(relativeBlackPoint)
-    , m_maxBrightness(maxBrightness)
+    , m_maxFALL(maxFALL)
+    , m_maxCLL(maxCLL)
 {
 }
 
@@ -49,9 +55,14 @@ std::optional<double> IccProfile::relativeBlackPoint() const
     return m_relativeBlackPoint;
 }
 
-std::optional<double> IccProfile::maxBrightness() const
+std::optional<double> IccProfile::maxFALL() const
 {
-    return m_maxBrightness;
+    return m_maxFALL;
+}
+
+std::optional<double> IccProfile::maxCLL() const
+{
+    return m_maxCLL;
 }
 
 const Colorimetry &IccProfile::colorimetry() const
@@ -67,6 +78,11 @@ std::shared_ptr<ColorTransformation> IccProfile::inverseTransferFunction() const
 std::shared_ptr<ColorTransformation> IccProfile::vcgt() const
 {
     return m_vcgt;
+}
+
+const QMatrix4x4 &IccProfile::mhc2Matrix() const
+{
+    return m_xyzMatrix;
 }
 
 const ColorPipeline *IccProfile::BToATag(RenderingIntent intent) const
@@ -235,6 +251,64 @@ static std::optional<ColorPipeline> parseBToATag(cmsHPROFILE profile, cmsTagSign
     return ret;
 }
 
+struct MHC2
+{
+    double minLuminance;
+    double maxLuminance;
+    QMatrix4x4 xyzMatrix;
+    std::vector<float> red;
+    std::vector<float> green;
+    std::vector<float> blue;
+};
+std::optional<MHC2> parseMhc2Tag(cmsHPROFILE profile)
+{
+    // see https://learn.microsoft.com/en-us/windows/win32/wcs/display-calibration-mhc
+    // for documentation of the tag
+    if (!cmsIsTag(profile, cmsTagSignature::cmsSigMHC2Tag)) {
+        return std::nullopt;
+    }
+    auto data = readTagRaw(profile, cmsTagSignature::cmsSigMHC2Tag);
+    if (data.size() < 36) {
+        qCWarning(KWIN_CORE, "MHC2 tag smaller than expected");
+        return std::nullopt;
+    }
+    MHC2 ret;
+    ret.minLuminance = readS15Fixed16(data, 12);
+    ret.maxLuminance = readS15Fixed16(data, 16);
+    const uint32_t lutSize = read<uint32_t>(data, 8);
+    const uint32_t matrixOffset = read<uint32_t>(data, 20);
+    const uint32_t redOffset = read<uint32_t>(data, 24);
+    const uint32_t greenOffset = read<uint32_t>(data, 28);
+    const uint32_t blueOffset = read<uint32_t>(data, 32);
+    if (matrixOffset != 0) {
+        if (data.size() < matrixOffset + 48) {
+            qCWarning(KWIN_CORE, "Parsing MHC2 tag failed");
+            return std::nullopt;
+        }
+        // NOTE That this technically also has an offset.
+        // Windows ignores it though, so it's best to ignore it too.
+        for (int row = 0; row < 3; ++row) {
+            for (int column = 0; column < 3; ++column) {
+                ret.xyzMatrix(row, column) = readS15Fixed16(data, matrixOffset + (row * 4 + column) * 4);
+            }
+        }
+    }
+    if (lutSize > 0) {
+        const uint32_t lutHeaderSize = 8;
+        const uint32_t lutDataSize = lutHeaderSize + lutSize * 4;
+        if (data.size() < std::max({redOffset, greenOffset, blueOffset}) + lutDataSize) {
+            qCWarning(KWIN_CORE, "Parsing MHC2 tag failed");
+            return std::nullopt;
+        }
+        for (uint32_t i = 0; i < lutSize; i++) {
+            ret.red.push_back(readS15Fixed16(data, redOffset + lutHeaderSize + i * 4));
+            ret.green.push_back(readS15Fixed16(data, greenOffset + lutHeaderSize + i * 4));
+            ret.blue.push_back(readS15Fixed16(data, blueOffset + lutHeaderSize + i * 4));
+        }
+    }
+    return ret;
+}
+
 static constexpr XYZ D50{
     .X = 0.9642,
     .Y = 1.0,
@@ -335,11 +409,11 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
         return std::unexpected(i18n("ICC profile \"%1\" is broken, its primaries are invalid", path));
     }
 
-    std::optional<double> maxBrightness;
+    std::optional<double> maxFALL;
     if (cmsCIEXYZ *luminance = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigLuminanceTag))) {
         // for some reason, lcms exposes the luminance as a XYZ triple...
         // only Y is non-zero, and it's the brightness in nits
-        maxBrightness = luminance->Y;
+        maxFALL = luminance->Y;
     }
     std::optional<double> relativeBlackPoint;
     cmsCIEXYZ blackPoint;
@@ -401,7 +475,36 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
         cmsFreeToneCurve(toneCurve);
     }
     const auto inverseEOTF = std::make_shared<ColorTransformation>(std::move(stages));
-    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(bToA0), std::move(bToA1), inverseEOTF, vcgt, relativeBlackPoint, maxBrightness);
+
+    QMatrix4x4 xyzMatrix;
+    std::optional<double> maxCLL = maxFALL;
+    if (auto mhc2 = parseMhc2Tag(handle)) {
+        if (mhc2->maxLuminance != 0) {
+            maxCLL = mhc2->maxLuminance;
+        }
+        if (mhc2->minLuminance != 0 && maxFALL.has_value()) {
+            relativeBlackPoint = mhc2->minLuminance / *maxFALL;
+        }
+        if (!mhc2->red.empty()) {
+            std::array<cmsToneCurve *, 3> toneCurves = {
+                cmsBuildTabulatedToneCurveFloat(nullptr, mhc2->red.size(), mhc2->red.data()),
+                cmsBuildTabulatedToneCurveFloat(nullptr, mhc2->green.size(), mhc2->green.data()),
+                cmsBuildTabulatedToneCurveFloat(nullptr, mhc2->blue.size(), mhc2->blue.data()),
+            };
+            std::vector<std::unique_ptr<ColorPipelineStage>> stages;
+            stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, toneCurves.size(), toneCurves.data())));
+            vcgt = std::make_shared<ColorTransformation>(std::move(stages));
+            for (auto toneCurve : toneCurves) {
+                cmsFreeToneCurve(toneCurve);
+            }
+        }
+        // NOTE that this matrix is usually used for bad hacks Windows needs
+        // like "sRGB clamping", which are completely unnecessary with KWin.
+        // Maybe warn the user about this in KScreen?
+        xyzMatrix = mhc2->xyzMatrix;
+    }
+
+    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(bToA0), std::move(bToA1), inverseEOTF, xyzMatrix, vcgt, relativeBlackPoint, maxFALL, maxCLL);
 }
 
 }
