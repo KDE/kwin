@@ -292,6 +292,10 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     }
     if (m_state.highDynamicRange || m_state.brightnessDevice || m_state.allowSdrSoftwareBrightness) {
         capabilities |= Capability::BrightnessControl;
+        // TODO also allow for external screens?
+        if (m_autoBrightnessAvailable && m_information.internal) {
+            capabilities |= Capability::AutomaticBrightness;
+        }
     }
     if (m_connector->edid()->isValid() && m_connector->edid()->defaultColorimetry().has_value()) {
         capabilities |= Capability::BuiltInColorProfile;
@@ -625,6 +629,9 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     next.sharpnessSetting = props->sharpness.value_or(m_state.sharpnessSetting);
+    next.automaticBrightness = props->automaticBrightness.value_or(m_state.automaticBrightness);
+    next.lastBrightnessAdjustmentReason = props->brightnessReason.value_or(m_state.lastBrightnessAdjustmentReason);
+    next.brightnessMap = props->brightnessMap.value_or(m_state.brightnessMap);
     tryKmsColorOffloading(next);
     maybeScheduleRepaints(next);
     setState(next);
@@ -789,6 +796,14 @@ void DrmOutput::removePipeline()
 void DrmOutput::setAutoRotateAvailable(bool isAvailable)
 {
     m_autoRotateAvailable = isAvailable;
+    Information next = m_information;
+    next.capabilities = computeCapabilities();
+    setInformation(next);
+}
+
+void DrmOutput::setAutoBrightnessAvailable(bool isAvailable)
+{
+    m_autoBrightnessAvailable = isAvailable;
     Information next = m_information;
     next.capabilities = computeCapabilities();
     setInformation(next);

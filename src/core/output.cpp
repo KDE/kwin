@@ -350,6 +350,26 @@ QRegion OutputTransform::map(const QRegion &region, const QSize &bounds) const
     return ret;
 }
 
+double BrightnessMap::sample(double lux) const
+{
+    return std::clamp(lux / m_luxForFullBrightness, 0.0, 1.0);
+}
+
+void BrightnessMap::adjust(double brightness, double lux)
+{
+    // This is the really difficult part about auto brightness:
+    // Adjust the brightness curve in a way that's intuitive for the user,
+    // without the user even knowing there's a curve.
+    // As I don't currently have any clever ideas about how to do that really
+    // well, this just implements the simplest mapping ever, linear with zero
+    // lux mapped to zero percent.
+    if (lux > 0 && brightness > 0) {
+        // 1000 lux is roughly shining a flash light directly into
+        // the sensor, so it should be a reasonable maximum
+        m_luxForFullBrightness = std::min(lux / brightness, 1000.0);
+    }
+}
+
 Output::Output(QObject *parent)
     : QObject(parent)
 {
@@ -672,6 +692,9 @@ void Output::setState(const State &state)
     if (oldState.sharpnessSetting != state.sharpnessSetting) {
         Q_EMIT sharpnessChanged();
     }
+    if (oldState.automaticBrightness != state.automaticBrightness) {
+        Q_EMIT automaticBrightnessChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -896,7 +919,21 @@ double Output::sharpnessSetting() const
     return m_state.sharpnessSetting;
 }
 
+bool Output::automaticBrightness() const
+{
+    return m_state.automaticBrightness;
+}
+
+Output::BrightnessReason Output::lastBrightnessAdjustmentReason() const
+{
+    return m_state.lastBrightnessAdjustmentReason;
+}
+
 void Output::setAutoRotateAvailable(bool isAvailable)
+{
+}
+
+void Output::setAutoBrightnessAvailable(bool isAvailable)
 {
 }
 
@@ -922,6 +959,11 @@ const std::shared_ptr<ColorDescription> &Output::blendingColor() const
 const std::shared_ptr<ColorDescription> &Output::layerBlendingColor() const
 {
     return m_state.layerBlendingColor;
+}
+
+const BrightnessMap &Output::brightnessMap() const
+{
+    return m_state.brightnessMap;
 }
 
 // TODO move these quirks to libdisplay-info?

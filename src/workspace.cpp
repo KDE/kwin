@@ -83,6 +83,7 @@
 #include <QCryptographicHash>
 #include <QDBusConnection>
 #include <QDBusPendingCall>
+#include <QLightSensor>
 #include <QMetaProperty>
 
 namespace KWin
@@ -119,6 +120,7 @@ Workspace::Workspace()
     , m_placementTracker(std::make_unique<PlacementTracker>(this))
     , m_lidSwitchTracker(std::make_unique<LidSwitchTracker>())
     , m_orientationSensor(std::make_unique<OrientationSensor>())
+    , m_lightSensor(std::make_unique<QLightSensor>())
 {
     _self = this;
 
@@ -230,6 +232,20 @@ void Workspace::init()
             output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
         }
     });
+    connect(m_lightSensor.get(), &QLightSensor::readingChanged, this, [this]() {
+        const auto lux = m_lightSensor->reading()->lux();
+        OutputConfiguration cfg;
+        for (Output *output : m_outputs) {
+            if ((output->capabilities() & Output::Capability::AutomaticBrightness) && output->automaticBrightness()) {
+                const auto change = cfg.changeSet(output);
+                change->brightness = output->brightnessMap().sample(lux);
+                change->brightnessReason = Output::BrightnessReason::AutomaticBrightness;
+            }
+        }
+        applyOutputConfiguration(cfg, std::nullopt);
+    }, Qt::QueuedConnection);
+    // FIXME start/stop the sensor dynamically
+    m_lightSensor->start();
 
     slotOutputBackendOutputsQueried();
     connect(kwinApp()->outputBackend(), &OutputBackend::outputsQueried, this, &Workspace::slotOutputBackendOutputsQueried);
@@ -416,9 +432,22 @@ Workspace::~Workspace()
     _self = nullptr;
 }
 
-OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder)
+OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder, ConfigAdjustment adjustments)
 {
     assignBrightnessDevices(config);
+    if (adjustments == ConfigAdjustment::AutomaticBrightness) {
+        for (Output *output : m_outputs) {
+            if (!(output->capabilities() & Output::Capability::AutomaticBrightness) || !output->automaticBrightness() || !m_lightSensor->isActive()) {
+                continue;
+            }
+            auto changeSet = config.changeSet(output);
+            if (!changeSet->brightness) {
+                continue;
+            }
+            changeSet->brightnessMap = output->brightnessMap();
+            changeSet->brightnessMap->adjust(*changeSet->brightness, m_lightSensor->reading()->lux());
+        }
+    }
 
     m_outputConfigStore->applyMirroring(config, kwinApp()->outputBackend()->outputs());
     auto error = kwinApp()->outputBackend()->applyOutputChanges(config);
@@ -1149,6 +1178,8 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
             m_outputs.append(output);
         }
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
+        // FIXME do we really need the same hack as for the orientation sensor?
+        output->setAutoBrightnessAvailable(true);
     }
 
     // The workspace requires at least one output connected.

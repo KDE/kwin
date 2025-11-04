@@ -380,6 +380,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .maxBitsPerColor = changeSet->maxBitsPerColor.value_or(output->maxBitsPerColor()),
                 .edrPolicy = changeSet->edrPolicy.value_or(output->edrPolicy()),
                 .sharpness = changeSet->sharpness.value_or(output->sharpnessSetting()),
+                .automaticBrightness = changeSet->automaticBrightness.value_or(output->automaticBrightness()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -431,6 +432,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .maxBitsPerColor = output->maxBitsPerColor(),
                 .edrPolicy = output->edrPolicy(),
                 .sharpness = output->sharpnessSetting(),
+                .automaticBrightness = output->automaticBrightness(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -499,6 +501,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .maxBitsPerColor = state.maxBitsPerColor,
             .edrPolicy = state.edrPolicy,
             .sharpness = state.sharpness,
+            .automaticBrightness = state.automaticBrightness,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -636,6 +639,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .maxBitsPerColor = existingData.maxBitsPerColor,
             .edrPolicy = existingData.edrPolicy.value_or(Output::EdrPolicy::Always),
             .sharpness = existingData.sharpness.value_or(0),
+            .automaticBrightness = existingData.automaticBrightness.value_or(false),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -1048,6 +1052,9 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("sharpness"); it != data.end() && it->isDouble()) {
             state.sharpness = std::clamp(it->toDouble(), 0.0, 1.0);
         }
+        if (const auto it = data.find("automaticBrightness"); it != data.end() && it->isBool()) {
+            state.automaticBrightness = it->toBool();
+        }
         outputDatas.push_back(state);
     }
 
@@ -1333,6 +1340,9 @@ void OutputConfigurationStore::save()
         }
         if (output.sharpness) {
             o["sharpness"] = *output.sharpness;
+        }
+        if (output.automaticBrightness) {
+            o["automaticBrightness"] = *output.automaticBrightness;
         }
         outputsData.append(o);
     }

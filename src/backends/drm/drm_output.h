@@ -54,6 +54,7 @@ public:
     bool shouldDisableNonPrimaryPlanes() const;
     bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
     void setAutoRotateAvailable(bool isAvailable) override;
+    void setAutoBrightnessAvailable(bool isAvailable) override;
 
     DrmLease *lease() const;
     bool addLeaseObjects(QList<uint32_t> &objectList);
@@ -96,6 +97,7 @@ private:
     bool m_needsShadowBuffer = false;
     PresentationMode m_desiredPresentationMode = PresentationMode::VSync;
     bool m_autoRotateAvailable = false;
+    bool m_autoBrightnessAvailable = false;
 };
 
 }

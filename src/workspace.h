@@ -32,6 +32,7 @@ class KConfigGroup;
 class KStartupInfo;
 class KStartupInfoData;
 class KStartupInfoId;
+class QLightSensor;
 
 namespace KWin
 {
@@ -430,11 +431,15 @@ public:
     Activities *activities() const;
 #endif
 
+    enum class ConfigAdjustment {
+        None,
+        AutomaticBrightness,
+    };
     /**
      * Apply the requested output configuration. Note that you must use this function
      * instead of Platform::applyOutputChanges().
      */
-    OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder = std::nullopt);
+    OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder = std::nullopt, ConfigAdjustment adjustment = ConfigAdjustment::None);
     void updateXwaylandScale();
 
     void setActivationToken(const QString &token, uint32_t serial, const QString &appId);
@@ -729,6 +734,7 @@ private:
     std::unique_ptr<OutputConfigurationStore> m_outputConfigStore;
     std::unique_ptr<LidSwitchTracker> m_lidSwitchTracker;
     std::unique_ptr<OrientationSensor> m_orientationSensor;
+    std::unique_ptr<QLightSensor> m_lightSensor;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     KConfigWatcher::Ptr m_kdeglobalsWatcher;
 

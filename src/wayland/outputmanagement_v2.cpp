@@ -24,7 +24,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 17;
+static const quint32 s_version = 18;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -77,6 +77,7 @@ protected:
     void kde_output_configuration_v2_set_max_bits_per_color(Resource *resource, struct ::wl_resource *outputdevice, uint32_t max_bpc) override;
     void kde_output_configuration_v2_set_edr_policy(Resource *resource, struct ::wl_resource *outputdevice, uint32_t edrPolicy) override;
     void kde_output_configuration_v2_set_sharpness(Resource *resource, wl_resource *outputdevice, uint32_t sharpness) override;
+    void kde_output_configuration_v2_set_auto_brightness(Resource *resource, ::wl_resource *outputdevice, uint32_t enabled) override;
 
     void sendFailure(Resource *resource, const QString &reason);
 };
@@ -381,6 +382,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_brightness(
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
         config.changeSet(output->handle())->brightness = brightness / 10'000.0;
+        config.changeSet(output->handle())->brightnessReason = Output::BrightnessReason::ManualAdjustment;
     }
 }
 
@@ -480,6 +482,16 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_sharpness(R
     }
 }
 
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_auto_brightness(Resource *resource, ::wl_resource *outputdevice, uint32_t enabled)
+{
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->automaticBrightness = bool(enabled);
+    }
+}
+
 void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
@@ -564,7 +576,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
             return pair.second->handle();
         });
     }
-    switch (workspace()->applyOutputConfiguration(config, sortedOrder)) {
+    switch (workspace()->applyOutputConfiguration(config, sortedOrder, Workspace::ConfigAdjustment::AutomaticBrightness)) {
     case OutputConfigurationError::None:
         send_applied();
         break;
