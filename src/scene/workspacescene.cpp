@@ -497,7 +497,7 @@ static void resetRepaintsHelper(Item *item, SceneView *delegate)
 static void accumulateRepaints(Item *item, SceneView *delegate, QRegion *repaints)
 {
     if (delegate->shouldRenderItem(item)) {
-        *repaints += delegate->mapToDeviceCoordinatesAligned(item->takeRepaints(delegate));
+        *repaints += item->takeDeviceRepaints(delegate);
     }
 
     const auto childItems = item->childItems();

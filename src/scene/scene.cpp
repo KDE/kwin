@@ -52,14 +52,6 @@ void RenderView::addDeviceRepaint(const QRegion &deviceRegion)
     m_layer->addDeviceRepaint(deviceRegion);
 }
 
-void RenderView::addLogicalRepaint(const QRegion &globalLogicalRegion)
-{
-    if (!m_layer) {
-        return;
-    }
-    m_layer->addDeviceRepaint(mapToDeviceCoordinatesAligned(globalLogicalRegion));
-}
-
 void RenderView::scheduleRepaint(Item *item)
 {
     if (!m_layer) {
@@ -95,6 +87,16 @@ bool RenderView::isVisible() const
 bool RenderView::shouldRenderHole(Item *item) const
 {
     return false;
+}
+
+QRect RenderView::deviceRect() const
+{
+    return QRect(QPoint(), deviceSize());
+}
+
+QSize RenderView::deviceSize() const
+{
+    return (viewport().size() * scale()).toSize();
 }
 
 QRectF RenderView::mapToDeviceCoordinates(const QRectF &logicalGeometry) const
@@ -354,7 +356,7 @@ void ItemView::prePaint()
 
 QRegion ItemView::collectDamage()
 {
-    return mapToDeviceCoordinatesAligned(m_item->takeRepaints(this));
+    return m_item->takeDeviceRepaints(this);
 }
 
 void ItemView::postPaint()
@@ -390,7 +392,7 @@ void ItemView::setExclusive(bool enable)
         m_item->scheduleSceneRepaint(m_item->rect());
         // also need to add all the Item's pending repaint regions to the scene,
         // otherwise some required repaints may be missing
-        m_parentView->addLogicalRepaint(m_item->takeRepaints(m_parentView));
+        m_parentView->addDeviceRepaint(m_item->takeDeviceRepaints(m_parentView));
         m_parentView->addExclusiveView(this);
         if (m_underlay) {
             m_parentView->addUnderlay(this);
@@ -477,7 +479,7 @@ QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
 
 static void accumulateRepaints(Item *item, ItemTreeView *view, QRegion *repaints)
 {
-    *repaints += view->mapToDeviceCoordinatesAligned(item->takeRepaints(view));
+    *repaints += item->takeDeviceRepaints(view);
 
     const auto childItems = item->childItems();
     for (Item *childItem : childItems) {
@@ -520,7 +522,7 @@ void ItemTreeView::setExclusive(bool enable)
         m_item->scheduleSceneRepaint(m_item->boundingRect());
         // also need to add all the Item's pending repaint regions to the scene,
         // otherwise some required repaints may be missing
-        m_parentView->addLogicalRepaint(m_item->takeRepaints(m_parentView));
+        m_parentView->addDeviceRepaint(m_item->takeDeviceRepaints(m_parentView));
         m_parentView->addExclusiveView(this);
         if (m_underlay) {
             m_parentView->addUnderlay(this);
@@ -604,17 +606,21 @@ void Scene::addLogicalRepaint(int x, int y, int width, int height)
 void Scene::addLogicalRepaint(const QRegion &logicalRegion)
 {
     for (const auto &view : std::as_const(m_views)) {
-        const QRectF viewport = view->viewport();
-        QRegion dirtyRegion = logicalRegion & viewport.toAlignedRect();
-        if (!dirtyRegion.isEmpty()) {
-            view->addLogicalRepaint(dirtyRegion);
-        }
+        addLogicalRepaint(view, logicalRegion);
     }
 }
 
 void Scene::addLogicalRepaint(RenderView *view, const QRegion &logicalRegion)
 {
-    view->addLogicalRepaint(logicalRegion);
+    QRegion dirtyRegion = view->mapToDeviceCoordinatesAligned(logicalRegion);
+    if (!dirtyRegion.isEmpty()) {
+        view->addDeviceRepaint(dirtyRegion);
+    }
+}
+
+void Scene::addDeviceRepaint(RenderView *view, const QRegion &deviceRegion)
+{
+    view->addDeviceRepaint(deviceRegion);
 }
 
 QRegion Scene::damage() const

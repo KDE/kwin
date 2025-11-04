@@ -56,7 +56,6 @@ public:
      * add a repaint in layer-local device coordinates
      */
     void addDeviceRepaint(const QRegion &deviceRegion);
-    void addLogicalRepaint(const QRegion &globalLogicalRegion);
     void scheduleRepaint(Item *item);
     /**
      * @returns true if the layer can be moved with the Item
@@ -76,6 +75,12 @@ public:
     QRectF mapFromDeviceCoordinates(const QRectF &deviceGeometry) const;
     QRect mapFromDeviceCoordinatesAligned(const QRect &deviceGeometry) const;
     QRegion mapFromDeviceCoordinatesAligned(const QRegion &deviceGeometry) const;
+
+    /**
+     * @returns QRect(QPoint(), deviceSize())
+     */
+    QRect deviceRect() const;
+    QSize deviceSize() const;
 
 protected:
     Output *m_output = nullptr;
@@ -206,7 +211,8 @@ public:
     ItemRenderer *renderer() const;
 
     void addLogicalRepaint(const QRegion &logicalRegion);
-    void addLogicalRepaint(RenderView *delegate, const QRegion &logicalRegion);
+    void addLogicalRepaint(RenderView *view, const QRegion &logicalRegion);
+    void addDeviceRepaint(RenderView *view, const QRegion &deviceRegion);
     void addLogicalRepaint(int x, int y, int width, int height);
     void addRepaintFull();
     virtual QRegion damage() const;

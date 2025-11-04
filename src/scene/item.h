@@ -139,8 +139,8 @@ public:
     BorderRadius borderRadius() const;
     void setBorderRadius(const BorderRadius &radius);
 
-    QRect paintedArea(RenderView *delegate, const QRectF &rect) const;
-    QRegion paintedArea(RenderView *delegate, const QRegion &region) const;
+    QRect paintedDeviceArea(RenderView *delegate, const QRectF &logicalRect) const;
+    QRegion paintedDeviceArea(RenderView *delegate, const QRegion &logicalRegion) const;
 
     void scheduleRepaint(const QRectF &region);
     void scheduleSceneRepaint(const QRectF &region);
@@ -149,7 +149,7 @@ public:
     void scheduleRepaint(RenderView *delegate, const QRegion &region);
     void scheduleFrame();
     bool hasRepaints(RenderView *view) const;
-    QRegion takeRepaints(RenderView *delegate);
+    QRegion takeDeviceRepaints(RenderView *delegate);
     void resetRepaints(RenderView *delegate);
 
     WindowQuadList quads() const;
@@ -228,7 +228,7 @@ private:
     int m_z = 0;
     bool m_explicitVisible = true;
     bool m_effectiveVisible = true;
-    QMap<RenderView *, QRegion> m_repaints;
+    QMap<RenderView *, QRegion> m_deviceRepaints;
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
     std::shared_ptr<ColorDescription> m_colorDescription = ColorDescription::sRGB;
