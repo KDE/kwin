@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "wayland/datadevice.h"
+#include "wayland/abstract_drop_handler.h"
 
 #include <xcb/xcb.h>
 

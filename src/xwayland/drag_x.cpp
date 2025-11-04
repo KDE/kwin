@@ -17,15 +17,12 @@
 #include "xwayland.h"
 
 #include "atoms.h"
-#include "wayland/datadevice.h"
-#include "wayland/datasource.h"
 #include "wayland/seat.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
 
-#include <QMouseEvent>
 #include <QTimer>
 
 namespace KWin

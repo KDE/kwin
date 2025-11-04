@@ -7,17 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "transfer.h"
-
-#include "databridge.h"
-#include "xwayland.h"
-
 #include "atoms.h"
-#include "wayland/datadevice.h"
-#include "wayland/datasource.h"
-#include "wayland/seat.h"
-#include "wayland_server.h"
-#include "window.h"
-#include "workspace.h"
+#include "xwayland.h"
 
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>

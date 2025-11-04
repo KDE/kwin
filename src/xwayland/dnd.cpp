@@ -15,16 +15,13 @@
 #include "selection_source.h"
 
 #include "atoms.h"
-#include "wayland/compositor.h"
-#include "wayland/datasource.h"
 #include "wayland/seat.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
 #include "xwayland.h"
 #include "xwldrophandler.h"
-
-#include <QMouseEvent>
 
 #include <xcb/xcb.h>
 
