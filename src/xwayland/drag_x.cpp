@@ -271,7 +271,6 @@ static QList<xcb_atom_t> mimeTypeListFromWindow(xcb_window_t window)
 bool WlVisit::handleEnter(xcb_client_message_event_t *event)
 {
     if (m_entered) {
-        // a drag already entered
         return true;
     }
     m_entered = true;
@@ -365,7 +364,6 @@ bool WlVisit::handleLeave(xcb_client_message_event_t *event)
 
 void WlVisit::sendStatus()
 {
-    // receive position events
     uint32_t flags = 1 << 1;
     if (targetAcceptsAction()) {
         // accept the drop

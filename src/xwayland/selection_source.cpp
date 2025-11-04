@@ -162,7 +162,6 @@ static bool isSpecialSelectionTarget(xcb_atom_t atom)
 
 void X11Source::handleTargets()
 {
-    // receive targets
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_get_property_cookie_t cookie = xcb_get_property(xcbConn,
                                                         1,

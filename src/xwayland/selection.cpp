@@ -239,7 +239,6 @@ void Selection::startTransferToWayland(const QString &mimeType, qint32 fd)
 
 void Selection::startTransferToX(xcb_selection_request_event_t *event, qint32 fd)
 {
-    // create new wl to x data transfer object
     auto *transfer = new TransferWltoX(m_atom, event, fd, this);
 
     connect(transfer, &TransferWltoX::selectionNotify, this, &Selection::sendSelectionNotify);

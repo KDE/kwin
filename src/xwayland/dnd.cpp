@@ -137,7 +137,6 @@ bool Dnd::dragMoveFilter(Window *target, const QPointF &position)
 
 void Dnd::startDrag()
 {
-    // There can only ever be one Wl native drag at the same time.
     Q_ASSERT(!m_currentDrag);
 
     auto dragSource = waylandServer()->seat()->dragSource();
