@@ -66,6 +66,9 @@ public:
     std::optional<uint32_t> priority;
     std::optional<QList<CustomModeDefinition>> customModes;
     std::optional<QPoint> deviceOffset;
+    std::optional<bool> automaticBrightness;
+    std::optional<BrightnessMap> brightnessMap;
+    std::optional<BackendOutput::BrightnessReason> brightnessReason;
 };
 
 class KWIN_EXPORT OutputConfiguration
@@ -73,6 +76,12 @@ class KWIN_EXPORT OutputConfiguration
 public:
     std::shared_ptr<OutputChangeSet> changeSet(BackendOutput *output);
     std::shared_ptr<OutputChangeSet> constChangeSet(BackendOutput *output) const;
+
+    enum class ConfigReason {
+        UserInitiated,
+        Automatic,
+    };
+    ConfigReason reason = ConfigReason::Automatic;
 
 private:
     QMap<BackendOutput *, std::shared_ptr<OutputChangeSet>> m_properties;

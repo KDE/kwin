@@ -22,6 +22,16 @@ class BrightnessDevice;
 class OutputFrame;
 class OutputLayer;
 
+class KWIN_EXPORT BrightnessMap
+{
+public:
+    double sample(double lux) const;
+    void adjust(double brightness, double lux);
+
+private:
+    double m_luxForFullBrightness = 100;
+};
+
 class KWIN_EXPORT BackendOutput : public QObject
 {
     Q_OBJECT
@@ -50,6 +60,7 @@ public:
         Edr = 1 << 13,
         SharpnessControl = 1 << 14,
         CustomModes = 1 << 15,
+        AutomaticBrightness = 1 << 16,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -92,6 +103,12 @@ public:
         Always,
     };
     Q_ENUM(EdrPolicy);
+
+    enum class BrightnessReason {
+        ManualAdjustment,
+        AutomaticBrightness,
+    };
+    Q_ENUM(BrightnessReason);
 
     explicit BackendOutput();
     ~BackendOutput() override;
@@ -248,6 +265,7 @@ public:
     double sharpnessSetting() const;
 
     virtual void setAutoRotateAvailable(bool isAvailable);
+    virtual void setAutoBrightnessAvailable(bool isAvailable);
 
     virtual bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay);
     virtual bool testPresentation(const std::shared_ptr<OutputFrame> &frame) = 0;
@@ -276,6 +294,9 @@ public:
     const std::shared_ptr<ColorDescription> &colorDescription() const;
 
     uint32_t priority() const;
+    const BrightnessMap &brightnessMap() const;
+    bool automaticBrightness() const;
+    BrightnessReason lastBrightnessAdjustmentReason() const;
 
     /**
      * The setting for the scale factor, which may differ from scale
@@ -358,6 +379,7 @@ Q_SIGNALS:
     void edrPolicyChanged();
     void sharpnessChanged();
     void priorityChanged();
+    void automaticBrightnessChanged();
 
 protected:
     struct Information
@@ -437,6 +459,9 @@ protected:
         QList<CustomModeDefinition> customModes;
         double scaleSetting = 1;
         QPoint deviceOffset;
+        bool automaticBrightness = false;
+        BrightnessMap brightnessMap;
+        BrightnessReason lastBrightnessAdjustmentReason = BrightnessReason::ManualAdjustment;
     };
 
     void setInformation(const Information &information);

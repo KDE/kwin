@@ -91,6 +91,7 @@ private:
         std::optional<BackendOutput::EdrPolicy> edrPolicy;
         std::optional<double> sharpness;
         std::optional<QList<CustomModeDefinition>> customModes;
+        std::optional<bool> automaticBrightness;
     };
     struct SetupState
     {

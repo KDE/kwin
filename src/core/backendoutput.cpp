@@ -18,6 +18,26 @@
 namespace KWin
 {
 
+double BrightnessMap::sample(double lux) const
+{
+    return std::clamp(lux / m_luxForFullBrightness, 0.0, 1.0);
+}
+
+void BrightnessMap::adjust(double brightness, double lux)
+{
+    // This is the really difficult part about auto brightness:
+    // Adjust the brightness curve in a way that's intuitive for the user,
+    // without the user even knowing there's a curve.
+    // As I don't currently have any clever ideas about how to do that really
+    // well, this just implements the simplest mapping ever, linear with zero
+    // lux mapped to zero percent.
+    if (lux > 0 && brightness > 0) {
+        // 1000 lux is roughly shining a flash light directly into
+        // the sensor, so it should be a reasonable maximum
+        m_luxForFullBrightness = std::min(lux / brightness, 1000.0);
+    }
+}
+
 BackendOutput::BackendOutput()
 {
 }
@@ -312,6 +332,9 @@ void BackendOutput::setState(const State &state)
     if (oldState.deviceOffset != state.deviceOffset) {
         Q_EMIT deviceOffsetChanged();
     }
+    if (oldState.automaticBrightness != state.automaticBrightness) {
+        Q_EMIT automaticBrightnessChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -536,6 +559,10 @@ void BackendOutput::setAutoRotateAvailable(bool isAvailable)
 {
 }
 
+void BackendOutput::setAutoBrightnessAvailable(bool isAvailable)
+{
+}
+
 std::optional<uint32_t> BackendOutput::minVrrRefreshRateHz() const
 {
     return m_information.minVrrRefreshRateHz;
@@ -591,6 +618,21 @@ bool BackendOutput::isDdcCiKnownBroken() const
 bool BackendOutput::overlayLayersLikelyBroken() const
 {
     return false;
+}
+
+const BrightnessMap &BackendOutput::brightnessMap() const
+{
+    return m_state.brightnessMap;
+}
+
+bool BackendOutput::automaticBrightness() const
+{
+    return m_state.automaticBrightness;
+}
+
+BackendOutput::BrightnessReason BackendOutput::lastBrightnessAdjustmentReason() const
+{
+    return m_state.lastBrightnessAdjustmentReason;
 }
 
 } // namespace KWin

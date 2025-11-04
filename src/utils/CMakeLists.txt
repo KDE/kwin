@@ -5,6 +5,7 @@ target_sources(kwin PRIVATE
     edid.cpp
     filedescriptor.cpp
     gravity.cpp
+    lightsensor.cpp
     orientationsensor.cpp
     ramfile.cpp
     realtime.cpp
