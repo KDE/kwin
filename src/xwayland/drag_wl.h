@@ -9,8 +9,7 @@
 #pragma once
 
 #include "drag.h"
-
-#include "wayland/datadevicemanager.h"
+#include "wayland/abstract_data_source.h"
 
 #include <QList>
 #include <QPoint>
@@ -103,11 +102,11 @@ private:
     } m_pos;
 
     // supported by the Wl source
-    DataDeviceManagerInterface::DnDActions m_supportedActions = DataDeviceManagerInterface::DnDAction::None;
+    DnDActions m_supportedActions = DnDAction::None;
     // preferred by the X client
-    DataDeviceManagerInterface::DnDAction m_preferredAction = DataDeviceManagerInterface::DnDAction::None;
+    DnDAction m_preferredAction = DnDAction::None;
     // decided upon by the compositor
-    DataDeviceManagerInterface::DnDAction m_proposedAction = DataDeviceManagerInterface::DnDAction::None;
+    DnDAction m_proposedAction = DnDAction::None;
 
     struct
     {

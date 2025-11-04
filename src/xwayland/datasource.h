@@ -32,11 +32,11 @@ public:
     void setMimeTypes(const QStringList &mimeTypes);
 
     void accept(const QString &mimeType) override;
-    DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const override;
-    void setSupportedDndActions(DataDeviceManagerInterface::DnDActions dndActions);
+    DnDActions supportedDragAndDropActions() const override;
+    void setSupportedDndActions(DnDActions dndActions);
 
-    DataDeviceManagerInterface::DnDAction selectedDndAction() const override;
-    void dndAction(DataDeviceManagerInterface::DnDAction action) override;
+    DnDAction selectedDndAction() const override;
+    void dndAction(DnDAction action) override;
 
     void dropPerformed() override
     {
@@ -65,8 +65,8 @@ Q_SIGNALS:
 
 private:
     QStringList m_mimeTypes;
-    DataDeviceManagerInterface::DnDActions m_supportedDndActions;
-    DataDeviceManagerInterface::DnDAction m_dndAction = DataDeviceManagerInterface::DnDAction::None;
+    DnDActions m_supportedDndActions;
+    DnDAction m_dndAction = DnDAction::None;
     bool m_accepted = false;
     bool m_dndFinished = false;
 };

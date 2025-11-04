@@ -56,15 +56,15 @@ void DataSourceInterfacePrivate::data_source_set_actions(Resource *resource, uin
         wl_resource_post_error(resource->handle, error_invalid_action_mask, "Invalid action mask");
         return;
     }
-    DataDeviceManagerInterface::DnDActions supportedActions;
+    DnDActions supportedActions;
     if (dnd_actions & QtWaylandServer::wl_data_device_manager::dnd_action_copy) {
-        supportedActions |= DataDeviceManagerInterface::DnDAction::Copy;
+        supportedActions |= DnDAction::Copy;
     }
     if (dnd_actions & QtWaylandServer::wl_data_device_manager::dnd_action_move) {
-        supportedActions |= DataDeviceManagerInterface::DnDAction::Move;
+        supportedActions |= DnDAction::Move;
     }
     if (dnd_actions & QtWaylandServer::wl_data_device_manager::dnd_action_ask) {
-        supportedActions |= DataDeviceManagerInterface::DnDAction::Ask;
+        supportedActions |= DnDAction::Ask;
     }
     if (supportedDnDActions != supportedActions) {
         supportedDnDActions = supportedActions;
@@ -81,7 +81,7 @@ DataSourceInterface::DataSourceInterface(wl_resource *resource)
     : d(new DataSourceInterfacePrivate(this, resource))
 {
     if (d->resource()->version() < WL_DATA_SOURCE_ACTION_SINCE_VERSION) {
-        d->supportedDnDActions = DataDeviceManagerInterface::DnDAction::Copy;
+        d->supportedDnDActions = DnDAction::Copy;
     }
 }
 
@@ -118,12 +118,12 @@ DataSourceInterface *DataSourceInterface::get(wl_resource *native)
     return nullptr;
 }
 
-DataDeviceManagerInterface::DnDActions DataSourceInterface::supportedDragAndDropActions() const
+DnDActions DataSourceInterface::supportedDragAndDropActions() const
 {
     return d->supportedDnDActions;
 }
 
-DataDeviceManagerInterface::DnDAction DataSourceInterface::selectedDndAction() const
+DnDAction DataSourceInterface::selectedDndAction() const
 {
     return d->selectedDndAction;
 }
@@ -146,7 +146,7 @@ void DataSourceInterface::dndFinished()
     d->send_dnd_finished();
 }
 
-void DataSourceInterface::dndAction(DataDeviceManagerInterface::DnDAction action)
+void DataSourceInterface::dndAction(DnDAction action)
 {
     d->selectedDndAction = action;
     Q_EMIT dndActionChanged();
@@ -155,11 +155,11 @@ void DataSourceInterface::dndAction(DataDeviceManagerInterface::DnDAction action
         return;
     }
     uint32_t wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_none;
-    if (action == DataDeviceManagerInterface::DnDAction::Copy) {
+    if (action == DnDAction::Copy) {
         wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_copy;
-    } else if (action == DataDeviceManagerInterface::DnDAction::Move) {
+    } else if (action == DnDAction::Move) {
         wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_move;
-    } else if (action == DataDeviceManagerInterface::DnDAction::Ask) {
+    } else if (action == DnDAction::Ask) {
         wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_ask;
     }
     d->send_action(wlAction);

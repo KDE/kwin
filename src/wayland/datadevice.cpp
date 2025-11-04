@@ -183,26 +183,26 @@ void DataDeviceInterface::drop()
     d->send_drop();
 }
 
-static DataDeviceManagerInterface::DnDAction chooseDndAction(AbstractDataSource *source, DataOfferInterface *offer, Qt::KeyboardModifiers keyboardModifiers)
+static DnDAction chooseDndAction(AbstractDataSource *source, DataOfferInterface *offer, Qt::KeyboardModifiers keyboardModifiers)
 {
     // first the compositor picks an action forced by the data source
     if (const auto exclusiveAction = source->exclusiveAction()) {
         if (source->supportedDragAndDropActions().testFlag(*exclusiveAction) && offer->supportedDragAndDropActions().has_value() && offer->supportedDragAndDropActions()->testFlag(*exclusiveAction)) {
             return *exclusiveAction;
         } else {
-            return DataDeviceManagerInterface::DnDAction::None;
+            return DnDAction::None;
         }
     }
 
     // then the compositor picks an action if modifiers are pressed and it's supported both sides
     if (keyboardModifiers.testFlag(Qt::ControlModifier)) {
-        if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Copy) && offer->supportedDragAndDropActions().has_value() && offer->supportedDragAndDropActions()->testFlag(DataDeviceManagerInterface::DnDAction::Copy)) {
-            return DataDeviceManagerInterface::DnDAction::Copy;
+        if (source->supportedDragAndDropActions().testFlag(DnDAction::Copy) && offer->supportedDragAndDropActions().has_value() && offer->supportedDragAndDropActions()->testFlag(DnDAction::Copy)) {
+            return DnDAction::Copy;
         }
     }
     if (keyboardModifiers.testFlag(Qt::ShiftModifier)) {
-        if (source->supportedDragAndDropActions().testFlag(DataDeviceManagerInterface::DnDAction::Move) && offer->supportedDragAndDropActions().has_value() && offer->supportedDragAndDropActions()->testFlag(DataDeviceManagerInterface::DnDAction::Move)) {
-            return DataDeviceManagerInterface::DnDAction::Move;
+        if (source->supportedDragAndDropActions().testFlag(DnDAction::Move) && offer->supportedDragAndDropActions().has_value() && offer->supportedDragAndDropActions()->testFlag(DnDAction::Move)) {
+            return DnDAction::Move;
         }
     }
 
@@ -215,14 +215,14 @@ static DataDeviceManagerInterface::DnDAction chooseDndAction(AbstractDataSource 
 
     // finally pick something everyone supports in a deterministic fashion
     if (offer->supportedDragAndDropActions().has_value()) {
-        for (const DataDeviceManagerInterface::DnDAction action : {DataDeviceManagerInterface::DnDAction::Copy, DataDeviceManagerInterface::DnDAction::Move, DataDeviceManagerInterface::DnDAction::Ask}) {
+        for (const DnDAction action : {DnDAction::Copy, DnDAction::Move, DnDAction::Ask}) {
             if (source->supportedDragAndDropActions().testFlag(action) && offer->supportedDragAndDropActions()->testFlag(action)) {
                 return action;
             }
         }
     }
 
-    return DataDeviceManagerInterface::DnDAction::None;
+    return DnDAction::None;
 }
 
 void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPointF &position, quint32 serial)
@@ -246,7 +246,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
         // Keep the data offer alive so the target client can retrieve data after a drop. The
         // data offer will be destroyed after the target client has finished using it.
         if (dragSource && dragSource->isDropPerformed()) {
-            if (dragSource->selectedDndAction() != DataDeviceManagerInterface::DnDAction::Ask) {
+            if (dragSource->selectedDndAction() != DnDAction::Ask) {
                 disconnect(d->drag.sourceActionConnection);
                 disconnect(d->drag.targetActionConnection);
                 disconnect(d->drag.keyboardModifiersConnection);
@@ -266,7 +266,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
 
     if (!surface || !dragSource) {
         if (auto s = dragSource) {
-            s->dndAction(DataDeviceManagerInterface::DnDAction::None);
+            s->dndAction(DnDAction::None);
         }
         return;
     }
@@ -297,7 +297,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
                 keyboardModifiers = dragSource->keyboardModifiers();
             }
 
-            const DataDeviceManagerInterface::DnDAction action = chooseDndAction(dragSource, offer, keyboardModifiers);
+            const DnDAction action = chooseDndAction(dragSource, offer, keyboardModifiers);
             offer->dndAction(action);
             dragSource->dndAction(action);
         };

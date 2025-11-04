@@ -6,13 +6,13 @@
 */
 #pragma once
 
-#include "kwin_export.h"
+#include "abstract_data_source.h"
 
 #include <QObject>
 
-#include "datadevicemanager.h"
-
 #include <optional>
+
+struct wl_resource;
 
 namespace KWin
 {
@@ -37,18 +37,18 @@ public:
     /**
      * @returns The Drag and Drop actions supported by this DataOfferInterface.
      */
-    std::optional<DataDeviceManagerInterface::DnDActions> supportedDragAndDropActions() const;
+    std::optional<DnDActions> supportedDragAndDropActions() const;
 
     /**
      * @returns The preferred Drag and Drop action of this DataOfferInterface.
      */
-    std::optional<DataDeviceManagerInterface::DnDAction> preferredDragAndDropAction() const;
+    std::optional<DnDAction> preferredDragAndDropAction() const;
 
     /**
      * This event indicates the @p action selected by the compositor after matching the
      * source/destination side actions. Only one action (or none) will be offered here.
      */
-    void dndAction(DataDeviceManagerInterface::DnDAction action);
+    void dndAction(DnDAction action);
 
 Q_SIGNALS:
     /**

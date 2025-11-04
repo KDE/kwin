@@ -200,7 +200,7 @@ void SeatInterface::endDrag()
     AbstractDataSource *dragSource = d->drag.source;
 
     if (dragSource) {
-        if (dragTargetDevice && dragSource->isAccepted() && dragSource->selectedDndAction() != DataDeviceManagerInterface::DnDAction::None) {
+        if (dragTargetDevice && dragSource->isAccepted() && dragSource->selectedDndAction() != DnDAction::None) {
             Q_EMIT dragDropped();
             dragTargetDevice->drop();
             dragSource->dropPerformed();

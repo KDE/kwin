@@ -10,7 +10,7 @@
 
 #include "selection.h"
 
-#include "wayland/datadevicemanager.h"
+#include "wayland/abstract_data_source.h"
 
 #include <QPoint>
 
@@ -45,8 +45,6 @@ public:
 
     bool dragMoveFilter(Window *target, const QPointF &position);
 
-    using DnDAction = DataDeviceManagerInterface::DnDAction;
-    using DnDActions = DataDeviceManagerInterface::DnDActions;
     static DnDAction atomToClientAction(xcb_atom_t atom);
     static xcb_atom_t clientActionToAtom(DnDAction action);
 

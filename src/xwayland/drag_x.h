@@ -10,8 +10,7 @@
 
 #include "datasource.h"
 #include "drag.h"
-
-#include "wayland/datadevicemanager.h"
+#include "wayland/abstract_data_source.h"
 
 #include <QList>
 #include <QPoint>
@@ -38,8 +37,8 @@ public:
     bool moveFilter(Window *target, const QPointF &position) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
-    void setDragAndDropAction(DataDeviceManagerInterface::DnDAction action);
-    DataDeviceManagerInterface::DnDAction selectedDragAndDropAction();
+    void setDragAndDropAction(DnDAction action);
+    DnDAction selectedDragAndDropAction();
 
     X11Source *x11Source() const
     {
@@ -57,7 +56,7 @@ private:
     WlVisit *m_visit = nullptr;
     QList<WlVisit *> m_oldVisits;
 
-    DataDeviceManagerInterface::DnDAction m_lastSelectedDragAndDropAction = DataDeviceManagerInterface::DnDAction::None;
+    DnDAction m_lastSelectedDragAndDropAction = DnDAction::None;
 
     Q_DISABLE_COPY(XToWlDrag)
 };
@@ -122,7 +121,7 @@ private:
     uint32_t m_version = 0;
 
     xcb_atom_t m_actionAtom;
-    DataDeviceManagerInterface::DnDAction m_action = DataDeviceManagerInterface::DnDAction::None;
+    DnDAction m_action = DnDAction::None;
 
     bool m_mapped = false;
     bool m_entered = false;

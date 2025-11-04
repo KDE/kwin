@@ -38,23 +38,23 @@ void XwlDataSource::accept(const QString &mimeType)
     Q_EMIT acceptedChanged();
 }
 
-DataDeviceManagerInterface::DnDActions XwlDataSource::supportedDragAndDropActions() const
+DnDActions XwlDataSource::supportedDragAndDropActions() const
 {
     return m_supportedDndActions;
 }
 
-void XwlDataSource::setSupportedDndActions(DataDeviceManagerInterface::DnDActions dndActions)
+void XwlDataSource::setSupportedDndActions(DnDActions dndActions)
 {
     m_supportedDndActions = dndActions;
     Q_EMIT supportedDragAndDropActionsChanged();
 }
 
-DataDeviceManagerInterface::DnDAction XwlDataSource::selectedDndAction() const
+DnDAction XwlDataSource::selectedDndAction() const
 {
     return m_dndAction;
 }
 
-void XwlDataSource::dndAction(DataDeviceManagerInterface::DnDAction action)
+void XwlDataSource::dndAction(DnDAction action)
 {
     m_dndAction = action;
     Q_EMIT dndActionChanged();

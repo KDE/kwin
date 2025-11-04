@@ -31,17 +31,6 @@ public:
     explicit DataDeviceManagerInterface(Display *display, QObject *parent = nullptr);
     ~DataDeviceManagerInterface() override;
 
-    /**
-     * Drag and Drop actions supported by the DataSourceInterface.
-     */
-    enum class DnDAction {
-        None = 0,
-        Copy = 1 << 0,
-        Move = 1 << 1,
-        Ask = 1 << 2,
-    };
-    Q_DECLARE_FLAGS(DnDActions, DnDAction)
-
 Q_SIGNALS:
     void dataSourceCreated(KWin::DataSourceInterface *);
     void dataDeviceCreated(KWin::DataDeviceInterface *);
@@ -51,5 +40,3 @@ private:
 };
 
 }
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::DataDeviceManagerInterface::DnDActions)

@@ -175,9 +175,6 @@ void Dnd::clearOldDrag(Drag *drag)
     delete drag;
 }
 
-using DnDAction = DataDeviceManagerInterface::DnDAction;
-using DnDActions = DataDeviceManagerInterface::DnDActions;
-
 DnDAction Dnd::atomToClientAction(xcb_atom_t atom)
 {
     if (atom == atoms->xdnd_action_copy) {

@@ -10,6 +10,8 @@
 #include "abstract_data_source.h"
 #include "datacontroldevicemanager_v1.h"
 
+struct wl_resource;
+
 namespace KWin
 {
 class DataControlSourceV1InterfacePrivate;

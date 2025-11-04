@@ -1165,16 +1165,16 @@ void CursorImage::updateDragCursor()
     AbstractDataSource *dragSource = waylandServer()->seat()->dragSource();
     if (dragSource && dragSource->isAccepted()) {
         switch (dragSource->selectedDndAction()) {
-        case DataDeviceManagerInterface::DnDAction::None:
+        case DnDAction::None:
             m_dragCursor->setShape(Qt::ClosedHandCursor);
             break;
-        case DataDeviceManagerInterface::DnDAction::Copy:
+        case DnDAction::Copy:
             m_dragCursor->setShape(Qt::DragCopyCursor);
             break;
-        case DataDeviceManagerInterface::DnDAction::Move:
+        case DnDAction::Move:
             m_dragCursor->setShape(Qt::DragMoveCursor);
             break;
-        case DataDeviceManagerInterface::DnDAction::Ask:
+        case DnDAction::Ask:
             // Cursor themes don't have anything better in the themes yet
             // a dnd-drag-ask is proposed
             m_dragCursor->setShape(Qt::ClosedHandCursor);

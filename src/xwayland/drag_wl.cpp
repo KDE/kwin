@@ -27,9 +27,6 @@
 #include <QMouseEvent>
 #include <QTimer>
 
-using DnDAction = KWin::DataDeviceManagerInterface::DnDAction;
-using DnDActions = KWin::DataDeviceManagerInterface::DnDActions;
-
 namespace KWin
 {
 namespace Xwl

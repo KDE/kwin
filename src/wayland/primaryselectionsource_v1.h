@@ -10,6 +10,8 @@
 #include "abstract_data_source.h"
 #include "primaryselectiondevicemanager_v1.h"
 
+struct wl_resource;
+
 namespace KWin
 {
 class PrimarySelectionSourceV1InterfacePrivate;

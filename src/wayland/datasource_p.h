@@ -25,8 +25,8 @@ public:
 
     DataSourceInterface *q;
     QStringList mimeTypes;
-    DataDeviceManagerInterface::DnDActions supportedDnDActions = DataDeviceManagerInterface::DnDAction::None;
-    DataDeviceManagerInterface::DnDAction selectedDndAction = DataDeviceManagerInterface::DnDAction::None;
+    DnDActions supportedDnDActions = DnDAction::None;
+    DnDAction selectedDndAction = DnDAction::None;
     bool isAccepted = false;
     bool dropPerformed = false;
     bool isCanceled = false;

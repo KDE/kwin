@@ -28,7 +28,7 @@ Qt::KeyboardModifiers AbstractDataSource::keyboardModifiers() const
     return m_heldModifiers;
 }
 
-void AbstractDataSource::setExclusiveAction(DataDeviceManagerInterface::DnDAction action)
+void AbstractDataSource::setExclusiveAction(DnDAction action)
 {
     if (m_exclusiveAction != action) {
         m_exclusiveAction = action;
@@ -36,7 +36,7 @@ void AbstractDataSource::setExclusiveAction(DataDeviceManagerInterface::DnDActio
     }
 }
 
-std::optional<DataDeviceManagerInterface::DnDAction> AbstractDataSource::exclusiveAction() const
+std::optional<DnDAction> AbstractDataSource::exclusiveAction() const
 {
     return m_exclusiveAction;
 }

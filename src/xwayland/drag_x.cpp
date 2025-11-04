@@ -33,9 +33,6 @@ namespace KWin
 namespace Xwl
 {
 
-using DnDAction = KWin::DataDeviceManagerInterface::DnDAction;
-using DnDActions = KWin::DataDeviceManagerInterface::DnDActions;
-
 XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
     : m_dnd(dnd)
     , m_source(source)
@@ -43,8 +40,8 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
     // Supported source actions are not known for sure, so we set all actions. When an XdndPosition
     // message arrives, the user action in it will be forced. If the target surface doesn't support
     // the user action, "none" action will be chosen instead.
-    m_source->dataSource()->setSupportedDndActions(DataDeviceManagerInterface::DnDAction::Copy | DataDeviceManagerInterface::DnDAction::Move | DataDeviceManagerInterface::DnDAction::Ask);
-    m_source->dataSource()->setExclusiveAction(DataDeviceManagerInterface::DnDAction::None);
+    m_source->dataSource()->setSupportedDndActions(DnDAction::Copy | DnDAction::Move | DnDAction::Ask);
+    m_source->dataSource()->setExclusiveAction(DnDAction::None);
 
     connect(source->dataSource(), &XwlDataSource::dropped, this, [this] {
         if (m_visit) {

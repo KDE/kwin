@@ -9,12 +9,23 @@
 #include "kwin_export.h"
 
 #include "clientconnection.h"
-#include "datadevicemanager.h"
 
 struct wl_client;
 
 namespace KWin
 {
+
+/**
+ * Drag and Drop actions supported by the data source.
+ */
+enum class DnDAction {
+    None = 0,
+    Copy = 1 << 0,
+    Move = 1 << 1,
+    Ask = 1 << 2,
+};
+Q_DECLARE_FLAGS(DnDActions, DnDAction)
+
 /**
  * @brief The AbstractDataSource class abstracts the data that
  * can be transferred to another client.
@@ -45,13 +56,13 @@ public:
     /**
      * @returns The Drag and Drop actions supported by this DataSourceInterface.
      */
-    virtual DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const
+    virtual DnDActions supportedDragAndDropActions() const
     {
         return {};
     };
-    virtual DataDeviceManagerInterface::DnDAction selectedDndAction() const
+    virtual DnDAction selectedDndAction() const
     {
-        return DataDeviceManagerInterface::DnDAction::None;
+        return DnDAction::None;
     }
     /**
      * The user performed the drop action during a drag and drop operation.
@@ -70,9 +81,9 @@ public:
      * This event indicates the @p action selected by the compositor after matching the
      * source/destination side actions. Only one action (or none) will be offered here.
      */
-    virtual void dndAction(DataDeviceManagerInterface::DnDAction action)
+    virtual void dndAction(DnDAction action)
     {
-    };
+    }
 
     bool isDndCancelled() const
     {
@@ -108,8 +119,8 @@ public:
      * Action forced by the data source. Its primary purpose is to support XDND where supported
      * source actions are unknown until some specific action arrives with an XdndPosition message.
      */
-    void setExclusiveAction(DataDeviceManagerInterface::DnDAction action);
-    std::optional<DataDeviceManagerInterface::DnDAction> exclusiveAction() const;
+    void setExclusiveAction(DnDAction action);
+    std::optional<DnDAction> exclusiveAction() const;
 
 Q_SIGNALS:
     void aboutToBeDestroyed();
@@ -125,10 +136,12 @@ protected:
     explicit AbstractDataSource(QObject *parent = nullptr);
 
 private:
-    std::optional<DataDeviceManagerInterface::DnDAction> m_exclusiveAction;
+    std::optional<DnDAction> m_exclusiveAction;
     Qt::KeyboardModifiers m_heldModifiers;
     bool m_dndCancelled = false;
     bool m_dndDropped = false;
 };
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::DnDActions)
