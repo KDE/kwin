@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2023-11-17 10:46+0100\n"
+"PO-Revision-Date: 2025-05-04 12:01+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -144,7 +144,7 @@ msgstr "Correspondance exacte"
 #: optionsmodel.cpp:200
 #, kde-format
 msgid "Substring Match"
-msgstr "Correspondance à une sous-chaîne"
+msgstr "Correspondance à une sous-chaine"
 
 #: optionsmodel.cpp:201
 #, kde-format
@@ -595,7 +595,7 @@ msgid ""
 "what might be nasty if the client abuses the feature\n"
 "to unconditionally popup in the middle of your screen."
 msgstr ""
-"Les fenêtres peuvent demander à apparaître à une position donnée. \n"
+"Les fenêtres peuvent demander à apparaitre à une position donnée. \n"
 "Par défaut, cela remplace la stratégie de placement, ce qui \n"
 "peut donner des résultats déplaisants si l'utilisateur abuse de cette "
 "fonctionnalité\n"
@@ -657,7 +657,7 @@ msgstr "Ignorer la barre de tâches"
 #: rulesmodel.cpp:549
 #, kde-format
 msgid "Window shall (not) appear in the taskbar."
-msgstr "La fenêtre doit (ou ne doit pas) apparaître dans la barre de tâches. "
+msgstr "La fenêtre doit (ou ne doit pas) apparaitre dans la barre de tâches. "
 
 #: rulesmodel.cpp:553
 #, kde-format
@@ -668,7 +668,7 @@ msgstr "Ignorer le gestionnaire de pages"
 #, kde-format
 msgid "Window shall (not) appear in the manager for virtual desktops"
 msgstr ""
-"La fenêtre doit (ou ne doit pas) apparaître dans le gestionnaire de bureaux "
+"La fenêtre doit (ou ne doit pas) apparaitre dans le gestionnaire de bureaux "
 "virtuels"
 
 #: rulesmodel.cpp:559
@@ -680,7 +680,7 @@ msgstr "Ignorer le sélecteur de tâches"
 #, kde-format
 msgid "Window shall (not) appear in the Alt+Tab list"
 msgstr ""
-"La fenêtre doit (ou ne doit pas) apparaître dans la liste « Alt » + « Tab »"
+"La fenêtre doit (ou ne doit pas) apparaitre dans la liste « Alt » + « Tab »"
 
 #: rulesmodel.cpp:565
 #, kde-format
