@@ -463,10 +463,10 @@ Device::Device(libinput_device *device, QObject *parent)
 
     const auto udevDevice = libinput_device_get_udev_device(m_device);
     if (udevDevice != nullptr) {
-        const auto devPath = udev_device_get_devpath(udevDevice);
-
-        // In UDev, all virtual uinput devices have a devpath start with /devices/virtual
-        m_isVirtual = strstr(devPath, "/devices/virtual/") != nullptr;
+        if (const auto devPath = udev_device_get_devpath(udevDevice)) {
+            // In UDev, all virtual uinput devices have a devpath start with /devices/virtual
+            m_isVirtual = strstr(devPath, "/devices/virtual/") != nullptr;
+        }
         udev_device_unref(udevDevice);
     }
 
