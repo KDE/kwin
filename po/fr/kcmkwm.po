@@ -62,7 +62,7 @@ msgstr ""
 #: actions.ui:46
 #, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr "Activer, effectuer un clic et faire apparaître au relâchement"
+msgstr "Activer, effectuer un clic et faire apparaitre au relâchement"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -496,7 +496,7 @@ msgid ""
 "window under the pointer</li></ul></body></html>"
 msgstr ""
 "<html><head/><body><p>La politique de placement détermine où la nouvelle "
-"fenêtre apparaîtra sur le bureau.</p><ul style=\"margin-top: 0px; margin-"
+"fenêtre apparaitra sur le bureau.</p><ul style=\"margin-top: 0px; margin-"
 "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li "
 "style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"

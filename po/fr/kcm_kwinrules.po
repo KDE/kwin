@@ -62,7 +62,7 @@ msgstr "Correspondance exacte"
 #: optionsmodel.cpp:200
 #, kde-format
 msgid "Substring match"
-msgstr "Correspondance à une sous-chaîne"
+msgstr "Correspondance à une sous-chaine"
 
 #: optionsmodel.cpp:201
 #, kde-format
@@ -402,7 +402,7 @@ msgstr "Ignorer la barre de tâches"
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
 msgstr ""
-"Contrôle si la fenêtre doit ou non apparaître dans le gestionnaire de tâches."
+"Contrôle si la fenêtre doit ou non apparaitre dans le gestionnaire de tâches."
 
 #: rulesmodel.cpp:588
 #, kde-format
@@ -415,7 +415,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
-"Contrôle si la fenêtre doit ou non apparaître dans le gestionnaire de "
+"Contrôle si la fenêtre doit ou non apparaitre dans le gestionnaire de "
 "bureaux virtuels."
 
 #: rulesmodel.cpp:594
@@ -430,7 +430,7 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
-"Contrôle si la fenêtre doit ou non apparaître dans la liste de fenêtres "
+"Contrôle si la fenêtre doit ou non apparaitre dans la liste de fenêtres "
 "proposée avec le raccourci <shortcut>ALT + Tab</shortcut>."
 
 #: rulesmodel.cpp:600
@@ -662,7 +662,7 @@ msgstr "Fenêtre normale"
 #: rulesmodel.cpp:815
 #, kde-format
 msgid "Dialog window"
-msgstr "Fenêtre de boîte de dialogue"
+msgstr "Fenêtre de boite de dialogue"
 
 #: rulesmodel.cpp:816
 #, kde-format

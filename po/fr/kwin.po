@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-01 00:48+0000\n"
-"PO-Revision-Date: 2025-09-24 14:18+0200\n"
+"POT-Creation-Date: 2025-11-04 00:43+0000\n"
+"PO-Revision-Date: 2025-10-29 09:49+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 25.08.1\n"
+"X-Generator: Lokalize 25.08.2\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -96,7 +96,7 @@ msgstr "Appuyez sur la touche de contrôle droite pour saisir l'entrée"
 msgid "KDE Wayland Compositor"
 msgstr "Compositeur Wayland de KDE"
 
-#: compositor.cpp:578
+#: compositor.cpp:579
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -2459,10 +2459,9 @@ msgstr "Impossible de se connecter à un contexte « PipeWire »"
 #: plugins/screencast/screencastmanager.cpp:79
 #: plugins/screencast/screencastmanager.cpp:95
 #: plugins/screencast/screencastmanager.cpp:140
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "Désactiver la composition"
+msgstr "Type de composition non prise en charge"
 
 #: plugins/screencast/screencastmanager.cpp:60
 #, kde-format
@@ -3021,7 +3020,7 @@ msgstr "Classe de fenêtre (application)"
 #: rulesettings.kcfg:27
 #, kde-format
 msgid "Window class string match type"
-msgstr "Type de correspondance par chaîne avec la classe de la fenêtre "
+msgstr "Type de correspondance par chaine avec la classe de la fenêtre "
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:33
@@ -3039,7 +3038,7 @@ msgstr "Rôle de fenêtre"
 #: rulesettings.kcfg:41
 #, kde-format
 msgid "Window role string match type"
-msgstr "Type de correspondance par chaîne avec le rôle de la fenêtre"
+msgstr "Type de correspondance par chaine avec le rôle de la fenêtre"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:48
@@ -3051,7 +3050,7 @@ msgstr "Titre de fenêtre"
 #: rulesettings.kcfg:51
 #, kde-format
 msgid "Window title string match type"
-msgstr "Type de correspondance par chaîne avec le titre de la fenêtre"
+msgstr "Type de correspondance par chaine avec le titre de la fenêtre"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:58
@@ -3063,7 +3062,7 @@ msgstr "Ordinateur (nom d'hôte)"
 #: rulesettings.kcfg:61
 #, kde-format
 msgid "Machine string match type"
-msgstr "Type de correspondance par chaîne avec l'ordinateur"
+msgstr "Type de correspondance par chaine avec l'ordinateur"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
@@ -3075,7 +3074,7 @@ msgstr "Libellé de fenêtre"
 #: rulesettings.kcfg:71
 #, kde-format
 msgid "Window tag string match type"
-msgstr "Type de correspondance par chaîne avec le libellé de la fenêtre"
+msgstr "Type de correspondance par chaine avec le libellé de la fenêtre"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
