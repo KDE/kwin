@@ -46,7 +46,7 @@ RuntimeDependencies:
     'plasma/plasma-workspace': '@same' # kscreenlocker needs it
 
 Options:
- ctest-arguments: '--repeat until-pass:5'
+ ctest-arguments: '--repeat until-pass:3 --timeout 90'
  use-ccache: True
  cppcheck-arguments: '--enable=warning,style,performance --library=kwin-cppcheck.xml --suppress-xml=cppcheck-suppressions.xml'
  cppcheck-ignore-files:
