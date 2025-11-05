@@ -346,6 +346,7 @@ void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, doubl
     addMatrix(s_fromICtCp, currentOutputRange(), ColorspaceType::AnyNonRGB);
     addTransferFunction(PQ, ColorspaceType::AnyNonRGB);
     addMatrix(containerColorimetry.fromLMS(), currentOutputRange(), ColorspaceType::LinearRGB);
+    // TODO add clipping in RGB here (or gamut mapping in ICtCp), to match the shader
 }
 
 void ColorPipeline::add1DLUT(const std::shared_ptr<ColorTransformation> &transform, ColorspaceType outputType)

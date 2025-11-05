@@ -112,7 +112,7 @@ vec3 doTonemapping(vec3 color) {
         return clamp(color.rgb, vec3(0.0), vec3(maxDestinationLuminance));
     }
 
-    // first, convert to ICtCp, to properly split luminance and color
+    // convert to ICtCp, to properly split luminance and color
     // intensity is PQ-encoded luminance
     vec3 lms = (destinationToLMS * vec4(color, 1.0)).rgb;
     vec3 lms_PQ = linearToPq(lms / 10000.0);
@@ -127,9 +127,11 @@ vec3 doTonemapping(vec3 color) {
     relativeLuminance = relativeLuminance * (1.0 + relativeLuminance * v) / (1.0 + relativeLuminance);
     luminance = relativeLuminance * destinationReferenceLuminance;
 
-    // last, convert back to rgb
+    // convert back to rgb
     ICtCp.r = singleLinearToPq(luminance / 10000.0);
-    return (lmsToDestination * vec4(pqToLinear(fromICtCp * ICtCp), 1.0)).rgb * 10000.0;
+    color = (lmsToDestination * vec4(pqToLinear(fromICtCp * ICtCp), 1.0)).rgb * 10000.0;
+    // and clip, to ensure out-of-gamut values are clipped to the correct white point
+    return clamp(color, vec3(0.0), vec3(maxDestinationLuminance));
 }
 
 vec4 encodingToNits(vec4 color, int sourceTransferFunction, float luminanceOffset, float luminanceScale) {
