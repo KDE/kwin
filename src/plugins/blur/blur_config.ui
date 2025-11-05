@@ -10,32 +10,16 @@
     <height>184</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
     <widget class="QLabel" name="labelConstantBlurDescription">
      <property name="text">
       <string>Blur strength:</string>
      </property>
     </widget>
    </item>
-   <item>
+   <item row="0" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
      <item>
       <widget class="QLabel" name="labelConstantBlurLight">
        <property name="text">
@@ -61,10 +45,10 @@
         <number>10</number>
        </property>
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="tickPosition">
-        <enum>QSlider::TicksBelow</enum>
+        <enum>QSlider::TickPosition::TicksBelow</enum>
        </property>
       </widget>
      </item>
@@ -77,31 +61,15 @@
      </item>
     </layout>
    </item>
-   <item>
+   <item row="2" column="0">
     <widget class="QLabel" name="labelConstantNoiseDescription">
      <property name="text">
       <string>Noise strength:</string>
      </property>
     </widget>
    </item>
-   <item>
+   <item row="2" column="1">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
      <item>
       <widget class="QLabel" name="labelConstantNoiseLight">
        <property name="text">
@@ -121,10 +89,10 @@
         <number>5</number>
        </property>
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="tickPosition">
-        <enum>QSlider::TicksBelow</enum>
+        <enum>QSlider::TickPosition::TicksBelow</enum>
        </property>
        <property name="tickInterval">
         <number>1</number>
@@ -139,19 +107,6 @@
       </widget>
      </item>
     </layout>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
