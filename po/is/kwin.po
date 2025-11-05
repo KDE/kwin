@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:43+0000\n"
+"POT-Creation-Date: 2025-11-05 00:45+0000\n"
 "PO-Revision-Date: 2025-10-25 11:06+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -85,77 +85,77 @@ msgstr "KDE Wayland skjásamsetning"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Skjáborðsbrellur voru endurræstar vegna endurstillingar á myndvinnslu"
 
-#: core/iccprofile.cpp:252
+#: core/iccprofile.cpp:326
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "Gat ekki opnað ICC-litasnið \"%1\""
 
-#: core/iccprofile.cpp:254
+#: core/iccprofile.cpp:328
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC-litasniðið \"%1\" er ekki til"
 
-#: core/iccprofile.cpp:258
+#: core/iccprofile.cpp:332
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC-litasniðið \"%1\" er ekki nothæft fyrir skjái"
 
-#: core/iccprofile.cpp:261
+#: core/iccprofile.cpp:335
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
 "ICC-litasniðið \"%1\" er með óstutt tengirými, einungis er stuðningur við XYZ"
 
-#: core/iccprofile.cpp:264
+#: core/iccprofile.cpp:338
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr "ICC-litasniðið \"%1\" er bilað, inntaks-/úttakslitrými er ekki RGB"
 
-#: core/iccprofile.cpp:277
+#: core/iccprofile.cpp:351
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC-litasniðið \"%1\" er bilað, það er ekki með neinn hvítan punkt"
 
-#: core/iccprofile.cpp:280
+#: core/iccprofile.cpp:354
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC-litasniðið \"%1\" er bilað, hvítur punktur þess er ógildur"
 
-#: core/iccprofile.cpp:293
+#: core/iccprofile.cpp:367
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr "ICC-litasniðið \"%1\" er bilað, þáttun á litaaðlögunarfylki mistókst"
 
-#: core/iccprofile.cpp:298
+#: core/iccprofile.cpp:372
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
 "ICC-litasniðið \"%1\" er bilað, umsnúningur litaaðlögunarfylkis mistókst"
 
-#: core/iccprofile.cpp:311
+#: core/iccprofile.cpp:385
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC-litasniðið \"%1\" er bilað, það er ekki með neina grunnliti"
 
-#: core/iccprofile.cpp:326
+#: core/iccprofile.cpp:400
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr "ICC-litasniðið \"%1\" er bilað, gat ekki reiknað út grunnliti þess"
 
-#: core/iccprofile.cpp:335
+#: core/iccprofile.cpp:409
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC-litasniðið \"%1\" er bilað, grunnlitir þess eru ógildir"
 
-#: core/iccprofile.cpp:351
+#: core/iccprofile.cpp:425
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC-litasniðið \"%1\" með eingöngu BToD-merki er ekki stutt"
 
-#: core/iccprofile.cpp:390
+#: core/iccprofile.cpp:464
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Engin TRC-merki í litasniði"

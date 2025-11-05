@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:43+0000\n"
+"POT-Creation-Date: 2025-11-05 00:45+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -74,75 +74,75 @@ msgstr "KDE Wayland 显示特效混合器"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "由于显卡重置，桌面效果已重启。"
 
-#: core/iccprofile.cpp:252
+#: core/iccprofile.cpp:326
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "打开 ICC 色彩特性文件“%1”失败"
 
-#: core/iccprofile.cpp:254
+#: core/iccprofile.cpp:328
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC 色彩特性文件“%1”不存在"
 
-#: core/iccprofile.cpp:258
+#: core/iccprofile.cpp:332
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC 色彩特性文件“%1”不能用于显示器"
 
-#: core/iccprofile.cpp:261
+#: core/iccprofile.cpp:335
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr "ICC 色彩特性文件“%1”包含不支持的连接空间，系统只支持 XYZ 连接空间"
 
-#: core/iccprofile.cpp:264
+#: core/iccprofile.cpp:338
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr "ICC 色彩特性文件“%1”包含错误，它的输入/输出色彩空间不是 RGB 空间"
 
-#: core/iccprofile.cpp:277
+#: core/iccprofile.cpp:351
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC 色彩特性文件“%1”包含错误，它没有白点信息"
 
-#: core/iccprofile.cpp:280
+#: core/iccprofile.cpp:354
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC 色彩特性文件“%1”包含错误，它的白点信息无效"
 
-#: core/iccprofile.cpp:293
+#: core/iccprofile.cpp:367
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr "ICC 色彩特性文件“%1”包含错误，解析色度调整矩阵失败"
 
-#: core/iccprofile.cpp:298
+#: core/iccprofile.cpp:372
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr "ICC 色彩特性文件“%1”包含错误，反转色度调整矩阵失败"
 
-#: core/iccprofile.cpp:311
+#: core/iccprofile.cpp:385
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC 色彩特性文件“%1”包含错误，它没有原色信息"
 
-#: core/iccprofile.cpp:326
+#: core/iccprofile.cpp:400
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr "ICC 色彩特性文件“%1”包含错误，无法计算其原色信息"
 
-#: core/iccprofile.cpp:335
+#: core/iccprofile.cpp:409
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC 色彩特性文件“%1”包含错误，它的原色信息无效"
 
-#: core/iccprofile.cpp:351
+#: core/iccprofile.cpp:425
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC 色彩特性文件“%1”只包含 BToD 标签，系统不支持"
 
-#: core/iccprofile.cpp:390
+#: core/iccprofile.cpp:464
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "ICC 色彩特性文件缺少 TRC 标签"

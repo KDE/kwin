@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-04 00:43+0000\n"
+"POT-Creation-Date: 2025-11-05 00:45+0000\n"
 "PO-Revision-Date: 2025-10-30 18:31+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -98,22 +98,22 @@ msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Подсистема эффектов рабочего стола была перезапущена из-за сброса графики"
 
-#: core/iccprofile.cpp:252
+#: core/iccprofile.cpp:326
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "Не удалось открыть ICC-профиль «%1»"
 
-#: core/iccprofile.cpp:254
+#: core/iccprofile.cpp:328
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC-профиль «%1» не существует"
 
-#: core/iccprofile.cpp:258
+#: core/iccprofile.cpp:332
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC-профиль «%1» нельзя использовать для экранов"
 
-#: core/iccprofile.cpp:261
+#: core/iccprofile.cpp:335
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
@@ -121,24 +121,24 @@ msgstr ""
 "У ICC-профиля «%1» неподдерживаемое пространство связи, поддерживается "
 "только XYZ"
 
-#: core/iccprofile.cpp:264
+#: core/iccprofile.cpp:338
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
 "ICC-профиль «%1» повреждён, входное/выходное цветовое пространство отлично "
 "от RGB"
 
-#: core/iccprofile.cpp:277
+#: core/iccprofile.cpp:351
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC-профиль «%1» повреждён, отсутствует точка белого"
 
-#: core/iccprofile.cpp:280
+#: core/iccprofile.cpp:354
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC-профиль «%1» повреждён, некорректная точка белого"
 
-#: core/iccprofile.cpp:293
+#: core/iccprofile.cpp:367
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -146,7 +146,7 @@ msgstr ""
 "ICC-профиль «%1» повреждён, не удалось распознать матрицу хроматической "
 "адаптации"
 
-#: core/iccprofile.cpp:298
+#: core/iccprofile.cpp:372
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -154,27 +154,27 @@ msgstr ""
 "ICC-профиль «%1» повреждён, не удалось инвертировать матрицу хроматической "
 "адаптации"
 
-#: core/iccprofile.cpp:311
+#: core/iccprofile.cpp:385
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC-профиль «%1» повреждён, отсутствуют основные цвета"
 
-#: core/iccprofile.cpp:326
+#: core/iccprofile.cpp:400
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr "ICC-профиль «%1» повреждён, не удалось вычислить основные цвета"
 
-#: core/iccprofile.cpp:335
+#: core/iccprofile.cpp:409
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC-профиль «%1» повреждён, некорректные основные цвета"
 
-#: core/iccprofile.cpp:351
+#: core/iccprofile.cpp:425
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC-профиль «%1» только с метками BToD не поддерживается"
 
-#: core/iccprofile.cpp:390
+#: core/iccprofile.cpp:464
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "У цветового профиля отсутствуют метки TRC"
