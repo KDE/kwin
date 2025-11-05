@@ -41,9 +41,18 @@ uint NoopSession::terminal() const
     return 0;
 }
 
-int NoopSession::openRestricted(const QString &fileName)
+std::expected<int, Session::Error> NoopSession::openRestricted(const QString &fileName)
 {
-    return ::open(fileName.toUtf8().data(), O_RDWR | O_CLOEXEC);
+    const int fd = ::open(fileName.toUtf8().data(), O_RDWR | O_CLOEXEC);
+    if (fd != -1) {
+        return fd;
+    } else {
+        if (errno == EBUSY) {
+            return std::unexpected(Error::EBusy);
+        } else {
+            return std::unexpected(Error::Other);
+        }
+    }
 }
 
 void NoopSession::closeRestricted(int fileDescriptor)

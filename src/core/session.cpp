@@ -43,6 +43,15 @@ std::unique_ptr<Session> Session::create(Type type)
     return nullptr;
 }
 
+Session::Error Session::errorFromErrno()
+{
+    if (errno == EBUSY) {
+        return Error::EBusy;
+    } else {
+        return Error::Other;
+    }
+}
+
 } // namespace KWin
 
 #include "moc_session.cpp"

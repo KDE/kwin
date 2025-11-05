@@ -108,7 +108,7 @@ int Context::openRestricted(const char *path, int flags)
 
     // Ask for control over everything but sys devices, which do not need it and it wouldn't be accepted by backends like logind anyway.
     if (!filepath.startsWith(QLatin1String("/sys/"))) {
-        fd = m_session->openRestricted(filepath);
+        fd = m_session->openRestricted(filepath).value_or(-1);
         if (fd < 0) {
             // failed
             return fd;
