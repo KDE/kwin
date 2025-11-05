@@ -526,6 +526,10 @@ std::optional<std::pair<OutputConfiguration, QList<Output *>>> OutputConfigurati
     Output *const internalOutput = *internalIt;
     auto [config, order] = setupToConfig(setup->first, setup->second);
     auto internalChangeset = config.changeSet(internalOutput);
+    if (!internalChangeset->enabled.value_or(internalOutput->isEnabled())) {
+        return std::make_pair(config, order);
+    }
+
     internalChangeset->enabled = false;
     order.removeOne(internalOutput);
 
