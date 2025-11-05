@@ -70,7 +70,7 @@
 >Nouveau...</guibutton
 > pour créer un nouveau profil de fenêtre, et le bouton <guibutton
 >Détecter les propriétés de la fenêtre</guibutton
->  de la boîte de dialogue qui apparaît pour remplir partiellement les informations requises pour l'application que vous voulez configurer.</para>
+>  de la boite de dialogue qui apparait pour remplir partiellement les informations requises pour l'application que vous voulez configurer.</para>
 
 <para
 >Vous pouvez aussi à tout moment <guibutton
@@ -407,7 +407,7 @@
 <listitem
 ><para
 ><guilabel
->Correspondre à une sous-chaîne</guilabel
+>Correspondre à une sous-chaine</guilabel
 ></para
 ></listitem>
 </itemizedlist>
@@ -417,10 +417,10 @@
 ><guilabel
 >Correspondance exacte</guilabel
 > et <guilabel
->Correspondance à une sous-chaîne</guilabel
+>Correspondance à une sous-chaine</guilabel
 > recherche une correspondance qui n'est pas sensible à la casse. Par exemple, <emphasis
 >AB</emphasis
-> correspond aux chaînes de caractères <emphasis
+> correspond aux chaines de caractères <emphasis
 >AB</emphasis
 >, <emphasis
 >ab</emphasis
@@ -1194,7 +1194,7 @@
 <para
 ><warning
 ><para
->A utiliser avec précaution puisque des résultats inattendus peuvent apparaître. Par exemple, un <guilabel
+>A utiliser avec précaution puisque des résultats inattendus peuvent apparaitre. Par exemple, un <guilabel
 >écran de démarrage</guilabel
 > est automatiquement fermé par &kwin; lors d'un simple clic.</para
 ></warning>
@@ -1458,7 +1458,7 @@
 ><title
 >Application sur tous les bureaux et ne manipuler qu'une seule fenêtre fille</title>
 <para
->Hormis pour les fenêtres de conversation, affichez &kopete; et ses fenêtres filles sur tous les bureaux et ne les affichez pas dans la boîte à miniatures ni dans le gestionnaire de bureaux. Pour les fenêtres de conversation filles, traitez-les comme la fenêtre mère mais affichez-les dans la boîte à miniatures. </para>
+>Hormis pour les fenêtres de conversation, affichez &kopete; et ses fenêtres filles sur tous les bureaux et ne les affichez pas dans la boite à miniatures ni dans le gestionnaire de bureaux. Pour les fenêtres de conversation filles, traitez-les comme la fenêtre mère mais affichez-les dans la boite à miniatures. </para>
 <para
 >Pour chaque attribut, utilisez le <link linkend="parameters"
 >paramètre</link

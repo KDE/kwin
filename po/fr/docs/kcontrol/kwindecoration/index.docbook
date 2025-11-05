@@ -90,10 +90,10 @@
 ><imageobject
 > <imagedata fileref="configure.png" format="PNG"/></imageobject
 ></inlinemediaobject
-> pour ouvrir des boîtes de dialogue de configuration pour la décoration.</para>
+> pour ouvrir des boites de dialogue de configuration pour la décoration.</para>
 
 <para
->Les options dans la boîte de dialogue de configuration sont appliquées à toutes les fenêtres. Certaines décorations de fenêtres (&pex; <quote
+>Les options dans la boite de dialogue de configuration sont appliquées à toutes les fenêtres. Certaines décorations de fenêtres (&pex; <quote
 >Breeze</quote
 >) présentent un onglet <guilabel
 >Prédominance des paramètres spécifiques de fenêtres</guilabel
@@ -118,7 +118,7 @@
 >Décorations</title>
 
 <para
->Dans cette boîte de dialogue, vous pouvez modifier la décoration de la fenêtre. Les options disponibles dépendent du style sélectionné. </para>
+>Dans cette boite de dialogue, vous pouvez modifier la décoration de la fenêtre. Les options disponibles dépendent du style sélectionné. </para>
 <para>
 <screenshot>
 <screeninfo
