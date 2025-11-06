@@ -23,6 +23,7 @@
 #include "pointer_input.h"
 #include "touch_input.h"
 #include "useractions.h"
+#include "utils/envvar.h"
 #include "utils/xcbutils.h"
 #include "wayland/xwaylandshell_v1.h"
 #include "wayland_server.h"
@@ -600,8 +601,17 @@ void X11Window::focusInEvent(xcb_focus_in_event_t *e)
     }
 }
 
+static const bool s_enableFocusOut = environmentVariableBoolValue("KWIN_ENABLE_FOCUS_OUT").value_or(false);
+
 void X11Window::focusOutEvent(xcb_focus_out_event_t *e)
 {
+    if (!s_enableFocusOut) {
+        // Focus out events cause problems with some applications that do
+        // questionable things with override redirect windows.
+        // As they shouldn't be necessary with clients that behave sensibly
+        // (accept focus when given), ignore these events entirely
+        return;
+    }
     if (e->mode == XCB_NOTIFY_MODE_GRAB || e->mode == XCB_NOTIFY_MODE_UNGRAB) {
         return; // we don't care
     }
