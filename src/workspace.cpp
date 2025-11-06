@@ -771,13 +771,13 @@ void Workspace::addWaylandWindow(Window *window)
     m_windows.append(window);
     addToStack(window);
 
-    const bool shouldActivate = window->wantsInput()
+    const bool shouldActivate = window->wantsInput() && !window->isPopupWindow()
         && ((mayActivate(window, window->activationToken()) && !window->isDesktop())
             // focus stealing prevention "low" should always activate new windows
             || (!window->isDesktop() && options->focusStealingPreventionLevel() <= FocusStealingPreventionLevel::Low)
             // If there's no active window, make this desktop the active one.
             || (activeWindow() == nullptr && should_get_focus.count() == 0));
-    if (!window->isMinimized() && !shouldActivate) {
+    if (!window->isMinimized() && !shouldActivate && !window->isPopupWindow()) {
         // This window won't be activated, so move it out of the way
         // of the active window
         restackWindowUnderActive(window);
