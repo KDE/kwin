@@ -6,15 +6,11 @@
 
  SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "KWayland/Client/keyboard.h"
-#include "KWayland/Client/seat.h"
 #include "kwin_wayland_test.h"
 
 #include "input.h"
 #include "options.h"
 #include "pointer_input.h"
-#include "qabstracteventdispatcher.h"
-#include "qsocketnotifier.h"
 #include "utils/xcbutils.h"
 #include "wayland/display.h"
 #include "wayland/keyboard.h"
@@ -23,8 +19,13 @@
 #include "workspace.h"
 
 #include <KConfigGroup>
-#include <linux/input.h>
+#include <KWayland/Client/keyboard.h>
+#include <KWayland/Client/seat.h>
 
+#include <QAbstractEventDispatcher>
+#include <QSocketNotifier>
+
+#include <linux/input.h>
 #define explicit xcb_explicit
 #include <xcb/xcb.h>
 #include <xcb/xcbext.h>
