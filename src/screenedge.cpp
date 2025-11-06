@@ -808,6 +808,7 @@ void ScreenEdges::reconfigure()
     }
     const int pushBack = windowsConfig.readEntry("ElectricBorderPushbackPixels", 1);
     m_cursorPushBackDistance = QSize(pushBack, pushBack);
+    setAllScreenCorners(windowsConfig.readEntry("ElectricBorderAllScreenCorner", true));
 
     KConfigGroup borderConfig = m_config->group(QStringLiteral("ElectricBorders"));
     setActionForBorder(ElectricTopLeft, &m_actionTopLeft,
@@ -1066,6 +1067,14 @@ void ScreenEdges::recreateEdges()
                 createHorizontalEdge(ElectricBottom, screenPart, fullArea, output);
             }
         }
+
+        if (isAllScreenCorners()) {
+            const QRect geo = output->geometry();
+            m_edges.push_back(createEdge(ElectricTopLeft, geo.x(), geo.y(), TOUCH_TARGET, TOUCH_TARGET, output));
+            m_edges.push_back(createEdge(ElectricTopRight, geo.x() + geo.width() - TOUCH_TARGET, geo.y(), TOUCH_TARGET, TOUCH_TARGET, output));
+            m_edges.push_back(createEdge(ElectricBottomLeft, geo.x(), geo.y() + geo.height() - TOUCH_TARGET, TOUCH_TARGET, TOUCH_TARGET, output));
+            m_edges.push_back(createEdge(ElectricBottomRight, geo.x() + geo.width() - TOUCH_TARGET, geo.y() + geo.height() - TOUCH_TARGET, TOUCH_TARGET, TOUCH_TARGET, output));
+        }
     }
     auto split = std::partition(oldEdges.begin(), oldEdges.end(), [](const auto &edge) {
         return !edge->client();
@@ -1102,7 +1111,7 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen,
     int y = screen.y();
     int height = screen.height();
     const int x = (border == ElectricLeft) ? screen.x() : screen.x() + screen.width() - TOUCH_TARGET;
-    if (isTopScreen(screen, fullArea)) {
+    if (!isAllScreenCorners() && isTopScreen(screen, fullArea)) {
         // also top most screen
         height -= m_cornerOffset;
         y += m_cornerOffset;
@@ -1110,7 +1119,7 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen,
         const ElectricBorder edge = (border == ElectricLeft) ? ElectricTopLeft : ElectricTopRight;
         m_edges.push_back(createEdge(edge, x, screen.y(), TOUCH_TARGET, TOUCH_TARGET, output));
     }
-    if (isBottomScreen(screen, fullArea)) {
+    if (!isAllScreenCorners() && isBottomScreen(screen, fullArea)) {
         // also bottom most screen
         height -= m_cornerOffset;
         // create bottom left/right edge
@@ -1120,6 +1129,10 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen,
     if (height <= m_cornerOffset) {
         // An overlap with another output is near complete. We ignore this border.
         return;
+    }
+    if (isAllScreenCorners()) {
+        height -= 2 * m_cornerOffset;
+        y += m_cornerOffset;
     }
     m_edges.push_back(createEdge(border, x, y, TOUCH_TARGET, height, output));
 }
@@ -1131,18 +1144,22 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
     }
     int x = screen.x();
     int width = screen.width();
-    if (isLeftScreen(screen, fullArea)) {
+    if (!isAllScreenCorners() && isLeftScreen(screen, fullArea)) {
         // also left most - adjust only x and width
         x += m_cornerOffset;
         width -= m_cornerOffset;
     }
-    if (isRightScreen(screen, fullArea)) {
+    if (!isAllScreenCorners() && isRightScreen(screen, fullArea)) {
         // also right most edge
         width -= m_cornerOffset;
     }
     if (width <= m_cornerOffset) {
         // An overlap with another output is near complete. We ignore this border.
         return;
+    }
+    if (isAllScreenCorners()) {
+        width -= 2 * m_cornerOffset;
+        x += m_cornerOffset;
     }
     const int y = (border == ElectricTop) ? screen.y() : screen.y() + screen.height() - TOUCH_TARGET;
     m_edges.push_back(createEdge(border, x, y, width, TOUCH_TARGET, output));

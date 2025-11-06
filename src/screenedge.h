@@ -302,6 +302,7 @@ public:
 
     bool isDesktopSwitching() const;
     bool isDesktopSwitchingMovingClients() const;
+    bool isAllScreenCorners() const;
     const QSize &cursorPushBackDistance() const;
     /**
      * Minimum time between the push back of the cursor and the activation by re-entering the edge.
@@ -357,6 +358,7 @@ private:
     };
     void setDesktopSwitching(bool enable);
     void setDesktopSwitchingMovingClients(bool enable);
+    void setAllScreenCorners(bool enable);
     void setCursorPushBackDistance(const QSize &distance);
     void setTimeThreshold(std::chrono::milliseconds threshold);
     void setReActivationThreshold(std::chrono::milliseconds threshold);
@@ -390,6 +392,7 @@ private:
     const int m_cornerOffset;
     std::unique_ptr<ScreenEdgeGestureRecognizer> m_gestureRecognizer;
     bool m_remainActiveOnFullscreen = false;
+    bool m_allScreenCorners = true;
 };
 
 /**********************************************************
@@ -515,6 +518,11 @@ inline bool ScreenEdges::isDesktopSwitchingMovingClients() const
     return m_desktopSwitchingMovingClients;
 }
 
+inline bool ScreenEdges::isAllScreenCorners() const
+{
+    return m_allScreenCorners;
+}
+
 inline std::chrono::milliseconds ScreenEdges::reActivationThreshold() const
 {
     return m_reactivateThreshold;
@@ -542,6 +550,15 @@ inline void ScreenEdges::setDesktopSwitching(bool enable)
 inline void ScreenEdges::setDesktopSwitchingMovingClients(bool enable)
 {
     m_desktopSwitchingMovingClients = enable;
+}
+
+inline void ScreenEdges::setAllScreenCorners(bool enable)
+{
+    if (enable == m_allScreenCorners) {
+        return;
+    }
+    m_allScreenCorners = enable;
+    recreateEdges();
 }
 
 inline void ScreenEdges::setReActivationThreshold(std::chrono::milliseconds threshold)

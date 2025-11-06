@@ -23,6 +23,9 @@
         <entry key="ElectricBorderCornerRatio" type="Double">
             <default>0.25</default>
         </entry>
+        <entry name="ElectricBorderAllScreenCorner" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
     <group name="ElectricBorders">
         <entry key="Top" type="String">

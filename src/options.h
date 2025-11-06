@@ -162,6 +162,10 @@ class KWIN_EXPORT Options : public QObject
      */
     Q_PROPERTY(bool electricBorderTiling READ electricBorderTiling WRITE setElectricBorderTiling NOTIFY electricBorderTilingChanged)
     /**
+     * Whether each screen has its own active corners instead of limiting to only four corners across all screens.
+     */
+    Q_PROPERTY(bool electricBorderAllScreenCorner READ electricBorderAllScreenCorner WRITE setElectricBorderAllScreenCorner NOTIFY electricBorderAllScreenCornerChanged)
+    /**
      * Whether a window is tiled to half screen when reaching left or right screen edge while been moved.
      */
     Q_PROPERTY(float electricBorderCornerRatio READ electricBorderCornerRatio WRITE setElectricBorderCornerRatio NOTIFY electricBorderCornerRatioChanged)
@@ -579,6 +583,14 @@ public:
         return electric_border_tiling;
     }
     /**
+     * @returns true if each screen has its own active corners instead of limiting
+     * to only four corners across all screens.
+     */
+    bool electricBorderAllScreenCorner() const
+    {
+        return electric_border_all_screen_corner;
+    }
+    /**
      * @returns the factor that determines the corner part of the edge (ie. 0.1 means tiny corner)
      */
     float electricBorderCornerRatio() const
@@ -667,6 +679,7 @@ public:
     void setDoubleClickBorderToMaximize(bool maximize);
     void setCondensedTitle(bool condensedTitle);
     void setElectricBorderMaximize(bool electricBorderMaximize);
+    void setElectricBorderAllScreenCorner(bool electricBorderAllScreenCorner);
     void setElectricBorderTiling(bool electricBorderTiling);
     void setElectricBorderCornerRatio(float electricBorderCornerRatio);
     void setBorderlessMaximizedWindows(bool borderlessMaximizedWindows);
@@ -840,6 +853,7 @@ Q_SIGNALS:
     void electricBorderMaximizeChanged();
     void electricBorderTilingChanged();
     void electricBorderCornerRatioChanged();
+    void electricBorderAllScreenCornerChanged();
     void borderlessMaximizedWindowsChanged();
     void killPingTimeoutChanged();
     void compositingModeChanged();
@@ -907,6 +921,7 @@ private:
 
     bool electric_border_maximize;
     bool electric_border_tiling;
+    bool electric_border_all_screen_corner;
     float electric_border_corner_ratio;
     bool borderless_maximized_windows;
     bool condensed_title;

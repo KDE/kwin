@@ -528,6 +528,15 @@ void Options::setElectricBorderCornerRatio(float electricBorderCornerRatio)
     Q_EMIT electricBorderCornerRatioChanged();
 }
 
+void Options::setElectricBorderAllScreenCorner(bool electricBorderAllScreenCorner)
+{
+    if (electric_border_all_screen_corner == electricBorderAllScreenCorner) {
+        return;
+    }
+    electric_border_all_screen_corner = electricBorderAllScreenCorner;
+    Q_EMIT electricBorderAllScreenCornerChanged();
+}
+
 void Options::setBorderlessMaximizedWindows(bool borderlessMaximizedWindows)
 {
     if (borderless_maximized_windows == borderlessMaximizedWindows) {
@@ -723,6 +732,7 @@ void Options::syncFromKcfgc()
     setElectricBorderMaximize(m_settings->electricBorderMaximize());
     setElectricBorderTiling(m_settings->electricBorderTiling());
     setElectricBorderCornerRatio(m_settings->electricBorderCornerRatio());
+    setElectricBorderAllScreenCorner(m_settings->electricBorderAllScreenCorner());
     setAllowTearing(m_settings->allowTearing());
     setInteractiveWindowMoveEnabled(m_settings->interactiveWindowMoveEnabled());
     setOverlayVirtualKeyboardOnWindows(m_settings->overlayVirtualKeyboardOnWindows());

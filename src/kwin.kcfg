@@ -179,6 +179,9 @@
         <entry name="ElectricBorderMaximize" type="Bool">
             <default>true</default>
         </entry>
+        <entry name="ElectricBorderAllScreenCorner" type="Bool">
+            <default>true</default>
+        </entry>
         <entry name="ElectricBorderTiling" type="Bool">
             <default>true</default>
         </entry>
