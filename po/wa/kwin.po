@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-05 00:45+0000\n"
+"POT-Creation-Date: 2025-11-06 08:07+0000\n"
 "PO-Revision-Date: 2011-07-17 16:09+0200\n"
 "Last-Translator: Jean Cayron <jean.cayron@base.be>\n"
 "Language-Team: Walloon <linux@walon.org>\n"
@@ -1625,7 +1625,7 @@ msgstr "Foite"
 msgid "Noise strength:"
 msgstr "&Foice:"
 
-#: plugins/colorpicker/colorpicker.cpp:109
+#: plugins/colorpicker/colorpicker.cpp:153
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
