@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-06 08:07+0000\n"
+"POT-Creation-Date: 2025-11-06 15:22+0000\n"
 "PO-Revision-Date: 2009-01-28 17:47+0530\n"
 "Last-Translator: Ravishankar Shrivastava <raviratlami@aol.in>\n"
 "Language-Team: Hindi <kde-i18n-doc@lists.kde.org>\n"
@@ -1600,7 +1600,7 @@ msgstr "सामर्थ्य (&S):"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
-#: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
+#: plugins/blur/blur_config.ui:26 plugins/blur/blur_config.ui:76
 #, fuzzy, kde-format
 #| msgid "Top-Right"
 msgid "Light"
@@ -1608,14 +1608,14 @@ msgstr "ऊपरी-जेवनी"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
-#: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
+#: plugins/blur/blur_config.ui:58 plugins/blur/blur_config.ui:105
 #, fuzzy, kde-format
 #| msgid "&Strength:"
 msgid "Strong"
 msgstr "सामर्थ्य (&S):"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
-#: plugins/blur/blur_config.ui:83
+#: plugins/blur/blur_config.ui:67
 #, fuzzy, kde-format
 #| msgid "&Strength:"
 msgid "Noise strength:"
