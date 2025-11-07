@@ -107,6 +107,19 @@ bool DrmBackend::initialize()
             updateOutputs();
         }
     });
+    connect(m_session, &Session::awoke, this, [this]() {
+        // some drivers for old GPUs have problems after suspend, which
+        // triggering a modeset works around.
+        for (const auto &gpu : m_gpus) {
+            if (gpu->atomicModeSetting()) {
+                continue;
+            }
+            const auto outputs = gpu->drmOutputs();
+            for (const auto &output : outputs) {
+                output->pipeline()->forceLegacyModeset();
+            }
+        }
+    });
 
     if (!m_explicitGpus.isEmpty()) {
         for (const QString &fileName : m_explicitGpus) {
