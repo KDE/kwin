@@ -141,7 +141,7 @@ private:
     void forgetBufferObject(QObject *buf);
     void doModeset();
 
-    DrmPipeline::Error checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs);
+    DrmPipeline::Error checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs, std::chrono::steady_clock::time_point deadline);
     DrmPipeline::Error testPipelines();
     QList<DrmObject *> unusedModesetObjects() const;
     void assignOutputLayers();

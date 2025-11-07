@@ -514,6 +514,7 @@ void Workspace::updateOutputConfiguration()
             return;
         case OutputConfigurationError::Unknown:
         case OutputConfigurationError::TooManyEnabledOutputs:
+        case OutputConfigurationError::Timeout:
             if (alreadyHaveEnabledOutputs) {
                 // just keeping the old output configuration is preferable
                 break;

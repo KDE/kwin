@@ -570,6 +570,9 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         break;
     case OutputConfigurationError::Unknown:
     case OutputConfigurationError::TooManyEnabledOutputs:
+        // NOTE that the error message is technically not accurate for timeouts, but
+        // in practice, it too is always caused by the driver rejecting the configuration.
+    case OutputConfigurationError::Timeout:
         // TODO provide a more accurate error reason once the driver actually gives us anything
         sendFailure(resource, i18n("The driver rejected the output configuration"));
         break;

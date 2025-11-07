@@ -442,6 +442,8 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
             if (error == DrmPipeline::Error::NotEnoughCrtcs) {
                 // TODO make this more specific, this is per GPU!
                 return OutputConfigurationError::TooManyEnabledOutputs;
+            } else if (error == DrmPipeline::Error::Timeout) {
+                return OutputConfigurationError::Timeout;
             } else {
                 return OutputConfigurationError::Unknown;
             }
