@@ -24,7 +24,7 @@ class XdgToplevelDragV1InterfacePrivate;
 class XdgToplevelDragManagerV1InterfacePrivate;
 class XdgToplevelInterface;
 
-class XdgToplevelDragV1Interface : public QObject
+class KWIN_EXPORT XdgToplevelDragV1Interface : public QObject
 {
     Q_OBJECT
 public:
@@ -43,7 +43,7 @@ private:
     friend class XdgToplevelDragManagerV1InterfacePrivate;
 };
 
-class XdgToplevelDragManagerV1Interface : public QObject
+class KWIN_EXPORT XdgToplevelDragManagerV1Interface : public QObject
 {
     Q_OBJECT
 public:
