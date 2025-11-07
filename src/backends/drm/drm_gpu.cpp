@@ -47,6 +47,8 @@
 #define DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP 0x15
 #endif
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -329,8 +331,11 @@ void DrmGpu::removeOutputs()
     }
 }
 
-DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs)
+DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs, std::chrono::steady_clock::time_point timeout)
 {
+    if (std::chrono::steady_clock::now() > timeout) {
+        return DrmPipeline::Error::Timeout;
+    }
     qCDebug(KWIN_DRM) << "Attempting to match" << connectors << "with" << crtcs;
     if (connectors.isEmpty()) {
         const auto result = testPipelines();
@@ -341,14 +346,14 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
     auto pipelineIt = m_pipelineMap.find(connector);
     if (pipelineIt == m_pipelineMap.end()) {
         // this connector doesn't even have a connected output
-        return checkCrtcAssignment(connectors, crtcs);
+        return checkCrtcAssignment(connectors, crtcs, timeout);
     }
     auto pipeline = pipelineIt->second.get();
     if (!pipeline->enabled() || !connector->isConnected()) {
         // disabled pipelines don't need CRTCs
         pipeline->setCrtc(nullptr);
         qCDebug(KWIN_DRM) << "Unassigning CRTC from connector" << connector->id();
-        return checkCrtcAssignment(connectors, crtcs);
+        return checkCrtcAssignment(connectors, crtcs, timeout);
     }
     if (crtcs.isEmpty()) {
         // we have no crtc left to drive this connector
@@ -368,8 +373,8 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             crtcsLeft.removeOne(currentCrtc);
             pipeline->setCrtc(currentCrtc);
             qCDebug(KWIN_DRM) << "Assigning CRTC" << currentCrtc->id() << "to connector" << connector->id();
-            DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
-            if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
+            DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft, timeout);
+            if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending || err == DrmPipeline::Error::Timeout) {
                 return err;
             }
         }
@@ -380,8 +385,8 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             crtcsLeft.removeOne(crtc);
             pipeline->setCrtc(crtc);
             qCDebug(KWIN_DRM) << "Assigning CRTC" << crtc->id() << "to connector" << connector->id();
-            DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft);
-            if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
+            DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft, timeout);
+            if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending || err == DrmPipeline::Error::Timeout) {
                 return err;
             }
         }
@@ -417,7 +422,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
         });
     }
     m_forceLowBandwidthMode = false;
-    auto err = checkCrtcAssignment(connectors, crtcs);
+    auto err = checkCrtcAssignment(connectors, crtcs, std::chrono::steady_clock::now() + 3s);
     if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
         return err;
     }
@@ -428,7 +433,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
         // We currently don't have any information about why the output config
         // got rejected; one possibility is missing memory bandwidth.
         m_forceLowBandwidthMode = true;
-        err = checkCrtcAssignment(connectors, crtcs);
+        err = checkCrtcAssignment(connectors, crtcs, std::chrono::steady_clock::now() + 3s);
     }
     return err;
 }
