@@ -45,8 +45,8 @@ struct BlurEffectData
 
     ItemEffect windowEffect;
 
-    qreal contrast = 1.0;
-    qreal saturation = 1.0;
+    std::optional<qreal> contrast;
+    std::optional<qreal> saturation;
 };
 
 class BlurEffect : public KWin::Effect
@@ -88,7 +88,7 @@ public Q_SLOTS:
 
 private:
     void initBlurStrengthValues();
-    QMatrix4x4 colorMatrix(qreal contrast, qreal saturation);
+    QMatrix4x4 colorMatrix(const BlurEffectData &params) const;
     QRegion blurRegion(EffectWindow *w) const;
     QRegion decorationBlurRegion(const EffectWindow *w) const;
     bool decorationSupportsBlurBehind(const EffectWindow *w) const;
@@ -158,6 +158,7 @@ private:
     int m_offset;
     int m_expandSize;
     int m_noiseStrength;
+    qreal m_saturation = 1.0;
 
     struct OffsetStruct
     {
