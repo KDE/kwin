@@ -255,12 +255,13 @@ void BlurEffect::initBlurStrengthValues()
     }
 }
 
-QMatrix4x4 BlurEffect::colorMatrix(qreal contrast, qreal saturation)
+QMatrix4x4 BlurEffect::colorMatrix(const BlurEffectData &params) const
 {
     QMatrix4x4 satMatrix; // saturation
     QMatrix4x4 contMatrix; // contrast
 
     // Saturation matrix
+    const qreal saturation = params.saturation.value_or(m_saturation);
     if (!qFuzzyCompare(saturation, 1.0)) {
         const qreal rval = (1.0 - saturation) * .2126;
         const qreal gval = (1.0 - saturation) * .7152;
@@ -273,13 +274,15 @@ QMatrix4x4 BlurEffect::colorMatrix(qreal contrast, qreal saturation)
     }
 
     // Contrast Matrix
-    if (!qFuzzyCompare(contrast, 1.0)) {
-        const float transl = (1.0 - contrast) / 2.0;
+    if (const auto contrast = params.contrast) {
+        if (!qFuzzyCompare(*contrast, 1.0)) {
+            const float transl = (1.0 - *contrast) / 2.0;
 
-        contMatrix = QMatrix4x4(contrast, 0, 0, 0.0,
-                                0, contrast, 0, 0.0,
-                                0, 0, contrast, 0.0,
-                                transl, transl, transl, 1.0);
+            contMatrix = QMatrix4x4(*contrast, 0, 0, 0.0,
+                                    0, *contrast, 0, 0.0,
+                                    0, 0, *contrast, 0.0,
+                                    transl, transl, transl, 1.0);
+        }
     }
 
     QMatrix4x4 colorMatrix = contMatrix * satMatrix;
@@ -296,6 +299,7 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
     m_offset = blurStrengthValues[blurStrength].offset;
     m_expandSize = blurOffsets[m_iterationCount - 1].expandSize;
     m_noiseStrength = BlurConfig::noiseStrength();
+    m_saturation = BlurConfig::saturation() / 100.0;
 
     // Update all windows for the blur to take effect
     effects->addRepaintFull();
@@ -305,8 +309,8 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
 {
     std::optional<QRegion> content;
     std::optional<QRegion> frame;
-    qreal saturation = 1.0;
-    qreal contrast = 1.0;
+    std::optional<qreal> saturation;
+    std::optional<qreal> contrast;
 
 #if KWIN_BUILD_X11
     if (net_wm_blur_region != XCB_ATOM_NONE) {
@@ -940,7 +944,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
         projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
 
-        const QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(blurInfo.contrast, blurInfo.saturation);
+        const QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(blurInfo);
 
         GLFramebuffer::popFramebuffer();
         const auto &read = renderInfo.framebuffers[1];
@@ -982,7 +986,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
         projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
 
-        QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(blurInfo.contrast, blurInfo.saturation);
+        QMatrix4x4 colorMatrix = BlurEffect::colorMatrix(blurInfo);
 
         GLFramebuffer::popFramebuffer();
         const auto &read = renderInfo.framebuffers[1];
