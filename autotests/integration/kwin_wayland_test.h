@@ -47,6 +47,7 @@
 #include "qwayland-xdg-decoration-unstable-v1.h"
 #include "qwayland-xdg-dialog-v1.h"
 #include "qwayland-xdg-shell.h"
+#include "qwayland-xdg-toplevel-drag-v1.h"
 #include "qwayland-xx-session-management-v1.h"
 #include "qwayland-zkde-screencast-unstable-v1.h"
 
@@ -57,6 +58,7 @@ namespace Client
 class AppMenuManager;
 class ConnectionThread;
 class Compositor;
+class DataSource;
 class EventQueue;
 class Output;
 class PlasmaShell;
@@ -740,6 +742,22 @@ public:
     std::unique_ptr<WpPrimarySelectionSourceV1> createSource();
 };
 
+class XdgToplevelDragV1 : public QtWayland::xdg_toplevel_drag_v1
+{
+public:
+    explicit XdgToplevelDragV1(::xdg_toplevel_drag_v1 *id);
+    ~XdgToplevelDragV1() override;
+};
+
+class XdgToplevelDragManagerV1 : public QtWayland::xdg_toplevel_drag_manager_v1
+{
+public:
+    XdgToplevelDragManagerV1(::wl_registry *registry, uint32_t id, int version);
+    ~XdgToplevelDragManagerV1() override;
+
+    std::unique_ptr<XdgToplevelDragV1> createDrag(KWayland::Client::DataSource *source);
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     DataDeviceManager = 1 << 1,
@@ -771,6 +789,7 @@ enum class AdditionalWaylandInterface {
     WpTabletV2 = 1 << 27,
     KeyState = 1 << 28,
     WpPrimarySelectionV1 = 1 << 29,
+    XdgToplevelDragV1 = 1 << 30,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -1012,6 +1031,7 @@ struct Connection
     std::unique_ptr<WpTabletManagerV2> tabletManager;
     std::unique_ptr<KeyStateV1> keyState;
     std::unique_ptr<WpPrimarySelectionDeviceManagerV1> primarySelectionManager;
+    std::unique_ptr<XdgToplevelDragManagerV1> toplevelDragManager;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -1084,6 +1104,7 @@ XdgActivation *xdgActivation();
 WpTabletManagerV2 *tabletManager();
 KeyStateV1 *keyState();
 WpPrimarySelectionDeviceManagerV1 *primarySelectionManager();
+XdgToplevelDragManagerV1 *toplevelDragManager();
 
 bool waitForWaylandSurface(Window *window);
 
