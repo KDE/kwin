@@ -237,7 +237,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     GLFramebuffer offscreenTarget(offscreenTexture.get());
 
     RenderTarget renderTarget(&offscreenTarget);
-    RenderViewport viewport(window->visibleGeometry(), 1, renderTarget);
+    RenderViewport viewport(window->visibleGeometry(), scale, renderTarget);
 
     WorkspaceScene *scene = Compositor::self()->scene();
 
