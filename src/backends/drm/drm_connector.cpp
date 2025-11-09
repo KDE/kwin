@@ -192,9 +192,9 @@ QString DrmConnector::connectorName() const
 QString DrmConnector::modelName() const
 {
     if (m_edid.serialNumber().isEmpty()) {
-        return connectorName() + QLatin1Char('-') + m_edid.nameString();
+        return connectorName() + QLatin1Char('-') + m_edid.nameString().trimmed();
     } else {
-        return m_edid.nameString();
+        return m_edid.nameString().trimmed();
     }
 }
 
