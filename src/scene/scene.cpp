@@ -430,7 +430,8 @@ QRegion ItemTreeView::collectDamage()
 
 void ItemTreeView::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
-    const QRegion globalRegion = region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft().toPoint());
+    // FIXME damage tracking for this layer still has some bugs, this effectively disables it
+    const QRegion globalRegion = infiniteRegion();
     RenderViewport renderViewport(viewport(), m_output->scale(), renderTarget);
     auto renderer = m_item->scene()->renderer();
     renderer->beginFrame(renderTarget, renderViewport);
