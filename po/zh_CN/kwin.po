@@ -1583,7 +1583,7 @@ msgstr "Wayland 和 Xwayland 服务器启动后立即启动的应用程序"
 #: plugins/blur/blur_config.ui:17
 #, kde-format
 msgid "Blur strength:"
-msgstr "虚化程度："
+msgstr "虚化强度："
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
@@ -1603,7 +1603,7 @@ msgstr "强"
 #: plugins/blur/blur_config.ui:83
 #, kde-format
 msgid "Noise strength:"
-msgstr "噪点程度："
+msgstr "噪点强度："
 
 #: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
