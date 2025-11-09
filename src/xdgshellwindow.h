@@ -260,6 +260,7 @@ private:
     std::shared_ptr<KDecoration3::Decoration> m_nextDecoration;
     std::shared_ptr<KDecoration3::DecorationState> m_nextDecorationState;
     std::unique_ptr<KillPrompt> m_killPrompt;
+    QString m_pendingKillPromptActivationToken;
 };
 
 class XdgPopupWindow final : public XdgSurfaceWindow

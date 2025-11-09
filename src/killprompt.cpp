@@ -24,6 +24,11 @@
 namespace KWin
 {
 
+QString KillPrompt::appId()
+{
+    return QStringLiteral("org.kde.kwin.killer");
+}
+
 KillPrompt::KillPrompt(Window *window)
     : m_window(window)
 {
@@ -50,7 +55,7 @@ bool KillPrompt::isRunning() const
     return m_process.state() == QProcess::Running;
 }
 
-void KillPrompt::start(quint32 timestamp)
+void KillPrompt::start(const QString &token)
 {
     if (isRunning()) {
         return;
@@ -68,7 +73,7 @@ void KillPrompt::start(quint32 timestamp)
     if (auto *x11Window = qobject_cast<X11Window *>(m_window)) {
         platform = QStringLiteral("xcb");
         wid = QString::number(x11Window->window());
-        timestampString = QString::number(timestamp);
+        timestampString = token;
         if (!x11Window->clientMachine()->isLocal()) {
             hostname = x11Window->clientMachine()->hostName();
         }
@@ -78,9 +83,6 @@ void KillPrompt::start(quint32 timestamp)
         platform = QStringLiteral("wayland");
         auto *exported = waylandServer()->exportAsForeign(xdgToplevel->surface());
         wid = exported->handle();
-
-        auto *seat = waylandServer()->seat();
-        const QString token = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, QStringLiteral("org.kde.kwin.killer"));
         env.insert(QStringLiteral("XDG_ACTIVATION_TOKEN"), token);
 
         env.remove(QStringLiteral("QT_WAYLAND_RECONNECT"));

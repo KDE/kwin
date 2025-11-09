@@ -24,6 +24,7 @@
 #include "utils/subsurfacemonitor.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu.h"
+#include "wayland/display.h"
 #include "wayland/output.h"
 #include "wayland/plasmashell.h"
 #include "wayland/seat.h"
@@ -36,6 +37,7 @@
 #include "wayland/xdgsession_v1.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "xdgactivationv1.h"
 
 #include <KDecoration3/DecoratedWindow>
 #include <KDecoration3/Decoration>
@@ -1148,7 +1150,8 @@ void XdgToplevelWindow::handlePingTimeout(quint32 serial)
             m_killPrompt = std::make_unique<KillPrompt>(this);
         }
         if (!m_killPrompt->isRunning()) {
-            m_killPrompt->start();
+            m_killPrompt->start(m_pendingKillPromptActivationToken);
+            m_pendingKillPromptActivationToken.clear();
         }
     }
 }
@@ -1188,11 +1191,14 @@ void XdgToplevelWindow::handleMinimumSizeChanged()
 
 void XdgToplevelWindow::sendPing(PingReason reason)
 {
-    XdgShellInterface *shell = m_shellSurface->shell();
-    XdgSurfaceInterface *surface = m_shellSurface->xdgSurface();
+    XdgShellInterface *xdgShell = m_shellSurface->shell();
+    XdgSurfaceInterface *xdgSurface = m_shellSurface->xdgSurface();
 
-    const quint32 serial = shell->ping(surface);
+    const quint32 serial = xdgShell->ping(xdgSurface);
     m_pings.insert(serial, reason);
+
+    auto *seat = waylandServer()->seat();
+    m_pendingKillPromptActivationToken = waylandServer()->xdgActivationIntegration()->requestToken(surface(), seat->display()->serial(), seat, KillPrompt::appId());
 }
 
 QPointF XdgToplevelWindow::initialPosition() const

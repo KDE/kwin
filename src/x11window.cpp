@@ -1423,7 +1423,7 @@ void X11Window::killProcess(bool ask, xcb_timestamp_t timestamp)
         if (!m_killPrompt) {
             m_killPrompt = std::make_unique<KillPrompt>(this);
         }
-        m_killPrompt->start(timestamp);
+        m_killPrompt->start(QString::number(timestamp));
     }
 }
 

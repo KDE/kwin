@@ -29,13 +29,18 @@ public:
 
     /**
      * @brief Starts the kill helper process.
-     * @param timestamp The X activation timestamp.
+     * @param token The XDG activation token or X activation timestamp.
      */
-    void start(quint32 timestamp = 0);
+    void start(const QString &token);
     /**
      * @brief Terminate the kill helper process.
      */
     void quit();
+
+    /**
+     * @brief The application ID of the kill helper process.
+     */
+    static QString appId();
 
 private:
     Window *m_window = nullptr;
