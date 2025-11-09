@@ -28,6 +28,10 @@ class KWIN_EXPORT XdgActivationV1Integration : public QObject
 public:
     XdgActivationV1Integration(XdgActivationV1Interface *activation, QObject *parent);
 
+    QString requestToken(SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId)
+    {
+        return requestToken(false, surface, serial, seat, appId);
+    }
     QString requestPrivilegedToken(SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId)
     {
         return requestToken(true, surface, serial, seat, appId);
