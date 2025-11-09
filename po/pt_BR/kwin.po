@@ -19,9 +19,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-06 15:22+0000\n"
-"PO-Revision-Date: 2025-10-28 06:56-0300\n"
-"Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
+"POT-Creation-Date: 2025-11-09 00:44+0000\n"
+"PO-Revision-Date: 2025-11-08 21:10-0300\n"
+"Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -1630,20 +1630,20 @@ msgstr "Intensidade do borrado:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
-#: plugins/blur/blur_config.ui:26 plugins/blur/blur_config.ui:76
+#: plugins/blur/blur_config.ui:53 plugins/blur/blur_config.ui:107
 #, kde-format
 msgid "Light"
 msgstr "Suave"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
-#: plugins/blur/blur_config.ui:58 plugins/blur/blur_config.ui:105
+#: plugins/blur/blur_config.ui:60 plugins/blur/blur_config.ui:114
 #, kde-format
 msgid "Strong"
 msgstr "Forte"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
-#: plugins/blur/blur_config.ui:67
+#: plugins/blur/blur_config.ui:74
 #, kde-format
 msgid "Noise strength:"
 msgstr "Intensidade do ruído:"
@@ -2635,7 +2635,7 @@ msgstr "Preenchimento:"
 #: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
-msgstr "Carregar layout..."
+msgstr "Carregar layout…"
 
 #: plugins/tileseditor/qml/Main.qml:270
 #, kde-format
@@ -2857,7 +2857,7 @@ msgstr "Sem janelas"
 #: plugins/windowview/qml/Main.qml:122
 #, kde-format
 msgid "Filter windows…"
-msgstr "Filtrar janelas..."
+msgstr "Filtrar janelas…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
@@ -3673,7 +3673,7 @@ msgstr "Definir as &configurações especiais da janela…"
 #: useractions.cpp:263
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Definir as configurações es&peciais do aplicativo..."
+msgstr "Definir as configurações es&peciais do aplicativo…"
 
 #: useractions.cpp:269
 #, kde-format

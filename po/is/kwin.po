@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-06 15:22+0000\n"
+"POT-Creation-Date: 2025-11-09 00:44+0000\n"
 "PO-Revision-Date: 2025-10-25 11:06+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -1609,20 +1609,20 @@ msgstr "Móðustyrkur:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
-#: plugins/blur/blur_config.ui:26 plugins/blur/blur_config.ui:76
+#: plugins/blur/blur_config.ui:53 plugins/blur/blur_config.ui:107
 #, kde-format
 msgid "Light"
 msgstr "Léttur"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
-#: plugins/blur/blur_config.ui:58 plugins/blur/blur_config.ui:105
+#: plugins/blur/blur_config.ui:60 plugins/blur/blur_config.ui:114
 #, kde-format
 msgid "Strong"
 msgstr "Mikill"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
-#: plugins/blur/blur_config.ui:67
+#: plugins/blur/blur_config.ui:74
 #, kde-format
 msgid "Noise strength:"
 msgstr "Styrkur suðs:"

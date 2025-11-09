@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-10-30 22:29-0300\n"
+"PO-Revision-Date: 2025-11-08 21:10-0300\n"
 "Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -218,7 +218,7 @@ msgstr "Tamanho da borda da tela:"
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Configurar botões da barra de título..."
+msgstr "Configurar botões da barra de título…"
 
 #: ui/main.qml:54
 #, kde-format
@@ -229,7 +229,7 @@ msgstr "Baixar novo…"
 #: ui/Themes.qml:93
 #, kde-format
 msgid "Edit %1 Theme…"
-msgstr "Editar tema %1..."
+msgstr "Editar tema %1…"
 
 #: utils.cpp:25
 #, kde-format
