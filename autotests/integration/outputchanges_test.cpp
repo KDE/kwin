@@ -15,12 +15,16 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "x11window.h"
 
 #include <KWayland/Client/surface.h>
 #include <QOrientationSensor>
+
+#if KWIN_BUILD_X11
+#include "x11window.h"
+
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
+#endif
 
 #include <ranges>
 
@@ -1204,6 +1208,7 @@ void OutputChangesTest::testLaptopLidClosed()
     input()->removeInputDevice(lidSwitch.get());
 }
 
+#if KWIN_BUILD_X11
 static X11Window *createX11Window(xcb_connection_t *connection, const QRect &geometry, std::function<void(xcb_window_t)> setup = {})
 {
     xcb_window_t windowId = xcb_generate_id(connection);
@@ -1232,9 +1237,11 @@ static X11Window *createX11Window(xcb_connection_t *connection, const QRect &geo
     }
     return windowCreatedSpy.last().first().value<X11Window *>();
 }
+#endif
 
 void OutputChangesTest::testXwaylandScaleChange()
 {
+#if KWIN_BUILD_X11
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
@@ -1275,6 +1282,7 @@ void OutputChangesTest::testXwaylandScaleChange()
     // the window should be back in its original geometry
     QCOMPARE(kwinApp()->xwaylandScale(), 2);
     QCOMPARE(window->frameGeometry(), originalGeometry);
+#endif
 }
 
 using ModeInfo = std::tuple<QSize, uint64_t, OutputMode::Flags>;
