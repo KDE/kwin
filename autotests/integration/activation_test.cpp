@@ -15,14 +15,18 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "x11window.h"
 #include "xdgactivationv1.h"
 
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
 #include <linux/input.h>
+
+#if KWIN_BUILD_X11
+#include "x11window.h"
+
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
+#endif
 
 namespace KWin
 {
@@ -538,6 +542,7 @@ void ActivationTest::stackScreensVertically()
     Test::setOutputConfig(screenGeometries);
 }
 
+#if KWIN_BUILD_X11
 static X11Window *createX11Window(xcb_connection_t *connection, const QRect &geometry, std::function<void(xcb_window_t)> setup = {})
 {
     xcb_window_t windowId = xcb_generate_id(connection);
@@ -566,9 +571,11 @@ static X11Window *createX11Window(xcb_connection_t *connection, const QRect &geo
     }
     return windowCreatedSpy.last().first().value<X11Window *>();
 }
+#endif
 
 void ActivationTest::testActiveFullscreen()
 {
+#if KWIN_BUILD_X11
     // Tests that an active X11 fullscreen window gets removed from the active layer
     // when activating a Wayland window, even if there's a pending activation request
     // for the X11 window
@@ -598,6 +605,7 @@ void ActivationTest::testActiveFullscreen()
     workspace()->activateWindow(waylandWindow);
     QCOMPARE(workspace()->activeWindow(), waylandWindow);
     QCOMPARE(x11Window->layer(), Layer::NormalLayer);
+#endif
 }
 
 struct TestWindow
