@@ -10,13 +10,11 @@
 
 #include "kwin_wayland_test.h"
 
-#include "atoms.h"
 #include "rules.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "x11window.h"
 
 #include <KWayland/Client/surface.h>
 
@@ -26,8 +24,13 @@
 #include <QDBusPendingReply>
 #include <QUuid>
 
+#if KWIN_BUILD_X11
+#include "atoms.h"
+#include "x11window.h"
+
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
+#endif
 
 using namespace KWin;
 
@@ -216,6 +219,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
 
 void TestDbusInterface::testGetWindowInfoX11Client()
 {
+#if KWIN_BUILD_X11
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 600, 400);
@@ -360,6 +364,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     reply = getWindowInfo(id);
     reply.waitForFinished();
     QVERIFY(reply.value().empty());
+#endif
 }
 
 WAYLANDTEST_MAIN(TestDbusInterface)
