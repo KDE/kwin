@@ -13,7 +13,6 @@
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "x11window.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
@@ -26,8 +25,12 @@
 #include <QPainter>
 #include <QRasterWindow>
 
+#if KWIN_BUILD_X11
+#include "x11window.h"
+
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
+#endif
 
 namespace KWin
 {
@@ -86,6 +89,7 @@ void PlasmaWindowTest::cleanup()
 
 void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
 {
+#if KWIN_BUILD_X11
     // this test verifies that a PlasmaWindow gets unmapped on Client side when an X11 window is destroyed
     QSignalSpy plasmaWindowCreatedSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
 
@@ -147,6 +151,7 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     QCOMPARE(unmappedSpy.count(), 1);
 
     QVERIFY(destroyedSpy.wait());
+#endif
 }
 
 class HelperWindow : public QRasterWindow
