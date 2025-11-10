@@ -72,7 +72,6 @@ public:
     void unblockGeometryUpdates();
     bool areGeometryUpdatesBlocked() const;
 
-    int depth() const;
     bool hasAlpha() const;
     QRegion opaqueRegion() const;
     QList<QRectF> shapeRegion() const;
@@ -449,14 +448,9 @@ private:
     X11Window *cl;
 };
 
-inline int X11Window::depth() const
-{
-    return bit_depth;
-}
-
 inline bool X11Window::hasAlpha() const
 {
-    return depth() == 32;
+    return bit_depth == 32;
 }
 
 inline QRegion X11Window::opaqueRegion() const
