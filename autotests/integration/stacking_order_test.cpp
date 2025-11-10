@@ -9,18 +9,21 @@
 
 #include "kwin_wayland_test.h"
 
-#include "atoms.h"
 #include "main.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "x11window.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/surface.h>
 
+#if KWIN_BUILD_X11
+#include "atoms.h"
+#include "x11window.h"
+
 #include <xcb/xcb.h>
 #include <xcb/xcb_icccm.h>
+#endif
 
 using namespace KWin;
 
@@ -350,6 +353,7 @@ void StackingOrderTest::testDeletedTransient()
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{parent, transient1, transient2}));
 }
 
+#if KWIN_BUILD_X11
 static xcb_window_t createGroupWindow(xcb_connection_t *conn,
                                       const QRect &geometry,
                                       xcb_window_t leaderWid = XCB_WINDOW_NONE)
@@ -393,9 +397,11 @@ static xcb_window_t createGroupWindow(xcb_connection_t *conn,
 
     return wid;
 }
+#endif
 
 void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
 {
+#if KWIN_BUILD_X11
     // This test verifies that group transients are always above other
     // window group members.
 
@@ -507,10 +513,12 @@ void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
     workspace()->activateWindow(transient);
     QTRY_VERIFY(transient->isActive());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{leader, member1, member2, transient}));
+#endif
 }
 
 void StackingOrderTest::testRaiseGroupTransient()
 {
+#if KWIN_BUILD_X11
     const QRect geometry = QRect(0, 0, 128, 128);
 
     Test::XcbConnectionPtr conn = Test::createX11Connection();
@@ -634,10 +642,12 @@ void StackingOrderTest::testRaiseGroupTransient()
     workspace()->activateWindow(transient);
     QTRY_VERIFY(transient->isActive());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{member1, leader, member2, anotherWindow, transient}));
+#endif
 }
 
 void StackingOrderTest::testDeletedGroupTransient()
 {
+#if KWIN_BUILD_X11
     // This test verifies that deleted group transients are kept above their
     // old window groups.
 
@@ -746,10 +756,12 @@ void StackingOrderTest::testDeletedGroupTransient()
 
     // The transient has to be above each member of the window group.
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{leader, member1, member2, transient}));
+#endif
 }
 
 void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()
 {
+#if KWIN_BUILD_X11
     // Bug 76026
 
     const QRect geometry = QRect(0, 0, 128, 128);
@@ -839,6 +851,7 @@ void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()
     workspace()->activateWindow(transient);
     QTRY_VERIFY(transient->isActive());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{leader, member1, member2, transient}));
+#endif
 }
 
 void StackingOrderTest::testKeepAbove()
