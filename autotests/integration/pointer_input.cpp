@@ -21,7 +21,6 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "x11window.h"
 
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
@@ -34,7 +33,12 @@
 #include <KWayland/Client/surface.h>
 
 #include <linux/input.h>
+
+#if KWIN_BUILD_X11
+#include "x11window.h"
+
 #include <xcb/xcb_icccm.h>
+#endif
 
 namespace KWin
 {
@@ -1870,6 +1874,7 @@ void PointerInputTest::testEmptyInputRegion()
 
 void PointerInputTest::testUnfocusedModifiers()
 {
+#if KWIN_BUILD_X11
     // This test verifies that a window under the cursor gets modifier events,
     // even if it isn't focused
 
@@ -1931,6 +1936,7 @@ void PointerInputTest::testUnfocusedModifiers()
     // Destroy the Wayland window.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(waylandWindow));
+#endif
 }
 }
 
