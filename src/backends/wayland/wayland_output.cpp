@@ -163,12 +163,6 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         .capabilities = caps,
     });
 
-    m_turnOffTimer.setSingleShot(true);
-    m_turnOffTimer.setInterval(dimAnimationTime());
-    connect(&m_turnOffTimer, &QTimer::timeout, this, [this] {
-        updateDpmsMode(DpmsMode::Off);
-    });
-
     m_configureThrottleTimer.setSingleShot(true);
     connect(&m_configureThrottleTimer, &QTimer::timeout, this, [this]() {
         applyConfigure(m_pendingConfigureSize, m_pendingConfigureSerial);
@@ -395,6 +389,14 @@ void WaylandOutput::applyChanges(const OutputConfiguration &config)
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
+    next.dpmsMode = props->dpmsMode.value_or(m_state.dpmsMode);
+    if (next.dpmsMode != m_state.dpmsMode) {
+        if (next.dpmsMode == DpmsMode::On) {
+            m_renderLoop->uninhibit();
+        } else {
+            m_renderLoop->inhibit();
+        }
+    }
     setState(next);
 }
 
@@ -443,29 +445,6 @@ void WaylandOutput::init(const QSize &pixelSize, qreal scale, bool fullscreen)
 
     m_xdgShellSurface->setFullscreen(fullscreen);
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
-}
-
-void WaylandOutput::setDpmsMode(DpmsMode mode)
-{
-    if (mode == DpmsMode::Off) {
-        if (!m_turnOffTimer.isActive()) {
-            Q_EMIT aboutToTurnOff(std::chrono::milliseconds(m_turnOffTimer.interval()));
-            m_turnOffTimer.start();
-        }
-    } else {
-        m_turnOffTimer.stop();
-        if (mode != dpmsMode()) {
-            updateDpmsMode(mode);
-            Q_EMIT wakeUp();
-        }
-    }
-}
-
-void WaylandOutput::updateDpmsMode(DpmsMode dpmsMode)
-{
-    State next = m_state;
-    next.dpmsMode = dpmsMode;
-    setState(next);
 }
 
 void WaylandOutput::handleConfigure(const QSize &size, XdgShellSurface::States states, quint32 serial)

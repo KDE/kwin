@@ -10,6 +10,7 @@
 #include "kscreen.h"
 #include "core/output.h"
 #include "effect/effecthandler.h"
+#include "workspace.h"
 // KConfigSkeleton
 #include "kscreenconfig.h"
 
@@ -24,28 +25,36 @@ KscreenEffect::KscreenEffect()
     KscreenConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
 
-    const QList<LogicalOutput *> screens = effects->screens();
-    for (auto screen : screens) {
-        addScreen(screen);
-    }
-    connect(effects, &EffectsHandler::screenAdded, this, &KscreenEffect::addScreen);
-    connect(effects, &EffectsHandler::screenRemoved, this, [this](KWin::LogicalOutput *screen) {
+    connect(workspace(), &Workspace::dpmsStateChanged, this, &KscreenEffect::dpmsChanged);
+    connect(effects, &EffectsHandler::screenRemoved, this, [this](LogicalOutput *screen) {
         m_states.remove(screen);
     });
 }
 
-void KscreenEffect::addScreen(LogicalOutput *screen)
+void KscreenEffect::dpmsChanged(std::chrono::milliseconds animationTime)
 {
-    connect(screen, &LogicalOutput::wakeUp, this, [this, screen] {
-        auto &state = m_states[screen];
-        state.m_timeLine.setDuration(std::chrono::milliseconds(animationTime<KscreenConfig>(250ms)));
-        setState(state, StateFadingIn);
-    });
-    connect(screen, &LogicalOutput::aboutToTurnOff, this, [this, screen](std::chrono::milliseconds dimmingIn) {
-        auto &state = m_states[screen];
-        state.m_timeLine.setDuration(dimmingIn);
-        setState(state, StateFadingOut);
-    });
+    switch (workspace()->dpmsState()) {
+    case Workspace::DpmsState::On: {
+        const auto screens = effects->screens();
+        for (LogicalOutput *screen : screens) {
+            auto &state = m_states[screen];
+            state.m_timeLine.setDuration(animationTime);
+            setState(state, StateFadingIn);
+        }
+        break;
+    }
+    case Workspace::DpmsState::AboutToTurnOff: {
+        const auto screens = effects->screens();
+        for (LogicalOutput *screen : screens) {
+            auto &state = m_states[screen];
+            state.m_timeLine.setDuration(animationTime);
+            setState(state, StateFadingOut);
+        }
+        break;
+    }
+    case Workspace::DpmsState::Off:
+        break;
+    }
 }
 
 void KscreenEffect::reconfigure(ReconfigureFlags flags)

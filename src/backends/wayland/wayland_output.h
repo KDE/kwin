@@ -89,8 +89,6 @@ public:
     WaylandBackend *backend() const;
 
     void lockPointer(KWayland::Client::Pointer *pointer, bool lock);
-    void setDpmsMode(DpmsMode mode) override;
-    void updateDpmsMode(DpmsMode dpmsMode);
 
     bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
@@ -123,7 +121,6 @@ private:
     std::unique_ptr<KWayland::Client::XdgDecoration> m_xdgDecoration;
     WaylandBackend *const m_backend;
     std::unique_ptr<WaylandCursor> m_cursor;
-    QTimer m_turnOffTimer;
     bool m_hasPointerLock = false;
     bool m_ready = false;
     bool m_mapped = false;

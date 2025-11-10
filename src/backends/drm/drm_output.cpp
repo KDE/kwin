@@ -76,16 +76,6 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn, DrmPipeline *pip
         .minVrrRefreshRateHz = edid->minVrrRefreshRateHz(),
     });
     updateConnectorProperties();
-
-    m_turnOffTimer.setSingleShot(true);
-    m_turnOffTimer.setInterval(dimAnimationTime());
-    connect(&m_turnOffTimer, &QTimer::timeout, this, [this] {
-        if (!setDrmDpmsMode(DpmsMode::Off)) {
-            // in case of failure, undo aboutToTurnOff() from setDpmsMode()
-            Q_EMIT wakeUp();
-        }
-        m_sleepInhibitor.reset();
-    });
 }
 
 bool DrmOutput::addLeaseObjects(QList<uint32_t> &objectList)
@@ -149,66 +139,6 @@ QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const
         ret.append(drmMode);
     }
     return ret;
-}
-
-void DrmOutput::setDpmsMode(DpmsMode mode)
-{
-    if (mode == dpmsMode()) {
-        return;
-    }
-    if (mode == DpmsMode::Off) {
-        if (!m_turnOffTimer.isActive()) {
-            updateDpmsMode(DpmsMode::AboutToTurnOff);
-            Q_EMIT aboutToTurnOff(std::chrono::milliseconds(m_turnOffTimer.interval()));
-            m_turnOffTimer.start();
-            m_sleepInhibitor = m_gpu->platform()->session()->delaySleep("dpms animation");
-        }
-    } else {
-        if (m_turnOffTimer.isActive()) {
-            updateDpmsMode(mode);
-            m_turnOffTimer.stop();
-            Q_EMIT wakeUp();
-        } else if (setDrmDpmsMode(mode)) {
-            Q_EMIT wakeUp();
-        }
-        m_sleepInhibitor.reset();
-    }
-}
-
-bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
-{
-    if (!isEnabled()) {
-        return false;
-    }
-    bool active = mode == DpmsMode::On || mode == DpmsMode::AboutToTurnOff;
-    bool isActive = dpmsMode() == DpmsMode::On || dpmsMode() == DpmsMode::AboutToTurnOff;
-    if (active == isActive) {
-        updateDpmsMode(mode);
-        return true;
-    }
-    m_pipeline->setActive(active);
-    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::TestAllowModeset) == DrmPipeline::Error::None) {
-        m_pipeline->applyPendingChanges();
-        updateDpmsMode(mode);
-        if (active) {
-            m_renderLoop->uninhibit();
-            m_renderLoop->scheduleRepaint();
-            // re-set KMS color pipeline stuff
-            State next = m_state;
-            tryKmsColorOffloading(next);
-            setState(next);
-        } else {
-            m_renderLoop->inhibit();
-            // with the renderloop inhibited, there won't be a new frame
-            // to trigger this automatically
-            m_gpu->maybeModeset(m_pipeline, nullptr);
-        }
-        return true;
-    } else {
-        qCWarning(KWIN_DRM) << "Setting dpms mode failed!";
-        m_pipeline->revertPendingChanges();
-        return false;
-    }
 }
 
 DrmPlane::Transformations outputToPlaneTransform(OutputTransform transform)
@@ -328,13 +258,6 @@ void DrmOutput::updateInformation()
     setInformation(nextInfo);
 }
 
-void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
-{
-    State next = m_state;
-    next.dpmsMode = dpmsMode;
-    setState(next);
-}
-
 bool DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
     m_desiredPresentationMode = frame->presentationMode();
@@ -447,6 +370,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setOverscan(props->overscan.value_or(m_pipeline->overscan()));
     m_pipeline->setRgbRange(props->rgbRange.value_or(m_pipeline->rgbRange()));
     m_pipeline->setEnable(props->enabled.value_or(m_pipeline->enabled()));
+    m_pipeline->setActive(m_pipeline->enabled() && props->dpmsMode.value_or(m_state.dpmsMode) != DpmsMode::Off);
     m_pipeline->setHighDynamicRange(hdr);
     m_pipeline->setWideColorGamut(bt2020);
 
@@ -598,10 +522,19 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.maxBitsPerColor = props->maxBitsPerColor.value_or(m_state.maxBitsPerColor);
     next.automaticMaxBitsPerColorLimit = decideAutomaticBpcLimit();
     next.edrPolicy = props->edrPolicy.value_or(m_state.edrPolicy);
+    next.dpmsMode = props->dpmsMode.value_or(m_state.dpmsMode);
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     next.sharpnessSetting = props->sharpness.value_or(m_state.sharpnessSetting);
     tryKmsColorOffloading(next);
+    maybeScheduleRepaints(next);
+    if (next.dpmsMode != m_state.dpmsMode) {
+        if (next.dpmsMode == DpmsMode::On) {
+            m_renderLoop->uninhibit();
+        } else {
+            m_renderLoop->inhibit();
+        }
+    }
     setState(next);
 
     // allowSdrSoftwareBrightness, the brightness device or detectedDdcCi might change our capabilities
@@ -609,7 +542,9 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     newInfo.capabilities = computeCapabilities();
     setInformation(newInfo);
 
-    if (!isEnabled() && m_pipeline->needsModeset()) {
+    if (!m_pipeline->activePending() && m_gpu->needsModeset()) {
+        // If the output is active, state changes end up being committed when presenting.
+        // However, if it's off, that needs to be done explicitly
         m_gpu->maybeModeset(nullptr, nullptr);
     }
 

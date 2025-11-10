@@ -36,7 +36,6 @@ public:
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);
-    void setDpmsMode(DpmsMode mode) override;
 
     DrmBackend *const m_backend;
     std::shared_ptr<DrmOutputLayer> m_layer;

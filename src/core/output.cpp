@@ -419,12 +419,6 @@ bool LogicalOutput::isInternal() const
     return m_information.internal;
 }
 
-std::chrono::milliseconds LogicalOutput::dimAnimationTime()
-{
-    // See kscreen.kcfg
-    return std::chrono::milliseconds(KSharedConfig::openConfig()->group(QStringLiteral("Effect-Kscreen")).readEntry("Duration", 250));
-}
-
 QRect LogicalOutput::mapFromGlobal(const QRect &rect) const
 {
     return rect.translated(-geometry().topLeft());
@@ -688,10 +682,6 @@ QSize LogicalOutput::orientateSize(const QSize &size) const
     default:
         return size;
     }
-}
-
-void LogicalOutput::setDpmsMode(DpmsMode mode)
-{
 }
 
 LogicalOutput::DpmsMode LogicalOutput::dpmsMode() const

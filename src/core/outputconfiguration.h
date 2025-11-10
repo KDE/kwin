@@ -61,6 +61,7 @@ public:
     std::optional<uint32_t> maxBitsPerColor;
     std::optional<LogicalOutput::EdrPolicy> edrPolicy;
     std::optional<double> sharpness;
+    std::optional<LogicalOutput::DpmsMode> dpmsMode;
 };
 
 class KWIN_EXPORT OutputConfiguration
