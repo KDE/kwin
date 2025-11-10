@@ -9,7 +9,6 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "atoms.h"
 #include "core/output.h"
 #include "cursor.h"
 #include "placement.h"
@@ -17,7 +16,6 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include "x11window.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -26,7 +24,6 @@
 #include <KWayland/Client/surface.h>
 
 #include <linux/input.h>
-#include <xcb/xcb_icccm.h>
 
 Q_DECLARE_METATYPE(KWin::QuickTileMode)
 Q_DECLARE_METATYPE(KWin::MaximizeMode)
