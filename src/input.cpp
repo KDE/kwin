@@ -52,6 +52,7 @@
 #include "wayland/tablet_v2.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "xdgactivationv1.h"
 #include "xkb.h"
 #include "xwayland/xwayland_interface.h"
 
@@ -1595,6 +1596,13 @@ public:
         e.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         e.setAccepted(false);
         QCoreApplication::sendEvent(decoration->decoration(), &e);
+        if (e.isAccepted()) {
+            // if a non-active window is closed through the decoration, it should be allowed to activate itself
+            // TODO use the event serial instead, once that's plumbed through
+            const uint32_t serial = waylandServer()->display()->nextSerial();
+            const QString token = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, serial, waylandServer()->seat(), "test");
+            workspace()->setActivationToken(token, serial, decoration->window()->desktopFileName());
+        }
         if (!e.isAccepted() && event->state == PointerButtonState::Pressed) {
             decoration->window()->processDecorationButtonPress(p, globalPos, event->button);
         }
