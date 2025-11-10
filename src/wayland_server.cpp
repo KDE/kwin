@@ -312,6 +312,7 @@ void WaylandServer::handleOutputRemoved(Output *output)
 {
     if (auto outputDevice = m_waylandOutputDevices.take(output)) {
         outputDevice->remove();
+        delete outputDevice;
     }
 }
 
