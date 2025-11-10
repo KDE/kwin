@@ -636,6 +636,12 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
     if (m_activeWindow->hasTransient(window, true)) {
         return true;
     }
+    if (auto parentWindow = window->transientFor()) {
+        const bool allow = mayActivate(parentWindow, m_activationToken);
+        if (allow) {
+            return true;
+        }
+    }
     const FocusStealingPreventionLevel focusStealingPreventionLevel = window->rules()->checkFSP(options->focusStealingPreventionLevel());
     if (focusStealingPreventionLevel == FocusStealingPreventionLevel::None) {
         return true;
