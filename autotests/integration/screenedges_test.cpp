@@ -10,7 +10,6 @@
 
 #include "kwin_wayland_test.h"
 
-#include "atoms.h"
 #include "cursor.h"
 #include "effect/effectloader.h"
 #include "main.h"
@@ -26,8 +25,6 @@
 #include <QAbstractEventDispatcher>
 #include <QAction>
 #include <QSocketNotifier>
-
-#include <xcb/xcb_icccm.h>
 
 Q_DECLARE_METATYPE(KWin::ElectricBorder)
 
