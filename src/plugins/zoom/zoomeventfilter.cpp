@@ -104,7 +104,7 @@ bool KWin::ZoomEventFilter::keyboardKey(KeyboardKeyEvent *event)
 bool KWin::ZoomEventFilter::matchShortcut(const QAction *action, const QKeySequence &sequence)
 {
     QList<QKeySequence> shortcutSequences = KGlobalAccel::self()->shortcut(action);
-    for (auto shortcutSequence : shortcutSequences) {
+    for (const QKeySequence &shortcutSequence : shortcutSequences) {
         if (shortcutSequence.matches(sequence)) {
             return true;
         }
