@@ -20,6 +20,7 @@
 namespace KWin
 {
 
+class ZoomEventFilter;
 class CursorItem;
 class GLFramebuffer;
 class GLTexture;
@@ -58,8 +59,7 @@ public:
     qreal targetZoom() const;
 
 private Q_SLOTS:
-    void globalShortcutPressed(const QString &componentUnique, const QString &actionUnique, qlonglong timestamp);
-    void globalShortcutReleased(const QString &componentUnique, const QString &actionUnique, qlonglong timestamp);
+    void handlePanDirectionChanged(const QPoint &panDirection);
     void zoomIn();
     void zoomTo(double to);
     void zoomOut();
@@ -114,15 +114,16 @@ private:
     GLShader *shaderForZoom(double zoom);
     void trackTextCaret();
     void trackFocus();
-
+    ZoomEventFilter *m_eventFilter;
     double m_zoom = 1.0;
     double m_targetZoom = 1.0;
     double m_sourceZoom = 1.0;
     double m_zoomFactor = 1.25;
     MouseTrackingType m_mouseTracking = MouseTrackingProportional;
     MousePointerType m_mousePointer = MousePointerScale;
-    QPoint m_cursorPoint;
-    QPoint m_prevPoint;
+    QPointF m_cursorPoint;
+    QPointF m_prevPoint;
+    QPoint m_panDirection;
     QTime m_lastMouseEvent;
     std::unique_ptr<CursorItem> m_cursorItem;
     bool m_cursorHidden = false;
