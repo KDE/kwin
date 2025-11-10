@@ -654,6 +654,42 @@ void ActivationTest::testXdgActivation()
         QCOMPARE(workspace()->activeWindow(), window.m_window);
     }
 
+    // a child window of the active one should always be automatically activated,
+    // even without an activation token
+    windows = setupWindows(time);
+    {
+        Test::XdgToplevelWindow window{[&windows](KWayland::Client::Surface *surface, Test::XdgToplevel *toplevel) {
+            toplevel->set_parent(windows[2]->m_toplevel->object());
+        }};
+        QVERIFY(window.show());
+        QCOMPARE(workspace()->activeWindow(), window.m_window);
+    }
+
+    // but a child window of a non-active one should not be automatically activated
+    windows = setupWindows(time);
+    {
+        Test::XdgToplevelWindow window{[&windows](KWayland::Client::Surface *surface, Test::XdgToplevel *toplevel) {
+            toplevel->set_parent(windows[1]->m_toplevel->object());
+        }};
+        QVERIFY(window.show());
+        QCOMPARE_NE(workspace()->activeWindow(), window.m_window);
+    }
+
+    // unless it has a valid activation token
+    windows = setupWindows(time);
+    token = Test::xdgActivation()->createToken();
+    token->set_surface(*windows[2]->m_surface);
+    token->set_serial(windows[2]->m_window->lastUsageSerial(), *Test::waylandSeat());
+    result = token->commitAndWait();
+    {
+        Test::XdgToplevelWindow window{[&windows, &result](KWayland::Client::Surface *surface, Test::XdgToplevel *toplevel) {
+            toplevel->set_parent(windows[1]->m_toplevel->object());
+            Test::xdgActivation()->activate(result, *surface);
+        }};
+        QVERIFY(window.show());
+        QCOMPARE(workspace()->activeWindow(), window.m_window);
+    }
+
     // focus stealing prevention level High is more lax and should activate windows
     // even with an invalid token if the app id matches the last granted activation token
     options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::High);
