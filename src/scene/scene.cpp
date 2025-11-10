@@ -7,6 +7,7 @@
 #include "scene/scene.h"
 #include "core/output.h"
 #include "core/outputlayer.h"
+#include "core/pixelgrid.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
 #include "scene/cursoritem.h"
@@ -301,6 +302,7 @@ QRectF ItemView::viewport() const
 
 QRectF ItemView::calculateViewport(const QRectF &itemRect) const
 {
+    const QRectF snapped = snapToPixels(itemRect, scale());
     const auto recommendedSizes = m_layer ? m_layer->recommendedSizes() : QList<QSize>{};
     if (!recommendedSizes.empty()) {
         const auto bufferSize = scaledRect(itemRect, scale()).size();
@@ -312,10 +314,10 @@ QRectF ItemView::calculateViewport(const QRectF &itemRect) const
         });
         if (it != bigEnough.end()) {
             const auto logicalSize = QSizeF(*it) / scale();
-            return m_item->mapToView(QRectF(itemRect.topLeft(), logicalSize), this);
+            return m_item->mapToView(QRectF(snapped.topLeft(), logicalSize), this);
         }
     }
-    return m_item->mapToView(itemRect, this);
+    return m_item->mapToView(snapped, this);
 }
 
 bool ItemView::isVisible() const
