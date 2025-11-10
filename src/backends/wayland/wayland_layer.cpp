@@ -80,10 +80,10 @@ bool WaylandLayer::test() const
     return true;
 }
 
-void WaylandLayer::setBuffer(wl_buffer *buffer, const QRegion &logicalDamagedRegion)
+void WaylandLayer::setBuffer(wl_buffer *buffer, const QRegion &deviceDamagedRegion)
 {
     m_surface->attachBuffer(buffer);
-    m_surface->damage(logicalDamagedRegion);
+    m_surface->damageBuffer(deviceDamagedRegion);
 }
 
 void WaylandLayer::commit(PresentationMode presentationMode)
