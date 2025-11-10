@@ -72,7 +72,6 @@ public:
     void unblockGeometryUpdates();
     bool areGeometryUpdatesBlocked() const;
 
-    xcb_visualid_t visual() const;
     int depth() const;
     bool hasAlpha() const;
     QRegion opaqueRegion() const;
@@ -402,7 +401,6 @@ private:
     SyncRequest m_syncRequest;
     static bool check_active_modal; ///< \see X11Window::checkActiveModal()
     int sm_stacking_order;
-    xcb_visualid_t m_visual = XCB_NONE;
     int bit_depth = 24;
     QRegion opaque_region;
     QList<QRectF> m_shapeRegion;
@@ -450,11 +448,6 @@ public:
 private:
     X11Window *cl;
 };
-
-inline xcb_visualid_t X11Window::visual() const
-{
-    return m_visual;
-}
 
 inline int X11Window::depth() const
 {

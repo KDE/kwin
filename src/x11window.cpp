@@ -334,7 +334,6 @@ bool X11Window::track(xcb_window_t w)
     m_frameGeometry = Xcb::fromXNative(geo.rect());
     m_clientGeometry = Xcb::fromXNative(geo.rect());
     checkOutput();
-    m_visual = attr->visual;
     bit_depth = geo->depth;
     info = new NETWinInfo(kwinApp()->x11Connection(), w, kwinApp()->x11RootWindow(),
                           NET::WMWindowType,
@@ -375,7 +374,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     m_client.setBorderWidth(0);
     m_client.selectInput(XCB_EVENT_MASK_FOCUS_CHANGE | XCB_EVENT_MASK_PROPERTY_CHANGE);
 
-    m_visual = attr->visual;
     bit_depth = windowGeometry->depth;
 
     // SELI TODO: Order all these things in some sane manner
