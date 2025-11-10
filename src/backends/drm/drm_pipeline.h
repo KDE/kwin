@@ -93,6 +93,7 @@ public:
     Output::RgbRange rgbRange() const;
     DrmConnector::DrmContentType contentType() const;
     const std::shared_ptr<IccProfile> &iccProfile() const;
+    bool freeSyncHDR() const;
 
     void setCrtc(DrmCrtc *crtc);
     void setMode(const std::shared_ptr<DrmConnectorMode> &mode);
@@ -107,6 +108,7 @@ public:
     void setHighDynamicRange(bool hdr);
     void setWideColorGamut(bool wcg);
     void setMaxBpc(uint32_t max);
+    void setFreeSyncHDR(bool enable);
 
     enum class CommitMode {
         Test,
@@ -120,7 +122,7 @@ private:
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
     static Error errnoToError();
-    std::shared_ptr<DrmBlob> createHdrMetadata(TransferFunction::Type transferFunction) const;
+    std::shared_ptr<DrmBlob> createHdrMetadata() const;
 
     // legacy only
     Error presentLegacy(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame);
@@ -161,6 +163,7 @@ private:
         std::shared_ptr<IccProfile> iccProfile;
         bool hdr = false;
         bool wcg = false;
+        bool freeSyncHdr = false;
         uint32_t maxBpc = 10;
 
         QList<DrmPipelineLayer *> layers;

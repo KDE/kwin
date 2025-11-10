@@ -116,6 +116,10 @@ public:
         BT2020_RGB,
         BT2020_YCC,
     };
+    enum class FreeSyncHdrMode : uint64_t {
+        Disabled,
+        Native,
+    };
 
     DrmProperty crtcId;
     DrmProperty nonDesktop;
@@ -135,6 +139,7 @@ public:
     DrmEnumProperty<ScalingMode> scalingMode;
     DrmEnumProperty<Colorspace> colorspace;
     DrmProperty path;
+    DrmEnumProperty<FreeSyncHdrMode> freeSyncHdrMode;
 
     static DrmContentType kwinToDrmContentType(ContentType type);
     static OutputTransform toKWinTransform(PanelOrientation orientation);

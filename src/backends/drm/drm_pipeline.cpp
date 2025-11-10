@@ -357,8 +357,17 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         commit->addProperty(m_connector->maxBpc, std::clamp<uint32_t>(m_pending.maxBpc, m_connector->maxBpc.minValue(), m_connector->maxBpc.maxValue()));
     }
     if (m_connector->hdrMetadata.isValid()) {
-        commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.hdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22));
+        commit->addBlob(m_connector->hdrMetadata, createHdrMetadata());
     } else if (m_pending.hdr) {
+        return false;
+    }
+    if (m_connector->freeSyncHdrMode.isValid()) {
+        if (m_pending.freeSyncHdr) {
+            commit->addEnum(m_connector->freeSyncHdrMode, DrmConnector::FreeSyncHdrMode::Native);
+        } else {
+            commit->addEnum(m_connector->freeSyncHdrMode, DrmConnector::FreeSyncHdrMode::Disabled);
+        }
+    } else if (m_pending.freeSyncHdr) {
         return false;
     }
     if (m_pending.wcg) {
@@ -581,6 +590,11 @@ const std::shared_ptr<IccProfile> &DrmPipeline::iccProfile() const
     return m_pending.iccProfile;
 }
 
+bool DrmPipeline::freeSyncHDR() const
+{
+    return m_pending.freeSyncHdr;
+}
+
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
     m_pending.crtc = crtc;
@@ -654,10 +668,15 @@ void DrmPipeline::setIccProfile(const std::shared_ptr<IccProfile> &profile)
     m_pending.iccProfile = profile;
 }
 
-std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction::Type transferFunction) const
+void DrmPipeline::setFreeSyncHDR(bool enable)
 {
-    if (transferFunction != TransferFunction::PerceptualQuantizer) {
-        // for sRGB / gamma 2.2, don't send any metadata, to ensure the non-HDR experience stays the same
+    m_pending.freeSyncHdr = enable;
+}
+
+std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata() const
+{
+    if (!m_pending.hdr) {
+        // don't send any metadata for SDR, to ensure the non-HDR experience stays the same
         return nullptr;
     }
     if (!m_connector->edid()->supportsPQ()) {
@@ -671,6 +690,10 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction::Type t
     const auto to16Bit = [](float value) {
         return uint16_t(std::round(value / 0.00002));
     };
+    // For BT2020PQ mode, work around some displays behaving quite weird with HDR metadata.
+    // In FreeSync HDR mode, that should not be necessary
+    const uint16_t maxLuminance = m_pending.freeSyncHdr ? uint16_t(std::round(m_connector->edid()->desiredMaxLuminance().value_or(0)))
+                                                        : uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0)));
     hdr_output_metadata data{
         .metadata_type = 0,
         .hdmi_metadata_type1 = hdr_metadata_infoframe{
@@ -680,7 +703,11 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction::Type t
             // - 2: SMPTE ST2084
             // - 3: hybrid Log-Gamma based on BT.2100-0
             // - 4-7: reserved
-            .eotf = uint8_t(2),
+            // FreeSync HDR seems to be a bit weird about HDR metadata:
+            // - just sending no metadata sometimes turns the mode on, but not reliably
+            // - sending value 2 (SMPTE ST2084) predictably turns the display into normal HDR mode
+            // - the theoretically correct value (1: traditional gamma, HDR) isn't supported
+            .eotf = uint8_t(m_pending.freeSyncHdr ? 0 : 2),
             // there's only one type. 1-7 are reserved for future use
             .metadata_type = 0,
             // in 0.00002 nits
@@ -691,11 +718,11 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction::Type t
             },
             .white_point = {to16Bit(white.x), to16Bit(white.y)},
             // in nits
-            .max_display_mastering_luminance = uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0))),
+            .max_display_mastering_luminance = maxLuminance,
             // in 0.0001 nits
             .min_display_mastering_luminance = uint16_t(std::round(m_connector->edid()->desiredMinLuminance() * 10000)),
             // in nits
-            .max_cll = uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0))),
+            .max_cll = maxLuminance,
             .max_fall = uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0))),
         },
     };

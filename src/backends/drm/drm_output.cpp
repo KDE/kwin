@@ -472,7 +472,12 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setRgbRange(props->rgbRange.value_or(m_pipeline->rgbRange()));
     m_pipeline->setEnable(props->enabled.value_or(m_pipeline->enabled()));
     m_pipeline->setHighDynamicRange(hdr);
-    m_pipeline->setWideColorGamut(bt2020);
+    m_pipeline->setFreeSyncHDR(hdr
+                               && m_connector->freeSyncHdrMode.isValid()
+                               && m_connector->freeSyncHdrMode.hasEnum(DrmConnector::FreeSyncHdrMode::Native)
+                               && m_connector->edid()->isValid()
+                               && m_connector->edid()->supportsFreeSyncHDR());
+    m_pipeline->setWideColorGamut(!m_pipeline->freeSyncHDR() && bt2020);
 
     if (uint32_t bpcSetting = props->maxBitsPerColor.value_or(maxBitsPerColor())) {
         m_pipeline->setMaxBpc(bpcSetting);
@@ -544,6 +549,28 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
     }
 
     const Colorimetry nativeColorimetry = m_information.edid.nativeColorimetry().value_or(Colorimetry::BT709);
+
+    if (m_pipeline->freeSyncHDR()) {
+        // FreeSync HDR: gamma 2.2 with native primaries
+        const double minBrightness = m_information.edid.desiredMinLuminance();
+        const double maxAverageBrightness = next.maxAverageBrightnessOverride.value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(next.referenceLuminance));
+        const double maxPeakBrightness = *m_connector->edid()->desiredMaxLuminance();
+        const TransferFunction transferFunction{TransferFunction::gamma22, minBrightness, maxPeakBrightness};
+
+        const double brightnessFactor = (!next.brightnessDevice && next.allowSdrSoftwareBrightness) || effectiveHdr ? brightness : 1.0;
+        const double effectiveReferenceLuminance = 5 + (next.referenceLuminance - 5) * brightnessFactor;
+        return std::make_shared<ColorDescription>(ColorDescription{
+            nativeColorimetry,
+            transferFunction,
+            effectiveReferenceLuminance,
+            minBrightness,
+            maxAverageBrightness,
+            maxPeakBrightness,
+            nativeColorimetry,
+            Colorimetry::BT709.interpolateGamutTo(nativeColorimetry, next.sdrGamutWideness),
+        });
+    }
+
     const Colorimetry containerColorimetry = effectiveWcg ? Colorimetry::BT2020 : (next.colorProfileSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::BT709);
     const Colorimetry masteringColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? nativeColorimetry : Colorimetry::BT709;
     const Colorimetry sdrColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? Colorimetry::BT709.interpolateGamutTo(nativeColorimetry, next.sdrGamutWideness) : Colorimetry::BT709;

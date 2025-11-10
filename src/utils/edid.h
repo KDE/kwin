@@ -92,6 +92,7 @@ public:
     std::optional<double> desiredMaxLuminance() const;
     bool supportsPQ() const;
     bool supportsBT2020() const;
+    bool supportsFreeSyncHDR() const;
 
     /**
      * @returns a string that is intended to identify the monitor uniquely.

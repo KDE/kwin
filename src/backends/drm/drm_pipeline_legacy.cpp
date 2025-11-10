@@ -146,7 +146,7 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
             m_connector->scalingMode.setEnumLegacy(DrmConnector::ScalingMode::None);
         }
         if (m_connector->hdrMetadata.isValid()) {
-            const auto blob = createHdrMetadata(m_pending.hdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22);
+            const auto blob = createHdrMetadata();
             m_connector->hdrMetadata.setPropertyLegacy(blob ? blob->blobId() : 0);
         } else if (m_pending.hdr) {
             return DrmPipeline::Error::InvalidArguments;
