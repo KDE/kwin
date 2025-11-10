@@ -124,6 +124,10 @@ public:
         Max_Bias,
         Max,
     };
+    enum class FreeSyncHdrMode : uint64_t {
+        Disabled,
+        Native,
+    };
 
     DrmProperty crtcId;
     DrmProperty nonDesktop;
@@ -144,6 +148,7 @@ public:
     DrmEnumProperty<Colorspace> colorspace;
     DrmProperty path;
     DrmEnumProperty<AbmLevel> abmLevel;
+    DrmEnumProperty<FreeSyncHdrMode> freeSyncHdrMode;
 
     static DrmContentType kwinToDrmContentType(ContentType type);
     static OutputTransform toKWinTransform(PanelOrientation orientation);

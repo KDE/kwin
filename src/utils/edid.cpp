@@ -401,6 +401,13 @@ bool Edid::supportsBT2020() const
     return m_hdrMetadata && m_hdrMetadata->supportsBT2020;
 }
 
+bool Edid::supportsFreeSyncHDR() const
+{
+    // FIXME actually check the AMD VSDB
+    return m_hdrMetadata.has_value()
+        && m_hdrMetadata->desiredContentMaxLuminance > 0;
+}
+
 QByteArray Edid::identifier() const
 {
     return m_identifier;

@@ -257,6 +257,12 @@ BackendOutput::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->abmLevel.isValid()) {
         capabilities |= Capability::AbmLevel;
     }
+    if (m_connector->freeSyncHdrMode.isValid()
+        && m_connector->freeSyncHdrMode.hasEnum(DrmConnector::FreeSyncHdrMode::Native)
+        && m_connector->edid()->isValid()
+        && m_connector->edid()->supportsFreeSyncHDR()) {
+        capabilities |= Capability::FreeSyncHDR;
+    }
     return capabilities;
 }
 
@@ -433,6 +439,7 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
 {
     const bool effectiveHdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
     const bool effectiveWcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
+    const bool effectiveFreeSyncHDR = effectiveHdr && (capabilities() & Capability::FreeSyncHDR);
     double brightnessFactor = 1.0;
     if ((!next.brightnessDevice && next.allowSdrSoftwareBrightness) || effectiveHdr) {
         brightnessFactor = next.currentBrightness.value_or(next.brightnessSetting);
@@ -464,6 +471,11 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
         // there's no dedicated ICC profile for this case
         profileSource = ColorProfileSource::EDID;
     }
+    if (effectiveFreeSyncHDR) {
+        // TODO also add ICC support for FreeSync HDR?
+        // Though this might require yet another combination of icc path + color profile source
+        profileSource = ColorProfileSource::EDID;
+    }
     switch (profileSource) {
     case ColorProfileSource::sRGB:
         // all the default values are for this case
@@ -493,12 +505,21 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
         if (m_information.edid.isValid() && m_information.edid.defaultColorimetry()) {
             nativeColorimetry = *m_information.edid.defaultColorimetry();
         }
-        if (effectiveWcg) {
+        if (effectiveWcg && !effectiveFreeSyncHDR) {
             containerColorimetry = Colorimetry::BT2020;
         } else {
             containerColorimetry = nativeColorimetry;
         }
-        if (effectiveHdr) {
+        if (effectiveFreeSyncHDR) {
+            // FreeSync HDR: gamma 2.2 with native primaries
+            minLuminance = m_information.edid.desiredMinLuminance();
+            maxAverageLuminance = next.maxAverageBrightnessOverride.value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(next.referenceLuminance));
+            maxLuminance = *m_connector->edid()->desiredMaxLuminance();
+            transferFunction = TransferFunction{TransferFunction::gamma22, minLuminance, maxLuminance};
+            // In theory, maxAverageLuminance would be the most appropriate here.
+            // In practice, that makes some screens unnecessarily dark.
+            maxReferenceLuminance = maxLuminance;
+        } else if (effectiveHdr) {
             transferFunction = TransferFunction(TransferFunction::PerceptualQuantizer);
             // HDR screens are weird, sending them the min. luminance from the EDID does
             // *not* make all of them present the darkest luminance the display can show.
@@ -604,7 +625,8 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setEnable(m_nextState->enabled);
     m_pipeline->setActive(m_nextState->enabled && m_nextState->dpmsMode == DpmsMode::On);
     m_pipeline->setHighDynamicRange(hdr);
-    m_pipeline->setWideColorGamut(bt2020);
+    m_pipeline->setFreeSyncHDR(hdr && (capabilities() & Capability::FreeSyncHDR));
+    m_pipeline->setWideColorGamut(!m_pipeline->freeSyncHDR() && bt2020);
 
     if (uint32_t bpcSetting = props->maxBitsPerColor.value_or(maxBitsPerColor())) {
         m_pipeline->setMaxBpc(bpcSetting);

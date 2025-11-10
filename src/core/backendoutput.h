@@ -80,6 +80,7 @@ public:
         AutomaticBrightness = 1 << 16,
         HdrIccProfile = 1 << 17,
         AbmLevel = 1 << 18,
+        FreeSyncHDR = 1 << 19,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 

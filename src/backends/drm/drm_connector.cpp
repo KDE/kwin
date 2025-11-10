@@ -170,6 +170,10 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                                                              QByteArrayLiteral("bias max"),
                                                                              QByteArrayLiteral("max"),
                                                                          })
+    , freeSyncHdrMode(this, QByteArrayLiteral("FreeSync HDR Mode"), {
+                                                                        QByteArrayLiteral("Disabled"),
+                                                                        QByteArrayLiteral("FreeSync 2 Native"),
+                                                                    })
 {
 }
 
@@ -279,6 +283,7 @@ bool DrmConnector::updateProperties()
     colorspace.update(props);
     path.update(props);
     abmLevel.update(props);
+    freeSyncHdrMode.update(props);
 
     if (gpu()->atomicModeSetting() && !crtcId.isValid()) {
         qCWarning(KWIN_DRM) << "Failed to update the basic connector properties (CRTC_ID)";
