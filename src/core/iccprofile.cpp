@@ -251,6 +251,11 @@ static std::optional<ColorPipeline> parseBToATag(cmsHPROFILE profile, cmsTagSign
     return ret;
 }
 
+static cmsTagSignature stringToSignature(std::string_view str)
+{
+    return cmsTagSignature((uint32_t(str[3]) << 0) | (uint32_t(str[2]) << 8) | (uint32_t(str[1]) << 16) | (uint32_t(str[0]) << 24));
+}
+
 struct MHC2
 {
     double minLuminance;
@@ -264,10 +269,13 @@ std::optional<MHC2> parseMhc2Tag(cmsHPROFILE profile)
 {
     // see https://learn.microsoft.com/en-us/windows/win32/wcs/display-calibration-mhc
     // for documentation of the tag
-    if (!cmsIsTag(profile, cmsTagSignature::cmsSigMHC2Tag)) {
+    // NOTE that cmsTagSignature::cmsSigMHC2Tag isn't used here, because that requires
+    // newer LCMS
+    const cmsTagSignature tagSignature = stringToSignature("MHC2");
+    if (!cmsIsTag(profile, tagSignature)) {
         return std::nullopt;
     }
-    auto data = readTagRaw(profile, cmsTagSignature::cmsSigMHC2Tag);
+    auto data = readTagRaw(profile, tagSignature);
     if (data.size() < 36) {
         qCWarning(KWIN_CORE, "MHC2 tag smaller than expected");
         return std::nullopt;
