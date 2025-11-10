@@ -202,10 +202,7 @@ bool DpmsInputEventFilter::tabletPadDialEvent(TabletPadDialEvent *event)
 
 void DpmsInputEventFilter::notify()
 {
-    const QList<Output *> outputs = workspace()->outputs();
-    for (Output *output : outputs) {
-        output->setDpmsMode(Output::DpmsMode::On);
-    }
+    workspace()->requestDpmsState(Workspace::DpmsState::On);
 }
 
 }

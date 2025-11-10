@@ -152,10 +152,7 @@ class KWIN_EXPORT Output : public QObject
 public:
     enum class DpmsMode {
         On,
-        Standby,
-        Suspend,
         Off,
-        AboutToTurnOff,
     };
     Q_ENUM(DpmsMode)
 
@@ -331,16 +328,6 @@ public:
      */
     virtual RenderLoop *renderLoop() const = 0;
 
-    /**
-     * @returns the configured time for an output to dim
-     *
-     * This allows the backends to coordinate with the front-end the time they
-     * allow to decorate the dimming until the display is turned off
-     *
-     * @see aboutToTurnOff
-     */
-    static std::chrono::milliseconds dimAnimationTime();
-
     OutputTransform transform() const;
     /**
      * The transform that the user has configured, and which doesn't get changed
@@ -360,7 +347,6 @@ public:
     QSize desiredModeSize() const;
     uint32_t desiredModeRefreshRate() const;
     DpmsMode dpmsMode() const;
-    virtual void setDpmsMode(DpmsMode mode);
 
     uint32_t overscan() const;
 
@@ -462,17 +448,6 @@ Q_SIGNALS:
      * This signal is emitted when the device pixel ratio of the output has changed.
      */
     void scaleChanged();
-
-    /**
-     * Notifies that the display will be dimmed in @p time ms. This allows
-     * effects to plan for it and hopefully animate it
-     */
-    void aboutToTurnOff(std::chrono::milliseconds time);
-
-    /**
-     * Notifies that the output has been turned on and the wake can be decorated.
-     */
-    void wakeUp();
 
     /**
      * Notifies that the output is about to change configuration based on a

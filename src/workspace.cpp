@@ -42,6 +42,7 @@
 #include "tabbox/tabbox.h"
 #endif
 #include "compositor.h"
+#include "core/session.h"
 #include "decorations/decorationbridge.h"
 #include "dpmsinputeventfilter.h"
 #include "lidswitchtracker.h"
@@ -56,6 +57,7 @@
 #include "tabletmodemanager.h"
 #include "tiles/tilemanager.h"
 #include "useractions.h"
+#include "utils/envvar.h"
 #include "utils/kernel.h"
 #include "utils/orientationsensor.h"
 #include "virtualdesktops.h"
@@ -164,6 +166,16 @@ Workspace::Workspace()
 
     new DBusInterface(this);
     m_outline = std::make_unique<Outline>();
+
+    m_dpmsTimer.setSingleShot(true);
+    connect(&m_dpmsTimer, &QTimer::timeout, this, [this]() {
+        m_dpms = DpmsState::Off;
+        // applyOutputConfiguration sets the correct value
+        OutputConfiguration cfg;
+        applyOutputConfiguration(cfg);
+        // NOTE this assumes that the displays are turned off immediately in applyOutputConfiguration
+        m_sleepInhibitor.reset();
+    });
 
     initShortcuts();
 
@@ -421,6 +433,10 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
     assignBrightnessDevices(config);
 
     m_outputConfigStore->applyMirroring(config, kwinApp()->outputBackend()->outputs());
+    const auto allOutputs = kwinApp()->outputBackend()->outputs();
+    for (Output *output : allOutputs) {
+        config.changeSet(output)->dpmsMode = m_dpms == DpmsState::Off ? Output::DpmsMode::Off : Output::DpmsMode::On;
+    }
     auto error = kwinApp()->outputBackend()->applyOutputChanges(config);
     if (error != OutputConfigurationError::None) {
         return error;
@@ -436,6 +452,46 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
     }
 
     return OutputConfigurationError::None;
+}
+
+void Workspace::requestDpmsState(DpmsState state)
+{
+    const bool requestOn = state == DpmsState::On;
+    const bool isOn = m_dpms == DpmsState::On;
+    if (requestOn == isOn) {
+        return;
+    }
+    if (state == DpmsState::Off) {
+        state = DpmsState::AboutToTurnOff;
+    }
+    m_dpms = state;
+
+    // See kscreen.kcfg
+    const auto animationTime = std::chrono::milliseconds(KSharedConfig::openConfig()->group(QStringLiteral("Effect-Kscreen")).readEntry("Duration", 250));
+
+    // the config can be empty, it gets adjusted in applyOutputConfiguration
+    OutputConfiguration cfg;
+    if (m_dpms == DpmsState::On) {
+        applyOutputConfiguration(cfg);
+        m_dpmsFilter.reset();
+        m_dpmsTimer.stop();
+    } else {
+        applyOutputConfiguration(cfg);
+        m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
+        input()->installInputEventFilter(m_dpmsFilter.get());
+        m_dpmsTimer.start(animationTime);
+        // TODO only do this if sleep is actually requested
+        m_sleepInhibitor = kwinApp()->outputBackend()->session()->delaySleep("dpms animation");
+    }
+    // When dpms mode for display changes, we need to trigger checking if dpms mode should be enabled/disabled.
+    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+
+    Q_EMIT dpmsStateChanged(animationTime);
+}
+
+Workspace::DpmsState Workspace::dpmsState() const
+{
+    return m_dpms;
 }
 
 void Workspace::updateXwaylandScale()
@@ -1134,10 +1190,13 @@ void Workspace::slotOutputBackendOutputsQueried()
     updateOutputs();
 }
 
+static const int s_dpmsTimeout = environmentVariableIntValue("KWIN_DPMS_WORKAROUND_TIMEOUT").value_or(2000);
+
 void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
 {
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldOutputs = m_outputs;
+    bool wakeUp = false;
 
     if (m_moveResizeWindow) {
         m_moveResizeWindow->cancelInteractiveMoveResize();
@@ -1193,14 +1252,9 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     for (Output *output : added) {
         output->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
-        connect(output, &Output::aboutToTurnOff, this, &Workspace::aboutToTurnOff);
-        connect(output, &Output::wakeUp, this, &Workspace::wakeUp);
-        if (output->dpmsMode() != Output::DpmsMode::On) {
-            aboutToTurnOff();
-        }
         Q_EMIT outputAdded(output);
+        wakeUp |= !m_recentlyRemovedDpmsOffOutputs.contains(output->uuid());
     }
-    wakeUp();
 
     m_placementTracker->inhibit();
 
@@ -1258,32 +1312,16 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     m_placementTracker->restore(outputLayoutId());
 
     for (Output *output : removed) {
+        m_recentlyRemovedDpmsOffOutputs.push_back(output->uuid());
         output->unref();
     }
 
     Q_EMIT outputsChanged();
-}
 
-void Workspace::aboutToTurnOff()
-{
-    if (!m_dpmsFilter) {
-        m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
-        input()->installInputEventFilter(m_dpmsFilter.get());
+    // if a new output was added, turn all displays on
+    if (wakeUp) {
+        requestDpmsState(DpmsState::On);
     }
-    // When dpms mode for display changes, we need to trigger checking if dpms mode should be enabled/disabled.
-    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
-}
-
-void Workspace::wakeUp()
-{
-    const bool allOn = std::all_of(m_outputs.begin(), m_outputs.end(), [](Output *output) {
-        return output->dpmsMode() == Output::DpmsMode::On && !output->isPlaceholder();
-    });
-    if (allOn) {
-        m_dpmsFilter.reset();
-    }
-    // When dpms mode for display changes, we need to trigger checking if dpms mode should be enabled/disabled.
-    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
 }
 
 void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
