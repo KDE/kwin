@@ -67,13 +67,6 @@ void DrmVirtualOutput::vblank(std::chrono::nanoseconds timestamp)
     }
 }
 
-void DrmVirtualOutput::setDpmsMode(DpmsMode mode)
-{
-    State next = m_state;
-    next.dpmsMode = mode;
-    setState(next);
-}
-
 DrmOutputLayer *DrmVirtualOutput::primaryLayer() const
 {
     return m_layer.get();

@@ -225,7 +225,6 @@ public:
     /** Returns the resolution of the output.  */
     QSize pixelSize() const;
     QSize modeSize() const;
-
     OutputTransform transform() const;
     /**
      * The transform that the user has configured, and which doesn't get changed
@@ -258,17 +257,6 @@ Q_SIGNALS:
      * This signal is emitted when the device pixel ratio of the output has changed.
      */
     void scaleChanged();
-
-    /**
-     * Notifies that the display will be dimmed in @p time ms. This allows
-     * effects to plan for it and hopefully animate it
-     */
-    void aboutToTurnOff(std::chrono::milliseconds time);
-
-    /**
-     * Notifies that the output has been turned on and the wake can be decorated.
-     */
-    void wakeUp();
 
     /**
      * Notifies that the output is about to change configuration based on a

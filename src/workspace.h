@@ -17,6 +17,7 @@
 #include "options.h"
 #include "sm.h"
 #include "utils/common.h"
+#include "utils/filedescriptor.h"
 // KF
 #include <netwm_def.h>
 // Qt
@@ -442,6 +443,14 @@ public:
     void setActivationToken(const QString &token, uint32_t serial, const QString &appId);
     bool mayActivate(Window *window, const QString &token) const;
 
+    enum class DpmsState {
+        Off,
+        AboutToTurnOff,
+        On
+    };
+    void requestDpmsState(DpmsState state);
+    DpmsState dpmsState() const;
+
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
     // Keybindings
@@ -566,6 +575,7 @@ Q_SIGNALS:
      */
     void stackingOrderChanged();
     void aboutToRearrange();
+    void dpmsStateChanged(std::chrono::milliseconds animationTime);
 
 private:
     void init();
@@ -616,8 +626,6 @@ private:
 
     void updateOutputConfiguration();
     void updateOutputs(const std::optional<QList<BackendOutput *>> &outputOrder = std::nullopt);
-    void aboutToTurnOff();
-    void wakeUp();
     void assignBrightnessDevices(OutputConfiguration &outputConfig);
 
     bool breaksShowingDesktop(Window *window) const;
@@ -738,6 +746,11 @@ private:
     QString m_activationToken;
     QString m_activationTokenAppId;
     uint32_t m_activationTokenSerial = 0;
+
+    DpmsState m_dpms = DpmsState::On;
+    QList<QString> m_recentlyRemovedDpmsOffOutputs;
+    QTimer m_dpmsTimer;
+    FileDescriptor m_sleepInhibitor;
 
 private:
     friend bool performTransiencyCheck();

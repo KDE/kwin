@@ -357,8 +357,6 @@ LogicalOutput::LogicalOutput(BackendOutput *backendOutput)
     connect(backendOutput, &BackendOutput::geometryChanged, this, &LogicalOutput::geometryChanged);
     connect(backendOutput, &BackendOutput::scaleChanged, this, &LogicalOutput::scaleChanged);
     // TODO dpms being kind of on the backend output and kind of here isn't great
-    connect(backendOutput, &BackendOutput::aboutToTurnOff, this, &LogicalOutput::aboutToTurnOff);
-    connect(backendOutput, &BackendOutput::wakeUp, this, &LogicalOutput::wakeUp);
     connect(backendOutput, &BackendOutput::aboutToChange, this, &LogicalOutput::aboutToChange);
     connect(backendOutput, &BackendOutput::changed, this, &LogicalOutput::changed);
     connect(backendOutput, &BackendOutput::blendingColorChanged, this, &LogicalOutput::blendingColorChanged);

@@ -50,7 +50,7 @@ private:
 
     void switchState(ScreenState &state);
     void setState(ScreenState &state, FadeOutState newState);
-    void addScreen(LogicalOutput *screen);
+    void dpmsChanged(std::chrono::milliseconds animationTime);
     bool isScreenActive(LogicalOutput *screen) const;
 
     QHash<LogicalOutput *, ScreenState> m_states;

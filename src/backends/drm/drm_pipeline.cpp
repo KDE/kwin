@@ -139,6 +139,11 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
             return errnoToError();
         }
         const bool withoutModeset = std::ranges::all_of(pipelines, [&frame](DrmPipeline *pipeline) {
+            // always require a modeset for turning off displays, it makes other logic easier to follow
+            const bool oldActive = pipeline->m_next.enabled && pipeline->m_next.active;
+            if (oldActive && !pipeline->activePending()) {
+                return false;
+            }
             auto commit = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{pipeline});
             return pipeline->prepareAtomicCommit(commit.get(), CommitMode::TestAllowModeset, frame) == Error::None && commit->test();
         });

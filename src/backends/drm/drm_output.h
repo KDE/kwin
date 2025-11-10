@@ -49,7 +49,6 @@ public:
     bool queueChanges(const std::shared_ptr<OutputChangeSet> &properties);
     void applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &properties);
     void revertQueuedChanges();
-    void updateDpmsMode(DpmsMode dpmsMode);
 
     bool shouldDisableNonPrimaryPlanes() const;
     bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
@@ -71,8 +70,6 @@ public:
     void removePipeline();
 
 private:
-    bool setDrmDpmsMode(DpmsMode mode);
-    void setDpmsMode(DpmsMode mode) override;
     void tryKmsColorOffloading(State &next);
     std::shared_ptr<ColorDescription> createColorDescription(const State &next) const;
     Capabilities computeCapabilities() const;
@@ -88,8 +85,6 @@ private:
     DrmPipeline *m_pipeline;
     const std::shared_ptr<DrmConnector> m_connector;
 
-    QTimer m_turnOffTimer;
-    FileDescriptor m_sleepInhibitor;
     DrmLease *m_lease = nullptr;
 
     QVector3D m_sRgbChannelFactors = {1, 1, 1};

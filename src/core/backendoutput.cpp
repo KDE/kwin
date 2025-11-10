@@ -350,10 +350,6 @@ QSize BackendOutput::orientateSize(const QSize &size) const
     }
 }
 
-void BackendOutput::setDpmsMode(DpmsMode mode)
-{
-}
-
 BackendOutput::DpmsMode BackendOutput::dpmsMode() const
 {
     return m_state.dpmsMode;
@@ -610,12 +606,6 @@ QRect BackendOutput::rect() const
 QRectF BackendOutput::rectF() const
 {
     return QRectF(QPointF(0, 0), geometryF().size());
-}
-
-std::chrono::milliseconds BackendOutput::dimAnimationTime()
-{
-    // See kscreen.kcfg
-    return std::chrono::milliseconds(KSharedConfig::openConfig()->group(QStringLiteral("Effect-Kscreen")).readEntry("Duration", 250));
 }
 
 } // namespace KWin

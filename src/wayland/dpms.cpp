@@ -7,6 +7,7 @@
 #include "core/backendoutput.h"
 #include "display.h"
 #include "output.h"
+#include "workspace.h"
 
 #include <QPointer>
 
@@ -109,25 +110,13 @@ void DpmsInterface::org_kde_kwin_dpms_set(Resource *resource, uint32_t mode)
         return;
     }
 
-    BackendOutput::DpmsMode dpmsMode;
-    switch (mode) {
-    case ORG_KDE_KWIN_DPMS_MODE_ON:
-        dpmsMode = BackendOutput::DpmsMode::On;
-        break;
-    case ORG_KDE_KWIN_DPMS_MODE_STANDBY:
-        dpmsMode = BackendOutput::DpmsMode::Standby;
-        break;
-    case ORG_KDE_KWIN_DPMS_MODE_SUSPEND:
-        dpmsMode = BackendOutput::DpmsMode::Suspend;
-        break;
-    case ORG_KDE_KWIN_DPMS_MODE_OFF:
-        dpmsMode = BackendOutput::DpmsMode::Off;
-        break;
-    default:
-        return;
+    Workspace::DpmsState dpms;
+    if (mode == ORG_KDE_KWIN_DPMS_MODE_ON) {
+        dpms = Workspace::DpmsState::On;
+    } else {
+        dpms = Workspace::DpmsState::Off;
     }
-
-    m_output->handle()->backendOutput()->setDpmsMode(dpmsMode);
+    workspace()->requestDpmsState(dpms);
 }
 
 void DpmsInterface::sendSupported()
@@ -147,22 +136,10 @@ void DpmsInterface::sendMode()
 
     const auto mode = m_output->handle()->backendOutput()->dpmsMode();
     org_kde_kwin_dpms_mode wlMode;
-    switch (mode) {
-    case BackendOutput::DpmsMode::On:
-    case BackendOutput::DpmsMode::AboutToTurnOff:
+    if (mode == BackendOutput::DpmsMode::On) {
         wlMode = ORG_KDE_KWIN_DPMS_MODE_ON;
-        break;
-    case BackendOutput::DpmsMode::Standby:
-        wlMode = ORG_KDE_KWIN_DPMS_MODE_STANDBY;
-        break;
-    case BackendOutput::DpmsMode::Suspend:
-        wlMode = ORG_KDE_KWIN_DPMS_MODE_SUSPEND;
-        break;
-    case BackendOutput::DpmsMode::Off:
+    } else {
         wlMode = ORG_KDE_KWIN_DPMS_MODE_OFF;
-        break;
-    default:
-        Q_UNREACHABLE();
     }
     send_mode(wlMode);
 }

@@ -494,23 +494,7 @@ DrmPipeline::Error DrmGpu::testPipelines()
             }
         }
     }
-    QList<DrmPipeline *> inactivePipelines;
-    std::ranges::copy_if(m_pipelines, std::back_inserter(inactivePipelines), [](const auto pipeline) {
-        return pipeline->enabled() && !pipeline->active();
-    });
-    DrmPipeline::Error test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedModesetObjects());
-    if (!inactivePipelines.isEmpty() && test == DrmPipeline::Error::None) {
-        // ensure that pipelines that are set as enabled but currently inactive
-        // still work when they need to be set active again
-        for (const auto pipeline : std::as_const(inactivePipelines)) {
-            pipeline->setActive(true);
-        }
-        test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedModesetObjects());
-        for (const auto pipeline : std::as_const(inactivePipelines)) {
-            pipeline->setActive(false);
-        }
-    }
-    return test;
+    return DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedModesetObjects());
 }
 
 DrmOutput *DrmGpu::findOutput(quint32 connector)

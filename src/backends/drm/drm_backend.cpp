@@ -282,36 +282,12 @@ static QString earlyIdentifier(BackendOutput *output)
 
 void DrmBackend::addOutput(DrmAbstractOutput *o)
 {
-    const bool allOff = std::ranges::all_of(m_outputs, [](BackendOutput *output) {
-        return !output->isEnabled() || output->dpmsMode() != BackendOutput::DpmsMode::On;
-    });
-    if (allOff && m_recentlyUnpluggedDpmsOffOutputs.contains(earlyIdentifier(o))) {
-        if (DrmOutput *drmOutput = qobject_cast<DrmOutput *>(o)) {
-            // When the system is in dpms power saving mode, KWin turns on all outputs if the user plugs a new output in
-            // as that's an intentional action and they expect to see the output light up.
-            // Some outputs however temporarily disconnect in some situations, most often shortly after they go into standby.
-            // To not turn on outputs in that case, restore the previous dpms state
-            drmOutput->updateDpmsMode(BackendOutput::DpmsMode::Off);
-            drmOutput->pipeline()->setActive(false);
-            drmOutput->renderLoop()->inhibit();
-            m_recentlyUnpluggedDpmsOffOutputs.removeOne(earlyIdentifier(drmOutput));
-        }
-    }
     m_outputs.append(o);
     Q_EMIT outputAdded(o);
 }
 
-static const int s_dpmsTimeout = environmentVariableIntValue("KWIN_DPMS_WORKAROUND_TIMEOUT").value_or(2000);
-
 void DrmBackend::removeOutput(DrmAbstractOutput *o)
 {
-    if (o->dpmsMode() == BackendOutput::DpmsMode::Off) {
-        const QString id = earlyIdentifier(o);
-        m_recentlyUnpluggedDpmsOffOutputs.push_back(id);
-        QTimer::singleShot(s_dpmsTimeout, this, [this, id]() {
-            m_recentlyUnpluggedDpmsOffOutputs.removeOne(id);
-        });
-    }
     m_outputs.removeOne(o);
     Q_EMIT outputRemoved(o);
 }
