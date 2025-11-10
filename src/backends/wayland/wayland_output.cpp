@@ -30,6 +30,7 @@
 #include "wayland-single-pixel-buffer-v1-client-protocol.h"
 #include "wayland-tearing-control-v1-client-protocol.h"
 #include "wayland-viewporter-client-protocol.h"
+#include "wayland-xdg-toplevel-icon-v1-client-protocol.h"
 #include "workspace.h"
 
 #include <KLocalizedString>
@@ -174,6 +175,12 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
     });
 
     updateWindowTitle();
+    if (auto toplevelIconManager = backend->display()->toplevelIconManager()) {
+        auto toplevelIcon = xdg_toplevel_icon_manager_v1_create_icon(toplevelIconManager);
+        xdg_toplevel_icon_v1_set_name(toplevelIcon, "kwin");
+        xdg_toplevel_icon_manager_v1_set_icon(toplevelIconManager, *m_xdgShellSurface, toplevelIcon);
+        xdg_toplevel_icon_v1_destroy(toplevelIcon);
+    }
 
     connect(m_xdgShellSurface.get(), &XdgShellSurface::configureRequested, this, &WaylandOutput::handleConfigure);
     connect(m_xdgShellSurface.get(), &XdgShellSurface::closeRequested, qApp, &QCoreApplication::quit);

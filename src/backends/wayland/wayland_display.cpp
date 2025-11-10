@@ -45,6 +45,7 @@
 #include "wayland-viewporter-client-protocol.h"
 #include "wayland-xdg-decoration-unstable-v1-client-protocol.h"
 #include "wayland-xdg-shell-client-protocol.h"
+#include "wayland-xdg-toplevel-icon-v1-client-protocol.h"
 
 namespace KWin
 {
@@ -359,6 +360,9 @@ WaylandDisplay::~WaylandDisplay()
     if (m_singlePixelManager) {
         wp_single_pixel_buffer_manager_v1_destroy(m_singlePixelManager);
     }
+    if (m_toplevelIconManager) {
+        xdg_toplevel_icon_manager_v1_destroy(m_toplevelIconManager);
+    }
     if (m_keyboardShortcutsInhibitManager) {
         zwp_keyboard_shortcuts_inhibit_manager_v1_destroy(m_keyboardShortcutsInhibitManager);
     }
@@ -426,6 +430,10 @@ bool WaylandDisplay::initialize(const QString &socketName)
     if (!m_presentationTime) {
         qCWarning(KWIN_WAYLAND_BACKEND, "wp_presentation_time isn't supported by the host compositor");
         return false;
+    }
+    if (!m_toplevelIconManager) {
+        qCWarning(KWIN_WAYLAND_BACKEND, "xdg_toplevel_icon_manager_v1 isn't supported by the host compositor");
+        // Not fatal, can live without it.
     }
     if (!m_keyboardShortcutsInhibitManager) {
         qCWarning(KWIN_WAYLAND_BACKEND, "zwp_keyboard_shortcuts_inhibit_manager_v1 isn't supported by the host compositor");
@@ -519,6 +527,11 @@ wp_single_pixel_buffer_manager_v1 *WaylandDisplay::singlePixelManager() const
     return m_singlePixelManager;
 }
 
+xdg_toplevel_icon_manager_v1 *WaylandDisplay::toplevelIconManager() const
+{
+    return m_toplevelIconManager;
+}
+
 zwp_keyboard_shortcuts_inhibit_manager_v1 *WaylandDisplay::keyboardShortcutsInhibitManager() const
 {
     return m_keyboardShortcutsInhibitManager;
@@ -576,6 +589,8 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
         display->m_subCompositor->setup(static_cast<wl_subcompositor *>(wl_registry_bind(registry, name, &wl_subcompositor_interface, 1)));
     } else if (strcmp(interface, wp_single_pixel_buffer_manager_v1_interface.name) == 0) {
         display->m_singlePixelManager = reinterpret_cast<wp_single_pixel_buffer_manager_v1 *>(wl_registry_bind(registry, name, &wp_single_pixel_buffer_manager_v1_interface, 1));
+    } else if (strcmp(interface, xdg_toplevel_icon_manager_v1_interface.name) == 0) {
+        display->m_toplevelIconManager = reinterpret_cast<xdg_toplevel_icon_manager_v1 *>(wl_registry_bind(registry, name, &xdg_toplevel_icon_manager_v1_interface, 1));
     } else if (strcmp(interface, zwp_keyboard_shortcuts_inhibit_manager_v1_interface.name) == 0) {
         display->m_keyboardShortcutsInhibitManager = reinterpret_cast<zwp_keyboard_shortcuts_inhibit_manager_v1 *>(wl_registry_bind(registry, name, &zwp_keyboard_shortcuts_inhibit_manager_v1_interface, 1));
     }
