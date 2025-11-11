@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2018 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -27,18 +28,18 @@ namespace Xwl
 // in Bytes: equals 64KB
 static const uint32_t s_incrChunkSize = 63 * 1024;
 
-Transfer::Transfer(xcb_atom_t selection, qint32 fd, xcb_timestamp_t timestamp, QObject *parent)
+Transfer::Transfer(xcb_atom_t selection, FileDescriptor fd, xcb_timestamp_t timestamp, QObject *parent)
     : QObject(parent)
     , m_atom(selection)
-    , m_fd(fd)
     , m_timestamp(timestamp)
+    , m_fd(std::move(fd))
 {
 }
 
 void Transfer::createSocketNotifier(QSocketNotifier::Type type)
 {
     delete m_notifier;
-    m_notifier = new QSocketNotifier(m_fd, type, this);
+    m_notifier = new QSocketNotifier(m_fd.get(), type, this);
 }
 
 void Transfer::clearSocketNotifier()
@@ -58,22 +59,12 @@ void Transfer::timeout()
 void Transfer::endTransfer()
 {
     clearSocketNotifier();
-    closeFd();
+    m_fd.reset();
     Q_EMIT finished();
 }
 
-void Transfer::closeFd()
-{
-    if (m_fd < 0) {
-        return;
-    }
-    close(m_fd);
-    m_fd = -1;
-}
-
-TransferWltoX::TransferWltoX(xcb_atom_t selection, xcb_selection_request_event_t *request,
-                             qint32 fd, QObject *parent)
-    : Transfer(selection, fd, 0, parent)
+TransferWltoX::TransferWltoX(xcb_atom_t selection, xcb_selection_request_event_t *request, FileDescriptor fd, QObject *parent)
+    : Transfer(selection, std::move(fd), 0, parent)
     , m_request(request)
 {
 }
@@ -243,10 +234,8 @@ void TransferWltoX::handlePropertyDelete()
     }
 }
 
-TransferXtoWl::TransferXtoWl(xcb_atom_t selection, xcb_atom_t target, qint32 fd,
-                             xcb_timestamp_t timestamp, xcb_window_t parentWindow,
-                             QObject *parent)
-    : Transfer(selection, fd, timestamp, parent)
+TransferXtoWl::TransferXtoWl(xcb_atom_t selection, xcb_atom_t target, FileDescriptor fd, xcb_timestamp_t timestamp, xcb_window_t parentWindow, QObject *parent)
+    : Transfer(selection, std::move(fd), timestamp, parent)
 {
     // create transfer window
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();

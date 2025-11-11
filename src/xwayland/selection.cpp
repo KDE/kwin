@@ -3,21 +3,22 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "selection.h"
-#include "databridge.h"
+#include "atoms.h"
 #include "selection_source.h"
 #include "transfer.h"
-#include "xwayland_logging.h"
-
-#include "atoms.h"
+#include "utils/pipe.h"
 #include "utils/xcbutils.h"
+#include "wayland/abstract_data_source.h"
 #include "workspace.h"
 #include "x11window.h"
+#include "xwayland_logging.h"
 
-#include <unistd.h>
+#include <fcntl.h>
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>
 
@@ -125,9 +126,7 @@ void Selection::setWlSource(WlSource *source)
     }
 
     m_xSource.reset();
-
     m_waylandSource.reset(source);
-    connect(m_waylandSource.get(), &WlSource::transferReady, this, &Selection::startTransferToX);
 }
 
 void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
@@ -143,7 +142,6 @@ void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
 
     m_xSource = std::make_unique<X11Source>(this);
     connect(m_xSource.get(), &X11Source::targetsReceived, this, &Selection::x11TargetsReceived);
-    connect(m_xSource.get(), &X11Source::transferRequested, this, &Selection::startTransferToWayland);
 }
 
 void Selection::ownSelection(bool own)
@@ -219,6 +217,7 @@ bool Selection::handlePropertyNotify(xcb_property_notify_event_t *event)
 
 void Selection::startTransferToWayland(const QString &mimeType, qint32 fd)
 {
+    Q_ASSERT(m_xSource);
     const xcb_atom_t mimeAtom = Xcb::mimeTypeToAtom(mimeType);
     if (mimeAtom == XCB_ATOM_NONE) {
         qCDebug(KWIN_XWL) << "Sending X11 clipboard to Wayland failed: unsupported MIME.";
@@ -226,7 +225,7 @@ void Selection::startTransferToWayland(const QString &mimeType, qint32 fd)
         return;
     }
 
-    auto *transfer = new TransferXtoWl(m_atom, mimeAtom, fd, m_timestamp, m_window, this);
+    auto *transfer = new TransferXtoWl(m_atom, mimeAtom, FileDescriptor(fd), m_timestamp, m_window, this);
     m_xToWlTransfers << transfer;
 
     connect(transfer, &TransferXtoWl::finished, this, [this, transfer]() {
@@ -237,9 +236,46 @@ void Selection::startTransferToWayland(const QString &mimeType, qint32 fd)
     startTimeoutTransfersTimer();
 }
 
-void Selection::startTransferToX(xcb_selection_request_event_t *event, qint32 fd)
+static QString selectMimeType(const QStringList &interested, const QStringList &available)
 {
-    auto *transfer = new TransferWltoX(m_atom, event, fd, this);
+    for (const QString &mimeType : interested) {
+        if (available.contains(mimeType)) {
+            return mimeType;
+        }
+    }
+    return QString();
+}
+
+bool Selection::startTransferToX(xcb_selection_request_event_t *event)
+{
+    Q_ASSERT(m_waylandSource);
+    AbstractDataSource *dataSource = m_waylandSource->dataSource();
+    if (!dataSource) {
+        return false;
+    }
+
+    const auto targets = Xcb::atomToMimeTypes(event->target);
+    if (targets.isEmpty()) {
+        qCDebug(KWIN_XWL) << "Unknown selection atom. Ignoring request.";
+        return false;
+    }
+
+    const QString mimeType = selectMimeType(targets, dataSource->mimeTypes());
+    if (mimeType.isEmpty()) {
+        return false;
+    }
+
+    std::optional<Pipe> pipe = Pipe::create(O_CLOEXEC);
+    if (!pipe) {
+        qCWarning(KWIN_XWL) << "Pipe failed, not sending selection:" << strerror(errno);
+        return false;
+    }
+
+    dataSource->requestData(mimeType, pipe->fds[1].take());
+
+    // TODO: don't pass xcb_selection_request_event_t to TransferWltoX.
+    auto transfer = new TransferWltoX(m_atom, new xcb_selection_request_event_t(*event), std::move(pipe->fds[0]), this);
+    m_wlToXTransfers.append(transfer);
 
     connect(transfer, &TransferWltoX::finished, this, [this, transfer]() {
         transfer->deleteLater();
@@ -247,9 +283,10 @@ void Selection::startTransferToX(xcb_selection_request_event_t *event, qint32 fd
         endTimeoutTransfersTimer();
     });
 
-    m_wlToXTransfers.append(transfer);
     transfer->startTransferFromSource();
     startTimeoutTransfersTimer();
+
+    return true;
 }
 
 void Selection::startTimeoutTransfersTimer()

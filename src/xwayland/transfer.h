@@ -3,10 +3,13 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2018 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+
+#include "utils/filedescriptor.h"
 
 #include <QList>
 #include <QObject>
@@ -42,10 +45,7 @@ class Transfer : public QObject
     Q_OBJECT
 
 public:
-    Transfer(xcb_atom_t selection,
-             qint32 fd,
-             xcb_timestamp_t timestamp,
-             QObject *parent = nullptr);
+    Transfer(xcb_atom_t selection, FileDescriptor fd, xcb_timestamp_t timestamp, QObject *parent = nullptr);
 
     virtual bool handlePropertyNotify(xcb_property_notify_event_t *event) = 0;
     void timeout();
@@ -66,7 +66,7 @@ protected:
     }
     qint32 fd() const
     {
-        return m_fd;
+        return m_fd.get();
     }
 
     void setIncr(bool set)
@@ -89,11 +89,9 @@ protected:
     }
 
 private:
-    void closeFd();
-
     xcb_atom_t m_atom;
-    qint32 m_fd;
     xcb_timestamp_t m_timestamp = XCB_CURRENT_TIME;
+    FileDescriptor m_fd;
 
     QSocketNotifier *m_notifier = nullptr;
     bool m_incr = false;
@@ -110,10 +108,7 @@ class TransferWltoX : public Transfer
     Q_OBJECT
 
 public:
-    TransferWltoX(xcb_atom_t selection,
-                  xcb_selection_request_event_t *request,
-                  qint32 fd,
-                  QObject *parent = nullptr);
+    TransferWltoX(xcb_atom_t selection, xcb_selection_request_event_t *request, FileDescriptor fd, QObject *parent = nullptr);
     ~TransferWltoX() override;
 
     void startTransferFromSource();
@@ -167,11 +162,7 @@ class TransferXtoWl : public Transfer
     Q_OBJECT
 
 public:
-    TransferXtoWl(xcb_atom_t selection,
-                  xcb_atom_t target,
-                  qint32 fd,
-                  xcb_timestamp_t timestamp, xcb_window_t parentWindow,
-                  QObject *parent = nullptr);
+    TransferXtoWl(xcb_atom_t selection, xcb_atom_t target, FileDescriptor fd, xcb_timestamp_t timestamp, xcb_window_t parentWindow, QObject *parent = nullptr);
     ~TransferXtoWl() override;
 
     bool handleSelectionNotify(xcb_selection_notify_event_t *event);

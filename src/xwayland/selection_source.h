@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -65,21 +66,15 @@ class WlSource : public SelectionSource
 public:
     WlSource(AbstractDataSource *dataSource, Selection *selection);
 
+    AbstractDataSource *dataSource() const;
+
     bool handleSelectionRequest(xcb_selection_request_event_t *event);
     void sendTargets(xcb_selection_request_event_t *event);
     void sendTimestamp(xcb_selection_request_event_t *event);
     void sendSelectionNotify(xcb_selection_request_event_t *event, bool success);
 
-Q_SIGNALS:
-    void transferReady(xcb_selection_request_event_t *event, qint32 fd);
-
 private:
-    bool checkStartTransfer(xcb_selection_request_event_t *event);
-
     AbstractDataSource *m_dsi = nullptr;
-    QStringList m_offers;
-
-    Q_DISABLE_COPY(WlSource)
 };
 
 /**
@@ -104,7 +99,6 @@ public:
 
 Q_SIGNALS:
     void targetsReceived(const QStringList &mimeTypes);
-    void transferRequested(const QString &mimeType, qint32 fd);
 
 private:
     void handleTargets();

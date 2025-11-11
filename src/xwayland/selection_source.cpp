@@ -3,20 +3,17 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "selection_source.h"
+#include "atoms.h"
 #include "datasource.h"
 #include "selection.h"
-#include "transfer.h"
-
-#include "atoms.h"
 #include "wayland/abstract_data_source.h"
 
-#include <fcntl.h>
 #include <span>
-#include <unistd.h>
 
 #include <xwayland_logging.h>
 
@@ -35,8 +32,12 @@ SelectionSource::SelectionSource(Selection *selection)
 WlSource::WlSource(AbstractDataSource *dataSource, Selection *selection)
     : SelectionSource(selection)
     , m_dsi(dataSource)
-    , m_offers(dataSource->mimeTypes())
 {
+}
+
+AbstractDataSource *WlSource::dataSource() const
+{
+    return m_dsi;
 }
 
 void WlSource::sendSelectionNotify(xcb_selection_request_event_t *event, bool success)
@@ -53,8 +54,7 @@ bool WlSource::handleSelectionRequest(xcb_selection_request_event_t *event)
     } else if (event->target == atoms->delete_atom) {
         sendSelectionNotify(event, true);
     } else {
-        // try to send mime data
-        if (!checkStartTransfer(event)) {
+        if (!selection()->startTransferToX(event)) {
             sendSelectionNotify(event, false);
         }
     }
@@ -63,13 +63,15 @@ bool WlSource::handleSelectionRequest(xcb_selection_request_event_t *event)
 
 void WlSource::sendTargets(xcb_selection_request_event_t *event)
 {
+    const QStringList mimeTypes = m_dsi->mimeTypes();
+
     QList<xcb_atom_t> targets;
-    targets.reserve(m_offers.size() + 2);
+    targets.reserve(mimeTypes.size() + 2);
 
     targets.append(atoms->timestamp);
     targets.append(atoms->targets);
 
-    for (const auto &mime : std::as_const(m_offers)) {
+    for (const auto &mime : mimeTypes) {
         targets.append(Xcb::mimeTypeToAtom(mime));
     }
 
@@ -93,45 +95,6 @@ void WlSource::sendTimestamp(xcb_selection_request_event_t *event)
                         32, 1, &time);
 
     sendSelectionNotify(event, true);
-}
-
-static QString selectMimeType(const QStringList &interested, const QStringList &available)
-{
-    for (const QString &mimeType : interested) {
-        if (available.contains(mimeType)) {
-            return mimeType;
-        }
-    }
-    return QString();
-}
-
-bool WlSource::checkStartTransfer(xcb_selection_request_event_t *event)
-{
-    if (!m_dsi) {
-        return false;
-    }
-
-    const auto targets = Xcb::atomToMimeTypes(event->target);
-    if (targets.isEmpty()) {
-        qCDebug(KWIN_XWL) << "Unknown selection atom. Ignoring request.";
-        return false;
-    }
-
-    const QString mimeType = selectMimeType(targets, m_dsi->mimeTypes());
-    if (mimeType.isEmpty()) {
-        return false;
-    }
-
-    int p[2];
-    if (pipe2(p, O_CLOEXEC) == -1) {
-        qCWarning(KWIN_XWL) << "Pipe failed. Not sending selection.";
-        return false;
-    }
-
-    m_dsi->requestData(mimeType, p[1]);
-
-    Q_EMIT transferReady(new xcb_selection_request_event_t(*event), p[0]);
-    return true;
 }
 
 X11Source::X11Source(Selection *selection)

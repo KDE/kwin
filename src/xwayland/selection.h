@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -69,6 +70,9 @@ public:
         m_timestamp = timestamp;
     }
 
+    void startTransferToWayland(const QString &mimeType, qint32 fd);
+    bool startTransferToX(xcb_selection_request_event_t *event);
+
 protected:
     Selection(xcb_atom_t atom, QObject *parent);
     void registerXfixes();
@@ -99,9 +103,6 @@ private:
     bool handleSelectionRequest(xcb_selection_request_event_t *event);
     bool handleSelectionNotify(xcb_selection_notify_event_t *event);
     bool handlePropertyNotify(xcb_property_notify_event_t *event);
-
-    void startTransferToWayland(const QString &mimeType, qint32 fd);
-    void startTransferToX(xcb_selection_request_event_t *event, qint32 fd);
 
     // Timeout transfers, which have become inactive due to client errors.
     void timeoutTransfers();

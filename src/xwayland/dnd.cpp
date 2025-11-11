@@ -103,6 +103,8 @@ void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
     }
     createX11Source(event);
     if (X11Source *source = x11Source()) {
+        connect(source->dataSource(), &XwlDataSource::dataRequested, this, &Selection::startTransferToWayland);
+
         SeatInterface *seat = waylandServer()->seat();
         seat->startPointerDrag(source->dataSource(), seat->focusedPointerSurface(), seat->pointerPos(), seat->focusedPointerSurfaceTransformation(), seat->pointerButtonSerial(Qt::LeftButton));
     }
