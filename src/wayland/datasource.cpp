@@ -13,8 +13,6 @@
 #include <QStringList>
 // Wayland
 #include <qwayland-server-wayland.h>
-// system
-#include <unistd.h>
 
 namespace KWin
 {
@@ -94,10 +92,9 @@ void DataSourceInterface::accept(const QString &mimeType)
     Q_EMIT acceptedChanged();
 }
 
-void DataSourceInterface::requestData(const QString &mimeType, qint32 fd)
+void DataSourceInterface::requestData(const QString &mimeType, FileDescriptor fd)
 {
-    d->send_send(mimeType, int32_t(fd));
-    close(fd);
+    d->send_send(mimeType, fd.get());
 }
 
 void DataSourceInterface::cancel()
