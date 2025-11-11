@@ -11,8 +11,6 @@
 #include <QStringList>
 // Wayland
 #include <qwayland-server-ext-data-control-v1.h>
-// system
-#include <unistd.h>
 
 namespace KWin
 {
@@ -61,10 +59,9 @@ DataControlSourceV1Interface::DataControlSourceV1Interface(DataControlDeviceMana
 
 DataControlSourceV1Interface::~DataControlSourceV1Interface() = default;
 
-void DataControlSourceV1Interface::requestData(const QString &mimeType, qint32 fd)
+void DataControlSourceV1Interface::requestData(const QString &mimeType, FileDescriptor fd)
 {
-    d->send_send(mimeType, fd);
-    close(fd);
+    d->send_send(mimeType, fd.get());
 }
 
 void DataControlSourceV1Interface::cancel()

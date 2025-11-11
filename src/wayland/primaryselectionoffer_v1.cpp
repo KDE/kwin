@@ -11,8 +11,6 @@
 #include <QStringList>
 // Wayland
 #include <qwayland-server-primary-selection-unstable-v1.h>
-// system
-#include <unistd.h>
 
 namespace KWin
 {
@@ -52,11 +50,11 @@ void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_des
 
 void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_receive(Resource *resource, const QString &mimeType, qint32 fd)
 {
-    if (!source || !source->mimeTypes().contains(mimeType)) {
-        close(fd);
-        return;
+    FileDescriptor pipe(fd);
+
+    if (source && source->mimeTypes().contains(mimeType)) {
+        source->requestData(mimeType, std::move(pipe));
     }
-    source->requestData(mimeType, fd);
 }
 
 PrimarySelectionOfferV1Interface::PrimarySelectionOfferV1Interface(AbstractDataSource *source, wl_resource *resource)

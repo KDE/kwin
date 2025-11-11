@@ -24,7 +24,7 @@ public:
 
     QMimeData *mimeData() const;
 
-    void requestData(const QString &mimeType, qint32 fd) override;
+    void requestData(const QString &mimeType, FileDescriptor fd) override;
     void cancel() override;
     QStringList mimeTypes() const override;
 

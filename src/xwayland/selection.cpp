@@ -277,7 +277,7 @@ bool Selection::startTransferToX(xcb_selection_request_event_t *event)
         qCWarning(KWIN_XWL) << "Failed to set O_NONBLOCK flag for the read endpoint of a Wayland to X11 transfer pipe:" << strerror(errno);
     }
 
-    dataSource->requestData(mimeType, pipe->fds[1].take());
+    dataSource->requestData(mimeType, std::move(pipe->fds[1]));
 
     auto transfer = new TransferWltoX(m_atom, *event, std::move(pipe->fds[0]), this);
     m_wlToXTransfers.append(transfer);

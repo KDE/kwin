@@ -26,7 +26,7 @@ public:
     virtual ~DataSourceInterface();
 
     void accept(const QString &mimeType) override;
-    void requestData(const QString &mimeType, qint32 fd) override;
+    void requestData(const QString &mimeType, FileDescriptor fd) override;
     void cancel() override;
 
     QStringList mimeTypes() const override;

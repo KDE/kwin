@@ -206,7 +206,7 @@ void TestDataSource::testRequestSend()
     QCOMPARE(dataSourceCreatedSpy.count(), 1);
     QTemporaryFile file;
     QVERIFY(file.open());
-    dataSourceCreatedSpy.first().first().value<DataSourceInterface *>()->requestData(plain, file.handle());
+    dataSourceCreatedSpy.first().first().value<DataSourceInterface *>()->requestData(plain, FileDescriptor(file.handle()));
 
     QVERIFY(sendRequestedSpy.wait());
     QCOMPARE(sendRequestedSpy.count(), 1);

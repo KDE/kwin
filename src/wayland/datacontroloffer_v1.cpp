@@ -11,8 +11,6 @@
 #include <QStringList>
 // Wayland
 #include <qwayland-server-ext-data-control-v1.h>
-// system
-#include <unistd.h>
 
 namespace KWin
 {
@@ -49,11 +47,11 @@ void DataControlOfferV1InterfacePrivate::ext_data_control_offer_v1_destroy_resou
 
 void DataControlOfferV1InterfacePrivate::ext_data_control_offer_v1_receive(Resource *resource, const QString &mimeType, qint32 fd)
 {
-    if (!source) {
-        close(fd);
-        return;
+    FileDescriptor pipe(fd);
+
+    if (source) {
+        source->requestData(mimeType, std::move(pipe));
     }
-    source->requestData(mimeType, fd);
 }
 
 DataControlOfferV1Interface::DataControlOfferV1Interface(AbstractDataSource *source, wl_resource *resource)

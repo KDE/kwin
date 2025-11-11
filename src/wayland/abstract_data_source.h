@@ -9,6 +9,7 @@
 #include "kwin_export.h"
 
 #include "clientconnection.h"
+#include "utils/filedescriptor.h"
 
 struct wl_client;
 
@@ -48,7 +49,7 @@ public:
     virtual void accept(const QString &mimeType)
     {
     };
-    virtual void requestData(const QString &mimeType, qint32 fd) = 0;
+    virtual void requestData(const QString &mimeType, FileDescriptor fd) = 0;
     virtual void cancel() = 0;
 
     virtual QStringList mimeTypes() const = 0;

@@ -21,6 +21,7 @@
 #include "tiles/customtile.h"
 #include "tiles/tile.h"
 #include "utils/filedescriptor.h"
+#include "utils/pipe.h"
 #include "virtualdesktops.h"
 #include "wayland/abstract_data_source.h"
 #include "wayland/clientconnection.h"
@@ -64,7 +65,6 @@
 #include <fcntl.h>
 #include <functional>
 #include <sys/poll.h>
-#include <unistd.h>
 
 namespace KWin
 {
@@ -1713,12 +1713,12 @@ void DataSourceModel::setSource(AbstractDataSource *source)
         const QStringList mimeTypes = m_source->mimeTypes();
         m_data.resize(mimeTypes.size());
         for (auto type = mimeTypes.begin(); type != mimeTypes.end(); ++type) {
-            int pipeFds[2];
-            if (pipe2(pipeFds, O_CLOEXEC) != 0) {
+            std::optional<Pipe> pipe = Pipe::create(O_CLOEXEC);
+            if (!pipe) {
                 continue;
             }
-            source->requestData(*type, pipeFds[1]);
-            QFuture<QByteArray> data = QtConcurrent::run(readData, pipeFds[0]);
+            source->requestData(*type, std::move(pipe->fds[1]));
+            QFuture<QByteArray> data = QtConcurrent::run(readData, pipe->fds[0].take());
             auto watcher = new QFutureWatcher<QByteArray>(this);
             watcher->setFuture(data);
             const int index = type - mimeTypes.begin();

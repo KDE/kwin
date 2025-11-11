@@ -14,9 +14,9 @@ XwlDataSource::~XwlDataSource()
     Q_EMIT aboutToBeDestroyed();
 }
 
-void XwlDataSource::requestData(const QString &mimeType, qint32 fd)
+void XwlDataSource::requestData(const QString &mimeType, FileDescriptor fd)
 {
-    Q_EMIT dataRequested(mimeType, fd);
+    Q_EMIT dataRequested(mimeType, fd.take());
 }
 
 void XwlDataSource::cancel()
