@@ -47,9 +47,9 @@ static QFuture<QByteArray> readMimeTypeData(const Offer &offer, const QMimeType 
         return QFuture<QByteArray>();
     }
 
-    offer->receive(mimeType.name(), pipe->fds[1].get());
+    offer->receive(mimeType.name(), pipe->writeEndpoint.get());
 
-    return QtConcurrent::run([fd = std::move(pipe->fds[0])] {
+    return QtConcurrent::run([fd = std::move(pipe->readEndpoint)] {
         QFile file;
         if (!file.open(fd.get(), QFile::ReadOnly | QFile::Text)) {
             return QByteArray();
