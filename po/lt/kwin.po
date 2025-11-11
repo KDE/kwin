@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-09 00:44+0000\n"
+"POT-Creation-Date: 2025-11-11 00:43+0000\n"
 "PO-Revision-Date: 2024-10-05 22:06+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -30,29 +30,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "rch@richard.eu.org,dgvirtual@akl.lt, <>"
 
-#: backends/wayland/wayland_output.cpp:501
+#: backends/wayland/wayland_output.cpp:508
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Paspauskite dešinįjį valdymo klavišą norėdami paleisti rodyklę"
 
-#: backends/wayland/wayland_output.cpp:503
+#: backends/wayland/wayland_output.cpp:510
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Paspauskite dešinįjį valdymo klavišą norėdami pagriebti rodyklę"
 
-#: backends/wayland/wayland_output.cpp:507
+#: backends/wayland/wayland_output.cpp:514
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland kompozitorius %1"
 
-#: backends/wayland/wayland_output.cpp:510
+#: backends/wayland/wayland_output.cpp:517
 #, kde-format
 msgid "- Output disabled"
 msgstr "– Išvedimas išjungtas"
 
-#: backends/wayland/wayland_output.cpp:512
+#: backends/wayland/wayland_output.cpp:519
 #, kde-format
 msgid "- Output dimmed"
 msgstr "– Išvedimas pritemdytas"
@@ -77,77 +77,77 @@ msgstr "KDE Wayland kompozitorius"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Darbalaukio efektai buvo paleisti iš naujo dėl grafikos atstatymo"
 
-#: core/iccprofile.cpp:326
+#: core/iccprofile.cpp:334
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr ""
 
-#: core/iccprofile.cpp:328
+#: core/iccprofile.cpp:336
 #, fuzzy, kde-format
 #| msgctxt "Required file does not exist"
 #| msgid "%1 does not exist"
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "%1 nėra"
 
-#: core/iccprofile.cpp:332
+#: core/iccprofile.cpp:340
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr ""
 
-#: core/iccprofile.cpp:335
+#: core/iccprofile.cpp:343
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
 
-#: core/iccprofile.cpp:338
+#: core/iccprofile.cpp:346
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
 
-#: core/iccprofile.cpp:351
+#: core/iccprofile.cpp:359
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr ""
 
-#: core/iccprofile.cpp:354
+#: core/iccprofile.cpp:362
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr ""
 
-#: core/iccprofile.cpp:367
+#: core/iccprofile.cpp:375
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
 
-#: core/iccprofile.cpp:372
+#: core/iccprofile.cpp:380
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
 
-#: core/iccprofile.cpp:385
+#: core/iccprofile.cpp:393
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr ""
 
-#: core/iccprofile.cpp:400
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 
-#: core/iccprofile.cpp:409
+#: core/iccprofile.cpp:417
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr ""
 
-#: core/iccprofile.cpp:425
+#: core/iccprofile.cpp:433
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr ""
 
-#: core/iccprofile.cpp:464
+#: core/iccprofile.cpp:472
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr ""
@@ -1254,82 +1254,82 @@ msgstr "Iškarpinė"
 msgid "Primary Selection"
 msgstr "Pirminis pasirinkimas"
 
-#: helpers/killer/killer.cpp:159
+#: helpers/killer/killer.cpp:125
 #, kde-format
 msgid "Window Manager"
 msgstr "Langų tvarkytuvė"
 
-#: helpers/killer/killer.cpp:164
+#: helpers/killer/killer.cpp:130
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "Programos, kurios darbą baigti, PID"
 
-#: helpers/killer/killer.cpp:164
+#: helpers/killer/killer.cpp:130
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:166
+#: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Mazgas, kuriame veikia paleista programa"
 
-#: helpers/killer/killer.cpp:166
+#: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "hostname"
 msgstr "mazgo pavadinimas"
 
-#: helpers/killer/killer.cpp:168
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Lango, kurio darbą baigti, antraštė"
 
-#: helpers/killer/killer.cpp:168
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "caption"
 msgstr "antraštė"
 
-#: helpers/killer/killer.cpp:170
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Programos, kurios darbą baigti, pavadinimas"
 
-#: helpers/killer/killer.cpp:170
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "name"
 msgstr "pavadinimas"
 
-#: helpers/killer/killer.cpp:172
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "Programai priklausančio ištekliaus ID"
 
-#: helpers/killer/killer.cpp:172
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "id"
 msgstr "id"
 
-#: helpers/killer/killer.cpp:174
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Naudotojo veiksmo, sukėlusio programos darbo baigimą, laikas"
 
-#: helpers/killer/killer.cpp:174
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "time"
 msgstr "laikas"
 
-#: helpers/killer/killer.cpp:176
+#: helpers/killer/killer.cpp:142
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin pagelbiklio paslaugų programa"
 
-#: helpers/killer/killer.cpp:212
+#: helpers/killer/killer.cpp:171
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Šio pagelbiklio paslaugų programos negalima iškviesti tiesiogiai."
 
-#: helpers/killer/killer.cpp:236
+#: helpers/killer/killer.cpp:195
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1345,7 +1345,7 @@ msgstr ""
 "<para><emphasis strong='true'>Nutraukus programos darbą, bus užverti visi "
 "jos langai. Bet kokie neįrašyti duomenys bus prarasti.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:240
+#: helpers/killer/killer.cpp:199
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1361,31 +1361,31 @@ msgstr ""
 "<para><emphasis strong='true'>Nutraukus programos darbą, bus užverti visi "
 "jos langai. Bet kokie neįrašyti duomenys bus prarasti.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:244
+#: helpers/killer/killer.cpp:203
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "&Nutraukti programos %1 darbą"
 
-#: helpers/killer/killer.cpp:245
+#: helpers/killer/killer.cpp:204
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "&Palaukti ilgiau"
 
-#: helpers/killer/killer.cpp:253
+#: helpers/killer/killer.cpp:212
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "Nereaguoja"
 
-#: helpers/killer/killer.cpp:269
+#: helpers/killer/killer.cpp:228
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "Proceso ID: %1"
 
-#: helpers/killer/killer.cpp:271
+#: helpers/killer/killer.cpp:230
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"

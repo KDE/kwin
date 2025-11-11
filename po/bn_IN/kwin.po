@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-09 00:44+0000\n"
+"POT-Creation-Date: 2025-11-11 00:43+0000\n"
 "PO-Revision-Date: 2008-12-22 16:10+0530\n"
 "Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
 "Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
@@ -28,29 +28,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "runab@redhat.com"
 
-#: backends/wayland/wayland_output.cpp:501
+#: backends/wayland/wayland_output.cpp:508
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:503
+#: backends/wayland/wayland_output.cpp:510
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:507
+#: backends/wayland/wayland_output.cpp:514
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:510
+#: backends/wayland/wayland_output.cpp:517
 #, kde-format
 msgid "- Output disabled"
 msgstr ""
 
-#: backends/wayland/wayland_output.cpp:512
+#: backends/wayland/wayland_output.cpp:519
 #, kde-format
 msgid "- Output dimmed"
 msgstr ""
@@ -75,75 +75,75 @@ msgstr ""
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: core/iccprofile.cpp:326
+#: core/iccprofile.cpp:334
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr ""
 
-#: core/iccprofile.cpp:328
+#: core/iccprofile.cpp:336
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr ""
 
-#: core/iccprofile.cpp:332
+#: core/iccprofile.cpp:340
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr ""
 
-#: core/iccprofile.cpp:335
+#: core/iccprofile.cpp:343
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
 
-#: core/iccprofile.cpp:338
+#: core/iccprofile.cpp:346
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
 
-#: core/iccprofile.cpp:351
+#: core/iccprofile.cpp:359
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr ""
 
-#: core/iccprofile.cpp:354
+#: core/iccprofile.cpp:362
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr ""
 
-#: core/iccprofile.cpp:367
+#: core/iccprofile.cpp:375
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
 
-#: core/iccprofile.cpp:372
+#: core/iccprofile.cpp:380
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
 
-#: core/iccprofile.cpp:385
+#: core/iccprofile.cpp:393
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr ""
 
-#: core/iccprofile.cpp:400
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 
-#: core/iccprofile.cpp:409
+#: core/iccprofile.cpp:417
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr ""
 
-#: core/iccprofile.cpp:425
+#: core/iccprofile.cpp:433
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr ""
 
-#: core/iccprofile.cpp:464
+#: core/iccprofile.cpp:472
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr ""
@@ -1248,83 +1248,83 @@ msgstr ""
 msgid "Primary Selection"
 msgstr ""
 
-#: helpers/killer/killer.cpp:159
+#: helpers/killer/killer.cpp:125
 #, fuzzy, kde-format
 #| msgid "KDE window manager"
 msgid "Window Manager"
 msgstr "KDE উইন্ডো পরিচালন ব্যবস্থা"
 
-#: helpers/killer/killer.cpp:164
+#: helpers/killer/killer.cpp:130
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "বন্ধ করার জন্য চিহ্নিত অ্যাপ্লিকেশনের PID"
 
-#: helpers/killer/killer.cpp:164
+#: helpers/killer/killer.cpp:130
 #, kde-format
 msgid "pid"
 msgstr ""
 
-#: helpers/killer/killer.cpp:166
+#: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "অ্যাপ্লিকেশন চালনাকারী মেশিনের হোস্ট-নেম"
 
-#: helpers/killer/killer.cpp:166
+#: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "hostname"
 msgstr ""
 
-#: helpers/killer/killer.cpp:168
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "বন্ধ করার জন্য চিহ্নিত উইন্ডোর শিরোনাম"
 
-#: helpers/killer/killer.cpp:168
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "caption"
 msgstr ""
 
-#: helpers/killer/killer.cpp:170
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "বন্ধ করার জন্য চিহ্নিত অ্যাপ্লিকেশনের নাম"
 
-#: helpers/killer/killer.cpp:170
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "name"
 msgstr ""
 
-#: helpers/killer/killer.cpp:172
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr ""
 
-#: helpers/killer/killer.cpp:172
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "id"
 msgstr ""
 
-#: helpers/killer/killer.cpp:174
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr ""
 
-#: helpers/killer/killer.cpp:174
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "time"
 msgstr ""
 
-#: helpers/killer/killer.cpp:176
+#: helpers/killer/killer.cpp:142
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin সহায়ক সামগ্রী"
 
-#: helpers/killer/killer.cpp:212
+#: helpers/killer/killer.cpp:171
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "সহায়ক সামগ্রী সরাসরি আরম্ভ করা সম্ভব নয়।"
 
-#: helpers/killer/killer.cpp:236
+#: helpers/killer/killer.cpp:195
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1334,7 +1334,7 @@ msgid ""
 "lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:240
+#: helpers/killer/killer.cpp:199
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1344,32 +1344,32 @@ msgid ""
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:244
+#: helpers/killer/killer.cpp:203
 #, fuzzy, kde-format
 #| msgid "Terminate"
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "বন্ধ করুন"
 
-#: helpers/killer/killer.cpp:245
+#: helpers/killer/killer.cpp:204
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr ""
 
-#: helpers/killer/killer.cpp:253
+#: helpers/killer/killer.cpp:212
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr ""
 
-#: helpers/killer/killer.cpp:269
+#: helpers/killer/killer.cpp:228
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr ""
 
-#: helpers/killer/killer.cpp:271
+#: helpers/killer/killer.cpp:230
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"

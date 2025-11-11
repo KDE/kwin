@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-09 00:44+0000\n"
+"POT-Creation-Date: 2025-11-11 00:43+0000\n"
 "PO-Revision-Date: 2025-10-28 05:26+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -28,29 +28,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Temuri.doghonadze@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:501
+#: backends/wayland/wayland_output.cpp:508
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "მაჩვენებლის დათრევის მოსახსნელად მარჯვენა control-ს დააწექით"
 
-#: backends/wayland/wayland_output.cpp:503
+#: backends/wayland/wayland_output.cpp:510
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "მაჩვენებლის დასათრევად მარჯვენა Control-ს დააწექით"
 
-#: backends/wayland/wayland_output.cpp:507
+#: backends/wayland/wayland_output.cpp:514
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland კომპოზიტორი %1"
 
-#: backends/wayland/wayland_output.cpp:510
+#: backends/wayland/wayland_output.cpp:517
 #, kde-format
 msgid "- Output disabled"
 msgstr "- გამოტანა გამორთულია"
 
-#: backends/wayland/wayland_output.cpp:512
+#: backends/wayland/wayland_output.cpp:519
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- გამოტანა დამალულია"
@@ -75,22 +75,22 @@ msgstr "KDE Wayland კომპოზიტორი"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "სამუშაო მაგიდის ეფექტები დარესტარტდა გრაფიკის გადატვირთვის გამო"
 
-#: core/iccprofile.cpp:326
+#: core/iccprofile.cpp:334
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "ვერ გავხსენი ICC პროფილი \"%1\""
 
-#: core/iccprofile.cpp:328
+#: core/iccprofile.cpp:336
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC პროფილი \"%1\" არ არსებობს"
 
-#: core/iccprofile.cpp:332
+#: core/iccprofile.cpp:340
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC პროფილი \"%1\" ეკრანებისთვის გამოყენებადი არაა"
 
-#: core/iccprofile.cpp:335
+#: core/iccprofile.cpp:343
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
@@ -98,23 +98,23 @@ msgstr ""
 "ICC პროფილს \"%1\" მხარდაუჭერელი დაკავშირების სივრცე აქვს. მხარდაჭერილია, "
 "მხოლოდ, XYX"
 
-#: core/iccprofile.cpp:338
+#: core/iccprofile.cpp:346
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია. შეყვანა/გამოტანის ფერების სივრცე RGB არაა"
 
-#: core/iccprofile.cpp:351
+#: core/iccprofile.cpp:359
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მას თეთრი წერტილი არ გააჩნია"
 
-#: core/iccprofile.cpp:354
+#: core/iccprofile.cpp:362
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მისი თეთრი წერილი არასწორია"
 
-#: core/iccprofile.cpp:367
+#: core/iccprofile.cpp:375
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -122,7 +122,7 @@ msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია. ქრომატული ადაპტაციის მატრიცის დამუშავება "
 "ჩავარდა"
 
-#: core/iccprofile.cpp:372
+#: core/iccprofile.cpp:380
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -130,28 +130,28 @@ msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია. ქრომატული ადაპტაციის მატრიცის ინვერსია "
 "ჩავარდა"
 
-#: core/iccprofile.cpp:385
+#: core/iccprofile.cpp:393
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მას ძირითადები არ აქვს"
 
-#: core/iccprofile.cpp:400
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია, რადგან მისი ძირითადების გამოთვლა შეუძლებელია"
 
-#: core/iccprofile.cpp:409
+#: core/iccprofile.cpp:417
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მისი ძირითადები არასწორია"
 
-#: core/iccprofile.cpp:425
+#: core/iccprofile.cpp:433
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC პროფილი \"%1\", მხოლოდ, BToD ჭდეებით მხარდაჭერილი არაა"
 
-#: core/iccprofile.cpp:464
+#: core/iccprofile.cpp:472
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "ფერების პროფილს TRC ჭდეები აკლია"
@@ -1239,82 +1239,82 @@ msgstr "გაცვლის ბაფერი"
 msgid "Primary Selection"
 msgstr "ძირითადი არჩევანი"
 
-#: helpers/killer/killer.cpp:159
+#: helpers/killer/killer.cpp:125
 #, kde-format
 msgid "Window Manager"
 msgstr "ფანჯრის მმართველი"
 
-#: helpers/killer/killer.cpp:164
+#: helpers/killer/killer.cpp:130
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "შესაწყვეტი აპლიკაციის PID"
 
-#: helpers/killer/killer.cpp:164
+#: helpers/killer/killer.cpp:130
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:166
+#: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "ჰოსტის სახელი, რომელზეც გაშვებულია აპლიკაცია"
 
-#: helpers/killer/killer.cpp:166
+#: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "hostname"
 msgstr "ჰოსტის სახელი"
 
-#: helpers/killer/killer.cpp:168
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "შესაწყვეტი ფანჯრის სათაური"
 
-#: helpers/killer/killer.cpp:168
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "caption"
 msgstr "პროგრამა"
 
-#: helpers/killer/killer.cpp:170
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "შესაწყვეტი აპლიკაციის სახელი"
 
-#: helpers/killer/killer.cpp:170
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "name"
 msgstr "name"
 
-#: helpers/killer/killer.cpp:172
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "რესურსის ID, რომელიც აპლიკაციას ეკუთვნის"
 
-#: helpers/killer/killer.cpp:172
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "id"
 msgstr "id"
 
-#: helpers/killer/killer.cpp:174
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "ავარიის გამომწვევი მომხმარებლის ქმედების დრო"
 
-#: helpers/killer/killer.cpp:174
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "time"
 msgstr "დრო"
 
-#: helpers/killer/killer.cpp:176
+#: helpers/killer/killer.cpp:142
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin -ის დამხმარე პროგრამა"
 
-#: helpers/killer/killer.cpp:212
+#: helpers/killer/killer.cpp:171
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "დამხმარე პროგრამა ცალკე არ უნდა გამოიძახოთ."
 
-#: helpers/killer/killer.cpp:236
+#: helpers/killer/killer.cpp:195
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1328,7 +1328,7 @@ msgstr ""
 "შესრულების შეწყვეტა დახურავს მის ყველა ფანჯარას. ყველაფერი, რაც არ "
 "შეგინახავთ, დაიკარგება.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:240
+#: helpers/killer/killer.cpp:199
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1342,31 +1342,31 @@ msgstr ""
 "აპლიკაციის შესრულების შეწყვეტა დახურავს მის ყველა ფანჯარას. ყველაფერი, რაც "
 "არ შეგინახავთ, დაიკარგება.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:244
+#: helpers/killer/killer.cpp:203
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "%1-ის მოკვლა"
 
-#: helpers/killer/killer.cpp:245
+#: helpers/killer/killer.cpp:204
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "&მეტ ხანს ლოდინი"
 
-#: helpers/killer/killer.cpp:253
+#: helpers/killer/killer.cpp:212
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "არ პასუხობს"
 
-#: helpers/killer/killer.cpp:269
+#: helpers/killer/killer.cpp:228
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "პროცესის ID: %1"
 
-#: helpers/killer/killer.cpp:271
+#: helpers/killer/killer.cpp:230
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
