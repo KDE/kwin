@@ -23,6 +23,7 @@
 #include "opengl/icc_shader.h"
 #include "qpainter/qpainterswapchain.h"
 #include "utils/drm_format_helper.h"
+#include "utils/envvar.h"
 
 #include <drm_fourcc.h>
 #include <errno.h>
@@ -36,7 +37,9 @@ static const QList<uint64_t> linearModifier = {DRM_FORMAT_MOD_LINEAR};
 static const QList<uint64_t> implicitModifier = {DRM_FORMAT_MOD_INVALID};
 static const QList<uint32_t> cpuCopyFormats = {DRM_FORMAT_ARGB8888, DRM_FORMAT_XRGB8888};
 
-static const bool bufferAgeEnabled = qEnvironmentVariable("KWIN_USE_BUFFER_AGE") != QStringLiteral("0");
+static const bool bufferAgeEnabled = environmentVariableBoolValue("KWIN_USE_BUFFER_AGE").value_or(true);
+static const bool s_forceMGPUSync = environmentVariableBoolValue("KWIN_DRM_FORCE_GL_FINISH_MGPU_COPY").value_or(false);
+static const bool s_forcePresentSync = environmentVariableBoolValue("KWIN_DRM_FORCE_GL_FINISH_PRESENT").value_or(false);
 
 static gbm_format_name_desc formatName(uint32_t format)
 {
@@ -265,7 +268,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
     }
     glFlush();
     EGLNativeFence sourceFence(m_eglBackend->eglDisplayObject());
-    if (!sourceFence.isValid()) {
+    if (!sourceFence.isValid() || s_forcePresentSync) {
         // llvmpipe doesn't do synchronization properly: https://gitlab.freedesktop.org/mesa/mesa/-/issues/9375
         // and NVidia doesn't support implicit sync
         glFinish();
@@ -581,7 +584,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
 
     const auto display = m_eglBackend->displayForGpu(m_gpu);
     // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
-    if (!readFence.isValid() || !display->supportsNativeFence()) {
+    if (!readFence.isValid() || !display->supportsNativeFence() || s_forceMGPUSync) {
         glFinish();
     }
 
@@ -658,7 +661,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     surface->importContext->shaderManager()->popShader();
     glFlush();
     EGLNativeFence endFence(display);
-    if (!endFence.isValid()) {
+    if (!endFence.isValid() || s_forcePresentSync) {
         glFinish();
     }
     surface->importGbmSwapchain->release(slot, endFence.fileDescriptor().duplicate());
