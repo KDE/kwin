@@ -272,13 +272,13 @@ bool Selection::startTransferToX(xcb_selection_request_event_t *event)
         return false;
     }
 
-    if (fcntl(pipe->fds[0].get(), F_SETFL, O_NONBLOCK) == -1) {
+    if (fcntl(pipe->readEndpoint.get(), F_SETFL, O_NONBLOCK) == -1) {
         qCWarning(KWIN_XWL) << "Failed to set O_NONBLOCK flag for the read endpoint of a Wayland to X11 transfer pipe:" << strerror(errno);
     }
 
-    dataSource->requestData(mimeType, std::move(pipe->fds[1]));
+    dataSource->requestData(mimeType, std::move(pipe->writeEndpoint));
 
-    auto transfer = new TransferWltoX(m_atom, *event, std::move(pipe->fds[0]), this);
+    auto transfer = new TransferWltoX(m_atom, *event, std::move(pipe->readEndpoint), this);
     m_wlToXTransfers.append(transfer);
 
     connect(transfer, &TransferWltoX::finished, this, [this, transfer]() {

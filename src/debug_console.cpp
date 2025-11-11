@@ -1717,8 +1717,8 @@ void DataSourceModel::setSource(AbstractDataSource *source)
             if (!pipe) {
                 continue;
             }
-            source->requestData(*type, std::move(pipe->fds[1]));
-            QFuture<QByteArray> data = QtConcurrent::run(readData, pipe->fds[0].take());
+            source->requestData(*type, std::move(pipe->writeEndpoint));
+            QFuture<QByteArray> data = QtConcurrent::run(readData, pipe->readEndpoint.take());
             auto watcher = new QFutureWatcher<QByteArray>(this);
             watcher->setFuture(data);
             const int index = type - mimeTypes.begin();
