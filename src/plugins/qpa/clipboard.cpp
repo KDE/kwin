@@ -6,6 +6,7 @@
 
 #include "plugins/qpa/clipboard.h"
 #include "utils/filedescriptor.h"
+#include "utils/pipe.h"
 #include "wayland/display.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
@@ -14,7 +15,6 @@
 
 #include <fcntl.h>
 #include <poll.h>
-#include <unistd.h>
 
 namespace KWin::QPA
 {
@@ -66,11 +66,11 @@ static void writeData(FileDescriptor fd, const QByteArray &buffer)
     }
 }
 
-void ClipboardDataSource::requestData(const QString &mimeType, qint32 fd)
+void ClipboardDataSource::requestData(const QString &mimeType, FileDescriptor fd)
 {
     const QByteArray data = m_mimeData->data(mimeType);
-    QThreadPool::globalInstance()->start([data, fd]() {
-        writeData(FileDescriptor(fd), data);
+    QThreadPool::globalInstance()->start([data, pipe = std::move(fd)]() mutable {
+        writeData(std::move(pipe), data);
     });
 }
 
@@ -120,15 +120,15 @@ static QVariant readData(FileDescriptor fd)
 
 QVariant ClipboardMimeData::retrieveData(const QString &mimeType, QMetaType preferredType) const
 {
-    int pipeFds[2];
-    if (pipe2(pipeFds, O_CLOEXEC) != 0) {
+    std::optional<Pipe> pipe = Pipe::create(O_CLOEXEC);
+    if (!pipe) {
         return QVariant();
     }
 
-    m_dataSource->requestData(mimeType, pipeFds[1]);
+    m_dataSource->requestData(mimeType, std::move(pipe->fds[1]));
 
     waylandServer()->display()->flush();
-    return readData(FileDescriptor(pipeFds[0]));
+    return readData(std::move(pipe->fds[0]));
 }
 
 Clipboard::Clipboard()

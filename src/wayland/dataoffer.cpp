@@ -13,8 +13,6 @@
 #include <QStringList>
 // Wayland
 #include <qwayland-server-wayland.h>
-// system
-#include <unistd.h>
 
 namespace KWin
 {
@@ -59,11 +57,11 @@ void DataOfferInterfacePrivate::data_offer_accept(Resource *resource, uint32_t s
 
 void DataOfferInterfacePrivate::data_offer_receive(Resource *resource, const QString &mime_type, int32_t fd)
 {
-    if (!source || !source->mimeTypes().contains(mime_type)) {
-        close(fd);
-        return;
+    FileDescriptor pipe(fd);
+
+    if (source && source->mimeTypes().contains(mime_type)) {
+        source->requestData(mime_type, std::move(pipe));
     }
-    source->requestData(mime_type, fd);
 }
 
 void DataOfferInterfacePrivate::data_offer_destroy(QtWaylandServer::wl_data_offer::Resource *resource)

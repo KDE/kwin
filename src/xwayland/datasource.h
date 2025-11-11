@@ -26,7 +26,7 @@ class XwlDataSource final : public AbstractDataSource
 public:
     ~XwlDataSource() override;
 
-    void requestData(const QString &mimeType, qint32 fd) override;
+    void requestData(const QString &mimeType, FileDescriptor fd) override;
     void cancel() override;
     QStringList mimeTypes() const override;
     void setMimeTypes(const QStringList &mimeTypes);
