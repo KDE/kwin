@@ -92,9 +92,9 @@ static QFuture<QByteArray> readMimeTypeData(KWayland::Client::DataOffer *offer, 
         return QFuture<QByteArray>();
     }
 
-    offer->receive(mimeType, pipe->fds[1].get());
+    offer->receive(mimeType, pipe->writeEndpoint.get());
 
-    return QtConcurrent::run([fd = std::move(pipe->fds[0])] {
+    return QtConcurrent::run([fd = std::move(pipe->readEndpoint)] {
         QFile file;
         if (!file.open(fd.get(), QFile::ReadOnly | QFile::Text)) {
             return QByteArray();

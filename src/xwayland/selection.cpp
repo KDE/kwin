@@ -271,10 +271,10 @@ bool Selection::startTransferToX(xcb_selection_request_event_t *event)
         return false;
     }
 
-    dataSource->requestData(mimeType, std::move(pipe->fds[1]));
+    dataSource->requestData(mimeType, std::move(pipe->writeEndpoint));
 
     // TODO: don't pass xcb_selection_request_event_t to TransferWltoX.
-    auto transfer = new TransferWltoX(m_atom, new xcb_selection_request_event_t(*event), std::move(pipe->fds[0]), this);
+    auto transfer = new TransferWltoX(m_atom, new xcb_selection_request_event_t(*event), std::move(pipe->readEndpoint), this);
     m_wlToXTransfers.append(transfer);
 
     connect(transfer, &TransferWltoX::finished, this, [this, transfer]() {

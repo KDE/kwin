@@ -125,10 +125,10 @@ QVariant ClipboardMimeData::retrieveData(const QString &mimeType, QMetaType pref
         return QVariant();
     }
 
-    m_dataSource->requestData(mimeType, std::move(pipe->fds[1]));
+    m_dataSource->requestData(mimeType, std::move(pipe->writeEndpoint));
 
     waylandServer()->display()->flush();
-    return readData(std::move(pipe->fds[0]));
+    return readData(std::move(pipe->readEndpoint));
 }
 
 Clipboard::Clipboard()

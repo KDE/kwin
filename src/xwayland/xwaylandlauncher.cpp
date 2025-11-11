@@ -169,8 +169,8 @@ bool XwaylandLauncher::start()
         }
     }
 
-    arguments << QStringLiteral("-displayfd") << QString::number(displayfd->fds[1].get());
-    fdsToPass << displayfd->fds[1].get();
+    arguments << QStringLiteral("-displayfd") << QString::number(displayfd->writeEndpoint.get());
+    fdsToPass << displayfd->writeEndpoint.get();
 
     arguments << QStringLiteral("-wm") << QString::number(wmfd->fds[1].get());
     fdsToPass << wmfd->fds[1].get();
@@ -229,7 +229,7 @@ bool XwaylandLauncher::start()
     // will quit. So we keep the ready file descriptor open instead of closing it when the socket
     // notifier is activated.
     m_xcbConnectionFd = std::move(wmfd->fds[0]);
-    m_readyFd = std::move(displayfd->fds[0]);
+    m_readyFd = std::move(displayfd->readEndpoint);
     m_readyNotifier = std::make_unique<QSocketNotifier>(m_readyFd.get(), QSocketNotifier::Read);
     connect(m_readyNotifier.get(), &QSocketNotifier::activated, this, [this]() {
         m_readyNotifier.reset();
