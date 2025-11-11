@@ -349,8 +349,8 @@ std::optional<PlacementCommand> Placement::placeCentered(const Window *c, const 
         return std::nullopt;
     }
 
-    const QPoint position(std::max(area.left() + (area.width() - size.width()) / 2, area.left()),
-                          std::max(area.top() + (area.height() - size.height()) / 2, area.top()));
+    const QPointF position(std::max(area.left() + (area.width() - size.width()) / 2, area.left()),
+                           std::max(area.top() + (area.height() - size.height()) / 2, area.top()));
 
     const QRectF placed = cascadeIfCovering(c, QRectF(position, size), area);
     return placed.topLeft();
