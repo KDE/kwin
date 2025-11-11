@@ -272,10 +272,16 @@ void Selection::endTimeoutTransfersTimer()
 
 void Selection::timeoutTransfers()
 {
-    for (TransferXtoWl *transfer : std::as_const(m_xToWlTransfers)) {
+    // A transfer can be removed from the corresponding list on timeout, so avoid iterating directly
+    // on m_xToWlTransfers and m_wlToXTransfers.
+
+    const auto xToWaylandTransfers = m_xToWlTransfers;
+    for (TransferXtoWl *transfer : xToWaylandTransfers) {
         transfer->timeout();
     }
-    for (TransferWltoX *transfer : std::as_const(m_wlToXTransfers)) {
+
+    const auto waylandToXTransfers = m_wlToXTransfers;
+    for (TransferWltoX *transfer : waylandToXTransfers) {
         transfer->timeout();
     }
 }
