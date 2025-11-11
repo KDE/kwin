@@ -8,6 +8,7 @@
 */
 #include "transfer.h"
 #include "atoms.h"
+#include "selection.h"
 #include "xwayland.h"
 
 #include <xcb/xcb_event.h>
@@ -137,7 +138,7 @@ void TransferWltoX::startIncr()
     // again by the requestor
     m_flushPropertyOnDelete = true;
     m_propertyIsSet = true;
-    Q_EMIT selectionNotify(m_request, true);
+    Selection::sendSelectionNotify(m_request, true);
 }
 
 void TransferWltoX::readWlSource()
@@ -180,7 +181,7 @@ void TransferWltoX::readWlSource()
             // non incremental transfer is to be completed now,
             // data can be transferred to X client via a single property set
             flushSourceData();
-            Q_EMIT selectionNotify(m_request, true);
+            Selection::sendSelectionNotify(m_request, true);
             endTransfer();
         }
     } else if (m_chunks.last().second == s_incrChunkSize) {

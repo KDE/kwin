@@ -241,7 +241,6 @@ void Selection::startTransferToX(xcb_selection_request_event_t *event, qint32 fd
 {
     auto *transfer = new TransferWltoX(m_atom, event, fd, this);
 
-    connect(transfer, &TransferWltoX::selectionNotify, this, &Selection::sendSelectionNotify);
     connect(transfer, &TransferWltoX::finished, this, [this, transfer]() {
         transfer->deleteLater();
         m_wlToXTransfers.removeOne(transfer);

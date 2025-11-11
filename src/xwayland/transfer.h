@@ -119,9 +119,6 @@ public:
     void startTransferFromSource();
     bool handlePropertyNotify(xcb_property_notify_event_t *event) override;
 
-Q_SIGNALS:
-    void selectionNotify(xcb_selection_request_event_t *event, bool success);
-
 private:
     void startIncr();
     void readWlSource();
