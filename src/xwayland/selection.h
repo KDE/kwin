@@ -9,6 +9,8 @@
 */
 #pragma once
 
+#include "utils/filedescriptor.h"
+
 #include <QList>
 #include <QObject>
 
@@ -70,7 +72,7 @@ public:
         m_timestamp = timestamp;
     }
 
-    void startTransferToWayland(const QString &mimeType, qint32 fd);
+    void startTransferToWayland(const QString &mimeType, FileDescriptor fd);
     bool startTransferToX(xcb_selection_request_event_t *event);
 
 protected:

@@ -1,14 +1,23 @@
 /*
     SPDX-FileCopyrightText: 2021 David Redondo <kde@david-redondo.de>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
 #include "datasource.h"
+#include "selection.h"
 
 namespace KWin
 {
 namespace Xwl
 {
+
+XwlDataSource::XwlDataSource(Selection *selection)
+    : m_selection(selection)
+{
+}
+
 XwlDataSource::~XwlDataSource()
 {
     Q_EMIT aboutToBeDestroyed();
@@ -16,7 +25,7 @@ XwlDataSource::~XwlDataSource()
 
 void XwlDataSource::requestData(const QString &mimeType, FileDescriptor fd)
 {
-    Q_EMIT dataRequested(mimeType, fd.take());
+    m_selection->startTransferToWayland(mimeType, std::move(fd));
 }
 
 void XwlDataSource::cancel()

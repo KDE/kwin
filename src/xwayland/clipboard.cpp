@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -125,9 +126,9 @@ void Clipboard::x11TargetsReceived(const QStringList &mimeTypes)
         return;
     }
 
-    auto newSelection = std::make_unique<XwlDataSource>();
+    auto newSelection = std::make_unique<XwlDataSource>(this);
     newSelection->setMimeTypes(mimeTypes);
-    connect(newSelection.get(), &XwlDataSource::dataRequested, this, &Selection::startTransferToWayland);
+
     // we keep the old selection around because setSelection needs it to be still alive
     std::swap(m_selectionSource, newSelection);
     waylandServer()->seat()->setSelection(m_selectionSource.get(), waylandServer()->display()->nextSerial());
