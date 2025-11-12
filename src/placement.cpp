@@ -532,10 +532,7 @@ std::optional<PlacementCommand> Placement::placeMaximizing(const Window *c, cons
 QRectF Placement::cascadeIfCovering(const Window *window, const QRectF &geometry, const QRectF &area) const
 {
     const QPointF offset = workspace()->cascadeOffset(area);
-    if (offset.isNull()) {
-        qCCritical(KWIN_CORE) << "Placement area" << area << "for" << window << "is empty, this should not happen!";
-        return geometry;
-    }
+    Q_ASSERT(!offset.isNull());
 
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
 
