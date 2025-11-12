@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2025-10-28 19:39+0300\n"
+"PO-Revision-Date: 2025-11-11 17:44+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -88,7 +88,8 @@ msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
 "pressed"
-msgstr "Как и выше, но только в сочетании с Meta, Ctrl, Alt или Shift"
+msgstr ""
+"Вышеперечисленное, а также любая клавиша в сочетании с Ctrl, Alt или Meta"
 
 #: ui/main.qml:156
 #, kde-format
