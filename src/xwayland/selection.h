@@ -95,7 +95,6 @@ protected:
     // must be called in order to provide data from Wl to X
     void ownSelection(bool own);
 
-private:
     bool handleSelectionRequest(xcb_selection_request_event_t *event);
     bool handleSelectionNotify(xcb_selection_notify_event_t *event);
     bool handlePropertyNotify(xcb_property_notify_event_t *event);

@@ -32,9 +32,10 @@ Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
     : Selection(atom, parent)
 {
     const uint32_t clipboardValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE};
+    m_window = xcb_generate_id(kwinApp()->x11Connection());
     xcb_create_window(kwinApp()->x11Connection(),
                       XCB_COPY_FROM_PARENT,
-                      window(),
+                      m_window,
                       kwinApp()->x11RootWindow(),
                       0, 0,
                       10, 10,

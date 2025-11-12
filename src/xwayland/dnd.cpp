@@ -49,9 +49,10 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
     const uint32_t dndValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE};
+    m_window = xcb_generate_id(kwinApp()->x11Connection());
     xcb_create_window(xcbConn,
                       XCB_COPY_FROM_PARENT,
-                      window(),
+                      m_window,
                       kwinApp()->x11RootWindow(),
                       0, 0,
                       8192, 8192, // TODO: get current screen size and connect to changes

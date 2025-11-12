@@ -32,8 +32,6 @@ Selection::Selection(xcb_atom_t atom, QObject *parent)
     : QObject(parent)
     , m_atom(atom)
 {
-    // TODO: Make sub-classes generate the window id.
-    m_window = xcb_generate_id(kwinApp()->x11Connection());
 }
 
 bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
