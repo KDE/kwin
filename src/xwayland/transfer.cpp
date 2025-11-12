@@ -63,8 +63,8 @@ void Transfer::endTransfer()
     Q_EMIT finished();
 }
 
-TransferWltoX::TransferWltoX(xcb_atom_t selection, const xcb_selection_request_event_t &request, FileDescriptor fd, QObject *parent)
-    : Transfer(selection, std::move(fd), 0, parent)
+TransferWltoX::TransferWltoX(const xcb_selection_request_event_t &request, FileDescriptor fd, QObject *parent)
+    : Transfer(request.selection, std::move(fd), 0, parent)
     , m_request(request)
 {
 }
