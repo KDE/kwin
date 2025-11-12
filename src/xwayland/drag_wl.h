@@ -17,8 +17,6 @@
 
 namespace KWin
 {
-class DataDeviceInterface;
-class DataSourceInterface;
 class SurfaceInterface;
 class Window;
 class X11Window;

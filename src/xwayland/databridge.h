@@ -16,7 +16,6 @@
 
 namespace KWin
 {
-class DataDeviceInterface;
 class SurfaceInterface;
 class Window;
 

@@ -20,8 +20,6 @@ struct xcb_xfixes_selection_notify_event_t;
 
 namespace KWin
 {
-class DataDeviceInterface;
-class DataSourceInterface;
 class AbstractDataSource;
 
 namespace Xwl

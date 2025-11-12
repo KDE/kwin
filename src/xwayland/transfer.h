@@ -14,18 +14,8 @@
 
 #include <xcb/xcb.h>
 
-namespace KWayland
-{
-namespace Client
-{
-class DataDevice;
-class DataSource;
-}
-}
 namespace KWin
 {
-class DataDeviceInterface;
-
 namespace Xwl
 {
 
