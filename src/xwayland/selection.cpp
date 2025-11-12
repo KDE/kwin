@@ -213,21 +213,20 @@ bool Selection::handlePropertyNotify(xcb_property_notify_event_t *event)
     return false;
 }
 
-void Selection::startTransferToWayland(const QString &mimeType, qint32 fd)
+void Selection::startTransferToWayland(const QString &mimeType, FileDescriptor fd)
 {
     Q_ASSERT(m_xSource);
     const xcb_atom_t mimeAtom = Xcb::mimeTypeToAtom(mimeType);
     if (mimeAtom == XCB_ATOM_NONE) {
         qCDebug(KWIN_XWL) << "Sending X11 clipboard to Wayland failed: unsupported MIME.";
-        close(fd);
         return;
     }
 
-    if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
+    if (fcntl(fd.get(), F_SETFL, O_NONBLOCK) == -1) {
         qCWarning(KWIN_XWL) << "Failed to set O_NONBLOCK flag for the write endpoint of an X11 to Wayland transfer pipe:" << strerror(errno);
     }
 
-    auto *transfer = new TransferXtoWl(m_atom, mimeAtom, FileDescriptor(fd), m_timestamp, m_window, this);
+    auto *transfer = new TransferXtoWl(m_atom, mimeAtom, std::move(fd), m_timestamp, m_window, this);
     m_xToWlTransfers << transfer;
 
     connect(transfer, &TransferXtoWl::finished, this, [this, transfer]() {

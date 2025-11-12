@@ -99,7 +99,7 @@ void WlSource::sendTimestamp(xcb_selection_request_event_t *event)
 
 X11Source::X11Source(Selection *selection)
     : SelectionSource(selection)
-    , m_dataSource(std::make_unique<XwlDataSource>())
+    , m_dataSource(std::make_unique<XwlDataSource>(selection))
 {
 }
 

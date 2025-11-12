@@ -4,6 +4,7 @@
 
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
     SPDX-FileCopyrightText: 2021 David Redondo <kde@david-redondo.de>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -127,9 +128,9 @@ void Primary::x11TargetsReceived(const QStringList &mimeTypes)
         return;
     }
 
-    auto newSelection = std::make_unique<XwlDataSource>();
+    auto newSelection = std::make_unique<XwlDataSource>(this);
     newSelection->setMimeTypes(mimeTypes);
-    connect(newSelection.get(), &XwlDataSource::dataRequested, this, &Selection::startTransferToWayland);
+
     // we keep the old selection around because setPrimarySelection needs it to be still alive
     std::swap(m_primarySelectionSource, newSelection);
     waylandServer()->seat()->setPrimarySelection(m_primarySelectionSource.get(), waylandServer()->display()->nextSerial());

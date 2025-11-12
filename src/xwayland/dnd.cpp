@@ -5,6 +5,8 @@
     SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
     SPDX-FileCopyrightText: 2021 David Edmundson <davidedmundson@kde.org>
     SPDX-FileCopyrightText: 2021 David Redondo <kde@david-redondo.de>
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "dnd.h"
@@ -102,8 +104,6 @@ void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
     }
     createX11Source(event);
     if (X11Source *source = x11Source()) {
-        connect(source->dataSource(), &XwlDataSource::dataRequested, this, &Selection::startTransferToWayland);
-
         SeatInterface *seat = waylandServer()->seat();
         seat->startPointerDrag(source->dataSource(), seat->focusedPointerSurface(), seat->pointerPos(), seat->focusedPointerSurfaceTransformation(), seat->pointerButtonSerial(Qt::LeftButton));
     }
