@@ -98,7 +98,7 @@ class TransferWltoX : public Transfer
     Q_OBJECT
 
 public:
-    TransferWltoX(xcb_atom_t selection, const xcb_selection_request_event_t &request, FileDescriptor fd, QObject *parent = nullptr);
+    TransferWltoX(const xcb_selection_request_event_t &request, FileDescriptor fd, QObject *parent = nullptr);
 
     void startTransferFromSource();
     bool handlePropertyNotify(xcb_property_notify_event_t *event) override;
