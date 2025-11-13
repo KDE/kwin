@@ -31,6 +31,11 @@ private Q_SLOTS:
 
 void FractionalRepaintTest::initTestCase()
 {
+    if (!Test::renderNodeAvailable()) {
+        QSKIP("no render node available");
+        return;
+    }
+
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
 
     qRegisterMetaType<Window *>();

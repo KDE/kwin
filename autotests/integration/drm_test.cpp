@@ -49,6 +49,11 @@ void DrmTest::init()
 
 void DrmTest::initTestCase()
 {
+    if (!Test::primaryNodeAvailable()) {
+        QSKIP("no primary node available");
+        return;
+    }
+
 #ifdef FORCE_DRM_LEGACY
     qputenv("KWIN_DRM_NO_AMS", "1");
 #endif

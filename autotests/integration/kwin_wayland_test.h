@@ -1221,6 +1221,11 @@ bool unlockScreen();
 bool renderNodeAvailable();
 
 /**
+ * Returns @c true if the system has at least one primary node; otherwise returns @c false.
+ */
+bool primaryNodeAvailable();
+
+/**
  * Creates an X11 connection
  * Internally a nested event loop is spawned whilst we connect to avoid a deadlock
  * with X on demand
