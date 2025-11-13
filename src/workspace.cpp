@@ -213,8 +213,8 @@ void Workspace::init()
         m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
         auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
         if (opt) {
-            auto &[config, order, type] = *opt;
-            applyOutputConfiguration(config, order);
+            auto &[config, type] = *opt;
+            applyOutputConfiguration(config);
         }
     };
     connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
@@ -414,7 +414,7 @@ Workspace::~Workspace()
     _self = nullptr;
 }
 
-OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<BackendOutput *>> &outputOrder)
+OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config)
 {
     assignBrightnessDevices(config);
 
@@ -423,8 +423,8 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
     if (error != OutputConfigurationError::None) {
         return error;
     }
-    updateOutputs(outputOrder);
-    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, m_outputOrder | std::views::transform(&LogicalOutput::backendOutput) | std::ranges::to<QList>());
+    updateOutputs();
+    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config);
     m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
 
     updateXwaylandScale();
@@ -456,7 +456,7 @@ void Workspace::updateOutputConfiguration()
     const auto outputs = kwinApp()->outputBackend()->outputs();
     if (outputs.empty()) {
         // nothing to do
-        setOutputOrder({});
+        updateOutputOrder();
         return;
     }
 
@@ -471,7 +471,7 @@ void Workspace::updateOutputConfiguration()
         if (!opt) {
             return;
         }
-        auto &[cfg, order, type] = *opt;
+        auto &[cfg, type] = *opt;
 
         for (const auto &output : outputs) {
             if (!toEnable.contains(output)) {
@@ -479,7 +479,7 @@ void Workspace::updateOutputConfiguration()
             }
         }
 
-        error = applyOutputConfiguration(cfg, order);
+        error = applyOutputConfiguration(cfg);
         switch (error) {
         case OutputConfigurationError::None:
             if (type == OutputConfigurationStore::ConfigType::Generated) {
@@ -510,7 +510,7 @@ void Workspace::updateOutputConfiguration()
 
     qCCritical(KWIN_CORE, "Applying output configuration failed!");
     // Update the output order to a fallback list, to avoid dangling pointers
-    setOutputOrder(m_outputs);
+    updateOutputOrder();
     // If applying the output configuration failed, brightness devices weren't assigned either.
     // To prevent dangling pointers, unset removed brightness brightness devices here
     const auto devices = waylandServer()->externalBrightness()->devices();
@@ -1125,7 +1125,7 @@ void Workspace::slotOutputBackendOutputsQueried()
     updateOutputs();
 }
 
-void Workspace::updateOutputs(const std::optional<QList<BackendOutput *>> &outputOrder)
+void Workspace::updateOutputs()
 {
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldLogicalOutputs = m_outputs;
@@ -1176,26 +1176,7 @@ void Workspace::updateOutputs(const std::optional<QList<BackendOutput *>> &outpu
         setActiveOutput(m_outputs[0]);
     }
 
-    if (outputOrder) {
-        QList<LogicalOutput *> logicalOrder;
-        for (BackendOutput *output : *outputOrder) {
-            if (auto logical = findOutput(output)) {
-                logicalOrder.push_back(logical);
-            }
-        }
-        setOutputOrder(logicalOrder);
-    } else {
-        // ensure all enabled but no disabled outputs are in the output order
-        for (LogicalOutput *output : std::as_const(m_outputs)) {
-            if (!m_outputOrder.contains(output)) {
-                m_outputOrder.push_back(output);
-            }
-        }
-        m_outputOrder.erase(std::remove_if(m_outputOrder.begin(), m_outputOrder.end(), [this](LogicalOutput *output) {
-            return !m_outputs.contains(output);
-        }),
-                            m_outputOrder.end());
-    }
+    updateOutputOrder();
 
     const QSet<LogicalOutput *> oldOutputsSet(oldLogicalOutputs.constBegin(), oldLogicalOutputs.constEnd());
     const QSet<LogicalOutput *> outputsSet(m_outputs.constBegin(), m_outputs.constEnd());
@@ -2401,10 +2382,14 @@ LogicalOutput *Workspace::xineramaIndexToOutput(int index) const
 }
 #endif
 
-void Workspace::setOutputOrder(const QList<LogicalOutput *> &order)
+void Workspace::updateOutputOrder()
 {
-    if (m_outputOrder != order) {
-        m_outputOrder = order;
+    auto previousOutputOrder = std::move(m_outputOrder);
+    m_outputOrder = m_outputs;
+    std::ranges::sort(m_outputOrder, [](LogicalOutput *l, LogicalOutput *r) {
+        return l->backendOutput()->priority() < r->backendOutput()->priority();
+    });
+    if (m_outputOrder != previousOutputOrder) {
         Q_EMIT outputOrderChanged();
     }
 }

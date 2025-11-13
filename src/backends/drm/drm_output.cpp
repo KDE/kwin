@@ -601,6 +601,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     next.sharpnessSetting = props->sharpness.value_or(m_state.sharpnessSetting);
+    next.priority = props->priority.value_or(m_state.priority);
     tryKmsColorOffloading(next);
     setState(next);
 
