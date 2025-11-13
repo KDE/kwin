@@ -65,7 +65,7 @@ QHash<int, QByteArray> DecorationsModel::roleNames() const
     QHash<int, QByteArray> roles({{Qt::DisplayRole, QByteArrayLiteral("display")},
                                   {PluginNameRole, QByteArrayLiteral("plugin")},
                                   {ThemeNameRole, QByteArrayLiteral("theme")},
-                                  {ConfigurationRole, QByteArrayLiteral("configureable")},
+                                  {ConfigurationRole, QByteArrayLiteral("configurable")},
                                   {KcmoduleNameRole, QByteArrayLiteral("kcmoduleName")},
                                   {RecommendedBorderSizeRole, QByteArrayLiteral("recommendedbordersize")}});
     return roles;

@@ -113,7 +113,7 @@ void InternalInputMethodContext::setFocusObject(QObject *object)
         update(Qt::ImQueryAll);
     }
 
-    // In QWindow::destory(), the focus window change may not be notified,
+    // In QWindow::destroy(), the focus window change may not be notified,
     // Try to refresh potential missing enable change.
     QWindow *window = QGuiApplication::focusWindow();
     if (m_focusWindow != window) {

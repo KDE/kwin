@@ -91,7 +91,7 @@ KCM.GridView {
             Kirigami.Action {
                 icon.name: "edit-entry"
                 tooltip: i18n("Edit %1 Theme…", model.display)
-                enabled: model.configureable
+                enabled: model.configurable
                 onTriggered: {
                     kcm.theme = index;
                     view.currentIndex = index;

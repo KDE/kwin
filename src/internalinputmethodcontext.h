@@ -56,7 +56,7 @@ Q_SIGNALS:
     void hideInputPanelRequested();
 
 private:
-    int indexFromWayland(const QString &text, int lenght, int base);
+    int indexFromWayland(const QString &text, int length, int base);
     QString m_surroundingText;
     int m_cursor;
     int m_cursorPos;

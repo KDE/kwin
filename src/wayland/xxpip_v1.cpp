@@ -90,7 +90,7 @@ class XXPipV1InterfacePrivate : public SurfaceExtension<XXPipV1InterfacePrivate,
 public:
     XXPipV1InterfacePrivate(XXPipV1Interface *q, XXPipShellV1Interface *shell, XdgSurfaceInterface *xdgSurface);
 
-    void apply(XXPipV1Commit *comit);
+    void apply(XXPipV1Commit *commit);
     void reset();
 
     XXPipV1Interface *q;
