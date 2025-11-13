@@ -16,10 +16,13 @@
 #include "workspace.h"
 #include "x11window.h"
 
+#include <fcntl.h>
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>
 
 #include <QTimer>
+
+#include <xwayland_logging.h>
 
 namespace KWin
 {
@@ -282,6 +285,10 @@ bool Selection::handlePropertyNotify(xcb_property_notify_event_t *event)
 
 void Selection::startTransferToWayland(xcb_atom_t target, qint32 fd)
 {
+    if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
+        qCWarning(KWIN_XWL) << "Failed to set O_NONBLOCK flag for the write endpoint of an X11 to Wayland transfer pipe:" << strerror(errno);
+    }
+
     // create new x to wl data transfer object
     auto *transfer = new TransferXtoWl(m_atom, target, fd, m_xSource->timestamp(), m_requestorWindow, this);
     m_xToWlTransfers << transfer;
@@ -297,6 +304,10 @@ void Selection::startTransferToWayland(xcb_atom_t target, qint32 fd)
 
 void Selection::startTransferToX(xcb_selection_request_event_t *event, qint32 fd)
 {
+    if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
+        qCWarning(KWIN_XWL) << "Failed to set O_NONBLOCK flag for the read endpoint of a Wayland to X11 transfer pipe:" << strerror(errno);
+    }
+
     // create new wl to x data transfer object
     auto *transfer = new TransferWltoX(m_atom, event, fd, this);
 
