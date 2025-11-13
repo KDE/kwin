@@ -87,7 +87,7 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
     const WindowQuadList quads = item->quads();
 
     const qreal scale = context->renderTargetScale;
-    const QPointF itemToDeviceTranslation = context->transformStack.top().map(QPointF(0., 0.)) - context->viewportOrigin * scale;
+    const QPointF itemToDeviceTranslation = context->transformStack.top().map(QPointF(0., 0.)) - context->viewportOrigin;
 
     RenderGeometry geometry;
     geometry.reserve(quads.count() * 6);
@@ -99,7 +99,7 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
             const QRectF deviceBounds = snapToPixelGridF(scaledRect(quad.bounds(), scale));
 
             for (const QRect &deviceClipRect : std::as_const(context->deviceClip)) {
-                const QRectF relativeDeviceClipRect = snapToPixelGridF(deviceClipRect).translated(-itemToDeviceTranslation);
+                const QRectF relativeDeviceClipRect = QRectF(deviceClipRect).translated(-itemToDeviceTranslation);
                 const QRectF intersected = relativeDeviceClipRect.intersected(deviceBounds);
                 if (intersected.isValid()) {
                     if (deviceBounds == intersected) {
@@ -337,7 +337,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         .deviceClip = deviceRegion & renderTarget.transformedRect(),
         .hardwareClipping = deviceRegion != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
         .renderTargetScale = viewport.scale(),
-        .viewportOrigin = viewport.renderRect().topLeft(),
+        .viewportOrigin = viewport.deviceRenderRect().topLeft(),
     };
 
     renderContext.transformStack.push(QMatrix4x4());
