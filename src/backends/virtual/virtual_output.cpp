@@ -102,6 +102,7 @@ void VirtualOutput::applyChanges(const OutputConfiguration &config)
     }
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
+    next.priority = props->priority.value_or(m_state.priority);
     setState(next);
     m_renderLoop->setRefreshRate(next.currentMode->refreshRate());
     m_vsyncMonitor->setRefreshRate(next.currentMode->refreshRate());

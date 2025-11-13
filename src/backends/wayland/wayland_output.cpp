@@ -395,6 +395,7 @@ void WaylandOutput::applyChanges(const OutputConfiguration &config)
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
+    next.priority = props->priority.value_or(m_state.priority);
     setState(next);
 }
 
