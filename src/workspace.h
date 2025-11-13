@@ -140,7 +140,6 @@ public:
 
     LogicalOutput *xineramaIndexToOutput(int index) const;
 
-    void setOutputOrder(const QList<LogicalOutput *> &order);
     QList<LogicalOutput *> outputOrder() const;
 
     LogicalOutput *activeOutput() const;
@@ -437,7 +436,7 @@ public:
      * Apply the requested output configuration. Note that you must use this function
      * instead of Platform::applyOutputChanges().
      */
-    OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config, const std::optional<QList<BackendOutput *>> &outputOrder = std::nullopt);
+    OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config);
     void updateXwaylandScale();
 
     void setActivationToken(const QString &token, uint32_t serial, const QString &appId);
@@ -625,8 +624,9 @@ private:
     void removeWindow(Window *window);
 
     void updateOutputConfiguration();
-    void updateOutputs(const std::optional<QList<BackendOutput *>> &outputOrder = std::nullopt);
+    void updateOutputs();
     void assignBrightnessDevices(OutputConfiguration &outputConfig);
+    void updateOutputOrder();
 
     bool breaksShowingDesktop(Window *window) const;
 

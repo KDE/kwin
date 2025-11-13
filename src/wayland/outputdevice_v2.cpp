@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 17;
+static const quint32 s_version = 18;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -138,6 +138,7 @@ public:
     void sendMaxBpc(Resource *resource);
     void sendEdrPolicy(Resource *resource);
     void sendSharpness(Resource *resource);
+    void sendPriority(Resource *resource);
 
     OutputDeviceV2Interface *q;
     QPointer<Display> m_display;
@@ -185,6 +186,7 @@ public:
     std::optional<uint32_t> m_automaticMaxBitsPerColorLimit;
     BackendOutput::EdrPolicy m_edrPolicy = BackendOutput::EdrPolicy::Always;
     double m_sharpness = 0;
+    uint32_t m_priority = 0;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -279,6 +281,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, BackendOutput
     updateMaxBpc();
     updateEdrPolicy();
     updateSharpness();
+    updatePriority();
 
     connect(handle, &BackendOutput::geometryChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -318,6 +321,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, BackendOutput
     connect(handle, &BackendOutput::maxBitsPerColorChanged, this, &OutputDeviceV2Interface::updateMaxBpc);
     connect(handle, &BackendOutput::edrPolicyChanged, this, &OutputDeviceV2Interface::updateEdrPolicy);
     connect(handle, &BackendOutput::sharpnessChanged, this, &OutputDeviceV2Interface::updateSharpness);
+    connect(handle, &BackendOutput::priorityChanged, this, &OutputDeviceV2Interface::updatePriority);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -406,6 +410,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendMaxBpc(resource);
     sendEdrPolicy(resource);
     sendSharpness(resource);
+    sendPriority(resource);
     sendDone(resource);
 }
 
@@ -621,6 +626,13 @@ void OutputDeviceV2InterfacePrivate::sendSharpness(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_SHARPNESS_SINCE_VERSION) {
         send_sharpness(resource->handle, m_sharpness);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendPriority(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_PRIORITY_SINCE_VERSION) {
+        send_priority(resource->handle, m_priority);
     }
 }
 
@@ -1074,6 +1086,18 @@ void OutputDeviceV2Interface::updateSharpness()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendSharpness(resource);
+        }
+        scheduleDone();
+    }
+}
+
+void OutputDeviceV2Interface::updatePriority()
+{
+    if (d->m_priority != d->m_handle->priority()) {
+        d->m_priority = d->m_handle->priority();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendPriority(resource);
         }
         scheduleDone();
     }

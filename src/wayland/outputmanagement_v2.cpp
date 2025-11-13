@@ -44,7 +44,6 @@ public:
     bool applied = false;
     bool invalid = false;
     OutputConfiguration config;
-    QList<std::pair<uint32_t, OutputDeviceV2Interface *>> outputOrder;
     QString failureReason;
 
 protected:
@@ -264,7 +263,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_priority(Re
         return;
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputResource)) {
-        outputOrder.push_back(std::make_pair(priority, output));
+        config.changeSet(output->handle())->priority = priority;
     }
 }
 
@@ -529,42 +528,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         return;
     }
 
-    std::optional<QList<BackendOutput *>> sortedOrder;
-    if (!outputOrder.empty()) {
-        const int desktopOutputs = std::count_if(allOutputs.begin(), allOutputs.end(), [](BackendOutput *output) {
-            return !output->isNonDesktop();
-        });
-        if (outputOrder.size() != desktopOutputs) {
-            sendFailure(resource, i18n("The provided output order doesn't contain all outputs"));
-            return;
-        }
-        outputOrder.erase(std::remove_if(outputOrder.begin(), outputOrder.end(), [this](const auto &pair) {
-            const auto changeset = config.constChangeSet(pair.second->handle());
-            if (changeset && changeset->enabled.has_value()) {
-                return !changeset->enabled.value();
-            } else {
-                return !pair.second->handle()->isEnabled();
-            }
-        }),
-                          outputOrder.end());
-        std::sort(outputOrder.begin(), outputOrder.end(), [](const auto &pair1, const auto &pair2) {
-            return pair1.first < pair2.first;
-        });
-        uint32_t i = 1;
-        for (const auto &[index, name] : std::as_const(outputOrder)) {
-            if (index != i) {
-                sendFailure(resource, i18n("The provided output order is invalid"));
-                return;
-            }
-            i++;
-        }
-        sortedOrder = QList<BackendOutput *>();
-        sortedOrder->reserve(outputOrder.size());
-        std::transform(outputOrder.begin(), outputOrder.end(), std::back_inserter(*sortedOrder), [](const auto &pair) {
-            return pair.second->handle();
-        });
-    }
-    switch (workspace()->applyOutputConfiguration(config, sortedOrder)) {
+    switch (workspace()->applyOutputConfiguration(config)) {
     case OutputConfigurationError::None:
         send_applied();
         break;

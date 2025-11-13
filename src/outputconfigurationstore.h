@@ -35,17 +35,17 @@ public:
         Preexisting,
         Generated,
     };
-    std::optional<std::tuple<OutputConfiguration, QList<BackendOutput *>, ConfigType>> queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode);
-    void storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<BackendOutput *> &outputOrder);
+    std::optional<std::pair<OutputConfiguration, ConfigType>> queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode);
+    void storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed, const OutputConfiguration &config);
 
     void applyMirroring(OutputConfiguration &config, const QList<BackendOutput *> &outputs);
     bool isAutoRotateActive(const QList<BackendOutput *> &outputs, bool isTabletMode) const;
 
 private:
-    std::pair<OutputConfiguration, QList<BackendOutput *>> generateConfig(const QList<BackendOutput *> &outputs, bool isLidClosed);
+    OutputConfiguration generateConfig(const QList<BackendOutput *> &outputs, bool isLidClosed);
     void registerOutputs(const QList<BackendOutput *> &outputs);
     void applyOrientationReading(OutputConfiguration &config, const QList<BackendOutput *> &outputs, QOrientationReading *orientation, bool isTabletMode);
-    std::optional<std::pair<OutputConfiguration, QList<BackendOutput *>>> generateLidClosedConfig(const QList<BackendOutput *> &outputs);
+    std::optional<OutputConfiguration> generateLidClosedConfig(const QList<BackendOutput *> &outputs);
     std::shared_ptr<OutputMode> chooseMode(BackendOutput *output) const;
     double chooseScale(BackendOutput *output, OutputMode *mode) const;
     void load();
@@ -105,7 +105,7 @@ private:
         QList<SetupState> outputs;
     };
 
-    std::pair<OutputConfiguration, QList<BackendOutput *>> setupToConfig(Setup *setup, const std::unordered_map<BackendOutput *, size_t> &outputMap) const;
+    OutputConfiguration setupToConfig(Setup *setup, const std::unordered_map<BackendOutput *, size_t> &outputMap) const;
     std::optional<std::pair<Setup *, std::unordered_map<BackendOutput *, size_t>>> findSetup(const QList<BackendOutput *> &outputs, bool lidClosed);
     std::optional<size_t> findOutput(BackendOutput *output, const QList<BackendOutput *> &allOutputs) const;
 

@@ -209,6 +209,7 @@ void BackendOutput::applyChanges(const OutputConfiguration &config)
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
+    next.priority = props->priority.value_or(m_state.priority);
 
     setState(next);
 
@@ -331,6 +332,9 @@ void BackendOutput::setState(const State &state)
     }
     if (oldState.sharpnessSetting != state.sharpnessSetting) {
         Q_EMIT sharpnessChanged();
+    }
+    if (oldState.priority != state.priority) {
+        Q_EMIT priorityChanged();
     }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
@@ -578,6 +582,11 @@ const std::shared_ptr<ColorDescription> &BackendOutput::blendingColor() const
 const std::shared_ptr<ColorDescription> &BackendOutput::layerBlendingColor() const
 {
     return m_state.layerBlendingColor;
+}
+
+uint32_t BackendOutput::priority() const
+{
+    return m_state.priority;
 }
 
 // TODO move these quirks to libdisplay-info?

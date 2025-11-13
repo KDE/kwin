@@ -1500,7 +1500,7 @@ void OutputChangesTest::testGenerateConfigs()
     OutputConfigurationStore configs;
     auto cfg = configs.queryConfig(outputs, false, nullptr, false);
     QVERIFY(cfg.has_value());
-    const auto [config, order, type] = *cfg;
+    const auto [config, type] = *cfg;
     const auto outputConfig = config.constChangeSet(outputs.front());
 
     QFETCH(ModeInfo, defaultMode);
@@ -1569,7 +1569,7 @@ void OutputChangesTest::testAutorotate()
     OutputConfigurationStore configs;
     auto cfg = configs.queryConfig(outputs, false, &sensorReading, true);
     QVERIFY(cfg.has_value());
-    const auto [config, order, type] = *cfg;
+    const auto [config, type] = *cfg;
     const auto outputConfig = config.constChangeSet(outputs.front());
 
     QCOMPARE(outputConfig->autoRotationPolicy, BackendOutput::AutoRotationPolicy::InTabletMode);
@@ -1769,7 +1769,7 @@ void OutputChangesTest::testSettingRestoration()
     {
         auto cfg = configs.queryConfig(outputs, false, nullptr, false);
         QVERIFY(cfg.has_value());
-        const auto [config, order, type] = *cfg;
+        const auto [config, type] = *cfg;
         for (const auto output : outputs) {
             output->applyChanges(config);
             outputPositions.push_back(config.constChangeSet(output)->pos);
@@ -1781,7 +1781,7 @@ void OutputChangesTest::testSettingRestoration()
     {
         auto cfg = configs.queryConfig(outputs, false, nullptr, false);
         QVERIFY(cfg.has_value());
-        const auto [config, order, type] = *cfg;
+        const auto [config, type] = *cfg;
         auto revertedPositions = outputPositions | std::views::reverse;
         for (int i = 0; i < outputs.size(); i++) {
             QCOMPARE(revertedPositions[i], config.constChangeSet(outputs[i])->pos);
@@ -1804,7 +1804,7 @@ void OutputChangesTest::testSettingRestoration()
     outputs = kwinApp()->outputBackend()->outputs();
     {
         auto cfg = configs.queryConfig(outputs, false, nullptr, false);
-        const auto [config, order, type] = *cfg;
+        const auto [config, type] = *cfg;
         outputs.front()->applyChanges(config);
     }
 
@@ -1826,7 +1826,7 @@ void OutputChangesTest::testSettingRestoration()
     {
         auto cfg = configs.queryConfig(outputs, false, nullptr, false);
         QVERIFY(cfg.has_value());
-        const auto [config, order, type] = *cfg;
+        const auto [config, type] = *cfg;
         auto revertedPositions = outputPositions | std::views::reverse;
         for (int i = 0; i < outputs.size(); i++) {
             QCOMPARE(revertedPositions[i], config.constChangeSet(outputs[i])->pos);
@@ -1885,7 +1885,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
         // query the generated config, like KWin normally would
         auto cfg = configs.queryConfig(outputs, false, nullptr, false);
         QVERIFY(cfg.has_value());
-        const auto [config, order, type] = *cfg;
+        const auto [config, type] = *cfg;
         outputs.front()->applyChanges(config);
         QCOMPARE(config.constChangeSet(outputs[0])->desiredModeSize.value(), QSize(1280, 1024));
     }
@@ -1897,14 +1897,14 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
         changeSet->desiredModeSize = QSize(640, 480);
         changeSet->desiredModeRefreshRate = 60000;
         outputs.front()->applyChanges(config);
-        configs.storeConfig(outputs, false, config, outputs);
+        configs.storeConfig(outputs, false, config);
     }
     {
         // verify that querying the config also shows the changed mode
         // things could already go wrong here
         auto cfg = configs.queryConfig(outputs, false, nullptr, false);
         QVERIFY(cfg.has_value());
-        const auto [config, order, type] = *cfg;
+        const auto [config, type] = *cfg;
         QCOMPARE(type, OutputConfigurationStore::ConfigType::Preexisting);
         outputs.front()->applyChanges(config);
         QCOMPARE(config.constChangeSet(outputs[0])->desiredModeSize.value(), QSize(640, 480));
@@ -1944,7 +1944,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     {
         auto cfg = configs.queryConfig(outputs, false, nullptr, false);
         QVERIFY(cfg.has_value());
-        const auto [config, order, type] = *cfg;
+        const auto [config, type] = *cfg;
         QCOMPARE(config.constChangeSet(outputs[0])->desiredModeSize.value(), QSize(640, 480));
     }
 }
@@ -1983,7 +1983,7 @@ void OutputChangesTest::testSettingRestoration_replacedMode()
         changeSet->desiredModeSize = QSize(1280, 1024);
         changeSet->desiredModeRefreshRate = 60000;
         output->applyChanges(config);
-        configs.storeConfig(outputs, false, config, outputs);
+        configs.storeConfig(outputs, false, config);
     }
 
     // now, mark the mode as "removed". Its replacement is already in the mode list
@@ -1991,7 +1991,7 @@ void OutputChangesTest::testSettingRestoration_replacedMode()
 
     const auto opt = configs.queryConfig(outputs, false, nullptr, false);
     QVERIFY(opt.has_value());
-    const auto [config, outputOrder, type] = *opt;
+    const auto [config, type] = *opt;
     output->applyChanges(config);
 
     // the preferred mode size and refresh rate should be the same,

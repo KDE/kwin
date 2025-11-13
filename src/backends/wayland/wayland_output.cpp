@@ -397,6 +397,7 @@ void WaylandOutput::applyChanges(const OutputConfiguration &config)
             m_renderLoop->inhibit();
         }
     }
+    next.priority = props->priority.value_or(m_state.priority);
     setState(next);
 }
 

@@ -177,13 +177,12 @@ std::shared_ptr<OutputMode> parseMode(BackendOutput *output, const QJsonObject &
     return (it != modes.end()) ? *it : nullptr;
 }
 
-std::optional<std::pair<OutputConfiguration, QList<BackendOutput *>>> readOutputConfig(const QList<BackendOutput *> &outputs, const QString &hash)
+std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *> &outputs, const QString &hash)
 {
     const auto outputsInfo = outputsConfig(outputs, hash);
     if (outputsInfo.isEmpty()) {
         return std::nullopt;
     }
-    std::vector<std::pair<uint32_t, BackendOutput *>> outputOrder;
     OutputConfiguration cfg;
     // default position goes from left to right
     QPoint pos(0, 0);
@@ -199,19 +198,16 @@ std::optional<std::pair<OutputConfiguration, QList<BackendOutput *>>> readOutput
             // settings that are per output setup:
             props->enabled = outputInfo["enabled"].toBool(true);
             if (outputInfo["primary"].toBool()) {
-                outputOrder.push_back(std::make_pair(1, output));
                 if (!props->enabled) {
                     qCWarning(KWIN_CORE) << "KScreen config would disable the primary output!";
                     return std::nullopt;
                 }
             } else if (int prio = outputInfo["priority"].toInt(); prio > 0) {
-                outputOrder.push_back(std::make_pair(prio, output));
                 if (!props->enabled) {
                     qCWarning(KWIN_CORE) << "KScreen config would disable an output with priority!";
                     return std::nullopt;
                 }
-            } else {
-                outputOrder.push_back(std::make_pair(0, output));
+                props->priority = prio;
             }
             if (const QJsonObject pos = outputInfo["pos"].toObject(); !pos.isEmpty()) {
                 props->pos = QPoint(pos["x"].toInt(), pos["y"].toInt());
@@ -245,7 +241,6 @@ std::optional<std::pair<OutputConfiguration, QList<BackendOutput *>>> readOutput
             props->enabled = true;
             props->pos = pos;
             props->transform = output->panelOrientation();
-            outputOrder.push_back(std::make_pair(0, output));
         }
         pos.setX(pos.x() + output->geometry().width());
     }
@@ -257,31 +252,7 @@ std::optional<std::pair<OutputConfiguration, QList<BackendOutput *>>> readOutput
         qCWarning(KWIN_CORE) << "KScreen config would disable all outputs!";
         return std::nullopt;
     }
-    std::erase_if(outputOrder, [&cfg](const auto &pair) {
-        return !cfg.constChangeSet(pair.second)->enabled.value_or(pair.second->isEnabled());
-    });
-    std::sort(outputOrder.begin(), outputOrder.end(), [](const auto &left, const auto &right) {
-        if (left.first != right.first) {
-            // All the outputs marked with prio 0 should be at the end of the list
-            if (left.first == 0) {
-                return false;
-            }
-            if (right.first == 0) {
-                return true;
-            }
-
-            return left.first < right.first;
-        }
-        // sort alphabetically as a fallback
-        return left.second->name() < right.second->name();
-    });
-
-    QList<BackendOutput *> order;
-    order.reserve(outputOrder.size());
-    std::transform(outputOrder.begin(), outputOrder.end(), std::back_inserter(order), [](const auto &pair) {
-        return pair.second;
-    });
-    return std::make_pair(cfg, order);
+    return cfg;
 }
 }
 }

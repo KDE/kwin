@@ -311,6 +311,8 @@ public:
      */
     const std::shared_ptr<ColorDescription> &colorDescription() const;
 
+    uint32_t priority() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.
@@ -374,6 +376,7 @@ Q_SIGNALS:
     void maxBitsPerColorChanged();
     void edrPolicyChanged();
     void sharpnessChanged();
+    void priorityChanged();
 
 protected:
     struct Information
@@ -449,6 +452,7 @@ protected:
         std::optional<uint32_t> automaticMaxBitsPerColorLimit;
         EdrPolicy edrPolicy = EdrPolicy::Always;
         double sharpnessSetting = 0;
+        uint32_t priority = 0;
     };
 
     void setInformation(const Information &information);

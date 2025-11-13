@@ -9,6 +9,7 @@
 #include "core/output.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "core/outputconfiguration.h"
 
 namespace KWin
 {
@@ -49,10 +50,17 @@ void XineramaTest::indexToOutput()
     QVERIFY(!xcb_connection_has_error(c.get()));
 
     const auto outputs = workspace()->outputs();
+
+    OutputConfiguration config;
+    config.changeSet(outputs[0]->backendOutput())->priority = 0;
+    config.changeSet(outputs[1]->backendOutput())->priority = 1;
+    QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
     QCOMPARE(workspace()->xineramaIndexToOutput(0), outputs.at(0));
     QCOMPARE(workspace()->xineramaIndexToOutput(1), outputs.at(1));
 
-    workspace()->setOutputOrder({outputs[1], outputs[0]});
+    config.changeSet(outputs[0]->backendOutput())->priority = 1;
+    config.changeSet(outputs[1]->backendOutput())->priority = 0;
+    QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
     QCOMPARE(workspace()->xineramaIndexToOutput(0), outputs.at(1));
     QCOMPARE(workspace()->xineramaIndexToOutput(1), outputs.at(0));
 }

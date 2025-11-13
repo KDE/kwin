@@ -19,6 +19,6 @@ namespace KScreenIntegration
 {
 
 QString connectedOutputsHash(const QList<BackendOutput *> &outputs, bool isLidClosed);
-std::optional<std::pair<OutputConfiguration, QList<BackendOutput *>>> readOutputConfig(const QList<BackendOutput *> &outputs, const QString &hash);
+std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *> &outputs, const QString &hash);
 }
 }

@@ -37,7 +37,7 @@ OutputConfigurationStore::~OutputConfigurationStore()
     save();
 }
 
-std::optional<std::tuple<OutputConfiguration, QList<BackendOutput *>, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode)
+std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode)
 {
     QList<BackendOutput *> relevantOutputs;
     std::copy_if(outputs.begin(), outputs.end(), std::back_inserter(relevantOutputs), [](BackendOutput *output) {
@@ -50,17 +50,17 @@ std::optional<std::tuple<OutputConfiguration, QList<BackendOutput *>, OutputConf
     registerOutputs(outputs);
     if (const auto opt = findSetup(relevantOutputs, isLidClosed)) {
         const auto &[setup, outputStates] = *opt;
-        auto [config, order] = setupToConfig(setup, outputStates);
+        auto config = setupToConfig(setup, outputStates);
         applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
         applyMirroring(config, relevantOutputs);
-        storeConfig(relevantOutputs, isLidClosed, config, order);
-        return std::make_tuple(config, order, ConfigType::Preexisting);
+        storeConfig(relevantOutputs, isLidClosed, config);
+        return std::make_tuple(config, ConfigType::Preexisting);
     }
-    auto [config, order] = generateConfig(relevantOutputs, isLidClosed);
+    auto config = generateConfig(relevantOutputs, isLidClosed);
     applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
     applyMirroring(config, relevantOutputs);
-    storeConfig(relevantOutputs, isLidClosed, config, order);
-    return std::make_tuple(config, order, ConfigType::Generated);
+    storeConfig(relevantOutputs, isLidClosed, config);
+    return std::make_tuple(config, ConfigType::Generated);
 }
 
 void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &config, const QList<BackendOutput *> &outputs, QOrientationReading *orientation, bool isTabletMode)
@@ -306,7 +306,7 @@ std::optional<size_t> OutputConfigurationStore::findOutput(BackendOutput *output
     }
 }
 
-void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<BackendOutput *> &outputOrder)
+void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed, const OutputConfiguration &config)
 {
     QList<BackendOutput *> relevantOutputs;
     std::copy_if(allOutputs.begin(), allOutputs.end(), std::back_inserter(relevantOutputs), [](BackendOutput *output) {
@@ -326,7 +326,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
         setup->lidClosed = isLidClosed;
     }
     for (BackendOutput *output : relevantOutputs) {
-        auto outputIndex = findOutput(output, outputOrder);
+        auto outputIndex = findOutput(output, allOutputs);
         Q_ASSERT(outputIndex.has_value());
         auto outputIt = std::find_if(setup->outputs.begin(), setup->outputs.end(), [outputIndex](const auto &output) {
             return output.outputIndex == outputIndex;
@@ -384,7 +384,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                 .outputIndex = *outputIndex,
                 .position = changeSet->pos.value_or(output->geometry().topLeft()),
                 .enabled = changeSet->enabled.value_or(output->isEnabled()),
-                .priority = int(outputOrder.indexOf(output)),
+                .priority = int(output->priority()),
                 .replicationSource = changeSet->replicationSource.value_or(output->replicationSource()),
             };
         } else {
@@ -435,7 +435,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                 .outputIndex = *outputIndex,
                 .position = output->geometry().topLeft(),
                 .enabled = output->isEnabled(),
-                .priority = int(outputOrder.indexOf(output)),
+                .priority = int(output->priority()),
                 .replicationSource = output->replicationSource(),
             };
         }
@@ -443,7 +443,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
     save();
 }
 
-std::pair<OutputConfiguration, QList<BackendOutput *>> OutputConfigurationStore::setupToConfig(Setup *setup, const std::unordered_map<BackendOutput *, size_t> &outputMap) const
+OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const std::unordered_map<BackendOutput *, size_t> &outputMap) const
 {
     OutputConfiguration ret;
     QList<std::pair<BackendOutput *, size_t>> priorities;
@@ -498,22 +498,13 @@ std::pair<OutputConfiguration, QList<BackendOutput *>> OutputConfigurationStore:
             .maxBitsPerColor = state.maxBitsPerColor,
             .edrPolicy = state.edrPolicy,
             .sharpness = state.sharpness,
+            .priority = setupState.priority,
         };
-        if (setupState.enabled) {
-            priorities.push_back(std::make_pair(output, setupState.priority));
-        }
     }
-    std::sort(priorities.begin(), priorities.end(), [](const auto &left, const auto &right) {
-        return left.second < right.second;
-    });
-    QList<BackendOutput *> order;
-    std::transform(priorities.begin(), priorities.end(), std::back_inserter(order), [](const auto &pair) {
-        return pair.first;
-    });
-    return std::make_pair(ret, order);
+    return ret;
 }
 
-std::optional<std::pair<OutputConfiguration, QList<BackendOutput *>>> OutputConfigurationStore::generateLidClosedConfig(const QList<BackendOutput *> &outputs)
+std::optional<OutputConfiguration> OutputConfigurationStore::generateLidClosedConfig(const QList<BackendOutput *> &outputs)
 {
     const auto internalIt = std::find_if(outputs.begin(), outputs.end(), [](BackendOutput *output) {
         return output->isInternal();
@@ -526,14 +517,13 @@ std::optional<std::pair<OutputConfiguration, QList<BackendOutput *>>> OutputConf
         return std::nullopt;
     }
     BackendOutput *const internalOutput = *internalIt;
-    auto [config, order] = setupToConfig(setup->first, setup->second);
+    auto config = setupToConfig(setup->first, setup->second);
     auto internalChangeset = config.changeSet(internalOutput);
     if (!internalChangeset->enabled.value_or(internalOutput->isEnabled())) {
-        return std::make_pair(config, order);
+        return config;
     }
 
     internalChangeset->enabled = false;
-    order.removeOne(internalOutput);
 
     const bool anyEnabled = std::any_of(outputs.begin(), outputs.end(), [&config = config](BackendOutput *output) {
         return config.changeSet(output)->enabled.value_or(output->isEnabled());
@@ -575,10 +565,10 @@ std::optional<std::pair<OutputConfiguration, QList<BackendOutput *>>> OutputConf
             changeset->pos = otherPos;
         }
     }
-    return std::make_pair(config, order);
+    return config;
 }
 
-std::pair<OutputConfiguration, QList<BackendOutput *>> OutputConfigurationStore::generateConfig(const QList<BackendOutput *> &outputs, bool isLidClosed)
+OutputConfiguration OutputConfigurationStore::generateConfig(const QList<BackendOutput *> &outputs, bool isLidClosed)
 {
     qCDebug(KWIN_OUTPUT_CONFIG, "Generating new config for %lld outputs", outputs.size());
     if (isLidClosed) {
@@ -588,10 +578,10 @@ std::pair<OutputConfiguration, QList<BackendOutput *>> OutputConfigurationStore:
     }
     const auto kscreenConfig = KScreenIntegration::readOutputConfig(outputs, KScreenIntegration::connectedOutputsHash(outputs, isLidClosed));
     OutputConfiguration ret;
-    QList<BackendOutput *> outputOrder;
     QPoint pos(0, 0);
+    int priority = 0;
     for (const auto output : outputs) {
-        const auto kscreenChangeSetPtr = kscreenConfig ? kscreenConfig->first.constChangeSet(output) : nullptr;
+        const auto kscreenChangeSetPtr = kscreenConfig ? kscreenConfig->constChangeSet(output) : nullptr;
         const auto kscreenChangeSet = kscreenChangeSetPtr ? *kscreenChangeSetPtr : OutputChangeSet{};
 
         const auto outputIndex = findOutput(output, outputs);
@@ -635,23 +625,15 @@ std::pair<OutputConfiguration, QList<BackendOutput *>> OutputConfigurationStore:
             .maxBitsPerColor = existingData.maxBitsPerColor,
             .edrPolicy = existingData.edrPolicy.value_or(BackendOutput::EdrPolicy::Always),
             .sharpness = existingData.sharpness.value_or(0),
+            .priority = priority,
         };
+        priority++;
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
             pos.setX(std::ceil(pos.x() + modeSize.width() / *changeset->scale));
-            outputOrder.push_back(output);
         }
     }
-    if (kscreenConfig && kscreenConfig->second.size() == outputOrder.size()) {
-        // make sure the old output order is consistent with the enablement states of the outputs
-        const bool consistent = std::ranges::all_of(outputOrder, [&kscreenConfig](const auto output) {
-            return kscreenConfig->second.contains(output);
-        });
-        if (consistent) {
-            outputOrder = kscreenConfig->second;
-        }
-    }
-    return std::make_pair(ret, outputOrder);
+    return ret;
 }
 
 std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(BackendOutput *output) const

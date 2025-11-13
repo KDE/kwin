@@ -86,6 +86,7 @@ private:
     void updateMaxBpc();
     void updateEdrPolicy();
     void updateSharpness();
+    void updatePriority();
 
     void scheduleDone();
 

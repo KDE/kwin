@@ -336,7 +336,7 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
             .scale = info.scale,
         };
     }
-    workspace()->applyOutputConfiguration(config, outputs);
+    workspace()->applyOutputConfiguration(config);
 }
 
 Test::SimpleKeyboard::SimpleKeyboard(QObject *parent)

@@ -62,6 +62,7 @@ public:
     std::optional<BackendOutput::EdrPolicy> edrPolicy;
     std::optional<double> sharpness;
     std::optional<BackendOutput::DpmsMode> dpmsMode;
+    std::optional<uint32_t> priority;
 };
 
 class KWIN_EXPORT OutputConfiguration
