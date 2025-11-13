@@ -16,5 +16,5 @@ void main(void)
     sum += texture2D(texUnit, uv + vec2(0.0, -halfpixel.y * 2.0) * offset);
     sum += texture2D(texUnit, uv + vec2(-halfpixel.x, -halfpixel.y) * offset) * 2.0;
 
-    gl_FragColor = (sum / 12) * colorMatrix;
+    gl_FragColor = (sum / 12.0) * colorMatrix;
 }
