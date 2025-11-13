@@ -17,6 +17,7 @@
 #include "workspace.h"
 #include "x11window.h"
 
+#include <fcntl.h>
 #include <unistd.h>
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>
@@ -224,6 +225,10 @@ void Selection::startTransferToWayland(const QString &mimeType, qint32 fd)
         return;
     }
 
+    if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
+        qCWarning(KWIN_XWL) << "Failed to set O_NONBLOCK flag for the write endpoint of an X11 to Wayland transfer pipe:" << strerror(errno);
+    }
+
     auto *transfer = new TransferXtoWl(m_atom, mimeAtom, fd, m_timestamp, m_window, this);
     m_xToWlTransfers << transfer;
 
@@ -237,6 +242,10 @@ void Selection::startTransferToWayland(const QString &mimeType, qint32 fd)
 
 void Selection::startTransferToX(xcb_selection_request_event_t *event, qint32 fd)
 {
+    if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) {
+        qCWarning(KWIN_XWL) << "Failed to set O_NONBLOCK flag for the read endpoint of a Wayland to X11 transfer pipe:" << strerror(errno);
+    }
+
     auto *transfer = new TransferWltoX(m_atom, event, fd, this);
 
     connect(transfer, &TransferWltoX::finished, this, [this, transfer]() {
