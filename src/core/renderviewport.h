@@ -24,6 +24,7 @@ public:
 
     QMatrix4x4 projectionMatrix() const;
     QRectF renderRect() const;
+    QRect deviceRenderRect() const;
     double scale() const;
     OutputTransform transform() const;
 

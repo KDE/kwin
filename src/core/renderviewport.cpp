@@ -43,6 +43,11 @@ QRectF RenderViewport::renderRect() const
     return m_renderRect;
 }
 
+QRect RenderViewport::deviceRenderRect() const
+{
+    return m_deviceRenderRect;
+}
+
 double RenderViewport::scale() const
 {
     return m_scale;
