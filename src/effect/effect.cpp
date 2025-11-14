@@ -398,11 +398,6 @@ void Effect::paintWindow(const RenderTarget &renderTarget, const RenderViewport 
     effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 }
 
-void Effect::postPaintWindow(EffectWindow *w)
-{
-    effects->postPaintWindow(w);
-}
-
 bool Effect::provides(Feature)
 {
     return false;
