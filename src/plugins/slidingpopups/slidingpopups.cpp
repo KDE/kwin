@@ -172,10 +172,10 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
     effects->paintWindow(renderTarget, viewport, w, mask, effectiveRegion, data);
 }
 
-void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
+void SlidingPopupsEffect::postPaintScreen()
 {
-    auto animationIt = m_animations.find(w);
-    if (animationIt != m_animations.end()) {
+    for (auto animationIt = m_animations.begin(); animationIt != m_animations.end();) {
+        EffectWindow *w = animationIt->first;
         const AnimationData &animData = m_animationsData[w];
         effects->addRepaint(damagedLogicalArea(w, animData));
 
@@ -184,11 +184,13 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
                 w->setData(WindowForceBackgroundContrastRole, QVariant());
                 w->setData(WindowForceBlurRole, QVariant());
             }
-            m_animations.erase(animationIt);
+            animationIt = m_animations.erase(animationIt);
+        } else {
+            ++animationIt;
         }
     }
 
-    effects->postPaintWindow(w);
+    effects->postPaintScreen();
 }
 
 void SlidingPopupsEffect::setupSlideData(EffectWindow *w)

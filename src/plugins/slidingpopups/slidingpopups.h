@@ -32,9 +32,9 @@ public:
 
     void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceGeometry, WindowPaintData &data) override;
-    void postPaintWindow(EffectWindow *w) override;
     void reconfigure(ReconfigureFlags flags) override;
     bool isActive() const override;
+    void postPaintScreen() override;
 
     int requestedEffectChainPosition() const override
     {
