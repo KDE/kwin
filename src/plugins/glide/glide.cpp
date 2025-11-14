@@ -155,9 +155,10 @@ void GlideEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, W
     data.multiplyOpacity(interpolate(params.opacity.from, params.opacity.to, t));
 }
 
-void GlideEffect::postPaintWindow(EffectWindow *w)
+void GlideEffect::postPaintScreen()
 {
-    if (auto animationIt = m_animations.find(w); animationIt != m_animations.end()) {
+    for (auto animationIt = m_animations.begin(); animationIt != m_animations.end();) {
+        EffectWindow *w = animationIt->first;
         w->addRepaintFull();
 
         if (animationIt->second.timeLine.done()) {
@@ -168,7 +169,7 @@ void GlideEffect::postPaintWindow(EffectWindow *w)
         }
     }
 
-    effects->postPaintWindow(w);
+    effects->postPaintScreen();
 }
 
 bool GlideEffect::isActive() const
