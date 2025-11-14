@@ -1353,7 +1353,7 @@ bool unlockScreen()
 }
 #endif // KWIN_BUILD_LOCKSCREEN
 
-bool renderNodeAvailable()
+static bool haveDrmNode(int type)
 {
 #if !HAVE_LIBDRM_FAUX
 #if defined(Q_OS_LINUX)
@@ -1377,9 +1377,19 @@ bool renderNodeAvailable()
         drmFreeDevices(devices.data(), devices.size());
     });
 
-    return std::any_of(devices.constBegin(), devices.constEnd(), [](drmDevice *device) {
-        return device->available_nodes & (1 << DRM_NODE_RENDER);
+    return std::any_of(devices.constBegin(), devices.constEnd(), [type](drmDevice *device) {
+        return device->available_nodes & (1 << type);
     });
+}
+
+bool renderNodeAvailable()
+{
+    return haveDrmNode(DRM_NODE_RENDER);
+}
+
+bool primaryNodeAvailable()
+{
+    return haveDrmNode(DRM_NODE_PRIMARY);
 }
 
 #if KWIN_BUILD_X11
