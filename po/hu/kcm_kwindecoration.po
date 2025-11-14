@@ -4,13 +4,13 @@
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2011, 2012, 2014, 2015, 2019.
 # Balázs Úr <urbalazs@gmail.com>, 2012, 2013, 2014.
 # Kiszel Kristóf <kiszel.kristof@gmail.com>, 2017, 2018, 2020, 2021.
-# SPDX-FileCopyrightText: 2021, 2024 Kristof Kiszel <ulysses@fsf.hu>
+# SPDX-FileCopyrightText: 2021, 2024, 2025 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-05-30 00:44+0000\n"
-"PO-Revision-Date: 2024-11-13 22:44+0100\n"
+"PO-Revision-Date: 2025-11-13 21:01+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -18,14 +18,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 25.08.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, fuzzy, kde-format
-#| msgctxt "Button showing window actions menu"
-#| msgid "Window Menu"
+#, kde-format
 msgid "Window menu"
-msgstr "Ablak menü"
+msgstr "Ablakmenü"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -182,20 +180,18 @@ msgid "Titlebar Buttons"
 msgstr "Címsorgombok"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgctxt "checkbox label"
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "Az ablakok bezárhatók legyenek a menügombra történő dupla kattintással"
+msgstr ""
+"Az ablakok bezárhatók legyenek az ablakmenü gombra történő dupla kattintással"
 
 #: ui/ConfigureTitlebar.qml:52
-#, fuzzy, kde-format
-#| msgctxt "popup tip"
-#| msgid "Click and hold on the menu button to show the menu."
+#, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
-msgstr "Kattintson és tartsa lenyomva a menü gombot a menü megjelenítéséhez."
+msgstr ""
+"Kattintson és tartsa lenyomva az ablakmenü gombot a menü megjelenítéséhez."
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format

@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-13 00:44+0000\n"
-"PO-Revision-Date: 2025-09-25 01:51+0900\n"
+"PO-Revision-Date: 2025-11-13 21:48+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -2404,10 +2404,9 @@ msgstr "無法連線 PipeWire 內文"
 #: plugins/screencast/screencastmanager.cpp:79
 #: plugins/screencast/screencastmanager.cpp:95
 #: plugins/screencast/screencastmanager.cpp:140
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "暫停合成器"
+msgstr "不支援的合成類型"
 
 #: plugins/screencast/screencastmanager.cpp:60
 #, kde-format
