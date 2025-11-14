@@ -6,7 +6,7 @@
 # SPDX-FileCopyrightText: 2010 Felix Schweighofer <felix.schweighofer@googlemail.com>
 # SPDX-FileCopyrightText: 2011 Hendrik Knackstedt <kn.hendrik@gmail.com>
 # SPDX-FileCopyrightText: 2023 Jannick Kuhr <opensource@kuhr.org>
-# SPDX-FileCopyrightText: 2025 Philipp Kiemle <l10n@prly.mozmail.com>
+# SPDX-FileCopyrightText: 2025 Philipp Kiemle <l10n.daphipz@fastmail.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
