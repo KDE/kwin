@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-13 02:39+0000\n"
-"PO-Revision-Date: 2025-10-30 18:31+0300\n"
+"PO-Revision-Date: 2025-11-13 15:30+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -678,7 +678,7 @@ msgstr "Отмена прокрутки"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "Начало удержания"
 
 #: debug_console.cpp:467
 #, kde-format
@@ -690,15 +690,13 @@ msgstr "Количество пальцев"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "Завершение удержания"
 
 #: debug_console.cpp:490
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "Отмена сжатия"
+msgstr "Удержание отменено"
 
 #: debug_console.cpp:502
 #, kde-format
@@ -3551,11 +3549,10 @@ msgstr ""
 "Сеанс будет завершён через 2 минуты."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
-msgstr "Взглянуть на рабочий стол"
+msgstr "Быстрый просмотр рабочего стола"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, kde-format
@@ -3621,7 +3618,7 @@ msgid "Tablets switched outputs"
 msgstr "Переключённые выводы планшета"
 
 #: useractions.cpp:161
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3634,7 +3631,7 @@ msgstr ""
 "комбинацией клавиш %1."
 
 #: useractions.cpp:168
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3780,9 +3777,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> уже используется для действия «%2» в приложении %3"
 
 #: useractions.cpp:818
-#, fuzzy, kde-format
+#, kde-format
 msgid "Window Menu"
-msgstr "Роль окна"
+msgstr "Меню «Окно»"
 
 #: useractions.cpp:820
 #, kde-format
@@ -3847,12 +3844,12 @@ msgstr "Скрыть или показать заголовок и границ�
 #: useractions.cpp:844
 #, kde-format
 msgid "Keep Window Above Others"
-msgstr "Поместить окно на передний план"
+msgstr "Поддерживать окно поверх остальных"
 
 #: useractions.cpp:846
 #, kde-format
 msgid "Keep Window Below Others"
-msgstr "Поместить окно на задний план"
+msgstr "Поддерживать окно ниже остальных"
 
 #: useractions.cpp:848
 #, kde-format
@@ -3892,12 +3889,12 @@ msgstr "Переместить окно вниз"
 #: useractions.cpp:862
 #, kde-format
 msgid "Expand Window Horizontally"
-msgstr "Распахнуть окно по горизонтали"
+msgstr "Расширить окно по горизонтали"
 
 #: useractions.cpp:864
 #, kde-format
 msgid "Expand Window Vertically"
-msgstr "Распахнуть окно по вертикали"
+msgstr "Расширить окно по вертикали"
 
 #: useractions.cpp:866
 #, kde-format
