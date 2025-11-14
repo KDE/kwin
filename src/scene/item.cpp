@@ -334,7 +334,10 @@ QRect Item::paintedDeviceArea(RenderView *view, const QRectF &rect) const
                       .mapRect(snapped)
                       .translated(snapToPixelGridF(item->position() * scale));
     }
-    return view->mapToDeviceCoordinatesAligned(scaledRect(snapped, 1.0 / scale)) & view->deviceRect();
+
+    const QRect deviceViewport = view->deviceViewport();
+    const QRect paintedArea = snapped.toAlignedRect() & deviceViewport;
+    return paintedArea.translated(-deviceViewport.topLeft());
 }
 
 QRegion Item::paintedDeviceArea(RenderView *view, const QRegion &region) const

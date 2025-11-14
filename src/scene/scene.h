@@ -76,11 +76,7 @@ public:
     QRect mapFromDeviceCoordinatesAligned(const QRect &deviceGeometry) const;
     QRegion mapFromDeviceCoordinatesAligned(const QRegion &deviceGeometry) const;
 
-    /**
-     * @returns QRect(QPoint(), deviceSize())
-     */
-    QRect deviceRect() const;
-    QSize deviceSize() const;
+    QRect deviceViewport() const;
 
 protected:
     Output *m_output = nullptr;

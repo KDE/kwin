@@ -89,14 +89,9 @@ bool RenderView::shouldRenderHole(Item *item) const
     return false;
 }
 
-QRect RenderView::deviceRect() const
+QRect RenderView::deviceViewport() const
 {
-    return QRect(QPoint(), deviceSize());
-}
-
-QSize RenderView::deviceSize() const
-{
-    return (viewport().size() * scale()).toSize();
+    return snapToPixelGrid(scaledRect(viewport(), scale()));
 }
 
 QRectF RenderView::mapToDeviceCoordinates(const QRectF &logicalGeometry) const
