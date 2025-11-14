@@ -405,15 +405,6 @@ void EffectsHandler::paintWindow(const RenderTarget &renderTarget, const RenderV
     }
 }
 
-void EffectsHandler::postPaintWindow(EffectWindow *w)
-{
-    if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
-        (*m_currentPaintWindowIterator++)->postPaintWindow(w);
-        --m_currentPaintWindowIterator;
-    }
-    // no special final code
-}
-
 Effect *EffectsHandler::provides(Effect::Feature ef)
 {
     for (int i = 0; i < loaded_effects.size(); ++i) {

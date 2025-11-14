@@ -586,10 +586,6 @@ QRegion WorkspaceScene::collectDamage()
 
 void WorkspaceScene::postPaint()
 {
-    for (WindowItem *w : std::as_const(stacking_order)) {
-        effects->postPaintWindow(w->effectWindow());
-    }
-
     effects->postPaintScreen();
 
     painted_delegate = nullptr;

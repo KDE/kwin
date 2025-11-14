@@ -648,16 +648,6 @@ public:
      * when this method is invoked.
      */
     virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
-    /**
-     * Called for every window after all painting has been finished.
-     * In this method you can:
-     * @li schedule next repaint for individual window(s) in case of animations
-     * You shouldn't paint anything here.
-     *
-     * In OpenGL based compositing, the frameworks ensures that the context is current
-     * when this method is invoked.
-     */
-    virtual void postPaintWindow(EffectWindow *w);
 
     /**
      * Called on Transparent resizes.
