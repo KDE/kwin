@@ -37,6 +37,7 @@ public:
     QSize magnifierSize() const;
     qreal targetZoom() const;
 private Q_SLOTS:
+    void saveInitialZoom();
     void zoomIn();
     void zoomOut();
     void toggle();
@@ -51,6 +52,7 @@ private:
     QRect visibleArea(QPointF pos = cursorPos()) const;
     void setTargetZoom(double zoomFactor);
 
+    QTimer *m_configurationTimer;
     double m_zoom;
     double m_targetZoom;
     double m_zoomFactor;
