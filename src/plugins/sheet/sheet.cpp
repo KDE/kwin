@@ -105,10 +105,9 @@ void SheetEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, W
     data.multiplyOpacity(t);
 }
 
-void SheetEffect::postPaintWindow(EffectWindow *w)
+void SheetEffect::postPaintScreen()
 {
-    auto animationIt = m_animations.begin();
-    while (animationIt != m_animations.end()) {
+    for (auto animationIt = m_animations.begin(); animationIt != m_animations.end();) {
         EffectWindow *w = animationIt.key();
         w->addRepaintFull();
         if ((*animationIt).timeLine.done()) {
@@ -123,7 +122,7 @@ void SheetEffect::postPaintWindow(EffectWindow *w)
         effects->addRepaintFull();
     }
 
-    effects->postPaintWindow(w);
+    effects->postPaintScreen();
 }
 
 bool SheetEffect::isActive() const
