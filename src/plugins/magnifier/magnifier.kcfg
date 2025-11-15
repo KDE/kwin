@@ -21,5 +21,8 @@
         <entry name="InitialZoom" type="Double">
             <default>1.0</default>
         </entry>
+        <entry name="PointerAxisGestureModifiers" type="String">
+            <default>Meta+Control</default>
+        </entry>
     </group>
 </kcfg>

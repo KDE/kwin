@@ -49,6 +49,25 @@ MagnifierEffect::MagnifierEffect()
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
 
+    m_touchpadAction = std::make_unique<QAction>();
+    connect(m_touchpadAction.get(), &QAction::triggered, this, [this]() {
+        const double threshold = 1.15;
+        if (m_targetZoom < threshold) {
+            setTargetZoom(1.0); // zoomTo
+        }
+        m_lastPinchProgress = 0;
+    });
+    effects->registerTouchpadPinchShortcut(PinchDirection::Expanding, 3, m_touchpadAction.get(), [this](qreal progress) {
+        const qreal delta = progress - m_lastPinchProgress;
+        m_lastPinchProgress = progress;
+        realtimeZoom(delta);
+    });
+    effects->registerTouchpadPinchShortcut(PinchDirection::Contracting, 3, m_touchpadAction.get(), [this](qreal progress) {
+        const qreal delta = progress - m_lastPinchProgress;
+        m_lastPinchProgress = progress;
+        realtimeZoom(-delta);
+    });
+
     connect(effects, &EffectsHandler::mouseChanged, this, &MagnifierEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::windowAdded, this, &MagnifierEffect::slotWindowAdded);
 
@@ -77,6 +96,31 @@ bool MagnifierEffect::supported()
     return effects->openglContext() && effects->openglContext()->supportsBlits();
 }
 
+// FIXME share with zoom effect.
+static Qt::KeyboardModifiers stringToKeyboardModifiers(const QString &string)
+{
+    const QStringList parts = string.split(QLatin1Char('+'));
+    if (parts.isEmpty()) {
+        return Qt::KeyboardModifiers();
+    }
+
+    Qt::KeyboardModifiers modifiers;
+    for (const QString &part : parts) {
+        if (part == QLatin1String("Meta")) {
+            modifiers |= Qt::MetaModifier;
+        } else if (part == QLatin1String("Ctrl") || part == QLatin1String("Control")) {
+            // NOTE: "Meta+Control" is provided KQuickControls.KeySequenceItem instead of "Meta+Ctrl"
+            modifiers |= Qt::ControlModifier;
+        } else if (part == QLatin1String("Alt")) {
+            modifiers |= Qt::AltModifier;
+        } else if (part == QLatin1String("Shift")) {
+            modifiers |= Qt::ShiftModifier;
+        }
+    }
+
+    return modifiers;
+}
+
 void MagnifierEffect::reconfigure(ReconfigureFlags)
 {
     MagnifierConfig::self()->read();
@@ -88,6 +132,23 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
     height = MagnifierConfig::height();
     m_magnifierSize = QSize(width, height);
     m_zoomFactor = MagnifierConfig::zoomFactor();
+
+    const Qt::KeyboardModifiers pointerAxisModifiers = stringToKeyboardModifiers(MagnifierConfig::pointerAxisGestureModifiers());
+    if (m_axisModifiers != pointerAxisModifiers) {
+        m_zoomInAxisAction.reset();
+        m_zoomOutAxisAction.reset();
+        m_axisModifiers = pointerAxisModifiers;
+
+        if (pointerAxisModifiers) {
+            m_zoomInAxisAction = std::make_unique<QAction>();
+            connect(m_zoomInAxisAction.get(), &QAction::triggered, this, &MagnifierEffect::zoomIn);
+            effects->registerAxisShortcut(pointerAxisModifiers, PointerAxisUp, m_zoomInAxisAction.get());
+
+            m_zoomOutAxisAction = std::make_unique<QAction>();
+            connect(m_zoomOutAxisAction.get(), &QAction::triggered, this, &MagnifierEffect::zoomOut);
+            effects->registerAxisShortcut(pointerAxisModifiers, PointerAxisDown, m_zoomOutAxisAction.get());
+        }
+    }
 
     if (m_zoom > 1.0) {
         effects->addRepaint(oldVisibleArea.united(visibleArea()));
@@ -287,6 +348,16 @@ void MagnifierEffect::setTargetZoom(double zoomFactor)
 
     m_targetZoom = effectiveTargetZoom;
     effects->addRepaint(visibleArea());
+}
+
+void MagnifierEffect::realtimeZoom(double delta)
+{
+    // for the change speed to feel roughly linear,
+    // we have to increase the delta at higher zoom levels
+    delta *= m_targetZoom / 2;
+    setTargetZoom(m_targetZoom + delta);
+    // skip the animation, we want this to be real time
+    m_zoom = m_targetZoom;
 }
 
 } // namespace

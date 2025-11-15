@@ -12,6 +12,10 @@
 
 #include "effect/effect.h"
 
+#include <memory>
+
+class QAction;
+
 namespace KWin
 {
 
@@ -50,10 +54,17 @@ private:
     QRect magnifierArea(QPointF pos = cursorPos()) const;
     QRect visibleArea(QPointF pos = cursorPos()) const;
     void setTargetZoom(double zoomFactor);
+    void realtimeZoom(double delta);
 
     double m_zoom;
     double m_targetZoom;
     double m_zoomFactor;
+    double m_pixelGridZoom;
+    std::unique_ptr<QAction> m_zoomInAxisAction;
+    std::unique_ptr<QAction> m_zoomOutAxisAction;
+    Qt::KeyboardModifiers m_axisModifiers;
+    std::unique_ptr<QAction> m_touchpadAction;
+    double m_lastPinchProgress = 0;
     std::chrono::milliseconds m_lastPresentTime;
     QSize m_magnifierSize;
     std::unique_ptr<GLTexture> m_texture;
