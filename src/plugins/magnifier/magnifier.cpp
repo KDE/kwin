@@ -21,6 +21,7 @@
 #include "effect/effecthandler.h"
 #include "opengl/eglcontext.h"
 #include "opengl/glutils.h"
+#include "utils/keys.h"
 #include <KGlobalAccel>
 
 using namespace std::chrono_literals;
@@ -48,6 +49,25 @@ MagnifierEffect::MagnifierEffect()
     a = KStandardActions::actualSize(this, &MagnifierEffect::toggle, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
+
+    m_touchpadAction = std::make_unique<QAction>();
+    connect(m_touchpadAction.get(), &QAction::triggered, this, [this]() {
+        const double threshold = 1.15;
+        if (m_targetZoom < threshold) {
+            setTargetZoom(1.0); // zoomTo
+        }
+        m_lastPinchProgress = 0;
+    });
+    effects->registerTouchpadPinchShortcut(PinchDirection::Expanding, 3, m_touchpadAction.get(), [this](qreal progress) {
+        const qreal delta = progress - m_lastPinchProgress;
+        m_lastPinchProgress = progress;
+        realtimeZoom(delta);
+    });
+    effects->registerTouchpadPinchShortcut(PinchDirection::Contracting, 3, m_touchpadAction.get(), [this](qreal progress) {
+        const qreal delta = progress - m_lastPinchProgress;
+        m_lastPinchProgress = progress;
+        realtimeZoom(-delta);
+    });
 
     connect(effects, &EffectsHandler::mouseChanged, this, &MagnifierEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::windowAdded, this, &MagnifierEffect::slotWindowAdded);
@@ -88,6 +108,23 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
     height = MagnifierConfig::height();
     m_magnifierSize = QSize(width, height);
     m_zoomFactor = MagnifierConfig::zoomFactor();
+
+    const Qt::KeyboardModifiers pointerAxisModifiers = stringToKeyboardModifiers(MagnifierConfig::pointerAxisGestureModifiers());
+    if (m_axisModifiers != pointerAxisModifiers) {
+        m_zoomInAxisAction.reset();
+        m_zoomOutAxisAction.reset();
+        m_axisModifiers = pointerAxisModifiers;
+
+        if (pointerAxisModifiers) {
+            m_zoomInAxisAction = std::make_unique<QAction>();
+            connect(m_zoomInAxisAction.get(), &QAction::triggered, this, &MagnifierEffect::zoomIn);
+            effects->registerAxisShortcut(pointerAxisModifiers, PointerAxisUp, m_zoomInAxisAction.get());
+
+            m_zoomOutAxisAction = std::make_unique<QAction>();
+            connect(m_zoomOutAxisAction.get(), &QAction::triggered, this, &MagnifierEffect::zoomOut);
+            effects->registerAxisShortcut(pointerAxisModifiers, PointerAxisDown, m_zoomOutAxisAction.get());
+        }
+    }
 
     if (m_zoom > 1.0) {
         effects->addRepaint(oldVisibleArea.united(visibleArea()));
@@ -287,6 +324,16 @@ void MagnifierEffect::setTargetZoom(double zoomFactor)
 
     m_targetZoom = effectiveTargetZoom;
     effects->addRepaint(visibleArea());
+}
+
+void MagnifierEffect::realtimeZoom(double delta)
+{
+    // for the change speed to feel roughly linear,
+    // we have to increase the delta at higher zoom levels
+    delta *= m_targetZoom / 2;
+    setTargetZoom(m_targetZoom + delta);
+    // skip the animation, we want this to be real time
+    m_zoom = m_targetZoom;
 }
 
 } // namespace
