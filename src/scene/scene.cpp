@@ -512,6 +512,15 @@ bool ItemTreeView::shouldRenderItem(Item *item) const
     return item == m_item || m_item->isAncestorOf(item);
 }
 
+static void schedulePendingRepaints(RenderView *view, Item *item)
+{
+    view->addDeviceRepaint(item->takeDeviceRepaints(view));
+    const auto children = item->childItems();
+    for (Item *child : children) {
+        schedulePendingRepaints(view, child);
+    }
+}
+
 void ItemTreeView::setExclusive(bool enable)
 {
     if (m_exclusive == enable) {
@@ -522,7 +531,7 @@ void ItemTreeView::setExclusive(bool enable)
         m_item->scheduleSceneRepaint(m_item->boundingRect());
         // also need to add all the Item's pending repaint regions to the scene,
         // otherwise some required repaints may be missing
-        m_parentView->addDeviceRepaint(m_item->takeDeviceRepaints(m_parentView));
+        schedulePendingRepaints(m_parentView, m_item);
         m_parentView->addExclusiveView(this);
         if (m_underlay) {
             m_parentView->addUnderlay(this);
