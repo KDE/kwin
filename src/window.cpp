@@ -1758,6 +1758,7 @@ void Window::setupWindowManagementInterface()
     w->setVirtualDesktopChangeable(true); // FIXME Matches X11Window::actionSupported(), but both should be implemented.
     w->setNoBorder(noBorder());
     w->setCanSetNoBorder(userCanSetNoBorder());
+    w->setExcludeFromCapture(excludeFromCapture());
     w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
     w->setGeometry(frameGeometry().toRect());
     w->setClientGeometry(clientGeometry().toRect());
@@ -1795,6 +1796,9 @@ void Window::setupWindowManagementInterface()
     connect(this, &Window::desktopFileNameChanged, w, updateAppId);
     connect(this, &Window::noBorderChanged, w, [w, this] {
         w->setNoBorder(noBorder());
+    });
+    connect(this, &Window::excludeFromCaptureChanged, w, [w, this] {
+        w->setExcludeFromCapture(excludeFromCapture());
     });
     connect(this, &Window::transientChanged, w, [w, this]() {
         w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
@@ -1844,6 +1848,9 @@ void Window::setupWindowManagementInterface()
     });
     connect(w, &PlasmaWindowInterface::noBorderRequested, this, [this](bool set) {
         setNoBorder(set);
+    });
+    connect(w, &PlasmaWindowInterface::excludeFromCaptureRequested, this, [this](bool set) {
+        setExcludeFromCapture(set);
     });
 
     for (const auto vd : std::as_const(m_desktops)) {

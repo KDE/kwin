@@ -24,7 +24,7 @@
 
 namespace KWin
 {
-static const quint32 s_version = 18;
+static const quint32 s_version = 20;
 static const quint32 s_activationVersion = 1;
 
 class PlasmaWindowManagementInterfacePrivate : public QtWaylandServer::org_kde_plasma_window_management
@@ -752,6 +752,9 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_state(Resource *res
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_NO_BORDER) {
         Q_EMIT q->noBorderRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_NO_BORDER);
     }
+    if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_EXCLUDE_FROM_CAPTURE) {
+        Q_EMIT q->excludeFromCaptureRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_EXCLUDE_FROM_CAPTURE);
+    }
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_minimized_geometry(Resource *resource,
@@ -1057,6 +1060,11 @@ void PlasmaWindowInterface::setNoBorder(bool set)
 void PlasmaWindowInterface::setCanSetNoBorder(bool set)
 {
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_CAN_SET_NO_BORDER, set);
+}
+
+void PlasmaWindowInterface::setExcludeFromCapture(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_EXCLUDE_FROM_CAPTURE, set);
 }
 
 void PlasmaWindowInterface::setParentWindow(PlasmaWindowInterface *parentWindow)
