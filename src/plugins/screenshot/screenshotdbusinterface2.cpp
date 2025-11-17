@@ -248,7 +248,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveWindow(const QVariantMap &opt
         return QVariantMap();
     }
 
-    Window *window = workspace()->activeWindow();
+    Window *window = workspace()->mostRecentlyActivatedWindow();
     if (!window) {
         sendErrorReply(s_errorInvalidWindow, s_errorInvalidWindowMessage);
         return QVariantMap();
