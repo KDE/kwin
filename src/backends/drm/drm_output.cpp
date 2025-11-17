@@ -196,7 +196,6 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
             // re-set KMS color pipeline stuff
             State next = m_state;
             tryKmsColorOffloading(next);
-            maybeScheduleRepaints(next);
             setState(next);
         } else {
             m_renderLoop->inhibit();
@@ -626,7 +625,6 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     next.sharpnessSetting = props->sharpness.value_or(m_state.sharpnessSetting);
     tryKmsColorOffloading(next);
-    maybeScheduleRepaints(next);
     setState(next);
 
     // allowSdrSoftwareBrightness, the brightness device or detectedDdcCi might change our capabilities
@@ -671,7 +669,6 @@ void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHe
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     tryKmsColorOffloading(next);
-    maybeScheduleRepaints(next);
     setState(next);
 }
 
@@ -694,6 +691,10 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 
 void DrmOutput::tryKmsColorOffloading(State &next)
 {
+    const auto repaints = qScopeGuard([this, &next]() {
+        maybeScheduleRepaints(next);
+    });
+
     constexpr TransferFunction::Type blendingSpace = TransferFunction::gamma22;
     const double maxLuminance = next.colorDescription->maxHdrLuminance().value_or(next.colorDescription->referenceLuminance());
     if (next.colorDescription->transferFunction().type == blendingSpace) {
