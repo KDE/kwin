@@ -1,5 +1,5 @@
 # translation of kcmkwindecoration.po to Polish
-# Version: $Revision: 1713672 $
+# Version: $Revision: 1723123 $
 # translation of kcmkwindecoration.po to
 # SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Norbert Popiołek <norbert@kde.com.pl>\n"
@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-26 02:32+0000\n"
+"POT-Creation-Date: 2025-11-17 16:18+0000\n"
 "PO-Revision-Date: 2024-08-31 06:20+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
