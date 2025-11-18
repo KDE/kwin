@@ -130,7 +130,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "En attende des boutons de souris :"
+msgstr "En attente des boutons de souris :"
 
 #: ui/main.qml:222
 #, kde-format
