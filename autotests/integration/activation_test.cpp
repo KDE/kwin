@@ -803,6 +803,45 @@ void ActivationTest::testXdgActivation()
         QCOMPARE(workspace()->activeWindow(), window);
     }
 
+    // a child window of the active one should always be automatically activated,
+    // even without an activation token
+    windows = setupWindows(time);
+    {
+        auto surface = Test::createSurface();
+        auto toplevel = Test::createXdgToplevelSurface(surface.get(), [&windows](Test::XdgToplevel *toplevel) {
+            toplevel->set_parent(windows[2].toplevel->object());
+        });
+        auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+        QCOMPARE(workspace()->activeWindow(), window);
+    }
+
+    // but a child window of a non-active one should not be automatically activated
+    windows = setupWindows(time);
+    {
+        auto surface = Test::createSurface();
+        auto toplevel = Test::createXdgToplevelSurface(surface.get(), [&windows](Test::XdgToplevel *toplevel) {
+            toplevel->set_parent(windows[1].toplevel->object());
+        });
+        auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+        QCOMPARE_NE(workspace()->activeWindow(), window);
+    }
+
+    // unless it has a valid activation token
+    windows = setupWindows(time);
+    token = Test::xdgActivation()->createToken();
+    token->set_surface(*windows[2].surface);
+    token->set_serial(windows[2].window->lastUsageSerial(), *Test::waylandSeat());
+    result = token->commitAndWait();
+    {
+        auto surface = Test::createSurface();
+        auto toplevel = Test::createXdgToplevelSurface(surface.get(), [&windows, &result, &surface](Test::XdgToplevel *toplevel) {
+            toplevel->set_parent(windows[1].toplevel->object());
+            Test::xdgActivation()->activate(result, *surface);
+        });
+        auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+        QCOMPARE(workspace()->activeWindow(), window);
+    }
+
     // focus stealing prevention level High is more lax and should activate windows
     // even with an invalid token if the app id matches the last granted activation token
     options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::High);
