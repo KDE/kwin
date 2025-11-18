@@ -809,13 +809,18 @@ void DrmGpu::maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFra
 
 void DrmGpu::doModeset()
 {
-    m_inModeset = true;
     auto pipelines = m_pipelines;
     for (const DrmOutput *output : std::as_const(m_drmOutputs)) {
         if (output->lease()) {
             pipelines.removeOne(output->pipeline());
         }
     }
+    if (pipelines.empty()) {
+        m_pendingModesetFrames.clear();
+        m_forceModeset = false;
+        return;
+    }
+    m_inModeset = true;
     const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
     for (DrmPipeline *pipeline : std::as_const(pipelines)) {
         if (pipeline->modesetPresentPending()) {
