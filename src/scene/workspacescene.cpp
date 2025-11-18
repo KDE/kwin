@@ -343,6 +343,11 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalC
         && !regionActuallyContains(opaque, deviceRect)
         && !effected.intersects(deviceRect)) {
         if (occupied.intersects(deviceRect) || (!corners.isEmpty() && corners.top().radius.clips(item->rect(), corners.top().box))) {
+            const bool isOpaque = regionActuallyContains(surfaceItem->opaque(), surfaceItem->rect().toAlignedRect());
+            if (!isOpaque) {
+                // only fully opaque items can be used as underlays
+                return false;
+            }
             underlays.push_back(surfaceItem);
         } else {
             overlays.push_back(surfaceItem);
