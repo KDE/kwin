@@ -7,12 +7,15 @@
 #include "kwin_wayland_test.h"
 
 #include "core/colorpipeline.h"
+#include "core/drmdevice.h"
+#include "core/graphicsbuffer.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "outputconfigurationstore.h"
 #include "pointer_input.h"
 #include "tiles/tilemanager.h"
+#include "wayland-client/linuxdmabuf.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -21,9 +24,12 @@
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
+#include <drm_fourcc.h>
+#include <fcntl.h>
 #include <format>
 
 #include "qwayland-color-management-v1.h"
+#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
 
 using namespace std::chrono_literals;
 
@@ -96,7 +102,7 @@ private Q_SLOTS:
 
 void ColorManagementTest::initTestCase()
 {
-    qRegisterMetaType<Window *>();
+    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
 
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
@@ -116,7 +122,8 @@ void ColorManagementTest::init()
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
     });
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ColorManagement));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ColorManagement
+                                         | Test::AdditionalWaylandInterface::ColorRepresentation));
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
@@ -289,6 +296,37 @@ void ColorManagementTest::testSetImageDescription_data()
         << RenderingIntent::Perceptual
         << false << true
         << std::optional<std::shared_ptr<ColorDescription>>();
+
+    QTest::addRow("rec601 limited range YUV")
+        << std::make_shared<ColorDescription>(ColorDescription{
+               Colorimetry::BT709,
+               TransferFunction(TransferFunction::BT1886),
+               YUVMatrixCoefficients::BT601,
+               EncodingRange::Limited,
+           })
+        << RenderingIntent::Perceptual
+        << false << true
+        << std::optional<std::shared_ptr<ColorDescription>>();
+    QTest::addRow("rec709 full range YUV")
+        << std::make_shared<ColorDescription>(ColorDescription{
+               Colorimetry::BT709,
+               TransferFunction(TransferFunction::BT1886),
+               YUVMatrixCoefficients::BT709,
+               EncodingRange::Full,
+           })
+        << RenderingIntent::Perceptual
+        << false << true
+        << std::optional<std::shared_ptr<ColorDescription>>();
+    QTest::addRow("rec2020 limited range YUV")
+        << std::make_shared<ColorDescription>(ColorDescription{
+               Colorimetry::BT709,
+               TransferFunction(TransferFunction::PerceptualQuantizer),
+               YUVMatrixCoefficients::BT2020,
+               EncodingRange::Limited,
+           })
+        << RenderingIntent::Perceptual
+        << false << true
+        << std::optional<std::shared_ptr<ColorDescription>>();
 }
 
 static ImageDescription createImageDescription(ColorManagementSurface *surface, const ColorDescription &color)
@@ -328,6 +366,44 @@ static ImageDescription createImageDescription(ColorManagementSurface *surface, 
     return ImageDescription(wp_image_description_creator_params_v1_create(creator.object()));
 }
 
+static const std::unordered_map<YUVMatrixCoefficients, wp_color_representation_surface_v1_coefficients> s_coefficientsMap = {
+    {YUVMatrixCoefficients::Identity, WP_COLOR_REPRESENTATION_SURFACE_V1_COEFFICIENTS_IDENTITY},
+    {YUVMatrixCoefficients::BT601, WP_COLOR_REPRESENTATION_SURFACE_V1_COEFFICIENTS_BT601},
+    {YUVMatrixCoefficients::BT709, WP_COLOR_REPRESENTATION_SURFACE_V1_COEFFICIENTS_BT709},
+    {YUVMatrixCoefficients::BT2020, WP_COLOR_REPRESENTATION_SURFACE_V1_COEFFICIENTS_BT2020},
+};
+static const std::unordered_map<EncodingRange, wp_color_representation_surface_v1_range> s_rangeMap = {
+    {EncodingRange::Limited, WP_COLOR_REPRESENTATION_SURFACE_V1_RANGE_LIMITED},
+    {EncodingRange::Full, WP_COLOR_REPRESENTATION_SURFACE_V1_RANGE_FULL},
+};
+
+static std::unique_ptr<Test::ColorRepresentationSurfaceV1> createRepresentation(KWayland::Client::Surface *surf,
+                                                                                const std::shared_ptr<ColorDescription> &color)
+{
+    auto ret = std::make_unique<Test::ColorRepresentationSurfaceV1>(Test::colorRepresentation()->get_surface(*surf));
+    ret->set_coefficients_and_range(s_coefficientsMap.at(color->yuvCoefficients()), s_rangeMap.at(color->range()));
+    return ret;
+}
+
+#if HAVE_MEMFD
+static wl_buffer *createYuvBuffer(const QSize &size)
+{
+    FileDescriptor fd{memfd_create("kwayland-shared", MFD_CLOEXEC | MFD_ALLOW_SEALING)};
+    if (!fd.isValid()) {
+        return nullptr;
+    }
+    const uint32_t bytesPerPixel = 4;
+    if (ftruncate(fd.get(), size.width() * size.height() * bytesPerPixel) < 0) {
+        return nullptr;
+    }
+    fcntl(fd.get(), F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_SEAL);
+    wl_shm_pool *pool = wl_shm_create_pool(Test::waylandShmPool()->shm(), fd.get(), size.width() * size.height() * bytesPerPixel);
+    wl_buffer *buffer = wl_shm_pool_create_buffer(pool, 0, size.width(), size.height(), size.width() * bytesPerPixel, DRM_FORMAT_XYUV8888);
+    wl_shm_pool_destroy(pool);
+    return buffer;
+}
+#endif
+
 void ColorManagementTest::testSetImageDescription()
 {
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -341,6 +417,19 @@ void ColorManagementTest::testSetImageDescription()
     QFETCH(RenderingIntent, renderingIntent);
 
     ImageDescription imageDescr = createImageDescription(cmSurf.get(), *input);
+    auto representation = createRepresentation(surface.get(), input);
+
+    // YUV color descriptions require YUV buffers
+    wl_buffer *buffer = nullptr;
+    if (input->yuvCoefficients() != YUVMatrixCoefficients::Identity) {
+#if HAVE_MEMFD
+        buffer = createYuvBuffer(QSize(100, 50));
+        QVERIFY(buffer);
+        surface->attachBuffer(buffer);
+#else
+        Q_SKIP("YUV tests without memfd aren't implemented");
+#endif
+    }
 
     QFETCH(bool, protocolError);
     if (protocolError) {
@@ -389,6 +478,9 @@ void ColorManagementTest::testSetImageDescription()
         QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
         cmSurf->set_image_description(imageDescr.object(), waylandRenderIntent);
         QVERIFY(error.wait(50ms));
+    }
+    if (buffer) {
+        wl_buffer_destroy(buffer);
     }
 }
 

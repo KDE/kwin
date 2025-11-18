@@ -566,6 +566,9 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
         if (flags & AdditionalWaylandInterface::LinuxDmabuf && interface == zwp_linux_dmabuf_v1_interface.name) {
             c->linuxDmabuf = std::make_unique<WaylandClient::LinuxDmabufV1>(*c->registry, name, version);
         }
+        if (flags & AdditionalWaylandInterface::ColorRepresentation && interface == wp_color_representation_manager_v1_interface.name) {
+            c->colorRepresentation = std::make_unique<ColorRepresentationV1>(*c->registry, name, version);
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -711,6 +714,7 @@ Connection::~Connection()
     primarySelectionManager.reset();
     toplevelDragManager.reset();
     linuxDmabuf.reset();
+    colorRepresentation.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -913,6 +917,11 @@ XdgToplevelDragManagerV1 *toplevelDragManager()
 WaylandClient::LinuxDmabufV1 *linuxDmabuf()
 {
     return s_waylandConnection->linuxDmabuf.get();
+}
+
+ColorRepresentationV1 *colorRepresentation()
+{
+    return s_waylandConnection->colorRepresentation.get();
 }
 
 bool waitForWaylandSurface(Window *window)
@@ -1899,6 +1908,26 @@ ColorManagerV1::ColorManagerV1(::wl_registry *registry, uint32_t id, int version
 ColorManagerV1::~ColorManagerV1()
 {
     wp_color_manager_v1_destroy(object());
+}
+
+ColorRepresentationV1::ColorRepresentationV1(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::wp_color_representation_manager_v1(registry, id, version)
+{
+}
+
+ColorRepresentationV1::~ColorRepresentationV1()
+{
+    destroy();
+}
+
+ColorRepresentationSurfaceV1::ColorRepresentationSurfaceV1(::wp_color_representation_surface_v1 *object)
+    : QtWayland::wp_color_representation_surface_v1(object)
+{
+}
+
+ColorRepresentationSurfaceV1::~ColorRepresentationSurfaceV1()
+{
+    destroy();
 }
 
 FifoManagerV1::FifoManagerV1(::wl_registry *registry, uint32_t id, int version)
