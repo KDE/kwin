@@ -66,7 +66,7 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     }
 
     stream << attribute << " vec4 position;\n";
-    if (traits & (ShaderTrait::MapTexture | ShaderTrait::MapExternalTexture | ShaderTrait::MapYUVTexture)) {
+    if (traits & (ShaderTrait::MapTexture | ShaderTrait::MapExternalTexture | ShaderTrait::MapMultiPlaneTexture)) {
         stream << attribute << " vec4 texcoord;\n\n";
         stream << varying << " vec2 texcoord0;\n\n";
     } else {
@@ -80,7 +80,7 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     stream << "uniform mat4 modelViewProjectionMatrix;\n\n";
 
     stream << "void main()\n{\n";
-    if (traits & (ShaderTrait::MapTexture | ShaderTrait::MapExternalTexture | ShaderTrait::MapYUVTexture)) {
+    if (traits & (ShaderTrait::MapTexture | ShaderTrait::MapExternalTexture | ShaderTrait::MapMultiPlaneTexture)) {
         stream << "    texcoord0 = texcoord.st;\n";
     }
 
@@ -137,10 +137,9 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     if (traits & ShaderTrait::MapTexture) {
         stream << "uniform sampler2D sampler;\n";
         stream << varying << " vec2 texcoord0;\n";
-    } else if (traits & ShaderTrait::MapYUVTexture) {
+    } else if (traits & ShaderTrait::MapMultiPlaneTexture) {
         stream << "uniform sampler2D sampler;\n";
         stream << "uniform sampler2D sampler1;\n";
-        stream << "uniform mat4 yuvToRgb;\n";
         stream << varying << " vec2 texcoord0;\n";
     } else if (traits & ShaderTrait::MapExternalTexture) {
         stream << "#extension GL_OES_EGL_image_external : require\n\n";
@@ -158,6 +157,9 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << varying << " vec2 position0;\n";
     }
 
+    if (traits & ShaderTrait::YuvConversion) {
+        stream << "uniform mat4 yuvToRgb;\n";
+    }
     if (traits & ShaderTrait::Modulate) {
         stream << "uniform vec4 modulation;\n";
     }
@@ -183,9 +185,8 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     stream << "    vec4 result;\n";
     if (traits & ShaderTrait::MapTexture) {
         stream << "    result = " << textureLookup << "(sampler, texcoord0);\n";
-    } else if (traits & ShaderTrait::MapYUVTexture) {
-        stream << "    result = yuvToRgb * vec4(" << textureLookup << "(sampler, texcoord0).x, " << textureLookup << "(sampler1, texcoord0).rg, 1.0);\n";
-        stream << "    result.a = 1.0;\n";
+    } else if (traits & ShaderTrait::MapMultiPlaneTexture) {
+        stream << "    result = vec4(" << textureLookup << "(sampler, texcoord0).x, " << textureLookup << "(sampler1, texcoord0).rg, 1.0);\n";
     } else if (traits & ShaderTrait::MapExternalTexture) {
         // external textures require texture2D for sampling
         stream << "    result = texture2D(sampler, texcoord0);\n";
@@ -199,6 +200,9 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    result = geometryColor * (1.0 - clamp(0.5 + f / df, 0.0, 1.0));\n";
     }
 
+    if (traits & ShaderTrait::YuvConversion) {
+        stream << "result.rgb = (yuvToRgb * vec4(result.rgb, 1.0)).rgb;";
+    }
     if (traits & ShaderTrait::RoundedCorners) {
         stream << "    float f = sdfRoundedBox(position0, box.xy, box.zw, cornerRadius);\n";
         stream << "    float df = fwidth(f);\n";

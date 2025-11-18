@@ -362,6 +362,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     if (pending->buffer && pending->buffer->dmabufAttributes()) {
         switch (pending->buffer->dmabufAttributes()->format) {
         case DRM_FORMAT_NV12:
+        case DRM_FORMAT_XYUV8888:
             if (!hasColorRepresentation) {
                 pending->yuvCoefficients = YUVMatrixCoefficients::BT709;
                 pending->range = EncodingRange::Limited;

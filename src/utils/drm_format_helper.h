@@ -39,7 +39,9 @@ static const QHash<uint32_t, YuvConversion> s_drmConversions = {
     {DRM_FORMAT_P010, YuvConversion{
                           {YuvFormat{DRM_FORMAT_R16, 1, 1}, YuvFormat{DRM_FORMAT_GR1616, 2, 2}},
                       }},
-};
+    {DRM_FORMAT_XYUV8888, YuvConversion{
+                              {YuvFormat{DRM_FORMAT_XRGB8888, 1, 1}},
+                          }}};
 
 struct KWIN_EXPORT FormatInfo
 {

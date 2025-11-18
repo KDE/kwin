@@ -19,6 +19,7 @@
 #include "workspace.h"
 
 #include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <format>
 

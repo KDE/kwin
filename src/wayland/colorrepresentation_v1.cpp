@@ -137,9 +137,11 @@ bool ColorRepresentationSurfaceV1::maybeEmitProtocolErrors()
         // if we ever change that, we should add a "isYUV" flag in FormatInfo
         const auto info = FormatInfo::get(attrs->format);
         yuv = info && info->yuvConversion();
+    } else if (auto attrs = priv->pending->buffer->shmAttributes()) {
+        const auto info = FormatInfo::get(attrs->format);
+        yuv = info && info->yuvConversion();
     } else {
-        // we (currently?) don't support YUV formats with SHM
-        // and single pixel buffer doesn't support them either
+        // single pixel buffer doesn't support YUV
         yuv = false;
     }
     const bool match = yuv == (priv->pending->yuvCoefficients != YUVMatrixCoefficients::Identity);

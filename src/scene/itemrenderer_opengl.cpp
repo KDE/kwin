@@ -218,7 +218,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         if (texture && texture->isValid()) {
             if (!geometry.isEmpty()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                    .traits = texture->texture().planes.count() == 1 ? ShaderTrait::MapTexture : ShaderTrait::MapYUVTexture,
+                    .traits = texture->texture().planes.count() == 1 ? ShaderTrait::MapTexture : ShaderTrait::MapMultiPlaneTexture,
                     .textures = texture->texture().toVarLengthArray(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
@@ -230,6 +230,9 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .paintHole = hole,
                 });
                 renderNode.geometry.postProcessTextureCoordinates(texture->texture().planes.at(0)->matrix(UnnormalizedCoordinates));
+                if (surfaceItem->colorDescription()->yuvCoefficients() != YUVMatrixCoefficients::Identity) {
+                    renderNode.traits |= ShaderTrait::YuvConversion;
+                }
 
                 if (!context->cornerStack.isEmpty()) {
                     const auto &top = context->cornerStack.top();
@@ -431,7 +434,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
             if (traits & ShaderTrait::MapTexture) {
                 shader->setUniform(GLShader::IntUniform::Sampler, 0);
-            } else if (traits & ShaderTrait::MapYUVTexture) {
+            } else if (traits & ShaderTrait::MapMultiPlaneTexture) {
                 shader->setUniform(GLShader::IntUniform::Sampler, 0);
                 shader->setUniform(GLShader::IntUniform::Sampler1, 1);
             }
@@ -443,7 +446,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         if (traits & ShaderTrait::TransformColorspace) {
             shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
         }
-        if (traits & ShaderTrait::MapYUVTexture) {
+        if (traits & ShaderTrait::YuvConversion) {
             shader->setUniform(GLShader::Mat4Uniform::YuvToRgb, renderNode.colorDescription->yuvMatrix());
         }
         if (traits & ShaderTrait::RoundedCorners) {

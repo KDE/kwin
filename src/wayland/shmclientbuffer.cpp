@@ -26,6 +26,7 @@ static constexpr int s_version = 2;
 static constexpr uint32_t s_formats[] = {
     WL_SHM_FORMAT_ARGB8888,
     WL_SHM_FORMAT_XRGB8888,
+    WL_SHM_FORMAT_XYUV8888,
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
     WL_SHM_FORMAT_ARGB2101010,
     WL_SHM_FORMAT_XRGB2101010,
