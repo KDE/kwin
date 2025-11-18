@@ -38,6 +38,7 @@
 #include <cerrno>
 #include <ranges>
 #include <sys/stat.h>
+#include <thread>
 #include <unistd.h>
 // drm
 #include <gbm.h>
