@@ -12,7 +12,7 @@
             <default>5</default>
         </entry>
         <entry name="Saturation" type="Int">
-            <default>100</default>
+            <default>150</default>
         </entry>
     </group>
 </kcfg>
