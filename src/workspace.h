@@ -29,9 +29,10 @@
 
 class KConfig;
 class KConfigGroup;
-class KStartupInfo;
 class KStartupInfoData;
 class KStartupInfoId;
+class KStartupInfo;
+class KXMessages;
 
 namespace KWin
 {
@@ -597,6 +598,7 @@ private:
     X11Window *createUnmanaged(xcb_window_t windowId);
     void addUnmanaged(X11Window *c);
     bool updateXStackingOrder();
+    void handleX11Message(const QString &msg, xcb_window_t messageWindow);
 #endif
     void setupWindowConnections(Window *window);
 
@@ -690,6 +692,7 @@ private:
     static Workspace *_self;
 #if KWIN_BUILD_X11
     std::unique_ptr<KStartupInfo> m_startup;
+    std::unique_ptr<KXMessages> m_x11StartupMessages;
 #endif
     QHash<const VirtualDesktop *, QRectF> m_workAreas;
     QHash<const VirtualDesktop *, StrutRects> m_restrictedAreas;
@@ -736,6 +739,8 @@ private:
     QString m_activationToken;
     QString m_activationTokenAppId;
     uint32_t m_activationTokenSerial = 0;
+    // for use with X11 apps
+    std::optional<pid_t> m_x11ActivationPid;
 
 private:
     friend bool performTransiencyCheck();

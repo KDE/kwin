@@ -421,7 +421,7 @@ void X11Window::mapRequestEvent(xcb_map_request_event_t *e)
         setMinimized(false);
     }
     if (!isOnCurrentDesktop()) {
-        if (allowWindowActivation()) {
+        if (workspace()->mayActivate(this, QString())) {
             workspace()->activateWindow(this);
         } else {
             demandAttention();
@@ -587,6 +587,7 @@ void X11Window::focusInEvent(xcb_focus_in_event_t *e)
         window->cancelFocusOutTimer();
     });
     // check if this window is in should_get_focus list or if activation is allowed
+    // TODO switch this to use Workspace::mayActivate?
     bool activate = allowWindowActivation(-1U, true);
     workspace()->gotFocusIn(this); // remove from should_get_focus list
     if (activate) {

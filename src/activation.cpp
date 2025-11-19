@@ -626,10 +626,17 @@ void Workspace::setActivationToken(const QString &token, uint32_t serial, const 
     m_activationToken = token;
     m_activationTokenSerial = serial;
     m_activationTokenAppId = appId;
+    m_x11ActivationPid.reset();
 }
 
 bool Workspace::mayActivate(Window *window, const QString &token) const
 {
+    // x11 apps can explicitly ask not to get focus
+    auto x11window = qobject_cast<X11Window *>(window);
+    if (x11window && !window->rules()->checkAcceptFocus(x11window->userTime() != 0)) {
+        return false;
+    }
+
     if (!m_activeWindow) {
         return true;
     }
@@ -658,6 +665,13 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
         && input()->lastInteractionSerial() <= m_activationTokenSerial
         && m_activationTokenAppId == window->desktopFileName()) {
         return true;
+    }
+    if (x11window) {
+        if (m_x11ActivationPid == x11window->pid() && input()->lastInteractionSerial() <= m_activationTokenSerial) {
+            return true;
+        }
+        // TODO simplify X11Window::allowWindowActivation and move its contents here?
+        return x11window->allowWindowActivation();
     }
     return false;
 }

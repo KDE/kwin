@@ -70,6 +70,7 @@
 #include "utils/xcbutils.h"
 #include "x11window.h"
 #include <KStartupInfo>
+#include <KXMessages>
 #endif
 // screenlocker
 #if KWIN_BUILD_SCREENLOCKER
@@ -319,6 +320,8 @@ void Workspace::initializeX11()
 
     // Call this before XSelectInput() on the root window
     m_startup = std::make_unique<KStartupInfo>(KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this);
+    m_x11StartupMessages = std::make_unique<KXMessages>(kwinApp()->x11Connection(), kwinApp()->x11RootWindow(), "_NET_STARTUP_INFO");
+    connect(m_x11StartupMessages.get(), &KXMessages::gotMessage2, this, &Workspace::handleX11Message);
 
     // Select windowmanager privileges
     selectWmInputEventMask();
@@ -376,6 +379,7 @@ void Workspace::cleanupX11()
     Xcb::Extensions::destroy();
 
     m_startup.reset();
+    m_x11StartupMessages.reset();
     m_nullFocus.reset();
     m_syncAlarmFilter.reset();
 }
@@ -1476,8 +1480,163 @@ void Workspace::cancelDelayFocus()
 #if KWIN_BUILD_X11
 bool Workspace::checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KStartupInfoData &data)
 {
+    // TODO either fix it (it doesn't do anything unless QX11Info::isPlatformX11() == true)
+    // or remove it. Most things are handled by the code below anyways
     return m_startup->checkStartup(w, id, data) == KStartupInfo::Match;
 }
+
+static std::unordered_map<QString, QString> parseX11Message(const QString &info)
+{
+    // all values are in the format of
+    // key=value
+    // separated by spaces... with the caveats that
+    // - values can be escaped with a backslash
+    // - values can be quoted
+
+    std::unordered_map<QString, QString> ret;
+    bool escaped = false;
+    bool quoted = false;
+    for (int i = 0; i < info.length();) {
+        // find the first non-space character
+        while (i < info.length() && info[i] == ' ') {
+            i++;
+        }
+        // find the key
+        int keyStart = i;
+        while (i < info.length() && info[i] != '=') {
+            i++;
+        }
+        if (i == info.length()) {
+            return ret;
+        }
+        QString key = info.mid(keyStart, i - keyStart);
+        // parse the value
+        i++;
+        QString value;
+        for (; i < info.length(); i++) {
+            if (escaped) {
+                escaped = false;
+                value += info[i];
+            } else if (quoted) {
+                if (info[i] == '"') {
+                    quoted = false;
+                } else if (info[i] == '\\') {
+                    escaped = true;
+                } else {
+                    value += info[i];
+                }
+            } else {
+                if (info[i] == '"') {
+                    quoted = true;
+                } else if (info[i] == '\\') {
+                    escaped = true;
+                } else if (info[i] == '\0' || info[i] == ' ') {
+                    // done!
+                    break;
+                } else {
+                    value += info[i];
+                }
+            }
+        }
+        while (i < info.length() && info[i] == ' ') {
+            i++;
+        }
+        ret[key] = value;
+    }
+    return ret;
+}
+
+static std::optional<pid_t> getX11WindowPid(xcb_window_t client)
+{
+    if (!Xcb::Extensions::self()->hasRes()) {
+        return std::nullopt;
+    }
+    const xcb_res_client_id_spec_t spec{
+        .client = client,
+        .mask = XCB_RES_CLIENT_ID_MASK_LOCAL_CLIENT_PID,
+    };
+    const auto cookie = xcb_res_query_client_ids(kwinApp()->x11Connection(), 1, &spec);
+    if (!cookie.sequence) {
+        return std::nullopt;
+    }
+    const auto clientIds = xcb_res_query_client_ids_reply(kwinApp()->x11Connection(), cookie, nullptr);
+    if (!clientIds) {
+        return std::nullopt;
+    }
+    xcb_res_client_id_value_iterator_t it = xcb_res_query_client_ids_ids_iterator(clientIds);
+    std::optional<pid_t> ret;
+    while (it.rem > 0) {
+        if ((it.data->spec.mask & XCB_RES_CLIENT_ID_MASK_LOCAL_CLIENT_PID) && xcb_res_client_id_value_value_length(it.data) > 0) {
+            ret = *xcb_res_client_id_value_value(it.data);
+            break;
+        }
+    }
+    free(clientIds);
+    return ret;
+}
+
+void Workspace::handleX11Message(const QString &msg, xcb_window_t messageWindow)
+{
+    QString trimmed = msg.trimmed();
+    auto it = std::ranges::find(trimmed, ':');
+    if (it == trimmed.end()) {
+        return;
+    }
+    const auto info = trimmed.mid(std::distance(trimmed.begin(), it) + 1);
+    if (trimmed.startsWith(QLatin1StringView("new")) || trimmed.startsWith(QLatin1StringView("change"))) {
+        // X11 window is starting another app, either X11 or Wayland.
+        // In the latter case, the result will be that the activation token
+        // of the Wayland window will match the "info" string.
+        const auto x11window = qobject_cast<X11Window *>(m_activeWindow);
+        if (!x11window) {
+            return;
+        }
+        // NOTE that we do *not* use LAUNCHED_BY to check if the startup notification
+        // belongs to the active window, because apps don't actually set it in practice.
+        // Instead, check if the pid matches the active window
+        const auto pid = getX11WindowPid(messageWindow);
+        if (!pid.has_value() || *pid != x11window->pid()) {
+            return;
+        }
+
+        const auto parsed = parseX11Message(info);
+        const auto appIdIt = parsed.find(QStringLiteral("APPLICATION_ID"));
+        const auto idIt = parsed.find(QStringLiteral("ID"));
+        if (idIt == parsed.end()) {
+            return;
+        }
+        QString appId;
+        if (appIdIt != parsed.end()) {
+            appId = appIdIt->second;
+            // The "app id" string can be either the app id + ".desktop", or a path to the .desktop file
+            if (appId.contains('/')) {
+                appId = appId.split('/').back();
+            }
+            if (appId.endsWith(QStringLiteral(".desktop"))) {
+                appId.chop(QByteArrayView(".desktop").length());
+            }
+        }
+
+        // If a Wayland window will be activated, it will use the ID string as its activation token.
+        // If an X11 window will be activated, it's supposed to send a "remove" message, which we'll
+        // handle later on.
+        setActivationToken(idIt->second, input()->lastInteractionSerial(), appId);
+    } else if (trimmed.startsWith(QLatin1StringView("remove"))) {
+        const auto parsed = parseX11Message(info);
+        const auto idIt = parsed.find(QStringLiteral("ID"));
+        if (idIt == parsed.end()) {
+            return;
+        }
+        // The activation token can be the same as the ID string when either
+        // - an X11 app previously sent a "new" message
+        // - a Wayland app created an activation token normally,
+        //   and the X11 app is now using it
+        if (idIt->second == m_activationToken) {
+            m_x11ActivationPid = getX11WindowPid(messageWindow);
+        }
+    }
+}
+
 #endif
 
 /**

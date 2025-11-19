@@ -872,7 +872,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         if (session) {
             allow = session->active && (!workspace()->wasUserInteraction() || workspace()->activeWindow() == nullptr || workspace()->activeWindow()->isDesktop());
         } else {
-            allow = allowWindowActivation(userTime(), false);
+            allow = workspace()->mayActivate(this, m_activationToken);
         }
 
         const bool isSessionSaving = workspace()->sessionManager()->state() == SessionState::Saving;
@@ -4292,8 +4292,8 @@ void X11Window::startupIdChanged()
     }
     const xcb_timestamp_t timestamp = asn_id.timestamp();
     if (timestamp != 0) {
-        bool activate = allowWindowActivation(timestamp);
-        if (activate) {
+        m_userTime = timestamp;
+        if (workspace()->mayActivate(this, QString())) {
             workspace()->activateWindow(this);
         } else {
             demandAttention();
