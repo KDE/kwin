@@ -87,6 +87,7 @@ UserActionsMenu::UserActionsMenu(QObject *parent)
     , m_minimizeOperation(nullptr)
     , m_closeOperation(nullptr)
     , m_shortcutOperation(nullptr)
+    , m_excludeFromCapture(nullptr)
 {
 }
 
@@ -247,6 +248,12 @@ void UserActionsMenu::init()
     m_noBorderOperation->setCheckable(true);
     m_noBorderOperation->setData(Options::NoBorderOp);
 
+    m_excludeFromCapture = advancedMenu->addAction(i18n("&Hide from Screencast"));
+    m_excludeFromCapture->setIcon(QIcon::fromTheme(QStringLiteral("view-private")));
+    setShortcut(m_excludeFromCapture, QStringLiteral("Window Exclude From Capture"));
+    m_excludeFromCapture->setCheckable(true);
+    m_excludeFromCapture->setData(Options::ExcludeFromCaptureOp);
+
     advancedMenu->addSeparator();
 
     m_shortcutOperation = advancedMenu->addAction(i18n("Set Window Short&cut…"));
@@ -331,6 +338,7 @@ void UserActionsMenu::menuAboutToShow()
     m_fullScreenOperation->setChecked(m_window->isFullScreen());
     m_noBorderOperation->setEnabled(m_window->userCanSetNoBorder());
     m_noBorderOperation->setChecked(m_window->noBorder());
+    m_excludeFromCapture->setChecked(m_window->excludeFromCapture());
     m_minimizeOperation->setEnabled(m_window->isMinimizable());
     m_closeOperation->setEnabled(m_window->isCloseable());
     m_shortcutOperation->setEnabled(m_window->rules()->checkShortcut(QString()).isNull());
@@ -1114,6 +1122,9 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
             window->setNoBorder(!window->noBorder());
         }
         break;
+    case Options::ExcludeFromCaptureOp:
+        window->setExcludeFromCapture(!window->excludeFromCapture());
+        break;
     case Options::KeepAboveOp: {
         StackingUpdatesBlocker blocker(this);
         bool was = window->keepAbove();
@@ -1350,6 +1361,13 @@ void Workspace::slotWindowNoBorder()
 {
     if (USABLE_ACTIVE_WINDOW) {
         performWindowOperation(m_activeWindow, Options::NoBorderOp);
+    }
+}
+
+void Workspace::slotWindowExcludeFromCapture()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        performWindowOperation(m_activeWindow, Options::ExcludeFromCaptureOp);
     }
 }
 

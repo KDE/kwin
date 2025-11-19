@@ -33,11 +33,15 @@ OutputScreenCastSource::OutputScreenCastSource(Output *output, std::optional<pid
     , m_sceneView(std::make_unique<SceneView>(Compositor::self()->scene(), output, m_layer.get()))
     , m_cursorView(std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), output, nullptr))
 {
-    if (pidToHide) {
-        m_sceneView->addWindowFilter([pidToHide](Window *window) {
-            return window->pid() == *pidToHide;
-        });
-    }
+
+    m_sceneView->addWindowFilter([pidToHide](Window *window) {
+        if (pidToHide.has_value() && *pidToHide == window->pid()) {
+            return true;
+        }
+
+        return window->excludeFromCapture();
+    });
+
     updateView();
     connect(output, &Output::changed, this, &OutputScreenCastSource::updateView);
     // prevent the layer from scheduling frames on the actual output
@@ -49,6 +53,22 @@ OutputScreenCastSource::OutputScreenCastSource(Output *output, std::optional<pid
             Q_EMIT closed();
         }
     });
+
+    auto setupRepaintOnExcludedFromCapture = [this](Window *window) {
+        // When a window becomes hidden or visible from screencast
+        // the region where the window is located will not be damaged, so
+        // by calling addDeviceRepaint() we will redraw everything
+        connect(window, &Window::excludeFromCaptureChanged, this, [this] {
+            m_sceneView->addDeviceRepaint(infiniteRegion());
+        });
+    };
+    connect(Workspace::self(), &Workspace::windowAdded, this, [setupRepaintOnExcludedFromCapture](Window *window) {
+        setupRepaintOnExcludedFromCapture(window);
+    });
+    auto windows = workspace()->windows();
+    for (auto window : std::as_const(windows)) {
+        setupRepaintOnExcludedFromCapture(window);
+    }
 }
 
 OutputScreenCastSource::~OutputScreenCastSource()

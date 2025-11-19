@@ -571,6 +571,11 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
 
+    /**
+     * Exclude this window from ScreenCast.
+     * It will also be applied for all transient windows recursively.
+     */
+    Q_PROPERTY(bool excludeFromCapture READ excludeFromCapture WRITE setExcludeFromCapture NOTIFY excludeFromCaptureChanged FINAL)
 public:
     ~Window() override;
 
@@ -1362,6 +1367,9 @@ public:
     void setActivationToken(const QString &token);
     QString activationToken() const;
 
+    bool excludeFromCapture() const;
+    void setExcludeFromCapture(bool newExcludeFromCapture);
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1483,6 +1491,7 @@ Q_SIGNALS:
     void tagChanged();
     void descriptionChanged();
     void borderRadiusChanged();
+    void excludeFromCaptureChanged();
 
 protected:
     Window();
@@ -1806,6 +1815,7 @@ protected:
     bool m_demandsAttention = false;
     bool m_minimized = false;
     bool m_suspended = false;
+    bool m_excludeFromCapture = false;
     QTimer *m_autoRaiseTimer = nullptr;
     QList<VirtualDesktop *> m_desktops;
 

@@ -406,6 +406,7 @@ public:
         LowerOp,
         FullScreenOp,
         NoBorderOp,
+        ExcludeFromCaptureOp,
         NoOp,
         SetupWindowShortcutOp,
         ApplicationRulesOp,

@@ -33,11 +33,14 @@ RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale,
     , m_sceneView(std::make_unique<SceneView>(Compositor::self()->scene(), workspace()->outputs().front(), m_layer.get()))
     , m_cursorView(std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr))
 {
-    if (pidToHide) {
-        m_sceneView->addWindowFilter([pidToHide](Window *window) {
-            return window->pid() == *pidToHide;
-        });
-    }
+    m_sceneView->addWindowFilter([pidToHide](Window *window) {
+        if (pidToHide.has_value() && *pidToHide == window->pid()) {
+            return true;
+        }
+
+        return window->excludeFromCapture();
+    });
+
     m_sceneView->setViewport(m_region);
     m_sceneView->setScale(m_scale);
     // prevent the layer from scheduling frames on the actual output
@@ -48,6 +51,22 @@ RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale,
     Q_ASSERT(m_scale > 0);
     // TODO once the layer doesn't depend on the output anymore, remove this?
     connect(workspace(), &Workspace::outputsChanged, this, &RegionScreenCastSource::close);
+
+    auto setupRepaintOnExcludedFromCapture = [this](Window *window) {
+        // When a window becomes hidden or visible from screencast
+        // the region where the window is located will not be damaged, so
+        // by calling addDeviceRepaint() we will redraw everything
+        connect(window, &Window::excludeFromCaptureChanged, this, [this] {
+            m_sceneView->addDeviceRepaint(infiniteRegion());
+        });
+    };
+    connect(Workspace::self(), &Workspace::windowAdded, this, [setupRepaintOnExcludedFromCapture](Window *window) {
+        setupRepaintOnExcludedFromCapture(window);
+    });
+    auto windows = workspace()->windows();
+    for (auto window : std::as_const(windows)) {
+        setupRepaintOnExcludedFromCapture(window);
+    }
 }
 
 RegionScreenCastSource::~RegionScreenCastSource()

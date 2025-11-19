@@ -2190,6 +2190,9 @@ void Window::setTransientFor(Window *transientFor)
         return;
     }
     m_transientFor = transientFor;
+    if (m_transientFor) {
+        setExcludeFromCapture(m_transientFor->excludeFromCapture());
+    }
     Q_EMIT transientChanged();
 }
 
@@ -4684,6 +4687,26 @@ void Window::setActivationToken(const QString &token)
 QString Window::activationToken() const
 {
     return m_activationToken;
+}
+
+bool Window::excludeFromCapture() const
+{
+    return m_excludeFromCapture;
+}
+
+void Window::setExcludeFromCapture(bool newExcludeFromCapture)
+{
+    if (m_excludeFromCapture == newExcludeFromCapture) {
+        return;
+    }
+
+    m_excludeFromCapture = newExcludeFromCapture;
+
+    for (auto window : std::as_const(m_transients)) {
+        window->setExcludeFromCapture(newExcludeFromCapture);
+    }
+
+    Q_EMIT excludeFromCaptureChanged();
 }
 
 } // namespace KWin

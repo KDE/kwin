@@ -496,6 +496,7 @@ public Q_SLOTS:
     void slotWindowOnAllDesktops();
     void slotWindowFullScreen();
     void slotWindowNoBorder();
+    void slotWindowExcludeFromCapture();
 
     void slotWindowToNextDesktop();
     void slotWindowToPreviousDesktop();
