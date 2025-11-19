@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-11-19 00:44+0000\n"
 "PO-Revision-Date: 2024-09-22 16:22+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -2421,26 +2421,26 @@ msgstr "Klarte ikkje oppretta PipeWire-kontekst"
 msgid "Failed to connect PipeWire context"
 msgstr "Klarte ikkje kopla til PipeWire-kontekst"
 
-#: plugins/screencast/screencastmanager.cpp:54
-#: plugins/screencast/screencastmanager.cpp:79
-#: plugins/screencast/screencastmanager.cpp:95
-#: plugins/screencast/screencastmanager.cpp:140
+#: plugins/screencast/screencastmanager.cpp:55
+#: plugins/screencast/screencastmanager.cpp:80
+#: plugins/screencast/screencastmanager.cpp:96
+#: plugins/screencast/screencastmanager.cpp:141
 #, fuzzy, kde-format
 #| msgid "Block Compositing rule type"
 msgid "Unsupported compositing type"
 msgstr "Regeltype for blokksamansetjing"
 
-#: plugins/screencast/screencastmanager.cpp:60
+#: plugins/screencast/screencastmanager.cpp:61
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Fann ikkje vindaugs-ID %1"
 
-#: plugins/screencast/screencastmanager.cpp:107
+#: plugins/screencast/screencastmanager.cpp:108
 #, kde-format
 msgid "Could not find output"
 msgstr "Fann ikkje uteining"
 
-#: plugins/screencast/screencastmanager.cpp:145
+#: plugins/screencast/screencastmanager.cpp:146
 #, kde-format
 msgid "Invalid region"
 msgstr "Ugyldig område"
@@ -2455,7 +2455,7 @@ msgstr "Krev OpenGL-samansetjing for skjermdeling"
 msgid "Failed to create PipeWire stream"
 msgstr "Klarte ikkje starta PipeWire-straum"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:405
+#: plugins/screenshot/screenshotdbusinterface2.cpp:413
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2464,7 +2464,7 @@ msgstr ""
 "Vel vindauge å ta skjermbilete av med klikk eller «Enter».\n"
 "Høgreklikk eller trykk «Escape» for å avbryta."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:423
+#: plugins/screenshot/screenshotdbusinterface2.cpp:431
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4170,7 +4170,7 @@ msgstr ""
 msgid "The provided output order is invalid"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:574
+#: wayland/outputmanagement_v2.cpp:577
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr ""
@@ -4181,7 +4181,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Svarar ikkje)"
 
-#: workspace.cpp:1572
+#: workspace.cpp:1573
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

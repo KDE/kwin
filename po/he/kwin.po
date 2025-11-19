@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-11-19 00:44+0000\n"
 "PO-Revision-Date: 2025-10-28 09:13+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -2409,25 +2409,25 @@ msgstr "יצירת הקשר PipeWire נכשלה"
 msgid "Failed to connect PipeWire context"
 msgstr "התחברות להקשר PipeWire נכשלה"
 
-#: plugins/screencast/screencastmanager.cpp:54
-#: plugins/screencast/screencastmanager.cpp:79
-#: plugins/screencast/screencastmanager.cpp:95
-#: plugins/screencast/screencastmanager.cpp:140
+#: plugins/screencast/screencastmanager.cpp:55
+#: plugins/screencast/screencastmanager.cpp:80
+#: plugins/screencast/screencastmanager.cpp:96
+#: plugins/screencast/screencastmanager.cpp:141
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "סוג ניהול חלונאי לא ידוע"
 
-#: plugins/screencast/screencastmanager.cpp:60
+#: plugins/screencast/screencastmanager.cpp:61
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "לא ניתן למצוא את מזהה החלון %1"
 
-#: plugins/screencast/screencastmanager.cpp:107
+#: plugins/screencast/screencastmanager.cpp:108
 #, kde-format
 msgid "Could not find output"
 msgstr "לא ניתן למצוא פלט"
 
-#: plugins/screencast/screencastmanager.cpp:145
+#: plugins/screencast/screencastmanager.cpp:146
 #, kde-format
 msgid "Invalid region"
 msgstr "אזור שגוי"
@@ -2442,7 +2442,7 @@ msgstr "מנהל חלונאי מסוג OpenGL נחוץ להקלטת המסך"
 msgid "Failed to create PipeWire stream"
 msgstr "יצירת תזרים PipeWire נכשלה"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:405
+#: plugins/screenshot/screenshotdbusinterface2.cpp:413
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2451,7 +2451,7 @@ msgstr ""
 "נא לבחור חלון לצילום בלחיצה שמאלית או enter.\n"
 "Escape או לחיצה ימנית לביטול."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:423
+#: plugins/screenshot/screenshotdbusinterface2.cpp:431
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4136,7 +4136,7 @@ msgstr "סדר הפלט שסופק לא מכיל את כל צגי הפלט"
 msgid "The provided output order is invalid"
 msgstr "סדר הפלט שסופק שגוי"
 
-#: wayland/outputmanagement_v2.cpp:574
+#: wayland/outputmanagement_v2.cpp:577
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "מנהל ההתקן דחה את הגדרות הפלט"
@@ -4147,7 +4147,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(לא מגיב)"
 
-#: workspace.cpp:1572
+#: workspace.cpp:1573
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

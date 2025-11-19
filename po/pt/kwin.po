@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-11-19 00:44+0000\n"
 "PO-Revision-Date: 2023-02-15 15:24+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -2523,27 +2523,27 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:54
-#: plugins/screencast/screencastmanager.cpp:79
-#: plugins/screencast/screencastmanager.cpp:95
-#: plugins/screencast/screencastmanager.cpp:140
+#: plugins/screencast/screencastmanager.cpp:55
+#: plugins/screencast/screencastmanager.cpp:80
+#: plugins/screencast/screencastmanager.cpp:96
+#: plugins/screencast/screencastmanager.cpp:141
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgid "Unsupported compositing type"
 msgstr "Suspender a Composição"
 
-#: plugins/screencast/screencastmanager.cpp:60
+#: plugins/screencast/screencastmanager.cpp:61
 #, fuzzy, kde-format
 #| msgid "Close running window on %1"
 msgid "Could not find window id %1"
 msgstr "Fechar a janela activa em %1"
 
-#: plugins/screencast/screencastmanager.cpp:107
+#: plugins/screencast/screencastmanager.cpp:108
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:145
+#: plugins/screencast/screencastmanager.cpp:146
 #, kde-format
 msgid "Invalid region"
 msgstr ""
@@ -2559,7 +2559,7 @@ msgstr "Sem compositor de OpenGL em execução"
 msgid "Failed to create PipeWire stream"
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:405
+#: plugins/screenshot/screenshotdbusinterface2.cpp:413
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -2571,7 +2571,7 @@ msgstr ""
 "Seleccione a janela onde forçar o fecho com o botão esquerdo ou o Enter.\n"
 "Carregue em Escape ou no botão direito para cancelar."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:423
+#: plugins/screenshot/screenshotdbusinterface2.cpp:431
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -4314,7 +4314,7 @@ msgstr ""
 msgid "The provided output order is invalid"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:574
+#: wayland/outputmanagement_v2.cpp:577
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr ""
@@ -4325,7 +4325,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Não Responde)"
 
-#: workspace.cpp:1572
+#: workspace.cpp:1573
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

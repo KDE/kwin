@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-11-19 00:44+0000\n"
 "PO-Revision-Date: 2025-11-13 21:48+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -2400,25 +2400,25 @@ msgstr "無法建立 PipeWire 內文"
 msgid "Failed to connect PipeWire context"
 msgstr "無法連線 PipeWire 內文"
 
-#: plugins/screencast/screencastmanager.cpp:54
-#: plugins/screencast/screencastmanager.cpp:79
-#: plugins/screencast/screencastmanager.cpp:95
-#: plugins/screencast/screencastmanager.cpp:140
+#: plugins/screencast/screencastmanager.cpp:55
+#: plugins/screencast/screencastmanager.cpp:80
+#: plugins/screencast/screencastmanager.cpp:96
+#: plugins/screencast/screencastmanager.cpp:141
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "不支援的合成類型"
 
-#: plugins/screencast/screencastmanager.cpp:60
+#: plugins/screencast/screencastmanager.cpp:61
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "找不到視窗 ID %1"
 
-#: plugins/screencast/screencastmanager.cpp:107
+#: plugins/screencast/screencastmanager.cpp:108
 #, kde-format
 msgid "Could not find output"
 msgstr "找不到輸出"
 
-#: plugins/screencast/screencastmanager.cpp:145
+#: plugins/screencast/screencastmanager.cpp:146
 #, kde-format
 msgid "Invalid region"
 msgstr "無效的區域"
@@ -2433,7 +2433,7 @@ msgstr "需要使用 OpenGL 合成才能利用螢幕錄製"
 msgid "Failed to create PipeWire stream"
 msgstr "無法建立 PipeWire 串流"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:405
+#: plugins/screenshot/screenshotdbusinterface2.cpp:413
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2442,7 +2442,7 @@ msgstr ""
 "用滑鼠左鍵或 Enter 來選取視窗進行螢幕截圖。\n"
 "按 Esc 或右鍵來取消。"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:423
+#: plugins/screenshot/screenshotdbusinterface2.cpp:431
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4127,7 +4127,7 @@ msgstr "提供的輸出順序沒有包含所有輸出"
 msgid "The provided output order is invalid"
 msgstr "提供的輸出順序是無效的"
 
-#: wayland/outputmanagement_v2.cpp:574
+#: wayland/outputmanagement_v2.cpp:577
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "驅動程式回絕了提供的輸出配置"
@@ -4138,7 +4138,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "（沒有回應）"
 
-#: workspace.cpp:1572
+#: workspace.cpp:1573
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-11-19 00:44+0000\n"
 "PO-Revision-Date: 2025-11-11 18:52+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -2410,25 +2410,25 @@ msgstr "Neizdevās palaist „PipeWire“ kontekstu"
 msgid "Failed to connect PipeWire context"
 msgstr "Neizdevās pievienot „PipeWire“ kontekstu"
 
-#: plugins/screencast/screencastmanager.cpp:54
-#: plugins/screencast/screencastmanager.cpp:79
-#: plugins/screencast/screencastmanager.cpp:95
-#: plugins/screencast/screencastmanager.cpp:140
+#: plugins/screencast/screencastmanager.cpp:55
+#: plugins/screencast/screencastmanager.cpp:80
+#: plugins/screencast/screencastmanager.cpp:96
+#: plugins/screencast/screencastmanager.cpp:141
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Neatbalstīts kompozitēšnas tips"
 
-#: plugins/screencast/screencastmanager.cpp:60
+#: plugins/screencast/screencastmanager.cpp:61
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Neizdevās atrast loga id %1"
 
-#: plugins/screencast/screencastmanager.cpp:107
+#: plugins/screencast/screencastmanager.cpp:108
 #, kde-format
 msgid "Could not find output"
 msgstr "Neizdevās atrast izvadi"
 
-#: plugins/screencast/screencastmanager.cpp:145
+#: plugins/screencast/screencastmanager.cpp:146
 #, kde-format
 msgid "Invalid region"
 msgstr "Nederīgs reģions"
@@ -2443,7 +2443,7 @@ msgstr "Ekrāna uzņemšanai ir nepieciešams „OpenGL“ kompozitors."
 msgid "Failed to create PipeWire stream"
 msgstr "Neizdevās izveidot „PipeWire“ straumi"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:405
+#: plugins/screenshot/screenshotdbusinterface2.cpp:413
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2453,7 +2453,7 @@ msgstr ""
 "ekrānattēlu.\n"
 "Lai atceltu darbību, spiediet „Escape“ vai peles labo pogu."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:423
+#: plugins/screenshot/screenshotdbusinterface2.cpp:431
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -4147,7 +4147,7 @@ msgstr "Sniegtā izvades secība nesatur nevienu izvadi"
 msgid "The provided output order is invalid"
 msgstr "Sniegtā izvades secība nav derīga"
 
-#: wayland/outputmanagement_v2.cpp:574
+#: wayland/outputmanagement_v2.cpp:577
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Draiveris noraidīja izvades konfigurāciju"
@@ -4158,7 +4158,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nereaģē)"
 
-#: workspace.cpp:1572
+#: workspace.cpp:1573
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
