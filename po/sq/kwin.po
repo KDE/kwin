@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-19 00:44+0000\n"
+"POT-Creation-Date: 2025-11-20 00:44+0000\n"
 "PO-Revision-Date: 2010-02-21 05:14+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -1598,7 +1598,9 @@ msgstr "I Lehtë"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationNone)
 #: plugins/blur/blur_config.ui:60 plugins/blur/blur_config.ui:114
+#: plugins/blur/blur_config.ui:168
 #, kde-format
 msgid "Strong"
 msgstr "I fortë"
@@ -1607,6 +1609,21 @@ msgstr "I fortë"
 #: plugins/blur/blur_config.ui:74
 #, kde-format
 msgid "Noise strength:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, labelSaturation)
+#: plugins/blur/blur_config.ui:128
+#, fuzzy, kde-format
+#| msgid "Duration"
+msgid "Saturation:"
+msgstr "Kohëzgjatja"
+
+#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
+#. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
+#: plugins/blur/blur_config.ui:161
+#: plugins/videowall/package/contents/ui/config.ui:73
+#, kde-format
+msgid "None"
 msgstr ""
 
 #: plugins/colorpicker/colorpicker.cpp:153
@@ -2806,12 +2823,6 @@ msgstr ""
 msgid "Ignore"
 msgstr ""
 
-#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
-#: plugins/videowall/package/contents/ui/config.ui:73
-#, kde-format
-msgid "None"
-msgstr ""
-
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
 #: plugins/windowview/windowvieweffect.cpp:48
 #, kde-format
@@ -3627,7 +3638,7 @@ msgstr ""
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: useractions.cpp:161
+#: useractions.cpp:162
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -3636,7 +3647,7 @@ msgid ""
 "shortcut."
 msgstr ""
 
-#: useractions.cpp:168
+#: useractions.cpp:169
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -3645,120 +3656,125 @@ msgid ""
 "window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 
-#: useractions.cpp:216
+#: useractions.cpp:217
 #, kde-format
 msgid "&Move"
 msgstr "&Zhvendos"
 
-#: useractions.cpp:221
+#: useractions.cpp:222
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgid "&Resize"
 msgstr "Ri&përmaso"
 
-#: useractions.cpp:226
+#: useractions.cpp:227
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Mbaje &Mbi të Tjerët"
 
-#: useractions.cpp:232
+#: useractions.cpp:233
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Mbaje &Nën të Tjerët"
 
-#: useractions.cpp:238
+#: useractions.cpp:239
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&Ekran i Plotë"
 
-#: useractions.cpp:244
+#: useractions.cpp:245
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:252
+#: useractions.cpp:251
+#, kde-format
+msgid "&Hide from Screencast"
+msgstr ""
+
+#: useractions.cpp:259
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr ""
 
-#: useractions.cpp:258
+#: useractions.cpp:265
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr ""
 
-#: useractions.cpp:263
+#: useractions.cpp:270
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr ""
 
-#: useractions.cpp:269
+#: useractions.cpp:276
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Ma&ksimizo"
 
-#: useractions.cpp:275
+#: useractions.cpp:282
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Mi&nimizo"
 
-#: useractions.cpp:281
+#: useractions.cpp:288
 #, kde-format
 msgid "&More Actions"
 msgstr ""
 
-#: useractions.cpp:286
+#: useractions.cpp:293
 #, kde-format
 msgid "&Close"
 msgstr "&Mbylle"
 
-#: useractions.cpp:351
+#: useractions.cpp:359
 #, kde-format
 msgid "&Extensions"
 msgstr ""
 
-#: useractions.cpp:401
+#: useractions.cpp:409
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "&Desktops"
 msgstr "&Të Gjithë Desktopët"
 
-#: useractions.cpp:417
+#: useractions.cpp:425
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to &Screen"
 msgstr "Tek &Desktopi"
 
-#: useractions.cpp:433
+#: useractions.cpp:441
 #, kde-format
 msgid "Show in &Activities"
 msgstr ""
 
-#: useractions.cpp:449
+#: useractions.cpp:457
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Të Gjithë Desktopët"
 
-#: useractions.cpp:484 useractions.cpp:616
+#: useractions.cpp:492 useractions.cpp:624
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to %1"
 msgstr "Tek &Desktopi"
 
-#: useractions.cpp:498
+#: useractions.cpp:506
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "&Të Gjithë Desktopët"
 
-#: useractions.cpp:510
+#: useractions.cpp:518
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Tek &Desktopi"
 
-#: useractions.cpp:541
+#: useractions.cpp:549
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgctxt ""
@@ -3767,387 +3783,387 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Ndrysho në Ekranin 1"
 
-#: useractions.cpp:568
+#: useractions.cpp:576
 #, kde-format
 msgid "&All Activities"
 msgstr ""
 
-#: useractions.cpp:735
+#: useractions.cpp:743
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr ""
 
-#: useractions.cpp:737
+#: useractions.cpp:745
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
-#: useractions.cpp:818
+#: useractions.cpp:826
 #, fuzzy, kde-format
 #| msgid "Kill Window"
 msgid "Window Menu"
 msgstr "Vrije Dritaren"
 
-#: useractions.cpp:820
+#: useractions.cpp:828
 #, kde-format
 msgid "Close Window"
 msgstr "Mbylle Dritaren"
 
-#: useractions.cpp:822
+#: useractions.cpp:830
 #, kde-format
 msgid "Maximize Window"
 msgstr "Maksimizo Dritaren"
 
-#: useractions.cpp:824
+#: useractions.cpp:832
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr ""
 
-#: useractions.cpp:826
+#: useractions.cpp:834
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr ""
 
-#: useractions.cpp:828
+#: useractions.cpp:836
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimizo Dritaren"
 
-#: useractions.cpp:830
+#: useractions.cpp:838
 #, kde-format
 msgid "Move Window"
 msgstr ""
 
-#: useractions.cpp:832
+#: useractions.cpp:840
 #, kde-format
 msgid "Resize Window"
 msgstr ""
 
-#: useractions.cpp:834
+#: useractions.cpp:842
 #, kde-format
 msgid "Raise Window"
 msgstr ""
 
-#: useractions.cpp:836
+#: useractions.cpp:844
 #, kde-format
 msgid "Lower Window"
 msgstr ""
 
-#: useractions.cpp:838
+#: useractions.cpp:846
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr ""
 
-#: useractions.cpp:840
+#: useractions.cpp:848
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr ""
 
-#: useractions.cpp:842
+#: useractions.cpp:850
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Mbylle Dritaren"
 
-#: useractions.cpp:844
+#: useractions.cpp:852
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr ""
 
-#: useractions.cpp:846
+#: useractions.cpp:854
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr ""
 
-#: useractions.cpp:848
+#: useractions.cpp:856
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr ""
 
-#: useractions.cpp:850
+#: useractions.cpp:858
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr ""
 
-#: useractions.cpp:852
+#: useractions.cpp:860
 #, kde-format
 msgid "Move Window to the Center"
 msgstr ""
 
-#: useractions.cpp:854
+#: useractions.cpp:862
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgid "Move Window Right"
 msgstr "Mbylle Dritaren"
 
-#: useractions.cpp:856
+#: useractions.cpp:864
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgid "Move Window Left"
 msgstr "Mbylle Dritaren"
 
-#: useractions.cpp:858
+#: useractions.cpp:866
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgid "Move Window Up"
 msgstr "Mbylle Dritaren"
 
-#: useractions.cpp:860
+#: useractions.cpp:868
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgid "Move Window Down"
 msgstr "Mbylle Dritaren"
 
-#: useractions.cpp:862
+#: useractions.cpp:870
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr ""
 
-#: useractions.cpp:864
+#: useractions.cpp:872
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr ""
 
-#: useractions.cpp:866
+#: useractions.cpp:874
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr ""
 
-#: useractions.cpp:868
+#: useractions.cpp:876
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr ""
 
-#: useractions.cpp:870
+#: useractions.cpp:878
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr ""
 
-#: useractions.cpp:872
+#: useractions.cpp:880
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr ""
 
-#: useractions.cpp:874
+#: useractions.cpp:882
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr ""
 
-#: useractions.cpp:876
+#: useractions.cpp:884
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr ""
 
-#: useractions.cpp:878
+#: useractions.cpp:886
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr ""
 
-#: useractions.cpp:880
+#: useractions.cpp:888
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr ""
 
-#: useractions.cpp:882
+#: useractions.cpp:890
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr ""
 
-#: useractions.cpp:884
+#: useractions.cpp:892
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr ""
 
-#: useractions.cpp:886
+#: useractions.cpp:894
 #, kde-format
 msgid "Switch to Window Above"
 msgstr ""
 
-#: useractions.cpp:888
+#: useractions.cpp:896
 #, kde-format
 msgid "Switch to Window Below"
 msgstr ""
 
-#: useractions.cpp:890
+#: useractions.cpp:898
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr ""
 
-#: useractions.cpp:892
+#: useractions.cpp:900
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr ""
 
-#: useractions.cpp:894
+#: useractions.cpp:902
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:896
+#: useractions.cpp:904
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:899
+#: useractions.cpp:907
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr ""
 
-#: useractions.cpp:902
+#: useractions.cpp:910
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Ndrysho në Ekranin 1"
 
-#: useractions.cpp:904
+#: useractions.cpp:912
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Ndrysho në Ekranin 1"
 
-#: useractions.cpp:906
+#: useractions.cpp:914
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr ""
 
-#: useractions.cpp:908
+#: useractions.cpp:916
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr ""
 
-#: useractions.cpp:919
+#: useractions.cpp:927
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "Dritare në Desktop 1"
 
-#: useractions.cpp:921
+#: useractions.cpp:929
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr ""
 
-#: useractions.cpp:922
+#: useractions.cpp:930
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr ""
 
-#: useractions.cpp:923
+#: useractions.cpp:931
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr ""
 
-#: useractions.cpp:925
+#: useractions.cpp:933
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr ""
 
-#: useractions.cpp:927
+#: useractions.cpp:935
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr ""
 
-#: useractions.cpp:929
+#: useractions.cpp:937
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr ""
 
-#: useractions.cpp:933
+#: useractions.cpp:941
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Move Window to Screen %1"
 msgstr "Ndrysho në Ekranin 1"
 
-#: useractions.cpp:940
+#: useractions.cpp:948
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Move Window to Next Screen"
 msgstr "Ndrysho në Ekranin 1"
 
-#: useractions.cpp:942
+#: useractions.cpp:950
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Move Window to Previous Screen"
 msgstr "Ndrysho në Ekranin 1"
 
-#: useractions.cpp:944
+#: useractions.cpp:952
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Move Window One Screen to the Right"
 msgstr "Ndrysho në Ekranin 1"
 
-#: useractions.cpp:946
+#: useractions.cpp:954
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Move Window One Screen to the Left"
 msgstr "Ndrysho në Ekranin 1"
 
-#: useractions.cpp:948
+#: useractions.cpp:956
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Move Window One Screen Up"
 msgstr "Ndrysho në Ekranin 1"
 
-#: useractions.cpp:950
+#: useractions.cpp:958
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Move Window One Screen Down"
 msgstr "Ndrysho në Ekranin 1"
 
-#: useractions.cpp:954
+#: useractions.cpp:962
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "Ndrysho në Ekranin 1"
 
-#: useractions.cpp:961
+#: useractions.cpp:969
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Ndrysho Në Ekranin Tjetër"
 
-#: useractions.cpp:962
+#: useractions.cpp:970
 #, fuzzy, kde-format
 #| msgid "Switch to Next Screen"
 msgid "Switch to Previous Screen"
 msgstr "Ndrysho Në Ekranin Tjetër"
 
-#: useractions.cpp:963
+#: useractions.cpp:971
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 2"
 msgid "Switch to Screen to the Right"
 msgstr "Ndrysho në Ekranin 2"
 
-#: useractions.cpp:965
+#: useractions.cpp:973
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 2"
 msgid "Switch to Screen to the Left"
 msgstr "Ndrysho në Ekranin 2"
 
-#: useractions.cpp:967
+#: useractions.cpp:975
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 2"
 msgid "Switch to Screen Above"
 msgstr "Ndrysho në Ekranin 2"
 
-#: useractions.cpp:969
+#: useractions.cpp:977
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 2"
 msgid "Switch to Screen Below"
 msgstr "Ndrysho në Ekranin 2"
 
-#: useractions.cpp:972
+#: useractions.cpp:980
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "Tek &Desktopi"
 
-#: useractions.cpp:975
+#: useractions.cpp:983
 #, kde-format
 msgid "Kill Window"
 msgstr "Vrije Dritaren"
 
-#: useractions.cpp:1043
+#: useractions.cpp:1051
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr ""
@@ -4223,7 +4239,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3113
+#: window.cpp:3116
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
