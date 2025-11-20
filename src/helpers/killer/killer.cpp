@@ -208,6 +208,7 @@ int main(int argc, char *argv[])
 
     auto *dialog = new KMessageDialog(KMessageDialog::WarningContinueCancel, question);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setModal(true);
     dialog->setCaption(i18nc("@title:window", "Not Responding"));
 
     QIcon icon;
