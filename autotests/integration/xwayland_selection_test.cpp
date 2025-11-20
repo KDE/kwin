@@ -345,6 +345,7 @@ private:
 
         xcb_selection_notify_event_t notifyEvent = {};
         notifyEvent.response_type = XCB_SELECTION_NOTIFY;
+        notifyEvent.time = event->time;
         notifyEvent.selection = event->selection;
         notifyEvent.requestor = event->requestor;
         notifyEvent.target = event->target;
