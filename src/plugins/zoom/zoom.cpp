@@ -19,6 +19,7 @@
 #include "scene/cursoritem.h"
 #include "scene/workspacescene.h"
 #include "textcarettracker.h"
+#include "utils/keys.h"
 #include "zoomconfig.h"
 
 #include <KConfigGroup>
@@ -178,30 +179,6 @@ void ZoomEffect::hideCursor()
             });
         }
     }
-}
-
-static Qt::KeyboardModifiers stringToKeyboardModifiers(const QString &string)
-{
-    const QStringList parts = string.split(QLatin1Char('+'));
-    if (parts.isEmpty()) {
-        return Qt::KeyboardModifiers();
-    }
-
-    Qt::KeyboardModifiers modifiers;
-    for (const QString &part : parts) {
-        if (part == QLatin1String("Meta")) {
-            modifiers |= Qt::MetaModifier;
-        } else if (part == QLatin1String("Ctrl") || part == QLatin1String("Control")) {
-            // NOTE: "Meta+Control" is provided KQuickControls.KeySequenceItem instead of "Meta+Ctrl"
-            modifiers |= Qt::ControlModifier;
-        } else if (part == QLatin1String("Alt")) {
-            modifiers |= Qt::AltModifier;
-        } else if (part == QLatin1String("Shift")) {
-            modifiers |= Qt::ShiftModifier;
-        }
-    }
-
-    return modifiers;
 }
 
 void ZoomEffect::reconfigure(ReconfigureFlags)
