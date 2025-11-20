@@ -30,17 +30,17 @@ namespace KWin
 namespace Xwl
 {
 
-XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
+XToWlDrag::XToWlDrag(XwlDataSource *source, Dnd *dnd)
     : m_dnd(dnd)
     , m_source(source)
 {
     // Supported source actions are not known for sure, so we set all actions. When an XdndPosition
     // message arrives, the user action in it will be forced. If the target surface doesn't support
     // the user action, "none" action will be chosen instead.
-    m_source->dataSource()->setSupportedDndActions(DnDAction::Copy | DnDAction::Move | DnDAction::Ask);
-    m_source->dataSource()->setExclusiveAction(DnDAction::None);
+    source->setSupportedDndActions(DnDAction::Copy | DnDAction::Move | DnDAction::Ask);
+    source->setExclusiveAction(DnDAction::None);
 
-    connect(source->dataSource(), &XwlDataSource::dropped, this, [this] {
+    connect(source, &XwlDataSource::dropped, this, [this] {
         if (m_visit) {
             connect(m_visit, &WlVisit::finish, this, [this](WlVisit *visit) {
                 tryFinish();
@@ -54,10 +54,10 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
             });
         }
     });
-    connect(source->dataSource(), &XwlDataSource::finished, this, [this] {
+    connect(source, &XwlDataSource::finished, this, [this] {
         tryFinish();
     });
-    connect(source->dataSource(), &XwlDataSource::cancelled, this, [this] {
+    connect(source, &XwlDataSource::cancelled, this, [this] {
         if (m_visit && !m_visit->leave()) {
             connect(m_visit, &WlVisit::finish, this, &XToWlDrag::tryFinish);
         }
@@ -129,17 +129,17 @@ bool XToWlDrag::handleClientMessage(xcb_client_message_event_t *event)
 
 void XToWlDrag::setDragAndDropAction(DnDAction action)
 {
-    m_source->dataSource()->setExclusiveAction(action);
+    m_source->setExclusiveAction(action);
 }
 
 DnDAction XToWlDrag::selectedDragAndDropAction()
 {
-    return m_source->dataSource()->selectedDndAction();
+    return m_source->selectedDndAction();
 }
 
 void XToWlDrag::setMimeTypes(const QStringList &mimeTypes)
 {
-    m_source->dataSource()->setMimeTypes(mimeTypes);
+    m_source->setMimeTypes(mimeTypes);
     setDragTarget();
 }
 
@@ -174,7 +174,7 @@ void XToWlDrag::tryFinish()
     }
 
     // Avoid sending XdndFinish if wl_data_offer.finish has not been called yet.
-    if (!m_source->dataSource()->isDndCancelled() && !m_source->dataSource()->isDndFinished()) {
+    if (!m_source->isDndCancelled() && !m_source->isDndFinished()) {
         return;
     }
 

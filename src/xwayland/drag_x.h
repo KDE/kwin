@@ -22,7 +22,7 @@ class Window;
 
 namespace Xwl
 {
-class X11Source;
+class XwlDataSource;
 class WlVisit;
 class Dnd;
 
@@ -31,7 +31,7 @@ class XToWlDrag : public Drag
     Q_OBJECT
 
 public:
-    explicit XToWlDrag(X11Source *source, Dnd *dnd);
+    explicit XToWlDrag(XwlDataSource *source, Dnd *dnd);
     ~XToWlDrag() override;
 
     bool moveFilter(Window *target, const QPointF &position) override;
@@ -51,7 +51,7 @@ private:
     void tryFinish();
 
     Dnd *const m_dnd;
-    X11Source *m_source;
+    XwlDataSource *m_source;
 
     WlVisit *m_visit = nullptr;
     QList<WlVisit *> m_oldVisits;

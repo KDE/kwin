@@ -142,7 +142,7 @@ void Dnd::startDrag()
 
     auto dragSource = waylandServer()->seat()->dragSource();
     if (qobject_cast<XwlDataSource *>(dragSource)) {
-        m_currentDrag = new XToWlDrag(x11Source(), this);
+        m_currentDrag = new XToWlDrag(x11Source()->dataSource(), this);
     } else {
         m_currentDrag = new WlToXDrag(this);
         auto source = new WlSource(dragSource, this);
