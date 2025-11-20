@@ -31,19 +31,18 @@ class TransferXtoWl;
 class XwlDataSource;
 
 /**
- * Base class representing generic X selections and their respective
- * Wayland counter-parts.
+ * The Selection class represents an X selection. Three selections are supported by us: the clipboard,
+ * the primary selection, and the XDND selection.
  *
- * The class needs to be subclassed and adjusted according to the
- * selection, but provides common functionality to be expected of all
- * selections.
+ * At any moment in time, a selection can have either a Wayland source or an X11 source.
  *
- * A selection should exist through the whole runtime of an Xwayland
- * session.
+ * If a Wayland source is attached to the selection, we will claim the ownership of the selection. If
+ * the selection is claimed by another X client, a proxy data source will be created and set as the current
+ * data source.
  *
- * Independently of each other the class holds the currently active
- * source instance and active transfers relative to the represented
- * selection.
+ * Note that with the clipboard and the primary selection, an X11 client can read Wayland data sources
+ * only if it is focused. X11 clients can write to the clipboard and the primary selection regardless of
+ * whether they are focused or not.
  */
 class Selection : public QObject
 {
