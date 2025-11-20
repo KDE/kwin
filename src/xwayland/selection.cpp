@@ -190,7 +190,11 @@ bool Selection::handleSelectionNotify(xcb_selection_notify_event_t *event)
     if (m_xSource && m_xSource->handleSelectionNotify(event)) {
         return true;
     }
-    for (TransferXtoWl *transfer : std::as_const(m_xToWlTransfers)) {
+
+    // A transfer can be removed from the m_xToWlTransfers list while processing a SelectionNotify event,
+    // so avoid iterating directly on m_xToWlTransfers.
+    const auto xToWlTransfers = m_xToWlTransfers;
+    for (TransferXtoWl *transfer : xToWlTransfers) {
         if (transfer->handleSelectionNotify(event)) {
             return true;
         }
@@ -200,16 +204,23 @@ bool Selection::handleSelectionNotify(xcb_selection_notify_event_t *event)
 
 bool Selection::handlePropertyNotify(xcb_property_notify_event_t *event)
 {
-    for (TransferXtoWl *transfer : std::as_const(m_xToWlTransfers)) {
+    // A transfer can be removed from the corresponding list while processing a PropertyNotify event,
+    // so avoid iterating directly on m_xToWlTransfers and m_wlToXTransfers.
+
+    const auto xToWlTransfers = m_xToWlTransfers;
+    for (TransferXtoWl *transfer : xToWlTransfers) {
         if (transfer->handlePropertyNotify(event)) {
             return true;
         }
     }
-    for (TransferWltoX *transfer : std::as_const(m_wlToXTransfers)) {
+
+    const auto wlToXTransfers = m_wlToXTransfers;
+    for (TransferWltoX *transfer : wlToXTransfers) {
         if (transfer->handlePropertyNotify(event)) {
             return true;
         }
     }
+
     return false;
 }
 
