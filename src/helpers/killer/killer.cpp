@@ -161,7 +161,6 @@ int main(int argc, char *argv[])
     QString appname = parser.value(applicationNameOption);
     QString windowHandle = parser.value(widOption);
 
-    // on Wayland XDG_ACTIVATION_TOKEN is set in the environment.
     bool time_ok = false;
     xcb_timestamp_t timestamp = parser.value(timestampOption).toULong(&time_ok);
 
