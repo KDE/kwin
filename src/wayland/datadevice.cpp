@@ -17,6 +17,12 @@
 #include "seat_p.h"
 #include "surface.h"
 
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+
+using namespace Qt::StringLiterals;
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 class DragAndDropIconPrivate
@@ -180,6 +186,41 @@ DataOfferInterface *DataDeviceInterface::sendSelection(AbstractDataSource *other
 
 void DataDeviceInterface::drop()
 {
+    qWarning() << "DataDeviceInterface::drop called" << d->drag.surface->client()->processId();
+
+    auto serviceName = [this]() -> std::optional<QString> {
+        const auto dbusInterface = QDBusConnection::sessionBus().interface();
+        const auto names = QDBusConnection::sessionBus().interface()->registeredServiceNames().value();
+        for (const QString &name : names) {
+            if (!name.startsWith(':')) { // not a unique name. The registry only operates on unique names!
+                continue;
+            }
+            if (dbusInterface->servicePid(name) == d->drag.surface->client()->processId()) {
+                return name;
+            }
+        }
+        return std::nullopt;
+    }();
+
+    if (serviceName.has_value()) {
+        QDBusMessage message = QDBusMessage::createMethodCall(u"org.freedesktop.portal.Desktop"_s, u"/org/freedesktop/portal/desktop"_s, u"org.freedesktop.host.portal.Registry"_s, u"Resolve"_s);
+        message << serviceName.value();
+        QDBusPendingReply<QString, QString> reply = QDBusConnection::sessionBus().call(message, QDBus::Block, std::chrono::milliseconds(500ms).count());
+        const QString appId = reply.argumentAt<0>();
+        const QString type = reply.argumentAt<1>();
+        qDebug() << "Asking portal to resolve DnD for service" << serviceName.value() << appId << type;
+
+        if (type == "flatpak"_L1) {
+            // TODO manipulate the dnd payload to get paths, then route them through the documents portal then use the returned paths instead of the original ones
+            // TODO figure out if the receiver is using the application/vnd.portal.filetransfer, then we can skip all this
+
+            // QDBusMessage message = QDBusMessage::createMethodCall(u"org.freedesktop.portal.Documents"_s, u"/org/freedesktop/portal/documents"_s, u"org.freedesktop.portal.Documents"_s, u"AddFull"_s);
+        }
+    } else {
+        // TODO don't warn on this, it's normal for non-dbus apps
+        qWarning() << "Could not find DBus service for client" << d->drag.surface->client()->processId();
+    }
+
     d->send_drop();
 }
 
