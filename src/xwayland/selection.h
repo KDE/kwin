@@ -22,11 +22,12 @@ class QTimer;
 
 namespace KWin
 {
+class AbstractDataSource;
+
 namespace Xwl
 {
 class TransferWltoX;
 class TransferXtoWl;
-class WlSource;
 class X11Source;
 
 /**
@@ -88,10 +89,10 @@ protected:
         return false;
     }
     // sets the current provider of the selection
-    void setWlSource(WlSource *source);
-    WlSource *wlSource() const
+    void setWlSource(AbstractDataSource *source);
+    AbstractDataSource *wlSource() const
     {
-        return m_waylandSource.get();
+        return m_waylandSource;
     }
     void createX11Source(xcb_xfixes_selection_notify_event_t *event);
     X11Source *x11Source() const
@@ -105,6 +106,9 @@ protected:
     bool handleSelectionNotify(xcb_selection_notify_event_t *event);
     bool handlePropertyNotify(xcb_property_notify_event_t *event);
 
+    void sendTargets(xcb_selection_request_event_t *event);
+    void sendTimestamp(xcb_selection_request_event_t *event);
+
     // Timeout transfers, which have become inactive due to client errors.
     void timeoutTransfers();
     void startTimeoutTransfersTimer();
@@ -117,7 +121,7 @@ protected:
 
     // Active source, if any. Only one of them at max can exist
     // at the same time.
-    std::unique_ptr<WlSource> m_waylandSource;
+    AbstractDataSource *m_waylandSource = nullptr;
     std::unique_ptr<X11Source> m_xSource;
 
     // active transfers

@@ -55,27 +55,6 @@ private:
 };
 
 /**
- * Representing a Wayland native data source.
- */
-class WlSource : public SelectionSource
-{
-    Q_OBJECT
-
-public:
-    WlSource(AbstractDataSource *dataSource, Selection *selection);
-
-    AbstractDataSource *dataSource() const;
-
-    bool handleSelectionRequest(xcb_selection_request_event_t *event);
-    void sendTargets(xcb_selection_request_event_t *event);
-    void sendTimestamp(xcb_selection_request_event_t *event);
-    void sendSelectionNotify(xcb_selection_request_event_t *event, bool success);
-
-private:
-    AbstractDataSource *m_dsi = nullptr;
-};
-
-/**
  * Representing an X data source.
  */
 class X11Source : public SelectionSource

@@ -116,15 +116,18 @@ void Selection::registerXfixes()
                                       mask);
 }
 
-void Selection::setWlSource(WlSource *source)
+void Selection::setWlSource(AbstractDataSource *source)
 {
-    if (!source) {
-        m_waylandSource.reset();
+    if (m_waylandSource == source) {
         return;
     }
 
-    m_xSource.reset();
-    m_waylandSource.reset(source);
+    m_waylandSource = source;
+    if (source) {
+        m_xSource.reset();
+    }
+
+    ownSelection(m_waylandSource != nullptr);
 }
 
 void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
@@ -135,7 +138,7 @@ void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
         return;
     }
 
-    m_waylandSource.reset();
+    m_waylandSource = nullptr;
     m_timestamp = event->timestamp;
 
     m_xSource = std::make_unique<X11Source>(this);
@@ -182,7 +185,60 @@ bool Selection::handleSelectionRequest(xcb_selection_request_event_t *event)
         }
         return false;
     }
-    return m_waylandSource->handleSelectionRequest(event);
+
+    if (event->target == atoms->targets) {
+        sendTargets(event);
+    } else if (event->target == atoms->timestamp) {
+        sendTimestamp(event);
+    } else if (event->target == atoms->delete_atom) {
+        sendSelectionNotify(event, true);
+    } else {
+        if (!startTransferToX(event)) {
+            sendSelectionNotify(event, false);
+        }
+    }
+
+    return true;
+}
+
+void Selection::sendTargets(xcb_selection_request_event_t *event)
+{
+    Q_ASSERT(m_waylandSource);
+
+    const QStringList mimeTypes = m_waylandSource->mimeTypes();
+
+    QList<xcb_atom_t> targets;
+    targets.reserve(mimeTypes.size() + 2);
+
+    targets.append(atoms->timestamp);
+    targets.append(atoms->targets);
+
+    for (const auto &mime : mimeTypes) {
+        targets.append(Xcb::mimeTypeToAtom(mime));
+    }
+
+    xcb_change_property(kwinApp()->x11Connection(),
+                        XCB_PROP_MODE_REPLACE,
+                        event->requestor,
+                        event->property,
+                        XCB_ATOM_ATOM,
+                        32, targets.size(), targets.data());
+
+    sendSelectionNotify(event, true);
+}
+
+void Selection::sendTimestamp(xcb_selection_request_event_t *event)
+{
+    Q_ASSERT(m_waylandSource);
+
+    xcb_change_property(kwinApp()->x11Connection(),
+                        XCB_PROP_MODE_REPLACE,
+                        event->requestor,
+                        event->property,
+                        XCB_ATOM_INTEGER,
+                        32, 1, &m_timestamp);
+
+    sendSelectionNotify(event, true);
 }
 
 bool Selection::handleSelectionNotify(xcb_selection_notify_event_t *event)
@@ -261,10 +317,6 @@ static QString selectMimeType(const QStringList &interested, const QStringList &
 bool Selection::startTransferToX(xcb_selection_request_event_t *event)
 {
     Q_ASSERT(m_waylandSource);
-    AbstractDataSource *dataSource = m_waylandSource->dataSource();
-    if (!dataSource) {
-        return false;
-    }
 
     const auto targets = Xcb::atomToMimeTypes(event->target);
     if (targets.isEmpty()) {
@@ -272,7 +324,7 @@ bool Selection::startTransferToX(xcb_selection_request_event_t *event)
         return false;
     }
 
-    const QString mimeType = selectMimeType(targets, dataSource->mimeTypes());
+    const QString mimeType = selectMimeType(targets, m_waylandSource->mimeTypes());
     if (mimeType.isEmpty()) {
         return false;
     }
@@ -287,7 +339,7 @@ bool Selection::startTransferToX(xcb_selection_request_event_t *event)
         qCWarning(KWIN_XWL) << "Failed to set O_NONBLOCK flag for the read endpoint of a Wayland to X11 transfer pipe:" << strerror(errno);
     }
 
-    dataSource->requestData(mimeType, std::move(pipe->writeEndpoint));
+    m_waylandSource->requestData(mimeType, std::move(pipe->writeEndpoint));
 
     auto transfer = new TransferWltoX(*event, std::move(pipe->readEndpoint), this);
     m_wlToXTransfers.append(transfer);

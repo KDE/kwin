@@ -69,15 +69,11 @@ void Clipboard::onSelectionChanged()
 
     auto currentSelection = waylandServer()->seat()->selection();
     if (!currentSelection || ownsSelection(currentSelection)) {
-        if (wlSource()) {
-            setWlSource(nullptr);
-            ownSelection(false);
-        }
+        setWlSource(nullptr);
         return;
     }
 
-    setWlSource(new WlSource(currentSelection, this));
-    ownSelection(true);
+    setWlSource(currentSelection);
 }
 
 void Clipboard::onActiveWindowChanged()
@@ -91,13 +87,9 @@ void Clipboard::onActiveWindowChanged()
     // owned by a Wayland client, X11 clients can access it only when they are focused.
     if (!ownsSelection(currentSelection)) {
         if (x11ClientsCanAccessSelection()) {
-            setWlSource(new WlSource(currentSelection, this));
-            ownSelection(true);
+            setWlSource(currentSelection);
         } else {
-            if (wlSource()) {
-                setWlSource(nullptr);
-                ownSelection(false);
-            }
+            setWlSource(nullptr);
         }
     }
 }

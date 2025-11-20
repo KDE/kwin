@@ -145,14 +145,12 @@ void Dnd::startDrag()
         m_currentDrag = new XToWlDrag(x11Source()->dataSource(), this);
     } else {
         m_currentDrag = new WlToXDrag(this);
-        auto source = new WlSource(dragSource, this);
-        connect(dragSource, &AbstractDataSource::aboutToBeDestroyed, this, [this, source] {
-            if (source == wlSource()) {
+        connect(dragSource, &AbstractDataSource::aboutToBeDestroyed, this, [this, dragSource] {
+            if (dragSource == wlSource()) {
                 setWlSource(nullptr);
             }
         });
-        setWlSource(source);
-        ownSelection(true);
+        setWlSource(dragSource);
     }
 }
 
