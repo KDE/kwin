@@ -226,8 +226,8 @@ void LogindSession::switchTo(uint terminal)
 
 FileDescriptor LogindSession::delaySleep(const QString &reason)
 {
-    QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, m_seatPath,
-                                                          s_seatInterface,
+    QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, s_managerPath,
+                                                          s_managerInterface,
                                                           QStringLiteral("Inhibit"));
     message.setArguments({QStringLiteral("sleep"), QStringLiteral("compositor"), reason, QStringLiteral("delay")});
 
