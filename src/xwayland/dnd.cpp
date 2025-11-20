@@ -79,14 +79,7 @@ void Dnd::selectionDisowned()
 
 void Dnd::selectionClaimed(xcb_xfixes_selection_notify_event_t *event)
 {
-    if (qobject_cast<XToWlDrag *>(m_currentDrag)) {
-        // X drag is in progress, rogue X client took over the selection.
-        return;
-    }
     if (m_currentDrag) {
-        // Wl drag is in progress - don't overwrite by rogue X client,
-        // get it back instead!
-        ownSelection(true);
         return;
     }
 
