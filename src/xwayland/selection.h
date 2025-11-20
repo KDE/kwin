@@ -52,8 +52,6 @@ class Selection : public QObject
 public:
     static void sendSelectionNotify(xcb_selection_request_event_t *event, bool success);
 
-    // on selection owner changes by X clients (Xwl -> Wl)
-    bool handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event);
     bool filterEvent(xcb_generic_event_t *event);
 
     xcb_atom_t atom() const
@@ -106,6 +104,7 @@ protected:
     // must be called in order to provide data from Wl to X
     void ownSelection(bool own);
 
+    bool handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event);
     bool handleSelectionRequest(xcb_selection_request_event_t *event);
     bool handleSelectionNotify(xcb_selection_notify_event_t *event);
     bool handlePropertyNotify(xcb_property_notify_event_t *event);
