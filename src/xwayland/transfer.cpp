@@ -280,9 +280,6 @@ bool TransferXtoWl::handleSelectionNotify(xcb_selection_notify_event_t *event)
     if (event->requestor != m_window) {
         return false;
     }
-    if (event->selection != atom()) {
-        return false;
-    }
     if (event->property == XCB_ATOM_NONE) {
         qCWarning(KWIN_XWL) << "Incoming X selection conversion failed";
         return true;

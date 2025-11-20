@@ -9,10 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "primary.h"
-
 #include "datasource.h"
-#include "selection_source.h"
-
 #include "wayland/display.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
@@ -53,11 +50,6 @@ Primary::Primary(xcb_atom_t atom, QObject *parent)
 
 Primary::~Primary() = default;
 
-bool Primary::ownsSelection(AbstractDataSource *dsi) const
-{
-    return dsi && dsi == m_primarySelectionSource.get();
-}
-
 bool Primary::x11ClientsCanAccessSelection() const
 {
     return qobject_cast<X11Window *>(workspace()->activeWindow());
@@ -70,7 +62,7 @@ void Primary::onSelectionChanged()
     }
 
     auto currentSelection = waylandServer()->seat()->primarySelection();
-    if (!currentSelection || ownsSelection(currentSelection)) {
+    if (!currentSelection || ownsDataSource(currentSelection)) {
         setWlSource(nullptr);
         return;
     }
@@ -87,7 +79,7 @@ void Primary::onActiveWindowChanged()
 
     // If the current selection is owned by an X11 client => do nothing. If the selection is
     // owned by a Wayland client, X11 clients can access it only when they are focused.
-    if (!ownsSelection(currentSelection)) {
+    if (!ownsDataSource(currentSelection)) {
         if (x11ClientsCanAccessSelection()) {
             setWlSource(currentSelection);
         } else {
@@ -96,36 +88,24 @@ void Primary::onActiveWindowChanged()
     }
 }
 
-void Primary::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
+void Primary::selectionDisowned()
 {
-    createX11Source(event);
-
-    if (X11Source *source = x11Source()) {
-        source->getTargets();
-    } else {
-        qCWarning(KWIN_XWL) << "Could not create a source from" << event << Qt::hex << (event ? event->owner : -1);
-    }
+    m_xSource.reset();
 }
 
-void Primary::x11OfferLost()
+void Primary::selectionClaimed(xcb_xfixes_selection_notify_event_t *event)
 {
-    m_primarySelectionSource.reset();
+    requestTargets();
 }
 
-void Primary::x11TargetsReceived(const QStringList &mimeTypes)
+void Primary::targetsReceived(const QStringList &mimeTypes)
 {
-    X11Source *source = x11Source();
-    if (!source) {
-        qCWarning(KWIN_XWL) << "offers changed when not having an X11Source!?";
-        return;
-    }
-
     auto newSelection = std::make_unique<XwlDataSource>(this);
     newSelection->setMimeTypes(mimeTypes);
 
     // we keep the old selection around because setPrimarySelection needs it to be still alive
-    std::swap(m_primarySelectionSource, newSelection);
-    waylandServer()->seat()->setPrimarySelection(m_primarySelectionSource.get(), waylandServer()->display()->nextSerial());
+    std::swap(m_xSource, newSelection);
+    waylandServer()->seat()->setPrimarySelection(m_xSource.get(), waylandServer()->display()->nextSerial());
 }
 
 } // namespace Xwl

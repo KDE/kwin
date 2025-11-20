@@ -23,7 +23,6 @@ class X11Window;
 
 namespace Xwl
 {
-class X11Source;
 class Xvisit;
 class Dnd;
 

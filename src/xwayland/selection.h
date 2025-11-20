@@ -28,7 +28,7 @@ namespace Xwl
 {
 class TransferWltoX;
 class TransferXtoWl;
-class X11Source;
+class XwlDataSource;
 
 /**
  * Base class representing generic X selections and their respective
@@ -73,6 +73,8 @@ public:
         m_timestamp = timestamp;
     }
 
+    bool ownsDataSource(AbstractDataSource *dataSource) const;
+
     void startTransferToWayland(const QString &mimeType, FileDescriptor fd);
     bool startTransferToX(xcb_selection_request_event_t *event);
 
@@ -80,9 +82,12 @@ protected:
     Selection(xcb_atom_t atom, QObject *parent);
     void registerXfixes();
 
-    virtual void doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event) = 0;
-    virtual void x11OfferLost() = 0;
-    virtual void x11TargetsReceived(const QStringList &mimeTypes) = 0;
+    // Called when the selection is claimed or disowned by somebody else, not us.
+    virtual void selectionClaimed(xcb_xfixes_selection_notify_event_t *event);
+    virtual void selectionDisowned();
+
+    void requestTargets();
+    virtual void targetsReceived(const QStringList &mimeTypes);
 
     virtual bool handleClientMessage(xcb_client_message_event_t *event)
     {
@@ -94,8 +99,7 @@ protected:
     {
         return m_waylandSource;
     }
-    void createX11Source(xcb_xfixes_selection_notify_event_t *event);
-    X11Source *x11Source() const
+    XwlDataSource *x11Source() const
     {
         return m_xSource.get();
     }
@@ -105,6 +109,7 @@ protected:
     bool handleSelectionRequest(xcb_selection_request_event_t *event);
     bool handleSelectionNotify(xcb_selection_notify_event_t *event);
     bool handlePropertyNotify(xcb_property_notify_event_t *event);
+    bool handleSelectionTargets(xcb_selection_notify_event_t *event);
 
     void sendTargets(xcb_selection_request_event_t *event);
     void sendTimestamp(xcb_selection_request_event_t *event);
@@ -122,7 +127,7 @@ protected:
     // Active source, if any. Only one of them at max can exist
     // at the same time.
     AbstractDataSource *m_waylandSource = nullptr;
-    std::unique_ptr<X11Source> m_xSource;
+    std::unique_ptr<XwlDataSource> m_xSource;
 
     // active transfers
     QList<TransferWltoX *> m_wlToXTransfers;

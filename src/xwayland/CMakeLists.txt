@@ -10,7 +10,6 @@ add_library(KWinXwaylandServerModule OBJECT
     drag_x.cpp
     primary.cpp
     selection.cpp
-    selection_source.cpp
     transfer.cpp
     xwayland.cpp
     xwldrophandler.cpp

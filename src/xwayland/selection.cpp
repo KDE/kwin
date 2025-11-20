@@ -9,7 +9,7 @@
 */
 #include "selection.h"
 #include "atoms.h"
-#include "selection_source.h"
+#include "datasource.h"
 #include "transfer.h"
 #include "utils/pipe.h"
 #include "utils/xcbutils.h"
@@ -35,6 +35,11 @@ Selection::Selection(xcb_atom_t atom, QObject *parent)
 {
 }
 
+bool Selection::ownsDataSource(AbstractDataSource *dataSource) const
+{
+    return dataSource && m_xSource.get() == dataSource;
+}
+
 bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
 {
     if (event->window != m_window) {
@@ -48,22 +53,26 @@ bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
     m_owner = event->owner;
 
     if (m_owner == XCB_WINDOW_NONE) {
-        if (previousOwner == m_window) {
-            return true;
+        if (previousOwner != m_window) {
+            selectionDisowned();
         }
-    }
-
-    if (event->owner == m_window) {
-        // When we claim a selection we must use XCB_TIME_CURRENT,
-        // grab the actual timestamp here to answer TIMESTAMP requests
-        // correctly
-        m_timestamp = event->timestamp;
         return true;
     }
 
-    // Being here means some other X window has claimed the selection.
-    doHandleXfixesNotify(event);
+    m_timestamp = event->timestamp;
+    if (m_owner != m_window) {
+        selectionClaimed(event);
+    }
+
     return true;
+}
+
+void Selection::selectionDisowned()
+{
+}
+
+void Selection::selectionClaimed(xcb_xfixes_selection_notify_event_t *event)
+{
 }
 
 bool Selection::filterEvent(xcb_generic_event_t *event)
@@ -130,19 +139,14 @@ void Selection::setWlSource(AbstractDataSource *source)
     ownSelection(m_waylandSource != nullptr);
 }
 
-void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
+void Selection::requestTargets()
 {
-    if (!event || event->owner == XCB_WINDOW_NONE) {
-        x11OfferLost();
-        m_xSource.reset();
-        return;
-    }
+    // will lead to a selection request event for the new owner
+    xcb_convert_selection(kwinApp()->x11Connection(), m_window, m_atom, atoms->targets, atoms->wl_selection, m_timestamp);
+}
 
-    m_waylandSource = nullptr;
-    m_timestamp = event->timestamp;
-
-    m_xSource = std::make_unique<X11Source>(this);
-    connect(m_xSource.get(), &X11Source::targetsReceived, this, &Selection::x11TargetsReceived);
+void Selection::targetsReceived(const QStringList &mimeTypes)
+{
 }
 
 void Selection::ownSelection(bool own)
@@ -243,8 +247,14 @@ void Selection::sendTimestamp(xcb_selection_request_event_t *event)
 
 bool Selection::handleSelectionNotify(xcb_selection_notify_event_t *event)
 {
-    if (m_xSource && m_xSource->handleSelectionNotify(event)) {
-        return true;
+    if (event->selection != m_atom) {
+        return false;
+    }
+
+    if (event->target == atoms->targets) {
+        if (handleSelectionTargets(event)) {
+            return true;
+        }
     }
 
     // A transfer can be removed from the m_xToWlTransfers list while processing a SelectionNotify event,
@@ -278,6 +288,46 @@ bool Selection::handlePropertyNotify(xcb_property_notify_event_t *event)
     }
 
     return false;
+}
+
+static bool isSpecialSelectionTarget(xcb_atom_t atom)
+{
+    return atom == atoms->targets || atom == atoms->multiple || atom == atoms->timestamp || atom == atoms->save_targets;
+}
+
+bool Selection::handleSelectionTargets(xcb_selection_notify_event_t *event)
+{
+    if (event->requestor != m_window) {
+        return false;
+    }
+    if (event->property == XCB_ATOM_NONE) {
+        return true;
+    }
+
+    xcb_connection_t *xcbConn = kwinApp()->x11Connection();
+    xcb_get_property_cookie_t cookie = xcb_get_property(xcbConn, 1, m_window, atoms->wl_selection, XCB_GET_PROPERTY_TYPE_ANY, 0, 4096);
+    auto *reply = xcb_get_property_reply(xcbConn, cookie, nullptr);
+    if (!reply) {
+        qCDebug(KWIN_XWL) << "Failed to get selection property";
+        return true;
+    }
+    if (reply->type != XCB_ATOM_ATOM) {
+        qCDebug(KWIN_XWL) << "Wrong reply type";
+        free(reply);
+        return true;
+    }
+
+    QStringList mimeTypes;
+    xcb_atom_t *value = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
+    for (xcb_atom_t value : std::span(value, reply->value_len)) {
+        if (!isSpecialSelectionTarget(value)) {
+            mimeTypes += Xcb::atomToMimeTypes(value);
+        }
+    }
+
+    targetsReceived(mimeTypes);
+    free(reply);
+    return true;
 }
 
 void Selection::startTransferToWayland(const QString &mimeType, FileDescriptor fd)

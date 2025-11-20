@@ -9,19 +9,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drag_x.h"
-
+#include "atoms.h"
 #include "databridge.h"
 #include "datasource.h"
 #include "dnd.h"
-#include "selection_source.h"
-#include "xwayland.h"
-
-#include "atoms.h"
 #include "wayland/seat.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#include "xwayland.h"
 
 #include <QTimer>
 
@@ -340,7 +337,7 @@ bool WlVisit::handleDrop(xcb_client_message_event_t *event)
     m_drag->selection()->setTimestamp(timestamp);
 
     // we do nothing more here, the drop is being processed
-    // through the X11Source object
+    // through the XwlDataSource object
     doFinish();
     return true;
 }

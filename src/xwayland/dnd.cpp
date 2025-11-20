@@ -10,13 +10,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "dnd.h"
-
+#include "atoms.h"
 #include "databridge.h"
 #include "drag_wl.h"
 #include "drag_x.h"
-#include "selection_source.h"
-
-#include "atoms.h"
 #include "wayland/seat.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
@@ -76,7 +73,11 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
     connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &Dnd::endDrag);
 }
 
-void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
+void Dnd::selectionDisowned()
+{
+}
+
+void Dnd::selectionClaimed(xcb_xfixes_selection_notify_event_t *event)
 {
     if (qobject_cast<XToWlDrag *>(m_currentDrag)) {
         // X drag is in progress, rogue X client took over the selection.
@@ -88,8 +89,10 @@ void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
         ownSelection(true);
         return;
     }
-    createX11Source(nullptr);
-    const auto *seat = waylandServer()->seat();
+
+    m_xSource.reset();
+
+    SeatInterface *seat = waylandServer()->seat();
     auto *originSurface = seat->focusedPointerSurface();
     if (!originSurface) {
         return;
@@ -102,19 +105,9 @@ void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
         // pressed for now
         return;
     }
-    createX11Source(event);
-    if (X11Source *source = x11Source()) {
-        SeatInterface *seat = waylandServer()->seat();
-        seat->startPointerDrag(source->dataSource(), seat->focusedPointerSurface(), seat->pointerPos(), seat->focusedPointerSurfaceTransformation(), seat->pointerButtonSerial(Qt::LeftButton));
-    }
-}
 
-void Dnd::x11OfferLost()
-{
-}
-
-void Dnd::x11TargetsReceived(const QStringList &mimeTypes)
-{
+    m_xSource = std::make_unique<XwlDataSource>(this);
+    seat->startPointerDrag(m_xSource.get(), seat->focusedPointerSurface(), seat->pointerPos(), seat->focusedPointerSurfaceTransformation(), seat->pointerButtonSerial(Qt::LeftButton));
 }
 
 bool Dnd::handleClientMessage(xcb_client_message_event_t *event)
@@ -141,8 +134,9 @@ void Dnd::startDrag()
     Q_ASSERT(!m_currentDrag);
 
     auto dragSource = waylandServer()->seat()->dragSource();
-    if (qobject_cast<XwlDataSource *>(dragSource)) {
-        m_currentDrag = new XToWlDrag(x11Source()->dataSource(), this);
+    if (ownsDataSource(dragSource)) {
+        m_currentDrag = new XToWlDrag(x11Source(), this);
+        setWlSource(nullptr);
     } else {
         m_currentDrag = new WlToXDrag(this);
         connect(dragSource, &AbstractDataSource::aboutToBeDestroyed, this, [this, dragSource] {

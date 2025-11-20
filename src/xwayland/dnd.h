@@ -38,9 +38,8 @@ public:
     static uint32_t version();
     XwlDropHandler *dropHandler() const;
 
-    void doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event) override;
-    void x11OfferLost() override;
-    void x11TargetsReceived(const QStringList &mimeTypes) override;
+    void selectionDisowned() override;
+    void selectionClaimed(xcb_xfixes_selection_notify_event_t *event) override;
     bool handleClientMessage(xcb_client_message_event_t *event) override;
 
     bool dragMoveFilter(Window *target, const QPointF &position);
