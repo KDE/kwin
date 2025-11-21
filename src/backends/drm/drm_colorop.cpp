@@ -51,6 +51,143 @@ QString DrmAbstractColorOp::name() const
     return m_name;
 }
 
+struct Assignments
+{
+    std::optional<ColorOp> nextInverseInputScaling;
+    DrmAbstractColorOp *nextHardwareOp = nullptr;
+    std::unordered_map<DrmAbstractColorOp *, std::deque<ColorOp::Operation>> assignments;
+};
+
+static bool maybeApplyNextInputScaling(DrmAbstractColorOp *hardwareOp, DrmAbstractColorOp *previousHardwareOp, Assignments &assignments)
+{
+    if (!assignments.nextInverseInputScaling) {
+        return true;
+    }
+    if (!hardwareOp->colorOpPreference(assignments.nextInverseInputScaling->operation)) {
+        return false;
+    }
+    if (previousHardwareOp == hardwareOp && !hardwareOp->supportsMultipleOps()) {
+        return false;
+    }
+    if (previousHardwareOp != hardwareOp && hardwareOp->inputScaling(*assignments.nextInverseInputScaling).has_value()) {
+        return false;
+    }
+    if (hardwareOp->outputScaling(*assignments.nextInverseInputScaling).has_value()) {
+        return false;
+    }
+    assignments.assignments[hardwareOp].push_front(assignments.nextInverseInputScaling->operation);
+    assignments.nextInverseInputScaling.reset();
+    return true;
+}
+
+// for an explanation of the algorithm, see "drm color operations.md"
+static std::optional<Assignments> findColorPipelineAssignments(DrmAbstractColorOp *hardwareOp, DrmAbstractColorOp *previousHardwareOp, std::span<const ColorOp> ops, const std::optional<ColorOp> &previousInverseOutputScaling)
+{
+    const ColorOp *currentColorOp = nullptr;
+    std::span<const ColorOp> nextOps;
+    const bool isInput = hardwareOp != previousHardwareOp;
+    if (isInput && previousInverseOutputScaling.has_value()) {
+        // we need to apply the previous operation's output scaling, prioritize it
+        currentColorOp = &*previousInverseOutputScaling;
+        nextOps = ops;
+    } else if (ops.empty()) {
+        // we're done here, the whole pipeline is assigned!
+        return Assignments{};
+    } else {
+        currentColorOp = &ops.front();
+        nextOps = ops.subspan(1);
+    }
+    if (!hardwareOp) {
+        return std::nullopt;
+    }
+
+    auto preference = hardwareOp->colorOpPreference(currentColorOp->operation);
+    if (isInput && !hardwareOp->canBeInputOrOutput(currentColorOp->inputSpace)) {
+        preference.reset();
+    }
+    if (!preference) {
+        if (!hardwareOp->canBypass()) {
+            return std::nullopt;
+        }
+        auto ret = findColorPipelineAssignments(hardwareOp->next(), hardwareOp, ops, previousInverseOutputScaling);
+        if (ret) {
+            maybeApplyNextInputScaling(hardwareOp, previousHardwareOp, *ret);
+        }
+        return ret;
+    }
+    if (hardwareOp->canBypass() && *preference != DrmAbstractColorOp::Priority::High) {
+        // attempt to find a higher priority hardware op type
+        DrmAbstractColorOp *higherPreferenceOp = hardwareOp->next();
+        while (higherPreferenceOp) {
+            const auto higherPreference = higherPreferenceOp->colorOpPreference(currentColorOp->operation);
+            if (higherPreference.has_value() && *higherPreference > *preference) {
+                if (auto ret = findColorPipelineAssignments(higherPreferenceOp, hardwareOp, ops, previousInverseOutputScaling)) {
+                    maybeApplyNextInputScaling(hardwareOp, previousHardwareOp, *ret);
+                    return ret;
+                } else {
+                    break;
+                }
+            }
+            higherPreferenceOp = higherPreferenceOp->next();
+        }
+    }
+
+    // this hardware op is the best match for currentColorOp
+    // before doing anything with it though, figure out if the other operations can be applied as well
+    const auto outputScaling = hardwareOp->outputScaling(*currentColorOp);
+    auto nextHardwareOp = hardwareOp->supportsMultipleOps() ? hardwareOp : hardwareOp->next();
+    auto ret = findColorPipelineAssignments(nextHardwareOp, hardwareOp, nextOps, outputScaling ? std::optional(outputScaling->inverse) : std::nullopt);
+    if (!ret) {
+        if (!nextHardwareOp) {
+            return std::nullopt;
+        }
+        // in some cases, skipping hardware ops can find working configurations
+        // as some hardware ops can only operate on specific color spaces
+        return findColorPipelineAssignments(nextHardwareOp->next(), previousHardwareOp, ops, previousInverseOutputScaling);
+    }
+
+    const bool isOutput = ret->nextHardwareOp != hardwareOp;
+    if (isOutput) {
+        auto lastColorSpace = currentColorOp->outputSpace;
+        if (ret->nextInverseInputScaling) {
+            lastColorSpace = ret->nextInverseInputScaling->outputSpace;
+        } else if (outputScaling) {
+            lastColorSpace = outputScaling->inverse.inputSpace;
+        }
+        if (!hardwareOp->canBeInputOrOutput(lastColorSpace)) {
+            return std::nullopt;
+        }
+    }
+
+    // first, the pre-op scaling from the next hardware op
+    // NOTE that the "previous" hardware op is hardwareOp in this case
+    // as we're pushing currentColorOp before the next input scaling
+    if (!maybeApplyNextInputScaling(hardwareOp, hardwareOp, *ret)) {
+        return std::nullopt;
+    }
+
+    // next, our own output scaling
+    if (outputScaling && isOutput) {
+        // need to prepend, because we recursively walk back
+        // from the last color opt to the front
+        ret->assignments[hardwareOp].push_front(outputScaling->scaling);
+    }
+
+    // next, the actual operation
+    ret->assignments[hardwareOp].push_front(currentColorOp->operation);
+
+    // last, our own pre-op scaling
+    if (isInput) {
+        const auto inputScaling = hardwareOp->inputScaling(*currentColorOp);
+        if (inputScaling) {
+            ret->assignments[hardwareOp].push_front(inputScaling->scaling);
+            ret->nextInverseInputScaling = inputScaling->inverse;
+        }
+    }
+    ret->nextHardwareOp = hardwareOp;
+    return ret;
+}
+
 bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline)
 {
     if (m_cachedPipeline && *m_cachedPipeline == pipeline) {
@@ -67,69 +204,23 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
         }
         return true;
     }
-
-    DrmAbstractColorOp *currentOp = this;
-    const auto needsLimitedRange = [](const ColorOp &op) {
-        // KMS LUTs have an input and output range of [0, 1]
-        return std::holds_alternative<ColorTransferFunction>(op.operation)
-            || std::holds_alternative<InverseColorTransferFunction>(op.operation);
-    };
-
-    // first, only check if the pipeline can be programmed in the first place
-    // don't calculate LUTs just yet
-
-    std::unordered_map<DrmAbstractColorOp *, std::vector<ColorOp::Operation>> assignments;
-
-    double valueScaling = 1;
-    if (!pipeline.ops.empty() && needsLimitedRange(pipeline.ops.front()) && pipeline.ops.front().input.max > 1) {
-        valueScaling = 1.0 / pipeline.ops.front().input.max;
-        ColorOp initialOp{
-            .input = pipeline.ops.front().input,
-            .operation = ColorMultiplier{valueScaling},
-            .output = ValueRange{
-                .min = pipeline.ops.front().input.min * valueScaling,
-                .max = 1.0,
-            },
-        };
-        while (currentOp && !currentOp->canBeUsedFor(initialOp, false)) {
-            currentOp = currentOp->next();
-        }
-        if (!currentOp) {
-            return false;
-        }
-        assignments[currentOp].push_back(initialOp.operation);
+    if (m_cachedPipelineFail && *m_cachedPipelineFail == pipeline) {
+        return false;
     }
-    auto ops = std::span(pipeline.ops);
-    while (!ops.empty()) {
-        while (currentOp && !currentOp->canBeUsedFor(ops.front(), true)) {
-            currentOp = currentOp->next();
-        }
-        if (!currentOp) {
-            return false;
-        }
-        auto &hwOps = assignments[currentOp];
-        if (valueScaling != 1) {
-            // un-do the previous scaling, so we get the original values out again
-            hwOps.push_back(ColorMultiplier{1.0 / valueScaling});
-        }
-        hwOps.push_back(ops.front().operation);
-        if (ops.size() > 1 && ops.front().output.max > 1 && (needsLimitedRange(ops[0]) || needsLimitedRange(ops[1]))) {
-            // scale values so that LUTs with their [0; 1] range can represent the values
-            valueScaling = 1.0 / ops.front().output.max;
-            hwOps.push_back(ColorMultiplier{valueScaling});
-        } else {
-            valueScaling = 1;
-        }
-        ops = ops.subspan(1);
+
+    // first, search for the most optimal pipeline, without calculating LUTs
+    const auto ret = findColorPipelineAssignments(this, nullptr, pipeline.ops, std::nullopt);
+    if (!ret || ret->nextInverseInputScaling) {
+        m_cachedPipelineFail = pipeline;
+        return false;
     }
 
     // now actually program the properties
-    currentOp = this;
     m_cache = std::make_unique<DrmAtomicCommit>(commit->gpu());
-    currentOp = this;
+    DrmAbstractColorOp *currentOp = this;
     while (currentOp) {
-        const auto it = assignments.find(currentOp);
-        if (it != assignments.end()) {
+        const auto it = ret->assignments.find(currentOp);
+        if (it != ret->assignments.end()) {
             const auto &[op, program] = *it;
             currentOp->program(m_cache.get(), program);
         } else {
@@ -139,6 +230,21 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
     }
     commit->merge(m_cache.get());
     m_cachedPipeline = pipeline;
+    return true;
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmAbstractColorOp::inputScaling(const ColorOp &op) const
+{
+    return std::nullopt;
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmAbstractColorOp::outputScaling(const ColorOp &op) const
+{
+    return std::nullopt;
+}
+
+bool DrmAbstractColorOp::canBeInputOrOutput(ColorspaceType type) const
+{
     return true;
 }
 
@@ -152,24 +258,27 @@ DrmLutColorOp16::DrmLutColorOp16(DrmAbstractColorOp *next, DrmProperty *prop, Dr
 {
 }
 
-bool DrmLutColorOp16::canBeUsedFor(const ColorOp &op, bool normalizedInput)
+std::optional<DrmAbstractColorOp::Priority> DrmLutColorOp16::colorOpPreference(const ColorOp::Operation &op)
 {
-    constexpr double eta = 0.0001;
-    // if normalizedInput is true, we can assume the input to be bounded to [0; 1] already
-    if ((!normalizedInput && op.input.max > 1 + eta) || op.input.min < -eta) {
-        return false;
-    }
-    if (std::holds_alternative<ColorTransferFunction>(op.operation) || std::holds_alternative<InverseColorTransferFunction>(op.operation)
-        || std::holds_alternative<ColorTonemapper>(op.operation) || std::holds_alternative<std::shared_ptr<ColorTransformation>>(op.operation)) {
+    if (std::holds_alternative<ColorTransferFunction>(op) || std::holds_alternative<InverseColorTransferFunction>(op)
+        || std::holds_alternative<ColorTonemapper>(op) || std::holds_alternative<std::shared_ptr<ColorTransformation>>(op)) {
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
         // but this is good enough for now
-        return m_maxSize >= 256;
+        if (m_maxSize >= 1024) {
+            return Priority::Normal;
+        } else {
+            return Priority::Low;
+        }
+        // TODO also check matrices for scaling + offset only, which can be represented just fine!
+    } else if (std::holds_alternative<ColorMultiplier>(op)) {
+        return Priority::Low;
+    } else if (std::holds_alternative<ColorClamp>(op)) {
+        return Priority::High;
     }
-    return std::holds_alternative<ColorMultiplier>(op.operation)
-        || std::holds_alternative<ColorClamp>(op.operation);
+    return std::nullopt;
 }
 
-void DrmLutColorOp16::program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations)
+void DrmLutColorOp16::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
 {
     for (uint32_t i = 0; i < m_maxSize; i++) {
         const double input = i / double(m_maxSize - 1);
@@ -198,6 +307,46 @@ void DrmLutColorOp16::bypass(DrmAtomicCommit *commit)
     }
 }
 
+std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp16::inputScaling(const ColorOp &op) const
+{
+    if (op.input.max <= 1.001) {
+        return std::nullopt;
+    }
+    return Scaling{
+        .scaling = ColorMultiplier(op.input.max),
+        .inverse = ColorOp{
+            .input = op.input,
+            .inputSpace = op.inputSpace,
+            .operation = ColorMultiplier(1.0 / op.input.max),
+            .output = ValueRange{
+                .min = op.input.min / op.input.max,
+                .max = 1.0,
+            },
+            .outputSpace = op.inputSpace,
+        },
+    };
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp16::outputScaling(const ColorOp &op) const
+{
+    if (op.output.max <= 1.001) {
+        return std::nullopt;
+    }
+    return Scaling{
+        .scaling = ColorMultiplier(1.0 / op.output.max),
+        .inverse = ColorOp{
+            .input = ValueRange{
+                .min = op.output.min / op.output.max,
+                .max = 1.0,
+            },
+            .inputSpace = op.outputSpace,
+            .operation = ColorMultiplier(op.output.max),
+            .output = op.output,
+            .outputSpace = op.outputSpace,
+        },
+    };
+}
+
 DrmLutColorOp32::DrmLutColorOp32(DrmAbstractColorOp *next, DrmProperty *prop, DrmEnumProperty<Lut1DInterpolation> *interpolation, uint32_t maxSize, DrmProperty *bypass)
     : DrmAbstractColorOp(next, Features{Feature::MultipleOps} | Feature::Bypass, QStringLiteral("1D LUT"))
     , m_prop(prop)
@@ -208,24 +357,27 @@ DrmLutColorOp32::DrmLutColorOp32(DrmAbstractColorOp *next, DrmProperty *prop, Dr
 {
 }
 
-bool DrmLutColorOp32::canBeUsedFor(const ColorOp &op, bool normalizedInput)
+std::optional<DrmAbstractColorOp::Priority> DrmLutColorOp32::colorOpPreference(const ColorOp::Operation &op)
 {
-    constexpr double eta = 0.0001;
-    // if normalizedInput is true, we can assume the input to be bounded to [0; 1] already
-    if ((!normalizedInput && op.input.max > 1 + eta) || op.input.min < -eta) {
-        return false;
-    }
-    if (std::holds_alternative<ColorTransferFunction>(op.operation) || std::holds_alternative<InverseColorTransferFunction>(op.operation)
-        || std::holds_alternative<ColorTonemapper>(op.operation) || std::holds_alternative<std::shared_ptr<ColorTransformation>>(op.operation)) {
+    if (std::holds_alternative<ColorTransferFunction>(op) || std::holds_alternative<InverseColorTransferFunction>(op)
+        || std::holds_alternative<ColorTonemapper>(op) || std::holds_alternative<std::shared_ptr<ColorTransformation>>(op)) {
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
         // but this is good enough for now
-        return m_maxSize >= 256;
+        if (m_maxSize >= 1024) {
+            return Priority::Normal;
+        } else {
+            return Priority::Low;
+        }
+        // TODO also check matrices for scaling + offset only, which can be represented just fine!
+    } else if (std::holds_alternative<ColorMultiplier>(op)) {
+        return Priority::Low;
+    } else if (std::holds_alternative<ColorClamp>(op)) {
+        return Priority::High;
     }
-    return std::holds_alternative<ColorMultiplier>(op.operation)
-        || std::holds_alternative<ColorClamp>(op.operation);
+    return std::nullopt;
 }
 
-void DrmLutColorOp32::program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations)
+void DrmLutColorOp32::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
 {
     for (uint32_t i = 0; i < m_maxSize; i++) {
         const double input = i / double(m_maxSize - 1);
@@ -254,27 +406,73 @@ void DrmLutColorOp32::bypass(DrmAtomicCommit *commit)
     }
 }
 
+std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp32::inputScaling(const ColorOp &op) const
+{
+    if (op.input.max <= 1.001) {
+        return std::nullopt;
+    }
+    return Scaling{
+        .scaling = ColorMultiplier(op.input.max),
+        .inverse = ColorOp{
+            .input = op.input,
+            .inputSpace = op.inputSpace,
+            .operation = ColorMultiplier(1.0 / op.input.max),
+            .output = ValueRange{
+                .min = op.input.min / op.input.max,
+                .max = 1.0,
+            },
+            .outputSpace = op.inputSpace,
+        },
+    };
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp32::outputScaling(const ColorOp &op) const
+{
+    if (op.output.max <= 1.001) {
+        return std::nullopt;
+    }
+    return Scaling{
+        .scaling = ColorMultiplier(1.0 / op.output.max),
+        .inverse = ColorOp{
+            .input = ValueRange{
+                .min = op.output.min / op.output.max,
+                .max = 1.0,
+            },
+            .inputSpace = op.outputSpace,
+            .operation = ColorMultiplier(op.output.max),
+            .output = op.output,
+            .outputSpace = op.outputSpace,
+        },
+    };
+}
+
 LegacyMatrixColorOp::LegacyMatrixColorOp(DrmAbstractColorOp *next, DrmProperty *prop)
     : DrmAbstractColorOp(next, Features{Feature::Bypass} | Feature::MultipleOps, QStringLiteral("legacy matrix"))
     , m_prop(prop)
 {
 }
 
-bool LegacyMatrixColorOp::canBeUsedFor(const ColorOp &op, bool normalizedInput)
+std::optional<DrmAbstractColorOp::Priority> LegacyMatrixColorOp::colorOpPreference(const ColorOp::Operation &op)
 {
-    // this isn't necessarily true, but let's keep things simple for now
-    if (auto matrix = std::get_if<ColorMatrix>(&op.operation)) {
-        return std::abs(matrix->mat(3, 0) - 0) < ColorPipeline::s_maxResolution
+    // TODO check the resolution of the matrix too?
+    // -> values above abs(5) should be re-scaled with a different (previous?) operation
+    if (auto matrix = std::get_if<ColorMatrix>(&op)) {
+        const bool canRepresent = std::abs(matrix->mat(3, 0) - 0) < ColorPipeline::s_maxResolution
             && std::abs(matrix->mat(3, 1) - 0) < ColorPipeline::s_maxResolution
             && std::abs(matrix->mat(3, 2) - 0) < ColorPipeline::s_maxResolution
             && std::abs(matrix->mat(3, 3) - 1) < ColorPipeline::s_maxResolution
             && std::abs(matrix->mat(0, 3) - 0) < ColorPipeline::s_maxResolution
             && std::abs(matrix->mat(1, 3) - 0) < ColorPipeline::s_maxResolution
             && std::abs(matrix->mat(2, 3) - 0) < ColorPipeline::s_maxResolution;
-    } else if (std::holds_alternative<ColorMultiplier>(op.operation)) {
-        return true;
+        if (!canRepresent) {
+            return std::nullopt;
+        } else {
+            return Priority::Normal;
+        }
+    } else if (std::holds_alternative<ColorMultiplier>(op)) {
+        return Priority::Low;
     }
-    return false;
+    return std::nullopt;
 }
 
 static uint64_t doubleToFixed(double value)
@@ -287,7 +485,7 @@ static uint64_t doubleToFixed(double value)
     return ret;
 }
 
-void LegacyMatrixColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations)
+void LegacyMatrixColorOp::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
 {
     // NOTE that matrix operations have to be added in reverse order to get the correct result!
     QMatrix4x4 result;
@@ -322,22 +520,27 @@ Matrix3x4ColorOp::Matrix3x4ColorOp(DrmAbstractColorOp *next, DrmProperty *prop, 
 {
 }
 
-bool Matrix3x4ColorOp::canBeUsedFor(const ColorOp &op, bool normalizedInput)
+std::optional<DrmAbstractColorOp::Priority> Matrix3x4ColorOp::colorOpPreference(const ColorOp::Operation &op)
 {
     // TODO check the resolution of the matrix too?
     // -> values above abs(5) should be re-scaled with a different (previous?) operation
-    if (auto matrix = std::get_if<ColorMatrix>(&op.operation)) {
-        return matrix->mat(3, 0) == 0
+    if (auto matrix = std::get_if<ColorMatrix>(&op)) {
+        const bool canRepresent = matrix->mat(3, 0) == 0
             && matrix->mat(3, 1) == 0
             && matrix->mat(3, 2) == 0
             && matrix->mat(3, 3) == 1;
-    } else if (std::holds_alternative<ColorMultiplier>(op.operation)) {
-        return true;
+        if (!canRepresent) {
+            return std::nullopt;
+        } else {
+            return Priority::Normal;
+        }
+    } else if (std::holds_alternative<ColorMultiplier>(op)) {
+        return Priority::Low;
     }
-    return false;
+    return std::nullopt;
 }
 
-void Matrix3x4ColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations)
+void Matrix3x4ColorOp::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
 {
     // NOTE that matrix operations have to be added in reverse order to get the correct result!
     QMatrix4x4 result;
@@ -372,12 +575,12 @@ UnknownColorOp::UnknownColorOp(DrmAbstractColorOp *next, DrmProperty *bypass)
 {
 }
 
-bool UnknownColorOp::canBeUsedFor(const ColorOp &op, bool normalizedInput)
+std::optional<DrmAbstractColorOp::Priority> UnknownColorOp::colorOpPreference(const ColorOp::Operation &op)
 {
-    return false;
+    return std::nullopt;
 }
 
-void UnknownColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations)
+void UnknownColorOp::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
 {
     Q_UNREACHABLE();
 }
@@ -397,7 +600,22 @@ DrmLut3DColorOp::DrmLut3DColorOp(DrmAbstractColorOp *next, DrmProperty *value, D
 {
 }
 
-void DrmLut3DColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations)
+std::optional<DrmAbstractColorOp::Priority> DrmLut3DColorOp::colorOpPreference(const ColorOp::Operation &op)
+{
+    // everything can be represented as a 3D lut,
+    // but resolution isn't great, so push it to other ops if possible
+    return Priority::Low;
+}
+
+bool DrmLut3DColorOp::canBeInputOrOutput(ColorspaceType type) const
+{
+    // because resolution is so limited, input or output has to be non-linear RGB
+    // linear RGB as I/O is also okay, because we can apply scaling to it
+    return type == ColorspaceType::NonLinearRGB
+        || type == ColorspaceType::LinearRGB;
+}
+
+void DrmLut3DColorOp::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
 {
     for (size_t r = 0; r < m_size; r++) {
         for (size_t g = 0; g < m_size; g++) {
@@ -427,18 +645,54 @@ void DrmLut3DColorOp::bypass(DrmAtomicCommit *commit)
     commit->addProperty(*m_bypass, 1);
 }
 
-bool DrmLut3DColorOp::canBeUsedFor(const ColorOp &op, bool normalizedInput)
+std::optional<DrmAbstractColorOp::Scaling> DrmLut3DColorOp::inputScaling(const ColorOp &op) const
 {
-    constexpr double eta = 0.0001;
-    // if normalizedInput is true, we can assume the input to be bounded to [0; 1] already
-    if ((!normalizedInput && op.input.max > 1 + eta) || op.input.min < -eta) {
-        return false;
+    if (op.inputSpace == ColorspaceType::NonLinearRGB) {
+        // The encoding is already some sort of non-linear RGB, applying PQ
+        // on top of that would just make things worse rather than better
+        // TODO use a custom LUT to use the limited resolution as much as is possible
+        return std::nullopt;
     }
-    // restricted to simple multipliers and matrices for now,
-    // as everything else requires more effort to be yield good results
-    return std::holds_alternative<ColorMultiplier>(op.operation)
-        || std::holds_alternative<ColorMatrix>(op.operation)
-        || std::holds_alternative<ColorClamp>(op.operation);
+    TransferFunction tf{TransferFunction::PerceptualQuantizer, op.input.min, op.input.max};
+    return Scaling{
+        .scaling = ColorTransferFunction(tf),
+        .inverse = ColorOp{
+            .input = op.input,
+            .inputSpace = op.inputSpace,
+            .operation = InverseColorTransferFunction(tf),
+            .output = ValueRange{
+                .min = 0,
+                .max = 1,
+            },
+            // NOTE this assumption only works because we enforce it in canBeInputOrOutput
+            .outputSpace = ColorspaceType::NonLinearRGB,
+        },
+    };
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmLut3DColorOp::outputScaling(const ColorOp &op) const
+{
+    if (op.inputSpace == ColorspaceType::NonLinearRGB) {
+        // The encoding is already some sort of non-linear RGB, applying PQ
+        // on top of that would just make things worse rather than better
+        // TODO use a custom LUT to use the limited resolution as much as is possible
+        return std::nullopt;
+    }
+    TransferFunction tf{TransferFunction::PerceptualQuantizer, op.output.min, op.output.max};
+    return Scaling{
+        .scaling = InverseColorTransferFunction(tf),
+        .inverse = ColorOp{
+            .input = ValueRange{
+                .min = 0,
+                .max = 1,
+            },
+            // NOTE this assumption only works because we enforce it in canBeInputOrOutput
+            .inputSpace = ColorspaceType::NonLinearRGB,
+            .operation = ColorTransferFunction(tf),
+            .output = op.output,
+            .outputSpace = op.outputSpace,
+        },
+    };
 }
 
 DrmMultiplier::DrmMultiplier(DrmAbstractColorOp *next, DrmProperty *value, DrmProperty *bypass)
@@ -453,19 +707,28 @@ static float commonScaling(const QMatrix4x4 &mat)
     return std::min({mat(0, 0), mat(1, 1), mat(2, 2)});
 }
 
-bool DrmMultiplier::canBeUsedFor(const ColorOp &op, bool normalizedInput)
+std::optional<DrmAbstractColorOp::Priority> DrmMultiplier::colorOpPreference(const ColorOp::Operation &op)
 {
-    if (const auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
+    if (const auto mult = std::get_if<ColorMultiplier>(&op)) {
         const float diff1 = std::abs(mult->factors.x() - mult->factors.y());
         const float diff2 = std::abs(mult->factors.y() - mult->factors.z());
         const float diff3 = std::abs(mult->factors.z() - mult->factors.x());
         const float maxDiff = std::max({diff1, diff2, diff3});
-        return maxDiff < 0.00001;
+        if (maxDiff < 0.00001) {
+            return Priority::High;
+        }
+    } else if (const auto mat = std::get_if<ColorMatrix>(&op)) {
+        // we want to partially apply the matrix
+        // as this has much higher resolution than matrices in hardware
+        const float common = commonScaling(mat->mat);
+        if (!qFuzzyIsNull(common) && !qFuzzyCompare(common, 1)) {
+            return Priority::High;
+        }
     }
-    return false;
+    return std::nullopt;
 }
 
-void DrmMultiplier::program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations)
+void DrmMultiplier::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
 {
     double factor = 1;
     for (const auto &op : operations) {
@@ -484,6 +747,33 @@ void DrmMultiplier::program(DrmAtomicCommit *commit, std::span<const ColorOp::Op
 void DrmMultiplier::bypass(DrmAtomicCommit *commit)
 {
     commit->addProperty(*m_bypass, 1);
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmMultiplier::inputScaling(const ColorOp &op) const
+{
+    return std::nullopt;
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmMultiplier::outputScaling(const ColorOp &op) const
+{
+    if (const auto mat = std::get_if<ColorMatrix>(&op.operation)) {
+        const float scaling = commonScaling(mat->mat);
+        QMatrix4x4 remaining = mat->mat;
+        remaining.scale(1.0 / scaling);
+        if (!isFuzzyIdentity(remaining)) {
+            return Scaling{
+                .scaling = ColorMatrix(remaining.inverted()),
+                .inverse = ColorOp{
+                    .input = op.output * (1.0 / scaling),
+                    .inputSpace = op.inputSpace,
+                    .operation = ColorMatrix(remaining),
+                    .output = op.output,
+                    .outputSpace = op.outputSpace,
+                },
+            };
+        }
+    }
+    return std::nullopt;
 }
 
 DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
