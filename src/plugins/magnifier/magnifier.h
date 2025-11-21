@@ -41,6 +41,7 @@ public:
     QSize magnifierSize() const;
     qreal targetZoom() const;
 private Q_SLOTS:
+    void saveInitialZoom();
     void zoomIn();
     void zoomOut();
     void toggle();
@@ -56,6 +57,7 @@ private:
     void setTargetZoom(double zoomFactor);
     void realtimeZoom(double delta);
 
+    std::unique_ptr<QTimer> m_configurationTimer;
     double m_zoom;
     double m_targetZoom;
     double m_zoomFactor;

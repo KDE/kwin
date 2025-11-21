@@ -59,6 +59,7 @@ public:
     qreal targetZoom() const;
 
 private Q_SLOTS:
+    void saveInitialZoom();
     void zoomIn();
     void zoomTo(double to);
     void zoomOut();
@@ -114,6 +115,7 @@ private:
     void trackTextCaret();
     void trackFocus();
 
+    std::unique_ptr<QTimer> m_configurationTimer;
     double m_zoom = 1.0;
     double m_targetZoom = 1.0;
     double m_sourceZoom = 1.0;

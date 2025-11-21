@@ -14,6 +14,7 @@
 #include "magnifierconfig.h"
 
 #include <QAction>
+#include <QTimer>
 
 #include <KStandardActions>
 
@@ -36,6 +37,11 @@ MagnifierEffect::MagnifierEffect()
     , m_targetZoom(1)
     , m_lastPresentTime(std::chrono::milliseconds::zero())
 {
+    m_configurationTimer = std::make_unique<QTimer>();
+    m_configurationTimer->setSingleShot(true);
+    m_configurationTimer->setInterval(1s);
+    connect(m_configurationTimer.get(), &QTimer::timeout, this, &MagnifierEffect::saveInitialZoom);
+
     MagnifierConfig::instance(effects->config());
     QAction *a;
     a = KStandardActions::zoomIn(this, &MagnifierEffect::zoomIn, this);
@@ -88,8 +94,7 @@ MagnifierEffect::MagnifierEffect()
 MagnifierEffect::~MagnifierEffect()
 {
     // Save the zoom value.
-    MagnifierConfig::setInitialZoom(m_targetZoom);
-    MagnifierConfig::self()->save();
+    saveInitialZoom();
 }
 
 bool MagnifierEffect::supported()
@@ -315,6 +320,12 @@ qreal MagnifierEffect::targetZoom() const
     return m_targetZoom;
 }
 
+void MagnifierEffect::saveInitialZoom()
+{
+    MagnifierConfig::setInitialZoom(m_targetZoom);
+    MagnifierConfig::self()->save();
+}
+
 void MagnifierEffect::setTargetZoom(double zoomFactor)
 {
     const double effectiveTargetZoom = std::clamp(zoomFactor, 1.0, 100.0);
@@ -324,6 +335,7 @@ void MagnifierEffect::setTargetZoom(double zoomFactor)
 
     m_targetZoom = effectiveTargetZoom;
     effects->addRepaint(visibleArea());
+    m_configurationTimer->start();
 }
 
 void MagnifierEffect::realtimeZoom(double delta)

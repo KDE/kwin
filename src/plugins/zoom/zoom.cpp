@@ -28,6 +28,7 @@
 #include <KStandardActions>
 
 #include <QAction>
+#include <QTimer>
 
 using namespace std::chrono_literals;
 
@@ -43,6 +44,11 @@ namespace KWin
 ZoomEffect::ZoomEffect()
 {
     ensureResources();
+
+    m_configurationTimer = std::make_unique<QTimer>();
+    m_configurationTimer->setInterval(1s);
+    m_configurationTimer->setSingleShot(true);
+    connect(m_configurationTimer.get(), &QTimer::timeout, this, &ZoomEffect::saveInitialZoom);
 
     ZoomConfig::instance(effects->config());
     QAction *a = nullptr;
@@ -144,8 +150,7 @@ ZoomEffect::~ZoomEffect()
     // switch off and free resources
     showCursor();
     // Save the zoom value.
-    ZoomConfig::setInitialZoom(m_targetZoom);
-    ZoomConfig::self()->save();
+    saveInitialZoom();
 }
 
 QPointF ZoomEffect::calculateCursorItemPosition() const
@@ -627,6 +632,12 @@ qreal ZoomEffect::targetZoom() const
     return m_targetZoom;
 }
 
+void ZoomEffect::saveInitialZoom()
+{
+    ZoomConfig::setInitialZoom(m_targetZoom);
+    ZoomConfig::self()->save();
+}
+
 bool ZoomEffect::screenExistsAt(const QPoint &point) const
 {
     const Output *output = effects->screenAt(point);
@@ -659,6 +670,7 @@ void ZoomEffect::setTargetZoom(double value)
         disconnect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
     }
     m_targetZoom = value;
+    m_configurationTimer->start();
     effects->addRepaintFull();
 }
 
