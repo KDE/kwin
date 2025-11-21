@@ -4176,16 +4176,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland се срина"
-
-#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
-#~ msgid "Show Desktop"
-#~ msgstr "Показване на работния плот"
-
-#~ msgid "Shaded"
-#~ msgstr "Сгънат"
-
-#~ msgid "Shaded rule type"
-#~ msgstr "Тип правило на сгъване"
-
-#~ msgid "Shade Window"
-#~ msgstr "Сгъване на прозорец"
