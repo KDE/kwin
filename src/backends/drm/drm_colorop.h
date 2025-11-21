@@ -232,6 +232,33 @@ private:
     DrmProperty *const m_bypass;
 };
 
+enum class Named1DLutType {
+    sRGB,
+    sRGB_Inverse,
+    PQ_125,
+    PQ_125_Inverse,
+    gamma22,
+    gamma22_Inverse
+};
+
+class DrmNamed1DLut : public DrmAbstractColorOp
+{
+public:
+    explicit DrmNamed1DLut(DrmAbstractColorOp *next, DrmEnumProperty<Named1DLutType> *value, DrmProperty *bypass);
+
+    std::optional<Priority> colorOpPreference(const ColorOp::Operation &op) override;
+    void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) override;
+    void bypass(DrmAtomicCommit *commit) override;
+    std::optional<Scaling> inputScaling(const ColorOp &op) const override;
+    std::optional<Scaling> outputScaling(const ColorOp &op) const override;
+
+private:
+    std::optional<Named1DLutType> getType(const ColorOp::Operation &op) const;
+
+    DrmEnumProperty<Named1DLutType> *const m_value;
+    DrmProperty *const m_bypass;
+};
+
 class DrmColorOp : public DrmObject
 {
 public:
@@ -249,6 +276,7 @@ private:
         Matrix3x4,
         Lut3D,
         Multiplier,
+        NamedLut1D,
     };
     DrmProperty m_next;
     DrmEnumProperty<Type> m_type;
@@ -256,6 +284,7 @@ private:
     DrmProperty m_size;
     DrmProperty m_bypass;
     DrmProperty m_multiplier;
+    DrmEnumProperty<Named1DLutType> m_1dNamedLutType;
     DrmEnumProperty<Lut1DInterpolation> m_lut1dInterpolation;
     DrmEnumProperty<Lut3DInterpolation> m_lut3dInterpolation;
     std::unique_ptr<DrmAbstractColorOp> m_op;

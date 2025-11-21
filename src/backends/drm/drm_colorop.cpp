@@ -776,6 +776,140 @@ std::optional<DrmAbstractColorOp::Scaling> DrmMultiplier::outputScaling(const Co
     return std::nullopt;
 }
 
+DrmNamed1DLut::DrmNamed1DLut(DrmAbstractColorOp *next, DrmEnumProperty<Named1DLutType> *value, DrmProperty *bypass)
+    : DrmAbstractColorOp(next, bypass ? Feature::Bypass : Features{}, QStringLiteral("1D curve"))
+    , m_value(value)
+    , m_bypass(bypass)
+{
+}
+
+std::optional<Named1DLutType> DrmNamed1DLut::getType(const ColorOp::Operation &op) const
+{
+    if (const auto tf = std::get_if<ColorTransferFunction>(&op)) {
+        switch (tf->tf.type) {
+        case TransferFunction::sRGB:
+            return Named1DLutType::sRGB;
+        case TransferFunction::PerceptualQuantizer:
+            return Named1DLutType::PQ_125;
+        case TransferFunction::gamma22:
+            return Named1DLutType::gamma22;
+        default:
+            return std::nullopt;
+        }
+    } else if (const auto invTf = std::get_if<InverseColorTransferFunction>(&op)) {
+        switch (invTf->tf.type) {
+        case TransferFunction::sRGB:
+            return Named1DLutType::sRGB_Inverse;
+        case TransferFunction::PerceptualQuantizer:
+            return Named1DLutType::PQ_125_Inverse;
+        case TransferFunction::gamma22:
+            return Named1DLutType::gamma22_Inverse;
+        default:
+            return std::nullopt;
+        }
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<DrmAbstractColorOp::Priority> DrmNamed1DLut::colorOpPreference(const ColorOp::Operation &op)
+{
+    const auto namedLut = getType(op);
+    if (!namedLut) {
+        return std::nullopt;
+    }
+    if (m_value->hasEnum(*namedLut)) {
+        return Priority::High;
+    } else {
+        return std::nullopt;
+    }
+}
+
+void DrmNamed1DLut::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
+{
+    // there may be the input / output scaling matrix in here, ignore it
+    const auto curve = std::ranges::find_if(operations, [](const ColorOp::Operation &op) {
+        return std::holds_alternative<ColorTransferFunction>(op)
+            || std::holds_alternative<InverseColorTransferFunction>(op);
+    });
+    Q_ASSERT(curve != operations.end());
+    commit->addEnum(*m_value, *getType(*curve));
+    if (m_bypass) {
+        commit->addProperty(*m_bypass, 0);
+    }
+}
+
+void DrmNamed1DLut::bypass(DrmAtomicCommit *commit)
+{
+    commit->addProperty(*m_bypass, 1);
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmNamed1DLut::inputScaling(const ColorOp &op) const
+{
+    const auto evaluateMat = [](const QMatrix4x4 &mat, float value) {
+        return (mat * QVector3D(value, value, value)).x();
+    };
+    if (const auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
+        // TODO this should ideally use an offset+scaling op, and not a generic matrix
+        QMatrix4x4 mat;
+        if (tf->tf.type == TransferFunction::PerceptualQuantizer) {
+            // PQ 125 is used, where 10k nits is 125
+            mat.scale(125.0);
+        }
+        mat.scale(1.0 / (tf->tf.maxLuminance - tf->tf.minLuminance));
+        mat.translate(-tf->tf.minLuminance, -tf->tf.minLuminance, -tf->tf.minLuminance);
+        return Scaling{
+            .scaling = ColorMatrix(mat.inverted()),
+            .inverse = ColorOp{
+                .input = op.input,
+                .inputSpace = op.inputSpace,
+                .operation = ColorMatrix(mat),
+                .output = ValueRange{
+                    .min = evaluateMat(mat, op.input.min),
+                    .max = evaluateMat(mat, op.input.max),
+                },
+                // not linear, not normal nonlinear either though
+                .outputSpace = ColorspaceType::AnyNonRGB,
+            },
+        };
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmNamed1DLut::outputScaling(const ColorOp &op) const
+{
+    const auto evaluateMat = [](const QMatrix4x4 &mat, float value) {
+        return (mat * QVector3D(value, value, value)).x();
+    };
+    if (const auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
+        // TODO this should ideally use an offset+scaling op, and not a generic matrix
+        QMatrix4x4 invMat;
+        invMat.translate(tf->tf.minLuminance, tf->tf.minLuminance, tf->tf.minLuminance);
+        invMat.scale(tf->tf.maxLuminance - tf->tf.minLuminance);
+        if (tf->tf.type == TransferFunction::PerceptualQuantizer) {
+            // PQ 125 is used, where 10k nits is 125
+            invMat.scale(1 / 125.0);
+        }
+        return Scaling{
+            .scaling = ColorMatrix(invMat.inverted()),
+            .inverse = ColorOp{
+                .input = ValueRange{
+                    .min = evaluateMat(invMat, op.output.min),
+                    .max = evaluateMat(invMat, op.output.max),
+                },
+                // not linear, not normal nonlinear either though
+                .inputSpace = ColorspaceType::AnyNonRGB,
+                .operation = ColorMatrix(invMat),
+                .output = op.output,
+                .outputSpace = op.outputSpace,
+            },
+        };
+    } else {
+        return std::nullopt;
+    }
+}
+
 DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
     : DrmObject(gpu, objectId, DRM_MODE_OBJECT_ANY)
     , m_next(this, QByteArrayLiteral("NEXT"))
@@ -784,11 +918,20 @@ DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
                                                   QByteArrayLiteral("3x4 Matrix"),
                                                   QByteArrayLiteral("3D LUT"),
                                                   QByteArrayLiteral("Multiplier"),
+                                                  QByteArrayLiteral("1D Curve"),
                                               })
     , m_data(this, QByteArrayLiteral("DATA"))
     , m_size(this, QByteArrayLiteral("SIZE"))
     , m_bypass(this, QByteArrayLiteral("BYPASS"))
     , m_multiplier(this, QByteArrayLiteral("MULTIPLIER"))
+    , m_1dNamedLutType(this, QByteArrayLiteral("CURVE_1D_TYPE"), {
+                                                                     QByteArrayLiteral("sRGB EOTF"),
+                                                                     QByteArrayLiteral("sRGB Inverse EOTF"),
+                                                                     QByteArrayLiteral("PQ 125 EOTF"),
+                                                                     QByteArrayLiteral("PQ 125 Inverse EOTF"),
+                                                                     QByteArrayLiteral("Gamma 2.2"),
+                                                                     QByteArrayLiteral("Gamma 2.2 Inverse"),
+                                                                 })
     , m_lut1dInterpolation(this, QByteArrayLiteral("LUT1D_INTERPOLATION"), {QByteArrayLiteral("Linear")})
     , m_lut3dInterpolation(this, QByteArrayLiteral("LUT3D_INTERPOLATION"), {QByteArrayLiteral("Tetrahedal")})
 {
@@ -818,6 +961,7 @@ bool DrmColorOp::updateProperties()
     m_size.update(props);
     m_bypass.update(props);
     m_multiplier.update(props);
+    m_1dNamedLutType.update(props);
     m_lut1dInterpolation.update(props);
     m_lut3dInterpolation.update(props);
 
@@ -875,6 +1019,14 @@ bool DrmColorOp::updateProperties()
             return true;
         }
         m_op = std::make_unique<DrmMultiplier>(next, &m_multiplier, bypassProp);
+        return true;
+    case Type::NamedLut1D:
+        if (!m_1dNamedLutType.isValid()) {
+            qCWarning(KWIN_DRM, "Skipping 1D lut with invalid type property");
+            m_op = std::make_unique<UnknownColorOp>(next, bypassProp);
+            return true;
+        }
+        m_op = std::make_unique<DrmNamed1DLut>(next, &m_1dNamedLutType, bypassProp);
         return true;
     }
     Q_UNREACHABLE();
