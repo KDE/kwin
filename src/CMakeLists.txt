@@ -149,6 +149,7 @@ target_sources(kwin PRIVATE
     popup_input_filter.cpp
     qpainter/qpainterbackend.cpp
     qpainter/qpainterswapchain.cpp
+    renderloopdrivenqanimationdriver.cpp
     resources.qrc
     rulebooksettings.cpp
     rules.cpp

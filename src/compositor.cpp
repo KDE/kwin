@@ -26,6 +26,7 @@
 #include "opengl/eglbackend.h"
 #include "opengl/glplatform.h"
 #include "qpainter/qpainterbackend.h"
+#include "renderloopdrivenqanimationdriver.h"
 #include "scene/itemrenderer_opengl.h"
 #include "scene/itemrenderer_qpainter.h"
 #include "scene/surfaceitem.h"
@@ -70,9 +71,20 @@ Compositor *Compositor::self()
 Compositor::Compositor(QObject *workspace)
     : QObject(workspace)
     , m_allowOverlaysEnv(environmentVariableBoolValue("KWIN_USE_OVERLAYS"))
+    , m_renderLoopDrivenAnimationDriver(new RenderLoopDrivenQAnimationDriver(this))
 {
     // register DBus
     new CompositorDBusInterface(this);
+
+    m_renderLoopDrivenAnimationDriver->install();
+    connect(m_renderLoopDrivenAnimationDriver, &RenderLoopDrivenQAnimationDriver::started, this, [this]() {
+        // foreach output, schedule repaint on render loop
+        for (const auto &it : m_primaryViews) {
+            RenderLoop *loop = it.first;
+            loop->scheduleRepaint();
+        }
+    });
+
     FTraceLogger::create();
 }
 
@@ -582,7 +594,9 @@ void Compositor::composite(RenderLoop *renderLoop)
         reinitialize();
         return;
     }
-
+    if (m_renderLoopDrivenAnimationDriver->isRunning()) {
+        m_renderLoopDrivenAnimationDriver->advanceToNextFrame(renderLoop->nextPresentationTimestamp());
+    }
     Output *output = findOutput(renderLoop);
     const auto primaryView = m_primaryViews[renderLoop].get();
     fTraceDuration("Paint (", output->name(), ")");
@@ -939,8 +953,12 @@ void Compositor::composite(RenderLoop *renderLoop)
         output->repairPresentation();
     }
 
-    if ((frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting() * output->dimming()) > 0.001)
-        || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001)) {
+    const bool forceRepaintForBrightness = (frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting() * output->dimming()) > 0.001)
+        || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001);
+
+    const bool forceRepaintForOffscreenAnimations = m_renderLoopDrivenAnimationDriver->isRunning();
+
+    if (forceRepaintForBrightness || forceRepaintForOffscreenAnimations) {
         // we're currently running an animation to change the brightness
         renderLoop->scheduleRepaint();
     }

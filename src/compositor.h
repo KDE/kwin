@@ -33,6 +33,7 @@ class Window;
 class OutputFrame;
 class SceneView;
 class ItemView;
+class RenderLoopDrivenQAnimationDriver;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -112,6 +113,7 @@ protected:
     std::unordered_map<RenderLoop *, std::unordered_map<OutputLayer *, std::unique_ptr<ItemView>>> m_overlayViews;
     std::unordered_set<RenderLoop *> m_brokenCursors;
     std::optional<bool> m_allowOverlaysEnv;
+    RenderLoopDrivenQAnimationDriver *m_renderLoopDrivenAnimationDriver;
 };
 
 } // namespace KWin
