@@ -42,9 +42,17 @@ public:
     virtual ~DrmAbstractColorOp();
 
     bool matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline);
+    virtual std::optional<Priority> colorOpPreference(const ColorOp::Operation &op) = 0;
+    virtual bool canBeInputOrOutput(ColorspaceType type) const;
     virtual void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) = 0;
     virtual void bypass(DrmAtomicCommit *commit) = 0;
-    virtual bool canBeUsedFor(const ColorOp &op, bool normalizedInput) = 0;
+    struct Scaling
+    {
+        ColorOp::Operation scaling;
+        ColorOp inverse;
+    };
+    virtual std::optional<Scaling> inputScaling(const ColorOp &op) const;
+    virtual std::optional<Scaling> outputScaling(const ColorOp &op) const;
 
     DrmAbstractColorOp *next() const;
     bool canBypass() const;
@@ -70,9 +78,11 @@ class DrmLutColorOp16 : public DrmAbstractColorOp
 public:
     explicit DrmLutColorOp16(DrmAbstractColorOp *next, DrmProperty *prop, DrmEnumProperty<Lut1DInterpolation> *interpolation, uint32_t maxSize, DrmProperty *bypass);
 
+    std::optional<Priority> colorOpPreference(const ColorOp::Operation &op) override;
     void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) override;
     void bypass(DrmAtomicCommit *commit) override;
-    bool canBeUsedFor(const ColorOp &op, bool normalizedInput) override;
+    std::optional<Scaling> inputScaling(const ColorOp &op) const override;
+    std::optional<Scaling> outputScaling(const ColorOp &op) const override;
 
 private:
     DrmProperty *const m_prop;
@@ -96,9 +106,11 @@ class DrmLutColorOp32 : public DrmAbstractColorOp
 public:
     explicit DrmLutColorOp32(DrmAbstractColorOp *next, DrmProperty *prop, DrmEnumProperty<Lut1DInterpolation> *interpolation, uint32_t maxSize, DrmProperty *bypass);
 
+    std::optional<Priority> colorOpPreference(const ColorOp::Operation &op) override;
     void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) override;
     void bypass(DrmAtomicCommit *commit) override;
-    bool canBeUsedFor(const ColorOp &op, bool normalizedInput) override;
+    std::optional<Scaling> inputScaling(const ColorOp &op) const override;
+    std::optional<Scaling> outputScaling(const ColorOp &op) const override;
 
 private:
     DrmProperty *const m_prop;
@@ -113,9 +125,9 @@ class LegacyMatrixColorOp : public DrmAbstractColorOp
 public:
     explicit LegacyMatrixColorOp(DrmAbstractColorOp *next, DrmProperty *prop);
 
+    std::optional<Priority> colorOpPreference(const ColorOp::Operation &op) override;
     void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) override;
     void bypass(DrmAtomicCommit *commit) override;
-    bool canBeUsedFor(const ColorOp &op, bool normalizedInput) override;
 
 private:
     DrmProperty *const m_prop;
@@ -126,9 +138,9 @@ class Matrix3x4ColorOp : public DrmAbstractColorOp
 public:
     explicit Matrix3x4ColorOp(DrmAbstractColorOp *next, DrmProperty *prop, DrmProperty *bypass);
 
+    std::optional<Priority> colorOpPreference(const ColorOp::Operation &op) override;
     void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) override;
     void bypass(DrmAtomicCommit *commit) override;
-    bool canBeUsedFor(const ColorOp &op, bool normalizedInput) override;
 
 private:
     DrmProperty *const m_prop;
@@ -140,9 +152,9 @@ class UnknownColorOp : public DrmAbstractColorOp
 public:
     explicit UnknownColorOp(DrmAbstractColorOp *next, DrmProperty *bypass);
 
+    std::optional<Priority> colorOpPreference(const ColorOp::Operation &op) override;
     void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) override;
     void bypass(DrmAtomicCommit *commit) override;
-    bool canBeUsedFor(const ColorOp &op, bool normalizedInput) override;
 
 private:
     DrmProperty *const m_bypass;
@@ -157,9 +169,12 @@ class DrmLut3DColorOp : public DrmAbstractColorOp
 public:
     explicit DrmLut3DColorOp(DrmAbstractColorOp *next, DrmProperty *value, DrmProperty *bypass, size_t size, DrmEnumProperty<Lut3DInterpolation> *interpolation);
 
+    std::optional<Priority> colorOpPreference(const ColorOp::Operation &op) override;
+    bool canBeInputOrOutput(ColorspaceType type) const override;
     void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) override;
     void bypass(DrmAtomicCommit *commit) override;
-    bool canBeUsedFor(const ColorOp &op, bool normalizedInput) override;
+    std::optional<Scaling> inputScaling(const ColorOp &op) const override;
+    std::optional<Scaling> outputScaling(const ColorOp &op) const override;
 
 private:
     DrmProperty *const m_value;
@@ -174,9 +189,11 @@ class DrmMultiplier : public DrmAbstractColorOp
 public:
     explicit DrmMultiplier(DrmAbstractColorOp *next, DrmProperty *value, DrmProperty *bypass);
 
+    std::optional<Priority> colorOpPreference(const ColorOp::Operation &op) override;
     void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) override;
     void bypass(DrmAtomicCommit *commit) override;
-    bool canBeUsedFor(const ColorOp &op, bool normalizedInput) override;
+    std::optional<Scaling> inputScaling(const ColorOp &op) const override;
+    std::optional<Scaling> outputScaling(const ColorOp &op) const override;
 
 private:
     DrmProperty *const m_value;
