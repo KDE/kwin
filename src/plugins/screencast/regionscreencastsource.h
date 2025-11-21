@@ -14,11 +14,10 @@
 namespace KWin
 {
 
-class LogicalOutput;
+class FilteredSceneView;
+class ItemTreeView;
 class RegionScreenCastSource;
 class ScreencastLayer;
-class SceneView;
-class ItemTreeView;
 
 class RegionScreenCastSource : public ScreenCastSource
 {
@@ -50,12 +49,14 @@ public:
 private:
     const QRect m_region;
     const qreal m_scale;
+    const std::optional<pid_t> m_pidToHide;
     std::chrono::nanoseconds m_last{0};
     bool m_closed = false;
     bool m_active = false;
+    bool m_renderCursor = false;
 
     std::unique_ptr<ScreencastLayer> m_layer;
-    std::unique_ptr<SceneView> m_sceneView;
+    std::unique_ptr<FilteredSceneView> m_sceneView;
     std::unique_ptr<ItemTreeView> m_cursorView;
 };
 

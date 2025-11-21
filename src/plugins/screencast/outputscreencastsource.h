@@ -14,10 +14,9 @@
 namespace KWin
 {
 
-class LogicalOutput;
-class SceneView;
+class FilteredSceneView;
 class ItemTreeView;
-class EglContext;
+class LogicalOutput;
 class ScreencastLayer;
 
 class OutputScreenCastSource : public ScreenCastSource
@@ -47,12 +46,13 @@ public:
     QRectF mapFromGlobal(const QRectF &rect) const override;
 
 private:
-    void updateView();
     QPointer<LogicalOutput> m_output;
+    std::optional<pid_t> m_pidToHide;
     std::unique_ptr<ScreencastLayer> m_layer;
-    std::unique_ptr<SceneView> m_sceneView;
+    std::unique_ptr<FilteredSceneView> m_sceneView;
     std::unique_ptr<ItemTreeView> m_cursorView;
     bool m_active = false;
+    bool m_renderCursor = false;
 };
 
 } // namespace KWin

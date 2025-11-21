@@ -5,6 +5,7 @@
 */
 
 #include "regionscreencastsource.h"
+#include "filteredsceneview.h"
 #include "screencastutils.h"
 
 #include "compositor.h"
@@ -16,7 +17,6 @@
 #include "opengl/glutils.h"
 #include "scene/workspacescene.h"
 #include "screencastlayer.h"
-#include "window.h"
 #include "workspace.h"
 
 #include <QPainter>
@@ -29,44 +29,13 @@ RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale,
     : ScreenCastSource()
     , m_region(region)
     , m_scale(scale)
-    , m_layer(std::make_unique<ScreencastLayer>(workspace()->outputs().front(), static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats()))
-    , m_sceneView(std::make_unique<SceneView>(Compositor::self()->scene(), workspace()->outputs().front(), m_layer.get()))
-    , m_cursorView(std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr))
+    , m_pidToHide(pidToHide)
 {
-    m_sceneView->addWindowFilter([pidToHide](Window *window) {
-        if (pidToHide.has_value() && *pidToHide == window->pid()) {
-            return true;
-        }
-
-        return window->excludeFromCapture();
-    });
-
-    m_sceneView->setViewport(m_region);
-    m_sceneView->setScale(m_scale);
-    // prevent the layer from scheduling frames on the actual output
-    m_layer->setRenderLoop(nullptr);
-    // always hide the cursor from the primary view
-    m_cursorView->setExclusive(true);
     Q_ASSERT(m_region.isValid());
     Q_ASSERT(m_scale > 0);
+
     // TODO once the layer doesn't depend on the output anymore, remove this?
     connect(workspace(), &Workspace::outputsChanged, this, &RegionScreenCastSource::close);
-
-    auto setupRepaintOnExcludedFromCapture = [this](Window *window) {
-        // When a window becomes hidden or visible from screencast
-        // the region where the window is located will not be damaged, so
-        // by calling addDeviceRepaint() we will redraw everything
-        connect(window, &Window::excludeFromCaptureChanged, this, [this] {
-            m_sceneView->addDeviceRepaint(infiniteRegion());
-        });
-    };
-    connect(Workspace::self(), &Workspace::windowAdded, this, [setupRepaintOnExcludedFromCapture](Window *window) {
-        setupRepaintOnExcludedFromCapture(window);
-    });
-    auto windows = workspace()->windows();
-    for (auto window : std::as_const(windows)) {
-        setupRepaintOnExcludedFromCapture(window);
-    }
 }
 
 RegionScreenCastSource::~RegionScreenCastSource()
@@ -96,7 +65,10 @@ std::chrono::nanoseconds RegionScreenCastSource::clock() const
 
 void RegionScreenCastSource::setRenderCursor(bool enable)
 {
-    m_cursorView->setExclusive(!enable);
+    m_renderCursor = enable;
+    if (m_cursorView) {
+        m_cursorView->setExclusive(!enable);
+    }
 }
 
 QRegion RegionScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferRepair)
@@ -162,6 +134,10 @@ void RegionScreenCastSource::pause()
 
     m_active = false;
     disconnect(m_layer.get(), &OutputLayer::repaintScheduled, this, &RegionScreenCastSource::frame);
+
+    m_cursorView.reset();
+    m_sceneView.reset();
+    m_layer.reset();
 }
 
 void RegionScreenCastSource::resume()
@@ -169,6 +145,17 @@ void RegionScreenCastSource::resume()
     if (m_active) {
         return;
     }
+
+    m_layer = std::make_unique<ScreencastLayer>(workspace()->outputs().front(), static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats());
+    // prevent the layer from scheduling frames on the actual output
+    m_layer->setRenderLoop(nullptr);
+
+    m_sceneView = std::make_unique<FilteredSceneView>(Compositor::self()->scene(), workspace()->outputs().front(), m_layer.get(), m_pidToHide);
+    m_sceneView->setViewport(m_region);
+    m_sceneView->setScale(m_scale);
+
+    m_cursorView = std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr);
+    m_cursorView->setExclusive(!m_renderCursor);
 
     m_active = true;
     connect(m_layer.get(), &OutputLayer::repaintScheduled, this, &RegionScreenCastSource::frame);
