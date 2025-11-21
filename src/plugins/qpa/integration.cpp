@@ -88,16 +88,15 @@ bool Integration::hasCapability(Capability cap) const
 {
     switch (cap) {
     case ThreadedPixmaps:
-        return true;
     case OpenGL:
-        return true;
-    case ThreadedOpenGL:
-        return false;
-    case BufferQueueingOpenGL:
-        return false;
     case MultipleWindows:
     case NonFullScreenWindows:
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 2)
+    case OffscreenSurface:
+#endif
         return true;
+    case ThreadedOpenGL:
+    case BufferQueueingOpenGL:
     case RasterGLSurface:
         return false;
     default:
@@ -140,7 +139,7 @@ QPlatformWindow *Integration::createPlatformWindow(QWindow *window) const
 
 QPlatformOffscreenSurface *Integration::createPlatformOffscreenSurface(QOffscreenSurface *surface) const
 {
-    return new OffscreenSurface(surface);
+    return new KWin::QPA::OffscreenSurface(surface);
 }
 
 QPlatformFontDatabase *Integration::fontDatabase() const
