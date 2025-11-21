@@ -19,9 +19,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-20 00:44+0000\n"
-"PO-Revision-Date: 2025-11-16 02:16-0300\n"
-"Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
+"POT-Creation-Date: 2025-11-21 00:44+0000\n"
+"PO-Revision-Date: 2025-11-20 07:08-0300\n"
+"Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -1652,10 +1652,9 @@ msgstr "Intensidade do ruído:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Saturation:"
-msgstr "Duração:"
+msgstr "Saturação:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -2930,32 +2929,32 @@ msgstr "Menos"
 msgid "More"
 msgstr "Mais"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:82
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Mover a área ampliada para a esquerda"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Mover a área ampliada para a direita"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:96
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Mover a área ampliada para cima"
 
-#: plugins/zoom/zoom.cpp:102
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Mover a área ampliada para baixo"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:111
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Mover mouse para o foco"
 
-#: plugins/zoom/zoom.cpp:117
+#: plugins/zoom/zoom.cpp:118
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mover mouse para o centro"
@@ -3674,7 +3673,7 @@ msgstr "&Sem barra de título e moldura"
 #: useractions.cpp:251
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "&Ocultar da transmissão de tela"
 
 #: useractions.cpp:259
 #, kde-format

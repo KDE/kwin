@@ -11,15 +11,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-20 00:44+0000\n"
-"PO-Revision-Date: 2025-10-15 21:08+0200\n"
+"POT-Creation-Date: 2025-11-21 00:44+0000\n"
+"PO-Revision-Date: 2025-11-21 01:37+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.08.1\n"
+"X-Generator: Lokalize 25.08.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -1628,10 +1628,9 @@ msgstr "Brusstyrka:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Saturation:"
-msgstr "Längd:"
+msgstr "Färgmättnad:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -2903,32 +2902,32 @@ msgstr "Mindre"
 msgid "More"
 msgstr "Mer"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:82
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Flytta zoomat område åt vänster"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Flytta zoomat område åt höger"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:96
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Flytta zoomat område uppåt"
 
-#: plugins/zoom/zoom.cpp:102
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Flytta zoomat område neråt"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:111
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Flytta musen till fokus"
 
-#: plugins/zoom/zoom.cpp:117
+#: plugins/zoom/zoom.cpp:118
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Flytta musen till mitten"
@@ -3647,7 +3646,7 @@ msgstr "Ingen &namnlist och ram"
 #: useractions.cpp:251
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "&Dölj från skärmsändning"
 
 #: useractions.cpp:259
 #, kde-format

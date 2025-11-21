@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-20 00:44+0000\n"
-"PO-Revision-Date: 2025-10-30 10:04+0400\n"
+"POT-Creation-Date: 2025-11-21 00:44+0000\n"
+"PO-Revision-Date: 2025-11-20 18:42+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1610,10 +1610,9 @@ msgstr "قوة الضوضاء:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Saturation:"
-msgstr "المدّة:"
+msgstr "التّشبّع:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -2883,32 +2882,32 @@ msgstr "أقل"
 msgid "More"
 msgstr "أكثر"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:82
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "حرك المنطقة المكبرة لليسار"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "حرك المنطقة المكبرة لليمين"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:96
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "حرك المنطقة المكبرة للأعلى"
 
-#: plugins/zoom/zoom.cpp:102
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "حرك المنطقة المكبرة للأسفل"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:111
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "حرك الفأرة للتركيز"
 
-#: plugins/zoom/zoom.cpp:117
+#: plugins/zoom/zoom.cpp:118
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "حرك الفأرة للوسط"
@@ -3626,7 +3625,7 @@ msgstr "بلا &شريط العنوان والإطار"
 #: useractions.cpp:251
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "أ&خفِ من تسجيل الشاشة"
 
 #: useractions.cpp:259
 #, kde-format

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-20 00:44+0000\n"
+"POT-Creation-Date: 2025-11-21 00:44+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -3211,36 +3211,36 @@ msgstr "мања"
 msgid "More"
 msgstr "већа"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:82
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Прозор једну површ улево"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:89
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Прозор једну површ удесно"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:96
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Помери зону увеличања нагоре"
 
-#: plugins/zoom/zoom.cpp:102
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Помери зону увеличања надоле"
 
 # >> @item
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:111
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "нема дугмади миша"
 
-#: plugins/zoom/zoom.cpp:117
+#: plugins/zoom/zoom.cpp:118
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Move Mouse to Center"

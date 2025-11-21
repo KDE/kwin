@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-20 00:44+0000\n"
+"POT-Creation-Date: 2025-11-21 00:44+0000\n"
 "PO-Revision-Date: 2023-12-03 14:01+0700\n"
 "Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -3093,37 +3093,37 @@ msgstr "Kurang"
 msgid "More"
 msgstr "Lebih"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:82
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Jendela Satu Desktop ke Kiri"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:89
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Jendela Satu Desktop ke Kanan"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:96
 #, fuzzy, kde-format
 #| msgid "Move Zoomed Area Upwards"
 msgid "Move Zoomed Area Upwards"
 msgstr "Pindah Area Zoom ke Atas"
 
-#: plugins/zoom/zoom.cpp:102
+#: plugins/zoom/zoom.cpp:103
 #, fuzzy, kde-format
 #| msgid "Move Zoomed Area Downwards"
 msgid "Move Zoomed Area Downwards"
 msgstr "Pindah Area Zoom ke Bawah"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:111
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "Tidak ada Tombol Mouse"
 
-#: plugins/zoom/zoom.cpp:117
+#: plugins/zoom/zoom.cpp:118
 #, fuzzy, kde-format
 #| msgid "Move Window to the Center"
 msgid "Move Mouse to Center"
