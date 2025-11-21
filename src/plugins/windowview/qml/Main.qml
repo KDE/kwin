@@ -130,7 +130,8 @@ Item {
 
             // We can't use activeFocus because is not reliable on qml effects
             text: effect.searchText
-            onTextEdited: {
+            // not onTextEdited so that the UI always stays in sync
+            onTextChanged: {
                 effect.searchText = text;
                 heap.resetSelected();
                 heap.selectNextItem(WindowHeap.Direction.Down);
