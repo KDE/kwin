@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-21 00:44+0000\n"
+"POT-Creation-Date: 2025-11-22 00:44+0000\n"
 "PO-Revision-Date: 2024-10-21 13:14+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -70,7 +70,7 @@ msgstr "Tryk på højre kontrol for at gribe input"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland-kompositør"
 
-#: compositor.cpp:579
+#: compositor.cpp:592
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Skrivebordseffekter blev genstartet pga. grafiknulstilling"
@@ -1320,12 +1320,12 @@ msgstr "tid"
 msgid "KWin helper utility"
 msgstr "KWin-hjælperedskab"
 
-#: helpers/killer/killer.cpp:171
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Dette hjælper-redskab er ikke beregnet til at blive kaldet direkte."
 
-#: helpers/killer/killer.cpp:195
+#: helpers/killer/killer.cpp:194
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1341,7 +1341,7 @@ msgstr ""
 "<para><emphasis strong='true'>Afslutning af denne applikation vil lukke alle "
 "dens vindue. Alt ugemt data vil gå tabt.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:199
+#: helpers/killer/killer.cpp:198
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1357,13 +1357,13 @@ msgstr ""
 "<para><emphasis strong='true'>Afslutning af denne applikation vil lukke alle "
 "dens vindue. Alt ugemt data vil gå tabt.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:203
+#: helpers/killer/killer.cpp:202
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "&Afslut %1"
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:203
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
@@ -2914,32 +2914,32 @@ msgstr "Mindre"
 msgid "More"
 msgstr "Mere"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Flyt zommede område til venstre"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Flyt zommede område til højre"
 
-#: plugins/zoom/zoom.cpp:96
+#: plugins/zoom/zoom.cpp:102
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Flyt zoomet område opad"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:109
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Flyt zoomet område nedad"
 
-#: plugins/zoom/zoom.cpp:111
+#: plugins/zoom/zoom.cpp:117
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Flyt mus til fokus"
 
-#: plugins/zoom/zoom.cpp:118
+#: plugins/zoom/zoom.cpp:124
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Flyt mus til centrum"

@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-21 00:44+0000\n"
+"POT-Creation-Date: 2025-11-22 00:44+0000\n"
 "PO-Revision-Date: 2025-06-19 10:31+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -84,7 +84,7 @@ msgstr "Prema a tecla de control dereita para agarrar a entrada"
 msgid "KDE Wayland Compositor"
 msgstr "Compositor de Wayland de KDE"
 
-#: compositor.cpp:579
+#: compositor.cpp:592
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Os efectos do escritorio reiniciáronse debido a un reinicio gráfico"
@@ -1333,13 +1333,13 @@ msgstr "duración"
 msgid "KWin helper utility"
 msgstr "Utilidade auxiliar de KWin"
 
-#: helpers/killer/killer.cpp:171
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr ""
 "Esta utilidade auxiliar non está concibida para ser chamada directamente."
 
-#: helpers/killer/killer.cpp:195
+#: helpers/killer/killer.cpp:194
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1353,7 +1353,7 @@ msgstr ""
 "pechar todas as súas xanelas. Ha perder calquera dato que non gardase "
 "previamente.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:199
+#: helpers/killer/killer.cpp:198
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1367,13 +1367,13 @@ msgstr ""
 "pechar todas as súas xanelas. Ha perder calquera dato que non gardase "
 "previamente.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:203
+#: helpers/killer/killer.cpp:202
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "&Terminar %1"
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:203
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
@@ -2929,32 +2929,32 @@ msgstr "Menos"
 msgid "More"
 msgstr "Máis"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Mover á esquerda a área ampliada"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Mover á dereita a área ampliada"
 
-#: plugins/zoom/zoom.cpp:96
+#: plugins/zoom/zoom.cpp:102
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Subir a área ampliada"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:109
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Baixar a área ampliada"
 
-#: plugins/zoom/zoom.cpp:111
+#: plugins/zoom/zoom.cpp:117
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Mover o rato ao foco"
 
-#: plugins/zoom/zoom.cpp:118
+#: plugins/zoom/zoom.cpp:124
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mover o rato ao centro"

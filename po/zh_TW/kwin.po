@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-21 00:44+0000\n"
+"POT-Creation-Date: 2025-11-22 00:44+0000\n"
 "PO-Revision-Date: 2025-11-20 20:47+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -81,7 +81,7 @@ msgstr "按下右側 Ctrl 鍵來抓取輸入"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 合成器"
 
-#: compositor.cpp:579
+#: compositor.cpp:592
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "桌面效果會重新啟動，因為圖形已重置"
@@ -1314,12 +1314,12 @@ msgstr "時間"
 msgid "KWin helper utility"
 msgstr "KWin 協助工具程式"
 
-#: helpers/killer/killer.cpp:171
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "此協助公用程式不支援直接呼叫。"
 
-#: helpers/killer/killer.cpp:195
+#: helpers/killer/killer.cpp:194
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1332,7 +1332,7 @@ msgstr ""
 "para><para><emphasis strong='true'>終止此應用程式將會關閉它的所有視窗。所有未"
 "儲存的資料將會遺失。</emphasis></para>"
 
-#: helpers/killer/killer.cpp:199
+#: helpers/killer/killer.cpp:198
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1345,13 +1345,13 @@ msgstr ""
 "嗎？</para><para><emphasis strong='true'>終止此應用程式將會關閉它的所有視窗。"
 "所有未儲存的資料將會遺失。</emphasis></para>"
 
-#: helpers/killer/killer.cpp:203
+#: helpers/killer/killer.cpp:202
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "終止 %1(&T)"
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:203
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
@@ -2886,32 +2886,32 @@ msgstr "較少"
 msgid "More"
 msgstr "較多"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "將放大區域向左移動"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "將放大區域向右移動"
 
-#: plugins/zoom/zoom.cpp:96
+#: plugins/zoom/zoom.cpp:102
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "將縮放區域移到上方"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:109
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "將縮放區域移到下方"
 
-#: plugins/zoom/zoom.cpp:111
+#: plugins/zoom/zoom.cpp:117
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "將滑鼠移至焦點"
 
-#: plugins/zoom/zoom.cpp:118
+#: plugins/zoom/zoom.cpp:124
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "將滑鼠移至中央"

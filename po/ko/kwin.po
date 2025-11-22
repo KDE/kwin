@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-21 00:44+0000\n"
+"POT-Creation-Date: 2025-11-22 00:44+0000\n"
 "PO-Revision-Date: 2025-10-09 01:06+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -72,7 +72,7 @@ msgstr "오른쪽 Ctrl 키를 누르면 입력을 잡음"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 컴포지터"
 
-#: compositor.cpp:579
+#: compositor.cpp:592
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "그래픽 초기화로 인하여 데스크톱 효과가 다시 시작됨"
@@ -1303,12 +1303,12 @@ msgstr "시간"
 msgid "KWin helper utility"
 msgstr "KWin 도우미"
 
-#: helpers/killer/killer.cpp:171
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "이 도우미 유틸리티는 직접 호출되지 않습니다."
 
-#: helpers/killer/killer.cpp:195
+#: helpers/killer/killer.cpp:194
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1321,7 +1321,7 @@ msgstr ""
 "료하시겠습니까?</para><para><emphasis strong='true'>앱을 종료하면 자식 창도 "
 "종료됩니다. 저장하지 않은 데이터는 손실됩니다.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:199
+#: helpers/killer/killer.cpp:198
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1334,13 +1334,13 @@ msgstr ""
 "앱을 강제로 종료하시겠습니까?</para><para><emphasis strong='true'>앱을 종료하"
 "면 자식 창도 종료됩니다. 저장하지 않은 데이터는 손실됩니다.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:203
+#: helpers/killer/killer.cpp:202
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "%1 강제 종료(&T)"
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:203
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
@@ -2879,32 +2879,32 @@ msgstr "덜 보기"
 msgid "More"
 msgstr "더 보기"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "크기 조정된 영역을 왼쪽으로 이동"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "크기 조정된 영역을 오른쪽으로 이동"
 
-#: plugins/zoom/zoom.cpp:96
+#: plugins/zoom/zoom.cpp:102
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "크기 조정된 영역을 위로 이동"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:109
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "크기 조정된 영역을 아래로 이동"
 
-#: plugins/zoom/zoom.cpp:111
+#: plugins/zoom/zoom.cpp:117
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "마우스를 포커스로 이동"
 
-#: plugins/zoom/zoom.cpp:118
+#: plugins/zoom/zoom.cpp:124
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "마우스를 가운데로 이동"

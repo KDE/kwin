@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-21 00:44+0000\n"
+"POT-Creation-Date: 2025-11-22 00:44+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -79,7 +79,7 @@ msgstr "Πατήστε το δεξί πλήκτρο control για να αρπά
 msgid "KDE Wayland Compositor"
 msgstr "Συνθέτης Wayland του KDE"
 
-#: compositor.cpp:579
+#: compositor.cpp:592
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -1329,12 +1329,12 @@ msgstr "χρόνος"
 msgid "KWin helper utility"
 msgstr "Εργαλείο βοήθειας του KWin"
 
-#: helpers/killer/killer.cpp:171
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Αυτή η βοηθητική εφαρμογή δεν μπορεί να εκτελεστεί απευθείας."
 
-#: helpers/killer/killer.cpp:195
+#: helpers/killer/killer.cpp:194
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1351,7 +1351,7 @@ msgstr ""
 "θυγατρικά παράθυρα. Όλα τα μη αποθηκευμένα δεδομένα στην εφαρμογή θα χαθούν."
 "</emphasis></para>"
 
-#: helpers/killer/killer.cpp:199
+#: helpers/killer/killer.cpp:198
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1368,13 +1368,13 @@ msgstr ""
 "θυγατρικά παράθυρα. Όλα τα μη αποθηκευμένα δεδομένα στην εφαρμογή θα χαθούν."
 "</emphasis></para>"
 
-#: helpers/killer/killer.cpp:203
+#: helpers/killer/killer.cpp:202
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "&Τερματισμός %1"
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:203
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
@@ -2963,35 +2963,35 @@ msgstr "Λιγότερη"
 msgid "More"
 msgstr "Περισσότερη"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:88
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Μετάβαση μία επιφάνεια εργασίας αριστερά"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:95
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Μετάβαση μία επιφάνεια εργασίας δεξιά"
 
-#: plugins/zoom/zoom.cpp:96
+#: plugins/zoom/zoom.cpp:102
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Μετακίνηση εστιασμένης περιοχής προς τα επάνω"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:109
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Μετακίνηση εστιασμένης περιοχής προς τα κάτω"
 
-#: plugins/zoom/zoom.cpp:111
+#: plugins/zoom/zoom.cpp:117
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "Χωρίς κουμπιά ποντικιού"
 
-#: plugins/zoom/zoom.cpp:118
+#: plugins/zoom/zoom.cpp:124
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Mouse to Center"

@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-20 00:44+0000\n"
-"PO-Revision-Date: 2025-10-29 12:00+0100\n"
+"POT-Creation-Date: 2025-11-22 00:44+0000\n"
+"PO-Revision-Date: 2025-11-21 02:11+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 25.08.2\n"
+"X-Generator: Lokalize 25.08.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -84,7 +84,7 @@ msgstr "Pulse la tecla de Control derecha para capturar la entrada"
 msgid "KDE Wayland Compositor"
 msgstr "Compositor de KDE Wayland"
 
-#: compositor.cpp:579
+#: compositor.cpp:592
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -1324,12 +1324,12 @@ msgstr "hora"
 msgid "KWin helper utility"
 msgstr "Utilidad de ayuda de KWin"
 
-#: helpers/killer/killer.cpp:171
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Esta utilidad de ayuda no debe ser llamada directamente."
 
-#: helpers/killer/killer.cpp:195
+#: helpers/killer/killer.cpp:194
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1343,7 +1343,7 @@ msgstr ""
 "aplicación se cerrarán todas sus ventanas. Se perderán los datos que no haya "
 "guardado.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:199
+#: helpers/killer/killer.cpp:198
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1357,13 +1357,13 @@ msgstr ""
 "esta aplicación se cerrarán todas sus ventanas. Se perderán los datos que no "
 "haya guardado.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:203
+#: helpers/killer/killer.cpp:202
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "&Terminar %1"
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:203
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
@@ -1650,10 +1650,9 @@ msgstr "Fuerza del ruido:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Saturation:"
-msgstr "Duración:"
+msgstr "Saturación:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -2474,7 +2473,7 @@ msgstr "Región no válida"
 #: plugins/screencast/screencaststream.cpp:376
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "Se necesita composición OpenGL para hacer un screencast"
+msgstr "Se necesita composición OpenGL para hacer una grabación de la pantalla"
 
 #: plugins/screencast/screencaststream.cpp:384
 #, kde-format
@@ -2930,32 +2929,32 @@ msgstr "Menos"
 msgid "More"
 msgstr "Más"
 
-#: plugins/zoom/zoom.cpp:81
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Mover área ampliada a la izquierda"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Mover área ampliada a la derecha"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:102
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Mover área ampliada hacia arriba"
 
-#: plugins/zoom/zoom.cpp:102
+#: plugins/zoom/zoom.cpp:109
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Mover área ampliada hacia abajo"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:117
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Mover ratón hasta el foco"
 
-#: plugins/zoom/zoom.cpp:117
+#: plugins/zoom/zoom.cpp:124
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mover ratón al centro"
@@ -3676,7 +3675,7 @@ msgstr "Si&n barra de título ni marco"
 #: useractions.cpp:251
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "&Ocultar de la grabación de la pantalla"
 
 #: useractions.cpp:259
 #, kde-format
@@ -4232,6 +4231,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"
-
-#~ msgid "Saturation strength:"
-#~ msgstr "Fuerza de la saturación:"

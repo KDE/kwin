@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-21 00:44+0000\n"
+"POT-Creation-Date: 2025-11-22 00:44+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -71,7 +71,7 @@ msgstr "इनपुट् ग्रहीतुं right control key नुद�
 msgid "KDE Wayland Compositor"
 msgstr "केडीई वेलैण्ड रचनाकार"
 
-#: compositor.cpp:579
+#: compositor.cpp:592
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "ग्राफिक्स् रीसेट् इत्यस्य कारणेन डेस्कटॉप् प्रभावाः पुनः आरब्धाः"
@@ -1311,12 +1311,12 @@ msgstr "कालः"
 msgid "KWin helper utility"
 msgstr "KWin सहायक उपयोगिता"
 
-#: helpers/killer/killer.cpp:171
+#: helpers/killer/killer.cpp:170
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "एषा सहायक-उपयोगिता प्रत्यक्षतया न आह्वनीया इति कल्प्यते ।"
 
-#: helpers/killer/killer.cpp:195
+#: helpers/killer/killer.cpp:194
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1332,7 +1332,7 @@ msgstr ""
 "<para><emphasis strong='true'>एतत् अनुप्रयोगं समाप्तं कृत्वा तस्य सर्वाणि विण्डोः "
 "पिधास्यन्ति । यत्किमपि अरक्षितं दत्तांशं नष्टं भविष्यति।</emphasis></para>"
 
-#: helpers/killer/killer.cpp:199
+#: helpers/killer/killer.cpp:198
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1348,13 +1348,13 @@ msgstr ""
 "<para><emphasis strong='true'>एतत् अनुप्रयोगं समाप्तं कृत्वा तस्य सर्वाणि विण्डोः "
 "पिधास्यन्ति । यत्किमपि अरक्षितं दत्तांशं नष्टं भविष्यति।</emphasis></para>"
 
-#: helpers/killer/killer.cpp:203
+#: helpers/killer/killer.cpp:202
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "&%1 समाप्तं कुर्वन्तु"
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:203
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
@@ -2901,32 +2901,32 @@ msgstr "न्यूनम्‌"
 msgid "More"
 msgstr "अधिकः"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:88
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Zoomed Area इत्येतत् Left - मध्ये चालयन्तु"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Zoomed Area इत्येतत् Right - मध्ये चालयन्तु"
 
-#: plugins/zoom/zoom.cpp:96
+#: plugins/zoom/zoom.cpp:102
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "जूम कृतक्षेत्रं ऊर्ध्वं चालयन्तु"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:109
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "जूम कृतक्षेत्रं अधः गच्छन्तु"
 
-#: plugins/zoom/zoom.cpp:111
+#: plugins/zoom/zoom.cpp:117
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "मूषकं फोकस प्रति चालयन्तु"
 
-#: plugins/zoom/zoom.cpp:118
+#: plugins/zoom/zoom.cpp:124
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "मूषकं केन्द्रं प्रति स्थानान्तरयन्तु"
