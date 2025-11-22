@@ -12,6 +12,8 @@ ScreencastLayer::ScreencastLayer(LogicalOutput *output, const QHash<uint32_t, QL
     : OutputLayer(output, OutputLayerType::Primary)
     , m_formats(formats)
 {
+    // prevent the layer from scheduling frames on the actual output
+    setRenderLoop(nullptr);
 }
 
 void ScreencastLayer::setFramebuffer(GLFramebuffer *buffer, const QRegion &bufferDamage)

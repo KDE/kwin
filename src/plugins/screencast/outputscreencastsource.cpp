@@ -117,8 +117,6 @@ void OutputScreenCastSource::resume()
     }
 
     m_layer = std::make_unique<ScreencastLayer>(m_output, static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats());
-    // prevent the layer from scheduling frames on the actual output
-    m_layer->setRenderLoop(nullptr);
 
     m_sceneView = std::make_unique<FilteredSceneView>(Compositor::self()->scene(), m_output, m_layer.get(), m_pidToHide);
     m_sceneView->setViewport(m_output->geometryF());
