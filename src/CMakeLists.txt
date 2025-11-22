@@ -55,6 +55,7 @@ target_sources(kwin PRIVATE
     core/outputconfiguration.cpp
     core/outputlayer.cpp
     core/rect.cpp
+    core/region.cpp
     core/renderbackend.cpp
     core/renderjournal.cpp
     core/renderloop.cpp
@@ -539,6 +540,7 @@ install(FILES
     core/outputlayer.h
     core/pixelgrid.h
     core/rect.h
+    core/region.h
     core/renderbackend.h
     core/renderjournal.h
     core/renderloop.h
