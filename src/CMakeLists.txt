@@ -54,6 +54,7 @@ target_sources(kwin PRIVATE
     core/outputconfiguration.cpp
     core/outputlayer.cpp
     core/rect.cpp
+    core/region.cpp
     core/renderbackend.cpp
     core/renderjournal.cpp
     core/renderloop.cpp
