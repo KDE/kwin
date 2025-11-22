@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "core/outputlayer.h"
 #include "screencastsource.h"
 
 #include <QPointer>

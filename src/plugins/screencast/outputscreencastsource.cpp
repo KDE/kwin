@@ -6,6 +6,7 @@
 
 #include "outputscreencastsource.h"
 #include "filteredsceneview.h"
+#include "screencastlayer.h"
 #include "screencastutils.h"
 
 #include "compositor.h"
@@ -15,10 +16,9 @@
 #include "cursor.h"
 #include "opengl/eglbackend.h"
 #include "opengl/egldisplay.h"
+#include "opengl/glframebuffer.h"
 #include "opengl/gltexture.h"
-#include "opengl/glutils.h"
 #include "scene/workspacescene.h"
-#include "screencastlayer.h"
 #include "workspace.h"
 
 #include <drm_fourcc.h>

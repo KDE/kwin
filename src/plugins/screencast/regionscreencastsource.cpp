@@ -6,20 +6,18 @@
 
 #include "regionscreencastsource.h"
 #include "filteredsceneview.h"
+#include "screencastlayer.h"
 #include "screencastutils.h"
 
 #include "compositor.h"
 #include "core/output.h"
-#include "core/pixelgrid.h"
 #include "cursor.h"
 #include "opengl/eglbackend.h"
+#include "opengl/glframebuffer.h"
 #include "opengl/gltexture.h"
-#include "opengl/glutils.h"
 #include "scene/workspacescene.h"
-#include "screencastlayer.h"
 #include "workspace.h"
 
-#include <QPainter>
 #include <drm_fourcc.h>
 
 namespace KWin

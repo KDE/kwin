@@ -15,12 +15,13 @@
 #include "core/renderviewport.h"
 #include "effect/effect.h"
 #include "input.h"
+#include "opengl/glframebuffer.h"
 #include "opengl/gltexture.h"
-#include "opengl/glutils.h"
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
 #include "workspace.h"
+
 #include <drm_fourcc.h>
 
 namespace KWin

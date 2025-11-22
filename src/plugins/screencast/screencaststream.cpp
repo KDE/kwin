@@ -18,7 +18,6 @@
 #include "opengl/eglnativefence.h"
 #include "opengl/glplatform.h"
 #include "opengl/gltexture.h"
-#include "opengl/glutils.h"
 #include "pipewirecore.h"
 #include "scene/workspacescene.h"
 #include "screencastbuffer.h"

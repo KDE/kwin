@@ -8,8 +8,7 @@
 
 #include "screencastsource.h"
 
-#include "opengl/gltexture.h"
-#include "opengl/glutils.h"
+#include <QRect>
 
 namespace KWin
 {
