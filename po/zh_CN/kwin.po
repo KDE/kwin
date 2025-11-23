@@ -1609,10 +1609,9 @@ msgstr "噪点强度："
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Saturation:"
-msgstr "动效持续时间："
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
