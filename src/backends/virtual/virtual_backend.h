@@ -33,6 +33,9 @@ public:
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
     std::unique_ptr<EglBackend> createOpenGLBackend() override;
 
+    Output *createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale) override;
+    void removeVirtualOutput(Output *output) override;
+
     struct OutputInfo
     {
         QRect geometry;
@@ -63,6 +66,7 @@ Q_SIGNALS:
 
 private:
     VirtualOutput *createOutput(const OutputInfo &info);
+    void removeOutput(VirtualOutput *output);
 
     QList<VirtualOutput *> m_outputs;
     std::unique_ptr<DrmDevice> m_drmDevice;
