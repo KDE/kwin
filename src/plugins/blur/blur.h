@@ -45,8 +45,10 @@ struct BlurEffectData
 
     ItemEffect windowEffect;
 
-    std::optional<qreal> contrast;
-    std::optional<qreal> saturation;
+    /**
+     * Color transformation matrix (contrast, and saturation).
+     */
+    std::optional<QMatrix4x4> colorMatrix;
 };
 
 class BlurEffect : public KWin::Effect
@@ -88,7 +90,6 @@ public Q_SLOTS:
 
 private:
     void initBlurStrengthValues();
-    QMatrix4x4 colorMatrix(const BlurEffectData &params) const;
     Region blurRegion(EffectWindow *w) const;
     Region decorationBlurRegion(const EffectWindow *w) const;
     bool decorationSupportsBlurBehind(const EffectWindow *w) const;
@@ -154,11 +155,11 @@ private:
     Region m_currentDeviceBlur; // keeps track of currently blurred area of the windows (from bottom to top)
     RenderView *m_currentView = nullptr;
 
+    QMatrix4x4 m_colorMatrix;
     size_t m_iterationCount; // number of times the texture will be downsized to half size
     int m_offset;
     int m_expandSize;
     int m_noiseStrength;
-    qreal m_saturation = 1.0;
 
     struct OffsetStruct
     {
