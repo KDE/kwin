@@ -18,7 +18,121 @@
 
 namespace KWin
 {
-static const int s_version = 5;
+static const int s_version = 6;
+
+LayerSurfaceMarginV1::LayerSurfaceMarginV1()
+    : m_value(0)
+{
+}
+
+LayerSurfaceMarginV1::LayerSurfaceMarginV1(int pixels)
+    : m_value(pixels)
+{
+}
+
+LayerSurfaceMarginV1::LayerSurfaceMarginV1(qreal percents)
+    : m_value(percents)
+{
+}
+
+LayerSurfaceMarginV1 LayerSurfaceMarginV1::fromPixels(int pixels)
+{
+    return LayerSurfaceMarginV1(pixels);
+}
+
+LayerSurfaceMarginV1 LayerSurfaceMarginV1::fromPercents(qreal percents)
+{
+    return LayerSurfaceMarginV1(percents);
+}
+
+std::optional<int> LayerSurfaceMarginV1::pixels() const
+{
+    if (std::holds_alternative<int>(m_value)) {
+        return std::get<int>(m_value);
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<qreal> LayerSurfaceMarginV1::percents() const
+{
+    if (std::holds_alternative<qreal>(m_value)) {
+        return std::get<qreal>(m_value);
+    } else {
+        return std::nullopt;
+    }
+}
+
+qreal LayerSurfaceMarginV1::materialized(qreal size) const
+{
+    if (std::holds_alternative<int>(m_value)) {
+        return std::get<int>(m_value);
+    } else if (std::holds_alternative<qreal>(m_value)) {
+        return std::get<qreal>(m_value) * size;
+    } else {
+        Q_UNREACHABLE();
+    }
+}
+
+LayerSurfaceMarginsV1::LayerSurfaceMarginsV1()
+{
+}
+
+LayerSurfaceMarginsV1::LayerSurfaceMarginsV1(LayerSurfaceMarginV1 left, LayerSurfaceMarginV1 top, LayerSurfaceMarginV1 right, LayerSurfaceMarginV1 bottom)
+    : m_left(left)
+    , m_top(top)
+    , m_right(right)
+    , m_bottom(bottom)
+{
+}
+
+LayerSurfaceMarginV1 LayerSurfaceMarginsV1::left() const
+{
+    return m_left;
+}
+
+void LayerSurfaceMarginsV1::setLeft(LayerSurfaceMarginV1 left)
+{
+    m_left = left;
+}
+
+LayerSurfaceMarginV1 LayerSurfaceMarginsV1::top() const
+{
+    return m_top;
+}
+
+void LayerSurfaceMarginsV1::setTop(LayerSurfaceMarginV1 top)
+{
+    m_top = top;
+}
+
+LayerSurfaceMarginV1 LayerSurfaceMarginsV1::right() const
+{
+    return m_right;
+}
+
+void LayerSurfaceMarginsV1::setRight(LayerSurfaceMarginV1 right)
+{
+    m_right = right;
+}
+
+LayerSurfaceMarginV1 LayerSurfaceMarginsV1::bottom() const
+{
+    return m_bottom;
+}
+
+void LayerSurfaceMarginsV1::setBottom(LayerSurfaceMarginV1 bottom)
+{
+    m_bottom = bottom;
+}
+
+QMarginsF LayerSurfaceMarginsV1::materialized(const QSizeF &size) const
+{
+    return QMarginsF(m_left.materialized(size.width()),
+                     m_top.materialized(size.height()),
+                     m_right.materialized(size.width()),
+                     m_bottom.materialized(size.height()));
+}
 
 class LayerShellV1InterfacePrivate : public QtWaylandServer::zwlr_layer_shell_v1
 {
@@ -43,7 +157,10 @@ class LayerSurfaceV1Commit : public SurfaceAttachedState<LayerSurfaceV1Commit>
 public:
     std::optional<LayerSurfaceV1Interface::Layer> layer;
     std::optional<Qt::Edges> anchor;
-    std::optional<QMargins> margins;
+    std::optional<LayerSurfaceMarginV1> leftMargin;
+    std::optional<LayerSurfaceMarginV1> topMargin;
+    std::optional<LayerSurfaceMarginV1> rightMargin;
+    std::optional<LayerSurfaceMarginV1> bottomMargin;
     std::optional<QSize> desiredSize;
     std::optional<int> exclusiveZone;
     std::optional<Qt::Edge> exclusiveEdge;
@@ -56,7 +173,7 @@ struct LayerSurfaceV1State
     QQueue<quint32> serials;
     LayerSurfaceV1Interface::Layer layer = LayerSurfaceV1Interface::BottomLayer;
     Qt::Edges anchor;
-    QMargins margins;
+    LayerSurfaceMarginsV1 margins;
     QSize desiredSize = QSize(0, 0);
     int exclusiveZone = 0;
     Qt::Edge exclusiveEdge = Qt::Edge();
@@ -92,6 +209,14 @@ protected:
     void zwlr_layer_surface_v1_ack_configure(Resource *resource, uint32_t serial) override;
     void zwlr_layer_surface_v1_destroy(Resource *resource) override;
     void zwlr_layer_surface_v1_set_layer(Resource *resource, uint32_t layer) override;
+    void zwlr_layer_surface_v1_set_left_margin_pixels(Resource *resource, int32_t margin) override;
+    void zwlr_layer_surface_v1_set_left_margin_percents(Resource *resource, wl_fixed_t margin) override;
+    void zwlr_layer_surface_v1_set_top_margin_pixels(Resource *resource, int32_t margin) override;
+    void zwlr_layer_surface_v1_set_top_margin_percents(Resource *resource, wl_fixed_t margin) override;
+    void zwlr_layer_surface_v1_set_right_margin_pixels(Resource *resource, int32_t margin) override;
+    void zwlr_layer_surface_v1_set_right_margin_percents(Resource *resource, wl_fixed_t margin) override;
+    void zwlr_layer_surface_v1_set_bottom_margin_pixels(Resource *resource, int32_t margin) override;
+    void zwlr_layer_surface_v1_set_bottom_margin_percents(Resource *resource, wl_fixed_t margin) override;
 };
 
 LayerShellV1InterfacePrivate::LayerShellV1InterfacePrivate(LayerShellV1Interface *q, Display *display)
@@ -224,7 +349,10 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Re
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_margin(Resource *, int32_t top, int32_t right, int32_t bottom, int32_t left)
 {
-    pending->margins = QMargins(left, top, right, bottom);
+    pending->leftMargin = LayerSurfaceMarginV1::fromPixels(left);
+    pending->topMargin = LayerSurfaceMarginV1::fromPixels(top);
+    pending->rightMargin = LayerSurfaceMarginV1::fromPixels(right);
+    pending->bottomMargin = LayerSurfaceMarginV1::fromPixels(bottom);
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_keyboard_interactivity(Resource *resource, uint32_t keyboard_interactivity)
@@ -274,6 +402,46 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_layer(Resource *r
         return;
     }
     pending->layer = LayerSurfaceV1Interface::Layer(layer);
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_left_margin_pixels(Resource *resource, int32_t margin)
+{
+    pending->leftMargin = LayerSurfaceMarginV1::fromPixels(margin);
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_left_margin_percents(Resource *resource, wl_fixed_t margin)
+{
+    pending->leftMargin = LayerSurfaceMarginV1::fromPercents(wl_fixed_to_double(margin));
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_top_margin_pixels(Resource *resource, int32_t margin)
+{
+    pending->topMargin = LayerSurfaceMarginV1::fromPixels(margin);
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_top_margin_percents(Resource *resource, wl_fixed_t margin)
+{
+    pending->topMargin = LayerSurfaceMarginV1::fromPercents(wl_fixed_to_double(margin));
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_right_margin_pixels(Resource *resource, int32_t margin)
+{
+    pending->rightMargin = LayerSurfaceMarginV1::fromPixels(margin);
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_right_margin_percents(Resource *resource, wl_fixed_t margin)
+{
+    pending->rightMargin = LayerSurfaceMarginV1::fromPercents(wl_fixed_to_double(margin));
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_bottom_margin_pixels(Resource *resource, int32_t margin)
+{
+    pending->bottomMargin = LayerSurfaceMarginV1::fromPixels(margin);
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_bottom_margin_percents(Resource *resource, wl_fixed_t margin)
+{
+    pending->bottomMargin = LayerSurfaceMarginV1::fromPercents(wl_fixed_to_double(margin));
 }
 
 void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
@@ -345,8 +513,17 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     if (commit->anchor.has_value()) {
         state.anchor = commit->anchor.value();
     }
-    if (commit->margins.has_value()) {
-        state.margins = commit->margins.value();
+    if (commit->leftMargin.has_value()) {
+        state.margins.setLeft(commit->leftMargin.value());
+    }
+    if (commit->topMargin.has_value()) {
+        state.margins.setTop(commit->topMargin.value());
+    }
+    if (commit->rightMargin.has_value()) {
+        state.margins.setRight(commit->rightMargin.value());
+    }
+    if (commit->bottomMargin.has_value()) {
+        state.margins.setBottom(commit->bottomMargin.value());
     }
     if (commit->desiredSize.has_value()) {
         state.desiredSize = commit->desiredSize.value();
@@ -439,29 +616,9 @@ LayerSurfaceV1Interface::Layer LayerSurfaceV1Interface::layer() const
     return d->state.layer;
 }
 
-QMargins LayerSurfaceV1Interface::margins() const
+LayerSurfaceMarginsV1 LayerSurfaceV1Interface::margins() const
 {
     return d->state.margins;
-}
-
-int LayerSurfaceV1Interface::leftMargin() const
-{
-    return d->state.margins.left();
-}
-
-int LayerSurfaceV1Interface::topMargin() const
-{
-    return d->state.margins.top();
-}
-
-int LayerSurfaceV1Interface::rightMargin() const
-{
-    return d->state.margins.right();
-}
-
-int LayerSurfaceV1Interface::bottomMargin() const
-{
-    return d->state.margins.bottom();
 }
 
 int LayerSurfaceV1Interface::exclusiveZone() const

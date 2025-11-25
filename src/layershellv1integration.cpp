@@ -63,24 +63,6 @@ void LayerShellV1Integration::destroyWindow(LayerSurfaceV1Interface *shellSurfac
     }
 }
 
-static void adjustWorkArea(const LayerSurfaceV1Interface *shellSurface, QRect *workArea)
-{
-    switch (shellSurface->exclusiveEdge()) {
-    case Qt::LeftEdge:
-        workArea->adjust(shellSurface->leftMargin() + shellSurface->exclusiveZone(), 0, 0, 0);
-        break;
-    case Qt::RightEdge:
-        workArea->adjust(0, 0, -shellSurface->rightMargin() - shellSurface->exclusiveZone(), 0);
-        break;
-    case Qt::TopEdge:
-        workArea->adjust(0, shellSurface->topMargin() + shellSurface->exclusiveZone(), 0, 0);
-        break;
-    case Qt::BottomEdge:
-        workArea->adjust(0, 0, 0, -shellSurface->bottomMargin() - shellSurface->exclusiveZone());
-        break;
-    }
-}
-
 static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *workArea,
                            LayerSurfaceV1Interface::Layer layer, bool exclusive)
 {
@@ -102,6 +84,7 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
         }
 
         QRect geometry(QPoint(0, 0), shellSurface->desiredSize());
+        const QMargins margins = shellSurface->margins().materialized(bounds.size()).toMargins();
 
         if ((shellSurface->anchor() & AnchorHorizontal) && geometry.width() == 0) {
             geometry.setLeft(bounds.left());
@@ -126,19 +109,19 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
         }
 
         if ((shellSurface->anchor() & AnchorHorizontal) == AnchorHorizontal) {
-            geometry.adjust(shellSurface->leftMargin(), 0, -shellSurface->rightMargin(), 0);
+            geometry.adjust(margins.left(), 0, -margins.right(), 0);
         } else if (shellSurface->anchor() & Qt::LeftEdge) {
-            geometry.translate(shellSurface->leftMargin(), 0);
+            geometry.translate(margins.left(), 0);
         } else if (shellSurface->anchor() & Qt::RightEdge) {
-            geometry.translate(-shellSurface->rightMargin(), 0);
+            geometry.translate(-margins.right(), 0);
         }
 
         if ((shellSurface->anchor() & AnchorVertical) == AnchorVertical) {
-            geometry.adjust(0, shellSurface->topMargin(), 0, -shellSurface->bottomMargin());
+            geometry.adjust(0, margins.top(), 0, -margins.bottom());
         } else if (shellSurface->anchor() & Qt::TopEdge) {
-            geometry.translate(0, shellSurface->topMargin());
+            geometry.translate(0, margins.top());
         } else if (shellSurface->anchor() & Qt::BottomEdge) {
-            geometry.translate(0, -shellSurface->bottomMargin());
+            geometry.translate(0, -margins.bottom());
         }
 
         // Move the window's bottom if its virtual keyboard is overlapping it
@@ -157,7 +140,20 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
         }
 
         if (exclusive && shellSurface->exclusiveZone() > 0) {
-            adjustWorkArea(shellSurface, workArea);
+            switch (shellSurface->exclusiveEdge()) {
+            case Qt::LeftEdge:
+                workArea->adjust(margins.left() + shellSurface->exclusiveZone(), 0, 0, 0);
+                break;
+            case Qt::RightEdge:
+                workArea->adjust(0, 0, -margins.right() - shellSurface->exclusiveZone(), 0);
+                break;
+            case Qt::TopEdge:
+                workArea->adjust(0, margins.top() + shellSurface->exclusiveZone(), 0, 0);
+                break;
+            case Qt::BottomEdge:
+                workArea->adjust(0, 0, 0, -margins.bottom() - shellSurface->exclusiveZone());
+                break;
+            }
         }
     }
 }

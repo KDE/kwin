@@ -306,7 +306,10 @@ void TestLayerShellV1Interface::testMargins()
     QSignalSpy marginsChangedSpy(serverShellSurface, &LayerSurfaceV1Interface::marginsChanged);
     QVERIFY(marginsChangedSpy.wait());
 
-    QCOMPARE(serverShellSurface->margins(), QMargins(40, 10, 20, 30));
+    QCOMPARE(serverShellSurface->margins(), LayerSurfaceMarginsV1(LayerSurfaceMarginV1::fromPixels(40),
+                                                                  LayerSurfaceMarginV1::fromPixels(10),
+                                                                  LayerSurfaceMarginV1::fromPixels(20),
+                                                                  LayerSurfaceMarginV1::fromPixels(30)));
 }
 
 void TestLayerShellV1Interface::testExclusiveZone()

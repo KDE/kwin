@@ -19,6 +19,57 @@ class OutputInterface;
 class SurfaceInterface;
 class SurfaceRole;
 
+class KWIN_EXPORT LayerSurfaceMarginV1
+{
+public:
+    static LayerSurfaceMarginV1 fromPixels(int pixels);
+    static LayerSurfaceMarginV1 fromPercents(qreal percents);
+
+    LayerSurfaceMarginV1();
+
+    std::optional<int> pixels() const;
+    std::optional<qreal> percents() const;
+
+    qreal materialized(qreal size) const;
+
+    auto operator<=>(const LayerSurfaceMarginV1 &other) const = default;
+
+private:
+    LayerSurfaceMarginV1(int pixels);
+    LayerSurfaceMarginV1(qreal percents);
+
+    std::variant<int, qreal> m_value;
+};
+
+class KWIN_EXPORT LayerSurfaceMarginsV1
+{
+public:
+    LayerSurfaceMarginsV1();
+    LayerSurfaceMarginsV1(LayerSurfaceMarginV1 left, LayerSurfaceMarginV1 top, LayerSurfaceMarginV1 right, LayerSurfaceMarginV1 bottom);
+
+    LayerSurfaceMarginV1 left() const;
+    void setLeft(LayerSurfaceMarginV1 left);
+
+    LayerSurfaceMarginV1 top() const;
+    void setTop(LayerSurfaceMarginV1 top);
+
+    LayerSurfaceMarginV1 right() const;
+    void setRight(LayerSurfaceMarginV1 right);
+
+    LayerSurfaceMarginV1 bottom() const;
+    void setBottom(LayerSurfaceMarginV1 bottom);
+
+    QMarginsF materialized(const QSizeF &size) const;
+
+    auto operator<=>(const LayerSurfaceMarginsV1 &other) const = default;
+
+private:
+    LayerSurfaceMarginV1 m_left;
+    LayerSurfaceMarginV1 m_top;
+    LayerSurfaceMarginV1 m_right;
+    LayerSurfaceMarginV1 m_bottom;
+};
+
 /**
  * The LayerShellV1Interface compositor extension allows to create desktop shell surfaces.
  *
@@ -112,27 +163,7 @@ public:
      * Returns the margins object that indicates the distance between an anchor edge and
      * the corresponding surface edge.
      */
-    QMargins margins() const;
-
-    /**
-     * Returns the value of the left margin. This is equivalent to calling margins().left().
-     */
-    int leftMargin() const;
-
-    /**
-     * Returns the value of the right margin. This is equivalent to calling margins().right().
-     */
-    int rightMargin() const;
-
-    /**
-     * Returns the value of the top margin. This is equivalent to calling margins().top().
-     */
-    int topMargin() const;
-
-    /**
-     * Returns the value of the bottom margin. This is equivalent to calling margins().bottom().
-     */
-    int bottomMargin() const;
+    LayerSurfaceMarginsV1 margins() const;
 
     /**
      * Returns the distance from the anchor edge that should not be occluded.
