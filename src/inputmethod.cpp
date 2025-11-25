@@ -711,7 +711,7 @@ void InputMethod::deleteSurroundingText(int32_t index, uint32_t length)
 
     auto t1 = waylandServer()->seat()->textInputV1();
     if (t1 && t1->isEnabled()) {
-        t1->deleteSurroundingText(before, after);
+        t1->deleteSurroundingText(index, length);
     }
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
