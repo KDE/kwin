@@ -348,7 +348,13 @@ bool DrmConnector::updateProperties()
                 .completeSizeInTiles = QSize(numTilesX, numTilesY),
                 .tileLocation = QPoint(tileLocX, tileLocY),
                 .tileSizeInPixels = QSize(tileWidth, tileHeight),
+                .completeSizeInPixels = QSize(numTilesX * tileWidth, numTilesY * tileHeight),
             };
+            // filter out all non-native modes, to avoid weird situations
+            erase_if(m_modes, [this](const auto &mode) {
+                return mode->size() != m_tileInfo->tileSizeInPixels;
+            });
+            qWarning() << "Connector" << connectorName() << "has tile info" << groupId << m_tileInfo->completeSizeInTiles << m_tileInfo->tileLocation << m_tileInfo->tileSizeInPixels;
         } else {
             qCWarning(KWIN_DRM, "Failed to parse the TILE blob!");
             m_tileInfo.reset();

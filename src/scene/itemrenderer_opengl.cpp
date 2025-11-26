@@ -419,7 +419,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     // The scissor region must be in the render target local coordinate system.
     const QSize bufferOffset = renderTarget.transform().map(QSize(viewport.renderOffset().x(), viewport.renderOffset().y()));
-    Region scissorRegion = Rect(QPoint(bufferOffset.width(), bufferOffset.height()), renderTarget.size() - 2 * bufferOffset);
+    Region scissorRegion = Rect(QPoint(bufferOffset.width(), bufferOffset.height()), viewport.deviceSize());
     if (renderContext.hardwareClipping) {
         scissorRegion &= viewport.transform().map(deviceRegion & renderTarget.transformedRect(), renderTarget.transformedSize());
     }

@@ -39,7 +39,11 @@ public:
     std::optional<std::pair<OutputConfiguration, ConfigType>> queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, AccelerometerOrientation orientation, bool isTabletMode);
     void storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed);
 
-    void applyMirroring(OutputConfiguration &config, const QList<BackendOutput *> &outputs);
+    /**
+     * applies required adjustments to the output configuration,
+     * namely changes required for mirroring and tiled displays
+     */
+    void applyAdjustments(OutputConfiguration &config, const QList<BackendOutput *> &outputs);
     bool isAutoRotateActive(const QList<BackendOutput *> &outputs, bool isTabletMode) const;
     bool isAutoBrightnessActive(const QList<BackendOutput *> &outputs) const;
 

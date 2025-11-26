@@ -528,7 +528,7 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
         }
     }
 
-    m_outputConfigStore->applyMirroring(config, backendOutputs);
+    m_outputConfigStore->applyAdjustments(config, backendOutputs);
     for (BackendOutput *output : backendOutputs) {
         if (m_dpms == DpmsState::Off || m_dpms == DpmsState::TurningOff) {
             config.changeSet(output)->dpmsMode = BackendOutput::DpmsMode::Off;
@@ -1298,11 +1298,36 @@ LogicalOutput *Workspace::findOutput(BackendOutput *backendOutput) const
         return nullptr;
     }
 
-    const auto it = std::ranges::find_if(m_outputs, [backendOutput](LogicalOutput *logical) {
-        return logical->backendOutput() == backendOutput
-            || logical->uuid() == backendOutput->replicationSource();
+    const auto it = std::ranges::find_if(m_outputs, [this, backendOutput](LogicalOutput *logical) {
+        BackendOutput *primary = primaryTileGroupOutput(backendOutput);
+        if (!primary) {
+            primary = backendOutput;
+        }
+        return logical->backendOutput() == primary
+            || logical->uuid() == primary->replicationSource();
     });
     return it == m_outputs.end() ? nullptr : *it;
+}
+
+BackendOutput *Workspace::primaryTileGroupOutput(int groupId) const
+{
+    const auto it = m_tileGroupOutputs.find(groupId);
+    return it == m_tileGroupOutputs.end() ? nullptr : it->second;
+}
+
+BackendOutput *Workspace::primaryTileGroupOutput(BackendOutput *output) const
+{
+    if (output->tileInfo()) {
+        return primaryTileGroupOutput(output->tileInfo()->groupId);
+    } else {
+        return nullptr;
+    }
+}
+
+bool Workspace::isNonPrimaryTileOutput(BackendOutput *output) const
+{
+    const auto primary = primaryTileGroupOutput(output);
+    return primary && output != primary;
 }
 
 void Workspace::slotOutputBackendOutputsQueried()
@@ -1327,17 +1352,62 @@ void Workspace::updateOutputs()
     QList<BackendOutput *> newBackendOutputs;
     bool wakeUp = false;
 
+    std::unordered_map<int, std::pair<Region, QSize>> tileGroupRegions;
+    for (BackendOutput *output : availableOutputs) {
+        if (output->isNonDesktop() || !output->tileInfo().has_value()) {
+            continue;
+        }
+        const auto &info = *output->tileInfo();
+        auto &[region, totalSize] = tileGroupRegions[info.groupId];
+        region |= Rect(info.tileLocation, QSize(1, 1));
+        totalSize = info.completeSizeInTiles;
+        qWarning() << "found output in tile group" << info.groupId << info.tileLocation;
+    }
+
+    // For every complete tile group, pick the backend output at tile position 0,0 to represent it.
+    // Always choosing the same one ensures the resulting UUID of the LogicalOutput stays the same
+    m_tileGroupOutputs.clear();
+    for (const auto &[groupId, info] : tileGroupRegions) {
+        const auto [region, totalSize] = info;
+        if (region != Rect(QPoint(), totalSize)) {
+            // In this case, each tile will be presented as its own output
+            qCDebug(KWIN_CORE, "Ignoring incomplete tile group %d", groupId);
+            qWarning() << "Incomplete tile group" << groupId << region << "vs" << totalSize;
+            continue;
+        }
+        m_tileGroupOutputs[groupId] = *std::ranges::find_if(availableOutputs, [groupId](BackendOutput *output) {
+            return output->tileInfo()
+                && output->tileInfo()->groupId == groupId
+                && output->tileInfo()->tileLocation == QPoint(0, 0);
+        });
+        qWarning() << "Tile group" << groupId << "is complete, with a size of" << info.second;
+    }
+
     for (BackendOutput *output : availableOutputs) {
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
         output->setAutoBrightnessAvailable(m_lightSensor->isAvailable());
         if (!wantsToManage(output)) {
             continue;
         }
-        const auto replicationSource = std::ranges::find_if(availableOutputs, [output](BackendOutput *other) {
-            return other->uuid() == output->replicationSource();
+        BackendOutput *primaryTile = primaryTileGroupOutput(output);
+        if (!primaryTile) {
+            primaryTile = output;
+        }
+        const auto replicationSource = std::ranges::find_if(availableOutputs, [primaryTile](BackendOutput *other) {
+            return other->uuid() == primaryTile->replicationSource();
         });
         if (replicationSource != availableOutputs.end() && (*replicationSource)->isEnabled()) {
             continue;
+        }
+        if (const auto info = output->tileInfo()) {
+            BackendOutput *primary = primaryTileGroupOutput(info->groupId);
+            if (primary && primary != output) {
+                // ignore all outputs of the tile group,
+                // except the one in the tileGroups map
+                qWarning() << "skipping non-'primary' tiled output" << output->name();
+                continue;
+            }
+            qWarning() << "found 'primary' tiled output" << output->name();
         }
         newBackendOutputs.append(output);
     }
@@ -1372,13 +1442,29 @@ void Workspace::updateOutputs()
         const auto existing = std::ranges::find_if(oldLogicalOutputs, [output](LogicalOutput *logical) {
             return output == logical->backendOutput();
         });
+        std::optional<int> tileGroupId;
+        if (primaryTileGroupOutput(output)) {
+            tileGroupId = output->tileInfo()->groupId;
+            qWarning() << "creating logical output for tile group" << tileGroupId;
+        } else {
+            qWarning() << "creating logical output for" << output->name();
+        }
         if (existing == oldLogicalOutputs.end()) {
-            m_outputs.push_back(new LogicalOutput(output));
+            m_outputs.push_back(new LogicalOutput(output, tileGroupId));
         } else {
             m_outputs.push_back(*existing);
         }
         // update geometry
-        m_outputs.back()->setGeometry(output->position() - topLeftMostCoordinates, output->modeSize(), output->refreshRate(), output->transform(), output->scale());
+        if (tileGroupId.has_value()) {
+            const auto info = output->tileInfo();
+            const QSize fullModeSize{
+                info->tileSizeInPixels.width() * info->completeSizeInTiles.width(),
+                info->tileSizeInPixels.height() * info->completeSizeInTiles.height(),
+            };
+            m_outputs.back()->setGeometry(output->position() - topLeftMostCoordinates, fullModeSize, output->refreshRate(), output->transform(), output->scale());
+        } else {
+            m_outputs.back()->setGeometry(output->position() - topLeftMostCoordinates, output->modeSize(), output->refreshRate(), output->transform(), output->scale());
+        }
         if (existing != oldLogicalOutputs.end()) {
             Q_EMIT m_outputs.back()->changed();
         }

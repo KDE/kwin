@@ -19,7 +19,7 @@ class SoftwareVsyncMonitor;
 class VirtualBackend;
 class OutputFrame;
 
-class VirtualOutput : public BackendOutput
+class KWIN_EXPORT VirtualOutput : public BackendOutput
 {
     Q_OBJECT
 

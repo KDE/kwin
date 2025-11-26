@@ -328,6 +328,9 @@ public:
     QString outputLayoutId() const;
     QList<LogicalOutput *> outputs() const;
     LogicalOutput *outputAt(const QPointF &pos) const;
+    BackendOutput *primaryTileGroupOutput(int tileGroupId) const;
+    BackendOutput *primaryTileGroupOutput(BackendOutput *output) const;
+    bool isNonPrimaryTileOutput(BackendOutput *output) const;
 
     /**
      * Set "Show Desktop" status
@@ -651,6 +654,7 @@ private:
     QList<LogicalOutput *> m_outputs;
     LogicalOutput *m_activeOutput = nullptr;
     QList<LogicalOutput *> m_outputOrder;
+    std::unordered_map<int, BackendOutput *> m_tileGroupOutputs;
 
     Window *m_activeWindow;
     Window *m_moveResizeWindow;

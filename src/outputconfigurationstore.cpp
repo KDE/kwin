@@ -59,12 +59,12 @@ std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigTyp
         const auto &[setup, outputStates] = *opt;
         auto config = setupToConfig(setup, outputStates);
         applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
-        applyMirroring(config, relevantOutputs);
+        applyAdjustments(config, relevantOutputs);
         return std::make_tuple(config, ConfigType::Preexisting);
     }
     auto config = generateConfig(relevantOutputs, isLidClosed);
     applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
-    applyMirroring(config, relevantOutputs);
+    applyAdjustments(config, relevantOutputs);
     return std::make_tuple(config, ConfigType::Generated);
 }
 
@@ -108,10 +108,14 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
 
 static QSize calculatePixelSize(OutputChangeSet *change, BackendOutput *output)
 {
-    const auto mode = change->mode.value_or(output->currentMode()).lock();
-    Q_ASSERT(mode);
     const auto transform = change->transform.value_or(output->transform());
-    return transform.map(mode->size());
+    if (BackendOutput *primary = workspace()->primaryTileGroupOutput(output)) {
+        return transform.map(primary->tileInfo()->completeSizeInPixels);
+    } else {
+        const auto mode = change->mode.value_or(output->currentMode()).lock();
+        Q_ASSERT(mode);
+        return transform.map(mode->size());
+    }
 }
 
 static double mirrorScale(QSize srcPixelSize, double srcScale, QSize dstPixelSize)
@@ -129,18 +133,32 @@ static QPoint calculateRenderOffset(QSize srcPixelSize, double srcScale, QSize d
     return QPoint(offset.width(), offset.height());
 }
 
-void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const QList<BackendOutput *> &outputs)
+void OutputConfigurationStore::applyAdjustments(OutputConfiguration &config, const QList<BackendOutput *> &outputs)
 {
     const auto enabledOutputs = outputs | std::views::filter([&config](BackendOutput *output) {
+        const auto &tileInfo = output->tileInfo();
+        if (tileInfo) {
+            // for tiled displays, the "primary" output overrides enablement of the other parts
+            BackendOutput *primary = workspace()->primaryTileGroupOutput(tileInfo->groupId);
+            if (primary) {
+                return config.changeSet(primary)->enabled.value_or(primary->isEnabled());
+            }
+        }
         return config.changeSet(output)->enabled.value_or(output->isEnabled());
     }) | std::ranges::to<QList>();
+
     for (BackendOutput *output : enabledOutputs) {
         auto cfg = config.changeSet(output);
-        const auto srcIt = std::ranges::find_if(enabledOutputs, [&cfg, &config, output](BackendOutput *other) {
-            if (output == other) {
+        BackendOutput *primary = workspace()->primaryTileGroupOutput(output);
+        if (!primary) {
+            primary = output;
+        }
+        auto primaryCfg = config.changeSet(primary);
+        const auto srcIt = std::ranges::find_if(enabledOutputs, [&primaryCfg, &config, primary](BackendOutput *other) {
+            if (primary == other) {
                 return false;
             }
-            const QString source = cfg->replicationSource.value_or(output->replicationSource());
+            const QString source = primaryCfg->replicationSource.value_or(primary->replicationSource());
             if (source.isEmpty()) {
                 return false;
             }
@@ -149,7 +167,7 @@ void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const
         });
         if (srcIt == enabledOutputs.end()) {
             // not mirroring anything
-            cfg->scale = cfg->scaleSetting.value_or(output->scaleSetting());
+            cfg->scale = primaryCfg->scaleSetting.value_or(output->scaleSetting());
             cfg->deviceOffset = QPoint();
             continue;
         }
@@ -160,7 +178,16 @@ void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const
         const double srcScale = config.changeSet(source)->scaleSetting.value_or(source->scaleSetting());
         const QSize dstPixelSize = calculatePixelSize(cfg.get(), output);
         cfg->scale = mirrorScale(srcPixelSize, srcScale, dstPixelSize);
-        cfg->deviceOffset = calculateRenderOffset(srcPixelSize, srcScale, dstPixelSize, *cfg->scale);
+        const QPoint offset = calculateRenderOffset(srcPixelSize, srcScale, dstPixelSize, *cfg->scale);
+        if (primary != output) {
+            // this is a non-top-left tiled part
+            const auto tileInfo = output->tileInfo();
+            const int32_t tileX = std::round(srcPixelSize.width() * tileInfo->tileLocation.x() / double(tileInfo->completeSizeInTiles.width()));
+            const int32_t tileY = std::round(srcPixelSize.height() * tileInfo->tileLocation.y() / double(tileInfo->completeSizeInTiles.height()));
+            cfg->deviceOffset = QPoint(std::max(offset.x() - tileX, 0), std::max(offset.y() - tileY, 0));
+        } else {
+            cfg->deviceOffset = offset;
+        }
     }
 }
 
@@ -652,8 +679,8 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
         } else {
             priority++;
         }
-        if (*changeset->enabled) {
-            const auto modeSize = changeset->transform->map(mode->size());
+        if (*changeset->enabled && !workspace()->isNonPrimaryTileOutput(output)) {
+            const QSize modeSize = calculatePixelSize(changeset.get(), output);
             const QPoint topRight = QPoint(std::ceil(changeset->pos->x() + modeSize.width() / *changeset->scaleSetting), changeset->pos->y());
             if (topRight.x() > rightMostPosition.x() || (topRight.x() == rightMostPosition.x() && topRight.y() < rightMostPosition.y())) {
                 rightMostPosition = topRight;

@@ -16,9 +16,12 @@ static QMatrix4x4 createProjectionMatrix(const RenderTarget &renderTarget, const
 
     ret.scale(1, -1); // flip the y axis back
     ret *= renderTarget.transform().toMatrix();
-    // TODO change the "offset" to a device-local viewport rect?
-    ret.scale((renderTarget.transformedSize().width() - 2 * renderOffset.x()) / double(renderTarget.transformedSize().width()),
-              (renderTarget.transformedSize().height() - 2 * renderOffset.y()) / double(renderTarget.transformedSize().height()));
+    const auto targetSize = renderTarget.transformedSize();
+    const QSize scalingOffset = (targetSize - rect.size()) / 2;
+    const QPointF correction(2 * (renderOffset.x() - scalingOffset.width()),
+                             2 * (renderOffset.y() - scalingOffset.height()));
+    ret.translate(correction.x() / double(targetSize.width()), correction.y() / double(targetSize.height()));
+    ret.scale(rect.width() / double(targetSize.width()), rect.height() / double(targetSize.height()));
     ret.scale(1, -1); // undo ortho() flipping the y axis
 
     ret.ortho(rect);

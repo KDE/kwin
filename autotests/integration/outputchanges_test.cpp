@@ -7,9 +7,12 @@
 #include "kwin_wayland_test.h"
 
 #include "backends/virtual/virtual_backend.h"
+#include "backends/virtual/virtual_egl_backend.h"
+#include "backends/virtual/virtual_output.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
+#include "effect/effecthandler.h"
 #include "outputconfigurationstore.h"
 #include "pointer_input.h"
 #include "tiles/tilemanager.h"
@@ -146,6 +149,12 @@ private Q_SLOTS:
 
     void testMirroring_data();
     void testMirroring();
+    void testMirrorNormalDisplay_data();
+    void testMirrorNormalDisplay();
+    void testTiledDisplay();
+    void testMirrorTiledDisplay();
+    void testTiledDisplayMirrors_data();
+    void testTiledDisplayMirrors();
 
     void testAutoBrightness();
     void testPerOutputDesktopsOutputToggle();
@@ -154,6 +163,13 @@ private Q_SLOTS:
 
 void OutputChangesTest::initTestCase()
 {
+    if (!Test::renderNodeAvailable()) {
+        QSKIP("no render node available");
+        return;
+    }
+
+    qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
+
     qRegisterMetaType<Window *>();
 
     QVERIFY(waylandServer()->init(qAppName()));
@@ -168,6 +184,10 @@ void OutputChangesTest::initTestCase()
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), Rect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), Rect(1280, 0, 1280, 1024));
+
+    // make sure open/close effects don't get in the way
+    // of image comparisons
+    effects->unloadAllEffects();
 }
 
 void OutputChangesTest::init()
@@ -2355,6 +2375,82 @@ void OutputChangesTest::testMirroring()
     input()->removeInputDevice(&lidSwitch);
 }
 
+void OutputChangesTest::testMirrorNormalDisplay_data()
+{
+    QTest::addColumn<QSize>("dstSize");
+    QTest::addColumn<QSize>("sourceSize");
+    QTest::addColumn<QPoint>("windowPosition");
+    QTest::addColumn<QPoint>("mirrorOffset");
+
+    QTest::addRow("narrow") << QSize(400, 200) << QSize(200, 200) << QPoint(50, 50) << QPoint(100, 0);
+    QTest::addRow("same") << QSize(400, 200) << QSize(400, 200) << QPoint(150, 50) << QPoint(0, 0);
+    QTest::addRow("wide") << QSize(400, 200) << QSize(400, 100) << QPoint(100, 50) << QPoint(0, 50);
+}
+
+void OutputChangesTest::testMirrorNormalDisplay()
+{
+    QFETCH(QSize, dstSize);
+    QFETCH(QSize, sourceSize);
+    QFETCH(QPoint, windowPosition);
+    QFETCH(QPoint, mirrorOffset);
+
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = Rect(QPoint(), sourceSize),
+            .connectorName = "src",
+        },
+        Test::OutputInfo{
+            .geometry = Rect(QPoint(), dstSize),
+            .connectorName = "dst",
+        },
+    });
+
+    const auto backendOutputs = kwinApp()->outputBackend()->outputs();
+
+    {
+        OutputConfiguration cfg;
+        cfg.changeSet(backendOutputs[1])->replicationSource = backendOutputs[0]->uuid();
+        QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+    }
+    const auto logicalOutputs = workspace()->outputs();
+    QCOMPARE(logicalOutputs.size(), 1);
+    QCOMPARE(logicalOutputs[0]->backendOutput(), backendOutputs[0]);
+
+    Cursors::self()->hideCursor();
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(QSize(100, 50), Qt::white));
+    window.m_window->move(windowPosition);
+    QVERIFY(window.presentWait());
+
+    VirtualEglLayer *mirrorLayer = static_cast<VirtualEglLayer *>(static_cast<VirtualOutput *>(backendOutputs[1])->outputLayer());
+    const QImage mirror = mirrorLayer->texture()->toImage();
+    const Rect geom = window.m_window->frameGeometry().rounded();
+
+    const auto white = qRgb(255, 255, 255);
+    const auto black = qRgb(0, 0, 0);
+
+    const auto topLeftInside = geom.topLeft() + mirrorOffset;
+    QCOMPARE(mirror.pixel(topLeftInside - QPoint(0, 0)), white);
+    QCOMPARE(mirror.pixel(topLeftInside - QPoint(1, 0)), black);
+    QCOMPARE(mirror.pixel(topLeftInside - QPoint(0, 1)), black);
+
+    const auto bottomLeftInside = geom.bottomLeft() - QPoint(0, 1) + mirrorOffset;
+    QCOMPARE(mirror.pixel(bottomLeftInside - QPoint(0, 0)), white);
+    QCOMPARE(mirror.pixel(bottomLeftInside - QPoint(1, 0)), black);
+    QCOMPARE(mirror.pixel(bottomLeftInside + QPoint(0, 1)), black);
+
+    const auto topRightInside = geom.topRight() - QPoint(1, 0) + mirrorOffset;
+    QCOMPARE(mirror.pixel(topRightInside - QPoint(0, 0)), white);
+    QCOMPARE(mirror.pixel(topRightInside + QPoint(1, 0)), black);
+    QCOMPARE(mirror.pixel(topRightInside - QPoint(0, 1)), black);
+
+    const auto bottomRightInside = geom.bottomRight() - QPoint(1, 1) + mirrorOffset;
+    QCOMPARE(mirror.pixel(bottomRightInside - QPoint(0, 0)), white);
+    QCOMPARE(mirror.pixel(bottomRightInside + QPoint(1, 0)), black);
+    QCOMPARE(mirror.pixel(bottomRightInside + QPoint(0, 1)), black);
+}
+
 #define COMPARE_RANGE(expression, value, uncertainty) \
     QCOMPARE_GE(expression, value - uncertainty);     \
     QCOMPARE_LE(expression, value + uncertainty);
@@ -2497,6 +2593,268 @@ void OutputChangesTest::testTemporaryDpmsHotplug()
         },
     });
     QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
+}
+
+void OutputChangesTest::testTiledDisplay()
+{
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 200, 100),
+            .internal = false,
+            .tileInfo = BackendOutput::TileInfo{
+                .groupId = 1,
+                .completeSizeInTiles = QSize(2, 1),
+                .tileLocation = QPoint(1, 0),
+                .tileSizeInPixels = QSize(200, 100),
+                .completeSizeInPixels = QSize(400, 100),
+            },
+        },
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 200, 100),
+            .internal = false,
+            .tileInfo = BackendOutput::TileInfo{
+                .groupId = 1,
+                .completeSizeInTiles = QSize(2, 1),
+                .tileLocation = QPoint(0, 0),
+                .tileSizeInPixels = QSize(200, 100),
+                .completeSizeInPixels = QSize(400, 100),
+            },
+        },
+    });
+
+    const auto backendOutputs = kwinApp()->outputBackend()->outputs();
+    QCOMPARE(backendOutputs.size(), 2);
+    QVERIFY(backendOutputs[0]->tileInfo().has_value());
+    QCOMPARE(backendOutputs[0]->tileInfo()->tileLocation, QPoint(1, 0));
+    QVERIFY(backendOutputs[1]->tileInfo().has_value());
+    QCOMPARE(backendOutputs[1]->tileInfo()->tileLocation, QPoint(0, 0));
+
+    const auto logicalOutputs = workspace()->outputs();
+    QCOMPARE(logicalOutputs.size(), 1);
+    QCOMPARE(logicalOutputs[0]->backendOutput(), backendOutputs[1]);
+
+    QCOMPARE(logicalOutputs[0]->geometry(), Rect(QPoint(), QSize(400, 100)));
+    QCOMPARE(logicalOutputs[0]->modeSize(), QSize(400, 100));
+
+    VirtualEglLayer *rightLayer = static_cast<VirtualEglLayer *>(static_cast<VirtualOutput *>(backendOutputs[0])->outputLayer());
+    VirtualEglLayer *leftLayer = static_cast<VirtualEglLayer *>(static_cast<VirtualOutput *>(backendOutputs[1])->outputLayer());
+
+    Cursors::self()->hideCursor();
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(QSize(100, 50), Qt::white));
+    window.m_window->move(QPoint(150, 25));
+    QVERIFY(window.presentWait());
+
+    const QImage left = leftLayer->texture()->toImage();
+    const QImage right = rightLayer->texture()->toImage();
+    const Rect geom = window.m_window->frameGeometry().rounded();
+
+    const auto white = qRgb(255, 255, 255);
+    const auto black = qRgb(0, 0, 0);
+
+    const auto topLeftInside = geom.topLeft();
+    QCOMPARE(left.pixel(topLeftInside - QPoint(0, 0)), white);
+    QCOMPARE(left.pixel(topLeftInside - QPoint(1, 0)), black);
+    QCOMPARE(left.pixel(topLeftInside - QPoint(0, 1)), black);
+
+    const auto bottomLeftInside = geom.bottomLeft() - QPoint(0, 1);
+    QCOMPARE(left.pixel(bottomLeftInside - QPoint(0, 0)), white);
+    QCOMPARE(left.pixel(bottomLeftInside - QPoint(1, 0)), black);
+    QCOMPARE(left.pixel(bottomLeftInside + QPoint(0, 1)), black);
+
+    const auto topRightInside = geom.topRight() - QPoint(200, 0) - QPoint(1, 0);
+    QCOMPARE(right.pixel(topRightInside - QPoint(0, 0)), white);
+    QCOMPARE(right.pixel(topRightInside + QPoint(1, 0)), black);
+    QCOMPARE(right.pixel(topRightInside - QPoint(0, 1)), black);
+
+    const auto bottomRightInside = geom.bottomRight() - QPoint(200, 0) - QPoint(1, 1);
+    QCOMPARE(right.pixel(bottomRightInside - QPoint(0, 0)), white);
+    QCOMPARE(right.pixel(bottomRightInside + QPoint(1, 0)), black);
+    QCOMPARE(right.pixel(bottomRightInside + QPoint(0, 1)), black);
+}
+
+void OutputChangesTest::testMirrorTiledDisplay()
+{
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 200, 100),
+            .internal = false,
+            .tileInfo = BackendOutput::TileInfo{
+                .groupId = 1,
+                .completeSizeInTiles = QSize(2, 1),
+                .tileLocation = QPoint(1, 0),
+                .tileSizeInPixels = QSize(200, 100),
+                .completeSizeInPixels = QSize(400, 100),
+            },
+        },
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 200, 100),
+            .internal = false,
+            .tileInfo = BackendOutput::TileInfo{
+                .groupId = 1,
+                .completeSizeInTiles = QSize(2, 1),
+                .tileLocation = QPoint(0, 0),
+                .tileSizeInPixels = QSize(200, 100),
+                .completeSizeInPixels = QSize(400, 100),
+            },
+        },
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 400, 200),
+        },
+    });
+
+    const auto backendOutputs = kwinApp()->outputBackend()->outputs();
+    QCOMPARE(backendOutputs.size(), 3);
+    QVERIFY(backendOutputs[0]->tileInfo().has_value());
+    QCOMPARE(backendOutputs[0]->tileInfo()->tileLocation, QPoint(1, 0));
+    QVERIFY(backendOutputs[1]->tileInfo().has_value());
+    QCOMPARE(backendOutputs[1]->tileInfo()->tileLocation, QPoint(0, 0));
+    QVERIFY(!backendOutputs[2]->tileInfo().has_value());
+
+    {
+        OutputConfiguration cfg;
+        cfg.changeSet(backendOutputs[2])->replicationSource = backendOutputs[1]->uuid();
+        QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+    }
+    const auto logicalOutputs = workspace()->outputs();
+    QCOMPARE(logicalOutputs.size(), 1);
+    QCOMPARE(logicalOutputs[0]->backendOutput(), backendOutputs[1]);
+
+    VirtualEglLayer *mirrorLayer = static_cast<VirtualEglLayer *>(static_cast<VirtualOutput *>(backendOutputs[2])->outputLayer());
+
+    Cursors::self()->hideCursor();
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(QSize(100, 50), Qt::white));
+    window.m_window->move(QPoint(150, 25));
+    QVERIFY(window.presentWait());
+
+    const QImage mirror = mirrorLayer->texture()->toImage();
+    const Rect geom = window.m_window->frameGeometry().rounded();
+
+    const auto white = qRgb(255, 255, 255);
+    const auto black = qRgb(0, 0, 0);
+
+    const QPoint offset(0, 50);
+    const auto topLeftInside = geom.topLeft() + offset;
+    QCOMPARE(mirror.pixel(topLeftInside - QPoint(0, 0)), white);
+    QCOMPARE(mirror.pixel(topLeftInside - QPoint(1, 0)), black);
+    QCOMPARE(mirror.pixel(topLeftInside - QPoint(0, 1)), black);
+
+    const auto bottomLeftInside = geom.bottomLeft() - QPoint(0, 1) + offset;
+    QCOMPARE(mirror.pixel(bottomLeftInside - QPoint(0, 0)), white);
+    QCOMPARE(mirror.pixel(bottomLeftInside - QPoint(1, 0)), black);
+    QCOMPARE(mirror.pixel(bottomLeftInside + QPoint(0, 1)), black);
+
+    const auto topRightInside = geom.topRight() - QPoint(1, 0) + offset;
+    QCOMPARE(mirror.pixel(topRightInside - QPoint(0, 0)), white);
+    QCOMPARE(mirror.pixel(topRightInside + QPoint(1, 0)), black);
+    QCOMPARE(mirror.pixel(topRightInside - QPoint(0, 1)), black);
+
+    const auto bottomRightInside = geom.bottomRight() - QPoint(1, 1) + offset;
+    QCOMPARE(mirror.pixel(bottomRightInside - QPoint(0, 0)), white);
+    QCOMPARE(mirror.pixel(bottomRightInside + QPoint(1, 0)), black);
+    QCOMPARE(mirror.pixel(bottomRightInside + QPoint(0, 1)), black);
+}
+
+void OutputChangesTest::testTiledDisplayMirrors_data()
+{
+    QTest::addColumn<QSize>("tileSize");
+    QTest::addColumn<QSize>("sourceSize");
+    QTest::addColumn<QPoint>("windowPosition");
+    QTest::addColumn<QPoint>("mirrorOffset");
+
+    QTest::addRow("narrow") << QSize(200, 200) << QSize(200, 200) << QPoint(50, 50) << QPoint(100, 0);
+    QTest::addRow("same") << QSize(200, 200) << QSize(400, 200) << QPoint(150, 50) << QPoint(0, 0);
+    QTest::addRow("wide") << QSize(200, 200) << QSize(400, 100) << QPoint(150, 25) << QPoint(0, 50);
+}
+
+void OutputChangesTest::testTiledDisplayMirrors()
+{
+    QFETCH(QSize, tileSize);
+    QFETCH(QSize, sourceSize);
+    QFETCH(QPoint, windowPosition);
+    QFETCH(QPoint, mirrorOffset);
+
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = Rect(QPoint(), tileSize),
+            .internal = false,
+            .connectorName = "tile right",
+            .tileInfo = BackendOutput::TileInfo{
+                .groupId = 1,
+                .completeSizeInTiles = QSize(2, 1),
+                .tileLocation = QPoint(1, 0),
+                .tileSizeInPixels = tileSize,
+                .completeSizeInPixels = QSize(tileSize.width() * 2, tileSize.height()),
+            },
+        },
+        Test::OutputInfo{
+            .geometry = Rect(QPoint(), tileSize),
+            .internal = false,
+            .connectorName = "tile left",
+            .tileInfo = BackendOutput::TileInfo{
+                .groupId = 1,
+                .completeSizeInTiles = QSize(2, 1),
+                .tileLocation = QPoint(0, 0),
+                .tileSizeInPixels = tileSize,
+                .completeSizeInPixels = QSize(tileSize.width() * 2, tileSize.height()),
+            },
+        },
+        Test::OutputInfo{
+            .geometry = Rect(QPoint(), sourceSize),
+            .connectorName = "mirror",
+        },
+    });
+
+    const auto backendOutputs = kwinApp()->outputBackend()->outputs();
+    {
+        OutputConfiguration cfg;
+        cfg.changeSet(backendOutputs[1])->replicationSource = backendOutputs[2]->uuid();
+        QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+    }
+    const auto logicalOutputs = workspace()->outputs();
+    QCOMPARE(logicalOutputs.size(), 1);
+    QCOMPARE(logicalOutputs[0]->backendOutput(), backendOutputs[2]);
+
+    VirtualEglLayer *rightLayer = static_cast<VirtualEglLayer *>(static_cast<VirtualOutput *>(backendOutputs[0])->outputLayer());
+    VirtualEglLayer *leftLayer = static_cast<VirtualEglLayer *>(static_cast<VirtualOutput *>(backendOutputs[1])->outputLayer());
+
+    Cursors::self()->hideCursor();
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(QSize(100, 50), Qt::white));
+    window.m_window->move(windowPosition);
+    QVERIFY(window.presentWait());
+
+    const QImage left = leftLayer->texture()->toImage();
+    const QImage right = rightLayer->texture()->toImage();
+    const Rect geom = window.m_window->frameGeometry().rounded();
+
+    const auto white = qRgb(255, 255, 255);
+    const auto black = qRgb(0, 0, 0);
+
+    const auto topLeftInside = geom.topLeft() + mirrorOffset;
+    QCOMPARE(left.pixel(topLeftInside - QPoint(0, 0)), white);
+    QCOMPARE(left.pixel(topLeftInside - QPoint(1, 0)), black);
+    QCOMPARE(left.pixel(topLeftInside - QPoint(0, 1)), black);
+
+    const auto bottomLeftInside = geom.bottomLeft() - QPoint(0, 1) + mirrorOffset;
+    QCOMPARE(left.pixel(bottomLeftInside - QPoint(0, 0)), white);
+    QCOMPARE(left.pixel(bottomLeftInside - QPoint(1, 0)), black);
+    QCOMPARE(left.pixel(bottomLeftInside + QPoint(0, 1)), black);
+
+    const QPoint tileOffset(tileSize.width(), 0);
+    const auto topRightInside = geom.topRight() - tileOffset - QPoint(1, 0) + mirrorOffset;
+    QCOMPARE(right.pixel(topRightInside - QPoint(0, 0)), white);
+    QCOMPARE(right.pixel(topRightInside + QPoint(1, 0)), black);
+    QCOMPARE(right.pixel(topRightInside - QPoint(0, 1)), black);
+
+    const auto bottomRightInside = geom.bottomRight() - tileOffset - QPoint(1, 1) + mirrorOffset;
+    QCOMPARE(right.pixel(bottomRightInside - QPoint(0, 0)), white);
+    QCOMPARE(right.pixel(bottomRightInside + QPoint(1, 0)), black);
+    QCOMPARE(right.pixel(bottomRightInside + QPoint(0, 1)), black);
 }
 
 } // namespace KWin
