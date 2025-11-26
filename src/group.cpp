@@ -135,8 +135,7 @@ void Group::updateUserTime(xcb_timestamp_t time)
 {
     // copy of X11Window::updateUserTime
     if (time == XCB_CURRENT_TIME) {
-        kwinApp()->updateXTime();
-        time = xTime();
+        time = kwinApp()->currentX11Time();
     }
     if (time != -1U
         && (user_time == XCB_CURRENT_TIME

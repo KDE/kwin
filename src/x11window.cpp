@@ -123,15 +123,6 @@ X11Window::X11Window()
     setOutput(workspace()->activeOutput());
     setMoveResizeOutput(workspace()->activeOutput());
 
-    // TODO: Do all as initialization
-    m_syncRequest.counter = m_syncRequest.alarm = XCB_NONE;
-    m_syncRequest.timeout = nullptr;
-    m_syncRequest.lastTimestamp = xTime();
-    m_syncRequest.enabled = false;
-    m_syncRequest.pending = false;
-    m_syncRequest.acked = false;
-    m_syncRequest.interactiveResize = false;
-
     // Set the initial mapping state
     mapping_state = Withdrawn;
 
@@ -920,9 +911,9 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 
     if (m_userTime == XCB_TIME_CURRENT_TIME || m_userTime == -1U) {
         // No known user time, set something old
-        m_userTime = xTime() - 1000000;
+        m_userTime = kwinApp()->currentX11Time() - 1000000;
         if (m_userTime == XCB_TIME_CURRENT_TIME || m_userTime == -1U) { // Let's be paranoid
-            m_userTime = xTime() - 1000000 + 10;
+            m_userTime = kwinApp()->currentX11Time() - 1000000 + 10;
         }
     }
 
@@ -1312,10 +1303,11 @@ void X11Window::closeWindow()
     }
 
     // Update user time, because the window may create a confirming dialog.
-    updateUserTime();
+    const xcb_timestamp_t time = kwinApp()->currentX11Time();
+    updateUserTime(time);
 
     if (info->supportsProtocol(NET::DeleteWindowProtocol)) {
-        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_delete_window, xTime());
+        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_delete_window, time);
         pingWindow();
     } else { // Client will not react on wm_delete_window. We have not choice
         // but destroy his connection to the XServer.
@@ -1372,7 +1364,7 @@ void X11Window::pingWindow()
     // we'll run the timer twice, at first we'll desaturate the window
     // and the second time we'll show the "do you want to kill" prompt
     ping_timer->start(options->killPingTimeout() / 2);
-    m_pingTimestamp = xTime();
+    m_pingTimestamp = kwinApp()->currentX11Time();
     rootInfo()->sendPing(window(), m_pingTimestamp);
 }
 
@@ -1584,8 +1576,7 @@ bool X11Window::takeFocus()
         demandAttention(false); // window cannot take input, at least withdraw urgency
     }
     if (effectiveTakeFocus) {
-        kwinApp()->updateXTime();
-        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus, xTime());
+        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus, kwinApp()->currentX11Time());
     }
 
     if (effectiveAcceptFocus || effectiveTakeFocus) {
@@ -1615,7 +1606,7 @@ bool X11Window::providesContextHelp() const
 void X11Window::showContextHelp()
 {
     if (info->supportsProtocol(NET::ContextHelpProtocol)) {
-        sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_context_help, xTime());
+        sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_context_help, kwinApp()->currentX11Time());
     }
 }
 
@@ -1878,16 +1869,12 @@ void X11Window::sendSyncRequest()
     if (oldLo > m_syncRequest.value.lo) {
         m_syncRequest.value.hi++;
     }
-    if (m_syncRequest.lastTimestamp >= xTime()) {
-        kwinApp()->updateXTime();
-    }
 
     setAllowCommits(false);
-    sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request, xTime(),
+    sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request, kwinApp()->currentX11Time(),
                       m_syncRequest.value.lo, m_syncRequest.value.hi);
     m_syncRequest.pending = true;
     m_syncRequest.interactiveResize = isInteractiveResize();
-    m_syncRequest.lastTimestamp = xTime();
 }
 
 bool X11Window::wantsInput() const
@@ -4135,8 +4122,7 @@ void X11Window::updateUserTime(xcb_timestamp_t time)
 {
     // copied in Group::updateUserTime
     if (time == XCB_TIME_CURRENT_TIME) {
-        kwinApp()->updateXTime();
-        time = xTime();
+        time = kwinApp()->currentX11Time();
     }
     if (time != -1U
         && (m_userTime == XCB_TIME_CURRENT_TIME

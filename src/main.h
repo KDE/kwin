@@ -69,7 +69,6 @@ class KWIN_EXPORT Application : public QApplication
 {
     Q_OBJECT
 #if KWIN_BUILD_X11
-    Q_PROPERTY(quint32 x11Time READ x11Time WRITE setX11Time)
     Q_PROPERTY(quint32 x11RootWindow READ x11RootWindow CONSTANT)
     Q_PROPERTY(void *x11Connection READ x11Connection NOTIFY x11ConnectionChanged)
 #endif
@@ -122,10 +121,12 @@ public:
     void unregisterEventFilter(X11EventFilter *filter);
     bool dispatchEvent(xcb_generic_event_t *event);
 
-    xcb_timestamp_t x11Time() const
+    xcb_timestamp_t currentX11Time()
     {
+        updateXTime();
         return m_x11Time;
     }
+
     enum class TimestampUpdate {
         OnlyIfLarger,
         Always

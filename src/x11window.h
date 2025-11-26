@@ -217,15 +217,14 @@ public:
 
     struct SyncRequest
     {
-        xcb_sync_counter_t counter;
+        xcb_sync_counter_t counter = XCB_NONE;
         xcb_sync_int64_t value;
-        xcb_sync_alarm_t alarm;
-        xcb_timestamp_t lastTimestamp;
-        QTimer *timeout;
-        bool enabled;
-        bool pending;
-        bool acked;
-        bool interactiveResize;
+        xcb_sync_alarm_t alarm = XCB_NONE;
+        QTimer *timeout = nullptr;
+        bool enabled = false;
+        bool pending = false;
+        bool acked = false;
+        bool interactiveResize = false;
     };
     const SyncRequest &syncRequest() const
     {
