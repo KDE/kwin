@@ -1267,7 +1267,7 @@ void X11Window::unmap()
     exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
 }
 
-void X11Window::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, uint32_t data1, uint32_t data2, uint32_t data3)
+void X11Window::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, xcb_timestamp_t time, uint32_t data1, uint32_t data2, uint32_t data3)
 {
     xcb_client_message_event_t ev{};
     // Every X11 event is 32 bytes (see man xcb_send_event), so XCB will copy
@@ -1279,7 +1279,7 @@ void X11Window::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t proto
     ev.type = a;
     ev.format = 32;
     ev.data.data32[0] = protocol;
-    ev.data.data32[1] = xTime();
+    ev.data.data32[1] = time;
     ev.data.data32[2] = data1;
     ev.data.data32[3] = data2;
     ev.data.data32[4] = data3;
@@ -1315,7 +1315,7 @@ void X11Window::closeWindow()
     updateUserTime();
 
     if (info->supportsProtocol(NET::DeleteWindowProtocol)) {
-        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_delete_window);
+        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_delete_window, xTime());
         pingWindow();
     } else { // Client will not react on wm_delete_window. We have not choice
         // but destroy his connection to the XServer.
@@ -1585,7 +1585,7 @@ bool X11Window::takeFocus()
     }
     if (effectiveTakeFocus) {
         kwinApp()->updateXTime();
-        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
+        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus, xTime());
     }
 
     if (effectiveAcceptFocus || effectiveTakeFocus) {
@@ -1615,7 +1615,7 @@ bool X11Window::providesContextHelp() const
 void X11Window::showContextHelp()
 {
     if (info->supportsProtocol(NET::ContextHelpProtocol)) {
-        sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_context_help);
+        sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_context_help, xTime());
     }
 }
 
@@ -1883,7 +1883,7 @@ void X11Window::sendSyncRequest()
     }
 
     setAllowCommits(false);
-    sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request,
+    sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request, xTime(),
                       m_syncRequest.value.lo, m_syncRequest.value.hi);
     m_syncRequest.pending = true;
     m_syncRequest.interactiveResize = isInteractiveResize();
