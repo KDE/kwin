@@ -1012,12 +1012,23 @@ void Compositor::assignOutputLayers(BackendOutput *output)
         sceneView->setLayer(primaryLayer);
     } else {
         sceneView = std::make_unique<SceneView>(m_scene.get(), logical, output, primaryLayer);
-        sceneView->setViewport(logical->geometryF());
         sceneView->setScale(output->scale());
         sceneView->setRenderOffset(output->deviceOffset());
-        connect(logical, &LogicalOutput::geometryChanged, sceneView.get(), [view = sceneView.get(), logical]() {
-            view->setViewport(logical->geometryF());
-        });
+        const auto updateViewport = [view = sceneView.get(), logical, output]() {
+            QRectF viewport = logical->geometryF();
+            if (logical->tileGroupId().has_value()) {
+                const auto tileInfo = output->tileInfo();
+                Q_ASSERT(tileInfo);
+                const double x = viewport.x() + viewport.width() * tileInfo->tileLocation.x() / double(tileInfo->completeSizeInTiles.width());
+                const double y = viewport.y() + viewport.height() * tileInfo->tileLocation.y() / double(tileInfo->completeSizeInTiles.height());
+                const double w = viewport.width() * tileInfo->tileSize.width() / double(tileInfo->completeSizeInTiles.width());
+                const double h = viewport.height() * tileInfo->tileSize.height() / double(tileInfo->completeSizeInTiles.height());
+                viewport = QRectF(x, y, w, h);
+            }
+            view->setViewport(viewport);
+        };
+        updateViewport();
+        connect(logical, &LogicalOutput::geometryChanged, sceneView.get(), updateViewport);
         connect(output, &BackendOutput::scaleChanged, sceneView.get(), [view = sceneView.get(), output]() {
             view->setScale(output->scale());
         });
