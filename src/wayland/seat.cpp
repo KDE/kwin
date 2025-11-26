@@ -1238,11 +1238,16 @@ void SeatInterface::setFocusedDataDeviceSurface(SurfaceInterface *surface)
 
     d->globalDataDevice.client = client;
 
-    qDeleteAll(d->globalDataDevice.selectionOffers);
-    d->globalDataDevice.selectionOffers.clear();
-
-    qDeleteAll(d->globalDataDevice.primarySelectionOffers);
-    d->globalDataDevice.primarySelectionOffers.clear();
+    // This code is commented out because there are issues with the keyboard focus flow from
+    // closed dialogs to their respective parent windows. The keyboard focus doesn't jump immediately
+    // from the child dialog to the parent window, instead it jumps to a null window, and then
+    // from the null window to the parent window.
+    //
+    // qDeleteAll(d->globalDataDevice.selectionOffers);
+    // d->globalDataDevice.selectionOffers.clear();
+    //
+    // qDeleteAll(d->globalDataDevice.primarySelectionOffers);
+    // d->globalDataDevice.primarySelectionOffers.clear();
 
     d->globalDataDevice.selections = d->dataDevicesForSurface(surface);
     for (DataDeviceInterface *device : std::as_const(d->globalDataDevice.selections)) {
