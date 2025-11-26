@@ -68,7 +68,6 @@ xcb_atom_t KWIN_EXPORT mimeTypeToAtom(const QString &mimeType);
 
 // forward declaration of methods
 static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
-static void setInputFocus(xcb_window_t window, uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
 static void moveWindow(xcb_window_t window, const QPoint &pos);
 static void moveWindow(xcb_window_t window, int32_t x, int32_t y);
 static void lowerWindow(xcb_window_t window);
@@ -1934,7 +1933,7 @@ inline void Window::defineCursor(xcb_cursor_t cursor)
 
 inline void Window::focus(uint8_t revertTo, xcb_timestamp_t time)
 {
-    setInputFocus(m_window, revertTo, time);
+    xcb_set_input_focus(connection(), revertTo, m_window, time);
 }
 
 inline void Window::selectInput(uint32_t events)
@@ -2042,11 +2041,6 @@ static inline QList<xcb_rectangle_t> regionToRects(const QRegion &region)
 static inline void defineCursor(xcb_window_t window, xcb_cursor_t cursor)
 {
     xcb_change_window_attributes(connection(), window, XCB_CW_CURSOR, &cursor);
-}
-
-static inline void setInputFocus(xcb_window_t window, uint8_t revertTo, xcb_timestamp_t time)
-{
-    xcb_set_input_focus(connection(), revertTo, window, time);
 }
 
 static inline void setTransientFor(xcb_window_t window, xcb_window_t transient_for_window)
