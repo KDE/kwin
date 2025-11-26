@@ -324,29 +324,6 @@ void Application::destroyInputMethod()
     m_inputMethod.reset();
 }
 
-#if KWIN_BUILD_X11
-void Application::registerEventFilter(X11EventFilter *filter)
-{
-    if (filter->isGenericEvent()) {
-        m_genericEventFilters.append(new X11EventFilterContainer(filter));
-    } else {
-        m_eventFilters.append(new X11EventFilterContainer(filter));
-    }
-}
-
-static X11EventFilterContainer *takeEventFilter(X11EventFilter *eventFilter,
-                                                QList<QPointer<X11EventFilterContainer>> &list)
-{
-    for (int i = 0; i < list.count(); ++i) {
-        X11EventFilterContainer *container = list.at(i);
-        if (container->filter() == eventFilter) {
-            return list.takeAt(i);
-        }
-    }
-    return nullptr;
-}
-#endif
-
 void Application::setXwaylandScale(qreal scale)
 {
     Q_ASSERT(scale != 0);
@@ -380,6 +357,27 @@ void Application::applyXwaylandScale()
 }
 
 #if KWIN_BUILD_X11
+void Application::registerEventFilter(X11EventFilter *filter)
+{
+    if (filter->isGenericEvent()) {
+        m_genericEventFilters.append(new X11EventFilterContainer(filter));
+    } else {
+        m_eventFilters.append(new X11EventFilterContainer(filter));
+    }
+}
+
+static X11EventFilterContainer *takeEventFilter(X11EventFilter *eventFilter,
+                                                QList<QPointer<X11EventFilterContainer>> &list)
+{
+    for (int i = 0; i < list.count(); ++i) {
+        X11EventFilterContainer *container = list.at(i);
+        if (container->filter() == eventFilter) {
+            return list.takeAt(i);
+        }
+    }
+    return nullptr;
+}
+
 void Application::unregisterEventFilter(X11EventFilter *filter)
 {
     X11EventFilterContainer *container = nullptr;

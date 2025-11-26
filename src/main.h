@@ -116,17 +116,6 @@ public:
     void setupCommandLine(QCommandLineParser *parser);
     void processCommandLine(QCommandLineParser *parser);
 
-#if KWIN_BUILD_X11
-    void registerEventFilter(X11EventFilter *filter);
-    void unregisterEventFilter(X11EventFilter *filter);
-    bool dispatchEvent(xcb_generic_event_t *event);
-
-    /**
-     * Returns the current X11 server time.
-     */
-    xcb_timestamp_t x11Time() const;
-#endif
-
     static void setCrashCount(int count);
     static bool wasCrash();
     void resetCrashesCount();
@@ -181,6 +170,15 @@ public:
     {
         m_compositeWindow = window;
     }
+
+    /**
+     * Returns the current X11 server time.
+     */
+    xcb_timestamp_t x11Time() const;
+
+    void registerEventFilter(X11EventFilter *filter);
+    void unregisterEventFilter(X11EventFilter *filter);
+    bool dispatchEvent(xcb_generic_event_t *event);
 #endif
 
     qreal xwaylandScale() const
