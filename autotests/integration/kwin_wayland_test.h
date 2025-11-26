@@ -9,6 +9,7 @@
 #ifndef KWIN_WAYLAND_TEST_H
 #define KWIN_WAYLAND_TEST_H
 
+#include "core/backendoutput.h"
 #include "core/inputdevice.h"
 #include "main.h"
 #include "window.h"
@@ -1409,6 +1410,7 @@ struct OutputInfo
     std::optional<QByteArray> edidIdentifierOverride;
     std::optional<QString> connectorName;
     std::optional<QByteArray> mstPath;
+    std::optional<BackendOutput::TileInfo> tileInfo;
 };
 void setOutputConfig(const QList<Rect> &geometries);
 void setOutputConfig(const QList<OutputInfo> &infos);
