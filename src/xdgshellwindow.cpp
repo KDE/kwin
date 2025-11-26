@@ -1868,7 +1868,7 @@ XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
     setOutput(workspace()->activeOutput());
     setMoveResizeOutput(workspace()->activeOutput());
 
-    m_windowType = WindowType::Unknown;
+    m_windowType = WindowType::PopupMenu;
 
     connect(shellSurface, &XdgPopupInterface::grabRequested,
             this, &XdgPopupWindow::handleGrabRequested);
