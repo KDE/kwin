@@ -320,6 +320,7 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
             .edidIdentifierOverride = info.edidIdentifierOverride,
             .connectorName = info.connectorName,
             .mstPath = info.mstPath,
+            .tileInfo = info.tileInfo,
         };
     });
     static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);

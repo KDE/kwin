@@ -322,8 +322,9 @@ Region OutputTransform::map(const Region &region, const QSize &bounds) const
     return ret;
 }
 
-LogicalOutput::LogicalOutput(BackendOutput *backendOutput)
+LogicalOutput::LogicalOutput(BackendOutput *backendOutput, std::optional<int> tileGroupId)
     : m_backendOutput(backendOutput)
+    , m_tileGroupId(tileGroupId)
 {
     QJSEngine::setObjectOwnership(this, QJSEngine::CppOwnership);
     connect(backendOutput, &BackendOutput::blendingColorChanged, this, &LogicalOutput::blendingColorChanged);
@@ -421,6 +422,11 @@ QSize LogicalOutput::orientateSize(const QSize &size) const
 BackendOutput *LogicalOutput::backendOutput() const
 {
     return m_backendOutput;
+}
+
+std::optional<int> LogicalOutput::tileGroupId() const
+{
+    return m_tileGroupId;
 }
 
 QString LogicalOutput::name() const
