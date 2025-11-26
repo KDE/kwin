@@ -301,6 +301,15 @@ public:
      */
     QPoint deviceOffset() const;
 
+    struct TileInfo
+    {
+        int groupId;
+        QSize completeSizeInTiles;
+        QPoint tileLocation;
+        QSize tileSize;
+    };
+    const std::optional<TileInfo> &tileInfo() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the position of this output has changed.
@@ -404,6 +413,7 @@ protected:
         double minBrightness = 0;
         BpcRange bitsPerColorRange;
         std::optional<uint32_t> minVrrRefreshRateHz;
+        std::optional<TileInfo> tileInfo;
     };
 
     struct State

@@ -1140,6 +1140,37 @@ void Workspace::updateOutputs()
         m_moveResizeWindow->cancelInteractiveMoveResize();
     }
 
+    // tile information is a bit complex, each connector can basically
+    // fill out a nearly arbitrary part of the output
+    std::unordered_map<int, std::pair<QRegion, QSize>> tileGroupRegions;
+    for (BackendOutput *output : availableOutputs) {
+        if (output->isNonDesktop() || !output->tileInfo().has_value()) {
+            continue;
+        }
+        const auto &info = *output->tileInfo();
+        QRect part(info.tileLocation, info.tileSize);
+        auto &[region, totalSize] = tileGroupRegions[info.groupId];
+        totalSize = info.completeSizeInTiles;
+        if (region.intersects(part)) {
+            // TODO anything sensible we can do in this case?
+            // Should we exclude / turn off the smallest overlapping parts or something?
+            qCWarning(KWIN_CORE, "Tiled outputs of output %s overlap!", qPrintable(output->description()));
+        }
+        region |= part;
+    }
+
+    // for every complete tile group, pick an arbitrary backend output to represent it
+    std::unordered_map<int, BackendOutput *> tileGroups;
+    for (const auto &[groupId, info] : tileGroupRegions) {
+        if (info.first != QRect(QPoint(), info.second)) {
+            qCDebug(KWIN_CORE, "Ignoring incomplete tile group %d", groupId);
+            continue;
+        }
+        tileGroups[groupId] = *std::ranges::find_if(availableOutputs, [groupId](BackendOutput *output) {
+            return output->tileInfo() && output->tileInfo()->groupId == groupId;
+        });
+    }
+
     for (BackendOutput *output : availableOutputs) {
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
         if (output->isNonDesktop() || !output->isEnabled()) {
@@ -1150,6 +1181,14 @@ void Workspace::updateOutputs()
         });
         if (replicationSource != availableOutputs.end() && (*replicationSource)->isEnabled()) {
             continue;
+        }
+        if (const auto info = output->tileInfo()) {
+            const auto it = tileGroups.find(info->groupId);
+            if (it != tileGroups.end() && it->second != output) {
+                // ignore all outputs of the tile group,
+                // except the one in the tileGroups map
+                continue;
+            }
         }
         newBackendOutputs.append(output);
     }
@@ -1177,13 +1216,25 @@ void Workspace::updateOutputs()
         const auto existing = std::ranges::find_if(oldLogicalOutputs, [output](LogicalOutput *logical) {
             return output == logical->backendOutput();
         });
+        std::optional<int> tileGroupId;
+        if (output->tileInfo() && tileGroups.contains(output->tileInfo()->groupId)) {
+            tileGroupId = output->tileInfo()->groupId;
+        }
         if (existing == oldLogicalOutputs.end()) {
-            m_outputs.push_back(new LogicalOutput(output));
+            m_outputs.push_back(new LogicalOutput(output, tileGroupId));
         } else {
             m_outputs.push_back(*existing);
         }
         // update geometry
-        m_outputs.back()->setGeometry(output->position(), output->modeSize(), output->transform(), output->scale());
+        if (tileGroupId.has_value()) {
+            const auto info = output->tileInfo();
+            const QSize partialSize = m_outputs.back()->backendOutput()->modeSize();
+            const QSize fullModeSize((partialSize.width() * info->completeSizeInTiles.width()) / info->tileSize.width(),
+                                     (partialSize.height() * info->completeSizeInTiles.height()) / info->tileSize.height());
+            m_outputs.back()->setGeometry(output->position(), fullModeSize, output->transform(), output->scale());
+        } else {
+            m_outputs.back()->setGeometry(output->position(), output->modeSize(), output->transform(), output->scale());
+        }
         if (existing != oldLogicalOutputs.end()) {
             Q_EMIT m_outputs.back()->changed();
         }

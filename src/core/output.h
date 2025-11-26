@@ -145,7 +145,7 @@ class KWIN_EXPORT LogicalOutput : public QObject
     Q_PROPERTY(QString serialNumber READ serialNumber CONSTANT)
 
 public:
-    explicit LogicalOutput(BackendOutput *backendOutput);
+    explicit LogicalOutput(BackendOutput *backendOutput, std::optional<int> tileGroupId = std::nullopt);
     ~LogicalOutput() override;
 
     void ref();
@@ -249,6 +249,8 @@ public:
 
     BackendOutput *backendOutput() const;
 
+    std::optional<int> tileGroupId() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.
@@ -304,6 +306,7 @@ protected:
     QSize m_modeSize;
     OutputTransform m_transform;
     double m_scale = 1.0;
+    std::optional<int> m_tileGroupId;
 };
 
 inline QRect LogicalOutput::rect() const

@@ -350,8 +350,9 @@ QRegion OutputTransform::map(const QRegion &region, const QSize &bounds) const
     return ret;
 }
 
-LogicalOutput::LogicalOutput(BackendOutput *backendOutput)
+LogicalOutput::LogicalOutput(BackendOutput *backendOutput, std::optional<int> tileGroupId)
     : m_backendOutput(backendOutput)
+    , m_tileGroupId(tileGroupId)
 {
     QJSEngine::setObjectOwnership(this, QJSEngine::CppOwnership);
     // TODO dpms being kind of on the backend output and kind of here isn't great
@@ -451,6 +452,11 @@ QSize LogicalOutput::orientateSize(const QSize &size) const
 BackendOutput *LogicalOutput::backendOutput() const
 {
     return m_backendOutput;
+}
+
+std::optional<int> LogicalOutput::tileGroupId() const
+{
+    return m_tileGroupId;
 }
 
 QString LogicalOutput::name() const
