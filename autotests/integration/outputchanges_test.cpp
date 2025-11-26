@@ -148,6 +148,7 @@ private Q_SLOTS:
 
     void testMirroring_data();
     void testMirroring();
+    void testTiledDisplay();
 
     void testAutoBrightness();
 };
@@ -2396,6 +2397,46 @@ void OutputChangesTest::testAutoBrightness()
     curve.adjust(0.4, 100);
     COMPARE_RANGE(curve.sample(100), 0.4, eta);
     COMPARE_RANGE(curve.sample(101), 0.4, laxEta);
+}
+
+void OutputChangesTest::testTiledDisplay()
+{
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1200),
+            .internal = false,
+            .tileInfo = BackendOutput::TileInfo{
+                .groupId = 1,
+                .completeSizeInTiles = QSize(2, 1),
+                .tileLocation = QPoint(1, 0),
+                .tileSizeInPixels = QSize(1280, 1200),
+            },
+        },
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 1280, 1200),
+            .internal = false,
+            .tileInfo = BackendOutput::TileInfo{
+                .groupId = 1,
+                .completeSizeInTiles = QSize(2, 1),
+                .tileLocation = QPoint(0, 0),
+                .tileSizeInPixels = QSize(1280, 1200),
+            },
+        },
+    });
+
+    const auto backendOutputs = kwinApp()->outputBackend()->outputs();
+    QCOMPARE(backendOutputs.size(), 2);
+    QVERIFY(backendOutputs[0]->tileInfo().has_value());
+    QCOMPARE(backendOutputs[0]->tileInfo()->tileLocation, QPoint(1, 0));
+    QVERIFY(backendOutputs[1]->tileInfo().has_value());
+    QCOMPARE(backendOutputs[1]->tileInfo()->tileLocation, QPoint(0, 0));
+
+    const auto logicalOutputs = workspace()->outputs();
+    QCOMPARE(logicalOutputs.size(), 1);
+    QCOMPARE(logicalOutputs[0]->backendOutput(), backendOutputs[1]);
+
+    QCOMPARE(logicalOutputs[0]->geometry(), QRect(QPoint(), QSize(2560, 1200)));
+    QCOMPARE(logicalOutputs[0]->modeSize(), QSize(2560, 1200));
 }
 
 } // namespace KWin

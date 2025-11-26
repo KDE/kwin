@@ -1277,7 +1277,8 @@ LogicalOutput *Workspace::findOutput(BackendOutput *backendOutput) const
 {
     const auto it = std::ranges::find_if(m_outputs, [backendOutput](LogicalOutput *logical) {
         return logical->backendOutput() == backendOutput
-            || logical->uuid() == backendOutput->replicationSource();
+            || logical->uuid() == backendOutput->replicationSource()
+            || (backendOutput->tileInfo() && logical->tileGroupId() == backendOutput->tileInfo()->groupId);
     });
     return it == m_outputs.end() ? nullptr : *it;
 }
@@ -1304,6 +1305,34 @@ void Workspace::updateOutputs()
     QList<BackendOutput *> newBackendOutputs;
     bool wakeUp = false;
 
+    std::unordered_map<int, std::pair<QRegion, QSize>> tileGroupRegions;
+    for (BackendOutput *output : availableOutputs) {
+        if (output->isNonDesktop() || !output->tileInfo().has_value()) {
+            continue;
+        }
+        const auto &info = *output->tileInfo();
+        auto &[region, totalSize] = tileGroupRegions[info.groupId];
+        region |= QRect(info.tileLocation, QSize(1, 1));
+        totalSize = info.completeSizeInTiles;
+    }
+
+    // For every complete tile group, pick the backend output at tile position 0,0 to represent it.
+    // Always choosing the same one ensures the resulting UUID of the LogicalOutput stays the same
+    std::unordered_map<int, BackendOutput *> tileGroups;
+    for (const auto &[groupId, info] : tileGroupRegions) {
+        const auto [region, totalSize] = info;
+        if (region != QRect(QPoint(), totalSize)) {
+            // In this case, each tile will be presented as its own output
+            qCDebug(KWIN_CORE, "Ignoring incomplete tile group %d", groupId);
+            continue;
+        }
+        tileGroups[groupId] = *std::ranges::find_if(availableOutputs, [groupId](BackendOutput *output) {
+            return output->tileInfo()
+                && output->tileInfo()->groupId == groupId
+                && output->tileInfo()->tileLocation == QPoint(0, 0);
+        });
+    }
+
     for (BackendOutput *output : availableOutputs) {
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
         output->setAutoBrightnessAvailable(m_lightSensor->isAvailable());
@@ -1315,6 +1344,14 @@ void Workspace::updateOutputs()
         });
         if (replicationSource != availableOutputs.end() && (*replicationSource)->isEnabled()) {
             continue;
+        }
+        if (const auto info = output->tileInfo()) {
+            const auto it = tileGroups.find(info->groupId);
+            if (it != tileGroups.end() && it->second != output) {
+                // ignore all outputs of the tile group,
+                // except the one in the tileGroups map
+                continue;
+            }
         }
         newBackendOutputs.append(output);
     }
@@ -1342,13 +1379,26 @@ void Workspace::updateOutputs()
         const auto existing = std::ranges::find_if(oldLogicalOutputs, [output](LogicalOutput *logical) {
             return output == logical->backendOutput();
         });
+        std::optional<int> tileGroupId;
+        if (output->tileInfo() && tileGroups.contains(output->tileInfo()->groupId)) {
+            tileGroupId = output->tileInfo()->groupId;
+        }
         if (existing == oldLogicalOutputs.end()) {
-            m_outputs.push_back(new LogicalOutput(output));
+            m_outputs.push_back(new LogicalOutput(output, tileGroupId));
         } else {
             m_outputs.push_back(*existing);
         }
         // update geometry
-        m_outputs.back()->setGeometry(output->position(), output->modeSize(), output->transform(), output->scale());
+        if (tileGroupId.has_value()) {
+            const auto info = output->tileInfo();
+            const QSize fullModeSize{
+                info->tileSizeInPixels.width() * info->completeSizeInTiles.width(),
+                info->tileSizeInPixels.height() * info->completeSizeInTiles.height(),
+            };
+            m_outputs.back()->setGeometry(output->position(), fullModeSize, output->transform(), output->scale());
+        } else {
+            m_outputs.back()->setGeometry(output->position(), output->modeSize(), output->transform(), output->scale());
+        }
         if (existing != oldLogicalOutputs.end()) {
             Q_EMIT m_outputs.back()->changed();
         }
