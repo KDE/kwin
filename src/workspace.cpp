@@ -660,9 +660,6 @@ X11Window *Workspace::createX11Window(xcb_window_t windowId, bool is_mapped)
 
 X11Window *Workspace::createUnmanaged(xcb_window_t windowId)
 {
-    if (kwinApp()->x11CompositeWindow() == windowId) {
-        return nullptr;
-    }
     X11Window *window = new X11Window();
     if (!window->track(windowId)) {
         X11Window::deleteClient(window);
