@@ -74,6 +74,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn, DrmPipeline *pip
             .max = m_gpu->atomicModeSetting() ? uint32_t(m_connector->maxBpc.maxValue()) : 8,
         },
         .minVrrRefreshRateHz = edid->minVrrRefreshRateHz(),
+        .tileInfo = m_connector->tileInfo(),
     });
     updateConnectorProperties();
 }
@@ -258,6 +259,7 @@ void DrmOutput::updateInformation()
         .min = m_gpu->atomicModeSetting() ? uint32_t(m_connector->maxBpc.minValue()) : 8,
         .max = m_gpu->atomicModeSetting() ? uint32_t(m_connector->maxBpc.maxValue()) : 8,
     };
+    nextInfo.tileInfo = m_connector->tileInfo();
     setInformation(nextInfo);
 }
 
