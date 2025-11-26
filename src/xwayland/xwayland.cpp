@@ -583,7 +583,6 @@ void Xwayland::destroyX11Connection()
 
     Q_EMIT m_app->x11ConnectionAboutToBeDestroyed();
 
-    Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
     m_app->destroyAtoms();
     m_app->removeNativeX11EventFilter();
 
