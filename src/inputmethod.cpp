@@ -582,26 +582,6 @@ void InputMethod::setEnabled(bool enabled)
     kwinApp()->config()->sync();
 }
 
-static quint32 keysymToKeycode(quint32 sym)
-{
-    switch (sym) {
-    case XKB_KEY_BackSpace:
-        return KEY_BACKSPACE;
-    case XKB_KEY_Return:
-        return KEY_ENTER;
-    case XKB_KEY_Left:
-        return KEY_LEFT;
-    case XKB_KEY_Right:
-        return KEY_RIGHT;
-    case XKB_KEY_Up:
-        return KEY_UP;
-    case XKB_KEY_Down:
-        return KEY_DOWN;
-    default:
-        return KEY_UNKNOWN;
-    }
-}
-
 void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, quint32 modifiers)
 {
     if (auto t1 = waylandServer()->seat()->textInputV1(); t1 && t1->isEnabled()) {
@@ -624,18 +604,16 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
     }
 
     if (effects && effects->hasKeyboardGrab()) {
-        const int keyCode = keysymToKeycode(sym);
-        forwardKeyToEffects(pressed, keyCode, sym);
+        std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(sym);
+        forwardKeyToEffects(pressed, keyCode.value_or(Xkb::KeyCode{}).keyCode, sym);
         return;
     }
 
-    KeyboardKeyState state;
     if (pressed) {
-        state = KeyboardKeyState::Pressed;
-    } else {
-        state = KeyboardKeyState::Released;
+        forwardKeySym(sym);
+        // reset any modifiers to the actual state
+        input()->keyboard()->xkb()->forwardModifiers();
     }
-    waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state, waylandServer()->display()->nextSerial());
 }
 
 void InputMethod::commitString(qint32 serial, const QString &text)
@@ -668,27 +646,32 @@ void InputMethod::commitString(qint32 serial, const QString &text)
 
         // First, send all the extracted keys as pressed keys to the client.
         for (const xkb_keysym_t &keySym : keySyms) {
-            std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
-            if (!keyCode) {
-                qCWarning(KWIN_VIRTUALKEYBOARD) << "Could not map keysym " << keySym << "to keycode. Trying custom keymap";
-                static const uint unmappedKeyCode = 247;
-                auto temporaryKeymap = input()->keyboard()->xkb()->keymapContentsForKeysym(unmappedKeyCode, keySym);
-                if (temporaryKeymap.isEmpty()) {
-                    continue;
-                }
-                waylandServer()->seat()->keyboard()->setKeymap(temporaryKeymap);
-                waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
-                waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
-                waylandServer()->seat()->keyboard()->setKeymap(input()->keyboard()->xkb()->keymapContents());
-            } else {
-                waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers , 0, 0, input()->keyboard()->xkb()->currentLayout());
-                waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
-                waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
-            }
+            forwardKeySym(keySym);
         }
 
         // reset any modifiers to the actual state
         input()->keyboard()->xkb()->forwardModifiers();
+    }
+}
+
+void InputMethod::forwardKeySym(int keySym)
+{
+    std::optional<Xkb::KeyCode> keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(keySym);
+    if (!keyCode) {
+        qCWarning(KWIN_VIRTUALKEYBOARD) << "Could not map keysym " << keySym << "to keycode. Trying custom keymap";
+        static const uint unmappedKeyCode = 247;
+        auto temporaryKeymap = input()->keyboard()->xkb()->keymapContentsForKeysym(unmappedKeyCode, keySym);
+        if (temporaryKeymap.isEmpty()) {
+            return;
+        }
+        waylandServer()->seat()->keyboard()->setKeymap(temporaryKeymap);
+        waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
+        waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
+        waylandServer()->seat()->keyboard()->setKeymap(input()->keyboard()->xkb()->keymapContents());
+    } else {
+        waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers , 0, 0, input()->keyboard()->xkb()->currentLayout());
+        waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
+        waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
     }
 }
 

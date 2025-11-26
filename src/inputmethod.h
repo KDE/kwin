@@ -134,6 +134,7 @@ private:
     void resetPendingPreedit();
     void refreshActive();
     void forwardKeyToEffects(bool pressed, int keyCode, int keySym);
+    void forwardKeySym(int keySym);
 
     // buffered till the preedit text is set
     struct
