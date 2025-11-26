@@ -286,6 +286,15 @@ Q_SIGNALS:
 protected:
     BackendOutput *const m_backendOutput;
     int m_refCount = 1;
+
+    // only Workspace is meant to change these properties
+    friend class Workspace;
+    void setGeometry(const QPoint logicalPosition, const QSize &modeSize, OutputTransform transform, double scale);
+
+    RectF m_geometry;
+    QSize m_modeSize;
+    OutputTransform m_transform;
+    double m_scale = 1.0;
 };
 
 inline Rect LogicalOutput::rect() const

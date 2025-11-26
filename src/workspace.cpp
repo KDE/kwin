@@ -1328,6 +1328,11 @@ void Workspace::updateOutputs()
         } else {
             m_outputs.push_back(*existing);
         }
+        // update geometry
+        m_outputs.back()->setGeometry(output->position(), output->modeSize(), output->transform(), output->scale());
+        if (existing != oldLogicalOutputs.end()) {
+            Q_EMIT m_outputs.back()->changed();
+        }
     }
 
     if (!m_activeOutput) {
