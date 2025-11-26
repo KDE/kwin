@@ -1169,6 +1169,7 @@ void Workspace::updateOutputs()
         tileGroups[groupId] = *std::ranges::find_if(availableOutputs, [groupId](BackendOutput *output) {
             return output->tileInfo() && output->tileInfo()->groupId == groupId;
         });
+        qWarning() << "Tile group" << groupId << "is complete, with a size of" << info.second;
     }
 
     for (BackendOutput *output : availableOutputs) {
