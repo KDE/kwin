@@ -326,7 +326,6 @@ void Workspace::initializeX11()
     if (Xcb::Extensions::self()->isSyncAvailable()) {
         m_syncAlarmFilter = std::make_unique<SyncAlarmX11Filter>();
     }
-    kwinApp()->updateXTime(); // Needed for proper initialization of user_time in Client ctor
 
     const uint32_t nullFocusValues[] = {true};
     m_nullFocus = std::make_unique<Xcb::Window>(QRect(-1, -1, 1, 1), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, nullFocusValues);

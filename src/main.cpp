@@ -413,8 +413,6 @@ bool Application::dispatchEvent(xcb_generic_event_t *event)
                                                  QByteArrayLiteral("BadImplementation"),
                                                  QByteArrayLiteral("Unknown")});
 
-    kwinApp()->updateX11Time(event);
-
     const uint8_t x11EventType = event->response_type & ~0x80;
     if (!x11EventType) {
         // let's check whether it's an error from one of the extensions KWin uses
@@ -497,80 +495,9 @@ static quint32 monotonicTime()
     return ts.tv_sec * 1000 + ts.tv_nsec / 1000000L;
 }
 
-void Application::updateXTime()
+xcb_timestamp_t Application::currentX11Time() const
 {
-    setX11Time(monotonicTime(), TimestampUpdate::Always);
-}
-
-void Application::updateX11Time(xcb_generic_event_t *event)
-{
-    xcb_timestamp_t time = XCB_TIME_CURRENT_TIME;
-    const uint8_t eventType = event->response_type & ~0x80;
-    switch (eventType) {
-    case XCB_KEY_PRESS:
-    case XCB_KEY_RELEASE:
-        time = reinterpret_cast<xcb_key_press_event_t *>(event)->time;
-        break;
-    case XCB_BUTTON_PRESS:
-    case XCB_BUTTON_RELEASE:
-        time = reinterpret_cast<xcb_button_press_event_t *>(event)->time;
-        break;
-    case XCB_MOTION_NOTIFY:
-        time = reinterpret_cast<xcb_motion_notify_event_t *>(event)->time;
-        break;
-    case XCB_ENTER_NOTIFY:
-    case XCB_LEAVE_NOTIFY:
-        time = reinterpret_cast<xcb_enter_notify_event_t *>(event)->time;
-        break;
-    case XCB_FOCUS_IN:
-    case XCB_FOCUS_OUT:
-    case XCB_KEYMAP_NOTIFY:
-    case XCB_EXPOSE:
-    case XCB_GRAPHICS_EXPOSURE:
-    case XCB_NO_EXPOSURE:
-    case XCB_VISIBILITY_NOTIFY:
-    case XCB_CREATE_NOTIFY:
-    case XCB_DESTROY_NOTIFY:
-    case XCB_UNMAP_NOTIFY:
-    case XCB_MAP_NOTIFY:
-    case XCB_MAP_REQUEST:
-    case XCB_REPARENT_NOTIFY:
-    case XCB_CONFIGURE_NOTIFY:
-    case XCB_CONFIGURE_REQUEST:
-    case XCB_GRAVITY_NOTIFY:
-    case XCB_RESIZE_REQUEST:
-    case XCB_CIRCULATE_NOTIFY:
-    case XCB_CIRCULATE_REQUEST:
-        // no timestamp
-        return;
-    case XCB_PROPERTY_NOTIFY:
-        time = reinterpret_cast<xcb_property_notify_event_t *>(event)->time;
-        break;
-    case XCB_SELECTION_CLEAR:
-        time = reinterpret_cast<xcb_selection_clear_event_t *>(event)->time;
-        break;
-    case XCB_SELECTION_REQUEST:
-        time = reinterpret_cast<xcb_selection_request_event_t *>(event)->time;
-        break;
-    case XCB_SELECTION_NOTIFY:
-        time = reinterpret_cast<xcb_selection_notify_event_t *>(event)->time;
-        break;
-    case XCB_COLORMAP_NOTIFY:
-    case XCB_CLIENT_MESSAGE:
-    case XCB_MAPPING_NOTIFY:
-    case XCB_GE_GENERIC:
-        // no timestamp
-        return;
-    default:
-        // extension handling
-        if (Xcb::Extensions::self()) {
-            if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
-                time = reinterpret_cast<xcb_shape_notify_event_t *>(event)->server_time;
-            }
-        }
-        break;
-    }
-    setX11Time(time);
+    return monotonicTime();
 }
 
 bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)

@@ -158,8 +158,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         return (event->event != event->window); // hide wm typical event from Qt
     }
     case XCB_MAP_REQUEST: {
-        kwinApp()->updateXTime();
-
         const auto *event = reinterpret_cast<xcb_map_request_event_t *>(e);
         if (!createX11Window(event->window, false)) {
             xcb_map_window(kwinApp()->x11Connection(), event->window);
@@ -232,7 +230,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         if (event->event == kwinApp()->x11RootWindow()
             && (event->detail == XCB_NOTIFY_DETAIL_NONE || event->detail == XCB_NOTIFY_DETAIL_POINTER_ROOT || event->detail == XCB_NOTIFY_DETAIL_INFERIOR)) {
             Xcb::CurrentInput currentInput;
-            kwinApp()->updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
             if (!currentInput.isNull()) {
                 // it seems we can "loose" focus reversions when the closing window hold a grab
                 // => catch the typical pattern (though we don't want the focus on the root anyway) #348935
@@ -291,14 +288,6 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
             destroyWindow();
             break;
         case XCB_UNMAP_NOTIFY: {
-            // unmap notify might have been emitted due to a destroy notify
-            // but unmap notify gets emitted before the destroy notify, nevertheless at this
-            // point the window is already destroyed. This means any XCB request with the window
-            // will cause an error.
-            // To not run into these errors we try to wait for the destroy notify. For this we
-            // generate a round trip to the X server and wait a very short time span before
-            // handling the release.
-            kwinApp()->updateXTime();
             // using 1 msec to not just move it at the end of the event loop but add an very short
             // timespan to cover cases like unmap() followed by destroy(). The only other way to
             // ensure that the window is not destroyed when we do the release handling is to grab

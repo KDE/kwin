@@ -207,7 +207,6 @@ void RootInfo::moveResize(xcb_window_t w, int x_root, int y_root, unsigned long 
 {
     X11Window *c = Workspace::self()->findClient(w);
     if (c) {
-        kwinApp()->updateXTime(); // otherwise grabbing may have old timestamp - this message should include timestamp
         c->NETMoveResize(Xcb::fromXNative(x_root), Xcb::fromXNative(y_root), (Direction)direction, button);
     }
 }

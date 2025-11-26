@@ -593,13 +593,6 @@ bool Workspace::allowFullClientRaising(const KWin::Window *window, uint32_t time
  */
 bool Workspace::restoreFocus()
 {
-    // this updateXTime() is necessary - as FocusIn events don't have
-    // a timestamp *sigh*, kwin's timestamp would be older than the timestamp
-    // that was used by whoever caused the focus change, and therefore
-    // the attempt to restore the focus would fail due to old timestamp
-#if KWIN_BUILD_X11
-    kwinApp()->updateXTime();
-#endif
     if (should_get_focus.count() > 0) {
         return requestFocus(should_get_focus.last());
     } else if (m_lastActiveWindow) {

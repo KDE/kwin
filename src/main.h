@@ -121,27 +121,7 @@ public:
     void unregisterEventFilter(X11EventFilter *filter);
     bool dispatchEvent(xcb_generic_event_t *event);
 
-    xcb_timestamp_t currentX11Time()
-    {
-        updateXTime();
-        return m_x11Time;
-    }
-
-    enum class TimestampUpdate {
-        OnlyIfLarger,
-        Always
-    };
-    void setX11Time(xcb_timestamp_t timestamp, TimestampUpdate force = TimestampUpdate::OnlyIfLarger)
-    {
-        if ((timestamp > m_x11Time || force == TimestampUpdate::Always) && timestamp != 0) {
-            m_x11Time = timestamp;
-        }
-    }
-    /**
-     * Queries the current X11 time stamp of the X server.
-     */
-    void updateXTime();
-    void updateX11Time(xcb_generic_event_t *event);
+    xcb_timestamp_t currentX11Time() const;
 #endif
 
     static void setCrashCount(int count);
@@ -366,7 +346,6 @@ private:
     KSharedConfigPtr m_inputConfig;
     KSharedConfigPtr m_kdeglobals;
 #if KWIN_BUILD_X11
-    xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;
     xcb_window_t m_compositeWindow = XCB_WINDOW_NONE;
     xcb_connection_t *m_connection = nullptr;
