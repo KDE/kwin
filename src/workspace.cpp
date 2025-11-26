@@ -1215,6 +1215,7 @@ void Workspace::updateOutputs()
                 && output->tileInfo()->groupId == groupId
                 && output->tileInfo()->tileLocation == QPoint(0, 0);
         });
+        qWarning() << "Tile group" << groupId << "is complete, with a size of" << info.second;
     }
 
     for (BackendOutput *output : availableOutputs) {
