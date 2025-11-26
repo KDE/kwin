@@ -72,43 +72,56 @@ KCM.ScrollViewKCM {
 
             contentItem: StackLayout {
                 Kirigami.TitleSubtitleWithActions {
-                    title: renameField.visible ? "" : model ? model.display : ""
+                    title: renameLayout.visible ? "" : model ? model.display : ""
                     elide: Text.ElideRight
+                    displayHint: QQC2.Button.IconOnly
                     actions: [
                         Kirigami.Action {
-                            icon.name: renameField.visible ? "dialog-ok-apply" : "edit-entry-symbolic"
-                            text: renameField.visible ? i18nc("@action:button", "Confirm new name") : i18nc("@action:button", "Rename")
+                            icon.name: "edit-entry-symbolic"
+                            enabled: !renameLayout.visible
+                            text: i18nc("@action:button", "Rename")
                             onTriggered: {
-                                if (renameField.visible) {
-                                    Qt.callLater(kcm.desktopsModel.setDesktopName, model.Id, renameField.text);
-                                    renameField.visible = false;
-                                } else {
-                                    renameField.visible = true;
-                                    renameField.forceActiveFocus();
-                                }
+                                renameLayout.visible = true;
+                                renameField.forceActiveFocus();
                             }
                             tooltip: text
                         },
                         Kirigami.Action {
-                            enabled: model && !model.IsMissing && desktopsList.count !== 1
+                            enabled: model && !model.IsMissing && desktopsList.count !== 1 && !renameLayout.visible
                             icon.name: "edit-delete-remove-symbolic"
-                            text: renameField.visible ? i18nc("@info:tooltip", "Cancel rename") : i18nc("@info:tooltip", "Remove")
+                            text: i18nc("@info:tooltip", "Remove")
                             onTriggered: {
-                                if (!renameField.visible) {
-                                    kcm.desktopsModel.removeDesktop(model.Id)
-                                } else {
-                                    renameField.visible = false;
-                                }
+                                kcm.desktopsModel.removeDesktop(model.Id);
                             }
                         }
                     ]
                 }
-                QQC2.TextField {
-                    id: renameField
-                    visible: false
+                RowLayout {
+                    id: renameLayout
+                    QQC2.TextField {
+                        id: renameField
+                    }
+                    QQC2.Button {
+                        id: acceptEditButton
+                        icon.name: "dialog-ok-apply"
+                        onClicked: {
+                            Qt.callLater(kcm.desktopsModel.setDesktopName, model.Id, renameField.text);
+                            renameLayout.visible = false;
+                        }
+                        display: QQC2.Button.IconOnly
+                    }
+                    QQC2.Button {
+                        id: discardEditButton
+                        icon.name: "dialog-cancel-symbolic"
+                        onClicked: {
+                            renameLayout.visible = false;
+                        }
+                        display: QQC2.Button.IconOnly
+                    }
+
                     onVisibleChanged: {
-                        text = model ? model.display : "";
-                        selectAll();
+                        renameField.text = model ? model.display : "";
+                        renameField.selectAll();
                     }
                 }
             }
