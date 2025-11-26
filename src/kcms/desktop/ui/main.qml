@@ -104,18 +104,26 @@ KCM.ScrollViewKCM {
                     QQC2.Button {
                         id: acceptEditButton
                         icon.name: "dialog-ok-apply"
+                        text: i18nc("@info:tooltip", "Apply new name")
                         onClicked: {
                             Qt.callLater(kcm.desktopsModel.setDesktopName, model.Id, renameField.text);
                             renameLayout.visible = false;
                         }
+                        QQC2.ToolTip.text: text
+                        QQC2.ToolTip.visible: hovered
+                        QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
                         display: QQC2.Button.IconOnly
                     }
                     QQC2.Button {
                         id: discardEditButton
                         icon.name: "dialog-cancel-symbolic"
+                        text: i18nc("@info:tooltip", "Cancel rename")
                         onClicked: {
                             renameLayout.visible = false;
                         }
+                        QQC2.ToolTip.text: text
+                        QQC2.ToolTip.visible: hovered
+                        QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
                         display: QQC2.Button.IconOnly
                     }
 
