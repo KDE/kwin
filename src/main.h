@@ -121,7 +121,10 @@ public:
     void unregisterEventFilter(X11EventFilter *filter);
     bool dispatchEvent(xcb_generic_event_t *event);
 
-    xcb_timestamp_t currentX11Time() const;
+    /**
+     * Returns the current X11 server time.
+     */
+    xcb_timestamp_t x11Time() const;
 #endif
 
     static void setCrashCount(int count);

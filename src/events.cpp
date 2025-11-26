@@ -148,7 +148,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         const auto *event = reinterpret_cast<xcb_create_notify_event_t *>(e);
         if (event->parent == kwinApp()->x11RootWindow() && !event->override_redirect) {
             // see comments for allowWindowActivation()
-            const xcb_timestamp_t t = kwinApp()->currentX11Time();
+            const xcb_timestamp_t t = kwinApp()->x11Time();
             xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, event->window, atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 32, 1, &t);
         }
         break;

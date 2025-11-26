@@ -495,7 +495,7 @@ static quint32 monotonicTime()
     return ts.tv_sec * 1000 + ts.tv_nsec / 1000000L;
 }
 
-xcb_timestamp_t Application::currentX11Time() const
+xcb_timestamp_t Application::x11Time() const
 {
     return monotonicTime();
 }

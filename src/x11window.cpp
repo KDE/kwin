@@ -911,9 +911,9 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 
     if (m_userTime == XCB_TIME_CURRENT_TIME || m_userTime == -1U) {
         // No known user time, set something old
-        m_userTime = kwinApp()->currentX11Time() - 1000000;
+        m_userTime = kwinApp()->x11Time() - 1000000;
         if (m_userTime == XCB_TIME_CURRENT_TIME || m_userTime == -1U) { // Let's be paranoid
-            m_userTime = kwinApp()->currentX11Time() - 1000000 + 10;
+            m_userTime = kwinApp()->x11Time() - 1000000 + 10;
         }
     }
 
@@ -1303,7 +1303,7 @@ void X11Window::closeWindow()
     }
 
     // Update user time, because the window may create a confirming dialog.
-    const xcb_timestamp_t time = kwinApp()->currentX11Time();
+    const xcb_timestamp_t time = kwinApp()->x11Time();
     updateUserTime(time);
 
     if (info->supportsProtocol(NET::DeleteWindowProtocol)) {
@@ -1364,7 +1364,7 @@ void X11Window::pingWindow()
     // we'll run the timer twice, at first we'll desaturate the window
     // and the second time we'll show the "do you want to kill" prompt
     ping_timer->start(options->killPingTimeout() / 2);
-    m_pingTimestamp = kwinApp()->currentX11Time();
+    m_pingTimestamp = kwinApp()->x11Time();
     rootInfo()->sendPing(window(), m_pingTimestamp);
 }
 
@@ -1576,7 +1576,7 @@ bool X11Window::takeFocus()
         demandAttention(false); // window cannot take input, at least withdraw urgency
     }
     if (effectiveTakeFocus) {
-        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus, kwinApp()->currentX11Time());
+        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus, kwinApp()->x11Time());
     }
 
     if (effectiveAcceptFocus || effectiveTakeFocus) {
@@ -1606,7 +1606,7 @@ bool X11Window::providesContextHelp() const
 void X11Window::showContextHelp()
 {
     if (info->supportsProtocol(NET::ContextHelpProtocol)) {
-        sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_context_help, kwinApp()->currentX11Time());
+        sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_context_help, kwinApp()->x11Time());
     }
 }
 
@@ -1871,7 +1871,7 @@ void X11Window::sendSyncRequest()
     }
 
     setAllowCommits(false);
-    sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request, kwinApp()->currentX11Time(),
+    sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request, kwinApp()->x11Time(),
                       m_syncRequest.value.lo, m_syncRequest.value.hi);
     m_syncRequest.pending = true;
     m_syncRequest.interactiveResize = isInteractiveResize();
@@ -4122,7 +4122,7 @@ void X11Window::updateUserTime(xcb_timestamp_t time)
 {
     // copied in Group::updateUserTime
     if (time == XCB_TIME_CURRENT_TIME) {
-        time = kwinApp()->currentX11Time();
+        time = kwinApp()->x11Time();
     }
     if (time != -1U
         && (m_userTime == XCB_TIME_CURRENT_TIME
