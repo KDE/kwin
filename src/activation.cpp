@@ -434,11 +434,11 @@ Window *Workspace::windowUnderMouse(LogicalOutput *output) const
 }
 
 // deactivates 'window' and activates next window
-bool Workspace::activateNextWindow(Window *window)
+void Workspace::activateNextWindow(Window *window)
 {
     // if 'c' is not the active or the to-become active one, do nothing
     if (!(window == m_activeWindow || (should_get_focus.count() > 0 && window == should_get_focus.last()))) {
-        return false;
+        return;
     }
 
     closeActivePopup();
@@ -450,51 +450,48 @@ bool Workspace::activateNextWindow(Window *window)
         should_get_focus.removeAll(window);
     }
 
-    // if blocking focus, move focus to the desktop later if needed
-    // in order to avoid flickering
+    // If focus is blocked, requestFocus() should be called again when focus updates are unblocked.
     if (!focusChangeEnabled()) {
         focusToNull();
-        return true;
-    }
-
-    if (!options->focusPolicyIsReasonable()) {
-        return false;
+        return;
     }
 
     Window *focusCandidate = nullptr;
 
-    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
-    LogicalOutput *output = window ? window->output() : workspace()->activeOutput();
+    if (options->focusPolicyIsReasonable()) {
+        VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
+        LogicalOutput *output = window ? window->output() : workspace()->activeOutput();
 
-    if (!focusCandidate && showingDesktop()) {
-        focusCandidate = findDesktop(desktop, output); // to not break the state
-    }
-
-    if (!focusCandidate && options->isNextFocusPrefersMouse()) {
-        focusCandidate = windowUnderMouse(output);
-        if (focusCandidate && (focusCandidate == window || focusCandidate->isDesktop())) {
-            // should rather not happen, but it cannot get the focus. rest of usability is tested above
-            focusCandidate = nullptr;
+        if (!focusCandidate && showingDesktop()) {
+            focusCandidate = findDesktop(desktop, output); // to not break the state
         }
-    }
 
-    if (!focusCandidate) { // no suitable window under the mouse -> find sth. else
-        // first try to pass the focus to the (former) active clients leader
-        if (window && window->isTransient()) {
-            auto leaders = window->mainWindows();
-            if (leaders.count() == 1 && m_focusChain->isUsableFocusCandidate(leaders.at(0), window)) {
-                focusCandidate = leaders.at(0);
-                raiseWindow(focusCandidate); // also raise - we don't know where it came from
+        if (!focusCandidate && options->isNextFocusPrefersMouse()) {
+            focusCandidate = windowUnderMouse(output);
+            if (focusCandidate && (focusCandidate == window || focusCandidate->isDesktop())) {
+                // should rather not happen, but it cannot get the focus. rest of usability is tested above
+                focusCandidate = nullptr;
             }
         }
-        if (!focusCandidate) {
-            // nope, ask the focus chain for the next candidate
-            focusCandidate = m_focusChain->nextForDesktop(window, desktop);
-        }
-    }
 
-    if (focusCandidate == nullptr) { // last chance: focus the desktop
-        focusCandidate = findDesktop(desktop, output);
+        if (!focusCandidate) { // no suitable window under the mouse -> find sth. else
+            // first try to pass the focus to the (former) active clients leader
+            if (window && window->isTransient()) {
+                auto leaders = window->mainWindows();
+                if (leaders.count() == 1 && m_focusChain->isUsableFocusCandidate(leaders.at(0), window)) {
+                    focusCandidate = leaders.at(0);
+                    raiseWindow(focusCandidate); // also raise - we don't know where it came from
+                }
+            }
+            if (!focusCandidate) {
+                // nope, ask the focus chain for the next candidate
+                focusCandidate = m_focusChain->nextForDesktop(window, desktop);
+            }
+        }
+
+        if (focusCandidate == nullptr) { // last chance: focus the desktop
+            focusCandidate = findDesktop(desktop, output);
+        }
     }
 
     if (focusCandidate != nullptr) {
@@ -502,8 +499,6 @@ bool Workspace::activateNextWindow(Window *window)
     } else {
         focusToNull();
     }
-
-    return true;
 }
 
 void Workspace::switchToOutput(LogicalOutput *output)

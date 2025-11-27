@@ -235,14 +235,10 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 // => catch the typical pattern (though we don't want the focus on the root anyway) #348935
                 const bool lostFocusPointerToRoot = currentInput->focus == kwinApp()->x11RootWindow() && event->detail == XCB_NOTIFY_DETAIL_INFERIOR;
                 if (currentInput->focus == XCB_WINDOW_NONE || currentInput->focus == XCB_INPUT_FOCUS_POINTER_ROOT || lostFocusPointerToRoot) {
-                    // kWarning( 1212 ) << "X focus set to None/PointerRoot, resetting focus" ;
-                    Window *window = mostRecentlyActivatedWindow();
-                    if (window != nullptr) {
+                    if (Window *window = mostRecentlyActivatedWindow()) {
                         requestFocus(window, true);
-                    } else if (activateNextWindow(nullptr)) {
-                        ; // ok, activated
                     } else {
-                        focusToNull();
+                        activateNextWindow(nullptr);
                     }
                 }
             }
