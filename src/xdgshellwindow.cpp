@@ -1005,10 +1005,8 @@ void XdgToplevelWindow::doSetPreferredColorDescription()
 
 bool XdgToplevelWindow::takeFocus()
 {
-    if (wantsInput()) {
-        sendPing(PingReason::FocusWindow);
-        workspace()->setActiveWindow(this);
-    }
+    sendPing(PingReason::FocusWindow);
+    workspace()->setActiveWindow(this);
     return true;
 }
 

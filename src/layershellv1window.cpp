@@ -132,9 +132,7 @@ bool LayerShellV1Window::isResizable() const
 
 bool LayerShellV1Window::takeFocus()
 {
-    if (acceptsFocus()) {
-        workspace()->setActiveWindow(this);
-    }
+    workspace()->setActiveWindow(this);
     return true;
 }
 
