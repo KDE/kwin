@@ -506,7 +506,6 @@ void Workspace::gotFocusIn(const Window *window)
 void Workspace::setShouldGetFocus(Window *window)
 {
     should_get_focus.append(window);
-    updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 }
 
 // basically the same like allowWindowActivation(), this time allowing
