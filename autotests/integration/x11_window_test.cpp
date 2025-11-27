@@ -18,6 +18,7 @@
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "x11eventfilter.h"
 #include "x11window.h"
 
 #include <KWayland/Client/surface.h>
@@ -26,6 +27,7 @@
 #include <linux/input-event-codes.h>
 #include <netwm.h>
 #include <xcb/present.h>
+#include <xcb/xcb_event.h>
 #include <xcb/xcb_icccm.h>
 
 using namespace KWin;
@@ -128,6 +130,7 @@ private Q_SLOTS:
     void testOverrideRedirectStackingAbove();
     void testOverrideRedirectStackingBelow();
     void testRandrEmulation();
+    void testRestoreFocusToDestroyedWindow();
 };
 
 void X11WindowTest::initTestCase_data()
@@ -3749,6 +3752,81 @@ void X11WindowTest::testRandrEmulation()
         }
         QVERIFY(commit.wait());
     }
+}
+
+/**
+ * A tiny helper to destroy a window when another window gets a FocusIn event.
+ */
+class DestroyWindowOnFocusInTask : public X11EventFilter
+{
+public:
+    explicit DestroyWindowOnFocusInTask(xcb_window_t triggerId, xcb_window_t windowId)
+        : X11EventFilter(XCB_FOCUS_IN)
+        , m_triggerId(triggerId)
+        , m_windowId(windowId)
+    {
+    }
+
+    bool event(xcb_generic_event_t *event) override
+    {
+        if (XCB_EVENT_RESPONSE_TYPE(event) == XCB_FOCUS_IN) {
+            const auto focusInEvent = reinterpret_cast<xcb_focus_in_event_t *>(event);
+            if (focusInEvent->event == m_triggerId) {
+                xcb_destroy_window(kwinApp()->x11Connection(), m_windowId);
+                xcb_flush(kwinApp()->x11Connection());
+            }
+        }
+        return false;
+    }
+private:
+    xcb_window_t m_triggerId;
+    xcb_window_t m_windowId;
+};
+
+void X11WindowTest::testRestoreFocusToDestroyedWindow()
+{
+    // This test verifies that the Workspace::activeWindow() won't get stuck with the wrong value after
+    // attempting to restore the focus to a destroyed window. This case is interesting because of the
+    // following event sequence: a client focuses itself, the wm rejects that and attempts to restore
+    // focus to a destroyed window (this will fail, X server focus will not change), the wm finally
+    // receives the corresponding DestroyNotify event, and activates the client that attempted to focus
+    // itself, this will not generate a FocusIn event. If the wm waits for the FocusIn event to update
+    // its internal state, e.g. currently active window, it may end up with the wrong state in case it
+    // doesn't consider that extreme corner case.
+
+    // Note that the window class is set so the focus stealing prevention policies consider the
+    // two windows belonging to different applications.
+    Test::XcbConnectionPtr firstConnection = Test::createX11Connection();
+    X11Window *firstWindow = createWindow(firstConnection.get(), QRect(0, 0, 100, 100), [&firstConnection](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(firstConnection.get(), windowId, 7, "foo\0foo");
+    });
+    QCOMPARE(workspace()->activeWindow(), firstWindow);
+
+    Test::XcbConnectionPtr secondConnection = Test::createX11Connection();
+    X11Window *secondWindow = createWindow(secondConnection.get(), QRect(100, 0, 100, 100), [&secondConnection](xcb_window_t windowId) {
+        xcb_icccm_set_wm_class(secondConnection.get(), windowId, 7, "bar\0bar");
+    });
+    QCOMPARE(workspace()->activeWindow(), secondWindow);
+
+    // Try to "steal" input focus.
+    xcb_set_input_focus(firstConnection.get(), XCB_INPUT_FOCUS_POINTER_ROOT, firstWindow->window(), XCB_TIME_CURRENT_TIME);
+    xcb_flush(firstConnection.get());
+
+    // The main purpose of this event filter is to destroy the active window to create a situation
+    // where the active window is already destroyed when the window manager processes the FocusIn event
+    // from the first window.
+    //
+    // The second window cannot be destroyed using the secondConnection because it looks like the window
+    // manager side will receive the DestroyNotify event first no matter which order the XSetInputFocus()
+    // and XDestroyWindow() requests are called. Performing roundtrips to the X server doesn't help either.
+    // So we install an event filter to destroy the active window right before the wm processes the
+    // FocusIn event.
+    auto activeWindowDestroyer = std::make_unique<DestroyWindowOnFocusInTask>(firstWindow->window(), secondWindow->window());
+
+    // Let the window manager side catch up with the X11 events.
+    QSignalSpy windowActivatedSpy(workspace(), &Workspace::windowActivated);
+    QVERIFY(windowActivatedSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), firstWindow);
 }
 
 WAYLANDTEST_MAIN(X11WindowTest)
