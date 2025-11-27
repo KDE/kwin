@@ -2613,7 +2613,8 @@ public:
             if (m_currentToplevelDragWindow) {
                 m_currentToplevelDragWindow->setKeepAbove(m_wasKeepAbove);
                 m_currentToplevelDragWindow->endInteractiveMoveResize();
-                workspace()->takeActivity(m_currentToplevelDragWindow, Workspace::ActivityFlag::ActivityFocus | Workspace::ActivityFlag::ActivityRaise);
+                workspace()->raiseWindow(m_currentToplevelDragWindow);
+                workspace()->requestFocus(m_currentToplevelDragWindow);
                 m_currentToplevelDragWindow = nullptr;
             }
         });
@@ -2794,7 +2795,7 @@ private:
     {
         m_raiseTimer.stop();
         if (m_dragTarget) {
-            workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityRaise);
+            workspace()->raiseWindow(m_dragTarget);
         }
     }
 
@@ -2864,7 +2865,7 @@ private:
         Window *dragTarget = pickDragTarget(position);
         if (dragTarget) {
             if (dragTarget != m_dragTarget) {
-                workspace()->takeActivity(dragTarget, Workspace::ActivityFlag::ActivityFocus);
+                workspace()->requestFocus(dragTarget);
                 m_raiseTimer.start();
             }
             if (!m_lastPos || (position - *m_lastPos).manhattanLength() > 10) {

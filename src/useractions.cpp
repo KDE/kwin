@@ -1094,19 +1094,23 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         window->maximize(window->maximizeMode() == MaximizeFull
                              ? MaximizeRestore
                              : MaximizeFull);
-        takeActivity(window, ActivityFocus | ActivityRaise);
+        raiseWindow(window);
+        requestFocus(window);
         break;
     case Options::HMaximizeOp:
         window->maximize(window->maximizeMode() ^ MaximizeHorizontal);
-        takeActivity(window, ActivityFocus | ActivityRaise);
+        raiseWindow(window);
+        requestFocus(window);
         break;
     case Options::VMaximizeOp:
         window->maximize(window->maximizeMode() ^ MaximizeVertical);
-        takeActivity(window, ActivityFocus | ActivityRaise);
+        raiseWindow(window);
+        requestFocus(window);
         break;
     case Options::RestoreOp:
         window->maximize(MaximizeRestore);
-        takeActivity(window, ActivityFocus | ActivityRaise);
+        raiseWindow(window);
+        requestFocus(window);
         break;
     case Options::MinimizeOp:
         window->setMinimized(true);
