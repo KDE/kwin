@@ -1029,9 +1029,6 @@ void Workspace::setupWindowShortcutDone(bool ok)
     m_windowKeysDialog->deleteLater();
     m_windowKeysDialog = nullptr;
     m_windowKeysWindow = nullptr;
-    if (m_activeWindow) {
-        m_activeWindow->takeFocus();
-    }
 }
 
 void Workspace::windowShortcutUpdated(Window *window)
