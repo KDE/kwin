@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-22 00:44+0000\n"
+"POT-Creation-Date: 2025-11-27 00:45+0000\n"
 "PO-Revision-Date: 2025-11-20 21:39+0300\n"
 "Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -55,13 +55,15 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Bileşikleştiricisi %1"
 
 #: backends/wayland/wayland_output.cpp:517
-#, kde-format
-msgid "- Output disabled"
+#, fuzzy, kde-format
+#| msgid "- Output disabled"
+msgid "- LogicalOutput disabled"
 msgstr "- Çıktı devre dışı"
 
 #: backends/wayland/wayland_output.cpp:519
-#, kde-format
-msgid "- Output dimmed"
+#, fuzzy, kde-format
+#| msgid "- Output dimmed"
+msgid "- LogicalOutput dimmed"
 msgstr "- Çıktı karartıldı"
 
 #: backends/x11/x11_windowed_backend.cpp:497

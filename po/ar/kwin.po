@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-22 00:44+0000\n"
+"POT-Creation-Date: 2025-11-27 00:45+0000\n"
 "PO-Revision-Date: 2025-11-20 18:42+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -44,13 +44,15 @@ msgid "KDE Wayland Compositor %1"
 msgstr "مراكب ويلاند كيدي %1"
 
 #: backends/wayland/wayland_output.cpp:517
-#, kde-format
-msgid "- Output disabled"
+#, fuzzy, kde-format
+#| msgid "- Output disabled"
+msgid "- LogicalOutput disabled"
 msgstr "- الخرج معطّل"
 
 #: backends/wayland/wayland_output.cpp:519
-#, kde-format
-msgid "- Output dimmed"
+#, fuzzy, kde-format
+#| msgid "- Output dimmed"
+msgid "- LogicalOutput dimmed"
 msgstr "- الخرج معتم"
 
 #: backends/x11/x11_windowed_backend.cpp:497

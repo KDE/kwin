@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-22 00:44+0000\n"
+"POT-Creation-Date: 2025-11-27 00:45+0000\n"
 "PO-Revision-Date: 2014-10-20 20:21+0000\n"
 "Last-Translator: Lejla Agic <lagic1@etf.unsa.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -56,12 +56,12 @@ msgstr ""
 
 #: backends/wayland/wayland_output.cpp:517
 #, kde-format
-msgid "- Output disabled"
+msgid "- LogicalOutput disabled"
 msgstr ""
 
 #: backends/wayland/wayland_output.cpp:519
 #, kde-format
-msgid "- Output dimmed"
+msgid "- LogicalOutput dimmed"
 msgstr ""
 
 #: backends/x11/x11_windowed_backend.cpp:497
