@@ -2325,7 +2325,7 @@ bool Window::isActiveFullScreen() const
         return false;
     }
 
-    const auto ac = workspace()->mostRecentlyActivatedWindow(); // instead of activeWindow() - avoids flicker
+    const auto ac = workspace()->activeWindow();
     // according to NETWM spec implementation notes suggests
     // "focused windows having state _NET_WM_STATE_FULLSCREEN" to be on the highest layer.
     // we'll also take the screen into account
