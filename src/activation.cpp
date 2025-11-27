@@ -357,58 +357,41 @@ void Workspace::activateWindow(Window *window, bool force)
  */
 bool Workspace::requestFocus(Window *window, bool force)
 {
-    return takeActivity(window, force ? ActivityFocusForce : ActivityFocus);
-}
-
-bool Workspace::takeActivity(Window *window, ActivityFlags flags)
-{
     // the 'if ( window == m_activeWindow ) return;' optimization mustn't be done here
     if (!focusChangeEnabled() && (window != m_activeWindow)) {
-        flags &= ~ActivityFocus;
-    }
-
-    if (flags & ActivityFocus) {
-        Window *modal = window->findModal();
-        if (modal != nullptr && modal != window) {
-            if (modal->desktops() != window->desktops()) {
-                modal->setDesktops(window->desktops());
-            }
-            if (!modal->isShown() && !modal->isMinimized()) { // forced desktop or utility window
-                activateWindow(modal); // activating a minimized blocked window will unminimize its modal implicitly
-            }
-            // if the click was inside the window (i.e. handled is set),
-            // but it has a modal, there's no need to use handled mode, because
-            // the modal doesn't get the click anyway
-            // raising of the original window needs to be still done
-            if (flags & ActivityRaise) {
-                raiseWindow(window);
-            }
-            window = modal;
-        }
-        cancelDelayFocus();
-    }
-    if (!flags.testFlag(ActivityFocusForce) && window->isSplash()) {
-        flags &= ~ActivityFocus; // toplevel menus don't take focus if not forced
-    }
-    if (!window->isShown()) { // shouldn't happen, call activateWindow() if needed
-        qCWarning(KWIN_CORE) << "takeActivity: not shown";
         return false;
     }
 
-    bool ret = true;
-
-    if (flags & ActivityFocus) {
-        ret &= window->takeFocus();
+    Window *modal = window->findModal();
+    if (modal != nullptr && modal != window) {
+        if (modal->desktops() != window->desktops()) {
+            modal->setDesktops(window->desktops());
+        }
+        if (!modal->isShown() && !modal->isMinimized()) { // forced desktop or utility window
+            activateWindow(modal); // activating a minimized blocked window will unminimize its modal implicitly
+        }
+        window = modal;
     }
-    if (flags & ActivityRaise) {
-        workspace()->raiseWindow(window);
+    cancelDelayFocus();
+
+    if (!force && window->isSplash()) {
+        return false; // toplevel menus don't take focus if not forced
+    }
+
+    if (!window->isShown()) { // shouldn't happen, call activateWindow() if needed
+        qCWarning(KWIN_CORE) << "Cannot focus a window that is hidden";
+        return false;
+    }
+
+    if (!window->takeFocus()) {
+        return false;
     }
 
     if (!window->isOnActiveOutput()) {
         setActiveOutput(window->output());
     }
 
-    return ret;
+    return true;
 }
 
 Window *Workspace::windowUnderMouse(LogicalOutput *output) const

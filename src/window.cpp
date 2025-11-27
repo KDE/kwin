@@ -2038,7 +2038,8 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         workspace()->raiseOrLowerWindow(this);
         break;
     case Options::MouseActivateAndRaise: {
-        workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
+        workspace()->raiseWindow(this);
+        workspace()->requestFocus(this);
         workspace()->setActiveOutput(globalPos);
         break;
     }
@@ -2048,19 +2049,20 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         workspace()->setActiveOutput(globalPos);
         break;
     case Options::MouseActivate:
-        workspace()->takeActivity(this, Workspace::ActivityFocus);
+        workspace()->requestFocus(this);
         workspace()->setActiveOutput(globalPos);
         break;
     case Options::MouseActivateRaiseAndPassClick:
-        workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
+        workspace()->raiseWindow(this);
+        workspace()->requestFocus(this);
         workspace()->setActiveOutput(globalPos);
         break;
     case Options::MouseActivateRaiseOnReleaseAndPassClick:
-        workspace()->takeActivity(this, Workspace::ActivityFocus);
+        workspace()->requestFocus(this);
         workspace()->setActiveOutput(globalPos);
         break;
     case Options::MouseActivateAndPassClick:
-        workspace()->takeActivity(this, Workspace::ActivityFocus);
+        workspace()->requestFocus(this);
         workspace()->setActiveOutput(globalPos);
         break;
     case Options::MouseMaximize:
@@ -2182,7 +2184,7 @@ void Window::performMouseReleaseCommand(Options::MouseCommand command, const QPo
         return;
     }
     if (isActive()) {
-        workspace()->takeActivity(this, Workspace::ActivityRaise);
+        workspace()->raiseWindow(this);
     }
     workspace()->setActiveOutput(globalPos);
 }

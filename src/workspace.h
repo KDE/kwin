@@ -162,13 +162,6 @@ public:
 
     void activateWindow(Window *window, bool force = false);
     bool requestFocus(Window *window, bool force = false);
-    enum ActivityFlag {
-        ActivityFocus = 1 << 0, // focus the window
-        ActivityFocusForce = 1 << 1 | ActivityFocus, // focus even if Dock etc.
-        ActivityRaise = 1 << 2 // raise the window
-    };
-    Q_DECLARE_FLAGS(ActivityFlags, ActivityFlag)
-    bool takeActivity(Window *window, ActivityFlags flags);
     bool restoreFocus();
     void gotFocusIn(const Window *window);
     void setShouldGetFocus(Window *window);
@@ -850,4 +843,3 @@ inline Workspace *workspace()
 }
 
 } // namespace
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Workspace::ActivityFlags)
