@@ -359,7 +359,7 @@ bool Workspace::requestFocus(Window *window, bool force)
 {
     // the 'if ( window == m_activeWindow ) return;' optimization mustn't be done here
     if (!focusChangeEnabled() && (window != m_activeWindow)) {
-        return true;
+        return false;
     }
 
     Window *modal = window->findModal();
@@ -375,7 +375,7 @@ bool Workspace::requestFocus(Window *window, bool force)
     cancelDelayFocus();
 
     if (!force && window->isSplash()) {
-        return true; // toplevel menus don't take focus if not forced
+        return false; // toplevel menus don't take focus if not forced
     }
 
     if (!window->isShown()) { // shouldn't happen, call activateWindow() if needed
