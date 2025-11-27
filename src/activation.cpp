@@ -422,18 +422,8 @@ void Workspace::activateNextWindow(Window *window)
     }
 
     closeActivePopup();
-
-    if (window != nullptr) {
-        if (window == m_activeWindow) {
-            setActiveWindow(nullptr);
-        }
+    if (window) {
         should_get_focus.removeAll(window);
-    }
-
-    // If focus is blocked, requestFocus() should be called again when focus updates are unblocked.
-    if (!focusChangeEnabled()) {
-        focusToNull();
-        return;
     }
 
     Window *focusCandidate = nullptr;
@@ -474,11 +464,14 @@ void Workspace::activateNextWindow(Window *window)
         }
     }
 
-    if (focusCandidate != nullptr) {
-        requestFocus(focusCandidate);
-    } else {
-        focusToNull();
+    if (focusCandidate) {
+        if (requestFocus(focusCandidate)) {
+            return;
+        }
     }
+
+    focusToNull();
+    setActiveWindow(nullptr);
 }
 
 void Workspace::switchToOutput(LogicalOutput *output)

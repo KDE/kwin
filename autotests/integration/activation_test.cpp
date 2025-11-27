@@ -51,6 +51,7 @@ private Q_SLOTS:
     void testActiveFullscreen();
     void testXdgActivation();
     void testGlobalShortcutActivation();
+    void testFocusMovesFromClosedDialogToParentWindow();
 
 private:
     void stackScreensHorizontally();
@@ -793,6 +794,36 @@ void ActivationTest::testGlobalShortcutActivation()
     Test::xdgActivation()->activate(tokenSpy.latestToken, *windows[1]->m_surface);
     QVERIFY(!activationSpy.wait(10));
     QCOMPARE(workspace()->activeWindow(), windows[2]->m_window);
+}
+
+void ActivationTest::testFocusMovesFromClosedDialogToParentWindow()
+{
+    // This test verifies that input focus moves from a closed dialog to the parent window as expected.
+
+    QSignalSpy windowActivatedSpy(workspace(), &Workspace::windowActivated);
+
+    std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+    QCOMPARE(windowActivatedSpy.count(), 1);
+    QCOMPARE(windowActivatedSpy.last().at(0).value<Window *>(), window);
+    QCOMPARE(workspace()->activeWindow(), window);
+
+    std::unique_ptr<KWayland::Client::Surface> transientSurface{Test::createSurface()};
+    std::unique_ptr<Test::XdgToplevel> transientShellSurface(Test::createXdgToplevelSurface(transientSurface.get()));
+    transientShellSurface->set_parent(shellSurface->object());
+    auto transient = Test::renderAndWaitForShown(transientSurface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(transient);
+    QCOMPARE(windowActivatedSpy.count(), 2);
+    QCOMPARE(windowActivatedSpy.last().at(0).value<Window *>(), transient);
+    QCOMPARE(workspace()->activeWindow(), transient);
+
+    transientShellSurface.reset();
+    transientSurface.reset();
+    QVERIFY(windowActivatedSpy.wait());
+    QCOMPARE(windowActivatedSpy.count(), 3);
+    QCOMPARE(windowActivatedSpy.last().at(0).value<Window *>(), window);
 }
 }
 
