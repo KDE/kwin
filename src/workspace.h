@@ -172,7 +172,7 @@ public:
     bool restoreFocus();
     void gotFocusIn(const Window *window);
     void setShouldGetFocus(Window *window);
-    bool activateNextWindow(Window *window);
+    void activateNextWindow(Window *window);
     bool focusChangeEnabled()
     {
         return block_focus == 0;
