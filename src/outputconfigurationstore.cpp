@@ -692,7 +692,11 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(BackendOutput *
         return (mode->flags() & OutputMode::Flag::Preferred);
     });
     const auto nativeSize = std::ranges::max_element(preferredOnly, findBiggestFastest);
-    if (nativeSize != preferredOnly.end() || output->edid().likelyNativeResolution()) {
+
+    // Non-default modes have a decent chance of not working on VGA,
+    // so avoid doing anything out of the ordinary there
+    const bool isVGA = output->name().contains("VGA");
+    if (!isVGA && (nativeSize != preferredOnly.end() || output->edid().likelyNativeResolution())) {
         const auto size = nativeSize != preferredOnly.end() ? (*nativeSize)->size() : *output->edid().likelyNativeResolution();
         auto correctSize = notPotentiallyBroken | std::ranges::views::filter([size](const auto &mode) {
             return mode->size() == size;
