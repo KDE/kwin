@@ -755,40 +755,31 @@ public:
      * Note: for the automatic format detection the size of the type T may not vary between
      * architectures. Thus one needs to use e.g. uint32_t instead of long. In general all xcb
      * data types can be used, all Xlib data types can not be used.
-     *
-     * @param defaultValue The default value to return in case of error
-     * @param ok Set to @c false in case of error, @c true in case of success
-     * @return The read value or @p defaultValue in error case
      */
     template<typename T>
         requires(!std::is_pointer_v<T>)
-    inline T value(T defaultValue = T(), bool *ok = nullptr)
+    inline std::optional<T> value()
     {
-        return value<T>(sizeof(T) * 8, m_type, defaultValue, ok);
+        return value<T>(sizeof(T) * 8, m_type);
     }
     /**
      * @brief Reads the property as a POD type.
      *
-     * Returns the first value of the property data. In case of @p format or @p type mismatch
-     * the @p defaultValue is returned. The optional argument @p ok is set
-     * to @c false in case of error and to @c true in case of successful reading of
-     * the property.
+     * Returns the first value of the property data, or in case of @p format or @p type
+     * mismatch, std::nullopt.
      *
      * @param format The expected format of the property value, e.g. 32 for XCB_ATOM_CARDINAL
      * @param type The expected type of the property value, e.g. XCB_ATOM_CARDINAL
-     * @param defaultValue The default value to return in case of error
-     * @param ok Set to @c false in case of error, @c true in case of success
-     * @return The read value or @p defaultValue in error case
      */
     template<typename T>
         requires(!std::is_pointer_v<T>)
-    inline T value(uint8_t format, xcb_atom_t type, T defaultValue = T(), bool *ok = nullptr)
+    inline std::optional<T> value(uint8_t format, xcb_atom_t type)
     {
-        T *reply = value<T *>(format, type, nullptr, ok);
-        if (!reply) {
-            return defaultValue;
+        const auto ret = array<T>(format, type);
+        if (!ret || ret->empty()) {
+            return std::nullopt;
         }
-        return reply[0];
+        return ret->front();
     }
     /**
      * @brief Overloaded method for convenience.
@@ -797,16 +788,12 @@ public:
      * Note: for the automatic format detection the size of the type T may not vary between
      * architectures. Thus one needs to use e.g. uint32_t instead of long. In general all xcb
      * data types can be used, all Xlib data types can not be used.
-     *
-     * @param defaultValue The default value to return in case of error
-     * @param ok Set to @c false in case of error, @c true in case of success
-     * @return The read value or @p defaultValue in error case
      */
     template<typename T>
-        requires std::is_pointer_v<T>
-    inline T value(T defaultValue = nullptr, bool *ok = nullptr)
+        requires(!std::is_pointer_v<T>)
+    inline std::optional<std::span<T>> array()
     {
-        return value<T>(sizeof(typename std::remove_pointer<T>::type) * 8, m_type, defaultValue, ok);
+        return array<T>(sizeof(typename std::remove_pointer<T>::type) * 8, m_type);
     }
     /**
      * @brief Reads the property as an array of T.
@@ -814,71 +801,49 @@ public:
      * This method is an overload for the case that T is a pointer type.
      *
      * Return the property value casted to the pointer type T. In case of @p format
-     * or @p type mismatch the @p defaultValue is returned. Also if the value length
-     * is @c 0 the @p defaultValue is returned. The optional argument @p ok is set
-     * to @c false in case of error and to @c true in case of successful reading of
-     * the property. Ok will always be true if the property exists and has been
-     * successfully read, even in the case the property is empty and its length is 0
+     * or @p type mismatch, std::nullopt is returned.
      *
      * @param format The expected format of the property value, e.g. 32 for XCB_ATOM_CARDINAL
      * @param type The expected type of the property value, e.g. XCB_ATOM_CARDINAL
-     * @param defaultValue The default value to return in case of error
-     * @param ok Set to @c false in case of error, @c true in case of success
-     * @return The read value or @p defaultValue in error case
      */
     template<typename T>
-        requires std::is_pointer_v<T>
-    inline T value(uint8_t format, xcb_atom_t type, T defaultValue = nullptr, bool *ok = nullptr)
+        requires(!std::is_pointer_v<T>)
+    inline std::optional<std::span<T>> array(uint8_t format, xcb_atom_t type)
     {
-        if (ok) {
-            *ok = false;
-        }
         const PropertyData::reply_type *reply = data();
         if (!reply) {
-            return defaultValue;
+            return std::nullopt;
         }
         if (reply->type != type) {
-            return defaultValue;
+            return std::nullopt;
         }
         if (reply->format != format) {
-            return defaultValue;
+            return std::nullopt;
         }
-
-        if (ok) {
-            *ok = true;
-        }
-        if (xcb_get_property_value_length(reply) == 0) {
-            return defaultValue;
-        }
-
-        return reinterpret_cast<T>(xcb_get_property_value(reply));
+        return std::span(reinterpret_cast<T *>(xcb_get_property_value(reply)), reply->value_len);
     }
     /**
      * @brief Reads the property as string and returns a QByteArray.
      *
      * In case of error this method returns a null QByteArray.
      */
-    inline QByteArray toByteArray(uint8_t format = 8, xcb_atom_t type = XCB_ATOM_STRING, bool *ok = nullptr)
+    inline std::optional<QByteArray> toByteArray(uint8_t format, xcb_atom_t type)
     {
-        bool valueOk = false;
-        const char *reply = value<const char *>(format, type, nullptr, &valueOk);
-        if (ok) {
-            *ok = valueOk;
-        }
-
-        if (valueOk && !reply) {
+        const auto reply = array<const char>(format, type);
+        if (!reply.has_value()) {
+            return std::nullopt;
+        } else if (reply->size() == 0) {
             return QByteArray("", 0); // valid, not null, but empty data
-        } else if (!valueOk) {
-            return QByteArray(); // Property not found, data empty and null
+        } else {
+            return QByteArray(reply->data(), reply->size());
         }
-        return QByteArray(reply, xcb_get_property_value_length(data()));
     }
     /**
      * @brief Overloaded method for convenience.
      */
-    inline QByteArray toByteArray(bool *ok)
+    inline std::optional<QByteArray> toByteArray()
     {
-        return toByteArray(8, m_type, ok);
+        return toByteArray(8, m_type);
     }
     /**
      * @brief Reads the property as a boolean value.
@@ -886,36 +851,25 @@ public:
      * If the property reply length is @c 1 the first element is interpreted as a boolean
      * value returning @c true for any value unequal to @c 0 and @c false otherwise.
      *
-     * In case of error this method returns @c false. Thus it is not possible to distinguish
-     * between error case and a read @c false value. Use the optional argument @p ok to
-     * distinguish the error case.
-     *
      * @param format Expected format. Defaults to 32.
      * @param type Expected type Defaults to XCB_ATOM_CARDINAL.
-     * @param ok Set to @c false in case of error, @c true in case of success
      * @return bool The first element interpreted as a boolean value or @c false in error case
      * @see value
      */
-    inline bool toBool(uint8_t format = 32, xcb_atom_t type = XCB_ATOM_CARDINAL, bool *ok = nullptr)
+    inline std::optional<bool> toBool(uint8_t format, xcb_atom_t type)
     {
-        bool *reply = value<bool *>(format, type, nullptr, ok);
-        if (!reply) {
-            return false;
+        const auto ret = array<bool>(format, type);
+        if (!ret || ret->size() != 1) {
+            return std::nullopt;
         }
-        if (data()->value_len != 1) {
-            if (ok) {
-                *ok = false;
-            }
-            return false;
-        }
-        return reply[0] != 0;
+        return (*ret)[0];
     }
     /**
      * @brief Overloaded method for convenience.
      */
-    inline bool toBool(bool *ok)
+    inline std::optional<bool> toBool()
     {
-        return toBool(32, m_type, ok);
+        return toBool(32, m_type);
     }
 
 private:
@@ -932,7 +886,7 @@ public:
     }
     operator QByteArray()
     {
-        return toByteArray();
+        return toByteArray().value_or(QByteArray());
     }
 };
 
@@ -944,20 +898,9 @@ public:
     {
     }
 
-    /**
-     * @brief Fill given window pointer with the WM_TRANSIENT_FOR property of a window.
-     * @param prop WM_TRANSIENT_FOR property value.
-     * @returns @c true on success, @c false otherwise
-     */
-    inline bool getTransientFor(WindowId *prop)
+    inline std::optional<WindowId> getTransientFor()
     {
-        WindowId *windows = value<WindowId *>();
-        if (!windows) {
-            return false;
-        }
-
-        *prop = *windows;
-        return true;
+        return value<WindowId>();
     }
 };
 
@@ -1117,7 +1060,9 @@ private:
         }
         inline SizeHints *sizeHints()
         {
-            return value<SizeHints *>(32, XCB_ATOM_WM_SIZE_HINTS, nullptr);
+            return array<SizeHints>(32, XCB_ATOM_WM_SIZE_HINTS).transform([](std::span<SizeHints> span) {
+                return span.empty() ? nullptr : span.data();
+            }).value_or(nullptr);
         }
     };
     friend TestXcbSizeHints;
@@ -1155,12 +1100,12 @@ public:
         if (!m_window) {
             return;
         }
-        m_hints = nullptr;
+        m_hints.reset();
         m_prop = Property(0, m_window, m_atom, m_atom, 0, 5);
     }
     void read()
     {
-        m_hints = m_prop.value<MwmHints *>(32, m_atom, nullptr);
+        m_hints = m_prop.value<MwmHints>(32, m_atom);
     }
     bool hasDecorationsFlag() const
     {
@@ -1236,7 +1181,7 @@ private:
     xcb_window_t m_window = XCB_WINDOW_NONE;
     Property m_prop;
     xcb_atom_t m_atom;
-    MwmHints *m_hints = nullptr;
+    std::optional<MwmHints> m_hints;
 };
 
 namespace RandR

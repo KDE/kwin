@@ -89,7 +89,7 @@ static QByteArray readWindowProperty(xcb_window_t win, xcb_atom_t atom, xcb_atom
             len *= 2;
             continue;
         }
-        return prop.toByteArray(format, type);
+        return prop.toByteArray(format, type).value_or(QByteArray());
     }
 }
 

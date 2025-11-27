@@ -1812,7 +1812,7 @@ void X11Window::getSyncCounter()
     }
 
     Xcb::Property syncProp(false, window(), atoms->net_wm_sync_request_counter, XCB_ATOM_CARDINAL, 0, 1);
-    const xcb_sync_counter_t counter = syncProp.value<xcb_sync_counter_t>(XCB_NONE);
+    const xcb_sync_counter_t counter = syncProp.value<xcb_sync_counter_t>().value_or(XCB_NONE);
     if (counter != XCB_NONE) {
         m_syncRequest.enabled = true;
         m_syncRequest.counter = counter;
@@ -2389,15 +2389,9 @@ Xcb::TransientFor X11Window::fetchTransient() const
 
 void X11Window::readTransientProperty(Xcb::TransientFor &transientFor)
 {
-    xcb_window_t new_transient_for_id = XCB_WINDOW_NONE;
-    if (transientFor.getTransientFor(&new_transient_for_id)) {
-        m_originalTransientForId = new_transient_for_id;
-        new_transient_for_id = verifyTransientFor(new_transient_for_id, true);
-    } else {
-        m_originalTransientForId = XCB_WINDOW_NONE;
-        new_transient_for_id = verifyTransientFor(XCB_WINDOW_NONE, false);
-    }
-    setTransient(new_transient_for_id);
+    const auto newTransientForId = transientFor.getTransientFor();
+    m_originalTransientForId = newTransientForId.value_or(XCB_WINDOW_NONE);
+    setTransient(verifyTransientFor(m_originalTransientForId, newTransientForId.has_value()));
 }
 
 void X11Window::readTransient()
@@ -3613,18 +3607,16 @@ void X11Window::configure(const QRect &nativeGeometry)
     QRect effectiveGeometry = nativeGeometry;
     if (m_fullscreenMode == X11Window::FullScreenMode::FullScreenNormal) {
         Xcb::Property property(0, m_client, atoms->xwayland_xrandr_emulation, XCB_ATOM_CARDINAL, 0, workspace()->outputs().size() * 4);
-        const uint32_t *values = property.value<uint32_t *>();
-        if (values) {
+        const auto values = property.array<uint32_t>();
+        if (values.has_value()) {
             const QPoint xwaylandOutputPos = Xcb::toXNative(m_moveResizeOutput->geometryF().topLeft());
-            // "length" is in number of 32 bit words
-            const int numOfOutputs = property.data()->length / 4;
-            for (int i = 0; i < numOfOutputs; i++) {
+            for (size_t i = 0; i < values->size() / 4; i++) {
                 // the format of the property is: x,y of the screen + emulated width,height
-                const uint32_t x = values[i * 4];
-                const uint32_t y = values[i * 4 + 1];
+                const uint32_t x = (*values)[i * 4];
+                const uint32_t y = (*values)[i * 4 + 1];
                 if (xwaylandOutputPos == QPoint(x, y)) {
-                    effectiveGeometry.setWidth(values[i * 4 + 2]);
-                    effectiveGeometry.setHeight(values[i * 4 + 3]);
+                    effectiveGeometry.setWidth((*values)[i * 4 + 2]);
+                    effectiveGeometry.setHeight((*values)[i * 4 + 3]);
                     break;
                 }
             }
@@ -4060,7 +4052,7 @@ Xcb::Property X11Window::fetchWmClientLeader() const
 
 void X11Window::readWmClientLeader(Xcb::Property &prop)
 {
-    m_wmClientLeader = prop.value<xcb_window_t>(window());
+    m_wmClientLeader = prop.value<xcb_window_t>().value_or(window());
 }
 
 void X11Window::getWmClientLeader()
@@ -4128,7 +4120,7 @@ Xcb::Property X11Window::fetchSkipCloseAnimation() const
 
 void X11Window::readSkipCloseAnimation(Xcb::Property &property)
 {
-    setSkipCloseAnimation(property.toBool());
+    setSkipCloseAnimation(property.toBool().value_or(false));
 }
 
 void X11Window::getSkipCloseAnimation()
@@ -4158,7 +4150,7 @@ void X11Window::updateUserTime(xcb_timestamp_t time)
 xcb_timestamp_t X11Window::readUserCreationTime() const
 {
     Xcb::Property prop(false, window(), atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 0, 1);
-    return prop.value<xcb_timestamp_t>(-1);
+    return prop.value<xcb_timestamp_t>().value_or(-1);
 }
 
 xcb_timestamp_t X11Window::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,

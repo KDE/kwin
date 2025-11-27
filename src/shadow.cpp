@@ -130,11 +130,11 @@ QList<uint32_t> Shadow::readX11ShadowProperty(xcb_window_t id)
     QList<uint32_t> ret;
     if (id != XCB_WINDOW_NONE) {
         Xcb::Property property(false, id, atoms->kde_net_wm_shadow, XCB_ATOM_CARDINAL, 0, 12);
-        uint32_t *shadow = property.value<uint32_t *>();
-        if (shadow) {
+        const auto shadow = property.array<uint32_t>();
+        if (shadow.has_value() && shadow->size() == 12) {
             ret.reserve(12);
             for (int i = 0; i < 12; ++i) {
-                ret << shadow[i];
+                ret << (*shadow)[i];
             }
         }
     }

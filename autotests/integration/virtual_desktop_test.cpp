@@ -60,9 +60,7 @@ void VirtualDesktopTest::initTestCase()
         Xcb::Atom currentDesktopAtom("_NET_CURRENT_DESKTOP");
         QVERIFY(currentDesktopAtom.isValid());
         Xcb::Property currentDesktop(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
-        bool ok = true;
-        QCOMPARE(currentDesktop.value(0, &ok), 0);
-        QVERIFY(ok);
+        QCOMPARE(currentDesktop.value<uint32_t>(), 0);
     }
 #endif
 }
@@ -92,33 +90,27 @@ void VirtualDesktopTest::testNetCurrentDesktop()
     Xcb::Atom currentDesktopAtom("_NET_CURRENT_DESKTOP");
     QVERIFY(currentDesktopAtom.isValid());
     Xcb::Property currentDesktop(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
-    bool ok = true;
-    QCOMPARE(currentDesktop.value(0, &ok), 0);
-    QVERIFY(ok);
+    QCOMPARE(currentDesktop.value<uint32_t>(), 0);
 
     // go to desktop 2
     VirtualDesktopManager::self()->setCurrent(2);
     currentDesktop = Xcb::Property(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
-    QCOMPARE(currentDesktop.value(0, &ok), 1);
-    QVERIFY(ok);
+    QCOMPARE(currentDesktop.value<uint32_t>(), 1);
 
     // go to desktop 3
     VirtualDesktopManager::self()->setCurrent(3);
     currentDesktop = Xcb::Property(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
-    QCOMPARE(currentDesktop.value(0, &ok), 2);
-    QVERIFY(ok);
+    QCOMPARE(currentDesktop.value<uint32_t>(), 2);
 
     // go to desktop 4
     VirtualDesktopManager::self()->setCurrent(4);
     currentDesktop = Xcb::Property(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
-    QCOMPARE(currentDesktop.value(0, &ok), 3);
-    QVERIFY(ok);
+    QCOMPARE(currentDesktop.value<uint32_t>(), 3);
 
     // and back to first
     VirtualDesktopManager::self()->setCurrent(1);
     currentDesktop = Xcb::Property(0, kwinApp()->x11RootWindow(), currentDesktopAtom, XCB_ATOM_CARDINAL, 0, 1);
-    QCOMPARE(currentDesktop.value(0, &ok), 0);
-    QVERIFY(ok);
+    QCOMPARE(currentDesktop.value<uint32_t>(), 0);
 }
 #endif
 
