@@ -1014,8 +1014,7 @@ void Workspace::activateWindowOnDesktop(VirtualDesktop *desktop)
         }
     }
 
-    focusToNull();
-    setActiveWindow(nullptr);
+    resetFocus();
 }
 
 Window *Workspace::findWindowToActivateOnDesktop(VirtualDesktop *desktop)

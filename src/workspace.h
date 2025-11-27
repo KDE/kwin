@@ -162,6 +162,7 @@ public:
 
     void activateWindow(Window *window, bool force = false);
     bool requestFocus(Window *window, bool force = false);
+    void resetFocus();
     bool restoreFocus();
     void gotFocusIn(const Window *window);
     void setShouldGetFocus(Window *window);

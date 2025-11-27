@@ -286,8 +286,7 @@ void Workspace::setActiveWindow(Window *window)
 void Workspace::activateWindow(Window *window, bool force)
 {
     if (window == nullptr) {
-        focusToNull();
-        setActiveWindow(nullptr);
+        resetFocus();
         return;
     }
     if (!window->isClient() || window->isDeleted() || !window->wantsInput()) {
@@ -391,6 +390,12 @@ bool Workspace::requestFocus(Window *window, bool force)
     return window->takeFocus();
 }
 
+void Workspace::resetFocus()
+{
+    focusToNull();
+    setActiveWindow(nullptr);
+}
+
 Window *Workspace::windowUnderMouse(LogicalOutput *output) const
 {
     auto it = stackingOrder().constEnd();
@@ -470,8 +475,7 @@ void Workspace::activateNextWindow(Window *window)
         }
     }
 
-    focusToNull();
-    setActiveWindow(nullptr);
+    resetFocus();
 }
 
 void Workspace::switchToOutput(LogicalOutput *output)
