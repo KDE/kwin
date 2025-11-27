@@ -1564,14 +1564,7 @@ bool X11Window::takeFocus()
     Q_ASSERT(effectiveAcceptFocus || effectiveTakeFocus);
 
     if (effectiveAcceptFocus) {
-        xcb_void_cookie_t cookie = xcb_set_input_focus_checked(kwinApp()->x11Connection(),
-                                                               XCB_INPUT_FOCUS_POINTER_ROOT,
-                                                               window(), XCB_TIME_CURRENT_TIME);
-        UniqueCPtr<xcb_generic_error_t> error(xcb_request_check(kwinApp()->x11Connection(), cookie));
-        if (error) {
-            qCWarning(KWIN_CORE, "Failed to focus 0x%x (error %d)", window(), error->error_code);
-            return false;
-        }
+        xcb_set_input_focus(kwinApp()->x11Connection(), XCB_INPUT_FOCUS_POINTER_ROOT, m_client, XCB_TIME_CURRENT_TIME);
     } else {
         demandAttention(false); // window cannot take input, at least withdraw urgency
     }
