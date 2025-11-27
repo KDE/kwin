@@ -20,11 +20,11 @@ static QList<uint32_t> readShadow(quint32 windowId)
     QList<uint32_t> ret;
     if (windowId != XCB_WINDOW) {
         KWin::Xcb::Property property(false, windowId, atom, XCB_ATOM_CARDINAL, 0, 12);
-        uint32_t *shadow = property.value<uint32_t *>();
-        if (shadow) {
+        const auto shadow = property.array<uint32_t>();
+        if (shadow.has_value() && shadow->size() == 12) {
             ret.reserve(12);
             for (int i = 0; i < 12; ++i) {
-                ret << shadow[i];
+                ret << (*shadow)[i];
             }
         } else {
             qDebug() << "!!!! no shadow";

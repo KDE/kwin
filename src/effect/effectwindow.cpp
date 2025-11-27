@@ -374,7 +374,7 @@ QByteArray EffectWindow::readProperty(long atom, long type, int format) const
             len *= 2;
             continue;
         }
-        return prop.toByteArray(format, type);
+        return prop.toByteArray(format, type).value_or(QByteArray());
     }
 #endif
     return {};
