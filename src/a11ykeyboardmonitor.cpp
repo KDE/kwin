@@ -49,10 +49,6 @@ bool A11yKeyboardMonitor::processKey(uint32_t key, KeyboardKeyState state, std::
     const auto keycode = key + 8;
 
     for (auto [name, data] : m_clients.asKeyValueRange()) {
-        if (data.grabbed) {
-            emitKeyEvent(name, released, mods, keysym, unicode, keycode);
-        }
-
         // if any of the grabbed modifiers is currently down, grab the key
         for (const auto grabbedMod : data.modifiers) {
             if (grabbedMod != keysym && data.pressedModifiers.contains(grabbedMod)) {
@@ -86,6 +82,11 @@ bool A11yKeyboardMonitor::processKey(uint32_t key, KeyboardKeyState state, std::
                 data.pressedModifiers.insert(keysym);
             }
 
+            emitKeyEvent(name, released, mods, keysym, unicode, keycode);
+            return true;
+        }
+
+        if (data.grabbed) {
             emitKeyEvent(name, released, mods, keysym, unicode, keycode);
             return true;
         }
@@ -164,6 +165,7 @@ void A11yKeyboardMonitor::SetKeyGrabs(const QList<quint32> &modifiers, const QLi
     m_clients[message().service()].modifiers = modifiers;
     m_clients[message().service()].keys = keystrokes;
     m_clients[message().service()].pressedModifiers.clear();
+    m_clients[message().service()].lastModifier = 0;
 }
 
 void A11yKeyboardMonitor::emitKeyEvent(const QString &name, bool released, quint32 state, quint32 keysym, quint32 unichar, quint16 keycode)
