@@ -1008,15 +1008,14 @@ void Workspace::activateWindowOnDesktop(VirtualDesktop *desktop)
         window = findDesktop(desktop, activeOutput());
     }
 
-    if (window != m_activeWindow) {
-        setActiveWindow(nullptr);
+    if (window) {
+        if (requestFocus(window)) {
+            return;
+        }
     }
 
-    if (window) {
-        requestFocus(window);
-    } else {
-        focusToNull();
-    }
+    focusToNull();
+    setActiveWindow(nullptr);
 }
 
 Window *Workspace::findWindowToActivateOnDesktop(VirtualDesktop *desktop)
