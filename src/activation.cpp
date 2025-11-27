@@ -384,6 +384,10 @@ bool Workspace::requestFocus(Window *window, bool force)
         return false;
     }
 
+    if (!window->wantsInput()) {
+        return false;
+    }
+
     return window->takeFocus();
 }
 
