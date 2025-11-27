@@ -1561,6 +1561,7 @@ bool X11Window::takeFocus()
 {
     const bool effectiveAcceptFocus = rules()->checkAcceptFocus(info->input());
     const bool effectiveTakeFocus = rules()->checkAcceptFocus(info->supportsProtocol(NET::TakeFocusProtocol));
+    Q_ASSERT(effectiveAcceptFocus || effectiveTakeFocus);
 
     if (effectiveAcceptFocus) {
         xcb_void_cookie_t cookie = xcb_set_input_focus_checked(kwinApp()->x11Connection(),
@@ -1574,13 +1575,14 @@ bool X11Window::takeFocus()
     } else {
         demandAttention(false); // window cannot take input, at least withdraw urgency
     }
+
     if (effectiveTakeFocus) {
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus, kwinApp()->x11Time());
     }
 
-    if (effectiveAcceptFocus || effectiveTakeFocus) {
-        workspace()->setShouldGetFocus(this);
-    }
+    workspace()->setShouldGetFocus(this);
+    workspace()->setActiveWindow(this);
+
     return true;
 }
 
