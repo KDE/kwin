@@ -188,14 +188,6 @@ void WaylandWindow::setCaption(const QString &caption)
     }
 }
 
-void WaylandWindow::doSetActive()
-{
-    if (isActive()) { // TODO: Xwayland clients must be unfocused somewhere else.
-        StackingUpdatesBlocker blocker(workspace());
-        workspace()->focusToNull();
-    }
-}
-
 void WaylandWindow::cleanGrouping()
 {
     // We want to break parent-child relationships, but preserve stacking

@@ -35,7 +35,6 @@ public:
 protected:
     bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
     bool belongsToDesktop() const override;
-    void doSetActive() override;
     void updateCaption() override;
     void updateClientOutputs();
     std::unique_ptr<WindowItem> createItem(Item *parentItem) override;

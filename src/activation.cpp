@@ -238,6 +238,7 @@ void Workspace::setActiveWindow(Window *window)
         // focusIn events only arrive for X11 windows, Wayland windows don't use such a mechanism
         // and so X11 windows could wrongly get stuck in the list
         should_get_focus.clear();
+        focusToNull();
     }
 
     Window *previousActiveWindow = m_activeWindow;
