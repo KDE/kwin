@@ -255,6 +255,7 @@ void Workspace::setActiveWindow(Window *window)
     }
 
     if (window) {
+        setActiveOutput(window->output());
         disableGlobalShortcutsForClient(window->rules()->checkDisableGlobalShortcuts(false));
     } else {
         disableGlobalShortcutsForClient(false);
@@ -383,15 +384,7 @@ bool Workspace::requestFocus(Window *window, bool force)
         return false;
     }
 
-    if (!window->takeFocus()) {
-        return false;
-    }
-
-    if (!window->isOnActiveOutput()) {
-        setActiveOutput(window->output());
-    }
-
-    return true;
+    return window->takeFocus();
 }
 
 Window *Workspace::windowUnderMouse(LogicalOutput *output) const
