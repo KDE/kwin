@@ -536,6 +536,9 @@ void DebugConsoleFilter::switchEvent(SwitchEvent *event)
 void DebugConsoleFilter::tabletToolProximityEvent(TabletToolProximityEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Proximity"))
+        + timestampRow(event->timestamp)
+        + timestampRowUsec(event->timestamp)
+        + deviceRow(event->device)
         + tableRow(i18n("Proximity"), event->type == TabletToolProximityEvent::EnterProximity ? i18n("In") : i18n("Out"))
         + tableRow(i18n("Position"),
                    QStringLiteral("%1,%2").arg(QString::number(event->position.x()), QString::number(event->position.y())))
@@ -551,6 +554,9 @@ void DebugConsoleFilter::tabletToolProximityEvent(TabletToolProximityEvent *even
 void DebugConsoleFilter::tabletToolAxisEvent(TabletToolAxisEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Axis"))
+        + timestampRow(event->timestamp)
+        + timestampRowUsec(event->timestamp)
+        + deviceRow(event->device)
         + tableRow(i18n("Position"),
                    QStringLiteral("%1,%2").arg(QString::number(event->position.x()), QString::number(event->position.y())))
         + tableRow(i18n("Tilt"),
@@ -567,6 +573,9 @@ void DebugConsoleFilter::tabletToolAxisEvent(TabletToolAxisEvent *event)
 void DebugConsoleFilter::tabletToolTipEvent(TabletToolTipEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Tip"))
+        + timestampRow(event->timestamp)
+        + timestampRowUsec(event->timestamp)
+        + deviceRow(event->device)
         + tableRow(i18n("Tip"), event->type == TabletToolTipEvent::Press ? i18n("Down") : i18n("Up"))
         + tableRow(i18n("Position"),
                    QStringLiteral("%1,%2").arg(QString::number(event->position.x()), QString::number(event->position.y())))
@@ -586,6 +595,7 @@ void DebugConsoleFilter::tabletToolTipEvent(TabletToolTipEvent *event)
 void DebugConsoleFilter::tabletToolButtonEvent(TabletToolButtonEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Button"))
+        + deviceRow(event->device)
         + tableRow(i18n("Button"), event->button)
         + tableRow(i18n("Pressed"), event->pressed)
         + tableRow(i18n("Tablet"), event->device->name())
@@ -600,6 +610,7 @@ void DebugConsoleFilter::tabletPadButtonEvent(TabletPadButtonEvent *event)
 {
     QString text = s_hr + s_tableStart
         + tableHeaderRow(i18n("Tablet Pad Button"))
+        + deviceRow(event->device)
         + tableRow(i18n("Button"), event->button)
         + tableRow(i18n("Pressed"), event->pressed)
         + tableRow(i18n("Group"), event->group)
@@ -616,6 +627,7 @@ void DebugConsoleFilter::tabletPadButtonEvent(TabletPadButtonEvent *event)
 void DebugConsoleFilter::tabletPadStripEvent(TabletPadStripEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Strip"))
+        + deviceRow(event->device)
         + tableRow(i18n("Number"), event->number)
         + tableRow(i18n("Position"), event->position)
         + tableRow(i18n("isFinger"), event->isFinger)
@@ -632,6 +644,7 @@ void DebugConsoleFilter::tabletPadStripEvent(TabletPadStripEvent *event)
 void DebugConsoleFilter::tabletPadRingEvent(TabletPadRingEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Ring"))
+        + deviceRow(event->device)
         + tableRow(i18n("Number"), event->number)
         + tableRow(i18n("Position"), event->position)
         + tableRow(i18n("isFinger"), event->isFinger)
@@ -648,6 +661,7 @@ void DebugConsoleFilter::tabletPadRingEvent(TabletPadRingEvent *event)
 void DebugConsoleFilter::tabletPadDialEvent(TabletPadDialEvent *event)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Dial"))
+        + deviceRow(event->device)
         + tableRow(i18n("Number"), event->number)
         + tableRow(i18n("Delta"), event->delta)
         + tableRow(i18n("Tablet"), event->device->name())
