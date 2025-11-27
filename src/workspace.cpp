@@ -358,7 +358,9 @@ void Workspace::initializeX11()
     desktop_geometry.height = m_geometry.height();
     rootInfo->setDesktopGeometry(desktop_geometry);
     rootInfo->setActiveWindow(XCB_WINDOW_NONE);
-    focusToNull(); // TODO: is this really needed on Wayland?
+
+    // Focus the null window, technically it is not required but we do it anyway just to be consistent.
+    focusToNull();
 }
 
 void Workspace::cleanupX11()

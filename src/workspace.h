@@ -349,6 +349,13 @@ public:
 
     void focusToNull(); // SELI TODO: Public?
 #if KWIN_BUILD_X11
+    /**
+     * Returns the id of the null window. The null window is a special window that gets focused
+     * when no other X11 window can be focused.
+     *
+     * If the root window gets focus, it serves us as a signal to activate any window of our choice.
+     * In case no window can be focused, then the null window will be focused.
+     */
     xcb_window_t nullFocusWindow() const;
 #endif
 
