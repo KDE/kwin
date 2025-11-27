@@ -761,7 +761,8 @@ public:
      * @return The read value or @p defaultValue in error case
      */
     template<typename T>
-    inline typename std::enable_if<!std::is_pointer<T>::value, T>::type value(T defaultValue = T(), bool *ok = nullptr)
+        requires(!std::is_pointer_v<T>)
+    inline T value(T defaultValue = T(), bool *ok = nullptr)
     {
         return value<T>(sizeof(T) * 8, m_type, defaultValue, ok);
     }
@@ -780,7 +781,8 @@ public:
      * @return The read value or @p defaultValue in error case
      */
     template<typename T>
-    inline typename std::enable_if<!std::is_pointer<T>::value, T>::type value(uint8_t format, xcb_atom_t type, T defaultValue = T(), bool *ok = nullptr)
+        requires(!std::is_pointer_v<T>)
+    inline T value(uint8_t format, xcb_atom_t type, T defaultValue = T(), bool *ok = nullptr)
     {
         T *reply = value<T *>(format, type, nullptr, ok);
         if (!reply) {
@@ -801,7 +803,8 @@ public:
      * @return The read value or @p defaultValue in error case
      */
     template<typename T>
-    inline typename std::enable_if<std::is_pointer<T>::value, T>::type value(T defaultValue = nullptr, bool *ok = nullptr)
+        requires std::is_pointer_v<T>
+    inline T value(T defaultValue = nullptr, bool *ok = nullptr)
     {
         return value<T>(sizeof(typename std::remove_pointer<T>::type) * 8, m_type, defaultValue, ok);
     }
@@ -824,7 +827,8 @@ public:
      * @return The read value or @p defaultValue in error case
      */
     template<typename T>
-    inline typename std::enable_if<std::is_pointer<T>::value, T>::type value(uint8_t format, xcb_atom_t type, T defaultValue = nullptr, bool *ok = nullptr)
+        requires std::is_pointer_v<T>
+    inline T value(uint8_t format, xcb_atom_t type, T defaultValue = nullptr, bool *ok = nullptr)
     {
         if (ok) {
             *ok = false;
