@@ -723,24 +723,11 @@ void Workspace::addX11Window(X11Window *window)
         grp->gotLeader(window);
     }
 
-    if (window->isDesktop()) {
-        if (m_activeWindow == nullptr && should_get_focus.isEmpty() && window->isOnCurrentDesktop()) {
-            requestFocus(window); // TODO: Make sure desktop is active after startup if there's no other window active
-        }
-    } else {
-        m_focusChain->update(window, FocusChain::Update);
-    }
+    m_focusChain->update(window, FocusChain::Update);
     Q_ASSERT(!m_windows.contains(window));
     m_windows.append(window);
     addToStack(window);
     window->updateLayer();
-    if (window->isDesktop()) {
-        raiseWindow(window);
-        // If there's no active window, make this desktop the active one
-        if (activeWindow() == nullptr && should_get_focus.count() == 0) {
-            activateWindow(findDesktop(VirtualDesktopManager::self()->currentDesktop(), window->output()));
-        }
-    }
     window->checkActiveModal();
     checkTransients(window->window()); // SELI TODO: Does this really belong here?
     updateStackingOrder(true); // Propagatem new window
