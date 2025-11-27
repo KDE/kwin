@@ -874,8 +874,6 @@ void XdgToplevelWindow::doMinimize()
 
 void XdgToplevelWindow::doSetActive()
 {
-    WaylandWindow::doSetActive();
-
     if (isActive()) {
         m_nextStates |= XdgToplevelInterface::State::Activated;
     } else {
