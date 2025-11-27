@@ -1488,6 +1488,7 @@ void Workspace::sendWindowToDesktops(Window *window, const QList<VirtualDesktop 
  */
 void Workspace::delayFocus()
 {
+    Q_ASSERT(m_delayFocusWindow);
     requestFocus(m_delayFocusWindow);
     cancelDelayFocus();
 }
