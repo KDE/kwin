@@ -367,11 +367,6 @@ bool Workspace::takeActivity(Window *window, ActivityFlags flags)
         flags &= ~ActivityFocus;
     }
 
-    if (!window) {
-        focusToNull();
-        return true;
-    }
-
     if (flags & ActivityFocus) {
         Window *modal = window->findModal();
         if (modal != nullptr && modal != window) {
