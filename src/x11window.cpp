@@ -3650,10 +3650,34 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 
 void X11Window::configure(const QRect &nativeGeometry)
 {
-    if (m_client.size() != nativeGeometry.size()) {
-        m_client.setGeometry(nativeGeometry);
-    } else if (m_client.position() != nativeGeometry.topLeft()) {
-        m_client.move(nativeGeometry.topLeft());
+    // handle xrandr emulation: If a fullscreen client requests mode changes,
+    // - Xwayland will set _XWAYLAND_RANDR_EMU_MONITOR_RECTS on all windows of the client
+    // - we need to configure the window to match the emulated size
+    // - Xwayland will set up the viewport to present the window properly on the Wayland side
+    QRect effectiveGeometry = nativeGeometry;
+    if (m_fullscreenMode == X11Window::FullScreenMode::FullScreenNormal) {
+        Xcb::Property property(0, m_client, atoms->xwayland_xrandr_emulation, XCB_ATOM_CARDINAL, 0, workspace()->outputs().size() * 4);
+        const uint32_t *values = property.value<uint32_t *>();
+        if (values) {
+            const QPoint xwaylandOutputPos = Xcb::toXNative(m_moveResizeOutput->geometryF().topLeft());
+            // "length" is in number of 32 bit words
+            const int numOfOutputs = property.data()->value_len / 4;
+            for (int i = 0; i < numOfOutputs; i++) {
+                // the format of the property is: x,y of the screen + emulated width,height
+                const uint32_t x = values[i * 4];
+                const uint32_t y = values[i * 4 + 1];
+                if (xwaylandOutputPos == QPoint(x, y)) {
+                    effectiveGeometry.setWidth(values[i * 4 + 2]);
+                    effectiveGeometry.setHeight(values[i * 4 + 3]);
+                    break;
+                }
+            }
+        }
+    }
+    if (m_client.size() != effectiveGeometry.size()) {
+        m_client.setGeometry(effectiveGeometry);
+    } else if (m_client.position() != effectiveGeometry.topLeft()) {
+        m_client.move(effectiveGeometry.topLeft());
 
         // A synthetic configure notify event has to be sent if the client window is not
         // resized to let the client know about the new position. See ICCCM 4.1.5.
