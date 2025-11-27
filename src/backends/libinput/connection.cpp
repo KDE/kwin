@@ -199,7 +199,10 @@ QPointF devicePointToGlobalPosition(const QPointF &devicePos, const LogicalOutpu
     default:
         Q_UNREACHABLE();
     }
-    return output->geometry().topLeft() + pos / output->scale();
+    const auto geo = output->geometryF();
+    pos = geo.topLeft() + pos / output->scale();
+    return QPointF(std::clamp(pos.x(), geo.x(), geo.x() + geo.width() - 1),
+                   std::clamp(pos.y(), geo.y(), geo.y() + geo.height() - 1));
 }
 #endif
 
