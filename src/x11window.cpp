@@ -1161,7 +1161,6 @@ void X11Window::doMinimize()
         }
     }
     updateVisibility();
-    updateAllowedActions();
     workspace()->updateMinimizedOfTransients(this);
 }
 
