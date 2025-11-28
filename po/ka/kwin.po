@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-27 00:45+0000\n"
-"PO-Revision-Date: 2025-11-20 04:48+0100\n"
+"POT-Creation-Date: 2025-11-28 00:44+0000\n"
+"PO-Revision-Date: 2025-11-27 06:12+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -46,16 +46,14 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland კომპოზიტორი %1"
 
 #: backends/wayland/wayland_output.cpp:517
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- LogicalOutput disabled"
-msgstr "- გამოტანა გამორთულია"
+msgstr "- ლოგიკური გამოტანა გამორთულია"
 
 #: backends/wayland/wayland_output.cpp:519
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- LogicalOutput dimmed"
-msgstr "- გამოტანა დამალულია"
+msgstr "- ლოგიკური გამოტანა დაბნელებულია"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
@@ -2447,12 +2445,12 @@ msgstr "შეყვანა ვერ ვიპოვე"
 msgid "Invalid region"
 msgstr "არასწორი რეგიონი"
 
-#: plugins/screencast/screencaststream.cpp:376
+#: plugins/screencast/screencaststream.cpp:375
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "ეკრანის გადაცემისთვის აუცილებელია OpenGL-ის კომპოზიტორი"
 
-#: plugins/screencast/screencaststream.cpp:384
+#: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire-ის ნაკადის შექმნის შეცდოა"
@@ -4173,7 +4171,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(არ პასუხობს)"
 
-#: workspace.cpp:1573
+#: workspace.cpp:1569
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

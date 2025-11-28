@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-27 00:45+0000\n"
-"PO-Revision-Date: 2025-11-20 10:50+0200\n"
+"POT-Creation-Date: 2025-11-28 00:44+0000\n"
+"PO-Revision-Date: 2025-11-27 11:47+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -58,16 +58,14 @@ msgid "KDE Wayland Compositor %1"
 msgstr "מנהל חלונאי KDE Wayland %1"
 
 #: backends/wayland/wayland_output.cpp:517
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- LogicalOutput disabled"
-msgstr "- פלט מושבת"
+msgstr "- פלט לוגי מושבת"
 
 #: backends/wayland/wayland_output.cpp:519
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- LogicalOutput dimmed"
-msgstr "- פלט מעומעם"
+msgstr "- פלט לוגי מעומעם"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
@@ -2450,12 +2448,12 @@ msgstr "לא ניתן למצוא פלט"
 msgid "Invalid region"
 msgstr "אזור שגוי"
 
-#: plugins/screencast/screencaststream.cpp:376
+#: plugins/screencast/screencaststream.cpp:375
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "מנהל חלונאי מסוג OpenGL נחוץ להקלטת המסך"
 
-#: plugins/screencast/screencaststream.cpp:384
+#: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "יצירת תזרים PipeWire נכשלה"
@@ -4164,7 +4162,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(לא מגיב)"
 
-#: workspace.cpp:1573
+#: workspace.cpp:1569
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

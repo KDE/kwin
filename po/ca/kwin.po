@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-27 00:45+0000\n"
-"PO-Revision-Date: 2025-11-20 10:03+0100\n"
+"POT-Creation-Date: 2025-11-28 00:44+0000\n"
+"PO-Revision-Date: 2025-11-27 09:35+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -52,16 +52,14 @@ msgid "KDE Wayland Compositor %1"
 msgstr "Compositor del Wayland de KDE %1"
 
 #: backends/wayland/wayland_output.cpp:517
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- LogicalOutput disabled"
-msgstr "- Sortida desactivada"
+msgstr "- Sortida lògica desactivada"
 
 #: backends/wayland/wayland_output.cpp:519
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- LogicalOutput dimmed"
-msgstr "- Sortida enfosquida"
+msgstr "- Sortida lògica enfosquida"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
@@ -2467,13 +2465,13 @@ msgstr "No s'ha pogut trobar la sortida"
 msgid "Invalid region"
 msgstr "Regió no vàlida"
 
-#: plugins/screencast/screencaststream.cpp:376
+#: plugins/screencast/screencaststream.cpp:375
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr ""
 "Es requereix la composició OpenGL per als vídeos de captura de pantalla"
 
-#: plugins/screencast/screencaststream.cpp:384
+#: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Ha fallat en crear el flux del PipeWire"
@@ -4200,7 +4198,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(No respon)"
 
-#: workspace.cpp:1573
+#: workspace.cpp:1569
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

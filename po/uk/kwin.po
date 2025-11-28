@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-27 00:45+0000\n"
-"PO-Revision-Date: 2025-11-20 21:41+0200\n"
+"POT-Creation-Date: 2025-11-28 00:44+0000\n"
+"PO-Revision-Date: 2025-11-27 14:02+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -52,16 +52,14 @@ msgid "KDE Wayland Compositor %1"
 msgstr "Засіб композиції KDE для %1"
 
 #: backends/wayland/wayland_output.cpp:517
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- LogicalOutput disabled"
-msgstr "- Виведення вимкнено"
+msgstr "- Логічне виведення вимкнено"
 
 #: backends/wayland/wayland_output.cpp:519
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- LogicalOutput dimmed"
-msgstr "- Виведення притлумлено"
+msgstr "- Логічна виведення притлумлено"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
@@ -2466,12 +2464,12 @@ msgstr "Не вдалося виявити виведення"
 msgid "Invalid region"
 msgstr "Некоректна область"
 
-#: plugins/screencast/screencaststream.cpp:376
+#: plugins/screencast/screencaststream.cpp:375
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Для трансляцій з екрана потрібне композитне відтворення з OpenGL"
 
-#: plugins/screencast/screencaststream.cpp:384
+#: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Не вдалося створити потік даних PipeWire"
@@ -4194,7 +4192,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не відповідає)"
 
-#: workspace.cpp:1573
+#: workspace.cpp:1569
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
