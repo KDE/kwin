@@ -47,6 +47,7 @@ private Q_SLOTS:
     void testCursorLayer();
     void testDirectScanout();
     void testOverlay();
+    void testDpms();
 };
 
 struct DrmCrtcState
@@ -575,6 +576,39 @@ void DrmTest::testOverlay()
     QVERIFY(std::ranges::any_of(enabledPlanes, [&framebufferGemNames](const DrmPlaneState &state) {
         return state.framebufferGemNames == framebufferGemNames;
     }));
+}
+
+void DrmTest::testDpms()
+{
+    // the output should be enabled
+    BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
+    auto state = DrmOutputState::read(output);
+    QVERIFY(state.has_value());
+    QVERIFY(state->crtc.has_value());
+
+    Test::XdgToplevelWindow dummy;
+    QVERIFY(dummy.show());
+
+    workspace()->requestDpmsState(Workspace::DpmsState::Off);
+    QSignalSpy stateChange(workspace(), &Workspace::dpmsStateChanged);
+    QVERIFY(stateChange.wait());
+#ifndef FORCE_DRM_LEGACY
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::TurningOff);
+    QVERIFY(stateChange.wait());
+#endif
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
+
+    state = DrmOutputState::read(output);
+    QVERIFY(state.has_value());
+    QVERIFY(!state->crtc.has_value() || !state->crtc->active);
+
+    workspace()->requestDpmsState(Workspace::DpmsState::On);
+    QVERIFY(dummy.presentWait());
+
+    state = DrmOutputState::read(output);
+    QVERIFY(state.has_value());
+    QVERIFY(state->crtc.has_value());
+    QVERIFY(state->crtc->active);
 }
 
 }
