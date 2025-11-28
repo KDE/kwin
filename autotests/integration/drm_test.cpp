@@ -6,6 +6,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include "backends/drm/drm_gpu.h"
+#include "backends/drm/drm_object.h"
+#include "backends/drm/drm_output.h"
+#include "backends/drm/drm_pointer.h"
 #include "compositor.h"
 #include "core/drmdevice.h"
 #include "core/graphicsbuffer.h"
@@ -22,6 +26,7 @@
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 #include <ranges>
+#include <xf86drmMode.h>
 
 namespace KWin
 {
@@ -43,6 +48,139 @@ private Q_SLOTS:
     void testDirectScanout();
     void testOverlay();
 };
+
+struct DrmCrtcState
+{
+    bool active;
+    QSize modeSize;
+    uint32_t refreshRateMilliHertz;
+};
+struct DrmPlaneState
+{
+    uint32_t crtcId;
+    QRect destinationRect;
+    uint32_t frambufferId;
+    std::array<uint32_t, 4> framebufferGemNames;
+};
+struct DrmConnectorState
+{
+    uint32_t crtcId;
+};
+struct DrmState
+{
+    std::unordered_map<uint32_t, DrmCrtcState> crtcs;
+    std::unordered_map<uint32_t, DrmPlaneState> planes;
+    std::unordered_map<uint32_t, DrmConnectorState> connectors;
+};
+static std::optional<DrmState> readDrmState(int fd)
+{
+    DrmUniquePtr<drmModeRes> resources(drmModeGetResources(fd));
+    DrmUniquePtr<drmModePlaneRes> planeResources(drmModeGetPlaneResources(fd));
+    if (!resources || !planeResources) {
+        return std::nullopt;
+    }
+    DrmState ret;
+    for (uint32_t id : std::span(resources->connectors, resources->count_connectors)) {
+        auto props = DrmObject::queryProperties(fd, id, DRM_MODE_OBJECT_CONNECTOR);
+        const auto crtcId = props.takeProperty(QByteArrayLiteral("CRTC_ID"));
+        if (!crtcId.has_value()) {
+            return std::nullopt;
+        }
+        ret.connectors[id] = DrmConnectorState{
+            .crtcId = uint32_t(crtcId->second),
+        };
+    }
+    for (uint32_t id : std::span(resources->crtcs, resources->count_crtcs)) {
+        DrmUniquePtr<drmModeCrtc> crtc(drmModeGetCrtc(fd, id));
+        if (!crtc) {
+            return std::nullopt;
+        }
+        auto props = DrmObject::queryProperties(fd, id, DRM_MODE_OBJECT_CRTC);
+        const auto active = props.takeProperty(QByteArrayLiteral("ACTIVE"));
+        if (!active.has_value()) {
+            return std::nullopt;
+        }
+        ret.crtcs[id] = DrmCrtcState{
+            .active = active->second == 1,
+            .modeSize = crtc->mode_valid ? QSize(crtc->mode.hdisplay, crtc->mode.vdisplay) : QSize(),
+            .refreshRateMilliHertz = crtc->mode_valid ? DrmConnector::refreshRateForMode(&crtc->mode) : 0,
+        };
+    }
+    for (uint32_t id : std::span(planeResources->planes, planeResources->count_planes)) {
+        auto props = DrmObject::queryProperties(fd, id, DRM_MODE_OBJECT_PLANE);
+        const auto crtcId = props.takeProperty(QByteArrayLiteral("CRTC_ID"));
+        const auto crtcX = props.takeProperty(QByteArrayLiteral("CRTC_X"));
+        const auto crtcY = props.takeProperty(QByteArrayLiteral("CRTC_Y"));
+        const auto crtcW = props.takeProperty(QByteArrayLiteral("CRTC_W"));
+        const auto crtcH = props.takeProperty(QByteArrayLiteral("CRTC_H"));
+        const auto fbId = props.takeProperty(QByteArrayLiteral("FB_ID"));
+        if (!crtcId || !crtcX || !crtcY || !crtcW || !crtcH || !fbId) {
+            return std::nullopt;
+        }
+        std::array<uint32_t, 4> framebufferGemNames = {0};
+        if (auto ptr = drmModeGetFB2(fd, fbId->second)) {
+            std::unordered_set<uint32_t> handles;
+            for (int i = 0; i < 4; i++) {
+                if (ptr->handles[i] == 0) {
+                    break;
+                }
+                handles.insert(ptr->handles[i]);
+                drm_gem_flink flink{
+                    .handle = ptr->handles[i],
+                    .name = 0,
+                };
+                if (drmIoctl(fd, DRM_IOCTL_GEM_FLINK, &flink) != 0) {
+                    return std::nullopt;
+                }
+                framebufferGemNames[i] = flink.name;
+            }
+            for (uint32_t handle : handles) {
+                drmCloseBufferHandle(fd, handle);
+            }
+            drmFree(ptr);
+        }
+        ret.planes[id] = DrmPlaneState{
+            .crtcId = uint32_t(crtcId->second),
+            .destinationRect = QRect(crtcX->second, crtcY->second, crtcW->second, crtcH->second),
+            .frambufferId = uint32_t(fbId->second),
+            .framebufferGemNames = framebufferGemNames,
+        };
+    }
+    return ret;
+}
+
+struct DrmOutputState
+{
+    DrmConnectorState connector;
+    std::optional<DrmCrtcState> crtc;
+    std::unordered_map<uint32_t, DrmPlaneState> planes;
+};
+static std::optional<DrmOutputState> readDrmOutputState(LogicalOutput *output)
+{
+    const auto drmOutput = static_cast<DrmOutput *>(output);
+    const auto allState = readDrmState(drmOutput->connector()->gpu()->fd());
+    if (!allState) {
+        return std::nullopt;
+    }
+    const auto connector = allState->connectors.find(drmOutput->connector()->id());
+    if (connector == allState->connectors.end()) {
+        return std::nullopt;
+    }
+    DrmOutputState ret;
+    ret.connector = connector->second;
+    if (connector->second.crtcId == 0) {
+        return ret;
+    }
+    const auto crtc = allState->crtcs.find(connector->second.crtcId);
+    if (crtc == allState->crtcs.end()) {
+        return std::nullopt;
+    }
+    ret.crtc = crtc->second;
+    ret.planes = allState->planes | std::views::filter([crtcId = connector->second.crtcId](const auto &state) {
+        return state.second.crtcId == crtcId;
+    }) | std::ranges::to<std::unordered_map>();
+    return ret;
+}
 
 // TODO move this stuff into XdgToplevelWindow instead?
 class DmabufWindow : public QObject
@@ -157,6 +295,16 @@ void DrmTest::initTestCase()
         cfg.changeSet(output)->enabled = false;
     }
     QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+
+    const auto state = readDrmOutputState(allOutputs.front());
+    QVERIFY(state.has_value());
+    QVERIFY(state->crtc.has_value());
+
+    for (LogicalOutput *output : allOutputs | std::views::drop(1)) {
+        const auto state = readDrmOutputState(output);
+        QVERIFY(state.has_value());
+        QVERIFY(!state->crtc.has_value());
+    }
 }
 
 void DrmTest::cleanup()
@@ -180,6 +328,12 @@ void DrmTest::testModesets()
         cfg.changeSet(output)->mode = mode;
         QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
         QVERIFY(window.presentWait());
+
+        const auto state = readDrmOutputState(output);
+        QVERIFY(state);
+        QVERIFY(state->crtc.has_value());
+        QCOMPARE(state->crtc->modeSize, mode->size());
+        QCOMPARE(state->crtc->refreshRateMilliHertz, mode->refreshRate());
     }
 }
 
@@ -226,6 +380,35 @@ void DrmTest::testCursorLayer()
         return layer->isEnabled();
     });
     QCOMPARE(enabledLayers, 2);
+
+    const auto state = readDrmOutputState(output);
+    QVERIFY(state);
+    QVERIFY(state->crtc.has_value());
+    auto enabledPlanes = state->planes | std::views::values | std::views::filter([](const auto &state) {
+        return state.crtcId != 0;
+    });
+    QCOMPARE(std::distance(enabledPlanes.begin(), enabledPlanes.end()), 2);
+}
+
+static std::array<uint32_t, 4> gemNames(int fd, const DmaBufAttributes *attributes)
+{
+    std::array<uint32_t, 4> ret = {0, 0, 0, 0};
+    for (int i = 0; i < attributes->planeCount; i++) {
+        uint32_t handle = 0;
+        if (drmPrimeFDToHandle(fd, attributes->fd[i].get(), &handle) != 0) {
+            return {0};
+        }
+        drm_gem_flink flink{
+            .handle = handle,
+            .name = 0,
+        };
+        if (drmIoctl(fd, DRM_IOCTL_GEM_FLINK, &flink) != 0) {
+            return {0};
+        }
+        ret[i] = flink.name;
+        drmCloseBufferHandle(fd, handle);
+    }
+    return ret;
 }
 
 void DrmTest::testDirectScanout()
@@ -243,7 +426,6 @@ void DrmTest::testDirectScanout()
         toplevel->set_fullscreen(nullptr);
     }};
     QVERIFY(window.renderAndWaitForShown(output->pixelSize()));
-    window.m_window->move(output->geometryF().center());
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
@@ -253,13 +435,28 @@ void DrmTest::testDirectScanout()
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_default);
 
-    QVERIFY(window.presentWait());
+    for (int i = 0; i < 10; i++) {
+        QVERIFY(window.presentWait());
+    }
 
     const int enabledLayers = std::ranges::count_if(layers, [](OutputLayer *layer) {
         return layer->isEnabled();
     });
     QCOMPARE(enabledLayers, 2);
-    // TODO check here that the client buffer is actually used on the plane
+
+    const auto state = readDrmOutputState(output);
+    QVERIFY(state);
+    QVERIFY(state->crtc.has_value());
+    auto enabledPlanes = state->planes | std::views::values | std::views::filter([](const DrmPlaneState &state) {
+        return state.crtcId != 0;
+    });
+    QCOMPARE(std::distance(enabledPlanes.begin(), enabledPlanes.end()), 2);
+
+    const int gpuFd = static_cast<DrmOutput *>(output)->connector()->gpu()->fd();
+    const auto framebufferGemNames = gemNames(gpuFd, window.m_buffer->dmabufAttributes());
+    QVERIFY(std::ranges::any_of(enabledPlanes, [&framebufferGemNames](const DrmPlaneState &state) {
+        return state.framebufferGemNames == framebufferGemNames;
+    }));
 }
 
 void DrmTest::testOverlay()
@@ -272,6 +469,11 @@ void DrmTest::testOverlay()
     if (layers.size() < 3) {
         QSKIP("The driver doesn't advertise an overlay plane");
     }
+
+    // show a dummy window somewhere on the screen,
+    // to force the primary plane to do compositing
+    Test::XdgToplevelWindow dummy;
+    QVERIFY(dummy.show());
 
     DmabufWindow window;
     QVERIFY(window.renderAndWaitForShown(QSize(100, 100)));
@@ -296,6 +498,31 @@ void DrmTest::testOverlay()
         return layer->isEnabled();
     });
     QCOMPARE(enabledLayers, 3);
+
+    const auto state = readDrmOutputState(output);
+    QVERIFY(state);
+    QVERIFY(state->crtc.has_value());
+    auto enabledPlanes = state->planes | std::views::values | std::views::filter([](const DrmPlaneState &state) {
+        return state.crtcId != 0;
+    });
+    QCOMPARE(std::distance(enabledPlanes.begin(), enabledPlanes.end()), 3);
+
+    const auto sceneIt = std::ranges::find_if(enabledPlanes, [output](const DrmPlaneState &state) {
+        return state.destinationRect == QRect(QPoint(), output->modeSize());
+    });
+    QVERIFY(sceneIt != enabledPlanes.end());
+    const auto overlayIt = std::ranges::find_if(enabledPlanes, [&window](const DrmPlaneState &state) {
+        return state.destinationRect == window.m_window->frameGeometry().toRect();
+    });
+    QVERIFY(overlayIt != enabledPlanes.end());
+    // TODO uncomment this once vkms supports the zpos property
+    // QCOMPARE_GE((*overlayIt).zpos, (*sceneIt).zpos);
+
+    const int gpuFd = static_cast<DrmOutput *>(output)->connector()->gpu()->fd();
+    const auto framebufferGemNames = gemNames(gpuFd, window.m_buffer->dmabufAttributes());
+    QVERIFY(std::ranges::any_of(enabledPlanes, [&framebufferGemNames](const DrmPlaneState &state) {
+        return state.framebufferGemNames == framebufferGemNames;
+    }));
 }
 }
 

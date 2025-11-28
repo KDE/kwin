@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "kwin_export.h"
 
 #include "core/drmdevice.h"
 #include "drm_buffer.h"
@@ -62,7 +63,7 @@ private:
     const QList<DrmOutput *> m_outputs;
 };
 
-class DrmGpu : public QObject
+class KWIN_EXPORT DrmGpu : public QObject
 {
     Q_OBJECT
 public:
