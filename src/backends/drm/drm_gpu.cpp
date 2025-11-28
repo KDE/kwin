@@ -854,6 +854,7 @@ void DrmGpu::doModeset()
     }
     m_pendingModesetFrames.clear();
     m_inModeset = false;
+    Q_EMIT modesetDone();
 }
 
 QList<DrmObject *> DrmGpu::unusedModesetObjects() const

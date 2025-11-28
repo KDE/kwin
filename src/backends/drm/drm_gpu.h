@@ -134,6 +134,7 @@ Q_SIGNALS:
     void activeChanged(bool active);
     void outputAdded(DrmAbstractOutput *output);
     void outputRemoved(DrmAbstractOutput *output);
+    void modesetDone();
 
 private:
     DrmOutput *findOutput(quint32 connector);
