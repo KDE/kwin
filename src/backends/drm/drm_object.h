@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "kwin_export.h"
 
 #include <QByteArray>
 #include <QList>
@@ -28,7 +29,7 @@ class DrmGpu;
 class DrmOutput;
 class DrmAtomicCommit;
 
-class DrmPropertyList
+class KWIN_EXPORT DrmPropertyList
 {
 public:
     void addProperty(DrmUniquePtr<drmModePropertyRes> &&prop, uint64_t value);
@@ -38,7 +39,7 @@ private:
     std::vector<std::pair<DrmUniquePtr<drmModePropertyRes>, uint64_t>> m_properties;
 };
 
-class DrmObject
+class KWIN_EXPORT DrmObject
 {
 public:
     virtual ~DrmObject() = default;
@@ -55,6 +56,8 @@ public:
     DrmGpu *gpu() const;
     uint32_t type() const;
     QString typeName() const;
+
+    static DrmPropertyList queryProperties(int fd, uint32_t object, uint32_t objectType);
 
 protected:
     DrmObject(DrmGpu *gpu, uint32_t objectId, uint32_t objectType);

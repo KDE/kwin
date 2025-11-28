@@ -25,23 +25,28 @@ DrmObject::DrmObject(DrmGpu *gpu, uint32_t objectId, uint32_t objectType)
 {
 }
 
-DrmPropertyList DrmObject::queryProperties() const
+DrmPropertyList DrmObject::queryProperties(int fd, uint32_t objectId, uint32_t objectType)
 {
-    DrmUniquePtr<drmModeObjectProperties> properties(drmModeObjectGetProperties(m_gpu->fd(), m_id, m_objectType));
+    DrmUniquePtr<drmModeObjectProperties> properties(drmModeObjectGetProperties(fd, objectId, objectType));
     if (!properties) {
-        qCWarning(KWIN_DRM) << "Failed to get properties for object" << m_id;
+        qCWarning(KWIN_DRM) << "Failed to get properties for object" << objectId;
         return {};
     }
     DrmPropertyList ret;
     for (uint32_t i = 0; i < properties->count_props; i++) {
-        DrmUniquePtr<drmModePropertyRes> prop(drmModeGetProperty(m_gpu->fd(), properties->props[i]));
+        DrmUniquePtr<drmModePropertyRes> prop(drmModeGetProperty(fd, properties->props[i]));
         if (!prop) {
-            qCWarning(KWIN_DRM, "Getting property %d of object %d failed!", properties->props[i], m_id);
+            qCWarning(KWIN_DRM, "Getting property %d of object %d failed!", properties->props[i], objectId);
             continue;
         }
         ret.addProperty(std::move(prop), properties->prop_values[i]);
     }
     return ret;
+}
+
+DrmPropertyList DrmObject::queryProperties() const
+{
+    return queryProperties(m_gpu->fd(), m_id, m_objectType);
 }
 
 uint32_t DrmObject::id() const

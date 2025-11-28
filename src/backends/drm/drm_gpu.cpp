@@ -162,9 +162,12 @@ void DrmGpu::initDrmResources()
     // try atomic mode setting
     bool isEnvVarSet = false;
     bool noAMS = qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &isEnvVarSet) != 0 && isEnvVarSet;
+    // always set the cap, so autotests can read back properties,
+    // even when this DrmGpu otherwise only uses legacy modesetting
+    const bool atomicSuccessful = drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0;
     if (noAMS) {
         qCWarning(KWIN_DRM) << "Atomic Mode Setting requested off via environment variable. Using legacy mode on GPU" << this;
-    } else if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0) {
+    } else if (atomicSuccessful) {
         if (m_isVirtualMachine) {
             // ATOMIC must be set before attempting CURSOR_PLANE_HOTSPOT
             if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT, 1) != 0) {

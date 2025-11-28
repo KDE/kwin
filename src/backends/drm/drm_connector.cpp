@@ -28,11 +28,11 @@ static QSize resolutionForMode(const drmModeModeInfo *info)
     return QSize(info->hdisplay, info->vdisplay);
 }
 
-static quint64 refreshRateForMode(_drmModeModeInfo *m)
+uint32_t DrmConnector::refreshRateForMode(_drmModeModeInfo *m)
 {
     // Calculate higher precision (mHz) refresh rate
     // logic based on Weston, see compositor-drm.c
-    quint64 refreshRate = (m->clock * 1000000LL / m->htotal + m->vtotal / 2) / m->vtotal;
+    uint64_t refreshRate = (m->clock * 1000000LL / m->htotal + m->vtotal / 2) / m->vtotal;
     if (m->flags & DRM_MODE_FLAG_INTERLACE) {
         refreshRate *= 2;
     }
@@ -55,7 +55,7 @@ static OutputMode::Flags flagsForMode(const drmModeModeInfo *info, OutputMode::F
 }
 
 DrmConnectorMode::DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode, Flags additionalFlags)
-    : OutputMode(resolutionForMode(&nativeMode), refreshRateForMode(&nativeMode), flagsForMode(&nativeMode, additionalFlags))
+    : OutputMode(resolutionForMode(&nativeMode), DrmConnector::refreshRateForMode(&nativeMode), flagsForMode(&nativeMode, additionalFlags))
     , m_connector(connector)
     , m_nativeMode(nativeMode)
 {

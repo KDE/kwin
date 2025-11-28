@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "kwin_export.h"
 
 #include <QPoint>
 #include <QSize>
@@ -47,7 +48,7 @@ private:
     std::shared_ptr<DrmBlob> m_blob;
 };
 
-class DrmConnector : public DrmObject
+class KWIN_EXPORT DrmConnector : public DrmObject
 {
 public:
     DrmConnector(DrmGpu *gpu, uint32_t connectorId);
@@ -140,6 +141,7 @@ public:
     static OutputTransform toKWinTransform(PanelOrientation orientation);
     static BroadcastRgbOptions rgbRangeToBroadcastRgb(BackendOutput::RgbRange rgbRange);
     static BackendOutput::RgbRange broadcastRgbToRgbRange(BroadcastRgbOptions rgbRange);
+    static uint32_t refreshRateForMode(_drmModeModeInfo *m);
 
 private:
     QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes();
