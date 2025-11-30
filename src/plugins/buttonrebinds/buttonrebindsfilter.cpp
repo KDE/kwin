@@ -226,6 +226,27 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         }
     }
 
+    const auto tabletStripsGroup = group.group(QStringLiteral("TabletStrip"));
+    const auto tabletStrips = tabletStripsGroup.groupList();
+    for (const auto &tabletStripName : tabletStrips) {
+        const auto stripModesGroup = tabletStripsGroup.group(tabletStripName);
+        for (const auto &modeGroupName : stripModesGroup.groupList()) {
+            const auto stripGroup = stripModesGroup.group(modeGroupName);
+            const auto tabletStripButtons = stripGroup.keyList();
+            for (const auto &buttonName : tabletStripButtons) {
+                const auto entry = stripGroup.readEntry(buttonName, QStringList());
+                bool buttonOk = false;
+                const uint button = buttonName.toUInt(&buttonOk);
+                bool modeOk = false;
+                const uint mode = modeGroupName.toUInt(&modeOk);
+                if (buttonOk && modeOk) {
+                    foundActions = true;
+                    insert(TabletStrip, {tabletStripName, button, mode}, entry);
+                }
+            }
+        }
+    }
+
     if (foundActions) {
         KWin::input()->installInputEventFilter(this);
 
@@ -335,6 +356,35 @@ bool ButtonRebindsFilter::tabletPadRingEvent(KWin::TabletPadRingEvent *event)
         return sent;
     } else {
         m_initialRingPosition = -1;
+    }
+
+    return false;
+}
+
+bool ButtonRebindsFilter::tabletPadStripEvent(KWin::TabletPadStripEvent *event)
+{
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
+
+    // We only get the ring's position in degrees
+    // So we need to start when it's pressed, and stop when released (that's given as -1)
+    // And only emit events with the delta passes a certain threshold
+    if (event->position != -1) {
+        if (m_initialStripPosition == -1) {
+            m_initialStripPosition = event->position;
+        }
+
+        const qreal delta = m_initialStripPosition - event->position;
+
+        const bool sent = send(TabletStrip, {event->device->name(), static_cast<uint>(event->number), event->mode}, false, delta * 120, event->time);
+        // If accepted (that means the threshold is met) then we want to reset ourselves
+        if (sent) {
+            m_initialStripPosition = event->position;
+        }
+        return sent;
+    } else {
+        m_initialStripPosition = -1;
     }
 
     return false;

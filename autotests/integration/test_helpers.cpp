@@ -2427,6 +2427,12 @@ void tabletPadRingEvent(qreal position, int number, quint32 group, quint32 mode,
     Q_EMIT virtualTabletPad->tabletPadRingEvent(number, position, true, group, mode, std::chrono::milliseconds(time), virtualTabletPad);
 }
 
+void tabletPadStripEvent(qreal position, int number, quint32 group, quint32 mode, quint32 time)
+{
+    auto virtualTabletPad = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletPad();
+    Q_EMIT virtualTabletPad->tabletPadStripEvent(number, position, true, group, mode, std::chrono::milliseconds(time), virtualTabletPad);
+}
+
 void tabletToolButtonPressed(quint32 button, quint32 time)
 {
     auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();

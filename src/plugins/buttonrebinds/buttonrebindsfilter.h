@@ -53,6 +53,7 @@ public:
         TabletToolButtonType,
         TabletDial,
         TabletRing,
+        TabletStrip,
         LastType
     };
     Q_ENUM(TriggerType)
@@ -89,6 +90,7 @@ public:
     bool tabletToolButtonEvent(KWin::TabletToolButtonEvent *event) override;
     bool tabletPadDialEvent(KWin::TabletPadDialEvent *event) override;
     bool tabletPadRingEvent(KWin::TabletPadRingEvent *event) override;
+    bool tabletPadStripEvent(KWin::TabletPadStripEvent *event) override;
 
 private:
     void loadConfig(const KConfigGroup &group);
@@ -108,4 +110,5 @@ private:
     QPointer<KWin::InputDeviceTabletTool> m_tabletTool;
     QPointF m_cursorPos, m_tabletCursorPos;
     qreal m_initialRingPosition = -1;
+    qreal m_initialStripPosition = -1;
 };
