@@ -32,6 +32,9 @@ namespace KWin
 class GLTexture;
 
 class OffscreenQuickView;
+class TabletToolProximityEvent;
+class TabletToolTipEvent;
+class TabletToolAxisEvent;
 
 /**
  * @brief The KwinQuickView class provides a convenient API for exporting
@@ -135,6 +138,10 @@ public:
     bool forwardTouchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     bool forwardTouchUp(qint32 id, std::chrono::microseconds time);
     void forwardTouchCancel();
+
+    bool forwardTabletToolProximity(TabletToolProximityEvent *event);
+    bool forwardTabletToolTip(TabletToolTipEvent *event);
+    bool forwardTabletToolAxis(TabletToolAxisEvent *event);
 
 Q_SIGNALS:
     /**

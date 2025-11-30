@@ -10,7 +10,10 @@
 #include "effect/offscreenquickview.h"
 #include "effect/effecthandler.h"
 
+#include "core/session.h"
+#include "input_event.h"
 #include "logging_p.h"
+#include "main.h"
 #include "opengl/eglcontext.h"
 #include "opengl/glutils.h"
 
@@ -31,6 +34,7 @@
 #include <QQuickRenderTarget>
 #include <QTimer>
 #include <private/qeventpoint_p.h> // for QMutableEventPoint
+#include <qpa/qwindowsysteminterface.h>
 
 namespace KWin
 {
@@ -59,6 +63,7 @@ public:
     QList<QEventPoint> touchPoints;
     QSet<uint32_t> acceptedTouchPoints;
     QPointingDevice *touchDevice;
+    std::unique_ptr<QPointingDevice> tabletDevice;
 
     ulong lastMousePressTime = 0;
     Qt::MouseButton lastMousePressButton = Qt::NoButton;
@@ -155,6 +160,11 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
     connect(d->m_renderControl.get(), &QQuickRenderControl::sceneChanged, this, &OffscreenQuickView::handleSceneChanged);
 
     d->touchDevice = new QPointingDevice(QStringLiteral("ForwardingTouchDevice"), {}, QInputDevice::DeviceType::TouchScreen, QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position, 10, {});
+
+    d->tabletDevice = std::make_unique<QPointingDevice>(QLatin1String("some tablet"), 0, QInputDevice::DeviceType::Stylus,
+                                                        QPointingDevice::PointerType::Pen, QInputDevice::Capability::Position | QInputDevice::Capability::ZPosition | QInputDevice::Capability::Pressure,
+                                                        10, 0, kwinApp()->session()->seat(), QPointingDeviceUniqueId());
+    QWindowSystemInterface::registerInputDevice(d->tabletDevice.get());
 }
 
 OffscreenQuickView::~OffscreenQuickView()
@@ -410,6 +420,29 @@ void OffscreenQuickView::forwardTouchCancel()
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
     event.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &event);
+}
+
+bool OffscreenQuickView::forwardTabletToolProximity(TabletToolProximityEvent *event)
+{
+    // handleTabletEnterLeaveProximityEvent has lots of parameters, most of which are ignored, so don't bother with them
+    return QWindowSystemInterface::handleTabletEnterLeaveProximityEvent(nullptr,
+                                                                        d->tabletDevice.get(), event->type == TabletToolProximityEvent::EnterProximity);
+}
+
+bool OffscreenQuickView::forwardTabletToolTip(TabletToolTipEvent *event)
+{
+    const QPointF globalPos = event->position;
+    const QPointF localPos = d->m_view->mapFromGlobal(event->position);
+
+    return QWindowSystemInterface::handleTabletEvent(d->m_view.get(), std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), d->tabletDevice.get(), localPos, globalPos, event->buttons, event->pressure, event->xTilt, event->yTilt, event->sliderPosition, event->rotation, event->distance, input()->keyboardModifiers());
+}
+
+bool OffscreenQuickView::forwardTabletToolAxis(TabletToolAxisEvent *event)
+{
+    const QPointF globalPos = event->position;
+    const QPointF localPos = d->m_view->mapFromGlobal(event->position);
+
+    return QWindowSystemInterface::handleTabletEvent(d->m_view.get(), std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), d->tabletDevice.get(), localPos, globalPos, event->buttons, event->pressure, event->xTilt, event->yTilt, event->sliderPosition, event->rotation, event->distance, input()->keyboardModifiers());
 }
 
 QRect OffscreenQuickView::geometry() const

@@ -631,6 +631,36 @@ bool QuickSceneEffect::touchUp(qint32 id, std::chrono::microseconds time)
     return false;
 }
 
+bool QuickSceneEffect::tabletToolProximity(TabletToolProximityEvent *event)
+{
+    for (const auto &[screen, screenView] : d->views) {
+        if (screenView->forwardTabletToolProximity(event)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool QuickSceneEffect::tabletToolAxis(TabletToolAxisEvent *event)
+{
+    for (const auto &[screen, screenView] : d->views) {
+        if (screenView->forwardTabletToolAxis(event)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool QuickSceneEffect::tabletToolTip(TabletToolTipEvent *event)
+{
+    for (const auto &[screen, screenView] : d->views) {
+        if (screenView->forwardTabletToolTip(event)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void QuickSceneEffect::touchCancel()
 {
     for (const auto &[screen, screenView] : d->views) {
