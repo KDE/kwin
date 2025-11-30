@@ -314,7 +314,7 @@ bool ButtonRebindsFilter::tabletPadRingEvent(KWin::TabletPadRingEvent *event)
         // I would guarantee that most devices emit ring events in small, ~5 degree increments, but *we don't know* how big their increments are but it's safe to assume it's less than this.
         constexpr int maximumIncrement = 180;
 
-        int delta = m_initialRingPosition - event->position;
+        qreal delta = m_initialRingPosition - event->position;
 
         // If the delta is something crazy, and could never be feasibly emitted by the device, then it's probably
         // because we made a complete circle.

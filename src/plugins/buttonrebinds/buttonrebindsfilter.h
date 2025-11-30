@@ -107,5 +107,5 @@ private:
     KConfigWatcher::Ptr m_configWatcher;
     QPointer<KWin::InputDeviceTabletTool> m_tabletTool;
     QPointF m_cursorPos, m_tabletCursorPos;
-    int m_initialRingPosition = -1;
+    qreal m_initialRingPosition = -1;
 };
