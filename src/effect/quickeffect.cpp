@@ -7,6 +7,7 @@
 #include "effect/quickeffect.h"
 #include "core/output.h"
 #include "effect/effecthandler.h"
+#include "input_event.h"
 
 #include "logging_p.h"
 
@@ -628,6 +629,34 @@ bool QuickSceneEffect::touchUp(qint32 id, std::chrono::microseconds time)
             return true;
         }
     }
+    return false;
+}
+
+bool QuickSceneEffect::tabletToolAxis(TabletToolAxisEvent *event)
+{
+    QMouseEvent mouseEvent(QEvent::MouseMove,
+                           event->position,
+                           event->position,
+                           Qt::NoButton,
+                           event->buttons,
+                           {});
+    mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
+    mouseEvent.setAccepted(false);
+    effects->checkInputWindowEvent(&mouseEvent);
+    return false;
+}
+
+bool QuickSceneEffect::tabletToolTip(TabletToolTipEvent *event)
+{
+    QMouseEvent mouseEvent(event->type == TabletToolTipEvent::Press ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+                           event->position,
+                           event->position,
+                           Qt::MouseButton::LeftButton,
+                           Qt::MouseButton::LeftButton,
+                           {} /*modifiers*/);
+    mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
+    mouseEvent.setAccepted(false);
+    effects->checkInputWindowEvent(&mouseEvent);
     return false;
 }
 
