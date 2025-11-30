@@ -50,6 +50,7 @@ private Q_SLOTS:
     void testBindingTabletPadDialScroll();
     void testBindingTabletPadDialKey();
     void testBindingTabletRingKey();
+    void testBindingTabletStripKey();
 
     void testMouseTabletCursorSync();
 
@@ -410,6 +411,49 @@ void TestButtonRebind::testBindingTabletRingKey()
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 2);
     QCOMPARE(keyChangedSpy.at(0).at(0), KEY_RIGHTBRACE);
+}
+
+void TestButtonRebind::testBindingTabletStripKey()
+{
+    const QKeySequence upSequence(Qt::Key_BracketLeft);
+    const QKeySequence downSequence(Qt::Key_BracketRight);
+
+    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("TabletStrip")).group(QStringLiteral("Virtual Tablet Pad 1")).group(QStringLiteral("0"));
+    buttonGroup.writeEntry("0", QStringList{"AxisKey", upSequence.toString(QKeySequence::PortableText), downSequence.toString(QKeySequence::PortableText), QStringLiteral("60")}, KConfig::Notify);
+    buttonGroup.sync();
+
+    kwinApp()->pluginManager()->unloadPlugin(s_pluginName);
+    kwinApp()->pluginManager()->loadPlugin(s_pluginName);
+
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    QVERIFY(enteredSpy.wait());
+
+    // gesturing downwards
+    for (int i = 0; i < 50; i++) {
+        Test::tabletPadStripEvent(i / 50.0, 0, 0, 0, timestamp++);
+    }
+    Test::tabletPadStripEvent(-1, 0, 0, 0, timestamp++); // finger released
+
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.count(), 2); // two events are reported because it emulates a press then release
+    QCOMPARE(keyChangedSpy.at(0).at(0), KEY_RIGHTBRACE);
+
+    // gesturing upwards
+    keyChangedSpy.clear();
+    for (int i = 50; i > 0; i--) {
+        Test::tabletPadStripEvent(i / 50.0, 0, 0, 0, timestamp++);
+    }
+    Test::tabletPadStripEvent(-1, 0, 0, 0, timestamp++); // finger released
+
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.count(), 2);
+    QCOMPARE(keyChangedSpy.at(0).at(0), KEY_LEFTBRACE);
 }
 
 void TestButtonRebind::testBindingTabletTool()
