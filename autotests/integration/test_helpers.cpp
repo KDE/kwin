@@ -2400,7 +2400,7 @@ void tabletPadDialEvent(double delta, int number, quint32 time)
     Q_EMIT virtualTabletPad->tabletPadDialEvent(number, delta, 0, std::chrono::milliseconds(time), virtualTabletPad);
 }
 
-void tabletPadRingEvent(int position, int number, quint32 group, quint32 mode, quint32 time)
+void tabletPadRingEvent(qreal position, int number, quint32 group, quint32 mode, quint32 time)
 {
     auto virtualTabletPad = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletPad();
     Q_EMIT virtualTabletPad->tabletPadRingEvent(number, position, true, group, mode, std::chrono::milliseconds(time), virtualTabletPad);

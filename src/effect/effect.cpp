@@ -510,7 +510,7 @@ bool Effect::tabletPadStripEvent(int number, qreal position, bool isFinger, void
     return false;
 }
 
-bool Effect::tabletPadRingEvent(int number, int position, bool isFinger, void *device)
+bool Effect::tabletPadRingEvent(int number, qreal position, bool isFinger, void *device)
 {
     return false;
 }

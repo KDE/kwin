@@ -255,7 +255,7 @@ struct TabletPadRingEvent
 {
     InputDevice *device;
     int number;
-    int position;
+    qreal position;
     bool isFinger;
     quint32 group;
     quint32 mode;

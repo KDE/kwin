@@ -1079,7 +1079,7 @@ void touchUp(qint32 id, quint32 time);
 void tabletPadButtonPressed(quint32 button, quint32 time);
 void tabletPadButtonReleased(quint32 button, quint32 time);
 void tabletPadDialEvent(double delta, int number, quint32 time);
-void tabletPadRingEvent(int position, int number, quint32 group, quint32 mode, quint32 time);
+void tabletPadRingEvent(qreal position, int number, quint32 group, quint32 mode, quint32 time);
 void tabletToolButtonPressed(quint32 button, quint32 time);
 void tabletToolButtonReleased(quint32 button, quint32 time);
 void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipNear, qreal sliderPosition, quint32 time);

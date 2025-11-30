@@ -564,7 +564,6 @@ void Connection::processEvents()
         }
         case LIBINPUT_EVENT_TABLET_PAD_RING: {
             auto *tabletEvent = static_cast<TabletPadRingEvent *>(event.get());
-            tabletEvent->position();
             Q_EMIT event->device()->tabletPadRingEvent(tabletEvent->number(),
                                                        tabletEvent->position(),
                                                        tabletEvent->source() == LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER,

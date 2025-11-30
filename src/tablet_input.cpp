@@ -437,7 +437,7 @@ void KWin::TabletInputRedirection::tabletPadStripEvent(int number, qreal positio
     input()->setLastInputHandler(this);
 }
 
-void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger, quint32 group, quint32 mode, std::chrono::microseconds time, InputDevice *device)
+void KWin::TabletInputRedirection::tabletPadRingEvent(int number, qreal position, bool isFinger, quint32 group, quint32 mode, std::chrono::microseconds time, InputDevice *device)
 {
     TabletPadRingEvent event{
         .device = device,

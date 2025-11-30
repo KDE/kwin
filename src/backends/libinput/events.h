@@ -345,7 +345,7 @@ class TabletPadRingEvent : public Event
 public:
     TabletPadRingEvent(libinput_event *event, libinput_event_type type);
 
-    int position() const
+    qreal position() const
     {
         return libinput_event_tablet_pad_get_ring_position(m_tabletPadEvent);
     }

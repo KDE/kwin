@@ -849,7 +849,7 @@ public:
      *
      * @since 5.25
      */
-    virtual bool tabletPadRingEvent(int number, int position, bool isFinger, void *device);
+    virtual bool tabletPadRingEvent(int number, qreal position, bool isFinger, void *device);
 
     /**
      * There has been an event from a input dial on a drawing tablet pad
