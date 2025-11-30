@@ -644,7 +644,7 @@ bool EffectsHandler::tabletPadButtonEvent(uint button, bool pressed, std::chrono
     return false;
 }
 
-bool EffectsHandler::tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device)
+bool EffectsHandler::tabletPadStripEvent(int number, qreal position, bool isFinger, std::chrono::microseconds time, InputDevice *device)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {

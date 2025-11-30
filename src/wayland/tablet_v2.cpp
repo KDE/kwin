@@ -525,10 +525,10 @@ void TabletPadStripV2Interface::sendFrame(quint32 time)
     }
 }
 
-void TabletPadStripV2Interface::sendPosition(quint32 position)
+void TabletPadStripV2Interface::sendPosition(qreal position)
 {
     for (auto *resource : d->resourcesForSurface(d->m_pad->currentSurface())) {
-        d->send_position(resource->handle, position);
+        d->send_position(resource->handle, 65535 * position);
     }
 }
 

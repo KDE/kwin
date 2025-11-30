@@ -407,7 +407,7 @@ class TabletPadStripEvent : public Event
 public:
     TabletPadStripEvent(libinput_event *event, libinput_event_type type);
 
-    int position() const
+    qreal position() const
     {
         return libinput_event_tablet_pad_get_strip_position(m_tabletPadEvent);
     }
