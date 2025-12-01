@@ -289,14 +289,6 @@ QPointF SlideEffect::forcePositivePosition(QPointF p) const
     return p;
 }
 
-bool SlideEffect::shouldElevate(const EffectWindow *w) const
-{
-    // Static docks(i.e. this effect doesn't slide docks) should be elevated
-    // so they can properly animate themselves when an user enters or leaves
-    // a virtual desktop with a window in fullscreen mode.
-    return w->isDock();
-}
-
 /*
  * This function is called when the desktop changes.
  * Called AFTER the gesture is released.
@@ -338,10 +330,6 @@ void SlideEffect::prepareSwitching()
             .visibilityRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_DESKTOP),
         };
 
-        if (shouldElevate(w)) {
-            effects->setElevatedWindow(w, true);
-            m_elevatedWindows << w;
-        }
         w->setData(WindowForceBackgroundContrastRole, QVariant(true));
         w->setData(WindowForceBlurRole, QVariant(true));
     }
@@ -357,11 +345,6 @@ void SlideEffect::finishedSwitching()
         w->setData(WindowForceBackgroundContrastRole, QVariant());
         w->setData(WindowForceBlurRole, QVariant());
     }
-
-    for (EffectWindow *w : std::as_const(m_elevatedWindows)) {
-        effects->setElevatedWindow(w, false);
-    }
-    m_elevatedWindows.clear();
 
     m_windowData.clear();
     m_movingWindow = nullptr;
@@ -454,10 +437,7 @@ void SlideEffect::windowAdded(EffectWindow *w)
     if (m_state == State::Inactive) {
         return;
     }
-    if (shouldElevate(w)) {
-        effects->setElevatedWindow(w, true);
-        m_elevatedWindows << w;
-    }
+
     w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     w->setData(WindowForceBlurRole, QVariant(true));
 
@@ -474,7 +454,6 @@ void SlideEffect::windowDeleted(EffectWindow *w)
     if (w == m_movingWindow) {
         m_movingWindow = nullptr;
     }
-    m_elevatedWindows.removeAll(w);
     m_windowData.remove(w);
 }
 
