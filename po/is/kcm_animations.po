@@ -1,0 +1,116 @@
+# Copyright (C) 2025 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# SPDX-FileCopyrightText: 2025 Sveinn í Felli <sv1@fellsnet.is>
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"PO-Revision-Date: 2025-11-30 11:06+0000\n"
+"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
+"Language-Team: Icelandic\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 23.08.5\n"
+
+#: ui/AnimationComboBox.qml:49
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "None"
+msgstr "Ekkert"
+
+#: ui/main.qml:37
+#, kde-format
+msgid "Global animation speed:"
+msgstr "Almennur hraði myndhreyfinga:"
+
+#: ui/main.qml:69
+#, kde-kuit-format
+msgctxt "@info:tooltip"
+msgid ""
+"Some applications do not support this setting: In particular, GTK "
+"applications cannot change animation duration, but will still disable "
+"animations when <interface>animation speed</interface> is "
+"<interface>Instant</interface>."
+msgstr ""
+"Sum forrit styðja ekki þessa stillingu: Sérstaklega eru það GTK-forrit sem "
+"ekki geta breytt tímalengd myndhreyfinga, en munu samt gera myndhreyfingar "
+"óvirkar þegar <interface>hraði myndhreyfinga</interface> er stilltur á "
+"<interface>Samstundis</interface>."
+
+#: ui/main.qml:76
+#, kde-format
+msgctxt "Animation speed"
+msgid "Slow"
+msgstr "Hægt"
+
+#: ui/main.qml:85
+#, kde-format
+msgctxt "Animation speed"
+msgid "Instant"
+msgstr "Samstundis"
+
+#: ui/main.qml:93
+#, kde-format
+msgctxt "@title:group"
+msgid "Desktop animations"
+msgstr "Myndhreyfingar skjáborðs"
+
+#: ui/main.qml:97
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window open/close:"
+msgstr "Gluggi opnast/lokast:"
+
+#: ui/main.qml:98
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window maximize:"
+msgstr "Gluggi hámarkaður:"
+
+#: ui/main.qml:99
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window minimize:"
+msgstr "Gluggi lágmarkaður:"
+
+#: ui/main.qml:100
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Window full screen:"
+msgstr "Gluggi í skjáfylli:"
+
+#: ui/main.qml:101
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Peek at desktop:"
+msgstr "Kíkja á skjáborð:"
+
+#: ui/main.qml:102
+#, kde-format
+msgctxt "@label:listbox"
+msgid "Virtual desktop switching:"
+msgstr "Skipting milli sýndarskjáborða:"
+
+#: ui/main.qml:130 ui/main.qml:197
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Configure…"
+msgstr "Grunnstilla…"
+
+#: ui/main.qml:157
+#, kde-format
+msgctxt ""
+"@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
+msgid "%1:"
+msgstr "%1:"
+
+#: ui/main.qml:225
+#, kde-format
+msgctxt "@title:group translate as short as possible"
+msgid "More effects settings:"
+msgstr "Fleiri stillingar sjónhrifa:"

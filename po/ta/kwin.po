@@ -11,15 +11,15 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-30 00:44+0000\n"
-"PO-Revision-Date: 2025-04-13 18:05+0530\n"
+"PO-Revision-Date: 2025-11-30 14:50+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
-"Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
+"Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -49,16 +49,14 @@ msgid "KDE Wayland Compositor %1"
 msgstr "கே.டீ.யீ. Wayland சாளரநிரல் %1"
 
 #: backends/wayland/wayland_output.cpp:517
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- LogicalOutput disabled"
-msgstr "- வெளியீடு முடக்கப்பட்டுள்ளது"
+msgstr ""
 
 #: backends/wayland/wayland_output.cpp:519
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- LogicalOutput dimmed"
-msgstr "வெளியீடு மங்கலாக்கப்பட்டுள்ளது"
+msgstr ""
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
@@ -659,9 +657,7 @@ msgid "Hold start"
 msgstr ""
 
 #: debug_console.cpp:472
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "விரல்களின் எண்ணிக்கை"
@@ -1355,11 +1351,7 @@ msgstr ""
 "சாளரங்களையும் மூடும். சேமிக்காதவற்றை இழப்பீர்.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:198
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1367,8 +1359,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>இந்த செயலியை கட்டாயப்படுத்தி மூடுவது, அதன் அனைத்து "
-"சாளரங்களையும் மூடும். சேமிக்காதவற்றை இழப்பீர்.</emphasis></para>"
+"<para><application>%2</application> எனும் செயலியின் \"%1\" பதிலளிக்கவில்லை. "
+"இச்செயலியை கட்டாயப்படுத்தி மூட வேண்டுமா?</para> <para><emphasis strong='true'>இந்த "
+"செயலியை கட்டாயப்படுத்தி மூடுவது, அதன் அனைத்து சாளரங்களையும் மூடும். சேமிக்காதவற்றை "
+"இழப்பீர்.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:202
 #, kde-format
@@ -2453,10 +2447,9 @@ msgstr ""
 #: plugins/screencast/screencastmanager.cpp:80
 #: plugins/screencast/screencastmanager.cpp:96
 #: plugins/screencast/screencastmanager.cpp:141
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "சாளரவரைவை முடக்கு"
+msgstr "ஆதரிக்கப்படாத சாளரவரைவு முறை"
 
 #: plugins/screencast/screencastmanager.cpp:61
 #, kde-format
@@ -3541,8 +3534,7 @@ msgstr ""
 "இரண்டு நிமிடங்களில் அவை கட்டாயமாக நிறுத்தப்படும்."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "பணிமேடையைக் காட்டு"
@@ -3610,40 +3602,29 @@ msgid "Tablets switched outputs"
 msgstr "வரைபலகை வேறு திரைக்கு மாற்றப்பட்டது"
 
 #: useractions.cpp:162
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the window menu instead, activated using the %1 keyboard "
 "shortcut."
 msgstr ""
-"நீங்கள் ஒரு சாளரத்தை விளிம்பு இல்லாமல் காட்டுமாறு கோரியுள்ளீர்கள்.\n"
+"ஒரு சாளரத்தை விளிம்பு இல்லாமல் காட்டுமாறு கோரியுள்ளீர்.\n"
 "விளிம்பு இல்லாதபோது, சுட்டியை மட்டும் கொண்டு அதனை மறுபடியும் காட்ட முடியாது. பதிலாக, "
-"%1 என்ற சுருக்குவழியை அழுத்தும்போது காட்டப்படும் பட்டியை பயன்படுத்துங்கள்."
+"%1 என்ற சுருக்குவழியை அழுத்தும்போது காட்டப்படும் பட்டியை பயன்படுத்தவும்."
 
 #: useractions.cpp:169
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
 "window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
-"நீங்கள் ஒரு சாளரத்தை முழுத்திரை முறையில் காட்டுமாறு கோரியுள்ளீர்கள்.\n"
+"ஒரு சாளரத்தை முழுத்திரை முறையில் காட்டுமாறு கோரியுள்ளீர்.\n"
 "முழுத்திரை முறையை முடக்கும் வசதி அச்செயலியிலேயே இல்லாத பட்சத்தில், சுட்டியை மட்டும் "
 "கொண்டு முழுத்திரை பயன்முறையை முடக்க முடியாது. பதிலாக, %1 என்ற சுருக்குவழியை "
-"அழுத்தும்போது காட்டப்படும் பட்டியை பயன்படுத்துங்கள்."
+"அழுத்தும்போது காட்டப்படும் பட்டியை பயன்படுத்தவும்."
 
 #: useractions.cpp:217
 #, kde-format
@@ -3678,7 +3659,7 @@ msgstr "&விளிம்பும் தலைப்புப்பட்ட�
 #: useractions.cpp:251
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "திரைப்பகிர்விலிருந்து மறை"
 
 #: useractions.cpp:259
 #, kde-format
@@ -3783,10 +3764,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> %2 என்பதால் %3 என்பதற்கு பயன்படுத்தப்படுகிறது"
 
 #: useractions.cpp:826
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "சாளர வகை"
+msgstr "சாளரப் பட்டி"
 
 #: useractions.cpp:828
 #, kde-format
