@@ -71,7 +71,6 @@ private:
     QPoint getDrawCoords(QPointF pos, LogicalOutput *screen);
     bool isTranslated(const EffectWindow *w) const;
     bool willBePainted(const EffectWindow *w) const;
-    bool shouldElevate(const EffectWindow *w) const;
     QPointF moveInsideDesktopGrid(QPointF p);
     QPointF constrainToDrawableRange(QPointF p);
     QPointF forcePositivePosition(QPointF p) const;
@@ -113,7 +112,6 @@ private:
         EffectWindowVisibleRef visibilityRef;
     };
 
-    QList<EffectWindow *> m_elevatedWindows;
     QHash<EffectWindow *, WindowData> m_windowData;
     bool m_switchingActivity = false;
     SlideEffect *m_parent;
