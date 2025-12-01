@@ -265,6 +265,11 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
         return w->hasDecoration();
     }
 
+    if (w->windowClass() == QLatin1String("spectacle org.kde.spectacle")
+        && w->tag() == QLatin1String("region-editor")) {
+        return false;
+    }
+
     if (s_blacklist.contains(w->windowClass())) {
         return false;
     }

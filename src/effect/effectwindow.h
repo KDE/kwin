@@ -333,6 +333,13 @@ class KWIN_EXPORT EffectWindow : public QObject
      */
     Q_PROPERTY(bool hiddenByShowDesktop READ isHiddenByShowDesktop)
 
+    /**
+     * A client-provided tag of the window.
+     * Not necessarily unique, but can be used to identify similar windows
+     * across application restarts
+     */
+    Q_PROPERTY(QString tag READ tag)
+
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -442,6 +449,7 @@ public:
     QIcon icon() const;
     QString windowClass() const;
     QString windowRole() const;
+    QString tag() const;
     const EffectWindowGroup *group() const;
 
     /**

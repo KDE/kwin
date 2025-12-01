@@ -9,14 +9,16 @@
 
 "use strict";
 
-const blacklist = [
+const blacklist = {
     // The logout screen has to be animated only by the logout effect.
-    "ksmserver ksmserver",
-    "ksmserver-logout-greeter ksmserver-logout-greeter",
+    "ksmserver ksmserver": [],
+    "ksmserver-logout-greeter ksmserver-logout-greeter": [],
 
     // KDE Plasma splash screen has to be animated only by the login effect.
-    "ksplashqml ksplashqml",
-];
+    "ksplashqml ksplashqml": [],
+
+    "spectacle org.kde.spectacle": ["region-editor"],
+};
 
 class ScaleEffect {
     constructor() {
@@ -49,7 +51,8 @@ class ScaleEffect {
             return window.hasDecoration;
         }
 
-        if (blacklist.indexOf(window.windowClass) != -1) {
+        const blacklistedTags = blacklist[window.windowClass];
+        if (blacklistedTags && (blacklistedTags.length === 0 || blacklistedTags.includes(window.tag))) {
             return false;
         }
 
