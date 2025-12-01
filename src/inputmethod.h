@@ -42,14 +42,25 @@ public:
         Force = 1,
     };
 
+    enum class VirtualKeyboardVisibility {
+        Never,
+        NonMouseInput,
+        AnyInput,
+    };
+    Q_ENUM(VirtualKeyboardVisibility);
+
     InputMethod();
     ~InputMethod() override;
 
     void init();
-    void setEnabled(bool enable);
+    void setMode(VirtualKeyboardVisibility mode);
+    VirtualKeyboardVisibility mode() const
+    {
+        return m_virtualKeyboardVisibility;
+    }
     bool isEnabled() const
     {
-        return m_enabled;
+        return m_virtualKeyboardVisibility != VirtualKeyboardVisibility::Never;
     }
     bool isActive() const;
     void setActive(bool active);
@@ -83,7 +94,7 @@ public:
 Q_SIGNALS:
     void panelChanged();
     void activeChanged(bool active);
-    void enabledChanged(bool enabled);
+    void modeChanged(VirtualKeyboardVisibility mode);
     void visibleChanged();
     void availableChanged();
     void activeClientSupportsTextInputChanged();
@@ -140,7 +151,7 @@ private:
     // TextInputV3 does not have a flag for this, so we have to handle it in the compositor
     QString m_pendingText = QString();
 
-    bool m_enabled = true;
+    VirtualKeyboardVisibility m_virtualKeyboardVisibility = VirtualKeyboardVisibility::NonMouseInput;
     quint32 m_serial = 0;
     QPointer<InputPanelV1Window> m_panel;
     QPointer<Window> m_trackedWindow;
