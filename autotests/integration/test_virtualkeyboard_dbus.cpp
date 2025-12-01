@@ -31,8 +31,8 @@ class VirtualKeyboardDBusTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void testEnabled();
-    void testRequestEnabled_data();
-    void testRequestEnabled();
+    void testRequestMode_data();
+    void testRequestMode();
     void init();
     void cleanup();
 };
@@ -54,7 +54,7 @@ void VirtualKeyboardDBusTest::initTestCase()
 
 void VirtualKeyboardDBusTest::init()
 {
-    kwinApp()->inputMethod()->setEnabled(false);
+    kwinApp()->inputMethod()->setMode(InputMethod::VirtualKeyboardVisibility::Never);
 }
 
 void VirtualKeyboardDBusTest::cleanup()
@@ -66,56 +66,57 @@ void VirtualKeyboardDBusTest::testEnabled()
 {
     VirtualKeyboardDBus dbus(KWin::kwinApp()->inputMethod());
     OrgKdeKwinVirtualKeyboardInterface iface(QStringLiteral("org.kde.kwin.testvirtualkeyboard"), QStringLiteral("/VirtualKeyboard"), QDBusConnection::sessionBus());
-    QSignalSpy helperChangedSpy(&iface, &OrgKdeKwinVirtualKeyboardInterface::enabledChanged);
+    QSignalSpy helperChangedSpy(&iface, &OrgKdeKwinVirtualKeyboardInterface::modeChanged);
 
     QCOMPARE(dbus.isEnabled(), false);
-    QCOMPARE(dbus.property("enabled").toBool(), false);
-    QSignalSpy enabledChangedSpy(&dbus, &VirtualKeyboardDBus::enabledChanged);
+    QCOMPARE(dbus.property("mode"), 0);
+    QSignalSpy modeChangedSpy(&dbus, &VirtualKeyboardDBus::modeChanged);
 
     QVERIFY(iface.isValid());
-    QCOMPARE(iface.enabled(), false);
+    QCOMPARE(iface.mode(), 0);
 
-    dbus.setEnabled(true);
-    QCOMPARE(enabledChangedSpy.count(), 1);
+    dbus.setMode(1);
+    QCOMPARE(modeChangedSpy.count(), 1);
     QVERIFY(helperChangedSpy.wait());
     QCOMPARE(helperChangedSpy.count(), 1);
     QCOMPARE(dbus.isEnabled(), true);
-    QCOMPARE(dbus.property("enabled").toBool(), true);
-    QCOMPARE(iface.enabled(), true);
+    QCOMPARE(dbus.property("mode"), 1);
+    QCOMPARE(iface.mode(), 1);
 
     // setting again to enabled should not change anything
-    dbus.setEnabled(true);
-    QCOMPARE(enabledChangedSpy.count(), 1);
+    dbus.setMode(1);
+    QCOMPARE(modeChangedSpy.count(), 1);
 
     // back to false
-    dbus.setEnabled(false);
-    QCOMPARE(enabledChangedSpy.count(), 2);
+    dbus.setMode(0);
+    QCOMPARE(modeChangedSpy.count(), 2);
     QVERIFY(helperChangedSpy.wait());
     QCOMPARE(helperChangedSpy.count(), 2);
     QCOMPARE(dbus.isEnabled(), false);
-    QCOMPARE(dbus.property("enabled").toBool(), false);
-    QCOMPARE(iface.enabled(), false);
+    QCOMPARE(dbus.property("mode"), 0);
+    QCOMPARE(iface.mode(), 0);
 }
 
-void VirtualKeyboardDBusTest::testRequestEnabled_data()
+void VirtualKeyboardDBusTest::testRequestMode_data()
 {
     QTest::addColumn<QString>("method");
-    QTest::addColumn<bool>("expectedResult");
+    QTest::addColumn<int>("expectedResult");
 
-    QTest::newRow("enable") << QStringLiteral("setEnabled") << true;
-    QTest::newRow("disable") << QStringLiteral("setEnabled") << false;
+    QTest::newRow("Never show") << QStringLiteral("setMode") << 0;
+    QTest::newRow("Show with non-mouse") << QStringLiteral("setMode") << 1;
+    QTest::newRow("Always show") << QStringLiteral("setMode") << 2;
 }
 
-void VirtualKeyboardDBusTest::testRequestEnabled()
+void VirtualKeyboardDBusTest::testRequestMode()
 {
     QFETCH(QString, method);
-    QFETCH(bool, expectedResult);
+    QFETCH(int, expectedResult);
 
     VirtualKeyboardDBus dbus(KWin::kwinApp()->inputMethod());
     OrgKdeKwinVirtualKeyboardInterface iface(QStringLiteral("org.kde.kwin.testvirtualkeyboard"), QStringLiteral("/VirtualKeyboard"), QDBusConnection::sessionBus());
 
-    iface.setEnabled(expectedResult);
-    QTRY_COMPARE(iface.enabled(), expectedResult);
+    iface.setMode(expectedResult);
+    QTRY_COMPARE(iface.mode(), expectedResult);
 }
 
 WAYLANDTEST_MAIN(VirtualKeyboardDBusTest)

@@ -20,7 +20,7 @@ VirtualKeyboardDBus::VirtualKeyboardDBus(InputMethod *parent)
                                                  QDBusConnection::ExportAllProperties | QDBusConnection::ExportScriptableContents | // qdbuscpp2xml doesn't support yet properties with NOTIFY
                                                      QDBusConnection::ExportAllSlots);
     connect(parent, &InputMethod::activeChanged, this, &VirtualKeyboardDBus::activeChanged);
-    connect(parent, &InputMethod::enabledChanged, this, &VirtualKeyboardDBus::enabledChanged);
+    connect(parent, &InputMethod::modeChanged, this, &VirtualKeyboardDBus::modeChanged);
     connect(parent, &InputMethod::visibleChanged, this, &VirtualKeyboardDBus::visibleChanged);
     connect(parent, &InputMethod::availableChanged, this, &VirtualKeyboardDBus::availableChanged);
     connect(parent, &InputMethod::activeClientSupportsTextInputChanged, this, &VirtualKeyboardDBus::activeClientSupportsTextInputChanged);
@@ -33,9 +33,9 @@ bool VirtualKeyboardDBus::isActive() const
     return m_inputMethod->isActive();
 }
 
-void VirtualKeyboardDBus::setEnabled(bool enabled)
+void VirtualKeyboardDBus::setMode(int mode)
 {
-    m_inputMethod->setEnabled(enabled);
+    m_inputMethod->setMode(static_cast<InputMethod::VirtualKeyboardVisibility>(mode));
 }
 
 void VirtualKeyboardDBus::setActive(bool active)
@@ -46,6 +46,11 @@ void VirtualKeyboardDBus::setActive(bool active)
 bool VirtualKeyboardDBus::isEnabled() const
 {
     return m_inputMethod->isEnabled();
+}
+
+int VirtualKeyboardDBus::mode() const
+{
+    return static_cast<int>(m_inputMethod->mode());
 }
 
 bool VirtualKeyboardDBus::isVisible() const

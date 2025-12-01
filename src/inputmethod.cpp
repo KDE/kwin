@@ -12,7 +12,6 @@
 
 #include "effect/effecthandler.h"
 #include "input.h"
-#include "input_event.h"
 #include "inputpanelv1window.h"
 #include "keyboard_input.h"
 #include "utils/common.h"
@@ -60,7 +59,15 @@ InputMethod::InputMethod()
 {
     m_internalContext = new InternalInputMethodContext(this);
 
-    m_enabled = kwinApp()->config()->group(QStringLiteral("Wayland")).readEntry("VirtualKeyboardEnabled", true);
+    auto group = kwinApp()->config()->group(QStringLiteral("Wayland"));
+    if (group.hasKey("VirtualKeyboardMode")) {
+        m_virtualKeyboardVisibility = static_cast<VirtualKeyboardVisibility>(
+            group.readEntry<int>("VirtualKeyboardMode", static_cast<int>(VirtualKeyboardVisibility::NonMouseInput)));
+    } else {
+        m_virtualKeyboardVisibility = group.readEntry("VirtualKeyboardEnabled", true)
+            ? VirtualKeyboardVisibility::NonMouseInput
+            : VirtualKeyboardVisibility::Never;
+    }
     // this is actually too late. Other processes are started before init,
     // so might miss the availability of text input
     // but without Workspace we don't have the window listed at all
@@ -162,9 +169,16 @@ void InputMethod::hide()
 
 bool InputMethod::shouldShowOnActive() const
 {
-    static bool alwaysShowIm = qEnvironmentVariableIntValue("KWIN_IM_SHOW_ALWAYS") != 0;
-    return alwaysShowIm || input()->touch() == input()->lastInputHandler()
-        || input()->tablet() == input()->lastInputHandler();
+    switch (m_virtualKeyboardVisibility) {
+    case VirtualKeyboardVisibility::Never:
+        return false;
+    case VirtualKeyboardVisibility::NonMouseInput:
+        return input()->touch() == input()->lastInputHandler()
+            || input()->tablet() == input()->lastInputHandler();
+    case VirtualKeyboardVisibility::AnyInput:
+        return true;
+    }
+    return true;
 }
 
 void InputMethod::refreshActive()
@@ -246,10 +260,6 @@ void InputMethod::setActive(bool active)
     }
 
     if (active) {
-        if (!m_enabled) {
-            return;
-        }
-
         if (!wasActive) {
             waylandServer()->inputMethod()->sendActivate();
         }
@@ -380,10 +390,6 @@ void InputMethod::contentTypeChanged()
 
 void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, TextInputV2Interface::UpdateReason reason)
 {
-    if (!m_enabled) {
-        return;
-    }
-
     auto t2 = waylandServer()->seat()->textInputV2();
     auto inputContext = waylandServer()->inputMethod()->context();
     if (!inputContext) {
@@ -410,19 +416,11 @@ void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, TextInputV2In
 
 void InputMethod::textInputInterfaceV2EnabledChanged()
 {
-    if (!m_enabled) {
-        return;
-    }
-
     refreshActive();
 }
 
 void InputMethod::textInputInterfaceV3EnabledChanged()
 {
-    if (!m_enabled) {
-        return;
-    }
-
     auto t3 = waylandServer()->seat()->textInputV3();
     refreshActive();
     if (t3->isEnabled() && t3->implicitShowPanelRequired()) {
@@ -454,30 +452,28 @@ void InputMethod::stateCommitted(uint32_t serial)
     }
 }
 
-void InputMethod::setEnabled(bool enabled)
+void InputMethod::setMode(VirtualKeyboardVisibility newMode)
 {
-    if (m_enabled == enabled) {
+    if (m_virtualKeyboardVisibility == newMode) {
         return;
     }
-    m_enabled = enabled;
-    Q_EMIT enabledChanged(m_enabled);
+    m_virtualKeyboardVisibility = newMode;
+    Q_EMIT modeChanged(m_virtualKeyboardVisibility);
 
     // send OSD message
     QDBusMessage msg = QDBusMessage::createMethodCall(
         QStringLiteral("org.kde.plasmashell"),
         QStringLiteral("/org/kde/osdService"),
         QStringLiteral("org.kde.osdService"),
-        QStringLiteral("virtualKeyboardEnabledChanged"));
-    msg.setArguments({enabled});
+        QStringLiteral("VirtualKeyboardModeChanged"));
+    msg.setArguments({static_cast<int>(mode())});
     QDBusConnection::sessionBus().asyncCall(msg);
-    if (!m_enabled) {
+    if (m_virtualKeyboardVisibility == VirtualKeyboardVisibility::Never) {
         hide();
-        stopInputMethod();
-    } else {
-        startInputMethod();
     }
     // save value into config
-    kwinApp()->config()->group(QStringLiteral("Wayland")).writeEntry("VirtualKeyboardEnabled", m_enabled);
+    auto group = kwinApp()->config()->group(QStringLiteral("Wayland"));
+    group.writeEntry("VirtualKeyboardMode", static_cast<int>(m_virtualKeyboardVisibility));
     kwinApp()->config()->sync();
 }
 
@@ -831,9 +827,7 @@ void InputMethod::setInputMethodCommand(const QString &command)
 
     m_inputMethodCommand = command;
 
-    if (m_enabled) {
-        startInputMethod();
-    }
+    startInputMethod();
     Q_EMIT availableChanged();
 }
 

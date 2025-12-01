@@ -193,7 +193,7 @@ void WaylandTestApplication::performStartup()
         createInputMethod();
         if (m_inputMethodServerToStart != QStringLiteral("internal")) {
             inputMethod()->setInputMethodCommand(m_inputMethodServerToStart);
-            inputMethod()->setEnabled(true);
+            inputMethod()->setMode(InputMethod::VirtualKeyboardVisibility::NonMouseInput);
         }
     }
 
