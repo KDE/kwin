@@ -45,6 +45,7 @@
 // frameworks
 #include <KLocalizedString>
 // Qt
+#include <QFont>
 #include <QFutureWatcher>
 #include <QMetaProperty>
 #include <QMetaType>
@@ -1755,32 +1756,38 @@ DebugConsoleEffectItem::DebugConsoleEffectItem(const QString &name, bool loaded,
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
 
-    QLabel *label = new QLabel(name, this);
-    layout->addWidget(label);
+    m_label = new QLabel(name, this);
+    layout->addWidget(m_label);
 
-    QPushButton *toggleButton = new QPushButton(this);
-    layout->addWidget(toggleButton);
+    m_toggleButton = new QPushButton(this);
+    layout->addWidget(m_toggleButton);
 
-    if (loaded) {
-        toggleButton->setText(i18nc("@action:button unload an effect", "Unload"));
-    } else {
-        toggleButton->setText(i18nc("@action:button load an effect", "Load"));
-    }
+    updateToggleButton();
 
-    connect(toggleButton, &QPushButton::clicked, this, [this, toggleButton]() {
+    connect(m_toggleButton, &QPushButton::clicked, this, [this]() {
         if (m_loaded) {
             m_loaded = false;
             effects->unloadEffect(m_name);
         } else {
             m_loaded = effects->loadEffect(m_name);
         }
-
-        if (m_loaded) {
-            toggleButton->setText(i18nc("@action:button unload an effect", "Unload"));
-        } else {
-            toggleButton->setText(i18nc("@action:button load an effect", "Load"));
-        }
+        updateToggleButton();
     });
+}
+
+void DebugConsoleEffectItem::updateToggleButton()
+{
+    QFont font = m_label->font();
+    if (m_loaded) {
+        m_toggleButton->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::MediaPlaybackPause));
+        m_toggleButton->setText(i18nc("@action:button unload an effect", "Unload"));
+        font.setBold(true);
+    } else {
+        m_toggleButton->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::MediaPlaybackStart));
+        m_toggleButton->setText(i18nc("@action:button load an effect", "Load"));
+        font.setBold(false);
+    }
+    m_label->setFont(font);
 }
 
 DebugConsoleEffectsTab::DebugConsoleEffectsTab(QWidget *parent)

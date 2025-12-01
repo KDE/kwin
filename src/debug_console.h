@@ -206,7 +206,11 @@ public:
     explicit DebugConsoleEffectItem(const QString &name, bool loaded, QWidget *parent = nullptr);
 
 private:
+    void updateToggleButton();
+
     QString m_name;
+    QLabel *m_label;
+    QPushButton *m_toggleButton;
     bool m_loaded = false;
 };
 
