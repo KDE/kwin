@@ -330,9 +330,12 @@ QRect Item::paintedArea(RenderView *view, const QRectF &rect) const
 
     QRectF snapped = snapToPixelGridF(scaledRect(rect, scale));
     for (const Item *item = this; item; item = item->parentItem()) {
-        snapped = item->transform()
-                      .mapRect(snapped)
-                      .translated(snapToPixelGridF(item->position() * scale));
+        if (!item->m_transform.isIdentity()) {
+            snapped = (QTransform::fromScale(1 / scale, 1 / scale) * item->m_transform * QTransform::fromScale(scale, scale))
+                          .mapRect(snapped);
+        }
+
+        snapped.translate(snapToPixelGridF(item->position() * scale));
     }
 
     return scaledRect(snapped, 1.0 / scale).toAlignedRect();
@@ -354,9 +357,12 @@ QRegion Item::paintedArea(RenderView *view, const QRegion &region) const
 
     for (const Item *item = this; item; item = item->parentItem()) {
         for (QRectF &part : parts) {
-            part = item->transform()
-                       .mapRect(part)
-                       .translated(snapToPixelGridF(item->position() * scale));
+            if (!item->m_transform.isIdentity()) {
+                part = (QTransform::fromScale(1 / scale, 1 / scale) * item->m_transform * QTransform::fromScale(scale, scale))
+                           .mapRect(part);
+            }
+
+            part.translate(snapToPixelGridF(item->position() * scale));
         }
     }
 
