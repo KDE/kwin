@@ -1,5 +1,5 @@
 [Unit]
-Description=KDE Window Manager
+Description=KDE Wayland Compositor
 PartOf=graphical-session.target
 
 [Service]
