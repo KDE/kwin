@@ -37,6 +37,7 @@ struct zwp_keyboard_shortcuts_inhibitor_v1;
 struct wp_viewport;
 struct wl_callback;
 struct wl_callback_listener;
+struct wp_presentation_feedback_listener;
 
 namespace KWin
 {
@@ -112,6 +113,8 @@ private:
     static void handleFractionalScaleChanged(void *data, struct wp_fractional_scale_v1 *wp_fractional_scale_v1, uint32_t scale120);
     static const wl_callback_listener s_frameCallbackListener;
     static void handleFrame(void *data, wl_callback *callback, uint32_t time);
+    static void handleDeadline(void *data, struct wp_presentation_feedback *wp_presentation_feedback, uint32_t tv_nsec);
+    static const wp_presentation_feedback_listener s_presentationListener;
 
     std::vector<std::unique_ptr<OutputLayer>> m_layers;
     std::unique_ptr<RenderLoop> m_renderLoop;
@@ -134,6 +137,7 @@ private:
         wp_presentation_feedback *presentationFeedback;
         wl_callback *frameCallback;
         std::optional<std::chrono::steady_clock::time_point> frameCallbackTime;
+        std::optional<std::chrono::nanoseconds> requiredSafetyMargin;
     };
     std::deque<FrameData> m_frames;
     quint32 m_pendingConfigureSerial = 0;

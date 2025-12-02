@@ -38,6 +38,8 @@
 #include <QPainter>
 
 #include <cmath>
+#include <iostream>
+#include <print>
 #include <ranges>
 
 namespace KWin
@@ -243,10 +245,22 @@ static void handleSyncOutput(void *data, struct wp_presentation_feedback *, stru
     // intentionally ignored
 }
 
-static constexpr struct wp_presentation_feedback_listener s_presentationListener{
+void WaylandOutput::handleDeadline(void *data, struct wp_presentation_feedback *object, uint32_t tv_nsec)
+{
+    auto output = reinterpret_cast<WaylandOutput *>(data);
+    auto it = std::ranges::find_if(output->m_frames, [object](const auto &frame) {
+        return frame.presentationFeedback == object;
+    });
+    if (it != output->m_frames.end()) {
+        it->requiredSafetyMargin = std::chrono::nanoseconds(tv_nsec);
+    }
+}
+
+const struct wp_presentation_feedback_listener WaylandOutput::s_presentationListener{
     .sync_output = handleSyncOutput,
     .presented = handlePresented,
     .discarded = handleDiscarded,
+    .content_update_deadline = WaylandOutput::handleDeadline,
 };
 
 void WaylandOutput::handleFrame(void *data, wl_callback *callback, uint32_t time)
@@ -360,13 +374,24 @@ void WaylandOutput::framePresented(std::chrono::nanoseconds timestamp, uint32_t 
         m_renderLoop->setRefreshRate(m_refreshRate);
     }
     const auto &frame = m_frames.front();
-    if (auto t = frame.frameCallbackTime) {
+    if (auto safety = frame.requiredSafetyMargin) {
+        m_renderLoop->setPresentationSafetyMargin(*safety + std::chrono::milliseconds(1));
+        std::println("Frame stats 2: Safety {}us + 1ms, t2p {}us, predicted render time {}us",
+                     std::chrono::duration_cast<std::chrono::microseconds>(*safety).count(),
+                     std::chrono::duration_cast<std::chrono::microseconds>(timestamp - frame.outputFrame->compositeStart().time_since_epoch()).count(),
+                     std::chrono::duration_cast<std::chrono::microseconds>(frame.outputFrame->predictedRenderTime()));
+        std::flush(std::cout);
+    } else if (auto t = frame.frameCallbackTime) {
         // NOTE that the frame callback gets signaled *after* the host compositor
         // is done compositing the frame on the CPU side, not before!
         // This is the best estimate we currently have for the commit deadline, but
         // it should be replaced with something more accurate when possible.
         const auto difference = timestamp - t->time_since_epoch();
         m_renderLoop->setPresentationSafetyMargin(difference + std::chrono::milliseconds(1));
+        std::println("Frame stats 1: Safety {}us + 1ms, t2p {}us, predicted render time {}us",
+                     std::chrono::duration_cast<std::chrono::microseconds>(difference).count(),
+                     std::chrono::duration_cast<std::chrono::microseconds>(timestamp - frame.outputFrame->compositeStart().time_since_epoch()).count(),
+                     std::chrono::duration_cast<std::chrono::microseconds>(frame.outputFrame->predictedRenderTime()));
     }
     frame.outputFrame->presented(timestamp, PresentationMode::VSync);
     m_frames.pop_front();

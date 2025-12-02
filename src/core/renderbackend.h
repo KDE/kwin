@@ -33,7 +33,8 @@ public:
     PresentationFeedback(PresentationFeedback &&move) = default;
     virtual ~PresentationFeedback() = default;
 
-    virtual void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode) = 0;
+    virtual void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp,
+                           PresentationMode mode, std::chrono::steady_clock::time_point compositeStart) = 0;
 };
 
 struct RenderTimeSpan
@@ -71,7 +72,7 @@ private:
 class KWIN_EXPORT OutputFrame
 {
 public:
-    explicit OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDuration);
+    explicit OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDuration, std::chrono::steady_clock::time_point compositeStart);
     ~OutputFrame();
 
     void presented(std::chrono::nanoseconds timestamp, PresentationMode mode);
@@ -87,6 +88,7 @@ public:
     void addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query);
 
     std::chrono::steady_clock::time_point targetPageflipTime() const;
+    std::chrono::steady_clock::time_point compositeStart() const;
     std::chrono::nanoseconds refreshDuration() const;
     std::chrono::nanoseconds predictedRenderTime() const;
 
@@ -103,6 +105,7 @@ private:
     const std::chrono::nanoseconds m_refreshDuration;
     const std::chrono::steady_clock::time_point m_targetPageflipTime;
     const std::chrono::nanoseconds m_predictedRenderTime;
+    const std::chrono::steady_clock::time_point m_compositeStart;
     std::vector<std::shared_ptr<PresentationFeedback>> m_feedbacks;
     std::optional<ContentType> m_contentType;
     PresentationMode m_presentationMode = PresentationMode::VSync;

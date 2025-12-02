@@ -40,7 +40,7 @@ void RenderJournal::add(std::chrono::nanoseconds renderTime, std::chrono::nanose
 
 std::chrono::nanoseconds RenderJournal::result() const
 {
-    return m_result + m_variance * 2;
+    return m_result + std::chrono::duration_cast<std::chrono::nanoseconds>(m_variance * 1.25);
 }
 
 } // namespace KWin

@@ -43,11 +43,12 @@ std::optional<RenderTimeSpan> CpuRenderTimeQuery::query()
     };
 }
 
-OutputFrame::OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDuration)
+OutputFrame::OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDuration, std::chrono::steady_clock::time_point compositeStart)
     : m_loop(loop)
     , m_refreshDuration(refreshDuration)
     , m_targetPageflipTime(loop->nextPresentationTimestamp())
     , m_predictedRenderTime(loop->predictedRenderTime())
+    , m_compositeStart(compositeStart)
 {
 }
 
@@ -94,7 +95,7 @@ void OutputFrame::presented(std::chrono::nanoseconds timestamp, PresentationMode
         RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode, this);
     }
     for (const auto &feedback : m_feedbacks) {
-        feedback->presented(m_refreshDuration, timestamp, mode);
+        feedback->presented(m_refreshDuration, timestamp, mode, m_compositeStart);
     }
 }
 
@@ -126,6 +127,11 @@ void OutputFrame::addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query)
 std::chrono::steady_clock::time_point OutputFrame::targetPageflipTime() const
 {
     return m_targetPageflipTime;
+}
+
+std::chrono::steady_clock::time_point OutputFrame::compositeStart() const
+{
+    return m_compositeStart;
 }
 
 std::chrono::nanoseconds OutputFrame::refreshDuration() const

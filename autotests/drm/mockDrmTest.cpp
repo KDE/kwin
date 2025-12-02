@@ -453,7 +453,9 @@ void DrmTest::testModeset()
     const auto layer = renderBackend->compatibleOutputLayers(output).front();
     layer->beginFrame();
     output->renderLoop()->prepareNewFrame();
-    const auto frame = std::make_shared<OutputFrame>(output->renderLoop(), std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
+    const auto frame = std::make_shared<OutputFrame>(output->renderLoop(),
+                                                     std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()),
+                                                     std::chrono::steady_clock::now());
     layer->endFrame(infiniteRegion(), infiniteRegion(), frame.get());
     QVERIFY(output->present({layer}, frame));
 

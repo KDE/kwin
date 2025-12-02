@@ -595,6 +595,7 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
 
 void Compositor::composite(RenderLoop *renderLoop)
 {
+    const auto compositeStart = std::chrono::steady_clock::now();
     if (m_backend->checkGraphicsReset()) {
         qCDebug(KWIN_CORE) << "Graphics reset occurred";
 #if KWIN_BUILD_NOTIFICATIONS
@@ -616,7 +617,9 @@ void Compositor::composite(RenderLoop *renderLoop)
 
     renderLoop->prepareNewFrame();
     auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
-    auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
+    auto frame = std::make_shared<OutputFrame>(renderLoop,
+                                               std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()),
+                                               compositeStart);
     std::optional<double> desiredArtificalHdrHeadroom;
 
     // brightness animations should be skipped when
