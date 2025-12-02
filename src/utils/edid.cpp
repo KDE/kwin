@@ -353,9 +353,9 @@ QString Edid::manufacturerString() const
 QString Edid::nameString() const
 {
     if (!m_monitorName.isEmpty()) {
-        return QString::fromLatin1(m_monitorName);
+        return QString::fromLatin1(m_monitorName).trimmed();
     } else if (!m_serialNumber.isEmpty()) {
-        return QString::fromLatin1(m_serialNumber);
+        return QString::fromLatin1(m_serialNumber).trimmed();
     } else {
         return i18n("unknown");
     }
