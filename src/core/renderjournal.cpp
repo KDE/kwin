@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2025 Xaver Hugl <xaver.hugl@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -8,6 +9,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <ranges>
 
 using namespace std::chrono_literals;
 
@@ -18,29 +20,28 @@ RenderJournal::RenderJournal()
 {
 }
 
-static std::chrono::nanoseconds mix(std::chrono::nanoseconds duration1, std::chrono::nanoseconds duration2, double ratio)
-{
-    return std::chrono::nanoseconds(int64_t(std::round(duration1.count() * ratio + duration2.count() * (1 - ratio))));
-}
-
 void RenderJournal::add(std::chrono::nanoseconds renderTime, std::chrono::nanoseconds presentationTimestamp)
 {
-    const auto timeDifference = m_lastAdd ? presentationTimestamp - *m_lastAdd : 10s;
-    m_lastAdd = presentationTimestamp;
+    m_history.push_back(renderTime);
+    if (m_history.size() > 100) {
+        m_history.pop_front();
+    }
+    const std::chrono::nanoseconds average = std::ranges::fold_left(m_history, 0ns, std::plus{}) / m_history.size();
+    auto deviations = m_history | std::views::transform([&average](std::chrono::nanoseconds t) {
+        const auto deviation = std::chrono::abs(t - average);
+        return std::chrono::nanoseconds(deviation.count() * deviation.count());
+    });
+    const std::chrono::nanoseconds variance = std::ranges::fold_left(deviations, 0ns, std::plus{}) / std::max<size_t>(m_history.size() - 1, 1);
+    const auto standardDeviation = std::chrono::nanoseconds{(int64_t)std::round(std::sqrt(variance.count()))};
 
-    static constexpr std::chrono::nanoseconds varianceTimeConstant = 6s;
-    const double varianceRatio = std::clamp(timeDifference.count() / double(varianceTimeConstant.count()), 0.001, 0.1);
-    const auto renderTimeDiff = std::max(renderTime - m_result, 0ns);
-    m_variance = std::max(mix(renderTimeDiff, m_variance, varianceRatio), renderTimeDiff);
-
-    static constexpr std::chrono::nanoseconds timeConstant = 500ms;
-    const double ratio = std::clamp(timeDifference.count() / double(timeConstant.count()), 0.01, 1.0);
-    m_result = mix(renderTime, m_result, ratio);
+    // 3x standard deviation above the mean includes the vast majority of values
+    // in the history, without being 'overpowered' by individual bad frames
+    m_result = average + 3 * standardDeviation;
 }
 
 std::chrono::nanoseconds RenderJournal::result() const
 {
-    return m_result + m_variance * 2;
+    return m_result;
 }
 
 } // namespace KWin

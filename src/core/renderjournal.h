@@ -8,6 +8,7 @@
 #include "kwin_export.h"
 
 #include <chrono>
+#include <deque>
 #include <optional>
 
 namespace KWin
@@ -28,8 +29,8 @@ public:
 
 private:
     std::chrono::nanoseconds m_result{0};
-    std::chrono::nanoseconds m_variance{0};
     std::optional<std::chrono::nanoseconds> m_lastAdd;
+    std::deque<std::chrono::nanoseconds> m_history;
 };
 
 } // namespace KWin
