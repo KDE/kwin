@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-30 00:44+0000\n"
+"POT-Creation-Date: 2025-12-02 00:43+0000\n"
 "PO-Revision-Date: 2025-11-28 09:01+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -54,31 +54,33 @@ msgstr ""
 "cousin@kde.org,gerard@delafond.org, yann.verley@free.fr, nicolas."
 "ternisien@gmail.com,renard@kde.org,sdepiets@gmail.com, xavier.besnard@kde.org"
 
-#: backends/wayland/wayland_output.cpp:508
+#: backends/wayland/wayland_output.cpp:487
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Appuyez sur la touche de contrôle droit pour libérer le pointeur"
 
-#: backends/wayland/wayland_output.cpp:510
+#: backends/wayland/wayland_output.cpp:489
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Appuyez sur la touche de contrôle droit pour saisir le pointeur"
 
-#: backends/wayland/wayland_output.cpp:514
+#: backends/wayland/wayland_output.cpp:493
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Compositeur %1 Wayland de KDE"
 
-#: backends/wayland/wayland_output.cpp:517
-#, kde-format
-msgid "- LogicalOutput disabled"
+#: backends/wayland/wayland_output.cpp:496
+#, fuzzy, kde-format
+#| msgid "- LogicalOutput disabled"
+msgid "- Output disabled"
 msgstr "- Sortie logique désactivée"
 
-#: backends/wayland/wayland_output.cpp:519
-#, kde-format
-msgid "- LogicalOutput dimmed"
+#: backends/wayland/wayland_output.cpp:498
+#, fuzzy, kde-format
+#| msgid "- LogicalOutput dimmed"
+msgid "- Output dimmed"
 msgstr "- Sortie logique ajustée"
 
 #: backends/x11/x11_windowed_backend.cpp:497
@@ -96,7 +98,7 @@ msgstr "Appuyez sur la touche de contrôle droite pour saisir l'entrée"
 msgid "KDE Wayland Compositor"
 msgstr "Compositeur Wayland de KDE"
 
-#: compositor.cpp:592
+#: compositor.cpp:601
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -2471,25 +2473,25 @@ msgstr "Impossible de créer un contexte « PipeWire »"
 msgid "Failed to connect PipeWire context"
 msgstr "Impossible de se connecter à un contexte « PipeWire »"
 
-#: plugins/screencast/screencastmanager.cpp:55
-#: plugins/screencast/screencastmanager.cpp:80
-#: plugins/screencast/screencastmanager.cpp:96
-#: plugins/screencast/screencastmanager.cpp:141
+#: plugins/screencast/screencastmanager.cpp:56
+#: plugins/screencast/screencastmanager.cpp:81
+#: plugins/screencast/screencastmanager.cpp:97
+#: plugins/screencast/screencastmanager.cpp:142
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Type de composition non prise en charge"
 
-#: plugins/screencast/screencastmanager.cpp:61
+#: plugins/screencast/screencastmanager.cpp:62
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Impossible de trouver l'identifiant de fenêtre %1"
 
-#: plugins/screencast/screencastmanager.cpp:108
+#: plugins/screencast/screencastmanager.cpp:109
 #, kde-format
 msgid "Could not find output"
 msgstr "Impossible de trouver une sortie"
 
-#: plugins/screencast/screencastmanager.cpp:146
+#: plugins/screencast/screencastmanager.cpp:147
 #, kde-format
 msgid "Invalid region"
 msgstr "Région non valable"
@@ -4224,13 +4226,13 @@ msgstr "L'ordre de sortie fourni n'est pas valable."
 msgid "The driver rejected the output configuration"
 msgstr "Le pilote a rejeté la configuration de sortie."
 
-#: window.cpp:3116
+#: window.cpp:3123
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne répond plus)"
 
-#: workspace.cpp:1569
+#: workspace.cpp:1628
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-30 00:44+0000\n"
+"POT-Creation-Date: 2025-12-02 00:43+0000\n"
 "PO-Revision-Date: 2025-10-18 12:06+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -39,33 +39,33 @@ msgstr ""
 "xalba@ni.eus,etxaurre@teleline.es,marcos@euskalgnu.org,juanirigoien@yahoo.es,"
 "igaztanaga@gmail.com,hizpol@ej-gv.es"
 
-#: backends/wayland/wayland_output.cpp:508
+#: backends/wayland/wayland_output.cpp:487
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Sakatu eskuineko kontrol tekla erakuslea heltzeko"
 
-#: backends/wayland/wayland_output.cpp:510
+#: backends/wayland/wayland_output.cpp:489
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Sakatu eskuineko kontrol tekla erakuslea askatzeko"
 
-#: backends/wayland/wayland_output.cpp:514
+#: backends/wayland/wayland_output.cpp:493
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland konposatzailea %1"
 
-#: backends/wayland/wayland_output.cpp:517
+#: backends/wayland/wayland_output.cpp:496
 #, fuzzy, kde-format
 #| msgid "- Output disabled"
-msgid "- LogicalOutput disabled"
+msgid "- Output disabled"
 msgstr "- Irteera ezgaituta"
 
-#: backends/wayland/wayland_output.cpp:519
+#: backends/wayland/wayland_output.cpp:498
 #, fuzzy, kde-format
 #| msgid "- Output dimmed"
-msgid "- LogicalOutput dimmed"
+msgid "- Output dimmed"
 msgstr "- Irteera motelduta"
 
 #: backends/x11/x11_windowed_backend.cpp:497
@@ -83,7 +83,7 @@ msgstr "Sakatu eskuineko kontrol tekla sarrera heltzeko"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland konposatzailea"
 
-#: compositor.cpp:592
+#: compositor.cpp:601
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -2442,25 +2442,25 @@ msgstr "«PipeWire» testuingurua sortzea huts egin du"
 msgid "Failed to connect PipeWire context"
 msgstr "«PipeWire» testuingurua konektatzea huts egin du"
 
-#: plugins/screencast/screencastmanager.cpp:55
-#: plugins/screencast/screencastmanager.cpp:80
-#: plugins/screencast/screencastmanager.cpp:96
-#: plugins/screencast/screencastmanager.cpp:141
+#: plugins/screencast/screencastmanager.cpp:56
+#: plugins/screencast/screencastmanager.cpp:81
+#: plugins/screencast/screencastmanager.cpp:97
+#: plugins/screencast/screencastmanager.cpp:142
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Eukarririk ez duen konposizio modua"
 
-#: plugins/screencast/screencastmanager.cpp:61
+#: plugins/screencast/screencastmanager.cpp:62
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Ezin izan du leiho IDa aurkitu: %1"
 
-#: plugins/screencast/screencastmanager.cpp:108
+#: plugins/screencast/screencastmanager.cpp:109
 #, kde-format
 msgid "Could not find output"
 msgstr "Ezin izan du irteera aurkitu"
 
-#: plugins/screencast/screencastmanager.cpp:146
+#: plugins/screencast/screencastmanager.cpp:147
 #, kde-format
 msgid "Invalid region"
 msgstr "Eskualde baliogabea"
@@ -4188,13 +4188,13 @@ msgstr "Emandako irteera-hurrenkera baliogabea da"
 msgid "The driver rejected the output configuration"
 msgstr "Gidariak irteera konfigurazioa errefusatu du"
 
-#: window.cpp:3116
+#: window.cpp:3123
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ez du erantzuten)"
 
-#: workspace.cpp:1569
+#: workspace.cpp:1628
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
