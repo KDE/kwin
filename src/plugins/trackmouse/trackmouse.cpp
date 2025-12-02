@@ -105,13 +105,13 @@ void TrackMouseEffect::reconfigure(ReconfigureFlags)
     }
 }
 
-void TrackMouseEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void TrackMouseEffect::postPaintScreen()
 {
     QTime t = QTime::currentTime();
     m_angle = ((t.second() % 4) * 90.0) + (t.msec() / 1000.0 * 90.0);
     m_rotatingArcsItem->rotate(m_angle);
 
-    effects->prePaintScreen(data, presentTime);
+    effects->postPaintScreen();
 }
 
 void TrackMouseEffect::toggle()
