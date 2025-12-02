@@ -223,7 +223,7 @@ public:
     };
 
     void sendSource(Source source);
-    void sendPosition(quint32 position);
+    void sendPosition(qreal position);
     void sendFrame(quint32 time);
     void sendStop();
 

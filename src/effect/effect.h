@@ -847,7 +847,7 @@ public:
      *
      * @since 5.25
      */
-    virtual bool tabletPadStripEvent(int number, int position, bool isFinger, void *device);
+    virtual bool tabletPadStripEvent(int number, qreal position, bool isFinger, void *device);
 
     /**
      * There has been an event from a input ring on a drawing tablet pad

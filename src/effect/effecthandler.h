@@ -751,7 +751,7 @@ public:
     bool tabletToolTipEvent(KWin::TabletToolTipEvent *event);
     bool tabletToolButtonEvent(uint button, bool pressed, InputDeviceTabletTool *tool, std::chrono::microseconds time);
     bool tabletPadButtonEvent(uint button, bool pressed, std::chrono::microseconds time, InputDevice *device);
-    bool tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
+    bool tabletPadStripEvent(int number, qreal position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
     bool tabletPadRingEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
     bool tabletPadDialEvent(int number, double delta, std::chrono::microseconds time, InputDevice *device);
 
