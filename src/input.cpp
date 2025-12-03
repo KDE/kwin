@@ -251,7 +251,11 @@ bool InputEventFilter::tabletPadDialEvent(TabletPadDialEvent *event)
 
 bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
 {
+    static QStringList s_deviceSkipsInputMethods = qEnvironmentVariable("KWIN_DEVICE_SKIPS_INPUT_METHOD").split(',');
     if (!kwinApp()->inputMethod()) {
+        return false;
+    }
+    if (event->device && s_deviceSkipsInputMethods.contains(event->device->name())) {
         return false;
     }
     if (auto keyboardGrab = kwinApp()->inputMethod()->keyboardGrab()) {
