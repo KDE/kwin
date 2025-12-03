@@ -240,3 +240,14 @@ target_link_libraries(testColorspaces
 )
 add_test(NAME kwin-testColorspaces COMMAND testColorspaces)
 ecm_mark_as_test(testColorspaces)
+
+########################################################
+# Test UInt32Serial
+########################################################
+add_executable(testSerial serial_test.cpp)
+target_link_libraries(testSerial
+    Qt::Test
+    kwin
+)
+add_test(NAME kwin-testSerial COMMAND testSerial)
+ecm_mark_as_test(testSerial)

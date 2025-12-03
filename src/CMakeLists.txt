@@ -566,6 +566,7 @@ install(FILES
     utils/ramfile.h
     utils/realtime.h
     utils/resource.h
+    utils/serial.h
     utils/serviceutils.h
     utils/softwarevsyncmonitor.h
     utils/subsurfacemonitor.h
