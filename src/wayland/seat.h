@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/inputdevice.h"
+#include "utils/serial.h"
 
 #include <QMatrix4x4>
 #include <QObject>
@@ -612,10 +613,10 @@ public:
      * @see selection
      * @see selectionChanged
      */
-    void setSelection(AbstractDataSource *selection, quint32 serial);
+    void setSelection(AbstractDataSource *selection, UInt32Serial serial);
 
     AbstractDataSource *primarySelection() const;
-    void setPrimarySelection(AbstractDataSource *selection, quint32 serial);
+    void setPrimarySelection(AbstractDataSource *selection, UInt32Serial serial);
 
     void setFocusedDataDeviceSurface(SurfaceInterface *surface);
 

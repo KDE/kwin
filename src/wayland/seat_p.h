@@ -76,9 +76,9 @@ public:
 
     // the last thing copied into the clipboard content
     AbstractDataSource *currentSelection = nullptr;
-    quint32 currentSelectionSerial = 0;
+    UInt32Serial currentSelectionSerial = 0;
     AbstractDataSource *currentPrimarySelection = nullptr;
-    quint32 currentPrimarySelectionSerial = 0;
+    UInt32Serial currentPrimarySelectionSerial = 0;
 
     // Pointer related members
     struct Pointer
@@ -155,8 +155,8 @@ protected:
     void seat_release(Resource *resource) override;
 
 private:
-    void updateSelection(DataSourceInterface *dataSource, quint32 serial);
-    void updatePrimarySelection(PrimarySelectionSourceV1Interface *dataSource, quint32);
+    void updateSelection(DataSourceInterface *dataSource, UInt32Serial serial);
+    void updatePrimarySelection(PrimarySelectionSourceV1Interface *dataSource, UInt32Serial serial);
 };
 
 } // namespace KWin

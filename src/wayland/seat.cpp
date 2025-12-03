@@ -308,9 +308,9 @@ bool SeatInterfacePrivate::dragInhibitsPointer(SurfaceInterface *surface) const
     return targetHasDataDevice;
 }
 
-void SeatInterfacePrivate::updateSelection(DataSourceInterface *dataSource, quint32 serial)
+void SeatInterfacePrivate::updateSelection(DataSourceInterface *dataSource, UInt32Serial serial)
 {
-    if (currentSelectionSerial - serial < UINT32_MAX / 2 && currentSelectionSerial != serial) {
+    if (serial < currentSelectionSerial) {
         if (dataSource) {
             dataSource->cancel();
         }
@@ -319,9 +319,9 @@ void SeatInterfacePrivate::updateSelection(DataSourceInterface *dataSource, quin
     q->setSelection(dataSource, serial);
 }
 
-void SeatInterfacePrivate::updatePrimarySelection(PrimarySelectionSourceV1Interface *dataSource, quint32 serial)
+void SeatInterfacePrivate::updatePrimarySelection(PrimarySelectionSourceV1Interface *dataSource, UInt32Serial serial)
 {
-    if (currentPrimarySelectionSerial - serial < UINT32_MAX / 2 && currentPrimarySelectionSerial != serial) {
+    if (serial < currentPrimarySelectionSerial) {
         if (dataSource) {
             dataSource->cancel();
         }
@@ -1156,7 +1156,7 @@ AbstractDataSource *SeatInterface::selection() const
     return d->currentSelection;
 }
 
-void SeatInterface::setSelection(AbstractDataSource *selection, quint32 serial)
+void SeatInterface::setSelection(AbstractDataSource *selection, UInt32Serial serial)
 {
     if (d->currentSelection == selection) {
         return;
@@ -1196,7 +1196,7 @@ AbstractDataSource *SeatInterface::primarySelection() const
     return d->currentPrimarySelection;
 }
 
-void SeatInterface::setPrimarySelection(AbstractDataSource *selection, quint32 serial)
+void SeatInterface::setPrimarySelection(AbstractDataSource *selection, UInt32Serial serial)
 {
     if (d->currentPrimarySelection == selection) {
         return;
