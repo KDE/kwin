@@ -251,10 +251,15 @@ bool InputEventFilter::tabletPadDialEvent(TabletPadDialEvent *event)
 
 bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
 {
+    static QStringList s_deviceSkipsInputMethods = qEnvironmentVariable("KWIN_DEVICE_SKIPS_INPUT_METHOD").split(',');
     if (!kwinApp()->inputMethod()) {
         return false;
     }
+    if (s_deviceSkipsInputMethods.contains(event->device->name())) {
+        return false;
+    }
     if (auto keyboardGrab = kwinApp()->inputMethod()->keyboardGrab()) {
+
         const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
         keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count(), event->nativeScanCode, event->state);
         return true;
