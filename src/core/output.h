@@ -226,20 +226,9 @@ public:
     QSize pixelSize() const;
     QSize modeSize() const;
     OutputTransform transform() const;
-    /**
-     * The transform that the user has configured, and which doesn't get changed
-     * by automatic rotation
-     */
-    OutputTransform manualTransform() const;
     QSize orientateSize(const QSize &size) const;
 
     bool isPlaceholder() const;
-
-    /**
-     * Can be used by the backend to suggest the compositor not to
-     * use overlay planes, to avoid driver issues
-     */
-    virtual bool overlayLayersLikelyBroken() const;
 
     /**
      * The color space in which the scene is blended

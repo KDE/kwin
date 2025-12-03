@@ -514,11 +514,6 @@ uint32_t LogicalOutput::refreshRate() const
     return m_backendOutput->refreshRate();
 }
 
-bool LogicalOutput::overlayLayersLikelyBroken() const
-{
-    return false;
-}
-
 } // namespace KWin
 
 #include "moc_output.cpp"
