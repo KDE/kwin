@@ -235,9 +235,6 @@ void Workspace::setActiveWindow(Window *window)
     updateFocusMousePosition(Cursors::self()->mouse()->pos());
 
     if (qobject_cast<WaylandWindow *>(window)) {
-        // focusIn events only arrive for X11 windows, Wayland windows don't use such a mechanism
-        // and so X11 windows could wrongly get stuck in the list
-        should_get_focus.clear();
         focusToNull();
     }
 
@@ -422,15 +419,11 @@ Window *Workspace::windowUnderMouse(LogicalOutput *output) const
 // deactivates 'window' and activates next window
 void Workspace::activateNextWindow(Window *window)
 {
-    // if 'c' is not the active or the to-become active one, do nothing
-    if (!(window == m_activeWindow || (should_get_focus.count() > 0 && window == should_get_focus.last()))) {
+    if (m_activeWindow != window) {
         return;
     }
 
     closeActivePopup();
-    if (window) {
-        should_get_focus.removeAll(window);
-    }
 
     Window *focusCandidate = nullptr;
 
@@ -490,27 +483,10 @@ void Workspace::switchToOutput(LogicalOutput *output)
     if (get_focus == nullptr) {
         get_focus = findDesktop(desktop, output);
     }
-    if (get_focus != nullptr && get_focus != mostRecentlyActivatedWindow()) {
+    if (get_focus != nullptr && get_focus != activeWindow()) {
         requestFocus(get_focus);
     }
     setActiveOutput(output);
-}
-
-void Workspace::gotFocusIn(const Window *window)
-{
-    if (should_get_focus.contains(window)) {
-        // remove also all sooner elements that should have got FocusIn,
-        // but didn't for some reason (and also won't anymore, because they were sooner)
-        while (should_get_focus.first() != window) {
-            should_get_focus.pop_front();
-        }
-        should_get_focus.pop_front(); // remove 'window'
-    }
-}
-
-void Workspace::setShouldGetFocus(Window *window)
-{
-    should_get_focus.append(window);
 }
 
 // basically the same like allowWindowActivation(), this time allowing
@@ -523,7 +499,7 @@ bool Workspace::allowFullClientRaising(const KWin::Window *window, uint32_t time
     if (sessionManager()->state() == SessionState::Saving && level <= FocusStealingPreventionLevel::Medium) {
         return true;
     }
-    Window *ac = mostRecentlyActivatedWindow();
+    Window *ac = activeWindow();
     if (level == FocusStealingPreventionLevel::None) {
         return true;
     }
@@ -560,8 +536,8 @@ bool Workspace::allowFullClientRaising(const KWin::Window *window, uint32_t time
  */
 bool Workspace::restoreFocus()
 {
-    if (should_get_focus.count() > 0) {
-        return requestFocus(should_get_focus.last());
+    if (m_activeWindow) {
+        return requestFocus(m_activeWindow);
     } else if (m_lastActiveWindow) {
         return requestFocus(m_lastActiveWindow);
     }

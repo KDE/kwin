@@ -235,7 +235,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 // => catch the typical pattern (though we don't want the focus on the root anyway) #348935
                 const bool lostFocusPointerToRoot = currentInput->focus == kwinApp()->x11RootWindow() && event->detail == XCB_NOTIFY_DETAIL_INFERIOR;
                 if (currentInput->focus == XCB_WINDOW_NONE || currentInput->focus == XCB_INPUT_FOCUS_POINTER_ROOT || lostFocusPointerToRoot) {
-                    if (Window *window = mostRecentlyActivatedWindow()) {
+                    if (Window *window = activeWindow()) {
                         requestFocus(window, true);
                     } else {
                         activateNextWindow(nullptr);
@@ -572,16 +572,42 @@ void X11Window::focusInEvent(xcb_focus_in_event_t *e)
     workspace()->forEachClient([](X11Window *window) {
         window->cancelFocusOutTimer();
     });
-    // check if this window is in should_get_focus list or if activation is allowed
-    bool activate = allowWindowActivation(-1U, true);
-    workspace()->gotFocusIn(this); // remove from should_get_focus list
-    if (activate) {
+
+    // This is a FocusIn event from an XSetInputFocus() request that was issued before ours, it will
+    // be superseded later, so don't bother updating the active window.
+    if (e->sequence < workspace()->x11FocusSerial()) {
+        return;
+    }
+
+    // This is a FocusIn event in response to the XSetInputFocus() getting called by us or somebody
+    // else tried to focus their window around the same time, in which case consult with our focus
+    // stealing prevention policies.
+    if (e->sequence == workspace()->x11FocusSerial()) {
+        if (isActive()) {
+            return;
+        }
+    }
+
+    // Somebody focused their window but they opted in only to the WM_TAKE_FOCUS protocol or somebody
+    // tried to steal input focus. If we've attempted to focus that window, then just update the
+    // focus serial, and that's it, otherwise check if this FocusIn event is fine according to our
+    // focus stealing prevention policies.
+    if (e->sequence > workspace()->x11FocusSerial()) {
+        if (isActive()) {
+            workspace()->setX11FocusSerial(e->sequence);
+            return;
+        }
+    }
+
+    if (allowWindowActivation(-1U, true)) {
+        workspace()->setX11FocusSerial(e->sequence);
         workspace()->setActiveWindow(this);
     } else {
         if (workspace()->restoreFocus()) {
             demandAttention();
         } else {
             qCWarning(KWIN_CORE, "Failed to restore focus. Activating 0x%x", window());
+            workspace()->setX11FocusSerial(e->sequence);
             workspace()->setActiveWindow(this);
         }
     }

@@ -164,7 +164,7 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
         }
         if (src == NET::FromTool) {
             workspace->activateWindow(c, true); // force
-        } else if (c == workspace->mostRecentlyActivatedWindow()) {
+        } else if (c == workspace->activeWindow()) {
             return; // WORKAROUND? With > 1 plasma activities, we cause this ourselves. bug #240673
         } else { // NET::FromApplication
             X11Window *c2;

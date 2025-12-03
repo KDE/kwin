@@ -1564,7 +1564,8 @@ bool X11Window::takeFocus()
     Q_ASSERT(effectiveAcceptFocus || effectiveTakeFocus);
 
     if (effectiveAcceptFocus) {
-        xcb_set_input_focus(kwinApp()->x11Connection(), XCB_INPUT_FOCUS_POINTER_ROOT, m_client, XCB_TIME_CURRENT_TIME);
+        const xcb_void_cookie_t cookie = xcb_set_input_focus(kwinApp()->x11Connection(), XCB_INPUT_FOCUS_POINTER_ROOT, m_client, XCB_TIME_CURRENT_TIME);
+        workspace()->setX11FocusSerial(cookie.sequence);
     } else {
         demandAttention(false); // window cannot take input, at least withdraw urgency
     }
@@ -1573,7 +1574,6 @@ bool X11Window::takeFocus()
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus, kwinApp()->x11Time());
     }
 
-    workspace()->setShouldGetFocus(this);
     workspace()->setActiveWindow(this);
 
     return true;
@@ -2586,7 +2586,7 @@ xcb_window_t X11Window::verifyTransientFor(xcb_window_t new_transient_for, bool 
 void X11Window::addTransient(Window *cl)
 {
     Window::addTransient(cl);
-    if (workspace()->mostRecentlyActivatedWindow() == this && cl->isModal()) {
+    if (workspace()->activeWindow() == this && cl->isModal()) {
         check_active_modal = true;
     }
 }
@@ -2824,7 +2824,7 @@ void X11Window::checkActiveModal()
     // if the active window got new modal transient, activate it.
     // cannot be done in AddTransient(), because there may temporarily
     // exist loops, breaking findModal
-    X11Window *check_modal = dynamic_cast<X11Window *>(workspace()->mostRecentlyActivatedWindow());
+    X11Window *check_modal = dynamic_cast<X11Window *>(workspace()->activeWindow());
     if (check_modal != nullptr && check_modal->check_active_modal) {
         X11Window *new_modal = dynamic_cast<X11Window *>(check_modal->findModal());
         if (new_modal != nullptr && new_modal != check_modal) {
@@ -4172,7 +4172,7 @@ xcb_timestamp_t X11Window::readUserTimeMapTimestamp(const KStartupInfoId *asn_id
         // Otherwise, refuse activation of a window
         // from already running application if this application
         // is not the active one (unless focus stealing prevention is turned off).
-        X11Window *act = dynamic_cast<X11Window *>(workspace()->mostRecentlyActivatedWindow());
+        X11Window *act = dynamic_cast<X11Window *>(workspace()->activeWindow());
         if (act != nullptr && !belongToSameApplication(act, this, SameApplicationCheck::RelaxedForActive)) {
             bool first_window = true;
             auto sameApplicationActiveHackPredicate = [this](const X11Window *cl) {
@@ -4323,14 +4323,14 @@ bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
     if (workspace()->sessionManager()->state() == SessionState::Saving && level <= FocusStealingPreventionLevel::Medium) { // <= normal
         return true;
     }
-    Window *ac = workspace()->mostRecentlyActivatedWindow();
+    Window *ac = workspace()->activeWindow();
     if (focus_in) {
-        if (workspace()->inShouldGetFocus(window)) {
-            return true; // FocusIn was result of KWin's action
+        // TODO: Remove when the KWIN_ENABLE_FOCUS_OUT environment variable is dropped.
+        if (!ac) {
+            // Before getting FocusIn, the active Client already
+            // got FocusOut, and therefore got deactivated.
+            ac = workspace()->lastActiveWindow();
         }
-        // Before getting FocusIn, the active Client already
-        // got FocusOut, and therefore got deactivated.
-        ac = workspace()->lastActiveWindow();
     }
     if (time == 0) { // explicitly asked not to get focus
         if (!window->rules()->checkAcceptFocus(false)) {

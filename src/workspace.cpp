@@ -805,7 +805,7 @@ void Workspace::addWaylandWindow(Window *window)
             // focus stealing prevention "low" should always activate new windows
             || (!window->isDesktop() && options->focusStealingPreventionLevel() <= FocusStealingPreventionLevel::Low)
             // If there's no active window, make this desktop the active one.
-            || (activeWindow() == nullptr && should_get_focus.count() == 0));
+            || !activeWindow());
     if (!window->isMinimized() && !shouldActivate && !window->isPopupWindow()) {
         // This window won't be activated, so move it out of the way
         // of the active window
@@ -843,7 +843,6 @@ void Workspace::removeWindow(Window *window)
         cancelDelayFocus();
     }
     attention_chain.removeAll(window);
-    should_get_focus.removeAll(window);
     if (window == m_activeWindow) {
         m_activeWindow = nullptr;
     }
@@ -1512,8 +1511,8 @@ void Workspace::focusToNull()
 {
 #if KWIN_BUILD_X11
     if (m_nullFocus) {
-        should_get_focus.clear();
-        m_nullFocus->focus();
+        const xcb_void_cookie_t cookie = xcb_set_input_focus(kwinApp()->x11Connection(), XCB_INPUT_FOCUS_POINTER_ROOT, *m_nullFocus, XCB_TIME_CURRENT_TIME);
+        m_x11FocusSerial = cookie.sequence;
     }
 #endif
 }
@@ -1842,6 +1841,16 @@ QString Workspace::supportInformation() const
 }
 
 #if KWIN_BUILD_X11
+uint Workspace::x11FocusSerial() const
+{
+    return m_x11FocusSerial;
+}
+
+void Workspace::setX11FocusSerial(uint serial)
+{
+    m_x11FocusSerial = serial;
+}
+
 void Workspace::forEachClient(std::function<void(X11Window *)> func)
 {
     for (Window *window : std::as_const(m_windows)) {

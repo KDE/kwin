@@ -4445,7 +4445,7 @@ void Window::applyWindowRules()
     updateLayer();
     // FSP
     // AcceptFocus :
-    if (workspace()->mostRecentlyActivatedWindow() == this
+    if (workspace()->activeWindow() == this
         && !client_rules->checkAcceptFocus(true)) {
         workspace()->activateNextWindow(this);
     }

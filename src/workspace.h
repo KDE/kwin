@@ -104,6 +104,9 @@ public:
 #if KWIN_BUILD_X11
     bool workspaceEvent(xcb_generic_event_t *);
 
+    uint x11FocusSerial() const;
+    void setX11FocusSerial(uint serial);
+
     X11Window *findClient(std::function<bool(const X11Window *)> func) const;
     X11Window *findClient(xcb_window_t w) const;
     void forEachClient(std::function<void(X11Window *)> func);
@@ -151,12 +154,6 @@ public:
      * if no window has the focus)
      */
     Window *activeWindow() const;
-    /**
-     * Window that was activated, but it's not yet really activeWindow(), because
-     * we didn't process yet the matching FocusIn event. Used mostly in focus
-     * stealing prevention code.
-     */
-    Window *mostRecentlyActivatedWindow() const;
 
     Window *windowUnderMouse(LogicalOutput *output) const;
 
@@ -164,8 +161,6 @@ public:
     bool requestFocus(Window *window, bool force = false);
     void resetFocus();
     bool restoreFocus();
-    void gotFocusIn(const Window *window);
-    void setShouldGetFocus(Window *window);
     void activateNextWindow(Window *window);
     bool focusChangeEnabled()
     {
@@ -411,10 +406,6 @@ public:
      * @internal
      * Used by session management
      */
-    bool inShouldGetFocus(Window *w) const
-    {
-        return should_get_focus.contains(w);
-    }
     Window *lastActiveWindow() const
     {
         return m_lastActiveWindow;
@@ -667,7 +658,6 @@ private:
 
     QList<Window *> unconstrained_stacking_order; // Topmost last
     QList<Window *> stacking_order; // Topmost last
-    QList<Window *> should_get_focus; // Last is most recent
     QList<Window *> attention_chain;
 
     bool showing_desktop;
@@ -679,6 +669,7 @@ private:
     QList<xcb_window_t> manual_overlays; // Topmost last
     std::unique_ptr<Xcb::Window> m_nullFocus;
     std::unique_ptr<X11EventFilter> m_syncAlarmFilter;
+    uint m_x11FocusSerial = 0;
 #endif
 
     int block_focus;
@@ -789,11 +780,6 @@ inline QList<LogicalOutput *> Workspace::outputs() const
 inline Window *Workspace::activeWindow() const
 {
     return m_activeWindow;
-}
-
-inline Window *Workspace::mostRecentlyActivatedWindow() const
-{
-    return should_get_focus.count() > 0 ? should_get_focus.last() : m_activeWindow;
 }
 
 #if KWIN_BUILD_X11
