@@ -43,17 +43,19 @@ msgstr[1] "Escriptori %1"
 #: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
-msgstr "S'ha produït un error en connectar amb el compositor."
+msgstr "S'ha produït un error mentre es connectava amb el compositor."
 
 #: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
-msgstr "S'ha produït un error en guardar la configuració al compositor."
+msgstr ""
+"S'ha produït un error mentre es guardava la configuració al compositor."
 
 #: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
-msgstr "S'ha produït un error en sol·licitar informació des del compositor."
+msgstr ""
+"S'ha produït un error mentre se sol·licitava informació des del compositor."
 
 #: ui/main.qml:26
 #, kde-format

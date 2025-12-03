@@ -86,7 +86,7 @@ msgstr ""
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr "No s'ha pogut obrir el perfil ICC «%1»"
+msgstr "Ha fallat mentre s'obria el perfil ICC «%1»"
 
 #: core/iccprofile.cpp:336
 #, kde-format
@@ -2416,17 +2416,17 @@ msgstr "Escala en tancar la finestra:"
 #: plugins/screencast/pipewirecore.cpp:92
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr "No s'ha pogut iniciar el bucle principal de PipeWire"
+msgstr "Ha fallat mentre s'iniciava el bucle principal de PipeWire"
 
 #: plugins/screencast/pipewirecore.cpp:79
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr "No s'ha pogut crear el context de PipeWire"
+msgstr "Ha fallat mentre es creava el context de PipeWire"
 
 #: plugins/screencast/pipewirecore.cpp:86
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr "No s'ha pogut connectar amb el context de PipeWire"
+msgstr "Ha fallat mentre es connectava amb el context de PipeWire"
 
 #: plugins/screencast/screencastmanager.cpp:45
 #, kde-format
@@ -2451,7 +2451,7 @@ msgstr "Es requerix la composició OpenGL per als vídeos de captura de pantalla
 #: plugins/screencast/screencaststream.cpp:384
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr "No s'ha pogut crear el flux de PipeWire"
+msgstr "Ha fallat mentre es creava el flux de PipeWire"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:403
 #, kde-format
