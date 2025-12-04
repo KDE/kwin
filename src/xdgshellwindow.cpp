@@ -759,6 +759,11 @@ void XdgToplevelWindow::setNoBorder(bool set)
 {
     set = rules()->checkNoBorder(set);
     if (m_userNoBorder == set) {
+        // NOTE that forcing no border to off can have an effect on the
+        // decoration, even if m_userNoBorder stays the same
+        if (rules()->checkNoBorder(true) == false) {
+            configureDecoration();
+        }
         return;
     }
     m_userNoBorder = set;
@@ -1552,6 +1557,10 @@ XdgToplevelWindow::DecorationMode XdgToplevelWindow::preferredDecorationMode() c
         return DecorationMode::Client;
     } else if (m_userNoBorder || isRequestedFullScreen()) {
         return DecorationMode::None;
+    } else if (!rules()->checkNoBorder(true)) {
+        // there's a window rule forcing this window to "no border" = false,
+        // meaning server side decorations
+        return DecorationMode::Server;
     }
 
     if (m_xdgDecoration) {
@@ -1616,6 +1625,7 @@ void XdgToplevelWindow::configureDecoration()
     } else if (m_serverDecoration) {
         configureServerDecoration(decorationMode);
     }
+    scheduleConfigure();
 }
 
 void XdgToplevelWindow::processDecorationState(std::shared_ptr<KDecoration3::DecorationState> state)
@@ -1643,7 +1653,6 @@ void XdgToplevelWindow::configureXdgDecoration(DecorationMode decorationMode)
         m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Server);
         break;
     }
-    scheduleConfigure();
 }
 
 void XdgToplevelWindow::configureServerDecoration(DecorationMode decorationMode)
@@ -1659,7 +1668,6 @@ void XdgToplevelWindow::configureServerDecoration(DecorationMode decorationMode)
         m_serverDecoration->setMode(ServerSideDecorationManagerInterface::Mode::Server);
         break;
     }
-    scheduleConfigure();
 }
 
 void XdgToplevelWindow::installXdgDecoration(XdgToplevelDecorationV1Interface *decoration)
