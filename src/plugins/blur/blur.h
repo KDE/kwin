@@ -20,6 +20,8 @@ namespace KWin
 
 class BlurManagerInterface;
 class ContrastManagerInterface;
+class SurfaceItemWayland;
+class BlurItem;
 
 struct BlurRenderData
 {
@@ -78,6 +80,8 @@ public:
     bool blocksDirectScanout() const override;
 
 public Q_SLOTS:
+    void slotItemAdded(Item *item);
+    void slotItemRemoved(Item *item);
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotViewRemoved(KWin::RenderView *view);
@@ -94,6 +98,7 @@ private:
     bool decorationSupportsBlurBehind(const EffectWindow *w) const;
     bool shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const;
     void updateBlurRegion(EffectWindow *w);
+    void updateBlurRegion(SurfaceItemWayland *item);
     void blur(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
     GLTexture *ensureNoiseTexture();
 
@@ -180,6 +185,9 @@ private:
     QMap<EffectWindow *, QMetaObject::Connection> windowBlurChangedConnections;
     QMap<EffectWindow *, QMetaObject::Connection> windowContrastChangedConnections;
     std::unordered_map<EffectWindow *, BlurEffectData> m_windows;
+
+    QMap<Item *, QMetaObject::Connection> itemBlurChangedConnections;
+    std::unordered_map<Item *, std::unique_ptr<BlurItem>> m_items;
 
     static BlurManagerInterface *s_blurManager;
     static QTimer *s_blurManagerRemoveTimer;

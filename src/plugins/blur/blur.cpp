@@ -16,8 +16,10 @@
 #include "effect/effecthandler.h"
 #include "opengl/glplatform.h"
 #include "scene/decorationitem.h"
+#include "scene/effectitem.h"
 #include "scene/scene.h"
 #include "scene/surfaceitem.h"
+#include "scene/surfaceitem_wayland.h"
 #include "scene/windowitem.h"
 #include "wayland/blur.h"
 #include "wayland/contrast.h"
@@ -166,8 +168,15 @@ BlurEffect::BlurEffect()
         s_contrastManager = new ContrastManagerInterface(effects->waylandDisplay(), s_contrastManagerRemoveTimer);
     }
 
-    connect(effects, &EffectsHandler::windowAdded, this, &BlurEffect::slotWindowAdded);
-    connect(effects, &EffectsHandler::windowDeleted, this, &BlurEffect::slotWindowDeleted);
+    // connect(effects, &EffectsHandler::windowAdded, this, &BlurEffect::slotWindowAdded);
+    // connect(effects, &EffectsHandler::windowDeleted, this, &BlurEffect::slotWindowDeleted);
+    // connect(effects, &EffectsHandler::itemAdded, this, &BlurEffect::slotItemAdded);
+    connect(effects, &EffectsHandler::itemAdded, this, [this](Item *item) {
+        QTimer::singleShot(0, this, [this, item]() {
+            slotItemAdded(item);
+        });
+    });
+    connect(effects, &EffectsHandler::itemRemoved, this, &BlurEffect::slotItemRemoved);
     connect(effects, &EffectsHandler::viewRemoved, this, &BlurEffect::slotViewRemoved);
 #if KWIN_BUILD_X11
     connect(effects, &EffectsHandler::propertyNotify, this, &BlurEffect::slotPropertyNotify);
@@ -303,6 +312,135 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
 
     // Update all windows for the blur to take effect
     effects->addRepaintFull();
+}
+
+class BlurItem : public BackgroundEffectItem
+{
+public:
+    explicit BlurItem(Item *parent)
+        : BackgroundEffectItem(parent)
+    {
+        // TODO limit the size to the blur region
+        updateSize();
+        connect(parent, &Item::sizeChanged, this, &BlurItem::updateSize);
+    }
+
+    void setParams(const QRegion &localRegion, std::optional<qreal> contrast, std::optional<qreal> saturation)
+    {
+        m_localRegion = localRegion;
+        m_contrast = contrast;
+        m_saturation = saturation;
+    }
+
+    void processBackground(GLTexture *backgroundTexture) override
+    {
+        // TODO...
+        // for faster testing, this just paints a red background
+        const QSize deviceSize = size().toSize();
+        if (!m_texture || m_texture->size() != deviceSize) {
+            QImage img(deviceSize, QImage::Format_ARGB32_Premultiplied);
+            img.fill(Qt::red);
+            m_texture = GLTexture::upload(img);
+            discardQuads();
+        }
+    }
+
+    GLTexture *texture() const override
+    {
+        // FIXME this texture needs to be per `RenderView`
+        return m_texture.get();
+    }
+
+private:
+    void updateSize()
+    {
+        setSize(parentItem()->size());
+    }
+
+    WindowQuadList buildQuads() const override
+    {
+        const QRectF geometry = boundingRect();
+        if (geometry.isEmpty() || !m_texture) {
+            return WindowQuadList{};
+        }
+
+        const QRectF imageRect = QRectF(QPointF(), m_texture->size());
+
+        WindowQuad quad;
+        quad[0] = WindowVertex(geometry.topLeft(), imageRect.topLeft());
+        quad[1] = WindowVertex(geometry.topRight(), imageRect.topRight());
+        quad[2] = WindowVertex(geometry.bottomRight(), imageRect.bottomRight());
+        quad[3] = WindowVertex(geometry.bottomLeft(), imageRect.bottomLeft());
+
+        WindowQuadList ret;
+        ret.append(quad);
+        return ret;
+    }
+
+    std::unique_ptr<GLTexture> m_texture;
+    QRegion m_localRegion;
+    std::optional<qreal> m_contrast;
+    std::optional<qreal> m_saturation;
+};
+
+void BlurEffect::updateBlurRegion(SurfaceItemWayland *item)
+{
+    std::optional<QRegion> content;
+    std::optional<qreal> saturation;
+    std::optional<qreal> contrast;
+    if (SurfaceInterface *surface = item->surface()) {
+        if (surface->blur()) {
+            content = surface->blur()->region();
+        }
+        if (surface->contrast()) {
+            saturation = surface->contrast()->saturation();
+            contrast = surface->contrast()->contrast();
+        }
+    }
+    if (content.has_value()) {
+        auto &ptr = m_items[item];
+        if (!ptr) {
+            ptr = std::make_unique<BlurItem>(item);
+        }
+        ptr->setParams(*content, contrast, saturation);
+    } else {
+        if (auto it = m_items.find(item); it != m_items.end()) {
+            effects->makeOpenGLContextCurrent();
+            m_items.erase(it);
+        }
+    }
+}
+
+void BlurEffect::slotItemAdded(Item *item)
+{
+    // TODO what we want to really do here:
+    // - the effect gets notified by the scene when a new item (not window) gets added
+    // - the effect sets up the same connections for updating each item's blur region
+    // - if an item gets a blur region, the effect adds a child `BlurItem` to it
+    // - the `BlurItem` renders the blur in *some* way... simply `GLTexture *EffectItem::texture()` + geometry perhaps?
+    // - how will it get the background though?
+    //      - we want the renderer to provide the background texture, and the scene to ensure it gets rendered properly
+    //      -> `BackgroundEffect` as a special case
+
+    // FIXME move blur region + contrast parameters to `Item`,
+    // and implement it for X11 and internal windows too
+    // This code path literally cannot work, as itemAdded
+    // is called in the Item *constructor*,
+    // so the item is never a SurfaceItemWayland (yet)...
+    if (auto surfaceItem = qobject_cast<SurfaceItemWayland *>(item)) {
+        updateBlurRegion(surfaceItem);
+        itemBlurChangedConnections[item] = connect(surfaceItem->surface(), &SurfaceInterface::blurChanged, this, [this, surfaceItem]() {
+            updateBlurRegion(surfaceItem);
+        });
+    }
+}
+
+void BlurEffect::slotItemRemoved(Item *item)
+{
+    if (auto it = m_items.find(item); it != m_items.end()) {
+        effects->makeOpenGLContextCurrent();
+        m_items.erase(it);
+    }
 }
 
 void BlurEffect::updateBlurRegion(EffectWindow *w)

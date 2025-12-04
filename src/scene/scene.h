@@ -245,6 +245,8 @@ public:
 
 Q_SIGNALS:
     void viewRemoved(RenderView *delegate);
+    void itemAdded(Item *item);
+    void itemRemoved(Item *item);
 
 protected:
     std::unique_ptr<ItemRenderer> m_renderer;

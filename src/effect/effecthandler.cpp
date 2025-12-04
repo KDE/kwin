@@ -292,6 +292,8 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
     connect(Cursors::self()->mouse(), &Cursor::cursorChanged, this, &EffectsHandler::cursorShapeChanged);
 
     connect(scene, &WorkspaceScene::viewRemoved, this, &EffectsHandler::viewRemoved);
+    connect(scene, &WorkspaceScene::itemAdded, this, &EffectsHandler::itemAdded);
+    connect(scene, &WorkspaceScene::itemRemoved, this, &EffectsHandler::itemRemoved);
 
     reconfigure();
 }

@@ -11,6 +11,7 @@
 #include "core/renderviewport.h"
 #include "core/syncobjtimeline.h"
 #include "effect/effect.h"
+#include "effectitem.h"
 #include "opengl/eglnativefence.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
@@ -242,7 +243,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     renderNode.box = QVector4D(top.box.x() + top.box.width() * 0.5,
                                                top.box.y() + top.box.height() * 0.5,
                                                top.box.width() * 0.5,
-                                               top.box.height() * 0.5),
+                                               top.box.height() * 0.5);
                     renderNode.borderRadius = top.radius.toVector();
                 }
             }
@@ -288,6 +289,36 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                 .borderColor = outline.color(),
                 .paintHole = hole,
             });
+        }
+    } else if (auto effectItem = qobject_cast<BackgroundEffectItem *>(item)) {
+        // FIXME
+        effectItem->processBackground(nullptr);
+        GLTexture *texture = effectItem->texture();
+        if (texture && !geometry.isEmpty()) {
+            RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
+                .traits = ShaderTrait::MapTexture,
+                .textures = {texture},
+                .geometry = geometry,
+                .transformMatrix = context->transformStack.top(),
+                .opacity = context->opacityStack.top(),
+                .hasAlpha = true,
+                .colorDescription = item->colorDescription(),
+                .renderingIntent = item->renderingIntent(),
+                .paintHole = hole,
+            });
+            renderNode.geometry.postProcessTextureCoordinates(texture->matrix(UnnormalizedCoordinates));
+
+            if (!context->cornerStack.isEmpty()) {
+                const auto &top = context->cornerStack.top();
+
+                renderNode.traits |= ShaderTrait::RoundedCorners;
+                renderNode.hasAlpha = true;
+                renderNode.box = QVector4D(top.box.x() + top.box.width() * 0.5,
+                                           top.box.y() + top.box.height() * 0.5,
+                                           top.box.width() * 0.5,
+                                           top.box.height() * 0.5);
+                renderNode.borderRadius = top.radius.toVector();
+            }
         }
     }
 

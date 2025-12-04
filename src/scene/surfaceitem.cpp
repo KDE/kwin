@@ -254,7 +254,11 @@ std::optional<std::chrono::nanoseconds> SurfaceItem::recursiveFrameTimeEstimatio
     std::optional<std::chrono::nanoseconds> ret = frameTimeEstimation();
     const auto children = childItems();
     for (Item *child : children) {
-        const auto other = static_cast<SurfaceItem *>(child)->recursiveFrameTimeEstimation();
+        const SurfaceItem *childSurface = qobject_cast<SurfaceItem *>(child);
+        if (!childSurface) {
+            continue;
+        }
+        const auto other = childSurface->recursiveFrameTimeEstimation();
         if (!other.has_value()) {
             continue;
         }

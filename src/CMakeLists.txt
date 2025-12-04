@@ -159,6 +159,7 @@ target_sources(kwin PRIVATE
     scene/cursoritem.cpp
     scene/decorationitem.cpp
     scene/dndiconitem.cpp
+    scene/effectitem.cpp
     scene/imageitem.cpp
     scene/item.cpp
     scene/itemgeometry.cpp
