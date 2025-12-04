@@ -61,7 +61,7 @@ private:
     {
         QSizeF initiallyConfiguredSize;
         Test::XdgToplevel::States initiallyConfiguredStates;
-        QRectF finalGeometry;
+        RectF finalGeometry;
     };
     /*
      * Create a window and return relevant results for testing
@@ -146,22 +146,22 @@ std::tuple<TestPlacement::PlaceWindowResult, TestPlacement::WindowHandle> TestPl
 void TestPlacement::testPlaceSmart()
 {
     const auto outputs = workspace()->outputs();
-    const QList<QRect> desiredGeometries{
-        QRect(0, 0, 600, 500),
-        QRect(600, 0, 600, 500),
-        QRect(0, 500, 600, 500),
-        QRect(600, 500, 600, 500),
-        QRect(680, 524, 600, 500),
-        QRect(680, 0, 600, 500),
-        QRect(0, 524, 600, 500),
-        QRect(0, 0, 600, 500),
+    const QList<Rect> desiredGeometries{
+        Rect(0, 0, 600, 500),
+        Rect(600, 0, 600, 500),
+        Rect(0, 500, 600, 500),
+        Rect(600, 500, 600, 500),
+        Rect(680, 524, 600, 500),
+        Rect(680, 0, 600, 500),
+        Rect(0, 524, 600, 500),
+        Rect(0, 0, 600, 500),
     };
 
     setPlacementPolicy(PlacementSmart);
 
     std::vector<WindowHandle> handles;
 
-    for (const QRect &desiredGeometry : desiredGeometries) {
+    for (const Rect &desiredGeometry : desiredGeometries) {
         auto [windowPlacement, handle] = createAndPlaceWindow(QSize(600, 500));
         handles.push_back(std::move(handle));
 
@@ -197,7 +197,7 @@ void TestPlacement::testPlaceMaximized()
         auto [windowPlacement, handle] = createAndPlaceWindow(QSize(600, 500));
         QVERIFY(windowPlacement.initiallyConfiguredStates & Test::XdgToplevel::State::Maximized);
         QCOMPARE(windowPlacement.initiallyConfiguredSize, QSize(1280, 1024 - 20));
-        QCOMPARE(windowPlacement.finalGeometry, QRect(0, 20, 1280, 1024 - 20)); // under the panel
+        QCOMPARE(windowPlacement.finalGeometry, RectF(0, 20, 1280, 1024 - 20)); // under the panel
         handles.push_back(std::move(handle));
     }
 }
