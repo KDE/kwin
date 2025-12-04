@@ -1200,6 +1200,23 @@ bool Device::isVirtual() const
 {
     return m_isVirtual;
 }
+
+bool Device::supportsEraserButton() const
+{
+    return libinput_tablet_tool_config_eraser_button_get_modes(m_device);
+}
+
+void Device::setEraserRegularButton(bool value)
+{
+}
+
+bool Device::eraserRegularButton() const
+{
+}
+
+quint32 Device::eraserButton() const
+{
+}
 }
 }
 

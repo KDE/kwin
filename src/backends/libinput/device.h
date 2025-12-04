@@ -192,6 +192,10 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(uint32_t defaultRotation READ defaultRotation CONSTANT)
     Q_PROPERTY(bool isVirtual READ isVirtual CONSTANT)
 
+    Q_PROPERTY(bool supportsEraserModes READ supportsEraserModes CONSTANT)
+    Q_PROPERTY(bool eraserRegularButton READ eraserRegularButton WRITE setEraserRegularButton NOTIFY eraserRegularButtonChanged)
+    Q_PROPERTY(quint32 eraserButton READ eraserButton CONSTANT)
+
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
     ~Device() override;
@@ -780,6 +784,11 @@ public:
     uint32_t defaultRotation() const;
     bool isVirtual() const;
 
+    bool supportsEraserButton() const;
+    void setEraserRegularButton(bool value);
+    bool eraserRegularButton() const;
+    quint32 eraserButton() const;
+
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
      */
@@ -815,6 +824,7 @@ Q_SIGNALS:
     void tabletToolRelativeChanged();
     void rotationChanged();
     void currentModesChanged();
+    void eraserRegularButtonChanged();
 
 private:
     template<typename T>
@@ -922,6 +932,8 @@ private:
     bool m_tabletToolIsRelative = false;
     QList<unsigned int> m_currentModes;
     bool m_isVirtual = false;
+
+    bool m_supportsEraserButton;
 };
 
 }
