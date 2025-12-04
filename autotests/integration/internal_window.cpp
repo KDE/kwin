@@ -270,12 +270,12 @@ void InternalWindowTest::testGeometry()
     QCOMPARE(frameGeometryChangedSpy.count(), 5);
 
     // server initiated move+resize
-    internalWindow->moveResize(internalWindow->clientRectToFrameRect(QRectF(100, 100, 300, 300)));
+    internalWindow->moveResize(internalWindow->clientRectToFrameRect(RectF(100, 100, 300, 300)));
     QCOMPARE(frameGeometryChangedSpy.count(), 6);
     QCOMPARE(internalWindow->clientGeometry(), RectF(100, 100, 300, 300));
     QCOMPARE(win.geometry(), QRect(100, 100, 300, 300));
 
-    internalWindow->moveResize(internalWindow->clientRectToFrameRect(QRectF(100, 100, 300, 300)));
+    internalWindow->moveResize(internalWindow->clientRectToFrameRect(RectF(100, 100, 300, 300)));
     QCOMPARE(frameGeometryChangedSpy.count(), 6);
 }
 
@@ -619,7 +619,7 @@ void InternalWindowTest::testReentrantMoveResize()
 
     // Let's pretend that there is a script that really wants the window to be at (100, 100).
     connect(window, &Window::frameGeometryChanged, this, [window]() {
-        window->moveResize(QRectF(QPointF(100, 100), window->size()));
+        window->moveResize(RectF(QPointF(100, 100), window->size()));
     });
 
     // Trigger the lambda above.
