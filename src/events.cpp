@@ -376,7 +376,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         propertyNotifyEvent(reinterpret_cast<xcb_property_notify_event_t *>(e));
         break;
     case XCB_FOCUS_IN:
-        focusInEvent(reinterpret_cast<xcb_focus_in_event_t *>(e));
+        focusInEvent(e);
         break;
     case XCB_FOCUS_OUT:
         focusOutEvent(reinterpret_cast<xcb_focus_out_event_t *>(e));
@@ -558,12 +558,14 @@ void X11Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
     }
 }
 
-void X11Window::focusInEvent(xcb_focus_in_event_t *e)
+void X11Window::focusInEvent(xcb_generic_event_t *event)
 {
-    if (e->mode == XCB_NOTIFY_MODE_GRAB || e->mode == XCB_NOTIFY_MODE_UNGRAB) {
+    const auto focusEvent = reinterpret_cast<xcb_focus_in_event_t *>(event);
+
+    if (focusEvent->mode == XCB_NOTIFY_MODE_GRAB || focusEvent->mode == XCB_NOTIFY_MODE_UNGRAB) {
         return; // we don't care
     }
-    if (e->detail == XCB_NOTIFY_DETAIL_POINTER) {
+    if (focusEvent->detail == XCB_NOTIFY_DETAIL_POINTER) {
         return; // we don't care
     }
     if (!isShown() || !isOnCurrentDesktop()) { // we unmapped it, but it got focus meanwhile ->
@@ -573,16 +575,19 @@ void X11Window::focusInEvent(xcb_focus_in_event_t *e)
         window->cancelFocusOutTimer();
     });
 
+    // Note that xcb_focus_in_event_t::sequence is a uint16_t serial.
+    const uint32_t serial = event->full_sequence;
+
     // This is a FocusIn event from an XSetInputFocus() request that was issued before ours, it will
     // be superseded later, so don't bother updating the active window.
-    if (e->sequence < workspace()->x11FocusSerial()) {
+    if (serial < workspace()->x11FocusSerial()) {
         return;
     }
 
     // This is a FocusIn event in response to the XSetInputFocus() getting called by us or somebody
     // else tried to focus their window around the same time, in which case consult with our focus
     // stealing prevention policies.
-    if (e->sequence == workspace()->x11FocusSerial()) {
+    if (serial == workspace()->x11FocusSerial()) {
         if (isActive()) {
             return;
         }
@@ -592,22 +597,22 @@ void X11Window::focusInEvent(xcb_focus_in_event_t *e)
     // tried to steal input focus. If we've attempted to focus that window, then just update the
     // focus serial, and that's it, otherwise check if this FocusIn event is fine according to our
     // focus stealing prevention policies.
-    if (e->sequence > workspace()->x11FocusSerial()) {
+    if (serial > workspace()->x11FocusSerial()) {
         if (isActive()) {
-            workspace()->setX11FocusSerial(e->sequence);
+            workspace()->setX11FocusSerial(serial);
             return;
         }
     }
 
     if (allowWindowActivation(-1U, true)) {
-        workspace()->setX11FocusSerial(e->sequence);
+        workspace()->setX11FocusSerial(serial);
         workspace()->setActiveWindow(this);
     } else {
         if (workspace()->restoreFocus()) {
             demandAttention();
         } else {
             qCWarning(KWIN_CORE, "Failed to restore focus. Activating 0x%x", window());
-            workspace()->setX11FocusSerial(e->sequence);
+            workspace()->setX11FocusSerial(serial);
             workspace()->setActiveWindow(this);
         }
     }

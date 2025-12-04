@@ -252,7 +252,7 @@ private:
     void configureRequestEvent(xcb_configure_request_event_t *e);
     void propertyNotifyEvent(xcb_property_notify_event_t *e);
     void clientMessageEvent(xcb_client_message_event_t *e);
-    void focusInEvent(xcb_focus_in_event_t *e);
+    void focusInEvent(xcb_generic_event_t *e);
     void focusOutEvent(xcb_focus_out_event_t *e);
     void shapeNotifyEvent(xcb_shape_notify_event_t *e);
 
