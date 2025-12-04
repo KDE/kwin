@@ -1566,8 +1566,6 @@ void X11Window::takeFocus()
     if (effectiveAcceptFocus) {
         const xcb_void_cookie_t cookie = xcb_set_input_focus(kwinApp()->x11Connection(), XCB_INPUT_FOCUS_POINTER_ROOT, m_client, XCB_TIME_CURRENT_TIME);
         workspace()->setX11FocusSerial(cookie.sequence);
-    } else {
-        demandAttention(false); // window cannot take input, at least withdraw urgency
     }
 
     if (effectiveTakeFocus) {
