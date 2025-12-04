@@ -105,25 +105,25 @@ bool Tile::supportsResizeGravity(Gravity gravity)
     }
 }
 
-void Tile::setGeometryFromWindow(const QRectF &geom)
+void Tile::setGeometryFromWindow(const RectF &geom)
 {
     setGeometryFromAbsolute(geom + QMarginsF(m_padding, m_padding, m_padding, m_padding));
 }
 
-void Tile::setGeometryFromAbsolute(const QRectF &geom)
+void Tile::setGeometryFromAbsolute(const RectF &geom)
 {
-    const QRectF outGeom = m_tiling->output()->geometryF();
-    const QRectF relGeom((geom.x() - outGeom.x()) / outGeom.width(),
-                         (geom.y() - outGeom.y()) / outGeom.height(),
-                         geom.width() / outGeom.width(),
-                         geom.height() / outGeom.height());
+    const RectF outGeom = m_tiling->output()->geometryF();
+    const RectF relGeom((geom.x() - outGeom.x()) / outGeom.width(),
+                        (geom.y() - outGeom.y()) / outGeom.height(),
+                        geom.width() / outGeom.width(),
+                        geom.height() / outGeom.height());
 
     setRelativeGeometry(relGeom);
 }
 
-void Tile::setRelativeGeometry(const QRectF &geom)
+void Tile::setRelativeGeometry(const RectF &geom)
 {
-    QRectF constrainedGeom = geom;
+    RectF constrainedGeom = geom;
     constrainedGeom.setWidth(std::max(constrainedGeom.width(), m_minimumSize.width()));
     constrainedGeom.setHeight(std::max(constrainedGeom.height(), m_minimumSize.height()));
 
@@ -145,30 +145,30 @@ void Tile::setRelativeGeometry(const QRectF &geom)
     }
 }
 
-QRectF Tile::relativeGeometry() const
+RectF Tile::relativeGeometry() const
 {
     return m_relativeGeometry;
 }
 
-QRectF Tile::absoluteGeometry() const
+RectF Tile::absoluteGeometry() const
 {
-    const QRectF geom = m_tiling->output()->geometryF();
-    return QRectF(std::round(geom.x() + m_relativeGeometry.x() * geom.width()),
-                  std::round(geom.y() + m_relativeGeometry.y() * geom.height()),
-                  std::round(m_relativeGeometry.width() * geom.width()),
-                  std::round(m_relativeGeometry.height() * geom.height()));
+    const RectF geom = m_tiling->output()->geometryF();
+    return RectF(std::round(geom.x() + m_relativeGeometry.x() * geom.width()),
+                 std::round(geom.y() + m_relativeGeometry.y() * geom.height()),
+                 std::round(m_relativeGeometry.width() * geom.width()),
+                 std::round(m_relativeGeometry.height() * geom.height()));
 }
 
-QRectF Tile::absoluteGeometryInScreen() const
+RectF Tile::absoluteGeometryInScreen() const
 {
-    const QRectF geom = m_tiling->output()->geometryF();
-    return QRectF(std::round(m_relativeGeometry.x() * geom.width()),
-                  std::round(m_relativeGeometry.y() * geom.height()),
-                  std::round(m_relativeGeometry.width() * geom.width()),
-                  std::round(m_relativeGeometry.height() * geom.height()));
+    const RectF geom = m_tiling->output()->geometryF();
+    return RectF(std::round(m_relativeGeometry.x() * geom.width()),
+                 std::round(m_relativeGeometry.y() * geom.height()),
+                 std::round(m_relativeGeometry.width() * geom.width()),
+                 std::round(m_relativeGeometry.height() * geom.height()));
 }
 
-QRectF Tile::windowGeometry() const
+RectF Tile::windowGeometry() const
 {
     // Apply half padding between tiles and full against the screen edges
     QMarginsF effectiveMargins;
@@ -181,7 +181,7 @@ QRectF Tile::windowGeometry() const
     return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), m_desktop)) - effectiveMargins;
 }
 
-QRectF Tile::maximizedWindowGeometry() const
+RectF Tile::maximizedWindowGeometry() const
 {
     const auto geom = absoluteGeometry();
     return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), m_desktop));
@@ -303,9 +303,9 @@ void Tile::resizeFromGravity(Gravity gravity, int x_root, int y_root)
         return;
     }
 
-    const QRectF outGeom = m_tiling->output()->geometryF();
+    const RectF outGeom = m_tiling->output()->geometryF();
     const QPointF relativePos = QPointF((x_root - outGeom.x()) / outGeom.width(), (y_root - outGeom.y()) / outGeom.height());
-    QRectF newGeom = m_relativeGeometry;
+    RectF newGeom = m_relativeGeometry;
 
     switch (gravity) {
     case Gravity::TopLeft:

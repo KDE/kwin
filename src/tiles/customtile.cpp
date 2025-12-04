@@ -37,7 +37,7 @@ CustomTile::CustomTile(TileManager *tiling, CustomTile *parentItem)
     m_geometryLock = true;
 }
 
-CustomTile *CustomTile::createChildAt(const QRectF &relativeGeometry, LayoutDirection layoutDirection, int position)
+CustomTile *CustomTile::createChildAt(const RectF &relativeGeometry, LayoutDirection layoutDirection, int position)
 {
     CustomTile *tile = new CustomTile(manager(), this);
     connect(tile, &CustomTile::layoutModified, this, &CustomTile::layoutModified);
@@ -50,13 +50,13 @@ CustomTile *CustomTile::createChildAt(const QRectF &relativeGeometry, LayoutDire
     return tile;
 }
 
-void CustomTile::setRelativeGeometry(const QRectF &geom)
+void CustomTile::setRelativeGeometry(const RectF &geom)
 {
     if (relativeGeometry() == geom) {
         return;
     }
 
-    QRectF finalGeom = geom.intersected(QRectF(0, 0, 1, 1));
+    RectF finalGeom = geom.intersected(RectF(0, 0, 1, 1));
     finalGeom.setWidth(std::max(finalGeom.width(), minimumSize().width()));
     finalGeom.setHeight(std::max(finalGeom.height(), minimumSize().height()));
     // We couldn't set the minimum size and still remain in boundaries, do nothing
@@ -71,7 +71,7 @@ void CustomTile::setRelativeGeometry(const QRectF &geom)
         if (finalGeom.left() != relativeGeometry().left()) {
             Tile *tile = nextTileAt(Qt::LeftEdge);
             if (tile) {
-                QRectF tileGeom = tile->relativeGeometry();
+                RectF tileGeom = tile->relativeGeometry();
                 tileGeom.setRight(finalGeom.left());
                 if (tileGeom.width() <= tile->minimumSize().width()) {
                     m_geometryLock = false;
@@ -200,9 +200,9 @@ QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
     if (parentT && (parentT->childCount() < 2 || parentT->layoutDirection() == newDirection)) {
         // Add a new cell to the current layout
         setLayoutDirection(newDirection);
-        QRectF newGeo;
+        RectF newGeo;
         if (newDirection == LayoutDirection::Floating) {
-            newGeo = QRectF(relativeGeometry().left() + 0.1, relativeGeometry().top() + 0.1, 0.3, 0.2);
+            newGeo = RectF(relativeGeometry().left() + 0.1, relativeGeometry().top() + 0.1, 0.3, 0.2);
             newGeo.setLeft(std::max(newGeo.left(), parentT->relativeGeometry().left()));
             newGeo.setTop(std::max(newGeo.top(), parentT->relativeGeometry().top()));
             newGeo.setRight(std::min(newGeo.right(), parentT->relativeGeometry().right()));
@@ -231,7 +231,7 @@ QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
             if (!childTiles().isEmpty()) {
                 startGeom = childTiles().last()->relativeGeometry();
             }
-            newGeo = QRectF(startGeom.left() + 0.05, startGeom.top() + 0.05, 0.3, 0.25);
+            newGeo = RectF(startGeom.left() + 0.05, startGeom.top() + 0.05, 0.3, 0.25);
             newGeo.setLeft(std::max(newGeo.left(), relativeGeometry().left()));
             newGeo.setTop(std::max(newGeo.top(), relativeGeometry().top()));
             newGeo.setRight(std::min(newGeo.right(), relativeGeometry().right()));

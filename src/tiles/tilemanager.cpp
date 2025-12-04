@@ -68,7 +68,7 @@ TileManager::TileManager(LogicalOutput *parent)
         m_rootTiles[desk] = rootTile;
         m_quickRootTiles[desk] = new QuickRootTile(this, desk);
 
-        rootTile->setRelativeGeometry(QRectF(0, 0, 1, 1));
+        rootTile->setRelativeGeometry(RectF(0, 0, 1, 1));
         connect(rootTile, &CustomTile::paddingChanged, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
         connect(rootTile, &CustomTile::layoutModified, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
 
@@ -191,7 +191,7 @@ Tile::LayoutDirection strToLayoutDirection(const QString &dir)
     }
 }
 
-CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const QRectF &availableArea, CustomTile *parentTile)
+CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const RectF &availableArea, CustomTile *parentTile)
 {
     if (availableArea.isEmpty()) {
         return nullptr;
@@ -202,7 +202,7 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const QRectF &av
         CustomTile *createdTile = nullptr;
 
         if (parentTile->layoutDirection() == Tile::LayoutDirection::Horizontal) {
-            QRectF rect = availableArea;
+            RectF rect = availableArea;
             const auto width = obj.value(QStringLiteral("width"));
             if (width.isDouble()) {
                 rect.setWidth(std::min(width.toDouble(), availableArea.width()));
@@ -212,7 +212,7 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const QRectF &av
             }
 
         } else if (parentTile->layoutDirection() == Tile::LayoutDirection::Vertical) {
-            QRectF rect = availableArea;
+            RectF rect = availableArea;
             const auto height = obj.value(QStringLiteral("height"));
             if (height.isDouble()) {
                 rect.setHeight(std::min(height.toDouble(), availableArea.height()));
@@ -222,11 +222,11 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const QRectF &av
             }
 
         } else if (parentTile->layoutDirection() == Tile::LayoutDirection::Floating) {
-            QRectF rect(0, 0, 1, 1);
-            rect = QRectF(obj.value(QStringLiteral("x")).toDouble(),
-                          obj.value(QStringLiteral("y")).toDouble(),
-                          obj.value(QStringLiteral("width")).toDouble(),
-                          obj.value(QStringLiteral("height")).toDouble());
+            RectF rect(0, 0, 1, 1);
+            rect = RectF(obj.value(QStringLiteral("x")).toDouble(),
+                         obj.value(QStringLiteral("y")).toDouble(),
+                         obj.value(QStringLiteral("width")).toDouble(),
+                         obj.value(QStringLiteral("height")).toDouble());
 
             if (!rect.isEmpty()) {
                 createdTile = parentTile->createChildAt(rect, parentTile->layoutDirection(), parentTile->childCount());
@@ -327,7 +327,7 @@ void TileManager::readSettings(RootTile *rootTile)
         const auto arr = doc.object().value(QStringLiteral("tiles"));
         if (arr.isArray() && arr.toArray().count() > 0) {
             rootTile->setLayoutDirection(strToLayoutDirection(doc.object().value(QStringLiteral("layoutDirection")).toString()));
-            parseTilingJSon(arr, QRectF(0, 0, 1, 1), rootTile);
+            parseTilingJSon(arr, RectF(0, 0, 1, 1), rootTile);
         }
     }
 

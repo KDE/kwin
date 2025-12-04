@@ -18,7 +18,6 @@
 
 #include <QAbstractItemModel>
 #include <QObject>
-#include <QRectF>
 
 #include <QJsonValue>
 
@@ -69,7 +68,7 @@ private:
     void readSettings(RootTile *rootTile);
     void saveSettings();
     QJsonObject tileToJSon(CustomTile *parentTile);
-    CustomTile *parseTilingJSon(const QJsonValue &val, const QRectF &availableArea, CustomTile *parentTile);
+    CustomTile *parseTilingJSon(const QJsonValue &val, const RectF &availableArea, CustomTile *parentTile);
 
     Q_DISABLE_COPY(TileManager)
 

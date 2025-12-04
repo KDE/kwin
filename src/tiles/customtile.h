@@ -25,9 +25,9 @@ class KWIN_EXPORT CustomTile : public Tile
 public:
     CustomTile(TileManager *tiling, CustomTile *parentItem = nullptr);
 
-    CustomTile *createChildAt(const QRectF &relativeGeometry, LayoutDirection direction, int position);
+    CustomTile *createChildAt(const RectF &relativeGeometry, LayoutDirection direction, int position);
 
-    void setRelativeGeometry(const QRectF &geom) override;
+    void setRelativeGeometry(const RectF &geom) override;
     bool supportsResizeGravity(KWin::Gravity gravity) override;
 
     /**

@@ -9,12 +9,12 @@
 
 #pragma once
 
+#include "core/rect.h"
 #include "effect/globals.h"
 #include "virtualdesktops.h"
 #include <kwin_export.h>
 
 #include <QObject>
-#include <QRectF>
 
 namespace KWin
 {
@@ -27,9 +27,9 @@ class Window;
 class KWIN_EXPORT Tile : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QRectF relativeGeometry READ relativeGeometry WRITE setRelativeGeometry NOTIFY relativeGeometryChanged)
-    Q_PROPERTY(QRectF absoluteGeometry READ absoluteGeometry NOTIFY absoluteGeometryChanged)
-    Q_PROPERTY(QRectF absoluteGeometryInScreen READ absoluteGeometryInScreen NOTIFY absoluteGeometryChanged)
+    Q_PROPERTY(KWin::RectF relativeGeometry READ relativeGeometry WRITE setRelativeGeometry NOTIFY relativeGeometryChanged)
+    Q_PROPERTY(KWin::RectF absoluteGeometry READ absoluteGeometry NOTIFY absoluteGeometryChanged)
+    Q_PROPERTY(KWin::RectF absoluteGeometryInScreen READ absoluteGeometryInScreen NOTIFY absoluteGeometryChanged)
     Q_PROPERTY(qreal padding READ padding WRITE setPadding NOTIFY paddingChanged)
     Q_PROPERTY(QSizeF minimumSize READ minimumSize WRITE setMinimumSize NOTIFY minimumSizeChanged)
     Q_PROPERTY(int positionInLayout READ row NOTIFY rowChanged)
@@ -53,37 +53,37 @@ public:
     VirtualDesktop *desktop() const;
     bool isActive() const;
 
-    void setGeometryFromWindow(const QRectF &geom);
-    void setGeometryFromAbsolute(const QRectF &geom);
-    virtual void setRelativeGeometry(const QRectF &geom);
+    void setGeometryFromWindow(const RectF &geom);
+    void setGeometryFromAbsolute(const RectF &geom);
+    virtual void setRelativeGeometry(const RectF &geom);
 
     virtual bool supportsResizeGravity(Gravity gravity);
 
     /**
      * Geometry of the tile in units between 0 and 1 relative to the screen geometry
      */
-    QRectF relativeGeometry() const;
+    RectF relativeGeometry() const;
 
     /**
      * Geometry of the tile in absolute coordinates
      */
-    QRectF absoluteGeometry() const;
+    RectF absoluteGeometry() const;
 
     /**
      * Geometry of the tile in absolute coordinates, but in screen coordinates,
      * ie the top left corner of rootTile always at 0,0
      */
-    QRectF absoluteGeometryInScreen() const;
+    RectF absoluteGeometryInScreen() const;
 
     /**
      * Absolute geometry minus the padding and reserved areas such as panels
      */
-    QRectF windowGeometry() const;
+    RectF windowGeometry() const;
 
     /**
      * Absolute geometry minus the padding and reserved areas such as panels
      */
-    QRectF maximizedWindowGeometry() const;
+    RectF maximizedWindowGeometry() const;
 
     /**
      * Which edges of the tile touches an edge of the screen
@@ -140,7 +140,7 @@ public:
     void destroyChild(Tile *tile);
 
     template<class T>
-    T *createChildAt(const QRectF &relativeGeometry, int position)
+    T *createChildAt(const RectF &relativeGeometry, int position)
     {
         T *t = new T(m_tiling, static_cast<T *>(this));
         t->setRelativeGeometry(relativeGeometry);
@@ -175,7 +175,7 @@ protected:
 
     VirtualDesktop *m_desktop = nullptr;
     TileManager *m_tiling;
-    QRectF m_relativeGeometry;
+    RectF m_relativeGeometry;
     QSizeF m_minimumSize = QSizeF(0.15, 0.15);
     QuickTileMode m_quickTileMode = QuickTileFlag::None;
     qreal m_padding = 4.0;

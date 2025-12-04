@@ -20,10 +20,10 @@ QuickRootTile::QuickRootTile(TileManager *tiling, VirtualDesktop *desktop)
     m_desktop = desktop;
     setParent(tiling);
     setPadding(0.0);
-    setRelativeGeometry(QRectF(0, 0, 1, 1));
+    setRelativeGeometry(RectF(0, 0, 1, 1));
     setQuickTileMode(QuickTileFlag::None);
 
-    auto createTile = [this](const QRectF &geometry, QuickTileMode tileMode) {
+    auto createTile = [this](const RectF &geometry, QuickTileMode tileMode) {
         Tile *tile = createChildAt<Tile>(geometry, childCount());
         tile->setPadding(0.0);
         tile->setQuickTileMode(tileMode);
@@ -36,15 +36,15 @@ QuickRootTile::QuickRootTile(TileManager *tiling, VirtualDesktop *desktop)
         return tile;
     };
 
-    m_leftVerticalTile = createTile(QRectF(0, 0, 0.5, 1), QuickTileFlag::Left);
-    m_rightVerticalTile = createTile(QRectF(0.5, 0, 0.5, 1), QuickTileFlag::Right);
-    m_topHorizontalTile = createTile(QRectF(0, 0, 1, 0.5), QuickTileFlag::Top);
-    m_bottomHorizontalTile = createTile(QRectF(0, 0.5, 1, 0.5), QuickTileFlag::Bottom);
+    m_leftVerticalTile = createTile(RectF(0, 0, 0.5, 1), QuickTileFlag::Left);
+    m_rightVerticalTile = createTile(RectF(0.5, 0, 0.5, 1), QuickTileFlag::Right);
+    m_topHorizontalTile = createTile(RectF(0, 0, 1, 0.5), QuickTileFlag::Top);
+    m_bottomHorizontalTile = createTile(RectF(0, 0.5, 1, 0.5), QuickTileFlag::Bottom);
 
-    m_topLeftTile = createTile(QRectF(0, 0, 0.5, 0.5), QuickTileFlag::Top | QuickTileFlag::Left);
-    m_topRightTile = createTile(QRectF(0.5, 0, 0.5, 0.5), QuickTileFlag::Top | QuickTileFlag::Right);
-    m_bottomLeftTile = createTile(QRectF(0, 0.5, 0.5, 0.5), QuickTileFlag::Bottom | QuickTileFlag::Left);
-    m_bottomRightTile = createTile(QRectF(0.5, 0.5, 0.5, 0.5), QuickTileFlag::Bottom | QuickTileFlag::Right);
+    m_topLeftTile = createTile(RectF(0, 0, 0.5, 0.5), QuickTileFlag::Top | QuickTileFlag::Left);
+    m_topRightTile = createTile(RectF(0.5, 0, 0.5, 0.5), QuickTileFlag::Top | QuickTileFlag::Right);
+    m_bottomLeftTile = createTile(RectF(0, 0.5, 0.5, 0.5), QuickTileFlag::Bottom | QuickTileFlag::Left);
+    m_bottomRightTile = createTile(RectF(0.5, 0.5, 0.5, 0.5), QuickTileFlag::Bottom | QuickTileFlag::Right);
 }
 
 QuickRootTile::~QuickRootTile()
@@ -59,7 +59,7 @@ void QuickRootTile::relayoutToFit(Tile *tile)
 
     m_resizedTile = tile;
 
-    const QRectF geometry = tile->relativeGeometry();
+    const RectF geometry = tile->relativeGeometry();
 
     if (m_topHorizontalTile == tile) {
         setVerticalSplit(geometry.bottom());

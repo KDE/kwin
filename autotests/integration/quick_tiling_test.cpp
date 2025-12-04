@@ -53,7 +53,7 @@ namespace KWin
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_quick_tiling-0");
 
 #if KWIN_BUILD_X11
-static X11Window *createWindow(xcb_connection_t *connection, const QRect &geometry)
+static X11Window *createWindow(xcb_connection_t *connection, const Rect &geometry)
 {
     xcb_window_t windowId = xcb_generate_id(connection);
     xcb_create_window(connection, XCB_COPY_FROM_PARENT, windowId, rootWindow(),
@@ -551,7 +551,7 @@ void QuickTilingTest::testX11QuickTiling()
 #if KWIN_BUILD_X11
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    const QRect windowGeometry(0, 0, 100, 200);
+    const Rect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
@@ -629,7 +629,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
 #if KWIN_BUILD_X11
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    const QRect windowGeometry(0, 0, 100, 200);
+    const Rect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),
@@ -975,7 +975,7 @@ void QuickTilingTest::testMultiScreenX11()
 
     Test::XcbConnectionPtr connection = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(connection.get()));
-    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+    X11Window *window = createWindow(connection.get(), Rect(0, 0, 100, 200));
 
     TileManager *firstTileManager = workspace()->tileManager(workspace()->outputs().at(0));
     TileManager *secondTileManager = workspace()->tileManager(workspace()->outputs().at(1));
@@ -1182,7 +1182,7 @@ void QuickTilingTest::testQuickTileAndMaximizeX11()
 
     Test::XcbConnectionPtr connection = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(connection.get()));
-    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+    X11Window *window = createWindow(connection.get(), Rect(0, 0, 100, 200));
 
     QuickTileMode previousQuickTileMode = QuickTileFlag::None;
     MaximizeMode previousMaximizeMode = MaximizeRestore;
@@ -1362,7 +1362,7 @@ void QuickTilingTest::testQuickTileAndFullScreenX11()
 #if KWIN_BUILD_X11
     Test::XcbConnectionPtr connection = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(connection.get()));
-    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+    X11Window *window = createWindow(connection.get(), Rect(0, 0, 100, 200));
 
     const RectF originalGeometry = window->frameGeometry();
 
@@ -1527,7 +1527,7 @@ void QuickTilingTest::testPerDesktopX11()
 
     Test::XcbConnectionPtr connection = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(connection.get()));
-    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+    X11Window *window = createWindow(connection.get(), Rect(0, 0, 100, 200));
 
     QSignalSpy tileChangedSpy(window, &Window::tileChanged);
     const RectF originalGeometry = window->frameGeometry();
@@ -1696,7 +1696,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileSameDesktopX11()
 
     Test::XcbConnectionPtr connection = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(connection.get()));
-    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+    X11Window *window = createWindow(connection.get(), Rect(0, 0, 100, 200));
 
     QSignalSpy tileChangedSpy(window, &Window::tileChanged);
     const RectF originalGeometry = window->frameGeometry();
@@ -1820,10 +1820,10 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
         }
 
         tile->split(Tile::LayoutDirection::Horizontal);
-        tile->childTiles().at(0)->setRelativeGeometry(QRectF(0, 0, left, 1.0));
+        tile->childTiles().at(0)->setRelativeGeometry(RectF(0, 0, left, 1.0));
 
-        QCOMPARE(tile->childTiles().at(0)->relativeGeometry(), QRectF(0, 0, left, 1));
-        QCOMPARE(tile->childTiles().at(1)->relativeGeometry(), QRectF(left, 0, right, 1));
+        QCOMPARE(tile->childTiles().at(0)->relativeGeometry(), RectF(0, 0, left, 1));
+        QCOMPARE(tile->childTiles().at(1)->relativeGeometry(), RectF(left, 0, right, 1));
     };
     applyTileLayout(workspace()->rootTile(outputs.at(0), desktops.at(0)), 0.4, 0.6);
     applyTileLayout(workspace()->rootTile(outputs.at(0), desktops.at(1)), 0.35, 0.65);
@@ -1937,7 +1937,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
 
     Test::XcbConnectionPtr connection = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(connection.get()));
-    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+    X11Window *window = createWindow(connection.get(), Rect(0, 0, 100, 200));
     window->setOnAllDesktops(true);
 
     auto applyTileLayout = [](CustomTile *tile, qreal left, qreal right) {
@@ -1947,10 +1947,10 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
         }
 
         tile->split(Tile::LayoutDirection::Horizontal);
-        tile->childTiles().at(0)->setRelativeGeometry(QRectF(0, 0, left, 1.0));
+        tile->childTiles().at(0)->setRelativeGeometry(RectF(0, 0, left, 1.0));
 
-        QCOMPARE(tile->childTiles().at(0)->relativeGeometry(), QRectF(0, 0, left, 1));
-        QCOMPARE(tile->childTiles().at(1)->relativeGeometry(), QRectF(left, 0, right, 1));
+        QCOMPARE(tile->childTiles().at(0)->relativeGeometry(), RectF(0, 0, left, 1));
+        QCOMPARE(tile->childTiles().at(1)->relativeGeometry(), RectF(left, 0, right, 1));
     };
     applyTileLayout(workspace()->rootTile(outputs.at(0), desktops.at(0)), 0.4, 0.6);
     applyTileLayout(workspace()->rootTile(outputs.at(0), desktops.at(1)), 0.35, 0.65);
@@ -2131,7 +2131,7 @@ void QuickTilingTest::testEvacuateFromRemovedDesktopX11()
 
     Test::XcbConnectionPtr connection = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(connection.get()));
-    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+    X11Window *window = createWindow(connection.get(), Rect(0, 0, 100, 200));
 
     const RectF originalGeometry = window->frameGeometry();
 
@@ -2197,7 +2197,7 @@ void QuickTilingTest::testCloseTiledWindowX11()
 #if KWIN_BUILD_X11
     Test::XcbConnectionPtr connection = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(connection.get()));
-    X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
+    X11Window *window = createWindow(connection.get(), Rect(0, 0, 100, 200));
 
     Tile *tile = workspace()->tileManager(workspace()->activeOutput())->quickTile(QuickTileFlag::Right);
 
