@@ -913,7 +913,7 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
         }
         if (value.userType() == qMetaTypeId<KWin::Tile *>()) {
             if (auto tile = value.value<KWin::Tile *>()) {
-                const QString tileGeometry = displayText(tile->absoluteGeometry(), locale);
+                const QString tileGeometry = displayText(QVariant::fromValue(tile->absoluteGeometry()), locale);
 
                 if (auto customTile = qobject_cast<KWin::CustomTile *>(tile)) {
                     const QString direction = QMetaEnum::fromType<KWin::Tile::LayoutDirection>().valueToKey(static_cast<quint64>(customTile->layoutDirection()));
