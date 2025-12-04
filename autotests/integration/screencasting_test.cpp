@@ -253,7 +253,7 @@ void ScreencastingTest::testOutputCasting()
 
     QVERIFY(window.show(sourceImage));
     QVERIFY(window.m_window->isFullScreen());
-    QCOMPARE(window.m_window->frameGeometry(), window.m_window->output()->geometry());
+    QCOMPARE(window.m_window->frameGeometry(), RectF(window.m_window->output()->geometry()));
 
     QVERIFY(window.presentWait());
 

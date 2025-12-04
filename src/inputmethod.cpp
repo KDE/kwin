@@ -929,7 +929,7 @@ void InputMethod::updateInputPanelState()
     QRectF overlap = QRectF(0, 0, 0, 0);
     if (m_trackedWindow) {
         const bool bottomKeyboard = m_panel && m_panel->mode() != InputPanelV1Window::Mode::Overlay && m_panel->isShown();
-        m_trackedWindow->setVirtualKeyboardGeometry(bottomKeyboard ? m_panel->frameGeometry() : QRectF());
+        m_trackedWindow->setVirtualKeyboardGeometry(bottomKeyboard ? m_panel->frameGeometry() : RectF());
 
         if (m_panel && m_panel->mode() != InputPanelV1Window::Mode::Overlay) {
             overlap = m_trackedWindow->frameGeometry() & m_panel->frameGeometry();

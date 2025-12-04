@@ -67,7 +67,7 @@ public:
         return true;
     }
     WindowType windowType() const override;
-    QRectF frameRectToBufferRect(const QRectF &rect) const override;
+    RectF frameRectToBufferRect(const RectF &rect) const override;
 
     Mode mode() const
     {
@@ -79,7 +79,7 @@ public:
     bool wasUnmapped() const;
 
 protected:
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const RectF &rect, MoveResizeMode mode) override;
     void doSetNextTargetScale() override;
     void doSetPreferredBufferTransform() override;
     void doSetPreferredColorDescription() override;
@@ -93,7 +93,7 @@ private:
     void handleUnmapped();
     void maybeShow();
 
-    QRectF m_windowGeometry;
+    RectF m_windowGeometry;
     Mode m_mode = Mode::None;
     bool m_allowed = false;
     bool m_requestedToBeShown = false;

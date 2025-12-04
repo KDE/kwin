@@ -10,6 +10,7 @@
 #pragma once
 
 #include "core/output.h"
+#include "core/rect.h"
 #include "cursor.h"
 #include "effect/globals.h"
 #include "options.h"
@@ -68,7 +69,7 @@ using ElectricBorderMode = std::variant<QuickTileMode, MaximizeMode>;
 /**
  * The PlacementCommand type specifies how a window should be placed in the workspace when it's shown.
  */
-using PlacementCommand = std::variant<QPointF, QRectF, MaximizeMode>;
+using PlacementCommand = std::variant<QPointF, RectF, MaximizeMode>;
 
 class KWIN_EXPORT Window : public QObject
 {
@@ -79,12 +80,12 @@ class KWIN_EXPORT Window : public QObject
      * occupies on the screen. This rectangle includes invisible portions of the
      * window, e.g. client-side drop shadows, etc.
      */
-    Q_PROPERTY(QRectF bufferGeometry READ bufferGeometry NOTIFY bufferGeometryChanged)
+    Q_PROPERTY(KWin::RectF bufferGeometry READ bufferGeometry NOTIFY bufferGeometryChanged)
 
     /**
      * The geometry of the Window without frame borders.
      */
-    Q_PROPERTY(QRectF clientGeometry READ clientGeometry NOTIFY clientGeometryChanged)
+    Q_PROPERTY(KWin::RectF clientGeometry READ clientGeometry NOTIFY clientGeometryChanged)
 
     /**
      * This property holds the position of the Window's frame geometry.
@@ -123,7 +124,7 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(KWin::LogicalOutput *output READ output NOTIFY outputChanged)
 
-    Q_PROPERTY(QRectF rect READ rect)
+    Q_PROPERTY(KWin::RectF rect READ rect)
     Q_PROPERTY(QString resourceName READ resourceName NOTIFY windowClassChanged)
     Q_PROPERTY(QString resourceClass READ resourceClass NOTIFY windowClassChanged)
     Q_PROPERTY(QString windowRole READ windowRole NOTIFY windowRoleChanged)
@@ -366,7 +367,7 @@ class KWIN_EXPORT Window : public QObject
      * The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
      */
-    Q_PROPERTY(QRectF iconGeometry READ iconGeometry)
+    Q_PROPERTY(KWin::RectF iconGeometry READ iconGeometry)
 
     /**
      * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
@@ -435,7 +436,7 @@ class KWIN_EXPORT Window : public QObject
      * The geometry of this Window. Be aware that depending on resize mode the frameGeometryChanged
      * signal might be emitted at each resize step or only at the end of the resize operation.
      */
-    Q_PROPERTY(QRectF frameGeometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
+    Q_PROPERTY(KWin::RectF frameGeometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
 
     /**
      * Whether the Window is currently being moved by the user.
@@ -591,7 +592,7 @@ public:
      * that the former specifies the current geometry while the latter specifies the next
      * geometry.
      */
-    QRectF moveResizeGeometry() const;
+    RectF moveResizeGeometry() const;
 
     /**
      * Returns the output where the last move or resize operation has occurred. The
@@ -608,16 +609,16 @@ public:
      * For Wayland windows, this method returns rectangle that the main surface
      * occupies on the screen, in global screen coordinates.
      */
-    QRectF bufferGeometry() const;
+    RectF bufferGeometry() const;
     /**
      * Returns the geometry of the Window, excluding invisible portions, e.g.
      * server-side and client-side drop shadows, etc.
      */
-    QRectF frameGeometry() const;
+    RectF frameGeometry() const;
     /**
      * Returns the geometry of the client window, in global screen coordinates.
      */
-    QRectF clientGeometry() const;
+    RectF clientGeometry() const;
     /**
      * Returns the extents of the server-side decoration.
      *
@@ -633,7 +634,7 @@ public:
     virtual QSizeF maxSize() const;
     QSizeF size() const;
     QPointF pos() const;
-    QRectF rect() const;
+    RectF rect() const;
     qreal x() const;
     qreal y() const;
     qreal width() const;
@@ -646,7 +647,7 @@ public:
     /**
      * Returns a rectangle that the window occupies on the screen, including drop-shadows.
      */
-    QRectF visibleGeometry() const;
+    RectF visibleGeometry() const;
 
     /**
      * Maps the specified @a point from the global screen coordinates to the frame coordinates.
@@ -693,15 +694,15 @@ public:
      *
      * Notice that size constraints won't be applied.
      */
-    QRectF frameRectToClientRect(const QRectF &rect) const;
-    QRectF nextFrameRectToClientRect(const QRectF &rect) const;
+    RectF frameRectToClientRect(const RectF &rect) const;
+    RectF nextFrameRectToClientRect(const RectF &rect) const;
     /**
      * Calculates the matching frame rect for the given client rect @p rect.
      *
      * Notice that size constraints won't be applied.
      */
-    QRectF clientRectToFrameRect(const QRectF &rect) const;
-    QRectF nextClientRectToFrameRect(const QRectF &rect) const;
+    RectF clientRectToFrameRect(const RectF &rect) const;
+    RectF nextClientRectToFrameRect(const RectF &rect) const;
 
     /**
      * How to resize the window in order to obey constraints (mainly aspect ratios).
@@ -730,7 +731,7 @@ public:
      * Requests a new @p geometry for the window that the implementation will need to adopt
      * within its possibilities.
      */
-    void moveResize(const QRectF &geometry);
+    void moveResize(const RectF &geometry);
 
     /**
      * Returns @c true if the window has already been placed in the workspace; otherwise returns @c false.
@@ -747,8 +748,8 @@ public:
     void growVertical();
     void shrinkVertical();
 
-    virtual QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &s) const = 0;
-    QRectF keepInArea(QRectF geometry, QRectF area, bool partial = false) const;
+    virtual RectF resizeWithChecks(const RectF &geometry, const QSizeF &s) const = 0;
+    RectF keepInArea(RectF geometry, RectF area, bool partial = false) const;
 
     // prefer isXXX() instead
     virtual WindowType windowType() const = 0;
@@ -1028,7 +1029,7 @@ public:
     }
     void setShortcut(const QString &cut);
 
-    QRectF iconGeometry() const;
+    RectF iconGeometry() const;
 
     void setMinimized(bool set);
     bool isMinimized() const
@@ -1040,8 +1041,8 @@ public:
     bool isSuspended() const;
     void setSuspended(bool suspended);
 
-    QRectF fullscreenGeometryRestore() const;
-    void setFullscreenGeometryRestore(const QRectF &geom);
+    RectF fullscreenGeometryRestore() const;
+    void setFullscreenGeometryRestore(const RectF &geom);
     virtual bool isFullScreenable() const;
     virtual bool isFullScreen() const;
     virtual bool isRequestedFullScreen() const;
@@ -1050,16 +1051,16 @@ public:
     bool wantsAdaptiveSync() const;
     bool wantsTearing(bool tearingRequested) const;
 
-    QRectF geometryRestore() const;
-    void setGeometryRestore(const QRectF &rect);
+    RectF geometryRestore() const;
+    void setGeometryRestore(const RectF &rect);
     virtual bool isMaximizable() const;
     virtual MaximizeMode maximizeMode() const;
     virtual MaximizeMode requestedMaximizeMode() const;
-    virtual void maximize(MaximizeMode mode, const QRectF &restore = QRectF());
+    virtual void maximize(MaximizeMode mode, const RectF &restore = RectF());
     /**
      * Sets the maximization according to @p vertically and @p horizontally.
      */
-    Q_INVOKABLE void setMaximize(bool vertically, bool horizontally, const QRectF &restore = QRectF());
+    Q_INVOKABLE void setMaximize(bool vertically, bool horizontally, const RectF &restore = RectF());
 
     QPalette palette();
     const Decoration::DecorationPalette *decorationPalette();
@@ -1092,7 +1093,7 @@ public:
     bool wantsTabFocus() const;
     virtual void takeFocus();
     virtual bool wantsInput() const = 0;
-    void checkWorkspacePosition(QRectF oldGeometry = QRectF(), const VirtualDesktop *oldDesktop = nullptr);
+    void checkWorkspacePosition(RectF oldGeometry = RectF(), const VirtualDesktop *oldDesktop = nullptr);
 #if KWIN_BUILD_X11
     virtual xcb_timestamp_t userTime() const;
 #endif
@@ -1197,7 +1198,7 @@ public:
     void setDecoratedWindow(Decoration::DecoratedWindowImpl *client);
     bool decorationHasAlpha() const;
     void triggerDecorationRepaint();
-    void layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRectF &bottom) const;
+    void layoutDecorationRects(RectF &left, RectF &top, RectF &right, RectF &bottom) const;
     void processDecorationMove(const QPointF &localPos, const QPointF &globalPos);
     bool processDecorationButtonPress(const QPointF &localPos, const QPointF &globalPos, Qt::MouseButton button, bool ignoreMenu = false);
     void processDecorationButtonRelease(Qt::MouseButton button);
@@ -1233,13 +1234,13 @@ public:
      * @returns the geometry of the virtual keyboard
      * This geometry is in global coordinates
      */
-    QRectF virtualKeyboardGeometry() const;
+    RectF virtualKeyboardGeometry() const;
 
     /**
      * Sets the geometry of the virtual keyboard, The window may resize itself in order to make space for the keyboard
      * This geometry is in global coordinates
      */
-    virtual void setVirtualKeyboardGeometry(const QRectF &geo);
+    virtual void setVirtualKeyboardGeometry(const RectF &geo);
 
     /**
      * Restores the Window after it had been hidden due to show on screen edge functionality.
@@ -1414,15 +1415,15 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the Window's buffer geometry changes.
      */
-    void bufferGeometryChanged(const QRectF &oldGeometry);
+    void bufferGeometryChanged(const KWin::RectF &oldGeometry);
     /**
      * This signal is emitted when the Window's frame geometry changes.
      */
-    void frameGeometryChanged(const QRectF &oldGeometry);
+    void frameGeometryChanged(const KWin::RectF &oldGeometry);
     /**
      * This signal is emitted when the Window's client geometry has changed.
      */
-    void clientGeometryChanged(const QRectF &oldGeometry);
+    void clientGeometryChanged(const KWin::RectF &oldGeometry);
 
     /**
      * This signal is emitted when the frame geometry is about to change. The new geometry is not known yet
@@ -1467,7 +1468,7 @@ Q_SIGNALS:
     void moveResizedChanged();
     void moveResizeCursorChanged(CursorShape);
     void interactiveMoveResizeStarted();
-    void interactiveMoveResizeStepped(const QRectF &geometry);
+    void interactiveMoveResizeStepped(const KWin::RectF &geometry);
     void interactiveMoveResizeFinished();
     void closeableChanged(bool);
     void minimizeableChanged(bool);
@@ -1591,12 +1592,12 @@ protected:
         return m_electricMaximizing;
     }
     void updateElectricGeometryRestore();
-    QRectF quickTileGeometryRestore() const;
-    QRectF quickTileGeometry(QuickTileMode mode, const QPointF &pos) const;
+    RectF quickTileGeometryRestore() const;
+    RectF quickTileGeometry(QuickTileMode mode, const QPointF &pos) const;
     void exitQuickTileMode();
 
     // geometry handling
-    void checkOffscreenPosition(QRectF *geom, const QRectF &screenArea);
+    void checkOffscreenPosition(RectF *geom, const RectF &screenArea);
     qreal borderLeft() const;
     qreal borderRight() const;
     qreal borderTop() const;
@@ -1608,7 +1609,7 @@ protected:
         Resize = 0x2,
         MoveResize = Move | Resize,
     };
-    virtual void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) = 0;
+    virtual void moveResizeInternal(const RectF &rect, MoveResizeMode mode) = 0;
 
     /**
      * @returns whether the Window is currently in move resize mode
@@ -1661,11 +1662,11 @@ protected:
     {
         m_interactiveMoveResize.offset = offset;
     }
-    QRectF initialInteractiveMoveResizeGeometry() const
+    RectF initialInteractiveMoveResizeGeometry() const
     {
         return m_interactiveMoveResize.initialGeometry;
     }
-    void setMoveResizeGeometry(const QRectF &geo);
+    void setMoveResizeGeometry(const RectF &geo);
     void setInteractiveMoveResizeGravity(Gravity gravity)
     {
         m_interactiveMoveResize.gravity = gravity;
@@ -1723,10 +1724,10 @@ protected:
      * Called during handling a resize. Implementing subclasses can use this
      * method to perform windowing system specific syncing.
      */
-    virtual void doInteractiveResizeSync(const QRectF &rect);
+    virtual void doInteractiveResizeSync(const RectF &rect);
     qreal titlebarThickness() const;
-    QRectF nextInteractiveMoveGeometry(const QPointF &global) const;
-    QRectF nextInteractiveResizeGeometry(const QPointF &global) const;
+    RectF nextInteractiveMoveGeometry(const QPointF &global) const;
+    RectF nextInteractiveResizeGeometry(const QPointF &global) const;
     void dontInteractiveMoveResize();
 
     virtual QSizeF resizeIncrements() const;
@@ -1756,11 +1757,11 @@ protected:
     virtual void updateCaption() = 0;
 
     // The geometry that the window should be restored when the virtual keyboard closes
-    QRectF keyboardGeometryRestore() const;
-    void setKeyboardGeometryRestore(const QRectF &geom);
+    RectF keyboardGeometryRestore() const;
+    void setKeyboardGeometryRestore(const RectF &geom);
 
-    QRectF moveToArea(const QRectF &geometry, const QRectF &oldArea, const QRectF &newArea);
-    QRectF ensureSpecialStateGeometry(const QRectF &geometry);
+    RectF moveToArea(const RectF &geometry, const RectF &oldArea, const RectF &newArea);
+    RectF ensureSpecialStateGeometry(const RectF &geometry);
 
     void cleanTabBox();
     void maybeSendFrameCallback();
@@ -1773,9 +1774,9 @@ protected:
     void setDescription(const QString &description);
 
     LogicalOutput *m_output = nullptr;
-    QRectF m_frameGeometry;
-    QRectF m_clientGeometry;
-    QRectF m_bufferGeometry;
+    RectF m_frameGeometry;
+    RectF m_clientGeometry;
+    RectF m_bufferGeometry;
     bool ready_for_painting;
     bool m_hidden = false;
     bool m_hiddenByShowDesktop = false;
@@ -1839,17 +1840,17 @@ protected:
 
     // electric border/quick tiling
     std::optional<ElectricBorderMode> m_electricMode = std::nullopt;
-    QRectF m_electricGeometryRestore;
+    RectF m_electricGeometryRestore;
     bool m_electricMaximizing = false;
     QTimer *m_electricMaximizingDelay = nullptr;
 
     // geometry
     LogicalOutput *m_moveResizeOutput = nullptr;
-    QRectF m_moveResizeGeometry;
-    QRectF m_keyboardGeometryRestore;
-    QRectF m_maximizeGeometryRestore;
-    QRectF m_fullscreenGeometryRestore;
-    QRectF m_virtualKeyboardGeometry;
+    RectF m_moveResizeGeometry;
+    RectF m_keyboardGeometryRestore;
+    RectF m_maximizeGeometryRestore;
+    RectF m_fullscreenGeometryRestore;
+    RectF m_virtualKeyboardGeometry;
 
     struct
     {
@@ -1858,8 +1859,8 @@ protected:
         QPointF anchor;
         Qt::KeyboardModifiers modifiers;
         QPointF offset;
-        QRectF initialGeometry;
-        QRectF initialGeometryRestore;
+        RectF initialGeometry;
+        RectF initialGeometryRestore;
         Gravity gravity = Gravity::None;
         bool buttonDown = false;
         CursorShape cursor = Qt::ArrowCursor;
@@ -1899,12 +1900,12 @@ protected:
     QString m_activationToken;
 };
 
-inline QRectF Window::bufferGeometry() const
+inline RectF Window::bufferGeometry() const
 {
     return m_bufferGeometry;
 }
 
-inline QRectF Window::clientGeometry() const
+inline RectF Window::clientGeometry() const
 {
     return m_clientGeometry;
 }
@@ -1914,7 +1915,7 @@ inline QSizeF Window::clientSize() const
     return m_clientGeometry.size();
 }
 
-inline QRectF Window::frameGeometry() const
+inline RectF Window::frameGeometry() const
 {
     return m_frameGeometry;
 }
@@ -1949,9 +1950,9 @@ inline qreal Window::height() const
     return m_frameGeometry.height();
 }
 
-inline QRectF Window::rect() const
+inline RectF Window::rect() const
 {
-    return QRectF(0, 0, width(), height());
+    return RectF(0, 0, width(), height());
 }
 
 inline bool Window::readyForPainting() const

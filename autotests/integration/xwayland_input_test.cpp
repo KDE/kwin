@@ -235,8 +235,8 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     QVERIFY(window);
     QVERIFY(!window->isDecorated());
     QVERIFY(window->isClientSideDecorated());
-    QCOMPARE(window->bufferGeometry(), QRectF(0, 0, 120, 225));
-    QCOMPARE(window->frameGeometry(), QRectF(10, 5, 100, 200));
+    QCOMPARE(window->bufferGeometry(), RectF(0, 0, 120, 225));
+    QCOMPARE(window->frameGeometry(), RectF(10, 5, 100, 200));
 
     QMetaObject::invokeMethod(window, "setReadyForPainting");
     QVERIFY(window->readyForPainting());

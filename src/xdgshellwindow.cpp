@@ -178,7 +178,7 @@ void XdgSurfaceWindow::handleRoleCommit()
 {
 }
 
-void XdgSurfaceWindow::maybeUpdateMoveResizeGeometry(const QRectF &rect)
+void XdgSurfaceWindow::maybeUpdateMoveResizeGeometry(const RectF &rect)
 {
     // We are about to send a configure event, ignore the committed window geometry.
     if (m_configureTimer->isActive()) {
@@ -202,7 +202,7 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
         setTargetScale(configureEvent->scale);
     }
-    const QRectF boundingGeometry = surface()->boundingRect();
+    const RectF boundingGeometry = surface()->boundingRect();
 
     // The effective window geometry is defined as the intersection of the window geometry
     // and the rectangle that bounds the main surface and all of its sub-surfaces. If the
@@ -223,7 +223,7 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
         m_windowGeometry = snapToPixels(m_windowGeometry, targetScale());
     }
 
-    QRectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
+    RectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
         if (configureEvent->flags & XdgSurfaceConfigure::ConfigurePosition) {
             frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
@@ -262,7 +262,7 @@ void XdgSurfaceWindow::resetHaveNextWindowGeometry()
     m_haveNextWindowGeometry = false;
 }
 
-void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
+void XdgSurfaceWindow::moveResizeInternal(const RectF &rect, MoveResizeMode mode)
 {
     Q_EMIT frameGeometryAboutToChange();
 
@@ -275,7 +275,7 @@ void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mod
 
         const QSize roundedClientSize = clientSize().toSize();
         if (roundedRequestedClientSize == roundedClientSize) {
-            const QRectF snappedRect = QRectF(rect.topLeft(), nextClientSizeToFrameSize(snapToPixels(roundedClientSize, nextTargetScale())));
+            const RectF snappedRect = RectF(rect.topLeft(), nextClientSizeToFrameSize(snapToPixels(roundedClientSize, nextTargetScale())));
             updateGeometry(m_nextGravity.apply(snappedRect, rect));
         } else {
             m_configureFlags |= XdgSurfaceConfigure::ConfigurePosition;
@@ -287,15 +287,15 @@ void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mod
             configureEvent->flags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
         }
         m_configureFlags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
-        updateGeometry(QRectF(rect.topLeft(), size()));
+        updateGeometry(RectF(rect.topLeft(), size()));
     }
 }
 
-QRectF XdgSurfaceWindow::frameRectToBufferRect(const QRectF &rect) const
+RectF XdgSurfaceWindow::frameRectToBufferRect(const RectF &rect) const
 {
     const qreal left = rect.left() + borderLeft() - m_windowGeometry.left();
     const qreal top = rect.top() + borderTop() - m_windowGeometry.top();
-    return QRectF(QPointF(left, top), snapToPixels(surface()->size(), m_targetScale));
+    return RectF(QPointF(left, top), snapToPixels(surface()->size(), m_targetScale));
 }
 
 void XdgSurfaceWindow::handleRoleDestroyed()
@@ -1336,7 +1336,7 @@ MaximizeMode XdgToplevelWindow::initialMaximizeMode(const std::optional<XdgTople
         }
     }
     if (isPlaceable()) {
-        const QRectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
+        const RectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
         if (const auto placement = workspace()->placement()->place(this, area)) {
             if (const auto maximizeMode = std::get_if<MaximizeMode>(&*placement)) {
                 return *maximizeMode;
@@ -1740,12 +1740,12 @@ void XdgToplevelWindow::setFullScreen(bool set)
     } else {
         m_fullScreenRequestedOutput.clear();
         if (fullscreenGeometryRestore().isValid()) {
-            moveResize(QRectF(fullscreenGeometryRestore().topLeft(),
-                              constrainFrameSize(fullscreenGeometryRestore().size())));
+            moveResize(RectF(fullscreenGeometryRestore().topLeft(),
+                             constrainFrameSize(fullscreenGeometryRestore().size())));
         } else {
             // this can happen when the window was first shown already fullscreen,
             // so let the client set the size by itself
-            moveResize(QRectF(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
+            moveResize(RectF(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
         }
     }
 
@@ -1755,7 +1755,7 @@ void XdgToplevelWindow::setFullScreen(bool set)
 }
 
 static bool changeMaximizeRecursion = false;
-void XdgToplevelWindow::maximize(MaximizeMode mode, const QRectF &restore)
+void XdgToplevelWindow::maximize(MaximizeMode mode, const RectF &restore)
 {
     if (changeMaximizeRecursion) {
         return;
@@ -1765,10 +1765,10 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const QRectF &restore)
         return;
     }
 
-    const QRectF clientArea = isElectricBorderMaximizing() ? workspace()->clientArea(MaximizeArea, this, interactiveMoveResizeAnchor()) : workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
+    const RectF clientArea = isElectricBorderMaximizing() ? workspace()->clientArea(MaximizeArea, this, interactiveMoveResizeAnchor()) : workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
 
     const MaximizeMode oldMode = m_requestedMaximizeMode;
-    const QRectF oldGeometry = moveResizeGeometry();
+    const RectF oldGeometry = moveResizeGeometry();
 
     mode = rules()->checkMaximize(mode);
     if (m_requestedMaximizeMode == mode) {
@@ -1802,7 +1802,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const QRectF &restore)
         setGeometryRestore(restore);
     } else {
         if (requestedQuickTileMode() == QuickTileMode(QuickTileFlag::None)) {
-            QRectF savedGeometry = geometryRestore();
+            RectF savedGeometry = geometryRestore();
             if (!(oldMode & MaximizeVertical)) {
                 savedGeometry.setTop(oldGeometry.top());
                 savedGeometry.setBottom(oldGeometry.bottom());
@@ -1819,7 +1819,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const QRectF &restore)
         exitQuickTileMode();
     }
 
-    QRectF geometry = oldGeometry;
+    RectF geometry = oldGeometry;
 
     if (m_requestedMaximizeMode & MaximizeHorizontal) {
         // Stretch the window vertically to fit the size of the maximize area.
@@ -1906,11 +1906,11 @@ void XdgPopupWindow::handleRepositionRequested(quint32 token)
 void XdgPopupWindow::updateRelativePlacement()
 {
     const QPointF parentPosition = transientFor()->nextFramePosToClientPos(transientFor()->pos());
-    const QRectF bounds = workspace()->clientArea(transientFor()->isFullScreen() ? FullScreenArea : PlacementArea, transientFor()).translated(-parentPosition);
+    const RectF bounds = workspace()->clientArea(transientFor()->isFullScreen() ? FullScreenArea : PlacementArea, transientFor()).translated(-parentPosition);
     const XdgPositioner positioner = m_shellSurface->positioner();
 
     if (m_plasmaShellSurface && m_plasmaShellSurface->isPositionSet()) {
-        m_relativePlacement = QRectF(m_plasmaShellSurface->position(), positioner.size()).translated(-parentPosition);
+        m_relativePlacement = RectF(m_plasmaShellSurface->position(), positioner.size()).translated(-parentPosition);
     } else {
         m_relativePlacement = positioner.placement(bounds);
     }
@@ -1970,7 +1970,7 @@ bool XdgPopupWindow::isMovableAcrossScreens() const
     return false;
 }
 
-QRectF XdgPopupWindow::transientPlacement() const
+RectF XdgPopupWindow::transientPlacement() const
 {
     const QPointF parentPosition = transientFor()->nextFramePosToClientPos(transientFor()->pos());
     return m_relativePlacement.translated(parentPosition);

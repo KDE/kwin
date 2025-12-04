@@ -87,9 +87,9 @@ XdgSurfaceConfigure *XXPipV1Window::sendRoleConfigure() const
     surface()->setPreferredBufferTransform(preferredBufferTransform());
     surface()->setPreferredColorDescription(preferredColorDescription());
 
-    const QRectF geometry = moveResizeGeometry();
+    const RectF geometry = moveResizeGeometry();
     if (geometry.isEmpty()) {
-        const QRectF workArea = workspace()->clientArea(PlacementArea, this, moveResizeOutput());
+        const RectF workArea = workspace()->clientArea(PlacementArea, this, moveResizeOutput());
         m_shellSurface->sendConfigureBounds(workArea.size() * 0.25);
     }
 

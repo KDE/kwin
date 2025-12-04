@@ -237,7 +237,7 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
 
         QVERIFY(initiallyConfiguredStates & Test::XdgToplevel::State::Fullscreen);
         QCOMPARE(initiallyConfiguredSize, QSize(1280, 1024));
-        QCOMPARE(window->frameGeometry(), QRect(0, 0, 1280, 1024));
+        QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
 
         handles.emplace_back(WindowHandle{
             .window = window,
@@ -260,7 +260,7 @@ void TestPlacement::testPlaceCentered()
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::red);
     QVERIFY(window);
-    QCOMPARE(window->frameGeometry(), QRect(590, 487, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(590, 487, 100, 50));
 
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
@@ -282,7 +282,7 @@ void TestPlacement::testPlaceUnderMouse()
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::red);
     QVERIFY(window);
-    QCOMPARE(window->frameGeometry(), QRect(150, 275, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(150, 275, 100, 50));
 
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
@@ -388,11 +388,11 @@ void TestPlacement::testFullscreen()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
     QVERIFY(geometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), outputs[0]->geometry());
+    QCOMPARE(window->frameGeometry(), RectF(outputs[0]->geometry()));
 
     // this doesn't require a round trip, so should be immediate
     window->sendToOutput(outputs[1]);
-    QCOMPARE(window->frameGeometry(), outputs[1]->geometry());
+    QCOMPARE(window->frameGeometry(), RectF(outputs[1]->geometry()));
     QCOMPARE(geometryChangedSpy.count(), 2);
 }
 

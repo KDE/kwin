@@ -49,7 +49,7 @@ Decoration::DecoratedWindowImpl *DecorationRenderer::client() const
 void DecorationRenderer::invalidate()
 {
     if (m_client) {
-        addDamage(m_client->window()->rect().toAlignedRect());
+        addDamage(QRect(m_client->window()->rect().toAlignedRect()));
     }
     m_imageSizesDirty = true;
 }
@@ -169,7 +169,7 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
         return;
     }
 
-    QRectF left, top, right, bottom;
+    RectF left, top, right, bottom;
     client()->window()->layoutDecorationRects(left, top, right, bottom);
 
     const qreal devicePixelRatio = effectiveDevicePixelRatio();
@@ -271,7 +271,7 @@ static int align(int value, int align)
 
 void SceneOpenGLDecorationRenderer::resizeTexture()
 {
-    QRectF left, top, right, bottom;
+    RectF left, top, right, bottom;
     client()->window()->layoutDecorationRects(left, top, right, bottom);
     QSize size;
 
@@ -356,7 +356,7 @@ void SceneQPainterDecorationRenderer::render(const QRegion &region)
 
 void SceneQPainterDecorationRenderer::resizeImages()
 {
-    QRectF left, top, right, bottom;
+    RectF left, top, right, bottom;
     client()->window()->layoutDecorationRects(left, top, right, bottom);
 
     auto checkAndCreate = [this](int index, const QSizeF &size) {
@@ -412,7 +412,7 @@ DecorationItem::~DecorationItem()
 
 QList<QRectF> DecorationItem::shape() const
 {
-    QRectF left, top, right, bottom;
+    RectF left, top, right, bottom;
     m_window->layoutDecorationRects(left, top, right, bottom);
     return {left, top, right, bottom};
 }
@@ -422,17 +422,17 @@ QRegion DecorationItem::opaque() const
     if (m_window->decorationHasAlpha()) {
         return QRegion();
     }
-    QRectF left, top, right, bottom;
+    RectF left, top, right, bottom;
     m_window->layoutDecorationRects(left, top, right, bottom);
 
     // We have to map to integers which has rounding issues
     // it's safer for a region to be considered transparent than opaque
     // so always align inwards
     const QMargins roundingPad = QMargins(1, 1, 1, 1);
-    QRegion roundedLeft = left.toAlignedRect().marginsRemoved(roundingPad);
-    QRegion roundedTop = top.toAlignedRect().marginsRemoved(roundingPad);
-    QRegion roundedRight = right.toAlignedRect().marginsRemoved(roundingPad);
-    QRegion roundedBottom = bottom.toAlignedRect().marginsRemoved(roundingPad);
+    QRegion roundedLeft = QRect(left.toAlignedRect()).marginsRemoved(roundingPad);
+    QRegion roundedTop = QRect(top.toAlignedRect()).marginsRemoved(roundingPad);
+    QRegion roundedRight = QRect(right.toAlignedRect()).marginsRemoved(roundingPad);
+    QRegion roundedBottom = QRect(bottom.toAlignedRect()).marginsRemoved(roundingPad);
 
     return roundedLeft | roundedTop | roundedRight | roundedBottom;
 }
@@ -530,7 +530,7 @@ WindowQuadList DecorationItem::buildQuads() const
         return WindowQuadList();
     }
 
-    QRectF left, top, right, bottom;
+    RectF left, top, right, bottom;
     const qreal devicePixelRatio = m_renderer->effectiveDevicePixelRatio();
     const int texturePad = DecorationRenderer::TexturePad;
 

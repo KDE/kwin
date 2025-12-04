@@ -49,7 +49,7 @@ public:
     };
     Q_DECLARE_FLAGS(ConfigureFlags, ConfigureFlag)
 
-    QRectF bounds;
+    RectF bounds;
     Gravity gravity;
     qreal serial;
     ConfigureFlags flags;
@@ -65,13 +65,13 @@ public:
     ~XdgSurfaceWindow() override;
 
     WindowType windowType() const override;
-    QRectF frameRectToBufferRect(const QRectF &rect) const override;
+    RectF frameRectToBufferRect(const RectF &rect) const override;
     void destroyWindow() override;
 
     void installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface);
 
 protected:
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const RectF &rect, MoveResizeMode mode) override;
 
     virtual XdgSurfaceConfigure *sendRoleConfigure() const = 0;
     virtual void handleRoleCommit();
@@ -94,7 +94,7 @@ private:
     bool haveNextWindowGeometry() const;
     void setHaveNextWindowGeometry();
     void resetHaveNextWindowGeometry();
-    void maybeUpdateMoveResizeGeometry(const QRectF &rect);
+    void maybeUpdateMoveResizeGeometry(const RectF &rect);
 
     XdgSurfaceInterface *m_shellSurface;
     QTimer *m_configureTimer;
@@ -102,7 +102,7 @@ private:
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
     std::unique_ptr<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
     std::optional<quint32> m_lastAcknowledgedConfigureSerial;
-    QRectF m_windowGeometry;
+    RectF m_windowGeometry;
     bool m_haveNextWindowGeometry = false;
 };
 
@@ -186,7 +186,7 @@ public:
     bool wantsInput() const override;
     void setFullScreen(bool set) override;
     void closeWindow() override;
-    void maximize(MaximizeMode mode, const QRectF &restore = QRectF()) override;
+    void maximize(MaximizeMode mode, const RectF &restore = RectF()) override;
 
     void installAppMenu(AppMenuInterface *appMenu);
     void installServerDecoration(ServerSideDecorationInterface *decoration);
@@ -318,12 +318,12 @@ private:
     void handleRepositionRequested(quint32 token);
     void initialize();
     void updateRelativePlacement();
-    QRectF transientPlacement() const;
+    RectF transientPlacement() const;
     void relayout();
 
     XdgPopupInterface *m_shellSurface;
     bool m_haveExplicitGrab = false;
-    QRectF m_relativePlacement;
+    RectF m_relativePlacement;
 };
 
 } // namespace KWin

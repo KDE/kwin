@@ -171,21 +171,21 @@ void QuickTilingTest::cleanup()
 void QuickTilingTest::testQuickTiling_data()
 {
     QTest::addColumn<QuickTileMode>("mode");
-    QTest::addColumn<QRectF>("expectedGeometry");
-    QTest::addColumn<QRectF>("secondScreen");
+    QTest::addColumn<RectF>("expectedGeometry");
+    QTest::addColumn<RectF>("secondScreen");
     QTest::addColumn<QuickTileMode>("expectedModeAfterToggle");
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
-    QTest::newRow("left") << FLAG(Left) << QRectF(0, 0, 640, 1024) << QRectF(1280, 0, 640, 1024) << FLAG(Right);
-    QTest::newRow("top") << FLAG(Top) << QRectF(0, 0, 1280, 512) << QRectF(1280, 0, 1280, 512) << FLAG(Top);
-    QTest::newRow("right") << FLAG(Right) << QRectF(640, 0, 640, 1024) << QRectF(1920, 0, 640, 1024) << FLAG(Right);
-    QTest::newRow("bottom") << FLAG(Bottom) << QRectF(0, 512, 1280, 512) << QRectF(1280, 512, 1280, 512) << FLAG(Bottom);
+    QTest::newRow("left") << FLAG(Left) << RectF(0, 0, 640, 1024) << RectF(1280, 0, 640, 1024) << FLAG(Right);
+    QTest::newRow("top") << FLAG(Top) << RectF(0, 0, 1280, 512) << RectF(1280, 0, 1280, 512) << FLAG(Top);
+    QTest::newRow("right") << FLAG(Right) << RectF(640, 0, 640, 1024) << RectF(1920, 0, 640, 1024) << FLAG(Right);
+    QTest::newRow("bottom") << FLAG(Bottom) << RectF(0, 512, 1280, 512) << RectF(1280, 512, 1280, 512) << FLAG(Bottom);
 
-    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRectF(0, 0, 640, 512) << QRectF(1280, 0, 640, 512) << (FLAG(Right) | FLAG(Top));
-    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRectF(640, 0, 640, 512) << QRectF(1920, 0, 640, 512) << (FLAG(Right) | FLAG(Top));
-    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRectF(0, 512, 640, 512) << QRectF(1280, 512, 640, 512) << (FLAG(Right) | FLAG(Bottom));
-    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRectF(640, 512, 640, 512) << QRectF(1920, 512, 640, 512) << (FLAG(Right) | FLAG(Bottom));
+    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << RectF(0, 0, 640, 512) << RectF(1280, 0, 640, 512) << (FLAG(Right) | FLAG(Top));
+    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << RectF(640, 0, 640, 512) << RectF(1920, 0, 640, 512) << (FLAG(Right) | FLAG(Top));
+    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << RectF(0, 512, 640, 512) << RectF(1280, 512, 640, 512) << (FLAG(Right) | FLAG(Bottom));
+    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << RectF(640, 512, 640, 512) << RectF(1920, 512, 640, 512) << (FLAG(Right) | FLAG(Bottom));
 #undef FLAG
 }
 
@@ -200,7 +200,7 @@ void QuickTilingTest::testQuickTiling()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 50));
     QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
 
     // We have to receive a configure event when the window becomes active.
@@ -215,12 +215,12 @@ void QuickTilingTest::testQuickTiling()
 
     QFETCH(QuickTileMode, mode);
     QFETCH(QuickTileMode, expectedModeAfterToggle);
-    QFETCH(QRectF, expectedGeometry);
+    QFETCH(RectF, expectedGeometry);
     const QuickTileMode oldQuickTileMode = window->quickTileMode();
     window->handleQuickTileShortcut(mode);
 
     // at this point the geometry did not yet change
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 50));
     // Manually maximized window is always without a tile
     QCOMPARE(window->requestedQuickTileMode(), mode);
     // Actual quickTileMOde didn't change yet
@@ -299,7 +299,7 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
 
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 50));
     QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
 
@@ -372,7 +372,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 50));
     QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
 
@@ -398,7 +398,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QTEST(window->requestedQuickTileMode(), "expectedMode");
     const QPoint tileOutputPositon = workspace()->outputAt(pointerPos)->geometry().topLeft();
-    QCOMPARE(window->geometryRestore(), QRect(tileOutputPositon, QSize(100, 50)));
+    QCOMPARE(window->geometryRestore(), RectF(tileOutputPositon, QSize(100, 50)));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), tileSize);
@@ -434,7 +434,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     Test::pointerMotion(pointerPos, timestamp++); // tile the window again
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QTEST(window->requestedQuickTileMode(), "expectedMode");
-    QCOMPARE(window->geometryRestore(), QRect(tileOutputPositon, QSize(100, 50)));
+    QCOMPARE(window->geometryRestore(), RectF(tileOutputPositon, QSize(100, 50)));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), tileSize);
@@ -486,7 +486,7 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QVERIFY(window->isDecorated());
     const auto decoration = window->decoration();
     QCOMPARE(workspace()->activeWindow(), window);
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 1000 + decoration->borderLeft() + decoration->borderRight(), 50 + decoration->borderTop() + decoration->borderBottom()));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1000 + decoration->borderLeft() + decoration->borderRight(), 50 + decoration->borderTop() + decoration->borderBottom()));
     QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
 
@@ -528,21 +528,21 @@ void QuickTilingTest::testQuickTilingTouchMove()
 void QuickTilingTest::testX11QuickTiling_data()
 {
     QTest::addColumn<QuickTileMode>("mode");
-    QTest::addColumn<QRectF>("expectedGeometry");
+    QTest::addColumn<RectF>("expectedGeometry");
     QTest::addColumn<int>("screenId");
     QTest::addColumn<QuickTileMode>("modeAfterToggle");
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
-    QTest::newRow("left") << FLAG(Left) << QRectF(0, 0, 640, 1024) << 0 << FLAG(Left);
-    QTest::newRow("top") << FLAG(Top) << QRectF(0, 0, 1280, 512) << 0 << FLAG(Top);
-    QTest::newRow("right") << FLAG(Right) << QRectF(640, 0, 640, 1024) << 1 << FLAG(Left);
-    QTest::newRow("bottom") << FLAG(Bottom) << QRectF(0, 512, 1280, 512) << 0 << FLAG(Bottom);
+    QTest::newRow("left") << FLAG(Left) << RectF(0, 0, 640, 1024) << 0 << FLAG(Left);
+    QTest::newRow("top") << FLAG(Top) << RectF(0, 0, 1280, 512) << 0 << FLAG(Top);
+    QTest::newRow("right") << FLAG(Right) << RectF(640, 0, 640, 1024) << 1 << FLAG(Left);
+    QTest::newRow("bottom") << FLAG(Bottom) << RectF(0, 512, 1280, 512) << 0 << FLAG(Bottom);
 
-    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRectF(0, 0, 640, 512) << 0 << (FLAG(Left) | FLAG(Top));
-    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRectF(640, 0, 640, 512) << 1 << (FLAG(Left) | FLAG(Top));
-    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRectF(0, 512, 640, 512) << 0 << (FLAG(Left) | FLAG(Bottom));
-    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRectF(640, 512, 640, 512) << 1 << (FLAG(Left) | FLAG(Bottom));
+    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << RectF(0, 0, 640, 512) << 0 << (FLAG(Left) | FLAG(Top));
+    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << RectF(640, 0, 640, 512) << 1 << (FLAG(Left) | FLAG(Top));
+    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << RectF(0, 512, 640, 512) << 0 << (FLAG(Left) | FLAG(Bottom));
+    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << RectF(640, 512, 640, 512) << 1 << (FLAG(Left) | FLAG(Bottom));
 
 #undef FLAG
 }
@@ -575,7 +575,7 @@ void QuickTilingTest::testX11QuickTiling()
 
     // now quick tile
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
-    const QRectF origGeo = window->frameGeometry();
+    const RectF origGeo = window->frameGeometry();
     QFETCH(QuickTileMode, mode);
     window->handleQuickTileShortcut(mode);
     QCOMPARE(quickTileChangedSpy.count(), 1);
@@ -607,19 +607,19 @@ void QuickTilingTest::testX11QuickTiling()
 void QuickTilingTest::testX11QuickTilingAfterVertMaximize_data()
 {
     QTest::addColumn<QuickTileMode>("mode");
-    QTest::addColumn<QRectF>("expectedGeometry");
+    QTest::addColumn<RectF>("expectedGeometry");
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
 
-    QTest::newRow("left") << FLAG(Left) << QRectF(0, 0, 640, 1024);
-    QTest::newRow("top") << FLAG(Top) << QRectF(0, 0, 1280, 512);
-    QTest::newRow("right") << FLAG(Right) << QRectF(640, 0, 640, 1024);
-    QTest::newRow("bottom") << FLAG(Bottom) << QRectF(0, 512, 1280, 512);
+    QTest::newRow("left") << FLAG(Left) << RectF(0, 0, 640, 1024);
+    QTest::newRow("top") << FLAG(Top) << RectF(0, 0, 1280, 512);
+    QTest::newRow("right") << FLAG(Right) << RectF(640, 0, 640, 1024);
+    QTest::newRow("bottom") << FLAG(Bottom) << RectF(0, 512, 1280, 512);
 
-    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << QRectF(0, 0, 640, 512);
-    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << QRectF(640, 0, 640, 512);
-    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << QRectF(0, 512, 640, 512);
-    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << QRectF(640, 512, 640, 512);
+    QTest::newRow("top left") << (FLAG(Left) | FLAG(Top)) << RectF(0, 0, 640, 512);
+    QTest::newRow("top right") << (FLAG(Right) | FLAG(Top)) << RectF(640, 0, 640, 512);
+    QTest::newRow("bottom left") << (FLAG(Left) | FLAG(Bottom)) << RectF(0, 512, 640, 512);
+    QTest::newRow("bottom right") << (FLAG(Right) | FLAG(Bottom)) << RectF(640, 512, 640, 512);
 
 #undef FLAG
 }
@@ -651,7 +651,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     QVERIFY(window);
     QCOMPARE(window->window(), windowId);
 
-    const QRectF origGeo = window->frameGeometry();
+    const RectF origGeo = window->frameGeometry();
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     // vertically maximize the window
     window->maximize(window->maximizeMode() ^ MaximizeVertical);
@@ -706,16 +706,16 @@ void QuickTilingTest::testShortcut_data()
         {BR, B, BR, R, BR, TL, TR, BL, BR},
     };
 
-    const QHash<QuickTileMode, QRect> geometries = {
-        {N, QRect()},
-        {L, QRect(0, 0, 640, 1024)},
-        {R, QRect(640, 0, 640, 1024)},
-        {T, QRect(0, 0, 1280, 512)},
-        {B, QRect(0, 512, 1280, 512)},
-        {TL, QRect(0, 0, 640, 512)},
-        {TR, QRect(640, 0, 640, 512)},
-        {BL, QRect(0, 512, 640, 512)},
-        {BR, QRect(640, 512, 640, 512)},
+    const QHash<QuickTileMode, RectF> geometries = {
+        {N, RectF()},
+        {L, RectF(0, 0, 640, 1024)},
+        {R, RectF(640, 0, 640, 1024)},
+        {T, RectF(0, 0, 1280, 512)},
+        {B, RectF(0, 512, 1280, 512)},
+        {TL, RectF(0, 0, 640, 512)},
+        {TR, RectF(640, 0, 640, 512)},
+        {BL, RectF(0, 512, 640, 512)},
+        {BR, RectF(640, 512, 640, 512)},
     };
 
     const QHash<QuickTileMode, QString> shortcuts = {
@@ -744,7 +744,7 @@ void QuickTilingTest::testShortcut_data()
     QTest::addColumn<QuickTileMode>("oldMode");
     QTest::addColumn<QString>("shortcut");
     QTest::addColumn<QuickTileMode>("expectedMode");
-    QTest::addColumn<QRect>("expectedGeometry");
+    QTest::addColumn<RectF>("expectedGeometry");
 
     for (size_t row = 0; row < sizeof(quickTileTransition) / sizeof(quickTileTransition[0]); ++row) {
         for (size_t col = 1; col < sizeof(quickTileTransition[0]) / sizeof(quickTileTransition[0][0]); ++col) {
@@ -783,7 +783,7 @@ void QuickTilingTest::testShortcut()
     QVERIFY(shellSurface != nullptr);
 
     // Map the window.
-    const auto initialGeometry = QRect(0, 0, 100, 50);
+    const auto initialGeometry = Rect(0, 0, 100, 50);
     auto window = Test::renderAndWaitForShown(surface.get(), initialGeometry.size(), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
@@ -799,7 +799,7 @@ void QuickTilingTest::testShortcut()
     QFETCH(QuickTileMode, oldMode);
     QFETCH(QString, shortcut);
     QFETCH(QuickTileMode, expectedMode);
-    QFETCH(QRect, expectedGeometry);
+    QFETCH(RectF, expectedGeometry);
 
     if (expectedMode == QuickTileMode(QuickTileFlag::None)) {
         expectedGeometry = initialGeometry;
@@ -876,7 +876,7 @@ void QuickTilingTest::testMultiScreen()
         Tile *previousTile;
         QuickTileMode next;
         Tile *nextTile;
-        QRectF geometry;
+        RectF geometry;
     } steps[] = {
         // Not tiled -> tiled on the left half of the first screen
         {
@@ -885,7 +885,7 @@ void QuickTilingTest::testMultiScreen()
             .previousTile = nullptr,
             .next = QuickTileFlag::Left,
             .nextTile = firstTileManager->quickTile(QuickTileFlag::Left),
-            .geometry = QRectF(0, 0, 640, 1024),
+            .geometry = RectF(0, 0, 640, 1024),
         },
         // Tiled on the left half of the first screen -> tiled on the right half of the first screen
         {
@@ -894,7 +894,7 @@ void QuickTilingTest::testMultiScreen()
             .previousTile = firstTileManager->quickTile(QuickTileFlag::Left),
             .next = QuickTileFlag::Right,
             .nextTile = firstTileManager->quickTile(QuickTileFlag::Right),
-            .geometry = QRectF(640, 0, 640, 1024),
+            .geometry = RectF(640, 0, 640, 1024),
         },
         // Tiled on the right half of the first screen -> tiled on the left half of the second screen
         {
@@ -903,7 +903,7 @@ void QuickTilingTest::testMultiScreen()
             .previousTile = firstTileManager->quickTile(QuickTileFlag::Right),
             .next = QuickTileFlag::Left,
             .nextTile = secondTileManager->quickTile(QuickTileFlag::Left),
-            .geometry = QRectF(1280, 0, 640, 1024),
+            .geometry = RectF(1280, 0, 640, 1024),
         },
         // Tiled on the left half of the second screen -> tiled on the right half of the second screen
         {
@@ -912,7 +912,7 @@ void QuickTilingTest::testMultiScreen()
             .previousTile = secondTileManager->quickTile(QuickTileFlag::Left),
             .next = QuickTileFlag::Right,
             .nextTile = secondTileManager->quickTile(QuickTileFlag::Right),
-            .geometry = QRectF(1920, 0, 640, 1024),
+            .geometry = RectF(1920, 0, 640, 1024),
         },
         // Tiled on the right half of the second screen -> tiled on the left half of the second screen
         {
@@ -921,7 +921,7 @@ void QuickTilingTest::testMultiScreen()
             .previousTile = secondTileManager->quickTile(QuickTileFlag::Right),
             .next = QuickTileFlag::Left,
             .nextTile = secondTileManager->quickTile(QuickTileFlag::Left),
-            .geometry = QRectF(1280, 0, 640, 1024),
+            .geometry = RectF(1280, 0, 640, 1024),
         },
         // Tiled on the left half of the second screen -> tiled on the right half of the first screen
         {
@@ -930,7 +930,7 @@ void QuickTilingTest::testMultiScreen()
             .previousTile = secondTileManager->quickTile(QuickTileFlag::Left),
             .next = QuickTileFlag::Right,
             .nextTile = firstTileManager->quickTile(QuickTileFlag::Right),
-            .geometry = QRectF(640, 0, 640, 1024),
+            .geometry = RectF(640, 0, 640, 1024),
         },
         // Tiled on the right half of the first screen -> tiled on the left half of the first screen
         {
@@ -939,7 +939,7 @@ void QuickTilingTest::testMultiScreen()
             .previousTile = firstTileManager->quickTile(QuickTileFlag::Right),
             .next = QuickTileFlag::Left,
             .nextTile = firstTileManager->quickTile(QuickTileFlag::Left),
-            .geometry = QRectF(0, 0, 640, 1024),
+            .geometry = RectF(0, 0, 640, 1024),
         },
     };
 
@@ -987,7 +987,7 @@ void QuickTilingTest::testMultiScreenX11()
         Tile *previousTile;
         QuickTileMode next;
         Tile *nextTile;
-        QRectF geometry;
+        RectF geometry;
     } steps[] = {
         // Not tiled -> tiled on the left half of the first screen
         {
@@ -996,7 +996,7 @@ void QuickTilingTest::testMultiScreenX11()
             .previousTile = nullptr,
             .next = QuickTileFlag::Left,
             .nextTile = firstTileManager->quickTile(QuickTileFlag::Left),
-            .geometry = QRectF(0, 0, 640, 1024),
+            .geometry = RectF(0, 0, 640, 1024),
         },
         // Tiled on the left half of the first screen -> tiled on the right half of the first screen
         {
@@ -1005,7 +1005,7 @@ void QuickTilingTest::testMultiScreenX11()
             .previousTile = firstTileManager->quickTile(QuickTileFlag::Left),
             .next = QuickTileFlag::Right,
             .nextTile = firstTileManager->quickTile(QuickTileFlag::Right),
-            .geometry = QRectF(640, 0, 640, 1024),
+            .geometry = RectF(640, 0, 640, 1024),
         },
         // Tiled on the right half of the first screen -> tiled on the left half of the second screen
         {
@@ -1014,7 +1014,7 @@ void QuickTilingTest::testMultiScreenX11()
             .previousTile = firstTileManager->quickTile(QuickTileFlag::Right),
             .next = QuickTileFlag::Left,
             .nextTile = secondTileManager->quickTile(QuickTileFlag::Left),
-            .geometry = QRectF(1280, 0, 640, 1024),
+            .geometry = RectF(1280, 0, 640, 1024),
         },
         // Tiled on the left half of the second screen -> tiled on the right half of the second screen
         {
@@ -1023,7 +1023,7 @@ void QuickTilingTest::testMultiScreenX11()
             .previousTile = secondTileManager->quickTile(QuickTileFlag::Left),
             .next = QuickTileFlag::Right,
             .nextTile = secondTileManager->quickTile(QuickTileFlag::Right),
-            .geometry = QRectF(1920, 0, 640, 1024),
+            .geometry = RectF(1920, 0, 640, 1024),
         },
         // Tiled on the right half of the second screen -> tiled on the left half of the second screen
         {
@@ -1032,7 +1032,7 @@ void QuickTilingTest::testMultiScreenX11()
             .previousTile = secondTileManager->quickTile(QuickTileFlag::Right),
             .next = QuickTileFlag::Left,
             .nextTile = secondTileManager->quickTile(QuickTileFlag::Left),
-            .geometry = QRectF(1280, 0, 640, 1024),
+            .geometry = RectF(1280, 0, 640, 1024),
         },
         // Tiled on the left half of the second screen -> tiled on the right half of the first screen
         {
@@ -1041,7 +1041,7 @@ void QuickTilingTest::testMultiScreenX11()
             .previousTile = secondTileManager->quickTile(QuickTileFlag::Left),
             .next = QuickTileFlag::Right,
             .nextTile = firstTileManager->quickTile(QuickTileFlag::Right),
-            .geometry = QRectF(640, 0, 640, 1024),
+            .geometry = RectF(640, 0, 640, 1024),
         },
         // Tiled on the right half of the first screen -> tiled on the left half of the first screen
         {
@@ -1050,7 +1050,7 @@ void QuickTilingTest::testMultiScreenX11()
             .previousTile = firstTileManager->quickTile(QuickTileFlag::Right),
             .next = QuickTileFlag::Left,
             .nextTile = firstTileManager->quickTile(QuickTileFlag::Left),
-            .geometry = QRectF(0, 0, 640, 1024),
+            .geometry = RectF(0, 0, 640, 1024),
         },
     };
 
@@ -1097,7 +1097,7 @@ void QuickTilingTest::testQuickTileAndMaximize()
 
     auto quickTile = [&]() {
         window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
-        QCOMPARE(window->geometryRestore(), QRectF(0, 0, 100, 100));
+        QCOMPARE(window->geometryRestore(), RectF(0, 0, 100, 100));
         QCOMPARE(window->quickTileMode(), previousQuickTileMode);
         QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
         QCOMPARE(window->maximizeMode(), previousMaximizeMode);
@@ -1110,8 +1110,8 @@ void QuickTilingTest::testQuickTileAndMaximize()
         QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
         QCOMPARE(window->maximizeMode(), MaximizeRestore);
         QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-        QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
-        QCOMPARE(window->moveResizeGeometry(), QRectF(640, 0, 640, 1024));
+        QCOMPARE(window->frameGeometry(), RectF(640, 0, 640, 1024));
+        QCOMPARE(window->moveResizeGeometry(), RectF(640, 0, 640, 1024));
 
         previousMaximizeMode = window->maximizeMode();
         previousQuickTileMode = window->quickTileMode();
@@ -1119,7 +1119,7 @@ void QuickTilingTest::testQuickTileAndMaximize()
 
     auto maximize = [&]() {
         window->maximize(MaximizeFull);
-        QCOMPARE(window->geometryRestore(), QRectF(0, 0, 100, 100));
+        QCOMPARE(window->geometryRestore(), RectF(0, 0, 100, 100));
         QCOMPARE(window->quickTileMode(), previousQuickTileMode);
         QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
         QCOMPARE(window->maximizeMode(), previousMaximizeMode);
@@ -1132,8 +1132,8 @@ void QuickTilingTest::testQuickTileAndMaximize()
         QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
         QCOMPARE(window->maximizeMode(), MaximizeFull);
         QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
-        QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
-        QCOMPARE(window->moveResizeGeometry(), QRectF(0, 0, 1280, 1024));
+        QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
+        QCOMPARE(window->moveResizeGeometry(), RectF(0, 0, 1280, 1024));
 
         previousMaximizeMode = window->maximizeMode();
         previousQuickTileMode = window->quickTileMode();
@@ -1141,7 +1141,7 @@ void QuickTilingTest::testQuickTileAndMaximize()
 
     auto restore = [&]() {
         window->maximize(MaximizeRestore);
-        QCOMPARE(window->geometryRestore(), QRectF(0, 0, 100, 100));
+        QCOMPARE(window->geometryRestore(), RectF(0, 0, 100, 100));
         QCOMPARE(window->quickTileMode(), previousQuickTileMode);
         QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
         QCOMPARE(window->maximizeMode(), previousMaximizeMode);
@@ -1154,8 +1154,8 @@ void QuickTilingTest::testQuickTileAndMaximize()
         QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
         QCOMPARE(window->maximizeMode(), MaximizeRestore);
         QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-        QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 100));
-        QCOMPARE(window->moveResizeGeometry(), QRectF(0, 0, 100, 100));
+        QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 100));
+        QCOMPARE(window->moveResizeGeometry(), RectF(0, 0, 100, 100));
 
         previousMaximizeMode = window->maximizeMode();
         previousQuickTileMode = window->quickTileMode();
@@ -1186,7 +1186,7 @@ void QuickTilingTest::testQuickTileAndMaximizeX11()
 
     QuickTileMode previousQuickTileMode = QuickTileFlag::None;
     MaximizeMode previousMaximizeMode = MaximizeRestore;
-    QRectF originalGeometry = window->frameGeometry();
+    RectF originalGeometry = window->frameGeometry();
 
     auto quickTile = [&]() {
         QCOMPARE(window->geometryRestore(), originalGeometry);
@@ -1201,8 +1201,8 @@ void QuickTilingTest::testQuickTileAndMaximizeX11()
         QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
         QCOMPARE(window->maximizeMode(), MaximizeRestore);
         QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-        QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
-        QCOMPARE(window->moveResizeGeometry(), QRectF(640, 0, 640, 1024));
+        QCOMPARE(window->frameGeometry(), RectF(640, 0, 640, 1024));
+        QCOMPARE(window->moveResizeGeometry(), RectF(640, 0, 640, 1024));
 
         previousMaximizeMode = window->maximizeMode();
         previousQuickTileMode = window->quickTileMode();
@@ -1221,8 +1221,8 @@ void QuickTilingTest::testQuickTileAndMaximizeX11()
         QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
         QCOMPARE(window->maximizeMode(), MaximizeFull);
         QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
-        QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
-        QCOMPARE(window->moveResizeGeometry(), QRectF(0, 0, 1280, 1024));
+        QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
+        QCOMPARE(window->moveResizeGeometry(), RectF(0, 0, 1280, 1024));
 
         previousMaximizeMode = window->maximizeMode();
         previousQuickTileMode = window->quickTileMode();
@@ -1285,20 +1285,20 @@ void QuickTilingTest::testQuickTileAndFullScreen()
 
     // tile the window in the left half of the screen on the first virtual desktop
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Left);
-    QCOMPARE(window->geometryRestore(), QRectF(0, 0, 100, 100));
+    QCOMPARE(window->geometryRestore(), RectF(0, 0, 100, 100));
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
     ackConfigure();
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 640, 1024));
 
     // make the window fullscreen
     window->setFullScreen(true);
-    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->fullscreenGeometryRestore(), RectF(0, 0, 640, 1024));
     QCOMPARE(window->isFullScreen(), false);
     QCOMPARE(window->isRequestedFullScreen(), true);
-    QCOMPARE(window->geometryRestore(), QRectF(0, 0, 100, 100));
+    QCOMPARE(window->geometryRestore(), RectF(0, 0, 100, 100));
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
     ackConfigure();
@@ -1306,7 +1306,7 @@ void QuickTilingTest::testQuickTileAndFullScreen()
     QCOMPARE(window->isRequestedFullScreen(), true);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
 
     // leave fullscreen mode
     window->setFullScreen(false);
@@ -1319,7 +1319,7 @@ void QuickTilingTest::testQuickTileAndFullScreen()
     QCOMPARE(window->isRequestedFullScreen(), false);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 640, 1024));
 
     // untile the window
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
@@ -1332,11 +1332,11 @@ void QuickTilingTest::testQuickTileAndFullScreen()
     QCOMPARE(window->isRequestedFullScreen(), false);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 100));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 100));
 
     // make the window fullscreen
     window->setFullScreen(true);
-    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(0, 0, 100, 100));
+    QCOMPARE(window->fullscreenGeometryRestore(), RectF(0, 0, 100, 100));
     QCOMPARE(window->isFullScreen(), false);
     QCOMPARE(window->isRequestedFullScreen(), true);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
@@ -1346,7 +1346,7 @@ void QuickTilingTest::testQuickTileAndFullScreen()
     QCOMPARE(window->isRequestedFullScreen(), true);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
 
     // attempt to tile the window
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Left);
@@ -1354,7 +1354,7 @@ void QuickTilingTest::testQuickTileAndFullScreen()
     QCOMPARE(window->isRequestedFullScreen(), true);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
 }
 
 void QuickTilingTest::testQuickTileAndFullScreenX11()
@@ -1364,7 +1364,7 @@ void QuickTilingTest::testQuickTileAndFullScreenX11()
     QVERIFY(!xcb_connection_has_error(connection.get()));
     X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
 
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
 
     // tile the window in the left half of the screen on the first virtual desktop
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
@@ -1373,16 +1373,16 @@ void QuickTilingTest::testQuickTileAndFullScreenX11()
     QCOMPARE(window->geometryRestore(), originalGeometry);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 640, 1024));
 
     // make the window fullscreen
     window->setFullScreen(true);
-    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->fullscreenGeometryRestore(), RectF(0, 0, 640, 1024));
     QCOMPARE(window->isFullScreen(), true);
     QCOMPARE(window->isRequestedFullScreen(), true);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
 
     // leave fullscreen mode
     window->setFullScreen(false);
@@ -1390,7 +1390,7 @@ void QuickTilingTest::testQuickTileAndFullScreenX11()
     QCOMPARE(window->isRequestedFullScreen(), false);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 640, 1024));
 
     // untile the window
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
@@ -1407,7 +1407,7 @@ void QuickTilingTest::testQuickTileAndFullScreenX11()
     QCOMPARE(window->isRequestedFullScreen(), true);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
 
     // attempt to tile the window
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Left);
@@ -1415,7 +1415,7 @@ void QuickTilingTest::testQuickTileAndFullScreenX11()
     QCOMPARE(window->isRequestedFullScreen(), true);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
 #endif
 }
 
@@ -1448,7 +1448,7 @@ void QuickTilingTest::testPerDesktop()
     ackConfigure();
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 640, 1024));
 
     // switch to the second virtual desktop, the window will still remain tiled, although invisible
     VirtualDesktopManager::self()->setCurrent(2);
@@ -1472,7 +1472,7 @@ void QuickTilingTest::testPerDesktop()
     ackConfigure();
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
-    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(640, 0, 640, 1024));
 
     // when we return back to the first virtual desktop, the window will be tiled in the left half of the screen
     VirtualDesktopManager::self()->setCurrent(1);
@@ -1481,7 +1481,7 @@ void QuickTilingTest::testPerDesktop()
     ackConfigure();
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 640, 1024));
 
     // and if we go back to the second virtual desktop, the window will be tiled in the right half of the screen
     VirtualDesktopManager::self()->setCurrent(2);
@@ -1490,7 +1490,7 @@ void QuickTilingTest::testPerDesktop()
     ackConfigure();
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
-    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(640, 0, 640, 1024));
 
     // untile the window on the second virtual desktop
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
@@ -1499,7 +1499,7 @@ void QuickTilingTest::testPerDesktop()
     ackConfigure();
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 100));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 100));
 
     // go back to the first virtual desktop, the window will be tiled
     VirtualDesktopManager::self()->setCurrent(1);
@@ -1508,7 +1508,7 @@ void QuickTilingTest::testPerDesktop()
     ackConfigure();
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 640, 1024));
 
     // go to the second virtual desktop, the window will be untiled
     VirtualDesktopManager::self()->setCurrent(2);
@@ -1517,7 +1517,7 @@ void QuickTilingTest::testPerDesktop()
     ackConfigure();
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 100));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 100));
 }
 
 void QuickTilingTest::testPerDesktopX11()
@@ -1530,7 +1530,7 @@ void QuickTilingTest::testPerDesktopX11()
     X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
 
     QSignalSpy tileChangedSpy(window, &Window::tileChanged);
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
 
     // tile the window in the left half of the screen on the first virtual desktop
     QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
@@ -1539,7 +1539,7 @@ void QuickTilingTest::testPerDesktopX11()
     QCOMPARE(tileChangedSpy.count(), 1);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 640, 1024));
 
     // switch to the second virtual desktop, the window will still remain tiled, although invisible
     VirtualDesktopManager::self()->setCurrent(2);
@@ -1566,21 +1566,21 @@ void QuickTilingTest::testPerDesktopX11()
     QCOMPARE(tileChangedSpy.count(), 2);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
-    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(640, 0, 640, 1024));
 
     // when we return back to the first virtual desktop, the window will be tiled in the left half of the screen
     VirtualDesktopManager::self()->setCurrent(1);
     QCOMPARE(tileChangedSpy.count(), 3);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 640, 1024));
 
     // and if we go back to the second virtual desktop, the window will be tiled in the right half of the screen
     VirtualDesktopManager::self()->setCurrent(2);
     QCOMPARE(tileChangedSpy.count(), 4);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
-    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(640, 0, 640, 1024));
 
     // untile the window on the second virtual desktop
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
@@ -1594,7 +1594,7 @@ void QuickTilingTest::testPerDesktopX11()
     QCOMPARE(tileChangedSpy.count(), 6);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Left);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Left);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 640, 1024));
 
     // go to the second virtual desktop, the window will be untiled
     VirtualDesktopManager::self()->setCurrent(2);
@@ -1627,7 +1627,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileSameDesktop()
         QVERIFY(tileChangedSpy.wait());
     };
 
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
     const auto outputs = workspace()->outputs();
     for (LogicalOutput *first : outputs) {
         for (LogicalOutput *second : outputs) {
@@ -1699,7 +1699,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileSameDesktopX11()
     X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
 
     QSignalSpy tileChangedSpy(window, &Window::tileChanged);
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
 
     const auto outputs = workspace()->outputs();
     for (LogicalOutput *first : outputs) {
@@ -1830,7 +1830,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktops()
     applyTileLayout(workspace()->rootTile(outputs.at(1), desktops.at(0)), 0.3, 0.7);
     applyTileLayout(workspace()->rootTile(outputs.at(1), desktops.at(1)), 0.25, 0.75);
 
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
     for (VirtualDesktop *customTileDesktop : desktops) {
         for (VirtualDesktop *quickTileDesktop : desktops) {
             if (customTileDesktop == quickTileDesktop) {
@@ -1957,7 +1957,7 @@ void QuickTilingTest::testMoveBetweenQuickTileAndCustomTileCrossDesktopsX11()
     applyTileLayout(workspace()->rootTile(outputs.at(1), desktops.at(0)), 0.3, 0.7);
     applyTileLayout(workspace()->rootTile(outputs.at(1), desktops.at(1)), 0.25, 0.75);
 
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
     for (VirtualDesktop *customTileDesktop : desktops) {
         for (VirtualDesktop *quickTileDesktop : desktops) {
             if (customTileDesktop == quickTileDesktop) {
@@ -2102,7 +2102,7 @@ void QuickTilingTest::testEvacuateFromRemovedDesktop()
         QVERIFY(frameGeometryChangedSpy.wait());
     };
 
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
 
     // tile the window in the right half of the screen
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
@@ -2112,7 +2112,7 @@ void QuickTilingTest::testEvacuateFromRemovedDesktop()
     ackConfigure();
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
-    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(640, 0, 640, 1024));
 
     // remove the current virtual desktop
     VirtualDesktopManager::self()->removeVirtualDesktop(VirtualDesktopManager::self()->currentDesktop());
@@ -2133,13 +2133,13 @@ void QuickTilingTest::testEvacuateFromRemovedDesktopX11()
     QVERIFY(!xcb_connection_has_error(connection.get()));
     X11Window *window = createWindow(connection.get(), QRect(0, 0, 100, 200));
 
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
 
     // tile the window in the right half of the screen
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
-    QCOMPARE(window->frameGeometry(), QRectF(640, 0, 640, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(640, 0, 640, 1024));
 
     // remove the current virtual desktop
     VirtualDesktopManager::self()->removeVirtualDesktop(VirtualDesktopManager::self()->currentDesktop());
@@ -2171,7 +2171,7 @@ void QuickTilingTest::testCloseTiledWindow()
 
     Tile *tile = workspace()->tileManager(workspace()->activeOutput())->quickTile(QuickTileFlag::Right);
 
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
     tile->manage(window);
     QCOMPARE(window->geometryRestore(), originalGeometry);
     QCOMPARE(window->tile(), nullptr);
@@ -2221,17 +2221,17 @@ void QuickTilingTest::testScript_data()
 {
     QTest::addColumn<QString>("action");
     QTest::addColumn<QuickTileMode>("expectedMode");
-    QTest::addColumn<QRect>("expectedGeometry");
+    QTest::addColumn<RectF>("expectedGeometry");
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
-    QTest::newRow("top") << QStringLiteral("Top") << FLAG(Top) << QRect(0, 0, 1280, 512);
-    QTest::newRow("bottom") << QStringLiteral("Bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512);
-    QTest::newRow("top right") << QStringLiteral("TopRight") << (FLAG(Top) | FLAG(Right)) << QRect(640, 0, 640, 512);
-    QTest::newRow("top left") << QStringLiteral("TopLeft") << (FLAG(Top) | FLAG(Left)) << QRect(0, 0, 640, 512);
-    QTest::newRow("bottom right") << QStringLiteral("BottomRight") << (FLAG(Bottom) | FLAG(Right)) << QRect(640, 512, 640, 512);
-    QTest::newRow("bottom left") << QStringLiteral("BottomLeft") << (FLAG(Bottom) | FLAG(Left)) << QRect(0, 512, 640, 512);
-    QTest::newRow("left") << QStringLiteral("Left") << FLAG(Left) << QRect(0, 0, 640, 1024);
-    QTest::newRow("right") << QStringLiteral("Right") << FLAG(Right) << QRect(640, 0, 640, 1024);
+    QTest::newRow("top") << QStringLiteral("Top") << FLAG(Top) << RectF(0, 0, 1280, 512);
+    QTest::newRow("bottom") << QStringLiteral("Bottom") << FLAG(Bottom) << RectF(0, 512, 1280, 512);
+    QTest::newRow("top right") << QStringLiteral("TopRight") << (FLAG(Top) | FLAG(Right)) << RectF(640, 0, 640, 512);
+    QTest::newRow("top left") << QStringLiteral("TopLeft") << (FLAG(Top) | FLAG(Left)) << RectF(0, 0, 640, 512);
+    QTest::newRow("bottom right") << QStringLiteral("BottomRight") << (FLAG(Bottom) | FLAG(Right)) << RectF(640, 512, 640, 512);
+    QTest::newRow("bottom left") << QStringLiteral("BottomLeft") << (FLAG(Bottom) | FLAG(Left)) << RectF(0, 512, 640, 512);
+    QTest::newRow("left") << QStringLiteral("Left") << FLAG(Left) << RectF(0, 0, 640, 1024);
+    QTest::newRow("right") << QStringLiteral("Right") << FLAG(Right) << RectF(640, 0, 640, 1024);
 #undef FLAG
 }
 
@@ -2246,7 +2246,7 @@ void QuickTilingTest::testScript()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 50));
     QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
 
     // We have to receive a configure event upon the window becoming active.
@@ -2268,7 +2268,7 @@ void QuickTilingTest::testScript()
     out.flush();
 
     QFETCH(QuickTileMode, expectedMode);
-    QFETCH(QRect, expectedGeometry);
+    QFETCH(RectF, expectedGeometry);
 
     const int id = Scripting::self()->loadScript(tmpFile.fileName());
     QVERIFY(id != -1);
@@ -2283,7 +2283,7 @@ void QuickTilingTest::testScript()
     QCOMPARE(runningChangedSpy.first().first().toBool(), true);
 
     // at this point the geometry did not yet change
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 50));
     // but requested quick tile mode already changed
     QCOMPARE(window->requestedQuickTileMode(), expectedMode);
 
@@ -2294,7 +2294,7 @@ void QuickTilingTest::testScript()
 
     // attach a new image
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Test::render(surface.get(), expectedGeometry.size(), Qt::red);
+    Test::render(surface.get(), expectedGeometry.size().toSize(), Qt::red);
 
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(quickTileChangedSpy.count(), 1);
@@ -2321,7 +2321,7 @@ void QuickTilingTest::testDontCrashWithMaximizeWindowRule()
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(workspace()->activeWindow(), window);
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 1280, 800));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 800));
     QCOMPARE(window->requestedQuickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
 

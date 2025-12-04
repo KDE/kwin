@@ -93,7 +93,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     // when it's minimized or unminimized.
 
     // Create a panel at the top of the screen.
-    const QRect panelRect = QRect(0, 0, 1280, 36);
+    const Rect panelRect = Rect(0, 0, 1280, 36);
     std::unique_ptr<KWayland::Client::Surface> panelSurface{Test::createSurface()};
     std::unique_ptr<Test::LayerSurfaceV1> panelShellSurface{Test::createLayerSurfaceV1(panelSurface.get(), QStringLiteral("dock"))};
     panelShellSurface->set_size(panelRect.width(), panelRect.height());
@@ -123,8 +123,8 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     // otherwise it won't start animation.
     auto plasmaWindow = plasmaWindowCreatedSpy.last().first().value<KWayland::Client::PlasmaWindow *>();
     QVERIFY(plasmaWindow);
-    const QRect iconRect = QRect(0, 0, 42, 36);
-    plasmaWindow->setMinimizedGeometry(panelSurface.get(), iconRect);
+    const RectF iconRect = RectF(0, 0, 42, 36);
+    plasmaWindow->setMinimizedGeometry(panelSurface.get(), iconRect.toRect());
     Test::flushWaylandConnection();
     QTRY_COMPARE(window->iconGeometry(), iconRect.translated(panel->frameGeometry().topLeft().toPoint()));
 

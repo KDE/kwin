@@ -53,7 +53,7 @@ public:
     bool isInternal() const override;
     bool isLockScreen() const override;
     bool isOutline() const override;
-    QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) const override;
+    RectF resizeWithChecks(const RectF &geometry, const QSizeF &size) const override;
     void setNoBorder(bool set) override;
     void invalidateDecoration() override;
     void destroyWindow() override;
@@ -78,15 +78,15 @@ protected:
     bool acceptsFocus() const override;
     bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
     void updateCaption() override;
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const RectF &rect, MoveResizeMode mode) override;
     std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
 
 private:
-    void commitGeometry(const QRectF &rect);
+    void commitGeometry(const RectF &rect);
     void setCaption(const QString &caption);
     void markAsMapped();
     void updateDecoration(bool check_workspace_pos, bool force = false);
-    void createDecoration(const QRectF &oldGeometry);
+    void createDecoration(const RectF &oldGeometry);
     void destroyDecoration();
 
     QWindow *m_handle = nullptr;

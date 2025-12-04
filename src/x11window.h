@@ -65,7 +65,7 @@ public:
     QSizeF nextFrameSizeToClientSize(const QSizeF &size) const override;
     QSizeF clientSizeToFrameSize(const QSizeF &size) const override;
     QSizeF nextClientSizeToFrameSize(const QSizeF &size) const override;
-    QRectF nextFrameRectToBufferRect(const QRectF &rect) const;
+    RectF nextFrameRectToBufferRect(const RectF &rect) const;
 
     void blockGeometryUpdates(bool block);
     void blockGeometryUpdates();
@@ -116,7 +116,7 @@ public:
 
     bool isMaximizable() const override;
     MaximizeMode maximizeMode() const override;
-    void maximize(MaximizeMode mode, const QRectF &restore = QRectF()) override;
+    void maximize(MaximizeMode mode, const RectF &restore = RectF()) override;
 
     bool isMinimizable() const override;
 
@@ -151,9 +151,9 @@ public:
 
 
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
-    QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) const override;
-    QRectF resizeWithChecks(const QRectF &geometry, qreal w, qreal h, xcb_gravity_t gravity) const;
-    QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &s, xcb_gravity_t gravity) const;
+    RectF resizeWithChecks(const RectF &geometry, const QSizeF &size) const override;
+    RectF resizeWithChecks(const RectF &geometry, qreal w, qreal h, xcb_gravity_t gravity) const;
+    RectF resizeWithChecks(const RectF &geometry, const QSizeF &s, xcb_gravity_t gravity) const;
     QSizeF constrainClientSize(const QSizeF &size, SizeMode mode = SizeModeAny) const override;
 
     bool providesContextHelp() const override;
@@ -272,11 +272,11 @@ protected:
     void doSetModal() override;
     bool belongsToDesktop() const override;
     bool isWaitingForInteractiveResizeSync() const override;
-    void doInteractiveResizeSync(const QRectF &rect) override;
+    void doInteractiveResizeSync(const RectF &rect) override;
     QSizeF resizeIncrements() const override;
     bool acceptsFocus() const override;
     void doSetQuickTileMode() override;
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const RectF &rect, MoveResizeMode mode) override;
     std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
     void doSetNextTargetScale() override;
 
@@ -507,12 +507,12 @@ inline bool X11Window::isManaged() const
     return m_managed;
 }
 
-inline QRectF X11Window::resizeWithChecks(const QRectF &geometry, const QSizeF &s) const
+inline RectF X11Window::resizeWithChecks(const RectF &geometry, const QSizeF &s) const
 {
     return resizeWithChecks(geometry, s.width(), s.height(), XCB_GRAVITY_BIT_FORGET);
 }
 
-inline QRectF X11Window::resizeWithChecks(const QRectF &geometry, const QSizeF &s, xcb_gravity_t gravity) const
+inline RectF X11Window::resizeWithChecks(const RectF &geometry, const QSizeF &s, xcb_gravity_t gravity) const
 {
     return resizeWithChecks(geometry, s.width(), s.height(), gravity);
 }

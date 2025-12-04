@@ -190,7 +190,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsDisabled()
 
     // Move the window to some predefined position so the test is more robust.
     window->move(QPoint(42, 67));
-    QCOMPARE(window->frameGeometry(), QRect(42, 67, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(42, 67, 100, 50));
 
     // Disable the output where the window is on.
     OutputConfiguration config;
@@ -201,7 +201,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsDisabled()
     workspace()->applyOutputConfiguration(config);
 
     // The window will be sent to the second output, which is at (1280, 0).
-    QCOMPARE(window->frameGeometry(), QRect(1280 + 42, 0 + 67, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(1280 + 42, 0 + 67, 100, 50));
 }
 
 void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
@@ -216,7 +216,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
 
     // Move the window to the second output.
     window->move(QPoint(1280 + 42, 67));
-    QCOMPARE(window->frameGeometry(), QRect(1280 + 42, 67, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(1280 + 42, 67, 100, 50));
 
     // Disable the first output.
     OutputConfiguration config;
@@ -234,7 +234,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
     QCOMPARE(workspace()->outputs().front()->geometry(), QRect(0, 0, 1280, 1024));
 
     // The position of the window relative to its output should remain the same.
-    QCOMPARE(window->frameGeometry(), QRect(42, 67, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(42, 67, 100, 50));
 }
 
 void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
@@ -255,7 +255,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
 
     // Move the window to some predefined position so the test is more robust.
     window->move(QPoint(42, 67));
-    QCOMPARE(window->frameGeometry(), QRect(42, 67, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(42, 67, 100, 50));
 
     // move the first output
     {
@@ -265,7 +265,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
     }
 
     // The position of the window relative to its output should remain the same.
-    QCOMPARE(window->frameGeometry(), QRect(42 - 20, 67 + 20, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(42 - 20, 67 + 20, 100, 50));
 }
 
 void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedLeftToRight()
@@ -284,7 +284,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedLeftToRigh
     // Move the window to the left output.
     window->move(QPointF(0, 0));
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 50));
 
     // Swap outputs.
     OutputConfiguration config;
@@ -298,7 +298,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedLeftToRigh
 
     // The window should be still on its original output.
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(1280, 0, 100, 50));
 }
 
 void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedRightToLeft()
@@ -317,7 +317,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedRightToLef
     // Move the window to the right output.
     window->move(QPointF(1280, 0));
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(1280, 0, 100, 50));
 
     // Swap outputs.
     OutputConfiguration config;
@@ -331,7 +331,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedRightToLef
 
     // The window should be still on its original output.
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 50));
 }
 
 void OutputChangesTest::testWindowRestoredAfterEnablingOutput()
@@ -349,7 +349,7 @@ void OutputChangesTest::testWindowRestoredAfterEnablingOutput()
     // Move the window to the right output.
     window->move(QPointF(1280 + 50, 100));
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
-    QCOMPARE(window->frameGeometry(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(1280 + 50, 100, 100, 50));
 
     // Disable the right output.
     OutputConfiguration config1;
@@ -361,7 +361,7 @@ void OutputChangesTest::testWindowRestoredAfterEnablingOutput()
 
     // The window will be moved to the left monitor.
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
-    QCOMPARE(window->frameGeometry(), QRectF(50, 100, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(50, 100, 100, 50));
 
     // Enable the right monitor.
     OutputConfiguration config2;
@@ -373,7 +373,7 @@ void OutputChangesTest::testWindowRestoredAfterEnablingOutput()
 
     // The window will be moved back to the right monitor.
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
-    QCOMPARE(window->frameGeometry(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(1280 + 50, 100, 100, 50));
 }
 
 void OutputChangesTest::testWindowNotRestoredAfterMovingWindowAndEnablingOutput()
@@ -392,7 +392,7 @@ void OutputChangesTest::testWindowNotRestoredAfterMovingWindowAndEnablingOutput(
     // Move the window to the right output.
     window->move(QPointF(1280 + 50, 100));
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
-    QCOMPARE(window->frameGeometry(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(1280 + 50, 100, 100, 50));
 
     // Disable the right output.
     OutputConfiguration config1;
@@ -404,14 +404,14 @@ void OutputChangesTest::testWindowNotRestoredAfterMovingWindowAndEnablingOutput(
 
     // The window will be moved to the left monitor.
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
-    QCOMPARE(window->frameGeometry(), QRectF(50, 100, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(50, 100, 100, 50));
 
     // Pretend that the user moved the window.
     workspace()->slotWindowMove();
     QVERIFY(window->isInteractiveMove());
     window->keyPressEvent(Qt::Key_Right);
     window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(window->frameGeometry(), QRectF(58, 100, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(58, 100, 100, 50));
 
     // Enable the right monitor.
     OutputConfiguration config2;
@@ -423,7 +423,7 @@ void OutputChangesTest::testWindowNotRestoredAfterMovingWindowAndEnablingOutput(
 
     // The window is still on the left monitor because user manually moved it.
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
-    QCOMPARE(window->frameGeometry(), QRectF(58, 100, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(58, 100, 100, 50));
 }
 
 void OutputChangesTest::testMaximizedWindowRestoredAfterEnablingOutput()
@@ -453,12 +453,12 @@ void OutputChangesTest::testMaximizedWindowRestoredAfterEnablingOutput()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280, 1024), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
-    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), RectF(1280, 0, 1280, 1024));
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
-    QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->geometryRestore(), RectF(1280 + 50, 100, 100, 50));
 
     // Disable the right output.
     OutputConfiguration config1;
@@ -469,12 +469,12 @@ void OutputChangesTest::testMaximizedWindowRestoredAfterEnablingOutput()
     workspace()->applyOutputConfiguration(config1);
 
     // The window will be moved to the left monitor, the geometry restore will be updated too.
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
-    QCOMPARE(window->moveResizeGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), RectF(0, 0, 1280, 1024));
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
-    QCOMPARE(window->geometryRestore(), QRectF(50, 100, 100, 50));
+    QCOMPARE(window->geometryRestore(), RectF(50, 100, 100, 50));
 
     // Enable the right monitor.
     OutputConfiguration config2;
@@ -485,12 +485,12 @@ void OutputChangesTest::testMaximizedWindowRestoredAfterEnablingOutput()
     workspace()->applyOutputConfiguration(config2);
 
     // The window will be moved back to the right monitor, the geometry restore will be updated too.
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
-    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), RectF(1280, 0, 1280, 1024));
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
-    QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->geometryRestore(), RectF(1280 + 50, 100, 100, 50));
 }
 
 void OutputChangesTest::testFullScreenWindowRestoredAfterEnablingOutput()
@@ -520,12 +520,12 @@ void OutputChangesTest::testFullScreenWindowRestoredAfterEnablingOutput()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280, 1024), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
-    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), RectF(1280, 0, 1280, 1024));
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->isFullScreen(), true);
     QCOMPARE(window->isRequestedFullScreen(), true);
-    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->fullscreenGeometryRestore(), RectF(1280 + 50, 100, 100, 50));
 
     // Disable the right output.
     OutputConfiguration config1;
@@ -536,12 +536,12 @@ void OutputChangesTest::testFullScreenWindowRestoredAfterEnablingOutput()
     workspace()->applyOutputConfiguration(config1);
 
     // The window will be moved to the left monitor, the geometry restore will be updated too.
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
-    QCOMPARE(window->moveResizeGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), RectF(0, 0, 1280, 1024));
     QCOMPARE(window->output()->backendOutput(), outputs[0]);
     QCOMPARE(window->isFullScreen(), true);
     QCOMPARE(window->isRequestedFullScreen(), true);
-    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(50, 100, 100, 50));
+    QCOMPARE(window->fullscreenGeometryRestore(), RectF(50, 100, 100, 50));
 
     // Enable the right monitor.
     OutputConfiguration config2;
@@ -552,12 +552,12 @@ void OutputChangesTest::testFullScreenWindowRestoredAfterEnablingOutput()
     workspace()->applyOutputConfiguration(config2);
 
     // The window will be moved back to the right monitor, the geometry restore will be updated too.
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
-    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), RectF(1280, 0, 1280, 1024));
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->isFullScreen(), true);
     QCOMPARE(window->isRequestedFullScreen(), true);
-    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->fullscreenGeometryRestore(), RectF(1280 + 50, 100, 100, 50));
 }
 
 void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
@@ -595,7 +595,7 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
-    QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->geometryRestore(), RectF(1280 + 50, 100, 100, 50));
 
     // Disable the right output.
     OutputConfiguration config1;
@@ -635,7 +635,7 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
-    QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->geometryRestore(), RectF(1280 + 50, 100, 100, 50));
 }
 
 void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
@@ -692,7 +692,7 @@ void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
-    QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->geometryRestore(), RectF(1280 + 50, 100, 100, 50));
 
     // remove the second output again
     {
@@ -730,7 +730,7 @@ void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
-    QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->geometryRestore(), RectF(1280 + 50, 100, 100, 50));
 }
 
 void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput_data()
@@ -948,7 +948,7 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->maximizeMode(), maximizeMode);
     QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
-    QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->geometryRestore(), RectF(1280 + 50, 100, 100, 50));
 
     // Disable the right output
     {
@@ -989,7 +989,7 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->maximizeMode(), maximizeMode);
     QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
-    QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+    QCOMPARE(window->geometryRestore(), RectF(1280 + 50, 100, 100, 50));
 }
 
 void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
@@ -1034,8 +1034,8 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
     // Move the window to the right monitor
     window->sendToOutput(workspace()->findOutput(outputs[1]));
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
-    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), RectF(1280, 0, 1280, 1024));
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
     QVERIFY(outputs[1]->geometry().contains(window->geometryRestore().topLeft().toPoint()));
@@ -1077,8 +1077,8 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), outputs[1]->geometry().size());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), outputs[1]->geometry().size(), Qt::blue);
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
-    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), RectF(1280, 0, 1280, 1024));
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);

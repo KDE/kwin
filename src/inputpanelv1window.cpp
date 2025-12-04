@@ -100,20 +100,20 @@ void InputPanelV1Window::resetPosition()
         m_windowGeometry = surface()->input().boundingRect();
 
         const auto activeOutput = workspace()->activeOutput();
-        QRectF availableArea;
+        RectF availableArea;
         if (waylandServer()->isScreenLocked()) {
             availableArea = workspace()->clientArea(FullScreenArea, this, activeOutput);
         } else {
             availableArea = workspace()->clientArea(MaximizeArea, this, activeOutput);
         }
 
-        QRectF geo = m_windowGeometry;
+        RectF geo = m_windowGeometry;
 
         // if it fits, align within available area
         if (geo.width() < availableArea.width()) {
             geo.moveLeft(availableArea.left() + (availableArea.width() - geo.width()) / 2);
         } else { // otherwise align to be centred within the screen
-            const QRectF outputArea = activeOutput->geometry();
+            const RectF outputArea = activeOutput->geometry();
             geo.moveLeft(outputArea.left() + (outputArea.width() - geo.width()) / 2);
         }
 
@@ -123,14 +123,14 @@ void InputPanelV1Window::resetPosition()
     } break;
     case Mode::Overlay: {
         QRect cursorRectangle = kwinApp()->inputMethod()->cursorRectangle();
-        const QRectF screen = Workspace::self()->clientArea(PlacementArea, this, cursorRectangle.bottomLeft());
+        const RectF screen = Workspace::self()->clientArea(PlacementArea, this, cursorRectangle.bottomLeft());
 
-        m_windowGeometry = QRectF(QPointF(0, 0), surface()->size());
+        m_windowGeometry = RectF(QPointF(0, 0), surface()->size());
 
-        QRectF popupRect(cursorRectangle.left(),
-                         cursorRectangle.top() + cursorRectangle.height(),
-                         m_windowGeometry.width(),
-                         m_windowGeometry.height());
+        RectF popupRect(cursorRectangle.left(),
+                        cursorRectangle.top() + cursorRectangle.height(),
+                        m_windowGeometry.width(),
+                        m_windowGeometry.height());
         if (popupRect.left() < screen.left()) {
             popupRect.moveLeft(screen.left());
         }
@@ -138,10 +138,10 @@ void InputPanelV1Window::resetPosition()
             popupRect.moveRight(screen.right());
         }
         if (popupRect.top() < screen.top() || popupRect.bottom() > screen.bottom()) {
-            const QRectF flippedPopupRect(cursorRectangle.left(),
-                                          cursorRectangle.top() - m_windowGeometry.height(),
-                                          m_windowGeometry.width(),
-                                          m_windowGeometry.height());
+            const RectF flippedPopupRect(cursorRectangle.left(),
+                                         cursorRectangle.top() - m_windowGeometry.height(),
+                                         m_windowGeometry.width(),
+                                         m_windowGeometry.height());
 
             // if it still doesn't fit we should continue with the unflipped version
             if (flippedPopupRect.top() >= screen.top() && flippedPopupRect.bottom() <= screen.bottom()) {
@@ -192,12 +192,12 @@ WindowType InputPanelV1Window::windowType() const
     return WindowType::Utility;
 }
 
-QRectF InputPanelV1Window::frameRectToBufferRect(const QRectF &rect) const
+RectF InputPanelV1Window::frameRectToBufferRect(const RectF &rect) const
 {
-    return QRectF(rect.topLeft() - m_windowGeometry.topLeft(), surface()->size());
+    return RectF(rect.topLeft() - m_windowGeometry.topLeft(), surface()->size());
 }
 
-void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
+void InputPanelV1Window::moveResizeInternal(const RectF &rect, MoveResizeMode mode)
 {
     updateGeometry(rect);
 }

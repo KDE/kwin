@@ -227,7 +227,7 @@ void InternalWindowTest::testGeometry()
     QSignalSpy frameGeometryChangedSpy(internalWindow, &Window::frameGeometryChanged);
     win.setPosition(QPoint(20, 30));
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
-    QCOMPARE(internalWindow->clientGeometry(), QRectF(20, 30, 100, 100));
+    QCOMPARE(internalWindow->clientGeometry(), RectF(20, 30, 100, 100));
     QCOMPARE(win.geometry(), QRect(20, 30, 100, 100));
 
     win.setPosition(QPoint(20, 30));
@@ -236,7 +236,7 @@ void InternalWindowTest::testGeometry()
     // client initiated resize
     win.resize(150, 150);
     QCOMPARE(frameGeometryChangedSpy.count(), 2);
-    QCOMPARE(internalWindow->clientGeometry(), QRectF(20, 30, 150, 150));
+    QCOMPARE(internalWindow->clientGeometry(), RectF(20, 30, 150, 150));
     QCOMPARE(win.geometry(), QRect(20, 30, 150, 150));
 
     win.resize(150, 150);
@@ -245,7 +245,7 @@ void InternalWindowTest::testGeometry()
     // client initiated move+resize
     win.setGeometry(QRect(50, 50, 200, 200));
     QCOMPARE(frameGeometryChangedSpy.count(), 3);
-    QCOMPARE(internalWindow->clientGeometry(), QRectF(50, 50, 200, 200));
+    QCOMPARE(internalWindow->clientGeometry(), RectF(50, 50, 200, 200));
     QCOMPARE(win.geometry(), QRect(50, 50, 200, 200));
 
     win.setGeometry(QRect(50, 50, 200, 200));
@@ -254,7 +254,7 @@ void InternalWindowTest::testGeometry()
     // server initiated move
     internalWindow->move(internalWindow->clientPosToFramePos(QPointF(5, 5)));
     QCOMPARE(frameGeometryChangedSpy.count(), 4);
-    QCOMPARE(internalWindow->clientGeometry(), QRectF(5, 5, 200, 200));
+    QCOMPARE(internalWindow->clientGeometry(), RectF(5, 5, 200, 200));
     QCOMPARE(win.geometry(), QRect(5, 5, 200, 200));
 
     internalWindow->move(internalWindow->clientPosToFramePos(QPointF(5, 5)));
@@ -263,7 +263,7 @@ void InternalWindowTest::testGeometry()
     // server initiated resize
     internalWindow->resize(internalWindow->clientSizeToFrameSize(QSizeF(100, 100)));
     QCOMPARE(frameGeometryChangedSpy.count(), 5);
-    QCOMPARE(internalWindow->clientGeometry(), QRectF(5, 5, 100, 100));
+    QCOMPARE(internalWindow->clientGeometry(), RectF(5, 5, 100, 100));
     QCOMPARE(win.geometry(), QRect(5, 5, 100, 100));
 
     internalWindow->resize(internalWindow->clientSizeToFrameSize(QSizeF(100, 100)));
@@ -272,7 +272,7 @@ void InternalWindowTest::testGeometry()
     // server initiated move+resize
     internalWindow->moveResize(internalWindow->clientRectToFrameRect(QRectF(100, 100, 300, 300)));
     QCOMPARE(frameGeometryChangedSpy.count(), 6);
-    QCOMPARE(internalWindow->clientGeometry(), QRectF(100, 100, 300, 300));
+    QCOMPARE(internalWindow->clientGeometry(), RectF(100, 100, 300, 300));
     QCOMPARE(win.geometry(), QRect(100, 100, 300, 300));
 
     internalWindow->moveResize(internalWindow->clientRectToFrameRect(QRectF(100, 100, 300, 300)));
@@ -295,7 +295,7 @@ void InternalWindowTest::testEnterLeave()
     QVERIFY(window->isInternal());
     QVERIFY(!window->isDecorated());
     QCOMPARE(workspace()->findInternal(&win), window);
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 100));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 100));
     QVERIFY(window->isShown());
     QVERIFY(workspace()->stackingOrder().contains(window));
 
@@ -422,15 +422,15 @@ void InternalWindowTest::testMove()
     QTRY_COMPARE(windowAddedSpy.count(), 1);
     auto internalWindow = windowAddedSpy.first().first().value<InternalWindow *>();
     QVERIFY(internalWindow);
-    QCOMPARE(internalWindow->frameGeometry(), QRect(0, 0, 100, 100));
+    QCOMPARE(internalWindow->frameGeometry(), RectF(0, 0, 100, 100));
 
     // normal move should be synced
     internalWindow->move(QPoint(5, 10));
-    QCOMPARE(internalWindow->frameGeometry(), QRect(5, 10, 100, 100));
+    QCOMPARE(internalWindow->frameGeometry(), RectF(5, 10, 100, 100));
     QTRY_COMPARE(win.geometry(), QRect(5, 10, 100, 100));
     // another move should also be synced
     internalWindow->move(QPoint(10, 20));
-    QCOMPARE(internalWindow->frameGeometry(), QRect(10, 20, 100, 100));
+    QCOMPARE(internalWindow->frameGeometry(), RectF(10, 20, 100, 100));
     QTRY_COMPARE(win.geometry(), QRect(10, 20, 100, 100));
 }
 

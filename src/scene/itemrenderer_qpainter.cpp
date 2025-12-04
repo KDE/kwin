@@ -198,7 +198,7 @@ void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *sur
 void ItemRendererQPainter::renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const
 {
     const auto renderer = static_cast<const SceneQPainterDecorationRenderer *>(decorationItem->renderer());
-    QRectF dtr, dlr, drr, dbr;
+    RectF dtr, dlr, drr, dbr;
     decorationItem->window()->layoutDecorationRects(dlr, dtr, drr, dbr);
 
     painter->drawImage(dtr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Top));

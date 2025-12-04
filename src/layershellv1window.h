@@ -45,7 +45,7 @@ public:
     bool hasStrut() const override;
     void destroyWindow() override;
     void closeWindow() override;
-    void setVirtualKeyboardGeometry(const QRectF &geo) override;
+    void setVirtualKeyboardGeometry(const RectF &geo) override;
     void showOnScreenEdge() override;
 
     void installAutoHideScreenEdgeV1(AutoHideScreenEdgeV1Interface *edge);
@@ -53,7 +53,7 @@ public:
 protected:
     Layer belongsToLayer() const override;
     bool acceptsFocus() const override;
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const RectF &rect, MoveResizeMode mode) override;
     void doSetNextTargetScale() override;
     void doSetPreferredBufferTransform() override;
     void doSetPreferredColorDescription() override;

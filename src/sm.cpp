@@ -157,8 +157,8 @@ void SessionManager::storeClient(KConfigGroup &cg, int num, X11Window *c)
     cg.writeEntry(QLatin1String("resourceName") + n, c->resourceName());
     cg.writeEntry(QLatin1String("resourceClass") + n, c->resourceClass());
     cg.writeEntry(QLatin1String("geometry") + n, QRectF(c->calculateGravitation(true), c->clientSize()).toRect()); // FRAME
-    cg.writeEntry(QLatin1String("restore") + n, c->geometryRestore());
-    cg.writeEntry(QLatin1String("fsrestore") + n, c->fullscreenGeometryRestore());
+    cg.writeEntry(QLatin1String("restore") + n, QRectF(c->geometryRestore()));
+    cg.writeEntry(QLatin1String("fsrestore") + n, QRectF(c->fullscreenGeometryRestore()));
     cg.writeEntry(QLatin1String("maximize") + n, (int)c->maximizeMode());
     cg.writeEntry(QLatin1String("fullscreen") + n, (int)c->fullScreenMode());
     cg.writeEntry(QLatin1String("desktop") + n, c->desktopId());

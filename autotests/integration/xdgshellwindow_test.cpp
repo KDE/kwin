@@ -421,7 +421,7 @@ void TestXdgShellWindow::testFullscreen()
     QVERIFY(window->isFullScreen());
     QVERIFY(!window->isDecorated());
     QCOMPARE(window->layer(), ActiveLayer);
-    QCOMPARE(window->frameGeometry(), QRect(QPoint(0, 0), window->output()->geometry().size()));
+    QCOMPARE(window->frameGeometry(), RectF(QPoint(0, 0), window->output()->geometry().size()));
 
     // Ask the compositor to show the window in normal mode.
     shellSurface->unset_fullscreen();
@@ -477,7 +477,7 @@ void TestXdgShellWindow::testSendFullScreenWindowToAnotherOutput()
 
     // Move the window to the left monitor.
     window->move(QPointF(10, 20));
-    QCOMPARE(window->frameGeometry(), QRectF(10, 20, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(10, 20, 100, 50));
     QCOMPARE(window->output(), outputs[0]);
 
     // Make the window fullscreen.
@@ -488,15 +488,15 @@ void TestXdgShellWindow::testSendFullScreenWindowToAnotherOutput()
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->isFullScreen(), true);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
-    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(10, 20, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
+    QCOMPARE(window->fullscreenGeometryRestore(), RectF(10, 20, 100, 50));
     QCOMPARE(window->output(), outputs[0]);
 
     // Send the window to another output.
     window->sendToOutput(outputs[1]);
     QCOMPARE(window->isFullScreen(), true);
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
-    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(1280 + 10, 20, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->fullscreenGeometryRestore(), RectF(1280 + 10, 20, 100, 50));
     QCOMPARE(window->output(), outputs[1]);
 }
 
@@ -644,7 +644,7 @@ void TestXdgShellWindow::testFullscreenMultipleOutputs()
 
         QVERIFY(window->isFullScreen());
 
-        QCOMPARE(window->frameGeometry(), output->geometry());
+        QCOMPARE(window->frameGeometry(), RectF(output->geometry()));
     }
 }
 
@@ -1538,7 +1538,7 @@ void TestXdgShellWindow::testDoubleFullscreenSeparatedByCommit()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::blue);
     QVERIFY(window->isFullScreen());
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
 }
 
 void TestXdgShellWindow::testMaximizeHorizontal()
@@ -1798,7 +1798,7 @@ void TestXdgShellWindow::testSendMaximizedWindowToAnotherOutput()
 
     // Move the window to the left monitor.
     window->move(QPointF(10, 20));
-    QCOMPARE(window->frameGeometry(), QRectF(10, 20, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(10, 20, 100, 50));
     QCOMPARE(window->output(), outputs[0]);
 
     // Make the window maximized.
@@ -1809,15 +1809,15 @@ void TestXdgShellWindow::testSendMaximizedWindowToAnotherOutput()
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->maximizeMode(), MaximizeFull);
-    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
-    QCOMPARE(window->geometryRestore(), QRectF(10, 20, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 1280, 1024));
+    QCOMPARE(window->geometryRestore(), RectF(10, 20, 100, 50));
     QCOMPARE(window->output(), outputs[0]);
 
     // Send the window to another output.
     window->sendToOutput(outputs[1]);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
-    QCOMPARE(window->geometryRestore(), QRectF(1280 + 10, 20, 100, 50));
+    QCOMPARE(window->frameGeometry(), RectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->geometryRestore(), RectF(1280 + 10, 20, 100, 50));
     QCOMPARE(window->output(), outputs[1]);
 }
 
@@ -1881,7 +1881,7 @@ void TestXdgShellWindow::testInteractiveMoveUnmaximizeFull()
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+    QCOMPARE(window->frameGeometry(), RectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
 
     // Move the window again.
     const QRectF normalGeometry = window->frameGeometry();
@@ -1950,7 +1950,7 @@ void TestXdgShellWindow::testInteractiveMoveUnmaximizeInitiallyFull()
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize));
+    QCOMPARE(window->frameGeometry(), RectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize));
 
     // Move the window again.
     const QRectF normalGeometry = window->frameGeometry();
@@ -2032,7 +2032,7 @@ void TestXdgShellWindow::testInteractiveMoveUnmaximizeHorizontal()
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+    QCOMPARE(window->frameGeometry(), RectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
 
     // Move the window again.
     const QRectF normalGeometry = window->frameGeometry();
@@ -2114,7 +2114,7 @@ void TestXdgShellWindow::testInteractiveMoveUnmaximizeVertical()
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
-    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+    QCOMPARE(window->frameGeometry(), RectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
 
     // Move the window again.
     const QRectF normalGeometry = window->frameGeometry();

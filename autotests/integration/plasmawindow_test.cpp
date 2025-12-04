@@ -132,7 +132,7 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     QCOMPARE(plasmaWindowCreatedSpy.count(), 1);
     QCOMPARE(m_windowManagement->windows().count(), 1);
     auto pw = m_windowManagement->windows().first();
-    QCOMPARE(pw->geometry(), window->frameGeometry());
+    QCOMPARE(pw->geometry(), QRect(window->frameGeometry().toRect()));
     QSignalSpy geometryChangedSpy(pw, &KWayland::Client::PlasmaWindow::geometryChanged);
 
     QSignalSpy unmappedSpy(m_windowManagement->windows().first(), &KWayland::Client::PlasmaWindow::unmapped);

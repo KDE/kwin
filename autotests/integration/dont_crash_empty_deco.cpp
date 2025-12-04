@@ -89,7 +89,7 @@ void DontCrashEmptyDecorationTest::testBug361551()
 
     // let's set a stupid geometry
     window->moveResize({0, 0, 0, 0});
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 0, 0));
+    QCOMPARE(window->frameGeometry(), RectF(0, 0, 0, 0));
 
     // and destroy the window again
     xcb_unmap_window(c, windowId);

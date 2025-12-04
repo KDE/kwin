@@ -300,7 +300,7 @@ void X11WindowTest::testMaximizedVertical()
     QCOMPARE(maximizedChangedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeVertical);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
-    QCOMPARE(window->frameGeometry(), QRectF(originalGeometry.x(), workArea.y(), originalGeometry.width(), workArea.height()));
+    QCOMPARE(window->frameGeometry(), RectF(originalGeometry.x(), workArea.y(), originalGeometry.width(), workArea.height()));
     QCOMPARE(window->geometryRestore(), originalGeometry);
 
     {
@@ -385,7 +385,7 @@ void X11WindowTest::testMaximizedHorizontal()
     QCOMPARE(maximizedChangedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
-    QCOMPARE(window->frameGeometry(), QRectF(workArea.x(), originalGeometry.y(), workArea.width(), originalGeometry.height()));
+    QCOMPARE(window->frameGeometry(), RectF(workArea.x(), originalGeometry.y(), workArea.width(), originalGeometry.height()));
     QCOMPARE(window->geometryRestore(), originalGeometry);
 
     {
