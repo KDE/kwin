@@ -442,7 +442,7 @@ double WorkspaceScene::desiredHdrHeadroom() const
 
 void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 {
-    LogicalOutput *logicalOutput = delegate->output();
+    LogicalOutput *logicalOutput = delegate->logicalOutput();
     const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(logicalOutput->backendOutput()->renderLoop()->lastPresentationTimestamp());
     m_containerItem->framePainted(delegate, logicalOutput, frame, frameTime);
     if (m_overlayItem) {
@@ -453,7 +453,7 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 void WorkspaceScene::prePaint(SceneView *delegate)
 {
     painted_delegate = delegate;
-    painted_screen = painted_delegate->output();
+    painted_screen = painted_delegate->logicalOutput();
 
     createStackingOrder();
 

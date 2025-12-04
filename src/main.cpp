@@ -567,8 +567,8 @@ static PlatformCursorImage grabCursorOpenGL()
     GLFramebuffer framebuffer(texture.get());
     RenderTarget renderTarget(&framebuffer);
 
-    SceneView sceneView(scene, output, nullptr);
-    ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr);
+    SceneView sceneView(scene, output, nullptr, nullptr);
+    ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr, nullptr);
     cursorView.prePaint();
     cursorView.paint(renderTarget, QPoint(), infiniteRegion());
     cursorView.postPaint();
@@ -591,8 +591,8 @@ static PlatformCursorImage grabCursorSoftware()
     QImage image((cursor->geometry().size() * output->scale()).toSize(), QImage::Format_ARGB32_Premultiplied);
     RenderTarget renderTarget(&image);
 
-    SceneView sceneView(scene, output, nullptr);
-    ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr);
+    SceneView sceneView(scene, output, nullptr, nullptr);
+    ItemTreeView cursorView(&sceneView, scene->cursorItem(), output, nullptr, nullptr);
     cursorView.prePaint();
     cursorView.paint(renderTarget, QPoint(), infiniteRegion());
     cursorView.postPaint();

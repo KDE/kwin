@@ -13,7 +13,7 @@ namespace KWin
 {
 
 FilteredSceneView::FilteredSceneView(Scene *scene, LogicalOutput *output, OutputLayer *layer, std::optional<pid_t> pidToHide)
-    : SceneView(scene, output, layer)
+    : SceneView(scene, output, nullptr, layer)
 {
     addWindowFilter([pidToHide](Window *window) {
         if (pidToHide.has_value() && *pidToHide == window->pid()) {

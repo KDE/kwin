@@ -715,7 +715,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         if (cursorLayer) {
             auto &view = m_overlayViews[renderLoop][cursorLayer];
             if (!view || view->item() != cursorItem) {
-                view = std::make_unique<ItemTreeView>(primaryView, cursorItem, logicalOutput, cursorLayer);
+                view = std::make_unique<ItemTreeView>(primaryView, cursorItem, logicalOutput, output, cursorLayer);
                 connect(cursorLayer, &OutputLayer::repaintScheduled, view.get(), [logicalOutput, output, cursorView = view.get()]() {
                     // this just deals with moving the plane asynchronously, for improved latency.
                     // enabling, disabling and updating the cursor image still happen in composite()
@@ -780,7 +780,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     for (const auto &[item, layer] : overlayAssignments) {
         auto &view = m_overlayViews[output->renderLoop()][layer];
         if (!view || view->item() != item) {
-            view = std::make_unique<ItemView>(primaryView, item, logicalOutput, layer);
+            view = std::make_unique<ItemView>(primaryView, item, logicalOutput, output, layer);
         }
         view->prePaint();
         layers.push_back(LayerData{
@@ -1023,7 +1023,7 @@ void Compositor::assignOutputLayers(BackendOutput *output)
     if (sceneView) {
         sceneView->setLayer(primaryLayer);
     } else {
-        sceneView = std::make_unique<SceneView>(m_scene.get(), logical, primaryLayer);
+        sceneView = std::make_unique<SceneView>(m_scene.get(), logical, output, primaryLayer);
         sceneView->setViewport(logical->geometryF());
         sceneView->setScale(output->scale());
         sceneView->setRenderOffset(output->deviceOffset());

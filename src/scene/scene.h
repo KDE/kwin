@@ -32,9 +32,13 @@ class KWIN_EXPORT RenderView : public QObject
 {
     Q_OBJECT
 public:
-    explicit RenderView(LogicalOutput *output, OutputLayer *layer);
+    explicit RenderView(LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer);
 
-    LogicalOutput *output() const;
+    LogicalOutput *logicalOutput() const;
+    /**
+     * may be nullptr.
+     */
+    BackendOutput *backendOutput() const;
     OutputLayer *layer() const;
 
     void setLayer(OutputLayer *layer);
@@ -87,7 +91,8 @@ public:
     void setRenderOffset(const QPoint &offset);
 
 protected:
-    LogicalOutput *m_output = nullptr;
+    LogicalOutput *m_logicalOutput = nullptr;
+    BackendOutput *m_backendOutput = nullptr;
     OutputLayer *m_layer = nullptr;
     QPoint m_renderOffset;
 };
@@ -96,7 +101,7 @@ class KWIN_EXPORT SceneView : public RenderView
 {
     Q_OBJECT
 public:
-    explicit SceneView(Scene *scene, LogicalOutput *output, OutputLayer *layer);
+    explicit SceneView(Scene *scene, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer);
     ~SceneView() override;
 
     Scene *scene() const;
@@ -129,7 +134,7 @@ public:
 
 private:
     Scene *m_scene;
-    LogicalOutput *m_output = nullptr;
+    LogicalOutput *m_logicalOutput = nullptr;
     OutputLayer *m_layer = nullptr;
     QRectF m_viewport;
     qreal m_scale = 1.0;
@@ -141,7 +146,7 @@ private:
 class KWIN_EXPORT ItemView : public RenderView
 {
 public:
-    explicit ItemView(SceneView *parentView, Item *item, LogicalOutput *output, OutputLayer *layer);
+    explicit ItemView(SceneView *parentView, Item *item, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer);
     ~ItemView() override;
 
     qreal scale() const override;
@@ -176,7 +181,7 @@ protected:
 class KWIN_EXPORT ItemTreeView : public ItemView
 {
 public:
-    explicit ItemTreeView(SceneView *parentView, Item *item, LogicalOutput *output, OutputLayer *layer);
+    explicit ItemTreeView(SceneView *parentView, Item *item, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer);
     ~ItemTreeView() override;
 
     QRectF viewport() const override;
@@ -241,7 +246,7 @@ public:
         QList<SurfaceItem *> underlays;
     };
     virtual OverlayCandidates overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const = 0;
-    virtual void prePaint(SceneView *delegate) = 0;
+    virtual void prePaint(SceneView *view) = 0;
     virtual QRegion collectDamage() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &deviceRegion) = 0;
     virtual void postPaint() = 0;

@@ -150,7 +150,7 @@ void RegionScreenCastSource::resume()
     m_sceneView->setViewport(m_region);
     m_sceneView->setScale(m_scale);
 
-    m_cursorView = std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr);
+    m_cursorView = std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
     m_cursorView->setExclusive(!m_renderCursor);
 
     m_active = true;

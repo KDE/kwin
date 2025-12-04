@@ -18,15 +18,21 @@
 namespace KWin
 {
 
-RenderView::RenderView(LogicalOutput *output, OutputLayer *layer)
-    : m_output(output)
+RenderView::RenderView(LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer)
+    : m_logicalOutput(logicalOutput)
+    , m_backendOutput(backendOutput)
     , m_layer(layer)
 {
 }
 
-LogicalOutput *RenderView::output() const
+LogicalOutput *RenderView::logicalOutput() const
 {
-    return m_output;
+    return m_logicalOutput;
+}
+
+BackendOutput *RenderView::backendOutput() const
+{
+    return m_backendOutput;
 }
 
 OutputLayer *RenderView::layer() const
@@ -169,8 +175,8 @@ void RenderView::setRenderOffset(const QPoint &offset)
     addDeviceRepaint(deviceRect());
 }
 
-SceneView::SceneView(Scene *scene, LogicalOutput *output, OutputLayer *layer)
-    : RenderView(output, layer)
+SceneView::SceneView(Scene *scene, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer)
+    : RenderView(logicalOutput, backendOutput, layer)
     , m_scene(scene)
 {
     m_scene->addView(this);
@@ -298,8 +304,8 @@ bool SceneView::shouldHideWindow(Window *window) const
     });
 }
 
-ItemView::ItemView(SceneView *parentView, Item *item, LogicalOutput *output, OutputLayer *layer)
-    : RenderView(output, layer)
+ItemView::ItemView(SceneView *parentView, Item *item, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer)
+    : RenderView(logicalOutput, backendOutput, layer)
     , m_parentView(parentView)
     , m_item(item)
 {
@@ -376,8 +382,8 @@ QList<SurfaceItem *> ItemView::scanoutCandidates(ssize_t maxCount) const
 
 void ItemView::frame(OutputFrame *frame)
 {
-    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(m_output->backendOutput()->renderLoop()->lastPresentationTimestamp());
-    m_item->framePainted(this, m_output, frame, frameTime);
+    const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(m_logicalOutput->backendOutput()->renderLoop()->lastPresentationTimestamp());
+    m_item->framePainted(this, m_logicalOutput, frame, frameTime);
 }
 
 void ItemView::prePaint()
@@ -396,7 +402,7 @@ void ItemView::postPaint()
 void ItemView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &region)
 {
     const QRegion globalRegion = region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft().toPoint());
-    RenderViewport renderViewport(viewport(), m_output->scale(), renderTarget, deviceOffset);
+    RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
     auto renderer = m_item->scene()->renderer();
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, globalRegion);
@@ -472,8 +478,8 @@ double ItemView::desiredHdrHeadroom() const
     return max / color->referenceLuminance();
 }
 
-ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, LogicalOutput *output, OutputLayer *layer)
-    : ItemView(parentView, item, output, layer)
+ItemTreeView::ItemTreeView(SceneView *parentView, Item *item, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer)
+    : ItemView(parentView, item, logicalOutput, backendOutput, layer)
 {
 }
 
@@ -528,7 +534,7 @@ QRegion ItemTreeView::collectDamage()
 
 void ItemTreeView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &deviceRegion)
 {
-    RenderViewport renderViewport(viewport(), m_output->scale(), renderTarget, deviceOffset);
+    RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
     auto renderer = m_item->scene()->renderer();
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, deviceRegion);
