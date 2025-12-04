@@ -288,7 +288,7 @@ if (KWIN_BUILD_X11)
     set(XWAYLAND_SESSION_SCRIPTS "/etc/xdg/Xwayland-session.d")
 endif()
 
-find_package(Libinput 1.28)
+find_package(Libinput 1.29)
 set_package_properties(Libinput PROPERTIES TYPE REQUIRED PURPOSE "Required for input handling on Wayland.")
 
 find_package(Libeis-1.0 1.4)
