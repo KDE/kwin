@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-03 00:45+0000\n"
+"POT-Creation-Date: 2025-12-04 00:45+0000\n"
 "PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -35,30 +35,30 @@ msgstr ""
 "wolfram@steloj.de,Steffen.Pietsch@BerlinOnline.de,matthias@peick.de,"
 "cfmckee@gmail.com,olivermkellogg@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:487
+#: backends/wayland/wayland_output.cpp:488
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Premu dekstran Ctrl-klavon por malkapti montrilon"
 
-#: backends/wayland/wayland_output.cpp:489
+#: backends/wayland/wayland_output.cpp:490
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Premu dekstran Ctrl-klavon por kapti montrilon"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:494
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Komponilo %1"
 
-#: backends/wayland/wayland_output.cpp:496
+#: backends/wayland/wayland_output.cpp:497
 #, fuzzy, kde-format
 #| msgid "- Output disabled"
 msgid "- Output disabled"
 msgstr "- Eligo malebligita"
 
-#: backends/wayland/wayland_output.cpp:498
+#: backends/wayland/wayland_output.cpp:499
 #, fuzzy, kde-format
 #| msgid "- Output dimmed"
 msgid "- Output dimmed"
@@ -4125,7 +4125,7 @@ msgstr "Rigardi Labortablon"
 msgid "Kill Window"
 msgstr "Mortigi fenestron"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1048
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivigi Fenestron (%1)"
@@ -4175,38 +4175,28 @@ msgstr "Iri al suba labortablo"
 msgid "Switch to Desktop %1"
 msgstr "Ŝanĝi al labortablo %1"
 
-#: wayland/outputmanagement_v2.cpp:510
+#: wayland/outputmanagement_v2.cpp:509
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Unu el la rilataj eligoj ne plu disponeblas"
 
-#: wayland/outputmanagement_v2.cpp:528
+#: wayland/outputmanagement_v2.cpp:527
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Malebligi ĉiujn eligojn per agordoŝanĝoj ne estas permesita"
 
-#: wayland/outputmanagement_v2.cpp:538
-#, kde-format
-msgid "The provided output order doesn't contain all outputs"
-msgstr "La provizita elig-sinsekvo ne enhavas ĉiujn eligojn"
-
-#: wayland/outputmanagement_v2.cpp:556
-#, kde-format
-msgid "The provided output order is invalid"
-msgstr "La provizita elig-sinsekvo estas nevalida"
-
-#: wayland/outputmanagement_v2.cpp:577
+#: wayland/outputmanagement_v2.cpp:541
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "La pelilo malakceptis la eligan agordon"
 
-#: window.cpp:3123
+#: window.cpp:3125
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne respondante)"
 
-#: workspace.cpp:1628
+#: workspace.cpp:1597
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4234,6 +4224,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland paneis"
+
+#~ msgid "The provided output order doesn't contain all outputs"
+#~ msgstr "La provizita elig-sinsekvo ne enhavas ĉiujn eligojn"
+
+#~ msgid "The provided output order is invalid"
+#~ msgstr "La provizita elig-sinsekvo estas nevalida"
 
 #, fuzzy
 #~| msgid "Blur strength:"

@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-03 00:45+0000\n"
-"PO-Revision-Date: 2025-11-27 13:18+0100\n"
+"POT-Creation-Date: 2025-12-04 00:45+0000\n"
+"PO-Revision-Date: 2025-12-02 10:13+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -41,34 +41,32 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "rinsedevries@kde.nl,,wilbertberendsen@kde.nl,freekdekruijf@kde.nl"
 
-#: backends/wayland/wayland_output.cpp:487
+#: backends/wayland/wayland_output.cpp:488
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Rechter Ctrl indrukken om aanwijzer los te maken"
 
-#: backends/wayland/wayland_output.cpp:489
+#: backends/wayland/wayland_output.cpp:490
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Rechter Ctrl indrukken om aanwijzer vast te pakken"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:494
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Compositor %1"
 
-#: backends/wayland/wayland_output.cpp:496
-#, fuzzy, kde-format
-#| msgid "- LogicalOutput disabled"
+#: backends/wayland/wayland_output.cpp:497
+#, kde-format
 msgid "- Output disabled"
-msgstr "- Logische uitvoer uitgeschakeld"
+msgstr "- Uitvoer uitgeschakeld"
 
-#: backends/wayland/wayland_output.cpp:498
-#, fuzzy, kde-format
-#| msgid "- LogicalOutput dimmed"
+#: backends/wayland/wayland_output.cpp:499
+#, kde-format
 msgid "- Output dimmed"
-msgstr "- Logische uitvoer gedimd"
+msgstr "- Uitvoer gedimd"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
@@ -4116,7 +4114,7 @@ msgstr "Naar het bureaublad gluren"
 msgid "Kill Window"
 msgstr "Venster geforceerd sluiten"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1048
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Venster (%1) activeren"
@@ -4166,40 +4164,30 @@ msgstr "Een bureaublad omlaag schakelen"
 msgid "Switch to Desktop %1"
 msgstr "Schakel naar bureaublad %1"
 
-#: wayland/outputmanagement_v2.cpp:510
+#: wayland/outputmanagement_v2.cpp:509
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Een van de relevante uitvoeren is niet langer beschikbaar"
 
-#: wayland/outputmanagement_v2.cpp:528
+#: wayland/outputmanagement_v2.cpp:527
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Alle uitvoeren uitschakelen via wijzigingen in de configuratie is niet "
 "toegestaan"
 
-#: wayland/outputmanagement_v2.cpp:538
-#, kde-format
-msgid "The provided output order doesn't contain all outputs"
-msgstr "De geleverde uitvoervolgorde bevat niet alle uitvoeren"
-
-#: wayland/outputmanagement_v2.cpp:556
-#, kde-format
-msgid "The provided output order is invalid"
-msgstr "De geleverde uitvoervolgorde is ongeldig"
-
-#: wayland/outputmanagement_v2.cpp:577
+#: wayland/outputmanagement_v2.cpp:541
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Het apparaatstuurprogramma verwierp de uitvoerconfiguratie"
 
-#: window.cpp:3123
+#: window.cpp:3125
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Reageert niet)"
 
-#: workspace.cpp:1628
+#: workspace.cpp:1597
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4227,6 +4215,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland is gecrasht"
+
+#~ msgid "The provided output order doesn't contain all outputs"
+#~ msgstr "De geleverde uitvoervolgorde bevat niet alle uitvoeren"
+
+#~ msgid "The provided output order is invalid"
+#~ msgstr "De geleverde uitvoervolgorde is ongeldig"
 
 #~ msgid "Saturation strength:"
 #~ msgstr "Verzadigingssterkte:"

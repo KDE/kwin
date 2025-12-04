@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-03 00:45+0000\n"
+"POT-Creation-Date: 2025-12-04 00:45+0000\n"
 "PO-Revision-Date: 2025-12-02 10:17+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
@@ -38,29 +38,29 @@ msgid "Your emails"
 msgstr ""
 "ra@ra.is, thori@mindspring.com, pjetur@pjetur.net, gudmundure@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:487
+#: backends/wayland/wayland_output.cpp:488
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Ýttu á hægri Ctrl-lykil til að sleppa bendli"
 
-#: backends/wayland/wayland_output.cpp:489
+#: backends/wayland/wayland_output.cpp:490
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Ýttu á hægri Ctrl-lykil til að grípa bendil"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:494
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland skjásamsetning %1"
 
-#: backends/wayland/wayland_output.cpp:496
+#: backends/wayland/wayland_output.cpp:497
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Úttak óvirkt"
 
-#: backends/wayland/wayland_output.cpp:498
+#: backends/wayland/wayland_output.cpp:499
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Úttak dimmað"
@@ -4089,7 +4089,7 @@ msgstr "Kíkja á skjáborðið "
 msgid "Kill Window"
 msgstr "Drepa glugga"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1048
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Virkja glugga (%1)"
@@ -4139,39 +4139,29 @@ msgstr "Fara eitt skjáborð niður"
 msgid "Switch to Desktop %1"
 msgstr "Skipta yfir á skjáborð %1"
 
-#: wayland/outputmanagement_v2.cpp:510
+#: wayland/outputmanagement_v2.cpp:509
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Eitt af úttökunum sem á við er ekki lengur tiltækt"
 
-#: wayland/outputmanagement_v2.cpp:528
+#: wayland/outputmanagement_v2.cpp:527
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Ekki er leyfilegt að gera öll úttök óvirk með breytingum á grunnstillingum"
 
-#: wayland/outputmanagement_v2.cpp:538
-#, kde-format
-msgid "The provided output order doesn't contain all outputs"
-msgstr "Úttaksröðin sem er gefin inniheldur ekki öll úttök"
-
-#: wayland/outputmanagement_v2.cpp:556
-#, kde-format
-msgid "The provided output order is invalid"
-msgstr "Úttaksröðin sem er gefin er ógild"
-
-#: wayland/outputmanagement_v2.cpp:577
+#: wayland/outputmanagement_v2.cpp:541
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Rekillinn hafnaði grunnstillingu úttaksins"
 
-#: window.cpp:3123
+#: window.cpp:3125
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(svarar ekki)"
 
-#: workspace.cpp:1628
+#: workspace.cpp:1597
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4198,6 +4188,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland hrundi"
+
+#~ msgid "The provided output order doesn't contain all outputs"
+#~ msgstr "Úttaksröðin sem er gefin inniheldur ekki öll úttök"
+
+#~ msgid "The provided output order is invalid"
+#~ msgstr "Úttaksröðin sem er gefin er ógild"
 
 #, fuzzy
 #~| msgid "Blur strength:"

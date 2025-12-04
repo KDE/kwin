@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-03 00:45+0000\n"
+"POT-Creation-Date: 2025-12-04 00:45+0000\n"
 "PO-Revision-Date: 2025-12-02 09:20+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -34,29 +34,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "rysin@kde.org,kov@tokyo.email.ne.jp,iip@telus.net"
 
-#: backends/wayland/wayland_output.cpp:487
+#: backends/wayland/wayland_output.cpp:488
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Натисніть праву клавішу Ctrl для скасування захоплення вказівника"
 
-#: backends/wayland/wayland_output.cpp:489
+#: backends/wayland/wayland_output.cpp:490
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Натисніть праву клавішу Ctrl для захоплення вказівника"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:494
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Засіб композиції KDE для %1"
 
-#: backends/wayland/wayland_output.cpp:496
+#: backends/wayland/wayland_output.cpp:497
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Виведення вимкнено"
 
-#: backends/wayland/wayland_output.cpp:498
+#: backends/wayland/wayland_output.cpp:499
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Виведення притлумлено"
@@ -4111,7 +4111,7 @@ msgstr "Показати стільницю"
 msgid "Kill Window"
 msgstr "Вбити вікно"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1048
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Задіяти вікно (%1)"
@@ -4161,38 +4161,28 @@ msgstr "Однією стільницею вниз"
 msgid "Switch to Desktop %1"
 msgstr "Перемкнутися до стільниці %1"
 
-#: wayland/outputmanagement_v2.cpp:510
+#: wayland/outputmanagement_v2.cpp:509
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Одне із пов'язаних виведень стало недоступним"
 
-#: wayland/outputmanagement_v2.cpp:528
+#: wayland/outputmanagement_v2.cpp:527
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Вимикання усіх виведень за допомогою змін у налаштуваннях заборонено"
 
-#: wayland/outputmanagement_v2.cpp:538
-#, kde-format
-msgid "The provided output order doesn't contain all outputs"
-msgstr "У наданому порядку виведення не міститься усіх виведень"
-
-#: wayland/outputmanagement_v2.cpp:556
-#, kde-format
-msgid "The provided output order is invalid"
-msgstr "Наданий порядок виведення є некоректним"
-
-#: wayland/outputmanagement_v2.cpp:577
+#: wayland/outputmanagement_v2.cpp:541
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Драйвером відмовлено у налаштовування виведення"
 
-#: window.cpp:3123
+#: window.cpp:3125
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не відповідає)"
 
-#: workspace.cpp:1628
+#: workspace.cpp:1597
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4221,6 +4211,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland завершив роботу в аварійному режимі"
+
+#~ msgid "The provided output order doesn't contain all outputs"
+#~ msgstr "У наданому порядку виведення не міститься усіх виведень"
+
+#~ msgid "The provided output order is invalid"
+#~ msgstr "Наданий порядок виведення є некоректним"
 
 #~ msgid "Saturation strength:"
 #~ msgstr "Потужність насичення:"

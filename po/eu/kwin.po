@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-03 00:45+0000\n"
+"POT-Creation-Date: 2025-12-04 00:45+0000\n"
 "PO-Revision-Date: 2025-10-18 12:06+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -39,30 +39,30 @@ msgstr ""
 "xalba@ni.eus,etxaurre@teleline.es,marcos@euskalgnu.org,juanirigoien@yahoo.es,"
 "igaztanaga@gmail.com,hizpol@ej-gv.es"
 
-#: backends/wayland/wayland_output.cpp:487
+#: backends/wayland/wayland_output.cpp:488
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Sakatu eskuineko kontrol tekla erakuslea heltzeko"
 
-#: backends/wayland/wayland_output.cpp:489
+#: backends/wayland/wayland_output.cpp:490
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Sakatu eskuineko kontrol tekla erakuslea askatzeko"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:494
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland konposatzailea %1"
 
-#: backends/wayland/wayland_output.cpp:496
+#: backends/wayland/wayland_output.cpp:497
 #, fuzzy, kde-format
 #| msgid "- Output disabled"
 msgid "- Output disabled"
 msgstr "- Irteera ezgaituta"
 
-#: backends/wayland/wayland_output.cpp:498
+#: backends/wayland/wayland_output.cpp:499
 #, fuzzy, kde-format
 #| msgid "- Output dimmed"
 msgid "- Output dimmed"
@@ -4113,7 +4113,7 @@ msgstr "Begirada bat mahaigainari"
 msgid "Kill Window"
 msgstr "Akabatu leihoa"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1048
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktibatu leihoa (%1)"
@@ -4163,38 +4163,28 @@ msgstr "Aldatu beheko mahaigainera"
 msgid "Switch to Desktop %1"
 msgstr "Aldatu %1 mahaigainera"
 
-#: wayland/outputmanagement_v2.cpp:510
+#: wayland/outputmanagement_v2.cpp:509
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Irteera esanguratsuetako bat jada ez dago erabilgarri"
 
-#: wayland/outputmanagement_v2.cpp:528
+#: wayland/outputmanagement_v2.cpp:527
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Konfigurazio aldaketen bidez irteera denak ezgaitzea ez da uzten"
 
-#: wayland/outputmanagement_v2.cpp:538
-#, kde-format
-msgid "The provided output order doesn't contain all outputs"
-msgstr "Emandako irteera-hurrenkerak ez ditu irteera denak"
-
-#: wayland/outputmanagement_v2.cpp:556
-#, kde-format
-msgid "The provided output order is invalid"
-msgstr "Emandako irteera-hurrenkera baliogabea da"
-
-#: wayland/outputmanagement_v2.cpp:577
+#: wayland/outputmanagement_v2.cpp:541
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Gidariak irteera konfigurazioa errefusatu du"
 
-#: window.cpp:3123
+#: window.cpp:3125
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ez du erantzuten)"
 
-#: workspace.cpp:1628
+#: workspace.cpp:1597
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4223,6 +4213,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland kraskatu egin da"
+
+#~ msgid "The provided output order doesn't contain all outputs"
+#~ msgstr "Emandako irteera-hurrenkerak ez ditu irteera denak"
+
+#~ msgid "The provided output order is invalid"
+#~ msgstr "Emandako irteera-hurrenkera baliogabea da"
 
 #, fuzzy
 #~| msgid "Blur strength:"

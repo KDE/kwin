@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-03 00:45+0000\n"
-"PO-Revision-Date: 2025-11-27 11:47+0200\n"
+"POT-Creation-Date: 2025-12-04 00:45+0000\n"
+"PO-Revision-Date: 2025-12-02 08:54+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -40,34 +40,32 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde-l10n-he@kde.org"
 
-#: backends/wayland/wayland_output.cpp:487
+#: backends/wayland/wayland_output.cpp:488
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "לחיצה על ה־Ctrl הימני תבטל אחיזת סמן"
 
-#: backends/wayland/wayland_output.cpp:489
+#: backends/wayland/wayland_output.cpp:490
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "לחיצה על ה־Ctrl הימני תאחוז את הסמן"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:494
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "מנהל חלונאי KDE Wayland %1"
 
-#: backends/wayland/wayland_output.cpp:496
-#, fuzzy, kde-format
-#| msgid "- LogicalOutput disabled"
+#: backends/wayland/wayland_output.cpp:497
+#, kde-format
 msgid "- Output disabled"
-msgstr "- פלט לוגי מושבת"
+msgstr "- פלט מושבת"
 
-#: backends/wayland/wayland_output.cpp:498
-#, fuzzy, kde-format
-#| msgid "- LogicalOutput dimmed"
+#: backends/wayland/wayland_output.cpp:499
+#, kde-format
 msgid "- Output dimmed"
-msgstr "- פלט לוגי מעומעם"
+msgstr "- פלט מעומעם"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
@@ -4083,7 +4081,7 @@ msgstr "הצצה בשולחן העבודה"
 msgid "Kill Window"
 msgstr "חיסול חלון"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1048
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "הפעלת חלון (%1)"
@@ -4133,38 +4131,28 @@ msgstr "מעבר שולחן עבודה אחד למטה"
 msgid "Switch to Desktop %1"
 msgstr "מעבר לשולחן עבודה %1"
 
-#: wayland/outputmanagement_v2.cpp:510
+#: wayland/outputmanagement_v2.cpp:509
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "אחד מצגי הפלט התואמים לא זמין עוד"
 
-#: wayland/outputmanagement_v2.cpp:528
+#: wayland/outputmanagement_v2.cpp:527
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "השבתת כל צדי הפלט דרך שינויי הגדרות אסורה"
 
-#: wayland/outputmanagement_v2.cpp:538
-#, kde-format
-msgid "The provided output order doesn't contain all outputs"
-msgstr "סדר הפלט שסופק לא מכיל את כל צגי הפלט"
-
-#: wayland/outputmanagement_v2.cpp:556
-#, kde-format
-msgid "The provided output order is invalid"
-msgstr "סדר הפלט שסופק שגוי"
-
-#: wayland/outputmanagement_v2.cpp:577
+#: wayland/outputmanagement_v2.cpp:541
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "מנהל ההתקן דחה את הגדרות הפלט"
 
-#: window.cpp:3123
+#: window.cpp:3125
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(לא מגיב)"
 
-#: workspace.cpp:1628
+#: workspace.cpp:1597
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4189,6 +4177,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland קרס"
+
+#~ msgid "The provided output order doesn't contain all outputs"
+#~ msgstr "סדר הפלט שסופק לא מכיל את כל צגי הפלט"
+
+#~ msgid "The provided output order is invalid"
+#~ msgstr "סדר הפלט שסופק שגוי"
 
 #~ msgid "Saturation strength:"
 #~ msgstr "עוצמת רוויה:"
