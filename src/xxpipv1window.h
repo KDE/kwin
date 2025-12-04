@@ -26,7 +26,6 @@ public:
     bool isCloseable() const override;
     void closeWindow() override;
     bool wantsInput() const override;
-    bool takeFocus() override;
 
 protected:
     bool acceptsFocus() const override;

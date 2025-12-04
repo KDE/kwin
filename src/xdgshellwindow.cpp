@@ -1006,11 +1006,9 @@ void XdgToplevelWindow::doSetPreferredColorDescription()
     }
 }
 
-bool XdgToplevelWindow::takeFocus()
+void XdgToplevelWindow::takeFocus()
 {
     sendPing(PingReason::FocusWindow);
-    workspace()->setActiveWindow(this);
-    return true;
 }
 
 bool XdgToplevelWindow::wantsInput() const
@@ -1988,11 +1986,6 @@ void XdgPopupWindow::closeWindow()
 }
 
 bool XdgPopupWindow::wantsInput() const
-{
-    return false;
-}
-
-bool XdgPopupWindow::takeFocus()
 {
     return false;
 }

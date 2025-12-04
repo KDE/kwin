@@ -270,11 +270,6 @@ void InternalWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     }
 }
 
-bool InternalWindow::takeFocus()
-{
-    return false;
-}
-
 void InternalWindow::setNoBorder(bool set)
 {
     if (!userCanSetNoBorder()) {

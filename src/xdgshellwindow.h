@@ -182,7 +182,7 @@ public:
     QString preferredColorScheme() const override;
     bool supportsWindowRules() const override;
     void applyWindowRules() override;
-    bool takeFocus() override;
+    void takeFocus() override;
     bool wantsInput() const override;
     void setFullScreen(bool set) override;
     void closeWindow() override;
@@ -304,7 +304,6 @@ public:
     bool isCloseable() const override;
     void closeWindow() override;
     bool wantsInput() const override;
-    bool takeFocus() override;
 
 protected:
     bool acceptsFocus() const override;

@@ -1557,7 +1557,7 @@ QStringList X11Window::activities() const
 /**
  * Performs the actual focusing of the window using XSetInputFocus and WM_TAKE_FOCUS
  */
-bool X11Window::takeFocus()
+void X11Window::takeFocus()
 {
     const bool effectiveAcceptFocus = rules()->checkAcceptFocus(info->input());
     const bool effectiveTakeFocus = rules()->checkAcceptFocus(info->supportsProtocol(NET::TakeFocusProtocol));
@@ -1573,10 +1573,6 @@ bool X11Window::takeFocus()
     if (effectiveTakeFocus) {
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus, kwinApp()->x11Time());
     }
-
-    workspace()->setActiveWindow(this);
-
-    return true;
 }
 
 /**

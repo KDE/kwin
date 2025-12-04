@@ -145,7 +145,7 @@ public:
     bool isMovableAcrossScreens() const override;
     bool isCloseable() const override; ///< May be closed by the user (May have a close button)
 
-    bool takeFocus() override;
+    void takeFocus() override;
 
     void invalidateDecoration() override;
 

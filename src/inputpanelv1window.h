@@ -58,10 +58,6 @@ public:
     void closeWindow() override
     {
     }
-    bool takeFocus() override
-    {
-        return false;
-    }
     bool wantsInput() const override
     {
         return false;

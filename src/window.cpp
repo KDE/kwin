@@ -682,6 +682,10 @@ bool Window::wantsTabFocus() const
     return (isNormalWindow() || isDialog() || isAppletPopup()) && wantsInput();
 }
 
+void Window::takeFocus()
+{
+}
+
 bool Window::isSpecialWindow() const
 {
     // TODO

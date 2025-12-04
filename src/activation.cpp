@@ -385,7 +385,10 @@ bool Workspace::requestFocus(Window *window, bool force)
         return false;
     }
 
-    return window->takeFocus();
+    window->takeFocus();
+    setActiveWindow(window);
+
+    return true;
 }
 
 void Workspace::resetFocus()

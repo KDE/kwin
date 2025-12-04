@@ -1090,7 +1090,7 @@ public:
     virtual bool supportsWindowRules() const;
 
     bool wantsTabFocus() const;
-    virtual bool takeFocus() = 0;
+    virtual void takeFocus();
     virtual bool wantsInput() const = 0;
     void checkWorkspacePosition(QRectF oldGeometry = QRectF(), const VirtualDesktop *oldDesktop = nullptr);
 #if KWIN_BUILD_X11

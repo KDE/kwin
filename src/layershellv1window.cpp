@@ -130,12 +130,6 @@ bool LayerShellV1Window::isResizable() const
     return false;
 }
 
-bool LayerShellV1Window::takeFocus()
-{
-    workspace()->setActiveWindow(this);
-    return true;
-}
-
 bool LayerShellV1Window::wantsInput() const
 {
     return acceptsFocus() && readyForPainting();

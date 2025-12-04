@@ -76,11 +76,6 @@ bool XXPipV1Window::wantsInput() const
     return false;
 }
 
-bool XXPipV1Window::takeFocus()
-{
-    return false;
-}
-
 bool XXPipV1Window::acceptsFocus() const
 {
     return false;
