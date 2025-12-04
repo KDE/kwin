@@ -2363,7 +2363,7 @@ void TestXdgShellWindow::testCloseInactiveModal()
     auto otherToplevel = Test::createXdgToplevelSurface(otherSurface.get());
     auto otherWindow = Test::renderAndWaitForShown(otherSurface.get(), {200, 200}, Qt::magenta);
     QVERIFY(otherWindow);
-    workspace()->setActiveWindow(otherWindow);
+    workspace()->activateWindow(otherWindow);
     QCOMPARE(workspace()->activeWindow(), otherWindow);
 
     // Close the child.
@@ -2465,7 +2465,7 @@ void TestXdgShellWindow::testPopupDismissedOnFocusChange()
     Window *other = Test::renderAndWaitForShown(otherSurface.get(), QSize(200, 200), Qt::cyan);
     QVERIFY(other);
 
-    workspace()->setActiveWindow(other);
+    workspace()->activateWindow(other);
 
     QVERIFY(popupDismissedSpy.wait());
     QVERIFY(!child); // and the server-side window closed immediately too

@@ -2638,7 +2638,7 @@ void TestXdgShellWindowRules::testInactiveOpacityDontAffect()
     QVERIFY(m_window->isActive());
 
     // Make the window inactive.
-    workspace()->setActiveWindow(nullptr);
+    workspace()->activateWindow(nullptr);
     QVERIFY(!m_window->isActive());
 
     // The opacity of the window should not be affected by the rule.
@@ -2656,7 +2656,7 @@ void TestXdgShellWindowRules::testInactiveOpacityForce()
     QCOMPARE(m_window->opacity(), 1.0);
 
     // Make the window inactive.
-    workspace()->setActiveWindow(nullptr);
+    workspace()->activateWindow(nullptr);
     QVERIFY(!m_window->isActive());
 
     // The opacity should be forced by the rule.
@@ -2674,7 +2674,7 @@ void TestXdgShellWindowRules::testInactiveOpacityForceTemporarily()
     QCOMPARE(m_window->opacity(), 1.0);
 
     // Make the window inactive.
-    workspace()->setActiveWindow(nullptr);
+    workspace()->activateWindow(nullptr);
     QVERIFY(!m_window->isActive());
 
     // The opacity should be forced by the rule.
@@ -2686,7 +2686,7 @@ void TestXdgShellWindowRules::testInactiveOpacityForceTemporarily()
 
     QVERIFY(m_window->isActive());
     QCOMPARE(m_window->opacity(), 1.0);
-    workspace()->setActiveWindow(nullptr);
+    workspace()->activateWindow(nullptr);
     QVERIFY(!m_window->isActive());
     QCOMPARE(m_window->opacity(), 1.0);
 

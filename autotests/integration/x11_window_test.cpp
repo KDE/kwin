@@ -2090,7 +2090,7 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
     QVERIFY(waylandWindow);
     QVERIFY(waylandWindow->isActive());
     // activate no window
-    workspace()->setActiveWindow(nullptr);
+    workspace()->activateWindow(nullptr);
     QVERIFY(!waylandWindow->isActive());
     QVERIFY(!workspace()->activeWindow());
     // and close Wayland window again
