@@ -541,13 +541,22 @@ void WorkspaceScene::preparePaintSimpleScreen()
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
         if (window->opacity() == 1.0) {
             const SurfaceItem *surfaceItem = windowItem->surfaceItem();
+            const auto mapOpaqueToDevice = [this](const Item *item) {
+                const QRegion opaque = item->borderRadius().clip(item->opaque(), item->rect());
+                const QRect deviceRect = snapToPixelGrid(painted_delegate->mapToDeviceCoordinates(item->mapToView(item->rect(), painted_delegate)));
+                QRegion ret;
+                for (QRectF rect : opaque) {
+                    ret |= snapToPixelGrid(painted_delegate->mapToDeviceCoordinates(item->mapToView(rect, painted_delegate))) & deviceRect;
+                }
+                return ret;
+            };
             if (Q_LIKELY(surfaceItem)) {
-                data.deviceOpaque = painted_delegate->mapToDeviceCoordinatesContained(surfaceItem->mapToScene(surfaceItem->borderRadius().clip(surfaceItem->opaque(), surfaceItem->rect())));
+                data.deviceOpaque = mapOpaqueToDevice(surfaceItem);
             }
 
             const DecorationItem *decorationItem = windowItem->decorationItem();
             if (decorationItem) {
-                data.deviceOpaque += painted_delegate->mapToDeviceCoordinatesContained(decorationItem->mapToScene(decorationItem->borderRadius().clip(decorationItem->opaque(), decorationItem->rect())));
+                data.deviceOpaque += mapOpaqueToDevice(decorationItem);
             }
         }
 
