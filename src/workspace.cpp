@@ -1841,12 +1841,12 @@ QString Workspace::supportInformation() const
 }
 
 #if KWIN_BUILD_X11
-uint Workspace::x11FocusSerial() const
+UInt32Serial Workspace::x11FocusSerial() const
 {
     return m_x11FocusSerial;
 }
 
-void Workspace::setX11FocusSerial(uint serial)
+void Workspace::setX11FocusSerial(UInt32Serial serial)
 {
     m_x11FocusSerial = serial;
 }

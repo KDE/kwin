@@ -18,6 +18,7 @@
 #include "sm.h"
 #include "utils/common.h"
 #include "utils/filedescriptor.h"
+#include "utils/serial.h"
 // KF
 #include <netwm_def.h>
 // Qt
@@ -104,8 +105,8 @@ public:
 #if KWIN_BUILD_X11
     bool workspaceEvent(xcb_generic_event_t *);
 
-    uint x11FocusSerial() const;
-    void setX11FocusSerial(uint serial);
+    UInt32Serial x11FocusSerial() const;
+    void setX11FocusSerial(UInt32Serial serial);
 
     X11Window *findClient(std::function<bool(const X11Window *)> func) const;
     X11Window *findClient(xcb_window_t w) const;
@@ -669,7 +670,7 @@ private:
     QList<xcb_window_t> manual_overlays; // Topmost last
     std::unique_ptr<Xcb::Window> m_nullFocus;
     std::unique_ptr<X11EventFilter> m_syncAlarmFilter;
-    uint m_x11FocusSerial = 0;
+    UInt32Serial m_x11FocusSerial = 0;
 #endif
 
     int block_focus;

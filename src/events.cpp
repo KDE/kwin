@@ -576,7 +576,7 @@ void X11Window::focusInEvent(xcb_generic_event_t *event)
     });
 
     // Note that xcb_focus_in_event_t::sequence is a uint16_t serial.
-    const uint32_t serial = event->full_sequence;
+    const UInt32Serial serial = event->full_sequence;
 
     // This is a FocusIn event from an XSetInputFocus() request that was issued before ours, it will
     // be superseded later, so don't bother updating the active window.
