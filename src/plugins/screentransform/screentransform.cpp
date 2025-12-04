@@ -101,7 +101,7 @@ void ScreenTransformEffect::addScreen(LogicalOutput *screen)
         RenderTarget renderTarget(state.m_prev.framebuffer.get(), screen->blendingColor());
 
         Scene *scene = effects->scene();
-        SceneView delegate(scene, screen, nullptr);
+        SceneView delegate(scene, screen, nullptr, nullptr);
         delegate.setViewport(screen->geometryF());
         delegate.setScale(screen->scale());
         scene->prePaint(&delegate);
@@ -121,6 +121,7 @@ void ScreenTransformEffect::removeScreen(LogicalOutput *screen)
 
 void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
+    m_currentView = data.view;
     auto it = m_states.find(data.screen);
     if (it != m_states.end()) {
         it->m_timeLine.advance(presentTime);
@@ -195,7 +196,7 @@ static QRectF lerp(const QRectF &a, const QRectF &b, qreal t)
 void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
 {
     auto it = m_states.find(screen);
-    if (it == m_states.end()) {
+    if (it == m_states.end() || m_currentView->backendOutput() != screen->backendOutput()) {
         effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
         return;
     }

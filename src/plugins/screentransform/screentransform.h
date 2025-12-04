@@ -65,6 +65,7 @@ private:
     int m_modelViewProjectioMatrixLocation = -1;
     int m_blendFactorLocation = -1;
     bool m_capturing = false;
+    RenderView *m_currentView = nullptr;
 };
 
 } // namespace KWin

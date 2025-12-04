@@ -126,7 +126,7 @@ void OutputScreenCastSource::resume()
         m_sceneView->setScale(m_output->scale());
     });
 
-    m_cursorView = std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), m_output, nullptr);
+    m_cursorView = std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), m_output, nullptr, nullptr);
     m_cursorView->setExclusive(!m_renderCursor);
 
     connect(m_layer.get(), &OutputLayer::repaintScheduled, this, &OutputScreenCastSource::frame);
