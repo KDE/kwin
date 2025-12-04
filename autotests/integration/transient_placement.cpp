@@ -481,8 +481,8 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(dock->isDock());
     QCOMPARE(dock->frameGeometry(), RectF(0, output->geometry().height() - 50, 1280, 50));
     QCOMPARE(dock->hasStrut(), true);
-    QCOMPARE(workspace()->clientArea(PlacementArea, dock), QRect(0, 0, 1280, 1024 - 50));
-    QCOMPARE(workspace()->clientArea(FullScreenArea, dock), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->clientArea(PlacementArea, dock), RectF(0, 0, 1280, 1024 - 50));
+    QCOMPARE(workspace()->clientArea(FullScreenArea, dock), RectF(0, 0, 1280, 1024));
 
     // create parent
     std::unique_ptr<KWayland::Client::Surface> parentSurface(Test::createSurface());

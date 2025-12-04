@@ -339,7 +339,7 @@ void Workspace::initializeX11()
     }
 
     const uint32_t nullFocusValues[] = {true};
-    m_nullFocus = std::make_unique<Xcb::Window>(QRect(-1, -1, 1, 1), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, nullFocusValues);
+    m_nullFocus = std::make_unique<Xcb::Window>(Rect(-1, -1, 1, 1), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, nullFocusValues);
     m_nullFocus->map();
 
     RootInfo *rootInfo = RootInfo::create();
@@ -791,7 +791,7 @@ void Workspace::addWaylandWindow(Window *window)
     window->updateLayer();
 
     if (window->isPlaceable() && !window->isPlaced()) {
-        const QRectF area = clientArea(PlacementArea, window, activeOutput());
+        const RectF area = clientArea(PlacementArea, window, activeOutput());
         if (const auto placement = m_placement->place(window, area)) {
             window->place(*placement);
         }
@@ -1074,7 +1074,7 @@ LogicalOutput *Workspace::outputAt(const QPointF &pos) const
     qreal minDistance;
 
     for (LogicalOutput *output : std::as_const(m_outputs)) {
-        const QRectF geo = output->geometry();
+        const RectF geo = output->geometry();
 
         const QPointF closestPoint(std::clamp(pos.x(), geo.x(), geo.x() + geo.width() - 1),
                                    std::clamp(pos.y(), geo.y(), geo.y() + geo.height() - 1));
@@ -1460,7 +1460,7 @@ void Workspace::sendWindowToDesktops(Window *window, const QList<VirtualDesktop 
         }
     }
 
-    window->checkWorkspacePosition(QRect(), oldDesktops.isEmpty() ? nullptr : oldDesktops.last());
+    window->checkWorkspacePosition(Rect(), oldDesktops.isEmpty() ? nullptr : oldDesktops.last());
 
     auto transients_stacking_order = ensureStackingOrder(window->transients());
     for (auto it = transients_stacking_order.constBegin(); it != transients_stacking_order.constEnd(); ++it) {
@@ -1701,7 +1701,7 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
     for (int i = 0; i < outputs.count(); ++i) {
         const auto output = outputs[i];
-        const QRect geo = outputs[i]->geometry();
+        const Rect geo = outputs[i]->geometry();
         support.append(QStringLiteral("Screen %1:\n").arg(i));
         support.append(QStringLiteral("---------\n"));
         support.append(QStringLiteral("Name: %1\n").arg(output->name()));
@@ -1962,7 +1962,7 @@ void Workspace::addInternalWindow(InternalWindow *window)
     window->updateLayer();
 
     if (window->isPlaceable()) {
-        const QRectF area = clientArea(PlacementArea, window, workspace()->activeOutput());
+        const RectF area = clientArea(PlacementArea, window, workspace()->activeOutput());
         if (const auto placement = m_placement->place(window, area)) {
             window->place(*placement);
         }
@@ -2094,8 +2094,8 @@ void Workspace::checkTransients(xcb_window_t w)
  */
 void Workspace::desktopResized()
 {
-    const QRect oldGeometry = m_geometry;
-    m_geometry = QRect();
+    const Rect oldGeometry = m_geometry;
+    m_geometry = Rect();
     for (const LogicalOutput *output : std::as_const(m_outputs)) {
         m_geometry = m_geometry.united(output->geometry());
     }
@@ -2130,13 +2130,13 @@ void Workspace::desktopResized()
 
     // restore cursor position
     const auto oldCursorOutput = std::find_if(m_oldScreenGeometries.cbegin(), m_oldScreenGeometries.cend(), [](const auto &geometry) {
-        return exclusiveContains(geometry, Cursors::self()->mouse()->pos());
+        return RectF(geometry).contains(Cursors::self()->mouse()->pos());
     });
     if (oldCursorOutput != m_oldScreenGeometries.cend()) {
         const LogicalOutput *cursorOutput = oldCursorOutput.key();
         if (std::find(m_outputs.cbegin(), m_outputs.cend(), cursorOutput) != m_outputs.cend()) {
-            const QRect oldGeometry = oldCursorOutput.value();
-            const QRect newGeometry = cursorOutput->geometry();
+            const Rect oldGeometry = oldCursorOutput.value();
+            const Rect newGeometry = cursorOutput->geometry();
             const QPointF relativePosition = Cursors::self()->mouse()->pos() - oldGeometry.topLeft();
             const QPointF newRelativePosition(newGeometry.width() * relativePosition.x() / float(oldGeometry.width()), newGeometry.height() * relativePosition.y() / float(oldGeometry.height()));
             input()->pointer()->warp(newGeometry.topLeft() + newRelativePosition);
@@ -2161,19 +2161,19 @@ void Workspace::saveOldScreenSizes()
     }
 }
 
-QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
+RectF Workspace::adjustClientArea(Window *window, const RectF &area) const
 {
-    QRectF adjustedArea = area;
+    RectF adjustedArea = area;
 
-    QRectF strutLeft = window->strutRect(StrutAreaLeft);
-    QRectF strutRight = window->strutRect(StrutAreaRight);
-    QRectF strutTop = window->strutRect(StrutAreaTop);
-    QRectF strutBottom = window->strutRect(StrutAreaBottom);
+    RectF strutLeft = window->strutRect(StrutAreaLeft);
+    RectF strutRight = window->strutRect(StrutAreaRight);
+    RectF strutTop = window->strutRect(StrutAreaTop);
+    RectF strutBottom = window->strutRect(StrutAreaBottom);
 
     // Handle struts at xinerama edges that are inside the virtual screen.
     // They're given in virtual screen coordinates, make them affect only
     // their xinerama screen.
-    QRectF screenArea = clientArea(ScreenArea, window);
+    RectF screenArea = clientArea(ScreenArea, window);
     strutLeft.setLeft(std::max(strutLeft.left(), screenArea.left()));
     strutRight.setRight(std::min(strutRight.right(), screenArea.right()));
     strutTop.setTop(std::max(strutTop.top(), screenArea.top()));
@@ -2207,9 +2207,9 @@ void Workspace::rearrange()
 
     const QList<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
 
-    QHash<const VirtualDesktop *, QRectF> workAreas;
+    QHash<const VirtualDesktop *, RectF> workAreas;
     QHash<const VirtualDesktop *, StrutRects> restrictedAreas;
-    QHash<const VirtualDesktop *, QHash<const LogicalOutput *, QRectF>> screenAreas;
+    QHash<const VirtualDesktop *, QHash<const LogicalOutput *, RectF>> screenAreas;
 
     for (const VirtualDesktop *desktop : desktops) {
         workAreas[desktop] = m_geometry;
@@ -2223,7 +2223,7 @@ void Workspace::rearrange()
         if (!window->hasStrut()) {
             continue;
         }
-        QRectF r = adjustClientArea(window, m_geometry);
+        RectF r = adjustClientArea(window, m_geometry);
 
         // This happens sometimes when the workspace size changes and the
         // struted windows haven't repositioned yet
@@ -2240,7 +2240,7 @@ void Workspace::rearrange()
             }
         }
         StrutRects strutRegion = window->strutRects();
-        const QRect clientsScreenRect = window->output()->geometry();
+        const Rect clientsScreenRect = window->output()->geometry();
         for (int i = strutRegion.size() - 1; i >= 0; --i) {
             const StrutRect clipped = StrutRect(strutRegion[i].intersected(clientsScreenRect), strutRegion[i].area());
             if (clipped.isEmpty()) {
@@ -2275,7 +2275,7 @@ void Workspace::rearrange()
 #if KWIN_BUILD_X11
         if (rootInfo()) {
             for (VirtualDesktop *desktop : desktops) {
-                const QRectF &workArea = m_workAreas[desktop];
+                const RectF &workArea = m_workAreas[desktop];
                 NETRect r(Xcb::toXNative(workArea));
                 rootInfo()->setWorkArea(desktop->x11DesktopNumber(), r);
             }
@@ -2298,7 +2298,7 @@ void Workspace::rearrange()
  * geometry minus windows on the dock. Placement algorithms should
  * refer to this rather than Screens::geometry.
  */
-QRectF Workspace::clientArea(clientAreaOption opt, const LogicalOutput *output, const VirtualDesktop *desktop) const
+RectF Workspace::clientArea(clientAreaOption opt, const LogicalOutput *output, const VirtualDesktop *desktop) const
 {
     switch (opt) {
     case MaximizeArea:
@@ -2323,12 +2323,12 @@ QRectF Workspace::clientArea(clientAreaOption opt, const LogicalOutput *output, 
     }
 }
 
-QRectF Workspace::clientArea(clientAreaOption opt, const Window *window) const
+RectF Workspace::clientArea(clientAreaOption opt, const Window *window) const
 {
     return clientArea(opt, window, window->output());
 }
 
-QRectF Workspace::clientArea(clientAreaOption opt, const Window *window, const LogicalOutput *output) const
+RectF Workspace::clientArea(clientAreaOption opt, const Window *window, const LogicalOutput *output) const
 {
     const VirtualDesktop *desktop;
     if (window->isOnCurrentDesktop()) {
@@ -2339,12 +2339,12 @@ QRectF Workspace::clientArea(clientAreaOption opt, const Window *window, const L
     return clientArea(opt, output, desktop);
 }
 
-QRectF Workspace::clientArea(clientAreaOption opt, const Window *window, const QPointF &pos) const
+RectF Workspace::clientArea(clientAreaOption opt, const Window *window, const QPointF &pos) const
 {
     return clientArea(opt, window, outputAt(pos));
 }
 
-QRect Workspace::geometry() const
+Rect Workspace::geometry() const
 {
     return m_geometry;
 }
@@ -2388,7 +2388,7 @@ StrutRects Workspace::previousRestrictedMoveArea(const VirtualDesktop *desktop, 
     return ret;
 }
 
-QHash<const LogicalOutput *, QRect> Workspace::previousScreenSizes() const
+QHash<const LogicalOutput *, Rect> Workspace::previousScreenSizes() const
 {
     return m_oldScreenGeometries;
 }
@@ -2485,11 +2485,11 @@ static bool canSnap(const Window *window, const Window *other)
 QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool unrestricted, double snapAdjust) const
 {
     QSizeF borderSnapZone(options->borderSnapZone(), options->borderSnapZone());
-    QRectF maxRect;
+    RectF maxRect;
     int guideMaximized = MaximizeRestore;
     if (window->maximizeMode() != MaximizeRestore) {
         maxRect = clientArea(MaximizeArea, window, pos + window->rect().center());
-        QRectF geo = window->frameGeometry();
+        RectF geo = window->frameGeometry();
         if (window->maximizeMode() & MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
             guideMaximized |= MaximizeHorizontal;
             borderSnapZone.setWidth(std::max(borderSnapZone.width() + 2, maxRect.width() / 16));
@@ -2634,7 +2634,7 @@ QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool 
     return pos;
 }
 
-QRectF Workspace::adjustWindowSize(const Window *window, QRectF moveResizeGeom, Gravity gravity) const
+RectF Workspace::adjustWindowSize(const Window *window, RectF moveResizeGeom, Gravity gravity) const
 {
     // adapted from adjustWindowPosition on 29May2004
     // this function is called when resizing a window and will modify
@@ -2642,7 +2642,7 @@ QRectF Workspace::adjustWindowSize(const Window *window, QRectF moveResizeGeom, 
     if (options->windowSnapZone() || options->borderSnapZone()) { // || options->centerSnapZone )
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
 
-        const QRectF maxRect = clientArea(MaximizeArea, window, window->rect().center());
+        const RectF maxRect = clientArea(MaximizeArea, window, window->rect().center());
         const qreal xmin = maxRect.left();
         const qreal xmax = maxRect.right(); // desk size
         const qreal ymin = maxRect.top();
@@ -2863,7 +2863,7 @@ QRectF Workspace::adjustWindowSize(const Window *window, QRectF moveResizeGeom, 
         //    // 2) Snap to the horizontal and vertical center lines of the screen
         //    }
 
-        moveResizeGeom = QRectF(QPointF(newcx, newcy), QPointF(newrx, newry));
+        moveResizeGeom = RectF(QPointF(newcx, newcy), QPointF(newrx, newry));
     }
     return moveResizeGeom;
 }
