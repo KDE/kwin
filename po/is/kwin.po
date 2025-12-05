@@ -7,15 +7,15 @@
 # Richard Allen <ra@ra.is>, 2000.
 # Pjetur G. Hjaltason <pjetur@pjetur.net>, 2003.
 # Arnar Leosson <leosson@frisurf.no>, 2005.
-# Sveinn í Felli <sveinki@nett.is>, 2008, 2009, 2010, 2022, 2024.
+# SPDX-FileCopyrightText: 2008, 2009, 2010, 2022, 2024, 2025 Sveinn í Felli <sveinki@nett.is>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 14:41+0000\n"
-"PO-Revision-Date: 2024-09-26 14:15+0000\n"
-"Last-Translator: Gummi <gudmundure@gmail.com>\n"
-"Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2025-12-04 09:07+0000\n"
+"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
+"Language-Team: Icelandic\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,13 +30,14 @@ msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
 "Richard Allen, Þórarinn R. Einarsson, Pjetur G. Hjaltason, Guðmundur "
-"Erlingsson"
+"Erlingsson, Sveinn í Felli"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-"ra@ra.is, thori@mindspring.com, pjetur@pjetur.net, gudmundure@gmail.com"
+"ra@ra.is, thori@mindspring.com, pjetur@pjetur.net, gudmundure@gmail.com, "
+"sv1@fellsnet.is"
 
 #: backends/wayland/wayland_output.cpp:496
 #, kde-format
@@ -88,75 +89,77 @@ msgstr "Skjáborðsbrellur voru endurræstar vegna endurstillingar á myndvinnsl
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "Gat ekki opnað ICC-litasnið \"%1\""
 
 #: core/iccprofile.cpp:336
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr ""
+msgstr "ICC-litasniðið \"%1\" er ekki til"
 
 #: core/iccprofile.cpp:340
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC-litasniðið \"%1\" er ekki nothæft fyrir skjái"
 
 #: core/iccprofile.cpp:343
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"ICC-litasniðið \"%1\" er með óstutt tengirými, einungis er stuðningur við XYZ"
 
 #: core/iccprofile.cpp:346
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
-msgstr ""
+msgstr "ICC-litasniðið \"%1\" er bilað, inntaks-/úttakslitrými er ekki RGB"
 
 #: core/iccprofile.cpp:359
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC-litasniðið \"%1\" er bilað, það er ekki með neinn hvítan punkt"
 
 #: core/iccprofile.cpp:362
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC-litasniðið \"%1\" er bilað, hvítur punktur þess er ógildur"
 
 #: core/iccprofile.cpp:375
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
-msgstr ""
+msgstr "ICC-litasniðið \"%1\" er bilað, þáttun á litaaðlögunarfylki mistókst"
 
 #: core/iccprofile.cpp:380
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"ICC-litasniðið \"%1\" er bilað, umsnúningur litaaðlögunarfylkis mistókst"
 
 #: core/iccprofile.cpp:393
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC-litasniðið \"%1\" er bilað, það er ekki með neina grunnliti"
 
 #: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
-msgstr ""
+msgstr "ICC-litasniðið \"%1\" er bilað, gat ekki reiknað út grunnliti þess"
 
 #: core/iccprofile.cpp:417
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC-litasniðið \"%1\" er bilað, grunnlitir þess eru ógildir"
 
 #: core/iccprofile.cpp:433
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "ICC-litasniðið \"%1\" með eingöngu BToD-merki er ekki stutt"
 
 #: core/iccprofile.cpp:472
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "Engin TRC-merki í litasniði"
 
 #: debug_console.cpp:80
 #, kde-format
@@ -426,14 +429,12 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:245
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:260
 #, kde-format
@@ -649,12 +650,10 @@ msgstr "Hætt við stroku"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "Hald byrjar"
 
 #: debug_console.cpp:467
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "Fjöldi fingra"
@@ -663,15 +662,13 @@ msgstr "Fjöldi fingra"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "Hald endar"
 
 #: debug_console.cpp:490
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "Hætt við klemmu"
+msgstr "Hætt við hald"
 
 #: debug_console.cpp:502
 #, kde-format
@@ -716,25 +713,24 @@ msgid "State"
 msgstr "Staða"
 
 #: debug_console.cpp:533
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Teikniborðsverkfæri"
+msgstr "Nálægð teikniborðsverkfæris"
 
 #: debug_console.cpp:534
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Nálægð"
 
 #: debug_console.cpp:534
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Inn"
 
 #: debug_console.cpp:534
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Út"
 
 #: debug_console.cpp:535 debug_console.cpp:549 debug_console.cpp:566
 #: debug_console.cpp:615 debug_console.cpp:631
@@ -753,10 +749,9 @@ msgid "Rotation"
 msgstr "Snúningur"
 
 #: debug_console.cpp:548
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Teikniborðsverkfæri"
+msgstr "Ás teikniborðsverkfæris"
 
 #: debug_console.cpp:554 debug_console.cpp:571
 #, kde-format
@@ -769,39 +764,34 @@ msgid "Buttons"
 msgstr "Hnappar"
 
 #: debug_console.cpp:564
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Teikniborðsverkfæri"
+msgstr "Oddur teikniborðsverkfæris"
 
 #: debug_console.cpp:565
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "Efst"
+msgstr "Oddur"
 
 #: debug_console.cpp:565
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Færa niður"
+msgstr "Niður"
 
 #: debug_console.cpp:565
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Upp"
 
 #: debug_console.cpp:572
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Fjarlægð:"
+msgstr "Fjarlægð"
 
 #: debug_console.cpp:573
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Staðsetning"
+msgstr "Staða sleða"
 
 #: debug_console.cpp:583
 #, kde-format
@@ -832,19 +822,17 @@ msgstr "Teikniborðshnappur"
 #: debug_console.cpp:600 debug_console.cpp:617 debug_console.cpp:633
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Flokkur"
 
 #: debug_console.cpp:601 debug_console.cpp:618 debug_console.cpp:634
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Mode:"
+#, kde-format
 msgid "Mode"
-msgstr "Snið:"
+msgstr "Snið"
 
 #: debug_console.cpp:602
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "Er sniðskipting"
 
 #: debug_console.cpp:613
 #, kde-format
@@ -867,15 +855,12 @@ msgid "Tablet Pad Ring"
 msgstr "Hringur á teikniborðsspjaldi"
 
 #: debug_console.cpp:645
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Hringur á teikniborðsspjaldi"
+msgstr "Teikniborðsskífa"
 
 #: debug_console.cpp:647
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -1104,10 +1089,9 @@ msgstr "Hlaða inn"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Hætta í villuleitarglugga"
+msgstr "Villuleitargluggi"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:27
@@ -1336,11 +1320,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Það á ekki að ræsa þetta hjálparverkfæri handvirkt."
 
 #: helpers/killer/killer.cpp:236
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1348,15 +1328,12 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Ef forritið er stöðvað verður öllum gluggum "
-"þess lokað. Öll óvistuð gögn glatast.</emphasis></para>"
+"<para><application>%1</application> svarar ekki. Viltu loka þessu forriti?</"
+"para><para><emphasis strong='true'>Ef forritið er stöðvað verður öllum "
+"gluggum þess lokað. Öll óvistuð gögn glatast.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:240
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1364,8 +1341,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Ef forritið er stöðvað verður öllum gluggum "
-"þess lokað. Öll óvistuð gögn glatast.</emphasis></para>"
+"<para>\"%1\" sem tilheyrir <application>%2</application> svarar ekki. Viltu "
+"loka þessu forriti?</para><para><emphasis strong='true'>Ef forritið er "
+"stöðvað verður öllum gluggum þess lokað. Öll óvistuð gögn glatast.</"
+"emphasis></para>"
 
 #: helpers/killer/killer.cpp:244
 #, kde-format
@@ -1528,7 +1507,7 @@ msgstr "Hæðin fyrir gluggasniðið. Sjálfgefin hæð er 768."
 #: main_wayland.cpp:322
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Hvort gluggasnið eigi að fylla skjá"
 
 #: main_wayland.cpp:326
 #, kde-format
@@ -1701,11 +1680,10 @@ msgid "Fullscreen windows"
 msgstr "Gluggar sem fylla skjá"
 
 #: plugins/eis/eisinputcapturemanager.cpp:130
-#, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
+#, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "Gera samþættingu við KActivities óvirka."
+msgstr "Gera viðtöku virks inntaks óvirka."
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -2971,7 +2949,7 @@ msgstr "Eyða þessari reglu (til notkunar í innflutningi)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "Þessi regla er virk"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
@@ -3029,17 +3007,15 @@ msgstr "Samsvörunargerð strengs fyrir vél"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Gluggastjóri"
+msgstr "Gluggamerki"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Samsvörunargerð strengs fyrir gluggatitil"
+msgstr "Samsvörunargerð strengs fyrir gluggamerki"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -3516,24 +3492,21 @@ msgid "Log Out Anyway"
 msgstr "Skrá samt út"
 
 #: sm.cpp:472
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
-"Eftirfarandi forrit lokaðist ekki:\n"
-"%1"
+"Eftirfarandi forrit lokuðust ekki:\n"
+"%1\n"
+"Skrái samt út eftir 2 mínútur."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
-msgstr "Kíkja á skjáborðið "
+msgstr "Kíkja á skjáborðið"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
 #, kde-format
@@ -3598,12 +3571,7 @@ msgid "Tablets switched outputs"
 msgstr "Teikniborð skiptu um úttak"
 
 #: useractions.cpp:161
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3611,18 +3579,11 @@ msgid ""
 "shortcut."
 msgstr ""
 "Þú hefur valið að birta gluggann án rammans.\n"
-"Án ramma getur þú ekki virkjað rammann aftur með músinni. Þess í stað getur "
-"þú gert það í aðgerðavalmynd gluggans sem hægt er að opna með flýtilyklinum "
-"%1."
+"Án ramma getur þú ekki virkjað rammann aftur með músinni: notaðu "
+"aðgerðavalmynd gluggans í staðinn sem hægt er að opna með flýtilyklinum %1."
 
 #: useractions.cpp:168
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3631,8 +3592,8 @@ msgid ""
 msgstr ""
 "Þú hefur valið að sýna glugga fullstækkaðan.\n"
 "Ef forritið er ekki með þann valkost að slökkva á fullstækkun verður ekki "
-"hægt að gera hana óvirka aftur með músinni. Þess í stað getur þú gert það í "
-"aðgerðavalmynd gluggans, sem hægt er að opna með flýtilyklinum %1."
+"hægt að gera hana óvirka aftur með músinni: notaðu aðgerðavalmynd gluggans í "
+"staðinn, sem hægt er að opna með flýtilyklinum %1."
 
 #: useractions.cpp:216
 #, kde-format
@@ -3767,10 +3728,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> er notað af %2 í %3"
 
 #: useractions.cpp:818
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Hlutverk glugga"
+msgstr "Gluggavalmynd"
 
 #: useractions.cpp:820
 #, kde-format
@@ -3973,28 +3933,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Halda glugga á öllum skjáborðum"
 
 #: useractions.cpp:902
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Flýtireitaraða glugga til vinstri"
+msgstr "Sérsniðin flýtireitaröðun glugga til vinstri"
 
 #: useractions.cpp:904
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Flýtireitaraða glugga til hægri"
+msgstr "Sérsniðin flýtireitaröðun glugga til hægri"
 
 #: useractions.cpp:906
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Flýtireitaraða glugga efst"
+msgstr "Sérsniðin flýtireitaröðun glugga efst"
 
 #: useractions.cpp:908
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Flýtireitaraða glugga neðst"
+msgstr "Sérsniðin flýtireitaröðun glugga neðst"
 
 #: useractions.cpp:919
 #, kde-format
@@ -4164,27 +4120,28 @@ msgstr "Skipta á skjáborð %1"
 #: wayland/outputmanagement_v2.cpp:499
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "Eitt af úttökunum sem á við er ekki lengur tiltækt"
 
 #: wayland/outputmanagement_v2.cpp:517
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
+"Ekki er leyfilegt að gera öll úttök óvirk með breytingum á grunnstillingum"
 
 #: wayland/outputmanagement_v2.cpp:527
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "Uppgefin úttaksröðun inniheldur ekki öll úttök"
 
 #: wayland/outputmanagement_v2.cpp:545
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "Uppgefin úttaksröðun er ógild"
 
 #: wayland/outputmanagement_v2.cpp:563
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "Rekillinn hafnaði grunnstillingu úttaksins"
 
 #: window.cpp:3117
 #, kde-format
