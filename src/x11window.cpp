@@ -129,9 +129,6 @@ X11Window::X11Window()
     info = nullptr;
 
     m_fullscreenMode = FullScreenNone;
-    noborder = false;
-    app_noborder = false;
-    ignore_focus_stealing = false;
     check_active_modal = false;
 
     max_mode = MaximizeRestore;
@@ -469,13 +466,13 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     std::optional<SessionInfo> session = workspace()->sessionManager()->takeSessionInfo(this);
     if (session) {
         init_minimize = session->minimized;
-        noborder = session->noBorder;
+        m_decorationPolicy = session->decorationPolicy;
     }
 
     setShortcut(rules()->checkShortcut(session ? session->shortcut : QString(), true));
 
     init_minimize = rules()->checkMinimize(init_minimize, !isMapped);
-    noborder = rules()->checkNoBorder(noborder, !isMapped);
+    m_decorationPolicy = rules()->checkDecorationPolicy(m_decorationPolicy, !isMapped);
 
     readActivities(activitiesCookie);
 
@@ -929,9 +926,54 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     return true;
 }
 
+DecorationPolicy X11Window::decorationPolicy() const
+{
+    return m_decorationPolicy;
+}
+
+void X11Window::setDecorationPolicy(DecorationPolicy policy)
+{
+    const DecorationPolicy effectivePolicy = rules()->checkDecorationPolicy(policy);
+    if (m_decorationPolicy == effectivePolicy) {
+        return;
+    }
+    m_decorationPolicy = effectivePolicy;
+    updateDecoration(true, false);
+    updateWindowRules(Rules::NoBorder);
+    Q_EMIT decorationPolicyChanged();
+}
+
+DecorationMode X11Window::preferredDecorationMode() const
+{
+    if (!Decoration::DecorationBridge::hasPlugin()) {
+        return DecorationMode::Client;
+    } else if (isRequestedFullScreen()) {
+        return DecorationMode::None;
+    }
+
+    switch (m_decorationPolicy) {
+    case DecorationPolicy::None:
+        return DecorationMode::None;
+    case DecorationPolicy::Server:
+        return DecorationMode::Server;
+    case DecorationPolicy::PreferredByClient:
+        if (!m_clientFrameExtents.isNull()) {
+            return DecorationMode::Client;
+        } else if (m_wantsNoDecoration) {
+            return DecorationMode::None;
+        } else {
+            return DecorationMode::Server;
+        }
+    }
+
+    Q_UNREACHABLE();
+}
+
 void X11Window::updateDecoration(bool check_workspace_pos, bool force)
 {
-    if (!force && ((!isDecorated() && noBorder()) || (isDecorated() && !noBorder()))) {
+    const bool wantsDecoration = preferredDecorationMode() == DecorationMode::Server;
+
+    if (!force && (isDecorated() == wantsDecoration)) {
         return;
     }
     RectF oldgeom = moveResizeGeometry();
@@ -939,7 +981,7 @@ void X11Window::updateDecoration(bool check_workspace_pos, bool force)
     if (force) {
         destroyDecoration();
     }
-    if (!noBorder()) {
+    if (wantsDecoration) {
         createDecoration();
     } else {
         destroyDecoration();
@@ -1002,8 +1044,7 @@ void X11Window::detectNoBorder()
     case WindowType::OnScreenDisplay:
     case WindowType::CriticalNotification:
     case WindowType::AppletPopup:
-        noborder = true;
-        app_noborder = true;
+        m_wantsNoDecoration = true;
         break;
     case WindowType::Unknown:
     case WindowType::Normal:
@@ -1011,7 +1052,7 @@ void X11Window::detectNoBorder()
     case WindowType::Menu:
     case WindowType::Dialog:
     case WindowType::Utility:
-        noborder = false;
+        m_wantsNoDecoration = false;
         break;
     default:
         Q_UNREACHABLE();
@@ -1020,8 +1061,7 @@ void X11Window::detectNoBorder()
     // just meaning "noborder", so let's treat it only as such flag, and ignore it as
     // a window type otherwise (SUPPORTED_WINDOW_TYPES_MASK doesn't include it)
     if (WindowType(info->windowType(NET::OverrideMask)) == WindowType::Override) {
-        noborder = true;
-        app_noborder = true;
+        m_wantsNoDecoration = true;
     }
 }
 
@@ -1054,11 +1094,6 @@ void X11Window::setClientFrameExtents(const NETStrut &strut)
     moveResize(moveResizeGeometry());
 }
 
-bool X11Window::userNoBorder() const
-{
-    return noborder;
-}
-
 bool X11Window::isFullScreenable() const
 {
     if (isUnmanaged()) {
@@ -1069,45 +1104,6 @@ bool X11Window::isFullScreenable() const
     }
     // don't check size constrains - some apps request fullscreen despite requesting fixed size
     return isNormalWindow() || isDialog(); // also better disallow only weird types to go fullscreen
-}
-
-bool X11Window::noBorder() const
-{
-    return userNoBorder() || isFullScreen();
-}
-
-bool X11Window::userCanSetNoBorder() const
-{
-    if (isUnmanaged()) {
-        return false;
-    }
-
-    // Client-side decorations and server-side decorations are mutually exclusive.
-    if (isClientSideDecorated()) {
-        return false;
-    }
-
-    return !isFullScreen();
-}
-
-void X11Window::setNoBorder(bool set)
-{
-    if (!userCanSetNoBorder()) {
-        return;
-    }
-    set = rules()->checkNoBorder(set);
-    if (noborder == set) {
-        return;
-    }
-    noborder = set;
-    updateDecoration(true, false);
-    updateWindowRules(Rules::NoBorder);
-    Q_EMIT noBorderChanged();
-}
-
-void X11Window::checkNoBorder()
-{
-    setNoBorder(app_noborder);
 }
 
 /**
@@ -1715,20 +1711,13 @@ void X11Window::fetchIconicName()
 void X11Window::getMotifHints()
 {
     const bool wasClosable = isCloseable();
-    const bool wasNoBorder = m_motif.noDecorations();
     if (m_managed) { // only on property change, initial read is prefetched
         m_motif.fetch();
     }
     m_motif.read();
-    if (m_motif.hasDecorationsFlag() && m_motif.noDecorations() != wasNoBorder) {
-        // If we just got a hint telling us to hide decorations, we do so.
-        if (m_motif.noDecorations()) {
-            noborder = rules()->checkNoBorder(true);
-            // If the Motif hint is now telling us to show decorations, we only do so if the app didn't
-            // instruct us to hide decorations in some other way, though.
-        } else if (!app_noborder) {
-            noborder = rules()->checkNoBorder(false);
-        }
+
+    if (m_motif.hasDecorationsFlag()) {
+        m_wantsNoDecoration = m_motif.noDecorations();
     }
 
     // mminimize; - Ignore, bogus - E.g. shading or sending to another desktop is "minimizing" too
@@ -3237,12 +3226,12 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
     qCDebug(KWIN_CORE) << this << bool(value_mask & configureGeometryMask) << bool(requestedMaximizeMode() & MaximizeVertical) << bool(requestedMaximizeMode() & MaximizeHorizontal);
 
     // we want to (partially) ignore the request when the window is somehow maximized or quicktiled
-    bool ignore = !app_noborder && (requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None) || requestedMaximizeMode() != MaximizeRestore);
+    bool ignore = !m_wantsNoDecoration && (requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None) || requestedMaximizeMode() != MaximizeRestore);
     // however, the user shall be able to force obedience despite and also disobedience in general
     ignore = rules()->checkIgnoreGeometry(ignore);
     if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
         exitQuickTileMode();
-    } else if (!app_noborder && requestedQuickTileMode() == QuickTileMode(QuickTileFlag::None) && (requestedMaximizeMode() == MaximizeVertical || requestedMaximizeMode() == MaximizeHorizontal)) {
+    } else if (!m_wantsNoDecoration && requestedQuickTileMode() == QuickTileMode(QuickTileFlag::None) && (requestedMaximizeMode() == MaximizeVertical || requestedMaximizeMode() == MaximizeHorizontal)) {
         // ignoring can be, because either we do, or the user does explicitly not want it.
         // for partially maximized windows we want to allow configures in the other dimension.
         // so we've to ask the user again - to know whether we just ignored for the partial maximization.
@@ -3704,7 +3693,7 @@ void X11Window::maximize(MaximizeMode mode, const RectF &restore)
         // triggers a maximize change.
         // The next setNoBorder iteration will exit since there's no change but the first recursion pullutes the restore geometry
         changeMaximizeRecursion = true;
-        setNoBorder(rules()->checkNoBorder(app_noborder || (m_motif.hasDecorationsFlag() && m_motif.noDecorations()) || max_mode == MaximizeFull));
+        setNoBorder(max_mode == MaximizeFull);
         changeMaximizeRecursion = false;
     }
 

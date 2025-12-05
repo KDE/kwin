@@ -71,6 +71,42 @@ using ElectricBorderMode = std::variant<QuickTileMode, MaximizeMode>;
  */
 using PlacementCommand = std::variant<QPointF, RectF, MaximizeMode>;
 
+/**
+ * The DecorationPolicy enum indicates how the decoration mode is determined.
+ */
+enum class DecorationPolicy {
+    /**
+     * Force no decoration.
+     */
+    None,
+    /**
+     * Follow the preferred decoration mode of the client.
+     */
+    PreferredByClient,
+    /**
+     * Force the server side decoration mode.
+     */
+    Server,
+};
+
+/**
+ * The DecorationMode enum specifies who draws the window decoration, if at all.
+ */
+enum class DecorationMode {
+    /**
+     * No decoration.
+     */
+    None,
+    /**
+     * The window decoration is drawn by the client.
+     */
+    Client,
+    /**
+     * The window decoration is drawn by the compositor.
+     */
+    Server,
+};
+
 class KWIN_EXPORT Window : public QObject
 {
     Q_OBJECT
@@ -461,7 +497,7 @@ class KWIN_EXPORT Window : public QObject
      * The decision whether a window has a border or not belongs to the window manager.
      * If this property gets abused by application developers, it will be removed again.
      */
-    Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder NOTIFY noBorderChanged)
+    Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder NOTIFY decorationPolicyChanged)
 
     /**
      * Whether the Window provides context help. Mostly needed by decorations to decide whether to
@@ -1205,10 +1241,12 @@ public:
 
     virtual void invalidateDecoration();
 
-    virtual bool noBorder() const;
-    virtual void setNoBorder(bool set);
-    virtual bool userCanSetNoBorder() const;
-    virtual void checkNoBorder();
+    bool noBorder() const;
+    void setNoBorder(bool set);
+    bool userCanSetNoBorder() const;
+
+    virtual DecorationPolicy decorationPolicy() const;
+    virtual void setDecorationPolicy(DecorationPolicy policy);
 
     /**
      * Returns whether the window provides context help or not. If it does,
@@ -1488,11 +1526,11 @@ Q_SIGNALS:
     void offscreenRenderingChanged();
     void targetScaleChanged();
     void nextTargetScaleChanged();
-    void noBorderChanged();
     void tagChanged();
     void descriptionChanged();
     void borderRadiusChanged();
     void excludeFromCaptureChanged();
+    void decorationPolicyChanged();
 
 protected:
     Window();

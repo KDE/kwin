@@ -174,8 +174,7 @@ void SessionManager::storeClient(KConfigGroup &cg, int num, X11Window *c)
     cg.writeEntry(QLatin1String("skipTaskbar") + n, c->originalSkipTaskbar());
     cg.writeEntry(QLatin1String("skipPager") + n, c->skipPager());
     cg.writeEntry(QLatin1String("skipSwitcher") + n, c->skipSwitcher());
-    // not really just set by user, but name kept for back. comp. reasons
-    cg.writeEntry(QLatin1String("userNoBorder") + n, c->userNoBorder());
+    cg.writeEntry(QLatin1String("decorationPolicy") + n, uint(c->decorationPolicy()));
     cg.writeEntry(QLatin1String("windowType") + n, windowTypeToTxt(c->windowType()));
     cg.writeEntry(QLatin1String("shortcut") + n, c->shortcut().toString());
     cg.writeEntry(QLatin1String("stackingOrder") + n, workspace()->unconstrainedStackingOrder().indexOf(c));
@@ -222,7 +221,7 @@ void SessionManager::addSessionInfo(KConfigGroup &cg)
         info.skipTaskbar = cg.readEntry(QLatin1String("skipTaskbar") + n, false);
         info.skipPager = cg.readEntry(QLatin1String("skipPager") + n, false);
         info.skipSwitcher = cg.readEntry(QLatin1String("skipSwitcher") + n, false);
-        info.noBorder = cg.readEntry(QLatin1String("userNoBorder") + n, false);
+        info.decorationPolicy = DecorationPolicy(cg.readEntry(QLatin1String("decorationPolicy") + n, uint(DecorationPolicy::PreferredByClient)));
         info.windowType = txtToWindowType(cg.readEntry(QLatin1String("windowType") + n, QString()).toLatin1().constData());
         info.shortcut = cg.readEntry(QLatin1String("shortcut") + n, QString());
         info.active = (active_client == i);

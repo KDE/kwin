@@ -881,6 +881,18 @@ LogicalOutput *WindowRules::checkOutput(LogicalOutput *output, bool init) const
     return ruleOutput ? ruleOutput : output;
 }
 
+DecorationPolicy WindowRules::checkDecorationPolicy(DecorationPolicy policy, bool init) const
+{
+    if (checkNoBorder(true, init) == false) {
+        return DecorationPolicy::Server;
+    }
+    if (checkNoBorder(false, init) == true) {
+        return DecorationPolicy::None;
+    }
+
+    return policy;
+}
+
 CHECK_RULE(Minimize, bool)
 CHECK_RULE(SkipTaskbar, bool)
 CHECK_RULE(SkipPager, bool)

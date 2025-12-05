@@ -128,11 +128,8 @@ public:
         return m_fullscreenMode; // only for session saving
     }
 
-    bool userNoBorder() const;
-    bool noBorder() const override;
-    void setNoBorder(bool set) override;
-    bool userCanSetNoBorder() const override;
-    void checkNoBorder() override;
+    DecorationPolicy decorationPolicy() const override;
+    void setDecorationPolicy(DecorationPolicy policy) override;
     void checkActivities() override;
 
     int sessionStackingOrder() const;
@@ -337,6 +334,7 @@ private:
     xcb_res_query_client_ids_cookie_t fetchPid() const;
     void readPid(xcb_res_query_client_ids_cookie_t cookie);
 
+    DecorationMode preferredDecorationMode() const;
     void updateDecoration(bool check_workspace_pos, bool force = false);
     void createDecoration();
     void destroyDecoration();
@@ -377,9 +375,9 @@ private:
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
     Xcb::MotifHints m_motif;
-    uint noborder : 1;
-    uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
-    uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
+    DecorationPolicy m_decorationPolicy = DecorationPolicy::PreferredByClient;
+    bool m_wantsNoDecoration = false;
+    bool ignore_focus_stealing = false; ///< Don't apply focus stealing prevention to this client
     bool is_shape = false;
 
     enum FullScreenMode {

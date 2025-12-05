@@ -468,8 +468,8 @@ std::optional<XdgToplevelSessionData> XdgToplevelSessionData::parse(const QVaria
             data.desktops = value.toStringList();
         } else if (key == QStringLiteral("activities")) {
             data.activities = value.toStringList();
-        } else if (key == QStringLiteral("noBorder")) {
-            data.noBorder = value.toBool();
+        } else if (key == QStringLiteral("decorationPolicy")) {
+            data.decorationPolicy = DecorationPolicy(value.toUInt());
         } else if (key == QStringLiteral("shortcut")) {
             data.shortcut = value.toString();
         }
@@ -494,7 +494,7 @@ QVariant XdgToplevelSessionData::save(const Window *window)
         {QStringLiteral("minimizeMode"), window->isMinimized()},
         {QStringLiteral("desktops"), window->desktopIds()},
         {QStringLiteral("activities"), window->activities()},
-        {QStringLiteral("noBorder"), window->noBorder()},
+        {QStringLiteral("decorationPolicy"), uint(window->decorationPolicy())},
         {QStringLiteral("shortcut"), window->shortcut().toString()},
     };
 }
@@ -745,31 +745,21 @@ bool XdgToplevelWindow::isTransient() const
     return m_isTransient;
 }
 
-bool XdgToplevelWindow::userCanSetNoBorder() const
+DecorationPolicy XdgToplevelWindow::decorationPolicy() const
 {
-    return (m_serverDecoration || m_xdgDecoration) && !isFullScreen();
+    return m_decorationPolicy;
 }
 
-bool XdgToplevelWindow::noBorder() const
+void XdgToplevelWindow::setDecorationPolicy(DecorationPolicy policy)
 {
-    return m_userNoBorder;
-}
-
-void XdgToplevelWindow::setNoBorder(bool set)
-{
-    set = rules()->checkNoBorder(set);
-    if (m_userNoBorder == set) {
-        // NOTE that forcing no border to off can have an effect on the
-        // decoration, even if m_userNoBorder stays the same
-        if (rules()->checkNoBorder(true) == false) {
-            configureDecoration();
-        }
+    const auto effectivePolicy = rules()->checkDecorationPolicy(policy);
+    if (m_decorationPolicy == effectivePolicy) {
         return;
     }
-    m_userNoBorder = set;
+    m_decorationPolicy = effectivePolicy;
     configureDecoration();
     updateWindowRules(Rules::NoBorder);
-    Q_EMIT noBorderChanged();
+    Q_EMIT decorationPolicyChanged();
 }
 
 KDecoration3::Decoration *XdgToplevelWindow::nextDecoration() const
@@ -1402,14 +1392,14 @@ QStringList XdgToplevelWindow::initialActivities(const std::optional<XdgToplevel
     return activities();
 }
 
-bool XdgToplevelWindow::initialNoBorder(const std::optional<XdgToplevelSessionData> &session) const
+DecorationPolicy XdgToplevelWindow::initialDecorationPolicy(const std::optional<XdgToplevelSessionData> &session) const
 {
     if (session) {
-        if (const auto noBorder = session->noBorder) {
-            return noBorder.value();
+        if (const auto decorationPolicy = session->decorationPolicy) {
+            return decorationPolicy.value();
         }
     }
-    return noBorder();
+    return decorationPolicy();
 }
 
 QString XdgToplevelWindow::initialShortcut(const std::optional<XdgToplevelSessionData> &session) const
@@ -1453,7 +1443,7 @@ void XdgToplevelWindow::initialize()
     setKeepAbove(rules()->checkKeepAbove(initialKeepAbove(sessionData), true));
     setKeepBelow(rules()->checkKeepBelow(initialKeepBelow(sessionData), true));
     setShortcut(rules()->checkShortcut(initialShortcut(sessionData), true));
-    setNoBorder(rules()->checkNoBorder(initialNoBorder(sessionData), true));
+    setDecorationPolicy(rules()->checkDecorationPolicy(initialDecorationPolicy(sessionData), true));
 
     workspace()->rulebook()->discardUsed(this, false); // Remove Apply Now rules.
     updateWindowRules(Rules::All);
@@ -1549,40 +1539,45 @@ void XdgToplevelWindow::installAppMenu(AppMenuInterface *appMenu)
     updateMenu(appMenu->address());
 }
 
-XdgToplevelWindow::DecorationMode XdgToplevelWindow::preferredDecorationMode() const
+DecorationMode XdgToplevelWindow::preferredDecorationMode() const
 {
     if (!Decoration::DecorationBridge::hasPlugin()) {
         return DecorationMode::Client;
-    } else if (m_userNoBorder || isRequestedFullScreen()) {
+    } else if (isRequestedFullScreen()) {
         return DecorationMode::None;
-    } else if (!rules()->checkNoBorder(true)) {
-        // there's a window rule forcing this window to "no border" = false,
-        // meaning server side decorations
+    }
+
+    switch (m_decorationPolicy) {
+    case DecorationPolicy::None:
+        return DecorationMode::None;
+    case DecorationPolicy::Server:
         return DecorationMode::Server;
-    }
-
-    if (m_xdgDecoration) {
-        switch (m_xdgDecoration->preferredMode()) {
-        case XdgToplevelDecorationV1Interface::Mode::Undefined:
-            return DecorationMode::Server;
-        case XdgToplevelDecorationV1Interface::Mode::None:
-            return DecorationMode::None;
-        case XdgToplevelDecorationV1Interface::Mode::Client:
-            return DecorationMode::Client;
-        case XdgToplevelDecorationV1Interface::Mode::Server:
-            return DecorationMode::Server;
+    case DecorationPolicy::PreferredByClient:
+        if (m_xdgDecoration) {
+            switch (m_xdgDecoration->preferredMode()) {
+            case XdgToplevelDecorationV1Interface::Mode::Undefined:
+                return DecorationMode::Server;
+            case XdgToplevelDecorationV1Interface::Mode::None:
+                return DecorationMode::None;
+            case XdgToplevelDecorationV1Interface::Mode::Client:
+                return DecorationMode::Client;
+            case XdgToplevelDecorationV1Interface::Mode::Server:
+                return DecorationMode::Server;
+            }
         }
-    }
 
-    if (m_serverDecoration) {
-        switch (m_serverDecoration->preferredMode()) {
-        case ServerSideDecorationManagerInterface::Mode::None:
-            return DecorationMode::None;
-        case ServerSideDecorationManagerInterface::Mode::Client:
-            return DecorationMode::Client;
-        case ServerSideDecorationManagerInterface::Mode::Server:
-            return DecorationMode::Server;
+        if (m_serverDecoration) {
+            switch (m_serverDecoration->preferredMode()) {
+            case ServerSideDecorationManagerInterface::Mode::None:
+                return DecorationMode::None;
+            case ServerSideDecorationManagerInterface::Mode::Client:
+                return DecorationMode::Client;
+            case ServerSideDecorationManagerInterface::Mode::Server:
+                return DecorationMode::Server;
+            }
         }
+
+        break;
     }
 
     return DecorationMode::Client;

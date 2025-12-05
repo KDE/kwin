@@ -47,14 +47,13 @@ public:
     bool isMovableAcrossScreens() const override;
     bool isResizable() const override;
     bool isPlaceable() const override;
-    bool noBorder() const override;
-    bool userCanSetNoBorder() const override;
     bool wantsInput() const override;
     bool isInternal() const override;
     bool isLockScreen() const override;
     bool isOutline() const override;
     RectF resizeWithChecks(const RectF &geometry, const QSizeF &size) const override;
-    void setNoBorder(bool set) override;
+    DecorationPolicy decorationPolicy() const override;
+    void setDecorationPolicy(DecorationPolicy policy) override;
     void invalidateDecoration() override;
     void destroyWindow() override;
     bool hasPopupGrab() const override;
@@ -85,6 +84,7 @@ private:
     void commitGeometry(const RectF &rect);
     void setCaption(const QString &caption);
     void markAsMapped();
+    DecorationMode preferredDecorationMode() const;
     void updateDecoration(bool check_workspace_pos, bool force = false);
     void createDecoration(const RectF &oldGeometry);
     void destroyDecoration();
@@ -93,7 +93,7 @@ private:
     QString m_captionNormal;
     QString m_captionSuffix;
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
-    bool m_userNoBorder = false;
+    DecorationPolicy m_decorationPolicy = DecorationPolicy::PreferredByClient;
     GraphicsBufferRef m_graphicsBufferRef;
     OutputTransform m_bufferTransform = OutputTransform::Normal;
 

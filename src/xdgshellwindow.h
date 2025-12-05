@@ -132,7 +132,7 @@ public:
     std::optional<MaximizeMode> maximizeMode;
     std::optional<bool> fullscreen;
     std::optional<bool> minimized;
-    std::optional<bool> noBorder;
+    std::optional<DecorationPolicy> decorationPolicy;
     std::optional<QStringList> desktops;
     std::optional<QStringList> activities;
     std::optional<QString> shortcut;
@@ -145,12 +145,6 @@ class XdgToplevelWindow final : public XdgSurfaceWindow
     enum class PingReason {
         CloseWindow,
         FocusWindow,
-    };
-
-    enum class DecorationMode {
-        None,
-        Client,
-        Server,
     };
 
 public:
@@ -174,9 +168,8 @@ public:
     bool isMinimizable() const override;
     bool isPlaceable() const override;
     bool isTransient() const override;
-    bool userCanSetNoBorder() const override;
-    bool noBorder() const override;
-    void setNoBorder(bool set) override;
+    DecorationPolicy decorationPolicy() const override;
+    void setDecorationPolicy(DecorationPolicy policy) override;
     KDecoration3::Decoration *nextDecoration() const override;
     void invalidateDecoration() override;
     QString preferredColorScheme() const override;
@@ -244,7 +237,7 @@ private:
     bool initialSkipPager(const std::optional<XdgToplevelSessionData> &session) const;
     bool initialSkipTaskbar(const std::optional<XdgToplevelSessionData> &session) const;
     bool initialMinimizeMode(const std::optional<XdgToplevelSessionData> &session) const;
-    bool initialNoBorder(const std::optional<XdgToplevelSessionData> &session) const;
+    DecorationPolicy initialDecorationPolicy(const std::optional<XdgToplevelSessionData> &session) const;
     MaximizeMode initialMaximizeMode(const std::optional<XdgToplevelSessionData> &session) const;
     bool initialFullScreenMode(const std::optional<XdgToplevelSessionData> &session) const;
     QVector<VirtualDesktop *> initialDesktops(const std::optional<XdgToplevelSessionData> &session) const;
@@ -274,10 +267,10 @@ private:
     MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
     QSizeF m_minimumSize = QSizeF(0, 0);
     QSizeF m_maximumSize = QSizeF(0, 0);
+    DecorationPolicy m_decorationPolicy = DecorationPolicy::PreferredByClient;
     bool m_isFullScreen = false;
     bool m_isRequestedFullScreen = false;
     bool m_isInitialized = false;
-    bool m_userNoBorder = false;
     bool m_isTransient = false;
     QPointer<LogicalOutput> m_fullScreenRequestedOutput;
     std::shared_ptr<KDecoration3::Decoration> m_nextDecoration;

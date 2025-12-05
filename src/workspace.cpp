@@ -902,7 +902,7 @@ void Workspace::slotReconfigure()
         // is to have borders, we need to unset the borders for all maximized windows
         for (auto it = m_windows.cbegin(); it != m_windows.cend(); ++it) {
             if ((*it)->maximizeMode() == MaximizeFull) {
-                (*it)->checkNoBorder();
+                (*it)->setNoBorder(false);
             }
         }
     }

@@ -1798,7 +1798,7 @@ void Window::setupWindowManagementInterface()
     });
     connect(this, &Window::windowClassChanged, w, updateAppId);
     connect(this, &Window::desktopFileNameChanged, w, updateAppId);
-    connect(this, &Window::noBorderChanged, w, [w, this] {
+    connect(this, &Window::decorationPolicyChanged, w, [w, this] {
         w->setNoBorder(noBorder());
     });
     connect(this, &Window::excludeFromCaptureChanged, w, [w, this] {
@@ -4340,22 +4340,32 @@ void Window::invalidateDecoration()
 
 bool Window::noBorder() const
 {
-    return true;
-}
-
-bool Window::userCanSetNoBorder() const
-{
-    return false;
+    return decorationPolicy() == DecorationPolicy::None;
 }
 
 void Window::setNoBorder(bool set)
 {
-    qCWarning(KWIN_CORE, "%s doesn't support setting decorations", metaObject()->className());
+    if (set) {
+        setDecorationPolicy(DecorationPolicy::None);
+    } else {
+        setDecorationPolicy(DecorationPolicy::PreferredByClient);
+    }
 }
 
-void Window::checkNoBorder()
+bool Window::userCanSetNoBorder() const
 {
-    setNoBorder(false);
+    const bool forcingNoDecoration = rules()->checkNoBorder(false);
+    const bool forcingServerDecoration = !rules()->checkNoBorder(true);
+    return !forcingNoDecoration && !forcingServerDecoration;
+}
+
+DecorationPolicy Window::decorationPolicy() const
+{
+    return DecorationPolicy::PreferredByClient;
+}
+
+void Window::setDecorationPolicy(DecorationPolicy policy)
+{
 }
 
 void Window::showOnScreenEdge()
@@ -4444,7 +4454,7 @@ void Window::applyWindowRules()
     setKeepAbove(keepAbove());
     setKeepBelow(keepBelow());
     setFullScreen(isRequestedFullScreen());
-    setNoBorder(noBorder());
+    setDecorationPolicy(decorationPolicy());
     updateColorScheme();
     updateLayer();
     // FSP

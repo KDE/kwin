@@ -30,6 +30,8 @@ class X11Window;
 struct SessionInfo;
 class XdgToplevelWindow;
 
+enum class DecorationPolicy;
+
 class SessionManager : public QObject, public QDBusContext
 {
     Q_OBJECT
@@ -110,7 +112,7 @@ struct SessionInfo
     bool skipTaskbar;
     bool skipPager;
     bool skipSwitcher;
-    bool noBorder;
+    DecorationPolicy decorationPolicy;
     WindowType windowType;
     QString shortcut;
     bool active; // means 'was active in the saved session'

@@ -28,6 +28,8 @@ class RuleSettings;
 class RuleBookSettings;
 class VirtualDesktop;
 
+enum class DecorationPolicy;
+
 #ifndef KCMRULES // only for kwin core
 
 class WindowRules
@@ -62,6 +64,7 @@ public:
     bool checkKeepBelow(bool below, bool init = false) const;
     bool checkFullScreen(bool fs, bool init = false) const;
     bool checkNoBorder(bool noborder, bool init = false) const;
+    DecorationPolicy checkDecorationPolicy(DecorationPolicy policy, bool init = false) const;
     QString checkDecoColor(QString schemeFile) const;
     bool checkBlockCompositing(bool block) const;
     FocusStealingPreventionLevel checkFSP(FocusStealingPreventionLevel fsp) const;

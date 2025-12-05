@@ -207,16 +207,6 @@ bool InternalWindow::isPlaceable() const
     return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
-bool InternalWindow::noBorder() const
-{
-    return m_userNoBorder || m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup);
-}
-
-bool InternalWindow::userCanSetNoBorder() const
-{
-    return !m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup);
-}
-
 bool InternalWindow::wantsInput() const
 {
     return false;
@@ -270,17 +260,19 @@ void InternalWindow::moveResizeInternal(const RectF &rect, MoveResizeMode mode)
     }
 }
 
-void InternalWindow::setNoBorder(bool set)
+DecorationPolicy InternalWindow::decorationPolicy() const
 {
-    if (!userCanSetNoBorder()) {
+    return m_decorationPolicy;
+}
+
+void InternalWindow::setDecorationPolicy(DecorationPolicy policy)
+{
+    if (m_decorationPolicy == policy) {
         return;
     }
-    if (m_userNoBorder == set) {
-        return;
-    }
-    m_userNoBorder = set;
+    m_decorationPolicy = policy;
     updateDecoration(true);
-    Q_EMIT noBorderChanged();
+    Q_EMIT decorationPolicyChanged();
 }
 
 void InternalWindow::createDecoration(const RectF &oldGeometry)
@@ -306,9 +298,34 @@ void InternalWindow::destroyDecoration()
     resize(clientSize);
 }
 
+DecorationMode InternalWindow::preferredDecorationMode() const
+{
+    if (!Decoration::DecorationBridge::hasPlugin()) {
+        return DecorationMode::Client;
+    } else if (isRequestedFullScreen()) {
+        return DecorationMode::None;
+    }
+
+    switch (m_decorationPolicy) {
+    case DecorationPolicy::None:
+        return DecorationMode::None;
+    case DecorationPolicy::Server:
+        return DecorationMode::Server;
+    case DecorationPolicy::PreferredByClient:
+        if (m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup)) {
+            return DecorationMode::Client;
+        } else {
+            return DecorationMode::Server;
+        }
+    }
+
+    return DecorationMode::Client;
+}
+
 void InternalWindow::updateDecoration(bool check_workspace_pos, bool force)
 {
-    if (!force && isDecorated() == !noBorder()) {
+    const bool wantsDecoration = preferredDecorationMode() == DecorationMode::Server;
+    if (!force && isDecorated() == wantsDecoration) {
         return;
     }
 
@@ -317,7 +334,7 @@ void InternalWindow::updateDecoration(bool check_workspace_pos, bool force)
         destroyDecoration();
     }
 
-    if (!noBorder()) {
+    if (wantsDecoration) {
         createDecoration(oldFrameGeometry);
     } else {
         destroyDecoration();
