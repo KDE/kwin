@@ -920,6 +920,7 @@ void InputMethod::adoptInputMethodContext()
         // When we have neither text-input-v2 nor text-input-v3 we can only send
         // fake key events, not more complex text. So ask the input method to
         // only send basic characters without any pre-editing.
+        inputContext->sendSurroundingText(QString(), 0, 0);
         inputContext->sendContentType(TextInputContentHint::Latin, TextInputContentPurpose::Normal);
     }
 
