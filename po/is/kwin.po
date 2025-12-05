@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-04 00:45+0000\n"
-"PO-Revision-Date: 2025-12-02 10:17+0000\n"
+"POT-Creation-Date: 2025-12-05 00:44+0000\n"
+"PO-Revision-Date: 2025-12-04 09:07+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
 "Language: is\n"
@@ -30,13 +30,14 @@ msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
 "Richard Allen, Þórarinn R. Einarsson, Pjetur G. Hjaltason, Guðmundur "
-"Erlingsson"
+"Erlingsson, Sveinn í Felli"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-"ra@ra.is, thori@mindspring.com, pjetur@pjetur.net, gudmundure@gmail.com"
+"ra@ra.is, thori@mindspring.com, pjetur@pjetur.net, gudmundure@gmail.com, "
+"sv1@fellsnet.is"
 
 #: backends/wayland/wayland_output.cpp:488
 #, kde-format
@@ -4155,13 +4156,13 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr "Rekillinn hafnaði grunnstillingu úttaksins"
 
-#: window.cpp:3125
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(svarar ekki)"
 
-#: workspace.cpp:1597
+#: workspace.cpp:1596
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

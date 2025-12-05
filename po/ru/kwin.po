@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-04 00:45+0000\n"
+"POT-Creation-Date: 2025-12-05 00:44+0000\n"
 "PO-Revision-Date: 2025-11-13 15:30+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -4209,14 +4209,14 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr "Конфигурация вывода отклонена драйвером"
 
-#: window.cpp:3125
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(не отвечает)"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
-#: workspace.cpp:1597
+#: workspace.cpp:1596
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

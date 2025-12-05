@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-04 00:45+0000\n"
+"POT-Creation-Date: 2025-12-05 00:44+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -4170,13 +4170,13 @@ msgstr "विन्यासपरिवर्तनद्वारा सर�
 msgid "The driver rejected the output configuration"
 msgstr "चालकः निर्गमविन्यासं अङ्गीकृतवान्"
 
-#: window.cpp:3125
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(प्रतिक्रिया न ददाति)"
 
-#: workspace.cpp:1597
+#: workspace.cpp:1596
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

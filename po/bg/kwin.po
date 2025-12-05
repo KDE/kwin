@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-04 00:45+0000\n"
-"PO-Revision-Date: 2025-11-28 19:52+0100\n"
+"POT-Creation-Date: 2025-12-05 00:44+0000\n"
+"PO-Revision-Date: 2025-12-04 17:28+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -47,16 +47,14 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Compositor %1"
 
 #: backends/wayland/wayland_output.cpp:497
-#, fuzzy, kde-format
-#| msgid "- LogicalOutput disabled"
+#, kde-format
 msgid "- Output disabled"
-msgstr "- LogicalOutput е деактивиран"
+msgstr "- Изходът е изключен"
 
 #: backends/wayland/wayland_output.cpp:499
-#, fuzzy, kde-format
-#| msgid "- LogicalOutput dimmed"
+#, kde-format
 msgid "- Output dimmed"
-msgstr "- LogicalOutput е затъмнен"
+msgstr "- Изходът е затъмнен"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
@@ -4155,13 +4153,13 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr "Драйверът отхвърли изходната конфигурация"
 
-#: window.cpp:3125
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не отговаря)"
 
-#: workspace.cpp:1597
+#: workspace.cpp:1596
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
