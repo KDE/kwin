@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "core/region.h"
 #include "kwin_export.h"
 
 #include <QObject>
@@ -151,7 +152,7 @@ Q_SIGNALS:
     void lockedChanged();
 
 private:
-    LockedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
+    LockedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const Region &region, ::wl_resource *resource);
     std::unique_ptr<LockedPointerV1InterfacePrivate> d;
     friend class LockedPointerV1InterfacePrivate;
     friend class PointerConstraintsV1InterfacePrivate;
@@ -236,7 +237,7 @@ Q_SIGNALS:
     void confinedChanged();
 
 private:
-    ConfinedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
+    ConfinedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const Region &region, ::wl_resource *resource);
     std::unique_ptr<ConfinedPointerV1InterfacePrivate> d;
     friend class ConfinedPointerV1InterfacePrivate;
     friend class PointerConstraintsV1InterfacePrivate;

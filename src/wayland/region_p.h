@@ -6,7 +6,7 @@
 */
 #pragma once
 
-#include <QRegion>
+#include "core/region.h"
 
 #include "qwayland-server-wayland.h"
 
@@ -18,7 +18,7 @@ public:
     static RegionInterface *get(wl_resource *native);
     explicit RegionInterface(wl_resource *resource);
 
-    QRegion region() const;
+    Region region() const;
 
 protected:
     void region_destroy_resource(Resource *resource) override;
@@ -27,7 +27,7 @@ protected:
     void region_subtract(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
 
 private:
-    QRegion m_region;
+    Region m_region;
 };
 
 } // namespace KWin

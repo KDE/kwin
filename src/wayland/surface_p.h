@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/graphicsbuffer.h"
+#include "core/region.h"
 #include "surface.h"
 // Qt
 #include <QHash>
@@ -67,10 +68,10 @@ struct SurfaceState
     void mergeInto(SurfaceState *target);
 
     Fields committed;
-    QRegion damage = QRegion();
-    QRegion bufferDamage = QRegion();
-    QRegion opaque = QRegion();
-    QRegion input = infiniteRegion();
+    Region damage = Region();
+    Region bufferDamage = Region();
+    Region opaque = Region();
+    Region input = Region::infinite();
     qint32 bufferScale = 1;
     OutputTransform bufferTransform = OutputTransform::Normal;
     wl_list frameCallbacks;
@@ -153,7 +154,7 @@ public:
      */
     bool contains(const QPointF &position) const;
     bool inputContains(const QPointF &position) const;
-    QRegion mapToBuffer(const QRegion &region) const;
+    Region mapToBuffer(const Region &region) const;
 
     CompositorInterface *compositor;
     SurfaceInterface *q;
@@ -163,10 +164,10 @@ public:
     RectF bufferSourceBox;
     QSizeF surfaceSize = QSizeF(0, 0);
 
-    QRegion inputRegion;
-    QRegion opaqueRegion;
+    Region inputRegion;
+    Region opaqueRegion;
     GraphicsBufferRef bufferRef;
-    QRegion bufferDamage;
+    Region bufferDamage;
     bool mapped = false;
     qreal scaleOverride = 1.;
     qreal pendingScaleOverride = 1.;

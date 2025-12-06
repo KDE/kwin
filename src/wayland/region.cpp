@@ -26,15 +26,15 @@ void RegionInterface::region_destroy(Resource *resource)
 
 void RegionInterface::region_add(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    m_region += QRegion(x, y, width, height);
+    m_region += Region(x, y, width, height);
 }
 
 void RegionInterface::region_subtract(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    m_region -= QRegion(x, y, width, height);
+    m_region -= Region(x, y, width, height);
 }
 
-QRegion RegionInterface::region() const
+Region RegionInterface::region() const
 {
     return m_region;
 }

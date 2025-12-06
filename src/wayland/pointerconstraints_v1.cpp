@@ -16,24 +16,15 @@ namespace KWin
 {
 static const int s_version = 1;
 
-static QRegion mapScaleOverride(const QRegion &region, qreal scaleOverride)
-{
-    QRegion out;
-    for (const QRect &rect : region) {
-        out += QRect(rect.topLeft() / scaleOverride, rect.size() / scaleOverride);
-    }
-    return out;
-}
-
 PointerConstraintsV1InterfacePrivate::PointerConstraintsV1InterfacePrivate(Display *display)
     : QtWaylandServer::zwp_pointer_constraints_v1(*display, s_version)
 {
 }
 
-static QRegion regionFromResource(::wl_resource *resource)
+static Region regionFromResource(::wl_resource *resource)
 {
     const RegionInterface *region = RegionInterface::get(resource);
-    return region ? region->region() : QRegion();
+    return region ? region->region() : Region();
 }
 
 void PointerConstraintsV1InterfacePrivate::zwp_pointer_constraints_v1_lock_pointer(Resource *resource,
@@ -135,7 +126,7 @@ LockedPointerV1InterfacePrivate *LockedPointerV1InterfacePrivate::get(LockedPoin
 LockedPointerV1InterfacePrivate::LockedPointerV1InterfacePrivate(LockedPointerV1Interface *q,
                                                                  SurfaceInterface *surface,
                                                                  LockedPointerV1Interface::LifeTime lifeTime,
-                                                                 const QRegion &region,
+                                                                 const Region &region,
                                                                  ::wl_resource *resource)
     : QtWaylandServer::zwp_locked_pointer_v1(resource)
     , SurfaceExtension(surface)
@@ -151,17 +142,17 @@ LockedPointerV1InterfacePrivate::LockedPointerV1InterfacePrivate(LockedPointerV1
 
 void LockedPointerV1InterfacePrivate::apply(LockedPointerV1Commit *commit)
 {
-    const QRegion oldRegion = effectiveRegion;
+    const Region oldRegion = effectiveRegion;
     const QPointF oldHint = hint;
 
     if (commit->region.has_value()) {
-        region = mapScaleOverride(commit->region.value(), surface->scaleOverride());
+        region = commit->region->scaledAndRoundedOut(1.0 / surface->scaleOverride());
     }
     if (commit->hint.has_value()) {
         hint = commit->hint.value() / surface->scaleOverride();
     }
 
-    effectiveRegion = surface->input();
+    effectiveRegion = Region(surface->input());
     if (!region.isEmpty()) {
         effectiveRegion &= region;
     }
@@ -197,7 +188,7 @@ void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_set_region(Resource 
 
 LockedPointerV1Interface::LockedPointerV1Interface(SurfaceInterface *surface,
                                                    LifeTime lifeTime,
-                                                   const QRegion &region,
+                                                   const Region &region,
                                                    ::wl_resource *resource)
     : d(new LockedPointerV1InterfacePrivate(this, surface, lifeTime, region, resource))
 {
@@ -215,7 +206,7 @@ LockedPointerV1Interface::LifeTime LockedPointerV1Interface::lifeTime() const
 
 QRegion LockedPointerV1Interface::region() const
 {
-    return d->effectiveRegion;
+    return QRegion(d->effectiveRegion);
 }
 
 QPointF LockedPointerV1Interface::cursorPositionHint() const
@@ -253,7 +244,7 @@ ConfinedPointerV1InterfacePrivate *ConfinedPointerV1InterfacePrivate::get(Confin
 ConfinedPointerV1InterfacePrivate::ConfinedPointerV1InterfacePrivate(ConfinedPointerV1Interface *q,
                                                                      SurfaceInterface *surface,
                                                                      ConfinedPointerV1Interface::LifeTime lifeTime,
-                                                                     const QRegion &region,
+                                                                     const Region &region,
                                                                      ::wl_resource *resource)
     : QtWaylandServer::zwp_confined_pointer_v1(resource)
     , SurfaceExtension(surface)
@@ -269,13 +260,13 @@ ConfinedPointerV1InterfacePrivate::ConfinedPointerV1InterfacePrivate(ConfinedPoi
 
 void ConfinedPointerV1InterfacePrivate::apply(ConfinedPointerV1Commit *commit)
 {
-    const QRegion oldRegion = effectiveRegion;
+    const Region oldRegion = effectiveRegion;
 
     if (commit->region.has_value()) {
-        region = mapScaleOverride(commit->region.value(), surface->scaleOverride());
+        region = commit->region->scaledAndRoundedOut(1.0 / surface->scaleOverride());
     }
 
-    effectiveRegion = surface->input();
+    effectiveRegion = Region(surface->input());
     if (!region.isEmpty()) {
         effectiveRegion &= region;
     }
@@ -302,7 +293,7 @@ void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_set_region(Resou
 
 ConfinedPointerV1Interface::ConfinedPointerV1Interface(SurfaceInterface *surface,
                                                        LifeTime lifeTime,
-                                                       const QRegion &region,
+                                                       const Region &region,
                                                        ::wl_resource *resource)
     : d(new ConfinedPointerV1InterfacePrivate(this, surface, lifeTime, region, resource))
 {
@@ -320,7 +311,7 @@ ConfinedPointerV1Interface::LifeTime ConfinedPointerV1Interface::lifeTime() cons
 
 QRegion ConfinedPointerV1Interface::region() const
 {
-    return d->effectiveRegion;
+    return QRegion(d->effectiveRegion);
 }
 
 bool ConfinedPointerV1Interface::isConfined() const
