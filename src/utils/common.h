@@ -13,6 +13,7 @@
 // cmake stuff
 #include "config-kwin.h"
 // kwin
+#include "core/rect.h"
 #include "effect/globals.h"
 #include "utils/version.h"
 // Qt
@@ -42,10 +43,10 @@ enum StrutArea {
 };
 Q_DECLARE_FLAGS(StrutAreas, StrutArea)
 
-class KWIN_EXPORT StrutRect : public QRect
+class KWIN_EXPORT StrutRect : public Rect
 {
 public:
-    explicit StrutRect(QRect rect = QRect(), StrutArea area = StrutAreaInvalid);
+    explicit StrutRect(Rect rect = Rect(), StrutArea area = StrutAreaInvalid);
     StrutRect(int x, int y, int width, int height, StrutArea area = StrutAreaInvalid);
     StrutRect(const StrutRect &other);
     StrutRect &operator=(const StrutRect &other);

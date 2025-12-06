@@ -3982,8 +3982,8 @@ void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *old
     // If the window was touching an edge before but not now move it so it is again.
     // Old and new maximums have different starting values so windows on the screen
     // edge will move when a new strut is placed on the edge.
-    QRect oldScreenArea;
-    QRect screenArea;
+    Rect oldScreenArea;
+    Rect screenArea;
     if (workspace()->inRearrange()) {
         // check if the window is on an about to be destroyed output
         LogicalOutput *newOutput = moveResizeOutput();
@@ -4009,18 +4009,18 @@ void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *old
         return;
     }
 
-    const QRect oldGeomTall = QRect(oldGeometry.x(), oldScreenArea.y(), oldGeometry.width(), oldScreenArea.height()); // Full screen height
-    const QRect oldGeomWide = QRect(oldScreenArea.x(), oldGeometry.y(), oldScreenArea.width(), oldGeometry.height()); // Full screen width
-    int oldTopMax = oldScreenArea.y();
-    int oldRightMax = oldScreenArea.x() + oldScreenArea.width();
-    int oldBottomMax = oldScreenArea.y() + oldScreenArea.height();
-    int oldLeftMax = oldScreenArea.x();
-    int topMax = screenArea.y();
-    int rightMax = screenArea.x() + screenArea.width();
-    int bottomMax = screenArea.y() + screenArea.height();
-    int leftMax = screenArea.x();
-    const QRect newGeomTall = QRect(newGeom.x(), screenArea.y(), newGeom.width(), screenArea.height()); // Full screen height
-    const QRect newGeomWide = QRect(screenArea.x(), newGeom.y(), screenArea.width(), newGeom.height()); // Full screen width
+    const Rect oldGeomTall = Rect(QPoint(oldGeometry.left(), oldScreenArea.top()), QPoint(oldGeometry.right(), oldScreenArea.bottom())); // Full screen height
+    const Rect oldGeomWide = Rect(QPoint(oldScreenArea.left(), oldGeometry.top()), QPoint(oldScreenArea.right(), oldGeometry.bottom())); // Full screen width
+    int oldTopMax = oldScreenArea.top();
+    int oldRightMax = oldScreenArea.right();
+    int oldBottomMax = oldScreenArea.bottom();
+    int oldLeftMax = oldScreenArea.left();
+    int topMax = screenArea.top();
+    int rightMax = screenArea.right();
+    int bottomMax = screenArea.bottom();
+    int leftMax = screenArea.left();
+    const Rect newGeomTall(QPoint(newGeom.left(), screenArea.top()), QPoint(newGeom.right(), screenArea.bottom())); // Full screen height
+    const Rect newGeomWide(QPoint(screenArea.left(), newGeom.top()), QPoint(screenArea.right(), newGeom.bottom())); // Full screen width
     // Get the max strut point for each side where the window is (E.g. Highest point for
     // the bottom struts bounded by the window's left and right sides).
 
@@ -4029,61 +4029,61 @@ void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *old
         &Workspace::restrictedMoveArea; //... when e.g. active desktop or screen changes
 
     const auto oldStrutsTop = (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaTop);
-    for (const QRect &r : oldStrutsTop) {
-        QRect rect = r & oldGeomTall;
+    for (const Rect &r : oldStrutsTop) {
+        Rect rect = r & oldGeomTall;
         if (!rect.isEmpty()) {
-            oldTopMax = std::max(oldTopMax, rect.y() + rect.height());
+            oldTopMax = std::max(oldTopMax, rect.bottom());
         }
     }
     const auto oldStrutsRight = (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaRight);
-    for (const QRect &r : oldStrutsRight) {
-        QRect rect = r & oldGeomWide;
+    for (const Rect &r : oldStrutsRight) {
+        Rect rect = r & oldGeomWide;
         if (!rect.isEmpty()) {
-            oldRightMax = std::min(oldRightMax, rect.x());
+            oldRightMax = std::min(oldRightMax, rect.left());
         }
     }
     const auto oldStrutsBottom = (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaBottom);
-    for (const QRect &r : oldStrutsBottom) {
-        QRect rect = r & oldGeomTall;
+    for (const Rect &r : oldStrutsBottom) {
+        Rect rect = r & oldGeomTall;
         if (!rect.isEmpty()) {
-            oldBottomMax = std::min(oldBottomMax, rect.y());
+            oldBottomMax = std::min(oldBottomMax, rect.top());
         }
     }
     const auto oldStrutsLeft = (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaLeft);
-    for (const QRect &r : oldStrutsLeft) {
-        QRect rect = r & oldGeomWide;
+    for (const Rect &r : oldStrutsLeft) {
+        Rect rect = r & oldGeomWide;
         if (!rect.isEmpty()) {
-            oldLeftMax = std::max(oldLeftMax, rect.x() + rect.width());
+            oldLeftMax = std::max(oldLeftMax, rect.right());
         }
     }
 
     // These 4 compute new bounds
     const auto newStrutsTop = workspace()->restrictedMoveArea(desktop, StrutAreaTop);
-    for (const QRect &r : newStrutsTop) {
-        QRect rect = r & newGeomTall;
+    for (const Rect &r : newStrutsTop) {
+        Rect rect = r & newGeomTall;
         if (!rect.isEmpty()) {
-            topMax = std::max(topMax, rect.y() + rect.height());
+            topMax = std::max(topMax, rect.bottom());
         }
     }
     const auto newStrutsRight = workspace()->restrictedMoveArea(desktop, StrutAreaRight);
-    for (const QRect &r : newStrutsRight) {
-        QRect rect = r & newGeomWide;
+    for (const Rect &r : newStrutsRight) {
+        Rect rect = r & newGeomWide;
         if (!rect.isEmpty()) {
-            rightMax = std::min(rightMax, rect.x());
+            rightMax = std::min(rightMax, rect.left());
         }
     }
     const auto newStrutsBottom = workspace()->restrictedMoveArea(desktop, StrutAreaBottom);
-    for (const QRect &r : newStrutsBottom) {
-        QRect rect = r & newGeomTall;
+    for (const Rect &r : newStrutsBottom) {
+        Rect rect = r & newGeomTall;
         if (!rect.isEmpty()) {
-            bottomMax = std::min(bottomMax, rect.y());
+            bottomMax = std::min(bottomMax, rect.top());
         }
     }
     const auto newStrutsLeft = workspace()->restrictedMoveArea(desktop, StrutAreaLeft);
-    for (const QRect &r : newStrutsLeft) {
-        QRect rect = r & newGeomWide;
+    for (const Rect &r : newStrutsLeft) {
+        Rect rect = r & newGeomWide;
         if (!rect.isEmpty()) {
-            leftMax = std::max(leftMax, rect.x() + rect.width());
+            leftMax = std::max(leftMax, rect.right());
         }
     }
 
@@ -4139,17 +4139,17 @@ void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *old
         newGeom.moveTop(std::max(topMax, screenArea.y()));
     }
     if (save[Right] || keep[Right]) {
-        newGeom.moveRight(std::min(rightMax, screenArea.right()) + 1);
+        newGeom.moveRight(std::min(rightMax, screenArea.right()));
     }
     if (save[Bottom] || keep[Bottom]) {
-        newGeom.moveBottom(std::min(bottomMax, screenArea.bottom()) + 1);
+        newGeom.moveBottom(std::min(bottomMax, screenArea.bottom()));
     }
 
     if (oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax) {
-        newGeom.setLeft(std::max(leftMax, screenArea.x()));
+        newGeom.setLeft(std::max(leftMax, screenArea.left()));
     }
     if (oldGeometry.y() >= oldTopMax && newGeom.y() < topMax) {
-        newGeom.setTop(std::max(topMax, screenArea.y()));
+        newGeom.setTop(std::max(topMax, screenArea.top()));
     }
 
     checkOffscreenPosition(&newGeom, screenArea);

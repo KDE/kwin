@@ -2172,17 +2172,17 @@ void Workspace::saveOldScreenSizes()
 
 QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
 {
-    QRectF adjustedArea = area;
+    RectF adjustedArea = area;
 
-    QRectF strutLeft = window->strutRect(StrutAreaLeft);
-    QRectF strutRight = window->strutRect(StrutAreaRight);
-    QRectF strutTop = window->strutRect(StrutAreaTop);
-    QRectF strutBottom = window->strutRect(StrutAreaBottom);
+    RectF strutLeft = window->strutRect(StrutAreaLeft);
+    RectF strutRight = window->strutRect(StrutAreaRight);
+    RectF strutTop = window->strutRect(StrutAreaTop);
+    RectF strutBottom = window->strutRect(StrutAreaBottom);
 
     // Handle struts at xinerama edges that are inside the virtual screen.
     // They're given in virtual screen coordinates, make them affect only
     // their xinerama screen.
-    QRectF screenArea = clientArea(ScreenArea, window);
+    RectF screenArea = clientArea(ScreenArea, window);
     strutLeft.setLeft(std::max(strutLeft.left(), screenArea.left()));
     strutRight.setRight(std::min(strutRight.right(), screenArea.right()));
     strutTop.setTop(std::max(strutTop.top(), screenArea.top()));
