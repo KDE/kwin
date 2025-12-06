@@ -31,6 +31,7 @@ public:
     constexpr Rect(const QPoint &topLeft, const QPoint &bottomRight) noexcept;
     constexpr Rect(const QPoint &topLeft, const QSize &size) noexcept;
     constexpr Rect(const QRect &rect) noexcept;
+    constexpr explicit Rect(Qt::Initialization) noexcept;
 
     constexpr inline bool isEmpty() const noexcept;
     constexpr inline bool isNull() const noexcept;
@@ -140,6 +141,7 @@ public:
     constexpr RectF(const Rect &rect) noexcept;
     constexpr RectF(const QRect &rect) noexcept;
     constexpr RectF(const QRectF &rect) noexcept;
+    constexpr explicit RectF(Qt::Initialization) noexcept;
 
     constexpr inline bool isEmpty() const noexcept;
     constexpr inline bool isNull() const noexcept;
@@ -275,6 +277,10 @@ constexpr inline Rect::Rect(const QRect &rect) noexcept
     , m_top(rect.y())
     , m_right(rect.right() + 1)
     , m_bottom(rect.bottom() + 1)
+{
+}
+
+constexpr inline Rect::Rect(Qt::Initialization) noexcept
 {
 }
 
@@ -758,6 +764,10 @@ constexpr inline RectF::RectF(const QRectF &rect) noexcept
     , m_top(rect.top())
     , m_right(rect.right())
     , m_bottom(rect.bottom())
+{
+}
+
+constexpr inline RectF::RectF(Qt::Initialization) noexcept
 {
 }
 
