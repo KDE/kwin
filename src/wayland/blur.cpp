@@ -86,8 +86,8 @@ class BlurInterfacePrivate : public QtWaylandServer::org_kde_kwin_blur
 {
 public:
     BlurInterfacePrivate(BlurInterface *q, wl_resource *resource);
-    QRegion pendingRegion;
-    QRegion currentRegion;
+    Region pendingRegion;
+    Region currentRegion;
 
     BlurInterface *q;
 
@@ -109,7 +109,7 @@ void BlurInterfacePrivate::org_kde_kwin_blur_set_region(Resource *resource, wl_r
     if (r) {
         pendingRegion = r->region();
     } else {
-        pendingRegion = QRegion();
+        pendingRegion = Region();
     }
 }
 
@@ -139,7 +139,7 @@ BlurInterface::~BlurInterface() = default;
 
 QRegion BlurInterface::region()
 {
-    return d->currentRegion;
+    return QRegion(d->currentRegion);
 }
 
 }

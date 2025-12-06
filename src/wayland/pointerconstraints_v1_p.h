@@ -40,7 +40,7 @@ protected:
 class LockedPointerV1Commit : public SurfaceAttachedState<LockedPointerV1Commit>
 {
 public:
-    std::optional<QRegion> region;
+    std::optional<Region> region;
     std::optional<QPointF> hint;
 };
 
@@ -49,14 +49,14 @@ class LockedPointerV1InterfacePrivate final : public QtWaylandServer::zwp_locked
 public:
     static LockedPointerV1InterfacePrivate *get(LockedPointerV1Interface *pointer);
 
-    LockedPointerV1InterfacePrivate(LockedPointerV1Interface *q, SurfaceInterface *surface, LockedPointerV1Interface::LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
+    LockedPointerV1InterfacePrivate(LockedPointerV1Interface *q, SurfaceInterface *surface, LockedPointerV1Interface::LifeTime lifeTime, const Region &region, ::wl_resource *resource);
 
     void apply(LockedPointerV1Commit *commit);
 
     LockedPointerV1Interface *q;
     LockedPointerV1Interface::LifeTime lifeTime;
-    QRegion effectiveRegion;
-    QRegion region;
+    Region effectiveRegion;
+    Region region;
     QPointF hint = QPointF(-1, -1);
     bool isLocked = false;
 
@@ -70,7 +70,7 @@ protected:
 class ConfinedPointerV1Commit : public SurfaceAttachedState<ConfinedPointerV1Commit>
 {
 public:
-    std::optional<QRegion> region;
+    std::optional<Region> region;
 };
 
 class ConfinedPointerV1InterfacePrivate final : public QtWaylandServer::zwp_confined_pointer_v1, public SurfaceExtension<ConfinedPointerV1InterfacePrivate, ConfinedPointerV1Commit>
@@ -81,15 +81,15 @@ public:
     ConfinedPointerV1InterfacePrivate(ConfinedPointerV1Interface *q,
                                       SurfaceInterface *surface,
                                       ConfinedPointerV1Interface::LifeTime lifeTime,
-                                      const QRegion &region,
+                                      const Region &region,
                                       ::wl_resource *resource);
 
     void apply(ConfinedPointerV1Commit *commit);
 
     ConfinedPointerV1Interface *q;
     ConfinedPointerV1Interface::LifeTime lifeTime;
-    QRegion effectiveRegion;
-    QRegion region;
+    Region effectiveRegion;
+    Region region;
     bool isConfined = false;
 
 protected:
