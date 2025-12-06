@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-05 00:44+0000\n"
+"POT-Creation-Date: 2025-12-06 00:44+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1611,7 +1611,7 @@ msgstr "噪点强度："
 #: plugins/blur/blur_config.ui:128
 #, kde-format
 msgid "Saturation:"
-msgstr ""
+msgstr "饱和度："
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -3465,19 +3465,19 @@ msgstr "对话框"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:422
+#: sm.cpp:421
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "取消注销"
 
-#: sm.cpp:423
+#: sm.cpp:422
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "仍要注销"
 
-#: sm.cpp:469
+#: sm.cpp:468
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -3613,7 +3613,7 @@ msgstr "无标题栏和边框(&N)"
 #: useractions.cpp:251
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "在录屏中隐藏(&H)"
 
 #: useractions.cpp:259
 #, kde-format
@@ -4153,9 +4153,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "The provided output order doesn't contain all outputs"
-#~ msgstr "提供的输出顺序不包含所有输出"
-
-#~ msgid "The provided output order is invalid"
-#~ msgstr "提供的输出顺序无效"

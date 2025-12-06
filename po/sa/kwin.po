@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-05 00:44+0000\n"
+"POT-Creation-Date: 2025-12-06 00:44+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -3499,19 +3499,19 @@ msgstr "संवादः"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:422
+#: sm.cpp:421
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "लॉगआउट् रद्दं कुर्वन्तु"
 
-#: sm.cpp:423
+#: sm.cpp:422
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "तथापि निर्गच्छन्तु"
 
-#: sm.cpp:469
+#: sm.cpp:468
 #, kde-format
 msgid ""
 "The following applications did not close:\n"

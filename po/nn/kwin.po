@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-05 00:44+0000\n"
+"POT-Creation-Date: 2025-12-06 00:44+0000\n"
 "PO-Revision-Date: 2024-09-22 16:22+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -3512,19 +3512,19 @@ msgstr "Dialogvindauge"
 msgid "..."
 msgstr "…"
 
-#: sm.cpp:422
+#: sm.cpp:421
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Avbryt utlogging"
 
-#: sm.cpp:423
+#: sm.cpp:422
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Logg ut likevel"
 
-#: sm.cpp:469
+#: sm.cpp:468
 #, fuzzy, kde-format
 msgid ""
 "The following applications did not close:\n"

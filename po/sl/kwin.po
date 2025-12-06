@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1724387 2025-12-05 01:24:54Z scripty $
+# $Id: kwin.po 1724431 2025-12-06 01:25:19Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-05 00:44+0000\n"
+"POT-Creation-Date: 2025-12-06 00:44+0000\n"
 "PO-Revision-Date: 2025-12-02 06:21+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -3516,19 +3516,19 @@ msgstr "Dialog"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:422
+#: sm.cpp:421
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Prekliči odjavo"
 
-#: sm.cpp:423
+#: sm.cpp:422
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Kljub temu se odjavi"
 
-#: sm.cpp:469
+#: sm.cpp:468
 #, kde-format
 msgid ""
 "The following applications did not close:\n"

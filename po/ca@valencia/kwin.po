@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-05 00:44+0000\n"
+"POT-Creation-Date: 2025-12-06 00:44+0000\n"
 "PO-Revision-Date: 2025-12-02 10:02+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -3521,19 +3521,19 @@ msgstr "Diàleg"
 msgid "..."
 msgstr "…"
 
-#: sm.cpp:422
+#: sm.cpp:421
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Cancel·la l'eixida"
 
-#: sm.cpp:423
+#: sm.cpp:422
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
 msgstr "Ix igualment"
 
-#: sm.cpp:469
+#: sm.cpp:468
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
