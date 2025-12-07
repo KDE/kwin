@@ -1604,7 +1604,7 @@ public:
             // if a non-active window is closed through the decoration, it should be allowed to activate itself
             // TODO use the event serial instead, once that's plumbed through
             const uint32_t serial = waylandServer()->display()->nextSerial();
-            const QString token = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, serial, waylandServer()->seat(), "test");
+            const QString token = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, serial, waylandServer()->seat(), decoration->window()->desktopFileName());
             workspace()->setActivationToken(token, serial, decoration->window()->desktopFileName());
         }
         if (!e.isAccepted() && event->state == PointerButtonState::Pressed) {
