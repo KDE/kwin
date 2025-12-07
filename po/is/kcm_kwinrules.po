@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2025-10-23 09:13+0000\n"
+"PO-Revision-Date: 2025-12-06 13:53+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
 "Language: is\n"
@@ -190,7 +190,7 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
-"Ef mjög lág gagnsæisgildi eru valin getur læsileiki gluggans versnað. Þegar "
+"Ef mjög lág gegnsæisgildi eru valin getur læsileiki gluggans versnað. Þegar "
 "Glugginn verður ósýnilegur við 0%."
 
 #: rulesmodel.cpp:387
@@ -445,12 +445,12 @@ msgstr "Litastef titilstiku"
 #: rulesmodel.cpp:617
 #, kde-format
 msgid "Active opacity"
-msgstr "Virkt ógagnsæi"
+msgstr "Virkt ógegnsæi"
 
 #: rulesmodel.cpp:622
 #, kde-format
 msgid "Inactive opacity"
-msgstr "Óvirkt ógagnsæi"
+msgstr "Óvirkt ógegnsæi"
 
 #: rulesmodel.cpp:628
 #, kde-format
