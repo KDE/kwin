@@ -2,16 +2,16 @@
 # Copyright (C) 2009 This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Sveinn í Felli <sveinki@nett.is>, 2009, 2010.
+# SPDX-FileCopyrightText: 2009, 2010, 2025 Sveinn í Felli <sveinki@nett.is>
 # SPDX-FileCopyrightText: 2022, 2023, 2024 Guðmundur Erlingsson <gudmundure@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 14:41+0000\n"
-"PO-Revision-Date: 2024-09-26 13:57+0000\n"
-"Last-Translator: Gummi <gudmundure@gmail.com>\n"
-"Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2025-12-06 13:50+0000\n"
+"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
+"Language-Team: Icelandic\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,47 +24,46 @@ msgstr ""
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
+msgstr "Keyra gagnvirka forskoðun fyrir gluggaskipti"
 
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "Slóð á QML-aðalskrá gluggaskiptis"
 
 #: layoutpreview.cpp:30
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "Sýna líka smámynd fyrir skjáborðið"
 
 #: layoutpreview.cpp:159
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
-msgstr ""
+msgstr "Dolphin"
 
 #: layoutpreview.cpp:163
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
-msgstr ""
+msgstr "Konqueror"
 
 #: layoutpreview.cpp:167
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
-msgstr ""
+msgstr "KMail"
 
 #: layoutpreview.cpp:171
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
-msgstr ""
+msgstr "Kerfisstillingar"
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Núverandi skjáborð"
+msgstr "Kíkja á skjáborðið"
 
 #: layoutpreview.cpp:207
 #, kde-format
@@ -85,14 +84,14 @@ msgstr "Vara"
 #: main.cpp:77
 #, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "Sækja ný stílsnið fyrir verkefnaskipti…"
+msgstr "Sækja ný stílsnið fyrir gluggaskipti…"
 
 #: main.cpp:95
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
 msgstr ""
-"Stillingar á fókusreglum takmarka möguleika þegar farið er á milli glugga."
+"Stillingar á fókusreglum takmarka möguleika þegar flakkað er á milli glugga."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: main.ui:32
@@ -102,10 +101,9 @@ msgstr "Innihald"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" entry"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "Hafa með færsluna \"Sýna skjáborð\""
+msgstr "Hafa með færsluna \"Kíkja á skjáborðið\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
@@ -117,13 +115,13 @@ msgstr "Nýlega notað"
 #: main.ui:60
 #, kde-format
 msgid "Stacking order"
-msgstr "Stöflunarröð:"
+msgstr "Stöflunarröð"
 
 #. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
 #: main.ui:68
 #, kde-format
 msgid "Only one window per application"
-msgstr "Bara einn gluggi fyrir hvert forrit"
+msgstr "Bara einn glugga fyrir hvert forrit"
 
 #. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
 #: main.ui:78
@@ -141,13 +139,13 @@ msgstr "Röðun:"
 #: main.ui:114
 #, kde-format
 msgid "Filter windows by"
-msgstr "Sía glugga eftir:"
+msgstr "Sía glugga eftir"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
 #: main.ui:123
 #, kde-format
 msgid "Virtual desktops"
-msgstr "Sýndarskjáborð"
+msgstr "Sýndarskjáborðum"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
 #: main.ui:167
@@ -165,7 +163,7 @@ msgstr "Öll önnur skjáborð"
 #: main.ui:184
 #, kde-format
 msgid "Activities"
-msgstr "Athafnir"
+msgstr "Athöfnum"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
 #: main.ui:228
@@ -183,7 +181,7 @@ msgstr "Allar aðrar athafnir"
 #: main.ui:245
 #, kde-format
 msgid "Screens"
-msgstr "Skjáir"
+msgstr "Skjám"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
 #: main.ui:289
@@ -201,7 +199,7 @@ msgstr "Allir aðrir skjáir"
 #: main.ui:306
 #, kde-format
 msgid "Minimization"
-msgstr "Gluggi falinn"
+msgstr "Sýnileika glugga"
 
 #. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
 #: main.ui:350
@@ -239,7 +237,7 @@ msgstr "Allir gluggar"
 #: main.ui:438 main.ui:458
 #, kde-format
 msgid "Reverse"
-msgstr "Snúa við"
+msgstr "Umsnúa"
 
 #. i18n: ectx: property (text), widget (QLabel, scCurrentReverseOr)
 #. i18n: ectx: property (text), widget (QLabel, scCurrentOr)
@@ -248,7 +246,7 @@ msgstr "Snúa við"
 #: main.ui:474 main.ui:506 main.ui:554 main.ui:586
 #, kde-format
 msgid "or"
-msgstr ""
+msgstr "eða"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:538
@@ -288,42 +286,42 @@ msgstr "Sýna valinn glugga"
 #: shortcutsettings.cpp:131
 #, kde-format
 msgid "Walk Through Windows"
-msgstr "Flakka milli glugga"
+msgstr "Fletta milli glugga"
 
 #: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr "Flakka milli glugga (afturábak)"
+msgstr "Fletta milli glugga (afturábak)"
 
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr "Flakka milli glugga núverandi forrits"
+msgstr "Fletta milli glugga núverandi forrits"
 
 #: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "Flakka milli glugga núverandi forrits (afturábak)"
+msgstr "Fletta milli glugga núverandi forrits (afturábak)"
 
 #: shortcutsettings.cpp:136
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr "Flakka milli glugga (varaleið)"
+msgstr "Fletta milli glugga (varaleið)"
 
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "Flakka milli glugga (varaleið afturábak)"
+msgstr "Fletta milli glugga (varaleið afturábak)"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "Flakka milli glugga núverandi forrits (varaleið)"
+msgstr "Fletta milli glugga núverandi forrits (varaleið)"
 
 #: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "Flakka milli glugga núverandi forrits (varaleið afturábak)"
+msgstr "Fletta milli glugga núverandi forrits (varaleið afturábak)"
 
 #~ msgid "Show Desktop"
 #~ msgstr "Sýna skjáborðið"
