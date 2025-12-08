@@ -518,6 +518,23 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         return;
     }
 
+    for (Output *output : allOutputs) {
+        const auto changeset = config.constChangeSet(output);
+        if (!changeset) {
+            continue;
+        }
+        if (changeset->pos.has_value()) {
+            if (changeset->pos->x() < 0 || changeset->pos->y() < 0) {
+                sendFailure(resource, i18n("Position of output %s is negative, that is not supported", output->name()));
+                return;
+            }
+            if (changeset->pos->x() > 1000000 || changeset->pos->y() > 1000000) {
+                sendFailure(resource, i18n("Position of output %s is way too large (%d, %d)", output->name(), changeset->pos->x(), changeset->pos->y()));
+                return;
+            }
+        }
+    }
+
     std::optional<QList<Output *>> sortedOrder;
     if (!outputOrder.empty()) {
         const int desktopOutputs = std::count_if(allOutputs.begin(), allOutputs.end(), [](Output *output) {
