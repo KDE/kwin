@@ -625,6 +625,16 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
                 }
             }
         }
+        if (changeset->pos.has_value()) {
+            if (changeset->pos->x() < 0 || changeset->pos->y() < 0) {
+                sendFailure(resource, i18n("Position of output %s is negative, that is not supported", output->name()));
+                return;
+            }
+            if (changeset->pos->x() > 1000000 || changeset->pos->y() > 1000000) {
+                sendFailure(resource, i18n("Position of output %s is way too large (%d, %d)", output->name(), changeset->pos->x(), changeset->pos->y()));
+                return;
+            }
+        }
     }
 
     switch (workspace()->applyOutputConfiguration(config)) {
