@@ -740,8 +740,18 @@ double OutputConfigurationStore::chooseScale(BackendOutput *output, OutputMode *
             minSize = 360;
         }
     } else {
-        // "normal" 1x scale desktop monitor dpi
-        targetDpi = 96;
+        // NOTE that height is checked instead of diagonal size to avoid
+        // applying the TV heuristic to ultrawide monitors
+        if (output->physicalSize().height() > 500) {
+            // This is a pretty big screen, most likely a TV.
+            // As you generally sit much further away from TVs than desktop monitors,
+            // user elements on it should also be much larger as well.
+            // The specific value results in a scale of 200% for 77" 4k TVs.
+            targetDpi = 30.5;
+        } else {
+            // "normal" 1x scale desktop monitor dpi
+            targetDpi = 96;
+        }
         minSize = 800;
     }
 

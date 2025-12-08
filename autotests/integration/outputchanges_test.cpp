@@ -1473,6 +1473,16 @@ void OutputChangesTest::testGenerateConfigs_data()
                .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
            }
         << ModeInfo(QSize(2560, 1440), 164831, OutputMode::Flag::Preferred) << 1.0 << false;
+
+    QTest::addRow("LG C4 77\"")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(),
+               .internal = false,
+               .physicalSizeInMM = QSize(1600, 900),
+               .modes = {ModeInfo(QSize(3840, 2160), 120000, OutputMode::Flag::Preferred)},
+           }
+        << ModeInfo(QSize(3840, 2160), 120000, OutputMode::Flag::Preferred) << 2.0 << true;
 }
 
 void OutputChangesTest::testGenerateConfigs()
