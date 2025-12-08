@@ -70,79 +70,67 @@ KCM.ScrollViewKCM {
             // left and right side content elements
             Kirigami.Theme.useAlternateBackgroundColor: true
 
-            contentItem: RowLayout {
-                QQC2.TextField {
-                    id: nameField
-
-                    background: null
-                    leftPadding: Kirigami.Units.largeSpacing
-                    topPadding: 0
-                    bottomPadding: 0
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-
-                    text: model ? model.display : ""
-                    verticalAlignment: Text.AlignVCenter
-
-                    readOnly: true
-
-                    onTextEdited: {
-                        Qt.callLater(kcm.desktopsModel.setDesktopName, model.Id, text);
-                    }
-
-                    onEditingFinished: {
-                        readOnly = true;
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: nameField.readOnly
-
-                        onDoubleClicked: {
-                            renameAction.clicked();
+            contentItem: StackLayout {
+                Kirigami.TitleSubtitleWithActions {
+                    title: renameLayout.visible ? "" : model ? model.display : ""
+                    elide: Text.ElideRight
+                    displayHint: QQC2.Button.IconOnly
+                    actions: [
+                        Kirigami.Action {
+                            icon.name: "edit-entry-symbolic"
+                            enabled: !renameLayout.visible
+                            text: i18nc("@action:button", "Rename")
+                            onTriggered: {
+                                renameLayout.visible = true;
+                                renameField.forceActiveFocus();
+                            }
+                            tooltip: text
+                        },
+                        Kirigami.Action {
+                            enabled: model && !model.IsMissing && desktopsList.count !== 1 && !renameLayout.visible
+                            icon.name: "edit-delete-remove-symbolic"
+                            text: i18nc("@info:tooltip", "Remove")
+                            onTriggered: {
+                                kcm.desktopsModel.removeDesktop(model.Id);
+                            }
                         }
+                    ]
+                }
+                RowLayout {
+                    id: renameLayout
+                    QQC2.TextField {
+                        id: renameField
                     }
-                }
-
-                Rectangle {
-                    id: defaultIndicator
-                    radius: width * 0.5
-                    implicitWidth: Kirigami.Units.largeSpacing
-                    implicitHeight: Kirigami.Units.largeSpacing
-                    visible: kcm.defaultsIndicatorsVisible
-                    opacity: model ? !model.IsDefault : 0.0
-                    color: Kirigami.Theme.neutralTextColor
-                }
-
-                DelegateButton {
-                    id: renameAction
-                    enabled: model && !model.IsMissing
-                    visible: !applyAction.visible
-                    icon.name: "edit-rename"
-                    text: i18nc("@info:tooltip", "Rename")
-                    onClicked: {
-                        nameField.readOnly = false;
-                        nameField.selectAll();
-                        nameField.forceActiveFocus();
+                    QQC2.Button {
+                        id: acceptEditButton
+                        icon.name: "dialog-ok-apply"
+                        text: i18nc("@info:tooltip", "Apply new name")
+                        onClicked: {
+                            Qt.callLater(kcm.desktopsModel.setDesktopName, model.Id, renameField.text);
+                            renameLayout.visible = false;
+                        }
+                        QQC2.ToolTip.text: text
+                        QQC2.ToolTip.visible: hovered
+                        QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+                        display: QQC2.Button.IconOnly
                     }
-                }
-
-                DelegateButton {
-                    id: applyAction
-                    visible: !nameField.readOnly
-                    icon.name: "dialog-ok-apply"
-                    text: i18nc("@info:tooltip", "Confirm new name")
-                    onClicked: {
-                        nameField.readOnly = true;
+                    QQC2.Button {
+                        id: discardEditButton
+                        icon.name: "dialog-cancel-symbolic"
+                        text: i18nc("@info:tooltip", "Cancel rename")
+                        onClicked: {
+                            renameLayout.visible = false;
+                        }
+                        QQC2.ToolTip.text: text
+                        QQC2.ToolTip.visible: hovered
+                        QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+                        display: QQC2.Button.IconOnly
                     }
-                }
 
-                DelegateButton {
-                    enabled: model && !model.IsMissing && desktopsList.count !== 1
-                    icon.name: "edit-delete-remove-symbolic"
-                    text: i18nc("@info:tooltip", "Remove")
-                    onClicked: kcm.desktopsModel.removeDesktop(model.Id)
+                    onVisibleChanged: {
+                        renameField.text = model ? model.display : "";
+                        renameField.selectAll();
+                    }
                 }
             }
         }
