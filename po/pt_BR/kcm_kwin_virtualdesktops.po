@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_virtualdesktops\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-12-09 00:44+0000\n"
 "PO-Revision-Date: 2025-02-16 00:51-0300\n"
 "Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -68,25 +68,35 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Adicionar área de trabalho"
 
-#: ui/main.qml:123
-#, kde-format
-msgctxt "@info:tooltip"
+#: ui/main.qml:82
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Rename"
+msgctxt "@action:button"
 msgid "Rename"
 msgstr "Renomear"
 
-#: ui/main.qml:135
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Confirm new name"
-msgstr "Confirmar nome novo"
-
-#: ui/main.qml:144
+#: ui/main.qml:92
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Remover"
 
-#: ui/main.qml:177
+#: ui/main.qml:107
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Confirm new name"
+msgctxt "@info:tooltip"
+msgid "Apply new name"
+msgstr "Confirmar nome novo"
+
+#: ui/main.qml:120
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Cancel rename"
+msgstr ""
+
+#: ui/main.qml:165
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -95,37 +105,37 @@ msgstr ""
 "As áreas de trabalho virtuais foram modificados fora desta aplicação de "
 "configurações. Se salvar agora as alterações serão substituídas."
 
-#: ui/main.qml:193
+#: ui/main.qml:181
 #, kde-format
 msgid "Row %1"
 msgstr "Linha %1"
 
-#: ui/main.qml:207
+#: ui/main.qml:195
 #, kde-format
 msgid "Options:"
 msgstr "Opções:"
 
-#: ui/main.qml:209
+#: ui/main.qml:197
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Navegação circular"
 
-#: ui/main.qml:227
+#: ui/main.qml:215
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Mostrar animação ao alternar:"
 
-#: ui/main.qml:278
+#: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Mostrar painel visual na tela ao alternar:"
 
-#: ui/main.qml:297
+#: ui/main.qml:285
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:321
+#: ui/main.qml:309
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostrar os indicadores de layout da área de trabalho"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-12-09 00:44+0000\n"
 "PO-Revision-Date: 2024-04-29 17:41+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -67,62 +67,72 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "新增桌面"
 
-#: ui/main.qml:123
-#, kde-format
-msgctxt "@info:tooltip"
+#: ui/main.qml:82
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Rename"
+msgctxt "@action:button"
 msgid "Rename"
 msgstr "重新命名"
 
-#: ui/main.qml:135
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Confirm new name"
-msgstr "確認新名稱"
-
-#: ui/main.qml:144
+#: ui/main.qml:92
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "移除"
 
-#: ui/main.qml:177
+#: ui/main.qml:107
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Confirm new name"
+msgctxt "@info:tooltip"
+msgid "Apply new name"
+msgstr "確認新名稱"
+
+#: ui/main.qml:120
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Cancel rename"
+msgstr ""
+
+#: ui/main.qml:165
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr "虛擬桌面已在設定程式之外的地方變更過。現在儲存會覆寫那些變更。"
 
-#: ui/main.qml:193
+#: ui/main.qml:181
 #, kde-format
 msgid "Row %1"
 msgstr "第 %1 行"
 
-#: ui/main.qml:207
+#: ui/main.qml:195
 #, kde-format
 msgid "Options:"
 msgstr "選項："
 
-#: ui/main.qml:209
+#: ui/main.qml:197
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "環繞式瀏覽"
 
-#: ui/main.qml:227
+#: ui/main.qml:215
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "切換時顯示動畫："
 
-#: ui/main.qml:278
+#: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "切換時使用螢幕顯示 (OSD)："
 
-#: ui/main.qml:297
+#: ui/main.qml:285
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 毫秒"
 
-#: ui/main.qml:321
+#: ui/main.qml:309
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "顯示桌面佈局指示器"

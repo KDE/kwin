@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-12-09 00:44+0000\n"
 "PO-Revision-Date: 2024-01-06 01:31+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -66,25 +66,35 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "デスクトップ %1"
 
-#: ui/main.qml:123
-#, kde-format
-msgctxt "@info:tooltip"
+#: ui/main.qml:82
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Rename"
+msgctxt "@action:button"
 msgid "Rename"
 msgstr "名前変更"
 
-#: ui/main.qml:135
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Confirm new name"
-msgstr "新しい名前を確定"
-
-#: ui/main.qml:144
+#: ui/main.qml:92
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "削除"
 
-#: ui/main.qml:177
+#: ui/main.qml:107
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Confirm new name"
+msgctxt "@info:tooltip"
+msgid "Apply new name"
+msgstr "新しい名前を確定"
+
+#: ui/main.qml:120
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Cancel rename"
+msgstr ""
+
+#: ui/main.qml:165
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -93,37 +103,37 @@ msgstr ""
 "この設定アプリケーション以外で仮想デスクトップが変更されました。今すぐ保存す"
 "ると、変更が上書きされます。"
 
-#: ui/main.qml:193
+#: ui/main.qml:181
 #, kde-format
 msgid "Row %1"
 msgstr "%1 列目"
 
-#: ui/main.qml:207
+#: ui/main.qml:195
 #, kde-format
 msgid "Options:"
 msgstr "オプション:"
 
-#: ui/main.qml:209
+#: ui/main.qml:197
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "ナビゲーションを循環させる"
 
-#: ui/main.qml:227
+#: ui/main.qml:215
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "切り替え時にアニメーションを表示:"
 
-#: ui/main.qml:278
+#: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "切り替え時にオンスクリーンディスプレイを表示:"
 
-#: ui/main.qml:297
+#: ui/main.qml:285
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ミリ秒"
 
-#: ui/main.qml:321
+#: ui/main.qml:309
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "デスクトップ配置インジケータを表示する"

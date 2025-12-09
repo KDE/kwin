@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-12-09 00:44+0000\n"
 "PO-Revision-Date: 2024-05-02 09:52+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -70,25 +70,35 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "أضف سطح مكتب"
 
-#: ui/main.qml:123
-#, kde-format
-msgctxt "@info:tooltip"
+#: ui/main.qml:82
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Rename"
+msgctxt "@action:button"
 msgid "Rename"
 msgstr "غيّر الاسم"
 
-#: ui/main.qml:135
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Confirm new name"
-msgstr "أكِّد عبارة الاسم الجديد"
-
-#: ui/main.qml:144
+#: ui/main.qml:92
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "أزل"
 
-#: ui/main.qml:177
+#: ui/main.qml:107
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Confirm new name"
+msgctxt "@info:tooltip"
+msgid "Apply new name"
+msgstr "أكِّد عبارة الاسم الجديد"
+
+#: ui/main.qml:120
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Cancel rename"
+msgstr ""
+
+#: ui/main.qml:165
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -97,37 +107,37 @@ msgstr ""
 "غُيرت أسطح المكتب الافتراضية خارج تطبيق الإعدادات هذا. الحفظ الآن سيحل محل "
 "تلك التغييرات."
 
-#: ui/main.qml:193
+#: ui/main.qml:181
 #, kde-format
 msgid "Row %1"
 msgstr "الصف %1"
 
-#: ui/main.qml:207
+#: ui/main.qml:195
 #, kde-format
 msgid "Options:"
 msgstr "الخيارات:"
 
-#: ui/main.qml:209
+#: ui/main.qml:197
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "يلف التنقل"
 
-#: ui/main.qml:227
+#: ui/main.qml:215
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "أظهر التحريك عند التبديل:"
 
-#: ui/main.qml:278
+#: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "إظهار العرض على الشاشة عند التبديل:"
 
-#: ui/main.qml:297
+#: ui/main.qml:285
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 مث"
 
-#: ui/main.qml:321
+#: ui/main.qml:309
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "أظهر مؤشرات تخطيط سطح المكتب"

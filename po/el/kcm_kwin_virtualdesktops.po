@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2025-12-09 00:44+0000\n"
 "PO-Revision-Date: 2024-09-19 17:36+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -68,25 +68,35 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Προσθήκη επιφάνειας εργασίας"
 
-#: ui/main.qml:123
-#, kde-format
-msgctxt "@info:tooltip"
+#: ui/main.qml:82
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Rename"
+msgctxt "@action:button"
 msgid "Rename"
 msgstr "Μετονομασία"
 
-#: ui/main.qml:135
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Confirm new name"
-msgstr "Επιβεβαίωση νέου ονόματος"
-
-#: ui/main.qml:144
+#: ui/main.qml:92
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Αφαίρεση"
 
-#: ui/main.qml:177
+#: ui/main.qml:107
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Confirm new name"
+msgctxt "@info:tooltip"
+msgid "Apply new name"
+msgstr "Επιβεβαίωση νέου ονόματος"
+
+#: ui/main.qml:120
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Cancel rename"
+msgstr ""
+
+#: ui/main.qml:165
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -95,37 +105,37 @@ msgstr ""
 "Οι εικονικές επιφάνειες εργασίας έχουν αλλάξει εκτός αυτής της εφαρμογής "
 "ρυθμίσεων. Η αποθήκευση τώρα θα αντικαταστήσει τις αλλαγές."
 
-#: ui/main.qml:193
+#: ui/main.qml:181
 #, kde-format
 msgid "Row %1"
 msgstr "Γραμμή %1"
 
-#: ui/main.qml:207
+#: ui/main.qml:195
 #, kde-format
 msgid "Options:"
 msgstr "Επιλογές:"
 
-#: ui/main.qml:209
+#: ui/main.qml:197
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Η πλοήγηση περιτυλίγεται γύρω του"
 
-#: ui/main.qml:227
+#: ui/main.qml:215
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Εμφάνιση εφέ κίνησης κατά την εναλλαγή:"
 
-#: ui/main.qml:278
+#: ui/main.qml:266
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Εμφάνιση απεικόνιση οθόνης κατά την εναλλαγή:"
 
-#: ui/main.qml:297
+#: ui/main.qml:285
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:321
+#: ui/main.qml:309
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Εμφάνιση της ένδειξης της διάταξης της επιφάνειας εργασίας"
