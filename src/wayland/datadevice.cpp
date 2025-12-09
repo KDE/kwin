@@ -253,16 +253,19 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
         d->drag.keyboardModifiersConnection = QMetaObject::Connection();
     }
 
-    if (!surface || !dragSource) {
-        if (auto s = dragSource) {
-            s->dndAction(DataDeviceManagerInterface::DnDAction::None);
+    if (!dragSource) {
+        return;
+    }
+
+    if (!surface) {
+        if (!dragSource->isDropPerformed()) {
+            dragSource->dndAction(DataDeviceManagerInterface::DnDAction::None);
         }
         return;
     }
 
-    if (dragSource) {
-        dragSource->accept(QString());
-    }
+    dragSource->accept(QString());
+
     d->drag.offer = d->createDataOffer(dragSource);
     d->drag.offer->sendSourceActions();
 
