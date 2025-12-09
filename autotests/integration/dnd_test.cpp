@@ -464,17 +464,20 @@ void DndTest::pointerDragAction()
     offer->accept(QStringLiteral("text/plain"), dataDeviceDragEnteredSpy.last().at(0).value<quint32>());
     offer->setDragAndDropActions(action, action);
     QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
+    QCOMPARE(dataSourceSelectedDragAndDropActionChangedSpy.count(), 1);
     QCOMPARE(dataSource->selectedDragAndDropAction(), action);
 
     // Drop.
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(dataDeviceDroppedSpy.wait());
+    QCOMPARE(dataSourceSelectedDragAndDropActionChangedSpy.count(), 1);
 
     // Change action after drop.
     switch (action) {
     case KWayland::Client::DataDeviceManager::DnDAction::Ask:
         offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
         QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
+        QCOMPARE(dataSourceSelectedDragAndDropActionChangedSpy.count(), 2);
         QCOMPARE(dataSource->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Copy);
         break;
     case KWayland::Client::DataDeviceManager::DnDAction::Copy:
@@ -1198,17 +1201,20 @@ void DndTest::touchDragAction()
     offer->accept(QStringLiteral("text/plain"), dataDeviceDragEnteredSpy.last().at(0).value<quint32>());
     offer->setDragAndDropActions(action, action);
     QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
+    QCOMPARE(dataSourceSelectedDragAndDropActionChangedSpy.count(), 1);
     QCOMPARE(dataSource->selectedDragAndDropAction(), action);
 
     // Drop.
     Test::touchUp(0, timestamp++);
     QVERIFY(dataDeviceDroppedSpy.wait());
+    QCOMPARE(dataSourceSelectedDragAndDropActionChangedSpy.count(), 1);
 
     // Change action after drop.
     switch (action) {
     case KWayland::Client::DataDeviceManager::DnDAction::Ask:
         offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
         QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
+        QCOMPARE(dataSourceSelectedDragAndDropActionChangedSpy.count(), 2);
         QCOMPARE(dataSource->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Copy);
         break;
     case KWayland::Client::DataDeviceManager::DnDAction::Copy:
@@ -1892,18 +1898,21 @@ void DndTest::tabletDragAction()
     offer->accept(QStringLiteral("text/plain"), dataDeviceDragEnteredSpy.last().at(0).value<quint32>());
     offer->setDragAndDropActions(action, action);
     QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
+    QCOMPARE(dataSourceSelectedDragAndDropActionChangedSpy.count(), 1);
     QCOMPARE(dataSource->selectedDragAndDropAction(), action);
 
     // Drop.
     Test::tabletToolTipEvent(QPointF(50, 50), 0, 0, 0, 0, 0, false, 0, timestamp++);
     Test::tabletToolProximityEvent(QPointF(50, 50), 0, 0, 0, 0, false, 0, timestamp++);
     QVERIFY(dataDeviceDroppedSpy.wait());
+    QCOMPARE(dataSourceSelectedDragAndDropActionChangedSpy.count(), 1);
 
     // Change action after drop.
     switch (action) {
     case KWayland::Client::DataDeviceManager::DnDAction::Ask:
         offer->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy, KWayland::Client::DataDeviceManager::DnDAction::Copy);
         QVERIFY(dataSourceSelectedDragAndDropActionChangedSpy.wait());
+        QCOMPARE(dataSourceSelectedDragAndDropActionChangedSpy.count(), 2);
         QCOMPARE(dataSource->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Copy);
         break;
     case KWayland::Client::DataDeviceManager::DnDAction::Copy:

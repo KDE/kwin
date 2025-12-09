@@ -264,16 +264,19 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, const QPoi
         d->drag.exclusiveActionConnection = QMetaObject::Connection();
     }
 
-    if (!surface || !dragSource) {
-        if (auto s = dragSource) {
-            s->dndAction(DnDAction::None);
+    if (!dragSource) {
+        return;
+    }
+
+    if (!surface) {
+        if (!dragSource->isDropPerformed()) {
+            dragSource->dndAction(DnDAction::None);
         }
         return;
     }
 
-    if (dragSource) {
-        dragSource->accept(QString());
-    }
+    dragSource->accept(QString());
+
     d->drag.offer = d->createDataOffer(dragSource);
     d->drag.offer->sendSourceActions();
 
