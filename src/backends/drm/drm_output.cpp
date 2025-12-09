@@ -542,6 +542,11 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
         if (next.dpmsMode == DpmsMode::On) {
             m_renderLoop->uninhibit();
         } else {
+            // NOTE that legacy modesetting applies dpms in the "test" before this
+            // method gets called, so we have to special case legacy vs. atomic here
+            if (m_state.dpmsMode == DpmsMode::On && m_gpu->atomicModeSetting()) {
+                next.dpmsMode = DpmsMode::TurningOff;
+            }
             m_renderLoop->inhibit();
         }
     }
@@ -715,6 +720,16 @@ void DrmOutput::setAutoRotateAvailable(bool isAvailable)
     Information next = m_information;
     next.capabilities = computeCapabilities();
     setInformation(next);
+}
+
+void DrmOutput::maybeUpdateDpmsState()
+{
+    // this is only needed for updating the state from "TurningOff" to "Off"
+    if (m_state.dpmsMode == DpmsMode::TurningOff && !m_pipeline->activePending()) {
+        State next = m_state;
+        next.dpmsMode = DpmsMode::Off;
+        setState(next);
+    }
 }
 }
 

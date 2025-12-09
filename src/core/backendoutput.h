@@ -28,6 +28,7 @@ class KWIN_EXPORT BackendOutput : public QObject
 public:
     enum class DpmsMode {
         On,
+        TurningOff,
         Off,
     };
     Q_ENUM(DpmsMode)

@@ -501,6 +501,7 @@ void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp)
     m_commitThread->pageFlipped(timestamp);
     // the commit thread adjusts the safety margin on every commit
     m_output->renderLoop()->setPresentationSafetyMargin(m_commitThread->safetyMargin());
+    m_output->maybeUpdateDpmsState();
     if (gpu()->needsModeset()) {
         gpu()->maybeModeset(nullptr, nullptr);
     }

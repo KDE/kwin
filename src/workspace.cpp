@@ -168,12 +168,15 @@ Workspace::Workspace()
 
     m_dpmsTimer.setSingleShot(true);
     connect(&m_dpmsTimer, &QTimer::timeout, this, [this]() {
-        m_dpms = DpmsState::Off;
+        // NOTE that we can't directly jump to "Off" here, as we need
+        // to delay sleep until the screens are actually turned off.
+        m_dpms = DpmsState::TurningOff;
+        // See kscreen.kcfg
+        const auto animationTime = std::chrono::milliseconds(KSharedConfig::openConfig()->group(QStringLiteral("Effect-Kscreen")).readEntry("Duration", 250));
+        Q_EMIT dpmsStateChanged(animationTime);
         // applyOutputConfiguration sets the correct value
         OutputConfiguration cfg;
         applyOutputConfiguration(cfg);
-        // NOTE this assumes that the displays are turned off immediately in applyOutputConfiguration
-        m_sleepInhibitor.reset();
     });
 
     initShortcuts();
@@ -295,6 +298,14 @@ void Workspace::init()
 #if KWIN_BUILD_SCREENLOCKER
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::locked, this, &Workspace::slotEndInteractiveMoveResize);
 #endif
+
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    for (BackendOutput *output : outputs) {
+        connect(output, &BackendOutput::dpmsModeChanged, this, &Workspace::maybeUpdateDpmsState);
+    }
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputAdded, this, [this](BackendOutput *output) {
+        connect(output, &BackendOutput::dpmsModeChanged, this, &Workspace::maybeUpdateDpmsState);
+    });
 }
 
 QString Workspace::outputLayoutId() const
@@ -436,7 +447,11 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
     m_outputConfigStore->applyMirroring(config, kwinApp()->outputBackend()->outputs());
     const auto allOutputs = kwinApp()->outputBackend()->outputs();
     for (BackendOutput *output : allOutputs) {
-        config.changeSet(output)->dpmsMode = m_dpms == DpmsState::Off ? BackendOutput::DpmsMode::Off : BackendOutput::DpmsMode::On;
+        if (m_dpms == DpmsState::Off || m_dpms == DpmsState::TurningOff) {
+            config.changeSet(output)->dpmsMode = BackendOutput::DpmsMode::Off;
+        } else {
+            config.changeSet(output)->dpmsMode = BackendOutput::DpmsMode::On;
+        }
     }
     auto error = kwinApp()->outputBackend()->applyOutputChanges(config);
     if (error != OutputConfigurationError::None) {
@@ -487,6 +502,25 @@ void Workspace::requestDpmsState(DpmsState state)
     // When dpms mode for display changes, we need to trigger checking if dpms mode should be enabled/disabled.
     m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
 
+    Q_EMIT dpmsStateChanged(animationTime);
+}
+
+void Workspace::maybeUpdateDpmsState()
+{
+    if (m_dpms != DpmsState::TurningOff) {
+        return;
+    }
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    const bool allOff = std::ranges::all_of(outputs, [](BackendOutput *output) {
+        return output->dpmsMode() == BackendOutput::DpmsMode::Off;
+    });
+    if (!allOff) {
+        return;
+    }
+    m_dpms = DpmsState::Off;
+    m_sleepInhibitor.reset();
+    // See kscreen.kcfg
+    const auto animationTime = std::chrono::milliseconds(KSharedConfig::openConfig()->group(QStringLiteral("Effect-Kscreen")).readEntry("Duration", 250));
     Q_EMIT dpmsStateChanged(animationTime);
 }
 

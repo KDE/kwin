@@ -437,6 +437,7 @@ public:
 
     enum class DpmsState {
         Off,
+        TurningOff,
         AboutToTurnOff,
         On
     };
@@ -620,6 +621,7 @@ private:
     void updateOutputs();
     void assignBrightnessDevices(OutputConfiguration &outputConfig);
     void updateOutputOrder();
+    void maybeUpdateDpmsState();
 
     bool breaksShowingDesktop(Window *window) const;
 

@@ -68,6 +68,7 @@ public:
     bool needsShadowBuffer() const;
 
     void removePipeline();
+    void maybeUpdateDpmsState();
 
 private:
     void tryKmsColorOffloading(State &next);
