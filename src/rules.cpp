@@ -25,9 +25,12 @@
 #endif
 
 #include "core/output.h"
+#include "input.h"
 #include "rulebooksettings.h"
 #include "rulesettings.h"
+#include "wayland_server.h"
 #include "workspace.h"
+#include "xdgactivationv1.h"
 
 namespace KWin
 {
@@ -952,7 +955,10 @@ void RuleBook::edit(Window *c, bool whole_app)
     }
     QProcess *p = new QProcess(this);
     p->setArguments({"kcm_kwinrules", "--args", args.join(QLatin1Char(' '))});
-    p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
+    const QString token = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, input()->lastInteractionSerial(), waylandServer()->seat(), "kcm_kwinrules");
+    QProcessEnvironment env = kwinApp()->processStartupEnvironment();
+    env.insert(QStringLiteral("XDG_ACTIVATION_TOKEN"), token);
+    p->setProcessEnvironment(env);
     p->setProgram(QStandardPaths::findExecutable("kcmshell6"));
     p->setProcessChannelMode(QProcess::MergedChannels);
     connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
