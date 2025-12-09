@@ -100,14 +100,11 @@ public:
                 // Since this is in the filter chain some key events may have been filtered out
                 // This loop makes sure all key press events are reset before we switch back to the
                 // Xwayland client and the state is correctly restored.
-                for (auto it = m_states.constBegin(); it != m_states.constEnd(); ++it) {
-                    if (it.value() == KeyboardKeyState::Pressed) {
-                        keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection(),
-                                          waylandServer()->display()->nextSerial());
-                    }
+                for (const quint32 &scanCode : std::as_const(m_pressedKeys)) {
+                    keyboard->sendKey(scanCode, KeyboardKeyState::Released, waylandServer()->xWaylandConnection(), waylandServer()->display()->nextSerial());
                 }
                 m_modifiers = {};
-                m_states.clear();
+                m_pressedKeys.clear();
             }
         });
     }
@@ -249,8 +246,15 @@ public:
             return false;
         }
 
-        if (!m_filterKey || !m_filterKey(event->key, event->modifiers)) {
+        // If there's an active keystroke, keep sending events regardless what the key filter says.
+        if (!m_pressedKeys.contains(event->nativeScanCode) && (!m_filterKey || !m_filterKey(event->key, event->modifiers))) {
             return false;
+        }
+
+        if (event->state == KeyboardKeyState::Released) {
+            if (!m_pressedKeys.remove(event->nativeScanCode)) {
+                return false;
+            }
         }
 
         auto keyboard = waylandServer()->seat()->keyboard();
@@ -263,8 +267,11 @@ public:
             }
         }
 
-        if (!updateKey(event->nativeScanCode, event->state)) {
-            return false;
+        if (event->state == KeyboardKeyState::Pressed) {
+            if (m_pressedKeys.contains(event->nativeScanCode)) {
+                return false;
+            }
+            m_pressedKeys.insert(event->nativeScanCode);
         }
 
         auto xkb = input()->keyboard()->xkb();
@@ -329,21 +336,7 @@ public:
         return false;
     }
 
-    bool updateKey(quint32 key, KeyboardKeyState state)
-    {
-        auto it = m_states.find(key);
-        if (it == m_states.end()) {
-            m_states.insert(key, state);
-            return true;
-        }
-        if (it.value() == state) {
-            return false;
-        }
-        it.value() = state;
-        return true;
-    }
-
-    QHash<quint32, KeyboardKeyState> m_states;
+    QSet<quint32> m_pressedKeys;
     struct Modifiers
     {
         quint32 depressed = 0;
