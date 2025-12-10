@@ -94,7 +94,7 @@ Edge::Edge(ScreenEdges *parent)
     , m_pushBackBlocked(false)
     , m_client(nullptr)
     , m_output(nullptr)
-    , m_gesture(std::make_unique<ScreenEdgeGesture>(m_edges->gestureRecognizer(), SwipeDirection::Up, QRectF()))
+    , m_gesture(std::make_unique<ScreenEdgeGesture>(m_edges->gestureRecognizer(), SwipeDirection::Up, RectF()))
 {
     connect(
         m_gesture.get(), &ScreenEdgeGesture::triggered, this, [this]() {
@@ -548,7 +548,7 @@ void Edge::pushCursorBack(const QPoint &cursorPos)
     input()->pointer()->warp(QPoint(x, y));
 }
 
-void Edge::setGeometry(const QRect &geometry)
+void Edge::setGeometry(const Rect &geometry)
 {
     if (m_geometry == geometry) {
         return;
@@ -581,7 +581,7 @@ void Edge::setGeometry(const QRect &geometry)
             height = offset;
         }
     }
-    m_approachGeometry = QRect(x, y, width, height);
+    m_approachGeometry = Rect(x, y, width, height);
 
     if (isScreenEdge()) {
         m_gesture->setGeometry(m_geometry);
@@ -639,7 +639,7 @@ void Edge::stopApproaching()
 
 void Edge::updateApproaching(const QPointF &point)
 {
-    if (exclusiveContains(approachGeometry(), point)) {
+    if (RectF(approachGeometry()).contains(point)) {
         int factor = 0;
         const int edgeDistance = m_edges->cornerOffset();
         auto cornerDistance = [=](const QPointF &corner) {
@@ -925,18 +925,18 @@ void ScreenEdges::updateLayout()
     }
 }
 
-static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
+static bool isLeftScreen(const Rect &screen, const Rect &fullArea)
 {
     const auto outputs = workspace()->outputs();
     if (outputs.count() == 1) {
         return true;
     }
-    if (screen.x() == fullArea.x()) {
+    if (screen.left() == fullArea.left()) {
         return true;
     }
     // If any other screen has a right edge against our left edge, then this screen is not a left screen
     for (const LogicalOutput *output : outputs) {
-        const QRect otherGeo = output->geometry();
+        const Rect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -952,18 +952,18 @@ static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
     return true;
 }
 
-static bool isRightScreen(const QRect &screen, const QRect &fullArea)
+static bool isRightScreen(const Rect &screen, const Rect &fullArea)
 {
     const auto outputs = workspace()->outputs();
     if (outputs.count() == 1) {
         return true;
     }
-    if (screen.x() + screen.width() == fullArea.x() + fullArea.width()) {
+    if (screen.right() == fullArea.right()) {
         return true;
     }
     // If any other screen has any left edge against any of our right edge, then this screen is not a right screen
     for (const LogicalOutput *output : outputs) {
-        const QRect otherGeo = output->geometry();
+        const Rect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -979,18 +979,18 @@ static bool isRightScreen(const QRect &screen, const QRect &fullArea)
     return true;
 }
 
-static bool isTopScreen(const QRect &screen, const QRect &fullArea)
+static bool isTopScreen(const Rect &screen, const Rect &fullArea)
 {
     const auto outputs = workspace()->outputs();
     if (outputs.count() == 1) {
         return true;
     }
-    if (screen.y() == fullArea.y()) {
+    if (screen.top() == fullArea.top()) {
         return true;
     }
     // If any other screen has any bottom edge against any of our top edge, then this screen is not a top screen
     for (const LogicalOutput *output : outputs) {
-        const QRect otherGeo = output->geometry();
+        const Rect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -1006,18 +1006,18 @@ static bool isTopScreen(const QRect &screen, const QRect &fullArea)
     return true;
 }
 
-static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
+static bool isBottomScreen(const Rect &screen, const Rect &fullArea)
 {
     const auto outputs = workspace()->outputs();
     if (outputs.count() == 1) {
         return true;
     }
-    if (screen.y() + screen.height() == fullArea.y() + fullArea.height()) {
+    if (screen.bottom() == fullArea.bottom()) {
         return true;
     }
     // If any other screen has any top edge against any of our bottom edge, then this screen is not a bottom screen
     for (const LogicalOutput *output : outputs) {
-        const QRect otherGeo = output->geometry();
+        const Rect otherGeo = output->geometry();
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -1042,7 +1042,7 @@ void ScreenEdges::recreateEdges()
 {
     std::vector<std::unique_ptr<Edge>> oldEdges = std::move(m_edges);
     m_edges.clear();
-    const QRect fullArea = workspace()->geometry();
+    const Rect fullArea = workspace()->geometry();
     QRegion processedRegion;
 
     const auto outputs = workspace()->outputs();
@@ -1069,7 +1069,7 @@ void ScreenEdges::recreateEdges()
         }
 
         if (isAllScreenCorners()) {
-            const QRect geo = output->geometry();
+            const Rect geo = output->geometry();
             m_edges.push_back(createEdge(ElectricTopLeft, geo.x(), geo.y(), TOUCH_TARGET, TOUCH_TARGET, output));
             m_edges.push_back(createEdge(ElectricTopRight, geo.x() + geo.width() - TOUCH_TARGET, geo.y(), TOUCH_TARGET, TOUCH_TARGET, output));
             m_edges.push_back(createEdge(ElectricBottomLeft, geo.x(), geo.y() + geo.height() - TOUCH_TARGET, TOUCH_TARGET, TOUCH_TARGET, output));
@@ -1103,14 +1103,14 @@ void ScreenEdges::recreateEdges()
     }
 }
 
-void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, LogicalOutput *output)
+void ScreenEdges::createVerticalEdge(ElectricBorder border, const Rect &screen, const Rect &fullArea, LogicalOutput *output)
 {
     if (border != ElectricRight && border != KWin::ElectricLeft) {
         return;
     }
     int y = screen.y();
     int height = screen.height();
-    const int x = (border == ElectricLeft) ? screen.x() : screen.x() + screen.width() - TOUCH_TARGET;
+    const int x = (border == ElectricLeft) ? screen.left() : screen.right() - TOUCH_TARGET;
     if (!isAllScreenCorners() && isTopScreen(screen, fullArea)) {
         // also top most screen
         height -= m_cornerOffset;
@@ -1137,7 +1137,7 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen,
     m_edges.push_back(createEdge(border, x, y, TOUCH_TARGET, height, output));
 }
 
-void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, LogicalOutput *output)
+void ScreenEdges::createHorizontalEdge(ElectricBorder border, const Rect &screen, const Rect &fullArea, LogicalOutput *output)
 {
     if (border != ElectricTop && border != ElectricBottom) {
         return;
@@ -1161,7 +1161,7 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
         width -= 2 * m_cornerOffset;
         x += m_cornerOffset;
     }
-    const int y = (border == ElectricTop) ? screen.y() : screen.y() + screen.height() - TOUCH_TARGET;
+    const int y = (border == ElectricTop) ? screen.top() : screen.bottom() - TOUCH_TARGET;
     m_edges.push_back(createEdge(border, x, y, width, TOUCH_TARGET, output));
 }
 
@@ -1173,7 +1173,7 @@ std::unique_ptr<Edge> ScreenEdges::createEdge(ElectricBorder border, int x, int 
     Q_ASSERT(height >= 0);
 
     edge->setBorder(border);
-    edge->setGeometry(QRect(x, y, width, height));
+    edge->setGeometry(Rect(x, y, width, height));
     edge->setOutput(output);
     if (createAction) {
         const ElectricBorderAction action = actionForEdge(edge.get());
@@ -1331,9 +1331,9 @@ bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
     int height = 0;
 
     LogicalOutput *output = client->output();
-    const QRect geo = client->frameGeometry().toRect();
+    const Rect geo = client->frameGeometry().toRect();
 
-    const QRect screen = output->geometry();
+    const Rect screen = output->geometry();
     switch (border) {
     case ElectricTop:
         y = screen.y();

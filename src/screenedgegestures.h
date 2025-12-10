@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "core/rect.h"
 #include "effect/globals.h"
 
 #include <QPointer>
@@ -27,8 +28,8 @@ public:
     SwipeDirection direction() const;
     void setDirection(SwipeDirection direction);
 
-    QRectF geometry() const;
-    void setGeometry(const QRectF &geometry);
+    RectF geometry() const;
+    void setGeometry(const RectF &geometry);
 
 Q_SIGNALS:
     void triggered();
@@ -39,7 +40,7 @@ Q_SIGNALS:
 private:
     const QPointer<ScreenEdgeGestureRecognizer> m_recognizer;
     SwipeDirection m_direction;
-    QRectF m_geometry;
+    RectF m_geometry;
 };
 
 class KWIN_EXPORT ScreenEdgeGestureRecognizer : public QObject

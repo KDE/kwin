@@ -38,12 +38,12 @@ void ScreenEdgeGesture::setDirection(SwipeDirection direction)
     m_direction = direction;
 }
 
-QRectF ScreenEdgeGesture::geometry() const
+RectF ScreenEdgeGesture::geometry() const
 {
     return m_geometry;
 }
 
-void ScreenEdgeGesture::setGeometry(const QRectF &geometry)
+void ScreenEdgeGesture::setGeometry(const RectF &geometry)
 {
     m_geometry = geometry;
 }

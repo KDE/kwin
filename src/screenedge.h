@@ -18,13 +18,13 @@
 
 #pragma once
 // KWin
+#include "core/rect.h"
 #include "effect/globals.h"
 // KDE includes
 #include <KSharedConfig>
 // Qt
 #include <QList>
 #include <QObject>
-#include <QRect>
 
 #include <memory>
 #include <xcb/xcb.h>
@@ -72,7 +72,7 @@ public:
     bool check(const QPoint &cursorPos, const std::chrono::microseconds &triggerTime, bool forceNoPushBack = false);
     void markAsTriggered(const QPoint &cursorPos, const std::chrono::microseconds &triggerTime);
     bool isReserved() const;
-    const QRect &approachGeometry() const;
+    const Rect &approachGeometry() const;
 
     ElectricBorder border() const;
     void reserve(QObject *object, const char *slot);
@@ -86,7 +86,7 @@ public:
     Window *client() const;
     void setOutput(LogicalOutput *output);
     LogicalOutput *output() const;
-    const QRect &geometry() const;
+    const Rect &geometry() const;
     void setTouchAction(ElectricBorderAction action);
     void checkBlocking();
 
@@ -99,10 +99,10 @@ public Q_SLOTS:
     void unreserve(QObject *object);
     void setBorder(ElectricBorder border);
     void setAction(ElectricBorderAction action);
-    void setGeometry(const QRect &geometry);
+    void setGeometry(const Rect &geometry);
     void updateApproaching(const QPointF &point);
 Q_SIGNALS:
-    void approaching(ElectricBorder border, qreal factor, const QRect &geometry);
+    void approaching(ElectricBorder border, qreal factor, const Rect &geometry);
     void activatesForTouchGestureChanged();
 
 protected:
@@ -138,8 +138,8 @@ private:
     ElectricBorderAction m_action;
     ElectricBorderAction m_touchAction = ElectricActionNone;
     int m_reserved;
-    QRect m_geometry;
-    QRect m_approachGeometry;
+    Rect m_geometry;
+    Rect m_approachGeometry;
     std::optional<std::chrono::microseconds> m_lastTrigger = std::nullopt;
     std::optional<std::chrono::microseconds> m_lastReset = std::nullopt;
     QPoint m_triggeredPoint;
@@ -348,7 +348,7 @@ Q_SIGNALS:
      * far away the mouse is from the approaching area. The values are clamped into [0.0,1.0] with
      * @c 0.0 meaning far away from the border, @c 1.0 in trigger distance.
      */
-    void approaching(ElectricBorder border, qreal factor, const QRect &geometry);
+    void approaching(ElectricBorder border, qreal factor, const Rect &geometry);
 
 private:
     enum {
@@ -362,8 +362,8 @@ private:
     void setCursorPushBackDistance(const QSize &distance);
     void setTimeThreshold(std::chrono::milliseconds threshold);
     void setReActivationThreshold(std::chrono::milliseconds threshold);
-    void createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, LogicalOutput *output);
-    void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, LogicalOutput *output);
+    void createHorizontalEdge(ElectricBorder border, const Rect &screen, const Rect &fullArea, LogicalOutput *output);
+    void createVerticalEdge(ElectricBorder border, const Rect &screen, const Rect &fullArea, LogicalOutput *output);
     std::unique_ptr<Edge> createEdge(ElectricBorder border, int x, int y, int width, int height, LogicalOutput *output, bool createAction = true);
     void setActionForBorder(ElectricBorder border, ElectricBorderAction *oldValue, ElectricBorderAction newValue);
     void setActionForTouchBorder(ElectricBorder border, ElectricBorderAction newValue);
@@ -455,12 +455,12 @@ inline const ScreenEdges *Edge::edges() const
     return m_edges;
 }
 
-inline const QRect &Edge::geometry() const
+inline const Rect &Edge::geometry() const
 {
     return m_geometry;
 }
 
-inline const QRect &Edge::approachGeometry() const
+inline const Rect &Edge::approachGeometry() const
 {
     return m_approachGeometry;
 }
