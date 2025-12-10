@@ -189,6 +189,7 @@ void ZoomEffect::hideCursor()
 void ZoomEffect::reconfigure(ReconfigureFlags)
 {
     ZoomConfig::self()->read();
+    // when mouse is set to centered on-screen, turning this on lets the zoom area extend beyond workspace bounds
     // On zoom-in and zoom-out change the zoom by the defined zoom-factor.
     m_zoomFactor = std::max(0.1, ZoomConfig::zoomFactor());
     m_pixelGridZoom = ZoomConfig::pixelGridZoom();
@@ -282,7 +283,14 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         break;
     case MouseTrackingCentered:
         m_prevPoint = m_cursorPoint;
-        // fall through
+        m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - m_prevPoint.x() * m_zoom)));
+        m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - m_prevPoint.y() * m_zoom)));
+        break;
+    case MouseTrackingCenteredStrict:
+        m_prevPoint = m_cursorPoint;
+        m_xTranslation = int(screenSize.width() / 2 - m_prevPoint.x() * m_zoom);
+        m_yTranslation = int(screenSize.height() / 2 - m_prevPoint.y() * m_zoom);
+        break;
     case MouseTrackingDisabled:
         m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - m_prevPoint.x() * m_zoom)));
         m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - m_prevPoint.y() * m_zoom)));
