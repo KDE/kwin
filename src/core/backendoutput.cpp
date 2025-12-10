@@ -204,6 +204,8 @@ void BackendOutput::setInformation(const Information &information)
 
 void BackendOutput::setState(const State &state)
 {
+    Q_ASSERT(!state.modes.isEmpty());
+
     const State oldState = m_state;
     m_state = state;
 
