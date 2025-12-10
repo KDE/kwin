@@ -352,7 +352,6 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
         .device = device,
         .rotation = rotation,
         .position = m_lastPosition,
-        .buttons = tipDown ? Qt::LeftButton : Qt::NoButton,
         .pressure = pressure,
         .sliderPosition = sliderPosition,
         .xTilt = xTilt,

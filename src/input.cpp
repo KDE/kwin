@@ -1553,8 +1553,9 @@ public:
 
         const QPointF globalPos = event->position;
         const QPointF localPos = globalPos - internal->position();
+        const Qt::MouseButtons buttons = event->type == TabletToolTipEvent::Press ? Qt::LeftButton : Qt::NoButton;
 
-        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), m_tabletDevice.get(), localPos, globalPos, event->buttons, event->pressure, event->xTilt, event->yTilt, event->sliderPosition, event->rotation, event->distance, input()->keyboardModifiers());
+        QWindowSystemInterface::handleTabletEvent(internal, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count(), m_tabletDevice.get(), localPos, globalPos, buttons, event->pressure, event->xTilt, event->yTilt, event->sliderPosition, event->rotation, event->distance, input()->keyboardModifiers());
 
         return true;
     }
