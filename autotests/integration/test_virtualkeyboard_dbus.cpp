@@ -47,8 +47,8 @@ void VirtualKeyboardDBusTest::initTestCase()
     static_cast<WaylandTestApplication *>(kwinApp())->setInputMethodServerToStart("internal");
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
 
     QVERIFY(setupWaylandConnection(AdditionalWaylandInterface::Seat | AdditionalWaylandInterface::InputMethodV1 | AdditionalWaylandInterface::TextInputManagerV2 | AdditionalWaylandInterface::TextInputManagerV3));

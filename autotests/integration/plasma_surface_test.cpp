@@ -58,7 +58,7 @@ void PlasmaSurfaceTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    Test::setOutputConfig({Rect(0, 0, 1280, 1024)});
 }
 
 void PlasmaSurfaceTest::init()
@@ -187,7 +187,7 @@ void PlasmaSurfaceTest::testOSDPlacement()
     QCOMPARE(window->frameGeometry(), RectF(1280 / 2 - 100 / 2, 2 * 1024 / 3 - 50 / 2, 100, 50));
 
     // change the screen size
-    const QList<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
+    const QList<Rect> geometries{Rect(0, 0, 1280, 1024), Rect(1280, 0, 1280, 1024)};
     Test::setOutputConfig(geometries);
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);

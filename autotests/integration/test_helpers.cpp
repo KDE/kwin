@@ -192,7 +192,7 @@ XdgSurface *XdgPopup::xdgSurface() const
 
 void XdgPopup::xdg_popup_configure(int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    Q_EMIT configureRequested(QRect(x, y, width, height));
+    Q_EMIT configureRequested(Rect(x, y, width, height));
 }
 
 void XdgPopup::xdg_popup_popup_done()

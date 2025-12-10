@@ -35,11 +35,11 @@ void XineramaTest::indexToOutput()
 {
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280, 1024),
+            .geometry = Rect(0, 0, 1280, 1024),
             .scale = 1.5,
         },
         Test::OutputInfo{
-            .geometry = QRect(1280, 0, 1280, 1024),
+            .geometry = Rect(1280, 0, 1280, 1024),
             .scale = 1.5,
         },
     });

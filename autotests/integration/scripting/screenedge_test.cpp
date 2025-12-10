@@ -68,7 +68,7 @@ void ScreenEdgeTest::initTestCase()
     kwinApp()->setConfig(config);
 
     kwinApp()->start();
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    Test::setOutputConfig({Rect(0, 0, 1280, 1024)});
     QVERIFY(Scripting::self());
 
     workspace()->screenEdges()->setTimeThreshold(0ms);

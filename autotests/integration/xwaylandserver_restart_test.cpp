@@ -43,8 +43,8 @@ void XwaylandServerRestartTest::initTestCase()
 
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
 }
 
@@ -76,7 +76,7 @@ void XwaylandServerRestartTest::testRestart()
     QVERIFY(!xcb_connection_has_error(c.get()));
 
     QTRY_COMPARE(startedSpy.count(), 2);
-    const QRect rect(0, 0, 100, 200);
+    const Rect rect(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       rect.x(), rect.y(), rect.width(), rect.height(), 0,

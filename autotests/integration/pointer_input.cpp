@@ -128,8 +128,8 @@ void PointerInputTest::initTestCase()
 
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
@@ -319,7 +319,7 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(leftSpy.wait());
 
     // now let's remove the screen containing the cursor
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    Test::setOutputConfig({Rect(0, 0, 1280, 1024)});
     QCOMPARE(workspace()->outputs().count(), 1);
 
     // this should have warped the cursor
@@ -532,8 +532,8 @@ void PointerInputTest::testModifierClickUnrestrictedFullscreenMove()
     // this test ensures that Meta+mouse button press triggers unrestricted move for fullscreen windows
     if (workspace()->outputs().size() < 2) {
         Test::setOutputConfig({
-            QRect(0, 0, 1280, 1024),
-            QRect(1280, 0, 1280, 1024),
+            Rect(0, 0, 1280, 1024),
+            Rect(1280, 0, 1280, 1024),
         });
     }
 
@@ -1525,11 +1525,11 @@ void PointerInputTest::testConfineToScreenGeometry()
     // after moving it to off-screen area
 
     // setup screen layout
-    const QList<QRect> geometries{
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-        QRect(2560, 0, 1280, 1024),
-        QRect(1280, 1024, 1280, 1024)};
+    const QList<Rect> geometries{
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
+        Rect(2560, 0, 1280, 1024),
+        Rect(1280, 1024, 1280, 1024)};
     Test::setOutputConfig(geometries);
 
     const auto outputs = workspace()->outputs();
@@ -1597,11 +1597,11 @@ void PointerInputTest::testEdgeBarrier_data()
 void PointerInputTest::testEdgeBarrier()
 {
     // setup screen layout
-    const QList<QRect> geometries{
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-        QRect(2560, 0, 1280, 1024),
-        QRect(1280, 1024, 1280, 1024)};
+    const QList<Rect> geometries{
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
+        Rect(2560, 0, 1280, 1024),
+        Rect(1280, 1024, 1280, 1024)};
     Test::setOutputConfig(geometries);
 
     const auto outputs = workspace()->outputs();
@@ -1893,7 +1893,7 @@ void PointerInputTest::testUnfocusedModifiers()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    const QRect windowGeometry(0, 0, 10, 10);
+    const Rect windowGeometry(0, 0, 10, 10);
     xcb_window_t windowId = xcb_generate_id(c.get());
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),

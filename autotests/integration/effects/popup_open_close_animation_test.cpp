@@ -62,8 +62,8 @@ void PopupOpenCloseAnimationTest::initTestCase()
 
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
 }
 
@@ -160,7 +160,7 @@ void PopupOpenCloseAnimationTest::testAnimateUserActionsPopup()
     QVERIFY(!effect->isActive());
 
     // Show the user actions popup.
-    workspace()->showWindowMenu(QRect(), window);
+    workspace()->showWindowMenu(Rect(), window);
     auto userActionsMenu = workspace()->userActionsMenu();
     QTRY_VERIFY(userActionsMenu->isShown());
     QVERIFY(userActionsMenu->hasWindow());

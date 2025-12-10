@@ -49,8 +49,8 @@ void WorkspaceTest::initTestCase()
 void WorkspaceTest::init()
 {
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
 
     QVERIFY(Test::setupWaylandConnection());
@@ -237,9 +237,9 @@ void WorkspaceTest::activeOutputDoesntFollowInactiveWindow()
     // This test verifies that the active output doesn't follow inactive windows.
 
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-        QRect(2560, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
+        Rect(2560, 0, 1280, 1024),
     });
 
     const auto firstOutput = workspace()->outputs()[0];
@@ -346,9 +346,9 @@ void WorkspaceTest::activeOutputAfterActivateNextWindowOnOutputRemoved()
     options->setSeparateScreenFocus(separateScreenFocus);
 
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
-        QRect(2560, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
+        Rect(2560, 0, 1280, 1024),
     });
 
     const auto firstOutput = workspace()->outputs()[0];

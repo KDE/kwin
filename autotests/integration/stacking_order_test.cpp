@@ -67,8 +67,8 @@ void StackingOrderTest::initTestCase()
 
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
 }
 
@@ -355,7 +355,7 @@ void StackingOrderTest::testDeletedTransient()
 
 #if KWIN_BUILD_X11
 static xcb_window_t createGroupWindow(xcb_connection_t *conn,
-                                      const QRect &geometry,
+                                      const Rect &geometry,
                                       xcb_window_t leaderWid = XCB_WINDOW_NONE)
 {
     xcb_window_t wid = xcb_generate_id(conn);
@@ -405,7 +405,7 @@ void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
     // This test verifies that group transients are always above other
     // window group members.
 
-    const QRect geometry = QRect(0, 0, 128, 128);
+    const Rect geometry = Rect(0, 0, 128, 128);
 
     Test::XcbConnectionPtr conn = Test::createX11Connection();
 
@@ -519,7 +519,7 @@ void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
 void StackingOrderTest::testRaiseGroupTransient()
 {
 #if KWIN_BUILD_X11
-    const QRect geometry = QRect(0, 0, 128, 128);
+    const Rect geometry = Rect(0, 0, 128, 128);
 
     Test::XcbConnectionPtr conn = Test::createX11Connection();
 
@@ -651,7 +651,7 @@ void StackingOrderTest::testDeletedGroupTransient()
     // This test verifies that deleted group transients are kept above their
     // old window groups.
 
-    const QRect geometry = QRect(0, 0, 128, 128);
+    const Rect geometry = Rect(0, 0, 128, 128);
 
     Test::XcbConnectionPtr conn = Test::createX11Connection();
 
@@ -764,7 +764,7 @@ void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()
 #if KWIN_BUILD_X11
     // Bug 76026
 
-    const QRect geometry = QRect(0, 0, 128, 128);
+    const Rect geometry = Rect(0, 0, 128, 128);
 
     Test::XcbConnectionPtr conn = Test::createX11Connection();
 

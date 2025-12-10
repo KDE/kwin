@@ -45,8 +45,8 @@ void XwaylandServerCrashTest::initTestCase()
 
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
@@ -61,7 +61,7 @@ void XwaylandServerCrashTest::testCrash()
     // Create a normal window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    const QRect windowGeometry(0, 0, 100, 200);
+    const Rect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId1 = xcb_generate_id(c.get());
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId1, rootWindow(),
                       windowGeometry.x(),

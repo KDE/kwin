@@ -480,7 +480,7 @@ X11Object::~X11Object()
     m_display->removeObject(this);
 }
 
-static X11Window *createX11Window(xcb_connection_t *connection, const QRect &geometry, std::function<void(xcb_window_t)> setup = {})
+static X11Window *createX11Window(xcb_connection_t *connection, const Rect &geometry, std::function<void(xcb_window_t)> setup = {})
 {
     const uint32_t events =
         XCB_EVENT_MASK_ENTER_WINDOW
@@ -564,8 +564,8 @@ void XwaylandSelectionTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
@@ -617,7 +617,7 @@ void XwaylandSelectionTest::clipboardX11ToWayland()
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Copy.
@@ -667,7 +667,7 @@ void XwaylandSelectionTest::emptyClipboardX11ToWayland()
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Copy.
@@ -719,7 +719,7 @@ void XwaylandSelectionTest::clipboardX11ToWaylandSwitchFocusBeforeTargets()
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Copy.
@@ -781,7 +781,7 @@ void XwaylandSelectionTest::clipboardWaylandToX11()
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Show a Wayland window.
@@ -839,7 +839,7 @@ void XwaylandSelectionTest::emptyClipboardWaylandToX11()
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Show a Wayland window.
@@ -897,7 +897,7 @@ void XwaylandSelectionTest::snoopClipboard()
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Show a Wayland window.
@@ -978,7 +978,7 @@ void XwaylandSelectionTest::primarySelectionX11ToWayland()
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Copy.
@@ -1028,7 +1028,7 @@ void XwaylandSelectionTest::emptyPrimarySelectionX11ToWayland()
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Copy.
@@ -1080,7 +1080,7 @@ void XwaylandSelectionTest::primarySelectionX11ToWaylandSwitchFocusBeforeTargets
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Copy.
@@ -1142,7 +1142,7 @@ void XwaylandSelectionTest::primarySelectionWaylandToX11()
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Show a Wayland window.
@@ -1199,7 +1199,7 @@ void XwaylandSelectionTest::emptyPrimarySelectionWaylandToX11()
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Show a Wayland window.
@@ -1256,7 +1256,7 @@ void XwaylandSelectionTest::snoopPrimarySelection()
     // Show an X11 window.
     std::unique_ptr<X11Display> x11Display = X11Display::create();
     QVERIFY(x11Display);
-    X11Window *x11Window = createX11Window(x11Display->connection(), QRect(0, 0, 100, 100));
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Show a Wayland window.

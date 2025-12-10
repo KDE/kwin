@@ -85,7 +85,7 @@ void ScreenEdgesTest::initTestCase()
     kwinApp()->setConfig(config);
 
     kwinApp()->start();
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    Test::setOutputConfig({Rect(0, 0, 1280, 1024)});
 }
 
 void ScreenEdgesTest::init()

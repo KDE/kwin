@@ -48,8 +48,8 @@ void ActivitiesTest::initTestCase()
     kwinApp()->setUseKActivities(true);
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
@@ -86,7 +86,7 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     QVERIFY(!xcb_connection_has_error(c.get()));
 
     xcb_window_t windowId = xcb_generate_id(c.get());
-    const QRect windowGeometry(0, 0, 100, 200);
+    const Rect windowGeometry(0, 0, 100, 200);
 
     auto cookie = xcb_create_window_checked(c.get(), 0, windowId, rootWindow(),
                                             windowGeometry.x(),

@@ -296,9 +296,9 @@ void Test::FractionalScaleV1::wp_fractional_scale_v1_preferred_scale(uint32_t sc
     Q_EMIT preferredScaleChanged();
 }
 
-void Test::setOutputConfig(const QList<QRect> &geometries)
+void Test::setOutputConfig(const QList<Rect> &geometries)
 {
-    setOutputConfig(geometries | std::views::transform([](const QRect &geometry) {
+    setOutputConfig(geometries | std::views::transform([](const Rect &geometry) {
         return OutputInfo{
             .geometry = geometry,
         };

@@ -154,8 +154,8 @@ void OutputChangesTest::initTestCase()
 
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
 
     const auto outputs = workspace()->outputs();
@@ -167,8 +167,8 @@ void OutputChangesTest::initTestCase()
 void OutputChangesTest::init()
 {
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     QVERIFY(Test::setupWaylandConnection());
 
@@ -1104,12 +1104,12 @@ void OutputChangesTest::testMaximizedWindowDoesntDisappear()
 
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(5120 / 3, 1440, 2256 / 1.3, 1504 / 1.3),
+            .geometry = Rect(5120 / 3, 1440, 2256 / 1.3, 1504 / 1.3),
             .scale = 1.3,
             .internal = true,
         },
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 5120, 1440),
+            .geometry = Rect(0, 0, 5120, 1440),
             .scale = 1,
             .internal = false,
         },
@@ -1177,11 +1177,11 @@ void OutputChangesTest::testLaptopLidClosed()
 {
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280, 1024),
+            .geometry = Rect(0, 0, 1280, 1024),
             .internal = true,
         },
         Test::OutputInfo{
-            .geometry = QRect(1280, 0, 1280, 1024),
+            .geometry = Rect(1280, 0, 1280, 1024),
             .internal = false,
         },
     });
@@ -1213,7 +1213,7 @@ void OutputChangesTest::testLaptopLidClosed()
 }
 
 #if KWIN_BUILD_X11
-static X11Window *createX11Window(xcb_connection_t *connection, const QRect &geometry, std::function<void(xcb_window_t)> setup = {})
+static X11Window *createX11Window(xcb_connection_t *connection, const Rect &geometry, std::function<void(xcb_window_t)> setup = {})
 {
     xcb_window_t windowId = xcb_generate_id(connection);
     xcb_create_window(connection, XCB_COPY_FROM_PARENT, windowId, rootWindow(),
@@ -1247,8 +1247,8 @@ void OutputChangesTest::testXwaylandScaleChange()
 {
 #if KWIN_BUILD_X11
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     const auto outputs = kwinApp()->outputBackend()->outputs();
 
@@ -1262,7 +1262,7 @@ void OutputChangesTest::testXwaylandScaleChange()
 
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createX11Window(c.get(), QRect(0, 0, 100, 200));
+    X11Window *window = createX11Window(c.get(), Rect(0, 0, 100, 200));
     const RectF originalGeometry = window->frameGeometry();
 
     // disable the left output -> window gets moved to the right output
@@ -1309,7 +1309,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("1080p 27\"")
         << DeviceType::Desktop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 1920, 1080),
+               .geometry = Rect(0, 0, 1920, 1080),
                .internal = false,
                .physicalSizeInMM = QSize(598, 336),
                .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred)},
@@ -1319,7 +1319,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("2160p 27\"")
         << DeviceType::Desktop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 3840, 2160),
+               .geometry = Rect(0, 0, 3840, 2160),
                .internal = false,
                .physicalSizeInMM = QSize(598, 336),
                .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
@@ -1329,7 +1329,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("2160p invalid size")
         << DeviceType::Desktop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 3840, 2160),
+               .geometry = Rect(0, 0, 3840, 2160),
                .internal = false,
                .physicalSizeInMM = QSize(),
                .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
@@ -1339,7 +1339,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("2160p impossibly tiny size")
         << DeviceType::Desktop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 3840, 2160),
+               .geometry = Rect(0, 0, 3840, 2160),
                .internal = false,
                .physicalSizeInMM = QSize(1, 1),
                .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
@@ -1349,7 +1349,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("1080p 27\" with non-preferred high refresh option")
         << DeviceType::Desktop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 1920, 1080),
+               .geometry = Rect(0, 0, 1920, 1080),
                .internal = false,
                .physicalSizeInMM = QSize(598, 336),
                .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(1920, 1080), 120000, OutputMode::Flags{})},
@@ -1359,7 +1359,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("2160p 27\" with 30Hz preferred mode")
         << DeviceType::Desktop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 3840, 2160),
+               .geometry = Rect(0, 0, 3840, 2160),
                .internal = false,
                .physicalSizeInMM = QSize(598, 336),
                .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flags{})},
@@ -1369,7 +1369,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("2160p 27\" with 30Hz preferred and a generated 60Hz mode")
         << DeviceType::Desktop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 3840, 2160),
+               .geometry = Rect(0, 0, 3840, 2160),
                .internal = false,
                .physicalSizeInMM = QSize(598, 336),
                .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flag::Generated)},
@@ -1379,7 +1379,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("1440p 32:9 49\" with two preferred modes")
         << DeviceType::Desktop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 5120, 1440),
+               .geometry = Rect(0, 0, 5120, 1440),
                .internal = false,
                .physicalSizeInMM = QSize(1190, 340),
                .modes = {ModeInfo(QSize(3840, 1080), 120000, OutputMode::Flag::Preferred), ModeInfo(QSize(5120, 1440), 120000, OutputMode::Flag::Preferred)},
@@ -1389,7 +1389,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("2160p 32:9 57\" with non-native preferred mode")
         << DeviceType::Desktop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 7680, 2160),
+               .geometry = Rect(0, 0, 7680, 2160),
                .internal = false,
                .physicalSizeInMM = QSize(1400, 400),
                .modes = {ModeInfo(QSize(3840, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(7680, 2160), 120000, OutputMode::Flags{})},
@@ -1399,7 +1399,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("Framework 1920p 13.5\"")
         << DeviceType::Laptop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 2880, 1920),
+               .geometry = Rect(0, 0, 2880, 1920),
                .internal = true,
                .physicalSizeInMM = QSize(285, 190),
                .modes = {ModeInfo(QSize(2880, 1920), 120000, OutputMode::Flag::Preferred)},
@@ -1409,7 +1409,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("DELL XPS 13 1080p 13\"")
         << DeviceType::Laptop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 1920, 1080),
+               .geometry = Rect(0, 0, 1920, 1080),
                .internal = true,
                .physicalSizeInMM = QSize(293, 162),
                .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred)},
@@ -1419,7 +1419,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("DELL XPS 13 2160p 13\"")
         << DeviceType::Laptop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 3840, 2160),
+               .geometry = Rect(0, 0, 3840, 2160),
                .internal = true,
                .physicalSizeInMM = QSize(294, 165),
                .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
@@ -1429,7 +1429,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("ThinkPad T14 2400p 14\"")
         << DeviceType::Laptop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 3840, 2400),
+               .geometry = Rect(0, 0, 3840, 2400),
                .internal = true,
                .physicalSizeInMM = QSize(301, 188),
                .modes = {ModeInfo(QSize(3840, 2400), 60000, OutputMode::Flag::Preferred)},
@@ -1439,7 +1439,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("SteamDeck OLED")
         << DeviceType::Laptop
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 800, 1280),
+               .geometry = Rect(0, 0, 800, 1280),
                .internal = true,
                .physicalSizeInMM = QSize(100, 160),
                .modes = {ModeInfo(QSize(800, 1280), 90000, OutputMode::Flag::Preferred)},
@@ -1450,7 +1450,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("Pixel 3a")
         << DeviceType::Phone
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 1080, 2220),
+               .geometry = Rect(0, 0, 1080, 2220),
                .internal = true,
                .physicalSizeInMM = QSize(62, 128),
                .modes = {ModeInfo(QSize(1080, 2220), 60000, OutputMode::Flags{}), ModeInfo(QSize(1080, 2220), 120000, OutputMode::Flag::Preferred)},
@@ -1460,7 +1460,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("OnePlus 6")
         << DeviceType::Phone
         << Test::OutputInfo{
-               .geometry = QRect(0, 0, 1080, 2280),
+               .geometry = Rect(0, 0, 1080, 2280),
                .internal = true,
                .physicalSizeInMM = QSize(68, 145),
                .modes = {ModeInfo(QSize(1080, 2280), 60000, OutputMode::Flag::Preferred)},
@@ -1470,7 +1470,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("Samsung Odyssey G5")
         << DeviceType::Desktop
         << Test::OutputInfo{
-               .geometry = QRect(),
+               .geometry = Rect(),
                .internal = false,
                .physicalSizeInMM = QSize(698, 393),
                .modes = {ModeInfo(QSize(2560, 1440), 164831, OutputMode::Flag::Preferred)},
@@ -1481,7 +1481,7 @@ void OutputChangesTest::testGenerateConfigs_data()
     QTest::addRow("LG C4 77\"")
         << DeviceType::Desktop
         << Test::OutputInfo{
-               .geometry = QRect(),
+               .geometry = Rect(),
                .internal = false,
                .physicalSizeInMM = QSize(1600, 900),
                .modes = {ModeInfo(QSize(3840, 2160), 120000, OutputMode::Flag::Preferred)},
@@ -1568,7 +1568,7 @@ void OutputChangesTest::testAutorotate()
 
     QFETCH(OutputTransform::Kind, panelOrientation);
     Test::setOutputConfig({Test::OutputInfo{
-        .geometry = QRect(0, 0, 1280, 1024),
+        .geometry = Rect(0, 0, 1280, 1024),
         .internal = true,
         .physicalSizeInMM = QSize(598, 336),
         .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
@@ -1762,7 +1762,7 @@ void OutputChangesTest::testSettingRestoration()
 
     Test::setOutputConfig(outputData | std::views::transform([](const IdentificationData &data) {
         return Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280, 1024),
+            .geometry = Rect(0, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
@@ -1805,7 +1805,7 @@ void OutputChangesTest::testSettingRestoration()
     // this must work if one of the outputs is removed in between as well
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(1280, 0, 1280, 1024),
+            .geometry = Rect(1280, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
@@ -1825,7 +1825,7 @@ void OutputChangesTest::testSettingRestoration()
     // and add it again, with the inverted order
     Test::setOutputConfig(outputData | std::views::reverse | std::views::transform([](const IdentificationData &data) {
         return Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280, 1024),
+            .geometry = Rect(0, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
@@ -1862,7 +1862,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     // to additionally test the case when EDID ID isn't unique when this happens
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280, 1024),
+            .geometry = Rect(0, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {
@@ -1875,7 +1875,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
             .mstPath = QByteArrayLiteral("MST-1-1"),
         },
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280, 1024),
+            .geometry = Rect(0, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {
@@ -1927,7 +1927,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     // now libdisplay-info was updated, and we have an EDID ID for the same hash
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280, 1024),
+            .geometry = Rect(0, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {
@@ -1940,7 +1940,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
             .mstPath = QByteArrayLiteral("MST-1-1"),
         },
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280, 1024),
+            .geometry = Rect(0, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {
@@ -1967,7 +1967,7 @@ void OutputChangesTest::testSettingRestoration_replacedMode()
 {
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280, 1024),
+            .geometry = Rect(0, 0, 1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {
@@ -2032,11 +2032,11 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
 {
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 5120, 1440),
+            .geometry = Rect(0, 0, 5120, 1440),
             .internal = false,
         },
         Test::OutputInfo{
-            .geometry = QRect(1705, 1440, 1800, 1200),
+            .geometry = Rect(1705, 1440, 1800, 1200),
             .scale = 1.6,
             .internal = true,
         },
@@ -2141,12 +2141,12 @@ void OutputChangesTest::testMirroring()
 
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280, 1200),
+            .geometry = Rect(0, 0, 1280, 1200),
             .scale = 1.0,
             .internal = true,
         },
         Test::OutputInfo{
-            .geometry = QRect(QPoint(1280, 0), resolution),
+            .geometry = Rect(QPoint(1280, 0), resolution),
             .scale = 1.0,
             .internal = false,
         },

@@ -84,7 +84,7 @@ void X11KeyReadTest::initTestCase()
 
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
     });
 
     Test::XcbConnectionPtr c = Test::createX11Connection();

@@ -99,7 +99,7 @@ void FifoTest::testFifo()
     QFETCH(uint32_t, refreshRate);
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 200, 200),
+            .geometry = Rect(0, 0, 200, 200),
             .modes = {
                 std::make_tuple(QSize(200, 200), refreshRate, OutputMode::Flag::Preferred),
             },
@@ -312,7 +312,7 @@ void FifoTest::testFifoOnSubsurfaces()
     // this test verifies that fifo works correctly with subsurfaces
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 200, 200),
+            .geometry = Rect(0, 0, 200, 200),
             .modes = {
                 std::make_tuple(QSize(200, 200), 60'000, OutputMode::Flag::Preferred),
             },

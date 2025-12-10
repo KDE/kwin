@@ -97,8 +97,8 @@ void TilesTest::initTestCase()
 
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
@@ -924,7 +924,7 @@ void TilesTest::evacuateFromRemovedOutput()
     // Remove output 2, the window should lose the tile
     {
         Test::setOutputConfig({
-            QRect(0, 0, 1280, 1024),
+            Rect(0, 0, 1280, 1024),
         });
 
         QCOMPARE(window->requestedTile(), nullptr);
@@ -934,8 +934,8 @@ void TilesTest::evacuateFromRemovedOutput()
     }
 
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
 }
 }

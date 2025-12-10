@@ -65,8 +65,8 @@ void ActivationTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
@@ -392,9 +392,9 @@ void ActivationTest::stackScreensHorizontally()
     // Process pending wl_output bind requests before destroying all outputs.
     QTest::qWait(1);
 
-    const QList<QRect> screenGeometries{
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+    const QList<Rect> screenGeometries{
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     };
     Test::setOutputConfig(screenGeometries);
 }
@@ -404,15 +404,15 @@ void ActivationTest::stackScreensVertically()
     // Process pending wl_output bind requests before destroying all outputs.
     QTest::qWait(1);
 
-    const QList<QRect> screenGeometries{
-        QRect(0, 0, 1280, 1024),
-        QRect(0, 1024, 1280, 1024),
+    const QList<Rect> screenGeometries{
+        Rect(0, 0, 1280, 1024),
+        Rect(0, 1024, 1280, 1024),
     };
     Test::setOutputConfig(screenGeometries);
 }
 
 #if KWIN_BUILD_X11
-static X11Window *createX11Window(xcb_connection_t *connection, const QRect &geometry, std::function<void(xcb_window_t)> setup = {})
+static X11Window *createX11Window(xcb_connection_t *connection, const Rect &geometry, std::function<void(xcb_window_t)> setup = {})
 {
     xcb_window_t windowId = xcb_generate_id(connection);
     xcb_create_window(connection, XCB_COPY_FROM_PARENT, windowId, rootWindow(),
@@ -448,11 +448,11 @@ void ActivationTest::testActiveFullscreen()
     // Tests that an active X11 fullscreen window gets removed from the active layer
     // when activating a Wayland window, even if there's a pending activation request
     // for the X11 window
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    Test::setOutputConfig({Rect(0, 0, 1280, 1024)});
 
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *x11Window = createX11Window(c.get(), QRect(0, 0, 100, 200));
+    X11Window *x11Window = createX11Window(c.get(), Rect(0, 0, 100, 200));
 
     // make it fullscreen
     x11Window->setFullScreen(true);
@@ -495,7 +495,7 @@ static std::vector<std::unique_ptr<Test::XdgToplevelWindow>> setupWindows(uint32
 
 void ActivationTest::testXdgActivation()
 {
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    Test::setOutputConfig({Rect(0, 0, 1280, 1024)});
 
     uint32_t time = 0;
 
@@ -755,7 +755,7 @@ public:
 
 void ActivationTest::testGlobalShortcutActivation()
 {
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    Test::setOutputConfig({Rect(0, 0, 1280, 1024)});
     options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::Extreme);
 
     // This spy needs to be used because normal keyboard shortcuts are signaled asynchronously,

@@ -38,7 +38,7 @@ void ScreenChangesTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
 
     kwinApp()->start();
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    Test::setOutputConfig({Rect(0, 0, 1280, 1024)});
     setenv("QT_QPA_PLATFORM", "wayland", true);
 }
 
@@ -79,7 +79,7 @@ void ScreenChangesTest::testScreenAddRemove()
     outputAnnouncedSpy.clear();
 
     // let's announce a new output
-    const QList<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
+    const QList<Rect> geometries{Rect(0, 0, 1280, 1024), Rect(1280, 0, 1280, 1024)};
     Test::setOutputConfig(geometries);
     auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
@@ -143,7 +143,7 @@ void ScreenChangesTest::testScreenAddRemove()
     QSignalSpy o1RemovedSpy(o1.get(), &KWayland::Client::Output::removed);
     QSignalSpy o2RemovedSpy(o2.get(), &KWayland::Client::Output::removed);
 
-    const QList<QRect> geometries2{QRect(0, 0, 1280, 1024)};
+    const QList<Rect> geometries2{Rect(0, 0, 1280, 1024)};
     Test::setOutputConfig(geometries2);
     outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 1);

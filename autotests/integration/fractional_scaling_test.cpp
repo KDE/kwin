@@ -55,11 +55,11 @@ void TestFractionalScale::initTestCase()
     kwinApp()->start();
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = QRect(0, 0, 1280 / 1.25, 1024 / 1.25),
+            .geometry = Rect(0, 0, 1280 / 1.25, 1024 / 1.25),
             .scale = 1.25,
         },
         Test::OutputInfo{
-            .geometry = QRect(1280, 0, 1280 / 2, 1024 / 2),
+            .geometry = Rect(1280, 0, 1280 / 2, 1024 / 2),
             .scale = 2.0,
         },
     });

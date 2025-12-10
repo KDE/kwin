@@ -60,8 +60,8 @@ void TestDbusInterface::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     VirtualDesktopManager::self()->setCount(4);
 }
@@ -222,7 +222,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
 #if KWIN_BUILD_X11
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    const QRect windowGeometry(0, 0, 600, 400);
+    const Rect windowGeometry(0, 0, 600, 400);
     xcb_window_t windowId = xcb_generate_id(c.get());
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
                       windowGeometry.x(),

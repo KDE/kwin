@@ -63,8 +63,8 @@ void TransientPlacementTest::initTestCase()
 
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
@@ -449,7 +449,7 @@ void TransientPlacementTest::testXdgPopup()
 
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
-    QCOMPARE(popupConfigureRequestedSpy.last()[0].value<QRect>(), QRect(expectedRelativeGeometry));
+    QCOMPARE(popupConfigureRequestedSpy.last()[0].value<Rect>(), expectedRelativeGeometry);
     popup->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last()[0].toUInt());
 
     auto transient = Test::renderAndWaitForShown(transientSurface.get(), expectedRelativeGeometry.size(), Qt::red);

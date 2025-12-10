@@ -178,7 +178,7 @@ static xcb_window_t findXdndAwareWindow(xcb_connection_t *connection, xcb_window
     return XCB_WINDOW_NONE;
 }
 
-static X11Window *createX11Window(xcb_connection_t *connection, const QRect &geometry, std::function<void(xcb_window_t)> setup = {})
+static X11Window *createX11Window(xcb_connection_t *connection, const Rect &geometry, std::function<void(xcb_window_t)> setup = {})
 {
     const uint32_t events =
         XCB_EVENT_MASK_ENTER_WINDOW
@@ -224,7 +224,7 @@ static X11Window *createX11Window(xcb_connection_t *connection, const QRect &geo
     return window;
 }
 
-static X11Window *createXdndAwareTestWindow(xcb_connection_t *connection, const QRect &geometry)
+static X11Window *createXdndAwareTestWindow(xcb_connection_t *connection, const Rect &geometry)
 {
     return createX11Window(connection, geometry, [connection](xcb_window_t window) {
         xcb_change_property(connection, XCB_PROP_MODE_REPLACE, window, atoms->xdnd_aware, XCB_ATOM_ATOM, 32, 1, &xdndVersion);
@@ -235,7 +235,7 @@ static X11Window *createXdndAwareTestWindow(xcb_connection_t *connection, const 
     });
 }
 
-static X11Window *createXdndUnawareTestWindow(xcb_connection_t *connection, const QRect &geometry)
+static X11Window *createXdndUnawareTestWindow(xcb_connection_t *connection, const Rect &geometry)
 {
     return createX11Window(connection, geometry, [connection](xcb_window_t window) {
         Test::applyMotifHints(connection, window, Test::MotifHints{
@@ -678,7 +678,7 @@ public:
     }
 
 Q_SIGNALS:
-    void status(bool accepted, const QRect &rect, xcb_atom_t action);
+    void status(bool accepted, const Rect &rect, xcb_atom_t action);
     void finished(bool accepted, xcb_atom_t action);
 
 public Q_SLOTS:
@@ -758,7 +758,7 @@ public Q_SLOTS:
 private:
     void onXdndStatus(const xcb_client_message_event_t *event)
     {
-        Q_EMIT status(event->data.data32[1] & 1, QRect(event->data.data32[2] >> 16, event->data.data32[2] & 0xffff, event->data.data32[3] >> 16, event->data.data32[3] & 0xffff), event->data.data32[4]);
+        Q_EMIT status(event->data.data32[1] & 1, Rect(event->data.data32[2] >> 16, event->data.data32[2] & 0xffff, event->data.data32[3] >> 16, event->data.data32[3] & 0xffff), event->data.data32[4]);
     }
 
     void onXdndFinished(const xcb_client_message_event_t *event)
@@ -814,7 +814,7 @@ public Q_SLOTS:
         sendXdndEvent(m_display->connection(), m_source, atoms->xdnd_finished, &data);
     }
 
-    void sendStatus(bool accepted, const QRect &rect, xcb_atom_t action)
+    void sendStatus(bool accepted, const Rect &rect, xcb_atom_t action)
     {
         xcb_client_message_data_t data = {};
         data.data32[0] = m_target;
@@ -1000,8 +1000,8 @@ void XwaylandDndTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
@@ -1031,7 +1031,7 @@ void XwaylandDndTest::x11ToX11()
     QVERIFY(x11Display);
 
     // Initialize the source window.
-    auto sourceWindow = createXdndAwareTestWindow(x11Display->connection(), QRect(0, 0, 100, 100));
+    auto sourceWindow = createXdndAwareTestWindow(x11Display->connection(), Rect(0, 0, 100, 100));
     QVERIFY(sourceWindow);
 
     X11DropHandler sourceDropHandler(x11Display.get(), sourceWindow->window());
@@ -1041,7 +1041,7 @@ void XwaylandDndTest::x11ToX11()
     QSignalSpy sourceDropHandlerDroppedSpy(&sourceDropHandler, &X11DropHandler::dropped);
 
     // Initialize the target window.
-    auto targetWindow = createXdndAwareTestWindow(x11Display->connection(), QRect(100, 0, 100, 100));
+    auto targetWindow = createXdndAwareTestWindow(x11Display->connection(), Rect(100, 0, 100, 100));
     QVERIFY(targetWindow);
 
     X11DropHandler targetDropHandler(x11Display.get(), targetWindow->window());
@@ -1082,7 +1082,7 @@ void XwaylandDndTest::x11ToX11()
     QCOMPARE(sourceDropHandlerLeftSpy.count(), 0);
     QCOMPARE(sourceDropHandlerPositionSpy.count(), 1);
     QCOMPARE(sourceDropHandlerPositionSpy.last().at(0).value<QPoint>(), QPoint(50, 50));
-    sourceDropHandler.sendStatus(true, QRect(), atoms->xdnd_action_copy);
+    sourceDropHandler.sendStatus(true, Rect(), atoms->xdnd_action_copy);
 
     // Move the pointer a little bit in the source window.
     Test::pointerMotion(QPointF(75, 50), timestamp++);
@@ -1091,7 +1091,7 @@ void XwaylandDndTest::x11ToX11()
     QCOMPARE(sourceDropHandlerLeftSpy.count(), 0);
     QCOMPARE(sourceDropHandlerPositionSpy.count(), 2);
     QCOMPARE(sourceDropHandlerPositionSpy.last().at(0).value<QPoint>(), QPoint(75, 50));
-    sourceDropHandler.sendStatus(true, QRect(), atoms->xdnd_action_copy);
+    sourceDropHandler.sendStatus(true, Rect(), atoms->xdnd_action_copy);
 
     // Move the pointer to the target window.
     Test::pointerMotion(QPointF(125, 50), timestamp++);
@@ -1101,7 +1101,7 @@ void XwaylandDndTest::x11ToX11()
     QCOMPARE(targetDropHandlerPositionSpy.count(), 1);
     QCOMPARE(targetDropHandlerPositionSpy.last().at(0).value<QPoint>(), QPoint(125, 50));
     QCOMPARE(sourceDropHandlerLeftSpy.count(), 1);
-    targetDropHandler.sendStatus(true, QRect(), atoms->xdnd_action_copy);
+    targetDropHandler.sendStatus(true, Rect(), atoms->xdnd_action_copy);
 
     // Move the pointer a little bit in the target window.
     Test::pointerMotion(QPointF(150, 50), timestamp++);
@@ -1110,7 +1110,7 @@ void XwaylandDndTest::x11ToX11()
     QCOMPARE(targetDropHandlerLeftSpy.count(), 0);
     QCOMPARE(targetDropHandlerPositionSpy.count(), 2);
     QCOMPARE(targetDropHandlerPositionSpy.last().at(0).value<QPoint>(), QPoint(150, 50));
-    targetDropHandler.sendStatus(true, QRect(), atoms->xdnd_action_copy);
+    targetDropHandler.sendStatus(true, Rect(), atoms->xdnd_action_copy);
 
     // Drop.
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
@@ -1177,7 +1177,7 @@ void XwaylandDndTest::x11ToWayland()
     auto x11Display = X11Display::create();
     QVERIFY(x11Display);
 
-    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), QRect(100, 0, 100, 100));
+    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), Rect(100, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Move the pointer to the center of the source X11 window and initiate a drag-and-drop session.
@@ -1289,7 +1289,7 @@ void XwaylandDndTest::noAcceptedMimeTypeX11ToWayland()
     auto x11Display = X11Display::create();
     QVERIFY(x11Display);
 
-    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), QRect(100, 0, 100, 100));
+    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), Rect(100, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Move the pointer to the center of the source X11 window and initiate a drag-and-drop session.
@@ -1351,7 +1351,7 @@ void XwaylandDndTest::destroyX11ToWaylandSource()
     auto x11Display = X11Display::create();
     QVERIFY(x11Display);
 
-    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), QRect(100, 0, 100, 100));
+    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), Rect(100, 0, 100, 100));
     QVERIFY(x11Window);
 
     // Move the pointer to the center of the source X11 window and initiate a drag-and-drop session.
@@ -1453,7 +1453,7 @@ void XwaylandDndTest::waylandToX11()
     auto x11Display = X11Display::create();
     QVERIFY(x11Display);
 
-    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), QRect(100, 0, 100, 100));
+    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), Rect(100, 0, 100, 100));
     QVERIFY(x11Window);
 
     X11Pointer x11Pointer(x11Display.get());
@@ -1484,7 +1484,7 @@ void XwaylandDndTest::waylandToX11()
     KWAIT_TWO(x11DropHandlerEnteredSpy, x11DropHandlerPositionSpy);
     QCOMPARE(x11DropHandlerEnteredSpy.last().at(0).value<QList<QMimeType>>(), offeredMimeTypes);
     QCOMPARE(x11DropHandlerPositionSpy.last().at(0).value<QPoint>(), QPoint(150, 50));
-    x11DropHandler.sendStatus(true, QRect(), atoms->xdnd_action_copy);
+    x11DropHandler.sendStatus(true, Rect(), atoms->xdnd_action_copy);
 
     QCOMPARE(x11PointerEnteredSpy.count(), 0);
     QCOMPARE(x11PointerLeftSpy.count(), 0);
@@ -1507,7 +1507,7 @@ void XwaylandDndTest::waylandToX11()
     KWAIT_TWO(x11DropHandlerEnteredSpy, x11DropHandlerPositionSpy);
     QCOMPARE(x11DropHandlerEnteredSpy.last().at(0).value<QList<QMimeType>>(), offeredMimeTypes);
     QCOMPARE(x11DropHandlerPositionSpy.last().at(0).value<QPoint>(), QPoint(150, 50));
-    x11DropHandler.sendStatus(true, QRect(), atoms->xdnd_action_copy);
+    x11DropHandler.sendStatus(true, Rect(), atoms->xdnd_action_copy);
 
     QCOMPARE(x11PointerEnteredSpy.count(), 0);
     QCOMPARE(x11PointerLeftSpy.count(), 0);
@@ -1519,7 +1519,7 @@ void XwaylandDndTest::waylandToX11()
     Test::pointerMotion(QPointF(175, 50), timestamp++);
     QVERIFY(x11DropHandlerPositionSpy.wait());
     QCOMPARE(x11DropHandlerPositionSpy.last().at(0).value<QPoint>(), QPoint(175, 50));
-    x11DropHandler.sendStatus(true, QRect(), atoms->xdnd_action_copy);
+    x11DropHandler.sendStatus(true, Rect(), atoms->xdnd_action_copy);
 
     QCOMPARE(x11PointerEnteredSpy.count(), 0);
     QCOMPARE(x11PointerLeftSpy.count(), 0);
@@ -1579,7 +1579,7 @@ void XwaylandDndTest::noAcceptedMimeTypeWaylandToX11()
     auto x11Display = X11Display::create();
     QVERIFY(x11Display);
 
-    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), QRect(100, 0, 100, 100));
+    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), Rect(100, 0, 100, 100));
     QVERIFY(x11Window);
 
     X11DropHandler x11DropHandler(x11Display.get(), x11Window->window());
@@ -1601,12 +1601,12 @@ void XwaylandDndTest::noAcceptedMimeTypeWaylandToX11()
     // Move the pointer to the X11 surface.
     Test::pointerMotion(QPointF(150, 50), timestamp++);
     KWAIT_TWO(x11DropHandlerEnteredSpy, x11DropHandlerPositionSpy);
-    x11DropHandler.sendStatus(false, QRect(), XCB_ATOM_NONE);
+    x11DropHandler.sendStatus(false, Rect(), XCB_ATOM_NONE);
 
     // Move the pointer inside the X11 surface a little bit.
     Test::pointerMotion(QPointF(175, 50), timestamp++);
     QVERIFY(x11DropHandlerPositionSpy.wait());
-    x11DropHandler.sendStatus(false, QRect(), XCB_ATOM_NONE);
+    x11DropHandler.sendStatus(false, Rect(), XCB_ATOM_NONE);
 
     // Drop.
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
@@ -1647,7 +1647,7 @@ void XwaylandDndTest::destroyWaylandToX11Source()
     auto x11Display = X11Display::create();
     QVERIFY(x11Display);
 
-    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), QRect(100, 0, 100, 100));
+    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), Rect(100, 0, 100, 100));
     QVERIFY(x11Window);
 
     X11DropHandler x11DropHandler(x11Display.get(), x11Window->window());
@@ -1669,7 +1669,7 @@ void XwaylandDndTest::destroyWaylandToX11Source()
     // Move the pointer to the X11 surface.
     Test::pointerMotion(QPointF(150, 50), timestamp++);
     KWAIT_TWO(x11DropHandlerEnteredSpy, x11DropHandlerPositionSpy);
-    x11DropHandler.sendStatus(false, QRect(), XCB_ATOM_NONE);
+    x11DropHandler.sendStatus(false, Rect(), XCB_ATOM_NONE);
 
     // Delete the data source.
     delete waylandDataSource;
@@ -1713,7 +1713,7 @@ void XwaylandDndTest::cancelWaylandToX11()
     auto x11Display = X11Display::create();
     QVERIFY(x11Display);
 
-    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), QRect(100, 0, 100, 100));
+    auto x11Window = createXdndAwareTestWindow(x11Display->connection(), Rect(100, 0, 100, 100));
     QVERIFY(x11Window);
 
     X11DropHandler x11DropHandler(x11Display.get(), x11Window->window());
@@ -1735,7 +1735,7 @@ void XwaylandDndTest::cancelWaylandToX11()
     // Move the pointer to the X11 surface.
     Test::pointerMotion(QPointF(150, 50), timestamp++);
     KWAIT_TWO(x11DropHandlerEnteredSpy, x11DropHandlerPositionSpy);
-    x11DropHandler.sendStatus(false, QRect(), XCB_ATOM_NONE);
+    x11DropHandler.sendStatus(false, Rect(), XCB_ATOM_NONE);
 
     // Cancel the drag-and-drop operation by pressing the Escape key.
     Test::keyboardKeyPressed(KEY_ESC, timestamp++);
@@ -1779,7 +1779,7 @@ void XwaylandDndTest::waylandToXdndUnawareWindow()
     auto x11Display = X11Display::create();
     QVERIFY(x11Display);
 
-    auto x11Window = createXdndUnawareTestWindow(x11Display->connection(), QRect(100, 0, 100, 100));
+    auto x11Window = createXdndUnawareTestWindow(x11Display->connection(), Rect(100, 0, 100, 100));
     QVERIFY(x11Window);
 
     X11DropHandler x11DropHandler(x11Display.get(), x11Window->window());

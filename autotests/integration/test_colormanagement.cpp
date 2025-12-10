@@ -107,8 +107,8 @@ void ColorManagementTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
@@ -119,8 +119,8 @@ void ColorManagementTest::initTestCase()
 void ColorManagementTest::init()
 {
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ColorManagement
                                          | Test::AdditionalWaylandInterface::ColorRepresentation));

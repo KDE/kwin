@@ -316,7 +316,7 @@ public:
     XdgSurface *xdgSurface() const;
 
 Q_SIGNALS:
-    void configureRequested(const QRect &rect);
+    void configureRequested(const Rect &rect);
     void doneReceived();
 
 protected:
@@ -1399,7 +1399,7 @@ private:
 
 struct OutputInfo
 {
-    QRect geometry;
+    Rect geometry;
     double scale = 1;
     bool internal = false;
     QSize physicalSizeInMM;
@@ -1410,7 +1410,7 @@ struct OutputInfo
     std::optional<QString> connectorName;
     std::optional<QByteArray> mstPath;
 };
-void setOutputConfig(const QList<QRect> &geometries);
+void setOutputConfig(const QList<Rect> &geometries);
 void setOutputConfig(const QList<OutputInfo> &infos);
 
 class XdgToplevelWindow

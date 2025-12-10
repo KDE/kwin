@@ -79,7 +79,7 @@ void MoveResizeWindowTest::initTestCase()
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    Test::setOutputConfig({Rect(0, 0, 1280, 1024)});
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 1);
     QCOMPARE(outputs[0]->geometry(), Rect(0, 0, 1280, 1024));
@@ -87,7 +87,7 @@ void MoveResizeWindowTest::initTestCase()
 
 void MoveResizeWindowTest::init()
 {
-    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    Test::setOutputConfig({Rect(0, 0, 1280, 1024)});
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1 | Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1));
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 1);
@@ -1076,7 +1076,7 @@ void MoveResizeWindowTest::testRestrictedMoveMultiMonitor()
     //      |   |
     //      |---|
 
-    Test::setOutputConfig({QRect(0, 1000, 1000, 1000), QRect(1000, 0, 1000, 3000)});
+    Test::setOutputConfig({Rect(0, 1000, 1000, 1000), Rect(1000, 0, 1000, 3000)});
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), Rect(0, 1000, 1000, 1000));

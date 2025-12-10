@@ -49,8 +49,8 @@ void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
-        QRect(1280, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
+        Rect(1280, 0, 1280, 1024),
     });
     QVERIFY(Compositor::self());
     QVERIFY(effects);
