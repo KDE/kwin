@@ -46,6 +46,7 @@ private Q_SLOTS:
     void testPresentation();
     void testCursorLayer();
     void testDirectScanout();
+    void testOverlay_data();
     void testOverlay();
     void testDpms();
 };
@@ -511,6 +512,15 @@ void DrmTest::testDirectScanout()
 #endif
 }
 
+void DrmTest::testOverlay_data()
+{
+    QTest::addColumn<bool>("occluded");
+
+    QTest::addRow("overlay") << false;
+    QTest::addRow("underlay") << true;
+    // TODO also add a test case for occluded == false + SSD with rounded corners?
+}
+
 void DrmTest::testOverlay()
 {
     QVERIFY2(Test::linuxDmabuf(), "This test needs dmabuf support");
@@ -522,15 +532,18 @@ void DrmTest::testOverlay()
         QSKIP("The driver doesn't advertise an overlay plane");
     }
 
-    // show a dummy window somewhere on the screen,
-    // to force the primary plane to do compositing
     Test::XdgToplevelWindow dummy;
     QVERIFY(dummy.show());
-    dummy.m_window->move(output->position() + QPoint(100, 100));
+    dummy.m_window->move(output->position() + QPoint(50, 50));
 
     DmabufWindow window;
     QVERIFY(window.renderAndWaitForShown(QSize(100, 100)));
     window.m_window->move(output->position());
+
+    QFETCH(bool, occluded);
+    if (occluded) {
+        workspace()->raiseWindow(dummy.m_window);
+    }
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
