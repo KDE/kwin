@@ -7,10 +7,11 @@
 
 #include "kwin_export.h"
 
+#include "core/rect.h"
+#include "textinput.h"
+
 #include <QObject>
 #include <memory>
-
-#include "textinput.h"
 
 struct wl_resource;
 namespace KWin
@@ -83,7 +84,7 @@ public:
     /**
      * @see cursorRectangleChanged
      */
-    QRect cursorRectangle() const;
+    Rect cursorRectangle() const;
 
     /**
      * @see contentTypeChanged
@@ -222,7 +223,7 @@ public:
      * @param visible Whether the input panel is currently visible
      * @param overlappedSurfaceArea The overlapping area in surface local coordinates
      */
-    void setInputPanelState(bool visible, const QRect &overlappedSurfaceArea);
+    void setInputPanelState(bool visible, const Rect &overlappedSurfaceArea);
 
     /**
      * Sets the language of the input text. The @p languageTag is a RFC-3066 format language tag.
@@ -253,7 +254,7 @@ Q_SIGNALS:
     /**
      * @see cursorRectangle
      */
-    void cursorRectangleChanged(const QRect &rect);
+    void cursorRectangleChanged(const Rect &rect);
     /**
      * Emitted when the {@link contentPurpose} and/or {@link contentHints} changes.
      * @see contentPurpose

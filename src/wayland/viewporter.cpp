@@ -70,7 +70,7 @@ void ViewportInterface::wp_viewport_destroy(Resource *resource)
 {
     if (surface) {
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
-        surfacePrivate->pending->viewport.sourceGeometry = QRectF();
+        surfacePrivate->pending->viewport.sourceGeometry = RectF();
         surfacePrivate->pending->committed |= SurfaceState::Field::SourceGeometry;
         surfacePrivate->pending->viewport.destinationSize = QSize();
         surfacePrivate->pending->committed |= SurfaceState::Field::DestinationSize;
@@ -93,7 +93,7 @@ void ViewportInterface::wp_viewport_set_source(Resource *resource, wl_fixed_t x_
 
     if (x == -1 && y == -1 && width == -1 && height == -1) {
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
-        surfacePrivate->pending->viewport.sourceGeometry = QRectF();
+        surfacePrivate->pending->viewport.sourceGeometry = RectF();
         surfacePrivate->pending->committed |= SurfaceState::Field::SourceGeometry;
         return;
     }
@@ -104,7 +104,7 @@ void ViewportInterface::wp_viewport_set_source(Resource *resource, wl_fixed_t x_
     }
 
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
-    surfacePrivate->pending->viewport.sourceGeometry = QRectF(x, y, width, height);
+    surfacePrivate->pending->viewport.sourceGeometry = RectF(x, y, width, height);
     surfacePrivate->pending->committed |= SurfaceState::Field::SourceGeometry;
 }
 

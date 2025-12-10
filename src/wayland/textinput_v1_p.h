@@ -13,7 +13,6 @@
 
 #include <QList>
 #include <QPointer>
-#include <QRect>
 #include <QSet>
 
 #include <qwayland-server-text-input-unstable-v1.h>
@@ -68,7 +67,7 @@ public:
     }
 
     QString preferredLanguage;
-    QRect cursorRectangle;
+    Rect cursorRectangle;
     TextInputContentHints contentHints = TextInputContentHint::None;
     TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;
     QPointer<SeatInterface> seat;
@@ -77,7 +76,7 @@ public:
     qint32 surroundingTextCursorPosition = 0;
     qint32 surroundingTextSelectionAnchor = 0;
     bool inputPanelVisible = false;
-    QRect overlappedSurfaceArea;
+    Rect overlappedSurfaceArea;
     QString language;
     QByteArray modifiersMap;
     TextInputV1Interface *q;

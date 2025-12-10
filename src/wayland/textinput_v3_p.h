@@ -11,7 +11,6 @@
 #include <QHash>
 #include <QList>
 #include <QPointer>
-#include <QRect>
 
 #include <qwayland-server-text-input-unstable-v3.h>
 
@@ -52,7 +51,7 @@ public:
         return inputInterface->d.get();
     }
 
-    QRect cursorRectangle;
+    Rect cursorRectangle;
     TextInputContentHints contentHints = TextInputContentHint::None;
     TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;
 
@@ -70,7 +69,7 @@ public:
 
     struct
     {
-        QRect cursorRectangle;
+        Rect cursorRectangle;
         TextInputChangeCause surroundingTextChangeCause = TextInputChangeCause::InputMethod;
         TextInputContentHints contentHints = TextInputContentHint::None;
         TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;

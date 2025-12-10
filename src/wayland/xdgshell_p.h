@@ -57,7 +57,7 @@ public:
     Qt::Edges gravityEdges;
     QPoint offset;
     QSize size;
-    QRect anchorRect;
+    Rect anchorRect;
     bool isReactive = false;
     QSize parentSize;
     quint32 parentConfigure;
@@ -89,7 +89,7 @@ protected:
 class XdgSurfaceCommit
 {
 public:
-    std::optional<QRect> windowGeometry;
+    std::optional<Rect> windowGeometry;
     std::optional<quint32> acknowledgedConfigure;
 };
 
@@ -121,7 +121,7 @@ public:
     QPointer<XdgPopupInterface> popup;
     QPointer<XXPipV1Interface> pip;
     QPointer<SurfaceInterface> surface;
-    QRect windowGeometry;
+    Rect windowGeometry;
     bool firstBufferAttached = false;
     bool isConfigured = false;
     bool isInitialized = false;

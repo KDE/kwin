@@ -8,6 +8,7 @@
 
 #include <QObject>
 
+#include "core/rect.h"
 #include "textinput.h"
 
 struct wl_resource;
@@ -60,7 +61,7 @@ public:
     /**
      * @see cursorRectangleChanged
      */
-    QRect cursorRectangle() const;
+    Rect cursorRectangle() const;
 
     /**
      * @see contentTypeChanged
@@ -159,7 +160,7 @@ Q_SIGNALS:
     /**
      * @see cursorRectangle
      */
-    void cursorRectangleChanged(const QRect &rect);
+    void cursorRectangleChanged(const Rect &rect);
     /**
      * Emitted when the {@link contentPurpose} and/or {@link contentHints} changes.
      * @see contentPurpose

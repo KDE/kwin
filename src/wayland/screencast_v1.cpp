@@ -10,7 +10,6 @@
 #include "output.h"
 
 #include <QDebug>
-#include <QRect>
 
 #include "qwayland-server-zkde-screencast-unstable-v1.h"
 

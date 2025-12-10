@@ -120,7 +120,7 @@ void XdgOutputV1Interface::update()
         return;
     }
 
-    const QRectF geometry = output->handle()->geometryF();
+    const RectF geometry = output->handle()->geometryF();
     const auto resources = resourceMap();
 
     if (pos != geometry.topLeft()) {

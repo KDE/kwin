@@ -144,7 +144,7 @@ public:
     QRegion opaque() const;
     QRegion input() const;
     QRegion bufferDamage() const;
-    QRectF bufferSourceBox() const;
+    RectF bufferSourceBox() const;
     /**
      * Returns the buffer transform that had been applied to the buffer to compensate for
      * output rotation.
@@ -170,7 +170,7 @@ public:
      *
      * QPoint(0, 0) corresponds to the upper left corner of this surface.
      */
-    QRectF boundingRect() const;
+    RectF boundingRect() const;
 
     /**
      * @returns The SubSurface for this Surface in case there is one.

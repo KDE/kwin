@@ -328,7 +328,7 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_set_cursor_rectangle(Resourc
     if (!pending.enabled) {
         return;
     }
-    pending.cursorRectangle = QRect(x, y, width, height);
+    pending.cursorRectangle = Rect(x, y, width, height);
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_text_change_cause(Resource *resource, uint32_t cause)
@@ -399,7 +399,7 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
 
 void TextInputV3InterfacePrivate::defaultPending()
 {
-    pending.cursorRectangle = QRect();
+    pending.cursorRectangle = Rect();
     pending.surroundingTextChangeCause = TextInputChangeCause::InputMethod;
     pending.contentHints = TextInputContentHints(TextInputContentHint::None);
     pending.contentPurpose = TextInputContentPurpose::Normal;
@@ -483,7 +483,7 @@ QPointer<SurfaceInterface> TextInputV3Interface::surface() const
     return d->surface;
 }
 
-QRect TextInputV3Interface::cursorRectangle() const
+Rect TextInputV3Interface::cursorRectangle() const
 {
     return d->cursorRectangle;
 }

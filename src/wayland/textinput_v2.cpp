@@ -389,7 +389,7 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_set_content_type(Resource *r
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_set_cursor_rectangle(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    const QRect rect = QRect(x, y, width, height);
+    const Rect rect = Rect(x, y, width, height);
     if (cursorRectangle != rect) {
         cursorRectangle = rect;
         Q_EMIT q->cursorRectangleChanged(cursorRectangle);
@@ -497,7 +497,7 @@ void TextInputV2Interface::setPreEditCursor(qint32 index)
     d->setPreEditCursor(index);
 }
 
-void TextInputV2Interface::setInputPanelState(bool visible, const QRect &overlappedSurfaceArea)
+void TextInputV2Interface::setInputPanelState(bool visible, const Rect &overlappedSurfaceArea)
 {
     if (d->inputPanelVisible == visible && d->overlappedSurfaceArea == overlappedSurfaceArea) {
         // not changed
@@ -541,7 +541,7 @@ QPointer<SurfaceInterface> TextInputV2Interface::surface() const
     return d->focusedSurface;
 }
 
-QRect TextInputV2Interface::cursorRectangle() const
+Rect TextInputV2Interface::cursorRectangle() const
 {
     return d->cursorRectangle;
 }

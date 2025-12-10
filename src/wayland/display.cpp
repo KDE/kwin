@@ -24,7 +24,6 @@
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
 #include <QDebug>
-#include <QRect>
 
 namespace KWin
 {
@@ -186,7 +185,7 @@ QList<OutputDeviceV2Interface *> Display::outputDevices() const
     return d->outputdevicesV2;
 }
 
-QList<OutputInterface *> Display::outputsIntersecting(const QRect &rect) const
+QList<OutputInterface *> Display::outputsIntersecting(const Rect &rect) const
 {
     QList<OutputInterface *> outputs;
     for (auto *output : std::as_const(d->outputs)) {
@@ -197,12 +196,12 @@ QList<OutputInterface *> Display::outputsIntersecting(const QRect &rect) const
     return outputs;
 }
 
-OutputInterface *Display::largestIntersectingOutput(const QRect &rect) const
+OutputInterface *Display::largestIntersectingOutput(const Rect &rect) const
 {
     OutputInterface *returnOutput = nullptr;
     uint64_t biggestArea = 0;
     for (auto *output : std::as_const(d->outputs)) {
-        const QRect intersect = output->handle()->geometry().intersected(rect);
+        const Rect intersect = output->handle()->geometry().intersected(rect);
         const uint64_t area = intersect.width() * intersect.height();
         if (area > biggestArea) {
             biggestArea = area;

@@ -380,7 +380,7 @@ void TextInputV1InterfacePrivate::zwp_text_input_v1_set_content_type(Resource *r
 
 void TextInputV1InterfacePrivate::zwp_text_input_v1_set_cursor_rectangle(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    const QRect rect = QRect(x, y, width, height);
+    const Rect rect = Rect(x, y, width, height);
     if (cursorRectangle != rect) {
         cursorRectangle = rect;
         Q_EMIT q->cursorRectangleChanged(cursorRectangle);
@@ -529,7 +529,7 @@ QPointer<SurfaceInterface> TextInputV1Interface::surface() const
     return d->surface;
 }
 
-QRect TextInputV1Interface::cursorRectangle() const
+Rect TextInputV1Interface::cursorRectangle() const
 {
     return d->cursorRectangle;
 }

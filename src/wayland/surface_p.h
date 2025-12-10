@@ -111,7 +111,7 @@ struct SurfaceState
 
     struct
     {
-        QRectF sourceGeometry = QRectF();
+        RectF sourceGeometry = RectF();
         QSize destinationSize = QSize();
     } viewport;
 
@@ -141,7 +141,7 @@ public:
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
     void removeIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
 
-    QRectF computeBufferSourceBox() const;
+    RectF computeBufferSourceBox() const;
     void applyState(SurfaceState *next);
 
     bool computeEffectiveMapped() const;
@@ -160,7 +160,7 @@ public:
     SurfaceRole *role = nullptr;
     std::unique_ptr<SurfaceState> current;
     std::unique_ptr<SurfaceState> pending;
-    QRectF bufferSourceBox;
+    RectF bufferSourceBox;
     QSizeF surfaceSize = QSizeF(0, 0);
 
     QRegion inputRegion;

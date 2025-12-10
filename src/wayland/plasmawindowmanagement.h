@@ -7,6 +7,8 @@
 
 #include "kwin_export.h"
 
+#include "core/rect.h"
+
 #include <QObject>
 #include <memory>
 
@@ -151,7 +153,7 @@ public:
      * @returns Geometries of the taskbar entries, indicized by the
      *          surface of the panels
      */
-    QHash<SurfaceInterface *, QRect> minimizedGeometries() const;
+    QHash<SurfaceInterface *, Rect> minimizedGeometries() const;
 
     /**
      * Sets this PlasmaWindowInterface as a transient window to @p parentWindow.
@@ -165,7 +167,7 @@ public:
      *
      * @param geometry The geometry in absolute coordinates
      */
-    void setGeometry(const QRect &geometry);
+    void setGeometry(const Rect &geometry);
 
     /**
      * Set the icon of the PlasmaWindowInterface.
@@ -233,7 +235,7 @@ public:
     /**
      * Set the client geometry (i.e. without window border/style)
      */
-    void setClientGeometry(const QRect &geometry);
+    void setClientGeometry(const Rect &geometry);
 
 Q_SIGNALS:
     void closeRequested();
@@ -252,7 +254,7 @@ Q_SIGNALS:
     void fullscreenableRequested(bool set);
     void skipTaskbarRequested(bool set);
     void skipSwitcherRequested(bool set);
-    QRect minimizedGeometriesChanged();
+    void minimizedGeometriesChanged();
     void shadeableRequested(bool set);
     void shadedRequested(bool set);
     void movableRequested(bool set);
@@ -297,7 +299,7 @@ Q_SIGNALS:
      * Requests sending the window to @p output
      */
     void sendToOutput(KWin::OutputInterface *output);
-    void clientGeometryChanged(const QRect &geometry);
+    void clientGeometryChanged(const KWin::Rect &geometry);
     void noBorderRequested(bool noBorder);
     void excludeFromCaptureRequested(bool exclude);
 

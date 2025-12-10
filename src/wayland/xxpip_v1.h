@@ -8,6 +8,8 @@
 
 #include "kwin_export.h"
 
+#include "core/rect.h"
+
 #include <QObject>
 
 #include <memory>
@@ -92,7 +94,7 @@ public:
      * Specifies the bounds within the origin surface from which the picture-in-picture surface has
      * been launched.
      */
-    QRect originRect() const;
+    Rect originRect() const;
 
     /**
      * Sends a configure event to the client. \a size specifies the new window geometry size. A size

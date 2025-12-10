@@ -16,7 +16,6 @@
 #include <QIcon>
 #include <QList>
 #include <QPointer>
-#include <QRect>
 #include <QThreadPool>
 #include <QUuid>
 
@@ -76,15 +75,15 @@ public:
     void unmap();
     void setState(org_kde_plasma_window_management_state flag, bool set);
     void setParentWindow(PlasmaWindowInterface *parent);
-    void setGeometry(const QRect &geometry);
+    void setGeometry(const Rect &geometry);
     void setApplicationMenuPaths(const QString &service, const QString &object);
     void setResourceName(const QString &resourceName);
     void sendInitialState(Resource *resource);
     wl_resource *resourceForParent(PlasmaWindowInterface *parent, Resource *child) const;
-    void setClientGeometry(const QRect &geometry);
+    void setClientGeometry(const Rect &geometry);
 
     quint32 windowId = 0;
-    QHash<SurfaceInterface *, QRect> minimizedGeometries;
+    QHash<SurfaceInterface *, Rect> minimizedGeometries;
     PlasmaWindowManagementInterface *wm;
 
     bool unmapped = false;
@@ -92,7 +91,7 @@ public:
     QMetaObject::Connection parentWindowDestroyConnection;
     QStringList plasmaVirtualDesktops;
     QStringList plasmaActivities;
-    QRect geometry;
+    Rect geometry;
     PlasmaWindowInterface *q;
     QString m_title;
     QString m_appId;
@@ -104,7 +103,7 @@ public:
     quint32 m_state = 0;
     QString uuid;
     QString m_resourceName;
-    QRect clientGeometry;
+    Rect clientGeometry;
 
 protected:
     Resource *org_kde_plasma_window_allocate() override;
@@ -638,7 +637,7 @@ void PlasmaWindowInterfacePrivate::setParentWindow(PlasmaWindowInterface *window
     }
 }
 
-void PlasmaWindowInterfacePrivate::setGeometry(const QRect &geo)
+void PlasmaWindowInterfacePrivate::setGeometry(const Rect &geo)
 {
     if (geometry == geo) {
         return;
@@ -770,11 +769,11 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_minimized_geometry(
         return;
     }
 
-    if (minimizedGeometries.value(panelSurface) == QRect(x, y, width, height)) {
+    if (minimizedGeometries.value(panelSurface) == Rect(x, y, width, height)) {
         return;
     }
 
-    minimizedGeometries[panelSurface] = QRect(x, y, width, height);
+    minimizedGeometries[panelSurface] = Rect(x, y, width, height);
     Q_EMIT q->minimizedGeometriesChanged();
     QObject::connect(panelSurface, &QObject::destroyed, q, [this, panelSurface]() {
         if (minimizedGeometries.remove(panelSurface)) {
@@ -825,7 +824,7 @@ void PlasmaWindowInterface::unmap()
     d->unmap();
 }
 
-QHash<SurfaceInterface *, QRect> PlasmaWindowInterface::minimizedGeometries() const
+QHash<SurfaceInterface *, Rect> PlasmaWindowInterface::minimizedGeometries() const
 {
     return d->minimizedGeometries;
 }
@@ -1072,7 +1071,7 @@ void PlasmaWindowInterface::setParentWindow(PlasmaWindowInterface *parentWindow)
     d->setParentWindow(parentWindow);
 }
 
-void PlasmaWindowInterface::setGeometry(const QRect &geometry)
+void PlasmaWindowInterface::setGeometry(const Rect &geometry)
 {
     d->setGeometry(geometry);
 }
@@ -1166,12 +1165,12 @@ void PlasmaWindowActivationInterface::sendAppId(const QString &appid)
     }
 }
 
-void PlasmaWindowInterface::setClientGeometry(const QRect &geometry)
+void PlasmaWindowInterface::setClientGeometry(const Rect &geometry)
 {
     d->setClientGeometry(geometry);
 }
 
-void PlasmaWindowInterfacePrivate::setClientGeometry(const QRect &geometry)
+void PlasmaWindowInterfacePrivate::setClientGeometry(const Rect &geometry)
 {
     if (clientGeometry == geometry) {
         return;

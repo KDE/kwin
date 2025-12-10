@@ -8,6 +8,8 @@
 
 #include "kwin_export.h"
 
+#include "core/rect.h"
+
 #include <QObject>
 #include <QSharedDataPointer>
 
@@ -166,9 +168,9 @@ public:
     /**
      * Returns the window geometry of the XdgSurfaceInterface.
      *
-     * This method will return an invalid QRect if the window geometry is not set by the client.
+     * This method will return an invalid Rect if the window geometry is not set by the client.
      */
-    QRect windowGeometry() const;
+    Rect windowGeometry() const;
 
     /**
      * Returns the XdgSurfaceInterface for the specified wayland resource object \a resource.
@@ -189,7 +191,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the window geometry has been changed.
      */
-    void windowGeometryChanged(const QRect &rect);
+    void windowGeometryChanged(const Rect &rect);
 
     /**
      * This signal is emitted when the surface has been unmapped and its state has been reset.
@@ -489,7 +491,7 @@ public:
      * Returns the unconstrained geometry of the popup. The \a bounds is in the parent local
      * coordinate space.
      */
-    QRectF placement(const QRectF &bounds) const;
+    RectF placement(const RectF &bounds) const;
 
     /**
      * Returns the current state of the xdg positioner object identified by \a resource.
@@ -551,7 +553,7 @@ public:
     /**
      * Sends a configure event to the client and returns the serial number of the event.
      */
-    quint32 sendConfigure(const QRect &rect);
+    quint32 sendConfigure(const Rect &rect);
 
     /**
      * Sends a popup done event to the client.
