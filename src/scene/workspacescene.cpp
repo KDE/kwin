@@ -583,7 +583,10 @@ QRegion WorkspaceScene::collectDamage()
             auto &paintData = m_paintContext.phase2Data[i];
             accumulateRepaints(paintData.item, painted_delegate, &paintData.deviceRegion);
             m_paintContext.deviceDamage += paintData.deviceRegion - opaque;
-            if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED))) {
+            // TODO change effects API, so occlusion culling is per item, rather than per window
+            const bool canCover = painted_delegate->shouldRenderItem(paintData.item->surfaceItem())
+                || painted_delegate->shouldRenderHole(paintData.item->surfaceItem());
+            if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED)) && canCover) {
                 opaque += paintData.deviceOpaque;
             }
         }
@@ -670,7 +673,10 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
         if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
             data->deviceRegion &= viewport.mapToDeviceCoordinatesAligned(data->item->mapToScene(data->item->boundingRect()));
 
-            if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
+            // TODO change effects API, so occlusion culling is per item, rather than per window
+            const bool canCover = painted_delegate->shouldRenderItem(data->item->surfaceItem())
+                || painted_delegate->shouldRenderHole(data->item->surfaceItem());
+            if (!(data->mask & PAINT_WINDOW_TRANSLUCENT) && canCover) {
                 visible -= data->deviceOpaque;
             }
         }
