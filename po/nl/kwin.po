@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-06 00:44+0000\n"
+"POT-Creation-Date: 2025-12-10 00:45+0000\n"
 "PO-Revision-Date: 2025-12-02 10:13+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -4164,19 +4164,29 @@ msgstr "Een bureaublad omlaag schakelen"
 msgid "Switch to Desktop %1"
 msgstr "Schakel naar bureaublad %1"
 
-#: wayland/outputmanagement_v2.cpp:509
+#: wayland/outputmanagement_v2.cpp:590
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Een van de relevante uitvoeren is niet langer beschikbaar"
 
-#: wayland/outputmanagement_v2.cpp:527
+#: wayland/outputmanagement_v2.cpp:608
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Alle uitvoeren uitschakelen via wijzigingen in de configuratie is niet "
 "toegestaan"
 
-#: wayland/outputmanagement_v2.cpp:541
+#: wayland/outputmanagement_v2.cpp:619
+#, kde-format
+msgid "Cannot add a custom mode with an empty size"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:623
+#, kde-format
+msgid "Cannot add a custom mode with a refresh rate of zero Hz"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:640
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Het apparaatstuurprogramma verwierp de uitvoerconfiguratie"

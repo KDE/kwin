@@ -64,9 +64,7 @@ msgid "Add Desktop"
 msgstr "Přidat plochu"
 
 #: ui/main.qml:82
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Rename"
+#, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "Přejmenovat"

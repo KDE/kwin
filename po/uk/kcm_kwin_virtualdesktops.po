@@ -3,15 +3,15 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2018, 2019, 2021, 2022, 2024.
+# Yuri Chornoivan <yurchor@ukr.net>, 2018, 2019, 2021, 2022, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_virtualdesktops\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-09 00:44+0000\n"
-"PO-Revision-Date: 2024-04-27 08:47+0300\n"
+"PO-Revision-Date: 2025-12-09 09:39+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
-"Language-Team: Ukrainian\n"
+"Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,9 +70,7 @@ msgid "Add Desktop"
 msgstr "Додати стільницю"
 
 #: ui/main.qml:82
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Rename"
+#, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "Перейменувати"
@@ -84,18 +82,16 @@ msgid "Remove"
 msgstr "Вилучити"
 
 #: ui/main.qml:107
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Confirm new name"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "Підтвердження нової назви"
+msgstr "Застосувати нову назву"
 
 #: ui/main.qml:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "Скасувати перейменування"
 
 #: ui/main.qml:165
 #, kde-format

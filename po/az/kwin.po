@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-06 00:44+0000\n"
+"POT-Creation-Date: 2025-12-10 00:45+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -4302,17 +4302,27 @@ msgstr "Bir İş masası aşağı keçmək"
 msgid "Switch to Desktop %1"
 msgstr "%1 İş masasına keçid"
 
-#: wayland/outputmanagement_v2.cpp:509
+#: wayland/outputmanagement_v2.cpp:590
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:527
+#: wayland/outputmanagement_v2.cpp:608
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:541
+#: wayland/outputmanagement_v2.cpp:619
+#, kde-format
+msgid "Cannot add a custom mode with an empty size"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:623
+#, kde-format
+msgid "Cannot add a custom mode with a refresh rate of zero Hz"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:640
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr ""

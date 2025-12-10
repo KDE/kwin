@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-06 00:44+0000\n"
+"POT-Creation-Date: 2025-12-10 00:45+0000\n"
 "PO-Revision-Date: 2025-12-04 01:02+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -4169,19 +4169,29 @@ msgstr "Cambiar al escritorio inferior"
 msgid "Switch to Desktop %1"
 msgstr "Cambiar al escritorio %1"
 
-#: wayland/outputmanagement_v2.cpp:509
+#: wayland/outputmanagement_v2.cpp:590
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Una de las salidas relevantes ya no está disponible"
 
-#: wayland/outputmanagement_v2.cpp:527
+#: wayland/outputmanagement_v2.cpp:608
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "No está permitido desactivar todas las salidas mediante cambios de la "
 "configuración"
 
-#: wayland/outputmanagement_v2.cpp:541
+#: wayland/outputmanagement_v2.cpp:619
+#, kde-format
+msgid "Cannot add a custom mode with an empty size"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:623
+#, kde-format
+msgid "Cannot add a custom mode with a refresh rate of zero Hz"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:640
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "El controlador ha rechazado la configuración de salida"

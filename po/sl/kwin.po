@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1724431 2025-12-06 01:25:19Z scripty $
+# $Id: kwin.po 1724648 2025-12-10 01:26:51Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-06 00:44+0000\n"
+"POT-Creation-Date: 2025-12-10 00:45+0000\n"
 "PO-Revision-Date: 2025-12-02 06:21+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -4159,17 +4159,27 @@ msgstr "Preklopi na eno namizje navzdol"
 msgid "Switch to Desktop %1"
 msgstr "Preklopi na namizje %1"
 
-#: wayland/outputmanagement_v2.cpp:509
+#: wayland/outputmanagement_v2.cpp:590
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Eden od ustreznih izhodov ni več na voljo"
 
-#: wayland/outputmanagement_v2.cpp:527
+#: wayland/outputmanagement_v2.cpp:608
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Onemogočanje vseh izhodov prek sprememb konfiguracije ni dovoljeno"
 
-#: wayland/outputmanagement_v2.cpp:541
+#: wayland/outputmanagement_v2.cpp:619
+#, kde-format
+msgid "Cannot add a custom mode with an empty size"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:623
+#, kde-format
+msgid "Cannot add a custom mode with a refresh rate of zero Hz"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:640
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Gonilnik je zavrnil konfiguracijo izhoda"

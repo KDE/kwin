@@ -7,20 +7,21 @@
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2016, 2018, 2021, 2023.
 # SPDX-FileCopyrightText: 2024 Geraldo Simiao <geraldosimiao@fedoraproject.org>
 # SPDX-FileCopyrightText: 2025 Guilherme Marçal Silva <guimarcalsilva@gmail.com>
+# SPDX-FileCopyrightText: 2025 Marcus Gama <marcus.gama@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_virtualdesktops\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-09 00:44+0000\n"
-"PO-Revision-Date: 2025-02-16 00:51-0300\n"
-"Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
+"PO-Revision-Date: 2025-12-09 07:29-0300\n"
+"Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.12.2\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -69,9 +70,7 @@ msgid "Add Desktop"
 msgstr "Adicionar área de trabalho"
 
 #: ui/main.qml:82
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Rename"
+#, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "Renomear"
@@ -83,18 +82,16 @@ msgid "Remove"
 msgstr "Remover"
 
 #: ui/main.qml:107
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Confirm new name"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "Confirmar nome novo"
+msgstr "Aplicar nome novo"
 
 #: ui/main.qml:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "Cancelar renomear"
 
 #: ui/main.qml:165
 #, kde-format

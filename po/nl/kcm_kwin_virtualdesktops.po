@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2018, 2019, 2021, 2022, 2024 Freek de Kruijf <freekdekruijf@kde.nl>
+# SPDX-FileCopyrightText: 2018, 2019, 2021, 2022, 2024, 2025 Freek de Kruijf <freekdekruijf@kde.nl>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-09 00:44+0000\n"
-"PO-Revision-Date: 2024-04-27 09:58+0200\n"
+"PO-Revision-Date: 2025-12-09 10:43+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,12 +15,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Freek de Kruijf - 2018-2019;2021-2024"
+msgstr "Freek de Kruijf - 2018-2019;2021-2025"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -65,9 +65,7 @@ msgid "Add Desktop"
 msgstr "Bureaublad toevoegen"
 
 #: ui/main.qml:82
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Rename"
+#, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "Hernoemen"
@@ -79,18 +77,16 @@ msgid "Remove"
 msgstr "Verwijderen"
 
 #: ui/main.qml:107
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Confirm new name"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "Nieuwe naam bevestigen"
+msgstr "Nieuwe naam toepassen"
 
 #: ui/main.qml:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "Hernoemen annuleren"
 
 #: ui/main.qml:165
 #, kde-format

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-09 00:44+0000\n"
-"PO-Revision-Date: 2024-04-29 10:32+0200\n"
+"PO-Revision-Date: 2025-12-09 09:18+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.8\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -64,9 +64,7 @@ msgid "Add Desktop"
 msgstr "სამუშაო მაგიდის დამატება"
 
 #: ui/main.qml:82
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Rename"
+#, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "სახელის გადარქმევა"
@@ -78,18 +76,16 @@ msgid "Remove"
 msgstr "წაშლა"
 
 #: ui/main.qml:107
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Confirm new name"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "ახალი სახელის დადასტურება"
+msgstr "ახალი სახელის გამოყენება"
 
 #: ui/main.qml:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "სახელის გადარქმევის გაუქმება"
 
 #: ui/main.qml:165
 #, kde-format

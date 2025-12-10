@@ -62,12 +62,10 @@ msgid "Add Desktop"
 msgstr "添加桌面"
 
 #: ui/main.qml:82
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Rename"
+#, kde-format
 msgctxt "@action:button"
 msgid "Rename"
-msgstr "重命名"
+msgstr ""
 
 #: ui/main.qml:92
 #, kde-format
@@ -76,12 +74,10 @@ msgid "Remove"
 msgstr "移除"
 
 #: ui/main.qml:107
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Confirm new name"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "确认新名称"
+msgstr ""
 
 #: ui/main.qml:120
 #, kde-format
