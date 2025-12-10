@@ -105,7 +105,7 @@ void ScreenTransformEffect::addScreen(LogicalOutput *screen)
         delegate.setViewport(screen->geometryF());
         delegate.setScale(screen->scale());
         scene->prePaint(&delegate);
-        scene->paint(renderTarget, QPoint(), screen->geometry());
+        scene->paint(renderTarget, QPoint(), QRegion(screen->geometry()));
         scene->postPaint();
     });
 }
@@ -221,7 +221,7 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     GLFramebuffer::popFramebuffer();
 
     const qreal blendFactor = it->m_timeLine.value();
-    const QRectF screenRect = screen->geometry();
+    const RectF screenRect = screen->geometry();
     const qreal angle = it->m_angle * (1 - blendFactor);
 
     const auto scale = viewport.scale();

@@ -65,8 +65,8 @@ void TestFractionalScale::initTestCase()
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
-    QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1024, 819));
-    QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 640, 512));
+    QCOMPARE(outputs[0]->geometry(), Rect(0, 0, 1024, 819));
+    QCOMPARE(outputs[1]->geometry(), Rect(1280, 0, 640, 512));
     QCOMPARE(outputs[0]->scale(), 1.25);
     QCOMPARE(outputs[1]->scale(), 2.0);
 }

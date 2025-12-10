@@ -96,8 +96,8 @@ void InputMethodTest::initTestCase()
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
-    QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
-    QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(outputs[0]->geometry(), Rect(0, 0, 1280, 1024));
+    QCOMPARE(outputs[1]->geometry(), Rect(1280, 0, 1280, 1024));
 }
 
 void InputMethodTest::init()

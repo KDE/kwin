@@ -63,7 +63,7 @@ static bool screenContainsPos(const QPointF &pos)
     return false;
 }
 
-static QPointF confineToBoundingBox(const QPointF &pos, const QRectF &boundingBox)
+static QPointF confineToBoundingBox(const QPointF &pos, const RectF &boundingBox)
 {
     return QPointF(
         std::clamp(pos.x(), boundingBox.left(), boundingBox.right() - 1.0),
@@ -831,7 +831,7 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
     return m_pos;
 }
 
-PointerInputRedirection::EdgeBarrierType PointerInputRedirection::edgeBarrierType(const QPointF &pos, const QRectF &lastOutputGeometry) const
+PointerInputRedirection::EdgeBarrierType PointerInputRedirection::edgeBarrierType(const QPointF &pos, const RectF &lastOutputGeometry) const
 {
     constexpr qreal cornerThreshold = 15;
     const auto moveResizeWindow = workspace()->moveResizeWindow();
@@ -874,7 +874,7 @@ qreal PointerInputRedirection::edgeBarrier(EdgeBarrierType type) const
 QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const LogicalOutput *currentOutput, std::chrono::microseconds time)
 {
     // optimization to avoid looping over all outputs
-    if (exclusiveContains(currentOutput->geometry(), m_pos)) {
+    if (RectF(currentOutput->geometry()).contains(m_pos)) {
         m_movementInEdgeBarrier = QPointF();
         return pos;
     }
@@ -1109,7 +1109,7 @@ void CursorImage::updateCursorOutputs(const QPointF &pos)
     if (m_currentSource == m_serverCursor.surface.get()) {
         auto cursorSurface = m_serverCursor.surface->surface();
         if (cursorSurface) {
-            const QRectF cursorGeometry(pos - m_currentSource->hotspot(), m_currentSource->size());
+            const RectF cursorGeometry(pos - m_currentSource->hotspot(), m_currentSource->size());
             cursorSurface->setOutputs(waylandServer()->display()->outputsIntersecting(cursorGeometry.toAlignedRect()),
                                       waylandServer()->display()->largestIntersectingOutput(cursorGeometry.toAlignedRect()));
         }

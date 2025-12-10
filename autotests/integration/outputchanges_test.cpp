@@ -160,8 +160,8 @@ void OutputChangesTest::initTestCase()
 
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
-    QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
-    QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(outputs[0]->geometry(), Rect(0, 0, 1280, 1024));
+    QCOMPARE(outputs[1]->geometry(), Rect(1280, 0, 1280, 1024));
 }
 
 void OutputChangesTest::init()
@@ -234,7 +234,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
     }
     workspace()->applyOutputConfiguration(config);
 
-    QCOMPARE(workspace()->outputs().front()->geometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(workspace()->outputs().front()->geometry(), Rect(0, 0, 1280, 1024));
 
     // The position of the window relative to its output should remain the same.
     QCOMPARE(window->frameGeometry(), RectF(42, 67, 100, 50));
@@ -591,8 +591,8 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280 / 2, 1024), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    const QRectF rightQuickTileGeomScreen2 = QRectF(1280 + 1280 / 2, 0, 1280 / 2, 1024);
-    const QRectF rightQuickTileGeomScreen1 = QRectF(1280 / 2, 0, 1280 / 2, 1024);
+    const RectF rightQuickTileGeomScreen2 = RectF(1280 + 1280 / 2, 0, 1280 / 2, 1024);
+    const RectF rightQuickTileGeomScreen1 = RectF(1280 / 2, 0, 1280 / 2, 1024);
     QCOMPARE(window->frameGeometry(), rightQuickTileGeomScreen2);
     QCOMPARE(window->moveResizeGeometry(), rightQuickTileGeomScreen2);
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
@@ -670,7 +670,7 @@ void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(100, 50), Qt::blue);
 
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
 
     // add a second output
     {
@@ -689,7 +689,7 @@ void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280 / 2, 1024), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    const QRectF rightQuickTileGeom = QRectF(1280 + 1280 / 2, 0, 1280 / 2, 1024);
+    const RectF rightQuickTileGeom = RectF(1280 + 1280 / 2, 0, 1280 / 2, 1024);
     QCOMPARE(window->frameGeometry(), rightQuickTileGeom);
     QCOMPARE(window->moveResizeGeometry(), rightQuickTileGeom);
     QCOMPARE(window->output()->backendOutput(), outputs[1]);
@@ -773,7 +773,7 @@ void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
-    const QRectF originalGeometry = window->moveResizeGeometry();
+    const RectF originalGeometry = window->moveResizeGeometry();
 
     // Enable the right output
     {
@@ -784,7 +784,7 @@ void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
     }
 
     QFETCH(size_t, tileIndex);
-    const QRectF customTileGeom = workspace()->rootTile(workspace()->findOutput(outputs[1]))->childTiles()[tileIndex]->windowGeometry();
+    const RectF customTileGeom = workspace()->rootTile(workspace()->findOutput(outputs[1]))->childTiles()[tileIndex]->windowGeometry();
 
     // Move the window to the right monitor and put it in the middle tile.
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
@@ -929,7 +929,7 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
-    const QRectF originalGeometry = window->moveResizeGeometry();
+    const RectF originalGeometry = window->moveResizeGeometry();
 
     // Enable the right output
     {
@@ -1024,8 +1024,8 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
     QVERIFY(window);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
 
-    const QRectF originalGeometry = window->moveResizeGeometry();
-    const QRectF originalGeometryRestore = window->geometryRestore();
+    const RectF originalGeometry = window->moveResizeGeometry();
+    const RectF originalGeometryRestore = window->geometryRestore();
 
     // Enable the right output
     {
@@ -1045,7 +1045,7 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
     QVERIFY(workspace()->findOutput(outputs[1])->geometry().contains(window->geometryRestore().topLeft().toPoint()));
     QCOMPARE(window->geometryRestore().size(), QSizeF(0, 0));
 
-    const QRectF rightGeometryRestore = window->geometryRestore();
+    const RectF rightGeometryRestore = window->geometryRestore();
 
     // Disable the right output
     {
@@ -1131,7 +1131,7 @@ void OutputChangesTest::testMaximizedWindowDoesntDisappear()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     window->move(workspace()->findOutput(outputs[1])->geometry().topLeft() + QPoint(3500, 500));
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
     QVERIFY(workspace()->findOutput(outputs[1])->geometryF().contains(originalGeometry));
 
     // vertically maximize the window
@@ -1263,7 +1263,7 @@ void OutputChangesTest::testXwaylandScaleChange()
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     X11Window *window = createX11Window(c.get(), QRect(0, 0, 100, 200));
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
 
     // disable the left output -> window gets moved to the right output
     {
@@ -2079,7 +2079,7 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
         QVERIFY(workspace()->findOutput(external)->geometryF().contains(window->frameGeometry()));
     }
 
-    const QRectF originalGeometry = window->frameGeometry();
+    const RectF originalGeometry = window->frameGeometry();
 
     // now remove the external output
     {

@@ -166,17 +166,17 @@ QPointF Cursor::hotspot() const
     return m_source->hotspot();
 }
 
-QRectF Cursor::geometry() const
+RectF Cursor::geometry() const
 {
     return rect().translated(m_pos - hotspot());
 }
 
-QRectF Cursor::rect() const
+RectF Cursor::rect() const
 {
     if (Q_UNLIKELY(!m_source)) {
-        return QRectF();
+        return RectF();
     } else {
-        return QRectF(QPointF(0, 0), m_source->size());
+        return RectF(QPointF(0, 0), m_source->size());
     }
 }
 

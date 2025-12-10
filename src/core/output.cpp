@@ -420,14 +420,14 @@ qreal LogicalOutput::scale() const
     return m_backendOutput->scale();
 }
 
-QRect LogicalOutput::geometry() const
+Rect LogicalOutput::geometry() const
 {
-    return QRect(m_backendOutput->position(), m_backendOutput->pixelSize() / scale());
+    return Rect(m_backendOutput->position(), m_backendOutput->pixelSize() / scale());
 }
 
-QRectF LogicalOutput::geometryF() const
+RectF LogicalOutput::geometryF() const
 {
-    return QRectF(m_backendOutput->position(), QSizeF(m_backendOutput->pixelSize()) / scale());
+    return RectF(m_backendOutput->position(), QSizeF(m_backendOutput->pixelSize()) / scale());
 }
 
 QSize LogicalOutput::modeSize() const

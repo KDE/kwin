@@ -82,7 +82,7 @@ void MoveResizeWindowTest::initTestCase()
     Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 1);
-    QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(outputs[0]->geometry(), Rect(0, 0, 1280, 1024));
 }
 
 void MoveResizeWindowTest::init()
@@ -91,7 +91,7 @@ void MoveResizeWindowTest::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1 | Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1));
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 1);
-    QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(outputs[0]->geometry(), Rect(0, 0, 1280, 1024));
     QVERIFY(Test::waitForWaylandPointer());
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
@@ -1079,8 +1079,8 @@ void MoveResizeWindowTest::testRestrictedMoveMultiMonitor()
     Test::setOutputConfig({QRect(0, 1000, 1000, 1000), QRect(1000, 0, 1000, 3000)});
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
-    QCOMPARE(outputs[0]->geometry(), QRect(0, 1000, 1000, 1000));
-    QCOMPARE(outputs[1]->geometry(), QRect(1000, 0, 1000, 3000));
+    QCOMPARE(outputs[0]->geometry(), Rect(0, 1000, 1000, 1000));
+    QCOMPARE(outputs[1]->geometry(), Rect(1000, 0, 1000, 3000));
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);

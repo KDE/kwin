@@ -10,6 +10,7 @@
 
 #include <kwin_export.h>
 
+#include "core/rect.h"
 #include "renderloop.h"
 #include "utils/edid.h"
 
@@ -196,22 +197,22 @@ public:
     /**
      * Returns geometry of this output in device independent pixels.
      */
-    QRect geometry() const;
+    Rect geometry() const;
 
     /**
      * Returns geometry of this output in device independent pixels, without rounding
      */
-    QRectF geometryF() const;
+    RectF geometryF() const;
 
     /**
-     * Equivalent to `QRect(QPoint(0, 0), geometry().size())`
+     * Equivalent to `Rect(QPoint(0, 0), geometry().size())`
      */
-    QRect rect() const;
+    Rect rect() const;
 
     /**
-     * Equivalent to `QRectF(QPointF(0, 0), geometryF().size())`
+     * Equivalent to `RectF(QPointF(0, 0), geometryF().size())`
      */
-    QRectF rectF() const;
+    RectF rectF() const;
 
     uint32_t refreshRate() const;
 
@@ -287,14 +288,14 @@ protected:
     int m_refCount = 1;
 };
 
-inline QRect LogicalOutput::rect() const
+inline Rect LogicalOutput::rect() const
 {
-    return QRect(QPoint(0, 0), geometry().size());
+    return Rect(QPoint(0, 0), geometry().size());
 }
 
-inline QRectF LogicalOutput::rectF() const
+inline RectF LogicalOutput::rectF() const
 {
-    return QRectF(QPointF(0, 0), geometryF().size());
+    return RectF(QPointF(0, 0), geometryF().size());
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const LogicalOutput *output);

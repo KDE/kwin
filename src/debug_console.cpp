@@ -906,7 +906,7 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
         }
         if (value.userType() == qMetaTypeId<KWin::LogicalOutput *>()) {
             if (auto output = value.value<KWin::LogicalOutput *>()) {
-                return QStringLiteral("%1 (%2@%3x)").arg(output->name(), displayText(output->geometry(), locale), QString::number(output->scale()));
+                return QStringLiteral("%1 (%2@%3x)").arg(output->name(), displayText(QVariant::fromValue(output->geometry()), locale), QString::number(output->scale()));
             } else {
                 return QStringLiteral("nullptr");
             }

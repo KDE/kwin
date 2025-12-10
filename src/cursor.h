@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "kwin_export.h"
+#include "core/rect.h"
 
 // Qt
 #include <QHash>
@@ -114,8 +114,8 @@ public:
     void setPos(const QPointF &pos);
 
     QPointF hotspot() const;
-    QRectF geometry() const;
-    QRectF rect() const;
+    RectF geometry() const;
+    RectF rect() const;
 
     CursorSource *source() const;
     void setSource(CursorSource *source);

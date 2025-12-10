@@ -1347,7 +1347,7 @@ static QRegion interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, 
 
     QRegion offscreenArea(availableArea.toAlignedRect());
     for (const LogicalOutput *output : outputs) {
-        offscreenArea -= output->geometry();
+        offscreenArea -= QRegion(output->geometry());
     }
 
     // RectF is used because QRect::right() returns left() + width() - 1; RectF::right() returns left() + width()
@@ -2036,7 +2036,7 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         if (isActive() && options->isClickRaise()) {
             autoRaise();
         }
-        workspace()->showWindowMenu(QRect(globalPos.toPoint(), globalPos.toPoint()), this);
+        workspace()->showWindowMenu(Rect(globalPos.toPoint(), globalPos.toPoint()), this);
         break;
     case Options::MouseToggleRaiseAndLower:
         workspace()->raiseOrLowerWindow(this);
@@ -3095,7 +3095,7 @@ void Window::showApplicationMenu(int actionId)
         decoration()->showApplicationMenu(actionId);
     } else {
         // we don't know where the application menu button will be, show it in the top left corner instead
-        Workspace::self()->showApplicationMenu(QRect(), this, actionId);
+        Workspace::self()->showApplicationMenu(Rect(), this, actionId);
     }
 }
 

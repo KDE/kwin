@@ -129,15 +129,15 @@ public:
      */
     Window *findInternal(QWindow *w) const;
 
-    QRectF clientArea(clientAreaOption, const LogicalOutput *output, const VirtualDesktop *desktop) const;
-    QRectF clientArea(clientAreaOption, const Window *window) const;
-    QRectF clientArea(clientAreaOption, const Window *window, const LogicalOutput *output) const;
-    QRectF clientArea(clientAreaOption, const Window *window, const QPointF &pos) const;
+    RectF clientArea(clientAreaOption, const LogicalOutput *output, const VirtualDesktop *desktop) const;
+    RectF clientArea(clientAreaOption, const Window *window) const;
+    RectF clientArea(clientAreaOption, const Window *window, const LogicalOutput *output) const;
+    RectF clientArea(clientAreaOption, const Window *window, const QPointF &pos) const;
 
     /**
      * Returns the geometry of this Workspace, i.e. the bounding rectangle of all outputs.
      */
-    QRect geometry() const;
+    Rect geometry() const;
     StrutRects restrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
 
     bool initializing() const;
@@ -173,9 +173,9 @@ public:
      */
     void setMoveResizeWindow(Window *window);
 
-    QRectF adjustClientArea(Window *window, const QRectF &area) const;
+    RectF adjustClientArea(Window *window, const RectF &area) const;
     QPointF adjustWindowPosition(const Window *window, QPointF pos, bool unrestricted, double snapAdjust = 1.0) const;
-    QRectF adjustWindowSize(const Window *window, QRectF moveResizeGeom, Gravity gravity) const;
+    RectF adjustWindowSize(const Window *window, RectF moveResizeGeom, Gravity gravity) const;
     void raiseWindow(Window *window, bool nogroup = false);
     void lowerWindow(Window *window, bool nogroup = false);
 #if KWIN_BUILD_X11
@@ -220,14 +220,14 @@ public:
     RootTile *rootTile(LogicalOutput *output, VirtualDesktop *desktop) const;
 
 public:
-    QPointF cascadeOffset(const QRectF &area) const;
+    QPointF cascadeOffset(const RectF &area) const;
 
     //-------------------------------------------------
     // Unsorted
 
 public:
     StrutRects previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
-    QHash<const LogicalOutput *, QRect> previousScreenSizes() const;
+    QHash<const LogicalOutput *, Rect> previousScreenSizes() const;
 
     /**
      * Returns @c true if the workspace is currently being rearranged; otherwise returns @c false.
@@ -283,13 +283,13 @@ public:
     /**
      * Shows the window menu and makes it active if it's not already.
      */
-    void showWindowMenu(const QRect &pos, Window *cl);
+    void showWindowMenu(const Rect &pos, Window *cl);
     UserActionsMenu *userActionsMenu() const
     {
         return m_userActionsMenu;
     }
 
-    void showApplicationMenu(const QRect &pos, Window *window, int actionId);
+    void showApplicationMenu(const Rect &pos, Window *window, int actionId);
 
     void updateMinimizedOfTransients(Window *);
     void updateOnAllDesktopsOfTransients(Window *);
@@ -696,12 +696,12 @@ private:
 #if KWIN_BUILD_X11
     std::unique_ptr<KStartupInfo> m_startup;
 #endif
-    QHash<const VirtualDesktop *, QRectF> m_workAreas;
+    QHash<const VirtualDesktop *, RectF> m_workAreas;
     QHash<const VirtualDesktop *, StrutRects> m_restrictedAreas;
-    QHash<const VirtualDesktop *, QHash<const LogicalOutput *, QRectF>> m_screenAreas;
-    QRect m_geometry;
+    QHash<const VirtualDesktop *, QHash<const LogicalOutput *, RectF>> m_screenAreas;
+    Rect m_geometry;
 
-    QHash<const LogicalOutput *, QRect> m_oldScreenGeometries;
+    QHash<const LogicalOutput *, Rect> m_oldScreenGeometries;
     QHash<const VirtualDesktop *, StrutRects> m_oldRestrictedAreas;
     QTimer m_rearrangeTimer;
     bool m_inRearrange = false;

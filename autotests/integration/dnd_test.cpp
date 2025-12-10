@@ -121,8 +121,8 @@ void DndTest::initTestCase()
     });
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
-    QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
-    QCOMPARE(outputs[1]->geometry(), QRect(1280, 0, 1280, 1024));
+    QCOMPARE(outputs[0]->geometry(), Rect(0, 0, 1280, 1024));
+    QCOMPARE(outputs[1]->geometry(), Rect(1280, 0, 1280, 1024));
 
     // Generate tablet tool events so the corresponding tablet tool device is registered.
     Test::tabletToolProximityEvent(QPointF(640, 480), 0, 0, 0, 0, true, 0, 0);

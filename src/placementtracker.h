@@ -8,11 +8,11 @@
 */
 #pragma once
 
+#include "core/rect.h"
 #include "utils/common.h"
 
 #include <QHash>
 #include <QList>
-#include <QRect>
 #include <QString>
 #include <QUuid>
 
@@ -41,12 +41,12 @@ private:
     struct WindowData
     {
         QString outputUuid;
-        QRectF geometry;
+        RectF geometry;
         MaximizeMode maximize;
         QuickTileMode quickTile;
-        QRectF geometryRestore;
+        RectF geometryRestore;
         bool fullscreen;
-        QRectF fullscreenGeometryRestore;
+        RectF fullscreenGeometryRestore;
         uint32_t interactiveMoveResizeCount;
     };
 

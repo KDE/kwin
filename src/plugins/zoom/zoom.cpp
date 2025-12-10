@@ -292,7 +292,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         const int x = m_cursorPoint.x() * m_zoom - m_prevPoint.x() * (m_zoom - 1.0);
         const int y = m_cursorPoint.y() * m_zoom - m_prevPoint.y() * (m_zoom - 1.0);
         const int threshold = 4;
-        const QRectF currScreen = effects->screenAt(QPoint(x, y))->geometry();
+        const RectF currScreen = effects->screenAt(QPoint(x, y))->geometry();
 
         // bounds of the screen the cursor's on
         const int screenTop = currScreen.top();
