@@ -1287,42 +1287,35 @@ private:
 namespace
 {
 
-/**
- * @returns if a command was performed, whether or not the event should be filtered out
- *          if no command was performed, std::nullopt
- */
-std::optional<bool> performModifierWindowMouseAction(PointerButtonEvent *event, Window *window)
+static std::optional<Options::MouseCommand> globalWindowAction(Qt::MouseButton button, Qt::KeyboardModifiers modifiers)
 {
-    if (event->modifiersRelevantForShortcuts != options->commandAllModifier()) {
+    if (modifiers != options->commandAllModifier()) {
         return std::nullopt;
     }
-    if (input()->pointer()->isConstrained() || workspace()->globalShortcutsDisabled()) {
+    if (workspace()->globalShortcutsDisabled()) {
         return std::nullopt;
     }
-    switch (event->button) {
+    switch (button) {
     case Qt::LeftButton:
-        return window->performMousePressCommand(options->commandAll1(), event->position);
+        return options->commandAll1();
     case Qt::MiddleButton:
-        return window->performMousePressCommand(options->commandAll2(), event->position);
+        return options->commandAll2();
     case Qt::RightButton:
-        return window->performMousePressCommand(options->commandAll3(), event->position);
+        return options->commandAll3();
     default:
         return std::nullopt;
     }
 }
-/**
- * @returns if a command was performed, whether or not the event should be filtered out
- *          if no command was performed, std::nullopt
- */
-std::optional<bool> performWindowMouseAction(PointerButtonEvent *event, Window *window)
+
+static std::optional<Options::MouseCommand> windowActionForPointerButtonPress(PointerButtonEvent *event, Window *window)
 {
-    if (const auto globalAction = performModifierWindowMouseAction(event, window)) {
-        return globalAction;
-    } else if (const auto command = window->getMousePressCommand(event->button)) {
-        return window->performMousePressCommand(*command, event->position);
-    } else {
-        return std::nullopt;
+    if (!input()->pointer()->isConstrained()) {
+        if (const auto command = globalWindowAction(event->button, event->modifiersRelevantForShortcuts)) {
+            return command;
+        }
     }
+
+    return window->getMousePressCommand(event->button);
 }
 
 std::optional<Options::MouseCommand> globalWindowWheelAction(PointerAxisEvent *event)
@@ -1591,12 +1584,19 @@ public:
         if (!decoration) {
             return false;
         }
+
+        Window *window = decoration->window();
         const QPointF globalPos = event->position;
-        const QPointF p = event->position - decoration->window()->pos();
-        const auto actionResult = performModifierWindowMouseAction(event, decoration->window());
-        if (actionResult) {
-            return *actionResult;
+        const QPointF p = event->position - window->pos();
+
+        if (event->state == PointerButtonState::Pressed) {
+            if (const auto command = windowActionForPointerButtonPress(event, window)) {
+                if (window->performMousePressCommand(*command, event->position)) {
+                    return true;
+                }
+            }
         }
+
         QMouseEvent e(event->state == PointerButtonState::Pressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease, p, event->position, event->button, event->buttons, event->modifiers);
         e.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         e.setAccepted(false);
@@ -1605,14 +1605,14 @@ public:
             // if a non-active window is closed through the decoration, it should be allowed to activate itself
             // TODO use the event serial instead, once that's plumbed through
             const uint32_t serial = waylandServer()->display()->nextSerial();
-            const QString token = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, serial, waylandServer()->seat(), decoration->window()->desktopFileName());
-            workspace()->setActivationToken(token, serial, decoration->window()->desktopFileName());
+            const QString token = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, serial, waylandServer()->seat(), window->desktopFileName());
+            workspace()->setActivationToken(token, serial, window->desktopFileName());
         }
         if (!e.isAccepted() && event->state == PointerButtonState::Pressed) {
-            decoration->window()->processDecorationButtonPress(p, globalPos, event->button);
+            window->processDecorationButtonPress(p, globalPos, event->button);
         }
         if (event->state == PointerButtonState::Released) {
-            decoration->window()->processDecorationButtonRelease(event->button);
+            window->processDecorationButtonRelease(event->button);
         }
         return true;
     }
@@ -1927,7 +1927,10 @@ public:
             if (!window || !window->isClient()) {
                 return false;
             }
-            return performWindowMouseAction(event, window).value_or(false);
+            if (const auto command = windowActionForPointerButtonPress(event, window)) {
+                return window->performMousePressCommand(*command, event->position);
+            }
+            return false;
         } else {
             // because of implicit pointer grab while a button is pressed, this may need to
             // target a different window than the one with pointer focus
