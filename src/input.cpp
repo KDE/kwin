@@ -1318,6 +1318,15 @@ static std::optional<Options::MouseCommand> windowActionForPointerButtonPress(Po
     return window->getMousePressCommand(event->button);
 }
 
+static std::optional<Options::MouseCommand> windowActionForTouchDown(Window *window)
+{
+    if (const auto command = globalWindowAction(Qt::LeftButton, input()->modifiersRelevantForGlobalShortcuts())) {
+        return command;
+    } else {
+        return window->getMousePressCommand(Qt::LeftButton);
+    }
+}
+
 std::optional<Options::MouseCommand> globalWindowWheelAction(PointerAxisEvent *event)
 {
     if (event->orientation != Qt::Vertical) {
@@ -1973,8 +1982,7 @@ public:
         if (!window || !window->isClient()) {
             return false;
         }
-        const auto command = window->getMousePressCommand(Qt::LeftButton);
-        if (command) {
+        if (const auto command = windowActionForTouchDown(window)) {
             return window->performMousePressCommand(*command, event->pos);
         }
         return false;
