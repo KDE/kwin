@@ -586,7 +586,6 @@ void DebugConsoleFilter::tabletToolTipEvent(TabletToolTipEvent *event)
                    QStringLiteral("%1,%2").arg(event->xTilt).arg(event->yTilt))
         + tableRow(i18n("Rotation"), QString::number(event->rotation))
         + tableRow(i18n("Pressure"), QString::number(event->pressure))
-        + tableRow(i18n("Distance"), QString::number(event->distance))
         + tableRow(i18n("Slider Position"), QString::number(event->sliderPosition))
         + tableRow(i18n("Buttons"), QString::number(event->buttons))
         + s_tableEnd;
