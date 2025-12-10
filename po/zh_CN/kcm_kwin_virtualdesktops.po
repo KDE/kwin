@@ -65,7 +65,7 @@ msgstr "添加桌面"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
-msgstr "重命名"
+msgstr ""
 
 #: ui/main.qml:135
 #, kde-format
