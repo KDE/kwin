@@ -1327,6 +1327,25 @@ static std::optional<Options::MouseCommand> windowActionForTouchDown(Window *win
     }
 }
 
+static std::optional<Options::MouseCommand> windowActionForTabletTipDown(Window *window)
+{
+    if (const auto command = globalWindowAction(Qt::LeftButton, input()->modifiersRelevantForGlobalShortcuts())) {
+        return command;
+    } else {
+        return window->getMousePressCommand(Qt::LeftButton);
+    }
+}
+
+static std::optional<Options::MouseCommand> windowActionForTabletButtonPress(TabletToolButtonEvent *event, Window *window)
+{
+    const auto button = event->button == BTN_STYLUS ? Qt::MiddleButton : Qt::RightButton;
+    if (const auto command = globalWindowAction(button, input()->modifiersRelevantForGlobalShortcuts())) {
+        return command;
+    } else {
+        return window->getMousePressCommand(button);
+    }
+}
+
 std::optional<Options::MouseCommand> globalWindowWheelAction(PointerAxisEvent *event)
 {
     if (event->orientation != Qt::Vertical) {
@@ -2007,8 +2026,7 @@ public:
         }
 
         if (event->type == TabletToolTipEvent::Press) {
-            const auto command = window->getMousePressCommand(Qt::LeftButton);
-            if (command) {
+            if (const auto command = windowActionForTabletTipDown(window)) {
                 return window->performMousePressCommand(*command, event->position);
             }
         } else {
@@ -2028,8 +2046,7 @@ public:
         }
 
         if (event->pressed) {
-            const auto command = window->getMousePressCommand(event->button == BTN_STYLUS ? Qt::MiddleButton : Qt::RightButton);
-            if (command) {
+            if (const auto command = windowActionForTabletButtonPress(event, window)) {
                 return window->performMousePressCommand(*command, input()->tablet()->position());
             }
         } else {
