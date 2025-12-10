@@ -156,7 +156,7 @@ public:
     QString m_name;
     subpixel m_subPixel = subpixel_unknown;
     transform m_transform = transform_normal;
-    QList<OutputDeviceModeV2Interface *> m_modes;
+    std::vector<std::unique_ptr<OutputDeviceModeV2Interface>> m_modes;
     OutputDeviceModeV2Interface *m_currentMode = nullptr;
     QByteArray m_edid;
     bool m_enabled = true;
@@ -339,7 +339,6 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, BackendOutput
 
 OutputDeviceV2Interface::~OutputDeviceV2Interface()
 {
-    d->globalRemove();
 }
 
 void OutputDeviceV2Interface::remove()
@@ -355,6 +354,8 @@ void OutputDeviceV2Interface::remove()
         displayPrivate->outputdevicesV2.removeOne(this);
     }
 
+    // NOTE that output modes can only be deleted after the global remove,
+    // otherwise the client temporarily has an output without any modes
     d->globalRemove();
 }
 
@@ -385,8 +386,8 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendName(resource);
     sendSerialNumber(resource);
 
-    for (OutputDeviceModeV2Interface *mode : std::as_const(m_modes)) {
-        sendNewMode(resource, mode);
+    for (const auto &mode : m_modes) {
+        sendNewMode(resource, mode.get());
     }
     sendCurrentMode(resource);
     sendUuid(resource);
@@ -722,16 +723,15 @@ void OutputDeviceV2Interface::updateScale()
 
 void OutputDeviceV2Interface::updateModes()
 {
-    const auto oldModes = d->m_modes;
-    d->m_modes.clear();
+    auto oldModes = std::move(d->m_modes);
     d->m_currentMode = nullptr;
 
     const auto clientResources = d->resourceMap();
     const auto nativeModes = d->m_handle->modes();
 
     for (const std::shared_ptr<OutputMode> &mode : nativeModes) {
-        OutputDeviceModeV2Interface *deviceMode = new OutputDeviceModeV2Interface(mode, this);
-        d->m_modes.append(deviceMode);
+        d->m_modes.push_back(std::make_unique<OutputDeviceModeV2Interface>(mode));
+        OutputDeviceModeV2Interface *deviceMode = d->m_modes.back().get();
 
         if (d->m_handle->currentMode() == mode) {
             d->m_currentMode = deviceMode;
@@ -746,17 +746,17 @@ void OutputDeviceV2Interface::updateModes()
         d->sendCurrentMode(resource);
     }
 
-    qDeleteAll(oldModes.crbegin(), oldModes.crend());
-
+    // make sure old modes are removed before the done event
+    oldModes.clear();
     scheduleDone();
 }
 
 void OutputDeviceV2Interface::updateCurrentMode()
 {
-    for (OutputDeviceModeV2Interface *mode : std::as_const(d->m_modes)) {
+    for (const auto &mode : d->m_modes) {
         if (mode->handle().lock() == d->m_handle->currentMode()) {
-            if (d->m_currentMode != mode) {
-                d->m_currentMode = mode;
+            if (d->m_currentMode != mode.get()) {
+                d->m_currentMode = mode.get();
                 const auto clientResources = d->resourceMap();
                 for (auto resource : clientResources) {
                     d->sendCurrentMode(resource);
@@ -1124,9 +1124,8 @@ OutputDeviceModeV2InterfacePrivate::OutputDeviceModeV2InterfacePrivate(OutputDev
 {
 }
 
-OutputDeviceModeV2Interface::OutputDeviceModeV2Interface(std::shared_ptr<OutputMode> handle, QObject *parent)
-    : QObject(parent)
-    , d(new OutputDeviceModeV2InterfacePrivate(this, handle))
+OutputDeviceModeV2Interface::OutputDeviceModeV2Interface(std::shared_ptr<OutputMode> handle)
+    : d(new OutputDeviceModeV2InterfacePrivate(this, handle))
 {
 }
 
