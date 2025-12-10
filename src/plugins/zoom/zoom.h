@@ -84,6 +84,7 @@ private:
         MouseTrackingCentered = 1,
         MouseTrackingPush = 2,
         MouseTrackingDisabled = 3,
+        MouseTrackingCenteredStrict = 4,
     };
 
     enum MousePointerType {
