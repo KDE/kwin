@@ -546,6 +546,7 @@ void DebugConsoleFilter::tabletToolProximityEvent(TabletToolProximityEvent *even
         + tableRow(i18n("Tilt"),
                    QStringLiteral("%1,%2").arg(event->xTilt).arg(event->yTilt))
         + tableRow(i18n("Rotation"), QString::number(event->rotation))
+        + tableRow(i18n("Distance"), QString::number(event->distance))
         + s_tableEnd;
 
     m_textEdit->insertHtml(text);
@@ -564,6 +565,7 @@ void DebugConsoleFilter::tabletToolAxisEvent(TabletToolAxisEvent *event)
                    QStringLiteral("%1,%2").arg(event->xTilt).arg(event->yTilt))
         + tableRow(i18n("Rotation"), QString::number(event->rotation))
         + tableRow(i18n("Pressure"), QString::number(event->pressure))
+        + tableRow(i18n("Distance"), QString::number(event->distance))
         + tableRow(i18n("Buttons"), QString::number(event->buttons))
         + s_tableEnd;
 
