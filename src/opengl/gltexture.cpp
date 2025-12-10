@@ -272,10 +272,10 @@ void GLTexture::render(const QSizeF &size)
 void GLTexture::render(const QRegion &region, const QSizeF &targetSize, bool hardwareClipping)
 {
     const auto rotatedSize = d->m_textureToBufferTransform.map(size());
-    render(QRectF(QPoint(), rotatedSize), region, targetSize, hardwareClipping);
+    render(RectF(QPoint(), rotatedSize), region, targetSize, hardwareClipping);
 }
 
-void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF &targetSize, bool hardwareClipping)
+void GLTexture::render(const RectF &source, const QRegion &region, const QSizeF &targetSize, bool hardwareClipping)
 {
     if (targetSize.isEmpty()) {
         return; // nothing to paint and m_vbo is likely nullptr and d->m_cachedSize empty as well, #337090

@@ -52,7 +52,7 @@ public:
     int m_normalizeActive; // 0 - no, otherwise refcount
     std::unique_ptr<GLVertexBuffer> m_vbo;
     QSizeF m_cachedSize;
-    QRectF m_cachedSource;
+    RectF m_cachedSource;
     OutputTransform m_cachedContentTransform;
 
     Q_DISABLE_COPY(GLTexturePrivate)

@@ -11,7 +11,8 @@
 #pragma once
 #include "kwin_export.h"
 
-#include <QRect>
+#include "core/rect.h"
+
 #include <QStack>
 #include <epoxy/gl.h>
 
@@ -102,13 +103,13 @@ public:
      * @see blitSupported
      * @since 4.8
      */
-    void blitFromFramebuffer(const QRect &source = QRect(), const QRect &destination = QRect(), GLenum filter = GL_LINEAR, bool flipX = false, bool flipY = false);
+    void blitFromFramebuffer(const Rect &source = Rect(), const Rect &destination = Rect(), GLenum filter = GL_LINEAR, bool flipX = false, bool flipY = false);
 
     /**
      * Blits from @a source rectangle in logical coordinates in the current framebuffer to the @a destination rectangle in texture-local coordinates
      * in this framebuffer, taking into account any transformations the source render target may have
      */
-    bool blitFromRenderTarget(const RenderTarget &sourceRenderTarget, const RenderViewport &sourceViewport, const QRect &source, const QRect &destination);
+    bool blitFromRenderTarget(const RenderTarget &sourceRenderTarget, const RenderViewport &sourceViewport, const Rect &source, const Rect &destination);
 
     /**
      * @returns the color attachment of this fbo. May be nullptr

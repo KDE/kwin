@@ -208,7 +208,7 @@ void GLFramebuffer::initDepthStencilAttachment()
     }
 }
 
-void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destination, GLenum filter, bool flipX, bool flipY)
+void GLFramebuffer::blitFromFramebuffer(const Rect &source, const Rect &destination, GLenum filter, bool flipX, bool flipY)
 {
     if (!valid()) {
         return;
@@ -242,8 +242,8 @@ void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destin
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, handle());
     glBindFramebuffer(GL_READ_FRAMEBUFFER, top->handle());
 
-    const QRect s = source.isNull() ? QRect(QPoint(0, 0), top->size()) : source;
-    const QRect d = destination.isNull() ? QRect(QPoint(0, 0), size()) : destination;
+    const Rect s = source.isNull() ? Rect(QPoint(0, 0), top->size()) : source;
+    const Rect d = destination.isNull() ? Rect(QPoint(0, 0), size()) : destination;
 
     GLuint srcX0 = s.x();
     GLuint srcY0 = top->size().height() - (s.y() + s.height());
@@ -266,7 +266,7 @@ void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destin
     GLFramebuffer::popFramebuffer();
 }
 
-bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget, const RenderViewport &sourceViewport, const QRect &source, const QRect &destination)
+bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget, const RenderViewport &sourceViewport, const Rect &source, const Rect &destination)
 {
     OutputTransform transform = sourceRenderTarget.texture() ? sourceRenderTarget.texture()->contentTransform() : OutputTransform();
 

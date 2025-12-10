@@ -89,7 +89,7 @@ public:
     void unbind();
     void render(const QSizeF &size);
     void render(const QRegion &region, const QSizeF &size, bool hardwareClipping = false);
-    void render(const QRectF &source, const QRegion &region, const QSizeF &targetSize, bool hardwareClipping = false);
+    void render(const RectF &source, const QRegion &region, const QSizeF &targetSize, bool hardwareClipping = false);
 
     GLuint texture() const;
     GLenum target() const;
