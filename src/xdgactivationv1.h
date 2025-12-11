@@ -10,6 +10,9 @@
 #pragma once
 
 #include "kwin_export.h"
+
+#include "utils/serial.h"
+
 #include <QObject>
 #include <QPointer>
 
@@ -35,7 +38,7 @@ public:
     void activateSurface(SurfaceInterface *surface, const QString &token);
 
 private:
-    QString requestToken(bool isPrivileged, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId);
+    QString requestToken(bool isPrivileged, SurfaceInterface *surface, UInt32Serial serial, SeatInterface *seat, const QString &appId);
     void clearFeedback();
 
     QString m_lastToken;

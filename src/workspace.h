@@ -432,7 +432,7 @@ public:
     OutputConfigurationError applyOutputConfiguration(OutputConfiguration &config);
     void updateXwaylandScale();
 
-    void setActivationToken(const QString &token, uint32_t serial, const QString &appId);
+    void setActivationToken(const QString &token, UInt32Serial serial, const QString &appId);
     bool mayActivate(Window *window, const QString &token) const;
 
     enum class DpmsState {
@@ -738,7 +738,7 @@ private:
 
     QString m_activationToken;
     QString m_activationTokenAppId;
-    uint32_t m_activationTokenSerial = 0;
+    UInt32Serial m_activationTokenSerial = 0;
 
     DpmsState m_dpms = DpmsState::On;
     QList<QString> m_recentlyRemovedDpmsOffOutputs;
