@@ -1440,4 +1440,13 @@ bool OutputConfigurationStore::isAutoRotateActive(const QList<BackendOutput *> &
     }
     Q_UNREACHABLE();
 }
+
+bool OutputConfigurationStore::isAutoBrightnessActive(const QList<BackendOutput *> &outputs) const
+{
+    return std::ranges::any_of(outputs, [](BackendOutput *output) {
+        return output->isEnabled()
+            && output->automaticBrightness()
+            && output->dpmsMode() == BackendOutput::DpmsMode::On;
+    });
+}
 }
