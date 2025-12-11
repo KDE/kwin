@@ -34,9 +34,9 @@
 </authorgroup>
 
 <date
->09/04/2015</date>
+>09/04/2021</date>
 <releaseinfo
->Plasma 5.3</releaseinfo>
+>Plasma 5.20</releaseinfo>
 
 <keywordset>
 <keyword
@@ -44,77 +44,62 @@
 <keyword
 >Configurações do sistema</keyword>
 <keyword
->ambiente de trabalho</keyword>
+>virtual</keyword>
+<keyword
+>área de trabalho</keyword>
 </keywordset>
 </articleinfo>
 
-<sect1 id="virtual-desktops">
-
-<title
->Áreas de trabalho virtuais</title>
-
-<sect2 id="desktop-number">
-<title
-><guilabel
->Ambientes de trabalho</guilabel
-></title>
-
 <para
->O &kde; oferece a você a possibilidade de possuir vários ambientes de trabalho virtuais. Nesta aba você pode configurar o número de ambientes, o número de linhas no ícone do <guilabel
->Pager</guilabel
->, bem como seus nomes. Basta usar a caixa de entrada para ajustar o número de ambientes de trabalho. Você pode atribuir nomes para os ambientes digitando o texto dentro dos campos de texto logo abaixo.</para
-> 
-<!-- not in 5.3
+>O &kde; DE oferece a possibilidade de ter várias áreas de trabalho virtuais. </para>
 <para
->Enable <guilabel
->Different widgets for each desktop</guilabel
-> 
-to use independent widgets and wallpapers on each individual desktop.
-</para>
--->
-</sect2>
-
-<sect2 id="desktop-switching">
-<title
-><guilabel
->Mudança</guilabel
-></title>
+>Você pode alterar os nomes das áreas de trabalho clicando no botão <guibutton
+>Renomear</guibutton
+> (que aparece quando você passa o mouse sobre o item da área de trabalho na lista) e inserindo o texto no campo de texto. </para>
+<para
+>Se você quiser remover uma área de trabalho, use o ícone da lixeira à direita do item da área de trabalho. </para>
+<para
+>Pressione o botão <guibutton
+>Adicionar</guibutton
+> para adicionar uma área de trabalho virtual (o nome padrão é <guilabel
+>Nova área de trabalho</guilabel
+>) à lista. </para>
+<para
+>Você pode configurar o número de linhas no item de paginação no painel. Basta usar a caixa de entrada de linhas abaixo da lista para ajustar o número de áreas de trabalho. As áreas de trabalho serão reorganizadas automaticamente pelas linhas. </para>
 
 <variablelist>
 <varlistentry>
 <term
 ><guilabel
->A navegação entre os ambientes dá a volta</guilabel
+>Navegação circular</guilabel
 ></term>
 <listitem
 ><para
->Ative esta opção se quiser a navegação pelas bordas ativas do ambiente ou pelo teclado, além das bordas de um ambiente, de modo a levá-lo para a borda oposta do novo ambiente. </para
+>Ative esta opção se quiser que o teclado ou a borda ativa da área de trabalho naveguem além da borda da área de trabalho para a borda oposta da nova área de trabalho. </para
 ></listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Animação do efeito da área de trabalho</guilabel
+>Mostrar animação ao alternar</guilabel
 ></term>
 <listitem
 ><para
->Selecione a opção <guilabel
->Sem Animação</guilabel
->, <guilabel
+>Selecione entre <guilabel
 >Deslizar</guilabel
 >, <guilabel
->Animação do Cubo de Ambientes</guilabel
+>Animação do cubo da área de trabalho</guilabel
 > ou <guilabel
->Desvanecer o Ambiente</guilabel
-> na lista. Se a animação selecionada tiver opções de configuração, clique no ícone de ferramentas à direita da lista, de modo a invocar uma janela de configuração. </para
+>Esmaecer</guilabel
+> na caixa suspensa ou desative as animações desmarcando o item. Se a animação selecionada tiver opções de configuração, clique no ícone de ferramentas à direita da caixa suspensa para abrir uma janela de configuração. </para
 ></listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Apresentação da Mudança do Ambiente</guilabel
+>Mostrar visualização na tela ao alternar</guilabel
 ></term>
 <listitem
 ><para
@@ -125,22 +110,11 @@ to use independent widgets and wallpapers on each individual desktop.
 <varlistentry>
 <term
 ><guilabel
->Mostrar os indicadores de disposição do ambiente</guilabel
+>Mostrar os indicadores de layout do ambiente</guilabel
 ></term>
 <listitem
 ><para
->A ativação desta opção irá mostrar uma pequena previsão da disposição do ambiente, indicando o ambiente selecionado. </para
-></listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
->Atalhos</guilabel
-></term>
-<listitem
-><para
->Esta seção mostra os atalhos configurados para mudar de ambientes, permitindo a sua edição. </para
+>A ativação desta opção irá mostrar uma pequena previsão do layout do ambiente, indicando o ambiente selecionado. </para
 ></listitem>
 </varlistentry>
 
@@ -164,7 +138,5 @@ to use independent widgets and wallpapers on each individual desktop.
 >S</keycap
 ></keycombo
 >).</para>
-</sect2>
-</sect1>
 
 </article>

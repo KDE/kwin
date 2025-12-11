@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-10 00:45+0000\n"
+"POT-Creation-Date: 2025-12-11 00:46+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -74,7 +74,7 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:601
+#: compositor.cpp:603
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -814,70 +814,62 @@ msgid "Out"
 msgstr ""
 
 # >> @item
-#: debug_console.cpp:544 debug_console.cpp:561 debug_console.cpp:581
-#: debug_console.cpp:633 debug_console.cpp:650
+#: debug_console.cpp:544 debug_console.cpp:562 debug_console.cpp:582
+#: debug_console.cpp:632 debug_console.cpp:649
 #, fuzzy, kde-format
 #| msgctxt "The global mouse pointer position"
 #| msgid "Global Position"
 msgid "Position"
 msgstr "глобални положај"
 
-#: debug_console.cpp:546 debug_console.cpp:563 debug_console.cpp:583
+#: debug_console.cpp:546 debug_console.cpp:564 debug_console.cpp:584
 #, kde-format
 msgid "Tilt"
 msgstr ""
 
 # rewrite-msgid: /caption/title/
-#: debug_console.cpp:548 debug_console.cpp:565 debug_console.cpp:585
+#: debug_console.cpp:548 debug_console.cpp:566 debug_console.cpp:586
 #, fuzzy, kde-format
 #| msgid "caption"
 msgid "Rotation"
 msgstr "наслов"
 
-#: debug_console.cpp:557
+#: debug_console.cpp:549 debug_console.cpp:568
+#, kde-format
+msgid "Distance"
+msgstr ""
+
+#: debug_console.cpp:558
 #, kde-format
 msgid "Tablet Tool Axis"
 msgstr ""
 
-#: debug_console.cpp:566 debug_console.cpp:586
+#: debug_console.cpp:567 debug_console.cpp:587
 #, kde-format
 msgid "Pressure"
 msgstr ""
 
-# >> @item
-#: debug_console.cpp:567 debug_console.cpp:589
-#, fuzzy, kde-format
-#| msgctxt "A button in a mouse press/release event"
-#| msgid "Button"
-msgid "Buttons"
-msgstr "дугме"
-
-#: debug_console.cpp:576
+#: debug_console.cpp:577
 #, kde-format
 msgid "Tablet Tool Tip"
 msgstr ""
 
 # >> @item:inlistbox Desktop name alignment
-#: debug_console.cpp:580
+#: debug_console.cpp:581
 #, fuzzy, kde-format
 #| msgid "Top"
 msgid "Tip"
 msgstr "горе"
 
-#: debug_console.cpp:580
+#: debug_console.cpp:581
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Down"
 msgstr "Помјери прозор"
 
-#: debug_console.cpp:580
+#: debug_console.cpp:581
 #, kde-format
 msgid "Up"
-msgstr ""
-
-#: debug_console.cpp:587
-#, kde-format
-msgid "Distance"
 msgstr ""
 
 # >> @item
@@ -888,13 +880,13 @@ msgstr ""
 msgid "Slider Position"
 msgstr "глобални положај"
 
-#: debug_console.cpp:598
+#: debug_console.cpp:597
 #, kde-format
 msgid "Tablet Tool Button"
 msgstr ""
 
 # >> @item
-#: debug_console.cpp:600 debug_console.cpp:615
+#: debug_console.cpp:599 debug_console.cpp:614
 #, fuzzy, kde-format
 #| msgctxt "A button in a mouse press/release event"
 #| msgid "Button"
@@ -902,295 +894,295 @@ msgid "Button"
 msgstr "дугме"
 
 # >> @item
-#: debug_console.cpp:601 debug_console.cpp:616
+#: debug_console.cpp:600 debug_console.cpp:615
 #, fuzzy, kde-format
 #| msgctxt "All currently pressed buttons in a mouse press/release event"
 #| msgid "Pressed Buttons"
 msgid "Pressed"
 msgstr "притиснута дугмад"
 
-#: debug_console.cpp:602 debug_console.cpp:620 debug_console.cpp:637
-#: debug_console.cpp:654 debug_console.cpp:668
+#: debug_console.cpp:601 debug_console.cpp:619 debug_console.cpp:636
+#: debug_console.cpp:653 debug_console.cpp:667
 #, kde-format
 msgid "Tablet"
 msgstr ""
 
-#: debug_console.cpp:613
+#: debug_console.cpp:612
 #, kde-format
 msgid "Tablet Pad Button"
 msgstr ""
 
-#: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
+#: debug_console.cpp:616 debug_console.cpp:634 debug_console.cpp:651
 #, kde-format
 msgid "Group"
 msgstr ""
 
-#: debug_console.cpp:618 debug_console.cpp:636 debug_console.cpp:653
+#: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
 #, kde-format
 msgid "Mode"
 msgstr ""
 
-#: debug_console.cpp:619
+#: debug_console.cpp:618
 #, kde-format
 msgid "Is Mode Switch"
 msgstr ""
 
-#: debug_console.cpp:630
+#: debug_console.cpp:629
 #, kde-format
 msgid "Tablet Pad Strip"
 msgstr ""
 
-#: debug_console.cpp:632 debug_console.cpp:649 debug_console.cpp:666
+#: debug_console.cpp:631 debug_console.cpp:648 debug_console.cpp:665
 #, kde-format
 msgid "Number"
 msgstr ""
 
-#: debug_console.cpp:634 debug_console.cpp:651
+#: debug_console.cpp:633 debug_console.cpp:650
 #, kde-format
 msgid "isFinger"
 msgstr ""
 
-#: debug_console.cpp:647
+#: debug_console.cpp:646
 #, kde-format
 msgid "Tablet Pad Ring"
 msgstr ""
 
-#: debug_console.cpp:664
+#: debug_console.cpp:663
 #, kde-format
 msgid "Tablet Pad Dial"
 msgstr ""
 
 # >> @item
-#: debug_console.cpp:667
+#: debug_console.cpp:666
 #, fuzzy, kde-format
 #| msgctxt "The relative mouse movement"
 #| msgid "Delta"
 msgid "Delta"
 msgstr "промена"
 
-#: debug_console.cpp:720
+#: debug_console.cpp:719
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr ""
 
 # >> @item
-#: debug_console.cpp:950
+#: debug_console.cpp:949
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "нема дугмади миша"
 
-#: debug_console.cpp:954
+#: debug_console.cpp:953
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "лево"
 
-#: debug_console.cpp:957
+#: debug_console.cpp:956
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "десно"
 
-#: debug_console.cpp:960
+#: debug_console.cpp:959
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "средње"
 
-#: debug_console.cpp:963
+#: debug_console.cpp:962
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "назад"
 
-#: debug_console.cpp:966
+#: debug_console.cpp:965
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "напред"
 
-#: debug_console.cpp:969
+#: debug_console.cpp:968
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "додатно 1"
 
-#: debug_console.cpp:972
+#: debug_console.cpp:971
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "додатно 2"
 
-#: debug_console.cpp:975
+#: debug_console.cpp:974
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "додатно 3"
 
-#: debug_console.cpp:978
+#: debug_console.cpp:977
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "додатно 4"
 
-#: debug_console.cpp:981
+#: debug_console.cpp:980
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "додатно 5"
 
-#: debug_console.cpp:984
+#: debug_console.cpp:983
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "додатно 6"
 
-#: debug_console.cpp:987
+#: debug_console.cpp:986
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "додатно 7"
 
-#: debug_console.cpp:990
+#: debug_console.cpp:989
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "додатно 8"
 
-#: debug_console.cpp:993
+#: debug_console.cpp:992
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "додатно 9"
 
-#: debug_console.cpp:996
+#: debug_console.cpp:995
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "додатно 10"
 
-#: debug_console.cpp:999
+#: debug_console.cpp:998
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "додатно 11"
 
-#: debug_console.cpp:1002
+#: debug_console.cpp:1001
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "додатно 12"
 
-#: debug_console.cpp:1005
+#: debug_console.cpp:1004
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "додатно 13"
 
-#: debug_console.cpp:1008
+#: debug_console.cpp:1007
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "додатно 14"
 
-#: debug_console.cpp:1011
+#: debug_console.cpp:1010
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "додатно 15"
 
-#: debug_console.cpp:1014
+#: debug_console.cpp:1013
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "додатно 16"
 
-#: debug_console.cpp:1017
+#: debug_console.cpp:1016
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "додатно 17"
 
-#: debug_console.cpp:1020
+#: debug_console.cpp:1019
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "додатно 18"
 
-#: debug_console.cpp:1023
+#: debug_console.cpp:1022
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "додатно 19"
 
-#: debug_console.cpp:1026
+#: debug_console.cpp:1025
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "додатно 20"
 
-#: debug_console.cpp:1029
+#: debug_console.cpp:1028
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "додатно 21"
 
-#: debug_console.cpp:1032
+#: debug_console.cpp:1031
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "додатно 22"
 
-#: debug_console.cpp:1035
+#: debug_console.cpp:1034
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "додатно 23"
 
-#: debug_console.cpp:1038
+#: debug_console.cpp:1037
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "додатно 24"
 
-#: debug_console.cpp:1041
+#: debug_console.cpp:1040
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "задатак"
 
-#: debug_console.cpp:1420
+#: debug_console.cpp:1419
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "X11 Windows"
 msgstr "Помјери прозор"
 
 # >> @item
-#: debug_console.cpp:1422
+#: debug_console.cpp:1421
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "неуправљани икс11 прозори"
 
 # >> @item
-#: debug_console.cpp:1424
+#: debug_console.cpp:1423
 #, kde-format
 msgid "Wayland Windows"
 msgstr "вејланд прозори"
 
 # >> @item
-#: debug_console.cpp:1426
+#: debug_console.cpp:1425
 #, kde-format
 msgid "Internal Windows"
 msgstr "унутрашњи прозори"
 
-#: debug_console.cpp:1783
+#: debug_console.cpp:1782
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr ""
 
-#: debug_console.cpp:1787
+#: debug_console.cpp:1786
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -4557,7 +4549,17 @@ msgstr ""
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:640
+#: wayland/outputmanagement_v2.cpp:630
+#, kde-format
+msgid "Position of output %s is negative, that is not supported"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:634
+#, kde-format
+msgid "Position of output %s is way too large (%d, %d)"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:650
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr ""
@@ -4568,7 +4570,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(не одазива се)"
 
-#: workspace.cpp:1596
+#: workspace.cpp:1604
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -4605,6 +4607,13 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+# >> @item
+#, fuzzy
+#~| msgctxt "A button in a mouse press/release event"
+#~| msgid "Button"
+#~ msgid "Buttons"
+#~ msgstr "дугме"
 
 #, fuzzy
 #~| msgid "&Strength:"

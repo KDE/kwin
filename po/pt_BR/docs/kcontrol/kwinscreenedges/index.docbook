@@ -32,9 +32,9 @@
 </authorgroup>
 
 <date
->14/07/2015</date>
+>30-01-2023</date>
 <releaseinfo
->Plasma 5.3</releaseinfo>
+>Plasma 5.27</releaseinfo>
 
 <keywordset>
 <keyword
@@ -45,6 +45,10 @@
 >ambiente de trabalho</keyword>
 <keyword
 >efeitos</keyword>
+<keyword
+>tela</keyword>
+<keyword
+>borda</keyword>
 </keywordset>
 </articleinfo>
 
@@ -52,7 +56,7 @@
 >As bordas ativas da tela permitem-lhe ativar os efeitos, enviando o cursor do seu mouse para a borda da tela. Aqui você poderá configurar o efeito que será ativado em cada borda ou canto da tela. </para>
 
 <para
->Clique com qualquer botão do mouse em um quadrado e selecione um efeito no menu de contexto. As bordas com um quadrado azul já possuem um efeito associado, enquanto um quadrado em cinza indica que não foi selecionado nenhum efeito para essa borda.</para>
+>Clique com qualquer botão do mouse em um quadrado e selecione um efeito no menu de contexto. As bordas com um quadrado azul já possuem um efeito associado, enquanto um quadrado cinzento indica que não foi selecionado nenhum efeito para essa borda.</para>
 
 <para
 >O número de itens acessíveis no menu de contexto depende do módulo <ulink url="help:/kcontrol/kwineffects/index.html"
@@ -61,7 +65,7 @@
 ></ulink
 >, na categoria <guilabel
 >Espaço de Trabalho</guilabel
->. Selecione seus efeitos favoritos no grupo <guilabel
+>. Selecione seus efeitos favoritos a partir do grupo <guilabel
 >Gerenciamento de Janelas</guilabel
 >. Isso irá ativar os itens correspondentes no menu de contexto.</para>
 
@@ -71,18 +75,34 @@
 > a partir do menu de contexto.</para>
 
 <para
->Na seção <guilabel
->Gerenciamento de Janelas</guilabel
->, você poderá ativar a opção <guilabel
->Maximizar as janelas, arrastando-as para a parte superior da tela </guilabel
+>Você pode habilitar <guilabel
+>Maximizar: janelas arrastadas para a borda superior</guilabel
+>, <guilabel
+>Lado a lado: janelas arrastadas para a borda esquerda ou direita</guilabel
 > ou <guilabel
->Colocar as janelas lado a lado, arrastando-as para a extremidade da tela</guilabel
-> e definir uma porcentagem da tela para acionar essa colocação. </para>
+>Ativar lado a lado em:</guilabel
+> e definir uma porcentagem da tela para ativar o modo janelas lado a lado. </para>
+
+<tip>
+<para
+>Na aba <guilabel
+>Movimento</guilabel
+> do módulo de configurações <guilabel
+>Comportamento da janela</guilabel
+> na seção <guilabel
+>Gerenciamento de janelas</guilabel
+> das configurações do sistema, você pode configurar zonas de ajuste para que as janelas sejam movidas para as bordas da tela, para o centro ou para outras janelas quando chegarem perto delas. </para>
+</tip>
 
 <para
->Na seção <guilabel
->Outras Configurações</guilabel
->, configure se deseja mudar para outra área de trabalho ao colocar o ponteiro do mouse em uma das extremidades da tela, &eg;, apenas ao mover as janelas. </para>
+>Desabilite a opção <guilabel
+>Permanecer ativo quando as janelas estiverem em tela cheia</guilabel
+> para suprimir o acionamento de ações nas bordas da tela quando um aplicativo estiver sendo executado em tela cheia.</para>
+
+<para
+>Usando o item <guilabel
+>Alternar área de trabalho na borda</guilabel
+>, configure se você deseja alternar para outra área de trabalho ao empurrar o cursor do mouse para uma borda da tela, por &eg; somente ao mover janelas. </para>
 <para
 ><guilabel
 >Atraso da ativação</guilabel

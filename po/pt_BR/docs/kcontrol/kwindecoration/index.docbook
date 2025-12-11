@@ -8,6 +8,8 @@
 
 <article id="kwindecoration" lang="&language;">
 <articleinfo>
+<title
+>Decorações da janela</title>
 <authorgroup>
 <author
 >&Rik.Hemsley; &Rik.Hemsley.mail;</author>
@@ -31,9 +33,9 @@
 </authorgroup>
 
 <date
->14/04/2016</date>
+>09/04/2021</date>
 <releaseinfo
->Plasma 5.6</releaseinfo>
+>Plasma 5.21</releaseinfo>
 
 <keywordset>
 <keyword
@@ -80,8 +82,8 @@
 </para>
 
 <para
->Escolha um estilo de decoração de janela na lista de previsões, usando o campo de pesquisa no topo da tela, ou baixe um novo estilo com o botão <guibutton
->Obter novas decorações</guibutton
+>Escolha um estilo de decoração de janela na lista de previsões ou baixe um novo estilo com o botão <guibutton
+>Baixar novas decorações de janelas</guibutton
 >.</para>
 
 <para
@@ -100,7 +102,7 @@
 >Você é encorajado a experimentar diferentes estilos, até que encontre um que melhor se encaixa no seu padrão de trabalho.</para>
 
 <para
->No painel de visualização, à direita de cada estilo, você encontrará um botão de configuração <inlinemediaobject
+>Na visualização de cada estilo, você encontrará um botão de configuração <inlinemediaobject
 ><imageobject
 > <imagedata fileref="configure.png" format="PNG"/></imageobject
 ></inlinemediaobject
@@ -109,8 +111,6 @@
 <para
 >As opções desta caixa de diálogo de configuração são aplicadas a todas as janelas. Algumas decorações de janelas (&eg; <quote
 >Breeze</quote
-> ou <quote
->Oxygen</quote
 >) oferecem a aba <guilabel
 >Substituições específicas da janela</guilabel
 >. Nesta aba, você poderá alterar o tamanho da borda e a visibilidade da barra de título das janelas que desejar.</para>
@@ -122,7 +122,16 @@
 
 <tip>
 <para
->Para fins de acessibilidade, algumas decorações de janela suportam bordas extra largas. Se isto estiver disponível, você pode escolher um tamanho de borda aqui. Estas bordas largas são mais fáceis de ver para usuários com deficiência visual, e mais fáceis de agarrar para pessoas com mobilidade limitada ou dificuldade de usar o mouse.</para>
+>Para fins de acessibilidade, algumas decorações de janela suportam bordas extra largas. Se isto estiver disponível, você pode escolher um <guilabel
+>Tamanho de borda de janela</guilabel
+> aqui. As bordas largas são mais fáceis de ver para usuários com deficiência visual, e mais fáceis de agarrar para pessoas com mobilidade limitada ou dificuldade de usar o mouse.</para>
+</tip>
+
+<tip>
+<para
+>Se você estiver interessado em criar sua própria decoração de janela, você pode aprender mais sobre isso <ulink url="https://develop.kde.org/docs/extend/plasma/aurorae/"
+>neste tutorial</ulink
+>.</para>
 </tip>
 
 </sect2>
@@ -152,10 +161,12 @@
 
 <sect2>
 <title
->Botões</title>
+>Botões da barra de título</title>
 
 <para
->Esta aba permite-lhe personalizar a localização dos botões na barra de título. Você pode arrastar os botões para a barra de título, removê-los ou arrastá-los de forma a terem a ordem que mais lhe agrada. </para>
+>Esta página permite-lhe personalizar a localização dos botões na barra de título. Você pode arrastar os botões &eg; o <guilabel
+>menu Aplicativo</guilabel
+> para a barra de título, removê-los ou arrastá-los de forma a terem a ordem que mais lhe agrada. </para>
 
 <screenshot>
 <screeninfo
@@ -173,8 +184,13 @@
 
 <para
 >Ative a opção <guilabel
->Fechar as janelas com um duplo clique no botão do menu</guilabel
+>Fechar as janelas com um clique duplo no botão do menu</guilabel
 > para ter uma alternativa adicional ao botão Fechar ou se tiver removido o botão Fechar da barra de título. </para>
+
+<para
+>Marque a opção <guilabel
+>Mostrar dicas do botão da barra de título</guilabel
+> se você quiser ver as dicas de ferramentas padrão quando passar o cursor do mouse sobre os botões da barra de título. </para>
 
 </sect2>
 

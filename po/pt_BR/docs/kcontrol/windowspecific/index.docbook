@@ -13,9 +13,9 @@
 <author>
 <personname
 ><firstname
->Partes deste documento foram convertidas a partir da página <ulink url="http://userbase.kde.org/KWin Rules"
+>Partes desta documentação foram convertidas da página <ulink url="https://userbase.kde.org/KWin_Rules"
 >Regras do KWin</ulink
-> da Base de Usuários do KDE.</firstname
+> do KDE UserBase e atualizadas pela equipe de documentação do KDE para o Plasma 5.8.</firstname
 > <surname
 ></surname
 > </personname>
@@ -39,9 +39,9 @@
 <legalnotice
 >&FDLNotice;</legalnotice>
 <date
->02/06/2012</date>
+>23/06/2016</date>
       <releaseinfo
->&kde; SC 4.9</releaseinfo>
+>Plasma 5.8</releaseinfo>
 <abstract>
 <para
 >Aqui você poderá personalizar as opções das janelas para algumas janelas em particular.</para>
@@ -133,7 +133,7 @@
 >exemplos</link
 > detalhados que poderão também ser usados para modelar as suas próprias regras. </para>
 <para
->Uma página especial está dedicada a tratar dos <link linkend="application-workarounds"
+>Uma página especial foi dedicada para tratar dos <link linkend="application-workarounds"
 >Comportamentos alternativos do aplicativo</link
 >. </para>
 </chapter>
@@ -332,7 +332,7 @@
 ></screeninfo>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="kwin-window-matching.png" format="PNG"/>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
     </imageobject>
     <textobject>
       <phrase
@@ -450,7 +450,7 @@
 ><para
 ><guilabel
 >Expressão regular</guilabel
-> - são implementadas as expressões regulares do Qt - veja a <ulink url="http://qt-project.org/doc/qt-4.8/qregexp.html"
+> - são implementadas as expressões regulares do Qt - veja a <ulink url="https://doc.qt.io/qt-5/qregexp.html"
 >correspondência de padrões com expressões regulares</ulink
 >.</para
 ></listitem>
@@ -735,37 +735,41 @@
   <varlistentry
 ><term
 ><emphasis role="bold"
->Maximizado horizontalmente, Maximizado verticalmente, Tela inteira</emphasis
+>Maximizado horizontalmente, Maximizado verticalmente</emphasis
 ></term>
     <listitem>
     <para
->Estes atributos são usados para ativar ou desativar o atributo de maximização horizontal/vertical ou de tela inteira.</para>
+>Estes atributos são usados para ativar ou desativar o atributo de maximização horizontal/vertical da janela.</para>
      </listitem>
   </varlistentry>
   <varlistentry
 ><term
 ><emphasis role="bold"
->Área de trabalho</emphasis
+>Área de trabalho, Atividade, Tela</emphasis
 ></term>
     <listitem>
     <para
 >Coloca a janela na <emphasis
 >Área de trabalho (Virtual)</emphasis
->. Use a opção <guilabel
->Todos as áreas de trabalho</guilabel
+>, <emphasis
+>Atividade</emphasis
+> ou <emphasis
+>Tela</emphasis
+> especificada. Use <guilabel
+>Todas as áreas de trabalho</guilabel
 > para colocar a janela em todas as <emphasis
->áreas de trabalho virtuais</emphasis
+>Áreas de trabalho virtuais</emphasis
 >.</para>
      </listitem>
   </varlistentry>
   <varlistentry
 ><term
 ><emphasis role="bold"
->Minimizado, Sombreado</emphasis
+>Tela cheia, Minimizado, Sombreado</emphasis
 ></term>
     <listitem>
     <para
->Ativa ou desativa os atributos da janela Minimizar e Sombrear. Por exemplo, uma janela poderá ser iniciada Minimizada, ou caso tenha sido iniciada como tal, ser forçada a não ser iniciada desta forma.</para>
+>Ativa ou desativa os atributos da janela Tela cheia, Minimizar e Sombrear. Por exemplo, uma janela poderá ser iniciada Minimizada, ou caso tenha sido iniciada como tal, ser forçada a não ser iniciada desta forma.</para>
      </listitem>
   </varlistentry>
 </variablelist>
@@ -808,20 +812,14 @@
 <listitem
 ><para
 ><guilabel
->Inteligente</guilabel
-> - coloca onde não existir outra janela qualquer.</para
+>Sobreposição mínima</guilabel
+> - local onde nenhuma outra janela existe.</para
 ></listitem>
 <listitem
 ><para
 ><guilabel
 >Maximizado</guilabel
 > - inicia a janela no modo maximizado.</para
-></listitem>
-<listitem
-><para
-><guilabel
->Em cascata</guilabel
-> - coloca em escadinha pelo título.</para
 ></listitem>
 <listitem
 ><para
@@ -838,7 +836,7 @@
 <listitem
 ><para
 ><guilabel
->Canto superior esquerdo</guilabel
+>No canto superior esquerdo</guilabel
 ></para
 ></listitem>
 <listitem
@@ -941,20 +939,7 @@
 >Cria um grupo com base num ID definido pelo usuário. O mesmo ID poderá ser compartilhado por mais de uma regra para que as janelas aparentemente distintas sejam agrupadas.</para>
      </listitem>
   </varlistentry>
-  <varlistentry
-><term
-><emphasis role="bold"
->Mosaico</emphasis
-></term>
-    <listitem>
-    <para
->Substitui o comportamento padrão das janelas para um modo em <guilabel
->Mosaico</guilabel
-> (lado-a-lado) ou <guilabel
->Flutuante</guilabel
->.</para>
-     </listitem>
-  </varlistentry>
+
   <varlistentry
 ><term
 ><emphasis role="bold"
@@ -972,10 +957,10 @@
 ></term>
     <listitem>
     <para
->Ativa ou desativa a visibilidade da janela no paginador:</para>
+>Ativa ou desativa a visibilidade da janela no paginador.</para>
      </listitem>
   </varlistentry>
-</variablelist>
+    </variablelist>
 <para>
 <screenshot>
 <screeninfo
@@ -1035,11 +1020,21 @@
   <varlistentry
 ><term
 ><emphasis role="bold"
+>Esquema de cores da barra de título</emphasis
+></term>
+    <listitem>
+    <para
+>Seleciona um esquema de cores para a barra de título da janela.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
 >Opacidade ativa/inativa</emphasis
 ></term>
     <listitem>
     <para
->Quando a janela está ativa/inativa, configura a sua opacidade com a percentagem indicada.</para>
+>Quando a janela está ativa/inativa, configura a sua opacidade com a porcentagem indicada.</para>
      </listitem>
   </varlistentry>
 </variablelist>
@@ -1054,19 +1049,6 @@
 ></tip>
 </para>
 <variablelist>
-  <varlistentry
-><term
-><emphasis role="bold"
->Mover/redimensionar</emphasis
-></term>
-    <listitem>
-    <para
-><emphasis
->Não é mais válido desde o &kde; 4.8</emphasis
-></para>
-    <!-- FIXME remove para in 4.9-->
-     </listitem>
-  </varlistentry>
   <varlistentry
 ><term
 ><emphasis role="bold"
@@ -1140,7 +1122,7 @@
 >Atalhos globais</guimenuitem
 ></menuchoice
 > ou ao executar <varname
->kcmshell5 keys</varname
+>kcmshell6 keys</varname
 > no <guilabel
 >konsole</guilabel
 >) enquanto a janela estiver ativa.</para>
@@ -1212,6 +1194,10 @@
 <listitem
 ><para
 >Menu autônomo</para
+></listitem>
+<listitem
+><para
+>Exibição na tela</para
 ></listitem>
 </itemizedlist>
 
@@ -2118,7 +2104,7 @@
 </para>
 <sect1 id="full-screen-re-size-error"
 ><title
->Erro de dimensionamento para tela inteira</title>
+>Erro de dimensionamento para tela cheia</title>
 <para
 >O &Emacs; e o <guilabel
 >gVim</guilabel
@@ -2176,7 +2162,7 @@
 ></listitem>
 <listitem
 ><para
->Ignore o pedido de tela inteira do &Emacs;, ativando o atributo <guilabel
+>Ignore o pedido de tela cheia do &Emacs;, ativando o atributo <guilabel
 >Obedecer às restrições de geometria</guilabel
 >, desativando-o (<guilabel
 >Não</guilabel
@@ -2212,14 +2198,13 @@
 <title
 >Créditos e licença</title>
       <para
->'Copyright' da documentação - veja o <ulink url="http://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>'Copyright' da documentação - veja o <ulink url="https://userbase.kde.org/index.php?title=KWin_Rules&amp;action=history"
 >histórico da página de Regras do KWin</ulink
 ></para>
       <para
 >Tradução de Marcus Gama <email
 >marcus.gama@gmail.com</email
 ></para
-> 
-&underFDL; </chapter>
+> &underFDL; </chapter>
 &documentation.index;
 </book>
