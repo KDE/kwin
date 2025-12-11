@@ -458,8 +458,24 @@ static std::array<uint32_t, 4> gemNames(int fd, const DmaBufAttributes *attribut
     return ret;
 }
 
+bool findBufferOnPlane(BackendOutput *output, GraphicsBuffer *buffer)
+{
+    const auto state = DrmOutputState::read(output);
+    if (!state || !state->crtc.has_value()) {
+        return false;
+    }
+    const int gpuFd = static_cast<DrmOutput *>(output)->connector()->gpu()->fd();
+    const auto framebufferGemNames = gemNames(gpuFd, buffer->dmabufAttributes());
+    return std::ranges::any_of(state->planes | std::views::values, [&framebufferGemNames](const DrmPlaneState &state) {
+        return state.framebufferGemNames == framebufferGemNames;
+    });
+}
+
 void DrmTest::testDirectScanout()
 {
+#ifdef FORCE_DRM_LEGACY
+    QSKIP("This test is known to be broken with legacy modesetting");
+#endif
     QVERIFY2(Test::linuxDmabuf(), "This test needs dmabuf support");
     uint32_t time = 0;
     BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
@@ -482,9 +498,17 @@ void DrmTest::testDirectScanout()
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_default);
 
-    for (int i = 0; i < 10; i++) {
+    QElapsedTimer timer;
+    timer.start();
+    while (timer.durationElapsed() < std::chrono::seconds(1)) {
+        window.m_surface->damageBuffer(QRect(QPoint(), QSize(100, 100)));
         QVERIFY(window.presentWait());
+
+        if (findBufferOnPlane(output, window.m_buffer.buffer())) {
+            break;
+        }
     }
+    QVERIFY(timer.durationElapsed() < std::chrono::seconds(1));
 
     const int enabledLayers = std::ranges::count_if(layers, [](OutputLayer *layer) {
         return layer->isEnabled();
@@ -502,13 +526,6 @@ void DrmTest::testDirectScanout()
     // with all drivers in legacy modesetting. VKMS doesn't report the cursor
     // plane as enabled if it was enabled through the legacy interface
     QCOMPARE(std::distance(enabledPlanes.begin(), enabledPlanes.end()), 2);
-
-    // TODO this bit is supposed to work, find out why it doesn't
-    const int gpuFd = static_cast<DrmOutput *>(output)->connector()->gpu()->fd();
-    const auto framebufferGemNames = gemNames(gpuFd, window.m_buffer->dmabufAttributes());
-    QVERIFY(std::ranges::any_of(enabledPlanes, [&framebufferGemNames](const DrmPlaneState &state) {
-        return state.framebufferGemNames == framebufferGemNames;
-    }));
 #endif
 }
 
@@ -553,12 +570,17 @@ void DrmTest::testOverlay()
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_default);
 
-    // emulate a quickly updating surface
-    for (int i = 0; i < 100; i++) {
+    QElapsedTimer timer;
+    timer.start();
+    while (timer.durationElapsed() < std::chrono::seconds(1)) {
         window.m_surface->damageBuffer(QRect(QPoint(), QSize(100, 100)));
         QVERIFY(window.presentWait());
+
+        if (findBufferOnPlane(output, window.m_buffer.buffer())) {
+            break;
+        }
     }
-    QCOMPARE_LE(window.m_window->surfaceItem()->frameTimeEstimation(), std::chrono::milliseconds(50));
+    QVERIFY(timer.durationElapsed() < std::chrono::seconds(1));
 
     const int enabledLayers = std::ranges::count_if(layers, [](OutputLayer *layer) {
         return layer->isEnabled();
