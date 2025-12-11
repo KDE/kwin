@@ -92,6 +92,7 @@ private:
         std::optional<double> sharpness;
         std::optional<QList<CustomModeDefinition>> customModes;
         std::optional<bool> automaticBrightness;
+        std::optional<BrightnessMap> brightnessMap;
     };
     struct SetupState
     {

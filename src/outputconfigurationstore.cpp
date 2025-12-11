@@ -359,6 +359,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                 .edrPolicy = changeSet->edrPolicy.value_or(output->edrPolicy()),
                 .sharpness = changeSet->sharpness.value_or(output->sharpnessSetting()),
                 .automaticBrightness = changeSet->automaticBrightness.value_or(output->automaticBrightness()),
+                .brightnessMap = changeSet->brightnessMap.value_or(output->brightnessMap()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -411,6 +412,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                 .edrPolicy = output->edrPolicy(),
                 .sharpness = output->sharpnessSetting(),
                 .automaticBrightness = output->automaticBrightness(),
+                .brightnessMap = output->brightnessMap(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -482,6 +484,7 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
             .sharpness = state.sharpness,
             .priority = setupState.priority,
             .automaticBrightness = state.automaticBrightness,
+            .brightnessMap = state.brightnessMap,
         };
     }
     return ret;
@@ -610,6 +613,8 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .sharpness = existingData.sharpness.value_or(0),
             .priority = priority,
             .automaticBrightness = existingData.automaticBrightness.value_or(false),
+            // TODO generate a more fitting brightness map per screen?
+            .brightnessMap = existingData.brightnessMap,
         };
         priority++;
         if (enable) {
@@ -1049,6 +1054,18 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("automaticBrightness"); it != data.end() && it->isBool()) {
             state.automaticBrightness = it->toBool();
         }
+        if (const auto it = data.find("brightnessMap"); it != data.end() && it->isArray()) {
+            const auto arr = it->toArray();
+            if (arr.size() == 6) {
+                BrightnessMap map;
+                size_t index = 0;
+                for (const auto &value : arr) {
+                    map.m_luxAt20Brightness[index] = value.toDouble(0.0);
+                    index++;
+                }
+                state.brightnessMap = map;
+            }
+        }
         outputDatas.push_back(state);
     }
 
@@ -1348,6 +1365,13 @@ void OutputConfigurationStore::save()
         }
         if (output.automaticBrightness) {
             o["automaticBrightness"] = *output.automaticBrightness;
+        }
+        if (output.brightnessMap) {
+            QJsonArray values;
+            for (const double lux : output.brightnessMap->m_luxAt20Brightness) {
+                values.push_back(lux);
+            }
+            o["brightnessMap"] = values;
         }
         outputsData.append(o);
     }

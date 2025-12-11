@@ -18,23 +18,59 @@
 namespace KWin
 {
 
+BrightnessMap::BrightnessMap()
+    : m_luxAt20Brightness({0, 0, 5, 15, 45, 55})
+{
+}
+
 double BrightnessMap::sample(double lux) const
 {
-    return std::clamp(lux / m_luxForFullBrightness, 0.0, 1.0);
+    for (int i = 5; i > 0; i--) {
+        const double low = m_luxAt20Brightness[i - 1];
+        const double high = m_luxAt20Brightness[i];
+        if (lux > low && lux <= high) {
+            const double factor = (lux - low) / (high - low);
+            const double highPercent = i / 5.0;
+            const double lowPercent = (i - 1) / 5.0;
+            return std::clamp((1 - factor) * lowPercent + factor * highPercent, 0.0, 1.0);
+        }
+    }
+    // lux is <= m_luxAt20Brightness[0] -> always 0% brightness
+    return 0;
 }
 
 void BrightnessMap::adjust(double brightness, double lux)
 {
     // This is the really difficult part about auto brightness:
     // Adjust the brightness curve in a way that's intuitive for the user,
-    // without the user even knowing there's a curve.
-    // As I don't currently have any clever ideas about how to do that really
-    // well, this just implements the simplest mapping ever, linear with zero
-    // lux mapped to zero percent.
-    if (lux > 0 && brightness > 0) {
-        // 1000 lux is roughly shining a flash light directly into
-        // the sensor, so it should be a reasonable maximum
-        m_luxForFullBrightness = std::min(lux / brightness, 1000.0);
+    // without the user having to care about how it works
+
+    const size_t lowMatch = std::floor(brightness / 0.2);
+    if (lowMatch == 5) {
+        // == 100% brightness
+        m_luxAt20Brightness.back() = lux;
+        for (size_t i = 0; i < m_luxAt20Brightness.size() - 1; i++) {
+            m_luxAt20Brightness[i] = std::min(m_luxAt20Brightness[i], lux);
+        }
+        return;
+    }
+    double &low = m_luxAt20Brightness[lowMatch];
+    double &high = m_luxAt20Brightness[lowMatch + 1];
+
+    const double highFactor = brightness / 0.2 - lowMatch;
+    const double lowFactor = 1.0 - highFactor;
+    const double currentLuxAtBrightness = low * lowFactor + high * highFactor;
+    const double difference = lux - currentLuxAtBrightness;
+    low = std::max(low + difference * lowFactor, 0.0);
+    high = std::max(high + difference * highFactor, 0.0);
+
+    // ensure the curve stays monotonic
+    // TODO maybe do something smarter here?
+    for (size_t i = 0; i < lowMatch; i++) {
+        m_luxAt20Brightness[i] = std::min(m_luxAt20Brightness[i], low);
+    }
+    for (size_t i = lowMatch + 1; i < m_luxAt20Brightness.size(); i++) {
+        m_luxAt20Brightness[i] = std::max(m_luxAt20Brightness[i], high);
     }
 }
 

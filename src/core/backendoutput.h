@@ -25,11 +25,13 @@ class OutputLayer;
 class KWIN_EXPORT BrightnessMap
 {
 public:
+    BrightnessMap();
+
     double sample(double lux) const;
     void adjust(double brightness, double lux);
 
-private:
-    double m_luxForFullBrightness = 100;
+    // brightness in lux, in 20% steps
+    std::array<double, 6> m_luxAt20Brightness;
 };
 
 class KWIN_EXPORT BackendOutput : public QObject
