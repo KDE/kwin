@@ -69,9 +69,9 @@ public:
     double right() const;
     double top() const;
     double bottom() const;
-    QRectF bounds() const;
+    RectF bounds() const;
 
-    static WindowQuad fromRect(const QRectF &rect);
+    static WindowQuad fromRect(const RectF &rect);
 
 private:
     friend class WindowQuadList;
@@ -186,7 +186,7 @@ public:
      * @param deviceScale The scaling factor used to convert from logical to
      *                    device coordinates.
      */
-    void appendSubQuad(const WindowQuad &quad, const QRectF &subquad, qreal deviceScale);
+    void appendSubQuad(const WindowQuad &quad, const RectF &subquad, qreal deviceScale);
     /**
      * Modify this geometry's texture coordinates based on a matrix.
      *
@@ -279,12 +279,12 @@ inline double WindowQuad::bottom() const
     return std::max(verts[0].py, std::max(verts[1].py, std::max(verts[2].py, verts[3].py)));
 }
 
-inline QRectF WindowQuad::bounds() const
+inline RectF WindowQuad::bounds() const
 {
-    return QRectF(QPointF(left(), top()), QPointF(right(), bottom()));
+    return RectF(QPointF(left(), top()), QPointF(right(), bottom()));
 }
 
-inline WindowQuad WindowQuad::fromRect(const QRectF &rect)
+inline WindowQuad WindowQuad::fromRect(const RectF &rect)
 {
     WindowQuad quad;
     quad[0] = WindowVertex(rect.topLeft(), QPointF(0, 0));

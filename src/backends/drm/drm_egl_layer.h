@@ -13,7 +13,6 @@
 
 #include <QMap>
 #include <QPointer>
-#include <QRegion>
 #include <epoxy/egl.h>
 #include <optional>
 
@@ -30,7 +29,7 @@ public:
     explicit EglGbmLayer(EglGbmBackend *eglBackend, DrmGpu *gpu, DrmPlane::TypeIndex type);
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame) override;
+    bool doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;
     bool preparePresentationTest() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     void releaseBuffers() override;

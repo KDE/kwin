@@ -45,7 +45,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::doBegi
         return std::nullopt;
     }
 
-    QRegion repaint = infiniteRegion();
+    Region repaint = Region::infinite();
     m_output->clearExposedArea();
 
     m_renderTime = std::make_unique<CpuRenderTimeQuery>();
@@ -55,7 +55,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::doBegi
     };
 }
 
-bool X11WindowedQPainterPrimaryLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool X11WindowedQPainterPrimaryLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_renderTime->end();
     frame->addRenderTimeQuery(std::move(m_renderTime));
@@ -95,11 +95,11 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::doBegin
     m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&m_buffer),
-        .repaint = infiniteRegion(),
+        .repaint = Region::infinite(),
     };
 }
 
-bool X11WindowedQPainterCursorLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool X11WindowedQPainterCursorLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_renderTime->end();
     if (frame) {

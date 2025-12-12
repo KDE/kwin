@@ -136,7 +136,7 @@ private:
 
     QHash<const EffectWindow *, WindowWobblyInfos> windows;
 
-    QRegion m_updateRegion;
+    Region m_updateRegion;
 
     qreal m_stiffness;
     qreal m_drag;

@@ -95,91 +95,91 @@ OutputTransform OutputTransform::inverted() const
     Q_UNREACHABLE();
 }
 
-QRectF OutputTransform::map(const QRectF &rect, const QSizeF &bounds) const
+RectF OutputTransform::map(const RectF &rect, const QSizeF &bounds) const
 {
     switch (m_kind) {
     case Kind::Normal:
         return rect;
     case Kind::Rotate90:
-        return QRectF(rect.y(),
-                      bounds.width() - (rect.x() + rect.width()),
-                      rect.height(),
-                      rect.width());
+        return RectF(rect.y(),
+                     bounds.width() - (rect.x() + rect.width()),
+                     rect.height(),
+                     rect.width());
     case Kind::Rotate180:
-        return QRectF(bounds.width() - (rect.x() + rect.width()),
-                      bounds.height() - (rect.y() + rect.height()),
-                      rect.width(),
-                      rect.height());
+        return RectF(bounds.width() - (rect.x() + rect.width()),
+                     bounds.height() - (rect.y() + rect.height()),
+                     rect.width(),
+                     rect.height());
     case Kind::Rotate270:
-        return QRectF(bounds.height() - (rect.y() + rect.height()),
-                      rect.x(),
-                      rect.height(),
-                      rect.width());
+        return RectF(bounds.height() - (rect.y() + rect.height()),
+                     rect.x(),
+                     rect.height(),
+                     rect.width());
     case Kind::FlipX:
-        return QRectF(bounds.width() - (rect.x() + rect.width()),
-                      rect.y(),
-                      rect.width(),
-                      rect.height());
+        return RectF(bounds.width() - (rect.x() + rect.width()),
+                     rect.y(),
+                     rect.width(),
+                     rect.height());
     case Kind::FlipX90:
-        return QRectF(rect.y(),
-                      rect.x(),
-                      rect.height(),
-                      rect.width());
+        return RectF(rect.y(),
+                     rect.x(),
+                     rect.height(),
+                     rect.width());
     case Kind::FlipX180:
-        return QRectF(rect.x(),
-                      bounds.height() - (rect.y() + rect.height()),
-                      rect.width(),
-                      rect.height());
+        return RectF(rect.x(),
+                     bounds.height() - (rect.y() + rect.height()),
+                     rect.width(),
+                     rect.height());
     case Kind::FlipX270:
-        return QRectF(bounds.height() - (rect.y() + rect.height()),
-                      bounds.width() - (rect.x() + rect.width()),
-                      rect.height(),
-                      rect.width());
+        return RectF(bounds.height() - (rect.y() + rect.height()),
+                     bounds.width() - (rect.x() + rect.width()),
+                     rect.height(),
+                     rect.width());
     default:
         Q_UNREACHABLE();
     }
 }
 
-QRect OutputTransform::map(const QRect &rect, const QSize &bounds) const
+Rect OutputTransform::map(const Rect &rect, const QSize &bounds) const
 {
     switch (m_kind) {
     case Kind::Normal:
         return rect;
     case Kind::Rotate90:
-        return QRect(rect.y(),
-                     bounds.width() - (rect.x() + rect.width()),
-                     rect.height(),
-                     rect.width());
+        return Rect(rect.y(),
+                    bounds.width() - (rect.x() + rect.width()),
+                    rect.height(),
+                    rect.width());
     case Kind::Rotate180:
-        return QRect(bounds.width() - (rect.x() + rect.width()),
-                     bounds.height() - (rect.y() + rect.height()),
-                     rect.width(),
-                     rect.height());
+        return Rect(bounds.width() - (rect.x() + rect.width()),
+                    bounds.height() - (rect.y() + rect.height()),
+                    rect.width(),
+                    rect.height());
     case Kind::Rotate270:
-        return QRect(bounds.height() - (rect.y() + rect.height()),
-                     rect.x(),
-                     rect.height(),
-                     rect.width());
+        return Rect(bounds.height() - (rect.y() + rect.height()),
+                    rect.x(),
+                    rect.height(),
+                    rect.width());
     case Kind::FlipX:
-        return QRect(bounds.width() - (rect.x() + rect.width()),
-                     rect.y(),
-                     rect.width(),
-                     rect.height());
+        return Rect(bounds.width() - (rect.x() + rect.width()),
+                    rect.y(),
+                    rect.width(),
+                    rect.height());
     case Kind::FlipX90:
-        return QRect(rect.y(),
-                     rect.x(),
-                     rect.height(),
-                     rect.width());
+        return Rect(rect.y(),
+                    rect.x(),
+                    rect.height(),
+                    rect.width());
     case Kind::FlipX180:
-        return QRect(rect.x(),
-                     bounds.height() - (rect.y() + rect.height()),
-                     rect.width(),
-                     rect.height());
+        return Rect(rect.x(),
+                    bounds.height() - (rect.y() + rect.height()),
+                    rect.width(),
+                    rect.height());
     case Kind::FlipX270:
-        return QRect(bounds.height() - (rect.y() + rect.height()),
-                     bounds.width() - (rect.x() + rect.width()),
-                     rect.height(),
-                     rect.width());
+        return Rect(bounds.height() - (rect.y() + rect.height()),
+                    bounds.width() - (rect.x() + rect.width()),
+                    rect.height(),
+                    rect.width());
     default:
         Q_UNREACHABLE();
     }
@@ -341,10 +341,10 @@ QMatrix4x4 OutputTransform::toMatrix() const
     return matrix;
 }
 
-QRegion OutputTransform::map(const QRegion &region, const QSize &bounds) const
+Region OutputTransform::map(const Region &region, const QSize &bounds) const
 {
-    QRegion ret;
-    for (const QRect &rect : region) {
+    Region ret;
+    for (const Rect &rect : region.rects()) {
         ret |= map(rect, bounds);
     }
     return ret;
@@ -385,22 +385,22 @@ void LogicalOutput::unref()
     }
 }
 
-QRect LogicalOutput::mapFromGlobal(const QRect &rect) const
+Rect LogicalOutput::mapFromGlobal(const Rect &rect) const
 {
     return rect.translated(-geometry().topLeft());
 }
 
-QRectF LogicalOutput::mapFromGlobal(const QRectF &rect) const
+RectF LogicalOutput::mapFromGlobal(const RectF &rect) const
 {
     return rect.translated(-geometry().topLeft());
 }
 
-QRectF LogicalOutput::mapToGlobal(const QRectF &rect) const
+RectF LogicalOutput::mapToGlobal(const RectF &rect) const
 {
     return rect.translated(geometry().topLeft());
 }
 
-QRegion LogicalOutput::mapToGlobal(const QRegion &region) const
+Region LogicalOutput::mapToGlobal(const Region &region) const
 {
     return region.translated(geometry().topLeft());
 }

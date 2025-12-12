@@ -153,30 +153,30 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         m_surface->currentShadowSlot->texture()->setContentTransform(m_surface->currentSlot->framebuffer()->colorAttachment()->contentTransform());
         return OutputLayerBeginFrameInfo{
             .renderTarget = RenderTarget(m_surface->currentShadowSlot->framebuffer(), m_surface->blendingColor),
-            .repaint = bufferAgeEnabled ? m_surface->shadowDamageJournal.accumulate(m_surface->currentShadowSlot->age(), infiniteRegion()) : infiniteRegion(),
+            .repaint = bufferAgeEnabled ? m_surface->shadowDamageJournal.accumulate(m_surface->currentShadowSlot->age(), Region::infinite()) : Region::infinite(),
         };
     } else {
         m_surface->shadowSwapchain.reset();
         m_surface->currentShadowSlot.reset();
         return OutputLayerBeginFrameInfo{
             .renderTarget = RenderTarget(m_surface->currentSlot->framebuffer(), m_surface->blendingColor),
-            .repaint = bufferAgeEnabled ? m_surface->damageJournal.accumulate(slot->age(), infiniteRegion()) : infiniteRegion(),
+            .repaint = bufferAgeEnabled ? m_surface->damageJournal.accumulate(slot->age(), Region::infinite()) : Region::infinite(),
         };
     }
 }
 
-static GLVertexBuffer *uploadGeometry(const QRegion &devicePixels, const QSize &fboSize)
+static GLVertexBuffer *uploadGeometry(const Region &devicePixels, const QSize &fboSize)
 {
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
-    const auto optMap = vbo->map<GLVertex2D>(devicePixels.rectCount() * 6);
+    const auto optMap = vbo->map<GLVertex2D>(devicePixels.rects().size() * 6);
     if (!optMap) {
         return nullptr;
     }
     const auto map = *optMap;
     size_t vboIndex = 0;
-    for (QRectF rect : devicePixels) {
+    for (RectF rect : devicePixels.rects()) {
         const float x0 = rect.left();
         const float y0 = rect.top();
         const float x1 = rect.right();
@@ -220,15 +220,15 @@ static GLVertexBuffer *uploadGeometry(const QRegion &devicePixels, const QSize &
     return vbo;
 }
 
-bool EglGbmLayerSurface::endRendering(const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     if (m_surface->needsShadowBuffer) {
-        const QRegion deviceRepaint = damagedDeviceRegion | m_surface->damageJournal.accumulate(m_surface->currentSlot->age(), infiniteRegion());
+        const Region deviceRepaint = damagedDeviceRegion | m_surface->damageJournal.accumulate(m_surface->currentSlot->age(), Region::infinite());
         m_surface->damageJournal.add(damagedDeviceRegion);
         m_surface->shadowDamageJournal.add(damagedDeviceRegion);
         const auto mapping = m_surface->currentShadowSlot->framebuffer()->colorAttachment()->contentTransform().combine(OutputTransform::FlipY);
         const QSize rotatedSize = mapping.map(m_surface->gbmSwapchain->size());
-        const QRegion repaint = mapping.map(deviceRepaint & QRect(QPoint(), rotatedSize), rotatedSize);
+        const Region repaint = mapping.map(deviceRepaint & QRect(QPoint(), rotatedSize), rotatedSize);
 
         GLFramebuffer *fbo = m_surface->currentSlot->framebuffer();
         GLFramebuffer::pushFramebuffer(fbo);
@@ -545,7 +545,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
         glClear(GL_COLOR_BUFFER_BIT);
         EglContext::currentContext()->popFramebuffer();
     }
-    if (const auto ret = importBuffer(surface, slot.get(), FileDescriptor{}, nullptr, infiniteRegion())) {
+    if (const auto ret = importBuffer(surface, slot.get(), FileDescriptor{}, nullptr, Region::infinite())) {
         // clear the render journal, because this was just a nonsense frame
         surface->importDamageJournal.clear();
         surface->currentSlot = slot;
@@ -556,7 +556,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, EglSwapchainSlot *slot, FileDescriptor &&readFence, OutputFrame *frame, const QRegion &damagedDeviceRegion) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, EglSwapchainSlot *slot, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const
 {
     if (surface->bufferTarget == BufferTarget::Dumb || surface->importMode == MultiGpuImportMode::DumbBuffer) {
         return importWithCpu(surface, slot, frame);
@@ -571,7 +571,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surfac
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const QRegion &damagedDeviceRegion) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const
 {
     Q_ASSERT(surface->importGbmSwapchain);
 
@@ -624,12 +624,12 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
 
     slot->texture()->setContentTransform(source->texture()->contentTransform());
 
-    const QRegion deviceRepaint = damagedDeviceRegion | surface->importDamageJournal.accumulate(slot->age(), infiniteRegion());
+    const Region deviceRepaint = damagedDeviceRegion | surface->importDamageJournal.accumulate(slot->age(), Region::infinite());
     surface->importDamageJournal.add(damagedDeviceRegion);
 
     const auto mapping = slot->texture()->contentTransform().combine(OutputTransform::FlipY);
     const QSize rotatedSize = mapping.map(slot->texture()->size());
-    const QRegion repaint = mapping.map(deviceRepaint & QRect(QPoint(), rotatedSize), rotatedSize);
+    const Region repaint = mapping.map(deviceRepaint & QRect(QPoint(), rotatedSize), rotatedSize);
 
     GLFramebuffer *fbo = slot->framebuffer();
     surface->importContext->pushFramebuffer(fbo);

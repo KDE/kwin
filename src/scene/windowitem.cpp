@@ -228,8 +228,8 @@ void WindowItem::updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem)
 
 void WindowItem::updateSurfacePosition()
 {
-    const QRectF bufferGeometry = m_window->bufferGeometry();
-    const QRectF frameGeometry = m_window->frameGeometry();
+    const RectF bufferGeometry = m_window->bufferGeometry();
+    const RectF frameGeometry = m_window->frameGeometry();
 
     m_surfaceItem->setPosition(bufferGeometry.topLeft() - frameGeometry.topLeft());
 }

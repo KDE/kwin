@@ -42,7 +42,7 @@ public:
 
     struct RenderCorner
     {
-        QRectF box;
+        RectF box;
         BorderRadius radius;
     };
 
@@ -54,7 +54,7 @@ public:
         QStack<RenderCorner> cornerStack;
         const QMatrix4x4 projectionMatrix;
         const QMatrix4x4 rootTransform;
-        const QRegion deviceClip;
+        const Region deviceClip;
         const bool hardwareClipping;
         const qreal renderTargetScale;
         const QPointF viewportOrigin;
@@ -66,8 +66,8 @@ public:
     void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
     void endFrame() override;
 
-    void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &deviceRegion) override;
-    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) override;
+    void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) override;
+    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) override;
 
     std::unique_ptr<ImageItem> createImageItem(Item *parent = nullptr) override;
 
@@ -75,7 +75,7 @@ private:
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
     void createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter);
-    void visualizeFractional(const RenderViewport &viewport, const QRegion &logicalRegion, const RenderContext &renderContext);
+    void visualizeFractional(const RenderViewport &viewport, const Region &logicalRegion, const RenderContext &renderContext);
 
     bool m_blendingEnabled = false;
     EglDisplay *const m_eglDisplay;

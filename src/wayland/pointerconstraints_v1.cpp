@@ -204,9 +204,9 @@ LockedPointerV1Interface::LifeTime LockedPointerV1Interface::lifeTime() const
     return d->lifeTime;
 }
 
-QRegion LockedPointerV1Interface::region() const
+Region LockedPointerV1Interface::region() const
 {
-    return QRegion(d->effectiveRegion);
+    return d->effectiveRegion;
 }
 
 QPointF LockedPointerV1Interface::cursorPositionHint() const
@@ -309,9 +309,9 @@ ConfinedPointerV1Interface::LifeTime ConfinedPointerV1Interface::lifeTime() cons
     return d->lifeTime;
 }
 
-QRegion ConfinedPointerV1Interface::region() const
+Region ConfinedPointerV1Interface::region() const
 {
-    return QRegion(d->effectiveRegion);
+    return d->effectiveRegion;
 }
 
 bool ConfinedPointerV1Interface::isConfined() const

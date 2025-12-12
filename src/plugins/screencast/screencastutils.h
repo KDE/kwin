@@ -103,13 +103,9 @@ static void grabTexture(GLTexture *texture, QImage *target)
     }
 }
 
-static inline QRegion scaleRegion(const QRegion &region, qreal scale, const QRect &bounds)
+static inline Region scaleRegion(const Region &region, qreal scale, const Rect &bounds)
 {
-    QRegion ret;
-    for (const QRect &rect : region) {
-        ret += scaledRect(rect, scale).toAlignedRect() & bounds;
-    }
-    return ret;
+    return region.scaledAndRoundedOut(scale) & bounds;
 }
 
 } // namespace KWin

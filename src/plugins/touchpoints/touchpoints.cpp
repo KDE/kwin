@@ -120,7 +120,7 @@ void TouchPointsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mi
     effects->prePaintScreen(data, presentTime);
 }
 
-void TouchPointsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
+void TouchPointsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
 
@@ -167,10 +167,10 @@ float TouchPointsEffect::computeAlpha(int time, int ring)
 void TouchPointsEffect::repaint()
 {
     if (!m_points.isEmpty()) {
-        QRegion dirtyRegion;
+        Region dirtyRegion;
         const int radius = m_ringMaxSize + m_lineWidth;
         for (auto it = m_points.constBegin(), end = m_points.constEnd(); it != end; ++it) {
-            dirtyRegion += QRect(it->pos.x() - radius, it->pos.y() - radius, 2 * radius, 2 * radius);
+            dirtyRegion += Rect(it->pos.x() - radius, it->pos.y() - radius, 2 * radius, 2 * radius);
         }
         effects->addRepaint(dirtyRegion);
     }

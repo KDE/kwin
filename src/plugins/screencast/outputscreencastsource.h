@@ -32,8 +32,8 @@ public:
     quint32 drmFormat() const override;
 
     void setRenderCursor(bool enable) override;
-    QRegion render(GLFramebuffer *target, const QRegion &bufferRepair) override;
-    QRegion render(QImage *target, const QRegion &bufferRepair) override;
+    Region render(GLFramebuffer *target, const Region &bufferRepair) override;
+    Region render(QImage *target, const Region &bufferRepair) override;
     std::chrono::nanoseconds clock() const override;
 
     void resume() override;

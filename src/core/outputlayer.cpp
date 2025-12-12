@@ -47,7 +47,7 @@ void OutputLayer::setOutput(BackendOutput *output)
     m_output = output;
     if (output) {
         m_renderLoop = output->renderLoop();
-        addDeviceRepaint(infiniteRegion());
+        addDeviceRepaint(Region::infinite());
     } else {
         m_renderLoop = nullptr;
     }
@@ -68,7 +68,7 @@ QList<QSize> OutputLayer::recommendedSizes() const
     return {};
 }
 
-QRegion OutputLayer::deviceRepaints() const
+Region OutputLayer::deviceRepaints() const
 {
     return m_repaints;
 }
@@ -85,7 +85,7 @@ void OutputLayer::scheduleRepaint(Item *item)
     Q_EMIT repaintScheduled();
 }
 
-void OutputLayer::addDeviceRepaint(const QRegion &region)
+void OutputLayer::addDeviceRepaint(const Region &region)
 {
     if (region.isEmpty() || !m_output) {
         return;
@@ -100,7 +100,7 @@ void OutputLayer::addDeviceRepaint(const QRegion &region)
 void OutputLayer::resetRepaints()
 {
     m_repaintScheduled = false;
-    m_repaints = QRegion();
+    m_repaints = Region();
 }
 
 bool OutputLayer::needsRepaint() const
@@ -118,7 +118,7 @@ std::optional<OutputLayerBeginFrameInfo> OutputLayer::beginFrame()
     return doBeginFrame();
 }
 
-bool OutputLayer::endFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool OutputLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     return doEndFrame(renderedDeviceRegion, damagedDeviceRegion, frame);
 }
@@ -144,12 +144,12 @@ bool OutputLayer::isEnabled() const
     return m_enabled;
 }
 
-QRectF OutputLayer::sourceRect() const
+RectF OutputLayer::sourceRect() const
 {
     return m_sourceRect;
 }
 
-void OutputLayer::setSourceRect(const QRectF &rect)
+void OutputLayer::setSourceRect(const RectF &rect)
 {
     m_sourceRect = rect;
 }
@@ -164,12 +164,12 @@ OutputTransform OutputLayer::bufferTransform() const
     return m_bufferTransform;
 }
 
-QRect OutputLayer::targetRect() const
+Rect OutputLayer::targetRect() const
 {
     return m_targetRect;
 }
 
-void OutputLayer::setTargetRect(const QRect &rect)
+void OutputLayer::setTargetRect(const Rect &rect)
 {
     m_targetRect = rect;
 }

@@ -73,8 +73,8 @@ public:
     bool areGeometryUpdatesBlocked() const;
 
     bool hasAlpha() const;
-    QRegion opaqueRegion() const;
-    QList<QRectF> shapeRegion() const;
+    Region opaqueRegion() const;
+    QList<RectF> shapeRegion() const;
 
     pid_t pid() const override;
     QString windowRole() const override;
@@ -398,8 +398,8 @@ private:
     static bool check_active_modal; ///< \see X11Window::checkActiveModal()
     int sm_stacking_order;
     int bit_depth = 24;
-    QRegion opaque_region;
-    QList<QRectF> m_shapeRegion;
+    Region opaque_region;
+    QList<RectF> m_shapeRegion;
     friend struct ResetupRulesProcedure;
 
     friend bool performTransiencyCheck();
@@ -450,7 +450,7 @@ inline bool X11Window::hasAlpha() const
     return bit_depth == 32;
 }
 
-inline QRegion X11Window::opaqueRegion() const
+inline Region X11Window::opaqueRegion() const
 {
     return opaque_region;
 }

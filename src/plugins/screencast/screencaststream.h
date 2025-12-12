@@ -13,7 +13,6 @@
 
 #include <QHash>
 #include <QObject>
-#include <QRegion>
 #include <QTimer>
 #include <chrono>
 #include <memory>
@@ -29,6 +28,7 @@ namespace KWin
 
 class Cursor;
 class PipeWireCore;
+class Region;
 class ScreenCastBuffer;
 class ScreenCastSource;
 
@@ -92,7 +92,7 @@ private:
     void addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor);
     void addHeader(spa_buffer *spaBuffer);
     void corruptHeader(spa_buffer *spaBuffer);
-    void addDamage(spa_buffer *spaBuffer, const QRegion &damagedRegion);
+    void addDamage(spa_buffer *spaBuffer, const Region &damagedRegion);
     void newStreamParams();
     spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,

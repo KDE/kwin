@@ -14,7 +14,7 @@ class ScreencastLayer : public OutputLayer
 public:
     explicit ScreencastLayer(LogicalOutput *output, const QHash<uint32_t, QList<uint64_t>> &formats);
 
-    void setFramebuffer(GLFramebuffer *buffer, const QRegion &bufferDamage);
+    void setFramebuffer(GLFramebuffer *buffer, const Region &bufferDamage);
 
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
@@ -22,11 +22,11 @@ public:
 
 private:
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
+    bool doEndFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame) override;
 
     const QHash<uint32_t, QList<uint64_t>> m_formats;
     GLFramebuffer *m_buffer = nullptr;
-    QRegion m_bufferDamage;
+    Region m_bufferDamage;
 };
 
 }

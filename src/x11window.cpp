@@ -3982,21 +3982,21 @@ void X11Window::checkOutput()
 void X11Window::getWmOpaqueRegion()
 {
     const auto rects = info->opaqueRegion();
-    QRegion new_opaque_region;
+    Region new_opaque_region;
     for (const auto &r : rects) {
         new_opaque_region += Xcb::fromXNative(QRect(r.pos.x, r.pos.y, r.size.width, r.size.height)).toRect();
     }
     opaque_region = new_opaque_region;
 }
 
-QList<QRectF> X11Window::shapeRegion() const
+QList<RectF> X11Window::shapeRegion() const
 {
     return m_shapeRegion;
 }
 
 void X11Window::updateShapeRegion()
 {
-    const QRectF bufferGeometry = this->bufferGeometry();
+    const RectF bufferGeometry = this->bufferGeometry();
     const auto previousRegion = m_shapeRegion;
     if (Xcb::Extensions::self()->hasShape(window())) {
         auto cookie = xcb_shape_get_rectangles_unchecked(kwinApp()->x11Connection(), window(), XCB_SHAPE_SK_BOUNDING);
@@ -4006,17 +4006,17 @@ void X11Window::updateShapeRegion()
             const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.get());
             const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.get());
             for (int i = 0; i < rectCount; ++i) {
-                QRectF region = Xcb::fromXNative(QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height));
+                RectF region = Xcb::fromXNative(QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height));
                 // make sure the shape is sane (X is async, maybe even XShape is broken)
-                region = region.intersected(QRectF(QPointF(0, 0), bufferGeometry.size()));
+                region = region.intersected(RectF(QPointF(0, 0), bufferGeometry.size()));
 
                 m_shapeRegion += region;
             }
         } else {
-            m_shapeRegion = {QRectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
+            m_shapeRegion = {RectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
         }
     } else {
-        m_shapeRegion = {QRectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
+        m_shapeRegion = {RectF(0, 0, bufferGeometry.width(), bufferGeometry.height())};
     }
     if (m_shapeRegion != previousRegion) {
         Q_EMIT shapeChanged();

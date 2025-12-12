@@ -19,7 +19,7 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Item *parent)
 
     setDestinationSize(window->bufferGeometry().size());
     setBuffer(m_window->graphicsBuffer());
-    setBufferSourceBox(QRectF(QPointF(0, 0), window->bufferGeometry().size() * window->bufferScale()));
+    setBufferSourceBox(RectF(QPointF(0, 0), window->bufferGeometry().size() * window->bufferScale()));
     setBufferTransform(m_window->bufferTransform());
 }
 
@@ -28,7 +28,7 @@ InternalWindow *SurfaceItemInternal::window() const
     return m_window;
 }
 
-QList<QRectF> SurfaceItemInternal::shape() const
+QList<RectF> SurfaceItemInternal::shape() const
 {
     return {rect()};
 }
@@ -37,7 +37,7 @@ void SurfaceItemInternal::handlePresented(const InternalWindowFrame &frame)
 {
     setDestinationSize(m_window->bufferGeometry().size());
     setBuffer(frame.buffer);
-    setBufferSourceBox(QRectF(QPointF(0, 0), frame.buffer->size()));
+    setBufferSourceBox(RectF(QPointF(0, 0), frame.buffer->size()));
     setBufferTransform(frame.bufferTransform);
 
     addDamage(frame.bufferDamage);

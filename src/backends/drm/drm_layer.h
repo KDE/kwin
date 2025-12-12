@@ -11,7 +11,6 @@
 #include "core/outputlayer.h"
 #include "drm_plane.h"
 
-#include <QRegion>
 #include <memory>
 #include <optional>
 

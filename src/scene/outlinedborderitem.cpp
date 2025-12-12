@@ -9,7 +9,7 @@
 namespace KWin
 {
 
-OutlinedBorderItem::OutlinedBorderItem(const QRectF &innerRect, const BorderOutline &outline, Item *parent)
+OutlinedBorderItem::OutlinedBorderItem(const RectF &innerRect, const BorderOutline &outline, Item *parent)
     : Item(parent)
     , m_innerRect(innerRect)
     , m_outline(outline)
@@ -17,12 +17,12 @@ OutlinedBorderItem::OutlinedBorderItem(const QRectF &innerRect, const BorderOutl
     setGeometry(m_outline.inflate(m_innerRect));
 }
 
-QRectF OutlinedBorderItem::innerRect() const
+RectF OutlinedBorderItem::innerRect() const
 {
     return m_innerRect;
 }
 
-void OutlinedBorderItem::setInnerRect(const QRectF &rect)
+void OutlinedBorderItem::setInnerRect(const RectF &rect)
 {
     if (m_innerRect != rect) {
         m_innerRect = rect;
@@ -62,37 +62,37 @@ WindowQuadList OutlinedBorderItem::buildQuads() const
     qreal topLeft = 0.0;
     if (radius.topLeft() > 0) {
         topLeft = thickness + radius.topLeft();
-        quads << WindowQuad::fromRect(QRectF(0, 0, topLeft, topLeft));
+        quads << WindowQuad::fromRect(RectF(0, 0, topLeft, topLeft));
     }
 
     qreal topRight = 0.0;
     if (radius.topRight() > 0) {
         topRight = thickness + radius.topRight();
-        quads << WindowQuad::fromRect(QRectF(extents.width() - topRight, 0, topRight, topRight));
+        quads << WindowQuad::fromRect(RectF(extents.width() - topRight, 0, topRight, topRight));
     }
 
     qreal bottomRight = 0.0;
     if (radius.bottomRight() > 0) {
         bottomRight = thickness + radius.bottomRight();
-        quads << WindowQuad::fromRect(QRectF(extents.width() - bottomRight, extents.height() - bottomRight, bottomRight, bottomRight));
+        quads << WindowQuad::fromRect(RectF(extents.width() - bottomRight, extents.height() - bottomRight, bottomRight, bottomRight));
     }
 
     qreal bottomLeft = 0.0;
     if (radius.bottomLeft() > 0) {
         bottomLeft = thickness + radius.bottomLeft();
-        quads << WindowQuad::fromRect(QRectF(0, extents.height() - bottomLeft, bottomLeft, bottomLeft));
+        quads << WindowQuad::fromRect(RectF(0, extents.height() - bottomLeft, bottomLeft, bottomLeft));
     }
 
-    quads << WindowQuad::fromRect(QRectF(topLeft, 0, extents.width() - topLeft - topRight, thickness));
-    quads << WindowQuad::fromRect(QRectF(bottomLeft, extents.height() - thickness, extents.width() - bottomLeft - bottomRight, thickness));
+    quads << WindowQuad::fromRect(RectF(topLeft, 0, extents.width() - topLeft - topRight, thickness));
+    quads << WindowQuad::fromRect(RectF(bottomLeft, extents.height() - thickness, extents.width() - bottomLeft - bottomRight, thickness));
 
     const qreal leftTopPadding = topLeft > 0 ? topLeft : thickness;
     const qreal leftBottomPadding = bottomLeft > 0 ? bottomLeft : thickness;
-    quads << WindowQuad::fromRect(QRectF(0, leftTopPadding, thickness, extents.height() - leftTopPadding - leftBottomPadding));
+    quads << WindowQuad::fromRect(RectF(0, leftTopPadding, thickness, extents.height() - leftTopPadding - leftBottomPadding));
 
     const qreal rightTopPadding = topRight > 0 ? topRight : thickness;
     const qreal rightBottomPadding = bottomRight > 0 ? bottomRight : thickness;
-    quads << WindowQuad::fromRect(QRectF(extents.width() - thickness, rightTopPadding, thickness, extents.height() - rightTopPadding - rightBottomPadding));
+    quads << WindowQuad::fromRect(RectF(extents.width() - thickness, rightTopPadding, thickness, extents.height() - rightTopPadding - rightBottomPadding));
 
     return quads;
 }

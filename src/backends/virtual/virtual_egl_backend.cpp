@@ -57,11 +57,11 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
 
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_current->framebuffer()),
-        .repaint = s_bufferAgeEnabled ? m_damageJournal.accumulate(m_current->age(), infiniteRegion()) : infiniteRegion(),
+        .repaint = s_bufferAgeEnabled ? m_damageJournal.accumulate(m_current->age(), Region::infinite()) : Region::infinite(),
     };
 }
 
-bool VirtualEglLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool VirtualEglLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
     frame->addRenderTimeQuery(std::move(m_query));

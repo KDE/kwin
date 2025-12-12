@@ -379,9 +379,9 @@ static bool checkForBlackBackground(SurfaceItem *background)
     return nits.lengthSquared() <= (0.1 * 0.1);
 }
 
-static QRect mapGlobalLogicalToOutputDeviceCoordinates(const QRectF &logicalGeometry, LogicalOutput *logicalOutput, BackendOutput *backendOutput)
+static Rect mapGlobalLogicalToOutputDeviceCoordinates(const RectF &logicalGeometry, LogicalOutput *logicalOutput, BackendOutput *backendOutput)
 {
-    const QRect localDevice = scaledRect(logicalGeometry.translated(-logicalOutput->geometryF().topLeft()), backendOutput->scale()).toRect();
+    const Rect localDevice = logicalGeometry.translated(-logicalOutput->geometryF().topLeft()).scaled(backendOutput->scale()).rounded();
     return backendOutput->transform().map(localDevice.translated(backendOutput->deviceOffset()), backendOutput->pixelSize());
 }
 
@@ -391,9 +391,9 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
         return false;
     }
     const auto layer = view->layer();
-    const QRect nativeViewport = mapGlobalLogicalToOutputDeviceCoordinates(view->viewport(), logicalOutput, backendOutput);
-    const bool coversEntireOutput = nativeViewport == QRect(QPoint(), backendOutput->modeSize());
-    if ((nativeViewport & QRect(QPoint(), backendOutput->modeSize())).isEmpty()) {
+    const Rect nativeViewport = mapGlobalLogicalToOutputDeviceCoordinates(view->viewport(), logicalOutput, backendOutput);
+    const bool coversEntireOutput = nativeViewport == Rect(QPoint(), backendOutput->modeSize());
+    if ((nativeViewport & Rect(QPoint(), backendOutput->modeSize())).isEmpty()) {
         return false;
     }
     // the background of the output can be assumed to be black
@@ -425,7 +425,7 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
         candidate->setScanoutHint(layer->scanoutDevice(), formats);
         return false;
     }
-    const auto geometry = candidate->mapToScene(QRectF(QPointF(0, 0), candidate->size()));
+    const auto geometry = candidate->mapToScene(RectF(QPointF(0, 0), candidate->size()));
     layer->setTargetRect(mapGlobalLogicalToOutputDeviceCoordinates(geometry, logicalOutput, backendOutput));
     layer->setEnabled(true);
     layer->setSourceRect(candidate->bufferSourceBox());
@@ -451,7 +451,7 @@ static bool prepareRendering(RenderView *view, LogicalOutput *logicalOutput, Bac
     // so add the relevant area to the source and target rect
     const QSize renderOffset = backendOutput->transform().map(QSize(view->renderOffset().x(), view->renderOffset().y()));
     nativeRect.adjust(-renderOffset.width(), -renderOffset.height(), renderOffset.width(), renderOffset.height());
-    if ((nativeRect & QRect(QPoint(), backendOutput->modeSize())).isEmpty()) {
+    if ((nativeRect & Rect(QPoint(), backendOutput->modeSize())).isEmpty()) {
         return false;
     }
 
@@ -459,7 +459,7 @@ static bool prepareRendering(RenderView *view, LogicalOutput *logicalOutput, Bac
     const double reference = backendOutput->colorDescription()->referenceLuminance();
     const double maxOutputLuminance = backendOutput->colorDescription()->maxHdrLuminance().value_or(reference);
     const double usedMaxLuminance = std::min(view->desiredHdrHeadroom() * reference, maxOutputLuminance);
-    layer->setSourceRect(QRect(QPoint(0, 0), nativeRect.size()));
+    layer->setSourceRect(Rect(QPoint(0, 0), nativeRect.size()));
     layer->setTargetRect(nativeRect);
     layer->setHotspot(backendOutput->transform().map(view->hotspot() * view->scale(), nativeRect.size()));
     layer->setEnabled(true);
@@ -470,14 +470,14 @@ static bool prepareRendering(RenderView *view, LogicalOutput *logicalOutput, Bac
     return layer->preparePresentationTest();
 }
 
-static bool renderLayer(RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput, const std::shared_ptr<OutputFrame> &frame, const QRegion &surfaceDamage)
+static bool renderLayer(RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput, const std::shared_ptr<OutputFrame> &frame, const Region &surfaceDamage)
 {
     auto beginInfo = view->layer()->beginFrame();
     if (!beginInfo) {
         return false;
     }
     auto &[renderTarget, repaint] = beginInfo.value();
-    const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(renderTarget.transformedRect());
+    const Region bufferDamage = surfaceDamage.united(repaint).intersected(renderTarget.transformedRect());
     view->paint(renderTarget, view->renderOffset(), bufferDamage);
     return view->layer()->endFrame(bufferDamage, surfaceDamage, frame.get());
 }
@@ -511,7 +511,7 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
     auto overlaysIt = overlays.begin();
     for (; overlaysIt != overlays.end();) {
         SurfaceItem *item = *overlaysIt;
-        const QRectF sceneRect = item->mapToView(item->rect(), sceneView);
+        const RectF sceneRect = item->mapToView(item->rect(), sceneView);
         if (sceneRect.contains(sceneView->viewport())) {
             // leave fullscreen direct scanout to the primary plane
             overlaysIt++;
@@ -532,7 +532,7 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
         }
         if (!layer->recommendedSizes().isEmpty()) {
             // it's likely that sizes other than the recommended ones won't work
-            const QRect deviceRect = scaledRect(sceneRect.translated(-sceneView->viewport().topLeft()), sceneView->scale()).toRect();
+            const Rect deviceRect = scaledRect(sceneRect.translated(-sceneView->viewport().topLeft()), sceneView->scale()).toRect();
             if (!layer->recommendedSizes().contains(deviceRect.size())) {
                 layerIt++;
                 continue;
@@ -559,7 +559,7 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
     auto underlaysIt = underlays.begin();
     for (; underlaysIt != underlays.end();) {
         SurfaceItem *item = *underlaysIt;
-        const QRectF sceneRect = item->mapToView(item->rect(), sceneView);
+        const RectF sceneRect = item->mapToView(item->rect(), sceneView);
         if (sceneRect.contains(sceneView->viewport())) {
             // leave fullscreen direct scanout to the primary plane
             underlaysIt++;
@@ -576,7 +576,7 @@ static std::unordered_map<SurfaceItem *, OutputLayer *> assignOverlays(RenderVie
         }
         if (!layer->recommendedSizes().isEmpty()) {
             // it's likely that sizes other than the recommended ones won't work
-            const QRect deviceRect = scaledRect(sceneRect.translated(-sceneView->viewport().topLeft()), sceneView->scale()).toRect();
+            const Rect deviceRect = scaledRect(sceneRect.translated(-sceneView->viewport().topLeft()), sceneView->scale()).toRect();
             if (!layer->recommendedSizes().contains(deviceRect.size())) {
                 layerIt++;
                 continue;
@@ -657,7 +657,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         bool directScanout = false;
         bool directScanoutOnly = false;
         bool highPriority = false;
-        QRegion surfaceDamage;
+        Region surfaceDamage;
         uint32_t requiredAlphaBits;
     };
     QList<LayerData> layers;
@@ -668,7 +668,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         .directScanout = false,
         .directScanoutOnly = false,
         .highPriority = false,
-        .surfaceDamage = QRegion{},
+        .surfaceDamage = Region{},
         .requiredAlphaBits = 0,
     });
 
@@ -751,7 +751,7 @@ void Compositor::composite(RenderLoop *renderLoop)
                 .directScanout = false,
                 .directScanoutOnly = false,
                 .highPriority = true,
-                .surfaceDamage = QRegion{},
+                .surfaceDamage = Region{},
                 .requiredAlphaBits = 8,
             });
             cursorLayer->setZpos(cursorLayer->maxZpos());
@@ -788,7 +788,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             .directScanout = true,
             .directScanoutOnly = true,
             .highPriority = false,
-            .surfaceDamage = QRegion(),
+            .surfaceDamage = Region(),
             .requiredAlphaBits = 0,
         });
         unusedOutputLayers.removeOne(layer);
@@ -929,7 +929,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             layers[1].view->layer()->setEnabled(false);
             layers[1].view->setExclusive(false);
             if (prepareRendering(primary.view, logicalOutput, output, primary.requiredAlphaBits)
-                && renderLayer(primary.view, logicalOutput, output, frame, infiniteRegion())) {
+                && renderLayer(primary.view, logicalOutput, output, frame, Region::infinite())) {
                 result = output->present(toUpdate, frame);
                 if (result) {
                     // disabling the cursor layer helped... so disable it permanently,

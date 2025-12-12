@@ -17,10 +17,10 @@ class KWIN_EXPORT OutlinedBorderItem : public Item
     Q_OBJECT
 
 public:
-    explicit OutlinedBorderItem(const QRectF &innerRect, const BorderOutline &outline, Item *parent = nullptr);
+    explicit OutlinedBorderItem(const RectF &innerRect, const BorderOutline &outline, Item *parent = nullptr);
 
-    QRectF innerRect() const;
-    void setInnerRect(const QRectF &rect);
+    RectF innerRect() const;
+    void setInnerRect(const RectF &rect);
 
     BorderOutline outline() const;
     void setOutline(const BorderOutline &outline);
@@ -29,7 +29,7 @@ protected:
     WindowQuadList buildQuads() const override;
 
 private:
-    QRectF m_innerRect;
+    RectF m_innerRect;
     BorderOutline m_outline;
 };
 

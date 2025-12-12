@@ -96,7 +96,7 @@ void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     effects->prePaintScreen(data, presentTime);
 }
 
-void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
+void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
 
@@ -117,7 +117,7 @@ void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         if (m_showText && click->m_frame) {
             float frameAlpha = (click->m_time * 2.0f - m_ringLife) / m_ringLife;
             frameAlpha = frameAlpha < 0 ? 1 : -(frameAlpha * frameAlpha) + 1;
-            click->m_frame->render(renderTarget, viewport, infiniteRegion(), frameAlpha, frameAlpha);
+            click->m_frame->render(renderTarget, viewport, Region::infinite(), frameAlpha, frameAlpha);
         }
     }
     for (const auto &tool : std::as_const(m_tabletTools)) {
@@ -196,7 +196,7 @@ std::unique_ptr<EffectFrame> MouseClickEffect::createEffectFrame(const QPoint &p
 void MouseClickEffect::repaint()
 {
     if (m_clicks.size() > 0) {
-        QRegion dirtyRegion;
+        Region dirtyRegion;
         const int radius = m_ringMaxSize + m_lineWidth;
         for (auto &click : m_clicks) {
             dirtyRegion += QRect(click->m_pos.x() - radius, click->m_pos.y() - radius, 2 * radius, 2 * radius);
@@ -207,7 +207,7 @@ void MouseClickEffect::repaint()
         effects->addRepaint(dirtyRegion);
     }
     if (!m_tabletTools.isEmpty()) {
-        QRegion dirtyRegion;
+        Region dirtyRegion;
         const int radius = m_ringMaxSize + m_lineWidth;
         for (const auto &event : std::as_const(m_tabletTools)) {
             dirtyRegion += QRect(event.m_globalPosition.x() - radius, event.m_globalPosition.y() - radius, 2 * radius, 2 * radius);

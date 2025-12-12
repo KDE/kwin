@@ -6,7 +6,6 @@
 #include "core/renderviewport.h"
 #include "core/pixelgrid.h"
 #include "core/rendertarget.h"
-#include "effect/globals.h"
 
 namespace KWin
 {
@@ -26,11 +25,11 @@ static QMatrix4x4 createProjectionMatrix(const RenderTarget &renderTarget, const
     return ret;
 }
 
-RenderViewport::RenderViewport(const QRectF &renderRect, double scale, const RenderTarget &renderTarget, const QPoint &renderOffset)
+RenderViewport::RenderViewport(const RectF &renderRect, double scale, const RenderTarget &renderTarget, const QPoint &renderOffset)
     : m_transform(renderTarget.transform())
     , m_transformBounds(m_transform.map(renderTarget.size()))
     , m_renderRect(renderRect)
-    , m_scaledRenderRect(snapToPixelGrid(scaledRect(renderRect, scale)))
+    , m_scaledRenderRect(renderRect.scaled(scale).rounded())
     , m_renderOffset(renderOffset)
     , m_projectionMatrix(createProjectionMatrix(renderTarget, m_scaledRenderRect, renderOffset))
     , m_scale(scale)
@@ -42,12 +41,12 @@ QMatrix4x4 RenderViewport::projectionMatrix() const
     return m_projectionMatrix;
 }
 
-QRectF RenderViewport::renderRect() const
+RectF RenderViewport::renderRect() const
 {
     return m_renderRect;
 }
 
-QRect RenderViewport::scaledRenderRect() const
+Rect RenderViewport::scaledRenderRect() const
 {
     return m_scaledRenderRect;
 }
@@ -67,9 +66,9 @@ QPoint RenderViewport::renderOffset() const
     return m_renderOffset;
 }
 
-QRect RenderViewport::deviceRect() const
+Rect RenderViewport::deviceRect() const
 {
-    return QRect(m_renderOffset, deviceSize());
+    return Rect(m_renderOffset, deviceSize());
 }
 
 QSize RenderViewport::deviceSize() const
@@ -77,76 +76,79 @@ QSize RenderViewport::deviceSize() const
     return m_scaledRenderRect.size();
 }
 
-QRectF RenderViewport::mapToDeviceCoordinates(const QRectF &logicalGeometry) const
+RectF RenderViewport::mapToDeviceCoordinates(const RectF &logicalGeometry) const
 {
-    return scaledRect(logicalGeometry.translated(-m_renderRect.topLeft()), m_scale).translated(m_renderOffset);
+    return logicalGeometry.translated(-m_renderRect.topLeft()).scaled(m_scale).translated(m_renderOffset);
 }
 
-QRect RenderViewport::mapToDeviceCoordinatesAligned(const QRectF &logicalGeometry) const
+Rect RenderViewport::mapToDeviceCoordinatesAligned(const RectF &logicalGeometry) const
 {
-    return mapToDeviceCoordinates(logicalGeometry).toAlignedRect();
+    return mapToDeviceCoordinates(logicalGeometry).roundedOut();
 }
 
-QRect RenderViewport::mapToDeviceCoordinatesAligned(const QRect &logicalGeometry) const
+Rect RenderViewport::mapToDeviceCoordinatesAligned(const Rect &logicalGeometry) const
 {
-    return scaledRect(QRectF(logicalGeometry).translated(-m_renderRect.topLeft()), m_scale).toAlignedRect().translated(m_renderOffset);
+    return RectF(logicalGeometry).translated(-m_renderRect.topLeft()).scaled(m_scale).roundedOut().translated(m_renderOffset);
 }
 
-QRegion RenderViewport::mapToDeviceCoordinatesAligned(const QRegion &logicalGeometry) const
+Region RenderViewport::mapToDeviceCoordinatesAligned(const Region &logicalGeometry) const
 {
-    QRegion ret;
-    for (const QRect &logicalRect : logicalGeometry) {
+    Region ret;
+    for (const Rect &logicalRect : logicalGeometry.rects()) {
         ret |= mapToDeviceCoordinatesAligned(logicalRect);
     }
     return ret;
 }
 
-QRectF RenderViewport::mapFromDeviceCoordinates(const QRectF &deviceGeometry) const
+RectF RenderViewport::mapFromDeviceCoordinates(const RectF &deviceGeometry) const
 {
-    return scaledRect(deviceGeometry.translated(-m_renderOffset), 1.0 / m_scale).translated(m_renderRect.topLeft());
+    return deviceGeometry.translated(-m_renderOffset).scaled(1.0 / m_scale).translated(m_renderRect.topLeft());
 }
 
-QRect RenderViewport::mapFromDeviceCoordinatesAligned(const QRect &deviceGeometry) const
+Rect RenderViewport::mapFromDeviceCoordinatesAligned(const Rect &deviceGeometry) const
 {
-    return scaledRect(deviceGeometry.translated(-m_renderOffset), 1.0 / m_scale).translated(m_renderRect.topLeft()).toAlignedRect();
+    return deviceGeometry.translated(-m_renderOffset).scaled(1.0 / m_scale).translated(m_renderRect.topLeft()).toAlignedRect();
 }
 
-QRect RenderViewport::mapFromDeviceCoordinatesContained(const QRect &deviceGeometry) const
+Rect RenderViewport::mapFromDeviceCoordinatesContained(const Rect &deviceGeometry) const
 {
-    const QRectF ret = scaledRect(deviceGeometry.translated(-m_renderOffset), 1.0 / m_scale).translated(m_renderRect.topLeft());
-    return QRect(QPoint(std::ceil(ret.x()), std::ceil(ret.y())),
-                 QPoint(std::floor(ret.x() + ret.width()) - 1, std::floor(ret.y() + ret.height()) - 1));
+    const RectF ret = deviceGeometry.translated(-m_renderOffset).scaled(1.0 / m_scale).translated(m_renderRect.topLeft());
+    return Rect(QPoint(std::ceil(ret.left()), std::ceil(ret.top())),
+                QPoint(std::floor(ret.right()), std::floor(ret.bottom())));
 }
 
-QRegion RenderViewport::mapFromDeviceCoordinatesAligned(const QRegion &deviceGeometry) const
+Region RenderViewport::mapFromDeviceCoordinatesAligned(const Region &deviceGeometry) const
 {
-    QRegion ret;
-    for (const QRect &deviceRect : deviceGeometry) {
+    Region ret;
+    for (const Rect &deviceRect : deviceGeometry.rects()) {
         ret |= mapFromDeviceCoordinatesAligned(deviceRect);
     }
     return ret;
 }
 
-QRegion RenderViewport::mapFromDeviceCoordinatesContained(const QRegion &deviceGeometry) const
+Region RenderViewport::mapFromDeviceCoordinatesContained(const Region &deviceGeometry) const
 {
-    QRegion ret;
-    for (const QRect &deviceRect : deviceGeometry) {
+    Region ret;
+    for (const Rect &deviceRect : deviceGeometry.rects()) {
         ret |= mapFromDeviceCoordinatesContained(deviceRect);
     }
     return ret;
 }
 
-QRectF RenderViewport::mapToRenderTarget(const QRectF &logicalGeometry) const
+RectF RenderViewport::mapToRenderTarget(const RectF &logicalGeometry) const
 {
-    const QRectF deviceGeometry = scaledRect(logicalGeometry, m_scale)
-                                      .translated(-m_scaledRenderRect.topLeft() + m_renderOffset);
+    const RectF deviceGeometry = logicalGeometry
+                                     .scaled(m_scale)
+                                     .translated(-m_scaledRenderRect.topLeft() + m_renderOffset);
     return m_transform.map(deviceGeometry, m_transformBounds);
 }
 
-QRect RenderViewport::mapToRenderTarget(const QRect &logicalGeometry) const
+Rect RenderViewport::mapToRenderTarget(const Rect &logicalGeometry) const
 {
-    const QRect deviceGeometry = snapToPixelGrid(scaledRect(logicalGeometry, m_scale))
-                                     .translated(-m_scaledRenderRect.topLeft() + m_renderOffset);
+    const Rect deviceGeometry = logicalGeometry
+                                    .scaled(m_scale)
+                                    .rounded()
+                                    .translated(-m_scaledRenderRect.topLeft() + m_renderOffset);
     return m_transform.map(deviceGeometry, m_transformBounds);
 }
 
@@ -162,24 +164,27 @@ QPointF RenderViewport::mapToRenderTarget(const QPointF &logicalGeometry) const
     return m_transform.map(devicePoint, m_transformBounds);
 }
 
-QRegion RenderViewport::mapToRenderTarget(const QRegion &logicalGeometry) const
+Region RenderViewport::mapToRenderTarget(const Region &logicalGeometry) const
 {
-    QRegion ret;
-    for (const auto &rect : logicalGeometry) {
+    Region ret;
+    for (const auto &rect : logicalGeometry.rects()) {
         ret += mapToRenderTarget(rect);
     }
     return ret;
 }
 
-QRectF RenderViewport::mapToRenderTargetTexture(const QRectF &logicalGeometry) const
+RectF RenderViewport::mapToRenderTargetTexture(const RectF &logicalGeometry) const
 {
-    return scaledRect(logicalGeometry, m_scale)
+    return logicalGeometry
+        .scaled(m_scale)
         .translated(-m_scaledRenderRect.topLeft() + m_renderOffset);
 }
 
-QRect RenderViewport::mapToRenderTargetTexture(const QRect &logicalGeometry) const
+Rect RenderViewport::mapToRenderTargetTexture(const Rect &logicalGeometry) const
 {
-    return snapToPixelGrid(scaledRect(logicalGeometry, m_scale))
+    return logicalGeometry
+        .scaled(m_scale)
+        .rounded()
         .translated(-m_scaledRenderRect.topLeft() + m_renderOffset);
 }
 
@@ -193,10 +198,10 @@ QPointF RenderViewport::mapToRenderTargetTexture(const QPointF &logicalGeometry)
     return logicalGeometry * m_scale - m_scaledRenderRect.topLeft() + m_renderOffset;
 }
 
-QRegion RenderViewport::mapToRenderTargetTexture(const QRegion &logicalGeometry) const
+Region RenderViewport::mapToRenderTargetTexture(const Region &logicalGeometry) const
 {
-    QRegion ret;
-    for (const auto &rect : logicalGeometry) {
+    Region ret;
+    for (const auto &rect : logicalGeometry.rects()) {
         ret += mapToRenderTargetTexture(rect);
     }
     return ret;

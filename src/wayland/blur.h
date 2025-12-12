@@ -9,6 +9,8 @@
 
 #include "kwin_export.h"
 
+#include "core/region.h"
+
 #include <QObject>
 #include <memory>
 
@@ -64,7 +66,7 @@ public:
     /**
      * @returns The region or the SurfaceInterface which should be blurred, null Region implies complete surface.
      */
-    QRegion region();
+    Region region();
 
 private:
     explicit BlurInterface(wl_resource *resource);

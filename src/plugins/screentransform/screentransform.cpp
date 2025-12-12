@@ -105,7 +105,7 @@ void ScreenTransformEffect::addScreen(LogicalOutput *screen)
         delegate.setViewport(screen->geometryF());
         delegate.setScale(screen->scale());
         scene->prePaint(&delegate);
-        scene->paint(renderTarget, QPoint(), QRegion(screen->geometry()));
+        scene->paint(renderTarget, QPoint(), screen->geometry());
         scene->postPaint();
     });
 }
@@ -193,7 +193,7 @@ static QRectF lerp(const QRectF &a, const QRectF &b, qreal t)
     return ret;
 }
 
-void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
+void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     auto it = m_states.find(screen);
     if (it == m_states.end() || m_currentView->backendOutput() != screen->backendOutput()) {

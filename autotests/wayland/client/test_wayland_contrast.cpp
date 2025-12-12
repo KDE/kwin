@@ -155,7 +155,7 @@ void TestContrast::testCreate()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QVERIFY(contrastChanged.wait());
-    QCOMPARE(serverSurface->contrast()->region(), QRegion(0, 0, 10, 20));
+    QCOMPARE(serverSurface->contrast()->region(), KWin::Region(0, 0, 10, 20));
     QCOMPARE(wl_fixed_from_double(serverSurface->contrast()->contrast()), wl_fixed_from_double(0.2));
     QCOMPARE(wl_fixed_from_double(serverSurface->contrast()->intensity()), wl_fixed_from_double(2.0));
     QCOMPARE(wl_fixed_from_double(serverSurface->contrast()->saturation()), wl_fixed_from_double(1.7));
@@ -182,7 +182,7 @@ void TestContrast::testSurfaceDestroy()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QVERIFY(contrastChanged.wait());
-    QCOMPARE(serverSurface->contrast()->region(), QRegion(0, 0, 10, 20));
+    QCOMPARE(serverSurface->contrast()->region(), KWin::Region(0, 0, 10, 20));
 
     // destroy the parent surface
     QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);

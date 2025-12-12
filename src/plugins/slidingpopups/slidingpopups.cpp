@@ -125,7 +125,7 @@ void SlidingPopupsEffect::prePaintWindow(RenderView *view, EffectWindow *w, Wind
     effects->prePaintWindow(view, w, data, presentTime);
 }
 
-void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceGeometry, WindowPaintData &data)
+void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
 {
     auto animationIt = m_animations.find(w);
     if (animationIt == m_animations.end()) {
@@ -139,7 +139,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
     const QRectF geo = w->expandedGeometry();
     const qreal t = animationIt->second.timeLine.value();
 
-    QRegion effectiveRegion = deviceGeometry;
+    Region effectiveRegion = deviceGeometry;
     switch (animData.location) {
     case Location::Left:
         if (slideLength < geo.width()) {

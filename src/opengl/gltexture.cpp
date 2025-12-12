@@ -149,7 +149,7 @@ void GLTexture::setSize(const QSize &size)
     d->updateMatrix();
 }
 
-void GLTexture::update(const QImage &image, const QRegion &region, const QPoint &offset)
+void GLTexture::update(const QImage &image, const Region &region, const QPoint &offset)
 {
     if (image.isNull() || isNull()) {
         return;
@@ -192,7 +192,7 @@ void GLTexture::update(const QImage &image, const QRegion &region, const QPoint 
 
     bind();
 
-    for (const QRect &rect : region) {
+    for (const Rect &rect : region.rects()) {
         Q_ASSERT(im.depth() % 8 == 0);
         glPixelStorei(GL_UNPACK_ROW_LENGTH, im.bytesPerLine() / (im.depth() / 8));
         glPixelStorei(GL_UNPACK_SKIP_PIXELS, rect.x());
@@ -266,16 +266,16 @@ void GLTexture::unbind()
 
 void GLTexture::render(const QSizeF &size)
 {
-    render(infiniteRegion(), size, false);
+    render(Region::infinite(), size, false);
 }
 
-void GLTexture::render(const QRegion &region, const QSizeF &targetSize, bool hardwareClipping)
+void GLTexture::render(const Region &region, const QSizeF &targetSize, bool hardwareClipping)
 {
     const auto rotatedSize = d->m_textureToBufferTransform.map(size());
     render(RectF(QPoint(), rotatedSize), region, targetSize, hardwareClipping);
 }
 
-void GLTexture::render(const RectF &source, const QRegion &region, const QSizeF &targetSize, bool hardwareClipping)
+void GLTexture::render(const RectF &source, const Region &region, const QSizeF &targetSize, bool hardwareClipping)
 {
     if (targetSize.isEmpty()) {
         return; // nothing to paint and m_vbo is likely nullptr and d->m_cachedSize empty as well, #337090

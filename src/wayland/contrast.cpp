@@ -180,9 +180,9 @@ ContrastInterface::ContrastInterface(wl_resource *resource)
 
 ContrastInterface::~ContrastInterface() = default;
 
-QRegion ContrastInterface::region() const
+Region ContrastInterface::region() const
 {
-    return QRegion(d->currentRegion);
+    return d->currentRegion;
 }
 
 qreal ContrastInterface::contrast() const

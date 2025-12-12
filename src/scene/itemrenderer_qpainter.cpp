@@ -50,22 +50,22 @@ void ItemRendererQPainter::endFrame()
     m_painter->end();
 }
 
-void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &deviceRegion)
+void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion)
 {
     m_painter->setCompositionMode(QPainter::CompositionMode_Source);
-    const QRegion clipped = deviceRegion & renderTarget.transformedRect();
-    for (const QRect &rect : clipped) {
+    const Region clipped = deviceRegion & renderTarget.transformedRect();
+    for (const Rect &rect : clipped.rects()) {
         m_painter->fillRect(viewport.mapFromDeviceCoordinates(rect), Qt::transparent);
     }
     m_painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 }
 
-void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
-    QRegion effectiveRegion = deviceRegion;
+    Region effectiveRegion = deviceRegion;
 
     if (!(mask & (Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED))) {
-        const QRect boundingRect = viewport.mapToRenderTarget(item->mapToScene(item->boundingRect())).toAlignedRect();
+        const Rect boundingRect = viewport.mapToRenderTarget(item->mapToScene(item->boundingRect())).roundedOut();
         effectiveRegion &= boundingRect;
     }
 
@@ -73,10 +73,8 @@ void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const Re
         return;
     }
 
-    const QRegion logicalRegion = viewport.mapFromDeviceCoordinatesAligned(effectiveRegion);
-
     m_painter->save();
-    m_painter->setClipRegion(logicalRegion);
+    m_painter->setClipRegion(QRegion(viewport.mapFromDeviceCoordinatesAligned(effectiveRegion)));
     m_painter->setClipping(true);
     m_painter->setOpacity(data.opacity());
 
@@ -177,12 +175,12 @@ void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *sur
         break;
     }
 
-    const QRectF sourceBox = surfaceItem->bufferSourceBox();
+    const RectF sourceBox = surfaceItem->bufferSourceBox();
     const qreal xSourceBoxScale = sourceBox.width() / transformedSize.width();
     const qreal ySourceBoxScale = sourceBox.height() / transformedSize.height();
 
-    const QList<QRectF> shape = surfaceItem->shape();
-    for (const QRectF rect : shape) {
+    const QList<RectF> shape = surfaceItem->shape();
+    for (const RectF rect : shape) {
         const QRectF target = surfaceToBufferTransform.map(rect, surfaceItem->size());
         const QRectF source(sourceBox.x() + target.x() * xSourceBoxScale,
                             sourceBox.y() + target.y() * ySourceBoxScale,

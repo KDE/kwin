@@ -58,19 +58,19 @@ void ImageItemOpenGL::preprocess()
             m_texture->setFilter(GL_LINEAR);
             m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         } else {
-            m_texture->update(m_image, m_image.rect());
+            m_texture->update(m_image, Rect(m_image.rect()));
         }
     }
 }
 
 WindowQuadList ImageItemOpenGL::buildQuads() const
 {
-    const QRectF geometry = boundingRect();
+    const RectF geometry = boundingRect();
     if (geometry.isEmpty()) {
         return WindowQuadList{};
     }
 
-    const QRectF imageRect = m_image.rect();
+    const RectF imageRect = m_image.rect();
 
     WindowQuad quad;
     quad[0] = WindowVertex(geometry.topLeft(), imageRect.topLeft());

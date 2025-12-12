@@ -232,7 +232,7 @@ void GLFramebuffer::blitFromFramebuffer(const Rect &source, const Rect &destinat
         ShaderBinder binder(ShaderTrait::MapTexture);
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
 
-        texture->render(source, infiniteRegion(), destination.size(), 1);
+        texture->render(source, Region::infinite(), destination.size(), 1);
 
         GLFramebuffer::popFramebuffer();
         return;
@@ -295,7 +295,7 @@ bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget,
         ShaderBinder binder(ShaderTrait::MapTexture);
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
 
-        texture->render(sourceViewport.mapToRenderTargetTexture(source), infiniteRegion(), destination.size(), 1);
+        texture->render(sourceViewport.mapToRenderTargetTexture(source), Region::infinite(), destination.size(), 1);
 
         GLFramebuffer::popFramebuffer();
         return true;

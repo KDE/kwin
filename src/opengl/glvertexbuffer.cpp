@@ -468,10 +468,10 @@ void GLVertexBuffer::setAttribLayout(std::span<const GLVertexAttrib> attribs, si
 
 void GLVertexBuffer::render(GLenum primitiveMode)
 {
-    render(infiniteRegion(), primitiveMode, false);
+    render(Region::infinite(), primitiveMode, false);
 }
 
-void GLVertexBuffer::render(const QRegion &region, GLenum primitiveMode, bool hardwareClipping)
+void GLVertexBuffer::render(const Region &region, GLenum primitiveMode, bool hardwareClipping)
 {
     d->bindArrays();
     draw(region, primitiveMode, 0, d->vertexCount, hardwareClipping);
@@ -490,10 +490,10 @@ void GLVertexBuffer::unbindArrays()
 
 void GLVertexBuffer::draw(GLenum primitiveMode, int first, int count)
 {
-    draw(infiniteRegion(), primitiveMode, first, count, false);
+    draw(Region::infinite(), primitiveMode, first, count, false);
 }
 
-void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first, int count, bool hardwareClipping)
+void GLVertexBuffer::draw(const Region &region, GLenum primitiveMode, int first, int count, bool hardwareClipping)
 {
     if (primitiveMode == GL_QUADS) {
         EglContext::currentContext()->indexBuffer()->bind();
@@ -506,7 +506,7 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
         } else {
             // Clip using scissoring
             const GLFramebuffer *current = GLFramebuffer::currentFramebuffer();
-            for (const QRect &r : region) {
+            for (const Rect &r : region.rects()) {
                 glScissor(r.x(), current->size().height() - (r.y() + r.height()), r.width(), r.height());
                 glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr, first);
             }
@@ -519,7 +519,7 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
     } else {
         // Clip using scissoring
         const GLFramebuffer *current = GLFramebuffer::currentFramebuffer();
-        for (const QRect &r : region) {
+        for (const Rect &r : region.rects()) {
             glScissor(r.x(), current->size().height() - (r.y() + r.height()), r.width(), r.height());
             glDrawArrays(primitiveMode, first, count);
         }

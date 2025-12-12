@@ -89,7 +89,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::doBeginFrame()
         return std::nullopt;
     }
 
-    const QRegion repair = bufferAgeEnabled ? m_damageJournal.accumulate(m_buffer->age(), infiniteRegion()) : infiniteRegion();
+    const Region repair = bufferAgeEnabled ? m_damageJournal.accumulate(m_buffer->age(), Region::infinite()) : Region::infinite();
     m_query = std::make_unique<GLRenderTimeQuery>(m_backend->openglContextRef());
     m_query->begin();
     return OutputLayerBeginFrameInfo{
@@ -98,7 +98,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::doBeginFrame()
     };
 }
 
-bool WaylandEglLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool WaylandEglLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
     frame->addRenderTimeQuery(std::move(m_query));
@@ -122,7 +122,7 @@ bool WaylandEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::sha
     if (!presentationBuffer) {
         return false;
     }
-    setBuffer(presentationBuffer, infiniteRegion());
+    setBuffer(presentationBuffer, Region::infinite());
     return true;
 }
 
@@ -188,11 +188,11 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::doBeginFrame()
     m_query->begin();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer->framebuffer()),
-        .repaint = infiniteRegion(),
+        .repaint = Region::infinite(),
     };
 }
 
-bool WaylandEglCursorLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool WaylandEglCursorLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_query->end();
     if (frame) {

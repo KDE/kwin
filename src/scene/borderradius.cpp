@@ -82,7 +82,7 @@ static double pointLength(const QPointF &point)
     return std::hypot(point.x(), point.y());
 }
 
-bool BorderRadius::clips(const QRectF &rect, const QRectF &bounds) const
+bool BorderRadius::clips(const RectF &rect, const RectF &bounds) const
 {
     if (rect.x() < bounds.x() || rect.y() < bounds.y()) {
         return true;
@@ -97,28 +97,28 @@ bool BorderRadius::clips(const QRectF &rect, const QRectF &bounds) const
         || pointLength(rect.bottomLeft() - bounds.bottomLeft() - QPointF(m_bottomLeft, m_bottomLeft)) > m_bottomLeft;
 }
 
-QRegion BorderRadius::clip(const QRegion &region, const QRectF &bounds) const
+Region BorderRadius::clip(const Region &region, const RectF &bounds) const
 {
     if (region.isEmpty()) {
-        return QRegion();
+        return Region();
     }
 
-    QRegion clipped = region;
+    Region clipped = region;
 
     if (m_topLeft > 0) {
-        clipped = clipped.subtracted(QRectF(0, 0, m_topLeft, m_topLeft).toAlignedRect());
+        clipped = clipped.subtracted(RectF(0, 0, m_topLeft, m_topLeft).toAlignedRect());
     }
 
     if (m_topRight > 0) {
-        clipped = clipped.subtracted(QRectF(bounds.x() + bounds.width() - m_topRight, 0, m_topRight, m_topRight).toAlignedRect());
+        clipped = clipped.subtracted(RectF(bounds.x() + bounds.width() - m_topRight, 0, m_topRight, m_topRight).toAlignedRect());
     }
 
     if (m_bottomRight > 0) {
-        clipped = clipped.subtracted(QRectF(bounds.x() + bounds.width() - m_bottomRight, bounds.y() + bounds.height() - m_bottomRight, m_bottomRight, m_bottomRight).toAlignedRect());
+        clipped = clipped.subtracted(RectF(bounds.x() + bounds.width() - m_bottomRight, bounds.y() + bounds.height() - m_bottomRight, m_bottomRight, m_bottomRight).toAlignedRect());
     }
 
     if (m_bottomLeft > 0) {
-        clipped = clipped.subtracted(QRectF(0, bounds.y() + bounds.height() - m_bottomLeft, m_bottomLeft, m_bottomLeft).toAlignedRect());
+        clipped = clipped.subtracted(RectF(0, bounds.y() + bounds.height() - m_bottomLeft, m_bottomLeft, m_bottomLeft).toAlignedRect());
     }
 
     return clipped;

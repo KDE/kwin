@@ -79,10 +79,10 @@ void SlideEffect::reconfigure(ReconfigureFlags)
     m_slideBackground = SlideConfig::slideBackground();
 }
 
-inline QRegion buildClipRegion(const QPoint &pos, int w, int h)
+inline Region buildClipRegion(const QPoint &pos, int w, int h)
 {
     const QSize screenSize = effects->virtualScreenSize();
-    QRegion r = QRect(pos, screenSize);
+    Region r = Rect(pos, screenSize);
     if (effects->optionRollOverDesktops()) {
         r += (r & QRect(-w, 0, w, h)).translated(w, 0); // W
         r += (r & QRect(w, 0, w, h)).translated(-w, 0); // E
@@ -154,7 +154,7 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millisec
     effects->prePaintScreen(data, presentTime);
 }
 
-void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
+void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     m_paintCtx.wrap = effects->optionRollOverDesktops();
     effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
@@ -210,7 +210,7 @@ void SlideEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePai
     effects->prePaintWindow(view, w, data, presentTime);
 }
 
-void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceGeometry, WindowPaintData &data)
+void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
 {
     if (!willBePainted(w)) {
         return;
@@ -250,8 +250,8 @@ void SlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderView
             QPoint drawTranslation = getDrawCoords(desktopTranslation, screen);
             data += drawTranslation;
 
-            const QRect screenArea = screen->geometry();
-            const QRect logicalDamage = screenArea.translated(drawTranslation).intersected(screenArea);
+            const Rect screenArea = screen->geometry();
+            const Rect logicalDamage = screenArea.translated(drawTranslation).intersected(screenArea);
 
             effects->paintWindow(
                 renderTarget, viewport, w, mask,

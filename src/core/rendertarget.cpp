@@ -28,9 +28,9 @@ QSize RenderTarget::transformedSize() const
     return m_transform.map(size());
 }
 
-QRect RenderTarget::transformedRect() const
+Rect RenderTarget::transformedRect() const
 {
-    return QRect(QPoint(0, 0), transformedSize());
+    return Rect(QPoint(0, 0), transformedSize());
 }
 
 QSize RenderTarget::size() const

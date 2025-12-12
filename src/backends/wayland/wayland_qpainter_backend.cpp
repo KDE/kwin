@@ -36,9 +36,9 @@ WaylandQPainterPrimaryLayer::~WaylandQPainterPrimaryLayer()
 {
 }
 
-QRegion WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
+Region WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
 {
-    return m_damageJournal.accumulate(bufferAge, infiniteRegion());
+    return m_damageJournal.accumulate(bufferAge, Region::infinite());
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::doBeginFrame()
@@ -60,7 +60,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::doBeginFra
     };
 }
 
-bool WaylandQPainterPrimaryLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool WaylandQPainterPrimaryLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_renderTime->end();
     frame->addRenderTimeQuery(std::move(m_renderTime));
@@ -111,11 +111,11 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::doBeginFram
     m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_back->view()->image()),
-        .repaint = infiniteRegion(),
+        .repaint = Region::infinite(),
     };
 }
 
-bool WaylandQPainterCursorLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool WaylandQPainterCursorLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_renderTime->end();
     if (frame) {

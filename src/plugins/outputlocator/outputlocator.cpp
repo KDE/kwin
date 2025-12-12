@@ -95,7 +95,7 @@ void OutputLocatorEffect::hide()
 {
     m_showTimer.stop();
 
-    QRegion repaintRegion;
+    Region repaintRegion;
     for (const auto &[screen, scene] : m_scenesByScreens) {
         repaintRegion += scene->geometry();
     }
@@ -104,7 +104,7 @@ void OutputLocatorEffect::hide()
     effects->addRepaint(repaintRegion);
 }
 
-void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
+void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
 

@@ -7,6 +7,8 @@
 #pragma once
 
 #include "core/colorspace.h"
+#include "core/rect.h"
+#include "core/region.h"
 #include "effect/globals.h"
 #include "scene/borderradius.h"
 #include "scene/itemgeometry.h"
@@ -67,22 +69,22 @@ public:
     QSizeF size() const;
     void setSize(const QSizeF &size);
 
-    void setGeometry(const QRectF &rect);
+    void setGeometry(const RectF &rect);
 
     int z() const;
     void setZ(int z);
 
     /**
-     * Returns the enclosing rectangle of the item. The rect equals QRect(0, 0, width(), height()).
+     * Returns the enclosing rectangle of the item. The rect equals Rect(0, 0, width(), height()).
      */
-    QRectF rect() const;
+    RectF rect() const;
     /**
      * Returns the enclosing rectangle of the item and all of its descendants.
      */
-    QRectF boundingRect() const;
+    RectF boundingRect() const;
 
-    virtual QList<QRectF> shape() const;
-    virtual QRegion opaque() const;
+    virtual QList<RectF> shape() const;
+    virtual Region opaque() const;
 
     /**
      * Returns the visual parent of the item. Note that the visual parent differs from
@@ -100,28 +102,28 @@ public:
      * Maps the given @a region from the item's coordinate system to the view's coordinate
      * system, snapping positions to the view's coordinate grid to match the renderer
      */
-    QRegion mapToView(const QRegion &region, const RenderView *view) const;
+    Region mapToView(const Region &region, const RenderView *view) const;
     /**
      * Maps the given @a rect from the item's coordinate system to the view's coordinate
      * system, snapping positions to the view's coordinate grid to match the renderer
      */
-    QRectF mapToView(const QRectF &rect, const RenderView *view) const;
+    RectF mapToView(const RectF &rect, const RenderView *view) const;
 
     /**
      * Maps the given @a region from the item's coordinate system to the scene's coordinate
      * system.
      */
-    QRegion mapToScene(const QRegion &region) const;
+    Region mapToScene(const Region &region) const;
     /**
      * Maps the given @a rect from the item's coordinate system to the scene's coordinate
      * system.
      */
-    QRectF mapToScene(const QRectF &rect) const;
+    RectF mapToScene(const RectF &rect) const;
     /**
      * Maps the given @a rect from the scene's coordinate system to the item's coordinate
      * system.
      */
-    QRectF mapFromScene(const QRectF &rect) const;
+    RectF mapFromScene(const RectF &rect) const;
 
     /**
      * Moves this item right before the specified @a sibling in the parent's children list.
@@ -139,17 +141,17 @@ public:
     BorderRadius borderRadius() const;
     void setBorderRadius(const BorderRadius &radius);
 
-    QRect paintedDeviceArea(RenderView *delegate, const QRectF &logicalRect) const;
-    QRegion paintedDeviceArea(RenderView *delegate, const QRegion &logicalRegion) const;
+    Rect paintedDeviceArea(RenderView *delegate, const RectF &logicalRect) const;
+    Region paintedDeviceArea(RenderView *delegate, const Region &logicalRegion) const;
 
-    void scheduleRepaint(const QRectF &region);
-    void scheduleSceneRepaint(const QRectF &region);
-    void scheduleRepaint(const QRegion &region);
-    void scheduleSceneRepaint(const QRegion &region);
-    void scheduleRepaint(RenderView *delegate, const QRegion &region);
+    void scheduleRepaint(const RectF &region);
+    void scheduleSceneRepaint(const RectF &region);
+    void scheduleRepaint(const Region &region);
+    void scheduleSceneRepaint(const Region &region);
+    void scheduleRepaint(RenderView *delegate, const Region &region);
     void scheduleFrame();
     bool hasRepaints(RenderView *view) const;
-    QRegion takeDeviceRepaints(RenderView *delegate);
+    Region takeDeviceRepaints(RenderView *delegate);
     void resetRepaints(RenderView *delegate);
 
     WindowQuadList quads() const;
@@ -203,9 +205,9 @@ private:
     void removeChild(Item *item);
     void updateBoundingRect();
     void updateItemToSceneTransform();
-    void scheduleRepaintInternal(const QRegion &region);
-    void scheduleRepaintInternal(RenderView *delegate, const QRegion &region);
-    void scheduleSceneRepaintInternal(const QRegion &region);
+    void scheduleRepaintInternal(const Region &region);
+    void scheduleRepaintInternal(RenderView *delegate, const Region &region);
+    void scheduleSceneRepaintInternal(const Region &region);
     void markSortedChildItemsDirty();
 
     bool computeEffectiveVisibility() const;
@@ -220,7 +222,7 @@ private:
     QTransform m_transform;
     QTransform m_itemToSceneTransform;
     QTransform m_sceneToItemTransform;
-    QRectF m_boundingRect;
+    RectF m_boundingRect;
     QPointF m_position;
     QSizeF m_size = QSize(0, 0);
     BorderRadius m_borderRadius;
@@ -228,7 +230,7 @@ private:
     int m_z = 0;
     bool m_explicitVisible = true;
     bool m_effectiveVisible = true;
-    QMap<RenderView *, QRegion> m_deviceRepaints;
+    QMap<RenderView *, Region> m_deviceRepaints;
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
     std::shared_ptr<ColorDescription> m_colorDescription = ColorDescription::sRGB;

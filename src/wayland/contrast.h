@@ -8,6 +8,8 @@
 
 #include "kwin_export.h"
 
+#include "core/region.h"
+
 #include <memory>
 #include <optional>
 
@@ -62,7 +64,7 @@ class KWIN_EXPORT ContrastInterface : public QObject
 public:
     ~ContrastInterface() override;
 
-    QRegion region() const;
+    Region region() const;
     qreal contrast() const;
     qreal intensity() const;
     qreal saturation() const;

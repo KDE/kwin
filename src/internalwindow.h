@@ -18,7 +18,7 @@ namespace KWin
 struct InternalWindowFrame
 {
     GraphicsBuffer *buffer = nullptr;
-    QRegion bufferDamage;
+    Region bufferDamage;
     OutputTransform bufferTransform = OutputTransform::Normal;
 };
 

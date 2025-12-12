@@ -31,12 +31,12 @@ class KWIN_EXPORT DecorationRenderer : public QObject
     Q_OBJECT
 
 public:
-    virtual void render(const QRegion &region) = 0;
+    virtual void render(const Region &region) = 0;
     void invalidate();
 
     // TODO: Move damage tracking inside DecorationItem.
-    QRegion damage() const;
-    void addDamage(const QRegion &region);
+    Region damage() const;
+    void addDamage(const Region &region);
     void resetDamage();
 
     qreal effectiveDevicePixelRatio() const;
@@ -47,7 +47,7 @@ public:
     static const int TexturePad = 1;
 
 Q_SIGNALS:
-    void damaged(const QRegion &region);
+    void damaged(const Region &region);
 
 protected:
     explicit DecorationRenderer(Decoration::DecoratedWindowImpl *client);
@@ -62,11 +62,11 @@ protected:
     {
         m_imageSizesDirty = false;
     }
-    void renderToPainter(QPainter *painter, const QRectF &rect);
+    void renderToPainter(QPainter *painter, const RectF &rect);
 
 private:
     QPointer<Decoration::DecoratedWindowImpl> m_client;
-    QRegion m_damage;
+    Region m_damage;
     qreal m_devicePixelRatio = 1;
     bool m_imageSizesDirty;
 };
@@ -85,7 +85,7 @@ public:
     explicit SceneOpenGLDecorationRenderer(Decoration::DecoratedWindowImpl *client);
     ~SceneOpenGLDecorationRenderer() override;
 
-    void render(const QRegion &region) override;
+    void render(const Region &region) override;
 
     GLTexture *texture()
     {
@@ -97,8 +97,8 @@ public:
     }
 
 private:
-    void renderPart(const QRectF &rect, const QRectF &partRect, const QPoint &textureOffset, qreal devicePixelRatio, bool rotated = false);
-    static const QMargins texturePadForPart(const QRectF &rect, const QRectF &partRect);
+    void renderPart(const RectF &rect, const RectF &partRect, const QPoint &textureOffset, qreal devicePixelRatio, bool rotated = false);
+    static const QMargins texturePadForPart(const RectF &rect, const RectF &partRect);
     void resizeTexture();
     int toNativeSize(double size) const;
     std::unique_ptr<GLTexture> m_texture;
@@ -117,7 +117,7 @@ public:
     };
     explicit SceneQPainterDecorationRenderer(Decoration::DecoratedWindowImpl *client);
 
-    void render(const QRegion &region) override;
+    void render(const Region &region) override;
 
     QImage image(DecorationPart part) const;
 
@@ -140,8 +140,8 @@ public:
     DecorationRenderer *renderer() const;
     Window *window() const;
 
-    QList<QRectF> shape() const override final;
-    QRegion opaque() const override final;
+    QList<RectF> shape() const override final;
+    Region opaque() const override final;
 
 private Q_SLOTS:
     void handleDecorationGeometryChanged();

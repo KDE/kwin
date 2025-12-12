@@ -14,7 +14,6 @@
 
 #include <QHash>
 #include <QObject>
-#include <QRegion>
 
 #include <memory>
 

@@ -367,7 +367,7 @@ void EffectsHandler::prePaintScreen(ScreenPrePaintData &data, std::chrono::milli
     // no special final code
 }
 
-void EffectsHandler::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
+void EffectsHandler::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintScreenIterator++)->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
@@ -395,7 +395,7 @@ void EffectsHandler::prePaintWindow(RenderView *view, EffectWindow *w, WindowPre
     // no special final code
 }
 
-void EffectsHandler::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
+void EffectsHandler::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintWindowIterator++)->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
@@ -415,7 +415,7 @@ Effect *EffectsHandler::provides(Effect::Feature ef)
     return nullptr;
 }
 
-void EffectsHandler::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
+void EffectsHandler::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     if (m_currentDrawWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentDrawWindowIterator++)->drawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
@@ -425,7 +425,7 @@ void EffectsHandler::drawWindow(const RenderTarget &renderTarget, const RenderVi
     }
 }
 
-void EffectsHandler::renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
+void EffectsHandler::renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     m_scene->finalDrawWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 }
@@ -1055,15 +1055,25 @@ void EffectsHandler::addRepaintFull()
 
 void EffectsHandler::addRepaint(const QRect &logicalRegion)
 {
-    m_compositor->scene()->addLogicalRepaint(logicalRegion);
+    m_compositor->scene()->addLogicalRepaint(Rect(logicalRegion));
 }
 
 void EffectsHandler::addRepaint(const QRectF &logicalRegion)
 {
+    m_compositor->scene()->addLogicalRepaint(Rect(logicalRegion.toAlignedRect()));
+}
+
+void EffectsHandler::addRepaint(const Rect &logicalRegion)
+{
+    m_compositor->scene()->addLogicalRepaint(logicalRegion);
+}
+
+void EffectsHandler::addRepaint(const RectF &logicalRegion)
+{
     m_compositor->scene()->addLogicalRepaint(logicalRegion.toAlignedRect());
 }
 
-void EffectsHandler::addRepaint(const QRegion &logicalRegion)
+void EffectsHandler::addRepaint(const Region &logicalRegion)
 {
     m_compositor->scene()->addLogicalRepaint(logicalRegion);
 }

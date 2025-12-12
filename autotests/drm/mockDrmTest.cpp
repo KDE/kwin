@@ -454,7 +454,7 @@ void DrmTest::testModeset()
     layer->beginFrame();
     output->renderLoop()->prepareNewFrame();
     const auto frame = std::make_shared<OutputFrame>(output->renderLoop(), std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
-    layer->endFrame(infiniteRegion(), infiniteRegion(), frame.get());
+    layer->endFrame(Region::infinite(), Region::infinite(), frame.get());
     QVERIFY(output->present({layer}, frame));
 
     gpu.reset();

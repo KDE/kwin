@@ -13,7 +13,6 @@
 #include <memory>
 
 class QImage;
-class QRegion;
 class QSize;
 class QString;
 
