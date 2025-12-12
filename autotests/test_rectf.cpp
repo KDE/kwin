@@ -104,6 +104,8 @@ private Q_SLOTS:
     void translated();
     void scaled_data();
     void scaled();
+    void scaleByMultiplying();
+    void scaleByDividing();
     void adjust_data();
     void adjust();
     void adjusted_data();
@@ -1056,6 +1058,18 @@ void TestRectF::scaled()
     QFETCH(qreal, scale);
 
     QTEST(rect.scaled(scale), "expected");
+}
+
+void TestRectF::scaleByMultiplying()
+{
+    QCOMPARE(RectF() * 2.5, RectF());
+    QCOMPARE(RectF(1, 2, 3, 4) * 2.5, RectF(2.5, 5.0, 7.5, 10.0));
+}
+
+void TestRectF::scaleByDividing()
+{
+    QCOMPARE(RectF() / 2.5, RectF());
+    QCOMPARE(RectF(1, 2, 3, 4) / 2.5, RectF(0.4, 0.8, 1.2, 1.6));
 }
 
 void TestRectF::adjust_data()
