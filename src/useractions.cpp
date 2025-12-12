@@ -1001,7 +1001,7 @@ void Workspace::setupWindowShortcut(Window *window)
     m_windowKeysDialog = new ShortcutDialog(window->shortcut());
     m_windowKeysWindow = window;
     connect(m_windowKeysDialog, &ShortcutDialog::dialogDone, this, &Workspace::setupWindowShortcutDone);
-    RectF r = clientArea(ScreenArea, window).toRect();
+    RectF r = clientArea(ScreenArea, window);
     QSize size = m_windowKeysDialog->sizeHint();
     QPointF pos(window->frameGeometry().left() + window->frameMargins().left(),
                 window->frameGeometry().top() + window->frameMargins().top());

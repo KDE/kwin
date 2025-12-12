@@ -874,7 +874,7 @@ qreal PointerInputRedirection::edgeBarrier(EdgeBarrierType type) const
 QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const LogicalOutput *currentOutput, std::chrono::microseconds time)
 {
     // optimization to avoid looping over all outputs
-    if (RectF(currentOutput->geometry()).contains(m_pos)) {
+    if (currentOutput->geometryF().contains(m_pos)) {
         m_movementInEdgeBarrier = QPointF();
         return pos;
     }
