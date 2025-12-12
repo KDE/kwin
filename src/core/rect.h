@@ -649,6 +649,20 @@ public:
     constexpr inline Rect &operator|=(const Rect &other) noexcept;
 
     /*!
+     * Scales this rectangle by the given \a scale factor.
+     *
+     * \sa scaled(), operator/()
+     */
+    constexpr inline RectF operator*(qreal scale) const noexcept;
+
+    /*!
+     * Scales this rectangle by the given 1 / \a scale factor.
+     *
+     * \sa scaled(), operator*()
+     */
+    constexpr inline RectF operator/(qreal scale) const;
+
+    /*!
      * Intersects this rectangle with the given \a other rectangle.
      *
      * \sa intersected(), operator&()
@@ -1363,6 +1377,20 @@ public:
     constexpr inline RectF operator&(const RectF &other) const noexcept;
 
     /*!
+     * Scales this rectangle by the given \a scale factor.
+     *
+     * \sa scaled(), operator/()
+     */
+    constexpr inline RectF operator*(qreal scale) const noexcept;
+
+    /*!
+     * Scales this rectangle by the given 1 / \a scale factor.
+     *
+     * \sa scaled(), operator*()
+     */
+    constexpr inline RectF operator/(qreal scale) const;
+
+    /*!
      * Unites this rectangle with the given \a other rectangle.
      *
      * \sa united(), operator|()
@@ -1876,6 +1904,16 @@ constexpr inline Rect Rect::operator|(const Rect &other) const noexcept
 constexpr inline Rect Rect::operator&(const Rect &other) const noexcept
 {
     return intersected(other);
+}
+
+constexpr inline RectF Rect::operator*(qreal scale) const noexcept
+{
+    return scaled(scale);
+}
+
+constexpr inline RectF Rect::operator/(qreal scale) const
+{
+    return scaled(1.0 / scale);
 }
 
 constexpr inline Rect &Rect::operator|=(const Rect &other) noexcept
@@ -2439,6 +2477,16 @@ constexpr inline RectF RectF::operator|(const RectF &other) const noexcept
 constexpr inline RectF RectF::operator&(const RectF &other) const noexcept
 {
     return intersected(other);
+}
+
+constexpr inline RectF RectF::operator*(qreal scale) const noexcept
+{
+    return scaled(scale);
+}
+
+constexpr inline RectF RectF::operator/(qreal scale) const
+{
+    return scaled(1.0 / scale);
 }
 
 constexpr inline RectF &RectF::operator|=(const RectF &other) noexcept
