@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "filedescriptor.h"
+#include "common.h"
 
 #include <fcntl.h>
 #include <sys/poll.h>
@@ -29,7 +30,12 @@ FileDescriptor::FileDescriptor(FileDescriptor &&other)
 FileDescriptor &FileDescriptor::operator=(FileDescriptor &&other)
 {
     if (m_fd != -1) {
-        ::close(m_fd);
+        const int err = ::close(m_fd);
+        if (Q_UNLIKELY(err != 0)) {
+            // If this failed, we've either closed the fd somewhere else, or we end up
+            // leaking this fd here. Either way, there's some significant bug!
+            qCCritical(KWIN_CORE, "::close() failed: %s", strerror(errno));
+        }
     }
     m_fd = std::exchange(other.m_fd, -1);
     return *this;
@@ -38,7 +44,12 @@ FileDescriptor &FileDescriptor::operator=(FileDescriptor &&other)
 FileDescriptor::~FileDescriptor()
 {
     if (m_fd != -1) {
-        ::close(m_fd);
+        const int err = ::close(m_fd);
+        if (Q_UNLIKELY(err != 0)) {
+            // If this failed, we've either closed the fd somewhere else, or we end up
+            // leaking this fd here. Either way, there's some significant bug!
+            qCCritical(KWIN_CORE, "::close() failed: %s", strerror(errno));
+        }
     }
 }
 
@@ -60,7 +71,12 @@ int FileDescriptor::take()
 void FileDescriptor::reset()
 {
     if (m_fd != -1) {
-        ::close(m_fd);
+        const int err = ::close(m_fd);
+        if (Q_UNLIKELY(err != 0)) {
+            // If this failed, we've either closed the fd somewhere else, or we end up
+            // leaking this fd here. Either way, there's some significant bug!
+            qCCritical(KWIN_CORE, "::close() failed: %s", strerror(errno));
+        }
         m_fd = -1;
     }
 }
