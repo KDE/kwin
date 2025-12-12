@@ -10,6 +10,12 @@
 
 using namespace KWin;
 
+template<typename T>
+static constexpr int bitCount()
+{
+    return sizeof(T) * 8;
+}
+
 static int xyToPow2(int x, int y, int stride)
 {
     return std::pow(2, y * stride + x);
@@ -17,7 +23,7 @@ static int xyToPow2(int x, int y, int stride)
 
 static QMap<int, Rect> enumerateRects(const QSize &gridSize, const QSize &unit = QSize(5, 5))
 {
-    Q_ASSERT(gridSize.width() * gridSize.height() <= sizeof(int) * 4);
+    Q_ASSERT(gridSize.width() * gridSize.height() <= bitCount<int>());
 
     QList<int> sumAreaTable;
     sumAreaTable.resize((gridSize.width() + 1) * (gridSize.height() + 1));
@@ -143,7 +149,7 @@ static Region bitsToRegion(int bits, const QSize &gridSize, const QSize &unit = 
 
 static QList<Region> enumerateRegions(const QSize &gridSize, const QSize &unit = QSize(5, 5))
 {
-    Q_ASSERT(gridSize.width() * gridSize.height() <= sizeof(int) * 4);
+    Q_ASSERT(gridSize.width() * gridSize.height() <= bitCount<int>());
     const int maxVariations = std::pow(2, gridSize.width() * gridSize.height());
 
     QList<Region> regions;
