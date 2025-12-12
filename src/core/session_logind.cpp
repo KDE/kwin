@@ -237,7 +237,7 @@ FileDescriptor LogindSession::delaySleep(const QString &reason)
         return FileDescriptor{};
     }
     const QDBusUnixFileDescriptor descriptor = reply.arguments().constFirst().value<QDBusUnixFileDescriptor>();
-    return FileDescriptor{descriptor.fileDescriptor()};
+    return FileDescriptor(fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0));
 }
 
 LogindSession::LogindSession(const QString &sessionPath)
