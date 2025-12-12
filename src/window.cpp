@@ -1337,18 +1337,17 @@ qreal Window::titlebarThickness() const
  *
  * See doc/moveresizerestriction for more details on algorithm.
  */
-static QRegion interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, Gravity gravity, int minWidth, int minHeight)
+static Region interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, Gravity gravity, int minWidth, int minHeight)
 {
     const auto outputs = workspace()->outputs();
     const auto struts = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
     const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput(), VirtualDesktopManager::self()->currentDesktop());
 
-    QRegion offscreenArea(availableArea.toAlignedRect());
+    Region offscreenArea(availableArea.toAlignedRect());
     for (const LogicalOutput *output : outputs) {
-        offscreenArea -= QRegion(output->geometry());
+        offscreenArea -= Region(output->geometry());
     }
 
-    // RectF is used because QRect::right() returns left() + width() - 1; RectF::right() returns left() + width()
     RectF initialRect = availableArea;
     switch (gravity) {
     case Gravity::None:
@@ -1373,7 +1372,8 @@ static QRegion interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, 
     default:
         Q_UNREACHABLE();
     }
-    QRegion availableRegion(initialRect.toAlignedRect());
+
+    Region availableRegion(initialRect.roundedOut());
 
     switch (gravity) {
     case Gravity::None:
@@ -1381,20 +1381,20 @@ static QRegion interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, 
     case Gravity::Left:
     case Gravity::TopLeft:
     case Gravity::BottomLeft:
-        for (const QRect &rect : struts) {
+        for (const Rect &rect : struts) {
             availableRegion -= rect.adjusted(-minWidth, -minHeight, 0, 0);
         }
-        for (const QRect &rect : offscreenArea) {
+        for (const Rect &rect : offscreenArea.rects()) {
             availableRegion -= rect.adjusted(-minWidth, -minHeight, 0, 0);
         }
         break;
     case Gravity::Right:
     case Gravity::TopRight:
     case Gravity::BottomRight:
-        for (const QRect &rect : struts) {
+        for (const Rect &rect : struts) {
             availableRegion -= rect.adjusted(0, -minHeight, minWidth, 0);
         }
-        for (const QRect &rect : offscreenArea) {
+        for (const Rect &rect : offscreenArea.rects()) {
             availableRegion -= rect.adjusted(0, -minHeight, minWidth, 0);
         }
         break;
@@ -1417,9 +1417,9 @@ static std::optional<QPointF> confineInteractiveMove(const RectF &geometry, int 
 
     minVisibleWidth = std::min(std::floor(geometry.width()), qreal(minVisibleWidth));
 
-    const QRegion visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, Gravity::None, minVisibleWidth, minVisibleHeight);
+    const Region visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, Gravity::None, minVisibleWidth, minVisibleHeight);
     const QPointF anchor = geometry.topLeft();
-    for (QRect rect : visibleSubrectRegion) {
+    for (Rect rect : visibleSubrectRegion.rects()) {
         // convert visibleSubrect top left to window top left
         // Allow the window to be moved "geometry.width() - minVisibleWidth" pixels offscreen to the left
         rect.setLeft(rect.left() - geometry.width() + minVisibleWidth);
@@ -1460,7 +1460,7 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
         minVisibleWidth = std::min(std::floor(geometry.width()), qreal(minVisibleWidth));
     }
 
-    const QRegion visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, gravity, minVisibleWidth, minVisibleHeight);
+    const Region visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, gravity, minVisibleWidth, minVisibleHeight);
     QPointF anchor;
     switch (gravity) {
     case Gravity::Top:
@@ -1514,7 +1514,7 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
     switch (gravity) {
     case Gravity::Top:
         // resizing from the top is handled like moving the window to avoid zero width rectangles when window width is equal to minVisibleWidth
-        for (QRect rect : visibleSubrectRegion) {
+        for (Rect rect : visibleSubrectRegion.rects()) {
             // convert top-left of visible titlebar subrect to top-left of the window
             rect.setLeft(rect.left() - geometry.width() + minVisibleWidth);
 
@@ -1529,7 +1529,7 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
     case Gravity::Left:
     case Gravity::TopLeft:
     case Gravity::BottomLeft:
-        for (QRect rect : visibleSubrectRegion) {
+        for (Rect rect : visibleSubrectRegion.rects()) {
             // convert top-left of visible titlebar subrect to top-left of the window
             rect.setLeft(availableArea.left());
 
@@ -1544,7 +1544,7 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
     case Gravity::Right:
     case Gravity::TopRight:
     case Gravity::BottomRight:
-        for (RectF rect : visibleSubrectRegion) {
+        for (RectF rect : visibleSubrectRegion.rects()) {
             // convert top-right of visible titlebar subrect to top-right of the window
             rect.setRight(availableArea.left() + availableArea.width());
 
@@ -2660,7 +2660,7 @@ void Window::setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration)
 void Window::updateDecorationInputShape()
 {
     if (!isDecorated()) {
-        m_decoration.inputRegion = QRegion();
+        m_decoration.inputRegion = Region();
         return;
     }
 
@@ -2670,7 +2670,7 @@ void Window::updateDecorationInputShape()
     const RectF innerRect = RectF(QPointF(borderLeft(), borderTop()), decoratedWindow()->size());
     const RectF outerRect = innerRect + borders + resizeBorders;
 
-    m_decoration.inputRegion = QRegion(outerRect.toAlignedRect()) - QRect(innerRect.toAlignedRect());
+    m_decoration.inputRegion = Region(outerRect.roundedOut()) - innerRect.roundedOut();
 }
 
 void Window::updateDecorationBorderRadius()

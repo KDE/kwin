@@ -1042,13 +1042,13 @@ void ScreenEdges::recreateEdges()
     std::vector<std::unique_ptr<Edge>> oldEdges = std::move(m_edges);
     m_edges.clear();
     const Rect fullArea = workspace()->geometry();
-    QRegion processedRegion;
+    Region processedRegion;
 
     const auto outputs = workspace()->outputs();
     for (LogicalOutput *output : outputs) {
-        const QRegion screen = QRegion(output->geometry()).subtracted(processedRegion);
+        const Region screen = Region(output->geometry()).subtracted(processedRegion);
         processedRegion += screen;
-        for (const QRect &screenPart : screen) {
+        for (const Rect &screenPart : screen.rects()) {
             if (isLeftScreen(screenPart, fullArea)) {
                 // left most screen
                 createVerticalEdge(ElectricLeft, screenPart, fullArea, output);
