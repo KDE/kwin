@@ -105,7 +105,7 @@ public:
 
     bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
 
-    QRegion exposedArea() const;
+    Region exposedArea() const;
     void addExposedArea(const QRect &rect);
     void clearExposedArea();
 
@@ -134,7 +134,7 @@ private:
     std::unique_ptr<X11WindowedCursor> m_cursor;
     std::unordered_map<GraphicsBuffer *, std::unique_ptr<X11WindowedBuffer>> m_buffers;
     QPoint m_hostPosition;
-    QRegion m_exposedArea;
+    Region m_exposedArea;
     std::shared_ptr<OutputFrame> m_frame;
 
     X11WindowedBackend *m_backend;

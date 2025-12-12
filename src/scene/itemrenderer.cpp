@@ -6,8 +6,6 @@
 
 #include "scene/itemrenderer.h"
 
-#include <QRegion>
-
 namespace KWin
 {
 

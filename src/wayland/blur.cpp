@@ -137,9 +137,9 @@ BlurInterface::BlurInterface(wl_resource *resource)
 
 BlurInterface::~BlurInterface() = default;
 
-QRegion BlurInterface::region()
+Region BlurInterface::region()
 {
-    return QRegion(d->currentRegion);
+    return d->currentRegion;
 }
 
 }

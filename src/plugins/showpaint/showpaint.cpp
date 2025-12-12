@@ -34,9 +34,9 @@ static const QList<QColor> s_colors{
 
 ShowPaintEffect::ShowPaintEffect() = default;
 
-void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen)
+void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
-    m_painted = QRegion();
+    m_painted = Region();
     effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
     if (effects->isOpenGLCompositing()) {
         paintGL(renderTarget, viewport);
@@ -48,7 +48,7 @@ void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const Render
     }
 }
 
-void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
+void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     m_painted += deviceRegion;
     effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
@@ -67,8 +67,8 @@ void ShowPaintEffect::paintGL(const RenderTarget &renderTarget, const RenderView
     color.setAlphaF(s_alpha);
     binder.shader()->setUniform(GLShader::ColorUniform::Color, color);
     QList<QVector2D> verts;
-    verts.reserve(m_painted.rectCount() * 12);
-    for (const QRect &deviceRect : m_painted) {
+    verts.reserve(m_painted.rects().size() * 12);
+    for (const Rect &deviceRect : m_painted.rects()) {
         const auto r = deviceRect.translated(viewport.scaledRenderRect().topLeft());
         verts.push_back(QVector2D(r.x() + r.width(), r.y()));
         verts.push_back(QVector2D(r.x(), r.y()));
@@ -86,7 +86,7 @@ void ShowPaintEffect::paintQPainter(const RenderViewport &viewport)
 {
     QColor color = s_colors[m_colorIndex];
     color.setAlphaF(s_alpha);
-    for (const QRect deviceRect : m_painted) {
+    for (const Rect &deviceRect : m_painted.rects()) {
         effects->scenePainter()->fillRect(viewport.mapFromDeviceCoordinates(deviceRect), color);
     }
 }

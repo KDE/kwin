@@ -11,7 +11,6 @@
 #include "core/renderbackend.h"
 
 #include <QObject>
-#include <QRegion>
 
 struct wl_resource;
 
@@ -82,15 +81,7 @@ private:
 class KWIN_EXPORT SurfaceInterface : public QObject
 {
     Q_OBJECT
-    /**
-     * The opaque region for a translucent buffer.
-     */
-    Q_PROPERTY(QRegion opaque READ opaque NOTIFY opaqueChanged)
-    /**
-     * The current input region.
-     */
-    Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
-    Q_PROPERTY(QSizeF size READ size NOTIFY sizeChanged)
+
 public:
     explicit SurfaceInterface(CompositorInterface *compositor, wl_resource *resource);
     ~SurfaceInterface() override;
@@ -141,9 +132,9 @@ public:
     std::shared_ptr<PresentationFeedback> presentationFeedback(LogicalOutput *output);
     bool hasPresentationFeedback() const;
 
-    QRegion opaque() const;
-    QRegion input() const;
-    QRegion bufferDamage() const;
+    Region opaque() const;
+    Region input() const;
+    Region bufferDamage() const;
     RectF bufferSourceBox() const;
     /**
      * Returns the buffer transform that had been applied to the buffer to compensate for
@@ -410,9 +401,9 @@ Q_SIGNALS:
      * @see buffer
      * @see damage
      */
-    void damaged(const QRegion &);
-    void opaqueChanged(const QRegion &);
-    void inputChanged(const QRegion &);
+    void damaged(const Region &);
+    void opaqueChanged(const Region &);
+    void inputChanged(const Region &);
     /**
      * This signal is emitted when the buffer transform has changed.
      */

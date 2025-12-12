@@ -69,16 +69,16 @@ void RegionScreenCastSource::setRenderCursor(bool enable)
     }
 }
 
-QRegion RegionScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferRepair)
+Region RegionScreenCastSource::render(GLFramebuffer *target, const Region &bufferRepair)
 {
     m_last = std::chrono::steady_clock::now().time_since_epoch();
     m_layer->setFramebuffer(target, bufferRepair & QRect(QPoint(), target->size()));
     if (!m_layer->preparePresentationTest()) {
-        return QRegion{};
+        return Region{};
     }
     const auto beginInfo = m_layer->beginFrame();
     if (!beginInfo) {
-        return QRegion{};
+        return Region{};
     }
     m_sceneView->prePaint();
     const auto bufferDamage = (m_layer->deviceRepaints() | m_sceneView->collectDamage()) & QRect(QPoint(), target->size());
@@ -87,19 +87,19 @@ QRegion RegionScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
     m_sceneView->paint(beginInfo->renderTarget, QPoint(), repaints);
     m_sceneView->postPaint();
     if (!m_layer->endFrame(repaints, bufferDamage, nullptr)) {
-        return QRegion{};
+        return Region{};
     }
     return bufferDamage;
 }
 
-QRegion RegionScreenCastSource::render(QImage *target, const QRegion &bufferRepair)
+Region RegionScreenCastSource::render(QImage *target, const Region &bufferRepair)
 {
     auto texture = GLTexture::allocate(GL_RGBA8, target->size());
     if (!texture) {
-        return QRegion{};
+        return Region{};
     }
     GLFramebuffer buffer(texture.get());
-    const QRegion ret = render(&buffer, infiniteRegion());
+    const Region ret = render(&buffer, Region::infinite());
     grabTexture(texture.get(), target);
     return ret;
 }

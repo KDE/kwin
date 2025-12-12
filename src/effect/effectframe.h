@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "core/region.h"
 #include "effect/globals.h"
 #include "effect/offscreenquickview.h"
 
@@ -128,7 +129,7 @@ public:
     /**
      * Render the frame.
      */
-    void render(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &deviceRegion = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0);
+    void render(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion = Region::infinite(), double opacity = 1.0, double frameOpacity = 1.0);
 
     void setPosition(const QPoint &point);
     /**

@@ -45,7 +45,7 @@ void RenderView::setLayer(OutputLayer *layer)
     m_layer = layer;
 }
 
-void RenderView::addDeviceRepaint(const QRegion &deviceRegion)
+void RenderView::addDeviceRepaint(const Region &deviceRegion)
 {
     if (!m_layer) {
         return;
@@ -90,9 +90,9 @@ bool RenderView::shouldRenderHole(Item *item) const
     return false;
 }
 
-QRect RenderView::deviceRect() const
+Rect RenderView::deviceRect() const
 {
-    return QRect(renderOffset(), deviceSize());
+    return Rect(renderOffset(), deviceSize());
 }
 
 QSize RenderView::deviceSize() const
@@ -100,61 +100,61 @@ QSize RenderView::deviceSize() const
     return (viewport().size() * scale()).toSize();
 }
 
-QRectF RenderView::mapToDeviceCoordinates(const QRectF &logicalGeometry) const
+RectF RenderView::mapToDeviceCoordinates(const RectF &logicalGeometry) const
 {
-    return scaledRect(logicalGeometry.translated(-viewport().topLeft()), scale()).translated(m_renderOffset);
+    return logicalGeometry.translated(-viewport().topLeft()).scaled(scale()).translated(m_renderOffset);
 }
 
-QRect RenderView::mapToDeviceCoordinatesAligned(const QRect &logicalGeometry) const
+Rect RenderView::mapToDeviceCoordinatesAligned(const Rect &logicalGeometry) const
 {
-    return mapToDeviceCoordinates(QRectF(logicalGeometry)).toAlignedRect();
+    return mapToDeviceCoordinates(RectF(logicalGeometry)).roundedOut();
 }
 
-QRect RenderView::mapToDeviceCoordinatesAligned(const QRectF &logicalGeometry) const
+Rect RenderView::mapToDeviceCoordinatesAligned(const RectF &logicalGeometry) const
 {
-    return mapToDeviceCoordinates(logicalGeometry).toAlignedRect();
+    return mapToDeviceCoordinates(logicalGeometry).roundedOut();
 }
 
-QRect RenderView::mapToDeviceCoordinatesContained(const QRect &logicalGeometry) const
+Rect RenderView::mapToDeviceCoordinatesContained(const Rect &logicalGeometry) const
 {
-    const QRectF ret = scaledRect(QRectF(logicalGeometry).translated(-viewport().topLeft()), scale());
-    return QRect(QPoint(std::ceil(ret.x()), std::ceil(ret.y())),
-                 QPoint(std::floor(ret.x() + ret.width()) - 1, std::floor(ret.y() + ret.height()) - 1))
+    const RectF ret = RectF(logicalGeometry).translated(-viewport().topLeft()).scaled(scale());
+    return Rect(QPoint(std::ceil(ret.left()), std::ceil(ret.top())),
+                QPoint(std::floor(ret.right()), std::floor(ret.bottom())))
         .translated(m_renderOffset);
 }
 
-QRegion RenderView::mapToDeviceCoordinatesAligned(const QRegion &logicalGeometry) const
+Region RenderView::mapToDeviceCoordinatesAligned(const Region &logicalGeometry) const
 {
-    QRegion ret;
-    for (const QRect &logicalRect : logicalGeometry) {
+    Region ret;
+    for (const Rect &logicalRect : logicalGeometry.rects()) {
         ret |= mapToDeviceCoordinatesAligned(logicalRect);
     }
     return ret;
 }
 
-QRegion RenderView::mapToDeviceCoordinatesContained(const QRegion &logicalGeometry) const
+Region RenderView::mapToDeviceCoordinatesContained(const Region &logicalGeometry) const
 {
-    QRegion ret;
-    for (const QRect &logicalRect : logicalGeometry) {
+    Region ret;
+    for (const Rect &logicalRect : logicalGeometry.rects()) {
         ret |= mapToDeviceCoordinatesContained(logicalRect);
     }
     return ret;
 }
 
-QRectF RenderView::mapFromDeviceCoordinates(const QRectF &deviceGeometry) const
+RectF RenderView::mapFromDeviceCoordinates(const RectF &deviceGeometry) const
 {
-    return scaledRect(deviceGeometry.translated(-m_renderOffset), 1.0 / scale()).translated(viewport().topLeft());
+    return deviceGeometry.translated(-m_renderOffset).scaled(1.0 / scale()).translated(viewport().topLeft());
 }
 
-QRect RenderView::mapFromDeviceCoordinatesAligned(const QRect &deviceGeometry) const
+Rect RenderView::mapFromDeviceCoordinatesAligned(const Rect &deviceGeometry) const
 {
-    return scaledRect(deviceGeometry.translated(-m_renderOffset), 1.0 / scale()).translated(viewport().topLeft()).toAlignedRect();
+    return deviceGeometry.translated(-m_renderOffset).scaled(1.0 / scale()).translated(viewport().topLeft()).toAlignedRect();
 }
 
-QRegion RenderView::mapFromDeviceCoordinatesAligned(const QRegion &deviceGeometry) const
+Region RenderView::mapFromDeviceCoordinatesAligned(const Region &deviceGeometry) const
 {
-    QRegion ret;
-    for (const QRect &deviceRect : deviceGeometry) {
+    Region ret;
+    for (const Rect &deviceRect : deviceGeometry.rects()) {
         ret |= mapFromDeviceCoordinatesAligned(deviceRect);
     }
     return ret;
@@ -197,7 +197,7 @@ void SceneView::prePaint()
     m_scene->prePaint(this);
 }
 
-QRegion SceneView::collectDamage()
+Region SceneView::collectDamage()
 {
     return m_scene->collectDamage();
 }
@@ -207,7 +207,7 @@ void SceneView::postPaint()
     m_scene->postPaint();
 }
 
-void SceneView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &deviceRegion)
+void SceneView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion)
 {
     m_scene->paint(renderTarget, deviceOffset, deviceRegion);
 }
@@ -222,7 +222,7 @@ void SceneView::frame(OutputFrame *frame)
     m_scene->frame(this, frame);
 }
 
-void SceneView::setViewport(const QRectF &viewport)
+void SceneView::setViewport(const RectF &viewport)
 {
     if (viewport == m_viewport) {
         return;
@@ -242,7 +242,7 @@ void SceneView::setScale(qreal scale)
     addDeviceRepaint(deviceRect());
 }
 
-QRectF SceneView::viewport() const
+RectF SceneView::viewport() const
 {
     return m_viewport;
 }
@@ -337,18 +337,18 @@ QPointF ItemView::hotspot() const
     }
 }
 
-QRectF ItemView::viewport() const
+RectF ItemView::viewport() const
 {
     // TODO make the viewport explicit instead?
     if (!m_item) {
-        return QRectF();
+        return RectF();
     }
     return calculateViewport(m_item->rect());
 }
 
-QRectF ItemView::calculateViewport(const QRectF &itemRect) const
+RectF ItemView::calculateViewport(const RectF &itemRect) const
 {
-    const QRectF snapped = snapToPixels(itemRect, scale());
+    const RectF snapped = snapToPixels(itemRect, scale());
     const auto recommendedSizes = m_layer ? m_layer->recommendedSizes() : QList<QSize>{};
     if (!recommendedSizes.empty()) {
         const auto bufferSize = scaledRect(itemRect, scale()).size();
@@ -360,7 +360,7 @@ QRectF ItemView::calculateViewport(const QRectF &itemRect) const
         });
         if (it != bigEnough.end()) {
             const auto logicalSize = QSizeF(*it) / scale();
-            return m_item->mapToView(QRectF(snapped.topLeft(), logicalSize), this);
+            return m_item->mapToView(RectF(snapped.topLeft(), logicalSize), this);
         }
     }
     return m_item->mapToView(snapped, this);
@@ -390,7 +390,7 @@ void ItemView::prePaint()
 {
 }
 
-QRegion ItemView::collectDamage()
+Region ItemView::collectDamage()
 {
     return m_item->takeDeviceRepaints(this);
 }
@@ -399,9 +399,9 @@ void ItemView::postPaint()
 {
 }
 
-void ItemView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &region)
+void ItemView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &region)
 {
-    const QRegion globalRegion = region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft().toPoint());
+    const Region globalRegion = region == Region::infinite() ? Region::infinite() : region.translated(viewport().topLeft().toPoint());
     RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
     auto renderer = m_item->scene()->renderer();
     renderer->beginFrame(renderTarget, renderViewport);
@@ -490,11 +490,11 @@ ItemTreeView::~ItemTreeView()
     }
 }
 
-QRectF ItemTreeView::viewport() const
+RectF ItemTreeView::viewport() const
 {
     // TODO make the viewport explicit instead?
     if (!m_item) {
-        return QRectF();
+        return RectF();
     }
     return calculateViewport(m_item->boundingRect());
 }
@@ -513,7 +513,7 @@ QList<SurfaceItem *> ItemTreeView::scanoutCandidates(ssize_t maxCount) const
     return {};
 }
 
-static void accumulateRepaints(Item *item, ItemTreeView *view, QRegion *repaints)
+static void accumulateRepaints(Item *item, ItemTreeView *view, Region *repaints)
 {
     *repaints += item->takeDeviceRepaints(view);
 
@@ -523,16 +523,16 @@ static void accumulateRepaints(Item *item, ItemTreeView *view, QRegion *repaints
     }
 }
 
-QRegion ItemTreeView::collectDamage()
+Region ItemTreeView::collectDamage()
 {
-    QRegion ret;
+    Region ret;
     accumulateRepaints(m_item, this, &ret);
     // FIXME damage tracking for this layer still has some bugs, this effectively disables it
-    ret = infiniteRegion();
+    ret = Region::infinite();
     return ret;
 }
 
-void ItemTreeView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const QRegion &deviceRegion)
+void ItemTreeView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion)
 {
     RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
     auto renderer = m_item->scene()->renderer();
@@ -641,46 +641,46 @@ ItemRenderer *Scene::renderer() const
 void Scene::addRepaintFull()
 {
     for (const auto &view : std::as_const(m_views)) {
-        view->addDeviceRepaint(infiniteRegion());
+        view->addDeviceRepaint(Region::infinite());
     }
 }
 
 void Scene::addLogicalRepaint(int x, int y, int width, int height)
 {
-    addLogicalRepaint(QRegion(x, y, width, height));
+    addLogicalRepaint(Region(x, y, width, height));
 }
 
-void Scene::addLogicalRepaint(const QRegion &logicalRegion)
+void Scene::addLogicalRepaint(const Region &logicalRegion)
 {
     for (const auto &view : std::as_const(m_views)) {
         addLogicalRepaint(view, logicalRegion);
     }
 }
 
-void Scene::addLogicalRepaint(RenderView *view, const QRegion &logicalRegion)
+void Scene::addLogicalRepaint(RenderView *view, const Region &logicalRegion)
 {
-    QRegion dirtyRegion = view->mapToDeviceCoordinatesAligned(logicalRegion);
+    Region dirtyRegion = view->mapToDeviceCoordinatesAligned(logicalRegion);
     if (!dirtyRegion.isEmpty()) {
         view->addDeviceRepaint(dirtyRegion);
     }
 }
 
-void Scene::addDeviceRepaint(RenderView *view, const QRegion &deviceRegion)
+void Scene::addDeviceRepaint(RenderView *view, const Region &deviceRegion)
 {
     view->addDeviceRepaint(deviceRegion);
 }
 
-QRegion Scene::damage() const
+Region Scene::damage() const
 {
-    return QRegion();
+    return Region();
 }
 
-QRect Scene::geometry() const
+Rect Scene::geometry() const
 {
     return m_geometry;
 }
 
-void Scene::setGeometry(const QRect &rect)
+void Scene::setGeometry(const Rect &rect)
 {
     if (m_geometry != rect) {
         m_geometry = rect;

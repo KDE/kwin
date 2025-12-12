@@ -4,6 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 #include "windoweffects.h"
+#include "core/region.h"
 #include "effect/effecthandler.h"
 
 #include <QGuiApplication>
@@ -52,7 +53,7 @@ void WindowEffects::slideWindow(QWindow *window, KWindowEffects::SlideFromLocati
 void WindowEffects::enableBlurBehind(QWindow *window, bool enable, const QRegion &region)
 {
     if (enable) {
-        window->setProperty("kwin_blur", region);
+        window->setProperty("kwin_blur", QVariant::fromValue(Region(region)));
     } else {
         window->setProperty("kwin_blur", {});
     }
@@ -61,7 +62,7 @@ void WindowEffects::enableBlurBehind(QWindow *window, bool enable, const QRegion
 void WindowEffects::enableBackgroundContrast(QWindow *window, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
 {
     if (enable) {
-        window->setProperty("kwin_background_region", region);
+        window->setProperty("kwin_background_region", QVariant::fromValue(Region(region)));
         window->setProperty("kwin_background_contrast", contrast);
         window->setProperty("kwin_background_intensity", intensity);
         window->setProperty("kwin_background_saturation", saturation);

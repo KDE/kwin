@@ -14,7 +14,6 @@
 
 #include <QExplicitlySharedDataPointer>
 #include <QMatrix4x4>
-#include <QRegion>
 #include <QSize>
 
 #include <epoxy/gl.h>
@@ -84,12 +83,12 @@ public:
      */
     QMatrix4x4 matrix(TextureCoordinateType type) const;
 
-    void update(const QImage &image, const QRegion &region, const QPoint &offset = QPoint());
+    void update(const QImage &image, const Region &region, const QPoint &offset = QPoint());
     void bind();
     void unbind();
     void render(const QSizeF &size);
-    void render(const QRegion &region, const QSizeF &size, bool hardwareClipping = false);
-    void render(const RectF &source, const QRegion &region, const QSizeF &targetSize, bool hardwareClipping = false);
+    void render(const Region &region, const QSizeF &size, bool hardwareClipping = false);
+    void render(const RectF &source, const Region &region, const QSizeF &targetSize, bool hardwareClipping = false);
 
     GLuint texture() const;
     GLenum target() const;

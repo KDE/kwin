@@ -6,10 +6,9 @@
 
 #pragma once
 
-#include "kwin_export.h"
+#include "core/region.h"
 
 #include <QList>
-#include <QRegion>
 
 namespace KWin
 {
@@ -40,7 +39,7 @@ public:
     /**
      * Adds the specified @a region to the journal.
      */
-    void add(const QRegion &region)
+    void add(const Region &region)
     {
         while (m_log.size() >= m_capacity) {
             m_log.removeLast();
@@ -63,9 +62,9 @@ public:
      * If the specified buffer age value refers to a damage region older than the last
      * one in the journal, @a fallback will be returned.
      */
-    QRegion accumulate(int bufferAge, const QRegion &fallback = QRegion()) const
+    Region accumulate(int bufferAge, const Region &fallback = Region()) const
     {
-        QRegion region;
+        Region region;
         if (bufferAge > 0 && bufferAge <= m_log.size()) {
             for (int i = 0; i < bufferAge - 1; ++i) {
                 region += m_log[i];
@@ -76,13 +75,13 @@ public:
         return region;
     }
 
-    QRegion lastDamage() const
+    Region lastDamage() const
     {
         return m_log.first();
     }
 
 private:
-    QList<QRegion> m_log;
+    QList<Region> m_log;
     int m_capacity = 10;
 };
 

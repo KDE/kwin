@@ -41,7 +41,7 @@ public:
     ~WaylandLayer() override;
 
     bool test() const;
-    void setBuffer(wl_buffer *buffer, const QRegion &deviceDamagedRegion);
+    void setBuffer(wl_buffer *buffer, const Region &deviceDamagedRegion);
     void commit(PresentationMode presentationMode);
 
     KWayland::Client::Surface *surface() const;

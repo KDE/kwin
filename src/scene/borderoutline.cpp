@@ -48,12 +48,12 @@ BorderOutline BorderOutline::rounded() const
     return BorderOutline(std::round(m_thickness), m_color, m_radius.rounded());
 }
 
-QRectF BorderOutline::inflate(const QRectF &rect) const
+RectF BorderOutline::inflate(const RectF &rect) const
 {
     return rect.adjusted(-m_thickness, -m_thickness, m_thickness, m_thickness);
 }
 
-QRectF BorderOutline::deflate(const QRectF &rect) const
+RectF BorderOutline::deflate(const RectF &rect) const
 {
     return rect.adjusted(m_thickness, m_thickness, -m_thickness, -m_thickness);
 }

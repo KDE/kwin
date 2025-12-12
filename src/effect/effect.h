@@ -9,9 +9,8 @@
 
 #pragma once
 
+#include "core/region.h"
 #include "effect/globals.h"
-
-#include <QRegion>
 
 #include <KPluginFactory>
 #include <KSharedConfig>
@@ -282,12 +281,12 @@ public:
     /**
      * Region that will be painted, in device coordinates.
      */
-    QRegion devicePaint;
+    Region devicePaint;
     /**
      * Region indicating the opaque content. It can be used to avoid painting
      * windows occluded by the opaque region.
      */
-    QRegion deviceOpaque;
+    Region deviceOpaque;
     /**
      * Simple helper that sets data to say the window will be painted as non-opaque.
      * Takes also care of changing the regions.
@@ -435,7 +434,7 @@ class KWIN_EXPORT ScreenPrePaintData
 {
 public:
     int mask;
-    QRegion paint;
+    Region paint;
     LogicalOutput *screen = nullptr;
     RenderView *view = nullptr;
 };
@@ -609,7 +608,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen);
+    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen);
     /**
      * Called after all the painting has been finished.
      * In this method you can:
@@ -647,7 +646,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
+    virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
 
     /**
      * Called on Transparent resizes.
@@ -676,7 +675,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
+    virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
 
     virtual void windowInputMouseEvent(QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
@@ -895,11 +894,11 @@ public:
     {
         return x * (1 - a) + y * a;
     }
-    /** Helper to set WindowPaintData and QRegion to necessary transformations so that
+    /** Helper to set WindowPaintData and Region to necessary transformations so that
      * a following drawWindow() would put the window at the requested geometry (useful for thumbnails)
      */
-    static void setPositionTransformations(WindowPaintData &data, QRect &logicalRegion, EffectWindow *w,
-                                           const QRect &r, Qt::AspectRatioMode aspect);
+    static void setPositionTransformations(WindowPaintData &data, Rect &logicalRegion, EffectWindow *w,
+                                           const Rect &r, Qt::AspectRatioMode aspect);
 
     /**
      * overwrite this method to return false if your effect does not need to be drawn over opaque fullscreen windows

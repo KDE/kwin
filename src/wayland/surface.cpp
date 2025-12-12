@@ -734,10 +734,10 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
 
     if (opaqueRegionChanged) {
-        Q_EMIT q->opaqueChanged(QRegion(opaqueRegion));
+        Q_EMIT q->opaqueChanged(opaqueRegion);
     }
     if (oldInputRegion != inputRegion) {
-        Q_EMIT q->inputChanged(QRegion(inputRegion));
+        Q_EMIT q->inputChanged(inputRegion);
     }
     if (transformChanged) {
         Q_EMIT q->bufferTransformChanged(current->bufferTransform);
@@ -783,7 +783,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         Q_EMIT q->alphaMultiplierChanged();
     }
     if (!bufferDamage.isEmpty()) {
-        Q_EMIT q->damaged(QRegion(bufferDamage));
+        Q_EMIT q->damaged(bufferDamage);
     }
 
     // The position of a sub-surface is applied when its parent is committed.
@@ -868,19 +868,19 @@ Region SurfaceInterfacePrivate::mapToBuffer(const Region &region) const
     return result;
 }
 
-QRegion SurfaceInterface::bufferDamage() const
+Region SurfaceInterface::bufferDamage() const
 {
-    return QRegion(d->bufferDamage);
+    return d->bufferDamage;
 }
 
-QRegion SurfaceInterface::opaque() const
+Region SurfaceInterface::opaque() const
 {
-    return QRegion(d->opaqueRegion);
+    return d->opaqueRegion;
 }
 
-QRegion SurfaceInterface::input() const
+Region SurfaceInterface::input() const
 {
-    return QRegion(d->inputRegion);
+    return d->inputRegion;
 }
 
 RectF SurfaceInterface::bufferSourceBox() const

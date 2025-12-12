@@ -62,12 +62,12 @@ void SurfaceItem::setBuffer(GraphicsBuffer *buffer)
     }
 }
 
-QRectF SurfaceItem::bufferSourceBox() const
+RectF SurfaceItem::bufferSourceBox() const
 {
     return m_bufferSourceBox;
 }
 
-void SurfaceItem::setBufferSourceBox(const QRectF &box)
+void SurfaceItem::setBufferSourceBox(const RectF &box)
 {
     if (m_bufferSourceBox != box) {
         m_bufferSourceBox = box;
@@ -102,35 +102,35 @@ void SurfaceItem::setBufferSize(const QSize &size)
     }
 }
 
-QRegion SurfaceItem::mapFromBuffer(const QRegion &region) const
+Region SurfaceItem::mapFromBuffer(const Region &region) const
 {
-    const QRectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
+    const RectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
     const qreal xScale = m_destinationSize.width() / sourceBox.width();
     const qreal yScale = m_destinationSize.height() / sourceBox.height();
 
-    QRegion result;
-    for (QRectF rect : region) {
-        const QRectF r = m_bufferToSurfaceTransform.map(rect, m_bufferSize).translated(-sourceBox.topLeft());
-        result += QRectF(r.x() * xScale, r.y() * yScale, r.width() * xScale, r.height() * yScale).toAlignedRect();
+    Region result;
+    for (RectF rect : region.rects()) {
+        const RectF r = m_bufferToSurfaceTransform.map(rect, m_bufferSize).translated(-sourceBox.topLeft());
+        result += RectF(r.x() * xScale, r.y() * yScale, r.width() * xScale, r.height() * yScale).toAlignedRect();
     }
     return result;
 }
 
-static QRegion expandRegion(const QRegion &region, const QMargins &padding)
+static Region expandRegion(const Region &region, const QMargins &padding)
 {
     if (region.isEmpty()) {
-        return QRegion();
+        return Region();
     }
 
-    QRegion ret;
-    for (const QRect &rect : region) {
+    Region ret;
+    for (const Rect &rect : region.rects()) {
         ret += rect.marginsAdded(padding);
     }
 
     return ret;
 }
 
-void SurfaceItem::addDamage(const QRegion &region)
+void SurfaceItem::addDamage(const Region &region)
 {
     if (m_lastDamage) {
         const auto diff = std::chrono::steady_clock::now() - *m_lastDamage;
@@ -143,14 +143,14 @@ void SurfaceItem::addDamage(const QRegion &region)
     m_lastDamage = std::chrono::steady_clock::now();
     m_damage += region;
 
-    const QRectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
+    const RectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
     const qreal xScale = sourceBox.width() / m_destinationSize.width();
     const qreal yScale = sourceBox.height() / m_destinationSize.height();
-    const QRegion logicalDamage = mapFromBuffer(region);
+    const Region logicalDamage = mapFromBuffer(region);
 
     const auto views = scene()->views();
     for (RenderView *view : views) {
-        QRegion viewDamage = logicalDamage;
+        Region viewDamage = logicalDamage;
         const qreal viewScale = view->scale();
         if (xScale != viewScale || yScale != viewScale) {
             // Simplified version of ceil(ceil(0.5 * output_scale / surface_scale) / output_scale)
@@ -166,10 +166,10 @@ void SurfaceItem::addDamage(const QRegion &region)
 
 void SurfaceItem::resetDamage()
 {
-    m_damage = QRegion();
+    m_damage = Region();
 }
 
-QRegion SurfaceItem::damage() const
+Region SurfaceItem::damage() const
 {
     return m_damage;
 }
@@ -195,7 +195,7 @@ void SurfaceItem::preprocess()
     }
 
     if (m_texture->isValid()) {
-        const QRegion region = damage();
+        const Region region = damage();
         if (!region.isEmpty()) {
             m_texture->update(region);
             resetDamage();
@@ -209,15 +209,15 @@ void SurfaceItem::preprocess()
 
 WindowQuadList SurfaceItem::buildQuads() const
 {
-    const QList<QRectF> region = shape();
+    const QList<RectF> region = shape();
     WindowQuadList quads;
     quads.reserve(region.count());
 
-    const QRectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
+    const RectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
     const qreal xScale = sourceBox.width() / m_destinationSize.width();
     const qreal yScale = sourceBox.height() / m_destinationSize.height();
 
-    for (const QRectF rect : region) {
+    for (const RectF rect : region) {
         WindowQuad quad;
 
         const QPointF bufferTopLeft = snapToPixelGridF(m_bufferSourceBox.topLeft() + m_surfaceToBufferTransform.map(QPointF(rect.left() * xScale, rect.top() * yScale), sourceBox.size()));
@@ -339,7 +339,7 @@ void OpenGLSurfaceTexture::destroy()
     m_size = QSize();
 }
 
-void OpenGLSurfaceTexture::update(const QRegion &region)
+void OpenGLSurfaceTexture::update(const Region &region)
 {
     GraphicsBuffer *buffer = m_item->buffer();
     if (buffer->dmabufAttributes()) {
@@ -377,16 +377,16 @@ bool OpenGLSurfaceTexture::loadShmTexture(GraphicsBuffer *buffer)
     return true;
 }
 
-static QRegion simplifyDamage(const QRegion &damage)
+static Region simplifyDamage(const Region &damage)
 {
-    if (damage.rectCount() < 3) {
+    if (damage.rects().size() < 3) {
         return damage;
     } else {
         return damage.boundingRect();
     }
 }
 
-void OpenGLSurfaceTexture::updateShmTexture(GraphicsBuffer *buffer, const QRegion &region)
+void OpenGLSurfaceTexture::updateShmTexture(GraphicsBuffer *buffer, const Region &region)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::Shm)) {
         destroy();
@@ -510,7 +510,7 @@ void OpenGLSurfaceTexture::updateSinglePixelTexture(GraphicsBuffer *buffer)
         return;
     }
     const GraphicsBufferView view(buffer);
-    m_texture.planes[0]->update(*view.image(), QRect(0, 0, 1, 1));
+    m_texture.planes[0]->update(*view.image(), Rect(0, 0, 1, 1));
 }
 
 QPainterSurfaceTexture::QPainterSurfaceTexture(QPainterBackend *backend, SurfaceItem *item)
@@ -531,7 +531,7 @@ bool QPainterSurfaceTexture::create()
     return !m_image.isNull();
 }
 
-void QPainterSurfaceTexture::update(const QRegion &region)
+void QPainterSurfaceTexture::update(const Region &region)
 {
     const GraphicsBufferView view(m_item->buffer());
     if (Q_UNLIKELY(view.isNull())) {
@@ -543,7 +543,7 @@ void QPainterSurfaceTexture::update(const QRegion &region)
 
     // The buffer data is copied as the buffer interface returns a QImage
     // which doesn't own the data of the underlying wl_shm_buffer object.
-    for (const QRect &rect : region) {
+    for (const Rect &rect : region.rects()) {
         painter.drawImage(rect, *view.image(), rect);
     }
 }

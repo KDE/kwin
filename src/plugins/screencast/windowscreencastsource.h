@@ -29,8 +29,8 @@ public:
     uint refreshRate() const override;
 
     void setRenderCursor(bool enable) override;
-    QRegion render(GLFramebuffer *target, const QRegion &bufferDamage) override;
-    QRegion render(QImage *target, const QRegion &bufferDamage) override;
+    Region render(GLFramebuffer *target, const Region &bufferDamage) override;
+    Region render(QImage *target, const Region &bufferDamage) override;
     std::chrono::nanoseconds clock() const override;
 
     void resume() override;

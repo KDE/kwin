@@ -14,7 +14,6 @@
 #include "opengl/egldisplay.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 
-#include <QRegion>
 #include <memory>
 
 #include <epoxy/egl.h>

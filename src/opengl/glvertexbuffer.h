@@ -11,8 +11,9 @@
 #pragma once
 #include "kwin_export.h"
 
+#include "core/region.h"
+
 #include <QColor>
-#include <QRegion>
 #include <QVector2D>
 
 #include <epoxy/gl.h>
@@ -205,7 +206,7 @@ public:
     /**
      * Draws count vertices beginning with first.
      */
-    void draw(const QRegion &region, GLenum primitiveMode, int first, int count, bool hardwareClipping = false);
+    void draw(const Region &region, GLenum primitiveMode, int first, int count, bool hardwareClipping = false);
 
     /**
      * Renders the vertex data in given @a primitiveMode.
@@ -218,7 +219,7 @@ public:
      * Same as above restricting painting to @a region if @a hardwareClipping is true.
      * It's within the caller's responsibility to enable GL_SCISSOR_TEST.
      */
-    void render(const QRegion &region, GLenum primitiveMode, bool hardwareClipping = false);
+    void render(const Region &region, GLenum primitiveMode, bool hardwareClipping = false);
 
     /**
      * Resets the instance to default values.

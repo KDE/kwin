@@ -149,7 +149,7 @@ void Item::setScene(Scene *scene)
     if (m_scene) {
         for (auto it = m_deviceRepaints.constBegin(); it != m_deviceRepaints.constEnd(); ++it) {
             RenderView *view = it.key();
-            const QRegion &dirty = it.value();
+            const Region &dirty = it.value();
             if (!dirty.isEmpty()) {
                 m_scene->addDeviceRepaint(view, dirty);
             }
@@ -204,25 +204,25 @@ void Item::setSize(const QSizeF &size)
     }
 }
 
-void Item::setGeometry(const QRectF &rect)
+void Item::setGeometry(const RectF &rect)
 {
     setPosition(rect.topLeft());
     setSize(rect.size());
 }
 
-QRectF Item::rect() const
+RectF Item::rect() const
 {
-    return QRectF(QPoint(0, 0), size());
+    return RectF(QPoint(0, 0), size());
 }
 
-QRectF Item::boundingRect() const
+RectF Item::boundingRect() const
 {
     return m_boundingRect;
 }
 
 void Item::updateBoundingRect()
 {
-    QRectF boundingRect = rect();
+    RectF boundingRect = rect();
     for (Item *item : std::as_const(m_childItems)) {
         boundingRect |= item->transform().mapRect(item->boundingRect()).translated(item->position());
     }
@@ -235,14 +235,14 @@ void Item::updateBoundingRect()
     }
 }
 
-QList<QRectF> Item::shape() const
+QList<RectF> Item::shape() const
 {
-    return QList<QRectF>();
+    return QList<RectF>();
 }
 
-QRegion Item::opaque() const
+Region Item::opaque() const
 {
-    return QRegion();
+    return Region();
 }
 
 QTransform Item::transform() const
@@ -280,19 +280,19 @@ void Item::updateItemToSceneTransform()
     }
 }
 
-QRegion Item::mapToView(const QRegion &region, const RenderView *view) const
+Region Item::mapToView(const Region &region, const RenderView *view) const
 {
-    QRegion ret;
-    for (QRectF rect : region) {
+    Region ret;
+    for (RectF rect : region.rects()) {
         ret |= mapToView(rect, view).toAlignedRect();
     }
     return ret;
 }
 
-QRectF Item::mapToView(const QRectF &rect, const RenderView *view) const
+RectF Item::mapToView(const RectF &rect, const RenderView *view) const
 {
     const auto snappedPosition = snapToPixels(m_position, view->scale());
-    const QRectF ret = rect.translated(snappedPosition);
+    const RectF ret = rect.translated(snappedPosition);
     if (m_parentItem) {
         return m_parentItem->mapToView(ret, view);
     } else {
@@ -300,35 +300,39 @@ QRectF Item::mapToView(const QRectF &rect, const RenderView *view) const
     }
 }
 
-QRegion Item::mapToScene(const QRegion &region) const
+Region Item::mapToScene(const Region &region) const
 {
     if (region.isEmpty()) {
-        return QRegion();
+        return Region();
     }
-    return m_itemToSceneTransform.map(region);
+    Region ret;
+    for (const Rect &rect : region.rects()) {
+        ret |= m_itemToSceneTransform.mapRect(rect);
+    }
+    return ret;
 }
 
-QRectF Item::mapToScene(const QRectF &rect) const
+RectF Item::mapToScene(const RectF &rect) const
 {
     if (rect.isEmpty()) {
-        return QRect();
+        return Rect();
     }
     return m_itemToSceneTransform.mapRect(rect);
 }
 
-QRectF Item::mapFromScene(const QRectF &rect) const
+RectF Item::mapFromScene(const RectF &rect) const
 {
     if (rect.isEmpty()) {
-        return QRect();
+        return Rect();
     }
     return m_sceneToItemTransform.mapRect(rect);
 }
 
-QRect Item::paintedDeviceArea(RenderView *view, const QRectF &rect) const
+Rect Item::paintedDeviceArea(RenderView *view, const RectF &rect) const
 {
     const qreal scale = view->scale();
 
-    QRectF snapped = snapToPixelGridF(scaledRect(rect, scale));
+    RectF snapped = rect.scaled(scale).rounded();
     for (const Item *item = this; item; item = item->parentItem()) {
         if (!item->m_transform.isIdentity()) {
             snapped = (QTransform::fromScale(1 / scale, 1 / scale) * item->m_transform * QTransform::fromScale(scale, scale))
@@ -340,10 +344,10 @@ QRect Item::paintedDeviceArea(RenderView *view, const QRectF &rect) const
     return view->mapToDeviceCoordinatesAligned(scaledRect(snapped, 1.0 / scale)) & view->deviceRect();
 }
 
-QRegion Item::paintedDeviceArea(RenderView *view, const QRegion &region) const
+Region Item::paintedDeviceArea(RenderView *view, const Region &region) const
 {
-    QRegion ret;
-    for (QRectF part : region) {
+    Region ret;
+    for (RectF part : region.rects()) {
         ret |= paintedDeviceArea(view, part);
     }
     return ret;
@@ -405,21 +409,21 @@ void Item::stackAfter(Item *sibling)
     sibling->scheduleSceneRepaint(sibling->boundingRect());
 }
 
-void Item::scheduleRepaint(const QRegion &region)
+void Item::scheduleRepaint(const Region &region)
 {
     if (isVisible()) {
         scheduleRepaintInternal(region);
     }
 }
 
-void Item::scheduleRepaint(RenderView *view, const QRegion &region)
+void Item::scheduleRepaint(RenderView *view, const Region &region)
 {
     if (isVisible()) {
         scheduleRepaintInternal(view, region);
     }
 }
 
-void Item::scheduleRepaintInternal(const QRegion &region)
+void Item::scheduleRepaintInternal(const Region &region)
 {
     if (Q_UNLIKELY(!m_scene)) {
         return;
@@ -429,7 +433,7 @@ void Item::scheduleRepaintInternal(const QRegion &region)
         if (!view->shouldRenderItem(this)) {
             continue;
         }
-        const QRegion dirtyRegion = paintedDeviceArea(view, region);
+        const Region dirtyRegion = paintedDeviceArea(view, region);
         if (!dirtyRegion.isEmpty()) {
             m_deviceRepaints[view] += dirtyRegion;
             view->scheduleRepaint(this);
@@ -447,7 +451,7 @@ void Item::scheduleMoveRepaint(Item *originallyMovedItem)
         if (!view->shouldRenderItem(this)) {
             continue;
         }
-        const QRegion dirtyRegion = paintedDeviceArea(view, rect());
+        const Region dirtyRegion = paintedDeviceArea(view, rect());
         if (!dirtyRegion.isEmpty()) {
             // we can skip the move repaint if the parent item was moved
             // and this item was just implicitly moved as a consequence
@@ -462,12 +466,12 @@ void Item::scheduleMoveRepaint(Item *originallyMovedItem)
     }
 }
 
-void Item::scheduleRepaintInternal(RenderView *view, const QRegion &region)
+void Item::scheduleRepaintInternal(RenderView *view, const Region &region)
 {
     if (Q_UNLIKELY(!m_scene) || !view->shouldRenderItem(this)) {
         return;
     }
-    const QRegion dirtyRegion = paintedDeviceArea(view, region);
+    const Region dirtyRegion = paintedDeviceArea(view, region);
     if (!dirtyRegion.isEmpty()) {
         m_deviceRepaints[view] += dirtyRegion;
         view->scheduleRepaint(this);
@@ -487,14 +491,14 @@ void Item::scheduleFrame()
         if (!view->shouldRenderItem(this)) {
             continue;
         }
-        const QRect geometry = paintedDeviceArea(view, rect());
+        const Rect geometry = paintedDeviceArea(view, rect());
         if (!geometry.isEmpty()) {
             view->scheduleRepaint(this);
         }
     }
 }
 
-void Item::scheduleSceneRepaintInternal(const QRegion &region)
+void Item::scheduleSceneRepaintInternal(const Region &region)
 {
     if (Q_UNLIKELY(!m_scene)) {
         return;
@@ -504,7 +508,7 @@ void Item::scheduleSceneRepaintInternal(const QRegion &region)
         if (!view->shouldRenderItem(this) && !view->shouldRenderHole(this)) {
             continue;
         }
-        const QRegion dirtyRegion = paintedDeviceArea(view, region);
+        const Region dirtyRegion = paintedDeviceArea(view, region);
         if (!dirtyRegion.isEmpty()) {
             m_scene->addDeviceRepaint(view, dirtyRegion);
         }
@@ -539,17 +543,17 @@ bool Item::hasRepaints(RenderView *view) const
     return it != m_deviceRepaints.end() && !it->isEmpty();
 }
 
-QRegion Item::takeDeviceRepaints(RenderView *view)
+Region Item::takeDeviceRepaints(RenderView *view)
 {
     auto &repaints = m_deviceRepaints[view];
-    QRegion reg;
+    Region reg;
     std::swap(reg, repaints);
     return reg;
 }
 
 void Item::resetRepaints(RenderView *view)
 {
-    m_deviceRepaints.insert(view, QRegion());
+    m_deviceRepaints.insert(view, Region());
 }
 
 void Item::removeRepaints(RenderView *view)
@@ -588,17 +592,17 @@ void Item::setBorderRadius(const BorderRadius &radius)
     }
 }
 
-void Item::scheduleRepaint(const QRectF &region)
+void Item::scheduleRepaint(const RectF &region)
 {
-    scheduleRepaint(QRegion(region.toAlignedRect()));
+    scheduleRepaint(Region(region.roundedOut()));
 }
 
-void Item::scheduleSceneRepaint(const QRectF &region)
+void Item::scheduleSceneRepaint(const RectF &region)
 {
-    scheduleSceneRepaint(QRegion(region.toAlignedRect()));
+    scheduleSceneRepaint(Region(region.roundedOut()));
 }
 
-void Item::scheduleSceneRepaint(const QRegion &region)
+void Item::scheduleSceneRepaint(const Region &region)
 {
     if (isVisible()) {
         scheduleSceneRepaintInternal(region);

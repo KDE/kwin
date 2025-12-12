@@ -356,10 +356,10 @@ public:
     explicit EffectWindow(WindowItem *windowItem);
     ~EffectWindow() override;
 
-    Q_SCRIPTABLE void addRepaint(const QRect &r);
+    Q_SCRIPTABLE void addRepaint(const Rect &r);
     Q_SCRIPTABLE void addRepaint(int x, int y, int w, int h);
     Q_SCRIPTABLE void addRepaintFull();
-    Q_SCRIPTABLE void addLayerRepaint(const QRect &r);
+    Q_SCRIPTABLE void addLayerRepaint(const Rect &r);
     Q_SCRIPTABLE void addLayerRepaint(int x, int y, int w, int h);
 
     void refWindow();
@@ -980,12 +980,12 @@ private:
 
 inline void EffectWindow::addRepaint(int x, int y, int w, int h)
 {
-    addRepaint(QRect(x, y, w, h));
+    addRepaint(Rect(x, y, w, h));
 }
 
 inline void EffectWindow::addLayerRepaint(int x, int y, int w, int h)
 {
-    addLayerRepaint(QRect(x, y, w, h));
+    addLayerRepaint(Rect(x, y, w, h));
 }
 
 } // namespace KWin

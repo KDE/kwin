@@ -67,7 +67,7 @@ ShadowTextureProvider *ShadowItem::textureProvider() const
 
 void ShadowItem::updateGeometry()
 {
-    const QRectF rect = m_shadow->rect() + m_shadow->offset();
+    const RectF rect = m_shadow->rect() + m_shadow->offset();
 
     setPosition(rect.topLeft());
     setSize(rect.size());
@@ -81,7 +81,7 @@ void ShadowItem::handleTextureChanged()
     m_textureDirty = true;
 }
 
-static inline void distributeHorizontally(QRectF &leftRect, QRectF &rightRect)
+static inline void distributeHorizontally(RectF &leftRect, RectF &rightRect)
 {
     if (leftRect.right() > rightRect.left()) {
         const qreal boundedRight = std::min(leftRect.right(), rightRect.right());
@@ -92,7 +92,7 @@ static inline void distributeHorizontally(QRectF &leftRect, QRectF &rightRect)
     }
 }
 
-static inline void distributeVertically(QRectF &topRect, QRectF &bottomRect)
+static inline void distributeVertically(RectF &topRect, RectF &bottomRect)
 {
     if (topRect.bottom() > bottomRect.top()) {
         const qreal boundedBottom = std::min(topRect.bottom(), bottomRect.bottom());
@@ -125,45 +125,45 @@ WindowQuadList ShadowItem::buildQuads() const
         std::max({topRight.width(), right.width(), bottomRight.width()}),
         std::max({bottomRight.height(), bottom.height(), bottomLeft.height()}));
 
-    const QRectF outerRect = rect();
+    const RectF outerRect = rect();
 
     const int width = shadowMargins.left() + std::max(top.width(), bottom.width()) + shadowMargins.right();
     const int height = shadowMargins.top() + std::max(left.height(), right.height()) + shadowMargins.bottom();
 
-    QRectF topLeftRect;
+    RectF topLeftRect;
     if (!topLeft.isEmpty()) {
-        topLeftRect = QRectF(outerRect.topLeft(), topLeft);
+        topLeftRect = RectF(outerRect.topLeft(), topLeft);
     } else {
-        topLeftRect = QRectF(outerRect.left() + shadowMargins.left(),
+        topLeftRect = RectF(outerRect.left() + shadowMargins.left(),
+                            outerRect.top() + shadowMargins.top(), 0, 0);
+    }
+
+    RectF topRightRect;
+    if (!topRight.isEmpty()) {
+        topRightRect = RectF(outerRect.right() - topRight.width(), outerRect.top(),
+                             topRight.width(), topRight.height());
+    } else {
+        topRightRect = RectF(outerRect.right() - shadowMargins.right(),
                              outerRect.top() + shadowMargins.top(), 0, 0);
     }
 
-    QRectF topRightRect;
-    if (!topRight.isEmpty()) {
-        topRightRect = QRectF(outerRect.right() - topRight.width(), outerRect.top(),
-                              topRight.width(), topRight.height());
-    } else {
-        topRightRect = QRectF(outerRect.right() - shadowMargins.right(),
-                              outerRect.top() + shadowMargins.top(), 0, 0);
-    }
-
-    QRectF bottomRightRect;
+    RectF bottomRightRect;
     if (!bottomRight.isEmpty()) {
-        bottomRightRect = QRectF(outerRect.right() - bottomRight.width(),
-                                 outerRect.bottom() - bottomRight.height(),
-                                 bottomRight.width(), bottomRight.height());
+        bottomRightRect = RectF(outerRect.right() - bottomRight.width(),
+                                outerRect.bottom() - bottomRight.height(),
+                                bottomRight.width(), bottomRight.height());
     } else {
-        bottomRightRect = QRectF(outerRect.right() - shadowMargins.right(),
-                                 outerRect.bottom() - shadowMargins.bottom(), 0, 0);
+        bottomRightRect = RectF(outerRect.right() - shadowMargins.right(),
+                                outerRect.bottom() - shadowMargins.bottom(), 0, 0);
     }
 
-    QRectF bottomLeftRect;
+    RectF bottomLeftRect;
     if (!bottomLeft.isEmpty()) {
-        bottomLeftRect = QRectF(outerRect.left(), outerRect.bottom() - bottomLeft.height(),
-                                bottomLeft.width(), bottomLeft.height());
+        bottomLeftRect = RectF(outerRect.left(), outerRect.bottom() - bottomLeft.height(),
+                               bottomLeft.width(), bottomLeft.height());
     } else {
-        bottomLeftRect = QRectF(outerRect.left() + shadowMargins.left(),
-                                outerRect.bottom() - shadowMargins.bottom(), 0, 0);
+        bottomLeftRect = RectF(outerRect.left() + shadowMargins.left(),
+                               outerRect.bottom() - shadowMargins.bottom(), 0, 0);
     }
 
     // Re-distribute the corner tiles so no one of them is overlapping with others.
@@ -238,17 +238,17 @@ WindowQuadList ShadowItem::buildQuads() const
         quads.append(bottomLeftQuad);
     }
 
-    QRectF topRect(QPointF(topLeftRect.right(), outerRect.top()),
-                   QPointF(topRightRect.left(), outerRect.top() + top.height()));
+    RectF topRect(QPointF(topLeftRect.right(), outerRect.top()),
+                  QPointF(topRightRect.left(), outerRect.top() + top.height()));
 
-    QRectF rightRect(QPointF(outerRect.right() - right.width(), topRightRect.bottom()),
-                     QPointF(outerRect.right(), bottomRightRect.top()));
+    RectF rightRect(QPointF(outerRect.right() - right.width(), topRightRect.bottom()),
+                    QPointF(outerRect.right(), bottomRightRect.top()));
 
-    QRectF bottomRect(QPointF(bottomLeftRect.right(), outerRect.bottom() - bottom.height()),
-                      QPointF(bottomRightRect.left(), outerRect.bottom()));
+    RectF bottomRect(QPointF(bottomLeftRect.right(), outerRect.bottom() - bottom.height()),
+                     QPointF(bottomRightRect.left(), outerRect.bottom()));
 
-    QRectF leftRect(QPointF(outerRect.left(), topLeftRect.bottom()),
-                    QPointF(outerRect.left() + left.width(), bottomLeftRect.top()));
+    RectF leftRect(QPointF(outerRect.left(), topLeftRect.bottom()),
+                   QPointF(outerRect.left() + left.width(), bottomLeftRect.top()));
 
     // Re-distribute left/right and top/bottom shadow tiles so they don't
     // overlap when the window is too small. Please notice that we don't

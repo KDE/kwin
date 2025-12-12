@@ -106,7 +106,7 @@ void KscreenEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPreP
     effects->prePaintWindow(view, w, data, presentTime);
 }
 
-void KscreenEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data)
+void KscreenEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     auto screen = w->screen();
     if (isScreenActive(screen)) {

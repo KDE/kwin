@@ -116,7 +116,7 @@ void ColorBlindnessCorrectionEffect::drawWindow(const RenderTarget &renderTarget
                                                 const RenderViewport &viewport,
                                                 EffectWindow *w,
                                                 int mask,
-                                                const QRegion &logicalRegion,
+                                                const Region &logicalRegion,
                                                 WindowPaintData &data)
 {
     // The 'saturation' uniform is exported in the base function, so we have to modify its value beforehand.

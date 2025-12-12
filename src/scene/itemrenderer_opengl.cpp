@@ -96,13 +96,13 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
 
     // split all quads in bounding rect with the actual rects in the region
     for (const WindowQuad &quad : std::as_const(quads)) {
-        if (context->deviceClip != infiniteRegion() && !context->hardwareClipping) {
+        if (context->deviceClip != Region::infinite() && !context->hardwareClipping) {
             // Scale to device coordinates, rounding as needed.
-            const QRectF deviceBounds = snapToPixelGridF(scaledRect(quad.bounds(), scale));
+            const RectF deviceBounds = snapToPixelGridF(scaledRect(quad.bounds(), scale));
 
-            for (const QRect &deviceClipRect : std::as_const(context->deviceClip)) {
-                const QRectF relativeDeviceClipRect = QRectF(deviceClipRect).translated(-itemToDeviceTranslation);
-                const QRectF intersected = relativeDeviceClipRect.intersected(deviceBounds);
+            for (const Rect &deviceClipRect : context->deviceClip.rects()) {
+                const RectF relativeDeviceClipRect = RectF(deviceClipRect).translated(-itemToDeviceTranslation);
+                const RectF intersected = relativeDeviceClipRect.intersected(deviceBounds);
                 if (intersected.isValid()) {
                     if (deviceBounds == intersected) {
                         // case 1: completely contains, include and do not check other rects
@@ -159,7 +159,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
     }
 
     if (const BorderRadius radius = item->borderRadius(); !radius.isNull()) {
-        const QRectF nativeRect = snapToPixelGridF(scaledRect(item->rect(), context->renderTargetScale));
+        const RectF nativeRect = snapToPixelGridF(scaledRect(item->rect(), context->renderTargetScale));
         const BorderRadius nativeRadius = radius.scaled(context->renderTargetScale).rounded();
         context->cornerStack.push({
             .box = nativeRect,
@@ -271,8 +271,8 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         if (!geometry.isEmpty()) {
             const BorderOutline outline = borderItem->outline();
             const int thickness = std::round(outline.thickness() * context->renderTargetScale);
-            const QRectF outerRect = snapToPixelGridF(scaledRect(borderItem->rect(), context->renderTargetScale));
-            const QRectF innerRect = outerRect.adjusted(thickness, thickness, -thickness, -thickness);
+            const RectF outerRect = snapToPixelGridF(scaledRect(borderItem->rect(), context->renderTargetScale));
+            const RectF innerRect = outerRect.adjusted(thickness, thickness, -thickness, -thickness);
             context->renderNodes.append(RenderNode{
                 .traits = ShaderTrait::Border,
                 .geometry = geometry,
@@ -309,7 +309,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
     }
 }
 
-void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &deviceRegion)
+void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion)
 {
     const auto clipped = deviceRegion & renderTarget.transformedRect();
     if (clipped == renderTarget.transformedRect()) {
@@ -320,7 +320,7 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
         glEnable(GL_SCISSOR_TEST);
 
         const auto targetSize = renderTarget.size();
-        for (const QRect &deviceRect : clipped) {
+        for (const Rect &deviceRect : clipped.rects()) {
             const auto bufferRect = viewport.transform().map(deviceRect, renderTarget.transformedSize());
             glScissor(bufferRect.x(), targetSize.height() - (bufferRect.y() + bufferRect.height()), bufferRect.width(), bufferRect.height());
             glClear(GL_COLOR_BUFFER_BIT);
@@ -330,7 +330,7 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
     }
 }
 
-void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
     if (deviceRegion.isEmpty()) {
         return;
@@ -340,7 +340,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         .projectionMatrix = viewport.projectionMatrix(),
         .rootTransform = data.toMatrix(viewport.scale()), // TODO: unify transforms
         .deviceClip = (deviceRegion & renderTarget.transformedRect()),
-        .hardwareClipping = (deviceRegion != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED))) || !viewport.renderOffset().isNull(),
+        .hardwareClipping = (deviceRegion != Region::infinite() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED))) || !viewport.renderOffset().isNull(),
         .renderTargetScale = viewport.scale(),
         .viewportOrigin = viewport.scaledRenderRect().topLeft(),
         .renderOffset = viewport.renderOffset(),
@@ -388,7 +388,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     // The scissor region must be in the render target local coordinate system.
     const QSize bufferOffset = renderTarget.transform().map(QSize(viewport.renderOffset().x(), viewport.renderOffset().y()));
-    QRegion scissorRegion = QRect(QPoint(bufferOffset.width(), bufferOffset.height()), renderTarget.size() - 2 * bufferOffset);
+    Region scissorRegion = Rect(QPoint(bufferOffset.width(), bufferOffset.height()), renderTarget.size() - 2 * bufferOffset);
     if (renderContext.hardwareClipping) {
         scissorRegion &= viewport.transform().map(deviceRegion & renderTarget.transformedRect(), renderTarget.transformedSize());
     }
@@ -503,7 +503,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     }
 }
 
-void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, const QRegion &logicalRegion, const RenderContext &renderContext)
+void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, const Region &logicalRegion, const RenderContext &renderContext)
 {
     if (!m_debug.fractionalShader) {
         m_debug.fractionalShader = ShaderManager::instance()->generateShaderFromFile(

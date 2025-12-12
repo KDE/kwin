@@ -105,21 +105,21 @@ void WindowScreenCastSource::setRenderCursor(bool enable)
     m_renderCursor = enable;
 }
 
-QRegion WindowScreenCastSource::render(QImage *target, const QRegion &bufferDamage)
+Region WindowScreenCastSource::render(QImage *target, const Region &bufferDamage)
 {
     const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, target->size());
     if (!offscreenTexture) {
-        return QRegion{};
+        return Region{};
     }
     offscreenTexture->setContentTransform(OutputTransform::FlipY);
 
     GLFramebuffer offscreenTarget(offscreenTexture.get());
-    render(&offscreenTarget, infiniteRegion());
+    render(&offscreenTarget, Region::infinite());
     grabTexture(offscreenTexture.get(), target);
-    return QRect(QPoint(), target->size());
+    return Rect(QPoint(), target->size());
 }
 
-QRegion WindowScreenCastSource::render(GLFramebuffer *target, const QRegion &bufferDamage)
+Region WindowScreenCastSource::render(GLFramebuffer *target, const Region &bufferDamage)
 {
     RenderTarget renderTarget(target);
     RenderViewport viewport(boundingRect(), devicePixelRatio(), renderTarget, QPoint());
@@ -130,13 +130,13 @@ QRegion WindowScreenCastSource::render(GLFramebuffer *target, const QRegion &buf
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
     for (const auto &window : m_windows) {
-        scene->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, {}, {});
+        scene->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, {}, {});
     }
     if (m_renderCursor && scene->cursorItem()->isVisible()) {
-        scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), 0, infiniteRegion(), WindowPaintData{}, {}, {});
+        scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {});
     }
     scene->renderer()->endFrame();
-    return QRect(QPoint(), target->size());
+    return Rect(QPoint(), target->size());
 }
 
 std::chrono::nanoseconds WindowScreenCastSource::clock() const

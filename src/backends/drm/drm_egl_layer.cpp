@@ -20,7 +20,6 @@
 #include "utils/envvar.h"
 #include "wayland/surface.h"
 
-#include <QRegion>
 #include <drm_fourcc.h>
 #include <errno.h>
 #include <gbm.h>
@@ -65,7 +64,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
                                     m_requiredAlphaBits);
 }
 
-bool EglGbmLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool EglGbmLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     return m_surface.endRendering(damagedDeviceRegion, frame);
 }

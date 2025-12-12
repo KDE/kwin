@@ -35,8 +35,8 @@ public:
     GraphicsBuffer *buffer() const;
     void setBuffer(GraphicsBuffer *buffer);
 
-    QRectF bufferSourceBox() const;
-    void setBufferSourceBox(const QRectF &box);
+    RectF bufferSourceBox() const;
+    void setBufferSourceBox(const RectF &box);
 
     OutputTransform bufferTransform() const;
     void setBufferTransform(OutputTransform transform);
@@ -48,11 +48,11 @@ public:
 
     std::shared_ptr<SyncReleasePoint> bufferReleasePoint() const;
 
-    QRegion mapFromBuffer(const QRegion &region) const;
+    Region mapFromBuffer(const Region &region) const;
 
-    void addDamage(const QRegion &region);
+    void addDamage(const Region &region);
     void resetDamage();
-    QRegion damage() const;
+    Region damage() const;
 
     void destroyTexture();
 
@@ -78,11 +78,11 @@ protected:
     void preprocess() override;
     WindowQuadList buildQuads() const override;
 
-    QRegion m_damage;
+    Region m_damage;
     OutputTransform m_bufferToSurfaceTransform;
     OutputTransform m_surfaceToBufferTransform;
     GraphicsBufferRef m_bufferRef;
-    QRectF m_bufferSourceBox;
+    RectF m_bufferSourceBox;
     QSize m_bufferSize;
     QSizeF m_destinationSize;
     bool m_hasAlphaChannel = false;
@@ -101,7 +101,7 @@ public:
     virtual bool isValid() const = 0;
 
     virtual bool create() = 0;
-    virtual void update(const QRegion &region) = 0;
+    virtual void update(const Region &region) = 0;
 
     // TODO: create()/update() steps are unnecessary now, consider removing size().
     QSize size() const;
@@ -145,14 +145,14 @@ public:
     ~OpenGLSurfaceTexture() override;
 
     bool create() override;
-    void update(const QRegion &region) override;
+    void update(const Region &region) override;
     bool isValid() const override;
 
     OpenGLSurfaceContents texture() const;
 
 private:
     bool loadShmTexture(GraphicsBuffer *buffer);
-    void updateShmTexture(GraphicsBuffer *buffer, const QRegion &region);
+    void updateShmTexture(GraphicsBuffer *buffer, const Region &region);
     bool loadDmabufTexture(GraphicsBuffer *buffer);
     void updateDmabufTexture(GraphicsBuffer *buffer);
     bool loadSinglePixelTexture(GraphicsBuffer *buffer);
@@ -178,7 +178,7 @@ public:
     QPainterSurfaceTexture(QPainterBackend *backend, SurfaceItem *item);
 
     bool create() override;
-    void update(const QRegion &region) override;
+    void update(const Region &region) override;
     bool isValid() const override;
 
     QPainterBackend *backend() const;

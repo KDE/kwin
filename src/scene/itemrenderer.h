@@ -8,6 +8,8 @@
 
 #include <kwin_export.h>
 
+#include "core/region.h"
+
 #include <QMatrix4x4>
 #include <memory>
 
@@ -34,8 +36,8 @@ public:
     virtual void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport);
     virtual void endFrame();
 
-    virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &deviceRegion) = 0;
-    virtual void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) = 0;
+    virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) = 0;
+    virtual void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) = 0;
 
     virtual std::unique_ptr<ImageItem> createImageItem(Item *parent = nullptr) = 0;
 };

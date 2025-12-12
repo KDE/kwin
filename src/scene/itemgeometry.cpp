@@ -6,7 +6,6 @@
 */
 
 #include "scene/itemgeometry.h"
-#include "effect/globals.h"
 
 #include <QMatrix4x4>
 
@@ -249,7 +248,7 @@ void RenderGeometry::appendWindowQuad(const WindowQuad &quad, qreal deviceScale)
     appendWindowVertex(quad[2], deviceScale);
 }
 
-void RenderGeometry::appendSubQuad(const WindowQuad &quad, const QRectF &subquad, qreal deviceScale)
+void RenderGeometry::appendSubQuad(const WindowQuad &quad, const RectF &subquad, qreal deviceScale)
 {
     std::array<GLVertex2D, 4> vertices;
     vertices[0].position = QVector2D(subquad.topLeft());
@@ -257,8 +256,8 @@ void RenderGeometry::appendSubQuad(const WindowQuad &quad, const QRectF &subquad
     vertices[2].position = QVector2D(subquad.bottomRight());
     vertices[3].position = QVector2D(subquad.bottomLeft());
 
-    const auto deviceQuad = QRectF{QPointF(std::round(quad.left() * deviceScale), std::round(quad.top() * deviceScale)),
-                                   QPointF(std::round(quad.right() * deviceScale), std::round(quad.bottom() * deviceScale))};
+    const auto deviceQuad = RectF{QPointF(std::round(quad.left() * deviceScale), std::round(quad.top() * deviceScale)),
+                                  QPointF(std::round(quad.right() * deviceScale), std::round(quad.bottom() * deviceScale))};
 
     const QPointF origin = deviceQuad.topLeft();
     const QSizeF size = deviceQuad.size();

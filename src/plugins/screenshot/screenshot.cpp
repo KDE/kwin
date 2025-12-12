@@ -130,7 +130,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
             return window->pid() == pid;
         });
     }
-    const QRect fullDamage = QRect(QPoint(), target->size());
+    const Rect fullDamage = QRect(QPoint(), target->size());
     sceneView.setViewport(screen->geometryF());
     sceneView.setScale(scale);
     sceneView.prePaint();
@@ -200,7 +200,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const QRect &area, Scree
             return window->pid() == pid;
         });
     }
-    const QRect fullDamage = QRect(QPoint(), target->size());
+    const Rect fullDamage = QRect(QPoint(), target->size());
     sceneView.setViewport(area);
     sceneView.setScale(scale);
     sceneView.prePaint();
@@ -254,14 +254,14 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     scene->renderer()->beginFrame(renderTarget, viewport);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    scene->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), WindowPaintData{}, [flags, w = window->windowItem()](Item *item) {
+    scene->renderer()->renderItem(renderTarget, viewport, window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, Region::infinite(), WindowPaintData{}, [flags, w = window->windowItem()](Item *item) {
         const bool deco = flags & ScreenShotFlag::ScreenShotIncludeDecoration;
         const bool shadow = deco && (flags & ScreenShotFlag::ScreenShotIncludeShadow);
         return (!deco && item == w->decorationItem())
             || (!shadow && item == w->shadowItem());
     }, {});
     if ((flags & ScreenShotFlag::ScreenShotIncludeCursor) && scene->cursorItem()->isVisible()) {
-        scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), 0, infiniteRegion(), WindowPaintData{}, {}, {});
+        scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {});
     }
     scene->renderer()->endFrame();
 

@@ -160,7 +160,7 @@ X11WindowedOutput::~X11WindowedOutput()
     xcb_flush(m_backend->connection());
 }
 
-QRegion X11WindowedOutput::exposedArea() const
+Region X11WindowedOutput::exposedArea() const
 {
     return m_exposedArea;
 }
@@ -172,7 +172,7 @@ void X11WindowedOutput::addExposedArea(const QRect &rect)
 
 void X11WindowedOutput::clearExposedArea()
 {
-    m_exposedArea = QRegion();
+    m_exposedArea = Region();
 }
 
 RenderLoop *X11WindowedOutput::renderLoop() const

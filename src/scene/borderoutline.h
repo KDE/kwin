@@ -35,8 +35,8 @@ public:
     BorderOutline scaled(qreal scale) const;
     BorderOutline rounded() const;
 
-    QRectF inflate(const QRectF &rect) const;
-    QRectF deflate(const QRectF &rect) const;
+    RectF inflate(const RectF &rect) const;
+    RectF deflate(const RectF &rect) const;
 
     static BorderOutline from(const KDecoration3::BorderOutline &outline);
 

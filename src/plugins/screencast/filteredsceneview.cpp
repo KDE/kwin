@@ -28,7 +28,7 @@ FilteredSceneView::FilteredSceneView(Scene *scene, LogicalOutput *output, Output
         // the region where the window is located will not be damaged, so
         // by calling addDeviceRepaint() we will redraw everything
         connect(window, &Window::excludeFromCaptureChanged, this, [this] {
-            addDeviceRepaint(infiniteRegion());
+            addDeviceRepaint(Region::infinite());
         });
     };
     connect(workspace(), &Workspace::windowAdded, this, [setupRepaintOnExcludedFromCapture](Window *window) {

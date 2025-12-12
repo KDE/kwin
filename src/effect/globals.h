@@ -230,35 +230,11 @@ private:
 };
 
 /**
- * Infinite region (i.e. a special region type saying that everything needs to be painted).
- */
-inline KWIN_EXPORT QRect infiniteRegion()
-{
-    // INT_MIN / 2 because width/height is used (INT_MIN+INT_MAX==-1)
-    return QRect(INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX);
-}
-
-/**
  * Scale a rect by a scalar.
  */
 KWIN_EXPORT inline QRectF scaledRect(const QRectF &rect, qreal scale)
 {
     return QRectF{rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale};
-}
-
-/**
- * Scale a region by a scalar.
- */
-KWIN_EXPORT inline QRegion scaleRegionAligned(const QRegion &region, qreal scale)
-{
-    if (region == infiniteRegion()) {
-        return region;
-    }
-    QRegion ret;
-    for (const QRect &rect : region) {
-        ret |= scaledRect(rect, scale).toAlignedRect();
-    }
-    return ret;
 }
 
 /**

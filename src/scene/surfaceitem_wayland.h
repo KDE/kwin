@@ -29,8 +29,8 @@ class KWIN_EXPORT SurfaceItemWayland : public SurfaceItem
 public:
     explicit SurfaceItemWayland(SurfaceInterface *surface, Item *parent = nullptr);
 
-    QList<QRectF> shape() const override;
-    QRegion opaque() const override;
+    QList<RectF> shape() const override;
+    Region opaque() const override;
     ContentType contentType() const override;
     void setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats) override;
     void freeze() override;
@@ -81,14 +81,14 @@ class KWIN_EXPORT SurfaceItemXwayland : public SurfaceItemWayland
 public:
     explicit SurfaceItemXwayland(X11Window *window, Item *parent = nullptr);
 
-    QRegion opaque() const override;
-    QList<QRectF> shape() const override;
+    Region opaque() const override;
+    QList<RectF> shape() const override;
 
 private:
     void handleShapeChange();
 
     X11Window *m_window;
-    QRegion m_previousBufferShape;
+    Region m_previousBufferShape;
 };
 #endif
 

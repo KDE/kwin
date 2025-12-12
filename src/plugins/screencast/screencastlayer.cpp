@@ -16,7 +16,7 @@ ScreencastLayer::ScreencastLayer(LogicalOutput *output, const QHash<uint32_t, QL
     setRenderLoop(nullptr);
 }
 
-void ScreencastLayer::setFramebuffer(GLFramebuffer *buffer, const QRegion &bufferDamage)
+void ScreencastLayer::setFramebuffer(GLFramebuffer *buffer, const Region &bufferDamage)
 {
     // TODO is there a better way to deal with this?
     m_buffer = buffer;
@@ -41,7 +41,7 @@ std::optional<OutputLayerBeginFrameInfo> ScreencastLayer::doBeginFrame()
     };
 }
 
-bool ScreencastLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
+bool ScreencastLayer::doEndFrame(const Region &renderedRegion, const Region &damagedRegion, OutputFrame *frame)
 {
     return true;
 }

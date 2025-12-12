@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "kwin_export.h"
+#include "core/rect.h"
+#include "core/region.h"
 
-#include <QRegion>
 #include <QVector4D>
 
 namespace KDecoration3
@@ -35,8 +35,8 @@ public:
     qreal topRight() const;
     qreal bottomRight() const;
 
-    bool clips(const QRectF &rect, const QRectF &bounds) const;
-    QRegion clip(const QRegion &region, const QRectF &bounds) const;
+    bool clips(const RectF &rect, const RectF &bounds) const;
+    Region clip(const Region &region, const RectF &bounds) const;
 
     BorderRadius scaled(qreal scale) const;
     BorderRadius rounded() const;

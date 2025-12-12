@@ -11,6 +11,7 @@
 #include <kwin_export.h>
 
 #include "core/rect.h"
+#include "core/region.h"
 #include "renderloop.h"
 #include "utils/edid.h"
 
@@ -18,7 +19,6 @@
 #include <QList>
 #include <QMatrix4x4>
 #include <QObject>
-#include <QRect>
 #include <QSize>
 #include <QString>
 #include <QUuid>
@@ -78,8 +78,8 @@ public:
     /**
      * Applies the output transform to the given @a rect within a buffer with dimensions @a bounds.
      */
-    QRectF map(const QRectF &rect, const QSizeF &bounds) const;
-    QRect map(const QRect &rect, const QSize &bounds) const;
+    RectF map(const RectF &rect, const QSizeF &bounds) const;
+    Rect map(const Rect &rect, const QSize &bounds) const;
 
     /**
      * Applies the output transform to the given @a point.
@@ -90,7 +90,7 @@ public:
     /**
      * Applies the output transform to the given @a region
      */
-    QRegion map(const QRegion &region, const QSize &bounds) const;
+    Region map(const Region &region, const QSize &bounds) const;
 
     /**
      * Returns an output transform that is equivalent to applying this transform and @a other
@@ -147,7 +147,7 @@ struct CustomModeDefinition
 class KWIN_EXPORT LogicalOutput : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
+    Q_PROPERTY(KWin::Rect geometry READ geometry NOTIFY geometryChanged)
     Q_PROPERTY(qreal devicePixelRatio READ scale NOTIFY scaleChanged)
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString manufacturer READ manufacturer CONSTANT)
@@ -164,22 +164,22 @@ public:
     /**
      * Maps the specified @a rect from the global coordinate system to the output-local coords.
      */
-    QRect mapFromGlobal(const QRect &rect) const;
+    Rect mapFromGlobal(const Rect &rect) const;
 
     /**
      * Maps the specified @a rect from the global coordinate system to the output-local coords.
      */
-    QRectF mapFromGlobal(const QRectF &rect) const;
+    RectF mapFromGlobal(const RectF &rect) const;
 
     /**
      * Maps a @a rect in this output coordinates to the global coordinate system.
      */
-    QRectF mapToGlobal(const QRectF &rect) const;
+    RectF mapToGlobal(const RectF &rect) const;
 
     /**
      * Maps a @a region in this output coordinates to the global coordinate system.
      */
-    QRegion mapToGlobal(const QRegion &region) const;
+    Region mapToGlobal(const Region &region) const;
 
     Q_INVOKABLE QPointF mapToGlobal(const QPointF &pos) const;
     Q_INVOKABLE QPointF mapFromGlobal(const QPointF &pos) const;

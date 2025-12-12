@@ -299,7 +299,7 @@ void WobblyWindowsEffect::postPaintScreen()
 {
     if (!m_updateRegion.isEmpty()) {
         effects->addRepaint(m_updateRegion);
-        m_updateRegion = QRegion();
+        m_updateRegion = Region();
     }
 
     // Call the next effect.

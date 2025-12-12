@@ -34,8 +34,8 @@ class ThumbnailAsideEffect
 public:
     ThumbnailAsideEffect();
     void reconfigure(ReconfigureFlags) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data) override;
 
     // for properties
     int configuredMaxWidth() const
@@ -72,14 +72,14 @@ private:
     {
         EffectWindow *window; // the same like the key in the hash (makes code simpler)
         int index;
-        QRect rect;
+        Rect rect;
     };
     QHash<EffectWindow *, Data> windows;
     int maxwidth;
     int spacing;
     double opacity;
     int screen;
-    QRegion painted;
+    Region painted;
 };
 
 } // namespace

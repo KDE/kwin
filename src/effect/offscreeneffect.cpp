@@ -26,7 +26,7 @@ public:
     void setShader(GLShader *newShader);
     void setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode);
 
-    void paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const QRegion &deviceRegion,
+    void paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const Region &deviceRegion,
                const WindowPaintData &data, const WindowQuadList &quads);
 
     void maybeRender(EffectWindow *window);
@@ -139,7 +139,7 @@ void OffscreenData::maybeRender(EffectWindow *window)
         data.setOpacity(1.0);
 
         const int mask = Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_WINDOW_TRANSLUCENT;
-        effects->drawWindow(renderTarget, viewport, window, mask, infiniteRegion(), data);
+        effects->drawWindow(renderTarget, viewport, window, mask, Region::infinite(), data);
 
         GLFramebuffer::popFramebuffer();
         m_isDirty = false;
@@ -166,7 +166,7 @@ void OffscreenData::setVertexSnappingMode(RenderGeometry::VertexSnappingMode mod
     m_vertexSnappingMode = mode;
 }
 
-void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const QRegion &deviceRegion,
+void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, const Region &deviceRegion,
                           const WindowPaintData &data, const WindowQuadList &quads)
 {
     if (!m_texture) {
@@ -212,8 +212,8 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     shader->setUniform(GLShader::IntUniform::TextureHeight, m_texture->height());
     shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
-    const bool clipping = deviceRegion != infiniteRegion();
-    const QRegion clipRegion = clipping ? viewport.transform().map(deviceRegion, renderTarget.transformedSize()) : infiniteRegion();
+    const bool clipping = deviceRegion != Region::infinite();
+    const Region clipRegion = clipping ? viewport.transform().map(deviceRegion, renderTarget.transformedSize()) : Region::infinite();
 
     if (clipping) {
         glEnable(GL_SCISSOR_TEST);
@@ -233,7 +233,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     vbo->unbindArrays();
 }
 
-void OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const QRegion &deviceRegion, WindowPaintData &data)
+void OffscreenEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     const auto it = d->windows.find(window);
     if (it == d->windows.end()) {
@@ -320,7 +320,7 @@ CrossFadeEffect::CrossFadeEffect(QObject *parent)
 
 CrossFadeEffect::~CrossFadeEffect() = default;
 
-void CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const QRegion &deviceRegion, WindowPaintData &data)
+void CrossFadeEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *window, int mask, const Region &deviceRegion, WindowPaintData &data)
 {
     const auto it = d->windows.find(window);
 

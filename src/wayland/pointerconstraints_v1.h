@@ -11,7 +11,6 @@
 #include "kwin_export.h"
 
 #include <QObject>
-#include <QRegion>
 #include <memory>
 
 struct wl_resource;
@@ -83,7 +82,7 @@ public:
      * @see regionChanged
      * @see SurfaceInterface::input
      */
-    QRegion region() const;
+    Region region() const;
 
     /**
      * Indicates where the mouse cursor should be positioned after it has been unlocked again.
@@ -199,7 +198,7 @@ public:
      * @see regionChanged
      * @see SurfaceInterface::input
      */
-    QRegion region() const;
+    Region region() const;
 
     /**
      * Whether the Compositor set this pointer confinement to be active.

@@ -45,14 +45,14 @@ std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::doBeginFrame()
     }
 
     m_renderTime = std::make_unique<CpuRenderTimeQuery>();
-    const QRegion repaint = m_damageJournal.accumulate(m_currentBuffer->age(), infiniteRegion());
+    const Region repaint = m_damageJournal.accumulate(m_currentBuffer->age(), Region::infinite());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_currentBuffer->view()->image()),
         .repaint = repaint,
     };
 }
 
-bool DrmQPainterLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool DrmQPainterLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_renderTime->end();
     if (frame) {
@@ -113,11 +113,11 @@ std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::doBeginFrame()
     m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&m_image),
-        .repaint = QRegion(),
+        .repaint = Region(),
     };
 }
 
-bool DrmVirtualQPainterLayer::doEndFrame(const QRegion &renderedDeviceRegion, const QRegion &damagedDeviceRegion, OutputFrame *frame)
+bool DrmVirtualQPainterLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
     m_renderTime->end();
     frame->addRenderTimeQuery(std::move(m_renderTime));

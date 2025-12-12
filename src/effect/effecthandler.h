@@ -13,6 +13,7 @@
 #pragma once
 
 #include "config-kwin.h"
+
 #include "effect/effect.h"
 #include "effect/effectwindow.h"
 
@@ -20,7 +21,6 @@
 #include <QIcon>
 #include <QPair>
 #include <QRect>
-#include <QRegion>
 #include <QSet>
 
 #include <QHash>
@@ -172,12 +172,12 @@ public:
 
     // for use by effects
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime);
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &deviceRegion, LogicalOutput *screen);
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen);
     void postPaintScreen();
     void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime);
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
-    void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
-    void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &deviceRegion, WindowPaintData &data);
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
+    void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
+    void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
     QVariant kwinOption(KWinOption kwopt);
     /**
      * Sets the cursor while the mouse is intercepted.
@@ -461,7 +461,9 @@ public:
     // TODO Plasma 7: rename these to "addLogicalRepaint"
     Q_SCRIPTABLE void addRepaint(const QRectF &logicalRegion);
     Q_SCRIPTABLE void addRepaint(const QRect &logicalRegion);
-    Q_SCRIPTABLE void addRepaint(const QRegion &logicalRegion);
+    Q_SCRIPTABLE void addRepaint(const RectF &logicalRegion);
+    Q_SCRIPTABLE void addRepaint(const Rect &logicalRegion);
+    Q_SCRIPTABLE void addRepaint(const Region &logicalRegion);
     Q_SCRIPTABLE void addRepaint(int x, int y, int w, int h);
 
     CompositingType compositingType() const;

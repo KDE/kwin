@@ -24,7 +24,7 @@ public:
     explicit RenderTarget(QImage *image, const std::shared_ptr<ColorDescription> &colorDescription = ColorDescription::sRGB);
 
     QSize transformedSize() const;
-    QRect transformedRect() const;
+    Rect transformedRect() const;
 
     QSize size() const;
     OutputTransform transform() const;

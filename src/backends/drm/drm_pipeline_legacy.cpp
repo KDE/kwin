@@ -71,7 +71,7 @@ DrmPipeline::Error DrmPipeline::legacyModeset()
     if (!buffer) {
         return Error::InvalidArguments;
     }
-    if (primary->sourceRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
+    if (primary->sourceRect() != RectF(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, nullptr);

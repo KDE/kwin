@@ -204,9 +204,9 @@ void EffectWindow::unrefVisible(const EffectWindowVisibleRef *holder)
     d->m_windowItem->unrefVisible(holder->reason());
 }
 
-void EffectWindow::addRepaint(const QRect &r)
+void EffectWindow::addRepaint(const Rect &r)
 {
-    d->m_windowItem->scheduleRepaint(QRegion(r));
+    d->m_windowItem->scheduleRepaint(Region(r));
 }
 
 void EffectWindow::addRepaintFull()
@@ -214,7 +214,7 @@ void EffectWindow::addRepaintFull()
     d->m_windowItem->scheduleRepaint(d->m_windowItem->boundingRect());
 }
 
-void EffectWindow::addLayerRepaint(const QRect &r)
+void EffectWindow::addLayerRepaint(const Rect &r)
 {
     d->m_windowItem->scheduleRepaint(d->m_windowItem->mapFromScene(r));
 }

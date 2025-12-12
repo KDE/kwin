@@ -146,7 +146,7 @@ void TestBlur::testCreate()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QVERIFY(blurChanged.wait());
-    QCOMPARE(serverSurface->blur()->region(), QRegion(0, 0, 10, 20));
+    QCOMPARE(serverSurface->blur()->region(), KWin::Region(0, 0, 10, 20));
 
     // and destroy
     QSignalSpy destroyedSpy(serverSurface->blur(), &QObject::destroyed);
@@ -170,7 +170,7 @@ void TestBlur::testSurfaceDestroy()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QVERIFY(blurChanged.wait());
-    QCOMPARE(serverSurface->blur()->region(), QRegion(0, 0, 10, 20));
+    QCOMPARE(serverSurface->blur()->region(), KWin::Region(0, 0, 10, 20));
 
     // destroy the parent surface
     QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
