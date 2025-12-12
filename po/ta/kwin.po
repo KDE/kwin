@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-11 00:46+0000\n"
+"POT-Creation-Date: 2025-12-12 00:44+0000\n"
 "PO-Revision-Date: 2025-11-30 14:50+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -4193,7 +4193,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1604
+#: workspace.cpp:1638
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

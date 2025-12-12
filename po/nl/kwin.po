@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-11 00:46+0000\n"
-"PO-Revision-Date: 2025-12-10 16:57+0100\n"
+"POT-Creation-Date: 2025-12-12 00:44+0000\n"
+"PO-Revision-Date: 2025-12-11 13:03+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -4185,12 +4185,12 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "Positie van uitvoer %s is negatief, dat wordt niet ondersteund"
 
 #: wayland/outputmanagement_v2.cpp:634
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "Positie van uitvoer %s is veel te groot (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:650
 #, kde-format
@@ -4203,7 +4203,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Reageert niet)"
 
-#: workspace.cpp:1604
+#: workspace.cpp:1638
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

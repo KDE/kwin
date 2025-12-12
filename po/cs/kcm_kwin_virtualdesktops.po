@@ -76,12 +76,10 @@ msgid "Remove"
 msgstr "Odstranit"
 
 #: ui/main.qml:107
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Confirm new name"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "Potvrdit nový název"
+msgstr ""
 
 #: ui/main.qml:120
 #, kde-format

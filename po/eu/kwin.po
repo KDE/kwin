@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-11 00:46+0000\n"
-"PO-Revision-Date: 2025-12-10 19:50+0100\n"
+"POT-Creation-Date: 2025-12-12 00:44+0000\n"
+"PO-Revision-Date: 2025-12-11 17:56+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -4178,12 +4178,12 @@ msgstr "Ezin da zero Hz-ko freskatze-tasa duen neurriko modu bat gehitu"
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "Irteera %s(e)ren kokapena negatiboa da, hori ez da onartzen"
 
 #: wayland/outputmanagement_v2.cpp:634
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "Irteera %s(e)ren kokapena handiegia da (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:650
 #, kde-format
@@ -4196,7 +4196,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ez du erantzuten)"
 
-#: workspace.cpp:1604
+#: workspace.cpp:1638
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1724699 2025-12-11 01:27:38Z scripty $
+# $Id: kwin.po 1724753 2025-12-12 01:25:10Z scripty $
 # $Source$
 #
 #
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-11 00:46+0000\n"
-"PO-Revision-Date: 2025-12-10 07:03+0100\n"
+"POT-Creation-Date: 2025-12-12 00:44+0000\n"
+"PO-Revision-Date: 2025-12-11 06:59+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -4177,12 +4177,12 @@ msgstr "Ni mogoče dodati načina po meri s hitrostjo osveževanja nič Hz"
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "Položaj izhoda %s je negativen, kar ni podprto"
 
 #: wayland/outputmanagement_v2.cpp:634
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "Položaj izhoda %s je prevelik (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:650
 #, kde-format
@@ -4195,7 +4195,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(se ne odziva)"
 
-#: workspace.cpp:1604
+#: workspace.cpp:1638
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-11 00:46+0000\n"
-"PO-Revision-Date: 2025-11-29 21:42+0400\n"
+"POT-Creation-Date: 2025-12-12 00:44+0000\n"
+"PO-Revision-Date: 2025-12-11 10:23+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -4127,22 +4127,22 @@ msgstr "لا يُسمح بتعطيل جميع المخرجات من خلال ت�
 #: wayland/outputmanagement_v2.cpp:619
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "لا يمكن إضافة وضع مخصص بحجم فارغ"
 
 #: wayland/outputmanagement_v2.cpp:623
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "لا يمكن إضافة وضع مخصص بمعدل تحديث يبلغ صفر هرتز"
 
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "موضع الإخراج %s سلبي، وهذا غير متاح"
 
 #: wayland/outputmanagement_v2.cpp:634
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "موضع الإخراج %s كبير جدًا (%d، %d)"
 
 #: wayland/outputmanagement_v2.cpp:650
 #, kde-format
@@ -4155,7 +4155,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(لا يستجيب)"
 
-#: workspace.cpp:1604
+#: workspace.cpp:1638
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

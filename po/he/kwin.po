@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-11 00:46+0000\n"
-"PO-Revision-Date: 2025-12-02 08:54+0200\n"
+"POT-Creation-Date: 2025-12-12 00:44+0000\n"
+"PO-Revision-Date: 2025-12-11 09:25+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -4139,22 +4139,22 @@ msgstr "השבתת כל צדי הפלט דרך שינויי הגדרות אסו�
 #: wayland/outputmanagement_v2.cpp:619
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "לא ניתן להוסיף מצב מותאם אישית בגודל ריק"
 
 #: wayland/outputmanagement_v2.cpp:623
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "לא ניתן להוסיף מצב מותאם אישית עם קצב ריענון של אפס הרץ"
 
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "המקום של הפלט %s הוא שלילי, המצב הזה לא נתמך."
 
 #: wayland/outputmanagement_v2.cpp:634
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "המקום של הפלט %s הוא גדול מדי (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:650
 #, kde-format
@@ -4167,7 +4167,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(לא מגיב)"
 
-#: workspace.cpp:1604
+#: workspace.cpp:1638
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
