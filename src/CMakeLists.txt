@@ -443,6 +443,7 @@ endif()
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h
+    a11ykeyboardmonitor.h
     activities.h
     appmenu.h
     client_machine.h
