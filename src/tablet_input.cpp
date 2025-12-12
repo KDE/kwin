@@ -89,6 +89,11 @@ TabletInputRedirection::TabletInputRedirection(InputRedirection *parent)
 
 TabletInputRedirection::~TabletInputRedirection() = default;
 
+bool TabletInputRedirection::haveImplicitGrab() const
+{
+    return m_tipDown || m_buttonDown;
+}
+
 void TabletInputRedirection::init()
 {
     Q_ASSERT(!inited());
@@ -471,7 +476,7 @@ void KWin::TabletInputRedirection::tabletPadDialEvent(int number, double delta, 
 
 bool TabletInputRedirection::focusUpdatesBlocked()
 {
-    return input()->isSelectingWindow() || m_tipDown || m_buttonDown;
+    return input()->isSelectingWindow() || haveImplicitGrab();
 }
 
 void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedWindowImpl *old,

@@ -61,6 +61,8 @@ public:
         return m_lastPosition;
     }
 
+    bool haveImplicitGrab() const;
+
 private:
     void cleanupDecoration(Decoration::DecoratedWindowImpl *old,
                            Decoration::DecoratedWindowImpl *now) override;

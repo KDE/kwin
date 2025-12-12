@@ -793,7 +793,7 @@ public:
         if (!window) {
             return false;
         }
-        if (event->type == TabletToolTipEvent::Release) {
+        if (!input()->tablet()->haveImplicitGrab()) {
             window->endInteractiveMoveResize();
         }
         return true;
@@ -807,6 +807,20 @@ public:
         }
 
         window->updateInteractiveMoveResize(event->position, input()->keyboardModifiers());
+        return true;
+    }
+
+    bool tabletToolButtonEvent(TabletToolButtonEvent *event) override
+    {
+        Window *window = workspace()->moveResizeWindow();
+        if (!window) {
+            return false;
+        }
+
+        if (!input()->tablet()->haveImplicitGrab()) {
+            window->endInteractiveMoveResize();
+        }
+
         return true;
     }
 
