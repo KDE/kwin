@@ -22,7 +22,6 @@
 
 #include <QList>
 #include <QRect>
-#include <QRegion>
 
 #include <xcb/composite.h>
 #include <xcb/randr.h>
@@ -1975,16 +1974,6 @@ static inline xcb_rectangle_t fromQt(const QRect &rect)
     rectangle.width = rect.width();
     rectangle.height = rect.height();
     return rectangle;
-}
-
-static inline QList<xcb_rectangle_t> regionToRects(const QRegion &region)
-{
-    QList<xcb_rectangle_t> rects;
-    rects.reserve(region.rectCount());
-    for (const QRect &rect : region) {
-        rects.append(Xcb::fromQt(rect));
-    }
-    return rects;
 }
 
 static inline void defineCursor(xcb_window_t window, xcb_cursor_t cursor)

@@ -1914,7 +1914,7 @@ protected:
         std::shared_ptr<KDecoration3::Decoration> decoration;
         QPointer<Decoration::DecoratedWindowImpl> client;
         QElapsedTimer doubleClickTimer;
-        QRegion inputRegion;
+        Region inputRegion;
     } m_decoration;
     QString m_desktopFileName;
 
