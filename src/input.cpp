@@ -728,10 +728,10 @@ public:
         }
         if (event->state == KeyboardKeyState::Repeated || event->state == KeyboardKeyState::Pressed) {
             window->keyPressEvent(QKeyCombination{event->modifiers, event->key});
-        }
-        if (window->isInteractiveMove() || window->isInteractiveResize()) {
-            // only update if mode didn't end
-            window->updateInteractiveMoveResize(input()->globalPointer(), input()->keyboardModifiers());
+            if (window->isInteractiveMove() || window->isInteractiveResize()) {
+                // only update if mode didn't end
+                window->updateInteractiveMoveResize(input()->globalPointer(), input()->keyboardModifiers());
+            }
         }
         return true;
     }
