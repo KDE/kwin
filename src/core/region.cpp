@@ -1004,6 +1004,10 @@ Region Region::intersected(const Region &other) const
 
 void Region::translate(const QPoint &offset)
 {
+    if (*this == infinite()) {
+        return;
+    }
+
     if (isEmpty()) {
         return;
     }
@@ -1016,6 +1020,10 @@ void Region::translate(const QPoint &offset)
 
 Region Region::translated(const QPoint &offset) const
 {
+    if (*this == infinite()) {
+        return *this;
+    }
+
     Region result = *this;
     result.translate(offset);
     return result;
@@ -1023,6 +1031,10 @@ Region Region::translated(const QPoint &offset) const
 
 Region Region::scaledAndRoundedOut(qreal xScale, qreal yScale) const
 {
+    if (*this == infinite()) {
+        return *this;
+    }
+
     if (isEmpty()) {
         return Region();
     } else if (m_rects.isEmpty()) {
