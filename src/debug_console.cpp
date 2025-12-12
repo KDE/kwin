@@ -1041,6 +1041,14 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
             }
             return list.join(QStringLiteral(", "));
         }
+        if (value.userType() == qMetaTypeId<Rect>()) {
+            const Rect r = value.value<Rect>();
+            return QStringLiteral("%1,%2 %3x%4").arg(r.x()).arg(r.y()).arg(r.width()).arg(r.height());
+        }
+        if (value.userType() == qMetaTypeId<RectF>()) {
+            const RectF r = value.value<RectF>();
+            return QStringLiteral("%1,%2 %3x%4").arg(r.x()).arg(r.y()).arg(r.width()).arg(r.height());
+        }
         break;
     }
     return QStyledItemDelegate::displayText(value, locale);
