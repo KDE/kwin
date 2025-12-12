@@ -48,4 +48,9 @@ bool KGlobalAccelImpl::checkAxisTriggered(int axis)
     return axisTriggered(axis);
 }
 
+void KGlobalAccelImpl::cancelModiferOnlySequence()
+{
+    resetModifierOnlyState();
+}
+
 #include "moc_kglobalaccel_plugin.cpp"

@@ -1283,6 +1283,22 @@ public:
         return m_gestureTaken;
     }
 
+    bool tabletToolTipEvent(TabletToolTipEvent *event) override
+    {
+        if (event->type == TabletToolTipEvent::Type::Press) {
+            input()->shortcuts()->cancelModiferOnlySequence();
+        }
+        return false;
+    }
+
+    bool tabletToolButtonEvent(TabletToolButtonEvent *event) override
+    {
+        if (event->pressed) {
+            input()->shortcuts()->cancelModiferOnlySequence();
+        }
+        return false;
+    }
+
 private:
     bool m_gestureTaken = false;
     bool m_gestureCancelled = false;

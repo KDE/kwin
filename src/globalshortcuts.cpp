@@ -331,6 +331,15 @@ void GlobalShortcutsManager::processPinchEnd()
     m_touchpadGestureRecognizer->endPinchGesture();
 }
 
+void GlobalShortcutsManager::cancelModiferOnlySequence()
+{
+#if KWIN_BUILD_GLOBALSHORTCUTS
+    if (m_kglobalAccelInterface) {
+        QMetaObject::invokeMethod(m_kglobalAccelInterface, "cancelModiferOnlySequence");
+    }
+#endif
+}
+
 } // namespace
 
 #include "moc_globalshortcuts.cpp"

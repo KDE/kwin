@@ -111,6 +111,8 @@ public:
     void processPinchCancel();
     void processPinchEnd();
 
+    void cancelModiferOnlySequence();
+
 private:
     void objectDeleted(QObject *object);
     bool add(GlobalShortcut sc, DeviceType device = DeviceType::Touchpad);
