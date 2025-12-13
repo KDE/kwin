@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-12 00:44+0000\n"
+"POT-Creation-Date: 2025-12-13 00:45+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -1065,33 +1065,33 @@ msgctxt "Mouse Button"
 msgid "task"
 msgstr "задача"
 
-#: debug_console.cpp:1419
+#: debug_console.cpp:1427
 #, kde-format
 msgid "X11 Windows"
 msgstr "Вокны X11"
 
-#: debug_console.cpp:1421
+#: debug_console.cpp:1429
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "Вокны X11 без кіравання"
 
-#: debug_console.cpp:1423
+#: debug_console.cpp:1431
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Вокны Wayland"
 
-#: debug_console.cpp:1425
+#: debug_console.cpp:1433
 #, kde-format
 msgid "Internal Windows"
 msgstr "Унутраныя вокны"
 
-#: debug_console.cpp:1782
+#: debug_console.cpp:1790
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "Выгрузіць"
 
-#: debug_console.cpp:1786
+#: debug_console.cpp:1794
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -3613,17 +3613,17 @@ msgstr ""
 "Не ўдаецца ўсталяваць сродак пераключэння акон, няма адпаведных рэсурсаў.\n"
 "Звярніцеся па гэтым пытанні да службы падтрымкі свайго дыстрыбутыва."
 
-#: tablet_input.cpp:114
+#: tablet_input.cpp:119
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Перамясціць планшэт на наступны вывад"
 
-#: tablet_input.cpp:194
+#: tablet_input.cpp:199
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Планшэт перамешчаны на %1"
 
-#: tablet_input.cpp:194
+#: tablet_input.cpp:199
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Пераключаныя вывады планшэтаў"

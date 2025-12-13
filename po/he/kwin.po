@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-12 00:44+0000\n"
+"POT-Creation-Date: 2025-12-13 00:45+0000\n"
 "PO-Revision-Date: 2025-12-11 09:25+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -1049,33 +1049,33 @@ msgctxt "Mouse Button"
 msgid "task"
 msgstr "משימה"
 
-#: debug_console.cpp:1419
+#: debug_console.cpp:1427
 #, kde-format
 msgid "X11 Windows"
 msgstr "חלונות X11"
 
-#: debug_console.cpp:1421
+#: debug_console.cpp:1429
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "חלונות X11 לא מנוהלים"
 
-#: debug_console.cpp:1423
+#: debug_console.cpp:1431
 #, kde-format
 msgid "Wayland Windows"
 msgstr "חלונות Wayland"
 
-#: debug_console.cpp:1425
+#: debug_console.cpp:1433
 #, kde-format
 msgid "Internal Windows"
 msgstr "חלונות פנימיים"
 
-#: debug_console.cpp:1782
+#: debug_console.cpp:1790
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "פריקה"
 
-#: debug_console.cpp:1786
+#: debug_console.cpp:1794
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -3560,17 +3560,17 @@ msgstr ""
 "התקנת מחליף החלונות פגומה, המשאבים חסרים.\n"
 "נא ליצור קשר עם אורזי ההפצה שלך בנוגע לזה."
 
-#: tablet_input.cpp:114
+#: tablet_input.cpp:119
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "העברת מחשב הלוח לפלט הבא"
 
-#: tablet_input.cpp:194
+#: tablet_input.cpp:199
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "מחשב הלוח הועבר אל %1"
 
-#: tablet_input.cpp:194
+#: tablet_input.cpp:199
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "מחשבי הלוח החליפו אמצעי פלט"

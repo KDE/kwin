@@ -65,7 +65,7 @@ msgstr "添加桌面"
 #, kde-format
 msgctxt "@action:button"
 msgid "Rename"
-msgstr ""
+msgstr "重命名"
 
 #: ui/main.qml:92
 #, kde-format
@@ -77,13 +77,13 @@ msgstr "移除"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr ""
+msgstr "应用新名称"
 
 #: ui/main.qml:120
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "取消重命名"
 
 #: ui/main.qml:165
 #, kde-format

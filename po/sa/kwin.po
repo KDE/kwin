@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-12 00:44+0000\n"
+"POT-Creation-Date: 2025-12-13 00:45+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -1049,33 +1049,33 @@ msgctxt "Mouse Button"
 msgid "task"
 msgstr "कार्य"
 
-#: debug_console.cpp:1419
+#: debug_console.cpp:1427
 #, kde-format
 msgid "X11 Windows"
 msgstr "X11 विण्डोज"
 
-#: debug_console.cpp:1421
+#: debug_console.cpp:1429
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "X11 अप्रबन्धितं विण्डोज"
 
-#: debug_console.cpp:1423
+#: debug_console.cpp:1431
 #, kde-format
 msgid "Wayland Windows"
 msgstr "वेलैण्ड् विण्डोज"
 
-#: debug_console.cpp:1425
+#: debug_console.cpp:1433
 #, kde-format
 msgid "Internal Windows"
 msgstr "आन्तरिक विण्डोज"
 
-#: debug_console.cpp:1782
+#: debug_console.cpp:1790
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "उतारना"
 
-#: debug_console.cpp:1786
+#: debug_console.cpp:1794
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -3571,17 +3571,17 @@ msgstr ""
 "Window Switcher संस्थापनं भग्नम् अस्ति, संसाधनाः अनुपलब्धाः सन्ति ।\n"
 "अस्य विषये स्ववितरणं सम्पर्कं कुर्वन्तु।"
 
-#: tablet_input.cpp:114
+#: tablet_input.cpp:119
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "टैब्लेट् अग्रिम-आउटपुट् प्रति चालयन्तु"
 
-#: tablet_input.cpp:194
+#: tablet_input.cpp:199
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "टैब्लेट् %1 प्रति गतः"
 
-#: tablet_input.cpp:194
+#: tablet_input.cpp:199
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "टैब्लेट् आउटपुट् स्विच् कृतवन्तः"

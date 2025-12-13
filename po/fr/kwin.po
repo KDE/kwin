@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-12 00:44+0000\n"
-"PO-Revision-Date: 2025-11-28 09:01+0100\n"
+"POT-Creation-Date: 2025-12-13 00:45+0000\n"
+"PO-Revision-Date: 2025-12-11 08:52+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 25.11.80\n"
+"X-Generator: Lokalize 25.11.90\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -1079,33 +1079,33 @@ msgctxt "Mouse Button"
 msgid "task"
 msgstr "tâche"
 
-#: debug_console.cpp:1419
+#: debug_console.cpp:1427
 #, kde-format
 msgid "X11 Windows"
 msgstr "Fenêtres « X11 »"
 
-#: debug_console.cpp:1421
+#: debug_console.cpp:1429
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "Fenêtres X11 non gérées"
 
-#: debug_console.cpp:1423
+#: debug_console.cpp:1431
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Fenêtres Wayland"
 
-#: debug_console.cpp:1425
+#: debug_console.cpp:1433
 #, kde-format
 msgid "Internal Windows"
 msgstr "Fenêtres internes"
 
-#: debug_console.cpp:1782
+#: debug_console.cpp:1790
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "Décharger"
 
-#: debug_console.cpp:1786
+#: debug_console.cpp:1794
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -3623,17 +3623,17 @@ msgstr ""
 "manquantes.\n"
 "Vous devriez contacter votre distribution à ce sujet."
 
-#: tablet_input.cpp:114
+#: tablet_input.cpp:119
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Déplacer la tablette vers la prochaine sortie"
 
-#: tablet_input.cpp:194
+#: tablet_input.cpp:199
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablette déplacée vers %1"
 
-#: tablet_input.cpp:194
+#: tablet_input.cpp:199
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Sorties commutées des tablettes"
@@ -4207,22 +4207,24 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:619
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Impossible d'ajouter un mode personnalisé avec une taille vide"
 
 #: wayland/outputmanagement_v2.cpp:623
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
+"Impossible d'ajouter un mode personnalisé avec une fréquence de "
+"rafraîchissement de 0 Hz"
 
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "La position de la sortie %s est négative, donc, non pris en charge"
 
 #: wayland/outputmanagement_v2.cpp:634
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "La position de la sortie %s est bien trop grande (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:650
 #, kde-format

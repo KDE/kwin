@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-12 00:44+0000\n"
+"POT-Creation-Date: 2025-12-13 00:45+0000\n"
 "PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -1057,33 +1057,33 @@ msgctxt "Mouse Button"
 msgid "task"
 msgstr "tasko"
 
-#: debug_console.cpp:1419
+#: debug_console.cpp:1427
 #, kde-format
 msgid "X11 Windows"
 msgstr "X11-Fenestroj"
 
-#: debug_console.cpp:1421
+#: debug_console.cpp:1429
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "X11 Neadministritaj Fenestroj"
 
-#: debug_console.cpp:1423
+#: debug_console.cpp:1431
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Wayland-Fenestroj"
 
-#: debug_console.cpp:1425
+#: debug_console.cpp:1433
 #, kde-format
 msgid "Internal Windows"
 msgstr "Internaj Fenestroj"
 
-#: debug_console.cpp:1782
+#: debug_console.cpp:1790
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "Malŝargi"
 
-#: debug_console.cpp:1786
+#: debug_console.cpp:1794
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -3591,17 +3591,17 @@ msgstr ""
 "La instalaĵo de Window Switcher estas rompita, rimedoj mankas.\n"
 "Kontaktu vian distribuon pri tio."
 
-#: tablet_input.cpp:114
+#: tablet_input.cpp:119
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Movi la tabuleton al la sekva eligo"
 
-#: tablet_input.cpp:194
+#: tablet_input.cpp:199
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tabuleto movita al %1"
 
-#: tablet_input.cpp:194
+#: tablet_input.cpp:199
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tabuletoj ŝanĝis elirojn"
