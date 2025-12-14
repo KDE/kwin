@@ -1333,7 +1333,7 @@ void OutputConfigurationStore::save()
             for (const auto &mode : *output.customModes) {
                 QJsonObject obj;
                 obj["width"] = mode.size.width();
-                obj["height"] = mode.size.width();
+                obj["height"] = mode.size.height();
                 obj["refreshRate"] = int(mode.refreshRate);
                 obj["flags"] = int(mode.flags);
                 modes.append(obj);
