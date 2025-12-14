@@ -53,9 +53,6 @@ namespace KWin
 // Mouse should not move more than this many pixels
 static const int DISTANCE_RESET = 30;
 
-// How large the touch target of the area recognizing touch gestures is
-static const int TOUCH_TARGET = 8;
-
 TouchCallback::TouchCallback(QAction *touchUpAction, TouchCallback::CallbackFunction progressCallback)
     : m_touchUpAction(touchUpAction)
     , m_progressCallback(progressCallback)
@@ -752,6 +749,7 @@ ScreenEdges::ScreenEdges()
     , m_actionBottomLeft(ElectricActionNone)
     , m_actionLeft(ElectricActionNone)
     , m_cornerOffset(40)
+    , m_touchTarget(8)
     , m_gestureRecognizer(std::make_unique<ScreenEdgeGestureRecognizer>())
 {
 }
@@ -790,6 +788,7 @@ void ScreenEdges::reconfigure()
     }
     KConfigGroup screenEdgesConfig = m_config->group(QStringLiteral("ScreenEdges"));
     setRemainActiveOnFullscreen(screenEdgesConfig.readEntry("RemainActiveOnFullscreen", false));
+    m_touchTarget = screenEdgesConfig.readEntry("TouchTarget", 8);
 
     // TODO: migrate settings to a group ScreenEdges
     KConfigGroup windowsConfig = m_config->group(QStringLiteral("Windows"));
@@ -1070,10 +1069,10 @@ void ScreenEdges::recreateEdges()
 
         if (isAllScreenCorners()) {
             const Rect geo = output->geometry();
-            m_edges.push_back(createEdge(ElectricTopLeft, geo.x(), geo.y(), TOUCH_TARGET, TOUCH_TARGET, output));
-            m_edges.push_back(createEdge(ElectricTopRight, geo.x() + geo.width() - TOUCH_TARGET, geo.y(), TOUCH_TARGET, TOUCH_TARGET, output));
-            m_edges.push_back(createEdge(ElectricBottomLeft, geo.x(), geo.y() + geo.height() - TOUCH_TARGET, TOUCH_TARGET, TOUCH_TARGET, output));
-            m_edges.push_back(createEdge(ElectricBottomRight, geo.x() + geo.width() - TOUCH_TARGET, geo.y() + geo.height() - TOUCH_TARGET, TOUCH_TARGET, TOUCH_TARGET, output));
+            m_edges.push_back(createEdge(ElectricTopLeft, geo.x(), geo.y(), m_touchTarget, m_touchTarget, output));
+            m_edges.push_back(createEdge(ElectricTopRight, geo.x() + geo.width() - m_touchTarget, geo.y(), m_touchTarget, m_touchTarget, output));
+            m_edges.push_back(createEdge(ElectricBottomLeft, geo.x(), geo.y() + geo.height() - m_touchTarget, m_touchTarget, m_touchTarget, output));
+            m_edges.push_back(createEdge(ElectricBottomRight, geo.x() + geo.width() - m_touchTarget, geo.y() + geo.height() - m_touchTarget, m_touchTarget, m_touchTarget, output));
         }
     }
     auto split = std::partition(oldEdges.begin(), oldEdges.end(), [](const auto &edge) {
@@ -1110,21 +1109,21 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const Rect &screen, 
     }
     int y = screen.y();
     int height = screen.height();
-    const int x = (border == ElectricLeft) ? screen.left() : screen.right() - TOUCH_TARGET;
+    const int x = (border == ElectricLeft) ? screen.left() : screen.right() - m_touchTarget;
     if (!isAllScreenCorners() && isTopScreen(screen, fullArea)) {
         // also top most screen
         height -= m_cornerOffset;
         y += m_cornerOffset;
         // create top left/right edge
         const ElectricBorder edge = (border == ElectricLeft) ? ElectricTopLeft : ElectricTopRight;
-        m_edges.push_back(createEdge(edge, x, screen.y(), TOUCH_TARGET, TOUCH_TARGET, output));
+        m_edges.push_back(createEdge(edge, x, screen.y(), m_touchTarget, m_touchTarget, output));
     }
     if (!isAllScreenCorners() && isBottomScreen(screen, fullArea)) {
         // also bottom most screen
         height -= m_cornerOffset;
         // create bottom left/right edge
         const ElectricBorder edge = (border == ElectricLeft) ? ElectricBottomLeft : ElectricBottomRight;
-        m_edges.push_back(createEdge(edge, x, screen.y() + screen.height() - TOUCH_TARGET, TOUCH_TARGET, TOUCH_TARGET, output));
+        m_edges.push_back(createEdge(edge, x, screen.y() + screen.height() - m_touchTarget, m_touchTarget, m_touchTarget, output));
     }
     if (height <= m_cornerOffset) {
         // An overlap with another output is near complete. We ignore this border.
@@ -1134,7 +1133,7 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const Rect &screen, 
         height -= 2 * m_cornerOffset;
         y += m_cornerOffset;
     }
-    m_edges.push_back(createEdge(border, x, y, TOUCH_TARGET, height, output));
+    m_edges.push_back(createEdge(border, x, y, m_touchTarget, height, output));
 }
 
 void ScreenEdges::createHorizontalEdge(ElectricBorder border, const Rect &screen, const Rect &fullArea, LogicalOutput *output)
@@ -1161,8 +1160,8 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const Rect &screen
         width -= 2 * m_cornerOffset;
         x += m_cornerOffset;
     }
-    const int y = (border == ElectricTop) ? screen.top() : screen.bottom() - TOUCH_TARGET;
-    m_edges.push_back(createEdge(border, x, y, width, TOUCH_TARGET, output));
+    const int y = (border == ElectricTop) ? screen.top() : screen.bottom() - m_touchTarget;
+    m_edges.push_back(createEdge(border, x, y, width, m_touchTarget, output));
 }
 
 std::unique_ptr<Edge> ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, LogicalOutput *output, bool createAction)

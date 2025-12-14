@@ -232,6 +232,10 @@ public:
      */
     int cornerOffset() const;
     /**
+     * The target size for touch gesture recognition areas
+     */
+    int touchTarget() const;
+    /**
      * Mark the specified screen edge as reserved. This method is provided for external activation
      * like effects and scripts. When the effect/script does no longer need the edge it is supposed
      * to call @ref unreserve.
@@ -390,6 +394,7 @@ private:
     ElectricBorderAction m_actionLeft;
     QMap<ElectricBorder, ElectricBorderAction> m_touchCallbacks;
     const int m_cornerOffset;
+    int m_touchTarget;
     std::unique_ptr<ScreenEdgeGestureRecognizer> m_gestureRecognizer;
     bool m_remainActiveOnFullscreen = false;
     bool m_allScreenCorners = true;
@@ -501,6 +506,11 @@ inline void ScreenEdges::setConfig(KSharedConfig::Ptr config)
 inline int ScreenEdges::cornerOffset() const
 {
     return m_cornerOffset;
+}
+
+inline int ScreenEdges::touchTarget() const
+{
+    return m_touchTarget;
 }
 
 inline const QSize &ScreenEdges::cursorPushBackDistance() const
