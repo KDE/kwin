@@ -4115,22 +4115,22 @@ msgstr "不允许通过配置更改禁用所有输出"
 #: wayland/outputmanagement_v2.cpp:619
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "无法添加一个大小为空的自定义模式"
 
 #: wayland/outputmanagement_v2.cpp:623
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "无法添加一个刷新率为零的自定义模式"
 
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "输出 %s 的位置是负值，系统不支持"
 
 #: wayland/outputmanagement_v2.cpp:634
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "输出 %s 的位置太大 (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:650
 #, kde-format
