@@ -643,16 +643,20 @@ bool Rules::applyOpacityActive(qreal &s) const
 {
     if (checkForceRule(opacityactiverule)) {
         s = opacityactive / 100.0;
+    } else if (checkForceRule(opacityinactiverule)) {
+        s = 1.0;
     }
-    return checkForceStop(opacityactiverule);
+    return checkForceStop(opacityactiverule) || checkForceStop(opacityinactiverule);
 }
 
 bool Rules::applyOpacityInactive(qreal &s) const
 {
     if (checkForceRule(opacityinactiverule)) {
         s = opacityinactive / 100.0;
+    } else if (checkForceRule(opacityactiverule)) {
+        s = 1.0;
     }
-    return checkForceStop(opacityinactiverule);
+    return checkForceStop(opacityactiverule) || checkForceStop(opacityinactiverule);
 }
 
 APPLY_FORCE_RULE(minsize, MinSize, QSizeF)
