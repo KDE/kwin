@@ -836,7 +836,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         if (info->state() & NET::Modal) {
             setModal(true);
         }
-        setOpacity(info->opacityF());
+        setOpacity(rules()->checkOpacityInactive(info->opacityF()));
 
         setFullScreen(rules()->checkFullScreen(info->state() & NET::FullScreen, !isMapped));
     }

@@ -1431,6 +1431,7 @@ void XdgToplevelWindow::initialize()
         resize(forcedSize);
     }
 
+    setOpacity(rules()->checkOpacityInactive(opacity()));
     maximize(rules()->checkMaximize(initialMaximizeMode(sessionData), true));
     setFullScreen(rules()->checkFullScreen(initialFullScreenMode(sessionData), true));
     setOnActivities(rules()->checkActivity(initialActivities(sessionData), true));
