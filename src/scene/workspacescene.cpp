@@ -187,6 +187,9 @@ static void maybePushCorners(Item *item, QStack<ClipCorner> &corners)
 
 static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded, QStack<ClipCorner> &corners)
 {
+    if (item->opacity() == 0.0) {
+        return true;
+    }
     if (item->opacity() != 1.0 || item->hasEffects()) {
         return false;
     }
@@ -253,6 +256,7 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
     const auto overlayItems = m_overlayItem->childItems();
     const bool needsRendering = std::ranges::any_of(overlayItems, [this](Item *child) {
         return child->isVisible()
+            && child->opacity() != 0.0
             && !child->boundingRect().isEmpty()
             && painted_delegate->shouldRenderItem(child);
     });
@@ -296,7 +300,7 @@ static QRegion mapToDevice(SceneView *view, Item *item, const QRegion &itemLocal
 
 static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount, QRegion &occupied, QRegion &opaque, QRegion &effected, QList<SurfaceItem *> &overlays, QList<SurfaceItem *> &underlays, QStack<ClipCorner> &corners)
 {
-    if (!item || !item->isVisible() || item->boundingRect().isEmpty() || !view->viewport().intersects(item->mapToView(item->boundingRect(), view))) {
+    if (!item || !item->isVisible() || item->opacity() == 0.0 || item->boundingRect().isEmpty() || !view->viewport().intersects(item->mapToView(item->boundingRect(), view))) {
         return true;
     }
     if (item->hasEffects()) {
