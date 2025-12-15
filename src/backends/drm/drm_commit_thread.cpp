@@ -361,7 +361,7 @@ void DrmCommitThread::clearDroppedCommits()
 
 // TODO reduce the default for this, once we have a more accurate way to know when an atomic commit
 // is actually applied. Waiting for the commit returning seems to work on Intel and AMD, but not with NVidia
-static const std::chrono::microseconds s_safetyMarginMinimum{environmentVariableIntValue("KWIN_DRM_OVERRIDE_SAFETY_MARGIN").value_or(1500)};
+static const std::chrono::microseconds s_safetyMarginMinimum{environmentVariableIntValue("KWIN_DRM_OVERRIDE_SAFETY_MARGIN").value_or(1000)};
 
 void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vblankTime)
 {
