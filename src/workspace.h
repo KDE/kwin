@@ -90,6 +90,8 @@ class BrightnessDevice;
 class BackendOutput;
 class LightSensor;
 
+using PlacementCallback = std::function<QRectF(Window*, const QRectF&)>;
+
 class KWIN_EXPORT Workspace : public QObject
 {
     Q_OBJECT
@@ -436,6 +438,8 @@ public:
 
     void setActivationToken(const QString &token, UInt32Serial serial, const QString &appId);
     bool mayActivate(Window *window, const QString &token) const;
+    void setPlacementCallback(PlacementCallback callback);
+    std::optional<RectF> scriptedPlacement(Window *window);
 
     enum class DpmsState {
         Off,
@@ -751,6 +755,8 @@ private:
     QList<QString> m_recentlyRemovedDpmsOffOutputs;
     QTimer m_dpmsTimer;
     FileDescriptor m_sleepInhibitor;
+
+    PlacementCallback m_placementCallback;
 
 private:
     friend bool performTransiencyCheck();

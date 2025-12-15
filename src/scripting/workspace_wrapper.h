@@ -11,6 +11,7 @@
 #pragma once
 
 #include "effect/globals.h"
+#include <QJSValue>
 #include <QObject>
 #include <QQmlListProperty>
 #include <QRect>
@@ -192,6 +193,8 @@ public:
 protected:
     explicit WorkspaceWrapper(QJSEngine *engine, QObject *parent = nullptr);
 
+    QJSValue m_scriptedPlacementCallback;
+
 public:
     Window *activeWindow() const;
     void setActiveWindow(Window *window);
@@ -236,6 +239,8 @@ public:
      * Returns the root tile for the given @a output and @a desktop.
      */
     Q_INVOKABLE KWin::Tile *rootTile(KWin::LogicalOutput *output, KWin::VirtualDesktop *desktop) const;
+
+    Q_INVOKABLE void setPlacementCallback(QJSValue callback);
 
     /**
      * Returns the geometry a Client can use with the specified option.

@@ -238,7 +238,7 @@ private:
     bool initialSkipTaskbar(const std::optional<XdgToplevelSessionData> &session) const;
     bool initialMinimizeMode(const std::optional<XdgToplevelSessionData> &session) const;
     DecorationPolicy initialDecorationPolicy(const std::optional<XdgToplevelSessionData> &session) const;
-    MaximizeMode initialMaximizeMode(const std::optional<XdgToplevelSessionData> &session) const;
+    MaximizeMode initialMaximizeMode(const std::optional<XdgToplevelSessionData> &session);
     bool initialFullScreenMode(const std::optional<XdgToplevelSessionData> &session) const;
     QVector<VirtualDesktop *> initialDesktops(const std::optional<XdgToplevelSessionData> &session) const;
     QString initialShortcut(const std::optional<XdgToplevelSessionData> &session) const;
