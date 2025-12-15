@@ -31,11 +31,16 @@ Placement::Placement()
 /**
  * Places the client \a c according to the workspace's layout policy
  */
-std::optional<PlacementCommand> Placement::place(const Window *c, const RectF &area)
+std::optional<PlacementCommand> Placement::place(Window *c, const RectF &area)
 {
     PlacementPolicy policy = c->rules()->checkPlacement(PlacementDefault);
     if (policy != PlacementDefault) {
         return place(c, area, policy);
+    }
+
+    auto scriptedPlacement = workspace()->scriptedPlacement(c);
+    if (scriptedPlacement) {
+        return scriptedPlacement->topLeft();
     }
 
     if (c->isUtility()) {

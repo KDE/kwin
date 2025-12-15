@@ -3002,6 +3002,26 @@ RootTile *Workspace::rootTile(LogicalOutput *output, VirtualDesktop *desktop) co
     return nullptr;
 }
 
+void Workspace::setPlacementCallback(PlacementCallback callback)
+{
+    m_placementCallback = callback;
+}
+
+std::optional<RectF> Workspace::scriptedPlacement(Window *window)
+{
+    if (!m_placementCallback) {
+        return std::nullopt;
+    }
+
+    const RectF area = clientArea(PlacementArea, window, activeOutput());
+    const RectF requestedArea = m_placementCallback(window, area);
+    if (requestedArea.isNull()) {
+        return std::nullopt;
+    }
+
+    return requestedArea;
+}
+
 #if KWIN_BUILD_TABBOX
 TabBox::TabBox *Workspace::tabbox() const
 {

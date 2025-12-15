@@ -15,6 +15,7 @@
 #include "effect/effecthandler.h"
 #include "outline.h"
 #include "scripting_logging.h"
+#include "scripting/scripting.h"
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "window.h"
@@ -230,6 +231,44 @@ SLOTWRAPPER(slotSwitchDesktopUp, Up)
 SLOTWRAPPER(slotSwitchDesktopDown, Down)
 
 #undef SLOTWRAPPER
+
+void WorkspaceWrapper::setPlacementCallback(QJSValue callback)
+{
+    m_scriptedPlacementCallback = callback;
+
+    workspace()->setPlacementCallback([this](Window *window, const QRectF &area) -> QRectF {
+        if (m_scriptedPlacementCallback.isCallable()) {
+
+            QJSValue jsargs = m_engine->newObject();
+            jsargs.setProperty("window", m_engine->newQObject(window));
+
+            QJSValue clientArea = m_engine->newObject();
+            clientArea.setProperty("x", area.x());
+            clientArea.setProperty("y", area.y());
+            clientArea.setProperty("width", area.width());
+            clientArea.setProperty("height", area.height());
+            jsargs.setProperty("area", clientArea);
+
+            QJSValueList args;
+            args << jsargs;
+
+            const QJSValue scripted_placement = m_scriptedPlacementCallback.call(args);
+            if (scripted_placement.isError()) {
+                qCWarning(KWIN_SCRIPTING) << "placementCallback error!"
+                    << "Uncaught exception at line"
+                    << scripted_placement.property("lineNumber").toInt()
+                    << ":" << scripted_placement.toString();
+            } else if (scripted_placement.isObject()) {
+                const int x = scripted_placement.property(QLatin1String("x")).toInt();
+                const int y = scripted_placement.property(QLatin1String("y")).toInt();
+                const int w = scripted_placement.property(QLatin1String("width")).toInt();
+                const int h = scripted_placement.property(QLatin1String("height")).toInt();
+                return QRectF(x, y, w, h);
+            }
+        }
+        return QRectF();
+    });
+}
 
 void WorkspaceWrapper::setActiveWindow(KWin::Window *window)
 {

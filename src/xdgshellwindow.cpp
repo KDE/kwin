@@ -1307,7 +1307,7 @@ bool XdgToplevelWindow::initialSkipTaskbar(const std::optional<XdgToplevelSessio
     return skipTaskbar();
 }
 
-MaximizeMode XdgToplevelWindow::initialMaximizeMode(const std::optional<XdgToplevelSessionData> &session) const
+MaximizeMode XdgToplevelWindow::initialMaximizeMode(const std::optional<XdgToplevelSessionData> &session)
 {
     // We prefer set_maximized() requests over maximized state stored in the session.
     if (m_initialStates & XdgToplevelInterface::State::Maximized) {

@@ -25,7 +25,7 @@ class KWIN_EXPORT Placement
 public:
     explicit Placement();
 
-    std::optional<PlacementCommand> place(const Window *c, const RectF &area);
+    std::optional<PlacementCommand> place(Window *c, const RectF &area);
     std::optional<PlacementCommand> placeSmart(const Window *c, const RectF &area, PlacementPolicy next = PlacementUnknown);
     std::optional<PlacementCommand> placeCentered(const Window *c, const RectF &area, PlacementPolicy next = PlacementUnknown);
 
