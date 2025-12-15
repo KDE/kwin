@@ -639,10 +639,24 @@ bool Rules::applySize(QSizeF &s, bool init) const
     return checkSetStop(sizerule);
 }
 
+bool Rules::applyOpacityActive(qreal &s) const
+{
+    if (checkForceRule(opacityactiverule)) {
+        s = opacityactive / 100.0;
+    }
+    return checkForceStop(opacityactiverule);
+}
+
+bool Rules::applyOpacityInactive(qreal &s) const
+{
+    if (checkForceRule(opacityinactiverule)) {
+        s = opacityinactive / 100.0;
+    }
+    return checkForceStop(opacityinactiverule);
+}
+
 APPLY_FORCE_RULE(minsize, MinSize, QSizeF)
 APPLY_FORCE_RULE(maxsize, MaxSize, QSizeF)
-APPLY_FORCE_RULE(opacityactive, OpacityActive, int)
-APPLY_FORCE_RULE(opacityinactive, OpacityInactive, int)
 APPLY_RULE(ignoregeometry, IgnoreGeometry, bool)
 
 APPLY_RULE(screen, Screen, int)
@@ -853,8 +867,8 @@ CHECK_RULE(Position, QPointF)
 CHECK_RULE(Size, QSizeF)
 CHECK_FORCE_RULE(MinSize, QSizeF)
 CHECK_FORCE_RULE(MaxSize, QSizeF)
-CHECK_FORCE_RULE(OpacityActive, int)
-CHECK_FORCE_RULE(OpacityInactive, int)
+CHECK_FORCE_RULE(OpacityActive, qreal)
+CHECK_FORCE_RULE(OpacityInactive, qreal)
 CHECK_RULE(IgnoreGeometry, bool)
 
 CHECK_RULE(Desktops, QList<VirtualDesktop *>)

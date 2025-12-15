@@ -1222,6 +1222,15 @@ void X11WindowTest::testRequestSkipTaskbar()
     QVERIFY(!window->skipTaskbar());
 }
 
+/**
+ * Some high precision bits can be lost when transmitting the opacity due to the _NET_WM_OPACITY
+ * property being a uint32_t number. This function computes the actual opacity that the wm will get.
+ */
+static qreal effectiveOpacity(qreal opacity)
+{
+    return static_cast<qreal>(static_cast<unsigned long>(opacity * 0xffffffff)) / 0xffffffff;
+}
+
 void X11WindowTest::testOpacity()
 {
     // This test verifies that _NET_WM_WINDOW_OPACITY is properly sync'ed with Window::opacity().
@@ -1233,7 +1242,7 @@ void X11WindowTest::testOpacity()
         NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::Properties(), NET::WM2Opacity);
         info.setOpacityF(0.5);
     });
-    QCOMPARE(window->opacity(), 0.5);
+    QCOMPARE(window->opacity(), effectiveOpacity(0.5));
 
     // Change the opacity.
     {
@@ -1243,7 +1252,7 @@ void X11WindowTest::testOpacity()
     }
     QSignalSpy opacityChangedSpy(window, &Window::opacityChanged);
     QVERIFY(opacityChangedSpy.wait());
-    QCOMPARE(window->opacity(), 0.8);
+    QCOMPARE(window->opacity(), effectiveOpacity(0.8));
 }
 
 void X11WindowTest::testNetWmKeyboardMove()

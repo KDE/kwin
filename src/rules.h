@@ -49,8 +49,8 @@ public:
     QSizeF checkSize(QSizeF s, bool init = false) const;
     QSizeF checkMinSize(QSizeF s) const;
     QSizeF checkMaxSize(QSizeF s) const;
-    int checkOpacityActive(int s) const;
-    int checkOpacityInactive(int s) const;
+    qreal checkOpacityActive(qreal s) const;
+    qreal checkOpacityInactive(qreal s) const;
     bool checkIgnoreGeometry(bool ignore, bool init = false) const;
     QList<VirtualDesktop *> checkDesktops(QList<VirtualDesktop *> desktops, bool init = false) const;
     LogicalOutput *checkOutput(LogicalOutput *output, bool init = false) const;
@@ -159,8 +159,8 @@ public:
     bool applySize(QSizeF &s, bool init) const;
     bool applyMinSize(QSizeF &s) const;
     bool applyMaxSize(QSizeF &s) const;
-    bool applyOpacityActive(int &s) const;
-    bool applyOpacityInactive(int &s) const;
+    bool applyOpacityActive(qreal &s) const;
+    bool applyOpacityInactive(qreal &s) const;
     bool applyIgnoreGeometry(bool &ignore, bool init) const;
     bool applyDesktops(QList<VirtualDesktop *> &desktops, bool init) const;
     bool applyScreen(int &desktop, bool init) const;

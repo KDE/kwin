@@ -494,10 +494,8 @@ void Window::setActive(bool act)
         return;
     }
     m_active = act;
-    const int ruledOpacity = m_active
-        ? rules()->checkOpacityActive(qRound(opacity() * 100.0))
-        : rules()->checkOpacityInactive(qRound(opacity() * 100.0));
-    setOpacity(ruledOpacity / 100.0);
+
+    setOpacity(m_active ? rules()->checkOpacityActive(opacity()) : rules()->checkOpacityInactive(opacity()));
 
     if (!m_active) {
         cancelAutoRaise();
@@ -4470,10 +4468,10 @@ void Window::applyWindowRules()
     setShortcut(rules()->checkShortcut(shortcut().toString()));
     // see also X11Window::setActive()
     if (isActive()) {
-        setOpacity(rules()->checkOpacityActive(qRound(opacity() * 100.0)) / 100.0);
+        setOpacity(rules()->checkOpacityActive(opacity()));
         workspace()->disableGlobalShortcutsForClient(rules()->checkDisableGlobalShortcuts(false));
     } else {
-        setOpacity(rules()->checkOpacityInactive(qRound(opacity() * 100.0)) / 100.0);
+        setOpacity(rules()->checkOpacityInactive(opacity()));
     }
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName()));
 }
