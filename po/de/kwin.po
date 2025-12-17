@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 14:41+0000\n"
+"POT-Creation-Date: 2025-12-17 02:33+0000\n"
 "PO-Revision-Date: 2025-09-07 20:05+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -4173,17 +4173,17 @@ msgstr ""
 "Alle Ausgabegeräte über Änderung der Einrichtung zu deaktivieren ist nicht "
 "zulässig"
 
-#: wayland/outputmanagement_v2.cpp:527
+#: wayland/outputmanagement_v2.cpp:544
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "Die angegebene Reihenfolge enthält nicht alle Ausgabegeräte"
 
-#: wayland/outputmanagement_v2.cpp:545
+#: wayland/outputmanagement_v2.cpp:562
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "Die angegebene Reihenfolge der Ausgabegeräte ist ungültig"
 
-#: wayland/outputmanagement_v2.cpp:563
+#: wayland/outputmanagement_v2.cpp:580
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Der Treiber hat die Ausgabeeinrichtung zurückgewiesen"

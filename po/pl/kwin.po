@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1724487 $
+# Version: $Revision: 1725107 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 14:41+0000\n"
+"POT-Creation-Date: 2025-12-17 02:33+0000\n"
 "PO-Revision-Date: 2025-12-06 15:39+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -4151,17 +4151,17 @@ msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Wyłączenie wszystkich wyjść przez zmiany w ustawieniach nie jest dozwolone"
 
-#: wayland/outputmanagement_v2.cpp:527
+#: wayland/outputmanagement_v2.cpp:544
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "Podany porządek wyjść nie zawiera wszystkich wyjść"
 
-#: wayland/outputmanagement_v2.cpp:545
+#: wayland/outputmanagement_v2.cpp:562
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "Podany porządek wyjść jest nieprawidłowy"
 
-#: wayland/outputmanagement_v2.cpp:563
+#: wayland/outputmanagement_v2.cpp:580
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Sterownik odrzucił ustawienia wyjść"

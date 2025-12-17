@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 14:41+0000\n"
+"POT-Creation-Date: 2025-12-17 02:33+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -4094,17 +4094,17 @@ msgstr "其中一个相关的输出已不再可用"
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "不允许通过配置更改禁用所有输出"
 
-#: wayland/outputmanagement_v2.cpp:527
+#: wayland/outputmanagement_v2.cpp:544
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "提供的输出顺序不包含所有输出"
 
-#: wayland/outputmanagement_v2.cpp:545
+#: wayland/outputmanagement_v2.cpp:562
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "提供的输出顺序无效"
 
-#: wayland/outputmanagement_v2.cpp:563
+#: wayland/outputmanagement_v2.cpp:580
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "驱动程序拒绝了输出配置"

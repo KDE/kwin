@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 14:41+0000\n"
+"POT-Creation-Date: 2025-12-17 02:33+0000\n"
 "PO-Revision-Date: 2025-11-21 02:11+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -4158,17 +4158,17 @@ msgstr ""
 "No está permitido desactivar todas las salidas mediante cambios de la "
 "configuración"
 
-#: wayland/outputmanagement_v2.cpp:527
+#: wayland/outputmanagement_v2.cpp:544
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "El orden de salida proporcionado no contiene todas las salidas"
 
-#: wayland/outputmanagement_v2.cpp:545
+#: wayland/outputmanagement_v2.cpp:562
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "El orden de salida proporcionado no es válido"
 
-#: wayland/outputmanagement_v2.cpp:563
+#: wayland/outputmanagement_v2.cpp:580
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "El controlador ha rechazado la configuración de salida"

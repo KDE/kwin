@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 14:41+0000\n"
+"POT-Creation-Date: 2025-12-17 02:33+0000\n"
 "PO-Revision-Date: 2025-09-22 03:45+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -4110,17 +4110,17 @@ msgstr "有關的一個輸出已不再可用"
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "不允許透過設定值變更來停用所有輸出"
 
-#: wayland/outputmanagement_v2.cpp:527
+#: wayland/outputmanagement_v2.cpp:544
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
 msgstr "提供的輸出順序沒有包含所有輸出"
 
-#: wayland/outputmanagement_v2.cpp:545
+#: wayland/outputmanagement_v2.cpp:562
 #, kde-format
 msgid "The provided output order is invalid"
 msgstr "提供的輸出順序是無效的"
 
-#: wayland/outputmanagement_v2.cpp:563
+#: wayland/outputmanagement_v2.cpp:580
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "驅動程式回絕了提供的輸出配置"
