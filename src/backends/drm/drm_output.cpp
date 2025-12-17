@@ -538,7 +538,9 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.deviceOffset = props->deviceOffset.value_or(m_state.deviceOffset);
     tryKmsColorOffloading(next);
     maybeScheduleRepaints(next);
-    if (next.dpmsMode != m_state.dpmsMode) {
+    const bool nextOff = next.dpmsMode != DpmsMode::On;
+    const bool currentOff = m_state.dpmsMode != DpmsMode::On;
+    if (nextOff != currentOff) {
         if (next.dpmsMode == DpmsMode::On) {
             m_renderLoop->uninhibit();
         } else {
