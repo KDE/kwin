@@ -604,6 +604,11 @@ void DrmTest::testDpms()
 
     workspace()->requestDpmsState(Workspace::DpmsState::Off);
     QSignalSpy stateChange(workspace(), &Workspace::dpmsStateChanged);
+    // requesting dpms off multiple times must not mess up renderloop inhibition
+    // or cause further state changes!
+    workspace()->requestDpmsState(Workspace::DpmsState::Off);
+    workspace()->requestDpmsState(Workspace::DpmsState::Off);
+    QCOMPARE(stateChange.count(), 0);
     QVERIFY(stateChange.wait());
 #ifndef FORCE_DRM_LEGACY
     QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::TurningOff);
