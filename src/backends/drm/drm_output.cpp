@@ -224,8 +224,10 @@ BackendOutput::Capabilities DrmOutput::computeCapabilities() const
     }
     if (m_state.highDynamicRange || m_state.brightnessDevice || m_state.allowSdrSoftwareBrightness) {
         capabilities |= Capability::BrightnessControl;
-        // TODO also allow for external screens?
-        if (m_autoBrightnessAvailable && m_information.internal) {
+        // changing brightness too often with DDC/CI can cause problems on
+        // some displays, so automatic brightness is blocked for them
+        const bool ddcci = !m_state.highDynamicRange && m_state.brightnessDevice && m_state.brightnessDevice->usesDdcCi();
+        if (m_autoBrightnessAvailable && !ddcci) {
             capabilities |= Capability::AutomaticBrightness;
         }
     }
