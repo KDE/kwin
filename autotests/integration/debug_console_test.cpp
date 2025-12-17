@@ -218,7 +218,7 @@ void DebugConsoleTest::testX11Unmanaged()
 
     // let's create an override redirect window
     const uint32_t values[] = {true};
-    Xcb::Window window(QRect(0, 0, 10, 10), XCB_CW_OVERRIDE_REDIRECT, values);
+    Xcb::Window window(Rect(0, 0, 10, 10), XCB_CW_OVERRIDE_REDIRECT, values);
     window.map();
 
     QVERIFY(rowsInsertedSpy.wait());

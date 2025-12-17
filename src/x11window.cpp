@@ -3576,13 +3576,13 @@ void X11Window::moveResizeInternal(const RectF &rect, MoveResizeMode mode)
     updateShapeRegion();
 }
 
-void X11Window::configure(const QRect &nativeGeometry)
+void X11Window::configure(const Rect &nativeGeometry)
 {
     // handle xrandr emulation: If a fullscreen client requests mode changes,
     // - Xwayland will set _XWAYLAND_RANDR_EMU_MONITOR_RECTS on all windows of the client
     // - we need to configure the window to match the emulated size
     // - Xwayland will set up the viewport to present the window properly on the Wayland side
-    QRect effectiveGeometry = nativeGeometry;
+    Rect effectiveGeometry = nativeGeometry;
     if (m_fullscreenMode == X11Window::FullScreenMode::FullScreenNormal) {
         Xcb::Property property(0, m_client, atoms->xwayland_xrandr_emulation, XCB_ATOM_CARDINAL, 0, workspace()->outputs().size() * 4);
         const auto values = property.array<uint32_t>();
@@ -3919,7 +3919,7 @@ void X11Window::doInteractiveResizeSync(const RectF &rect)
 {
     const RectF moveResizeFrameGeometry = Xcb::fromXNative(Xcb::toXNative(rect));
     const RectF moveResizeBufferGeometry = nextFrameRectToBufferRect(moveResizeFrameGeometry);
-    const QRect nativeBufferGeometry = Xcb::toXNative(moveResizeBufferGeometry);
+    const Rect nativeBufferGeometry = Xcb::toXNative(moveResizeBufferGeometry);
 
     if (m_client.geometry() == nativeBufferGeometry) {
         return;
@@ -3984,7 +3984,7 @@ void X11Window::getWmOpaqueRegion()
     const auto rects = info->opaqueRegion();
     Region new_opaque_region;
     for (const auto &r : rects) {
-        new_opaque_region += Xcb::fromXNative(QRect(r.pos.x, r.pos.y, r.size.width, r.size.height)).toRect();
+        new_opaque_region += Xcb::fromXNative(Rect(r.pos.x, r.pos.y, r.size.width, r.size.height)).toRect();
     }
     opaque_region = new_opaque_region;
 }
@@ -4006,7 +4006,7 @@ void X11Window::updateShapeRegion()
             const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.get());
             const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.get());
             for (int i = 0; i < rectCount; ++i) {
-                RectF region = Xcb::fromXNative(QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height));
+                RectF region = Xcb::fromXNative(Rect(rects[i].x, rects[i].y, rects[i].width, rects[i].height));
                 // make sure the shape is sane (X is async, maybe even XShape is broken)
                 region = region.intersected(RectF(QPointF(0, 0), bufferGeometry.size()));
 
@@ -4451,8 +4451,8 @@ bool X11Window::hitTest(const QPointF &point) const
     if (!m_surface || (m_surface->isMapped() && !m_surface->inputSurfaceAt(mapToLocal(point)))) {
         return false;
     }
-    return std::ranges::any_of(m_shapeRegion, [local = mapToLocal(point)](const QRectF &rect) {
-        return exclusiveContains(rect, local);
+    return std::ranges::any_of(m_shapeRegion, [local = mapToLocal(point)](const RectF &rect) {
+        return rect.contains(local);
     });
 }
 

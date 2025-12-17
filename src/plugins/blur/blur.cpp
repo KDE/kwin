@@ -323,7 +323,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
                 int y = cardinals[i++];
                 int w = cardinals[i++];
                 int h = cardinals[i++];
-                region += Xcb::fromXNative(QRect(x, y, w, h)).toRect();
+                region += Xcb::fromXNative(Rect(x, y, w, h)).toRect();
             }
         }
         if (!value.isNull()) {

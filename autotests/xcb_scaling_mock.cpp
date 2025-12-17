@@ -17,7 +17,7 @@ uint32_t Xcb::toXNative(qreal value)
     return value;
 }
 
-QRect Xcb::toXNative(const QRectF &rect)
+Rect Xcb::toXNative(const RectF &rect)
 {
     return rect.toRect();
 }
@@ -32,8 +32,24 @@ QSizeF Xcb::fromXNative(const QSize &value)
     return value;
 }
 
-QRectF Xcb::nativeFloor(const QRectF &value)
+RectF Xcb::nativeFloor(const RectF &value)
 {
     return value;
 }
+}
+
+QDebug operator<<(QDebug dbg, const KWin::Rect &rect)
+{
+    QDebugStateSaver saver(dbg);
+    dbg.nospace();
+    dbg << "KWin::Rect(" << rect.x() << "," << rect.y() << " " << rect.width() << "x" << rect.height() << ")";
+    return dbg;
+}
+
+QDebug operator<<(QDebug dbg, const KWin::RectF &rect)
+{
+    QDebugStateSaver saver(dbg);
+    dbg.nospace();
+    dbg << "KWin::RectF(" << rect.x() << "," << rect.y() << " " << rect.width() << "x" << rect.height() << ")";
+    return dbg;
 }

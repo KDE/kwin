@@ -106,7 +106,7 @@ void TestClientMachine::hostName_data()
 
 void TestClientMachine::hostName()
 {
-    const QRect geometry(0, 0, 10, 10);
+    const Rect geometry(0, 0, 10, 10);
     const uint32_t values[] = {true};
     Xcb::Window window(geometry, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     QFETCH(QString, hostName);
@@ -130,7 +130,7 @@ void TestClientMachine::hostName()
 
 void TestClientMachine::emptyHostName()
 {
-    const QRect geometry(0, 0, 10, 10);
+    const Rect geometry(0, 0, 10, 10);
     const uint32_t values[] = {true};
     Xcb::Window window(geometry, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     ClientMachine clientMachine;
