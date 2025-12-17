@@ -3417,7 +3417,7 @@ void X11Window::NETMoveResizeWindow(int flags, qreal x, qreal y, qreal width, qr
 void X11Window::GTKShowWindowMenu(qreal x_root, qreal y_root)
 {
     QPoint globalPos(x_root, y_root);
-    workspace()->showWindowMenu(QRect(globalPos, globalPos), this);
+    workspace()->showWindowMenu(Rect(globalPos, globalPos), this);
 }
 
 bool X11Window::isMovable() const
@@ -3660,7 +3660,7 @@ void X11Window::maximize(MaximizeMode mode, const RectF &restore)
         setGeometryRestore(restore);
     } else {
         if (requestedQuickTileMode() == QuickTileMode(QuickTileFlag::None)) {
-            QRectF savedGeometry = geometryRestore();
+            RectF savedGeometry = geometryRestore();
             if (!(old_mode & MaximizeVertical)) {
                 savedGeometry.setTop(y());
                 savedGeometry.setHeight(sz.height());
@@ -3857,7 +3857,7 @@ void X11Window::setFullScreen(bool set)
         }
     } else {
         Q_ASSERT(!fullscreenGeometryRestore().isNull());
-        moveResize(QRectF(fullscreenGeometryRestore().topLeft(), constrainFrameSize(fullscreenGeometryRestore().size())));
+        moveResize(RectF(fullscreenGeometryRestore().topLeft(), constrainFrameSize(fullscreenGeometryRestore().size())));
     }
 
     markAsPlaced();
@@ -3890,9 +3890,9 @@ void X11Window::updateFullscreenMonitors(NETFullscreenMonitors topology)
  * Calculates the bounding rectangle defined by the 4 monitor indices indicating the
  * top, bottom, left, and right edges of the window when the fullscreen state is enabled.
  */
-QRect X11Window::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) const
+Rect X11Window::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) const
 {
-    QRect total;
+    Rect total;
 
     if (auto output = workspace()->xineramaIndexToOutput(requestedTopology.top)) {
         total = total.united(output->geometry());
