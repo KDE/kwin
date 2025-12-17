@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 19;
+static const quint32 s_version = 20;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
