@@ -122,6 +122,7 @@ Workspace::Workspace()
     , m_lidSwitchTracker(std::make_unique<LidSwitchTracker>())
     , m_orientationSensor(std::make_unique<OrientationSensor>())
     , m_lightSensor(std::make_unique<LightSensor>())
+    , m_delayedLightTimer(std::make_unique<QTimer>())
 {
     _self = this;
 
@@ -235,25 +236,57 @@ void Workspace::init()
             return;
         }
         auto &[config, type] = *opt;
-        if (m_lightSensor->isAvailable()) {
-            const auto lux = m_lightSensor->lux();
-            for (BackendOutput *output : outputs) {
-                if ((output->capabilities() & BackendOutput::Capability::AutomaticBrightness) && output->automaticBrightness()) {
-                    const auto change = config.changeSet(output);
-                    change->brightness = output->autoBrightnessCurve().sample(lux);
-                    change->brightnessReason = BackendOutput::BrightnessReason::AutomaticBrightness;
-                }
+        applyOutputConfiguration(config);
+    };
+    connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
+    connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
+    // NOTE that enabling or disabling the orientation sensor can trigger the orientation to change immediately.
+    // As we do enable or disable it in applySensorChanges, it must be done asynchronously / with a queued connection!
+    connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges, Qt::QueuedConnection);
+    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+
+    const auto applyLightChanges = [this]() {
+        if (!m_lightSensor->isAvailable()) {
+            return;
+        }
+        const double lux = m_lightSensor->lux();
+        m_luxAtLastBrightnessAdjust = lux;
+        const auto outputs = kwinApp()->outputBackend()->outputs();
+        OutputConfiguration config;
+        for (BackendOutput *output : outputs) {
+            if ((output->capabilities() & BackendOutput::Capability::AutomaticBrightness) && output->automaticBrightness()) {
+                const auto change = config.changeSet(output);
+                change->brightness = output->autoBrightnessCurve().sample(lux);
+                change->brightnessReason = BackendOutput::BrightnessReason::AutomaticBrightness;
             }
         }
         applyOutputConfiguration(config);
     };
-    connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
-    // NOTE that enabling or disabling the orientation sensor can trigger the orientation to change immediately.
-    // As we do enable or disable it in applySensorChanges, it must be done asynchronously / with a queued connection!
-    connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges, Qt::QueuedConnection);
-    connect(m_lightSensor.get(), &LightSensor::brightnessChanged, this, applySensorChanges, Qt::QueuedConnection);
-    connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
-    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+
+    // constant brightness adjustments can be rather annoying and be perceived as flicker, so
+    // delay them a bit and only do anything if environment brightness changes by at least 10%
+    connect(m_lightSensor.get(), &LightSensor::brightnessChanged, this, [applyLightChanges, this]() {
+        if (m_delayedLightTimer->isActive()) {
+            return;
+        }
+        if (!m_luxAtLastBrightnessAdjust.has_value()) {
+            applyLightChanges();
+            return;
+        }
+        const double relativeLux = m_lightSensor->lux() / *m_luxAtLastBrightnessAdjust;
+        if (relativeLux > 1.1 || relativeLux < 0.9) {
+            m_delayedLightTimer->start();
+        }
+    });
+    m_delayedLightTimer->setSingleShot(true);
+    m_delayedLightTimer->setInterval(std::chrono::seconds(2));
+    connect(m_delayedLightTimer.get(), &QTimer::timeout, this, [applyLightChanges, this]() {
+        // check again if brightness is still changed as much as when the timer was started
+        const double relativeLux = m_lightSensor->lux() / *m_luxAtLastBrightnessAdjust;
+        if (relativeLux > 1.1 || relativeLux < 0.9) {
+            applyLightChanges();
+        }
+    });
     m_lightSensor->setEnabled(m_outputConfigStore->isAutoBrightnessActive(kwinApp()->outputBackend()->outputs()));
 
     const auto updateSensorAvailability = [this]() {
