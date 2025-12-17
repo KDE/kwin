@@ -284,7 +284,7 @@ private:
     void exportMappingState(int s); // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
     bool isManaged() const; ///< Returns false if this client is not yet managed
     void updateAllowedActions(bool force = false);
-    QRect fullscreenMonitorsArea(NETFullscreenMonitors topology) const;
+    Rect fullscreenMonitorsArea(NETFullscreenMonitors topology) const;
     void getResourceClass();
     void getWmNormalHints();
     void getWmClientMachine();
