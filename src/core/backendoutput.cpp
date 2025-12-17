@@ -32,10 +32,14 @@ double AutoBrightnessCurve::sample(double lux) const
     for (int i = m_luxAtBrightness.size() - 1; i > 0; i--) {
         const double low = m_luxAtBrightness[i - 1];
         const double high = m_luxAtBrightness[i];
-        if (lux > low && lux <= high) {
-            const double factor = (lux - low) / (high - low);
+        if (lux >= low && lux <= high) {
+            const double range = high - low;
             const double highPercent = i / double(m_luxAtBrightness.size() - 1);
+            if (qFuzzyIsNull(range)) {
+                return highPercent;
+            }
             const double lowPercent = (i - 1) / double(m_luxAtBrightness.size() - 1);
+            const double factor = (lux - low) / range;
             return std::clamp(std::lerp(lowPercent, highPercent, factor), 0.0, 1.0);
         }
     }
