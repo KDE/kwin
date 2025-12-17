@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-16 13:26+0000\n"
-"PO-Revision-Date: 2025-12-04 17:28+0100\n"
+"PO-Revision-Date: 2025-12-16 21:58+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -4146,22 +4146,23 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:619
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Не може да се добави персонализиран режим с непопълнен размер"
 
 #: wayland/outputmanagement_v2.cpp:623
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
+"Не може да се добави персонализиран режим с честота на опресняване нула Hz"
 
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "Позицията на изхода %s е отрицателна, това не се поддържа"
 
 #: wayland/outputmanagement_v2.cpp:634
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "Позицията на изхода %s е прекалено голяма (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:650
 #, kde-format
