@@ -1966,16 +1966,6 @@ static inline int defaultDepth()
     return defaultScreen()->root_depth;
 }
 
-static inline xcb_rectangle_t fromQt(const QRect &rect)
-{
-    xcb_rectangle_t rectangle;
-    rectangle.x = rect.x();
-    rectangle.y = rect.y();
-    rectangle.width = rect.width();
-    rectangle.height = rect.height();
-    return rectangle;
-}
-
 static inline void defineCursor(xcb_window_t window, xcb_cursor_t cursor)
 {
     xcb_change_window_attributes(connection(), window, XCB_CW_CURSOR, &cursor);
