@@ -324,7 +324,7 @@ private:
     void map();
     void unmap();
 
-    void configure(const QRect &nativeGeometry);
+    void configure(const Rect &nativeGeometry);
 
     xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
                                              bool session) const;

@@ -55,7 +55,7 @@ void TestXcbWindow::defaultCtor()
 
 void TestXcbWindow::ctor()
 {
-    const QRect geometry(0, 0, 10, 10);
+    const Rect geometry(0, 0, 10, 10);
     const uint32_t values[] = {true};
     Xcb::Window window(geometry, XCB_CW_OVERRIDE_REDIRECT, values);
     QCOMPARE(window.isValid(), true);
@@ -67,7 +67,7 @@ void TestXcbWindow::ctor()
 
 void TestXcbWindow::classCtor()
 {
-    const QRect geometry(0, 0, 10, 10);
+    const Rect geometry(0, 0, 10, 10);
     const uint32_t values[] = {true};
     Xcb::Window window(geometry, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     QCOMPARE(window.isValid(), true);
@@ -88,7 +88,7 @@ void TestXcbWindow::create()
     xcb_window_t wId = window;
     QCOMPARE(wId, noneWindow());
 
-    const QRect geometry(0, 0, 10, 10);
+    const Rect geometry(0, 0, 10, 10);
     const uint32_t values[] = {true};
     window.create(geometry, XCB_CW_OVERRIDE_REDIRECT, values);
     QCOMPARE(window.isValid(), true);
@@ -101,7 +101,7 @@ void TestXcbWindow::create()
 
 void TestXcbWindow::mapUnmap()
 {
-    const QRect geometry(0, 0, 10, 10);
+    const Rect geometry(0, 0, 10, 10);
     const uint32_t values[] = {true};
     Xcb::Window window(geometry, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     Xcb::WindowAttributes attribs(window);
@@ -126,14 +126,14 @@ void TestXcbWindow::mapUnmap()
 
 void TestXcbWindow::geometry()
 {
-    const QRect geometry(0, 0, 10, 10);
+    const Rect geometry(0, 0, 10, 10);
     const uint32_t values[] = {true};
     Xcb::Window window(geometry, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     Xcb::WindowGeometry windowGeometry(window);
     QCOMPARE(windowGeometry.isNull(), false);
     QCOMPARE(windowGeometry.rect(), geometry);
 
-    const QRect geometry2(10, 20, 100, 200);
+    const Rect geometry2(10, 20, 100, 200);
     window.setGeometry(geometry2);
     Xcb::WindowGeometry windowGeometry2(window);
     QCOMPARE(windowGeometry2.isNull(), false);
@@ -148,7 +148,7 @@ void TestXcbWindow::geometry()
 
 void TestXcbWindow::destroy()
 {
-    const QRect geometry(0, 0, 10, 10);
+    const Rect geometry(0, 0, 10, 10);
     const uint32_t values[] = {true};
     Xcb::Window window(geometry, XCB_CW_OVERRIDE_REDIRECT, values);
     QCOMPARE(window.isValid(), true);
