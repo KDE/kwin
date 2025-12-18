@@ -487,8 +487,8 @@ void Region::appendRects(QSpan<const Rect> rects)
     std::memcpy(m_rects.data() + start, rects.data(), rects.size_bytes());
 }
 
-/**
- * @internal
+/*!
+ * \internal
  *
  * In order to unite two regions, a scanline runs from top to bottom. The scanline stops at the boundaries
  * of bands. For example, consider that we want to unite the following two regions
@@ -631,8 +631,8 @@ Region Region::united(const Region &other) const
     return result;
 }
 
-/**
- * @internal
+/*!
+ * \internal
  *
  * In order to subtract two regions, a scanline runs from top to bottom. The scanline stops at the boundaries
  * of bands. For example, consider that we want to subtract the following two regions
@@ -754,8 +754,8 @@ Region Region::subtracted(const Region &other) const
     return result;
 }
 
-/**
- * @internal
+/*!
+ * \internal
  *
  * In order to xor two regions, a scanline runs from top to bottom. The scanline stops at the boundaries
  * of bands. For example, consider that we want to xor the following two regions
@@ -888,8 +888,8 @@ Region Region::xored(const Region &other) const
     return result;
 }
 
-/**
- * @internal
+/*!
+ * \internal
  *
  * In order to intersect two regions, a scanline runs from top to bottom. The scanline stops at the boundaries
  * of bands. For example, consider that we want to intersect the following two regions
@@ -1062,8 +1062,8 @@ void Region::assignSortedRects(const QList<Rect> &rects)
     m_rects = rects;
 }
 
-/**
- * @internal
+/*!
+ * \internal
  *
  * A region is constructed from a list of rectangles sorted by the top edge coordinate by running
  * a sweep line from top to bottom. There is a buffer that contains rectangles that intersect with

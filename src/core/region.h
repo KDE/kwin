@@ -15,7 +15,7 @@
 namespace KWin
 {
 
-/**
+/*!
  * The Region type represents a collection of rectangles to specify the area for drawing or clipping.
  *
  * The Region maintains rectangles so they are sorted first by the y coordinate then by the x coordinate.
