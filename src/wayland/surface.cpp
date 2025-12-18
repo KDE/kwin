@@ -639,6 +639,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->yuvCoefficients = yuvCoefficients;
     target->range = range;
     target->presentationFeedback = std::move(presentationFeedback);
+    target->requestedTiming = std::exchange(requestedTiming, std::nullopt);
 
     auto previousExtensions = std::exchange(target->extensions, {});
     for (const auto &[extension, sourceState] : extensions) {

@@ -48,6 +48,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${WaylandProtocols_DATADIR}/staging/alpha-modifier/alpha-modifier-v1.xml
         ${WaylandProtocols_DATADIR}/staging/color-management/color-management-v1.xml
         ${WaylandProtocols_DATADIR}/staging/color-representation/color-representation-v1.xml
+        ${WaylandProtocols_DATADIR}/staging/commit-timing/commit-timing-v1.xml
         ${WaylandProtocols_DATADIR}/staging/content-type/content-type-v1.xml
         ${WaylandProtocols_DATADIR}/staging/cursor-shape/cursor-shape-v1.xml
         ${WaylandProtocols_DATADIR}/staging/drm-lease/drm-lease-v1.xml
@@ -92,6 +93,7 @@ target_sources(kwin PRIVATE
     clientconnection.cpp
     colormanagement_v1.cpp
     colorrepresentation_v1.cpp
+    commit_timing_v1.cpp
     compositor.cpp
     contenttype_v1.cpp
     contrast.cpp
@@ -187,6 +189,7 @@ install(FILES
     clientconnection.h
     colormanagement_v1.h
     colorrepresentation_v1.h
+    commit_timing_v1.h
     compositor.h
     contenttype_v1.h
     contrast.h

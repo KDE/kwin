@@ -35,6 +35,7 @@ class AlphaModifierSurfaceV1;
 class FifoV1Surface;
 class FifoBarrier;
 class ColorRepresentationSurfaceV1;
+class CommitTimingSurfaceV1;
 
 struct SurfaceState
 {
@@ -97,6 +98,7 @@ struct SurfaceState
     EncodingRange range = EncodingRange::Full;
     bool fifoBarrier = false;
     bool hasFifoWaitCondition = false;
+    std::optional<std::chrono::steady_clock::time_point> requestedTiming;
 
     struct
     {
@@ -200,6 +202,7 @@ public:
     AlphaModifierSurfaceV1 *alphaModifier = nullptr;
     FifoV1Surface *fifoSurface = nullptr;
     ColorRepresentationSurfaceV1 *colorRepresentation = nullptr;
+    CommitTimingSurfaceV1 *commitTiming = nullptr;
 
     struct
     {
