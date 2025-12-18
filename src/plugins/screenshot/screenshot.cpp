@@ -130,7 +130,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
             return window->pid() == pid;
         });
     }
-    const Rect fullDamage = QRect(QPoint(), target->size());
+    const Rect fullDamage = Rect(QPoint(), target->size());
     sceneView.setViewport(screen->geometryF());
     sceneView.setScale(scale);
     sceneView.prePaint();
@@ -150,7 +150,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     return snapshot;
 }
 
-std::optional<QImage> ScreenShotManager::takeScreenShot(const QRect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
+std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, ScreenShotFlags flags, std::optional<pid_t> pidToHide)
 {
     const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
     if (!eglBackend) {
@@ -200,7 +200,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const QRect &area, Scree
             return window->pid() == pid;
         });
     }
-    const Rect fullDamage = QRect(QPoint(), target->size());
+    const Rect fullDamage = Rect(QPoint(), target->size());
     sceneView.setViewport(area);
     sceneView.setScale(scale);
     sceneView.prePaint();
@@ -232,7 +232,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     }
 
     const qreal scale = window->targetScale();
-    QRectF geometry = window->visibleGeometry();
+    RectF geometry = window->visibleGeometry();
     if (window->windowItem()->decorationItem() && !(flags & ScreenShotIncludeDecoration)) {
         geometry = window->clientGeometry();
     } else if (!(flags & ScreenShotIncludeShadow)) {

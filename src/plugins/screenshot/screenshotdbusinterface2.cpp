@@ -309,7 +309,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureArea(int x, int y, int width, int h
         return QVariantMap();
     }
 
-    const QRect area(x, y, width, height);
+    const Rect area(x, y, width, height);
     if (area.isEmpty()) {
         sendErrorReply(s_errorInvalidArea, s_errorInvalidAreaMessage);
         return QVariantMap();
@@ -470,7 +470,7 @@ void ScreenShotDBusInterface2::takeScreenShot(LogicalOutput *screen, ScreenShotF
     sink->deleteLater();
 }
 
-void ScreenShotDBusInterface2::takeScreenShot(const QRect &area, ScreenShotFlags flags,
+void ScreenShotDBusInterface2::takeScreenShot(const Rect &area, ScreenShotFlags flags,
                                               ScreenShotSinkPipe2 *sink, std::optional<pid_t> pid)
 {
     if (const auto result = m_effect->takeScreenShot(area, flags, pid)) {
