@@ -193,14 +193,14 @@ QPointF WindowScreenCastSource::mapFromGlobal(const QPointF &point) const
     return point - boundingRect().topLeft();
 }
 
-QRectF WindowScreenCastSource::mapFromGlobal(const QRectF &rect) const
+RectF WindowScreenCastSource::mapFromGlobal(const RectF &rect) const
 {
     return rect.translated(-boundingRect().topLeft());
 }
 
-QRectF WindowScreenCastSource::boundingRect() const
+RectF WindowScreenCastSource::boundingRect() const
 {
-    QRectF boundingRect;
+    RectF boundingRect;
     for (const auto &window : m_windows) {
         boundingRect = boundingRect.united(window->frameGeometry());
     }

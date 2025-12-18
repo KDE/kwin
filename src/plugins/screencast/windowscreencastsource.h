@@ -39,13 +39,13 @@ public:
     bool includesCursor(Cursor *cursor) const override;
 
     QPointF mapFromGlobal(const QPointF &point) const override;
-    QRectF mapFromGlobal(const QRectF &rect) const override;
+    RectF mapFromGlobal(const RectF &rect) const override;
 
 private:
     void add(Window *window);
     void watch(Window *window);
     void unwatch(Window *window);
-    QRectF boundingRect() const;
+    RectF boundingRect() const;
 
     QList<Window *> m_windows;
     bool m_active = false;

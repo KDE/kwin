@@ -117,12 +117,12 @@ void ScreencastManager::streamOutput(ScreencastStreamV1Interface *waylandStream,
     integrateStreams(waylandStream, stream);
 }
 
-static QString rectToString(const QRect &rect)
+static QString rectToString(const Rect &rect)
 {
     return QStringLiteral("%1,%2 %3x%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
 }
 
-static qreal devicePixelRatioForRegion(const QRect &region)
+static qreal devicePixelRatioForRegion(const Rect &region)
 {
     qreal devicePixelRatio = 1.0;
 
@@ -136,7 +136,7 @@ static qreal devicePixelRatioForRegion(const QRect &region)
     return devicePixelRatio;
 }
 
-void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream, const QRect &geometry, qreal scale, ScreencastV1Interface::CursorMode mode)
+void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream, const Rect &geometry, qreal scale, ScreencastV1Interface::CursorMode mode)
 {
     if (!isSupportedCompositingType()) {
         waylandStream->sendFailed(i18n("Unsupported compositing type"));

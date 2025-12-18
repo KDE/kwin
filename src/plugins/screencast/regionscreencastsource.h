@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include "core/rect.h"
 #include "screencastsource.h"
-
-#include <QRect>
 
 namespace KWin
 {
@@ -23,7 +22,7 @@ class RegionScreenCastSource : public ScreenCastSource
     Q_OBJECT
 
 public:
-    explicit RegionScreenCastSource(const QRect &region, qreal scale, std::optional<pid_t> pidToHide);
+    explicit RegionScreenCastSource(const Rect &region, qreal scale, std::optional<pid_t> pidToHide);
     ~RegionScreenCastSource() override;
 
     quint32 drmFormat() const override;
@@ -43,10 +42,10 @@ public:
     bool includesCursor(Cursor *cursor) const override;
 
     QPointF mapFromGlobal(const QPointF &point) const override;
-    QRectF mapFromGlobal(const QRectF &rect) const override;
+    RectF mapFromGlobal(const RectF &rect) const override;
 
 private:
-    const QRect m_region;
+    const Rect m_region;
     const qreal m_scale;
     const std::optional<pid_t> m_pidToHide;
     std::chrono::nanoseconds m_last{0};

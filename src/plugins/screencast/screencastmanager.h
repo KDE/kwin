@@ -41,7 +41,7 @@ private:
                              double scale,
                              ScreencastV1Interface::CursorMode mode);
     void streamRegion(ScreencastStreamV1Interface *stream,
-                      const QRect &geometry,
+                      const Rect &geometry,
                       qreal scale,
                       ScreencastV1Interface::CursorMode mode);
 

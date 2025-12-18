@@ -80,7 +80,7 @@ Region OutputScreenCastSource::render(QImage *target, const Region &bufferRepair
 
 Region OutputScreenCastSource::render(GLFramebuffer *target, const Region &bufferRepair)
 {
-    m_layer->setFramebuffer(target, bufferRepair & QRect(QPoint(), target->size()));
+    m_layer->setFramebuffer(target, bufferRepair & Rect(QPoint(), target->size()));
     if (!m_layer->preparePresentationTest()) {
         return Region{};
     }
@@ -89,7 +89,7 @@ Region OutputScreenCastSource::render(GLFramebuffer *target, const Region &buffe
         return Region{};
     }
     m_sceneView->prePaint();
-    const auto bufferDamage = (m_layer->deviceRepaints() | m_sceneView->collectDamage()) & QRect(QPoint(), target->size());
+    const auto bufferDamage = (m_layer->deviceRepaints() | m_sceneView->collectDamage()) & Rect(QPoint(), target->size());
     const auto repaints = beginInfo->repaint | bufferDamage;
     m_layer->resetRepaints();
     m_sceneView->paint(beginInfo->renderTarget, QPoint(), repaints);
@@ -160,7 +160,7 @@ QPointF OutputScreenCastSource::mapFromGlobal(const QPointF &point) const
     return m_output->mapFromGlobal(point);
 }
 
-QRectF OutputScreenCastSource::mapFromGlobal(const QRectF &rect) const
+RectF OutputScreenCastSource::mapFromGlobal(const RectF &rect) const
 {
     return m_output->mapFromGlobal(rect);
 }

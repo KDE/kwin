@@ -16,6 +16,7 @@ namespace KWin
 class Cursor;
 class GLFramebuffer;
 class GLTexture;
+class RectF;
 class Region;
 
 class ScreenCastSource : public QObject
@@ -41,7 +42,7 @@ public:
     virtual bool includesCursor(Cursor *cursor) const = 0;
 
     virtual QPointF mapFromGlobal(const QPointF &point) const = 0;
-    virtual QRectF mapFromGlobal(const QRectF &rect) const = 0;
+    virtual RectF mapFromGlobal(const RectF &rect) const = 0;
 
 Q_SIGNALS:
     void frame();

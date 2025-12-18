@@ -861,7 +861,7 @@ void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
     const QImage image = kwinApp()->cursorImage().image();
     if (!image.isNull()) {
         QPainter painter(&dest);
-        painter.drawImage(QRect({0, 0}, targetSize), image);
+        painter.drawImage(Rect({0, 0}, targetSize), image);
     }
 }
 

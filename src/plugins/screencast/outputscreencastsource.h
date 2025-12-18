@@ -42,7 +42,7 @@ public:
     bool includesCursor(Cursor *cursor) const override;
 
     QPointF mapFromGlobal(const QPointF &point) const override;
-    QRectF mapFromGlobal(const QRectF &rect) const override;
+    RectF mapFromGlobal(const RectF &rect) const override;
 
 private:
     QPointer<LogicalOutput> m_output;
