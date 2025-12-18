@@ -14,6 +14,8 @@
 #include "wayland/surface.h"
 #include "window.h"
 
+#include "wayland/clientconnection.h"
+
 #if KWIN_BUILD_X11
 #include "x11window.h"
 #endif
@@ -48,6 +50,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
             this, &SurfaceItemWayland::handlePresentationModeHintChanged);
     connect(surface, &SurfaceInterface::bufferReleasePointChanged, this, &SurfaceItemWayland::handleReleasePointChanged);
     connect(surface, &SurfaceInterface::alphaMultiplierChanged, this, &SurfaceItemWayland::handleAlphaMultiplierChanged);
+    connect(surface, &SurfaceInterface::waitingOnCommitTiming, this, &SurfaceItemWayland::handleCommitTiming);
 
     connect(surface, &SurfaceInterface::mapped,
             this, &SurfaceItemWayland::handleSurfaceMappedChanged);
@@ -234,6 +237,11 @@ void SurfaceItemWayland::handleAlphaMultiplierChanged()
     setOpacity(m_surface->alphaMultiplier());
 }
 
+void SurfaceItemWayland::handleCommitTiming()
+{
+    scheduleFrame(m_surface->requestedTimingOfNextCommit());
+}
+
 void SurfaceItemWayland::handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
     if (!m_surface) {
@@ -248,6 +256,17 @@ void SurfaceItemWayland::handleFramePainted(LogicalOutput *output, OutputFrame *
     }
     // TODO only call this once per refresh cycle
     m_surface->clearFifoBarrier(output ? std::optional(std::chrono::nanoseconds(1'000'000'000'000) / output->refreshRate()) : std::nullopt);
+    if (const auto timing = m_surface->requestedTimingOfNextCommit()) {
+        scheduleFrame(timing);
+    }
+}
+
+void SurfaceItemWayland::handlePrepareFrame(std::chrono::nanoseconds timestamp)
+{
+    if (!m_surface) {
+        return;
+    }
+    m_surface->prepareFrame(timestamp);
 }
 
 #if KWIN_BUILD_X11

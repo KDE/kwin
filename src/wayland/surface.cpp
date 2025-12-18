@@ -478,16 +478,16 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
         d->serverScale = d->client->scaleOverride();
     });
 
-    d->fifoFallbackTimer.setInterval(1000 / 20);
-    d->fifoFallbackTimer.setSingleShot(true);
-    connect(&d->fifoFallbackTimer, &QTimer::timeout, this, &SurfaceInterface::handleFifoFallback);
+    d->fallbackTimer.setSingleShot(true);
+    d->fallbackTimer.setTimerType(Qt::PreciseTimer);
+    connect(&d->fallbackTimer, &QTimer::timeout, this, &SurfaceInterface::handleCommitFallback);
 }
 
 SurfaceInterface::~SurfaceInterface()
 {
     d->m_tearingDown = true;
     if (d->firstTransaction) {
-        d->firstTransaction->tryApply();
+        d->firstTransaction->tryApply(std::nullopt);
     }
 }
 
@@ -647,6 +647,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->range = range;
     target->presentationFeedback = std::move(presentationFeedback);
     target->blurRegion = blurRegion;
+    target->requestedTiming = std::exchange(requestedTiming, std::nullopt);
 
     auto previousExtensions = std::exchange(target->extensions, {});
     for (const auto &[extension, sourceState] : extensions) {
@@ -733,9 +734,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (visibilityChanged) {
         updateEffectiveMapped();
-    }
-    if (current->fifoBarrier) {
-        fifoFallbackTimer.start();
     }
 
     if (opaqueRegionChanged) {
@@ -1276,6 +1274,30 @@ Transaction *SurfaceInterface::firstTransaction() const
 void SurfaceInterface::setFirstTransaction(Transaction *transaction)
 {
     d->firstTransaction = transaction;
+    if (transaction) {
+        TransactionEntry *entry = transaction->entry(this);
+        if (entry && entry->state->requestedTiming) {
+            Q_EMIT waitingOnCommitTiming();
+        }
+    }
+    setupFallbackTimer();
+}
+
+void SurfaceInterface::setupFallbackTimer()
+{
+    const auto timing = requestedTimingOfNextCommit();
+    if (!timing && !hasFifoBarrier()) {
+        d->fallbackTimer.stop();
+        return;
+    }
+    std::chrono::nanoseconds duration{0};
+    if (timing) {
+        duration = std::max(duration, *timing - std::chrono::steady_clock::now());
+    }
+    if (hasFifoBarrier()) {
+        duration = std::max(duration, d->fifoRefreshRate);
+    }
+    d->fallbackTimer.start(std::chrono::ceil<std::chrono::milliseconds>(duration));
 }
 
 Transaction *SurfaceInterface::lastTransaction() const
@@ -1312,31 +1334,48 @@ double SurfaceInterface::alphaMultiplier() const
 
 void SurfaceInterface::clearFifoBarrier(std::optional<std::chrono::nanoseconds> refreshDuration)
 {
-    // When the barrier is cleared by the scene in time, the timer should never fire.
-    // If the next transaction sets a fifo barrier again, that will start the timer again.
-    d->fifoFallbackTimer.stop();
     if (refreshDuration.has_value()) {
         // some games don't work properly if the refresh rate goes too low with FIFO. 30Hz is assumed to be fine here.
         // this must still be slower than the actual screen though, or fifo behavior would be broken!
-        const auto fallbackRefreshDuration = std::max(*refreshDuration * 5 / 4, std::chrono::nanoseconds(1'000'000'000) / 30);
-        d->fifoFallbackTimer.setInterval(std::chrono::duration_cast<std::chrono::milliseconds>(fallbackRefreshDuration));
+        d->fifoRefreshRate = std::max(*refreshDuration * 5 / 4, std::chrono::nanoseconds(1'000'000'000) / 30);
     }
     if (d->current->fifoBarrier) {
         d->current->fifoBarrier = false;
         if (d->firstTransaction) {
-            d->firstTransaction->tryApply();
+            d->firstTransaction->tryApply(std::nullopt);
         }
     }
 }
 
-void SurfaceInterface::handleFifoFallback()
+void SurfaceInterface::handleCommitFallback()
 {
-    clearFifoBarrier();
+    d->fallbackTimer.stop();
+    d->current->fifoBarrier = false;
+    if (d->firstTransaction) {
+        d->firstTransaction->tryApply(std::nullopt);
+    }
 }
 
 bool SurfaceInterface::hasFifoBarrier() const
 {
     return d->current->fifoBarrier;
+}
+
+void SurfaceInterface::prepareFrame(std::chrono::nanoseconds timestamp)
+{
+    if (d->firstTransaction) {
+        // TODO port the other timestamps to use an actual timestamp type as well
+        d->firstTransaction->tryApply(std::chrono::steady_clock::time_point(timestamp));
+    }
+}
+
+std::optional<std::chrono::steady_clock::time_point> SurfaceInterface::requestedTimingOfNextCommit() const
+{
+    if (d->firstTransaction) {
+        return d->firstTransaction->targetTimestamp(this);
+    } else {
+        return std::nullopt;
+    }
 }
 
 } // namespace KWin

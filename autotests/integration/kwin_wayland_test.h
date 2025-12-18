@@ -29,6 +29,7 @@
 #include "qwayland-alpha-modifier-v1.h"
 #include "qwayland-color-management-v1.h"
 #include "qwayland-color-representation-v1.h"
+#include "qwayland-commit-timing-v1.h"
 #include "qwayland-cursor-shape-v1.h"
 #include "qwayland-fake-input.h"
 #include "qwayland-fifo-v1.h"
@@ -828,6 +829,7 @@ enum class AdditionalWaylandInterface : uint64_t {
     ColorRepresentation = 1ull << 32,
     Viewporter = 1ull << 33,
     AlphaModifierV1 = 1ull << 34,
+    CommitTiming = 1ull << 35,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -1153,6 +1155,13 @@ public:
     ~WlTouch() override;
 };
 
+class CommitTimingManager : public QtWayland::wp_commit_timing_manager_v1
+{
+public:
+    explicit CommitTimingManager(::wl_registry *registry, uint32_t id, int version);
+    ~CommitTimingManager() override;
+};
+
 struct Connection
 {
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
@@ -1209,6 +1218,7 @@ struct Connection
     std::unique_ptr<AlphaModifierV1> alphaModifier;
     // TODO port everything away from KWayland::Client::Seat
     std::unique_ptr<WlSeat> kwinSeat;
+    std::unique_ptr<CommitTimingManager> commitTiming;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -1289,6 +1299,7 @@ WaylandClient::LinuxDmabufV1 *linuxDmabuf();
 ColorRepresentationV1 *colorRepresentation();
 WaylandClient::Viewporter *viewporter();
 AlphaModifierV1 *alphaModifier();
+Connection *connection();
 
 bool waitForWaylandSurface(Window *window);
 
@@ -1593,6 +1604,7 @@ public:
     void unmap();
     bool unmapAndWaitForClosed();
 
+    void commit();
     /**
      * Commits and waits for the commit to be presented.
      * NOTE that this requires the presentation time protocol!
