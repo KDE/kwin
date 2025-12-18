@@ -33,18 +33,16 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, BackendOutput *output)
 {
 }
 
-void RenderLoopPrivate::scheduleNextRepaint(std::optional<std::chrono::nanoseconds> presentNotBefore)
+void RenderLoopPrivate::scheduleNextRepaint(std::optional<std::chrono::steady_clock::time_point> presentNotBefore)
 {
     if (kwinApp()->isTerminating() || preparingNewFrame) {
         return;
     }
-    const std::chrono::nanoseconds presentNotBeforeTime = presentNotBefore.value_or(std::chrono::steady_clock::now().time_since_epoch());
-    if (compositeTimer.isActive()) {
-        if (presentNotBeforeTime >= lastPresentNotBefore) {
-            // this would present later than what we already scheduled for,
-            // so it's not important
-            return;
-        }
+    const std::chrono::nanoseconds presentNotBeforeTime = presentNotBefore.value_or(std::chrono::steady_clock::now()).time_since_epoch();
+    if (compositeTimer.isActive() && presentNotBeforeTime >= lastPresentNotBefore) {
+        // this would present later than what we already scheduled for,
+        // so we can ignore it
+        return;
     }
     scheduleRepaint(nextPresentationTimestamp, presentNotBeforeTime);
 }
@@ -54,6 +52,7 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
     pendingReschedule = false;
     const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
     const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
+    presentNotBefore = std::max(presentNotBefore, currentTime);
 
     std::chrono::nanoseconds targetTimestamp;
 
@@ -96,7 +95,7 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
 
         if (compositeTimer.isActive() && presentNotBefore >= lastPresentNotBefore) {
             // we already scheduled this frame, but we got a new timestamp
-            // which might require starting to composite earlier than we planned
+            // which might require starting to composite earlier than we planned.
             // It's important here that we do not change the targeted vblank interval,
             // otherwise with a pessimistic compositing time estimation we might
             // unnecessarily drop frames
@@ -120,7 +119,7 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
     }
 
     if (compositeTimer.isActive()) {
-        // a frame was previously scheduled
+        // a frame was previously scheduled,
         if (presentNotBefore >= lastPresentNotBefore) {
             // but we have an updated timestamp for the same refresh cycle
             nextPresentationTimestamp = targetTimestamp;
@@ -284,7 +283,7 @@ void RenderLoop::setPresentationSafetyMargin(std::chrono::nanoseconds safetyMarg
     d->safetyMargin = safetyMargin;
 }
 
-void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer, std::optional<std::chrono::nanoseconds> presentNotBefore)
+void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer, std::optional<std::chrono::steady_clock::time_point> presentNotBefore)
 {
     const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
     const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;

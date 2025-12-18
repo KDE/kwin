@@ -31,6 +31,7 @@
 #include "wayland/clientconnection.h"
 #include "wayland/colormanagement_v1.h"
 #include "wayland/colorrepresentation_v1.h"
+#include "wayland/commit_timing_v1.h"
 #include "wayland/compositor.h"
 #include "wayland/contenttype_v1.h"
 #include "wayland/cursorshape_v1.h"
@@ -534,6 +535,7 @@ bool WaylandServer::init()
     m_colorRepresentation = new ColorRepresentationManagerV1(m_display, m_display);
     m_pointerWarp = new PointerWarpV1(m_display, m_display);
     m_backgroundEffect = new ExtBackgroundEffectManagerV1(m_display, m_display);
+    m_commitTiming = new CommitTimingManagerV1(m_display, m_display);
     return true;
 }
 

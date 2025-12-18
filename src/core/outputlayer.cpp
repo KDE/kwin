@@ -73,14 +73,14 @@ Region OutputLayer::deviceRepaints() const
     return m_repaints;
 }
 
-void OutputLayer::scheduleRepaint(Item *item)
+void OutputLayer::scheduleRepaint(Item *item, std::optional<std::chrono::steady_clock::time_point> targetTime)
 {
     if (!m_output) {
         return;
     }
     m_repaintScheduled = true;
     if (m_renderLoop) {
-        m_renderLoop->scheduleRepaint(item, this);
+        m_renderLoop->scheduleRepaint(item, this, targetTime);
     }
     Q_EMIT repaintScheduled();
 }

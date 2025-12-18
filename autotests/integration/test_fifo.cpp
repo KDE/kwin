@@ -21,6 +21,7 @@
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
+#include <deque>
 #include <format>
 
 using namespace std::chrono_literals;
@@ -44,6 +45,7 @@ private Q_SLOTS:
     void testFifoWaitOnly();
     void testFifoOnSubsurfaces();
     void testBarrierNotClearedByEmptyCommit();
+    void testFifoCommitTiming();
 };
 
 class FifoV1Surface : public QObject, public QtWayland::wp_fifo_v1
@@ -62,6 +64,27 @@ public:
     }
 };
 
+class CommitTimerV1 : public QtWayland::wp_commit_timer_v1
+{
+public:
+    explicit CommitTimerV1(::wp_commit_timer_v1 *obj)
+        : QtWayland::wp_commit_timer_v1(obj)
+    {
+    }
+
+    ~CommitTimerV1() override
+    {
+        destroy();
+    }
+
+    void setTimestamp(std::chrono::nanoseconds time)
+    {
+        const uint64_t seconds = time / 1s;
+        const uint64_t nanos = (time - std::chrono::seconds(seconds)).count();
+        set_timestamp(seconds >> 32, seconds & 0xFFFFFFFF, nanos);
+    }
+};
+
 void FifoTest::initTestCase()
 {
     qRegisterMetaType<Window *>();
@@ -72,7 +95,9 @@ void FifoTest::initTestCase()
 
 void FifoTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::FifoV1 | Test::AdditionalWaylandInterface::PresentationTime));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::FifoV1
+                                         | Test::AdditionalWaylandInterface::PresentationTime
+                                         | Test::AdditionalWaylandInterface::CommitTiming));
     Test::setupWaylandConnection();
 
     workspace()->setActiveOutput(QPoint(640, 512));
@@ -412,6 +437,52 @@ void FifoTest::testBarrierNotClearedByEmptyCommit()
     const auto refreshDuration = secondSpy.last().at(1).value<std::chrono::nanoseconds>();
     const auto diff = thisTimestamp - lastTimestamp;
     QCOMPARE_GT(diff, refreshDuration / 2);
+}
+
+void FifoTest::testFifoCommitTiming()
+{
+    // this tests that using fifo + commit timing in combination
+    // (like Mesa does) works as expected
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
+
+    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*window.m_surface));
+    auto timer = std::make_unique<CommitTimerV1>(Test::connection()->commitTiming->get_timer(*window.m_surface));
+
+    std::deque<std::unique_ptr<Test::WpPresentationFeedback>> frames;
+
+    auto lastTarget = std::chrono::steady_clock::now().time_since_epoch();
+    auto refreshDuration = std::chrono::nanoseconds(1'000'000) / workspace()->outputs().front()->refreshRate();
+    std::optional<std::chrono::nanoseconds> lastPresentation;
+
+    for (size_t i = 0; i < 10; i++) {
+        if (frames.size() >= 3) {
+            QSignalSpy presented(frames[0].get(), &Test::WpPresentationFeedback::presented);
+            QVERIFY(presented.wait());
+
+            refreshDuration = presented.last()[1].value<std::chrono::nanoseconds>();
+            const auto timestamp = presented.last()[0].value<std::chrono::nanoseconds>();
+            if (lastPresentation) {
+                const auto duration = timestamp - *lastPresentation;
+                QCOMPARE_GE(duration, refreshDuration / 2);
+                QCOMPARE_LE(duration, refreshDuration * 2);
+            }
+            lastPresentation = timestamp;
+
+            frames.pop_front();
+        }
+
+        frames.push_back(std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*window.m_surface)));
+        fifo->set_barrier();
+        fifo->wait_barrier();
+        timer->setTimestamp(lastTarget + refreshDuration - 500us);
+        lastTarget += refreshDuration;
+        window.commit();
+
+        fifo->wait_barrier();
+        window.commit();
+    }
 }
 
 }

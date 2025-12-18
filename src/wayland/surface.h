@@ -359,6 +359,8 @@ public:
     void clearFifoBarrier();
     bool hasFifoBarrier() const;
 
+    void prepareFrame(std::chrono::nanoseconds timestamp);
+
     /**
      * Registers the specified @a extension. Returns the pending state for the extension.
      *
@@ -375,6 +377,8 @@ public:
     void removeExtension(RawSurfaceExtension *extension);
 
     QPointF mapToMainSurface(const QPointF &localPoint) const;
+
+    std::optional<std::chrono::steady_clock::time_point> requestedTimingOfNextCommit() const;
 
 Q_SIGNALS:
     /**
@@ -453,6 +457,8 @@ Q_SIGNALS:
     void presentationModeHintChanged();
     void bufferReleasePointChanged();
     void alphaMultiplierChanged();
+
+    void waitingOnCommitTiming();
 
     /**
      * Emitted when the Surface has been committed.

@@ -30,7 +30,7 @@ public:
     void dispatch();
 
     void delayScheduleRepaint();
-    void scheduleNextRepaint(std::optional<std::chrono::nanoseconds> presentNotBefore);
+    void scheduleNextRepaint(std::optional<std::chrono::steady_clock::time_point> presentNotBefore);
     void scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp, std::chrono::nanoseconds presentNotBefore);
 
     void notifyFrameDropped();

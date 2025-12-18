@@ -52,12 +52,14 @@ private Q_SLOTS:
     void handlePresentationModeHintChanged();
     void handleReleasePointChanged();
     void handleAlphaMultiplierChanged();
+    void handleCommitTiming();
 
     void handleFifoFallback();
 
 private:
     SurfaceItemWayland *getOrCreateSubSurfaceItem(SubSurfaceInterface *s);
     void handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp) override;
+    void handlePrepareFrame(std::chrono::nanoseconds timestamp) override;
 
     QPointer<SurfaceInterface> m_surface;
     struct ScanoutFeedback

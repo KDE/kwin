@@ -61,7 +61,7 @@ public:
      * add a repaint in layer-local device coordinates
      */
     void addDeviceRepaint(const Region &deviceRegion);
-    void scheduleRepaint(Item *item);
+    void scheduleRepaint(Item *item, std::optional<std::chrono::steady_clock::time_point> targetTime = std::nullopt);
     /**
      * @returns true if the layer can be moved with the Item
      * and thus no repaint is necessary

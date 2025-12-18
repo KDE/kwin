@@ -53,7 +53,7 @@ void RenderView::addDeviceRepaint(const Region &deviceRegion)
     m_layer->addDeviceRepaint(deviceRegion);
 }
 
-void RenderView::scheduleRepaint(Item *item)
+void RenderView::scheduleRepaint(Item *item, std::optional<std::chrono::steady_clock::time_point> targetTime)
 {
     if (!m_layer) {
         return;

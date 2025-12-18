@@ -13,6 +13,8 @@
 #include "wayland/surface.h"
 #include "window.h"
 
+#include "wayland/clientconnection.h"
+
 #if KWIN_BUILD_X11
 #include "x11window.h"
 #endif
@@ -47,6 +49,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
             this, &SurfaceItemWayland::handlePresentationModeHintChanged);
     connect(surface, &SurfaceInterface::bufferReleasePointChanged, this, &SurfaceItemWayland::handleReleasePointChanged);
     connect(surface, &SurfaceInterface::alphaMultiplierChanged, this, &SurfaceItemWayland::handleAlphaMultiplierChanged);
+    connect(surface, &SurfaceInterface::waitingOnCommitTiming, this, &SurfaceItemWayland::handleCommitTiming);
 
     connect(surface, &SurfaceInterface::mapped,
             this, &SurfaceItemWayland::handleSurfaceMappedChanged);
@@ -236,6 +239,11 @@ void SurfaceItemWayland::handleAlphaMultiplierChanged()
     setOpacity(m_surface->alphaMultiplier());
 }
 
+void SurfaceItemWayland::handleCommitTiming()
+{
+    scheduleFrame(m_surface->requestedTimingOfNextCommit());
+}
+
 void SurfaceItemWayland::handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
     if (!m_surface) {
@@ -259,6 +267,17 @@ void SurfaceItemWayland::handleFramePainted(LogicalOutput *output, OutputFrame *
         // reset the timer, it should only trigger if we don't present fast enough
         m_fifoFallbackTimer.start(std::chrono::duration_cast<std::chrono::milliseconds>(fallbackRefreshDuration));
     }
+    if (const auto timing = m_surface->requestedTimingOfNextCommit()) {
+        scheduleFrame(timing);
+    }
+}
+
+void SurfaceItemWayland::handlePrepareFrame(std::chrono::nanoseconds timestamp)
+{
+    if (!m_surface) {
+        return;
+    }
+    m_surface->prepareFrame(timestamp);
 }
 
 void SurfaceItemWayland::handleFifoFallback()

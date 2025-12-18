@@ -530,6 +530,9 @@ void WorkspaceScene::prePaint(SceneView *delegate)
     painted_delegate = delegate;
     painted_screen = painted_delegate->logicalOutput();
 
+    m_containerItem->prepareFrame(painted_delegate, painted_screen, painted_delegate->nextPresentationTimestamp());
+    m_overlayItem->prepareFrame(painted_delegate, painted_screen, painted_delegate->nextPresentationTimestamp());
+
     createStackingOrder();
 
     // preparation step

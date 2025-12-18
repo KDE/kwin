@@ -159,7 +159,7 @@ public:
     void scheduleRepaint(const RegionF &region);
     void scheduleSceneRepaint(const RegionF &region);
     void scheduleRepaint(RenderView *delegate, const RegionF &region);
-    void scheduleFrame();
+    void scheduleFrame(std::optional<std::chrono::steady_clock::time_point> targetTime = std::nullopt);
     bool hasRepaints(RenderView *view) const;
     Region takeDeviceRepaints(RenderView *delegate);
     void resetRepaints(RenderView *delegate);
@@ -174,6 +174,7 @@ public:
     void addEffect();
     void removeEffect();
 
+    void prepareFrame(RenderView *view, LogicalOutput *output, std::chrono::nanoseconds timestamp);
     void framePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
     bool isAncestorOf(const Item *item) const;
@@ -203,6 +204,7 @@ Q_SIGNALS:
 
 protected:
     virtual WindowQuadList buildQuads() const;
+    virtual void handlePrepareFrame(std::chrono::nanoseconds timestamp);
     virtual void handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
     virtual void releaseResources();
     void discardQuads();
