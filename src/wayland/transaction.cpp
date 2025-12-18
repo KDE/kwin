@@ -26,7 +26,7 @@ TransactionFence::TransactionFence(Transaction *transaction, FileDescriptor &&fi
     m_notifier = std::make_unique<QSocketNotifier>(m_fileDescriptor.get(), QSocketNotifier::Read);
     QObject::connect(m_notifier.get(), &QSocketNotifier::activated, m_notifier.get(), [this]() {
         m_notifier->setEnabled(false);
-        m_transaction->tryApply();
+        m_transaction->tryApply(std::nullopt);
     });
 }
 
@@ -44,25 +44,27 @@ Transaction::Transaction()
 {
 }
 
-bool Transaction::isReady() const
+std::expected<void, TransactionEntry::Blocker> TransactionEntry::isReady(std::chrono::steady_clock::time_point targetTimestamp) const
 {
-    return std::none_of(m_entries.cbegin(), m_entries.cend(), [](const TransactionEntry &entry) {
-        if (entry.previousTransaction) {
-            return true;
+    if (previousTransaction) {
+        return std::unexpected(Blocker::Other);
+    }
+    if (isDiscarded()) {
+        return {};
+    }
+    for (const auto &fence : fences) {
+        if (fence->isWaiting()) {
+            return std::unexpected(Blocker::Other);
         }
-
-        if (entry.isDiscarded()) {
-            return false;
-        }
-
-        for (const auto &fence : entry.fences) {
-            if (fence->isWaiting()) {
-                return true;
-            }
-        }
-
-        return entry.state->hasFifoWaitCondition && entry.surface->hasFifoBarrier();
-    });
+    }
+    if (state->hasFifoWaitCondition && surface->hasFifoBarrier()) {
+        return std::unexpected(Blocker::Other);
+    }
+    if (state->requestedTiming && *state->requestedTiming > targetTimestamp) {
+        return std::unexpected(Blocker::CommitTiming);
+    } else {
+        return {};
+    }
 }
 
 Transaction *Transaction::next(SurfaceInterface *surface) const
@@ -144,7 +146,7 @@ static SurfaceInterface *mainSurface(SurfaceInterface *surface)
     return surface;
 }
 
-void Transaction::apply()
+void Transaction::apply(std::optional<std::chrono::steady_clock::time_point> targetTimestamp)
 {
     // Sort surfaces so descendants come first, then their ancestors.
     std::sort(m_entries.begin(), m_entries.end(), [](const TransactionEntry &a, const TransactionEntry &b) {
@@ -187,17 +189,29 @@ void Transaction::apply()
                     break;
                 }
             }
-            entry.nextTransaction->tryApply();
+            entry.nextTransaction->tryApply(targetTimestamp);
         }
     }
 
     delete this;
 }
 
-void Transaction::tryApply()
+void Transaction::tryApply(std::optional<std::chrono::steady_clock::time_point> targetTimestamp)
 {
-    if (isReady()) {
-        apply();
+    const auto t = targetTimestamp.value_or(std::chrono::steady_clock::now());
+    bool ready = true;
+    for (const TransactionEntry &entry : m_entries) {
+        auto ret = entry.isReady(t);
+        if (ret) {
+            continue;
+        }
+        ready = false;
+        if (entry.surface && ret.error() == TransactionEntry::Blocker::CommitTiming) {
+            Q_EMIT entry.surface->waitingOnCommitTiming();
+        }
+    }
+    if (ready) {
+        apply(targetTimestamp);
     }
 }
 
@@ -232,7 +246,7 @@ void Transaction::commit()
         entry.surface->setLastTransaction(this);
     }
 
-    tryApply();
+    tryApply(std::nullopt);
 }
 
 void Transaction::watchSyncObj(TransactionEntry *entry)
@@ -284,6 +298,22 @@ void Transaction::watchDmaBuf(TransactionEntry *entry)
         }
     }
 #endif
+}
+
+TransactionEntry *Transaction::entry(SurfaceInterface *surface)
+{
+    const auto it = std::ranges::find_if(m_entries, [surface](const TransactionEntry &entry) {
+        return entry.surface == surface;
+    });
+    return it == m_entries.end() ? nullptr : &*it;
+}
+
+std::optional<std::chrono::steady_clock::time_point> Transaction::targetTimestamp(const SurfaceInterface *surface) const
+{
+    const auto it = std::ranges::find_if(m_entries, [surface](const TransactionEntry &entry) {
+        return entry.surface == surface;
+    });
+    return it == m_entries.end() ? std::nullopt : it->state->requestedTiming;
 }
 
 } // namespace KWin
