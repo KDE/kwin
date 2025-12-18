@@ -309,13 +309,13 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
-    QVERIFY(exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos()));
+    QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
 
     // move the cursor to the second screen
     input()->pointer()->warp(QPointF(1500, 300));
-    QVERIFY(!exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos()));
+    QVERIFY(!window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
     QVERIFY(leftSpy.wait());
 
     // now let's remove the screen containing the cursor
@@ -324,7 +324,7 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
 
     // this should have warped the cursor
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(640, 512));
-    QVERIFY(exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos()));
+    QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
 
     // and we should get an enter event
     QVERIFY(enteredSpy.wait());
@@ -871,8 +871,8 @@ void PointerInputTest::testFocusFollowsMouse()
     QVERIFY(window2->isActive());
 
     // move on top of first window
-    QVERIFY(exclusiveContains(window1->frameGeometry(), QPointF(10, 10)));
-    QVERIFY(!exclusiveContains(window2->frameGeometry(), QPointF(10, 10)));
+    QVERIFY(window1->frameGeometry().contains(QPointF(10, 10)));
+    QVERIFY(!window2->frameGeometry().contains(QPointF(10, 10)));
     input()->pointer()->warp(QPointF(10, 10));
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(stackingOrderChangedSpy.count(), 1);
@@ -953,8 +953,8 @@ void PointerInputTest::testMouseActionInactiveWindow()
     QVERIFY(window2->isActive());
 
     // move on top of first window
-    QVERIFY(exclusiveContains(window1->frameGeometry(), QPointF(10, 10)));
-    QVERIFY(!exclusiveContains(window2->frameGeometry(), QPointF(10, 10)));
+    QVERIFY(window1->frameGeometry().contains(QPointF(10, 10)));
+    QVERIFY(!window2->frameGeometry().contains(QPointF(10, 10)));
     input()->pointer()->warp(QPointF(10, 10));
     // no focus follows mouse
     QVERIFY(stackingOrderChangedSpy.isEmpty());
@@ -1039,8 +1039,8 @@ void PointerInputTest::testMouseActionActiveWindow()
     QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
 
     // move on top of second window
-    QVERIFY(!exclusiveContains(window1->frameGeometry(), QPointF(900, 900)));
-    QVERIFY(exclusiveContains(window2->frameGeometry(), QPointF(900, 900)));
+    QVERIFY(!window1->frameGeometry().contains(QPointF(900, 900)));
+    QVERIFY(window2->frameGeometry().contains(QPointF(900, 900)));
     input()->pointer()->warp(QPointF(900, 900));
 
     // and click
@@ -1225,7 +1225,7 @@ void PointerInputTest::testEffectOverrideCursorImage()
     QVERIFY(window);
 
     // and move cursor to the window
-    QVERIFY(!exclusiveContains(window->frameGeometry(), QPoint(800, 800)));
+    QVERIFY(!window->frameGeometry().contains(QPoint(800, 800)));
     input()->pointer()->warp(window->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_wait);
@@ -1290,7 +1290,7 @@ void PointerInputTest::testPopup()
     QVERIFY(window);
     QCOMPARE(window->hasPopupGrab(), false);
     // move pointer into window
-    QVERIFY(!exclusiveContains(window->frameGeometry(), QPoint(800, 800)));
+    QVERIFY(!window->frameGeometry().contains(QPoint(800, 800)));
     input()->pointer()->warp(window->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
     // click inside window to create serial
@@ -1371,7 +1371,7 @@ void PointerInputTest::testDecoCancelsPopup()
     QVERIFY(window->isDecorated());
 
     // move pointer into window
-    QVERIFY(!exclusiveContains(window->frameGeometry(), QPoint(800, 800)));
+    QVERIFY(!window->frameGeometry().contains(QPoint(800, 800)));
     input()->pointer()->warp(window->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
     // click inside window to create serial
@@ -1433,7 +1433,7 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     QVERIFY(window);
 
     // move cursor over window
-    QVERIFY(!exclusiveContains(window->frameGeometry(), QPoint(800, 800)));
+    QVERIFY(!window->frameGeometry().contains(QPoint(800, 800)));
     input()->pointer()->warp(window->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
     // click inside window
@@ -1455,8 +1455,8 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     auto popupWindow = windowAddedSpy.last().first().value<Window *>();
     QVERIFY(popupWindow);
     QVERIFY(popupWindow != window);
-    QVERIFY(exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos()));
-    QVERIFY(exclusiveContains(popupWindow->frameGeometry(), Cursors::self()->mouse()->pos()));
+    QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(popupWindow->frameGeometry().contains(Cursors::self()->mouse()->pos()));
     QVERIFY(Test::waylandSync());
     QCOMPARE(leftSpy.count(), 0);
 
