@@ -373,6 +373,8 @@ public:
     void clearFifoBarrier(std::optional<std::chrono::nanoseconds> refreshDuration = std::nullopt);
     bool hasFifoBarrier() const;
 
+    void prepareFrame(std::chrono::nanoseconds timestamp);
+
     /**
      * Registers the specified @a extension. Returns the pending state for the extension.
      *
@@ -395,6 +397,8 @@ public:
     std::optional<QPointF> lockedPointerHint() const;
     void setPointerConfined(bool confined);
     void setPointerLocked(bool locked);
+
+    std::optional<std::chrono::steady_clock::time_point> requestedTimingOfNextCommit() const;
 
 Q_SIGNALS:
     /**
@@ -466,6 +470,8 @@ Q_SIGNALS:
     void bufferReleasePointChanged();
     void alphaMultiplierChanged();
 
+    void waitingOnCommitTiming();
+
     /**
      * Emitted when the Surface has been committed.
      *
@@ -475,7 +481,8 @@ Q_SIGNALS:
     void committed();
 
 private:
-    void handleFifoFallback();
+    void handleCommitFallback();
+    void setupFallbackTimer();
 
     std::unique_ptr<SurfaceInterfacePrivate> d;
     friend class SurfaceInterfacePrivate;
