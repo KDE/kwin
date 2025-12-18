@@ -858,13 +858,13 @@ Region SurfaceInterfacePrivate::mapToBuffer(const Region &region) const
         return Region();
     }
 
-    const QRectF sourceBox = current->bufferTransform.inverted().map(bufferSourceBox, current->buffer->size());
+    const RectF sourceBox = current->bufferTransform.inverted().map(bufferSourceBox, current->buffer->size());
     const qreal xScale = sourceBox.width() / surfaceSize.width();
     const qreal yScale = sourceBox.height() / surfaceSize.height();
 
     Region result;
     for (const Rect &rect : region.rects()) {
-        result += current->bufferTransform.map(QRectF(rect.x() * xScale, rect.y() * yScale, rect.width() * xScale, rect.height() * yScale), sourceBox.size()).translated(bufferSourceBox.topLeft()).toAlignedRect();
+        result += current->bufferTransform.map(rect.scaled(xScale, yScale), sourceBox.size()).translated(bufferSourceBox.topLeft()).roundedOut();
     }
     return result;
 }
