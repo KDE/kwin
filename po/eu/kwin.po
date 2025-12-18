@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 13:26+0000\n"
+"POT-Creation-Date: 2025-12-18 00:44+0000\n"
 "PO-Revision-Date: 2025-12-11 17:56+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -4155,37 +4155,37 @@ msgstr "Aldatu beheko mahaigainera"
 msgid "Switch to Desktop %1"
 msgstr "Aldatu %1 mahaigainera"
 
-#: wayland/outputmanagement_v2.cpp:590
+#: wayland/outputmanagement_v2.cpp:602
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Irteera esanguratsuetako bat jada ez dago erabilgarri"
 
-#: wayland/outputmanagement_v2.cpp:608
+#: wayland/outputmanagement_v2.cpp:620
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Konfigurazio aldaketen bidez irteera denak ezgaitzea ez da uzten"
 
-#: wayland/outputmanagement_v2.cpp:619
+#: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Ezin da gehitu neurria hutsik duen neurriko modu bat"
 
-#: wayland/outputmanagement_v2.cpp:623
+#: wayland/outputmanagement_v2.cpp:635
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Ezin da zero Hz-ko freskatze-tasa duen neurriko modu bat gehitu"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:642
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
 msgstr "Irteera %s(e)ren kokapena negatiboa da, hori ez da onartzen"
 
-#: wayland/outputmanagement_v2.cpp:634
+#: wayland/outputmanagement_v2.cpp:646
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "Irteera %s(e)ren kokapena handiegia da (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:650
+#: wayland/outputmanagement_v2.cpp:663
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Gidariak irteera konfigurazioa errefusatu du"
@@ -4196,7 +4196,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ez du erantzuten)"
 
-#: workspace.cpp:1638
+#: workspace.cpp:1675
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

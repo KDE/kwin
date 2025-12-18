@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 13:26+0000\n"
+"POT-Creation-Date: 2025-12-18 00:44+0000\n"
 "PO-Revision-Date: 2025-12-11 10:23+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -4114,37 +4114,37 @@ msgstr "بدّل إلى سطح المكتب الأسفل"
 msgid "Switch to Desktop %1"
 msgstr "بدّل إلى سطح المكتب %1"
 
-#: wayland/outputmanagement_v2.cpp:590
+#: wayland/outputmanagement_v2.cpp:602
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "أحد المخرجات ذات الصلة لم يعد متاحًا"
 
-#: wayland/outputmanagement_v2.cpp:608
+#: wayland/outputmanagement_v2.cpp:620
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "لا يُسمح بتعطيل جميع المخرجات من خلال تغييرات الضبط"
 
-#: wayland/outputmanagement_v2.cpp:619
+#: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "لا يمكن إضافة وضع مخصص بحجم فارغ"
 
-#: wayland/outputmanagement_v2.cpp:623
+#: wayland/outputmanagement_v2.cpp:635
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "لا يمكن إضافة وضع مخصص بمعدل تحديث يبلغ صفر هرتز"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:642
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
 msgstr "موضع الإخراج %s سلبي، وهذا غير متاح"
 
-#: wayland/outputmanagement_v2.cpp:634
+#: wayland/outputmanagement_v2.cpp:646
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "موضع الإخراج %s كبير جدًا (%d، %d)"
 
-#: wayland/outputmanagement_v2.cpp:650
+#: wayland/outputmanagement_v2.cpp:663
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "رفض السائق ضبط الإخراج"
@@ -4155,7 +4155,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(لا يستجيب)"
 
-#: workspace.cpp:1638
+#: workspace.cpp:1675
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

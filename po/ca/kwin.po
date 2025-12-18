@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 13:26+0000\n"
+"POT-Creation-Date: 2025-12-18 00:44+0000\n"
 "PO-Revision-Date: 2025-12-11 12:23+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -4160,41 +4160,41 @@ msgstr "Canvia un escriptori avall"
 msgid "Switch to Desktop %1"
 msgstr "Canvia a l'escriptori %1"
 
-#: wayland/outputmanagement_v2.cpp:590
+#: wayland/outputmanagement_v2.cpp:602
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Una de les sortides importants ja no està disponible"
 
-#: wayland/outputmanagement_v2.cpp:608
+#: wayland/outputmanagement_v2.cpp:620
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "No es permet desactivar totes les sortides mitjançant canvis a la "
 "configuració"
 
-#: wayland/outputmanagement_v2.cpp:619
+#: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "No s'ha pogut afegir un mode personalitzat amb una mida buida"
 
-#: wayland/outputmanagement_v2.cpp:623
+#: wayland/outputmanagement_v2.cpp:635
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "No s'ha pogut afegir un mode personalitzat amb una freqüència "
 "d'actualització de zero Hz"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:642
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
 msgstr "La posició de la sortida %s és negativa. Això no està implementat"
 
-#: wayland/outputmanagement_v2.cpp:634
+#: wayland/outputmanagement_v2.cpp:646
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "La posició de la sortida %s és massa gran (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:650
+#: wayland/outputmanagement_v2.cpp:663
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "El controlador ha rebutjat la configuració de la sortida"
@@ -4205,7 +4205,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(No respon)"
 
-#: workspace.cpp:1638
+#: workspace.cpp:1675
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

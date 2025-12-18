@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-16 13:26+0000\n"
+"POT-Creation-Date: 2025-12-18 00:44+0000\n"
 "PO-Revision-Date: 2025-12-12 13:11+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -4156,38 +4156,38 @@ msgstr "Однією стільницею вниз"
 msgid "Switch to Desktop %1"
 msgstr "Перемкнутися до стільниці %1"
 
-#: wayland/outputmanagement_v2.cpp:590
+#: wayland/outputmanagement_v2.cpp:602
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Одне із пов'язаних виведень стало недоступним"
 
-#: wayland/outputmanagement_v2.cpp:608
+#: wayland/outputmanagement_v2.cpp:620
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Вимикання усіх виведень за допомогою змін у налаштуваннях заборонено"
 
-#: wayland/outputmanagement_v2.cpp:619
+#: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Неможливо додати нетиповий режим із порожнім розміром"
 
-#: wayland/outputmanagement_v2.cpp:623
+#: wayland/outputmanagement_v2.cpp:635
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Неможливо додати нетиповий режим із частотою оновлення у нуль герців"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:642
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
 msgstr ""
 "Позиція виведення %s є від'ємною. Підтримки таких позицій не передбачено"
 
-#: wayland/outputmanagement_v2.cpp:634
+#: wayland/outputmanagement_v2.cpp:646
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "Позиція виведення %s є надто великою (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:650
+#: wayland/outputmanagement_v2.cpp:663
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Драйвером відмовлено у налаштовування виведення"
@@ -4198,7 +4198,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не відповідає)"
 
-#: workspace.cpp:1638
+#: workspace.cpp:1675
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
