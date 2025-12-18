@@ -101,40 +101,26 @@ RectF OutputTransform::map(const RectF &rect, const QSizeF &bounds) const
     case Kind::Normal:
         return rect;
     case Kind::Rotate90:
-        return RectF(rect.y(),
-                     bounds.width() - (rect.x() + rect.width()),
-                     rect.height(),
-                     rect.width());
+        return RectF(QPointF(rect.top(), bounds.width() - rect.right()),
+                     QPointF(rect.bottom(), bounds.width() - rect.left()));
     case Kind::Rotate180:
-        return RectF(bounds.width() - (rect.x() + rect.width()),
-                     bounds.height() - (rect.y() + rect.height()),
-                     rect.width(),
-                     rect.height());
+        return RectF(QPointF(bounds.width() - rect.right(), bounds.height() - rect.bottom()),
+                     QPointF(bounds.width() - rect.left(), bounds.height() - rect.top()));
     case Kind::Rotate270:
-        return RectF(bounds.height() - (rect.y() + rect.height()),
-                     rect.x(),
-                     rect.height(),
-                     rect.width());
+        return RectF(QPointF(bounds.height() - rect.bottom(), rect.left()),
+                     QPointF(bounds.height() - rect.top(), rect.right()));
     case Kind::FlipX:
-        return RectF(bounds.width() - (rect.x() + rect.width()),
-                     rect.y(),
-                     rect.width(),
-                     rect.height());
+        return RectF(QPointF(bounds.width() - rect.right(), rect.top()),
+                     QPointF(bounds.width() - rect.left(), rect.bottom()));
     case Kind::FlipX90:
-        return RectF(rect.y(),
-                     rect.x(),
-                     rect.height(),
-                     rect.width());
+        return RectF(QPointF(rect.top(), rect.left()),
+                     QPointF(rect.bottom(), rect.right()));
     case Kind::FlipX180:
-        return RectF(rect.x(),
-                     bounds.height() - (rect.y() + rect.height()),
-                     rect.width(),
-                     rect.height());
+        return RectF(QPointF(rect.left(), bounds.height() - rect.bottom()),
+                     QPointF(rect.right(), bounds.height() - rect.top()));
     case Kind::FlipX270:
-        return RectF(bounds.height() - (rect.y() + rect.height()),
-                     bounds.width() - (rect.x() + rect.width()),
-                     rect.height(),
-                     rect.width());
+        return RectF(QPointF(bounds.height() - rect.bottom(), bounds.width() - rect.right()),
+                     QPointF(bounds.height() - rect.top(), bounds.width() - rect.left()));
     default:
         Q_UNREACHABLE();
     }
@@ -146,40 +132,26 @@ Rect OutputTransform::map(const Rect &rect, const QSize &bounds) const
     case Kind::Normal:
         return rect;
     case Kind::Rotate90:
-        return Rect(rect.y(),
-                    bounds.width() - (rect.x() + rect.width()),
-                    rect.height(),
-                    rect.width());
+        return Rect(QPoint(rect.top(), bounds.width() - rect.right()),
+                    QPoint(rect.bottom(), bounds.width() - rect.left()));
     case Kind::Rotate180:
-        return Rect(bounds.width() - (rect.x() + rect.width()),
-                    bounds.height() - (rect.y() + rect.height()),
-                    rect.width(),
-                    rect.height());
+        return Rect(QPoint(bounds.width() - rect.right(), bounds.height() - rect.bottom()),
+                    QPoint(bounds.width() - rect.left(), bounds.height() - rect.top()));
     case Kind::Rotate270:
-        return Rect(bounds.height() - (rect.y() + rect.height()),
-                    rect.x(),
-                    rect.height(),
-                    rect.width());
+        return Rect(QPoint(bounds.height() - rect.bottom(), rect.left()),
+                    QPoint(bounds.height() - rect.top(), rect.right()));
     case Kind::FlipX:
-        return Rect(bounds.width() - (rect.x() + rect.width()),
-                    rect.y(),
-                    rect.width(),
-                    rect.height());
+        return Rect(QPoint(bounds.width() - rect.right(), rect.top()),
+                    QPoint(bounds.width() - rect.left(), rect.bottom()));
     case Kind::FlipX90:
-        return Rect(rect.y(),
-                    rect.x(),
-                    rect.height(),
-                    rect.width());
+        return Rect(QPoint(rect.top(), rect.left()),
+                    QPoint(rect.bottom(), rect.right()));
     case Kind::FlipX180:
-        return Rect(rect.x(),
-                    bounds.height() - (rect.y() + rect.height()),
-                    rect.width(),
-                    rect.height());
+        return Rect(QPoint(rect.left(), bounds.height() - rect.bottom()),
+                    QPoint(rect.right(), bounds.height() - rect.top()));
     case Kind::FlipX270:
-        return Rect(bounds.height() - (rect.y() + rect.height()),
-                    bounds.width() - (rect.x() + rect.width()),
-                    rect.height(),
-                    rect.width());
+        return Rect(QPoint(bounds.height() - rect.bottom(), bounds.width() - rect.right()),
+                    QPoint(bounds.height() - rect.top(), bounds.width() - rect.left()));
     default:
         Q_UNREACHABLE();
     }
