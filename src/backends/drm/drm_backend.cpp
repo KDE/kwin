@@ -264,22 +264,6 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
     return gpu;
 }
 
-static QString earlyIdentifier(BackendOutput *output)
-{
-    // We can't use the output's UUID because that's only set later, by the output config system.
-    // This doesn't need to be perfectly accurate though, sometimes getting a false positive is ok,
-    // so this just uses EDID ID, EDID hash or connector name, whichever is available
-    if (output->edid().isValid()) {
-        if (!output->edid().identifier().isEmpty()) {
-            return output->edid().identifier();
-        } else {
-            return output->edid().hash();
-        }
-    } else {
-        return output->name();
-    }
-}
-
 void DrmBackend::addOutput(DrmAbstractOutput *o)
 {
     m_outputs.append(o);
