@@ -71,6 +71,7 @@ class SinglePixelBufferManagerV1;
 class ColorRepresentationManagerV1;
 class BackendOutput;
 class ExtBackgroundEffectManagerV1;
+class CommitTimingManagerV1;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -294,6 +295,7 @@ private:
     ColorRepresentationManagerV1 *m_colorRepresentation = nullptr;
     PointerWarpV1 *m_pointerWarp = nullptr;
     ExtBackgroundEffectManagerV1 *m_backgroundEffect = nullptr;
+    CommitTimingManagerV1 *m_commitTiming = nullptr;
 
     KWIN_SINGLETON(WaylandServer)
 };

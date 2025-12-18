@@ -79,7 +79,7 @@ public:
 
     Region deviceRepaints() const;
     void resetRepaints();
-    void scheduleRepaint(Item *item);
+    void scheduleRepaint(Item *item, std::optional<std::chrono::steady_clock::time_point> targetTime = std::nullopt);
     void addDeviceRepaint(const Region &region);
     bool needsRepaint() const;
 

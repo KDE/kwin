@@ -52,9 +52,11 @@ private Q_SLOTS:
     void handlePresentationModeHintChanged();
     void handleReleasePointChanged();
     void handleAlphaMultiplierChanged();
+    void handleCommitTiming();
 
 private:
     SurfaceItemWayland *getOrCreateSubSurfaceItem(SubSurfaceInterface *s);
+    void handlePrepareFrame(std::chrono::nanoseconds timestamp) override;
     void handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp) override;
 
     QPointer<SurfaceInterface> m_surface;

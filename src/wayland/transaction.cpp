@@ -26,7 +26,7 @@ TransactionFence::TransactionFence(Transaction *transaction, FileDescriptor &&fi
     m_notifier = std::make_unique<QSocketNotifier>(m_fileDescriptor.get(), QSocketNotifier::Read);
     QObject::connect(m_notifier.get(), &QSocketNotifier::activated, m_notifier.get(), [this]() {
         m_notifier->setEnabled(false);
-        m_transaction->tryApply();
+        m_transaction->tryApply(std::chrono::steady_clock::now());
     });
 }
 
@@ -44,25 +44,18 @@ Transaction::Transaction()
 {
 }
 
-bool Transaction::isReady() const
+bool TransactionEntry::isReady() const
 {
-    return std::none_of(m_entries.cbegin(), m_entries.cend(), [](const TransactionEntry &entry) {
-        if (entry.previousTransaction) {
-            return true;
-        }
-
-        if (entry.isDiscarded()) {
-            return false;
-        }
-
-        for (const auto &fence : entry.fences) {
-            if (fence->isWaiting()) {
-                return true;
-            }
-        }
-
-        return entry.state->hasFifoWaitCondition && entry.surface->hasFifoBarrier();
-    });
+    if (previousTransaction) {
+        return false;
+    }
+    if (isDiscarded()) {
+        return true;
+    }
+    if (std::ranges::any_of(fences, &TransactionFence::isWaiting)) {
+        return false;
+    }
+    return !state->hasFifoWaitCondition || !surface->hasFifoBarrier();
 }
 
 Transaction *Transaction::next(SurfaceInterface *surface) const
@@ -144,7 +137,7 @@ static SurfaceInterface *mainSurface(SurfaceInterface *surface)
     return surface;
 }
 
-void Transaction::apply()
+void Transaction::apply(std::chrono::steady_clock::time_point targetTimestamp)
 {
     // Sort surfaces so descendants come first, then their ancestors.
     std::sort(m_entries.begin(), m_entries.end(), [](const TransactionEntry &a, const TransactionEntry &b) {
@@ -187,18 +180,28 @@ void Transaction::apply()
                     break;
                 }
             }
-            entry.nextTransaction->tryApply();
+            entry.nextTransaction->tryApply(targetTimestamp);
         }
     }
 
     delete this;
 }
 
-void Transaction::tryApply()
+void Transaction::tryApply(std::chrono::steady_clock::time_point presentationTimestamp)
 {
-    if (isReady()) {
-        apply();
+    if (!std::ranges::all_of(m_entries, &TransactionEntry::isReady)) {
+        return;
     }
+    const auto targetTime = targetTimestamp();
+    if (targetTime && *targetTime > presentationTimestamp) {
+        for (const TransactionEntry &entry : m_entries) {
+            if (entry.surface && entry.state->requestedTiming == targetTime) {
+                Q_EMIT entry.surface->waitingOnCommitTiming();
+            }
+        }
+        return;
+    }
+    apply(presentationTimestamp);
 }
 
 void Transaction::commit()
@@ -232,7 +235,7 @@ void Transaction::commit()
         entry.surface->setLastTransaction(this);
     }
 
-    tryApply();
+    tryApply(std::chrono::steady_clock::now());
 }
 
 void Transaction::watchSyncObj(TransactionEntry *entry)
@@ -284,6 +287,30 @@ void Transaction::watchDmaBuf(TransactionEntry *entry)
         }
     }
 #endif
+}
+
+TransactionEntry *Transaction::entry(SurfaceInterface *surface)
+{
+    const auto it = std::ranges::find_if(m_entries, [surface](const TransactionEntry &entry) {
+        return entry.surface == surface;
+    });
+    return it == m_entries.end() ? nullptr : &*it;
+}
+
+std::optional<std::chrono::steady_clock::time_point> Transaction::targetTimestamp() const
+{
+    std::optional<std::chrono::steady_clock::time_point> ret;
+    for (const TransactionEntry &entry : m_entries) {
+        if (entry.isDiscarded()) {
+            continue;
+        }
+        if (!ret) {
+            ret = entry.state->requestedTiming;
+        } else if (entry.state->requestedTiming) {
+            ret = std::max(*ret, *entry.state->requestedTiming);
+        }
+    }
+    return ret;
 }
 
 } // namespace KWin

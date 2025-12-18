@@ -11,6 +11,7 @@
 #include <QPointer>
 #include <QSocketNotifier>
 
+#include <expected>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -56,6 +57,13 @@ struct TransactionEntry
     bool isDiscarded() const;
 
     /**
+     * Returns \c true if the transaction is ready to be applied, otherwise returns \c false.
+     *
+     * NOTE this does not check commit timing, which is transaction-wide
+     */
+    bool isReady() const;
+
+    /**
      * The surface that is going to be affected by the transaction. Might be
      * \c null if the surface has been destroyed while the transaction is still
      * not ready.
@@ -97,12 +105,6 @@ public:
     Transaction();
 
     /**
-     * Returns \c true if this transaction can be applied, i.e. all its dependencies are resolved;
-     * otherwise returns \c false.
-     */
-    bool isReady() const;
-
-    /**
      * Returns the next transaction for the specified \a surface. If this transaction does
      * not affect the given surface, \c null is returned.
      */
@@ -139,10 +141,14 @@ public:
      * dependencies, for example previous transactions have not been applied yet, or one of the
      * graphics buffers in the transaction is not ready to be used yet.
      */
-    void tryApply();
+    void tryApply(std::chrono::steady_clock::time_point presentationTimestamp);
+
+    TransactionEntry *entry(SurfaceInterface *surface);
+
+    std::optional<std::chrono::steady_clock::time_point> targetTimestamp() const;
 
 private:
-    void apply();
+    void apply(std::chrono::steady_clock::time_point targetTimestamp);
 
     void watchSyncObj(TransactionEntry *entry);
     void watchDmaBuf(TransactionEntry *entry);
