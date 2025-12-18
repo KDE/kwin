@@ -582,6 +582,9 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
         if (flags.testFlag(AdditionalWaylandInterface::Seat) && interface == wl_seat_interface.name) {
             c->kwinSeat = std::make_unique<WlSeat>(*c->registry, name, version);
         }
+        if ((flags & AdditionalWaylandInterface::CommitTiming) && interface == wp_commit_timing_manager_v1_interface.name) {
+            c->commitTiming = std::make_unique<CommitTimingManager>(*c->registry, name, version);
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -730,6 +733,7 @@ Connection::~Connection()
     colorRepresentation.reset();
     viewporter.reset();
     kwinSeat.reset();
+    commitTiming.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -947,6 +951,11 @@ ColorRepresentationV1 *colorRepresentation()
 WaylandClient::Viewporter *viewporter()
 {
     return s_waylandConnection->viewporter.get();
+}
+
+Connection *connection()
+{
+    return s_waylandConnection.get();
 }
 
 bool waitForWaylandSurface(Window *window)
@@ -2543,6 +2552,16 @@ WlTouch::~WlTouch()
     release();
 }
 
+CommitTimingManager::CommitTimingManager(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::wp_commit_timing_manager_v1(registry, id, version)
+{
+}
+
+CommitTimingManager::~CommitTimingManager()
+{
+    destroy();
+}
+
 void keyboardKeyPressed(quint32 key, quint32 time)
 {
     auto virtualKeyboard = static_cast<WaylandTestApplication *>(kwinApp())->virtualKeyboard();
@@ -2747,6 +2766,11 @@ bool XdgToplevelWindow::unmapAndWaitForClosed()
     Window *window = m_window;
     unmap();
     return waitForWindowClosed(window);
+}
+
+void XdgToplevelWindow::commit()
+{
+    m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
 }
 
 bool XdgToplevelWindow::presentWait()

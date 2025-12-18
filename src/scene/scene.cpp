@@ -14,6 +14,7 @@
 #include "scene/item.h"
 #include "scene/itemrenderer.h"
 #include "scene/surfaceitem.h"
+#include "scene/windowitem.h"
 
 namespace KWin
 {
@@ -53,7 +54,7 @@ void RenderView::addDeviceRepaint(const Region &deviceRegion)
     m_layer->addDeviceRepaint(deviceRegion);
 }
 
-void RenderView::scheduleRepaint(Item *item)
+void RenderView::scheduleRepaint(Item *item, std::optional<std::chrono::steady_clock::time_point> targetTime)
 {
     if (!m_layer) {
         return;
@@ -314,6 +315,15 @@ bool SceneView::shouldHideWindow(Window *window) const
     return std::ranges::any_of(m_windowFilters, [window](const auto filter) {
         return filter(window);
     });
+}
+
+bool SceneView::shouldHideItem(Item *item) const
+{
+    if (auto window = qobject_cast<WindowItem *>(item)) {
+        return shouldHideWindow(window->window());
+    } else {
+        return false;
+    }
 }
 
 ItemView::ItemView(SceneView *parentView, Item *item, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer)
