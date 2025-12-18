@@ -61,7 +61,18 @@ bool Transaction::isReady() const
             }
         }
 
-        return entry.state->hasFifoWaitCondition && entry.surface->hasFifoBarrier();
+        if (entry.state->hasFifoWaitCondition && entry.surface->hasFifoBarrier()) {
+            return true;
+        }
+
+        // FIXME this needs to check the target pageflip time, not the current time...
+        // Ideas:
+        // - pass target timestamp to some SurfaceInterface method, which calls tryApply
+        // - add an optional timestamp to this
+        // - add an optional no-earlier-than timestamp to RenderLoop::scheduleRepaint
+        // - after every composite cycle, re-apply that repaint scheduling
+        return entry.state->requestedTiming.has_value()
+            && std::chrono::steady_clock::now() >= *entry.state->requestedTiming;
     });
 }
 
