@@ -256,15 +256,6 @@ KWIN_EXPORT inline QPoint flooredPoint(const QPointF &point)
     return QPoint(std::floor(point.x()), std::floor(point.y()));
 }
 
-/**
- * @returns if @a point is contained in @a rect, including the left and top borders
- * but excluding the right and bottom borders
- */
-static inline bool exclusiveContains(const QRectF &rect, const QPointF &point)
-{
-    return point.x() >= rect.x() && point.y() >= rect.y() && point.x() < (rect.x() + rect.width()) && point.y() < (rect.y() + rect.height());
-}
-
 enum class PresentationMode {
     VSync,
     AdaptiveSync,

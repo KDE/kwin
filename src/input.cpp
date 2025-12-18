@@ -3713,7 +3713,7 @@ void InputDeviceHandler::updateDecoration()
     Decoration::DecoratedWindowImpl *decoration = nullptr;
     auto hover = m_hover.window.data();
     if (hover && hover->decoratedWindow()) {
-        if (!exclusiveContains(hover->clientGeometry(), flooredPoint(position()))) {
+        if (!hover->clientGeometry().contains(flooredPoint(position()))) {
             // input device above decoration
             decoration = hover->decoratedWindow();
         }

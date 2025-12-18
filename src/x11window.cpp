@@ -4451,8 +4451,8 @@ bool X11Window::hitTest(const QPointF &point) const
     if (!m_surface || (m_surface->isMapped() && !m_surface->inputSurfaceAt(mapToLocal(point)))) {
         return false;
     }
-    return std::ranges::any_of(m_shapeRegion, [local = mapToLocal(point)](const QRectF &rect) {
-        return exclusiveContains(rect, local);
+    return std::ranges::any_of(m_shapeRegion, [local = mapToLocal(point)](const RectF &rect) {
+        return rect.contains(local);
     });
 }
 

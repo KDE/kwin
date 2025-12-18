@@ -412,7 +412,7 @@ Window *Workspace::windowUnderMouse(LogicalOutput *output) const
             continue;
         }
 
-        if (exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos())) {
+        if (window->frameGeometry().contains(Cursors::self()->mouse()->pos())) {
             return window;
         }
     }

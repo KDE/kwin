@@ -370,7 +370,7 @@ bool Window::hitTest(const QPointF &point) const
     if (m_surface && m_surface->isMapped()) {
         return m_surface->inputSurfaceAt(mapToLocal(point));
     }
-    return exclusiveContains(m_bufferGeometry, point);
+    return m_bufferGeometry.contains(point);
 }
 
 QPointF Window::mapToFrame(const QPointF &point) const

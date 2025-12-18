@@ -70,7 +70,7 @@ bool PopupInputFilter::pointerButton(PointerButtonEvent *event)
         }
         if (pointerFocus && pointerFocus->isDecorated()) {
             // test whether it is on the decoration
-            if (!exclusiveContains(pointerFocus->clientGeometry(), event->position)) {
+            if (!pointerFocus->clientGeometry().contains(event->position)) {
                 cancelPopups();
                 return true;
             }
@@ -122,7 +122,7 @@ bool PopupInputFilter::touchDown(TouchDownEvent *event)
     }
     if (pointerFocus && pointerFocus->isDecorated()) {
         // test whether it is on the decoration
-        if (!exclusiveContains(pointerFocus->clientGeometry(), event->pos)) {
+        if (!pointerFocus->clientGeometry().contains(event->pos)) {
             cancelPopups();
             return true;
         }
@@ -145,7 +145,7 @@ bool PopupInputFilter::tabletToolTipEvent(TabletToolTipEvent *event)
         }
         if (tabletFocus && tabletFocus->isDecorated()) {
             // test whether it is on the decoration
-            if (!exclusiveContains(tabletFocus->clientGeometry(), event->position)) {
+            if (!tabletFocus->clientGeometry().contains(event->position)) {
                 cancelPopups();
                 return true;
             }
