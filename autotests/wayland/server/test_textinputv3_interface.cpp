@@ -256,7 +256,7 @@ void TestTextInputV3Interface::testEnableDisable()
     QCOMPARE(enableRequestedSpy.count(), 0);
     QCOMPARE(textInputEnabledSpy.count(), 1);
     QCOMPARE(cursorRectangleChangedSpy.count(), 1);
-    QCOMPARE(m_serverTextInputV3->cursorRectangle(), QRect(0, 0, 20, 20));
+    QCOMPARE(m_serverTextInputV3->cursorRectangle(), Rect(0, 0, 20, 20));
     QCOMPARE(m_serverTextInputV3->surroundingText(), QString("KDE Plasma Desktop"));
     QCOMPARE(m_serverTextInputV3->surroundingTextCursorPosition(), 0);
     QCOMPARE(m_serverTextInputV3->surroundingTextSelectionAnchor(), 3);
@@ -269,7 +269,7 @@ void TestTextInputV3Interface::testEnableDisable()
     QVERIFY(enableRequestedSpy.wait());
     QCOMPARE(textInputEnabledSpy.count(), 1);
     QCOMPARE(cursorRectangleChangedSpy.count(), 1);
-    QCOMPARE(m_serverTextInputV3->cursorRectangle(), QRect(0, 0, 20, 20));
+    QCOMPARE(m_serverTextInputV3->cursorRectangle(), Rect(0, 0, 20, 20));
     QCOMPARE(m_serverTextInputV3->surroundingText(), QString("KDE Plasma Desktop"));
     QCOMPARE(m_serverTextInputV3->surroundingTextCursorPosition(), 0);
     QCOMPARE(m_serverTextInputV3->surroundingTextSelectionAnchor(), 3);

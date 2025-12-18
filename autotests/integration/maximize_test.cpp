@@ -245,7 +245,7 @@ void TestMaximized::testBorderlessMaximizedWindow()
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Maximize the window.
-    const QRectF maximizeRestoreGeometry = window->frameGeometry();
+    const RectF maximizeRestoreGeometry = window->frameGeometry();
     workspace()->slotWindowMaximize();
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);

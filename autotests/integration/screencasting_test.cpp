@@ -152,7 +152,7 @@ void ScreencastingTest::testWindowWithPopup()
     QVERIFY(window.show(windowImage));
 
     QSize popupSize(5, 5);
-    QRect anchoRect(0, 0, 1, 1);
+    Rect anchoRect(0, 0, 1, 1);
     std::unique_ptr<KWayland::Client::Surface> popupSurface(Test::createSurface());
     std::unique_ptr<Test::XdgPositioner> positioner(Test::createXdgPositioner());
     positioner->set_size(popupSize.width(), popupSize.height());
@@ -168,7 +168,7 @@ void ScreencastingTest::testWindowWithPopup()
     std::unique_ptr<Test::ScreencastingStreamV1> stream(KWin::Test::screencasting()->createWindowStream(window.m_window->internalId().toString(), Test::ScreencastingV1::pointer_hidden));
 
     QImage expectedImage = windowImage;
-    QPainter(&expectedImage).drawImage(QRectF(anchoRect).bottomRight(), popupImage);
+    QPainter(&expectedImage).drawImage(anchoRect.bottomRight(), popupImage);
 
     std::optional<QImage> img = oneFrameAndClose(stream.get());
     QVERIFY(img);
@@ -211,7 +211,7 @@ void ScreencastingTest::testWindowWithPopupDynamic()
     QCOMPAREIMG(image, expectedImage, "dynamic_initial");
 
     QSize popupSize(5, 5);
-    QRect anchoRect(0, 0, 1, 1);
+    Rect anchoRect(0, 0, 1, 1);
     std::unique_ptr<KWayland::Client::Surface> popupSurface(Test::createSurface());
     std::unique_ptr<Test::XdgPositioner> positioner(Test::createXdgPositioner());
     positioner->set_size(popupSize.width(), popupSize.height());
@@ -225,7 +225,7 @@ void ScreencastingTest::testWindowWithPopupDynamic()
     QVERIFY(popupWindow);
 
     expectedImage = windowImage;
-    QPainter(&expectedImage).drawImage(QRectF(anchoRect).bottomRight(), popupImage);
+    QPainter(&expectedImage).drawImage(anchoRect.bottomRight(), popupImage);
     image = fetchNextImageFrame(expectedImage.format());
     QCOMPAREIMG(image, expectedImage, "dynamic_popup");
 

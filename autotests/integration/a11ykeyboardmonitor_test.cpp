@@ -140,7 +140,7 @@ void A11yKeyboardMonitorTest::initTestCase()
 
     kwinApp()->start();
     Test::setOutputConfig({
-        QRect(0, 0, 1280, 1024),
+        Rect(0, 0, 1280, 1024),
     });
 
     QDBusConnection::sessionBus().registerService("org.gnome.Orca.KeyboardMonitor");

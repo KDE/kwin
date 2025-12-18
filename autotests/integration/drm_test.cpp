@@ -80,7 +80,7 @@ std::optional<DrmCrtcState> DrmCrtcState::read(int fd, uint32_t id)
 struct DrmPlaneState
 {
     uint32_t crtcId;
-    QRect destinationRect;
+    Rect destinationRect;
     uint32_t frambufferId;
     std::array<uint32_t, 4> framebufferGemNames;
 
@@ -125,7 +125,7 @@ std::optional<DrmPlaneState> DrmPlaneState::read(int fd, uint32_t id)
     }
     return DrmPlaneState{
         .crtcId = uint32_t(crtcId->second),
-        .destinationRect = QRect(crtcX->second, crtcY->second, crtcW->second, crtcH->second),
+        .destinationRect = Rect(crtcX->second, crtcY->second, crtcW->second, crtcH->second),
         .frambufferId = uint32_t(fbId->second),
         .framebufferGemNames = framebufferGemNames,
     };
@@ -574,7 +574,7 @@ void DrmTest::testOverlay()
     QCOMPARE(std::distance(enabledPlanes.begin(), enabledPlanes.end()), 3);
 
     const auto sceneIt = std::ranges::find_if(enabledPlanes, [output](const DrmPlaneState &state) {
-        return state.destinationRect == QRect(QPoint(), output->modeSize());
+        return state.destinationRect == Rect(QPoint(), output->modeSize());
     });
     QVERIFY(sceneIt != enabledPlanes.end());
     const auto overlayIt = std::ranges::find_if(enabledPlanes, [&window](const DrmPlaneState &state) {

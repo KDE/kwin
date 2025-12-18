@@ -156,7 +156,7 @@ void TestViewporterInterface::testCropScale()
     QVERIFY(serverSurfaceMappedSpy.wait());
     QCOMPARE(bufferSourceBoxChangedSpy.count(), 1);
     QCOMPARE(serverSurface->size(), QSize(100, 50));
-    QCOMPARE(serverSurface->bufferSourceBox(), QRectF(0, 0, 200, 100));
+    QCOMPARE(serverSurface->bufferSourceBox(), RectF(0, 0, 200, 100));
 
     // Create a viewport for the surface.
     std::unique_ptr<Viewport> clientViewport(new Viewport);
@@ -168,7 +168,7 @@ void TestViewporterInterface::testCropScale()
     QVERIFY(serverSurfaceSizeChangedSpy.wait());
     QCOMPARE(bufferSourceBoxChangedSpy.count(), 2);
     QCOMPARE(serverSurface->size(), QSize(30, 20));
-    QCOMPARE(serverSurface->bufferSourceBox(), QRectF(20, 20, 60, 40));
+    QCOMPARE(serverSurface->bufferSourceBox(), RectF(20, 20, 60, 40));
 
     // Scale the surface.
     clientViewport->set_destination(500, 250);
@@ -176,7 +176,7 @@ void TestViewporterInterface::testCropScale()
     QVERIFY(serverSurfaceSizeChangedSpy.wait());
     QCOMPARE(bufferSourceBoxChangedSpy.count(), 2);
     QCOMPARE(serverSurface->size(), QSize(500, 250));
-    QCOMPARE(serverSurface->bufferSourceBox(), QRectF(20, 20, 60, 40));
+    QCOMPARE(serverSurface->bufferSourceBox(), RectF(20, 20, 60, 40));
 
     // If the viewport is destroyed, the crop and scale state will be unset on a next commit.
     clientViewport->destroy();
@@ -184,7 +184,7 @@ void TestViewporterInterface::testCropScale()
     QVERIFY(serverSurfaceSizeChangedSpy.wait());
     QCOMPARE(bufferSourceBoxChangedSpy.count(), 3);
     QCOMPARE(serverSurface->size(), QSize(100, 50));
-    QCOMPARE(serverSurface->bufferSourceBox(), QRectF(0, 0, 200, 100));
+    QCOMPARE(serverSurface->bufferSourceBox(), RectF(0, 0, 200, 100));
 }
 
 QTEST_GUILESS_MAIN(TestViewporterInterface)

@@ -753,22 +753,22 @@ void InputMethodTest::testFakeEventFallback()
 
 void InputMethodTest::testOverlayPositioning_data()
 {
-    QTest::addColumn<QRect>("cursorRectangle");
+    QTest::addColumn<Rect>("cursorRectangle");
     QTest::addColumn<RectF>("result");
 
-    QTest::newRow("regular") << QRect(10, 20, 30, 40) << RectF(60, 160, 200, 50);
-    QTest::newRow("offscreen-left") << QRect(-200, 40, 30, 40) << RectF(0, 180, 200, 50);
-    QTest::newRow("offscreen-right") << QRect(1200, 40, 30, 40) << RectF(1080, 180, 200, 50);
-    QTest::newRow("offscreen-top") << QRect(1200, -400, 30, 40) << RectF(1080, 0, 200, 50);
+    QTest::newRow("regular") << Rect(10, 20, 30, 40) << RectF(60, 160, 200, 50);
+    QTest::newRow("offscreen-left") << Rect(-200, 40, 30, 40) << RectF(0, 180, 200, 50);
+    QTest::newRow("offscreen-right") << Rect(1200, 40, 30, 40) << RectF(1080, 180, 200, 50);
+    QTest::newRow("offscreen-top") << Rect(1200, -400, 30, 40) << RectF(1080, 0, 200, 50);
     // Check it is flipped near the bottom of screen (anchor point 844 + 100 + 40 = 1024 - 40)
-    QTest::newRow("offscreen-bottom-flip") << QRect(1200, 844, 30, 40) << RectF(1080, 894, 200, 50);
+    QTest::newRow("offscreen-bottom-flip") << Rect(1200, 844, 30, 40) << RectF(1080, 894, 200, 50);
     // Top is (screen height 1024 - window height 50) = 984
-    QTest::newRow("offscreen-bottom-slide") << QRect(1200, 1200, 30, 40) << RectF(1080, 974, 200, 50);
+    QTest::newRow("offscreen-bottom-slide") << Rect(1200, 1200, 30, 40) << RectF(1080, 974, 200, 50);
 }
 
 void InputMethodTest::testOverlayPositioning()
 {
-    QFETCH(QRect, cursorRectangle);
+    QFETCH(Rect, cursorRectangle);
     QFETCH(RectF, result);
     Test::inputMethod()->setMode(Test::MockInputMethod::Mode::Overlay);
     QVERIFY(!kwinApp()->inputMethod()->isActive());

@@ -328,13 +328,13 @@ void TextInputTest::testShowHidePanel()
     QCOMPARE(textInput->isInputPanelVisible(), false);
     textInput->showInputPanel();
     QVERIFY(showPanelRequestedSpy.wait());
-    ti->setInputPanelState(true, QRect(0, 0, 0, 0));
+    ti->setInputPanelState(true, Rect(0, 0, 0, 0));
     QVERIFY(inputPanelStateChangedSpy.wait());
     QCOMPARE(textInput->isInputPanelVisible(), true);
 
     textInput->hideInputPanel();
     QVERIFY(hidePanelRequestedSpy.wait());
-    ti->setInputPanelState(false, QRect(0, 0, 0, 0));
+    ti->setInputPanelState(false, Rect(0, 0, 0, 0));
     QVERIFY(inputPanelStateChangedSpy.wait());
     QCOMPARE(textInput->isInputPanelVisible(), false);
 }
@@ -356,12 +356,12 @@ void TextInputTest::testCursorRectangle()
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
-    QCOMPARE(ti->cursorRectangle(), QRect());
+    QCOMPARE(ti->cursorRectangle(), Rect());
     QSignalSpy cursorRectangleChangedSpy(ti, &TextInputV2Interface::cursorRectangleChanged);
 
-    textInput->setCursorRectangle(QRect(10, 20, 30, 40));
+    textInput->setCursorRectangle(Rect(10, 20, 30, 40));
     QVERIFY(cursorRectangleChangedSpy.wait());
-    QCOMPARE(ti->cursorRectangle(), QRect(10, 20, 30, 40));
+    QCOMPARE(ti->cursorRectangle(), Rect(10, 20, 30, 40));
 }
 
 void TextInputTest::testPreferredLanguage()

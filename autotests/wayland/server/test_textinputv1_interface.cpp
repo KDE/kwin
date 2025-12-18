@@ -224,7 +224,7 @@ void TestTextInputV1Interface::testEnableDisable()
 
     QCOMPARE(textInputEnabledSpy.count(), 1);
     QCOMPARE(cursorRectangleChangedSpy.count(), 1);
-    QCOMPARE(m_serverTextInputV1->cursorRectangle(), QRect(0, 0, 20, 20));
+    QCOMPARE(m_serverTextInputV1->cursorRectangle(), Rect(0, 0, 20, 20));
     QCOMPARE(m_serverTextInputV1->surroundingText(), QString("KDE Plasma Desktop"));
     QCOMPARE(m_serverTextInputV1->surroundingTextCursorPosition(), 0);
     QCOMPARE(m_serverTextInputV1->surroundingTextSelectionAnchor(), 3);

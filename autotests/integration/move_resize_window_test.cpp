@@ -313,7 +313,7 @@ void MoveResizeWindowTest::testPackTo()
     QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 50));
 
     // let's place it centered
-    window->place(*workspace()->placement()->placeCentered(window, QRect(0, 0, 1280, 1024)));
+    window->place(*workspace()->placement()->placeCentered(window, RectF(0, 0, 1280, 1024)));
     QCOMPARE(window->frameGeometry(), RectF(590, 487, 100, 50));
 
     QFETCH(QString, methodCall);
@@ -380,7 +380,7 @@ void MoveResizeWindowTest::testPackAgainstClient()
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
     // let's place it centered
-    window->place(*workspace()->placement()->placeCentered(window, QRect(0, 0, 1280, 1024)));
+    window->place(*workspace()->placement()->placeCentered(window, RectF(0, 0, 1280, 1024)));
     QCOMPARE(window->frameGeometry(), RectF(590, 487, 100, 50));
 
     QFETCH(QString, methodCall);
@@ -426,7 +426,7 @@ void MoveResizeWindowTest::testGrowShrink()
     QCOMPARE(workspace()->activeWindow(), window);
 
     // let's place it centered
-    window->place(*workspace()->placement()->placeCentered(window, QRect(0, 0, 1280, 1024)));
+    window->place(*workspace()->placement()->placeCentered(window, RectF(0, 0, 1280, 1024)));
     QCOMPARE(window->frameGeometry(), RectF(590, 487, 100, 50));
 
     QFETCH(QString, methodCall);

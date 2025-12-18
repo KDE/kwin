@@ -33,7 +33,7 @@
 
 using namespace KWin;
 
-typedef std::function<QPointF(const QRectF &)> PointerFunc;
+typedef std::function<QPointF(const RectF &)> PointerFunc;
 Q_DECLARE_METATYPE(PointerFunc)
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_pointer_constraints-0");
@@ -96,17 +96,17 @@ void TestPointerConstraints::testConfinedPointer_data()
     QTest::addColumn<PointerFunc>("positionFunction");
     QTest::addColumn<int>("xOffset");
     QTest::addColumn<int>("yOffset");
-    PointerFunc bottomLeft = [](const QRectF &rect) {
-        return rect.toRect().bottomLeft();
+    PointerFunc bottomLeft = [](const RectF &rect) {
+        return QPointF(rect.left(), rect.bottom() - 1);
     };
-    PointerFunc bottomRight = [](const QRectF &rect) {
-        return rect.toRect().bottomRight();
+    PointerFunc bottomRight = [](const RectF &rect) {
+        return QPointF(rect.right() - 1, rect.bottom() - 1);
     };
-    PointerFunc topRight = [](const QRectF &rect) {
-        return rect.toRect().topRight();
+    PointerFunc topRight = [](const RectF &rect) {
+        return QPointF(rect.right() - 1, rect.top());
     };
-    PointerFunc topLeft = [](const QRectF &rect) {
-        return rect.toRect().topLeft();
+    PointerFunc topLeft = [](const RectF &rect) {
+        return QPointF(rect.left(), rect.top());
     };
 
     QTest::newRow("XdgWmBase - bottomLeft") << bottomLeft << -1 << 1;

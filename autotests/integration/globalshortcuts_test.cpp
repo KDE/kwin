@@ -318,7 +318,7 @@ void GlobalShortcutsTest::testX11WindowShortcut()
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     xcb_window_t windowId = xcb_generate_id(c.get());
-    const QRect windowGeometry = QRect(0, 0, 10, 20);
+    const Rect windowGeometry = Rect(0, 0, 10, 20);
     const uint32_t values[] = {
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW};
     xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
