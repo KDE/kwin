@@ -11,9 +11,10 @@
 
 #include "kwin_export.h"
 
+#include "core/rect.h"
+
 #include <QImage>
 #include <QObject>
-#include <QRectF>
 
 #include <xcb/xcb.h>
 
@@ -100,9 +101,9 @@ public:
     };
     QSizeF elementSize(ShadowElements element) const;
 
-    QRectF rect() const
+    RectF rect() const
     {
-        return QRectF(QPoint(0, 0), m_cachedSize);
+        return RectF(QPoint(0, 0), m_cachedSize);
     }
     QMarginsF offset() const
     {

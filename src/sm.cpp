@@ -207,9 +207,9 @@ void SessionManager::addSessionInfo(KConfigGroup &cg)
         info.wmCommand = cg.readEntry(QLatin1String("wmCommand") + n, QString()).toLatin1();
         info.resourceName = cg.readEntry(QLatin1String("resourceName") + n, QString());
         info.resourceClass = cg.readEntry(QLatin1String("resourceClass") + n, QString()).toLower();
-        info.geometry = cg.readEntry(QLatin1String("geometry") + n, QRect());
-        info.restore = cg.readEntry(QLatin1String("restore") + n, QRect());
-        info.fsrestore = cg.readEntry(QLatin1String("fsrestore") + n, QRect());
+        info.geometry = cg.readEntry(QLatin1String("geometry") + n, QRectF());
+        info.restore = cg.readEntry(QLatin1String("restore") + n, QRectF());
+        info.fsrestore = cg.readEntry(QLatin1String("fsrestore") + n, QRectF());
         info.maximized = cg.readEntry(QLatin1String("maximize") + n, 0);
         info.fullscreen = cg.readEntry(QLatin1String("fullscreen") + n, 0);
         info.desktop = cg.readEntry(QLatin1String("desktop") + n, 0);

@@ -119,7 +119,7 @@ bool UserActionsMenu::isMenuWindow(const Window *window) const
     return window && window == m_window;
 }
 
-void UserActionsMenu::show(const QRect &pos, Window *window)
+void UserActionsMenu::show(const Rect &pos, Window *window)
 {
     Q_ASSERT(window);
     QPointer<Window> windowPtr(window);

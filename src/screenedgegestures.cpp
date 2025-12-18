@@ -14,7 +14,7 @@
 namespace KWin
 {
 
-ScreenEdgeGesture::ScreenEdgeGesture(ScreenEdgeGestureRecognizer *recognizer, SwipeDirection direction, const QRectF &geometry)
+ScreenEdgeGesture::ScreenEdgeGesture(ScreenEdgeGestureRecognizer *recognizer, SwipeDirection direction, const RectF &geometry)
     : m_recognizer(recognizer)
     , m_direction(direction)
     , m_geometry(geometry)

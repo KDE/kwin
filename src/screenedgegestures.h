@@ -22,7 +22,7 @@ class KWIN_EXPORT ScreenEdgeGesture : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScreenEdgeGesture(ScreenEdgeGestureRecognizer *recognizer, SwipeDirection direction, const QRectF &geometry);
+    explicit ScreenEdgeGesture(ScreenEdgeGestureRecognizer *recognizer, SwipeDirection direction, const RectF &geometry);
     ~ScreenEdgeGesture() override;
 
     SwipeDirection direction() const;

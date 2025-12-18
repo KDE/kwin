@@ -17,10 +17,11 @@
 #include <QPointer>
 
 class QAction;
-class QRect;
 
 namespace KWin
 {
+
+class Rect;
 class Window;
 
 /**
@@ -86,7 +87,7 @@ public:
      * @param pos The position where the menu should be shown.
      * @param window The Window for which the Menu has to be shown.
      */
-    void show(const QRect &pos, Window *window);
+    void show(const Rect &pos, Window *window);
 
 public Q_SLOTS:
     /**

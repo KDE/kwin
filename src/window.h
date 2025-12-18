@@ -29,7 +29,6 @@
 #include <QMatrix4x4>
 #include <QObject>
 #include <QPointer>
-#include <QRectF>
 #include <QTimer>
 #include <QUuid>
 

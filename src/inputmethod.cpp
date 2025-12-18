@@ -251,9 +251,9 @@ void InputMethod::commitPendingText()
     }
 }
 
-QRect InputMethod::cursorRectangle() const
+RectF InputMethod::cursorRectangle() const
 {
-    QRect localCursorRect;
+    RectF localCursorRect;
     auto t1 = waylandServer()->seat()->textInputV1();
     auto t2 = waylandServer()->seat()->textInputV2();
     auto t3 = waylandServer()->seat()->textInputV3();
@@ -272,7 +272,7 @@ QRect InputMethod::cursorRectangle() const
     }
 
     if (auto textWindow = waylandServer()->findWindow(waylandServer()->seat()->focusedTextInputSurface())) {
-        return localCursorRect.translated(textWindow->bufferGeometry().topLeft().toPoint());
+        return localCursorRect.translated(textWindow->bufferGeometry().topLeft());
     }
     return {};
 }
@@ -342,7 +342,7 @@ void InputMethod::setTrackedWindow(Window *trackedWindow)
         return;
     }
     if (m_trackedWindow) {
-        m_trackedWindow->setVirtualKeyboardGeometry(QRect());
+        m_trackedWindow->setVirtualKeyboardGeometry(Rect());
         disconnect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
         disconnect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::cursorRectangleChanged);
     }
@@ -926,7 +926,7 @@ void InputMethod::updateInputPanelState()
         m_panel->allow();
     }
 
-    QRectF overlap = QRectF(0, 0, 0, 0);
+    RectF overlap = RectF(0, 0, 0, 0);
     if (m_trackedWindow) {
         const bool bottomKeyboard = m_panel && m_panel->mode() != InputPanelV1Window::Mode::Overlay && m_panel->isShown();
         m_trackedWindow->setVirtualKeyboardGeometry(bottomKeyboard ? m_panel->frameGeometry() : RectF());

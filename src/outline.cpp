@@ -62,19 +62,19 @@ void Outline::hide()
     m_visual->hide();
 }
 
-void Outline::show(const QRect &outlineGeometry)
+void Outline::show(const Rect &outlineGeometry)
 {
-    show(outlineGeometry, QRect());
+    show(outlineGeometry, Rect());
 }
 
-void Outline::show(const QRect &outlineGeometry, const QRect &visualParentGeometry)
+void Outline::show(const Rect &outlineGeometry, const Rect &visualParentGeometry)
 {
     setGeometry(outlineGeometry);
     setVisualParentGeometry(visualParentGeometry);
     show();
 }
 
-void Outline::setGeometry(const QRect &outlineGeometry)
+void Outline::setGeometry(const Rect &outlineGeometry)
 {
     if (m_outlineGeometry == outlineGeometry) {
         return;
@@ -84,7 +84,7 @@ void Outline::setGeometry(const QRect &outlineGeometry)
     Q_EMIT unifiedGeometryChanged();
 }
 
-void Outline::setVisualParentGeometry(const QRect &visualParentGeometry)
+void Outline::setVisualParentGeometry(const Rect &visualParentGeometry)
 {
     if (m_visualParentGeometry == visualParentGeometry) {
         return;
@@ -94,7 +94,7 @@ void Outline::setVisualParentGeometry(const QRect &visualParentGeometry)
     Q_EMIT unifiedGeometryChanged();
 }
 
-QRect Outline::unifiedGeometry() const
+Rect Outline::unifiedGeometry() const
 {
     return m_outlineGeometry | m_visualParentGeometry;
 }
@@ -115,12 +115,12 @@ void Outline::compositingChanged()
     }
 }
 
-const QRect &Outline::geometry() const
+const Rect &Outline::geometry() const
 {
     return m_outlineGeometry;
 }
 
-const QRect &Outline::visualParentGeometry() const
+const Rect &Outline::visualParentGeometry() const
 {
     return m_visualParentGeometry;
 }

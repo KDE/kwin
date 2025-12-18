@@ -33,7 +33,7 @@
 namespace KWin
 {
 
-static QPointF confineToBoundingBox(const QPointF &pos, const QRectF &boundingBox)
+static QPointF confineToBoundingBox(const QPointF &pos, const RectF &boundingBox)
 {
     return QPointF(
         std::clamp(pos.x(), boundingBox.left(), boundingBox.right() - 1.0),

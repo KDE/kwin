@@ -8,6 +8,7 @@
 
 #include "config-kwin.h"
 
+#include "core/rect.h"
 #include "input.h"
 #include "input_event.h"
 #include "input_event_spy.h"
@@ -45,7 +46,7 @@ OnScreenNotificationInputEventSpy::OnScreenNotificationInputEventSpy(OnScreenNot
 
 void OnScreenNotificationInputEventSpy::pointerMotion(PointerMotionEvent *event)
 {
-    m_parent->setContainsPointer(m_parent->geometry().contains(event->position.toPoint()));
+    m_parent->setContainsPointer(m_parent->geometry().contains(event->position));
 }
 
 OnScreenNotification::OnScreenNotification(QObject *parent)
@@ -197,12 +198,12 @@ void OnScreenNotification::createInputSpy()
     }
 }
 
-QRect OnScreenNotification::geometry() const
+RectF OnScreenNotification::geometry() const
 {
     if (QQuickWindow *w = qobject_cast<QQuickWindow *>(m_mainItem.get())) {
         return w->geometry();
     }
-    return QRect();
+    return RectF();
 }
 
 void OnScreenNotification::setContainsPointer(bool contains)

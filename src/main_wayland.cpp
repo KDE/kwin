@@ -517,7 +517,7 @@ int main(int argc, char *argv[])
         auto outputBackend = std::make_unique<KWin::VirtualBackend>();
         for (int i = 0; i < outputCount; ++i) {
             outputBackend->addOutput(KWin::VirtualBackend::OutputInfo{
-                .geometry = QRect(QPoint(), initialWindowSize),
+                .geometry = KWin::Rect(QPoint(), initialWindowSize),
                 .scale = outputScale,
             });
         }

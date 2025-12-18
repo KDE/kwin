@@ -21,6 +21,7 @@ namespace KWin
 {
 
 class OnScreenNotificationInputEventSpy;
+class RectF;
 
 class OnScreenNotification : public QObject
 {
@@ -38,7 +39,7 @@ public:
     QString iconName() const;
     int timeout() const;
 
-    QRect geometry() const;
+    RectF geometry() const;
 
     void setVisible(bool m_visible);
     void setMessage(const QString &message);

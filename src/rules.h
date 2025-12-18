@@ -10,7 +10,6 @@
 #pragma once
 
 #include <QList>
-#include <QRectF>
 
 #include "options.h"
 #include "utils/common.h"
@@ -41,9 +40,9 @@ public:
     bool contains(const Rules *rule) const;
     void remove(Rules *rule);
     PlacementPolicy checkPlacement(PlacementPolicy placement) const;
-    QRectF checkGeometry(QRectF rect, bool init = false) const;
-    QRectF checkGeometrySafe(QRectF rect, bool init = false) const;
-    // use 'invalidPoint' with checkPosition, unlike QSize() and QRect(), QPoint() is a valid point
+    RectF checkGeometry(RectF rect, bool init = false) const;
+    RectF checkGeometrySafe(RectF rect, bool init = false) const;
+    // use 'invalidPoint' with checkPosition, unlike QSize() and Rect(), QPoint() is a valid point
     QPointF checkPositionSafe(QPointF pos, bool init = false) const;
     QPointF checkPosition(QPointF pos, bool init = false) const;
     QSizeF checkSize(QSizeF s, bool init = false) const;
@@ -153,8 +152,8 @@ public:
     bool match(const Window *c) const;
     bool update(Window *, int selection);
     bool applyPlacement(PlacementPolicy &placement) const;
-    bool applyGeometry(QRectF &rect, bool init) const;
-    // use 'invalidPoint' with applyPosition, unlike QSize() and QRect(), QPoint() is a valid point
+    bool applyGeometry(RectF &rect, bool init) const;
+    // use 'invalidPoint' with applyPosition, unlike QSize() and Rect(), QPoint() is a valid point
     bool applyPosition(QPointF &pos, bool init) const;
     bool applySize(QSizeF &s, bool init) const;
     bool applyMinSize(QSizeF &s) const;

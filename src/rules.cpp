@@ -607,7 +607,7 @@ bool Rules::update(Window *c, int selection)
 
 APPLY_FORCE_RULE(placement, Placement, PlacementPolicy)
 
-bool Rules::applyGeometry(QRectF &rect, bool init) const
+bool Rules::applyGeometry(RectF &rect, bool init) const
 {
     QPointF p = rect.topLeft();
     QSizeF s = rect.size();
@@ -840,14 +840,14 @@ void WindowRules::update(Window *c, int selection)
 
 CHECK_FORCE_RULE(Placement, PlacementPolicy)
 
-QRectF WindowRules::checkGeometry(QRectF rect, bool init) const
+RectF WindowRules::checkGeometry(RectF rect, bool init) const
 {
-    return QRectF(checkPosition(rect.topLeft(), init), checkSize(rect.size(), init));
+    return RectF(checkPosition(rect.topLeft(), init), checkSize(rect.size(), init));
 }
 
-QRectF WindowRules::checkGeometrySafe(QRectF rect, bool init) const
+RectF WindowRules::checkGeometrySafe(RectF rect, bool init) const
 {
-    return QRectF(checkPositionSafe(rect.topLeft(), init), checkSize(rect.size(), init));
+    return RectF(checkPositionSafe(rect.topLeft(), init), checkSize(rect.size(), init));
 }
 
 QPointF WindowRules::checkPositionSafe(QPointF pos, bool init) const

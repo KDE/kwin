@@ -10,17 +10,12 @@
 
 #include "wayland/textinput_v2.h"
 
-#include <utility>
-#include <vector>
-
 #include <QObject>
-#include <QRect>
-
-#include "input_event_spy.h"
-#include <kwin_export.h>
-
 #include <QPointer>
 #include <QTimer>
+
+#include <utility>
+#include <vector>
 
 class QProcess;
 
@@ -81,7 +76,7 @@ public:
         return m_internalContext;
     }
 
-    QRect cursorRectangle() const;
+    RectF cursorRectangle() const;
 
 Q_SIGNALS:
     void panelChanged();

@@ -8,12 +8,11 @@
 */
 
 #pragma once
-#include "effect/globals.h"
-#include <QObject>
-#include <QRect>
-#include <memory>
 
-#include <kwin_export.h>
+#include "core/rect.h"
+
+#include <QObject>
+
 #include <memory>
 
 class QQmlContext;
@@ -37,9 +36,9 @@ class OutlineVisual;
 class KWIN_EXPORT Outline : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
-    Q_PROPERTY(QRect visualParentGeometry READ visualParentGeometry NOTIFY visualParentGeometryChanged)
-    Q_PROPERTY(QRect unifiedGeometry READ unifiedGeometry NOTIFY unifiedGeometryChanged)
+    Q_PROPERTY(KWin::Rect geometry READ geometry NOTIFY geometryChanged)
+    Q_PROPERTY(KWin::Rect visualParentGeometry READ visualParentGeometry NOTIFY visualParentGeometryChanged)
+    Q_PROPERTY(KWin::Rect unifiedGeometry READ unifiedGeometry NOTIFY unifiedGeometryChanged)
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
 public:
     explicit Outline();
@@ -51,7 +50,7 @@ public:
      * @param outlineGeometry The geometry of the outline to be shown
      * @see showOutline
      */
-    void setGeometry(const QRect &outlineGeometry);
+    void setGeometry(const Rect &outlineGeometry);
 
     /**
      * Set the visual parent geometry.
@@ -59,7 +58,7 @@ public:
      * @param visualParentGeometry The visual geometry of the visual parent
      * @see showOutline
      */
-    void setVisualParentGeometry(const QRect &visualParentGeometry);
+    void setVisualParentGeometry(const Rect &visualParentGeometry);
 
     /**
      * Shows the outline of a window using either an effect or the X implementation.
@@ -75,7 +74,7 @@ public:
      * @param outlineGeometry The geometry of the outline to be shown
      * @see hideOutline
      */
-    void show(const QRect &outlineGeometry);
+    void show(const Rect &outlineGeometry);
 
     /**
      * Shows the outline for the given @p outlineGeometry animated from @p visualParentGeometry.
@@ -87,7 +86,7 @@ public:
      * @see hideOutline
      * @since 5.10
      */
-    void show(const QRect &outlineGeometry, const QRect &visualParentGeometry);
+    void show(const Rect &outlineGeometry, const Rect &visualParentGeometry);
 
     /**
      * Hides shown outline.
@@ -95,9 +94,9 @@ public:
      */
     void hide();
 
-    const QRect &geometry() const;
-    const QRect &visualParentGeometry() const;
-    QRect unifiedGeometry() const;
+    const Rect &geometry() const;
+    const Rect &visualParentGeometry() const;
+    Rect unifiedGeometry() const;
 
     bool isActive() const;
 
@@ -113,8 +112,8 @@ Q_SIGNALS:
 private:
     void createHelper();
     std::unique_ptr<OutlineVisual> m_visual;
-    QRect m_outlineGeometry;
-    QRect m_visualParentGeometry;
+    Rect m_outlineGeometry;
+    Rect m_visualParentGeometry;
     bool m_active;
 };
 

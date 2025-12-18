@@ -9,7 +9,7 @@
 #include "gestures.h"
 
 #include <QDebug>
-#include <QRect>
+
 #include <cmath>
 #include <functional>
 

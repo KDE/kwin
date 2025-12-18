@@ -545,7 +545,7 @@ std::optional<OutputConfiguration> OutputConfigurationStore::generateLidClosedCo
             }
             const auto changeset = config.changeSet(output);
             const QPoint pos = changeset->pos.value_or(output->position());
-            return QRect(pos, otherSize).intersects(QRect(otherPos, getSize(changeset.get(), output)));
+            return Rect(pos, otherSize).intersects(Rect(otherPos, getSize(changeset.get(), output)));
         });
         if (!overlap) {
             changeset->pos = otherPos;
