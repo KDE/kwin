@@ -12,8 +12,6 @@
 #include "core/outputbackend.h"
 #include "utils/filedescriptor.h"
 
-#include <QRect>
-
 namespace KWin
 {
 class VirtualBackend;
@@ -38,7 +36,7 @@ public:
 
     struct OutputInfo
     {
-        QRect geometry;
+        Rect geometry;
         double scale = 1;
         bool internal = false;
         QSize physicalSizeInMM;

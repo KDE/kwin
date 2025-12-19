@@ -11,7 +11,6 @@
 #include "core/backendoutput.h"
 
 #include <QObject>
-#include <QRect>
 
 namespace KWin
 {
