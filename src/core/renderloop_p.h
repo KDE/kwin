@@ -30,9 +30,8 @@ public:
 
     void dispatch();
 
-    void delayScheduleRepaint();
-    void scheduleNextRepaint();
-    void scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp);
+    void scheduleNextRepaint(std::optional<std::chrono::steady_clock::time_point> presentNotBefore);
+    void scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp, std::chrono::nanoseconds presentNotBefore);
 
     void notifyFrameDropped();
     void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<RenderTimeSpan> renderTime, PresentationMode mode, OutputFrame *frame);
@@ -43,6 +42,7 @@ public:
     std::optional<std::fstream> m_debugOutput;
     std::chrono::nanoseconds lastPresentationTimestamp = std::chrono::nanoseconds::zero();
     std::chrono::nanoseconds nextPresentationTimestamp = std::chrono::nanoseconds::zero();
+    std::chrono::nanoseconds lastPresentNotBefore = std::chrono::nanoseconds::zero();
     bool wasTripleBuffering = false;
     int doubleBufferingCounter = 0;
     PreciseTimer compositeTimer;
@@ -51,7 +51,7 @@ public:
     int pendingFrameCount = 0;
     bool preparingNewFrame = false;
     int inhibitCount = 0;
-    bool pendingReschedule = false;
+    std::optional<std::chrono::steady_clock::time_point> pendingReschedule;
     std::chrono::nanoseconds safetyMargin{0};
 
     PresentationMode presentationMode = PresentationMode::VSync;
