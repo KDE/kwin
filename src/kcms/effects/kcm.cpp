@@ -33,7 +33,7 @@ DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const KPluginMetaData &met
 
     // These are handled in kcm_animations
     m_model->setExcludeExclusiveGroups({"toplevel-open-close-animation", "maximize", "minimize", "fullscreen", "show-desktop", "desktop-animations"});
-    m_model->setExcludeEffects({"fadingpopups", "slidingpopups", "login", "logout"});
+    m_model->setExcludeEffects({"fadingpopups", "slidingnotifications", "slidingpopups", "login", "logout"});
 }
 
 DesktopEffectsKCM::~DesktopEffectsKCM()

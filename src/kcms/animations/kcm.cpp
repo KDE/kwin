@@ -36,7 +36,7 @@ AnimationsKCM::AnimationsKCM(QObject *parent, const KPluginMetaData &metaData)
     m_windowFullScreenAnimations = new EffectsSubsetModel(m_model, QStringLiteral("fullscreen"), this);
     m_peekDesktopAnimations = new EffectsSubsetModel(m_model, QStringLiteral("show-desktop"), this);
     m_virtualDesktopAnimations = new EffectsSubsetModel(m_model, QStringLiteral("desktop-animations"), this);
-    m_otherEffects = new EffectsSubsetModel(m_model, {"fadingpopups", "slidingpopups", "login", "logout"}, this);
+    m_otherEffects = new EffectsSubsetModel(m_model, {"fadingpopups", "slidingpopups", "slidingnotifications", "login", "logout"}, this);
 
     connect(m_animationsGlobalsSettings, &AnimationsGlobalsSettings::animationDurationFactorChanged, this, &AnimationsKCM::updateNeedsSave);
     connect(m_model, &EffectsModel::dataChanged, this, &AnimationsKCM::updateNeedsSave);
