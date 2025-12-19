@@ -106,7 +106,7 @@ public:
     bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
 
     Region exposedArea() const;
-    void addExposedArea(const QRect &rect);
+    void addExposedArea(const Rect &rect);
     void clearExposedArea();
 
     void handlePresentCompleteNotify(xcb_present_complete_notify_event_t *event);

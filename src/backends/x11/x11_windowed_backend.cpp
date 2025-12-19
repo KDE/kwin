@@ -590,7 +590,7 @@ void X11WindowedBackend::handleExpose(xcb_expose_event_t *event)
 {
     X11WindowedOutput *output = findOutput(event->window);
     if (output) {
-        output->addExposedArea(QRect(event->x, event->y, event->width, event->height));
+        output->addExposedArea(Rect(event->x, event->y, event->width, event->height));
         output->renderLoop()->scheduleRepaint();
     }
 }

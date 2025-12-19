@@ -165,7 +165,7 @@ Region X11WindowedOutput::exposedArea() const
     return m_exposedArea;
 }
 
-void X11WindowedOutput::addExposedArea(const QRect &rect)
+void X11WindowedOutput::addExposedArea(const Rect &rect)
 {
     m_exposedArea += rect;
 }
