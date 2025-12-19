@@ -104,10 +104,19 @@ void TransferWltoX::startIncr()
 
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
-    uint32_t mask[] = {XCB_EVENT_MASK_PROPERTY_CHANGE};
-    xcb_change_window_attributes(xcbConn,
-                                 m_request.requestor,
-                                 XCB_CW_EVENT_MASK, mask);
+    // Note that m_request.requestor can be one of the managed windows. In which case, the event mask
+    // should not be overwritten with only the PropertyChange flag, otherwise we can stop receiving
+    // the WM-relevant events, for example FocusIn events.
+    xcb_get_window_attributes_cookie_t cookie = xcb_get_window_attributes(xcbConn, m_request.requestor);
+    if (xcb_get_window_attributes_reply_t *reply = xcb_get_window_attributes_reply(xcbConn, cookie, nullptr)) {
+        m_originalEventMask = reply->your_event_mask;
+        if (!(*m_originalEventMask & XCB_EVENT_MASK_PROPERTY_CHANGE)) {
+            uint32_t mask = *m_originalEventMask | XCB_EVENT_MASK_PROPERTY_CHANGE;
+            xcb_change_window_attributes(xcbConn, m_request.requestor, XCB_CW_EVENT_MASK, &mask);
+        }
+
+        free(reply);
+    }
 
     // spec says to make the available space larger
     const uint32_t chunkSpace = 1024 + s_incrChunkSize;
@@ -209,10 +218,11 @@ void TransferWltoX::handlePropertyDelete()
             // transfer complete
             xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
-            uint32_t mask[] = {0};
-            xcb_change_window_attributes(xcbConn,
-                                         m_request.requestor,
-                                         XCB_CW_EVENT_MASK, mask);
+            if (m_originalEventMask && !(*m_originalEventMask & XCB_EVENT_MASK_PROPERTY_CHANGE)) {
+                xcb_change_window_attributes(xcbConn,
+                                             m_request.requestor,
+                                             XCB_CW_EVENT_MASK, &*m_originalEventMask);
+            }
 
             xcb_change_property(xcbConn,
                                 XCB_PROP_MODE_REPLACE,
