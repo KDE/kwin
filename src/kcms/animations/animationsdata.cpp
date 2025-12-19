@@ -27,7 +27,7 @@ AnimationsData::AnimationsData(QObject *parent)
     m_windowFullscreenAnimations = new EffectsSubsetModel(m_model, QStringLiteral("fullscreen"), this);
     m_peekDesktopAnimations = new EffectsSubsetModel(m_model, QStringLiteral("show-desktop"), this);
     m_virtualDesktopAnimations = new EffectsSubsetModel(m_model, QStringLiteral("desktop-animations"), this);
-    m_otherEffects = new EffectsSubsetModel(m_model, {"fadingpopups", "slidingpopups", "login", "logout"}, this);
+    m_otherEffects = new EffectsSubsetModel(m_model, {"fadingpopups", "slidingpopups", "slidingnotifications", "login", "logout"}, this);
 
     disconnect(this, &KCModuleData::aboutToLoad, nullptr, nullptr);
     connect(m_model, &EffectsModel::loaded, this, &KCModuleData::loaded);
