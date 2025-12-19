@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-18 00:44+0000\n"
+"POT-Creation-Date: 2025-12-19 00:45+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -56,14 +56,12 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland-sammensetter %1"
 
 #: backends/wayland/wayland_output.cpp:497
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- Output disabled"
 msgstr "– Utdata slått av"
 
 #: backends/wayland/wayland_output.cpp:499
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- Output dimmed"
 msgstr "– Utdata dempet"
 
@@ -4213,7 +4211,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Svarer ikke)"
 
-#: workspace.cpp:1675
+#: workspace.cpp:1708
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4241,13 +4239,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland krasjet"
-
-#~ msgid "Buttons"
-#~ msgstr "Knapper"
-
-#~ msgid "The provided output order doesn't contain all outputs"
-#~ msgstr ""
-#~ "Den oppgitte sorteringen av utenheter, inneholder ikke alle utenhetene"
-
-#~ msgid "The provided output order is invalid"
-#~ msgstr "Den oppgitte sorteringen av utenhetene er ugyldig"

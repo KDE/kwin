@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-18 00:44+0000\n"
+"POT-Creation-Date: 2025-12-19 00:45+0000\n"
 "PO-Revision-Date: 2024-09-22 16:22+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -51,14 +51,12 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland-samansetjar %1"
 
 #: backends/wayland/wayland_output.cpp:497
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- Output disabled"
 msgstr "– Utdata slått av"
 
 #: backends/wayland/wayland_output.cpp:499
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- Output dimmed"
 msgstr "– Utdata dempa"
 
@@ -4204,7 +4202,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Svarar ikkje)"
 
-#: workspace.cpp:1675
+#: workspace.cpp:1708
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4232,6 +4230,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgid "Buttons"
-#~ msgstr "Knappar"

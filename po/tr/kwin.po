@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-18 00:44+0000\n"
-"PO-Revision-Date: 2025-11-27 16:23+0300\n"
+"POT-Creation-Date: 2025-12-19 00:45+0000\n"
+"PO-Revision-Date: 2025-12-18 15:34+0300\n"
 "Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -55,16 +55,14 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Bileşikleştiricisi %1"
 
 #: backends/wayland/wayland_output.cpp:497
-#, fuzzy, kde-format
-#| msgid "- LogicalOutput disabled"
+#, kde-format
 msgid "- Output disabled"
-msgstr "- Mantıksal çıkış devre dışı"
+msgstr "- Çıkış devre dışı"
 
 #: backends/wayland/wayland_output.cpp:499
-#, fuzzy, kde-format
-#| msgid "- LogicalOutput dimmed"
+#, kde-format
 msgid "- Output dimmed"
-msgstr "- Mantıksal çıkış karartıldı"
+msgstr "- Çıkış karartıldı"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
@@ -4151,22 +4149,22 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Boş bir boyut ile özel bir kip eklenemiyor"
 
 #: wayland/outputmanagement_v2.cpp:635
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "Sıfır Hz’lik bir yenileme hızıyla özel bir kip eklenemiyor"
 
 #: wayland/outputmanagement_v2.cpp:642
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "%s çıkışının konumu negatif, bu desteklenmez"
 
 #: wayland/outputmanagement_v2.cpp:646
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "%s çıkışının konumu pek büyük (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:663
 #, kde-format
@@ -4179,7 +4177,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Yanıt Vermiyor)"
 
-#: workspace.cpp:1675
+#: workspace.cpp:1708
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
