@@ -50,16 +50,7 @@ function isPopupWindow(window) {
         return true;
     }
 
-    // Previously, there was a "monolithic" fade effect, which tried to
-    // animate almost every window that was shown or hidden. Then it was
-    // split into two effects: one that animates toplevel windows and
-    // this one. In addition to popups, this effect also animates some
-    // special windows(e.g. notifications) because the monolithic version
-    // was doing that.
-    if (window.splash || window.toolbar
-            || window.notification || window.onScreenDisplay
-            || window.criticalNotification
-            || window.appletPopup) {
+    if (window.splash || window.toolbar || window.onScreenDisplay || window.appletPopup) {
         return true;
     }
 

@@ -1,0 +1,9 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Slide Plasma notifications in and out",
+        "EnabledByDefault": true,
+        "License": "GPL",
+        "Name": "Sliding notifications"
+    }
+}
