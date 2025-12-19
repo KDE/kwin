@@ -115,7 +115,7 @@ std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend()
 BackendOutput *VirtualBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale)
 {
     return addOutput(OutputInfo{
-        .geometry = QRect(QPoint(), size),
+        .geometry = Rect(QPoint(), size),
         .scale = scale,
         .connectorName = QStringLiteral("Virtual-") + name,
     });
