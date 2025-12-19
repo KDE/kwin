@@ -254,6 +254,14 @@ void SurfaceItemWayland::handleFramePainted(LogicalOutput *output, OutputFrame *
     }
 }
 
+void SurfaceItemWayland::handlePrepareFrame(std::chrono::nanoseconds timestamp)
+{
+    if (!m_surface) {
+        return;
+    }
+    m_surface->prepareFrame(timestamp);
+}
+
 void SurfaceItemWayland::handleFifoFallback()
 {
     if (m_surface) {

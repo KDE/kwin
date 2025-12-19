@@ -1299,7 +1299,7 @@ void SurfaceInterface::clearFifoBarrier()
     if (d->current->fifoBarrier) {
         d->current->fifoBarrier = false;
         if (d->firstTransaction) {
-            d->firstTransaction->tryApply();
+            d->firstTransaction->tryApply(std::nullopt);
         }
     }
 }
@@ -1307,6 +1307,14 @@ void SurfaceInterface::clearFifoBarrier()
 bool SurfaceInterface::hasFifoBarrier() const
 {
     return d->current->fifoBarrier;
+}
+
+void SurfaceInterface::prepareFrame(std::chrono::nanoseconds timestamp)
+{
+    if (d->firstTransaction) {
+        // TODO port the other timestamps to use an actual timestamp type as well
+        d->firstTransaction->tryApply(std::chrono::steady_clock::time_point(timestamp));
+    }
 }
 
 } // namespace KWin

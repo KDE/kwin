@@ -463,6 +463,7 @@ void WorkspaceScene::prePaint(SceneView *delegate)
     }
 
     // preparation step
+    m_containerItem->prepareFrame(painted_delegate, painted_screen, m_expectedPresentTimestamp);
     effects->startPaint();
 
     ScreenPrePaintData prePaintData;

@@ -100,7 +100,7 @@ public:
      * Returns \c true if this transaction can be applied, i.e. all its dependencies are resolved;
      * otherwise returns \c false.
      */
-    bool isReady() const;
+    bool isReady(std::optional<std::chrono::steady_clock::time_point> targetTimestamp) const;
 
     /**
      * Returns the next transaction for the specified \a surface. If this transaction does
@@ -139,10 +139,10 @@ public:
      * dependencies, for example previous transactions have not been applied yet, or one of the
      * graphics buffers in the transaction is not ready to be used yet.
      */
-    void tryApply();
+    void tryApply(std::optional<std::chrono::steady_clock::time_point> targetTimestamp);
 
 private:
-    void apply();
+    void apply(std::optional<std::chrono::steady_clock::time_point> targetTimestamp);
 
     void watchSyncObj(TransactionEntry *entry);
     void watchDmaBuf(TransactionEntry *entry);

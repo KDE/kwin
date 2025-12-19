@@ -164,6 +164,7 @@ public:
     void addEffect();
     void removeEffect();
 
+    void prepareFrame(RenderView *view, LogicalOutput *output, std::chrono::nanoseconds timestamp);
     void framePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
     bool isAncestorOf(const Item *item) const;
@@ -194,6 +195,7 @@ Q_SIGNALS:
 protected:
     virtual WindowQuadList buildQuads() const;
     virtual void handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
+    virtual void handlePrepareFrame(std::chrono::nanoseconds timestamp);
     void discardQuads();
     void setColorDescription(const std::shared_ptr<ColorDescription> &description);
     void setRenderingIntent(RenderingIntent intent);

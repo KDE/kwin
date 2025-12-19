@@ -712,6 +712,22 @@ void Item::framePainted(RenderView *view, LogicalOutput *output, OutputFrame *fr
     }
 }
 
+void Item::prepareFrame(RenderView *view, LogicalOutput *output, std::chrono::nanoseconds timestamp)
+{
+    // The visibility of the item itself is not checked here to be able to paint hidden items for
+    // things like screncasts or thumbnails
+    handlePrepareFrame(timestamp);
+    for (const auto child : std::as_const(m_childItems)) {
+        if (child->explicitVisible() && (!view || view->shouldRenderItem(child)) && workspace()->outputAt(child->mapToScene(child->boundingRect()).center()) == output) {
+            child->prepareFrame(view, output, timestamp);
+        }
+    }
+}
+
+void Item::handlePrepareFrame(std::chrono::nanoseconds timestamp)
+{
+}
+
 bool Item::isAncestorOf(const Item *item) const
 {
     return std::ranges::any_of(m_childItems, [item](const Item *child) {

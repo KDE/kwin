@@ -365,6 +365,8 @@ public:
     void clearFifoBarrier();
     bool hasFifoBarrier() const;
 
+    void prepareFrame(std::chrono::nanoseconds timestamp);
+
     /**
      * Registers the specified @a extension. Returns the pending state for the extension.
      *

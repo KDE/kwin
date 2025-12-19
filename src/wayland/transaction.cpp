@@ -26,7 +26,7 @@ TransactionFence::TransactionFence(Transaction *transaction, FileDescriptor &&fi
     m_notifier = std::make_unique<QSocketNotifier>(m_fileDescriptor.get(), QSocketNotifier::Read);
     QObject::connect(m_notifier.get(), &QSocketNotifier::activated, [this]() {
         m_notifier->setEnabled(false);
-        m_transaction->tryApply();
+        m_transaction->tryApply(std::nullopt);
     });
 }
 
@@ -44,9 +44,10 @@ Transaction::Transaction()
 {
 }
 
-bool Transaction::isReady() const
+bool Transaction::isReady(std::optional<std::chrono::steady_clock::time_point> targetTimestamp) const
 {
-    return std::none_of(m_entries.cbegin(), m_entries.cend(), [](const TransactionEntry &entry) {
+    const auto t = targetTimestamp.value_or(std::chrono::steady_clock::now());
+    return std::none_of(m_entries.cbegin(), m_entries.cend(), [&t](const TransactionEntry &entry) {
         if (entry.previousTransaction) {
             return true;
         }
@@ -65,14 +66,7 @@ bool Transaction::isReady() const
             return true;
         }
 
-        // FIXME this needs to check the target pageflip time, not the current time...
-        // Ideas:
-        // - pass target timestamp to some SurfaceInterface method, which calls tryApply
-        // - add an optional timestamp to this
-        // - add an optional no-earlier-than timestamp to RenderLoop::scheduleRepaint
-        // - after every composite cycle, re-apply that repaint scheduling
-        return entry.state->requestedTiming.has_value()
-            && std::chrono::steady_clock::now() >= *entry.state->requestedTiming;
+        return entry.state->requestedTiming.has_value() && t >= *entry.state->requestedTiming;
     });
 }
 
@@ -155,7 +149,7 @@ static SurfaceInterface *mainSurface(SurfaceInterface *surface)
     return surface;
 }
 
-void Transaction::apply()
+void Transaction::apply(std::optional<std::chrono::steady_clock::time_point> targetTimestamp)
 {
     // Sort surfaces so descendants come first, then their ancestors.
     std::sort(m_entries.begin(), m_entries.end(), [](const TransactionEntry &a, const TransactionEntry &b) {
@@ -198,17 +192,20 @@ void Transaction::apply()
                     break;
                 }
             }
-            entry.nextTransaction->tryApply();
+            entry.nextTransaction->tryApply(targetTimestamp);
         }
     }
 
     delete this;
 }
 
-void Transaction::tryApply()
+void Transaction::tryApply(std::optional<std::chrono::steady_clock::time_point> targetTimestamp)
 {
-    if (isReady()) {
-        apply();
+    if (isReady(targetTimestamp)) {
+        apply(targetTimestamp);
+    } else {
+        // FIXME schedule repaints for all surfaces that are blocking
+        // this transaction based on only the timestamp
     }
 }
 
@@ -243,7 +240,7 @@ void Transaction::commit()
         entry.surface->setLastTransaction(this);
     }
 
-    tryApply();
+    tryApply(std::nullopt);
 }
 
 void Transaction::watchSyncObj(TransactionEntry *entry)
