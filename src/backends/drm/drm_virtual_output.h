@@ -12,7 +12,6 @@
 #include "drm_abstract_output.h"
 
 #include <QObject>
-#include <QRect>
 
 namespace KWin
 {

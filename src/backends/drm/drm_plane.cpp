@@ -202,7 +202,7 @@ bool DrmPlane::updateProperties()
     return true;
 }
 
-void DrmPlane::set(DrmAtomicCommit *commit, const QRect &src, const QRect &dst)
+void DrmPlane::set(DrmAtomicCommit *commit, const Rect &src, const Rect &dst)
 {
     // Src* are in 16.16 fixed point format
     commit->addProperty(srcX, src.x() << 16);

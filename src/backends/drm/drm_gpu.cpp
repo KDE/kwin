@@ -485,8 +485,8 @@ DrmPipeline::Error DrmGpu::testPipelines()
         const auto layers = pipeline->layers();
         for (auto layer : layers) {
             if (layer->type() == OutputLayerType::Primary) {
-                layer->setTargetRect(QRect(QPoint(0, 0), pipeline->mode()->size()));
-                layer->setSourceRect(QRect(QPoint(0, 0), pipeline->mode()->size()));
+                layer->setTargetRect(Rect(QPoint(0, 0), pipeline->mode()->size()));
+                layer->setSourceRect(Rect(QPoint(0, 0), pipeline->mode()->size()));
                 layer->setEnabled(true);
                 // ensure we have suitable buffers for the test
                 if (!layer->preparePresentationTest()) {
