@@ -33,19 +33,29 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, BackendOutput *output)
 {
 }
 
-void RenderLoopPrivate::scheduleNextRepaint()
+void RenderLoopPrivate::scheduleNextRepaint(std::optional<std::chrono::nanoseconds> presentNotBefore)
 {
-    if (kwinApp()->isTerminating() || compositeTimer.isActive() || preparingNewFrame) {
+    if (kwinApp()->isTerminating() || preparingNewFrame) {
         return;
     }
-    scheduleRepaint(nextPresentationTimestamp);
+    const std::chrono::nanoseconds presentNotBeforeTime = presentNotBefore.value_or(std::chrono::steady_clock::now().time_since_epoch());
+    if (compositeTimer.isActive()) {
+        if (presentNotBeforeTime >= lastPresentNotBefore) {
+            // this would present later than what we already scheduled for,
+            // so it's not important
+            return;
+        }
+    }
+    scheduleRepaint(nextPresentationTimestamp, presentNotBeforeTime);
 }
 
-void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp)
+void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp, std::chrono::nanoseconds presentNotBefore)
 {
     pendingReschedule = false;
     const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
     const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
+
+    std::chrono::nanoseconds targetTimestamp;
 
     // Estimate when it's a good time to perform the next compositing cycle.
     // the 1ms on top of the safety margin is required for timer and scheduler inaccuracies
@@ -53,7 +63,7 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
 
     if (presentationMode == PresentationMode::VSync) {
         // normal presentation: pageflips only happen at vblank
-        const uint64_t pageflipsSince = std::max<int64_t>((currentTime - lastPresentationTimestamp) / vblankInterval, 0);
+        const uint64_t pageflipsSince = std::max<int64_t>((presentNotBefore - lastPresentationTimestamp) / vblankInterval, 0);
         if (pageflipsSince > 100) {
             // if it's been a while since the last frame, the GPU is likely in a low power state and render time will be increased
             // -> take that into account and start compositing very early
@@ -84,29 +94,49 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
             }
         }
 
-        if (compositeTimer.isActive()) {
+        if (compositeTimer.isActive() && presentNotBefore >= lastPresentNotBefore) {
             // we already scheduled this frame, but we got a new timestamp
             // which might require starting to composite earlier than we planned
             // It's important here that we do not change the targeted vblank interval,
             // otherwise with a pessimistic compositing time estimation we might
             // unnecessarily drop frames
             const uint32_t intervalsSinceLastTimestamp = std::max<int32_t>(std::round((nextPresentationTimestamp - lastPresentationTimestamp).count() / double(vblankInterval.count())), 0);
-            nextPresentationTimestamp = lastPresentationTimestamp + intervalsSinceLastTimestamp * vblankInterval;
+            targetTimestamp = lastPresentationTimestamp + intervalsSinceLastTimestamp * vblankInterval;
         } else {
-            nextPresentationTimestamp = lastPresentationTimestamp + std::max(pageflipsSince + pageflipsInAdvance, pageflipsSinceLastToTarget + 1) * vblankInterval;
+            // Either no frame is scheduled yet, or presentNotBefore is earlier than the last presentNotBefore hint
+            targetTimestamp = lastPresentationTimestamp + std::max(pageflipsSince + pageflipsInAdvance, pageflipsSinceLastToTarget + 1) * vblankInterval;
         }
     } else {
         wasTripleBuffering = false;
         doubleBufferingCounter = 0;
         if (presentationMode == PresentationMode::Async || presentationMode == PresentationMode::AdaptiveAsync) {
             // tearing: pageflips happen ASAP
-            nextPresentationTimestamp = currentTime;
+            targetTimestamp = presentNotBefore;
         } else {
             // adaptive sync: pageflips happen after one vblank interval
-            // TODO read minimum refresh rate from the EDID and take it into account here
-            nextPresentationTimestamp = std::max(currentTime, lastPresentationTimestamp + vblankInterval);
+            // FIXME take minimum refresh rate into account as well
+            targetTimestamp = std::max(presentNotBefore, lastPresentationTimestamp + vblankInterval);
         }
     }
+
+    if (compositeTimer.isActive()) {
+        // a frame was previously scheduled
+        if (presentNotBefore >= lastPresentNotBefore) {
+            // but we have an updated timestamp for the same refresh cycle
+            nextPresentationTimestamp = targetTimestamp;
+        } else if (targetTimestamp < nextPresentationTimestamp) {
+            // but now we want to present in an earlier refresh cycle
+            nextPresentationTimestamp = std::min(nextPresentationTimestamp, targetTimestamp);
+        } else {
+            // but this would schedule at a later time
+            lastPresentNotBefore = presentNotBefore;
+            return;
+        }
+    } else {
+        nextPresentationTimestamp = targetTimestamp;
+    }
+
+    lastPresentNotBefore = presentNotBefore;
 
     const std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - expectedCompositingTime;
     compositeTimer.start(std::max(0ms, std::chrono::duration_cast<std::chrono::milliseconds>(nextRenderTimestamp - currentTime)), Qt::PreciseTimer, q);
@@ -123,7 +153,7 @@ void RenderLoopPrivate::notifyFrameDropped()
     pendingFrameCount--;
 
     if (!inhibitCount && pendingReschedule) {
-        scheduleNextRepaint();
+        scheduleNextRepaint(std::nullopt);
     }
 }
 
@@ -149,12 +179,13 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
     if (renderTime) {
         renderJournal.add(renderTime->end - renderTime->start, timestamp);
     }
-    if (compositeTimer.isActive()) {
+    const auto now = std::chrono::steady_clock::now().time_since_epoch();
+    if (compositeTimer.isActive() && now > lastPresentNotBefore) {
         // reschedule to match the new timestamp and render time
-        scheduleRepaint(lastPresentationTimestamp);
+        scheduleRepaint(lastPresentationTimestamp, now);
     }
     if (!inhibitCount && pendingReschedule) {
-        scheduleNextRepaint();
+        scheduleNextRepaint(std::nullopt);
     }
 
     Q_EMIT q->framePresented(q, timestamp, mode);
@@ -215,7 +246,7 @@ void RenderLoop::uninhibit()
     d->inhibitCount--;
 
     if (d->inhibitCount == 0) {
-        d->scheduleNextRepaint();
+        d->scheduleNextRepaint(std::nullopt);
     }
 }
 
@@ -244,7 +275,7 @@ void RenderLoop::setRefreshRate(int refreshRate)
     Q_EMIT refreshRateChanged();
 
     if (d->compositeTimer.isActive()) {
-        d->scheduleRepaint(d->lastPresentationTimestamp);
+        d->scheduleRepaint(d->lastPresentationTimestamp, std::chrono::steady_clock::now().time_since_epoch());
     }
 }
 
@@ -253,7 +284,7 @@ void RenderLoop::setPresentationSafetyMargin(std::chrono::nanoseconds safetyMarg
     d->safetyMargin = safetyMargin;
 }
 
-void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer)
+void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer, std::optional<std::chrono::nanoseconds> presentNotBefore)
 {
     const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
     const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
@@ -268,7 +299,7 @@ void RenderLoop::scheduleRepaint(Item *item, OutputLayer *outputLayer)
     d->delayedVrrTimer.stop();
     const int effectiveMaxPendingFrameCount = (vrr || tearing) ? 1 : d->maxPendingFrameCount;
     if (d->pendingFrameCount < effectiveMaxPendingFrameCount && !d->inhibitCount) {
-        d->scheduleNextRepaint();
+        d->scheduleNextRepaint(presentNotBefore);
     } else {
         d->delayScheduleRepaint();
     }
