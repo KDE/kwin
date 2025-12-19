@@ -47,7 +47,7 @@ public:
     void setCurrentBuffer(const std::shared_ptr<DrmFramebuffer> &b);
     void releaseCurrentBuffer();
 
-    void set(DrmAtomicCommit *commit, const QRect &src, const QRect &dst);
+    void set(DrmAtomicCommit *commit, const Rect &src, const Rect &dst);
 
     QList<QSize> recommendedSizes() const;
     QList<DrmColorOp *> colorPipelines() const;

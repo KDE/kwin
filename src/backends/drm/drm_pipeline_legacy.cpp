@@ -44,7 +44,7 @@ DrmPipeline::Error DrmPipeline::presentLegacy(const QList<OutputLayer *> &layers
     // always present on the crtc, for presentation feedback
     const auto primary = findLayer(m_pending.layers, OutputLayerType::Primary);
     const auto buffer = primary->currentBuffer();
-    if (primary->sourceRect() != primary->targetRect() || primary->targetRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
+    if (primary->sourceRect() != primary->targetRect() || primary->targetRect() != Rect(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, frame);
