@@ -24,9 +24,9 @@ Gravity::operator Gravity::Kind() const
     return m_kind;
 }
 
-QRectF Gravity::apply(const QRectF &rect, const QRectF &bounds) const
+RectF Gravity::apply(const RectF &rect, const RectF &bounds) const
 {
-    QRectF geometry = rect;
+    RectF geometry = rect;
 
     switch (m_kind) {
     case Gravity::TopLeft:

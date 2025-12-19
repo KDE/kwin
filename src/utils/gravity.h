@@ -6,9 +6,7 @@
 
 #pragma once
 
-#include "kwin_export.h"
-
-#include <QRectF>
+#include "core/rect.h"
 
 namespace KWin
 {
@@ -36,7 +34,7 @@ public:
 
     operator Kind() const;
 
-    QRectF apply(const QRectF &rect, const QRectF &bounds) const;
+    RectF apply(const RectF &rect, const RectF &bounds) const;
 
 private:
     Kind m_kind;

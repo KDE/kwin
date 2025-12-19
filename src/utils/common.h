@@ -21,7 +21,6 @@
 #include <QLoggingCategory>
 #include <QMatrix4x4>
 #include <QPoint>
-#include <QRect>
 // system
 #include <climits>
 Q_DECLARE_LOGGING_CATEGORY(KWIN_CORE)
