@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 05:54+0000\n"
+"POT-Creation-Date: 2025-11-17 16:18+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -34,9 +34,7 @@ msgstr ""
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
-"knut.yrvin@gmail.com,gluras@c2i.net,khollund@responze.net,"
-"zerodogg@skolelinux.no,mh306602@gmail.com"
+msgstr "knut.yrvin@gmail.com,gluras@c2i.net,khollund@responze.net,zerodogg@skolelinux.no,mh306602@gmail.com"
 
 #: composite.cpp:646
 #, kde-format
