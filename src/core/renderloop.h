@@ -76,7 +76,7 @@ public:
     /**
      * Schedules a compositing cycle at the next available moment.
      */
-    void scheduleRepaint(Item *item = nullptr, OutputLayer *outputLayer = nullptr);
+    void scheduleRepaint(Item *item = nullptr, OutputLayer *outputLayer = nullptr, std::optional<std::chrono::nanoseconds> presentNotBefore = std::nullopt);
 
     /**
      * Returns the timestamp of the last frame that has been presented on the screen.

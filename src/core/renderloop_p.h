@@ -30,8 +30,8 @@ public:
     void dispatch();
 
     void delayScheduleRepaint();
-    void scheduleNextRepaint();
-    void scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp);
+    void scheduleNextRepaint(std::optional<std::chrono::nanoseconds> presentNotBefore);
+    void scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp, std::chrono::nanoseconds presentNotBefore);
 
     void notifyFrameDropped();
     void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<RenderTimeSpan> renderTime, PresentationMode mode, OutputFrame *frame);
@@ -42,6 +42,7 @@ public:
     std::optional<std::fstream> m_debugOutput;
     std::chrono::nanoseconds lastPresentationTimestamp = std::chrono::nanoseconds::zero();
     std::chrono::nanoseconds nextPresentationTimestamp = std::chrono::nanoseconds::zero();
+    std::chrono::nanoseconds lastPresentNotBefore = std::chrono::nanoseconds::zero();
     bool wasTripleBuffering = false;
     int doubleBufferingCounter = 0;
     QBasicTimer compositeTimer;
