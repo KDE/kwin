@@ -1,24 +1,25 @@
 # Elkana Bardugo <ttv200@gmail.com>, 2017. #zanata
+# SPDX-FileCopyrightText: 2025 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2017-05-23 08:51-0400\n"
-"Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
-"Language-Team: Hebrew\n"
+"PO-Revision-Date: 2025-12-18 13:09+0200\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
+"Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Zanata 3.9.6\n"
+"X-Generator: Lokalize 25.12.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::VideoWallConfigForm)
 #: videowall/contents/ui/config.ui:14
 #, kde-format
 msgid "Video Wall"
-msgstr ""
+msgstr "קיר סרטון"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
 #: videowall/contents/ui/config.ui:20
@@ -30,26 +31,26 @@ msgstr "חל על"
 #: videowall/contents/ui/config.ui:32
 #, kde-format
 msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
-msgstr ""
+msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Whitelist)
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Blacklist)
 #: videowall/contents/ui/config.ui:35 videowall/contents/ui/config.ui:66
 #, kde-format
 msgid "Comma separated list of window classes"
-msgstr "רשימה מופרדת בפסיקים של מחלקות החלון"
+msgstr "רשימה מופרדת בפסיקים של מחלקות החלונות"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: videowall/contents/ui/config.ui:45
 #, kde-format
 msgid "All"
-msgstr "הכל"
+msgstr "הכול"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: videowall/contents/ui/config.ui:54
 #, kde-format
 msgid "Ignore"
-msgstr "התעלם"
+msgstr "התעלמות"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #: videowall/contents/ui/config.ui:73

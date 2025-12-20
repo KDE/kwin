@@ -4,20 +4,21 @@
 # Diego Iastrubni <elcuco@kde.org>, 2012, 2013.
 # elkana bardugo <ttv200@gmail.com>, 2016.
 # Elkana Bardugo <ttv200@gmail.com>, 2017. #zanata
+# SPDX-FileCopyrightText: 2025 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2017-05-16 11:31-0400\n"
-"Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
-"Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2025-12-18 13:17+0200\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
+"Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Zanata 3.9.6\n"
+"X-Generator: Lokalize 25.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -32,12 +33,12 @@ msgstr "kde-l10n-he@kde.org"
 #: module.cpp:57
 #, kde-format
 msgid "Import KWin Script"
-msgstr "ייבא סקריפט של KWin"
+msgstr "ייבוא סקריפט של KWin"
 
 #: module.cpp:58
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
-msgstr "*.kwinscript|KWin סקריפט (*.kwinscript)"
+msgstr "*.kwinscript|KWin סקריפט (‎*.kwinscript)"
 
 #: module.cpp:96
 #, kde-format
@@ -46,36 +47,35 @@ msgid ""
 "Cannot import selected script.\n"
 "%1"
 msgstr ""
-"אי אפשר לייבא את הסקריפט.\n"
+"אי אפשר לייבא את הסקריפט הנבחר.\n"
 "%1"
 
 #: module.cpp:108
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
-msgstr "הסקריפט \"%1\" יובא בהצלחה"
+msgstr "הסקריפט „%1’ יובא בהצלחה."
 
 #: module.cpp:148
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
-msgstr ""
+msgstr "שגיאה בהסרת סקריפט KWin:‏ %1"
 
 #: package/contents/ui/main.qml:47
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete..."
-msgstr ""
+msgstr "מחיקה…"
 
 #: package/contents/ui/main.qml:60
 #, kde-format
 msgid "Install from File..."
-msgstr ""
+msgstr "התקנה מקובץ…"
 
 #: package/contents/ui/main.qml:64
-#, fuzzy, kde-format
-#| msgid "Get New Script..."
+#, kde-format
 msgid "Get New Scripts..."
-msgstr "קבל סקריפט חדש..."
+msgstr "הורדת סקריפטים חדשים…"
 
 #~ msgid "KWin Scripts"
 #~ msgstr "סקריפטים של KWin"
