@@ -70,6 +70,13 @@ KCM.ScrollViewKCM {
             // left and right side content elements
             Kirigami.Theme.useAlternateBackgroundColor: true
 
+            Keys.onPressed: (event) => {
+                if (event.key == Qt.Key_F2) {
+                    renameAction.triggered()
+                    event.accepted = true
+                }
+            }
+
             contentItem: StackLayout {
                 Kirigami.TitleSubtitleWithActions {
                     title: renameLayout.visible ? "" : model ? model.display : ""
@@ -77,6 +84,7 @@ KCM.ScrollViewKCM {
                     displayHint: QQC2.Button.IconOnly
                     actions: [
                         Kirigami.Action {
+                            id: renameAction
                             icon.name: "edit-entry-symbolic"
                             enabled: !renameLayout.visible
                             text: i18nc("@action:button", "Rename")
@@ -100,6 +108,10 @@ KCM.ScrollViewKCM {
                     id: renameLayout
                     QQC2.TextField {
                         id: renameField
+                        onEditingFinished: acceptEditButton.clicked()
+                        Keys.onEscapePressed: discardEditButton.clicked()
+                        Keys.onUpPressed: () => { /* don't move to previous delegate */ }
+                        Keys.onDownPressed: () => { /* don't move to next delegate */ }
                     }
                     QQC2.Button {
                         id: acceptEditButton
@@ -128,8 +140,10 @@ KCM.ScrollViewKCM {
                     }
 
                     onVisibleChanged: {
-                        renameField.text = model ? model.display : "";
-                        renameField.selectAll();
+                        if (visible) {
+                            renameField.text = model ? model.display : "";
+                            renameField.selectAll();
+                        }
                     }
                 }
             }
