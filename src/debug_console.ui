@@ -22,6 +22,9 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
+     <property name="usesScrollButtons">
+      <bool>false</bool>
+     </property>
      <widget class="QWidget" name="windows">
       <attribute name="title">
        <string>Windows</string>
