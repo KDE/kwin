@@ -5,6 +5,7 @@
 */
 
 #include "inputmethod_v1.h"
+#include "clientconnection.h"
 #include "display.h"
 #include "keyboard.h"
 #include "keyboard_p.h"
@@ -13,6 +14,7 @@
 #include "surface.h"
 #include "utils/common.h"
 #include "utils/ramfile.h"
+#include "wayland_server.h"
 
 #include <QHash>
 
@@ -156,7 +158,8 @@ public:
     void zwp_input_method_context_v1_grab_keyboard(Resource *resource, uint32_t id) override
     {
         m_keyboardGrab.reset(new InputMethodGrabV1(q));
-        m_keyboardGrab->d->add(resource->client(), id, 10);
+        const bool supportsKeyRepeat = KWin::waylandServer()->seat()->keyboard()->supportsKeyRepeat(ClientConnection::get(resource->client()));
+        m_keyboardGrab->d->add(resource->client(), id, supportsKeyRepeat ? 10 : 1);
         Q_EMIT q->keyboardGrabRequested(m_keyboardGrab.get());
     }
     void zwp_input_method_context_v1_key(Resource *, uint32_t serial, uint32_t time, uint32_t key, uint32_t state) override

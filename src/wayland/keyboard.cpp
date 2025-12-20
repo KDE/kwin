@@ -276,6 +276,15 @@ void KeyboardInterface::setRepeatInfo(qint32 charactersPerSecond, qint32 delay)
     }
 }
 
+bool KeyboardInterface::supportsKeyRepeat(ClientConnection *client) const
+{
+    const auto resources = d->resourceMap().values(client->client());
+
+    return std::any_of(resources.cbegin(), resources.cend(), [](auto resource) {
+        return resource->version() >= WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION;
+    });
+}
+
 SurfaceInterface *KeyboardInterface::focusedSurface() const
 {
     return d->focusedSurface;
