@@ -16,5 +16,9 @@
             <min>100</min>
             <default>200</default>
         </entry>
+        <entry name="ShowsTriggeredActionOsd" type="Bool">
+            <label>Display the triggered action on a short OSD popup</label>
+            <default>true</default>
+        </entry>
     </group>
 </kcfg>

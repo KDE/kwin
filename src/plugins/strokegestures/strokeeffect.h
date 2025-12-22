@@ -45,6 +45,9 @@ public:
     int strokeFadeOutMsec() const;
     void setStrokeFadeOutMsec(int msec);
 
+    bool showsTriggeredActionOsd() const;
+    void setShowsTriggeredActionOsd(bool);
+
 public Q_SLOTS:
     void activate();
     void deactivate(int timeout);
@@ -52,6 +55,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void strokeActiveChanged();
     void strokeFadeOutMsecChanged();
+    void showsTriggeredActionOsdChanged();
 
     void strokeStarted(const QPointF &initial);
     void strokePointAdded(const QPointF &latest);
@@ -73,6 +77,7 @@ private:
     // visualization
     std::unique_ptr<QTimer> m_shutdownTimer;
     bool m_isStrokeActive = false;
+    bool m_showsTriggeredActionOsd = true;
 };
 
 } // namespace KWin

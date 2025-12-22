@@ -19,6 +19,8 @@
 #include <input.h>
 
 // Qt
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <QDebug>
 
 using namespace std::chrono_literals;
@@ -63,6 +65,7 @@ void StrokeEffect::reconfigure(ReconfigureFlags)
     StrokeEffectConfig::self()->read();
 
     setStrokeFadeOutMsec(animationTime(std::chrono::milliseconds(StrokeEffectConfig::strokeFadeOutMsec())));
+    setShowsTriggeredActionOsd(StrokeEffectConfig::showsTriggeredActionOsd());
 
     // FIXME: example strokes, until we get them through some other means (config, D-Bus, etc.)
     qDebug() << "StrokeEffect::reconfigure(): registering example strokes";
@@ -73,13 +76,13 @@ void StrokeEffect::reconfigure(ReconfigureFlags)
         leftwardPoints.push_back(QPointF(1.0 - (i / 8.0), 0.5));
     }
     m_actions.clear();
-    m_actions.push_back(std::make_unique<QAction>());
+    m_actions.push_back(std::make_unique<QAction>(QIcon::fromTheme("go-next"), "&Forward"));
     connect(m_actions.back().get(), &QAction::triggered, this, [] {
         qDebug() << "STROKE RIGHT!";
     });
     effects->registerStrokeShortcut(Qt::NoModifier, rightwardPoints, m_actions.back().get());
 
-    m_actions.push_back(std::make_unique<QAction>());
+    m_actions.push_back(std::make_unique<QAction>(QIcon::fromTheme("go-previous"), "&Back"));
     connect(m_actions.back().get(), &QAction::triggered, this, [] {
         qDebug() << "STROKE LEFT!";
     });
@@ -127,6 +130,19 @@ void StrokeEffect::setStrokeFadeOutMsec(int msec)
     }
 }
 
+bool StrokeEffect::showsTriggeredActionOsd() const
+{
+    return m_showsTriggeredActionOsd;
+}
+
+void StrokeEffect::setShowsTriggeredActionOsd(bool osd)
+{
+    if (m_showsTriggeredActionOsd != osd) {
+        m_showsTriggeredActionOsd = osd;
+        Q_EMIT showsTriggeredActionOsdChanged();
+    }
+}
+
 void StrokeEffect::strokeGestureBegin(const StrokeGestureBeginEvent *event)
 {
     activate();
@@ -148,6 +164,18 @@ void StrokeEffect::strokeGestureEnd(const StrokeGestureEndEvent *event)
 {
     deactivate(m_strokeFadeOutMsec);
     Q_EMIT strokeEnded();
+
+    if (m_showsTriggeredActionOsd && event->triggeredAction) {
+        QDBusMessage msg = QDBusMessage::createMethodCall( //
+            QStringLiteral("org.kde.plasmashell"),
+            QStringLiteral("/org/kde/osdService"),
+            QStringLiteral("org.kde.osdService"),
+            QStringLiteral("showText"));
+
+        msg.setArguments({event->triggeredAction->icon().name(), event->triggeredAction->iconText()});
+
+        QDBusConnection::sessionBus().call(msg, QDBus::NoBlock);
+    }
 }
 
 void StrokeEffect::strokeGestureCancelled(const StrokeGestureCancelEvent *event)
