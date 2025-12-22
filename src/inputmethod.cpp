@@ -311,7 +311,7 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
 {
     Q_ASSERT(panel->isInputMethod());
     if (m_panel) {
-        qCWarning(KWIN_VIRTUALKEYBOARD) << "Replacing input panel" << m_panel << "with" << panel;
+        qCDebug(KWIN_VIRTUALKEYBOARD) << "Replacing input panel" << m_panel << "with" << panel;
         m_panel->destroyWindow();
     }
 
