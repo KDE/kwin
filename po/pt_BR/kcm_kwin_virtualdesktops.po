@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_virtualdesktops\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:44+0000\n"
+"POT-Creation-Date: 2025-12-23 00:42+0000\n"
 "PO-Revision-Date: 2025-12-10 05:41-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -69,31 +69,31 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Adicionar área de trabalho"
 
-#: ui/main.qml:82
+#: ui/main.qml:90
 #, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "Renomear"
 
-#: ui/main.qml:92
+#: ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Remover"
 
-#: ui/main.qml:107
+#: ui/main.qml:119
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
 msgstr "Aplicar nome novo"
 
-#: ui/main.qml:120
+#: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
 msgstr "Cancelar renomear"
 
-#: ui/main.qml:165
+#: ui/main.qml:179
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -102,37 +102,37 @@ msgstr ""
 "As áreas de trabalho virtuais foram modificados fora desta aplicação de "
 "configurações. Se salvar agora as alterações serão substituídas."
 
-#: ui/main.qml:181
+#: ui/main.qml:195
 #, kde-format
 msgid "Row %1"
 msgstr "Linha %1"
 
-#: ui/main.qml:195
+#: ui/main.qml:209
 #, kde-format
 msgid "Options:"
 msgstr "Opções:"
 
-#: ui/main.qml:197
+#: ui/main.qml:211
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Navegação circular"
 
-#: ui/main.qml:215
+#: ui/main.qml:229
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Mostrar animação ao alternar:"
 
-#: ui/main.qml:266
+#: ui/main.qml:280
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Mostrar visualização na tela ao alternar:"
 
-#: ui/main.qml:285
+#: ui/main.qml:299
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:309
+#: ui/main.qml:323
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostrar os indicadores de layout da área de trabalho"

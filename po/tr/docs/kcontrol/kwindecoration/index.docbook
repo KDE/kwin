@@ -8,6 +8,8 @@
 
 <article id="kwindecoration" lang="&language;">
 <articleinfo>
+<title
+>Pencere Dekorasyonları</title>
 <authorgroup>
 <author
 >&Rik.Hemsley; &Rik.Hemsley.mail;</author>
@@ -31,7 +33,7 @@
 </authorgroup>
 
 <date
->2021-04-09</date>
+>2021‒04‒09</date>
 <releaseinfo
 >Plasma 5.21</releaseinfo>
 
@@ -164,7 +166,7 @@
 <para
 >Bu sayfa, başlık çubuğundaki düğme konumunu özelleştirmenizi sağlar. Örneğin, <guilabel
 >Uygulama Menüsü</guilabel
->'nü başlık çubuğuna koyun, kaldırın veya sizi rahat ettiren bir sıralama elde edene kadar düğmeleri sürükleyin. </para>
+>’nü başlık çubuğuna koyun, kaldırın veya sizi rahat ettiren bir sıralama elde edene kadar düğmeleri sürükleyin. </para>
 
 <screenshot>
 <screeninfo
@@ -182,7 +184,7 @@
 
 <para
 >Kapat düğmesine ek bir seçenek isterseniz veya başlık çubuğundan kaldırdıysanız <guilabel
->Menü düğmesine çift tıklayarak pencereleri kapat</guilabel
+>Pencere menüsü düğmesine çift tıklayarak pencereleri kapat</guilabel
 > seçeneğini işaretleyin. </para>
 
 <para

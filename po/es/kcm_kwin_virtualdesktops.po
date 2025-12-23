@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_virtualdesktops\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:44+0000\n"
+"POT-Creation-Date: 2025-12-23 00:42+0000\n"
 "PO-Revision-Date: 2025-12-09 11:50+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -65,31 +65,31 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Añadir escritorio"
 
-#: ui/main.qml:82
+#: ui/main.qml:90
 #, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "Cambiar nombre"
 
-#: ui/main.qml:92
+#: ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Eliminar"
 
-#: ui/main.qml:107
+#: ui/main.qml:119
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
 msgstr "Aplicar nuevo nombre"
 
-#: ui/main.qml:120
+#: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
 msgstr "Cancelar cambio de nombre"
 
-#: ui/main.qml:165
+#: ui/main.qml:179
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -99,37 +99,37 @@ msgstr ""
 "de preferencias. Si guarda ahora estas preferencias se sobrescribirán las "
 "modificaciones."
 
-#: ui/main.qml:181
+#: ui/main.qml:195
 #, kde-format
 msgid "Row %1"
 msgstr "Fila %1"
 
-#: ui/main.qml:195
+#: ui/main.qml:209
 #, kde-format
 msgid "Options:"
 msgstr "Opciones:"
 
-#: ui/main.qml:197
+#: ui/main.qml:211
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Navegación cíclica"
 
-#: ui/main.qml:215
+#: ui/main.qml:229
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Mostrar animación al cambiar:"
 
-#: ui/main.qml:266
+#: ui/main.qml:280
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Mostrar información en la pantalla al cambiar:"
 
-#: ui/main.qml:285
+#: ui/main.qml:299
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:309
+#: ui/main.qml:323
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostrar indicadores de disposición de escritorio"

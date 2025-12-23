@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:44+0000\n"
+"POT-Creation-Date: 2025-12-23 00:42+0000\n"
 "PO-Revision-Date: 2024-05-08 19:50+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -64,7 +64,7 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Legg til skrivebord"
 
-#: ui/main.qml:82
+#: ui/main.qml:90
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid "Rename"
@@ -72,13 +72,13 @@ msgctxt "@action:button"
 msgid "Rename"
 msgstr "Endra namn"
 
-#: ui/main.qml:92
+#: ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Fjern"
 
-#: ui/main.qml:107
+#: ui/main.qml:119
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid "Confirm new name"
@@ -86,13 +86,13 @@ msgctxt "@info:tooltip"
 msgid "Apply new name"
 msgstr "Stadfest nytt namn"
 
-#: ui/main.qml:120
+#: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
 msgstr ""
 
-#: ui/main.qml:165
+#: ui/main.qml:179
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -101,37 +101,37 @@ msgstr ""
 "Virtuelle skrivebord er endra utanfrå (utanfor dette "
 "innstillingsprogrammet). Viss du lagrar, vil du overskriva desse endringane."
 
-#: ui/main.qml:181
+#: ui/main.qml:195
 #, kde-format
 msgid "Row %1"
 msgstr "Rad %1"
 
-#: ui/main.qml:195
+#: ui/main.qml:209
 #, kde-format
 msgid "Options:"
 msgstr "Val:"
 
-#: ui/main.qml:197
+#: ui/main.qml:211
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Navigering går rundt"
 
-#: ui/main.qml:215
+#: ui/main.qml:229
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Vis animasjon ved byte:"
 
-#: ui/main.qml:266
+#: ui/main.qml:280
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Vis skjermmeldingar ved byte:"
 
-#: ui/main.qml:285
+#: ui/main.qml:299
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:309
+#: ui/main.qml:323
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Vis skrivebordoppsett-indikatorar"

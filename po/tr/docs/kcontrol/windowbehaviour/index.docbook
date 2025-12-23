@@ -43,7 +43,7 @@
 </authorgroup>
 
 <date
->2022-08-31</date>
+>2022‒08‒31</date>
 <releaseinfo
 >Plasma 5.26</releaseinfo>
 
@@ -110,7 +110,7 @@
 
 <note>
 <para
->&plasma;'nın yerel pencere yöneticisi &kwin;'i kullanmazsanız bu modüldeki yapılandırmanın etkili olmayacağını lütfen unutmayın. Farklı bir pencere yöneticisi kullanıyorsanız lütfen pencere davranışını nasıl özelleştireceğinizle ilgili belgelere bakın. </para>
+>&plasma;’nın yerel pencere yöneticisi &kwin;’i kullanmazsanız bu modüldeki yapılandırmanın etkili olmayacağını lütfen unutmayın. Farklı bir pencere yöneticisi kullanıyorsanız lütfen pencere davranışını nasıl özelleştireceğinizle ilgili belgelere bakın. </para>
 </note>
 
 <sect2 id="focus">
@@ -120,7 +120,7 @@
 <para
 >Çalışma alanının <quote
 >odak</quote
->'ı, kullanıcının o anda üzerinde çalıştığı pencereyi ifade eder. Odaklı pencere genellikle <quote
+>’ı, kullanıcının o anda üzerinde çalıştığı pencereyi ifade eder. Odaklı pencere genellikle <quote
 >etkin pencere</quote
 > olarak adlandırılır. </para>
 
@@ -134,7 +134,7 @@
 >Pencere etkinleştirme politikası</title>
 
 <para
->&kwin;'in geçerli odağı belirlemek için kullanacağı altı yöntem vardır: </para>
+>&kwin;’in geçerli odağı belirlemek için kullanacağı altı yöntem vardır: </para>
 
 <variablelist>
 
@@ -160,7 +160,7 @@
 >Odak için tıkla</guilabel
 > ile aynıdır. Sistem tarafından etkin bir pencerenin seçilmesi gerekiyorsa (&eg;,. o anda etkin olan kapalı olduğu için), farenin altındaki pencere tercih edilen adaydır. Alışılmadık; ancak <guilabel
 >Odak için tıkla</guilabel
->'nın olası bir çeşididir. </para>
+>’nın olası bir çeşididir. </para>
 </listitem>
 </varlistentry>
 
@@ -222,7 +222,7 @@
 <para
 ><guilabel
 >Odak farenin altında</guilabel
->'ya benzer; ancak yorumuyla daha da katıdır. Yalnızca fare işaretçisinin altındaki pencere etkindir. Fare işaretçisi bir pencerenin üzerinde değilse hiçbir pencerenin odağı yoktur. <keycombo action="simul"
+>’ya benzer; ancak yorumuyla daha da katıdır. Yalnızca fare işaretçisinin altındaki pencere etkindir. Fare işaretçisi bir pencerenin üzerinde değilse hiçbir pencerenin odağı yoktur. <keycombo action="simul"
 >&Alt;<keycap
 >F2</keycap
 ></keycombo
@@ -238,11 +238,11 @@
 >Odak farenin altında</guilabel
 > ve <guilabel
 >Odak katıca farenin altında</guilabel
->'nın <guilabel
+>’nın <guilabel
 >Odak çalma koruması</guilabel
 > ve <keycombo action="simul"
 >&Alt;&Tab;</keycombo
-> gibi bazı özelliklerin düzgün çalışmasını  önlediğini unutmayın. </para>
+> gibi bazı özelliklerin düzgün çalışmasını önlediğini unutmayın. </para>
 </note>
 
 </sect3>
@@ -350,7 +350,7 @@
 
 <tip>
 <para
->Gecikmeyi çok kısa ayarlamak pencerelerin hızlı bir şekilde değiştirilmesine neden olur ve bu oldukça dikkat dağıtıcı olabilir. Çoğu insan 100-300 ms’lik bir gecikmeyi sevecektir. Bu duyarlıdır, ancak hedefinize giderken o pencereyi öne getirmeden pencerenin köşelerinden kaydırmanıza izin verir. </para>
+>Gecikmeyi çok kısa ayarlamak pencerelerin hızlı bir şekilde değiştirilmesine neden olur ve bu oldukça dikkat dağıtıcı olabilir. Çoğu insan 100–300 ms’lik bir gecikmeyi sevecektir. Bu duyarlıdır, ancak hedefinize giderken o pencereyi öne getirmeden pencerenin köşelerinden kaydırmanıza izin verir. </para>
 </tip>
 
 </sect3>
@@ -690,7 +690,7 @@
 <varlistentry>
 <term
 ><guilabel
->Eylemler menüsünü göster</guilabel
+>Pencere menüsü</guilabel
 ></term>
 <listitem>
 <para
@@ -898,7 +898,7 @@
 >Sağ</mousebutton
 > düğme tıklamaları ve <guilabel
 >Fare Tekerleği</guilabel
->'ne farklı eylemler atayabilirsiniz. </para>
+>’ne farklı eylemler atayabilirsiniz. </para>
 
 <para
 >Fare düğmeleri için seçenekleriniz şunlardır: </para>
@@ -1003,6 +1003,17 @@
 <listitem>
 <para
 >Pencereyi daha az saydam yapar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Pencere menüsü</guilabel
+></term>
+<listitem>
+<para
+>Pencere ile ilgili komutları seçebileceğiniz küçük bir alt menü açacaktır (&eg;, Masaüstüne Taşı, Ekrana Taşı, Ekranı Kapla, Simge Durumuna Küçült, Kapat, vb.). </para>
 </listitem>
 </varlistentry>
 
@@ -1126,7 +1137,7 @@
 <para
 >Bu sayfa, <guilabel
 >Tutturma Bölgeleri</guilabel
->'ni yapılandırmanıza izin verir. Bunlar, ekranın ve her pencerenin kenarı boyunca uzanan manyetik bir alan gibidir; bu, yakına taşındığında pencerelerin yan yana oturmasını sağlar. </para>
+>’ni yapılandırmanıza izin verir. Bunlar, ekranın ve her pencerenin kenarı boyunca uzanan manyetik bir alan gibidir; bu, yakına taşındığında pencerelerin yan yana oturmasını sağlar. </para>
 
 <variablelist>
 
@@ -1159,7 +1170,7 @@
 ></term>
 <listitem>
 <para
->Burada ekran merkezi için tutturma bölgesini, yani pencerelerin yanına taşındığında ekranın merkezine yapışmasını sağlayacak manyetik alanın 'kuvvetini' ayarlayabilirsiniz. </para>
+>Burada ekran merkezi için tutturma bölgesini, yani pencerelerin yanına taşındığında ekranın merkezine yapışmasını sağlayacak manyetik alanın “kuvvetini” ayarlayabilirsiniz. </para>
 </listitem>
 </varlistentry>
 
@@ -1309,7 +1320,7 @@
 >Pencere Kuralları</guilabel
 > oluşturabilirsiniz. Bunu, bir pencerenin başlık çubuğuna sağ tıklayıp <guimenu
 >Diğer Eylemler</guimenu
->'i seçerek veya <guilabel
+>’i seçerek veya <guilabel
 >Pencere Yönetimi</guilabel
 > sistem ayarları bölümündeki <guilabel
 >Pencere Kuralları</guilabel
@@ -1332,7 +1343,7 @@
 ></term>
 <listitem>
 <para
->Etkinleştirildiğinde, etkin olmayan uygulamaların izlence pencereleri (araç pencereleri, parçalanmış menüler, ...) gizlenecek ve yalnızca uygulama etkin olduğunda gösterilecektir. Bu özelliğin çalışması için uygulamaların pencereleri uygun pencere türüyle işaretlemesi gerektiğini unutmayın. </para>
+>Etkinleştirildiğinde, etkin olmayan uygulamaların izlence pencereleri (araç pencereleri, parçalanmış menüler, …) gizlenecek ve yalnızca uygulama etkin olduğunda gösterilecektir. Bu özelliğin çalışması için uygulamaların pencereleri uygun pencere türüyle işaretlemesi gerektiğini unutmayın. </para>
 </listitem>
 </varlistentry>
 

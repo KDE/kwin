@@ -13,7 +13,7 @@
 <author>
 <personname
 ><firstname
->Bu belgelendirmenin bir kısmı KDE Kullanıcı Tabanı<ulink url="https://userbase.kde.org/KWin Rules"
+>Bu belgelendirmenin bir kısmı KDE Kullanıcı Tabanı<ulink url="https://userbase.kde.org/KWin_Rules"
 >KWin Kuralları</ulink
 > sayfasından dönüştürülmüş ve &kde; Belgelendirme Takımı tarafından Plasma 5.8 için uyarlanmıştır.</firstname
 > <surname
@@ -39,7 +39,7 @@
 <legalnotice
 >&FDLNotice;</legalnotice>
 <date
->2016-06-23</date>
+>2016‒06‒23</date>
       <releaseinfo
 >Plasma 5.8</releaseinfo>
 <abstract>
@@ -68,7 +68,7 @@
 
 <note>
 <para
->&plasma;'nın yerel pencere yöneticisi &kwin;'i kullanmazsanız bu modüldeki yapılandırmanın etkili olmayacağını lütfen unutmayın. Farklı bir pencere yöneticisi kullanıyorsanız lütfen pencere davranışını nasıl özelleştireceğinizle ilgili belgelere bakın.</para>
+>&plasma;’nın yerel pencere yöneticisi &kwin;’i kullanmazsanız bu modüldeki yapılandırmanın etkili olmayacağını lütfen unutmayın. Farklı bir pencere yöneticisi kullanıyorsanız lütfen pencere davranışını nasıl özelleştireceğinizle ilgili belgelere bakın.</para>
 </note>
 
 <para
@@ -80,15 +80,15 @@
 >Geometriyi, yerleşimi, bir pencerenin diğerlerinin üzerinde mi yoksa altında mı tutulması gerektiğini, odak çalmayı önlemeyi ve saydamlık ayarlarını kapsar.</para>
 
 <para
->Bu modüle iki şekilde erişebilirsiniz: Yapılandırmak istediğiniz uygulamanın başlık çubuğundan veya &systemsettings;'ndan. &systemsettings; içinden başlatırsanız bir pencere profili oluşturmak için <guibutton
+>Bu modüle iki şekilde erişebilirsiniz: Yapılandırmak istediğiniz uygulamanın başlık çubuğundan veya &systemsettings;’ndan. &systemsettings; içinden başlatırsanız bir pencere profili oluşturmak için <guibutton
 >Yeni..</guibutton
->'yi ve ortaya çıkan iletişim kutusundaki <guibutton
+>’yi ve ortaya çıkan iletişim kutusundaki <guibutton
 >Pencere Özelliklerini Algıla</guibutton
 > düğmesini kullanarak yapılandırmak istediğiniz uygulama için gerekli bilgileri kısmen doldurabilirsiniz.</para>
 
 <para
 >Ayrıca istediğiniz bir zamanda herhangi bir depolanan ayarlar profilini <guibutton
->Değiştir...</guibutton
+>Değiştir…</guibutton
 > veya <guibutton
 >Sil</guibutton
 > yapabilir ve listeyi yeniden sıralayabilirsiniz. <guibutton
@@ -116,11 +116,11 @@
 <para
 ><link linkend="kwin-rule-editor"
 >&kwin; Kural Düzenleyicisi</link
->'ni kullanma ve <link linkend="window-matching"
+>’ni kullanma ve <link linkend="window-matching"
 >Pencere Eşleştirme</link
->'yi ve <link linkend="window-attributes"
+>’yi ve <link linkend="window-attributes"
 >Pencere Öznitelikleri</link
->'ni belirtmek üzerine adım adım <link linkend="examples"
+>’ni belirtmek üzerine adım adım <link linkend="examples"
 >örnekler</link
 > sağlanır. </para>
 </chapter>
@@ -135,7 +135,7 @@
 <para
 ><link linkend="application-workarounds"
 >Uygulama Geçici Çözümü</link
->'nü ele almak için özel bir sayfa ayrılmıştır. </para>
+>’nü ele almak için özel bir sayfa ayrılmıştır. </para>
 </chapter>
 <chapter id="kwin-rule-editor"
 ><title
@@ -169,13 +169,13 @@
 ><guimenu
 >Daha Fazla Eylem</guimenu
 ><guimenuitem
->Pencere Yöneticisi Ayarları...</guimenuitem
+>Pencere Yöneticisi Ayarları…</guimenuitem
 ></menuchoice
 > ve <guilabel
 >Yapılandır</guilabel
 > penceresinde <guilabel
 >Pencere Kuralları</guilabel
->'nı seçin veya şu yolu izleyin:</para
+>’nı seçin veya şu yolu izleyin:</para
 ></listitem>
 </itemizedlist>
 <itemizedlist>
@@ -198,9 +198,9 @@
 <listitem
 ><para
 >Kuralları, <guilabel
->Yeni...</guilabel
+>Yeni…</guilabel
 >, <guilabel
->Değiştir...</guilabel
+>Değiştir…</guilabel
 > ve <guilabel
 >Sil</guilabel
 > ile etkilemek</para
@@ -237,7 +237,7 @@
 <para
 ><tip
 ><para
->Önce daha kısıtlayıcı kurallar koyarak alt pencereleri uygulama için uyarlayabilirsiniz - örnek olarak <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>Önce daha kısıtlayıcı kurallar koyarak alt pencereleri uygulama için uyarlayabilirsiniz — örnek olarak <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
 >Kopete ve Kopete Sohbet Penceresi</link
 > verilebilir.</para
 ></tip>
@@ -352,12 +352,12 @@
 ><para
 ><guilabel
 >Pencere sınıfı (uygulama)</guilabel
-> - sınıfı eşleştirin.<itemizedlist
+> — sınıfı eşleştirin.<itemizedlist
 > <listitem
 ><para
 ><guilabel
 >Tüm pencere sınıfını eşleştir</guilabel
-> - ikincil sınıfı eşleştirmeyi içerir.</para
+> — ikincil sınıfı eşleştirmeyi içerir.</para
 ></listitem>
 </itemizedlist>
 </para
@@ -366,7 +366,7 @@
 ><para
 ><guilabel
 >Pencere rolü</guilabel
-> - eşleşmeyi pencerenin işleviyle sınırlayın (&eg;, bir <emphasis
+> — eşleşmeyi pencerenin işleviyle sınırlayın (&eg;, bir <emphasis
 >ana pencere</emphasis
 >, bir <emphasis
 >sohbet penceresi</emphasis
@@ -376,7 +376,7 @@
 ><para
 ><guilabel
 >Pencere türleri</guilabel
-> - eşleşmeyi pencere türüyle sınırlayın: <guilabel
+> — eşleşmeyi pencere türüyle sınırlayın: <guilabel
 >Normal Pencere</guilabel
 >, <guilabel
 >İletişim Kutusu</guilabel
@@ -386,13 +386,13 @@
 ><para
 ><guilabel
 >Pencere başlığı</guilabel
-> - eşleşmeyi pencerenin başlığıyla sınırlayın.</para
+> — eşleşmeyi pencerenin başlığıyla sınırlayın.</para
 ></listitem>
 <listitem
 ><para
 ><guilabel
 >Makine (makine adı)</guilabel
-> - eşleşmeyi, pencereyle ilişkili makine adıyla kısıtlayın.</para
+> — eşleşmeyi, pencereyle ilişkili makine adıyla kısıtlayın.</para
 ></listitem>
 </itemizedlist>
 <para
@@ -404,13 +404,13 @@
 ></tip>
 </para>
 <para
->Her alan için, alan değerine karşı aşağıdaki işleçler uygulanabilir: </para>
+>Her alan için alan değerine karşı aşağıdaki işleçler uygulanabilir: </para>
 <itemizedlist>
 <listitem
 ><para
 ><guilabel
 >Önemsiz</guilabel
-> - alanı yok sayın.</para
+> — alanı yok sayın.</para
 ></listitem>
 <listitem
 ><para
@@ -450,7 +450,7 @@
 ><para
 ><guilabel
 >Düzenli İfade</guilabel
-> - Qt’nin düzenli ifadeleri uygulanır - bkz. <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+> — Qt’nin düzenli ifadeleri uygulanır — bkz. <ulink url="https://doc.qt.io/qt-5/qregexp.html"
 >düzenli ifadeler kullanarak model eşleştirme</ulink
 >.</para
 ></listitem>
@@ -494,7 +494,7 @@
 ><para
 ><guilabel
 >Pencere Özelliklerini Algıla</guilabel
->'ya tıklayın ve</para
+>’ya tıklayın ve</para
 ></listitem>
 <listitem
 ><para
@@ -507,7 +507,7 @@
 ><para
 ><guilabel
 >İkincil sınıf adı</guilabel
-> - bazı uygulamaların ikincil bir sınıf adı vardır. Bu değer, pencereleri bu değere göre kısıtlamak için kullanılabilir.</para
+> — bazı uygulamaların ikincil bir sınıf adı vardır. Bu değer, pencereleri bu değere göre kısıtlamak için kullanılabilir.</para
 ></listitem>
 <listitem
 ><para
@@ -544,7 +544,7 @@
 >Sınıf</guilabel
 > içindeki belirli bir pencere <guilabel
 >Tür</guilabel
->'üne uygulanabilir; örneğin, bir <guilabel
+>’üne uygulanabilir; örneğin, bir <guilabel
 >Araç Çubuğu</guilabel
 >. </para>
 </sect1>
@@ -673,7 +673,7 @@
 ><para
 ><guilabel
 >Pencere Özelliklerini Algıla</guilabel
-> düğmesi özniteliğe özgü değerleri geri doldurur - daha fazla bilgi için <link linkend="window-matching"
+> düğmesi özniteliğe özgü değerleri geri doldurur — daha fazla bilgi için <link linkend="window-matching"
 >Pencere Eşleştirme</link
 > bölümüne bakın. Örneğin, <guilabel
 >Boyut</guilabel
@@ -718,7 +718,7 @@
 <para
 ><tip
 ><para
->&kwin;'in başlangıç noktası (0,0), masaüstünün sol üst köşesidir.</para
+>&kwin;’in başlangıç noktası (0,0), masaüstünün sol üst köşesidir.</para
 ></tip>
 </para>
 <variablelist>
@@ -759,7 +759,7 @@
 >Sanal Masaüstlerine</emphasis
 > yerleştirmek için <guilabel
 >Tüm Masaüstleri</guilabel
->'ni kullanın.</para>
+>’ni kullanın.</para>
      </listitem>
   </varlistentry>
   <varlistentry
@@ -801,31 +801,31 @@
 ><para
 ><guilabel
 >Öntanımlı</guilabel
-> - genel pencere yerleştirme stratejisini kullanın.</para
+> — genel pencere yerleştirme stratejisini kullanın.</para
 ></listitem>
 <listitem
 ><para
 ><guilabel
 >Yerleştirme yok</guilabel
-> - sol üst köşe.</para
+> — sol üst köşe.</para
 ></listitem>
 <listitem
 ><para
 ><guilabel
 >En az çakışan</guilabel
-> - başka pencerenin olmadığı yerdir.</para
+> — başka pencerenin olmadığı yerdir.</para
 ></listitem>
 <listitem
 ><para
 ><guilabel
 >Ekranı kaplamış</guilabel
-> - pencereyi ekranı kaplamış olarak başlatın.</para
+> — pencereyi ekranı kaplamış olarak başlatın.</para
 ></listitem>
 <listitem
 ><para
 ><guilabel
 >Ortalanmış</guilabel
-> - masaüstünün merkezi.</para
+> — masaüstünün merkezi.</para
 ></listitem>
 <listitem
 ><para
@@ -849,7 +849,7 @@
 ><para
 ><guilabel
 >Ana pencerede</guilabel
-> - bir alt pencerenin yerleşimini ana pencerenin sınırlarıyla sınırlayın.</para
+> — bir alt pencerenin yerleşimini ana pencerenin sınırlarıyla sınırlayın.</para
 ></listitem>
 </itemizedlist>
 
@@ -997,7 +997,7 @@
     <listitem>
     <para
 >Pencereye bir kısayol atayın. <guilabel
->Düzenle...</guilabel
+>Düzenle…</guilabel
 > tıklandığında, ek yönergeler sunulur.</para>
      </listitem>
   </varlistentry>
@@ -1064,7 +1064,7 @@
 <itemizedlist>
 <listitem
 ><para
->Yok - Odağı her zaman pencereye verin.</para
+>Yok — Odağı her zaman pencereye verin.</para
 ></listitem>
 <listitem
 ><para
@@ -1080,7 +1080,7 @@
 ></listitem>
 <listitem
 ><para
->Çok Yüksek - Pencerenin odak isteği reddedildi. Odak, yalnızca fare aracılığıyla açıkça istendiğinde verilir.</para
+>Çok Yüksek — Pencerenin odak isteği reddedildi. Odak, yalnızca fare aracılığıyla açıkça istendiğinde verilir.</para
 ></listitem>
 </itemizedlist>
 
@@ -1092,7 +1092,7 @@
 ><para
 >Bir pencereyi saltokunur yapmak ve herhangi bir klavye girişini kabul etmemesi için <guilabel
 >Odağı kabul et</guilabel
->'e bakın.</para
+>’e bakın.</para
 ></tip>
 </para>
 <variablelist>
@@ -1121,9 +1121,9 @@
 ><guimenuitem
 >Global Kısayollar</guimenuitem
 ></menuchoice
->'da tanımlandığı üzere veya <guilabel
+>’da tanımlandığı üzere veya <guilabel
 >konsole</guilabel
->'da <varname
+>’da <varname
 >kcmshell6 keys</varname
 > yazarak).</para>
      </listitem>
@@ -1267,9 +1267,9 @@
 ><title
 >Bir Pencereyi Masaüstüne Sabitleyin ve Diğer Öznitelikleri Ayarlayın</title>
 <para
->&akregator;'ü <emphasis
+>&akregator;’ü <emphasis
 >Sanal Masaüstü 2</emphasis
->'ye sabitleyin. Ek olarak, uygulamayı yeğlenen bir boyutla ve konumda başlatın. Her bir öznitelik için <guilabel
+>’ye sabitleyin. Ek olarak, uygulamayı yeğlenen bir boyutla ve konumda başlatın. Her bir öznitelik için <guilabel
 >Başlangıçta Uygula</guilabel
 > <link linkend="parameters"
 >parametresini</link
@@ -1279,7 +1279,7 @@
 <orderedlist>
 <listitem
 ><para
->&akregator;'ü <emphasis
+>&akregator;’ü <emphasis
 >ikinci masaüstünde</emphasis
 > başlatın ve istediğiniz gibi konumlandırıp boyutlandırın: <screenshot>
 <screeninfo
@@ -1302,9 +1302,9 @@
 ><guimenu
 >Daha Fazla Eylem</guimenu
 ><guimenuitem
->Pencere Yöneticisi Ayarları...</guimenuitem
+>Pencere Yöneticisi Ayarları…</guimenuitem
 ></menuchoice
->'nı seçin: <screenshot>
+>’nı seçin: <screenshot>
 <screeninfo
 ></screeninfo>
   <mediaobject>
@@ -1323,9 +1323,9 @@
 ><para
 >Sol sütunda <guilabel
 >Pencere Kuralları</guilabel
->'nı seçin ve <guilabel
->Yeni...</guilabel
->'ye tıklayın: <screenshot>
+>’nı seçin ve <guilabel
+>Yeni…</guilabel
+>’ye tıklayın: <screenshot>
 <screeninfo
 ></screeninfo>
   <mediaobject>
@@ -1367,7 +1367,7 @@
 >0 sn gecikme</guilabel
 > ile <guilabel
 >Pencere Özelliklerini Algıla</guilabel
->'ya tıklayın, imleç hemen artı işaretine dönüşür. &akregator; penceresi içinde (herhangi bir yere) tıklayın; (ancak başlık çubuğuna değil). Pencere kriterleri sunulur. Yalnızca birincil sınıf adına göre eşleştirin, bu nedenle onay kutularını işaretlemeyin - ek bilgi için <link linkend="window-matching"
+>’ya tıklayın, imleç hemen artı işaretine dönüşür. &akregator; penceresi içinde (herhangi bir yere) tıklayın; (ancak başlık çubuğuna değil). Pencere kriterleri sunulur. Yalnızca birincil sınıf adına göre eşleştirin, bu nedenle onay kutularını işaretlemeyin — ek bilgi için <link linkend="window-matching"
 >pencere eşleştirme</link
 > bölümüne bakın: <screenshot>
 <screeninfo
@@ -1388,7 +1388,7 @@
 ><para
 >Önceki pencerede <guilabel
 >Tamam</guilabel
->'a tıklamak, <guilabel
+>’a tıklamak, <guilabel
 >Pencere Eşleştirme</guilabel
 > sekmesindeki sonuçları geri doldurur. <guilabel
 >Açıklama</guilabel
@@ -1438,9 +1438,9 @@
 ><para
 >Önceki pencerede <guilabel
 >Tamam</guilabel
->'e tıklandığında ana <guilabel
+>’a tıklandığında ana <guilabel
 >KWin Kuralları</guilabel
->'na geri dönülür. Açıklamasıyla birlikte yeni kural listelenmiştir: <screenshot>
+>’na geri dönülür. Açıklamasıyla birlikte yeni kural listelenmiştir: <screenshot>
 <screeninfo
 ></screeninfo>
   <mediaobject>
@@ -1459,7 +1459,7 @@
 ><para
 >Pencereyi kapatmak için <guilabel
 >Tamam</guilabel
->'a tıklayın.</para
+>’a tıklayın.</para
 ></listitem>
 <listitem
 ><para
@@ -1514,11 +1514,11 @@
 ><para
 ><guilabel
 >Pencere Özelliklerini Algıla</guilabel
->'yı kullanın ve <guilabel
+>’yı kullanın ve <guilabel
 >Kopete Sohbeti</guilabel
 > penceresini seçin. Kriterleri sohbet pencereleriyle sınırlamak için <guilabel
 >Pencere rolü</guilabel
-> kutusunu işaretleyin - ek bilgi için <link linkend="window-matching"
+> kutusunu işaretleyin — ek bilgi için <link linkend="window-matching"
 >pencere eşleştirme</link
 >bölümüne bakın: <screenshot>
 <screeninfo
@@ -1539,7 +1539,7 @@
 ><para
 >Önceki pencerede <guilabel
 >Tamam</guilabel
->'a tıklandığında <guilabel
+>’a tıklandığında <guilabel
 >Pencere Eşleştirme</guilabel
 > sekmesindeki sonuçlar geri doldurulur. <guilabel
 >Açıklama</guilabel
@@ -1605,13 +1605,13 @@
 ><title
 >Kopete Kuralı</title>
 <para
->&kopete;'nin açık olduğunu varsayarsak: </para>
+>&kopete;’nin açık olduğunu varsayarsak: </para>
 <orderedlist>
 <listitem
 ><para
 ><guilabel
 >Pencere Özelliklerini Algıla</guilabel
->'yı kullanın ve &kopete; penceresini seçin. Yalnızca birincil sınıf adına göre eşleştirin, bu nedenle onay kutularını işaretlemeyin - ek bilgi için <link linkend="window-matching"
+>’yı kullanın ve &kopete; penceresini seçin. Yalnızca birincil sınıf adına göre eşleştirin, bu nedenle onay kutularını işaretlemeyin — ek bilgi için <link linkend="window-matching"
 >pencere eşleştirme</link
 > bölümüne bakın: <screenshot>
 <screeninfo
@@ -1632,7 +1632,7 @@
 ><para
 >Önceki pencerede <guilabel
 >Tamam</guilabel
->'a tıklandığında <guilabel
+>’a tıklandığında <guilabel
 >Pencere Eşleştirme</guilabel
 > sekmesindeki sonuçlar geri doldurulur. <guilabel
 >Açıklama</guilabel
@@ -1708,15 +1708,15 @@
 <para
 >Bir <emphasis
 >yapışkan not</emphasis
->' penceresinin var olduğunu varsayarsak: </para>
+> penceresinin var olduğunu varsayarsak: </para>
 <orderedlist>
 <listitem
 ><para
 ><guilabel
 >Pencere Özelliklerini Algıla</guilabel
->'yı kullanın ve herhangi bir <emphasis
+>’yı kullanın ve herhangi bir <emphasis
 >yapışkan not</emphasis
-> penceresini seçin. Yalnızca birincil sınıf adına göre eşleştirin, bu nedenle onay kutularını işaretlemeyin - ek bilgi için <link linkend="window-matching"
+> penceresini seçin. Yalnızca birincil sınıf adına göre eşleştirin, bu nedenle onay kutularını işaretlemeyin — ek bilgi için <link linkend="window-matching"
 >pencere eşleştirme</link
 > bölümüne bakın: <screenshot>
 <screeninfo
@@ -1737,7 +1737,7 @@
 ><para
 >Önceki pencerede <guilabel
 >Tamam</guilabel
->'a tıklandığında <guilabel
+>’a tıklandığında <guilabel
 >Pencere Eşleştirme</guilabel
 > sekmesindeki sonuçlar geri doldurulur. <guilabel
 >Açıklama</guilabel
@@ -1824,9 +1824,9 @@
 ><para
 ><application
 >Thunderbird</application
->'ün ana penceresini <emphasis
+>’ün ana penceresini <emphasis
 >Sanal Masaüstü 1</emphasis
->'e masaüstünde belirli bir boyut ve konumla sabitleyin.</para
+>’e masaüstünde belirli bir boyut ve konumla sabitleyin.</para
 ></listitem>
 <listitem
 ><para
@@ -1847,7 +1847,7 @@
 > etkileyecek kadar önemli değildir. </para>
 <sect2 id="thunderbird---main"
 ><title
->Thunderbird - Ana</title>
+>Thunderbird — Ana</title>
 <para
 ><guilabel
 >Thunderbird Ana</guilabel
@@ -1857,11 +1857,11 @@
 ><para
 ><guilabel
 >Pencere Özelliklerini Algıla</guilabel
->'yı kullanın ve <guilabel
+>’yı kullanın ve <guilabel
 >Thunderbird Ana</guilabel
 > penceresini seçin. Kriterleri ana pencereyle sınırlamak için <guilabel
 >Pencere rolü</guilabel
-> kutusunu işaretleyin - ek bilgi için <link linkend="window-matching"
+> kutusunu işaretleyin — ek bilgi için <link linkend="window-matching"
 >pencere eşleştirme</link
 > bölümüne bakın: <screenshot>
 <screeninfo
@@ -1882,7 +1882,7 @@
 ><para
 >Önceki pencerede <guilabel
 >Tamam</guilabel
->'a tıklandığında <guilabel
+>’a tıklandığında <guilabel
 >Pencere Eşleştirme</guilabel
 > sekmesindeki sonuçlar geri doldurulur. <guilabel
 >Açıklama</guilabel
@@ -1926,7 +1926,7 @@
 </sect2>
 <sect2 id="thunderbird---composer"
 ><title
->Thunderbird - Oluşturucu</title>
+>Thunderbird — Oluşturucu</title>
 <para
 >Bir <guilabel
 >Thunderbird Oluşturucu</guilabel
@@ -1936,13 +1936,13 @@
 ><para
 ><guilabel
 >Pencere Özelliklerini Algıla</guilabel
->'yı kullanın ve <guilabel
+>’yı kullanın ve <guilabel
 >Thunderbird Oluşturucu</guilabel
 > penceresini seçin. Kriterleri oluşturucu pencereleriyle sınırlamak için <guilabel
 >Pencere rolü</guilabel
 > ve <guilabel
 >Pencere türü</guilabel
-> kutularını işaretleyin - ek bilgi için <link linkend="window-matching"
+> kutularını işaretleyin — ek bilgi için <link linkend="window-matching"
 >pencere eşleştirme</link
 > bölümüne bakın: <screenshot>
 <screeninfo
@@ -1963,7 +1963,7 @@
 ><para
 >Önceki pencerede <guilabel
 >Tamam</guilabel
->'a tıklandığında <guilabel
+>’a tıklandığında <guilabel
 >Pencere Eşleştirme</guilabel
 > sekmesindeki sonuçlar geri doldurulur. <guilabel
 >Açıklama</guilabel
@@ -2007,7 +2007,7 @@
 </sect2>
 <sect2 id="thunderbird---reminder"
 ><title
->Thunderbird - Anımsatıcı</title>
+>Thunderbird — Anımsatıcı</title>
 <para
 >Bir <guilabel
 >Thunderbird Anımsatıcı</guilabel
@@ -2017,13 +2017,13 @@
 ><para
 ><guilabel
 >Pencere Özelliklerini Algıla</guilabel
->'yı kullanın ve <guilabel
+>’yı kullanın ve <guilabel
 >Thunderbird Anımsatıcı</guilabel
 > penceresini seçin. Kriterleri anımsatma pencereleriyle sınırlamak için <guilabel
 >İkincil sınıf adı</guilabel
 > ve <guilabel
 >Pencere Türü</guilabel
-> kutularını işaretleyin - ek bilgi için <link linkend="window-matching"
+> kutularını işaretleyin — ek bilgi için <link linkend="window-matching"
 >pencere eşleştirme</link 
 > bölümüne bakın: <screenshot>
 <screeninfo
@@ -2044,7 +2044,7 @@
 ><para
 >Önceki pencerede <guilabel
 >Tamam</guilabel
->'a tıklandığında <guilabel
+>’a tıklandığında <guilabel
 >Pencere Eşleştirme</guilabel
 > sekmesindeki sonuçlar geri doldurulur. <guilabel
 >Açıklama</guilabel
@@ -2108,8 +2108,8 @@
 <para
 >&Emacs; ve <guilabel
 >gVim</guilabel
->, büyütüldüğünde (tam ekran kipi) ve belirli koşullar altında pencere yeniden boyutlandırma sorunlarıyla karşılaşabilir - bkz. <ulink url="https://bugs.kde.org/show_bug.cgi? id=252314"
->Emacs window resizes...</ulink
+>, büyütüldüğünde (tam ekran kipi) ve belirli koşullar altında pencere yeniden boyutlandırma sorunlarıyla karşılaşabilir — bkz. <ulink url="https://bugs.kde.org/show_bug.cgi? id=252314"
+>Emacs window resizes…</ulink
 >. Bir &kwin; Kuralı, soruna geçici bir çözüm getiriyor. </para>
 <para
 >Bir &Emacs; penceresinin açık olduğunu varsayarsak: </para>
@@ -2118,9 +2118,9 @@
 ><para
 ><guilabel
 >Pencere Özelliklerini Algıla</guilabel
->'yı kullanın ve &Emacs; penceresini seçin. Yalnızca <guilabel
+>’yı kullanın ve &Emacs; penceresini seçin. Yalnızca <guilabel
 >birincil sınıf adına</guilabel
-> göre eşleştirin, bu nedenle onay kutularını işaretlemeyin - ek bilgi için <link linkend="window-matching"
+> göre eşleştirin, bu nedenle onay kutularını işaretlemeyin — ek bilgi için <link linkend="window-matching"
 >pencere eşleştirme</link
 > bölümüne bakın. <screenshot>
 <screeninfo
@@ -2141,7 +2141,7 @@
 ><para
 >Önceki pencerede <guilabel
 >Tamam</guilabel
->'a tıklandığında <guilabel
+>’a tıklandığında <guilabel
 >Pencere Eşleştirme</guilabel
 > sekmesindeki sonuçlar geri doldurulur. <guilabel
 >Açıklama</guilabel
@@ -2198,7 +2198,7 @@
 <title
 >Emeği Geçenler ve Lisans</title>
       <para
->Belgelendirme telif hakkı için Kullanıcı Tabanı <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>Belgelendirme telif hakkı için Kullanıcı Tabanı <ulink url="https://userbase.kde.org/index.php?title=KWin_Rules&amp;action=history"
 >KWin Kuralları sayfa geçmişine</ulink
 > bakın</para>
       <para

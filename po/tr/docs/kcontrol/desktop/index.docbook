@@ -34,7 +34,7 @@
 </authorgroup>
 
 <date
->2021-04-09</date>
+>2021‒04‒09</date>
 <releaseinfo
 >Plasma 5.20</releaseinfo>
 
@@ -63,7 +63,7 @@
 >Ekle</guibutton
 > düğmesine basın (öntanımlı adı <guilabel
 >Yeni Masaüstü</guilabel
->'dür). </para>
+>’dür). </para>
 <para
 >Paneldeki sayfalayıcıda satır sayısını yapılandırabilirsiniz. Masaüstü sayısını ayarlamak için listenin altındaki satır giriş kutusunu kullanmanız yeterlidir. Masaüstleri, satırlara göre kendiliğinden yeniden düzenlenecektir. </para>
 
@@ -92,7 +92,7 @@
 >Masaüstü Küp Canlandırması</guilabel
 > veya <guilabel
 >Masaüstünü Soldur</guilabel
->'u seçin veya ögenin işaretini kaldırarak canlandırmaları kapatın. Seçilen canlandırmanın ayar seçenekleri varsa bir yapılandırma iletişim kutusunu başlatmak için açılır kutunun sağındaki araçlar simgesine tıklayın. </para
+>’u seçin veya ögenin işaretini kaldırarak canlandırmaları kapatın. Seçilen canlandırmanın ayar seçenekleri varsa bir yapılandırma iletişim kutusunu başlatmak için açılır kutunun sağındaki araçlar simgesine tıklayın. </para
 ></listitem>
 </varlistentry>
 
@@ -129,7 +129,7 @@
 >Masaüstü Ayarları</guilabel
 > içindeki <guilabel
 >Fare Eylemleri</guilabel
->'nden değiştirebilirsiniz (<keycombo action="simul"
+>’nden değiştirebilirsiniz (<keycombo action="simul"
 >&Alt;<keycap
 >D</keycap
 ></keycombo

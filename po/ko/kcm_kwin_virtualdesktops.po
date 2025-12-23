@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:44+0000\n"
+"POT-Creation-Date: 2025-12-23 00:42+0000\n"
 "PO-Revision-Date: 2024-08-20 00:23+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -61,7 +61,7 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "바탕 화면 추가"
 
-#: ui/main.qml:82
+#: ui/main.qml:90
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid "Rename"
@@ -69,13 +69,13 @@ msgctxt "@action:button"
 msgid "Rename"
 msgstr "이름 바꾸기"
 
-#: ui/main.qml:92
+#: ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "삭제"
 
-#: ui/main.qml:107
+#: ui/main.qml:119
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid "Confirm new name"
@@ -83,13 +83,13 @@ msgctxt "@info:tooltip"
 msgid "Apply new name"
 msgstr "새 이름 확인"
 
-#: ui/main.qml:120
+#: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
 msgstr ""
 
-#: ui/main.qml:165
+#: ui/main.qml:179
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -98,37 +98,37 @@ msgstr ""
 "가상 바탕 화면 설정이 이 앱 외부에서 변경되었습니다. 설정을 저장하면 해당 변"
 "경 사항을 덮어씁니다."
 
-#: ui/main.qml:181
+#: ui/main.qml:195
 #, kde-format
 msgid "Row %1"
 msgstr "%1줄"
 
-#: ui/main.qml:195
+#: ui/main.qml:209
 #, kde-format
 msgid "Options:"
 msgstr "옵션:"
 
-#: ui/main.qml:197
+#: ui/main.qml:211
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "탐색 시 끝에 도달했을 때 되돌아가기"
 
-#: ui/main.qml:215
+#: ui/main.qml:229
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "전환 시 사용할 애니메이션:"
 
-#: ui/main.qml:266
+#: ui/main.qml:280
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "전환 시 화면 상 표시 내용:"
 
-#: ui/main.qml:285
+#: ui/main.qml:299
 #, kde-format
 msgid "%1 ms"
 msgstr "%1밀리초"
 
-#: ui/main.qml:309
+#: ui/main.qml:323
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "바탕 화면 레이아웃 표시기 표시"

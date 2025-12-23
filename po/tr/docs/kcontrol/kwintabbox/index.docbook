@@ -29,7 +29,7 @@
 </authorgroup>
 
 <date
->2023-01-30</date>
+>2023‒01‒30</date>
 <releaseinfo
 >&plasma; 5.27</releaseinfo>
 
@@ -98,7 +98,7 @@
 > (3B kart yığını) ve <guilabel
 >Orta Yuvarlak</guilabel
 > (bir Microsoft &Windows; tarzı simgeler listesi) vardır. İletişim kutusunun sağ alt kısmındaki <guibutton
->Yeni Görev Değiştiriciler Al...</guibutton
+>Yeni Görev Değiştiriciler Al…</guibutton
 > düğmesine tıklayarak daha birçok görselleştirme indirilebilir ve kurulabilir.</para>
 
 <para
@@ -111,7 +111,7 @@
 
 <note
 ><para
->İstenen Görev Değiştiricisi görselleştirmesinin gösterilemediği durumlar olabilir. Bu durumlardan biri, 'bileşikleştirme' adı verilen bir işlemin kapatıldığı veya devre dışı bırakıldığı zaman olabilir. Böyle bir durumda, pencere listesi yine de gösterilir; ancak çok basit bir biçimde.</para
+>İstenen Görev Değiştiricisi görselleştirmesinin gösterilemediği durumlar olabilir. Bu durumlardan biri, “bileşikleştirme” adı verilen bir işlemin kapatıldığı veya devre dışı bırakıldığı zaman olabilir. Böyle bir durumda, pencere listesi yine de gösterilir; ancak çok basit bir biçimde.</para
 ></note>
 </sect2>
 
@@ -184,8 +184,8 @@
 
 <para
 ><guilabel
->"Masaüstünü Göster" simgesini içer</guilabel
-> seçeneği, pencere listesine bir Masaüstünü Göster seçeneği ekleyecektir. Bu, kullanıcının gösterilecek 'pencere' olarak Masaüstünü kolayca seçmesini sağlar.</para>
+>“Masaüstüne Bak” simgesini içer</guilabel
+> seçeneği, pencere listesine bir Masaüstüne Bak seçeneği ekleyecektir. Bu, kullanıcının gösterilecek “pencere” olarak Masaüstünü kolayca seçmesini sağlar.</para>
 
 <para
 ><guilabel
@@ -200,7 +200,7 @@
 
 <sect2 id="filter-windows-by">
 <title
->Pencereleri süzme ölçütü</title>
+>Pencereleri Şuna Göre Süz</title>
 <para
 >Bu bölüm, Görev Değiştiricisi’nin pencere listesini ek olarak süzmek için seçenekler içerir.</para>
 
@@ -211,7 +211,7 @@
 >Geçerli masaüstü</guilabel
 > ögesini seçin. Sanal masaüstlerinde yalnızca şu anda etkin olmayan pencereleri göstermek için <guilabel
 >Diğer tüm masaüstleri</guilabel
->'ni seçin.</para>
+>’ni seçin.</para>
 
 <para
 ><guilabel
@@ -220,16 +220,16 @@
 >Geçerli etkinlik</guilabel
 > ögesini seçin. Yalnızca şu anda etkin olmayan etkinliklerin parçası olan pencereleri göstermek için <guilabel
 >Diğer tüm etkinlikler</guilabel
->'i seçin.</para>
+>’i seçin.</para>
 
 <para
 ><guilabel
 >Ekranlar</guilabel
 > seçeneği, o anda etkin olan görüntüleme ekranına göre pencerelerin listesini süzer. Yalnızca o anda üzerinde fare işaretçisinin bulunduğu ekranda bulunan pencereleri göstermek için <guilabel
 >Geçerli ekran</guilabel
->'ı seçin. Diğer tüm ekranlardaki pencereleri göstermek için <guilabel
+>’ı seçin. Diğer tüm ekranlardaki pencereleri göstermek için <guilabel
 >Diğer tüm ekranlar</guilabel
->'ı seçin. Bu seçenek, çoklu monitör kurulumunda aynı monitörde bulunan pencereler arasında tez geçiş yapmak isteyen kullanıcılar için yararlı olabilir.</para>
+>’ı seçin. Bu seçenek, çoklu monitör kurulumunda aynı monitörde bulunan pencereler arasında tez geçiş yapmak isteyen kullanıcılar için yararlı olabilir.</para>
 <note
 ><para
 >Etkin ekran, o anda etkin pencerenin açık olduğu ekran değil, fare işaretçisinin o anda üzerinde olduğu ekrandır.</para
@@ -240,9 +240,9 @@
 >Simge durumuna küçültme</guilabel
 > seçeneği, pencerelerin listesini gizli olup olmamalarına göre süzer. Yalnızca simge durumuna küçültülmemiş pencereleri göstermek için <guilabel
 >Görünür pencereler</guilabel
->'i seçin. Yalnızca simge durumuna küçültülmüş pencereleri göstermek için <guilabel
+>’i seçin. Yalnızca simge durumuna küçültülmüş pencereleri göstermek için <guilabel
 >Gizli pencereler</guilabel
->'i seçin.</para>
+>’i seçin.</para>
 
 <para
 >Bu bölümdeki bir seçeneğin işaretini kaldırırsanız o seçenek için herhangi bir süzgeç uygulanmaz. Örneğin, Ekranlar seçeneğini işaretler ve diğer üç seçeneği temizlerseniz Görev Değiştiricisi pencere listesi yalnızca geçerli ekranda hangi pencerelerin bulunduğuna göre süzülür.</para>

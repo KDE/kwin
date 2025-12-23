@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-19 00:45+0000\n"
-"PO-Revision-Date: 2025-11-28 09:53+0100\n"
+"PO-Revision-Date: 2025-12-14 08:33+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.3\n"
+"X-Generator: Lokalize 25.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -4183,21 +4183,24 @@ msgstr ""
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr ""
+"Impossibile aggiungere una modalità personalizzata con una dimensione vuota"
 
 #: wayland/outputmanagement_v2.cpp:635
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
+"Impossibile aggiungere una modalità personalizzata con una frequenza di "
+"aggiornamento di zero Hz"
 
 #: wayland/outputmanagement_v2.cpp:642
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "La posizione dell'uscita %s è negativa, questo non è supportato"
 
 #: wayland/outputmanagement_v2.cpp:646
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "La posizione dell'uscita %s è troppo grande (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:663
 #, kde-format

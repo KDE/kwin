@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-09 00:44+0000\n"
+"POT-Creation-Date: 2025-12-23 00:42+0000\n"
 "PO-Revision-Date: 2025-12-09 09:18+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -63,31 +63,31 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "სამუშაო მაგიდის დამატება"
 
-#: ui/main.qml:82
+#: ui/main.qml:90
 #, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "სახელის გადარქმევა"
 
-#: ui/main.qml:92
+#: ui/main.qml:100
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "წაშლა"
 
-#: ui/main.qml:107
+#: ui/main.qml:119
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
 msgstr "ახალი სახელის გამოყენება"
 
-#: ui/main.qml:120
+#: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
 msgstr "სახელის გადარქმევის გაუქმება"
 
-#: ui/main.qml:165
+#: ui/main.qml:179
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -96,37 +96,37 @@ msgstr ""
 "ვირტუალური სამუშაო მაგიდები შეიცვალა მორგების აპლიკაციის გარეთ. ახლა თუ "
 "შეინახავთ, ყველა ცვლილება დაიკარგება."
 
-#: ui/main.qml:181
+#: ui/main.qml:195
 #, kde-format
 msgid "Row %1"
 msgstr "მწკრივი %1"
 
-#: ui/main.qml:195
+#: ui/main.qml:209
 #, kde-format
 msgid "Options:"
 msgstr "პარამეტრები:"
 
-#: ui/main.qml:197
+#: ui/main.qml:211
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "ნავიგაცის გადატანა"
 
-#: ui/main.qml:215
+#: ui/main.qml:229
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "გადათვისას ანიმაციის ჩვენება:"
 
-#: ui/main.qml:266
+#: ui/main.qml:280
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "გადართვისას ეკრანის ჩვენება:"
 
-#: ui/main.qml:285
+#: ui/main.qml:299
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 მწმ"
 
-#: ui/main.qml:309
+#: ui/main.qml:323
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "სამუშაო მაგიდის განლაგების ინდიკატორების ჩვენება"
