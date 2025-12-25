@@ -57,6 +57,7 @@ public:
         Hidden = 1,
         Embedded = 2,
         Metadata = 4,
+        Interactive = 8,
     };
     Q_ENUM(CursorMode)
 

@@ -16,6 +16,7 @@
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "input_event.h"
+#include "main.h"
 
 #include <QAction>
 
@@ -32,7 +33,9 @@ namespace KWin
 MouseClickEffect::MouseClickEffect()
 {
     MouseClickConfig::instance(effects->config());
-    m_enabled = false;
+
+    connect(kwinApp(), &Application::hasInteractiveScreenCastChanged,
+            this, &MouseClickEffect::onHasInteractiveScreenCastChanged);
 
     QAction *a = new QAction(this);
     a->setObjectName(QStringLiteral("ToggleMouseClick"));
@@ -226,11 +229,41 @@ bool MouseClickEffect::isPressed(Qt::MouseButtons button, Qt::MouseButtons butto
     return (button & buttons) && !(button & oldButtons);
 }
 
+bool MouseClickEffect::effectiveEnabled() const
+{
+    return m_enabled || m_enabledByScreenCast;
+}
+
 void MouseClickEffect::toggleEnabled()
 {
-    m_enabled = !m_enabled;
+    const bool oldEnabled = effectiveEnabled();
+    // Let user toggling the effect override screen cast auto enable.
+    if (m_enabledByScreenCast) {
+        m_enabledByScreenCast = false;
+        m_enabled = false;
+    } else {
+        m_enabled = !m_enabled;
+    }
 
-    if (m_enabled) {
+    if (oldEnabled != effectiveEnabled()) {
+        maybeEnable();
+    }
+}
+
+// FIXME config option
+void MouseClickEffect::onHasInteractiveScreenCastChanged(bool hasInteractiveScreenCast)
+{
+    const bool oldEnabled = effectiveEnabled();
+    m_enabledByScreenCast = hasInteractiveScreenCast;
+
+    if (oldEnabled != effectiveEnabled()) {
+        maybeEnable();
+    }
+}
+
+void MouseClickEffect::maybeEnable()
+{
+    if (m_enabled || m_enabledByScreenCast) {
         connect(effects, &EffectsHandler::mouseChanged, this, &MouseClickEffect::slotMouseChanged);
     } else {
         disconnect(effects, &EffectsHandler::mouseChanged, this, &MouseClickEffect::slotMouseChanged);
@@ -247,7 +280,7 @@ void MouseClickEffect::toggleEnabled()
 
 bool MouseClickEffect::isActive() const
 {
-    return m_enabled && (m_clicks.size() != 0 || !m_tabletTools.isEmpty());
+    return effectiveEnabled() && (m_clicks.size() != 0 || !m_tabletTools.isEmpty());
 }
 
 void MouseClickEffect::drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)

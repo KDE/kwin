@@ -224,6 +224,9 @@ public:
     bool supportsGlobalShortcuts() const;
     void setSupportsGlobalShortcuts(bool set);
 
+    bool hasInteractiveScreenCast() const;
+    void setHasInteractiveScreenCast(bool set);
+
     void installNativeX11EventFilter();
     void removeNativeX11EventFilter();
 
@@ -290,6 +293,7 @@ Q_SIGNALS:
     void xwaylandScaleChanged();
     void workspaceCreated();
     void virtualTerminalCreated();
+    void hasInteractiveScreenCastChanged(bool set);
 
 protected:
     Application(int &argc, char **argv);
@@ -330,6 +334,7 @@ private:
     bool m_initiallyLocked = false;
     bool m_supportsLockScreen = true;
     bool m_supportsGlobalShortcuts = true;
+    bool m_hasInteractiveScreenCast = false;
     KSharedConfigPtr m_config;
     KSharedConfigPtr m_kxkbConfig;
     KSharedConfigPtr m_inputConfig;
@@ -380,6 +385,11 @@ inline bool Application::supportsGlobalShortcuts() const
 inline void Application::setSupportsGlobalShortcuts(bool set)
 {
     m_supportsGlobalShortcuts = set;
+}
+
+inline bool Application::hasInteractiveScreenCast() const
+{
+    return m_hasInteractiveScreenCast;
 }
 
 inline static Application *kwinApp()

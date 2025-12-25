@@ -641,6 +641,14 @@ void Application::startInteractivePositionSelection(std::function<void(const QPo
     input()->startInteractivePositionSelection(callback);
 }
 
+void Application::setHasInteractiveScreenCast(bool set)
+{
+    if (m_hasInteractiveScreenCast != set) {
+        m_hasInteractiveScreenCast = set;
+        Q_EMIT hasInteractiveScreenCastChanged(set);
+    }
+}
+
 } // namespace
 
 #include "moc_main.cpp"

@@ -51,6 +51,7 @@ private:
 
     ScreencastV1Interface *m_screencast;
     std::shared_ptr<PipeWireCore> m_pipewireConnectionCache;
+    QList<ScreenCastStream *> m_readyStreams;
 };
 
 } // namespace KWin

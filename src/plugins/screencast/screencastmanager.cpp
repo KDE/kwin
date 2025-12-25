@@ -163,13 +163,30 @@ void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream,
 void ScreencastManager::integrateStreams(ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream)
 {
     connect(waylandStream, &ScreencastStreamV1Interface::finished, stream, &ScreenCastStream::close);
+
     connect(stream, &ScreenCastStream::closed, waylandStream, [stream, waylandStream] {
         waylandStream->sendClosed();
         stream->deleteLater();
     });
-    connect(stream, &ScreenCastStream::ready, stream, [waylandStream](uint nodeid) {
+    connect(stream, &ScreenCastStream::closed, this, [this, stream] {
+        m_readyStreams.removeOne(stream);
+        const bool hasInteractiveScreenCast = std::any_of(m_readyStreams.cbegin(), m_readyStreams.cend(), [](auto *stream) {
+            // FIXME check interactive
+            Q_UNUSED(stream);
+            return true;
+        });
+        kwinApp()->setHasInteractiveScreenCast(hasInteractiveScreenCast);
+    });
+
+    connect(stream, &ScreenCastStream::ready, waylandStream, [stream, waylandStream](uint nodeid) {
         waylandStream->sendCreated(nodeid);
     });
+    connect(stream, &ScreenCastStream::ready, this, [this, stream] {
+        m_readyStreams.append(stream);
+        // FIXME check if interactive
+        kwinApp()->setHasInteractiveScreenCast(true);
+    });
+
     if (!stream->init()) {
         waylandStream->sendFailed(stream->error());
         delete stream;

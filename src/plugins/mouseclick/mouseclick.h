@@ -128,6 +128,10 @@ private Q_SLOTS:
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
+    bool effectiveEnabled() const;
+    void maybeEnable();
+    void onHasInteractiveScreenCastChanged(bool hasInteractiveScreenCast);
+
     std::unique_ptr<EffectFrame> createEffectFrame(const QPoint &pos, const QString &text);
     inline void drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
 
@@ -159,7 +163,8 @@ private:
     std::unique_ptr<MouseButton> m_buttons[BUTTON_COUNT];
     QHash<InputDeviceTabletTool *, TabletToolEvent> m_tabletTools;
 
-    bool m_enabled;
+    bool m_enabled = false;
+    bool m_enabledByScreenCast = false;
 };
 
 } // namespace
