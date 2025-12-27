@@ -13,7 +13,7 @@
 <author>
 <personname
 ><firstname
->Delen van deze documentatie zijn geconverteerd uit de pagina in de KDE UserBase <ulink url="https://userbase.kde.org/KWin Rules"
+>Delen van deze documentatie zijn geconverteerd uit de pagina in de KDE UserBase <ulink url="https://userbase.kde.org/KWin_Rules"
 >KWin-regels</ulink
 > en bijgewerkt door het documentatieteam van &kde; naar Plasma 5.8.</firstname
 > <surname
@@ -2184,7 +2184,7 @@
 <title
 >Dankbetuigingen en licentie</title>
       <para
->Documentatie copyright zie de UserBase <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>Documentatie copyright zie de UserBase <ulink url="https://userbase.kde.org/index.php?title=KWin_Rules&amp;action=history"
 >KWin-regels paginageschiedenis</ulink
 ></para>
       &meld.fouten;&vertaling.niels;&vertaling.natalie;&vertaling.freek; &underFDL; </chapter>
