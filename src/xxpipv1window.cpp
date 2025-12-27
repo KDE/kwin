@@ -94,7 +94,7 @@ XdgSurfaceConfigure *XXPipV1Window::sendRoleConfigure() const
     }
 
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
-    configureEvent->bounds = moveResizeGeometry();
+    configureEvent->gravityRect = moveResizeGeometry();
     configureEvent->serial = m_shellSurface->sendConfigureSize(geometry.size());
 
     return configureEvent;

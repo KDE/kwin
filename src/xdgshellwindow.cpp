@@ -126,7 +126,7 @@ void XdgSurfaceWindow::sendConfigure()
     configureEvent->scale = m_nextTargetScale;
     m_configureFlags = {};
     if (!isInteractiveMoveResize()) {
-        m_nextGravity = Gravity::None;
+        m_nextGravity = Gravity::Center;
     }
 
     m_configureEvents.append(configureEvent);
@@ -202,6 +202,12 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
     if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
         setTargetScale(configureEvent->scale);
     }
+
+    if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
+        m_gravity = configureEvent->gravity;
+        m_gravityRect = configureEvent->gravityRect;
+    }
+
     const RectF boundingGeometry = surface()->boundingRect();
 
     // The effective window geometry is defined as the intersection of the window geometry
@@ -224,12 +230,6 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
     }
 
     RectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
-    if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
-        if (configureEvent->flags & XdgSurfaceConfigure::ConfigurePosition) {
-            frameGeometry = configureEvent->gravity.apply(frameGeometry, configureEvent->bounds);
-        }
-    }
-
     if (isInteractiveMove()) {
         bool fullscreen = isFullScreen();
         if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
@@ -241,6 +241,8 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
             frameGeometry.moveTopLeft(QPointF(anchor.x() - offset.x() * frameGeometry.width(),
                                               anchor.y() - offset.y() * frameGeometry.height()));
         }
+    } else {
+        frameGeometry = m_gravity.apply(frameGeometry, m_gravityRect);
     }
 
     maybeUpdateMoveResizeGeometry(frameGeometry);
@@ -282,12 +284,19 @@ void XdgSurfaceWindow::moveResizeInternal(const RectF &rect, MoveResizeMode mode
             scheduleConfigure();
         }
     } else {
+        const RectF effectiveRect(rect.topLeft(), size());
+
         // If the window is moved, cancel any queued window position updates.
         for (XdgSurfaceConfigure *configureEvent : std::as_const(m_configureEvents)) {
             configureEvent->flags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
+            configureEvent->gravity = Gravity::Center;
+            configureEvent->gravityRect = effectiveRect;
         }
+
         m_configureFlags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
-        updateGeometry(RectF(rect.topLeft(), size()));
+        m_gravity = Gravity::Center;
+        m_gravityRect = effectiveRect;
+        updateGeometry(effectiveRect);
     }
 }
 
@@ -824,7 +833,7 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
     const quint32 serial = m_shellSurface->sendConfigure(nextClientSize.toSize(), m_nextStates);
 
     XdgToplevelConfigure *configureEvent = new XdgToplevelConfigure();
-    configureEvent->bounds = moveResizeGeometry();
+    configureEvent->gravityRect = moveResizeGeometry();
     configureEvent->states = m_nextStates;
     configureEvent->decoration = m_nextDecoration;
     configureEvent->decorationState = m_nextDecorationState;
@@ -939,7 +948,7 @@ void XdgToplevelWindow::doSetQuickTileMode()
 
 bool XdgToplevelWindow::doStartInteractiveMoveResize()
 {
-    if (interactiveMoveResizeGravity() != Gravity::None) {
+    if (interactiveMoveResizeGravity() != Gravity::Center) {
         m_nextGravity = interactiveMoveResizeGravity();
         m_nextStates |= XdgToplevelInterface::State::Resizing;
         scheduleConfigure();
@@ -2000,7 +2009,7 @@ XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure() const
     const quint32 serial = m_shellSurface->sendConfigure(m_relativePlacement.toRect());
 
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
-    configureEvent->bounds = moveResizeGeometry();
+    configureEvent->gravityRect = moveResizeGeometry();
     configureEvent->serial = serial;
 
     return configureEvent;

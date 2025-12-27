@@ -10,7 +10,7 @@ namespace KWin
 {
 
 Gravity::Gravity()
-    : m_kind(None)
+    : m_kind(Center)
 {
 }
 
@@ -29,6 +29,9 @@ QRectF Gravity::apply(const QRectF &rect, const QRectF &bounds) const
     QRectF geometry = rect;
 
     switch (m_kind) {
+    case Gravity::Center:
+        geometry.moveCenter(bounds.center());
+        break;
     case Gravity::TopLeft:
         geometry.moveRight(bounds.right());
         geometry.moveBottom(bounds.bottom());
@@ -41,7 +44,6 @@ QRectF Gravity::apply(const QRectF &rect, const QRectF &bounds) const
     case Gravity::Right:
     case Gravity::BottomRight:
     case Gravity::Bottom:
-    case Gravity::None:
         geometry.moveLeft(bounds.left());
         geometry.moveTop(bounds.top());
         break;

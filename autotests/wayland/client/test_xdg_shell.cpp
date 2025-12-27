@@ -379,7 +379,7 @@ void XdgShellTest::testResize_data()
     QTest::addColumn<Qt::Edges>("edges");
     QTest::addColumn<KWin::Gravity::Kind>("gravity");
 
-    QTest::newRow("none") << Qt::Edges() << KWin::Gravity::None;
+    QTest::newRow("none") << Qt::Edges() << KWin::Gravity::Center;
     QTest::newRow("top") << Qt::Edges(Qt::TopEdge) << KWin::Gravity::Top;
     QTest::newRow("bottom") << Qt::Edges(Qt::BottomEdge) << KWin::Gravity::Bottom;
     QTest::newRow("left") << Qt::Edges(Qt::LeftEdge) << KWin::Gravity::Left;

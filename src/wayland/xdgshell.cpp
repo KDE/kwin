@@ -466,7 +466,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_resize(Resource *resource, ::wl_r
     Gravity gravity;
     switch (xdgEdges) {
     case resize_edge_none:
-        gravity = Gravity::None;
+        gravity = Gravity::Center;
         break;
     case resize_edge_top:
         gravity = Gravity::Top;

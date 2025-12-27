@@ -49,7 +49,7 @@ public:
     };
     Q_DECLARE_FLAGS(ConfigureFlags, ConfigureFlag)
 
-    RectF bounds;
+    RectF gravityRect;
     Gravity gravity;
     qreal serial;
     ConfigureFlags flags;
@@ -85,7 +85,9 @@ protected:
     QPointer<PlasmaShellSurfaceInterface> m_plasmaShellSurface;
 
     WindowType m_windowType = WindowType::Normal;
-    Gravity m_nextGravity = Gravity::None;
+    Gravity m_gravity = Gravity::Center;
+    Gravity m_nextGravity = Gravity::Center;
+    RectF m_gravityRect;
 
 private:
     void handleConfigureAcknowledged(quint32 serial);

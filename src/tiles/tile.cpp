@@ -99,7 +99,7 @@ bool Tile::supportsResizeGravity(Gravity gravity)
         return m_relativeGeometry.bottom() < 1.0 && m_relativeGeometry.left() > 0.0;
     case Gravity::BottomRight:
         return m_relativeGeometry.bottom() < 1.0 && m_relativeGeometry.right() < 1.0;
-    case Gravity::None:
+    case Gravity::Center:
     default:
         return false;
     }
@@ -332,7 +332,7 @@ void Tile::resizeFromGravity(Gravity gravity, int x_root, int y_root)
     case Gravity::Right:
         newGeom.setRight(relativePos.x() + m_padding / outGeom.width());
         break;
-    case Gravity::None:
+    case Gravity::Center:
         Q_UNREACHABLE();
         break;
     }

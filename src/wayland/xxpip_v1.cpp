@@ -205,7 +205,7 @@ void XXPipV1InterfacePrivate::xx_pip_v1_resize(Resource *resource, struct ::wl_r
     Gravity gravity;
     switch (edges) {
     case resize_edge_none:
-        gravity = Gravity::None;
+        gravity = Gravity::Center;
         break;
     case resize_edge_top:
         gravity = Gravity::Top;

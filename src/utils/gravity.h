@@ -20,7 +20,7 @@ class KWIN_EXPORT Gravity
 {
 public:
     enum Kind {
-        None,
+        Center,
         Left,
         Right,
         Top,
