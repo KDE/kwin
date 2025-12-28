@@ -219,6 +219,16 @@ void EffectTogglableState::addInverseGesture(ConfigurableGesture *gesture)
     connect(gesture->reverseAction(), &QAction::triggered, activateAction(), &QAction::triggered);
 }
 
+void EffectTogglableState::removeGesture(ConfigurableGesture *gesture)
+{
+    disconnect(gesture, &ConfigurableGesture::forwardProgress, this, nullptr);
+    disconnect(gesture, &ConfigurableGesture::reverseProgress, this, nullptr);
+    disconnect(gesture->forwardAction(), &QAction::triggered, activateAction(), &QAction::triggered);
+    disconnect(gesture->forwardAction(), &QAction::triggered, deactivateAction(), &QAction::triggered);
+    disconnect(gesture->reverseAction(), &QAction::triggered, activateAction(), &QAction::triggered);
+    disconnect(gesture->reverseAction(), &QAction::triggered, deactivateAction(), &QAction::triggered);
+}
+
 void EffectTogglableGesture::addTouchpadPinchGesture(PinchDirection direction, uint fingerCount)
 {
     effects->registerTouchpadPinchShortcut(direction, fingerCount, m_state->activateAction(), m_state->progressCallback());

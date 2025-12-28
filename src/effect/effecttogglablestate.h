@@ -72,6 +72,7 @@ public:
 
     void addGesture(ConfigurableGesture *gesture);
     void addInverseGesture(ConfigurableGesture *gesture);
+    void removeGesture(ConfigurableGesture *gesture);
 
 Q_SIGNALS:
     void inProgressChanged();

@@ -31,12 +31,15 @@ OverviewEffect::OverviewEffect()
     , m_gridState(new EffectTogglableState(this))
     , m_border(new EffectTogglableTouchBorder(m_overviewState))
     , m_gridBorder(new EffectTogglableTouchBorder(m_gridState))
-    , m_gesture(effects->registerGesture("builtin_overview", "overview effect"))
+    , m_overviewGesture(effects->registerGesture("builtin_overview", "overview effect"))
+    , m_gridGesture(effects->registerGesture("builtin_grid", "grid effect"))
     , m_shutdownTimer(new QTimer(this))
 {
-    m_overviewState->addGesture(m_gesture.get());
-    m_transitionState->addGesture(m_gesture.get());
-    m_gridState->addInverseGesture(m_gesture.get());
+    // initial [overviewGesture: overviewState]-> overview [overviewGesture: transitionState]-> grid [overviewGesture: inverse gridState]-> initial
+    // initial [gridGesture: gridState]-> grid [gridGesture: inverse transitionState]-> overview [gridGesture: inverse overviewState]-> initial
+    // m_transitionState will get its gesture assigned during initial progress
+    m_overviewState->addGesture(m_overviewGesture.get());
+    m_gridState->addGesture(m_gridGesture.get());
     m_transitionState->stop();
 
     connect(m_overviewState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::overviewGestureInProgressChanged);
@@ -46,6 +49,12 @@ OverviewEffect::OverviewEffect()
         if (status == EffectTogglableState::Status::Activating || status == EffectTogglableState::Status::Active) {
             m_searchText = QString();
             setRunning(true);
+            if (m_gridState->status() != EffectTogglableState::Status::Stopped) {
+                m_transitionState->removeGesture(m_gridGesture.get());
+                m_transitionState->addGesture(m_overviewGesture.get());
+                m_gridState->removeGesture(m_gridGesture.get());
+                m_gridState->addInverseGesture(m_overviewGesture.get());
+            }
             m_gridState->stop();
         }
         if (status == EffectTogglableState::Status::Active) {
@@ -55,6 +64,8 @@ OverviewEffect::OverviewEffect()
             m_transitionState->stop();
         }
         if (status == EffectTogglableState::Status::Inactive) {
+            m_gridState->removeGesture(m_overviewGesture.get());
+            m_gridState->addGesture(m_gridGesture.get());
             m_gridState->deactivate();
             deactivate();
         }
@@ -79,9 +90,17 @@ OverviewEffect::OverviewEffect()
         if (status == EffectTogglableState::Status::Activating || status == EffectTogglableState::Status::Active) {
             m_searchText = QString();
             setRunning(true);
+            if (m_overviewState->status() != EffectTogglableState::Status::Stopped) {
+                m_transitionState->removeGesture(m_overviewGesture.get());
+                m_transitionState->addInverseGesture(m_gridGesture.get());
+                m_overviewState->removeGesture(m_overviewGesture.get());
+                m_overviewState->addInverseGesture(m_gridGesture.get());
+            }
             m_overviewState->stop();
         }
         if (status == EffectTogglableState::Status::Inactive) {
+            m_overviewState->removeGesture(m_gridGesture.get());
+            m_overviewState->addGesture(m_overviewGesture.get());
             m_overviewState->deactivate();
             deactivate();
         }

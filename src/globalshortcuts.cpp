@@ -211,7 +211,6 @@ bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt, K
             // trying the variants
             if (check(mods | Qt::ShiftModifier, keyQt, state)) {
                 return true;
-
             }
             if (check(mods | Qt::ShiftModifier, Qt::Key_Tab, state)) {
                 return true;
@@ -355,6 +354,20 @@ std::unique_ptr<ConfigurableGesture> GlobalShortcutsManager::registerGesture(con
             Q_EMIT gesture->forwardProgress(progress);
         });
         registerTouchscreenSwipe(SwipeDirection::Down, 3, ret->reverseAction(), [gesture = ret.get()](qreal progress) {
+            Q_EMIT gesture->reverseProgress(progress);
+        });
+    }
+    if (uniqueHandle == "builtin_grid") {
+        registerTouchpadSwipe(SwipeDirection::Down, 4, ret->forwardAction(), [gesture = ret.get()](qreal progress) {
+            Q_EMIT gesture->forwardProgress(progress);
+        });
+        registerTouchpadSwipe(SwipeDirection::Up, 4, ret->reverseAction(), [gesture = ret.get()](qreal progress) {
+            Q_EMIT gesture->reverseProgress(progress);
+        });
+        registerTouchscreenSwipe(SwipeDirection::Down, 3, ret->forwardAction(), [gesture = ret.get()](qreal progress) {
+            Q_EMIT gesture->forwardProgress(progress);
+        });
+        registerTouchscreenSwipe(SwipeDirection::Up, 3, ret->reverseAction(), [gesture = ret.get()](qreal progress) {
             Q_EMIT gesture->reverseProgress(progress);
         });
     }
