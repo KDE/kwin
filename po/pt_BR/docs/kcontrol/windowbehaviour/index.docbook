@@ -17,6 +17,14 @@
 >&Mike.McBride; &Mike.McBride.mail;</author>
 <author
 >&Jost.Schenck; &Jost.Schenck.mail;</author>
+<author
+><firstname
+>Natalie</firstname
+><surname
+>Clarius</surname
+><email
+>natalie_clarius@yahoo.de</email
+></author>
 <othercredit role="translator"
 ><firstname
 >Marcus</firstname
@@ -35,9 +43,9 @@
 </authorgroup>
 
 <date
->14/07/2015</date>
+>31/08/2022</date>
 <releaseinfo
->Plasma 5.3</releaseinfo>
+>Plasma 5.26</releaseinfo>
 
 <keywordset>
 <keyword
@@ -49,11 +57,28 @@
 <keyword
 >ações</keyword>
 <keyword
+>janela</keyword>
+<keyword
 >posicionamento da janela</keyword>
 <keyword
 >tamanho da janela</keyword>
+<keyword
+>gerenciamento de janelas</keyword>
+<keyword
+>comportamento das janelas</keyword>
+<keyword
+>foco</keyword>
+<keyword
+>elevar</keyword>
+<keyword
+>barra de título</keyword>
+<keyword
+>tela</keyword>
+<keyword
+>ajustar</keyword>
 </keywordset>
 </articleinfo>
+
 <sect1 id="window-behavior">
 <title
 >Comportamento das janelas</title>
@@ -62,58 +87,57 @@
 >Na parte superior deste módulo de controle, você poderá ver várias páginas: <guilabel
 >Foco</guilabel
 >, <guilabel
->Ações da Barra de Título</guilabel
+>Ações da barra de título</guilabel
 >, <guilabel
->Ações das Janelas</guilabel
+>Ações da janela</guilabel
 >, <guilabel
->Movimentação</guilabel
+>Movimento</guilabel
 > e <guilabel
 >Avançado</guilabel
 >. No painel <guilabel
 >Foco</guilabel
 >, você poderá configurar como as janelas podem ganhar ou perder o foco, &ie; ficar ativa ou inativa. Ao usar as páginas de <guilabel
->Ações da Barra de Título</guilabel
+>Ações da barra de título</guilabel
 > e <guilabel
->Ações da Janela</guilabel
+>Ações da janela</guilabel
 >, você poderá configurar a forma como as barras de título e as janelas reagem ao mouse. A <guilabel
->Movimentação</guilabel
+>Movimento</guilabel
 > permite-lhe configurar a forma como as janelas se movem ou se posicionam quando são iniciadas. As opções em <guilabel
 >Avançado</guilabel
 > cobrem algumas definições mais especializadas, como <quote
->paginação de janelas</quote
-> e <quote
 >enrolamento de janelas</quote
 >. </para>
 
 <note>
 <para
->Por favor, lembre-se de que estas configurações não terão efeito se não usar o &kwin;, o gerenciador de janelas nativo do &kde;, como o seu gerenciador de janelas. Se você usar um gerenciador de janelas diferente, veja na documentação deste gerenciador como configurar o comportamento das janelas. </para>
+>Por favor, lembre-se de que estas configurações não terão efeito se não usar o &kwin;, o gerenciador de janelas nativo do &plasma;, como o seu gerenciador de janelas. Se você usar um gerenciador de janelas diferente, veja na documentação deste gerenciador como configurar o comportamento das janelas. </para>
 </note>
 
-<sect2 id="action-focus">
+<sect2 id="focus">
 <title
 >Foco</title>
 
 <para
 >O <quote
 >foco</quote
-> da área de trabalho refere-se à janela que se encontra em primeiro plano e onde o usuário se encontra trabalhando. A janela em foco ou em primeiro plano é referida como sendo a <quote
+> do espaço de trabalho refere-se à janela que se encontra em primeiro plano e onde o usuário se encontra trabalhando. A janela em foco ou em primeiro plano é referida como sendo a <quote
 >janela ativa</quote
 >. </para>
 
 <para
 >O foco não significa necessariamente que a janela é a que se encontra à frente &mdash; esta normalmente diz-se <quote
 >elevada</quote
-> e, ainda que isto também seja aqui configurado, o foco e a elevação das janelas são configurados de forma independente.</para>
+> e, ainda que isto também seja aqui configurado, o foco e a elevação das janelas são configurados de forma independente. </para>
 
-<sect3 id="action-focus-focuspolicy">
+<sect3 id="focus-focuspolicy">
 <title
->Política de Foco</title>
+>Política de ativação das janelas</title>
 
 <para
->Existem seis métodos que o &kde; poderá usar para determinar o foco atual: </para>
+>Existem seis métodos que o &kwin; poderá usar para determinar o foco atual: </para>
 
 <variablelist>
+
 <varlistentry>
 <term
 ><guilabel
@@ -128,7 +152,7 @@
 <varlistentry>
 <term
 ><guilabel
->Clicar para obter o foco - Precedência do mouse</guilabel
+>Clicar para obter o foco (precedência do mouse)</guilabel
 ></term>
 <listitem>
 <para
@@ -154,7 +178,6 @@
 >, ficarão em primeiro plano, sem que você tenha que colocar o mouse em cima delas explicitamente. &eg;, as janelas que aparecem aleatoriamente sob o mouse não ficarão em primeiro plano. A prevenção de captura do foco toma lugar como de costume. Pense como o <guilabel
 >Clicar para obter o foco</guilabel
 >, mas sem ter que clicar. </para>
-
 <para
 >Nos outros gerenciadores de janelas, isto normalmente é conhecido como <quote
 >Foco desordenado segue o mouse</quote
@@ -165,7 +188,7 @@
 <varlistentry>
 <term
 ><guilabel
->Foco segue o mouse - Precedência do mouse</guilabel
+>Foco segue o mouse (precedência do mouse)</guilabel
 ></term>
 <listitem>
 <para
@@ -182,7 +205,7 @@
 ></term>
 <listitem>
 <para
->A janela que estiver sob o mouse no momento fica então ativa. Se o mouse não estiver sobre uma janela (por exemplo, se estiver na área de trabalho), a última janela que estava sob o cursor será a que estará em primeiro plano. As novas janelas, como a mini-linha de comando que é invocada com o <keycombo action="simul"
+>A janela que estiver sob o mouse no momento fica então ativa. Se o mouse não estiver sobre uma janela (por exemplo, se estiver sobre o papel de parede da área de trabalho), a última janela que estava sob o cursor será a que estará em primeiro plano. As novas janelas, como a mini-linha de comando que é invocada com o <keycombo action="simul"
 >&Alt;<keycap
 >F2</keycap
 ></keycombo
@@ -198,41 +221,51 @@
 <listitem>
 <para
 >É semelhante à opção <guilabel
->Foco Sob o Mouse</guilabel
+>Foco sob o mouse</guilabel
 >, só que a sua interpretação é ainda mais restrita. Somente a janela que estiver sob o cursor do mouse é que ficará ativa. Se o cursor do mouse não estiver sobre nenhuma janela, nada ficará em primeiro plano. As novas janelas, como a linha de comando que é invocada com o <keycombo action="simul"
 >&Alt;<keycap
 >F2</keycap
 ></keycombo
 >, não irão ficar em primeiro plano. Você terá que passar o cursor por cima dela para ser possível digitar. </para>
-
 </listitem>
 </varlistentry>
+
 </variablelist>
 
-<note
-><para
+<note>
+<para
 >Lembre-se que a opção <guilabel
->Foco Sob o Mouse</guilabel
+>Foco sob o mouse</guilabel
 > e a <guilabel
->Foco Restrito Sob o Mouse</guilabel
+>Foco estritamente sob o mouse</guilabel
 > impedem certas funcionalidades, como a <guilabel
 >Prevenção de captura do foco</guilabel
 > e a circulação pelas várias janelas com o <keycombo action="simul"
 >&Alt;&Tab;</keycombo
->, de se comportarem corretamente.</para>
+>, de se comportarem corretamente. </para>
 </note>
 
 </sect3>
 
-<sect3 id="action-focus-focusstealin">
+<sect3 id="focus-focusdelay">
 <title
->Nível de prevenção da captura do foco</title>
+>Atrasar o foco em</title>
 
 <para
->Esta opção indica como o KWin irá tentar evitar que o foco seja roubado devido à ativação inesperada de janelas novas.</para
+>Este é o tempo a aguardar para que a janela onde o ponteiro do mouse estiver, obtenha o foco de forma automática. </para>
+
+</sect3>
+
+<sect3 id="focus-focusstealing">
+<title
+>Prevenção de captura de foco</title>
+
+<para
+>Esta opção indica como o KWin irá tentar evitar que o foco seja roubado devido à ativação inesperada de janelas novas. </para
 > 
 
 <variablelist>
+
 <varlistentry>
 <term
 ><guilabel
@@ -243,6 +276,7 @@
 >A prevenção é desativada e as janelas novas ficam sempre ativadas.</para
 ></listitem>
 </varlistentry>
+
 <varlistentry>
 <term
 ><guilabel
@@ -253,6 +287,7 @@
 >A prevenção é ativada; quando alguma janela não tiver suporte para o mecanismo subjacente e o KWin não conseguir decidir de forma confiável se deve ativar a janela ou não, ela será desativada. Esta configuração poderá ter tanto resultados melhores ou piores que o nível médio, dependendo das aplicações.</para
 ></listitem>
 </varlistentry>
+
 <varlistentry>
 <term
 ><guilabel
@@ -274,6 +309,7 @@
 >As janelas novas só ficam ativadas se não estiver nenhuma ativada no momento ou se pertencerem à aplicação atualmente ativa. Esta configuração não será provavelmente muito útil se não estiver usando a política de foco com o mouse.</para
 ></listitem>
 </varlistentry>
+
 <varlistentry>
 <term
 ><guilabel
@@ -284,38 +320,73 @@
 >Todas as janelas terão que ser ativadas explicitamente pelo usuário.</para
 ></listitem>
 </varlistentry>
+
 </variablelist>
+
 <para
->As janelas que são proibidas de roubar o foco ficam marcadas como pedindo atenção, o que significa por padrão que o seu item na barra de tarefas ficará realçado. Isto poderá ser alterado no módulo de controle das Notificações.</para>
+>As janelas que são proibidas de roubar o foco ficam marcadas como pedindo atenção, o que significa por padrão que o seu item na barra de tarefas ficará realçado. Isto poderá ser alterado no módulo de controle das Notificações. </para>
+
 </sect3>
-  
-<sect3 id="action-focus-raisingwindow">
+
+<sect3 id="focus-raisingwindow">
 <title
->Elevar a janela</title>
-<para
->Assim que você tenha determinado a política de primeiro plano, existem as opções de elevação das janelas. </para>
+>Elevar as janelas</title>
 
 <para
->Com a política de clicar para obter o foco, a opção <guilabel
+>Além de receberem foco, você também pode controlar em quais condições as janelas são elevadas, &ie;, trazidas para a frente. </para>
+
+<para
+>Você deve garantir que pelo menos uma das opções de elevação esteja ativada, caso contrário, as janelas não serão elevadas. </para>
+
+<para
+><guilabel
 >Elevar a janela ativa ao clicar</guilabel
-> estará ativa e a elevação ao passar ficará indisponível. </para>
+> trará uma janela para a frente quando ela for clicada. Isso está habilitado por padrão com a política de clique para focar. </para>
 
 <para
->Com uma política de passagem do mouse para obter o foco, você poderá alternativamente usar a elevação automática. Ao assinalar a opção <guilabel
->Elevar durante a passagem, com um atraso de</guilabel
->, o &kde; poderá passar uma janela para a frente, desde que o cursor do mouse fique sobre essa janela durante um determinado período de tempo. Você poderá definir o atraso se usar a combinação da barra deslizante/campo incremental. </para>
+>Ao ativar <guilabel
+>Elevar ao passar o mouse, com atraso de</guilabel
+>, você pode alternativamente trazer uma janela para a frente se o ponteiro do mouse estiver sobre ela por um período de tempo especificado. Você pode determinar o atraso para esta opção usando o controle de caixa de seleção. Esta opção de elevação automática está disponível apenas com uma política de foco ao passar o mouse. </para>
 
 <tip>
 <para
 >A definição de um atraso demasiado pequeno fará com que a mudança de janelas funcione de forma muito rápida, o que poderá levar à distração. A maioria das pessoas ficará satisfeita com um atraso de 100-300 ms. Isto é reativo o suficiente, mas permite-lhe deslizar pelos cantos de uma janela, a caminho do seu destino, sem passar essa janela para a frente. </para>
 </tip>
 
+</sect3>
+
+<sect3 id="focus-multiscreen">
+<title
+>Comportamento multi-tela</title>
+
 <para
->Se você não usar a opção para auto-elevar, certifique-se de que a opção <guilabel
->Elevar a janela ativa ao clicar</guilabel
-> esteja assinalada. Não será satisfatório se você tiver tanto as opções auto-elevar e <guilabel
->Elevar a janela ativa ao clicar</guilabel
-> desligadas, por ter o efeito adverso de nenhuma janela poder ficar elevada nesse caso. </para>
+>Isso controla o comportamento do foco da janela com várias telas. Observe que essas opções aparecem somente quando mais de uma tela está conectada no momento. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>A tela ativa segue o mouse</guilabel
+></term>
+<listitem>
+<para
+>Quando esta opção estiver ativada, a tela ativa (por exemplo, onde aparecem as novas janelas) é aquela onde o ponteiro do mouse estiver. Quando desativada, a tela ativa é aquela que contém a janela em foco. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Separar o foco de cada tela</guilabel
+></term>
+<listitem>
+<para
+>Quando esta opção está ativada, as operações de foco ficam limitadas apenas à tela ativa. Por exemplo, ao fechar uma janela, a próxima janela a receber o foco será uma janela na tela ativa, mesmo que haja uma janela usada mais recentemente em outra tela. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
 
 </sect3>
 
@@ -323,59 +394,232 @@
 
 <sect2 id="titlebar-actions">
 <title
->Ações da Barra de Título</title>
+>Ações da barra de título</title>
 
 <para
 >Neste painel, você poderá configurar o que acontece às janelas sempre que clicar com o mouse nas suas barras de título. </para>
 
-<sect3 id="action-actions-sec1">
+<sect3 id="actions-titlebar">
 <title
->Duplo-clique na barra de título</title>
+><guilabel
+>Ações da barra de título</guilabel
+></title>
 
 <para
->Nesta lista, você poderá optar por <guilabel
->Enrolar</guilabel
->, diversas variantes para <guilabel
+>Esta seção permite que você determine o que acontece quando você clica duas vezes ou rola a roda do mouse na barra de título de uma janela. </para>
+
+<para
+>As seguintes ações estão disponíveis para o <guilabel
+>Clique duplo</guilabel
+>: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
 >Maximizar</guilabel
-> ou <guilabel
->Baixar</guilabel
->, <guilabel
+></term>
+<listitem>
+<para
+>Redimensiona a janela para preencher a altura e a largura da tela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximizar verticalmente</guilabel
+></term>
+<listitem>
+<para
+>Redimensiona a janela para a altura da tela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximizar horizontalmente</guilabel
+></term>
+<listitem>
+<para
+>Redimensiona a janela para a largura da tela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Minimizar</guilabel
+></term>
+<listitem>
+<para
+>Oculta a janela, minimizando-a, de onde pode ser restaurada, &eg;, através do gerenciador de tarefas ou do seletor de tarefas. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Sombrear</guilabel
+></term>
+<listitem>
+<para
+>Faz com que a janela seja reduzida apenas à barra de título. Clicar duas vezes na barra de título restaura a janela ao seu tamanho normal. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
 >Fechar</guilabel
-> e <guilabel
->Em todas as áreas de trabalho</guilabel
->. </para>
+></term>
+<listitem>
+<para
+>Fecha a janela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mostrar em todas as áreas de trabalho</guilabel
+></term>
+<listitem>
+<para
+>Faz com que a janela fique visível em todas as áreas de trabalho virtuais. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Não fazer nada</guilabel
+></term>
+<listitem>
+<para
+>Ao clicar duas vezes, nada acontece. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
 
 <para
->Selecionar a opção <guilabel
->Maximizar</guilabel
->, fará com que o &kde; maximize a janela, sempre que você fizer duplo-clique sobre a barra de título. Você poderá ainda optar por maximizar as janelas apenas na vertical ou na horizontal.</para>
+>A <guilabel
+>Roda do mouse</guilabel
+> pode ser usada para acionar uma ação dependendo se for rolada para cima ou para baixo: </para>
 
-<para
->O <guilabel
->Enrolar</guilabel
->, por outro lado, fará com que a janela fique reduzida apenas à barra de título. Se voltar a fazer duplo-clique sobre a barra de título, irá restaurar a janela no seu tamanho normal. </para>
+<variablelist>
 
+<varlistentry>
+<term
+><guilabel
+>Elevar/baixar</guilabel
+></term>
+<listitem>
 <para
->Estão disponíveis opções semelhantes para o <guilabel
->evento da roda</guilabel
->. </para>
-<!--FIXME Raise/Lower Shade/Unshade Maximize/Restore Keep Above/Below Move to Previous/Next Desktop Change Opacity  Switch to Window Tab to the Left/Reght -->
+>Ao rolar para cima, a janela será movida para cima das outras janelas. </para>
+<para
+>Ao rolar para baixo, a janela será movida para baixo das outras janelas. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Enrolar/desenrolar</guilabel
+></term>
+<listitem>
+<para
+>Ao rolar para cima, a janela será reduzida, exibindo apenas a barra de título. </para>
+<para
+>Rolar para baixo restaurará o tamanho normal da janela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximizar/restaurar</guilabel
+></term>
+<listitem>
+<para
+>Ao rolar para cima, a janela será maximizada para preencher toda a tela. </para>
+<para
+>Ao rolar para baixo, a página retornará ao seu tamanho anterior. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Manter acima/abaixo</guilabel
+></term>
+<listitem>
+<para
+>Ao rolar para cima, a janela permanecerá visível, cobrindo as outras janelas. </para>
+<para
+>Ao rolar para baixo, a janela permanecerá oculta sob as outras janelas. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mover para a área de trabalho anterior/seguinte</guilabel
+></term>
+<listitem>
+<para
+>Rolar para cima moverá a janela para a área de trabalho virtual anterior. </para>
+<para
+>Rolar para baixo moverá a janela para a próxima área de trabalho virtual. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Alterar opacidade</guilabel
+></term>
+<listitem>
+<para
+>Ao rolar para cima, a janela ficará menos transparente. </para>
+<para
+>Ao rolar para baixo, a janela ficará mais transparente. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Não fazer nada</guilabel
+></term>
+<listitem>
+<para
+>Nada acontece ao rolar para cima ou para baixo na barra de título da janela. </para>
+</listitem>
+</varlistentry>
+  
+</variablelist>
 
 <tip>
 <para
->Você poderá fazer com que as janelas se desenrolem automaticamente, quando passar o cursor do mouse pela sua barra de título enrolada. Basta assinalar a opção <guilabel
->Ativar à passagem</guilabel
-> da página <guilabel
+>Você pode fazer com que as janelas desapareçam automaticamente quando você simplesmente posicionar o mouse sobre a barra de título sombreada. Basta marcar a caixa de seleção <link linkend="advanced-unshading"
+><guilabel
+> Desenrolar janela</guilabel
+></link
+> na aba <guilabel
 >Avançado</guilabel
-> deste módulo. Esta é uma ótima maneira de reclamar espaço na área de trabalho, caso esteja cortando e colando entre várias janelas, por exemplo. </para>
+> deste módulo. Esta é uma ótima maneira de recuperar espaço na tela quando você estiver recortando e colando entre muitas janelas, por exemplo. </para>
 </tip>
 
 </sect3>
 
-<sect3 id="action-actions-sec2">
+<sect3 id="actions-titlebar-frame">
 <title
 ><guilabel
->Barra de Título &amp; Moldura</guilabel
+>Ações da barra de título e moldura</guilabel
 ></title>
 
 <para
@@ -393,7 +637,7 @@
 ></term>
 <listitem>
 <para
->Irá enviar a janela para o topo da tela. Todas as outras janelas que se sobrepunham a esta ficarão escondidas <quote
+>Irá enviar a janela para o topo da pilha de janelas. Todas as outras janelas que se sobrepunham a esta ficarão escondidas <quote
 >por baixo</quote
 > dela. </para>
 </listitem>
@@ -406,14 +650,14 @@
 ></term>
 <listitem>
 <para
->Irá mover esta janela para o fundo da tela. Isso irá tirar a janela do caminho. </para>
+>Irá mover esta janela para o fundo da pilha de janelas. Isso irá tirar a janela do caminho. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Alternar entre Elevar &amp; Baixar</guilabel
+>Alternar entre elevar e baixar</guilabel
 ></term>
 <listitem>
 <para
@@ -421,42 +665,111 @@
 </listitem>
 </varlistentry>
 
-<!--FIXME missing:
-Minimize, Shade, Close, Start Window Tab Drag
--->
-
 <varlistentry>
 <term
 ><guilabel
->Nada</guilabel
+>Minimizar</guilabel
 ></term>
 <listitem>
 <para
->Tal como diz, não faz nada. </para>
+>Oculta a janela, minimizando-a, de onde pode ser restaurada, &eg;, através do gerenciador de tarefas ou do seletor de tarefas. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+
+<term
+><guilabel
+>Sombrear</guilabel
+></term>
+<listitem>
+<para
+>Faz com que a janela seja reduzida apenas à barra de título. Clicar duas vezes na barra de título restaura a janela ao seu tamanho normal. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Menu de Operações</guilabel
+>Fechar</guilabel
 ></term>
 <listitem>
 <para
->Irá abrir um pequeno submenu, no qual poderá escolher os comandos relacionados com as janelas (&ie; Maximizar, Minimizar, Fechar, &etc;). </para>
+>Fecha a janela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mostrar o menu de ações</guilabel
+></term>
+<listitem>
+<para
+>Irá abrir um pequeno submenu, no qual poderá escolher os comandos relacionados com as janelas (&ie;, Mover para a área de trabalho, Mover para a tela, Maximizar, Minimizar, Fechar, &etc;). </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Não fazer nada</guilabel
+></term>
+<listitem>
+<para
+>Ao clicar, nada acontece. </para>
 </listitem>
 </varlistentry>
 
 </variablelist>
+
 </sect3>
 
-<sect3 id="action-actions-maximize-button">
+<sect3 id="actions-maximize-button">
 <title
 ><guilabel
->Botão maximizar</guilabel
+>Ações do botão maximizar</guilabel
 ></title>
+
 <para
->Esta seção permite-lhe determinar o comportamento dos três botões do mouse no botão para maximizar. Você terá a opção entre a maximização na vertical, na horizontal ou em ambas as direções. </para>
+>Esta seção permite-lhe determinar o comportamento dos três botões do mouse no botão para maximizar. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Maximizar</guilabel
+></term>
+<listitem>
+<para
+>Redimensiona a janela para a altura e largura da tela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximizar verticalmente</guilabel
+></term>
+<listitem>
+<para
+>Redimensiona a janela para a altura da tela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximizar horizontalmente</guilabel
+></term>
+<listitem>
+<para
+>Redimensiona a janela para a largura da tela. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
 </sect3>
 
 </sect2>
@@ -465,7 +778,7 @@ Minimize, Shade, Close, Start Window Tab Drag
 <title
 >Ações da Janela</title>
 
-<sect3 id="action-actions-sec3">
+<sect3 id="actions-inactive-inner-window">
 <title
 ><guilabel
 >Janela Interior Inativa</guilabel
@@ -478,10 +791,11 @@ Minimize, Shade, Close, Start Window Tab Drag
 >As suas opções são as seguintes: </para>
 
 <variablelist>
+
 <varlistentry>
 <term
 ><guilabel
->Ativar, Elevar &amp; Passar o Evento</guilabel
+>Ativar, elevar e passar o evento</guilabel
 ></term>
 <listitem>
 <para
@@ -492,7 +806,7 @@ Minimize, Shade, Close, Start Window Tab Drag
 <varlistentry>
 <term
 ><guilabel
->Ativar &amp; Passar o Evento</guilabel
+>Ativar e passar o evento</guilabel
 ></term>
 <listitem>
 <para
@@ -514,7 +828,7 @@ Minimize, Shade, Close, Start Window Tab Drag
 <varlistentry>
 <term
 ><guilabel
->Ativar &amp; Elevar</guilabel
+>Ativar e elevar</guilabel
 ></term>
 <listitem>
 <para
@@ -522,19 +836,69 @@ Minimize, Shade, Close, Start Window Tab Drag
 </listitem>
 </varlistentry>
 
-<!--FIXME Wheel Scroll, Activate & Scroll, Activate, Raise & Scroll-->
+</variablelist>
+
+<para
+>As opções para <guilabel
+>Roda do mouse</guilabel
+> são as seguintes: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Deslocar</guilabel
+></term>
+<listitem>
+<para
+>Simplesmente desloca o conteúdo dentro da janela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ativar e deslocar</guilabel
+></term>
+<listitem>
+<para
+>Isso torna a janela clicada ativa e desloca o conteúdo. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ativar, elevar e deslocar</guilabel
+></term>
+<listitem>
+<para
+>Isso torna a janela clicada ativa, eleva a janela para o topo da tela e desloca o conteúdo. </para>
+</listitem>
+</varlistentry>
 
 </variablelist>
+
 </sect3>
 
-<sect3 id="action-actions-sec4">
+<sect3 id="actions-inner-window-titlebar-frame">
 <title
 ><guilabel
->Moldura, Barra de Título &amp; Janela Interior</guilabel
+>Janela interna, barra de título e moldura</guilabel
 ></title>
 
 <para
->Esta seção inferior permite-lhe configurar as ações adicionais, quando uma tecla modificadora (como o &Alt;) é pressionada juntamente com um botão do mouse numa janela.</para>
+>Esta seção inferior permite configurar ações adicionais ao clicar em uma janela com uma tecla modificadora pressionada. </para>
+
+<para
+>Como uma <guilabel
+>Tecla modificadora</guilabel
+>, você pode selecionar entre <guilabel
+>Meta</guilabel
+> (padrão) ou <guilabel
+>Alt</guilabel
+>. </para>
 
 <para
 >Mais uma vez, você poderá selecionar ações diferentes para os botões <mousebutton
@@ -548,9 +912,10 @@ Minimize, Shade, Close, Start Window Tab Drag
 >. </para>
 
 <para
->As suas opções são:</para>
+>As suas opções para os botões do mouse são as seguintes: </para>
 
 <variablelist>
+
 <varlistentry>
 <term
 ><guilabel
@@ -558,42 +923,29 @@ Minimize, Shade, Close, Start Window Tab Drag
 ></term>
 <listitem>
 <para
->Permite-lhe arrastar a janela selecionada pela tela. </para>
+>Permite-lhe arrastar a janela selecionada pelo espaço de trabalho. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Baixar</guilabel
+>Ativar, elevar e mover</guilabel
 ></term>
 <listitem>
 <para
->Irá mover esta janela para o fundo da tela. Isso irá tirar a janela do caminho. </para>
+>Isso torna a janela clicada ativa, eleva-a para o topo da pilha de janelas e arrasta a janela pelo espaço de trabalho. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Nada</guilabel
+>Alternar entre elevar e baixar</guilabel
 ></term>
 <listitem>
 <para
->Tal como diz, não faz nada. </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
->Elevar</guilabel
-></term>
-<listitem>
-<para
->Irá enviar a janela para o topo da tela. Todas as outras janelas que se sobrepunham a esta ficarão escondidas <quote
->por baixo</quote
-> dela. </para>
+>Esta opção irá elevar as janelas que não estão no topo e baixar as janelas que já estão no topo. </para>
 </listitem>
 </varlistentry>
 
@@ -611,136 +963,244 @@ Minimize, Shade, Close, Start Window Tab Drag
 <varlistentry>
 <term
 ><guilabel
->Alternar entre Elevar &amp; Baixar</guilabel
+>Elevar</guilabel
 ></term>
 <listitem>
 <para
->Esta opção irá elevar as janelas que não estão no topo e baixar as janelas que já estão no topo. </para>
+>Irá enviar a janela para o topo da pilha de janelas. Todas as outras janelas que se sobrepunham a esta ficarão escondidas <quote
+>por baixo</quote
+> dela. </para>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term
 ><guilabel
->Ativar</guilabel
+>Baixar</guilabel
 ></term>
 <listitem>
 <para
->Torna esta janela ativa. </para>
+>Irá mover esta janela para o fundo da pilha de janelas. Isso irá tirar a janela do caminho. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Minimizar</guilabel
+></term>
+<listitem>
+<para
+>Oculta a janela, minimizando-a, de onde pode ser restaurada, &eg;, através do gerenciador de tarefas ou do seletor de tarefas. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Diminuir opacidade</guilabel
+></term>
+<listitem>
+<para
+>Torna a janela mais transparente. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aumentar opacidade</guilabel
+></term>
+<listitem>
+<para
+>Torna a janela menos transparente. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Não fazer nada</guilabel
+></term>
+<listitem>
+<para
+>Ao clicar, nada acontece. </para>
 </listitem>
 </varlistentry>
 
 </variablelist>
-<!-- FIXME missing:
-Activate, Raise &amp; Move
-Minimize
-Increase Opacity + Decrease Opacity
--->
-<!--FIXME
-Mouse Wheel has different choices:
-Raise/Lower, Shade/Unshade, Maximize/Restore, Keep Above/Below, 
-Move to Previous/Next Desktop, Change Opacity, Switch to Window Tab to the Left/Right
-Nothing
--->
+
+<para
+>As suas opções para a roda do mouse são as seguintes: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Elevar/baixar</guilabel
+></term>
+<listitem>
+<para
+>Ao rolar para cima, a janela será movida para cima das outras janelas. </para>
+<para
+>Ao rolar para baixo, a janela será movida para baixo das outras janelas. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Enrolar/desenrolar</guilabel
+></term>
+<listitem>
+<para
+>Ao rolar para cima, a janela será reduzida, exibindo apenas a barra de título. </para>
+<para
+>Rolar para baixo restaurará o tamanho normal da janela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximizar/restaurar</guilabel
+></term>
+<listitem>
+<para
+>Ao rolar para cima, a janela será maximizada para preencher toda a tela. </para>
+<para
+>Ao rolar para baixo, a página retornará ao seu tamanho anterior. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Manter acima/abaixo</guilabel
+></term>
+<listitem>
+<para
+>Ao rolar para cima, a janela permanecerá visível, cobrindo as outras janelas. </para>
+<para
+>Ao rolar para baixo, a janela permanecerá oculta sob as outras janelas. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mover para a área de trabalho anterior/seguinte</guilabel
+></term>
+<listitem>
+<para
+>Rolar para cima moverá a janela para a área de trabalho virtual anterior. </para>
+<para
+>Rolar para baixo moverá a janela para a próxima área de trabalho virtual. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Alterar opacidade</guilabel
+></term>
+<listitem>
+<para
+>Ao rolar para cima, a janela ficará menos transparente. </para>
+<para
+>Ao rolar para baixo, a janela ficará mais transparente. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Não fazer nada</guilabel
+></term>
+<listitem>
+<para
+>Nada acontece ao rolar para cima ou para baixo na barra de título da janela. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
 
 </sect3>
 
 </sect2>
 
-<sect2 id="action-moving">
+<sect2 id="movement">
 <title
->Movimentação</title>
+>Movimento</title>
 
-<sect3>
-<title
-><guilabel
->Janelas</guilabel
-></title>
 <para
->Estas opções definem como as janelas aparecem na tela ao serem movimentadas.</para>
+>Esta página permite-lhe configurar as <guilabel
+>Zonas de atração</guilabel
+>. Estas zonas funcionam como um campo magnético nas extremidades da tela e em cada janela, e que farão com que as janelas se colem entre si ao aproximarem-se. </para>
 
 <variablelist>
+
 <varlistentry>
 <term
 ><guilabel
->Mostrar a geometria da janela ao mover ou redimensionar</guilabel
+>Área de encaixe do canto da tela</guilabel
 ></term>
 <listitem>
 <para
->Ative esta opção se quiser que a geometria da janela seja mostrada enquanto é movida ou redimensionada. A posição da janela em relação ao canto superior esquerdo da tela é mostrada em conjunto com o seu tamanho.</para>
-</listitem>
-</varlistentry>
-</variablelist>
-
-</sect3>
-
-<sect3>
-<title
-><guilabel
->Áreas de encaixe</guilabel
-></title>
-
-<para
->O resto desta página permite-lhe configurar as <guilabel
->Zonas de Atração</guilabel
->. Estas zonas funcionam como um campo magnético nas extremidades da área de trabalho e em cada janela, e que farão com que as janelas se colem entre si ao aproximarem-se.</para>
-
-<variablelist>
-<varlistentry>
-<term
-><guilabel
->Área de encaixe da borda:</guilabel
-></term>
-<listitem>
-
-<para
->Aqui você pode definir a zona de atração das bordas da tela. Mover uma janela dentro da distância configurada, fará com que ela se cole a essa borda da área de trabalho.</para>
+>Aqui você pode definir a zona de atração das bordas da tela. Mover uma janela dentro da distância configurada, fará com que ela se cole a essa borda da tela. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Área de encaixe da janela:</guilabel
+>Área de encaixe da janela</guilabel
 ></term>
 <listitem>
-
 <para
->Aqui pode definir a zona de atração das bordas da janela. Como acontece nos bordas da tela, faz com que as janelas se 'colem' a um extremo quando movidas para perto dele.</para>
+>Aqui pode definir a zona de atração das bordas da janela. Como acontece nos bordas da tela, faz com que as janelas se 'colem' a um extremo quando movidas para perto dele. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Zona de atração do centro:</guilabel
+>Área de atração do centro</guilabel
 ></term>
 <listitem>
-
 <para
 >Aqui pode definir a área de atração do centro da tela, &ie; a <quote
 >potência</quote
-> do campo magnético que fará com as janelas se colem ao centro da tela, caso sejam movidas para a proximidade do mesmo.</para>
+> do campo magnético que fará com as janelas se colem ao centro da tela, caso sejam movidas para a proximidade do mesmo. </para>
 </listitem>
 </varlistentry>
-
 
 <varlistentry>
 <term
 ><guilabel
->Atrair as janelas somente quando sobrepostas</guilabel
+>Atrair as janelas: Apenas quando sobrepostas</guilabel
 ></term>
 <listitem>
-
 <para
->Se a opção estiver assinalada, as janelas não se irão colar se só estiverem próximas umas das outras; terão de estar sobrepostas para tal, de acordo com o parâmetro de distância configurado.</para>
+>Se a opção estiver assinalada, as janelas não se irão colar se só estiverem próximas umas das outras; terão de estar sobrepostas para tal, de acordo com o parâmetro de distância configurado. </para>
 </listitem>
 </varlistentry>
+
 </variablelist>
-</sect3>
+
+<tip>
+<para
+>No módulo de configurações <guilabel
+>Bordas da tela</guilabel
+> na seção <guilabel
+>Comportamento do espaço de trabalho</guilabel
+> das configurações do sistema, você pode configurar as janelas para serem organizadas em mosaico rápido para ocupar toda a tela, metade ou um quarto da tela quando arrastadas perto das bordas da tela. </para>
+</tip>
 
 </sect2>
 
-<sect2 id="action-advanced">
+<sect2 id="advanced">
 <title
 >Avançado</title>
 
@@ -749,14 +1209,15 @@ Nothing
 >Avançado</guilabel
 >, você poderá efetuar alguns ajustes mais avançados sobre o comportamento da janela. </para>
 
-<variablelist>
+<sect3 id="advanced-unshading">
 <title
->Enrolar</title>
+>Desenrolar da janela</title>
 
+<variablelist>
 <varlistentry>
 <term
 ><guilabel
->Ativar à passagem</guilabel
+>Na passagem do mouse na barra de título após</guilabel
 ></term>
 <listitem>
 <para
@@ -764,71 +1225,172 @@ Nothing
 </listitem>
 </varlistentry>
 </variablelist>
+</sect3>
+
+<sect3 id="advanced-placement">
+<title
+>Posicionamento da janela</title>
+
+<para
+>A política de posicionamento determina onde uma nova janela aparecerá na tela. </para>
+
+<para
+>Em uma configuração com vários monitores, a tela na qual as janelas aparecem é sempre a tela ativa (ou seja, a tela que tem o ponteiro do mouse ou a janela em foco; veja <link linkend="focus-multiscreen"
+>Comportamento em várias telas</link
+>), com exceção das janelas que lembram sua posição anterior (veja <link linkend="advanced-remember-positions"
+>abaixo</link
+>). </para>
 
 <variablelist>
-<title
->Paginação da janela</title>
 
 <varlistentry>
 <term
 ><guilabel
->Agrupar automaticamente as janelas semelhantes</guilabel
+>Sobreposição mínima</guilabel
 ></term>
-<listitem
-><para
->Quando a opção estiver ativa, tentará detectar automaticamente quando uma janela nova é aberta e está relacionada com outra existente, de modo a colocá-la sob o mesmo grupo de janelas.</para
-></listitem>
+<listitem>
+<para
+>Posicionará todas as novas janelas de forma a sobrepor as janelas existentes o mínimo possível. </para>
+</listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Mudar imediatamente para as janelas agrupadas de forma automática</guilabel
+>Maximizado</guilabel
 ></term>
-<listitem
-><para
->Quando estiver ativa, muda imediatamente para as páginas novas das janelas que foram adicionadas automaticamente ao grupo atual.</para
-></listitem>
+<listitem>
+<para
+>Tentará maximizar todas as novas janelas para preencher toda a tela. </para>
+</listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Posicionamento</guilabel
+>Aleatório</guilabel
 ></term>
-<listitem
-><para
->A política de posicionamento determina onde uma nova janela será colocada na área de trabalho. A <guilabel
->Inteligente</guilabel
-> tentará atingir um mínimo de sobreposição de janelas, a <guilabel
->Cascata</guilabel
-> irá colocar as janelas em cascata, a <guilabel
->Aleatória</guilabel
-> irá usar uma posição aleatória e a <guilabel
->Centralizada</guilabel
-> irá centralizar a janela; finalmente, a <guilabel
->No canto</guilabel
-> irá colocar a janela no canto superior esquerdo da tela.</para
-></listitem>
+<listitem>
+<para
+>Colocará todas as novas janelas em locais aleatórios. </para>
+</listitem>
 </varlistentry>
 
+<varlistentry>
+<term
+><guilabel
+>Centralizado</guilabel
+></term>
+<listitem>
+<para
+>Posicionará todas as novas janelas no centro da tela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>No canto superior esquerdo</guilabel
+></term>
+<listitem>
+<para
+>Posicionará todas as novas janelas com seu canto superior esquerdo no canto superior esquerdo da tela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Sob o mouse</guilabel
+></term>
+<listitem>
+<para
+>Posicionará todas as novas janelas centralizadas sob o ponteiro do mouse. </para>
+</listitem>
+</varlistentry>
+  
 </variablelist>
 
-<variablelist>
+<para id="advanced-remember-positions"
+>Marque a opção <guilabel
+>Permitir que os aplicativos se lembrem das posições de suas próprias janelas</guilabel
+> para abrir as janelas onde elas estavam anteriormente, em vez de usar o método de posicionamento escolhido acima. Observe que essa posição memorizada inclui a atribuição da tela, portanto, as janelas podem abrir em uma tela diferente da ativa, se essa for a última tela em que estavam localizadas. Observe também que essa opção está disponível apenas no X11, não no Wayland, e é suportada apenas por alguns aplicativos do KDE. </para>
+
+<tip>
+<para
+>Se você deseja que algumas janelas apareçam em posições, telas ou áreas de trabalho virtuais específicas, pode configurar <guilabel
+>Regras de Janela</guilabel
+> para definir configurações especiais de janelas ou aplicativos. Você pode encontrar essa opção clicando com o botão direito do mouse na barra de título de uma janela e escolhendo <guimenu
+>Mais ações</guimenu
+> ou no módulo <guilabel
+>Regras de janela</guilabel
+> na seção <guilabel
+>Gerenciamento de janelas</guilabel
+> das configurações do sistema. </para>
+</tip>
+
+
+</sect3>
+
+<sect3 id="advanced-special-windows">
 <title
 >Janelas especiais</title>
+
+<variablelist>
+
 <varlistentry>
 <term
 ><guilabel
 >Ocultar as janelas utilitárias para aplicativos inativos</guilabel
 ></term>
-<listitem
-><para
->Se estiver ativo, as janelas utilitárias (janelas de ferramentas, menus separados...) dos aplicativos inativos ficarão ocultas e só aparecerão quando a aplicação ficar ativa. Lembre-se de que os aplicativos terão que marcar as janelas com o tipo adequado para este recurso funcionar.</para
-></listitem>
+<listitem>
+<para
+>Se estiver ativo, as janelas utilitárias (janelas de ferramentas, menus separados ...) dos aplicativos inativos ficarão ocultas e só aparecerão quando a aplicação ficar ativa. Lembre-se de que os aplicativos terão que marcar as janelas com o tipo adequado para este recurso funcionar. </para>
+</listitem>
 </varlistentry>
 
 </variablelist>
+
+</sect3>
+
+<sect3 id="advanced-virtual-desktop-behavior">
+<title
+>Comportamento da área de trabalho virtual</title>
+
+<para
+>Às vezes, ao chamar um aplicativo, uma janela existente será ativada em vez de uma nova janela. Esta configuração controla o que deve acontecer se a janela ativada estiver localizada em uma área de trabalho virtual diferente da atual. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Mudar para essa área de trabalho virtual</guilabel
+></term>
+<listitem>
+<para
+>A janela será exibida na área de trabalho virtual onde se encontra atualmente. </para>
+<para
+>Escolha esta opção se desejar que a área de trabalho virtual ativa siga automaticamente as janelas para a área de trabalho virtual atribuída. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Traga a janela para a área de trabalho virtual atual</guilabel
+></term>
+<listitem>
+<para
+>Fará com que a janela salte para a área de trabalho virtual ativa. </para>
+<para
+>Escolha esta opção se desejar que as janelas sempre abram na área de trabalho virtual atual e que a área de trabalho virtual ativa só mude quando você navegar até ela manualmente. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
 
 </sect2>
 

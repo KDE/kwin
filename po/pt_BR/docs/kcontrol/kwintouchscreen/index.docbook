@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Brazilian-Portuguese "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>Gestos da tela sensível ao toque</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Marcus</firstname
+><surname
+>Gama</surname
+><affiliation
+><address
+><email
+>marcus.gama@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>10/04/2021</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Configurações do sistema</keyword>
+<keyword
+>toque</keyword>
+<keyword
+>tela</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Deslizar o dedo da borda da tela em direção ao centro permite ativar efeitos. Aqui você pode configurar qual efeito será ativado em cada borda da tela. </para>
+
+<para
+>Clique com qualquer botão do mouse em um quadrado e selecione um efeito no menu de contexto. As bordas com um quadrado azul já possuem um efeito associado, enquanto um quadrado cinzento indica que não foi selecionado nenhum efeito para essa borda.</para>
+
+<para
+>O número de itens acessíveis no menu de contexto depende do módulo <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Efeitos da Área de Trabalho</guilabel
+></ulink
+>, na categoria <guilabel
+>Espaço de Trabalho</guilabel
+>. Selecione seus efeitos favoritos a partir do grupo <guilabel
+>Gerenciamento de Janelas</guilabel
+>. Isso irá ativar os itens correspondentes no menu de contexto.</para>
+</article>
