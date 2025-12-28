@@ -358,16 +358,16 @@ std::unique_ptr<ConfigurableGesture> GlobalShortcutsManager::registerGesture(con
         });
     }
     if (uniqueHandle == "builtin_grid") {
-        registerTouchpadSwipe(SwipeDirection::Down, 4, ret->forwardAction(), [gesture = ret.get()](qreal progress) {
+        registerTouchpadSwipe(SwipeDirection::Right, 4, ret->forwardAction(), [gesture = ret.get()](qreal progress) {
             Q_EMIT gesture->forwardProgress(progress);
         });
-        registerTouchpadSwipe(SwipeDirection::Up, 4, ret->reverseAction(), [gesture = ret.get()](qreal progress) {
+        registerTouchpadSwipe(SwipeDirection::Left, 4, ret->reverseAction(), [gesture = ret.get()](qreal progress) {
             Q_EMIT gesture->reverseProgress(progress);
         });
-        registerTouchscreenSwipe(SwipeDirection::Down, 3, ret->forwardAction(), [gesture = ret.get()](qreal progress) {
+        registerTouchscreenSwipe(SwipeDirection::Right, 3, ret->forwardAction(), [gesture = ret.get()](qreal progress) {
             Q_EMIT gesture->forwardProgress(progress);
         });
-        registerTouchscreenSwipe(SwipeDirection::Up, 3, ret->reverseAction(), [gesture = ret.get()](qreal progress) {
+        registerTouchscreenSwipe(SwipeDirection::Left, 3, ret->reverseAction(), [gesture = ret.get()](qreal progress) {
             Q_EMIT gesture->reverseProgress(progress);
         });
     }
