@@ -1,13 +1,13 @@
 # Diego Iastrubni <elcuco@kde.org>, 2012.
 # elkana bardugo <ttv200@gmail.com>, 2016.
 # Elkana Bardugo <ttv200@gmail.com>, 2017. #zanata
-# SPDX-FileCopyrightText: 2023, 2024 Yaron Shahrabani <sh.yaron@gmail.com>
+# SPDX-FileCopyrightText: 2023, 2024, 2025 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2024-08-28 11:05+0300\n"
+"PO-Revision-Date: 2025-12-27 16:00+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 25.12.0\n"
 
 #: main.cpp:152 touch.cpp:118
 #, kde-format
@@ -82,12 +82,12 @@ msgstr "רשת"
 #: main.cpp:169 touch.cpp:135
 #, kde-format
 msgid "Toggle window switching"
-msgstr "שינוי מחליף חלונות"
+msgstr "שינוי בורר חלונות"
 
 #: main.cpp:170 touch.cpp:136
 #, kde-format
 msgid "Toggle alternative window switching"
-msgstr "שינוי מחליף חלונות חילופי"
+msgstr "החלפה לבורר חלונות אחר"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
