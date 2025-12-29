@@ -2315,7 +2315,7 @@ void TestLibinputDevice::testLoadPressureCurve()
     // and try to store
     if (configValue != initValue) {
         d.setPressureCurve(initValueString);
-        QCOMPARE(inputConfig.readEntry("TabletToolPressureCurve", configValueString), initValueString);
+        QCOMPARE(inputConfig.readEntry("TabletToolPressureCurve", d.defaultPressureCurve()), initValueString);
     }
 }
 
