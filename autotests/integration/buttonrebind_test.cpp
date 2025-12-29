@@ -468,7 +468,7 @@ void TestButtonRebind::testMouseTabletCursorSync()
     QVERIFY(enteredSpy.wait());
 
     // Move the tablet cursor to (10,10)
-    Test::tabletToolProximityEvent(startGeometry.topLeft() + QPointF{10.f, 10.f}, 0, 0, 0, 0, false, 0, timestamp++);
+    Test::tabletToolProximityEvent(startGeometry.topLeft() + QPointF{10.f, 10.f}, 0, 0, 0, 0, true, 0, timestamp++);
 
     // Verify they are not starting in the same place
     QVERIFY(input()->pointer()->pos() != input()->tablet()->position());
