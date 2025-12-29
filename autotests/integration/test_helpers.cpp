@@ -1911,6 +1911,16 @@ bool VirtualInputDevice::isLidSwitch() const
     return m_lidSwitch;
 }
 
+bool VirtualInputDevice::tabletToolIsRelative() const
+{
+    return m_tabletToolIsRelative;
+}
+
+void VirtualInputDevice::setTabletToolIsRelative(const bool relative)
+{
+    m_tabletToolIsRelative = relative;
+}
+
 ColorManagerV1::ColorManagerV1(::wl_registry *registry, uint32_t id, int version)
     : QtWayland::wp_color_manager_v1(registry, id, version)
 {
@@ -2443,6 +2453,13 @@ void tabletToolAxisEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal 
     auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
     auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
     Q_EMIT tablet->tabletToolAxisEvent(pos, pressure, xTilt, yTilt, rotation, distance, tipDown, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
+}
+
+void tabletToolAxisEventRelative(const QPointF &delta, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, quint32 time)
+{
+    auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();
+    auto tool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
+    Q_EMIT tablet->tabletToolAxisEventRelative(delta, pressure, xTilt, yTilt, rotation, distance, tipDown, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
 }
 
 void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, quint32 time)

@@ -858,6 +858,9 @@ public:
     bool isTabletModeSwitch() const override;
     bool isLidSwitch() const override;
 
+    bool tabletToolIsRelative() const override;
+    void setTabletToolIsRelative(bool relative);
+
 private:
     QString m_name;
     void *m_group = nullptr;
@@ -867,6 +870,7 @@ private:
     bool m_lidSwitch = false;
     bool m_tabletPad = false;
     bool m_tabletTool = false;
+    bool m_tabletToolIsRelative;
 };
 
 class ColorManagerV1 : public QtWayland::wp_color_manager_v1
@@ -1087,6 +1091,7 @@ void tabletToolButtonPressed(quint32 button, quint32 time);
 void tabletToolButtonReleased(quint32 button, quint32 time);
 void tabletToolProximityEvent(const QPointF &pos, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipNear, qreal sliderPosition, quint32 time);
 void tabletToolAxisEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, quint32 time);
+void tabletToolAxisEventRelative(const QPointF &delta, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, quint32 time);
 void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, quint32 time);
 
 /**
