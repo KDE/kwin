@@ -298,7 +298,11 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
     ensureTabletTool(tool);
 
     if (tipNear) {
-        if (!device->tabletToolIsRelative()) {
+        if (input()->syncTabletWithMouse()) {
+            if (const auto position = input()->takeLastPosition()) {
+                setPosition(tool, *position);
+            }
+        } else if (!device->tabletToolIsRelative()) {
             setPosition(tool, pos);
         }
     }

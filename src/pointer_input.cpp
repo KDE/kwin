@@ -249,6 +249,11 @@ void PointerInputRedirection::processWarp(const QPointF &pos, std::chrono::micro
 
 void PointerInputRedirection::processMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device)
 {
+    if (input()->syncTabletWithMouse()) {
+        if (const auto position = input()->takeLastPosition()) {
+            m_pos = *position;
+        }
+    }
     processMotionInternal(m_pos + delta, delta, deltaNonAccelerated, time, device, MotionType::Motion);
 }
 
