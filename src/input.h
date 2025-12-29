@@ -208,6 +208,22 @@ public:
     void removeInputDevice(InputDevice *device);
     void addInputBackend(std::unique_ptr<InputBackend> &&inputBackend);
 
+    /**
+     * Takes the last position (if set) which needs to be synced to the input handler that's currently processing.
+     * For example, a tablet device can push it's last cursor position which a pointer device can use.
+     */
+    std::optional<QPointF> takeLastPosition()
+    {
+        const auto lastPosition = m_lastPosition;
+        m_lastPosition.reset();
+        return lastPosition;
+    }
+
+    void setLastPosition(const QPointF &position)
+    {
+        m_lastPosition = position;
+    }
+
 Q_SIGNALS:
     void deviceAdded(InputDevice *device);
     void deviceRemoved(InputDevice *device);
@@ -310,6 +326,7 @@ private:
     bool m_hasPointer = false;
     bool m_hasTouch = false;
     bool m_hasTabletModeSwitch = false;
+    std::optional<QPointF> m_lastPosition;
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();

@@ -942,6 +942,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos, const QPointF &
     workspace()->setActiveOutput(m_pos);
     m_cursor->updateCursorOutputs(m_pos);
     Cursors::self()->mouse()->setPos(m_pos);
+    input()->setLastPosition(m_pos);
 
     Q_EMIT input()->globalPointerChanged(m_pos);
 }

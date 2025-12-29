@@ -214,6 +214,19 @@ void TabletInputRedirection::ensureTabletTool(InputDeviceTabletTool *device)
     m_cursorByTool[device] = cursor;
 }
 
+void TabletInputRedirection::setPosition(InputDeviceTabletTool *tool, const QPointF &position)
+{
+    m_lastPosition = position;
+
+    // Make sure pointer doesn't go outside of the screens range
+    LogicalOutput *output = Workspace::self()->outputAt(m_lastPosition);
+    m_lastPosition = confineToBoundingBox(m_lastPosition, output->geometryF());
+
+    m_cursorByTool[tool]->setPos(m_lastPosition);
+    workspace()->setActiveOutput(m_lastPosition);
+    input()->setLastPosition(m_lastPosition);
+}
+
 void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
@@ -221,12 +234,9 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
     }
 
     ensureTabletTool(tool);
-
-    m_lastPosition = pos;
-    m_cursorByTool[tool]->setPos(m_lastPosition);
+    setPosition(tool, pos);
 
     update();
-    workspace()->setActiveOutput(m_lastPosition);
 
     TabletToolAxisEvent ev{
         .device = device,
@@ -256,17 +266,9 @@ void TabletInputRedirection::tabletToolAxisEventRelative(const QPointF &delta,
     }
 
     ensureTabletTool(tool);
-
-    m_lastPosition += delta;
-
-    // Make sure pointer doesn't go outside of the screens range
-    LogicalOutput *output = Workspace::self()->outputAt(m_lastPosition);
-    m_lastPosition = confineToBoundingBox(m_lastPosition, output->geometryF());
-
-    m_cursorByTool[tool]->setPos(m_lastPosition);
+    setPosition(tool, m_lastPosition + delta);
 
     update();
-    workspace()->setActiveOutput(output);
 
     TabletToolAxisEvent ev{
         .device = device,
@@ -295,16 +297,13 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
 
     ensureTabletTool(tool);
 
-    if (!device->tabletToolIsRelative()) {
-        m_lastPosition = pos;
-    }
-
     if (tipNear) {
-        m_cursorByTool[tool]->setPos(m_lastPosition);
+        if (!device->tabletToolIsRelative()) {
+            setPosition(tool, pos);
+        }
     }
 
     update();
-    workspace()->setActiveOutput(m_lastPosition);
 
     TabletToolProximityEvent ev{
         .type = tipNear ? TabletToolProximityEvent::EnterProximity : TabletToolProximityEvent::LeaveProximity,
@@ -332,12 +331,8 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
 
     ensureTabletTool(tool);
 
-    if (!device->tabletToolIsRelative()) {
-        m_lastPosition = pos;
-    }
-
-    if (tipDown) {
-        m_cursorByTool[tool]->setPos(m_lastPosition);
+    if (tipDown && !device->tabletToolIsRelative()) {
+        setPosition(tool, pos);
     }
 
     if (!tipDown) {
@@ -349,8 +344,6 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
     if (tipDown) {
         m_tipDown = true;
     }
-
-    workspace()->setActiveOutput(m_lastPosition);
 
     TabletToolTipEvent ev{
         .type = tipDown ? TabletToolTipEvent::Press : TabletToolTipEvent::Release,

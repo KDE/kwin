@@ -71,6 +71,7 @@ private:
     void removeDevice(InputDevice *device);
     void trackNextOutput();
     void ensureTabletTool(InputDeviceTabletTool *tool);
+    void setPosition(InputDeviceTabletTool *tool, const QPointF &position);
 
     QPointF m_lastPosition;
     QMetaObject::Connection m_decorationGeometryConnection;
