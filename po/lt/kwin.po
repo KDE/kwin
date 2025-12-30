@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-17 02:33+0000\n"
-"PO-Revision-Date: 2024-10-05 22:06+0300\n"
+"PO-Revision-Date: 2025-12-29 22:05+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.8\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -80,19 +80,17 @@ msgstr "Darbalaukio efektai buvo paleisti iš naujo dėl grafikos atstatymo"
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "Nepavyko atverti ICC profilio „%1“"
 
 #: core/iccprofile.cpp:336
-#, fuzzy, kde-format
-#| msgctxt "Required file does not exist"
-#| msgid "%1 does not exist"
+#, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr "%1 nėra"
+msgstr "ICC profilio „%1“ nėra"
 
 #: core/iccprofile.cpp:340
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC profilis „%1“ nėra tinkamas naudoti ekranams"
 
 #: core/iccprofile.cpp:343
 #, kde-format
@@ -104,6 +102,7 @@ msgstr ""
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
+"ICC profilis „%1“ yra sugadintas, įvesties/išvesties spalvų erdvė nėra RGB"
 
 #: core/iccprofile.cpp:359
 #, kde-format
@@ -150,7 +149,7 @@ msgstr ""
 #: core/iccprofile.cpp:472
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "Spalvų profilyje nėra TRC žymių"
 
 #: debug_console.cpp:80
 #, kde-format
@@ -420,14 +419,12 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:245
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:260
 #, kde-format
@@ -643,12 +640,10 @@ msgstr "Perbraukimo atsisakyta"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "Laikymo pradžia"
 
 #: debug_console.cpp:467
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "Pirštų skaičius"
@@ -657,15 +652,13 @@ msgstr "Pirštų skaičius"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "Laikymo pabaiga"
 
 #: debug_console.cpp:490
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "Žnybtelėjimo atsisakyta"
+msgstr "Laikymo atsisakyta"
 
 #: debug_console.cpp:502
 #, kde-format
@@ -786,10 +779,9 @@ msgid "Up"
 msgstr ""
 
 #: debug_console.cpp:572
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Atstumas:"
+msgstr "Atstumas"
 
 #: debug_console.cpp:573
 #, fuzzy, kde-format
@@ -829,11 +821,9 @@ msgid "Group"
 msgstr ""
 
 #: debug_console.cpp:601 debug_console.cpp:618 debug_console.cpp:634
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Mode:"
+#, kde-format
 msgid "Mode"
-msgstr "Veiksena:"
+msgstr "Veiksena"
 
 #: debug_console.cpp:602
 #, kde-format
@@ -867,9 +857,7 @@ msgid "Tablet Pad Dial"
 msgstr "Planšetės kilimėlio žiedas"
 
 #: debug_console.cpp:647
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -1098,10 +1086,9 @@ msgstr "Įkelti"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Išeiti iš derinimo pulto"
+msgstr "Derinimo pultas"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:27
@@ -2521,7 +2508,7 @@ msgstr "Šiuo metu kadr./sek."
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "Daugiausia kadr./sek."
+msgstr "Daugiausiai kadr./sek."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: plugins/slide/slide_config.ui:17
@@ -2987,7 +2974,7 @@ msgstr "Ištrinti šią taisyklę (naudojimui importavimuose)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "This rule is enabled"
-msgstr ""
+msgstr "Ši taisyklė yra įjungta"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
@@ -3045,10 +3032,9 @@ msgstr "Kompiuterio eilutės atitikimo tipas"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "Langų tvarkytuvė"
+msgstr "Lango žymė"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
@@ -3532,21 +3518,18 @@ msgid "Log Out Anyway"
 msgstr "Vis tiek atsijungti"
 
 #: sm.cpp:472
-#, fuzzy, kde-format
-#| msgid ""
-#| "The following applications did not close:\n"
-#| "%1"
+#, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
 "Šios programos neužsivėrė:\n"
-"%1"
+"%1\n"
+"Po 2 minučių atsijungiama bet kokiu atveju."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "Žvilgsnis į darbalaukį"
@@ -3614,12 +3597,7 @@ msgid "Tablets switched outputs"
 msgstr "Planšetės pakeitė išvedimus"
 
 #: useractions.cpp:161
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3627,18 +3605,11 @@ msgid ""
 "shortcut."
 msgstr ""
 "Jūs pasirinkote rodyti langą be rėmelio.\n"
-"Be rėmelio, negalėsite vėl įjungti rėmelį, naudodami pelę: vietoje pelės, "
-"naudokite lango operacijų meniu, kurį galite aktyvuoti sparčiaisiais "
-"klavišais %1."
+"Be rėmelio negalėsite vėl įjungti rėmelį, naudodami pelę: vietoje pelės, "
+"naudokite lango meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
 
 #: useractions.cpp:168
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3648,7 +3619,7 @@ msgstr ""
 "Jūs pasirinkote rodyti langą visame ekrane.\n"
 "Jei pati programa neturi parinkties išjungti viso ekrano veikseną, tuomet "
 "negalėsite išjungti veikseną naudodami pelę. Vietoje to, naudokite lango "
-"operacijų meniu, kurį galite aktyvuoti sparčiaisiais klavišais %1."
+"meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
 
 #: useractions.cpp:216
 #, kde-format
@@ -3783,10 +3754,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "Spartieji klavišai <b>%1</b> yra naudojami veiksmui %2, programoje %3"
 
 #: useractions.cpp:818
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window Menu"
-msgstr "Lango vaidmuo"
+msgstr "Lango meniu"
 
 #: useractions.cpp:820
 #, kde-format
@@ -4180,27 +4150,28 @@ msgstr "Perjungti į darbalaukį %1"
 #: wayland/outputmanagement_v2.cpp:499
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "Vienas iš aktualių išvedimų daugiau nebeprieinamas"
 
 #: wayland/outputmanagement_v2.cpp:517
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
+"Visų išvedimų išjungimas per konfigūracijos pakeitimus yra neleidžiamas"
 
 #: wayland/outputmanagement_v2.cpp:544
 #, kde-format
 msgid "The provided output order doesn't contain all outputs"
-msgstr ""
+msgstr "Pateiktoje išvedimų tvarkoje nėra visų išvedimų"
 
 #: wayland/outputmanagement_v2.cpp:562
 #, kde-format
 msgid "The provided output order is invalid"
-msgstr ""
+msgstr "Pateikta išvedimų tvarka yra neteisinga"
 
 #: wayland/outputmanagement_v2.cpp:580
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "Tvarkyklė atmetė išvedimo konfigūraciją"
 
 #: window.cpp:3117
 #, kde-format

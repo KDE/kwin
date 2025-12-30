@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 14:41+0000\n"
-"PO-Revision-Date: 2024-04-04 17:46+0300\n"
+"PO-Revision-Date: 2025-12-29 21:13+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: lt\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.8\n"
 
 #: ui/main.qml:27
 #, kde-format
 msgctxt "@info"
 msgid "Changes will take effect the next time you log in."
-msgstr ""
+msgstr "Pakeitimai įsigalios, kai kitą kartą prisijungsite."
 
 #: ui/main.qml:31
 #, kde-format
 msgctxt "@action:button"
 msgid "Log Out Now"
-msgstr ""
+msgstr "Atsijungti dabar"
 
 #: ui/main.qml:52
 #, kde-kuit-format
@@ -40,31 +40,35 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
+"Pasenusios X11 programos naudojančios visuotinius sparčiuosius klavišus bei "
+"kitas ypatybes, kurios pasiekiamos programoms veikiant fone, turi turėti "
+"galimybę visą laiką klausytis klavišų paspaudimų.<nl/><nl/>Jeigu naudojate "
+"kažkurią iš tų programų, čia galite pasirinkti pageidaujamą saugumo ir "
+"suderinamumo pusiausvyrą."
 
 #: ui/main.qml:73
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr ""
+msgstr "Klavišų paspaudimų klausymasis:"
 
 #: ui/main.qml:80
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
-msgstr ""
+msgstr "Draudžiamas"
 
 #: ui/main.qml:96
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
-msgstr ""
+msgstr "Saugiausia; visuotiniai spartieji klavišai neveiks X11 programose"
 
 #: ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt and Shift keys"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
-msgstr "Tik Meta, Vald, Alt ir Lyg2 klavišai"
+msgstr "Tik Meta, Vald, Alt ir Lyg2 klavišus"
 
 #: ui/main.qml:126
 #, kde-format
@@ -73,32 +77,31 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"Labai saugu; X11 programose veiks aktyvavimas mygtuko paspaudimu (PTT) ir "
+"kiti tik modifikatoriaus visuotiniai spartieji klavišai"
 
 #: ui/main.qml:140
-#, fuzzy, kde-format
-#| msgid ""
-#| "As above, plus any key typed while the Control, Alt, or Meta keys are "
-#| "pressed"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
 "pressed"
 msgstr ""
-"Tas pats, kaip aukščiau ir dar papildomai bet kuriuos klavišus, kurie rašomi "
-"nuspaudus Vald, Alt ar Meta klavišus"
+"Tas pats, kaip aukščiau ir dar papildomai bet kuriuos klavišus, kurie "
+"paspaudžiami laikant nuspaustą Vald, Alt ar Meta klavišą"
 
 #: ui/main.qml:156
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
+"Vidutiniškai saugu; X11 programose veiks visi visuotiniai spartieji klavišai"
 
 #: ui/main.qml:170
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "Visada"
+msgstr "Visada leidžiamas"
 
 #: ui/main.qml:186
 #, kde-format
@@ -107,36 +110,33 @@ msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
 msgstr ""
+"Nesaugiausia; visos X11 programos galės matyti visą bet kurioje programoje "
+"rašomą tekstą"
 
 #: ui/main.qml:200
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
 "malicious software to steal passwords and spy on the text that you type. "
 "Make sure you understand and accept this risk."
 msgstr ""
-"Turėkite omenyje, kad naudojant šią nuostatą, sistemos saugumas sumažės iki "
-"X11 seanso lygio, nes kenkėjiškai programinei įrangai atsiras galimybė vogti "
-"jūsų slaptažodžius ir šnipinėti renkamą tekstą. Įsitikinkite, kad suvokiate "
-"šią riziką ir sutinkate ją prisiimti."
+"Turėkite omenyje, kad naudojant šią nuostatą, sistemos saugumas sumažės, o "
+"kenkėjiškai programinei įrangai atsiras galimybė vogti jūsų slaptažodžius ir "
+"šnipinėti renkamą tekstą. Įsitikinkite, kad suvokiate šią riziką ir "
+"sutinkate ją prisiimti."
 
 #: ui/main.qml:216
-#, fuzzy, kde-format
-#| msgid "Additionally include mouse buttons"
+#, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "Papildomai įtraukti pelės mygtukus"
+msgstr "Pelės mygtukų spustelėjimų klausymasis:"
 
 #: ui/main.qml:222
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
-msgstr ""
+msgstr "Leidžiamas"
 
 #: ui/main.qml:238
 #, kde-format
@@ -145,12 +145,14 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"Vidutiniškai saugu; X11 programose veiks visuotiniai klavišai, kuriuose "
+"naudojami pelės mygtukai"
 
 #: ui/main.qml:252
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "Rodyklės ir klaviatūros valdymas:"
 
 #: ui/main.qml:258
 #, kde-format
@@ -158,30 +160,26 @@ msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr ""
+msgstr "Leidžiamas neprašant leidimo"
 
 #: ui/main.qml:268
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
-msgstr ""
+msgstr "Nesaugiausia; visos X11 programos galės perimti kompiuterio valdymą"
 
 #: ui/main.qml:282
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-"Turėkite omenyje, kad naudojant šią nuostatą, sistemos saugumas sumažės iki "
-"X11 seanso lygio, nes kenkėjiškai programinei įrangai atsiras galimybė vogti "
-"jūsų slaptažodžius ir šnipinėti renkamą tekstą. Įsitikinkite, kad suvokiate "
-"šią riziką ir sutinkate ją prisiimti."
+"Turėkite omenyje, kad naudojant šią nuostatą, ženkliai sumažės sistemos "
+"saugumas, o kenkėjiškai programinei įrangai atsiras galimybė perimti visišką "
+"pelės rodyklės ir klaviatūros valdymą. Įsitikinkite, kad suvokiate šią "
+"riziką ir sutinkate ją prisiimti."
 
 #~ msgid ""
 #~ "Some legacy X11 apps require the ability to read keystrokes typed in "
