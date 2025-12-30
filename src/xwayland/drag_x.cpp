@@ -374,7 +374,7 @@ void WlVisit::sendStatus()
 
 void WlVisit::sendFinished()
 {
-    const bool accepted = m_entered && m_action != DnDAction::None;
+    const bool accepted = m_entered && targetAcceptsAction();
     xcb_client_message_data_t data = {};
     data.data32[0] = m_window;
     data.data32[1] = accepted;
