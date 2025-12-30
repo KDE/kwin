@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-23 00:42+0000\n"
-"PO-Revision-Date: 2024-05-08 23:32+0300\n"
+"PO-Revision-Date: 2025-12-29 18:28+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.8\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -69,9 +69,7 @@ msgid "Add Desktop"
 msgstr "Pridėti darbalaukį"
 
 #: ui/main.qml:90
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Rename"
+#, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "Pervadinti"
@@ -83,18 +81,16 @@ msgid "Remove"
 msgstr "Šalinti"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Confirm new name"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "Patvirtinti naują pavadinimą"
+msgstr "Taikyti naują pavadinimą"
 
 #: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "Atsisakyti pervadinimo"
 
 #: ui/main.qml:179
 #, kde-format

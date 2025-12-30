@@ -2,14 +2,15 @@
 # Copyright (C) 2012 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kcm-kwin-scripts package.
 # Kevin Scannell <kscanne@gmail.com>, 2012.
+# SPDX-FileCopyrightText: 2025 Charlotte <altronic25@protonmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2012-05-14 16:25-0500\n"
-"Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
-"Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2025-12-25 23:06+0000\n"
+"Last-Translator: Charlotte <altronic25@protonmail.com>\n"
+"Language-Team: Irish\n"
 "Language: ga\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,16 +19,14 @@ msgstr ""
 "3 : 4\n"
 
 #: module.cpp:52
-#, fuzzy, kde-format
-#| msgid "Import KWin script..."
+#, kde-format
 msgid "Import KWin Script"
-msgstr "Iompórtáil script KWin..."
+msgstr "Iompórtáil Script KWin..."
 
 #: module.cpp:53
-#, fuzzy, kde-format
-#| msgid "KWin Scripts"
+#, kde-format
 msgid "KWin Script (*.kwinscript)"
-msgstr "Scripteanna KWin"
+msgstr "Script KWin (*.kwinscript)"
 
 #: module.cpp:65
 #, kde-format
@@ -36,35 +35,36 @@ msgid ""
 "Cannot import selected script.\n"
 "%1"
 msgstr ""
+"Níl féidir script roghnaithe a iompórtáil.\n"
+"%1"
 
 #: module.cpp:69
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
-msgstr ""
+msgstr "Bhí an script \"%1\" go rathúil ag iompórtáilte."
 
 #: module.cpp:131
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
-msgstr ""
+msgstr "Earráid nuair Script KWin á dhíshuiteáil: %1"
 
 #: ui/main.qml:23
 #, kde-format
 msgid "Install from File…"
-msgstr ""
+msgstr "Suiteáil ó Chomhad..."
 
 #: ui/main.qml:27
-#, fuzzy, kde-format
-#| msgid "Get New Script..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "Faigh Script Nua..."
+msgstr "Faigh Nua..."
 
 #: ui/main.qml:65
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr ""
+msgstr "Scrios..."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
