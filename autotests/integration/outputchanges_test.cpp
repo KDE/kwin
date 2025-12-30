@@ -144,6 +144,8 @@ private Q_SLOTS:
 
     void testMirroring_data();
     void testMirroring();
+
+    void testAutoBrightness();
 };
 
 void OutputChangesTest::initTestCase()
@@ -2186,6 +2188,48 @@ void OutputChangesTest::testMirroring()
     QCOMPARE(external->deviceOffset(), deviceOffset);
 
     input()->removeInputDevice(&lidSwitch);
+}
+
+#define COMPARE_RANGE(expression, value, uncertainty) \
+    QCOMPARE_GE(expression, value - uncertainty);     \
+    QCOMPARE_LE(expression, value + uncertainty);
+
+void OutputChangesTest::testAutoBrightness()
+{
+    AutoBrightnessCurve curve;
+    curve.adjust(1.00, 100);
+    curve.adjust(0.75, 50);
+    curve.adjust(0.40, 10);
+    curve.adjust(0.20, 1);
+
+    constexpr double eta = 0.001;
+
+    COMPARE_RANGE(curve.sample(100), 1.00, eta);
+    COMPARE_RANGE(curve.sample(50), 0.75, eta);
+    COMPARE_RANGE(curve.sample(10), 0.40, eta);
+    COMPARE_RANGE(curve.sample(1), 0.20, eta);
+
+    // reduce brightness at higher lux values
+    curve.adjust(0.40, 0);
+    curve.adjust(0.20, 10);
+    COMPARE_RANGE(curve.sample(10), 0.20, eta);
+
+    // reduce brightness at zero lux
+    curve.adjust(0.40, 0);
+    curve.adjust(0.35, 0);
+    curve.adjust(0.20, 0);
+    COMPARE_RANGE(curve.sample(0), 0.20, eta);
+
+    // increase brightness at zero lux
+    curve.adjust(0.20, 0);
+    curve.adjust(0.25, 0);
+    curve.adjust(0.30, 0);
+    curve.adjust(0.35, 0);
+    COMPARE_RANGE(curve.sample(0), 0.35, eta);
+
+    // higher luminance values should be unaffected by the changes at low brightness
+    COMPARE_RANGE(curve.sample(100), 1.00, eta);
+    COMPARE_RANGE(curve.sample(50), 0.75, eta);
 }
 
 } // namespace KWin

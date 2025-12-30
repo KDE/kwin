@@ -53,12 +53,16 @@ void AutoBrightnessCurve::adjust(double brightness, double lux)
     // Adjust the brightness curve in a way that's intuitive for the user,
     // without the user having to care about how it works
 
+    constexpr double minDifference = 0.001;
+
     const size_t lowMatch = std::floor(brightness * (m_luxAtBrightness.size() - 1));
     if (lowMatch == m_luxAtBrightness.size() - 1) {
         // == 100% brightness
         m_luxAtBrightness.back() = lux;
-        for (size_t i = 0; i < m_luxAtBrightness.size() - 1; i++) {
-            m_luxAtBrightness[i] = std::min(m_luxAtBrightness[i], lux);
+        double last = lux;
+        for (int i = m_luxAtBrightness.size() - 2; i >= 0; i--) {
+            m_luxAtBrightness[i] = std::min(m_luxAtBrightness[i], last - minDifference);
+            last = m_luxAtBrightness[i];
         }
         return;
     }
@@ -66,19 +70,26 @@ void AutoBrightnessCurve::adjust(double brightness, double lux)
     double &high = m_luxAtBrightness[lowMatch + 1];
 
     const double highFactor = brightness * (m_luxAtBrightness.size() - 1) - lowMatch;
-    const double lowFactor = 1.0 - highFactor;
-    const double currentLuxAtBrightness = low * lowFactor + high * highFactor;
-    const double difference = lux - currentLuxAtBrightness;
-    low = std::max(low + difference * lowFactor, 0.0);
-    high = std::max(high + difference * highFactor, 0.0);
+    high = std::lerp(high, lux, highFactor);
+    // the curve must be strictly monotonic, so for "low = lux"
+    // to be possible, "high" must be strictly higher than "lux"
+    high = std::max(high, lux + minDifference);
+    // this is derived from the linear equation set up by linearly interpolating between low and high:
+    // lux = low + (high - low) * highFactor
+    // -> lux = highFactor * high + (1 - highFactor) * low
+    // -> (1 - highFactor) * low = lux - highFactor * high
+    low = (lux - highFactor * high) / (1 - highFactor);
 
-    // ensure the curve stays monotonic
-    // TODO maybe do something smarter here?
-    for (size_t i = 0; i < lowMatch; i++) {
-        m_luxAtBrightness[i] = std::min(m_luxAtBrightness[i], low);
+    // ensure the curve stays strictly monotonic in both directions
+    double last = low;
+    for (int i = lowMatch - 1; i >= 0; i--) {
+        m_luxAtBrightness[i] = std::min(m_luxAtBrightness[i], last - minDifference);
+        last = m_luxAtBrightness[i];
     }
+    last = low;
     for (size_t i = lowMatch + 1; i < m_luxAtBrightness.size(); i++) {
-        m_luxAtBrightness[i] = std::max(m_luxAtBrightness[i], high);
+        m_luxAtBrightness[i] = std::max(m_luxAtBrightness[i], last + minDifference);
+        last = m_luxAtBrightness[i];
     }
 }
 
