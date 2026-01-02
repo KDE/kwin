@@ -324,6 +324,7 @@ enum Order {
     PlaceholderOutput,
     Dpms,
     ButtonRebind,
+    SlowKeys,
     BounceKeys,
     StickyKeys,
     MouseKeys,

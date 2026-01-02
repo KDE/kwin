@@ -145,6 +145,7 @@ integrationTest(NAME testStackingOrder SRCS stacking_order_test.cpp OPTIONAL_LIB
 integrationTest(NAME testDbusInterface SRCS dbus_interface_test.cpp OPTIONAL_LIBS XCB::ICCCM)
 integrationTest(NAME testFakeInput SRCS fakeinput_test.cpp)
 integrationTest(NAME testSecurityContext SRCS security_context_test.cpp)
+integrationTest(NAME testSlowKeys SRCS slow_keys_test.cpp)
 integrationTest(NAME testStickyKeys SRCS sticky_keys_test.cpp)
 integrationTest(NAME testWorkspace SRCS workspace_test.cpp)
 integrationTest(NAME testMouseActions SRCS mouseactions_test.cpp LIBS)
