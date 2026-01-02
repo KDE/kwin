@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-19 00:45+0000\n"
+"POT-Creation-Date: 2026-01-02 00:45+0000\n"
 "PO-Revision-Date: 2025-12-16 21:58+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -1086,152 +1086,152 @@ msgid "Debug Console"
 msgstr "Конзола за откриване на грешки"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:27
+#: debug_console.ui:30
 #, kde-format
 msgid "Windows"
 msgstr "Прозорци"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:41
+#: debug_console.ui:44
 #, kde-format
 msgid "Input Events"
 msgstr "Входни събития"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:58
+#: debug_console.ui:61
 #, kde-format
 msgid "Input Devices"
 msgstr "Устройства за въвеждане"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:68
+#: debug_console.ui:71
 #, kde-format
 msgid "OpenGL"
 msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:74
+#: debug_console.ui:77
 #, kde-format
 msgid "No OpenGL compositor running"
 msgstr "Няма работещ OpenGL композитор"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:102
+#: debug_console.ui:105
 #, kde-format
 msgid "OpenGL (ES) driver information"
 msgstr "Информация за драйвера на OpenGL (ES)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:108
+#: debug_console.ui:111
 #, kde-format
 msgid "Vendor:"
 msgstr "Доставчик:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:115
+#: debug_console.ui:118
 #, kde-format
 msgid "Renderer:"
 msgstr "Визуализатор:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:122
+#: debug_console.ui:125
 #, kde-format
 msgid "Version:"
 msgstr "Версия:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:129
+#: debug_console.ui:132
 #, kde-format
 msgid "Shading Language Version:"
 msgstr "Версия на езика за сгъване:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:136
+#: debug_console.ui:139
 #, kde-format
 msgid "Driver:"
 msgstr "Драйвер:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:143
+#: debug_console.ui:146
 #, kde-format
 msgid "GPU class:"
 msgstr "GPU клас:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:150
+#: debug_console.ui:153
 #, kde-format
 msgid "OpenGL Version:"
 msgstr "Версия на OpenGL:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:157
+#: debug_console.ui:160
 #, kde-format
 msgid "GLSL Version:"
 msgstr "GLSL версия:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:223
+#: debug_console.ui:226
 #, kde-format
 msgid "Platform Extensions"
 msgstr "Разширения на платформата"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:239
+#: debug_console.ui:242
 #, kde-format
 msgid "OpenGL (ES) Extensions"
 msgstr "Разширения на OpenGL (ES)"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:260
+#: debug_console.ui:263
 #, kde-format
 msgid "Keyboard"
 msgstr "Клавиатура"
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:287
+#: debug_console.ui:290
 #, kde-format
 msgid "Keymap Layouts"
 msgstr "Клавиатурни подредби"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:309
+#: debug_console.ui:312
 #, kde-format
 msgid "Current Layout:"
 msgstr "Текуща подредба:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.ui:328
+#: debug_console.ui:331
 #, kde-format
 msgid "Modifiers"
 msgstr "Модификатори"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:344
+#: debug_console.ui:347
 #, kde-format
 msgid "Active Modifiers"
 msgstr "Активни модификатори"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:360
+#: debug_console.ui:363
 #, kde-format
 msgid "LEDs"
 msgstr "Светодиоди"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:376
+#: debug_console.ui:379
 #, kde-format
 msgid "Active LEDs"
 msgstr "Активни светодиоди"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: debug_console.ui:397 debug_console.ui:417
+#: debug_console.ui:400 debug_console.ui:420
 #, kde-format
 msgid "Clipboard"
 msgstr "Клипборд"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
-#: debug_console.ui:463
+#: debug_console.ui:466
 #, kde-format
 msgid "Primary Selection"
 msgstr "Основна селекция"

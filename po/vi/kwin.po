@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-19 00:45+0000\n"
+"POT-Creation-Date: 2026-01-02 00:45+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -1099,152 +1099,152 @@ msgid "Debug Console"
 msgstr "Thoát khỏi bàn điều khiển gỡ lỗi"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:27
+#: debug_console.ui:30
 #, kde-format
 msgid "Windows"
 msgstr "Cửa sổ"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:41
+#: debug_console.ui:44
 #, kde-format
 msgid "Input Events"
 msgstr "Sự kiện đầu vào"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:58
+#: debug_console.ui:61
 #, kde-format
 msgid "Input Devices"
 msgstr "Thiết bị nhập"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:68
+#: debug_console.ui:71
 #, kde-format
 msgid "OpenGL"
 msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:74
+#: debug_console.ui:77
 #, kde-format
 msgid "No OpenGL compositor running"
 msgstr "Không có trình kết hợp OpenGL nào đang chạy"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:102
+#: debug_console.ui:105
 #, kde-format
 msgid "OpenGL (ES) driver information"
 msgstr "Thông tin trình điều khiển OpenGL (ES)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:108
+#: debug_console.ui:111
 #, kde-format
 msgid "Vendor:"
 msgstr "Nhà cung cấp:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:115
+#: debug_console.ui:118
 #, kde-format
 msgid "Renderer:"
 msgstr "Trình kết xuất:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:122
+#: debug_console.ui:125
 #, kde-format
 msgid "Version:"
 msgstr "Phiên bản:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:129
+#: debug_console.ui:132
 #, kde-format
 msgid "Shading Language Version:"
 msgstr "Phiên bản ngôn ngữ đổ bóng:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:136
+#: debug_console.ui:139
 #, kde-format
 msgid "Driver:"
 msgstr "Trình điều khiển:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:143
+#: debug_console.ui:146
 #, kde-format
 msgid "GPU class:"
 msgstr "Lớp GPU:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:150
+#: debug_console.ui:153
 #, kde-format
 msgid "OpenGL Version:"
 msgstr "Phiên bản OpenGL:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:157
+#: debug_console.ui:160
 #, kde-format
 msgid "GLSL Version:"
 msgstr "Phiên bản GLSL:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:223
+#: debug_console.ui:226
 #, kde-format
 msgid "Platform Extensions"
 msgstr "Phần mở rộng nền tảng"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:239
+#: debug_console.ui:242
 #, kde-format
 msgid "OpenGL (ES) Extensions"
 msgstr "Phần mở rộng OpenGL (ES)"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:260
+#: debug_console.ui:263
 #, kde-format
 msgid "Keyboard"
 msgstr "Bàn phím"
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:287
+#: debug_console.ui:290
 #, kde-format
 msgid "Keymap Layouts"
 msgstr "Bố cục bản đồ phím"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:309
+#: debug_console.ui:312
 #, kde-format
 msgid "Current Layout:"
 msgstr "Bố cục hiện tại:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.ui:328
+#: debug_console.ui:331
 #, kde-format
 msgid "Modifiers"
 msgstr "Phím bổ trợ"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:344
+#: debug_console.ui:347
 #, kde-format
 msgid "Active Modifiers"
 msgstr "Các phím bổ trợ đang hoạt động"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:360
+#: debug_console.ui:363
 #, kde-format
 msgid "LEDs"
 msgstr "LED"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:376
+#: debug_console.ui:379
 #, kde-format
 msgid "Active LEDs"
 msgstr "LED hoạt động"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: debug_console.ui:397 debug_console.ui:417
+#: debug_console.ui:400 debug_console.ui:420
 #, kde-format
 msgid "Clipboard"
 msgstr "Bảng nháp"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
-#: debug_console.ui:463
+#: debug_console.ui:466
 #, kde-format
 msgid "Primary Selection"
 msgstr "Phần chọn chính"

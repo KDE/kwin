@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-12-19 00:45+0000\n"
+"POT-Creation-Date: 2026-01-02 00:45+0000\n"
 "PO-Revision-Date: 2025-10-09 01:06+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1080,152 +1080,152 @@ msgid "Debug Console"
 msgstr "디버그 콘솔"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
-#: debug_console.ui:27
+#: debug_console.ui:30
 #, kde-format
 msgid "Windows"
 msgstr "창"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:41
+#: debug_console.ui:44
 #, kde-format
 msgid "Input Events"
 msgstr "입력 이벤트"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:58
+#: debug_console.ui:61
 #, kde-format
 msgid "Input Devices"
 msgstr "입력 장치"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:68
+#: debug_console.ui:71
 #, kde-format
 msgid "OpenGL"
 msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:74
+#: debug_console.ui:77
 #, kde-format
 msgid "No OpenGL compositor running"
 msgstr "OpenGL 컴포지터가 실행 중이 아님"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:102
+#: debug_console.ui:105
 #, kde-format
 msgid "OpenGL (ES) driver information"
 msgstr "OpenGL (ES) 드라이버 정보"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:108
+#: debug_console.ui:111
 #, kde-format
 msgid "Vendor:"
 msgstr "제조사:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:115
+#: debug_console.ui:118
 #, kde-format
 msgid "Renderer:"
 msgstr "렌더러:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:122
+#: debug_console.ui:125
 #, kde-format
 msgid "Version:"
 msgstr "버전:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:129
+#: debug_console.ui:132
 #, kde-format
 msgid "Shading Language Version:"
 msgstr "셰이더 언어 버전:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:136
+#: debug_console.ui:139
 #, kde-format
 msgid "Driver:"
 msgstr "드라이버:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:143
+#: debug_console.ui:146
 #, kde-format
 msgid "GPU class:"
 msgstr "GPU 클래스:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:150
+#: debug_console.ui:153
 #, kde-format
 msgid "OpenGL Version:"
 msgstr "OpenGL 버전:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:157
+#: debug_console.ui:160
 #, kde-format
 msgid "GLSL Version:"
 msgstr "GLSL 버전:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:223
+#: debug_console.ui:226
 #, kde-format
 msgid "Platform Extensions"
 msgstr "플랫폼 확장"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:239
+#: debug_console.ui:242
 #, kde-format
 msgid "OpenGL (ES) Extensions"
 msgstr "OpenGL (ES) 확장"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:260
+#: debug_console.ui:263
 #, kde-format
 msgid "Keyboard"
 msgstr "키보드"
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:287
+#: debug_console.ui:290
 #, kde-format
 msgid "Keymap Layouts"
 msgstr "키보드 레이아웃"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:309
+#: debug_console.ui:312
 #, kde-format
 msgid "Current Layout:"
 msgstr "현재 레이아웃:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.ui:328
+#: debug_console.ui:331
 #, kde-format
 msgid "Modifiers"
 msgstr "수정자"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:344
+#: debug_console.ui:347
 #, kde-format
 msgid "Active Modifiers"
 msgstr "활성 수정자"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:360
+#: debug_console.ui:363
 #, kde-format
 msgid "LEDs"
 msgstr "LED"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:376
+#: debug_console.ui:379
 #, kde-format
 msgid "Active LEDs"
 msgstr "켜진 LED"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: debug_console.ui:397 debug_console.ui:417
+#: debug_console.ui:400 debug_console.ui:420
 #, kde-format
 msgid "Clipboard"
 msgstr "클립보드"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
-#: debug_console.ui:463
+#: debug_console.ui:466
 #, kde-format
 msgid "Primary Selection"
 msgstr "주 선택"
