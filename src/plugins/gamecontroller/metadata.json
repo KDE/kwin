@@ -1,0 +1,10 @@
+{
+    "KPlugin": {
+        "Category": "Input",
+        "Description": "Enable KWin game controller input detection",
+        "EnabledByDefault": true,
+        "License": "GPL",
+        "Name": "gamecontroller"
+    },
+    "X-KDE-ServiceTypes": ["KWin/Plugin"]
+}
