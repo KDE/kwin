@@ -6,5 +6,7 @@
         "License": "GPL",
         "Name": "gamecontroller"
     },
-    "X-KDE-ServiceTypes": ["KWin/Plugin"]
+    "X-KDE-ServiceTypes": [
+        "KWin/Plugin"
+    ]
 }
