@@ -18,8 +18,15 @@ namespace KWin
 #endif // EGL_ANDROID_native_fence_sync
 
 EGLNativeFence::EGLNativeFence(EglDisplay *display)
-    : EGLNativeFence(display, eglCreateSyncKHR(display->handle(), EGL_SYNC_NATIVE_FENCE_ANDROID, nullptr))
+    : m_display(display)
 {
+    if (!display->supportsNativeFence()) {
+        m_sync = EGL_NO_SYNC_KHR;
+        return;
+    }
+
+    m_sync = eglCreateSyncKHR(display->handle(), EGL_SYNC_NATIVE_FENCE_ANDROID, nullptr);
+
     if (m_sync != EGL_NO_SYNC_KHR) {
         // The native fence will get a valid sync file fd only after a flush.
         glFlush();
