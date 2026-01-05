@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-17 02:33+0000\n"
-"PO-Revision-Date: 2025-10-01 17:08+0100\n"
+"PO-Revision-Date: 2025-12-12 10:53+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -1110,7 +1110,7 @@ msgstr "Evenimente de introducere"
 #: debug_console.ui:58
 #, kde-format
 msgid "Input Devices"
-msgstr "Dispozitive de introducere"
+msgstr "Dispozitive de intrare"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #: debug_console.ui:68
