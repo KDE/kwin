@@ -6,13 +6,13 @@
 # SPDX-FileCopyrightText: 2023 Johannes Obermayr <johannesobermayr@gmx.de>
 # SPDX-FileCopyrightText: 2024, 2025 Flori G <renner03@protonmail.com>
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
-# SPDX-FileCopyrightText: 2025 Philipp Kiemle <l10n.daphipz@fastmail.de>
+# SPDX-FileCopyrightText: 2025, 2026 Philipp Kiemle <l10n.daphipz@fastmail.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2025-09-07 19:34+0200\n"
+"PO-Revision-Date: 2026-01-01 22:04+0100\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #: ui/main.qml:27
 #, kde-format
@@ -43,12 +43,17 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
+"Alte X11-Anwendungen mit globalen Kurzbefehlen und anderen Funktionen, die "
+"aus dem Hintergrund aktiviert werden können, müssen Tasteneingaben jederzeit "
+"erfassen können.<nl/><nl/>Wenn Sie solche Anwendungen verwenden, können Sie "
+"hier Ihr bevorzugtes Verhältnis zwischen Sicherheit und Kompatibilität "
+"auswählen."
 
 #: ui/main.qml:73
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr ""
+msgstr "Erfassung von Tasteneingaben:"
 
 #: ui/main.qml:80
 #, kde-format
@@ -61,6 +66,8 @@ msgstr "Verboten"
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr ""
+"Höchste Sicherheit – Globale Kurzbefehle werden in X11-Anwendungen nicht "
+"funktionieren"
 
 #: ui/main.qml:110
 #, kde-format
@@ -75,6 +82,8 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"Hohe Sicherheit – „Push-to-Talk“ und andere Kurzbefehle, die ausschließlich "
+"mit Sondertasten funktionieren, werden in X11-Anwendungen funktionieren"
 
 #: ui/main.qml:140
 #, kde-format
@@ -91,6 +100,8 @@ msgstr ""
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
+"Mäßige Sicherheit – Alle globalen Kurzbefehle werden in X11-Anwendungen "
+"funktionieren"
 
 #: ui/main.qml:170
 #, kde-format
@@ -105,30 +116,26 @@ msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
 msgstr ""
+"Niedrigste Sicherheit – Alle X11-Anwendungen können alle Tasteneingaben "
+"auslesen, auch wenn diese in anderen Anwendungen getätigt werden"
 
 #: ui/main.qml:200
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
 "malicious software to steal passwords and spy on the text that you type. "
 "Make sure you understand and accept this risk."
 msgstr ""
-"Bitte beachten Sie, dass diese Einstellung die Systemsicherheit auf die "
-"Stufe von einer X11-Sitzung schwächt und es bösartiger Software erlaubt, "
-"Passwörter zu stehlen und Text den Sie tippen abzuhören. Seien Sie sich der "
-"Risiken bewusst."
+"Bitte beachten Sie, dass diese Einstellung die Systemsicherheit schwächt und "
+"es bösartiger Software erlaubt, Passwörter zu stehlen und von Ihnen "
+"getippten Text abzuhören. Seien Sie sich der Risiken bewusst."
 
 #: ui/main.qml:216
-#, fuzzy, kde-format
-#| msgid "Additionally include mouse buttons"
+#, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "Maustasten auch erfassen"
+msgstr "Maustastenerfassung:"
 
 #: ui/main.qml:222
 #, kde-format
@@ -143,6 +150,8 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"Mäßige Sicherheit – Globale Kurzbefehle mit Maustasten werden in X11-"
+"Anwendungen funktionieren"
 
 #: ui/main.qml:252
 #, kde-format
@@ -163,23 +172,20 @@ msgstr "Erlauben, ohne um Erlaubnis zu fragen"
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
+"Niedrigste Sicherheit – Alle X11-Anwendungen werden die Kontrolle über den "
+"Comuter übernehmen können"
 
 #: ui/main.qml:282
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-"Bitte beachten Sie, dass diese Einstellung die Systemsicherheit auf die "
-"Stufe von einer X11-Sitzung schwächt und es bösartiger Software erlaubt, "
-"Passwörter zu stehlen und Text den Sie tippen abzuhören. Seien Sie sich der "
-"Risiken bewusst."
+"Bitte beachten Sie, dass diese Einstellung die Systemsicherheit massiv "
+"schwächt und es bösartiger Software erlaubt, die vollständige Kontrolle über "
+"Maus und Tastatur zu erhalten. Seien Sie sich der Risiken bewusst."
 
 #~ msgid ""
 #~ "Some legacy X11 apps require the ability to read keystrokes typed in "

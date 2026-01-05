@@ -2,18 +2,18 @@
 # SPDX-FileCopyrightText: 2005 Stephan Johach <hunsum@gmx.de>
 # SPDX-FileCopyrightText: 2005, 2006, 2007, 2008, 2010 Thomas Reitelbach <tr@erdfunkstelle.de>
 # SPDX-FileCopyrightText: 2009, 2010, 2011, 2012, 2016, 2018, 2022, 2023 Frederik Schwarzer <schwarzer@kde.org>
-# SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021 Burkhard Lück <lueck@hube-lueck.de>
 # SPDX-FileCopyrightText: 2011, 2012 Frank Steinmetzger <Warp_7@gmx.de>
+# SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021 Burkhard Lück <lueck@hube-lueck.de>
 # SPDX-FileCopyrightText: 2023 Jannick Kuhr <opensource@kuhr.org>
 # SPDX-FileCopyrightText: 2024, 2025 Flori G <Renner03@protonmail.com>
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
-# SPDX-FileCopyrightText: 2025 Philipp Kiemle <l10n.daphipz@fastmail.de>
+# SPDX-FileCopyrightText: 2025, 2026 Philipp Kiemle <l10n.daphipz@fastmail.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2025-09-15 22:04+0200\n"
+"PO-Revision-Date: 2026-01-01 21:38+0100\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.1\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -238,10 +238,9 @@ msgid "Machine (hostname)"
 msgstr "Maschine (Rechnername):"
 
 #: rulesmodel.cpp:440
-#, fuzzy, kde-format
-#| msgid "Window &Extra"
+#, kde-format
 msgid "Window tag"
-msgstr "Fenster-&Besonderheit"
+msgstr "Fenster-Tag"
 
 #: rulesmodel.cpp:447
 #, kde-format
@@ -527,6 +526,27 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Diese Eigenschaft steuert die Fokus-Schutzstufe des aktuell aktiven "
+"Fensters. Sie wird verwendet, um das Verhindern unerwünschter Aktivierung "
+"neuer Fenster, die ohne Ihre direkte Aktion geöffnet wurden, zu "
+"überschreiben.<nl/><nl/>Hier sehen Sie, welchen Einfluss die verschiedenen "
+"Schutzstufen auf neue Fenster haben, die ohne Ihre direkte Aktion geöffnet "
+"werden, während das Fenster, auf das die Schutzstufe angewendet wird, "
+"fokussiert ist:<nl/><nl/><list><item><emphasis strong='true'>Deaktiviert:</"
+"emphasis> Neu geöffnete Fenster werden immer in den Vordergrund gebracht und "
+"fokussiert.</item><item><emphasis strong='true'>Niedrig:</emphasis> Das "
+"Verhindern unerwünschter Aktivierung wird auf das neu geöffnete Fenster "
+"angewendet, aber in einer Situation, die KWin als mehrdeutig einstuft, wird "
+"das Fenster in den Vordergrund gebracht und fokussiert.</"
+"item><item><emphasis strong='true'>Normal:</emphasis> Das Verhindern "
+"unerwünschter Aktivierung wird auf das neu geöffnete Fenster angewendet, "
+"aber in einer Situation, die KWin als mehrdeutig einstuft, wird das Fenster "
+"<emphasis>nicht</emphasis> in den Vordergrund gebracht und fokussiert.</"
+"item><item><emphasis strong='true'>Hoch:</emphasis> Neu geöffnete Fenster "
+"werden nur in den Vordergrund gebracht und fokussiert, wenn sie zur gleichen "
+"Anwendung gehören wie das aktuell fokussierte Fenster.</item><item><emphasis "
+"strong='true'>Extrem:</emphasis> Neu geöffnete Fenster werden nie in den "
+"Vordergrund gebracht und fokussiert.</item></list>"
 
 #: rulesmodel.cpp:683
 #, kde-format

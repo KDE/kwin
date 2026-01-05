@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-02 00:45+0000\n"
-"PO-Revision-Date: 2025-09-07 20:05+0200\n"
+"PO-Revision-Date: 2025-12-23 18:41+0100\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -136,20 +136,23 @@ msgstr ""
 "ICC-Profil „%1“ ist beschädigt, das Invertieren der chromatischen "
 "Adaptionsmatrix ist fehlgeschlagen"
 
+# ich weiß nicht, ob primaries sich auf Farben bezieht
 #: core/iccprofile.cpp:393
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC-Profil „%1“ ist beschädigt, es hat keine Primärfarben"
 
 #: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
+"ICC-Profil „%1“ ist beschädigt, die Primärfarben können nicht berechnet "
+"werden"
 
 #: core/iccprofile.cpp:417
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC-Profil „%1“ ist beschädigt, die Primärfarben sind ungültig"
 
 #: core/iccprofile.cpp:433
 #, kde-format
@@ -655,12 +658,10 @@ msgstr "Wischgeste abgebrochen"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "Halten gestartet"
 
 #: debug_console.cpp:473
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "Fingeranzahl"
@@ -669,15 +670,13 @@ msgstr "Fingeranzahl"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "Halten beendet"
 
 #: debug_console.cpp:496
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "Kneifgeste abgebrochen"
+msgstr "Halten abgebrochen"
 
 #: debug_console.cpp:508
 #, kde-format
@@ -836,7 +835,7 @@ msgstr ""
 #: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
 #, kde-format
 msgid "Mode"
-msgstr ""
+msgstr "Modus"
 
 #: debug_console.cpp:618
 #, kde-format
@@ -1651,10 +1650,9 @@ msgstr "Verzerrstärke:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Saturation:"
-msgstr "Dauer:"
+msgstr "Sättigung:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -3529,7 +3527,7 @@ msgstr "Dialog"
 #: shortcutdialog.ui:25
 #, kde-format
 msgid "..."
-msgstr "..."
+msgstr "…"
 
 #: sm.cpp:421
 #, kde-format
@@ -3555,8 +3553,7 @@ msgstr ""
 "Die Abmeldung wird trotzdem in 2 Minuten durchgeführt."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "Blick auf die Arbeitsfläche"
