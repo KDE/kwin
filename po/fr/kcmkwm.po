@@ -10,7 +10,7 @@
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2005, 2007, 2008, 2010.
 # Sébastien Renard <Sebastien.Renard@digitalfox.org>, 2008, 2012.
 # Anne-Marie Mahfouf <annma@kde.org>, 2012.
-# SPDX-FileCopyrightText: 2013, 2023, 2024, 2025 Xavier Besnard <xavier.besnard@kde.org>
+# SPDX-FileCopyrightText: 2013, 2023, 2024, 2025, 2026 Xavier Besnard <xavier.besnard@kde.org>
 # Ludovic Grossard <ludovic.grossard@unilim.fr>, 2014.
 # Sebastien Renard <renard@kde.org>, 2015.
 # Simon Depiets <sdepiets@gmail.com>, 2019, 2020.
@@ -21,9 +21,9 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2025-08-08 11:25+0200\n"
+"PO-Revision-Date: 2026-01-03 18:05+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
-"Language-Team: French <French <kde-francophone@kde.org>>\n"
+"Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 25.07.90\n"
+"X-Generator: Lokalize 25.12.0\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -676,7 +676,14 @@ msgstr ""
 "bureau virtuel</span> permettra le basculement vers le bureau virtuel où se "
 "trouve actuellement la fenêtre. </p><p><span style=\" font-style:italic;"
 "\">Déplacer une fenêtre vers le bureau virtuel courant</span> provoquera le "
-"transfert de la fenêtre vers le bureau virtuel actif. </p></body></html>"
+"transfert de la fenêtre vers le bureau virtuel actif. </p><p>Ces paramètres "
+"contrôlent le comportement lorsqu'une fenêtre ouverte située sur un bureau "
+"virtuel, différent du bureau courant activé. </p><p><span style=\" font-"
+"style:italic;\">Basculer vers l'autre bureau virtuel</span> permettra le "
+"basculement vers le bureau virtuel où se trouve actuellement la fenêtre. </"
+"p><p><span style=\" font-style:italic;\">Déplacer la fenêtre vers le bureau "
+"virtuel courant</span> provoquera le transfert de la fenêtre vers le bureau "
+"virtuel actif. </p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
@@ -688,7 +695,7 @@ msgstr "Basculer vers ce bureau virtuel"
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr "Déplacer une fenêtre vers le bureau virtuel courant"
+msgstr "Déplacer la fenêtre vers le bureau virtuel courant"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22

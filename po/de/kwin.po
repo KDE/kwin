@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2025-09-07 20:05+0200\n"
+"PO-Revision-Date: 2025-12-23 18:41+0100\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2163,7 +2163,7 @@ msgstr "Dialog"
 #: shortcutdialog.ui:25
 #, kde-format
 msgid "..."
-msgstr "..."
+msgstr "…"
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
