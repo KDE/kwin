@@ -7,9 +7,13 @@
         "Description[es]": "Activar la detección de mandos de juego en KWin",
         "Description[eu]": "Gaitu KWin-ek joko kontrolatzailearen sarrera antzematea",
         "Description[he]": "הפעלת זיהוי קלט בקר משחק ב־KWin",
+        "Description[it]": "Abilita il rilevamento dell'input del controller di gioco KWin",
         "Description[ka]": "KWin-ის თამაშის კონტროლერის შეყვანის დადგენის ჩართვა",
+        "Description[nl]": "Invoerdetectie van spelcontroller van KWin inschakelen",
         "Description[pt_BR]": "Ativar detecção de entrada do controlador de jogos no KWin",
         "Description[sl]": "Omogoči zaznavanje vnosa krmilnika iger KWin",
+        "Description[uk]": "Увімкнути виявлення ігрового контролера у KWin",
+        "Description[zh_TW]": "啟用 KWin 遊戲控制器輸入偵測",
         "EnabledByDefault": true,
         "License": "GPL",
         "Name": "gamecontroller",
@@ -18,9 +22,13 @@
         "Name[es]": "mando de juegos",
         "Name[eu]": "joko-kontrolatzailea",
         "Name[he]": "בקר משחק",
+        "Name[it]": "controller di gioco",
         "Name[ka]": "gamecontroller",
+        "Name[nl]": "spelcontroller",
         "Name[pt_BR]": "controlador de jogo",
-        "Name[sl]": "krmilnik iger"
+        "Name[sl]": "krmilnik iger",
+        "Name[uk]": "Ігровий контролер",
+        "Name[zh_TW]": "遊戲控制器"
     },
     "X-KDE-ServiceTypes": [
         "KWin/Plugin"
