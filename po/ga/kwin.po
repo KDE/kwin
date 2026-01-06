@@ -2,13 +2,13 @@
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Séamus Ó Ciardhuáin <seoc@cnds.ucd.ie>, 2002
 # Kevin Scannell <kscanne@gmail.com>, 2009
-# SPDX-FileCopyrightText: 2025 Charlotte <altronic25@protonmail.com>
+# SPDX-FileCopyrightText: 2025, 2026 Charlotte <altronic25@protonmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-02 00:45+0000\n"
-"PO-Revision-Date: 2025-12-23 21:28+0000\n"
+"PO-Revision-Date: 2026-01-04 10:24+0000\n"
 "Last-Translator: Charlotte <altronic25@protonmail.com>\n"
 "Language-Team: Irish\n"
 "Language: ga\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
 "3 : 4\n"
+"X-Generator: Lokalize 25.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -692,19 +693,19 @@ msgstr ""
 #, kde-format
 msgctxt "The hardware switch got turned off"
 msgid "Off"
-msgstr ""
+msgstr "Múchta"
 
 #: debug_console.cpp:525
 #, kde-format
 msgctxt "The hardware switch got turned on"
 msgid "On"
-msgstr ""
+msgstr "Ar"
 
 #: debug_console.cpp:530
 #, kde-format
 msgctxt "State of a hardware switch (on/off)"
 msgid "State"
-msgstr ""
+msgstr "Staid"
 
 #: debug_console.cpp:539
 #, kde-format
@@ -719,12 +720,12 @@ msgstr ""
 #: debug_console.cpp:543
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Isteach"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Amach"
 
 #: debug_console.cpp:544 debug_console.cpp:562 debug_console.cpp:582
 #: debug_console.cpp:632 debug_console.cpp:649
@@ -822,7 +823,7 @@ msgstr ""
 #: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
 #, kde-format
 msgid "Mode"
-msgstr ""
+msgstr "Mód"
 
 #: debug_console.cpp:618
 #, kde-format
@@ -1053,10 +1054,9 @@ msgid "task"
 msgstr ""
 
 #: debug_console.cpp:1427
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "X11 Windows"
-msgstr "Fuinneoga"
+msgstr "X11 Fuinneoga"
 
 #: debug_console.cpp:1429
 #, kde-format
@@ -1064,10 +1064,9 @@ msgid "X11 Unmanaged Windows"
 msgstr ""
 
 #: debug_console.cpp:1431
-#, fuzzy, kde-format
-#| msgid "Shade Window"
+#, kde-format
 msgid "Wayland Windows"
-msgstr "Scáthaigh Fuinneog"
+msgstr "Wayland Fuinneoga"
 
 #: debug_console.cpp:1433
 #, fuzzy, kde-format
@@ -1079,13 +1078,13 @@ msgstr "Fuinneoga neamhghníomhacha:"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Díluchtaigh"
 
 #: debug_console.cpp:1794
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Luchtaigh"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
@@ -1109,7 +1108,7 @@ msgstr ""
 #: debug_console.ui:61
 #, kde-format
 msgid "Input Devices"
-msgstr ""
+msgstr "Gléasanna Ionchuir"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #: debug_console.ui:71
@@ -1311,7 +1310,7 @@ msgstr "Am an ghnímh úsáideora a rinne an marú"
 #: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "time"
-msgstr ""
+msgstr "am"
 
 #: helpers/killer/killer.cpp:142
 #, kde-format
@@ -1344,11 +1343,10 @@ msgid ""
 msgstr ""
 
 #: helpers/killer/killer.cpp:202
-#, fuzzy, kde-format
-#| msgid "Terminate"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "Stop"
+msgstr "&Críochnaigh %1"
 
 #: helpers/killer/killer.cpp:203
 #, kde-format
@@ -1404,10 +1402,9 @@ msgid "KDE window manager"
 msgstr "Bainisteoir fuinneog KDE"
 
 #: main.cpp:173
-#, fuzzy, kde-format
-#| msgid "(c) 1999-2008, The KDE Developers"
+#, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
-msgstr "© 1999-2008, Forbróirí KDE"
+msgstr "© 1999-2019, Forbróirí KDE"
 
 #: main.cpp:175
 #, kde-format
@@ -1450,10 +1447,9 @@ msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
 #: main.cpp:183
-#, fuzzy, kde-format
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Fíor-ollmhór"
+msgstr "Xaver Hugl"
 
 #: main.cpp:192
 #, kde-format
@@ -1994,7 +1990,7 @@ msgstr "Fuinneoga"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "name"
-msgstr ""
+msgstr "ainm"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:87
 #, kde-format
@@ -2514,7 +2510,7 @@ msgstr ""
 #: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "Níorbh fhéidir sruth PipeWire a chruthú"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:413
 #, kde-format
@@ -2706,7 +2702,7 @@ msgstr ""
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Scrios"
 
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
@@ -3235,7 +3231,7 @@ msgstr "Ciúb Deisce"
 #: rulesettings.kcfg:176
 #, kde-format
 msgid "Screen number"
-msgstr ""
+msgstr "Uimhir scáileáin"
 
 #. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:180
