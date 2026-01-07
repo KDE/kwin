@@ -19,6 +19,7 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
         ${CMAKE_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
         ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
         ${WaylandProtocols_DATADIR}/stable/tablet/tablet-v2.xml
+        ${WaylandProtocols_DATADIR}/stable/viewporter/viewporter.xml
         ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
         ${WaylandProtocols_DATADIR}/staging/color-management/color-management-v1.xml
         ${WaylandProtocols_DATADIR}/staging/color-representation/color-representation-v1.xml

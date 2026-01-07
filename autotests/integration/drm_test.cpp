@@ -20,6 +20,7 @@
 #include "kwin_wayland_test.h"
 #include "scene/surfaceitem.h"
 #include "wayland-client/linuxdmabuf.h"
+#include "wayland-client/viewporter.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -309,7 +310,8 @@ void DrmTest::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::PresentationTime
                                          | Test::AdditionalWaylandInterface::Seat
                                          | Test::AdditionalWaylandInterface::CursorShapeV1
-                                         | Test::AdditionalWaylandInterface::LinuxDmabuf));
+                                         | Test::AdditionalWaylandInterface::LinuxDmabuf
+                                         | Test::AdditionalWaylandInterface::Viewporter));
 }
 
 void DrmTest::initTestCase()
@@ -536,9 +538,14 @@ void DrmTest::testDirectScanout()
 void DrmTest::testOverlay_data()
 {
     QTest::addColumn<bool>("occluded");
+    QTest::addColumn<double>("scale");
+    QTest::addColumn<Rect>("windowGeometry");
+    QTest::addColumn<Rect>("planeGeometry");
 
-    QTest::addRow("overlay") << false;
-    QTest::addRow("underlay") << true;
+    QTest::addRow("overlay") << false << 1.0 << Rect(51, 51, 100, 100) << Rect(0, 0, 100, 100);
+    QTest::addRow("underlay") << true << 1.0 << Rect(51, 51, 100, 100) << Rect(0, 0, 100, 100);
+    // this case verifies (among other things) that output position is properly rounded for the plane position
+    QTest::addRow("scaling + overlay") << false << 1.6 << Rect(52, 52, 63, 63) << Rect(1, 1, 101, 101);
     // TODO also add a test case for occluded == false + SSD with rounded corners?
 }
 
@@ -553,15 +560,29 @@ void DrmTest::testOverlay()
         QSKIP("The driver doesn't advertise an overlay plane");
     }
 
+    QFETCH(bool, occluded);
+    QFETCH(double, scale);
+    QFETCH(Rect, windowGeometry);
+    QFETCH(Rect, planeGeometry);
+
     Test::XdgToplevelWindow dummy;
     QVERIFY(dummy.show());
-    dummy.m_window->move(output->position() + QPoint(50, 50));
+    dummy.m_window->move(windowGeometry.topLeft() + QPoint(50, 50));
+
+    {
+        OutputConfiguration cfg;
+        cfg.changeSet(output)->scaleSetting = scale;
+        cfg.changeSet(output)->pos = QPoint(51, 51);
+        QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+    }
 
     DmabufWindow window;
-    QVERIFY(window.renderAndWaitForShown(QSize(100, 100)));
-    window.m_window->move(output->position());
+    auto viewport = Test::viewporter()->createViewport(*window.m_surface);
+    viewport->setSource(planeGeometry.size());
+    viewport->setDestination(windowGeometry.size());
+    QVERIFY(window.renderAndWaitForShown(planeGeometry.size()));
+    window.m_window->move(windowGeometry.topLeft());
 
-    QFETCH(bool, occluded);
     if (occluded) {
         workspace()->raiseWindow(dummy.m_window);
     }
@@ -579,7 +600,7 @@ void DrmTest::testOverlay()
     QElapsedTimer timer;
     timer.start();
     while (timer.durationElapsed() < 5s) {
-        window.m_surface->damageBuffer(QRect(QPoint(), QSize(100, 100)));
+        window.m_surface->damageBuffer(QRect(QPoint(), planeGeometry.size()));
         QVERIFY(window.presentWait());
 
         if (findBufferOnPlane(output, window.m_buffer.buffer())) {
@@ -605,18 +626,17 @@ void DrmTest::testOverlay()
         return state.destinationRect == Rect(QPoint(), output->modeSize());
     });
     QVERIFY(sceneIt != enabledPlanes.end());
-    const auto overlayIt = std::ranges::find_if(enabledPlanes, [&window](const DrmPlaneState &state) {
-        return state.destinationRect == window.m_window->frameGeometry().toRect();
-    });
-    QVERIFY(overlayIt != enabledPlanes.end());
-    // TODO uncomment this once vkms supports the zpos property
-    // QCOMPARE_GE((*overlayIt).zpos, (*sceneIt).zpos);
 
     const int gpuFd = static_cast<DrmOutput *>(output)->connector()->gpu()->fd();
     const auto framebufferGemNames = gemNames(gpuFd, window.m_buffer->dmabufAttributes());
-    QVERIFY(std::ranges::any_of(enabledPlanes, [&framebufferGemNames](const DrmPlaneState &state) {
+    const auto overlayIt = std::ranges::find_if(enabledPlanes, [&framebufferGemNames](const DrmPlaneState &state) {
         return state.framebufferGemNames == framebufferGemNames;
-    }));
+    });
+    QVERIFY(overlayIt != enabledPlanes.end());
+    const auto &overlayPlane = *overlayIt;
+    QCOMPARE(overlayPlane.destinationRect, planeGeometry);
+    // TODO uncomment this once vkms supports the zpos property
+    // QCOMPARE_GE(overlayPlane.zpos, (*sceneIt).zpos);
 }
 
 void DrmTest::testDpms()

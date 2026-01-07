@@ -18,7 +18,9 @@
 #include "input_event.h"
 #include "inputmethod.h"
 #include "wayland-client/linuxdmabuf.h"
+#include "wayland-client/viewporter.h"
 #include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
+#include "wayland-viewporter-client-protocol.h"
 #include "wayland-zkde-screencast-unstable-v1-client-protocol.h"
 #include "wayland/display.h"
 #include "wayland_server.h"
@@ -569,6 +571,9 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
         if (flags & AdditionalWaylandInterface::ColorRepresentation && interface == wp_color_representation_manager_v1_interface.name) {
             c->colorRepresentation = std::make_unique<ColorRepresentationV1>(*c->registry, name, version);
         }
+        if (flags & AdditionalWaylandInterface::Viewporter && interface == wp_viewporter_interface.name) {
+            c->viewporter = std::make_unique<WaylandClient::Viewporter>(*c->registry, name, 1u);
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -715,6 +720,7 @@ Connection::~Connection()
     toplevelDragManager.reset();
     linuxDmabuf.reset();
     colorRepresentation.reset();
+    viewporter.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -922,6 +928,11 @@ WaylandClient::LinuxDmabufV1 *linuxDmabuf()
 ColorRepresentationV1 *colorRepresentation()
 {
     return s_waylandConnection->colorRepresentation.get();
+}
+
+WaylandClient::Viewporter *viewporter()
+{
+    return s_waylandConnection->viewporter.get();
 }
 
 bool waitForWaylandSurface(Window *window)

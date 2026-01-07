@@ -93,6 +93,7 @@ namespace KWin
 namespace WaylandClient
 {
 class LinuxDmabufV1;
+class Viewporter;
 }
 
 class WaylandServer;
@@ -798,6 +799,7 @@ enum class AdditionalWaylandInterface : uint64_t {
     XdgToplevelDragV1 = 1 << 30,
     LinuxDmabuf = 1ull << 31,
     ColorRepresentation = 1ull << 32,
+    Viewporter = 1ull << 33,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -1056,6 +1058,7 @@ struct Connection
     std::unique_ptr<XdgToplevelDragManagerV1> toplevelDragManager;
     std::unique_ptr<WaylandClient::LinuxDmabufV1> linuxDmabuf;
     std::unique_ptr<ColorRepresentationV1> colorRepresentation;
+    std::unique_ptr<WaylandClient::Viewporter> viewporter;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -1131,6 +1134,7 @@ WpPrimarySelectionDeviceManagerV1 *primarySelectionManager();
 XdgToplevelDragManagerV1 *toplevelDragManager();
 WaylandClient::LinuxDmabufV1 *linuxDmabuf();
 ColorRepresentationV1 *colorRepresentation();
+WaylandClient::Viewporter *viewporter();
 
 bool waitForWaylandSurface(Window *window);
 
