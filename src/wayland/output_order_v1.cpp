@@ -57,6 +57,9 @@ void OutputOrderV1InterfacePrivate::kde_output_order_v1_bind_resource(Resource *
 void OutputOrderV1InterfacePrivate::sendList(wl_resource *resource)
 {
     for (LogicalOutput *output : std::as_const(outputOrder)) {
+        if (output->isPlaceholder()) {
+            continue;
+        }
         kde_output_order_v1_send_output(resource, output->name().toUtf8().constData());
     }
     kde_output_order_v1_send_done(resource);
