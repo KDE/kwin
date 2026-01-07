@@ -19,7 +19,11 @@
 namespace KWin
 {
 
-VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM, OutputTransform panelOrientation, const QByteArray &edid, std::optional<QByteArray> edidIdentifierOverride, const std::optional<QString> &connectorName, const std::optional<QByteArray> &mstPath)
+VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal,
+                             const QSize &physicalSizeInMM, OutputTransform panelOrientation,
+                             const QByteArray &edid, std::optional<QByteArray> edidIdentifierOverride,
+                             const std::optional<QString> &connectorName, const std::optional<QByteArray> &mstPath,
+                             const std::optional<TileInfo> &tileInfo)
     : BackendOutput()
     , m_backend(parent)
     , m_renderLoop(std::make_unique<RenderLoop>(this))
@@ -36,6 +40,7 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize 
         .panelOrientation = panelOrientation,
         .internal = internal,
         .mstPath = mstPath.value_or(QByteArray()),
+        .tileInfo = tileInfo,
     });
 }
 
