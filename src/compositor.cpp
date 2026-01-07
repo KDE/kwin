@@ -364,8 +364,16 @@ static bool isTearingRequested(const Item *item)
 
 static Rect mapGlobalLogicalToOutputDeviceCoordinates(const RectF &logicalGeometry, LogicalOutput *logicalOutput, BackendOutput *backendOutput)
 {
-    const Rect localDevice = logicalGeometry.translated(-logicalOutput->geometryF().topLeft()).scaled(backendOutput->scale()).rounded();
-    return backendOutput->transform().map(localDevice.translated(backendOutput->deviceOffset()), backendOutput->pixelSize());
+    const Rect localDevice = logicalGeometry.scaled(backendOutput->scale()).rounded();
+    const QPoint scaledOutputPos = (logicalOutput->geometryF().topLeft() * backendOutput->scale()).toPoint();
+    return backendOutput->transform().map(localDevice.translated(backendOutput->deviceOffset() - scaledOutputPos), backendOutput->pixelSize());
+}
+
+static Rect mapItemToOutputDeviceCoordinates(Item *item, RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput)
+{
+    const Rect scaledItemRect = item->mapToView(item->rect(), view).scaled(view->scale()).rounded();
+    const QPoint scaledOutputPos = (logicalOutput->geometryF().topLeft() * view->scale()).toPoint();
+    return backendOutput->transform().map(scaledItemRect.translated(backendOutput->deviceOffset() - scaledOutputPos), backendOutput->pixelSize());
 }
 
 static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput, const std::shared_ptr<OutputFrame> &frame)
@@ -399,8 +407,7 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
         candidate->setScanoutHint(layer->scanoutDevice(), formats);
         return false;
     }
-    const auto geometry = candidate->mapToScene(RectF(QPointF(0, 0), candidate->size()));
-    layer->setTargetRect(mapGlobalLogicalToOutputDeviceCoordinates(geometry, logicalOutput, backendOutput));
+    layer->setTargetRect(mapItemToOutputDeviceCoordinates(candidate, view, logicalOutput, backendOutput));
     layer->setEnabled(true);
     layer->setSourceRect(candidate->bufferSourceBox());
     layer->setBufferTransform(candidate->bufferTransform());
@@ -1012,12 +1019,15 @@ void Compositor::assignOutputLayers(BackendOutput *output)
         sceneView->setLayer(primaryLayer);
     } else {
         sceneView = std::make_unique<SceneView>(m_scene.get(), logical, output, primaryLayer);
-        sceneView->setViewport(logical->geometryF());
         sceneView->setScale(output->scale());
         sceneView->setRenderOffset(output->deviceOffset());
-        connect(logical, &LogicalOutput::geometryChanged, sceneView.get(), [view = sceneView.get(), logical]() {
-            view->setViewport(logical->geometryF());
-        });
+        const auto updateViewport = [view = sceneView.get(), logical, output]() {
+            // this matches how the renderer snaps elements to the pixel grid
+            const Rect scaled = logical->geometryF().scaled(output->scale()).rounded();
+            view->setViewport(scaled.scaled(1.0 / output->scale()));
+        };
+        updateViewport();
+        connect(logical, &LogicalOutput::geometryChanged, sceneView.get(), updateViewport);
         connect(output, &BackendOutput::scaleChanged, sceneView.get(), [view = sceneView.get(), output]() {
             view->setScale(output->scale());
         });
