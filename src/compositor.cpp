@@ -429,6 +429,11 @@ static bool prepareRendering(RenderView *view, Output *output, uint32_t required
     const auto layer = view->layer();
     const auto outputLocalRect = view->viewport().translated(-output->geometryF().topLeft());
     const auto nativeRect = output->transform().map(scaledRect(outputLocalRect, output->scale()), output->pixelSize()).toRect();
+    const auto sizes = layer->recommendedSizes();
+    if (!sizes.empty() && !sizes.contains(nativeRect.size())) {
+        // this is unlikely to work, and can cause glitches on some legacy drivers
+        return false;
+    }
     const double reference = output->colorDescription()->referenceLuminance();
     const double maxOutputLuminance = output->colorDescription()->maxHdrLuminance().value_or(reference);
     const double usedMaxLuminance = std::min(view->desiredHdrHeadroom() * reference, maxOutputLuminance);
