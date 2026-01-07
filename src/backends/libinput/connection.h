@@ -59,6 +59,10 @@ public:
 
     QStringList devicesSysNames() const;
 
+    Q_SCRIPTABLE QStringList ListPointers() const;
+    Q_SCRIPTABLE QStringList ListKeyboards() const;
+    Q_SCRIPTABLE QStringList ListTouch() const;
+
     static Connection *create(Session *session);
 
 Q_SIGNALS:

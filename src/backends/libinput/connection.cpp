@@ -32,6 +32,7 @@
 
 #include <cmath>
 #include <libinput.h>
+#include <ranges>
 
 namespace KWin
 {
@@ -62,7 +63,7 @@ public:
         QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/InputDevice"),
                                                      QStringLiteral("org.kde.KWin.InputDeviceManager"),
                                                      this,
-                                                     QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals);
+                                                     QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals | QDBusConnection::ExportScriptableContents);
     }
 
     ~ConnectionAdaptor() override
@@ -716,6 +717,29 @@ QStringList Connection::devicesSysNames() const
     return sl;
 }
 
+QStringList Connection::ListPointers() const
+{
+    return m_devices
+        | std::views::filter(&Device::isPointer)
+        | std::views::transform(&Device::sysName)
+        | std::ranges::to<QStringList>();
+}
+
+QStringList Connection::ListKeyboards() const
+{
+    return m_devices
+        | std::views::filter(&Device::isKeyboard)
+        | std::views::transform(&Device::sysName)
+        | std::ranges::to<QStringList>();
+}
+
+QStringList Connection::ListTouch() const
+{
+    return m_devices
+        | std::views::filter(&Device::isTouch)
+        | std::views::transform(&Device::sysName)
+        | std::ranges::to<QStringList>();
+}
 }
 }
 
