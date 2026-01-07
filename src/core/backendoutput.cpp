@@ -745,6 +745,11 @@ QPoint BackendOutput::deviceOffset() const
     return m_state.deviceOffset;
 }
 
+const std::optional<BackendOutput::TileInfo> &BackendOutput::tileInfo() const
+{
+    return m_information.tileInfo;
+}
+
 // TODO move these quirks to libdisplay-info?
 static const std::array s_brokenDdcCi = {
     std::make_pair(QByteArrayLiteral("SAM"), QByteArrayLiteral("Odyssey G5")),
