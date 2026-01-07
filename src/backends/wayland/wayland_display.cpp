@@ -7,6 +7,7 @@
 #include "wayland_display.h"
 #include "utils/memorymap.h"
 #include "wayland-client/linuxdmabuf.h"
+#include "wayland-client/viewporter.h"
 #include "wayland_logging.h"
 
 #include <KWayland/Client/compositor.h>
@@ -180,6 +181,7 @@ WaylandDisplay::~WaylandDisplay()
     m_xdgShell.reset();
     m_linuxDmabuf.reset();
     m_colorManager.reset();
+    m_viewporter.reset();
 
     if (m_shm) {
         wl_shm_destroy(m_shm);
@@ -192,9 +194,6 @@ WaylandDisplay::~WaylandDisplay()
     }
     if (m_fractionalScaleV1) {
         wp_fractional_scale_manager_v1_destroy(m_fractionalScaleV1);
-    }
-    if (m_viewporter) {
-        wp_viewporter_destroy(m_viewporter);
     }
     if (m_singlePixelManager) {
         wp_single_pixel_buffer_manager_v1_destroy(m_singlePixelManager);
@@ -346,9 +345,9 @@ wp_tearing_control_manager_v1 *WaylandDisplay::tearingControl() const
     return m_tearingControl;
 }
 
-wp_viewporter *WaylandDisplay::viewporter() const
+WaylandClient::Viewporter *WaylandDisplay::viewporter() const
 {
-    return m_viewporter;
+    return m_viewporter.get();
 }
 
 ColorManager *WaylandDisplay::colorManager() const
@@ -422,7 +421,7 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
     } else if (strcmp(interface, wp_fractional_scale_manager_v1_interface.name) == 0) {
         display->m_fractionalScaleV1 = reinterpret_cast<wp_fractional_scale_manager_v1 *>(wl_registry_bind(registry, name, &wp_fractional_scale_manager_v1_interface, 1));
     } else if (strcmp(interface, wp_viewporter_interface.name) == 0) {
-        display->m_viewporter = reinterpret_cast<wp_viewporter *>(wl_registry_bind(registry, name, &wp_viewporter_interface, 1));
+        display->m_viewporter = std::make_unique<WaylandClient::Viewporter>(registry, name, 1u);
     } else if (strcmp(interface, wl_subcompositor_interface.name) == 0) {
         display->m_subCompositor = std::make_unique<KWayland::Client::SubCompositor>();
         display->m_subCompositor->setup(static_cast<wl_subcompositor *>(wl_registry_bind(registry, name, &wl_subcompositor_interface, 1)));

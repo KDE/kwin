@@ -13,6 +13,7 @@
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
 #include "core/renderloop_p.h"
+#include "wayland-client/viewporter.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
 #include "wayland_layer.h"
@@ -29,7 +30,6 @@
 #include "wayland-presentation-time-client-protocol.h"
 #include "wayland-single-pixel-buffer-v1-client-protocol.h"
 #include "wayland-tearing-control-v1-client-protocol.h"
-#include "wayland-viewporter-client-protocol.h"
 #include "wayland-xdg-toplevel-icon-v1-client-protocol.h"
 #include "workspace.h"
 
@@ -49,17 +49,12 @@ using namespace KWayland::Client;
 
 WaylandCursor::WaylandCursor(WaylandBackend *backend)
     : m_surface(backend->display()->compositor()->createSurface())
+    , m_viewport(backend->display()->viewporter()->createViewport(*m_surface))
 {
-    if (auto viewporter = backend->display()->viewporter()) {
-        m_viewport = wp_viewporter_get_viewport(viewporter, *m_surface);
-    }
 }
 
 WaylandCursor::~WaylandCursor()
 {
-    if (m_viewport) {
-        wp_viewport_destroy(m_viewport);
-    }
 }
 
 KWayland::Client::Pointer *WaylandCursor::pointer() const
@@ -103,9 +98,7 @@ void WaylandCursor::sync()
         m_surface->attachBuffer(KWayland::Client::Buffer::Ptr());
         m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
     } else {
-        if (m_viewport) {
-            wp_viewport_set_destination(m_viewport, m_size.width(), m_size.height());
-        }
+        m_viewport->setDestination(m_size);
         m_surface->attachBuffer(m_buffer);
         m_surface->damageBuffer(QRect(0, 0, INT32_MAX, INT32_MAX));
         m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -156,7 +149,7 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
         m_fractionalScale = wp_fractional_scale_manager_v1_get_fractional_scale(manager, *m_surface);
         wp_fractional_scale_v1_add_listener(m_fractionalScale, &s_fractionalScaleListener, this);
     }
-    m_viewport = wp_viewporter_get_viewport(backend->display()->viewporter(), *m_surface);
+    m_viewport = backend->display()->viewporter()->createViewport(*m_surface);
     setInformation(Information{
         .name = name,
         .model = name,
@@ -188,7 +181,7 @@ WaylandOutput::~WaylandOutput()
     if (m_shortcutInhibition) {
         zwp_keyboard_shortcuts_inhibitor_v1_destroy(m_shortcutInhibition);
     }
-    wp_viewport_destroy(m_viewport);
+    m_viewport.reset();
     m_xdgDecoration.reset();
     m_xdgShellSurface.reset();
     m_surface.reset();
@@ -319,7 +312,7 @@ bool WaylandOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
         m_surface->attachBuffer(buffer);
         m_mapped = true;
     }
-    wp_viewport_set_destination(m_viewport, std::round(modeSize().width() / scale()), std::round(modeSize().height() / scale()));
+    m_viewport->setDestination(QSize(std::round(modeSize().width() / scale()), std::round(modeSize().height() / scale())));
     m_surface->setScale(1);
     // commit the subsurfaces before the main surface
     for (OutputLayer *layer : layersToUpdate) {

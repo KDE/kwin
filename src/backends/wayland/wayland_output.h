@@ -34,13 +34,16 @@ struct wp_color_management_surface_v1;
 struct wp_fractional_scale_v1;
 struct wp_fractional_scale_v1_listener;
 struct zwp_keyboard_shortcuts_inhibitor_v1;
-struct wp_viewport;
 struct wl_callback;
 struct wl_callback_listener;
 
 namespace KWin
 {
 class OutputFrame;
+namespace WaylandClient
+{
+class Viewport;
+}
 
 namespace Wayland
 {
@@ -65,7 +68,7 @@ private:
     KWayland::Client::Pointer *m_pointer = nullptr;
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     wl_buffer *m_buffer = nullptr;
-    wp_viewport *m_viewport = nullptr;
+    std::unique_ptr<WaylandClient::Viewport> m_viewport;
     QPoint m_hotspot;
     QSize m_size;
     bool m_enabled = true;
@@ -141,7 +144,7 @@ private:
     QTimer m_configureThrottleTimer;
     std::unique_ptr<ColorSurfaceFeedback> m_colorSurfaceFeedback;
     wp_fractional_scale_v1 *m_fractionalScale = nullptr;
-    wp_viewport *m_viewport = nullptr;
+    std::unique_ptr<WaylandClient::Viewport> m_viewport;
     zwp_keyboard_shortcuts_inhibitor_v1 *m_shortcutInhibition = nullptr;
     uint32_t m_refreshRate = 60'000;
     qreal m_pendingScale = 1.0;

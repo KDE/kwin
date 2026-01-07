@@ -24,10 +24,13 @@ struct wp_tearing_control_v1;
 struct wp_color_management_surface_v1;
 struct wp_fractional_scale_v1;
 struct wp_fractional_scale_v1_listener;
-struct wp_viewport;
 
 namespace KWin
 {
+namespace WaylandClient
+{
+class Viewport;
+}
 
 namespace Wayland
 {
@@ -54,7 +57,7 @@ protected:
     wp_tearing_control_v1 *m_tearingControl = nullptr;
     wp_color_management_surface_v1 *m_colorSurface = nullptr;
     wp_fractional_scale_v1 *m_fractionalScale = nullptr;
-    wp_viewport *m_viewport = nullptr;
+    std::unique_ptr<WaylandClient::Viewport> m_viewport;
     std::shared_ptr<ColorDescription> m_previousColor;
 };
 
