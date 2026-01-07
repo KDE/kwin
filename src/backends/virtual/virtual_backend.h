@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "core/output.h"
+#include "core/backendoutput.h"
 #include "core/outputbackend.h"
 #include "utils/filedescriptor.h"
 
@@ -46,6 +46,7 @@ public:
         std::optional<QByteArray> edidIdentifierOverride;
         std::optional<QString> connectorName;
         std::optional<QByteArray> mstPath;
+        std::optional<BackendOutput::TileInfo> tileInfo;
     };
     BackendOutput *addOutput(const OutputInfo &info);
     void setVirtualOutputs(const QList<OutputInfo> &infos);
