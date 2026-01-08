@@ -33,8 +33,6 @@ target_sources(kwin PRIVATE
     activation.cpp
     appmenu.cpp
     client_machine.cpp
-    colors/colordevice.cpp
-    colors/colormanager.cpp
     compositor.cpp
     core/backendoutput.cpp
     core/colorlut3d.cpp

@@ -8,8 +8,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "nightlightmanager.h"
-#include "colors/colordevice.h"
-#include "colors/colormanager.h"
+#include "3rdparty/colortemperature.h"
+#include "core/backendoutput.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
 #include "main.h"
@@ -78,7 +78,7 @@ NightLightManager::NightLightManager()
     KGlobalAccel::setGlobalShortcut(toggleAction, QList<QKeySequence>());
     connect(toggleAction, &QAction::triggered, this, &NightLightManager::toggle);
 
-    connect(kwinApp()->colorManager(), &ColorManager::deviceAdded, this, &NightLightManager::hardReset);
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputAdded, this, &NightLightManager::hardReset);
 
     connect(kwinApp()->session(), &Session::activeChanged, this, [this](bool active) {
         if (active) {
@@ -520,9 +520,11 @@ int NightLightManager::currentTargetTemperature() const
 
 void NightLightManager::commitGammaRamps(int temperature)
 {
-    const QList<ColorDevice *> devices = kwinApp()->colorManager()->devices();
-    for (ColorDevice *device : devices) {
-        device->setTemperature(temperature);
+    // TODO this list should ideally be filtered by workspace
+    const QList<BackendOutput *> outputs = kwinApp()->outputBackend()->outputs();
+    const QVector3D rgbFactors = sampleColorTemperature(temperature);
+    for (BackendOutput *output : outputs) {
+        output->setChannelFactors(rgbFactors);
     }
 
     setCurrentTemperature(temperature);

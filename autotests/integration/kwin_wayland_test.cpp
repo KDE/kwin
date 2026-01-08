@@ -130,7 +130,6 @@ WaylandTestApplication::~WaylandTestApplication()
     m_xwayland.reset();
 #endif
     destroyVirtualInputDevices();
-    destroyColorManager();
     destroyWorkspace();
     destroyInputMethod();
     destroyCompositor();
@@ -218,7 +217,6 @@ void WaylandTestApplication::performStartup()
     auto compositor = Compositor::create();
     compositor->createRenderer();
     createWorkspace();
-    createColorManager();
     createPlugins();
 
     compositor->start();

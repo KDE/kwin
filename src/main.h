@@ -36,7 +36,6 @@ class Session;
 class X11EventFilter;
 class PluginManager;
 class InputMethod;
-class ColorManager;
 class TabletModeManager;
 class XwaylandInterface;
 class Edge;
@@ -235,7 +234,6 @@ public:
 
     PluginManager *pluginManager() const;
     InputMethod *inputMethod() const;
-    ColorManager *colorManager() const;
     virtual XwaylandInterface *xwayland() const;
     TabletModeManager *tabletModeManager() const;
 
@@ -299,14 +297,12 @@ protected:
     void createWorkspace();
     void createOptions();
     void createPlugins();
-    void createColorManager();
     void createInputMethod();
     void createTabletModeManager();
     void destroyInput();
     void destroyWorkspace();
     void destroyCompositor();
     void destroyPlugins();
-    void destroyColorManager();
     void destroyInputMethod();
     void destroyPlatform();
     void applyXwaylandScale();
@@ -348,7 +344,6 @@ private:
     QProcessEnvironment m_processEnvironment;
     std::unique_ptr<PluginManager> m_pluginManager;
     std::unique_ptr<InputMethod> m_inputMethod;
-    std::unique_ptr<ColorManager> m_colorManager;
     std::unique_ptr<TabletModeManager> m_tabletModeManager;
 };
 

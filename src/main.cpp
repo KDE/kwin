@@ -14,7 +14,6 @@
 #if KWIN_BUILD_X11
 #include "atoms.h"
 #endif
-#include "colors/colormanager.h"
 #include "compositor.h"
 #include "core/outputbackend.h"
 #include "core/rendertarget.h"
@@ -262,11 +261,6 @@ void Application::createPlugins()
     m_pluginManager = std::make_unique<PluginManager>();
 }
 
-void Application::createColorManager()
-{
-    m_colorManager = std::make_unique<ColorManager>();
-}
-
 void Application::createInputMethod()
 {
     m_inputMethod = std::make_unique<InputMethod>();
@@ -312,11 +306,6 @@ void Application::destroyCompositor()
 void Application::destroyPlugins()
 {
     m_pluginManager.reset();
-}
-
-void Application::destroyColorManager()
-{
-    m_colorManager.reset();
 }
 
 void Application::destroyInputMethod()
@@ -538,11 +527,6 @@ PluginManager *Application::pluginManager() const
 InputMethod *Application::inputMethod() const
 {
     return m_inputMethod.get();
-}
-
-ColorManager *Application::colorManager() const
-{
-    return m_colorManager.get();
 }
 
 XwaylandInterface *Application::xwayland() const

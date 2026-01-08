@@ -119,7 +119,6 @@ ApplicationWayland::~ApplicationWayland()
 #if KWIN_BUILD_X11
     m_xwayland.reset();
 #endif
-    destroyColorManager();
     destroyWorkspace();
 
     destroyInputMethod();
@@ -144,7 +143,6 @@ void ApplicationWayland::performStartup()
     auto compositor = Compositor::create();
     compositor->createRenderer();
     createWorkspace();
-    createColorManager();
     createPlugins();
 
     compositor->start();
