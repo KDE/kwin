@@ -82,6 +82,9 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
         child->surface()->setPreferredColorDescription(preferredColorDescription.value());
     }
 
+    if (child->surface()->inhibitsIdle()) {
+        Q_EMIT q->inhibitsIdleChanged();
+    }
     Q_EMIT q->childSubSurfaceAdded(child);
     Q_EMIT q->childSubSurfacesChanged();
 }
@@ -109,6 +112,10 @@ void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
         });
     }
 
+    if (!child->surface() || child->surface()->inhibitsIdle()) {
+        // TODO solve this in a better way
+        Q_EMIT q->inhibitsIdleChanged();
+    }
     Q_EMIT q->childSubSurfaceRemoved(child);
     Q_EMIT q->childSubSurfacesChanged();
 }
@@ -247,11 +254,20 @@ void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerV1Interfac
     Q_EMIT q->pointerConstraintsChanged();
 }
 
+void SurfaceInterfacePrivate::recursivelyEmitIdleInhibitChanged()
+{
+    Q_EMIT q->inhibitsIdleChanged();
+    if (!subsurface.handle || !subsurface.handle->parentSurface()) {
+        return;
+    }
+    SurfaceInterfacePrivate::get(subsurface.handle->parentSurface())->recursivelyEmitIdleInhibitChanged();
+}
+
 void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorV1Interface *inhibitor)
 {
     idleInhibitors << inhibitor;
     if (idleInhibitors.count() == 1) {
-        Q_EMIT q->inhibitsIdleChanged();
+        recursivelyEmitIdleInhibitChanged();
     }
 }
 
@@ -259,7 +275,7 @@ void SurfaceInterfacePrivate::removeIdleInhibitor(IdleInhibitorV1Interface *inhi
 {
     idleInhibitors.removeOne(inhibitor);
     if (idleInhibitors.isEmpty()) {
-        Q_EMIT q->inhibitsIdleChanged();
+        recursivelyEmitIdleInhibitChanged();
     }
 }
 
@@ -1130,7 +1146,12 @@ ConfinedPointerV1Interface *SurfaceInterface::confinedPointer() const
 
 bool SurfaceInterface::inhibitsIdle() const
 {
-    return !d->idleInhibitors.isEmpty();
+    return !d->idleInhibitors.isEmpty()
+        || std::ranges::any_of(d->current->subsurface.above, [](SubSurfaceInterface *sub) {
+        return sub->surface()->inhibitsIdle();
+    }) || std::ranges::any_of(d->current->subsurface.below, [](SubSurfaceInterface *sub) {
+        return sub->surface()->inhibitsIdle();
+    });
 }
 
 LinuxDmaBufV1Feedback *SurfaceInterface::dmabufFeedbackV1() const

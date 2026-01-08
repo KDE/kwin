@@ -14,6 +14,7 @@
 #include "window.h"
 #include "workspace.h"
 
+#include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 
 using namespace KWin;
@@ -33,6 +34,8 @@ private Q_SLOTS:
     void testDontInhibitWhenMinimized();
     void testDontInhibitWhenUnmapped();
     void testDontInhibitWhenLeftCurrentDesktop();
+    void testSubsurface();
+    void testSubsurfaceInitial();
 };
 
 void TestIdleInhibition::initTestCase()
@@ -295,6 +298,67 @@ void TestIdleInhibition::testDontInhibitWhenLeftCurrentDesktop()
     // Destroy the test window.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
+    QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
+}
+
+void TestIdleInhibition::testSubsurface()
+{
+    QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
+
+    // create a subsurface
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    const auto subsurface = Test::createSubSurface(surface.get(), window.m_surface.get());
+    Test::render(surface.get(), QSize(10, 10), Qt::red);
+    QVERIFY(window.presentWait());
+
+    std::unique_ptr<Test::IdleInhibitorV1> inhibitor = Test::createIdleInhibitorV1(surface.get());
+    QVERIFY(window.presentWait());
+
+    // this should inhibit our server object
+    QCOMPARE(input()->idleInhibitors(), QList<Window *>{window.m_window});
+
+    // deleting the object should uninhibit again
+    inhibitor.reset();
+    QVERIFY(window.presentWait());
+    QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
+
+    // inhibit again
+    inhibitor = Test::createIdleInhibitorV1(surface.get());
+    QVERIFY(window.presentWait());
+    QCOMPARE(input()->idleInhibitors(), QList<Window *>{window.m_window});
+
+    // and destroy the window
+    QVERIFY(window.unmapAndWaitForClosed());
+    QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
+}
+
+void TestIdleInhibition::testSubsurfaceInitial()
+{
+    // this verifies that inhibition is applied properly,
+    // even if the inhibition is added to the surface before
+    // it's attached to the parent surface
+    QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
+
+    // create a surface with an inhibition
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::IdleInhibitorV1> inhibitor = Test::createIdleInhibitorV1(surface.get());
+
+    // now attach it to the window
+    const auto subsurface = Test::createSubSurface(surface.get(), window.m_surface.get());
+    Test::render(surface.get(), QSize(10, 10), Qt::red);
+    QVERIFY(window.presentWait());
+
+    QCOMPARE(input()->idleInhibitors(), QList<Window *>{window.m_window});
+
+    // removing the subsurface should remove the inhibitor
+    surface.reset();
+    QVERIFY(window.presentWait());
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
 }
 
