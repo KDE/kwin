@@ -615,16 +615,16 @@ void DrmOutput::revertQueuedChanges()
     m_pipeline->revertPendingChanges();
 }
 
-bool DrmOutput::setChannelFactors(const QVector3D &rgb)
+void DrmOutput::setChannelFactors(const QVector3D &rgb)
 {
-    if (rgb != m_sRgbChannelFactors) {
-        m_sRgbChannelFactors = rgb;
-        State next = m_state;
-        next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
-        tryKmsColorOffloading(next);
-        setState(next);
+    if (rgb == m_sRgbChannelFactors) {
+        return;
     }
-    return true;
+    m_sRgbChannelFactors = rgb;
+    State next = m_state;
+    next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
+    tryKmsColorOffloading(next);
+    setState(next);
 }
 
 void DrmOutput::tryKmsColorOffloading(State &next)

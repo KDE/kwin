@@ -60,7 +60,7 @@ public:
     void leased(DrmLease *lease);
     void leaseEnded();
 
-    bool setChannelFactors(const QVector3D &rgb) override;
+    void setChannelFactors(const QVector3D &rgb) override;
     void updateConnectorProperties();
 
     /**

@@ -240,7 +240,7 @@ public:
      */
     QByteArray mstPath() const;
 
-    virtual bool setChannelFactors(const QVector3D &rgb);
+    virtual void setChannelFactors(const QVector3D &rgb);
 
     std::optional<double> maxPeakBrightness() const;
     std::optional<double> maxAverageBrightness() const;

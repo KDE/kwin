@@ -450,9 +450,8 @@ BackendOutput::RgbRange BackendOutput::rgbRange() const
     return m_state.rgbRange;
 }
 
-bool BackendOutput::setChannelFactors(const QVector3D &rgb)
+void BackendOutput::setChannelFactors(const QVector3D &rgb)
 {
-    return false;
 }
 
 OutputTransform BackendOutput::panelOrientation() const
