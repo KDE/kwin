@@ -629,6 +629,10 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 
 void DrmOutput::tryKmsColorOffloading(State &next)
 {
+    if (!m_pipeline->activePending() || m_pipeline->layers().empty() || m_lease) {
+        return;
+    }
+
     const auto repaints = qScopeGuard([this, &next]() {
         maybeScheduleRepaints(next);
     });
@@ -659,9 +663,6 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         m_needsShadowBuffer = usesICC
             || next.colorDescription->transferFunction().type != blendingSpace
             || !colorPipeline.isIdentity();
-        return;
-    }
-    if (!m_pipeline->activePending() || m_pipeline->layers().empty()) {
         return;
     }
     if (usesICC) {
