@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 21;
+static const quint32 s_version = 22;
 
 class OutputDeviceRegistryV2Private : public QtWaylandServer::kde_output_device_registry_v2
 {
@@ -145,6 +145,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(BackendOutput::Capabi
     if (caps & BackendOutput::Capability::AutomaticBrightness) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_auto_brightness;
     }
+    if (caps & BackendOutput::Capability::HdrIccProfile) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_hdr_icc_profile;
+    }
     return ret;
 }
 
@@ -208,6 +211,8 @@ public:
     void sendSharpness(Resource *resource);
     void sendPriority(Resource *resource);
     void sendAutoBrightness(Resource *resource);
+    void sendHdrIccProfilePath(Resource *resource);
+    void sendHdrColorProfileSource(Resource *resource);
 
     OutputDeviceV2Interface *q;
     BackendOutput *m_handle;
@@ -256,6 +261,8 @@ public:
     double m_sharpness = 0;
     uint32_t m_priority = 0;
     bool m_autoBrightness = false;
+    QString m_hdrIccProfilePath;
+    color_profile_source m_hdrColorProfile = color_profile_source::color_profile_source_EDID;
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
@@ -343,6 +350,8 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(BackendOutput *handle)
     updateSharpness();
     updatePriority();
     updateAutoBrightness();
+    updateHdrIccProfilePath();
+    updateHdrColorProfileSource();
 
     connect(handle, &BackendOutput::positionChanged,
             this, &OutputDeviceV2Interface::updateGlobalPosition);
@@ -384,6 +393,8 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(BackendOutput *handle)
     connect(handle, &BackendOutput::sharpnessChanged, this, &OutputDeviceV2Interface::updateSharpness);
     connect(handle, &BackendOutput::priorityChanged, this, &OutputDeviceV2Interface::updatePriority);
     connect(handle, &BackendOutput::automaticBrightnessChanged, this, &OutputDeviceV2Interface::updateAutoBrightness);
+    connect(handle, &BackendOutput::hdrIccProfilePathChanged, this, &OutputDeviceV2Interface::updateHdrIccProfilePath);
+    connect(handle, &BackendOutput::hdrColorProfileSourceChanged, this, &OutputDeviceV2Interface::updateHdrColorProfileSource);
 
     // Delay the done event to batch property updates.
     d->m_doneTimer.setSingleShot(true);
@@ -473,6 +484,8 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendSharpness(resource);
     sendPriority(resource);
     sendAutoBrightness(resource);
+    sendHdrIccProfilePath(resource);
+    sendHdrColorProfileSource(resource);
     sendDone(resource);
 }
 
@@ -702,6 +715,20 @@ void OutputDeviceV2InterfacePrivate::sendAutoBrightness(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_AUTO_BRIGHTNESS_SINCE_VERSION) {
         send_auto_brightness(resource->handle, m_autoBrightness);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendHdrIccProfilePath(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_HDR_ICC_PROFILE_PATH_SINCE_VERSION) {
+        send_hdr_icc_profile_path(resource->handle, m_hdrIccProfilePath);
+    }
+}
+
+void OutputDeviceV2InterfacePrivate::sendHdrColorProfileSource(Resource *resource)
+{
+    if (resource->version() >= KDE_OUTPUT_DEVICE_V2_HDR_COLOR_PROFILE_SOURCE_SINCE_VERSION) {
+        send_hdr_color_profile_source(resource->handle, m_hdrColorProfile);
     }
 }
 
@@ -1022,19 +1049,22 @@ void OutputDeviceV2Interface::updateSdrGamutWideness()
     }
 }
 
+static QtWaylandServer::kde_output_device_v2::color_profile_source kwinToWaylandColorProfileSource(BackendOutput::ColorProfileSource source)
+{
+    switch (source) {
+    case BackendOutput::ColorProfileSource::sRGB:
+        return QtWaylandServer::kde_output_device_v2::color_profile_source_sRGB;
+    case BackendOutput::ColorProfileSource::ICC:
+        return QtWaylandServer::kde_output_device_v2::color_profile_source_ICC;
+    case BackendOutput::ColorProfileSource::EDID:
+        return QtWaylandServer::kde_output_device_v2::color_profile_source_EDID;
+    }
+    Q_UNREACHABLE();
+}
+
 void OutputDeviceV2Interface::updateColorProfileSource()
 {
-    const auto waylandColorProfileSource = [this]() {
-        switch (d->m_handle->colorProfileSource()) {
-        case BackendOutput::ColorProfileSource::sRGB:
-            return QtWaylandServer::kde_output_device_v2::color_profile_source_sRGB;
-        case BackendOutput::ColorProfileSource::ICC:
-            return QtWaylandServer::kde_output_device_v2::color_profile_source_ICC;
-        case BackendOutput::ColorProfileSource::EDID:
-            return QtWaylandServer::kde_output_device_v2::color_profile_source_EDID;
-        };
-        Q_UNREACHABLE();
-    }();
+    const auto waylandColorProfileSource = kwinToWaylandColorProfileSource(d->m_handle->colorProfileSource());
     if (d->m_colorProfile != waylandColorProfileSource) {
         d->m_colorProfile = waylandColorProfileSource;
         const auto clientResources = d->resourceMap();
@@ -1179,6 +1209,31 @@ void OutputDeviceV2Interface::updateAutoBrightness()
         const auto clientResources = d->resourceMap();
         for (const auto &resource : clientResources) {
             d->sendAutoBrightness(resource);
+        }
+        scheduleDone();
+    }
+}
+
+void OutputDeviceV2Interface::updateHdrIccProfilePath()
+{
+    if (d->m_hdrIccProfilePath != d->m_handle->hdrIccProfilePath()) {
+        d->m_hdrIccProfilePath = d->m_handle->hdrIccProfilePath();
+        const auto clientResources = d->resourceMap();
+        for (const auto &resource : clientResources) {
+            d->sendHdrIccProfilePath(resource);
+        }
+        scheduleDone();
+    }
+}
+
+void OutputDeviceV2Interface::updateHdrColorProfileSource()
+{
+    const auto waylandColorProfileSource = kwinToWaylandColorProfileSource(d->m_handle->hdrColorProfileSource());
+    if (d->m_hdrColorProfile != waylandColorProfileSource) {
+        d->m_hdrColorProfile = waylandColorProfileSource;
+        const auto clientResources = d->resourceMap();
+        for (auto resource : clientResources) {
+            d->sendHdrColorProfileSource(resource);
         }
         scheduleDone();
     }

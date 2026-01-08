@@ -25,7 +25,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 19;
+static const quint32 s_version = 20;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -81,6 +81,8 @@ protected:
     void kde_output_configuration_v2_set_sharpness(Resource *resource, wl_resource *outputdevice, uint32_t sharpness) override;
     void kde_output_configuration_v2_set_custom_modes(Resource *resource, struct ::wl_resource *outputdevice, struct ::wl_resource *modes) override;
     void kde_output_configuration_v2_set_auto_brightness(Resource *resource, ::wl_resource *outputdevice, uint32_t enabled) override;
+    void kde_output_configuration_v2_set_hdr_icc_profile_path(Resource *resource, ::wl_resource *outputdevice, const QString &profile_path) override;
+    void kde_output_configuration_v2_set_hdr_color_profile_source(Resource *resource, ::wl_resource *outputdevice, uint32_t color_profile_source) override;
 
     void sendFailure(Resource *resource, const QString &reason);
 };
@@ -382,23 +384,26 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_sdr_gamut_w
     }
 }
 
+static BackendOutput::ColorProfileSource waylandToKWinColorProfileSource(uint32_t source)
+{
+    switch (source) {
+    case QtWaylandServer::kde_output_configuration_v2::color_profile_source_sRGB:
+        return BackendOutput::ColorProfileSource::sRGB;
+    case QtWaylandServer::kde_output_configuration_v2::color_profile_source_ICC:
+        return BackendOutput::ColorProfileSource::ICC;
+    case QtWaylandServer::kde_output_configuration_v2::color_profile_source_EDID:
+        return BackendOutput::ColorProfileSource::EDID;
+    }
+    return BackendOutput::ColorProfileSource::EDID;
+}
+
 void OutputConfigurationV2Interface::kde_output_configuration_v2_set_color_profile_source(Resource *resource, wl_resource *outputdevice, uint32_t source)
 {
     if (invalid) {
         return;
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
-        config.changeSet(output->handle())->colorProfileSource = [source]() {
-            switch (source) {
-            case color_profile_source_sRGB:
-                return BackendOutput::ColorProfileSource::sRGB;
-            case color_profile_source_ICC:
-                return BackendOutput::ColorProfileSource::ICC;
-            case color_profile_source_EDID:
-                return BackendOutput::ColorProfileSource::EDID;
-            };
-            Q_UNREACHABLE();
-        }();
+        config.changeSet(output->handle())->colorProfileSource = waylandToKWinColorProfileSource(source);
     }
 }
 
@@ -526,6 +531,32 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_auto_bright
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
         config.changeSet(output->handle())->automaticBrightness = bool(enabled);
+    }
+}
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_hdr_icc_profile_path(Resource *resource, ::wl_resource *outputdevice, const QString &profile_path)
+{
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        const auto set = config.changeSet(output->handle());
+        set->hdrIccProfilePath = profile_path;
+        if (auto profile = IccProfile::load(profile_path)) {
+            set->hdrIccProfile = std::move(profile.value());
+        } else {
+            failureReason = profile.error();
+        }
+    }
+}
+
+void OutputConfigurationV2Interface::kde_output_configuration_v2_set_hdr_color_profile_source(Resource *resource, ::wl_resource *outputdevice, uint32_t source)
+{
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->hdrColorProfileSource = waylandToKWinColorProfileSource(source);
     }
 }
 

@@ -223,7 +223,11 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const st
     }
     m_shader->setUniform(GLShader::FloatUniform::SourceReferenceLuminance, inputColor->referenceLuminance());
     m_shader->setUniform(GLShader::FloatUniform::DestinationReferenceLuminance, inputColor->referenceLuminance());
-    m_shader->setUniform(GLShader::FloatUniform::MaxDestinationLuminance, inputColor->transferFunction().maxLuminance);
+    if (wireTransfer == TransferFunction::Type::PerceptualQuantizer && profile->hasMHC2Tag()) {
+        m_shader->setUniform(GLShader::FloatUniform::MaxDestinationLuminance, 10'000);
+    } else {
+        m_shader->setUniform(GLShader::FloatUniform::MaxDestinationLuminance, inputColor->transferFunction().maxLuminance);
+    }
 
     glActiveTexture(GL_TEXTURE1);
     if (m_B) {

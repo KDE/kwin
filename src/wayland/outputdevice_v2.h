@@ -105,6 +105,8 @@ private:
     void updateSharpness();
     void updatePriority();
     void updateAutoBrightness();
+    void updateHdrIccProfilePath();
+    void updateHdrColorProfileSource();
 
     void scheduleDone();
 

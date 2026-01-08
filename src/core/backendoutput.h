@@ -78,6 +78,7 @@ public:
         SharpnessControl = 1 << 14,
         CustomModes = 1 << 15,
         AutomaticBrightness = 1 << 16,
+        HdrIccProfile = 1 << 17,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -235,6 +236,7 @@ public:
     AutoRotationPolicy autoRotationPolicy() const;
     std::shared_ptr<IccProfile> iccProfile() const;
     QString iccProfilePath() const;
+    QString hdrIccProfilePath() const;
     /**
      * @returns the mst path of this output. Is empty if invalid
      */
@@ -254,6 +256,7 @@ public:
 
     double sdrGamutWideness() const;
     ColorProfileSource colorProfileSource() const;
+    ColorProfileSource hdrColorProfileSource() const;
 
     double brightnessSetting() const;
     std::optional<double> currentBrightness() const;
@@ -400,6 +403,8 @@ Q_SIGNALS:
     void sharpnessChanged();
     void priorityChanged();
     void automaticBrightnessChanged();
+    void hdrIccProfilePathChanged();
+    void hdrColorProfileSourceChanged();
 
 protected:
     struct Information
@@ -445,7 +450,10 @@ protected:
         AutoRotationPolicy autoRotatePolicy = AutoRotationPolicy::InTabletMode;
         QString iccProfilePath;
         std::shared_ptr<IccProfile> iccProfile;
+        QString hdrIccProfilePath;
+        std::shared_ptr<IccProfile> hdrIccProfile;
         ColorProfileSource colorProfileSource = ColorProfileSource::sRGB;
+        ColorProfileSource hdrColorProfileSource = ColorProfileSource::EDID;
         // color description without night light applied
         std::shared_ptr<ColorDescription> originalColorDescription = ColorDescription::sRGB;
         std::shared_ptr<ColorDescription> colorDescription = ColorDescription::sRGB;

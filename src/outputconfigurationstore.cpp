@@ -348,7 +348,9 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
             .wideColorGamut = output->wideColorGamut(),
             .autoRotation = output->autoRotationPolicy(),
             .iccProfilePath = output->iccProfilePath(),
+            .hdrIccProfilePath = output->hdrIccProfilePath(),
             .colorProfileSource = output->colorProfileSource(),
+            .hdrColorProfileSource = output->hdrColorProfileSource(),
             .maxPeakBrightnessOverride = output->maxPeakBrightnessOverride(),
             .maxAverageBrightnessOverride = output->maxAverageBrightnessOverride(),
             .minBrightnessOverride = output->minBrightnessOverride(),
@@ -441,11 +443,14 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
             .autoRotationPolicy = state.autoRotation,
             .iccProfilePath = state.iccProfilePath,
             .iccProfile = state.iccProfilePath ? IccProfile::load(*state.iccProfilePath).value_or(nullptr) : nullptr,
+            .hdrIccProfilePath = state.hdrIccProfilePath,
+            .hdrIccProfile = state.hdrIccProfilePath ? IccProfile::load(*state.hdrIccProfilePath).value_or(nullptr) : nullptr,
             .maxPeakBrightnessOverride = state.maxPeakBrightnessOverride,
             .maxAverageBrightnessOverride = state.maxAverageBrightnessOverride,
             .minBrightnessOverride = state.minBrightnessOverride,
             .sdrGamutWideness = state.sdrGamutWideness,
             .colorProfileSource = state.colorProfileSource,
+            .hdrColorProfileSource = state.hdrColorProfileSource,
             .brightness = state.brightness,
             .allowSdrSoftwareBrightness = state.allowSdrSoftwareBrightness,
             .colorPowerTradeoff = state.colorPowerTradeoff,
@@ -673,6 +678,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .wideColorGamut = existingData.wideColorGamut.value_or(false),
             .autoRotationPolicy = existingData.autoRotation.value_or(BackendOutput::AutoRotationPolicy::InTabletMode),
             .colorProfileSource = existingData.colorProfileSource.value_or(BackendOutput::ColorProfileSource::sRGB),
+            .hdrColorProfileSource = existingData.hdrColorProfileSource.value_or(BackendOutput::ColorProfileSource::EDID),
             .brightness = existingData.brightness.value_or(1.0),
             .allowSdrSoftwareBrightness = existingData.allowSdrSoftwareBrightness.value_or(output->brightnessDevice() == nullptr),
             .colorPowerTradeoff = existingData.colorPowerTradeoff.value_or(BackendOutput::ColorPowerTradeoff::PreferEfficiency),
@@ -875,6 +881,32 @@ void OutputConfigurationStore::registerOutputs(const QList<BackendOutput *> &out
     }
 }
 
+static std::optional<BackendOutput::ColorProfileSource> stringToProfileSource(const QString &str)
+{
+    if (str == "sRGB") {
+        return BackendOutput::ColorProfileSource::sRGB;
+    } else if (str == "ICC") {
+        return BackendOutput::ColorProfileSource::ICC;
+    } else if (str == "EDID") {
+        return BackendOutput::ColorProfileSource::EDID;
+    } else {
+        return std::nullopt;
+    }
+}
+
+static QString profileSourceToString(BackendOutput::ColorProfileSource source)
+{
+    switch (source) {
+    case BackendOutput::ColorProfileSource::sRGB:
+        return QStringLiteral("sRGB");
+    case BackendOutput::ColorProfileSource::ICC:
+        return QStringLiteral("ICC");
+    case BackendOutput::ColorProfileSource::EDID:
+        return QStringLiteral("EDID");
+    }
+    Q_UNREACHABLE();
+}
+
 void OutputConfigurationStore::load()
 {
     const QString jsonPath = QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"));
@@ -1042,6 +1074,9 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("iccProfilePath"); it != data.end()) {
             state.iccProfilePath = it->toString();
         }
+        if (const auto it = data.find("hdrIccProfilePath"); it != data.end()) {
+            state.hdrIccProfilePath = it->toString();
+        }
         if (const auto it = data.find("maxPeakBrightnessOverride"); it != data.end() && it->isDouble()) {
             state.maxPeakBrightnessOverride = it->toDouble();
             if (*state.maxPeakBrightnessOverride < 50) {
@@ -1063,13 +1098,8 @@ void OutputConfigurationStore::load()
             state.sdrGamutWideness = it->toDouble();
         }
         if (const auto it = data.find("colorProfileSource"); it != data.end()) {
-            const auto str = it->toString();
-            if (str == "sRGB") {
-                state.colorProfileSource = BackendOutput::ColorProfileSource::sRGB;
-            } else if (str == "ICC") {
-                state.colorProfileSource = BackendOutput::ColorProfileSource::ICC;
-            } else if (str == "EDID") {
-                state.colorProfileSource = BackendOutput::ColorProfileSource::EDID;
+            if (const auto source = stringToProfileSource(it->toString())) {
+                state.colorProfileSource = *source;
             }
         } else {
             const bool icc = state.iccProfilePath && !state.iccProfilePath->isEmpty() && !state.highDynamicRange.value_or(false) && !state.wideColorGamut.value_or(false);
@@ -1077,6 +1107,11 @@ void OutputConfigurationStore::load()
                 state.colorProfileSource = BackendOutput::ColorProfileSource::ICC;
             } else {
                 state.colorProfileSource = BackendOutput::ColorProfileSource::sRGB;
+            }
+        }
+        if (const auto it = data.find("hdrColorProfileSource"); it != data.end()) {
+            if (const auto source = stringToProfileSource(it->toString())) {
+                state.hdrColorProfileSource = *source;
             }
         }
         if (const auto it = data.find("brightness"); it != data.end() && it->isDouble()) {
@@ -1369,6 +1404,9 @@ void OutputConfigurationStore::save()
         if (output.iccProfilePath) {
             o["iccProfilePath"] = *output.iccProfilePath;
         }
+        if (output.hdrIccProfilePath) {
+            o["hdrIccProfilePath"] = *output.hdrIccProfilePath;
+        }
         if (output.maxPeakBrightnessOverride) {
             o["maxPeakBrightnessOverride"] = *output.maxPeakBrightnessOverride;
         }
@@ -1382,17 +1420,10 @@ void OutputConfigurationStore::save()
             o["sdrGamutWideness"] = *output.sdrGamutWideness;
         }
         if (output.colorProfileSource) {
-            switch (*output.colorProfileSource) {
-            case BackendOutput::ColorProfileSource::sRGB:
-                o["colorProfileSource"] = "sRGB";
-                break;
-            case BackendOutput::ColorProfileSource::ICC:
-                o["colorProfileSource"] = "ICC";
-                break;
-            case BackendOutput::ColorProfileSource::EDID:
-                o["colorProfileSource"] = "EDID";
-                break;
-            }
+            o["colorProfileSource"] = profileSourceToString(*output.colorProfileSource);
+        }
+        if (output.hdrColorProfileSource) {
+            o["hdrColorProfileSource"] = profileSourceToString(*output.hdrColorProfileSource);
         }
         if (output.brightness) {
             o["brightness"] = *output.brightness;

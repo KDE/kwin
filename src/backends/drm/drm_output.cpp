@@ -200,7 +200,7 @@ static const bool s_allowColorspaceNVidia = qEnvironmentVariableIntValue("KWIN_D
 
 BackendOutput::Capabilities DrmOutput::computeCapabilities() const
 {
-    Capabilities capabilities = Capability::Dpms | Capability::IccProfile | Capability::CustomModes;
+    Capabilities capabilities = Capability::Dpms | Capability::IccProfile | Capability::CustomModes | Capability::HdrIccProfile;
     if (m_connector->overscan.isValid() || m_connector->underscan.isValid()) {
         capabilities |= Capability::Overscan;
     }
@@ -447,8 +447,8 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
     Colorimetry containerColorimetry = Colorimetry::BT709;
     Colorimetry nativeColorimetry = Colorimetry::BT709;
 
-    auto profileSource = next.colorProfileSource;
-    auto iccProfile = effectiveHdr ? nullptr : next.iccProfile;
+    auto profileSource = effectiveHdr ? next.hdrColorProfileSource : next.colorProfileSource;
+    const auto &iccProfile = effectiveHdr ? next.hdrIccProfile : next.iccProfile;
     if (!iccProfile && profileSource == ColorProfileSource::ICC) {
         // can't do anything
         profileSource = ColorProfileSource::sRGB;
@@ -468,12 +468,23 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
         break;
     case ColorProfileSource::ICC:
         nativeColorimetry = iccProfile->colorimetry();
-        containerColorimetry = nativeColorimetry;
-        maxAverageLuminance = iccProfile->maxFALL().value_or(maxAverageLuminance);
-        maxLuminance = maxAverageLuminance;
-        maxReferenceLuminance = maxAverageLuminance;
-        minLuminance = iccProfile->relativeBlackPoint().value_or(0) * maxAverageLuminance;
-        transferFunction = TransferFunction(TransferFunction::gamma22, minLuminance * next.artificialHdrHeadroom, maxLuminance * next.artificialHdrHeadroom);
+        if (effectiveHdr) {
+            if (effectiveWcg) {
+                containerColorimetry = Colorimetry::BT2020;
+            }
+            maxAverageLuminance = iccProfile->maxFALL().value_or(maxAverageLuminance);
+            maxLuminance = iccProfile->maxCLL().value_or(maxAverageLuminance);
+            minLuminance = iccProfile->relativeBlackPoint().value_or(0) * maxAverageLuminance;
+            maxReferenceLuminance = maxAverageLuminance;
+            transferFunction = TransferFunction(TransferFunction::gamma22, minLuminance, maxLuminance);
+        } else {
+            containerColorimetry = nativeColorimetry;
+            maxAverageLuminance = iccProfile->maxFALL().value_or(maxAverageLuminance);
+            maxLuminance = maxAverageLuminance;
+            maxReferenceLuminance = maxAverageLuminance;
+            minLuminance = iccProfile->relativeBlackPoint().value_or(0) * maxAverageLuminance;
+            transferFunction = TransferFunction(TransferFunction::gamma22, minLuminance * next.artificialHdrHeadroom, maxLuminance * next.artificialHdrHeadroom);
+        }
         break;
     case ColorProfileSource::EDID:
         if (m_information.edid.isValid() && m_information.edid.defaultColorimetry()) {
@@ -535,8 +546,11 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_nextState->sdrGamutWideness = props->sdrGamutWideness.value_or(m_state.sdrGamutWideness);
     m_nextState->iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
     m_nextState->iccProfile = props->iccProfile.value_or(m_state.iccProfile);
+    m_nextState->hdrIccProfilePath = props->hdrIccProfilePath.value_or(m_state.hdrIccProfilePath);
+    m_nextState->hdrIccProfile = props->hdrIccProfile.value_or(m_state.hdrIccProfile);
     m_nextState->vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     m_nextState->colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
+    m_nextState->hdrColorProfileSource = props->hdrColorProfileSource.value_or(m_state.hdrColorProfileSource);
     m_nextState->brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
     m_nextState->desiredMode = props->desiredMode.value_or(m_state.desiredMode);
     m_nextState->allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
@@ -595,9 +609,10 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
         m_pipeline->setMaxBpc(decideAutomaticBpcLimit().value_or(tradeoff == ColorPowerTradeoff::PreferAccuracy ? 16 : 10));
     }
 
-    if (bt2020 || hdr || props->colorProfileSource.value_or(m_state.colorProfileSource) != ColorProfileSource::ICC) {
-        // ICC profiles don't support HDR (yet)
+    if (m_nextState->colorProfileSource != ColorProfileSource::ICC || (bt2020 && !hdr)) {
         m_pipeline->setIccProfile(nullptr);
+    } else if (hdr) {
+        m_pipeline->setIccProfile(m_nextState->hdrIccProfile);
     } else {
         m_pipeline->setIccProfile(m_nextState->iccProfile);
     }
@@ -740,7 +755,9 @@ void DrmOutput::tryKmsColorOffloading(State &next)
 
     const bool hdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
     const bool wcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
-    const bool usesICC = next.colorProfileSource == ColorProfileSource::ICC && next.iccProfile && !hdr && !wcg;
+    const auto &iccProfile = hdr ? next.hdrIccProfile : next.iccProfile;
+    const ColorProfileSource profileSource = hdr ? next.hdrColorProfileSource : next.colorProfileSource;
+    const bool usesICC = profileSource == ColorProfileSource::ICC && iccProfile;
     if (next.colorPowerTradeoff == ColorPowerTradeoff::PreferAccuracy) {
         next.layerBlendingColor = encoding;
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
@@ -752,17 +769,21 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     }
     if (usesICC) {
         colorPipeline.addTransferFunction(encoding->transferFunction(), ColorspaceType::LinearRGB);
-        if (next.iccProfile->hasMHC2Tag()) {
-            const auto calibration = wireColor(next).fromXYZ() * next.iccProfile->mhc2Matrix() * encoding->containerColorimetry().toXYZ();
+        if (iccProfile->hasMHC2Tag()) {
+            const auto calibration = wireColor(next).fromXYZ() * iccProfile->mhc2Matrix() * encoding->containerColorimetry().toXYZ();
             colorPipeline.addMatrix(calibration, colorPipeline.currentOutputRange(), ColorspaceType::LinearRGB);
-            colorPipeline.addMultiplier(1.0 / encoding->transferFunction().maxLuminance);
-            colorPipeline.addInverseTransferFunction(TransferFunction(TransferFunction::gamma22, 0, 1.0), ColorspaceType::NonLinearRGB);
+            if (auto wireTF = wireTransfer(next); wireTF == TransferFunction::PerceptualQuantizer) {
+                colorPipeline.addInverseTransferFunction(TransferFunction(wireTF, 0, 10'000), ColorspaceType::NonLinearRGB);
+            } else {
+                colorPipeline.addMultiplier(1.0 / encoding->transferFunction().maxLuminance);
+                colorPipeline.addInverseTransferFunction(TransferFunction(TransferFunction::gamma22, 0, 1.0), ColorspaceType::NonLinearRGB);
+            }
         } else {
             colorPipeline.addMultiplier(1.0 / encoding->transferFunction().maxLuminance);
-            colorPipeline.add1DLUT(next.iccProfile->inverseTransferFunction(), ColorspaceType::NonLinearRGB);
+            colorPipeline.add1DLUT(iccProfile->inverseTransferFunction(), ColorspaceType::NonLinearRGB);
         }
-        if (next.iccProfile->vcgt()) {
-            colorPipeline.add1DLUT(next.iccProfile->vcgt(), ColorspaceType::NonLinearRGB);
+        if (iccProfile->vcgt()) {
+            colorPipeline.add1DLUT(iccProfile->vcgt(), ColorspaceType::NonLinearRGB);
         }
     }
     m_pipeline->setCrtcColorPipeline(colorPipeline);

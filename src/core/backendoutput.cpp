@@ -495,6 +495,12 @@ void BackendOutput::setState(const State &state)
     if (oldState.automaticBrightness != state.automaticBrightness) {
         Q_EMIT automaticBrightnessChanged();
     }
+    if (oldState.hdrIccProfilePath != state.hdrIccProfilePath) {
+        Q_EMIT hdrIccProfilePathChanged();
+    }
+    if (oldState.hdrColorProfileSource != state.hdrColorProfileSource) {
+        Q_EMIT hdrColorProfileSourceChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -582,6 +588,11 @@ QString BackendOutput::iccProfilePath() const
     return m_state.iccProfilePath;
 }
 
+QString BackendOutput::hdrIccProfilePath() const
+{
+    return m_state.hdrIccProfilePath;
+}
+
 QByteArray BackendOutput::mstPath() const
 {
     return m_information.mstPath;
@@ -630,6 +641,11 @@ double BackendOutput::sdrGamutWideness() const
 BackendOutput::ColorProfileSource BackendOutput::colorProfileSource() const
 {
     return m_state.colorProfileSource;
+}
+
+BackendOutput::ColorProfileSource BackendOutput::hdrColorProfileSource() const
+{
+    return m_state.hdrColorProfileSource;
 }
 
 double BackendOutput::brightnessSetting() const
