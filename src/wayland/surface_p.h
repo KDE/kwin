@@ -142,6 +142,7 @@ public:
     void installPointerConstraint(ConfinedPointerV1Interface *confinement);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
     void removeIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
+    void recursivelyEmitIdleInhibitChanged();
 
     RectF computeBufferSourceBox() const;
     void applyState(SurfaceState *next);
