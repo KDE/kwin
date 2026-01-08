@@ -442,6 +442,7 @@ protected:
         AutoRotationPolicy autoRotatePolicy = AutoRotationPolicy::InTabletMode;
         QString iccProfilePath;
         std::shared_ptr<IccProfile> iccProfile;
+        std::shared_ptr<IccProfile> hdrIccProfile;
         ColorProfileSource colorProfileSource = ColorProfileSource::sRGB;
         // color description without night light applied
         std::shared_ptr<ColorDescription> originalColorDescription = ColorDescription::sRGB;

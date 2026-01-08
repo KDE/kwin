@@ -397,22 +397,43 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
         maxPossibleArtificialHeadroom = std::min(1.0 / next.currentBrightness.value_or(next.brightnessSetting), 3.0);
     }
 
-    if (next.colorProfileSource == ColorProfileSource::ICC && !effectiveHdr && !effectiveWcg && next.iccProfile) {
-        const double maxFALL = next.iccProfile->maxFALL().value_or(200);
-        const double minBrightness = next.iccProfile->relativeBlackPoint().value_or(0) * maxFALL;
-        const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(next.iccProfile->colorimetry(), next.sdrGamutWideness);
-        const double brightnessFactor = (!next.brightnessDevice && next.allowSdrSoftwareBrightness) ? brightness : 1.0;
-        const double effectiveReferenceLuminance = 5 + (maxFALL - 5) * brightnessFactor;
-        return std::make_shared<ColorDescription>(ColorDescription{
-            next.iccProfile->colorimetry(),
-            TransferFunction(TransferFunction::gamma22, minBrightness, maxFALL * next.artificialHdrHeadroom),
-            effectiveReferenceLuminance,
-            minBrightness * next.artificialHdrHeadroom,
-            maxFALL * maxPossibleArtificialHeadroom,
-            maxFALL * maxPossibleArtificialHeadroom,
-            next.iccProfile->colorimetry(),
-            sdrColor,
-        });
+    if (next.colorProfileSource == ColorProfileSource::ICC) {
+        if (effectiveHdr && effectiveWcg && next.hdrIccProfile) {
+            const double maxCLL = next.hdrIccProfile->maxCLL().value_or(200);
+            const double maxFALL = next.hdrIccProfile->maxFALL().value_or(200);
+            const double minBrightness = next.hdrIccProfile->relativeBlackPoint().value_or(0) * maxFALL;
+            const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(next.hdrIccProfile->colorimetry(), next.sdrGamutWideness);
+            const double effectiveReferenceLuminance = 5 + (maxFALL - 5) * brightness;
+            return std::make_shared<ColorDescription>(ColorDescription{
+                Colorimetry::BT2020,
+                TransferFunction(TransferFunction::gamma22, minBrightness, maxCLL),
+                effectiveReferenceLuminance,
+                minBrightness,
+                maxFALL,
+                maxCLL,
+                next.hdrIccProfile->colorimetry(),
+                sdrColor,
+            });
+        } else if (!effectiveHdr && !effectiveWcg && next.iccProfile) {
+            const double maxFALL = next.iccProfile->maxFALL().value_or(200);
+            const double minBrightness = next.iccProfile->relativeBlackPoint().value_or(0) * maxFALL;
+            const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(next.iccProfile->colorimetry(), next.sdrGamutWideness);
+            const double brightnessFactor = (!next.brightnessDevice && next.allowSdrSoftwareBrightness) ? brightness : 1.0;
+            const double effectiveReferenceLuminance = 5 + (maxFALL - 5) * brightnessFactor;
+            return std::make_shared<ColorDescription>(ColorDescription{
+                next.iccProfile->colorimetry(),
+                TransferFunction(TransferFunction::gamma22, minBrightness, maxFALL * next.artificialHdrHeadroom),
+                effectiveReferenceLuminance,
+                minBrightness * next.artificialHdrHeadroom,
+                maxFALL * maxPossibleArtificialHeadroom,
+                maxFALL * maxPossibleArtificialHeadroom,
+                next.iccProfile->colorimetry(),
+                sdrColor,
+            });
+        } else {
+            // PQ or WCG but not both being enabled is an edge case we don't really support,
+            // so just fall back to non-ICC HDR handling, even if an ICC profile is set.
+        }
     }
 
     const Colorimetry nativeColorimetry = m_information.edid.nativeColorimetry().value_or(Colorimetry::BT709);
@@ -473,6 +494,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_nextState->sdrGamutWideness = props->sdrGamutWideness.value_or(m_state.sdrGamutWideness);
     m_nextState->iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
     m_nextState->iccProfile = props->iccProfile.value_or(m_state.iccProfile);
+    m_nextState->hdrIccProfile = props->hdrIccProfile.value_or(m_state.hdrIccProfile);
     m_nextState->vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     m_nextState->colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
     m_nextState->brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
@@ -525,9 +547,10 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
         m_pipeline->setMaxBpc(decideAutomaticBpcLimit().value_or(tradeoff == ColorPowerTradeoff::PreferAccuracy ? 16 : 10));
     }
 
-    if (bt2020 || hdr || props->colorProfileSource.value_or(m_state.colorProfileSource) != ColorProfileSource::ICC) {
-        // ICC profiles don't support HDR (yet)
+    if (m_nextState->colorProfileSource != ColorProfileSource::ICC) {
         m_pipeline->setIccProfile(nullptr);
+    } else if (bt2020 || hdr) {
+        m_pipeline->setIccProfile(m_nextState->hdrIccProfile);
     } else {
         m_pipeline->setIccProfile(m_nextState->iccProfile);
     }
@@ -657,7 +680,8 @@ void DrmOutput::tryKmsColorOffloading(State &next)
 
     const bool hdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
     const bool wcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
-    const bool usesICC = next.colorProfileSource == ColorProfileSource::ICC && next.iccProfile && !hdr && !wcg;
+    const auto &iccProfile = (hdr && wcg) ? next.hdrIccProfile : next.iccProfile;
+    bool usesICC = next.colorProfileSource == ColorProfileSource::ICC && iccProfile;
     if (next.colorPowerTradeoff == ColorPowerTradeoff::PreferAccuracy) {
         next.layerBlendingColor = encoding;
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
@@ -670,11 +694,11 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     if (usesICC) {
         colorPipeline.addTransferFunction(encoding->transferFunction(), ColorspaceType::LinearRGB);
         colorPipeline.addMultiplier(1.0 / encoding->transferFunction().maxLuminance);
-        const auto calibration = encoding->containerColorimetry().fromXYZ() * next.iccProfile->mhc2Matrix() * encoding->containerColorimetry().toXYZ();
+        const auto calibration = encoding->containerColorimetry().fromXYZ() * iccProfile->mhc2Matrix() * encoding->containerColorimetry().toXYZ();
         colorPipeline.addMatrix(calibration, colorPipeline.currentOutputRange(), ColorspaceType::LinearRGB);
-        colorPipeline.add1DLUT(next.iccProfile->inverseTransferFunction(), ColorspaceType::NonLinearRGB);
-        if (next.iccProfile->vcgt()) {
-            colorPipeline.add1DLUT(next.iccProfile->vcgt(), ColorspaceType::NonLinearRGB);
+        colorPipeline.add1DLUT(iccProfile->inverseTransferFunction(), ColorspaceType::NonLinearRGB);
+        if (iccProfile->vcgt()) {
+            colorPipeline.add1DLUT(iccProfile->vcgt(), ColorspaceType::NonLinearRGB);
         }
     }
     m_pipeline->setCrtcColorPipeline(colorPipeline);
