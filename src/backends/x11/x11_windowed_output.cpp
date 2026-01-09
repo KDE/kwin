@@ -490,6 +490,8 @@ bool X11WindowedOutput::present(const QList<OutputLayer *> &layersToUpdate, cons
                        0,
                        0,
                        nullptr);
+
+    Q_ASSERT(!m_frame);
     m_frame = frame;
     return true;
 }
