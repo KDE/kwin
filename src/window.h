@@ -1716,10 +1716,6 @@ protected:
     {
         m_interactiveMoveResize.buttonDown = down;
     }
-    LogicalOutput *interactiveMoveResizeStartOutput() const
-    {
-        return m_interactiveMoveResize.startOutput;
-    }
     void checkUnrestrictedInteractiveMoveResize();
     /**
      * Sets an appropriate cursor shape for the logical mouse position.
@@ -1901,7 +1897,8 @@ protected:
         Gravity gravity = Gravity::None;
         bool buttonDown = false;
         CursorShape cursor = Qt::ArrowCursor;
-        LogicalOutput *startOutput = nullptr;
+        QString initialOutputId;
+        RectF initialScreenArea;
         QTimer *delayedTimer = nullptr;
         uint32_t counter = 0;
         MaximizeMode initialMaximizeMode;

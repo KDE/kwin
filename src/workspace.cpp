@@ -1281,10 +1281,6 @@ void Workspace::updateOutputs()
     QList<BackendOutput *> newBackendOutputs;
     bool wakeUp = false;
 
-    if (m_moveResizeWindow) {
-        m_moveResizeWindow->cancelInteractiveMoveResize();
-    }
-
     for (BackendOutput *output : availableOutputs) {
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
         output->setAutoBrightnessAvailable(m_lightSensor->isAvailable());

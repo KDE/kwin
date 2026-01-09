@@ -1067,7 +1067,8 @@ bool Window::startInteractiveMoveResize()
     workspace()->raiseWindow(this);
 
     m_interactiveMoveResize.initialGeometry = moveResizeGeometry();
-    m_interactiveMoveResize.startOutput = moveResizeOutput();
+    m_interactiveMoveResize.initialOutputId = moveResizeOutput()->uuid();
+    m_interactiveMoveResize.initialScreenArea = moveResizeOutput()->geometryF();
     m_interactiveMoveResize.initialMaximizeMode = requestedMaximizeMode();
     m_interactiveMoveResize.initialQuickTileMode = requestedQuickTileMode();
     m_interactiveMoveResize.initialGeometryRestore = geometryRestore();
@@ -1096,9 +1097,9 @@ void Window::finishInteractiveMoveResize(bool cancel)
             setQuickTileMode(m_interactiveMoveResize.initialQuickTileMode, m_interactiveMoveResize.initialGeometry.center());
             setGeometryRestore(m_interactiveMoveResize.initialGeometryRestore);
         }
-    } else if (moveResizeOutput() != interactiveMoveResizeStartOutput()) {
+    } else if (moveResizeOutput()->uuid() != m_interactiveMoveResize.initialOutputId) {
         sendToOutput(moveResizeOutput()); // checks rule validity
-        const RectF oldScreenArea = workspace()->clientArea(MaximizeArea, this, interactiveMoveResizeStartOutput());
+        const RectF oldScreenArea = m_interactiveMoveResize.initialScreenArea;
         const RectF screenArea = workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
         m_electricGeometryRestore = moveToArea(m_electricGeometryRestore, oldScreenArea, screenArea);
         if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore) {
