@@ -13,6 +13,7 @@
         "Description[nl]": "Invoerdetectie van spelcontroller van KWin inschakelen",
         "Description[pt_BR]": "Ativar detecção de entrada do controlador de jogos no KWin",
         "Description[sl]": "Omogoči zaznavanje vnosa krmilnika iger KWin",
+        "Description[tr]": "KWin oyun kolu girişi algılamasını etkinleştirin",
         "Description[uk]": "Увімкнути виявлення ігрового контролера у KWin",
         "Description[zh_TW]": "啟用 KWin 遊戲控制器輸入偵測",
         "EnabledByDefault": true,
@@ -29,6 +30,7 @@
         "Name[nl]": "spelcontroller",
         "Name[pt_BR]": "controlador de jogos",
         "Name[sl]": "krmilnik iger",
+        "Name[tr]": "oyun kolu,oyun kumandası,oyun çubuğu,gamecontroller,game controller,gamepad,game pad",
         "Name[uk]": "Ігровий контролер",
         "Name[zh_TW]": "遊戲控制器"
     },
