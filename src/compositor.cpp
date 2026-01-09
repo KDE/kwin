@@ -612,18 +612,19 @@ void Compositor::composite(RenderLoop *renderLoop)
         reinitialize();
         return;
     }
-    if (m_renderLoopDrivenAnimationDriver->isRunning()) {
-        m_renderLoopDrivenAnimationDriver->advanceToNextFrame(renderLoop->nextPresentationTimestamp());
-    }
 
     BackendOutput *output = findOutput(renderLoop);
     LogicalOutput *logicalOutput = workspace()->findOutput(output);
     const auto primaryView = m_primaryViews[renderLoop].get();
     fTraceDuration("Paint (", output->name(), ")");
 
-    QList<OutputLayer *> toUpdate;
-
+    // This must come first.
     renderLoop->prepareNewFrame();
+
+    if (m_renderLoopDrivenAnimationDriver->isRunning()) {
+        m_renderLoopDrivenAnimationDriver->advanceToNextFrame(renderLoop->nextPresentationTimestamp());
+    }
+
     auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
     auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
     std::optional<double> desiredArtificalHdrHeadroom;
@@ -800,6 +801,8 @@ void Compositor::composite(RenderLoop *renderLoop)
             view->setUnderlay(false);
         }
     }
+
+    QList<OutputLayer *> toUpdate;
 
     // disable entirely unused output layers
     for (OutputLayer *layer : unusedOutputLayers) {
