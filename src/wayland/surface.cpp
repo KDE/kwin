@@ -82,6 +82,9 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
         child->surface()->setPreferredColorDescription(preferredColorDescription.value());
     }
 
+    if (child->surface()->inhibitsIdle()) {
+        Q_EMIT q->inhibitsIdleChanged();
+    }
     Q_EMIT q->childSubSurfaceAdded(child);
     Q_EMIT q->childSubSurfacesChanged();
 }
@@ -109,6 +112,10 @@ void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
         });
     }
 
+    // TODO this isn't particularly nice
+    if (!child->surface() || child->surface()->inhibitsIdle()) {
+        Q_EMIT q->inhibitsIdleChanged();
+    }
     Q_EMIT q->childSubSurfaceRemoved(child);
     Q_EMIT q->childSubSurfacesChanged();
 }

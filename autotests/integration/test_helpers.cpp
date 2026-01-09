@@ -2495,6 +2495,13 @@ void XdgToplevelWindow::unmap()
     m_window = nullptr;
 }
 
+bool XdgToplevelWindow::unmapAndWaitForClosed()
+{
+    Window *window = m_window;
+    unmap();
+    return waitForWindowClosed(window);
+}
+
 bool XdgToplevelWindow::presentWait()
 {
     const auto feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*m_surface));

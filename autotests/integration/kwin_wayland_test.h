@@ -1428,6 +1428,7 @@ public:
     bool show(const QSize &size = QSize(100, 100), const QColor &color = Qt::blue);
     bool show(const QImage &image);
     void unmap();
+    bool unmapAndWaitForClosed();
 
     /**
      * Commits and waits for the commit to be presented.
