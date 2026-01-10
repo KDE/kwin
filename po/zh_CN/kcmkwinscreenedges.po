@@ -265,7 +265,7 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
-"您可以在此设置多个屏幕之间的边缘围栏的强度。边缘围栏将要求光标必须在屏幕的边"
+"您可以在此设置多个屏幕之间的边缘围栏的强度。边缘围栏将要求指针必须在屏幕的边"
 "缘移动一段额外的距离之后才能穿越到其他屏幕。在多屏幕场景中，此功能有助于用户"
 "访问某些界面元素，例如被放置在屏幕之间的边缘的 Plasma 面板等。"
 
