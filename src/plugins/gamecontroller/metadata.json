@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Input",
         "Description": "Enable KWin game controller input detection",
+        "Description[ar]": "مكّن كشف إدخال وحدة التحكم في الألعاب كوين",
         "Description[ca@valencia]": "Activa la detecció d'entrada de controlador de jocs",
         "Description[ca]": "Activa la detecció d'entrada de controlador de jocs",
         "Description[es]": "Activar la detección de mandos de juego en KWin",
@@ -15,10 +16,12 @@
         "Description[sl]": "Omogoči zaznavanje vnosa krmilnika iger KWin",
         "Description[tr]": "KWin oyun kolu girişi algılamasını etkinleştirin",
         "Description[uk]": "Увімкнути виявлення ігрового контролера у KWin",
+        "Description[zh_CN]": "启用 KWin 游戏控制器输入检测",
         "Description[zh_TW]": "啟用 KWin 遊戲控制器輸入偵測",
         "EnabledByDefault": true,
         "License": "GPL",
         "Name": "gamecontroller",
+        "Name[ar]": "جهاز تحكم الألعاب",
         "Name[ca@valencia]": "gamecontroller",
         "Name[ca]": "gamecontroller",
         "Name[es]": "mando de juegos",
@@ -32,6 +35,7 @@
         "Name[sl]": "krmilnik iger",
         "Name[tr]": "oyun kolu,oyun kumandası,oyun çubuğu,gamecontroller,game controller,gamepad,game pad",
         "Name[uk]": "Ігровий контролер",
+        "Name[zh_CN]": "游戏控制器",
         "Name[zh_TW]": "遊戲控制器"
     },
     "X-KDE-ServiceTypes": [
