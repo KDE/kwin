@@ -479,7 +479,7 @@ msgstr ""
 "style:italic;\">左上角</span>：在左上角放置窗口</li><li style=\" margin-"
 "top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-"
 "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">鼠标下方</"
-"span>：在鼠标光标下方放置窗口</li></ul></body></html>"
+"span>：在鼠标指针下方放置窗口</li></ul></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:34
@@ -780,7 +780,7 @@ msgid ""
 "When this option is enabled, a window in the background will automatically "
 "come to the front when the mouse pointer has been over it for some time."
 msgstr ""
-"启用此选项后，当鼠标光标移动到后台窗口上方一段时间后，该窗口将自动被提升到最"
+"启用此选项后，当鼠标指针移动到后台窗口上方一段时间后，该窗口将自动被提升到最"
 "前面。"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
