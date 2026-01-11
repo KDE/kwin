@@ -7,7 +7,6 @@ ecm_qt_declare_logging_category(gamecontroller
     HEADER gamecontroller_logging.h
     IDENTIFIER KWIN_GAMECONTROLLER
     CATEGORY_NAME kwin_gamecontroller
-    DEFAULT_SEVERITY Debug
 )
 
 target_sources(gamecontroller PRIVATE
