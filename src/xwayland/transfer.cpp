@@ -109,9 +109,8 @@ void TransferWltoX::startIncr()
     // the WM-relevant events, for example FocusIn events.
     xcb_get_window_attributes_cookie_t cookie = xcb_get_window_attributes(xcbConn, m_request.requestor);
     if (xcb_get_window_attributes_reply_t *reply = xcb_get_window_attributes_reply(xcbConn, cookie, nullptr)) {
-        m_originalEventMask = reply->your_event_mask;
-        if (!(*m_originalEventMask & XCB_EVENT_MASK_PROPERTY_CHANGE)) {
-            uint32_t mask = *m_originalEventMask | XCB_EVENT_MASK_PROPERTY_CHANGE;
+        if (!(reply->your_event_mask & XCB_EVENT_MASK_PROPERTY_CHANGE)) {
+            uint32_t mask = reply->your_event_mask | XCB_EVENT_MASK_PROPERTY_CHANGE;
             xcb_change_window_attributes(xcbConn, m_request.requestor, XCB_CW_EVENT_MASK, &mask);
         }
 
@@ -215,16 +214,7 @@ void TransferWltoX::handlePropertyDelete()
 
     if (m_flushPropertyOnDelete) {
         if (!socketNotifier() && m_chunks.isEmpty()) {
-            // transfer complete
-            xcb_connection_t *xcbConn = kwinApp()->x11Connection();
-
-            if (m_originalEventMask && !(*m_originalEventMask & XCB_EVENT_MASK_PROPERTY_CHANGE)) {
-                xcb_change_window_attributes(xcbConn,
-                                             m_request.requestor,
-                                             XCB_CW_EVENT_MASK, &*m_originalEventMask);
-            }
-
-            xcb_change_property(xcbConn,
+            xcb_change_property(kwinApp()->x11Connection(),
                                 XCB_PROP_MODE_REPLACE,
                                 m_request.requestor,
                                 m_request.property,

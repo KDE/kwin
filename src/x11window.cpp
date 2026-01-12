@@ -199,7 +199,6 @@ void X11Window::releaseWindow(bool on_shutdown)
         if (Xcb::Extensions::self()->isShapeAvailable()) {
             xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);
         }
-        Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
         workspace()->removeUnmanaged(this);
     } else {
         cleanTabBox();
@@ -234,7 +233,6 @@ void X11Window::releaseWindow(bool on_shutdown)
         m_client.deleteProperty(atoms->net_frame_extents);
         m_client.deleteProperty(atoms->kde_net_wm_frame_strut);
         m_client.move(Xcb::toXNative(calculateGravitation(true)));
-        m_client.selectInput(XCB_EVENT_MASK_NO_EVENT);
         m_client.reset();
         ungrabXServer();
     }
@@ -360,7 +358,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 
     m_client.reset(w, false, windowGeometry.rect());
     m_client.setBorderWidth(0);
-    m_client.selectInput(XCB_EVENT_MASK_FOCUS_CHANGE | XCB_EVENT_MASK_PROPERTY_CHANGE);
+    m_client.selectInput(attr->your_event_mask | XCB_EVENT_MASK_FOCUS_CHANGE | XCB_EVENT_MASK_PROPERTY_CHANGE);
 
     bit_depth = windowGeometry->depth;
 

@@ -118,7 +118,6 @@ private:
 
     bool m_propertyIsSet = false;
     bool m_flushPropertyOnDelete = false;
-    std::optional<uint32_t> m_originalEventMask = std::nullopt;
 
     Q_DISABLE_COPY(TransferWltoX)
 };
