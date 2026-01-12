@@ -70,7 +70,7 @@ public:
     void setDescription(const QString &description);
     QStringList warningMessages() const;
 
-    Q_INVOKABLE void detectWindowProperties(int miliseconds);
+    Q_INVOKABLE void detectWindowProperties(int milliseconds);
 
 Q_SIGNALS:
     void descriptionChanged();

@@ -17,7 +17,7 @@ namespace KWin
 /**
  * The RenderLoopDrivenQAnimationDriver class
  * allowing kwin to control when Qt's internal animations update
- * to the next position and the timestamp they are targetting.
+ * to the next position and the timestamp they are targeting.
  */
 class RenderLoopDrivenQAnimationDriver : public QAnimationDriver
 {

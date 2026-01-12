@@ -16,8 +16,8 @@
 
 	* advanced.[cpp,h] : new tab for some of the last of the
   		kwm's options which remained out of the GUI config:
-		CtrlTab, TraverseAll, AltTabeMode, Button3Grab and 
-		the filter lists for decorations, focus, stickyness,
+		CtrlTab, TraverseAll, AltTabeMode, Button3Grab and
+		the filter lists for decorations, focus, stickiness,
 		session management ignore ( I kinda disklike the solution
 		I got for the latest)
 

@@ -95,7 +95,7 @@ When operations are added, if possible, `ColorPipeline` automatically combines t
 # Blending
 KWin creates a blending space in some gamma 2.2 format, the specifics of which depend on the output and its settings. It can for example be
 - the native colorspace of an sRGB screen, BT709 primaries + gamma 2.2 transfer function with max luminance = reference luminance
-- a modified verison of an ICC profile's colorspace, native primaries + gamma 2.2 transfer function with max luminance = reference luminance
+- a modified version of an ICC profile's colorspace, native primaries + gamma 2.2 transfer function with max luminance = reference luminance
 - the native colorspace of a FreeSync HDR screen, native primaries + gamma 2.2 transfer function with max luminance = max display luminance
 - a modified version of the BT2020PQ colorspace, BT2020 primaries + gamma 2.2 transfer function with max luminance = max display luminance
 

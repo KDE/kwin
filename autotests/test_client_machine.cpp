@@ -92,16 +92,16 @@ void TestClientMachine::hostName_data()
     QTest::newRow("localhost") << QStringLiteral("localhost") << QStringLiteral("localhost") << true;
     QTest::newRow("hostname") << m_hostName << m_hostName << true;
     QTest::newRow("HOSTNAME") << m_hostName.toUpper() << m_hostName.toUpper() << true;
-    QString cutted(m_hostName);
-    cutted.remove(0, 1);
-    QTest::newRow("ostname") << cutted << cutted << false;
+    QString cut(m_hostName);
+    cut.remove(0, 1);
+    QTest::newRow("ostname") << cut << cut << false;
     QString domain("random.name.not.exist.tld");
     QTest::newRow("domain") << domain << domain << false;
     QTest::newRow("fqdn") << m_fqdn << m_fqdn << true;
     QTest::newRow("FQDN") << m_fqdn.toUpper() << m_fqdn.toUpper() << true;
-    cutted = m_fqdn;
-    cutted.remove(0, 1);
-    QTest::newRow("qdn") << cutted << cutted << false;
+    cut = m_fqdn;
+    cut.remove(0, 1);
+    QTest::newRow("qdn") << cut << cut << false;
 }
 
 void TestClientMachine::hostName()

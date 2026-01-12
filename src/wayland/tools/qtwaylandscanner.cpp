@@ -459,7 +459,7 @@ bool Scanner::process()
     if (m_basename.isEmpty())
         m_basename = QByteArray(m_protocolName).replace('_', '-');
 
-    // We should convert - to _ so that the preprocessor wont generate code which will lead to unexpected behavior
+    // We should convert - to _ so that the preprocessor won't generate code which will lead to unexpected behavior
     const QByteArray preProcessorProtocolName = QByteArray(m_basename).replace('-', '_').toUpper();
 
     std::vector<WaylandInterface> interfaces;

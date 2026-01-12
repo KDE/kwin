@@ -247,7 +247,7 @@ static void sigbusHandler(int signum, siginfo_t *info, void *context)
 GraphicsBuffer::Map ShmClientBuffer::map(MapFlags flags)
 {
     if (!m_shmPool->sigbusImpossible) {
-        // A SIGBUS signal may be emitted if the backing file is shrinked and we access now
+        // A SIGBUS signal may be emitted if the backing file is shrunk and we access now
         // removed pages. Install a signal handler to handle this case. Note that if the
         // backing file has F_SEAL_SHRINK seal, then we don't need to do anything.
 

@@ -933,9 +933,9 @@ QList<OptionsModel::Data> RulesModel::layerModelData() const
     return modelData;
 }
 
-void RulesModel::detectWindowProperties(int miliseconds)
+void RulesModel::detectWindowProperties(int milliseconds)
 {
-    QTimer::singleShot(miliseconds, this, &RulesModel::selectX11Window);
+    QTimer::singleShot(milliseconds, this, &RulesModel::selectX11Window);
 }
 
 void RulesModel::selectX11Window()

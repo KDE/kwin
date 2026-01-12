@@ -692,7 +692,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // Maximization for oversized windows must happen NOW.
     // If we effectively pass keepInArea(), the window will resizeWithChecks() - i.e. constrained
     // to the combo of all screen MINUS all struts on the edges
-    // If only one screen struts, this will affect screens as a side-effect, the window is artificially shrinked
+    // If only one screen struts, this will affect screens as a side-effect, the window is artificially shrunk
     // below the screen size and as result no more maximized what breaks KMainWindow's stupid width+1, height+1 hack
     // TODO: get KMainWindow a correct state storage what will allow to store the restore size as well.
 
