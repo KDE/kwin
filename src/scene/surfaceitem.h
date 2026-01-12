@@ -147,6 +147,7 @@ public:
     bool create() override;
     void update(const Region &region) override;
     bool isValid() const override;
+    bool isFloatingPoint() const;
 
     OpenGLSurfaceContents texture() const;
 

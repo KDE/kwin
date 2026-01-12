@@ -353,6 +353,22 @@ void OpenGLSurfaceTexture::update(const Region &region)
     }
 }
 
+bool OpenGLSurfaceTexture::isFloatingPoint() const
+{
+    GraphicsBuffer *buffer = m_item->buffer();
+    if (auto dmabuf = buffer->dmabufAttributes()) {
+        const auto info = FormatInfo::get(dmabuf->format);
+        return info && info->floatingPoint;
+    } else if (auto shm = buffer->shmAttributes()) {
+        const auto info = FormatInfo::get(shm->format);
+        return info && info->floatingPoint;
+    } else if (buffer->singlePixelAttributes()) {
+        return false;
+    } else {
+        Q_UNREACHABLE();
+    }
+}
+
 bool OpenGLSurfaceTexture::loadShmTexture(GraphicsBuffer *buffer)
 {
     const GraphicsBufferView view(buffer);

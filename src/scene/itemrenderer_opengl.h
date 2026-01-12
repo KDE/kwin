@@ -38,6 +38,7 @@ public:
         int borderThickness = 0;
         QColor borderColor;
         bool paintHole = false;
+        bool hasFloatingPointColor = false;
     };
 
     struct RenderCorner

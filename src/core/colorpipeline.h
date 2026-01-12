@@ -89,10 +89,22 @@ public:
     double m_v;
 };
 
+class KWIN_EXPORT ColorClamp
+{
+public:
+    explicit ColorClamp(ValueRange range);
+    explicit ColorClamp(double minValue, double maxValue);
+
+    bool operator==(const ColorClamp &) const = default;
+
+    double m_minValue;
+    double m_maxValue;
+};
+
 class KWIN_EXPORT ColorOp
 {
 public:
-    using Operation = std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper, std::shared_ptr<ColorTransformation>, std::shared_ptr<ColorLUT3D>>;
+    using Operation = std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper, std::shared_ptr<ColorTransformation>, std::shared_ptr<ColorLUT3D>, ColorClamp>;
     ValueRange input;
     ColorspaceType inputSpace = ColorspaceType::AnyNonRGB;
     Operation operation;
@@ -117,7 +129,11 @@ public:
     explicit ColorPipeline();
     explicit ColorPipeline(const ValueRange &inputRange, ColorspaceType inputType);
 
-    static ColorPipeline create(const std::shared_ptr<ColorDescription> &from, const std::shared_ptr<ColorDescription> &to, RenderingIntent intent);
+    enum class InputType {
+        FixedPoint,
+        FloatingPoint,
+    };
+    static ColorPipeline create(const std::shared_ptr<ColorDescription> &from, const std::shared_ptr<ColorDescription> &to, RenderingIntent intent, InputType inputType = InputType::FixedPoint);
 
     ColorPipeline merged(const ColorPipeline &onTop) const;
 
@@ -136,6 +152,7 @@ public:
     void add(const ColorOp &op);
     void add(const ColorPipeline &pipeline);
     void add1DLUT(const std::shared_ptr<ColorTransformation> &transform, ColorspaceType outputType);
+    void addClamp(const ValueRange &range);
 
     ValueRange inputRange;
     ColorspaceType inputSpace;

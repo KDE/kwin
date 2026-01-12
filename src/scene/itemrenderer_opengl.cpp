@@ -230,6 +230,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
                     .paintHole = hole,
+                    .hasFloatingPointColor = texture->isFloatingPoint(),
                 });
                 renderNode.geometry.postProcessTextureCoordinates(texture->texture().planes.at(0)->matrix(UnnormalizedCoordinates));
                 if (surfaceItem->colorDescription()->yuvCoefficients() != YUVMatrixCoefficients::Identity) {
@@ -409,7 +410,8 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             // make sure that brightness and saturation adjustments are always applied in linear space
             traits |= ShaderTrait::TransformColorspace;
         } else {
-            const auto colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
+            const auto colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent,
+                                                                   renderNode.hasFloatingPointColor ? ColorPipeline::InputType::FloatingPoint : ColorPipeline::InputType::FixedPoint);
             if (!colorTransformation.isIdentity()) {
                 traits |= ShaderTrait::TransformColorspace;
             }
