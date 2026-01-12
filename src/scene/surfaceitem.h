@@ -147,6 +147,7 @@ public:
     bool create() override;
     void update(const Region &region) override;
     bool isValid() const override;
+    bool isFloatingPoint() const;
 
     OpenGLSurfaceContents texture() const;
 
@@ -167,6 +168,7 @@ private:
     };
 
     BufferType m_bufferType = BufferType::None;
+    bool m_isFloatingPoint = false;
     EglBackend *m_backend;
     SurfaceItem *m_item;
     OpenGLSurfaceContents m_texture;

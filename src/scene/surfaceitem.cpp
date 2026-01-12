@@ -353,6 +353,11 @@ void OpenGLSurfaceTexture::update(const Region &region)
     }
 }
 
+bool OpenGLSurfaceTexture::isFloatingPoint() const
+{
+    return m_isFloatingPoint;
+}
+
 bool OpenGLSurfaceTexture::loadShmTexture(GraphicsBuffer *buffer)
 {
     const GraphicsBufferView view(buffer);
@@ -373,6 +378,8 @@ bool OpenGLSurfaceTexture::loadShmTexture(GraphicsBuffer *buffer)
 
     m_bufferType = BufferType::Shm;
     m_size = buffer->size();
+    const auto info = FormatInfo::get(buffer->shmAttributes()->format);
+    m_isFloatingPoint = info && info->floatingPoint;
 
     return true;
 }
@@ -400,6 +407,8 @@ void OpenGLSurfaceTexture::updateShmTexture(GraphicsBuffer *buffer, const Region
     }
 
     m_texture.planes[0]->update(*view.image(), simplifyDamage(region));
+    const auto info = FormatInfo::get(buffer->shmAttributes()->format);
+    m_isFloatingPoint = info && info->floatingPoint;
 }
 
 bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
@@ -454,6 +463,8 @@ bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
     }
     m_bufferType = BufferType::DmaBuf;
     m_size = buffer->size();
+    const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
+    m_isFloatingPoint = info && info->floatingPoint;
 
     return true;
 }
@@ -485,6 +496,8 @@ void OpenGLSurfaceTexture::updateDmabufTexture(GraphicsBuffer *buffer)
         glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(m_backend->importBufferAsImage(buffer)));
         m_texture.planes[0]->unbind();
     }
+    const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
+    m_isFloatingPoint = info && info->floatingPoint;
 }
 
 bool OpenGLSurfaceTexture::loadSinglePixelTexture(GraphicsBuffer *buffer)
@@ -499,6 +512,7 @@ bool OpenGLSurfaceTexture::loadSinglePixelTexture(GraphicsBuffer *buffer)
     m_texture = {{texture}};
     m_bufferType = BufferType::SinglePixel;
     m_size = QSize(1, 1);
+    m_isFloatingPoint = false;
     return true;
 }
 

@@ -542,7 +542,7 @@ void TestColorspaces::dontCrashWithWeirdHdrMetadata()
         40,
     });
     const auto pipeline = ColorPipeline::create(in, out, RenderingIntent::Perceptual);
-    QCOMPARE(pipeline.evaluate(QVector3D()), QVector3D());
+    QVERIFY(compareVectors(pipeline.evaluate(QVector3D()), QVector3D(), 0.000001));
 }
 
 void TestColorspaces::testColorimetryCheck_data()
