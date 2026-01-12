@@ -29,10 +29,10 @@
         <entry name="MoveFactor" type="Double">
             <default code="true">10</default>
         </entry>
-        <entry name="XTesselation" type="Double">
+        <entry name="XTessellation" key="XTesselation" type="Double">
             <default>20</default>
         </entry>
-        <entry name="YTesselation" type="Double">
+        <entry name="YTessellation" key="YTesselation" type="Double">
             <default>20</default>
         </entry>
         <entry name="MinVelocity" type="Double">

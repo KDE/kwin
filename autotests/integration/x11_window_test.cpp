@@ -3541,7 +3541,7 @@ public:
         , m_window(createWindow(m_display->connection(), Rect(QPoint(), size)))
         , m_size(size)
     {
-        // request confgure events
+        // request configure events
         uint32_t value = XCB_EVENT_MASK_STRUCTURE_NOTIFY;
         xcb_change_window_attributes_checked(m_display->connection(), m_window->window(), XCB_CW_EVENT_MASK, &value);
     }

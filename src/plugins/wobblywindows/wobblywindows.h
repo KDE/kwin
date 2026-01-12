@@ -26,8 +26,8 @@ class WobblyWindowsEffect : public OffscreenEffect
     Q_PROPERTY(qreal stiffness READ stiffness)
     Q_PROPERTY(qreal drag READ drag)
     Q_PROPERTY(qreal moveFactor READ moveFactor)
-    Q_PROPERTY(qreal xTesselation READ xTesselation)
-    Q_PROPERTY(qreal yTesselation READ yTesselation)
+    Q_PROPERTY(qreal xTessellation READ xTessellation)
+    Q_PROPERTY(qreal yTessellation READ yTessellation)
     Q_PROPERTY(qreal minVelocity READ minVelocity)
     Q_PROPERTY(qreal maxVelocity READ maxVelocity)
     Q_PROPERTY(qreal stopVelocity READ stopVelocity)
@@ -77,8 +77,8 @@ public:
     qreal stiffness() const;
     qreal drag() const;
     qreal moveFactor() const;
-    qreal xTesselation() const;
-    qreal yTesselation() const;
+    qreal xTessellation() const;
+    qreal yTessellation() const;
     qreal minVelocity() const;
     qreal maxVelocity() const;
     qreal stopVelocity() const;
@@ -142,11 +142,11 @@ private:
     qreal m_drag;
     qreal m_move_factor;
 
-    // the default tesselation for windows
+    // the default tessellation for windows
     // use qreal instead of int as I really often need
     // these values as real to do divisions.
-    qreal m_xTesselation;
-    qreal m_yTesselation;
+    qreal m_xTessellation;
+    qreal m_yTessellation;
 
     qreal m_minVelocity;
     qreal m_maxVelocity;

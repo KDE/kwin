@@ -52,7 +52,7 @@ bool SlowKeysFilter::keyboardKey(KeyboardKeyEvent *event)
     case KeyboardKeyState::Pressed:
     case KeyboardKeyState::Repeated:
         if (auto it = m_firstEvent.find(event->key); it == m_firstEvent.end()) {
-            // First time we're seing this key, record the time when the key was pressed
+            // First time we're seeing this key, record the time when the key was pressed
             m_firstEvent[event->key] = now;
             if (m_keysPressBeep) {
                 if (auto effect = effects->provides(Effect::SystemBell)) {
@@ -65,7 +65,7 @@ bool SlowKeysFilter::keyboardKey(KeyboardKeyEvent *event)
             auto first = *it;
 
             if (now - first < m_delay) {
-                // The event occured sooner than the user-set delay, we will reject the event
+                // The event occurred sooner than the user-set delay, we will reject the event
                 if (m_keysRejectBeep) {
                     if (auto effect = effects->provides(Effect::SystemBell)) {
                         effect->perform(Effect::SystemBell, {});
@@ -73,7 +73,7 @@ bool SlowKeysFilter::keyboardKey(KeyboardKeyEvent *event)
                 }
                 return true;
             } else {
-                // The event occured later than the user-set delay, we will *not* reject the event
+                // The event occurred later than the user-set delay, we will *not* reject the event
                 if (m_keysAcceptBeep) {
                     if (auto effect = effects->provides(Effect::SystemBell)) {
                         effect->perform(Effect::SystemBell, {});

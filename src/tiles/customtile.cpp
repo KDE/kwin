@@ -196,7 +196,7 @@ QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
 
     QList<CustomTile *> splitTiles;
 
-    // If we are m_rootLayoutTile always create childrens, not siblings
+    // If we are m_rootLayoutTile always create children, not siblings
     if (parentT && (parentT->childCount() < 2 || parentT->layoutDirection() == newDirection)) {
         // Add a new cell to the current layout
         setLayoutDirection(newDirection);
