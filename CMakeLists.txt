@@ -207,12 +207,17 @@ set_package_properties(Wayland PROPERTIES
     PURPOSE "Required for building KWin with Wayland support"
 )
 
-find_package(WaylandProtocols 1.47)
+find_package(WaylandProtocols 1.45)
 set_package_properties(WaylandProtocols PROPERTIES
     TYPE REQUIRED
     PURPOSE "Collection of Wayland protocols that add functionality not available in the Wayland core protocol"
     URL "https://gitlab.freedesktop.org/wayland/wayland-protocols/"
 )
+if (WaylandProtocols_VERSION VERSION_GREATER_EQUAL 1.47)
+    set(HAVE_WAYLAND_PROTOCOLS_147 1)
+else()
+    set(HAVE_WAYLAND_PROTOCOLS_147 0)
+endif()
 
 find_package(PlasmaWaylandProtocols 1.19.0 CONFIG)
 set_package_properties(PlasmaWaylandProtocols PROPERTIES
