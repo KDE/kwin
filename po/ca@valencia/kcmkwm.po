@@ -900,7 +900,7 @@ msgstr "Ava&nçat"
 #: main.cpp:74
 #, kde-format
 msgid "&Picture-in-picture"
-msgstr "&Imatge a la imatge"
+msgstr "&Imatge en la imatge"
 
 #: main.cpp:165
 #, kde-format
