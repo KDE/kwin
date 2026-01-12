@@ -343,19 +343,6 @@ set_package_properties(lcms2 PROPERTIES
     PURPOSE "Required for the color management system"
 )
 
-find_package(Freetype)
-set_package_properties(Freetype PROPERTIES
-    DESCRIPTION "A font rendering engine"
-    URL "https://www.freetype.org"
-    TYPE REQUIRED
-    PURPOSE "Needed for KWin's QPA plugin."
-)
-find_package(Fontconfig)
-set_package_properties(Fontconfig PROPERTIES
-    TYPE REQUIRED
-    PURPOSE "Needed for KWin's QPA plugin."
-)
-
 find_package(hwdata)
 set_package_properties(hwdata PROPERTIES
     TYPE RUNTIME

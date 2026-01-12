@@ -26,7 +26,5 @@ target_link_libraries(KWinQpaPlugin PRIVATE
     Qt::Concurrent
     Qt::CorePrivate
     Qt::GuiPrivate
-    Freetype::Freetype # Must be after Qt6 platform support libs
-    Fontconfig::Fontconfig
     kwin
 )
