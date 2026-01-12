@@ -939,9 +939,9 @@ void Workspace::initShortcuts()
 
     for (int i = 0; i < 8; ++i) {
         initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Move Window to Screen %1", i), 0, [this, i]() {
-            LogicalOutput *output = outputs().value(i);
-            if (output) {
-                slotWindowToScreen(output);
+            const auto order = outputOrder();
+            if (i < order.size()) {
+                slotWindowToScreen(order[i]);
             }
         }, true);
     }
