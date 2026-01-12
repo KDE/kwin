@@ -36,6 +36,9 @@ OutputScreenCastSource::OutputScreenCastSource(LogicalOutput *output, std::optio
             Q_EMIT closed();
         }
     });
+    connect(Compositor::self(), &Compositor::aboutToToggleCompositing, this, [this]() {
+        Q_EMIT closed();
+    });
 }
 
 OutputScreenCastSource::~OutputScreenCastSource()
