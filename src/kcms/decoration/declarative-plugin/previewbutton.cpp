@@ -125,6 +125,9 @@ void PreviewButtonItem::paint(QPainter *painter)
     if (type() == KDecoration3::DecorationButtonType::Spacer) {
         static const QIcon icon = QIcon::fromTheme(QStringLiteral("distribute-horizontal"));
         icon.paint(painter, rect);
+    } else if (type() == KDecoration3::DecorationButtonType::ExcludeFromCapture) {
+        static const QIcon icon = QIcon::fromTheme(QStringLiteral("view-private"));
+        icon.paint(painter, rect);
     } else {
         m_button->paint(painter, rect);
     }

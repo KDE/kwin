@@ -43,6 +43,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const KPluginMetaData &met
     , m_rightButtonsModel(new KDecoration3::Preview::ButtonsModel(DecorationButtonsList(), this))
     , m_availableButtonsModel(new KDecoration3::Preview::ButtonsModel(this))
     , m_data(new KWinDecorationData(this))
+    , m_excludeFromCaptureButtonSelected(isExcludeFromCaptureSelected())
 {
     setButtons(Apply | Default | Help);
     qmlRegisterAnonymousType<QAbstractListModel>("org.kde.kwin.KWinDecoration", 1);
@@ -79,6 +80,9 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const KPluginMetaData &met
     connect(m_rightButtonsModel, &QAbstractItemModel::rowsMoved, this, &KCMKWinDecoration::onRightButtonsChanged);
     connect(m_rightButtonsModel, &QAbstractItemModel::rowsRemoved, this, &KCMKWinDecoration::onRightButtonsChanged);
     connect(m_rightButtonsModel, &QAbstractItemModel::modelReset, this, &KCMKWinDecoration::onRightButtonsChanged);
+
+    connect(m_data->settings(), &KWinDecorationSettings::buttonsOnLeftChanged, this, &KCMKWinDecoration::checkExcludeFromCaptureButtonPresence);
+    connect(m_data->settings(), &KWinDecorationSettings::buttonsOnRightChanged, this, &KCMKWinDecoration::checkExcludeFromCaptureButtonPresence);
 
     connect(this, &KCMKWinDecoration::borderSizeChanged, this, &KCMKWinDecoration::settingsChanged);
 
@@ -169,6 +173,11 @@ QAbstractListModel *KCMKWinDecoration::availableButtonsModel() const
     return m_availableButtonsModel;
 }
 
+bool KCMKWinDecoration::excludeFromCaptureButtonSelected() const
+{
+    return m_excludeFromCaptureButtonSelected;
+}
+
 QStringList KCMKWinDecoration::borderSizesModel() const
 {
     // Use index 0 for borderSizeAuto == true
@@ -250,6 +259,25 @@ int KCMKWinDecoration::borderSizeIndexFromString(const QString &size) const
 QString KCMKWinDecoration::borderSizeIndexToString(int index) const
 {
     return Utils::borderSizeToString(Utils::getBorderSizeNames().keys().at(index));
+}
+
+bool KCMKWinDecoration::isExcludeFromCaptureSelected() const
+{
+    const auto left = Utils::buttonsFromString(settings()->buttonsOnLeft());
+    const auto right = Utils::buttonsFromString(settings()->buttonsOnRight());
+    const auto excludeFromCapture = KDecoration3::DecorationButtonType::ExcludeFromCapture;
+    return left.contains(excludeFromCapture) || right.contains(excludeFromCapture);
+}
+
+void KCMKWinDecoration::checkExcludeFromCaptureButtonPresence()
+{
+    const bool selected = isExcludeFromCaptureSelected();
+    if (m_excludeFromCaptureButtonSelected == selected) {
+        return;
+    }
+
+    m_excludeFromCaptureButtonSelected = selected;
+    Q_EMIT excludeFromCaptureButtonSelectedChanged();
 }
 
 #include "kcm.moc"

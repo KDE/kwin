@@ -19,7 +19,7 @@ namespace Preview
 
 PreviewClient::PreviewClient(DecoratedWindow *c, Decoration *decoration)
     : QObject(decoration)
-    , DecoratedWindowPrivateV3(c, decoration)
+    , DecoratedWindowPrivateV4(c, decoration)
     , m_icon(QIcon::fromTheme(QStringLiteral("start-here-kde")))
     , m_iconName(m_icon.name())
     , m_palette(QStringLiteral("kdeglobals"))
@@ -27,6 +27,7 @@ PreviewClient::PreviewClient(DecoratedWindow *c, Decoration *decoration)
     , m_closeable(true)
     , m_keepBelow(false)
     , m_keepAbove(false)
+    , m_excludeFromCapture(false)
     , m_maximizable(true)
     , m_maximizedHorizontally(false)
     , m_maximizedVertically(false)
@@ -50,6 +51,7 @@ PreviewClient::PreviewClient(DecoratedWindow *c, Decoration *decoration)
     connect(this, &PreviewClient::closeableChanged, c, &DecoratedWindow::closeableChanged);
     connect(this, &PreviewClient::keepAboveChanged, c, &DecoratedWindow::keepAboveChanged);
     connect(this, &PreviewClient::keepBelowChanged, c, &DecoratedWindow::keepBelowChanged);
+    connect(this, &PreviewClient::excludeFromCaptureChanged, c, &DecoratedWindow::excludeFromCaptureChanged);
     connect(this, &PreviewClient::maximizableChanged, c, &DecoratedWindow::maximizeableChanged);
     connect(this, &PreviewClient::maximizedChanged, c, &DecoratedWindow::maximizedChanged);
     connect(this, &PreviewClient::maximizedVerticallyChanged, c, &DecoratedWindow::maximizedVerticallyChanged);
@@ -150,6 +152,11 @@ bool PreviewClient::isKeepAbove() const
 bool PreviewClient::isKeepBelow() const
 {
     return m_keepBelow;
+}
+
+bool PreviewClient::isExcludedFromCapture() const
+{
+    return m_excludeFromCapture;
 }
 
 bool PreviewClient::isMaximizeable() const
@@ -376,6 +383,11 @@ void PreviewClient::requestToggleKeepBelow()
     setKeepBelow(!isKeepBelow());
 }
 
+void PreviewClient::requestToggleExcludeFromCapture()
+{
+    setExcludeFromCapture(!isExcludedFromCapture());
+}
+
 void PreviewClient::requestShowWindowMenu(const QRect &rect)
 {
     Q_EMIT showWindowMenuRequested();
@@ -422,6 +434,7 @@ SETTER2(setCloseable, closeable)
 SETTER2(setMaximizable, maximizable)
 SETTER2(setKeepBelow, keepBelow)
 SETTER2(setKeepAbove, keepAbove)
+SETTER2(setExcludeFromCapture, excludeFromCapture)
 SETTER2(setMaximizedHorizontally, maximizedHorizontally)
 SETTER2(setMaximizedVertically, maximizedVertically)
 SETTER2(setMinimizable, minimizable)

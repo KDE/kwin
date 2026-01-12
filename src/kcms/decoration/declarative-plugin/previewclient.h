@@ -18,7 +18,7 @@ namespace KDecoration3
 {
 namespace Preview
 {
-class PreviewClient : public QObject, public DecoratedWindowPrivateV3
+class PreviewClient : public QObject, public DecoratedWindowPrivateV4
 {
     Q_OBJECT
     QML_ANONYMOUS
@@ -58,6 +58,7 @@ public:
     bool isCloseable() const override;
     bool isKeepAbove() const override;
     bool isKeepBelow() const override;
+    bool isExcludedFromCapture() const override;
     bool isMaximizeable() const override;
     bool isMaximized() const override;
     bool isMaximizedVertically() const override;
@@ -94,6 +95,7 @@ public:
     void requestMinimize() override;
     void requestToggleKeepAbove() override;
     void requestToggleKeepBelow() override;
+    void requestToggleExcludeFromCapture() override;
     void requestToggleShade() override;
     void requestShowWindowMenu(const QRect &rect) override;
     void requestShowApplicationMenu(const QRect &rect, int actionId) override;
@@ -109,6 +111,7 @@ public:
     void setMaximizable(bool maximizable);
     void setKeepBelow(bool keepBelow);
     void setKeepAbove(bool keepAbove);
+    void setExcludeFromCapture(bool exclude);
     void setMaximizedHorizontally(bool maximized);
     void setMaximizedVertically(bool maximized);
     void setMinimizable(bool minimizable);
@@ -144,6 +147,7 @@ Q_SIGNALS:
     void closeableChanged(bool);
     void keepAboveChanged(bool);
     void keepBelowChanged(bool);
+    void excludeFromCaptureChanged(bool);
     void maximizableChanged(bool);
     void maximizedChanged(bool);
     void maximizedVerticallyChanged(bool);
@@ -178,6 +182,7 @@ private:
     bool m_closeable;
     bool m_keepBelow;
     bool m_keepAbove;
+    bool m_excludeFromCapture;
     bool m_maximizable;
     bool m_maximizedHorizontally;
     bool m_maximizedVertically;

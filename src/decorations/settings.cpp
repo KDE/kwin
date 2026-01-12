@@ -24,7 +24,7 @@ namespace Decoration
 {
 SettingsImpl::SettingsImpl(KDecoration3::DecorationSettings *parent)
     : QObject()
-    , DecorationSettingsPrivate(parent)
+    , DecorationSettingsPrivateV2(parent)
     , m_borderSize(KDecoration3::BorderSize::Normal)
 {
     readSettings();
@@ -56,6 +56,11 @@ bool SettingsImpl::isCloseOnDoubleClickOnMenu() const
     return m_closeDoubleClickMenu;
 }
 
+bool SettingsImpl::isAlwaysShowExcludeFromCapture() const
+{
+    return m_alwaysShowExcludeFromCapture;
+}
+
 static QHash<KDecoration3::DecorationButtonType, QChar> s_buttonNames;
 static void initButtons()
 {
@@ -71,6 +76,7 @@ static void initButtons()
     s_buttonNames[KDecoration3::DecorationButtonType::Close] = QChar('X');
     s_buttonNames[KDecoration3::DecorationButtonType::KeepAbove] = QChar('F');
     s_buttonNames[KDecoration3::DecorationButtonType::KeepBelow] = QChar('B');
+    s_buttonNames[KDecoration3::DecorationButtonType::ExcludeFromCapture] = QChar('E');
     s_buttonNames[KDecoration3::DecorationButtonType::Spacer] = QChar('_');
 }
 
@@ -131,7 +137,7 @@ static KDecoration3::BorderSize stringToSize(const QString &name)
 void SettingsImpl::readSettings()
 {
     KConfigGroup config = kwinApp()->config()->group(QStringLiteral("org.kde.kdecoration2"));
-    const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QList<KDecoration3::DecorationButtonType>({KDecoration3::DecorationButtonType::Menu, KDecoration3::DecorationButtonType::OnAllDesktops}));
+    const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QList<KDecoration3::DecorationButtonType>({KDecoration3::DecorationButtonType::Menu, KDecoration3::DecorationButtonType::OnAllDesktops, KDecoration3::DecorationButtonType::ExcludeFromCapture}));
     if (left != m_leftButtons) {
         m_leftButtons = left;
         Q_EMIT decorationSettings()->decorationButtonsLeftChanged(m_leftButtons);
@@ -147,6 +153,13 @@ void SettingsImpl::readSettings()
         m_closeDoubleClickMenu = close;
         Q_EMIT decorationSettings()->closeOnDoubleClickOnMenuChanged(m_closeDoubleClickMenu);
     }
+
+    const bool alwaysShowExcludeFromCapture = config.readEntry("AlwaysShowExcludeFromCapture", false);
+    if (alwaysShowExcludeFromCapture != m_alwaysShowExcludeFromCapture) {
+        m_alwaysShowExcludeFromCapture = alwaysShowExcludeFromCapture;
+        Q_EMIT decorationSettings()->alwaysShowExcludeFromCaptureChanged(m_alwaysShowExcludeFromCapture);
+    }
+
     m_autoBorderSize = config.readEntry("BorderSizeAuto", true);
 
     auto size = stringToSize(config.readEntry("BorderSize", QStringLiteral("Normal")));

@@ -31,11 +31,15 @@
     </entry>
     <entry name="buttonsOnLeft" key="ButtonsOnLeft" type="String">
       <label>Titlebar left buttons</label>
-      <default>MS</default>
+      <default>MSE</default>
     </entry>
     <entry name="buttonsOnRight" key="ButtonsOnRight" type="String">
       <label>Titlebar right buttons</label>
       <default>HIAX</default>
+    </entry>
+    <entry name="alwaysShowExcludeFromCapture" key="AlwaysShowExcludeFromCapture" type="Bool">
+      <label>Always show "Hide from Screencast" button, even if the window is not excluded from screencast already.</label>
+      <default>false</default>
     </entry>
   </group>
 </kcfg>

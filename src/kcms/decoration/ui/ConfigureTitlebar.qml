@@ -65,5 +65,29 @@ KCM.AbstractKCM {
                 settingName: "showToolTips"
             }
         }
+        RowLayout {
+            spacing: Kirigami.Units.smallSpacing
+
+            QQC2.CheckBox {
+                id: alwaysShowExcludeFromCaptureCheckBox
+                text: i18nc("@option:check", "Always show \"Hide from Screencast\" buttonX")
+                checked: kcm.settings.alwaysShowExcludeFromCapture
+                onToggled: kcm.settings.alwaysShowExcludeFromCapture = checked
+
+                KCM.SettingStateBinding {
+                    configObject: kcm.settings
+                    settingName: "alwaysShowExcludeFromCapture"
+                    extraEnabledConditions: kcm.excludeFromCaptureButtonSelected
+                }
+            }
+
+            Kirigami.ContextualHelpButton {
+                readonly property string helpText: i18nc("@info:tooltip", "When unchecked the button only appears if the window is hidden from screencast")
+                readonly property string additionalHelpText: i18nc("@info:tooltip", "To enable this option, add the \"Hide from screencast\" button to the titlebar first")
+                toolTipText: alwaysShowExcludeFromCaptureCheckBox.enabled
+                    ? helpText
+                    : helpText + "\n\n" + additionalHelpText
+            }
+        }
     }
 }

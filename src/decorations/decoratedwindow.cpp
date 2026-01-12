@@ -29,7 +29,7 @@ namespace Decoration
 
 DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration)
     : QObject()
-    , DecoratedWindowPrivateV3(decoratedClient, decoration)
+    , DecoratedWindowPrivateV4(decoratedClient, decoration)
     , m_window(window)
     , m_clientSize(window->clientSize())
 {
@@ -62,6 +62,9 @@ DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::Decorated
     });
     connect(window, &Window::keepAboveChanged, decoratedClient, &KDecoration3::DecoratedWindow::keepAboveChanged);
     connect(window, &Window::keepBelowChanged, decoratedClient, &KDecoration3::DecoratedWindow::keepBelowChanged);
+    connect(window, &Window::excludeFromCaptureChanged, this, [decoratedClient, window]() {
+        Q_EMIT decoratedClient->excludeFromCaptureChanged(window->excludeFromCapture());
+    });
     connect(window, &Window::requestedTileChanged, decoratedClient, [this, decoratedClient]() {
         Q_EMIT decoratedClient->adjacentScreenEdgesChanged(adjacentScreenEdges());
     });
@@ -137,6 +140,7 @@ bool DecoratedWindowImpl::isShaded() const
 
 DELEGATE(bool, isKeepAbove, keepAbove)
 DELEGATE(bool, isKeepBelow, keepBelow)
+DELEGATE(bool, isExcludedFromCapture, excludeFromCapture)
 
 #undef DELEGATE
 
@@ -156,6 +160,7 @@ void DecoratedWindowImpl::requestToggleShade()
 DELEGATE(requestToggleOnAllDesktops, OnAllDesktopsOp)
 DELEGATE(requestToggleKeepAbove, KeepAboveOp)
 DELEGATE(requestToggleKeepBelow, KeepBelowOp)
+DELEGATE(requestToggleExcludeFromCapture, ExcludeFromCaptureOp)
 
 #undef DELEGATE
 

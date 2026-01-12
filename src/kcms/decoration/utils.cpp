@@ -42,6 +42,7 @@ const QHash<KDecoration3::DecorationButtonType, QChar> s_buttonNames{
     {KDecoration3::DecorationButtonType::Close, QChar('X')},
     {KDecoration3::DecorationButtonType::KeepAbove, QChar('F')},
     {KDecoration3::DecorationButtonType::KeepBelow, QChar('B')},
+    {KDecoration3::DecorationButtonType::ExcludeFromCapture, QChar('E')},
     {KDecoration3::DecorationButtonType::Spacer, QChar('_')},
 };
 }

@@ -41,9 +41,10 @@ class KCMKWinDecoration : public KQuickManagedConfigModule
     Q_PROPERTY(int borderSize READ borderSize NOTIFY borderSizeChanged)
     Q_PROPERTY(int recommendedBorderSize READ recommendedBorderSize CONSTANT)
     Q_PROPERTY(int theme READ theme WRITE setTheme NOTIFY themeChanged)
-    Q_PROPERTY(QAbstractListModel *leftButtonsModel READ leftButtonsModel NOTIFY buttonsChanged)
-    Q_PROPERTY(QAbstractListModel *rightButtonsModel READ rightButtonsModel NOTIFY buttonsChanged)
+    Q_PROPERTY(QAbstractListModel *leftButtonsModel READ leftButtonsModel CONSTANT)
+    Q_PROPERTY(QAbstractListModel *rightButtonsModel READ rightButtonsModel CONSTANT)
     Q_PROPERTY(QAbstractListModel *availableButtonsModel READ availableButtonsModel CONSTANT)
+    Q_PROPERTY(bool excludeFromCaptureButtonSelected READ excludeFromCaptureButtonSelected NOTIFY excludeFromCaptureButtonSelectedChanged)
 
 public:
     KCMKWinDecoration(QObject *parent, const KPluginMetaData &metaData);
@@ -53,6 +54,7 @@ public:
     QAbstractListModel *leftButtonsModel();
     QAbstractListModel *rightButtonsModel();
     QAbstractListModel *availableButtonsModel() const;
+    bool excludeFromCaptureButtonSelected() const;
     QStringList borderSizesModel() const;
     int borderIndex() const;
     int borderSize() const;
@@ -68,6 +70,7 @@ Q_SIGNALS:
     void themeChanged();
     void borderIndexChanged();
     void borderSizeChanged();
+    void excludeFromCaptureButtonSelectedChanged();
 
 public Q_SLOTS:
     void load() override;
@@ -78,9 +81,11 @@ public Q_SLOTS:
 private Q_SLOTS:
     void onLeftButtonsChanged();
     void onRightButtonsChanged();
+    void checkExcludeFromCaptureButtonPresence();
 
 private:
     bool isSaveNeeded() const override;
+    bool isExcludeFromCaptureSelected() const;
 
     int borderSizeIndexFromString(const QString &size) const;
     QString borderSizeIndexToString(int index) const;
@@ -94,4 +99,5 @@ private:
 
     int m_borderSizeIndex = -1;
     KWinDecorationData *m_data;
+    bool m_excludeFromCaptureButtonSelected = false;
 };

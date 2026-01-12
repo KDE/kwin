@@ -23,7 +23,7 @@ class Window;
 namespace Decoration
 {
 
-class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivateV3
+class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivateV4
 {
     Q_OBJECT
 public:
@@ -36,6 +36,7 @@ public:
     bool isCloseable() const override;
     bool isKeepAbove() const override;
     bool isKeepBelow() const override;
+    bool isExcludedFromCapture() const override;
     bool isMaximizeable() const override;
     bool isMaximized() const override;
     bool isMaximizedHorizontally() const override;
@@ -73,6 +74,7 @@ public:
     void requestShowApplicationMenu(const QRect &rect, int actionId) override;
     void requestToggleKeepAbove() override;
     void requestToggleKeepBelow() override;
+    void requestToggleExcludeFromCapture() override;
     void requestToggleOnAllDesktops() override;
     void requestToggleShade() override;
 

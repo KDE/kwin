@@ -42,7 +42,7 @@ private:
                                                      BorderSize::Oversized});
 };
 
-class PreviewSettings : public QObject, public DecorationSettingsPrivate
+class PreviewSettings : public QObject, public DecorationSettingsPrivateV2
 {
     Q_OBJECT
     Q_PROPERTY(bool onAllDesktopsAvailable READ isOnAllDesktopsAvailable WRITE setOnAllDesktopsAvailable NOTIFY onAllDesktopsAvailableChanged)
@@ -63,11 +63,16 @@ public:
     {
         return m_closeOnDoubleClick;
     }
+    bool isAlwaysShowExcludeFromCapture() const override
+    {
+        return m_alwaysShowExcludeFromCapture;
+    }
     BorderSize borderSize() const override;
 
     void setOnAllDesktopsAvailable(bool available);
     void setAlphaChannelSupported(bool supported);
     void setCloseOnDoubleClickOnMenu(bool enabled);
+    void setAlwaysShowExcludeFromCapture(bool enabled);
 
     QAbstractItemModel *leftButtonsModel() const;
     QAbstractItemModel *rightButtonsModel() const;
@@ -99,6 +104,7 @@ Q_SIGNALS:
     void onAllDesktopsAvailableChanged(bool);
     void alphaChannelSupportedChanged(bool);
     void closeOnDoubleClickOnMenuChanged(bool);
+    void alwaysShowExcludeFromCaptureChanged(bool);
     void borderSizesIndexChanged(int);
     void fontChanged(const QFont &);
 
@@ -106,6 +112,7 @@ private:
     bool m_alphaChannelSupported;
     bool m_onAllDesktopsAvailable;
     bool m_closeOnDoubleClick;
+    bool m_alwaysShowExcludeFromCapture;
     ButtonsModel *m_leftButtons;
     ButtonsModel *m_rightButtons;
     ButtonsModel *m_availableButtons;

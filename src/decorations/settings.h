@@ -19,7 +19,7 @@ namespace KWin
 namespace Decoration
 {
 
-class SettingsImpl : public QObject, public KDecoration3::DecorationSettingsPrivate
+class SettingsImpl : public QObject, public KDecoration3::DecorationSettingsPrivateV2
 {
     Q_OBJECT
 public:
@@ -28,6 +28,7 @@ public:
     bool isAlphaChannelSupported() const override;
     bool isOnAllDesktopsAvailable() const override;
     bool isCloseOnDoubleClickOnMenu() const override;
+    bool isAlwaysShowExcludeFromCapture() const override;
     KDecoration3::BorderSize borderSize() const override
     {
         return m_borderSize;
@@ -55,6 +56,7 @@ private:
     KDecoration3::BorderSize m_borderSize;
     bool m_autoBorderSize = true;
     bool m_closeDoubleClickMenu = false;
+    bool m_alwaysShowExcludeFromCapture = false;
     QFont m_font;
 };
 } // Decoration

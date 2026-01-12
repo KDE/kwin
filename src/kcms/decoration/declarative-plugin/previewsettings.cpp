@@ -52,13 +52,15 @@ QHash<int, QByteArray> BorderSizesModel::roleNames() const
 
 PreviewSettings::PreviewSettings(DecorationSettings *parent)
     : QObject()
-    , DecorationSettingsPrivate(parent)
+    , DecorationSettingsPrivateV2(parent)
     , m_alphaChannelSupported(true)
     , m_onAllDesktopsAvailable(true)
     , m_closeOnDoubleClick(false)
+    , m_alwaysShowExcludeFromCapture(false)
     , m_leftButtons(new ButtonsModel(QList<DecorationButtonType>({DecorationButtonType::Menu,
                                                                   DecorationButtonType::ApplicationMenu,
-                                                                  DecorationButtonType::OnAllDesktops}),
+                                                                  DecorationButtonType::OnAllDesktops,
+                                                                  DecorationButtonType::ExcludeFromCapture}),
                                      this))
     , m_rightButtons(new ButtonsModel(QList<DecorationButtonType>({DecorationButtonType::ContextHelp,
                                                                    DecorationButtonType::Minimize,
@@ -73,7 +75,8 @@ PreviewSettings::PreviewSettings(DecorationSettings *parent)
                                                                        DecorationButtonType::Close,
                                                                        DecorationButtonType::ContextHelp,
                                                                        DecorationButtonType::KeepBelow,
-                                                                       DecorationButtonType::KeepAbove}),
+                                                                       DecorationButtonType::KeepAbove,
+                                                                       DecorationButtonType::ExcludeFromCapture}),
                                           this))
     , m_borderSizes(new BorderSizesModel(this))
     , m_borderSize(int(BorderSize::Normal))
@@ -149,6 +152,15 @@ void PreviewSettings::setCloseOnDoubleClickOnMenu(bool enabled)
     }
     m_closeOnDoubleClick = enabled;
     Q_EMIT closeOnDoubleClickOnMenuChanged(enabled);
+}
+
+void PreviewSettings::setAlwaysShowExcludeFromCapture(bool enabled)
+{
+    if (m_alwaysShowExcludeFromCapture == enabled) {
+        return;
+    }
+    m_alwaysShowExcludeFromCapture = enabled;
+    Q_EMIT alwaysShowExcludeFromCaptureChanged(enabled);
 }
 
 QList<DecorationButtonType> PreviewSettings::decorationButtonsLeft() const
