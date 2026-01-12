@@ -25,7 +25,7 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "SPDX-FileCopyrightText: 2019 Empar Montoro Martín,Josep M. Ferrer"
+msgstr "Empar Montoro Martín,Josep M. Ferrer"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -61,7 +61,7 @@ msgstr "L'script «%1» s'ha importat correctament."
 #: module.cpp:148
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
-msgstr "S'ha produït un error en desinstal·lar l'Script de KWin: %1"
+msgstr "S'ha produït un error mentre es desinstal·lava l'script de KWin: %1"
 
 #: package/contents/ui/main.qml:47
 #, kde-format

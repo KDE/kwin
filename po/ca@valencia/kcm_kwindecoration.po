@@ -172,7 +172,7 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
-"No s'ha pogut guardar la vostra configuració del tema. El motiu és "
+"Ha fallat mentre es guardava la vostra configuració del tema. El motiu és "
 "desconegut, però hi ha un error no recuperable. Podria ser que funcione en "
 "tornar-ho a intentar."
 
