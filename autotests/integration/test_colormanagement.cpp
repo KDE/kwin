@@ -102,6 +102,7 @@ private Q_SLOTS:
 
 void ColorManagementTest::initTestCase()
 {
+    QSKIP("v1 is forced because v2 breaks Firefox");
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
 
     QVERIFY(waylandServer()->init(s_socketName));

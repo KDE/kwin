@@ -17,7 +17,9 @@ namespace KWin
 ColorManagerV1::ColorManagerV1(Display *display, QObject *parent)
     : QObject(parent)
 #if HAVE_WAYLAND_PROTOCOLS_147
-    , QtWaylandServer::wp_color_manager_v1(*display, 2)
+    // NOTE that Firefox is broken with color manager version 2, the
+    // version being set to 1 is merely a workaround until it's fixed
+    , QtWaylandServer::wp_color_manager_v1(*display, 1)
 #else
     , QtWaylandServer::wp_color_manager_v1(*display, 1)
 #endif
