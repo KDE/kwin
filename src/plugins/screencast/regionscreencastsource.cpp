@@ -42,6 +42,7 @@ RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale,
     Q_ASSERT(m_scale > 0);
     // TODO once the layer doesn't depend on the output anymore, remove this?
     connect(workspace(), &Workspace::outputsChanged, this, &RegionScreenCastSource::close);
+    connect(Compositor::self(), &Compositor::aboutToToggleCompositing, this, &RegionScreenCastSource::close);
 }
 
 RegionScreenCastSource::~RegionScreenCastSource()

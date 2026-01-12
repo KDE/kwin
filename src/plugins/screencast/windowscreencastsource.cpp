@@ -39,6 +39,9 @@ WindowScreenCastSource::WindowScreenCastSource(Window *window, QObject *parent)
             }
         }
     });
+    connect(Compositor::self(), &Compositor::aboutToToggleCompositing, this, [this]() {
+        Q_EMIT closed();
+    });
 }
 
 WindowScreenCastSource::~WindowScreenCastSource()

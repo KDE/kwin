@@ -43,6 +43,9 @@ OutputScreenCastSource::OutputScreenCastSource(Output *output, QObject *parent)
             Q_EMIT closed();
         }
     });
+    connect(Compositor::self(), &Compositor::aboutToToggleCompositing, this, [this]() {
+        Q_EMIT closed();
+    });
 }
 
 OutputScreenCastSource::~OutputScreenCastSource()
