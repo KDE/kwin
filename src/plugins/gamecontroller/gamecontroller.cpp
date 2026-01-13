@@ -109,7 +109,10 @@ void GameController::handleEvdevEvent()
             continue;
         }
 
-        if (rc < 0) {
+        if (rc == -ENODEV) {
+            // device got removed, we can safely ignore this
+            return;
+        } else if (rc < 0) {
             qCWarning(KWIN_GAMECONTROLLER) << "Error reading event:" << strerror(-rc);
             break;
         }
