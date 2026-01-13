@@ -146,10 +146,7 @@ void VirtualEglGbmLayer::releaseBuffers()
     m_gbmSwapchain.reset();
     m_oldGbmSwapchain.reset();
     m_currentSlot.reset();
-    if (m_scanoutBuffer) {
-        m_scanoutBuffer->unref();
-        m_scanoutBuffer = nullptr;
-    }
+    m_scanoutBuffer = nullptr;
 }
 
 DrmDevice *VirtualEglGbmLayer::scanoutDevice() const
