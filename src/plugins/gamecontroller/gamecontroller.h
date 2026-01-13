@@ -37,7 +37,8 @@ public:
     int fd() const;
     libevdev *evdev() const;
 
-    void countUsage(int n);
+    void increaseUsageCount();
+    void decreaseUsageCount();
     int usageCount();
 
 private:

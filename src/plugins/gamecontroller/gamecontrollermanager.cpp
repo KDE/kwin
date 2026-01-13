@@ -212,9 +212,9 @@ void GameControllerManager::handleFdAccess()
         if (it != m_watchesToGameControllers.end()) {
             GameController *controller = it.value();
             if (event->mask & IN_OPEN) {
-                controller->countUsage(+1);
+                controller->increaseUsageCount();
             } else if (event->mask & (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)) {
-                controller->countUsage(-1);
+                controller->decreaseUsageCount();
             }
             qCDebug(KWIN_GAMECONTROLLER) << "Device" << controller->path() << "in use by:" << controller->usageCount() << "other apps";
         }

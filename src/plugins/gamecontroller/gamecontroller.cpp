@@ -63,20 +63,25 @@ libevdev *GameController::evdev() const
     return m_evdev.get();
 }
 
-void GameController::countUsage(int n)
+void GameController::increaseUsageCount()
 {
-    const bool wasUsed = m_usageCount != 0;
-    m_usageCount += n;
-    const bool isUsed = m_usageCount != 0;
-
-    if (wasUsed == isUsed) {
-        return;
-    }
-
-    if (isUsed) {
+    m_usageCount++;
+    if (m_usageCount == 1) {
         input()->removeInputDevice(m_inputdevice.get());
         m_inputdevice.reset();
-    } else {
+    }
+}
+
+void GameController::decreaseUsageCount()
+{
+    if (m_usageCount == 0) {
+        // It's not possible to reliably find out how many processes had
+        // the input node open before this plugin started watching it,
+        // so we need to guard against m_usageCount becoming negative
+        return;
+    }
+    m_usageCount--;
+    if (m_usageCount == 0) {
         m_inputdevice = std::make_unique<EmulatedInputDevice>();
         input()->addInputDevice(m_inputdevice.get());
 
