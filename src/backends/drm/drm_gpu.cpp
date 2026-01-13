@@ -907,12 +907,15 @@ void DrmGpu::createLayers()
 void DrmGpu::assignOutputLayers()
 {
     if (m_atomicModeSetting) {
-        auto enabledPipelines = std::as_const(m_pipelines) | std::views::filter(&DrmPipeline::enabled);
         QList<DrmPlane *> freePlanes = m_planes | std::views::transform([](const auto &plane) {
             return plane.get();
         }) | std::ranges::to<QList>();
-        const size_t enabledPipelinesCount = std::distance(enabledPipelines.begin(), enabledPipelines.end());
-        for (DrmPipeline *pipeline : enabledPipelines) {
+        const size_t enabledPipelinesCount = std::ranges::count_if(m_pipelines, &DrmPipeline::enabled);
+        for (DrmPipeline *pipeline : std::as_const(m_pipelines)) {
+            if (!pipeline->enabled()) {
+                pipeline->setLayers({});
+                continue;
+            }
             QList<DrmPipelineLayer *> layers = {m_planeLayerMap[pipeline->crtc()->primaryPlane()].get()};
             for (DrmPlane *plane : freePlanes) {
                 if (plane->isCrtcSupported(pipeline->crtc()->pipeIndex())
@@ -936,7 +939,11 @@ void DrmGpu::assignOutputLayers()
             pipeline->setLayers(layers);
         }
     } else {
-        for (DrmPipeline *pipeline : std::as_const(m_pipelines) | std::views::filter(&DrmPipeline::crtc)) {
+        for (DrmPipeline *pipeline : std::as_const(m_pipelines)) {
+            if (!pipeline->enabled()) {
+                pipeline->setLayers({});
+                continue;
+            }
             pipeline->setLayers({m_legacyLayerMap[pipeline->crtc()].get(), m_legacyCursorLayerMap[pipeline->crtc()].get()});
         }
     }
