@@ -364,8 +364,6 @@ Q_SIGNALS:
      */
     void changed();
 
-    void outputLayersChanged();
-
     void currentModeChanged();
     void modesChanged();
     void transformChanged();

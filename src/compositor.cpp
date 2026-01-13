@@ -993,9 +993,6 @@ void Compositor::addOutput(BackendOutput *output)
     }
     assignOutputLayers(output);
     connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-    connect(output, &BackendOutput::outputLayersChanged, this, [this, output]() {
-        assignOutputLayers(output);
-    });
 }
 
 void Compositor::removeOutput(BackendOutput *output)
@@ -1004,7 +1001,6 @@ void Compositor::removeOutput(BackendOutput *output)
         return;
     }
     disconnect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-    disconnect(output, &BackendOutput::outputLayersChanged, this, nullptr);
     m_overlayViews.erase(output->renderLoop());
     m_primaryViews.erase(output->renderLoop());
     m_brokenCursors.erase(output->renderLoop());
