@@ -219,7 +219,7 @@ else()
     set(HAVE_WAYLAND_PROTOCOLS_147 0)
 endif()
 
-find_package(PlasmaWaylandProtocols 1.19.0 CONFIG)
+find_package(PlasmaWaylandProtocols 1.20.0 CONFIG)
 set_package_properties(PlasmaWaylandProtocols PROPERTIES
     TYPE REQUIRED
     PURPOSE "Collection of Plasma-specific Wayland protocols"
