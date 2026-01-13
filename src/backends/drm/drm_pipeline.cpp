@@ -475,14 +475,10 @@ bool DrmPipeline::presentAsync(OutputLayer *layer, std::optional<std::chrono::na
 
 void DrmPipeline::applyPendingChanges()
 {
-    const bool layersChanged = m_next.layers != m_pending.layers;
     m_next = m_pending;
     m_commitThread->setModeInfo(m_pending.mode->refreshRate(), m_pending.mode->vblankTime());
     m_output->renderLoop()->setPresentationSafetyMargin(m_commitThread->safetyMargin());
     m_output->renderLoop()->setRefreshRate(m_pending.mode->refreshRate());
-    if (layersChanged) {
-        Q_EMIT m_output->outputLayersChanged();
-    }
 }
 
 DrmConnector *DrmPipeline::connector() const
