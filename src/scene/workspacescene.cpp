@@ -514,7 +514,7 @@ void WorkspaceScene::prePaint(SceneView *delegate)
     }
 
     // preparation step
-    effects->startPaint();
+    effects->startPaint(delegate);
 
     ScreenPrePaintData prePaintData;
     prePaintData.mask = 0;

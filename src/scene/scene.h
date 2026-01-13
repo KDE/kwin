@@ -16,6 +16,14 @@
 
 namespace KWin
 {
+class Effect;
+}
+namespace KWindowEffects
+{
+enum Effect : int;
+}
+namespace KWin
+{
 
 class ItemRenderer;
 class LogicalOutput;
@@ -126,7 +134,9 @@ public:
     bool shouldRenderHole(Item *item) const override;
 
     void addWindowFilter(std::function<bool(Window *)> filter);
+    void addEffectFilter(std::function<bool(Effect *)> filter);
     bool shouldHideWindow(Window *window) const;
+    bool shouldHideEffect(Effect *window) const;
 
 private:
     Scene *m_scene;
@@ -137,6 +147,7 @@ private:
     QList<RenderView *> m_exclusiveViews;
     QList<RenderView *> m_underlayViews;
     QList<std::function<bool(Window *)>> m_windowFilters;
+    QList<std::function<bool(Effect *)>> m_effectFilters;
 };
 
 class KWIN_EXPORT ItemView : public RenderView

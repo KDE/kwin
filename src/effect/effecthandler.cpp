@@ -441,13 +441,15 @@ bool EffectsHandler::decorationsHaveAlpha() const
 }
 
 // start another painting pass
-void EffectsHandler::startPaint()
+void EffectsHandler::startPaint(SceneView *delegate)
 {
     m_activeEffects.clear();
     m_activeEffects.reserve(loaded_effects.count());
     for (QList<KWin::EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->isActive()) {
-            m_activeEffects << it->second;
+            if (!delegate->shouldHideEffect(it->second)) {
+                m_activeEffects << it->second;
+            }
         }
     }
     m_currentDrawWindowIterator = m_activeEffects.constBegin();

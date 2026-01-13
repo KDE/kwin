@@ -292,10 +292,22 @@ void SceneView::addWindowFilter(std::function<bool(Window *)> filter)
     m_windowFilters.push_back(filter);
 }
 
+void SceneView::addEffectFilter(std::function<bool(Effect *)> filter)
+{
+    m_effectFilters.push_back(filter);
+}
+
 bool SceneView::shouldHideWindow(Window *window) const
 {
     return std::ranges::any_of(m_windowFilters, [window](const auto filter) {
         return filter(window);
+    });
+}
+
+bool SceneView::shouldHideEffect(Effect *effect) const
+{
+    return std::ranges::any_of(m_effectFilters, [effect](const auto filter) {
+        return filter(effect);
     });
 }
 

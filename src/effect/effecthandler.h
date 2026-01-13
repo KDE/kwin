@@ -58,6 +58,7 @@ class Decoration;
 
 namespace KWin
 {
+class SceneView;
 
 class SurfaceInterface;
 class Display;
@@ -168,7 +169,7 @@ public:
     ~EffectsHandler() override;
 
     // internal (used by kwin core or compositing code)
-    void startPaint();
+    void startPaint(SceneView *delegate);
 
     // for use by effects
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime);
