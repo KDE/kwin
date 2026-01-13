@@ -30,7 +30,7 @@ class GameController : public QObject
     Q_OBJECT
 
 public:
-    GameController(const QString &path, FileDescriptor &&fd, libevdev *evdev);
+    explicit GameController(const QString &path, FileDescriptor &&fd, libevdev *evdev);
     ~GameController();
 
     const QString &path() const;
