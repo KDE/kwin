@@ -30,7 +30,7 @@ class GameController : public QObject
     Q_OBJECT
 
 public:
-    GameController(const QString &path, FileDescriptor fd, libevdev *evdev);
+    GameController(const QString &path, FileDescriptor &&fd, libevdev *evdev);
     ~GameController();
 
     const QString &path() const;
@@ -42,10 +42,10 @@ public:
     int usageCount();
 
 private:
-    void addInputDevice(EmulatedInputDevice *inputDevice);
-    void removeInputDevice(EmulatedInputDevice *inputDevice);
     void handleEvdevEvent();
     void logEvent(input_event *ev);
+    void enableInputEmulation();
+
     bool isTestEnvironment = qEnvironmentVariableIsSet("KWIN_GAMECONTROLLER_TEST");
 
     const QString m_path;
