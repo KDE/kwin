@@ -43,9 +43,10 @@ uint RebindScope::s_scopes = 0;
 
 static constexpr double s_deadzone = 0.25;
 
-EmulatedInputDevice::EmulatedInputDevice(const QPointF leftStickLimits, const QPointF &rightStickLimits)
-    : m_leftStickLimits(leftStickLimits)
-    , m_rightStickLimits(rightStickLimits)
+EmulatedInputDevice::EmulatedInputDevice(libevdev *device)
+    : m_device(device)
+    , m_leftStickLimits(libevdev_get_abs_maximum(device, ABS_X), libevdev_get_abs_maximum(device, ABS_Y))
+    , m_rightStickLimits(libevdev_get_abs_maximum(device, ABS_RX), libevdev_get_abs_maximum(device, ABS_RY))
 {
     m_timer.setSingleShot(false);
     m_timer.setInterval(5);
@@ -110,17 +111,27 @@ void EmulatedInputDevice::evkeyMapping(input_event *ev)
 
 void EmulatedInputDevice::evabsMapping(input_event *ev)
 {
-    const PointerButtonState pointerState = ev->value == 255 ? KWin::PointerButtonState::Pressed : KWin::PointerButtonState::Released;
+    const PointerButtonState pointerState = ev->value >= libevdev_get_abs_maximum(m_device, ev->code) * 0.9 ? KWin::PointerButtonState::Pressed : KWin::PointerButtonState::Released;
     KeyboardKeyState keyState = ev->value ? KWin::KeyboardKeyState::Pressed : KWin::KeyboardKeyState::Released;
     const std::chrono::microseconds time = std::chrono::seconds(ev->time.tv_sec) + std::chrono::microseconds(ev->time.tv_usec);
 
     switch (ev->code) {
     // analog triggers
     case ABS_RZ: // R2 → left click
-        Q_EMIT pointerButtonChanged(BTN_LEFT, pointerState, time, this);
+    case ABS_HAT2X: // right trigger on the steam controller
+        if (pointerState != m_leftClick) {
+            m_leftClick = pointerState;
+            Q_EMIT pointerButtonChanged(BTN_LEFT, pointerState, time, this);
+            Q_EMIT pointerFrame(this);
+        }
         break;
     case ABS_Z: // L2 → right click
-        Q_EMIT pointerButtonChanged(BTN_RIGHT, pointerState, time, this);
+    case ABS_HAT2Y: // left trigger on the steam controller
+        if (pointerState != m_rightClick) {
+            m_rightClick = pointerState;
+            Q_EMIT pointerButtonChanged(BTN_RIGHT, pointerState, time, this);
+            Q_EMIT pointerFrame(this);
+        }
         break;
 
     // D-pad
@@ -212,6 +223,7 @@ void EmulatedInputDevice::handleAnalogStickInput()
     const QPointF delta = stick * speedMultiplier;
     if (!delta.isNull()) {
         Q_EMIT pointerMotion(delta, delta, time, this);
+        Q_EMIT pointerFrame(this);
     }
 }
 
