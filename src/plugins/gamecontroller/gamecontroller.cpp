@@ -25,11 +25,10 @@ void LibevdevDeleter::operator()(libevdev *dev) const
     }
 }
 
-GameController::GameController(const QString &path, FileDescriptor fd, libevdev *evdev)
+GameController::GameController(const QString &path, FileDescriptor &&fd, libevdev *evdev)
     : m_path(path)
     , m_fd(std::move(fd))
     , m_evdev(evdev)
-    , m_inputdevice(std::make_unique<EmulatedInputDevice>())
 {
     Q_ASSERT(m_fd.isValid());
 
@@ -39,6 +38,9 @@ GameController::GameController(const QString &path, FileDescriptor fd, libevdev 
     libevdev_set_clock_id(m_evdev.get(), CLOCK_MONOTONIC);
 
     qCDebug(KWIN_GAMECONTROLLER) << "Connected to GameController:" << libevdev_get_name(m_evdev.get()) << "at" << m_path;
+
+    // default assumption: when KWin opens the device, no other process is using it
+    enableInputEmulation();
 }
 
 GameController::~GameController()
@@ -82,12 +84,17 @@ void GameController::decreaseUsageCount()
     }
     m_usageCount--;
     if (m_usageCount == 0) {
-        m_inputdevice = std::make_unique<EmulatedInputDevice>();
-        input()->addInputDevice(m_inputdevice.get());
-
-        m_inputdevice->setMaxAbs(libevdev_get_abs_maximum(m_evdev.get(), ABS_RX));
-        m_inputdevice->setMinAbs(libevdev_get_abs_minimum(m_evdev.get(), ABS_RX));
+        enableInputEmulation();
     }
+}
+
+void GameController::enableInputEmulation()
+{
+    m_inputdevice = std::make_unique<EmulatedInputDevice>();
+    input()->addInputDevice(m_inputdevice.get());
+
+    m_inputdevice->setMaxAbs(libevdev_get_abs_maximum(m_evdev.get(), ABS_RX));
+    m_inputdevice->setMinAbs(libevdev_get_abs_minimum(m_evdev.get(), ABS_RX));
 }
 
 int GameController::usageCount()
