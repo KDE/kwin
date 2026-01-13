@@ -19,7 +19,7 @@ namespace KWin
 class EmulatedInputDevice : public InputDevice
 {
 public:
-    EmulatedInputDevice();
+    explicit EmulatedInputDevice(const QPointF leftStickLimits, const QPointF &rightStickLimits);
     ~EmulatedInputDevice();
 
     QString name() const override;
@@ -37,8 +37,6 @@ public:
     bool isLidSwitch() const override;
 
     void emulateInputDevice(input_event &ev);
-    void setMaxAbs(int max);
-    void setMinAbs(int min);
 
 private:
     void evkeyMapping(input_event *ev);
@@ -53,11 +51,10 @@ private:
     static constexpr qreal SPEED_CURVE_EXPONENT = 2.5f;
 
     QTimer m_timer;
-    int m_rightStickX = 0;
-    int m_rightStickY = 0;
-    qreal m_absMaxValue = 0.0f;
-    qreal m_absMinValue = 0.0f;
-    qreal m_deadzone;
+    QPointF m_leftStick;
+    QPointF m_rightStick;
+    const QPointF m_leftStickLimits;
+    const QPointF m_rightStickLimits;
 };
 
 } // namespace KWin

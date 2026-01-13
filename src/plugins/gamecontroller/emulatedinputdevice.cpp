@@ -41,7 +41,11 @@ public:
 };
 uint RebindScope::s_scopes = 0;
 
-EmulatedInputDevice::EmulatedInputDevice()
+static constexpr double s_deadzone = 0.25;
+
+EmulatedInputDevice::EmulatedInputDevice(const QPointF leftStickLimits, const QPointF &rightStickLimits)
+    : m_leftStickLimits(leftStickLimits)
+    , m_rightStickLimits(rightStickLimits)
 {
     m_timer.setSingleShot(false);
     m_timer.setInterval(5);
@@ -62,18 +66,6 @@ void EmulatedInputDevice::emulateInputDevice(input_event &ev)
         qCDebug(KWIN_GAMECONTROLLER) << "Analog buttons pressed: Simulating User Activity";
         evabsMapping(&ev);
     }
-}
-
-void EmulatedInputDevice::setMaxAbs(int max)
-{
-    m_absMaxValue = max;
-    m_deadzone = std::floor((m_absMaxValue - m_absMinValue) * 0.25);
-}
-
-void EmulatedInputDevice::setMinAbs(int min)
-{
-    m_absMinValue = min;
-    m_deadzone = std::floor((m_absMaxValue - m_absMinValue) * 0.25);
 }
 
 void EmulatedInputDevice::evkeyMapping(input_event *ev)
@@ -172,14 +164,32 @@ void EmulatedInputDevice::evabsMapping(input_event *ev)
 
 void EmulatedInputDevice::updateAnalogStick(input_event *ev)
 {
-    if (ev->code == ABS_RX || ev->code == ABS_X) {
-        m_rightStickX = ev->value;
+    switch (ev->code) {
+    case ABS_X: {
+        const double value = ev->value / m_leftStickLimits.x();
+        m_leftStick.setX(std::abs(value) >= s_deadzone ? value : 0);
+        break;
     }
-    if (ev->code == ABS_RY || ev->code == ABS_Y) {
-        m_rightStickY = ev->value;
+    case ABS_Y: {
+        const double value = ev->value / m_leftStickLimits.y();
+        m_leftStick.setY(std::abs(value) >= s_deadzone ? value : 0);
+        break;
+    }
+    case ABS_RX: {
+        const double value = ev->value / m_rightStickLimits.x();
+        m_rightStick.setX(std::abs(value) >= s_deadzone ? value : 0);
+        break;
+    }
+    case ABS_RY: {
+        const double value = ev->value / m_rightStickLimits.y();
+        m_rightStick.setY(std::abs(value) >= s_deadzone ? value : 0);
+        break;
+    }
     }
 
-    if (!m_timer.isActive()) {
+    if (m_leftStick.isNull() && m_rightStick.isNull()) {
+        m_timer.stop();
+    } else if (!m_timer.isActive()) {
         m_timer.start();
     }
 }
@@ -189,39 +199,19 @@ void EmulatedInputDevice::handleAnalogStickInput()
     auto time = std::chrono::duration_cast<std::chrono::microseconds>(
         std::chrono::steady_clock::now().time_since_epoch());
 
-    const qreal stickX = abs(m_rightStickX) > m_deadzone ? m_rightStickX : 0.0f;
-    const qreal stickY = abs(m_rightStickY) > m_deadzone ? m_rightStickY : 0.0f;
-
-    if (stickX == 0.0f && stickY == 0.0f) {
-        if (m_timer.isActive()) {
-            m_timer.stop();
-        }
-        return;
-    }
-
-    // Normalize to -1.0 to 1.0 range
-    const qreal normalizedX = stickX / m_absMaxValue;
-    const qreal normalizedY = stickY / m_absMaxValue;
+    const QPointF &stick = m_leftStick.manhattanLength() > m_rightStick.manhattanLength() ? m_leftStick : m_rightStick;
 
     // Calculate stick magnitude OR how far from center
-    qreal magnitude = sqrt(normalizedX * normalizedX + normalizedY * normalizedY);
-    magnitude = std::min(magnitude, 1.0);
+    qreal magnitude = std::hypot(stick.x(), stick.y());
+    magnitude = std::clamp(magnitude, -1.0, 1.0);
 
     // We use an exponential curve for speed.
     // Provides more precise control at low speeds
     // and faster movement at high deflection (magnitude)
-    const qreal speedMultiplier = MOUSE_BASE_SPEED + (MOUSE_MAX_SPEED - MOUSE_BASE_SPEED) * pow(magnitude, SPEED_CURVE_EXPONENT);
-
-    // Final calculation
-    const qreal deltaX = normalizedX * speedMultiplier;
-    const qreal deltaY = normalizedY * speedMultiplier;
-
-    if (deltaX != 0.0f || deltaY != 0.0f) {
-        Q_EMIT pointerMotion(
-            QPointF(deltaX, deltaY),
-            QPointF(deltaX, deltaY),
-            time,
-            this);
+    const qreal speedMultiplier = MOUSE_BASE_SPEED + (MOUSE_MAX_SPEED - MOUSE_BASE_SPEED) * std::pow(magnitude, SPEED_CURVE_EXPONENT);
+    const QPointF delta = stick * speedMultiplier;
+    if (!delta.isNull()) {
+        Q_EMIT pointerMotion(delta, delta, time, this);
     }
 }
 

@@ -90,11 +90,10 @@ void GameController::decreaseUsageCount()
 
 void GameController::enableInputEmulation()
 {
-    m_inputdevice = std::make_unique<EmulatedInputDevice>();
+    m_inputdevice = std::make_unique<EmulatedInputDevice>(
+        QPointF(libevdev_get_abs_maximum(m_evdev.get(), ABS_X), libevdev_get_abs_maximum(m_evdev.get(), ABS_Y)),
+        QPointF(libevdev_get_abs_maximum(m_evdev.get(), ABS_RX), libevdev_get_abs_maximum(m_evdev.get(), ABS_RY)));
     input()->addInputDevice(m_inputdevice.get());
-
-    m_inputdevice->setMaxAbs(libevdev_get_abs_maximum(m_evdev.get(), ABS_RX));
-    m_inputdevice->setMinAbs(libevdev_get_abs_minimum(m_evdev.get(), ABS_RX));
 }
 
 int GameController::usageCount()
