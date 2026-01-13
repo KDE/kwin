@@ -147,6 +147,14 @@ public:
         }
     }
 
+    void reset()
+    {
+        if (m_buffer) {
+            m_buffer->unref();
+            m_buffer = nullptr;
+        }
+    }
+
     GraphicsBufferRef &operator=(const GraphicsBufferRef &other)
     {
         if (other.m_buffer) {
