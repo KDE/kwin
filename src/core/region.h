@@ -12,6 +12,8 @@
 #include <QRegion>
 #include <QSpan>
 
+#include <limits>
+
 namespace KWin
 {
 
@@ -517,7 +519,10 @@ inline Region::Region(Region &&other)
 
 inline Region Region::infinite()
 {
-    return Region(INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX);
+    return Region(std::numeric_limits<int>::min() / 2,
+                  std::numeric_limits<int>::min() / 2,
+                  std::numeric_limits<int>::max(),
+                  std::numeric_limits<int>::max());
 }
 
 inline void Region::translate(int x, int y)
