@@ -283,20 +283,20 @@ static ChipClass detectNVidiaClass(const QString &chipset)
         }
     }
 
-    if (chipset.contains(QLatin1String("GeForce2")) || chipset.contains(QLatin1String("GeForce 256"))) {
+    if (chipset.contains(QLatin1StringView("GeForce2")) || chipset.contains(QLatin1StringView("GeForce 256"))) {
         return NV10;
     }
 
-    if (chipset.contains(QLatin1String("GeForce3"))) {
+    if (chipset.contains(QLatin1StringView("GeForce3"))) {
         return NV20;
     }
 
-    if (chipset.contains(QLatin1String("GeForce4"))) {
-        if (chipset.contains(QLatin1String("MX 420"))
-            || chipset.contains(QLatin1String("MX 440")) // including MX 440SE
-            || chipset.contains(QLatin1String("MX 460"))
-            || chipset.contains(QLatin1String("MX 4000"))
-            || chipset.contains(QLatin1String("PCX 4300"))) {
+    if (chipset.contains(QLatin1StringView("GeForce4"))) {
+        if (chipset.contains(QLatin1StringView("MX 420"))
+            || chipset.contains(QLatin1StringView("MX 440")) // including MX 440SE
+            || chipset.contains(QLatin1StringView("MX 460"))
+            || chipset.contains(QLatin1StringView("MX 4000"))
+            || chipset.contains(QLatin1StringView("PCX 4300"))) {
             return NV10;
         }
 

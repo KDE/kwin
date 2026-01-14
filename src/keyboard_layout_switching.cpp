@@ -58,7 +58,7 @@ std::unique_ptr<Policy> Policy::create(Xkb *xkb, KeyboardLayout *layout, const K
 const char Policy::defaultLayoutEntryKeyPrefix[] = "LayoutDefault";
 const QString Policy::defaultLayoutEntryKey() const
 {
-    return QLatin1String(defaultLayoutEntryKeyPrefix) % name() % QLatin1Char('_');
+    return QLatin1StringView(defaultLayoutEntryKeyPrefix) % name() % QLatin1Char('_');
 }
 
 void Policy::clearLayouts()
@@ -71,7 +71,7 @@ void Policy::clearLayouts()
 
 const QString GlobalPolicy::defaultLayoutEntryKey() const
 {
-    return QLatin1String(defaultLayoutEntryKeyPrefix) % name();
+    return QLatin1StringView(defaultLayoutEntryKeyPrefix) % name();
 }
 
 GlobalPolicy::GlobalPolicy(Xkb *xkb, KeyboardLayout *_layout, const KConfigGroup &config)

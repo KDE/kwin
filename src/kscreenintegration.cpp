@@ -93,15 +93,15 @@ static QHash<BackendOutput *, QJsonObject> outputsConfig(const QList<BackendOutp
     const auto outputsJson = doc.array();
     for (const auto &outputJson : outputsJson) {
         const auto outputObject = outputJson.toObject();
-        const auto id = outputObject[QLatin1String("id")];
+        const auto id = outputObject[QLatin1StringView("id")];
         const auto output = std::find_if(outputs.begin(), outputs.end(), [&duplicate, &id, &outputObject](BackendOutput *output) {
             if (outputHash(output) != id.toString()) {
                 return false;
             }
             if (duplicate[output]) {
                 // can't distinguish between outputs by hash alone, need to look at connector names
-                const auto metadata = outputObject[QLatin1String("metadata")];
-                const auto outputName = metadata[QLatin1String("name")].toString();
+                const auto metadata = outputObject[QLatin1StringView("metadata")];
+                const auto outputName = metadata[QLatin1StringView("name")].toString();
                 return outputName == output->name();
             } else {
                 return true;

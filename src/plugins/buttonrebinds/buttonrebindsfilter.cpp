@@ -109,7 +109,7 @@ ButtonRebindsFilter::ButtonRebindsFilter()
     : KWin::InputEventFilter(KWin::InputFilterOrder::ButtonRebind)
     , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kcminputrc")))
 {
-    const QLatin1String groupName("ButtonRebinds");
+    const QLatin1StringView groupName("ButtonRebinds");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
         // We want to get the top-most parent in the config file, since our ButtonRebinds configs tend to be very nested
         auto parent = group.parent();
@@ -133,7 +133,7 @@ ButtonRebindsFilter::~ButtonRebindsFilter()
 
 void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
 {
-    Q_ASSERT(QLatin1String("ButtonRebinds") == group.name());
+    Q_ASSERT(QLatin1StringView("ButtonRebinds") == group.name());
     if (m_inputDevice) {
         KWin::input()->removeInputDevice(m_inputDevice.get());
         m_inputDevice.reset();
@@ -346,7 +346,7 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
         qCWarning(KWIN_BUTTONREBINDS) << "Failed to rebind to" << entry;
         return;
     }
-    if (entry.first() == QLatin1String("Key")) {
+    if (entry.first() == QLatin1StringView("Key")) {
         if (entry.size() != 2) {
             qCWarning(KWIN_BUTTONREBINDS) << "Invalid key" << entry;
             return;
@@ -356,7 +356,7 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
         if (!keys.isEmpty()) {
             m_actions.at(type).insert(trigger, keys);
         }
-    } else if (entry.first() == QLatin1String("AxisKey")) {
+    } else if (entry.first() == QLatin1StringView("AxisKey")) {
         if (entry.size() != 4) {
             qCWarning(KWIN_BUTTONREBINDS) << "Invalid axis key" << entry;
             return;
@@ -369,7 +369,7 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
         if (!upKey.isEmpty() && !downKey.isEmpty()) {
             m_actions.at(type).insert(trigger, AxisKeybind{upKey, downKey, threshold});
         }
-    } else if (entry.first() == QLatin1String("MouseButton")) {
+    } else if (entry.first() == QLatin1StringView("MouseButton")) {
         if (entry.size() < 2) {
             qCWarning(KWIN_BUTTONREBINDS) << "Invalid mouse button" << entry;
             return;
@@ -389,7 +389,7 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
         } else {
             qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << entry << "into a mouse button";
         }
-    } else if (entry.first() == QLatin1String("TabletToolButton")) {
+    } else if (entry.first() == QLatin1StringView("TabletToolButton")) {
         if (entry.size() != 2) {
             qCWarning(KWIN_BUTTONREBINDS)
                 << "Invalid tablet tool button" << entry;
@@ -403,9 +403,9 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
         } else {
             qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << entry << "into a mouse button";
         }
-    } else if (entry.first() == QLatin1String("Scroll")) {
+    } else if (entry.first() == QLatin1StringView("Scroll")) {
         m_actions.at(type).insert(trigger, ScrollWheel{});
-    } else if (entry.first() == QLatin1String("Disabled")) {
+    } else if (entry.first() == QLatin1StringView("Disabled")) {
         m_actions.at(type).insert(trigger, DisabledButton{});
     }
 }

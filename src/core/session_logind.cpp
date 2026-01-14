@@ -336,7 +336,7 @@ void LogindSession::handlePauseDevice(uint major, uint minor, const QString &typ
 {
     Q_EMIT devicePaused(makedev(major, minor));
 
-    if (type == QLatin1String("pause")) {
+    if (type == QLatin1StringView("pause")) {
         QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, m_sessionPath,
                                                               s_sessionInterface,
                                                               QStringLiteral("PauseDeviceComplete"));

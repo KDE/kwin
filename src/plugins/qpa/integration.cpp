@@ -153,7 +153,7 @@ QStringList Integration::themeNames() const
     if (qEnvironmentVariableIsSet("KDE_FULL_SESSION")) {
         return QStringList({QStringLiteral("kde")});
     }
-    return QStringList({QLatin1String(QGenericUnixTheme::name)});
+    return QStringList({QLatin1StringView(QGenericUnixTheme::name)});
 }
 
 QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext *context) const

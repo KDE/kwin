@@ -51,7 +51,7 @@ Activities::Activities()
     const auto sessionsConfig = KSharedConfig::openConfig();
     const auto groups = sessionsConfig->groupList();
     for (const QString &groupName : groups) {
-        if (groupName.startsWith(QLatin1String("SubSession: "))) {
+        if (groupName.startsWith(QLatin1StringView("SubSession: "))) {
             sessionsConfig->deleteGroup(groupName);
         }
     }

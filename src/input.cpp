@@ -1413,12 +1413,12 @@ public:
     InternalWindowEventFilter()
         : InputEventFilter(InputFilterOrder::InternalWindow)
     {
-        m_touchDevice = std::make_unique<QPointingDevice>(QLatin1String("some touchscreen"), 0, QInputDevice::DeviceType::TouchScreen,
+        m_touchDevice = std::make_unique<QPointingDevice>(QLatin1StringView("some touchscreen"), 0, QInputDevice::DeviceType::TouchScreen,
                                                           QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position,
                                                           10, 0, kwinApp()->session()->seat(), QPointingDeviceUniqueId());
         QWindowSystemInterface::registerInputDevice(m_touchDevice.get());
 
-        m_tabletDevice = std::make_unique<QPointingDevice>(QLatin1String("some tablet"), 0, QInputDevice::DeviceType::Stylus,
+        m_tabletDevice = std::make_unique<QPointingDevice>(QLatin1StringView("some tablet"), 0, QInputDevice::DeviceType::Stylus,
                                                            QPointingDevice::PointerType::Pen, QInputDevice::Capability::Position | QInputDevice::Capability::ZPosition | QInputDevice::Capability::Pressure,
                                                            10, 0, kwinApp()->session()->seat(), QPointingDeviceUniqueId());
         QWindowSystemInterface::registerInputDevice(m_tabletDevice.get());
@@ -3261,7 +3261,7 @@ void InputRedirection::setupInputFilters()
 
 void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)
 {
-    if (group.name() == QLatin1String("Keyboard")) {
+    if (group.name() == QLatin1StringView("Keyboard")) {
         m_keyboard->reconfigure();
     }
 }

@@ -260,13 +260,13 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
     // So, the only way to decide whether a window should be animated is
     // to use a heuristic: if a window has decoration, then it's most
     // likely a dialog or a settings window so we have to animate it.
-    if (w->windowClass() == QLatin1String("plasmashell plasmashell")
-        || w->windowClass() == QLatin1String("plasmashell org.kde.plasmashell")) {
+    if (w->windowClass() == QLatin1StringView("plasmashell plasmashell")
+        || w->windowClass() == QLatin1StringView("plasmashell org.kde.plasmashell")) {
         return w->hasDecoration();
     }
 
-    if (w->windowClass() == QLatin1String("spectacle org.kde.spectacle")
-        && w->tag() == QLatin1String("region-editor")) {
+    if (w->windowClass() == QLatin1StringView("spectacle org.kde.spectacle")
+        && w->tag() == QLatin1StringView("region-editor")) {
         return false;
     }
 

@@ -22,7 +22,7 @@ static const QString s_pluginDirectory = QStringLiteral("kwin/plugins");
 
 static QJsonValue readPluginInfo(const QJsonObject &metadata, const QString &key)
 {
-    return metadata.value(QLatin1String("KPlugin")).toObject().value(key);
+    return metadata.value(QLatin1StringView("KPlugin")).toObject().value(key);
 }
 
 PluginManager::PluginManager()
@@ -30,7 +30,7 @@ PluginManager::PluginManager()
     const KConfigGroup config(kwinApp()->config(), QStringLiteral("Plugins"));
 
     auto checkEnabled = [&config](const QString &pluginId, const QJsonObject &metadata) {
-        const QString configKey = pluginId + QLatin1String("Enabled");
+        const QString configKey = pluginId + QLatin1StringView("Enabled");
         if (config.hasKey(configKey)) {
             return config.readEntry(configKey, false);
         }

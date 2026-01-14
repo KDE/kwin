@@ -1684,7 +1684,7 @@ void X11Window::setCaption(const QString &_s, bool force)
     QString machine_suffix;
     if (!options->condensedTitle()) { // machine doesn't qualify for "clean"
         if (clientMachine()->hostName() != ClientMachine::localhost() && !clientMachine()->isLocal()) {
-            machine_suffix = QLatin1String(" <@") + clientMachine()->hostName() + QLatin1Char('>') + LRM;
+            machine_suffix = QLatin1StringView(" <@") + clientMachine()->hostName() + QLatin1Char('>') + LRM;
         }
     }
     QString shortcut_suffix = shortcutCaptionSuffix();

@@ -974,7 +974,7 @@ QString AnimationEffect::debug(const QString &parameter) const
             if (caption.isEmpty()) {
                 caption = QStringLiteral("[Untitled]");
             }
-            dbg += QLatin1String("Animating window: ") + caption + QLatin1Char('\n');
+            dbg += QLatin1StringView("Animating window: ") + caption + QLatin1Char('\n');
             for (const auto &anim : data) {
                 dbg += anim.debugInfo();
             }

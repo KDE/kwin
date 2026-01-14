@@ -90,7 +90,7 @@ void KeyboardLayoutTest::resetLayouts()
 
     const QString policy = layoutGroup.readEntry("SwitchMode", "Global");
 
-    if (policy == QLatin1String("Global")) {
+    if (policy == QLatin1StringView("Global")) {
         layoutGroup.writeEntry("SwitchMode", "Desktop", KConfig::Notify);
     } else {
         layoutGroup.deleteEntry("SwitchMode", KConfig::Notify);
@@ -121,7 +121,7 @@ void KeyboardLayoutTest::callSession(const QString &method)
                                                       QStringLiteral("/Session"),
                                                       QStringLiteral("org.kde.KWin.Session"),
                                                       method);
-    msg << QLatin1String(); // session name
+    msg << QLatin1StringView(); // session name
     QVERIFY(QDBusConnection::sessionBus().call(msg).type() != QDBusMessage::ErrorMessage);
 }
 

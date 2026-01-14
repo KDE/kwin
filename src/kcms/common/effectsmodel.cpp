@@ -300,8 +300,8 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
 
             if (const QString configModule = plugin.value(QStringLiteral("X-KDE-ConfigModule")); !configModule.isEmpty()) {
                 if (configModule == QLatin1StringView("kcm_kwin4_genericscripted")) {
-                    const QString xmlFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, prefix + QLatin1Char('/') + plugin.pluginId() + QLatin1String("/contents/config/main.xml"));
-                    const QString uiFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, prefix + QLatin1Char('/') + plugin.pluginId() + QLatin1String("/contents/ui/config.ui"));
+                    const QString xmlFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, prefix + QLatin1Char('/') + plugin.pluginId() + QLatin1StringView("/contents/config/main.xml"));
+                    const QString uiFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, prefix + QLatin1Char('/') + plugin.pluginId() + QLatin1StringView("/contents/ui/config.ui"));
                     if (QFileInfo::exists(xmlFile) && QFileInfo::exists(uiFile)) {
                         effect.configModule = configModule;
                         effect.configArgs = QVariantList{plugin.pluginId(), QStringLiteral("KWin/Effect")};

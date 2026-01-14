@@ -99,12 +99,12 @@ static QString attributeString(KWin::AnimationEffect::Attribute attribute)
 
 QString AniData::debugInfo() const
 {
-    return (QLatin1String("Animation: ") + attributeString(attribute)
-            + QLatin1String("\n     From: ") + from.toString()
-            + QLatin1String("\n       To: ") + to.toString()
-            + QLatin1String("\n  Started: ") + QString::number(AnimationEffect::clock() - startTime) + QLatin1String("ms ago\n")
-            + QLatin1String(" Duration: ") + QString::number(timeLine.duration().count()) + QLatin1String("ms\n")
-            + QLatin1String("   Passed: ") + QString::number(timeLine.elapsed().count()) + QLatin1String("ms\n"));
+    return (QLatin1StringView("Animation: ") + attributeString(attribute)
+            + QLatin1StringView("\n     From: ") + from.toString()
+            + QLatin1StringView("\n       To: ") + to.toString()
+            + QLatin1StringView("\n  Started: ") + QString::number(AnimationEffect::clock() - startTime) + QLatin1StringView("ms ago\n")
+            + QLatin1StringView(" Duration: ") + QString::number(timeLine.duration().count()) + QLatin1StringView("ms\n")
+            + QLatin1StringView("   Passed: ") + QString::number(timeLine.elapsed().count()) + QLatin1StringView("ms\n"));
 }
 
 } // namespace KWin

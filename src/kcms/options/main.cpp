@@ -44,33 +44,33 @@ KWinOptions::KWinOptions(QObject *parent, const KPluginMetaData &data)
     };
 
     mFocus = new KFocusConfig(mSettings, widget());
-    mFocus->setObjectName(QLatin1String("KWin Focus Config"));
+    mFocus->setObjectName(QLatin1StringView("KWin Focus Config"));
     tab->addTab(mFocus->widget(), i18n("&Focus"));
     connectKCM(mFocus);
 
     mTitleBarActions = new KTitleBarActionsConfig(mSettings, widget());
-    mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
+    mTitleBarActions->setObjectName(QLatin1StringView("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions->widget(), i18n("Titlebar A&ctions"));
     connectKCM(mTitleBarActions);
 
     mWindowActions = new KWindowActionsConfig(mSettings, widget());
-    mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
+    mWindowActions->setObjectName(QLatin1StringView("KWin Window Actions"));
     tab->addTab(mWindowActions->widget(), i18n("W&indow Actions"));
     connectKCM(mWindowActions);
 
     mMoving = new KMovingConfig(mSettings, widget());
-    mMoving->setObjectName(QLatin1String("KWin Moving"));
+    mMoving->setObjectName(QLatin1StringView("KWin Moving"));
     tab->addTab(mMoving->widget(), i18n("Mo&vement"));
     connectKCM(mMoving);
 
     mAdvanced = new KAdvancedConfig(mSettings, new KWinOptionsKDEGlobalsSettings(this), widget());
-    mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
+    mAdvanced->setObjectName(QLatin1StringView("KWin Advanced"));
     tab->addTab(mAdvanced->widget(), i18n("Adva&nced"));
     connectKCM(mAdvanced);
 
     if (qEnvironmentVariableIntValue("KWIN_WAYLAND_SUPPORT_XX_PIP_V1")) {
         mPip = new KPipConfig(mSettings, widget());
-        mPip->setObjectName(QLatin1String("KWin Picture-in-Picture"));
+        mPip->setObjectName(QLatin1StringView("KWin Picture-in-Picture"));
         tab->addTab(mPip->widget(), i18n("&Picture-in-picture"));
         connectKCM(mPip);
     }
@@ -161,7 +161,7 @@ KActionsOptions::KActionsOptions(QObject *parent, const KPluginMetaData &data)
     layout->addWidget(tab);
 
     mTitleBarActions = new KTitleBarActionsConfig(mSettings, widget());
-    mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
+    mTitleBarActions->setObjectName(QLatin1StringView("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions->widget(), i18n("&Titlebar Actions"));
     connect(mTitleBarActions, &KCModule::needsSaveChanged, this, [this]() {
         setNeedsSave(mTitleBarActions->needsSave());
@@ -171,7 +171,7 @@ KActionsOptions::KActionsOptions(QObject *parent, const KPluginMetaData &data)
     });
 
     mWindowActions = new KWindowActionsConfig(mSettings, widget());
-    mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
+    mWindowActions->setObjectName(QLatin1StringView("KWin Window Actions"));
     tab->addTab(mWindowActions->widget(), i18n("Window Actio&ns"));
     connect(mWindowActions, &KCModule::needsSaveChanged, this, [this]() {
         setNeedsSave(mWindowActions->needsSave());

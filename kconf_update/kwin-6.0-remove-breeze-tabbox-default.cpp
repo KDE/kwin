@@ -9,7 +9,7 @@
 
 int main()
 {
-    KConfig config(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1String("/kdedefaults/kwinrc"), KConfig::SimpleConfig);
+    KConfig config(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1StringView("/kdedefaults/kwinrc"), KConfig::SimpleConfig);
 
     KConfigGroup windows = config.group(QStringLiteral("TabBox"));
     bool needsSync = false;

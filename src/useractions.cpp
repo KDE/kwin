@@ -165,7 +165,7 @@ void UserActionsMenu::helperDialog(const QString &message)
                                                    "activated using the %1 keyboard shortcut.",
                                                    shortcut(QStringLiteral("Window Operations Menu")));
         type = QStringLiteral("altf3warning");
-    } else if (message == QLatin1String("fullscreenaltf3")) {
+    } else if (message == QLatin1StringView("fullscreenaltf3")) {
         args << QStringLiteral("--msgbox") << i18n("You have selected to show a window in fullscreen mode.\n"
                                                    "If the application itself does not have an option to turn the fullscreen "
                                                    "mode off you will not be able to disable it "
@@ -182,7 +182,7 @@ void UserActionsMenu::helperDialog(const QString &message)
         if (!cg.readEntry(type, true)) {
             return;
         }
-        args << QStringLiteral("--dontagain") << QLatin1String("kwin_dialogsrc:") + type;
+        args << QStringLiteral("--dontagain") << QLatin1StringView("kwin_dialogsrc:") + type;
     }
     KProcess::startDetached(QStringLiteral("kdialog"), args);
 }
@@ -1678,7 +1678,7 @@ void Window::setShortcut(const QString &_cut)
     // Format:
     // base+(abcdef)<space>base+(abcdef)
     // E.g. Alt+Ctrl+(ABCDEF);Meta+X,Meta+(ABCDEF)
-    if (!cut.contains(QLatin1Char('(')) && !cut.contains(QLatin1Char(')')) && !cut.contains(QLatin1String(" - "))) {
+    if (!cut.contains(QLatin1Char('(')) && !cut.contains(QLatin1Char(')')) && !cut.contains(QLatin1StringView(" - "))) {
         if (workspace()->shortcutAvailable(cut, this)) {
             updateShortcut(QKeySequence(cut));
         } else {

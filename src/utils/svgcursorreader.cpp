@@ -30,27 +30,27 @@ struct SvgCursorMetaDataEntry
 
 std::optional<SvgCursorMetaDataEntry> SvgCursorMetaDataEntry::parse(const QJsonObject &object)
 {
-    const QJsonValue fileName = object.value(QLatin1String("filename"));
+    const QJsonValue fileName = object.value(QLatin1StringView("filename"));
     if (!fileName.isString()) {
         return std::nullopt;
     }
 
-    const QJsonValue nominalSize = object.value(QLatin1String("nominal_size"));
+    const QJsonValue nominalSize = object.value(QLatin1StringView("nominal_size"));
     if (!nominalSize.isDouble()) {
         return std::nullopt;
     }
 
-    const QJsonValue hotspotX = object.value(QLatin1String("hotspot_x"));
+    const QJsonValue hotspotX = object.value(QLatin1StringView("hotspot_x"));
     if (!hotspotX.isDouble()) {
         return std::nullopt;
     }
 
-    const QJsonValue hotspotY = object.value(QLatin1String("hotspot_y"));
+    const QJsonValue hotspotY = object.value(QLatin1StringView("hotspot_y"));
     if (!hotspotY.isDouble()) {
         return std::nullopt;
     }
 
-    const QJsonValue delay = object.value(QLatin1String("delay"));
+    const QJsonValue delay = object.value(QLatin1StringView("delay"));
 
     return SvgCursorMetaDataEntry{
         .fileName = fileName.toString(),

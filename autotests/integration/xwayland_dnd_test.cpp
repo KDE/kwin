@@ -288,7 +288,7 @@ public:
     xcb_atom_t mimeTypeToAtom(const QMimeType &mimeType) const
     {
         QByteArray effectiveName;
-        if (mimeType.name() == QLatin1String("text/plain")) {
+        if (mimeType.name() == QLatin1StringView("text/plain")) {
             effectiveName = QByteArrayLiteral("TEXT");
         } else {
             effectiveName = mimeType.name().toUtf8();
@@ -320,7 +320,7 @@ public:
         free(reply);
 
         QString effectiveName;
-        if (name == QLatin1String("TEXT")) {
+        if (name == QLatin1StringView("TEXT")) {
             effectiveName = QStringLiteral("text/plain");
         } else {
             effectiveName = name;
@@ -1560,7 +1560,7 @@ void XwaylandDndTest::noAcceptedMimeTypeWaylandToX11()
     waylandDataSource->offer(QStringLiteral("text/plain"));
     waylandDataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     connect(waylandDataSource, &KWayland::Client::DataSource::sendDataRequested, this, [](const QString &mimeType, int fd) {
-        if (mimeType == QLatin1String("text/plain")) {
+        if (mimeType == QLatin1StringView("text/plain")) {
             const auto payload = QByteArrayLiteral("wayland -> x11");
             write(fd, payload.data(), payload.size());
         }
@@ -1628,7 +1628,7 @@ void XwaylandDndTest::destroyWaylandToX11Source()
     waylandDataSource->offer(QStringLiteral("text/plain"));
     waylandDataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     connect(waylandDataSource, &KWayland::Client::DataSource::sendDataRequested, this, [](const QString &mimeType, int fd) {
-        if (mimeType == QLatin1String("text/plain")) {
+        if (mimeType == QLatin1StringView("text/plain")) {
             const auto payload = QByteArrayLiteral("wayland -> x11");
             write(fd, payload.data(), payload.size());
         }
@@ -1694,7 +1694,7 @@ void XwaylandDndTest::cancelWaylandToX11()
     waylandDataSource->offer(QStringLiteral("text/plain"));
     waylandDataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     connect(waylandDataSource, &KWayland::Client::DataSource::sendDataRequested, this, [](const QString &mimeType, int fd) {
-        if (mimeType == QLatin1String("text/plain")) {
+        if (mimeType == QLatin1StringView("text/plain")) {
             const auto payload = QByteArrayLiteral("wayland -> x11");
             write(fd, payload.data(), payload.size());
         }
@@ -1760,7 +1760,7 @@ void XwaylandDndTest::waylandToXdndUnawareWindow()
     waylandDataSource->offer(QStringLiteral("text/plain"));
     waylandDataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     connect(waylandDataSource, &KWayland::Client::DataSource::sendDataRequested, this, [](const QString &mimeType, int fd) {
-        if (mimeType == QLatin1String("text/plain")) {
+        if (mimeType == QLatin1StringView("text/plain")) {
             const auto payload = QByteArrayLiteral("wayland -> x11");
             write(fd, payload.data(), payload.size());
         }

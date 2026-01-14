@@ -888,7 +888,7 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
     }
     default:
         if (value.userType() == qMetaTypeId<QStringList>()) {
-            return value.toStringList().join(QLatin1String(", "));
+            return value.toStringList().join(QLatin1StringView(", "));
         }
         if (value.userType() == qMetaTypeId<KWin::SurfaceInterface *>()) {
             if (auto s = value.value<KWin::SurfaceInterface *>()) {
@@ -1685,7 +1685,7 @@ QVariant DataSourceModel::data(const QModelIndex &index, int role) const
         return mimeType;
     } else if (index.column() == 1 && index.row() < m_data.count()) {
         const QByteArray &data = m_data.at(index.row());
-        if (mimeType.contains(QLatin1String("image"))) {
+        if (mimeType.contains(QLatin1StringView("image"))) {
             if (role == Qt::DecorationRole) {
                 return QImage::fromData(data);
             }

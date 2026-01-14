@@ -64,7 +64,7 @@ QVariant VirtualKeyboardsModel::data(const QModelIndex &index, int role) const
     case Qt::ToolTipRole:
         return service ? service->comment() : i18n("Do not use any virtual keyboard");
     case DesktopFileNameRole:
-        return service ? QStandardPaths::locate(QStandardPaths::ApplicationsLocation, service->desktopEntryName() + QLatin1String(".desktop")) : QString();
+        return service ? QStandardPaths::locate(QStandardPaths::ApplicationsLocation, service->desktopEntryName() + QLatin1StringView(".desktop")) : QString();
     }
     return {};
 }
@@ -77,7 +77,7 @@ int VirtualKeyboardsModel::inputMethodIndex(const QString &desktopFile) const
 
     int i = 0;
     for (const auto &service : m_services) {
-        if (service && desktopFile.endsWith(service->desktopEntryName() + QLatin1String(".desktop"))) {
+        if (service && desktopFile.endsWith(service->desktopEntryName() + QLatin1StringView(".desktop"))) {
             return i;
         }
         ++i;

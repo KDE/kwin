@@ -3117,14 +3117,14 @@ QString Window::shortcutCaptionSuffix() const
     if (shortcut().isEmpty()) {
         return QString();
     }
-    return QLatin1String(" {") + shortcut().toString() + QLatin1Char('}');
+    return QLatin1StringView(" {") + shortcut().toString() + QLatin1Char('}');
 }
 
 QString Window::caption() const
 {
     QString cap = captionNormal() + captionSuffix();
     if (unresponsive()) {
-        cap += QLatin1String(" ");
+        cap += QLatin1StringView(" ");
         cap += i18nc("Application is not responding, appended to window title", "(Not Responding)");
     }
     return cap;

@@ -34,7 +34,7 @@ StickyKeysFilter::StickyKeysFilter()
     : KWin::InputEventFilter(KWin::InputFilterOrder::StickyKeys)
     , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
 {
-    const QLatin1String groupName("Keyboard");
+    const QLatin1StringView groupName("Keyboard");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
         if (group.name() == groupName) {
             loadConfig(group);

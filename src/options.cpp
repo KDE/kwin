@@ -85,10 +85,10 @@ Options::Options(QObject *parent)
 
     m_configWatcher = KConfigWatcher::create(m_settings->sharedConfig());
     connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
-        if (group.name() == QLatin1String("KDE") && names.contains(QByteArrayLiteral("AnimationDurationFactor"))) {
+        if (group.name() == QLatin1StringView("KDE") && names.contains(QByteArrayLiteral("AnimationDurationFactor"))) {
             m_settings->load();
             Q_EMIT animationSpeedChanged();
-        } else if (group.name() == QLatin1String("Xwayland")) {
+        } else if (group.name() == QLatin1StringView("Xwayland")) {
             workspace()->reconfigure();
         }
     });

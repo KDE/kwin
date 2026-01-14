@@ -771,11 +771,11 @@ static ElectricBorderAction electricBorderAction(const QString &name)
         return ElectricActionShowDesktop;
     } else if (lowerName == QLatin1StringView("lockscreen")) {
         return ElectricActionLockScreen;
-    } else if (lowerName == QLatin1String("krunner")) {
+    } else if (lowerName == QLatin1StringView("krunner")) {
         return ElectricActionKRunner;
-    } else if (lowerName == QLatin1String("activitymanager")) {
+    } else if (lowerName == QLatin1StringView("activitymanager")) {
         return ElectricActionActivityManager;
-    } else if (lowerName == QLatin1String("applicationlauncher")) {
+    } else if (lowerName == QLatin1StringView("applicationlauncher")) {
         return ElectricActionApplicationLauncher;
     }
     return ElectricActionNone;

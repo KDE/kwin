@@ -232,7 +232,7 @@ void Rules::write(RuleSettings *settings) const
     WRITE_SET_RULE(fullscreen, Fullscreen, );
     WRITE_SET_RULE(noborder, Noborder, );
     auto colorToString = [](const QString &value) -> QString {
-        if (value.endsWith(QLatin1String(".colors"))) {
+        if (value.endsWith(QLatin1StringView(".colors"))) {
             return QFileInfo(value).baseName();
         } else {
             return value;
@@ -319,7 +319,7 @@ QString Rules::getDecoColor(const QString &themeName)
     }
     // find the actual scheme file
     return QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                  QLatin1String("color-schemes/") + themeName + QLatin1String(".colors"));
+                                  QLatin1StringView("color-schemes/") + themeName + QLatin1StringView(".colors"));
 }
 
 bool typeMatchesMask(WindowType type, WindowTypes mask)

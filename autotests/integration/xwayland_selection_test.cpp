@@ -122,7 +122,7 @@ public:
     xcb_atom_t mimeTypeToAtom(const QMimeType &mimeType) const
     {
         QByteArray effectiveName;
-        if (mimeType.name() == QLatin1String("text/plain")) {
+        if (mimeType.name() == QLatin1StringView("text/plain")) {
             effectiveName = QByteArrayLiteral("TEXT");
         } else {
             effectiveName = mimeType.name().toUtf8();
@@ -154,7 +154,7 @@ public:
         free(reply);
 
         QString effectiveName;
-        if (name == QLatin1String("TEXT")) {
+        if (name == QLatin1StringView("TEXT")) {
             effectiveName = QStringLiteral("text/plain");
         } else {
             effectiveName = name;

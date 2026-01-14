@@ -53,7 +53,7 @@ SystemBellEffect::SystemBellEffect()
 
     connect(effects, &EffectsHandler::windowClosed, this, &SystemBellEffect::slotWindowClosed);
 
-    const QLatin1String groupName("Bell");
+    const QLatin1StringView groupName("Bell");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
         if (group.name() == groupName) {
             m_bellConfig = group;

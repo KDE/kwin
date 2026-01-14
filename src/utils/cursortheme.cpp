@@ -210,11 +210,11 @@ static QStringList defaultSearchPaths()
         } else {
             const QString home = QDir::homePath();
             if (!home.isEmpty()) {
-                paths.append(home + QLatin1String("/.icons"));
+                paths.append(home + QLatin1StringView("/.icons"));
             }
             const QStringList dataDirs = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
             for (const QString &dataDir : dataDirs) {
-                paths.append(dataDir + QLatin1String("/icons"));
+                paths.append(dataDir + QLatin1StringView("/icons"));
             }
         }
     }
@@ -243,9 +243,9 @@ void CursorThemePrivate::discover(const QStringList &searchPaths)
             if (!dir.exists()) {
                 continue;
             }
-            if (const QDir package = dir.filePath(QLatin1String("cursors_scalable")); package.exists()) {
+            if (const QDir package = dir.filePath(QLatin1StringView("cursors_scalable")); package.exists()) {
                 discoverSvgCursors(package.path());
-            } else if (const QDir package = dir.filePath(QLatin1String("cursors")); package.exists()) {
+            } else if (const QDir package = dir.filePath(QLatin1StringView("cursors")); package.exists()) {
                 discoverXCursors(package.path());
             }
             if (inherits.isEmpty()) {

@@ -135,7 +135,7 @@ static QList<KPackage::Package> availableLnFPackages()
     const QStringList dataPaths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
 
     for (const QString &path : dataPaths) {
-        QDir dir(path + QLatin1String("/plasma/look-and-feel"));
+        QDir dir(path + QLatin1StringView("/plasma/look-and-feel"));
         paths << dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
     }
 
@@ -189,7 +189,7 @@ void KWinTabBoxConfig::initLayoutLists()
         for (const auto &offer : offers) {
             const QString pluginName = offer.pluginId();
             const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                              packageRoot + QLatin1Char('/') + pluginName + QLatin1String("/contents/ui/main.qml"));
+                                                              packageRoot + QLatin1Char('/') + pluginName + QLatin1StringView("/contents/ui/main.qml"));
             if (scriptFile.isEmpty()) {
                 qWarning() << "scriptfile is null" << pluginName;
                 continue;

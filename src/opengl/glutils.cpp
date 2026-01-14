@@ -34,7 +34,7 @@ static QString formatGLError(GLenum err)
     case GL_OUT_OF_MEMORY:
         return QStringLiteral("GL_OUT_OF_MEMORY");
     default:
-        return QLatin1String("0x") + QString::number(err, 16);
+        return QLatin1StringView("0x") + QString::number(err, 16);
     }
 }
 

@@ -43,12 +43,12 @@ static const QString s_fallbackPlugin = QStringLiteral("org.kde.kwin.aurorae");
 static void migrateAuroraeTheme()
 {
     const QString themeName = kwinApp()->config()->group(s_configKeyName).readEntry("theme");
-    if (!themeName.startsWith(QLatin1String("__aurorae__svg__"))) {
+    if (!themeName.startsWith(QLatin1StringView("__aurorae__svg__"))) {
         return;
     }
 
     const QString pluginName = kwinApp()->config()->group(s_configKeyName).readEntry("library");
-    if (pluginName != QLatin1String("org.kde.kwin.aurorae")) {
+    if (pluginName != QLatin1StringView("org.kde.kwin.aurorae")) {
         return;
     }
 
@@ -249,9 +249,9 @@ KDecoration3::Decoration *DecorationBridge::createDecoration(Window *window)
 
 static QString settingsProperty(const QVariant &variant)
 {
-    if (QLatin1String(variant.typeName()) == QLatin1String("KDecoration3::BorderSize")) {
+    if (QLatin1StringView(variant.typeName()) == QLatin1StringView("KDecoration3::BorderSize")) {
         return QString::number(variant.toInt());
-    } else if (QLatin1String(variant.typeName()) == QLatin1String("QList<KDecoration3::DecorationButtonType>")) {
+    } else if (QLatin1StringView(variant.typeName()) == QLatin1StringView("QList<KDecoration3::DecorationButtonType>")) {
         const auto &b = variant.value<QList<KDecoration3::DecorationButtonType>>();
         QString buffer;
         for (auto it = b.begin(); it != b.end(); ++it) {
@@ -277,7 +277,7 @@ QString DecorationBridge::supportInformation() const
         const QMetaObject *metaOptions = m_settings->metaObject();
         for (int i = 0; i < metaOptions->propertyCount(); ++i) {
             const QMetaProperty property = metaOptions->property(i);
-            if (QLatin1String(property.name()) == QLatin1String("objectName")) {
+            if (QLatin1StringView(property.name()) == QLatin1StringView("objectName")) {
                 continue;
             }
             b.append(QStringLiteral("%1: %2\n").arg(property.name(), settingsProperty(m_settings->property(property.name()))));

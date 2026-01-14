@@ -124,7 +124,7 @@ void ScreenEdgeTest::testEdge()
     // mock the config
     auto config = kwinApp()->config();
     QFETCH(KWin::ElectricBorder, edge);
-    config->group(QLatin1String("Script-") + scriptToLoad).writeEntry("Edge", int(edge));
+    config->group(QLatin1StringView("Script-") + scriptToLoad).writeEntry("Edge", int(edge));
     config->sync();
 
     QVERIFY(!Scripting::self()->isScriptLoaded(scriptToLoad));
@@ -171,7 +171,7 @@ void ScreenEdgeTest::testTouchEdge()
     // mock the config
     auto config = kwinApp()->config();
     QFETCH(KWin::ElectricBorder, edge);
-    config->group(QLatin1String("Script-") + scriptToLoad).writeEntry("Edge", int(edge));
+    config->group(QLatin1StringView("Script-") + scriptToLoad).writeEntry("Edge", int(edge));
     config->sync();
 
     QVERIFY(!Scripting::self()->isScriptLoaded(scriptToLoad));

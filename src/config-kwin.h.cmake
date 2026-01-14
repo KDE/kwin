@@ -1,5 +1,5 @@
 #pragma once
-#include <QLatin1String>
+#include <QLatin1StringView>
 
 #define KWIN_PLUGIN_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}"
 #define PROJECT_VERSION_PATCH ${PROJECT_VERSION_PATCH}
@@ -13,11 +13,11 @@
 #cmakedefine01 KWIN_BUILD_GLOBALSHORTCUTS
 #cmakedefine01 KWIN_BUILD_X11
 #cmakedefine01 KWIN_BUILD_QACCESSIBILITYCLIENT
-constexpr QLatin1String KWIN_CONFIG("kwinrc");
-constexpr QLatin1String KWIN_VERSION_STRING("${PROJECT_VERSION}");
-constexpr QLatin1String XCB_VERSION_STRING("${XCB_VERSION}");
-constexpr QLatin1String KWIN_KILLER_BIN("${KWIN_KILLER_BIN}");
-constexpr QLatin1String LIBEXEC_DIR("${CMAKE_INSTALL_FULL_LIBEXECDIR}");
+constexpr QLatin1StringView KWIN_CONFIG("kwinrc");
+constexpr QLatin1StringView KWIN_VERSION_STRING("${PROJECT_VERSION}");
+constexpr QLatin1StringView XCB_VERSION_STRING("${XCB_VERSION}");
+constexpr QLatin1StringView KWIN_KILLER_BIN("${KWIN_KILLER_BIN}");
+constexpr QLatin1StringView LIBEXEC_DIR("${CMAKE_INSTALL_FULL_LIBEXECDIR}");
 #cmakedefine01 HAVE_X11_XCB
 #cmakedefine01 HAVE_X11_XINPUT
 #cmakedefine01 HAVE_GBM_BO_GET_FD_FOR_PLANE
@@ -29,4 +29,4 @@ constexpr QLatin1String LIBEXEC_DIR("${CMAKE_INSTALL_FULL_LIBEXECDIR}");
 #cmakedefine01 HAVE_DL_LIBRARY
 #cmakedefine01 HAVE_LIBDRM_FAUX
 
-constexpr QLatin1String XWAYLAND_SESSION_SCRIPTS("${XWAYLAND_SESSION_SCRIPTS}");
+constexpr QLatin1StringView XWAYLAND_SESSION_SCRIPTS("${XWAYLAND_SESSION_SCRIPTS}");

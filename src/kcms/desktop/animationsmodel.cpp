@@ -161,7 +161,7 @@ bool AnimationsModel::needsSave() const
     for (int i = 0; i < rowCount(); ++i) {
         const QModelIndex index_ = index(i, 0);
         const bool enabledConfig = kwinConfig.readEntry(
-            index_.data(ServiceNameRole).toString() + QLatin1String("Enabled"),
+            index_.data(ServiceNameRole).toString() + QLatin1StringView("Enabled"),
             index_.data(EnabledByDefaultRole).toBool());
         const bool enabled = (m_animationEnabled && i == m_animationIndex);
 

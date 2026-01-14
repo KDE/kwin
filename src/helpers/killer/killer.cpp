@@ -68,7 +68,7 @@ std::optional<QString> bootId()
 
 void writeApplicationNotResponding(pid_t pid)
 {
-    const QString dirPath = QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation) + QLatin1String("/drkonqi/application-not-responding/");
+    const QString dirPath = QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation) + QLatin1StringView("/drkonqi/application-not-responding/");
     QDir dir(dirPath);
     if (!dir.exists()) {
         if (!dir.mkpath(dirPath)) {
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
 
     parser.process(app);
 
-    const bool isX11 = app.platformName() == QLatin1String("xcb");
+    const bool isX11 = app.platformName() == QLatin1StringView("xcb");
 
     QString hostname = parser.value(hostNameOption);
     bool pid_ok = false;

@@ -1803,10 +1803,10 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("\n"));
 
     const Cursor *cursor = Cursors::self()->mouse();
-    support.append(QLatin1String("Cursor\n"));
-    support.append(QLatin1String("======\n"));
-    support.append(QLatin1String("themeName: ") + cursor->themeName() + QLatin1Char('\n'));
-    support.append(QLatin1String("themeSize: ") + QString::number(cursor->themeSize()) + QLatin1Char('\n'));
+    support.append(QLatin1StringView("Cursor\n"));
+    support.append(QLatin1StringView("======\n"));
+    support.append(QLatin1StringView("themeName: ") + cursor->themeName() + QLatin1Char('\n'));
+    support.append(QLatin1StringView("themeSize: ") + QString::number(cursor->themeSize()) + QLatin1Char('\n'));
     support.append(QLatin1Char('\n'));
 
     support.append(QStringLiteral("Options\n"));
@@ -1817,14 +1817,14 @@ QString Workspace::supportInformation() const
             const QSize &s = variant.toSize();
             return QStringLiteral("%1x%2").arg(s.width()).arg(s.height());
         }
-        if (QLatin1String(variant.typeName()) == QLatin1String("KWin::OpenGLPlatformInterface") || QLatin1String(variant.typeName()) == QLatin1String("KWin::Options::WindowOperation")) {
+        if (QLatin1StringView(variant.typeName()) == QLatin1StringView("KWin::OpenGLPlatformInterface") || QLatin1StringView(variant.typeName()) == QLatin1StringView("KWin::Options::WindowOperation")) {
             return QString::number(variant.toInt());
         }
         return variant.toString();
     };
     for (int i = 0; i < metaOptions->propertyCount(); ++i) {
         const QMetaProperty property = metaOptions->property(i);
-        if (QLatin1String(property.name()) == QLatin1String("objectName")) {
+        if (QLatin1StringView(property.name()) == QLatin1StringView("objectName")) {
             continue;
         }
         support.append(QStringLiteral("%1: %2\n").arg(property.name(), printProperty(options->property(property.name()))));
@@ -1834,7 +1834,7 @@ QString Workspace::supportInformation() const
     const QMetaObject *metaScreenEdges = m_screenEdges->metaObject();
     for (int i = 0; i < metaScreenEdges->propertyCount(); ++i) {
         const QMetaProperty property = metaScreenEdges->property(i);
-        if (QLatin1String(property.name()) == QLatin1String("objectName")) {
+        if (QLatin1StringView(property.name()) == QLatin1StringView("objectName")) {
             continue;
         }
         support.append(QStringLiteral("%1: %2\n").arg(property.name(), printProperty(m_screenEdges->property(property.name()))));
@@ -1965,15 +1965,15 @@ QString Workspace::supportInformation() const
             support.append(effects->supportInformation(effect));
             support.append(QStringLiteral("\n"));
         }
-        support.append(QLatin1String("\nLoaded Plugins:\n"));
-        support.append(QLatin1String("---------------\n"));
+        support.append(QLatin1StringView("\nLoaded Plugins:\n"));
+        support.append(QLatin1StringView("---------------\n"));
         QStringList loadedPlugins = kwinApp()->pluginManager()->loadedPlugins();
         loadedPlugins.sort();
         for (const QString &plugin : std::as_const(loadedPlugins)) {
             support.append(plugin + QLatin1Char('\n'));
         }
-        support.append(QLatin1String("\nAvailable Plugins:\n"));
-        support.append(QLatin1String("------------------\n"));
+        support.append(QLatin1StringView("\nAvailable Plugins:\n"));
+        support.append(QLatin1StringView("------------------\n"));
         QStringList availablePlugins = kwinApp()->pluginManager()->availablePlugins();
         availablePlugins.sort();
         for (const QString &plugin : std::as_const(availablePlugins)) {

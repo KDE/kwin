@@ -65,11 +65,11 @@ void GenericScriptedConfig::createUi()
     QVBoxLayout *layout = new QVBoxLayout(widget());
 
     QString packageRoot = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                 QLatin1String("kwin-wayland/") + typeName() + QLatin1Char('/') + m_packageName,
+                                                 QLatin1StringView("kwin-wayland/") + typeName() + QLatin1Char('/') + m_packageName,
                                                  QStandardPaths::LocateDirectory);
     if (packageRoot.isEmpty()) {
         packageRoot = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                             QLatin1String("kwin/") + typeName() + QLatin1Char('/') + m_packageName,
+                                             QLatin1StringView("kwin/") + typeName() + QLatin1Char('/') + m_packageName,
                                              QStandardPaths::LocateDirectory);
     }
     if (packageRoot.isEmpty()) {
@@ -77,25 +77,25 @@ void GenericScriptedConfig::createUi()
         return;
     }
 
-    const KPluginMetaData metaData = KPluginMetaData::fromJsonFile(packageRoot + QLatin1String("/metadata.json"));
+    const KPluginMetaData metaData = KPluginMetaData::fromJsonFile(packageRoot + QLatin1StringView("/metadata.json"));
     if (!metaData.isValid()) {
         layout->addWidget(new QLabel(i18nc("Required file does not exist", "%1 does not contain a valid metadata.json file", qPrintable(packageRoot))));
         return;
     }
 
-    const QString kconfigXTFile = packageRoot + QLatin1String("/contents/config/main.xml");
+    const QString kconfigXTFile = packageRoot + QLatin1StringView("/contents/config/main.xml");
     if (!QFileInfo::exists(kconfigXTFile)) {
         layout->addWidget(new QLabel(i18nc("Required file does not exist", "%1 does not exist", qPrintable(kconfigXTFile))));
         return;
     }
 
-    const QString uiPath = packageRoot + QLatin1String("/contents/ui/config.ui");
+    const QString uiPath = packageRoot + QLatin1StringView("/contents/ui/config.ui");
     if (!QFileInfo::exists(uiPath)) {
         layout->addWidget(new QLabel(i18nc("Required file does not exist", "%1 does not exist", qPrintable(uiPath))));
         return;
     }
 
-    const QString localePath = packageRoot + QLatin1String("/contents/locale");
+    const QString localePath = packageRoot + QLatin1StringView("/contents/locale");
     if (QFileInfo::exists(localePath)) {
         KLocalizedString::addDomainLocaleDir(metaData.value("X-KWin-Config-TranslationDomain").toUtf8(), localePath);
     }
@@ -149,7 +149,7 @@ QString ScriptedEffectConfig::typeName() const
 
 KConfigGroup ScriptedEffectConfig::configGroup()
 {
-    return KSharedConfig::openConfig(KWIN_CONFIG)->group(QLatin1String("Effect-") + packageName());
+    return KSharedConfig::openConfig(KWIN_CONFIG)->group(QLatin1StringView("Effect-") + packageName());
 }
 
 void ScriptedEffectConfig::reload()
@@ -172,7 +172,7 @@ ScriptingConfig::~ScriptingConfig()
 
 KConfigGroup ScriptingConfig::configGroup()
 {
-    return KSharedConfig::openConfig(KWIN_CONFIG)->group(QLatin1String("Script-") + packageName());
+    return KSharedConfig::openConfig(KWIN_CONFIG)->group(QLatin1StringView("Script-") + packageName());
 }
 
 QString ScriptingConfig::typeName() const

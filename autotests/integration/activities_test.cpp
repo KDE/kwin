@@ -115,8 +115,8 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     QVERIFY(!Workspace::self()->activities()->all().contains(QStringLiteral("bar")));
 
     window->setOnActivities(QStringList{QStringLiteral("foo"), QStringLiteral("bar")});
-    QVERIFY(!window->activities().contains(QLatin1String("foo")));
-    QVERIFY(!window->activities().contains(QLatin1String("bar")));
+    QVERIFY(!window->activities().contains(QLatin1StringView("foo")));
+    QVERIFY(!window->activities().contains(QLatin1StringView("bar")));
 
     // and destroy the window again
     xcb_unmap_window(c.get(), windowId);

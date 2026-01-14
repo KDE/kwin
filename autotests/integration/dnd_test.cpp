@@ -155,7 +155,7 @@ void DndTest::pointerDrag()
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     connect(dataSource, &KWayland::Client::DataSource::sendDataRequested, this, [](const QString &mimeType, int fd) {
-        if (mimeType == QLatin1String("text/plain")) {
+        if (mimeType == QLatin1StringView("text/plain")) {
             const auto payload = QByteArrayLiteral("foo");
             write(fd, payload.data(), payload.size());
         }
@@ -901,7 +901,7 @@ void DndTest::touchDrag()
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     connect(dataSource, &KWayland::Client::DataSource::sendDataRequested, this, [](const QString &mimeType, int fd) {
-        if (mimeType == QLatin1String("text/plain")) {
+        if (mimeType == QLatin1StringView("text/plain")) {
             const auto payload = QByteArrayLiteral("foo");
             write(fd, payload.data(), payload.size());
         }
@@ -1594,7 +1594,7 @@ void DndTest::tabletDrag()
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     connect(dataSource, &KWayland::Client::DataSource::sendDataRequested, this, [](const QString &mimeType, int fd) {
-        if (mimeType == QLatin1String("text/plain")) {
+        if (mimeType == QLatin1StringView("text/plain")) {
             const auto payload = QByteArrayLiteral("foo");
             write(fd, payload.data(), payload.size());
         }

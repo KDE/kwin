@@ -69,7 +69,7 @@ static QString locateMainScript(const QString &pluginName)
         return QString();
     }
     const QFileInfo metaDataFileInfo(offers.first().fileName());
-    return metaDataFileInfo.path() + QLatin1String("/contents/code/main.js");
+    return metaDataFileInfo.path() + QLatin1StringView("/contents/code/main.js");
 }
 
 void MinimizeAllScriptTest::init()

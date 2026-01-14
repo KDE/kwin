@@ -68,7 +68,7 @@ MouseKeysFilter::MouseKeysFilter()
     , KWin::InputEventFilter(KWin::InputFilterOrder::MouseKeys)
     , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
 {
-    const QLatin1String groupName("Mouse");
+    const QLatin1StringView groupName("Mouse");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
         if (group.name() == groupName) {
             loadConfig(group);

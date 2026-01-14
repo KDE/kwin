@@ -141,7 +141,7 @@ void ScreencastingTest::testWindowCasting()
     std::optional<QImage> img = oneFrameAndClose(stream);
     QVERIFY(img);
     img->convertTo(sourceImage.format());
-    QCOMPAREIMG(*img, sourceImage, QLatin1String("window_cast"));
+    QCOMPAREIMG(*img, sourceImage, QLatin1StringView("window_cast"));
 }
 
 void ScreencastingTest::testWindowWithPopup()
@@ -173,7 +173,7 @@ void ScreencastingTest::testWindowWithPopup()
     std::optional<QImage> img = oneFrameAndClose(stream.get());
     QVERIFY(img);
     img->convertTo(expectedImage.format());
-    QCOMPAREIMG(*img, expectedImage, QLatin1String("window_popup"));
+    QCOMPAREIMG(*img, expectedImage, QLatin1StringView("window_popup"));
 }
 
 void ScreencastingTest::testWindowWithPopupDynamic()
@@ -262,7 +262,7 @@ void ScreencastingTest::testOutputCasting()
     std::optional<QImage> img = oneFrameAndClose(stream);
     QVERIFY(img);
     img->convertTo(sourceImage.format());
-    QCOMPAREIMG(*img, sourceImage, QLatin1String("output_cast"));
+    QCOMPAREIMG(*img, sourceImage, QLatin1StringView("output_cast"));
 }
 
 }

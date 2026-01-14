@@ -1402,14 +1402,14 @@ QString EffectsHandler::supportInformation(const QString &name) const
         return QString();
     }
 
-    QString support((*it).first + QLatin1String(":\n"));
+    QString support((*it).first + QLatin1StringView(":\n"));
     const QMetaObject *metaOptions = (*it).second->metaObject();
     for (int i = 0; i < metaOptions->propertyCount(); ++i) {
         const QMetaProperty property = metaOptions->property(i);
         if (qstrcmp(property.name(), "objectName") == 0) {
             continue;
         }
-        support += QString::fromUtf8(property.name()) + QLatin1String(": ") + (*it).second->property(property.name()).toString() + QLatin1Char('\n');
+        support += QString::fromUtf8(property.name()) + QLatin1StringView(": ") + (*it).second->property(property.name()).toString() + QLatin1Char('\n');
     }
 
     return support;
@@ -1659,7 +1659,7 @@ QQmlEngine *EffectsHandler::qmlEngine() const
 
 void EffectsHandler::configChanged(const KConfigGroup &group, const QByteArrayList &names)
 {
-    if (group.name() != QLatin1String("Plugins")) {
+    if (group.name() != QLatin1StringView("Plugins")) {
         return;
     }
 

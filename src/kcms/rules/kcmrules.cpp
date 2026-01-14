@@ -50,14 +50,14 @@ void KCMKWinRules::parseArguments(const QStringList &args)
 
     // TODO: Use a better argument parser
     for (const QString &arg : args) {
-        if (arg == QLatin1String("uuid")) {
+        if (arg == QLatin1StringView("uuid")) {
             nextArgIsUuid = true;
         } else if (nextArgIsUuid) {
             uuid = QUuid(arg);
             nextArgIsUuid = false;
         } else if (arg.startsWith("uuid=")) {
             uuid = QUuid(arg.mid(strlen("uuid=")));
-        } else if (arg == QLatin1String("whole-app")) {
+        } else if (arg == QLatin1StringView("whole-app")) {
             m_wholeApp = true;
         }
     }
