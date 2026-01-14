@@ -744,6 +744,14 @@ void OutputDeviceV2Interface::updateModes()
     const auto clientResources = d->resourceMap();
     const auto nativeModes = d->m_handle->modes();
 
+    if (nativeModes.isEmpty()) {
+        if (d->isGlobalRemoved()) {
+            qFatal("Output modes are updated after removing global");
+        } else {
+            qFatal("No output modes left");
+        }
+    }
+
     for (const std::shared_ptr<OutputMode> &mode : nativeModes) {
         d->m_modes.push_back(std::make_unique<OutputDeviceModeV2Interface>(mode));
         OutputDeviceModeV2Interface *deviceMode = d->m_modes.back().get();
