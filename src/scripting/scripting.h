@@ -346,6 +346,10 @@ public:
 
     AbstractScript *findScript(const QString &pluginName) const;
 
+    QMap<QString, QObject *> additionalGlobalObjects() const;
+    void addGlobalObject(const QString &name, QObject *obj);
+    void removeGlobalObject(const QString &name);
+
     static Scripting *self();
     static Scripting *create(QObject *parent);
 
@@ -363,6 +367,7 @@ private:
     QQmlEngine *m_qmlEngine;
     QQmlContext *m_declarativeScriptSharedContext;
     QtScriptWorkspaceWrapper *m_workspaceWrapper;
+    QMap<QString, QObject *> m_additionalGlobalObjects;
 };
 
 inline QQmlEngine *Scripting::qmlEngine() const

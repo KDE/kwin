@@ -214,6 +214,13 @@ void KWin::Script::slotScriptLoadedFromFile()
     // Install console functions (e.g. console.assert(), console.log(), etc).
     m_engine->installExtensions(QJSEngine::ConsoleExtension);
 
+    // Install additional global objects first, so they cannot overwrite existing API.
+    const auto additionalGlobalObjects = Scripting::self()->additionalGlobalObjects();
+    for (auto it = additionalGlobalObjects.begin(), end = additionalGlobalObjects.end(); it != end; ++it) {
+        QJSValue jsValue = m_engine->newQObject(it.value());
+        m_engine->globalObject().setProperty(it.key(), jsValue);
+    }
+
     // Make the timer visible to QJSEngine.
     QJSValue timerMetaObject = m_engine->newQMetaObject(&ScriptTimer::staticMetaObject);
     m_engine->globalObject().setProperty("QTimer", timerMetaObject);
@@ -882,6 +889,25 @@ int KWin::Scripting::loadDeclarativeScript(const QString &filePath, const QStrin
     connect(script, &QObject::destroyed, this, &Scripting::scriptDestroyed);
     scripts.append(script);
     return id;
+}
+
+QMap<QString, QObject *> KWin::Scripting::additionalGlobalObjects() const
+{
+    return m_additionalGlobalObjects;
+}
+
+void KWin::Scripting::addGlobalObject(const QString &name, QObject *obj)
+{
+    Q_ASSERT(!m_additionalGlobalObjects.contains(name));
+    // TODO track destroyed?
+    QJSEngine::setObjectOwnership(obj, QJSEngine::CppOwnership);
+    m_additionalGlobalObjects.insert(name, obj);
+}
+
+void KWin::Scripting::removeGlobalObject(const QString &name)
+{
+    Q_ASSERT(m_additionalGlobalObjects.contains(name));
+    m_additionalGlobalObjects.remove(name);
 }
 
 KWin::Scripting::~Scripting()
