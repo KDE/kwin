@@ -186,6 +186,7 @@ ShmClientBuffer::ShmClientBuffer(ShmPool *pool, ShmAttributes attributes, wl_cli
 
 ShmClientBuffer::~ShmClientBuffer()
 {
+    Q_ASSERT(!m_shmAccess);
     m_shmPool->unref();
 }
 
