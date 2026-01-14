@@ -81,6 +81,13 @@ MouseKeysFilter::MouseKeysFilter()
     connect(&m_repeatTimer, &QTimer::timeout, this, &MouseKeysFilter::repeatTriggered);
 }
 
+MouseKeysFilter::~MouseKeysFilter()
+{
+    if (m_inputDevice) {
+        KWin::input()->removeInputDevice(m_inputDevice.get());
+    }
+}
+
 void MouseKeysFilter::loadConfig(const KConfigGroup &group)
 {
     const bool newEnabled = group.readEntry<bool>("MouseKeys", false);
