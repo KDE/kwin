@@ -126,8 +126,7 @@ ButtonRebindsFilter::ButtonRebindsFilter()
 
 ButtonRebindsFilter::~ButtonRebindsFilter()
 {
-    // on shutdown, input is destroyed before this filter
-    if (KWin::input() && m_inputDevice) {
+    if (m_inputDevice) {
         KWin::input()->removeInputDevice(m_inputDevice.get());
     }
 }
