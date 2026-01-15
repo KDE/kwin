@@ -23,7 +23,6 @@
 #include "pointer_input.h"
 #include "touch_input.h"
 #include "useractions.h"
-#include "utils/envvar.h"
 #include "utils/xcbutils.h"
 #include "wayland/xwaylandshell_v1.h"
 #include "wayland_server.h"
@@ -379,7 +378,10 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         focusInEvent(e);
         break;
     case XCB_FOCUS_OUT:
-        focusOutEvent(reinterpret_cast<xcb_focus_out_event_t *>(e));
+        // Focus out events cause problems with some applications that use
+        // override redirect windows to implement popups.
+        // As they shouldn't be necessary with clients that behave sensibly
+        // (accept focus when given), ignore these events entirely
         break;
     case XCB_REPARENT_NOTIFY:
         break;
@@ -571,9 +573,6 @@ void X11Window::focusInEvent(xcb_generic_event_t *event)
     if (!isShown() || !isOnCurrentDesktop()) { // we unmapped it, but it got focus meanwhile ->
         return; // activateNextWindow() already transferred focus elsewhere
     }
-    workspace()->forEachClient([](X11Window *window) {
-        window->cancelFocusOutTimer();
-    });
 
     // Note that xcb_focus_in_event_t::sequence is a uint16_t serial.
     const UInt32Serial serial = event->full_sequence;
@@ -604,7 +603,7 @@ void X11Window::focusInEvent(xcb_generic_event_t *event)
         }
     }
 
-    if (allowWindowActivation(-1U, true)) {
+    if (allowWindowActivation(-1U)) {
         workspace()->setX11FocusSerial(serial);
         workspace()->setActiveWindow(this);
     } else {
@@ -616,54 +615,6 @@ void X11Window::focusInEvent(xcb_generic_event_t *event)
             workspace()->setActiveWindow(this);
         }
     }
-}
-
-static const bool s_enableFocusOut = environmentVariableBoolValue("KWIN_ENABLE_FOCUS_OUT").value_or(false);
-
-void X11Window::focusOutEvent(xcb_focus_out_event_t *e)
-{
-    if (!s_enableFocusOut) {
-        // Focus out events cause problems with some applications that do
-        // questionable things with override redirect windows.
-        // As they shouldn't be necessary with clients that behave sensibly
-        // (accept focus when given), ignore these events entirely
-        return;
-    }
-    if (e->mode == XCB_NOTIFY_MODE_GRAB || e->mode == XCB_NOTIFY_MODE_UNGRAB) {
-        return; // we don't care
-    }
-    if (e->detail != XCB_NOTIFY_DETAIL_NONLINEAR
-        && e->detail != XCB_NOTIFY_DETAIL_NONLINEAR_VIRTUAL) {
-        // SELI check all this
-        return; // hack for motif apps like netscape
-    }
-
-    // When a window loses focus, FocusOut events are usually immediately
-    // followed by FocusIn events for another window that gains the focus
-    // (unless the focus goes to another screen, or to the nofocus widget).
-    // Without this check, the former focused window would have to be
-    // deactivated, and after that, the new one would be activated, with
-    // a short time when there would be no active window. This can cause
-    // flicker sometimes, e.g. when a fullscreen is shown, and focus is transferred
-    // from it to its transient, the fullscreen would be kept in the Active layer
-    // at the beginning and at the end, but not in the middle, when the active
-    // window would be temporarily none (see X11Window::belongToLayer() ).
-    // Therefore the setActive(false) call is moved to the end of the current
-    // event queue. If there is a matching FocusIn event in the current queue
-    // this will be processed before the setActive(false) call and the activation
-    // of the window which gained FocusIn will automatically deactivate the
-    // previously active window.
-    if (!m_focusOutTimer) {
-        m_focusOutTimer = new QTimer(this);
-        m_focusOutTimer->setSingleShot(true);
-        m_focusOutTimer->setInterval(0);
-        connect(m_focusOutTimer, &QTimer::timeout, this, [this]() {
-            if (workspace()->activeWindow() == this) {
-                workspace()->setActiveWindow(nullptr);
-            }
-        });
-    }
-    m_focusOutTimer->start();
 }
 
 void X11Window::shapeNotifyEvent(xcb_shape_notify_event_t *e)

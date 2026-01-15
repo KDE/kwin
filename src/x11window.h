@@ -203,8 +203,6 @@ public:
     bool isOutline() const override;
     bool isUnmanaged() const override;
 
-    void cancelFocusOutTimer();
-
     Xcb::StringProperty fetchApplicationMenuServiceName() const;
     void readApplicationMenuServiceName(Xcb::StringProperty &property);
     void checkApplicationMenuServiceName();
@@ -232,7 +230,7 @@ public:
     void ackSyncTimeout();
     void finishSync();
 
-    bool allowWindowActivation(xcb_timestamp_t time = -1U, bool focus_in = false);
+    bool allowWindowActivation(xcb_timestamp_t time = -1U);
 
     quint64 surfaceSerial() const;
 
@@ -251,7 +249,6 @@ private:
     void propertyNotifyEvent(xcb_property_notify_event_t *e);
     void clientMessageEvent(xcb_client_message_event_t *e);
     void focusInEvent(xcb_generic_event_t *e);
-    void focusOutEvent(xcb_focus_out_event_t *e);
     void shapeNotifyEvent(xcb_shape_notify_event_t *e);
 
 protected:
@@ -413,7 +410,6 @@ private:
 
     bool sessionActivityOverride;
 
-    QTimer *m_focusOutTimer;
     QTimer m_releaseTimer;
     QPointer<VirtualDesktop> m_netWmDesktop;
 
