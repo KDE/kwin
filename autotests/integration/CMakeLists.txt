@@ -168,6 +168,7 @@ target_compile_definitions(testDrmLegacy PRIVATE FORCE_DRM_LEGACY=1)
 integrationTest(NAME testSelection SRCS selection_test.cpp)
 integrationTest(NAME testToplevelDrag SRCS topleveldrag_test.cpp)
 integrationTest(NAME testA11yKeyboardMonitor SRCS a11ykeyboardmonitor_test.cpp)
+integrationTest(NAME testSubsurface SRCS test_subsurface.cpp)
 
 if(KWIN_BUILD_X11)
     integrationTest(NAME testDontCrashEmptyDeco SRCS dont_crash_empty_deco.cpp LIBS KDecoration3::KDecoration)
@@ -187,8 +188,8 @@ qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKey
 integrationTest(NAME testVirtualKeyboardDBus SRCS test_virtualkeyboard_dbus.cpp ${DBUS_SRCS})
 
 if (KWIN_BUILD_GLOBALSHORTCUTS)
-integrationTest(NAME testGlobalShortcuts SRCS globalshortcuts_test.cpp LIBS XCB::ICCCM KF6::GlobalAccel KF6::I18n XKB::XKB)
-integrationTest(NAME testKWinBindings SRCS kwinbindings_test.cpp LIBS KF6::I18n)
+    integrationTest(NAME testGlobalShortcuts SRCS globalshortcuts_test.cpp LIBS XCB::ICCCM KF6::GlobalAccel KF6::I18n XKB::XKB)
+    integrationTest(NAME testKWinBindings SRCS kwinbindings_test.cpp LIBS KF6::I18n)
 endif()
 if (TARGET K::KPipeWire)
     integrationTest(NAME testScreencasting SRCS screencasting_test.cpp LIBS K::KPipeWire)
