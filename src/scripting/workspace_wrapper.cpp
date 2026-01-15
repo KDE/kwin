@@ -12,6 +12,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "cursor.h"
+#include "effect/effect.h"
 #include "effect/effecthandler.h"
 #include "outline.h"
 #include "scripting_logging.h"
@@ -373,6 +374,19 @@ bool WorkspaceWrapper::isEffectActive(const QString &pluginId) const
         return false;
     }
     return effects->isEffectActive(pluginId);
+}
+
+Effect *WorkspaceWrapper::effect(const QString &pluginId) const
+{
+    if (!effects) {
+        return nullptr;
+    }
+    Effect *effect = effects->findEffect(pluginId);
+    if (!effect) {
+        return nullptr;
+    }
+    QJSEngine::setObjectOwnership(effect, QJSEngine::CppOwnership);
+    return effect;
 }
 
 QSize WorkspaceWrapper::desktopGridSize() const

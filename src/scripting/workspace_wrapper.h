@@ -20,6 +20,7 @@
 namespace KWin
 {
 // forward declarations
+class Effect;
 class Tile;
 class TileManager;
 class Window;
@@ -315,6 +316,14 @@ public:
      * @since 6.0
      */
     Q_INVOKABLE bool isEffectActive(const QString &pluginId) const;
+
+    /**
+     * Get the given Effect object.
+     * @param pluginId The plugin Id of the effect
+     * @return The Effect object if it is loaded, otherwise null.
+     * @since 6.7
+     */
+    Q_INVOKABLE Effect *effect(const QString &pluginId) const;
 
     /**
      * Defines that a window needs to remain under another
