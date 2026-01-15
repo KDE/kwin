@@ -248,7 +248,6 @@ void Workspace::setActiveWindow(Window *window)
     }
 
     if (m_activeWindow) {
-        m_lastActiveWindow = m_activeWindow;
         m_focusChain->update(m_activeWindow, FocusChain::MakeFirst);
         m_activeWindow->demandAttention(false);
         m_activeWindow->setActive(true);
@@ -543,8 +542,6 @@ bool Workspace::restoreFocus()
 {
     if (m_activeWindow) {
         return requestFocus(m_activeWindow);
-    } else if (m_lastActiveWindow) {
-        return requestFocus(m_lastActiveWindow);
     }
     return true;
 }
