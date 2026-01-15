@@ -157,6 +157,8 @@ integrationTest(NAME testSelection SRCS selection_test.cpp)
 integrationTest(NAME testDrm SRCS drm_test.cpp)
 integrationTest(NAME testDrmLegacy SRCS drm_test.cpp)
 target_compile_definitions(testDrmLegacy PRIVATE FORCE_DRM_LEGACY=1)
+integrationTest(NAME testDrmNoModifiers SRCS drm_test.cpp)
+target_compile_definitions(testDrmNoModifiers PRIVATE FORCE_NO_DRM_MODIFIERS=1)
 integrationTest(NAME testToplevelDrag SRCS topleveldrag_test.cpp)
 integrationTest(NAME testA11yKeyboardMonitor SRCS a11ykeyboardmonitor_test.cpp)
 

@@ -511,15 +511,9 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
 
 std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget) const
 {
-    static bool modifiersEnvSet = false;
-    static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
-    bool allowModifiers = (m_gpu->addFB2ModifiersSupported() || importMode == MultiGpuImportMode::Egl || importMode == MultiGpuImportMode::DumbBuffer) && (!modifiersEnvSet || (modifiersEnvSet && modifiersEnv)) && modifiers != implicitModifier;
-#if !HAVE_GBM_BO_GET_FD_FOR_PLANE
-    allowModifiers &= m_gpu == gpu;
-#endif
     const bool linearSupported = modifiers.contains(DRM_FORMAT_MOD_LINEAR);
     const bool preferLinear = importMode == MultiGpuImportMode::DumbBuffer;
-    const bool forceLinear = importMode == MultiGpuImportMode::LinearDmabuf || (importMode != MultiGpuImportMode::None && importMode != MultiGpuImportMode::DumbBuffer && !allowModifiers);
+    const bool forceLinear = importMode == MultiGpuImportMode::LinearDmabuf || (importMode != MultiGpuImportMode::None && importMode != MultiGpuImportMode::DumbBuffer && modifiers == implicitModifier);
     if (forceLinear && !linearSupported) {
         return nullptr;
     }
@@ -530,14 +524,7 @@ std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu
             return nullptr;
         }
     }
-
-    if (allowModifiers) {
-        if (auto swapchain = EglSwapchain::create(gpu->drmDevice()->allocator(), context, size, format, modifiers)) {
-            return swapchain;
-        }
-    }
-
-    return EglSwapchain::create(gpu->drmDevice()->allocator(), context, size, format, implicitModifier);
+    return EglSwapchain::create(gpu->drmDevice()->allocator(), context, size, format, modifiers);
 }
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *surface) const

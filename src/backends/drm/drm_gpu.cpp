@@ -25,6 +25,7 @@
 #include "drm_pipeline.h"
 #include "drm_plane.h"
 #include "drm_virtual_output.h"
+#include "utils/envvar.h"
 
 #include <QFile>
 #include <algorithm>
@@ -49,6 +50,8 @@
 
 namespace KWin
 {
+
+static const std::optional<bool> s_modifiersEnv = environmentVariableBoolValue("KWIN_DRM_USE_MODIFIERS");
 
 DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     : m_fd(fd)
@@ -77,8 +80,12 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
         m_presentationClock = CLOCK_REALTIME;
     }
 
-    m_addFB2ModifiersSupported = drmGetCap(fd, DRM_CAP_ADDFB2_MODIFIERS, &capability) == 0 && capability == 1;
-    qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << this;
+    if (s_modifiersEnv.has_value() && *s_modifiersEnv == false) {
+        qCDebug(KWIN_DRM, "modifier support disabled by environment variable");
+    } else {
+        m_addFB2ModifiersSupported = drmGetCap(fd, DRM_CAP_ADDFB2_MODIFIERS, &capability) == 0 && capability == 1;
+        qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << this;
+    }
 
     // find out what driver this kms device is using
     DrmUniquePtr<drmVersion> version(drmGetVersion(fd));
