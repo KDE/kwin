@@ -564,12 +564,21 @@ void X11Window::focusInEvent(xcb_generic_event_t *event)
 {
     const auto focusEvent = reinterpret_cast<xcb_focus_in_event_t *>(event);
 
+    // If a window (e.g. a popup) grabs keyboard and input focus moves back and forth, we want to
+    // keep the Workspace::activeWindow() as is.
     if (focusEvent->mode == XCB_NOTIFY_MODE_GRAB || focusEvent->mode == XCB_NOTIFY_MODE_UNGRAB) {
-        return; // we don't care
+        return;
     }
+
+    // When the X server sends a "real" FocusIn event, it will also send a NotifyPointer focus
+    // event to a window that has pointer focus. That window must be a descendant of the window that
+    // is the target of the "real" focus event. The X server will also send focus events with
+    // NotifyPointer detail to all other windows between the "real" focus event target and the window
+    // that has pointer focus. Such bizarre events are of no use to us.
     if (focusEvent->detail == XCB_NOTIFY_DETAIL_POINTER) {
-        return; // we don't care
+        return;
     }
+
     if (!isShown() || !isOnCurrentDesktop()) { // we unmapped it, but it got focus meanwhile ->
         return; // activateNextWindow() already transferred focus elsewhere
     }
