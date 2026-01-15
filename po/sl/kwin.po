@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1727458 2026-01-13 09:22:21Z scripty $
+# $Id: kwin.po 1727692 2026-01-15 01:26:00Z scripty $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-13 08:42+0000\n"
-"PO-Revision-Date: 2025-12-11 06:59+0100\n"
+"PO-Revision-Date: 2026-01-14 07:27+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -2463,7 +2463,7 @@ msgstr "Neveljavna regija"
 #: plugins/screencast/screencaststream.cpp:375
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "Za predvajanje zaslona je potreben upodobilnik OpenGL"
+msgstr "Za video zajem zaslona je potreben upodobilnik OpenGL"
 
 #: plugins/screencast/screencaststream.cpp:383
 #, kde-format
@@ -3660,7 +3660,7 @@ msgstr "Brez &naslovne letvice in okvirja"
 #: useractions.cpp:251
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr "Skrij iz posnetka zaslona"
+msgstr "Skrij iz video posnetka zaslona"
 
 #: useractions.cpp:259
 #, kde-format

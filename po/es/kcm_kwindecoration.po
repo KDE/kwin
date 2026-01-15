@@ -1,5 +1,5 @@
 # Spanish translations for kcm_kwindecoration.po package.
-# Copyright (C) 2003-2025 This file is copyright:
+# Copyright (C) 2003-2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
 # SPDX-FileCopyrightText: 2003, 2008, 2009 Jaime Robles <jaime@kde.org>
@@ -9,13 +9,13 @@
 # SPDX-FileCopyrightText: 2007 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
 # SPDX-FileCopyrightText: 2010, 2011 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
 # SPDX-FileCopyrightText: 2012 Javier Vinal <fjvinal@gmail.com>
-# SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021, 2023, 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021, 2023, 2024, 2025, 2026 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-14 00:45+0000\n"
-"PO-Revision-Date: 2025-05-31 16:27+0100\n"
+"PO-Revision-Date: 2026-01-14 12:18+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Pablo de Vicente <pvicentea@nexo.es>\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 25.12.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
@@ -74,7 +74,7 @@ msgstr "Mantener por encima de otras ventanas"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "Ocultar en videocaptura de pantalla"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -217,7 +217,7 @@ msgstr "Mostrar ayudas emergentes de los botones de la barra de título"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" buttonX"
-msgstr ""
+msgstr "Mostrar siempre el botón «Ocultar en videocaptura de pantalla»"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -226,6 +226,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screencast"
 msgstr ""
+"Si no está marcada, el botón aparece solo cuando la ventana se oculta para "
+"la videocaptura de pantalla"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -234,6 +236,8 @@ msgid ""
 "To enable this option, add the \"Hide from screencast\" button to the "
 "titlebar first"
 msgstr ""
+"Para activar esta opción, añada primero el botón «Ocultar en videocaptura de "
+"pantalla» a la barra de título"
 
 #: ui/main.qml:29
 #, kde-format
