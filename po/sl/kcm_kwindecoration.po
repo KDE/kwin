@@ -1,7 +1,7 @@
 # translation of kcmkwindecoration.po to
 # Translation of kcmkwindecoration.po to Slovenian
 # SLOVENIAN TRANSLATION OF K DESKTOP ENVIRONMENT.
-# $Id: kcm_kwindecoration.po 1727605 2026-01-14 03:10:21Z scripty $
+# $Id: kcm_kwindecoration.po 1727696 2026-01-15 03:31:37Z scripty $
 # $Source$
 #
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-14 02:39+0000\n"
-"PO-Revision-Date: 2025-05-30 06:59+0200\n"
+"PO-Revision-Date: 2026-01-14 07:20+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.8\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
 #, kde-format
@@ -75,7 +75,7 @@ msgstr "Drži nad drugimi okni"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "Skrij iz posnetka zaslona"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -212,7 +212,7 @@ msgstr "Prikaži orodne namige gumbov oken"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" buttonX"
-msgstr ""
+msgstr "Vedno prikaži gumbX \"Skrij pred posnetkom zaslona\""
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -221,6 +221,7 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screencast"
 msgstr ""
+"Če gumb ni označen, se prikaže le, če je okno skrito pred posnetkom zaslona"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -229,6 +230,8 @@ msgid ""
 "To enable this option, add the \"Hide from screencast\" button to the "
 "titlebar first"
 msgstr ""
+"Če želite omogočiti to možnost, najprej v naslovno vrstico dodajte gumb "
+"\"Skrij iz posnetka zaslona\""
 
 #: ui/main.qml:29
 #, kde-format

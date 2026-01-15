@@ -3,7 +3,7 @@
 # Andrea Rizzi <rizzi@kde.org>, 2003, 2005.
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2010, 2012.
-# SPDX-FileCopyrightText: 2015, 2018, 2019, 2020, 2021, 2023, 2024, 2025 Vincenzo Reale <smart2128vr@gmail.com>
+# SPDX-FileCopyrightText: 2015, 2018, 2019, 2020, 2021, 2023, 2024, 2025, 2026 Vincenzo Reale <smart2128vr@gmail.com>
 # Paolo Zamponi <feus73@gmail.com>, 2019.
 #
 msgid ""
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-14 02:39+0000\n"
-"PO-Revision-Date: 2025-05-31 07:46+0200\n"
+"PO-Revision-Date: 2026-01-14 18:19+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 25.12.1\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
 #, kde-format
@@ -69,7 +69,7 @@ msgstr "Mantieni sopra le altre finestre"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "Nascondi dalla registrazione dello schermo"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -214,7 +214,7 @@ msgstr "Mostra i suggerimenti per i pulsanti della barra del titolo"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" buttonX"
-msgstr ""
+msgstr "Mostra sempre il pulsante «Nascondi dalla registrazione dello schermo»"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -223,6 +223,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screencast"
 msgstr ""
+"Se non selezionata, il pulsante appare solo se la finestra è nascosta dalla "
+"registrazione dello schermo"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -231,6 +233,8 @@ msgid ""
 "To enable this option, add the \"Hide from screencast\" button to the "
 "titlebar first"
 msgstr ""
+"Per abilitare questa opzione, aggiungi prima il pulsante «Nascondi dalla "
+"registrazione dello schermo» alla barra del titolo"
 
 #: ui/main.qml:29
 #, kde-format

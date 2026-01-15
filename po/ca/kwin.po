@@ -4233,19 +4233,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "L'Xwayland ha fallat"
-
-#~ msgid "Buttons"
-#~ msgstr "Botons"
-
-#~ msgid "The provided output order doesn't contain all outputs"
-#~ msgstr "L'ordre de sortida proporcionat no conté totes les sortides"
-
-#~ msgid "The provided output order is invalid"
-#~ msgstr "L'ordre de sortida proporcionada no és vàlid"
-
-#~ msgid "Saturation strength:"
-#~ msgstr "Intensitat de la saturació:"
-
-#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
-#~ msgid "Show Desktop"
-#~ msgstr "Mostra l'escriptori"
