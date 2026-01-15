@@ -108,7 +108,6 @@ Workspace::Workspace()
     , active_popup(nullptr)
     , m_activePopupWindow(nullptr)
     , m_activeWindow(nullptr)
-    , m_lastActiveWindow(nullptr)
     , m_moveResizeWindow(nullptr)
     , m_delayFocusWindow(nullptr)
     , force_restacking(false)
@@ -958,9 +957,6 @@ void Workspace::removeWindow(Window *window)
     attention_chain.removeAll(window);
     if (window == m_activeWindow) {
         m_activeWindow = nullptr;
-    }
-    if (window == m_lastActiveWindow) {
-        m_lastActiveWindow = nullptr;
     }
     if (m_windowKeysWindow == window) {
         setupWindowShortcutDone(false);

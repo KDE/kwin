@@ -406,14 +406,6 @@ public:
     void addInternalWindow(InternalWindow *window);
     void removeInternalWindow(InternalWindow *window);
 
-    /**
-     * @internal
-     * Used by session management
-     */
-    Window *lastActiveWindow() const
-    {
-        return m_lastActiveWindow;
-    }
     FocusChain *focusChain() const;
     ApplicationMenu *applicationMenu() const;
     Decoration::DecorationBridge *decorationBridge() const;
@@ -651,7 +643,6 @@ private:
     QList<LogicalOutput *> m_outputOrder;
 
     Window *m_activeWindow;
-    Window *m_lastActiveWindow;
     Window *m_moveResizeWindow;
 
     // Delay(ed) window focus timer and window

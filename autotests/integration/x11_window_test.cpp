@@ -96,7 +96,6 @@ private Q_SLOTS:
     void testMaximumSize();
     void testTrimCaption_data();
     void testTrimCaption();
-    void testFocusInWithWaylandLastActiveWindow();
     void testCaptionChanges();
     void testCaptionWmName();
     void testActivateFocusedWindow();
@@ -2056,63 +2055,6 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
     QVERIFY(Test::waitForWindowClosed(waylandWindow));
     QTRY_VERIFY(window->isActive());
     QCOMPARE(window->layer(), ActiveLayer);
-
-    // and destroy the window again
-    xcb_unmap_window(c.get(), windowId);
-    xcb_flush(c.get());
-}
-
-void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
-{
-    // this test verifies that Workspace::allowWindowActivation does not crash if last client was a Wayland client
-
-    // create an X11 window
-    Test::XcbConnectionPtr c = Test::createX11Connection();
-    QVERIFY(!xcb_connection_has_error(c.get()));
-    const Rect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.get());
-    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
-                      windowGeometry.x(),
-                      windowGeometry.y(),
-                      windowGeometry.width(),
-                      windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_size_hints_t hints{};
-    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
-    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
-    xcb_map_window(c.get(), windowId);
-    xcb_flush(c.get());
-
-    // we should get a window for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.wait());
-    X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
-    QVERIFY(window);
-    QCOMPARE(window->window(), windowId);
-    QVERIFY(window->isActive());
-
-    // create Wayland window
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    auto waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(waylandWindow);
-    QVERIFY(waylandWindow->isActive());
-    // activate no window
-    workspace()->activateWindow(nullptr);
-    QVERIFY(!waylandWindow->isActive());
-    QVERIFY(!workspace()->activeWindow());
-    // and close Wayland window again
-    shellSurface.reset();
-    surface.reset();
-    QVERIFY(Test::waitForWindowClosed(waylandWindow));
-
-    // and try to activate the x11 window through X11 api
-    const auto cookie = xcb_set_input_focus_checked(c.get(), XCB_INPUT_FOCUS_NONE, windowId, XCB_CURRENT_TIME);
-    auto error = xcb_request_check(c.get(), cookie);
-    QVERIFY(!error);
-    // this accesses m_lastActiveWindow on trying to activate
-    QTRY_VERIFY(window->isActive());
 
     // and destroy the window again
     xcb_unmap_window(c.get(), windowId);
