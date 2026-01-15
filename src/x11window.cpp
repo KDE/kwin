@@ -119,7 +119,6 @@ X11Window::X11Window()
     , sm_stacking_order(-1)
     , activitiesDefined(false)
     , sessionActivityOverride(false)
-    , m_focusOutTimer(nullptr)
 {
     setOutput(workspace()->activeOutput());
     setMoveResizeOutput(workspace()->activeOutput());
@@ -853,7 +852,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         if (session) {
             allow = session->active && (!workspace()->wasUserInteraction() || workspace()->activeWindow() == nullptr || workspace()->activeWindow()->isDesktop());
         } else {
-            allow = allowWindowActivation(userTime(), false);
+            allow = allowWindowActivation(userTime());
         }
 
         const bool isSessionSaving = workspace()->sessionManager()->state() == SessionState::Saving;
@@ -2059,13 +2058,6 @@ WindowType X11Window::windowType() const
         wt = isTransient() ? WindowType::Dialog : WindowType::Normal;
     }
     return wt;
-}
-
-void X11Window::cancelFocusOutTimer()
-{
-    if (m_focusOutTimer) {
-        m_focusOutTimer->stop();
-    }
 }
 
 xcb_window_t X11Window::window() const
@@ -4327,7 +4319,7 @@ void X11Window::updateUrgency()
 }
 
 // focus_in -> the window got FocusIn event
-bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
+bool X11Window::allowWindowActivation(xcb_timestamp_t time)
 {
     auto window = this;
     // options->focusStealingPreventionLevel :
@@ -4346,14 +4338,6 @@ bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
         return true;
     }
     Window *ac = workspace()->activeWindow();
-    if (focus_in) {
-        // TODO: Remove when the KWIN_ENABLE_FOCUS_OUT environment variable is dropped.
-        if (!ac) {
-            // Before getting FocusIn, the active Client already
-            // got FocusOut, and therefore got deactivated.
-            ac = workspace()->lastActiveWindow();
-        }
-    }
     if (time == 0) { // explicitly asked not to get focus
         if (!window->rules()->checkAcceptFocus(false)) {
             return false;
