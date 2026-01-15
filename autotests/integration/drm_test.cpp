@@ -48,6 +48,7 @@ private Q_SLOTS:
     void testModesets();
     void testPresentation();
     void testCursorLayer();
+    void testDirectScanout_data();
     void testDirectScanout();
     void testOverlay_data();
     void testOverlay();
@@ -478,6 +479,24 @@ bool findBufferOnPlane(BackendOutput *output, GraphicsBuffer *buffer)
     });
 }
 
+void DrmTest::testDirectScanout_data()
+{
+    BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
+
+    QTest::addColumn<double>("outputScale");
+    QTest::addColumn<QSize>("bufferSize");
+    QTest::addColumn<Rect>("sourceViewport");
+
+    QTest::addRow("no scaling") << 1.0 << QSize(output->pixelSize()) << Rect(QPoint(), output->pixelSize());
+    QTest::addRow("no effective scaling") << 2.0 << QSize(output->pixelSize()) << Rect(QPoint(), output->pixelSize());
+#ifndef FORCE_DRM_LEGACY
+    // TODO maybe also test that direct scanout does *not* happen with these cases and legacy modesetting?
+    QTest::addRow("scaled up by 2x") << 2.0 << QSize(output->pixelSize() / 2) << Rect(QPoint(), output->pixelSize() / 2);
+    QTest::addRow("scaled up by 2x + partial source") << 2.0 << output->pixelSize() << Rect(QPoint(output->pixelSize().width() / 4, output->pixelSize().height() / 2), output->pixelSize() / 2);
+    QTest::addRow("scaled down by 2x") << 2.0 << QSize(output->pixelSize() * 2) << Rect(QPoint(), output->pixelSize() * 2);
+#endif
+}
+
 void DrmTest::testDirectScanout()
 {
 #ifdef FORCE_DRM_LEGACY
@@ -487,6 +506,16 @@ void DrmTest::testDirectScanout()
     uint32_t time = 0;
     BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
 
+    QFETCH(double, outputScale);
+    QFETCH(QSize, bufferSize);
+    QFETCH(Rect, sourceViewport);
+
+    {
+        OutputConfiguration cfg;
+        cfg.changeSet(output)->scaleSetting = outputScale;
+        QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+    }
+
     const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
     if (layers.size() == 1) {
         QSKIP("The driver only advertises a primary plane");
@@ -495,7 +524,10 @@ void DrmTest::testDirectScanout()
     DmabufWindow window{[](Test::XdgToplevel *toplevel) {
         toplevel->set_fullscreen(nullptr);
     }};
-    QVERIFY(window.renderAndWaitForShown(output->pixelSize()));
+    auto viewport = Test::viewporter()->createViewport(*window.m_surface);
+    viewport->setSource(sourceViewport);
+    viewport->setDestination(output->pixelSize() / outputScale);
+    QVERIFY(window.renderAndWaitForShown(bufferSize));
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
