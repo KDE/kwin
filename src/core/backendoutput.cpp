@@ -20,7 +20,7 @@ namespace KWin
 {
 
 AutoBrightnessCurve::AutoBrightnessCurve()
-    : m_luxAtBrightness({0, 0, 5, 15, 45, 55})
+    : m_luxAtBrightness({0, 0, 0, 0, 0, 0})
 {
 }
 
@@ -53,7 +53,20 @@ void AutoBrightnessCurve::adjust(double brightness, double lux)
     // Adjust the brightness curve in a way that's intuitive for the user,
     // without the user having to care about how it works
 
-    constexpr double minDifference = 0.001;
+    // in lux
+    constexpr double minAbsDifference = 1;
+    // unitless factor
+    constexpr double minRelativeDifference = 0.1;
+
+    // the constraints on the curve are:
+    // - it must be strictly monotonic, so
+    //      - m_luxAtBrightness[i] > m_luxAtBrightness[i - 1]
+    // - the difference between two control points has to be large enough to avoid small
+    //   luminance fluctuations from triggering large brightness jumps. More specifically,
+    //      - m_luxAtBrightness[i] >= m_luxAtBrightness[i - 1] * (1 + minRelativeDifference)
+    //          - aka m_luxAtBrightness[i] / (1 + minRelativeDifference) >= m_luxAtBrightness[i - 1]
+    //      - m_luxAtBrightness[i] >= m_luxAtBrightness[i - 1] + minAbsDifference
+    // - after this method ran, adjust(lux) = brightness
 
     const size_t lowMatch = std::floor(brightness * (m_luxAtBrightness.size() - 1));
     if (lowMatch == m_luxAtBrightness.size() - 1) {
@@ -61,7 +74,7 @@ void AutoBrightnessCurve::adjust(double brightness, double lux)
         m_luxAtBrightness.back() = lux;
         double last = lux;
         for (int i = m_luxAtBrightness.size() - 2; i >= 0; i--) {
-            m_luxAtBrightness[i] = std::min(m_luxAtBrightness[i], last - minDifference);
+            m_luxAtBrightness[i] = std::min({m_luxAtBrightness[i], last / (1 + minRelativeDifference), last - minAbsDifference});
             last = m_luxAtBrightness[i];
         }
         return;
@@ -71,24 +84,32 @@ void AutoBrightnessCurve::adjust(double brightness, double lux)
 
     const double highFactor = brightness * (m_luxAtBrightness.size() - 1) - lowMatch;
     high = std::lerp(high, lux, highFactor);
-    // the curve must be strictly monotonic, so for "low = lux"
-    // to be possible, "high" must be strictly higher than "lux"
-    high = std::max(high, lux + minDifference);
+
+    // We need to enforce "m_luxAtBrightness[i] >= m_luxAtBrightness[i - 1] * (1 + minRelativeDifference)",
+    // but the new value of m_luxAtBrightness[i - 1] is still unknown here.
+    // As it's just a linear equation, use the adjustment point to scale minRelativeDifference instead,
+    // which ensures "(high - low) >= (1 + minRelativeDifference) * lux", which is good enough
+    const double minHighValueRelative = lux + minRelativeDifference * (1 - highFactor) * lux;
+    // Also enforce the minimum absolute difference.
+    const double minHighValueAbsolute = lux + minAbsDifference * (1 - highFactor);
+    high = std::max({minHighValueAbsolute, minHighValueRelative, high});
+
     // this is derived from the linear equation set up by linearly interpolating between low and high:
     // lux = low + (high - low) * highFactor
     // -> lux = highFactor * high + (1 - highFactor) * low
     // -> (1 - highFactor) * low = lux - highFactor * high
     low = (lux - highFactor * high) / (1 - highFactor);
 
-    // ensure the curve stays strictly monotonic in both directions
+    // ensure the curve stays strictly monotonic below the low control point (lowMatch)
     double last = low;
     for (int i = lowMatch - 1; i >= 0; i--) {
-        m_luxAtBrightness[i] = std::min(m_luxAtBrightness[i], last - minDifference);
+        m_luxAtBrightness[i] = std::min({m_luxAtBrightness[i], last / (1 + minRelativeDifference), last - minAbsDifference});
         last = m_luxAtBrightness[i];
     }
-    last = low;
-    for (size_t i = lowMatch + 1; i < m_luxAtBrightness.size(); i++) {
-        m_luxAtBrightness[i] = std::max(m_luxAtBrightness[i], last + minDifference);
+    // and do the same above the high control point (lowMatch + 1)
+    last = high;
+    for (size_t i = lowMatch + 2; i < m_luxAtBrightness.size(); i++) {
+        m_luxAtBrightness[i] = std::max({m_luxAtBrightness[i], last * (1 + minRelativeDifference), last + minAbsDifference});
         last = m_luxAtBrightness[i];
     }
 }
