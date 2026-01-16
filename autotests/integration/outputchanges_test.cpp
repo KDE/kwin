@@ -2333,13 +2333,19 @@ void OutputChangesTest::testMirroring()
 
 void OutputChangesTest::testAutoBrightness()
 {
+    constexpr double eta = 0.001;
+    // we don't need to be exact in all cases
+    constexpr double laxEta = 0.02;
+
     AutoBrightnessCurve curve;
     curve.adjust(1.00, 100);
+    COMPARE_RANGE(curve.sample(100), 1.00, eta);
     curve.adjust(0.75, 50);
+    COMPARE_RANGE(curve.sample(50), 0.75, eta);
     curve.adjust(0.40, 10);
+    COMPARE_RANGE(curve.sample(10), 0.40, eta);
     curve.adjust(0.20, 1);
-
-    constexpr double eta = 0.001;
+    COMPARE_RANGE(curve.sample(1), 0.20, eta);
 
     COMPARE_RANGE(curve.sample(100), 1.00, eta);
     COMPARE_RANGE(curve.sample(50), 0.75, eta);
@@ -2367,6 +2373,17 @@ void OutputChangesTest::testAutoBrightness()
     // higher luminance values should be unaffected by the changes at low brightness
     COMPARE_RANGE(curve.sample(100), 1.00, eta);
     COMPARE_RANGE(curve.sample(50), 0.75, eta);
+
+    // reducing brightness at high luminance should work
+    curve.adjust(0.8, 150);
+    COMPARE_RANGE(curve.sample(150), 0.8, eta);
+    // afterwards, slightly increased luminance should *not* make brightness jump to 100%
+    COMPARE_RANGE(curve.sample(151), 0.8, laxEta);
+
+    // same as above, but in the middle of the curve
+    curve.adjust(0.4, 100);
+    COMPARE_RANGE(curve.sample(100), 0.4, eta);
+    COMPARE_RANGE(curve.sample(101), 0.4, laxEta);
 }
 
 } // namespace KWin
