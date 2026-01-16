@@ -264,7 +264,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
     }
 
     PositionUpdateBlocker blocker(this);
-    updatePosition(pos, time);
+    updatePosition(pos, delta, time);
 
     PointerMotionEvent event{
         .device = device,
@@ -871,8 +871,13 @@ qreal PointerInputRedirection::edgeBarrier(EdgeBarrierType type) const
     }
 }
 
-QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const LogicalOutput *currentOutput, std::chrono::microseconds time)
+QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const QPointF &relativeMotion, const LogicalOutput *currentOutput, std::chrono::microseconds time)
 {
+    // edge barriers are counter-productive for absolute motion
+    if (relativeMotion.isNull()) {
+        m_movementInEdgeBarrier = QPointF();
+        return pos;
+    }
     // optimization to avoid looping over all outputs
     if (currentOutput->geometryF().contains(m_pos)) {
         m_movementInEdgeBarrier = QPointF();
@@ -911,7 +916,7 @@ QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const Logi
     return newPos;
 }
 
-void PointerInputRedirection::updatePosition(const QPointF &pos, std::chrono::microseconds time)
+void PointerInputRedirection::updatePosition(const QPointF &pos, const QPointF &relativeMotion, std::chrono::microseconds time)
 {
     m_lastMoveTime = time;
     if (m_locked) {
@@ -921,7 +926,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos, std::chrono::mi
     // verify that at least one screen contains the pointer position
     const LogicalOutput *currentOutput = workspace()->outputAt(pos);
     QPointF p = confineToBoundingBox(pos, currentOutput->geometry());
-    p = applyEdgeBarrier(p, currentOutput, time);
+    p = applyEdgeBarrier(p, relativeMotion, currentOutput, time);
     p = applyPointerConfinement(p);
     if (p == m_pos) {
         // didn't change due to confinement

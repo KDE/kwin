@@ -168,9 +168,9 @@ private:
 
     void updateOnStartMoveResize();
     void updateToReset();
-    void updatePosition(const QPointF &pos, std::chrono::microseconds time);
+    void updatePosition(const QPointF &pos, const QPointF &relativeMotion, std::chrono::microseconds time);
     void updateButton(uint32_t button, PointerButtonState state);
-    QPointF applyEdgeBarrier(const QPointF &pos, const LogicalOutput *currentOutput, std::chrono::microseconds time);
+    QPointF applyEdgeBarrier(const QPointF &pos, const QPointF &relativeMotion, const LogicalOutput *currentOutput, std::chrono::microseconds time);
     EdgeBarrierType edgeBarrierType(const QPointF &pos, const RectF &lastOutputGeometry) const;
     qreal edgeBarrier(EdgeBarrierType type) const;
     QPointF applyPointerConfinement(const QPointF &pos) const;
