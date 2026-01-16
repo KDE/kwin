@@ -110,8 +110,15 @@ private:
     };
 
     OutputConfiguration setupToConfig(Setup *setup, const std::unordered_map<BackendOutput *, size_t> &outputMap) const;
-    std::optional<std::pair<Setup *, std::unordered_map<BackendOutput *, size_t>>> findSetup(const QList<BackendOutput *> &outputs, bool lidClosed);
-    std::optional<size_t> findOutput(BackendOutput *output, const QList<BackendOutput *> &allOutputs) const;
+    struct SetupWithOutputs
+    {
+        Setup *setup;
+        // this maps to indices in the global m_outputs, not to Setup::outputs
+        std::unordered_map<BackendOutput *, size_t> globalOutputIndices;
+    };
+    std::optional<SetupWithOutputs> findSetup(const QList<BackendOutput *> &outputs, bool lidClosed);
+    std::optional<SetupWithOutputs> findPartialSetup(const QList<BackendOutput *> &outputs, bool lidClosed);
+    std::optional<size_t> findOutputIndex(BackendOutput *output, const QList<BackendOutput *> &allOutputs) const;
 
     QList<OutputState> m_outputs;
     QList<Setup> m_setups;
