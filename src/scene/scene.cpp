@@ -160,6 +160,16 @@ Region RenderView::mapFromDeviceCoordinatesAligned(const Region &deviceGeometry)
     return ret;
 }
 
+RenderView::AccessibilityFlags RenderView::accessibilityFlags() const
+{
+    return m_accessibilityFlags;
+}
+
+void RenderView::setAccessibilityFlags(AccessibilityFlags flags)
+{
+    m_accessibilityFlags = flags;
+}
+
 QPoint RenderView::renderOffset() const
 {
     return m_renderOffset;

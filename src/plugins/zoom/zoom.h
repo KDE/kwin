@@ -117,6 +117,7 @@ private:
     void trackFocus();
 
     std::unique_ptr<QTimer> m_configurationTimer;
+    bool m_inhibitPaint;
     double m_zoom = 1.0;
     double m_targetZoom = 1.0;
     double m_sourceZoom = 1.0;

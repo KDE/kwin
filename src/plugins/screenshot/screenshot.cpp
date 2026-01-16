@@ -120,6 +120,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
         return std::nullopt;
     }
     SceneView sceneView(Compositor::self()->scene(), screen, nullptr, &layer);
+    sceneView.setAccessibilityFlags((RenderView::AccessibilityFlags)(sceneView.accessibilityFlags() | RenderView::AccessibilityFlags::HideScreenMagnification));
     std::unique_ptr<ItemTreeView> cursorView;
     if (!(flags & ScreenShotIncludeCursor)) {
         cursorView = std::make_unique<ItemTreeView>(&sceneView, Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
@@ -190,6 +191,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
         return std::nullopt;
     }
     SceneView sceneView(Compositor::self()->scene(), workspace()->outputs().front(), nullptr, &layer);
+    sceneView.setAccessibilityFlags((RenderView::AccessibilityFlags)(sceneView.accessibilityFlags() | RenderView::AccessibilityFlags::HideScreenMagnification));
     std::unique_ptr<ItemTreeView> cursorView;
     if (!(flags & ScreenShotIncludeCursor)) {
         cursorView = std::make_unique<ItemTreeView>(&sceneView, Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);

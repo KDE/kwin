@@ -245,6 +245,8 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
+    m_inhibitPaint = data.view->accessibilityFlags() & RenderView::AccessibilityFlags::HideScreenMagnification;
+
     data.mask |= PAINT_SCREEN_TRANSFORMED;
     if (m_zoom != m_targetZoom) {
         int time = 0;
@@ -261,7 +263,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         }
     }
 
-    if (m_zoom == 1.0) {
+    if (m_inhibitPaint || m_zoom == 1.0) {
         m_focusPoint.reset();
 
         showCursor();
@@ -401,6 +403,11 @@ GLShader *ZoomEffect::shaderForZoom(double zoom)
 
 void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
+    if (m_inhibitPaint) {
+        Effect::paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
+        return;
+    }
+
     OffscreenData *offscreenData = ensureOffscreenData(renderTarget, viewport, screen);
     if (!offscreenData) {
         return;

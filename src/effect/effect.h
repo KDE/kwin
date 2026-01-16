@@ -19,6 +19,7 @@ class QKeyEvent;
 
 namespace KWin
 {
+class SceneView;
 
 class EffectWindow;
 class LogicalOutput;
@@ -436,7 +437,7 @@ public:
     int mask;
     Region paint;
     LogicalOutput *screen = nullptr;
-    RenderView *view = nullptr;
+    SceneView *view = nullptr;
 };
 
 /**

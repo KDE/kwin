@@ -91,6 +91,7 @@ Region OutputScreenCastSource::render(GLFramebuffer *target, const Region &buffe
     if (!beginInfo) {
         return Region{};
     }
+    m_sceneView->setAccessibilityFlags((RenderView::AccessibilityFlags)(m_sceneView->accessibilityFlags() | RenderView::AccessibilityFlags::HideScreenMagnification));
     m_sceneView->prePaint();
     const auto bufferDamage = (m_layer->deviceRepaints() | m_sceneView->collectDamage()) & Rect(QPoint(), target->size());
     const auto repaints = beginInfo->repaint | bufferDamage;

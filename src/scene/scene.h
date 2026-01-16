@@ -30,6 +30,11 @@ class KWIN_EXPORT RenderView : public QObject
 {
     Q_OBJECT
 public:
+    enum AccessibilityFlags {
+        None = 0,
+        HideScreenMagnification = 1
+    };
+
     explicit RenderView(LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer);
 
     LogicalOutput *logicalOutput() const;
@@ -78,6 +83,9 @@ public:
     Rect mapFromDeviceCoordinatesAligned(const Rect &deviceGeometry) const;
     Region mapFromDeviceCoordinatesAligned(const Region &deviceGeometry) const;
 
+    AccessibilityFlags accessibilityFlags() const;
+    void setAccessibilityFlags(AccessibilityFlags flags);
+
     /**
      * @returns Rect(renderOffset(), deviceSize())
      */
@@ -92,6 +100,7 @@ protected:
     BackendOutput *m_backendOutput = nullptr;
     OutputLayer *m_layer = nullptr;
     QPoint m_renderOffset;
+    AccessibilityFlags m_accessibilityFlags;
 };
 
 class KWIN_EXPORT SceneView : public RenderView
