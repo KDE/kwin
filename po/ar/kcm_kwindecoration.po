@@ -7,7 +7,7 @@
 # محمد سعد  Mohamed SAAD <metehyi@free.fr>, 2006.
 # AbdulAziz AlSharif <a.a-a.s@hotmail.com>, 2007.
 # Youssef Chahibi <chahibi@gmail.com>, 2007.
-# SPDX-FileCopyrightText: 2008, 2024, 2025 zayed <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2008, 2024, 2025, 2026 zayed <zayed.alsaidi@gmail.com>
 # Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010, 2021, 2023.
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, 2016.
 msgid ""
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-14 00:45+0000\n"
-"PO-Revision-Date: 2025-05-31 11:01+0400\n"
+"PO-Revision-Date: 2026-01-15 09:05+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -74,7 +74,7 @@ msgstr "أبقها أعلى النوافذ الأخرى"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "أخفِ من تسجيل الشاشة"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -205,7 +205,7 @@ msgstr "أظهر تلميحات زر شريط العنوان"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" buttonX"
-msgstr ""
+msgstr "أظهر دومًا زر ”إخفاء من تسجيل الشاشة“"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -214,6 +214,7 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screencast"
 msgstr ""
+"عندما لا تُحدد هذه الخانة، لا يظهر الزر إلا إذا كانت النافذة مخفية عن الشاشة."
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -221,7 +222,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from screencast\" button to the "
 "titlebar first"
-msgstr ""
+msgstr "لتمكين هذا الخيار، أضف زر ”أخف من تسجيل الشاشة“ إلى شريط العنوان أولاً"
 
 #: ui/main.qml:29
 #, kde-format
