@@ -654,7 +654,8 @@ void Workspace::updateOutputConfiguration()
                 const bool hasInternal = std::any_of(outputs.begin(), outputs.end(), [](BackendOutput *o) {
                     return o->isInternal();
                 });
-                if (hasInternal && outputs.size() == 2 && kwinApp()->supportsGlobalShortcuts()) {
+                if (hasInternal && outputs.size() == 2 && kwinApp()->supportsGlobalShortcuts()
+                    && !QStandardPaths::isTestModeEnabled()) {
                     // show the OSD with output configuration presets
                     QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kscreen.osdService"),
                                                                           QStringLiteral("/org/kde/kscreen/osdService"),
