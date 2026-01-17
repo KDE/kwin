@@ -30,11 +30,6 @@ class KWIN_EXPORT RenderView : public QObject
 {
     Q_OBJECT
 public:
-    enum AccessibilityFlags {
-        None = 0,
-        HideScreenMagnification = 1
-    };
-
     explicit RenderView(LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer);
 
     LogicalOutput *logicalOutput() const;
@@ -83,9 +78,6 @@ public:
     Rect mapFromDeviceCoordinatesAligned(const Rect &deviceGeometry) const;
     Region mapFromDeviceCoordinatesAligned(const Region &deviceGeometry) const;
 
-    AccessibilityFlags accessibilityFlags() const;
-    void setAccessibilityFlags(AccessibilityFlags flags);
-
     /**
      * @returns Rect(renderOffset(), deviceSize())
      */
@@ -100,15 +92,23 @@ protected:
     BackendOutput *m_backendOutput = nullptr;
     OutputLayer *m_layer = nullptr;
     QPoint m_renderOffset;
-    AccessibilityFlags m_accessibilityFlags;
 };
 
 class KWIN_EXPORT SceneView : public RenderView
 {
     Q_OBJECT
 public:
+    enum AccessibilityFlags {
+        None = 0,
+        HideScreenMagnification = 1
+    };
+    Q_ENUM(AccessibilityFlags);
+
     explicit SceneView(Scene *scene, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer);
     ~SceneView() override;
+
+    AccessibilityFlags accessibilityFlags() const;
+    void setAccessibilityFlags(AccessibilityFlags flags);
 
     Scene *scene() const;
     RectF viewport() const override;
@@ -146,6 +146,7 @@ private:
     QList<RenderView *> m_exclusiveViews;
     QList<RenderView *> m_underlayViews;
     QList<std::function<bool(Window *)>> m_windowFilters;
+    AccessibilityFlags m_accessibilityFlags;
 };
 
 class KWIN_EXPORT ItemView : public RenderView

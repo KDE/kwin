@@ -245,7 +245,7 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    m_inhibitPaint = data.view->accessibilityFlags() & RenderView::AccessibilityFlags::HideScreenMagnification;
+    m_inhibitPaint = data.view->accessibilityFlags() & SceneView::AccessibilityFlags::HideScreenMagnification;
 
     data.mask |= PAINT_SCREEN_TRANSFORMED;
     if (m_zoom != m_targetZoom) {

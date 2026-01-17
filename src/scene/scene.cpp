@@ -160,16 +160,6 @@ Region RenderView::mapFromDeviceCoordinatesAligned(const Region &deviceGeometry)
     return ret;
 }
 
-RenderView::AccessibilityFlags RenderView::accessibilityFlags() const
-{
-    return m_accessibilityFlags;
-}
-
-void RenderView::setAccessibilityFlags(AccessibilityFlags flags)
-{
-    m_accessibilityFlags = flags;
-}
-
 QPoint RenderView::renderOffset() const
 {
     return m_renderOffset;
@@ -195,6 +185,16 @@ SceneView::SceneView(Scene *scene, LogicalOutput *logicalOutput, BackendOutput *
 SceneView::~SceneView()
 {
     m_scene->removeView(this);
+}
+
+SceneView::AccessibilityFlags SceneView::accessibilityFlags() const
+{
+    return m_accessibilityFlags;
+}
+
+void SceneView::setAccessibilityFlags(AccessibilityFlags flags)
+{
+    m_accessibilityFlags = flags;
 }
 
 QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
