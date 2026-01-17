@@ -139,6 +139,8 @@
                                     Defaults to false
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "exclude-zoom" (b): Whether to exclude Zoom or Magnifier
+                                  in the image. Defaults to false
 
             The following results get returned via the @results vardict:
 
@@ -185,6 +187,8 @@
                                     Defaults to false
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "exclude-zoom" (b): Whether to exclude Zoom or Magnifier
+                      in the image. Defaults to false
 
             The following results get returned via the @results vardict:
 
@@ -231,6 +235,8 @@
                                     Defaults to false
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "exclude-zoom" (b): Whether to exclude Zoom or Magnifier
+                                  in the image. Defaults to false
 
             The following results get returned via the @results vardict:
 
@@ -276,6 +282,8 @@
                                     Defaults to true
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "exclude-zoom" (b): Whether to exclude Zoom or Magnifier
+                                  in the image. Defaults to false
 
             The following results get returned via the @results vardict:
 
@@ -330,6 +338,8 @@
                                     Defaults to false
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "exclude-zoom" (b): Whether to exclude Zoom or Magnifier
+                                  in the image. Defaults to false
 
             The following results get returned via the @results vardict:
 

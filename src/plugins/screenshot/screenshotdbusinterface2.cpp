@@ -111,6 +111,11 @@ static ScreenShotFlags screenShotFlagsFromOptions(const QVariantMap &options)
         flags |= ScreenShotIncludeDecoration;
     }
 
+    const QVariant excludeZoom = options.value(QStringLiteral("exclude-zoom"));
+    if (!excludeZoom.toBool()) {
+        flags |= ScreenShotIncludeZoom;
+    }
+
     const QVariant includeShadow = options.value(QStringLiteral("include-shadow"), true);
     if (includeShadow.toBool()) {
         flags |= ScreenShotIncludeShadow;
