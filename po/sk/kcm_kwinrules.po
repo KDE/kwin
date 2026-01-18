@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2026-01-14 18:50+0100\n"
+"PO-Revision-Date: 2026-01-17 20:18+0100\n"
 "Last-Translator: Lucia Mrenica <lucia.mrenica@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
@@ -235,10 +235,9 @@ msgid "Machine (hostname)"
 msgstr "Počítač (hostiteľ):"
 
 #: rulesmodel.cpp:440
-#, fuzzy, kde-format
-#| msgid "Window types"
+#, kde-format
 msgid "Window tag"
-msgstr "Typy okien:"
+msgstr "Tag okna"
 
 #: rulesmodel.cpp:447
 #, kde-format
@@ -846,14 +845,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "Žiadne pravidlá pre konkrétne okná nie sú aktuálne nastavené"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr ""
-"Kliknite na tlačidlo <interface>Pridať nové</interface> nižšie a pridajte "
-"nejaké"
+msgstr "Kliknutím na <interface>Pridať nové...</interface> pridáte ďalšie"
 
 #: ui/main.qml:97
 #, kde-format
@@ -962,18 +957,16 @@ msgid "Add property to the rule"
 msgstr "Pridať vlastnosť tomuto pravidlu"
 
 #: ui/RulesEditor.qml:267
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "Nezmenili sa žiadne vlastnosti okna"
+msgstr "Nezostali žiadne vlastnosti na pridanie"
 
 #: ui/RulesEditor.qml:269
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "Nezmenili sa žiadne vlastnosti okna"
+msgstr "Žiadne vlastnosti sa nezhodujú s \"%1\""
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format

@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-14 02:39+0000\n"
-"PO-Revision-Date: 2026-01-14 18:50+0100\n"
+"PO-Revision-Date: 2026-01-17 20:25+0100\n"
 "Last-Translator: Lucia Mrenica <lucia.mrenica@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
@@ -24,9 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "Button showing window actions menu"
-#| msgid "Window Menu"
+#, kde-format
 msgid "Window menu"
 msgstr "Ponuka okna"
 
@@ -189,20 +187,16 @@ msgid "Titlebar Buttons"
 msgstr "Tlačidlá záhlavia"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgctxt "checkbox label"
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "Zavrieť okná dvojklikom na tlačidlo ponuky"
+msgstr "Zatvorte okná dvojitým kliknutím na tlačidlo ponuky okna."
 
 #: ui/ConfigureTitlebar.qml:52
-#, fuzzy, kde-format
-#| msgctxt "popup tip"
-#| msgid "Click and hold on the menu button to show the menu."
+#, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
-msgstr "Ponuku zobrazíte kliknutím a podržaním na tlačidla ponuky."
+msgstr "Kliknite a podržte tlačidlo ponuky okna, aby sa zobrazila ponuka."
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format
@@ -223,6 +217,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screencast"
 msgstr ""
+"Ak nie je zaškrtnuté, tlačidlo sa zobrazí len v prípade, že je okno skryté z "
+"screencastu."
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format

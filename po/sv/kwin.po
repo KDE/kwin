@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-13 08:42+0000\n"
-"PO-Revision-Date: 2025-11-21 01:37+0100\n"
+"PO-Revision-Date: 2026-01-17 16:50+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -50,14 +50,12 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland-sammansättning %1"
 
 #: backends/wayland/wayland_output.cpp:490
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- Output disabled"
 msgstr "- Utmatning inaktiverad"
 
 #: backends/wayland/wayland_output.cpp:492
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- Output dimmed"
 msgstr "- Utmatning dämpad"
 
@@ -4150,22 +4148,22 @@ msgstr "Inaktivering av alla utgångar med inställningsändringar tillåts inte
 #: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Kan inte lägga till eget läge med en tom storlek"
 
 #: wayland/outputmanagement_v2.cpp:635
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "Kan inte lägga till eget läge med en uppdateringsfrekvens noll Hz"
 
 #: wayland/outputmanagement_v2.cpp:642
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "Positionen för utdata %s är negativ, vilket inte stöds"
 
 #: wayland/outputmanagement_v2.cpp:646
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "Positionen för utdata %s är alldeles för stor (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:663
 #, kde-format

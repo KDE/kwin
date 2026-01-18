@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-12-23 00:42+0000\n"
-"PO-Revision-Date: 2026-01-14 18:49+0100\n"
+"PO-Revision-Date: 2026-01-17 20:18+0100\n"
 "Last-Translator: Lucia Mrenica <lucia.mrenica@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
@@ -80,18 +80,16 @@ msgid "Remove"
 msgstr "Odstrániť"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Confirm new name"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "Potvrdiť nový názov"
+msgstr "Použiť nový názov"
 
 #: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "Zrušiť premenovanie"
 
 #: ui/main.qml:179
 #, kde-format
