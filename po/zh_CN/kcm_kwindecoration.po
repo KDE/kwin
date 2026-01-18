@@ -65,7 +65,7 @@ msgstr "保持在其他窗口之上"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "在录屏中隐藏"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -194,7 +194,7 @@ msgstr "显示标题栏按钮悬停提示"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" buttonX"
-msgstr ""
+msgstr "总是显示“在录屏中隐藏”按钮"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -202,7 +202,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screencast"
-msgstr ""
+msgstr "如果不勾选此项，此按钮将只在窗口在录屏中隐藏时显示"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -210,7 +210,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from screencast\" button to the "
 "titlebar first"
-msgstr ""
+msgstr "要启用此选项，请先在标题栏中添加“在录屏中隐藏”按钮"
 
 #: ui/main.qml:29
 #, kde-format
