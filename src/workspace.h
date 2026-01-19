@@ -246,7 +246,7 @@ public:
      *
      * @see clientArea()
      */
-    void rearrange();
+    void rearrange(const QHash<Window *, LogicalOutput *> &oldOutputs = {});
 
     /**
      * Schedules the workspace to be re-arranged at the next available opportunity.
@@ -523,7 +523,6 @@ public Q_SLOTS:
     void slotEndInteractiveMoveResize();
 
 private Q_SLOTS:
-    void desktopResized();
 #if KWIN_BUILD_X11
     void selectWmInputEventMask();
 #endif
@@ -582,6 +581,7 @@ private:
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, bool autoRepeat);
     void setupWindowShortcut(Window *window);
     bool switchWindow(Window *window, Direction direction, QPoint curPos, VirtualDesktop *desktop);
+    void desktopResized(const QHash<Window *, LogicalOutput *> &oldOutputs);
 
     QList<Window *> constrainedStackingOrder();
     bool areConstrained(const Window *below, const Window *above) const;
