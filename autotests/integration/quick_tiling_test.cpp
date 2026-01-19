@@ -120,6 +120,8 @@ private Q_SLOTS:
     void testScript_data();
     void testScript();
     void testDontCrashWithMaximizeWindowRule();
+    void testRestoreFromTiled();
+    void testRestorePriorityOrder();
 };
 
 void QuickTilingTest::initTestCase()
@@ -2328,6 +2330,101 @@ void QuickTilingTest::testDontCrashWithMaximizeWindowRule()
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
+}
+
+void QuickTilingTest::testRestoreFromTiled()
+{
+    // Ensure no window rules are active from previous tests
+    workspace()->rulebook()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
+    workspace()->slotReconfigure();
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+
+    // Map the window.
+    const auto initialGeometry = Rect(0, 0, 100, 50);
+    auto window = Test::renderAndWaitForShown(surface.get(), initialGeometry.size(), Qt::blue);
+    QCOMPARE(workspace()->activeWindow(), window);
+    QCOMPARE(window->frameGeometry(), initialGeometry);
+    QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
+
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Tile the window to the left
+    window->handleQuickTileShortcut(QuickTileFlag::Left);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
+    QTRY_COMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::Left));
+
+    // Invoke the restore operation
+    workspace()->slotWindowRestore();
+
+    // Window should be un-tiled and return to original geometry
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), initialGeometry.size());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+
+    QTRY_COMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
+    QTRY_COMPARE(window->frameGeometry(), initialGeometry);
+}
+
+void QuickTilingTest::testRestorePriorityOrder()
+{
+    // Ensure no window rules are active from previous tests
+    workspace()->rulebook()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
+    workspace()->slotReconfigure();
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+
+    // Map the window.
+    const auto originalGeometry = Rect(0, 0, 100, 50);
+    auto window = Test::renderAndWaitForShown(surface.get(), originalGeometry.size(), Qt::blue);
+    QCOMPARE(workspace()->activeWindow(), window);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Test that fullscreen is restored before tiled state
+    // First tile the window
+    window->handleQuickTileShortcut(QuickTileFlag::Left);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
+    QTRY_COMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::Left));
+    const auto tiledGeometry = window->frameGeometry();
+
+    // Then make it fullscreen (while tiled)
+    window->setFullScreen(true);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
+    QTRY_VERIFY(window->isFullScreen());
+
+    // First restore should exit fullscreen, not un-tile
+    workspace()->slotWindowRestore();
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), tiledGeometry.size());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
+    QTRY_VERIFY(!window->isFullScreen());
+    QTRY_COMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::Left)); // Still tiled
+    QTRY_COMPARE(window->frameGeometry(), tiledGeometry);
+
+    // Second restore should un-tile
+    workspace()->slotWindowRestore();
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), originalGeometry.size());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
+    QTRY_COMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
+    QTRY_COMPARE(window->frameGeometry(), originalGeometry);
 }
 }
 

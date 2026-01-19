@@ -42,6 +42,8 @@ private Q_SLOTS:
     void testInitiallyMaximizedBorderless();
     void testBorderlessMaximizedWindow();
     void testMaximizedGainFocusAndBeActivated();
+    void testRestoreFromMaximized();
+    void testRestoreFromFullscreen();
 };
 
 void TestMaximized::initTestCase()
@@ -309,6 +311,79 @@ void TestMaximized::testMaximizedGainFocusAndBeActivated()
     QVERIFY(Test::waitForWindowClosed(window));
     xdgShellSurface2.reset();
     QVERIFY(Test::waitForWindowClosed(window2));
+}
+
+void TestMaximized::testRestoreFromMaximized()
+{
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+
+    // Map the window.
+    const auto originalGeometry = RectF(0, 0, 100, 50);
+    auto window = Test::renderAndWaitForShown(surface.get(), originalGeometry.size().toSize(), Qt::blue);
+    QCOMPARE(workspace()->activeWindow(), window);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+
+    // Maximize the window
+    workspace()->slotWindowMaximize();
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
+    QTRY_COMPARE(window->maximizeMode(), MaximizeFull);
+
+    // Invoke the restore operation
+    workspace()->slotWindowRestore();
+
+    // Window should be restored
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), originalGeometry.size().toSize());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+
+    QTRY_COMPARE(window->maximizeMode(), MaximizeRestore);
+    QTRY_COMPARE(window->frameGeometry(), originalGeometry);
+}
+
+void TestMaximized::testRestoreFromFullscreen()
+{
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+
+    // Map the window.
+    const auto originalGeometry = RectF(0, 0, 100, 50);
+    auto window = Test::renderAndWaitForShown(surface.get(), originalGeometry.size().toSize(), Qt::blue);
+    QCOMPARE(workspace()->activeWindow(), window);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    QVERIFY(!window->isFullScreen());
+
+    // Make fullscreen
+    window->setFullScreen(true);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
+    QTRY_VERIFY(window->isFullScreen());
+
+    // Invoke the restore operation
+    workspace()->slotWindowRestore();
+
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), originalGeometry.size().toSize());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+
+    QTRY_VERIFY(!window->isFullScreen());
+    QTRY_COMPARE(window->frameGeometry(), originalGeometry);
 }
 
 WAYLANDTEST_MAIN(TestMaximized)

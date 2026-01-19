@@ -842,6 +842,8 @@ void Workspace::initShortcuts()
                  0, &Workspace::slotWindowMaximizeVertical, false);
     initShortcut("Window Maximize Horizontal", i18n("Maximize Window Horizontally"),
                  0, &Workspace::slotWindowMaximizeHorizontal, false);
+    initShortcut("Window Restore", i18n("Restore Window"),
+                 Qt::META | Qt::Key_Backspace, &Workspace::slotWindowRestore, true);
     initShortcut("Window Minimize", i18n("Minimize Window"),
                  Qt::META | Qt::Key_PageDown, &Workspace::slotWindowMinimize, false);
     initShortcut("Window Move", i18n("Move Window"),
@@ -1113,8 +1115,19 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         raiseWindow(window);
         requestFocus(window);
         break;
-    case Options::RestoreOp:
-        window->maximize(MaximizeRestore);
+    case Options::UntileOrRestoreOp:
+        // Un-fullscreen takes priority
+        if (window->isFullScreen()) {
+            window->setFullScreen(false);
+        }
+        // Un-tile if tiled
+        else if (window->requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+            window->setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
+        }
+        // Un-maximize if maximized
+        else if (window->requestedMaximizeMode() != MaximizeRestore) {
+            window->maximize(MaximizeRestore);
+        }
         raiseWindow(window);
         requestFocus(window);
         break;
@@ -1297,6 +1310,16 @@ void Workspace::slotWindowMaximizeHorizontal()
 {
     if (USABLE_ACTIVE_WINDOW) {
         performWindowOperation(m_activeWindow, Options::HMaximizeOp);
+    }
+}
+
+/**
+ * Restores the active window (un-fullscreen, un-tile, or un-maximize).
+ */
+void Workspace::slotWindowRestore()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        performWindowOperation(m_activeWindow, Options::UntileOrRestoreOp);
     }
 }
 

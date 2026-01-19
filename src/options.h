@@ -389,7 +389,7 @@ public:
 
     enum WindowOperation {
         MaximizeOp = 5000,
-        RestoreOp,
+        UntileOrRestoreOp,
         MinimizeOp,
         MoveOp,
         UnrestrictedMoveOp,
