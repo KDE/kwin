@@ -3957,7 +3957,7 @@ void Window::sendToOutput(LogicalOutput *newOutput)
     }
 }
 
-void Window::checkWorkspacePosition(RectF oldGeometry, LogicalOutput *oldOutput)
+void Window::checkWorkspacePosition(RectF oldGeometry)
 {
     if (isDeleted()) {
         qCWarning(KWIN_CORE) << "Window::checkWorkspacePosition: called for a closed window. Consider this a bug";
@@ -3972,23 +3972,21 @@ void Window::checkWorkspacePosition(RectF oldGeometry, LogicalOutput *oldOutput)
     if (!oldGeometry.isValid()) {
         oldGeometry = newGeom;
     }
-    if (!oldOutput) {
-        oldOutput = moveResizeOutput();
-    }
 
     // If the window was touching an edge before but not now move it so it is again.
     // Old and new maximums have different starting values so windows on the screen
     // edge will move when a new strut is placed on the edge.
     Rect oldScreenArea;
     Rect screenArea;
+    LogicalOutput *oldOutput = moveResizeOutput();
+    LogicalOutput *newOutput = oldOutput;
     if (workspace()->inRearrange()) {
         // check if the window is on an about to be destroyed output
-        LogicalOutput *newOutput = oldOutput;
         if (!workspace()->outputs().contains(newOutput)) {
             newOutput = workspace()->outputAt(newGeom.center());
         }
         // we need to find the screen area as it was before the change
-        oldScreenArea = workspace()->previousScreenSizes().value(oldOutput);
+        oldScreenArea = workspace()->previousScreenSizes().value(moveResizeOutput());
         if (oldScreenArea.isNull()) {
             oldScreenArea = newOutput->geometry();
         }
@@ -4000,9 +3998,17 @@ void Window::checkWorkspacePosition(RectF oldGeometry, LogicalOutput *oldOutput)
     }
 
     if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore || requestedQuickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-        moveResize(ensureSpecialStateGeometry(newGeom));
         setFullscreenGeometryRestore(moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea));
         setGeometryRestore(moveToArea(m_maximizeGeometryRestore, oldScreenArea, screenArea));
+        if (oldOutput != newOutput && requestedQuickTileMode() != QuickTileFlag::None) {
+            if (requestedQuickTileMode() == QuickTileFlag::Custom) {
+                setQuickTileMode(QuickTileFlag::None, newGeom.center());
+                newGeom = moveResizeGeometry();
+            } else {
+                setQuickTileMode(requestedQuickTileMode(), newGeom.center());
+            }
+        }
+        moveResize(ensureSpecialStateGeometry(newGeom));
         return;
     }
 

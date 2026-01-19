@@ -311,9 +311,7 @@ void Workspace::init()
     m_rearrangeTimer.setSingleShot(true);
 
     connect(&reconfigureTimer, &QTimer::timeout, this, &Workspace::slotReconfigure);
-    connect(&m_rearrangeTimer, &QTimer::timeout, this, [this]() {
-        rearrange();
-    });
+    connect(&m_rearrangeTimer, &QTimer::timeout, this, &Workspace::rearrange);
 
     // TODO: do we really need to reconfigure everything when fonts change?
     // maybe just reconfigure the decorations? Move this into libkdecoration?
@@ -1292,13 +1290,6 @@ static const int s_dpmsTimeout = environmentVariableIntValue("KWIN_DPMS_WORKAROU
 
 void Workspace::updateOutputs()
 {
-    QHash<Window *, LogicalOutput *> oldMoveResizeOutputs;
-    for (Window *window : m_windows) {
-        if (window->isClient()) {
-            oldMoveResizeOutputs[window] = window->moveResizeOutput();
-        }
-    }
-
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldLogicalOutputs = m_outputs;
     QList<BackendOutput *> newBackendOutputs;
@@ -1371,55 +1362,16 @@ void Workspace::updateOutputs()
     const auto removed = oldOutputsSet - outputsSet;
     for (LogicalOutput *output : removed) {
         Q_EMIT outputRemoved(output);
-
-        auto tileManager = std::move(m_tileManagers[output]);
-        m_tileManagers.erase(output);
-
-        const auto desktops = VirtualDesktopManager::self()->desktops();
-        for (VirtualDesktop *desktop : desktops) {
-            // Evacuate windows from the defunct custom tile tree.
-            tileManager->rootTile(desktop)->visitDescendants([](Tile *child) {
-                const QList<Window *> windows = child->windows();
-                for (Window *window : windows) {
-                    child->unmanage(window);
-                }
-            });
-
-            // Migrate windows from the defunct quick tile to a quick tile tree on another output.
-            static constexpr QuickTileMode quickTileModes[] = {
-                QuickTileFlag::Left,
-                QuickTileFlag::Right,
-                QuickTileFlag::Top,
-                QuickTileFlag::Bottom,
-                QuickTileFlag::Top | QuickTileFlag::Left,
-                QuickTileFlag::Top | QuickTileFlag::Right,
-                QuickTileFlag::Bottom | QuickTileFlag::Left,
-                QuickTileFlag::Bottom | QuickTileFlag::Right,
-            };
-
-            for (const QuickTileMode &quickTileMode : quickTileModes) {
-                Tile *quickTile = tileManager->quickRootTile(desktop)->tileForMode(quickTileMode);
-                const QList<Window *> windows = quickTile->windows();
-                if (windows.isEmpty()) {
-                    continue;
-                }
-
-                LogicalOutput *bestOutput = outputAt(output->geometry().center());
-                Tile *bestTile = m_tileManagers[bestOutput]->quickRootTile(desktop)->tileForMode(quickTileMode);
-
-                if (bestTile) {
-                    for (Window *window : windows) {
-                        bestTile->manage(window);
-                    }
-                }
-            }
-        }
     }
 
-    desktopResized(oldMoveResizeOutputs);
+    desktopResized();
 
     m_placementTracker->uninhibit();
     m_placementTracker->restore(outputLayoutId());
+
+    for (LogicalOutput *output : removed) {
+        m_tileManagers.erase(output);
+    }
 
     Q_EMIT outputsChanged();
 
@@ -2241,7 +2193,7 @@ void Workspace::checkTransients(xcb_window_t w)
 /**
  * Resizes the workspace after an XRANDR screen size change
  */
-void Workspace::desktopResized(const QHash<Window *, LogicalOutput *> &oldOutputs)
+void Workspace::desktopResized()
 {
     const Rect oldGeometry = m_geometry;
     m_geometry = Rect();
@@ -2262,7 +2214,7 @@ void Workspace::desktopResized(const QHash<Window *, LogicalOutput *> &oldOutput
     }
 #endif
 
-    rearrange(oldOutputs);
+    rearrange();
 
     if (!m_outputs.contains(m_activeOutput)) {
         setActiveOutput(m_outputs[0]);
@@ -2353,7 +2305,7 @@ void Workspace::scheduleRearrange()
     m_rearrangeTimer.start(0);
 }
 
-void Workspace::rearrange(const QHash<Window *, LogicalOutput *> &oldOutputs)
+void Workspace::rearrange()
 {
     Q_EMIT aboutToRearrange();
     m_rearrangeTimer.stop();
@@ -2429,7 +2381,7 @@ void Workspace::rearrange(const QHash<Window *, LogicalOutput *> &oldOutputs)
 
         for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
             if ((*it)->isClient()) {
-                (*it)->checkWorkspacePosition(RectF(), oldOutputs.value(*it, nullptr));
+                (*it)->checkWorkspacePosition();
             }
         }
 
