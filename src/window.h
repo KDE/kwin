@@ -1128,7 +1128,7 @@ public:
     bool wantsTabFocus() const;
     virtual void takeFocus();
     virtual bool wantsInput() const = 0;
-    void checkWorkspacePosition(RectF oldGeometry = RectF(), const VirtualDesktop *oldDesktop = nullptr);
+    void checkWorkspacePosition(RectF oldGeometry = RectF(), const VirtualDesktop *oldDesktop = nullptr, LogicalOutput *oldOutput = nullptr);
 #if KWIN_BUILD_X11
     virtual xcb_timestamp_t userTime() const;
 #endif

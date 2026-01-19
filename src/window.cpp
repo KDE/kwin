@@ -3957,7 +3957,7 @@ void Window::sendToOutput(LogicalOutput *newOutput)
     }
 }
 
-void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *oldDesktop)
+void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *oldDesktop, LogicalOutput *oldOutput)
 {
     if (isDeleted()) {
         qCWarning(KWIN_CORE) << "Window::checkWorkspacePosition: called for a closed window. Consider this a bug";
@@ -3977,6 +3977,9 @@ void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *old
     if (!oldDesktop) {
         oldDesktop = desktop;
     }
+    if (!oldOutput) {
+        oldOutput = moveResizeOutput();
+    }
 
     // If the window was touching an edge before but not now move it so it is again.
     // Old and new maximums have different starting values so windows on the screen
@@ -3985,12 +3988,12 @@ void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *old
     Rect screenArea;
     if (workspace()->inRearrange()) {
         // check if the window is on an about to be destroyed output
-        LogicalOutput *newOutput = moveResizeOutput();
+        LogicalOutput *newOutput = oldOutput;
         if (!workspace()->outputs().contains(newOutput)) {
             newOutput = workspace()->outputAt(newGeom.center());
         }
         // we need to find the screen area as it was before the change
-        oldScreenArea = workspace()->previousScreenSizes().value(moveResizeOutput());
+        oldScreenArea = workspace()->previousScreenSizes().value(oldOutput);
         if (oldScreenArea.isNull()) {
             oldScreenArea = newOutput->geometry();
         }
