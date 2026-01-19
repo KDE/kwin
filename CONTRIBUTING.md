@@ -85,7 +85,7 @@ cmake ..
 make
 ```
 
-People hacking on much KDE software may want to set up [kdesrc-build](https://invent.kde.org/sdk/kdesrc-build).
+People hacking on much KDE software may want to set up [kde-builder](https://invent.kde.org/sdk/kde-builder).
 
 Once built, you can either install it over your system KWin (not recommended) or run it from the build directory directly.
 
