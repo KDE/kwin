@@ -21,6 +21,7 @@ namespace KWin
 class Display;
 class BlurManagerInterfacePrivate;
 class BlurInterfacePrivate;
+class SurfaceInterface;
 
 /**
  * @brief Represents the Global for org_kde_kwin_blur_manager interface.
@@ -69,7 +70,7 @@ public:
     Region region();
 
 private:
-    explicit BlurInterface(wl_resource *resource);
+    BlurInterface(SurfaceInterface *surface, wl_resource *resource);
     friend class BlurManagerInterfacePrivate;
 
     std::unique_ptr<BlurInterfacePrivate> d;

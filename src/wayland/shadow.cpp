@@ -12,7 +12,7 @@
 
 namespace KWin
 {
-static const quint32 s_version = 2;
+static const quint32 s_version = 3;
 
 class ShadowManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_shadow_manager
 {
@@ -52,10 +52,7 @@ void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_create(Resource 
         return;
     }
 
-    auto shadow = new ShadowInterface(q, shadow_resource);
-
-    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
-    surfacePrivate->setShadow(QPointer<ShadowInterface>(shadow));
+    new ShadowInterface(s, shadow_resource);
 }
 
 void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_unset(Resource *resource, wl_resource *surface)
@@ -112,7 +109,7 @@ public:
     void attach(Commit::Flags flag, wl_resource *buffer);
 
     ShadowInterface *q;
-    ShadowManagerInterface *manager;
+    QPointer<SurfaceInterface> surface;
     Commit pending;
 
     GraphicsBufferRef left;
@@ -291,14 +288,25 @@ ShadowInterfacePrivate::ShadowInterfacePrivate(ShadowInterface *_q, wl_resource 
 {
 }
 
-ShadowInterface::ShadowInterface(ShadowManagerInterface *manager, wl_resource *resource)
+ShadowInterface::ShadowInterface(SurfaceInterface *surface, wl_resource *resource)
     : QObject()
     , d(new ShadowInterfacePrivate(this, resource))
 {
-    d->manager = manager;
+    d->surface = surface;
+
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
+    surfacePrivate->setShadow(this);
 }
 
-ShadowInterface::~ShadowInterface() = default;
+ShadowInterface::~ShadowInterface()
+{
+    if (d->surface) {
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
+        if (surfacePrivate->pending->shadow == this) {
+            surfacePrivate->setShadow(nullptr);
+        }
+    }
+}
 
 QMarginsF ShadowInterface::offset() const
 {

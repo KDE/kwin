@@ -23,6 +23,7 @@ namespace KWin
 class Display;
 class ContrastManagerInterfacePrivate;
 class ContrastInterfacePrivate;
+class SurfaceInterface;
 
 /**
  * @brief Represents the Global for org_kde_kwin_contrast_manager interface.
@@ -71,7 +72,7 @@ public:
     QColor frost() const;
 
 private:
-    explicit ContrastInterface(wl_resource *resource);
+    ContrastInterface(SurfaceInterface *surface, wl_resource *resource);
     friend class ContrastManagerInterfacePrivate;
 
     std::unique_ptr<ContrastInterfacePrivate> d;

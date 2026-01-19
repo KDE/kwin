@@ -14,7 +14,7 @@
 
 namespace KWin
 {
-static const quint32 s_version = 1;
+static const quint32 s_version = 2;
 
 class BlurManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_blur_manager
 {
@@ -62,9 +62,7 @@ void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_create(Resource *res
         wl_client_post_no_memory(resource->client());
         return;
     }
-    auto blur = new BlurInterface(blur_resource);
-    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
-    surfacePrivate->setBlur(blur);
+    new BlurInterface(s, blur_resource);
 }
 
 BlurManagerInterface::BlurManagerInterface(Display *display, QObject *parent)
@@ -90,6 +88,7 @@ public:
     Region currentRegion;
 
     BlurInterface *q;
+    QPointer<SurfaceInterface> surface;
 
 protected:
     void org_kde_kwin_blur_destroy_resource(Resource *resource) override;
@@ -129,13 +128,25 @@ BlurInterfacePrivate::BlurInterfacePrivate(BlurInterface *_q, wl_resource *resou
 {
 }
 
-BlurInterface::BlurInterface(wl_resource *resource)
+BlurInterface::BlurInterface(SurfaceInterface *surface, wl_resource *resource)
     : QObject()
     , d(new BlurInterfacePrivate(this, resource))
 {
+    d->surface = surface;
+
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
+    surfacePrivate->setBlur(this);
 }
 
-BlurInterface::~BlurInterface() = default;
+BlurInterface::~BlurInterface()
+{
+    if (d->surface) {
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
+        if (surfacePrivate->pending->blur == this) {
+            surfacePrivate->setBlur(nullptr);
+        }
+    }
+}
 
 Region BlurInterface::region()
 {

@@ -13,7 +13,7 @@
 
 namespace KWin
 {
-static const quint32 s_version = 2;
+static const quint32 s_version = 3;
 
 class ContrastManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_contrast_manager
 {
@@ -52,9 +52,7 @@ void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_create(Resou
         wl_client_post_no_memory(resource->client());
         return;
     }
-    auto contrast = new ContrastInterface(contrast_resource);
-    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
-    surfacePrivate->setContrast(contrast);
+    new ContrastInterface(s, contrast_resource);
 }
 
 void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_unset(Resource *resource, wl_resource *surface)
@@ -99,6 +97,7 @@ public:
     QColor currentFrost;
     QColor pendingFrost;
     ContrastInterface *q;
+    QPointer<SurfaceInterface> surface;
 
 protected:
     void org_kde_kwin_contrast_commit(Resource *resource) override;
@@ -172,13 +171,25 @@ ContrastInterfacePrivate::ContrastInterfacePrivate(ContrastInterface *_q, wl_res
 {
 }
 
-ContrastInterface::ContrastInterface(wl_resource *resource)
+ContrastInterface::ContrastInterface(SurfaceInterface *surface, wl_resource *resource)
     : QObject()
     , d(new ContrastInterfacePrivate(this, resource))
 {
+    d->surface = surface;
+
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
+    surfacePrivate->setContrast(this);
 }
 
-ContrastInterface::~ContrastInterface() = default;
+ContrastInterface::~ContrastInterface()
+{
+    if (d->surface) {
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
+        if (surfacePrivate->pending->contrast == this) {
+            surfacePrivate->setContrast(nullptr);
+        }
+    }
+}
 
 Region ContrastInterface::region() const
 {
