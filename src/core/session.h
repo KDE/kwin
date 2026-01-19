@@ -73,6 +73,7 @@ public:
 
     enum class Error {
         EBusy,
+        NoSuchDevice,
         Other,
     };
 

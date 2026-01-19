@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "core/outputbackend.h"
+#include "core/session.h"
 
 #include <QList>
 #include <QPointer>
@@ -20,7 +21,6 @@
 namespace KWin
 {
 
-class Session;
 class Udev;
 class UdevMonitor;
 class UdevDevice;
@@ -80,7 +80,7 @@ private:
     void addOutput(DrmAbstractOutput *output);
     void removeOutput(DrmAbstractOutput *output);
     void handleUdevEvent();
-    DrmGpu *addGpu(const QString &fileName);
+    std::expected<DrmGpu *, Session::Error> addGpu(const QString &fileName);
 
     std::unique_ptr<Udev> m_udev;
     std::unique_ptr<UdevMonitor> m_udevMonitor;

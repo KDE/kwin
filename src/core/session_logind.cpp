@@ -162,6 +162,7 @@ std::expected<int, Session::Error> LogindSession::openRestricted(const QString &
 {
     struct stat st;
     if (stat(fileName.toUtf8(), &st) < 0) {
+        qCWarning(KWIN_CORE, "stat on %s failed: %s", qPrintable(fileName), strerror(errno));
         return std::unexpected(errorFromErrno());
     }
 
@@ -177,6 +178,10 @@ std::expected<int, Session::Error> LogindSession::openRestricted(const QString &
                   qPrintable(fileName), qPrintable(reply.errorMessage()));
         if (reply.errorName() == "System.Error.EBUSY") {
             return std::unexpected(Error::EBusy);
+        } else if (reply.errorName() == "System.Error.ENOENT"
+                   || reply.errorName() == "System.Error.ENXIO"
+                   || reply.errorName() == "System.Error.ENODEV") {
+            return std::unexpected(Error::NoSuchDevice);
         } else {
             return std::unexpected(Error::Other);
         }
@@ -184,11 +189,13 @@ std::expected<int, Session::Error> LogindSession::openRestricted(const QString &
 
     const QDBusUnixFileDescriptor descriptor = reply.arguments().constFirst().value<QDBusUnixFileDescriptor>();
     if (!descriptor.isValid()) {
+        qCWarning(KWIN_CORE, "Opening %s returned an invalid file descriptor", qPrintable(fileName));
         return std::unexpected(Error::Other);
     }
 
     const int ret = fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (ret == -1) {
+        qCWarning(KWIN_CORE, "Duplicating file descriptor for %s failed: %s", qPrintable(fileName), strerror(errno));
         return std::unexpected(errorFromErrno());
     } else {
         return ret;

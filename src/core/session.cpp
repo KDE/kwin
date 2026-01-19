@@ -45,9 +45,14 @@ std::unique_ptr<Session> Session::create(Type type)
 
 Session::Error Session::errorFromErrno()
 {
-    if (errno == EBUSY) {
+    switch (errno) {
+    case EBUSY:
         return Error::EBusy;
-    } else {
+    case ENOENT:
+    case ENXIO:
+    case ENODEV:
+        return Error::NoSuchDevice;
+    default:
         return Error::Other;
     }
 }

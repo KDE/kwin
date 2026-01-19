@@ -164,6 +164,7 @@ std::expected<int, Session::Error> ConsoleKitSession::openRestricted(const QStri
 {
     struct stat st;
     if (stat(fileName.toUtf8(), &st) < 0) {
+        qCWarning(KWIN_CORE, "stat on %s failed: %s", qPrintable(fileName), strerror(errno));
         return std::unexpected(errorFromErrno());
     }
 
@@ -175,10 +176,14 @@ std::expected<int, Session::Error> ConsoleKitSession::openRestricted(const QStri
 
     const QDBusMessage reply = QDBusConnection::systemBus().call(message);
     if (reply.type() == QDBusMessage::ErrorMessage) {
-        qCDebug(KWIN_CORE, "Failed to open %s device (%s)",
-                qPrintable(fileName), qPrintable(reply.errorMessage()));
+        qCWarning(KWIN_CORE, "Failed to open %s device (%s)",
+                  qPrintable(fileName), qPrintable(reply.errorMessage()));
         if (reply.errorName() == "System.Error.EBUSY") {
             return std::unexpected(Error::EBusy);
+        } else if (reply.errorName() == "System.Error.ENOENT"
+                   || reply.errorName() == "System.Error.ENXIO"
+                   || reply.errorName() == "System.Error.ENODEV") {
+            return std::unexpected(Error::NoSuchDevice);
         } else {
             return std::unexpected(Error::Other);
         }
@@ -186,11 +191,13 @@ std::expected<int, Session::Error> ConsoleKitSession::openRestricted(const QStri
 
     const QDBusUnixFileDescriptor descriptor = reply.arguments().constFirst().value<QDBusUnixFileDescriptor>();
     if (!descriptor.isValid()) {
+        qCWarning(KWIN_CORE, "Opening %s returned an invalid file descriptor", qPrintable(fileName));
         return std::unexpected(Error::Other);
     }
 
     const int ret = fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (ret == -1) {
+        qCWarning(KWIN_CORE, "Duplicating file descriptor for %s failed: %s", qPrintable(fileName), strerror(errno));
         return std::unexpected(errorFromErrno());
     } else {
         return ret;

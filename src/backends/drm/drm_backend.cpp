@@ -122,18 +122,25 @@ bool DrmBackend::initialize()
         }
     });
 
-    if (!m_explicitGpus.isEmpty()) {
-        for (const QString &fileName : m_explicitGpus) {
-            addGpu(fileName);
-        }
-    } else {
-        const auto devices = m_udev->listGPUs();
-        for (const auto &device : devices) {
-            if (device->seat() == m_session->seat()) {
-                addGpu(device->devNode());
+    QElapsedTimer timer;
+    timer.start();
+    bool retry = false;
+    do {
+        if (!m_explicitGpus.isEmpty()) {
+            for (const QString &fileName : m_explicitGpus) {
+                const auto gpu = addGpu(fileName);
+                retry |= !gpu.has_value() && gpu.error() == Session::Error::NoSuchDevice;
+            }
+        } else {
+            const auto devices = m_udev->listGPUs();
+            for (const auto &device : devices) {
+                if (device->seat() == m_session->seat()) {
+                    const auto gpu = addGpu(device->devNode());
+                    retry |= !gpu.has_value() && gpu.error() == Session::Error::NoSuchDevice;
+                }
             }
         }
-    }
+    } while (retry && timer.durationElapsed() < 5s);
 
     if (m_gpus.empty()) {
         qCWarning(KWIN_DRM) << "No suitable DRM devices have been found";
@@ -213,7 +220,7 @@ void DrmBackend::handleUdevEvent()
         } else if (device->action() == QLatin1StringView("change")) {
             DrmGpu *gpu = findGpu(device->devNum());
             if (!gpu) {
-                gpu = addGpu(device->devNode());
+                gpu = addGpu(device->devNode()).value_or(nullptr);
             }
             if (gpu && gpu->isActive()) {
                 qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->drmDevice()->path();
@@ -223,7 +230,7 @@ void DrmBackend::handleUdevEvent()
     }
 }
 
-DrmGpu *DrmBackend::addGpu(const QString &fileName)
+std::expected<DrmGpu *, Session::Error> DrmBackend::addGpu(const QString &fileName)
 {
     std::expected<int, Session::Error> fd = m_session->openRestricted(fileName);
     QElapsedTimer timer;
@@ -237,19 +244,19 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
     }
     if (!fd.has_value()) {
         qCWarning(KWIN_DRM, "Failed to open drm device %s", qPrintable(fileName));
-        return nullptr;
+        return std::unexpected(fd.error());
     }
 
     if (!drmIsKMS(*fd)) {
         qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << fileName;
         m_session->closeRestricted(*fd);
-        return nullptr;
+        return std::unexpected(Session::Error::Other);
     }
 
     auto drmDevice = DrmDevice::openWithAuthentication(fileName, *fd);
     if (!drmDevice) {
         m_session->closeRestricted(*fd);
-        return nullptr;
+        return std::unexpected(Session::Error::Other);
     }
 
     m_gpus.push_back(std::make_unique<DrmGpu>(this, *fd, std::move(drmDevice)));
