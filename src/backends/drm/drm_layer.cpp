@@ -125,7 +125,11 @@ static const QHash<uint32_t, QList<uint64_t>> s_legacyCursorFormats = {{DRM_FORM
 QHash<uint32_t, QList<uint64_t>> DrmPipelineLayer::supportedDrmFormats() const
 {
     if (m_plane) {
-        return m_plane->gpu()->forceLowBandwidthMode() ? m_plane->lowBandwidthFormats() : m_plane->formats();
+        if (m_plane->gpu()->forceLowBandwidthMode() && m_type == OutputLayerType::Primary) {
+            return m_plane->lowBandwidthFormats();
+        } else {
+            return m_plane->formats();
+        }
     } else if (m_type == OutputLayerType::CursorOnly) {
         return s_legacyCursorFormats;
     } else {
