@@ -55,6 +55,12 @@ private Q_SLOTS:
     void testXdgActivationBeforeMap();
     void testGlobalShortcutActivation();
     void testFocusMovesFromClosedDialogToParentWindow();
+    void testFullAreaLayerSurfaceUnderlay_data();
+    void testFullAreaLayerSurfaceUnderlay();
+    void testFullAreaLayerSurfaceOverlay_data();
+    void testFullAreaLayerSurfaceOverlay();
+    void testPartialAreaLayerSurfaceOverlay_data();
+    void testPartialAreaLayerSurfaceOverlay();
 
 private:
     void stackScreensHorizontally();
@@ -81,7 +87,7 @@ void ActivationTest::init()
 {
     options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::Low);
 
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgActivation | Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgActivation | Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::LayerShellV1));
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
@@ -1060,6 +1066,119 @@ void ActivationTest::testFocusMovesFromClosedDialogToParentWindow()
     QVERIFY(windowActivatedSpy.wait());
     QCOMPARE(windowActivatedSpy.count(), 3);
     QCOMPARE(windowActivatedSpy.last().at(0).value<Window *>(), window);
+}
+
+void ActivationTest::testFullAreaLayerSurfaceUnderlay_data()
+{
+    QTest::addColumn<Test::LayerShellV1::layer>("layer");
+
+    QTest::addRow("background") << Test::LayerShellV1::layer_background;
+    QTest::addRow("bottom") << Test::LayerShellV1::layer_bottom;
+}
+
+void ActivationTest::testFullAreaLayerSurfaceUnderlay()
+{
+    // This test verifies that an underlay layer shell surface that covers the whole screen will not
+    // be activated without a valid activation token by accident.
+
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::High);
+
+    // Show a regular window.
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
+    QCOMPARE(workspace()->activeWindow(), window.m_window);
+
+    // Show a fullscreen layer shell surface.
+    QFETCH(Test::LayerShellV1::layer, layer);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface(Test::createLayerSurfaceV1(surface.get(), QStringLiteral("test")));
+    shellSurface->set_layer(layer);
+    shellSurface->set_anchor(Test::LayerSurfaceV1::anchor_top | Test::LayerSurfaceV1::anchor_right | Test::LayerSurfaceV1::anchor_bottom | Test::LayerSurfaceV1::anchor_left);
+    shellSurface->set_size(0, 0);
+    shellSurface->set_keyboard_interactivity(1);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(configureRequestedSpy.wait());
+    const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
+    shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
+    Test::renderAndWaitForShown(surface.get(), requestedSize, Qt::red);
+    QCOMPARE(workspace()->activeWindow(), window.m_window);
+}
+
+void ActivationTest::testFullAreaLayerSurfaceOverlay_data()
+{
+    QTest::addColumn<Test::LayerShellV1::layer>("layer");
+
+    QTest::addRow("top") << Test::LayerShellV1::layer_top;
+    QTest::addRow("overlay") << Test::LayerShellV1::layer_overlay;
+}
+
+void ActivationTest::testFullAreaLayerSurfaceOverlay()
+{
+    // This test verifies that an overlay layer shell surface that covers the whole screen will be
+    // activated even without a valid activation token (because it will cover the active window).
+
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::High);
+
+    // Show a regular window.
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
+    QCOMPARE(workspace()->activeWindow(), window.m_window);
+
+    // Show a fullscreen layer shell surface.
+    QFETCH(Test::LayerShellV1::layer, layer);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface(Test::createLayerSurfaceV1(surface.get(), QStringLiteral("test")));
+    shellSurface->set_layer(layer);
+    shellSurface->set_anchor(Test::LayerSurfaceV1::anchor_top | Test::LayerSurfaceV1::anchor_right | Test::LayerSurfaceV1::anchor_bottom | Test::LayerSurfaceV1::anchor_left);
+    shellSurface->set_size(0, 0);
+    shellSurface->set_keyboard_interactivity(1);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(configureRequestedSpy.wait());
+    const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
+    shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
+    Window *overlayWindow = Test::renderAndWaitForShown(surface.get(), requestedSize, Qt::red);
+    QCOMPARE(workspace()->activeWindow(), overlayWindow);
+}
+
+void ActivationTest::testPartialAreaLayerSurfaceOverlay_data()
+{
+    QTest::addColumn<Test::LayerShellV1::layer>("layer");
+
+    QTest::addRow("top") << Test::LayerShellV1::layer_top;
+    QTest::addRow("overlay") << Test::LayerShellV1::layer_overlay;
+}
+
+void ActivationTest::testPartialAreaLayerSurfaceOverlay()
+{
+    // This test verifies that an overlay layer shell surface that partially covers the screen will
+    // not be activated without an activation token by accident.
+
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::High);
+
+    // Show a regular window.
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show());
+    QCOMPARE(workspace()->activeWindow(), window.m_window);
+
+    // Show a fullscreen layer shell surface.
+    QFETCH(Test::LayerShellV1::layer, layer);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface(Test::createLayerSurfaceV1(surface.get(), QStringLiteral("test")));
+    shellSurface->set_layer(layer);
+    shellSurface->set_size(1000, 1000);
+    shellSurface->set_keyboard_interactivity(1);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(configureRequestedSpy.wait());
+    const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
+    shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
+    Test::renderAndWaitForShown(surface.get(), requestedSize, Qt::red);
+    QCOMPARE(workspace()->activeWindow(), window.m_window);
 }
 }
 

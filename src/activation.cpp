@@ -22,9 +22,11 @@
 #include "activities.h"
 #endif
 #include "input.h"
+#include "layershellv1window.h"
 #include "rules.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
+#include "wayland/layershell_v1.h"
 #include "waylandwindow.h"
 #include "window.h"
 
@@ -598,6 +600,27 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
         && m_activationTokenAppId == window->desktopFileName()) {
         return true;
     }
+
+    // If it is a fullscreen overlay window, i.e. a window placed above other normal windows,
+    // allow window activation even without a token to prevent keyboard focus going to an occluded
+    // window. An example of such an overlay window is the logout greeter.
+    //
+    // If a layer shell surface could be closed by the compositor because it didn't get input
+    // focus, then perhaps we wouldn't need this special case.
+    if (const auto layerShellWindow = qobject_cast<LayerShellV1Window *>(window)) {
+        if (m_activeWindow->output() == window->output()) {
+            const LayerSurfaceV1Interface *layerSurface = layerShellWindow->shellSurface();
+            switch (layerSurface->layer()) {
+            case LayerSurfaceV1Interface::BackgroundLayer:
+            case LayerSurfaceV1Interface::BottomLayer:
+                return false;
+            case LayerSurfaceV1Interface::TopLayer:
+            case LayerSurfaceV1Interface::OverlayLayer:
+                return layerSurface->anchor() == Qt::Edges(Qt::TopEdge | Qt::RightEdge | Qt::BottomEdge | Qt::LeftEdge);
+            }
+        }
+    }
+
     return false;
 }
 
