@@ -3632,8 +3632,8 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
                 combined = mode;
             }
 
-            // If trying to tile to the side that the window is already tiled to move the window to the next
-            // screen near the tile if it exists and swap the tile side, otherwise toggle the mode (set QuickTileFlag::None)
+            // If trying to tile to the side that the window is already tiled to, move the window to the next
+            // screen in that direction if it exists and swap the tile side.
             if (combined == oldMode) {
                 LogicalOutput *currentOutput = moveResizeOutput();
                 LogicalOutput *nextOutput = currentOutput;
