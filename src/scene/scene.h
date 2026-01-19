@@ -146,7 +146,7 @@ private:
     QList<RenderView *> m_exclusiveViews;
     QList<RenderView *> m_underlayViews;
     QList<std::function<bool(Window *)>> m_windowFilters;
-    AccessibilityFlags m_accessibilityFlags;
+    AccessibilityFlags m_accessibilityFlags = AccessibilityFlags::None;
 };
 
 class KWIN_EXPORT ItemView : public RenderView
