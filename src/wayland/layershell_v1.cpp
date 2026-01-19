@@ -48,7 +48,7 @@ public:
     std::optional<int> exclusiveZone;
     std::optional<Qt::Edge> exclusiveEdge;
     std::optional<quint32> acknowledgedConfigure;
-    std::optional<bool> acceptsFocus;
+    std::optional<LayerSurfaceV1Interface::KeyboardInteractivity> keyboardInteractivity;
 };
 
 struct LayerSurfaceV1State
@@ -60,7 +60,7 @@ struct LayerSurfaceV1State
     QSize desiredSize = QSize(0, 0);
     int exclusiveZone = 0;
     Qt::Edge exclusiveEdge = Qt::Edge();
-    bool acceptsFocus = false;
+    LayerSurfaceV1Interface::KeyboardInteractivity keyboardInteractivity = LayerSurfaceV1Interface::KeyboardInteractivityNone;
     bool configured = false;
     bool closed = false;
     bool committed = false;
@@ -229,7 +229,7 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_margin(Resource *
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_keyboard_interactivity(Resource *resource, uint32_t keyboard_interactivity)
 {
-    pending->acceptsFocus = keyboard_interactivity;
+    pending->keyboardInteractivity = LayerSurfaceV1Interface::KeyboardInteractivity(keyboard_interactivity);
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_get_popup(Resource *resource, struct ::wl_resource *popup_resource)
@@ -358,11 +358,14 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
         state.exclusiveEdge = commit->exclusiveEdge.value();
     }
 
-    if (commit->acceptsFocus.has_value()) {
-        state.acceptsFocus = commit->acceptsFocus.value();
+    if (commit->keyboardInteractivity.has_value()) {
+        state.keyboardInteractivity = commit->keyboardInteractivity.value();
     }
 
-    if (previous.acceptsFocus != state.acceptsFocus) {
+    if (previous.keyboardInteractivity != state.keyboardInteractivity) {
+        Q_EMIT q->keyboardInteractivityChanged();
+    }
+    if ((previous.keyboardInteractivity == LayerSurfaceV1Interface::KeyboardInteractivityNone) != (state.keyboardInteractivity == LayerSurfaceV1Interface::KeyboardInteractivityNone)) {
         Q_EMIT q->acceptsFocusChanged();
     }
     if (previous.layer != state.layer) {
@@ -431,7 +434,12 @@ QSize LayerSurfaceV1Interface::desiredSize() const
 
 bool LayerSurfaceV1Interface::acceptsFocus() const
 {
-    return d->state.acceptsFocus;
+    return d->state.keyboardInteractivity != KeyboardInteractivityNone;
+}
+
+LayerSurfaceV1Interface::KeyboardInteractivity LayerSurfaceV1Interface::keyboardInteractivity() const
+{
+    return d->state.keyboardInteractivity;
 }
 
 LayerSurfaceV1Interface::Layer LayerSurfaceV1Interface::layer() const

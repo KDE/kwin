@@ -67,6 +67,12 @@ public:
         OverlayLayer,
     };
 
+    enum KeyboardInteractivity {
+        KeyboardInteractivityNone = 0,
+        KeyboardInteractivityExclusive = 1,
+        KeyboardInteractivityOnDemand = 2,
+    };
+
     LayerSurfaceV1Interface(LayerShellV1Interface *shell,
                             SurfaceInterface *surface,
                             OutputInterface *output,
@@ -105,8 +111,14 @@ public:
 
     /**
      * Returns @c true if the surface accepts keyboard input; otherwise returns @c false.
+     * It's false when the keyboard interactivity is KeyboardInteractivityNone
      */
     bool acceptsFocus() const;
+
+    /**
+     * Returns how the layer surface handles keyboard focus.
+     */
+    KeyboardInteractivity keyboardInteractivity() const;
 
     /**
      * Returns the margins object that indicates the distance between an anchor edge and
@@ -179,6 +191,7 @@ Q_SIGNALS:
     void aboutToBeDestroyed();
     void configureAcknowledged(quint32 serial);
     void acceptsFocusChanged();
+    void keyboardInteractivityChanged();
     void layerChanged();
     void anchorChanged();
     void desiredSizeChanged();
