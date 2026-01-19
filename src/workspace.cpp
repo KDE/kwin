@@ -311,7 +311,9 @@ void Workspace::init()
     m_rearrangeTimer.setSingleShot(true);
 
     connect(&reconfigureTimer, &QTimer::timeout, this, &Workspace::slotReconfigure);
-    connect(&m_rearrangeTimer, &QTimer::timeout, this, &Workspace::rearrange);
+    connect(&m_rearrangeTimer, &QTimer::timeout, this, [this]() {
+        rearrange();
+    });
 
     // TODO: do we really need to reconfigure everything when fonts change?
     // maybe just reconfigure the decorations? Move this into libkdecoration?
@@ -1290,6 +1292,13 @@ static const int s_dpmsTimeout = environmentVariableIntValue("KWIN_DPMS_WORKAROU
 
 void Workspace::updateOutputs()
 {
+    QHash<Window *, LogicalOutput *> oldMoveResizeOutputs;
+    for (Window *window : m_windows) {
+        if (window->isClient()) {
+            oldMoveResizeOutputs[window] = window->moveResizeOutput();
+        }
+    }
+
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldLogicalOutputs = m_outputs;
     QList<BackendOutput *> newBackendOutputs;
@@ -1407,7 +1416,7 @@ void Workspace::updateOutputs()
         }
     }
 
-    desktopResized();
+    desktopResized(oldMoveResizeOutputs);
 
     m_placementTracker->uninhibit();
     m_placementTracker->restore(outputLayoutId());
@@ -2233,7 +2242,7 @@ void Workspace::checkTransients(xcb_window_t w)
 /**
  * Resizes the workspace after an XRANDR screen size change
  */
-void Workspace::desktopResized()
+void Workspace::desktopResized(const QHash<Window *, LogicalOutput *> &oldOutputs)
 {
     const Rect oldGeometry = m_geometry;
     m_geometry = Rect();
@@ -2254,7 +2263,7 @@ void Workspace::desktopResized()
     }
 #endif
 
-    rearrange();
+    rearrange(oldOutputs);
 
     if (!m_outputs.contains(m_activeOutput)) {
         setActiveOutput(m_outputs[0]);
@@ -2345,7 +2354,7 @@ void Workspace::scheduleRearrange()
     m_rearrangeTimer.start(0);
 }
 
-void Workspace::rearrange()
+void Workspace::rearrange(const QHash<Window *, LogicalOutput *> &oldOutputs)
 {
     Q_EMIT aboutToRearrange();
     m_rearrangeTimer.stop();
@@ -2429,7 +2438,7 @@ void Workspace::rearrange()
 
         for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
             if ((*it)->isClient()) {
-                (*it)->checkWorkspacePosition();
+                (*it)->checkWorkspacePosition(RectF(), nullptr, oldOutputs.value(*it, nullptr));
             }
         }
 
