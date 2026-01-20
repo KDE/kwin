@@ -3,20 +3,20 @@
 #
 # Zlatko Popov <zlatkopopov@fsa-bg.org>, 2006, 2007, 2008.
 # Yasen Pramatarov <yasen@lindeas.com>, 2009, 2010.
-# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 Mincho Kondarev <mkondarev@yahoo.de>
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025, 2026 Mincho Kondarev <mkondarev@yahoo.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-14 00:45+0000\n"
-"PO-Revision-Date: 2025-05-31 10:31+0200\n"
+"PO-Revision-Date: 2026-01-19 19:02+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.07.70\n"
+"X-Generator: Lokalize 26.03.70\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
@@ -67,7 +67,7 @@ msgstr "Задържане над другите прозорци"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "Скриване при предаване на екрана"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -207,7 +207,7 @@ msgstr "Показване на подсказките за бутоните н�
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" buttonX"
-msgstr ""
+msgstr "Винаги да се показва бутонът „Скриване при предаване на екрана“"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -216,6 +216,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screencast"
 msgstr ""
+"Когато не е отметнато, бутонът се появява само ако прозорецът е скрит при "
+"предаване на екрана."
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -224,6 +226,8 @@ msgid ""
 "To enable this option, add the \"Hide from screencast\" button to the "
 "titlebar first"
 msgstr ""
+"За да активирате тази опция, първо добавете бутона „Скриване при предаване "
+"на екрана“ към заглавната лента"
 
 #: ui/main.qml:29
 #, kde-format
