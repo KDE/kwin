@@ -1473,6 +1473,30 @@ void OutputChangesTest::testGenerateConfigs_data()
                .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
            }
         << ModeInfo(QSize(2560, 1440), 164831, OutputMode::Flag::Preferred) << 1.0 << false;
+
+    QTest::addRow("Acer 24 CB242Ybmiprx")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = QRect(),
+               .internal = false,
+               .physicalSizeInMM = QSize(527, 296),
+               .modes = {
+                   ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred),
+                   ModeInfo(QSize(1920, 1080), 75000, OutputMode::Flags{}),
+                   ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flags{}),
+                   ModeInfo(QSize(1920, 1080), 50000, OutputMode::Flags{}),
+                   ModeInfo(QSize(1680, 1050), 60000, OutputMode::Flags{}),
+                   ModeInfo(QSize(1280, 1024), 75000, OutputMode::Flags{}),
+                   ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flags{}),
+                   ModeInfo(QSize(1440, 900), 50000, OutputMode::Flags{}),
+                   ModeInfo(QSize(1280, 960), 60000, OutputMode::Flags{}),
+                   ModeInfo(QSize(1920, 540), 60000, OutputMode::Flags{}),
+                   ModeInfo(QSize(1280, 800), 60000, OutputMode::Flags{}),
+                   ModeInfo(QSize(1152, 864), 75000, OutputMode::Flags{}),
+                   ModeInfo(QSize(1280, 720), 60000, OutputMode::Flags{}),
+               },
+           }
+        << ModeInfo(QSize(1920, 1080), 75000, OutputMode::Flags{}) << 1.0 << true;
 }
 
 void OutputChangesTest::testGenerateConfigs()
