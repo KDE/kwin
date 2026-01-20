@@ -648,21 +648,25 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(BackendOutput *
         return *std::ranges::max_element(modes, findBiggestFastest);
     }
 
-    // 32:9 displays often advertise a lower resolution mode as preferred, special case them
-    auto only32by9 = notPotentiallyBroken | std::ranges::views::filter([](const auto &mode) {
-        const double aspectRatio = mode->size().width() / double(mode->size().height());
-        return aspectRatio > 31 / 9.0 && aspectRatio < 33 / 9.0;
-    });
-    const auto best32By9 = std::ranges::max_element(only32by9, findBiggestFastest);
-    if (best32By9 != only32by9.end()) {
-        return *best32By9;
-    }
-
     // try to figure out the native resolution; the biggest preferred mode usually has that
     auto preferredOnly = notPotentiallyBroken | std::ranges::views::filter([](const auto &mode) {
         return (mode->flags() & OutputMode::Flag::Preferred);
     });
     const auto nativeSize = std::ranges::max_element(preferredOnly, findBiggestFastest);
+
+    auto is32by9 = [](const auto &mode) {
+        const double aspectRatio = mode->size().width() / double(mode->size().height());
+        return aspectRatio > 31 / 9.0 && aspectRatio < 33 / 9.0;
+    };
+
+    if (nativeSize == preferredOnly.end() || is32by9(*nativeSize)) {
+        // 32:9 displays often advertise a lower resolution mode as preferred, special case them
+        auto only32by9 = notPotentiallyBroken | std::ranges::views::filter(is32by9);
+        const auto best32By9 = std::ranges::max_element(only32by9, findBiggestFastest);
+        if (best32By9 != only32by9.end()) {
+            return *best32By9;
+        }
+    }
 
     // Non-default modes have a decent chance of not working on VGA,
     // so avoid doing anything out of the ordinary there
