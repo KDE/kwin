@@ -138,6 +138,7 @@ private Q_SLOTS:
     void testSettingRestoration();
     void testSettingRestoration_initialParsingFailure();
     void testSettingRestoration_replacedMode();
+    void testCursorRestoration();
 
     void testEvacuateTiledWindowFromRemovedOutput_data();
     void testEvacuateTiledWindowFromRemovedOutput();
@@ -2015,6 +2016,43 @@ void OutputChangesTest::testSettingRestoration_replacedMode()
     QCOMPARE(output->desiredModeSize(), QSize(1280, 1024));
     QCOMPARE(output->desiredModeRefreshRate(), 60000);
     QCOMPARE(output->currentMode(), output->modes()[2]);
+}
+
+void OutputChangesTest::testCursorRestoration()
+{
+    // This test verifies that the cursor gets put back to its original position
+    // when output changes happen, even with edge barriers enabled
+    options->setEdgeBarrier(100);
+
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 2880, 1920),
+            .scale = 1.6,
+            .connectorName = QStringLiteral("eDP-1"),
+        },
+    });
+
+    BackendOutput *tmp = kwinApp()->outputBackend()->createVirtualOutput("DP-1", "", QSize(5120, 1440), 1.0);
+
+    auto outputs = kwinApp()->outputBackend()->outputs();
+
+    OutputConfiguration config;
+    config.changeSet(outputs[0])->pos = QPoint(1691, 1440);
+    config.changeSet(outputs[1])->pos = QPoint(0, 0);
+    QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
+
+    input()->pointer()->warp(outputs[0]->position() + QPoint(1500, 1000));
+
+    // if an unrelated output is removed, the cursor should stay where it was
+    // relative to the output it's on
+    kwinApp()->outputBackend()->removeVirtualOutput(tmp);
+    outputs = kwinApp()->outputBackend()->outputs();
+    QCOMPARE(input()->pointer()->pos(), outputs[0]->position() + QPoint(1500, 1000));
+
+    // same when it's added back
+    tmp = kwinApp()->outputBackend()->createVirtualOutput("DP-1", "", QSize(5120, 1440), 1.0);
+    outputs = kwinApp()->outputBackend()->outputs();
+    QCOMPARE(input()->pointer()->pos(), outputs[0]->position() + QPoint(1500, 1000));
 }
 
 void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput_data()
