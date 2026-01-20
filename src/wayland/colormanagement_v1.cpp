@@ -16,11 +16,7 @@ namespace KWin
 
 ColorManagerV1::ColorManagerV1(Display *display, QObject *parent)
     : QObject(parent)
-#if HAVE_WAYLAND_PROTOCOLS_147
     , QtWaylandServer::wp_color_manager_v1(*display, 2)
-#else
-    , QtWaylandServer::wp_color_manager_v1(*display, 1)
-#endif
 {
 }
 
@@ -48,21 +44,17 @@ void ColorManagerV1::wp_color_manager_v1_bind_resource(Resource *resource)
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_st2084_pq);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_ext_linear);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_bt1886);
-#if HAVE_WAYLAND_PROTOCOLS_147
     if (resource->version() >= WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_COMPOUND_POWER_2_4_SINCE_VERSION) {
         send_supported_tf_named(resource->handle, transfer_function::transfer_function_compound_power_2_4);
     }
-#endif
 
     send_supported_intent(resource->handle, render_intent::render_intent_perceptual);
     send_supported_intent(resource->handle, render_intent::render_intent_relative);
     send_supported_intent(resource->handle, render_intent::render_intent_absolute);
     send_supported_intent(resource->handle, render_intent::render_intent_relative_bpc);
-#if HAVE_WAYLAND_PROTOCOLS_147
     if (resource->version() >= WP_COLOR_MANAGER_V1_RENDER_INTENT_ABSOLUTE_NO_ADAPTATION_SINCE_VERSION) {
         send_supported_intent(resource->handle, render_intent::render_intent_absolute_no_adaptation);
     }
-#endif
 
     send_done(resource->handle);
 }
@@ -149,15 +141,11 @@ void ColorFeedbackSurfaceV1::setPreferredColorDescription(const std::shared_ptr<
     if (m_preferred != descr) {
         m_preferred = descr;
         ImageDescriptionV1::s_idCounter++;
-#if HAVE_WAYLAND_PROTOCOLS_147
         if (resource()->version() >= WP_COLOR_MANAGEMENT_SURFACE_FEEDBACK_V1_PREFERRED_CHANGED2_SINCE_VERSION) {
             send_preferred_changed2(resource()->handle, highPart(ImageDescriptionV1::s_idCounter), lowPart(ImageDescriptionV1::s_idCounter));
         } else {
-#endif
             send_preferred_changed(resource()->handle, lowPart(ImageDescriptionV1::s_idCounter));
-#if HAVE_WAYLAND_PROTOCOLS_147
         }
-#endif
     }
 }
 
@@ -216,10 +204,8 @@ static std::optional<RenderingIntent> waylandToKwinIntent(uint32_t intent)
     case QtWaylandServer::wp_color_manager_v1::render_intent::render_intent_relative:
     case QtWaylandServer::wp_color_manager_v1::render_intent::render_intent_absolute:
         return RenderingIntent::RelativeColorimetric;
-#if HAVE_WAYLAND_PROTOCOLS_147
     case QtWaylandServer::wp_color_manager_v1::render_intent::render_intent_absolute_no_adaptation:
         return RenderingIntent::AbsoluteColorimetricNoAdaptation;
-#endif
     case QtWaylandServer::wp_color_manager_v1::render_intent::render_intent_relative_bpc:
         return RenderingIntent::RelativeColorimetricWithBPC;
     case QtWaylandServer::wp_color_manager_v1::render_intent::render_intent_saturation:
@@ -350,11 +336,9 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_set_tf_nam
     case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_BT1886:
         m_transferFunctionType = TransferFunction::BT1886;
         return;
-#if HAVE_WAYLAND_PROTOCOLS_147
     case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_COMPOUND_POWER_2_4:
         m_transferFunctionType = TransferFunction::sRGB;
         return;
-#endif
         // intentionally not supported - it's confusing and
         // deprecated in version 2 of the protocol
     case WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_SRGB:
@@ -504,15 +488,11 @@ ImageDescriptionV1 *ImageDescriptionV1::createReady(wl_client *client, uint32_t 
 {
     auto description = new ImageDescriptionV1(client, id, version, colorDescription, type);
     s_idCounter++;
-#if HAVE_WAYLAND_PROTOCOLS_147
     if (version >= WP_IMAGE_DESCRIPTION_V1_READY2_SINCE_VERSION) {
         description->send_ready2(highPart(s_idCounter), lowPart(s_idCounter));
     } else {
-#endif
         description->send_ready(lowPart(s_idCounter));
-#if HAVE_WAYLAND_PROTOCOLS_147
     }
-#endif
     return description;
 }
 
@@ -548,9 +528,7 @@ static uint32_t kwinTFtoProtoTF(TransferFunction tf)
     case TransferFunction::PerceptualQuantizer:
         return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_ST2084_PQ;
     case TransferFunction::sRGB:
-#if HAVE_WAYLAND_PROTOCOLS_147
         return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_COMPOUND_POWER_2_4;
-#endif
     case TransferFunction::gamma22:
         return WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22;
     case TransferFunction::BT1886:
