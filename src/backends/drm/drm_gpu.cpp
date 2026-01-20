@@ -131,12 +131,17 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
 
 DrmGpu::~DrmGpu()
 {
+    // clean up all `DrmFramebuffer`s before destroying the egl display
     removeOutputs();
-    m_eglDisplay.reset();
+    m_planeLayerMap.clear();
+    m_legacyLayerMap.clear();
+    m_legacyCursorLayerMap.clear();
+    m_pipelineMap.clear();
     m_crtcs.clear();
     m_connectors.clear();
     m_planes.clear();
     m_socketNotifier.reset();
+    m_eglDisplay.reset();
     m_platform->session()->closeRestricted(m_fd);
 }
 
