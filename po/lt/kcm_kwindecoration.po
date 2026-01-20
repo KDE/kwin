@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-14 02:39+0000\n"
-"PO-Revision-Date: 2025-12-29 19:24+0200\n"
+"PO-Revision-Date: 2026-01-19 18:49+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -69,7 +69,7 @@ msgstr "Laikyti aukščiau kitų langų"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "Slėpti, kai filmuojamas ekranas"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -212,7 +212,7 @@ msgstr "Rodyti antraštės juostos mygtukų paaiškinimus"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" buttonX"
-msgstr ""
+msgstr "Visada rodyti mygtuką „Slėpti, kai filmuojamas ekranas“"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -221,6 +221,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screencast"
 msgstr ""
+"Kai nepažymėta, mygtukas rodomas tik tuo atveju, jei, filmuojant ekraną, "
+"langas yra slepiamas"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -229,6 +231,8 @@ msgid ""
 "To enable this option, add the \"Hide from screencast\" button to the "
 "titlebar first"
 msgstr ""
+"Norėdami įjungti šią parinktį, pirmiausiai, pridėkite į antraštės juostą "
+"mygtuką „Slėpti, kai filmuojamas ekranas“"
 
 #: ui/main.qml:29
 #, kde-format

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-13 08:42+0000\n"
-"PO-Revision-Date: 2025-12-29 22:05+0200\n"
+"PO-Revision-Date: 2026-01-19 19:55+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -96,7 +96,7 @@ msgstr "ICC profilis „%1“ nėra tinkamas naudoti ekranams"
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
-msgstr ""
+msgstr "ICC profilyje „%1“ yra nepalaikoma ryšio erdvė, palaikoma tik XYZ"
 
 #: core/iccprofile.cpp:346
 #, kde-format
@@ -107,44 +107,50 @@ msgstr ""
 #: core/iccprofile.cpp:359
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC profilis „%1“ yra sugadintas, jame nėra baltojo taško"
 
 #: core/iccprofile.cpp:362
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC profilis „%1“ yra sugadintas, jo baltasis taškas yra neteisingas"
 
 #: core/iccprofile.cpp:375
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"ICC profilis „%1“ yra sugadintas, nepavyko išnagrinėti spalvinio pritaikymo "
+"matricos"
 
 #: core/iccprofile.cpp:380
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"ICC profilis „%1“ yra sugadintas, nepavyko invertuoti spalvinio pritaikymo "
+"matricos"
 
 #: core/iccprofile.cpp:393
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC profilis „%1“ yra sugadintas, jame nėra pagrindinių spalvų"
 
 #: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
+"ICC profilis „%1“ yra sugadintas nepavyko apskaičiuoti jo pagrindinių spalvų"
 
 #: core/iccprofile.cpp:417
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr ""
+"ICC profilis „%1“ yra sugadintas, jo pagrindinės spalvos yra neteisingos"
 
 #: core/iccprofile.cpp:433
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "ICC profilis „%1“, naudojantis tik BToD žymes, yra nepalaikomas"
 
 #: core/iccprofile.cpp:472
 #, kde-format
@@ -703,25 +709,24 @@ msgid "State"
 msgstr "Būsena"
 
 #: debug_console.cpp:539
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Planšetės įrankis"
+msgstr "Planšetės įrankio artumas"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Artumas"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Vidun"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Išorėn"
 
 #: debug_console.cpp:544 debug_console.cpp:562 debug_console.cpp:582
 #: debug_console.cpp:632 debug_console.cpp:649
@@ -745,10 +750,9 @@ msgid "Distance"
 msgstr "Atstumas"
 
 #: debug_console.cpp:558
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Planšetės įrankis"
+msgstr "Planšetės įrankio ašis"
 
 #: debug_console.cpp:567 debug_console.cpp:587
 #, kde-format
@@ -756,33 +760,29 @@ msgid "Pressure"
 msgstr "Spaudimas"
 
 #: debug_console.cpp:577
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Planšetės įrankis"
+msgstr "Planšetės įrankio galiukas"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "Viršuje"
+msgstr "Galiukas"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Perkelti žemyn"
+msgstr "Žemyn"
 
 #: debug_console.cpp:581
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Aukštyn"
 
 #: debug_console.cpp:588
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Pozicija"
+msgstr "Slinktuko pozicija"
 
 #: debug_console.cpp:597
 #, kde-format
@@ -813,7 +813,7 @@ msgstr "Planšetės kilimėlio mygtukas"
 #: debug_console.cpp:616 debug_console.cpp:634 debug_console.cpp:651
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Grupė"
 
 #: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
 #, kde-format
@@ -823,7 +823,7 @@ msgstr "Veiksena"
 #: debug_console.cpp:618
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "Yra veiksenos perjungiklis"
 
 #: debug_console.cpp:629
 #, kde-format
@@ -846,10 +846,9 @@ msgid "Tablet Pad Ring"
 msgstr "Planšetės kilimėlio žiedas"
 
 #: debug_console.cpp:663
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Planšetės kilimėlio žiedas"
+msgstr "Planšetės kilimėlio sukamas diskas"
 
 #: debug_console.cpp:666
 #, kde-format
@@ -1312,11 +1311,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Šio pagelbiklio paslaugų programos negalima iškviesti tiesiogiai."
 
 #: helpers/killer/killer.cpp:194
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1324,15 +1319,13 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Nutraukus programos darbą, bus užverti visi "
-"jos langai. Bet kokie neįrašyti duomenys bus prarasti.</emphasis></para>"
+"<para><application>%1</application> nereaguoja. Ar norite nutraukti šios "
+"programos darbą?</para><para><emphasis strong='true'>Nutraukus programos "
+"darbą, bus užverti visi jos langai. Bet kokie neįrašyti duomenys bus "
+"prarasti.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:198
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1340,8 +1333,10 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Nutraukus programos darbą, bus užverti visi "
-"jos langai. Bet kokie neįrašyti duomenys bus prarasti.</emphasis></para>"
+"<para>„%1“ iš <application>%2</application> nereaguoja. Ar norite nutraukti "
+"šios programos darbą?</para><para><emphasis strong='true'>Nutraukus "
+"programos darbą, bus užverti visi jos langai. Bet kokie neįrašyti duomenys "
+"bus prarasti.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:202
 #, kde-format
@@ -1506,7 +1501,7 @@ msgstr "Lango veiksenos aukštis. Numatytasis aukštis yra 768."
 #: main_wayland.cpp:320
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Ar padaryti, kad lango veiksena būtų rodoma per visą ekraną"
 
 #: main_wayland.cpp:324
 #, kde-format
@@ -1701,11 +1696,10 @@ msgid "Fullscreen windows"
 msgstr "Viso ekrano langai"
 
 #: plugins/eis/eisinputcapturemanager.cpp:130
-#, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
+#, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "Išjungti KActivities integraciją."
+msgstr "Išjungti aktyvų įvesties užvaldymą"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -2442,10 +2436,9 @@ msgstr "Nepavyko prisijungti prie PipeWire konteksto"
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
 #: plugins/screencast/screencastmanager.cpp:142
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "Pristabdyti komponavimą"
+msgstr "Nepalaikomas komponavimo tipas"
 
 #: plugins/screencast/screencastmanager.cpp:62
 #, kde-format
@@ -2465,7 +2458,7 @@ msgstr "Neteisinga sritis"
 #: plugins/screencast/screencaststream.cpp:375
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "Reikia OpenGL komponavimo, kad būtų įrašomas ekranas"
+msgstr "Reikia OpenGL komponavimo, kad būtų filmuojamas ekranas"
 
 #: plugins/screencast/screencaststream.cpp:383
 #, kde-format
@@ -3052,10 +3045,9 @@ msgstr "Lango žymė"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
-#, fuzzy, kde-format
-#| msgid "Window title string match type"
+#, kde-format
 msgid "Window tag string match type"
-msgstr "Lango antraštės eilutės atitikimo tipas"
+msgstr "Lango žymės eilutės atitikimo tipas"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
@@ -3668,7 +3660,7 @@ msgstr "&Be antraštės juostos ir rėmelio"
 #: useractions.cpp:251
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr "&Slėpti iš ekrano įrašo"
+msgstr "&Slėpti, kai filmuojamas ekranas"
 
 #: useractions.cpp:259
 #, kde-format
@@ -3978,28 +3970,24 @@ msgid "Keep Window on All Desktops"
 msgstr "Laikyti langą visuose darbalaukiuose"
 
 #: useractions.cpp:910
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "Greitai iškloti langą kairėje"
+msgstr "Tinkintas greitas lango išklojimas kairėje"
 
 #: useractions.cpp:912
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "Greitai iškloti langą dešinėje"
+msgstr "Tinkintas greitas lango išklojimas dešinėje"
 
 #: useractions.cpp:914
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "Greitai iškloti langą viršuje"
+msgstr "Tinkintas greitas lango išklojimas viršuje"
 
 #: useractions.cpp:916
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "Greitai iškloti langą apačioje"
+msgstr "Tinkintas greitas lango išklojimas apačioje"
 
 #: useractions.cpp:927
 #, kde-format
