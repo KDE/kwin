@@ -111,7 +111,8 @@ void EmulatedInputDevice::evkeyMapping(input_event *ev)
 
 void EmulatedInputDevice::evabsMapping(input_event *ev)
 {
-    const PointerButtonState pointerState = ev->value >= libevdev_get_abs_maximum(m_device, ev->code) * 0.9 ? KWin::PointerButtonState::Pressed : KWin::PointerButtonState::Released;
+    const int maximumValue = libevdev_get_abs_maximum(m_device, ev->code);
+    const PointerButtonState pointerState = maximumValue > 0 && ev->value >= maximumValue * 0.9 ? KWin::PointerButtonState::Pressed : KWin::PointerButtonState::Released;
     KeyboardKeyState keyState = ev->value ? KWin::KeyboardKeyState::Pressed : KWin::KeyboardKeyState::Released;
     const std::chrono::microseconds time = std::chrono::seconds(ev->time.tv_sec) + std::chrono::microseconds(ev->time.tv_usec);
 
@@ -177,23 +178,39 @@ void EmulatedInputDevice::updateAnalogStick(input_event *ev)
 {
     switch (ev->code) {
     case ABS_X: {
-        const double value = ev->value / m_leftStickLimits.x();
-        m_leftStick.setX(std::abs(value) >= s_deadzone ? value : 0);
+        if (m_leftStickLimits.x() > 0) {
+            const double value = ev->value / m_leftStickLimits.x();
+            m_leftStick.setX(std::abs(value) >= s_deadzone ? value : 0);
+        } else {
+            m_leftStick.setX(0);
+        }
         break;
     }
     case ABS_Y: {
-        const double value = ev->value / m_leftStickLimits.y();
-        m_leftStick.setY(std::abs(value) >= s_deadzone ? value : 0);
+        if (m_leftStickLimits.y() > 0) {
+            const double value = ev->value / m_leftStickLimits.y();
+            m_leftStick.setY(std::abs(value) >= s_deadzone ? value : 0);
+        } else {
+            m_leftStick.setY(0);
+        }
         break;
     }
     case ABS_RX: {
-        const double value = ev->value / m_rightStickLimits.x();
-        m_rightStick.setX(std::abs(value) >= s_deadzone ? value : 0);
+        if (m_rightStickLimits.x() > 0) {
+            const double value = ev->value / m_rightStickLimits.x();
+            m_rightStick.setX(std::abs(value) >= s_deadzone ? value : 0);
+        } else {
+            m_rightStick.setX(0);
+        }
         break;
     }
     case ABS_RY: {
-        const double value = ev->value / m_rightStickLimits.y();
-        m_rightStick.setY(std::abs(value) >= s_deadzone ? value : 0);
+        if (m_rightStickLimits.y() > 0) {
+            const double value = ev->value / m_rightStickLimits.y();
+            m_rightStick.setY(std::abs(value) >= s_deadzone ? value : 0);
+        } else {
+            m_rightStick.setY(0);
+        }
         break;
     }
     }
