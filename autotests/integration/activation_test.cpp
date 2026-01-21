@@ -50,6 +50,7 @@ private Q_SLOTS:
     void testSwitchToWindowFullScreen();
     void testActiveFullscreen();
     void testXdgActivation();
+    void testNoDemandAttentionWithoutActivationRequest();
     void testXdgActivationBeforeInitialCommit();
     void testXdgActivationBeforeMap();
     void testGlobalShortcutActivation();
@@ -743,6 +744,30 @@ void ActivationTest::testXdgActivation()
     QCOMPARE(workspace()->activeWindow(), windows[1]->m_window);
 }
 
+void ActivationTest::testNoDemandAttentionWithoutActivationRequest()
+{
+    // This test verifies that the demand attention state will not be set if kwin doesn't want a
+    // window to be activated and the client hasn't made an explicit activation request.
+
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::High);
+
+    // Show a window
+    auto gooseWindow = std::make_unique<Test::XdgToplevelWindow>([](Test::XdgToplevel *toplevel) {
+        toplevel->set_app_id("org.kde.goose");
+    });
+    gooseWindow->show();
+    QVERIFY(gooseWindow->m_window->isActive());
+    QVERIFY(!gooseWindow->m_window->isDemandingAttention());
+
+    // Show another window.
+    auto wolfWindow = std::make_unique<Test::XdgToplevelWindow>([](Test::XdgToplevel *toplevel) {
+        toplevel->set_app_id("org.kde.wolf");
+    });
+    wolfWindow->show();
+    QVERIFY(!wolfWindow->m_window->isActive());
+    QVERIFY(!wolfWindow->m_window->isDemandingAttention());
+}
+
 static QString generateActivationToken(const Test::XdgToplevelWindow &window, const QString &appId)
 {
     std::unique_ptr<Test::XdgActivationToken> token = Test::xdgActivation()->createToken();
@@ -810,7 +835,6 @@ void ActivationTest::testXdgActivationBeforeInitialCommit()
 
         // The window should not be activate because of the invalid activation token.
         QVERIFY(!duckWindow->isActive());
-        QEXPECT_FAIL("", "demand state is not tracked properly", Continue);
         QVERIFY(duckWindow->isDemandingAttention());
     }
 
@@ -910,7 +934,6 @@ void ActivationTest::testXdgActivationBeforeMap()
 
         // The window should not be activate because of the invalid activation token.
         QVERIFY(!duckWindow->isActive());
-        QEXPECT_FAIL("", "demand state is not tracked properly", Continue);
         QVERIFY(duckWindow->isDemandingAttention());
     }
 
