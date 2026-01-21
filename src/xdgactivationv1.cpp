@@ -104,15 +104,17 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
         return;
     }
 
-    if (!ws->mayActivate(window, token)) {
-        window->demandAttention();
+    if (!window->readyForPainting()) {
+        window->setActivationToken(token);
         return;
     }
-    if (window->readyForPainting()) {
+
+    if (ws->mayActivate(window, token)) {
         ws->activateWindow(window);
     } else {
-        window->setActivationToken(token);
+        window->demandAttention();
     }
+
     clearFeedback();
 }
 

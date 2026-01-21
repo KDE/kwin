@@ -251,6 +251,7 @@ void WaylandServer::registerWindow(Window *window)
         });
     }
     m_windows << window;
+    Q_EMIT windowCreated(window);
 }
 
 void WaylandServer::registerXdgToplevelWindow(XdgToplevelWindow *window)
