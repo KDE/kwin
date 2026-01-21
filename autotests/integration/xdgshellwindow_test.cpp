@@ -10,10 +10,10 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
+#include "core/outputconfiguration.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
 #include "pointer_input.h"
-
 #include "virtualdesktops.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
@@ -121,6 +121,10 @@ private Q_SLOTS:
     void testNoMaximumSize();
     void testUnconfiguredBufferToplevel();
     void testUnconfiguredBufferPopup();
+    void testRemoveActiveDesktopBeforeInitialCommit();
+    void testRemoveActiveDesktopBeforeMap();
+    void testRemoveActiveOutputBeforeInitialCommit();
+    void testRemoveActiveOutputBeforeMap();
 };
 
 void TestXdgShellWindow::testXdgPopupReactive_data()
@@ -209,6 +213,10 @@ void TestXdgShellWindow::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
 
     kwinApp()->start();
+}
+
+void TestXdgShellWindow::init()
+{
     Test::setOutputConfig({
         Rect(0, 0, 1280, 1024),
         Rect(1280, 0, 1280, 1024),
@@ -217,10 +225,7 @@ void TestXdgShellWindow::initTestCase()
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), Rect(0, 0, 1280, 1024));
     QCOMPARE(outputs[1]->geometry(), Rect(1280, 0, 1280, 1024));
-}
 
-void TestXdgShellWindow::init()
-{
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1 | Test::AdditionalWaylandInterface::AppMenu | Test::AdditionalWaylandInterface::XdgDialogV1));
     QVERIFY(Test::waitForWaylandPointer());
 
@@ -2587,6 +2592,178 @@ void TestXdgShellWindow::testUnconfiguredBufferPopup()
 
     QSignalSpy connectionErrorSpy(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(connectionErrorSpy.wait());
+}
+
+void TestXdgShellWindow::testRemoveActiveDesktopBeforeInitialCommit()
+{
+    // This test verifies that a window will be placed on the right desktop if the current desktop
+    // is removed before the client has a chance to commit the initial state.
+
+    QSKIP("Initializing windows are not properly evacuated from removed desktops");
+
+    VirtualDesktopManager *virtualDesktopManager = VirtualDesktopManager::self();
+    virtualDesktopManager->setCount(2);
+
+    const auto virtualDesktops = virtualDesktopManager->desktops();
+    virtualDesktopManager->setCurrent(virtualDesktops[1]);
+
+    // Create an xdg-toplevel surface.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+    // Wait for the corresponding Window object to be created on the compositor side.
+    QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+    QVERIFY(windowCreatedSpy.wait());
+    Window *window = windowCreatedSpy.last().at(0).value<Window *>();
+    QCOMPARE(window->desktops(), QList<VirtualDesktop *>{virtualDesktops[1]});
+
+    // Remove the current desktop.
+    virtualDesktopManager->removeVirtualDesktop(virtualDesktops[1]);
+
+    // Commit the initial state.
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Map the window.
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Window *mapped = Test::renderAndWaitForShown(surface.get(), QSize(800, 600), Qt::blue);
+    QCOMPARE(mapped, window);
+
+    // The window should have been evacuated from the second virtual desktop to the first virtual desktop.
+    QCOMPARE(window->desktops(), QList<VirtualDesktop *>{virtualDesktops[0]});
+}
+
+void TestXdgShellWindow::testRemoveActiveDesktopBeforeMap()
+{
+    // This test verifies that a window will be placed on the right desktop if the current desktop
+    // is removed before the client has a chance to map the surface (after committing the initial state).
+
+    QSKIP("Initializing windows are not properly evacuated from removed desktops");
+
+    VirtualDesktopManager *virtualDesktopManager = VirtualDesktopManager::self();
+    virtualDesktopManager->setCount(2);
+
+    const auto virtualDesktops = virtualDesktopManager->desktops();
+    virtualDesktopManager->setCurrent(virtualDesktops[1]);
+
+    // Create an xdg-toplevel surface.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+    // Wait for the corresponding Window object to be created on the compositor side.
+    QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+    QVERIFY(windowCreatedSpy.wait());
+    Window *window = windowCreatedSpy.last().at(0).value<Window *>();
+    QCOMPARE(window->desktops(), QList<VirtualDesktop *>{virtualDesktops[1]});
+
+    // Commit the initial state.
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Remove the current desktop.
+    virtualDesktopManager->removeVirtualDesktop(virtualDesktops[1]);
+
+    // Map the window.
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Window *mapped = Test::renderAndWaitForShown(surface.get(), QSize(800, 600), Qt::blue);
+    QCOMPARE(mapped, window);
+
+    // The window should have been evacuated from the second virtual desktop to the first virtual desktop.
+    QCOMPARE(window->desktops(), QList<VirtualDesktop *>{virtualDesktops[0]});
+}
+
+void TestXdgShellWindow::testRemoveActiveOutputBeforeInitialCommit()
+{
+    // This test verifies that a window will be placed on the right output if the active output
+    // is removed before the client has a chance to commit the initial state.
+
+    const auto outputs = workspace()->outputs();
+    workspace()->setActiveOutput(outputs[1]);
+
+    // Create an xdg-toplevel surface.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+    // Wait for the corresponding Window object to be created on the compositor side.
+    QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+    QVERIFY(windowCreatedSpy.wait());
+    Window *window = windowCreatedSpy.last().at(0).value<Window *>();
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->moveResizeOutput(), outputs[1]);
+
+    // Disable the active output.
+    OutputConfiguration config;
+    {
+        auto changeSet = config.changeSet(outputs[1]->backendOutput());
+        changeSet->enabled = false;
+    }
+    workspace()->applyOutputConfiguration(config);
+
+    // Commit the initial state.
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Map the window.
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Window *mapped = Test::renderAndWaitForShown(surface.get(), QSize(800, 600), Qt::blue);
+    QCOMPARE(mapped, window);
+
+    // The window should have been evacuated from the second output to the first output.
+    QCOMPARE(window->output(), outputs[0]);
+    QCOMPARE(window->moveResizeOutput(), outputs[0]);
+}
+
+void TestXdgShellWindow::testRemoveActiveOutputBeforeMap()
+{
+    // This test verifies that a window will be placed on the right output if the current output
+    // is removed before the client has a chance to map the surface (after committing the initial state).
+
+    const auto outputs = workspace()->outputs();
+    workspace()->setActiveOutput(outputs[1]);
+
+    // Create an xdg-toplevel surface.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+    // Wait for the corresponding Window object to be created on the compositor side.
+    QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+    QVERIFY(windowCreatedSpy.wait());
+    Window *window = windowCreatedSpy.last().at(0).value<Window *>();
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->moveResizeOutput(), outputs[1]);
+
+    // Commit the initial state.
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Disable the active output.
+    OutputConfiguration config;
+    {
+        auto changeSet = config.changeSet(outputs[1]->backendOutput());
+        changeSet->enabled = false;
+    }
+    workspace()->applyOutputConfiguration(config);
+
+    // Map the window.
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Window *mapped = Test::renderAndWaitForShown(surface.get(), QSize(800, 600), Qt::blue);
+    QCOMPARE(mapped, window);
+
+    // The window should have been evacuated from the second output to the first output.
+    QCOMPARE(window->output(), outputs[0]);
+    QCOMPARE(window->moveResizeOutput(), outputs[0]);
 }
 
 WAYLANDTEST_MAIN(TestXdgShellWindow)
