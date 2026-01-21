@@ -21,6 +21,7 @@
 #include "core/output.h"
 #include "core/renderloop_p.h"
 #include "drm_blob.h"
+#include "drm_commit.h"
 #include "drm_connector.h"
 #include "drm_plane.h"
 
@@ -50,6 +51,7 @@ public:
         TestBufferFailed,
         NotEnoughCrtcs,
         Timeout,
+        NeedsModeset,
         Unknown,
     };
     Q_ENUM(Error)
@@ -120,6 +122,7 @@ public:
 private:
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
+    static Error commitResultToError(const std::pair<drm_mode_atomic_failure_codes, QByteArray> &error);
     static Error errnoToError();
     std::shared_ptr<DrmBlob> createHdrMetadata(TransferFunction::Type transferFunction) const;
 

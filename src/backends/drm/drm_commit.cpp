@@ -102,7 +102,7 @@ void DrmAtomicCommit::setPresentationMode(PresentationMode mode)
     m_mode = mode;
 }
 
-bool DrmAtomicCommit::test()
+std::expected<void, std::pair<drm_mode_atomic_failure_codes, QByteArray>> DrmAtomicCommit::test()
 {
     uint32_t flags = DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK;
     if (isTearing()) {
@@ -111,12 +111,12 @@ bool DrmAtomicCommit::test()
     return doCommit(flags);
 }
 
-bool DrmAtomicCommit::testAllowModeset()
+std::expected<void, std::pair<drm_mode_atomic_failure_codes, QByteArray>> DrmAtomicCommit::testAllowModeset()
 {
     return doCommit(DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_ALLOW_MODESET);
 }
 
-bool DrmAtomicCommit::commit()
+std::expected<void, std::pair<drm_mode_atomic_failure_codes, QByteArray>> DrmAtomicCommit::commit()
 {
     uint32_t flags = DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_PAGE_FLIP_EVENT;
     if (isTearing()) {
@@ -125,13 +125,13 @@ bool DrmAtomicCommit::commit()
     return doCommit(flags);
 }
 
-bool DrmAtomicCommit::commitModeset()
+std::expected<void, std::pair<drm_mode_atomic_failure_codes, QByteArray>> DrmAtomicCommit::commitModeset()
 {
     m_modeset = true;
     return doCommit(DRM_MODE_ATOMIC_ALLOW_MODESET);
 }
 
-bool DrmAtomicCommit::doCommit(uint32_t flags)
+std::expected<void, std::pair<drm_mode_atomic_failure_codes, QByteArray>> DrmAtomicCommit::doCommit(uint32_t flags)
 {
     std::vector<uint32_t> objects;
     std::vector<uint32_t> propertyCounts;
@@ -153,6 +153,8 @@ bool DrmAtomicCommit::doCommit(uint32_t flags)
             values.push_back(value);
         }
     }
+    // FIXME handle the new API not being supported yet (needs a capability on the GPU)
+    drm_mode_atomic_err_code errorCode{};
     drm_mode_atomic commitData{
         .flags = flags,
         .count_objs = uint32_t(objects.size()),
@@ -160,10 +162,14 @@ bool DrmAtomicCommit::doCommit(uint32_t flags)
         .count_props_ptr = reinterpret_cast<uint64_t>(propertyCounts.data()),
         .props_ptr = reinterpret_cast<uint64_t>(propertyIds.data()),
         .prop_values_ptr = reinterpret_cast<uint64_t>(values.data()),
-        .reserved = 0,
+        .reserved = reinterpret_cast<uint64_t>(&errorCode),
         .user_data = reinterpret_cast<uint64_t>(this),
     };
-    return drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
+    const bool ret = drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
+    if (ret) {
+        return std::expected<void, std::pair<drm_mode_atomic_failure_codes, QByteArray>>{};
+    }
+    return std::unexpected(std::make_pair(drm_mode_atomic_failure_codes(errorCode.failure_code), QByteArray(errorCode.failure_string)));
 }
 
 void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)

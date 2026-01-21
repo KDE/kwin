@@ -134,9 +134,9 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
     }
     switch (mode) {
     case CommitMode::TestAllowModeset: {
-        if (!commit->testAllowModeset()) {
+        if (const auto success = commit->testAllowModeset(); !success.has_value()) {
             qCWarning(KWIN_DRM) << "Atomic modeset test failed!" << strerror(errno);
-            return errnoToError();
+            return commitResultToError(success.error());
         }
         const bool withoutModeset = std::ranges::all_of(pipelines, [&frame](DrmPipeline *pipeline) {
             // always require a modeset for turning off displays, it makes other logic easier to follow
@@ -158,9 +158,9 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
         // and already was disabled before, to work around some quirks in old userspace.
         // Instead of using DRM_MODE_PAGE_FLIP_EVENT | DRM_MODE_ATOMIC_NONBLOCK, do the modeset in a blocking
         // fashion without page flip events and trigger the pageflip notification directly
-        if (!commit->commitModeset()) {
+        if (const auto success = commit->commitModeset(); !success.has_value()) {
             qCCritical(KWIN_DRM) << "Atomic modeset commit failed!" << strerror(errno);
-            return errnoToError();
+            return commitResultToError(success.error());
         }
         for (const auto pipeline : pipelines) {
             pipeline->m_next.needsModeset = pipeline->m_pending.needsModeset = false;
@@ -169,8 +169,8 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
         return Error::None;
     }
     case CommitMode::Test: {
-        if (!commit->test()) {
-            return errnoToError();
+        if (const auto success = commit->test(); !success.has_value()) {
+            return commitResultToError(success.error());
         }
         return Error::None;
     }
@@ -427,6 +427,26 @@ uint32_t DrmPipeline::calculateUnderscan()
         m_pending.overscan = 128 / aspectRatio;
     }
     return hborder;
+}
+
+DrmPipeline::Error DrmPipeline::commitResultToError(const std::pair<drm_mode_atomic_failure_codes, QByteArray> &error)
+{
+    switch (error.first) {
+        // (currently) catch-all error
+        // TODO once there's an actual "invalid API usage" error for only that,
+        // add an enum value for it and print the error message every time
+    case DRM_MODE_ATOMIC_INVALID_API_USAGE:
+    case DRM_MODE_ATOMIC_ASYNC_NOT_SUPP_PLANE:
+    case DRM_MODE_ATOMIC_ASYNC_MODIFIER_NOT_SUPP:
+        return errnoToError();
+        // This should generally be handled fine either way atm
+    case DRM_MODE_ATOMIC_ASYNC_PROP_CHANGED:
+        return Error::InvalidArguments;
+    case DRM_MODE_ATOMIC_CRTC_NEED_FULL_MODESET:
+    case DRM_MODE_ATOMIC_NEED_FULL_MODESET:
+        return Error::NeedsModeset;
+    }
+    return errnoToError();
 }
 
 DrmPipeline::Error DrmPipeline::errnoToError()

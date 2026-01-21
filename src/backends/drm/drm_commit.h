@@ -11,8 +11,10 @@
 #include <memory>
 #include <xf86drmMode.h>
 
+#include <QByteArray>
 #include <QHash>
 #include <chrono>
+#include <expected>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -33,6 +35,26 @@ class DrmPlane;
 class DrmProperty;
 class DrmPipeline;
 class OutputFrame;
+
+#ifndef DRM_MODE_ATOMIC_FAILURE_STRING_LEN
+#define DRM_MODE_ATOMIC_FAILURE_STRING_LEN 128
+struct drm_mode_atomic_err_code
+{
+    __u64 failure_code;
+    __u64 failure_objs_ptr;
+    __u64 reserved;
+    __u32 count_objs;
+    char failure_string[DRM_MODE_ATOMIC_FAILURE_STRING_LEN];
+};
+enum drm_mode_atomic_failure_codes {
+    DRM_MODE_ATOMIC_INVALID_API_USAGE,
+    DRM_MODE_ATOMIC_CRTC_NEED_FULL_MODESET,
+    DRM_MODE_ATOMIC_NEED_FULL_MODESET,
+    DRM_MODE_ATOMIC_ASYNC_NOT_SUPP_PLANE,
+    DRM_MODE_ATOMIC_ASYNC_MODIFIER_NOT_SUPP,
+    DRM_MODE_ATOMIC_ASYNC_PROP_CHANGED,
+};
+#endif
 
 class DrmCommit
 {
@@ -68,10 +90,10 @@ public:
     void setVrr(DrmCrtc *crtc, bool vrr);
     void setPresentationMode(PresentationMode mode);
 
-    bool test();
-    bool testAllowModeset();
-    bool commit();
-    bool commitModeset();
+    std::expected<void, std::pair<drm_mode_atomic_failure_codes, QByteArray>> test();
+    std::expected<void, std::pair<drm_mode_atomic_failure_codes, QByteArray>> testAllowModeset();
+    std::expected<void, std::pair<drm_mode_atomic_failure_codes, QByteArray>> commit();
+    std::expected<void, std::pair<drm_mode_atomic_failure_codes, QByteArray>> commitModeset();
 
     void pageFlipped(std::chrono::nanoseconds timestamp) override;
 
@@ -90,7 +112,7 @@ public:
     bool isTearing() const;
 
 private:
-    bool doCommit(uint32_t flags);
+    std::expected<void, std::pair<drm_mode_atomic_failure_codes, QByteArray>> doCommit(uint32_t flags);
 
     const QList<DrmPipeline *> m_pipelines;
     std::optional<std::chrono::steady_clock::time_point> m_targetPageflipTime;
