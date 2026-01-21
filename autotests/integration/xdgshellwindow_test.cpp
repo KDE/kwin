@@ -2599,8 +2599,6 @@ void TestXdgShellWindow::testRemoveActiveDesktopBeforeInitialCommit()
     // This test verifies that a window will be placed on the right desktop if the current desktop
     // is removed before the client has a chance to commit the initial state.
 
-    QSKIP("Initializing windows are not properly evacuated from removed desktops");
-
     VirtualDesktopManager *virtualDesktopManager = VirtualDesktopManager::self();
     virtualDesktopManager->setCount(2);
 
@@ -2640,8 +2638,6 @@ void TestXdgShellWindow::testRemoveActiveDesktopBeforeMap()
 {
     // This test verifies that a window will be placed on the right desktop if the current desktop
     // is removed before the client has a chance to map the surface (after committing the initial state).
-
-    QSKIP("Initializing windows are not properly evacuated from removed desktops");
 
     VirtualDesktopManager *virtualDesktopManager = VirtualDesktopManager::self();
     virtualDesktopManager->setCount(2);
