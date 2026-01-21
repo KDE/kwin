@@ -115,6 +115,10 @@ KCM.ScrollViewKCM {
                 return (value == 0) ? i18n("Instantly")
                                     : i18np("After %1 second", "After %1 seconds", value)
             }
+            valueFromText: (text, locale) => {
+                const number = Number.parseInt(text.match(/[0-9]+/), 10);
+                return isNaN(number) ? 0 : number;
+            }
 
             TextMetrics {
                 id: metricsInstant
