@@ -801,8 +801,12 @@ void Workspace::addWaylandWindow(Window *window)
     if (window->hasStrut()) {
         rearrange();
     }
-    if (!window->isMinimized() && shouldActivate) {
-        activateWindow(window);
+    if (!window->isMinimized()) {
+        if (shouldActivate) {
+            activateWindow(window);
+        } else if (!window->activationToken().isEmpty()) {
+            window->demandAttention();
+        }
     }
     updateTabbox();
     Q_EMIT windowAdded(window);
