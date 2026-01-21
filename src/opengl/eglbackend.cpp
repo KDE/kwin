@@ -50,6 +50,14 @@ void EglBackend::setFailed(const QString &reason)
 bool EglBackend::checkGraphicsReset()
 {
     const auto context = openglContext();
+    if (context != EglContext::currentContext()) {
+        const bool success = context->makeCurrent();
+        if (!success) {
+            // not necessarily a graphics reset, but we can't really know
+            // and need to re-create everything either way
+            return true;
+        }
+    }
     const GLenum status = context->checkGraphicsResetStatus();
     if (Q_LIKELY(status == GL_NO_ERROR)) {
         return false;
