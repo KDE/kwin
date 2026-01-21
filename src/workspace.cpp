@@ -1358,8 +1358,35 @@ void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
     rearrange();
 }
 
+static VirtualDesktop *pickNewVirtualDesktopForWindow(const Window *window, const VirtualDesktop *removedDesktop)
+{
+    const uint desktopId = std::min(removedDesktop->x11DesktopNumber(), VirtualDesktopManager::self()->count());
+    return VirtualDesktopManager::self()->desktopForX11Id(desktopId);
+}
+
 void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
 {
+    // Note that sendWindowToDesktops() does far more than just assigning the new desktop. It cannot
+    // be used with initializing windows.
+    {
+        const auto windows = waylandServer()->windows();
+        for (Window *window : windows) {
+            if (m_windows.contains(window)) {
+                continue;
+            }
+
+            if (!window->desktops().contains(desktop)) {
+                continue;
+            }
+
+            if (window->desktops().count() > 1) {
+                window->leaveDesktop(desktop);
+            } else {
+                window->setDesktops({pickNewVirtualDesktopForWindow(window, desktop)});
+            }
+        }
+    }
+
     for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
         if (!(*it)->desktops().contains(desktop)) {
             continue;
@@ -1367,8 +1394,7 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
         if ((*it)->desktops().count() > 1) {
             (*it)->leaveDesktop(desktop);
         } else {
-            const uint desktopId = std::min(desktop->x11DesktopNumber(), VirtualDesktopManager::self()->count());
-            sendWindowToDesktops(*it, {VirtualDesktopManager::self()->desktopForX11Id(desktopId)}, true);
+            sendWindowToDesktops(*it, {pickNewVirtualDesktopForWindow(*it, desktop)}, true);
         }
     }
 
