@@ -524,8 +524,15 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
             continue;
         }
         if (changeset->pos.has_value()) {
-            if (changeset->pos->x() < 0 || changeset->pos->y() < 0) {
-                sendFailure(resource, QString("Position of output %1 is negative, that is not supported").arg(output->name()));
+            // KScreen in some cases moves disabled screens to negative positions, to preserve their
+            // relative position vs. the still enabled outputs. Until that's changed, we have to allow
+            // disabled outputs to be in negative positions
+            const bool enabled = changeset->enabled.value_or(output->isEnabled());
+            if (!enabled && (changeset->pos->x() < -1000000 || changeset->pos->y() < -1000000)) {
+                sendFailure(resource, QStringLiteral("Position of output %1 is way too negative (%2, %3)").arg(output->name()).arg(changeset->pos->x()).arg(changeset->pos->y()));
+                return;
+            } else if (enabled && (changeset->pos->x() < 0 || changeset->pos->y() < 0)) {
+                sendFailure(resource, QStringLiteral("Position of enabled output %1 is negative (%2, %3)").arg(output->name()).arg(changeset->pos->x()).arg(changeset->pos->y()));
                 return;
             }
             if (changeset->pos->x() > 1000000 || changeset->pos->y() > 1000000) {
