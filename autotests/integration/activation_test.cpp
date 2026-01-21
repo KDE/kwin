@@ -50,6 +50,8 @@ private Q_SLOTS:
     void testSwitchToWindowFullScreen();
     void testActiveFullscreen();
     void testXdgActivation();
+    void testXdgActivationBeforeInitialCommit();
+    void testXdgActivationBeforeMap();
     void testGlobalShortcutActivation();
     void testFocusMovesFromClosedDialogToParentWindow();
 
@@ -76,6 +78,8 @@ void ActivationTest::initTestCase()
 
 void ActivationTest::init()
 {
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::Low);
+
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgActivation | Test::AdditionalWaylandInterface::Seat));
 
     workspace()->setActiveOutput(QPoint(640, 512));
@@ -737,6 +741,215 @@ void ActivationTest::testXdgActivation()
     Test::xdgActivation()->activate(QString(), *windows[1]->m_surface);
     QVERIFY(activationSpy.wait());
     QCOMPARE(workspace()->activeWindow(), windows[1]->m_window);
+}
+
+static QString generateActivationToken(const Test::XdgToplevelWindow &window, const QString &appId)
+{
+    std::unique_ptr<Test::XdgActivationToken> token = Test::xdgActivation()->createToken();
+    token->set_surface(*window.m_surface);
+    token->set_serial(window.m_window->lastUsageSerial(), *Test::waylandSeat());
+    token->set_app_id(appId);
+    return token->commitAndWait();
+}
+
+void ActivationTest::testXdgActivationBeforeInitialCommit()
+{
+    // This test verifies that activation requests that are made before the initial xdg-toplevel
+    // commit are handled as expected, i.e. that the window will be eventually marked as active and
+    // that the Workspace state is not touched yet.
+
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::High);
+
+    // Show a window
+    auto gooseWindow = std::make_unique<Test::XdgToplevelWindow>([](Test::XdgToplevel *toplevel) {
+        toplevel->set_app_id("org.kde.goose");
+    });
+    gooseWindow->show();
+    QVERIFY(gooseWindow->m_window->isActive());
+
+    // Click in the middle of the window so there is a proper usage serial.
+    uint32_t time = 0;
+    Test::pointerMotion(gooseWindow->m_window->frameGeometry().center(), time++);
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+    Test::pointerButtonReleased(BTN_LEFT, time++);
+
+    const QString invalidActivationToken = QStringLiteral("duckity duck");
+    const QString activationToken = generateActivationToken(*gooseWindow, QStringLiteral("org.kde.wolf"));
+
+    {
+        std::unique_ptr<KWayland::Client::Surface> duckSurface(Test::createSurface());
+        std::unique_ptr<Test::XdgToplevel> duckShellSurface(Test::createXdgToplevelSurface(duckSurface.get(), Test::CreationSetup::CreateOnly));
+        QSignalSpy toplevelConfigureRequestedSpy(duckShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        QSignalSpy surfaceConfigureRequestedSpy(duckShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+        // Wait for the compositor side window to be created.
+        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        QVERIFY(windowCreatedSpy.wait());
+        Window *duckWindow = windowCreatedSpy.last().at(0).value<Window *>();
+
+        // Attempt to activate the window, waylandSync() is needed to make sure that the compositor
+        // side has processed the activation request before we check the compositor state.
+        //
+        // The activation token should only be cached, no other activation related state should be set.
+        Test::xdgActivation()->activate(invalidActivationToken, *duckSurface);
+        QVERIFY(Test::waylandSync());
+        QCOMPARE(duckWindow->activationToken(), invalidActivationToken);
+        QVERIFY(!duckWindow->isActive());
+        QVERIFY(!duckWindow->isDemandingAttention());
+        QVERIFY(!workspace()->stackingOrder().contains(duckWindow));
+
+        // Commit the initial state.
+        duckShellSurface->set_app_id(QStringLiteral("org.kde.duck"));
+        duckSurface->commit(KWayland::Client::Surface::CommitFlag::None);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+        // Map the window.
+        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
+        duckShellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::renderAndWaitForShown(duckSurface.get(), QSize(800, 600), Qt::blue);
+
+        // The window should not be activate because of the invalid activation token.
+        QVERIFY(!duckWindow->isActive());
+        QEXPECT_FAIL("", "demand state is not tracked properly", Continue);
+        QVERIFY(duckWindow->isDemandingAttention());
+    }
+
+    {
+        std::unique_ptr<KWayland::Client::Surface> wolfSurface(Test::createSurface());
+        std::unique_ptr<Test::XdgToplevel> wolfShellSurface(Test::createXdgToplevelSurface(wolfSurface.get(), Test::CreationSetup::CreateOnly));
+        QSignalSpy toplevelConfigureRequestedSpy(wolfShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        QSignalSpy surfaceConfigureRequestedSpy(wolfShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+        // Wait for the compositor side window to be created.
+        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        QVERIFY(windowCreatedSpy.wait());
+        Window *wolfWindow = windowCreatedSpy.last().at(0).value<Window *>();
+
+        // Attempt to activate the window, waylandSync() is needed to make sure that the compositor
+        // side has processed the activation request before we check the compositor state.
+        //
+        // The activation token should only be cached, no other activation related state should be set.
+        Test::xdgActivation()->activate(activationToken, *wolfSurface);
+        QVERIFY(Test::waylandSync());
+        QCOMPARE(wolfWindow->activationToken(), activationToken);
+        QVERIFY(!wolfWindow->isActive());
+        QVERIFY(!wolfWindow->isDemandingAttention());
+        QVERIFY(!workspace()->stackingOrder().contains(wolfWindow));
+
+        // Commit the initial state.
+        wolfShellSurface->set_app_id(QStringLiteral("org.kde.wolf"));
+        wolfSurface->commit(KWayland::Client::Surface::CommitFlag::None);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+        // Map the window.
+        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
+        wolfShellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::renderAndWaitForShown(wolfSurface.get(), QSize(800, 600), Qt::blue);
+
+        // The window should be activated as expected.
+        QVERIFY(wolfWindow->isActive());
+        QVERIFY(!wolfWindow->isDemandingAttention());
+    }
+}
+
+void ActivationTest::testXdgActivationBeforeMap()
+{
+    // This test verifies that activation requests that are made before the xdg-toplevel surface
+    // is mapped are handled as expected, i.e. that the window will be eventually marked as active
+    // and that the Workspace state is not touched yet.
+
+    options->setFocusStealingPreventionLevel(FocusStealingPreventionLevel::High);
+
+    // Show a window
+    auto gooseWindow = std::make_unique<Test::XdgToplevelWindow>([](Test::XdgToplevel *toplevel) {
+        toplevel->set_app_id("org.kde.goose");
+    });
+    gooseWindow->show();
+    QVERIFY(gooseWindow->m_window->isActive());
+
+    // Click in the middle of the window so there is a proper usage serial.
+    uint32_t time = 0;
+    Test::pointerMotion(gooseWindow->m_window->frameGeometry().center(), time++);
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+    Test::pointerButtonReleased(BTN_LEFT, time++);
+
+    const QString invalidActivationToken = QStringLiteral("duckity duck");
+    const QString activationToken = generateActivationToken(*gooseWindow, QStringLiteral("org.kde.wolf"));
+
+    {
+        std::unique_ptr<KWayland::Client::Surface> duckSurface(Test::createSurface());
+        std::unique_ptr<Test::XdgToplevel> duckShellSurface(Test::createXdgToplevelSurface(duckSurface.get(), Test::CreationSetup::CreateOnly));
+        QSignalSpy toplevelConfigureRequestedSpy(duckShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        QSignalSpy surfaceConfigureRequestedSpy(duckShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+        // Wait for the compositor side window to be created.
+        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        QVERIFY(windowCreatedSpy.wait());
+        Window *duckWindow = windowCreatedSpy.last().at(0).value<Window *>();
+
+        // Commit the initial state.
+        duckShellSurface->set_app_id(QStringLiteral("org.kde.duck"));
+        duckSurface->commit(KWayland::Client::Surface::CommitFlag::None);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+        // Attempt to activate the window, waylandSync() is needed to make sure that the compositor
+        // side has processed the activation request before we check the compositor state.
+        //
+        // The activation token should only be cached, no other activation related state should be set.
+        Test::xdgActivation()->activate(invalidActivationToken, *duckSurface);
+        QVERIFY(Test::waylandSync());
+        QCOMPARE(duckWindow->activationToken(), invalidActivationToken);
+        QVERIFY(!duckWindow->isActive());
+        QVERIFY(!duckWindow->isDemandingAttention());
+        QVERIFY(!workspace()->stackingOrder().contains(duckWindow));
+
+        // Map the window.
+        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
+        duckShellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::renderAndWaitForShown(duckSurface.get(), QSize(800, 600), Qt::blue);
+
+        // The window should not be activate because of the invalid activation token.
+        QVERIFY(!duckWindow->isActive());
+        QEXPECT_FAIL("", "demand state is not tracked properly", Continue);
+        QVERIFY(duckWindow->isDemandingAttention());
+    }
+
+    {
+        std::unique_ptr<KWayland::Client::Surface> wolfSurface(Test::createSurface());
+        std::unique_ptr<Test::XdgToplevel> wolfShellSurface(Test::createXdgToplevelSurface(wolfSurface.get(), Test::CreationSetup::CreateOnly));
+        QSignalSpy toplevelConfigureRequestedSpy(wolfShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        QSignalSpy surfaceConfigureRequestedSpy(wolfShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+        // Wait for the compositor side window to be created.
+        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        QVERIFY(windowCreatedSpy.wait());
+        Window *wolfWindow = windowCreatedSpy.last().at(0).value<Window *>();
+
+        // Commit the initial state.
+        wolfShellSurface->set_app_id(QStringLiteral("org.kde.wolf"));
+        wolfSurface->commit(KWayland::Client::Surface::CommitFlag::None);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+        // Attempt to activate the window, waylandSync() is needed to make sure that the compositor
+        // side has processed the activation request before we check the compositor state.
+        //
+        // The activation token should only be cached, no other activation related state should be set.
+        Test::xdgActivation()->activate(activationToken, *wolfSurface);
+        QVERIFY(Test::waylandSync());
+        QCOMPARE(wolfWindow->activationToken(), activationToken);
+        QVERIFY(!wolfWindow->isActive());
+        QVERIFY(!wolfWindow->isDemandingAttention());
+        QVERIFY(!workspace()->stackingOrder().contains(wolfWindow));
+
+        // Map the window.
+        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
+        wolfShellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::renderAndWaitForShown(wolfSurface.get(), QSize(800, 600), Qt::blue);
+
+        // The window should be activated as expected.
+        QVERIFY(wolfWindow->isActive());
+        QVERIFY(!wolfWindow->isDemandingAttention());
+    }
 }
 
 class TokenSpy : public InputEventSpy

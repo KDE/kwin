@@ -229,6 +229,7 @@ public:
     void setRenderBackend(RenderBackend *backend);
 
 Q_SIGNALS:
+    void windowCreated(KWin::Window *);
     void windowAdded(KWin::Window *);
     void windowRemoved(KWin::Window *);
     void initialized();
