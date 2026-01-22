@@ -338,9 +338,18 @@ void DrmOutput::repairPresentation()
     QTimer::singleShot(0, m_gpu->platform(), &DrmBackend::updateOutputs);
 }
 
-bool DrmOutput::overlayLayersLikelyBroken() const
+bool DrmOutput::recommendsOverlayUse() const
 {
-    return m_gpu->isNVidia();
+    // Two drivers are known to have issues with overlays:
+    // - amdgpu on some hardware has really slow atomic tests when overlays are involved
+    // - Nvidia has more severe issues
+    if (PROJECT_VERSION_PATCH >= 80) {
+        // we can take some more risks in development versions.
+        return !m_gpu->isNVidia();
+    } else {
+        // release version: play it really safe for now, only enable on select drivers
+        return m_gpu->isI915() || m_gpu->isIntelXE();
+    }
 }
 
 DrmConnector *DrmOutput::connector() const

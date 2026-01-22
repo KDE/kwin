@@ -692,7 +692,7 @@ bool BackendOutput::isDdcCiKnownBroken() const
     });
 }
 
-bool BackendOutput::overlayLayersLikelyBroken() const
+bool BackendOutput::recommendsOverlayUse() const
 {
     return false;
 }

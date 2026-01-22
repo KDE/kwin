@@ -289,10 +289,10 @@ public:
     virtual void repairPresentation();
 
     /**
-     * Can be used by the backend to suggest the compositor not to
+     * Can be used by the backend to suggest the compositor (not) to
      * use overlay planes, to avoid driver issues
      */
-    virtual bool overlayLayersLikelyBroken() const;
+    virtual bool recommendsOverlayUse() const;
 
     /**
      * The color space in which the scene is blended

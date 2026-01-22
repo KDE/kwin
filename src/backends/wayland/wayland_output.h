@@ -81,6 +81,7 @@ public:
     WaylandOutput(const QString &name, WaylandBackend *backend);
     ~WaylandOutput() override;
 
+    bool recommendsOverlayUse() const override;
     RenderLoop *renderLoop() const override;
     bool presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay) override;
 

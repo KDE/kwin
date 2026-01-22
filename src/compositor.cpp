@@ -717,7 +717,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     // the primary output layer is currently always used for the main content
     unusedOutputLayers.removeOne(primaryView->layer());
 
-    const bool overlaysAllowed = m_allowOverlaysEnv.value_or(!output->overlayLayersLikelyBroken() && PROJECT_VERSION_PATCH >= 80);
+    const bool overlaysAllowed = m_allowOverlaysEnv.value_or(output->recommendsOverlayUse());
     QList<OutputLayer *> specialLayers = unusedOutputLayers | std::views::filter([this, renderLoop, overlaysAllowed](OutputLayer *layer) {
         return layer->type() != OutputLayerType::Primary
             && (!m_brokenCursors.contains(renderLoop) || layer->type() != OutputLayerType::CursorOnly)

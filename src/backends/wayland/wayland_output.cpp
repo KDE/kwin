@@ -419,6 +419,12 @@ RenderLoop *WaylandOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
+bool WaylandOutput::recommendsOverlayUse() const
+{
+    // TODO once https://bugs.kde.org/show_bug.cgi?id=509518 is fixed, switch this back on
+    return false;
+}
+
 bool WaylandOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nanoseconds> allowedVrrDelay)
 {
     // the host compositor moves the cursor, there's nothing to do

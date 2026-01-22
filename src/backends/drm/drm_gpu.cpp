@@ -95,6 +95,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     // find out what driver this kms device is using
     DrmUniquePtr<drmVersion> version(drmGetVersion(fd));
     m_isI915 = strstr(version->name, "i915");
+    m_isIntelXE = strstr(version->name, "xe");
     m_isNVidia = strstr(version->name, "nvidia-drm");
     m_isAmdgpu = strstr(version->name, "amdgpu");
     m_isVmwgfx = strstr(version->name, "vmwgfx");
@@ -722,6 +723,11 @@ bool DrmGpu::colorPipelineSupported() const
 bool DrmGpu::isI915() const
 {
     return m_isI915;
+}
+
+bool DrmGpu::isIntelXE() const
+{
+    return m_isIntelXE;
 }
 
 bool DrmGpu::isNVidia() const
