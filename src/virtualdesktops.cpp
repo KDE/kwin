@@ -908,14 +908,26 @@ void VirtualDesktopManager::initSwitchToShortcuts()
 {
     const QString toDesktop = QStringLiteral("Switch to Desktop %1");
     const KLocalizedString toDesktopLabel = ki18n("Switch to Desktop %1");
-    addAction(toDesktop, toDesktopLabel, 1, QKeySequence(Qt::CTRL | Qt::Key_F1), &VirtualDesktopManager::slotSwitchTo);
-    addAction(toDesktop, toDesktopLabel, 2, QKeySequence(Qt::CTRL | Qt::Key_F2), &VirtualDesktopManager::slotSwitchTo);
-    addAction(toDesktop, toDesktopLabel, 3, QKeySequence(Qt::CTRL | Qt::Key_F3), &VirtualDesktopManager::slotSwitchTo);
-    addAction(toDesktop, toDesktopLabel, 4, QKeySequence(Qt::CTRL | Qt::Key_F4), &VirtualDesktopManager::slotSwitchTo);
+    addAction(toDesktop, toDesktopLabel, 1, QList<QKeySequence>{QKeySequence(Qt::META | Qt::Key_F1), QKeySequence(Qt::CTRL | Qt::Key_F1)}, &VirtualDesktopManager::slotSwitchTo);
+    addAction(toDesktop, toDesktopLabel, 2, QList<QKeySequence>{QKeySequence(Qt::META | Qt::Key_F2), QKeySequence(Qt::CTRL | Qt::Key_F2)}, &VirtualDesktopManager::slotSwitchTo);
+    addAction(toDesktop, toDesktopLabel, 3, QList<QKeySequence>{QKeySequence(Qt::META | Qt::Key_F3), QKeySequence(Qt::CTRL | Qt::Key_F3)}, &VirtualDesktopManager::slotSwitchTo);
+    addAction(toDesktop, toDesktopLabel, 4, QList<QKeySequence>{QKeySequence(Qt::META | Qt::Key_F4), QKeySequence(Qt::CTRL | Qt::Key_F4)}, &VirtualDesktopManager::slotSwitchTo);
 
     for (uint i = 5; i <= maximum(); ++i) {
         addAction(toDesktop, toDesktopLabel, i, QKeySequence(), &VirtualDesktopManager::slotSwitchTo);
     }
+}
+
+QAction *VirtualDesktopManager::addAction(const QString &name, const KLocalizedString &label, uint value, const QList<QKeySequence> &key, void (VirtualDesktopManager::*slot)())
+{
+    QAction *a = new QAction(this);
+    a->setProperty("componentName", QStringLiteral("kwin"));
+    a->setObjectName(name.arg(value));
+    a->setText(label.subs(value).toString());
+    a->setData(value);
+    KGlobalAccel::setGlobalShortcut(a, key);
+    connect(a, &QAction::triggered, this, slot);
+    return a;
 }
 
 QAction *VirtualDesktopManager::addAction(const QString &name, const KLocalizedString &label, uint value, const QKeySequence &key, void (VirtualDesktopManager::*slot)())
