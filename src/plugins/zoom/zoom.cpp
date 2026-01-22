@@ -241,6 +241,13 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
             effects->registerAxisShortcut(pointerAxisModifiers, PointerAxisDown, m_zoomOutAxisAction.get());
         }
     }
+
+    bool usePatternUpscaler = ZoomConfig::usePatternUpscaler();
+    if (usePatternUpscaler != m_usePatternUpscaler) {
+        m_usePatternUpscaler = usePatternUpscaler;
+        // TODO: figure out if this actually gets texture filters to change
+        effects->addRepaintFull();
+    }
 }
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
@@ -396,6 +403,19 @@ GLShader *ZoomEffect::shaderForZoom(double zoom)
             return m_pixelGridShader.get();
         }
     }
+
+    if (m_usePatternUpscaler) {
+        if (!m_upscalerShader) {
+            m_upscalerShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/upscaler.frag"));
+        }
+        if (m_upscalerShader && m_upscalerShader->isValid()) {
+            return m_upscalerShader.get();
+        }
+
+        // if the shader doesn't load, disable the setting so we don't keep trying each repaint.
+        m_usePatternUpscaler = false;
+    }
+
     return ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
 }
 
@@ -421,6 +441,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
 
     GLShader *shader = shaderForZoom(m_zoom);
     ShaderManager::instance()->pushShader(shader);
+    shader->setUniform("zoomLevel", this->m_zoom);
     for (auto &[screen, offscreen] : m_offscreenData) {
         QMatrix4x4 matrix;
         matrix.translate(m_xTranslation * scale, m_yTranslation * scale);
