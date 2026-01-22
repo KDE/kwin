@@ -68,7 +68,6 @@ protected:
     EglBackend();
 
     void cleanup();
-    virtual void cleanupSurfaces();
     void setEglDisplay(EglDisplay *display);
     void initClientExtensions();
     void initWayland();

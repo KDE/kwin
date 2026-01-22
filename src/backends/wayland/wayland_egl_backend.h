@@ -106,7 +106,6 @@ private:
     bool initializeEgl();
     bool initRenderingContext();
     void createOutputLayers(BackendOutput *output);
-    void cleanupSurfaces() override;
 
     WaylandBackend *m_backend;
 };
