@@ -22,6 +22,7 @@ target_link_libraries(gamecontroller PRIVATE
 
     KF6::I18n
 
+    UDev::UDev
     PkgConfig::libevdev
     XKB::XKB
 )
