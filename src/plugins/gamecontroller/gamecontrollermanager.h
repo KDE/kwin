@@ -41,6 +41,7 @@ private:
     bool removeGameController(const QString &devNode);
     bool isGameControllerDevice(libevdev *evdev);
     bool isTracked(const QString &path) const;
+    bool isHandledByLibinput(const QString &devNode);
 
     bool addDeviceWatch(GameController *gc);
     void removeDeviceWatch(const QString &devNode);

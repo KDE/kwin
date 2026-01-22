@@ -11,6 +11,7 @@
 #include "gamecontroller_logging.h"
 
 #include <fcntl.h>
+#include <libudev.h>
 #include <sys/inotify.h>
 #include <unistd.h>
 
@@ -47,8 +48,7 @@ GameControllerManager::GameControllerManager()
     m_inotifyNotifier = std::make_unique<QSocketNotifier>(m_inotifyFd.get(), QSocketNotifier::Read);
     connect(m_inotifyNotifier.get(), &QSocketNotifier::activated, this, &GameControllerManager::handleFdAccess);
 
-    const QString inputDir = qEnvironmentVariable("KWIN_TEST_INPUT_DIR", QStringLiteral("/dev/input"));
-    const QDir dir(inputDir);
+    const QDir dir(qEnvironmentVariable("KWIN_TEST_INPUT_DIR", QStringLiteral("/dev/input")));
     const auto files = dir.entryList({QStringLiteral("event*")}, QDir::Files | QDir::Readable | QDir::System);
     for (const QString &file : files) {
         const QString path = dir.absoluteFilePath(file);
@@ -88,6 +88,11 @@ void GameControllerManager::handleUdevEvent()
 
 GameController *GameControllerManager::addGameController(const QString &devNode)
 {
+    if (isHandledByLibinput(devNode)) {
+        qCDebug(KWIN_GAMECONTROLLER) << "Not adding: " << devNode << " to managed game controllers";
+        return nullptr;
+    }
+
     // Note: Game controllers are generally *not* restricted by udev on most
     // distributions - allows games to open them directly without special
     // privileges. Using ::open() here is intentional.
@@ -147,6 +152,32 @@ bool GameControllerManager::removeGameController(const QString &devNode)
         }
     }
     return false;
+}
+
+bool GameControllerManager::isHandledByLibinput(const QString &devNode)
+{
+    udev_device *udevDevice = udev_device_new_from_subsystem_sysname(
+        *m_udev.get(),
+        "input",
+        QFileInfo(devNode).fileName().toUtf8().constData());
+    if (!udevDevice) {
+        qCDebug(KWIN_GAMECONTROLLER) << "Could not get udev device for:" << devNode << ", assuming it is handled by libintput.";
+        return true;
+    }
+
+    const char *value = udev_device_get_property_value(udevDevice, "ID_INPUT_JOYSTICK");
+    if (!value) {
+        qCDebug(KWIN_GAMECONTROLLER) << devNode << " has no ID_INPUT_JOYSTICK property, assuming it is handled by libinput.";
+        udev_device_unref(udevDevice);
+        return true;
+    }
+    qCDebug(KWIN_GAMECONTROLLER) << devNode << " property value for ID_INPUT_JOYSTICK: " << value;
+
+    const bool handledByLibinput = (strcmp(value, "1") != 0);
+    qCDebug(KWIN_GAMECONTROLLER) << devNode << " handled by libinput: " << handledByLibinput;
+
+    udev_device_unref(udevDevice);
+    return handledByLibinput;
 }
 
 bool GameControllerManager::isGameControllerDevice(libevdev *evdev)
