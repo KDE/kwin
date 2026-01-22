@@ -778,7 +778,7 @@ void DebugConsole::initGLTab()
     };
 
     const EglBackend *backend = static_cast<EglBackend *>(Compositor::self()->backend());
-    m_ui->platformExtensionsLabel->setText(extensionsString(backend->extensions()));
+    m_ui->platformExtensionsLabel->setText(extensionsString(backend->eglDisplayObject()->extensions()));
     m_ui->openGLExtensionsLabel->setText(extensionsString(backend->openglContext()->openglExtensions()));
 }
 

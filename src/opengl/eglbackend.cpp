@@ -136,7 +136,6 @@ void EglBackend::cleanupSurfaces()
 void EglBackend::setEglDisplay(EglDisplay *display)
 {
     m_display = display;
-    m_extensions = m_display->extensions();
 }
 
 void EglBackend::initWayland()
