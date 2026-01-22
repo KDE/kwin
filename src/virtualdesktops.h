@@ -514,6 +514,11 @@ private:
     QAction *addAction(const QString &name, const KLocalizedString &label, uint value, const QKeySequence &key, void (VirtualDesktopManager::*slot)());
 
     /**
+     * Same as above, but takes in multiple key sequences
+     */
+    QAction *addAction(const QString &name, const KLocalizedString &label, uint value, const QList<QKeySequence> &key, void (VirtualDesktopManager::*slot)());
+
+    /**
      * Creates an action and connects it to the @p slot in this Manager.
      * Overloaded method for the case that no additional value needs to be passed to the action.
      * @param name The name of the action to be created
