@@ -53,24 +53,6 @@ public:
         return m_failed;
     }
 
-    /**
-     * The backend specific extensions (e.g. EGL/GLX extensions).
-     *
-     * Not the OpenGL (ES) extension!
-     */
-    QList<QByteArray> extensions() const
-    {
-        return m_extensions;
-    }
-
-    /**
-     * @returns whether the backend specific extensions contains @p extension.
-     */
-    bool hasExtension(const QByteArray &extension) const
-    {
-        return m_extensions.contains(extension);
-    }
-
     bool testImportBuffer(GraphicsBuffer *buffer) override;
     QHash<uint32_t, QList<uint64_t>> supportedFormats() const override;
 
@@ -119,7 +101,6 @@ protected:
      * @brief Whether the initialization failed, of course default to @c false.
      */
     bool m_failed = false;
-    QList<QByteArray> m_extensions;
 };
 
 }
