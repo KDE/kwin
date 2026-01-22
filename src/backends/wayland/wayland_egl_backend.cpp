@@ -237,6 +237,10 @@ WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
 
 WaylandEglBackend::~WaylandEglBackend()
 {
+    const auto outputs = m_backend->outputs();
+    for (BackendOutput *output : outputs) {
+        static_cast<WaylandOutput *>(output)->setOutputLayers({});
+    }
     cleanup();
 }
 
@@ -248,14 +252,6 @@ WaylandBackend *WaylandEglBackend::backend() const
 DrmDevice *WaylandEglBackend::drmDevice() const
 {
     return m_backend->drmDevice();
-}
-
-void WaylandEglBackend::cleanupSurfaces()
-{
-    const auto outputs = m_backend->outputs();
-    for (BackendOutput *output : outputs) {
-        static_cast<WaylandOutput *>(output)->setOutputLayers({});
-    }
 }
 
 void WaylandEglBackend::createOutputLayers(BackendOutput *output)
