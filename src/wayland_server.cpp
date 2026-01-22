@@ -137,7 +137,6 @@ public:
     const QSet<QByteArray> interfacesBlackList = {
         QByteArrayLiteral("org_kde_plasma_window_management"),
         QByteArrayLiteral("org_kde_kwin_fake_input"),
-        QByteArrayLiteral("org_kde_kwin_keystate"),
         QByteArrayLiteral("zkde_screencast_unstable_v1"),
         QByteArrayLiteral("org_kde_plasma_activation_feedback"),
         QByteArrayLiteral("kde_lockscreen_overlay_v1"),
