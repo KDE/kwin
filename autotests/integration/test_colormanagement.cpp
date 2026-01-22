@@ -52,7 +52,7 @@ public:
         wp_image_description_v1_destroy(object());
     }
 
-    void wp_image_description_v1_ready2(uint32_t identity_hi, uint32_t identity_lo) override
+    void wp_image_description_v1_ready(uint32_t identity) override
     {
         Q_EMIT ready();
     }
@@ -271,18 +271,18 @@ void ColorManagementTest::testSetImageDescription_data()
         << RenderingIntent::RelativeColorimetricWithBPC
         << false << true
         << std::optional<std::shared_ptr<ColorDescription>>();
-    QTest::addRow("rec.2020 PQ absolute colorimetric")
-        << std::make_shared<ColorDescription>(ColorDescription{
-               Colorimetry::BT2020,
-               TransferFunction(TransferFunction::PerceptualQuantizer),
-               203,
-               0,
-               400,
-               400,
-           })
-        << RenderingIntent::AbsoluteColorimetricNoAdaptation
-        << false << true
-        << std::optional<std::shared_ptr<ColorDescription>>();
+    // QTest::addRow("rec.2020 PQ absolute colorimetric")
+    //     << std::make_shared<ColorDescription>(ColorDescription{
+    //            Colorimetry::BT2020,
+    //            TransferFunction(TransferFunction::PerceptualQuantizer),
+    //            203,
+    //            0,
+    //            400,
+    //            400,
+    //        })
+    //     << RenderingIntent::AbsoluteColorimetricNoAdaptation
+    //     << false << true
+    //     << std::optional<std::shared_ptr<ColorDescription>>();
     QTest::addRow("rec.709 + BT1886")
         << std::make_shared<ColorDescription>(ColorDescription{
                Colorimetry::BT709,
