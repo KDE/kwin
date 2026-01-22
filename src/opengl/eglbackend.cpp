@@ -125,12 +125,7 @@ void EglBackend::cleanup()
         m_display->destroyImage(image);
     }
 
-    cleanupSurfaces();
     m_context.reset();
-}
-
-void EglBackend::cleanupSurfaces()
-{
 }
 
 void EglBackend::setEglDisplay(EglDisplay *display)
