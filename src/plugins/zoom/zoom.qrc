@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/effects/zoom/">
   <file>shaders/pixelgrid.frag</file>
+  <file>shaders/upscaler.frag</file>
 </qresource>
 </RCC>
