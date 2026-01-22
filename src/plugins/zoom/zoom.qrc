@@ -2,5 +2,7 @@
 <qresource prefix="/effects/zoom/">
   <file>shaders/pixelgrid.frag</file>
   <file>shaders/pixelgrid_core.frag</file>
+  <file>shaders/upscaler.frag</file>
+  <file>shaders/upscaler_core.frag</file>
 </qresource>
 </RCC>

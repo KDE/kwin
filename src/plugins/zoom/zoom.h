@@ -136,6 +136,7 @@ private:
     double m_moveFactor = 20.0;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
     std::map<LogicalOutput *, OffscreenData> m_offscreenData;
+    std::unique_ptr<GLShader> m_upscalerShader;
     std::unique_ptr<GLShader> m_pixelGridShader;
     double m_pixelGridZoom;
     std::unique_ptr<QAction> m_zoomInAxisAction;
@@ -143,6 +144,7 @@ private:
     Qt::KeyboardModifiers m_axisModifiers;
     std::unique_ptr<QAction> m_touchpadAction;
     double m_lastPinchProgress = 0;
+    bool m_usePatternUpscaler = true;
 
     std::unique_ptr<TextCaretTracker> m_textCaretTracker;
 #if KWIN_BUILD_QACCESSIBILITYCLIENT
