@@ -378,7 +378,7 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
         if (!data.texture) {
             return nullptr;
         }
-        data.texture->setFilter(GL_LINEAR);
+        data.texture->setFilter(GL_NEAREST);
         data.texture->setWrapMode(GL_CLAMP_TO_EDGE);
         data.framebuffer = std::make_unique<GLFramebuffer>(data.texture.get());
     }
@@ -390,7 +390,14 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
 GLShader *ZoomEffect::shaderForZoom(double zoom)
 {
     if (zoom < m_pixelGridZoom) {
-        return ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        if (m_useUpscaler) {
+            if (!m_upscalerShader) {
+                m_upscalerShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/upscaler.frag"));
+            }
+            return m_upscalerShader.get();
+        } else {
+            return ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        }
     } else {
         if (!m_pixelGridShader) {
             m_pixelGridShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/pixelgrid.frag"));
@@ -421,6 +428,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
 
     GLShader *shader = shaderForZoom(m_zoom);
     ShaderManager::instance()->pushShader(shader);
+    shader->setUniform("zoomLevel", this->m_zoom);
     for (auto &[screen, offscreen] : m_offscreenData) {
         QMatrix4x4 matrix;
         matrix.translate(m_xTranslation * scale, m_yTranslation * scale);
