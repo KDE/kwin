@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-01-23 02:42+0000\n"
 "PO-Revision-Date: 2020-10-25 18:44+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -906,59 +906,59 @@ msgstr "Lisa omadus ..."
 msgid "Detect Window Properties"
 msgstr "Akna omaduste tuvastamine"
 
-#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:122
+#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:126
 #, kde-format
 msgid "Instantly"
 msgstr "Kohe"
 
-#: ui/RulesEditor.qml:116 ui/RulesEditor.qml:127
+#: ui/RulesEditor.qml:116 ui/RulesEditor.qml:131
 #, kde-format
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
 msgstr[0] "%1 sekundi järel"
 msgstr[1] "%1 sekundi järel"
 
-#: ui/RulesEditor.qml:174
+#: ui/RulesEditor.qml:178
 #, kde-format
 msgid "Add property to the rule"
 msgstr "Lisa reeglile omadus"
 
-#: ui/RulesEditor.qml:267
+#: ui/RulesEditor.qml:271
 #, fuzzy, kde-format
 #| msgid "Detect Window Properties"
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
 msgstr "Akna omaduste tuvastamine"
 
-#: ui/RulesEditor.qml:269
+#: ui/RulesEditor.qml:273
 #, fuzzy, kde-format
 #| msgid "Detect Window Properties"
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
 msgstr "Akna omaduste tuvastamine"
 
-#: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:294 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Jah"
 
-#: ui/RulesEditor.qml:290 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:294 ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "Ei"
 
-#: ui/RulesEditor.qml:292 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:296 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
 
-#: ui/RulesEditor.qml:294
+#: ui/RulesEditor.qml:298
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: ui/RulesEditor.qml:296
+#: ui/RulesEditor.qml:300
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"

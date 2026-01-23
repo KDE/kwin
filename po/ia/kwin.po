@@ -1,15 +1,15 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# SPDX-FileCopyrightText: 2010, 2011, 2012, 2013, 2017, 2020, 2021, 2022, 2023, 2024, 2025 g.sora <g.sora@tiscali.it>
+# SPDX-FileCopyrightText: 2010, 2011, 2012, 2013, 2017, 2020, 2021, 2022, 2023, 2024, 2025, 2026 g.sora <g.sora@tiscali.it>
 # Giovanni Sora <g.sora@tioscali.it>, 2014, 2020, 2021.
 # giovanni <g.sora@tiscali.it>, 2023, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-13 08:42+0000\n"
-"PO-Revision-Date: 2025-05-30 18:47+0200\n"
+"POT-Creation-Date: 2026-01-23 02:42+0000\n"
+"PO-Revision-Date: 2026-01-22 17:46+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -47,14 +47,12 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Compositor %1"
 
 #: backends/wayland/wayland_output.cpp:490
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- Output disabled"
 msgstr "- Sortita dishabilitate"
 
 #: backends/wayland/wayland_output.cpp:492
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- Output dimmed"
 msgstr "- Sortita obscurate"
 
@@ -648,12 +646,10 @@ msgstr "Swipe cancellate"
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "Initia tener"
 
 #: debug_console.cpp:473
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "Computo de digito"
@@ -662,15 +658,13 @@ msgstr "Computo de digito"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "Termina tener"
 
 #: debug_console.cpp:496
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "Pinciar cancellate"
+msgstr "Tener cancellate"
 
 #: debug_console.cpp:508
 #, kde-format
@@ -751,8 +745,7 @@ msgid "Rotation"
 msgstr "Rotation"
 
 #: debug_console.cpp:549 debug_console.cpp:568
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
 msgstr "Distantia:"
 
@@ -787,10 +780,9 @@ msgid "Up"
 msgstr "In alto"
 
 #: debug_console.cpp:588
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Position"
+msgstr "Position de glissator"
 
 #: debug_console.cpp:597
 #, kde-format
@@ -821,19 +813,17 @@ msgstr "Button de tampon (pad) de tabletta"
 #: debug_console.cpp:616 debug_console.cpp:634 debug_console.cpp:651
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Gruppo"
 
 #: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Mode:"
+#, kde-format
 msgid "Mode"
-msgstr "Modo:"
+msgstr "Modo"
 
 #: debug_console.cpp:618
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "Es Commuta de Modo"
 
 #: debug_console.cpp:629
 #, kde-format
@@ -1642,10 +1632,9 @@ msgstr "Fortia de rumor:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Saturation:"
-msgstr "Duration:"
+msgstr "Saturation:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -2442,10 +2431,9 @@ msgstr "Falleva a connecter contexto de PipeWire"
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
 #: plugins/screencast/screencastmanager.cpp:142
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "Suspende de facer composition"
+msgstr "Typo de composition non supportate"
 
 #: plugins/screencast/screencastmanager.cpp:62
 #, kde-format
@@ -3538,8 +3526,7 @@ msgstr ""
 "Abandonar de omne modo in 2 minutas."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
 msgstr "Reguarda a Scriptorio"
@@ -3608,12 +3595,7 @@ msgid "Tablets switched outputs"
 msgstr "Exitos commutate de tablettas"
 
 #: useractions.cpp:162
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -3622,17 +3604,11 @@ msgid ""
 msgstr ""
 "Tu ha seligite de monstrar un fenestra sin bordo.\n"
 "Sin le bordo, tu non potera habilitar de nove le bordo con le uso del mus: "
-"tu in vice usa le menu de operationes de fenestra, activate con uso de %1 "
-"via breve de claviero."
+"tu in vice usa le menu de fenestra, activate con uso de %1 via breve de "
+"claviero."
 
 #: useractions.cpp:169
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -3642,8 +3618,7 @@ msgstr ""
 "Tu ha seligite de monstrar un fenestra in modo de schermo plen.\n"
 "Si le mesme application non ha un option de commutar inter modo de schermo "
 "tu non potera dishabilitar lo de nove con le uso del mus: tu in vice usa le "
-"menu de operationes de fenestra, activate con uso de %1 via breve de "
-"claviero."
+"menu de fenestra, activate con uso de %1 via breve de claviero."
 
 #: useractions.cpp:217
 #, kde-format
@@ -3678,7 +3653,7 @@ msgstr "&Nulle barra de titulo e quadro"
 #: useractions.cpp:251
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "&Cela ab Screencast"
 
 #: useractions.cpp:259
 #, kde-format
@@ -4186,22 +4161,23 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Non pote adder un modo personalisate con un grandor vacue"
 
 #: wayland/outputmanagement_v2.cpp:635
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
+"Non pote adder un modo personalisate con unratio de refrescar de zero Hz"
 
 #: wayland/outputmanagement_v2.cpp:642
 #, kde-format
 msgid "Position of output %s is negative, that is not supported"
-msgstr ""
+msgstr "Position de sortita %s es negative, illo non es suppoortate"
 
 #: wayland/outputmanagement_v2.cpp:646
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "Position de sortita %s es troppo grande  (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:663
 #, kde-format
@@ -4214,7 +4190,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(non respondente)"
 
-#: workspace.cpp:1710
+#: workspace.cpp:1740
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

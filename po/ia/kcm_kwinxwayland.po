@@ -1,13 +1,13 @@
 # Copyright (C) 2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 giovanni <g.sora@tiscali.it>
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025, 2026 giovanni <g.sora@tiscali.it>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2025-05-30 18:46+0200\n"
+"PO-Revision-Date: 2026-01-22 17:45+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -43,7 +43,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr ""
+msgstr "Ascoltante pressiones de claviero:"
 
 #: ui/main.qml:80
 #, kde-format
@@ -55,7 +55,7 @@ msgstr "Prohibite"
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
-msgstr ""
+msgstr "Maxime securitate; vias breve global non functionara in apps de X11"
 
 #: ui/main.qml:110
 #, kde-format
@@ -70,6 +70,8 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"Alte securitate; push-to-talk e altere vias breve global de sol modificator "
+"(modifier-only) functionara  in appas de X11"
 
 #: ui/main.qml:140
 #, kde-format
@@ -85,7 +87,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
-msgstr ""
+msgstr "Moderate securitate; vias breve global  functionara in apps de X11"
 
 #: ui/main.qml:170
 #, kde-format
@@ -100,29 +102,26 @@ msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
 msgstr ""
+"Minus secur; tote apps de X11 potera vider ulle texto que tu typain ulle "
+"application"
 
 #: ui/main.qml:200
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
 "malicious software to steal passwords and spy on the text that you type. "
 "Make sure you understand and accept this risk."
 msgstr ""
-"Nota que usar iste preferentia reducera le securitate de systema a illo del "
-"session de X11 per permitter a software malevole rubar contrasignos e spiar "
-"le textoque tu es typante. Assecura te que tu comprende e accepta iste risco."
+"Nota que usar iste preferentia reducera le securitate de systemapermittera a "
+"software malevole rubar contrasignos e spiar sur le texto que tu es typante. "
+"Assecura te que tu comprende e accepta iste risco."
 
 #: ui/main.qml:216
-#, fuzzy, kde-format
-#| msgid "Additionally include mouse buttons"
+#, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr "Include additionalmente buttones de mus"
+msgstr "Asxoltar buttones de mus:"
 
 #: ui/main.qml:222
 #, kde-format
@@ -137,6 +136,8 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"Moderate securitate; vias breve global implicante buttones de mus "
+"functionara  in apps de X11"
 
 #: ui/main.qml:252
 #, kde-format
@@ -156,23 +157,19 @@ msgstr "Permitte sin demandar permission"
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
-msgstr ""
+msgstr "Minus secur; tote apps de X11 potera prender controlo del computator"
 
 #: ui/main.qml:282
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-"Nota que usar iste preferentia reducera le securitate de systema a illo del "
-"session de X11 per permitter a software malevole rubar contrasignos e spiar "
-"le textoque tu es typante. Assecura te que tu comprende e accepta iste risco."
+"Nota que usar iste preferentia reducera le securitate de systema epermittera "
+"a software malevole prender controlo de tu punctator eclaviero. Assecura te "
+"que tu comprende e accepta iste risco."
 
 #~ msgid ""
 #~ "Some legacy X11 apps require the ability to read keystrokes typed in "
