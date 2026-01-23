@@ -32,26 +32,13 @@ class KWIN_EXPORT EglBackend : public RenderBackend
     Q_OBJECT
 
 public:
-    virtual void init() = 0;
+    virtual bool init() = 0;
     CompositingType compositingType() const override final;
     bool checkGraphicsReset() override final;
 
     EglContext *openglContext() const;
     std::shared_ptr<EglContext> openglContextRef() const;
     EglDisplay *eglDisplayObject() const;
-
-    /**
-     * @brief Whether the creation of the Backend failed.
-     *
-     * The SceneOpenGL should test whether the Backend got constructed correctly. If this method
-     * returns @c true, the SceneOpenGL should not try to start the rendering.
-     *
-     * @return bool @c true if the creation of the Backend failed, @c false otherwise.
-     */
-    bool isFailed() const
-    {
-        return m_failed;
-    }
 
     bool testImportBuffer(GraphicsBuffer *buffer) override;
     QHash<uint32_t, QList<uint64_t>> supportedFormats() const override;
@@ -80,26 +67,11 @@ protected:
     ::EGLContext createContextInternal(::EGLContext sharedContext);
     void teardown();
 
-    /**
-     * @brief Sets the backend initialization to failed.
-     *
-     * This method should be called by the concrete subclass in case the initialization failed.
-     * The given @p reason is logged as a warning.
-     *
-     * @param reason The reason why the initialization failed.
-     */
-    void setFailed(const QString &reason);
-
     EglDisplay *m_display = nullptr;
     std::shared_ptr<EglContext> m_context;
     QList<QByteArray> m_clientExtensions;
     QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;
     QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
-
-    /**
-     * @brief Whether the initialization failed, of course default to @c false.
-     */
-    bool m_failed = false;
 };
 
 }

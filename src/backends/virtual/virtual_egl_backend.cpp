@@ -139,22 +139,16 @@ bool VirtualEglBackend::initializeEgl()
     return true;
 }
 
-void VirtualEglBackend::init()
+bool VirtualEglBackend::init()
 {
     if (!initializeEgl()) {
-        setFailed("Could not initialize egl");
-        return;
+        qCWarning(KWIN_VIRTUAL, "Could not initialize egl");
+        return false;
     }
     if (!initRenderingContext()) {
-        setFailed("Could not initialize rendering context");
-        return;
+        qCWarning(KWIN_VIRTUAL, "Could not initialize rendering context");
+        return false;
     }
-
-    if (checkGLError("Init")) {
-        setFailed("Error during init of EglGbmBackend");
-        return;
-    }
-
     initWayland();
 
     const auto outputs = m_backend->outputs();
@@ -163,6 +157,7 @@ void VirtualEglBackend::init()
     }
 
     connect(m_backend, &VirtualBackend::outputAdded, this, &VirtualEglBackend::addOutput);
+    return true;
 }
 
 bool VirtualEglBackend::initRenderingContext()
