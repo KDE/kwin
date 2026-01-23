@@ -13,6 +13,7 @@
 #include "core/colortransformation.h"
 #include "core/graphicsbufferview.h"
 #include "core/iccprofile.h"
+#include "core/renderdevice.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
@@ -417,8 +418,8 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         return doTestFormats(sortedFormats, MultiGpuImportMode::None);
     }
     // special case, we're using different display devices but the same render device
-    const auto display = m_eglBackend->displayForGpu(m_gpu);
-    if (display && !display->renderNode().isEmpty() && display->renderNode() == m_eglBackend->eglDisplayObject()->renderNode()) {
+    const auto device = m_eglBackend->renderDeviceForGpu(m_gpu);
+    if (device && !device->eglDisplay()->renderNode().isEmpty() && device->eglDisplay()->renderNode() == m_eglBackend->eglDisplayObject()->renderNode()) {
         if (auto surface = doTestFormats(sortedFormats, MultiGpuImportMode::None)) {
             return surface;
         }
@@ -562,9 +563,9 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
 {
     Q_ASSERT(surface->importGbmSwapchain);
 
-    const auto display = m_eglBackend->displayForGpu(m_gpu);
+    const auto renderDevice = m_eglBackend->renderDeviceForGpu(m_gpu);
     // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
-    if (!readFence.isValid() || !display->supportsNativeFence() || s_forceMGPUSync) {
+    if (!readFence.isValid() || !renderDevice->eglDisplay()->supportsNativeFence() || s_forceMGPUSync) {
         glFinish();
     }
 
@@ -636,7 +637,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     surface->importContext->popFramebuffer();
     surface->importContext->shaderManager()->popShader();
     glFlush();
-    EGLNativeFence endFence(display);
+    EGLNativeFence endFence(renderDevice->eglDisplay());
     if (!endFence.isValid() || s_forcePresentSync) {
         glFinish();
     }

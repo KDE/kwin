@@ -11,12 +11,13 @@
 
 #include "config-kwin.h"
 
+#include "core/renderdevice.h"
+#include "pointer_input.h"
 #include "utils/xcbutils.h"
 #include "x11_windowed_egl_backend.h"
 #include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"
 #include "x11_windowed_qpainter_backend.h"
-#include <pointer_input.h>
 // KDE
 #include <KLocalizedString>
 #include <QAbstractEventDispatcher>
@@ -144,7 +145,6 @@ X11WindowedBackend::~X11WindowedBackend()
     m_pointerDevice.reset();
     m_keyboardDevice.reset();
     m_touchDevice.reset();
-    m_eglDisplay.reset();
 
     if (m_connection) {
         if (m_keySymbols) {
@@ -281,9 +281,8 @@ void X11WindowedBackend::initDri3()
         xcb_dri3_open_cookie_t cookie = xcb_dri3_open(m_connection, m_screen->root, 0);
         UniqueCPtr<xcb_dri3_open_reply_t> reply(xcb_dri3_open_reply(m_connection, cookie, nullptr));
         if (reply && reply->nfd == 1) {
-            int fd = xcb_dri3_open_reply_fds(m_connection, reply.get())[0];
-            m_drmDevice = DrmDevice::open(QByteArray(drmGetDeviceNameFromFd2(fd)));
-            ::close(fd);
+            const FileDescriptor fd{xcb_dri3_open_reply_fds(m_connection, reply.get())[0]};
+            m_renderDevice = RenderDevice::open(QByteArray(drmGetDeviceNameFromFd2(fd.get())));
         }
     }
 
@@ -676,7 +675,7 @@ xcb_window_t X11WindowedBackend::rootWindow() const
 
 DrmDevice *X11WindowedBackend::drmDevice() const
 {
-    return m_drmDevice.get();
+    return m_renderDevice ? m_renderDevice->drmDevice() : nullptr;
 }
 
 X11WindowedInputDevice *X11WindowedBackend::pointerDevice() const
@@ -764,7 +763,7 @@ int X11WindowedBackend::driMinorVersion() const
 QList<CompositingType> X11WindowedBackend::supportedCompositors() const
 {
     QList<CompositingType> ret;
-    if (m_drmDevice) {
+    if (m_renderDevice) {
         ret.append(OpenGLCompositing);
     }
     if (m_hasShm) {
@@ -787,14 +786,14 @@ void X11WindowedBackend::destroyOutputs()
     }
 }
 
-void X11WindowedBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
-{
-    m_eglDisplay = std::move(display);
-}
-
 EglDisplay *X11WindowedBackend::sceneEglDisplayObject() const
 {
-    return m_eglDisplay.get();
+    return m_renderDevice ? m_renderDevice->eglDisplay() : nullptr;
+}
+
+RenderDevice *X11WindowedBackend::renderDevice() const
+{
+    return m_renderDevice.get();
 }
 
 } // namespace KWin
