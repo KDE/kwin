@@ -31,15 +31,11 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
     : m_backend(drmBackend)
 {
     drmBackend->setRenderBackend(this);
-    connect(m_backend, &DrmBackend::gpuRemoved, this, [this](DrmGpu *gpu) {
-        m_contexts.erase(gpu->renderDevice());
-    });
 }
 
 EglGbmBackend::~EglGbmBackend()
 {
     m_backend->releaseBuffers();
-    m_contexts.clear();
     cleanup();
     m_backend->setRenderBackend(nullptr);
 }
@@ -100,28 +96,8 @@ RenderDevice *EglGbmBackend::renderDeviceForGpu(DrmGpu *gpu)
 
 std::shared_ptr<EglContext> EglGbmBackend::contextForGpu(DrmGpu *gpu)
 {
-    if (gpu == m_backend->primaryGpu()) {
-        return m_context;
-    }
-    auto device = gpu->renderDevice();
-    if (!device) {
-        device = createRenderDevice(gpu);
-        if (!device) {
-            return nullptr;
-        }
-    }
-    auto &context = m_contexts[device];
-    if (const auto c = context.lock()) {
-        return c;
-    }
-    const auto ret = std::shared_ptr<EglContext>(EglContext::create(device->eglDisplay(), EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT));
-    context = ret;
-    return ret;
-}
-
-void EglGbmBackend::resetContextForGpu(DrmGpu *gpu)
-{
-    m_contexts.erase(gpu->renderDevice());
+    const auto device = renderDeviceForGpu(gpu);
+    return device ? device->eglContext() : nullptr;
 }
 
 DrmDevice *EglGbmBackend::drmDevice() const
