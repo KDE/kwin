@@ -53,16 +53,16 @@ public:
 
     DrmGpu *gpu() const;
 
-    EglDisplay *displayForGpu(DrmGpu *gpu);
+    RenderDevice *renderDeviceForGpu(DrmGpu *gpu);
     std::shared_ptr<EglContext> contextForGpu(DrmGpu *gpu);
     void resetContextForGpu(DrmGpu *gpu);
 
 private:
     bool initializeEgl();
-    EglDisplay *createEglDisplay(DrmGpu *gpu) const;
+    RenderDevice *createRenderDevice(DrmGpu *gpu) const;
 
     DrmBackend *m_backend;
-    std::map<EglDisplay *, std::weak_ptr<EglContext>> m_contexts;
+    std::map<RenderDevice *, std::weak_ptr<EglContext>> m_contexts;
 
     friend class EglGbmTexture;
 };

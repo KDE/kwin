@@ -9,6 +9,7 @@
 #include "virtual_backend.h"
 
 #include "core/drmdevice.h"
+#include "core/renderdevice.h"
 #include "virtual_egl_backend.h"
 #include "virtual_output.h"
 #include "virtual_qpainter_backend.h"
@@ -21,13 +22,13 @@
 namespace KWin
 {
 
-static std::unique_ptr<DrmDevice> findRenderDevice()
+static std::unique_ptr<RenderDevice> findRenderDevice()
 {
 #if !HAVE_LIBDRM_FAUX
 #if defined(Q_OS_LINUX)
     // Workaround for libdrm being unaware of faux bus.
     if (qEnvironmentVariableIsSet("CI")) {
-        return DrmDevice::open(QStringLiteral("/dev/dri/card1"));
+        return RenderDevice::open(QStringLiteral("/dev/dri/card1"));
     }
 #endif
 #endif
@@ -63,7 +64,7 @@ static std::unique_ptr<DrmDevice> findRenderDevice()
 #endif
 
         if (device->available_nodes & (1 << nodeType)) {
-            if (auto ret = DrmDevice::open(device->nodes[nodeType])) {
+            if (auto ret = RenderDevice::open(device->nodes[nodeType])) {
                 return ret;
             }
         }
@@ -74,7 +75,7 @@ static std::unique_ptr<DrmDevice> findRenderDevice()
 
 VirtualBackend::VirtualBackend(QObject *parent)
     : OutputBackend(parent)
-    , m_drmDevice(findRenderDevice())
+    , m_renderDevice(findRenderDevice())
 {
 }
 
@@ -90,7 +91,7 @@ bool VirtualBackend::initialize()
 QList<CompositingType> VirtualBackend::supportedCompositors() const
 {
     QList<CompositingType> compositingTypes;
-    if (m_drmDevice) {
+    if (m_renderDevice) {
         compositingTypes.append(OpenGLCompositing);
     }
     compositingTypes.append(QPainterCompositing);
@@ -99,7 +100,7 @@ QList<CompositingType> VirtualBackend::supportedCompositors() const
 
 DrmDevice *VirtualBackend::drmDevice() const
 {
-    return m_drmDevice.get();
+    return m_renderDevice ? m_renderDevice->drmDevice() : nullptr;
 }
 
 std::unique_ptr<QPainterBackend> VirtualBackend::createQPainterBackend()
@@ -175,14 +176,14 @@ void VirtualBackend::setVirtualOutputs(const QList<OutputInfo> &infos)
     Q_EMIT outputsQueried();
 }
 
-void VirtualBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
+RenderDevice *VirtualBackend::renderDevice() const
 {
-    m_display = std::move(display);
+    return m_renderDevice.get();
 }
 
 EglDisplay *VirtualBackend::sceneEglDisplayObject() const
 {
-    return m_display.get();
+    return m_renderDevice->eglDisplay();
 }
 
 } // namespace KWin
