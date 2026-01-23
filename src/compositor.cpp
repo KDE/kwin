@@ -145,13 +145,7 @@ static QVariantHash collectCrashInformation(const EglBackend *backend)
 bool Compositor::attemptOpenGLCompositing()
 {
     std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend();
-    if (!backend) {
-        return false;
-    }
-    if (!backend->isFailed()) {
-        backend->init();
-    }
-    if (backend->isFailed()) {
+    if (!backend->init()) {
         return false;
     }
 
