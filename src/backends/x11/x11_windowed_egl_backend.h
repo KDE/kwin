@@ -83,7 +83,6 @@ public:
 
 private:
     bool initializeEgl();
-    bool initRenderingContext();
 
     X11WindowedBackend *m_backend;
 };

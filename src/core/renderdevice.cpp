@@ -40,6 +40,16 @@ EglDisplay *RenderDevice::eglDisplay() const
     return m_display.get();
 }
 
+std::shared_ptr<EglContext> RenderDevice::eglContext(EglContext *shareContext)
+{
+    auto ret = m_eglContext.lock();
+    if (!ret || ret->isFailed()) {
+        ret = EglContext::create(m_display.get(), EGL_NO_CONFIG_KHR, shareContext ? shareContext->handle() : EGL_NO_CONTEXT);
+        m_eglContext = ret;
+    }
+    return ret;
+}
+
 EGLImageKHR RenderDevice::importBufferAsImage(GraphicsBuffer *buffer)
 {
     std::pair key(buffer, 0);
