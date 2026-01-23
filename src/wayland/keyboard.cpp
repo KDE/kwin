@@ -13,6 +13,7 @@
 // Qt
 #include <QList>
 
+#include <algorithm>
 #include <unistd.h>
 
 namespace KWin
@@ -291,6 +292,12 @@ qint32 KeyboardInterface::keyRepeatRate() const
     return d->keyRepeat.charactersPerSecond;
 }
 
+bool KeyboardInterface::clientUseCompositorRepetition(ClientConnection *client) const
+{
+    return std::ranges::any_of(d->keyboardsForClient(client), [client](KeyboardInterfacePrivate::Resource *keyboardResource) {
+        return keyboardResource->version() >= WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION;
+    });
+}
 }
 
 #include "moc_keyboard.cpp"

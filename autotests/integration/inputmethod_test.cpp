@@ -12,6 +12,7 @@
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
 #include "keyboard_input.h"
+#include "main.h"
 #include "pointer_input.h"
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
@@ -32,14 +33,18 @@
 #include <QTest>
 
 #include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/region.h>
+#include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/textinput.h>
 #include <linux/input-event-codes.h>
+#include <memory>
 #include <sys/mman.h>
+#include <wayland-client.h>
 
 using namespace KWin;
 using KWin::VirtualKeyboardDBus;
@@ -69,6 +74,8 @@ private Q_SLOTS:
     void testOverlayPositioning_data();
     void testOverlayPositioning();
     void testV3AutoCommit();
+    void testSendRepeatInfo();
+    void testSendRepeatInfoV10();
 
 private:
     void touchNow()
@@ -905,6 +912,104 @@ void InputMethodTest::testV3AutoCommit()
     QVERIFY(Test::waitForWindowClosed(window));
     shellSurface2.reset();
     QVERIFY(Test::waitForWindowClosed(window2));
+}
+
+void InputMethodTest::testSendRepeatInfo()
+{
+    // Create a client that's using old seat version prior 10.
+    auto legacyClient = Test::Connection::setup(Test::AdditionalWaylandInterface::TextInputManagerV3);
+    auto *registry = legacyClient->registry;
+
+    auto seatInterface = registry->interface(KWayland::Client::Registry::Interface::Seat);
+    QVERIFY(seatInterface.version >= 5);
+
+    // Use an old version supported by kwayland right now.
+    legacyClient->seat = registry->createSeat(seatInterface.name, 5);
+    QVERIFY(Test::waitForWaylandKeyboard(legacyClient->seat));
+    auto legacyKeyboard = std::unique_ptr<KWayland::Client::Keyboard>(legacyClient->seat->createKeyboard());
+    auto *wlKeyboard = static_cast<wl_keyboard *>(*legacyKeyboard);
+    QVERIFY(wl_proxy_get_version(reinterpret_cast<wl_proxy *>(wlKeyboard)) == 5);
+
+    QSignalSpy keyrepeatSpy(legacyKeyboard.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    // Wait for initial modifiers update
+    QVERIFY(keyrepeatSpy.wait());
+    QVERIFY(legacyKeyboard->isKeyRepeatEnabled());
+    auto surface = Test::createSurface(legacyClient->compositor);
+    auto shellSurface = Test::createXdgToplevelSurface(legacyClient->xdgShell, surface.get());
+    Test::renderAndWaitForShown(legacyClient->shm, surface.get(), QSize(100, 100), Qt::cyan);
+    QSignalSpy firstEnteredSpy(legacyKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    QVERIFY(firstEnteredSpy.wait());
+
+    auto textInputV3 = std::make_unique<Test::TextInputV3>();
+    textInputV3->init(legacyClient->textInputManagerV3->get_text_input(*legacyClient->seat));
+    textInputV3->enable();
+
+    QSignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    QSignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    // just enabling the text-input should not show it but rather on commit
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+    textInputV3->commit();
+    QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+    QVERIFY(inputMethodActivateSpy.wait());
+    auto *context = Test::inputMethod()->context();
+    std::unique_ptr<KWayland::Client::Keyboard> keyboardGrab(new KWayland::Client::Keyboard);
+    keyboardGrab->setup(zwp_input_method_context_v1_grab_keyboard(context));
+
+    QSignalSpy keygrabRepeatSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    // Wait for initial modifiers update
+    QVERIFY(keygrabRepeatSpy.wait());
+    QVERIFY(keyboardGrab->isKeyRepeatEnabled());
+}
+
+void InputMethodTest::testSendRepeatInfoV10()
+{
+    // Create a client that's using latest seat version supported by kwin.
+    auto client = Test::Connection::setup(Test::AdditionalWaylandInterface::TextInputManagerV3);
+    auto *registry = client->registry;
+
+    auto seatInterface = registry->interface(KWayland::Client::Registry::Interface::Seat);
+    QVERIFY(seatInterface.version >= 10);
+
+    // KWayland::Client's interface version is too low to do this test, have to use native API.
+    auto *wlSeat = reinterpret_cast<wl_seat *>(wl_registry_bind(registry->registry(), seatInterface.name, &wl_seat_interface, seatInterface.version));
+    client->seat = new KWayland::Client::Seat;
+    client->seat->setup(wlSeat);
+    QVERIFY(Test::waitForWaylandKeyboard(client->seat));
+    auto keyboard = std::unique_ptr<KWayland::Client::Keyboard>(client->seat->createKeyboard());
+    auto *wlKeyboard = static_cast<wl_keyboard *>(*keyboard);
+    QVERIFY(wl_proxy_get_version(reinterpret_cast<wl_proxy *>(wlKeyboard)) == seatInterface.version);
+    QSignalSpy keyrepeatSpy(keyboard.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    // Wait for initial modifiers update
+    QVERIFY(keyrepeatSpy.wait());
+    QVERIFY(!keyboard->isKeyRepeatEnabled());
+    auto surface = Test::createSurface(client->compositor);
+    auto shellSurface = Test::createXdgToplevelSurface(client->xdgShell, surface.get());
+    Test::renderAndWaitForShown(client->shm, surface.get(), QSize(100, 100), Qt::cyan);
+    QSignalSpy firstEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    QVERIFY(firstEnteredSpy.wait());
+
+    auto textInputV3 = std::make_unique<Test::TextInputV3>();
+    textInputV3->init(client->textInputManagerV3->get_text_input(*client->seat));
+    textInputV3->enable();
+
+    QSignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    QSignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    // just enabling the text-input should not show it but rather on commit
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+    textInputV3->commit();
+    QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+    QVERIFY(inputMethodActivateSpy.wait());
+    auto *context = Test::inputMethod()->context();
+    std::unique_ptr<KWayland::Client::Keyboard> keyboardGrab(new KWayland::Client::Keyboard);
+    keyboardGrab->setup(zwp_input_method_context_v1_grab_keyboard(context));
+
+    QSignalSpy keygrabRepeatSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    // Wait for initial modifiers update
+    QVERIFY(keygrabRepeatSpy.wait());
+
+    QVERIFY(!keyboardGrab->isKeyRepeatEnabled());
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)

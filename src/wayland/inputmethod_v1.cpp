@@ -32,6 +32,9 @@ public:
     InputKeyboardV1InterfacePrivate()
     {
     }
+
+    // Whether the focused client uses compositor side key repeat
+    bool clientSideRepeat = false;
 };
 
 InputMethodGrabV1::InputMethodGrabV1(QObject *parent)
@@ -72,7 +75,7 @@ void InputMethodGrabV1::sendKey(quint32 serial, quint32 timestamp, quint32 key, 
 
     const auto resources = d->resourceMap();
     for (auto r : resources) {
-        if (r->version() < WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION && state == KeyboardKeyState::Repeated) {
+        if ((d->clientSideRepeat || r->version() < WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION) && state == KeyboardKeyState::Repeated) {
             continue;
         }
 
@@ -86,6 +89,19 @@ void InputMethodGrabV1::sendModifiers(quint32 serial, quint32 depressed, quint32
     for (auto r : resources) {
         d->send_modifiers(r->handle, serial, depressed, latched, locked, group);
     }
+}
+
+void InputMethodGrabV1::sendRepeatInfo(int32_t rate, int32_t delay)
+{
+    const auto resources = d->resourceMap();
+    for (auto resource : resources) {
+        if (resource->version() < WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {
+            continue;
+        }
+        d->send_repeat_info(resource->handle, rate, delay);
+    }
+    // We send non-zero rate to input method when current client keyboard is not using compositor side repeat.
+    d->clientSideRepeat = (rate > 0);
 }
 
 class InputMethodContextV1InterfacePrivate : public QtWaylandServer::zwp_input_method_context_v1
