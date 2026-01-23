@@ -69,7 +69,6 @@ public:
 
 private:
     bool initializeEgl();
-    bool initRenderingContext();
 
     void addOutput(BackendOutput *output);
 

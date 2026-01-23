@@ -72,7 +72,7 @@ protected:
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;
     bool isOpenGLES() const;
-    bool createContext(EGLConfig config);
+    bool createContext();
 
     bool ensureGlobalShareContext(EGLConfig config);
     void destroyGlobalShareContext();

@@ -573,7 +573,6 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
         qCWarning(KWIN_DRM, "Failed to make import context current");
         // this is probably caused by a GPU reset, let's not take any chances
         surface->needsRecreation = true;
-        m_eglBackend->resetContextForGpu(m_gpu);
         return nullptr;
     }
     const auto restoreContext = qScopeGuard([this]() {
@@ -582,7 +581,6 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     if (surface->importContext->checkGraphicsResetStatus() != GL_NO_ERROR) {
         qCWarning(KWIN_DRM, "Detected GPU reset on secondary GPU %s", qPrintable(m_gpu->drmDevice()->path()));
         surface->needsRecreation = true;
-        m_eglBackend->resetContextForGpu(m_gpu);
         return nullptr;
     }
     std::unique_ptr<GLRenderTimeQuery> renderTime;

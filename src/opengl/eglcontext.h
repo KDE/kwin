@@ -84,6 +84,13 @@ public:
      */
     bool checkSupported() const;
 
+    /**
+     * @returns whether or not this context is known to be broken,
+     *          specifically whether or not a previous makeCurrent failed
+     *          or the context was reset
+     */
+    bool isFailed() const;
+
     GLenum checkGraphicsResetStatus();
     void glReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
     void glGetnTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels);
@@ -144,6 +151,7 @@ private:
     std::unique_ptr<IndexBuffer> m_indexBuffer;
     QStack<GLFramebuffer *> m_fbos;
     uint32_t m_vao = 0;
+    bool m_failed = false;
 };
 
 }
