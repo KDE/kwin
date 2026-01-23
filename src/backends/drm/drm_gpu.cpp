@@ -11,6 +11,7 @@
 #include "config-kwin.h"
 
 #include "core/gbmgraphicsbufferallocator.h"
+#include "core/renderdevice.h"
 #include "core/session.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
@@ -141,7 +142,7 @@ DrmGpu::~DrmGpu()
     m_connectors.clear();
     m_planes.clear();
     m_socketNotifier.reset();
-    m_eglDisplay.reset();
+    m_renderDevice.reset();
     m_platform->session()->closeRestricted(m_fd);
 }
 
@@ -684,16 +685,6 @@ bool DrmGpu::atomicModeSetting() const
     return m_atomicModeSetting;
 }
 
-EglDisplay *DrmGpu::eglDisplay() const
-{
-    return m_eglDisplay.get();
-}
-
-void DrmGpu::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
-{
-    m_eglDisplay = std::move(display);
-}
-
 bool DrmGpu::addFB2ModifiersSupported() const
 {
     return m_addFB2ModifiersSupported;
@@ -1070,6 +1061,16 @@ QList<OutputLayer *> DrmGpu::compatibleOutputLayers(BackendOutput *output) const
     // TODO once dynamic ownership of layers is defined somehow,
     // additionally return planes that aren't currently in use
     return static_cast<DrmOutput *>(output)->pipeline()->layers() | std::ranges::to<QList<OutputLayer *>>();
+}
+
+RenderDevice *DrmGpu::renderDevice() const
+{
+    return m_renderDevice.get();
+}
+
+void DrmGpu::setRenderDevice(std::unique_ptr<RenderDevice> &&device)
+{
+    m_renderDevice = std::move(device);
 }
 
 DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QList<DrmOutput *> &outputs)

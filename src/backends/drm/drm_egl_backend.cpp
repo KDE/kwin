@@ -8,6 +8,7 @@
 */
 #include "drm_egl_backend.h"
 // kwin
+#include "core/renderdevice.h"
 #include "core/syncobjtimeline.h"
 #include "drm_abstract_output.h"
 #include "drm_backend.h"
@@ -31,7 +32,7 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
 {
     drmBackend->setRenderBackend(this);
     connect(m_backend, &DrmBackend::gpuRemoved, this, [this](DrmGpu *gpu) {
-        m_contexts.erase(gpu->eglDisplay());
+        m_contexts.erase(gpu->renderDevice());
     });
 }
 
@@ -45,32 +46,31 @@ EglGbmBackend::~EglGbmBackend()
 
 bool EglGbmBackend::initializeEgl()
 {
-    initClientExtensions();
-    auto display = m_backend->primaryGpu()->eglDisplay();
-
-    // Use eglGetPlatformDisplayEXT() to get the display pointer
-    // if the implementation supports it.
-    if (!display) {
-        display = createEglDisplay(m_backend->primaryGpu());
-        if (!display) {
-            return false;
-        }
+    if (!initClientExtensions()) {
+        return false;
     }
-    setEglDisplay(display);
-    return true;
+    auto device = m_backend->primaryGpu()->renderDevice();
+    if (!device) {
+        device = createRenderDevice(m_backend->primaryGpu());
+    }
+    setRenderDevice(device);
+    return device;
 }
 
-EglDisplay *EglGbmBackend::createEglDisplay(DrmGpu *gpu) const
+RenderDevice *EglGbmBackend::createRenderDevice(DrmGpu *gpu) const
 {
-    for (const QByteArray &extension : {QByteArrayLiteral("EGL_EXT_platform_base"), QByteArrayLiteral("EGL_KHR_platform_gbm")}) {
-        if (!hasClientExtension(extension)) {
-            qCWarning(KWIN_DRM) << extension << "client extension is not supported by the platform";
-            return nullptr;
-        }
+    // Temporary EGL display for finding a compatible render node.
+    // TODO find it in a different way!
+    const auto gpuDisplay = EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gpu->drmDevice()->gbmDevice(), nullptr));
+    if (!gpuDisplay) {
+        return nullptr;
+    } else if (gpuDisplay->renderNode().isEmpty()) {
+        // as a fallback for software rendering, use the primary node
+        gpu->setRenderDevice(RenderDevice::open(gpu->drmDevice()->path(), gpu->fd()));
+    } else {
+        gpu->setRenderDevice(RenderDevice::open(gpuDisplay->renderNode()));
     }
-
-    gpu->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gpu->drmDevice()->gbmDevice(), nullptr)));
-    return gpu->eglDisplay();
+    return gpu->renderDevice();
 }
 
 bool EglGbmBackend::init()
@@ -89,16 +89,13 @@ bool EglGbmBackend::init()
     return true;
 }
 
-EglDisplay *EglGbmBackend::displayForGpu(DrmGpu *gpu)
+RenderDevice *EglGbmBackend::renderDeviceForGpu(DrmGpu *gpu)
 {
-    if (gpu == m_backend->primaryGpu()) {
-        return eglDisplayObject();
+    auto device = gpu->renderDevice();
+    if (!device) {
+        device = createRenderDevice(gpu);
     }
-    auto display = gpu->eglDisplay();
-    if (!display) {
-        display = createEglDisplay(gpu);
-    }
-    return display;
+    return device;
 }
 
 std::shared_ptr<EglContext> EglGbmBackend::contextForGpu(DrmGpu *gpu)
@@ -106,25 +103,25 @@ std::shared_ptr<EglContext> EglGbmBackend::contextForGpu(DrmGpu *gpu)
     if (gpu == m_backend->primaryGpu()) {
         return m_context;
     }
-    auto display = gpu->eglDisplay();
-    if (!display) {
-        display = createEglDisplay(gpu);
-        if (!display) {
+    auto device = gpu->renderDevice();
+    if (!device) {
+        device = createRenderDevice(gpu);
+        if (!device) {
             return nullptr;
         }
     }
-    auto &context = m_contexts[display];
+    auto &context = m_contexts[device];
     if (const auto c = context.lock()) {
         return c;
     }
-    const auto ret = std::shared_ptr<EglContext>(EglContext::create(display, EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT));
+    const auto ret = std::shared_ptr<EglContext>(EglContext::create(device->eglDisplay(), EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT));
     context = ret;
     return ret;
 }
 
 void EglGbmBackend::resetContextForGpu(DrmGpu *gpu)
 {
-    m_contexts.erase(gpu->eglDisplay());
+    m_contexts.erase(gpu->renderDevice());
 }
 
 DrmDevice *EglGbmBackend::drmDevice() const

@@ -30,6 +30,7 @@ namespace KWin
 {
 class X11WindowedBackend;
 class X11WindowedOutput;
+class RenderDevice;
 
 class X11WindowedInputDevice : public InputDevice
 {
@@ -120,7 +121,7 @@ public:
     X11WindowedInputDevice *keyboardDevice() const;
     X11WindowedInputDevice *touchDevice() const;
 
-    void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
+    RenderDevice *renderDevice() const;
     EglDisplay *sceneEglDisplayObject() const override;
 
 private:
@@ -171,8 +172,7 @@ private:
     int m_driMinorVersion = 0;
     QHash<uint32_t, QList<uint64_t>> m_driFormats;
 
-    std::unique_ptr<DrmDevice> m_drmDevice;
-    std::unique_ptr<EglDisplay> m_eglDisplay;
+    std::unique_ptr<RenderDevice> m_renderDevice;
 
     QList<X11WindowedOutput *> m_outputs;
     QHash<int, xcb_render_pictformat_t> m_pictureFormats;
