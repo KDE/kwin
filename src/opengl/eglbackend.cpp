@@ -262,12 +262,12 @@ bool EglBackend::isOpenGLES() const
     return EglDisplay::shouldUseOpenGLES();
 }
 
-bool EglBackend::createContext(EGLConfig config)
+bool EglBackend::createContext()
 {
-    if (!ensureGlobalShareContext(config)) {
+    if (!ensureGlobalShareContext(EGL_NO_CONFIG_KHR)) {
         return false;
     }
-    m_context = EglContext::create(m_renderDevice->eglDisplay(), config, s_globalShareContext ? s_globalShareContext->handle() : EGL_NO_CONTEXT);
+    m_context = m_renderDevice->eglContext(s_globalShareContext.get());
     return m_context != nullptr;
 }
 

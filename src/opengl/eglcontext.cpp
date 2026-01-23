@@ -181,6 +181,7 @@ bool EglContext::makeCurrent(EGLSurface surface)
         // QOpenGLContext::doneCurrent unset the context, we need to mirror that here!
         s_currentContext = nullptr;
         qCWarning(KWIN_OPENGL, "Could not make egl context current! %s", qPrintable(getEglErrorString()));
+        m_failed = true;
     }
     return ret;
 }
@@ -617,7 +618,11 @@ void EglContext::initDebugOutput()
 GLenum EglContext::checkGraphicsResetStatus()
 {
     if (m_glGetGraphicsResetStatus) {
-        return m_glGetGraphicsResetStatus();
+        const GLenum ret = m_glGetGraphicsResetStatus();
+        if (ret != GL_NO_ERROR) {
+            m_failed = true;
+        }
+        return ret;
     } else {
         return GL_NO_ERROR;
     }
@@ -676,5 +681,10 @@ GLFramebuffer *EglContext::popFramebuffer()
 GLFramebuffer *EglContext::currentFramebuffer()
 {
     return m_fbos.empty() ? nullptr : m_fbos.top();
+}
+
+bool EglContext::isFailed() const
+{
+    return m_failed;
 }
 }

@@ -296,7 +296,7 @@ void WaylandEglBackend::init()
 
 bool WaylandEglBackend::initRenderingContext()
 {
-    if (!createContext(EGL_NO_CONFIG_KHR)) {
+    if (!createContext()) {
         return false;
     }
 

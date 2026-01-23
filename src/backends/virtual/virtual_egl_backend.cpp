@@ -132,7 +132,7 @@ void VirtualEglBackend::init()
         setFailed("Could not initialize egl");
         return;
     }
-    if (!initRenderingContext()) {
+    if (!createContext()) {
         setFailed("Could not initialize rendering context");
         return;
     }
@@ -150,11 +150,6 @@ void VirtualEglBackend::init()
     }
 
     connect(m_backend, &VirtualBackend::outputAdded, this, &VirtualEglBackend::addOutput);
-}
-
-bool VirtualEglBackend::initRenderingContext()
-{
-    return createContext(EGL_NO_CONFIG_KHR) && openglContext()->makeCurrent();
 }
 
 void VirtualEglBackend::addOutput(BackendOutput *output)
