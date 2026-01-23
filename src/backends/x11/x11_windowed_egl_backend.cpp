@@ -195,17 +195,17 @@ bool X11WindowedEglBackend::initializeEgl()
     return true;
 }
 
-void X11WindowedEglBackend::init()
+bool X11WindowedEglBackend::init()
 {
     qputenv("EGL_PLATFORM", "x11");
 
     if (!initializeEgl()) {
-        setFailed(QStringLiteral("Could not initialize egl"));
-        return;
+        qCWarning(KWIN_X11WINDOWED, "Could not initialize egl");
+        return false;
     }
     if (!createContext()) {
-        setFailed(QStringLiteral("Could not initialize rendering context"));
-        return;
+        qCWarning(KWIN_X11WINDOWED, "Could not initialize rendering context");
+        return false;
     }
 
     initWayland();
@@ -218,6 +218,7 @@ void X11WindowedEglBackend::init()
         layers.push_back(std::make_unique<X11WindowedEglCursorLayer>(this, x11Output));
         x11Output->setOutputLayers(std::move(layers));
     }
+    return true;
 }
 
 QList<OutputLayer *> X11WindowedEglBackend::compatibleOutputLayers(BackendOutput *output)

@@ -99,7 +99,7 @@ public:
     WaylandBackend *backend() const;
     DrmDevice *drmDevice() const override;
 
-    void init() override;
+    bool init() override;
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
 
 private:

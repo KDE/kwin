@@ -77,7 +77,7 @@ public:
     X11WindowedBackend *backend() const;
     DrmDevice *drmDevice() const override;
 
-    void init() override;
+    bool init() override;
     void endFrame(BackendOutput *output, const Region &renderedDeviceRegion, const Region &damagedDeviceRegion);
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
 

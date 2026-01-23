@@ -62,7 +62,7 @@ public:
     ~VirtualEglBackend() override;
 
     QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) override;
-    void init() override;
+    bool init() override;
 
     VirtualBackend *backend() const;
     DrmDevice *drmDevice() const override;
