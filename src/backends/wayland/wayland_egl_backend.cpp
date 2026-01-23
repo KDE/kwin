@@ -280,18 +280,18 @@ bool WaylandEglBackend::initializeEgl()
     return true;
 }
 
-void WaylandEglBackend::init()
+bool WaylandEglBackend::init()
 {
     if (!initializeEgl()) {
-        setFailed("Could not initialize egl");
-        return;
+        qCWarning(KWIN_WAYLAND_BACKEND, "Could not initialize egl");
+        return false;
     }
     if (!initRenderingContext()) {
-        setFailed("Could not initialize rendering context");
-        return;
+        qCWarning(KWIN_WAYLAND_BACKEND, "Could not initialize rendering context");
+        return false;
     }
-
     initWayland();
+    return true;
 }
 
 bool WaylandEglBackend::initRenderingContext()

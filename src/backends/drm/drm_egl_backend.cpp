@@ -69,19 +69,20 @@ RenderDevice *EglGbmBackend::createRenderDevice(DrmGpu *gpu) const
     return gpu->renderDevice();
 }
 
-void EglGbmBackend::init()
+bool EglGbmBackend::init()
 {
     if (!initializeEgl()) {
-        setFailed("Could not initialize egl");
-        return;
+        qCWarning(KWIN_DRM, "Could not initialize egl");
+        return false;
     }
 
     if (!createContext()) {
-        setFailed("Could not initialize rendering context");
-        return;
+        qCWarning(KWIN_DRM, "Could not initialize rendering context");
+        return false;
     }
     initWayland();
     m_backend->createLayers();
+    return true;
 }
 
 RenderDevice *EglGbmBackend::renderDeviceForGpu(DrmGpu *gpu)
