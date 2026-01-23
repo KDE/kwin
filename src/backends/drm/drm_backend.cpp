@@ -12,6 +12,7 @@
 
 #include "backends/libinput/libinputbackend.h"
 #include "core/outputconfiguration.h"
+#include "core/renderdevice.h"
 #include "core/session.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
@@ -469,7 +470,7 @@ const std::vector<std::unique_ptr<DrmGpu>> &DrmBackend::gpus() const
 
 EglDisplay *DrmBackend::sceneEglDisplayObject() const
 {
-    return m_gpus.front()->eglDisplay();
+    return m_gpus.front()->renderDevice()->eglDisplay();
 }
 }
 

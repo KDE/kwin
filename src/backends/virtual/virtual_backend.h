@@ -17,6 +17,7 @@ namespace KWin
 class VirtualBackend;
 class VirtualOutput;
 class DrmDevice;
+class RenderDevice;
 
 class KWIN_EXPORT VirtualBackend : public OutputBackend
 {
@@ -54,7 +55,7 @@ public:
 
     QList<CompositingType> supportedCompositors() const override;
 
-    void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
+    RenderDevice *renderDevice() const;
     EglDisplay *sceneEglDisplayObject() const override;
 
     DrmDevice *drmDevice() const;
@@ -67,8 +68,7 @@ private:
     void removeOutput(VirtualOutput *output);
 
     QList<VirtualOutput *> m_outputs;
-    std::unique_ptr<DrmDevice> m_drmDevice;
-    std::unique_ptr<EglDisplay> m_display;
+    std::unique_ptr<RenderDevice> m_renderDevice;
 };
 
 } // namespace KWin

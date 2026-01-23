@@ -42,6 +42,7 @@ class GraphicsBuffer;
 class GraphicsBufferAllocator;
 class OutputFrame;
 class DrmCommit;
+class RenderDevice;
 
 class DrmLease : public QObject
 {
@@ -96,7 +97,6 @@ public:
     bool sharpnessSupported() const;
     std::optional<Version> nvidiaDriverVersion() const;
     QString driverName() const;
-    EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;
     /**
      * Returns the clock from which presentation timestamps are sourced. The returned value
@@ -108,7 +108,8 @@ public:
     QList<DrmOutput *> drmOutputs() const;
     const QList<DrmPipeline *> pipelines() const;
 
-    void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
+    RenderDevice *renderDevice() const;
+    void setRenderDevice(std::unique_ptr<RenderDevice> &&device);
 
     bool updateOutputs();
     void removeOutputs();
@@ -170,7 +171,7 @@ private:
     bool m_forceImplicitModifiers = false;
     bool m_sharpnessSupported = false;
     clockid_t m_presentationClock;
-    std::unique_ptr<EglDisplay> m_eglDisplay;
+    std::unique_ptr<RenderDevice> m_renderDevice;
     DrmBackend *const m_platform;
     std::optional<Version> m_nvidiaDriverVersion;
 

@@ -10,6 +10,7 @@
 #include "wayland_backend.h"
 #include "compositor.h"
 #include "core/drmdevice.h"
+#include "core/renderdevice.h"
 #include "input.h"
 #include "wayland-client/linuxdmabuf.h"
 #include "wayland_display.h"
@@ -420,7 +421,6 @@ WaylandBackend::WaylandBackend(const WaylandBackendOptions &options, QObject *pa
 
 WaylandBackend::~WaylandBackend()
 {
-    m_eglDisplay.reset();
     destroyOutputs();
 
     m_buffers.clear();
@@ -438,10 +438,7 @@ bool WaylandBackend::initialize()
     }
 
     if (WaylandClient::LinuxDmabufV1 *dmabuf = m_display->linuxDmabuf()) {
-        m_drmDevice = DrmDevice::open(dmabuf->mainDevice());
-        if (!m_drmDevice) {
-            qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << dmabuf->mainDevice();
-        }
+        m_renderDevice = RenderDevice::open(dmabuf->mainDevice());
     }
 
     createOutputs();
@@ -586,7 +583,7 @@ void WaylandBackend::togglePointerLock()
 QList<CompositingType> WaylandBackend::supportedCompositors() const
 {
     QList<CompositingType> ret;
-    if (m_display->linuxDmabuf() && m_drmDevice) {
+    if (m_display->linuxDmabuf() && m_renderDevice) {
         ret.append(OpenGLCompositing);
     }
     ret.append(QPainterCompositing);
@@ -672,19 +669,19 @@ wl_buffer *WaylandBackend::importBuffer(GraphicsBuffer *graphicsBuffer)
     return buffer->handle();
 }
 
-void WaylandBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
-{
-    m_eglDisplay = std::move(display);
-}
-
 EglDisplay *WaylandBackend::sceneEglDisplayObject() const
 {
-    return m_eglDisplay.get();
+    return m_renderDevice ? m_renderDevice->eglDisplay() : nullptr;
 }
 
 DrmDevice *WaylandBackend::drmDevice() const
 {
-    return m_drmDevice.get();
+    return m_renderDevice ? m_renderDevice->drmDevice() : nullptr;
+}
+
+RenderDevice *WaylandBackend::renderDevice() const
+{
+    return m_renderDevice.get();
 }
 
 WaylandBuffer::WaylandBuffer(wl_buffer *handle, GraphicsBuffer *graphicsBuffer)
