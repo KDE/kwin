@@ -160,6 +160,7 @@ public:
     void sendKeymap(const QByteArray &content);
     void sendKey(quint32 serial, quint32 timestamp, quint32 key, KeyboardKeyState state);
     void sendModifiers(quint32 serial, quint32 depressed, quint32 latched, quint32 locked, quint32 group);
+    void sendRepeatInfo(int32_t rate, int32_t delay);
 
 private:
     InputMethodGrabV1(QObject *parent);
