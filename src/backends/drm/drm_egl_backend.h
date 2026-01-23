@@ -62,7 +62,6 @@ private:
     RenderDevice *createRenderDevice(DrmGpu *gpu) const;
 
     DrmBackend *m_backend;
-    std::map<RenderDevice *, std::weak_ptr<EglContext>> m_contexts;
 
     friend class EglGbmTexture;
 };

@@ -269,7 +269,7 @@ bool EglBackend::createContext()
     if (!ensureGlobalShareContext()) {
         return false;
     }
-    m_context = EglContext::create(m_renderDevice->eglDisplay(), EGL_NO_CONFIG_KHR, s_globalShareContext ? s_globalShareContext->handle() : EGL_NO_CONTEXT);
+    m_context = m_renderDevice->eglContext(s_globalShareContext.get());
     return m_context != nullptr;
 }
 

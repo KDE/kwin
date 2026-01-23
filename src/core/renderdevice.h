@@ -37,6 +37,13 @@ public:
      */
     DrmDevice *drmDevice() const;
     EglDisplay *eglDisplay() const;
+    /**
+     * @returns an EGL context suitable for rendering with this render device,
+     * Note that the EGL context is lazily created, and destroyed once no
+     * references to it exist anymore.
+     * If the context already exists, @p shareContext is ignored
+     */
+    std::shared_ptr<EglContext> eglContext(EglContext *shareContext = nullptr);
 
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
@@ -46,6 +53,7 @@ public:
 private:
     const std::unique_ptr<DrmDevice> m_device;
     const std::unique_ptr<EglDisplay> m_display;
+    std::weak_ptr<EglContext> m_eglContext;
 
     QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
 };
