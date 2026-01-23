@@ -24,6 +24,7 @@ class LogicalOutput;
 class GLTexture;
 class EglContext;
 class EglDisplay;
+class RenderDevice;
 
 struct DmaBufAttributes;
 
@@ -59,8 +60,6 @@ public:
     QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
 
     std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
-    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes) const;
-    EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes, int plane, int format, const QSize &size) const;
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
@@ -68,8 +67,8 @@ protected:
     EglBackend();
 
     void cleanup();
-    void setEglDisplay(EglDisplay *display);
-    void initClientExtensions();
+    void setRenderDevice(RenderDevice *device);
+    bool initClientExtensions();
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;
     bool isOpenGLES() const;
@@ -90,7 +89,7 @@ protected:
      */
     void setFailed(const QString &reason);
 
-    EglDisplay *m_display = nullptr;
+    RenderDevice *m_renderDevice = nullptr;
     std::shared_ptr<EglContext> m_context;
     QList<QByteArray> m_clientExtensions;
     QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;

@@ -187,24 +187,11 @@ DrmDevice *X11WindowedEglBackend::drmDevice() const
 
 bool X11WindowedEglBackend::initializeEgl()
 {
-    initClientExtensions();
-
-    if (!m_backend->sceneEglDisplayObject()) {
-        for (const QByteArray &extension : {QByteArrayLiteral("EGL_EXT_platform_base"), QByteArrayLiteral("EGL_KHR_platform_gbm")}) {
-            if (!hasClientExtension(extension)) {
-                qCWarning(KWIN_X11WINDOWED) << extension << "client extension is not supported by the platform";
-                return false;
-            }
-        }
-
-        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->drmDevice()->gbmDevice(), nullptr)));
-    }
-
-    const auto display = m_backend->sceneEglDisplayObject();
-    if (!display) {
+    if (!initClientExtensions()) {
         return false;
     }
-    setEglDisplay(display);
+    Q_ASSERT(m_backend->renderDevice());
+    setRenderDevice(m_backend->renderDevice());
     return true;
 }
 

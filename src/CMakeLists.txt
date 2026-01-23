@@ -55,6 +55,7 @@ target_sources(kwin PRIVATE
     core/rect.cpp
     core/region.cpp
     core/renderbackend.cpp
+    core/renderdevice.cpp
     core/renderjournal.cpp
     core/renderloop.cpp
     core/rendertarget.cpp
@@ -541,6 +542,7 @@ install(FILES
     core/rect.h
     core/region.h
     core/renderbackend.h
+    core/renderdevice.h
     core/renderjournal.h
     core/renderloop.h
     core/renderloop_p.h
