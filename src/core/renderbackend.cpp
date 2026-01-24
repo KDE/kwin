@@ -178,7 +178,7 @@ RenderDevice *RenderBackend::renderDevice() const
     return nullptr;
 }
 
-bool RenderBackend::testImportBuffer(GraphicsBuffer *buffer)
+bool RenderBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
 {
     return false;
 }
