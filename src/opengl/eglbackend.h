@@ -46,7 +46,7 @@ public:
     EglContext *openglShareContext() const;
     RenderDevice *renderDevice() const override;
 
-    bool testImportBuffer(GraphicsBuffer *buffer) override;
+    bool testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice) override;
     FormatModifierMap supportedFormats() const override;
 
     QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
@@ -61,6 +61,7 @@ protected:
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;
     bool createContext();
+    void updateDmabufTranches();
 
     bool ensureGlobalShareContext();
     ::EGLContext createContextInternal(::EGLContext sharedContext);

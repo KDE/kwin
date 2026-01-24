@@ -20,7 +20,6 @@
 #include <QDebug>
 #include <QList>
 #include <QPointer>
-
 #include <drm_fourcc.h>
 #include <sys/types.h>
 
@@ -92,6 +91,8 @@ public:
     QSize size() const override;
     bool hasAlphaChannel() const override;
     const DmaBufAttributes *dmabufAttributes() const override;
+
+    void setDevice(dev_t deviceId);
 
     static LinuxDmaBufV1ClientBuffer *get(wl_resource *resource);
 

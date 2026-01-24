@@ -125,13 +125,15 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     // Make sure the render device list is up to date, otherwise we may first
     // select software rendering and only later switch to the render node
     GpuManager::self()->scanForRenderDevices();
-    // fallback for software rendering
-    auto fallbackDevice = RenderDevice::open(m_drmDevice->path(), m_fd);
-    m_kmsRenderDevice = fallbackDevice.get();
-    if (!fallbackDevice) {
-        qCWarning(KWIN_DRM, "Opening render device for %s failed", qPrintable(m_drmDevice->path()));
-    } else {
-        GpuManager::self()->addDevice(std::move(fallbackDevice));
+    if (!GpuManager::self()->softwareDevice()) {
+        // fallback for software rendering
+        auto fallbackDevice = RenderDevice::open(m_drmDevice->path(), m_fd);
+        m_kmsRenderDevice = fallbackDevice.get();
+        if (!fallbackDevice) {
+            qCWarning(KWIN_DRM, "Opening render device for %s failed", qPrintable(m_drmDevice->path()));
+        } else {
+            GpuManager::self()->addDevice(std::move(fallbackDevice));
+        }
     }
     updateRenderDevice();
     connect(GpuManager::self(), &GpuManager::renderDeviceAdded, this, &DrmGpu::updateRenderDevice);

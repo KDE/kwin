@@ -20,6 +20,7 @@ class GraphicsBuffer;
 class Region;
 class Rect;
 typedef void *EGLImageKHR;
+class MultiGpuSwapchain;
 
 class TextureOpenGL : public Texture
 {
@@ -49,6 +50,7 @@ public:
     static std::unique_ptr<BufferTextureOpenGL> create(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
 
     explicit BufferTextureOpenGL(EglBackend *backend);
+    ~BufferTextureOpenGL() override;
 
     bool attach(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
     void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
@@ -61,7 +63,7 @@ private:
     bool loadShmTexture(GraphicsBuffer *buffer);
     void updateShmTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint);
     bool loadDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
-    void updateDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    void updateDmabufTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint);
     bool loadSinglePixelTexture(GraphicsBuffer *buffer);
     void updateSinglePixelTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
     bool loadUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image);
@@ -77,6 +79,8 @@ private:
 
     BufferType m_bufferType = BufferType::None;
     EglBackend *m_backend;
+    std::unique_ptr<MultiGpuSwapchain> m_mgpuSwapchain;
+    std::optional<dev_t> m_dmabufDevice;
 };
 
 } // namespace KWin
