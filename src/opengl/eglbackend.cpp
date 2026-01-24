@@ -11,6 +11,7 @@
 #include "compositor.h"
 #include "core/drm_formats.h"
 #include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
 #include "core/outputbackend.h"
 #include "core/renderdevice.h"
@@ -36,6 +37,9 @@ static std::unique_ptr<EglContext> s_globalShareContext;
 EglBackend::EglBackend()
 {
     connect(Compositor::self(), &Compositor::aboutToDestroy, this, &EglBackend::teardown);
+
+    connect(GpuManager::s_self.get(), &GpuManager::renderDeviceAdded, this, &EglBackend::updateDmabufTranches);
+    connect(GpuManager::s_self.get(), &GpuManager::renderDeviceRemoved, this, &EglBackend::updateDmabufTranches);
 }
 
 CompositingType EglBackend::compositingType() const
@@ -156,9 +160,14 @@ void EglBackend::initWayland()
     } else {
         qCWarning(KWIN_OPENGL) << "No render node have been found, not initializing wl-drm";
     }
+    updateDmabufTranches();
+    waylandServer()->setRenderBackend(this);
+}
 
-    const auto formats = m_renderDevice->eglDisplay()->allSupportedDrmFormats();
-    auto filterFormats = [this, &formats](std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
+void EglBackend::updateDmabufTranches()
+{
+    auto filterFormats = [this](RenderDevice *device, std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
+        const auto formats = device->eglDisplay()->allSupportedDrmFormats();
         FormatModifierMap set;
         for (auto it = formats.constBegin(); it != formats.constEnd(); it++) {
             const auto info = FormatInfo::get(it.key());
@@ -183,6 +192,9 @@ void EglBackend::initWayland()
                 if (modifiers.empty()) {
                     break;
                 }
+                if (tranche.device != device->drmDevice()->deviceId()) {
+                    continue;
+                }
                 const auto trancheModifiers = tranche.formatTable.value(it.key());
                 for (auto trancheModifier : trancheModifiers) {
                     modifiers.erase(trancheModifier);
@@ -206,27 +218,38 @@ void EglBackend::initWayland()
         return formats;
     };
 
-    m_tranches.append({
-        .device = m_renderDevice->eglDisplay()->renderDevNode().value_or(scanoutDevice->deviceId()),
-        .flags = {},
-        .formatTable = filterFormats(10, false),
-    });
-    m_tranches.append({
-        .device = m_renderDevice->eglDisplay()->renderDevNode().value_or(scanoutDevice->deviceId()),
-        .flags = {},
-        .formatTable = filterFormats(8, false),
-    });
-    m_tranches.append({
-        .device = m_renderDevice->eglDisplay()->renderDevNode().value_or(scanoutDevice->deviceId()),
-        .flags = {},
-        .formatTable = includeShaderConversions(filterFormats({}, true)),
-    });
+    auto addTranches = [&](RenderDevice *device) {
+        m_tranches.append({
+            .device = device->drmDevice()->deviceId(),
+            .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
+            .formatTable = filterFormats(device, 10, false),
+        });
+        m_tranches.append({
+            .device = device->drmDevice()->deviceId(),
+            .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
+            .formatTable = filterFormats(device, 8, false),
+        });
+        m_tranches.append({
+            .device = device->drmDevice()->deviceId(),
+            .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
+            .formatTable = includeShaderConversions(filterFormats(device, std::nullopt, true)),
+        });
+    };
+
+    m_tranches.clear();
+    // put the "main" device first
+    addTranches(m_renderDevice);
+    const auto &devices = GpuManager::s_self->renderDevices();
+    for (const auto &device : devices) {
+        if (device.get() == m_renderDevice) {
+            continue;
+        }
+        addTranches(device.get());
+    }
 
     LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
     dmabuf->setRenderBackend(this);
     dmabuf->setSupportedFormatsWithModifiers(m_tranches);
-
-    waylandServer()->setRenderBackend(this);
 }
 
 bool EglBackend::initClientExtensions()
@@ -293,11 +316,20 @@ std::shared_ptr<GLTexture> EglBackend::importDmaBufAsTexture(const DmaBufAttribu
     return m_context->importDmaBufAsTexture(attributes);
 }
 
-bool EglBackend::testImportBuffer(GraphicsBuffer *buffer)
+bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
 {
-    const auto nonExternalOnly = m_renderDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats();
+    RenderDevice *device = GpuManager::s_self->compatibleRenderDevice(targetDevice);
+    if (!device && m_renderDevice->drmDevice()->deviceId() == targetDevice) {
+        // Our autotests often target the primary node with dumb buffers
+        device = m_renderDevice;
+    }
+    if (!device) {
+        return false;
+    }
+
+    const auto nonExternalOnly = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
     if (auto it = nonExternalOnly.find(buffer->dmabufAttributes()->format); it != nonExternalOnly.end() && it->contains(buffer->dmabufAttributes()->modifier)) {
-        return m_renderDevice->importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
+        return device->importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
     }
     // external_only buffers aren't used as a single EGLImage, import them separately
     const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
@@ -309,7 +341,7 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer)
         return false;
     }
     for (int i = 0; i < planes.size(); i++) {
-        if (!m_renderDevice->importBufferAsImage(buffer, i, planes[i].format, QSize(buffer->size().width() / planes[i].widthDivisor, buffer->size().height() / planes[i].heightDivisor))) {
+        if (!device->importBufferAsImage(buffer, i, planes[i].format, QSize(buffer->size().width() / planes[i].widthDivisor, buffer->size().height() / planes[i].heightDivisor))) {
             return false;
         }
     }
@@ -334,6 +366,11 @@ EglContext *EglBackend::openglContext() const
 std::shared_ptr<EglContext> EglBackend::openglContextRef() const
 {
     return m_context;
+}
+
+RenderDevice *EglBackend::renderDevice() const
+{
+    return m_renderDevice;
 }
 
 } // namespace KWin
