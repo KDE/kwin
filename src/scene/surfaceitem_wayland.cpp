@@ -8,6 +8,7 @@
 #include "core/backendoutput.h"
 #include "core/drmdevice.h"
 #include "core/renderbackend.h"
+#include "core/syncobjtimeline.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/subcompositor.h"
 #include "wayland/surface.h"

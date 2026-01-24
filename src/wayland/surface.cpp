@@ -1300,7 +1300,7 @@ void SurfaceInterface::traverseTree(std::function<void(SurfaceInterface *surface
     }
 }
 
-std::shared_ptr<SyncReleasePoint> SurfaceInterface::bufferReleasePoint() const
+std::shared_ptr<SyncObjReleasePoint> SurfaceInterface::bufferReleasePoint() const
 {
     return d->current->releasePoint;
 }

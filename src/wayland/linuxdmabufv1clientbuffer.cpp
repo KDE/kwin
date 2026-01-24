@@ -176,10 +176,26 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create(Resource *resource, 
     m_attrs.width = width;
     m_attrs.height = height;
     m_attrs.format = format;
-    m_attrs.device = m_targetDevice.value_or(m_integration->mainDevice(resource->client()));
 
     auto clientBuffer = new LinuxDmaBufV1ClientBuffer(std::move(m_attrs));
-    if (!renderBackend->testImportBuffer(clientBuffer)) {
+    const dev_t target = m_targetDevice.value_or(m_integration->mainDevice(resource->client()));
+    const auto &devices = GpuManager::s_self->renderDevices();
+    bool success = renderBackend->testImportBuffer(clientBuffer, target);
+    if (success) {
+        clientBuffer->setDevice(target);
+    } else {
+        for (const auto &device : devices) {
+            if (device->drmDevice()->deviceId() == target) {
+                continue;
+            }
+            success = renderBackend->testImportBuffer(clientBuffer, device->drmDevice()->deviceId());
+            if (success) {
+                clientBuffer->setDevice(device->drmDevice()->deviceId());
+                break;
+            }
+        }
+    }
+    if (!success) {
         send_failed(resource->handle);
         clientBuffer->drop();
         return;
@@ -228,10 +244,26 @@ void LinuxDmaBufParamsV1::zwp_linux_buffer_params_v1_create_immed(Resource *reso
     m_attrs.width = width;
     m_attrs.height = height;
     m_attrs.format = format;
-    m_attrs.device = m_targetDevice.value_or(m_integration->mainDevice(resource->client()));
 
     auto clientBuffer = new LinuxDmaBufV1ClientBuffer(std::move(m_attrs));
-    if (!renderBackend->testImportBuffer(clientBuffer)) {
+    const dev_t target = m_targetDevice.value_or(m_integration->mainDevice(resource->client()));
+    const auto &devices = GpuManager::s_self->renderDevices();
+    bool success = renderBackend->testImportBuffer(clientBuffer, target);
+    if (success) {
+        clientBuffer->setDevice(target);
+    } else {
+        for (const auto &device : devices) {
+            if (device->drmDevice()->deviceId() == target) {
+                continue;
+            }
+            success = renderBackend->testImportBuffer(clientBuffer, device->drmDevice()->deviceId());
+            if (success) {
+                clientBuffer->setDevice(device->drmDevice()->deviceId());
+                break;
+            }
+        }
+    }
+    if (!success) {
         wl_resource_post_error(resource->handle, error_invalid_wl_buffer, "importing the supplied dmabufs failed");
         clientBuffer->drop();
         return;
@@ -404,6 +436,11 @@ void LinuxDmaBufV1ClientBuffer::initialize(wl_resource *resource)
 const DmaBufAttributes *LinuxDmaBufV1ClientBuffer::dmabufAttributes() const
 {
     return &m_attrs;
+}
+
+void LinuxDmaBufV1ClientBuffer::setDevice(dev_t deviceId)
+{
+    m_attrs.device = deviceId;
 }
 
 QSize LinuxDmaBufV1ClientBuffer::size() const

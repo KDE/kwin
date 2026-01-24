@@ -129,6 +129,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
 {
     const auto format = FormatInfo::get(attributes->format);
     if (!format) {
+        // TODO remove these debug prints... or at least make them qCDebug!
         qCWarning(KWIN_VULKAN, "Dmabuf has unknown format");
         return nullptr;
     }

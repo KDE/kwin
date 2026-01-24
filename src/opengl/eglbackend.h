@@ -41,8 +41,9 @@ public:
     EglContext *openglContext() const;
     std::shared_ptr<EglContext> openglContextRef() const;
     EglDisplay *eglDisplayObject() const;
+    RenderDevice *renderDevice() const override;
 
-    bool testImportBuffer(GraphicsBuffer *buffer) override;
+    bool testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice) override;
     FormatModifierMap supportedFormats() const override;
 
     QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
@@ -61,6 +62,7 @@ protected:
     bool hasClientExtension(const QByteArray &ext) const;
     bool isOpenGLES() const;
     bool createContext();
+    void updateDmabufTranches();
 
     bool ensureGlobalShareContext();
     void destroyGlobalShareContext();
