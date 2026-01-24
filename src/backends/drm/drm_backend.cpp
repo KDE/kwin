@@ -76,7 +76,7 @@ static QStringList splitPathList(const QString &input, const QChar delimiter)
 DrmBackend::DrmBackend(Session *session, QObject *parent)
     : OutputBackend(parent)
     , m_udev(std::make_unique<Udev>())
-    , m_udevMonitor(m_udev->monitor())
+    , m_udevMonitor(m_udev->createMonitor())
     , m_session(session)
     , m_explicitGpus(splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"), ':'))
 {
