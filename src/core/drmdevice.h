@@ -35,17 +35,28 @@ public:
     bool supportsSyncObjTimelines() const;
     std::optional<drmPciDeviceInfo> pciDeviceInfo() const;
 
+    /**
+     * @returns whether or not this and other are the same underlying hardware,
+     *          even if they reference different nodes (KMS vs. render)
+     */
+    bool equals(DrmDevice *other) const;
+
+    std::optional<int> busType() const;
+
     static std::unique_ptr<DrmDevice> open(const QString &path);
     static std::unique_ptr<DrmDevice> openWithAuthentication(const QString &path, int authenticatedFd);
 
 private:
     explicit DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_device *gbmDevice);
 
+    bool fetchLibdrmDevice();
+
     const QString m_path;
     const dev_t m_id;
     const FileDescriptor m_fd;
     gbm_device *const m_gbmDevice;
     const std::unique_ptr<GraphicsBufferAllocator> m_allocator;
+    drmDevice *m_libdrmDevice = nullptr;
     bool m_supportsSyncObjTimelines;
 };
 

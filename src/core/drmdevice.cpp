@@ -26,6 +26,7 @@ DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_dev
     , m_gbmDevice(gbmDevice)
     , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(gbmDevice))
 {
+    drmGetDevice2(m_fd.get(), 0, &m_libdrmDevice);
     uint64_t value = 0;
     m_supportsSyncObjTimelines = drmGetCap(m_fd.get(), DRM_CAP_SYNCOBJ_TIMELINE, &value) == 0 && value != 0;
 }
@@ -33,6 +34,9 @@ DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_dev
 DrmDevice::~DrmDevice()
 {
     gbm_device_destroy(m_gbmDevice);
+    if (m_libdrmDevice) {
+        drmFreeDevice(&m_libdrmDevice);
+    }
 }
 
 QString DrmDevice::path() const
@@ -67,20 +71,20 @@ bool DrmDevice::supportsSyncObjTimelines() const
 
 std::optional<drmPciDeviceInfo> DrmDevice::pciDeviceInfo() const
 {
-    drmDevice *nativeDevice = nullptr;
-    auto nativeDeviceCleanup = qScopeGuard([&nativeDevice]() {
-        drmFreeDevice(&nativeDevice);
-    });
-
-    if (drmGetDeviceFromDevId(deviceId(), 0, &nativeDevice) != 0) {
+    if (!m_libdrmDevice || m_libdrmDevice->bustype != DRM_BUS_PCI) {
         return std::nullopt;
     }
+    return *m_libdrmDevice->deviceinfo.pci;
+}
 
-    if (nativeDevice->bustype != DRM_BUS_PCI) {
-        return std::nullopt;
-    }
+bool DrmDevice::equals(DrmDevice *other) const
+{
+    return drmDevicesEqual(m_libdrmDevice, other->m_libdrmDevice);
+}
 
-    return *nativeDevice->deviceinfo.pci;
+std::optional<int> DrmDevice::busType() const
+{
+    return m_libdrmDevice ? m_libdrmDevice->bustype : std::optional<int>();
 }
 
 std::unique_ptr<DrmDevice> DrmDevice::open(const QString &path)
