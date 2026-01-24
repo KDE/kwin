@@ -54,6 +54,7 @@ EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, B
     , m_eglBackend(eglBackend)
     , m_requestedBufferTarget(target)
 {
+    connect(m_gpu, &DrmGpu::renderDeviceChanged, this, &EglGbmLayerSurface::destroyResources);
 }
 
 EglGbmLayerSurface::~EglGbmLayerSurface() = default;
@@ -418,7 +419,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         return doTestFormats(sortedFormats, MultiGpuImportMode::None);
     }
     // special case, we're using different display devices but the same render device
-    const auto device = m_eglBackend->renderDeviceForGpu(m_gpu);
+    const auto device = m_gpu->renderDevice();
     if (device && !device->eglDisplay()->renderNode().isEmpty() && device->eglDisplay()->renderNode() == m_eglBackend->eglDisplayObject()->renderNode()) {
         if (auto surface = doTestFormats(sortedFormats, MultiGpuImportMode::None)) {
             return surface;
@@ -460,7 +461,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     auto ret = std::make_unique<Surface>();
     const auto drmFormat = m_eglBackend->eglDisplayObject()->allSupportedDrmFormats()[format];
     if (importMode == MultiGpuImportMode::Egl) {
-        ret->importContext = m_eglBackend->contextForGpu(m_gpu);
+        ret->importContext = m_gpu->renderDevice()->eglContext();
         if (!ret->importContext || ret->importContext->isSoftwareRenderer()) {
             return nullptr;
         }
@@ -480,7 +481,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     if (renderModifiers.empty()) {
         return nullptr;
     }
-    ret->context = m_eglBackend->contextForGpu(m_eglBackend->gpu());
+    ret->context = m_eglBackend->openglContextRef();
     ret->bufferTarget = bufferTarget;
     ret->importMode = importMode;
     ret->gbmSwapchain = createGbmSwapchain(m_eglBackend->gpu(), m_eglBackend->openglContext(), size, format, renderModifiers, importMode, bufferTarget);
@@ -563,7 +564,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
 {
     Q_ASSERT(surface->importGbmSwapchain);
 
-    const auto renderDevice = m_eglBackend->renderDeviceForGpu(m_gpu);
+    const auto renderDevice = m_gpu->renderDevice();
     // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
     if (!readFence.isValid() || !renderDevice->eglDisplay()->supportsNativeFence() || s_forceMGPUSync) {
         glFinish();

@@ -13,6 +13,7 @@
 
 #include "mock_drm.h"
 
+#include "core/gpumanager.h"
 #include "core/outputlayer.h"
 #include "core/session.h"
 #include "drm_backend.h"
@@ -77,6 +78,9 @@ class DrmTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void init();
+    void cleanup();
+
     void testAmsDetection();
     void testOutputDetection_data();
     void testOutputDetection();
@@ -100,6 +104,17 @@ static void verifyCleanup(MockGpu *mockGpu)
     QVERIFY(mockGpu->drmProps.isEmpty());
     QVERIFY(mockGpu->drmObjectProperties.isEmpty());
     QVERIFY(mockGpu->drmPropertyBlobs.isEmpty());
+}
+
+void DrmTest::init()
+{
+    // as this is not an integration test, we need to initialize it manually
+    GpuManager::s_self = std::make_unique<GpuManager>();
+}
+
+void DrmTest::cleanup()
+{
+    GpuManager::s_self.reset();
 }
 
 void DrmTest::testAmsDetection()

@@ -45,28 +45,8 @@ bool EglGbmBackend::initializeEgl()
     if (!initClientExtensions()) {
         return false;
     }
-    auto device = m_backend->primaryGpu()->renderDevice();
-    if (!device) {
-        device = createRenderDevice(m_backend->primaryGpu());
-    }
-    setRenderDevice(device);
-    return device;
-}
-
-RenderDevice *EglGbmBackend::createRenderDevice(DrmGpu *gpu) const
-{
-    // Temporary EGL display for finding a compatible render node.
-    // TODO find it in a different way!
-    const auto gpuDisplay = EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gpu->drmDevice()->gbmDevice(), nullptr));
-    if (!gpuDisplay) {
-        return nullptr;
-    } else if (gpuDisplay->renderNode().isEmpty()) {
-        // as a fallback for software rendering, use the primary node
-        gpu->setRenderDevice(RenderDevice::open(gpu->drmDevice()->path(), gpu->fd()));
-    } else {
-        gpu->setRenderDevice(RenderDevice::open(gpuDisplay->renderNode()));
-    }
-    return gpu->renderDevice();
+    setRenderDevice(m_backend->primaryGpu()->renderDevice());
+    return true;
 }
 
 bool EglGbmBackend::init()
@@ -83,21 +63,6 @@ bool EglGbmBackend::init()
     initWayland();
     m_backend->createLayers();
     return true;
-}
-
-RenderDevice *EglGbmBackend::renderDeviceForGpu(DrmGpu *gpu)
-{
-    auto device = gpu->renderDevice();
-    if (!device) {
-        device = createRenderDevice(gpu);
-    }
-    return device;
-}
-
-std::shared_ptr<EglContext> EglGbmBackend::contextForGpu(DrmGpu *gpu)
-{
-    const auto device = renderDeviceForGpu(gpu);
-    return device ? device->eglContext() : nullptr;
 }
 
 DrmDevice *EglGbmBackend::drmDevice() const

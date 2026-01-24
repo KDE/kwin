@@ -53,13 +53,8 @@ public:
 
     DrmGpu *gpu() const;
 
-    RenderDevice *renderDeviceForGpu(DrmGpu *gpu);
-    std::shared_ptr<EglContext> contextForGpu(DrmGpu *gpu);
-    void resetContextForGpu(DrmGpu *gpu);
-
 private:
     bool initializeEgl();
-    RenderDevice *createRenderDevice(DrmGpu *gpu) const;
 
     DrmBackend *m_backend;
 

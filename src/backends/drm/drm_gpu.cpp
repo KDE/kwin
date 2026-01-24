@@ -11,7 +11,7 @@
 #include "config-kwin.h"
 
 #include "core/gbmgraphicsbufferallocator.h"
-#include "core/renderdevice.h"
+#include "core/gpumanager.h"
 #include "core/session.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
@@ -128,6 +128,13 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     m_sharpnessSupported = std::ranges::all_of(m_crtcs, [](const std::unique_ptr<DrmCrtc> &crtc) {
         return crtc->sharpnessStrength.isValid();
     });
+
+    // Make sure the render device list is up to date, otherwise we may first
+    // select software rendering and only later switch to the render node
+    GpuManager::s_self->scanForRenderDevices();
+    updateRenderDevice();
+    connect(GpuManager::s_self.get(), &GpuManager::renderDeviceAdded, this, &DrmGpu::updateRenderDevice);
+    connect(GpuManager::s_self.get(), &GpuManager::renderDeviceRemoved, this, &DrmGpu::updateRenderDevice);
 }
 
 DrmGpu::~DrmGpu()
@@ -142,7 +149,7 @@ DrmGpu::~DrmGpu()
     m_connectors.clear();
     m_planes.clear();
     m_socketNotifier.reset();
-    m_renderDevice.reset();
+    m_softwareRenderDevice.reset();
     m_platform->session()->closeRestricted(m_fd);
 }
 
@@ -1065,12 +1072,33 @@ QList<OutputLayer *> DrmGpu::compatibleOutputLayers(BackendOutput *output) const
 
 RenderDevice *DrmGpu::renderDevice() const
 {
-    return m_renderDevice.get();
+    return m_renderDevice;
 }
 
-void DrmGpu::setRenderDevice(std::unique_ptr<RenderDevice> &&device)
+void DrmGpu::setRenderDevice(RenderDevice *device)
 {
-    m_renderDevice = std::move(device);
+    if (m_renderDevice == device) {
+        return;
+    }
+    m_renderDevice = device;
+    Q_EMIT renderDeviceChanged();
+}
+
+void DrmGpu::updateRenderDevice()
+{
+    if (RenderDevice *renderDev = GpuManager::s_self->compatibleRenderDevice(m_drmDevice.get())) {
+        setRenderDevice(renderDev);
+        m_softwareRenderDevice.reset();
+        return;
+    }
+    // for software rendering, fall back to the primary node
+    if (!m_softwareRenderDevice) {
+        m_softwareRenderDevice = RenderDevice::open(m_drmDevice->path(), m_fd);
+        if (!m_softwareRenderDevice) {
+            qCWarning(KWIN_DRM, "Opening render device for %s failed", qPrintable(m_drmDevice->path()));
+        }
+    }
+    setRenderDevice(m_softwareRenderDevice.get());
 }
 
 DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QList<DrmOutput *> &outputs)

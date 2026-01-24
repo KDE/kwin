@@ -22,7 +22,7 @@ namespace KWin
 
 GameControllerManager::GameControllerManager()
     : m_udev(std::make_unique<Udev>())
-    , m_udevMonitor(m_udev->monitor())
+    , m_udevMonitor(m_udev->createMonitor())
 {
     if (!m_udevMonitor) {
         qCWarning(KWIN_GAMECONTROLLER) << "Failed to setup udev Monitor:" << strerror(errno);
