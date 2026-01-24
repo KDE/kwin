@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-23 02:42+0000\n"
+"POT-Creation-Date: 2026-01-24 02:39+0000\n"
 "PO-Revision-Date: 2026-01-22 17:46+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2430,7 +2430,7 @@ msgstr "Falleva a connecter contexto de PipeWire"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Typo de composition non supportate"
@@ -2440,12 +2440,12 @@ msgstr "Typo de composition non supportate"
 msgid "Could not find window id %1"
 msgstr "Claude le fenestra executante sur %1"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr "Non poteva trovar sortita"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr "Region invalide"

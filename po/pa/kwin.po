@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-23 02:42+0000\n"
+"POT-Creation-Date: 2026-01-24 02:39+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -2499,7 +2499,7 @@ msgstr ""
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, fuzzy, kde-format
 #| msgid "Suspend Compositing"
 msgid "Unsupported compositing type"
@@ -2511,12 +2511,12 @@ msgstr "ਸਸਪੈਂਡ ਕੰਪੋਜ਼ਿਸ਼ਨ"
 msgid "Could not find window id %1"
 msgstr "%1 ਉੱਤੇ ਚੱਲਦੀ ਵਿੰਡੋ ਨੂੰ ਬੰਦ ਕਰੋ"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr ""

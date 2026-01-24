@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-23 02:42+0000\n"
+"POT-Creation-Date: 2026-01-24 02:39+0000\n"
 "PO-Revision-Date: 2025-12-11 13:03+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -2441,7 +2441,7 @@ msgstr "Verbinden met context van PipeWire is mislukt"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Niet-ondersteund type samenstellen"
@@ -2451,12 +2451,12 @@ msgstr "Niet-ondersteund type samenstellen"
 msgid "Could not find window id %1"
 msgstr "Kon venster-id %1 niet vinden"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr "Kon uitvoer niet vinden"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr "Ongeldig gebied"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-23 02:42+0000\n"
+"POT-Creation-Date: 2026-01-24 02:39+0000\n"
 "PO-Revision-Date: 2025-12-11 17:56+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -2437,7 +2437,7 @@ msgstr "«PipeWire» testuingurua konektatzea huts egin du"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "Eukarririk ez duen konposizio modua"
@@ -2447,12 +2447,12 @@ msgstr "Eukarririk ez duen konposizio modua"
 msgid "Could not find window id %1"
 msgstr "Ezin izan du leiho IDa aurkitu: %1"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr "Ezin izan du irteera aurkitu"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr "Eskualde baliogabea"

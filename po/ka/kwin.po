@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-23 02:42+0000\n"
+"POT-Creation-Date: 2026-01-24 02:39+0000\n"
 "PO-Revision-Date: 2025-12-11 05:14+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -2420,7 +2420,7 @@ msgstr "PipeWire-ის კონტექსტთან მიერთებ�
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "მხარდაუჭერელი კომპოზიტირების ტიპი"
@@ -2430,12 +2430,12 @@ msgstr "მხარდაუჭერელი კომპოზიტირ�
 msgid "Could not find window id %1"
 msgstr "ფანჯარა ID-ით %1 ვერ ვიპოვე"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr "შეყვანა ვერ ვიპოვე"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr "არასწორი რეგიონი"
