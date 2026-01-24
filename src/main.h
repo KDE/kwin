@@ -27,6 +27,7 @@
 
 class KPluginMetaData;
 class QCommandLineParser;
+class QSocketNotifier;
 
 namespace KWin
 {
@@ -44,6 +45,10 @@ class Outline;
 class OutlineVisual;
 class Compositor;
 class Window;
+class RenderDevice;
+class Udev;
+class UdevMonitor;
+class DrmDevice;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -282,12 +287,17 @@ public:
      */
     virtual PlatformCursorImage cursorImage() const;
 
+    const std::vector<std::unique_ptr<RenderDevice>> &renderDevices() const;
+    RenderDevice *compatibleRenderDevice(DrmDevice *dev) const;
+
 Q_SIGNALS:
     void x11ConnectionChanged();
     void x11ConnectionAboutToBeDestroyed();
     void xwaylandScaleChanged();
     void workspaceCreated();
     void virtualTerminalCreated();
+    void renderDeviceAdded(RenderDevice *device);
+    void renderDeviceRemoved(RenderDevice *device);
 
 protected:
     Application(int &argc, char **argv);
@@ -316,6 +326,9 @@ protected:
     static int crashes;
 
 private:
+    void scanForRenderDevices();
+    void handleUdevEvent();
+
 #if KWIN_BUILD_X11
     QList<QPointer<X11EventFilterContainer>> m_eventFilters;
     QList<QPointer<X11EventFilterContainer>> m_genericEventFilters;
@@ -345,6 +358,11 @@ private:
     std::unique_ptr<PluginManager> m_pluginManager;
     std::unique_ptr<InputMethod> m_inputMethod;
     std::unique_ptr<TabletModeManager> m_tabletModeManager;
+
+    const std::unique_ptr<Udev> m_udev;
+    const std::unique_ptr<UdevMonitor> m_udevMonitor;
+    const std::unique_ptr<QSocketNotifier> m_udevNotifier;
+    std::vector<std::unique_ptr<RenderDevice>> m_renderDevices;
 };
 
 inline bool Application::initiallyLocked() const

@@ -282,7 +282,9 @@ void X11WindowedBackend::initDri3()
         UniqueCPtr<xcb_dri3_open_reply_t> reply(xcb_dri3_open_reply(m_connection, cookie, nullptr));
         if (reply && reply->nfd == 1) {
             const FileDescriptor fd{xcb_dri3_open_reply_fds(m_connection, reply.get())[0]};
-            m_renderDevice = RenderDevice::open(QByteArray(drmGetDeviceNameFromFd2(fd.get())));
+            if (auto device = DrmDevice::open(QByteArray(drmGetDeviceNameFromFd2(fd.get())))) {
+                m_renderDevice = kwinApp()->compatibleRenderDevice(device.get());
+            }
         }
     }
 
@@ -793,7 +795,7 @@ EglDisplay *X11WindowedBackend::sceneEglDisplayObject() const
 
 RenderDevice *X11WindowedBackend::renderDevice() const
 {
-    return m_renderDevice.get();
+    return m_renderDevice;
 }
 
 } // namespace KWin

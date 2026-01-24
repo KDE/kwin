@@ -26,6 +26,7 @@
 #include "drm_pipeline.h"
 #include "drm_plane.h"
 #include "drm_virtual_output.h"
+#include "main.h"
 #include "utils/envvar.h"
 
 #include <QFile>
@@ -128,6 +129,11 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     m_sharpnessSupported = std::ranges::all_of(m_crtcs, [](const std::unique_ptr<DrmCrtc> &crtc) {
         return crtc->sharpnessStrength.isValid();
     });
+
+    // TODO it can happen that the render node is opened later than the KMS node
+    updateRenderDevice();
+    connect(kwinApp(), &Application::renderDeviceAdded, this, &DrmGpu::updateRenderDevice);
+    connect(kwinApp(), &Application::renderDeviceRemoved, this, &DrmGpu::updateRenderDevice);
 }
 
 DrmGpu::~DrmGpu()
@@ -142,7 +148,7 @@ DrmGpu::~DrmGpu()
     m_connectors.clear();
     m_planes.clear();
     m_socketNotifier.reset();
-    m_renderDevice.reset();
+    m_softwareRenderDevice.reset();
     m_platform->session()->closeRestricted(m_fd);
 }
 
@@ -1065,12 +1071,37 @@ QList<OutputLayer *> DrmGpu::compatibleOutputLayers(BackendOutput *output) const
 
 RenderDevice *DrmGpu::renderDevice() const
 {
-    return m_renderDevice.get();
+    return m_renderDevice;
 }
 
-void DrmGpu::setRenderDevice(std::unique_ptr<RenderDevice> &&device)
+void DrmGpu::setRenderDevice(RenderDevice *device)
 {
-    m_renderDevice = std::move(device);
+    if (m_renderDevice == device) {
+        return;
+    }
+    m_renderDevice = device;
+    Q_EMIT renderDeviceChanged();
+}
+
+void DrmGpu::updateRenderDevice()
+{
+    // mockDrmTest doesn't have a kwinApp
+    // TODO remove this check once the test is ported to vkms
+    if (kwinApp()) {
+        if (RenderDevice *renderDev = kwinApp()->compatibleRenderDevice(m_drmDevice.get())) {
+            setRenderDevice(renderDev);
+            m_softwareRenderDevice.reset();
+            return;
+        }
+    }
+    // for software rendering, fall back to the primary node
+    if (!m_softwareRenderDevice) {
+        m_softwareRenderDevice = RenderDevice::open(m_drmDevice->path(), m_fd);
+        if (!m_softwareRenderDevice) {
+            qCWarning(KWIN_DRM, "Opening render device for %s failed", qPrintable(m_drmDevice->path()));
+        }
+    }
+    setRenderDevice(m_softwareRenderDevice.get());
 }
 
 DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QList<DrmOutput *> &outputs)

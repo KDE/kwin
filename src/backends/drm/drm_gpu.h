@@ -109,7 +109,6 @@ public:
     const QList<DrmPipeline *> pipelines() const;
 
     RenderDevice *renderDevice() const;
-    void setRenderDevice(std::unique_ptr<RenderDevice> &&device);
 
     bool updateOutputs();
     void removeOutputs();
@@ -136,6 +135,7 @@ Q_SIGNALS:
     void activeChanged(bool active);
     void outputAdded(DrmAbstractOutput *output);
     void outputRemoved(DrmAbstractOutput *output);
+    void renderDeviceChanged();
 
 private:
     DrmOutput *findOutput(quint32 connector);
@@ -143,6 +143,8 @@ private:
     void initDrmResources();
     void forgetBufferObject(QObject *buf);
     void doModeset();
+    void setRenderDevice(RenderDevice *device);
+    void updateRenderDevice();
 
     DrmPipeline::Error checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs, std::chrono::steady_clock::time_point deadline);
     DrmPipeline::Error testPipelines();
@@ -171,7 +173,8 @@ private:
     bool m_forceImplicitModifiers = false;
     bool m_sharpnessSupported = false;
     clockid_t m_presentationClock;
-    std::unique_ptr<RenderDevice> m_renderDevice;
+    RenderDevice *m_renderDevice = nullptr;
+    std::unique_ptr<RenderDevice> m_softwareRenderDevice;
     DrmBackend *const m_platform;
     std::optional<Version> m_nvidiaDriverVersion;
 
