@@ -44,6 +44,7 @@ class Outline;
 class OutlineVisual;
 class Compositor;
 class Window;
+class GpuManager;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -345,6 +346,7 @@ private:
     std::unique_ptr<PluginManager> m_pluginManager;
     std::unique_ptr<InputMethod> m_inputMethod;
     std::unique_ptr<TabletModeManager> m_tabletModeManager;
+    std::unique_ptr<GpuManager> m_gpuManager;
 };
 
 inline bool Application::initiallyLocked() const

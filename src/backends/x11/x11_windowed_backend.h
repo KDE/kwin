@@ -172,7 +172,7 @@ private:
     int m_driMinorVersion = 0;
     QHash<uint32_t, QList<uint64_t>> m_driFormats;
 
-    std::unique_ptr<RenderDevice> m_renderDevice;
+    RenderDevice *m_renderDevice = nullptr;
 
     QList<X11WindowedOutput *> m_outputs;
     QHash<int, xcb_render_pictformat_t> m_pictureFormats;
