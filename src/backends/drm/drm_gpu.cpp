@@ -1075,6 +1075,11 @@ RenderDevice *DrmGpu::renderDevice() const
     return m_renderDevice;
 }
 
+bool DrmGpu::hasRenderNode() const
+{
+    return m_softwareRenderDevice == nullptr;
+}
+
 void DrmGpu::setRenderDevice(RenderDevice *device)
 {
     if (m_renderDevice == device) {

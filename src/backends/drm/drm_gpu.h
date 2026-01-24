@@ -109,6 +109,7 @@ public:
     const QList<DrmPipeline *> pipelines() const;
 
     RenderDevice *renderDevice() const;
+    bool hasRenderNode() const;
 
     bool updateOutputs();
     void removeOutputs();
