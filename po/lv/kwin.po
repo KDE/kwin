@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-22 01:00+0000\n"
+"POT-Creation-Date: 2026-01-24 00:44+0000\n"
 "PO-Revision-Date: 2025-11-11 18:52+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -4160,17 +4160,22 @@ msgstr ""
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:642
+#: wayland/outputmanagement_v2.cpp:646
 #, kde-format
-msgid "Position of output %s is negative, that is not supported"
+msgid "Position of output %s is way too negative (%d, %d)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:646
+#: wayland/outputmanagement_v2.cpp:649
+#, kde-format
+msgid "Position of enabled output %s is negative (%d, %d)"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:663
+#: wayland/outputmanagement_v2.cpp:670
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Draiveris noraidīja izvades konfigurāciju"

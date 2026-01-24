@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1728266 2026-01-22 01:40:50Z scripty $
+# $Id: kwin.po 1728393 2026-01-24 01:27:12Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-22 01:00+0000\n"
+"POT-Creation-Date: 2026-01-24 00:44+0000\n"
 "PO-Revision-Date: 2026-01-14 07:27+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -4174,17 +4174,24 @@ msgstr "Ni mogoče dodati načina po meri s prazno velikostjo"
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Ni mogoče dodati načina po meri s hitrostjo osveževanja nič Hz"
 
-#: wayland/outputmanagement_v2.cpp:642
-#, kde-format
-msgid "Position of output %s is negative, that is not supported"
-msgstr "Položaj izhoda %s je negativen, kar ni podprto"
-
 #: wayland/outputmanagement_v2.cpp:646
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
+msgid "Position of output %s is way too negative (%d, %d)"
+msgstr "Položaj izhoda %s je prevelik (%d, %d)"
+
+#: wayland/outputmanagement_v2.cpp:649
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
+msgid "Position of enabled output %s is negative (%d, %d)"
+msgstr "Položaj izhoda %s je prevelik (%d, %d)"
+
+#: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "Položaj izhoda %s je prevelik (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:663
+#: wayland/outputmanagement_v2.cpp:670
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Gonilnik je zavrnil konfiguracijo izhoda"
@@ -4221,6 +4228,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland se je sesul"
+
+#~ msgid "Position of output %s is negative, that is not supported"
+#~ msgstr "Položaj izhoda %s je negativen, kar ni podprto"
 
 #~ msgid "Buttons"
 #~ msgstr "Gumbi"

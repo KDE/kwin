@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-22 01:00+0000\n"
+"POT-Creation-Date: 2026-01-24 00:44+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -4122,17 +4122,24 @@ msgstr "无法添加一个大小为空的自定义模式"
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "无法添加一个刷新率为零的自定义模式"
 
-#: wayland/outputmanagement_v2.cpp:642
-#, kde-format
-msgid "Position of output %s is negative, that is not supported"
-msgstr "输出 %s 的位置是负值，系统不支持"
-
 #: wayland/outputmanagement_v2.cpp:646
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
+msgid "Position of output %s is way too negative (%d, %d)"
+msgstr "输出 %s 的位置太大 (%d, %d)"
+
+#: wayland/outputmanagement_v2.cpp:649
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
+msgid "Position of enabled output %s is negative (%d, %d)"
+msgstr "输出 %s 的位置太大 (%d, %d)"
+
+#: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "输出 %s 的位置太大 (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:663
+#: wayland/outputmanagement_v2.cpp:670
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "驱动程序拒绝了输出配置"
@@ -4168,3 +4175,6 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
+
+#~ msgid "Position of output %s is negative, that is not supported"
+#~ msgstr "输出 %s 的位置是负值，系统不支持"

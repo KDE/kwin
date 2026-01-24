@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-22 01:00+0000\n"
+"POT-Creation-Date: 2026-01-24 00:44+0000\n"
 "PO-Revision-Date: 2025-12-18 13:14+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -4146,17 +4146,24 @@ msgstr "לא ניתן להוסיף מצב מותאם אישית בגודל רי�
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "לא ניתן להוסיף מצב מותאם אישית עם קצב ריענון של אפס הרץ"
 
-#: wayland/outputmanagement_v2.cpp:642
-#, kde-format
-msgid "Position of output %s is negative, that is not supported"
-msgstr "המקום של הפלט %s הוא שלילי, המצב הזה לא נתמך."
-
 #: wayland/outputmanagement_v2.cpp:646
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
+msgid "Position of output %s is way too negative (%d, %d)"
+msgstr "המקום של הפלט %s הוא גדול מדי (%d, %d)"
+
+#: wayland/outputmanagement_v2.cpp:649
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
+msgid "Position of enabled output %s is negative (%d, %d)"
+msgstr "המקום של הפלט %s הוא גדול מדי (%d, %d)"
+
+#: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "המקום של הפלט %s הוא גדול מדי (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:663
+#: wayland/outputmanagement_v2.cpp:670
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "מנהל ההתקן דחה את הגדרות הפלט"
@@ -4192,6 +4199,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland קרס"
+
+#~ msgid "Position of output %s is negative, that is not supported"
+#~ msgstr "המקום של הפלט %s הוא שלילי, המצב הזה לא נתמך."
 
 #~ msgid "Buttons"
 #~ msgstr "כפתורים"

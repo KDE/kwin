@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-22 01:00+0000\n"
+"POT-Creation-Date: 2026-01-24 00:44+0000\n"
 "PO-Revision-Date: 2025-12-11 08:52+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -4216,17 +4216,24 @@ msgstr ""
 "Impossible d'ajouter un mode personnalisé avec une fréquence de "
 "rafraîchissement de 0 Hz"
 
-#: wayland/outputmanagement_v2.cpp:642
-#, kde-format
-msgid "Position of output %s is negative, that is not supported"
-msgstr "La position de la sortie %s est négative, donc, non pris en charge"
-
 #: wayland/outputmanagement_v2.cpp:646
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
+msgid "Position of output %s is way too negative (%d, %d)"
+msgstr "La position de la sortie %s est bien trop grande (%d, %d)"
+
+#: wayland/outputmanagement_v2.cpp:649
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
+msgid "Position of enabled output %s is negative (%d, %d)"
+msgstr "La position de la sortie %s est bien trop grande (%d, %d)"
+
+#: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "La position de la sortie %s est bien trop grande (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:663
+#: wayland/outputmanagement_v2.cpp:670
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Le pilote a rejeté la configuration de sortie."
@@ -4266,6 +4273,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland s'est planté."
+
+#~ msgid "Position of output %s is negative, that is not supported"
+#~ msgstr "La position de la sortie %s est négative, donc, non pris en charge"
 
 #~ msgid "Buttons"
 #~ msgstr "Boutons"

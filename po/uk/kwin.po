@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-22 01:00+0000\n"
+"POT-Creation-Date: 2026-01-24 00:44+0000\n"
 "PO-Revision-Date: 2025-12-12 13:11+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -4176,18 +4176,24 @@ msgstr "Неможливо додати нетиповий режим із по�
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Неможливо додати нетиповий режим із частотою оновлення у нуль герців"
 
-#: wayland/outputmanagement_v2.cpp:642
-#, kde-format
-msgid "Position of output %s is negative, that is not supported"
-msgstr ""
-"Позиція виведення %s є від'ємною. Підтримки таких позицій не передбачено"
-
 #: wayland/outputmanagement_v2.cpp:646
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
+msgid "Position of output %s is way too negative (%d, %d)"
+msgstr "Позиція виведення %s є надто великою (%d, %d)"
+
+#: wayland/outputmanagement_v2.cpp:649
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
+msgid "Position of enabled output %s is negative (%d, %d)"
+msgstr "Позиція виведення %s є надто великою (%d, %d)"
+
+#: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "Позиція виведення %s є надто великою (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:663
+#: wayland/outputmanagement_v2.cpp:670
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Драйвером відмовлено у налаштовування виведення"
@@ -4227,6 +4233,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland завершив роботу в аварійному режимі"
+
+#~ msgid "Position of output %s is negative, that is not supported"
+#~ msgstr ""
+#~ "Позиція виведення %s є від'ємною. Підтримки таких позицій не передбачено"
 
 #~ msgid "Buttons"
 #~ msgstr "Кнопки"
