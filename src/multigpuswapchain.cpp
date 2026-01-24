@@ -11,6 +11,7 @@
 #include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
 #include "core/renderbackend.h"
+#include "core/syncobjtimeline.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
@@ -77,7 +78,7 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyD
         if (fmt) {
             auto swapchain = VulkanSwapchain::create(copyDevice->vulkanDevice(), targetDevice->allocator(), size, fmt->format, fmt->modifiers);
             if (swapchain) {
-                return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, std::move(swapchain));
+                return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, std::move(swapchain), format);
             }
         }
     }
@@ -92,13 +93,13 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyD
         }
         auto eglSwapchain = EglSwapchain::create(copyDevice->drmDevice()->allocator(), context.get(), size, formatMod->format, formatMod->modifiers);
         if (eglSwapchain) {
-            return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, context, std::move(eglSwapchain));
+            return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, context, std::move(eglSwapchain), format);
         }
     }
     return nullptr;
 }
 
-MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, const std::shared_ptr<EglContext> &eglContext, std::shared_ptr<EglSwapchain> &&eglSwapchain)
+MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, const std::shared_ptr<EglContext> &eglContext, std::shared_ptr<EglSwapchain> &&eglSwapchain, uint32_t sourceFormat)
     : m_targetDevice(targetDevice)
     , m_copyDevice(copyDevice)
     , m_copyContext(eglContext)
@@ -106,17 +107,19 @@ MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *target
     , m_format(m_eglSwapchain->format())
     , m_modifier(m_eglSwapchain->modifier())
     , m_size(m_eglSwapchain->size())
+    , m_sourceFormat(sourceFormat)
 {
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &MultiGpuSwapchain::handleDeviceRemoved);
 }
 
-MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, std::unique_ptr<VulkanSwapchain> &&swapchain)
+MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, std::unique_ptr<VulkanSwapchain> &&swapchain, uint32_t sourceFormat)
     : m_targetDevice(targetDevice)
     , m_copyDevice(copyDevice)
     , m_vulkanSwapchain(std::move(swapchain))
     , m_format(m_vulkanSwapchain->format())
     , m_modifier(m_vulkanSwapchain->modifier())
     , m_size(m_vulkanSwapchain->size())
+    , m_sourceFormat(sourceFormat)
 {
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &MultiGpuSwapchain::handleDeviceRemoved);
     connect(m_copyDevice->vulkanDevice(), &VulkanDevice::deviceLost, this, &MultiGpuSwapchain::handleGpuReset);
@@ -127,19 +130,19 @@ MultiGpuSwapchain::~MultiGpuSwapchain()
     deleteResources();
 }
 
-std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame)
+std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (!m_copyDevice || !m_targetDevice || !buffer->dmabufAttributes()) {
         return std::nullopt;
     }
     if (m_vulkanSwapchain) {
-        return copyWithVulkan(buffer, damage, std::move(sync), frame);
+        return copyWithVulkan(buffer, damage, std::move(sync), frame, releasePoint);
     } else {
-        return copyWithEGL(buffer, damage, std::move(sync), frame);
+        return copyWithEGL(buffer, damage, std::move(sync), frame, releasePoint);
     }
 }
 
-std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(GraphicsBuffer *src, const Region &damage, FileDescriptor &&sync, OutputFrame *frame)
+std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(GraphicsBuffer *src, const Region &damage, FileDescriptor &&sync, OutputFrame *frame, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     // TODO add timestamp queries for this
 
@@ -147,6 +150,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         return Ret{
             .buffer = m_currentVulkanSlot->buffer(),
             .sync = m_currentVulkanSlot->releaseFd().duplicate(),
+            .releasePoint = m_currentVulkanSlot->releasePoint(),
         };
     }
 
@@ -222,19 +226,24 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         m_needsRecreation = true;
         return std::nullopt;
     }
+    if (releasePoint) {
+        releasePoint->addReleaseFence(*completionFd);
+    }
     m_vulkanSwapchain->release(m_currentVulkanSlot.get(), completionFd->duplicate());
     return Ret{
         .buffer = m_currentVulkanSlot->buffer(),
         .sync = std::move(*completionFd),
+        .releasePoint = m_currentVulkanSlot->releasePoint(),
     };
 }
 
-std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame)
+std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (damage.isEmpty() && m_currentEglSlot) {
         return Ret{
             .buffer = m_currentEglSlot->buffer(),
             .sync = m_currentEglSlot->releaseFd().duplicate(),
+            .releasePoint = m_currentEglSlot->releasePoint(),
         };
     }
 
@@ -288,9 +297,13 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuf
         renderTime->end();
         frame->addRenderTimeQuery(std::move(renderTime));
     }
+    if (releasePoint) {
+        releasePoint->addReleaseFence(fence.fileDescriptor());
+    }
     return Ret{
         .buffer = m_currentEglSlot->buffer(),
         .sync = fence.takeFileDescriptor(),
+        .releasePoint = m_currentEglSlot->releasePoint(),
     };
 }
 
@@ -354,6 +367,22 @@ QSize MultiGpuSwapchain::size() const
 bool MultiGpuSwapchain::needsRecreation() const
 {
     return m_needsRecreation;
+}
+
+bool MultiGpuSwapchain::isSuitableFor(GraphicsBuffer *buffer) const
+{
+    if (!m_copyDevice || !m_targetDevice || needsRecreation()) {
+        return false;
+    }
+    const auto attrs = buffer->dmabufAttributes();
+    if (!attrs || attrs->format != m_sourceFormat || buffer->size() != m_size) {
+        return false;
+    }
+    if (m_vulkanSwapchain) {
+        return m_copyDevice->vulkanDevice()->supportedFormats().containsFormat(attrs->format, attrs->modifier);
+    } else {
+        return m_copyDevice->eglDisplay()->allSupportedDrmFormats().containsFormat(attrs->format, attrs->modifier);
+    }
 }
 
 }

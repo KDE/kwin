@@ -9,12 +9,38 @@
 #include "vulkan_swapchain.h"
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferallocator.h"
+#include "core/syncobjtimeline.h"
 #include "vulkan_device.h"
 #include "vulkan_logging.h"
 #include "vulkan_texture.h"
 
 namespace KWin
 {
+
+class VulkanReleasePoint : public SyncReleasePoint
+{
+public:
+    explicit VulkanReleasePoint(const std::shared_ptr<VulkanSwapchainSlot> &slot);
+
+    void addReleaseFence(const FileDescriptor &fd) override;
+
+private:
+    std::shared_ptr<VulkanSwapchainSlot> m_slot;
+};
+
+VulkanReleasePoint::VulkanReleasePoint(const std::shared_ptr<VulkanSwapchainSlot> &slot)
+    : m_slot(slot)
+{
+}
+
+void VulkanReleasePoint::addReleaseFence(const FileDescriptor &fd)
+{
+    if (m_slot->m_releaseFd.isValid()) {
+        m_slot->m_releaseFd = m_slot->m_releaseFd.mergeSyncFds(fd, m_slot->m_releaseFd);
+    } else {
+        m_slot->m_releaseFd = fd.duplicate();
+    }
+}
 
 VulkanSwapchainSlot::VulkanSwapchainSlot(GraphicsBuffer *buffer, std::shared_ptr<VulkanTexture> &&texture)
     : m_buffer(buffer)
@@ -44,12 +70,22 @@ int VulkanSwapchainSlot::age() const
 
 bool VulkanSwapchainSlot::isBusy() const
 {
-    return m_buffer->isReferenced() || (m_releaseFd.isValid() && !m_releaseFd.isReadable());
+    return m_buffer->isReferenced() || !m_releasePoint.expired() || (m_releaseFd.isValid() && !m_releaseFd.isReadable());
 }
 
 const FileDescriptor &VulkanSwapchainSlot::releaseFd() const
 {
     return m_releaseFd;
+}
+
+std::shared_ptr<SyncReleasePoint> VulkanSwapchainSlot::releasePoint()
+{
+    auto ret = m_releasePoint.lock();
+    if (!ret) {
+        ret = std::make_shared<VulkanReleasePoint>(shared_from_this());
+        m_releasePoint = ret;
+    }
+    return ret;
 }
 
 VulkanSwapchain::VulkanSwapchain(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, uint64_t modifier, std::shared_ptr<VulkanSwapchainSlot> &&initialSlot)

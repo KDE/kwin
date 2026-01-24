@@ -28,6 +28,7 @@ class RenderViewport;
 class Scene;
 class Texture;
 class WindowPaintData;
+class SyncReleasePoint;
 
 class KWIN_EXPORT ItemRenderer
 {
@@ -37,7 +38,7 @@ public:
 
     virtual QPainter *painter() const;
 
-    virtual std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer) = 0;
+    virtual std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint) = 0;
     virtual std::unique_ptr<Texture> createTexture(const QImage &image) = 0;
 
     virtual std::unique_ptr<NinePatch> createNinePatch(const QImage &image) = 0;

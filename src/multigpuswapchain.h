@@ -28,21 +28,25 @@ class RenderDevice;
 class VulkanDevice;
 class VulkanSwapchain;
 class VulkanSwapchainSlot;
+class SyncReleasePoint;
 
 class KWIN_EXPORT MultiGpuSwapchain : public QObject
 {
     Q_OBJECT
 public:
-    explicit MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, const std::shared_ptr<EglContext> &eglContext, std::shared_ptr<EglSwapchain> &&eglSwapchain);
-    explicit MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, std::unique_ptr<VulkanSwapchain> &&swapchain);
+    explicit MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, const std::shared_ptr<EglContext> &eglContext, std::shared_ptr<EglSwapchain> &&eglSwapchain, uint32_t sourceFormat);
+    explicit MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, std::unique_ptr<VulkanSwapchain> &&swapchain, uint32_t sourceFormat);
     ~MultiGpuSwapchain() override;
 
     struct Ret
     {
         GraphicsBuffer *buffer;
         FileDescriptor sync;
+        std::shared_ptr<SyncReleasePoint> releasePoint;
     };
-    std::optional<Ret> copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame);
+    std::optional<Ret> copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage,
+                                     FileDescriptor &&sync, OutputFrame *frame,
+                                     const std::shared_ptr<SyncReleasePoint> &releasePoint = nullptr);
 
     void resetDamageTracking();
 
@@ -50,6 +54,8 @@ public:
     uint64_t modifier() const;
     QSize size() const;
     bool needsRecreation() const;
+
+    bool isSuitableFor(GraphicsBuffer *buffer) const;
 
     /**
      * NOTE that the copyDevice needs to be chosen carefully. Importing a buffer to a given device
@@ -61,8 +67,8 @@ public:
     static std::unique_ptr<MultiGpuSwapchain> create(RenderDevice *copyDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats);
 
 private:
-    std::optional<Ret> copyWithVulkan(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame);
-    std::optional<Ret> copyWithEGL(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame);
+    std::optional<Ret> copyWithVulkan(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    std::optional<Ret> copyWithEGL(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame, const std::shared_ptr<SyncReleasePoint> &releasePoint);
     void handleDeviceRemoved(RenderDevice *device);
     void handleGpuReset();
     void deleteResources();
@@ -79,5 +85,6 @@ private:
     const uint64_t m_modifier;
     const QSize m_size;
     bool m_needsRecreation = false;
+    const uint32_t m_sourceFormat;
 };
 }

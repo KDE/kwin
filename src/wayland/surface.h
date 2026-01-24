@@ -29,7 +29,7 @@ class SlideInterface;
 class SubSurfaceInterface;
 class SurfaceInterfacePrivate;
 class Transaction;
-class SyncReleasePoint;
+class SyncObjReleasePoint;
 class RawSurfaceAttachedState;
 class RawSurfaceExtension;
 
@@ -339,7 +339,7 @@ public:
      * GPU side, the compositor has to either keep the release point referenced as long as the
      * GPU task is running, or add a fence for each GPU task to the release point
      */
-    std::shared_ptr<SyncReleasePoint> bufferReleasePoint() const;
+    std::shared_ptr<SyncObjReleasePoint> bufferReleasePoint() const;
 
     /**
      * Traverses the surface sub-tree with this surface as the root.

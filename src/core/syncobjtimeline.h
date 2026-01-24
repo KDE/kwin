@@ -16,13 +16,27 @@ namespace KWin
 class SyncTimeline;
 
 /**
- * A helper to signal the release point when it goes out of scope
+ * An abstract helper to signal a synchronization mechanism when it gets out of scope
  */
 class KWIN_EXPORT SyncReleasePoint
 {
 public:
-    explicit SyncReleasePoint(const std::shared_ptr<SyncTimeline> &timeline, uint64_t timelinePoint);
-    ~SyncReleasePoint();
+    virtual ~SyncReleasePoint() = default;
+
+    virtual void addReleaseFence(const FileDescriptor &fd) = 0;
+
+protected:
+    explicit SyncReleasePoint() = default;
+};
+
+/**
+ * A helper to signal the release point of a syncobj timeline when it goes out of scope
+ */
+class KWIN_EXPORT SyncObjReleasePoint : public SyncReleasePoint
+{
+public:
+    explicit SyncObjReleasePoint(const std::shared_ptr<SyncTimeline> &timeline, uint64_t timelinePoint);
+    ~SyncObjReleasePoint() override;
 
     SyncTimeline *timeline() const;
     uint64_t timelinePoint() const;
@@ -31,7 +45,7 @@ public:
      * Adds the fence of a graphics job that this release point should wait for
      * before the timeline point is signaled
      */
-    void addReleaseFence(const FileDescriptor &fd);
+    void addReleaseFence(const FileDescriptor &fd) override;
 
 private:
     const std::shared_ptr<SyncTimeline> m_timeline;

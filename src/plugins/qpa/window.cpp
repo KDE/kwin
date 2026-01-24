@@ -14,6 +14,7 @@
 #include "compositor.h"
 #include "core/drmdevice.h"
 #include "core/renderbackend.h"
+#include "core/renderdevice.h"
 #include "core/shmgraphicsbufferallocator.h"
 #include "internalwindow.h"
 #include "swapchain.h"
@@ -56,6 +57,8 @@ Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const F
         if (software) {
             static ShmGraphicsBufferAllocator shmAllocator;
             allocator = &shmAllocator;
+        } else if (auto render = Compositor::self()->backend()->renderDevice()) {
+            allocator = render->drmDevice()->allocator();
         } else {
             allocator = Compositor::self()->backend()->drmDevice()->allocator();
         }

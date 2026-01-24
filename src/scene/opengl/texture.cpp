@@ -7,8 +7,12 @@
 #include "scene/opengl/texture.h"
 #include "compositor.h"
 #include "core/drm_formats.h"
+#include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/graphicsbufferview.h"
+#include "multigpuswapchain.h"
 #include "opengl/eglbackend.h"
+#include "opengl/eglnativefence.h"
 #include "opengl/gltexture.h"
 #include "utils/common.h"
 
@@ -35,7 +39,7 @@ std::unique_ptr<ImageTextureOpenGL> ImageTextureOpenGL::create(const QImage &ima
     return nullptr;
 }
 
-void ImageTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region)
+void ImageTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     Q_UNREACHABLE();
 }
@@ -66,20 +70,24 @@ BufferTextureOpenGL::BufferTextureOpenGL(EglBackend *backend)
 {
 }
 
-std::unique_ptr<BufferTextureOpenGL> BufferTextureOpenGL::create(GraphicsBuffer *buffer)
+BufferTextureOpenGL::~BufferTextureOpenGL()
+{
+}
+
+std::unique_ptr<BufferTextureOpenGL> BufferTextureOpenGL::create(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     auto texture = std::make_unique<BufferTextureOpenGL>(static_cast<EglBackend *>(Compositor::self()->backend()));
-    if (texture->attach(buffer)) {
+    if (texture->attach(buffer, releasePoint)) {
         return texture;
     }
 
     return nullptr;
 }
 
-bool BufferTextureOpenGL::attach(GraphicsBuffer *buffer)
+bool BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (buffer->dmabufAttributes()) {
-        return loadDmabufTexture(buffer);
+        return loadDmabufTexture(buffer, releasePoint);
     } else if (buffer->shmAttributes()) {
         return loadShmTexture(buffer);
     } else if (buffer->singlePixelAttributes()) {
@@ -90,14 +98,14 @@ bool BufferTextureOpenGL::attach(GraphicsBuffer *buffer)
     }
 }
 
-void BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region)
+void BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (buffer->dmabufAttributes()) {
-        updateDmabufTexture(buffer);
+        updateDmabufTexture(buffer, region, releasePoint);
     } else if (buffer->shmAttributes()) {
-        updateShmTexture(buffer, region);
+        updateShmTexture(buffer, region, releasePoint);
     } else if (buffer->singlePixelAttributes()) {
-        updateSinglePixelTexture(buffer);
+        updateSinglePixelTexture(buffer, releasePoint);
     } else {
         qCDebug(KWIN_OPENGL) << "Failed to update OpenGLSurfaceTexture for a buffer of unknown type" << buffer;
     }
@@ -150,11 +158,11 @@ static Region simplifyDamage(const Region &damage)
     }
 }
 
-void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region &region)
+void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::Shm)) {
         reset();
-        attach(buffer);
+        attach(buffer, releasePoint);
         return;
     }
 
@@ -168,8 +176,43 @@ void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region 
     m_isFloatingPoint = info && info->floatingPoint;
 }
 
-bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer)
+bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
+    const auto attribs = buffer->dmabufAttributes();
+    m_dmabufDevice = attribs->device;
+    Q_ASSERT(attribs->device);
+    RenderDevice *compat = nullptr;
+    if (attribs->device == m_backend->renderDevice()->drmDevice()->deviceId()) {
+        // special case for software rendering
+        // TODO handle that more nicely somehow, so it doesn't need to be special-cased?
+        compat = m_backend->renderDevice();
+    } else {
+        compat = GpuManager::s_self->compatibleRenderDevice(*attribs->device);
+    }
+    if (!compat) {
+        qCWarning(KWIN_OPENGL, "Couldn't find a compatible GPU for a buffer");
+        return false;
+    } else if (compat == m_backend->renderDevice()) {
+        m_mgpuSwapchain.reset();
+        m_releasePoint = releasePoint;
+    } else {
+        // need to do a multi gpu copy
+        m_mgpuSwapchain = MultiGpuSwapchain::create(compat, m_backend->renderDevice()->drmDevice(), attribs->format, attribs->modifier, buffer->size(),
+                                                    m_backend->renderDevice()->eglDisplay()->nonExternalOnlySupportedDrmFormats());
+        EGLNativeFence releaseFence(m_backend->eglDisplayObject());
+        auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, Region::infinite(), releaseFence.takeFileDescriptor(),
+                                                       nullptr, releasePoint);
+        if (!imported.has_value()) {
+            return false;
+        }
+        const auto fence = EGLNativeFence::importFence(m_backend->eglDisplayObject(), std::move(imported->sync));
+        if (!fence.waitSync()) {
+            return false;
+        }
+        buffer = imported->buffer;
+        m_releasePoint = imported->releasePoint;
+    }
+
     auto createTexture = [](EGLImageKHR image, const QSize &size, bool isExternalOnly) -> std::unique_ptr<GLTexture> {
         if (Q_UNLIKELY(image == EGL_NO_IMAGE_KHR)) {
             qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
@@ -191,7 +234,6 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer)
         return texture;
     };
 
-    const auto attribs = buffer->dmabufAttributes();
     if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
         std::vector<std::unique_ptr<GLTexture>> textures;
         Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
@@ -229,12 +271,27 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer)
     return true;
 }
 
-void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer)
+void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
-    if (Q_UNLIKELY(m_bufferType != BufferType::DmaBuf)) {
+    if (Q_UNLIKELY(m_bufferType != BufferType::DmaBuf)
+        || Q_UNLIKELY(m_dmabufDevice != buffer->dmabufAttributes()->device)
+        || (m_mgpuSwapchain && !m_mgpuSwapchain->isSuitableFor(buffer))) {
         reset();
-        attach(buffer);
+        attach(buffer, releasePoint);
         return;
+    }
+    if (m_mgpuSwapchain) {
+        EGLNativeFence releaseFence(m_backend->eglDisplayObject());
+        auto imported = m_mgpuSwapchain->copyRgbBuffer(buffer, region, releaseFence.takeFileDescriptor(),
+                                                       nullptr, releasePoint);
+        if (!imported.has_value()) {
+            return;
+        }
+        const auto fence = EGLNativeFence::importFence(m_backend->eglDisplayObject(), std::move(imported->sync));
+        if (!fence.waitSync()) {
+            return;
+        }
+        buffer = imported->buffer;
     }
 
     const GLint target = GL_TEXTURE_2D;
@@ -276,11 +333,11 @@ bool BufferTextureOpenGL::loadSinglePixelTexture(GraphicsBuffer *buffer)
     return true;
 }
 
-void BufferTextureOpenGL::updateSinglePixelTexture(GraphicsBuffer *buffer)
+void BufferTextureOpenGL::updateSinglePixelTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::SinglePixel)) {
         reset();
-        attach(buffer);
+        attach(buffer, releasePoint);
         return;
     }
     const GraphicsBufferView view(buffer);
