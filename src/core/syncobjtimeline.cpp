@@ -28,13 +28,13 @@ struct sync_merge_data
 namespace KWin
 {
 
-SyncReleasePoint::SyncReleasePoint(const std::shared_ptr<SyncTimeline> &timeline, uint64_t timelinePoint)
+SyncObjReleasePoint::SyncObjReleasePoint(const std::shared_ptr<SyncTimeline> &timeline, uint64_t timelinePoint)
     : m_timeline(timeline)
     , m_timelinePoint(timelinePoint)
 {
 }
 
-SyncReleasePoint::~SyncReleasePoint()
+SyncObjReleasePoint::~SyncObjReleasePoint()
 {
     if (m_releaseFence.isValid()) {
         m_timeline->moveInto(m_timelinePoint, m_releaseFence);
@@ -43,40 +43,21 @@ SyncReleasePoint::~SyncReleasePoint()
     }
 }
 
-static FileDescriptor mergeSyncFds(const FileDescriptor &fd1, const FileDescriptor &fd2)
-{
-    struct sync_merge_data data
-    {
-        .name = "merged release fence",
-        .fd2 = fd2.get(),
-        .fence = -1,
-    };
-    int err = -1;
-    do {
-        err = ioctl(fd1.get(), SYNC_IOC_MERGE, &data);
-    } while (err == -1 && (errno == EINTR || errno == EAGAIN));
-    if (err < 0) {
-        return FileDescriptor{};
-    } else {
-        return FileDescriptor(data.fence);
-    }
-}
-
-void SyncReleasePoint::addReleaseFence(const FileDescriptor &fd)
+void SyncObjReleasePoint::addReleaseFence(const FileDescriptor &fd)
 {
     if (m_releaseFence.isValid()) {
-        m_releaseFence = mergeSyncFds(m_releaseFence, fd);
+        m_releaseFence = FileDescriptor::mergeSyncFds(m_releaseFence, fd);
     } else {
         m_releaseFence = fd.duplicate();
     }
 }
 
-SyncTimeline *SyncReleasePoint::timeline() const
+SyncTimeline *SyncObjReleasePoint::timeline() const
 {
     return m_timeline.get();
 }
 
-uint64_t SyncReleasePoint::timelinePoint() const
+uint64_t SyncObjReleasePoint::timelinePoint() const
 {
     return m_timelinePoint;
 }

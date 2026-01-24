@@ -36,9 +36,9 @@ ItemRendererOpenGL::ItemRendererOpenGL(EglDisplay *eglDisplay)
     }
 }
 
-std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffer)
+std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
-    return BufferTextureOpenGL::create(buffer);
+    return BufferTextureOpenGL::create(buffer, releasePoint);
 }
 
 std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(const QImage &image)
@@ -258,7 +258,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .hasAlpha = surfaceItem->hasAlphaChannel(),
                     .colorDescription = item->colorDescription(),
                     .renderingIntent = item->renderingIntent(),
-                    .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
+                    .bufferReleasePoint = texture->releasePoint(),
                     .paintHole = hole,
                     .hasFloatingPointColor = texture->isFloatingPoint(),
                 });

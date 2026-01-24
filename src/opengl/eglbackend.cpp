@@ -11,6 +11,7 @@
 #include "compositor.h"
 #include "core/drm_formats.h"
 #include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
 #include "core/outputbackend.h"
 #include "core/renderdevice.h"
@@ -18,6 +19,7 @@
 #include "opengl/eglimagetexture.h"
 #include "opengl/eglutils_p.h"
 #include "utils/common.h"
+#include "vulkan/vulkan_device.h"
 #include "wayland/drmclientbuffer.h"
 #include "wayland/linux_drm_syncobj_v1.h"
 #include "wayland_server.h"
@@ -36,6 +38,9 @@ static std::unique_ptr<EglContext> s_globalShareContext;
 EglBackend::EglBackend()
 {
     connect(Compositor::self(), &Compositor::aboutToDestroy, this, &EglBackend::teardown);
+
+    connect(GpuManager::s_self.get(), &GpuManager::renderDeviceAdded, this, &EglBackend::updateDmabufTranches);
+    connect(GpuManager::s_self.get(), &GpuManager::renderDeviceRemoved, this, &EglBackend::updateDmabufTranches);
 }
 
 CompositingType EglBackend::compositingType() const
@@ -156,11 +161,16 @@ void EglBackend::initWayland()
     } else {
         qCWarning(KWIN_OPENGL) << "No render node have been found, not initializing wl-drm";
     }
+    updateDmabufTranches();
+    waylandServer()->setRenderBackend(this);
+}
 
-    auto filterFormats = [this](std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
+void EglBackend::updateDmabufTranches()
+{
+    auto filterFormats = [this](RenderDevice *device, std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
         FormatModifierMap set;
-        const auto &allFormats = m_renderDevice->eglDisplay()->allSupportedDrmFormats();
-        const auto &nonExternalOnly = m_renderDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats();
+        const auto &allFormats = device->eglDisplay()->allSupportedDrmFormats();
+        const auto &nonExternalOnly = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
         for (auto it = allFormats.constBegin(); it != allFormats.constEnd(); it++) {
             const auto info = FormatInfo::get(it.key());
             if (bpc && (!info || bpc != info->bitsPerColor)) {
@@ -183,6 +193,9 @@ void EglBackend::initWayland()
             for (const auto &tranche : std::as_const(m_tranches)) {
                 if (modifiers.empty()) {
                     break;
+                }
+                if (tranche.device != device->drmDevice()->deviceId()) {
+                    continue;
                 }
                 const auto trancheModifiers = tranche.formatTable.value(it.key());
                 for (auto trancheModifier : trancheModifiers) {
@@ -207,27 +220,42 @@ void EglBackend::initWayland()
         return formats;
     };
 
+    m_tranches.clear();
+
+    // put the "main" device first, and with EGL format+modifiers
     m_tranches.append({
-        .device = m_renderDevice->eglDisplay()->renderDevNode().value_or(scanoutDevice->deviceId()),
-        .flags = {},
-        .formatTable = filterFormats(10, false),
+        .device = m_renderDevice->drmDevice()->deviceId(),
+        .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
+        .formatTable = filterFormats(m_renderDevice, 10, false),
     });
     m_tranches.append({
-        .device = m_renderDevice->eglDisplay()->renderDevNode().value_or(scanoutDevice->deviceId()),
-        .flags = {},
-        .formatTable = filterFormats(8, false),
+        .device = m_renderDevice->drmDevice()->deviceId(),
+        .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
+        .formatTable = filterFormats(m_renderDevice, 8, false),
     });
     m_tranches.append({
-        .device = m_renderDevice->eglDisplay()->renderDevNode().value_or(scanoutDevice->deviceId()),
-        .flags = {},
-        .formatTable = includeShaderConversions(filterFormats({}, true)),
+        .device = m_renderDevice->drmDevice()->deviceId(),
+        .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
+        .formatTable = includeShaderConversions(filterFormats(m_renderDevice, std::nullopt, true)),
     });
+
+    // other GPUs come afterwards in no particular order,
+    // with only Vulkan format+modifiers
+    const auto &devices = GpuManager::s_self->renderDevices();
+    for (const auto &device : devices) {
+        if (device.get() == m_renderDevice || !device->vulkanDevice()) {
+            continue;
+        }
+        m_tranches.push_back({
+            .device = device->drmDevice()->deviceId(),
+            .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
+            .formatTable = device->vulkanDevice()->supportedFormats(),
+        });
+    }
 
     LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
     dmabuf->setRenderBackend(this);
     dmabuf->setSupportedFormatsWithModifiers(m_tranches);
-
-    waylandServer()->setRenderBackend(this);
 }
 
 bool EglBackend::initClientExtensions()
@@ -294,11 +322,28 @@ std::shared_ptr<GLTexture> EglBackend::importDmaBufAsTexture(const DmaBufAttribu
     return m_context->importDmaBufAsTexture(attributes);
 }
 
-bool EglBackend::testImportBuffer(GraphicsBuffer *buffer)
+bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
 {
-    const auto nonExternalOnly = m_renderDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats();
+    RenderDevice *device = GpuManager::s_self->compatibleRenderDevice(targetDevice);
+    if (!device && m_renderDevice->drmDevice()->deviceId() == targetDevice) {
+        // Our autotests often target the primary node with dumb buffers
+        device = m_renderDevice;
+    }
+    if (!device) {
+        return false;
+    }
+
+    if (device != m_renderDevice) {
+        // buffers from secondary GPUs can only import to Vulkan
+        if (!device->vulkanDevice()) {
+            return false;
+        }
+        return device->vulkanDevice()->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT) != nullptr;
+    }
+
+    const auto nonExternalOnly = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();
     if (auto it = nonExternalOnly.find(buffer->dmabufAttributes()->format); it != nonExternalOnly.end() && it->contains(buffer->dmabufAttributes()->modifier)) {
-        return m_renderDevice->importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
+        return device->importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
     }
     // external_only buffers aren't used as a single EGLImage, import them separately
     const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
@@ -310,7 +355,7 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer)
         return false;
     }
     for (int i = 0; i < planes.size(); i++) {
-        if (!m_renderDevice->importBufferAsImage(buffer, i, planes[i].format, QSize(buffer->size().width() / planes[i].widthDivisor, buffer->size().height() / planes[i].heightDivisor))) {
+        if (!device->importBufferAsImage(buffer, i, planes[i].format, QSize(buffer->size().width() / planes[i].widthDivisor, buffer->size().height() / planes[i].heightDivisor))) {
             return false;
         }
     }
@@ -335,6 +380,11 @@ EglContext *EglBackend::openglContext() const
 std::shared_ptr<EglContext> EglBackend::openglContextRef() const
 {
     return m_context;
+}
+
+RenderDevice *EglBackend::renderDevice() const
+{
+    return m_renderDevice;
 }
 
 } // namespace KWin

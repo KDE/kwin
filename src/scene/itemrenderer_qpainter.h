@@ -24,7 +24,7 @@ public:
 
     QPainter *painter() const override;
 
-    std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer) override;
+    std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
     std::unique_ptr<Texture> createTexture(const QImage &image) override;
 
     std::unique_ptr<NinePatch> createNinePatch(const QImage &image) override;

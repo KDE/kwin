@@ -5,6 +5,7 @@
 */
 
 #include "scene/texture.h"
+#include "core/syncobjtimeline.h"
 
 namespace KWin
 {
@@ -25,6 +26,11 @@ QSize Texture::size() const
 bool Texture::isFloatingPoint() const
 {
     return m_isFloatingPoint;
+}
+
+std::shared_ptr<SyncReleasePoint> Texture::releasePoint() const
+{
+    return m_releasePoint;
 }
 
 } // namespace KWin

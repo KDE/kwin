@@ -10,9 +10,25 @@
 #include "common.h"
 
 #include <fcntl.h>
+#include <sys/ioctl.h>
 #include <sys/poll.h>
 #include <unistd.h>
 #include <utility>
+
+#if defined(Q_OS_LINUX)
+#include <linux/sync_file.h>
+#else
+struct sync_merge_data
+{
+    char name[32];
+    __s32 fd2;
+    __s32 fence;
+    __u32 flags;
+    __u32 pad;
+};
+#define SYNC_IOC_MAGIC '>'
+#define SYNC_IOC_MERGE _IOWR(SYNC_IOC_MAGIC, 3, struct sync_merge_data)
+#endif
 
 namespace KWin
 {
@@ -121,5 +137,23 @@ bool FileDescriptor::isReadable(int fd)
         .revents = 0,
     };
     return poll(&pfd, 1, 0) && (pfd.revents & (POLLIN | POLLNVAL)) != 0;
+}
+
+FileDescriptor FileDescriptor::mergeSyncFds(const FileDescriptor &one, const FileDescriptor &two)
+{
+    struct sync_merge_data data{
+        .name = "merged release fence",
+        .fd2 = two.get(),
+        .fence = -1,
+    };
+    int err = -1;
+    do {
+        err = ioctl(one.get(), SYNC_IOC_MERGE, &data);
+    } while (err == -1 && (errno == EINTR || errno == EAGAIN));
+    if (err < 0) {
+        return FileDescriptor{};
+    } else {
+        return FileDescriptor(data.fence);
+    }
 }
 }

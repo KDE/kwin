@@ -25,6 +25,7 @@ struct DmaBufAttributes
     int height = 0;
     uint32_t format = 0;
     uint64_t modifier = 0;
+    std::optional<dev_t> device;
 
     std::array<FileDescriptor, 4> fd;
     std::array<uint32_t, 4> offset{0, 0, 0, 0};
