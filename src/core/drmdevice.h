@@ -40,6 +40,7 @@ public:
      *          even if they reference different nodes (KMS vs. render)
      */
     bool equals(DrmDevice *other) const;
+    drmDevice *libdrmDevice() const;
 
     std::optional<int> busType() const;
 

@@ -58,6 +58,35 @@ RenderDevice *GpuManager::compatibleRenderDevice(DrmDevice *dev) const
     return nullptr;
 }
 
+RenderDevice *GpuManager::compatibleRenderDevice(dev_t id) const
+{
+    // TODO monitor KMS nodes on the system, and maintain a dev_t -> RenderDevice *
+    // hash map, instead of looking this stuff up every time...
+    if (RenderDevice *ret = findDevice(id)) {
+        return ret;
+    }
+    drmDevice *device = nullptr;
+    if (drmGetDeviceFromDevId(id, 0, &device) != 0) {
+        return nullptr;
+    }
+    auto matchingIt = std::ranges::find_if(m_renderDevices, [device](const auto &renderDevice) {
+        return drmDevicesEqual(device, renderDevice->drmDevice()->libdrmDevice()) == 0;
+    });
+    if (matchingIt != m_renderDevices.end()) {
+        return matchingIt->get();
+    }
+    // fallback for split display/render cases: devices with bus "platform" can be assumed to be compatible
+    if (device->bustype == DRM_BUS_PLATFORM) {
+        matchingIt = std::ranges::find_if(m_renderDevices, [](const auto &renderDevice) {
+            return renderDevice->drmDevice()->busType() == DRM_BUS_PLATFORM;
+        });
+        if (matchingIt != m_renderDevices.end()) {
+            return matchingIt->get();
+        }
+    }
+    return nullptr;
+}
+
 RenderDevice *GpuManager::findDevice(dev_t id) const
 {
     const auto it = std::ranges::find_if(m_renderDevices, [id](const auto &device) {

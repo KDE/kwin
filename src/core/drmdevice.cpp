@@ -24,7 +24,7 @@ DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_dev
     , m_id(id)
     , m_fd(std::move(fd))
     , m_gbmDevice(gbmDevice)
-    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(gbmDevice))
+    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(gbmDevice, id))
 {
     drmGetDevice2(m_fd.get(), 0, &m_libdrmDevice);
     uint64_t value = 0;
@@ -80,6 +80,11 @@ std::optional<drmPciDeviceInfo> DrmDevice::pciDeviceInfo() const
 bool DrmDevice::equals(DrmDevice *other) const
 {
     return drmDevicesEqual(m_libdrmDevice, other->m_libdrmDevice);
+}
+
+drmDevice *DrmDevice::libdrmDevice() const
+{
+    return m_libdrmDevice;
 }
 
 std::optional<int> DrmDevice::busType() const

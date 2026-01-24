@@ -33,6 +33,7 @@ public:
 
     enum class TrancheFlag : uint32_t {
         Scanout = 1,
+        Sampling = 2,
     };
     Q_DECLARE_FLAGS(TrancheFlags, TrancheFlag)
 
@@ -70,6 +71,7 @@ public:
     explicit LinuxDmaBufV1ClientBufferIntegration(Display *display);
     ~LinuxDmaBufV1ClientBufferIntegration() override;
 
+    dev_t mainDevice() const;
     RenderBackend *renderBackend() const;
     void setRenderBackend(RenderBackend *renderBackend);
 

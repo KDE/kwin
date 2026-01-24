@@ -30,6 +30,7 @@ class DrmDevice;
 class Item;
 class LogicalOutput;
 class OutputFrame;
+class EglMultiGpuSwapchain;
 
 class KWIN_EXPORT ItemEffect
 {

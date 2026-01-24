@@ -15,13 +15,13 @@
 #include "linuxdmabufv1clientbuffer.h"
 #include "utils/ramfile.h"
 
-#include "qwayland-server-linux-dmabuf-unstable-v1.h"
+#include "qwayland-server-linux-dmabuf-v1.h"
 
 #include <QDebug>
 #include <QList>
 #include <QPointer>
-
 #include <drm_fourcc.h>
+#include <optional>
 
 namespace KWin
 {
@@ -38,7 +38,7 @@ public:
     std::unique_ptr<LinuxDmaBufV1FormatTable> table;
     dev_t mainDevice;
     QPointer<RenderBackend> renderBackend;
-    FormatModifierMap supportedModifiers;
+    FormatModifierMap mainDeviceFormatModifiers;
 
 protected:
     void zwp_linux_dmabuf_v1_bind_resource(Resource *resource) override;
@@ -66,6 +66,7 @@ protected:
     void zwp_linux_buffer_params_v1_create(Resource *resource, int32_t width, int32_t height, uint32_t format, uint32_t flags) override;
     void
     zwp_linux_buffer_params_v1_create_immed(Resource *resource, uint32_t buffer_id, int32_t width, int32_t height, uint32_t format, uint32_t flags) override;
+    void zwp_linux_buffer_params_v1_set_sampling_device(Resource *resource, wl_array *device) override;
 
 private:
     bool test(Resource *resource, uint32_t width, uint32_t height);
@@ -74,6 +75,7 @@ private:
     DmaBufAttributes m_attrs;
     std::array<uint64_t, 4> m_modifiers;
     bool m_isUsed = false;
+    std::optional<dev_t> m_targetDevice;
 };
 
 class LinuxDmaBufV1ClientBuffer : public GraphicsBuffer
@@ -86,6 +88,8 @@ public:
     QSize size() const override;
     bool hasAlphaChannel() const override;
     const DmaBufAttributes *dmabufAttributes() const override;
+
+    void setDevice(dev_t deviceId);
 
     static LinuxDmaBufV1ClientBuffer *get(wl_resource *resource);
 

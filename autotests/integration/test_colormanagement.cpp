@@ -29,7 +29,7 @@
 #include <format>
 
 #include "qwayland-color-management-v1.h"
-#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
+#include "wayland-linux-dmabuf-v1-client-protocol.h"
 
 using namespace std::chrono_literals;
 

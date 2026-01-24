@@ -173,6 +173,8 @@ private:
     EglBackend *m_backend;
     SurfaceItem *m_item;
     OpenGLSurfaceContents m_texture;
+    std::unique_ptr<EglMultiGpuSwapchain> m_mgpuSwapchain;
+    std::optional<dev_t> m_dmabufDevice;
 };
 
 class KWIN_EXPORT QPainterSurfaceTexture : public SurfaceTexture

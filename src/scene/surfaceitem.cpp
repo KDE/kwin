@@ -7,10 +7,13 @@
 #include "scene/surfaceitem.h"
 #include "compositor.h"
 #include "core/drm_formats.h"
+#include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/graphicsbufferview.h"
 #include "core/pixelgrid.h"
 #include "core/renderbackend.h"
 #include "opengl/eglbackend.h"
+#include "opengl/eglmultigpuswapchain.h"
 #include "opengl/gltexture.h"
 #include "qpainter/qpainterbackend.h"
 #include "scene/scene.h"
@@ -335,6 +338,7 @@ bool OpenGLSurfaceTexture::create()
 void OpenGLSurfaceTexture::destroy()
 {
     m_texture.reset();
+    m_mgpuSwapchain.reset();
     m_bufferType = BufferType::None;
     m_size = QSize();
 }
@@ -413,6 +417,35 @@ void OpenGLSurfaceTexture::updateShmTexture(GraphicsBuffer *buffer, const Region
 
 bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
 {
+    const auto attribs = buffer->dmabufAttributes();
+    m_dmabufDevice = attribs->device;
+    // TODO ensure the field is set in all cases, then make it non-optional
+    Q_ASSERT(attribs->device);
+    RenderDevice *compat = nullptr;
+    if (attribs->device == m_backend->renderDevice()->drmDevice()->deviceId()) {
+        // special case for software rendering
+        // TODO handle that more nicely somehow, so it doesn't need to be special-cased?
+        compat = m_backend->renderDevice();
+    } else {
+        compat = GpuManager::s_self->compatibleRenderDevice(*attribs->device);
+    }
+    if (!compat) {
+        qCWarning(KWIN_OPENGL, "Couldn't find a compatible GPU for a buffer");
+        return false;
+    } else if (compat == m_backend->renderDevice()) {
+        m_mgpuSwapchain.reset();
+    } else {
+        // need to do a multi gpu copy
+        if (!m_mgpuSwapchain) {
+            m_mgpuSwapchain = std::make_unique<EglMultiGpuSwapchain>(compat, m_backend->openglContextRef());
+        }
+        // FIXME integrate the color description for YUV support!
+        buffer = m_mgpuSwapchain->importBuffer(buffer, ColorDescription::sRGB).first;
+        if (!buffer) {
+            return false;
+        }
+    }
+
     auto createTexture = [](EGLImageKHR image, const QSize &size, bool isExternalOnly) -> std::shared_ptr<GLTexture> {
         if (Q_UNLIKELY(image == EGL_NO_IMAGE_KHR)) {
             qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
@@ -434,7 +467,6 @@ bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
         return texture;
     };
 
-    const auto attribs = buffer->dmabufAttributes();
     if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
         QList<std::shared_ptr<GLTexture>> textures;
         Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
@@ -471,10 +503,16 @@ bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
 
 void OpenGLSurfaceTexture::updateDmabufTexture(GraphicsBuffer *buffer)
 {
-    if (Q_UNLIKELY(m_bufferType != BufferType::DmaBuf)) {
+    if (Q_UNLIKELY(m_bufferType != BufferType::DmaBuf)
+        || Q_UNLIKELY(m_dmabufDevice != buffer->dmabufAttributes()->device)) {
         destroy();
         create();
         return;
+    }
+
+    if (m_mgpuSwapchain) {
+        // FIXME integrate the color description for YUV support!
+        buffer = m_mgpuSwapchain->importBuffer(buffer, ColorDescription::sRGB).first;
     }
 
     const GLint target = GL_TEXTURE_2D;

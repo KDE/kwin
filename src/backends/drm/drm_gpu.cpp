@@ -1098,6 +1098,7 @@ void DrmGpu::updateRenderDevice()
     }
     // for software rendering, fall back to the primary node
     if (!m_softwareRenderDevice) {
+        qCDebug(KWIN_DRM, "Falling back to software rendering on %s", qPrintable(m_drmDevice->path()));
         m_softwareRenderDevice = RenderDevice::open(m_drmDevice->path(), m_fd);
         if (!m_softwareRenderDevice) {
             qCWarning(KWIN_DRM, "Opening render device for %s failed", qPrintable(m_drmDevice->path()));

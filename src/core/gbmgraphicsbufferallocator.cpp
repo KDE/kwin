@@ -20,7 +20,7 @@
 namespace KWin
 {
 
-static inline std::optional<DmaBufAttributes> dmaBufAttributesForBo(gbm_bo *bo)
+static inline std::optional<DmaBufAttributes> dmaBufAttributesForBo(gbm_bo *bo, dev_t deviceId)
 {
     DmaBufAttributes attributes;
     attributes.planeCount = gbm_bo_get_plane_count(bo);
@@ -28,6 +28,7 @@ static inline std::optional<DmaBufAttributes> dmaBufAttributesForBo(gbm_bo *bo)
     attributes.height = gbm_bo_get_height(bo);
     attributes.format = gbm_bo_get_format(bo);
     attributes.modifier = gbm_bo_get_modifier(bo);
+    attributes.device = deviceId;
 
 #if HAVE_GBM_BO_GET_FD_FOR_PLANE
     for (int i = 0; i < attributes.planeCount; ++i) {
@@ -106,8 +107,9 @@ private:
     bool m_hasAlphaChannel;
 };
 
-GbmGraphicsBufferAllocator::GbmGraphicsBufferAllocator(gbm_device *device)
+GbmGraphicsBufferAllocator::GbmGraphicsBufferAllocator(gbm_device *device, dev_t deviceId)
     : m_gbmDevice(device)
+    , m_deviceId(deviceId)
 {
 }
 
@@ -115,7 +117,7 @@ GbmGraphicsBufferAllocator::~GbmGraphicsBufferAllocator()
 {
 }
 
-static GraphicsBuffer *allocateDumb(gbm_device *device, const GraphicsBufferOptions &options)
+static GraphicsBuffer *allocateDumb(gbm_device *device, dev_t deviceId, const GraphicsBufferOptions &options)
 {
     if (!options.modifiers.empty()) {
         return nullptr;
@@ -142,18 +144,19 @@ static GraphicsBuffer *allocateDumb(gbm_device *device, const GraphicsBufferOpti
     }
 
     return new DumbGraphicsBuffer(gbm_device_get_fd(device), createArgs.handle, DmaBufAttributes{
-        .planeCount = 1,
-        .width = options.size.width(),
-        .height = options.size.height(),
-        .format = options.format,
-        .modifier = DRM_FORMAT_MOD_LINEAR,
-        .fd = {FileDescriptor(primeFd), FileDescriptor{}, FileDescriptor{}, FileDescriptor{}},
-        .offset = {0, 0, 0, 0},
-        .pitch = {createArgs.pitch, 0, 0, 0},
-    });
+                                                                                    .planeCount = 1,
+                                                                                    .width = options.size.width(),
+                                                                                    .height = options.size.height(),
+                                                                                    .format = options.format,
+                                                                                    .modifier = DRM_FORMAT_MOD_LINEAR,
+                                                                                    .device = deviceId,
+                                                                                    .fd = {FileDescriptor(primeFd), FileDescriptor{}, FileDescriptor{}, FileDescriptor{}},
+                                                                                    .offset = {0, 0, 0, 0},
+                                                                                    .pitch = {createArgs.pitch, 0, 0, 0},
+                                                                                });
 }
 
-static GraphicsBuffer *allocateDmaBuf(gbm_device *device, const GraphicsBufferOptions &options)
+static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const GraphicsBufferOptions &options)
 {
     if (!options.modifiers.empty() && !(options.modifiers.size() == 1 && *options.modifiers.begin() == DRM_FORMAT_MOD_INVALID)) {
         gbm_bo *bo = gbm_bo_create_with_modifiers(device,
@@ -163,7 +166,7 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, const GraphicsBufferOp
                                                   &*options.modifiers.begin(),
                                                   options.modifiers.size());
         if (bo) {
-            std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
+            std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo, deviceId);
             if (!attributes.has_value()) {
                 gbm_bo_destroy(bo);
                 return nullptr;
@@ -185,7 +188,7 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, const GraphicsBufferOp
                                options.format,
                                flags);
     if (bo) {
-        std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo);
+        std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo, deviceId);
         if (!attributes.has_value()) {
             gbm_bo_destroy(bo);
             return nullptr;
@@ -204,10 +207,10 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, const GraphicsBufferOp
 GraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
     if (options.software) {
-        return allocateDumb(m_gbmDevice, options);
+        return allocateDumb(m_gbmDevice, m_deviceId, options);
     }
 
-    return allocateDmaBuf(m_gbmDevice, options);
+    return allocateDmaBuf(m_gbmDevice, m_deviceId, options);
 }
 
 GbmGraphicsBuffer::GbmGraphicsBuffer(DmaBufAttributes attributes, gbm_bo *handle)

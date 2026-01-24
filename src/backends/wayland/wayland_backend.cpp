@@ -39,7 +39,7 @@
 #include <unistd.h>
 #include <wayland-client-core.h>
 
-#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
+#include "wayland-linux-dmabuf-v1-client-protocol.h"
 
 namespace KWin
 {

@@ -9,6 +9,7 @@
 #include "drm_egl_layer.h"
 #include "core/colorpipeline.h"
 #include "core/iccprofile.h"
+#include "core/renderdevice.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_crtc.h"
@@ -97,14 +98,13 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
         // it's likely not worth making this code more complicated to handle those edge cases
         return false;
     }
-    if (gpu() != gpu()->platform()->primaryGpu()) {
+    if (buffer->dmabufAttributes()->device != gpu()->drmDevice()->deviceId()
+        && buffer->dmabufAttributes()->device != gpu()->renderDevice()->drmDevice()->deviceId()) {
         // Disable direct scanout between GPUs, as
         // - there are some significant driver bugs with direct scanout from other GPUs,
         //   like https://gitlab.freedesktop.org/drm/amd/-/issues/2075
         // - with implicit modifiers, direct scanout on secondary GPUs
         //   is also very unlikely to yield the correct results.
-        // TODO once we know what buffer a GPU is meant for, loosen this check again
-        // Right now this just assumes all buffers are on the primary GPU
         return false;
     }
     if (!m_colorPipeline.isIdentity() && drmOutput()->colorPowerTradeoff() == BackendOutput::ColorPowerTradeoff::PreferAccuracy) {

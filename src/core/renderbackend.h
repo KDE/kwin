@@ -25,6 +25,7 @@ class PresentationFeedback;
 class RenderLoop;
 class DrmDevice;
 class SyncTimeline;
+class RenderDevice;
 
 class PresentationFeedback
 {
@@ -128,8 +129,9 @@ public:
     virtual QList<OutputLayer *> compatibleOutputLayers(BackendOutput *output) = 0;
 
     virtual DrmDevice *drmDevice() const;
+    virtual RenderDevice *renderDevice() const;
 
-    virtual bool testImportBuffer(GraphicsBuffer *buffer);
+    virtual bool testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice);
     virtual FormatModifierMap supportedFormats() const;
 };
 

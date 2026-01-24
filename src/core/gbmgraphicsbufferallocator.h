@@ -16,13 +16,14 @@ namespace KWin
 class KWIN_EXPORT GbmGraphicsBufferAllocator : public GraphicsBufferAllocator
 {
 public:
-    explicit GbmGraphicsBufferAllocator(gbm_device *device);
+    explicit GbmGraphicsBufferAllocator(gbm_device *device, dev_t deviceId);
     ~GbmGraphicsBufferAllocator() override;
 
     GraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
 
 private:
-    gbm_device *m_gbmDevice;
+    gbm_device *const m_gbmDevice;
+    const dev_t m_deviceId;
 };
 
 } // namespace KWin

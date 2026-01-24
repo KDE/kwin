@@ -30,6 +30,7 @@ public:
 
     const std::vector<std::unique_ptr<RenderDevice>> &renderDevices() const;
     RenderDevice *compatibleRenderDevice(DrmDevice *dev) const;
+    RenderDevice *compatibleRenderDevice(dev_t id) const;
     RenderDevice *findDevice(dev_t id) const;
 
     /**
