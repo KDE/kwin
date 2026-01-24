@@ -165,7 +165,11 @@ bool DrmBackend::initialize()
             if (desktopOutputs1 != desktopOutputs2) {
                 return desktopOutputs1 > desktopOutputs2;
             }
-            return gpu1->drmOutputs().size() > gpu2->drmOutputs().size();
+            if (gpu1->drmOutputs().size() != gpu2->drmOutputs().size()) {
+                return gpu1->drmOutputs().size() > gpu2->drmOutputs().size();
+            }
+            // GPUs with render nodes are much less likely to require software rendering
+            return gpu1->hasRenderNode();
         });
         qCDebug(KWIN_DRM) << "chose" << m_gpus.front()->drmDevice()->path() << "as the primary GPU";
     }
