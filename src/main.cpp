@@ -15,6 +15,7 @@
 #include "atoms.h"
 #endif
 #include "compositor.h"
+#include "core/gpumanager.h"
 #include "core/outputbackend.h"
 #include "core/rendertarget.h"
 #include "core/session.h"
@@ -93,6 +94,7 @@ Application::Application(int &argc, char **argv)
     qRegisterMetaType<KWin::SurfaceInterface *>("KWin::SurfaceInterface *");
     qRegisterMetaType<KSharedConfigPtr>();
     qRegisterMetaType<std::chrono::nanoseconds>();
+    GpuManager::s_self = std::make_unique<GpuManager>();
 }
 
 void Application::setConfigLock(bool lock)
@@ -131,6 +133,7 @@ Application::~Application()
     delete options;
     destroyAtoms();
     destroyPlatform();
+    GpuManager::s_self.reset();
     m_session.reset();
 }
 

@@ -44,6 +44,7 @@ target_sources(kwin PRIVATE
     core/drm_formats.cpp
     core/drmdevice.cpp
     core/gbmgraphicsbufferallocator.cpp
+    core/gpumanager.cpp
     core/graphicsbuffer.cpp
     core/graphicsbufferallocator.cpp
     core/graphicsbufferview.cpp
@@ -544,6 +545,7 @@ install(FILES
     core/drm_formats.h
     core/drmdevice.h
     core/gbmgraphicsbufferallocator.h
+    core/gpumanager.h
     core/graphicsbuffer.h
     core/graphicsbufferallocator.h
     core/graphicsbufferview.h

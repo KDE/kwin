@@ -10,6 +10,7 @@
 #include "wayland_backend.h"
 #include "compositor.h"
 #include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/renderdevice.h"
 #include "input.h"
 #include "wayland-client/linuxdmabuf.h"
@@ -438,7 +439,10 @@ bool WaylandBackend::initialize()
     }
 
     if (WaylandClient::LinuxDmabufV1 *dmabuf = m_display->linuxDmabuf()) {
-        m_renderDevice = RenderDevice::open(dmabuf->mainDevice());
+        auto device = DrmDevice::open(dmabuf->mainDevice());
+        if (device) {
+            m_renderDevice = GpuManager::s_self->compatibleRenderDevice(device.get());
+        }
     }
 
     createOutputs();
@@ -681,7 +685,7 @@ DrmDevice *WaylandBackend::drmDevice() const
 
 RenderDevice *WaylandBackend::renderDevice() const
 {
-    return m_renderDevice.get();
+    return m_renderDevice;
 }
 
 WaylandBuffer::WaylandBuffer(wl_buffer *handle, GraphicsBuffer *graphicsBuffer)

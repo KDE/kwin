@@ -39,7 +39,7 @@ public:
 
     enum class Match {
         SubSystem,
-        SysName
+        SysName,
     };
     void addMatch(Match match, const char *name);
     void scan();
@@ -150,6 +150,24 @@ std::vector<std::unique_ptr<UdevDevice>> Udev::listGPUs()
 #endif
 }
 
+std::vector<std::unique_ptr<UdevDevice>> Udev::listRenderNodes()
+{
+    if (!m_udev) {
+        return {};
+    }
+#if defined(Q_OS_FREEBSD)
+    std::vector<std::unique_ptr<UdevDevice>> r;
+    r.push_back(deviceFromSyspath("/dev/dri/renderD128"));
+    return r;
+#else
+    UdevEnumerate enumerate(this);
+    enumerate.addMatch(UdevEnumerate::Match::SubSystem, "drm");
+    enumerate.addMatch(UdevEnumerate::Match::SysName, "renderD[1-2][0-9][0-9]");
+    enumerate.scan();
+    return enumerate.find();
+#endif
+}
+
 std::unique_ptr<UdevDevice> Udev::deviceFromSyspath(const char *syspath)
 {
     auto dev = udev_device_new_from_syspath(m_udev, syspath);
@@ -160,7 +178,7 @@ std::unique_ptr<UdevDevice> Udev::deviceFromSyspath(const char *syspath)
     return std::make_unique<UdevDevice>(dev);
 }
 
-std::unique_ptr<UdevMonitor> Udev::monitor()
+std::unique_ptr<UdevMonitor> Udev::createMonitor()
 {
     auto m = std::make_unique<UdevMonitor>(this);
     if (m->isValid()) {
