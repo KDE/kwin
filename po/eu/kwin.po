@@ -1,28 +1,28 @@
 # Translation for kwin.po to Euskara/Basque (eu).
-# Copyright (C) 2002-2025 This file is copyright:
+# Copyright (C) 2002-2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# SPDX-FileCopyrightText: 2023, 2024, 2025 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
+# SPDX-FileCopyrightText: 2023, 2024, 2025, 2026 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
 #
 # Translators:
 # Iñaki Ibarrola Atxa <etxaurre@teleline.es>, 2002.
 # Marcos  <marcos@euskalgnu.org>, 2002, 2003, 2005, 2006, 2007.
 # Juan Irigoien <juanirigoien@yahoo.es>, 2004.
 # Ion Gaztañaga <igaztanaga@gmail.com>, 2005.
-# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2008, 2009, 2010, 2011, 2014, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2008, 2009, 2010, 2011, 2014, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026.
 # Hizkuntza Politikarako Sailburuordetza <hizpol@ej-gv.es>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-24 00:44+0000\n"
-"PO-Revision-Date: 2025-12-11 17:56+0100\n"
+"PO-Revision-Date: 2026-01-24 17:28+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.08.3\n"
+"X-Generator: Lokalize 25.12.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, kde-format
@@ -4176,21 +4176,19 @@ msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Ezin da zero Hz-ko freskatze-tasa duen neurriko modu bat gehitu"
 
 #: wayland/outputmanagement_v2.cpp:646
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %s is way too negative (%d, %d)"
-msgstr "Irteera %s(e)ren kokapena handiegia da (%d, %d)"
+msgstr "%s irteeraren kokapena negatiboegia da (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:649
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %s is negative (%d, %d)"
-msgstr "Irteera %s(e)ren kokapena handiegia da (%d, %d)"
+msgstr "Gaitutako %s irteeraren kokapena negatiboa da (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr "Irteera %s(e)ren kokapena handiegia da (%d, %d)"
+msgstr "%s irteeren kokapena handiegia da (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:670
 #, kde-format

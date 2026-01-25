@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-24 00:44+0000\n"
-"PO-Revision-Date: 2025-12-11 05:14+0100\n"
+"PO-Revision-Date: 2026-01-24 04:25+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -4157,16 +4157,14 @@ msgstr ""
 "0 ჰერცი განახლების სიხშირის მქონე მორგებული რეჟიმის დამატება შეუძლებელია"
 
 #: wayland/outputmanagement_v2.cpp:646
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %s is way too negative (%d, %d)"
-msgstr "%s-ის გამოტანის მდებარეობა მეტისმეტად დიდია (%d, %d)"
+msgstr "%s-ის გამოტანის მდებარეობა მეტისმეტად უარყოფითია (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:649
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %s is negative (%d, %d)"
-msgstr "%s-ის გამოტანის მდებარეობა მეტისმეტად დიდია (%d, %d)"
+msgstr "%s-ის ჩართული გამოტანის მდებარეობა მეტისმეტად უარყოფითია (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:653
 #, kde-format
