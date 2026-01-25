@@ -16,6 +16,7 @@
 #include "options.h"
 #include "rules.h"
 #include "scene/borderradius.h"
+#include "useractionprompt.h"
 #include "utils/common.h"
 #include "utils/gravity.h"
 
@@ -1408,6 +1409,9 @@ public:
     bool excludeFromCapture() const;
     void setExcludeFromCapture(bool newExcludeFromCapture);
 
+    void showUserActionPrompt(UserActionPrompt::Prompt prompt);
+    void hideUserActionPrompt(UserActionPrompt::Prompt prompt);
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1932,6 +1936,8 @@ protected:
     QString m_description;
 
     QString m_activationToken;
+
+    std::unique_ptr<UserActionPrompt> m_userActionPrompt;
 };
 
 inline RectF Window::bufferGeometry() const

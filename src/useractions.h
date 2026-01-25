@@ -158,12 +158,6 @@ private:
      */
     void initActivityPopup();
     /**
-     * Shows a helper Dialog to inform the user how to get back in case he triggered
-     * an action which hides the window decoration (e.g. NoBorder or Fullscreen).
-     * @param message The message type to be shown
-     */
-    void helperDialog(const QString &message);
-    /**
      * Set the global action shortcut on the action for displaying it on the menu.
      * @param action The action to add the shortcut to
      * @param actionName The global action name to read the action from
