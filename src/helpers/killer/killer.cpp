@@ -7,6 +7,8 @@
 
 */
 
+#include "config-kwin.h"
+
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -123,7 +125,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName(QStringLiteral("kwin_killer_helper"));
     QCoreApplication::setOrganizationDomain(QStringLiteral("kde.org"));
     QApplication::setApplicationDisplayName(i18n("Window Manager"));
-    QCoreApplication::setApplicationVersion(QStringLiteral("1.0"));
+    QCoreApplication::setApplicationVersion(KWIN_VERSION_STRING);
     QApplication::setDesktopFileName(QStringLiteral("org.kde.kwin.killer"));
 
     QCommandLineOption pidOption(QStringLiteral("pid"),

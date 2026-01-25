@@ -4,6 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
+#include "config-kwin.h"
+
 #include "kwindecorationsettings.h"
 
 #include "decorationmodel.h"
@@ -23,7 +25,7 @@ int main(int argc, char **argv)
     QCoreApplication app(argc, argv);
     int exitCode{0};
     QCoreApplication::setApplicationName(QStringLiteral("kwin-applywindowdecoration"));
-    QCoreApplication::setApplicationVersion(QStringLiteral("1.0"));
+    QCoreApplication::setApplicationVersion(KWIN_VERSION_STRING);
     QCoreApplication::setOrganizationDomain(QStringLiteral("kde.org"));
     KLocalizedString::setApplicationDomain(QByteArrayLiteral("kwin-applywindowdecoration"));
 
