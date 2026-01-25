@@ -24,10 +24,11 @@
 #include "kwintouchscreendata.h"
 #include "kwintouchscreenedgeconfigform.h"
 #include "kwintouchscreenedgeeffectsettings.h"
+#include "kwintouchscreenmoduledata.h"
 #include "kwintouchscreenscriptsettings.h"
 #include "kwintouchscreensettings.h"
 
-K_PLUGIN_FACTORY_WITH_JSON(KWinScreenEdgesConfigFactory, "kcm_kwintouchscreen.json", registerPlugin<KWin::KWinScreenEdgesConfig>(); registerPlugin<KWin::KWinTouchScreenData>();)
+K_PLUGIN_FACTORY_WITH_JSON(KWinScreenEdgesConfigFactory, "kcm_kwintouchscreen.json", registerPlugin<KWin::KWinScreenEdgesConfig>(); registerPlugin<KWin::KWinTouchScreenModuleData>();)
 
 namespace KWin
 {
