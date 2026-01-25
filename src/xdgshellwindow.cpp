@@ -1743,6 +1743,8 @@ void XdgToplevelWindow::setFullScreen(bool set)
             // so let the client set the size by itself
             moveResize(RectF(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
         }
+
+        hideUserActionPrompt(UserActionPrompt::Prompt::FullScreen);
     }
 
     markAsPlaced();

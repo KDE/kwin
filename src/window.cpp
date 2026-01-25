@@ -101,6 +101,9 @@ Window::Window()
 
 Window::~Window()
 {
+    if (m_userActionPrompt) {
+        m_userActionPrompt->quit();
+    }
 }
 
 void Window::ref()
@@ -4348,6 +4351,7 @@ void Window::setNoBorder(bool set)
         setDecorationPolicy(DecorationPolicy::None);
     } else {
         setDecorationPolicy(DecorationPolicy::PreferredByClient);
+        hideUserActionPrompt(UserActionPrompt::Prompt::NoBorder);
     }
 }
 
@@ -4729,6 +4733,37 @@ void Window::setExcludeFromCapture(bool newExcludeFromCapture)
     }
 
     Q_EMIT excludeFromCaptureChanged();
+}
+
+void Window::showUserActionPrompt(UserActionPrompt::Prompt prompt)
+{
+    if (m_userActionPrompt && m_userActionPrompt->prompt() == prompt) {
+        return;
+    }
+
+    m_userActionPrompt = std::make_unique<UserActionPrompt>(this, prompt);
+    connect(m_userActionPrompt.get(), &UserActionPrompt::undoRequested, this, [this, prompt] {
+        switch (prompt) {
+        case UserActionPrompt::Prompt::NoBorder:
+            setNoBorder(false);
+            break;
+        case UserActionPrompt::Prompt::FullScreen:
+            setFullScreen(false);
+            break;
+        }
+    });
+
+    connect(m_userActionPrompt.get(), &UserActionPrompt::finished, this, [this] {
+        m_userActionPrompt.reset();
+    });
+    m_userActionPrompt->start();
+}
+
+void Window::hideUserActionPrompt(UserActionPrompt::Prompt prompt)
+{
+    if (m_userActionPrompt && m_userActionPrompt->prompt() == prompt) {
+        m_userActionPrompt->quit();
+    }
 }
 
 } // namespace KWin

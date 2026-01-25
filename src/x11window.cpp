@@ -3887,6 +3887,10 @@ void X11Window::setFullScreen(bool set)
     updateWindowRules(Rules::Fullscreen | Rules::Position | Rules::Size);
     updateAllowedActions(false);
     Q_EMIT fullScreenChanged();
+
+    if (!set) {
+        hideUserActionPrompt(UserActionPrompt::Prompt::FullScreen);
+    }
 }
 
 void X11Window::updateFullscreenMonitors(NETFullscreenMonitors topology)

@@ -1,4 +1,5 @@
 set(KWIN_KILLER_BIN ${CMAKE_INSTALL_FULL_LIBEXECDIR}/kwin_killer_helper)
+set(KWIN_DIALOG_BIN ${CMAKE_INSTALL_FULL_LIBEXECDIR}/kwin_dialog_helper)
 
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h)
 
@@ -200,6 +201,7 @@ target_sources(kwin PRIVATE
     tiles/tile.cpp
     tiles/tilemanager.cpp
     touch_input.cpp
+    useractionprompt.cpp
     useractions.cpp
     utils/svgcursorreader.cpp
     utils/version.cpp
