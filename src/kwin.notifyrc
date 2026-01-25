@@ -285,3 +285,8 @@ Comment[vi]=Xwayland gặp sự cố
 Comment[zh_CN]=Xwayland 已经崩溃
 Comment[zh_TW]=Xwayland 已崩潰
 Action=Popup
+
+[Event/brokentabbox]
+Name=Window Switcher Broken
+Comment=The Window Switcher installation is broken
+Action=Popup

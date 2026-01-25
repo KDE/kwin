@@ -30,7 +30,9 @@
 #include <KLocalizedString>
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
-#include <KProcess>
+#if KWIN_BUILD_NOTIFICATIONS
+#include <KNotification>
+#endif
 
 namespace KWin
 {
@@ -186,11 +188,10 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem()
     m_qmlComponent->loadUrl(QUrl::fromLocalFile(file));
     if (m_qmlComponent->isError()) {
         qCWarning(KWIN_TABBOX) << "Component failed to load: " << m_qmlComponent->errors();
-        QStringList args;
-        args << QStringLiteral("--passivepopup") << i18n("The Window Switcher installation is broken, resources are missing.\n"
-                                                         "Contact your distribution about this.")
-             << QStringLiteral("20");
-        KProcess::startDetached(QStringLiteral("kdialog"), args);
+#if KWIN_BUILD_NOTIFICATIONS
+        KNotification::event(QStringLiteral("brokentabbox"), i18n("The Window Switcher installation is broken, resources are missing.\n"
+                                                                  "Contact your distribution about this."));
+#endif
         m_qmlComponent.reset(nullptr);
     } else {
         QObject *object = m_qmlComponent->create(m_qmlContext.get());
