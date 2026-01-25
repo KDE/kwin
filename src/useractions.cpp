@@ -45,10 +45,9 @@
 #endif
 #include "appmenu.h"
 
-#include <KProcess>
-
 #include <QAction>
 #include <QCheckBox>
+#include <QFileInfo>
 #include <QPushButton>
 #include <QWindow>
 
@@ -148,50 +147,58 @@ void UserActionsMenu::grabInput()
     m_menu->windowHandle()->setKeyboardGrabEnabled(true);
 }
 
-void UserActionsMenu::helperDialog(const QString &message)
-{
-    QStringList args;
-    QString type;
-    auto shortcut = [](const QString &name) {
-        QAction *action = Workspace::self()->findChild<QAction *>(name);
-        Q_ASSERT(action != nullptr);
-        const auto shortcuts = KGlobalAccel::self()->shortcut(action);
-        return QStringLiteral("%1").arg(shortcuts.isEmpty() ? QString() : shortcuts.first().toString(QKeySequence::NativeText));
-    };
-    if (message == QLatin1StringView("noborderaltf3")) {
-        args << QStringLiteral("--msgbox") << i18n("You have selected to show a window without its border.\n"
-                                                   "Without the border, you will not be able to enable the border "
-                                                   "again using the mouse: use the window menu instead, "
-                                                   "activated using the %1 keyboard shortcut.",
-                                                   shortcut(QStringLiteral("Window Operations Menu")));
-        type = QStringLiteral("altf3warning");
-    } else if (message == QLatin1StringView("fullscreenaltf3")) {
-        args << QStringLiteral("--msgbox") << i18n("You have selected to show a window in fullscreen mode.\n"
-                                                   "If the application itself does not have an option to turn the fullscreen "
-                                                   "mode off you will not be able to disable it "
-                                                   "again using the mouse: use the window menu instead, "
-                                                   "activated using the %1 keyboard shortcut.",
-                                                   shortcut(QStringLiteral("Window Operations Menu")));
-        type = QStringLiteral("altf3warning");
-    } else {
-        Q_UNREACHABLE();
-    }
-    if (!type.isEmpty()) {
-        KConfig cfg(QStringLiteral("kwin_dialogsrc"));
-        KConfigGroup cg(&cfg, QStringLiteral("Notification Messages")); // Depends on KMessageBox
-        if (!cg.readEntry(type, true)) {
-            return;
-        }
-        args << QStringLiteral("--dontagain") << QLatin1StringView("kwin_dialogsrc:") + type;
-    }
-    KProcess::startDetached(QStringLiteral("kdialog"), args);
-}
-
 void UserActionsMenu::setShortcut(QAction *action, const QString &actionName)
 {
     const auto shortcuts = KGlobalAccel::self()->shortcut(Workspace::self()->findChild<QAction *>(actionName));
     if (!shortcuts.isEmpty()) {
         action->setShortcut(shortcuts.first());
+    }
+}
+
+void UserActionsMenu::showUserActionPrompt(Window *window, UserActionPrompt::Prompt prompt)
+{
+    auto *dialog = window->findChild<UserActionPrompt *>();
+    if (dialog && dialog->prompt() == prompt) {
+        return;
+    }
+
+    if (dialog) {
+        dialog->quit();
+    }
+
+    dialog = new UserActionPrompt(window, prompt, window);
+
+    switch (prompt) {
+    case UserActionPrompt::Prompt::NoBorder:
+        connect(dialog, &UserActionPrompt::undoRequested, window, [window] {
+            window->setNoBorder(false);
+        });
+        connect(window, &Window::decorationPolicyChanged, dialog, [window, dialog] {
+            if (!window->noBorder()) {
+                dialog->quit();
+            }
+        });
+        break;
+    case UserActionPrompt::Prompt::FullScreen:
+        connect(dialog, &UserActionPrompt::undoRequested, window, [window] {
+            window->setFullScreen(false);
+        });
+        connect(window, &Window::fullScreenChanged, dialog, [window, dialog] {
+            if (!window->isFullScreen()) {
+                dialog->quit();
+            }
+        });
+        break;
+    }
+
+    connect(dialog, &UserActionPrompt::finished, dialog, &QObject::deleteLater);
+    dialog->start();
+}
+
+void UserActionsMenu::hideUserActionPrompt(Window *window)
+{
+    if (auto *dialog = window->findChild<UserActionPrompt *>()) {
+        dialog->quit();
     }
 }
 
@@ -645,24 +652,26 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     if (c.isNull()) {
         return;
     }
-    QString type;
+
     switch (op) {
     case Options::FullScreenOp:
-        if (!c->isFullScreen() && c->isFullScreenable()) {
-            type = QStringLiteral("fullscreenaltf3");
+        if (c->isFullScreen()) {
+            hideUserActionPrompt(c);
+        } else if (c->isFullScreenable()) {
+            showUserActionPrompt(c, UserActionPrompt::Prompt::FullScreen);
         }
         break;
     case Options::NoBorderOp:
-        if (!c->noBorder() && c->userCanSetNoBorder()) {
-            type = QStringLiteral("noborderaltf3");
+        if (c->noBorder()) {
+            hideUserActionPrompt(c);
+        } else if (c->userCanSetNoBorder()) {
+            showUserActionPrompt(c, UserActionPrompt::Prompt::NoBorder);
         }
         break;
     default:
         break;
     }
-    if (!type.isEmpty()) {
-        helperDialog(type);
-    }
+
     // need to delay performing the window operation as we need to have the
     // window menu closed before we destroy the decoration. Otherwise Qt crashes
     QMetaObject::invokeMethod(

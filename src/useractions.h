@@ -10,6 +10,7 @@
 #include "ui_shortcutdialog.h"
 
 #include "effect/globals.h"
+#include "useractionprompt.h"
 
 // Qt
 #include <QDialog>
@@ -158,17 +159,24 @@ private:
      */
     void initActivityPopup();
     /**
-     * Shows a helper Dialog to inform the user how to get back in case he triggered
-     * an action which hides the window decoration (e.g. NoBorder or Fullscreen).
-     * @param message The message type to be shown
-     */
-    void helperDialog(const QString &message);
-    /**
      * Set the global action shortcut on the action for displaying it on the menu.
      * @param action The action to add the shortcut to
      * @param actionName The global action name to read the action from
      */
     void setShortcut(QAction *action, const QString &actionName);
+
+    /**
+     * Show a feedback dialog for a window and given action
+     * @param window The window to attach the dialog to
+     * @param prompt The prompt to sohw
+     */
+    void showUserActionPrompt(Window *window, UserActionPrompt::Prompt prompt);
+    /**
+     * Hide the feedback dialog for a given window
+     * @param window The window a dialog might be attached to
+     */
+    void hideUserActionPrompt(Window *window);
+
     /**
      * The actual main context menu which is show when the UserActionsMenu is invoked.
      */

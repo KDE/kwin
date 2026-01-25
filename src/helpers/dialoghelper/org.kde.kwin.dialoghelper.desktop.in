@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 Kai Uwe Broulik <kde@broulik.de>
+# SPDX-License-Identifier: CC0-1.0
+
+[Desktop Entry]
+Type=Application
+Name=KWin Dialog Helper
+Comment=Provides feedback about user actions
+Exec=@KWIN_DIALOGHELPER_BIN@
+Terminal=false
+NoDisplay=true
+Icon=dialog-information
+StartupNotify=false

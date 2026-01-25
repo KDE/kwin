@@ -17,6 +17,7 @@ constexpr QLatin1StringView KWIN_CONFIG("kwinrc");
 constexpr QLatin1StringView KWIN_VERSION_STRING("${PROJECT_VERSION}");
 constexpr QLatin1StringView XCB_VERSION_STRING("${XCB_VERSION}");
 constexpr QLatin1StringView KWIN_KILLER_BIN("${KWIN_KILLER_BIN}");
+constexpr QLatin1StringView KWIN_DIALOG_BIN("${KWIN_DIALOG_BIN}");
 constexpr QLatin1StringView LIBEXEC_DIR("${CMAKE_INSTALL_FULL_LIBEXECDIR}");
 #cmakedefine01 HAVE_X11_XCB
 #cmakedefine01 HAVE_X11_XINPUT
