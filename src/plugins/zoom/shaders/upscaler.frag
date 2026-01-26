@@ -34,21 +34,21 @@ in vec2 texcoord0;
 out vec4 fragColor;
 
 #define INTENSITY_WEIGHT 1.0
-#define COLOR_SIMULARITY_TOLERANCE 30.0/255.0
+#define COLOR_SIMULARITY_TOLERANCE 0.1127
 #define DOMINANT_DIRECTION_THRESHOLD 3.6
 
 /* compute distance between two colors, in ICtCp space, with more weight given to intensity */
 float colorDistance(vec3 a, vec3 b) {
-    vec3 lmsA = (destinationToLMS * vec4(a, 1.0)).rgb;
-    vec3 lmsB = (destinationToLMS * vec4(b, 1.0)).rgb;
-    vec3 lmsA_PQ = linearToPq(lmsA / 10000.0);
-    vec3 lmsB_PQ = linearToPq(lmsB / 10000.0);
+    vec3 lmsA = (destinationToLMS * vec4(a / sourceReferenceLuminance, 1.0)).rgb;
+    vec3 lmsB = (destinationToLMS * vec4(b / sourceReferenceLuminance, 1.0)).rgb;
+    vec3 lmsA_PQ = linearToPq(lmsA);
+    vec3 lmsB_PQ = linearToPq(lmsB);
     vec3 ICtCpA = toICtCp * lmsA_PQ;
     vec3 ICtCpB = toICtCp * lmsB_PQ;
 
     vec3 diff = ICtCpA - ICtCpB;
 
-    float i = (diff.x / sourceReferenceLuminance) * INTENSITY_WEIGHT;
+    float i = (diff.x) * INTENSITY_WEIGHT;
     float ct = diff.y;
     float cp = diff.z;
 
