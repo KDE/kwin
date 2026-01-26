@@ -1,7 +1,7 @@
 # translation of kcmkwindecoration.po to
 # Translation of kcmkwindecoration.po to Slovenian
 # SLOVENIAN TRANSLATION OF K DESKTOP ENVIRONMENT.
-# $Id: kcm_kwindecoration.po 1727692 2026-01-15 01:26:00Z scripty $
+# $Id: kcm_kwindecoration.po 1728488 2026-01-26 01:26:13Z scripty $
 # $Source$
 #
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-14 00:45+0000\n"
+"POT-Creation-Date: 2026-01-26 00:44+0000\n"
 "PO-Revision-Date: 2026-01-14 07:30+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -88,7 +88,7 @@ msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "Privzete vrednosti teme (%1)"
 
-#: kwin-applywindowdecoration.cpp:32
+#: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "This tool allows you to set the window decoration theme for the currently "
@@ -99,7 +99,7 @@ msgstr ""
 "seje, ne da bi jo pomotoma nastavili na tisto, ki bodisi ni na voljo ali ki "
 "je že nastavljena."
 
-#: kwin-applywindowdecoration.cpp:33
+#: kwin-applywindowdecoration.cpp:35
 #, kde-format
 msgid ""
 "The name of the window decoration theme you wish to set for KWin. Passing a "
@@ -110,13 +110,13 @@ msgstr ""
 "celotne poti bo poskušala najti temo v tem imeniku in jo nato uporabiti, če "
 "jo je mogoče razbrati."
 
-#: kwin-applywindowdecoration.cpp:34
+#: kwin-applywindowdecoration.cpp:36
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr "Pokaži vse teme, ki so na voljo v sistemu (in katera je trenutna tema)"
 
-#: kwin-applywindowdecoration.cpp:65
+#: kwin-applywindowdecoration.cpp:67
 #, kde-format
 msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
@@ -125,7 +125,7 @@ msgstr ""
 "Razrešena %1 na temo KWin Aurorae \"%2\" in jo bomo poskusili nastaviti kot "
 "vašo trenutno temo."
 
-#: kwin-applywindowdecoration.cpp:71
+#: kwin-applywindowdecoration.cpp:73
 #, kde-format
 msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
@@ -135,19 +135,19 @@ msgstr ""
 "razrešiti kot datotekoteme in bomo morali postopek prekiniti, ker nimamo "
 "teme, ki bi jo nastavili"
 
-#: kwin-applywindowdecoration.cpp:77
+#: kwin-applywindowdecoration.cpp:79
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr "Zahtevana tema \"%1\" je že nastavljena kot tema za dekoracijo oken."
 
-#: kwin-applywindowdecoration.cpp:99
+#: kwin-applywindowdecoration.cpp:101
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr ""
 "Tema kazalke %1 je bila uspešno uveljavljena za vašo trenutno sejo Plasme"
 
-#: kwin-applywindowdecoration.cpp:103
+#: kwin-applywindowdecoration.cpp:105
 #, kde-format
 msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
@@ -156,7 +156,7 @@ msgstr ""
 "Nastavitev teme ni bilo mogoče shraniti - razlog ni znan, vendar je to bila "
 "nepopravljiva napaka. Morda boste ugotovili, da bi nov poskus kar deloval."
 
-#: kwin-applywindowdecoration.cpp:107
+#: kwin-applywindowdecoration.cpp:109
 #, kde-format
 msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
@@ -165,7 +165,7 @@ msgstr ""
 "Teme \"%1\" ni bilo mogoče najti. Tema bi morala biti ena od naslednjih "
 "možnosti: %2"
 
-#: kwin-applywindowdecoration.cpp:112
+#: kwin-applywindowdecoration.cpp:114
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "V sistemu imate naslednje teme okrasitev oken KWin:"

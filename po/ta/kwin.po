@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-24 00:44+0000\n"
+"POT-Creation-Date: 2026-01-26 00:44+0000\n"
 "PO-Revision-Date: 2026-01-04 17:13+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -1253,83 +1253,83 @@ msgstr "பிடிப்புப்பலகை"
 msgid "Primary Selection"
 msgstr "முதன்மையான தேர்வு"
 
-#: helpers/killer/killer.cpp:125
+#: helpers/killer/killer.cpp:127
 #, kde-format
 msgid "Window Manager"
 msgstr "சாளர மேலாளர்"
 
-#: helpers/killer/killer.cpp:130
+#: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "நிறுத்த வேண்டிய செயலியின் பணி எண் (PID)"
 
-#: helpers/killer/killer.cpp:130
+#: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "pid"
 msgstr "பணியெண்"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "செயலி இயங்கும் கணினியின் புரவன் பெயர்"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "hostname"
 msgstr "புரவன்பெயர்"
 
 # Caption = title?
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "நிறுத்த வேண்டிய சாளரத்தின் தலைப்பு"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "caption"
 msgstr "தலைப்பு"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "நிறுத்த வேண்டிய செயலியின் பெயர்"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "name"
 msgstr "பெயர்"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr ""
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "id"
 msgstr ""
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:142
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "நிறுத்துமாறு பயனர் கோரிய நேரம்"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:142
 #, kde-format
 msgid "time"
 msgstr "நேரம்"
 
-#: helpers/killer/killer.cpp:142
+#: helpers/killer/killer.cpp:144
 #, kde-format
 msgid "KWin helper utility"
 msgstr "கேவின் உதவி செயலி"
 
-#: helpers/killer/killer.cpp:170
+#: helpers/killer/killer.cpp:172
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "இச்செயலி, நேரடியாக இயக்கப்படக்கூடாத‍து."
 
-#: helpers/killer/killer.cpp:194
+#: helpers/killer/killer.cpp:196
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1345,7 +1345,7 @@ msgstr ""
 "<para><emphasis strong='true'>இந்த செயலியை கட்டாயப்படுத்தி மூடுவது, அதன் அனைத்து "
 "சாளரங்களையும் மூடும். சேமிக்காதவற்றை இழப்பீர்.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:198
+#: helpers/killer/killer.cpp:200
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1359,31 +1359,31 @@ msgstr ""
 "செயலியை கட்டாயப்படுத்தி மூடுவது, அதன் அனைத்து சாளரங்களையும் மூடும். சேமிக்காதவற்றை "
 "இழப்பீர்.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:202
+#: helpers/killer/killer.cpp:204
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "%1 என்பதை &நிறுத்து"
 
-#: helpers/killer/killer.cpp:203
+#: helpers/killer/killer.cpp:205
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "இன்னும் நேரம் &காத்திரு"
 
-#: helpers/killer/killer.cpp:212
+#: helpers/killer/killer.cpp:214
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "பதிலளிக்கவில்லை"
 
-#: helpers/killer/killer.cpp:228
+#: helpers/killer/killer.cpp:230
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "பணியின் எண்: %1"
 
-#: helpers/killer/killer.cpp:230
+#: helpers/killer/killer.cpp:232
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -3572,7 +3572,7 @@ msgstr "தற்போதைய செயலியின் சாளரங்�
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "தற்போதைய செயலியின் சாளரங்களின் பட்டியலில் இப்படியும் பின்னே செல்"
 
-#: tabbox/tabboxhandler.cpp:190
+#: tabbox/tabboxhandler.cpp:192
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-14 00:45+0000\n"
+"POT-Creation-Date: 2026-01-26 00:44+0000\n"
 "PO-Revision-Date: 2024-02-18 17:42+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -80,7 +80,7 @@ msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "தோற்றத்திட்டத்தின் இயல்பிருப்பு (%1)"
 
-#: kwin-applywindowdecoration.cpp:32
+#: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "This tool allows you to set the window decoration theme for the currently "
@@ -88,7 +88,7 @@ msgid ""
 "available, or which is already set."
 msgstr ""
 
-#: kwin-applywindowdecoration.cpp:33
+#: kwin-applywindowdecoration.cpp:35
 #, kde-format
 msgid ""
 "The name of the window decoration theme you wish to set for KWin. Passing a "
@@ -96,7 +96,7 @@ msgid ""
 "that if one can be deduced."
 msgstr ""
 
-#: kwin-applywindowdecoration.cpp:34
+#: kwin-applywindowdecoration.cpp:36
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
@@ -104,14 +104,14 @@ msgstr ""
 "கணினியில் கிட்டுகின்ற அனைத்து தோற்றத்திட்டங்களை (மற்றும் இப்போது எது செயலில் உள்ளதென) "
 "காட்டும்"
 
-#: kwin-applywindowdecoration.cpp:65
+#: kwin-applywindowdecoration.cpp:67
 #, kde-format
 msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
 
-#: kwin-applywindowdecoration.cpp:71
+#: kwin-applywindowdecoration.cpp:73
 #, kde-format
 msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
@@ -120,19 +120,19 @@ msgstr ""
 "கோப்புப்பாதையைக் கொடுத்தீர், ஆனால் அது ஓர் தோற்றத்திட்டம் போல் தெரியவில்லை. இதனால் இந்நிரல் "
 "வெளியேறும்."
 
-#: kwin-applywindowdecoration.cpp:77
+#: kwin-applywindowdecoration.cpp:79
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr "கோரப்பட்ட \"%1\" ஏற்கனவே விளிம்புத்திட்டமாக அமைக்கப்பட்டுள்ளது."
 
-#: kwin-applywindowdecoration.cpp:99
+#: kwin-applywindowdecoration.cpp:101
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr ""
 "தற்போதைய பிளாஸ்மா அமர்வுக்கு %1 சுட்டிக்குறித்திட்டம் வெற்றிகரமாக செயல்படுத்தப்பட்டுள்ளது"
 
-#: kwin-applywindowdecoration.cpp:103
+#: kwin-applywindowdecoration.cpp:105
 #, kde-format
 msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
@@ -141,7 +141,7 @@ msgstr ""
 "தெரியாத காரணத்தால் தோற்றத்திட்ட அமைப்புகளை சேமிக்க முடியவில்லை. மறுபடியும் முயற்சித்தால் "
 "இச்சிக்கல் சரியாகலாம்."
 
-#: kwin-applywindowdecoration.cpp:107
+#: kwin-applywindowdecoration.cpp:109
 #, kde-format
 msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
@@ -150,7 +150,7 @@ msgstr ""
 "\"%1\" என்ற தோற்றத்திட்டத்தை கண்டுபிடிக்க முடியவில்லை. தோற்றத்திட்டம் பின்வருபவற்றில் ஒன்றாக "
 "இருக்க வேண்டும்: %2"
 
-#: kwin-applywindowdecoration.cpp:112
+#: kwin-applywindowdecoration.cpp:114
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "உங்கள் கணினியில் கீழ்காணும் விளிம்புத்திட்டங்கள் உள்ளன:"

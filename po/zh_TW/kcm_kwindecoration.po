@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-14 00:45+0000\n"
+"POT-Creation-Date: 2026-01-26 00:44+0000\n"
 "PO-Revision-Date: 2026-01-15 01:11+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -83,7 +83,7 @@ msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "主題預設值 (%1)"
 
-#: kwin-applywindowdecoration.cpp:32
+#: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "This tool allows you to set the window decoration theme for the currently "
@@ -93,7 +93,7 @@ msgstr ""
 "此工具讓您可以為目前作用中的工作階段設定視窗裝飾佈景主題，而不會意外地將其設"
 "定為無法使用或已在使用中的佈景主題。"
 
-#: kwin-applywindowdecoration.cpp:33
+#: kwin-applywindowdecoration.cpp:35
 #, kde-format
 msgid ""
 "The name of the window decoration theme you wish to set for KWin. Passing a "
@@ -103,13 +103,13 @@ msgstr ""
 "您想要為 KWin 設定的視窗裝置佈景主題名稱。傳遞完整完整路徑將會嘗試在該目錄中"
 "尋找佈景主題，然後套用該主題（若可識別）。"
 
-#: kwin-applywindowdecoration.cpp:34
+#: kwin-applywindowdecoration.cpp:36
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr "顯示系統上所有可用的佈景主題（以及哪個是目前的佈景主題）"
 
-#: kwin-applywindowdecoration.cpp:65
+#: kwin-applywindowdecoration.cpp:67
 #, kde-format
 msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
@@ -117,7 +117,7 @@ msgid ""
 msgstr ""
 "已解析 %1 到 KWin Aurorae 佈景主題「%2」，且將會嘗試設定為您的目前佈景主題。"
 
-#: kwin-applywindowdecoration.cpp:71
+#: kwin-applywindowdecoration.cpp:73
 #, kde-format
 msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
@@ -126,18 +126,18 @@ msgstr ""
 "您嘗試傳遞檔案路徑，但這可能無法解析出佈景主題，我們將會放棄，因為沒有設定佈"
 "景主題"
 
-#: kwin-applywindowdecoration.cpp:77
+#: kwin-applywindowdecoration.cpp:79
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr "要求的佈景主體「%1」已設定為視窗裝飾佈景主題。"
 
-#: kwin-applywindowdecoration.cpp:99
+#: kwin-applywindowdecoration.cpp:101
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr "成功套用游標佈景主題 %1 到您目前的 Plasma 工作階段"
 
-#: kwin-applywindowdecoration.cpp:103
+#: kwin-applywindowdecoration.cpp:105
 #, kde-format
 msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
@@ -146,14 +146,14 @@ msgstr ""
 "儲存您的佈景主題設定失敗，理由未知，但這是無法還原的錯誤。您可能會發現再試一"
 "次即可。"
 
-#: kwin-applywindowdecoration.cpp:107
+#: kwin-applywindowdecoration.cpp:109
 #, kde-format
 msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr "找不到佈景主題「%1」。佈景主題應該是以下選項的其中一個：%2"
 
-#: kwin-applywindowdecoration.cpp:112
+#: kwin-applywindowdecoration.cpp:114
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "您的系統上有以下的 KWin 視窗裝飾佈景主題："

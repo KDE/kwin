@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-24 00:44+0000\n"
+"POT-Creation-Date: 2026-01-26 00:44+0000\n"
 "PO-Revision-Date: 2007-11-01 14:27+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -1245,89 +1245,89 @@ msgstr ""
 msgid "Primary Selection"
 msgstr ""
 
-#: helpers/killer/killer.cpp:125
+#: helpers/killer/killer.cpp:127
 #, fuzzy, kde-format
 #| msgid "KDE window manager"
 msgid "Window Manager"
 msgstr "केडीई सञ्झ्याल प्रबन्धक"
 
-#: helpers/killer/killer.cpp:130
+#: helpers/killer/killer.cpp:132
 #, fuzzy, kde-format
 #| msgid "PID of the application to terminate."
 msgid "PID of the application to terminate"
 msgstr "टर्मिनेट गर्न अनुप्रयोगको पीआईडी ।"
 
-#: helpers/killer/killer.cpp:130
+#: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "pid"
 msgstr ""
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:134
 #, fuzzy, kde-format
 #| msgid "Hostname on which the application is running."
 msgid "Hostname on which the application is running"
 msgstr "होस्टनाम जसमा अनुप्रयोग चलिरहेको छ ।"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "hostname"
 msgstr ""
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:136
 #, fuzzy, kde-format
 #| msgid "Caption of the window to be terminated."
 msgid "Caption of the window to be terminated"
 msgstr "टर्मिनेट गर्नुपर्ने सञ्झ्यालको क्याप्सन ।"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "caption"
 msgstr ""
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:138
 #, fuzzy, kde-format
 #| msgid "Name of the application to be terminated."
 msgid "Name of the application to be terminated"
 msgstr "टर्मिनेट गर्नुपर्ने अनुप्रयोगको नाम ।"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "name"
 msgstr ""
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:140
 #, fuzzy, kde-format
 #| msgid "ID of resource belonging to the application."
 msgid "ID of resource belonging to the application"
 msgstr "अनुप्रयोगसँग सम्बन्धित संसाधानको आईडी ।"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "id"
 msgstr ""
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:142
 #, fuzzy, kde-format
 #| msgid "Time of user action causing killing."
 msgid "Time of user action causing termination"
 msgstr "नष्ट गरिरहेको प्रयोगकर्ता कार्यको समय ।"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:142
 #, kde-format
 msgid "time"
 msgstr ""
 
-#: helpers/killer/killer.cpp:142
+#: helpers/killer/killer.cpp:144
 #, kde-format
 msgid "KWin helper utility"
 msgstr "केडीई विन सहयोगी युटिलिटी"
 
-#: helpers/killer/killer.cpp:170
+#: helpers/killer/killer.cpp:172
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "यो सहयोगीलाई प्रत्यक्ष कल गर्न मिल्दैन ।"
 
-#: helpers/killer/killer.cpp:194
+#: helpers/killer/killer.cpp:196
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1337,7 +1337,7 @@ msgid ""
 "lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:198
+#: helpers/killer/killer.cpp:200
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1347,32 +1347,32 @@ msgid ""
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:202
+#: helpers/killer/killer.cpp:204
 #, fuzzy, kde-format
 #| msgid "Terminate"
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "बिच्छेद गर्नुहोस्"
 
-#: helpers/killer/killer.cpp:203
+#: helpers/killer/killer.cpp:205
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr ""
 
-#: helpers/killer/killer.cpp:212
+#: helpers/killer/killer.cpp:214
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr ""
 
-#: helpers/killer/killer.cpp:228
+#: helpers/killer/killer.cpp:230
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr ""
 
-#: helpers/killer/killer.cpp:230
+#: helpers/killer/killer.cpp:232
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -3653,7 +3653,7 @@ msgstr "सञ्झ्याल (उल्टो) मार्फत जान�
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabboxhandler.cpp:190
+#: tabbox/tabboxhandler.cpp:192
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"

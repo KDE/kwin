@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-14 00:45+0000\n"
+"POT-Creation-Date: 2026-01-26 00:44+0000\n"
 "PO-Revision-Date: 2021-06-10 11:34+0400\n"
 "Last-Translator: Kheyyam Gojayev <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -81,7 +81,7 @@ msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "Standart mövzu (%1)"
 
-#: kwin-applywindowdecoration.cpp:32
+#: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "This tool allows you to set the window decoration theme for the currently "
@@ -92,7 +92,7 @@ msgstr ""
 "etmədən, hazırda aktiv iclas üçün pəncərə bəzək mövzusunu təyin etməyə imkan "
 "verir."
 
-#: kwin-applywindowdecoration.cpp:33
+#: kwin-applywindowdecoration.cpp:35
 #, kde-format
 msgid ""
 "The name of the window decoration theme you wish to set for KWin. Passing a "
@@ -103,13 +103,13 @@ msgstr ""
 "Tam yolu keçmək, bu kataloqda mövzunu tapmağa cəhd edəcək və aşkatlandığı "
 "halda onu tətbiq edəcəkdir."
 
-#: kwin-applywindowdecoration.cpp:34
+#: kwin-applywindowdecoration.cpp:36
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr "Sistemdə mövcud olan bütün mövzuları göstərmək (həmçinin cari mövzunu)"
 
-#: kwin-applywindowdecoration.cpp:65
+#: kwin-applywindowdecoration.cpp:67
 #, kde-format
 msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
@@ -118,7 +118,7 @@ msgstr ""
 "%1, \"%2\" KWin Aurorae  mövzusu ilə həll edildi və bunu cari mövzunuz "
 "olaraq təyin etməyə çalışacaq."
 
-#: kwin-applywindowdecoration.cpp:71
+#: kwin-applywindowdecoration.cpp:73
 #, kde-format
 msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
@@ -127,7 +127,7 @@ msgstr ""
 "Siz bütün yolu keçməyə cəhd etdiniz, lakin, bu bir mövzu ilə həll oluna "
 "bilmədi və təyin ediləcək mövzu olmadığı üçün ləğv ediləcəkdir"
 
-#: kwin-applywindowdecoration.cpp:77
+#: kwin-applywindowdecoration.cpp:79
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
@@ -135,12 +135,12 @@ msgstr ""
 "Tələb olunan \"%1\" mövzusu artıq pəncərə dekorasiyası mövzusu kimi təyin "
 "olunub."
 
-#: kwin-applywindowdecoration.cpp:99
+#: kwin-applywindowdecoration.cpp:101
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr "%1 kursor mövzusu cari Plasma sesiyası üçün tətbiq edildi"
 
-#: kwin-applywindowdecoration.cpp:103
+#: kwin-applywindowdecoration.cpp:105
 #, kde-format
 msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
@@ -150,7 +150,7 @@ msgstr ""
 "bilməyən xətadır. Siz sadəcə olaraq yenidən cəhd edərək nəticə əldə edə "
 "bilərsiniz."
 
-#: kwin-applywindowdecoration.cpp:107
+#: kwin-applywindowdecoration.cpp:109
 #, kde-format
 msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
@@ -158,7 +158,7 @@ msgid ""
 msgstr ""
 "\"%1\" mövzusu tapılmadı. Mövzu aşağıdakı variantlardan biri olmalıdır: %2"
 
-#: kwin-applywindowdecoration.cpp:112
+#: kwin-applywindowdecoration.cpp:114
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "Sisteminizdə aşağıdakı pəncərə dekorasiyası mövzuları var:"

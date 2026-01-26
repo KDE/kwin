@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-14 00:45+0000\n"
+"POT-Creation-Date: 2026-01-26 00:44+0000\n"
 "PO-Revision-Date: 2024-09-18 19:03+0200\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -83,7 +83,7 @@ msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "Etosa defaŭlto (%1)"
 
-#: kwin-applywindowdecoration.cpp:32
+#: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "This tool allows you to set the window decoration theme for the currently "
@@ -94,7 +94,7 @@ msgstr ""
 "nuntempe aktiva seanco, sen hazarde agordi ĝin al unu, kiu aŭ ne "
 "disponeblas, aŭ kiu jam estas agordita."
 
-#: kwin-applywindowdecoration.cpp:33
+#: kwin-applywindowdecoration.cpp:35
 #, kde-format
 msgid ""
 "The name of the window decoration theme you wish to set for KWin. Passing a "
@@ -105,14 +105,14 @@ msgstr ""
 "plenan vojon provos trovi etoson en tiu dosierujo, kaj poste apliki tion se "
 "oni povas dedukti."
 
-#: kwin-applywindowdecoration.cpp:34
+#: kwin-applywindowdecoration.cpp:36
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr ""
 "Montru ĉiujn disponeblajn etosojn en la sistemo (kaj kiu estas la nuna etoso)"
 
-#: kwin-applywindowdecoration.cpp:65
+#: kwin-applywindowdecoration.cpp:67
 #, kde-format
 msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
@@ -121,7 +121,7 @@ msgstr ""
 "Solvita %1 al la KWin Aurorae-etoso \"%2\", kaj provos agordi tion kiel via "
 "nuna etoso."
 
-#: kwin-applywindowdecoration.cpp:71
+#: kwin-applywindowdecoration.cpp:73
 #, kde-format
 msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
@@ -130,19 +130,19 @@ msgstr ""
 "Vi provis pasigi dosiervojon, sed ĉi tio ne povis esti solvita al etoso, kaj "
 "ni devos ĉesigi, ĉar ne havas etoso por agordi."
 
-#: kwin-applywindowdecoration.cpp:77
+#: kwin-applywindowdecoration.cpp:79
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr ""
 "La petita etoso \"%1\" jam estas agordita kiel la fenestro-ornama etoso."
 
-#: kwin-applywindowdecoration.cpp:99
+#: kwin-applywindowdecoration.cpp:101
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr "Sukcese aplikis la kursoran etoso %1 al via nuna Plasma seanco"
 
-#: kwin-applywindowdecoration.cpp:103
+#: kwin-applywindowdecoration.cpp:105
 #, kde-format
 msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
@@ -152,7 +152,7 @@ msgstr ""
 "ĉi tio estas nereakirebla eraro. Vi eble trovos, ke simple provi denove "
 "funkcios."
 
-#: kwin-applywindowdecoration.cpp:107
+#: kwin-applywindowdecoration.cpp:109
 #, kde-format
 msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
@@ -160,7 +160,7 @@ msgid ""
 msgstr ""
 "Ne eblis trovi etoson \"%1\". La etoso devus esti unu el la sekvaj opcioj: %2"
 
-#: kwin-applywindowdecoration.cpp:112
+#: kwin-applywindowdecoration.cpp:114
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "Vi havas la jenajn KWin-fenestrajn ornam-etosojn en via sistemo:"

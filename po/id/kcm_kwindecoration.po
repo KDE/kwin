@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-14 00:45+0000\n"
+"POT-Creation-Date: 2026-01-26 00:44+0000\n"
 "PO-Revision-Date: 2022-09-27 18:04+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -84,7 +84,7 @@ msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "Tema default (%1)"
 
-#: kwin-applywindowdecoration.cpp:32
+#: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "This tool allows you to set the window decoration theme for the currently "
@@ -95,7 +95,7 @@ msgstr ""
 "yang aktif saat ini, tanpa sengaja mengaturnya ke sesi yang tidak tersedia, "
 "atau yang sudah diatur."
 
-#: kwin-applywindowdecoration.cpp:33
+#: kwin-applywindowdecoration.cpp:35
 #, kde-format
 msgid ""
 "The name of the window decoration theme you wish to set for KWin. Passing a "
@@ -106,14 +106,14 @@ msgstr ""
 "lengkap akan mencoba menemukan tema di direktori itu, dan kemudian "
 "menerapkannya jika seseorang menyimpulkannya."
 
-#: kwin-applywindowdecoration.cpp:34
+#: kwin-applywindowdecoration.cpp:36
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr ""
 "Tampilkan semua tema yang tersedia di sistem (dan bahkan tema saat ini)"
 
-#: kwin-applywindowdecoration.cpp:65
+#: kwin-applywindowdecoration.cpp:67
 #, kde-format
 msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
@@ -122,7 +122,7 @@ msgstr ""
 "Menyelesaikan %1 ke tema KWin Aurorae \"%2\", dan akan mencoba mengaturnya "
 "sebagai temamu saat ini."
 
-#: kwin-applywindowdecoration.cpp:71
+#: kwin-applywindowdecoration.cpp:73
 #, kde-format
 msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
@@ -131,19 +131,19 @@ msgstr ""
 "Kamu mencoba melewati alur file, tetapi ini tidak bisa diselesaikan ke tema, "
 "dan kami harus membatalkannya, karena tidak memiliki tema untuk diatur"
 
-#: kwin-applywindowdecoration.cpp:77
+#: kwin-applywindowdecoration.cpp:79
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr ""
 "Tema \"%1\" yang diminta sudah ditetapkan sebagai tema dekorasi jendela."
 
-#: kwin-applywindowdecoration.cpp:99
+#: kwin-applywindowdecoration.cpp:101
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr "Berhasil menerapkan tema kursor %1 ke sesi Plasma kamu saat ini"
 
-#: kwin-applywindowdecoration.cpp:103
+#: kwin-applywindowdecoration.cpp:105
 #, kde-format
 msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
@@ -153,7 +153,7 @@ msgstr ""
 "adalah galat yang tidak bisa dipulihkan. Kamu mungkin cukup mencobanya lagi "
 "mudah-mudahan berhasil."
 
-#: kwin-applywindowdecoration.cpp:107
+#: kwin-applywindowdecoration.cpp:109
 #, kde-format
 msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
@@ -162,7 +162,7 @@ msgstr ""
 "Tidak bisa menemukan tema \"%1\". Tema seharusnya salahsatu dari opsi "
 "berikut ini: %2"
 
-#: kwin-applywindowdecoration.cpp:112
+#: kwin-applywindowdecoration.cpp:114
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "Kamu memiliki tema dekorasi jendela KWin berikut ini di sistemmu:"

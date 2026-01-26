@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-24 00:44+0000\n"
+"POT-Creation-Date: 2026-01-26 00:44+0000\n"
 "PO-Revision-Date: 2025-05-30 23:12+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1242,82 +1242,82 @@ msgstr "Vágólap"
 msgid "Primary Selection"
 msgstr "Elsődleges kijelölés"
 
-#: helpers/killer/killer.cpp:125
+#: helpers/killer/killer.cpp:127
 #, kde-format
 msgid "Window Manager"
 msgstr "Ablakkezelő"
 
-#: helpers/killer/killer.cpp:130
+#: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "A bezárni kívánt alkalmazás azonosítója (PID)"
 
-#: helpers/killer/killer.cpp:130
+#: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Az alkalmazást futtató gép neve"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "hostname"
 msgstr "gépnév"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "A bezárni kívánt ablak címe"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "caption"
 msgstr "felirat"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "A bezárni kívánt alkalmazás neve"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "name"
 msgstr "név"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "Az alkalmazáshoz tartozó erőforrás azonosítója"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "id"
 msgstr "azonosító"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:142
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "A lefagyást okozó felhasználói művelet időpontja"
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:142
 #, kde-format
 msgid "time"
 msgstr "idő"
 
-#: helpers/killer/killer.cpp:142
+#: helpers/killer/killer.cpp:144
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin segédprogram"
 
-#: helpers/killer/killer.cpp:170
+#: helpers/killer/killer.cpp:172
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Ezt a segédprogram nem közvetlen használatra való."
 
-#: helpers/killer/killer.cpp:194
+#: helpers/killer/killer.cpp:196
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1330,7 +1330,7 @@ msgstr ""
 "az alkalmazást?</para><para><emphasis strong='true'>Az alkalmazás leállítása "
 "bezárja az összes ablakát. A nem mentett adatok elvesznek.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:198
+#: helpers/killer/killer.cpp:200
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1344,31 +1344,31 @@ msgstr ""
 "alkalmazás leállítása bezárja az összes ablakát. A nem mentett adatok "
 "elvesznek.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:202
+#: helpers/killer/killer.cpp:204
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "%1 leállí&tása"
 
-#: helpers/killer/killer.cpp:203
+#: helpers/killer/killer.cpp:205
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "&Várakozás tovább"
 
-#: helpers/killer/killer.cpp:212
+#: helpers/killer/killer.cpp:214
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "Nem válaszol"
 
-#: helpers/killer/killer.cpp:228
+#: helpers/killer/killer.cpp:230
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "Folyamatazonosító: %1"
 
-#: helpers/killer/killer.cpp:230
+#: helpers/killer/killer.cpp:232
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -3565,7 +3565,7 @@ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Lépegetés a jelenlegi alkalmazásalternatívák ablakai között (visszafelé)"
 
-#: tabbox/tabboxhandler.cpp:190
+#: tabbox/tabboxhandler.cpp:192
 #, kde-format
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"

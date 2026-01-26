@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-14 00:45+0000\n"
+"POT-Creation-Date: 2026-01-26 00:44+0000\n"
 "PO-Revision-Date: 2024-12-20 21:52+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -80,7 +80,7 @@ msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "विषयः पूर्वनिर्धारितः (%1) ."
 
-#: kwin-applywindowdecoration.cpp:32
+#: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "This tool allows you to set the window decoration theme for the currently "
@@ -90,7 +90,7 @@ msgstr ""
 "एतत् साधनं भवन्तं वर्तमानसक्रियसत्रस्य कृते विण्डो-सज्जा-विषयं सेट् कर्तुं शक्नोति, यदृच्छया एकं न "
 "उपलभ्यते, अथवा यत् पूर्वमेव सेट् कृतम् अस्ति इति सेट् कर्तुं न शक्नोति"
 
-#: kwin-applywindowdecoration.cpp:33
+#: kwin-applywindowdecoration.cpp:35
 #, kde-format
 msgid ""
 "The name of the window decoration theme you wish to set for KWin. Passing a "
@@ -100,13 +100,13 @@ msgstr ""
 "KWin कृते भवन्तः यत् विण्डो अलङ्कारविषयं सेट् कर्तुम् इच्छन्ति तस्य नाम । पूर्णमार्गं पारयित्वा "
 "तस्मिन् निर्देशिकायां विषयं अन्वेष्टुं प्रयतते, ततः तत् प्रयोजयिष्यति यदि निष्कर्षः कर्तुं शक्यते ।"
 
-#: kwin-applywindowdecoration.cpp:34
+#: kwin-applywindowdecoration.cpp:36
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr "प्रणाल्यां उपलभ्यमानानि सर्वाणि विषयाणि दर्शयन्तु (वर्तमानः विषयः च कः)"
 
-#: kwin-applywindowdecoration.cpp:65
+#: kwin-applywindowdecoration.cpp:67
 #, kde-format
 msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
@@ -115,7 +115,7 @@ msgstr ""
 "KWin Aurorae विषयवस्तु \"%2\" प्रति %1 समाधानं कृतम्, तत् च भवतः वर्तमानविषयत्वेन सेट् "
 "कर्तुं प्रयतते ।"
 
-#: kwin-applywindowdecoration.cpp:71
+#: kwin-applywindowdecoration.cpp:73
 #, kde-format
 msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
@@ -124,18 +124,18 @@ msgstr ""
 "भवान् सञ्चिकामार्गं पारयितुं प्रयतितवान्, परन्तु एतत् विषयवस्तुं प्रति समाधानं कर्तुं न शक्तवान्, "
 "अस्माभिः च निरस्तं कर्तव्यं भविष्यति, सेट् कर्तुं विषयः नास्ति इति कारणतः"
 
-#: kwin-applywindowdecoration.cpp:77
+#: kwin-applywindowdecoration.cpp:79
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr "अनुरोधितः विषयः \"%1\" पूर्वमेव विण्डो अलङ्कारविषयत्वेन सेट् कृतः अस्ति ।"
 
-#: kwin-applywindowdecoration.cpp:99
+#: kwin-applywindowdecoration.cpp:101
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr "भवतः वर्तमानप्लाज्मासत्रे %1 इति कर्सरविषयं सफलतया प्रयुक्तम्"
 
-#: kwin-applywindowdecoration.cpp:103
+#: kwin-applywindowdecoration.cpp:105
 #, kde-format
 msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
@@ -144,14 +144,14 @@ msgstr ""
 "भवतः विषयसेटिंग्स् रक्षितुं असफलः - कारणम् अज्ञातम्, परन्तु एषा अपुनर्प्राप्तियोग्यदोषः अस्ति "
 "। भवन्तः पश्यन्ति यत् केवलं पुनः प्रयासः एव कार्यं करिष्यति।"
 
-#: kwin-applywindowdecoration.cpp:107
+#: kwin-applywindowdecoration.cpp:109
 #, kde-format
 msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr "\"%1\" इति विषयः न लब्धः । विषयः निम्नलिखितविकल्पेषु अन्यतमः भवेत्: %2"
 
-#: kwin-applywindowdecoration.cpp:112
+#: kwin-applywindowdecoration.cpp:114
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "भवतः प्रणाल्यां निम्नलिखित KWin विण्डो अलङ्कारविषयाणि सन्ति ।"

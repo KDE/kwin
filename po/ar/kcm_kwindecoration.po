@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-14 00:45+0000\n"
+"POT-Creation-Date: 2026-01-26 00:44+0000\n"
 "PO-Revision-Date: 2026-01-15 09:05+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -87,7 +87,7 @@ msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "السمة المبدئيّة (%1)"
 
-#: kwin-applywindowdecoration.cpp:32
+#: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "This tool allows you to set the window decoration theme for the currently "
@@ -97,7 +97,7 @@ msgstr ""
 "تتيح لك هذه الأداة ضبط سمة زخارف النوافذ لجلسة البلازما الحالية، دون تعينها "
 "عن طريق الخطأ لسمة إما غير متوفرة، أو عينت فعلًا."
 
-#: kwin-applywindowdecoration.cpp:33
+#: kwin-applywindowdecoration.cpp:35
 #, kde-format
 msgid ""
 "The name of the window decoration theme you wish to set for KWin. Passing a "
@@ -107,20 +107,20 @@ msgstr ""
 "اسم سمة زخرفة النافذة التي ترغب في تعيينها لـكوين. عند تقديم مسار كامل "
 "سيحاول العثور على سمة في ذاك الدليل، ثم تطبيق ذلك إذا وجدها."
 
-#: kwin-applywindowdecoration.cpp:34
+#: kwin-applywindowdecoration.cpp:36
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr "اعرض جميع السمات المتوفرة على النظام (وما السمة الحالية)"
 
-#: kwin-applywindowdecoration.cpp:65
+#: kwin-applywindowdecoration.cpp:67
 #, kde-format
 msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr "حل %1 إلى سمة أرورا لكوين \"%2\"، وسنحاول تعينه كسمتك الحالية."
 
-#: kwin-applywindowdecoration.cpp:71
+#: kwin-applywindowdecoration.cpp:73
 #, kde-format
 msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
@@ -129,18 +129,18 @@ msgstr ""
 "لقد حاولت تمرير مسار ملف، ولكن لا يمكن حل هذا إلى سمة، وسيتعين علينا إحباط "
 "ذلك، نظرًا لعدم وجود سمة لتعيينها"
 
-#: kwin-applywindowdecoration.cpp:77
+#: kwin-applywindowdecoration.cpp:79
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr "عينت السمة المطلوبة \"%1\" فعلًا كسمة لجلسة البلازما الحالية."
 
-#: kwin-applywindowdecoration.cpp:99
+#: kwin-applywindowdecoration.cpp:101
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr "طبقت سمة المؤشر %1 بنجاح لجلسة بلازما الحالية"
 
-#: kwin-applywindowdecoration.cpp:103
+#: kwin-applywindowdecoration.cpp:105
 #, kde-format
 msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
@@ -149,7 +149,7 @@ msgstr ""
 "فشل في حفظ إعدادات السمة - السبب غير معروف، لكن هذا خطأ لا يمكن إصلاحه. قد "
 "تجد أن مجرد المحاولة مرة أخرى ستنجح."
 
-#: kwin-applywindowdecoration.cpp:107
+#: kwin-applywindowdecoration.cpp:109
 #, kde-format
 msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
@@ -158,7 +158,7 @@ msgstr ""
 "لم يعثر على السمة المطلوبة \"%1\". السمة يجب أن تكون واحدة من الخيارات "
 "التالية: %2"
 
-#: kwin-applywindowdecoration.cpp:112
+#: kwin-applywindowdecoration.cpp:114
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
 msgstr "لديك سمات زخرفة النوافذ لكوين التالية على نظامك:"
