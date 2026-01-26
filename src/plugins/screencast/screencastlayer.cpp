@@ -8,7 +8,7 @@
 namespace KWin
 {
 
-ScreencastLayer::ScreencastLayer(LogicalOutput *output, const QHash<uint32_t, QList<uint64_t>> &formats)
+ScreencastLayer::ScreencastLayer(LogicalOutput *output, const FormatModifierMap &formats)
     : OutputLayer(output->backendOutput(), OutputLayerType::Primary)
     , m_formats(formats)
 {
@@ -28,7 +28,7 @@ DrmDevice *ScreencastLayer::scanoutDevice() const
     return nullptr;
 }
 
-QHash<uint32_t, QList<uint64_t>> ScreencastLayer::supportedDrmFormats() const
+FormatModifierMap ScreencastLayer::supportedDrmFormats() const
 {
     return m_formats;
 }

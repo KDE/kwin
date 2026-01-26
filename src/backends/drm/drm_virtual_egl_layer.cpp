@@ -104,13 +104,13 @@ std::shared_ptr<EglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
             const auto format = it.key();
             const auto modifiers = it.value();
 
-            if (allowModifiers && !modifiers.isEmpty()) {
+            if (allowModifiers && !modifiers.empty()) {
                 if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->drmDevice()->allocator(), m_eglBackend->openglContext(), size, format, modifiers)) {
                     return swapchain;
                 }
             }
 
-            static const QList<uint64_t> implicitModifier{DRM_FORMAT_MOD_INVALID};
+            static const ModifierList implicitModifier{DRM_FORMAT_MOD_INVALID};
             if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->drmDevice()->allocator(), m_eglBackend->openglContext(), size, format, implicitModifier)) {
                 return swapchain;
             }
@@ -154,7 +154,7 @@ DrmDevice *VirtualEglGbmLayer::scanoutDevice() const
     return m_eglBackend->drmDevice();
 }
 
-QHash<uint32_t, QList<uint64_t>> VirtualEglGbmLayer::supportedDrmFormats() const
+FormatModifierMap VirtualEglGbmLayer::supportedDrmFormats() const
 {
     return m_eglBackend->supportedFormats();
 }

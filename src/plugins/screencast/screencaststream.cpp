@@ -8,6 +8,7 @@
 
 #include "screencaststream.h"
 #include "compositor.h"
+#include "core/drm_formats.h"
 #include "core/drmdevice.h"
 #include "core/graphicsbufferallocator.h"
 #include "core/renderbackend.h"
@@ -22,7 +23,6 @@
 #include "scene/workspacescene.h"
 #include "screencastbuffer.h"
 #include "screencastsource.h"
-#include "utils/drm_format_helper.h"
 
 #include <KLocalizedString>
 
@@ -236,19 +236,16 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
 
         // Note that we don't need to search for duplicates in values[1...] but we do that anyway as a
         // sanity check because the DRM modifier negotiation logic can be easily tripped by bad input.
-        QList<uint64_t> receivedModifiers;
-        receivedModifiers.reserve(valueCount);
+        ModifierList receivedModifiers;
         for (uint32_t i = 0; i < valueCount; ++i) {
-            if (!receivedModifiers.contains(values[i])) {
-                receivedModifiers.append(values[i]);
-            }
+            receivedModifiers.insert(values[i]);
         }
 
         if (!m_dmabufParams || m_dmabufParams->width != m_resolution.width() || m_dmabufParams->height != m_resolution.height() || !receivedModifiers.contains(m_dmabufParams->modifier)) {
             // DRM_MOD_INVALID should be used as a last option. Do not just remove it it's the only
             // item on the list
-            if (receivedModifiers.count() > 1) {
-                receivedModifiers.removeAll(DRM_FORMAT_MOD_INVALID);
+            if (receivedModifiers.size() > 1) {
+                receivedModifiers.erase(DRM_FORMAT_MOD_INVALID);
             }
             m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, receivedModifiers);
 
@@ -257,7 +254,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
             // be used and clients can go for it over and over
             if (!m_dmabufParams.has_value()) {
                 for (uint64_t modifier : receivedModifiers) {
-                    m_modifiers.removeAll(modifier);
+                    m_modifiers.erase(modifier);
                 }
             }
 
@@ -763,7 +760,7 @@ QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2
 
 spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                                        struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
-                                       const QList<uint64_t> &modifiers, quint32 modifiersFlags)
+                                       const ModifierList &modifiers, quint32 modifiersFlags)
 {
     struct spa_pod_frame f[2];
     spa_pod_builder_push_object(b, &f[0], SPA_TYPE_OBJECT_Format, SPA_PARAM_EnumFormat);
@@ -788,12 +785,12 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
         spa_pod_builder_add(b, SPA_FORMAT_VIDEO_format, SPA_POD_Id(format), 0);
     }
 
-    if (!modifiers.isEmpty()) {
+    if (!modifiers.empty()) {
         spa_pod_builder_prop(b, SPA_FORMAT_VIDEO_modifier, modifiersFlags);
         spa_pod_builder_push_choice(b, &f[1], SPA_CHOICE_Enum, 0);
 
         int c = 0;
-        for (auto modifier : modifiers) {
+        for (uint64_t modifier : modifiers) {
             spa_pod_builder_long(b, modifier);
             if (c++ == 0) {
                 spa_pod_builder_long(b, modifier);
@@ -870,7 +867,7 @@ void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode)
     m_cursor.mode = mode;
 }
 
-std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers)
+std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(const QSize &size, quint32 format, const ModifierList &modifiers)
 {
     EglBackend *backend = qobject_cast<EglBackend *>(Compositor::self()->backend());
     if (!backend) {

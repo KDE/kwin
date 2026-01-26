@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "core/drm_formats.h"
 #include "utils/damagejournal.h"
 #include "wayland/screencast_v1.h"
 
@@ -96,12 +97,12 @@ private:
     void newStreamParams();
     spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
-                         const QList<uint64_t> &modifiers, quint32 modifiersFlags);
+                         const ModifierList &modifiers, quint32 modifiersFlags);
     pw_buffer *dequeueBuffer();
     void record(Contents contents);
     void bumpBufferAge(ScreenCastBuffer *renderedBuffer);
 
-    std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers);
+    std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const ModifierList &modifiers);
 
     std::shared_ptr<PipeWireCore> m_pwCore;
     std::unique_ptr<ScreenCastSource> m_source;
@@ -116,7 +117,7 @@ private:
 
     spa_video_info_raw m_videoFormat;
     QString m_error;
-    QList<uint64_t> m_modifiers;
+    ModifierList m_modifiers;
     std::optional<ScreenCastDmaBufTextureParams> m_dmabufParams; // when fixated
 
     struct

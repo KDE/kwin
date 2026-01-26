@@ -6,7 +6,7 @@
 
 #include "config-kwin.h"
 
-#include "utils/drm_format_helper.h"
+#include "core/drm_formats.h"
 #include "wayland/display.h"
 #include "wayland/shmclientbuffer.h"
 #include "wayland/shmclientbuffer_p.h"

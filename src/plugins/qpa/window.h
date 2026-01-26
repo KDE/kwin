@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/drm_formats.h"
 
 #include <QPointer>
 #include <qpa/qplatformwindow.h>
@@ -41,7 +42,7 @@ public:
     bool isExposed() const override;
 
     InternalWindow *internalWindow() const;
-    Swapchain *swapchain(const std::shared_ptr<EglContext> &context, const QHash<uint32_t, QList<uint64_t>> &formats);
+    Swapchain *swapchain(const std::shared_ptr<EglContext> &context, const FormatModifierMap &formats);
 
 private:
     void map();

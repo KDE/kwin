@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "core/drm_formats.h"
 #include "kwin_export.h"
 #include "utils/filedescriptor.h"
 
@@ -66,7 +67,7 @@ public:
 
     void resetBufferAge();
 
-    static std::shared_ptr<EglSwapchain> create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers);
+    static std::shared_ptr<EglSwapchain> create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const ModifierList &modifiers);
 
 private:
     GraphicsBufferAllocator *m_allocator;

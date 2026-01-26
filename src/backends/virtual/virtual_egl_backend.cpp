@@ -76,7 +76,7 @@ DrmDevice *VirtualEglLayer::scanoutDevice() const
     return m_backend->drmDevice();
 }
 
-QHash<uint32_t, QList<uint64_t>> VirtualEglLayer::supportedDrmFormats() const
+FormatModifierMap VirtualEglLayer::supportedDrmFormats() const
 {
     return m_backend->supportedFormats();
 }

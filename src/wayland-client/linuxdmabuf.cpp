@@ -46,7 +46,7 @@ LinuxDmabufFeedbackV1::~LinuxDmabufFeedbackV1()
     zwp_linux_dmabuf_feedback_v1_destroy(m_feedback);
 }
 
-QHash<uint32_t, QList<uint64_t>> LinuxDmabufFeedbackV1::formats() const
+FormatModifierMap LinuxDmabufFeedbackV1::formats() const
 {
     return m_formats;
 }
@@ -151,8 +151,8 @@ void LinuxDmabufFeedbackV1::tranche_formats(void *data, zwp_linux_dmabuf_feedbac
     const auto entries = static_cast<linux_dmabuf_feedback_v1_table_entry *>(feedback->m_formatTable.data());
     for (const uint16_t &index : std::span(static_cast<uint16_t *>(indices->data), indices->size / sizeof(uint16_t))) {
         const linux_dmabuf_feedback_v1_table_entry &entry = entries[index];
-        feedback->m_formats[entry.format].append(entry.modifier);
-        feedback->m_pendingTranche.formats[entry.format].append(entry.modifier);
+        feedback->m_formats[entry.format].insert(entry.modifier);
+        feedback->m_pendingTranche.formats[entry.format].insert(entry.modifier);
     }
 }
 
@@ -190,7 +190,7 @@ QByteArray LinuxDmabufV1::mainDevice() const
     return m_defaultFeedback->devicePath();
 }
 
-QHash<uint32_t, QList<uint64_t>> LinuxDmabufV1::formats() const
+FormatModifierMap LinuxDmabufV1::formats() const
 {
     return m_defaultFeedback->formats();
 }

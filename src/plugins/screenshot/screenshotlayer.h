@@ -17,7 +17,7 @@ public:
     explicit ScreenshotLayer(LogicalOutput *output, GLFramebuffer *buffer);
 
     DrmDevice *scanoutDevice() const override;
-    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    FormatModifierMap supportedDrmFormats() const override;
     void releaseBuffers() override;
 
 private:

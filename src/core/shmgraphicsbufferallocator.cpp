@@ -82,7 +82,7 @@ GraphicsBuffer *ShmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
     if (!options.software) {
         return nullptr;
     }
-    if (!options.modifiers.isEmpty() && !options.modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
+    if (!options.modifiers.empty() && !options.modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
         return nullptr;
     }
 

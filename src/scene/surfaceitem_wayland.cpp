@@ -170,7 +170,7 @@ ContentType SurfaceItemWayland::contentType() const
     return m_surface ? m_surface->contentType() : ContentType::None;
 }
 
-void SurfaceItemWayland::setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats)
+void SurfaceItemWayland::setScanoutHint(DrmDevice *device, const FormatModifierMap &drmFormats)
 {
     if (!m_surface || !m_surface->dmabufFeedbackV1()) {
         return;

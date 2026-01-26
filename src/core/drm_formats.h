@@ -12,6 +12,8 @@
 #include <QHash>
 #include <QList>
 #include <QString>
+#include <flat_set>
+#include <vector>
 
 #include <epoxy/gl.h>
 #include <libdrm/drm_fourcc.h>
@@ -20,6 +22,13 @@
 
 namespace KWin
 {
+
+using ModifierList = std::flat_set<uint64_t, std::less<uint64_t>, std::vector<uint64_t>>;
+// to be able to pass the modifier list to gbm (as a pointer), it must be contiguous
+static_assert(std::contiguous_iterator<decltype(ModifierList{}.begin())>);
+using FormatModifierMap = QHash<uint32_t, ModifierList>;
+
+KWIN_EXPORT ModifierList intersect(const ModifierList &one, const ModifierList &two);
 
 struct YuvFormat
 {
@@ -32,17 +41,6 @@ struct YuvConversion
     QList<struct YuvFormat> plane = {};
 };
 
-static const QHash<uint32_t, YuvConversion> s_drmConversions = {
-    {DRM_FORMAT_NV12, YuvConversion{
-                          {YuvFormat{DRM_FORMAT_R8, 1, 1}, YuvFormat{DRM_FORMAT_GR88, 2, 2}},
-                      }},
-    {DRM_FORMAT_P010, YuvConversion{
-                          {YuvFormat{DRM_FORMAT_R16, 1, 1}, YuvFormat{DRM_FORMAT_GR1616, 2, 2}},
-                      }},
-    {DRM_FORMAT_XYUV8888, YuvConversion{
-                              {YuvFormat{DRM_FORMAT_XRGB8888, 1, 1}},
-                          }}};
-
 struct KWIN_EXPORT FormatInfo
 {
     uint32_t drmFormat;
@@ -51,6 +49,8 @@ struct KWIN_EXPORT FormatInfo
     uint32_t bitsPerPixel;
     GLint openglFormat;
     bool floatingPoint;
+
+    static const QHash<uint32_t, YuvConversion> s_drmConversions;
 
     std::optional<YuvConversion> yuvConversion() const
     {

@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "core/drm_formats.h"
 #include "core/graphicsbuffer.h"
 #include "core/output.h"
 #include "scene/item.h"
@@ -59,7 +60,7 @@ public:
     SurfaceTexture *texture() const;
 
     virtual ContentType contentType() const;
-    virtual void setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats);
+    virtual void setScanoutHint(DrmDevice *device, const FormatModifierMap &drmFormats);
 
     virtual void freeze();
 

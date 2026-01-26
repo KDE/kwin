@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "egldisplay.h"
+#include "core/drm_formats.h"
 #include "core/drmdevice.h"
 #include "core/graphicsbuffer.h"
 #include "opengl/eglutils_p.h"
@@ -15,7 +16,6 @@
 
 #include <QOpenGLContext>
 #include <drm_fourcc.h>
-#include <utils/drm_format_helper.h>
 
 #ifndef EGL_DRM_RENDER_NODE_FILE_EXT
 #define EGL_DRM_RENDER_NODE_FILE_EXT 0x3377
@@ -241,9 +241,9 @@ QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::allSupportedDrmFormats() 
     return m_importFormats;
 }
 
-QHash<uint32_t, QList<uint64_t>> EglDisplay::nonExternalOnlySupportedDrmFormats() const
+FormatModifierMap EglDisplay::nonExternalOnlySupportedDrmFormats() const
 {
-    QHash<uint32_t, QList<uint64_t>> ret;
+    FormatModifierMap ret;
     ret.reserve(m_importFormats.size());
     for (auto it = m_importFormats.constBegin(), itEnd = m_importFormats.constEnd(); it != itEnd; ++it) {
         ret[it.key()] = it->nonExternalOnlyModifiers;
@@ -287,26 +287,28 @@ QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::queryImportFormats() cons
             EGLint count = 0;
             const EGLBoolean success = m_functions.queryDmaBufModifiersEXT(m_handle, format, 0, nullptr, nullptr, &count);
             if (success && count > 0) {
+                QList<uint64_t> tmp;
+                tmp.resize(count);
                 DrmFormatInfo drmFormatInfo;
-                drmFormatInfo.allModifiers.resize(count);
                 QList<EGLBoolean> externalOnly(count);
-                if (m_functions.queryDmaBufModifiersEXT(m_handle, format, count, drmFormatInfo.allModifiers.data(), externalOnly.data(), &count)) {
+                if (m_functions.queryDmaBufModifiersEXT(m_handle, format, count, tmp.data(), externalOnly.data(), &count)) {
+                    drmFormatInfo.allModifiers = ModifierList(tmp.begin(), tmp.end());
                     drmFormatInfo.externalOnlyModifiers = drmFormatInfo.allModifiers;
                     drmFormatInfo.nonExternalOnlyModifiers = drmFormatInfo.allModifiers;
                     for (int i = drmFormatInfo.allModifiers.size() - 1; i >= 0; i--) {
                         if (externalOnly[i]) {
-                            drmFormatInfo.nonExternalOnlyModifiers.removeAll(drmFormatInfo.allModifiers[i]);
+                            drmFormatInfo.nonExternalOnlyModifiers.erase(tmp[i]);
                         } else {
-                            drmFormatInfo.externalOnlyModifiers.removeAll(drmFormatInfo.allModifiers[i]);
+                            drmFormatInfo.externalOnlyModifiers.erase(tmp[i]);
                         }
                     }
                     if (!drmFormatInfo.allModifiers.empty()) {
                         if (!drmFormatInfo.allModifiers.contains(DRM_FORMAT_MOD_INVALID)) {
-                            drmFormatInfo.allModifiers.push_back(DRM_FORMAT_MOD_INVALID);
+                            drmFormatInfo.allModifiers.insert(DRM_FORMAT_MOD_INVALID);
                             if (!drmFormatInfo.nonExternalOnlyModifiers.empty()) {
-                                drmFormatInfo.nonExternalOnlyModifiers.push_back(DRM_FORMAT_MOD_INVALID);
+                                drmFormatInfo.nonExternalOnlyModifiers.insert(DRM_FORMAT_MOD_INVALID);
                             } else {
-                                drmFormatInfo.externalOnlyModifiers.push_back(DRM_FORMAT_MOD_INVALID);
+                                drmFormatInfo.externalOnlyModifiers.insert(DRM_FORMAT_MOD_INVALID);
                             }
                         }
                         ret.insert(format, drmFormatInfo);

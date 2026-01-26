@@ -5,9 +5,9 @@
 */
 #include "colorrepresentation_v1.h"
 
+#include "core/drm_formats.h"
 #include "display.h"
 #include "surface_p.h"
-#include "utils/drm_format_helper.h"
 
 namespace KWin
 {

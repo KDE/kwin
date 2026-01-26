@@ -9,9 +9,9 @@
 
 #include "core/backendoutput.h"
 #include "core/colorpipeline.h"
+#include "core/drm_formats.h"
 #include "core/rendertarget.h"
 #include "kwin_export.h"
-#include "utils/drm_format_helper.h"
 
 #include <QObject>
 #include <QPointer>
@@ -108,8 +108,8 @@ public:
     void setScanoutCandidate(SurfaceItem *item);
 
     virtual DrmDevice *scanoutDevice() const = 0;
-    virtual QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const = 0;
-    virtual QHash<uint32_t, QList<uint64_t>> supportedAsyncDrmFormats() const;
+    virtual FormatModifierMap supportedDrmFormats() const = 0;
+    virtual FormatModifierMap supportedAsyncDrmFormats() const;
 
     /**
      * Returns the source rect this output layer should sample from, in buffer local coordinates
@@ -147,7 +147,7 @@ public:
     int minZpos() const;
     int maxZpos() const;
 
-    static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, BackendOutput::ColorPowerTradeoff tradeoff);
+    static QList<FormatInfo> filterAndSortFormats(const FormatModifierMap &formats, uint32_t requiredAlphaBits, BackendOutput::ColorPowerTradeoff tradeoff);
 
     virtual void releaseBuffers() = 0;
 

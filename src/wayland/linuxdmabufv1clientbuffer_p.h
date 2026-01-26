@@ -38,7 +38,7 @@ public:
     std::unique_ptr<LinuxDmaBufV1FormatTable> table;
     dev_t mainDevice;
     QPointer<RenderBackend> renderBackend;
-    QHash<uint32_t, QList<uint64_t>> supportedModifiers;
+    FormatModifierMap supportedModifiers;
 
 protected:
     void zwp_linux_dmabuf_v1_bind_resource(Resource *resource) override;
@@ -106,7 +106,7 @@ private:
 class LinuxDmaBufV1FormatTable
 {
 public:
-    LinuxDmaBufV1FormatTable(const QHash<uint32_t, QList<uint64_t>> &supportedModifiers);
+    LinuxDmaBufV1FormatTable(const FormatModifierMap &supportedModifiers);
 
     RamFile file;
     QMap<std::pair<uint32_t, uint64_t>, uint16_t> indices;

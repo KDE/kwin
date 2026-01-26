@@ -293,7 +293,7 @@ void X11WindowedBackend::initDri3()
     while (it.rem > 0) {
         uint32_t format = driFormatForDepth(it.data->depth);
         if (format) {
-            QList<uint64_t> &mods = m_driFormats[format];
+            ModifierList &mods = m_driFormats[format];
 
             if (m_driMajorVersion > 1 || m_driMinorVersion >= 2) {
                 xcb_dri3_get_supported_modifiers_cookie_t cookie = xcb_dri3_get_supported_modifiers(m_connection, m_screen->root, it.data->depth, 32);
@@ -302,13 +302,13 @@ void X11WindowedBackend::initDri3()
                     const uint64_t *modifiers = xcb_dri3_get_supported_modifiers_screen_modifiers(reply.get());
                     const int modifierCount = xcb_dri3_get_supported_modifiers_screen_modifiers_length(reply.get());
                     for (int i = 0; i < modifierCount; ++i) {
-                        mods.append(modifiers[i]);
+                        mods.insert(modifiers[i]);
                     }
                 }
             }
 
-            if (mods.isEmpty()) {
-                mods.append(DRM_FORMAT_MOD_INVALID);
+            if (mods.empty()) {
+                mods.insert(DRM_FORMAT_MOD_INVALID);
             }
         }
 
@@ -736,7 +736,7 @@ xcb_render_pictformat_t X11WindowedBackend::pictureFormatForDepth(int depth) con
     return m_pictureFormats.value(depth);
 }
 
-QHash<uint32_t, QList<uint64_t>> X11WindowedBackend::driFormats() const
+FormatModifierMap X11WindowedBackend::driFormats() const
 {
     return m_driFormats;
 }
