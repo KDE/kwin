@@ -303,8 +303,8 @@ void main()
         vec2 origin = vec2(1 / sqrt(2), 0);
         vec2 direction = vec2(-1, -1);
         if (splitByImage) {
-            float isShallow = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != B3 && B3 != C3) ? 1 : 0;
-            float isSteep = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != D3 && D3 != D2) ? 1 : 0;
+            float isShallow = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != D3 && D2 != D3) ? 1 : 0;
+            float isSteep = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != B1 && C1 != B1) ? 1 : 0;
             origin = vec2(0.5 * (1 - 0.5 * isShallow), 0);
             direction.x -= isSteep;
             direction.y -= isShallow;
@@ -321,7 +321,7 @@ void main()
         (blendTypes.x != BLEND_NONE && !isColorSimilar(C2, D3))
         || (blendTypes.w != BLEND_NONE && !isColorSimilar(C2, B1))
         || (
-        !isColorSimilar(C2, D2)
+        !isColorSimilar(C2, D1)
         && isColorSimilar(D3, D2)
         && isColorSimilar(D2, D1)
         && isColorSimilar(D1, C1)
@@ -347,7 +347,7 @@ void main()
         float shallow = colorDistance(C3, D1);
         float steep = colorDistance(D2, B3);
         bool splitByImage = blendTypes.w == BLEND_DOMINANT || !(
-        (blendTypes.x != BLEND_NONE && !isColorSimilar(C2, D1))
+        (blendTypes.y != BLEND_NONE && !isColorSimilar(C2, D1))
         || (blendTypes.z != BLEND_NONE && !isColorSimilar(C2, B3))
         || (
         !isColorSimilar(C2, D3)
@@ -361,7 +361,7 @@ void main()
         vec2 origin = vec2(0, 1 / sqrt(2));
         vec2 direction = vec2(1, -1);
         if (splitByImage) {
-            float isShallow = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != D3 && D3 != C3) ? 1 : 0;
+            float isShallow = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != D1 && D2 != D1) ? 1 : 0;
             float isSteep = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != B3 && B3 != B2) ? 1 : 0;
             origin = vec2(0, 0.5 * (1 - 0.5 * isShallow));
             direction.x += isShallow;
