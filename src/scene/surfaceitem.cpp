@@ -6,6 +6,7 @@
 
 #include "scene/surfaceitem.h"
 #include "compositor.h"
+#include "core/drm_formats.h"
 #include "core/graphicsbufferview.h"
 #include "core/pixelgrid.h"
 #include "core/renderbackend.h"
@@ -18,7 +19,6 @@
 #include <QPainter>
 
 #include <epoxy/egl.h>
-#include <utils/drm_format_helper.h>
 
 using namespace std::chrono_literals;
 
@@ -241,7 +241,7 @@ ContentType SurfaceItem::contentType() const
     return ContentType::None;
 }
 
-void SurfaceItem::setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats)
+void SurfaceItem::setScanoutHint(DrmDevice *device, const FormatModifierMap &drmFormats)
 {
 }
 
@@ -435,7 +435,7 @@ bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
     };
 
     const auto attribs = buffer->dmabufAttributes();
-    if (auto itConv = s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != s_drmConversions.end()) {
+    if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
         QList<std::shared_ptr<GLTexture>> textures;
         Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
 
@@ -478,7 +478,7 @@ void OpenGLSurfaceTexture::updateDmabufTexture(GraphicsBuffer *buffer)
     }
 
     const GLint target = GL_TEXTURE_2D;
-    if (auto itConv = s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != s_drmConversions.end()) {
+    if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
         Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
         for (uint plane = 0; plane < itConv->plane.count(); ++plane) {
             const auto &currentPlane = itConv->plane[plane];

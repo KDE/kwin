@@ -40,7 +40,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::doBeginFram
     const QSize bufferSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         const uint32_t format = DRM_FORMAT_XRGB8888;
-        const QHash<uint32_t, QList<uint64_t>> formatTable = m_backend->backend()->driFormats();
+        const FormatModifierMap formatTable = m_backend->backend()->driFormats();
         if (!formatTable.contains(format)) {
             return std::nullopt;
         }
@@ -81,7 +81,7 @@ DrmDevice *X11WindowedEglPrimaryLayer::scanoutDevice() const
     return m_backend->drmDevice();
 }
 
-QHash<uint32_t, QList<uint64_t>> X11WindowedEglPrimaryLayer::supportedDrmFormats() const
+FormatModifierMap X11WindowedEglPrimaryLayer::supportedDrmFormats() const
 {
     return m_backend->backend()->driFormats();
 }
@@ -152,7 +152,7 @@ DrmDevice *X11WindowedEglCursorLayer::scanoutDevice() const
     return m_backend->drmDevice();
 }
 
-QHash<uint32_t, QList<uint64_t>> X11WindowedEglCursorLayer::supportedDrmFormats() const
+FormatModifierMap X11WindowedEglCursorLayer::supportedDrmFormats() const
 {
     return m_backend->supportedFormats();
 }

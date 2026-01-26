@@ -5,7 +5,7 @@
 */
 
 #include "core/graphicsbuffer.h"
-#include "utils/drm_format_helper.h"
+#include "core/drm_formats.h"
 
 #include <QCoreApplication>
 

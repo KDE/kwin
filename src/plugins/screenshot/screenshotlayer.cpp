@@ -19,7 +19,7 @@ DrmDevice *ScreenshotLayer::scanoutDevice() const
     return nullptr;
 }
 
-QHash<uint32_t, QList<uint64_t>> ScreenshotLayer::supportedDrmFormats() const
+FormatModifierMap ScreenshotLayer::supportedDrmFormats() const
 {
     return {};
 }

@@ -41,6 +41,7 @@ target_sources(kwin PRIVATE
     core/colorpipelinestage.cpp
     core/colorspace.cpp
     core/colortransformation.cpp
+    core/drm_formats.cpp
     core/drmdevice.cpp
     core/gbmgraphicsbufferallocator.cpp
     core/gpumanager.cpp
@@ -533,6 +534,7 @@ install(FILES
     core/colorpipelinestage.h
     core/colorspace.h
     core/colortransformation.h
+    core/drm_formats.h
     core/drmdevice.h
     core/gbmgraphicsbufferallocator.h
     core/gpumanager.h

@@ -105,7 +105,7 @@ public:
 
     xcb_render_pictformat_t pictureFormatForDepth(int depth) const;
 
-    QHash<uint32_t, QList<uint64_t>> driFormats() const;
+    FormatModifierMap driFormats() const;
     uint32_t driFormatForDepth(int depth) const;
     int driMajorVersion() const;
     int driMinorVersion() const;
@@ -170,7 +170,7 @@ private:
     bool m_hasDri = false;
     int m_driMajorVersion = 0;
     int m_driMinorVersion = 0;
-    QHash<uint32_t, QList<uint64_t>> m_driFormats;
+    FormatModifierMap m_driFormats;
 
     RenderDevice *m_renderDevice = nullptr;
 

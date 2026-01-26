@@ -11,6 +11,7 @@
 
 #include <errno.h>
 
+#include "core/drm_formats.h"
 #include "core/iccprofile.h"
 #include "core/session.h"
 #include "drm_backend.h"
@@ -25,7 +26,6 @@
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_plane.h"
-#include "utils/drm_format_helper.h"
 #include "utils/envvar.h"
 #include "utils/kernel.h"
 

@@ -6,10 +6,29 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "drm_format_helper.h"
+#include "drm_formats.h"
 
 namespace KWin
 {
+
+ModifierList intersect(const ModifierList &one, const ModifierList &two)
+{
+    ModifierList ret;
+    std::ranges::set_intersection(one, two, std::inserter(ret, ret.begin()));
+    return ret;
+}
+
+const QHash<uint32_t, YuvConversion> FormatInfo::s_drmConversions = {
+    {DRM_FORMAT_NV12, YuvConversion{
+                          {YuvFormat{DRM_FORMAT_R8, 1, 1}, YuvFormat{DRM_FORMAT_GR88, 2, 2}},
+                      }},
+    {DRM_FORMAT_P010, YuvConversion{
+                          {YuvFormat{DRM_FORMAT_R16, 1, 1}, YuvFormat{DRM_FORMAT_GR1616, 2, 2}},
+                      }},
+    {DRM_FORMAT_XYUV8888, YuvConversion{
+                              {YuvFormat{DRM_FORMAT_XRGB8888, 1, 1}},
+                          }},
+};
 
 std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
 {

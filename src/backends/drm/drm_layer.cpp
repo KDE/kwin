@@ -119,10 +119,10 @@ DrmDevice *DrmPipelineLayer::scanoutDevice() const
     return pipeline()->gpu()->drmDevice();
 }
 
-static const QHash<uint32_t, QList<uint64_t>> s_legacyFormats = {{DRM_FORMAT_XRGB8888, {DRM_FORMAT_MOD_INVALID}}};
-static const QHash<uint32_t, QList<uint64_t>> s_legacyCursorFormats = {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
+static const FormatModifierMap s_legacyFormats = {{DRM_FORMAT_XRGB8888, {DRM_FORMAT_MOD_INVALID}}};
+static const FormatModifierMap s_legacyCursorFormats = {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
 
-QHash<uint32_t, QList<uint64_t>> DrmPipelineLayer::supportedDrmFormats() const
+FormatModifierMap DrmPipelineLayer::supportedDrmFormats() const
 {
     if (m_plane) {
         if (m_plane->gpu()->forceLowBandwidthMode() && m_type == OutputLayerType::Primary) {
@@ -137,7 +137,7 @@ QHash<uint32_t, QList<uint64_t>> DrmPipelineLayer::supportedDrmFormats() const
     }
 }
 
-QHash<uint32_t, QList<uint64_t>> DrmPipelineLayer::supportedAsyncDrmFormats() const
+FormatModifierMap DrmPipelineLayer::supportedAsyncDrmFormats() const
 {
     if (m_plane) {
         return m_plane->tearingFormats();

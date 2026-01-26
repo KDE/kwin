@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "core/drm_formats.h"
 #include "kwin_export.h"
 
 #include <QByteArray>
@@ -28,9 +29,9 @@ class KWIN_EXPORT EglDisplay
 public:
     struct DrmFormatInfo
     {
-        QList<uint64_t> allModifiers;
-        QList<uint64_t> nonExternalOnlyModifiers;
-        QList<uint64_t> externalOnlyModifiers;
+        ModifierList allModifiers;
+        ModifierList nonExternalOnlyModifiers;
+        ModifierList externalOnlyModifiers;
     };
 
     EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions, bool owning = true);
@@ -46,7 +47,7 @@ public:
     bool supportsBufferAge() const;
     bool supportsNativeFence() const;
 
-    QHash<uint32_t, QList<uint64_t>> nonExternalOnlySupportedDrmFormats() const;
+    FormatModifierMap nonExternalOnlySupportedDrmFormats() const;
     QHash<uint32_t, DrmFormatInfo> allSupportedDrmFormats() const;
     bool isExternalOnly(uint32_t format, uint64_t modifier) const;
 

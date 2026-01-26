@@ -19,7 +19,7 @@ DrmDevice *ColorPickerLayer::scanoutDevice() const
     return nullptr;
 }
 
-QHash<uint32_t, QList<uint64_t>> ColorPickerLayer::supportedDrmFormats() const
+FormatModifierMap ColorPickerLayer::supportedDrmFormats() const
 {
     return {};
 }

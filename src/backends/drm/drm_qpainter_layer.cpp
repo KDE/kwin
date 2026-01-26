@@ -134,8 +134,8 @@ DrmDevice *DrmVirtualQPainterLayer::scanoutDevice() const
     return nullptr;
 }
 
-QHash<uint32_t, QList<uint64_t>> DrmVirtualQPainterLayer::supportedDrmFormats() const
+FormatModifierMap DrmVirtualQPainterLayer::supportedDrmFormats() const
 {
-    return {{DRM_FORMAT_ARGB8888, QList<uint64_t>{DRM_FORMAT_MOD_LINEAR}}};
+    return {{DRM_FORMAT_ARGB8888, ModifierList{DRM_FORMAT_MOD_LINEAR}}};
 }
 }

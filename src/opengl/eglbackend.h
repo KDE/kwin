@@ -42,7 +42,7 @@ public:
     EglDisplay *eglDisplayObject() const;
 
     bool testImportBuffer(GraphicsBuffer *buffer) override;
-    QHash<uint32_t, QList<uint64_t>> supportedFormats() const override;
+    FormatModifierMap supportedFormats() const override;
 
     QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
 

@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "core/drm_formats.h"
 #include "core/graphicsbuffer.h"
 
 #include <QHash>
@@ -39,18 +40,18 @@ public:
     {
         dev_t device;
         TrancheFlags flags;
-        QHash<uint32_t, QList<uint64_t>> formatTable;
+        FormatModifierMap formatTable;
     };
     /**
      * Sets the list of tranches for this feedback object, with lower indices
      * indicating a higher priority / a more optimal configuration.
      * The main device does not need to be included
      */
-    void setScanoutTranches(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &formats);
+    void setScanoutTranches(DrmDevice *device, const FormatModifierMap &formats);
     void setTranches(const QList<Tranche> &tranches);
 
 private:
-    static QList<Tranche> createScanoutTranches(const QList<Tranche> &tranches, DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &formats);
+    static QList<Tranche> createScanoutTranches(const QList<Tranche> &tranches, DrmDevice *device, const FormatModifierMap &formats);
 
     LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegrationPrivate *integration);
     friend class LinuxDmaBufV1ClientBufferIntegrationPrivate;

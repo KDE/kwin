@@ -9,14 +9,15 @@
 */
 #include "opengl/eglbackend.h"
 #include "compositor.h"
+#include "core/drm_formats.h"
 #include "core/drmdevice.h"
+#include "core/graphicsbuffer.h"
 #include "core/outputbackend.h"
 #include "core/renderdevice.h"
 #include "main.h"
 #include "opengl/eglimagetexture.h"
 #include "opengl/eglutils_p.h"
 #include "utils/common.h"
-#include "utils/drm_format_helper.h"
 #include "wayland/drmclientbuffer.h"
 #include "wayland/linux_drm_syncobj_v1.h"
 #include "wayland_server.h"
@@ -158,7 +159,7 @@ void EglBackend::initWayland()
 
     const auto formats = m_renderDevice->eglDisplay()->allSupportedDrmFormats();
     auto filterFormats = [this, &formats](std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
-        QHash<uint32_t, QList<uint64_t>> set;
+        FormatModifierMap set;
         for (auto it = formats.constBegin(); it != formats.constEnd(); it++) {
             const auto info = FormatInfo::get(it.key());
             if (bpc && (!info || bpc != info->bitsPerColor)) {
@@ -166,29 +167,28 @@ void EglBackend::initWayland()
             }
 
             const bool externalOnlySupported = withExternalOnlyYUV && info && info->yuvConversion();
-            QList<uint64_t> modifiers = externalOnlySupported ? it->allModifiers : it->nonExternalOnlyModifiers;
+            ModifierList modifiers = externalOnlySupported ? it->allModifiers : it->nonExternalOnlyModifiers;
 
-            if (externalOnlySupported && !modifiers.isEmpty()) {
+            if (externalOnlySupported && !modifiers.empty()) {
                 if (auto yuv = info->yuvConversion()) {
                     for (auto plane : std::as_const(yuv->plane)) {
                         const auto planeModifiers = formats.value(plane.format).allModifiers;
-                        modifiers.erase(std::remove_if(modifiers.begin(), modifiers.end(), [&planeModifiers](uint64_t mod) {
+                        std::erase_if(modifiers, [&planeModifiers](uint64_t mod) {
                             return !planeModifiers.contains(mod);
-                        }),
-                                        modifiers.end());
+                        });
                     }
                 }
             }
             for (const auto &tranche : std::as_const(m_tranches)) {
-                if (modifiers.isEmpty()) {
+                if (modifiers.empty()) {
                     break;
                 }
                 const auto trancheModifiers = tranche.formatTable.value(it.key());
                 for (auto trancheModifier : trancheModifiers) {
-                    modifiers.removeAll(trancheModifier);
+                    modifiers.erase(trancheModifier);
                 }
             }
-            if (modifiers.isEmpty()) {
+            if (modifiers.empty()) {
                 continue;
             }
             set.insert(it.key(), modifiers);
@@ -196,10 +196,10 @@ void EglBackend::initWayland()
         return set;
     };
 
-    auto includeShaderConversions = [](QHash<uint32_t, QList<uint64_t>> &&formats) -> QHash<uint32_t, QList<uint64_t>> {
-        for (auto format : s_drmConversions.keys()) {
+    auto includeShaderConversions = [](FormatModifierMap &&formats) -> FormatModifierMap {
+        for (auto format : FormatInfo::s_drmConversions.keys()) {
             auto &modifiers = formats[format];
-            if (modifiers.isEmpty()) {
+            if (modifiers.empty()) {
                 modifiers = {DRM_FORMAT_MOD_LINEAR};
             }
         }
@@ -316,7 +316,7 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer)
     return true;
 }
 
-QHash<uint32_t, QList<uint64_t>> EglBackend::supportedFormats() const
+FormatModifierMap EglBackend::supportedFormats() const
 {
     return m_renderDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats();
 }

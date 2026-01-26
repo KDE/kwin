@@ -66,7 +66,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglLayer::doBeginFrame()
 
     const QSize nativeSize = targetRect().size();
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        const QHash<uint32_t, QList<uint64_t>> formatTable = m_backend->backend()->display()->linuxDmabuf()->formats();
+        const FormatModifierMap formatTable = m_backend->backend()->display()->linuxDmabuf()->formats();
         const auto suitableFormats = filterAndSortFormats(formatTable, m_requiredAlphaBits, m_output->colorPowerTradeoff());
         for (const auto &candidate : suitableFormats) {
             auto it = formatTable.constFind(candidate.drmFormat);
@@ -131,7 +131,7 @@ DrmDevice *WaylandEglLayer::scanoutDevice() const
     return m_backend->drmDevice();
 }
 
-QHash<uint32_t, QList<uint64_t>> WaylandEglLayer::supportedDrmFormats() const
+FormatModifierMap WaylandEglLayer::supportedDrmFormats() const
 {
     return m_backend->backend()->display()->linuxDmabuf()->formats();
 }
@@ -162,7 +162,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::doBeginFrame()
 
     const auto bufferSize = targetRect().size();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
-        const QHash<uint32_t, QList<uint64_t>> formatTable = m_backend->backend()->display()->linuxDmabuf()->formats();
+        const FormatModifierMap formatTable = m_backend->backend()->display()->linuxDmabuf()->formats();
         const auto suitableFormats = filterAndSortFormats(formatTable, m_requiredAlphaBits, m_output->colorPowerTradeoff());
         for (const auto &candidate : suitableFormats) {
             auto it = formatTable.constFind(candidate.drmFormat);
@@ -216,7 +216,7 @@ DrmDevice *WaylandEglCursorLayer::scanoutDevice() const
     return m_backend->drmDevice();
 }
 
-QHash<uint32_t, QList<uint64_t>> WaylandEglCursorLayer::supportedDrmFormats() const
+FormatModifierMap WaylandEglCursorLayer::supportedDrmFormats() const
 {
     return m_backend->supportedFormats();
 }

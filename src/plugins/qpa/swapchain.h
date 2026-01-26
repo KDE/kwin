@@ -25,7 +25,7 @@ public:
 
     GraphicsBuffer *acquire();
     uint32_t format() const;
-    QList<uint64_t> modifiers() const;
+    const ModifierList &modifiers() const;
 
 private:
     GraphicsBufferAllocator *m_allocator;

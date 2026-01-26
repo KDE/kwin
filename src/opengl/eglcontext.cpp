@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "eglcontext.h"
+#include "core/drm_formats.h"
 #include "core/graphicsbuffer.h"
 #include "egldisplay.h"
 #include "eglimagetexture.h"
@@ -20,7 +21,6 @@
 #include "opengl/eglutils_p.h"
 #include "opengl/glutils.h"
 #include "utils/common.h"
-#include "utils/drm_format_helper.h"
 
 #include <QOpenGLContext>
 #include <drm_fourcc.h>

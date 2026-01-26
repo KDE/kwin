@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "drm_formats.h"
 #include "kwin_export.h"
 
 #include <QList>
@@ -28,7 +29,7 @@ struct GraphicsBufferOptions
     uint32_t format;
 
     /// An optional list of modifiers, see DRM_FORMAT_MOD_*.
-    QList<uint64_t> modifiers;
+    ModifierList modifiers;
 
     /// Whether the graphics buffer should be suitable for software rendering.
     bool software = false;

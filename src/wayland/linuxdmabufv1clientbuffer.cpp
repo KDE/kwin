@@ -323,7 +323,7 @@ void LinuxDmaBufV1ClientBufferIntegration::setRenderBackend(RenderBackend *rende
 void LinuxDmaBufV1ClientBufferIntegration::setSupportedFormatsWithModifiers(const QList<LinuxDmaBufV1Feedback::Tranche> &tranches)
 {
     if (LinuxDmaBufV1FeedbackPrivate::get(d->defaultFeedback.get())->m_tranches != tranches) {
-        QHash<uint32_t, QList<uint64_t>> set;
+        FormatModifierMap set;
         for (const auto &tranche : tranches) {
             set.insert(tranche.formatTable);
         }
@@ -397,7 +397,7 @@ LinuxDmaBufV1Feedback::LinuxDmaBufV1Feedback(LinuxDmaBufV1ClientBufferIntegratio
 
 LinuxDmaBufV1Feedback::~LinuxDmaBufV1Feedback() = default;
 
-void LinuxDmaBufV1Feedback::setScanoutTranches(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &formats)
+void LinuxDmaBufV1Feedback::setScanoutTranches(DrmDevice *device, const FormatModifierMap &formats)
 {
     setTranches(createScanoutTranches(d->m_bufferintegration->defaultFeedback->d->m_tranches, device, formats));
 }
@@ -413,7 +413,7 @@ void LinuxDmaBufV1Feedback::setTranches(const QList<Tranche> &tranches)
     }
 }
 
-QList<LinuxDmaBufV1Feedback::Tranche> LinuxDmaBufV1Feedback::createScanoutTranches(const QList<Tranche> &tranches, DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &formats)
+QList<LinuxDmaBufV1Feedback::Tranche> LinuxDmaBufV1Feedback::createScanoutTranches(const QList<Tranche> &tranches, DrmDevice *device, const FormatModifierMap &formats)
 {
     QList<LinuxDmaBufV1Feedback::Tranche> ret;
     for (const auto &tranche : tranches) {
@@ -424,7 +424,7 @@ QList<LinuxDmaBufV1Feedback::Tranche> LinuxDmaBufV1Feedback::createScanoutTranch
             const auto drmModifiers = formats[format];
             for (const uint64_t mod : trancheModifiers) {
                 if (drmModifiers.contains(mod)) {
-                    scanoutTranche.formatTable[format] << mod;
+                    scanoutTranche.formatTable[format].insert(mod);
                 }
             }
         }
@@ -499,7 +499,7 @@ struct linux_dmabuf_feedback_v1_table_entry
     uint64_t modifier;
 };
 
-LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const QHash<uint32_t, QList<uint64_t>> &supportedModifiers)
+LinuxDmaBufV1FormatTable::LinuxDmaBufV1FormatTable(const FormatModifierMap &supportedModifiers)
 {
     QList<linux_dmabuf_feedback_v1_table_entry> data;
     for (auto it = supportedModifiers.begin(); it != supportedModifiers.end(); it++) {

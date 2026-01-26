@@ -3579,7 +3579,7 @@ public:
         GraphicsBufferRef buffer = allocator.allocate(GraphicsBufferOptions{
             .size = size,
             .format = DRM_FORMAT_XRGB8888,
-            .modifiers = QList<uint64_t>{DRM_FORMAT_MOD_LINEAR},
+            .modifiers = ModifierList{DRM_FORMAT_MOD_LINEAR},
             .software = true,
         });
         if (!buffer) {
