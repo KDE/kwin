@@ -76,6 +76,19 @@ public:
         return m_con->devicesSysNames();
     }
 
+    Q_SCRIPTABLE QStringList ListPointers() const
+    {
+        return m_con->ListPointers();
+    }
+    Q_SCRIPTABLE QStringList ListKeyboards() const
+    {
+        return m_con->ListKeyboards();
+    }
+    Q_SCRIPTABLE QStringList ListTouch() const
+    {
+        return m_con->ListTouch();
+    }
+
 Q_SIGNALS:
     void deviceAdded(QString sysName);
     void deviceRemoved(QString sysName);
