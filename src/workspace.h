@@ -315,7 +315,7 @@ public:
     };
     LogicalOutput *findOutput(LogicalOutput *reference, Direction direction, bool wrapAround = false) const;
     LogicalOutput *findOutput(const QString &name) const;
-    LogicalOutput *findOutput(BackendOutput *backendOutput) const;
+    LogicalOutput *findOutput(const BackendOutput *backendOutput) const;
     void switchToOutput(LogicalOutput *output);
 
     QString outputLayoutId() const;

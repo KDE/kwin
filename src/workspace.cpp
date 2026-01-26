@@ -1267,7 +1267,7 @@ LogicalOutput *Workspace::findOutput(LogicalOutput *reference, Direction directi
     }
 }
 
-LogicalOutput *Workspace::findOutput(BackendOutput *backendOutput) const
+LogicalOutput *Workspace::findOutput(const BackendOutput *backendOutput) const
 {
     const auto it = std::ranges::find_if(m_outputs, [backendOutput](LogicalOutput *logical) {
         return logical->backendOutput() == backendOutput
