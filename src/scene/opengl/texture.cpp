@@ -10,7 +10,7 @@
 #include "opengl/eglbackend.h"
 #include "opengl/gltexture.h"
 #include "utils/common.h"
-#include "utils/drm_format_helper.h"
+#include "core/drm_formats.h"
 
 namespace KWin
 {
@@ -192,7 +192,7 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer)
     };
 
     const auto attribs = buffer->dmabufAttributes();
-    if (auto itConv = s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != s_drmConversions.end()) {
+    if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
         std::vector<std::unique_ptr<GLTexture>> textures;
         Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
 
@@ -238,7 +238,7 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer)
     }
 
     const GLint target = GL_TEXTURE_2D;
-    if (auto itConv = s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != s_drmConversions.end()) {
+    if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
         Q_ASSERT(itConv->plane.count() == uint(buffer->dmabufAttributes()->planeCount));
         for (uint plane = 0; plane < itConv->plane.count(); ++plane) {
             const auto &currentPlane = itConv->plane[plane];

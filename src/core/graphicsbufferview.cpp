@@ -5,9 +5,9 @@
 */
 
 #include "core/graphicsbufferview.h"
+#include "core/drm_formats.h"
 #include "core/graphicsbuffer.h"
 #include "utils/common.h"
-#include "utils/drm_format_helper.h"
 
 #include <drm_fourcc.h>
 

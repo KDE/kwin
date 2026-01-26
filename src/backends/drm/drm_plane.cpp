@@ -11,12 +11,12 @@
 
 #include "config-kwin.h"
 
+#include "core/drm_formats.h"
 #include "drm_buffer.h"
 #include "drm_commit.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_pointer.h"
-#include "utils/drm_format_helper.h"
 
 #include <drm_fourcc.h>
 #include <ranges>
@@ -127,11 +127,11 @@ bool DrmPlane::updateProperties()
     if (inFormats.isValid() && inFormats.immutableBlob() && gpu()->addFB2ModifiersSupported()) {
         drmModeFormatModifierIterator iterator{};
         while (drmModeFormatModifierBlobIterNext(inFormats.immutableBlob(), &iterator)) {
-            m_supportedFormats[iterator.fmt].push_back(iterator.mod);
+            m_supportedFormats[iterator.fmt].insert(iterator.mod);
         }
     } else {
         // if we don't have modifier support, assume the cursor needs a linear buffer
-        const QList<uint64_t> modifiers = {type.enumValue() == TypeIndex::Cursor ? DRM_FORMAT_MOD_LINEAR : DRM_FORMAT_MOD_INVALID};
+        const ModifierList modifiers = {type.enumValue() == TypeIndex::Cursor ? DRM_FORMAT_MOD_LINEAR : DRM_FORMAT_MOD_INVALID};
         for (uint32_t i = 0; i < p->count_formats; i++) {
             m_supportedFormats.insert(p->formats[i], modifiers);
         }
@@ -171,7 +171,7 @@ bool DrmPlane::updateProperties()
         m_supportedTearingFormats.clear();
         drmModeFormatModifierIterator iterator{};
         while (drmModeFormatModifierBlobIterNext(inFormatsForTearing.immutableBlob(), &iterator)) {
-            m_supportedTearingFormats[iterator.fmt].push_back(iterator.mod);
+            m_supportedTearingFormats[iterator.fmt].insert(iterator.mod);
         }
     } else {
         m_supportedTearingFormats = m_supportedFormats;
@@ -220,17 +220,17 @@ bool DrmPlane::isCrtcSupported(int pipeIndex) const
     return (m_possibleCrtcs & (1 << pipeIndex));
 }
 
-QHash<uint32_t, QList<uint64_t>> DrmPlane::lowBandwidthFormats() const
+FormatModifierMap DrmPlane::lowBandwidthFormats() const
 {
     return m_lowBandwidthFormats;
 }
 
-QHash<uint32_t, QList<uint64_t>> DrmPlane::formats() const
+FormatModifierMap DrmPlane::formats() const
 {
     return m_supportedFormats;
 }
 
-QHash<uint32_t, QList<uint64_t>> DrmPlane::tearingFormats() const
+FormatModifierMap DrmPlane::tearingFormats() const
 {
     return m_supportedTearingFormats;
 }

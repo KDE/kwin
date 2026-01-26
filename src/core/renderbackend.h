@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "core/drm_formats.h"
 #include "core/rendertarget.h"
 #include "effect/globals.h"
 #include "utils/filedescriptor.h"
@@ -133,7 +134,7 @@ public:
     virtual DrmDevice *drmDevice() const;
 
     virtual bool testImportBuffer(GraphicsBuffer *buffer);
-    virtual QHash<uint32_t, QList<uint64_t>> supportedFormats() const;
+    virtual FormatModifierMap supportedFormats() const;
 };
 
 } // namespace KWin

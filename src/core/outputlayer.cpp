@@ -174,7 +174,7 @@ void OutputLayer::setTargetRect(const Rect &rect)
     m_targetRect = rect;
 }
 
-QHash<uint32_t, QList<uint64_t>> OutputLayer::supportedAsyncDrmFormats() const
+FormatModifierMap OutputLayer::supportedAsyncDrmFormats() const
 {
     return supportedDrmFormats();
 }
@@ -243,7 +243,7 @@ int OutputLayer::maxZpos() const
     return m_maxZpos;
 }
 
-QList<FormatInfo> OutputLayer::filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, BackendOutput::ColorPowerTradeoff tradeoff)
+QList<FormatInfo> OutputLayer::filterAndSortFormats(const FormatModifierMap &formats, uint32_t requiredAlphaBits, BackendOutput::ColorPowerTradeoff tradeoff)
 {
     QList<FormatInfo> ret;
     for (auto it = formats.begin(); it != formats.end(); it++) {

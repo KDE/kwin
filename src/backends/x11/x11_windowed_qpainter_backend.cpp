@@ -68,7 +68,7 @@ DrmDevice *X11WindowedQPainterPrimaryLayer::scanoutDevice() const
     return m_backend->drmDevice();
 }
 
-QHash<uint32_t, QList<uint64_t>> X11WindowedQPainterPrimaryLayer::supportedDrmFormats() const
+FormatModifierMap X11WindowedQPainterPrimaryLayer::supportedDrmFormats() const
 {
     return m_backend->supportedFormats();
 }
@@ -114,7 +114,7 @@ DrmDevice *X11WindowedQPainterCursorLayer::scanoutDevice() const
     return nullptr;
 }
 
-QHash<uint32_t, QList<uint64_t>> X11WindowedQPainterCursorLayer::supportedDrmFormats() const
+FormatModifierMap X11WindowedQPainterCursorLayer::supportedDrmFormats() const
 {
     return {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
 }

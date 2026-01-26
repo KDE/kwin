@@ -9,7 +9,7 @@
 */
 // this needs to be on top, epoxy has an error if you include it after GL/gl.h,
 // which Qt does include
-#include "utils/drm_format_helper.h"
+#include "core/drm_formats.h"
 
 #include "compositor.h"
 #include "core/drmdevice.h"
@@ -43,7 +43,7 @@ Window::~Window()
     unmap();
 }
 
-Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const QHash<uint32_t, QList<uint64_t>> &formats)
+Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const FormatModifierMap &formats)
 {
     const QSize nativeSize = geometry().size() * devicePixelRatio();
     const bool software = window()->surfaceType() == QSurface::RasterSurface; // RasterGLSurface is unsupported by us

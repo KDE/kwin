@@ -6,10 +6,62 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "drm_format_helper.h"
+#include "drm_formats.h"
 
 namespace KWin
 {
+
+ModifierList::ModifierList()
+{
+}
+
+ModifierList::ModifierList(QList<uint64_t> &&move)
+    : QList<uint64_t>(std::move(move))
+{
+}
+
+ModifierList::ModifierList(const QList<uint64_t> &copy)
+    : QList<uint64_t>(copy)
+{
+}
+
+ModifierList::ModifierList(const std::initializer_list<uint64_t> &list)
+    : QList<uint64_t>(list)
+{
+}
+
+void ModifierList::insert(uint64_t modifier)
+{
+    if (!contains(modifier)) {
+        push_back(modifier);
+    }
+}
+
+void ModifierList::erase(uint64_t modifier)
+{
+    removeOne(modifier);
+}
+
+ModifierList ModifierList::intersected(const ModifierList &other) const
+{
+    ModifierList ret;
+    std::ranges::copy_if(*this, std::back_inserter(ret), [&other](uint64_t modifier) {
+        return other.contains(modifier);
+    });
+    return ret;
+}
+
+const QHash<uint32_t, YuvConversion> FormatInfo::s_drmConversions = {
+    {DRM_FORMAT_NV12, YuvConversion{
+                          {YuvFormat{DRM_FORMAT_R8, 1, 1}, YuvFormat{DRM_FORMAT_GR88, 2, 2}},
+                      }},
+    {DRM_FORMAT_P010, YuvConversion{
+                          {YuvFormat{DRM_FORMAT_R16, 1, 1}, YuvFormat{DRM_FORMAT_GR1616, 2, 2}},
+                      }},
+    {DRM_FORMAT_XYUV8888, YuvConversion{
+                              {YuvFormat{DRM_FORMAT_XRGB8888, 1, 1}},
+                          }},
+};
 
 std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
 {

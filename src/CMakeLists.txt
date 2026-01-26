@@ -41,6 +41,7 @@ target_sources(kwin PRIVATE
     core/colorpipelinestage.cpp
     core/colorspace.cpp
     core/colortransformation.cpp
+    core/drm_formats.cpp
     core/drmdevice.cpp
     core/gbmgraphicsbufferallocator.cpp
     core/graphicsbuffer.cpp
@@ -540,6 +541,7 @@ install(FILES
     core/colorpipelinestage.h
     core/colorspace.h
     core/colortransformation.h
+    core/drm_formats.h
     core/drmdevice.h
     core/gbmgraphicsbufferallocator.h
     core/graphicsbuffer.h
@@ -574,7 +576,6 @@ install(FILES
     utils/common.h
     utils/cursortheme.h
     utils/damagejournal.h
-    utils/drm_format_helper.h
     utils/edid.h
     utils/executable_path.h
     utils/filedescriptor.h

@@ -222,7 +222,7 @@ ContentType SurfaceItem::contentType() const
     return ContentType::None;
 }
 
-void SurfaceItem::setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats)
+void SurfaceItem::setScanoutHint(DrmDevice *device, const FormatModifierMap &drmFormats)
 {
 }
 
@@ -267,7 +267,6 @@ bool SurfaceItem::hasAlphaChannel() const
 {
     return m_hasAlphaChannel;
 }
-
 } // namespace KWin
 
 #include "moc_surfaceitem.cpp"

@@ -40,7 +40,7 @@
 #include "window.h"
 #include "workspace.h"
 
-#include "utils/drm_format_helper.h"
+#include "core/drm_formats.h"
 
 #include <KCrash>
 #if KWIN_BUILD_NOTIFICATIONS
