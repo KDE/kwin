@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "core/backendoutput.h"
 #include "core/inputdevice.h"
 
 #include <libinput.h>
@@ -719,8 +720,8 @@ public:
     int tabletPadStripCount() const override;
     QList<InputDeviceTabletPadModeGroup> modeGroups() const override;
 
-    LogicalOutput *output() const;
-    void setOutput(LogicalOutput *output);
+    BackendOutput *output() const;
+    void setOutput(KWin::BackendOutput *output);
 
     LEDs leds() const override;
     void setLeds(LEDs leds) override;
@@ -900,7 +901,7 @@ private:
     KConfigGroup m_defaultConfig;
     bool m_loading = false;
 
-    QPointer<LogicalOutput> m_output;
+    QPointer<BackendOutput> m_output;
     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
     QMatrix4x4 m_defaultCalibrationMatrix;
     QMatrix4x4 m_calibrationMatrix;
