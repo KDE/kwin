@@ -11,6 +11,7 @@
 #include "config-kwin.h"
 
 #include "core/output.h"
+#include "core/outputbackend.h"
 #include "libinput_logging.h"
 #include "main.h"
 #include "mousebuttons.h"
@@ -902,8 +903,8 @@ void Device::setOutputName(const QString &name)
         return;
     }
     m_outputName = name;
-    const auto outputs = workspace()->outputs();
-    const auto it = std::ranges::find_if(outputs, [&name](LogicalOutput *output) {
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    const auto it = std::ranges::find_if(outputs, [&name](BackendOutput *output) {
         return output->name() == name;
     });
     if (it == outputs.end()) {
@@ -938,8 +939,8 @@ void Device::setOutputUuid(const QString &uuid)
         return;
     }
     m_outputUuid = uuid;
-    const auto outputs = workspace()->outputs();
-    const auto it = std::ranges::find_if(outputs, [&uuid](LogicalOutput *output) {
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    const auto it = std::ranges::find_if(outputs, [&uuid](BackendOutput *output) {
         return output->uuid() == uuid;
     });
     if (it == outputs.end()) {
@@ -955,12 +956,12 @@ void Device::setOutputUuid(const QString &uuid)
 #endif
 }
 
-LogicalOutput *Device::output() const
+BackendOutput *Device::output() const
 {
     return m_output;
 }
 
-void Device::setOutput(LogicalOutput *output)
+void Device::setOutput(BackendOutput *output)
 {
     m_output = output;
 }

@@ -8,6 +8,7 @@
 */
 #include "connection.h"
 #include "context.h"
+#include "core/backendoutput.h"
 #include "device.h"
 #include "events.h"
 
@@ -226,11 +227,12 @@ static QPointF tabletToolPosition(TabletToolEvent *event)
     if (event->device()->isMapToWorkspace()) {
         return workspace()->geometry().topLeft() + event->transformedPosition(workspace()->geometry().size());
     } else {
-        LogicalOutput *output = event->device()->output();
-        if (!output) {
-            output = workspace()->activeOutput();
+        BackendOutput *backendOutput = event->device()->output();
+        if (backendOutput) {
+            return devicePointToGlobalPosition(event->transformedPosition(backendOutput->modeSize()), backendOutput);
         }
-        return devicePointToGlobalPosition(event->transformedPosition(output->modeSize()), output);
+        // LogicalOutput *output = workspace()->activeOutput();
+        // return devicePointToGlobalPosition(event->transformedPosition(output->modeSize()), output);
     }
 #else
     return QPointF();
@@ -624,20 +626,20 @@ void Connection::applyScreenToDevice(Device *device)
         return;
     }
 
-    LogicalOutput *deviceOutput = nullptr;
-    const QList<LogicalOutput *> outputs = workspace()->outputs();
+    BackendOutput *deviceOutput = nullptr;
+    const QList<BackendOutput *> outputs = kwinApp()->outputBackend()->outputs();
 
     // let's try to find a screen for it
     if (!device->outputUuid().isEmpty()) {
         // use the UUID if possible, which is more stable than the output name
-        const auto it = std::ranges::find_if(outputs, [device](LogicalOutput *output) {
+        const auto it = std::ranges::find_if(outputs, [device](BackendOutput *output) {
             return output->uuid() == device->outputUuid();
         });
         deviceOutput = it == outputs.end() ? nullptr : *it;
     }
     if (!deviceOutput && !device->outputName().isEmpty()) {
         // we have an output name, try to find a screen with matching name
-        for (LogicalOutput *output : outputs) {
+        for (BackendOutput *output : outputs) {
             if (output->name() == device->outputName()) {
                 deviceOutput = output;
                 break;
@@ -646,14 +648,14 @@ void Connection::applyScreenToDevice(Device *device)
     }
     if (!deviceOutput && device->isTouch()) {
         // do we have an internal screen?
-        LogicalOutput *internalOutput = nullptr;
-        for (LogicalOutput *output : outputs) {
+        BackendOutput *internalOutput = nullptr;
+        for (BackendOutput *output : outputs) {
             if (output->isInternal()) {
                 internalOutput = output;
                 break;
             }
         }
-        auto testScreenMatches = [device](const LogicalOutput *output) {
+        auto testScreenMatches = [device](const BackendOutput *output) {
             const auto &size = device->size();
             const auto &screenSize = output->physicalSize();
             return std::round(size.width()) == std::round(screenSize.width())
@@ -663,7 +665,7 @@ void Connection::applyScreenToDevice(Device *device)
             deviceOutput = internalOutput;
         }
         // let's compare all screens for size
-        for (LogicalOutput *output : outputs) {
+        for (BackendOutput *output : outputs) {
             if (testScreenMatches(output)) {
                 deviceOutput = output;
                 break;
