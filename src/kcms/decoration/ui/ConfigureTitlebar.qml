@@ -70,7 +70,7 @@ KCM.AbstractKCM {
 
             QQC2.CheckBox {
                 id: alwaysShowExcludeFromCaptureCheckBox
-                text: i18nc("@option:check", "Always show \"Hide from Screencast\" buttonX")
+                text: i18nc("@option:check", "Always show \"Hide from Screencast\" button")
                 checked: kcm.settings.alwaysShowExcludeFromCapture
                 onToggled: kcm.settings.alwaysShowExcludeFromCapture = checked
 
