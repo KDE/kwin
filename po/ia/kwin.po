@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-26 00:44+0000\n"
-"PO-Revision-Date: 2026-01-22 15:30+0100\n"
+"PO-Revision-Date: 2026-01-26 15:24+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -4170,16 +4170,14 @@ msgstr ""
 "Non pote adder un modo personalisate con unratio de refrescar de zero Hz"
 
 #: wayland/outputmanagement_v2.cpp:646
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %s is way too negative (%d, %d)"
-msgstr "Position de sortita %s es troppo grande  (%d, %d)"
+msgstr "Position de sortita %s es troppo negative  (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:649
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %s is negative (%d, %d)"
-msgstr "Position de sortita %s es troppo grande  (%d, %d)"
+msgstr "Position de sortita habilitate %s es negative  (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:653
 #, kde-format
