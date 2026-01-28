@@ -50,7 +50,7 @@ public:
     std::optional<double> brightness;
     // setting "brightness" may trigger animations;
     // setting the current brightness doesn't
-    std::optional<double> currentBrightness;
+    std::optional<double> currentHardwareBrightness;
     std::optional<bool> allowSdrSoftwareBrightness;
     std::optional<BackendOutput::ColorPowerTradeoff> colorPowerTradeoff;
     std::optional<double> dimming;

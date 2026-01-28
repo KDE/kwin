@@ -476,13 +476,15 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_nextState->vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     m_nextState->colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
     m_nextState->brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
-    m_nextState->currentBrightness = props->currentBrightness.has_value() ? props->currentBrightness : m_state.currentBrightness;
     m_nextState->desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     m_nextState->desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     m_nextState->allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
     m_nextState->colorPowerTradeoff = props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff);
     m_nextState->dimming = props->dimming.value_or(m_state.dimming);
     m_nextState->brightnessDevice = props->brightnessDevice.value_or(m_state.brightnessDevice);
+    if (!m_nextState->highDynamicRange && m_nextState->brightnessDevice) {
+        m_nextState->currentBrightness = props->currentHardwareBrightness.has_value() ? props->currentHardwareBrightness : m_state.currentBrightness;
+    }
     m_nextState->uuid = props->uuid.value_or(m_state.uuid);
     m_nextState->replicationSource = props->replicationSource.value_or(m_state.replicationSource);
     m_nextState->detectedDdcCi = props->detectedDdcCi.value_or(m_state.detectedDdcCi);

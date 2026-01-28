@@ -1461,7 +1461,9 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
             if (changeset->allowSdrSoftwareBrightness.value_or(output->allowSdrSoftwareBrightness())) {
                 changeset->allowSdrSoftwareBrightness = false;
                 changeset->brightness = device->observedBrightness();
-                changeset->currentBrightness = device->observedBrightness();
+            }
+            if (device != output->brightnessDevice()) {
+                changeset->currentHardwareBrightness = device->observedBrightness();
             }
         }
     }
