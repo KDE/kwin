@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-24 02:39+0000\n"
+"POT-Creation-Date: 2026-01-28 02:43+0000\n"
 "PO-Revision-Date: 2026-01-24 17:28+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1469,12 +1469,12 @@ msgstr "Desgaitu konfigurazio-aukerak"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "KWin oraintsu n aldiz kraskatu dela adierazten du"
 
-#: main_wayland.cpp:296
+#: main_wayland.cpp:305
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Abiarazi root gabeko Xwayland zerbitzari bat."
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:308
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1482,44 +1482,44 @@ msgstr ""
 "Entzun beharreko Wayland hargunearen izena. Ezartzen ez bada \"wayland-0\" "
 "erabiltzen da."
 
-#: main_wayland.cpp:303
+#: main_wayland.cpp:312
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "Erabili beharreko X11 bistaratzailea X11 plataformaren leiho-moduan."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:316
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Erabili beharreko Wayland bistaratzailea, leihodun moduan, Wayland "
 "plataforman."
 
-#: main_wayland.cpp:309
+#: main_wayland.cpp:318
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Errendatu alegiazko framebuffer batera."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:320
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Leiho-moduaren zabalera. Zabalera lehenetsia 1024koa da."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:324
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Leiho-moduaren altuera. Altuera lehenetsia 768koa da."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:329
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr "Leiho-modua pantaila-osokoa egin edo ez"
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:333
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Leiho-moduaren eskala. Balio lehenetsia 1 da."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:338
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1527,7 +1527,7 @@ msgstr ""
 "Leiho-moduan irteera gisa ireki beharreko leiho kopurua. Balio lehenetsia 1 "
 "da"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:343
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1536,7 +1536,7 @@ msgstr ""
 "Sarrerako konexioekin erabili beharreko Wayland-en hargunea. Hori beste "
 "horrekin konbinatu daiteke -- hargunea izendatzeko hargunea"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:347
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1545,28 +1545,28 @@ msgstr ""
 "Sarrerako konexioekin erabili beharreko XWayland-en hargunea. Hori hainbat "
 "aldiz ezar daiteke"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:351
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Aurre-ezarri den xwayland pantailaren izena"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:355
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "xauthority fitxategiaren izena "
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:359
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Instantzia honetatik ateratzen da kwin_wayland_wrapper bidez berrabiarazteko."
 
-#: main_wayland.cpp:352
+#: main_wayland.cpp:361
 #, kde-format
 msgid "Render through drm node."
 msgstr "Errendatu drm moduaren bidez."
 
-#: main_wayland.cpp:353
+#: main_wayland.cpp:362
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
@@ -1574,37 +1574,37 @@ msgstr ""
 "Atera tokiko konfigurazioak «locale1»etik erabiltzailearen konfiguraziotik "
 "egin ordez"
 
-#: main_wayland.cpp:380
+#: main_wayland.cpp:389
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "KWin-ek abiatzen duen sarrera metodoa."
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:395
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Saioa modu giltzatuan abiatzen du."
 
-#: main_wayland.cpp:390
+#: main_wayland.cpp:399
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Saioa abiatzen du giltzatze-pantaila euskarririk gabe."
 
-#: main_wayland.cpp:395
+#: main_wayland.cpp:404
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Saioa abiatzen du lasterbide orokorren euskarririk gabe."
 
-#: main_wayland.cpp:400
+#: main_wayland.cpp:409
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desgaitu KActivities bateratzea."
 
-#: main_wayland.cpp:405
+#: main_wayland.cpp:414
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Irten saio aplikazioa, KWin-ek abiatu duena, ixten denean."
 
-#: main_wayland.cpp:410
+#: main_wayland.cpp:419
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -4175,17 +4175,12 @@ msgstr "Ezin da gehitu neurria hutsik duen neurriko modu bat"
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Ezin da zero Hz-ko freskatze-tasa duen neurriko modu bat gehitu"
 
-#: wayland/outputmanagement_v2.cpp:642
-#, kde-format
-msgid "Position of output %s is negative, that is not supported"
-msgstr "Irteera %s(e)ren kokapena negatiboa da, hori ez da onartzen"
-
-#: wayland/outputmanagement_v2.cpp:646
+#: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "%s irteeren kokapena handiegia da (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:663
+#: wayland/outputmanagement_v2.cpp:670
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Gidariak irteera konfigurazioa errefusatu du"
@@ -4225,6 +4220,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland kraskatu egin da"
+
+#~ msgid "Position of output %s is negative, that is not supported"
+#~ msgstr "Irteera %s(e)ren kokapena negatiboa da, hori ez da onartzen"
 
 #~ msgid "Buttons"
 #~ msgstr "Botoiak"
