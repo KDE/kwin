@@ -190,7 +190,7 @@ void Connection::handleEvent()
 }
 
 #ifndef KWIN_BUILD_TESTING
-QPointF devicePointToGlobalPosition(const QPointF &devicePos, const LogicalOutput *output)
+QPointF devicePointToGlobalPosition(const QPointF &devicePos, const BackendOutput *output)
 {
     QPointF pos = devicePos;
     // TODO: Do we need to handle the flipped cases differently?
@@ -214,7 +214,13 @@ QPointF devicePointToGlobalPosition(const QPointF &devicePos, const LogicalOutpu
     default:
         Q_UNREACHABLE();
     }
-    const auto geo = output->geometryF();
+
+    // is this size right?
+    const auto geo = RectF(output->position() + output->deviceOffset(), QSizeF(output->pixelSize()) / output->scale());
+    qDebug() << geo << pos;
+
+    qDebug() << output->pixelSize() << output->modeSize();
+
     pos = geo.topLeft() + pos / output->scale();
     return QPointF(std::clamp(pos.x(), geo.x(), geo.x() + geo.width() - 1),
                    std::clamp(pos.y(), geo.y(), geo.y() + geo.height() - 1));
@@ -231,8 +237,8 @@ static QPointF tabletToolPosition(TabletToolEvent *event)
         if (backendOutput) {
             return devicePointToGlobalPosition(event->transformedPosition(backendOutput->modeSize()), backendOutput);
         }
-        // LogicalOutput *output = workspace()->activeOutput();
-        // return devicePointToGlobalPosition(event->transformedPosition(output->modeSize()), output);
+        BackendOutput *output = workspace()->activeOutput()->backendOutput();
+        return devicePointToGlobalPosition(event->transformedPosition(output->modeSize()), output);
     }
 #else
     return QPointF();
