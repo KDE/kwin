@@ -274,8 +274,8 @@ void main()
         vec2 origin = vec2(0, -1 / sqrt(2));
         vec2 direction = vec2(-1, 1);
         if (splitByImage) {
-            float isShallow = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != B3 && C3 != B3) ? 1 : 0;
-            float isSteep = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != D1 && D1 != D2) ? 1 : 0;
+            float isShallow = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != B3 && C3 != B3) ? 1 : 0;
+            float isSteep = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != D1 && D1 != D2) ? 1 : 0;
             origin = vec2(0, -0.5 * (1 - 0.5 * isShallow));
             direction.x -= isShallow;
             direction.y += isSteep;
@@ -361,7 +361,7 @@ void main()
         vec2 origin = vec2(0, 1 / sqrt(2));
         vec2 direction = vec2(1, -1);
         if (splitByImage) {
-            float isShallow = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != D1 && D2 != D1) ? 1 : 0;
+            float isShallow = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != D1 && C1 != D1) ? 1 : 0;
             float isSteep = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != B3 && B3 != B2) ? 1 : 0;
             origin = vec2(0, 0.5 * (1 - 0.5 * isShallow));
             direction.x += isShallow;
