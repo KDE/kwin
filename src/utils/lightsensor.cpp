@@ -4,6 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "lightsensor.h"
+#include "utils/common.h"
 
 #include <QLightSensor>
 
@@ -33,10 +34,12 @@ void LightSensor::setEnabled(bool enable)
         return;
     }
     if (enable) {
-        connect(m_sensor.get(), &QLightSensor::readingChanged, this, &LightSensor::update, Qt::UniqueConnection);
-        m_sensor->start();
-        // after we enable the sensor, pick up current reading as device might have rotated meanwhile
-        update();
+        if (m_sensor->start()) {
+            connect(m_sensor.get(), &QLightSensor::readingChanged, this, &LightSensor::update, Qt::UniqueConnection);
+            update();
+        } else {
+            qCWarning(KWIN_CORE) << "Failed to start the light sensor. Light readings will be unavailable.";
+        }
     } else {
         disconnect(m_sensor.get(), &QLightSensor::readingChanged, this, &LightSensor::update);
         m_sensor->stop();
