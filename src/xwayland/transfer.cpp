@@ -38,14 +38,12 @@ Transfer::Transfer(xcb_atom_t selection, FileDescriptor fd, xcb_timestamp_t time
 
 void Transfer::createSocketNotifier(QSocketNotifier::Type type)
 {
-    delete m_notifier;
-    m_notifier = new QSocketNotifier(m_fd.get(), type, this);
+    m_notifier = std::make_unique<QSocketNotifier>(m_fd.get(), type);
 }
 
 void Transfer::clearSocketNotifier()
 {
-    delete m_notifier;
-    m_notifier = nullptr;
+    m_notifier.reset();
 }
 
 void Transfer::timeout()

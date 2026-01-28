@@ -411,16 +411,15 @@ void Selection::startTimeoutTransfersTimer()
     if (m_timeoutTransfers) {
         return;
     }
-    m_timeoutTransfers = new QTimer(this);
-    connect(m_timeoutTransfers, &QTimer::timeout, this, &Selection::timeoutTransfers);
+    m_timeoutTransfers = std::make_unique<QTimer>();
+    connect(m_timeoutTransfers.get(), &QTimer::timeout, this, &Selection::timeoutTransfers);
     m_timeoutTransfers->start(5000);
 }
 
 void Selection::endTimeoutTransfersTimer()
 {
     if (m_xToWlTransfers.isEmpty() && m_wlToXTransfers.isEmpty()) {
-        delete m_timeoutTransfers;
-        m_timeoutTransfers = nullptr;
+        m_timeoutTransfers.reset();
     }
 }
 
