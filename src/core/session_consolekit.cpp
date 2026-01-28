@@ -97,17 +97,6 @@ static void releaseControl(const QString &sessionPath)
     QDBusConnection::systemBus().asyncCall(message);
 }
 
-static bool activate(const QString &sessionPath)
-{
-    const QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, sessionPath,
-                                                                s_sessionInterface,
-                                                                QStringLiteral("Activate"));
-
-    const QDBusMessage reply = QDBusConnection::systemBus().call(message);
-
-    return reply.type() != QDBusMessage::ErrorMessage;
-}
-
 std::unique_ptr<ConsoleKitSession> ConsoleKitSession::create()
 {
     if (!QDBusConnection::systemBus().interface()->isServiceRegistered(s_serviceName)) {
@@ -117,12 +106,6 @@ std::unique_ptr<ConsoleKitSession> ConsoleKitSession::create()
     const QString sessionPath = findProcessSessionPath();
     if (sessionPath.isEmpty()) {
         qCWarning(KWIN_CORE) << "Could not determine the active graphical session";
-        return nullptr;
-    }
-
-    if (!activate(sessionPath)) {
-        qCWarning(KWIN_CORE, "Failed to activate %s session. Maybe another compositor is running?",
-                  qPrintable(sessionPath));
         return nullptr;
     }
 
