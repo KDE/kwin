@@ -11,6 +11,8 @@
 #include "libeis_logging.h"
 #include "main.h"
 
+#include <QTimer>
+
 #include <unistd.h>
 
 namespace KWin
@@ -236,10 +238,12 @@ void EisContext::handleEvents()
         }
         case EIS_EVENT_DEVICE_START_EMULATING: {
             qCDebug(KWIN_EIS) << "Device" << device->name() << "starts emulating";
+            device->setEmulating(true);
             break;
         }
         case EIS_EVENT_DEVICE_STOP_EMULATING: {
             qCDebug(KWIN_EIS) << "Device" << device->name() << "stops emulating";
+            device->setEmulating(false);
             break;
         }
         case EIS_EVENT_POINTER_MOTION: {
