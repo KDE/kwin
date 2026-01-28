@@ -90,7 +90,7 @@ void main()
     vec2 pixelCoord = texcoord0 - pixelOffset * pixelSize;
     vec2 texelOffset = pixelOffset * pixelSize;
 
-#define PIXEL(x,y) texture(sampler, texcoord0 + pixelSize * vec2(x, y)).rgb
+#define PIXEL(x,y) texture(sampler, pixelCoord + pixelSize * vec2(x, y)).rgb
 
     // we need to sample a 5x5 neighbourhood like this:
     //
