@@ -350,11 +350,11 @@ public:
 
 Xwayland::Xwayland(Application *app)
     : m_app(app)
-    , m_launcher(new XwaylandLauncher(this))
+    , m_launcher(std::make_unique<XwaylandLauncher>())
 {
-    connect(m_launcher, &XwaylandLauncher::ready, this, &Xwayland::handleXwaylandReady);
-    connect(m_launcher, &XwaylandLauncher::finished, this, &Xwayland::handleXwaylandFinished);
-    connect(m_launcher, &XwaylandLauncher::errorOccurred, this, &Xwayland::errorOccurred);
+    connect(m_launcher.get(), &XwaylandLauncher::ready, this, &Xwayland::handleXwaylandReady);
+    connect(m_launcher.get(), &XwaylandLauncher::finished, this, &Xwayland::handleXwaylandFinished);
+    connect(m_launcher.get(), &XwaylandLauncher::errorOccurred, this, &Xwayland::errorOccurred);
 }
 
 Xwayland::~Xwayland()
@@ -376,7 +376,7 @@ void Xwayland::init()
 
 XwaylandLauncher *Xwayland::xwaylandLauncher() const
 {
-    return m_launcher;
+    return m_launcher.get();
 }
 
 void Xwayland::dispatchEvents(DispatchEventsMode mode)
@@ -411,8 +411,8 @@ void Xwayland::installSocketNotifier()
 {
     const int fileDescriptor = xcb_get_file_descriptor(kwinApp()->x11Connection());
 
-    m_socketNotifier = new QSocketNotifier(fileDescriptor, QSocketNotifier::Read, this);
-    connect(m_socketNotifier, &QSocketNotifier::activated, this, [this]() {
+    m_socketNotifier = std::make_unique<QSocketNotifier>(fileDescriptor, QSocketNotifier::Read);
+    connect(m_socketNotifier.get(), &QSocketNotifier::activated, this, [this]() {
         dispatchEvents(DispatchEventsMode::Poll);
     });
 
@@ -430,16 +430,14 @@ void Xwayland::uninstallSocketNotifier()
     QAbstractEventDispatcher *dispatcher = QCoreApplication::eventDispatcher();
     disconnect(dispatcher, nullptr, this, nullptr);
 
-    delete m_socketNotifier;
-    m_socketNotifier = nullptr;
+    m_socketNotifier.reset();
 }
 
 void Xwayland::handleXwaylandFinished()
 {
     disconnect(workspace(), &Workspace::outputOrderChanged, this, &Xwayland::updatePrimary);
 
-    delete m_xrandrEventsFilter;
-    m_xrandrEventsFilter = nullptr;
+    m_xrandrEventsFilter.reset();
 
     // If Xwayland has crashed, we must deactivate the socket notifier and ensure that no X11
     // events will be dispatched before blocking; otherwise we will simply hang...
@@ -481,8 +479,7 @@ void Xwayland::handleXwaylandReady()
     connect(workspace(), &Workspace::outputOrderChanged, this, &Xwayland::updatePrimary);
     updatePrimary();
 
-    delete m_xrandrEventsFilter;
-    m_xrandrEventsFilter = new XrandrEventFilter(this);
+    m_xrandrEventsFilter = std::make_unique<XrandrEventFilter>(this);
 
     refreshEavesdropping();
     connect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);

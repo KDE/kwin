@@ -85,15 +85,15 @@ private:
 
     bool dragMoveFilter(Window *target, const QPointF &position) override;
     AbstractDropHandler *xwlDropHandler() override;
-    QSocketNotifier *m_socketNotifier = nullptr;
+    std::unique_ptr<QSocketNotifier> m_socketNotifier;
 
     Application *m_app;
     std::unique_ptr<KSelectionOwner> m_windowManagerSelectionOwner;
     std::unique_ptr<KSelectionOwner> m_compositingManagerSelectionOwner;
     std::unique_ptr<DataBridge> m_dataBridge;
 
-    XrandrEventFilter *m_xrandrEventsFilter = nullptr;
-    XwaylandLauncher *m_launcher;
+    std::unique_ptr<XrandrEventFilter> m_xrandrEventsFilter;
+    std::unique_ptr<XwaylandLauncher> m_launcher;
     std::unique_ptr<XwaylandInputFilter> m_inputFilter;
 
     Q_DISABLE_COPY(Xwayland)

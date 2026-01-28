@@ -130,7 +130,7 @@ protected:
     // active transfers
     QList<TransferWltoX *> m_wlToXTransfers;
     QList<TransferXtoWl *> m_xToWlTransfers;
-    QTimer *m_timeoutTransfers = nullptr;
+    std::unique_ptr<QTimer> m_timeoutTransfers;
 
     Q_DISABLE_COPY(Selection)
 };
