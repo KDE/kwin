@@ -8,6 +8,8 @@
 
 #include "core/inputdevice.h"
 
+#include <memory>
+
 struct eis_device;
 
 namespace KWin
@@ -25,6 +27,10 @@ public:
         return m_device;
     }
     void changeDevice(eis_device *device);
+
+    void releasePressedAndTouches();
+
+    void setEmulating(bool emulating);
 
     QSet<quint32> pressedButtons;
     QSet<quint32> pressedKeys;
@@ -46,6 +52,7 @@ public:
 
 private:
     eis_device *m_device;
+    std::unique_ptr<QTimer> m_releaseTimer;
     bool m_enabled;
 };
 
