@@ -107,6 +107,7 @@ public:
     DrmProperty inFormatsForTearing;
     DrmProperty zpos;
     DrmProperty colorPipeline;
+    DrmProperty fbDamageClips;
 
 private:
     std::shared_ptr<DrmFramebuffer> m_current;

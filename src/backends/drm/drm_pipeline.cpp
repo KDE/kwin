@@ -320,6 +320,23 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
         commit->addEnum(plane->colorRange, range);
         break;
     }
+    if (plane->fbDamageClips.isValid()) {
+        const Rect bufferRect = Rect(QPoint(), fb->buffer()->size());
+        const Region damage = layer->lastBufferDamage() & bufferRect;
+        // not setting the property is the same as full damage
+        if (damage != bufferRect) {
+            QVector<drm_mode_rect> data;
+            for (const Rect &rect : damage.rects()) {
+                data.push_back(drm_mode_rect{
+                    .x1 = rect.left(),
+                    .y1 = rect.top(),
+                    .x2 = rect.right(),
+                    .y2 = rect.bottom(),
+                });
+            }
+            commit->addBlob(plane->fbDamageClips, DrmBlob::create(gpu(), data.data(), data.size() * sizeof(drm_mode_rect)));
+        }
+    }
     return Error::None;
 }
 

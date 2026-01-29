@@ -73,6 +73,7 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
     , inFormatsForTearing(this, QByteArrayLiteral("IN_FORMATS_ASYNC"))
     , zpos(this, QByteArrayLiteral("zpos"))
     , colorPipeline(this, QByteArrayLiteral("COLOR_PIPELINE"))
+    , fbDamageClips(this, QByteArrayLiteral("FB_DAMAGE_CLIPS"))
 {
 }
 
@@ -113,6 +114,7 @@ bool DrmPlane::updateProperties()
     inFormatsForTearing.update(props);
     zpos.update(props);
     colorPipeline.update(props);
+    fbDamageClips.update(props);
 
     if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
         || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {

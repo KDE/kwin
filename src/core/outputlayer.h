@@ -147,6 +147,8 @@ public:
     int minZpos() const;
     int maxZpos() const;
 
+    Region lastBufferDamage() const;
+
     static QList<FormatInfo> filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, BackendOutput::ColorPowerTradeoff tradeoff);
 
     virtual void releaseBuffers() = 0;
@@ -178,6 +180,7 @@ protected:
     int m_zpos = 0;
     int m_minZpos = 0;
     int m_maxZpos = 0;
+    Region m_lastBufferDamage;
 };
 
 } // namespace KWin

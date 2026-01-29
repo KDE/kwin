@@ -120,7 +120,11 @@ std::optional<OutputLayerBeginFrameInfo> OutputLayer::beginFrame()
 
 bool OutputLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
-    return doEndFrame(renderedDeviceRegion, damagedDeviceRegion, frame);
+    const bool ret = doEndFrame(renderedDeviceRegion, damagedDeviceRegion, frame);
+    if (ret && m_output) {
+        m_lastBufferDamage = m_output->transform().inverted().map(damagedDeviceRegion, m_output->pixelSize());
+    }
+    return ret;
 }
 
 void OutputLayer::setScanoutCandidate(SurfaceItem *item)
@@ -241,6 +245,11 @@ int OutputLayer::minZpos() const
 int OutputLayer::maxZpos() const
 {
     return m_maxZpos;
+}
+
+Region OutputLayer::lastBufferDamage() const
+{
+    return m_lastBufferDamage;
 }
 
 QList<FormatInfo> OutputLayer::filterAndSortFormats(const QHash<uint32_t, QList<uint64_t>> &formats, uint32_t requiredAlphaBits, BackendOutput::ColorPowerTradeoff tradeoff)
