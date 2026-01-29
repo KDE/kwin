@@ -26,6 +26,7 @@
 #include "placement.h"
 #include "scene/windowitem.h"
 #include "shadow.h"
+#include "utils/envvar.h"
 #include "virtualdesktops.h"
 #include "wayland/surface.h"
 #include "wayland/xwaylandshell_v1.h"
@@ -1219,6 +1220,7 @@ void X11Window::internalShow()
     }
     MappingState old = mapping_state;
     mapping_state = Mapped;
+    setFrameCallbackHeartbeat(false);
     if (old == Unmapped || old == Withdrawn) {
         map();
     }
@@ -1234,6 +1236,7 @@ void X11Window::internalHide()
     }
     MappingState old = mapping_state;
     mapping_state = Unmapped;
+    setFrameCallbackHeartbeat(false);
     if (old == Mapped || old == Kept) {
         unmap();
     }
@@ -1249,6 +1252,7 @@ void X11Window::internalKeep()
     }
     MappingState old = mapping_state;
     mapping_state = Kept;
+    setFrameCallbackHeartbeat(wantsFrameCallbackHeartbeat());
     if (old == Unmapped || old == Withdrawn) {
         map();
     }
@@ -1273,6 +1277,37 @@ void X11Window::unmap()
     m_inflightUnmaps++;
 
     exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
+}
+
+bool X11Window::wantsFrameCallbackHeartbeat() const
+{
+    // By default, if Xwayland receives no frame callbacks from the compositor, it falls back to
+    // sending present complete notify events at approximately 1Hz. Video games and other apps handle
+    // this very poorly, some of them even completely freeze and remain frozen even after getting
+    // brought back to foreground. The main purpose of frame callback heartbeats is to prevent
+    // X11 applications breaking due to frame callback starvation.
+    //
+    // Note that the behavior is different for unmapped windows. In that case, Xwayland will send
+    // present complete notify events at approximately 60Hz. The only problematic case is when a
+    // mapped window temporarily stops getting frame callbacks.
+
+    static bool wants = !environmentVariableBoolValue("KWIN_X11_NO_FRAME_CALLBACK_HEARTBEAT").value_or(false);
+    return wants;
+}
+
+void X11Window::setFrameCallbackHeartbeat(bool enabled)
+{
+    if (m_frameCallbackHeartbeat == enabled) {
+        return;
+    }
+
+    m_frameCallbackHeartbeat = enabled;
+
+    if (enabled) {
+        refOffscreenRendering();
+    } else {
+        unrefOffscreenRendering();
+    }
 }
 
 void X11Window::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, xcb_timestamp_t time, uint32_t data1, uint32_t data2, uint32_t data3)

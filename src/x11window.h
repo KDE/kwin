@@ -374,6 +374,9 @@ private:
     void setNetWmDesktop(VirtualDesktop *desktop);
     void updateNetWmDesktopId();
 
+    bool wantsFrameCallbackHeartbeat() const;
+    void setFrameCallbackHeartbeat(bool enabled);
+
     NETWinInfo *info = nullptr;
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
@@ -424,6 +427,7 @@ private:
 
     bool m_unmanaged = false;
     bool m_outline = false;
+    bool m_frameCallbackHeartbeat = false;
     quint64 m_surfaceSerial = 0;
     int m_inflightUnmaps = 0;
 };
