@@ -294,7 +294,7 @@ private:
     LinuxDrmSyncObjV1Interface *m_linuxDrmSyncObj = nullptr;
     QList<Window *> m_windows;
     QHash<LogicalOutput *, OutputInterface *> m_waylandOutputs;
-    QHash<BackendOutput *, OutputDeviceV2Interface *> m_waylandOutputDevices;
+    std::unordered_map<BackendOutput *, std::unique_ptr<OutputDeviceV2Interface>> m_waylandOutputDevices;
     DrmLeaseManagerV1 *m_leaseManager = nullptr;
     OutputOrderV1Interface *m_outputOrder = nullptr;
     ColorManagerV1 *m_colorManager = nullptr;

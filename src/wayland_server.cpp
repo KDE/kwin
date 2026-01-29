@@ -305,14 +305,15 @@ void WaylandServer::registerXdgGenericWindow(Window *window)
 void WaylandServer::handleOutputAdded(BackendOutput *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
-        m_waylandOutputDevices.insert(output, new OutputDeviceV2Interface(m_display, output));
+        m_waylandOutputDevices[output] = std::make_unique<OutputDeviceV2Interface>(m_display, output);
     }
 }
 
 void WaylandServer::handleOutputRemoved(BackendOutput *output)
 {
-    if (auto outputDevice = m_waylandOutputDevices.take(output)) {
+    if (auto &outputDevice = m_waylandOutputDevices.at(output)) {
         outputDevice->remove();
+        m_waylandOutputDevices.erase(output);
     }
 }
 
