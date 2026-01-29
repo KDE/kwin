@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-28 02:43+0000\n"
-"PO-Revision-Date: 2026-01-17 20:25+0100\n"
+"PO-Revision-Date: 2026-01-28 16:33+0100\n"
 "Last-Translator: Lucia Mrenica <lucia.mrenica@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
@@ -71,7 +71,7 @@ msgstr "Držať nad ostatnými oknami"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "Skryť zo Screencastu"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -208,7 +208,7 @@ msgstr "Zobrazovať popisy tlačidiel záhlavia"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" button"
-msgstr ""
+msgstr "Vždy zobrazovať tlačidlo \"Skryť zo Screencastu\""
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -227,6 +227,8 @@ msgid ""
 "To enable this option, add the \"Hide from screencast\" button to the "
 "titlebar first"
 msgstr ""
+"Ak chcete túto možnosť aktivovať, najskôr pridajte tlačidlo \"Skryť zo "
+"screencastu“ do hlavného panela."
 
 #: ui/main.qml:29
 #, kde-format

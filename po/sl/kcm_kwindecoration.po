@@ -1,7 +1,7 @@
 # translation of kcmkwindecoration.po to
 # Translation of kcmkwindecoration.po to Slovenian
 # SLOVENIAN TRANSLATION OF K DESKTOP ENVIRONMENT.
-# $Id: kcm_kwindecoration.po 1728744 2026-01-28 03:15:24Z scripty $
+# $Id: kcm_kwindecoration.po 1728865 2026-01-29 03:37:35Z scripty $
 # $Source$
 #
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-28 02:43+0000\n"
-"PO-Revision-Date: 2026-01-14 07:20+0100\n"
+"PO-Revision-Date: 2026-01-28 11:20+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -209,12 +209,10 @@ msgid "Show titlebar button tooltips"
 msgstr "Prikaži orodne namige gumbov oken"
 
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" buttonX"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" button"
-msgstr "Vedno prikaži gumbX \"Skrij pred posnetkom zaslona\""
+msgstr "Vedno prikaži gumb \"Skrij iz video posnetka zaslona\""
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format

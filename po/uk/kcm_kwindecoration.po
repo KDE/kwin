@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-28 02:43+0000\n"
-"PO-Revision-Date: 2026-01-15 00:46+0200\n"
+"PO-Revision-Date: 2026-01-28 16:17+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -203,9 +203,7 @@ msgid "Show titlebar button tooltips"
 msgstr "Показувати підказки кнопок заголовків вікон"
 
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" buttonX"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" button"
 msgstr "Завжди показувати кнопку «Приховати на записі з екрана»"
