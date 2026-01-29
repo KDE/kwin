@@ -54,3 +54,4 @@ Options:
   - autotests
  require-passing-tests-on: ['Linux/Qt6']
  run-qmllint: True
+ enable-lsan: True
