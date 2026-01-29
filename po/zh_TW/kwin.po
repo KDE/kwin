@@ -11,13 +11,13 @@
 # pan93412 <pan93412@gmail.com>, 2018, 2019, 2020.
 # Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv dot tw>, 2007, 2008, 2009, 2010.
 # Franklin Weng <franklin at goodhorse dot idv dot tw>, 2007, 2008.
-# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 Kisaragi Hiu <mail@kisaragi-hiu.com>
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025, 2026 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-28 00:46+0000\n"
-"PO-Revision-Date: 2025-12-16 22:00+0900\n"
+"POT-Creation-Date: 2026-01-29 00:45+0000\n"
+"PO-Revision-Date: 2026-01-28 20:00+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -4138,16 +4138,14 @@ msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "無法新增更新頻率是 0 Hz 的自訂模式"
 
 #: wayland/outputmanagement_v2.cpp:646
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %s is way too negative (%d, %d)"
-msgstr "輸出 %s 的位置大到不合理 (%d, %d)"
+msgstr "輸出 %s 的位置負到不合理 (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:649
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %s is negative (%d, %d)"
-msgstr "輸出 %s 的位置大到不合理 (%d, %d)"
+msgstr "已啟用的輸出 %s 的位置是負的 (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:653
 #, kde-format
@@ -4165,7 +4163,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "（沒有回應）"
 
-#: workspace.cpp:1740
+#: workspace.cpp:1742
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

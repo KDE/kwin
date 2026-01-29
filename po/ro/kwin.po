@@ -2,15 +2,15 @@
 # Copyright (C) 2008 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kwrite package.
 # Laurenţiu Buzdugan <lbuz@rolix.org>, 2008, 2009".
-# SPDX-FileCopyrightText: 2008, 2009, 2010, 2011, 2012, 2013, 2020, 2022, 2025 Sergiu Bivol <sergiu@cip.md>
+# SPDX-FileCopyrightText: 2008, 2009, 2010, 2011, 2012, 2013, 2020, 2022, 2025, 2026 Sergiu Bivol <sergiu@cip.md>
 # Cristian Oneț <onet.cristian@gmail.com>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-28 00:46+0000\n"
-"PO-Revision-Date: 2025-12-12 10:53+0000\n"
+"POT-Creation-Date: 2026-01-29 00:45+0000\n"
+"PO-Revision-Date: 2026-01-28 23:05+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -4156,46 +4156,39 @@ msgid "Window One Desktop Down"
 msgstr "Fereastra cu un birou mai jos"
 
 #: useractions.cpp:941
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Fereastra către ecranul %1"
+msgstr "Mută fereastra către ecranul %1"
 
 #: useractions.cpp:948
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Fereastră către ecranul următor"
+msgstr "Mută fereastra către ecranul următor"
 
 #: useractions.cpp:950
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Fereastră către ecranul precedent"
+msgstr "Mută fereastra către ecranul precedent"
 
 #: useractions.cpp:952
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Fereastra cu un birou la dreapta"
+msgstr "Mută fereastra cu un ecran la dreapta"
 
 #: useractions.cpp:954
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Fereastra cu un birou la stânga"
+msgstr "Mută fereastra cu un ecran la stânga"
 
 #: useractions.cpp:956
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Fereastră în biroul 2"
+msgstr "Mută fereastra cu un ecran mai sus"
 
 #: useractions.cpp:958
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Fereastra cu un birou mai jos"
+msgstr "Mută fereastra cu un ecran mai jos"
 
 #: useractions.cpp:962
 #, kde-format
@@ -4213,34 +4206,29 @@ msgid "Switch to Previous Screen"
 msgstr "Schimbă la ecranul precedent"
 
 #: useractions.cpp:971
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Schimbă la fereastra din dreapta"
+msgstr "Schimbă la ecranul din dreapta"
 
 #: useractions.cpp:973
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Schimbă la fereastra din stânga"
+msgstr "Schimbă la ecranul din stânga"
 
 #: useractions.cpp:975
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Comută la biroul 0"
+msgstr "Schimbă la ecranul de mai sus"
 
 #: useractions.cpp:977
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Comută la biroul 0"
+msgstr "Schimbă la ecranul de mai jos"
 
 #: useractions.cpp:980
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "M&ută la biroul"
+msgstr "Trage cu ochiul la birou"
 
 #: useractions.cpp:983
 #, kde-format
@@ -4300,42 +4288,43 @@ msgstr "Comută la biroul %1"
 #: wayland/outputmanagement_v2.cpp:602
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "Unul dintre afișajele relevante nu mai e disponibil"
 
 #: wayland/outputmanagement_v2.cpp:620
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
+"Dezactivarea tuturor afișajelor prin modificarea configurărilor nu e permisă"
 
 #: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Nu se poate adăuga regim personalizat cu dimensiune goală"
 
 #: wayland/outputmanagement_v2.cpp:635
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "Nu se poate adăuga regim personalizat cu rată de împrospătare zero Hz"
 
 #: wayland/outputmanagement_v2.cpp:646
 #, kde-format
 msgid "Position of output %s is way too negative (%d, %d)"
-msgstr ""
+msgstr "Poziția afișajului %s e mult prea negativă (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:649
 #, kde-format
 msgid "Position of enabled output %s is negative (%d, %d)"
-msgstr ""
+msgstr "Poziția afișajului activat %s e negativă (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "Poziția afișajului %s e mult prea mare (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:670
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "Driver-ul a respins configurația afișajelor"
 
 #: window.cpp:3128
 #, kde-format
@@ -4343,7 +4332,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(nu răspunde)"
 
-#: workspace.cpp:1740
+#: workspace.cpp:1742
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4361,7 +4350,7 @@ msgstr ""
 #: xwayland/xwaylandlauncher.cpp:295
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
+msgstr "Xwayland s-a prăbușit"
 
 #~ msgid "Buttons"
 #~ msgstr "Butoane"

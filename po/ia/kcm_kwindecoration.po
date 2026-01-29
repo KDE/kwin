@@ -2,19 +2,20 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # SPDX-FileCopyrightText: 2010, 2012, 2013, 2014, 2019, 2020, 2021, 2023, 2024, 2025, 2026 g.sora <g.sora@tiscali.it>
+# giovanni <g.sora@tiscali.it>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-28 00:46+0000\n"
-"PO-Revision-Date: 2026-01-22 14:18+0100\n"
+"PO-Revision-Date: 2026-01-28 15:42+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
@@ -205,12 +206,10 @@ msgid "Show titlebar button tooltips"
 msgstr "Monstra consilios de button de fenestra de barra de titulo"
 
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" buttonX"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" button"
-msgstr "Monstra sempre buttonX de \"Cela ab Screencast\""
+msgstr "Monstra sempre button de \"Cela ab Screencast\""
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format

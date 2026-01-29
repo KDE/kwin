@@ -1,11 +1,11 @@
-# SPDX-FileCopyrightText: 2021, 2022, 2023, 2024, 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2021, 2022, 2023, 2024, 2025, 2026 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 # Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-28 00:46+0000\n"
-"PO-Revision-Date: 2025-12-11 10:23+0400\n"
+"POT-Creation-Date: 2026-01-29 00:45+0000\n"
+"PO-Revision-Date: 2026-01-28 20:10+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -4135,16 +4135,14 @@ msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "لا يمكن إضافة وضع مخصص بمعدل تحديث يبلغ صفر هرتز"
 
 #: wayland/outputmanagement_v2.cpp:646
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %s is way too negative (%d, %d)"
-msgstr "موضع الإخراج %s كبير جدًا (%d، %d)"
+msgstr "موضع الإخراج %s سلبي للغاية (%d، %d)"
 
 #: wayland/outputmanagement_v2.cpp:649
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %s is negative (%d, %d)"
-msgstr "موضع الإخراج %s كبير جدًا (%d، %d)"
+msgstr "موضع الإخراج الممكّن %s سلبي (%d، %d)"
 
 #: wayland/outputmanagement_v2.cpp:653
 #, kde-format
@@ -4162,7 +4160,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(لا يستجيب)"
 
-#: workspace.cpp:1740
+#: workspace.cpp:1742
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
