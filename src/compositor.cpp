@@ -465,6 +465,8 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
     }
     const auto layer = view->layer();
     const auto candidate = view->scanoutCandidate();
+    const bool candidateChanged = layer->scanoutCandidate() != candidate;
+    const Region deviceDamage = candidateChanged ? Region::infinite() : view->collectDamage();
     layer->setScanoutCandidate(candidate);
     if (!candidate) {
         return false;
@@ -488,7 +490,7 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
     }
     const bool tearing = frame->presentationMode() == PresentationMode::Async || frame->presentationMode() == PresentationMode::AdaptiveAsync;
     const auto formats = tearing ? layer->supportedAsyncDrmFormats() : layer->supportedDrmFormats();
-    if (!formats.containsFormat(attrs->format, attrs->modifier) || !layer->importScanoutBuffer(candidate->buffer(), frame)) {
+    if (!formats.containsFormat(attrs->format, attrs->modifier) || !layer->importScanoutBuffer(candidate->buffer(), deviceDamage, frame)) {
         candidate->setScanoutHint(layer->scanoutDevice(), formats);
         return false;
     }

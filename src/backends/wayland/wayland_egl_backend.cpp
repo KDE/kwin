@@ -143,8 +143,9 @@ bool WaylandEglLayer::earlyScanoutChecks()
     return test();
 }
 
-bool WaylandEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+bool WaylandEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const Region &damagedDeviceRegion, const std::shared_ptr<OutputFrame> &frame)
 {
+    // TODO use the damage region
     setBuffer(buffer, Region::infinite());
     return true;
 }

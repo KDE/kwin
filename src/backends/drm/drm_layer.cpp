@@ -152,4 +152,9 @@ QList<QSize> DrmPipelineLayer::recommendedSizes() const
     }
 }
 
+Region DrmPipelineLayer::bufferDamage() const
+{
+    return m_bufferDamage;
+}
+
 }

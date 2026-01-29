@@ -106,13 +106,14 @@ public:
     /**
      * Attempts to import the buffer for direct scanout
      */
-    virtual bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame);
+    virtual bool importScanoutBuffer(GraphicsBuffer *buffer, const Region &damagedDeviceRegion, const std::shared_ptr<OutputFrame> &frame);
     /**
      * Returns the item whose buffer is presented directly by display hardware.
      */
     virtual SurfaceItem *presentedDirectScanoutItem() const;
 
     void setScanoutCandidate(SurfaceItem *item);
+    SurfaceItem *scanoutCandidate() const;
 
     DrmDevice *scanoutDevice() const;
     virtual FormatModifierMap supportedDrmFormats() const = 0;

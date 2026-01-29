@@ -77,10 +77,10 @@ bool WaylandLayer::test() const
     return true;
 }
 
-void WaylandLayer::setBuffer(GraphicsBuffer *buffer, const Region &deviceDamagedRegion)
+void WaylandLayer::setBuffer(GraphicsBuffer *buffer, const Region &bufferDamage)
 {
     m_pendingBuffer = buffer;
-    m_pendingDamage = deviceDamagedRegion;
+    m_pendingDamage = bufferDamage;
 }
 
 void WaylandLayer::commit(PresentationMode presentationMode)

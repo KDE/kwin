@@ -291,8 +291,20 @@ std::expected<void, OutputError> DrmPipeline::prepareAtomicPlane(DrmAtomicCommit
     if (plane->zpos.isValid() && !plane->zpos.isImmutable()) {
         commit->addProperty(plane->zpos, layer->zpos());
     }
+
     if (plane->fbDamage.isValid()) {
-        commit->addProperty(plane->fbDamage, 0);
+        const Rect bufferRect = Rect(QPoint(), fb->buffer()->size());
+        const Region damage = layer->bufferDamage() & bufferRect;
+        QList<drm_mode_rect> data;
+        for (const Rect &rect : damage.rects()) {
+            data.push_back(drm_mode_rect{
+                .x1 = rect.left(),
+                .y1 = rect.top(),
+                .x2 = rect.right(),
+                .y2 = rect.bottom(),
+            });
+        }
+        commit->addBlob(plane->fbDamage, DrmBlob::create(gpu(), data.data(), data.size() * sizeof(drm_mode_rect)));
     }
 
     const auto colorPipelines = plane->colorPipelines();

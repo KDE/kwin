@@ -113,7 +113,7 @@ bool OutputLayer::earlyScanoutChecks()
     return false;
 }
 
-bool OutputLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+bool OutputLayer::importScanoutBuffer(GraphicsBuffer *buffer, const Region &damagedDeviceRegion, const std::shared_ptr<OutputFrame> &frame)
 {
     return false;
 }
@@ -129,6 +129,11 @@ void OutputLayer::setScanoutCandidate(SurfaceItem *item)
         m_scanoutCandidate->setScanoutHint(nullptr, {});
     }
     m_scanoutCandidate = item;
+}
+
+SurfaceItem *OutputLayer::scanoutCandidate() const
+{
+    return m_scanoutCandidate;
 }
 
 void OutputLayer::setEnabled(bool enable)

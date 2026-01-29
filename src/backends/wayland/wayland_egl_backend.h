@@ -44,7 +44,7 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame(OutputFrame *frame) override;
     bool endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;
     bool earlyScanoutChecks() override;
-    bool importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame) override;
+    bool importScanoutBuffer(GraphicsBuffer *buffer, const Region &damagedDeviceRegion, const std::shared_ptr<OutputFrame> &frame) override;
     FormatModifierMap supportedDrmFormats() const override;
     void releaseBuffers() override;
 

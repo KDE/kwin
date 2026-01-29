@@ -134,7 +134,7 @@ bool VirtualEglGbmLayer::earlyScanoutChecks()
     return true;
 }
 
-bool VirtualEglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+bool VirtualEglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const Region &damagedDeviceRegion, const std::shared_ptr<OutputFrame> &frame)
 {
     m_scanoutBuffer = buffer;
     return true;

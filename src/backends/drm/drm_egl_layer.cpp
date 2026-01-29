@@ -71,7 +71,11 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame(OutputFrame *fr
 
 bool EglGbmLayer::endFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
-    return m_surface.endRendering(damagedDeviceRegion, frame);
+    const bool ret = m_surface.endRendering(damagedDeviceRegion, frame);
+    if (ret) {
+        m_bufferDamage = m_output->transform().inverted().map(damagedDeviceRegion, m_output->pixelSize());
+    }
+    return ret;
 }
 
 bool EglGbmLayer::preparePresentationTest()
@@ -135,7 +139,7 @@ bool EglGbmLayer::earlyScanoutChecks()
     return true;
 }
 
-bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
+bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const Region &damagedDeviceRegion, const std::shared_ptr<OutputFrame> &frame)
 {
     if (buffer->dmabufAttributes()->device != gpu()->drmDevice()->deviceId()
         && (!gpu()->renderDevice() || buffer->dmabufAttributes()->device != gpu()->renderDevice()->deviceId())) {
@@ -149,6 +153,19 @@ bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_
     m_scanoutBuffer = gpu()->importBuffer(buffer, FileDescriptor{});
     if (m_scanoutBuffer) {
         m_surface.forgetDamage(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal. It's more flexible and less error-prone
+
+        // damagedDeviceRegion is relative to the crtc target,
+        // but we need buffer damage. Since tracking that is
+        // quite complicated in the compositor, just estimate
+        // the buffer damage here
+        const double xScale = m_targetRect.width() / double(buffer->size().width());
+        const double yScale = m_targetRect.height() / double(buffer->size().height());
+        const auto transform = m_bufferTransform.inverted();
+        auto rects = damagedDeviceRegion.rects() | std::views::transform([&](const Rect &rect) {
+            const auto local = rect.scaled(1.0 / xScale, 1.0 / yScale);
+            return transform.map(local, buffer->size()).roundedOut();
+        }) | std::ranges::to<QList>();
+        m_bufferDamage = Region::fromUnsortedRects(rects);
     }
     return m_scanoutBuffer != nullptr;
 }

@@ -42,6 +42,7 @@ public:
     FormatModifierMap supportedAsyncDrmFormats() const override;
 
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
+    Region bufferDamage() const;
 
     DrmPlane *plane() const;
 
@@ -51,6 +52,7 @@ protected:
     DrmOutput *drmOutput() const;
 
     DrmPlane *m_plane = nullptr;
+    Region m_bufferDamage;
 };
 
 }

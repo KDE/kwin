@@ -49,7 +49,7 @@ public:
     ~WaylandLayer() override;
 
     bool test() const;
-    void setBuffer(GraphicsBuffer *buffer, const Region &deviceDamagedRegion);
+    void setBuffer(GraphicsBuffer *buffer, const Region &bufferDamage);
     void commit(PresentationMode presentationMode);
 
     KWayland::Client::Surface *surface() const;
