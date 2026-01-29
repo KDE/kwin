@@ -58,3 +58,4 @@ Options:
  cppcheck-ignore-files:
   - autotests
  run-qmllint: True
+ enable-lsan: True
