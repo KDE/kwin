@@ -241,6 +241,13 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
             effects->registerAxisShortcut(pointerAxisModifiers, PointerAxisDown, m_zoomOutAxisAction.get());
         }
     }
+
+    bool usePatternUpscaler = ZoomConfig::usePatternUpscaler();
+    if (usePatternUpscaler != m_usePatternUpscaler) {
+        m_usePatternUpscaler = usePatternUpscaler;
+        // TODO: figure out if this actually gets texture filters to change
+        effects->addRepaintFull();
+    }
 }
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
@@ -390,7 +397,7 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
 GLShader *ZoomEffect::shaderForZoom(double zoom)
 {
     if (zoom < m_pixelGridZoom) {
-        if (m_useUpscaler) {
+        if (m_usePatternUpscaler) {
             if (!m_upscalerShader) {
                 m_upscalerShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/upscaler.frag"));
             }

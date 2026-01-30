@@ -144,7 +144,7 @@ private:
     Qt::KeyboardModifiers m_axisModifiers;
     std::unique_ptr<QAction> m_touchpadAction;
     double m_lastPinchProgress = 0;
-    bool m_useUpscaler = true;
+    bool m_usePatternUpscaler = true;
 
     std::unique_ptr<TextCaretTracker> m_textCaretTracker;
 #if KWIN_BUILD_QACCESSIBILITYCLIENT
