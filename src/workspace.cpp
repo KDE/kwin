@@ -1517,7 +1517,7 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
         if ((*it)->desktops().count() > 1) {
             (*it)->leaveDesktop(desktop);
         } else {
-            sendWindowToDesktops(*it, {pickNewVirtualDesktopForWindow(*it, desktop)}, true);
+            (*it)->setDesktops({pickNewVirtualDesktopForWindow(*it, desktop)});
         }
     }
 
