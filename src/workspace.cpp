@@ -1489,42 +1489,32 @@ static VirtualDesktop *pickNewVirtualDesktopForWindow(const Window *window, cons
 
 void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
 {
-    // Note that sendWindowToDesktops() does far more than just assigning the new desktop. It cannot
-    // be used with initializing windows.
-    {
-        const auto windows = waylandServer()->windows();
-        for (Window *window : windows) {
-            if (m_windows.contains(window)) {
-                continue;
-            }
-
-            if (!window->desktops().contains(desktop)) {
-                continue;
-            }
-
-            if (window->desktops().count() > 1) {
-                window->leaveDesktop(desktop);
-            } else {
-                window->setDesktops({pickNewVirtualDesktopForWindow(window, desktop)});
-            }
+    const auto tryEvacuateWindow = [desktop](Window *window) {
+        if (!window->desktops().contains(desktop)) {
+            return;
         }
-    }
 
-    for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
-        if (!(*it)->desktops().contains(desktop)) {
-            continue;
-        }
-        if ((*it)->desktops().count() > 1) {
-            (*it)->leaveDesktop(desktop);
+        if (window->desktops().count() > 1) {
+            window->leaveDesktop(desktop);
         } else {
-            (*it)->setDesktops({pickNewVirtualDesktopForWindow(*it, desktop)});
+            window->setDesktops({pickNewVirtualDesktopForWindow(window, desktop)});
+        }
+    };
+
+    // Evacuate initializing Wayland windows, i.e. windows that are not managed by the Workspace yet.
+    const auto waylandWindows = waylandServer()->windows();
+    for (Window *window : waylandWindows) {
+        if (!m_windows.contains(window)) {
+            tryEvacuateWindow(window);
         }
     }
 
-    for (auto it = deleted.constBegin(); it != deleted.constEnd(); ++it) {
-        if ((*it)->desktops().contains(desktop)) {
-            (*it)->leaveDesktop(desktop);
-        }
+    for (Window *window : std::as_const(m_windows)) {
+        tryEvacuateWindow(window);
+    }
+
+    for (Window *window : std::as_const(deleted)) {
+        tryEvacuateWindow(window);
     }
 
     rearrange();
