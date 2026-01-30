@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-29 00:45+0000\n"
+"POT-Creation-Date: 2026-01-30 00:45+0000\n"
 "PO-Revision-Date: 2026-01-24 11:29+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -4239,7 +4239,7 @@ msgstr ""
 "servicio de bandeja de pegar como https://paste.kde.org en lugar de pegarla "
 "en hilos de ayuda.\n"
 
-#: xwayland/xwaylandlauncher.cpp:295
+#: xwayland/xwaylandlauncher.cpp:293
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"

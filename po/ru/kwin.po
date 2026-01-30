@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-29 00:45+0000\n"
+"POT-Creation-Date: 2026-01-30 00:45+0000\n"
 "PO-Revision-Date: 2026-01-28 16:45+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -4256,7 +4256,7 @@ msgstr ""
 "Пожалуйста, размещайте информацию, приведённую ниже, в сервис Pastebin,\n"
 "например, на https://paste.kde.org вместо вставки напрямую в темы форума.\n"
 
-#: xwayland/xwaylandlauncher.cpp:295
+#: xwayland/xwaylandlauncher.cpp:293
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Произошло аварийное завершение Xwayland"

@@ -1,7 +1,7 @@
 # Traducerea kcmkwinrules.po în Română
 # translation of kcmkwinrules.po to Romanian
+# SPDX-FileCopyrightText: 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022, 2024, 2026 Sergiu Bivol <sergiu@cip.md>
 # Claudiu Costin <claudiuc@kde.org>, 2004, 2005.
-# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022, 2024.
 # Cristian Oneț <onet.cristian@gmail.com>, 2011, 2012.
 # Cristian Buzduga <cristianbzdg@gmail.com>, 2011.
 msgid ""
@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-23 00:45+0000\n"
-"PO-Revision-Date: 2024-02-27 21:36+0000\n"
+"PO-Revision-Date: 2026-01-29 00:39+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 25.08.1\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -41,26 +41,22 @@ msgid "Unimportant"
 msgstr "Neimportant"
 
 #: optionsmodel.cpp:199
-#, fuzzy, kde-format
-#| msgid "Exact Match"
+#, kde-format
 msgid "Exact match"
 msgstr "Potrivire exactă"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Substring Match"
+#, kde-format
 msgid "Substring match"
 msgstr "Potrivire subșir"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Regular Expression"
+#, kde-format
 msgid "Regular expression"
 msgstr "Expresie regulată"
 
 #: optionsmodel.cpp:205
-#, fuzzy, kde-format
-#| msgid "Apply Initially"
+#, kde-format
 msgid "Apply initially"
 msgstr "Aplică inițial"
 
@@ -76,8 +72,7 @@ msgstr ""
 "Modificările ulterioare nu vor fi afectate."
 
 #: optionsmodel.cpp:209
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply now"
 msgstr "Aplică acum"
 
@@ -107,8 +102,7 @@ msgstr ""
 "ferestrei, ultima valoare memorizată va fi aplicată."
 
 #: optionsmodel.cpp:217
-#, fuzzy, kde-format
-#| msgid "Do Not Affect"
+#, kde-format
 msgid "Do not affect"
 msgstr "Nu afecta"
 
@@ -135,8 +129,7 @@ msgid "The window property will be always forced to the given value."
 msgstr "Proprietatea ferestrei va fi forțată mereu la valoarea dată."
 
 #: optionsmodel.cpp:224
-#, fuzzy, kde-format
-#| msgid "Force Temporarily"
+#, kde-format
 msgid "Force temporarily"
 msgstr "Forțează temporar"
 
@@ -191,6 +184,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"Lizibilitatea poate fi afectată la valori extrem de scăzute ale opacității. "
+"La 0%, fereastra devine invizibilă."
 
 #: rulesmodel.cpp:387
 #, kde-format
@@ -240,10 +235,9 @@ msgid "Machine (hostname)"
 msgstr "Mașină (nume gazdă):"
 
 #: rulesmodel.cpp:440
-#, fuzzy, kde-format
-#| msgid "Window &Extra"
+#, kde-format
 msgid "Window tag"
-msgstr "&Suplimentar"
+msgstr "Marcajul ferestrei"
 
 #: rulesmodel.cpp:447
 #, kde-format
@@ -274,14 +268,12 @@ msgid "Maximized vertically"
 msgstr "Maximizat pe verticală"
 
 #: rulesmodel.cpp:472
-#, fuzzy, kde-format
-#| msgid "Virtual Desktop"
+#, kde-format
 msgid "Virtual desktop"
 msgstr "Birou virtual"
 
 #: rulesmodel.cpp:478
-#, fuzzy, kde-format
-#| msgid "Virtual Desktops"
+#, kde-format
 msgid "Virtual desktops"
 msgstr "Birouri virtuale"
 
@@ -326,6 +318,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Unele aplicații își pot stabili propria geometrie, supradefinind "
+"preferințele gestionarului de ferestre. Stabilirea acestei proprietăți "
+"supradefinește cererile de plasare ale acestora.<nl/><nl/>Aceasta afectează "
+"<interface>Dimensiunea</interface> și <interface>Poziția</interface>, dar nu "
+"și stările de <interface>Maximizare</interface> sau <interface>Ecran "
+"complet</interface>.<nl/><nl/>Rețineți că poziția poate fi folosită și "
+"pentru plasarea pe un alt <interface>Ecran</interface>."
 
 #: rulesmodel.cpp:549
 #, kde-format
@@ -389,7 +388,7 @@ msgstr "Sari bara de sarcini"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Controlează dacă fereastra apare în gestionarul de sarcini."
 
 #: rulesmodel.cpp:588
 #, kde-format
@@ -401,7 +400,7 @@ msgstr "Sari paginatorul"
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr ""
+msgstr "Controlează dacă fereastra apare în gestionarul de birouri virtuale."
 
 #: rulesmodel.cpp:594
 #, kde-format
@@ -415,6 +414,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Controlează dacă fereastra apare în lista de ferestre <shortcut>Alt+Tab</"
+"shortcut>."
 
 #: rulesmodel.cpp:600
 #, kde-format
@@ -513,7 +514,7 @@ msgstr "Acceptă focalizare"
 #: rulesmodel.cpp:685
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Controlează dacă fereastra devine focalizată la apăsare."
 
 #: rulesmodel.cpp:689
 #, kde-format
@@ -531,6 +532,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Folosiți această proprietate pentru a preveni funcționarea scurtăturilor de "
+"taste globale cât timp fereastra e focalizată. Aceasta poate fi utilă pentru "
+"aplicații ca emulatori sau mașini virtuale ce manipulează aceleași "
+"scurtături.<nl/><nl/>Rețineți că nu veți putea ieși cu <shortcut>Alt+Tab</"
+"shortcut> din fereastră sau folosi orice alte scurtături globale, cum ar fi "
+"<shortcut>Alt+Spațiu</shortcut> pentru a activa KRunner."
 
 #: rulesmodel.cpp:701
 #, kde-format
@@ -553,21 +560,19 @@ msgid "Layer"
 msgstr "Strat"
 
 #: rulesmodel.cpp:722
-#, fuzzy, kde-format
-#| msgid "Adaptive Sync"
+#, kde-format
 msgid "Adaptive sync"
 msgstr "Sincronizare adaptivă"
 
 #: rulesmodel.cpp:727
 #, kde-format
 msgid "Allow tearing"
-msgstr ""
+msgstr "Permite frânturile"
 
 #: rulesmodel.cpp:778
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Clasa ferestrei (aplicație)"
+msgstr "Clasa ferestrei nu e disponibilă"
 
 #: rulesmodel.cpp:779
 #, kde-kuit-format
@@ -578,28 +583,29 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Această aplicație nu furnizează o clasă pentru fereastră, de aceea KWin nu o "
+"poate folosi pentru potrivirea și aplicarea regulilor. Dacă doriți oricum să "
+"aplicați unele reguli, încercați să potriviți alte proprietăți, cum ar fi "
+"titlul ferestrei.<nl/><nl/>Aveți în vedere raportarea acestui defect "
+"dezvoltatorilor aplicației."
 
 #: rulesmodel.cpp:813
-#, fuzzy, kde-format
-#| msgid "All Window Types"
+#, kde-format
 msgid "All window types"
 msgstr "Toate tipurile de ferestre"
 
 #: rulesmodel.cpp:814
-#, fuzzy, kde-format
-#| msgid "Normal Window"
+#, kde-format
 msgid "Normal window"
 msgstr "Fereastră normală"
 
 #: rulesmodel.cpp:815
-#, fuzzy, kde-format
-#| msgid "Dialog Window"
+#, kde-format
 msgid "Dialog window"
 msgstr "Fereastră de dialog"
 
 #: rulesmodel.cpp:816
-#, fuzzy, kde-format
-#| msgid "Utility Window"
+#, kde-format
 msgid "Utility window"
 msgstr "Fereastră utilitară"
 
@@ -614,16 +620,14 @@ msgid "Toolbar"
 msgstr "Bara de unelte"
 
 #: rulesmodel.cpp:819
-#, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
+#, kde-format
 msgid "Torn-off menu"
-msgstr "Meniu „rupt”"
+msgstr "Meniu rupt"
 
 #: rulesmodel.cpp:820
-#, fuzzy, kde-format
-#| msgid "Splash Screen"
+#, kde-format
 msgid "Splash screen"
-msgstr "Imagine de întâmpinare"
+msgstr "Ecran de întâmpinare"
 
 #: rulesmodel.cpp:821 rulesmodel.cpp:922
 #, kde-format
@@ -632,20 +636,17 @@ msgstr "Birou"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:823
-#, fuzzy, kde-format
-#| msgid "Standalone Menubar"
+#, kde-format
 msgid "Standalone menubar"
-msgstr "Bară de meniu independentă"
+msgstr "Bară de meniu de sine stătătoare"
 
 #: rulesmodel.cpp:824 rulesmodel.cpp:930
-#, fuzzy, kde-format
-#| msgid "On Screen Display"
+#, kde-format
 msgid "On-screen display"
 msgstr "Afișaj-pe-ecran"
 
 #: rulesmodel.cpp:834
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All desktops"
 msgstr "Toate birourile"
 
@@ -656,8 +657,7 @@ msgid "Make the window available on all desktops"
 msgstr "Fă fereastra disponibilă pe toate birourile"
 
 #: rulesmodel.cpp:855
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "All activities"
 msgstr "Toate activitățile"
 
@@ -673,14 +673,12 @@ msgid "Default"
 msgstr "Implicit"
 
 #: rulesmodel.cpp:879
-#, fuzzy, kde-format
-#| msgid "No Placement"
+#, kde-format
 msgid "No placement"
 msgstr "Fără plasare"
 
 #: rulesmodel.cpp:880
-#, fuzzy, kde-format
-#| msgid "Minimal Overlapping"
+#, kde-format
 msgid "Minimal overlapping"
 msgstr "Suprapunere minimă"
 
@@ -700,22 +698,19 @@ msgid "Random"
 msgstr "Aleator"
 
 #: rulesmodel.cpp:884
-#, fuzzy, kde-format
-#| msgid "In Top-Left Corner"
+#, kde-format
 msgid "In top-left corner"
-msgstr "În colțul din stânga sus"
+msgstr "În colțul din stânga-sus"
 
 #: rulesmodel.cpp:885
-#, fuzzy, kde-format
-#| msgid "Under Mouse"
+#, kde-format
 msgid "Under mouse"
-msgstr "Sub maus"
+msgstr "Sub șoricel"
 
 #: rulesmodel.cpp:886
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "On main window"
-msgstr "În fereastra principală"
+msgstr "Pe fereastra principală"
 
 #: rulesmodel.cpp:893
 #, kde-format
@@ -763,8 +758,7 @@ msgid "Popup"
 msgstr "Indiciu"
 
 #: rulesmodel.cpp:929
-#, fuzzy, kde-format
-#| msgid "Critical Notification"
+#, kde-format
 msgid "Critical notification"
 msgstr "Notificare critică"
 
@@ -821,14 +815,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "Nu sunt stabilite reguli pentru ferestre specifice"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr ""
-"Apăsați butonul <interface>Adaugă noi...</interface> de mai jos pentru a "
-"adăuga câteva"
+msgstr "Apăsați pe <interface>Adaugă noi…</interface> pentru a adăuga câteva"
 
 #: ui/main.qml:97
 #, kde-format
@@ -938,18 +928,16 @@ msgid "Add property to the rule"
 msgstr "Adaugă proprietate la regulă"
 
 #: ui/RulesEditor.qml:271
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "Nicio proprietate a ferestrei nu s-a modificat"
+msgstr "Nu mai sunt proprietăți de adăugat"
 
 #: ui/RulesEditor.qml:273
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "Nicio proprietate a ferestrei nu s-a modificat"
+msgstr "Nicio proprietate nu se potrivește cu „%1”"
 
 #: ui/RulesEditor.qml:294 ui/ValueEditor.qml:54
 #, kde-format
