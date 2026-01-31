@@ -10,6 +10,8 @@
 #include "kwin_export.h"
 #include "renderdevice.h"
 
+#include <vulkan/vulkan_core.h>
+
 class QSocketNotifier;
 
 namespace KWin
@@ -39,17 +41,21 @@ public:
      */
     void scanForRenderDevices();
 
+    VkInstance vulkanInstance() const;
+
 Q_SIGNALS:
     void renderDeviceAdded(RenderDevice *device);
     void renderDeviceRemoved(RenderDevice *device);
 
 private:
+    void initVulkan();
     void handleUdevEvent();
 
     const std::unique_ptr<Udev> m_udev;
     const std::unique_ptr<UdevMonitor> m_udevMonitor;
     const std::unique_ptr<QSocketNotifier> m_udevNotifier;
     std::vector<std::unique_ptr<RenderDevice>> m_renderDevices;
+    VkInstance m_vulkanInstance;
 };
 
 }

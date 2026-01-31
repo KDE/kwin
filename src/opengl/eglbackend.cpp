@@ -19,6 +19,7 @@
 #include "opengl/eglimagetexture.h"
 #include "opengl/eglutils_p.h"
 #include "utils/common.h"
+#include "vulkan/vulkan_device.h"
 #include "wayland/drmclientbuffer.h"
 #include "wayland/linux_drm_syncobj_v1.h"
 #include "wayland_server.h"
@@ -218,33 +219,37 @@ void EglBackend::updateDmabufTranches()
         return formats;
     };
 
-    auto addTranches = [&](RenderDevice *device) {
-        m_tranches.append({
-            .device = device->drmDevice()->deviceId(),
-            .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = filterFormats(device, 10, false),
-        });
-        m_tranches.append({
-            .device = device->drmDevice()->deviceId(),
-            .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = filterFormats(device, 8, false),
-        });
-        m_tranches.append({
-            .device = device->drmDevice()->deviceId(),
-            .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
-            .formatTable = includeShaderConversions(filterFormats(device, std::nullopt, true)),
-        });
-    };
-
     m_tranches.clear();
-    // put the "main" device first
-    addTranches(m_renderDevice);
+
+    // put the "main" device first, and with EGL format+modifiers
+    m_tranches.append({
+        .device = m_renderDevice->drmDevice()->deviceId(),
+        .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
+        .formatTable = filterFormats(m_renderDevice, 10, false),
+    });
+    m_tranches.append({
+        .device = m_renderDevice->drmDevice()->deviceId(),
+        .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
+        .formatTable = filterFormats(m_renderDevice, 8, false),
+    });
+    m_tranches.append({
+        .device = m_renderDevice->drmDevice()->deviceId(),
+        .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
+        .formatTable = includeShaderConversions(filterFormats(m_renderDevice, std::nullopt, true)),
+    });
+
+    // other GPUs come afterwards in no particular order,
+    // with only Vulkan format+modifiers
     const auto &devices = GpuManager::s_self->renderDevices();
     for (const auto &device : devices) {
-        if (device.get() == m_renderDevice) {
+        if (device.get() == m_renderDevice || !device->vulkanDevice()) {
             continue;
         }
-        addTranches(device.get());
+        m_tranches.push_back({
+            .device = device->drmDevice()->deviceId(),
+            .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
+            .formatTable = device->vulkanDevice()->supportedFormats(),
+        });
     }
 
     LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
@@ -325,6 +330,14 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer, dev_t targetDevice)
     }
     if (!device) {
         return false;
+    }
+
+    if (device != m_renderDevice) {
+        // buffers from secondary GPUs can only import to Vulkan
+        if (!device->vulkanDevice()) {
+            return false;
+        }
+        return device->vulkanDevice()->importBuffer(buffer, VK_IMAGE_USAGE_TRANSFER_SRC_BIT) != nullptr;
     }
 
     const auto nonExternalOnly = device->eglDisplay()->nonExternalOnlySupportedDrmFormats();

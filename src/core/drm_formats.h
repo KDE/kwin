@@ -2,7 +2,7 @@
     KWin - the KDE window manager
     This file is part of the KDE project.
 
-    SPDX-FileCopyrightText: 2023 Xaver Hugl <xaver.hugl@gmail.com>
+    SPDX-FileCopyrightText: 2023-2026 Xaver Hugl <xaver.hugl@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -13,12 +13,14 @@
 #include <QList>
 #include <QString>
 #include <flat_set>
+#include <unordered_map>
 #include <vector>
 
 #include <epoxy/gl.h>
 #include <libdrm/drm_fourcc.h>
 #include <optional>
 #include <stdint.h>
+#include <vulkan/vulkan_core.h>
 
 namespace KWin
 {
@@ -48,9 +50,11 @@ struct KWIN_EXPORT FormatInfo
     uint32_t alphaBits;
     uint32_t bitsPerPixel;
     GLint openglFormat;
+    VkFormat vulkanFormat;
     bool floatingPoint;
 
     static const QHash<uint32_t, YuvConversion> s_drmConversions;
+    static const std::unordered_map<uint32_t, FormatInfo> s_knownFormats;
 
     std::optional<YuvConversion> yuvConversion() const
     {

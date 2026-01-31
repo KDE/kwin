@@ -13,11 +13,12 @@
 #include "core/pixelgrid.h"
 #include "core/renderbackend.h"
 #include "opengl/eglbackend.h"
-#include "opengl/eglmultigpuswapchain.h"
+#include "opengl/eglnativefence.h"
 #include "opengl/gltexture.h"
 #include "qpainter/qpainterbackend.h"
 #include "scene/scene.h"
 #include "utils/common.h"
+#include "vulkan/vulkan_mgpu_swapchain.h"
 
 #include <QPainter>
 
@@ -437,13 +438,18 @@ bool OpenGLSurfaceTexture::loadDmabufTexture(GraphicsBuffer *buffer)
     } else {
         // need to do a multi gpu copy
         if (!m_mgpuSwapchain) {
-            m_mgpuSwapchain = std::make_unique<EglMultiGpuSwapchain>(compat, m_backend->openglContextRef());
+            m_mgpuSwapchain = std::make_unique<VulkanMultiGpuSwapchain>(compat, m_backend->renderDevice());
         }
-        // FIXME integrate the color description for YUV support!
-        buffer = m_mgpuSwapchain->importBuffer(buffer, ColorDescription::sRGB).first;
-        if (!buffer) {
+        EGLNativeFence releaseFence(m_backend->eglDisplayObject());
+        auto imported = m_mgpuSwapchain->importBuffer(buffer, releaseFence.takeFileDescriptor());
+        if (!imported.has_value()) {
             return false;
         }
+        const auto fence = EGLNativeFence::importFence(m_backend->eglDisplayObject(), std::move(imported->sync));
+        if (!fence.waitSync()) {
+            return false;
+        }
+        buffer = imported->buffer;
     }
 
     auto createTexture = [](EGLImageKHR image, const QSize &size, bool isExternalOnly) -> std::shared_ptr<GLTexture> {
@@ -511,8 +517,16 @@ void OpenGLSurfaceTexture::updateDmabufTexture(GraphicsBuffer *buffer)
     }
 
     if (m_mgpuSwapchain) {
-        // FIXME integrate the color description for YUV support!
-        buffer = m_mgpuSwapchain->importBuffer(buffer, ColorDescription::sRGB).first;
+        EGLNativeFence releaseFence(m_backend->eglDisplayObject());
+        auto imported = m_mgpuSwapchain->importBuffer(buffer, releaseFence.takeFileDescriptor());
+        if (!imported.has_value()) {
+            return;
+        }
+        const auto fence = EGLNativeFence::importFence(m_backend->eglDisplayObject(), std::move(imported->sync));
+        if (!fence.waitSync()) {
+            return;
+        }
+        buffer = imported->buffer;
     }
 
     const GLint target = GL_TEXTURE_2D;
