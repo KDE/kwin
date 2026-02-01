@@ -1,11 +1,12 @@
+# SPDX-FileCopyrightText: 2026 César A. P. Cláudio <cesarapclaudio@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-30 00:45+0000\n"
-"PO-Revision-Date: 2023-02-15 15:24+0000\n"
-"Last-Translator: Pedro Morais <morais@kde.org>\n"
-"Language-Team: pt <kde-i18n-pt@kde.org>\n"
+"PO-Revision-Date: 2026-01-31 02:12+0000\n"
+"Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
+"Language-Team: pt\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,58 +33,59 @@ msgstr ""
 "X-POFile-SpellExtra: Roman Gilg Edmundson Tabletes eUmDedo Key desktop min\n"
 "X-POFile-SpellExtra: max Des kwinwaylandwrapper XWayland xwayland\n"
 "X-POFile-SpellExtra: xauthority metadata json\n"
+"X-Generator: Lokalize 25.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Pedro Morais"
+msgstr "César A. P. Cláudio, Pedro Morais"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "morais@kde.org"
+msgstr "cesarapclaudio@gmail.com, morais@kde.org"
 
 #: backends/wayland/wayland_output.cpp:481
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "Prima a tecla Control direita para libertar o ponteiro do rato"
 
 #: backends/wayland/wayland_output.cpp:483
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "Prima a tecla Control direita para capturar o ponteiro do rato"
 
 #: backends/wayland/wayland_output.cpp:487
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr ""
+msgstr "Compositor Wayland do KDE %1"
 
 #: backends/wayland/wayland_output.cpp:490
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- Saída desativada"
 
 #: backends/wayland/wayland_output.cpp:492
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- Saída com brilho reduzido"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "Prima a tecla Control direita para libertar a entrada"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "Prima a tecla Control direita para capturar a entrada"
 
 #: backends/x11/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "Compositor Wayland do KDE"
 
 #: compositor.cpp:610
 #, kde-format
@@ -95,87 +97,95 @@ msgstr ""
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "Falha ao abrir o perfil ICC \"%1\""
 
 #: core/iccprofile.cpp:336
-#, fuzzy, kde-format
-#| msgctxt "Required file does not exist"
-#| msgid "%1 does not exist"
+#, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr "O %1 não existe"
+msgstr "O perfil ICC \"%1\" não existe"
 
 #: core/iccprofile.cpp:340
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "O perfil ICC \"%1\" não é utilizável em monitores"
 
 #: core/iccprofile.cpp:343
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"O perfil ICC \"%1\" tem um espaço de cor não suportado; apenas XYZ é "
+"suportado"
 
 #: core/iccprofile.cpp:346
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
+"O perfil ICC \"%1\" está com erros; o espaço de cor de entrada/saída não é "
+"RGB"
 
 #: core/iccprofile.cpp:359
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "O perfil ICC \"%1\" está com erros; não tem ponto de branco"
 
 #: core/iccprofile.cpp:362
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "O perfil ICC \"%1\" está com erros; o seu ponto de branco é inválido"
 
 #: core/iccprofile.cpp:375
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
+"O perfil ICC \"%1\" está com erros; falha ao analisar a matriz de adaptação "
+"cromática"
 
 #: core/iccprofile.cpp:380
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"O perfil ICC \"%1\" está com erros; falha ao inverter a matriz de adaptação "
+"cromática"
 
 #: core/iccprofile.cpp:393
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "O perfil ICC \"%1\" está com erros; não tem primárias"
 
 #: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
+"O perfil ICC \"%1\" está com erros; não foi possível calcular as suas "
+"primárias"
 
 #: core/iccprofile.cpp:417
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "O perfil ICC \"%1\" está com erros; as suas primárias são inválidas"
 
 #: core/iccprofile.cpp:433
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
-msgstr ""
+msgstr "O perfil ICC \"%1\" apenas com etiquetas BToD não é suportado"
 
 #: core/iccprofile.cpp:472
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "O perfil de cor não tem etiquetas TRC"
 
 #: debug_console.cpp:86
 #, kde-format
 msgid "Timestamp"
-msgstr "Hora"
+msgstr "Data/hora"
 
 #: debug_console.cpp:91
 #, kde-format
 msgid "Timestamp (µsec)"
-msgstr "Hora (µs)"
+msgstr "Data/hora (µs)"
 
 #: debug_console.cpp:98
 #, kde-format
@@ -217,132 +227,132 @@ msgstr "Tarefa"
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 4"
-msgstr "Botão Extra 4"
+msgstr "Botão extra 4"
 
 #: debug_console.cpp:112
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 5"
-msgstr "Botão Extra 5"
+msgstr "Botão extra 5"
 
 #: debug_console.cpp:114
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 6"
-msgstr "Botão Extra 6"
+msgstr "Botão extra 6"
 
 #: debug_console.cpp:116
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 7"
-msgstr "Botão Extra 7"
+msgstr "Botão extra 7"
 
 #: debug_console.cpp:118
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 8"
-msgstr "Botão Extra 8"
+msgstr "Botão extra 8"
 
 #: debug_console.cpp:120
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 9"
-msgstr "Botão Extra 9"
+msgstr "Botão extra 9"
 
 #: debug_console.cpp:122
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 10"
-msgstr "Botão Extra 10"
+msgstr "Botão extra 10"
 
 #: debug_console.cpp:124
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 11"
-msgstr "Botão Extra 11"
+msgstr "Botão extra 11"
 
 #: debug_console.cpp:126
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 12"
-msgstr "Botão Extra 12"
+msgstr "Botão extra 12"
 
 #: debug_console.cpp:128
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 13"
-msgstr "Botão Extra 13"
+msgstr "Botão extra 13"
 
 #: debug_console.cpp:130
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 14"
-msgstr "Botão Extra 14"
+msgstr "Botão extra 14"
 
 #: debug_console.cpp:132
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 15"
-msgstr "Botão Extra 15"
+msgstr "Botão extra 15"
 
 #: debug_console.cpp:134
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 16"
-msgstr "Botão Extra 16"
+msgstr "Botão extra 16"
 
 #: debug_console.cpp:136
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 17"
-msgstr "Botão Extra 17"
+msgstr "Botão extra 17"
 
 #: debug_console.cpp:138
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 18"
-msgstr "Botão Extra 18"
+msgstr "Botão extra 18"
 
 #: debug_console.cpp:140
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 19"
-msgstr "Botão Extra 19"
+msgstr "Botão extra 19"
 
 #: debug_console.cpp:142
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 20"
-msgstr "Botão Extra 20"
+msgstr "Botão extra 20"
 
 #: debug_console.cpp:144
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 21"
-msgstr "Botão Extra 21"
+msgstr "Botão extra 21"
 
 #: debug_console.cpp:146
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 22"
-msgstr "Botão Extra 22"
+msgstr "Botão extra 22"
 
 #: debug_console.cpp:148
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 23"
-msgstr "Botão Extra 23"
+msgstr "Botão extra 23"
 
 #: debug_console.cpp:150
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 24"
-msgstr "Botão Extra 24"
+msgstr "Botão extra 24"
 
 #: debug_console.cpp:159 debug_console.cpp:161
 #, kde-format
 msgid "Input Device"
-msgstr "Dispositivo de Entrada"
+msgstr "Dispositivo de entrada"
 
 #: debug_console.cpp:159
 #, kde-format
@@ -354,7 +364,7 @@ msgstr "Desconhecido"
 #, kde-format
 msgctxt "A mouse pointer motion event"
 msgid "Pointer Motion"
-msgstr "Movimento do Cursor"
+msgstr "Movimento do ponteiro do rato"
 
 #: debug_console.cpp:199
 #, kde-format
@@ -372,13 +382,13 @@ msgstr "Delta (não acelerado)"
 #, kde-format
 msgctxt "The global mouse pointer position"
 msgid "Global Position"
-msgstr "Posição Global"
+msgstr "Posição global"
 
 #: debug_console.cpp:220
 #, kde-format
 msgctxt "A mouse pointer button press event"
 msgid "Pointer Button Press"
-msgstr "Pressão do Botão do Cursor"
+msgstr "Botão do rato pressionado"
 
 #: debug_console.cpp:223 debug_console.cpp:230
 #, kde-format
@@ -390,25 +400,25 @@ msgstr "Botão"
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Native Button code"
-msgstr "Código do Botão Nativo"
+msgstr "Código de botão nativo"
 
 #: debug_console.cpp:225 debug_console.cpp:232
 #, kde-format
 msgctxt "All currently pressed buttons in a mouse press/release event"
 msgid "Pressed Buttons"
-msgstr "Botões Pressionados"
+msgstr "Botões pressionados"
 
 #: debug_console.cpp:227
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
-msgstr "Libertação do Botão do Cursor"
+msgstr "Libertar botão do rato"
 
 #: debug_console.cpp:244
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
-msgstr "Eixo do Cursor"
+msgstr "Eixo do ponteiro do rato"
 
 #: debug_console.cpp:247
 #, kde-format
@@ -435,26 +445,24 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:251
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:266
 #, kde-format
 msgctxt "A key press event"
 msgid "Key Press"
-msgstr "Pressão de Tecla"
+msgstr "Premir tecla"
 
 #: debug_console.cpp:269
 #, kde-format
 msgctxt "A key release event"
 msgid "Key Release"
-msgstr "Libertação de Tecla"
+msgstr "Libertar tecla"
 
 #: debug_console.cpp:278
 #, kde-format
@@ -484,13 +492,13 @@ msgstr "Meta"
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Keypad"
-msgstr "Teclado Numérico"
+msgstr "Teclado numérico"
 
 #: debug_console.cpp:298
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
-msgstr "Mudança de grupo"
+msgstr "Mudar de grupo"
 
 #: debug_console.cpp:304
 #, kde-format
@@ -499,18 +507,16 @@ msgid "Repeat"
 msgstr "Repetição"
 
 #: debug_console.cpp:308
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Código do Qt::Key"
+msgstr "Código de tecla"
 
 #: debug_console.cpp:309
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
-msgstr "Código do Qt::Key"
+msgstr "Qt::Código de tecla"
 
 #: debug_console.cpp:310
 #, kde-format
@@ -534,13 +540,13 @@ msgstr "Modificadores"
 #, kde-format
 msgctxt "A touch down event"
 msgid "Touch down"
-msgstr "Toque para baixo"
+msgstr "Toque no ecrã"
 
 #: debug_console.cpp:326 debug_console.cpp:341 debug_console.cpp:356
 #, kde-format
 msgctxt "The id of the touch point in the touch event"
 msgid "Point identifier"
-msgstr "Identificador do ponto"
+msgstr "Identificador de ponto"
 
 #: debug_console.cpp:327 debug_console.cpp:342
 #, kde-format
@@ -552,19 +558,19 @@ msgstr "Posição global"
 #, kde-format
 msgctxt "A touch motion event"
 msgid "Touch Motion"
-msgstr "Movimento do Toque"
+msgstr "Movimento de toque"
 
 #: debug_console.cpp:354
 #, kde-format
 msgctxt "A touch up event"
 msgid "Touch Up"
-msgstr "Toque para Cima"
+msgstr "Terminar toque"
 
 #: debug_console.cpp:367
 #, kde-format
 msgctxt "A pinch gesture is started"
 msgid "Pinch start"
-msgstr "Início do toque"
+msgstr "Início do gesto de pinça"
 
 #: debug_console.cpp:369
 #, kde-format
@@ -576,7 +582,7 @@ msgstr "Número de dedos"
 #, kde-format
 msgctxt "A pinch gesture is updated"
 msgid "Pinch update"
-msgstr "Actualização do toque"
+msgstr "Atualização do gesto de pinça"
 
 #: debug_console.cpp:382
 #, kde-format
@@ -606,19 +612,19 @@ msgstr "Delta y"
 #, kde-format
 msgctxt "A pinch gesture ended"
 msgid "Pinch end"
-msgstr "Fim do toque"
+msgstr "Fim do gesto de pinça"
 
 #: debug_console.cpp:408
 #, kde-format
 msgctxt "A pinch gesture got cancelled"
 msgid "Pinch cancelled"
-msgstr "Toque cancelado"
+msgstr "Gesto de pinça cancelado"
 
 #: debug_console.cpp:420
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
-msgstr "Início do deslize"
+msgstr "Início do gesto de deslizar"
 
 #: debug_console.cpp:422
 #, kde-format
@@ -630,7 +636,7 @@ msgstr "Número de dedos"
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
-msgstr "Actualização do deslize"
+msgstr "Atualização do gesto de deslizar"
 
 #: debug_console.cpp:435
 #, kde-format
@@ -648,24 +654,22 @@ msgstr "Delta y"
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
-msgstr "Fim do deslize"
+msgstr "Fim do gesto de deslizar"
 
 #: debug_console.cpp:459
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
-msgstr "Deslize cancelado"
+msgstr "Gesto de deslizar cancelado"
 
 #: debug_console.cpp:471
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "Início de pressão contínua"
 
 #: debug_console.cpp:473
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "Número de dedos"
@@ -674,27 +678,25 @@ msgstr "Número de dedos"
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "Fim de pressão contínua"
 
 #: debug_console.cpp:496
-#, fuzzy, kde-format
-#| msgctxt "A pinch gesture got cancelled"
-#| msgid "Pinch cancelled"
+#, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr "Toque cancelado"
+msgstr "Pressão contínua cancelada"
 
 #: debug_console.cpp:508
 #, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "Interruptor comutado"
+msgstr "Interruptor ativado/desativado"
 
 #: debug_console.cpp:514
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Notebook lid"
-msgstr "Tampo do portátil"
+msgstr "Tampa do portátil"
 
 #: debug_console.cpp:516
 #, kde-format
@@ -727,25 +729,24 @@ msgid "State"
 msgstr "Estado"
 
 #: debug_console.cpp:539
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Proximity"
-msgstr "Ferramenta de Tabletes"
+msgstr "Proximidade da caneta de 'tablet'"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Proximidade"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Dentro"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Fora"
 
 #: debug_console.cpp:544 debug_console.cpp:562 debug_console.cpp:582
 #: debug_console.cpp:632 debug_console.cpp:649
@@ -756,7 +757,7 @@ msgstr "Posição"
 #: debug_console.cpp:546 debug_console.cpp:564 debug_console.cpp:584
 #, kde-format
 msgid "Tilt"
-msgstr "Desvio"
+msgstr "Inclinação"
 
 #: debug_console.cpp:548 debug_console.cpp:566 debug_console.cpp:586
 #, kde-format
@@ -764,16 +765,14 @@ msgid "Rotation"
 msgstr "Rotação"
 
 #: debug_console.cpp:549 debug_console.cpp:568
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Distância:"
+msgstr "Distância"
 
 #: debug_console.cpp:558
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Axis"
-msgstr "Ferramenta de Tabletes"
+msgstr "Eixo da caneta de 'tablet'"
 
 #: debug_console.cpp:567 debug_console.cpp:587
 #, kde-format
@@ -781,38 +780,34 @@ msgid "Pressure"
 msgstr "Pressão"
 
 #: debug_console.cpp:577
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Ferramenta de Tabletes"
+msgstr "Ponta da caneta de 'tablet'"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "Topo"
+msgstr "Ponta"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
-#| msgid "Move Window Down"
+#, kde-format
 msgid "Down"
-msgstr "Mover a Janela para Baixo"
+msgstr "Baixo"
 
 #: debug_console.cpp:581
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Cima"
 
 #: debug_console.cpp:588
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Posição"
+msgstr "Posição do controlo deslizante"
 
 #: debug_console.cpp:597
 #, kde-format
 msgid "Tablet Tool Button"
-msgstr "Botão de Ferramentas da Tablete"
+msgstr "Botão da caneta de 'tablet'"
 
 #: debug_console.cpp:599 debug_console.cpp:614
 #, kde-format
@@ -828,32 +823,32 @@ msgstr "Pressionado"
 #: debug_console.cpp:653 debug_console.cpp:667
 #, kde-format
 msgid "Tablet"
-msgstr "Tablete"
+msgstr "'Tablet'"
 
 #: debug_console.cpp:612
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr "Botão do Painel da Tablete"
+msgstr "Botão físico do 'tablet'"
 
 #: debug_console.cpp:616 debug_console.cpp:634 debug_console.cpp:651
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Grupo"
 
 #: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
 #, kde-format
 msgid "Mode"
-msgstr ""
+msgstr "Modo"
 
 #: debug_console.cpp:618
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "Alternar modo"
 
 #: debug_console.cpp:629
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr "Barra do Painel da Tablete"
+msgstr "Faixa de toque do 'tablet'"
 
 #: debug_console.cpp:631 debug_console.cpp:648 debug_console.cpp:665
 #, kde-format
@@ -868,18 +863,15 @@ msgstr "eUmDedo"
 #: debug_console.cpp:646
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr "Anel do Painel da Tablete"
+msgstr "Anel de suporte de dedo do 'tablet'"
 
 #: debug_console.cpp:663
-#, fuzzy, kde-format
-#| msgid "Tablet Pad Ring"
+#, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Anel do Painel da Tablete"
+msgstr "Botão rotativo do 'tablet'"
 
 #: debug_console.cpp:666
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -887,12 +879,12 @@ msgstr "Delta"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Efeitos"
 
 #: debug_console.cpp:949
 #, kde-format
 msgid "No Mouse Buttons"
-msgstr "Sem Botões do Rato"
+msgstr "Sem botões do rato"
 
 #: debug_console.cpp:953
 #, kde-format
@@ -1077,41 +1069,40 @@ msgstr "tarefa"
 #: debug_console.cpp:1427
 #, kde-format
 msgid "X11 Windows"
-msgstr "Janelas do X11"
+msgstr "Janelas X11"
 
 #: debug_console.cpp:1429
 #, kde-format
 msgid "X11 Unmanaged Windows"
-msgstr "Janelas Não-Geridas pelo X11"
+msgstr "Janelas não geridas pelo X11"
 
 #: debug_console.cpp:1431
 #, kde-format
 msgid "Wayland Windows"
-msgstr "Janelas de Wayland"
+msgstr "Janelas Wayland"
 
 #: debug_console.cpp:1433
 #, kde-format
 msgid "Internal Windows"
-msgstr "Janelas Internas"
+msgstr "Janelas internas"
 
 #: debug_console.cpp:1790
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Descarregar"
 
 #: debug_console.cpp:1794
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Carregar"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Sair da Consola de Depuração"
+msgstr "Consola de depuração"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:30
@@ -1123,13 +1114,13 @@ msgstr "Janelas"
 #: debug_console.ui:44
 #, kde-format
 msgid "Input Events"
-msgstr "Eventos de Entrada"
+msgstr "Eventos de entrada"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
 #: debug_console.ui:61
 #, kde-format
 msgid "Input Devices"
-msgstr "Dispositivos de Entrada"
+msgstr "Dispositivos de entrada"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #: debug_console.ui:71
@@ -1141,13 +1132,13 @@ msgstr "OpenGL"
 #: debug_console.ui:77
 #, kde-format
 msgid "No OpenGL compositor running"
-msgstr "Sem compositor de OpenGL em execução"
+msgstr "Nenhum compositor OpenGL em execução"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
 #: debug_console.ui:105
 #, kde-format
 msgid "OpenGL (ES) driver information"
-msgstr "Informação do controlador de OpenGL (ES)"
+msgstr "Informação do controlador OpenGL (ES)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:111
@@ -1159,7 +1150,7 @@ msgstr "Fornecedor:"
 #: debug_console.ui:118
 #, kde-format
 msgid "Renderer:"
-msgstr "Sistema de Desenho:"
+msgstr "Processador gráfico:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: debug_console.ui:125
@@ -1171,7 +1162,7 @@ msgstr "Versão:"
 #: debug_console.ui:132
 #, kde-format
 msgid "Shading Language Version:"
-msgstr "Versão da Linguagem de Desenho:"
+msgstr "Versão da linguagem de sombreamento:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: debug_console.ui:139
@@ -1183,7 +1174,7 @@ msgstr "Controlador:"
 #: debug_console.ui:146
 #, kde-format
 msgid "GPU class:"
-msgstr "Classe do GPU:"
+msgstr "Classe da GPU:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: debug_console.ui:153
@@ -1201,7 +1192,7 @@ msgstr "Versão do GLSL:"
 #: debug_console.ui:226
 #, kde-format
 msgid "Platform Extensions"
-msgstr "Extensões da Plataforma"
+msgstr "Extensões de Plataforma"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
 #: debug_console.ui:242
@@ -1219,13 +1210,13 @@ msgstr "Teclado"
 #: debug_console.ui:290
 #, kde-format
 msgid "Keymap Layouts"
-msgstr "Disposições das Teclas"
+msgstr "Disposições de teclas"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: debug_console.ui:312
 #, kde-format
 msgid "Current Layout:"
-msgstr "Disposição Actual:"
+msgstr "Disposição atual:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
 #: debug_console.ui:331
@@ -1237,42 +1228,42 @@ msgstr "Modificadores"
 #: debug_console.ui:347
 #, kde-format
 msgid "Active Modifiers"
-msgstr "Modificadores Activos"
+msgstr "Modificadores ativos"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
 #: debug_console.ui:363
 #, kde-format
 msgid "LEDs"
-msgstr "LED's"
+msgstr "LEDs"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
 #: debug_console.ui:379
 #, kde-format
 msgid "Active LEDs"
-msgstr "LED's Activos"
+msgstr "LEDs ativos"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: debug_console.ui:400 debug_console.ui:420
 #, kde-format
 msgid "Clipboard"
-msgstr "Área de Transferência"
+msgstr "Área de transferência"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 #: debug_console.ui:466
 #, kde-format
 msgid "Primary Selection"
-msgstr "Selecção Principal"
+msgstr "Seleção principal"
 
 #: helpers/killer/killer.cpp:127
 #, kde-format
 msgid "Window Manager"
-msgstr "Gestor de Janelas"
+msgstr "Gestor de janelas"
 
 #: helpers/killer/killer.cpp:132
 #, kde-format
 msgid "PID of the application to terminate"
-msgstr "O PID da aplicação a terminar"
+msgstr "PID da aplicação a terminar"
 
 #: helpers/killer/killer.cpp:132
 #, kde-format
@@ -1282,7 +1273,7 @@ msgstr "pid"
 #: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "Hostname on which the application is running"
-msgstr "O nome da máquina onde a aplicação está a correr"
+msgstr "Nome do anfitrião onde a aplicação está em execução"
 
 #: helpers/killer/killer.cpp:134
 #, kde-format
@@ -1292,27 +1283,27 @@ msgstr "hostname"
 #: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "Caption of the window to be terminated"
-msgstr "O título da janela a terminar"
+msgstr "Legenda da janela a terminar"
 
 #: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "caption"
-msgstr "caption"
+msgstr "legenda"
 
 #: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "Name of the application to be terminated"
-msgstr "O nome da aplicação a terminar"
+msgstr "Nome da aplicação a terminar"
 
 #: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "name"
-msgstr "name"
+msgstr "nome"
 
 #: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "ID of resource belonging to the application"
-msgstr "O ID do recurso que pertence à aplicação"
+msgstr "ID do recurso pertencente à aplicação"
 
 #: helpers/killer/killer.cpp:140
 #, kde-format
@@ -1322,31 +1313,25 @@ msgstr "id"
 #: helpers/killer/killer.cpp:142
 #, kde-format
 msgid "Time of user action causing termination"
-msgstr "A hora da acção do utilizador que provocou o encerramento"
+msgstr "Data/hora da ação do utilizador que causou a terminação"
 
 #: helpers/killer/killer.cpp:142
 #, kde-format
 msgid "time"
-msgstr "time"
+msgstr "data/hora"
 
 #: helpers/killer/killer.cpp:144
 #, kde-format
 msgid "KWin helper utility"
-msgstr "Utilitário do KWin"
+msgstr "Utilitário auxiliar do KWin"
 
 #: helpers/killer/killer.cpp:172
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
-msgstr ""
-"Este utilitário auxiliar não foi concebido para ser chamado directamente."
+msgstr "Este utilitário auxiliar não deve ser chamado diretamente."
 
 #: helpers/killer/killer.cpp:196
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1354,17 +1339,13 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para>Deseja terminar esta aplicação?</para><para><warning>A interrupção da "
-"aplicação irá fechar todas as suas janelas-filhas. Todos os dados por gravar "
-"perder-se-ão.</warning></para>"
+"<para>A aplicação <application>%1</application> não está a responder. Deseja "
+"terminar esta aplicação?</para><para><emphasis strong='true'>Terminar esta "
+"aplicação fechará todas as suas janelas. Quaisquer dados não guardados serão "
+"perdidos.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:200
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
@@ -1372,49 +1353,45 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Deseja terminar esta aplicação?</para><para><warning>A interrupção da "
-"aplicação irá fechar todas as suas janelas-filhas. Todos os dados por gravar "
-"perder-se-ão.</warning></para>"
+"<para>A janela \"%1\" da aplicação <application>%2</application> não está a "
+"responder. Deseja terminar esta aplicação?</para><para><emphasis "
+"strong='true'>Terminar esta aplicação fechará todas as suas janelas. "
+"Quaisquer dados não guardados serão perdidos.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:204
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "&Terminar a Aplicação %1"
+msgstr "&Terminar %1"
 
 #: helpers/killer/killer.cpp:205
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Esperar um Pouco"
+msgstr "&Aguardar que responda"
 
 #: helpers/killer/killer.cpp:214
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Não Responde)"
+msgstr "Não está a responder"
 
 #: helpers/killer/killer.cpp:230
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "ID do processo: %1"
 
 #: helpers/killer/killer.cpp:232
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "hostname"
+msgstr "Nome do anfitrião: %1"
 
 #: keyboard_layout.cpp:46 keyboard_layout.cpp:56 keyboard_layout.cpp:140
 #, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr "Selector de Disposições do Teclado"
+msgstr "Seletor de disposição de teclado"
 
 #: killwindow.cpp:31
 #, kde-format
@@ -1422,8 +1399,8 @@ msgid ""
 "Select window to force close with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Seleccione a janela onde forçar o fecho com o botão esquerdo ou o Enter.\n"
-"Carregue em Escape ou no botão direito para cancelar."
+"Selecione a janela para forçar o fecho com clique esquerdo ou Enter.\n"
+"Prima Escape ou clique com o botão direito do rato para cancelar."
 
 #: main.cpp:168 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1439,12 +1416,12 @@ msgstr "KWin"
 #: main.cpp:170 main.cpp:194
 #, kde-format
 msgid "KDE window manager"
-msgstr "O gestor de janelas do KDE"
+msgstr "Gestor de janelas do KDE"
 
 #: main.cpp:172
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
-msgstr "(c) 1999-2019, A Equipa de Desenvolvimento do KDE"
+msgstr "(c) 1999-2019, A equipa de desenvolvimento do KDE"
 
 #: main.cpp:174
 #, kde-format
@@ -1487,77 +1464,75 @@ msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
 #: main.cpp:182
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Mais do que Enorme"
+msgstr "Xaver Hugl"
 
 #: main.cpp:191
 #, kde-format
 msgid "Disable configuration options"
-msgstr "Desactivar as opções de configuração"
+msgstr "Desativar opções de configuração"
 
 #: main.cpp:192
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
-msgstr "Indica que o KWin estoirou recentemente 'n' vezes"
+msgstr "Indicar que o KWin encerrou inesperadamente \"n\" vezes recentemente"
 
 #: main_wayland.cpp:305
 #, kde-format
 msgid "Start a rootless Xwayland server."
-msgstr "Iniciar um servidor de Xwayland sem 'root'."
+msgstr "Iniciar um servidor Xwayland sem privilégios de 'root'."
 
 #: main_wayland.cpp:308
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
-"Nome do 'socket' do Wayland onde atender pedidos. Se não for definido, será "
-"usado o \"wayland-0\"."
+"Nome da 'socket' Wayland a escutar. Se não definido, será utilizado "
+"\"wayland-0\"."
 
 #: main_wayland.cpp:312
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
-msgstr "O ecrã de X11 a usar no modo em janelas da plataforma X11."
+msgstr "O ecrã X11 a utilizar no modo janela na plataforma X11."
 
 #: main_wayland.cpp:316
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
-msgstr "O ecrã de Wayland a usar no modo em janelas da plataforma Wayland."
+msgstr "O ecrã Wayland a utilizar no modo janela na plataforma Wayland."
 
 #: main_wayland.cpp:318
 #, kde-format
 msgid "Render to a virtual framebuffer."
-msgstr "Desenhar num 'framebuffer' virtual."
+msgstr "Renderizar para um 'framebuffer' virtual."
 
 #: main_wayland.cpp:320
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
-msgstr "A largura do modo em janelas. A largura por omissão é 1024."
+msgstr "A largura para o modo em janela. A largura predefinida é 1024."
 
 #: main_wayland.cpp:324
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
-msgstr "A altura do modo em janelas. A altura por omissão é 768."
+msgstr "A altura para o modo em janela. A altura predefinida é 768."
 
 #: main_wayland.cpp:329
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "Se o modo em janela deve, ou não, ficar em ecrã inteiro"
 
 #: main_wayland.cpp:333
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
-msgstr "A escala do modo em janelas. A altura por omissão é 1."
+msgstr "A escala para o modo em janela. O valor predefinido é 1."
 
 #: main_wayland.cpp:338
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
-"O número de janelas a abrir como saídas no modo por janelas. O valor por "
-"omissão é 1"
+"O número de janelas a abrir como saídas no modo em janela. O valor "
+"predefinido é 1."
 
 #: main_wayland.cpp:343
 #, kde-format
@@ -1565,8 +1540,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
-"O 'socket' de Wayland a usar para as ligações recebidas. Isto pode ser "
-"combinado com o '--socket' para dar um nome ao 'socket'"
+"'Socket' Wayland a utilizar para ligações recebidas. Pode ser combinado com "
+"--socket para dar nome à 'socket'."
 
 #: main_wayland.cpp:347
 #, kde-format
@@ -1574,13 +1549,13 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
-"O 'socket' do XWayland a usar para as ligações recebidas. Isto pode ser "
-"definido várias vezes"
+"'Socket' XWayland a utilizar para ligações recebidas do Xwayland. Pode ser "
+"definido múltiplas vezes."
 
 #: main_wayland.cpp:351
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr "Nome do ecrã do 'xwayland' que foi pré-configurado"
+msgstr "Nome do ecrã Xwayland que foi pré-configurado"
 
 #: main_wayland.cpp:355
 #, kde-format
@@ -1591,72 +1566,70 @@ msgstr "Nome do ficheiro 'xauthority' "
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
-"Sai desta instância para que possa ser reiniciada pelo "
-"'kwin_wayland_wrapper'."
+"Termina esta instância para que possa ser reiniciada pelo "
+"kwin_wayland_wrapper."
 
 #: main_wayland.cpp:361
 #, kde-format
 msgid "Render through drm node."
-msgstr "Desenhar pelo nó de DRM."
+msgstr "Renderizar através do nó DRM."
 
 #: main_wayland.cpp:362
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
-"Extrair a informação regional do local1 em vez da configuração do utilizador"
+"Extrair informações de localização do 'locale1' em vez da configuração do "
+"utilizador"
 
 #: main_wayland.cpp:389
 #, kde-format
 msgid "Input method that KWin starts."
-msgstr "O método de entrada com que o KWin é iniciado."
+msgstr "Método de introdução que o KWin inicia."
 
 #: main_wayland.cpp:395
 #, kde-format
 msgid "Starts the session in locked mode."
-msgstr "Inicia a sessão no modo bloqueado."
+msgstr "Inicia a sessão em modo bloqueado."
 
 #: main_wayland.cpp:399
 #, kde-format
 msgid "Starts the session without lock screen support."
-msgstr "Inicia a sessão sem o suporte para o bloqueio do ecrã."
+msgstr "Inicia a sessão sem suporte para ecrã de bloqueio."
 
 #: main_wayland.cpp:404
 #, kde-format
 msgid "Starts the session without global shortcuts support."
-msgstr "Inicia a sessão sem o suporte para os atalhos globais."
+msgstr "Inicia a sessão sem suporte para atalhos globais."
 
 #: main_wayland.cpp:409
 #, kde-format
 msgid "Disable KActivities integration."
-msgstr "Desactivar a integração com o KActivities."
+msgstr "Desativar a integração com KActivities."
 
 #: main_wayland.cpp:414
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
-msgstr "Sair após a aplicação de sessões, iniciada pelo KWin, sair."
+msgstr ""
+"Sair após o encerramento da aplicação de sessão, que foi iniciada pelo KWin."
 
 #: main_wayland.cpp:419
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
-msgstr ""
-"As aplicações a iniciar assim que os servidores Wayland e Xwayland sejam "
-"iniciados"
+msgstr "Aplicações a iniciar após o arranque do servidor Wayland e Xwayland."
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: plugins/blur/blur_config.ui:17
 #, kde-format
 msgid "Blur strength:"
-msgstr "Potência do borrão:"
+msgstr "Intensidade do desfoque:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:53 plugins/blur/blur_config.ui:107
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Light"
-msgstr "Direito"
+msgstr "Leve"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
@@ -1671,14 +1644,13 @@ msgstr "Forte"
 #: plugins/blur/blur_config.ui:74
 #, kde-format
 msgid "Noise strength:"
-msgstr "Potência do ruído:"
+msgstr "Intensidade do ruído:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Saturation:"
-msgstr "caption"
+msgstr "Saturação:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -1686,19 +1658,16 @@ msgstr "caption"
 #: plugins/videowall/package/contents/ui/config.ui:73
 #, kde-format
 msgid "None"
-msgstr "Nada"
+msgstr "Nenhum"
 
 #: plugins/colorpicker/colorpicker.cpp:153
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Seleccione a janela onde forçar o fecho com o botão esquerdo ou o Enter.\n"
-"Carregue em Escape ou no botão direito para cancelar."
+"Selecione uma posição para escolha de cor com clique esquerdo ou Enter.\n"
+"Prima Escape ou clique com o botão direito do rato para cancelar."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
@@ -1710,48 +1679,43 @@ msgstr "Força:"
 #: plugins/diminactive/diminactive_config.ui:43
 #, kde-format
 msgid "Dim:"
-msgstr "Desvanecimento:"
+msgstr "Reduzir brilho:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: plugins/diminactive/diminactive_config.ui:50
 #, kde-format
 msgid "Docks and panels"
-msgstr "Áreas acopláveis e painéis"
+msgstr "Barras de acoplamento e painéis"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:57
-#, fuzzy, kde-format
-#| msgid "&Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "&Ecrãs"
+msgstr "Ambiente de trabalho"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:64
-#, fuzzy, kde-format
-#| msgid "Keep above"
+#, kde-format
 msgid "Keep above windows"
-msgstr "Manter acima"
+msgstr "Manter por cima das janelas"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:71
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "By window group"
-msgstr "Papel da janela"
+msgstr "Por grupo de janelas"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:78
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "Ecrã Completo"
+msgstr "Janelas em ecrã inteiro"
 
 #: plugins/eis/eisinputcapturemanager.cpp:130
-#, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
+#, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "Desactivar a integração com o KActivities."
+msgstr "Desativar a Captura Ativa de Entrada"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1764,10 +1728,9 @@ msgstr "Duração da animação:"
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Duration:"
-msgstr "caption"
+msgstr "Duração:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
@@ -1782,22 +1745,20 @@ msgstr "Predefinição"
 #: plugins/scale/package/contents/ui/config.ui:33
 #, kde-format
 msgid " milliseconds"
-msgstr " milisegundos"
+msgstr " milissegundos"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "Posição da janela"
+msgstr "Animação de abertura da janela"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "Rotação"
+msgstr "Borda de rotação:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1809,11 +1770,9 @@ msgstr "Topo"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Right"
-msgstr "Direito"
+msgstr "Direita"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1825,19 +1784,16 @@ msgstr "Fundo"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Left"
-msgstr "Esquerdo"
+msgstr "Esquerda"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "Rotação"
+msgstr "Ângulo de rotação:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
@@ -1848,128 +1804,126 @@ msgstr "Distância:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "Posição da janela"
+msgstr "Animação de fecho da janela"
 
 #: plugins/hidecursor/hidecursor_config.cpp:56
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "Nunca"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " milisegundos"
-msgstr[1] " milisegundos"
+msgstr[0] "%1 segundo"
+msgstr[1] "%1 segundos"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr ""
+msgstr "Ocultar cursor após inatividade:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Ocultar o ponteiro do rato enquanto escreve"
 
 #: plugins/invert/invert.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr "Comutar o Efeito de Inversão"
+msgstr "Alternar efeito de inverter"
 
 #: plugins/invert/invert.cpp:52
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Comutar o Efeito de Inversão na Janela"
+msgstr "Alternar efeito de inverter na janela"
 
 #: plugins/invert/invert.cpp:59
 #, kde-format
 msgid "Invert Screen Colors"
-msgstr "Inverter as Cores do Ecrã"
+msgstr "Inverter cores do ecrã"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "A tecla Caps Lock foi ativada."
 
 #: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "A tecla Caps Lock está agora inativa."
 
 #: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "A tecla Num Lock foi ativada."
 
 #: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "A tecla Num Lock está agora inativa."
 
 #: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "A tecla Scroll Lock foi ativada."
 
 #: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "A tecla Scroll Lock está agora inativa."
 
 #: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "A tecla Shift está agora ativa."
 
 #: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "A tecla Shift está agora inativa"
 
 #: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "A tecla Control está agora ativa."
 
 #: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "A tecla Control está agora inativa."
 
 #: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "A tecla Alt está agora ativa."
 
 #: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "A tecla Alt está agora inativa."
 
 #: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "A tecla Meta está agora ativa."
 
 #: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "A tecla Meta está agora inativa."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "activate"
-msgstr "activar"
+msgstr "ativar"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:44
 #, kde-format
@@ -2054,53 +2008,53 @@ msgstr "ecrã"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:259
 #, kde-format
 msgid "Switch to desktop %1"
-msgstr "Mudar para o ecrã %1"
+msgstr "Mudar para o ambiente de trabalho %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Close running window on %1"
-msgstr "Fechar a janela activa em %1"
+msgstr "Fechar a janela em execução em %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "(Un)minimize running window on %1"
-msgstr "Repor/Minimizar a janela activa em %1"
+msgstr "Maxi/minimizar a janela em execução em %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "Maximize/restore running window on %1"
-msgstr "Maximizar/repor a janela activa em %1"
+msgstr "Maximizar/restaurar a janela em execução em %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr "Activar o ecrã completo para a janela activa em %1"
+msgstr "Alternar ecrã inteiro para a janela em execução em %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
 msgid "(Un)shade running window on %1"
-msgstr "(Des)enrolar a janela activa em %1"
+msgstr "(Des)enrolar a janela ativa em %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:313
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr "Manter a janela activa acima em %1"
+msgstr "Alternar 'manter por cima' para a janela em execução em %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:316
 #, kde-format
 msgid "Toggle keep below running window on %1"
-msgstr "Manter a janela activa abaixo em %1"
+msgstr "Alternar 'manter por baixo' para a janela em execução em %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:320
 #, kde-format
 msgid "Activate running window on %1"
-msgstr "Activar a janela em execução em %1"
+msgstr "Ativar a janela em execução em %1"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: plugins/login/package/contents/ui/config.ui:17
 #, kde-format
 msgid "Fade to black (fullscreen splash screens only)"
-msgstr "Mudar para preto (apenas nos ecrãs iniciais para todo o ecrã)"
+msgstr "Transição para preto (apenas em ecrãs de início de ecrã inteiro)"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: plugins/magiclamp/magiclamp_config.ui:36
@@ -2111,31 +2065,24 @@ msgstr "Predefinida"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Comutar o Efeito do Botão do Rato"
+msgstr "Alternar animação de clique do rato"
 
 #: plugins/mouseclick/mouseclick.cpp:46
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Esquerdo"
 
 #: plugins/mouseclick/mouseclick.cpp:47
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Meio"
 
 #: plugins/mouseclick/mouseclick.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "Direito"
@@ -2144,34 +2091,31 @@ msgstr "Direito"
 #: plugins/mouseclick/mouseclick_config.ui:21
 #, kde-format
 msgid "Basic Settings"
-msgstr "Configuração Básica"
+msgstr "Definições básicas"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "Sem Botões do Rato"
+msgstr "Cor do botão esquerdo do rato:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "Sem Botões do Rato"
+msgstr "Cor do botão do meio do rato:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "Sem Botões do Rato"
+msgstr "Cor do botão direito do rato:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
 #, kde-format
 msgid "Advanced Settings"
-msgstr "Configuração Avançada"
+msgstr "Definições avançadas"
 
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: plugins/mouseclick/mouseclick_config.ui:97
@@ -2183,7 +2127,7 @@ msgstr "Anéis"
 #: plugins/mouseclick/mouseclick_config.ui:103
 #, kde-format
 msgid "Line Width:"
-msgstr "Espessura da Linha:"
+msgstr "Espessura da linha:"
 
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
@@ -2203,21 +2147,19 @@ msgstr " ms"
 #: plugins/mouseclick/mouseclick_config.ui:145
 #, kde-format
 msgid "Ring Duration:"
-msgstr "Duração dos Anéis:"
+msgstr "Duração do anel:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
 #: plugins/mouseclick/mouseclick_config.ui:155
 #, kde-format
 msgid "Ring Radius:"
-msgstr "Raio do Anel:"
+msgstr "Raio do anel:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgid "Ring Count:"
-msgstr "Número de dedos"
+msgstr "Número de anéis:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
@@ -2233,34 +2175,32 @@ msgstr "Tipo de letra:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgctxt "Special entry in alt+tab list for minimizing all windows"
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "Mostrar o Ecrã"
+msgstr "Mostrar texto:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
 msgid "Clear All Mouse Marks"
-msgstr "Limpar Todas as Marcas do Rato"
+msgstr "Limpar todas as marcas do rato"
 
 #: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:52
 #, kde-format
 msgid "Clear Last Mouse Mark"
-msgstr "Limpar as Últimas Marcas do Rato"
+msgstr "Limpar a última marca do rato"
 
 #: plugins/mousemark/mousemark_config.cpp:46
 #, kde-format
 msgid "Clear Mouse Marks"
-msgstr "Limpar as Marcas do Rato"
+msgstr "Limpar marcas do rato"
 
 #: plugins/mousemark/mousemark_config.cpp:87
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " pixel"
+msgstr[1] " pixels"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
@@ -2283,19 +2223,15 @@ msgstr "&Cor:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr ""
-"Desenhe com o rato, mantendo carregadas as teclas Shift+Meta e movendo o "
-"rato."
+msgstr "Desenhar com o rato ao premir teclas modificadoras e mover o rato"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Modificadores"
+msgstr "Teclas modificadoras para desenho livre:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2303,9 +2239,7 @@ msgstr "Modificadores"
 #: plugins/mousemark/mousemark_config.ui:125
 #: plugins/mousemark/mousemark_config.ui:179
 #: plugins/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "Alt"
 msgstr "Alt"
 
@@ -2325,9 +2259,7 @@ msgstr "Ctrl"
 #: plugins/mousemark/mousemark_config.ui:139
 #: plugins/mousemark/mousemark_config.ui:193
 #: plugins/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Shift"
+#, kde-format
 msgid "Shift"
 msgstr "Shift"
 
@@ -2337,50 +2269,41 @@ msgstr "Shift"
 #: plugins/mousemark/mousemark_config.ui:146
 #: plugins/mousemark/mousemark_config.ui:200
 #: plugins/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Meta"
+#, kde-format
 msgid "Meta"
 msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Modificadores"
+msgstr "Teclas modificadoras para desenho de setas:"
 
 #: plugins/nightlight/nightlightmanager.cpp:55
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Cor Nocturna Ligada"
+msgstr "Luz noturna suspensa"
 
 #: plugins/nightlight/nightlightmanager.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Cor Nocturna Ligada"
+msgstr "Luz noturna retomada"
 
 #: plugins/nightlight/nightlightmanager.cpp:77
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Suspender/retomar luz noturna"
 
 #: plugins/nightlight/nightlightmanager.cpp:393
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr "Antevisão da Temperatura de Cor"
+msgstr "Pré-visualização da temperatura de cor"
 
 #: plugins/outputlocator/outputlocator.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgctxt "@label"
 msgid "Unknown"
 msgstr "Desconhecido"
@@ -2389,315 +2312,290 @@ msgstr "Desconhecido"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Alternar entre a vista geral e a vista em grelha"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
 #: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Alternar entre a vista em grelha e a vista geral"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:53
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Comutar a Introdução"
+msgstr "Alternar vista geral"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:60
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Comutar a Introdução"
+msgstr "Alternar vista em grelha"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Minimizar a Janela"
+msgstr "Ignorar janelas minimizadas:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
 #: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Organizar janelas na vista em grelha:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Os resultados da pesquisa incluem janelas filtradas:"
 
 #: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Alternar entre a vista geral e a vista em grelha"
 
 #: plugins/overview/overvieweffect.cpp:143
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Comutar a Introdução"
+msgstr "Toggle Overview"
 
 #: plugins/overview/overvieweffect.cpp:152
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Comutar a Introdução"
+msgstr "Alternar vista em grelha"
 
 #: plugins/overview/qml/DesktopBar.qml:165
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "Espreitar o Ecrã"
+msgstr "Eliminar ambiente de trabalho virtual"
 
 #: plugins/overview/qml/DesktopBar.qml:264
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "Adicionar a um &Novo Ecrã"
+msgstr "Adicionar ambiente de trabalho virtual"
 
 #: plugins/overview/qml/Main.qml:378
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Espreitar o Ecrã"
+msgstr "Sem outros ambientes de trabalho virtuais para mostrar"
 
 #: plugins/overview/qml/Main.qml:384
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
-msgstr "Adicionar a um &Novo Ecrã"
+msgstr "Adicionar ambiente de trabalho virtual"
 
 #: plugins/overview/qml/Main.qml:391
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Espreitar o Ecrã"
+msgstr "Configurar ambientes de trabalho virtuais..."
 
 #: plugins/overview/qml/Main.qml:742
-#, fuzzy, kde-format
-#| msgid "X11 Unmanaged Windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
-msgstr "Janelas Não-Geridas pelo X11"
+msgstr "Sem janelas correspondentes"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
 msgid "Drag Down To Close"
-msgstr "Arrastar para Baixo para Fechar"
+msgstr "Arrastar para baixo para fechar"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:373
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
-msgstr "Fechar a Janela"
+msgstr "Fechar janela"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window open scale:"
-msgstr "Papel da janela"
+msgstr "Escala de abertura de janela:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: plugins/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window close scale:"
-msgstr "Papel da janela"
+msgstr "Escala de fecho de janela:"
 
 #: plugins/screencast/pipewirecore.cpp:63
 #: plugins/screencast/pipewirecore.cpp:92
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "Falha ao iniciar o ciclo principal do PipeWire"
 
 #: plugins/screencast/pipewirecore.cpp:79
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "Falha ao criar o contexto do PipeWire"
 
 #: plugins/screencast/pipewirecore.cpp:86
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "Falha ao ligar o contexto do PipeWire"
 
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
 #: plugins/screencast/screencastmanager.cpp:142
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "Suspender a Composição"
+msgstr "Tipo de composição não suportado"
 
 #: plugins/screencast/screencastmanager.cpp:62
-#, fuzzy, kde-format
-#| msgid "Close running window on %1"
+#, kde-format
 msgid "Could not find window id %1"
-msgstr "Fechar a janela activa em %1"
+msgstr "Não foi possível encontrar o ID da janela %1"
 
 #: plugins/screencast/screencastmanager.cpp:109
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "Não foi possível encontrar saída"
 
 #: plugins/screencast/screencastmanager.cpp:147
 #, kde-format
 msgid "Invalid region"
-msgstr ""
+msgstr "Região inválida"
 
 #: plugins/screencast/screencaststream.cpp:375
-#, fuzzy, kde-format
-#| msgid "No OpenGL compositor running"
+#, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "Sem compositor de OpenGL em execução"
+msgstr "Composição OpenGL é necessária para a gravação de ecrã"
 
 #: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "Falha ao criar o fluxo do PipeWire"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:413
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Seleccione a janela onde forçar o fecho com o botão esquerdo ou o Enter.\n"
-"Carregue em Escape ou no botão direito para cancelar."
+"Selecione a janela para capturar com clique esquerdo ou Enter.\n"
+"Prima Escape ou clique com o botão direito do rato para cancelar."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:431
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Seleccione a janela onde forçar o fecho com o botão esquerdo ou o Enter.\n"
-"Carregue em Escape ou no botão direito para cancelar."
+"Criar captura de ecrã com clique esquerdo ou Enter.\n"
+"Prima Escape ou clique com o botão direito do rato para cancelar."
 
 #: plugins/showcompositing/qml/Main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "Suspender a Composição"
+msgstr "Composição"
 
 #: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr "Este efeito não é um teste de performance"
+msgstr "Este efeito não é um teste de desempenho"
 
 #: plugins/showfps/qml/Main.qml:110
-#, fuzzy, kde-format
-#| msgctxt "A mouse pointer motion event"
-#| msgid "Pointer Motion"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "Movimento do Cursor"
+msgstr "Duração da pintura"
 
 #: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "Quantidade de Pinturas"
+msgstr "Quantidade de pinturas"
 
 #: plugins/showfps/qml/Main.qml:175
-#, fuzzy, kde-format
-#| msgid "Current Layout:"
+#, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr "Disposição Actual:"
+msgstr "'FPS' atuais"
 
 #: plugins/showfps/qml/Main.qml:184
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "IPS Máximos"
+msgstr "'FPS' máximas"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: plugins/slide/slide_config.ui:17
 #, kde-format
 msgid "Gap between desktops"
-msgstr "Intervalo entre ecrãs"
+msgstr "Espaço entre ambientes de trabalho"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "Horizontal"
+msgstr "Horizontal:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: plugins/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "Vertical"
+msgstr "Vertical:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: plugins/slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
-msgstr "Deslizar o fundo do ecrã"
+msgstr "Deslizar o fundo do ambiente de trabalho"
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"A tecla Shift foi bloqueada e está agora ativa para todas as teclas "
+"seguintes."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"A tecla Control foi bloqueada e está agora ativa para todas as teclas "
+"seguintes."
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"A tecla Alt foi bloqueada e está agora ativa para todas as teclas seguintes."
 
 #: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"A tecla Meta foi bloqueada e está agora ativa para todas as teclas seguintes."
 
 #: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"A tecla AltGr foi bloqueada e está agora ativa para todas as teclas "
+"seguintes."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "Comutar a Miniatura da Janela Actual"
+msgstr "Alternar miniatura da janela atual"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:23
@@ -2709,7 +2607,7 @@ msgstr "&Largura máxima:"
 #: plugins/thumbnailaside/thumbnailaside_config.ui:36
 #, kde-format
 msgid "&Spacing:"
-msgstr "E&spaço:"
+msgstr "E&spaçamento:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
@@ -2717,7 +2615,7 @@ msgstr "E&spaço:"
 #: plugins/thumbnailaside/thumbnailaside_config.ui:106
 #, kde-format
 msgid " pixels"
-msgstr " pontos"
+msgstr " pixels"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68
@@ -2735,7 +2633,7 @@ msgstr " %"
 #: plugins/tileseditor/tileseditoreffect.cpp:32
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr "Comutar o Editor de Padrões"
+msgstr "Alternar editor de mosaicos"
 
 #: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
@@ -2743,37 +2641,35 @@ msgid "Padding:"
 msgstr "Preenchimento:"
 
 #: plugins/tileseditor/qml/Main.qml:163
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "Carregar uma Disposição..."
+msgstr "Carregar disposição…"
 
 #: plugins/tileseditor/qml/Main.qml:270
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "Fe&char"
+msgstr "Fechar"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Divisão esquerda/direita"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Divisão cima/baixo"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr "Adicionar um Padrão Flutuante"
+msgstr "Adicionar mosaico flutuante"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr "Apagar"
+msgstr "Eliminar"
 
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
@@ -2785,21 +2681,19 @@ msgstr "Seguir o rato"
 #: plugins/trackmouse/trackmouse_config.ui:26
 #, kde-format
 msgid "Trigger effect with:"
-msgstr "Activar o efeito com:"
+msgstr "Ativar efeito com:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
-#, fuzzy, kde-format
-#| msgid "Keyboard"
+#, kde-format
 msgid "Keyboard shortcut:"
-msgstr "Teclado"
+msgstr "Atalho de teclado:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "Modificadores"
+msgstr "Teclas modificadoras:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
@@ -2811,13 +2705,13 @@ msgstr "Translucidez"
 #: plugins/translucency/package/contents/ui/config.ui:20
 #, kde-format
 msgid "General Translucency Settings"
-msgstr "Configuração Geral da Translucidez"
+msgstr "Definições gerais de translucidez"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: plugins/translucency/package/contents/ui/config.ui:64
 #, kde-format
 msgid "Combobox popups:"
-msgstr "Listas de selecção:"
+msgstr "Janelas de caixa de combinação:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -2825,14 +2719,13 @@ msgstr "Listas de selecção:"
 #: plugins/translucency/package/contents/ui/config.ui:431
 #, kde-format
 msgid "Opaque"
-msgstr "Opaca"
+msgstr "Opaco"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: plugins/translucency/package/contents/ui/config.ui:137
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Dialogs:"
-msgstr "Janela"
+msgstr "Diálogos:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2850,23 +2743,21 @@ msgstr "Menus:"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "Mover a Janela"
+msgstr "Janelas em movimento:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "Janelas Internas"
+msgstr "Janelas inativas:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:267
 #, kde-format
 msgid "Set menu translucency independently"
-msgstr "Definir a translucidez do menu de forma independente"
+msgstr "Definir translucidez do menu independentemente"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:285
