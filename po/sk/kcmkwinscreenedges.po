@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2026-01-14 18:51+0100\n"
+"PO-Revision-Date: 2026-01-31 17:23+0100\n"
 "Last-Translator: Lucia Mrenica <lucia.mrenica@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
@@ -233,7 +233,7 @@ msgstr "Oneskorenie &reaktivácie:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "Rohová bariéra:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -245,19 +245,28 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Tu môžete povoliť alebo zakázať virtuálnu bariéru medzi obrazovkami. Bariéra "
+"zabraňuje presunutiu kurzora na inú obrazovku, keď sa už dotýka rohu "
+"obrazovky. To uľahčuje spúšťanie prvkov používateľského rozhrania, ako sú "
+"tlačidlá na zatvorenie maximalizovaných okien, pri používaní viacerých "
+"obrazoviek.Tu môžete povoliť alebo zakázať virtuálnu bariéru medzi "
+"obrazovkami. Bariéra zabraňuje presunutiu kurzora na inú obrazovku, keď sa "
+"už dotýka rohu obrazovky. To uľahčuje spúšťanie prvkov používateľského "
+"rozhrania, ako sú tlačidlá na zatvorenie maximalizovaných okien, pri "
+"používaní viacerých obrazoviek."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Zabraňuje prekrývaniu kurzorov v rohoch obrazovky."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "Hranová bariéra:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -269,6 +278,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Tu môžete nastaviť veľkosť okrajovej bariéry medzi rôznymi obrazovkami. "
+"Bariéra pridáva dodatočnú vzdialenosť, ktorú musíte presunúť kurzorom, než "
+"prekročí okraj na druhú obrazovku. To uľahčuje prístup k prvkom "
+"používateľského rozhrania, ako sú panely Plasma, ktoré sa nachádzajú na "
+"okraji medzi obrazovkami."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -276,6 +290,8 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"Dodatočná vzdialenosť, ktorú musí kurzor prekonať, aby prekročil okraje "
+"obrazovky."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
