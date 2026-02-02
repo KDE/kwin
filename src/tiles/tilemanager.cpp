@@ -285,10 +285,12 @@ static QString generateOutputId(LogicalOutput *output)
 void TileManager::readSettings(RootTile *rootTile)
 {
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
-    qreal padding = cg.readEntry("padding", 4);
+    qreal padding = cg.readEntry("padding", 4); // Fall back to the "global" padding set previously
+    cg.deleteEntry("padding"); // clean up residual value, TODO clean after 6.7 or 6.8 is out
     VirtualDesktop *desk = rootTile->desktop();
     KConfigGroup desktopCg = KConfigGroup(&cg, desk->id());
     cg = KConfigGroup(&desktopCg, m_output->uuid());
+    padding = cg.readEntry("padding", padding);
 
     Q_ASSERT(m_rootTiles.contains(desk));
 
@@ -385,7 +387,6 @@ QJsonObject TileManager::tileToJSon(CustomTile *tile)
 void TileManager::saveSettings()
 {
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
-    cg.writeEntry("padding", rootTile()->padding());
 
     for (auto it = m_rootTiles.constBegin(); it != m_rootTiles.constEnd(); it++) {
         VirtualDesktop *desk = it.key();
@@ -395,6 +396,7 @@ void TileManager::saveSettings()
         KConfigGroup tileGroup(&cg, desk->id());
         tileGroup = KConfigGroup(&tileGroup, m_output->uuid());
         tileGroup.writeEntry("tiles", doc.toJson(QJsonDocument::Compact));
+        tileGroup.writeEntry("padding", rootTile->padding());
     }
     cg.sync(); // FIXME: less frequent?
 }
