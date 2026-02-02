@@ -24,7 +24,7 @@
         "Description[uk]": "Увімкнути виявлення ігрового контролера у KWin",
         "Description[zh_CN]": "启用 KWin 游戏控制器输入检测",
         "Description[zh_TW]": "啟用 KWin 遊戲控制器輸入偵測",
-        "EnabledByDefault": true,
+        "EnabledByDefault": false,
         "License": "GPL",
         "Name": "gamecontroller",
         "Name[ar]": "جهاز تحكم الألعاب",
