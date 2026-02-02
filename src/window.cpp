@@ -1064,7 +1064,6 @@ bool Window::startInteractiveMoveResize()
 
     setInteractiveMoveResize(true);
     workspace()->setMoveResizeWindow(this);
-    workspace()->raiseWindow(this);
 
     m_interactiveMoveResize.initialGeometry = moveResizeGeometry();
     m_interactiveMoveResize.initialOutputId = moveResizeOutput()->uuid();
@@ -1075,6 +1074,7 @@ bool Window::startInteractiveMoveResize()
 
     updateElectricGeometryRestore();
     checkUnrestrictedInteractiveMoveResize();
+    performDelayedRaise();
     Q_EMIT interactiveMoveResizeStarted();
     if (workspace()->screenEdges()->isDesktopSwitchingMovingClients()) {
         workspace()->screenEdges()->reserveDesktopSwitching(true, Qt::Vertical | Qt::Horizontal);
@@ -2061,6 +2061,7 @@ bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &
         workspace()->setActiveOutput(globalPos);
         break;
     case Options::MouseActivateRaiseOnReleaseAndPassClick:
+        m_delayedRaise = true;
         workspace()->requestFocus(this);
         workspace()->setActiveOutput(globalPos);
         break;
@@ -2186,9 +2187,7 @@ void Window::performMouseReleaseCommand(Options::MouseCommand command, const QPo
     if (command != Options::MouseActivateRaiseOnReleaseAndPassClick) {
         return;
     }
-    if (isActive()) {
-        workspace()->raiseWindow(this);
-    }
+    performDelayedRaise();
     workspace()->setActiveOutput(globalPos);
 }
 
@@ -2333,6 +2332,19 @@ bool Window::isActiveFullScreen() const
     // "focused windows having state _NET_WM_STATE_FULLSCREEN" to be on the highest layer.
     // we'll also take the screen into account
     return ac && (ac == this || !ac->isOnOutput(output()) || ac->allMainWindows().contains(const_cast<Window *>(this)));
+}
+
+void Window::performDelayedRaise()
+{
+    if (!m_delayedRaise) {
+        return;
+    }
+
+    m_delayedRaise = false;
+
+    if (isActive()) {
+        workspace()->raiseWindow(this);
+    }
 }
 
 qreal Window::borderBottom() const
