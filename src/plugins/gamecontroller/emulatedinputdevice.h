@@ -18,6 +18,8 @@ namespace KWin
 
 class EmulatedInputDevice : public InputDevice
 {
+    Q_OBJECT
+
 public:
     explicit EmulatedInputDevice(libevdev *device);
     ~EmulatedInputDevice();
