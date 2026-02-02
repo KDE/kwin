@@ -31,7 +31,11 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
+    void testMouseActivate();
+    void testMouseActivateInteractiveMoveResize();
+    void testMouseActivateAndRaise();
     void testMouseActivateRaiseOnReleaseAndPassClick();
+    void testMouseActivateRaiseOnReleaseAndPassClickInteractiveMoveResize();
 };
 
 void MouseActionsTest::initTestCase()
@@ -59,8 +63,111 @@ void MouseActionsTest::cleanup()
     Test::destroyWaylandConnection();
 }
 
+void MouseActionsTest::testMouseActivate()
+{
+    // This test verifies that a window will not be raised with the MouseActivate command.
+
+    options->setCommandWindow1(Options::MouseActivate);
+
+    // Create two windows, window1 is covered by window2.
+    Test::XdgToplevelWindow window1;
+    QVERIFY(window1.show(QSize(100, 100)));
+    QVERIFY(window1.m_window->isActive());
+    window1.m_window->move(QPoint(0, 0));
+
+    Test::XdgToplevelWindow window2;
+    QVERIFY(window2.show(QSize(100, 100)));
+    QVERIFY(window2.m_window->isActive());
+    window2.m_window->move(QPoint(50, 50));
+
+    QCOMPARE(workspace()->stackingOrder(), (QList{window1.m_window, window2.m_window}));
+
+    // Click left mouse button over the first window.
+    uint32_t time = 0;
+    Test::pointerMotion(QPoint(25, 25), time++);
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+    QVERIFY(window1.m_window->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (QList{window1.m_window, window2.m_window}));
+
+    // Release the button.
+    Test::pointerButtonReleased(BTN_LEFT, time++);
+    QCOMPARE(workspace()->stackingOrder(), (QList{window1.m_window, window2.m_window}));
+}
+
+void MouseActionsTest::testMouseActivateInteractiveMoveResize()
+{
+    // This test verifies that a window will not be accidentally raised after starting an interactive
+    // move resize operation while the MouseActivate command is assigned to LMB.
+
+    options->setCommandWindow1(Options::MouseActivate);
+
+    // Create two windows, window1 is covered by window2.
+    Test::XdgToplevelWindow window1;
+    QVERIFY(window1.show(QSize(100, 100)));
+    QVERIFY(window1.m_window->isActive());
+    window1.m_window->move(QPoint(0, 0));
+
+    Test::XdgToplevelWindow window2;
+    QVERIFY(window2.show(QSize(100, 100)));
+    QVERIFY(window2.m_window->isActive());
+    window2.m_window->move(QPoint(50, 50));
+
+    QCOMPARE(workspace()->stackingOrder(), (QList{window1.m_window, window2.m_window}));
+
+    // Click left mouse button over the first window.
+    uint32_t time = 0;
+    Test::pointerMotion(QPoint(25, 25), time++);
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+    QCOMPARE(workspace()->stackingOrder(), (QList{window1.m_window, window2.m_window}));
+
+    // Start an interactive move operation, window1 should not be raised.
+    workspace()->slotWindowMove();
+    QCOMPARE(workspace()->stackingOrder(), (QList{window1.m_window, window2.m_window}));
+
+    // Finish the interactive move operation.
+    Test::pointerButtonReleased(BTN_LEFT, time++);
+    QCOMPARE(workspace()->stackingOrder(), (QList{window1.m_window, window2.m_window}));
+}
+
+void MouseActionsTest::testMouseActivateAndRaise()
+{
+    // This test verifies that the MouseActivateAndRaise command works as expected. That is, the window
+    // gets immediately activated and raised on a button press.
+
+    options->setCommandWindow1(Options::MouseActivateAndRaise);
+
+    // Create two windows, window1 is covered by window2.
+    Test::XdgToplevelWindow window1;
+    QVERIFY(window1.show(QSize(100, 100)));
+    QVERIFY(window1.m_window->isActive());
+    window1.m_window->move(QPoint(0, 0));
+
+    Test::XdgToplevelWindow window2;
+    QVERIFY(window2.show(QSize(100, 100)));
+    QVERIFY(window2.m_window->isActive());
+    window2.m_window->move(QPoint(50, 50));
+
+    QCOMPARE(workspace()->stackingOrder(), (QList{window1.m_window, window2.m_window}));
+
+    // Click left mouse button over the first window.
+    uint32_t time = 0;
+    Test::pointerMotion(QPoint(25, 25), time++);
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+    QVERIFY(window1.m_window->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (QList{window2.m_window, window1.m_window}));
+
+    // Release the button.
+    Test::pointerButtonReleased(BTN_LEFT, time++);
+    QCOMPARE(workspace()->stackingOrder(), (QList{window2.m_window, window1.m_window}));
+}
+
 void MouseActionsTest::testMouseActivateRaiseOnReleaseAndPassClick()
 {
+    // This test verifies that MouseActivateRaiseOnReleaseAndPassClick works as expected. In other
+    // words, the window gets activated imediately on a button press, but raised on the button release.
+
+    options->setCommandWindow1(Options::MouseActivateRaiseOnReleaseAndPassClick);
+
     // Create two windows on the left screen.
     auto surface1 = Test::createSurface();
     auto shellSurface1 = Test::createXdgToplevelSurface(surface1.get());
@@ -120,6 +227,41 @@ void MouseActionsTest::testMouseActivateRaiseOnReleaseAndPassClick()
     QCOMPARE(workspace()->stackingOrder(), (QList{window1, window2}));
 }
 
+void MouseActionsTest::testMouseActivateRaiseOnReleaseAndPassClickInteractiveMoveResize()
+{
+    // This test verifies that a window will be immediately raised if an interactive move resize
+    // operation is started while the left mouse button is being held. The window should be raised
+    // when the move resize operation starts not when the left mouse button is released.
+
+    options->setCommandWindow1(Options::MouseActivateRaiseOnReleaseAndPassClick);
+
+    // Create two windows, window1 is covered by window2.
+    Test::XdgToplevelWindow window1;
+    QVERIFY(window1.show(QSize(100, 100)));
+    QVERIFY(window1.m_window->isActive());
+    window1.m_window->move(QPoint(0, 0));
+
+    Test::XdgToplevelWindow window2;
+    QVERIFY(window2.show(QSize(100, 100)));
+    QVERIFY(window2.m_window->isActive());
+    window2.m_window->move(QPoint(50, 50));
+
+    QCOMPARE(workspace()->stackingOrder(), (QList{window1.m_window, window2.m_window}));
+
+    // Click left mouse button over the first window.
+    uint32_t time = 0;
+    Test::pointerMotion(QPoint(25, 25), time++);
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+    QCOMPARE(workspace()->stackingOrder(), (QList{window1.m_window, window2.m_window}));
+
+    // Start an interactive move operation, window1 should be raised now.
+    workspace()->slotWindowMove();
+    QCOMPARE(workspace()->stackingOrder(), (QList{window2.m_window, window1.m_window}));
+
+    // Finish the interactive move operation.
+    Test::pointerButtonReleased(BTN_LEFT, time++);
+    QCOMPARE(workspace()->stackingOrder(), (QList{window2.m_window, window1.m_window}));
+}
 }
 
 WAYLANDTEST_MAIN(KWin::MouseActionsTest)

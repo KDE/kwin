@@ -1616,6 +1616,7 @@ protected:
 
     virtual Layer belongsToLayer() const;
     bool isActiveFullScreen() const;
+    void performDelayedRaise();
 
     // electric border / quick tiling
     void setElectricBorderMode(std::optional<ElectricBorderMode> mode);
@@ -1868,6 +1869,7 @@ protected:
     QList<Window *> m_transients;
     bool m_modal = false;
     Layer m_layer = UnknownLayer;
+    bool m_delayedRaise = false;
     QPointer<Tile> m_requestedTile;
     QPointer<Tile> m_tile;
 
