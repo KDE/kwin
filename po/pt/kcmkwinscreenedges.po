@@ -1,32 +1,34 @@
+# SPDX-FileCopyrightText: 2026 César A. P. Cláudio <cesarapclaudio@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2022-07-15 09:31+0100\n"
-"Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
-"Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
+"PO-Revision-Date: 2026-02-01 01:01+0000\n"
+"Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
+"Language-Team: pt\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-POFile-SpellExtra: ms KRunner\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 25.12.1\n"
 
 #: main.cpp:152 touch.cpp:118
 #, kde-format
 msgid "No Action"
-msgstr "Nenhuma Acção"
+msgstr "Nenhuma ação"
 
 #: main.cpp:153 touch.cpp:119
 #, kde-format
 msgid "Peek at Desktop"
-msgstr "Espreitar o Ecrã"
+msgstr "Espreitar ambiente de trabalho"
 
 #: main.cpp:154 touch.cpp:120
 #, kde-format
 msgid "Lock Screen"
-msgstr "Bloquear o Ecrã"
+msgstr "Bloquear ecrã"
 
 #: main.cpp:155 touch.cpp:121
 #, kde-format
@@ -36,7 +38,7 @@ msgstr "Mostrar o KRunner"
 #: main.cpp:156 touch.cpp:122
 #, kde-format
 msgid "Activity Manager"
-msgstr "Gestor de Actividades"
+msgstr "Gestor de Atividades"
 
 #: main.cpp:157 touch.cpp:123
 #, kde-format
@@ -46,42 +48,42 @@ msgstr "Lançador de Aplicações"
 #: main.cpp:161 touch.cpp:127
 #, kde-format
 msgid "Present Windows"
-msgstr "Janelas Presentes"
+msgstr "Janelas presentes"
 
 #: main.cpp:162 touch.cpp:128
 #, kde-format
 msgid "%1 - All Desktops"
-msgstr "%1 - Todos os Ecrãs"
+msgstr "%1 - Todos os Ambientes de Trabalho"
 
 #: main.cpp:163 touch.cpp:129
 #, kde-format
 msgid "%1 - Current Desktop"
-msgstr "%1 - Ecrã Actual"
+msgstr "%1 - Ambiente de Trabalho Atual"
 
 #: main.cpp:164 touch.cpp:130
 #, kde-format
 msgid "%1 - Current Application"
-msgstr "%1 - Aplicação Actual"
+msgstr "%1 - Aplicação Atual"
 
 #: main.cpp:166 touch.cpp:132
 #, kde-format
 msgid "Overview"
-msgstr ""
+msgstr "Vista Geral"
 
 #: main.cpp:167 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "Grelha"
 
 #: main.cpp:169 touch.cpp:135
 #, kde-format
 msgid "Toggle window switching"
-msgstr "Comutar a mudança de janelas"
+msgstr "Alternar mudança de janelas"
 
 #: main.cpp:170 touch.cpp:136
 #, kde-format
 msgid "Toggle alternative window switching"
-msgstr "Comutar a mudança alternativa de janelas"
+msgstr "Alternar mudança alternativa de janelas"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
@@ -90,8 +92,8 @@ msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
 msgstr ""
-"Poderá activar uma acção se enviar o cursor do rato para o extremo ou canto "
-"do ecrã correspondente."
+"Pode executar uma ação ao empurrar o cursor do rato contra o extremo ou "
+"canto correspondente do ecrã."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -109,7 +111,7 @@ msgstr "Janelas arrastadas para o extremo superior"
 #: main.ui:84
 #, kde-format
 msgid "&Tile:"
-msgstr "&Lado-a-Lado:"
+msgstr "&Organizar:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderTiling)
 #: main.ui:94
@@ -127,13 +129,13 @@ msgstr "Comportamento:"
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr "Permanecer activo quando as janelas estão em ecrã completo"
+msgstr "Permanecer ativo quando as janelas estão em ecrã inteiro"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr "Activar o lado-a-lado por &quartos em:"
+msgstr "Acionar organização em &quartos em:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -145,7 +147,7 @@ msgstr "%"
 #: main.ui:133
 #, kde-format
 msgid "Outer "
-msgstr "Exteriores "
+msgstr "Exterior "
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: main.ui:149
@@ -158,34 +160,34 @@ msgstr "do ecrã"
 #, kde-format
 msgid ""
 "Change desktop when the mouse cursor is pushed against the edge of the screen"
-msgstr "Mudar de ecrã quando o cursor do rato se aproximar do extremo do ecrã"
+msgstr ""
+"Mudar de ambiente de trabalho quando o cursor do rato é empurrado contra o "
+"extremo do ecrã"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
 #, kde-format
 msgid "&Switch desktop on edge:"
-msgstr "Mudar de ecrã no e&xtremo:"
+msgstr "&Mudar ambiente de trabalho no extremo:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:188
 #, kde-format
 msgctxt "Switch desktop on edge"
 msgid "Disabled"
-msgstr "Desactivado"
+msgstr "Desativado"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
-#, fuzzy, kde-format
-#| msgid "Only When Moving Windows"
+#, kde-format
 msgid "Only when moving windows"
-msgstr "Só ao Mover as Janelas"
+msgstr "Apenas ao mover janelas"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, fuzzy, kde-format
-#| msgid "Always Enabled"
+#, kde-format
 msgid "Always enabled"
-msgstr "Sempre Activo"
+msgstr "Sempre ativo"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
@@ -194,14 +196,14 @@ msgid ""
 "Amount of time required for the mouse cursor to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
-"A quantidade de tempo necessária para o cursor do rato ser encostado ao "
-"extremo do ecrã, antes de a acção ser despoletada"
+"Tempo necessário para que o cursor do rato seja empurrado contra o extremo "
+"do ecrã antes de a ação ser executada"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
 #, kde-format
 msgid "Activation &delay:"
-msgstr "A&traso na activação:"
+msgstr "A&traso de ativação:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderDelay)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderCooldown)
@@ -217,20 +219,19 @@ msgid ""
 "Amount of time required after triggering an action until the next trigger "
 "can occur"
 msgstr ""
-"A quantidade de tempo necessária após despoletar um acção até poder ocorrer "
-"a próxima activação"
+"Tempo necessário após executar uma ação até que a próxima ação possa ocorrer"
 
 #. i18n: ectx: property (text), widget (QLabel, triggerCooldownLabel)
 #: main.ui:241
 #, kde-format
 msgid "&Reactivation delay:"
-msgstr "Atraso na &reactivação:"
+msgstr "Atraso de &reativação:"
 
 #. i18n: ectx: property (text), widget (QLabel, CornerBarrierLabel)
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&Barreira de cantos:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -242,19 +243,23 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Aqui pode ativar ou desativar a barreira virtual de cantos entre ecrãs. A "
+"barreira impede que o cursor se mova para outro ecrã quando já está a tocar "
+"num canto do ecrã. Isto facilita a execução de elementos de interface como "
+"os botões de fechar de janelas maximizadas ao utilizar múltiplos ecrãs."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Impede que os cursores atravessem nos cantos do ecrã."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "&Barreira de extremos:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -266,6 +271,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Aqui pode definir o tamanho da barreira de extremos entre diferentes ecrãs. "
+"A barreira adiciona uma distância extra que o ponteiro tem de percorrer "
+"antes de atravessar o extremo para outro ecrã. Isto facilita o acesso a "
+"elementos de interface como os Painéis do Plasma que estão localizados num "
+"extremo entre ecrãs."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -273,18 +283,20 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"Distância adicional que o cursor precisa de percorrer para atravessar os "
+"extremos do ecrã."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Nenhum"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
@@ -293,8 +305,8 @@ msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
 msgstr ""
-"Poderá activar uma acção se arrastar do extremo do ecrã para o centro do "
-"mesmo."
+"Pode executar uma ação ao deslizar do extremo do ecrã em direção ao centro "
+"do ecrã."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

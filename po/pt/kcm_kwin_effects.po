@@ -1,22 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# SPDX-FileCopyrightText: 2026 César A. P. Cláudio <cesarapclaudio@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2019-09-30 11:24+0100\n"
-"Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
-"Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
+"PO-Revision-Date: 2026-02-01 01:06+0000\n"
+"Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
+"Language-Team: pt\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-POFile-SpellExtra: Vlad Zagorodniy Zahorodnii\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 25.12.1\n"
 
 #: ui/Effect.qml:98
 #, kde-format
@@ -28,9 +28,7 @@ msgstr ""
 "Licença: %2"
 
 #: ui/Effect.qml:110
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Configure..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
 msgstr "Configurar..."
@@ -39,17 +37,17 @@ msgstr "Configurar..."
 #, kde-format
 msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
-msgstr ""
+msgstr "Obter novos..."
 
 #: ui/main.qml:54
 #, kde-format
 msgid "Configure Filter"
-msgstr "Configurar o Filtro"
+msgstr "Configurar filtro"
 
 #: ui/main.qml:66
 #, kde-format
 msgid "Exclude unsupported effects"
-msgstr "Excluir os efeitos não suportados"
+msgstr "Excluir efeitos não suportados"
 
 #~ msgctxt "@info:tooltip"
 #~ msgid "Show/Hide Video"

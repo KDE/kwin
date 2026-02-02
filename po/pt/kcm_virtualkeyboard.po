@@ -1,21 +1,21 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# SPDX-FileCopyrightText: 2026 César A. P. Cláudio <cesarapclaudio@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2021-05-08 19:13+0100\n"
-"Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
-"Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
+"PO-Revision-Date: 2026-02-01 11:35+0000\n"
+"Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
+"Language-Team: pt\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 25.12.1\n"
 
 #: kcmvirtualkeyboard.cpp:61
 #, kde-format
@@ -25,7 +25,7 @@ msgstr "Nenhum"
 #: kcmvirtualkeyboard.cpp:65
 #, kde-format
 msgid "Do not use any virtual keyboard"
-msgstr "Não usar nenhum teclado virtual"
+msgstr "Não utilizar qualquer teclado virtual"
 
 #~ msgid "This module lets you choose the virtual keyboard to use."
 #~ msgstr "Este módulo permite-lhe seleccionar o teclado virtual a usar."

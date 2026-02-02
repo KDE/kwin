@@ -1,68 +1,71 @@
+# SPDX-FileCopyrightText: 2026 César A. P. Cláudio <cesarapclaudio@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2022-06-15 19:25+0100\n"
-"Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
-"Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
+"PO-Revision-Date: 2026-02-01 15:09+0000\n"
+"Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
+"Language-Team: pt\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-POFile-SpellExtra: KWin\n"
+"X-Generator: Lokalize 25.12.1\n"
 
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
 msgstr ""
+"Iniciar uma pré-visualização interativa para um alternador de caixas de "
+"separadores"
 
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "Caminho para o ficheiro principal QML do Comutador de Janelas"
 
 #: layoutpreview.cpp:30
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "Mostrar também uma miniatura do ambiente de trabalho"
 
 #: layoutpreview.cpp:159
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
-msgstr ""
+msgstr "Dolphin"
 
 #: layoutpreview.cpp:163
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
-msgstr ""
+msgstr "Konqueror"
 
 #: layoutpreview.cpp:167
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
-msgstr ""
+msgstr "KMail"
 
 #: layoutpreview.cpp:171
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
-msgstr ""
+msgstr "Definições de Sistema"
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Ecrã actual"
+msgstr "Espreitar ambiente de trabalho"
 
 #: layoutpreview.cpp:207
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
-msgstr "Ecrã 1"
+msgstr "Ambiente de trabalho 1"
 
 #: main.cpp:74
 #, kde-format
@@ -75,18 +78,17 @@ msgid "Alternative"
 msgstr "Alternativo"
 
 #: main.cpp:77
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers..."
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "Obter Novos Selectores de Tarefas..."
+msgstr "Obter novos estilos para o Comutador de Tarefas…"
 
 #: main.cpp:95
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
 msgstr ""
-"A configuração da política de foco limita a funcionalidade da navegação "
-"entre as janelas."
+"As definições da política de dar foco limitam a funcionalidade de navegação "
+"pelas janelas."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: main.ui:32
@@ -96,16 +98,15 @@ msgstr "Conteúdo"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" icon"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "Incluir o ícone \"Mostrar o Ecrã\""
+msgstr "Incluir entrada \"Espreitar ambiente de trabalho\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
 #, kde-format
 msgid "Recently used"
-msgstr "Usadas recentemente"
+msgstr "Utilizado recentemente"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:60
@@ -123,7 +124,7 @@ msgstr "Apenas uma janela por aplicação"
 #: main.ui:78
 #, kde-format
 msgid "Order minimized windows after unminimized windows"
-msgstr "Ordenar as janelas minimizadas a seguir às não-minimizadas"
+msgstr "Ordenar janelas minimizadas após janelas não minimizadas"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: main.ui:88
@@ -135,43 +136,43 @@ msgstr "Ordenação:"
 #: main.ui:114
 #, kde-format
 msgid "Filter windows by"
-msgstr "Filtrar as janelas por"
+msgstr "Filtrar janelas por"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
 #: main.ui:123
 #, kde-format
 msgid "Virtual desktops"
-msgstr "Ecrãs virtuais"
+msgstr "Ambientes de trabalho virtuais"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
 #: main.ui:167
 #, kde-format
 msgid "Current desktop"
-msgstr "Ecrã actual"
+msgstr "Ambiente de trabalho atual"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
 #: main.ui:174
 #, kde-format
 msgid "All other desktops"
-msgstr "Todos os outros ecrãs"
+msgstr "Todos os restantes ambientes de trabalho"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
 #: main.ui:184
 #, kde-format
 msgid "Activities"
-msgstr "Actividades"
+msgstr "Atividades"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
 #: main.ui:228
 #, kde-format
 msgid "Current activity"
-msgstr "Actividade actual"
+msgstr "Atividade actual"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
 #: main.ui:235
 #, kde-format
 msgid "All other activities"
-msgstr "Todas as outras actividades"
+msgstr "Todas as restantes atividades"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
 #: main.ui:245
@@ -183,13 +184,13 @@ msgstr "Ecrãs"
 #: main.ui:289
 #, kde-format
 msgid "Current screen"
-msgstr "Ecrã actual"
+msgstr "Ecrã atual"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
 #: main.ui:296
 #, kde-format
 msgid "All other screens"
-msgstr "Todos os outros ecrãs"
+msgstr "Todos os restantes ecrãs"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
 #: main.ui:306
@@ -207,7 +208,7 @@ msgstr "Janelas visíveis"
 #: main.ui:357
 #, kde-format
 msgid "Hidden windows"
-msgstr "Janelas escondidas"
+msgstr "Janelas ocultas"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
 #: main.ui:396
@@ -242,13 +243,13 @@ msgstr "Inversa"
 #: main.ui:474 main.ui:506 main.ui:554 main.ui:586
 #, kde-format
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:538
 #, kde-format
 msgid "Current application"
-msgstr "Aplicação actual"
+msgstr "Aplicação atual"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: main.ui:615
@@ -261,8 +262,8 @@ msgstr "Visualização"
 #, kde-format
 msgid "The effect to replace the list window when desktop effects are active."
 msgstr ""
-"O efeito para substituir a janela da lista, quando activar os efeitos do "
-"ecrã."
+"O efeito para substituir a janela de lista quando os efeitos de ambiente de "
+"trabalho estão ativos."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
 #: main.ui:678
@@ -271,55 +272,55 @@ msgid ""
 "The currently selected window will be highlighted by fading out all other "
 "windows. This option requires desktop effects to be active."
 msgstr ""
-"A janela seleccionada de momento será realçada, desvanecendo todas as outras "
-"janelas. Esta opção precisa de ter os efeitos do ecrã activados."
+"A janela atualmente selecionada será destacada através do esbatimento de "
+"todas as outras janelas. Esta opção requer que os efeitos de ambiente de "
+"trabalho estejam ativos."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
 #: main.ui:681
 #, kde-format
 msgid "Show selected window"
-msgstr "Mostrar a janela seleccionada"
+msgstr "Mostrar janela selecionada"
 
 #: shortcutsettings.cpp:131
 #, kde-format
 msgid "Walk Through Windows"
-msgstr "Percorrer as Janelas"
+msgstr "Percorrer janelas"
 
 #: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr "Percorrer as Janelas (Sentido Inverso)"
+msgstr "Percorrer janelas (sentido inverso)"
 
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr "Percorrer as Janelas da Aplicação Actual"
+msgstr "Percorrer janelas da aplicação atual"
 
 #: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "Percorrer as Janelas da Aplicação Actual (Sentido Inverso)"
+msgstr "Percorrer janelas da aplicação atual (sentido inverso)"
 
 #: shortcutsettings.cpp:136
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr "Percorrer as Janelas em Alternativa"
+msgstr "Alternativa a Percorrer janelas"
 
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "Percorrer as Janelas em Alternativa (Sentido Inverso)"
+msgstr "Alternativa a Percorrer janelas (sentido inverso)"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "Percorrer as Janelas da Aplicação Actual em Alternativa"
+msgstr "Alternativa a Percorrer janelas da aplicação atual"
 
 #: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr ""
-"Percorrer as Janelas da Aplicação Actual em Alternativa (Sentido Inverso)"
+msgstr "Alternativa a Percorrer janelas da aplicação atual (sentido inverso)"
 
 #~ msgid "Show Desktop"
 #~ msgstr "Mostrar o Ecrã"

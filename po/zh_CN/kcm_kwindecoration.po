@@ -194,7 +194,7 @@ msgstr "显示标题栏按钮悬停提示"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" button"
-msgstr ""
+msgstr "总是显示“在录屏中隐藏”按钮"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format

@@ -1,34 +1,34 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# SPDX-FileCopyrightText: 2026 César A. P. Cláudio <cesarapclaudio@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2022-12-24 07:21+0000\n"
-"Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
-"Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
+"PO-Revision-Date: 2026-02-01 14:55+0000\n"
+"Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
+"Language-Team: pt\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-POFile-SpellExtra: Control\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 25.12.1\n"
 
 #: ui/main.qml:27
 #, kde-format
 msgctxt "@info"
 msgid "Changes will take effect the next time you log in."
-msgstr ""
+msgstr "As alterações terão efeito na próxima vez que iniciar sessão."
 
 #: ui/main.qml:31
 #, kde-format
 msgctxt "@action:button"
 msgid "Log Out Now"
-msgstr ""
+msgstr "Terminar sessão agora"
 
 #: ui/main.qml:52
 #, kde-kuit-format
@@ -39,28 +39,32 @@ msgid ""
 "time.<nl/><nl/>If you use any of these apps, you can choose your preferred "
 "balance of security and compatibility here."
 msgstr ""
+"As aplicações legado X11 com atalhos globais e outras funcionalidades "
+"acedidas enquanto são executadas em segundo plano, precisam de conseguir "
+"escutar as teclas premidas constantemente.<nl/><nl/>Se utilizar alguma "
+"destas aplicações, pode escolher aqui o seu equilíbrio preferido entre "
+"segurança e compatibilidade."
 
 #: ui/main.qml:73
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
-msgstr ""
+msgstr "A escutar batimentos de teclas:"
 
 #: ui/main.qml:80
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
-msgstr ""
+msgstr "Proibido"
 
 #: ui/main.qml:96
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
-msgstr ""
+msgstr "Segurança máxima; os atalhos globais não funcionarão em aplicações X11"
 
 #: ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt, and Shift keys"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Apenas as teclas Meta, Control, Alt e Shift"
@@ -72,30 +76,31 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
+"Segurança elevada; as teclas 'push-to-talk' e outros atalhos globais com "
+"teclas modificadoras funcionarão em aplicações X11"
 
 #: ui/main.qml:140
-#, fuzzy, kde-format
-#| msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
 "As above, plus any key pressed while the Control, Alt, or Meta key is also "
 "pressed"
 msgstr ""
-"Todas as teclas, mas apenas enquanto as teclas Meta, Ctrl, Alt ou Shift "
-"estiverem carregadas"
+"Como acima, mais qualquer tecla premida enquanto as teclas Control, Alt ou "
+"Meta também estiverem premidas"
 
 #: ui/main.qml:156
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
+"Segurança moderada; todos os atalhos globais funcionarão em aplicações X11"
 
 #: ui/main.qml:170
-#, fuzzy, kde-format
-#| msgid "Always"
+#, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
-msgstr "Sempre"
+msgstr "Sempre permitido"
 
 #: ui/main.qml:186
 #, kde-format
@@ -104,35 +109,32 @@ msgid ""
 "Least secure; all X11 apps will be able to see any text you type into any "
 "application"
 msgstr ""
+"Segurança mínima; todas as aplicações X11 poderão ver qualquer texto que "
+"escreva em qualquer aplicação"
 
 #: ui/main.qml:200
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will reduce system security and permit "
 "malicious software to steal passwords and spy on the text that you type. "
 "Make sure you understand and accept this risk."
 msgstr ""
-"Lembre-se que, ao usar esta opção, irá reduzir a segurança do sistema apenas "
-"à da sessão de X11, permitindo que algumas aplicações maliciosas roubem as "
-"senhas e olhem para o texto que escreve. Certifique-se que compreende e "
-"aceita esse risco."
+"Note que a utilização desta definição irá reduzir a segurança do sistema e "
+"permitir que 'software' malicioso roube palavras-passe e espie o texto que "
+"escreve. Certifique-se de que compreende e aceita este risco."
 
 #: ui/main.qml:216
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
-msgstr ""
+msgstr "A escutar botões do rato:"
 
 #: ui/main.qml:222
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
-msgstr ""
+msgstr "Permitido"
 
 #: ui/main.qml:238
 #, kde-format
@@ -141,12 +143,14 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
+"Segurança moderada; os atalhos globais que envolvam botões do rato "
+"funcionarão em aplicações X11"
 
 #: ui/main.qml:252
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
-msgstr ""
+msgstr "Controlo do ponteiro e do teclado:"
 
 #: ui/main.qml:258
 #, kde-format
@@ -154,30 +158,28 @@ msgctxt ""
 "@option:check Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr ""
+msgstr "Permitir sem pedir permissão"
 
 #: ui/main.qml:268
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
+"Segurança mínima; todas as aplicações X11 poderão assumir o controlo do "
+"computador"
 
 #: ui/main.qml:282
-#, fuzzy, kde-format
-#| msgid ""
-#| "Note that using this setting will reduce system security to that of the "
-#| "X11 session by permitting malicious software to steal passwords and spy "
-#| "on the text that you type. Make sure you understand and accept this risk."
+#, kde-format
 msgctxt "@info:usagetip"
 msgid ""
 "Note that using this setting will drastically reduce system security and "
 "permit malicious software to take complete control of your pointer and "
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
-"Lembre-se que, ao usar esta opção, irá reduzir a segurança do sistema apenas "
-"à da sessão de X11, permitindo que algumas aplicações maliciosas roubem as "
-"senhas e olhem para o texto que escreve. Certifique-se que compreende e "
-"aceita esse risco."
+"Note que a utilização desta definição irá reduzir drasticamente a segurança "
+"do sistema e permitir que 'software' malicioso assuma o controlo total do "
+"seu ponteiro do rato e teclado. Certifique-se de que compreende e aceita "
+"este risco."
 
 #, fuzzy
 #~| msgid ""
