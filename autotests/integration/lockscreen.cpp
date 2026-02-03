@@ -115,7 +115,8 @@ Q_SIGNALS:
         QVERIFY(!waylandServer()->isScreenLocked());                                                             \
         QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged); \
         ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);                             \
-        QTRY_COMPARE(ScreenLocker::KSldApp::self()->lockState(), ScreenLocker::KSldApp::Locked);                 \
+        QVERIFY(lockStateChangedSpy.wait());                                                                     \
+        QCOMPARE(ScreenLocker::KSldApp::self()->lockState(), ScreenLocker::KSldApp::Locked);                     \
         QVERIFY(waylandServer()->isScreenLocked());                                                              \
     } while (false)
 
