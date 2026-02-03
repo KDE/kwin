@@ -889,7 +889,7 @@ WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(Wayl
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked, this, [this] {
         delete this;
     });
-    connect(server, &WaylandServer::windowAdded, this, [this](Window *window) {
+    connect(workspace(), &Workspace::windowAdded, this, [this](Window *window) {
         if (window->isLockScreen()) {
             // only signal lockScreenShown once all outputs have been presented at least once
             connect(window->output()->backendOutput()->renderLoop(), &RenderLoop::framePresented, this, [this, windowGuard = QPointer(window)]() {
@@ -897,6 +897,7 @@ WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(Wayl
                 if (windowGuard) {
                     m_signaledOutputs << windowGuard->output();
                     if (m_signaledOutputs.size() == workspace()->outputs().size()) {
+                        qDebug() << "lock screen shown yo";
                         ScreenLocker::KSldApp::self()->lockScreenShown();
                         delete this;
                     }
@@ -905,6 +906,7 @@ WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(Wayl
         }
     });
     QTimer::singleShot(1000, this, [this]() {
+        qDebug() << "lock screen shown timeout";
         ScreenLocker::KSldApp::self()->lockScreenShown();
         delete this;
     });
