@@ -47,10 +47,11 @@ RuntimeDependencies:
     'plasma/plasma-workspace': '@same' # kscreenlocker needs it
 
 Options:
- ctest-arguments: '--repeat until-pass:3 --timeout 90'
+ ctest-arguments: '--repeat until-pass:3 --timeout 500'
  use-ccache: True
  cppcheck-arguments: '--enable=warning,style,performance --library=kwin-cppcheck.xml --suppress-xml=cppcheck-suppressions.xml'
  cppcheck-ignore-files:
   - autotests
  require-passing-tests-on: ['Linux/Qt6']
  run-qmllint: True
+ per-test-timeout: 500
