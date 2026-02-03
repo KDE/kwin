@@ -905,11 +905,13 @@ WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(Wayl
             });
         }
     });
+#if 0
     QTimer::singleShot(1000, this, [this]() {
         qDebug() << "lock screen shown timeout";
         ScreenLocker::KSldApp::self()->lockScreenShown();
         delete this;
     });
+#endif
 }
 #endif
 }
