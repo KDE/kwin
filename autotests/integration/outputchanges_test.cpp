@@ -1518,6 +1518,15 @@ void OutputChangesTest::testGenerateConfigs_data()
 
 void OutputChangesTest::testGenerateConfigs()
 {
+    QElapsedTimer timer;
+    timer.start();
+
+    qDebug() << "start";
+
+    auto measure = qScopeGuard([&timer]() {
+        qDebug() << (timer.nsecsElapsed() / 1000000.0);
+    });
+
     // Whether there is a lid switch input device is not a totally reliable way to determine if it's
     // a laptop, but on the other hand, we don't have any other better hints.
     QFETCH(DeviceType, deviceType);
