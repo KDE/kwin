@@ -142,12 +142,14 @@ Q_SIGNALS:
 
 void LockScreenTest::unlock()
 {
+    qDebug() << "attempt to unlock the screen";
     using namespace ScreenLocker;
     const auto children = KSldApp::self()->children();
     for (auto it = children.begin(); it != children.end(); ++it) {
         if (qstrcmp((*it)->metaObject()->className(), "LogindIntegration") != 0) {
             continue;
         }
+        qDebug() << "call requestUnlock";
         QMetaObject::invokeMethod(*it, "requestUnlock");
         break;
     }
