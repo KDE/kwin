@@ -1590,6 +1590,14 @@ void OutputChangesTest::testAutorotate_data()
 
 void OutputChangesTest::testAutorotate()
 {
+    QElapsedTimer timer;
+    timer.start();
+
+    qDebug() << "start";
+
+    auto measure = qScopeGuard([&timer]() {
+        qDebug() << (timer.nsecsElapsed() / 1000000.0);
+    });
     // delete the previous config to avoid clashes between test runs
     QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
 
