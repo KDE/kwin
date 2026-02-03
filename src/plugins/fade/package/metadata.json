@@ -74,6 +74,7 @@
         "Description[lv]": "Likt logiem izgaist un lēnām parādīties, kad tos parādāt vai slēpjat.",
         "Description[nl]": "Laat vensters vloeiend opkomen/vervagen als ze worden weergegeven of verborgen",
         "Description[pl]": "Okna wyłaniają się przy otwieraniu i zanikają przy zamykaniu",
+        "Description[pt]": "Fazer as janelas aparecerem e desaparecerem com desvanecimento quando são mostradas ou ocultadas",
         "Description[pt_BR]": "Faz com que as janelas transicionem suavemente e esmaeçam quando forem mostradas ou ocultadas",
         "Description[ro]": "Face ferestrele să se estompeze când sunt arătate sau ascunse",
         "Description[ru]": "Закрывающиеся окна будут становиться всё более прозрачными, а потом совсем исчезать",

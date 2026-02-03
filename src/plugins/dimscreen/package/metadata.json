@@ -85,7 +85,7 @@
         "Description[nl]": "Maakt het volledige scherm donker wanneer er om root-privileges wordt verzocht",
         "Description[nn]": "Gjer heile skjermen mørkare når det vert spurt om rottilgang",
         "Description[pl]": "Przyciemnia ekran przy żądaniu praw administratora",
-        "Description[pt]": "Escurece o ecrã todo ao pedir privilégios de administração",
+        "Description[pt]": "Escurece o ecrã inteiro ao solicitar privilégios de administrador",
         "Description[pt_BR]": "Escurece toda a tela ao solicitar privilégios de root",
         "Description[ro]": "Întunecă întregul ecran la cererea privilegiilor de root",
         "Description[ru]": "Затемнение всего экрана при запросе привилегий суперпользователя",
