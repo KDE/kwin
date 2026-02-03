@@ -25,21 +25,21 @@ msgstr "Nenhum"
 #: kcmvirtualkeyboard.cpp:65
 #, kde-format
 msgid "Do not use any virtual keyboard"
-msgstr "Não utilizar qualquer teclado virtual"
+msgstr "Não utilizar um teclado virtual"
 
 #~ msgid "This module lets you choose the virtual keyboard to use."
 #~ msgstr "Este módulo permite-lhe seleccionar o teclado virtual a usar."
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
-#~ msgstr "José Nuno Pires"
+#~ msgstr "César A. P. Cláduio, José Nuno Pires"
 
 #~ msgctxt "EMAIL OF TRANSLATORS"
 #~ msgid "Your emails"
-#~ msgstr "zepires@gmail.com"
+#~ msgstr "cesarapclaudio@gmail.com"
 
 #~ msgid "Virtual Keyboard"
 #~ msgstr "Teclado Virtual"
 
 #~ msgid "Choose Virtual Keyboard"
-#~ msgstr "Seleccionar o Teclado Virtual"
+#~ msgstr "Seleccionar Teclado Virtual"
