@@ -1461,6 +1461,9 @@ Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
         qunsetenv("XDG_SESSION_DESKTOP");                                                                                                 \
         qunsetenv("XDG_CURRENT_DESKTOP");                                                                                                 \
         KWin::WaylandTestApplication app(argc, argv, useDrm);                                                                             \
+        qunsetenv("QT_QPA_PLATFORM");                                                                                                     \
+        qunsetenv("QT_QPA_PLATFORM_PLUGIN_PATH");                                                                                         \
+        qunsetenv("KWIN_FORCE_OWN_QPA");                                                                                                  \
         app.setAttribute(Qt::AA_Use96Dpi, true);                                                                                          \
         TestObject tc;                                                                                                                    \
         return QTest::qExec(&tc, argc, argv);                                                                                             \
