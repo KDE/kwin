@@ -904,10 +904,10 @@ WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(Wayl
             });
         }
     });
-    QTimer::singleShot(1000, this, [this]() {
-        ScreenLocker::KSldApp::self()->lockScreenShown();
-        delete this;
-    });
+    // QTimer::singleShot(1000, this, [this]() {
+    //     ScreenLocker::KSldApp::self()->lockScreenShown();
+    //     delete this;
+    // });
 }
 #endif
 }

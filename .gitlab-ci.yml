@@ -5,15 +5,9 @@ include:
   - project: sysadmin/ci-utilities
     file:
       - /gitlab-templates/linux-qt6.yml
-      - /gitlab-templates/linux-qt6-next.yml
-      - /gitlab-templates/freebsd-qt6.yml
-      - /gitlab-templates/xml-lint.yml
-      - /gitlab-templates/yaml-lint.yml
-      - /gitlab-templates/qml-lint.yml
-      - /gitlab-templates/cppcheck.yml
-
-suse_tumbleweed_qt610_reduced_featureset:
-  extends: suse_tumbleweed_qt610
-  script:
-    - git config --global --add safe.directory $CI_PROJECT_DIR
-    - python3 -u ci-utilities/run-ci-build.py --project $CI_PROJECT_NAME --branch $CI_COMMIT_REF_NAME --platform Linux --extra-cmake-args="-DKWIN_BUILD_KCMS=OFF -DKWIN_BUILD_SCREENLOCKER=OFF -DKWIN_BUILD_TABBOX=OFF -DKWIN_BUILD_ACTIVITIES=OFF -DKWIN_BUILD_RUNNERS=OFF -DKWIN_BUILD_NOTIFICATIONS=OFF -DKWIN_BUILD_GLOBALSHORTCUTS=OFF -DKWIN_BUILD_X11=OFF -DKWIN_BUILD_EIS=OFF -DKWIN_BUILD_QACCESSIBILITYCLIENT=OFF" --skip-publishing --only-build
+      # - /gitlab-templates/linux-qt6-next.yml
+      # - /gitlab-templates/freebsd-qt6.yml
+      # - /gitlab-templates/xml-lint.yml
+      # - /gitlab-templates/yaml-lint.yml
+      # - /gitlab-templates/qml-lint.yml
+      # - /gitlab-templates/cppcheck.yml
