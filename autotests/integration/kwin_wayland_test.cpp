@@ -62,7 +62,7 @@ WaylandTestApplication::WaylandTestApplication(int &argc, char **argv, bool runO
     const QStringList configs{
         QStringLiteral("kaccessrc"),
         QStringLiteral("kglobalshortcutsrc"),
-        QStringLiteral("kcminputrc"),
+        // QStringLiteral("kcminputrc"),
         QStringLiteral("kxkbrc"),
         QStringLiteral("kwinoutputconfig.json"),
     };

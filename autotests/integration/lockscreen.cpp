@@ -236,7 +236,6 @@ void LockScreenTest::testPointer()
 
     LOCK;
 
-    QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
 
     // simulate moving out in and out again
@@ -367,7 +366,6 @@ void LockScreenTest::testKeyboard()
     QCOMPARE(keyChangedSpy.at(1).at(2).value<quint32>(), quint32(2));
 
     LOCK;
-    QVERIFY(leftSpy.wait());
     KEYPRESS(KEY_B);
     KEYRELEASE(KEY_B);
     QCOMPARE(leftSpy.count(), 1);
@@ -780,7 +778,7 @@ void LockScreenTest::testTouch()
     QCOMPARE(sequenceStartedSpy.count(), 1);
 
     LOCK;
-    QVERIFY(cancelSpy.wait());
+    QCOMPARE(cancelSpy.count(), 1);
 
     Test::touchUp(1, timestamp++);
     QVERIFY(!pointRemovedSpy.wait(10));
