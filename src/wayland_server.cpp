@@ -890,6 +890,7 @@ WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(Wayl
         delete this;
     });
     connect(workspace(), &Workspace::windowAdded, this, [this](Window *window) {
+        qDebug() << "::add" << window << window->isLockScreen();
         if (window->isLockScreen()) {
             // only signal lockScreenShown once all outputs have been presented at least once
             connect(window->output()->backendOutput()->renderLoop(), &RenderLoop::framePresented, this, [this, windowGuard = QPointer(window)]() {
@@ -902,7 +903,7 @@ WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(Wayl
                         delete this;
                     }
                 }
-            });
+            }, Qt::SingleShotConnection);
         }
     });
 #if 0
