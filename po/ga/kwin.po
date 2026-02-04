@@ -8,15 +8,16 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-29 03:06+0000\n"
-"PO-Revision-Date: 2026-01-04 10:24+0000\n"
+"PO-Revision-Date: 2026-01-30 04:02+0000\n"
 "Last-Translator: Charlotte <altronic25@protonmail.com>\n"
-"Language-Team: Irish\n"
+"Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
 "Language: ga\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
 "3 : 4\n"
+"X-Generator: Lokalize 25.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -485,7 +486,7 @@ msgstr ""
 #, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr ""
+msgstr "Cód eochair"
 
 #: debug_console.cpp:309
 #, kde-format
@@ -692,13 +693,13 @@ msgstr ""
 #, kde-format
 msgctxt "The hardware switch got turned off"
 msgid "Off"
-msgstr "Múchta"
+msgstr "As"
 
 #: debug_console.cpp:525
 #, kde-format
 msgctxt "The hardware switch got turned on"
 msgid "On"
-msgstr "Ar"
+msgstr "Air"
 
 #: debug_console.cpp:530
 #, kde-format
@@ -1642,10 +1643,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Strength:"
-msgstr "&Neart:"
+msgstr "Neart:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: plugins/diminactive/diminactive_config.ui:43
@@ -1705,10 +1705,9 @@ msgstr "Aga na beochana:"
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "Duration"
+#, kde-format
 msgid "Duration:"
-msgstr "Aga"
+msgstr "Aga:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
@@ -1917,11 +1916,10 @@ msgid "activate"
 msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:44
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "close"
-msgstr "&Dún"
+msgstr "dún"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:47
 #, kde-format
@@ -1930,11 +1928,10 @@ msgid "min"
 msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:50
-#, fuzzy, kde-format
-#| msgid "Minimize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "minimize"
-msgstr "Íoslaghdaigh"
+msgstr "íoslaghdaigh"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:53
 #, kde-format
@@ -1944,18 +1941,16 @@ msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:56
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:58
-#, fuzzy, kde-format
-#| msgid "Maximize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "maximize"
-msgstr "Uasmhéadaigh"
+msgstr "uasmhéadaigh"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:59
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "fullscreen"
-msgstr "&Lánscáileán"
+msgstr "lánscáileán"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:62
 #, fuzzy, kde-format
@@ -1999,11 +1994,10 @@ msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:89
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:145
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
-msgstr "G&ach Deasc"
+msgstr "deasc"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:259
 #, fuzzy, kde-format
@@ -2325,7 +2319,7 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "Anaithnid"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
@@ -2674,13 +2668,12 @@ msgstr ""
 #: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
-msgstr ""
+msgstr "Luchtaigh Lagan Amach..."
 
 #: plugins/tileseditor/qml/Main.qml:270
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "&Dún"
+msgstr "Dún"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
@@ -3597,13 +3590,13 @@ msgstr "..."
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Cealaigh Logáil Amach"
 
 #: sm.cpp:422
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Logáil Amach Ar Aon Nós"
 
 #: sm.cpp:468
 #, kde-format
@@ -4246,7 +4239,7 @@ msgstr "Gníomhachtaigh Fuinneog (%1)"
 #: utils/edid.cpp:360
 #, kde-format
 msgid "unknown"
-msgstr ""
+msgstr "anaithnid"
 
 #: virtualdesktops.cpp:729 virtualdesktops.cpp:808
 #, kde-format
