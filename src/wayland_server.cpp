@@ -17,6 +17,7 @@
 #include "core/session.h"
 #include "idle_inhibition.h"
 #include "inputpanelv1integration.h"
+#include "inputpopupexv2integration.h"
 #include "layershellv1integration.h"
 #include "layershellv1window.h"
 #include "main.h"
@@ -142,7 +143,11 @@ public:
         QByteArrayLiteral("kde_lockscreen_overlay_v1"),
     };
 
-    const QSet<QByteArray> inputmethodInterfaces = {"zwp_input_panel_v1", "zwp_input_method_v1"};
+    const QSet<QByteArray> inputmethodInterfaces = {
+        QByteArrayLiteral("zwp_input_panel_v1"),
+        QByteArrayLiteral("zwp_input_method_v1"),
+        QByteArrayLiteral("xx_input_method_manager_v2"),
+        QByteArrayLiteral("xx_input_method_v1")};
     const QSet<QByteArray> xwaylandInterfaces = {
         QByteArrayLiteral("zwp_xwayland_keyboard_grab_manager_v1"),
         QByteArrayLiteral("xwayland_shell_v1"),
@@ -588,6 +593,13 @@ void WaylandServer::initWorkspace()
     if (qEnvironmentVariableIntValue("KWIN_WAYLAND_SUPPORT_XX_PIP_V1") == 1) {
         auto pipV1Integration = new XXPipV1Integration(this);
         connect(pipV1Integration, &XXPipV1Integration::windowCreated,
+                this, &WaylandServer::registerWindow);
+    }
+
+    // Input method experimental v2 popup integration
+    if (qEnvironmentVariableIntValue("KWIN_WAYLAND_SUPPORT_XX_INPUT_METHOD_V2") == 1) {
+        auto popupV2Integration = new InputPopupExV2Integration(this);
+        connect(popupV2Integration, &InputPopupExV2Integration::windowCreated,
                 this, &WaylandServer::registerWindow);
     }
 

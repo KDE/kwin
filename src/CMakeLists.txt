@@ -101,6 +101,8 @@ target_sources(kwin PRIVATE
     inputmethod.cpp
     inputpanelv1integration.cpp
     inputpanelv1window.cpp
+    inputpopupexv2integration.cpp
+    inputpopupexv2window.cpp
     internalinputmethodcontext.cpp
     internalwindow.cpp
     keyboard_input.cpp
@@ -468,6 +470,8 @@ install(FILES
     inputmethod.h
     inputpanelv1integration.h
     inputpanelv1window.h
+    inputpopupexv2integration.h
+    inputpopupexv2window.h
     internalwindow.h
     keyboard_input.h
     keyboard_layout.h

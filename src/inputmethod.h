@@ -27,6 +27,7 @@ class Window;
 class InputPanelV1Window;
 class InputMethodGrabV1;
 class InternalInputMethodContext;
+class XXInputMethodV1Interface;
 
 /**
  * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
@@ -88,6 +89,8 @@ Q_SIGNALS:
     void activeClientSupportsTextInputChanged();
     void cursorRectangleChanged();
     void activeWindowChanged();
+    // Emitted when the experimental v2 input method object is created
+    void imV2Ready(KWin::XXInputMethodV1Interface *im);
 
 private Q_SLOTS:
     // textinput interface slots
@@ -158,6 +161,10 @@ private:
     bool m_hasPendingModifiers = false;
     bool m_activeClientSupportsTextInput = false;
     bool m_shouldShowPanel = false;
+
+    // Experimental input method v2 backend
+    XXInputMethodV1Interface *m_imV2 = nullptr;
+    bool m_useImV2 = false;
 };
 
 }

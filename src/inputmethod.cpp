@@ -35,6 +35,7 @@
 #include "wayland/surface.h"
 #include "wayland/textinput_v1.h"
 #include "wayland/textinput_v3.h"
+#include "wayland/xx_input_method_v2.h"
 #include "xkb.h"
 
 #include <KLocalizedString>
@@ -102,6 +103,7 @@ InputMethod::~InputMethod()
 
 void InputMethod::init()
 {
+    m_useImV2 = qEnvironmentVariableIntValue("KWIN_WAYLAND_SUPPORT_XX_INPUT_METHOD_V2") == 1;
     // Stop restarting the input method if it starts crashing very frequently
     m_inputMethodCrashTimer.setInterval(20000);
     m_inputMethodCrashTimer.setSingleShot(true);
@@ -159,6 +161,34 @@ void InputMethod::init()
     connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
         m_hasPendingModifiers = true;
     });
+
+    if (m_useImV2) {
+        auto manager = new XXInputMethodManagerV2Interface(waylandServer()->display(), this);
+        connect(manager, &XXInputMethodManagerV2Interface::inputMethodCreated, this, [this](XXInputMethodV1Interface *im) {
+            m_imV2 = im;
+            Q_EMIT imV2Ready(im);
+            connect(im, &XXInputMethodV1Interface::commitString, this, [this](const QString &text) {
+                commitString(m_serial++, text);
+            });
+            connect(im, &XXInputMethodV1Interface::setPreeditString, this, [this](const QString &text, qint32 cursorBegin, qint32 cursorEnd) {
+                setPreeditString(m_serial++, text, QString());
+                setPreeditCursor(cursorBegin);
+            });
+            connect(im, &XXInputMethodV1Interface::deleteSurroundingText, this, [this](quint32 before, quint32 after) {
+                auto t2 = waylandServer()->seat()->textInputV2();
+                auto t3 = waylandServer()->seat()->textInputV3();
+                if (t3 && t3->isEnabled()) {
+                    t3->deleteSurroundingText(before, after);
+                    t3->done();
+                } else if (t2 && t2->isEnabled()) {
+                    t2->deleteSurroundingText(before, after);
+                }
+                if (m_internalContext->isEnabled()) {
+                    m_internalContext->handleDeleteSurroundingText(before, after);
+                }
+            });
+        });
+    }
 }
 
 void InputMethod::show()
@@ -244,9 +274,11 @@ void InputMethod::commitPendingText()
     if (!m_pendingText.isEmpty()) {
         commitString(m_serial++, m_pendingText);
         m_pendingText = QString();
-        auto imContext = waylandServer()->inputMethod()->context();
-        if (imContext) {
-            imContext->sendReset();
+        if (!m_useImV2) {
+            auto imContext = waylandServer()->inputMethod()->context();
+            if (imContext) {
+                imContext->sendReset();
+            }
         }
     }
 }
@@ -257,9 +289,11 @@ RectF InputMethod::cursorRectangle() const
     auto t1 = waylandServer()->seat()->textInputV1();
     auto t2 = waylandServer()->seat()->textInputV2();
     auto t3 = waylandServer()->seat()->textInputV3();
-    auto inputContext = waylandServer()->inputMethod()->context();
-    if (!inputContext) {
-        return {};
+    if (!m_useImV2) {
+        auto inputContext = waylandServer()->inputMethod()->context();
+        if (!inputContext) {
+            return {};
+        }
     }
     if (t1 && t1->isEnabled()) {
         localCursorRect = t1->cursorRectangle();
@@ -279,9 +313,13 @@ RectF InputMethod::cursorRectangle() const
 
 void InputMethod::setActive(bool active)
 {
-    const bool wasActive = waylandServer()->inputMethod()->context();
+    const bool wasActive = m_useImV2 ? (m_imV2 != nullptr) : (waylandServer()->inputMethod()->context());
     if (wasActive && !active) {
-        waylandServer()->inputMethod()->sendDeactivate();
+        if (m_useImV2 && m_imV2) {
+            m_imV2->sendDeactivate();
+        } else {
+            waylandServer()->inputMethod()->sendDeactivate();
+        }
     }
 
     if (active) {
@@ -290,7 +328,13 @@ void InputMethod::setActive(bool active)
         }
 
         if (!wasActive) {
-            waylandServer()->inputMethod()->sendActivate();
+            if (m_useImV2) {
+                if (m_imV2) {
+                    m_imV2->sendActivate();
+                }
+            } else {
+                waylandServer()->inputMethod()->sendActivate();
+            }
         }
         adoptInputMethodContext();
     } else {
@@ -384,21 +428,42 @@ void InputMethod::surroundingTextChanged()
 {
     auto t2 = waylandServer()->seat()->textInputV2();
     auto t3 = waylandServer()->seat()->textInputV3();
-    auto inputContext = waylandServer()->inputMethod()->context();
-    if (!inputContext) {
-        return;
-    }
-    if (t2 && t2->isEnabled()) {
-        inputContext->sendSurroundingText(t2->surroundingText(), t2->surroundingTextCursorPosition(), t2->surroundingTextSelectionAnchor());
-        return;
-    }
-    if (t3 && t3->isEnabled()) {
-        inputContext->sendSurroundingText(t3->surroundingText(), t3->surroundingTextCursorPosition(), t3->surroundingTextSelectionAnchor());
-        return;
-    }
-    if (m_internalContext->isEnabled()) {
-        inputContext->sendSurroundingText(m_internalContext->surroundingText(), m_internalContext->cursorPosition(), m_internalContext->anchorPosition());
-        return;
+    if (m_useImV2) {
+        if (!m_imV2) {
+            return;
+        }
+        if (t2 && t2->isEnabled()) {
+            m_imV2->sendSurroundingText(t2->surroundingText(), t2->surroundingTextCursorPosition(), t2->surroundingTextSelectionAnchor());
+            m_imV2->sendDone();
+            return;
+        }
+        if (t3 && t3->isEnabled()) {
+            m_imV2->sendSurroundingText(t3->surroundingText(), t3->surroundingTextCursorPosition(), t3->surroundingTextSelectionAnchor());
+            m_imV2->sendDone();
+            return;
+        }
+        if (m_internalContext->isEnabled()) {
+            m_imV2->sendSurroundingText(m_internalContext->surroundingText(), m_internalContext->cursorPosition(), m_internalContext->anchorPosition());
+            m_imV2->sendDone();
+            return;
+        }
+    } else {
+        auto inputContext = waylandServer()->inputMethod()->context();
+        if (!inputContext) {
+            return;
+        }
+        if (t2 && t2->isEnabled()) {
+            inputContext->sendSurroundingText(t2->surroundingText(), t2->surroundingTextCursorPosition(), t2->surroundingTextSelectionAnchor());
+            return;
+        }
+        if (t3 && t3->isEnabled()) {
+            inputContext->sendSurroundingText(t3->surroundingText(), t3->surroundingTextCursorPosition(), t3->surroundingTextSelectionAnchor());
+            return;
+        }
+        if (m_internalContext->isEnabled()) {
+            inputContext->sendSurroundingText(m_internalContext->surroundingText(), m_internalContext->cursorPosition(), m_internalContext->anchorPosition());
+            return;
+        }
     }
 }
 
@@ -407,18 +472,36 @@ void InputMethod::contentTypeChanged()
     auto t1 = waylandServer()->seat()->textInputV1();
     auto t2 = waylandServer()->seat()->textInputV2();
     auto t3 = waylandServer()->seat()->textInputV3();
-    auto inputContext = waylandServer()->inputMethod()->context();
-    if (!inputContext) {
-        return;
-    }
-    if (t1 && t1->isEnabled()) {
-        inputContext->sendContentType(t1->contentHints(), t1->contentPurpose());
-    }
-    if (t2 && t2->isEnabled()) {
-        inputContext->sendContentType(t2->contentHints(), t2->contentPurpose());
-    }
-    if (t3 && t3->isEnabled()) {
-        inputContext->sendContentType(t3->contentHints(), t3->contentPurpose());
+    if (m_useImV2) {
+        if (!m_imV2) {
+            return;
+        }
+        if (t1 && t1->isEnabled()) {
+            m_imV2->sendContentType(static_cast<uint32_t>(t1->contentHints()), static_cast<uint32_t>(t1->contentPurpose()));
+            m_imV2->sendDone();
+        }
+        if (t2 && t2->isEnabled()) {
+            m_imV2->sendContentType(static_cast<uint32_t>(t2->contentHints()), static_cast<uint32_t>(t2->contentPurpose()));
+            m_imV2->sendDone();
+        }
+        if (t3 && t3->isEnabled()) {
+            m_imV2->sendContentType(static_cast<uint32_t>(t3->contentHints()), static_cast<uint32_t>(t3->contentPurpose()));
+            m_imV2->sendDone();
+        }
+    } else {
+        auto inputContext = waylandServer()->inputMethod()->context();
+        if (!inputContext) {
+            return;
+        }
+        if (t1 && t1->isEnabled()) {
+            inputContext->sendContentType(t1->contentHints(), t1->contentPurpose());
+        }
+        if (t2 && t2->isEnabled()) {
+            inputContext->sendContentType(t2->contentHints(), t2->contentPurpose());
+        }
+        if (t3 && t3->isEnabled()) {
+            inputContext->sendContentType(t3->contentHints(), t3->contentPurpose());
+        }
     }
 }
 
@@ -873,51 +956,64 @@ void InputMethod::forwardModifiers(ForwardModifiersForce force)
 
 void InputMethod::adoptInputMethodContext()
 {
-    auto inputContext = waylandServer()->inputMethod()->context();
-
     TextInputV1Interface *t1 = waylandServer()->seat()->textInputV1();
     TextInputV2Interface *t2 = waylandServer()->seat()->textInputV2();
     TextInputV3Interface *t3 = waylandServer()->seat()->textInputV3();
 
-    if (t1 && t1->isEnabled()) {
-        inputContext->sendSurroundingText(t1->surroundingText(), t1->surroundingTextCursorPosition(), t1->surroundingTextSelectionAnchor());
-        inputContext->sendPreferredLanguage(t1->preferredLanguage());
-        inputContext->sendContentType(t1->contentHints(), t2->contentPurpose());
-        connect(inputContext, &InputMethodContextV1Interface::language, this, &InputMethod::setLanguage);
-        connect(inputContext, &InputMethodContextV1Interface::textDirection, this, &InputMethod::setTextDirection);
-    } else if (t2 && t2->isEnabled()) {
-        inputContext->sendSurroundingText(t2->surroundingText(), t2->surroundingTextCursorPosition(), t2->surroundingTextSelectionAnchor());
-        inputContext->sendPreferredLanguage(t2->preferredLanguage());
-        inputContext->sendContentType(t2->contentHints(), t2->contentPurpose());
-        connect(inputContext, &InputMethodContextV1Interface::language, this, &InputMethod::setLanguage);
-        connect(inputContext, &InputMethodContextV1Interface::textDirection, this, &InputMethod::setTextDirection);
-    } else if (t3 && t3->isEnabled()) {
-        inputContext->sendSurroundingText(t3->surroundingText(), t3->surroundingTextCursorPosition(), t3->surroundingTextSelectionAnchor());
-        inputContext->sendContentType(t3->contentHints(), t3->contentPurpose());
-    } else if (m_internalContext->isEnabled()) {
-        inputContext->sendSurroundingText(m_internalContext->surroundingText(), m_internalContext->cursorPosition(), m_internalContext->anchorPosition());
-        inputContext->sendContentType(TextInputContentHint::Latin, TextInputContentPurpose::Normal);
-    } else {
-        // When we have neither text-input-v2 nor text-input-v3 we can only send
-        // fake key events, not more complex text. So ask the input method to
-        // only send basic characters without any pre-editing.
-        inputContext->sendSurroundingText(QString(), 0, 0);
-        inputContext->sendContentType(TextInputContentHint::Latin, TextInputContentPurpose::Normal);
+    if (!m_useImV2) {
+        auto inputContext = waylandServer()->inputMethod()->context();
+        if (t1 && t1->isEnabled()) {
+            inputContext->sendSurroundingText(t1->surroundingText(), t1->surroundingTextCursorPosition(), t1->surroundingTextSelectionAnchor());
+            inputContext->sendPreferredLanguage(t1->preferredLanguage());
+            inputContext->sendContentType(t1->contentHints(), t2->contentPurpose());
+            connect(inputContext, &InputMethodContextV1Interface::language, this, &InputMethod::setLanguage);
+            connect(inputContext, &InputMethodContextV1Interface::textDirection, this, &InputMethod::setTextDirection);
+        } else if (t2 && t2->isEnabled()) {
+            inputContext->sendSurroundingText(t2->surroundingText(), t2->surroundingTextCursorPosition(), t2->surroundingTextSelectionAnchor());
+            inputContext->sendPreferredLanguage(t2->preferredLanguage());
+            inputContext->sendContentType(t2->contentHints(), t2->contentPurpose());
+            connect(inputContext, &InputMethodContextV1Interface::language, this, &InputMethod::setLanguage);
+            connect(inputContext, &InputMethodContextV1Interface::textDirection, this, &InputMethod::setTextDirection);
+        } else if (t3 && t3->isEnabled()) {
+            inputContext->sendSurroundingText(t3->surroundingText(), t3->surroundingTextCursorPosition(), t3->surroundingTextSelectionAnchor());
+            inputContext->sendContentType(t3->contentHints(), t3->contentPurpose());
+        } else if (m_internalContext->isEnabled()) {
+            inputContext->sendSurroundingText(m_internalContext->surroundingText(), m_internalContext->cursorPosition(), m_internalContext->anchorPosition());
+            inputContext->sendContentType(TextInputContentHint::Latin, TextInputContentPurpose::Normal);
+        } else {
+            inputContext->sendSurroundingText(QString(), 0, 0);
+            inputContext->sendContentType(TextInputContentHint::Latin, TextInputContentPurpose::Normal);
+        }
+
+        inputContext->sendCommitState(m_serial++);
+
+        connect(inputContext, &InputMethodContextV1Interface::keysym, this, &InputMethod::keysymReceived, Qt::UniqueConnection);
+        connect(inputContext, &InputMethodContextV1Interface::key, this, &InputMethod::key, Qt::UniqueConnection);
+        connect(inputContext, &InputMethodContextV1Interface::modifiers, this, &InputMethod::modifiers, Qt::UniqueConnection);
+        connect(inputContext, &InputMethodContextV1Interface::commitString, this, &InputMethod::commitString, Qt::UniqueConnection);
+        connect(inputContext, &InputMethodContextV1Interface::deleteSurroundingText, this, &InputMethod::deleteSurroundingText, Qt::UniqueConnection);
+        connect(inputContext, &InputMethodContextV1Interface::cursorPosition, this, &InputMethod::setCursorPosition, Qt::UniqueConnection);
+        connect(inputContext, &InputMethodContextV1Interface::preeditStyling, this, &InputMethod::setPreeditStyling, Qt::UniqueConnection);
+        connect(inputContext, &InputMethodContextV1Interface::preeditString, this, &InputMethod::setPreeditString, Qt::UniqueConnection);
+        connect(inputContext, &InputMethodContextV1Interface::preeditCursor, this, &InputMethod::setPreeditCursor, Qt::UniqueConnection);
+        connect(inputContext, &InputMethodContextV1Interface::keyboardGrabRequested, this, &InputMethod::installKeyboardGrab, Qt::UniqueConnection);
+        connect(inputContext, &InputMethodContextV1Interface::modifiersMap, this, &InputMethod::updateModifiersMap, Qt::UniqueConnection);
+    } else if (m_imV2) {
+        if (t1 && t1->isEnabled()) {
+            m_imV2->sendSurroundingText(t1->surroundingText(), t1->surroundingTextCursorPosition(), t1->surroundingTextSelectionAnchor());
+            m_imV2->sendContentType(static_cast<uint32_t>(t1->contentHints()), static_cast<uint32_t>(t2->contentPurpose()));
+        } else if (t2 && t2->isEnabled()) {
+            m_imV2->sendSurroundingText(t2->surroundingText(), t2->surroundingTextCursorPosition(), t2->surroundingTextSelectionAnchor());
+            m_imV2->sendContentType(static_cast<uint32_t>(t2->contentHints()), static_cast<uint32_t>(t2->contentPurpose()));
+        } else if (t3 && t3->isEnabled()) {
+            m_imV2->sendSurroundingText(t3->surroundingText(), t3->surroundingTextCursorPosition(), t3->surroundingTextSelectionAnchor());
+            m_imV2->sendContentType(static_cast<uint32_t>(t3->contentHints()), static_cast<uint32_t>(t3->contentPurpose()));
+        } else if (m_internalContext->isEnabled()) {
+            m_imV2->sendSurroundingText(m_internalContext->surroundingText(), m_internalContext->cursorPosition(), m_internalContext->anchorPosition());
+            m_imV2->sendContentType(0, 0);
+        }
+        m_imV2->sendDone();
     }
-
-    inputContext->sendCommitState(m_serial++);
-
-    connect(inputContext, &InputMethodContextV1Interface::keysym, this, &InputMethod::keysymReceived, Qt::UniqueConnection);
-    connect(inputContext, &InputMethodContextV1Interface::key, this, &InputMethod::key, Qt::UniqueConnection);
-    connect(inputContext, &InputMethodContextV1Interface::modifiers, this, &InputMethod::modifiers, Qt::UniqueConnection);
-    connect(inputContext, &InputMethodContextV1Interface::commitString, this, &InputMethod::commitString, Qt::UniqueConnection);
-    connect(inputContext, &InputMethodContextV1Interface::deleteSurroundingText, this, &InputMethod::deleteSurroundingText, Qt::UniqueConnection);
-    connect(inputContext, &InputMethodContextV1Interface::cursorPosition, this, &InputMethod::setCursorPosition, Qt::UniqueConnection);
-    connect(inputContext, &InputMethodContextV1Interface::preeditStyling, this, &InputMethod::setPreeditStyling, Qt::UniqueConnection);
-    connect(inputContext, &InputMethodContextV1Interface::preeditString, this, &InputMethod::setPreeditString, Qt::UniqueConnection);
-    connect(inputContext, &InputMethodContextV1Interface::preeditCursor, this, &InputMethod::setPreeditCursor, Qt::UniqueConnection);
-    connect(inputContext, &InputMethodContextV1Interface::keyboardGrabRequested, this, &InputMethod::installKeyboardGrab, Qt::UniqueConnection);
-    connect(inputContext, &InputMethodContextV1Interface::modifiersMap, this, &InputMethod::updateModifiersMap, Qt::UniqueConnection);
 }
 
 void InputMethod::updateInputPanelState()
@@ -1032,6 +1128,9 @@ void InputMethod::startInputMethod()
 }
 bool InputMethod::isActive() const
 {
+    if (m_useImV2) {
+        return m_imV2 != nullptr;
+    }
     return waylandServer()->inputMethod()->context();
 }
 

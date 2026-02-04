@@ -39,6 +39,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/frog-color-management-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-pip-v1.xml
+        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-input-method-v2.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
 
         ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
@@ -118,6 +119,7 @@ target_sources(kwin PRIVATE
     idleinhibit_v1.cpp
     idlenotify_v1.cpp
     inputmethod_v1.cpp
+    xx_input_method_v2.cpp
     keyboard.cpp
     keyboard_shortcuts_inhibit_v1.cpp
     keystate.cpp
@@ -210,6 +212,7 @@ install(FILES
     idleinhibit_v1.h
     idlenotify_v1.h
     inputmethod_v1.h
+    xx_input_method_v2.h
     keyboard.h
     keyboard_shortcuts_inhibit_v1.h
     keystate.h
