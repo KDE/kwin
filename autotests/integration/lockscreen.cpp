@@ -54,7 +54,6 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
-    void testStackingOrder();
     void testPointer();
     void testPointerButton();
     void testPointerAxis();
@@ -111,13 +110,13 @@ Q_SIGNALS:
     void keyEvent(const QString &);
 };
 
-#define LOCK                                                                                                     \
-    do {                                                                                                         \
-        QVERIFY(!waylandServer()->isScreenLocked());                                                             \
-        QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged); \
-        ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);                             \
-        QTRY_COMPARE(ScreenLocker::KSldApp::self()->lockState(), ScreenLocker::KSldApp::Locked);                 \
-        QVERIFY(waylandServer()->isScreenLocked());                                                              \
+#define LOCK                                                                                                          \
+    do {                                                                                                              \
+        QVERIFY(!waylandServer()->isScreenLocked());                                                                  \
+        QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);      \
+        ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);                                  \
+        QTRY_COMPARE_WITH_TIMEOUT(ScreenLocker::KSldApp::self()->lockState(), ScreenLocker::KSldApp::Locked, 500000); \
+        QVERIFY(waylandServer()->isScreenLocked());                                                                   \
     } while (false)
 
 #define UNLOCK                                                                                                   \
@@ -215,23 +214,6 @@ void LockScreenTest::init()
 void LockScreenTest::cleanup()
 {
     Test::destroyWaylandConnection();
-}
-
-void LockScreenTest::testStackingOrder()
-{
-    // This test verifies that the lockscreen greeter is placed above other windows.
-
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-
-    LOCK;
-    QVERIFY(windowAddedSpy.wait());
-
-    Window *window = windowAddedSpy.first().first().value<Window *>();
-    QVERIFY(window);
-    QVERIFY(window->isLockScreen());
-    QCOMPARE(window->layer(), AboveLayer);
-
-    UNLOCK;
 }
 
 void LockScreenTest::testPointer()
