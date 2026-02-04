@@ -14,6 +14,7 @@
 #include "opengl/eglnativefence.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
+#include "scene/opengl/atlas.h"
 #include "scene/opengl/ninepatch.h"
 #include "scene/opengl/texture.h"
 #include "scene/outlinedborderitem.h"
@@ -60,6 +61,11 @@ std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &top
                                                                const QImage &leftPatch)
 {
     return NinePatchOpenGL::create(topLeftPatch, topPatch, topRightPatch, rightPatch, bottomRightPatch, bottomPatch, bottomLeftPatch, leftPatch);
+}
+
+std::unique_ptr<Atlas> ItemRendererOpenGL::createAtlas(const QList<QImage> &sprites)
+{
+    return AtlasOpenGL::create(sprites);
 }
 
 void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
@@ -222,11 +228,11 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
         if (!geometry.isEmpty()) {
-            auto renderer = static_cast<const SceneOpenGLDecorationRenderer *>(decorationItem->renderer());
-            if (renderer->texture()) {
+            auto atlas = static_cast<const AtlasOpenGL *>(decorationItem->atlas());
+            if (atlas && atlas->texture()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
-                    .textures = {renderer->texture()},
+                    .textures = {atlas->texture()},
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
@@ -236,7 +242,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .bufferReleasePoint = nullptr,
                     .paintHole = hole,
                 });
-                renderNode.geometry.postProcessTextureCoordinates(renderer->texture()->matrix(UnnormalizedCoordinates));
+                renderNode.geometry.postProcessTextureCoordinates(atlas->texture()->matrix(UnnormalizedCoordinates));
             }
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {

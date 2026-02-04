@@ -37,6 +37,8 @@ public:
                                                const QImage &bottomLeftPatch,
                                                const QImage &leftPatch) override;
 
+    std::unique_ptr<Atlas> createAtlas(const QList<QImage> &sprites) override;
+
     void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
     void endFrame() override;
 

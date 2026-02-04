@@ -18,6 +18,7 @@ class QPainter;
 namespace KWin
 {
 
+class Atlas;
 class GraphicsBuffer;
 class ImageItem;
 class Item;
@@ -48,6 +49,8 @@ public:
                                                        const QImage &bottomPatch,
                                                        const QImage &bottomLeftPatch,
                                                        const QImage &leftPatch) = 0;
+
+    virtual std::unique_ptr<Atlas> createAtlas(const QList<QImage> &sprites) = 0;
 
     virtual void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport);
     virtual void endFrame();

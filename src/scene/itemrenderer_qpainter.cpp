@@ -11,6 +11,7 @@
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
 #include "scene/ninepatch.h"
+#include "scene/qpainter/atlas.h"
 #include "scene/qpainter/texture.h"
 #include "scene/surfaceitem.h"
 #include "scene/workspacescene.h"
@@ -57,6 +58,11 @@ std::unique_ptr<NinePatch> ItemRendererQPainter::createNinePatch(const QImage &t
 {
     // TODO: Nine patch is noop because only drop-shadows use it. Look into cleaning this up.
     return nullptr;
+}
+
+std::unique_ptr<Atlas> ItemRendererQPainter::createAtlas(const QList<QImage> &sprites)
+{
+    return AtlasQPainter::create(sprites);
 }
 
 QPainter *ItemRendererQPainter::painter() const
@@ -221,14 +227,14 @@ void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *sur
 
 void ItemRendererQPainter::renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const
 {
-    const auto renderer = static_cast<const SceneQPainterDecorationRenderer *>(decorationItem->renderer());
+    const auto atlas = static_cast<const AtlasQPainter *>(decorationItem->atlas());
     RectF dtr, dlr, drr, dbr;
     decorationItem->window()->layoutDecorationRects(dlr, dtr, drr, dbr);
 
-    painter->drawImage(dtr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Top));
-    painter->drawImage(dlr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Left));
-    painter->drawImage(drr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Right));
-    painter->drawImage(dbr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Bottom));
+    painter->drawImage(dtr, atlas->image(uint(DecorationRenderer::DecorationPart::Top)));
+    painter->drawImage(dlr, atlas->image(uint(DecorationRenderer::DecorationPart::Left)));
+    painter->drawImage(drr, atlas->image(uint(DecorationRenderer::DecorationPart::Right)));
+    painter->drawImage(dbr, atlas->image(uint(DecorationRenderer::DecorationPart::Bottom)));
 }
 
 void ItemRendererQPainter::renderImageItem(QPainter *painter, ImageItem *imageItem) const

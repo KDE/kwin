@@ -155,6 +155,7 @@ target_sources(kwin PRIVATE
     resources.qrc
     rulebooksettings.cpp
     rules.cpp
+    scene/atlas.cpp
     scene/borderoutline.cpp
     scene/borderradius.cpp
     scene/cursoritem.cpp
@@ -167,9 +168,11 @@ target_sources(kwin PRIVATE
     scene/itemrenderer_opengl.cpp
     scene/itemrenderer_qpainter.cpp
     scene/ninepatch.cpp
+    scene/opengl/atlas.cpp
     scene/opengl/ninepatch.cpp
     scene/opengl/texture.cpp
     scene/outlinedborderitem.cpp
+    scene/qpainter/atlas.cpp
     scene/qpainter/texture.cpp
     scene/rootitem.cpp
     scene/scene.cpp
@@ -628,6 +631,7 @@ install(FILES
 )
 
 install(FILES
+    scene/atlas.h
     scene/borderoutline.h
     scene/borderradius.h
     scene/cursoritem.h
@@ -640,9 +644,11 @@ install(FILES
     scene/itemrenderer_opengl.h
     scene/itemrenderer_qpainter.h
     scene/ninepatch.h
+    scene/opengl/atlas.h
     scene/opengl/ninepatch.h
     scene/opengl/texture.h
     scene/outlinedborderitem.h
+    scene/qpainter/atlas.h
     scene/qpainter/texture.h
     scene/rootitem.h
     scene/scene.h
