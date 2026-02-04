@@ -80,18 +80,13 @@ bool EglGbmBackend::init()
         return false;
     }
 
-    if (!initRenderingContext()) {
+    if (!createContext()) {
         qCWarning(KWIN_DRM, "Could not initialize rendering context");
         return false;
     }
     initWayland();
     m_backend->createLayers();
     return true;
-}
-
-bool EglGbmBackend::initRenderingContext()
-{
-    return createContext(EGL_NO_CONFIG_KHR) && openglContext()->makeCurrent();
 }
 
 EglDisplay *EglGbmBackend::displayForGpu(DrmGpu *gpu)

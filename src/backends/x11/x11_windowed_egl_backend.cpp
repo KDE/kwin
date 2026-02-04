@@ -208,15 +208,6 @@ bool X11WindowedEglBackend::initializeEgl()
     return true;
 }
 
-bool X11WindowedEglBackend::initRenderingContext()
-{
-    if (!createContext(EGL_NO_CONFIG_KHR)) {
-        return false;
-    }
-
-    return openglContext()->makeCurrent();
-}
-
 bool X11WindowedEglBackend::init()
 {
     qputenv("EGL_PLATFORM", "x11");
@@ -225,7 +216,7 @@ bool X11WindowedEglBackend::init()
         qCWarning(KWIN_X11WINDOWED, "Could not initialize egl");
         return false;
     }
-    if (!initRenderingContext()) {
+    if (!createContext()) {
         qCWarning(KWIN_X11WINDOWED, "Could not initialize rendering context");
         return false;
     }

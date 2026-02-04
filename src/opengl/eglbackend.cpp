@@ -85,10 +85,10 @@ bool EglBackend::checkGraphicsReset()
     return true;
 }
 
-bool EglBackend::ensureGlobalShareContext(EGLConfig config)
+bool EglBackend::ensureGlobalShareContext()
 {
     if (!s_globalShareContext) {
-        s_globalShareContext = EglContext::create(m_display, config, EGL_NO_CONTEXT);
+        s_globalShareContext = EglContext::create(m_display, EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
     }
     if (s_globalShareContext) {
         kwinApp()->outputBackend()->setSceneEglGlobalShareContext(s_globalShareContext->handle());
@@ -258,12 +258,12 @@ bool EglBackend::isOpenGLES() const
     return EglDisplay::shouldUseOpenGLES();
 }
 
-bool EglBackend::createContext(EGLConfig config)
+bool EglBackend::createContext()
 {
-    if (!ensureGlobalShareContext(config)) {
+    if (!ensureGlobalShareContext()) {
         return false;
     }
-    m_context = EglContext::create(m_display, config, s_globalShareContext ? s_globalShareContext->handle() : EGL_NO_CONTEXT);
+    m_context = EglContext::create(m_display, EGL_NO_CONFIG_KHR, s_globalShareContext ? s_globalShareContext->handle() : EGL_NO_CONTEXT);
     return m_context != nullptr;
 }
 

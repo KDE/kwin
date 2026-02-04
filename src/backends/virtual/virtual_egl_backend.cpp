@@ -145,7 +145,7 @@ bool VirtualEglBackend::init()
         qCWarning(KWIN_VIRTUAL, "Could not initialize egl");
         return false;
     }
-    if (!initRenderingContext()) {
+    if (!createContext()) {
         qCWarning(KWIN_VIRTUAL, "Could not initialize rendering context");
         return false;
     }
@@ -158,11 +158,6 @@ bool VirtualEglBackend::init()
 
     connect(m_backend, &VirtualBackend::outputAdded, this, &VirtualEglBackend::addOutput);
     return true;
-}
-
-bool VirtualEglBackend::initRenderingContext()
-{
-    return createContext(EGL_NO_CONFIG_KHR) && openglContext()->makeCurrent();
 }
 
 void VirtualEglBackend::addOutput(BackendOutput *output)
