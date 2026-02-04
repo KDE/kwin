@@ -5,6 +5,7 @@
 */
 
 #include "eiscontext.h"
+#include "config-eis.h"
 #include "eisbackend.h"
 #include "eisdevice.h"
 #include "libeis_logging.h"
@@ -77,11 +78,13 @@ XWaylandEisContext::XWaylandEisContext(KWin::EisBackend *backend)
 
 bool XWaylandEisContext::allowConnection(eis_client *client) const
 {
+#if EIS_HAVE_GET_CLIENT_PID
     const auto pid = eis_backend_socket_get_client_pid(client);
     if (kwinApp()->xwaylandPid() != pid) {
         qCWarning(KWIN_EIS) << "Non-xwayland process" << pid << "trying to connect to Xwayland socket - disconnecting";
         return false;
     }
+#endif
     return true;
 }
 
