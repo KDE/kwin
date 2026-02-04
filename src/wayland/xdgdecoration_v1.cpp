@@ -12,8 +12,6 @@
 namespace KWin
 {
 
-// TODO: We need to wait for an ack_configure either here or in xdgshellclient.cpp.
-
 XdgDecorationManagerV1InterfacePrivate::XdgDecorationManagerV1InterfacePrivate(XdgDecorationManagerV1Interface *manager)
     : q(manager)
 {
@@ -53,7 +51,7 @@ XdgDecorationManagerV1Interface::XdgDecorationManagerV1Interface(Display *displa
     : QObject(parent)
     , d(new XdgDecorationManagerV1InterfacePrivate(this))
 {
-    d->init(*display, 1);
+    d->init(*display, 2);
 }
 
 XdgDecorationManagerV1Interface::~XdgDecorationManagerV1Interface()
