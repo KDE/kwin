@@ -61,7 +61,10 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const std
         std::unique_ptr<GlLookUpTable> A;
         const ColorDescription linearizedInput(inputColor->containerColorimetry(), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
         const ColorDescription linearizedProfile(profile->colorimetry(), TransferFunction(TransferFunction::linear, 0, 1), 1, 0, 1, 1);
-        if (const auto tag = profile->BToATag(intent)) {
+
+        // NOTE that the MHC2 tag forces the shaper+matrix path,
+        // as the spec doesn't describe how it would work with BToA.
+        if (const auto tag = profile->BToATag(intent); tag && profile->mhc2Matrix().isIdentity()) {
             if (intent == RenderingIntent::AbsoluteColorimetricNoAdaptation) {
                 // There's no BToA tag for absolute colorimetric, we have to piece it together ourselves with
                 // input white point -(absolute colorimetric)-> display white point
@@ -147,6 +150,15 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const std
             }
         } else {
             toXYZD50 = linearizedInput.toOther(linearizedProfile, intent);
+
+            if (!profile->mhc2Matrix().isIdentity()) {
+                // The pipeline for MHC2 is quite weird:
+                // SourceRGBtoXYZ -> XYZtoXYZAdjust -> XYZtoTargetRGB
+                // "TargetRGB" is BT.709 or BT.2020, not the actual target primaries.
+                // As this code path is only used for SDR, we always use BT.709
+                toXYZD50 = Colorimetry::BT709.fromXYZ() * profile->mhc2Matrix() * linearizedProfile.containerColorimetry().toXYZ();
+            }
+
             const auto inverseEOTF = profile->inverseTransferFunction();
             const auto sample = [inverseEOTF, vcgt](size_t x) {
                 const float relativeX = x / double(lutSize - 1);
@@ -162,7 +174,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const std
                 return false;
             }
         }
-        m_toXYZD50 = profile->mhc2Matrix() * toXYZD50;
+        m_toXYZD50 = toXYZD50;
         m_B = std::move(B);
         m_matrix2 = matrix2;
         m_M = std::move(M);
