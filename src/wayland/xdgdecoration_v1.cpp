@@ -52,7 +52,7 @@ XdgDecorationManagerV1Interface::XdgDecorationManagerV1Interface(Display *displa
     : QObject(parent)
     , d(new XdgDecorationManagerV1InterfacePrivate(this))
 {
-    d->init(*display, 1);
+    d->init(*display, 2);
 }
 
 XdgDecorationManagerV1Interface::~XdgDecorationManagerV1Interface()
