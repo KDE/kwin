@@ -135,5 +135,6 @@
         "wayland"
     ],
     "X-KDE-System-Settings-Parent-Category": "hardware-input-touchscreen",
+    "X-KDE-System-Settings-Uses-ModuleData": true,
     "X-KDE-Weight": 20
 }

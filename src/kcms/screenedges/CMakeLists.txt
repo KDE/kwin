@@ -35,10 +35,14 @@ set(kcm_screenedges_LIBS
 )
 target_link_libraries(kcm_kwinscreenedges ${X11_LIBRARIES} ${kcm_screenedges_LIBS})
 
+qt_add_dbus_interface(kcm_kwintouchscreen_dbus_SRCS ${KWin_SOURCE_DIR}/src/org.kde.KWin.InputDeviceManager.xml inputdevicemanager_interface)
+
 set(kcm_kwintouchscreenedges_PART_SRCS
     touch.cpp
     kwintouchscreenedgeconfigform.cpp
+    kwintouchscreenmoduledata.cpp
     ${kcm_screenedges_SRCS}
+    ${kcm_kwintouchscreen_dbus_SRCS}
 )
 
 kcmutils_generate_module_data(
