@@ -10,6 +10,7 @@
 #include "effect/effect.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
+#include "scene/ninepatch.h"
 #include "scene/qpainter/texture.h"
 #include "scene/surfaceitem.h"
 #include "scene/workspacescene.h"
@@ -37,6 +38,25 @@ std::unique_ptr<Texture> ItemRendererQPainter::createTexture(GraphicsBuffer *buf
 std::unique_ptr<Texture> ItemRendererQPainter::createTexture(const QImage &image)
 {
     return ImageTextureQPainter::create(image);
+}
+
+std::unique_ptr<NinePatch> ItemRendererQPainter::createNinePatch(const QImage &image)
+{
+    // TODO: Nine patch is noop because only drop-shadows use it. Look into cleaning this up.
+    return nullptr;
+}
+
+std::unique_ptr<NinePatch> ItemRendererQPainter::createNinePatch(const QImage &topLeftPatch,
+                                                                 const QImage &topPatch,
+                                                                 const QImage &topRightPatch,
+                                                                 const QImage &rightPatch,
+                                                                 const QImage &bottomRightPatch,
+                                                                 const QImage &bottomPatch,
+                                                                 const QImage &bottomLeftPatch,
+                                                                 const QImage &leftPatch)
+{
+    // TODO: Nine patch is noop because only drop-shadows use it. Look into cleaning this up.
+    return nullptr;
 }
 
 QPainter *ItemRendererQPainter::painter() const

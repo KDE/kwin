@@ -166,6 +166,8 @@ target_sources(kwin PRIVATE
     scene/itemrenderer.cpp
     scene/itemrenderer_opengl.cpp
     scene/itemrenderer_qpainter.cpp
+    scene/ninepatch.cpp
+    scene/opengl/ninepatch.cpp
     scene/opengl/texture.cpp
     scene/outlinedborderitem.cpp
     scene/qpainter/texture.cpp
@@ -637,6 +639,8 @@ install(FILES
     scene/itemrenderer.h
     scene/itemrenderer_opengl.h
     scene/itemrenderer_qpainter.h
+    scene/ninepatch.h
+    scene/opengl/ninepatch.h
     scene/opengl/texture.h
     scene/outlinedborderitem.h
     scene/qpainter/texture.h

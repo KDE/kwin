@@ -14,6 +14,7 @@
 #include "opengl/eglnativefence.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
+#include "scene/opengl/ninepatch.h"
 #include "scene/opengl/texture.h"
 #include "scene/outlinedborderitem.h"
 #include "scene/shadowitem.h"
@@ -42,6 +43,23 @@ std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffe
 std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(const QImage &image)
 {
     return ImageTextureOpenGL::create(image);
+}
+
+std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &image)
+{
+    return NinePatchOpenGL::create(image);
+}
+
+std::unique_ptr<NinePatch> ItemRendererOpenGL::createNinePatch(const QImage &topLeftPatch,
+                                                               const QImage &topPatch,
+                                                               const QImage &topRightPatch,
+                                                               const QImage &rightPatch,
+                                                               const QImage &bottomRightPatch,
+                                                               const QImage &bottomPatch,
+                                                               const QImage &bottomLeftPatch,
+                                                               const QImage &leftPatch)
+{
+    return NinePatchOpenGL::create(topLeftPatch, topPatch, topRightPatch, rightPatch, bottomRightPatch, bottomPatch, bottomLeftPatch, leftPatch);
 }
 
 void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
@@ -185,11 +203,11 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
 
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
         if (!geometry.isEmpty()) {
-            OpenGLShadowTextureProvider *textureProvider = static_cast<OpenGLShadowTextureProvider *>(shadowItem->textureProvider());
-            if (textureProvider->shadowTexture()) {
+            const auto ninePatch = static_cast<NinePatchOpenGL *>(shadowItem->ninePatch());
+            if (ninePatch->texture()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
-                    .textures = {textureProvider->shadowTexture()},
+                    .textures = {ninePatch->texture()},
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
@@ -199,7 +217,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .bufferReleasePoint = nullptr,
                     .paintHole = hole,
                 });
-                renderNode.geometry.postProcessTextureCoordinates(textureProvider->shadowTexture()->matrix(UnnormalizedCoordinates));
+                renderNode.geometry.postProcessTextureCoordinates(ninePatch->texture()->matrix(UnnormalizedCoordinates));
             }
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {

@@ -27,6 +27,16 @@ public:
     std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer) override;
     std::unique_ptr<Texture> createTexture(const QImage &image) override;
 
+    std::unique_ptr<NinePatch> createNinePatch(const QImage &image) override;
+    std::unique_ptr<NinePatch> createNinePatch(const QImage &topLeftPatch,
+                                               const QImage &topPatch,
+                                               const QImage &topRightPatch,
+                                               const QImage &rightPatch,
+                                               const QImage &bottomRightPatch,
+                                               const QImage &bottomPatch,
+                                               const QImage &bottomLeftPatch,
+                                               const QImage &leftPatch) override;
+
     void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
     void endFrame() override;
 

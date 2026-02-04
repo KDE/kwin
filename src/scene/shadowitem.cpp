@@ -5,44 +5,40 @@
 */
 
 #include "scene/shadowitem.h"
-#include "compositor.h"
-#include "core/renderbackend.h"
-#include "opengl/eglcontext.h"
-#include "opengl/gltexture.h"
+#include "scene/itemrenderer.h"
+#include "scene/ninepatch.h"
 #include "scene/workspacescene.h"
 #include "shadow.h"
 #include "window.h"
 
-#include <QPainter>
-
 namespace KWin
 {
 
-ShadowTextureProvider::ShadowTextureProvider(Shadow *shadow)
-    : m_shadow(shadow)
+class DecorationShadowTextureCache
 {
-}
+public:
+    ~DecorationShadowTextureCache();
+    DecorationShadowTextureCache(const DecorationShadowTextureCache &) = delete;
+    static DecorationShadowTextureCache &instance();
 
-ShadowTextureProvider::~ShadowTextureProvider()
-{
-}
+    void unregister(ShadowItem *shadowItem);
+    std::shared_ptr<NinePatch> ninePatch(ShadowItem *shadowItem);
+
+private:
+    DecorationShadowTextureCache() = default;
+    struct Data
+    {
+        std::shared_ptr<NinePatch> ninePatch;
+        QList<ShadowItem *> shadowItems;
+    };
+    QHash<KDecoration3::DecorationShadow *, Data> m_cache;
+};
 
 ShadowItem::ShadowItem(Shadow *shadow, Window *window, Item *parent)
     : Item(parent)
     , m_window(window)
     , m_shadow(shadow)
 {
-    switch (Compositor::self()->backend()->compositingType()) {
-    case OpenGLCompositing:
-        m_textureProvider = std::make_unique<OpenGLShadowTextureProvider>(shadow);
-        break;
-    case QPainterCompositing:
-        m_textureProvider = std::make_unique<QPainterShadowTextureProvider>(shadow);
-        break;
-    default:
-        Q_UNREACHABLE();
-    }
-
     connect(shadow, &Shadow::offsetChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::rectChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::textureChanged, this, &ShadowItem::handleTextureChanged);
@@ -53,6 +49,10 @@ ShadowItem::ShadowItem(Shadow *shadow, Window *window, Item *parent)
 
 ShadowItem::~ShadowItem()
 {
+    if (m_ninePatch) {
+        DecorationShadowTextureCache::instance().unregister(this);
+        m_ninePatch.reset();
+    }
 }
 
 Shadow *ShadowItem::shadow() const
@@ -60,9 +60,9 @@ Shadow *ShadowItem::shadow() const
     return m_shadow;
 }
 
-ShadowTextureProvider *ShadowItem::textureProvider() const
+NinePatch *ShadowItem::ninePatch() const
 {
-    return m_textureProvider.get();
+    return m_ninePatch.get();
 }
 
 void ShadowItem::updateGeometry()
@@ -315,31 +315,25 @@ WindowQuadList ShadowItem::buildQuads() const
 
 void ShadowItem::preprocess()
 {
-    if (m_textureDirty) {
-        m_textureDirty = false;
-        m_textureProvider->update();
+    if (!m_textureDirty) {
+        return;
+    }
+
+    m_textureDirty = false;
+
+    if (m_shadow->hasDecorationShadow()) {
+        m_ninePatch = DecorationShadowTextureCache::instance().ninePatch(this);
+    } else {
+        m_ninePatch = scene()->renderer()->createNinePatch(m_shadow->shadowElement(Shadow::ShadowElementTopLeft),
+                                                           m_shadow->shadowElement(Shadow::ShadowElementTop),
+                                                           m_shadow->shadowElement(Shadow::ShadowElementTopRight),
+                                                           m_shadow->shadowElement(Shadow::ShadowElementRight),
+                                                           m_shadow->shadowElement(Shadow::ShadowElementBottomRight),
+                                                           m_shadow->shadowElement(Shadow::ShadowElementBottom),
+                                                           m_shadow->shadowElement(Shadow::ShadowElementBottomLeft),
+                                                           m_shadow->shadowElement(Shadow::ShadowElementLeft));
     }
 }
-
-class DecorationShadowTextureCache
-{
-public:
-    ~DecorationShadowTextureCache();
-    DecorationShadowTextureCache(const DecorationShadowTextureCache &) = delete;
-    static DecorationShadowTextureCache &instance();
-
-    void unregister(ShadowTextureProvider *provider);
-    std::shared_ptr<GLTexture> getTexture(ShadowTextureProvider *provider);
-
-private:
-    DecorationShadowTextureCache() = default;
-    struct Data
-    {
-        std::shared_ptr<GLTexture> texture;
-        QList<ShadowTextureProvider *> providers;
-    };
-    QHash<KDecoration3::DecorationShadow *, Data> m_cache;
-};
 
 DecorationShadowTextureCache &DecorationShadowTextureCache::instance()
 {
@@ -352,22 +346,22 @@ DecorationShadowTextureCache::~DecorationShadowTextureCache()
     Q_ASSERT(m_cache.isEmpty());
 }
 
-void DecorationShadowTextureCache::unregister(ShadowTextureProvider *provider)
+void DecorationShadowTextureCache::unregister(ShadowItem *shadowItem)
 {
     auto it = m_cache.begin();
     while (it != m_cache.end()) {
         auto &d = it.value();
         // check whether the Vector of Shadows contains our shadow and remove all of them
-        auto glIt = d.providers.begin();
-        while (glIt != d.providers.end()) {
-            if (*glIt == provider) {
-                glIt = d.providers.erase(glIt);
+        auto glIt = d.shadowItems.begin();
+        while (glIt != d.shadowItems.end()) {
+            if (*glIt == shadowItem) {
+                glIt = d.shadowItems.erase(glIt);
             } else {
                 glIt++;
             }
         }
         // if there are no shadows any more we can erase the cache entry
-        if (d.providers.isEmpty()) {
+        if (d.shadowItems.isEmpty()) {
             it = m_cache.erase(it);
         } else {
             it++;
@@ -375,136 +369,27 @@ void DecorationShadowTextureCache::unregister(ShadowTextureProvider *provider)
     }
 }
 
-std::shared_ptr<GLTexture> DecorationShadowTextureCache::getTexture(ShadowTextureProvider *provider)
+std::shared_ptr<NinePatch> DecorationShadowTextureCache::ninePatch(ShadowItem *shadowItem)
 {
-    Shadow *shadow = provider->shadow();
+    Shadow *shadow = shadowItem->shadow();
     Q_ASSERT(shadow->hasDecorationShadow());
-    unregister(provider);
+    unregister(shadowItem);
     const auto decoShadow = shadow->decorationShadow().lock();
     Q_ASSERT(decoShadow);
     auto it = m_cache.find(decoShadow.get());
     if (it != m_cache.end()) {
-        Q_ASSERT(!it.value().providers.contains(provider));
-        it.value().providers << provider;
-        return it.value().texture;
+        Q_ASSERT(!it.value().shadowItems.contains(shadowItem));
+        it.value().shadowItems << shadowItem;
+        return it.value().ninePatch;
     }
     Data d;
-    d.providers << provider;
-    d.texture = GLTexture::upload(shadow->decorationShadowImage());
-    if (!d.texture) {
+    d.shadowItems << shadowItem;
+    d.ninePatch = shadowItem->scene()->renderer()->createNinePatch(shadow->decorationShadowImage());
+    if (!d.ninePatch) {
         return nullptr;
     }
-    d.texture->setFilter(GL_LINEAR);
-    d.texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_cache.insert(decoShadow.get(), d);
-    return d.texture;
-}
-
-OpenGLShadowTextureProvider::OpenGLShadowTextureProvider(Shadow *shadow)
-    : ShadowTextureProvider(shadow)
-{
-}
-
-OpenGLShadowTextureProvider::~OpenGLShadowTextureProvider()
-{
-    if (m_texture) {
-        Compositor::self()->scene()->openglContext()->makeCurrent();
-        DecorationShadowTextureCache::instance().unregister(this);
-        m_texture.reset();
-    }
-}
-
-void OpenGLShadowTextureProvider::update()
-{
-    if (m_shadow->hasDecorationShadow()) {
-        // simplifies a lot by going directly to
-        m_texture = DecorationShadowTextureCache::instance().getTexture(this);
-        return;
-    }
-
-    const QSize top(m_shadow->shadowElement(Shadow::ShadowElementTop).size());
-    const QSize topRight(m_shadow->shadowElement(Shadow::ShadowElementTopRight).size());
-    const QSize right(m_shadow->shadowElement(Shadow::ShadowElementRight).size());
-    const QSize bottom(m_shadow->shadowElement(Shadow::ShadowElementBottom).size());
-    const QSize bottomLeft(m_shadow->shadowElement(Shadow::ShadowElementBottomLeft).size());
-    const QSize left(m_shadow->shadowElement(Shadow::ShadowElementLeft).size());
-    const QSize topLeft(m_shadow->shadowElement(Shadow::ShadowElementTopLeft).size());
-    const QSize bottomRight(m_shadow->shadowElement(Shadow::ShadowElementBottomRight).size());
-
-    const int width = std::max({topLeft.width(), left.width(), bottomLeft.width()}) + std::max(top.width(), bottom.width()) + std::max({topRight.width(), right.width(), bottomRight.width()});
-    const int height = std::max({topLeft.height(), top.height(), topRight.height()}) + std::max(left.height(), right.height()) + std::max({bottomLeft.height(), bottom.height(), bottomRight.height()});
-
-    if (width == 0 || height == 0) {
-        return;
-    }
-
-    QImage image(width, height, QImage::Format_ARGB32);
-    image.fill(Qt::transparent);
-
-    const int innerRectTop = std::max({topLeft.height(), top.height(), topRight.height()});
-    const int innerRectLeft = std::max({topLeft.width(), left.width(), bottomLeft.width()});
-
-    QPainter p;
-    p.begin(&image);
-
-    p.drawImage(QRectF(0, 0, topLeft.width(), topLeft.height()), m_shadow->shadowElement(Shadow::ShadowElementTopLeft));
-    p.drawImage(QRectF(innerRectLeft, 0, top.width(), top.height()), m_shadow->shadowElement(Shadow::ShadowElementTop));
-    p.drawImage(QRectF(width - topRight.width(), 0, topRight.width(), topRight.height()), m_shadow->shadowElement(Shadow::ShadowElementTopRight));
-
-    p.drawImage(QRectF(0, innerRectTop, left.width(), left.height()), m_shadow->shadowElement(Shadow::ShadowElementLeft));
-    p.drawImage(QRectF(width - right.width(), innerRectTop, right.width(), right.height()), m_shadow->shadowElement(Shadow::ShadowElementRight));
-
-    p.drawImage(QRectF(0, height - bottomLeft.height(), bottomLeft.width(), bottomLeft.height()), m_shadow->shadowElement(Shadow::ShadowElementBottomLeft));
-    p.drawImage(QRectF(innerRectLeft, height - bottom.height(), bottom.width(), bottom.height()), m_shadow->shadowElement(Shadow::ShadowElementBottom));
-    p.drawImage(QRectF(width - bottomRight.width(), height - bottomRight.height(), bottomRight.width(), bottomRight.height()), m_shadow->shadowElement(Shadow::ShadowElementBottomRight));
-
-    p.end();
-
-    // Check if the image is alpha-only in practice, and if so convert it to an 8-bpp format
-    const auto context = EglContext::currentContext();
-    if (!context->isOpenGLES() && context->supportsTextureSwizzle() && context->supportsRGTextures()) {
-        QImage alphaImage(image.size(), QImage::Format_Alpha8);
-        bool alphaOnly = true;
-
-        for (ptrdiff_t y = 0; alphaOnly && y < image.height(); y++) {
-            const uint32_t *const src = reinterpret_cast<const uint32_t *>(image.scanLine(y));
-            uint8_t *const dst = reinterpret_cast<uint8_t *>(alphaImage.scanLine(y));
-
-            for (ptrdiff_t x = 0; x < image.width(); x++) {
-                if (src[x] & 0x00ffffff) {
-                    alphaOnly = false;
-                }
-
-                dst[x] = qAlpha(src[x]);
-            }
-        }
-
-        if (alphaOnly) {
-            image = alphaImage;
-        }
-    }
-
-    m_texture = GLTexture::upload(image);
-    if (!m_texture) {
-        return;
-    }
-    m_texture->setFilter(GL_LINEAR);
-    m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
-
-    if (m_texture->internalFormat() == GL_R8) {
-        // Swizzle red to alpha and all other channels to zero
-        m_texture->bind();
-        m_texture->setSwizzle(GL_ZERO, GL_ZERO, GL_ZERO, GL_RED);
-    }
-}
-
-QPainterShadowTextureProvider::QPainterShadowTextureProvider(Shadow *shadow)
-    : ShadowTextureProvider(shadow)
-{
-}
-
-void QPainterShadowTextureProvider::update()
-{
+    return d.ninePatch;
 }
 
 } // namespace KWin
