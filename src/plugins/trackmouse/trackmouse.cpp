@@ -13,7 +13,6 @@
 #include "effect/effecthandler.h"
 #include "plugins/trackmouse/trackmouseconfig.h"
 #include "scene/imageitem.h"
-#include "scene/itemrenderer.h"
 #include "scene/workspacescene.h"
 
 #include <KGlobalAccel>
@@ -35,13 +34,13 @@ RotatingArcsItem::RotatingArcsItem(Item *parentItem)
     }
 
     const QImage outerImage(f[0]);
-    m_outerArcItem = scene()->renderer()->createImageItem(this);
+    m_outerArcItem = std::make_unique<ImageItem>(this);
     m_outerArcItem->setImage(outerImage);
     m_outerArcItem->setSize(outerImage.size());
     m_outerArcItem->setPosition(QPointF(-outerImage.width() / 2, -outerImage.height() / 2));
 
     const QImage innerImage(f[1]);
-    m_innerArcItem = scene()->renderer()->createImageItem(this);
+    m_innerArcItem = std::make_unique<ImageItem>(this);
     m_innerArcItem->setImage(innerImage);
     m_innerArcItem->setSize(innerImage.size());
     m_innerArcItem->setPosition(QPointF(-innerImage.width() / 2, -innerImage.height() / 2));

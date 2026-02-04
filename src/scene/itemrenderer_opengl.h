@@ -64,13 +64,14 @@ public:
 
     ItemRendererOpenGL(EglDisplay *eglDisplay);
 
+    std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer) override;
+    std::unique_ptr<Texture> createTexture(const QImage &image) override;
+
     void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
     void endFrame() override;
 
     void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) override;
     void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) override;
-
-    std::unique_ptr<ImageItem> createImageItem(Item *parent = nullptr) override;
 
 private:
     QVector4D modulate(float opacity, float brightness) const;

@@ -10,6 +10,7 @@
 #include "effect/effect.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
+#include "scene/qpainter/texture.h"
 #include "scene/surfaceitem.h"
 #include "scene/workspacescene.h"
 #include "window.h"
@@ -28,9 +29,14 @@ ItemRendererQPainter::~ItemRendererQPainter()
 {
 }
 
-std::unique_ptr<ImageItem> ItemRendererQPainter::createImageItem(Item *parent)
+std::unique_ptr<Texture> ItemRendererQPainter::createTexture(GraphicsBuffer *buffer)
 {
-    return std::make_unique<ImageItem>(parent);
+    return BufferTextureQPainter::create(buffer);
+}
+
+std::unique_ptr<Texture> ItemRendererQPainter::createTexture(const QImage &image)
+{
+    return ImageTextureQPainter::create(image);
 }
 
 QPainter *ItemRendererQPainter::painter() const
@@ -131,8 +137,8 @@ void ItemRendererQPainter::renderItem(QPainter *painter, Item *item, const std::
 
 void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const
 {
-    const auto surfaceTexture = static_cast<QPainterSurfaceTexture *>(surfaceItem->texture());
-    if (!surfaceTexture || !surfaceTexture->isValid()) {
+    const auto surfaceTexture = static_cast<TextureQPainter *>(surfaceItem->texture());
+    if (!surfaceTexture || surfaceTexture->nativeImage().isNull()) {
         return;
     }
 
@@ -187,7 +193,7 @@ void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *sur
                             target.width() * xSourceBoxScale,
                             target.height() * ySourceBoxScale);
 
-        painter->drawImage(target, surfaceTexture->image(), source);
+        painter->drawImage(target, surfaceTexture->nativeImage(), source);
     }
 
     painter->restore();

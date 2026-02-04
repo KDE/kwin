@@ -7,10 +7,7 @@
 #include "scene/cursoritem.h"
 #include "cursor.h"
 #include "cursorsource.h"
-#include "effect/effect.h"
 #include "scene/imageitem.h"
-#include "scene/itemrenderer.h"
-#include "scene/scene.h"
 #include "scene/surfaceitem_wayland.h"
 
 namespace KWin
@@ -56,7 +53,7 @@ void CursorItem::setImage(const QImage &image, const QPointF &hotspot)
     m_surfaceItem.reset();
 
     if (!m_imageItem) {
-        m_imageItem = scene()->renderer()->createImageItem(this);
+        m_imageItem = std::make_unique<ImageItem>(this);
     }
     m_imageItem->setImage(image);
     m_imageItem->setPosition(-hotspot);

@@ -14,6 +14,7 @@
 #include "opengl/eglnativefence.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
+#include "scene/opengl/texture.h"
 #include "scene/outlinedborderitem.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem.h"
@@ -33,9 +34,14 @@ ItemRendererOpenGL::ItemRendererOpenGL(EglDisplay *eglDisplay)
     }
 }
 
-std::unique_ptr<ImageItem> ItemRendererOpenGL::createImageItem(Item *parent)
+std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(GraphicsBuffer *buffer)
 {
-    return std::make_unique<ImageItemOpenGL>(parent);
+    return BufferTextureOpenGL::create(buffer);
+}
+
+std::unique_ptr<Texture> ItemRendererOpenGL::createTexture(const QImage &image)
+{
+    return ImageTextureOpenGL::create(image);
 }
 
 void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
@@ -216,12 +222,12 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
             }
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
-        auto texture = static_cast<OpenGLSurfaceTexture *>(surfaceItem->texture());
-        if (texture && texture->isValid()) {
+        auto texture = static_cast<TextureOpenGL *>(surfaceItem->texture());
+        if (texture && !texture->planes().isEmpty()) {
             if (!geometry.isEmpty()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                    .traits = texture->texture().planes.count() == 1 ? ShaderTrait::MapTexture : ShaderTrait::MapMultiPlaneTexture,
-                    .textures = texture->texture().toVarLengthArray(),
+                    .traits = texture->planes().count() == 1 ? ShaderTrait::MapTexture : ShaderTrait::MapMultiPlaneTexture,
+                    .textures = texture->planes(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
@@ -232,7 +238,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .paintHole = hole,
                     .hasFloatingPointColor = texture->isFloatingPoint(),
                 });
-                renderNode.geometry.postProcessTextureCoordinates(texture->texture().planes.at(0)->matrix(UnnormalizedCoordinates));
+                renderNode.geometry.postProcessTextureCoordinates(texture->planes().at(0)->matrix(UnnormalizedCoordinates));
                 if (surfaceItem->colorDescription()->yuvCoefficients() != YUVMatrixCoefficients::Identity) {
                     renderNode.traits |= ShaderTrait::YuvConversion;
                 }
@@ -250,12 +256,13 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                 }
             }
         }
-    } else if (auto imageItem = qobject_cast<ImageItemOpenGL *>(item)) {
+    } else if (auto imageItem = qobject_cast<ImageItem *>(item)) {
         if (!geometry.isEmpty()) {
-            if (imageItem->texture()) {
+            auto texture = static_cast<TextureOpenGL *>(imageItem->texture());
+            if (texture && !texture->planes().isEmpty()) {
                 RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
                     .traits = ShaderTrait::MapTexture,
-                    .textures = {imageItem->texture()},
+                    .textures = texture->planes(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
@@ -265,7 +272,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .bufferReleasePoint = nullptr,
                     .paintHole = hole,
                 });
-                renderNode.geometry.postProcessTextureCoordinates(imageItem->texture()->matrix(UnnormalizedCoordinates));
+                renderNode.geometry.postProcessTextureCoordinates(texture->planes()[0]->matrix(UnnormalizedCoordinates));
             }
         }
     } else if (auto borderItem = qobject_cast<OutlinedBorderItem *>(item)) {

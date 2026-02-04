@@ -10,7 +10,6 @@
 // KWin
 #include "effect/effecthandler.h"
 #include "scene/imageitem.h"
-#include "scene/itemrenderer.h"
 #include "scene/workspacescene.h"
 // KDE
 #include <KConfigGroup>
@@ -106,7 +105,7 @@ std::unique_ptr<ImageItem> ScreenEdgeEffect::createGlowItem(ElectricBorder borde
 
     WorkspaceScene *scene = effects->scene();
 
-    std::unique_ptr<ImageItem> imageItem = scene->renderer()->createImageItem(scene->overlayItem());
+    auto imageItem = std::make_unique<ImageItem>(scene->overlayItem());
     imageItem->setImage(image);
     imageItem->setPosition(geometry.topLeft());
     imageItem->setSize(geometry.size());

@@ -18,11 +18,13 @@ class QPainter;
 namespace KWin
 {
 
+class GraphicsBuffer;
 class ImageItem;
 class Item;
 class RenderTarget;
 class RenderViewport;
 class Scene;
+class Texture;
 class WindowPaintData;
 
 class KWIN_EXPORT ItemRenderer
@@ -33,13 +35,14 @@ public:
 
     virtual QPainter *painter() const;
 
+    virtual std::unique_ptr<Texture> createTexture(GraphicsBuffer *buffer) = 0;
+    virtual std::unique_ptr<Texture> createTexture(const QImage &image) = 0;
+
     virtual void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport);
     virtual void endFrame();
 
     virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) = 0;
     virtual void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) = 0;
-
-    virtual std::unique_ptr<ImageItem> createImageItem(Item *parent = nullptr) = 0;
 };
 
 } // namespace KWin

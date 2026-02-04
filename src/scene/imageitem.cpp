@@ -5,8 +5,9 @@
 */
 
 #include "scene/imageitem.h"
-
-#include "opengl/gltexture.h"
+#include "scene/itemrenderer.h"
+#include "scene/scene.h"
+#include "scene/texture.h"
 
 namespace KWin
 {
@@ -14,6 +15,15 @@ namespace KWin
 ImageItem::ImageItem(Item *parent)
     : Item(parent)
 {
+}
+
+ImageItem::~ImageItem()
+{
+}
+
+Texture *ImageItem::texture() const
+{
+    return m_texture.get();
 }
 
 QImage ImageItem::image() const
@@ -28,42 +38,24 @@ void ImageItem::setImage(const QImage &image)
     scheduleRepaint(boundingRect());
 }
 
-ImageItemOpenGL::ImageItemOpenGL(Item *parent)
-    : ImageItem(parent)
-{
-}
-
-ImageItemOpenGL::~ImageItemOpenGL()
-{
-}
-
-GLTexture *ImageItemOpenGL::texture() const
-{
-    return m_texture.get();
-}
-
-void ImageItemOpenGL::preprocess()
+void ImageItem::preprocess()
 {
     if (m_image.isNull()) {
         m_texture.reset();
         m_textureKey = 0;
-    } else if (m_textureKey != m_image.cacheKey()) {
+    } else if (!m_texture || m_textureKey != m_image.cacheKey()) {
         m_textureKey = m_image.cacheKey();
 
+        ItemRenderer *itemRenderer = scene()->renderer();
         if (!m_texture || m_texture->size() != m_image.size()) {
-            m_texture = GLTexture::upload(m_image);
-            if (!m_texture) {
-                return;
-            }
-            m_texture->setFilter(GL_LINEAR);
-            m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
+            m_texture = itemRenderer->createTexture(m_image);
         } else {
-            m_texture->update(m_image, Rect(m_image.rect()));
+            m_texture->upload(m_image, m_image.rect());
         }
     }
 }
 
-WindowQuadList ImageItemOpenGL::buildQuads() const
+WindowQuadList ImageItem::buildQuads() const
 {
     const RectF geometry = boundingRect();
     if (geometry.isEmpty()) {

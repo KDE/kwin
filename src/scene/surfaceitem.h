@@ -18,7 +18,7 @@ namespace KWin
 class EglBackend;
 class GLTexture;
 class QPainterBackend;
-class SurfaceTexture;
+class Texture;
 class Window;
 
 /**
@@ -29,6 +29,8 @@ class KWIN_EXPORT SurfaceItem : public Item
     Q_OBJECT
 
 public:
+    ~SurfaceItem() override;
+
     QSizeF destinationSize() const;
     void setDestinationSize(const QSizeF &size);
 
@@ -56,7 +58,7 @@ public:
 
     void destroyTexture();
 
-    SurfaceTexture *texture() const;
+    Texture *texture() const;
 
     virtual ContentType contentType() const;
     virtual void setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats);
@@ -86,120 +88,11 @@ protected:
     QSize m_bufferSize;
     QSizeF m_destinationSize;
     bool m_hasAlphaChannel = false;
-    std::unique_ptr<SurfaceTexture> m_texture;
+    std::unique_ptr<Texture> m_texture;
     std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;
     std::optional<std::chrono::nanoseconds> m_frameTimeEstimation;
     std::shared_ptr<SyncReleasePoint> m_bufferReleasePoint;
 };
-
-class KWIN_EXPORT SurfaceTexture
-{
-public:
-    virtual ~SurfaceTexture();
-
-    virtual bool isValid() const = 0;
-
-    virtual bool create() = 0;
-    virtual void update(const Region &region) = 0;
-
-    // TODO: create()/update() steps are unnecessary now, consider removing size().
-    QSize size() const;
-
-protected:
-    QSize m_size;
-};
-
-class KWIN_EXPORT OpenGLSurfaceContents
-{
-public:
-    OpenGLSurfaceContents()
-    {
-    }
-    OpenGLSurfaceContents(const std::shared_ptr<GLTexture> &contents)
-        : planes({contents})
-    {
-    }
-    OpenGLSurfaceContents(const QList<std::shared_ptr<GLTexture>> &planes)
-        : planes(planes)
-    {
-    }
-
-    void reset()
-    {
-        planes.clear();
-    }
-    bool isValid() const
-    {
-        return !planes.isEmpty();
-    }
-    QVarLengthArray<GLTexture *, 4> toVarLengthArray() const;
-
-    QList<std::shared_ptr<GLTexture>> planes;
-};
-
-class KWIN_EXPORT OpenGLSurfaceTexture : public SurfaceTexture
-{
-public:
-    explicit OpenGLSurfaceTexture(EglBackend *backend, SurfaceItem *item);
-    ~OpenGLSurfaceTexture() override;
-
-    bool create() override;
-    void update(const Region &region) override;
-    bool isValid() const override;
-    bool isFloatingPoint() const;
-
-    OpenGLSurfaceContents texture() const;
-
-private:
-    bool loadShmTexture(GraphicsBuffer *buffer);
-    void updateShmTexture(GraphicsBuffer *buffer, const Region &region);
-    bool loadDmabufTexture(GraphicsBuffer *buffer);
-    void updateDmabufTexture(GraphicsBuffer *buffer);
-    bool loadSinglePixelTexture(GraphicsBuffer *buffer);
-    void updateSinglePixelTexture(GraphicsBuffer *buffer);
-    void destroy();
-
-    enum class BufferType {
-        None,
-        Shm,
-        DmaBuf,
-        SinglePixel,
-    };
-
-    BufferType m_bufferType = BufferType::None;
-    bool m_isFloatingPoint = false;
-    EglBackend *m_backend;
-    SurfaceItem *m_item;
-    OpenGLSurfaceContents m_texture;
-};
-
-class KWIN_EXPORT QPainterSurfaceTexture : public SurfaceTexture
-{
-public:
-    QPainterSurfaceTexture(QPainterBackend *backend, SurfaceItem *item);
-
-    bool create() override;
-    void update(const Region &region) override;
-    bool isValid() const override;
-
-    QPainterBackend *backend() const;
-    QImage image() const;
-
-protected:
-    QPainterBackend *m_backend;
-    SurfaceItem *m_item;
-    QImage m_image;
-};
-
-inline QVarLengthArray<GLTexture *, 4> OpenGLSurfaceContents::toVarLengthArray() const
-{
-    Q_ASSERT(planes.size() <= 4);
-    QVarLengthArray<GLTexture *, 4> ret;
-    for (const auto &plane : planes) {
-        ret << plane.get();
-    }
-    return ret;
-}
 
 } // namespace KWin

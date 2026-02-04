@@ -166,13 +166,16 @@ target_sources(kwin PRIVATE
     scene/itemrenderer.cpp
     scene/itemrenderer_opengl.cpp
     scene/itemrenderer_qpainter.cpp
+    scene/opengl/texture.cpp
     scene/outlinedborderitem.cpp
+    scene/qpainter/texture.cpp
     scene/rootitem.cpp
     scene/scene.cpp
     scene/shadowitem.cpp
     scene/surfaceitem.cpp
     scene/surfaceitem_internal.cpp
     scene/surfaceitem_wayland.cpp
+    scene/texture.cpp
     scene/windowitem.cpp
     scene/workspacescene.cpp
     screenedge.cpp
@@ -634,13 +637,16 @@ install(FILES
     scene/itemrenderer.h
     scene/itemrenderer_opengl.h
     scene/itemrenderer_qpainter.h
+    scene/opengl/texture.h
     scene/outlinedborderitem.h
+    scene/qpainter/texture.h
     scene/rootitem.h
     scene/scene.h
     scene/shadowitem.h
     scene/surfaceitem.h
     scene/surfaceitem_internal.h
     scene/surfaceitem_wayland.h
+    scene/texture.h
     scene/windowitem.h
     scene/workspacescene.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/scene COMPONENT Devel

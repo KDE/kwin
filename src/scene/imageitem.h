@@ -13,7 +13,7 @@
 namespace KWin
 {
 
-class GLTexture;
+class Texture;
 
 class KWIN_EXPORT ImageItem : public Item
 {
@@ -21,30 +21,19 @@ class KWIN_EXPORT ImageItem : public Item
 
 public:
     explicit ImageItem(Item *parent = nullptr);
+    ~ImageItem() override;
+
+    Texture *texture() const;
 
     QImage image() const;
     void setImage(const QImage &image);
 
 protected:
-    QImage m_image;
-};
-
-class ImageItemOpenGL : public ImageItem
-{
-    Q_OBJECT
-
-public:
-    explicit ImageItemOpenGL(Item *parent = nullptr);
-    ~ImageItemOpenGL() override;
-
-    GLTexture *texture() const;
-
-protected:
     void preprocess() override;
     WindowQuadList buildQuads() const override;
 
-private:
-    std::unique_ptr<GLTexture> m_texture;
+    QImage m_image;
+    std::unique_ptr<Texture> m_texture;
     qint64 m_textureKey = 0;
 };
 
