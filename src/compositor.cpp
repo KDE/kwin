@@ -490,7 +490,8 @@ static std::unordered_map<Item *, OutputLayer *> assignOverlays(RenderView *scen
     auto overlaysIt = overlays.begin();
     for (; overlaysIt != overlays.end();) {
         Item *item = *overlaysIt;
-        const RectF sceneRect = item->mapToView(item->rect(), sceneView);
+        const bool compositingAllowed = qobject_cast<CursorItem *>(item) != nullptr;
+        const RectF sceneRect = item->mapToView(compositingAllowed ? item->boundingRect() : item->rect(), sceneView);
         if (sceneRect.contains(sceneView->viewport())) {
             // leave fullscreen direct scanout to the primary plane
             overlaysIt++;
@@ -516,7 +517,6 @@ static std::unordered_map<Item *, OutputLayer *> assignOverlays(RenderView *scen
         const auto recommendedSizes = layer->recommendedSizes();
         if (!recommendedSizes.isEmpty()) {
             // it's likely that sizes other than the recommended ones won't work
-            const bool compositingAllowed = qobject_cast<CursorItem *>(item) != nullptr;
             const Rect deviceRect = sceneRect.translated(-sceneView->viewport().topLeft()).scaled(sceneView->scale()).rounded();
             const bool hasFittingSize = std::ranges::any_of(recommendedSizes, [compositingAllowed, deviceRect](const QSize &size) {
                 if (compositingAllowed) {
@@ -552,7 +552,8 @@ static std::unordered_map<Item *, OutputLayer *> assignOverlays(RenderView *scen
     auto underlaysIt = underlays.begin();
     for (; underlaysIt != underlays.end();) {
         Item *item = *underlaysIt;
-        const RectF sceneRect = item->mapToView(item->rect(), sceneView);
+        const bool compositingAllowed = qobject_cast<CursorItem *>(item) != nullptr;
+        const RectF sceneRect = item->mapToView(compositingAllowed ? item->boundingRect() : item->rect(), sceneView);
         if (sceneRect.contains(sceneView->viewport())) {
             // leave fullscreen direct scanout to the primary plane
             underlaysIt++;
@@ -574,7 +575,6 @@ static std::unordered_map<Item *, OutputLayer *> assignOverlays(RenderView *scen
         const auto recommendedSizes = layer->recommendedSizes();
         if (!recommendedSizes.isEmpty()) {
             // it's likely that sizes other than the recommended ones won't work
-            const bool compositingAllowed = qobject_cast<CursorItem *>(item) != nullptr;
             const Rect deviceRect = sceneRect.translated(-sceneView->viewport().topLeft()).scaled(sceneView->scale()).rounded();
             const bool hasFittingSize = std::ranges::any_of(recommendedSizes, [compositingAllowed, deviceRect](const QSize &size) {
                 if (compositingAllowed) {
