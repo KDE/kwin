@@ -10,6 +10,8 @@
 
 #include "input.h"
 
+#include <QObject>
+#include <QPointF>
 #include <chrono>
 
 namespace KWin
@@ -20,6 +22,21 @@ class InputDeviceTabletTool;
 
 struct PointerMotionEvent
 {
+    Q_GADGET
+    Q_PROPERTY(QPointF position MEMBER position CONSTANT)
+    Q_PROPERTY(bool warp MEMBER warp CONSTANT)
+    Q_PROPERTY(Qt::MouseButtons buttons MEMBER buttons CONSTANT)
+    Q_PROPERTY(Qt::KeyboardModifiers modifiers MEMBER modifiers CONSTANT)
+    Q_PROPERTY(Qt::KeyboardModifiers modifiersRelevantForShortcuts MEMBER modifiersRelevantForShortcuts CONSTANT)
+    Q_PROPERTY(qint64 timestamp READ timestampMicros CONSTANT)
+
+public:
+    qint64 timestampMicros() const
+    {
+        return timestamp.count();
+    }
+
+public:
     InputDevice *device;
     QPointF position;
     QPointF delta;
@@ -33,6 +50,22 @@ struct PointerMotionEvent
 
 struct PointerButtonEvent
 {
+    Q_GADGET
+    Q_PROPERTY(QPointF position MEMBER position CONSTANT)
+    Q_PROPERTY(KWin::PointerButtonState state MEMBER state CONSTANT)
+    Q_PROPERTY(Qt::MouseButton button MEMBER button CONSTANT)
+    Q_PROPERTY(Qt::MouseButtons buttons MEMBER buttons CONSTANT)
+    Q_PROPERTY(Qt::KeyboardModifiers modifiers MEMBER modifiers CONSTANT)
+    Q_PROPERTY(Qt::KeyboardModifiers modifiersRelevantForShortcuts MEMBER modifiersRelevantForShortcuts CONSTANT)
+    Q_PROPERTY(qint64 timestamp READ timestampMicros CONSTANT)
+
+public:
+    qint64 timestampMicros() const
+    {
+        return timestamp.count();
+    }
+
+public:
     InputDevice *device;
     QPointF position;
     PointerButtonState state;
@@ -143,6 +176,22 @@ struct TouchUpEvent
 
 struct KeyboardKeyEvent
 {
+    Q_GADGET
+    Q_PROPERTY(KWin::KeyboardKeyState state MEMBER state CONSTANT)
+    Q_PROPERTY(Qt::Key key MEMBER key CONSTANT)
+    Q_PROPERTY(QString text MEMBER text CONSTANT)
+    Q_PROPERTY(Qt::KeyboardModifiers modifiers MEMBER modifiers CONSTANT)
+    Q_PROPERTY(Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts MEMBER modifiersRelevantForGlobalShortcuts CONSTANT)
+    Q_PROPERTY(qint64 timestamp READ timestampMicros CONSTANT)
+    Q_PROPERTY(uint32_t serial MEMBER serial CONSTANT)
+
+public:
+    qint64 timestampMicros() const
+    {
+        return timestamp.count();
+    }
+
+public:
     InputDevice *device;
     KeyboardKeyState state;
     Qt::Key key;
@@ -271,3 +320,10 @@ struct TabletPadDialEvent
 };
 
 } // namespace KWin
+
+Q_DECLARE_METATYPE(KWin::PointerMotionEvent)
+Q_DECLARE_METATYPE(KWin::PointerMotionEvent *)
+Q_DECLARE_METATYPE(KWin::PointerButtonEvent)
+Q_DECLARE_METATYPE(KWin::PointerButtonEvent *)
+Q_DECLARE_METATYPE(KWin::KeyboardKeyEvent)
+Q_DECLARE_METATYPE(KWin::KeyboardKeyEvent *)

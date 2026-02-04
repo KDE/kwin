@@ -38,6 +38,7 @@ namespace KWin
 {
 class Window;
 class QtScriptWorkspaceWrapper;
+class InputEventScriptingSpy;
 
 class KWIN_EXPORT AbstractScript : public QObject
 {
@@ -349,6 +350,12 @@ public:
     static Scripting *self();
     static Scripting *create(QObject *parent);
 
+    // For tests: access the input event singleton instance
+    InputEventScriptingSpy *inputEventSpy() const
+    {
+        return m_inputEventSpy;
+    }
+
 public Q_SLOTS:
     void scriptDestroyed(QObject *object);
     Q_SCRIPTABLE void start();
@@ -363,6 +370,7 @@ private:
     QQmlEngine *m_qmlEngine;
     QQmlContext *m_declarativeScriptSharedContext;
     QtScriptWorkspaceWrapper *m_workspaceWrapper;
+    InputEventScriptingSpy *m_inputEventSpy = nullptr;
 };
 
 inline QQmlEngine *Scripting::qmlEngine() const

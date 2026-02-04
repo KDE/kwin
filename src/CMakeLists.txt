@@ -186,6 +186,7 @@ target_sources(kwin PRIVATE
     scripting/scripting_logging.cpp
     scripting/scriptingutils.cpp
     scripting/shortcuthandler.cpp
+    scripting/inputeventscripting.cpp
     scripting/tilemodel.cpp
     scripting/virtualdesktopmodel.cpp
     scripting/windowmodel.cpp

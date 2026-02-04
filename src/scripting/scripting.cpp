@@ -15,6 +15,7 @@
 #include "desktopbackgrounditem.h"
 #include "effect/quickeffect.h"
 #include "gesturehandler.h"
+#include "inputeventscripting.h"
 #include "screenedgehandler.h"
 #include "scriptedquicksceneeffect.h"
 #include "scripting_logging.h"
@@ -686,6 +687,11 @@ KWin::Scripting::Scripting(QObject *parent)
 
 void KWin::Scripting::init()
 {
+    // Register event value types for QML/JS and queued connections.
+    qRegisterMetaType<KWin::PointerMotionEvent>("KWin::PointerMotionEvent");
+    qRegisterMetaType<KWin::PointerButtonEvent>("KWin::PointerButtonEvent");
+    qRegisterMetaType<KWin::KeyboardKeyEvent>("KWin::KeyboardKeyEvent");
+
     qRegisterMetaType<QList<KWin::LogicalOutput *>>();
     qRegisterMetaType<QList<KWin::Window *>>();
     qRegisterMetaType<QList<KWin::VirtualDesktop *>>();
@@ -702,6 +708,18 @@ void KWin::Scripting::init()
     qmlRegisterType<VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");
     qmlRegisterUncreatableType<KWin::QuickSceneView>("org.kde.kwin", 3, 0, "SceneView", QStringLiteral("Can't instantiate an object of type SceneView"));
     qmlRegisterType<ScriptedQuickSceneEffect>("org.kde.kwin", 3, 0, "SceneEffect");
+
+    // QML singleton and event exposure
+    m_inputEventSpy = new KWin::InputEventScriptingSpy(m_qmlEngine);
+    if (input()) {
+        input()->installInputEventSpy(m_inputEventSpy);
+    }
+    qmlRegisterSingletonInstance("org.kde.kwin", 3, 0, "InputEvents", m_inputEventSpy);
+
+    // Expose event types to QML as uncreatable types for typing and introspection.
+    qmlRegisterUncreatableMetaObject(KWin::PointerMotionEvent::staticMetaObject, "org.kde.kwin", 3, 0, "PointerMotionEvent", QStringLiteral("Event types cannot be instantiated"));
+    qmlRegisterUncreatableMetaObject(KWin::PointerButtonEvent::staticMetaObject, "org.kde.kwin", 3, 0, "PointerButtonEvent", QStringLiteral("Event types cannot be instantiated"));
+    qmlRegisterUncreatableMetaObject(KWin::KeyboardKeyEvent::staticMetaObject, "org.kde.kwin", 3, 0, "KeyboardKeyEvent", QStringLiteral("Event types cannot be instantiated"));
 
     qmlRegisterSingletonType<DeclarativeScriptWorkspaceWrapper>("org.kde.kwin", 3, 0, "Workspace", [](QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
         return new DeclarativeScriptWorkspaceWrapper();
