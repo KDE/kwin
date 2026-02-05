@@ -165,10 +165,10 @@ integrationTest(NAME testXdgSession SRCS xdgsession_test.cpp)
 integrationTest(NAME testDnd SRCS dnd_test.cpp)
 integrationTest(NAME testFractionalRepaint SRCS fractional_repaint_test.cpp)
 
-integrationTest(NAME testDrm SRCS drm_test.cpp PROPERTIES RESOURCE_LOCK "vkms")
-integrationTest(NAME testDrmLegacy SRCS drm_test.cpp PROPERTIES RESOURCE_LOCK "vkms")
+integrationTest(NAME testDrm SRCS drm_test.cpp PROPERTIES RESOURCE_LOCK "vkms" LIBS lcms2::lcms2)
+integrationTest(NAME testDrmLegacy SRCS drm_test.cpp PROPERTIES RESOURCE_LOCK "vkms" LIBS lcms2::lcms2)
 target_compile_definitions(testDrmLegacy PRIVATE FORCE_DRM_LEGACY=1)
-integrationTest(NAME testDrmNoModifiers SRCS drm_test.cpp PROPERTIES RESOURCE_LOCK "vkms")
+integrationTest(NAME testDrmNoModifiers SRCS drm_test.cpp PROPERTIES RESOURCE_LOCK "vkms" LIBS lcms2::lcms2)
 target_compile_definitions(testDrmNoModifiers PRIVATE FORCE_NO_DRM_MODIFIERS=1)
 
 integrationTest(NAME testSelection SRCS selection_test.cpp)
