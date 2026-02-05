@@ -27,7 +27,6 @@
 #include "relativepointer_v1_p.h"
 #include "seat_p.h"
 #include "surface.h"
-#include "textinput_v1_p.h"
 #include "textinput_v2_p.h"
 #include "textinput_v3_p.h"
 #include "touch_p.h"
@@ -54,7 +53,6 @@ SeatInterfacePrivate::SeatInterfacePrivate(SeatInterface *q, Display *display, c
     , display(display)
     , name(name)
 {
-    textInputV1 = new TextInputV1Interface(q);
     textInputV2 = new TextInputV2Interface(q);
     textInputV3 = new TextInputV3Interface(q);
     pointer.reset(new PointerInterface(q));
@@ -1114,7 +1112,6 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
 
     if (d->focusedTextInputSurface) {
         disconnect(d->focusedSurfaceDestroyConnection);
-        d->textInputV1->d->sendLeave(d->focusedTextInputSurface);
         d->textInputV2->d->sendLeave(serial, d->focusedTextInputSurface);
         d->textInputV3->d->sendLeave(d->focusedTextInputSurface);
     }
@@ -1124,7 +1121,6 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
         d->focusedSurfaceDestroyConnection = connect(surface, &SurfaceInterface::aboutToBeDestroyed, this, [this] {
             setFocusedTextInputSurface(nullptr);
         });
-        d->textInputV1->d->sendEnter(surface);
         d->textInputV2->d->sendEnter(surface, serial);
         d->textInputV3->d->sendEnter(surface);
     }
@@ -1135,11 +1131,6 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
 SurfaceInterface *SeatInterface::focusedTextInputSurface() const
 {
     return d->focusedTextInputSurface;
-}
-
-TextInputV1Interface *SeatInterface::textInputV1() const
-{
-    return d->textInputV1;
 }
 
 TextInputV2Interface *SeatInterface::textInputV2() const

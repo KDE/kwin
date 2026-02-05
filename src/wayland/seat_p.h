@@ -25,7 +25,6 @@ class DataDeviceInterface;
 class DataOfferInterface;
 class DataSourceInterface;
 class DataControlDeviceV1Interface;
-class TextInputV1Interface;
 class TextInputV2Interface;
 class TextInputV3Interface;
 class PrimarySelectionDeviceV1Interface;
@@ -66,7 +65,6 @@ public:
     QList<PrimarySelectionDeviceV1Interface *> primarySelectionDevices;
     QList<DataControlDeviceV1Interface *> dataControlDevices;
 
-    QPointer<TextInputV1Interface> textInputV1;
     // TextInput v2
     QPointer<TextInputV2Interface> textInputV2;
     QPointer<TextInputV3Interface> textInputV3;

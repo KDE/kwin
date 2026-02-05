@@ -14,7 +14,6 @@
 #include "wayland/output.h"
 #include "wayland/seat.h"
 #include "wayland/surface.h"
-#include "wayland/textinput_v1.h"
 #include "wayland/textinput_v2.h"
 #include "wayland/textinput_v3.h"
 #include "wayland_server.h"

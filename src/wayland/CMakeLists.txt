@@ -160,7 +160,6 @@ target_sources(kwin PRIVATE
     tablet_v2.cpp
     tearingcontrol_v1.cpp
     textinput.cpp
-    textinput_v1.cpp
     textinput_v2.cpp
     textinput_v3.cpp
     touch.cpp
@@ -251,7 +250,6 @@ install(FILES
     tablet_v2.h
     tearingcontrol_v1.h
     textinput.h
-    textinput_v1.h
     textinput_v2.h
     textinput_v3.h
     touch.h
