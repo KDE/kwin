@@ -361,9 +361,10 @@ void SceneQPainterDecorationRenderer::resizeImages()
     client()->window()->layoutDecorationRects(left, top, right, bottom);
 
     auto checkAndCreate = [this](int index, const QSizeF &size) {
-        auto dpr = effectiveDevicePixelRatio();
-        if (m_images[index].size() != size * dpr || m_images[index].devicePixelRatio() != dpr) {
-            m_images[index] = QImage(size.toSize() * dpr, QImage::Format_ARGB32_Premultiplied);
+        const qreal dpr = effectiveDevicePixelRatio();
+        const QSize nativeSize = (size * dpr).toSize();
+        if (m_images[index].size() != nativeSize || m_images[index].devicePixelRatio() != dpr) {
+            m_images[index] = QImage(nativeSize, QImage::Format_ARGB32_Premultiplied);
             m_images[index].setDevicePixelRatio(dpr);
             m_images[index].fill(Qt::transparent);
         }
