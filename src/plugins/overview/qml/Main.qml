@@ -123,6 +123,15 @@ FocusScope {
         }
     }
 
+    function currentDesktopIndex() {
+        for (let i = 0; i < allDesktopHeaps.count; i++) {
+            if (allDesktopHeaps.itemAt(i).current) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     function switchTo(desktop) {
         KWinComponents.Workspace.currentDesktop = desktop;
         effect.deactivate();
@@ -130,13 +139,7 @@ FocusScope {
 
     function selectNext(direction) {
         if (effect.searchText !== "") return false;
-        let currentIndex = 0
-        for (let i = 0; i < allDesktopHeaps.count; i++) {
-            if (allDesktopHeaps.itemAt(i).current) {
-                currentIndex = i;
-                break;
-            }
-        }
+        const currentIndex = currentDesktopIndex();
         let x = currentIndex % container.columns;
         let y = Math.floor(currentIndex / container.columns);
 
@@ -241,6 +244,37 @@ FocusScope {
     }
     Keys.priority: Keys.AfterItem
     Keys.forwardTo: [allDesktopHeaps.currentHeap, searchField, searchResults]
+
+    WheelHandler {
+        property int wheelDelta: 0
+        acceptedDevices: PointerDevice.Mouse
+
+        onWheel: (event) => {
+            const delta = (event.inverted ? -1 : 1) * (event.angleDelta.y ? event.angleDelta.y : -event.angleDelta.x);
+            wheelDelta += delta;
+
+            let currentIndex = container.currentDesktopIndex();
+            // Magic number 120 for common "one click"
+            // See: https://qt-project.org/doc/qt-5/qml-qtquick-wheelevent.html#angleDelta-prop
+            while (wheelDelta >= 120) {
+                wheelDelta -= 120;
+                if (KWinComponents.Workspace.virtualDesktopNavigationWrapsAround) {
+                    currentIndex = (currentIndex - 1 + allDesktopHeaps.count) % allDesktopHeaps.count;
+                } else {
+                    currentIndex = Math.max(0, currentIndex - 1);
+                }
+            }
+            while (wheelDelta <= -120) {
+                wheelDelta += 120;
+                if (KWinComponents.Workspace.virtualDesktopNavigationWrapsAround) {
+                    currentIndex = (currentIndex + 1) % allDesktopHeaps.count;
+                } else {
+                    currentIndex = Math.min(allDesktopHeaps.count - 1, currentIndex + 1);
+                }
+            }
+            KWinComponents.Workspace.currentDesktop = allDesktopHeaps.itemAt(currentIndex).desktop;
+        }
+    }
 
     Item {
         width: backgroundItem.width
