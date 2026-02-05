@@ -53,8 +53,10 @@ private:
     static constexpr qreal SPEED_CURVE_EXPONENT = 2.5f;
 
     libevdev *const m_device;
-    const QPointF m_leftStickLimits;
-    const QPointF m_rightStickLimits;
+    const QPointF m_leftStickMin;
+    const QPointF m_leftStickMax;
+    const QPointF m_rightStickMin;
+    const QPointF m_rightStickMax;
     QTimer m_timer;
     QPointF m_leftStick;
     QPointF m_rightStick;

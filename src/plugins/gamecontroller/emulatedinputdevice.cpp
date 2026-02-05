@@ -45,8 +45,10 @@ static constexpr double s_deadzone = 0.25;
 
 EmulatedInputDevice::EmulatedInputDevice(libevdev *device)
     : m_device(device)
-    , m_leftStickLimits(libevdev_get_abs_maximum(device, ABS_X), libevdev_get_abs_maximum(device, ABS_Y))
-    , m_rightStickLimits(libevdev_get_abs_maximum(device, ABS_RX), libevdev_get_abs_maximum(device, ABS_RY))
+    , m_leftStickMin(libevdev_get_abs_minimum(device, ABS_X), libevdev_get_abs_minimum(device, ABS_Y))
+    , m_leftStickMax(libevdev_get_abs_maximum(device, ABS_X), libevdev_get_abs_maximum(device, ABS_Y))
+    , m_rightStickMin(libevdev_get_abs_minimum(device, ABS_RX), libevdev_get_abs_minimum(device, ABS_RY))
+    , m_rightStickMax(libevdev_get_abs_maximum(device, ABS_RX), libevdev_get_abs_maximum(device, ABS_RY))
 {
     m_timer.setSingleShot(false);
     m_timer.setInterval(5);
@@ -178,8 +180,10 @@ void EmulatedInputDevice::updateAnalogStick(input_event *ev)
 {
     switch (ev->code) {
     case ABS_X: {
-        if (m_leftStickLimits.x() > 0) {
-            const double value = ev->value / m_leftStickLimits.x();
+        const double halfRange = (m_leftStickMax.x() - m_leftStickMin.x()) / 2;
+        if (halfRange > 0) {
+            const double center = m_leftStickMin.x() + halfRange;
+            const double value = (ev->value - center) / halfRange;
             m_leftStick.setX(std::abs(value) >= s_deadzone ? value : 0);
         } else {
             m_leftStick.setX(0);
@@ -187,8 +191,10 @@ void EmulatedInputDevice::updateAnalogStick(input_event *ev)
         break;
     }
     case ABS_Y: {
-        if (m_leftStickLimits.y() > 0) {
-            const double value = ev->value / m_leftStickLimits.y();
+        const double halfRange = (m_leftStickMax.y() - m_leftStickMin.y()) / 2;
+        if (halfRange > 0) {
+            const double center = m_leftStickMin.y() + halfRange;
+            const double value = (ev->value - center) / halfRange;
             m_leftStick.setY(std::abs(value) >= s_deadzone ? value : 0);
         } else {
             m_leftStick.setY(0);
@@ -196,8 +202,10 @@ void EmulatedInputDevice::updateAnalogStick(input_event *ev)
         break;
     }
     case ABS_RX: {
-        if (m_rightStickLimits.x() > 0) {
-            const double value = ev->value / m_rightStickLimits.x();
+        const double halfRange = (m_rightStickMax.x() - m_rightStickMin.x()) / 2;
+        if (halfRange > 0) {
+            const double center = m_rightStickMin.x() + halfRange;
+            const double value = (ev->value - center) / halfRange;
             m_rightStick.setX(std::abs(value) >= s_deadzone ? value : 0);
         } else {
             m_rightStick.setX(0);
@@ -205,8 +213,10 @@ void EmulatedInputDevice::updateAnalogStick(input_event *ev)
         break;
     }
     case ABS_RY: {
-        if (m_rightStickLimits.y() > 0) {
-            const double value = ev->value / m_rightStickLimits.y();
+        const double halfRange = (m_rightStickMax.y() - m_rightStickMin.y()) / 2;
+        if (halfRange > 0) {
+            const double center = m_rightStickMin.y() + halfRange;
+            const double value = (ev->value - center) / halfRange;
             m_rightStick.setY(std::abs(value) >= s_deadzone ? value : 0);
         } else {
             m_rightStick.setY(0);
