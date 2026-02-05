@@ -235,7 +235,6 @@ target_link_libraries(kwin
     PRIVATE
         Qt::Concurrent
         Qt::GuiPrivate
-        Qt::Sensors
         Qt::Svg
 
         KF6::ColorScheme
@@ -319,6 +318,11 @@ qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusin
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin::PluginManagerDBusInterface)
 qt_add_dbus_interface(kwin_dbus_SRCS org.freedesktop.DBus.Properties.xml dbusproperties_interface)
+
+set_source_files_properties(net.hadess.SensorProxy.xml PROPERTIES
+    NO_NAMESPACE ON
+)
+qt_add_dbus_interface(kwin_dbus_SRCS net.hadess.SensorProxy.xml sensorproxy_interface)
 
 if (KWIN_BUILD_SCREENLOCKER)
     qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf6_org.freedesktop.ScreenSaver.xml screenlocker_interface)

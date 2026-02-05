@@ -15,13 +15,13 @@
 #include "input_event.h"
 #include "kscreenintegration.h"
 #include "outputconfiglogging.h"
+#include "utils/orientationsensor.h"
 #include "workspace.h"
 
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QOrientationReading>
 #include <ranges>
 
 namespace KWin
@@ -37,7 +37,7 @@ OutputConfigurationStore::~OutputConfigurationStore()
     save();
 }
 
-std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode)
+std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, AccelerometerOrientation orientation, bool isTabletMode)
 {
     QList<BackendOutput *> relevantOutputs;
     std::copy_if(outputs.begin(), outputs.end(), std::back_inserter(relevantOutputs), [](BackendOutput *output) {
@@ -63,7 +63,7 @@ std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigTyp
     return std::make_tuple(config, ConfigType::Generated);
 }
 
-void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &config, const QList<BackendOutput *> &outputs, QOrientationReading *orientation, bool isTabletMode)
+void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &config, const QList<BackendOutput *> &outputs, AccelerometerOrientation orientation, bool isTabletMode)
 {
     const auto output = std::find_if(outputs.begin(), outputs.end(), [&config](BackendOutput *output) {
         return output->isInternal() && config.changeSet(output)->enabled.value_or(output->isEnabled());
@@ -78,23 +78,23 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
         return;
     }
     const auto panelOrientation = (*output)->panelOrientation();
-    switch (orientation->orientation()) {
-    case QOrientationReading::Orientation::TopUp:
+    switch (orientation) {
+    case AccelerometerOrientation::TopUp:
         changeset->transform = panelOrientation;
         return;
-    case QOrientationReading::Orientation::TopDown:
+    case AccelerometerOrientation::TopDown:
         changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotate180);
         return;
-    case QOrientationReading::Orientation::LeftUp:
+    case AccelerometerOrientation::LeftUp:
         changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotate90);
         return;
-    case QOrientationReading::Orientation::RightUp:
+    case AccelerometerOrientation::RightUp:
         changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotate270);
         return;
-    case QOrientationReading::Orientation::FaceUp:
-    case QOrientationReading::Orientation::FaceDown:
+    case AccelerometerOrientation::FaceUp:
+    case AccelerometerOrientation::FaceDown:
         return;
-    case QOrientationReading::Orientation::Undefined:
+    case AccelerometerOrientation::Undefined:
         changeset->transform = changeset->manualTransform;
         return;
     }
