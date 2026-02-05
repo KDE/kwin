@@ -672,8 +672,11 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     if (usesICC) {
         colorPipeline.addTransferFunction(encoding->transferFunction(), ColorspaceType::LinearRGB);
         colorPipeline.addMultiplier(1.0 / encoding->transferFunction().maxLuminance);
-        const auto calibration = encoding->containerColorimetry().fromXYZ() * next.iccProfile->mhc2Matrix() * encoding->containerColorimetry().toXYZ();
-        colorPipeline.addMatrix(calibration, colorPipeline.currentOutputRange(), ColorspaceType::LinearRGB);
+        if (!next.iccProfile->mhc2Matrix().isIdentity()) {
+            // NOTE the spec assumes BT.709 or BT.2020 is used as the target colorspace, *not* the native colorspace!
+            const auto calibration = Colorimetry::BT709.fromXYZ() * next.iccProfile->mhc2Matrix() * encoding->containerColorimetry().toXYZ();
+            colorPipeline.addMatrix(calibration, colorPipeline.currentOutputRange(), ColorspaceType::LinearRGB);
+        }
         colorPipeline.add1DLUT(next.iccProfile->inverseTransferFunction(), ColorspaceType::NonLinearRGB);
         if (next.iccProfile->vcgt()) {
             colorPipeline.add1DLUT(next.iccProfile->vcgt(), ColorspaceType::NonLinearRGB);
