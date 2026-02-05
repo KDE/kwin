@@ -362,9 +362,7 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
         return std::unexpected(i18n("ICC profile \"%1\" is broken, its whitepoint is invalid", path));
     }
 
-    XYZ red;
-    XYZ green;
-    XYZ blue;
+    Colorimetry colorimetry = Colorimetry::BT709;
     XYZ white = XYZ{whitepoint->X, whitepoint->Y, whitepoint->Z};
     std::optional<QMatrix4x4> chromaticAdaptationMatrix;
     if (cmsIsTag(handle, cmsSigChromaticAdaptationTag)) {
@@ -382,9 +380,13 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
         white = XYZ::fromVector(*chromaticAdaptationMatrix * D50.asVector());
     }
     if (cmsCIExyYTRIPLE *chrmTag = static_cast<cmsCIExyYTRIPLE *>(cmsReadTag(handle, cmsSigChromaticityTag))) {
-        red = xyY{chrmTag->Red.x, chrmTag->Red.y, chrmTag->Red.Y}.toXYZ();
-        green = xyY{chrmTag->Green.x, chrmTag->Green.y, chrmTag->Green.Y}.toXYZ();
-        blue = xyY{chrmTag->Blue.x, chrmTag->Blue.y, chrmTag->Blue.Y}.toXYZ();
+        xy red{chrmTag->Red.x, chrmTag->Red.y};
+        xy green{chrmTag->Green.x, chrmTag->Green.y};
+        xy blue{chrmTag->Blue.x, chrmTag->Blue.y};
+        if (!Colorimetry::isValid(red, green, blue, white.toxy())) {
+            return std::unexpected(i18n("ICC profile \"%1\" is broken, its primaries are invalid", path));
+        }
+        colorimetry = Colorimetry{red, green, blue, white.toxy()};
     } else {
         const cmsCIEXYZ *r = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigRedColorantTag));
         const cmsCIEXYZ *g = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigGreenColorantTag));
@@ -393,9 +395,13 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
             return std::unexpected(i18n("ICC profile \"%1\" is broken, it has no primaries", path));
         }
         if (chromaticAdaptationMatrix) {
-            red = XYZ::fromVector(*chromaticAdaptationMatrix * QVector3D(r->X, r->Y, r->Z));
-            green = XYZ::fromVector(*chromaticAdaptationMatrix * QVector3D(g->X, g->Y, g->Z));
-            blue = XYZ::fromVector(*chromaticAdaptationMatrix * QVector3D(b->X, b->Y, b->Z));
+            XYZ red = XYZ::fromVector(*chromaticAdaptationMatrix * QVector3D(r->X, r->Y, r->Z));
+            XYZ green = XYZ::fromVector(*chromaticAdaptationMatrix * QVector3D(g->X, g->Y, g->Z));
+            XYZ blue = XYZ::fromVector(*chromaticAdaptationMatrix * QVector3D(b->X, b->Y, b->Z));
+            if (red.Y == 0 || green.Y == 0 || blue.Y == 0 || !Colorimetry::isValid(red.toxy(), green.toxy(), blue.toxy(), white.toxy())) {
+                return std::unexpected(i18n("ICC profile \"%1\" is broken, its primaries are invalid", path));
+            }
+            colorimetry = Colorimetry{red.toxy(), green.toxy(), blue.toxy(), white.toxy()};
         } else {
             // if the chromatic adaptation tag isn't available, fall back to using the media whitepoint instead
             cmsCIEXYZ adaptedR{};
@@ -407,14 +413,14 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
             if (!success) {
                 return std::unexpected(i18n("ICC profile \"%1\" is broken, couldn't calculate its primaries", path));
             }
-            red = XYZ(adaptedR.X, adaptedR.Y, adaptedR.Z);
-            green = XYZ(adaptedG.X, adaptedG.Y, adaptedG.Z);
-            blue = XYZ(adaptedB.X, adaptedB.Y, adaptedB.Z);
+            XYZ red = XYZ(adaptedR.X, adaptedR.Y, adaptedR.Z);
+            XYZ green = XYZ(adaptedG.X, adaptedG.Y, adaptedG.Z);
+            XYZ blue = XYZ(adaptedB.X, adaptedB.Y, adaptedB.Z);
+            if (red.Y == 0 || green.Y == 0 || blue.Y == 0 || !Colorimetry::isValid(red.toxy(), green.toxy(), blue.toxy(), white.toxy())) {
+                return std::unexpected(i18n("ICC profile \"%1\" is broken, its primaries are invalid", path));
+            }
+            colorimetry = Colorimetry{red.toxy(), green.toxy(), blue.toxy(), white.toxy()};
         }
-    }
-
-    if (red.Y == 0 || green.Y == 0 || blue.Y == 0 || white.Y == 0) {
-        return std::unexpected(i18n("ICC profile \"%1\" is broken, its primaries are invalid", path));
     }
 
     std::optional<double> maxFALL;
@@ -445,7 +451,7 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
     if (bToA0 || bToA1) {
         // the TRC tags are often nonsense when the BToA tag exists, so this estimates the
         // inverse transfer function by doing a grayscale transform on the BToA tag instead
-        const QMatrix4x4 toXYZD50 = Colorimetry::chromaticAdaptationMatrix(white, D50) * Colorimetry(red, green, blue, white).toXYZ();
+        const QMatrix4x4 toXYZD50 = Colorimetry::chromaticAdaptationMatrix(white, D50) * colorimetry.toXYZ();
         ColorPipeline pipeline;
         pipeline.addMatrix(toXYZD50, ValueRange{}, ColorspaceType::AnyNonRGB);
         pipeline.add(bToA1 ? *bToA1 : *bToA0);
@@ -512,7 +518,7 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
         xyzMatrix = mhc2->xyzMatrix;
     }
 
-    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(bToA0), std::move(bToA1), inverseEOTF, xyzMatrix, vcgt, relativeBlackPoint, maxFALL, maxCLL);
+    return std::make_unique<IccProfile>(handle, colorimetry, std::move(bToA0), std::move(bToA1), inverseEOTF, xyzMatrix, vcgt, relativeBlackPoint, maxFALL, maxCLL);
 }
 
 }
