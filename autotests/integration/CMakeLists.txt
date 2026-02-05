@@ -139,7 +139,7 @@ integrationTest(NAME testActivation SRCS activation_test.cpp OPTIONAL_LIBS XCB::
 integrationTest(NAME testInputMethod SRCS inputmethod_test.cpp LIBS XKB::XKB)
 integrationTest(NAME testScreens SRCS screens_test.cpp)
 integrationTest(NAME testScreenEdges SRCS screenedges_test.cpp)
-integrationTest(NAME testOutputChanges SRCS outputchanges_test.cpp LIBS Qt::Sensors OPTIONAL_LIBS XCB::ICCCM)
+integrationTest(NAME testOutputChanges SRCS outputchanges_test.cpp OPTIONAL_LIBS XCB::ICCCM)
 integrationTest(NAME testTiles SRCS tiles_test.cpp OPTIONAL_LIBS XCB::ICCCM)
 integrationTest(NAME testFractionalScaling SRCS fractional_scaling_test.cpp)
 integrationTest(NAME testMoveResize SRCS move_resize_window_test.cpp)

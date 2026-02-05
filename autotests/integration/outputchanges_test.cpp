@@ -13,12 +13,12 @@
 #include "outputconfigurationstore.h"
 #include "pointer_input.h"
 #include "tiles/tilemanager.h"
+#include "utils/orientationsensor.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
-#include <QOrientationSensor>
 
 #if KWIN_BUILD_X11
 #include "x11window.h"
@@ -1545,7 +1545,7 @@ void OutputChangesTest::testGenerateConfigs()
 
     const auto outputs = kwinApp()->outputBackend()->outputs();
     OutputConfigurationStore configs;
-    auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+    auto cfg = configs.queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
     QVERIFY(cfg.has_value());
     const auto [config, type] = *cfg;
     const auto outputConfig = config.constChangeSet(outputs.front());
@@ -1641,28 +1641,28 @@ void OutputChangesTest::testGeneratePartialConfigs()
 void OutputChangesTest::testAutorotate_data()
 {
     QTest::addColumn<OutputTransform::Kind>("panelOrientation");
-    QTest::addColumn<QOrientationReading::Orientation>("orientation");
+    QTest::addColumn<AccelerometerOrientation>("orientation");
     QTest::addColumn<OutputTransform::Kind>("expectedRotation");
 
-    QTest::addRow("panel orientation normal, no rotation") << OutputTransform::Kind::Normal << QOrientationReading::Orientation::TopUp << OutputTransform::Kind::Normal;
-    QTest::addRow("panel orientation normal, rotated 90° right") << OutputTransform::Kind::Normal << QOrientationReading::Orientation::LeftUp << OutputTransform::Kind::Rotate90;
-    QTest::addRow("panel orientation normal, rotated 180°") << OutputTransform::Kind::Normal << QOrientationReading::Orientation::TopDown << OutputTransform::Kind::Rotate180;
-    QTest::addRow("panel orientation normal, rotated 90° left") << OutputTransform::Kind::Normal << QOrientationReading::Orientation::RightUp << OutputTransform::Kind::Rotate270;
+    QTest::addRow("panel orientation normal, no rotation") << OutputTransform::Kind::Normal << AccelerometerOrientation::TopUp << OutputTransform::Kind::Normal;
+    QTest::addRow("panel orientation normal, rotated 90° right") << OutputTransform::Kind::Normal << AccelerometerOrientation::LeftUp << OutputTransform::Kind::Rotate90;
+    QTest::addRow("panel orientation normal, rotated 180°") << OutputTransform::Kind::Normal << AccelerometerOrientation::TopDown << OutputTransform::Kind::Rotate180;
+    QTest::addRow("panel orientation normal, rotated 90° left") << OutputTransform::Kind::Normal << AccelerometerOrientation::RightUp << OutputTransform::Kind::Rotate270;
 
-    QTest::addRow("panel orientation left up, no rotation") << OutputTransform::Kind::Rotate90 << QOrientationReading::Orientation::TopUp << OutputTransform::Kind::Rotate90;
-    QTest::addRow("panel orientation left up, rotated 90° right") << OutputTransform::Kind::Rotate90 << QOrientationReading::Orientation::LeftUp << OutputTransform::Kind::Rotate180;
-    QTest::addRow("panel orientation left up, rotated 180°") << OutputTransform::Kind::Rotate90 << QOrientationReading::Orientation::TopDown << OutputTransform::Kind::Rotate270;
-    QTest::addRow("panel orientation left up, rotated 90° left") << OutputTransform::Kind::Rotate90 << QOrientationReading::Orientation::RightUp << OutputTransform::Kind::Normal;
+    QTest::addRow("panel orientation left up, no rotation") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::TopUp << OutputTransform::Kind::Rotate90;
+    QTest::addRow("panel orientation left up, rotated 90° right") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::LeftUp << OutputTransform::Kind::Rotate180;
+    QTest::addRow("panel orientation left up, rotated 180°") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::TopDown << OutputTransform::Kind::Rotate270;
+    QTest::addRow("panel orientation left up, rotated 90° left") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::RightUp << OutputTransform::Kind::Normal;
 
-    QTest::addRow("panel orientation upside down, no rotation") << OutputTransform::Kind::Rotate180 << QOrientationReading::Orientation::TopUp << OutputTransform::Kind::Rotate180;
-    QTest::addRow("panel orientation upside down, rotated 90° right") << OutputTransform::Kind::Rotate180 << QOrientationReading::Orientation::LeftUp << OutputTransform::Kind::Rotate270;
-    QTest::addRow("panel orientation upside down, rotated 180°") << OutputTransform::Kind::Rotate180 << QOrientationReading::Orientation::TopDown << OutputTransform::Kind::Normal;
-    QTest::addRow("panel orientation upside down, rotated 90° left") << OutputTransform::Kind::Rotate180 << QOrientationReading::Orientation::RightUp << OutputTransform::Kind::Rotate90;
+    QTest::addRow("panel orientation upside down, no rotation") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::TopUp << OutputTransform::Kind::Rotate180;
+    QTest::addRow("panel orientation upside down, rotated 90° right") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::LeftUp << OutputTransform::Kind::Rotate270;
+    QTest::addRow("panel orientation upside down, rotated 180°") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::TopDown << OutputTransform::Kind::Normal;
+    QTest::addRow("panel orientation upside down, rotated 90° left") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::RightUp << OutputTransform::Kind::Rotate90;
 
-    QTest::addRow("panel orientation right up, no rotation") << OutputTransform::Kind::Rotate270 << QOrientationReading::Orientation::TopUp << OutputTransform::Kind::Rotate270;
-    QTest::addRow("panel orientation right up, rotated 90° right") << OutputTransform::Kind::Rotate270 << QOrientationReading::Orientation::LeftUp << OutputTransform::Kind::Normal;
-    QTest::addRow("panel orientation right up, rotated 180°") << OutputTransform::Kind::Rotate270 << QOrientationReading::Orientation::TopDown << OutputTransform::Kind::Rotate90;
-    QTest::addRow("panel orientation right up, rotated 90° left") << OutputTransform::Kind::Rotate270 << QOrientationReading::Orientation::RightUp << OutputTransform::Kind::Rotate180;
+    QTest::addRow("panel orientation right up, no rotation") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::TopUp << OutputTransform::Kind::Rotate270;
+    QTest::addRow("panel orientation right up, rotated 90° right") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::LeftUp << OutputTransform::Kind::Normal;
+    QTest::addRow("panel orientation right up, rotated 180°") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::TopDown << OutputTransform::Kind::Rotate90;
+    QTest::addRow("panel orientation right up, rotated 90° left") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::RightUp << OutputTransform::Kind::Rotate180;
 }
 
 void OutputChangesTest::testAutorotate()
@@ -1679,13 +1679,11 @@ void OutputChangesTest::testAutorotate()
         .panelOrientation = panelOrientation,
     }});
 
-    QFETCH(QOrientationReading::Orientation, orientation);
-    QOrientationReading sensorReading;
-    sensorReading.setOrientation(orientation);
+    QFETCH(AccelerometerOrientation, orientation);
 
     const auto outputs = kwinApp()->outputBackend()->outputs();
     OutputConfigurationStore configs;
-    auto cfg = configs.queryConfig(outputs, false, &sensorReading, true);
+    auto cfg = configs.queryConfig(outputs, false, orientation, true);
     QVERIFY(cfg.has_value());
     const auto [config, type] = *cfg;
     const auto outputConfig = config.constChangeSet(outputs.front());
@@ -1885,7 +1883,7 @@ void OutputChangesTest::testSettingRestoration()
 
     QList<std::optional<QPoint>> outputPositions;
     {
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         for (const auto output : outputs) {
@@ -1897,7 +1895,7 @@ void OutputChangesTest::testSettingRestoration()
     // the positions must be independent of the order of outputs in the list
     std::ranges::reverse(outputs);
     {
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         auto revertedPositions = outputPositions | std::views::reverse;
@@ -1921,7 +1919,7 @@ void OutputChangesTest::testSettingRestoration()
     });
     outputs = kwinApp()->outputBackend()->outputs();
     {
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
         const auto [config, type] = *cfg;
         outputs.front()->applyChanges(config);
     }
@@ -1942,7 +1940,7 @@ void OutputChangesTest::testSettingRestoration()
     outputs = kwinApp()->outputBackend()->outputs();
 
     {
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         auto revertedPositions = outputPositions | std::views::reverse;
@@ -2001,7 +1999,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
 
     {
         // query the generated config, like KWin normally would
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         outputs.front()->applyChanges(config);
@@ -2020,7 +2018,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     {
         // verify that querying the config also shows the changed mode
         // things could already go wrong here
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         QCOMPARE(type, OutputConfigurationStore::ConfigType::Preexisting);
@@ -2060,7 +2058,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     outputs = kwinApp()->outputBackend()->outputs();
 
     {
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         QCOMPARE(config.constChangeSet(outputs[0])->desiredModeSize.value(), QSize(640, 480));
@@ -2107,7 +2105,7 @@ void OutputChangesTest::testSettingRestoration_replacedMode()
     // now, mark the mode as "removed". Its replacement is already in the mode list
     outputs[0]->modes()[1]->setRemoved();
 
-    const auto opt = configs.queryConfig(outputs, false, nullptr, false);
+    const auto opt = configs.queryConfig(outputs, false, AccelerometerOrientation::Undefined, false);
     QVERIFY(opt.has_value());
     const auto [config, type] = *opt;
     output->applyChanges(config);
