@@ -14,12 +14,11 @@
 
 #include <kwin_export.h>
 
-class QProximitySensor;
-
 namespace KWin
 {
 
 class DrmBackend;
+class ProximitySensor;
 
 class KWIN_EXPORT DpmsInputEventFilter : public QObject, public InputEventFilter
 {
@@ -51,7 +50,7 @@ private:
     void notify();
     QElapsedTimer m_doubleTapTimer;
     QList<qint32> m_touchPoints;
-    std::unique_ptr<QProximitySensor> m_sensor;
+    std::unique_ptr<ProximitySensor> m_sensor;
 
     bool m_secondTap = false;
     bool m_enableDoubleTap = false;

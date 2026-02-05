@@ -1,43 +1,69 @@
 /*
-    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
-    SPDX-FileCopyrightText: 2023 Xaver Hugl <xaver.hugl@gmail.com>
+    SPDX-FileCopyrightText: 2023 Xaver Hugl <xaver.hugl@kde.org>
+    SPDX-FileCopyrightText: 2026 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+
 #pragma once
 
 #include <QObject>
-#include <memory>
 
-class QOrientationSensor;
-class QOrientationReading;
+class OrgFreedesktopDBusPropertiesInterface;
+class QDBusServiceWatcher;
 
 namespace KWin
 {
 
+enum class AccelerometerOrientation {
+    Undefined,
+    TopUp,
+    TopDown,
+    LeftUp,
+    RightUp,
+    FaceUp,
+    FaceDown,
+};
+
+class OrientationSensorSubscription;
+
 class OrientationSensor : public QObject
 {
     Q_OBJECT
-public:
-    explicit OrientationSensor();
-    ~OrientationSensor();
 
-    void setEnabled(bool enable);
-    QOrientationReading *reading() const;
+public:
+    OrientationSensor();
+    ~OrientationSensor() override;
 
     bool isAvailable() const;
 
+    AccelerometerOrientation reading() const;
+
+    bool isEnabled() const;
+    void setEnabled(bool enabled);
+
 Q_SIGNALS:
-    void orientationChanged();
     void availableChanged();
+    void readingReceived();
 
 private:
-    void update();
+    void subscribe();
+    void unsubscribe();
 
-    const std::unique_ptr<QOrientationSensor> m_sensor;
-    const std::unique_ptr<QOrientationReading> m_reading;
-    bool m_isAvailable = false;
+    void onServiceRegistered();
+    void onServiceUnregistered();
+    void onPropertiesChanged(const QString &interfaceName, const QVariantMap &properties);
+
+    void updateAvailable(bool available);
+    void updateOrientation(AccelerometerOrientation orientation);
+
+    bool m_available = false;
     bool m_enabled = false;
+
+    std::unique_ptr<QDBusServiceWatcher> m_watcher;
+    std::unique_ptr<OrgFreedesktopDBusPropertiesInterface> m_properties;
+    std::unique_ptr<OrientationSensorSubscription> m_subscription;
+    AccelerometerOrientation m_orientation = AccelerometerOrientation::Undefined;
 };
 
-}
+} // namespace KWin

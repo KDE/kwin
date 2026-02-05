@@ -18,11 +18,10 @@
 #include <tuple>
 #include <unordered_map>
 
-class QOrientationReading;
-
 namespace KWin
 {
 
+enum class AccelerometerOrientation;
 class OutputConfiguration;
 
 class KWIN_EXPORT OutputConfigurationStore
@@ -35,7 +34,7 @@ public:
         Preexisting,
         Generated,
     };
-    std::optional<std::pair<OutputConfiguration, ConfigType>> queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode);
+    std::optional<std::pair<OutputConfiguration, ConfigType>> queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, AccelerometerOrientation orientation, bool isTabletMode);
     void storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed, const OutputConfiguration &config);
 
     void applyMirroring(OutputConfiguration &config, const QList<BackendOutput *> &outputs);
@@ -45,7 +44,7 @@ public:
 private:
     OutputConfiguration generateConfig(const QList<BackendOutput *> &outputs, bool isLidClosed);
     void registerOutputs(const QList<BackendOutput *> &outputs);
-    void applyOrientationReading(OutputConfiguration &config, const QList<BackendOutput *> &outputs, QOrientationReading *orientation, bool isTabletMode);
+    void applyOrientationReading(OutputConfiguration &config, const QList<BackendOutput *> &outputs, AccelerometerOrientation orientation, bool isTabletMode);
     std::optional<OutputConfiguration> generateLidClosedConfig(const QList<BackendOutput *> &outputs);
     std::shared_ptr<OutputMode> chooseMode(BackendOutput *output) const;
     double chooseScale(BackendOutput *output, OutputMode *mode) const;

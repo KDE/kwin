@@ -1,0 +1,277 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+
+<node>
+
+  <!--
+      net.hadess.SensorProxy:
+      @short_description: D-Bus proxy to access hardware sensors
+
+      After checking the availability of the sensor type you want to monitor,
+      call the net.hadess.SensorProxy.ClaimAccelerometer() or the
+      net.hadess.SensorProxy.ClaimLight() method to start updating the properties
+      from the hardware readings.
+
+      The object path will be "/net/hadess/SensorProxy".
+  -->
+  <interface name="net.hadess.SensorProxy">
+    <!--
+        HasAccelerometer:
+
+        Whether a supported accelerometer is present on the system.
+    -->
+    <property name="HasAccelerometer" type="b" access="read"/>
+
+    <!--
+        AccelerometerOrientation:
+
+        The detected orientation of the tablet or laptop.
+        Possible values are:
+        <itemizedlist>
+          <listitem>
+            <para>
+              undefined
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              normal
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              bottom-up
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              left-up
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              right-up
+            </para>
+          </listitem>
+        </itemizedlist>
+    -->
+    <property name="AccelerometerOrientation" type="s" access="read"/>
+
+    <!--
+        AccelerometerTilt:
+
+        The detected tilt of the device.
+        Possible values are:
+        <itemizedlist>
+          <listitem>
+            <para>
+              undefined
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              vertical
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              tilted-up
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              tilted-down
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              face-up
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              face-down
+            </para>
+          </listitem>
+        </itemizedlist>
+    -->
+    <property name='AccelerometerTilt' type='s' access='read'/>
+
+    <!--
+        HasAmbientLight:
+
+        Whether a supported ambient light sensor is present on the system.
+    -->
+    <property name="HasAmbientLight" type="b" access="read"/>
+
+    <!--
+        LightLevelUnit:
+
+        The unit used in Ambient Light Sensor readings. It is
+        one of either "lux" or "vendor".
+
+        Note that different hardware will have different readings in the
+        same condition, so values should be taken as relative.
+
+        When the unit is "vendor", readings will be a percentage with 100% being the
+        maximum reading.
+    -->
+    <property name="LightLevelUnit" type="s" access="read"/>
+
+    <!--
+        LightLevel:
+
+        The ambient light sensor reading, in the unit exported in the
+        "LightLevelUnit" property.
+    -->
+    <property name="LightLevel" type="d" access="read"/>
+
+    <!--
+        HasProximity:
+
+        Whether a supported proximity sensor is present on the system.
+    -->
+    <property name="HasProximity" type="b" access="read"/>
+
+    <!--
+        ProximityNear:
+
+        Whether an object is near to the proximity sensor.
+    -->
+    <property name='ProximityNear' type='b' access='read'/>
+
+    <!--
+       ClaimAccelerometer:
+
+       To start receiving accelerometer reading updates from the proxy, the application
+       must call the net.hadess.SensorProxy.ClaimAccelerometer() method. It can do so
+       whether an accelerometer is available or not, updates would then be sent when an
+       accelerometer appears.
+
+       Applications should call net.hadess.SensorProxy.ReleaseAccelerometer() when
+       readings are not required anymore. For example, an application that monitors
+       the orientation of the main screen should stop monitoring for updates when that
+       screen has been turned off.
+
+       This prevents the sensor proxy from polling the device, thus increasing wake-ups
+       and reducing battery life.
+    -->
+    <method name="ClaimAccelerometer"/>
+
+    <!--
+        ReleaseAccelerometer:
+
+        This should be called as soon as readings are not required anymore. Note
+        that resources are freed up if a monitoring application exits without
+        calling net.hadess.SensorProxy.ReleaseAccelerometer(), crashes or the sensor disappears.
+    -->
+    <method name="ReleaseAccelerometer"/>
+
+    <!--
+       ClaimLight:
+
+       To start receiving ambient light sensor reading updates from the proxy, the
+       application must call the net.hadess.SensorProxy.ClaimLight() method. It can do so
+       whether an ambient light sensor is available or not, updates would then be sent
+       when such a sensor appears.
+
+       Applications should call net.hadess.SensorProxy.ReleaseLight() when readings are
+       not required anymore. For example, an application that monitors the ambient light
+       to change the screen brightness should stop monitoring for updates when that screen
+       has been turned off.
+
+       This prevents the sensor proxy from polling the device, thus increasing wake-ups
+       and reducing battery life.
+    -->
+    <method name="ClaimLight"/>
+
+    <!--
+        ReleaseLight:
+
+        This should be called as soon as readings are not required anymore. Note
+        that resources are freed up if a monitoring application exits without
+        calling net.hadess.SensorProxy.ReleaseLight(), crashes or the sensor disappears.
+    -->
+    <method name="ReleaseLight"/>
+
+    <!--
+       ClaimProximity:
+
+       To start receiving proximity updates from the proxy, the
+       application must call the net.hadess.SensorProxy.ClaimProximity() method. It can do so
+       whether a proximity is available or not, updates would then be sent
+       when such a sensor appears.
+
+       Applications should call net.hadess.SensorProxy.ReleaseProximity() when readings are
+       not required anymore. This prevents the sensor proxy from polling the device, thus
+       increasing wake-ups and reducing battery life.
+    -->
+    <method name="ClaimProximity"/>
+
+    <!--
+        ReleaseProximity:
+
+        This should be called as soon as readings are not required anymore. Note
+        that resources are freed up if a monitoring application exits without
+        calling net.hadess.SensorProxy.ReleaseProximity(), crashes or the sensor disappears.
+    -->
+    <method name="ReleaseProximity"/>
+
+  </interface>
+
+  <!--
+      net.hadess.SensorProxy.Compass:
+      @short_description: D-Bus proxy to access Compass sensors
+
+      After checking the availability of the sensor type you want to monitor,
+      call the net.hadess.SensorProxy.ClaimCompass() method to start updating
+      the properties from the hardware readings.
+
+      The object path will be "/net/hadess/SensorProxy/Compass".
+  -->
+  <interface name="net.hadess.SensorProxy.Compass">
+    <!--
+        HasCompass:
+
+        Whether a supported compass is present on the system.
+    -->
+    <property name='HasCompass' type='b' access='read'/>
+
+    <!--
+        CompassHeading:
+
+        The compass heading in degrees with respect to magnetic North direction, in
+        clockwise order. That means North becomes 0 degree, East: 90 degrees,
+        South: 180 degrees, West: 270 degrees and so on. When unknown,
+        it's set to -1.0.
+    -->
+    <property name='CompassHeading' type='d' access='read'/>
+
+    <!--
+       ClaimCompass:
+
+       To start receiving compass heading updates from the proxy, the
+       application must call the net.hadess.SensorProxy.ClaimCompass() method. It can do so
+       whether a compass is available or not, updates would then be sent
+       when such a sensor appears.
+
+       Applications should call net.hadess.SensorProxy.ReleaseCompass() when readings are
+       not required anymore. This prevents the sensor proxy from polling the device, thus
+       increasing wake-ups and reducing battery life.
+
+       Note that Compass information is only available to Geoclue by default, which will
+       proxy the magnetic heading information, and transform it to True North heading.
+    -->
+    <method name="ClaimCompass"/>
+
+    <!--
+        ReleaseCompass:
+
+        This should be called as soon as readings are not required anymore. Note
+        that resources are freed up if a monitoring application exits without
+        calling net.hadess.SensorProxy.ReleaseCompass(), crashes or the sensor disappears.
+    -->
+    <method name="ReleaseCompass"/>
+
+  </interface>
+</node>

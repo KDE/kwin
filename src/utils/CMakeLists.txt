@@ -7,6 +7,7 @@ target_sources(kwin PRIVATE
     gravity.cpp
     lightsensor.cpp
     orientationsensor.cpp
+    proximitysensor.cpp
     ramfile.cpp
     realtime.cpp
     softwarevsyncmonitor.cpp

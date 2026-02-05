@@ -12,13 +12,12 @@
 #include "input_event.h"
 #include "main.h"
 #include "utils/keys.h"
+#include "utils/proximitysensor.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
 #include <QGuiApplication>
 #include <QKeyEvent>
-
-#include <QProximitySensor>
 
 namespace KWin
 {
@@ -29,29 +28,23 @@ DpmsInputEventFilter::DpmsInputEventFilter()
     KSharedConfig::Ptr kwinSettings = kwinApp()->config();
     m_enableDoubleTap = kwinSettings->group(QStringLiteral("Wayland")).readEntry<bool>("DoubleTapWakeup", true);
 
-    // TODO: Disabled due to https://bugreports.qt.io/browse/QTBUG-141672, this call hangs on some devices (OnePlus 6)
-    static bool useProximitySensor = qEnvironmentVariableIntValue("KWIN_WAYLAND_USE_PROXIMITY_SENSOR");
-    if (useProximitySensor && m_enableDoubleTap) {
-        m_sensor = std::make_unique<QProximitySensor>();
-        connect(m_sensor.get(), &QProximitySensor::readingChanged, this, &DpmsInputEventFilter::updateProximitySensor, Qt::UniqueConnection);
-        m_sensor->start();
+    if (m_enableDoubleTap) {
+        m_sensor = std::make_unique<ProximitySensor>();
+        m_sensor->setEnabled(true);
+
         updateProximitySensor();
+        connect(m_sensor.get(), &ProximitySensor::readingReceived, this, &DpmsInputEventFilter::updateProximitySensor);
     }
 }
 
 DpmsInputEventFilter::~DpmsInputEventFilter()
 {
-    if (m_sensor) {
-        m_sensor->stop();
-        m_proximityClose = false;
-    }
 }
 
 void DpmsInputEventFilter::updateProximitySensor()
 {
-    // change proximity value only if there is valid sensor backend is connected
-    if (m_sensor->isConnectedToBackend() && !m_sensor->sensorsForType(m_sensor->type()).isEmpty()) {
-        m_proximityClose = m_sensor->reading()->close();
+    if (m_sensor->reading()) {
+        m_proximityClose = *m_sensor->reading();
     }
 }
 
