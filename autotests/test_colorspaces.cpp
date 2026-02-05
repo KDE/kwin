@@ -48,6 +48,7 @@ private Q_SLOTS:
     void testYCbCr();
     void testBlackPointCompensation();
     void testSCRGB();
+    void testNightLightNoTonemapping();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -672,6 +673,20 @@ void TestColorspaces::testSCRGB()
         QCOMPARE_LE(out.z(), direct.z() + 1);
         QCOMPARE_GE(out.z(), direct.z() - 1);
     }
+}
+
+void TestColorspaces::testNightLightNoTonemapping()
+{
+    const auto src = ColorDescription::sRGB;
+    const xyY newWhite = XYZ::fromVector(src->containerColorimetry().toXYZ() * QVector3D(1.0, 0.8, 0.5)).toxyY();
+    const auto dst = src->withWhitepoint(newWhite)->dimmed(newWhite.Y);
+
+    // the color pipeline should not have any tonemapping steps in it
+    const auto pipeline = ColorPipeline::create(src, dst, RenderingIntent::Perceptual);
+    QCOMPARE(pipeline.ops.size(), 3);
+    QVERIFY(std::holds_alternative<ColorTransferFunction>(pipeline.ops[0].operation));
+    QVERIFY(std::holds_alternative<ColorMatrix>(pipeline.ops[1].operation));
+    QVERIFY(std::holds_alternative<InverseColorTransferFunction>(pipeline.ops[2].operation));
 }
 
 QTEST_MAIN(TestColorspaces)
