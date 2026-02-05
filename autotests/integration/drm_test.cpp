@@ -15,6 +15,7 @@
 #include "core/drmdevice.h"
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferview.h"
+#include "core/iccprofile.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "core/outputlayer.h"
@@ -28,6 +29,7 @@
 
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
+#include <lcms2.h>
 #include <ranges>
 #include <xf86drmMode.h>
 
@@ -57,6 +59,9 @@ private Q_SLOTS:
     void testDpms();
     void testNightLight_data();
     void testNightLight();
+
+    void testICCProfiles_data();
+    void testICCProfiles();
 };
 
 struct DrmCrtcState
@@ -316,15 +321,19 @@ void DrmTest::init()
                                          | Test::AdditionalWaylandInterface::Seat
                                          | Test::AdditionalWaylandInterface::CursorShapeV1
                                          | Test::AdditionalWaylandInterface::LinuxDmabuf
-                                         | Test::AdditionalWaylandInterface::Viewporter));
+                                         | Test::AdditionalWaylandInterface::Viewporter
+                                         | Test::AdditionalWaylandInterface::ColorManagement));
 
     const auto allOutputs = kwinApp()->outputBackend()->outputs();
     QVERIFY(!allOutputs.isEmpty());
 
     // Create a simple setup that's useful for most tests.
     OutputConfiguration cfg;
-    cfg.changeSet(allOutputs.front())->enabled = true;
-    cfg.changeSet(allOutputs.front())->scaleSetting = 1;
+    const auto change = cfg.changeSet(allOutputs.front());
+    change->enabled = true;
+    change->scaleSetting = 1;
+    change->colorPowerTradeoff = BackendOutput::ColorPowerTradeoff::PreferEfficiency;
+    change->colorProfileSource = BackendOutput::ColorProfileSource::sRGB;
     for (BackendOutput *output : allOutputs | std::views::drop(1)) {
         cfg.changeSet(output)->enabled = false;
     }
@@ -719,6 +728,17 @@ void DrmTest::testDpms()
     QVERIFY(state->crtc->active);
 }
 
+static QImage generateTestPattern()
+{
+    QImage testPattern{QSize(256, 256), QImage::Format_ARGB32_Premultiplied};
+    for (int x = 0; x < testPattern.width(); x++) {
+        for (int y = 0; y < testPattern.height(); y++) {
+            testPattern.setPixel(x, y, qRgba(x, y, (x + y) / 2, 255));
+        }
+    }
+    return testPattern;
+}
+
 void DrmTest::testNightLight_data()
 {
     QTest::addColumn<int>("colorTemperature");
@@ -744,17 +764,20 @@ void DrmTest::testNightLight()
     backend->updateOutputs();
     BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
 
+    {
+        OutputConfiguration config;
+        const auto change = config.changeSet(output);
+        change->scaleSetting = 1.0;
+        QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
+        output->setChannelFactors(QVector3D(1, 1, 1));
+    }
+
     Cursors::self()->hideCursor();
 
     const auto drmPipeline = static_cast<DrmOutput *>(output)->pipeline();
     QVERIFY(drmPipeline->connector()->isWriteback());
 
-    QImage testPattern{QSize(256, 256), QImage::Format_ARGB32_Premultiplied};
-    for (int x = 0; x < testPattern.width(); x++) {
-        for (int y = 0; y < testPattern.height(); y++) {
-            testPattern.setPixel(x, y, qRgba(x, y, (x + y) / 2, 255));
-        }
-    }
+    const auto testPattern = generateTestPattern();
     Test::XdgToplevelWindow window;
     QVERIFY(window.show(testPattern));
     window.m_window->move(output->position());
@@ -781,8 +804,6 @@ void DrmTest::testNightLight()
     });
     pipeline.add(ColorPipeline::create(dst, encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation));
 
-    QImage comparison{QSize(256, 256), QImage::Format_ARGB32_Premultiplied};
-
     float maxError = 0;
     for (int x = 0; x < testPattern.width(); x++) {
         for (int y = 0; y < testPattern.height(); y++) {
@@ -792,12 +813,292 @@ void DrmTest::testNightLight()
             const QVector3D rounded{std::round(evaluated.x()), std::round(evaluated.y()), std::round(evaluated.z())};
             const QVector3D fb(qRed(map.image()->pixel(x, y)), qGreen(map.image()->pixel(x, y)), qBlue(map.image()->pixel(x, y)));
             maxError = std::max(maxError, (rounded - fb).length());
-            comparison.setPixel(x, y, qRgba(rounded.x(), rounded.y(), rounded.z(), 255));
         }
     }
 
     qWarning() << "max error:" << maxError;
     QCOMPARE_LE(maxError, maxAcceptedError);
+}
+
+class ImageDescription : public QObject, public QtWayland::wp_image_description_v1
+{
+    Q_OBJECT
+public:
+    explicit ImageDescription(::wp_image_description_v1 *descr)
+        : QtWayland::wp_image_description_v1(descr)
+    {
+    }
+
+    ~ImageDescription() override
+    {
+        wp_image_description_v1_destroy(object());
+    }
+
+    void wp_image_description_v1_ready(uint32_t identity) override
+    {
+        Q_EMIT ready();
+    }
+
+    void wp_image_description_v1_failed(uint32_t cause, const QString &msg) override
+    {
+        Q_EMIT failed();
+    }
+
+Q_SIGNALS:
+    void ready();
+    void failed();
+};
+
+class ColorManagementSurface : public QObject, public QtWayland::wp_color_management_surface_v1
+{
+    Q_OBJECT
+public:
+    explicit ColorManagementSurface(::wp_color_management_surface_v1 *obj)
+        : QtWayland::wp_color_management_surface_v1(obj)
+    {
+    }
+
+    ~ColorManagementSurface() override
+    {
+        wp_color_management_surface_v1_destroy(object());
+    }
+};
+
+static ImageDescription createImageDescription(ColorManagementSurface *surface, const ColorDescription &color)
+{
+    QtWayland::wp_image_description_creator_params_v1 creator(Test::colorManager()->create_parametric_creator());
+
+    creator.set_primaries(std::round(1'000'000.0 * color.containerColorimetry().red().toxyY().x),
+                          std::round(1'000'000.0 * color.containerColorimetry().red().toxyY().y),
+                          std::round(1'000'000.0 * color.containerColorimetry().green().toxyY().x),
+                          std::round(1'000'000.0 * color.containerColorimetry().green().toxyY().y),
+                          std::round(1'000'000.0 * color.containerColorimetry().blue().toxyY().x),
+                          std::round(1'000'000.0 * color.containerColorimetry().blue().toxyY().y),
+                          std::round(1'000'000.0 * color.containerColorimetry().white().toxyY().x),
+                          std::round(1'000'000.0 * color.containerColorimetry().white().toxyY().y));
+    switch (color.transferFunction().type) {
+    case TransferFunction::sRGB:
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_COMPOUND_POWER_2_4);
+        break;
+    case TransferFunction::gamma22:
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_GAMMA22);
+        break;
+    case TransferFunction::linear:
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_EXT_LINEAR);
+        break;
+    case TransferFunction::PerceptualQuantizer:
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_ST2084_PQ);
+        break;
+    case TransferFunction::BT1886:
+        creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_BT1886);
+        break;
+    }
+    creator.set_luminances(std::round(color.transferFunction().minLuminance * 10'000), std::round(color.transferFunction().maxLuminance), std::round(color.referenceLuminance()));
+    creator.set_max_fall(std::round(color.maxAverageLuminance().value_or(0)));
+    creator.set_max_cll(std::round(color.maxHdrLuminance().value_or(0)));
+    creator.set_mastering_luminance(std::round(color.minLuminance() * 10'000), std::round(color.maxHdrLuminance().value_or(0)));
+
+    return ImageDescription(wp_image_description_creator_params_v1_create(creator.object()));
+}
+
+void DrmTest::testICCProfiles_data()
+{
+    QTest::addColumn<QString>("iccProfilePath");
+    QTest::addColumn<QString>("lcmsIccProfilePath");
+    QTest::addColumn<RenderingIntent>("intent");
+    QTest::addColumn<uint32_t>("lcmsIntent");
+    QTest::addColumn<BackendOutput::ColorPowerTradeoff>("colorPowerTradeoff");
+    QTest::addColumn<int>("maxAllowedError");
+
+    const auto F13 = QFINDTESTDATA("../data/Framework 13.icc");
+    const auto Samsung = QFINDTESTDATA("../data/Samsung CRG49 Shaper Matrix.icc");
+
+    // TODO find out why "prefer efficiency" makes such a large difference with this profile
+    QTest::addRow("Framework 13 Prefer Efficiency") << F13 << F13
+                                                    << RenderingIntent::RelativeColorimetric << uint32_t(INTENT_RELATIVE_COLORIMETRIC)
+                                                    << BackendOutput::ColorPowerTradeoff::PreferEfficiency
+                                                    << 20;
+    QTest::addRow("Framework 13 Prefer Accuracy") << F13 << F13
+                                                  << RenderingIntent::RelativeColorimetric << uint32_t(INTENT_RELATIVE_COLORIMETRIC)
+                                                  << BackendOutput::ColorPowerTradeoff::PreferAccuracy
+                                                  << 4;
+    QTest::addRow("Framework 13 Prefer Accuracy Absolute Colorimetric") << F13 << F13
+                                                                        << RenderingIntent::AbsoluteColorimetricNoAdaptation << uint32_t(INTENT_ABSOLUTE_COLORIMETRIC)
+                                                                        << BackendOutput::ColorPowerTradeoff::PreferAccuracy
+                                                                        << 4;
+
+    QTest::addRow("Samsung CRG49") << Samsung << Samsung
+                                   << RenderingIntent::RelativeColorimetric << uint32_t(INTENT_RELATIVE_COLORIMETRIC)
+                                   << BackendOutput::ColorPowerTradeoff::PreferEfficiency
+                                   << 2;
+
+    // NOTE that LCMS doesn't apply the MHC2 tag, so we compare with the native profile instead
+    // The margin for error has to be a bit higher because of that
+    QTest::addRow("HP with MHC2") << QFINDTESTDATA("../data/HP 'sRGB' profile with MHC2.icc") << QFINDTESTDATA("../data/HP 'Native' profile.icc")
+                                  << RenderingIntent::RelativeColorimetric << uint32_t(INTENT_RELATIVE_COLORIMETRIC)
+                                  << BackendOutput::ColorPowerTradeoff::PreferAccuracy
+                                  << 7;
+}
+
+void DrmTest::testICCProfiles()
+{
+    QFETCH(QString, iccProfilePath);
+    QFETCH(QString, lcmsIccProfilePath);
+    QFETCH(RenderingIntent, intent);
+    QFETCH(uint32_t, lcmsIntent);
+    QFETCH(BackendOutput::ColorPowerTradeoff, colorPowerTradeoff);
+    QFETCH(int, maxAllowedError);
+
+    const auto backend = static_cast<DrmBackend *>(kwinApp()->outputBackend());
+    const auto gpu = backend->primaryGpu();
+    if (!gpu->hasWriteback()) {
+        QSKIP("Can't test color management without a writeback connector");
+    }
+    gpu->setWritebackConnectorsOnly(true);
+    backend->updateOutputs();
+    BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
+
+    const std::shared_ptr<IccProfile> profile = IccProfile::load(iccProfilePath).value_or(nullptr);
+    QVERIFY(profile);
+
+    // using the native gamut of the profile means we
+    // - actually test larger parts of the gamut
+    // - don't need to special case out-of-gamut values, which we handle differently from LCMS atm
+    const double maxLuminance = profile->maxFALL().value_or(200);
+    const double minLuminance = profile->relativeBlackPoint().value_or(0) * maxLuminance;
+    const auto imageColorspace = std::make_shared<ColorDescription>(ColorDescription{
+        profile->colorimetry(),
+        TransferFunction{
+            TransferFunction::gamma22,
+            minLuminance,
+            maxLuminance,
+        },
+        maxLuminance,
+        minLuminance,
+        maxLuminance,
+        maxLuminance,
+    });
+
+    {
+        OutputConfiguration config;
+        const auto change = config.changeSet(output);
+        change->iccProfilePath = iccProfilePath;
+        change->iccProfile = profile;
+        change->colorProfileSource = BackendOutput::ColorProfileSource::ICC;
+        change->colorPowerTradeoff = colorPowerTradeoff;
+        QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
+    }
+
+    const auto testPattern = generateTestPattern();
+    Test::XdgToplevelWindow window;
+    ColorManagementSurface cmSurf(Test::colorManager()->get_surface(*window.m_surface));
+    auto imageDescription = createImageDescription(&cmSurf, *imageColorspace);
+    uint32_t waylandRenderIntent;
+    switch (intent) {
+    case RenderingIntent::Perceptual:
+        waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL;
+        break;
+    case RenderingIntent::RelativeColorimetric:
+        waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_RELATIVE;
+        break;
+    case RenderingIntent::RelativeColorimetricWithBPC:
+        waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_RELATIVE_BPC;
+        break;
+    case RenderingIntent::AbsoluteColorimetricNoAdaptation:
+        waylandRenderIntent = WP_COLOR_MANAGER_V1_RENDER_INTENT_ABSOLUTE_NO_ADAPTATION;
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
+    cmSurf.set_image_description(imageDescription.object(), waylandRenderIntent);
+    QVERIFY(window.show(testPattern));
+    window.m_window->move(output->position());
+
+    QImage lcmsResult(testPattern.width(), testPattern.height(), QImage::Format_RGBA8888_Premultiplied);
+    {
+        // by default, LCMS uses adaption state 1.0 for absolute colorimetric,
+        // also known as relative colorimetric... we don't want that
+        cmsSetAdaptationState(0);
+
+        const auto toCmsxyY = [](const xyY &primary) {
+            return cmsCIExyY{
+                .x = primary.x,
+                .y = primary.y,
+                .Y = primary.Y,
+            };
+        };
+        const cmsCIExyY imageWhite = toCmsxyY(imageColorspace->containerColorimetry().white().toxyY());
+        const cmsCIExyYTRIPLE imagePrimaries{
+            .Red = toCmsxyY(imageColorspace->containerColorimetry().red().toxyY()),
+            .Green = toCmsxyY(imageColorspace->containerColorimetry().green().toxyY()),
+            .Blue = toCmsxyY(imageColorspace->containerColorimetry().blue().toxyY()),
+        };
+        // parametric curve 6 is Y = (a * X + b) ^ gamma + c
+        // Y and X are normalized, so c must be the relative black level lift
+        // b is zero, so it can be simplified to Y = a^gamma * X^gamma + c
+        // Y(1.0) = 1.0, so a = ((max - min) / max) ^ (1/gamma)
+        // or a = (1.0 - min / max) ^ (1 / gamma)
+        const std::array<double, 10> params = {
+            2.2, // gamma
+            std::pow(1.0 - imageColorspace->transferFunction().minLuminance / imageColorspace->transferFunction().maxLuminance, 1.0 / 2.2), // a
+            0, // b
+            imageColorspace->transferFunction().minLuminance / imageColorspace->transferFunction().maxLuminance, // c
+        };
+        const std::array toneCurves = {
+            cmsBuildParametricToneCurve(nullptr, 6, params.data()),
+            cmsBuildParametricToneCurve(nullptr, 6, params.data()),
+            cmsBuildParametricToneCurve(nullptr, 6, params.data()),
+        };
+        // note that we can't just use cmsCreate_sRGBProfile here
+        // as that uses the sRGB piece-wise transfer function, which is not correct for our use case
+        cmsHPROFILE sRGBHandle = cmsCreateRGBProfile(&imageWhite, &imagePrimaries, toneCurves.data());
+
+        cmsHPROFILE handle = cmsOpenProfileFromFile(lcmsIccProfilePath.toUtf8(), "r");
+        QVERIFY(handle);
+
+        const auto transform = cmsCreateTransform(sRGBHandle, TYPE_RGB_8, handle, TYPE_RGB_8, lcmsIntent, cmsFLAGS_NOOPTIMIZE);
+        QVERIFY(transform);
+
+        for (int x = 0; x < testPattern.width(); x++) {
+            for (int y = 0; y < testPattern.height(); y++) {
+                const auto pixel = testPattern.pixel(x, y);
+                std::array<uint8_t, 3> in = {
+                    uint8_t(qRed(pixel)),
+                    uint8_t(qGreen(pixel)),
+                    uint8_t(qBlue(pixel)),
+                };
+                std::array<uint8_t, 3> out = {0, 0, 0};
+                cmsDoTransform(transform, in.data(), out.data(), 1);
+                lcmsResult.setPixel(x, y, qRgba(out[0], out[1], out[2], 255));
+            }
+        }
+        cmsDeleteTransform(transform);
+        cmsCloseProfile(sRGBHandle);
+        cmsCloseProfile(handle);
+    }
+
+    const auto drmPipeline = static_cast<DrmOutput *>(output)->pipeline();
+    QVERIFY(drmPipeline->connector()->isWriteback());
+
+    drmPipeline->setWriteback(true);
+    QVERIFY(window.presentWait());
+    drmPipeline->setWriteback(false);
+
+    const auto framebuffer = drmPipeline->writebackBuffer();
+    GraphicsBufferView map(framebuffer->buffer());
+
+    float maxError = 0;
+    for (int x = 0; x < testPattern.width(); x++) {
+        for (int y = 0; y < testPattern.height(); y++) {
+            const auto pixel = lcmsResult.pixel(x, y);
+            const QVector3D lcms = QVector3D(qRed(pixel), qGreen(pixel), qBlue(pixel));
+            const QVector3D display(qRed(map.image()->pixel(x, y)), qGreen(map.image()->pixel(x, y)), qBlue(map.image()->pixel(x, y)));
+            maxError = std::max(maxError, (lcms - display).length());
+        }
+    }
+
+    qWarning() << "maxError:" << maxError;
+    QCOMPARE_LE(maxError, maxAllowedError);
 }
 }
 
