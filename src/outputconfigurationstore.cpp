@@ -158,11 +158,11 @@ void OutputConfigurationStore::applyMirroring(OutputConfiguration &config, const
     }
 }
 
-std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<BackendOutput *, size_t>>> OutputConfigurationStore::findSetup(const QList<BackendOutput *> &outputs, bool lidClosed)
+std::optional<OutputConfigurationStore::SetupWithOutputs> OutputConfigurationStore::findSetup(const QList<BackendOutput *> &outputs, bool lidClosed)
 {
     std::unordered_map<BackendOutput *, size_t> outputStates;
     for (BackendOutput *output : outputs) {
-        if (auto opt = findOutput(output, outputs)) {
+        if (auto opt = findOutputIndex(output, outputs)) {
             outputStates[output] = *opt;
         } else {
             return std::nullopt;
@@ -181,11 +181,14 @@ std::optional<std::pair<OutputConfigurationStore::Setup *, std::unordered_map<Ba
     if (setup == m_setups.end()) {
         return std::nullopt;
     } else {
-        return std::make_pair(&(*setup), outputStates);
+        return SetupWithOutputs{
+            .setup = &*setup,
+            .globalOutputIndices = outputStates,
+        };
     }
 }
 
-std::optional<size_t> OutputConfigurationStore::findOutput(BackendOutput *output, const QList<BackendOutput *> &allOutputs) const
+std::optional<size_t> OutputConfigurationStore::findOutputIndex(BackendOutput *output, const QList<BackendOutput *> &allOutputs) const
 {
     struct Properties
     {
@@ -298,14 +301,14 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
     const auto opt = findSetup(relevantOutputs, isLidClosed);
     Setup *setup = nullptr;
     if (opt) {
-        setup = opt->first;
+        setup = opt->setup;
     } else {
         m_setups.push_back(Setup{});
         setup = &m_setups.back();
         setup->lidClosed = isLidClosed;
     }
     for (BackendOutput *output : relevantOutputs) {
-        auto outputIndex = findOutput(output, allOutputs);
+        auto outputIndex = findOutputIndex(output, allOutputs);
         Q_ASSERT(outputIndex.has_value());
         auto outputIt = std::find_if(setup->outputs.begin(), setup->outputs.end(), [outputIndex](const auto &output) {
             return output.outputIndex == outputIndex;
@@ -503,7 +506,7 @@ std::optional<OutputConfiguration> OutputConfigurationStore::generateLidClosedCo
         return std::nullopt;
     }
     BackendOutput *const internalOutput = *internalIt;
-    auto config = setupToConfig(setup->first, setup->second);
+    auto config = setupToConfig(setup->setup, setup->globalOutputIndices);
     auto internalChangeset = config.changeSet(internalOutput);
     if (!internalChangeset->enabled.value_or(internalOutput->isEnabled())) {
         return config;
@@ -554,6 +557,47 @@ std::optional<OutputConfiguration> OutputConfigurationStore::generateLidClosedCo
     return config;
 }
 
+std::optional<OutputConfigurationStore::SetupWithOutputs> OutputConfigurationStore::findPartialSetup(const QList<BackendOutput *> &outputs, bool lidClosed)
+{
+    std::unordered_map<BackendOutput *, size_t> outputStates;
+    for (BackendOutput *output : outputs) {
+        if (auto index = findOutputIndex(output, outputs)) {
+            outputStates[output] = *index;
+        }
+    }
+    const auto matchCount = [lidClosed, &outputStates](const Setup &setup) -> size_t {
+        if (setup.lidClosed != lidClosed) {
+            return 0;
+        }
+        // Skip the setup if it contains outputs that aren't currently connected
+        const bool otherOutputs = std::ranges::any_of(setup.outputs, [&](const SetupState &state) {
+            return std::ranges::none_of(outputStates, [&state](const auto &outputIt) {
+                return outputIt.second == state.outputIndex;
+            });
+        });
+        if (otherOutputs) {
+            return 0;
+        }
+        // now just count how many outputs are relevant
+        return std::ranges::count_if(outputStates, [&setup](const auto &outputIt) {
+            return std::ranges::any_of(setup.outputs, [&outputIt](const auto &outputInfo) {
+                return outputInfo.outputIndex == outputIt.second;
+            });
+        });
+    };
+    const auto bestSetup = std::ranges::max_element(m_setups, [&](const auto &left, const auto &right) {
+        return matchCount(left) < matchCount(right);
+    });
+    if (bestSetup == m_setups.end() || matchCount(*bestSetup) == 0) {
+        return std::nullopt;
+    } else {
+        return SetupWithOutputs{
+            .setup = &*bestSetup,
+            .globalOutputIndices = outputStates,
+        };
+    }
+}
+
 OutputConfiguration OutputConfigurationStore::generateConfig(const QList<BackendOutput *> &outputs, bool isLidClosed)
 {
     qCDebug(KWIN_OUTPUT_CONFIG, "Generating new config for %lld outputs", outputs.size());
@@ -562,15 +606,38 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             return *closedConfig;
         }
     }
+    const auto closestSetup = findPartialSetup(outputs, isLidClosed);
     const auto kscreenConfig = KScreenIntegration::readOutputConfig(outputs, KScreenIntegration::connectedOutputsHash(outputs, isLidClosed));
     OutputConfiguration ret;
-    QPoint pos(0, 0);
+    QPoint rightMostPosition(0, 0);
     int priority = 0;
-    for (const auto output : outputs) {
+
+    QList<BackendOutput *> sortedOutputs = outputs;
+    if (closestSetup.has_value()) {
+        // place outputs we already have settings for first
+        std::ranges::partition(sortedOutputs, [&closestSetup](BackendOutput *output) {
+            return closestSetup->globalOutputIndices.contains(output);
+        });
+    }
+    for (BackendOutput *output : sortedOutputs) {
         const auto kscreenChangeSetPtr = kscreenConfig ? kscreenConfig->constChangeSet(output) : nullptr;
         const auto kscreenChangeSet = kscreenChangeSetPtr ? *kscreenChangeSetPtr : OutputChangeSet{};
 
-        const auto outputIndex = findOutput(output, outputs);
+        std::optional<SetupState> setupState;
+        if (closestSetup.has_value()) {
+            const auto indexIt = closestSetup->globalOutputIndices.find(output);
+            if (indexIt != closestSetup->globalOutputIndices.end()) {
+                const auto &[output, index] = *indexIt;
+                for (const SetupState &state : closestSetup->setup->outputs) {
+                    if (state.outputIndex == index) {
+                        setupState = state;
+                        break;
+                    }
+                }
+            }
+        }
+
+        const auto outputIndex = findOutputIndex(output, outputs);
         const bool enable = kscreenChangeSet.enabled.value_or(!isLidClosed || !output->isInternal() || outputs.size() == 1);
         const OutputState existingData = outputIndex ? m_outputs[*outputIndex] : OutputState{};
 
@@ -587,8 +654,8 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .mode = mode,
             .desiredModeSize = mode->size(),
             .desiredModeRefreshRate = mode->refreshRate(),
-            .enabled = kscreenChangeSet.enabled.value_or(enable),
-            .pos = pos,
+            .enabled = setupState ? setupState->enabled : enable,
+            .pos = setupState ? setupState->position : rightMostPosition,
             // kscreen scale is unreliable because it gets overwritten with the value 1 on Xorg,
             // and we don't know if it's from Xorg or the 5.27 Wayland session... so just ignore it
             .scaleSetting = existingData.scaleSetting.value_or(chooseScale(output, mode.get())),
@@ -611,15 +678,22 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .maxBitsPerColor = existingData.maxBitsPerColor,
             .edrPolicy = existingData.edrPolicy.value_or(BackendOutput::EdrPolicy::Always),
             .sharpness = existingData.sharpness.value_or(0),
-            .priority = priority,
+            .priority = setupState ? setupState->priority : priority,
             .automaticBrightness = existingData.automaticBrightness.value_or(false),
             // TODO generate a more fitting brightness map per screen?
             .autoBrightnessCurve = existingData.autoBrightnessCurve,
         };
-        priority++;
-        if (enable) {
+        if (setupState) {
+            priority = std::max(setupState->priority + 1, priority);
+        } else {
+            priority++;
+        }
+        if (*changeset->enabled) {
             const auto modeSize = changeset->transform->map(mode->size());
-            pos.setX(std::ceil(pos.x() + modeSize.width() / *changeset->scaleSetting));
+            const QPoint topRight = QPoint(std::ceil(changeset->pos->x() + modeSize.width() / *changeset->scaleSetting), changeset->pos->y());
+            if (topRight.x() > rightMostPosition.x() || (topRight.x() == rightMostPosition.x() && topRight.y() < rightMostPosition.y())) {
+                rightMostPosition = topRight;
+            }
         }
     }
     return ret;
@@ -774,7 +848,7 @@ void OutputConfigurationStore::registerOutputs(const QList<BackendOutput *> &out
         if (output->isNonDesktop() || output->isPlaceholder()) {
             continue;
         }
-        auto index = findOutput(output, outputs);
+        auto index = findOutputIndex(output, outputs);
         if (!index) {
             index = m_outputs.size();
             m_outputs.push_back(OutputState{});

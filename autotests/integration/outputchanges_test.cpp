@@ -6,6 +6,7 @@
 
 #include "kwin_wayland_test.h"
 
+#include "backends/virtual/virtual_backend.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
@@ -132,6 +133,7 @@ private Q_SLOTS:
     void testLaptopLidClosed();
     void testGenerateConfigs_data();
     void testGenerateConfigs();
+    void testGeneratePartialConfigs();
     void testAutorotate_data();
     void testAutorotate();
     void testSettingRestoration_data();
@@ -154,6 +156,10 @@ void OutputChangesTest::initTestCase()
     qRegisterMetaType<Window *>();
 
     QVERIFY(waylandServer()->init(s_socketName));
+
+    // delete the previous output config, to avoid previous runs messing with this one
+    // TODO reset it per test function instead?
+    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
 
     kwinApp()->start();
     Test::setOutputConfig({
@@ -1559,6 +1565,77 @@ void OutputChangesTest::testGenerateConfigs()
 
     QFETCH(bool, defaultDDCValue);
     QCOMPARE(*outputConfig->allowDdcCi, defaultDDCValue);
+}
+
+void OutputChangesTest::testGeneratePartialConfigs()
+{
+    // This test verifies that adding an output to an existing configuration
+    // keeps some properties of that configuration (position, priority)
+    // instead of generating a completely new one
+
+    // TODO change test API so it's possible to add outputs without also configuring them
+    const auto outputBackend = qobject_cast<VirtualBackend *>(kwinApp()->outputBackend());
+    outputBackend->setVirtualOutputs({
+        VirtualBackend::OutputInfo{
+            .geometry = Rect(0, 0, 1920, 1080),
+            .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
+            .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+        },
+        VirtualBackend::OutputInfo{
+            .geometry = Rect(0, 0, 1920, 1080),
+            .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
+            .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
+        },
+    });
+    auto outputs = kwinApp()->outputBackend()->outputs();
+
+    // workspace should have the outputs configured to be next to each other,
+    // with default priority in the order of the outputs
+    QCOMPARE(outputs[0]->position(), QPoint(0, 0));
+    QCOMPARE(outputs[0]->priority(), 0);
+    QCOMPARE(outputs[1]->position(), QPoint(1920, 0));
+    QCOMPARE(outputs[1]->priority(), 1);
+
+    {
+        // change the priority values and positions
+        OutputConfiguration config;
+        *config.changeSet(outputs[0]) = OutputChangeSet{
+            .pos = QPoint(0, 1080),
+            .priority = 1,
+        };
+        *config.changeSet(outputs[1]) = OutputChangeSet{
+            .pos = QPoint(500, 0),
+            .priority = 0,
+        };
+        QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
+    }
+
+    // now add another output
+    outputBackend->setVirtualOutputs({
+        VirtualBackend::OutputInfo{
+            .geometry = Rect(0, 0, 1920, 1080),
+            .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
+            .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+        },
+        VirtualBackend::OutputInfo{
+            .geometry = Rect(0, 0, 1920, 1080),
+            .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
+            .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
+        },
+        VirtualBackend::OutputInfo{
+            .geometry = Rect(0, 0, 1920, 1080),
+        },
+    });
+    outputs = kwinApp()->outputBackend()->outputs();
+
+    // position and priority should still be what we applied before
+    QCOMPARE(outputs[0]->position(), QPoint(0, 1080));
+    QCOMPARE(outputs[0]->priority(), 1);
+    QCOMPARE(outputs[1]->position(), QPoint(500, 0));
+    QCOMPARE(outputs[1]->priority(), 0);
+    // the new output should also have sane default values
+    QCOMPARE(outputs[2]->position(), QPoint(2420, 0));
+    QCOMPARE(outputs[2]->priority(), 2);
 }
 
 void OutputChangesTest::testAutorotate_data()
