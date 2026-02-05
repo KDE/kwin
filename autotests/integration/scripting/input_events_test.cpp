@@ -9,11 +9,14 @@
 
 #include "kwin_wayland_test.h"
 
+#include "input.h"
+#include "pointer_input.h"
 #include "scripting/scripting.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
 #include <KWayland/Client/seat.h>
+#include <QQmlContext>
 
 #include <linux/input-event-codes.h>
 
