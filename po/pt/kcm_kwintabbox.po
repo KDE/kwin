@@ -54,7 +54,7 @@ msgstr "KMail"
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
-msgstr "Definições de Sistema"
+msgstr "Definições do Sistema"
 
 #: layoutpreview.cpp:177
 #, kde-format
