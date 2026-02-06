@@ -778,6 +778,11 @@ BackendOutput::BrightnessReason BackendOutput::lastBrightnessAdjustmentReason() 
     return m_state.lastBrightnessAdjustmentReason;
 }
 
+QList<CustomModeDefinition> BackendOutput::customModes() const
+{
+    return m_state.customModes;
+}
+
 } // namespace KWin
 
 #include "moc_backendoutput.cpp"

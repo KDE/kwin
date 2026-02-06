@@ -313,6 +313,7 @@ public:
     const AutoBrightnessCurve &autoBrightnessCurve() const;
     bool automaticBrightness() const;
     BrightnessReason lastBrightnessAdjustmentReason() const;
+    QList<CustomModeDefinition> customModes() const;
 
     /**
      * The setting for the scale factor, which may differ from scale
