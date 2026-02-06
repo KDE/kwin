@@ -33,6 +33,7 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize 
         .name = connectorName.value_or(QStringLiteral("Virtual-%1").arg(identifier)),
         .physicalSize = physicalSizeInMM,
         .edid = Edid{edid, edidIdentifierOverride},
+        .capabilities = Capability::CustomModes,
         .panelOrientation = panelOrientation,
         .internal = internal,
         .mstPath = mstPath.value_or(QByteArray()),
@@ -106,6 +107,22 @@ void VirtualOutput::applyChanges(const OutputConfiguration &config)
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
     next.priority = props->priority.value_or(m_state.priority);
     next.deviceOffset = props->deviceOffset.value_or(m_state.deviceOffset);
+    if (props->customModes.has_value()) {
+        next.customModes = *props->customModes;
+
+        QList<std::shared_ptr<OutputMode>> newModes;
+        for (const auto &mode : next.modes) {
+            if (mode->flags() & OutputMode::Flag::Custom) {
+                continue;
+            }
+            newModes.push_back(mode);
+        }
+        for (const auto &custom : next.customModes) {
+            newModes.push_back(std::make_shared<OutputMode>(custom.size, custom.refreshRate, custom.flags | OutputMode::Flag::Custom));
+        }
+        next.modes = newModes;
+    }
+
     setState(next);
     m_renderLoop->setRefreshRate(next.currentMode->refreshRate());
     m_vsyncMonitor->setRefreshRate(next.currentMode->refreshRate());
