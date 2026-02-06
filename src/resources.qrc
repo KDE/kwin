@@ -5,9 +5,9 @@
   <file>opengl/icc_core.frag</file>
   <file>opengl/saturation.glsl</file>
   <file>opengl/sdf.glsl</file>
-  <file>scene/shaders/debug_fractional.frag</file>
-  <file>scene/shaders/debug_fractional.vert</file>
-  <file>scene/shaders/debug_fractional_core.frag</file>
-  <file>scene/shaders/debug_fractional_core.vert</file>
+  <file>scene/opengl/shaders/debug_fractional.frag</file>
+  <file>scene/opengl/shaders/debug_fractional.vert</file>
+  <file>scene/opengl/shaders/debug_fractional_core.frag</file>
+  <file>scene/opengl/shaders/debug_fractional_core.vert</file>
 </qresource>
 </RCC>

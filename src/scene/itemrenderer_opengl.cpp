@@ -541,8 +541,8 @@ void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, con
     if (!m_debug.fractionalShader) {
         m_debug.fractionalShader = ShaderManager::instance()->generateShaderFromFile(
             ShaderTrait::MapTexture,
-            QStringLiteral(":/scene/shaders/debug_fractional.vert"),
-            QStringLiteral(":/scene/shaders/debug_fractional.frag"));
+            QStringLiteral(":/scene/opengl/shaders/debug_fractional.vert"),
+            QStringLiteral(":/scene/opengl/shaders/debug_fractional.frag"));
     }
 
     if (!m_debug.fractionalShader) {
