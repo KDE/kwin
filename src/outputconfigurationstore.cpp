@@ -361,6 +361,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                 .maxBitsPerColor = changeSet->maxBitsPerColor.value_or(output->maxBitsPerColor()),
                 .edrPolicy = changeSet->edrPolicy.value_or(output->edrPolicy()),
                 .sharpness = changeSet->sharpness.value_or(output->sharpnessSetting()),
+                .customModes = changeSet->customModes.value_or(output->customModes()),
                 .automaticBrightness = changeSet->automaticBrightness.value_or(output->automaticBrightness()),
                 .autoBrightnessCurve = changeSet->autoBrightnessCurve.value_or(output->autoBrightnessCurve()),
             };
@@ -414,6 +415,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                 .maxBitsPerColor = output->maxBitsPerColor(),
                 .edrPolicy = output->edrPolicy(),
                 .sharpness = output->sharpnessSetting(),
+                .customModes = output->customModes(),
                 .automaticBrightness = output->automaticBrightness(),
                 .autoBrightnessCurve = output->autoBrightnessCurve(),
             };
@@ -486,6 +488,7 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
             .edrPolicy = state.edrPolicy,
             .sharpness = state.sharpness,
             .priority = setupState.priority,
+            .customModes = state.customModes,
             .automaticBrightness = state.automaticBrightness,
             .autoBrightnessCurve = state.autoBrightnessCurve,
         };
@@ -679,6 +682,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .edrPolicy = existingData.edrPolicy.value_or(BackendOutput::EdrPolicy::Always),
             .sharpness = existingData.sharpness.value_or(0),
             .priority = setupState ? setupState->priority : priority,
+            .customModes = existingData.customModes,
             .automaticBrightness = existingData.automaticBrightness.value_or(false),
             // TODO generate a more fitting brightness map per screen?
             .autoBrightnessCurve = existingData.autoBrightnessCurve,
