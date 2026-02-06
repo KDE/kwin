@@ -275,7 +275,10 @@ bool GLVertexBufferPrivate::awaitFence(intptr_t end)
         fences.pop_front();
     }
 
-    Q_ASSERT(!fences.empty());
+    // We may end up with no fences if a graphics reset occurs.
+    if (fences.empty()) {
+        return false;
+    }
 
     // Wait on the next fence
     const BufferFence &fence = fences.front();
