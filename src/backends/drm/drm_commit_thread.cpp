@@ -138,6 +138,15 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
     m_thread->start();
 }
 
+static std::unique_ptr<DrmAtomicCommit> mergeCommits(std::span<const std::unique_ptr<DrmAtomicCommit>> commits)
+{
+    auto ret = std::make_unique<DrmAtomicCommit>(*commits.front());
+    for (const auto &onTop : commits.subspan(1)) {
+        ret->merge(onTop.get());
+    }
+    return ret;
+}
+
 void DrmCommitThread::submit()
 {
     DrmAtomicCommit *commit = m_commits.front().get();
@@ -173,13 +182,11 @@ void DrmCommitThread::submit()
         if (m_commits.size() > 1) {
             // the failure may have been because of the reordering of commits
             // -> collapse all commits into one and try again with an already tested state
-            while (m_commits.size() > 1) {
-                auto toMerge = std::move(m_commits[1]);
-                m_commits.erase(m_commits.begin() + 1);
-                commit->merge(toMerge.get());
-                m_commitsToDelete.push_back(std::move(toMerge));
-            }
-            if (commit->test()) {
+            auto newCommit = mergeCommits(m_commits);
+            std::ranges::move(m_commits, std::back_inserter(m_commitsToDelete));
+            m_commits.clear();
+            m_commits.push_back(std::move(newCommit));
+            if (m_commits.front()->test()) {
                 // presentation didn't fail after all, try again
                 submit();
                 return;
@@ -192,15 +199,6 @@ void DrmCommitThread::submit()
         qCWarning(KWIN_DRM) << "atomic commit failed:" << strerror(errno);
     }
     QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);
-}
-
-static std::unique_ptr<DrmAtomicCommit> mergeCommits(std::span<const std::unique_ptr<DrmAtomicCommit>> commits)
-{
-    auto ret = std::make_unique<DrmAtomicCommit>(*commits.front());
-    for (const auto &onTop : commits.subspan(1)) {
-        ret->merge(onTop.get());
-    }
-    return ret;
 }
 
 void DrmCommitThread::optimizeCommits(TimePoint pageflipTarget)
