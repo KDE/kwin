@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-30 00:45+0000\n"
+"POT-Creation-Date: 2026-02-06 00:46+0000\n"
 "PO-Revision-Date: 2026-02-03 23:54+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -72,7 +72,7 @@ msgstr "오른쪽 Ctrl 키를 누르면 입력을 잡음"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 컴포지터"
 
-#: compositor.cpp:610
+#: compositor.cpp:604
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "그래픽 초기화로 인하여 데스크톱 효과가 다시 시작됨"
