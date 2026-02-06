@@ -307,18 +307,19 @@ GLvoid *GLVertexBufferPrivate::getIdleRange(size_t size)
 
     // Handle wrap-around
     if ((nextOffset + size > bufferSize)) {
-        nextOffset = 0;
-        bufferEnd -= bufferSize;
-
-        for (BufferFence &fence : fences) {
-            fence.nextEnd -= bufferSize;
-        }
-
-        // Emit a fence now
         if (auto sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0)) {
+            nextOffset = 0;
+            bufferEnd -= bufferSize;
+
+            for (BufferFence &fence : fences) {
+                fence.nextEnd -= bufferSize;
+            }
+
             fences.push_back(BufferFence{
                 .sync = sync,
                 .nextEnd = intptr_t(bufferSize)});
+        } else {
+            return nullptr;
         }
     }
 
