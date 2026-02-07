@@ -289,6 +289,7 @@ Action=Popup
 [Event/brokentabbox]
 Name=Window Switcher Broken
 Name[ar]=مبدل النوافذ مكسور
+Name[bg]=Превключване на прозорците е повредено
 Name[ca]=Commutador de finestres trencat
 Name[ca@valencia]=Commutador de finestres trencat
 Name[es]=Selector de ventanas dañado
@@ -310,6 +311,7 @@ Name[zh_CN]=窗口切换器损坏
 Name[zh_TW]=視窗切換器已損壞
 Comment=The Window Switcher installation is broken
 Comment[ar]=تثبيت مبدل النوافذ مكسور
+Comment[bg]=Инсталацията на Превключване на прозорците е повредено
 Comment[ca]=La instal·lació del commutador de finestres està trencada
 Comment[ca@valencia]=La instal·lació del commutador de finestres està trencada
 Comment[es]=La instalación del selector de ventanas está dañada
