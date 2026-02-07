@@ -42,8 +42,7 @@ MouseClickEffectConfig::MouseClickEffectConfig(QObject *parent, const KPluginMet
     QAction *a = m_actionCollection->addAction(QStringLiteral("ToggleMouseClick"));
     a->setText(i18n("Toggle Mouse Click Animation"));
     a->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Asterisk));
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Asterisk));
+    KGlobalAccel::self()->setGlobalShortcut(a, QKeySequence(Qt::META | Qt::Key_Asterisk));
 
     m_ui.editor->addCollection(m_actionCollection);
 

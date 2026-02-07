@@ -25,13 +25,11 @@ TilesEditorEffect::TilesEditorEffect()
     connect(m_shutdownTimer.get(), &QTimer::timeout, this, &TilesEditorEffect::realDeactivate);
     connect(effects, &EffectsHandler::screenAboutToLock, this, &TilesEditorEffect::realDeactivate);
 
-    const QKeySequence defaultToggleShortcut = Qt::META | Qt::Key_T;
     m_toggleAction = std::make_unique<QAction>();
     connect(m_toggleAction.get(), &QAction::triggered, this, &TilesEditorEffect::toggle);
     m_toggleAction->setObjectName(QStringLiteral("Edit Tiles"));
     m_toggleAction->setText(i18n("Toggle Tiles Editor"));
-    KGlobalAccel::self()->setDefaultShortcut(m_toggleAction.get(), {defaultToggleShortcut});
-    KGlobalAccel::self()->setShortcut(m_toggleAction.get(), {defaultToggleShortcut});
+    KGlobalAccel::self()->setGlobalShortcut(m_toggleAction.get(), QKeySequence(Qt::META | Qt::Key_T));
     m_toggleShortcut = KGlobalAccel::self()->shortcut(m_toggleAction.get());
 
     loadFromModule(QStringLiteral("org.kde.kwin/tileseditor"), QStringLiteral("Main"));

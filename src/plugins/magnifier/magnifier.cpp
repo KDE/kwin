@@ -45,16 +45,13 @@ MagnifierEffect::MagnifierEffect()
     MagnifierConfig::instance(effects->config());
     QAction *a;
     a = KStandardActions::zoomIn(this, &MagnifierEffect::zoomIn, this);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Plus) << (Qt::META | Qt::Key_Equal));
+    KGlobalAccel::self()->setGlobalShortcut(a, QList<QKeySequence>{{Qt::META | Qt::Key_Plus}, {Qt::META | Qt::Key_Equal}});
 
     a = KStandardActions::zoomOut(this, &MagnifierEffect::zoomOut, this);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_Minus));
+    KGlobalAccel::self()->setGlobalShortcut(a, QKeySequence(Qt::META | Qt::Key_Minus));
 
     a = KStandardActions::actualSize(this, &MagnifierEffect::toggle, this);
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::META | Qt::Key_0));
+    KGlobalAccel::self()->setGlobalShortcut(a, QKeySequence(Qt::META | Qt::Key_0));
 
     m_touchpadAction = std::make_unique<QAction>();
     connect(m_touchpadAction.get(), &QAction::triggered, this, [this]() {

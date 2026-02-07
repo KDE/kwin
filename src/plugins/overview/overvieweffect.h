@@ -86,10 +86,6 @@ private:
     EffectTogglableTouchBorder *const m_gridBorder;
 
     QTimer *m_shutdownTimer;
-    QList<QKeySequence> m_cycleShortcut;
-    QList<QKeySequence> m_reverseCycleShortcut;
-    QList<QKeySequence> m_overviewShortcut;
-    QList<QKeySequence> m_gridShortcut;
     QList<ElectricBorder> m_borderActivate;
     QList<ElectricBorder> m_gridBorderActivate;
     QString m_searchText;

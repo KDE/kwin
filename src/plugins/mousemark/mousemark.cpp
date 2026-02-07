@@ -41,14 +41,12 @@ MouseMarkEffect::MouseMarkEffect()
     QAction *a = new QAction(this);
     a->setObjectName(QStringLiteral("ClearMouseMarks"));
     a->setText(i18n("Clear All Mouse Marks"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F11));
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F11));
+    KGlobalAccel::self()->setGlobalShortcut(a, QKeySequence(Qt::SHIFT | Qt::META | Qt::Key_F11));
     connect(a, &QAction::triggered, this, &MouseMarkEffect::clear);
     a = new QAction(this);
     a->setObjectName(QStringLiteral("ClearLastMouseMark"));
     a->setText(i18n("Clear Last Mouse Mark"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F12));
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F12));
+    KGlobalAccel::self()->setGlobalShortcut(a, QKeySequence(Qt::SHIFT | Qt::META | Qt::Key_F12));
     connect(a, &QAction::triggered, this, &MouseMarkEffect::clearLast);
 
     connect(effects, &EffectsHandler::mouseChanged, this, &MouseMarkEffect::slotMouseChanged);

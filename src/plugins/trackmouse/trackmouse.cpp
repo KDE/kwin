@@ -68,8 +68,7 @@ TrackMouseEffect::TrackMouseEffect()
     QAction *action = new QAction(this);
     action->setObjectName(QStringLiteral("TrackMouse"));
     action->setText(i18n("Track mouse"));
-    KGlobalAccel::self()->setDefaultShortcut(action, QList<QKeySequence>());
-    KGlobalAccel::self()->setShortcut(action, QList<QKeySequence>());
+    KGlobalAccel::self()->setGlobalShortcut(action, QList<QKeySequence>());
     connect(action, &QAction::triggered, this, &TrackMouseEffect::toggle);
 
     reconfigure(ReconfigureAll);

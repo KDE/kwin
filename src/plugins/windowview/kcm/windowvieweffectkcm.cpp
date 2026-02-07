@@ -37,32 +37,25 @@ WindowViewEffectConfig::WindowViewEffectConfig(QObject *parent, const KPluginMet
     actionCollection->setConfigGroup(QStringLiteral("windowview"));
     actionCollection->setConfigGlobal(true);
 
-    const QKeySequence defaultToggleShortcut = Qt::CTRL | Qt::Key_F9;
     QAction *toggleAction = actionCollection->addAction(QStringLiteral("Expose"));
     toggleAction->setText(i18n("Toggle Present Windows (Current desktop)"));
     toggleAction->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(toggleAction, {defaultToggleShortcut});
-    KGlobalAccel::self()->setShortcut(toggleAction, {defaultToggleShortcut});
+    KGlobalAccel::self()->setGlobalShortcut(toggleAction, QKeySequence(Qt::CTRL | Qt::Key_F9));
 
-    const QKeySequence defaultToggleShortcutAll = Qt::CTRL | Qt::Key_F10;
     toggleAction = actionCollection->addAction(QStringLiteral("ExposeAll"));
     toggleAction->setText(i18n("Toggle Present Windows (All desktops)"));
     toggleAction->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(toggleAction, {defaultToggleShortcutAll});
-    KGlobalAccel::self()->setShortcut(toggleAction, {defaultToggleShortcutAll});
+    KGlobalAccel::self()->setGlobalShortcut(toggleAction, QKeySequence(Qt::CTRL | Qt::Key_F10));
 
-    const QKeySequence defaultToggleShortcutClass = Qt::CTRL | Qt::Key_F7;
     toggleAction = actionCollection->addAction(QStringLiteral("ExposeClass"));
     toggleAction->setText(i18n("Toggle Present Windows (Window class)"));
     toggleAction->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(toggleAction, {defaultToggleShortcutClass});
-    KGlobalAccel::self()->setShortcut(toggleAction, {defaultToggleShortcutClass});
+    KGlobalAccel::self()->setGlobalShortcut(toggleAction, QKeySequence(Qt::CTRL | Qt::Key_F7));
 
     toggleAction = actionCollection->addAction(QStringLiteral("ExposeClassCurrentDesktop"));
     toggleAction->setText(i18n("Toggle Present Windows (Window class on current desktop)"));
     toggleAction->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(toggleAction, QList<QKeySequence>()); // no default shortcut
-    KGlobalAccel::self()->setShortcut(toggleAction, QList<QKeySequence>());
+    KGlobalAccel::self()->setGlobalShortcut(toggleAction, QList<QKeySequence>()); // no default shortcut
 
     ui.shortcutsEditor->addCollection(actionCollection);
     connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);

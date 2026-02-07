@@ -125,35 +125,25 @@ OverviewEffect::OverviewEffect()
     connect(cycleAction, &QAction::triggered, this, &OverviewEffect::cycle);
     cycleAction->setObjectName(QStringLiteral("Cycle Overview"));
     cycleAction->setText(i18nc("@action Grid View and Overview are the name of KWin effects", "Cycle through Overview and Grid View"));
-    KGlobalAccel::self()->setDefaultShortcut(cycleAction, {});
-    KGlobalAccel::self()->setShortcut(cycleAction, {});
-    m_cycleShortcut = KGlobalAccel::self()->shortcut(cycleAction);
+    KGlobalAccel::self()->setGlobalShortcut(cycleAction, QList<QKeySequence>{});
 
     auto reverseCycleAction = new QAction(this);
     connect(reverseCycleAction, &QAction::triggered, this, &OverviewEffect::reverseCycle);
     reverseCycleAction->setObjectName(QStringLiteral("Cycle Overview Opposite"));
     reverseCycleAction->setText(i18nc("@action Grid View and Overview are the name of KWin effects", "Cycle through Grid View and Overview"));
-    KGlobalAccel::self()->setDefaultShortcut(reverseCycleAction, {});
-    KGlobalAccel::self()->setShortcut(reverseCycleAction, {});
-    m_reverseCycleShortcut = KGlobalAccel::self()->shortcut(reverseCycleAction);
+    KGlobalAccel::self()->setGlobalShortcut(reverseCycleAction, QList<QKeySequence>{});
 
-    const QKeySequence defaultOverviewShortcut = Qt::META | Qt::Key_W;
     auto overviewAction = m_overviewState->toggleAction();
     overviewAction->setObjectName(QStringLiteral("Overview"));
     overviewAction->setText(i18nc("@action Overview is the name of a Kwin effect", "Toggle Overview"));
     overviewAction->setAutoRepeat(false);
-    KGlobalAccel::self()->setDefaultShortcut(overviewAction, {defaultOverviewShortcut});
-    KGlobalAccel::self()->setShortcut(overviewAction, {defaultOverviewShortcut});
-    m_overviewShortcut = KGlobalAccel::self()->shortcut(overviewAction);
+    KGlobalAccel::self()->setGlobalShortcut(overviewAction, QKeySequence(Qt::META | Qt::Key_W));
 
-    const QKeySequence defaultGridShortcut = Qt::META | Qt::Key_G;
     auto gridAction = m_gridState->toggleAction();
     gridAction->setObjectName(QStringLiteral("Grid View"));
     gridAction->setText(i18nc("@action Grid view is the name of a Kwin effect", "Toggle Grid View"));
     gridAction->setAutoRepeat(false);
-    KGlobalAccel::self()->setDefaultShortcut(gridAction, {defaultGridShortcut});
-    KGlobalAccel::self()->setShortcut(gridAction, {defaultGridShortcut});
-    m_gridShortcut = KGlobalAccel::self()->shortcut(gridAction);
+    KGlobalAccel::self()->setGlobalShortcut(gridAction, QKeySequence(Qt::META | Qt::Key_G));
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
 
