@@ -32,12 +32,10 @@ TilesEditorEffectConfig::TilesEditorEffectConfig(QObject *parent, const KPluginM
     actionCollection->setConfigGroup(QStringLiteral("tileseditor"));
     actionCollection->setConfigGlobal(true);
 
-    const QKeySequence defaultToggleShortcut = Qt::META | Qt::Key_T;
     QAction *toggleAction = actionCollection->addAction(QStringLiteral("Edit Tiles"));
     toggleAction->setText(i18n("Toggle Tiles Editor"));
     toggleAction->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(toggleAction, {defaultToggleShortcut});
-    KGlobalAccel::self()->setShortcut(toggleAction, {defaultToggleShortcut});
+    KGlobalAccel::self()->setGlobalShortcut(toggleAction, QKeySequence(Qt::META | Qt::Key_T));
 
     ui.shortcutsEditor->addCollection(actionCollection);
     connect(ui.shortcutsEditor, &KShortcutsEditor::keyChange, this, &KCModule::markAsChanged);

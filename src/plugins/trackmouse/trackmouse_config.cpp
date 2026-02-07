@@ -49,8 +49,7 @@ TrackMouseEffectConfig::TrackMouseEffectConfig(QObject *parent, const KPluginMet
     a->setText(i18n("Track mouse"));
     a->setProperty("isConfigurationAction", true);
 
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>());
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
+    KGlobalAccel::self()->setGlobalShortcut(a, QList<QKeySequence>());
 
     connect(m_ui.shortcut, &KKeySequenceWidget::keySequenceChanged,
             this, &TrackMouseEffectConfig::shortcutChanged);

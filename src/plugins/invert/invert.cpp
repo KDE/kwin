@@ -42,23 +42,20 @@ InvertEffect::InvertEffect()
     a->setAutoRepeat(false);
     a->setObjectName(QStringLiteral("Invert"));
     a->setText(i18n("Toggle Invert Effect"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::Key_I));
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::Key_I));
+    KGlobalAccel::self()->setGlobalShortcut(a, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_I));
     connect(a, &QAction::triggered, this, &InvertEffect::toggleScreenInversion);
 
     QAction *b = new QAction(this);
     b->setAutoRepeat(false);
     b->setObjectName(QStringLiteral("InvertWindow"));
     b->setText(i18n("Toggle Invert Effect on Window"));
-    KGlobalAccel::self()->setDefaultShortcut(b, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::Key_U));
-    KGlobalAccel::self()->setShortcut(b, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::Key_U));
+    KGlobalAccel::self()->setGlobalShortcut(b, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_U));
     connect(b, &QAction::triggered, this, &InvertEffect::toggleWindow);
 
     QAction *c = new QAction(this);
     c->setObjectName(QStringLiteral("Invert Screen Colors"));
     c->setText(i18n("Invert Screen Colors"));
-    KGlobalAccel::self()->setDefaultShortcut(c, QList<QKeySequence>());
-    KGlobalAccel::self()->setShortcut(c, QList<QKeySequence>());
+    KGlobalAccel::self()->setGlobalShortcut(c, QList<QKeySequence>());
     connect(c, &QAction::triggered, this, &InvertEffect::toggleScreenInversion);
 
     connect(effects, &EffectsHandler::windowAdded, this, &InvertEffect::slotWindowAdded);
