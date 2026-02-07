@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-28 02:43+0000\n"
-"PO-Revision-Date: 2026-02-05 16:16+0100\n"
+"PO-Revision-Date: 2026-02-06 16:50+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -87,7 +87,7 @@ msgid ""
 msgstr ""
 "Iste instrumento te  permitte assignar le thema de decoration de fenestra "
 "per le session actualmente active, sin assignar lo accidentalmente a un que "
-"o non es disponiil o que es ja assignate."
+"o non es disponibile o que es ja assignate."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
