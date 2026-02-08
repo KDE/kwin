@@ -2954,7 +2954,7 @@ msgstr "Mover rato para o centro"
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
 msgid "Total rules count (legacy)"
-msgstr "Contagem total de regras (legado)"
+msgstr "Contagem total de regras (antiga)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
 #: rulebooksettingsbase.kcfg:13
@@ -2972,7 +2972,7 @@ msgstr "Descrição da regra"
 #: rulesettings.kcfg:13
 #, kde-format
 msgid "Rule description (legacy)"
-msgstr "Descrição da regra (legado)"
+msgstr "Descrição da regra (antiga)"
 
 #. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:16

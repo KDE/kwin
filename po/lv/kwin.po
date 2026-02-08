@@ -3,7 +3,7 @@
 # kwin.po tulkojums uz Latviešu valodu
 # Copyright (C) 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
 #
-# SPDX-FileCopyrightText: 2024, 2025 Toms Trasuns <toms.trasuns@posteo.net>
+# SPDX-FileCopyrightText: 2024, 2025, 2026 Toms Trasuns <toms.trasuns@posteo.net>
 # Maris Nartiss <maris.nartiss@gmail.com>, 2005.
 # Maris Nartiss <maris.kde@gmail.com>, 2006, 2007, 2008, 2024.
 # Viesturs Zarins <viesturs.zarins@mii.lu.lv>, 2007, 2008, 2009.
@@ -13,14 +13,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-06 00:46+0000\n"
-"PO-Revision-Date: 2025-11-11 18:52+0200\n"
+"PO-Revision-Date: 2026-02-06 14:38+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.08.2\n"
+"X-Generator: Lokalize 25.12.1\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
@@ -52,26 +52,24 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE „Wayland“ kompozitors „%1“"
 
 #: backends/wayland/wayland_output.cpp:490
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- Output disabled"
-msgstr "– Izvade ir izslēgta"
+msgstr "— Izvade ir izslēgta"
 
 #: backends/wayland/wayland_output.cpp:492
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- Output dimmed"
-msgstr "– Izvade ir satumsināta"
+msgstr "— Izvade ir aptumšota"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr "Spiediet labo „Control“ taustiņu, lai atdotu ievadi"
+msgstr "Lai noņemtu ievades paņemšanu, spiediet labo „Ctrl“ taustiņu"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr "Spiediet labo „Control“ taustiņu, lai paņemtu ievadi"
+msgstr "Lai paņemtu ievadi, spiediet labo „Ctr“ taustiņu"
 
 #: backends/x11/x11_windowed_backend.cpp:498
 #, kde-format
@@ -1627,10 +1625,9 @@ msgstr "Trokšņa stiprums:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Saturation:"
-msgstr "Ilgums:"
+msgstr "Piesātinājums:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -3646,7 +3643,7 @@ msgstr "&Bez virsrakstjoslas un ietvara"
 #: useractions.cpp:251
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "&Slēpt no ekrāna ierakstīšanas"
 
 #: useractions.cpp:259
 #, kde-format
@@ -4153,27 +4150,29 @@ msgstr "Nav atļauta visu izvadu izslēgšana caur konfigurācijas izmaiņām"
 #: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Nav iespējams pievienot pielāgotu režīmu ar tukšu izmēru"
 
 #: wayland/outputmanagement_v2.cpp:635
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
+"Nav iespējams pievienot pielāgotu režīmu ar nulles hercu atsvaidzināšanas "
+"ātrumu"
 
 #: wayland/outputmanagement_v2.cpp:646
 #, kde-format
 msgid "Position of output %s is way too negative (%d, %d)"
-msgstr ""
+msgstr "Izvades „%s“ pozīcija ir pārāk negatīva (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:649
 #, kde-format
 msgid "Position of enabled output %s is negative (%d, %d)"
-msgstr ""
+msgstr "Ieslēgtās izvades „%s“ pozīcija ir negatīva (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "Izvades „%s“ pozīcija ir pārāk liela (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:670
 #, kde-format
