@@ -227,7 +227,7 @@ void DrmLeaseDeviceV1Interface::wp_drm_lease_device_v1_bind_resource(Resource *r
     send_drm_fd(resource->handle, fd.get());
     for (const auto &[output, connector] : m_connectors) {
         if (!connector->withdrawn()) {
-            auto connectorResource = connector->add(resource->client(), 0, s_version);
+            auto connectorResource = connector->add(resource->client(), 0, resource->version());
             send_connector(resource->handle, connectorResource->handle);
             connector->send(connectorResource->handle);
         }
