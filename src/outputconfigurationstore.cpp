@@ -77,19 +77,20 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
         changeset->transform = changeset->manualTransform;
         return;
     }
-    const auto panelOrientation = (*output)->panelOrientation();
+    // NOTE that udev "corrects" orientation sensors to match the panel orientation,
+    // the sensor values we get are already relative to the display, not the device.
     switch (orientation->orientation()) {
     case QOrientationReading::Orientation::TopUp:
-        changeset->transform = panelOrientation;
+        changeset->transform = OutputTransform::Kind::Normal;
         return;
     case QOrientationReading::Orientation::TopDown:
-        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotate180);
+        changeset->transform = OutputTransform::Kind::Rotate180;
         return;
     case QOrientationReading::Orientation::LeftUp:
-        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotate90);
+        changeset->transform = OutputTransform::Kind::Rotate90;
         return;
     case QOrientationReading::Orientation::RightUp:
-        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotate270);
+        changeset->transform = OutputTransform::Kind::Rotate270;
         return;
     case QOrientationReading::Orientation::FaceUp:
     case QOrientationReading::Orientation::FaceDown:
