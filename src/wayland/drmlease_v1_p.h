@@ -38,9 +38,7 @@ public:
     void done();
     void remove();
     void addLeaseRequest(DrmLeaseRequestV1Interface *leaseRequest);
-    void removeLeaseRequest(DrmLeaseRequestV1Interface *leaseRequest);
     void addLease(DrmLeaseV1Interface *lease);
-    void removeLease(DrmLeaseV1Interface *lease);
     void offerConnector(DrmLeaseConnectorV1Interface *connector);
 
     bool hasDrmMaster() const;
@@ -83,12 +81,25 @@ private:
     DrmOutput *const m_output;
 };
 
-class DrmLeaseRequestV1Interface : public QtWaylandServer::wp_drm_lease_request_v1
+class DrmNoopLeaseRequestV1Interface : public QtWaylandServer::wp_drm_lease_request_v1
 {
 public:
-    DrmLeaseRequestV1Interface(DrmLeaseDeviceV1Interface *device, wl_resource *resource);
-    ~DrmLeaseRequestV1Interface();
+    DrmNoopLeaseRequestV1Interface(wl_resource *resource);
 
+protected:
+    void wp_drm_lease_request_v1_request_connector(Resource *resource, struct ::wl_resource *connector) override;
+    void wp_drm_lease_request_v1_submit(Resource *resource, uint32_t id) override;
+    void wp_drm_lease_request_v1_destroy_resource(Resource *resource) override;
+};
+
+class DrmLeaseRequestV1Interface : public QObject, public QtWaylandServer::wp_drm_lease_request_v1
+{
+    Q_OBJECT
+
+public:
+    DrmLeaseRequestV1Interface(DrmLeaseDeviceV1Interface *device, wl_resource *resource);
+
+    bool isInert() const;
     QList<DrmLeaseConnectorV1Interface *> connectors() const;
     void invalidate();
 
@@ -97,9 +108,19 @@ protected:
     void wp_drm_lease_request_v1_submit(Resource *resource, uint32_t id) override;
     void wp_drm_lease_request_v1_destroy_resource(Resource *resource) override;
 
-    DrmLeaseDeviceV1Interface *const m_device;
+    QPointer<DrmLeaseDeviceV1Interface> m_device;
     QList<DrmLeaseConnectorV1Interface *> m_connectors;
     bool m_invalid = false;
+};
+
+class DrmNoopLeaseV1Interface : public QtWaylandServer::wp_drm_lease_v1
+{
+public:
+    DrmNoopLeaseV1Interface(wl_resource *resource);
+
+protected:
+    void wp_drm_lease_v1_destroy(Resource *resource) override;
+    void wp_drm_lease_v1_destroy_resource(Resource *resource) override;
 };
 
 class DrmLeaseV1Interface : public QObject, private QtWaylandServer::wp_drm_lease_v1
@@ -107,7 +128,6 @@ class DrmLeaseV1Interface : public QObject, private QtWaylandServer::wp_drm_leas
     Q_OBJECT
 public:
     DrmLeaseV1Interface(DrmLeaseDeviceV1Interface *device, const QList<DrmLeaseConnectorV1Interface *> &connectors, wl_resource *resource);
-    ~DrmLeaseV1Interface();
 
     void grant(std::unique_ptr<DrmLease> &&lease);
     void deny();
