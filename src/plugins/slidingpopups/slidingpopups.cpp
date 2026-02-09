@@ -42,7 +42,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     if (!s_slideManagerRemoveTimer) {
         s_slideManagerRemoveTimer = new QTimer(QCoreApplication::instance());
         s_slideManagerRemoveTimer->setSingleShot(true);
-        s_slideManagerRemoveTimer->callOnTimeout([]() {
+        s_slideManagerRemoveTimer->callOnTimeout(QCoreApplication::instance(), []() {
             s_slideManager->remove();
             s_slideManager = nullptr;
         });

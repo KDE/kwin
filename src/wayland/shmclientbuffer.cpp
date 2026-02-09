@@ -176,7 +176,7 @@ ShmClientBuffer::ShmClientBuffer(ShmPool *pool, ShmAttributes attributes, wl_cli
 {
     m_shmPool->ref();
 
-    connect(this, &GraphicsBuffer::released, [this]() {
+    connect(this, &GraphicsBuffer::released, this, [this]() {
         wl_buffer_send_release(m_resource);
     });
 

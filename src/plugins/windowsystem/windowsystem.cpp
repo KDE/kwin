@@ -48,7 +48,7 @@ void WindowSystem::requestToken(QWindow *win, uint32_t serial, const QString &ap
     auto seat = KWin::waylandServer()->seat();
     auto token = KWin::waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, appId);
     // Ensure that xdgActivationTokenArrived is always emitted asynchronously
-    QTimer::singleShot(0, [serial, token] {
+    QTimer::singleShot(0, KWaylandExtras::self(), [serial, token] {
         Q_EMIT KWaylandExtras::self()->xdgActivationTokenArrived(serial, token);
     });
 }

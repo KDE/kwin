@@ -96,7 +96,7 @@ EisContext::EisContext(KWin::EisBackend *backend, QFlags<eis_device_capability> 
 {
     eis_log_set_priority(m_eisContext, EIS_LOG_PRIORITY_DEBUG);
     eis_log_set_handler(m_eisContext, eis_log_handler);
-    QObject::connect(&m_socketNotifier, &QSocketNotifier::activated, [this] {
+    QObject::connect(&m_socketNotifier, &QSocketNotifier::activated, &m_socketNotifier, [this] {
         handleEvents();
     });
 }

@@ -206,7 +206,7 @@ void DBusInterface::showDesktop(bool show)
         }
 
         watcher = new QDBusServiceWatcher(m.service(), QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForUnregistration, this);
-        connect(watcher, &QDBusServiceWatcher::serviceUnregistered, []() {
+        connect(watcher, &QDBusServiceWatcher::serviceUnregistered, watcher, []() {
             workspace()->setShowingDesktop(false, true);
             watcher->deleteLater();
         });

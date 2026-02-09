@@ -173,7 +173,7 @@ BlurEffect::BlurEffect()
     if (!s_blurManagerRemoveTimer) {
         s_blurManagerRemoveTimer = new QTimer(QCoreApplication::instance());
         s_blurManagerRemoveTimer->setSingleShot(true);
-        s_blurManagerRemoveTimer->callOnTimeout([]() {
+        s_blurManagerRemoveTimer->callOnTimeout(QCoreApplication::instance(), []() {
             s_blurManager->remove();
             s_blurManager = nullptr;
         });
@@ -187,7 +187,7 @@ BlurEffect::BlurEffect()
     if (!s_contrastManagerRemoveTimer) {
         s_contrastManagerRemoveTimer = new QTimer(QCoreApplication::instance());
         s_contrastManagerRemoveTimer->setSingleShot(true);
-        s_contrastManagerRemoveTimer->callOnTimeout([]() {
+        s_contrastManagerRemoveTimer->callOnTimeout(QCoreApplication::instance(), []() {
             s_contrastManager->remove();
             s_contrastManager = nullptr;
         });

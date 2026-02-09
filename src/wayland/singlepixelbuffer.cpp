@@ -45,7 +45,7 @@ SinglePixelClientBuffer::SinglePixelClientBuffer(uint32_t r, uint32_t g, uint32_
     , m_argb8888(qRgba(r >> 24, g >> 24, b >> 24, a >> 24))
     , m_resource(wl_resource_create(client, &wl_buffer_interface, 1, id))
 {
-    connect(this, &GraphicsBuffer::released, [this]() {
+    connect(this, &GraphicsBuffer::released, this, [this]() {
         wl_buffer_send_release(m_resource);
     });
     wl_resource_set_implementation(m_resource, &implementation, this, buffer_destroy_resource);

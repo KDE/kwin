@@ -24,7 +24,7 @@ TransactionFence::TransactionFence(Transaction *transaction, FileDescriptor &&fi
     , m_fileDescriptor(std::move(fileDescriptor))
 {
     m_notifier = std::make_unique<QSocketNotifier>(m_fileDescriptor.get(), QSocketNotifier::Read);
-    QObject::connect(m_notifier.get(), &QSocketNotifier::activated, [this]() {
+    QObject::connect(m_notifier.get(), &QSocketNotifier::activated, m_notifier.get(), [this]() {
         m_notifier->setEnabled(false);
         m_transaction->tryApply();
     });

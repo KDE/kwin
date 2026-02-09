@@ -82,7 +82,7 @@ SystemBellEffect::SystemBellEffect()
     if (!s_systemBellRemoveTimer) {
         s_systemBellRemoveTimer = new QTimer(QCoreApplication::instance());
         s_systemBellRemoveTimer->setSingleShot(true);
-        s_systemBellRemoveTimer->callOnTimeout([]() {
+        s_systemBellRemoveTimer->callOnTimeout(QCoreApplication::instance(), []() {
             s_systemBell->remove();
             s_systemBell = nullptr;
         });

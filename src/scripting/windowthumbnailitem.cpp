@@ -92,10 +92,10 @@ std::shared_ptr<WindowThumbnailSource> WindowThumbnailSource::getOrCreate(QQuick
     auto s = std::make_shared<WindowThumbnailSource>(window, handle);
     source = s;
 
-    QObject::connect(handle, &Window::destroyed, [key]() {
+    QObject::connect(handle, &Window::destroyed, handle, [key]() {
         sources.erase(key);
     });
-    QObject::connect(window, &QQuickWindow::destroyed, [key]() {
+    QObject::connect(window, &QQuickWindow::destroyed, handle, [key]() {
         sources.erase(key);
     });
     return s;

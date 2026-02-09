@@ -670,11 +670,11 @@ void InputMethodTest::testModifierForwarding()
     bool keyChanged = false;
     bool modifiersChanged = false;
     // We want to verify the order of two signals, so SignalSpy is not very useful here.
-    auto keyChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::keyChanged, [&keyChanged, &modifiersChanged]() {
+    auto keyChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::keyChanged, keyboardGrab.get(), [&keyChanged, &modifiersChanged]() {
         QVERIFY(!modifiersChanged);
         keyChanged = true;
     });
-    auto modifiersChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::modifiersChanged, [&keyChanged, &modifiersChanged]() {
+    auto modifiersChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::modifiersChanged, keyboardGrab.get(), [&keyChanged, &modifiersChanged]() {
         QVERIFY(keyChanged);
         modifiersChanged = true;
     });
@@ -691,11 +691,11 @@ void InputMethodTest::testModifierForwarding()
     // verify the order of key and modifiers again. Key first, then modifiers.
     keyChanged = false;
     modifiersChanged = false;
-    keyChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::keyChanged, [&keyChanged, &modifiersChanged]() {
+    keyChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::keyChanged, keyboardGrab.get(), [&keyChanged, &modifiersChanged]() {
         QVERIFY(!modifiersChanged);
         keyChanged = true;
     });
-    modifiersChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::modifiersChanged, [&keyChanged, &modifiersChanged]() {
+    modifiersChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::modifiersChanged, keyboardGrab.get(), [&keyChanged, &modifiersChanged]() {
         QVERIFY(keyChanged);
         modifiersChanged = true;
     });

@@ -100,7 +100,7 @@ void PlasmaShellInterfacePrivate::org_kde_plasma_shell_get_surface(QtWaylandServ
     auto shellSurface = new PlasmaShellSurfaceInterface(s, shell_resource);
     s_shellSurfaces.append(shellSurface);
 
-    QObject::connect(shellSurface, &QObject::destroyed, [shellSurface]() {
+    QObject::connect(shellSurface, &QObject::destroyed, shellSurface, [shellSurface]() {
         s_shellSurfaces.removeOne(shellSurface);
     });
 

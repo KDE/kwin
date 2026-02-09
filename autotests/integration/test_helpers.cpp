@@ -400,19 +400,19 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
     connection->registry = registry;
     registry->setEventQueue(connection->queue);
 
-    QObject::connect(registry, &KWayland::Client::Registry::outputAnnounced, [c = connection.get()](quint32 name, quint32 version) {
+    QObject::connect(registry, &KWayland::Client::Registry::outputAnnounced, registry, [c = connection.get()](quint32 name, quint32 version) {
         KWayland::Client::Output *output = c->registry->createOutput(name, version, c->registry);
         c->outputs << output;
-        QObject::connect(output, &KWayland::Client::Output::removed, [=]() {
+        QObject::connect(output, &KWayland::Client::Output::removed, output, [output, c]() {
             output->deleteLater();
             c->outputs.removeOne(output);
         });
-        QObject::connect(output, &KWayland::Client::Output::destroyed, [=]() {
+        QObject::connect(output, &KWayland::Client::Output::destroyed, output, [output, c]() {
             c->outputs.removeOne(output);
         });
     });
 
-    QObject::connect(registry, &KWayland::Client::Registry::interfaceAnnounced, [c = connection.get(), flags](const QByteArray &interface, quint32 name, quint32 version) {
+    QObject::connect(registry, &KWayland::Client::Registry::interfaceAnnounced, registry, [c = connection.get(), flags](const QByteArray &interface, quint32 name, quint32 version) {
         if (flags & AdditionalWaylandInterface::InputMethodV1) {
             if (interface == QByteArrayLiteral("zwp_input_method_v1")) {
                 c->inputMethodV1 = new MockInputMethod(*c->registry, name, version);
@@ -458,7 +458,7 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
 
                 c->outputDevicesV2 << device;
 
-                QObject::connect(device, &WaylandOutputDeviceV2::destroyed, [=]() {
+                QObject::connect(device, &WaylandOutputDeviceV2::destroyed, device, [c, device]() {
                     c->outputDevicesV2.removeOne(device);
                     device->deleteLater();
                 });

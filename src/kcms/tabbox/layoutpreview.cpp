@@ -44,7 +44,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    QObject::connect(preview, &QObject::destroyed, [&app]() {
+    QObject::connect(preview, &QObject::destroyed, &app, [&app] {
         app.exit();
     });
 
