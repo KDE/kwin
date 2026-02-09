@@ -1681,20 +1681,20 @@ void OutputChangesTest::testAutorotate_data()
     QTest::addRow("panel orientation normal, rotated 180°") << OutputTransform::Kind::Normal << AccelerometerOrientation::TopDown << OutputTransform::Kind::Rotate180;
     QTest::addRow("panel orientation normal, rotated 90° left") << OutputTransform::Kind::Normal << AccelerometerOrientation::RightUp << OutputTransform::Kind::Rotate270;
 
-    QTest::addRow("panel orientation left up, no rotation") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::TopUp << OutputTransform::Kind::Rotate90;
-    QTest::addRow("panel orientation left up, rotated 90° right") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::LeftUp << OutputTransform::Kind::Rotate180;
-    QTest::addRow("panel orientation left up, rotated 180°") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::TopDown << OutputTransform::Kind::Rotate270;
-    QTest::addRow("panel orientation left up, rotated 90° left") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::RightUp << OutputTransform::Kind::Normal;
+    QTest::addRow("panel orientation left up, no rotation") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::TopUp << OutputTransform::Kind::Normal;
+    QTest::addRow("panel orientation left up, rotated 90° right") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::LeftUp << OutputTransform::Kind::Rotate90;
+    QTest::addRow("panel orientation left up, rotated 180°") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::TopDown << OutputTransform::Kind::Rotate180;
+    QTest::addRow("panel orientation left up, rotated 90° left") << OutputTransform::Kind::Rotate90 << AccelerometerOrientation::RightUp << OutputTransform::Kind::Rotate270;
 
-    QTest::addRow("panel orientation upside down, no rotation") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::TopUp << OutputTransform::Kind::Rotate180;
-    QTest::addRow("panel orientation upside down, rotated 90° right") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::LeftUp << OutputTransform::Kind::Rotate270;
-    QTest::addRow("panel orientation upside down, rotated 180°") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::TopDown << OutputTransform::Kind::Normal;
-    QTest::addRow("panel orientation upside down, rotated 90° left") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::RightUp << OutputTransform::Kind::Rotate90;
+    QTest::addRow("panel orientation upside down, no rotation") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::TopUp << OutputTransform::Kind::Normal;
+    QTest::addRow("panel orientation upside down, rotated 90° right") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::LeftUp << OutputTransform::Kind::Rotate90;
+    QTest::addRow("panel orientation upside down, rotated 180°") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::TopDown << OutputTransform::Kind::Rotate180;
+    QTest::addRow("panel orientation upside down, rotated 90° left") << OutputTransform::Kind::Rotate180 << AccelerometerOrientation::RightUp << OutputTransform::Kind::Rotate270;
 
-    QTest::addRow("panel orientation right up, no rotation") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::TopUp << OutputTransform::Kind::Rotate270;
-    QTest::addRow("panel orientation right up, rotated 90° right") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::LeftUp << OutputTransform::Kind::Normal;
-    QTest::addRow("panel orientation right up, rotated 180°") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::TopDown << OutputTransform::Kind::Rotate90;
-    QTest::addRow("panel orientation right up, rotated 90° left") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::RightUp << OutputTransform::Kind::Rotate180;
+    QTest::addRow("panel orientation right up, no rotation") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::TopUp << OutputTransform::Kind::Normal;
+    QTest::addRow("panel orientation right up, rotated 90° right") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::LeftUp << OutputTransform::Kind::Rotate90;
+    QTest::addRow("panel orientation right up, rotated 180°") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::TopDown << OutputTransform::Kind::Rotate180;
+    QTest::addRow("panel orientation right up, rotated 90° left") << OutputTransform::Kind::Rotate270 << AccelerometerOrientation::RightUp << OutputTransform::Kind::Rotate270;
 }
 
 void OutputChangesTest::testAutorotate()
