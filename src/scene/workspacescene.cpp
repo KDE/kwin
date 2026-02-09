@@ -165,19 +165,31 @@ struct ClipCorner
     BorderRadius radius;
 };
 
-static void maybePushCorners(Item *item, QStack<ClipCorner> &corners)
+static std::optional<ClipCorner> calculateClipCorner(Item *item, const std::optional<ClipCorner> &parentClip)
 {
     if (!item->borderRadius().isNull()) {
-        corners.push({
+        return ClipCorner{
             .box = item->rect(),
             .radius = item->borderRadius(),
-        });
-    } else if (!corners.isEmpty()) {
-        const auto &top = corners.top();
-        corners.push({
-            .box = item->transform().inverted().mapRect(top.box.translated(-item->position())),
-            .radius = top.radius,
-        });
+        };
+    } else if (parentClip.has_value()) {
+        return ClipCorner{
+            .box = item->transform().inverted().mapRect(parentClip->box.translated(-item->position())),
+            .radius = parentClip->radius,
+        };
+    } else {
+        return std::nullopt;
+    }
+}
+
+static void maybePushCorners(Item *item, QStack<ClipCorner> &corners)
+{
+    std::optional<ClipCorner> top;
+    if (!corners.isEmpty()) {
+        top = corners.top();
+    }
+    if (const auto clip = calculateClipCorner(item, top)) {
+        corners.push(*clip);
     }
 }
 
@@ -579,6 +591,23 @@ void WorkspaceScene::preparePaintGenericScreen()
     }
 }
 
+static void addOpaqueRegionRecursive(SceneView *view, Item *item, const std::optional<ClipCorner> &parentCorner, Region &ret)
+{
+    const std::optional<ClipCorner> corner = calculateClipCorner(item, parentCorner);
+    Region opaque = item->opaque();
+    if (corner.has_value()) {
+        opaque = corner->radius.clip(item->opaque(), corner->box);
+    }
+    const Rect deviceRect = snapToPixelGrid(view->mapToDeviceCoordinates(item->mapToView(item->rect(), view)));
+    for (RectF rect : opaque.rects()) {
+        ret |= snapToPixelGrid(view->mapToDeviceCoordinates(item->mapToView(rect, view))) & deviceRect;
+    }
+    const auto children = item->childItems();
+    for (Item *child : children) {
+        addOpaqueRegionRecursive(view, child, corner, ret);
+    }
+}
+
 void WorkspaceScene::preparePaintSimpleScreen()
 {
     for (WindowItem *windowItem : std::as_const(stacking_order)) {
@@ -588,24 +617,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
         if (window->opacity() == 1.0) {
-            const SurfaceItem *surfaceItem = windowItem->surfaceItem();
-            const auto mapOpaqueToDevice = [this](const Item *item) {
-                const Region opaque = item->borderRadius().clip(item->opaque(), item->rect());
-                const Rect deviceRect = snapToPixelGrid(painted_delegate->mapToDeviceCoordinates(item->mapToView(item->rect(), painted_delegate)));
-                Region ret;
-                for (RectF rect : opaque.rects()) {
-                    ret |= snapToPixelGrid(painted_delegate->mapToDeviceCoordinates(item->mapToView(rect, painted_delegate))) & deviceRect;
-                }
-                return ret;
-            };
-            if (Q_LIKELY(surfaceItem)) {
-                data.deviceOpaque = mapOpaqueToDevice(surfaceItem);
-            }
-
-            const DecorationItem *decorationItem = windowItem->decorationItem();
-            if (decorationItem) {
-                data.deviceOpaque += mapOpaqueToDevice(decorationItem);
-            }
+            addOpaqueRegionRecursive(painted_delegate, windowItem, std::nullopt, data.deviceOpaque);
         }
 
         effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data, m_expectedPresentTimestamp);
