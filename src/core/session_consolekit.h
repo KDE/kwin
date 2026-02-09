@@ -28,7 +28,7 @@ public:
     std::expected<int, Error> openRestricted(const QString &fileName) override;
     void closeRestricted(int fileDescriptor) override;
     void switchTo(uint terminal) override;
-    FileDescriptor delaySleep(const QString &reason) override;
+    std::shared_ptr<FileDescriptor> delaySleep(const QString &reason) override;
 
 private Q_SLOTS:
     void handleResumeDevice(uint major, uint minor, QDBusUnixFileDescriptor fileDescriptor);
@@ -47,6 +47,7 @@ private:
     QString m_seatPath;
     uint m_terminal = 0;
     bool m_isActive = false;
+    std::weak_ptr<FileDescriptor> m_suspendLock;
 };
 
 } // namespace KWin

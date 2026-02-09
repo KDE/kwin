@@ -753,7 +753,7 @@ private:
     DpmsState m_dpms = DpmsState::On;
     QList<QString> m_recentlyRemovedDpmsOffOutputs;
     QTimer m_dpmsTimer;
-    FileDescriptor m_sleepInhibitor;
+    std::shared_ptr<FileDescriptor> m_sleepInhibitor;
 
 private:
     friend bool performTransiencyCheck();

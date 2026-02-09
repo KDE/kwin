@@ -307,6 +307,8 @@ private:
     ColorRepresentationManagerV1 *m_colorRepresentation = nullptr;
     PointerWarpV1 *m_pointerWarp = nullptr;
     ExtBackgroundEffectManagerV1 *m_backgroundEffect = nullptr;
+
+    std::shared_ptr<FileDescriptor> m_sleepInhibitor;
     KWIN_SINGLETON(WaylandServer)
 };
 

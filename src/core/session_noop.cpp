@@ -64,9 +64,9 @@ void NoopSession::switchTo(uint terminal)
 {
 }
 
-FileDescriptor NoopSession::delaySleep(const QString &reason)
+std::shared_ptr<FileDescriptor> NoopSession::delaySleep(const QString &reason)
 {
-    return FileDescriptor{};
+    return nullptr;
 }
 
 } // namespace KWin

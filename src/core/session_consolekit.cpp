@@ -209,8 +209,11 @@ void ConsoleKitSession::switchTo(uint terminal)
     QDBusConnection::systemBus().asyncCall(message);
 }
 
-FileDescriptor ConsoleKitSession::delaySleep(const QString &reason)
+std::shared_ptr<FileDescriptor> ConsoleKitSession::delaySleep(const QString &reason)
 {
+    if (auto existingLock = m_suspendLock.lock()) {
+        return existingLock;
+    }
     QDBusMessage message = QDBusMessage::createMethodCall(s_serviceName, s_managerPath,
                                                           s_managerInterface,
                                                           QStringLiteral("Inhibit"));
@@ -219,10 +222,11 @@ FileDescriptor ConsoleKitSession::delaySleep(const QString &reason)
     const QDBusMessage reply = QDBusConnection::systemBus().call(message);
     if (reply.type() == QDBusMessage::ErrorMessage) {
         qCWarning(KWIN_CORE, "Failed to delay sleep: %s", qPrintable(reply.errorMessage()));
-        return FileDescriptor{};
+        return nullptr;
     }
-    const QDBusUnixFileDescriptor descriptor = reply.arguments().constFirst().value<QDBusUnixFileDescriptor>();
-    return FileDescriptor{fcntl(descriptor.fileDescriptor(), F_DUPFD_CLOEXEC, 0)};
+    auto ret = std::make_shared<FileDescriptor>(reply.arguments().constFirst().value<QDBusUnixFileDescriptor>().takeFileDescriptor());
+    m_suspendLock = ret;
+    return ret;
 }
 
 ConsoleKitSession::ConsoleKitSession(const QString &sessionPath)

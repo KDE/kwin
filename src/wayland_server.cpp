@@ -687,6 +687,16 @@ void WaylandServer::initScreenLocker()
 
     connect(screenLockerApp, &ScreenLocker::KSldApp::lockStateChanged, this, &WaylandServer::lockStateChanged);
 
+    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::inhibitSuspend, this, [this]() {
+        if (m_sleepInhibitor) {
+            return;
+        }
+        m_sleepInhibitor = kwinApp()->session()->delaySleep(QStringLiteral("Ensuring that the screen gets locked before going to sleep"));
+    });
+    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::uninhibitSuspend, this, [this]() {
+        m_sleepInhibitor.reset();
+    });
+
     ScreenLocker::KSldApp::self()->initialize();
 
     if (kwinApp()->initiallyLocked()) {
