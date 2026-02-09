@@ -84,7 +84,7 @@ private:
 class DrmNoopLeaseRequestV1Interface : public QtWaylandServer::wp_drm_lease_request_v1
 {
 public:
-    DrmNoopLeaseRequestV1Interface(wl_resource *resource);
+    DrmNoopLeaseRequestV1Interface(wl_client *client, int version, uint32_t id);
 
 protected:
     void wp_drm_lease_request_v1_request_connector(Resource *resource, struct ::wl_resource *connector) override;
@@ -97,7 +97,7 @@ class DrmLeaseRequestV1Interface : public QObject, public QtWaylandServer::wp_dr
     Q_OBJECT
 
 public:
-    DrmLeaseRequestV1Interface(DrmLeaseDeviceV1Interface *device, wl_resource *resource);
+    DrmLeaseRequestV1Interface(DrmLeaseDeviceV1Interface *device, wl_client *client, int version, uint32_t id);
 
     bool isInert() const;
     QList<DrmLeaseConnectorV1Interface *> connectors() const;
@@ -116,7 +116,7 @@ protected:
 class DrmNoopLeaseV1Interface : public QtWaylandServer::wp_drm_lease_v1
 {
 public:
-    DrmNoopLeaseV1Interface(wl_resource *resource);
+    DrmNoopLeaseV1Interface(wl_client *client, int version, uint32_t id);
 
 protected:
     void wp_drm_lease_v1_destroy(Resource *resource) override;
@@ -127,7 +127,7 @@ class DrmLeaseV1Interface : public QObject, private QtWaylandServer::wp_drm_leas
 {
     Q_OBJECT
 public:
-    DrmLeaseV1Interface(DrmLeaseDeviceV1Interface *device, const QList<DrmLeaseConnectorV1Interface *> &connectors, wl_resource *resource);
+    DrmLeaseV1Interface(DrmLeaseDeviceV1Interface *device, const QList<DrmLeaseConnectorV1Interface *> &connectors, wl_client *client, int version, uint32_t id);
 
     void grant(std::unique_ptr<DrmLease> &&lease);
     void deny();

@@ -201,17 +201,10 @@ void DrmLeaseDeviceV1Interface::offerConnector(DrmLeaseConnectorV1Interface *con
 
 void DrmLeaseDeviceV1Interface::wp_drm_lease_device_v1_create_lease_request(Resource *resource, uint32_t id)
 {
-    wl_resource *requestResource = wl_resource_create(resource->client(), &wp_drm_lease_request_v1_interface,
-                                                      resource->version(), id);
-    if (!requestResource) {
-        wl_resource_post_no_memory(resource->handle);
-        return;
-    }
-
     if (isGlobalRemoved()) {
-        new DrmNoopLeaseRequestV1Interface(requestResource);
+        new DrmNoopLeaseRequestV1Interface(resource->client(), resource->version(), id);
     } else {
-        new DrmLeaseRequestV1Interface(this, requestResource);
+        new DrmLeaseRequestV1Interface(this, resource->client(), resource->version(), id);
     }
 }
 
@@ -303,8 +296,8 @@ void DrmLeaseConnectorV1Interface::wp_drm_lease_connector_v1_destroy(Resource *r
     wl_resource_destroy(resource->handle);
 }
 
-DrmNoopLeaseRequestV1Interface::DrmNoopLeaseRequestV1Interface(wl_resource *resource)
-    : QtWaylandServer::wp_drm_lease_request_v1(resource)
+DrmNoopLeaseRequestV1Interface::DrmNoopLeaseRequestV1Interface(wl_client *client, int version, uint32_t id)
+    : QtWaylandServer::wp_drm_lease_request_v1(client, id, version)
 {
 }
 
@@ -315,13 +308,7 @@ void DrmNoopLeaseRequestV1Interface::wp_drm_lease_request_v1_request_connector(R
 
 void DrmNoopLeaseRequestV1Interface::wp_drm_lease_request_v1_submit(Resource *resource, uint32_t id)
 {
-    wl_resource *leaseResource = wl_resource_create(resource->client(), &wp_drm_lease_v1_interface, s_version, id);
-    if (!leaseResource) {
-        wl_resource_post_no_memory(resource->handle);
-        return;
-    }
-
-    auto lease = new DrmNoopLeaseV1Interface(leaseResource);
+    auto lease = new DrmNoopLeaseV1Interface(resource->client(), resource->version(), id);
     lease->send_finished();
 
     wl_resource_destroy(resource->handle);
@@ -332,8 +319,8 @@ void DrmNoopLeaseRequestV1Interface::wp_drm_lease_request_v1_destroy_resource(Re
     delete this;
 }
 
-DrmLeaseRequestV1Interface::DrmLeaseRequestV1Interface(DrmLeaseDeviceV1Interface *device, wl_resource *resource)
-    : wp_drm_lease_request_v1(resource)
+DrmLeaseRequestV1Interface::DrmLeaseRequestV1Interface(DrmLeaseDeviceV1Interface *device, wl_client *client, int version, uint32_t id)
+    : wp_drm_lease_request_v1(client, id, version)
     , m_device(device)
 {
     m_device->addLeaseRequest(this);
@@ -380,17 +367,11 @@ void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_request_connector(Resou
 
 void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_submit(Resource *resource, uint32_t id)
 {
-    wl_resource *leaseResource = wl_resource_create(resource->client(), &wp_drm_lease_v1_interface, s_version, id);
-    if (!leaseResource) {
-        wl_resource_post_no_memory(resource->handle);
-        return;
-    }
-
     if (isInert()) {
-        auto lease = new DrmNoopLeaseV1Interface(leaseResource);
+        auto lease = new DrmNoopLeaseV1Interface(resource->client(), resource->version(), id);
         lease->send_finished();
     } else {
-        DrmLeaseV1Interface *lease = new DrmLeaseV1Interface(m_device, m_connectors, leaseResource);
+        DrmLeaseV1Interface *lease = new DrmLeaseV1Interface(m_device, m_connectors, resource->client(), resource->version(), id);
         if (!m_device->hasDrmMaster()) {
             qCWarning(KWIN_CORE) << "DrmLease: rejecting lease request without drm master";
             lease->deny();
@@ -421,8 +402,8 @@ void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_destroy_resource(Resour
     delete this;
 }
 
-DrmNoopLeaseV1Interface::DrmNoopLeaseV1Interface(wl_resource *resource)
-    : QtWaylandServer::wp_drm_lease_v1(resource)
+DrmNoopLeaseV1Interface::DrmNoopLeaseV1Interface(wl_client *client, int version, uint32_t id)
+    : QtWaylandServer::wp_drm_lease_v1(client, id, version)
 {
 }
 
@@ -436,8 +417,8 @@ void DrmNoopLeaseV1Interface::wp_drm_lease_v1_destroy_resource(Resource *resourc
     delete this;
 }
 
-DrmLeaseV1Interface::DrmLeaseV1Interface(DrmLeaseDeviceV1Interface *device, const QList<DrmLeaseConnectorV1Interface *> &connectors, wl_resource *resource)
-    : wp_drm_lease_v1(resource)
+DrmLeaseV1Interface::DrmLeaseV1Interface(DrmLeaseDeviceV1Interface *device, const QList<DrmLeaseConnectorV1Interface *> &connectors, wl_client *client, int version, uint32_t id)
+    : wp_drm_lease_v1(client, id, version)
     , m_device(device)
     , m_connectors(connectors)
 {
