@@ -79,25 +79,70 @@ void AutoBrightnessCurve::adjust(double brightness, double lux)
         }
         return;
     }
+
+    // Intermediate values between control points are computed using linear interpolation. We want to
+    // end up with such low and high control points that when you interpolate between them, you land
+    // at the given lux level for the given screen brightness.
+    //
+    //               (*) high control point
+    //               /
+    //              /
+    //            (*) lux point
+    //            /
+    //           /
+    //         (*) low control point
+    //
+    // Visually, you can think of the adjustment algorithm as follows: high and low control points
+    // are distributed relative to the lux point (i.e. it acts as the pivot point for rotation and scaling)
+    // until linear interpolation produces the desired results.
+    //
+    // Given
+    //
+    //    lux = low + (high - low) * highFactor
+    //
+    // The low control point can be found based on the lux and high points as follows:
+    //
+    //    lux = low + (high - low) * highFactor
+    //    -> lux = highFactor * high + (1 - highFactor) * low
+    //    -> (1 - highFactor) * low = lux - highFactor * high
+    //    -> low = (lux - highFactor * high) / (1 - highFactor)
+    //
+    // The high control point is chosen using a "sufficiently reasonable heuristic" - the sample point
+    // influences the high control point the closer it lies to it.
+    //
+    // Given that the adjustment algorithm can be viewed as rotation and scaling around a pivot point,
+    // in order to satisfy the auto brightness curve constraints, we only need to pick the appropriate
+    // coordinates for the high control point.
+    //
+    // In order to guarantee that `m_luxAtBrightness[i] >= m_luxAtBrightness[i - 1] + minAbsDifference`
+    // is satisfied, the high control point should be at least `minAbsDifference * (1 - highFactor)` away
+    // from the lux point. In that case, the low control point and the lux point will be
+    // `minAbsDifference * highFactor` far apart from each other:
+    //
+    //     low = (lux - highFactor * high) / (1 - highFactor)
+    //         = (lux - highFactor * (lux + minAbsDifference * (1 - highFactor))) / (1 - highFactor)
+    //         ...
+    //         = lux - minAbsDifference * highFactor
+    //
+    //     distance(high, low) = high - low
+    //                         = (lux + minAbsDifference * (1 - highFactor)) - (lux - minAbsDifference * highFactor)
+    //                         = minAbsDifference
+    //
+    // Similarly, in order to guarantee the `m_luxAtBrightness[i] >= m_luxAtBrightness[i - 1] * (1 + minRelativeDifference)`
+    // constraint, the high control point should be at least `minRelativeDifference * (1 - highFactor) * lux`
+    // away from the lux point. Then, the low control point and the lux point will be
+    // `minRelativeDifference * highFactor * lux` far apart from each other (it can be confirmed by
+    // plugging in the corresponding high control point coordinate to the low control point equation).
+
     double &low = m_luxAtBrightness[lowMatch];
     double &high = m_luxAtBrightness[lowMatch + 1];
 
     const double highFactor = brightness * (m_luxAtBrightness.size() - 1) - lowMatch;
     high = std::lerp(high, lux, highFactor);
 
-    // We need to enforce "m_luxAtBrightness[i] >= m_luxAtBrightness[i - 1] * (1 + minRelativeDifference)",
-    // but the new value of m_luxAtBrightness[i - 1] is still unknown here.
-    // As it's just a linear equation, use the adjustment point to scale minRelativeDifference instead,
-    // which ensures "(high - low) >= (1 + minRelativeDifference) * lux", which is good enough
     const double minHighValueRelative = lux + minRelativeDifference * (1 - highFactor) * lux;
-    // Also enforce the minimum absolute difference.
     const double minHighValueAbsolute = lux + minAbsDifference * (1 - highFactor);
     high = std::max({minHighValueAbsolute, minHighValueRelative, high});
-
-    // this is derived from the linear equation set up by linearly interpolating between low and high:
-    // lux = low + (high - low) * highFactor
-    // -> lux = highFactor * high + (1 - highFactor) * low
-    // -> (1 - highFactor) * low = lux - highFactor * high
     low = (lux - highFactor * high) / (1 - highFactor);
 
     // ensure the curve stays strictly monotonic below the low control point (lowMatch)
