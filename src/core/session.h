@@ -92,7 +92,7 @@ public:
      */
     virtual void switchTo(uint terminal) = 0;
 
-    virtual FileDescriptor delaySleep(const QString &reason) = 0;
+    virtual std::shared_ptr<FileDescriptor> delaySleep(const QString &reason) = 0;
 
 Q_SIGNALS:
     /**

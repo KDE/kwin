@@ -26,7 +26,7 @@ public:
     std::expected<int, Error> openRestricted(const QString &fileName) override;
     void closeRestricted(int fileDescriptor) override;
     void switchTo(uint terminal) override;
-    FileDescriptor delaySleep(const QString &reason) override;
+    std::shared_ptr<FileDescriptor> delaySleep(const QString &reason) override;
 
 private:
     explicit NoopSession() = default;
