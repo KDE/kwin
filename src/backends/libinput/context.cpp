@@ -7,10 +7,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "context.h"
+
+#include "config-kwin.h"
+
 #include "events.h"
 #include "libinput_logging.h"
 
 #include "core/session.h"
+#include "utils/envvar.h"
 #include "utils/udev.h"
 
 #include <fcntl.h>
@@ -65,6 +69,15 @@ bool Context::initialize()
     if (!isValid()) {
         return false;
     }
+
+#if HAVE_LIBINPUT_PLUGINS
+    const bool wantsPlugins = !environmentVariableBoolValue("KWIN_LIBINPUT_NO_PLUGINS").value_or(false);
+    if (wantsPlugins) {
+        libinput_plugin_system_append_default_paths(m_libinput);
+        libinput_plugin_system_load_plugins(m_libinput, LIBINPUT_PLUGIN_SYSTEM_FLAG_NONE);
+    }
+#endif
+
     return libinput_udev_assign_seat(m_libinput, m_session->seat().toUtf8().constData()) == 0;
 }
 

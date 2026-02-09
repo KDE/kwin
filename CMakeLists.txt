@@ -290,6 +290,11 @@ endif()
 
 find_package(Libinput 1.28)
 set_package_properties(Libinput PROPERTIES TYPE REQUIRED PURPOSE "Required for input handling on Wayland.")
+if (Libinput_VERSION VERSION_GREATER_EQUAL 1.30)
+    set(HAVE_LIBINPUT_PLUGINS 1)
+else()
+    set(HAVE_LIBINPUT_PLUGINS 0)
+endif()
 
 find_package(Libeis-1.0 1.4)
 set_package_properties(Libeis-1.0 PROPERTIES TYPE OPTIONAL PURPOSE "Required for emulated input handling.")
