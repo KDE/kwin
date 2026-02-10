@@ -37,6 +37,12 @@ OutputConfigurationStore::~OutputConfigurationStore()
     save();
 }
 
+void OutputConfigurationStore::clear()
+{
+    m_setups.clear();
+    m_outputs.clear();
+}
+
 std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, AccelerometerOrientation orientation, bool isTabletMode)
 {
     QList<BackendOutput *> relevantOutputs;

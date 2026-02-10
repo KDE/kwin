@@ -30,6 +30,8 @@ public:
     OutputConfigurationStore();
     ~OutputConfigurationStore();
 
+    void clear();
+
     enum class ConfigType {
         Preexisting,
         Generated,
