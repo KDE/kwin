@@ -2,7 +2,7 @@
 # translation of kcmkwindecoration.po to Romanian
 # Copyright (C) 2003, 2004, 2005, 2008 Free Software Foundation, Inc.
 # Claudiu Costin <claudiuc@kde.org>, 2003, 2004, 2005.
-# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022, 2024.
+# SPDX-FileCopyrightText: 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022, 2024, 2026 Sergiu Bivol <sergiu@cip.md>
 # Cristian Oneț <onet.cristian@gmail.com>, 2011.
 #
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-28 02:43+0000\n"
-"PO-Revision-Date: 2024-02-27 21:32+0000\n"
+"PO-Revision-Date: 2026-02-08 17:38+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -19,14 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 25.08.1\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "Button showing window actions menu"
-#| msgid "Window Menu"
+#, kde-format
 msgid "Window menu"
-msgstr "Meniu fereastră"
+msgstr "Meniul ferestrei"
 
 #: declarative-plugin/buttonsmodel.cpp:58
 #, kde-format
@@ -71,7 +69,7 @@ msgstr "Ține deasupra altor ferestre"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "Ascunde din difuzarea ecranului"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -79,9 +77,7 @@ msgid "Spacer"
 msgstr "Spațiator"
 
 #: kcm.cpp:186
-#, fuzzy, kde-format
-#| msgctxt "%1 is the name of a border size"
-#| msgid "Theme's default (%1)"
+#, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "Implicită a tematicii (%1)"
@@ -93,6 +89,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"Această unealtă vă permite să stabiliți tematica decorațiilor de fereastră "
+"pentru sesiunea activă, fără a o stabili din greșeală la una indisponibilă "
+"sau care e deja stabilită."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -101,6 +100,9 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"Denumirea tematicii cu decorație de fereastră pe care doriți s-o stabiliți "
+"pentru KWin. Transmiterea unei căi complete va duce la încercarea de a găsi "
+"o tematică în acel dosar, apoi aplicarea aceleia dacă poate fi dedusă."
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
@@ -114,6 +116,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"%1 a fost rezolvat la tematica Aurorae KWin „%2” și se va încerca stabilirea "
+"acesteia ca tematică actuală."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -121,6 +125,9 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"Ați încercat să transmiteți calea unui fișier, dar aceasta nu a putut fi "
+"rezolvată la o tematică și operațiunea trebuie abandonată din cauză că nu "
+"este nicio tematică de stabilit"
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
@@ -143,6 +150,8 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"Salvarea configurărilor de tematică a eșuat – motivul e necunoscut, dar "
+"această eroare e fatală. Încercați iar, s-ar putea să funcționeze."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format
@@ -180,20 +189,17 @@ msgid "Titlebar Buttons"
 msgstr "Butoane pe bara de titlu"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgctxt "checkbox label"
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "Închide ferestrele prin dublu clic pe butonul de meniu"
+msgstr "Închide ferestrele prin dublu clic pe butonul de meniu al ferestrei"
 
 #: ui/ConfigureTitlebar.qml:52
-#, fuzzy, kde-format
-#| msgctxt "popup tip"
-#| msgid "Click and hold on the menu button to show the menu."
+#, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
-msgstr "Apăsați și țineți pe butonul meniului pentru a arăta meniul."
+msgstr ""
+"Apăsați și țineți pe butonul de meniu al ferestrei pentru a arăta meniul."
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format
@@ -205,7 +211,7 @@ msgstr "Arată indicii pentru butoanele barei de titlu"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" button"
-msgstr ""
+msgstr "Arată mereu butonul de ascundere din difuzarea ecranului"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -214,6 +220,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screencast"
 msgstr ""
+"Când nu e bifat, butonul apare doar dacă fereastra e ascunsă de la difuzarea "
+"ecranului"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -222,6 +230,8 @@ msgid ""
 "To enable this option, add the \"Hide from screencast\" button to the "
 "titlebar first"
 msgstr ""
+"Pentru a activa această opțiune, adăugați mai întâi butonul „Ascunde din "
+"difuzarea ecranului” pe bara de titlu"
 
 #: ui/main.qml:29
 #, kde-format
@@ -242,64 +252,54 @@ msgid "Get New…"
 msgstr "Obține noi…"
 
 #: ui/Themes.qml:93
-#, fuzzy, kde-format
-#| msgid "Edit %1 Theme"
+#, kde-format
 msgid "Edit %1 Theme…"
-msgstr "Modifică tematica %1"
+msgstr "Modifică tematica %1…"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Window Borders"
+#, kde-format
 msgid "No window borders"
-msgstr "Fără contur ferestre"
+msgstr "Fără contur al ferestrelor"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Window Borders"
+#, kde-format
 msgid "No side window borders"
-msgstr "Fără contur lateral ferestre"
+msgstr "Fără contur lateral al ferestrelor"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Tiny Window Borders"
+#, kde-format
 msgid "Tiny window borders"
-msgstr "Contur ferestre minuscul"
+msgstr "Contur minuscul al ferestrelor"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "Normal Window Borders"
+#, kde-format
 msgid "Normal window borders"
-msgstr "Contur ferestre normal"
+msgstr "Contur normal al ferestrelor"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Large Window Borders"
+#, kde-format
 msgid "Large window borders"
-msgstr "Contur ferestre mare"
+msgstr "Contur mare al ferestrelor"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very Large Window Borders"
+#, kde-format
 msgid "Very large window borders"
-msgstr "Contur ferestre foarte mare"
+msgstr "Contur foarte mare al ferestrelor"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Huge Window Borders"
+#, kde-format
 msgid "Huge window borders"
-msgstr "Contur ferestre imens"
+msgstr "Contur imens al ferestrelor"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Very Huge Window Borders"
+#, kde-format
 msgid "Very huge window borders"
-msgstr "Contur ferestre foarte imens"
+msgstr "Contur foarte imens al ferestrelor"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Oversized Window Borders"
+#, kde-format
 msgid "Oversized window borders"
-msgstr "Contur ferestre supradimensionat"
+msgstr "Contur supradimensionat al ferestrelor"
 
 #~ msgid "More actions for this window"
 #~ msgstr "Acțiuni suplimentare pentru această fereastră"

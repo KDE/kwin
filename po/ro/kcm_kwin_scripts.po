@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# Sergiu Bivol <sergiu@cip.md>, 2024.
+# SPDX-FileCopyrightText: 2024, 2026 Sergiu Bivol <sergiu@cip.md>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2024-02-27 21:29+0000\n"
+"PO-Revision-Date: 2026-02-08 13:43+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 25.08.1\n"
 
 #: module.cpp:52
 #, kde-format
@@ -24,10 +24,9 @@ msgid "Import KWin Script"
 msgstr "Importă script KWin"
 
 #: module.cpp:53
-#, fuzzy, kde-format
-#| msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+#, kde-format
 msgid "KWin Script (*.kwinscript)"
-msgstr "*.kwinscript|Scripturi KWin (*.kwinscript)"
+msgstr "Script KWin (*.kwinscript)"
 
 #: module.cpp:65
 #, kde-format

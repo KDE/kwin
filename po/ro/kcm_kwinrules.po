@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-23 02:42+0000\n"
-"PO-Revision-Date: 2026-01-29 00:39+0000\n"
+"PO-Revision-Date: 2026-02-08 18:21+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -28,12 +28,12 @@ msgstr "Copie a %1"
 #: kcmrules.cpp:414
 #, kde-format
 msgid "Application settings for %1"
-msgstr "Configurări aplicație pentru %1"
+msgstr "Configurări de aplicație pentru %1"
 
 #: kcmrules.cpp:436 rulesmodel.cpp:221 rulesmodel.cpp:224
 #, kde-format
 msgid "Window settings for %1"
-msgstr "Configurări fereastră pentru %1"
+msgstr "Configurări de fereastră pentru %1"
 
 #: optionsmodel.cpp:198
 #, kde-format
@@ -150,7 +150,7 @@ msgstr "Configurări pentru %1"
 #: rulesmodel.cpp:230
 #, kde-format
 msgid "New window settings"
-msgstr "Configurări noi pentru fereastră"
+msgstr "Configurări pentru ferestre noi"
 
 #: rulesmodel.cpp:246
 #, kde-format
@@ -342,13 +342,7 @@ msgid "Obey geometry restrictions"
 msgstr "Respectă restricțiile geometrice"
 
 #: rulesmodel.cpp:561
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -357,11 +351,12 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"De ex. terminalele sau dispozitivele de redare video pot cere să mențină\n"
-"un anumit raport de aspect sau să crească doar cu valori mai mari decât unu\n"
-"(de ex. cu dimensiunile unui caracter).\n"
-"Aceasta poate fi fără sens și restricțiile previn dimensiuni arbitrare\n"
-"cum ar fi întregul ecran."
+"Unele aplicații, cum ar fi lectorii video sau terminalele, pot cere lui KWin "
+"să fie constrânse la anumite raporturi de aspect sau să crească doar cu "
+"valori mai mari decât dimensiunile unui caracter. Folosiți această "
+"proprietate pentru a ignora astfel de restricții și a permite acelor "
+"ferestre să fie redimensionate la orice mărime.<nl/><nl/>Acest lucru poate "
+"fi util pentru ferestre ce nu acoperă întregul ecran când sunt maximizate."
 
 #: rulesmodel.cpp:572
 #, kde-format
@@ -476,6 +471,26 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin încearcă să împiedice ferestrele deschise fără intervenția directă a "
+"utilizatorului de a se ridica și de a obține focalizarea în timp ce "
+"interacționați cu altă fereastră.Această proprietate poate fi folosită "
+"pentru a schimba nivelul de prevenire a furtului focalizării aplicat "
+"ferestrelor și aplicațiilor individuale.<nl/><nl/>Iată ce se întâmplă cu "
+"ferestrele deschise fără acțiunea dumneavoastră directă la fiecare nivel de "
+"prevenire a furtului focalizării:<nl/><list><item><emphasis "
+"strong='true'>Fără</emphasis>: Ferestrele nou deschise se ridică mereu și "
+"obțin focalizarea.</item><item><emphasis strong='true'>Joasă:</emphasis> "
+"Prevenirea furtului focalizării va fi aplicată la fereastra nou deschisă "
+"dar, în situații considerate ambigue de către KWin, fereastra va fi ridicată "
+"și focalizată.</item><item><emphasis strong='true'>Normală:</emphasis> "
+"Prevenirea furtului focalizării va fi aplicată la fereastra nou deschisă "
+"dar, în situații considerate ambigue de către KWin, fereastra <emphasis>nu</"
+"emphasis> va fi ridicată și focalizată.</item><item><emphasis "
+"strong='true'>Înaltă:</emphasis> Fereastra nou deschisă se ridică și obține "
+"focalizarea doar dacă aceasta aparține aceleași aplicații ca fereastra "
+"focalizată acum.</item><item><emphasis strong='true'>Extremă:</emphasis> "
+"Ferestrele nou deschise nu se ridică și nu obțin focalizarea niciodată.</"
+"item></list>"
 
 #: rulesmodel.cpp:655
 #, kde-format
@@ -505,6 +520,25 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Această proprietate controlează nivelul de protejare a focalizării pentru "
+"fereastra activă. Acesta e folosit pentru a supradefini protecția împotriva "
+"furtului focalizării aplicată ferestrelor noi ce sunt deschise fără acțiunea "
+"dumneavoastră directă.<nl/><nl/>Iată ce se întâmplă cu ferestrele noi ce "
+"sunt deschise fără acțiunea dumneavoastră directă la fiecare nivel de "
+"protejare a focalizării cât timp fereastra cu această proprietate aplicată e "
+"focalizată:<nl/><list><item><emphasis strong='true'>Fără</emphasis>: "
+"Ferestrele nou deschise se ridică mereu și obțin focalizarea.</"
+"item><item><emphasis strong='true'>Joasă:</emphasis> Prevenirea furtului "
+"focalizării va fi aplicată la fereastra nou deschisă dar, în situații "
+"considerate ambigue de către KWin, fereastra va fi ridicată și focalizată.</"
+"item><item><emphasis strong='true'>Normală:</emphasis> Prevenirea furtului "
+"focalizării va fi aplicată la fereastra nou deschisă dar, în situații "
+"considerate ambigue de către KWin, fereastra <emphasis>nu</emphasis> va fi "
+"ridicată și focalizată.</item><item><emphasis strong='true'>Înaltă:</"
+"emphasis> Fereastra nou deschisă se ridică și obține focalizarea doar dacă "
+"aceasta aparține aceleași aplicații ca fereastra focalizată acum.</"
+"item><item><emphasis strong='true'>Extremă:</emphasis> Ferestrele nou "
+"deschise nu se ridică și nu obțin focalizarea niciodată.</item></list>"
 
 #: rulesmodel.cpp:683
 #, kde-format
