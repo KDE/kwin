@@ -40,5 +40,8 @@
        <entry key="HighlightWindows" type="Bool">
            <default code="true">TabBoxConfig::defaultHighlightWindow()</default>
        </entry>
+       <entry key="DelayTime" type="Int">
+           <default>90</default>
+       </entry>
     </group>
 </kcfg>

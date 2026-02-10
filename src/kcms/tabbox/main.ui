@@ -618,6 +618,39 @@
         <bool>true</bool>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0" alignment="Qt::AlignRight|Qt::AlignVCenter">
+         <widget class="QCheckBox" name="kcfg_HighlightWindows">
+          <property name="toolTip">
+           <string>The currently selected window will be highlighted by fading out all other windows. This option requires desktop effects to be active.</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" alignment="Qt::AlignLeft|Qt::AlignVCenter">
+         <widget class="QLabel" name="label_HighlightWindows">
+          <property name="text">
+           <string>Show selected window</string>
+          </property>
+          <property name="buddy">
+           <cstring>kcfg_HighlightWindows</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" alignment="Qt::AlignRight|Qt::AlignVCenter">
+         <widget class="QCheckBox" name="kcfg_ShowTabBox">
+          <property name="toolTip">
+           <string>Enable the window list effect</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="1">
          <widget class="QWidget" name="widget_6" native="true">
           <layout class="QHBoxLayout" name="horizontalLayout">
@@ -662,23 +695,44 @@
           </layout>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="kcfg_ShowTabBox">
-          <property name="text">
-           <string/>
+        <item row="2" column="0" alignment="Qt::AlignRight|Qt::AlignVCenter">
+         <widget class="QLabel" name="label_DelayTime">
+          <property name="whatsThis">
+           <string>The time in milliseconds to wait before showing the task switcher.</string>
           </property>
-          <property name="checked">
-           <bool>true</bool>
+          <property name="text">
+           <string>Show delay:</string>
+          </property>
+          <property name="buddy">
+           <cstring>kcfg_DelayTime</cstring>
           </property>
          </widget>
         </item>
-        <item row="0" column="0" colspan="2">
-         <widget class="QCheckBox" name="kcfg_HighlightWindows">
-          <property name="toolTip">
-           <string>The currently selected window will be highlighted by fading out all other windows. This option requires desktop effects to be active.</string>
+        <item row="2" column="1" alignment="Qt::AlignLeft|Qt::AlignVCenter">
+         <widget class="QSpinBox" name="kcfg_DelayTime">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <property name="text">
-           <string>Show selected window</string>
+          <property name="suffix">
+           <string> ms</string>
+          </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>5000</number>
+          </property>
+          <property name="singleStep">
+           <number>50</number>
+          </property>
+          <property name="value">
+           <number>0</number>
+          </property>
+          <property name="toolTip">
+           <string>Delay before the window list appears</string>
           </property>
          </widget>
         </item>
