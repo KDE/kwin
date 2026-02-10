@@ -71,8 +71,13 @@ ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &fro
     const QVector3D white = toOther.map(mdWhite);
 
     ret.addMatrix(toOther, getValueRange({black, red, green, blue, white}), ColorspaceType::LinearRGB);
-    if (!s_disableTonemapping && ret.currentOutputRange().max > maxOutputLuminance * 1.01 && intent == RenderingIntent::Perceptual) {
-        ret.addTonemapper(to->containerColorimetry(), to->referenceLuminance(), ret.currentOutputRange().max, maxOutputLuminance);
+
+    // NOTE that this is different from currentOutputRange().max, as the range
+    // also takes the gamut into account. For tone mapping, we don't care about
+    // the gamut though, only the luminance of white is relevant
+    const double maxWhiteLuminance = std::max({white.x(), white.y(), white.z()});
+    if (!s_disableTonemapping && maxWhiteLuminance > maxOutputLuminance * 1.01 && intent == RenderingIntent::Perceptual) {
+        ret.addTonemapper(to->containerColorimetry(), to->referenceLuminance(), maxWhiteLuminance, maxOutputLuminance);
     }
 
     ret.addInverseTransferFunction(to->transferFunction(), to->transferFunction().type == TransferFunction::linear ? ColorspaceType::LinearRGB : ColorspaceType::NonLinearRGB);
