@@ -25,12 +25,22 @@
 #include "drm_plane.h"
 #include "drm_pointer.h"
 #include "qpainter/qpainterbackend.h"
+#include "wayland/clientconnection.h"
+#include "wayland/display.h"
+#include "wayland/drmlease_v1.h"
+#include "wayland/drmlease_v1_p.h"
 
 #include <drm_fourcc.h>
 #include <fcntl.h>
+#include <sys/socket.h>
 #include <sys/utsname.h>
 
 using namespace KWin;
+
+Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
+Q_LOGGING_CATEGORY(KWIN_OPENGL, "kwin_scene_opengl", QtWarningMsg)
+Q_LOGGING_CATEGORY(KWIN_QPAINTER, "kwin_scene_qpainter", QtWarningMsg)
+Q_LOGGING_CATEGORY(KWIN_VIRTUALKEYBOARD, "kwin_virtualkeyboard", QtWarningMsg)
 
 static std::unique_ptr<MockGpu> findPrimaryDevice(int crtcCount)
 {
@@ -87,6 +97,9 @@ private Q_SLOTS:
     void testModeset_data();
     void testModeset();
     void testVrrChange();
+    void testLeaseDisconnectReconnect();
+    void testLeaseAvailableAfterMasterToggleAndClientExit();
+    void testLeaseAvailableWhenClientExitsBeforeQueuedReoffer();
 };
 
 static void verifyCleanup(MockGpu *mockGpu)
@@ -486,6 +499,220 @@ void DrmTest::testVrrChange()
     QCOMPARE(gpu->drmOutputs().front(), output);
     QCOMPARE(capsChanged.count(), 1);
     QVERIFY(output->capabilities() & BackendOutput::Capability::Vrr);
+}
+
+void DrmTest::testLeaseDisconnectReconnect()
+{
+    const auto mockGpu = findPrimaryDevice(1);
+    const auto nonDesktop = std::make_shared<MockConnector>(mockGpu.get(), true);
+    mockGpu->connectors.push_back(nonDesktop);
+
+    const auto session = Session::create(Session::Type::Noop);
+    const auto backend = std::make_unique<DrmBackend>(session.get());
+    const auto renderBackend = backend->createQPainterBackend();
+    auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
+
+    QVERIFY(gpu->updateOutputs());
+    const auto outputs = gpu->drmOutputs();
+    QCOMPARE(outputs.size(), 1);
+    DrmOutput *nonDesktopOutput = outputs.front();
+    QVERIFY(nonDesktopOutput->isNonDesktop());
+
+    KWin::Display display;
+    const QString socketName = QStringLiteral("kwin-test-mockdrm-lease-%1").arg(QCoreApplication::applicationPid());
+    QVERIFY(display.addSocketName(socketName));
+    QVERIFY(display.start());
+    auto leaseManager = std::make_unique<DrmLeaseManagerV1>(backend.get(), &display);
+    Q_EMIT backend->gpuAdded(gpu.get());
+    auto *leaseDevice = leaseManager->leaseDeviceForGpu(gpu.get());
+    QVERIFY(leaseDevice);
+
+    int sv[2];
+    QVERIFY(socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sv) == 0);
+    ClientConnection *client = display.createClient(sv[0]);
+    QVERIFY(client);
+    close(sv[1]);
+
+    QVERIFY(leaseDevice->add(client->client(), 2, 1));
+    auto *connector = leaseDevice->connectorForOutput(nonDesktopOutput);
+    QVERIFY(connector);
+    const int advertisedBeforeLease = connector->resourceMap().size();
+    QVERIFY(advertisedBeforeLease >= 1);
+
+    auto drmLease = std::make_unique<DrmLease>(gpu.get(), FileDescriptor{dup(gpu->fd())}, 4242, QList<DrmOutput *>{nonDesktopOutput});
+    wl_resource *leaseResource = wl_resource_create(client->client(), &wp_drm_lease_v1_interface, 1, 3);
+    QVERIFY(leaseResource);
+    auto *lease = new DrmLeaseV1Interface(leaseDevice, QList<DrmLeaseConnectorV1Interface *>{connector}, leaseResource);
+    leaseDevice->addLease(lease);
+
+    // Simulate an active lease: the connector must become withdrawn.
+    lease->grant(std::move(drmLease));
+    QVERIFY(connector->withdrawn());
+
+    // Hot-unplug while leased: revoke must not immediately re-advertise.
+    nonDesktop->connection = DRM_MODE_DISCONNECTED;
+    QVERIFY(nonDesktopOutput->connector()->updateProperties());
+    const int advertisedBeforeRevoke = connector->resourceMap().size();
+    lease->revoke();
+    QCOMPARE(connector->resourceMap().size(), advertisedBeforeRevoke);
+    QVERIFY(connector->withdrawn());
+
+    // After reconnect, outputsQueried should re-offer available connectors.
+    nonDesktop->connection = DRM_MODE_CONNECTED;
+    QVERIFY(nonDesktopOutput->connector()->updateProperties());
+    Q_EMIT backend->outputsQueried();
+    QCOMPARE(connector->resourceMap().size(), advertisedBeforeRevoke + 1);
+    QVERIFY(!connector->withdrawn());
+
+    // Explicitly destroy the lease resource so the lease object is removed
+    // before backend teardown. This avoids a second revoke during cleanup.
+    wl_resource_destroy(leaseResource);
+    leaseManager.reset();
+
+    gpu.reset();
+    verifyCleanup(mockGpu.get());
+}
+
+void DrmTest::testLeaseAvailableAfterMasterToggleAndClientExit()
+{
+    const auto mockGpu = findPrimaryDevice(1);
+    const auto nonDesktop = std::make_shared<MockConnector>(mockGpu.get(), true);
+    mockGpu->connectors.push_back(nonDesktop);
+
+    const auto session = Session::create(Session::Type::Noop);
+    const auto backend = std::make_unique<DrmBackend>(session.get());
+    const auto renderBackend = backend->createQPainterBackend();
+    auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
+
+    QVERIFY(gpu->updateOutputs());
+    const auto outputs = gpu->drmOutputs();
+    QCOMPARE(outputs.size(), 1);
+    DrmOutput *nonDesktopOutput = outputs.front();
+    QVERIFY(nonDesktopOutput->isNonDesktop());
+
+    KWin::Display display;
+    const QString socketName = QStringLiteral("kwin-test-mockdrm-lease-master-toggle-%1").arg(QCoreApplication::applicationPid());
+    QVERIFY(display.addSocketName(socketName));
+    QVERIFY(display.start());
+    auto leaseManager = std::make_unique<DrmLeaseManagerV1>(backend.get(), &display);
+    Q_EMIT backend->gpuAdded(gpu.get());
+    auto *leaseDevice = leaseManager->leaseDeviceForGpu(gpu.get());
+    QVERIFY(leaseDevice);
+
+    int sv[2];
+    QVERIFY(socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sv) == 0);
+    ClientConnection *client = display.createClient(sv[0]);
+    QVERIFY(client);
+    close(sv[1]);
+
+    auto *deviceResource = leaseDevice->add(client->client(), 2, 1);
+    QVERIFY(deviceResource);
+
+    auto *connector = leaseDevice->connectorForOutput(nonDesktopOutput);
+    QVERIFY(connector);
+    QVERIFY(!connector->resourceMap().empty());
+
+    wl_resource *leaseResource = wl_resource_create(client->client(), &wp_drm_lease_v1_interface, 1, 3);
+    QVERIFY(leaseResource);
+    auto *lease = new DrmLeaseV1Interface(leaseDevice, QList<DrmLeaseConnectorV1Interface *>{connector}, leaseResource);
+    leaseDevice->addLease(lease);
+    auto drmLease = std::make_unique<DrmLease>(gpu.get(), FileDescriptor{dup(gpu->fd())}, 4242, QList<DrmOutput *>{nonDesktopOutput});
+    lease->grant(std::move(drmLease));
+    QVERIFY(connector->withdrawn());
+
+    Q_EMIT gpu->activeChanged(false);
+    QVERIFY(connector->withdrawn());
+
+    // Simulate client exiting while DRM master is lost.
+    client->destroy();
+    QCoreApplication::processEvents();
+    QVERIFY(connector->resourceMap().empty());
+
+    // Re-acquiring DRM master followed by outputsQueried must make the
+    // connector available again, even if there are no bound resources.
+    Q_EMIT gpu->activeChanged(true);
+    Q_EMIT backend->outputsQueried();
+    QVERIFY(!connector->withdrawn());
+
+    leaseManager.reset();
+    gpu.reset();
+    verifyCleanup(mockGpu.get());
+}
+
+void DrmTest::testLeaseAvailableWhenClientExitsBeforeQueuedReoffer()
+{
+    const auto mockGpu = findPrimaryDevice(1);
+    const auto nonDesktop = std::make_shared<MockConnector>(mockGpu.get(), true);
+    mockGpu->connectors.push_back(nonDesktop);
+
+    const auto session = Session::create(Session::Type::Noop);
+    const auto backend = std::make_unique<DrmBackend>(session.get());
+    const auto renderBackend = backend->createQPainterBackend();
+    auto gpu = std::make_unique<DrmGpu>(backend.get(), mockGpu->fd, DrmDevice::open(mockGpu->devNode));
+
+    QVERIFY(gpu->updateOutputs());
+    const auto outputs = gpu->drmOutputs();
+    QCOMPARE(outputs.size(), 1);
+    DrmOutput *nonDesktopOutput = outputs.front();
+    QVERIFY(nonDesktopOutput->isNonDesktop());
+
+    KWin::Display display;
+    const QString socketName = QStringLiteral("kwin-test-mockdrm-lease-client-exit-%1").arg(QCoreApplication::applicationPid());
+    QVERIFY(display.addSocketName(socketName));
+    QVERIFY(display.start());
+    auto leaseManager = std::make_unique<DrmLeaseManagerV1>(backend.get(), &display);
+    Q_EMIT backend->gpuAdded(gpu.get());
+    auto *leaseDevice = leaseManager->leaseDeviceForGpu(gpu.get());
+    QVERIFY(leaseDevice);
+
+    int sv[2];
+    QVERIFY(socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sv) == 0);
+    ClientConnection *client = display.createClient(sv[0]);
+    QVERIFY(client);
+    close(sv[1]);
+
+    auto *deviceResource = leaseDevice->add(client->client(), 2, 1);
+    QVERIFY(deviceResource);
+
+    auto *connector = leaseDevice->connectorForOutput(nonDesktopOutput);
+    QVERIFY(connector);
+    QVERIFY(!connector->resourceMap().empty());
+
+    wl_resource *leaseResource = wl_resource_create(client->client(), &wp_drm_lease_v1_interface, 1, 3);
+    QVERIFY(leaseResource);
+    auto *lease = new DrmLeaseV1Interface(leaseDevice, QList<DrmLeaseConnectorV1Interface *>{connector}, leaseResource);
+    leaseDevice->addLease(lease);
+    auto drmLease = std::make_unique<DrmLease>(gpu.get(), FileDescriptor{dup(gpu->fd())}, 4242, QList<DrmOutput *>{nonDesktopOutput});
+
+    lease->grant(std::move(drmLease));
+    QVERIFY(connector->withdrawn());
+
+    // Disconnect the client before processing events.
+    // Lease resource destruction triggers DrmLeaseV1Interface teardown,
+    // which revokes the lease. Connectors stay withdrawn until re-offered.
+    client->destroy();
+    QCoreApplication::processEvents();
+    QVERIFY(connector->resourceMap().empty());
+
+    // Trigger outputsQueried -> handleOutputsQueried() which calls
+    // offerAvailableConnectors() to re-offer withdrawn connected connectors.
+    Q_EMIT backend->outputsQueried();
+    QVERIFY(!connector->withdrawn());
+
+    // A newly connecting client should receive the connector again.
+    int sv2[2];
+    QVERIFY(socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sv2) == 0);
+    ClientConnection *client2 = display.createClient(sv2[0]);
+    QVERIFY(client2);
+    close(sv2[1]);
+    auto *deviceResource2 = leaseDevice->add(client2->client(), 2, 5);
+    QVERIFY(deviceResource2);
+    QVERIFY(!connector->resourceMap().empty());
+    QVERIFY(!connector->withdrawn());
+
+    leaseManager.reset();
+    gpu.reset();
+    verifyCleanup(mockGpu.get());
 }
 
 QTEST_GUILESS_MAIN(DrmTest)

@@ -13,6 +13,7 @@ extern "C" {
 #include <libxcvt/libxcvt.h>
 }
 #include <math.h>
+#include <unistd.h>
 
 #include <memory>
 
@@ -22,6 +23,7 @@ extern "C" {
 // Mock impls
 
 static QMap<int, MockGpu*> s_gpus;
+static uint32_t s_nextLeaseId = 1;
 
 static MockGpu *getGpu(int fd)
 {
@@ -1201,12 +1203,61 @@ int drmModeDestroyPropertyBlob(int fd, uint32_t id)
 
 int drmModeCreateLease(int fd, const uint32_t *objects, int num_objects, int flags, uint32_t *lessee_id)
 {
-    return -(errno = ENOTSUP);
+    GPU(fd, -EINVAL);
+    if (!objects || num_objects <= 0 || !lessee_id || flags != 0) {
+        return -(errno = EINVAL);
+    }
+
+    MockLease lease;
+    lease.id = s_nextLeaseId++;
+    for (int i = 0; i < num_objects; ++i) {
+        lease.objects.push_back(objects[i]);
+    }
+    gpu->leases.push_back(lease);
+    *lessee_id = lease.id;
+
+    const int leaseFd = dup(fd);
+    if (leaseFd < 0) {
+        gpu->leases.removeLast();
+        return -errno;
+    }
+    return leaseFd;
 }
 
 drmModeLesseeListPtr drmModeListLessees(int fd)
 {
-    return nullptr;
+    GPU(fd, nullptr);
+    auto isLeaseActive = [gpu](const MockLease &lease) {
+        for (uint32_t obj : lease.objects) {
+            if (const MockConnector *connector = gpu->findConnector(obj)) {
+                if (connector->connection != DRM_MODE_CONNECTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
+
+    QList<uint32_t> activeLeases;
+    for (auto it = gpu->leases.begin(); it != gpu->leases.end();) {
+        if (isLeaseActive(*it)) {
+            activeLeases.push_back(it->id);
+            ++it;
+        } else {
+            it = gpu->leases.erase(it);
+        }
+    }
+
+    drmModeLesseeListRes *ret = static_cast<drmModeLesseeListRes *>(calloc(1, sizeof(drmModeLesseeListRes) + activeLeases.count() * sizeof(uint32_t)));
+    if (!ret) {
+        errno = ENOMEM;
+        return nullptr;
+    }
+    ret->count = activeLeases.count();
+    for (int i = 0; i < activeLeases.count(); ++i) {
+        ret->lessees[i] = activeLeases[i];
+    }
+    return ret;
 }
 
 drmModeObjectListPtr drmModeGetLease(int fd)
@@ -1216,7 +1267,15 @@ drmModeObjectListPtr drmModeGetLease(int fd)
 
 int drmModeRevokeLease(int fd, uint32_t lessee_id)
 {
-    return -(errno = ENOTSUP);
+    GPU(fd, -EINVAL);
+    const auto it = std::find_if(gpu->leases.begin(), gpu->leases.end(), [lessee_id](const MockLease &lease) {
+        return lease.id == lessee_id;
+    });
+    if (it == gpu->leases.end()) {
+        return -(errno = EINVAL);
+    }
+    gpu->leases.erase(it);
+    return 0;
 }
 
 void drmModeFreeResources(drmModeResPtr ptr)

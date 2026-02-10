@@ -140,6 +140,12 @@ struct Prop {
     uint64_t value;
 };
 
+struct MockLease
+{
+    uint32_t id = 0;
+    QList<uint32_t> objects;
+};
+
 struct _drmModeAtomicReq {
     bool legacyEmulation = false;
     QList<Prop> props;
@@ -188,8 +194,6 @@ public:
     QList<drmModePropertyBlobPtr> drmPropertyBlobs;
     QList<drmModeObjectPropertiesPtr> drmObjectProperties;
     QList<drmModePlaneResPtr> drmPlaneRes;
+    QList<MockLease> leases;
     std::mutex m_mutex;
 };
-
-
-

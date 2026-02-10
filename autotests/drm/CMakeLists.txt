@@ -25,11 +25,22 @@ set(mockDRM_SRCS
     ../../src/backends/drm/drm_qpainter_layer.cpp
     ../../src/backends/drm/drm_virtual_egl_layer.cpp
     ../../src/backends/drm/drm_virtual_output.cpp
+    ../../src/wayland/drmlease_v1.cpp
 )
 
 include_directories(${Libdrm_INCLUDE_DIRS})
 
+add_library(DrmLeaseServerProtocol OBJECT)
+set_property(TARGET DrmLeaseServerProtocol PROPERTY POSITION_INDEPENDENT_CODE ON)
+target_link_libraries(DrmLeaseServerProtocol Qt::Core Wayland::Server)
+ecm_add_qtwayland_server_protocol_kde(DrmLeaseServerProtocol
+    PRIVATE_CODE
+    FILES
+        ${WaylandProtocols_DATADIR}/staging/drm-lease/drm-lease-v1.xml
+)
+
 add_library(LibDrmTest STATIC ${mockDRM_SRCS})
+target_sources(LibDrmTest PRIVATE $<TARGET_OBJECTS:DrmLeaseServerProtocol>)
 target_link_libraries(LibDrmTest
     Qt::Gui
     Qt::Widgets

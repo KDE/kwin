@@ -25,6 +25,7 @@ class DrmLeaseManagerV1 : public QObject
 public:
     DrmLeaseManagerV1(DrmBackend *backend, Display *display, QObject *parent = nullptr);
     ~DrmLeaseManagerV1();
+    DrmLeaseDeviceV1Interface *leaseDeviceForGpu(DrmGpu *gpu) const;
 
 private:
     void addGpu(DrmGpu *gpu);

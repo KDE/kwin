@@ -9,6 +9,7 @@
 #include "utils/common.h"
 #include "utils/resource.h"
 
+#include <algorithm>
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -38,6 +39,11 @@ DrmLeaseManagerV1::~DrmLeaseManagerV1()
     }
 }
 
+DrmLeaseDeviceV1Interface *DrmLeaseManagerV1::leaseDeviceForGpu(DrmGpu *gpu) const
+{
+    return m_leaseDevices.value(gpu);
+}
+
 void DrmLeaseManagerV1::addGpu(DrmGpu *gpu)
 {
     m_leaseDevices[gpu] = new DrmLeaseDeviceV1Interface(m_display, gpu);
@@ -53,8 +59,10 @@ void DrmLeaseManagerV1::removeGpu(DrmGpu *gpu)
 void DrmLeaseManagerV1::handleOutputsQueried()
 {
     for (const auto device : m_leaseDevices) {
-        device->done();
-        device->setDrmMaster(device->gpu()->isActive());
+        if (device->hasDrmMaster()) {
+            device->offerAvailableConnectors();
+            device->done();
+        }
     }
 }
 
@@ -68,7 +76,7 @@ DrmLeaseDeviceV1Interface::DrmLeaseDeviceV1Interface(Display *display, DrmGpu *g
     }
     connect(gpu, &DrmGpu::outputAdded, this, &DrmLeaseDeviceV1Interface::addOutput);
     connect(gpu, &DrmGpu::outputRemoved, this, &DrmLeaseDeviceV1Interface::removeOutput);
-    connect(gpu, &DrmGpu::activeChanged, this, &DrmLeaseDeviceV1Interface::setDrmMaster);
+    connect(gpu, &DrmGpu::activeChanged, this, &DrmLeaseDeviceV1Interface::onGpuActiveChanged);
 }
 
 DrmLeaseDeviceV1Interface::~DrmLeaseDeviceV1Interface()
@@ -98,10 +106,7 @@ void DrmLeaseDeviceV1Interface::removeOutput(DrmAbstractOutput *output)
         DrmLeaseConnectorV1Interface *connector = it->second.get();
         connector->withdraw();
         for (DrmLeaseV1Interface *lease : std::as_const(m_leases)) {
-            if (lease->connectors().contains(connector)) {
-                lease->connectors().removeOne(connector);
-                lease->revoke();
-            }
+            lease->removeConnector(connector);
         }
         for (DrmLeaseRequestV1Interface *leaseRequest : std::as_const(m_leaseRequests)) {
             if (leaseRequest->connectors().contains(connector)) {
@@ -112,33 +117,42 @@ void DrmLeaseDeviceV1Interface::removeOutput(DrmAbstractOutput *output)
     }
 }
 
+void DrmLeaseDeviceV1Interface::onGpuActiveChanged(bool active)
+{
+    if (!active) {
+        // Withdraw all connectors immediately. Re-offering happens later
+        // in handleOutputsQueried() after updateOutputs() refreshes
+        // connector state on the way back from VT switch.
+        bool changed = false;
+        for (const auto &[output, connector] : m_connectors) {
+            if (!connector->withdrawn()) {
+                connector->withdraw();
+                changed = true;
+            }
+        }
+        if (changed) {
+            done();
+        }
+    }
+    setDrmMaster(active);
+}
+
 void DrmLeaseDeviceV1Interface::setDrmMaster(bool hasDrmMaster)
 {
     if (hasDrmMaster == m_hasDrmMaster) {
         return;
     }
+    m_hasDrmMaster = hasDrmMaster;
     if (hasDrmMaster) {
-        // send pending drm fds
         while (!m_pendingFds.isEmpty()) {
             FileDescriptor fd = m_gpu->createNonMasterFd();
             send_drm_fd(m_pendingFds.dequeue(), fd.get());
         }
-        // offer all connectors again
-        for (const auto &[output, connector] : m_connectors) {
-            offerConnector(connector.get());
-        }
     } else {
-        // withdraw all connectors
-        for (const auto &[output, connector] : m_connectors) {
-            connector->withdraw();
-        }
-        // and revoke all leases
         for (DrmLeaseV1Interface *lease : std::as_const(m_leases)) {
             lease->revoke();
         }
     }
-    m_hasDrmMaster = hasDrmMaster;
-    done();
 }
 
 void DrmLeaseDeviceV1Interface::done()
@@ -196,10 +210,38 @@ DrmGpu *DrmLeaseDeviceV1Interface::gpu() const
 
 void DrmLeaseDeviceV1Interface::offerConnector(DrmLeaseConnectorV1Interface *connector)
 {
+    // Mark the connector as available even if there are no currently bound
+    // wp_drm_lease_device_v1 resources. Otherwise no send() happens, withdrawn
+    // stays true, and future binds won't get this connector advertised.
+    connector->setAvailable();
     for (const Resource *resource : resourceMap()) {
         auto connectorResource = connector->add(resource->client(), 0, resource->version());
         send_connector(resource->handle, connectorResource->handle);
         connector->send(connectorResource->handle);
+    }
+}
+
+DrmLeaseConnectorV1Interface *DrmLeaseDeviceV1Interface::connectorForOutput(DrmAbstractOutput *output) const
+{
+    const auto it = m_connectors.find(output);
+    return it != m_connectors.end() ? it->second.get() : nullptr;
+}
+
+bool DrmLeaseDeviceV1Interface::isLeased(DrmLeaseConnectorV1Interface *connector) const
+{
+    return std::ranges::any_of(m_leases, [connector](const DrmLeaseV1Interface *lease) {
+        return lease->isGranted() && lease->hasConnector(connector);
+    });
+}
+
+void DrmLeaseDeviceV1Interface::offerAvailableConnectors()
+{
+    for (const auto &[output, connector] : m_connectors) {
+        if (connector->withdrawn()
+            && connector->output()->connector()->isConnected()
+            && !isLeased(connector.get())) {
+            offerConnector(connector.get());
+        }
     }
 }
 
@@ -295,6 +337,11 @@ void DrmLeaseConnectorV1Interface::withdraw()
             send_withdrawn(resource->handle);
         }
     }
+}
+
+void DrmLeaseConnectorV1Interface::setAvailable()
+{
+    m_withdrawn = false;
 }
 
 void DrmLeaseConnectorV1Interface::wp_drm_lease_connector_v1_destroy(Resource *resource)
@@ -426,13 +473,13 @@ void DrmLeaseV1Interface::revoke()
         send_finished();
     }
     m_lease.reset();
-    // check if we should offer connectors again
-    if (m_device->hasDrmMaster()) {
-        for (DrmLeaseConnectorV1Interface *connector : std::as_const(m_connectors)) {
-            m_device->offerConnector(connector);
-        }
-        m_device->done();
-    }
+    // Connectors stay withdrawn; offerAvailableConnectors() will re-offer
+    // them at the next outputsQueried if they are still connected.
+}
+
+bool DrmLeaseV1Interface::isGranted() const
+{
+    return m_lease != nullptr;
 }
 
 void DrmLeaseV1Interface::wp_drm_lease_v1_destroy(Resource *resource)
@@ -445,9 +492,16 @@ void DrmLeaseV1Interface::wp_drm_lease_v1_destroy_resource(Resource *resource)
     delete this;
 }
 
-QList<DrmLeaseConnectorV1Interface *> DrmLeaseV1Interface::connectors() const
+void DrmLeaseV1Interface::removeConnector(DrmLeaseConnectorV1Interface *connector)
 {
-    return m_connectors;
+    if (m_connectors.removeOne(connector) && isGranted()) {
+        revoke();
+    }
+}
+
+bool DrmLeaseV1Interface::hasConnector(DrmLeaseConnectorV1Interface *connector) const
+{
+    return m_connectors.contains(connector);
 }
 
 }

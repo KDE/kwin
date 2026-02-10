@@ -34,7 +34,7 @@ public:
 
     void addOutput(DrmAbstractOutput *output);
     void removeOutput(DrmAbstractOutput *output);
-    void setDrmMaster(bool hasDrmMaster);
+    void onGpuActiveChanged(bool active);
     void done();
     void remove();
     void addLeaseRequest(DrmLeaseRequestV1Interface *leaseRequest);
@@ -42,11 +42,15 @@ public:
     void addLease(DrmLeaseV1Interface *lease);
     void removeLease(DrmLeaseV1Interface *lease);
     void offerConnector(DrmLeaseConnectorV1Interface *connector);
+    DrmLeaseConnectorV1Interface *connectorForOutput(DrmAbstractOutput *output) const;
+    void offerAvailableConnectors();
 
     bool hasDrmMaster() const;
     DrmGpu *gpu() const;
 
 private:
+    void setDrmMaster(bool hasDrmMaster);
+    bool isLeased(DrmLeaseConnectorV1Interface *connector) const;
     void wp_drm_lease_device_v1_create_lease_request(Resource *resource, uint32_t id) override;
     void wp_drm_lease_device_v1_release(Resource *resource) override;
     void wp_drm_lease_device_v1_bind_resource(Resource *resource) override;
@@ -70,6 +74,7 @@ public:
     uint32_t id() const;
     void send(wl_resource *resource);
     void withdraw();
+    void setAvailable();
 
     DrmLeaseDeviceV1Interface *device() const;
     DrmOutput *output() const;
@@ -112,8 +117,9 @@ public:
     void grant(std::unique_ptr<DrmLease> &&lease);
     void deny();
     void revoke();
-
-    QList<DrmLeaseConnectorV1Interface *> connectors() const;
+    void removeConnector(DrmLeaseConnectorV1Interface *connector);
+    bool isGranted() const;
+    bool hasConnector(DrmLeaseConnectorV1Interface *connector) const;
 
 private:
     DrmLeaseDeviceV1Interface *m_device;
