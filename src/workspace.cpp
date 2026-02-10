@@ -3127,6 +3127,11 @@ Activities *Workspace::activities() const
 }
 #endif
 
+OutputConfigurationStore *Workspace::outputConfigureStore() const
+{
+    return m_outputConfigStore.get();
+}
+
 } // namespace
 
 #include "moc_workspace.cpp"

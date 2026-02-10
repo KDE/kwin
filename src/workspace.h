@@ -427,6 +427,7 @@ public:
 #if KWIN_BUILD_ACTIVITIES
     Activities *activities() const;
 #endif
+    OutputConfigurationStore *outputConfigureStore() const;
 
     /**
      * Apply the requested output configuration. Note that you must use this function
