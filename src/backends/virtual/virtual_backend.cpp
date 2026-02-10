@@ -115,7 +115,7 @@ std::unique_ptr<EglBackend> VirtualBackend::createOpenGLBackend()
 BackendOutput *VirtualBackend::createVirtualOutput(const QString &name, const QString &description, const QSize &size, qreal scale)
 {
     return addOutput(OutputInfo{
-        .geometry = Rect(QPoint(), size),
+        .size = size,
         .scale = scale,
         .connectorName = QStringLiteral("Virtual-") + name,
     });
@@ -136,7 +136,7 @@ QList<BackendOutput *> VirtualBackend::outputs() const
 VirtualOutput *VirtualBackend::createOutput(const OutputInfo &info)
 {
     VirtualOutput *output = new VirtualOutput(this, info.internal, info.physicalSizeInMM, info.panelOrientation, info.edid, info.edidIdentifierOverride, info.connectorName, info.mstPath);
-    output->init(info.geometry.topLeft(), info.geometry.size() * info.scale, info.scale, info.modes);
+    output->init(info.size * info.scale, info.scale, info.modes);
     m_outputs.append(output);
     Q_EMIT outputAdded(output);
     return output;

@@ -36,7 +36,7 @@ public:
 
     struct OutputInfo
     {
-        Rect geometry;
+        QSize size;
         double scale = 1;
         bool internal = false;
         QSize physicalSizeInMM;

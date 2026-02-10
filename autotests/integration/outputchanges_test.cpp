@@ -1597,12 +1597,12 @@ void OutputChangesTest::testGeneratePartialConfigs()
     const auto outputBackend = qobject_cast<VirtualBackend *>(kwinApp()->outputBackend());
     outputBackend->setVirtualOutputs({
         VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1920, 1080),
+            .size = QSize(1920, 1080),
             .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
             .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
         },
         VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1920, 1080),
+            .size = QSize(1920, 1080),
             .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
             .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
         },
@@ -1633,17 +1633,17 @@ void OutputChangesTest::testGeneratePartialConfigs()
     // now add another output
     outputBackend->setVirtualOutputs({
         VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1920, 1080),
+            .size = QSize(1920, 1080),
             .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
             .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
         },
         VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1920, 1080),
+            .size = QSize(1920, 1080),
             .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
             .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
         },
         VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1920, 1080),
+            .size = QSize(1920, 1080),
         },
     });
     outputs = kwinApp()->outputBackend()->outputs();
@@ -1885,7 +1885,7 @@ void OutputChangesTest::testSettingRestoration()
     const auto outputBackend = qobject_cast<VirtualBackend *>(kwinApp()->outputBackend());
     outputBackend->setVirtualOutputs(outputData | std::views::transform([](const IdentificationData &data) {
         return VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1280, 1024),
+            .size = QSize(1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
@@ -1927,7 +1927,7 @@ void OutputChangesTest::testSettingRestoration()
     // this must work if one of the outputs is removed in between as well
     outputBackend->setVirtualOutputs({
         VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1280, 1024),
+            .size = QSize(1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
@@ -1941,7 +1941,7 @@ void OutputChangesTest::testSettingRestoration()
     // and add it again, with the inverted order
     outputBackend->setVirtualOutputs(outputData | std::views::reverse | std::views::transform([](const IdentificationData &data) {
         return VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1280, 1024),
+            .size = QSize(1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {ModeInfo(QSize(1280, 1024), 60000, OutputMode::Flag::Preferred)},
@@ -1980,7 +1980,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     // to additionally test the case when EDID ID isn't unique when this happens
     outputBackend->setVirtualOutputs({
         VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1280, 1024),
+            .size = QSize(1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {
@@ -1993,7 +1993,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
             .mstPath = QByteArrayLiteral("MST-1-1"),
         },
         VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1280, 1024),
+            .size = QSize(1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {
@@ -2043,7 +2043,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     // now libdisplay-info was updated, and we have an EDID ID for the same hash
     outputBackend->setVirtualOutputs({
         VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1280, 1024),
+            .size = QSize(1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {
@@ -2056,7 +2056,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
             .mstPath = QByteArrayLiteral("MST-1-1"),
         },
         VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1280, 1024),
+            .size = QSize(1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {
@@ -2084,7 +2084,7 @@ void OutputChangesTest::testSettingRestoration_replacedMode()
     const auto outputBackend = qobject_cast<VirtualBackend *>(kwinApp()->outputBackend());
     outputBackend->setVirtualOutputs({
         VirtualBackend::OutputInfo{
-            .geometry = Rect(0, 0, 1280, 1024),
+            .size = QSize(1280, 1024),
             .internal = false,
             .physicalSizeInMM = QSize(598, 336),
             .modes = {

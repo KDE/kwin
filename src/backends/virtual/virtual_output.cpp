@@ -61,7 +61,7 @@ bool VirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
     return true;
 }
 
-void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale, const QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> &modes)
+void VirtualOutput::init(const QSize &pixelSize, qreal scale, const QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> &modes)
 {
     QList<std::shared_ptr<OutputMode>> modeList;
     for (const auto &mode : modes) {
@@ -75,7 +75,6 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize, 
     m_renderLoop->setRefreshRate(modeList.front()->refreshRate());
     m_vsyncMonitor->setRefreshRate(modeList.front()->refreshRate());
     setState(State{
-        .position = logicalPosition,
         .scale = scale,
         .modes = modeList,
         .currentMode = modeList.front(),

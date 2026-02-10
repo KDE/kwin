@@ -310,7 +310,7 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
     QList<VirtualBackend::OutputInfo> converted;
     std::transform(infos.begin(), infos.end(), std::back_inserter(converted), [](const auto &info) {
         return VirtualBackend::OutputInfo{
-            .geometry = info.geometry,
+            .size = info.geometry.size(),
             .scale = info.scale,
             .internal = info.internal,
             .physicalSizeInMM = info.physicalSizeInMM,
