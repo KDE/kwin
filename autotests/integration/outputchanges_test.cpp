@@ -1545,7 +1545,7 @@ void OutputChangesTest::testGenerateConfigs()
 
     const auto outputs = kwinApp()->outputBackend()->outputs();
     OutputConfigurationStore configs;
-    auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+    auto cfg = configs.queryConfig(OutputConfigurationQuery(outputs));
     QVERIFY(cfg.has_value());
     const auto [config, type] = *cfg;
     const auto outputConfig = config.constChangeSet(outputs.front());
@@ -1685,7 +1685,9 @@ void OutputChangesTest::testAutorotate()
 
     const auto outputs = kwinApp()->outputBackend()->outputs();
     OutputConfigurationStore configs;
-    auto cfg = configs.queryConfig(outputs, false, &sensorReading, true);
+    auto cfg = configs.queryConfig(OutputConfigurationQuery(outputs)
+                                       .withAccelerometerOrientation(&sensorReading)
+                                       .withTabletMode(true));
     QVERIFY(cfg.has_value());
     const auto [config, type] = *cfg;
     const auto outputConfig = config.constChangeSet(outputs.front());
@@ -1885,7 +1887,7 @@ void OutputChangesTest::testSettingRestoration()
 
     QList<std::optional<QPoint>> outputPositions;
     {
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(OutputConfigurationQuery(outputs));
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         for (const auto output : outputs) {
@@ -1897,7 +1899,7 @@ void OutputChangesTest::testSettingRestoration()
     // the positions must be independent of the order of outputs in the list
     std::ranges::reverse(outputs);
     {
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(OutputConfigurationQuery(outputs));
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         auto revertedPositions = outputPositions | std::views::reverse;
@@ -1921,7 +1923,7 @@ void OutputChangesTest::testSettingRestoration()
     });
     outputs = kwinApp()->outputBackend()->outputs();
     {
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(OutputConfigurationQuery(outputs));
         const auto [config, type] = *cfg;
         outputs.front()->applyChanges(config);
     }
@@ -1942,7 +1944,7 @@ void OutputChangesTest::testSettingRestoration()
     outputs = kwinApp()->outputBackend()->outputs();
 
     {
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(OutputConfigurationQuery(outputs));
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         auto revertedPositions = outputPositions | std::views::reverse;
@@ -2001,7 +2003,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
 
     {
         // query the generated config, like KWin normally would
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(OutputConfigurationQuery(outputs));
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         outputs.front()->applyChanges(config);
@@ -2020,7 +2022,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     {
         // verify that querying the config also shows the changed mode
         // things could already go wrong here
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(OutputConfigurationQuery(outputs));
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         QCOMPARE(type, OutputConfigurationStore::ConfigType::Preexisting);
@@ -2060,7 +2062,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
     outputs = kwinApp()->outputBackend()->outputs();
 
     {
-        auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+        auto cfg = configs.queryConfig(OutputConfigurationQuery(outputs));
         QVERIFY(cfg.has_value());
         const auto [config, type] = *cfg;
         QCOMPARE(config.constChangeSet(outputs[0])->desiredModeSize.value(), QSize(640, 480));
@@ -2107,7 +2109,7 @@ void OutputChangesTest::testSettingRestoration_replacedMode()
     // now, mark the mode as "removed". Its replacement is already in the mode list
     outputs[0]->modes()[1]->setRemoved();
 
-    const auto opt = configs.queryConfig(outputs, false, nullptr, false);
+    const auto opt = configs.queryConfig(OutputConfigurationQuery(outputs));
     QVERIFY(opt.has_value());
     const auto [config, type] = *opt;
     output->applyChanges(config);

@@ -15,7 +15,6 @@
 #include <QSize>
 #include <memory>
 #include <optional>
-#include <tuple>
 #include <unordered_map>
 
 class QOrientationReading;
@@ -24,6 +23,27 @@ namespace KWin
 {
 
 class OutputConfiguration;
+
+class KWIN_EXPORT OutputConfigurationQuery
+{
+public:
+    explicit OutputConfigurationQuery(const QList<BackendOutput *> &outputs);
+
+    QList<BackendOutput *> outputs() const;
+    bool isLidClosed() const;
+    bool isTabletMode() const;
+    QOrientationReading *accelerometerOrientation() const;
+
+    OutputConfigurationQuery &&withLidClosed(bool closed) &&;
+    OutputConfigurationQuery &&withTabletMode(bool engaged) &&;
+    OutputConfigurationQuery &&withAccelerometerOrientation(QOrientationReading *orientation) &&;
+
+private:
+    QList<BackendOutput *> m_outputs;
+    bool m_lidClosed = false;
+    bool m_tabletMode = false;
+    QOrientationReading *m_accelerometerOrientation = nullptr;
+};
 
 class KWIN_EXPORT OutputConfigurationStore
 {
@@ -35,7 +55,7 @@ public:
         Preexisting,
         Generated,
     };
-    std::optional<std::pair<OutputConfiguration, ConfigType>> queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode);
+    std::optional<std::pair<OutputConfiguration, ConfigType>> queryConfig(const OutputConfigurationQuery &query);
     void storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed, const OutputConfiguration &config);
 
     void applyMirroring(OutputConfiguration &config, const QList<BackendOutput *> &outputs);
@@ -123,4 +143,22 @@ private:
     QList<OutputState> m_outputs;
     QList<Setup> m_setups;
 };
+
+inline OutputConfigurationQuery &&OutputConfigurationQuery::withLidClosed(bool closed) &&
+{
+    m_lidClosed = closed;
+    return std::move(*this);
+}
+
+inline OutputConfigurationQuery &&OutputConfigurationQuery::withTabletMode(bool engaged) &&
+{
+    m_tabletMode = engaged;
+    return std::move(*this);
+}
+
+inline OutputConfigurationQuery &&OutputConfigurationQuery::withAccelerometerOrientation(QOrientationReading *orientation) &&
+{
+    m_accelerometerOrientation = orientation;
+    return std::move(*this);
+}
 }

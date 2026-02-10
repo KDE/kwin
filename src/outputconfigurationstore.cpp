@@ -27,6 +27,31 @@
 namespace KWin
 {
 
+OutputConfigurationQuery::OutputConfigurationQuery(const QList<BackendOutput *> &outputs)
+    : m_outputs(outputs)
+{
+}
+
+QList<BackendOutput *> OutputConfigurationQuery::outputs() const
+{
+    return m_outputs;
+}
+
+bool OutputConfigurationQuery::isLidClosed() const
+{
+    return m_lidClosed;
+}
+
+bool OutputConfigurationQuery::isTabletMode() const
+{
+    return m_tabletMode;
+}
+
+QOrientationReading *OutputConfigurationQuery::accelerometerOrientation() const
+{
+    return m_accelerometerOrientation;
+}
+
 OutputConfigurationStore::OutputConfigurationStore()
 {
     load();
@@ -37,29 +62,29 @@ OutputConfigurationStore::~OutputConfigurationStore()
     save();
 }
 
-std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const QList<BackendOutput *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode)
+std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigType>> OutputConfigurationStore::queryConfig(const OutputConfigurationQuery &query)
 {
     QList<BackendOutput *> relevantOutputs;
-    std::copy_if(outputs.begin(), outputs.end(), std::back_inserter(relevantOutputs), [](BackendOutput *output) {
+    std::ranges::copy_if(query.outputs(), std::back_inserter(relevantOutputs), [](BackendOutput *output) {
         return !output->isNonDesktop() && !output->isPlaceholder();
     });
     if (relevantOutputs.isEmpty()) {
         return std::nullopt;
     }
     // assigns uuids, if the outputs don't have one yet
-    registerOutputs(outputs);
-    if (const auto opt = findSetup(relevantOutputs, isLidClosed)) {
+    registerOutputs(query.outputs());
+    if (const auto opt = findSetup(relevantOutputs, query.isLidClosed())) {
         const auto &[setup, outputStates] = *opt;
         auto config = setupToConfig(setup, outputStates);
-        applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
+        applyOrientationReading(config, relevantOutputs, query.accelerometerOrientation(), query.isTabletMode());
         applyMirroring(config, relevantOutputs);
-        storeConfig(relevantOutputs, isLidClosed, config);
+        storeConfig(relevantOutputs, query.isLidClosed(), config);
         return std::make_tuple(config, ConfigType::Preexisting);
     }
-    auto config = generateConfig(relevantOutputs, isLidClosed);
-    applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
+    auto config = generateConfig(relevantOutputs, query.isLidClosed());
+    applyOrientationReading(config, relevantOutputs, query.accelerometerOrientation(), query.isTabletMode());
     applyMirroring(config, relevantOutputs);
-    storeConfig(relevantOutputs, isLidClosed, config);
+    storeConfig(relevantOutputs, query.isLidClosed(), config);
     return std::make_tuple(config, ConfigType::Generated);
 }
 

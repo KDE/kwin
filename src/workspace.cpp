@@ -232,7 +232,11 @@ void Workspace::init()
         const auto outputs = kwinApp()->outputBackend()->outputs();
         m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(outputs, kwinApp()->tabletModeManager()->effectiveTabletMode()));
         m_lightSensor->setEnabled(m_outputConfigStore->isAutoBrightnessActive(outputs));
-        auto opt = m_outputConfigStore->queryConfig(outputs, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+        auto opt = m_outputConfigStore->queryConfig(
+            OutputConfigurationQuery(outputs)
+                .withLidClosed(m_lidSwitchTracker->isLidClosed())
+                .withAccelerometerOrientation(m_orientationSensor->reading())
+                .withTabletMode(kwinApp()->tabletModeManager()->effectiveTabletMode()));
         if (!opt) {
             return;
         }
@@ -635,7 +639,11 @@ void Workspace::updateOutputConfiguration()
     QList<BackendOutput *> toEnable = outputs;
     OutputConfigurationError error = OutputConfigurationError::None;
     do {
-        auto opt = m_outputConfigStore->queryConfig(toEnable, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+        auto opt = m_outputConfigStore->queryConfig(
+            OutputConfigurationQuery(toEnable)
+                .withLidClosed(m_lidSwitchTracker->isLidClosed())
+                .withAccelerometerOrientation(m_orientationSensor->reading())
+                .withTabletMode(kwinApp()->tabletModeManager()->effectiveTabletMode()));
         if (!opt) {
             return;
         }
