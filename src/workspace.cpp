@@ -539,7 +539,7 @@ OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration
         return error;
     }
     updateOutputs();
-    m_outputConfigStore->storeConfig(backendOutputs, m_lidSwitchTracker->isLidClosed(), config);
+    m_outputConfigStore->storeConfig(backendOutputs, m_lidSwitchTracker->isLidClosed());
     m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(backendOutputs, kwinApp()->tabletModeManager()->effectiveTabletMode()));
     m_lightSensor->setEnabled(m_outputConfigStore->isAutoBrightnessActive(backendOutputs));
 

@@ -59,13 +59,11 @@ std::optional<std::pair<OutputConfiguration, OutputConfigurationStore::ConfigTyp
         auto config = setupToConfig(setup, outputStates);
         applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
         applyMirroring(config, relevantOutputs);
-        storeConfig(relevantOutputs, isLidClosed, config);
         return std::make_tuple(config, ConfigType::Preexisting);
     }
     auto config = generateConfig(relevantOutputs, isLidClosed);
     applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
     applyMirroring(config, relevantOutputs);
-    storeConfig(relevantOutputs, isLidClosed, config);
     return std::make_tuple(config, ConfigType::Generated);
 }
 
@@ -294,7 +292,7 @@ std::optional<size_t> OutputConfigurationStore::findOutputIndex(BackendOutput *o
     }
 }
 
-void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed, const OutputConfiguration &config)
+void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutputs, bool isLidClosed)
 {
     QList<BackendOutput *> relevantOutputs;
     std::copy_if(allOutputs.begin(), allOutputs.end(), std::back_inserter(relevantOutputs), [](BackendOutput *output) {
@@ -324,115 +322,60 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
             outputIt = setup->outputs.end() - 1;
         }
         const std::optional<QString> existingUuid = m_outputs[*outputIndex].uuid;
-        if (const auto changeSet = config.constChangeSet(output)) {
-            QSize modeSize = changeSet->desiredModeSize.value_or(output->desiredModeSize());
-            if (modeSize.isEmpty()) {
-                modeSize = output->currentMode()->size();
-            }
-            uint32_t refreshRate = changeSet->desiredModeRefreshRate.value_or(output->desiredModeRefreshRate());
-            if (refreshRate == 0) {
-                refreshRate = output->currentMode()->refreshRate();
-            }
-            m_outputs[*outputIndex] = OutputState{
-                .edidIdentifier = output->edid().identifier(),
-                .connectorName = output->name(),
-                .edidHash = output->edid().hash(),
-                .mstPath = output->mstPath(),
-                .mode = ModeData{
-                    .size = modeSize,
-                    .refreshRate = refreshRate,
-                },
-                .scaleSetting = changeSet->scaleSetting.value_or(output->scaleSetting()),
-                .transform = changeSet->transform.value_or(output->transform()),
-                .manualTransform = changeSet->manualTransform.value_or(output->manualTransform()),
-                .overscan = changeSet->overscan.value_or(output->overscan()),
-                .rgbRange = changeSet->rgbRange.value_or(output->rgbRange()),
-                .vrrPolicy = changeSet->vrrPolicy.value_or(output->vrrPolicy()),
-                .highDynamicRange = changeSet->highDynamicRange.value_or(output->highDynamicRange()),
-                .referenceLuminance = changeSet->referenceLuminance.value_or(output->referenceLuminance()),
-                .wideColorGamut = changeSet->wideColorGamut.value_or(output->wideColorGamut()),
-                .autoRotation = changeSet->autoRotationPolicy.value_or(output->autoRotationPolicy()),
-                .iccProfilePath = changeSet->iccProfilePath.value_or(output->iccProfilePath()),
-                .colorProfileSource = changeSet->colorProfileSource.value_or(output->colorProfileSource()),
-                .maxPeakBrightnessOverride = changeSet->maxPeakBrightnessOverride.value_or(output->maxPeakBrightnessOverride()),
-                .maxAverageBrightnessOverride = changeSet->maxAverageBrightnessOverride.value_or(output->maxAverageBrightnessOverride()),
-                .minBrightnessOverride = changeSet->minBrightnessOverride.value_or(output->minBrightnessOverride()),
-                .sdrGamutWideness = changeSet->sdrGamutWideness.value_or(output->sdrGamutWideness()),
-                .brightness = changeSet->brightness.value_or(output->brightnessSetting()),
-                .allowSdrSoftwareBrightness = changeSet->allowSdrSoftwareBrightness.value_or(output->allowSdrSoftwareBrightness()),
-                .colorPowerTradeoff = changeSet->colorPowerTradeoff.value_or(output->colorPowerTradeoff()),
-                .uuid = existingUuid,
-                .detectedDdcCi = changeSet->detectedDdcCi.value_or(output->detectedDdcCi()),
-                .allowDdcCi = changeSet->allowDdcCi.value_or(output->allowDdcCi()),
-                .maxBitsPerColor = changeSet->maxBitsPerColor.value_or(output->maxBitsPerColor()),
-                .edrPolicy = changeSet->edrPolicy.value_or(output->edrPolicy()),
-                .sharpness = changeSet->sharpness.value_or(output->sharpnessSetting()),
-                .customModes = changeSet->customModes.value_or(output->customModes()),
-                .automaticBrightness = changeSet->automaticBrightness.value_or(output->automaticBrightness()),
-                .autoBrightnessCurve = changeSet->autoBrightnessCurve.value_or(output->autoBrightnessCurve()),
-            };
-            *outputIt = SetupState{
-                .outputIndex = *outputIndex,
-                .position = changeSet->pos.value_or(output->position()),
-                .enabled = changeSet->enabled.value_or(output->isEnabled()),
-                .priority = int(output->priority()),
-                .replicationSource = changeSet->replicationSource.value_or(output->replicationSource()),
-            };
-        } else {
-            QSize modeSize = output->desiredModeSize();
-            if (modeSize.isEmpty()) {
-                modeSize = output->currentMode()->size();
-            }
-            uint32_t refreshRate = output->desiredModeRefreshRate();
-            if (refreshRate == 0) {
-                refreshRate = output->currentMode()->refreshRate();
-            }
-            m_outputs[*outputIndex] = OutputState{
-                .edidIdentifier = output->edid().identifier(),
-                .connectorName = output->name(),
-                .edidHash = output->edid().hash(),
-                .mstPath = output->mstPath(),
-                .mode = ModeData{
-                    .size = modeSize,
-                    .refreshRate = refreshRate,
-                },
-                .scaleSetting = output->scaleSetting(),
-                .transform = output->transform(),
-                .manualTransform = output->manualTransform(),
-                .overscan = output->overscan(),
-                .rgbRange = output->rgbRange(),
-                .vrrPolicy = output->vrrPolicy(),
-                .highDynamicRange = output->highDynamicRange(),
-                .referenceLuminance = output->referenceLuminance(),
-                .wideColorGamut = output->wideColorGamut(),
-                .autoRotation = output->autoRotationPolicy(),
-                .iccProfilePath = output->iccProfilePath(),
-                .colorProfileSource = output->colorProfileSource(),
-                .maxPeakBrightnessOverride = output->maxPeakBrightnessOverride(),
-                .maxAverageBrightnessOverride = output->maxAverageBrightnessOverride(),
-                .minBrightnessOverride = output->minBrightnessOverride(),
-                .sdrGamutWideness = output->sdrGamutWideness(),
-                .brightness = output->brightnessSetting(),
-                .allowSdrSoftwareBrightness = output->allowSdrSoftwareBrightness(),
-                .colorPowerTradeoff = output->colorPowerTradeoff(),
-                .uuid = existingUuid,
-                .detectedDdcCi = output->detectedDdcCi(),
-                .allowDdcCi = output->allowDdcCi(),
-                .maxBitsPerColor = output->maxBitsPerColor(),
-                .edrPolicy = output->edrPolicy(),
-                .sharpness = output->sharpnessSetting(),
-                .customModes = output->customModes(),
-                .automaticBrightness = output->automaticBrightness(),
-                .autoBrightnessCurve = output->autoBrightnessCurve(),
-            };
-            *outputIt = SetupState{
-                .outputIndex = *outputIndex,
-                .position = output->position(),
-                .enabled = output->isEnabled(),
-                .priority = int(output->priority()),
-                .replicationSource = output->replicationSource(),
-            };
+
+        QSize modeSize = output->desiredModeSize();
+        if (modeSize.isEmpty()) {
+            modeSize = output->currentMode()->size();
         }
+        uint32_t refreshRate = output->desiredModeRefreshRate();
+        if (refreshRate == 0) {
+            refreshRate = output->currentMode()->refreshRate();
+        }
+        m_outputs[*outputIndex] = OutputState{
+            .edidIdentifier = output->edid().identifier(),
+            .connectorName = output->name(),
+            .edidHash = output->edid().hash(),
+            .mstPath = output->mstPath(),
+            .mode = ModeData{
+                .size = modeSize,
+                .refreshRate = refreshRate,
+            },
+            .scaleSetting = output->scaleSetting(),
+            .transform = output->transform(),
+            .manualTransform = output->manualTransform(),
+            .overscan = output->overscan(),
+            .rgbRange = output->rgbRange(),
+            .vrrPolicy = output->vrrPolicy(),
+            .highDynamicRange = output->highDynamicRange(),
+            .referenceLuminance = output->referenceLuminance(),
+            .wideColorGamut = output->wideColorGamut(),
+            .autoRotation = output->autoRotationPolicy(),
+            .iccProfilePath = output->iccProfilePath(),
+            .colorProfileSource = output->colorProfileSource(),
+            .maxPeakBrightnessOverride = output->maxPeakBrightnessOverride(),
+            .maxAverageBrightnessOverride = output->maxAverageBrightnessOverride(),
+            .minBrightnessOverride = output->minBrightnessOverride(),
+            .sdrGamutWideness = output->sdrGamutWideness(),
+            .brightness = output->brightnessSetting(),
+            .allowSdrSoftwareBrightness = output->allowSdrSoftwareBrightness(),
+            .colorPowerTradeoff = output->colorPowerTradeoff(),
+            .uuid = existingUuid,
+            .detectedDdcCi = output->detectedDdcCi(),
+            .allowDdcCi = output->allowDdcCi(),
+            .maxBitsPerColor = output->maxBitsPerColor(),
+            .edrPolicy = output->edrPolicy(),
+            .sharpness = output->sharpnessSetting(),
+            .customModes = output->customModes(),
+            .automaticBrightness = output->automaticBrightness(),
+            .autoBrightnessCurve = output->autoBrightnessCurve(),
+        };
+        *outputIt = SetupState{
+            .outputIndex = *outputIndex,
+            .position = output->position(),
+            .enabled = output->isEnabled(),
+            .priority = int(output->priority()),
+            .replicationSource = output->replicationSource(),
+        };
     }
     save();
 }
