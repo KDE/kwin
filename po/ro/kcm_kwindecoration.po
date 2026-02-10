@@ -2,7 +2,7 @@
 # translation of kcmkwindecoration.po to Romanian
 # Copyright (C) 2003, 2004, 2005, 2008 Free Software Foundation, Inc.
 # Claudiu Costin <claudiuc@kde.org>, 2003, 2004, 2005.
-# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022, 2024.
+# SPDX-FileCopyrightText: 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022, 2024, 2026 Sergiu Bivol <sergiu@cip.md>
 # Cristian Oneț <onet.cristian@gmail.com>, 2011.
 #
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2024-02-27 21:32+0000\n"
+"PO-Revision-Date: 2026-02-08 17:38+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 25.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -109,6 +109,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"Această unealtă vă permite să stabiliți tematica decorațiilor de fereastră "
+"pentru sesiunea activă, fără a o stabili din greșeală la una indisponibilă "
+"sau care e deja stabilită."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -117,6 +120,9 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"Denumirea tematicii cu decorație de fereastră pe care doriți s-o stabiliți "
+"pentru KWin. Transmiterea unei căi complete va duce la încercarea de a găsi "
+"o tematică în acel dosar, apoi aplicarea aceleia dacă poate fi dedusă."
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
@@ -130,6 +136,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"%1 a fost rezolvat la tematica Aurorae KWin „%2” și se va încerca stabilirea "
+"acesteia ca tematică actuală."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -137,6 +145,9 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"Ați încercat să transmiteți calea unui fișier, dar aceasta nu a putut fi "
+"rezolvată la o tematică și operațiunea trebuie abandonată din cauză că nu "
+"este nicio tematică de stabilit"
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
@@ -159,6 +170,8 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"Salvarea configurărilor de tematică a eșuat – motivul e necunoscut, dar "
+"această eroare e fatală. Încercați iar, s-ar putea să funcționeze."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format

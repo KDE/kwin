@@ -3,7 +3,7 @@
 # Copyright (C) 2003, 2004, 2005, 2008 Free Software Foundation, Inc.
 # Claudiu Costin <claudiuc@kde.org>, 2003, 2004, 2005.
 # Laurenţiu Buzdugan <lbuz@rolix.org>, 2009.
-# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2010, 2011, 2013, 2020, 2022.
+# SPDX-FileCopyrightText: 2008, 2009, 2010, 2011, 2013, 2020, 2022, 2026 Sergiu Bivol <sergiu@cip.md>
 # Cristian Oneț <onet.cristian@gmail.com>, 2011, 2012.
 #
 msgid ""
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2022-04-01 10:28+0100\n"
+"PO-Revision-Date: 2026-02-09 10:41+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 25.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -34,10 +34,9 @@ msgstr ",sergiu@cip.md"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window"
+#, kde-format
 msgid "Inactive Inner Window Actions"
-msgstr "Interior fereastră inactivă"
+msgstr "Acțiuni în interiorul ferestrei inactive"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -48,14 +47,14 @@ msgstr "C&lic stâng:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:39
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "In this row you can customize left click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"Aici puteți personaliza comportamentul atunci când dați clic stânga în "
-"interiorul unei ferestre inactive („interior” înseamnă orice în afară de "
-"bara de titlu și cadru)."
+"Pe acest rând puteți personaliza comportamentul de clic stâng în interiorul "
+"unei ferestre inactive („interior” înseamnă orice în afară de bara de titlu "
+"și cadru)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -106,12 +105,12 @@ msgstr "Clic &mijlociu:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
 #: actions.ui:79
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"Aici puteți personaliza comportamentul atunci când dați clic mijloc în "
+"Pe acest rând puteți personaliza comportamentul de clic mijlociu în "
 "interiorul unei ferestre inactive („interior” înseamnă orice în afară de "
 "bara de titlu și cadru)."
 
@@ -124,14 +123,14 @@ msgstr "Clic d&rept:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
 #: actions.ui:119
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"Aici puteți personaliza comportamentul atunci când dați clic dreapta în "
-"interiorul unei ferestre inactive („interior” înseamnă orice în afară de "
-"bara de titlu și cadru)."
+"Pe acest rând puteți personaliza comportamentul de clic drept în interiorul "
+"unei ferestre inactive („interior” înseamnă orice în afară de bara de titlu "
+"și cadru)."
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_2)
@@ -142,14 +141,14 @@ msgstr "Rotița ma&usului:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:159
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
 "window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"Aici puteți personaliza comportamentul la derularea în interiorul unei "
-"ferestre inactive („interior” înseamnă orice în afară de bara de titlu și "
-"cadru)."
+"Pe acest rând puteți personaliza comportamentul la derularea în interiorul "
+"unei ferestre inactive („interior” înseamnă orice în afară de bara de titlu "
+"și cadru)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:163
@@ -171,10 +170,9 @@ msgstr "Activează, ridică și derulează"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: actions.ui:184
-#, fuzzy, kde-format
-#| msgid "Inner Window, Titlebar & Frame"
+#, kde-format
 msgid "Inner Window, Titlebar and Frame Actions"
-msgstr "Interior fereastră, bara de titlu și cadrul"
+msgstr "Acțiuni pentru interiorul ferestrei, bara de titlu și cadrul"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: actions.ui:195
@@ -184,13 +182,13 @@ msgstr "Tasta mo&dificatoare:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
 #: actions.ui:205
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "Here you select whether holding the Meta key or Alt key will allow you to "
 "perform the following actions."
 msgstr ""
-"Aici alegeți dacă ținând apăsată tasta Meta sau Alt vă permite să efectuați "
-"acțiunile ce urmează."
+"Aici alegeți dacă ținerea tastei Meta sau Alt apăsate vă permite să "
+"efectuați acțiunile ce urmează."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
 #: actions.ui:209
@@ -219,13 +217,13 @@ msgstr "C&lic stâng:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
 #: actions.ui:261
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "In this row you can customize left click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
-"În această linie puteți personaliza comportamentul ferestrei când dați clic "
-"stânga pe bara de titlu sau pe cadru."
+"Pe acest rând puteți personaliza comportamentul de clic stâng când apăsați "
+"pe bara de titlu sau pe cadru."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -359,13 +357,13 @@ msgstr "&Clic mijlociu:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
 #: actions.ui:331
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
-"În acest rând puteți personaliza comportamentul ferestrei când apăsați clic "
-"mijloc pe bara de titlu sau pe cadru."
+"Pe acest rând puteți personaliza comportamentul de clic mijlociu când "
+"apăsați pe bara de titlu sau pe cadru."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
@@ -376,13 +374,13 @@ msgstr "Clic d&rept:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:401
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
-"În această linie puteți personaliza comportamentul ferestrei când dați clic "
-"dreapta pe bara de titlu sau pe cadru."
+"Pe acest rând puteți personaliza comportamentul de clic drept când apăsați "
+"pe bara de titlu sau pe cadru."
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: actions.ui:458
@@ -392,13 +390,13 @@ msgstr "Rotița ma&usului:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
 #: actions.ui:471
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
 "a window while pressing the modifier key."
 msgstr ""
-"Aici puteți personaliza comportamentul KDE atunci când învârtiți rotița "
-"mausului în fereastră în timp ce țineți apăsată o tastă modificator."
+"Aici puteți personaliza comportamentul KDE atunci când derulați rotița "
+"mausului într-o fereastră în timp ce țineți apăsată o tastă modificatoare."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -412,7 +410,7 @@ msgstr "Ridică/coboară"
 #: actions.ui:480 mouse.ui:107
 #, kde-format
 msgid "Shade/unshade"
-msgstr "Strânge/desfășoară"
+msgstr "Strânge/desfă"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -444,25 +442,21 @@ msgstr "Schimbă opacitatea"
 
 #. i18n: ectx: property (text), widget (QLabel, shadeHoverLabel)
 #: advanced.ui:20
-#, fuzzy, kde-format
-#| msgid "Window Tabbing"
+#, kde-format
 msgid "Window &unshading:"
-msgstr "File cu Ferestre"
+msgstr "Desfacerea &ferestrelor:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:32
-#, fuzzy, kde-format
-#| msgid ""
-#| "If Shade Hover is enabled, a shaded window will un-shade automatically "
-#| "when the mouse pointer has been over the title bar for some time."
+#, kde-format
 msgid ""
 "<html><head/><body><p>If this option is enabled, a shaded window will "
 "unshade automatically when the mouse pointer has been over the titlebar for "
 "some time.</p></body></html>"
 msgstr ""
-"Dacă efectul de strângere \"hover\" este activat, atunci o fereastră va fi "
-"automat desfășurată atunci când cursorul mausului stă deasupra barei ei de "
-"titlu un anumit interval de timp specificat."
+"<html><head/><body><p>Dacă această opțiune e activă, atunci o fereastră "
+"strânsă va fi desfăcută automat atunci când indicatorul mausului a stat un "
+"timp peste bara de titlu.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
@@ -472,13 +466,13 @@ msgstr "La planare peste bara de titlu după:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_ShadeHoverInterval)
 #: advanced.ui:42
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "Sets the time in milliseconds before the window unshades when the mouse "
 "pointer goes over the shaded window."
 msgstr ""
-"Setează timpul în milisecunde înainte ca fereastra să se desfacă atunci când "
-"cursorul mausului trece deasupra unei ferestre strânse."
+"Stabilește durata în milisecunde înainte ca fereastra să se desfacă atunci "
+"când indicatorul mausului trece peste o fereastră strânsă."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
@@ -496,25 +490,7 @@ msgstr "Am&plasare fereastră:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
-#, fuzzy, kde-format
-#| msgid ""
-#| "<p>This option specifies how much KWin will try to prevent unwanted focus "
-#| "stealing caused by unexpected activation of new windows. (Note: This "
-#| "feature does not work with the Focus Under Mouse or Focus Strictly Under "
-#| "Mouse focus policies.)<ul><li><em>None:</em> Prevention is turned off and "
-#| "new windows always become activated.</li><li><em>Low:</em> Prevention is "
-#| "enabled; when some window does not have support for the underlying "
-#| "mechanism and KWin cannot reliably decide whether to activate the window "
-#| "or not, it will be activated. This setting may have both worse and better "
-#| "results than the medium level, depending on the applications.</"
-#| "li><li><em>Medium:</em> Prevention is enabled.</li><li><em>High:</em> New "
-#| "windows get activated only if no window is currently active or if they "
-#| "belong to the currently active application. This setting is probably not "
-#| "really usable when not using mouse focus policy.</li><li><em>Extreme:</"
-#| "em> All windows must be explicitly activated by the user.</li></ul></"
-#| "p><p>Windows that are prevented from stealing focus are marked as "
-#| "demanding attention, which by default means their taskbar entry will be "
-#| "highlighted. This can be changed in the Notifications control module.</p>"
+#, kde-format
 msgid ""
 "<html><head/><body><p>The placement policy determines where a new window "
 "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
@@ -540,21 +516,30 @@ msgid ""
 "\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
 "window under the pointer</li></ul></body></html>"
 msgstr ""
-"Această opțiune specifică cât de mult încearcă KWin să prevină capturarea "
-"nedorită a focalizării de către activarea nedorită a ferestrelor noi. "
-"(Observație: Această caracteristică nu funcționează cu politicile "
-"„Focalizare sub maus” și „Focalizare strict sub maus”)<ul><li><em>Nimic:</"
-"em> Prevenirea este dezactivată și ferestrele noi sunt întotdeauna activate."
-"</li><li><em>Mică:</em> Prevenirea este activată; când o anumită fereastră "
-"nu are suport pentru acest mecanism și KWin nu poate decide sigur dacă să "
-"activeze fereastra sau nu, ea va fi activată. Această setare poate avea în "
-"același timp efecte bune și rele față de nivelul mediu, în funcție de "
-"aplicațiile pe care le utilizați.</li><li><em>Medie:</em> Prevenirea este "
-"activată.</li><li><em>Mare:</em> Ferestrele noi sunt activate numai dacă nu "
-"există o fereastră activă sau dacă fereastra aparține aplicației active. "
-"Probabil că această setare nu este foarte utilă dacă nu utilizați și "
-"politica de focalizare.</li><li><em>Extremă:</em> Toate ferestrele trebuie "
-"activate în mod explicit de către utilizator.</li></ul>"
+"<html><head/><body><p>Politica de amplasare determină unde va apărea o "
+"fereastră nouă pe birou.</p><ul style=\"margin-top: 0px; margin-bottom: 0px; "
+"margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
+"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+"\">Inteligentă</span> va încerca să obțină o suprapunere minimă a "
+"ferestrelor</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Maximizatoare</span> va încerca să maximizeze "
+"fiecare fereastră pentru a umple tot ecranul. Aceasta poate fi utilă pentru "
+"a afecta selectiv plasamentul unor ferestre folosind configurări specifice "
+"ferestrelor.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Aleatoare</span> va folosi o poziție "
+"aleatoare</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Centrată</span> va plasa fereastra centrat</"
+"li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">La colțul zero</span> va plasa fereastra în colțul din stânga-sus</"
+"li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Sub maus</span> va plasa fereastra sub indicator</li></ul></body></"
+"html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:80
@@ -600,14 +585,18 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
+"Când e activată, aplicațiilor capabile să țină minte pozițiile propriilor "
+"ferestre li se permite să facă aceasta. Configurarea va supradefini regimul "
+"de amplasare a ferestrelor definit mai sus."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
-#, fuzzy, kde-format
-#| msgid "Allow KDE apps to remember the positions of their own windows"
+#, kde-format
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
-msgstr "Permite aplicațiilor KDE să țină minte pozițiile propriilor ferestre"
+msgstr ""
+"Permite aplicațiilor să țină minte pozițiile propriilor ferestre, dacă au "
+"această caracteristică"
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
@@ -617,18 +606,18 @@ msgstr "Ferestre &speciale:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:133
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "When turned on, utility windows (tool windows, torn-off menus,...) of "
 "inactive applications will be hidden and will be shown only when the "
 "application becomes active. Note that applications have to mark the windows "
 "with the proper window type for this feature to work."
 msgstr ""
-"Când este activată, ferestrele utilitare (ferestre cu unelte, ș.a.) ale "
-"aplicațiilor inactive vor fi ascunse și se vor afișa numai când aplicația "
-"devine activă. Aveți în vedere că aplicațiile trebuie să marcheze ferestrele "
-"cu tipul de fereastră corespunzător pentru ca această caracteristică să "
-"funcționeze."
+"Când este activată, ferestrele utilitare (ferestre cu unelte, meniuri rupte, "
+"etc.) ale aplicațiilor inactive vor fi ascunse și se vor arăta numai când "
+"aplicația devine activă. Aveți în vedere că aplicațiile trebuie să marcheze "
+"ferestrele cu tipul de fereastră corespunzător pentru ca această "
+"caracteristică să funcționeze."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:136
@@ -640,13 +629,13 @@ msgstr "Ascunde ferestrele utilitare pentru aplicații inactive"
 #: advanced.ui:143
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "Comportamentul birourilor virtuale:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "La activarea unei ferestre de pe alt birou virtual:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -660,18 +649,25 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
+"<html><head/><body><p>Această opțiune controlează ce se întâmplă atunci când "
+"se activează o fereastră deschisă de pe alt birou virtual decât cel actual. "
+"</p><p><span style=\" font-style:italic;\">Schimbă la acel birou virtual</"
+"span> va trece la biroul virtual pe care e amplasată fereastra acum. </"
+"p><p><span style=\" font-style:italic;\">Adu fereastra pe biroul virtual "
+"actual</span> va face fereastra să sară spre biroul virtual activ. </p></"
+"body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "Schimbă la acel birou virtual"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "Adu fereastra pe biroul virtual actual"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
@@ -684,6 +680,7 @@ msgstr "Politică de &activare a ferestrelor:"
 #, kde-format
 msgid "With this option you can specify how and when windows will be focused."
 msgstr ""
+"Cu această opțiune puteți specifica când și cum vor fi focalizate ferestrele."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:36
@@ -696,7 +693,7 @@ msgstr "Apasă pentru focalizare"
 #: focus.ui:41
 #, kde-format
 msgid "Click to focus (mouse precedence)"
-msgstr "Apasă pentru focalizare (precedență maus)"
+msgstr "Apasă pentru focalizare (precedența mausului)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:46
@@ -708,7 +705,7 @@ msgstr "Focalizarea urmărește mausul"
 #: focus.ui:51
 #, kde-format
 msgid "Focus follows mouse (mouse precedence)"
-msgstr "Focalizarea urmărește mausul (precedență maus)"
+msgstr "Focalizarea urmărește șoricelul (precedența mausului)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:56
@@ -730,12 +727,12 @@ msgstr "Întârzie fo&calizarea cu:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
 #: focus.ui:82
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "This is the delay after which the window the mouse pointer is over will "
 "automatically receive focus."
 msgstr ""
-"Aceasta este întârzierea după care o fereastră deasupra căreia este cursorul "
+"Aceasta este întârzierea după care fereastra deasupra căreia este cursorul "
 "mausului va fi primi automat focalizarea."
 
 #. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
@@ -746,25 +743,7 @@ msgstr "Pre&venirea furtului focalizării:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
-#, fuzzy, kde-format
-#| msgid ""
-#| "<p>This option specifies how much KWin will try to prevent unwanted focus "
-#| "stealing caused by unexpected activation of new windows. (Note: This "
-#| "feature does not work with the Focus Under Mouse or Focus Strictly Under "
-#| "Mouse focus policies.)<ul><li><em>None:</em> Prevention is turned off and "
-#| "new windows always become activated.</li><li><em>Low:</em> Prevention is "
-#| "enabled; when some window does not have support for the underlying "
-#| "mechanism and KWin cannot reliably decide whether to activate the window "
-#| "or not, it will be activated. This setting may have both worse and better "
-#| "results than the medium level, depending on the applications.</"
-#| "li><li><em>Medium:</em> Prevention is enabled.</li><li><em>High:</em> New "
-#| "windows get activated only if no window is currently active or if they "
-#| "belong to the currently active application. This setting is probably not "
-#| "really usable when not using mouse focus policy.</li><li><em>Extreme:</"
-#| "em> All windows must be explicitly activated by the user.</li></ul></"
-#| "p><p>Windows that are prevented from stealing focus are marked as "
-#| "demanding attention, which by default means their taskbar entry will be "
-#| "highlighted. This can be changed in the Notifications control module.</p>"
+#, kde-format
 msgid ""
 "<html><head/><body><p>This option specifies how much KWin will try to "
 "prevent unwanted focus stealing caused by unexpected activation of new "
@@ -797,21 +776,37 @@ msgid ""
 "by default means their taskbar entry will be highlighted. This can be "
 "changed in the Notifications control module.</p></body></html>"
 msgstr ""
-"Această opțiune specifică cât de mult încearcă KWin să prevină capturarea "
-"nedorită a focalizării de către activarea nedorită a ferestrelor noi. "
-"(Observație: Această caracteristică nu funcționează cu politicile "
-"„Focalizare sub maus” și „Focalizare strict sub maus”)<ul><li><em>Nimic:</"
-"em> Prevenirea este dezactivată și ferestrele noi sunt întotdeauna activate."
-"</li><li><em>Mică:</em> Prevenirea este activată; când o anumită fereastră "
-"nu are suport pentru acest mecanism și KWin nu poate decide sigur dacă să "
-"activeze fereastra sau nu, ea va fi activată. Această setare poate avea în "
-"același timp efecte bune și rele față de nivelul mediu, în funcție de "
-"aplicațiile pe care le utilizați.</li><li><em>Medie:</em> Prevenirea este "
-"activată.</li><li><em>Mare:</em> Ferestrele noi sunt activate numai dacă nu "
-"există o fereastră activă sau dacă fereastra aparține aplicației active. "
-"Probabil că această setare nu este foarte utilă dacă nu utilizați și "
-"politica de focalizare.</li><li><em>Extremă:</em> Toate ferestrele trebuie "
-"activate în mod explicit de către utilizator.</li></ul>"
+"<html><head/><body><p>Această opțiune specifică cât de mult încearcă KWin să "
+"prevină furtul nedorit al focalizării de către activarea neașteptată a "
+"ferestrelor noi. (Observație: Această caracteristică nu funcționează cu "
+"politicile <span style=\" font-style:italic;\">Focalizare sub maus</span> și "
+"<span style=\" font-style:italic;\">Focalizare strict sub maus</span>) </"
+"p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-"
+"right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Niciuna:</span> Prevenirea "
+"este dezactivată și ferestrele noi sunt întotdeauna activate.</li><li style="
+"\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Joasă:"
+"</span> Prevenirea este activată; când o anumită fereastră nu are suport "
+"pentru acest mecanism și KWin nu poate decide sigur dacă să activeze "
+"fereastra sau nu, ea va fi activată. Această opțiune poate avea în același "
+"timp efecte bune și rele față de nivelul mediu, în funcție de aplicații.</"
+"li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Medie:</span> Prevenirea este activată.</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Înaltă:</"
+"span> Ferestrele noi sunt activate numai dacă nu există o fereastră activă "
+"sau dacă acestea aparțin aplicației active. Probabil că această opțiune nu "
+"este foarte utilă dacă nu utilizați și politica de focalizare cu șoricelul.</"
+"li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Extremă:</span> Toate ferestrele trebuiesc activate explicit de "
+"către utilizator.</li></ul><p>Ferestrele cărora li se interzice furtul "
+"focalizării sunt marcate ca cerând atenție, ceea ce implică evidențierea "
+"acestora pe bara de sarcini. Acest lucru poate fi schimbat în modulul de "
+"control Notificări.</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -859,16 +854,16 @@ msgstr "Ridicarea ferestrelor:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:153
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "When this option is enabled, the active window will be brought to the front "
 "when you click somewhere into the window contents. To change it for inactive "
 "windows, you need to change the settings in the Actions tab."
 msgstr ""
-"Dacă această opțiune este activă, atunci fereastra activă va fi adusă "
-"automat în față atunci când dați clic pe o zonă a conținutului ei. Pentru a "
-"schimba setarea pentru ferestrele inactive, trebuie să modificați setările "
-"în subfereastra „Acțiuni”."
+"Când această opțiune e activată, fereastra activă va fi adusă în față "
+"automat atunci când apăsați în interiorul acesteia. Pentru a schimba această "
+"opțiune pentru ferestrele inactive, trebuie să modificați configurările din "
+"fila „Acțiuni”."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:156
@@ -878,14 +873,14 @@ msgstr "Apăsarea ridi&că fereastra activă"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:165
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "When this option is enabled, a window in the background will automatically "
 "come to the front when the mouse pointer has been over it for some time."
 msgstr ""
-"Dacă opțiunea „Ridicare automată” este activată, atunci o fereastră din "
-"fundal va fi automat adusă în față atunci când cursorul mausului stă "
-"deasupra ei un interval de timp specificat."
+"Dacă această opțiune e activată, atunci o fereastră din fundal va fi adusă "
+"în față automat atunci când cursorul mausului a stat un timp deasupra "
+"acesteia."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:168
@@ -911,23 +906,15 @@ msgstr "Comportament multi-ecran:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, the active Xinerama screen (where new "
-#| "windows appear, for example) is the screen containing the mouse pointer. "
-#| "When disabled, the active Xinerama screen is the  screen containing the "
-#| "focused window. By default this option is disabled for Click to focus and "
-#| "enabled for other focus policies."
+#, kde-format
 msgid ""
 "When this option is enabled, the active screen (where new windows appear, "
 "for example) is the screen containing the mouse pointer. When disabled, the "
 "active screen is the screen containing the focused window."
 msgstr ""
-"Când este activată această opțiune, ecranul Xinerama activ (unde apar noile "
-"ferestre) este considerat acela în care se găsește indicatorul mausului. "
-"Când este dezactivată, ecranul Xinerama activ este acela cu fereastra "
-"focalizată. Această opțiune este dezactivată implicit pentru „Clic pentru "
-"focalizare” și activată pentru celelalte politici de focalizare."
+"Când este activată această opțiune, ecranul activ (unde apar noile ferestre) "
+"este considerat acela în care se găsește indicatorul mausului. Când este "
+"dezactivată, ecranul activ este acela cu fereastra focalizată."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:206
@@ -1252,25 +1239,20 @@ msgstr "Comportament la clic <em>drept</em> pe butonul de maximizare."
 
 #. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
 #: moving.ui:20
-#, fuzzy, kde-format
-#| msgid "&Border snap zone:"
+#, kde-format
 msgid "Screen &edge snap zone:"
-msgstr "Zona magnetică a &marginii:"
+msgstr "Zona magn&etică a marginii ecranului:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
 #: moving.ui:30
-#, fuzzy, kde-format
-#| msgid ""
-#| "Here you can set the snap zone for screen borders, i.e. the 'strength' of "
-#| "the magnetic field which will make windows snap to the border when moved "
-#| "near it."
+#, kde-format
 msgid ""
 "Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
 "magnetic field which will make windows snap to the border when moved near it."
 msgstr ""
-"Aici puteți stabili zona magnetică a marginii ecranelor, adică „tăria” "
+"Aici puteți stabili zona magnetică a marginii ecranelor, adică „puterea” "
 "câmpului magnetic care face ferestrele să se lipească de marginea ecranului "
-"atunci când sunt mutate în apropierea ei."
+"atunci când sunt mutate în apropierea acesteia."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
@@ -1346,6 +1328,9 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
+"<em>Apasă pentru focalizare:</em> O fereastră devine activă când apăsați pe "
+"ea. Acest comportament e întâlnit pe alte sisteme de operare ți e probabil "
+"ceea ce doriți."
 
 #: windows.cpp:101
 #, kde-format
@@ -1356,6 +1341,11 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
+"<em>Apasă pentru focalizare (precedența mausului):</em> În mare parte ca "
+"<em>apăsarea pentru focalizare</em>. Dacă fereastra activă trebuie aleasă de "
+"către sistem (de exemplu, din cauză că fereastra ce era activă s-a închis), "
+"atunci fereastra de sub șoricel e candidata preferată. O variantă mai "
+"neobișnuită, dar posibilă, de <em>apăsare pentru focalizare</em>."
 
 #: windows.cpp:106
 #, kde-format
@@ -1365,6 +1355,11 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
+"<em>Focalizarea urmărește mausul:</em> Mișcarea șoricelului deasupra unei "
+"ferestre o va activa. De exemplu, ferestrele ce apar din întâmplare sub "
+"indicator nu vor primi focalizarea. <em>Prevenirea furtului focalizării</em> "
+"are loc ca de obicei. Gândiți-vă la <em>apăsarea pentru focalizare</em>, "
+"doar fără a fi nevoie de apăsare."
 
 #: windows.cpp:110
 #, kde-format
@@ -1374,6 +1369,11 @@ msgid ""
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
+"Aceasta e, în mare parte, ca <em>focalizarea urmărește mausul</em>. Dacă o "
+"fereastră activă trebuie aleasă de către sistem (de exemplu, din cauză că "
+"fereastra ce era activă s-a închis), atunci fereastra de sub indicator e "
+"candidata preferată. Alegeți această opțiune dacă doriți o focalizare "
+"dictată de șoricel."
 
 #: windows.cpp:115
 #, kde-format
@@ -1384,6 +1384,11 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
+"<em>Focalizare sub maus:</em> Focalizarea rămâne mereu asupra ferestrei de "
+"sub șoricel.<br/><strong>Atenție:</strong> <em>Prevenirea furtului "
+"focalizării</em> și <em>cutia de file („Alt+Tab”)</em> contrazic politica de "
+"activare și nu vor funcționa. E foarte probabil că vreți <em>Focalizarea "
+"urmărește mausul (precedența mausului)</em> în schimb!"
 
 #: windows.cpp:119
 #, kde-format
@@ -1395,6 +1400,12 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+"<em>Focalizare strict sub maus:</em> Focalizarea e mereu asupra ferestrei de "
+"sub maus (fără excepții), foarte asemănător cu comportamentul focalizării "
+"într-un mediu vechi X11 negestionat.<br/><strong>Atenție:</strong> "
+"<em>Prevenirea furtului focalizării</em> și <em>cutia de file („Alt+Tab”)</"
+"em> contrazic politica de activare și nu vor funcționa. E foarte probabil că "
+"vreți <em>Focalizarea urmărește mausul (precedența mausului)</em> în schimb!"
 
 #~ msgid "Cascaded"
 #~ msgstr "În cascadă"

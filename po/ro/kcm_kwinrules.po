@@ -1,7 +1,7 @@
 # Traducerea kcmkwinrules.po în Română
 # translation of kcmkwinrules.po to Romanian
+# SPDX-FileCopyrightText: 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022, 2024, 2026 Sergiu Bivol <sergiu@cip.md>
 # Claudiu Costin <claudiuc@kde.org>, 2004, 2005.
-# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022, 2024.
 # Cristian Oneț <onet.cristian@gmail.com>, 2011, 2012.
 # Cristian Buzduga <cristianbzdg@gmail.com>, 2011.
 msgid ""
@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2024-02-27 21:36+0000\n"
+"PO-Revision-Date: 2026-02-08 18:21+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 25.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -33,7 +33,7 @@ msgstr ",sergiu@cip.md"
 #: kcmrules.cpp:28
 #, kde-format
 msgid "Window Rules"
-msgstr "Reguli fereastră"
+msgstr "Reguli pentru ferestre"
 
 #: kcmrules.cpp:32
 #, kde-format
@@ -68,12 +68,12 @@ msgstr "Copie a %1"
 #: kcmrules.cpp:423
 #, kde-format
 msgid "Application settings for %1"
-msgstr "Configurări aplicație pentru %1"
+msgstr "Configurări de aplicație pentru %1"
 
 #: kcmrules.cpp:445 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
-msgstr "Configurări fereastră pentru %1"
+msgstr "Configurări de fereastră pentru %1"
 
 #: main.cpp:31
 #, kde-format
@@ -415,7 +415,7 @@ msgstr "Configurări pentru %1"
 #: rulesmodel.cpp:221
 #, kde-format
 msgid "New window settings"
-msgstr "Configurări noi pentru fereastră"
+msgstr "Configurări pentru ferestre noi"
 
 #: rulesmodel.cpp:237
 #, kde-format
@@ -789,10 +789,9 @@ msgid "Block compositing"
 msgstr "Blochează compoziționarea"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Clasa ferestrei (aplicație)"
+msgstr "Clasa ferestrei nu e disponibilă"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -803,6 +802,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Această aplicație nu furnizează o clasă pentru fereastră, de aceea KWin nu o "
+"poate folosi pentru potrivirea și aplicarea regulilor. Dacă doriți oricum să "
+"aplicați unele reguli, încercați să potriviți alte proprietăți, cum ar fi "
+"titlul ferestrei.<nl/><nl/>Aveți în vedere raportarea acestui defect "
+"dezvoltatorilor aplicației."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -837,12 +841,12 @@ msgstr "Bara de unelte"
 #: rulesmodel.cpp:744
 #, kde-format
 msgid "Torn-Off Menu"
-msgstr "Meniu „rupt”"
+msgstr "Meniu rupt"
 
 #: rulesmodel.cpp:745
 #, kde-format
 msgid "Splash Screen"
-msgstr "Imagine de întâmpinare"
+msgstr "Ecran de întâmpinare"
 
 #: rulesmodel.cpp:746
 #, kde-format
@@ -853,7 +857,7 @@ msgstr "Birou"
 #: rulesmodel.cpp:748
 #, kde-format
 msgid "Standalone Menubar"
-msgstr "Bară de meniu independentă"
+msgstr "Bară de meniu de sine stătătoare"
 
 #: rulesmodel.cpp:749
 #, kde-format
@@ -915,17 +919,17 @@ msgstr "Aleator"
 #: rulesmodel.cpp:809
 #, kde-format
 msgid "In Top-Left Corner"
-msgstr "În colțul din stânga sus"
+msgstr "În colțul din stânga-sus"
 
 #: rulesmodel.cpp:810
 #, kde-format
 msgid "Under Mouse"
-msgstr "Sub maus"
+msgstr "Sub șoricel"
 
 #: rulesmodel.cpp:811
 #, kde-format
 msgid "On Main Window"
-msgstr "În fereastra principală"
+msgstr "Pe fereastra principală"
 
 #: rulesmodel.cpp:818
 #, kde-format
