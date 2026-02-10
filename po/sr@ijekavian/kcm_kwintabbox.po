@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-02-10 00:45+0000\n"
 "PO-Revision-Date: 2016-03-20 15:24+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -279,14 +279,8 @@ msgstr "Тренутни програм"
 msgid "Visualization"
 msgstr "Визуелизација"
 
-#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
-#: main.ui:645
-#, kde-format
-msgid "The effect to replace the list window when desktop effects are active."
-msgstr "Ефекат који мијења прозор списка када су активни ефекти површи."
-
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:678
+#: main.ui:624
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -295,11 +289,47 @@ msgstr ""
 "Тренутно изабрани прозор биће истакнут утапањем свих других прозора. Ова "
 "опција захтијева да буду активни ефекти површи."
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:681
+#. i18n: ectx: property (text), widget (QLabel, label_HighlightWindows)
+#: main.ui:634
 #, kde-format
 msgid "Show selected window"
 msgstr "Прикажи изабрани прозор"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_ShowTabBox)
+#: main.ui:644
+#, kde-format
+msgid "Enable the window list effect"
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:678
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr "Ефекат који мијења прозор списка када су активни ефекти површи."
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_DelayTime)
+#: main.ui:701
+#, kde-format
+msgid "The time in milliseconds to wait before showing the task switcher."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
+#: main.ui:704
+#, kde-format
+msgid "Show delay:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
+#: main.ui:720
+#, kde-format
+msgid " ms"
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
+#: main.ui:735
+#, kde-format
+msgid "Delay before the window list appears"
+msgstr ""
 
 #: shortcutsettings.cpp:131
 #, kde-format

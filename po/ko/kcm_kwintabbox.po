@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-02-10 00:45+0000\n"
 "PO-Revision-Date: 2025-10-09 01:05+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -255,14 +255,8 @@ msgstr "현재 앱"
 msgid "Visualization"
 msgstr "시각화"
 
-#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
-#: main.ui:645
-#, kde-format
-msgid "The effect to replace the list window when desktop effects are active."
-msgstr "데스크톱 효과가 활성화되어 있을 때 창을 바꾸는 효과입니다."
-
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:678
+#: main.ui:624
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -271,11 +265,47 @@ msgstr ""
 "다른 모든 창을 숨겨서 현재 선택한 창을 강조합니다. 이 옵션을 사용하려면 데스"
 "크톱 효과를 활성화시켜야 합니다."
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:681
+#. i18n: ectx: property (text), widget (QLabel, label_HighlightWindows)
+#: main.ui:634
 #, kde-format
 msgid "Show selected window"
 msgstr "선택한 창 표시"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_ShowTabBox)
+#: main.ui:644
+#, kde-format
+msgid "Enable the window list effect"
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:678
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr "데스크톱 효과가 활성화되어 있을 때 창을 바꾸는 효과입니다."
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_DelayTime)
+#: main.ui:701
+#, kde-format
+msgid "The time in milliseconds to wait before showing the task switcher."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
+#: main.ui:704
+#, kde-format
+msgid "Show delay:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
+#: main.ui:720
+#, kde-format
+msgid " ms"
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
+#: main.ui:735
+#, kde-format
+msgid "Delay before the window list appears"
+msgstr ""
 
 #: shortcutsettings.cpp:131
 #, kde-format

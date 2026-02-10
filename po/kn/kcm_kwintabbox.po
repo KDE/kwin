@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-02-10 00:45+0000\n"
 "PO-Revision-Date: 2010-01-15 13:41+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -272,14 +272,8 @@ msgstr "ಪ್ರಸ್ತುತ ಗಣಕತೆರೆಯನ್ನು ಅನ್�
 msgid "Visualization"
 msgstr "ಸಂಚಾರ"
 
-#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
-#: main.ui:645
-#, kde-format
-msgid "The effect to replace the list window when desktop effects are active."
-msgstr "ಗಣಕತೆರೆ ಪರಿಣಾಮಗಳು ಸಕ್ರಿಯವಾಗಿದ್ದಾಗ ಪಟ್ಟಿ ಕಿಟಕಿಯನ್ನು ಬದಲಾಯಿಸಬೇಕಿರುವ ಪರಿಣಾಮ."
-
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:678
+#: main.ui:624
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
@@ -288,12 +282,48 @@ msgstr ""
 "ಪ್ರಸ್ತುತ ಆಯ್ದ ಕಿಟಕಿಯನ್ನು ತೋರಿಸಲು ಇತರ ಕಿಟಕಿಗಳನ್ನು ಮಬ್ಬುಗೊಳಿಸಲಾಗುವುದು. ಈ ಆಯ್ಕೆಯು ಕೆಲಸ "
 "ಮಾಡಲು ಗಣಕತೆರೆ ಪರಿಣಾಮ ಸಕ್ರಿಯವಾಗಿರಬೇಕು."
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:681
+#. i18n: ectx: property (text), widget (QLabel, label_HighlightWindows)
+#: main.ui:634
 #, fuzzy, kde-format
 #| msgid "Show outline of selected window"
 msgid "Show selected window"
 msgstr "ಆಯ್ದ ವಿಂಡೋವಿನ ಹೊರನಕಾಶೆಯನ್ನು ತೋರಿಸು"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_ShowTabBox)
+#: main.ui:644
+#, kde-format
+msgid "Enable the window list effect"
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:678
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr "ಗಣಕತೆರೆ ಪರಿಣಾಮಗಳು ಸಕ್ರಿಯವಾಗಿದ್ದಾಗ ಪಟ್ಟಿ ಕಿಟಕಿಯನ್ನು ಬದಲಾಯಿಸಬೇಕಿರುವ ಪರಿಣಾಮ."
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_DelayTime)
+#: main.ui:701
+#, kde-format
+msgid "The time in milliseconds to wait before showing the task switcher."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
+#: main.ui:704
+#, kde-format
+msgid "Show delay:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
+#: main.ui:720
+#, kde-format
+msgid " ms"
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
+#: main.ui:735
+#, kde-format
+msgid "Delay before the window list appears"
+msgstr ""
 
 #: shortcutsettings.cpp:131
 #, kde-format

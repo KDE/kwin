@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Sergiu Bivol <sergiu@cip.md>, 2009, 2010, 2013, 2020, 2022, 2024.
+# SPDX-FileCopyrightText: 2009, 2010, 2013, 2020, 2022, 2024, 2026 Sergiu Bivol <sergiu@cip.md>
 # Laurenţiu Buzdugan <lbuz@rolix.org>, 2009.
 # Cristian Oneț <onet.cristian@gmail.com>, 2011, 2012.
 #
@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-05 00:45+0000\n"
-"PO-Revision-Date: 2024-02-27 21:23+0000\n"
+"PO-Revision-Date: 2026-02-09 10:48+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 25.08.1\n"
 
 #: main.cpp:152 touch.cpp:119
 #, kde-format
@@ -78,7 +78,7 @@ msgstr "Privire generală"
 #: main.cpp:167 touch.cpp:134
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "Grilă"
 
 #: main.cpp:169 touch.cpp:136
 #, kde-format
@@ -183,15 +183,13 @@ msgstr "Dezactivat"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
-#, fuzzy, kde-format
-#| msgid "Only When Moving Windows"
+#, kde-format
 msgid "Only when moving windows"
 msgstr "Numai la mutarea ferestrelor"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, fuzzy, kde-format
-#| msgid "Always Enabled"
+#, kde-format
 msgid "Always enabled"
 msgstr "Activat întotdeauna"
 
@@ -238,7 +236,7 @@ msgstr "Întârzierea &reactivării:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "Barieră la &colț:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -250,19 +248,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Aici puteți activa sau dezactiva bariera virtuală la colțuri între ecrane. "
+"Bariera previne deplasarea cursorului spre un alt ecran atunci când acesta "
+"atinge deja un colț al ecranului. Aceasta ușurează declanșarea elementelor "
+"de interfață cu utilizatorul ca butonul de închidere al ferestrelor "
+"maximizare atunci când se folosesc ecrane multiple."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Previne trecerea cursorului la colțurile ecranului."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "Barieră la margin&e:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -274,6 +277,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Aici puteți stabili mărimea barierei de la margine între diferite ecrane. "
+"Bariera adaugă distanță suplimentară pe care trebuie să deplasați "
+"indicatorul înainte ca acesta să treacă de margine spre celălalt ecran. "
+"Aceasta ușurează accesarea elementelor de interfață cu utilizatorul ca "
+"panourile Plasma ce sunt amplasate pe o margine dintre ecrane."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -281,18 +289,20 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"Distanța suplimentară pe care trebuie s-o depășească cursorul pentru a trece "
+"de marginea ecranelor."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Niciuna"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17

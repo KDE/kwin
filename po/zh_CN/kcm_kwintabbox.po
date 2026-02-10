@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-02-10 00:45+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -255,25 +255,55 @@ msgstr "当前应用程序"
 msgid "Visualization"
 msgstr "可视化"
 
-#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
-#: main.ui:645
-#, kde-format
-msgid "The effect to replace the list window when desktop effects are active."
-msgstr "激活桌面特效时，用于替换列表窗口的特效。"
-
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:678
+#: main.ui:624
 #, kde-format
 msgid ""
 "The currently selected window will be highlighted by fading out all other "
 "windows. This option requires desktop effects to be active."
 msgstr "淡化其他窗口以突出显示当前窗口。此选项需要启用桌面特效。"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
-#: main.ui:681
+#. i18n: ectx: property (text), widget (QLabel, label_HighlightWindows)
+#: main.ui:634
 #, kde-format
 msgid "Show selected window"
 msgstr "显示选中窗口"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_ShowTabBox)
+#: main.ui:644
+#, kde-format
+msgid "Enable the window list effect"
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:678
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr "激活桌面特效时，用于替换列表窗口的特效。"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_DelayTime)
+#: main.ui:701
+#, kde-format
+msgid "The time in milliseconds to wait before showing the task switcher."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
+#: main.ui:704
+#, kde-format
+msgid "Show delay:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
+#: main.ui:720
+#, kde-format
+msgid " ms"
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
+#: main.ui:735
+#, kde-format
+msgid "Delay before the window list appears"
+msgstr ""
 
 #: shortcutsettings.cpp:131
 #, kde-format
