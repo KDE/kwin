@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-06 00:46+0000\n"
-"PO-Revision-Date: 2026-01-25 09:06+0100\n"
+"PO-Revision-Date: 2026-02-08 09:39+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.12.1\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -808,12 +808,12 @@ msgstr "Premuto"
 #: debug_console.cpp:653 debug_console.cpp:667
 #, kde-format
 msgid "Tablet"
-msgstr "Tavoletta grafica"
+msgstr "Tablet"
 
 #: debug_console.cpp:612
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr "Pulsante tablet"
+msgstr "Pulsante"
 
 #: debug_console.cpp:616 debug_console.cpp:634 debug_console.cpp:651
 #, kde-format
@@ -833,7 +833,7 @@ msgstr "Is Mode Switch"
 #: debug_console.cpp:629
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr "Barra tablet"
+msgstr "Striscia"
 
 #: debug_console.cpp:631 debug_console.cpp:648 debug_console.cpp:665
 #, kde-format
@@ -848,12 +848,12 @@ msgstr "isFinger"
 #: debug_console.cpp:646
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr "Anello tablet"
+msgstr "Anello"
 
 #: debug_console.cpp:663
 #, kde-format
 msgid "Tablet Pad Dial"
-msgstr "Rotella tablet"
+msgstr "Rotella"
 
 #: debug_console.cpp:666
 #, kde-format

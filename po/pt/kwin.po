@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-06 00:46+0000\n"
-"PO-Revision-Date: 2026-01-31 21:18+0000\n"
+"PO-Revision-Date: 2026-02-11 00:16+0000\n"
 "Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
 "Language-Team: pt\n"
 "Language: pt\n"
@@ -33,7 +33,7 @@ msgstr ""
 "X-POFile-SpellExtra: Roman Gilg Edmundson Tabletes eUmDedo Key desktop min\n"
 "X-POFile-SpellExtra: max Des kwinwaylandwrapper XWayland xwayland\n"
 "X-POFile-SpellExtra: xauthority metadata json\n"
-"X-Generator: Lokalize 25.12.1\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1391,7 +1391,7 @@ msgstr "Nome do anfitrião: %1"
 #: keyboard_layout.cpp:46 keyboard_layout.cpp:56 keyboard_layout.cpp:140
 #, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr "Seletor de disposição de teclado"
+msgstr "Seletor de esquema de teclado"
 
 #: killwindow.cpp:31
 #, kde-format
@@ -2054,7 +2054,7 @@ msgstr "Ativar a janela em execução em %1"
 #: plugins/login/package/contents/ui/config.ui:17
 #, kde-format
 msgid "Fade to black (fullscreen splash screens only)"
-msgstr "Transição para preto (apenas em ecrãs de início de ecrã inteiro)"
+msgstr "Transição para preto (apenas em ecrãs de arranque de ecrã inteiro)"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: plugins/magiclamp/magiclamp_config.ui:36
@@ -2643,7 +2643,7 @@ msgstr "Preenchimento:"
 #: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
-msgstr "Carregar disposição…"
+msgstr "Carregar esquema..."
 
 #: plugins/tileseditor/qml/Main.qml:270
 #, kde-format
