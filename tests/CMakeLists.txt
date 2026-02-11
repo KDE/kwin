@@ -1,6 +1,4 @@
-if (Qt6_VERSION VERSION_GREATER_EQUAL "6.9.0")
-    add_subdirectory(pip)
-endif()
+add_subdirectory(pip)
 
 if(KWIN_BUILD_X11)
     set(normalhintsbasesizetest_SRCS normalhintsbasesizetest.cpp)
@@ -76,12 +74,9 @@ target_link_libraries(xdgforeign-test Qt::Gui Plasma::KWaylandClient)
 add_executable(xdg-test xdgtest.cpp)
 target_link_libraries(xdg-test Qt::Gui Plasma::KWaylandClient)
 
-if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
-    set(private_code_option  "PRIVATE_CODE")
-endif()
 add_executable(xdgsessiontest xdgsessiontest.cpp)
 qt6_generate_wayland_protocol_client_sources(xdgsessiontest
-    ${private_code_option}
+    PRIVATE_CODE
     NO_INCLUDE_CORE_ONLY
     FILES
      ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
@@ -97,8 +92,7 @@ target_link_libraries(xdgsessiontest
 add_executable(lockscreenoverlaytest lockscreenoverlaytest.cpp)
 target_link_libraries(lockscreenoverlaytest Qt::Widgets Qt::WaylandClient Qt::WaylandClientPrivate Wayland::Client KF6::WindowSystem)
 qt6_generate_wayland_protocol_client_sources(lockscreenoverlaytest
-    ${private_code_option}
+    PRIVATE_CODE
     FILES
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-lockscreen-overlay-v1.xml
 )
-

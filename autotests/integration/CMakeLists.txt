@@ -2,18 +2,15 @@ add_subdirectory(helper)
 
 add_library(KWinIntegrationTestFramework STATIC)
 
-if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
-    set(private_code_option  "PRIVATE_CODE")
-endif()
 qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
-    ${private_code_option}
+    PRIVATE_CODE
     NO_INCLUDE_CORE_ONLY
     FILES
         ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
         ${WaylandProtocols_DATADIR}/unstable/linux-dmabuf/linux-dmabuf-unstable-v1.xml
 )
 qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
-    ${private_code_option}
+    PRIVATE_CODE
     FILES
         ${CMAKE_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
         ${CMAKE_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
