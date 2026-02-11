@@ -523,9 +523,9 @@ public Q_SLOTS:
     void slotEndInteractiveMoveResize();
 
 private Q_SLOTS:
-    void desktopResized();
 #if KWIN_BUILD_X11
     void selectWmInputEventMask();
+    void updateX11Geometry();
 #endif
     void delayFocus();
     void slotReloadConfig();
@@ -621,6 +621,7 @@ private:
 
     void updateOutputConfiguration();
     void updateOutputs();
+    void updateOutputList();
     void assignBrightnessDevices(OutputConfiguration &outputConfig);
     void updateOutputOrder();
     void maybeUpdateDpmsState();

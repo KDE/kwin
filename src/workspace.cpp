@@ -433,6 +433,8 @@ void Workspace::initializeX11()
     rootInfo->setDesktopGeometry(desktop_geometry);
     rootInfo->setActiveWindow(XCB_WINDOW_NONE);
 
+    connect(this, &Workspace::geometryChanged, this, &Workspace::updateX11Geometry);
+
     // Focus the null window, technically it is not required but we do it anyway just to be consistent.
     focusToNull();
 }
@@ -1280,14 +1282,11 @@ LogicalOutput *Workspace::findOutput(BackendOutput *backendOutput) const
     return it == m_outputs.end() ? nullptr : *it;
 }
 
-static const int s_dpmsTimeout = environmentVariableIntValue("KWIN_DPMS_WORKAROUND_TIMEOUT").value_or(2000);
-
-void Workspace::updateOutputs()
+void Workspace::updateOutputList()
 {
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldLogicalOutputs = m_outputs;
     QList<BackendOutput *> newBackendOutputs;
-    bool wakeUp = false;
 
     for (BackendOutput *output : availableOutputs) {
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
@@ -1333,11 +1332,18 @@ void Workspace::updateOutputs()
             m_outputs.push_back(*existing);
         }
     }
+}
 
-    if (!m_activeOutput) {
-        setActiveOutput(m_outputs[0]);
-    }
+static const int s_dpmsTimeout = environmentVariableIntValue("KWIN_DPMS_WORKAROUND_TIMEOUT").value_or(2000);
 
+void Workspace::updateOutputs()
+{
+    m_placementTracker->inhibit();
+
+    const auto oldLogicalOutputs = m_outputs;
+    bool wakeUp = false;
+
+    updateOutputList();
     updateOutputOrder();
 
     const QSet<LogicalOutput *> oldOutputsSet(oldLogicalOutputs.constBegin(), oldLogicalOutputs.constEnd());
@@ -1351,17 +1357,61 @@ void Workspace::updateOutputs()
         wakeUp |= !m_recentlyRemovedDpmsOffOutputs.contains(output->uuid());
     }
 
-    m_placementTracker->inhibit();
-
     const auto removed = oldOutputsSet - outputsSet;
     for (LogicalOutput *output : removed) {
         Q_EMIT outputRemoved(output);
     }
 
-    desktopResized();
+    if (!m_activeOutput || removed.contains(m_activeOutput)) {
+        setActiveOutput(m_outputs[0]);
+    }
+
+    const Rect oldGeometry = m_geometry;
+    m_geometry = Rect();
+    for (const LogicalOutput *output : std::as_const(m_outputs)) {
+        m_geometry = m_geometry.united(output->geometry());
+    }
+
+    rearrange();
+
+    // restore cursor position
+    const auto oldCursorOutput = std::find_if(m_oldScreenGeometries.cbegin(), m_oldScreenGeometries.cend(), [](const auto &geometry) {
+        return RectF(geometry).contains(Cursors::self()->mouse()->pos());
+    });
+    if (oldCursorOutput != m_oldScreenGeometries.cend()) {
+        const LogicalOutput *cursorOutput = oldCursorOutput.key();
+        if (std::find(m_outputs.cbegin(), m_outputs.cend(), cursorOutput) != m_outputs.cend()) {
+            const Rect oldGeometry = oldCursorOutput.value();
+            const Rect newGeometry = cursorOutput->geometry();
+            const QPointF relativePosition = Cursors::self()->mouse()->pos() - oldGeometry.topLeft();
+            const QPointF newRelativePosition(newGeometry.width() * relativePosition.x() / float(oldGeometry.width()), newGeometry.height() * relativePosition.y() / float(oldGeometry.height()));
+            input()->pointer()->warp(newGeometry.topLeft() + newRelativePosition);
+        }
+    }
+
+    saveOldScreenSizes(); // after rearrange(), so that one still uses the previous one
+
+    m_screenEdges->recreateEdges();
+
+    if (m_geometry != oldGeometry) {
+        Q_EMIT geometryChanged();
+    }
 
     m_placementTracker->uninhibit();
     m_placementTracker->restore(outputLayoutId());
+
+    const auto stack = stackingOrder();
+    for (Window *window : stack) {
+        window->setMoveResizeOutput(outputAt(window->moveResizeGeometry().center()));
+        window->setOutput(outputAt(window->frameGeometry().center()));
+    }
+
+    // TODO: Track uninitialized windows in the Workspace too.
+    const auto windows = waylandServer()->windows();
+    for (Window *window : windows) {
+        window->setMoveResizeOutput(outputAt(window->moveResizeGeometry().center()));
+        window->setOutput(outputAt(window->frameGeometry().center()));
+    }
 
     for (LogicalOutput *output : removed) {
         m_tileManagers.erase(output);
@@ -1385,6 +1435,22 @@ void Workspace::updateOutputs()
         requestDpmsState(DpmsState::On);
     }
 }
+
+#if KWIN_BUILD_X11
+void Workspace::updateX11Geometry()
+{
+    if (rootInfo()) {
+        NETSize desktop_geometry;
+        desktop_geometry.width = Xcb::toXNative(m_geometry.width());
+        desktop_geometry.height = Xcb::toXNative(m_geometry.height());
+        rootInfo()->setDesktopGeometry(desktop_geometry);
+    }
+
+    if (m_guardWindow) {
+        m_guardWindow->setGeometry(Xcb::toXNative(geometry()));
+    }
+}
+#endif
 
 void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
 {
@@ -2183,74 +2249,6 @@ void Workspace::checkTransients(xcb_window_t w)
     }
 }
 #endif
-
-/**
- * Resizes the workspace after an XRANDR screen size change
- */
-void Workspace::desktopResized()
-{
-    const Rect oldGeometry = m_geometry;
-    m_geometry = Rect();
-    for (const LogicalOutput *output : std::as_const(m_outputs)) {
-        m_geometry = m_geometry.united(output->geometry());
-    }
-
-#if KWIN_BUILD_X11
-    if (rootInfo()) {
-        NETSize desktop_geometry;
-        desktop_geometry.width = Xcb::toXNative(m_geometry.width());
-        desktop_geometry.height = Xcb::toXNative(m_geometry.height());
-        rootInfo()->setDesktopGeometry(desktop_geometry);
-    }
-
-    if (m_guardWindow) {
-        m_guardWindow->setGeometry(Xcb::toXNative(geometry()));
-    }
-#endif
-
-    rearrange();
-
-    if (!m_outputs.contains(m_activeOutput)) {
-        setActiveOutput(m_outputs[0]);
-    }
-
-    const auto stack = stackingOrder();
-    for (Window *window : stack) {
-        window->setMoveResizeOutput(outputAt(window->moveResizeGeometry().center()));
-        window->setOutput(outputAt(window->frameGeometry().center()));
-    }
-
-    // TODO: Track uninitialized windows in the Workspace too.
-    const auto windows = waylandServer()->windows();
-    for (Window *window : windows) {
-        window->setMoveResizeOutput(outputAt(window->moveResizeGeometry().center()));
-        window->setOutput(outputAt(window->frameGeometry().center()));
-    }
-
-    // restore cursor position
-    const auto oldCursorOutput = std::find_if(m_oldScreenGeometries.cbegin(), m_oldScreenGeometries.cend(), [](const auto &geometry) {
-        return RectF(geometry).contains(Cursors::self()->mouse()->pos());
-    });
-    if (oldCursorOutput != m_oldScreenGeometries.cend()) {
-        const LogicalOutput *cursorOutput = oldCursorOutput.key();
-        if (std::find(m_outputs.cbegin(), m_outputs.cend(), cursorOutput) != m_outputs.cend()) {
-            const Rect oldGeometry = oldCursorOutput.value();
-            const Rect newGeometry = cursorOutput->geometry();
-            const QPointF relativePosition = Cursors::self()->mouse()->pos() - oldGeometry.topLeft();
-            const QPointF newRelativePosition(newGeometry.width() * relativePosition.x() / float(oldGeometry.width()), newGeometry.height() * relativePosition.y() / float(oldGeometry.height()));
-            input()->pointer()->warp(newGeometry.topLeft() + newRelativePosition);
-        }
-    }
-
-    saveOldScreenSizes(); // after rearrange(), so that one still uses the previous one
-
-    // TODO: emit a signal instead and remove the deep function calls into edges and effects
-    m_screenEdges->recreateEdges();
-
-    if (m_geometry != oldGeometry) {
-        Q_EMIT geometryChanged();
-    }
-}
 
 void Workspace::saveOldScreenSizes()
 {
