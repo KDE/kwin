@@ -171,7 +171,7 @@ void ThumbnailAsideEffect::arrange()
     if (!effectiveScreen) {
         effectiveScreen = effects->activeScreen();
     }
-    QRectF area = effects->clientArea(MaximizeArea, effectiveScreen, effects->currentDesktop());
+    QRectF area = effects->clientArea(MaximizeArea, effectiveScreen);
     double scale = area.height() / double(height);
     scale = std::min(scale, maxwidth / double(mwidth)); // don't be wider than maxwidth pixels
     int add = 0;

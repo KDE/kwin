@@ -243,7 +243,7 @@ void SlidingPopupsEffect::slotWindowHiddenChanged(EffectWindow *w)
 
 void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
 {
-    const QRectF screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
+    const QRectF screenRect = effects->clientArea(FullScreenArea, w->screen());
     const QRectF windowGeo = w->frameGeometry();
     AnimationData &animData = m_animationsData[w];
 
@@ -396,7 +396,7 @@ void SlidingPopupsEffect::setupInputPanelSlide()
 
 QRectF SlidingPopupsEffect::damagedLogicalArea(EffectWindow *w, const AnimationData animData)
 {
-    const QRectF screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
+    const QRectF screenRect = effects->clientArea(FullScreenArea, w->screen());
     qreal splitPoint = 0;
     const QRectF geo = w->expandedGeometry();
 

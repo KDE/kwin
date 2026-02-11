@@ -185,7 +185,7 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                 }
             } else {
                 // we did not find a panel, so it might be autohidden
-                QRectF iconScreen = effects->clientArea(ScreenArea, icon.topLeft(), effects->currentDesktop());
+                QRectF iconScreen = effects->clientArea(ScreenArea, icon.topLeft());
                 // as the icon geometry could be overlap a screen edge we use an intersection
                 QRectF rect = iconScreen.intersected(icon);
                 // here we need a different assumption: icon geometry borders one screen edge
