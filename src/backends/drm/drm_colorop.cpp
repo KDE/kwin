@@ -164,10 +164,9 @@ bool DrmLutColorOp16::canBeUsedFor(const ColorOp &op, bool normalizedInput)
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
         // but this is good enough for now
         return m_maxSize >= 256;
-    } else if (std::holds_alternative<ColorMultiplier>(op.operation)) {
-        return true;
     }
-    return false;
+    return std::holds_alternative<ColorMultiplier>(op.operation)
+        || std::holds_alternative<ColorClamp>(op.operation);
 }
 
 void DrmLutColorOp16::program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations)
@@ -221,10 +220,9 @@ bool DrmLutColorOp32::canBeUsedFor(const ColorOp &op, bool normalizedInput)
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
         // but this is good enough for now
         return m_maxSize >= 256;
-    } else if (std::holds_alternative<ColorMultiplier>(op.operation)) {
-        return true;
     }
-    return false;
+    return std::holds_alternative<ColorMultiplier>(op.operation)
+        || std::holds_alternative<ColorClamp>(op.operation);
 }
 
 void DrmLutColorOp32::program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations)
@@ -439,7 +437,8 @@ bool DrmLut3DColorOp::canBeUsedFor(const ColorOp &op, bool normalizedInput)
     // restricted to simple multipliers and matrices for now,
     // as everything else requires more effort to be yield good results
     return std::holds_alternative<ColorMultiplier>(op.operation)
-        || std::holds_alternative<ColorMatrix>(op.operation);
+        || std::holds_alternative<ColorMatrix>(op.operation)
+        || std::holds_alternative<ColorClamp>(op.operation);
 }
 
 DrmMultiplier::DrmMultiplier(DrmAbstractColorOp *next, DrmProperty *value, DrmProperty *bypass)

@@ -38,7 +38,7 @@ static ValueRange getValueRange(std::initializer_list<QVector3D> &&vectors)
     return ret;
 }
 
-ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &from, const std::shared_ptr<ColorDescription> &to, RenderingIntent intent)
+ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &from, const std::shared_ptr<ColorDescription> &to, RenderingIntent intent, InputType inputType)
 {
     // to figure out the most extreme RGB values that could be used, we check the extreme values
     // of the mastering display colorimetry - black, red, green, blue and white
@@ -78,6 +78,12 @@ ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &fro
     const double maxWhiteLuminance = std::max({white.x(), white.y(), white.z()});
     if (!s_disableTonemapping && maxWhiteLuminance > maxOutputLuminance * 1.01 && intent == RenderingIntent::Perceptual) {
         ret.addTonemapper(to->containerColorimetry(), to->referenceLuminance(), maxWhiteLuminance, maxOutputLuminance);
+        // if values outside of [0; 1] are possible, we must clamp
+    } else if (inputType == InputType::FloatingPoint || from->range() == EncodingRange::Limited || maxLum < from->transferFunction().maxLuminance) {
+        ret.addClamp(ValueRange{
+            .min = to->minLuminance(),
+            .max = to->maxHdrLuminance().value_or(to->referenceLuminance()),
+        });
     }
 
     ret.addInverseTransferFunction(to->transferFunction(), to->transferFunction().type == TransferFunction::linear ? ColorspaceType::LinearRGB : ColorspaceType::NonLinearRGB);
@@ -351,7 +357,7 @@ void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, doubl
     addMatrix(s_fromICtCp, currentOutputRange(), ColorspaceType::AnyNonRGB);
     addTransferFunction(PQ, ColorspaceType::AnyNonRGB);
     addMatrix(containerColorimetry.fromLMS(), currentOutputRange(), ColorspaceType::LinearRGB);
-    // TODO add clipping in RGB here (or gamut mapping in ICtCp), to match the shader
+    addClamp(currentOutputRange());
 }
 
 void ColorPipeline::add1DLUT(const std::shared_ptr<ColorTransformation> &transform, ColorspaceType outputType)
@@ -367,6 +373,20 @@ void ColorPipeline::add1DLUT(const std::shared_ptr<ColorTransformation> &transfo
             .max = std::max({max.x(), max.y(), max.z()}),
         },
         .outputSpace = outputType,
+    });
+}
+
+void ColorPipeline::addClamp(const ValueRange &range)
+{
+    ops.push_back(ColorOp{
+        .input = currentOutputRange(),
+        .inputSpace = currentOutputSpace(),
+        .operation = ColorClamp(range),
+        .output = ValueRange{
+            .min = std::clamp(range.min, currentOutputRange().min, currentOutputRange().max),
+            .max = std::clamp(range.max, currentOutputRange().min, currentOutputRange().max),
+        },
+        .outputSpace = currentOutputSpace(),
     });
 }
 
@@ -445,6 +465,12 @@ QVector3D ColorOp::applyOperation(const ColorOp::Operation &operation, const QVe
         return (*transform1D)->transform(input);
     } else if (const auto transform3D = std::get_if<std::shared_ptr<ColorLUT3D>>(&operation)) {
         return (*transform3D)->sample(input);
+    } else if (auto clamp = std::get_if<KWin::ColorClamp>(&operation)) {
+        return QVector3D{
+            std::clamp<float>(input.x(), clamp->m_minValue, clamp->m_maxValue),
+            std::clamp<float>(input.y(), clamp->m_minValue, clamp->m_maxValue),
+            std::clamp<float>(input.z(), clamp->m_minValue, clamp->m_maxValue),
+        };
     } else {
         Q_UNREACHABLE();
     }
@@ -500,6 +526,18 @@ double ColorTonemapper::map(double pqEncodedLuminance) const
     relativeLuminance = relativeLuminance * (1 + relativeLuminance * m_v) / (1.0 + relativeLuminance);
     return TransferFunction(TransferFunction::PerceptualQuantizer).nitsToEncoded(relativeLuminance * m_referenceLuminance);
 }
+
+ColorClamp::ColorClamp(ValueRange range)
+    : m_minValue(range.min)
+    , m_maxValue(range.max)
+{
+}
+
+ColorClamp::ColorClamp(double minValue, double maxValue)
+    : m_minValue(minValue)
+    , m_maxValue(maxValue)
+{
+}
 }
 
 QDebug operator<<(QDebug debug, const KWin::ColorOp &op)
@@ -518,6 +556,8 @@ QDebug operator<<(QDebug debug, const KWin::ColorOp &op)
         debug << "lut1d";
     } else if (std::holds_alternative<std::shared_ptr<KWin::ColorLUT3D>>(op.operation)) {
         debug << "lut3d";
+    } else if (auto clip = std::get_if<KWin::ColorClamp>(&op.operation)) {
+        debug << "clamp(" << clip->m_minValue << clip->m_maxValue << ")";
     }
     return debug;
 }
