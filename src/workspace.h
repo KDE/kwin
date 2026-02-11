@@ -536,7 +536,6 @@ private Q_SLOTS:
     void slotCurrentDesktopChangingCancelled();
     void slotDesktopAdded(VirtualDesktop *desktop);
     void slotDesktopRemoved(VirtualDesktop *desktop);
-    void slotOutputBackendOutputsQueried();
 
 Q_SIGNALS:
     /**

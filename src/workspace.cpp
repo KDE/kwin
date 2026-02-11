@@ -304,8 +304,8 @@ void Workspace::init()
     connect(m_lightSensor.get(), &LightSensor::availableChanged, this, updateSensorAvailability);
     connect(m_orientationSensor.get(), &OrientationSensor::availableChanged, this, updateSensorAvailability);
 
-    slotOutputBackendOutputsQueried();
-    connect(kwinApp()->outputBackend(), &OutputBackend::outputsQueried, this, &Workspace::slotOutputBackendOutputsQueried);
+    updateOutputConfiguration();
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputsQueried, this, &Workspace::updateOutputConfiguration);
 
     reconfigureTimer.setSingleShot(true);
     m_rearrangeTimer.setSingleShot(true);
@@ -627,7 +627,7 @@ void Workspace::updateOutputConfiguration()
     const auto outputs = kwinApp()->outputBackend()->outputs();
     if (outputs.empty()) {
         // nothing to do
-        updateOutputOrder();
+        updateOutputs();
         return;
     }
 
@@ -681,8 +681,8 @@ void Workspace::updateOutputConfiguration()
     } while (error == OutputConfigurationError::TooManyEnabledOutputs && !toEnable.isEmpty() && !alreadyHaveEnabledOutputs);
 
     qCCritical(KWIN_CORE, "Applying output configuration failed!");
-    // Update the output order to a fallback list, to avoid dangling pointers
-    updateOutputOrder();
+    // updateOutputs will update the output order list
+    updateOutputs();
     // If applying the output configuration failed, brightness devices weren't assigned either.
     // To prevent dangling pointers, unset removed brightness brightness devices here
     const auto devices = waylandServer()->externalBrightness()->devices();
@@ -1278,12 +1278,6 @@ LogicalOutput *Workspace::findOutput(BackendOutput *backendOutput) const
             || logical->uuid() == backendOutput->replicationSource();
     });
     return it == m_outputs.end() ? nullptr : *it;
-}
-
-void Workspace::slotOutputBackendOutputsQueried()
-{
-    updateOutputConfiguration();
-    updateOutputs();
 }
 
 static const int s_dpmsTimeout = environmentVariableIntValue("KWIN_DPMS_WORKAROUND_TIMEOUT").value_or(2000);
