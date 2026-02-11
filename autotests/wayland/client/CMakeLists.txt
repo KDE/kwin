@@ -1,6 +1,3 @@
-if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
-    set(private_code_option  "PRIVATE_CODE")
-endif()
 ########################################################
 # Test WaylandOutput
 ########################################################
@@ -33,7 +30,7 @@ set( testWaylandSeat_SRCS
         test_wayland_seat.cpp
     )
 qt6_generate_wayland_protocol_client_sources(testWaylandSeat
-    ${private_code_option}
+    PRIVATE_CODE
     FILES
         ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml
 )
@@ -127,7 +124,7 @@ set( testServerSideDecoration_SRCS
     )
 add_executable(testServerSideDecoration ${testServerSideDecoration_SRCS})
 qt6_generate_wayland_protocol_client_sources(testServerSideDecoration
-    ${private_code_option}
+    PRIVATE_CODE
     FILES
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration.xml
 )
@@ -241,7 +238,7 @@ set( testServerSideDecorationPalette_SRCS
     )
 add_executable(testServerSideDecorationPalette ${testServerSideDecorationPalette_SRCS})
 qt6_generate_wayland_protocol_client_sources(testServerSideDecorationPalette
-    ${private_code_option}
+    PRIVATE_CODE
     FILES
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration-palette.xml
 )
@@ -293,4 +290,3 @@ add_executable(testXdgDecoration ${testXdgdecoration_SRCS})
 target_link_libraries( testXdgDecoration Qt::Test Qt::Gui Plasma::KWaylandClient kwin Wayland::Client Wayland::Server)
 add_test(NAME kwayland-testXdgDecoration COMMAND testXdgDecoration)
 ecm_mark_as_test(testXdgDecoration)
-

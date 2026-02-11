@@ -1,6 +1,3 @@
-if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
-    set(private_code_option  "PRIVATE_CODE")
-endif()
 ########################################################
 # Test WaylandServerDisplay
 ########################################################
@@ -35,8 +32,8 @@ ecm_mark_as_test(testNoXdgRuntimeDir)
 # Test Tablet Interface
 ########################################################
 add_executable(testTabletInterface)
-qt6_generate_wayland_protocol_client_sources(testTabletInterface 
-    ${private_code_option}
+qt6_generate_wayland_protocol_client_sources(testTabletInterface
+    PRIVATE_CODE
     FILES
         ${WaylandProtocols_DATADIR}/stable/tablet/tablet-v2.xml
     )
@@ -50,7 +47,7 @@ ecm_mark_as_test(testTabletInterface)
 ########################################################
 add_executable(testDataControlInterface test_datacontrol_interface.cpp ${DATACONTROL_SRCS})
 qt6_generate_wayland_protocol_client_sources(testDataControlInterface
-    ${private_code_option}
+    PRIVATE_CODE
     FILES
         ${WaylandProtocols_DATADIR}/staging/ext-data-control/ext-data-control-v1.xml
 )
@@ -64,7 +61,7 @@ ecm_mark_as_test(testDataControlInterface)
 ########################################################
 add_executable(testKeyboardShortcutsInhibitorInterface)
 qt6_generate_wayland_protocol_client_sources(testKeyboardShortcutsInhibitorInterface
-    ${private_code_option}
+    PRIVATE_CODE
     FILES
         ${WaylandProtocols_DATADIR}/unstable/keyboard-shortcuts-inhibit/keyboard-shortcuts-inhibit-unstable-v1.xml
 )
@@ -78,7 +75,7 @@ ecm_mark_as_test(testKeyboardShortcutsInhibitorInterface)
 ########################################################
 add_executable(testViewporterInterface)
 qt6_generate_wayland_protocol_client_sources(testViewporterInterface
-    ${private_code_option}
+    PRIVATE_CODE
     FILES
         ${WaylandProtocols_DATADIR}/stable/viewporter/viewporter.xml
 )
@@ -92,7 +89,7 @@ ecm_mark_as_test(testViewporterInterface)
 ########################################################
 add_executable(testScreencastV1Interface)
 qt6_generate_wayland_protocol_client_sources(testScreencastV1Interface
-    ${private_code_option}
+    PRIVATE_CODE
     FILES
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
 )
@@ -109,7 +106,7 @@ qt6_generate_wayland_protocol_client_sources(testInputMethodInterface
     NO_INCLUDE_CORE_ONLY
     FILES
         ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
-    ${private_code_option}
+    PRIVATE_CODE
 )
 target_sources(testInputMethodInterface PRIVATE
     test_inputmethod_interface.cpp
@@ -125,7 +122,7 @@ ecm_mark_as_test(testInputMethodInterface)
 ########################################################
 add_executable(testLayerShellV1Interface)
 qt6_generate_wayland_protocol_client_sources(testLayerShellV1Interface
-    ${private_code_option}
+    PRIVATE_CODE
     FILES
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
         ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
@@ -140,8 +137,8 @@ ecm_mark_as_test(testLayerShellV1Interface)
 # Test TextInputV3 Interface
 ########################################################
 add_executable(testTextInputV3Interface)
-qt6_generate_wayland_protocol_client_sources(testTextInputV3Interface 
-    ${private_code_option}
+qt6_generate_wayland_protocol_client_sources(testTextInputV3Interface
+    PRIVATE_CODE
     FILES
         ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
 )
@@ -155,7 +152,7 @@ ecm_mark_as_test(testTextInputV3Interface)
 ########################################################
 add_executable(testTextInputV1Interface)
 qt6_generate_wayland_protocol_client_sources(testTextInputV1Interface
-    ${private_code_option}
+    PRIVATE_CODE
     FILES
         ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
 )
