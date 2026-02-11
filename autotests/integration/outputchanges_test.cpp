@@ -110,6 +110,7 @@ private Q_SLOTS:
 
     void testWindowSticksToOutputAfterOutputIsDisabled();
     void testWindowSticksToOutputAfterAnotherOutputIsDisabled();
+    void testWindowSticksToOutputAfterOutputIsMoved_data();
     void testWindowSticksToOutputAfterOutputIsMoved();
     void testWindowSticksToOutputAfterOutputsAreSwappedLeftToRight();
     void testWindowSticksToOutputAfterOutputsAreSwappedRightToLeft();
@@ -249,15 +250,25 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
     QCOMPARE(window->frameGeometry(), RectF(42, 67, 100, 50));
 }
 
+void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved_data()
+{
+    QTest::addColumn<QuickTileFlag>("tileMode");
+
+    QTest::addRow("Not tiled") << QuickTileFlag::None;
+    QTest::addRow("Quick Left") << QuickTileFlag::Left;
+    QTest::addRow("Quick Right") << QuickTileFlag::Right;
+    QTest::addRow("Quick Top") << QuickTileFlag::Top;
+    QTest::addRow("Quick Bottom") << QuickTileFlag::Bottom;
+    QTest::addRow("Custom") << QuickTileFlag::Custom;
+}
+
 void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
 {
     auto outputs = kwinApp()->outputBackend()->outputs();
 
-    // Create a window.
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(window);
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(QSize(100, 50)));
+    QFETCH(QuickTileFlag, tileMode);
 
     {
         OutputConfiguration config;
@@ -266,8 +277,17 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
     }
 
     // Move the window to some predefined position so the test is more robust.
-    window->move(QPoint(42, 67));
-    QCOMPARE(window->frameGeometry(), RectF(42, 67, 100, 50));
+    window.m_window->move(QPoint(42, 67));
+    if (tileMode != QuickTileFlag::None) {
+        // this ensures any configure events up to this point were received
+        QVERIFY(Test::waylandSync());
+        // now tile it
+        window.m_window->setQuickTileModeAtCurrentPosition(tileMode);
+        QVERIFY(window.handleConfigure());
+    } else {
+        QCOMPARE(window.m_window->frameGeometry(), RectF(42, 67, 100, 50));
+    }
+    const RectF oldGeometry = window.m_window->frameGeometry();
 
     // move the first output
     {
@@ -277,7 +297,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
     }
 
     // The position of the window relative to its output should remain the same.
-    QCOMPARE(window->frameGeometry(), RectF(42 - 20, 67 + 20, 100, 50));
+    QCOMPARE(window.m_window->frameGeometry(), oldGeometry.translated(-20, 20));
 }
 
 void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedLeftToRight()
