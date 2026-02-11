@@ -257,11 +257,11 @@ QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) co
 
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, LogicalOutput *output, VirtualDesktop *desktop) const
 {
-    if (!output || !desktop) {
-        qCWarning(KWIN_SCRIPTING) << "clientArea needs valid output:" << output << "and desktop:" << desktop << "arguments";
+    if (!output) {
+        qCWarning(KWIN_SCRIPTING) << "clientArea needs a valid output:" << output << "argument";
         return QRect();
     }
-    return workspace()->clientArea(static_cast<clientAreaOption>(option), output, desktop);
+    return workspace()->clientArea(static_cast<clientAreaOption>(option), output);
 }
 
 void WorkspaceWrapper::createDesktop(int position, const QString &name) const

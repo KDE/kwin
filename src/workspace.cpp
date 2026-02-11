@@ -1575,7 +1575,6 @@ void Workspace::removeWindowFromDesktop(Window *window, VirtualDesktop *desktop)
  */
 void Workspace::sendWindowToDesktops(Window *window, const QList<VirtualDesktop *> &desktops, bool dont_activate)
 {
-    const QList<VirtualDesktop *> oldDesktops = window->desktops();
     const bool wasOnCurrent = window->isOnCurrentDesktop();
     const bool wasActive = window->isActive();
     window->setDesktops(desktops);
@@ -1600,7 +1599,7 @@ void Workspace::sendWindowToDesktops(Window *window, const QList<VirtualDesktop 
         }
     }
 
-    window->checkWorkspacePosition(Rect(), oldDesktops.isEmpty() ? nullptr : oldDesktops.last());
+    window->checkWorkspacePosition(Rect());
 
     auto transients_stacking_order = ensureStackingOrder(window->transients());
     for (auto it = transients_stacking_order.constBegin(); it != transients_stacking_order.constEnd(); ++it) {
@@ -2352,16 +2351,11 @@ void Workspace::rearrange()
 
     const QList<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
 
-    QHash<const VirtualDesktop *, RectF> workAreas;
-    QHash<const VirtualDesktop *, StrutRects> restrictedAreas;
-    QHash<const VirtualDesktop *, QHash<const LogicalOutput *, RectF>> screenAreas;
-
-    for (const VirtualDesktop *desktop : desktops) {
-        workAreas[desktop] = m_geometry;
-
-        for (const LogicalOutput *output : std::as_const(m_outputs)) {
-            screenAreas[desktop][output] = output->geometryF();
-        }
+    RectF workArea = m_geometry;
+    StrutRects restrictedArea;
+    QHash<const LogicalOutput *, RectF> screenAreas;
+    for (const LogicalOutput *output : std::as_const(m_outputs)) {
+        screenAreas[output] = output->geometryF();
     }
 
     for (Window *window : std::as_const(m_windows)) {
@@ -2396,31 +2390,28 @@ void Workspace::rearrange()
         }
 
         const auto vds = window->isOnAllDesktops() ? desktops : window->desktops();
-        for (VirtualDesktop *vd : vds) {
-            workAreas[vd] &= r;
-            restrictedAreas[vd] += strutRegion;
-            for (LogicalOutput *output : std::as_const(m_outputs)) {
-                const auto geo = screenAreas[vd][output].intersected(adjustClientArea(window, output->geometryF()));
-                // ignore the geometry if it results in the screen getting removed completely
-                if (!geo.isEmpty()) {
-                    screenAreas[vd][output] = geo;
-                }
+        workArea &= r;
+        restrictedArea += strutRegion;
+        for (LogicalOutput *output : std::as_const(m_outputs)) {
+            const auto geo = screenAreas[output].intersected(adjustClientArea(window, output->geometryF()));
+            // ignore the geometry if it results in the screen getting removed completely
+            if (!geo.isEmpty()) {
+                screenAreas[output] = geo;
             }
         }
     }
 
-    if (m_workAreas != workAreas || m_restrictedAreas != restrictedAreas || m_screenAreas != screenAreas) {
-        m_workAreas = workAreas;
+    if (m_workArea != workArea || m_restrictedArea != restrictedArea || m_screenAreas != screenAreas) {
+        m_workArea = workArea;
         m_screenAreas = screenAreas;
 
         m_inRearrange = true;
-        m_oldRestrictedAreas = m_restrictedAreas;
-        m_restrictedAreas = restrictedAreas;
+        m_oldRestrictedArea = m_restrictedArea;
+        m_restrictedArea = restrictedArea;
 
 #if KWIN_BUILD_X11
         if (rootInfo()) {
             for (VirtualDesktop *desktop : desktops) {
-                const RectF &workArea = m_workAreas[desktop];
                 NETRect r(Xcb::toXNative(workArea));
                 rootInfo()->setWorkArea(desktop->x11DesktopNumber(), r);
             }
@@ -2433,7 +2424,7 @@ void Workspace::rearrange()
             }
         }
 
-        m_oldRestrictedAreas.clear(); // reset, no longer valid or needed
+        m_oldRestrictedArea.clear(); // reset, no longer valid or needed
         m_inRearrange = false;
     }
 }
@@ -2443,15 +2434,13 @@ void Workspace::rearrange()
  * geometry minus windows on the dock. Placement algorithms should
  * refer to this rather than Screens::geometry.
  */
-RectF Workspace::clientArea(clientAreaOption opt, const LogicalOutput *output, const VirtualDesktop *desktop) const
+RectF Workspace::clientArea(clientAreaOption opt, const LogicalOutput *output) const
 {
     switch (opt) {
     case MaximizeArea:
     case PlacementArea:
-        if (auto desktopIt = m_screenAreas.constFind(desktop); desktopIt != m_screenAreas.constEnd()) {
-            if (auto outputIt = desktopIt->constFind(output); outputIt != desktopIt->constEnd()) {
-                return *outputIt;
-            }
+        if (auto outputIt = m_screenAreas.constFind(output); outputIt != m_screenAreas.constEnd()) {
+            return *outputIt;
         }
         return output->geometryF();
     case MaximizeFullArea:
@@ -2460,7 +2449,7 @@ RectF Workspace::clientArea(clientAreaOption opt, const LogicalOutput *output, c
     case ScreenArea:
         return output->geometryF();
     case WorkArea:
-        return m_workAreas.value(desktop, m_geometry);
+        return m_workArea;
     case FullArea:
         return m_geometry;
     default:
@@ -2475,13 +2464,7 @@ RectF Workspace::clientArea(clientAreaOption opt, const Window *window) const
 
 RectF Workspace::clientArea(clientAreaOption opt, const Window *window, const LogicalOutput *output) const
 {
-    const VirtualDesktop *desktop;
-    if (window->isOnCurrentDesktop()) {
-        desktop = VirtualDesktopManager::self()->currentDesktop();
-    } else {
-        desktop = window->desktops().constLast();
-    }
-    return clientArea(opt, output, desktop);
+    return clientArea(opt, output);
 }
 
 RectF Workspace::clientArea(clientAreaOption opt, const Window *window, const QPointF &pos) const
@@ -2494,16 +2477,15 @@ Rect Workspace::geometry() const
     return m_geometry;
 }
 
-StrutRects Workspace::restrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas) const
+StrutRects Workspace::restrictedMoveArea(StrutAreas areas) const
 {
-    const StrutRects strut = m_restrictedAreas.value(desktop);
     if (areas == StrutAreaAll) {
-        return strut;
+        return m_restrictedArea;
     }
 
     StrutRects ret;
-    ret.reserve(strut.size());
-    for (const StrutRect &rect : strut) {
+    ret.reserve(m_restrictedArea.size());
+    for (const StrutRect &rect : m_restrictedArea) {
         if (rect.area() & areas) {
             ret.append(rect);
         }
@@ -2516,16 +2498,15 @@ bool Workspace::inRearrange() const
     return m_inRearrange;
 }
 
-StrutRects Workspace::previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas) const
+StrutRects Workspace::previousRestrictedMoveArea(StrutAreas areas) const
 {
-    const StrutRects strut = m_oldRestrictedAreas.value(desktop);
     if (areas == StrutAreaAll) {
-        return strut;
+        return m_oldRestrictedArea;
     }
 
     StrutRects ret;
-    ret.reserve(strut.size());
-    for (const StrutRect &rect : strut) {
+    ret.reserve(m_oldRestrictedArea.size());
+    for (const StrutRect &rect : m_oldRestrictedArea) {
         if (rect.area() & areas) {
             ret.append(rect);
         }

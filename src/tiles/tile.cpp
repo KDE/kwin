@@ -178,13 +178,13 @@ RectF Tile::windowGeometry() const
     effectiveMargins.setBottom(m_relativeGeometry.bottom() < 1.0 ? m_padding / 2.0 : m_padding);
 
     const auto geom = absoluteGeometry();
-    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), m_desktop)) - effectiveMargins;
+    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output())) - effectiveMargins;
 }
 
 RectF Tile::maximizedWindowGeometry() const
 {
     const auto geom = absoluteGeometry();
-    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), m_desktop));
+    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output()));
 }
 
 Qt::Edges Tile::anchors() const
