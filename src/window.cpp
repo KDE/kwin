@@ -1341,8 +1341,8 @@ qreal Window::titlebarThickness() const
 static Region interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, Gravity gravity, int minWidth, int minHeight)
 {
     const auto outputs = workspace()->outputs();
-    const auto struts = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
-    const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput(), VirtualDesktopManager::self()->currentDesktop());
+    const auto struts = workspace()->restrictedMoveArea();
+    const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput());
 
     Region offscreenArea(availableArea.toAlignedRect());
     for (const LogicalOutput *output : outputs) {
@@ -1510,7 +1510,7 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
 
     std::optional<QPointF> candidate;
     qreal bestScore;
-    const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput(), VirtualDesktopManager::self()->currentDesktop());
+    const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput());
 
     switch (gravity) {
     case Gravity::Top:
@@ -3957,7 +3957,7 @@ void Window::sendToOutput(LogicalOutput *newOutput)
     }
 }
 
-void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *oldDesktop, LogicalOutput *oldOutput)
+void Window::checkWorkspacePosition(RectF oldGeometry, LogicalOutput *oldOutput)
 {
     if (isDeleted()) {
         qCWarning(KWIN_CORE) << "Window::checkWorkspacePosition: called for a closed window. Consider this a bug";
@@ -3971,11 +3971,6 @@ void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *old
 
     if (!oldGeometry.isValid()) {
         oldGeometry = newGeom;
-    }
-
-    VirtualDesktop *desktop = !isOnCurrentDesktop() ? desktops().constLast() : VirtualDesktopManager::self()->currentDesktop();
-    if (!oldDesktop) {
-        oldDesktop = desktop;
     }
     if (!oldOutput) {
         oldOutput = moveResizeOutput();
@@ -4000,7 +3995,7 @@ void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *old
         screenArea = newOutput->geometry();
         newGeom.translate(screenArea.topLeft() - oldScreenArea.topLeft());
     } else {
-        oldScreenArea = workspace()->clientArea(ScreenArea, workspace()->outputAt(oldGeometry.center()), oldDesktop).toRect();
+        oldScreenArea = workspace()->clientArea(ScreenArea, workspace()->outputAt(oldGeometry.center())).toRect();
         screenArea = workspace()->clientArea(ScreenArea, this, newGeom.center()).toRect();
     }
 
@@ -4030,28 +4025,28 @@ void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *old
     auto moveAreaFunc = workspace()->inRearrange() ? &Workspace::previousRestrictedMoveArea : //... the restricted areas changed
         &Workspace::restrictedMoveArea; //... when e.g. active desktop or screen changes
 
-    const auto oldStrutsTop = (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaTop);
+    const auto oldStrutsTop = (workspace()->*moveAreaFunc)(StrutAreaTop);
     for (const Rect &r : oldStrutsTop) {
         Rect rect = r & oldGeomTall;
         if (!rect.isEmpty()) {
             oldTopMax = std::max(oldTopMax, rect.bottom());
         }
     }
-    const auto oldStrutsRight = (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaRight);
+    const auto oldStrutsRight = (workspace()->*moveAreaFunc)(StrutAreaRight);
     for (const Rect &r : oldStrutsRight) {
         Rect rect = r & oldGeomWide;
         if (!rect.isEmpty()) {
             oldRightMax = std::min(oldRightMax, rect.left());
         }
     }
-    const auto oldStrutsBottom = (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaBottom);
+    const auto oldStrutsBottom = (workspace()->*moveAreaFunc)(StrutAreaBottom);
     for (const Rect &r : oldStrutsBottom) {
         Rect rect = r & oldGeomTall;
         if (!rect.isEmpty()) {
             oldBottomMax = std::min(oldBottomMax, rect.top());
         }
     }
-    const auto oldStrutsLeft = (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaLeft);
+    const auto oldStrutsLeft = (workspace()->*moveAreaFunc)(StrutAreaLeft);
     for (const Rect &r : oldStrutsLeft) {
         Rect rect = r & oldGeomWide;
         if (!rect.isEmpty()) {
@@ -4060,28 +4055,28 @@ void Window::checkWorkspacePosition(RectF oldGeometry, const VirtualDesktop *old
     }
 
     // These 4 compute new bounds
-    const auto newStrutsTop = workspace()->restrictedMoveArea(desktop, StrutAreaTop);
+    const auto newStrutsTop = workspace()->restrictedMoveArea(StrutAreaTop);
     for (const Rect &r : newStrutsTop) {
         Rect rect = r & newGeomTall;
         if (!rect.isEmpty()) {
             topMax = std::max(topMax, rect.bottom());
         }
     }
-    const auto newStrutsRight = workspace()->restrictedMoveArea(desktop, StrutAreaRight);
+    const auto newStrutsRight = workspace()->restrictedMoveArea(StrutAreaRight);
     for (const Rect &r : newStrutsRight) {
         Rect rect = r & newGeomWide;
         if (!rect.isEmpty()) {
             rightMax = std::min(rightMax, rect.left());
         }
     }
-    const auto newStrutsBottom = workspace()->restrictedMoveArea(desktop, StrutAreaBottom);
+    const auto newStrutsBottom = workspace()->restrictedMoveArea(StrutAreaBottom);
     for (const Rect &r : newStrutsBottom) {
         Rect rect = r & newGeomTall;
         if (!rect.isEmpty()) {
             bottomMax = std::min(bottomMax, rect.top());
         }
     }
-    const auto newStrutsLeft = workspace()->restrictedMoveArea(desktop, StrutAreaLeft);
+    const auto newStrutsLeft = workspace()->restrictedMoveArea(StrutAreaLeft);
     for (const Rect &r : newStrutsLeft) {
         Rect rect = r & newGeomWide;
         if (!rect.isEmpty()) {

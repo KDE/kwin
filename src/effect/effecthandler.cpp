@@ -1088,9 +1088,9 @@ LogicalOutput *EffectsHandler::activeScreen() const
     return workspace()->activeOutput();
 }
 
-QRectF EffectsHandler::clientArea(clientAreaOption opt, const LogicalOutput *screen, const VirtualDesktop *desktop) const
+QRectF EffectsHandler::clientArea(clientAreaOption opt, const LogicalOutput *screen) const
 {
-    return Workspace::self()->clientArea(opt, screen, desktop);
+    return Workspace::self()->clientArea(opt, screen);
 }
 
 QRectF EffectsHandler::clientArea(clientAreaOption opt, const EffectWindow *effectWindow) const
@@ -1099,10 +1099,10 @@ QRectF EffectsHandler::clientArea(clientAreaOption opt, const EffectWindow *effe
     return Workspace::self()->clientArea(opt, window);
 }
 
-QRectF EffectsHandler::clientArea(clientAreaOption opt, const QPoint &p, const VirtualDesktop *desktop) const
+QRectF EffectsHandler::clientArea(clientAreaOption opt, const QPoint &p) const
 {
     const LogicalOutput *output = Workspace::self()->outputAt(p);
-    return Workspace::self()->clientArea(opt, output, desktop);
+    return Workspace::self()->clientArea(opt, output);
 }
 
 QRect EffectsHandler::virtualScreenGeometry() const

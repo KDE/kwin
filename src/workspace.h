@@ -131,7 +131,7 @@ public:
      */
     Window *findInternal(QWindow *w) const;
 
-    RectF clientArea(clientAreaOption, const LogicalOutput *output, const VirtualDesktop *desktop) const;
+    RectF clientArea(clientAreaOption, const LogicalOutput *output) const;
     RectF clientArea(clientAreaOption, const Window *window) const;
     RectF clientArea(clientAreaOption, const Window *window, const LogicalOutput *output) const;
     RectF clientArea(clientAreaOption, const Window *window, const QPointF &pos) const;
@@ -140,7 +140,7 @@ public:
      * Returns the geometry of this Workspace, i.e. the bounding rectangle of all outputs.
      */
     Rect geometry() const;
-    StrutRects restrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
+    StrutRects restrictedMoveArea(StrutAreas areas = StrutAreaAll) const;
 
     bool initializing() const;
 
@@ -229,7 +229,7 @@ public:
     // Unsorted
 
 public:
-    StrutRects previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
+    StrutRects previousRestrictedMoveArea(StrutAreas areas = StrutAreaAll) const;
     QHash<const LogicalOutput *, Rect> previousScreenSizes() const;
 
     /**
@@ -701,13 +701,13 @@ private:
 #if KWIN_BUILD_X11
     std::unique_ptr<KStartupInfo> m_startup;
 #endif
-    QHash<const VirtualDesktop *, RectF> m_workAreas;
-    QHash<const VirtualDesktop *, StrutRects> m_restrictedAreas;
-    QHash<const VirtualDesktop *, QHash<const LogicalOutput *, RectF>> m_screenAreas;
+    RectF m_workArea;
+    StrutRects m_restrictedArea;
+    QHash<const LogicalOutput *, RectF> m_screenAreas;
     Rect m_geometry;
 
     QHash<const LogicalOutput *, Rect> m_oldScreenGeometries;
-    QHash<const VirtualDesktop *, StrutRects> m_oldRestrictedAreas;
+    StrutRects m_oldRestrictedArea;
     QTimer m_rearrangeTimer;
     bool m_inRearrange = false;
 

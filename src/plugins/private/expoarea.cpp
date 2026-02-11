@@ -63,7 +63,7 @@ void ExpoArea::update()
     }
     const QRectF oldRect = m_rect;
 
-    m_rect = workspace()->clientArea(MaximizeArea, m_screen, VirtualDesktopManager::self()->currentDesktop());
+    m_rect = workspace()->clientArea(MaximizeArea, m_screen);
 
     // Map the area to the output local coordinates.
     m_rect.translate(-m_screen->geometry().topLeft());
