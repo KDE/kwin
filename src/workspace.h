@@ -622,7 +622,7 @@ private:
     void updateOutputConfiguration();
     void updateOutputs();
     void updateOutputList();
-    void assignBrightnessDevices(OutputConfiguration &outputConfig);
+    void adjustOutputConfiguration(OutputConfiguration &outputConfig);
     void updateOutputOrder();
     void maybeUpdateDpmsState();
 

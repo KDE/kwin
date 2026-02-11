@@ -508,37 +508,13 @@ Workspace::~Workspace()
 
 OutputConfigurationError Workspace::applyOutputConfiguration(OutputConfiguration &config)
 {
-    assignBrightnessDevices(config);
-    const auto backendOutputs = kwinApp()->outputBackend()->outputs();
-    if (config.source == OutputConfiguration::Source::User) {
-        // if the user adjusted brightness setting of an output,
-        // adjust its brightness map to fit the new preference
-        for (BackendOutput *output : backendOutputs) {
-            if (!(output->capabilities() & BackendOutput::Capability::AutomaticBrightness) || !output->automaticBrightness() || !m_lightSensor->isAvailable() || !m_lightSensor->reading()) {
-                continue;
-            }
-            auto changeSet = config.changeSet(output);
-            if (!changeSet->brightness) {
-                continue;
-            }
-            changeSet->autoBrightnessCurve = output->autoBrightnessCurve();
-            changeSet->autoBrightnessCurve->adjust(*changeSet->brightness, *m_lightSensor->reading());
-        }
-    }
-
-    m_outputConfigStore->applyMirroring(config, backendOutputs);
-    for (BackendOutput *output : backendOutputs) {
-        if (m_dpms == DpmsState::Off || m_dpms == DpmsState::TurningOff) {
-            config.changeSet(output)->dpmsMode = BackendOutput::DpmsMode::Off;
-        } else {
-            config.changeSet(output)->dpmsMode = BackendOutput::DpmsMode::On;
-        }
-    }
+    adjustOutputConfiguration(config);
     auto error = kwinApp()->outputBackend()->applyOutputChanges(config);
     if (error != OutputConfigurationError::None) {
         return error;
     }
     updateOutputs();
+    const auto backendOutputs = kwinApp()->outputBackend()->outputs();
     m_outputConfigStore->storeConfig(backendOutputs, m_lidSwitchTracker->isLidClosed(), config);
     m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(backendOutputs, kwinApp()->tabletModeManager()->effectiveTabletMode()));
     m_lightSensor->setEnabled(m_outputConfigStore->isAutoBrightnessActive(backendOutputs));
@@ -1452,17 +1428,17 @@ void Workspace::updateX11Geometry()
 }
 #endif
 
-void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
+void Workspace::adjustOutputConfiguration(OutputConfiguration &config)
 {
     QList<BackendOutput *> candidates = kwinApp()->outputBackend()->outputs();
     const auto devices = waylandServer()->externalBrightness()->devices();
     for (BrightnessDevice *device : devices) {
         // assign the device to the most fitting output
-        const auto it = std::ranges::find_if(candidates, [device, &outputConfig](BackendOutput *output) {
+        const auto it = std::ranges::find_if(candidates, [device, &config](BackendOutput *output) {
             if (output->isInternal() != device->isInternal()) {
                 return false;
             }
-            const auto changeset = outputConfig.constChangeSet(output);
+            const auto changeset = config.constChangeSet(output);
             const bool disallowDdcCi = output->isDdcCiKnownBroken()
                 || (changeset && !changeset->allowDdcCi.value_or(output->allowDdcCi()))
                 || (!changeset && !output->allowDdcCi());
@@ -1478,7 +1454,7 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
         if (it != candidates.end()) {
             BackendOutput *const output = *it;
             candidates.erase(it);
-            const auto changeset = outputConfig.changeSet(output);
+            const auto changeset = config.changeSet(output);
             changeset->brightnessDevice = device;
             if (device->usesDdcCi()) {
                 changeset->detectedDdcCi = true;
@@ -1493,7 +1469,32 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
         }
     }
     for (BackendOutput *output : candidates) {
-        outputConfig.changeSet(output)->brightnessDevice = nullptr;
+        config.changeSet(output)->brightnessDevice = nullptr;
+    }
+    const auto backendOutputs = kwinApp()->outputBackend()->outputs();
+    if (config.source == OutputConfiguration::Source::User) {
+        // if the user adjusted brightness setting of an output,
+        // adjust its brightness map to fit the new preference
+        for (BackendOutput *output : backendOutputs) {
+            if (!(output->capabilities() & BackendOutput::Capability::AutomaticBrightness) || !output->automaticBrightness() || !m_lightSensor->isAvailable() || !m_lightSensor->reading()) {
+                continue;
+            }
+            auto changeSet = config.changeSet(output);
+            if (!changeSet->brightness) {
+                continue;
+            }
+            changeSet->autoBrightnessCurve = output->autoBrightnessCurve();
+            changeSet->autoBrightnessCurve->adjust(*changeSet->brightness, *m_lightSensor->reading());
+        }
+    }
+
+    m_outputConfigStore->applyMirroring(config, backendOutputs);
+    for (BackendOutput *output : backendOutputs) {
+        if (m_dpms == DpmsState::Off || m_dpms == DpmsState::TurningOff) {
+            config.changeSet(output)->dpmsMode = BackendOutput::DpmsMode::Off;
+        } else {
+            config.changeSet(output)->dpmsMode = BackendOutput::DpmsMode::On;
+        }
     }
 }
 
