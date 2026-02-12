@@ -424,12 +424,8 @@ void VirtualDesktopManagerDBusInterface::setDesktopName(const QString &id, const
     if (!vd) {
         return;
     }
-    if (vd->name() == name) {
-        return;
-    }
 
     vd->setName(name);
-    m_manager->save();
 }
 
 void VirtualDesktopManagerDBusInterface::removeDesktop(const QString &id)

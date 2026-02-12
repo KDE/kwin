@@ -453,6 +453,8 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const
     vd->setId(generateDesktopId());
     vd->setName(desktopName);
 
+    connect(vd, &VirtualDesktop::nameChanged, this, &VirtualDesktopManager::save);
+
 #if KWIN_BUILD_X11
     if (RootInfo::desktopEnabled()) {
         connect(vd, &VirtualDesktop::nameChanged, this, [this, vd]() {
