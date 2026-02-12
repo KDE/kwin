@@ -199,6 +199,8 @@ public:
      * Updates the global pointer @p pos.
      *
      * Sends a pointer motion event to the focused pointer surface.
+     * The caller is responsible for calling updateSubSurfacePointerFocus
+     * if desired.
      */
     void notifyPointerMotion(const QPointF &pos);
     /**
@@ -256,6 +258,10 @@ public:
      * @see focusedPointerSurfaceTransformation
      */
     void notifyPointerEnter(SurfaceInterface *surface, const QPointF &position, const QMatrix4x4 &transformation);
+    /**
+     * Updates subsurface pointer focus based on the pointer position.
+     */
+    void updateSubSurfacePointerFocus(const QPointF &pos);
     void notifyPointerLeave();
     /**
      * @returns The currently focused pointer surface, that is the surface receiving pointer events.

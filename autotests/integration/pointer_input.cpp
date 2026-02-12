@@ -1966,8 +1966,6 @@ void PointerInputTest::testImplicitGrab()
 
 void PointerInputTest::testImplicitGrabOnSubsurface()
 {
-    QSKIP("Implicit grabs on subsurfaces are not handled correctly yet");
-
     std::unique_ptr<KWayland::Client::Pointer> pointer{m_seat->createPointer(m_seat)};
     QSignalSpy enterSpy(pointer.get(), &KWayland::Client::Pointer::entered);
     QSignalSpy leaveSpy(pointer.get(), &KWayland::Client::Pointer::left);

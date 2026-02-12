@@ -314,6 +314,9 @@ public:
         if (pointerSurfaceAllowed()) {
             // TODO: should the pointer position always stay in sync, i.e. not do the check?
             seat->setTimestamp(event->timestamp);
+            if (!input()->pointer()->focusUpdatesBlocked()) {
+                seat->updateSubSurfacePointerFocus(event->position);
+            }
             seat->notifyPointerMotion(event->position);
         }
         return true;
@@ -2154,6 +2157,9 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);
+        if (!input()->pointer()->focusUpdatesBlocked()) {
+            seat->updateSubSurfacePointerFocus(event->position);
+        }
         seat->notifyPointerMotion(event->position);
         // absolute motion events confuse games and Wayland doesn't have a warp event yet
         // -> send a relative motion event with a zero delta to signal the warp instead
@@ -3663,6 +3669,9 @@ bool InputDeviceHandler::setHover(Window *window)
 void InputDeviceHandler::setFocus(Window *window)
 {
     if (m_focus.window == window) {
+        // update focus even when the window stays the same,
+        // so subsurface focus can be updated
+        focusUpdate(window, window);
         return;
     }
 

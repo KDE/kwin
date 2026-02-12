@@ -619,6 +619,11 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedWindowImpl 
 
 void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
 {
+    auto seat = waylandServer()->seat();
+    if (focusOld == focusNow) {
+        seat->updateSubSurfacePointerFocus(m_pos);
+        return;
+    }
     if (focusOld && focusOld->isClient()) {
         focusOld->pointerLeaveEvent();
         breakPointerConstraints(focusOld->surface());
@@ -631,7 +636,6 @@ void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
         focusNow->pointerEnterEvent(m_pos);
     }
 
-    auto seat = waylandServer()->seat();
     if (!focusNow || !focusNow->surface()) {
         seat->notifyPointerLeave();
         return;

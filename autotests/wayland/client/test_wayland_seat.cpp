@@ -768,6 +768,7 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
     QCOMPARE(pointer->enteredSurface(), grandChild2Surface.get());
     // a motion on grandchild2
     m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->updateSubSurfacePointerFocus(QPointF(25, 60));
     m_seatInterface->notifyPointerMotion(QPointF(25, 60));
     m_seatInterface->notifyPointerFrame();
     QVERIFY(motionSpy.wait());
@@ -777,6 +778,7 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
     QCOMPARE(motionSpy.last().first().toPointF(), QPointF(25, 35));
     // motion which changes to childSurface
     m_seatInterface->setTimestamp(timestamp++);
+    m_seatInterface->updateSubSurfacePointerFocus(QPointF(25, 80));
     m_seatInterface->notifyPointerMotion(QPointF(25, 80));
     m_seatInterface->notifyPointerFrame();
     QVERIFY(enteredSpy.wait());

@@ -93,6 +93,7 @@ public:
         struct Focus
         {
             SurfaceInterface *surface = nullptr;
+            SurfaceInterface *effectiveSurface = nullptr;
             QMetaObject::Connection destroyConnection;
             QPointF offset = QPointF();
             QMatrix4x4 transformation;

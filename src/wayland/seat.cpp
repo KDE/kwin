@@ -443,15 +443,7 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
         return;
     }
 
-    const auto [effectiveFocusedSurface, localPosition] = focusedSurface->mapToInputSurface(focusedPointerSurfaceTransformation().map(pos));
-
-    if (d->pointer->focusedSurface() != effectiveFocusedSurface) {
-        d->pointer->sendEnter(effectiveFocusedSurface, localPosition, display()->nextSerial());
-        if (d->keyboard) {
-            d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
-        }
-    }
-
+    const QPointF localPosition = focusedSurface->mapToChild(d->globalPointer.focus.effectiveSurface, focusedPointerSurfaceTransformation().map(pos));
     d->pointer->sendMotion(localPosition);
 }
 
@@ -552,8 +544,17 @@ void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF 
     d->globalPointer.focus.offset = QPointF();
 
     d->globalPointer.pos = position;
-    const auto [effectiveFocusedSurface, localPosition] = surface->mapToInputSurface(focusedPointerSurfaceTransformation().map(position));
-    d->pointer->sendEnter(effectiveFocusedSurface, localPosition, serial);
+    updateSubSurfacePointerFocus(position);
+}
+
+void SeatInterface::updateSubSurfacePointerFocus(const QPointF &pos)
+{
+    if (!d->globalPointer.focus.surface) {
+        return;
+    }
+    const auto [effectiveFocusedSurface, localPosition] = d->globalPointer.focus.surface->mapToInputSurface(focusedPointerSurfaceTransformation().map(pos));
+    d->pointer->sendEnter(effectiveFocusedSurface, localPosition, d->globalPointer.focus.serial);
+    d->globalPointer.focus.effectiveSurface = effectiveFocusedSurface;
     if (d->keyboard) {
         d->keyboard->setModifierFocusSurface(effectiveFocusedSurface);
     }
