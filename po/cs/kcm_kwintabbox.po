@@ -303,7 +303,7 @@ msgstr ""
 #: main.ui:720
 #, kde-format
 msgid " ms"
-msgstr ""
+msgstr " ms"
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:735

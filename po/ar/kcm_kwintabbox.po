@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, 2015.
-# SPDX-FileCopyrightText: 2021, 2022, 2023, 2024, 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2021, 2022, 2023, 2024, 2025, 2026 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-10 00:45+0000\n"
-"PO-Revision-Date: 2025-10-05 10:29+0400\n"
+"PO-Revision-Date: 2026-02-11 20:53+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -276,7 +276,7 @@ msgstr "اعرض النافذة المحددة"
 #: main.ui:644
 #, kde-format
 msgid "Enable the window list effect"
-msgstr ""
+msgstr "مكّن تأثير قائمة النوافذ"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
 #: main.ui:678
@@ -288,25 +288,25 @@ msgstr "تأثير لاستبدال قائمة النوافذ عندما تكو�
 #: main.ui:701
 #, kde-format
 msgid "The time in milliseconds to wait before showing the task switcher."
-msgstr ""
+msgstr "الوقت بالمللي ثانية الذي يجب الانتظار قبل عرض مبدل المهام."
 
 #. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
 #: main.ui:704
 #, kde-format
 msgid "Show delay:"
-msgstr ""
+msgstr "تأخير الإظهار:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:720
 #, kde-format
 msgid " ms"
-msgstr ""
+msgstr " م‌ث"
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:735
 #, kde-format
 msgid "Delay before the window list appears"
-msgstr ""
+msgstr "التأخير قبل ظهور قائمة النوافذ"
 
 #: shortcutsettings.cpp:131
 #, kde-format
