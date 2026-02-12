@@ -30,6 +30,7 @@
 #include <KWayland/Client/region.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
+#include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 
 #include <linux/input.h>
@@ -108,6 +109,8 @@ private Q_SLOTS:
     void testDefaultInputRegion();
     void testEmptyInputRegion();
     void testUnfocusedModifiers();
+    void testImplicitGrab();
+    void testImplicitGrabOnSubsurface();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -1937,6 +1940,64 @@ void PointerInputTest::testUnfocusedModifiers()
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(waylandWindow));
 #endif
+}
+
+void PointerInputTest::testImplicitGrab()
+{
+    std::unique_ptr<KWayland::Client::Pointer> pointer{m_seat->createPointer(m_seat)};
+    QSignalSpy enterSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy leaveSpy(pointer.get(), &KWayland::Client::Pointer::left);
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(QSize(100, 100)));
+    window.m_window->move(QPoint(0, 0));
+
+    uint32_t time = 0;
+    Test::pointerMotion(QPoint(50, 50), time++);
+    QVERIFY(enterSpy.count() || enterSpy.wait());
+
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+    Test::pointerMotion(QPoint(150, 150), time++);
+    QVERIFY(!leaveSpy.wait(50));
+
+    Test::pointerButtonReleased(BTN_LEFT, time++);
+    QVERIFY(leaveSpy.wait());
+}
+
+void PointerInputTest::testImplicitGrabOnSubsurface()
+{
+    QSKIP("Implicit grabs on subsurfaces are not handled correctly yet");
+
+    std::unique_ptr<KWayland::Client::Pointer> pointer{m_seat->createPointer(m_seat)};
+    QSignalSpy enterSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy leaveSpy(pointer.get(), &KWayland::Client::Pointer::left);
+
+    Test::XdgToplevelWindow window;
+    QVERIFY(window.show(QSize(100, 100)));
+    window.m_window->move(QPoint(0, 0));
+
+    uint32_t time = 0;
+    Test::pointerMotion(QPoint(75, 75), time++);
+    QVERIFY(enterSpy.count() || enterSpy.wait());
+
+    auto surface = Test::createSurface();
+    auto subsurface = Test::createSubSurface(surface.get(), window.m_surface.get());
+    Test::render(surface.get(), QSize(50, 50), Qt::blue);
+    QVERIFY(window.presentWait());
+
+    Test::pointerMotion(QPoint(25, 25), time++);
+    QVERIFY(leaveSpy.wait());
+    QCOMPARE(enterSpy.count(), 2);
+    QCOMPARE(pointer->enteredSurface(), surface.get());
+
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+    Test::pointerMotion(QPoint(75, 75), time++);
+    QVERIFY(!leaveSpy.wait(50));
+
+    Test::pointerButtonReleased(BTN_LEFT, time++);
+    QVERIFY(leaveSpy.wait());
+    QCOMPARE(enterSpy.count(), 3);
+    QCOMPARE(pointer->enteredSurface(), window.m_surface.get());
 }
 }
 
