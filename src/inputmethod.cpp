@@ -63,10 +63,9 @@ static QList<xkb_keysym_t> textToKey(const QString &inputString)
 
         // Handle surrogate pair (two QChars → one codepoint)
         if (inputString[i].isHighSurrogate() && i + 1 < inputString.size()
-            && inputString[i+1].isLowSurrogate())
-        {
+            && inputString[i + 1].isLowSurrogate()) {
             cp = QChar::surrogateToUcs4(inputString[i].unicode(),
-                                        inputString[i+1].unicode());
+                                        inputString[i + 1].unicode());
             i++; // skip the low surrogate
         }
 
@@ -1044,6 +1043,17 @@ void InputMethod::installKeyboardGrab(InputMethodGrabV1 *keyboardGrab)
 {
     auto xkb = input()->keyboard()->xkb();
     m_keyboardGrab = keyboardGrab;
+    // Send repeat info based on the current focused client's keyboard version.
+    if (const auto keyboard = waylandServer()->seat()->keyboard()) {
+        const auto focusedKeyboardSurface = keyboard->focusedSurface();
+        auto effectiveRate = keyboard->keyRepeatRate();
+        // If focused keyboard surface's wl_keyboard object accepts compositor repetition,
+        // disable input method side repetition, otherwise send the current repeat rate.
+        if (!focusedKeyboardSurface || keyboard->clientUseCompositorRepetition(focusedKeyboardSurface->client())) {
+            effectiveRate = 0;
+        }
+        keyboardGrab->sendRepeatInfo(effectiveRate, keyboard->keyRepeatDelay());
+    }
     keyboardGrab->sendKeymap(xkb->keymapContents());
     forwardModifiers(Force);
 }

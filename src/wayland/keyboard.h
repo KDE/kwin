@@ -57,6 +57,8 @@ public:
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, ClientConnection *client);
 
+    bool clientUseCompositorRepetition(ClientConnection *client) const;
+
 private:
     void setFocusedSurface(SurfaceInterface *surface, const QList<quint32> &keys, quint32 serial);
     void setModifierFocusSurface(SurfaceInterface *surface);
