@@ -1,0 +1,10 @@
+/*!
+    \page kwin-index.html
+    \title KWin
+
+    \section1 API Reference
+
+    \list
+        \li \l{KWin Scripting QML Types}
+    \endlist
+*/
