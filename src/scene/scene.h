@@ -54,6 +54,7 @@ public:
     virtual bool shouldRenderHole(Item *item) const;
     virtual double desiredHdrHeadroom() const = 0;
     virtual std::chrono::nanoseconds nextPresentationTimestamp() const = 0;
+    virtual uint refreshRate() const = 0;
 
     /**
      * add a repaint in layer-local device coordinates
@@ -106,6 +107,7 @@ public:
     RectF viewport() const override;
     qreal scale() const override;
     std::chrono::nanoseconds nextPresentationTimestamp() const override;
+    uint refreshRate() const override;
 
     void setViewport(const RectF &viewport);
     void setScale(qreal scale);
@@ -151,6 +153,7 @@ public:
     QPointF hotspot() const override;
     RectF viewport() const override;
     std::chrono::nanoseconds nextPresentationTimestamp() const override;
+    uint refreshRate() const override;
     bool isVisible() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void prePaint() override;

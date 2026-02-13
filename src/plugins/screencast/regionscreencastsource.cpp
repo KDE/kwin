@@ -150,6 +150,7 @@ void RegionScreenCastSource::resume()
     m_sceneView = std::make_unique<FilteredSceneView>(Compositor::self()->scene(), workspace()->outputs().front(), m_layer.get(), m_pidToHide);
     m_sceneView->setViewport(m_region);
     m_sceneView->setScale(m_scale);
+    m_sceneView->setRefreshRate(refreshRate());
 
     m_cursorView = std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
     m_cursorView->setExclusive(!m_renderCursor);

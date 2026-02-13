@@ -252,6 +252,11 @@ std::chrono::nanoseconds SceneView::nextPresentationTimestamp() const
     return m_backendOutput->renderLoop()->nextPresentationTimestamp();
 }
 
+uint SceneView::refreshRate() const
+{
+    return m_backendOutput->refreshRate();
+}
+
 void SceneView::addExclusiveView(RenderView *view)
 {
     m_exclusiveViews.push_back(view);
@@ -349,6 +354,11 @@ RectF ItemView::viewport() const
 std::chrono::nanoseconds ItemView::nextPresentationTimestamp() const
 {
     return m_parentView->nextPresentationTimestamp();
+}
+
+uint ItemView::refreshRate() const
+{
+    return m_parentView->refreshRate();
 }
 
 RectF ItemView::calculateViewport(const RectF &itemRect) const

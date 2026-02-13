@@ -45,10 +45,20 @@ std::chrono::nanoseconds FilteredSceneView::nextPresentationTimestamp() const
     return m_presentationTimestamp;
 }
 
+uint FilteredSceneView::refreshRate() const
+{
+    return m_refreshRate;
+}
+
 void FilteredSceneView::prePaint()
 {
     m_presentationTimestamp = std::chrono::steady_clock::now().time_since_epoch();
     SceneView::prePaint();
+}
+
+void FilteredSceneView::setRefreshRate(uint refreshRate)
+{
+    m_refreshRate = refreshRate;
 }
 
 } // namespace KWin

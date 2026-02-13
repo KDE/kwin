@@ -34,9 +34,13 @@ public:
     /**
      * Advances the clock to the specified @a timestamp.
      *
+     * The @a refreshRate specifies the expected refresh rate, in milli-Hertz. It can be used to
+     * limit the delta time between consecutive frames to minimize stuttering if a frame has missed
+     * its target vblank. If the specified refresh rate is @c 0, the delta time is not limited.
+     *
      * Returns the number of milliseconds elapsed between this and the last tick().
      */
-    std::chrono::milliseconds tick(std::chrono::nanoseconds timestamp);
+    std::chrono::milliseconds tick(std::chrono::nanoseconds timestamp, uint refreshRate = 0);
     std::chrono::milliseconds tick(const RenderView *view);
 
 private:
@@ -84,8 +88,12 @@ public:
 
     /**
      * Advances the timeline to the specified @a timestamp.
+     *
+     * The @a refreshRate specifies the expected refresh rate, in milli-Hertz. It can be used to
+     * limit the delta time between consecutive frames to minimize stuttering if a frame has missed
+     * its target vblank. If the specified refresh rate is @c 0, the delta time is not limited.
      */
-    void advance(std::chrono::nanoseconds timestamp);
+    void advance(std::chrono::nanoseconds timestamp, uint refreshRate = 0);
     void advance(const RenderView *view);
 
     /**
