@@ -61,13 +61,16 @@ public:
 protected:
     explicit WindowItem(Window *window, Item *parent = nullptr);
     void updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem);
+    Item *windowContainer() const;
+
+    const std::unique_ptr<Item> m_windowContainer;
 
 private Q_SLOTS:
     void updateDecorationItem();
     void updateShadowItem();
     void updateSurfacePosition();
-    void updateSurfaceBorderRadius();
-    void updatePosition();
+    void updateBorderRadius();
+    void updateGeometry();
     void updateOpacity();
     void updateStackingOrder();
     void addSurfaceItemDamageConnects(Item *item);
