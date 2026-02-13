@@ -11,6 +11,7 @@
 
 // Include with base class for effects.
 #include "effect/offscreeneffect.h"
+#include "effect/timeline.h"
 
 namespace KWin
 {
@@ -41,8 +42,7 @@ public:
     ~WobblyWindowsEffect() override;
 
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
@@ -131,7 +131,7 @@ private:
         bool can_wobble_top, can_wobble_left, can_wobble_right, can_wobble_bottom;
         QRectF resize_original_rect;
 
-        std::chrono::milliseconds clock;
+        AnimationClock clock;
     };
 
     QHash<const EffectWindow *, WindowWobblyInfos> windows;

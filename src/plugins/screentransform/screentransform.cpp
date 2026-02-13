@@ -119,18 +119,18 @@ void ScreenTransformEffect::removeScreen(LogicalOutput *screen)
     }
 }
 
-void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     m_currentView = data.view;
     auto it = m_states.find(data.screen);
     if (it != m_states.end()) {
-        it->m_timeLine.advance(presentTime);
+        it->m_timeLine.advance(data.view);
         if (it->m_timeLine.done()) {
             m_states.remove(data.screen);
         }
     }
 
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
 }
 
 static GLVertexBuffer *texturedRectVbo(const QRectF &geometry, qreal scale)

@@ -42,28 +42,23 @@ void FallApartEffect::reconfigure(ReconfigureFlags)
     blockSize = FallApartConfig::blockSize();
 }
 
-void FallApartEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void FallApartEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     if (!windows.isEmpty()) {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     }
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
 }
 
-void FallApartEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void FallApartEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
 {
     auto animationIt = windows.find(w);
     if (animationIt != windows.end() && isRealWindow(w)) {
-        int time = 0;
-        if (animationIt->lastPresentTime.count()) {
-            time = (presentTime - animationIt->lastPresentTime).count();
-        }
-        animationIt->lastPresentTime = presentTime;
-
+        const int time = animationIt->clock.tick(view).count();
         animationIt->progress += time / animationTime(1s);
         data.setTransformed();
     }
-    effects->prePaintWindow(view, w, data, presentTime);
+    effects->prePaintWindow(view, w, data);
 }
 
 void FallApartEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)

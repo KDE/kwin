@@ -11,6 +11,7 @@
 
 #include "effect/effectwindow.h"
 #include "effect/offscreeneffect.h"
+#include "effect/timeline.h"
 
 namespace KWin
 {
@@ -18,7 +19,7 @@ namespace KWin
 struct FallApartAnimation
 {
     EffectWindowDeletedRef deletedRef;
-    std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
+    AnimationClock clock;
     qreal progress = 0;
 };
 
@@ -29,8 +30,8 @@ class FallApartEffect : public OffscreenEffect
 public:
     FallApartEffect();
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data) override;
+    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data) override;
     void postPaintScreen() override;
     bool isActive() const override;
 

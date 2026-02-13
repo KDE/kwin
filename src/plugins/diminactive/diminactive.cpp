@@ -86,19 +86,19 @@ void DimInactiveEffect::reconfigure(ReconfigureFlags flags)
     effects->addRepaintFull();
 }
 
-void DimInactiveEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void DimInactiveEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     if (m_fullScreenTransition.active) {
-        m_fullScreenTransition.timeLine.advance(presentTime);
+        m_fullScreenTransition.timeLine.advance(data.view);
     }
 
     auto transitionIt = m_transitions.begin();
     while (transitionIt != m_transitions.end()) {
-        (*transitionIt).advance(presentTime);
+        (*transitionIt).advance(data.view);
         ++transitionIt;
     }
 
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
 }
 
 void DimInactiveEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)

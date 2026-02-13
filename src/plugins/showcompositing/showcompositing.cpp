@@ -21,9 +21,9 @@ ShowCompositingEffect::ShowCompositingEffect()
 
 ShowCompositingEffect::~ShowCompositingEffect() = default;
 
-void ShowCompositingEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void ShowCompositingEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
     if (!m_scene) {
         m_scene = std::make_unique<OffscreenQuickScene>();
         m_scene->loadFromModule(QStringLiteral("org.kde.kwin.showcompositing"), QStringLiteral("Main"), {});

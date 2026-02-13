@@ -247,6 +247,11 @@ qreal SceneView::scale() const
     return m_scale;
 }
 
+std::chrono::nanoseconds SceneView::nextPresentationTimestamp() const
+{
+    return m_backendOutput->renderLoop()->nextPresentationTimestamp();
+}
+
 void SceneView::addExclusiveView(RenderView *view)
 {
     m_exclusiveViews.push_back(view);
@@ -339,6 +344,11 @@ RectF ItemView::viewport() const
         return RectF();
     }
     return calculateViewport(m_item->rect());
+}
+
+std::chrono::nanoseconds ItemView::nextPresentationTimestamp() const
+{
+    return m_parentView->nextPresentationTimestamp();
 }
 
 RectF ItemView::calculateViewport(const RectF &itemRect) const

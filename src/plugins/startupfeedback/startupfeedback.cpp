@@ -83,7 +83,6 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     , m_active(false)
     , m_frame(0)
     , m_progress(0)
-    , m_lastPresentTime(std::chrono::milliseconds::zero())
     , m_type(BouncingFeedback)
     , m_cursorSize(24)
     , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("klaunchrc", KConfig::NoGlobals)))
@@ -174,13 +173,9 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
     }
 }
 
-void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    int time = 0;
-    if (m_lastPresentTime.count()) {
-        time = (presentTime - m_lastPresentTime).count();
-    }
-    m_lastPresentTime = presentTime;
+    const int time = m_clock.tick(data.view).count();
 
     if (m_active && effects->isCursorHidden()) {
         stop();
@@ -202,7 +197,7 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
             break; // nothing
         }
     }
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
 }
 
 void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
@@ -360,7 +355,7 @@ void StartupFeedbackEffect::stop()
     }
     disconnect(effects, &EffectsHandler::mouseChanged, this, &StartupFeedbackEffect::slotMouseChanged);
     m_active = false;
-    m_lastPresentTime = std::chrono::milliseconds::zero();
+    m_clock.reset();
     effects->makeOpenGLContextCurrent();
     switch (m_type) {
     case BouncingFeedback:

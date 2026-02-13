@@ -174,10 +174,10 @@ public:
     void startPaint();
 
     // for use by effects
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime);
+    void prePaintScreen(ScreenPrePaintData &data);
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen);
     void postPaintScreen();
-    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime);
+    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data);
     void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
     void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
     void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);

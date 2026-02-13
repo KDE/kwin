@@ -16,6 +16,9 @@
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "input_event.h"
+#include "opengl/glshader.h"
+#include "opengl/glshadermanager.h"
+#include "opengl/glvertexbuffer.h"
 
 #include <QAction>
 
@@ -66,9 +69,9 @@ void MouseClickEffect::reconfigure(ReconfigureFlags)
     m_font = MouseClickConfig::font();
 }
 
-void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    const int time = m_lastPresentTime.count() ? (presentTime - m_lastPresentTime).count() : 0;
+    const int time = m_clock.tick(data.view).count();
 
     for (auto &click : m_clicks) {
         click->m_time += time;
@@ -87,13 +90,11 @@ void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
         m_clicks.pop_front();
     }
 
-    if (isActive()) {
-        m_lastPresentTime = presentTime;
-    } else {
-        m_lastPresentTime = std::chrono::milliseconds::zero();
+    if (!isActive()) {
+        m_clock.reset();
     }
 
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
 }
 
 void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)

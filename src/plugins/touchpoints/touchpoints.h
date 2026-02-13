@@ -11,6 +11,7 @@
 #pragma once
 
 #include "effect/effect.h"
+#include "effect/timeline.h"
 
 namespace KWin
 {
@@ -26,7 +27,7 @@ class TouchPointsEffect
 public:
     TouchPointsEffect();
     ~TouchPointsEffect() override;
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data) override;
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
@@ -81,7 +82,7 @@ private:
     QList<TouchPoint> m_points;
     QHash<quint32, QPointF> m_latestPositions;
     QHash<quint32, Qt::GlobalColor> m_colors;
-    std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
+    AnimationClock m_clock;
 };
 
 } // namespace

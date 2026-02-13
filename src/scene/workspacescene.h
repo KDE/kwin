@@ -109,7 +109,6 @@ private:
     void destroyDndIconItem();
     void updateCursor();
 
-    std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
     PaintContext m_paintContext;

@@ -228,30 +228,26 @@ void WobblyWindowsEffect::setDrag(qreal drag)
     m_drag = drag;
 }
 
-void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
-{
-    effects->prePaintScreen(data, presentTime);
-}
-
 static const std::chrono::milliseconds integrationStep(10);
 
-void WobblyWindowsEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void WobblyWindowsEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
 {
     auto infoIt = windows.find(w);
     if (infoIt != windows.end()) {
         data.setTransformed();
 
-        while ((presentTime - infoIt->clock).count() > 0) {
-            const auto delta = std::min(presentTime - infoIt->clock, integrationStep);
-            infoIt->clock += delta;
+        std::chrono::milliseconds delta = infoIt->clock.tick(view);
+        while (delta.count() > 0) {
+            const auto dt = std::min(delta, integrationStep);
+            delta -= dt;
 
-            if (!updateWindowWobblyDatas(w, delta.count())) {
+            if (!updateWindowWobblyDatas(w, dt.count())) {
                 break;
             }
         }
     }
 
-    effects->prePaintWindow(view, w, data, presentTime);
+    effects->prePaintWindow(view, w, data);
 }
 
 void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
@@ -487,8 +483,6 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos &wwi, QRectF geometry
     wwi.bezierSurface.resize(wwi.bezierCount);
 
     wwi.status = Moving;
-    wwi.clock = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::steady_clock::now().time_since_epoch());
 
     qreal x = geometry.x(), y = geometry.y();
     qreal width = geometry.width(), height = geometry.height();

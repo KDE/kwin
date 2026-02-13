@@ -9,6 +9,7 @@
 
 #pragma once
 #include "effect/effect.h"
+#include "effect/timeline.h"
 #include <KConfigWatcher>
 
 #if KWIN_BUILD_X11
@@ -36,7 +37,7 @@ public:
     ~StartupFeedbackEffect() override;
 
     void reconfigure(ReconfigureFlags flags) override;
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data) override;
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
@@ -90,7 +91,7 @@ private:
     bool m_active;
     int m_frame;
     int m_progress;
-    std::chrono::milliseconds m_lastPresentTime;
+    AnimationClock m_clock;
     std::unique_ptr<GLTexture> m_bouncingTextures[5];
     std::unique_ptr<GLTexture> m_texture; // for passive and blinking
     FeedbackType m_type;

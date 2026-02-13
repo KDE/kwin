@@ -595,12 +595,8 @@ public:
      * @li change the region of the screen that will be painted
      * @li do various housekeeping tasks such as initing your effect's variables
             for the upcoming paint pass or updating animation's progress
-     *
-     * @a presentTime specifies the expected monotonic time when the rendered frame
-     * will be displayed on the screen.
     */
-    virtual void prePaintScreen(ScreenPrePaintData &data,
-                                std::chrono::milliseconds presentTime);
+    virtual void prePaintScreen(ScreenPrePaintData &data);
     /**
      * In this method you can:
      * @li paint something on top of the windows (by painting after calling
@@ -633,12 +629,8 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
-     *
-     * @a presentTime specifies the expected monotonic time when the rendered frame
-     * will be displayed on the screen.
      */
-    virtual void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data,
-                                std::chrono::milliseconds presentTime);
+    virtual void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data);
     /**
      * This is the main method for painting windows.
      * In this method you can:

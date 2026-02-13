@@ -51,26 +51,26 @@ void MagicLampEffect::reconfigure(ReconfigureFlags)
     m_duration = std::chrono::milliseconds(static_cast<int>(animationTime(d)));
 }
 
-void MagicLampEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void MagicLampEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     // We need to mark the screen windows as transformed. Otherwise the
     // whole screen won't be repainted, resulting in artefacts.
     data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
 }
 
-void MagicLampEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void MagicLampEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
 {
     // Schedule window for transformation if the animation is still in
     //  progress
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
-        (*animationIt).timeLine.advance(presentTime);
+        (*animationIt).timeLine.advance(view);
         data.setTransformed();
     }
 
-    effects->prePaintWindow(view, w, data, presentTime);
+    effects->prePaintWindow(view, w, data);
 }
 
 void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)

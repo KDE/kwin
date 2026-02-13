@@ -465,7 +465,7 @@ Rect AnimationEffect::clipRect(const Rect &geo, const AniData &anim) const
     return clip;
 }
 
-void AnimationEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void AnimationEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
 {
     auto entry = d->m_animations.find(w);
     if (entry != d->m_animations.end()) {
@@ -477,7 +477,7 @@ void AnimationEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPr
             }
 
             if (anim.frozenTime < 0) {
-                anim.timeLine.advance(presentTime);
+                anim.timeLine.advance(view);
             }
 
             if (anim.attribute == Opacity || anim.attribute == CrossFadePrevious) {
@@ -487,7 +487,7 @@ void AnimationEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPr
             }
         }
     }
-    effects->prePaintWindow(view, w, data, presentTime);
+    effects->prePaintWindow(view, w, data);
 }
 
 static inline float geometryCompensation(int flags, float v)

@@ -464,20 +464,20 @@ Region BlurEffect::blurRegion(EffectWindow *w) const
     return region;
 }
 
-void BlurEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void BlurEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     m_paintedDeviceArea = Region();
     m_currentDeviceBlur = Region();
     m_currentView = data.view;
 
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
 }
 
-void BlurEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void BlurEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
 {
     // this effect relies on prePaintWindow being called in the bottom to top order
 
-    effects->prePaintWindow(view, w, data, presentTime);
+    effects->prePaintWindow(view, w, data);
 
     const Region oldOpaque = data.deviceOpaque;
     if (data.deviceOpaque.intersects(m_currentDeviceBlur)) {

@@ -26,7 +26,7 @@ public:
     ScreenTransformEffect();
     ~ScreenTransformEffect() override;
 
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data) override;
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
 
     bool isActive() const override;

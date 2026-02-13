@@ -369,9 +369,9 @@ bool Effect::borderActivated(ElectricBorder)
     return false;
 }
 
-void Effect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void Effect::prePaintScreen(ScreenPrePaintData &data)
 {
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
 }
 
 void Effect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
@@ -384,9 +384,9 @@ void Effect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void Effect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void Effect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
 {
-    effects->prePaintWindow(view, w, data, presentTime);
+    effects->prePaintWindow(view, w, data);
 }
 
 void Effect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)

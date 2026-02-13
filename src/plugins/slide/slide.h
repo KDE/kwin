@@ -14,6 +14,7 @@
 // kwineffects
 #include "effect/effect.h"
 #include "effect/effectwindow.h"
+#include "effect/timeline.h"
 #include "plugins/slide/springmotion.h"
 
 namespace KWin
@@ -56,11 +57,11 @@ public:
 
     void reconfigure(ReconfigureFlags) override;
 
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data) override;
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
 
-    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data) override;
     void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data) override;
 
     bool isActive() const override;
@@ -116,7 +117,7 @@ private:
     QPointF m_gesturePos;
 
     EffectWindow *m_movingWindow = nullptr;
-    std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
+    AnimationClock m_clock;
 
     struct
     {

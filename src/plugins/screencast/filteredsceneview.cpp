@@ -40,6 +40,17 @@ FilteredSceneView::FilteredSceneView(Scene *scene, LogicalOutput *output, Output
     }
 }
 
+std::chrono::nanoseconds FilteredSceneView::nextPresentationTimestamp() const
+{
+    return m_presentationTimestamp;
+}
+
+void FilteredSceneView::prePaint()
+{
+    m_presentationTimestamp = std::chrono::steady_clock::now().time_since_epoch();
+    SceneView::prePaint();
+}
+
 } // namespace KWin
 
 #include "moc_filteredsceneview.cpp"

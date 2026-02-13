@@ -243,15 +243,11 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     }
 }
 
-void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     data.mask |= PAINT_SCREEN_TRANSFORMED;
     if (m_zoom != m_targetZoom) {
-        int time = 0;
-        if (m_lastPresentTime.count()) {
-            time = (presentTime - m_lastPresentTime).count();
-        }
-        m_lastPresentTime = presentTime;
+        const int time = m_clock.tick(data.view).count();
 
         const float zoomDist = std::abs(m_targetZoom - m_sourceZoom);
         if (m_targetZoom > m_zoom) {
@@ -360,7 +356,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         m_cursorItem->setPosition(calculateCursorItemPosition());
     }
 
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
 }
 
 ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, LogicalOutput *screen)
@@ -439,7 +435,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
 void ZoomEffect::postPaintScreen()
 {
     if (m_zoom == m_targetZoom) {
-        m_lastPresentTime = std::chrono::milliseconds::zero();
+        m_clock.reset();
     }
 
     if (m_zoom == 1.0 || m_zoom != m_targetZoom) {

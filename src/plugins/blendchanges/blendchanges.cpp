@@ -88,16 +88,16 @@ void BlendChanges::paintWindow(const RenderTarget &renderTarget, const RenderVie
     effects->paintWindow(renderTarget, viewport, w, mask, deviceRegion, data);
 }
 
-void BlendChanges::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void BlendChanges::prePaintScreen(ScreenPrePaintData &data)
 {
     if (m_state == Off) {
         return;
     }
     if (m_state == Blending) {
-        m_timeline.advance(presentTime);
+        m_timeline.advance(data.view);
     }
 
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
 }
 
 } // namespace KWin

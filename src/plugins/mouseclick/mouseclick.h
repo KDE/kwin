@@ -11,7 +11,7 @@
 
 #include "effect/effect.h"
 #include "effect/effectframe.h"
-#include "opengl/glutils.h"
+#include "effect/timeline.h"
 #include <KLocalizedString>
 #include <QFont>
 #include <QHash>
@@ -100,7 +100,7 @@ public:
     MouseClickEffect();
     ~MouseClickEffect() override;
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data) override;
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
@@ -153,7 +153,7 @@ private:
     float m_ringMaxSize;
     bool m_showText;
     QFont m_font;
-    std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
+    AnimationClock m_clock;
 
     std::deque<std::unique_ptr<MouseClickMouseEvent>> m_clicks;
     std::unique_ptr<MouseButton> m_buttons[BUTTON_COUNT];

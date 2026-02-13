@@ -391,7 +391,7 @@ void QuickSceneEffect::activateView(QuickSceneView *view)
     Q_EMIT activeViewChanged(view);
 }
 
-void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     data.mask |= PAINT_SCREEN_TRANSFORMED;
 }

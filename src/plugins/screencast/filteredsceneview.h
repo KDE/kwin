@@ -17,6 +17,12 @@ class FilteredSceneView : public SceneView
 
 public:
     FilteredSceneView(Scene *scene, LogicalOutput *output, OutputLayer *layer, std::optional<pid_t> pidToHide);
+
+    std::chrono::nanoseconds nextPresentationTimestamp() const override;
+    void prePaint() override;
+
+private:
+    std::chrono::nanoseconds m_presentationTimestamp = std::chrono::nanoseconds::zero();
 };
 
 } // namespace KWin

@@ -16,6 +16,33 @@
 namespace KWin
 {
 
+class RenderView;
+
+/**
+ * The AnimationClock type provides a convenient to compute animation delta times.
+ */
+class KWIN_EXPORT AnimationClock
+{
+public:
+    AnimationClock();
+
+    /**
+     * Resets the clock to the initial state.
+     */
+    void reset();
+
+    /**
+     * Advances the clock to the specified @a timestamp.
+     *
+     * Returns the number of milliseconds elapsed between this and the last tick().
+     */
+    std::chrono::milliseconds tick(std::chrono::nanoseconds timestamp);
+    std::chrono::milliseconds tick(const RenderView *view);
+
+private:
+    std::optional<std::chrono::nanoseconds> m_lastTimestamp;
+};
+
 /**
  * The TimeLine class is a helper for controlling animations.
  */
@@ -58,7 +85,8 @@ public:
     /**
      * Advances the timeline to the specified @a timestamp.
      */
-    void advance(std::chrono::milliseconds timestamp);
+    void advance(std::chrono::nanoseconds timestamp);
+    void advance(const RenderView *view);
 
     /**
      * Returns the number of elapsed milliseconds.

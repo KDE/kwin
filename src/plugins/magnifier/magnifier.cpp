@@ -35,7 +35,6 @@ const int FRAME_WIDTH = 5;
 MagnifierEffect::MagnifierEffect()
     : m_zoom(1)
     , m_targetZoom(1)
-    , m_lastPresentTime(std::chrono::milliseconds::zero())
 {
     m_configurationTimer = std::make_unique<QTimer>();
     m_configurationTimer->setSingleShot(true);
@@ -136,9 +135,9 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
     }
 }
 
-void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    const int time = m_lastPresentTime.count() ? (presentTime - m_lastPresentTime).count() : 0;
+    const int time = m_clock.tick(data.view).count();
 
     if (m_zoom != m_targetZoom) {
         double diff = time / animationTime(500ms);
@@ -164,13 +163,11 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
         }
     }
 
-    if (m_zoom != m_targetZoom) {
-        m_lastPresentTime = presentTime;
-    } else {
-        m_lastPresentTime = std::chrono::milliseconds::zero();
+    if (m_zoom == m_targetZoom) {
+        m_clock.reset();
     }
 
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
     if (m_zoom != 1.0) {
         data.paint += visibleArea();
     }

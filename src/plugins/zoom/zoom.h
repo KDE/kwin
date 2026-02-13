@@ -13,6 +13,7 @@
 
 #include "core/colorspace.h"
 #include "effect/effect.h"
+#include "effect/timeline.h"
 
 #include <QAction>
 #include <QTime>
@@ -44,7 +45,7 @@ public:
     ~ZoomEffect() override;
 
     void reconfigure(ReconfigureFlags flags) override;
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data) override;
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
@@ -134,7 +135,7 @@ private:
     int m_xTranslation = 0;
     int m_yTranslation = 0;
     double m_moveFactor = 20.0;
-    std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
+    AnimationClock m_clock;
     std::map<LogicalOutput *, OffscreenData> m_offscreenData;
     std::unique_ptr<GLShader> m_pixelGridShader;
     double m_pixelGridZoom;

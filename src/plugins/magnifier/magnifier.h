@@ -11,6 +11,7 @@
 #pragma once
 
 #include "effect/effect.h"
+#include "effect/timeline.h"
 
 #include <memory>
 
@@ -31,7 +32,7 @@ public:
     MagnifierEffect();
     ~MagnifierEffect() override;
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintScreen(ScreenPrePaintData &data) override;
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
@@ -67,7 +68,7 @@ private:
     Qt::KeyboardModifiers m_axisModifiers;
     std::unique_ptr<QAction> m_touchpadAction;
     double m_lastPinchProgress = 0;
-    std::chrono::milliseconds m_lastPresentTime;
+    AnimationClock m_clock;
     QSize m_magnifierSize;
     std::unique_ptr<GLTexture> m_texture;
     std::unique_ptr<GLFramebuffer> m_fbo;

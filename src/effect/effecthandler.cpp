@@ -358,10 +358,10 @@ void EffectsHandler::reconfigure()
 }
 
 // the idea is that effects call this function again which calls the next one
-void EffectsHandler::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void EffectsHandler::prePaintScreen(ScreenPrePaintData &data)
 {
     if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
-        (*m_currentPaintScreenIterator++)->prePaintScreen(data, presentTime);
+        (*m_currentPaintScreenIterator++)->prePaintScreen(data);
         --m_currentPaintScreenIterator;
     }
     // no special final code
@@ -386,10 +386,10 @@ void EffectsHandler::postPaintScreen()
     // no special final code
 }
 
-void EffectsHandler::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
+void EffectsHandler::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
 {
     if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
-        (*m_currentPaintWindowIterator++)->prePaintWindow(view, w, data, presentTime);
+        (*m_currentPaintWindowIterator++)->prePaintWindow(view, w, data);
         --m_currentPaintWindowIterator;
     }
     // no special final code

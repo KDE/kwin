@@ -94,12 +94,9 @@ bool TouchPointsEffect::touchUp(qint32 id, std::chrono::microseconds time)
     return false;
 }
 
-void TouchPointsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
+void TouchPointsEffect::prePaintScreen(ScreenPrePaintData &data)
 {
-    int time = 0;
-    if (m_lastPresentTime.count()) {
-        time = (presentTime - m_lastPresentTime).count();
-    }
+    const int time = m_clock.tick(data.view).count();
 
     auto it = m_points.begin();
     while (it != m_points.end()) {
@@ -112,12 +109,10 @@ void TouchPointsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mi
     }
 
     if (m_points.isEmpty()) {
-        m_lastPresentTime = std::chrono::milliseconds::zero();
-    } else {
-        m_lastPresentTime = presentTime;
+        m_clock.reset();
     }
 
-    effects->prePaintScreen(data, presentTime);
+    effects->prePaintScreen(data);
 }
 
 void TouchPointsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
