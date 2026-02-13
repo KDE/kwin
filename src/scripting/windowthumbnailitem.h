@@ -53,10 +53,24 @@ private:
     bool m_dirty = true;
 };
 
+/*!
+ * \qmltype WindowThumbnail
+ * \inqmlmodule org.kde.kwin
+ * \inherits Item
+ *
+ * \brief Window Thumbnail.
+ */
 class WindowThumbnailItem : public QQuickItem
 {
     Q_OBJECT
+    /*!
+     * \qmlproperty QUuid WindowThumbnail::wId
+     */
     Q_PROPERTY(QUuid wId READ wId WRITE setWId NOTIFY wIdChanged)
+
+    /*!
+     * \qmlproperty Window WindowThumbnail::client
+     */
     Q_PROPERTY(KWin::Window *client READ client WRITE setClient NOTIFY clientChanged)
 
 public:
