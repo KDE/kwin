@@ -21,7 +21,6 @@ class GraphicsBuffer;
 class BlurInterface;
 class ClientConnection;
 class ConfinedPointerV1Interface;
-class ContrastInterface;
 class CompositorInterface;
 class LinuxDmaBufV1Feedback;
 class LockedPointerV1Interface;
@@ -78,7 +77,6 @@ private:
  * @see GraphicsBuffer
  * @see SubSurfaceInterface
  * @see BlurInterface
- * @see ContrastInterface
  * @see ShadowInterface
  * @see SlideInterface
  * @see LinuxDmaBufV1Feedback
@@ -194,11 +192,6 @@ public:
      * @returns The Slide for this Surface.
      */
     SlideInterface *slideOnShowHide() const;
-
-    /**
-     * @returns The Contrast for this Surface.
-     */
-    ContrastInterface *contrast() const;
 
     /**
      * Whether the SurfaceInterface is currently considered to be mapped.
@@ -428,7 +421,6 @@ Q_SIGNALS:
     void shadowChanged();
     void blurChanged();
     void slideOnShowHideChanged();
-    void contrastChanged();
     /**
      * Emitted whenever a new child sub-surface @p subSurface is added.
      */

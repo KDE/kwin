@@ -9,7 +9,6 @@
 #include "colormanagement_v1.h"
 #include "colorrepresentation_v1.h"
 #include "compositor.h"
-#include "contrast.h"
 #include "display.h"
 #include "fractionalscale_v1_p.h"
 #include "frog_colormanagement_v1.h"
@@ -183,12 +182,6 @@ void SurfaceInterfacePrivate::setSlide(const QPointer<SlideInterface> &slide)
 {
     pending->slide = slide;
     pending->committed |= SurfaceState::Field::Slide;
-}
-
-void SurfaceInterfacePrivate::setContrast(const QPointer<ContrastInterface> &contrast)
-{
-    pending->contrast = contrast;
-    pending->committed |= SurfaceState::Field::Contrast;
 }
 
 void SurfaceInterfacePrivate::installPointerConstraint(LockedPointerV1Interface *lock)
@@ -633,7 +626,6 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->subsurface = subsurface;
     target->shadow = shadow;
     target->blur = blur;
-    target->contrast = contrast;
     target->slide = slide;
     target->input = input;
     target->opaque = opaque;
@@ -677,7 +669,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool transformChanged = (next->committed & SurfaceState::Field::BufferTransform) && (current->bufferTransform != next->bufferTransform);
     const bool shadowChanged = (next->committed & SurfaceState::Field::Shadow);
     const bool blurChanged = (next->committed & SurfaceState::Field::Blur);
-    const bool contrastChanged = (next->committed & SurfaceState::Field::Contrast);
     const bool slideChanged = (next->committed & SurfaceState::Field::Slide);
     const bool subsurfaceOrderChanged = (next->committed & SurfaceState::Field::SubsurfaceOrder);
     const bool visibilityChanged = (next->committed & SurfaceState::Field::Buffer) && bool(current->buffer) != bool(next->buffer);
@@ -772,9 +763,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (blurChanged) {
         Q_EMIT q->blurChanged();
-    }
-    if (contrastChanged) {
-        Q_EMIT q->contrastChanged();
     }
     if (slideChanged) {
         Q_EMIT q->slideOnShowHideChanged();
@@ -982,11 +970,6 @@ ShadowInterface *SurfaceInterface::shadow() const
 Region SurfaceInterface::blurRegion() const
 {
     return d->current->blurRegion;
-}
-
-ContrastInterface *SurfaceInterface::contrast() const
-{
-    return d->current->contrast;
 }
 
 SlideInterface *SurfaceInterface::slideOnShowHide() const

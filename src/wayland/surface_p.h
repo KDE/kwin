@@ -51,7 +51,6 @@ struct SurfaceState
         Buffer = 1 << 2,
         Shadow = 1 << 3,
         Blur = 1 << 4,
-        Contrast = 1 << 5,
         Slide = 1 << 6,
         SubsurfaceOrder = 1 << 7,
         SubsurfacePosition = 1 << 8,
@@ -81,7 +80,6 @@ struct SurfaceState
     QPointer<GraphicsBuffer> buffer;
     QPointer<ShadowInterface> shadow;
     QPointer<BlurInterface> blur;
-    QPointer<ContrastInterface> contrast;
     QPointer<SlideInterface> slide;
     ContentType contentType = ContentType::None;
     PresentationModeHint presentationHint = PresentationModeHint::VSync;
@@ -138,7 +136,6 @@ public:
     bool raiseChild(SubSurfaceInterface *subsurface, SurfaceInterface *anchor);
     bool lowerChild(SubSurfaceInterface *subsurface, SurfaceInterface *anchor);
     void setShadow(const QPointer<ShadowInterface> &shadow);
-    void setContrast(const QPointer<ContrastInterface> &contrast);
     void setSlide(const QPointer<SlideInterface> &slide);
     void installPointerConstraint(LockedPointerV1Interface *lock);
     void installPointerConstraint(ConfinedPointerV1Interface *confinement);

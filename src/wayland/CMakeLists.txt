@@ -14,7 +14,6 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
 
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/appmenu.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/blur.xml
-        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/contrast.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/dpms.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/fake-input.xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/idle.xml
@@ -95,7 +94,6 @@ target_sources(kwin PRIVATE
     colorrepresentation_v1.cpp
     compositor.cpp
     contenttype_v1.cpp
-    contrast.cpp
     cursorshape_v1.cpp
     datacontroldevice_v1.cpp
     datacontroldevicemanager_v1.cpp
@@ -191,7 +189,6 @@ install(FILES
     colorrepresentation_v1.h
     compositor.h
     contenttype_v1.h
-    contrast.h
     cursorshape_v1.h
     datacontroldevice_v1.h
     datacontroldevicemanager_v1.h

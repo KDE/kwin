@@ -73,17 +73,6 @@ add_test(NAME kwayland-testBlur COMMAND testBlur)
 ecm_mark_as_test(testBlur)
 
 ########################################################
-# Test Contrast
-########################################################
-set( testContrast_SRCS
-        test_wayland_contrast.cpp
-    )
-add_executable(testContrast ${testContrast_SRCS})
-target_link_libraries( testContrast Qt::Test Qt::Gui Plasma::KWaylandClient kwin Wayland::Client)
-add_test(NAME kwayland-testContrast COMMAND testContrast)
-ecm_mark_as_test(testContrast)
-
-########################################################
 # Test Slide
 ########################################################
 set( testSlide_SRCS
