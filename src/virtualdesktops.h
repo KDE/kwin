@@ -31,11 +31,31 @@ namespace KWin
 class Options;
 class PlasmaVirtualDesktopManagementInterface;
 
+/*!
+ * \qmltype VirtualDesktop
+ * \inqmlmodule org.kde.kwin
+ *
+ * \brief Virtual Desktop.
+ *
+ * This type cannot be created from QML.
+ */
 class KWIN_EXPORT VirtualDesktop : public QObject
 {
     Q_OBJECT
+
+    /*!
+     * \qmlproperty string VirtualDesktop::id
+     */
     Q_PROPERTY(QString id READ id CONSTANT)
+
+    /*!
+     * \qmlproperty int VirtualDesktop::x11DesktopNumber
+     */
     Q_PROPERTY(uint x11DesktopNumber READ x11DesktopNumber NOTIFY x11DesktopNumberChanged)
+
+    /*!
+     * \qmlproperty string VirtualDesktop::name
+     */
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
 public:
     explicit VirtualDesktop(QObject *parent = nullptr);
@@ -63,7 +83,9 @@ Q_SIGNALS:
     void nameChanged();
     void x11DesktopNumberChanged();
 
-    /**
+    /*!
+     * \qmlsignal VirtualDesktop::aboutToBeDestroyed
+     *
      * Emitted just before the desktop gets destroyed.
      */
     void aboutToBeDestroyed();
