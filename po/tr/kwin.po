@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-12 00:44+0000\n"
+"POT-Creation-Date: 2026-02-13 00:45+0000\n"
 "PO-Revision-Date: 2026-01-26 17:17+0300\n"
 "Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -1237,10 +1237,159 @@ msgstr "Pano"
 msgid "Primary Selection"
 msgstr "Birincil Seçim"
 
-#: helpers/killer/killer.cpp:127
+#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:127
 #, kde-format
 msgid "Window Manager"
 msgstr "Pencere Yöneticisi"
+
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#, kde-format
+msgid "ID of resource belonging to the application"
+msgstr "Uygulamanın ait olduğu kaynağın kimliği"
+
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#, kde-format
+msgid "id"
+msgstr "kimlik"
+
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#, kde-format
+msgid "Time of user action causing termination"
+msgstr "Sonlandırma için kullanıcı davranışı süresi"
+
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#, kde-format
+msgid "time"
+msgstr "zaman"
+
+#: helpers/dialoghelper/dialoghelper.cpp:46
+#, kde-format
+msgid "The message to show (fullscreen, noborder)"
+msgstr ""
+
+#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
+#, kde-format
+msgid "KWin helper utility"
+msgstr "KWin yardımcı izlencesi"
+
+#: helpers/dialoghelper/dialoghelper.cpp:68
+#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:172
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr "Bu izlence, doğrudan çağrılmayı desteklemiyor."
+
+#: helpers/dialoghelper/dialoghelper.cpp:79
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window menu instead, activated using the %1 keyboard shortcut."
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse: use the "
+"%1 keyboard shortcut instead."
+msgstr ""
+"Bir pencereyi tam ekran göstermeyi seçtiniz.\n"
+"Eğer uygulamanın kendi içerisinde tam ekran kipinden çıkmak için bir seçenek "
+"yoksa fareyi kullanarak tam ekran kipinden çıkamazsınız: Bunun yerine "
+"pencere menüsünü kullanın, %1 kısayolunu kullanarak etkinleştirin."
+
+#: helpers/dialoghelper/dialoghelper.cpp:85
+#, kde-format
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse: use the "
+"window menu instead, activated using the %1 keyboard shortcut."
+msgstr ""
+"Bir pencereyi tam ekran göstermeyi seçtiniz.\n"
+"Eğer uygulamanın kendi içerisinde tam ekran kipinden çıkmak için bir seçenek "
+"yoksa fareyi kullanarak tam ekran kipinden çıkamazsınız: Bunun yerine "
+"pencere menüsünü kullanın, %1 kısayolunu kullanarak etkinleştirin."
+
+#: helpers/dialoghelper/dialoghelper.cpp:93
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window menu instead, activated using the %1 keyboard shortcut."
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse."
+msgstr ""
+"Bir pencereyi tam ekran göstermeyi seçtiniz.\n"
+"Eğer uygulamanın kendi içerisinde tam ekran kipinden çıkmak için bir seçenek "
+"yoksa fareyi kullanarak tam ekran kipinden çıkamazsınız: Bunun yerine "
+"pencere menüsünü kullanın, %1 kısayolunu kullanarak etkinleştirin."
+
+#: helpers/dialoghelper/dialoghelper.cpp:98
+#, fuzzy, kde-format
+#| msgid "Fullscreen"
+msgctxt "@action:button Un-fullscreen"
+msgid "Undo Fullscreen"
+msgstr "Tam Ekran"
+
+#: helpers/dialoghelper/dialoghelper.cpp:101
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window menu instead, activated using the %1 keyboard "
+#| "shortcut."
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse: use the %1 keyboard shortcut instead."
+msgstr ""
+"Bir pencereyi kenarlıkları olmadan göstermeyi seçtiniz.\n"
+"Kenarlıklar olmadığında fare kullanarak kenarlıkları etkinleştiremezsiniz: "
+"Bunun yerine pencere menüsünü kullanın, %1 kısayolunu kullanarak "
+"etkinleştirin."
+
+#: helpers/dialoghelper/dialoghelper.cpp:106
+#, kde-format
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
+msgstr ""
+"Bir pencereyi kenarlıkları olmadan göstermeyi seçtiniz.\n"
+"Kenarlıklar olmadığında fare kullanarak kenarlıkları etkinleştiremezsiniz: "
+"Bunun yerine pencere menüsünü kullanın, %1 kısayolunu kullanarak "
+"etkinleştirin."
+
+#: helpers/dialoghelper/dialoghelper.cpp:112
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window menu instead, activated using the %1 keyboard "
+#| "shortcut."
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse."
+msgstr ""
+"Bir pencereyi kenarlıkları olmadan göstermeyi seçtiniz.\n"
+"Kenarlıklar olmadığında fare kullanarak kenarlıkları etkinleştiremezsiniz: "
+"Bunun yerine pencere menüsünü kullanın, %1 kısayolunu kullanarak "
+"etkinleştirin."
+
+#: helpers/dialoghelper/dialoghelper.cpp:116
+#, kde-format
+msgctxt "@action:button"
+msgid "Restore Border"
+msgstr ""
+
+#: helpers/dialoghelper/dialoghelper.cpp:133
+#, kde-format
+msgid "Do not show again"
+msgstr ""
 
 #: helpers/killer/killer.cpp:132
 #, kde-format
@@ -1281,36 +1430,6 @@ msgstr "Sonlandırılacak uygulamanın adı"
 #, kde-format
 msgid "name"
 msgstr "ad"
-
-#: helpers/killer/killer.cpp:140
-#, kde-format
-msgid "ID of resource belonging to the application"
-msgstr "Uygulamanın ait olduğu kaynağın kimliği"
-
-#: helpers/killer/killer.cpp:140
-#, kde-format
-msgid "id"
-msgstr "kimlik"
-
-#: helpers/killer/killer.cpp:142
-#, kde-format
-msgid "Time of user action causing termination"
-msgstr "Sonlandırma için kullanıcı davranışı süresi"
-
-#: helpers/killer/killer.cpp:142
-#, kde-format
-msgid "time"
-msgstr "zaman"
-
-#: helpers/killer/killer.cpp:144
-#, kde-format
-msgid "KWin helper utility"
-msgstr "KWin yardımcı izlencesi"
-
-#: helpers/killer/killer.cpp:172
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "Bu izlence, doğrudan çağrılmayı desteklemiyor."
 
 #: helpers/killer/killer.cpp:196
 #, kde-kuit-format
@@ -3581,145 +3700,119 @@ msgstr "Tablet şuraya taşındı: %1"
 msgid "Tablets switched outputs"
 msgstr "Tabletler çıktılarını değiştirdiler"
 
-#: useractions.cpp:162
-#, kde-format
-msgid ""
-"You have selected to show a window without its border.\n"
-"Without the border, you will not be able to enable the border again using "
-"the mouse: use the window menu instead, activated using the %1 keyboard "
-"shortcut."
-msgstr ""
-"Bir pencereyi kenarlıkları olmadan göstermeyi seçtiniz.\n"
-"Kenarlıklar olmadığında fare kullanarak kenarlıkları etkinleştiremezsiniz: "
-"Bunun yerine pencere menüsünü kullanın, %1 kısayolunu kullanarak "
-"etkinleştirin."
-
-#: useractions.cpp:169
-#, kde-format
-msgid ""
-"You have selected to show a window in fullscreen mode.\n"
-"If the application itself does not have an option to turn the fullscreen "
-"mode off you will not be able to disable it again using the mouse: use the "
-"window menu instead, activated using the %1 keyboard shortcut."
-msgstr ""
-"Bir pencereyi tam ekran göstermeyi seçtiniz.\n"
-"Eğer uygulamanın kendi içerisinde tam ekran kipinden çıkmak için bir seçenek "
-"yoksa fareyi kullanarak tam ekran kipinden çıkamazsınız: Bunun yerine "
-"pencere menüsünü kullanın, %1 kısayolunu kullanarak etkinleştirin."
-
-#: useractions.cpp:217
+#: useractions.cpp:224
 #, kde-format
 msgid "&Move"
 msgstr "&Taşı"
 
-#: useractions.cpp:222
+#: useractions.cpp:229
 #, kde-format
 msgid "&Resize"
 msgstr "Yeniden Boyu&tlandır"
 
-#: useractions.cpp:227
+#: useractions.cpp:234
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "&Diğerlerinin Üzerinde Tut"
 
-#: useractions.cpp:233
+#: useractions.cpp:240
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Diğ&erlerinin Altında Tut"
 
-#: useractions.cpp:239
+#: useractions.cpp:246
 #, kde-format
 msgid "&Fullscreen"
 msgstr "Tam &Ekran"
 
-#: useractions.cpp:245
+#: useractions.cpp:252
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "Başlık Çubuğu ve Çerçeve &Yok"
 
-#: useractions.cpp:251
+#: useractions.cpp:258
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr "Ekran Yayımından &Gizle"
 
-#: useractions.cpp:259
+#: useractions.cpp:266
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Pencere &Kısayolunu Ayarla…"
 
-#: useractions.cpp:265
+#: useractions.cpp:272
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Özel &Pencere Ayarlarını Yapılandır…"
 
-#: useractions.cpp:270
+#: useractions.cpp:277
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Özel Uygulama Ayarlarını &Yapılandır…"
 
-#: useractions.cpp:276
+#: useractions.cpp:283
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Ekranı &Kapla"
 
-#: useractions.cpp:282
+#: useractions.cpp:289
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Simge Durumu&na Küçült"
 
-#: useractions.cpp:288
+#: useractions.cpp:295
 #, kde-format
 msgid "&More Actions"
 msgstr "&Daha Fazla Eylem"
 
-#: useractions.cpp:293
+#: useractions.cpp:300
 #, kde-format
 msgid "&Close"
 msgstr "&Kapat"
 
-#: useractions.cpp:359
+#: useractions.cpp:366
 #, kde-format
 msgid "&Extensions"
 msgstr "&Uzantılar"
 
-#: useractions.cpp:409
+#: useractions.cpp:416
 #, kde-format
 msgid "&Desktops"
 msgstr "M&asaüstleri"
 
-#: useractions.cpp:425
+#: useractions.cpp:432
 #, kde-format
 msgid "Move to &Screen"
 msgstr "&Ekrana Taşı"
 
-#: useractions.cpp:441
+#: useractions.cpp:448
 #, kde-format
 msgid "Show in &Activities"
 msgstr "&Etkinliklerde Göster"
 
-#: useractions.cpp:457
+#: useractions.cpp:464
 #, kde-format
 msgid "&All Desktops"
 msgstr "Tüm M&asaüstlerine"
 
-#: useractions.cpp:492 useractions.cpp:624
+#: useractions.cpp:499 useractions.cpp:631
 #, kde-format
 msgid "Move to %1"
 msgstr "%1 Konumuna Taşı"
 
-#: useractions.cpp:506
+#: useractions.cpp:513
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Yeni Ma&saüstüne Ekle"
 
-#: useractions.cpp:518
+#: useractions.cpp:525
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "&Yeni Masaüstüne Taşı"
 
-#: useractions.cpp:549
+#: useractions.cpp:556
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3727,364 +3820,364 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Ekran &%1 (%2)"
 
-#: useractions.cpp:576
+#: useractions.cpp:583
 #, kde-format
 msgid "&All Activities"
 msgstr "Tüm &Etkinlikler"
 
-#: useractions.cpp:743
+#: useractions.cpp:752
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> kullanımda"
 
-#: useractions.cpp:745
+#: useractions.cpp:754
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> %3 içerisinde %2 tarafından kullanılıyor"
 
-#: useractions.cpp:826
+#: useractions.cpp:835
 #, kde-format
 msgid "Window Menu"
 msgstr "Pencere Menüsü"
 
-#: useractions.cpp:828
+#: useractions.cpp:837
 #, kde-format
 msgid "Close Window"
 msgstr "Pencereyi Kapat"
 
-#: useractions.cpp:830
+#: useractions.cpp:839
 #, kde-format
 msgid "Maximize Window"
 msgstr "Pencere Ekranı Kaplasın"
 
-#: useractions.cpp:832
+#: useractions.cpp:841
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Pencere Ekranı Dikey Kaplasın"
 
-#: useractions.cpp:834
+#: useractions.cpp:843
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Pencere Ekranı Yatay Kaplasın"
 
-#: useractions.cpp:836
+#: useractions.cpp:845
 #, kde-format
 msgid "Minimize Window"
 msgstr "Pencereyi Simge Durumuna Küçült"
 
-#: useractions.cpp:838
+#: useractions.cpp:847
 #, kde-format
 msgid "Move Window"
 msgstr "Pencereyi Taşı"
 
-#: useractions.cpp:840
+#: useractions.cpp:849
 #, kde-format
 msgid "Resize Window"
 msgstr "Pencereyi Yeniden Boyutlandır"
 
-#: useractions.cpp:842
+#: useractions.cpp:851
 #, kde-format
 msgid "Raise Window"
 msgstr "Pencereyi Alçalt"
 
-#: useractions.cpp:844
+#: useractions.cpp:853
 #, kde-format
 msgid "Lower Window"
 msgstr "Pencereyi İndir"
 
-#: useractions.cpp:846
+#: useractions.cpp:855
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Pencereyi Büyüt/Küçült"
 
-#: useractions.cpp:848
+#: useractions.cpp:857
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Pencereyi Tam Ekran Yap"
 
-#: useractions.cpp:850
+#: useractions.cpp:859
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Başlık Çubuğunu ve Çerçeveyi Aç/Kapat"
 
-#: useractions.cpp:852
+#: useractions.cpp:861
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Pencereyi Diğerlerinin Üzerinde Tut"
 
-#: useractions.cpp:854
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Pencereyi Diğerlerinin Altında Tut"
 
-#: useractions.cpp:856
+#: useractions.cpp:865
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Pencere Etkinleştirme Denemesi"
 
-#: useractions.cpp:858
+#: useractions.cpp:867
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Pencere Kısayolunu Ayarla"
 
-#: useractions.cpp:860
+#: useractions.cpp:869
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Pencereyi Merkeze Taşı"
 
-#: useractions.cpp:862
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window Right"
 msgstr "Pencereyi Sağa Taşı"
 
-#: useractions.cpp:864
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Left"
 msgstr "Pencereyi Sola Taşı"
 
-#: useractions.cpp:866
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Up"
 msgstr "Pencereyi Yukarıya Taşı"
 
-#: useractions.cpp:868
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Down"
 msgstr "Pencereyi Aşağıya Taşı"
 
-#: useractions.cpp:870
+#: useractions.cpp:879
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Pencereyi Yatay Genişlet"
 
-#: useractions.cpp:872
+#: useractions.cpp:881
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Pencereyi Dikey Genişlet"
 
-#: useractions.cpp:874
+#: useractions.cpp:883
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Pencereyi Yatay Küçült"
 
-#: useractions.cpp:876
+#: useractions.cpp:885
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Pencereyi Dikey Küçült"
 
-#: useractions.cpp:878
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Tez Pencereyi Sola Döşe"
 
-#: useractions.cpp:880
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Tez Pencereyi Sağa Döşe"
 
-#: useractions.cpp:882
+#: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Tez Pencereyi Üste Döşe"
 
-#: useractions.cpp:884
+#: useractions.cpp:893
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Tez Pencereyi Alta Döşe"
 
-#: useractions.cpp:886
+#: useractions.cpp:895
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Tez Pencereyi Üst Sola Döşe"
 
-#: useractions.cpp:888
+#: useractions.cpp:897
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Tez Pencereyi Alt Sola Döşe"
 
-#: useractions.cpp:890
+#: useractions.cpp:899
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Tez Pencereyi Üst Sağa Döşe"
 
-#: useractions.cpp:892
+#: useractions.cpp:901
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Tez Pencereyi Alt Sağa Döşe"
 
-#: useractions.cpp:894
+#: useractions.cpp:903
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Yukarıdaki Masaüstüne Geç"
 
-#: useractions.cpp:896
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Aşağıdaki Masaüstüne Geç"
 
-#: useractions.cpp:898
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Sağdaki Pencereye Geç"
 
-#: useractions.cpp:900
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Soldaki Pencereye Geç"
 
-#: useractions.cpp:902
+#: useractions.cpp:911
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Etkin Pencerenin Matlığını %​5 Artır"
 
-#: useractions.cpp:904
+#: useractions.cpp:913
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Etkin Pencerenin Matlığını %​5 Azalt"
 
-#: useractions.cpp:907
+#: useractions.cpp:916
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Pencere’yi Tüm Masaüstlerinde Bulundur"
 
-#: useractions.cpp:910
+#: useractions.cpp:919
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Tez Pencereyi Sola Özel Döşe"
 
-#: useractions.cpp:912
+#: useractions.cpp:921
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Tez Pencereyi Sağa Özel Döşe"
 
-#: useractions.cpp:914
+#: useractions.cpp:923
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Tez Pencereyi Üste Özel Döşe"
 
-#: useractions.cpp:916
+#: useractions.cpp:925
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Tez Pencereyi Alta Özel Döşe"
 
-#: useractions.cpp:927
+#: useractions.cpp:936
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Pencere %1. Masaüstüne"
 
-#: useractions.cpp:929
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Pencere Sonraki Masaüstüne"
 
-#: useractions.cpp:930
+#: useractions.cpp:939
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Pencere Önceki Masaüstüne"
 
-#: useractions.cpp:931
+#: useractions.cpp:940
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Pencere Bir Sağ Masaüstüne"
 
-#: useractions.cpp:933
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Pencere Bir Sol Masaüstüne"
 
-#: useractions.cpp:935
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Pencere Bir Üst Masaüstüne"
 
-#: useractions.cpp:937
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Pencere Bir Alt Masaüstüne"
 
-#: useractions.cpp:941
+#: useractions.cpp:950
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Pencereyi %1. Ekrana Taşı"
 
-#: useractions.cpp:948
+#: useractions.cpp:957
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Pencereyi Sonraki Ekrana Taşı"
 
-#: useractions.cpp:950
+#: useractions.cpp:959
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Pencereyi Önceki Ekrana Taşı"
 
-#: useractions.cpp:952
+#: useractions.cpp:961
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Pencereyi Bir Sağ Ekrana Taşı"
 
-#: useractions.cpp:954
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Pencereyi Bir Sol Ekrana Taşı"
 
-#: useractions.cpp:956
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Pencereyi Bir Ekran Yukarı Taşı"
 
-#: useractions.cpp:958
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Pencereyi Bir Ekran Aşağı Taşı"
 
-#: useractions.cpp:962
+#: useractions.cpp:971
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "%1. Ekrana Geç"
 
-#: useractions.cpp:969
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Sonraki Ekrana Geç"
 
-#: useractions.cpp:970
+#: useractions.cpp:979
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Önceki Ekrana Geç"
 
-#: useractions.cpp:971
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Sağdaki Ekrana Geç"
 
-#: useractions.cpp:973
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Soldaki Ekrana Geç"
 
-#: useractions.cpp:975
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Yukarıdaki Ekrana Geç"
 
-#: useractions.cpp:977
+#: useractions.cpp:986
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Aşağıdaki Ekrana Geç"
 
-#: useractions.cpp:980
+#: useractions.cpp:989
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Masaüstüne Bak"
 
-#: useractions.cpp:983
+#: useractions.cpp:992
 #, kde-format
 msgid "Kill Window"
 msgstr "Pencereyi Öldür"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1057
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Pencereyi Etkinleştir (%1)"
@@ -4182,7 +4275,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Yanıt Vermiyor)"
 
-#: workspace.cpp:1736
+#: workspace.cpp:1745
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

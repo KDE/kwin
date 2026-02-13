@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-12 00:44+0000\n"
+"POT-Creation-Date: 2026-02-13 00:45+0000\n"
 "PO-Revision-Date: 2026-02-06 01:55+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -1235,10 +1235,157 @@ msgstr "Iškarpinė"
 msgid "Primary Selection"
 msgstr "Pirminis pasirinkimas"
 
-#: helpers/killer/killer.cpp:127
+#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:127
 #, kde-format
 msgid "Window Manager"
 msgstr "Langų tvarkytuvė"
+
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#, kde-format
+msgid "ID of resource belonging to the application"
+msgstr "Programai priklausančio ištekliaus ID"
+
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#, kde-format
+msgid "id"
+msgstr "id"
+
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#, kde-format
+msgid "Time of user action causing termination"
+msgstr "Naudotojo veiksmo, sukėlusio programos darbo baigimą, laikas"
+
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#, kde-format
+msgid "time"
+msgstr "laikas"
+
+#: helpers/dialoghelper/dialoghelper.cpp:46
+#, kde-format
+msgid "The message to show (fullscreen, noborder)"
+msgstr ""
+
+#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
+#, kde-format
+msgid "KWin helper utility"
+msgstr "KWin pagelbiklio paslaugų programa"
+
+#: helpers/dialoghelper/dialoghelper.cpp:68
+#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:172
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr "Šio pagelbiklio paslaugų programos negalima iškviesti tiesiogiai."
+
+#: helpers/dialoghelper/dialoghelper.cpp:79
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window menu instead, activated using the %1 keyboard shortcut."
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse: use the "
+"%1 keyboard shortcut instead."
+msgstr ""
+"Jūs pasirinkote rodyti langą visame ekrane.\n"
+"Jei pati programa neturi parinkties išjungti viso ekrano veikseną, tuomet "
+"negalėsite išjungti veikseną naudodami pelę. Vietoje to, naudokite lango "
+"meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:85
+#, kde-format
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse: use the "
+"window menu instead, activated using the %1 keyboard shortcut."
+msgstr ""
+"Jūs pasirinkote rodyti langą visame ekrane.\n"
+"Jei pati programa neturi parinkties išjungti viso ekrano veikseną, tuomet "
+"negalėsite išjungti veikseną naudodami pelę. Vietoje to, naudokite lango "
+"meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:93
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window menu instead, activated using the %1 keyboard shortcut."
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse."
+msgstr ""
+"Jūs pasirinkote rodyti langą visame ekrane.\n"
+"Jei pati programa neturi parinkties išjungti viso ekrano veikseną, tuomet "
+"negalėsite išjungti veikseną naudodami pelę. Vietoje to, naudokite lango "
+"meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:98
+#, fuzzy, kde-format
+#| msgid "Fullscreen"
+msgctxt "@action:button Un-fullscreen"
+msgid "Undo Fullscreen"
+msgstr "Visas ekranas"
+
+#: helpers/dialoghelper/dialoghelper.cpp:101
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window menu instead, activated using the %1 keyboard "
+#| "shortcut."
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse: use the %1 keyboard shortcut instead."
+msgstr ""
+"Jūs pasirinkote rodyti langą be rėmelio.\n"
+"Be rėmelio negalėsite vėl įjungti rėmelį, naudodami pelę: vietoje pelės, "
+"naudokite lango meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:106
+#, kde-format
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
+msgstr ""
+"Jūs pasirinkote rodyti langą be rėmelio.\n"
+"Be rėmelio negalėsite vėl įjungti rėmelį, naudodami pelę: vietoje pelės, "
+"naudokite lango meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:112
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window menu instead, activated using the %1 keyboard "
+#| "shortcut."
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse."
+msgstr ""
+"Jūs pasirinkote rodyti langą be rėmelio.\n"
+"Be rėmelio negalėsite vėl įjungti rėmelį, naudodami pelę: vietoje pelės, "
+"naudokite lango meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:116
+#, fuzzy, kde-format
+#| msgid "&No Border"
+msgctxt "@action:button"
+msgid "Restore Border"
+msgstr "&Nerodyti rėmelio"
+
+#: helpers/dialoghelper/dialoghelper.cpp:133
+#, kde-format
+msgid "Do not show again"
+msgstr ""
 
 #: helpers/killer/killer.cpp:132
 #, kde-format
@@ -1279,36 +1426,6 @@ msgstr "Programos, kurios darbą baigti, pavadinimas"
 #, kde-format
 msgid "name"
 msgstr "pavadinimas"
-
-#: helpers/killer/killer.cpp:140
-#, kde-format
-msgid "ID of resource belonging to the application"
-msgstr "Programai priklausančio ištekliaus ID"
-
-#: helpers/killer/killer.cpp:140
-#, kde-format
-msgid "id"
-msgstr "id"
-
-#: helpers/killer/killer.cpp:142
-#, kde-format
-msgid "Time of user action causing termination"
-msgstr "Naudotojo veiksmo, sukėlusio programos darbo baigimą, laikas"
-
-#: helpers/killer/killer.cpp:142
-#, kde-format
-msgid "time"
-msgstr "laikas"
-
-#: helpers/killer/killer.cpp:144
-#, kde-format
-msgid "KWin helper utility"
-msgstr "KWin pagelbiklio paslaugų programa"
-
-#: helpers/killer/killer.cpp:172
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "Šio pagelbiklio paslaugų programos negalima iškviesti tiesiogiai."
 
 #: helpers/killer/killer.cpp:196
 #, kde-kuit-format
@@ -3602,144 +3719,119 @@ msgstr "Planšetė perkelta į %1"
 msgid "Tablets switched outputs"
 msgstr "Planšetės pakeitė išvedimus"
 
-#: useractions.cpp:162
-#, kde-format
-msgid ""
-"You have selected to show a window without its border.\n"
-"Without the border, you will not be able to enable the border again using "
-"the mouse: use the window menu instead, activated using the %1 keyboard "
-"shortcut."
-msgstr ""
-"Jūs pasirinkote rodyti langą be rėmelio.\n"
-"Be rėmelio negalėsite vėl įjungti rėmelį, naudodami pelę: vietoje pelės, "
-"naudokite lango meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
-
-#: useractions.cpp:169
-#, kde-format
-msgid ""
-"You have selected to show a window in fullscreen mode.\n"
-"If the application itself does not have an option to turn the fullscreen "
-"mode off you will not be able to disable it again using the mouse: use the "
-"window menu instead, activated using the %1 keyboard shortcut."
-msgstr ""
-"Jūs pasirinkote rodyti langą visame ekrane.\n"
-"Jei pati programa neturi parinkties išjungti viso ekrano veikseną, tuomet "
-"negalėsite išjungti veikseną naudodami pelę. Vietoje to, naudokite lango "
-"meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
-
-#: useractions.cpp:217
+#: useractions.cpp:224
 #, kde-format
 msgid "&Move"
 msgstr "Perke&lti"
 
-#: useractions.cpp:222
+#: useractions.cpp:229
 #, kde-format
 msgid "&Resize"
 msgstr "Keisti &dydį"
 
-#: useractions.cpp:227
+#: useractions.cpp:234
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Laikyti &virš kitų"
 
-#: useractions.cpp:233
+#: useractions.cpp:240
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Laikyti &po kitais"
 
-#: useractions.cpp:239
+#: useractions.cpp:246
 #, kde-format
 msgid "&Fullscreen"
 msgstr "Visas &ekranas"
 
-#: useractions.cpp:245
+#: useractions.cpp:252
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "&Be antraštės juostos ir rėmelio"
 
-#: useractions.cpp:251
+#: useractions.cpp:258
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr "&Slėpti, kai filmuojamas ekranas"
 
-#: useractions.cpp:259
+#: useractions.cpp:266
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Nustatyti lango &spartųjį klavišą…"
 
-#: useractions.cpp:265
+#: useractions.cpp:272
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Konfigūruoti specialias lango nu&ostatas…"
 
-#: useractions.cpp:270
+#: useractions.cpp:277
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Konfigūruoti s&pecialias programos nuostatas…"
 
-#: useractions.cpp:276
+#: useractions.cpp:283
 #, kde-format
 msgid "Ma&ximize"
 msgstr "&Išskleisti"
 
-#: useractions.cpp:282
+#: useractions.cpp:289
 #, kde-format
 msgid "Mi&nimize"
 msgstr "&Suskleisti"
 
-#: useractions.cpp:288
+#: useractions.cpp:295
 #, kde-format
 msgid "&More Actions"
 msgstr "&Daugiau veiksmų"
 
-#: useractions.cpp:293
+#: useractions.cpp:300
 #, kde-format
 msgid "&Close"
 msgstr "&Užverti"
 
-#: useractions.cpp:359
+#: useractions.cpp:366
 #, kde-format
 msgid "&Extensions"
 msgstr "&Plėtiniai"
 
-#: useractions.cpp:409
+#: useractions.cpp:416
 #, kde-format
 msgid "&Desktops"
 msgstr "&Darbalaukiai"
 
-#: useractions.cpp:425
+#: useractions.cpp:432
 #, kde-format
 msgid "Move to &Screen"
 msgstr "Perkelti į &ekraną"
 
-#: useractions.cpp:441
+#: useractions.cpp:448
 #, kde-format
 msgid "Show in &Activities"
 msgstr "Rodyti &veiklose"
 
-#: useractions.cpp:457
+#: useractions.cpp:464
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Visi darbalaukiai"
 
-#: useractions.cpp:492 useractions.cpp:624
+#: useractions.cpp:499 useractions.cpp:631
 #, kde-format
 msgid "Move to %1"
 msgstr "Perkelti į %1"
 
-#: useractions.cpp:506
+#: useractions.cpp:513
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Pridėti į &naują darbalaukį"
 
-#: useractions.cpp:518
+#: useractions.cpp:525
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Perkelti į naują darbalaukį"
 
-#: useractions.cpp:549
+#: useractions.cpp:556
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3747,364 +3839,364 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Ekranas &%1 (%2)"
 
-#: useractions.cpp:576
+#: useractions.cpp:583
 #, kde-format
 msgid "&All Activities"
 msgstr "Vi&sos veiklos"
 
-#: useractions.cpp:743
+#: useractions.cpp:752
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> jau yra naudojamas"
 
-#: useractions.cpp:745
+#: useractions.cpp:754
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "Spartieji klavišai <b>%1</b> yra naudojami veiksmui %2, programoje %3"
 
-#: useractions.cpp:826
+#: useractions.cpp:835
 #, kde-format
 msgid "Window Menu"
 msgstr "Lango meniu"
 
-#: useractions.cpp:828
+#: useractions.cpp:837
 #, kde-format
 msgid "Close Window"
 msgstr "Užverti langą"
 
-#: useractions.cpp:830
+#: useractions.cpp:839
 #, kde-format
 msgid "Maximize Window"
 msgstr "Išskleisti langą"
 
-#: useractions.cpp:832
+#: useractions.cpp:841
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Išskleisti langą vertikaliai"
 
-#: useractions.cpp:834
+#: useractions.cpp:843
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Išskleisti langą horizontaliai"
 
-#: useractions.cpp:836
+#: useractions.cpp:845
 #, kde-format
 msgid "Minimize Window"
 msgstr "Suskleisti langą"
 
-#: useractions.cpp:838
+#: useractions.cpp:847
 #, kde-format
 msgid "Move Window"
 msgstr "Perkelti langą"
 
-#: useractions.cpp:840
+#: useractions.cpp:849
 #, kde-format
 msgid "Resize Window"
 msgstr "Keisti lango dydį"
 
-#: useractions.cpp:842
+#: useractions.cpp:851
 #, kde-format
 msgid "Raise Window"
 msgstr "Iškelti langą į pirmą planą"
 
-#: useractions.cpp:844
+#: useractions.cpp:853
 #, kde-format
 msgid "Lower Window"
 msgstr "Nuleisti langą į antrą planą"
 
-#: useractions.cpp:846
+#: useractions.cpp:855
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Perkelinėti langą į pirmą/antrą planą"
 
-#: useractions.cpp:848
+#: useractions.cpp:857
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Išskleisti langą per visą ekraną"
 
-#: useractions.cpp:850
+#: useractions.cpp:859
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Perjungti lango antraštės juostą ir rėmelį"
 
-#: useractions.cpp:852
+#: useractions.cpp:861
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Laikyti langą virš kitų"
 
-#: useractions.cpp:854
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Langą langą po kitais"
 
-#: useractions.cpp:856
+#: useractions.cpp:865
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Aktyvuoti langą, reikalaujantį dėmesio"
 
-#: useractions.cpp:858
+#: useractions.cpp:867
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Nustatyti lango sparčiuosius klavišus"
 
-#: useractions.cpp:860
+#: useractions.cpp:869
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Perkelti langą į centrą"
 
-#: useractions.cpp:862
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window Right"
 msgstr "Perkelti langą dešinėn"
 
-#: useractions.cpp:864
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Left"
 msgstr "Perkelti langą kairėn"
 
-#: useractions.cpp:866
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Up"
 msgstr "Perkelti langą aukštyn"
 
-#: useractions.cpp:868
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Down"
 msgstr "Perkelti langą žemyn"
 
-#: useractions.cpp:870
+#: useractions.cpp:879
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Išplėsti langą horizontaliai"
 
-#: useractions.cpp:872
+#: useractions.cpp:881
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Išplėsti langą vertikaliai"
 
-#: useractions.cpp:874
+#: useractions.cpp:883
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Sumažinti langą horizontaliai"
 
-#: useractions.cpp:876
+#: useractions.cpp:885
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Sumažinti langą vertikaliai"
 
-#: useractions.cpp:878
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Greitai iškloti langą kairėje"
 
-#: useractions.cpp:880
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Greitai iškloti langą dešinėje"
 
-#: useractions.cpp:882
+#: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Greitai iškloti langą viršuje"
 
-#: useractions.cpp:884
+#: useractions.cpp:893
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Greitai iškloti langą apačioje"
 
-#: useractions.cpp:886
+#: useractions.cpp:895
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Greitai iškloti langą viršuje kairėje"
 
-#: useractions.cpp:888
+#: useractions.cpp:897
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Greitai iškloti langą apačioje kairėje"
 
-#: useractions.cpp:890
+#: useractions.cpp:899
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Greitai iškloti langą viršuje dešinėje"
 
-#: useractions.cpp:892
+#: useractions.cpp:901
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Greitai iškloti langą apačioje dešinėje"
 
-#: useractions.cpp:894
+#: useractions.cpp:903
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Perjungti į langą aukščiau"
 
-#: useractions.cpp:896
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Perjungti į langą žemiau"
 
-#: useractions.cpp:898
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Perjungti į langą dešinėje"
 
-#: useractions.cpp:900
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Perjungti į langą kairėje"
 
-#: useractions.cpp:902
+#: useractions.cpp:911
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Padidinti 5% aktyvaus lango nepermatomumą"
 
-#: useractions.cpp:904
+#: useractions.cpp:913
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Sumažinti 5% aktyvaus lango nepermatomumą"
 
-#: useractions.cpp:907
+#: useractions.cpp:916
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Laikyti langą visuose darbalaukiuose"
 
-#: useractions.cpp:910
+#: useractions.cpp:919
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Tinkintas greitas lango išklojimas kairėje"
 
-#: useractions.cpp:912
+#: useractions.cpp:921
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Tinkintas greitas lango išklojimas dešinėje"
 
-#: useractions.cpp:914
+#: useractions.cpp:923
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Tinkintas greitas lango išklojimas viršuje"
 
-#: useractions.cpp:916
+#: useractions.cpp:925
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Tinkintas greitas lango išklojimas apačioje"
 
-#: useractions.cpp:927
+#: useractions.cpp:936
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Langą į darbalaukį %1"
 
-#: useractions.cpp:929
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Langą į kitą darbalaukį"
 
-#: useractions.cpp:930
+#: useractions.cpp:939
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Langą į ankstesnį darbalaukį"
 
-#: useractions.cpp:931
+#: useractions.cpp:940
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Langą vienu darbalaukiu į dešinę"
 
-#: useractions.cpp:933
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Langą vienu darbalaukiu į kairę"
 
-#: useractions.cpp:935
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Langą vienu darbalaukiu į viršų"
 
-#: useractions.cpp:937
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Langą vienu darbalaukiu į apačią"
 
-#: useractions.cpp:941
+#: useractions.cpp:950
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Perkelti langą į ekraną %1"
 
-#: useractions.cpp:948
+#: useractions.cpp:957
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Perkelti langą į kitą ekraną"
 
-#: useractions.cpp:950
+#: useractions.cpp:959
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Perkelti langą į ankstesnį ekraną"
 
-#: useractions.cpp:952
+#: useractions.cpp:961
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Perkelti langą vienu ekranu į dešinę"
 
-#: useractions.cpp:954
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Perkelti langą vienu ekranu į kairę"
 
-#: useractions.cpp:956
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Perkelti langą vienu ekranu aukštyn"
 
-#: useractions.cpp:958
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Perkelti langą vienu ekranu žemyn"
 
-#: useractions.cpp:962
+#: useractions.cpp:971
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Perjungti į ekraną %1"
 
-#: useractions.cpp:969
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Perjungti į kitą ekraną"
 
-#: useractions.cpp:970
+#: useractions.cpp:979
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Perjungti į ankstesnį ekraną"
 
-#: useractions.cpp:971
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Perjungti į ekraną dešinėje"
 
-#: useractions.cpp:973
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Perjungti į ekraną kairėje"
 
-#: useractions.cpp:975
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Perjungti į ekraną aukščiau"
 
-#: useractions.cpp:977
+#: useractions.cpp:986
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Perjungti į ekraną žemiau"
 
-#: useractions.cpp:980
+#: useractions.cpp:989
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Žvilgsnis į darbalaukį"
 
-#: useractions.cpp:983
+#: useractions.cpp:992
 #, kde-format
 msgid "Kill Window"
 msgstr "Nutraukti lango darbą"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1057
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktyvuoti langą (%1)"
@@ -4202,7 +4294,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nereaguoja)"
 
-#: workspace.cpp:1736
+#: workspace.cpp:1745
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4701,9 +4793,6 @@ msgstr "Xwayland užstrigo"
 
 #~ msgid "Walk Through Desktop List (Reverse)"
 #~ msgstr "Pereiti per darbalaukių sąrašą (atvirkščiai)"
-
-#~ msgid "&No Border"
-#~ msgstr "&Nerodyti rėmelio"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

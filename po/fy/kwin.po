@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-12 00:44+0000\n"
+"POT-Creation-Date: 2026-02-13 00:45+0000\n"
 "PO-Revision-Date: 2010-07-20 13:46+0100\n"
 "Last-Translator: Berend Ytsma <berendy@gmail.com>\n"
 "Language-Team: Frysk <kde-i18n-fry@kde.org>\n"
@@ -1240,11 +1240,174 @@ msgstr ""
 msgid "Primary Selection"
 msgstr ""
 
-#: helpers/killer/killer.cpp:127
+#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:127
 #, fuzzy, kde-format
 #| msgid "KDE window manager"
 msgid "Window Manager"
 msgstr "De KDE Finsterbehearder"
+
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#, kde-format
+msgid "ID of resource belonging to the application"
+msgstr "ID fan boarne dy't by de applikaasje heard"
+
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#, kde-format
+msgid "id"
+msgstr ""
+
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#, kde-format
+msgid "Time of user action causing termination"
+msgstr "Tiid fan de brûkersaksje dy it beëinjen feroarsaket"
+
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#, kde-format
+msgid "time"
+msgstr ""
+
+#: helpers/dialoghelper/dialoghelper.cpp:46
+#, kde-format
+msgid "The message to show (fullscreen, noborder)"
+msgstr ""
+
+#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
+#, kde-format
+msgid "KWin helper utility"
+msgstr "KWin-helperapplikaasje"
+
+#: helpers/dialoghelper/dialoghelper.cpp:68
+#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:172
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr "Dizze helperapplikaasje is net bedoeld om direkt oanropt te wurden."
+
+#: helpers/dialoghelper/dialoghelper.cpp:79
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse: use the "
+"%1 keyboard shortcut instead."
+msgstr ""
+"Jo ha opdracht jûn om in finster skermfoljend wer te jaan.\n"
+"As de tapassing sels gjin mooglik biedt om dizze modus te ferlitten, dan "
+"sille jo sels it finstermenu fan de finstermanager brûke moatte om dizze "
+"modus wer te ferlitten. Jo kinne it finstermenu wol oproppe mei de "
+"fluchtoets %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:85
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse: use the "
+"window menu instead, activated using the %1 keyboard shortcut."
+msgstr ""
+"Jo ha opdracht jûn om in finster skermfoljend wer te jaan.\n"
+"As de tapassing sels gjin mooglik biedt om dizze modus te ferlitten, dan "
+"sille jo sels it finstermenu fan de finstermanager brûke moatte om dizze "
+"modus wer te ferlitten. Jo kinne it finstermenu wol oproppe mei de "
+"fluchtoets %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:93
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse."
+msgstr ""
+"Jo ha opdracht jûn om in finster skermfoljend wer te jaan.\n"
+"As de tapassing sels gjin mooglik biedt om dizze modus te ferlitten, dan "
+"sille jo sels it finstermenu fan de finstermanager brûke moatte om dizze "
+"modus wer te ferlitten. Jo kinne it finstermenu wol oproppe mei de "
+"fluchtoets %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:98
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgctxt "@action:button Un-fullscreen"
+msgid "Undo Fullscreen"
+msgstr "F&olslein skerm"
+
+#: helpers/dialoghelper/dialoghelper.cpp:101
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse: use the %1 keyboard shortcut instead."
+msgstr ""
+"Jo ha opdracht jûn om in finster sûnder râne wer te jaan.\n"
+"Sûnder râne kinne jo it finstermenu net mear mei de mûs oanroppe. Jo kinne "
+"it finstermenu wol oproppe mei de fluchtoets %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:106
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
+msgstr ""
+"Jo ha opdracht jûn om in finster sûnder râne wer te jaan.\n"
+"Sûnder râne kinne jo it finstermenu net mear mei de mûs oanroppe. Jo kinne "
+"it finstermenu wol oproppe mei de fluchtoets %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:112
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse."
+msgstr ""
+"Jo ha opdracht jûn om in finster sûnder râne wer te jaan.\n"
+"Sûnder râne kinne jo it finstermenu net mear mei de mûs oanroppe. Jo kinne "
+"it finstermenu wol oproppe mei de fluchtoets %1."
+
+#: helpers/dialoghelper/dialoghelper.cpp:116
+#, fuzzy, kde-format
+#| msgid "&No Border"
+msgctxt "@action:button"
+msgid "Restore Border"
+msgstr "Finsterrâne fer&stopje"
+
+#: helpers/dialoghelper/dialoghelper.cpp:133
+#, kde-format
+msgid "Do not show again"
+msgstr ""
 
 #: helpers/killer/killer.cpp:132
 #, kde-format
@@ -1285,36 +1448,6 @@ msgstr "Namme fan de applikaasje dy't beëine wurdt"
 #, kde-format
 msgid "name"
 msgstr ""
-
-#: helpers/killer/killer.cpp:140
-#, kde-format
-msgid "ID of resource belonging to the application"
-msgstr "ID fan boarne dy't by de applikaasje heard"
-
-#: helpers/killer/killer.cpp:140
-#, kde-format
-msgid "id"
-msgstr ""
-
-#: helpers/killer/killer.cpp:142
-#, kde-format
-msgid "Time of user action causing termination"
-msgstr "Tiid fan de brûkersaksje dy it beëinjen feroarsaket"
-
-#: helpers/killer/killer.cpp:142
-#, kde-format
-msgid "time"
-msgstr ""
-
-#: helpers/killer/killer.cpp:144
-#, kde-format
-msgid "KWin helper utility"
-msgstr "KWin-helperapplikaasje"
-
-#: helpers/killer/killer.cpp:172
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "Dizze helperapplikaasje is net bedoeld om direkt oanropt te wurden."
 
 #: helpers/killer/killer.cpp:196
 #, kde-kuit-format
@@ -3691,166 +3824,129 @@ msgstr ""
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: useractions.cpp:162
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
-msgid ""
-"You have selected to show a window without its border.\n"
-"Without the border, you will not be able to enable the border again using "
-"the mouse: use the window menu instead, activated using the %1 keyboard "
-"shortcut."
-msgstr ""
-"Jo ha opdracht jûn om in finster sûnder râne wer te jaan.\n"
-"Sûnder râne kinne jo it finstermenu net mear mei de mûs oanroppe. Jo kinne "
-"it finstermenu wol oproppe mei de fluchtoets %1."
-
-#: useractions.cpp:169
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
-msgid ""
-"You have selected to show a window in fullscreen mode.\n"
-"If the application itself does not have an option to turn the fullscreen "
-"mode off you will not be able to disable it again using the mouse: use the "
-"window menu instead, activated using the %1 keyboard shortcut."
-msgstr ""
-"Jo ha opdracht jûn om in finster skermfoljend wer te jaan.\n"
-"As de tapassing sels gjin mooglik biedt om dizze modus te ferlitten, dan "
-"sille jo sels it finstermenu fan de finstermanager brûke moatte om dizze "
-"modus wer te ferlitten. Jo kinne it finstermenu wol oproppe mei de "
-"fluchtoets %1."
-
-#: useractions.cpp:217
+#: useractions.cpp:224
 #, kde-format
 msgid "&Move"
 msgstr "Fer&pleatse"
 
-#: useractions.cpp:222
+#: useractions.cpp:229
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgid "&Resize"
 msgstr "Grutte &Feroarje"
 
-#: useractions.cpp:227
+#: useractions.cpp:234
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Altyd op &foargrûn"
 
-#: useractions.cpp:233
+#: useractions.cpp:240
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Altyd op &eftergrûn"
 
-#: useractions.cpp:239
+#: useractions.cpp:246
 #, kde-format
 msgid "&Fullscreen"
 msgstr "F&olslein skerm"
 
-#: useractions.cpp:245
+#: useractions.cpp:252
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:251
+#: useractions.cpp:258
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr ""
 
-#: useractions.cpp:259
+#: useractions.cpp:266
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
 msgid "Set Window Short&cut…"
 msgstr "Finster Fluchtoet&s..."
 
-#: useractions.cpp:265
+#: useractions.cpp:272
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
 msgid "Configure Special &Window Settings…"
 msgstr "&Spesjale finsterynstellings..."
 
-#: useractions.cpp:270
+#: useractions.cpp:277
 #, fuzzy, kde-format
 #| msgid "S&pecial Application Settings..."
 msgid "Configure S&pecial Application Settings…"
 msgstr "&Spesjale applikaasje ynstellings..."
 
-#: useractions.cpp:276
+#: useractions.cpp:283
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Ma&ksimalisearje"
 
-#: useractions.cpp:282
+#: useractions.cpp:289
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Mi&nimalisearje"
 
-#: useractions.cpp:288
+#: useractions.cpp:295
 #, kde-format
 msgid "&More Actions"
 msgstr ""
 
-#: useractions.cpp:293
+#: useractions.cpp:300
 #, kde-format
 msgid "&Close"
 msgstr "S&lúte"
 
-#: useractions.cpp:359
+#: useractions.cpp:366
 #, kde-format
 msgid "&Extensions"
 msgstr ""
 
-#: useractions.cpp:409
+#: useractions.cpp:416
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "&Desktops"
 msgstr "&Alle buroblêden"
 
-#: useractions.cpp:425
+#: useractions.cpp:432
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to &Screen"
 msgstr "Nei buroblê&d"
 
-#: useractions.cpp:441
+#: useractions.cpp:448
 #, fuzzy, kde-format
 #| msgid "Ac&tivities"
 msgid "Show in &Activities"
 msgstr "Ak&tiviteiten"
 
-#: useractions.cpp:457
+#: useractions.cpp:464
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Alle buroblêden"
 
-#: useractions.cpp:492 useractions.cpp:624
+#: useractions.cpp:499 useractions.cpp:631
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to %1"
 msgstr "Nei buroblê&d"
 
-#: useractions.cpp:506
+#: useractions.cpp:513
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Buroblêd sjen litte"
 
-#: useractions.cpp:518
+#: useractions.cpp:525
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Nei buroblê&d"
 
-#: useractions.cpp:549
+#: useractions.cpp:556
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgctxt ""
@@ -3859,396 +3955,396 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Finster nei skerm 1"
 
-#: useractions.cpp:576
+#: useractions.cpp:583
 #, kde-format
 msgid "&All Activities"
 msgstr "&Alle aktiviteiten"
 
-#: useractions.cpp:743
+#: useractions.cpp:752
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr ""
 
-#: useractions.cpp:745
+#: useractions.cpp:754
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
-#: useractions.cpp:826
+#: useractions.cpp:835
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Window Menu"
 msgstr "Finsters"
 
-#: useractions.cpp:828
+#: useractions.cpp:837
 #, kde-format
 msgid "Close Window"
 msgstr "Finster slute"
 
-#: useractions.cpp:830
+#: useractions.cpp:839
 #, kde-format
 msgid "Maximize Window"
 msgstr "Finster maksimalisearje "
 
-#: useractions.cpp:832
+#: useractions.cpp:841
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Finster fertikaal maksimalisearje"
 
-#: useractions.cpp:834
+#: useractions.cpp:843
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Finster horizontaal maksimalisearje"
 
-#: useractions.cpp:836
+#: useractions.cpp:845
 #, kde-format
 msgid "Minimize Window"
 msgstr "Finster minimalisearje"
 
-#: useractions.cpp:838
+#: useractions.cpp:847
 #, kde-format
 msgid "Move Window"
 msgstr "Finster ferpleatse"
 
-#: useractions.cpp:840
+#: useractions.cpp:849
 #, kde-format
 msgid "Resize Window"
 msgstr "Finstergrutte feroarje"
 
-#: useractions.cpp:842
+#: useractions.cpp:851
 #, kde-format
 msgid "Raise Window"
 msgstr "Finster nei foargrûn"
 
-#: useractions.cpp:844
+#: useractions.cpp:853
 #, kde-format
 msgid "Lower Window"
 msgstr "Finster nei eftergrûn"
 
-#: useractions.cpp:846
+#: useractions.cpp:855
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Finster nei foar/eftergrûn"
 
-#: useractions.cpp:848
+#: useractions.cpp:857
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Folslein finster"
 
-#: useractions.cpp:850
+#: useractions.cpp:859
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Finsterrâne ferstopje"
 
-#: useractions.cpp:852
+#: useractions.cpp:861
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Hâld finster boppe oaren"
 
-#: useractions.cpp:854
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Hâld finster ûnder oaren"
 
-#: useractions.cpp:856
+#: useractions.cpp:865
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "\"Finster freget om oandacht\" aktivearje"
 
-#: useractions.cpp:858
+#: useractions.cpp:867
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Finsterfluchtoets ynstelle"
 
-#: useractions.cpp:860
+#: useractions.cpp:869
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Window to the Center"
 msgstr "Finster ferpleatse nei groep"
 
-#: useractions.cpp:862
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window Right"
 msgstr "Finster rjochts ferpleatse"
 
-#: useractions.cpp:864
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Left"
 msgstr "Finster lofts ferpleatse"
 
-#: useractions.cpp:866
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Up"
 msgstr "Finster omheech ferpleatse"
 
-#: useractions.cpp:868
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Down"
 msgstr "Finster omleech ferpleatse"
 
-#: useractions.cpp:870
+#: useractions.cpp:879
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Finster horizontaal maksimalisearje"
 
-#: useractions.cpp:872
+#: useractions.cpp:881
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Finster fertikaal maksimalisearje"
 
-#: useractions.cpp:874
+#: useractions.cpp:883
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "Finster horizontaal oanslutend ferlytsje"
 
-#: useractions.cpp:876
+#: useractions.cpp:885
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "Finster fertikaal oanslutend ferlytsje"
 
-#: useractions.cpp:878
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:880
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Finsters nei rjochts fluch yn tegels orderje"
 
-#: useractions.cpp:882
+#: useractions.cpp:891
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:884
+#: useractions.cpp:893
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:886
+#: useractions.cpp:895
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:888
+#: useractions.cpp:897
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:890
+#: useractions.cpp:899
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "Finsters nei rjochts fluch yn tegels orderje"
 
-#: useractions.cpp:892
+#: useractions.cpp:901
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Finsters nei rjochts fluch yn tegels orderje"
 
-#: useractions.cpp:894
+#: useractions.cpp:903
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Wikselje nei finster omheech"
 
-#: useractions.cpp:896
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Wikselje nei finster omleech"
 
-#: useractions.cpp:898
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Wikselje nei finster rjochts"
 
-#: useractions.cpp:900
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Wikselje nei finster lofts"
 
-#: useractions.cpp:902
+#: useractions.cpp:911
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:904
+#: useractions.cpp:913
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:907
+#: useractions.cpp:916
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Finster op alle buroblêden hâlde"
 
-#: useractions.cpp:910
+#: useractions.cpp:919
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:912
+#: useractions.cpp:921
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Finsters nei rjochts fluch yn tegels orderje"
 
-#: useractions.cpp:914
+#: useractions.cpp:923
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:916
+#: useractions.cpp:925
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Finsters nei loft fluch yn tegels orderje"
 
-#: useractions.cpp:927
+#: useractions.cpp:936
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "Finster nei buroblêd 1"
 
-#: useractions.cpp:929
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Finster nei neikommend buroblêd"
 
-#: useractions.cpp:930
+#: useractions.cpp:939
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Finster nei foarich buroblêd"
 
-#: useractions.cpp:931
+#: useractions.cpp:940
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Finster ien buroblêd nei rjochts"
 
-#: useractions.cpp:933
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Finster ien buroblêd nei lofts"
 
-#: useractions.cpp:935
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Finster ien buroblêd omheech"
 
-#: useractions.cpp:937
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Finster ien buroblêd omleech"
 
-#: useractions.cpp:941
+#: useractions.cpp:950
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgid "Move Window to Screen %1"
 msgstr "Finster nei skerm 1"
 
-#: useractions.cpp:948
+#: useractions.cpp:957
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "Finster nei folgjend skerm"
 
-#: useractions.cpp:950
+#: useractions.cpp:959
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "Finster nei foarich buroblêd"
 
-#: useractions.cpp:952
+#: useractions.cpp:961
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Finster ien buroblêd nei rjochts"
 
-#: useractions.cpp:954
+#: useractions.cpp:963
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Finster ien buroblêd nei lofts"
 
-#: useractions.cpp:956
+#: useractions.cpp:965
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Finster nei skerm 2"
 
-#: useractions.cpp:958
+#: useractions.cpp:967
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Finster ien buroblêd omleech"
 
-#: useractions.cpp:962
+#: useractions.cpp:971
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "Wikselje nei skerm 1"
 
-#: useractions.cpp:969
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Wikselje nei folgjend skerm"
 
-#: useractions.cpp:970
+#: useractions.cpp:979
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "Wikselje nei foarich Buroblêd"
 
-#: useractions.cpp:971
+#: useractions.cpp:980
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Wikselje nei finster rjochts"
 
-#: useractions.cpp:973
+#: useractions.cpp:982
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Wikselje nei finster lofts"
 
-#: useractions.cpp:975
+#: useractions.cpp:984
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "Wikselje nei skerm 0"
 
-#: useractions.cpp:977
+#: useractions.cpp:986
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "Wikselje nei skerm 0"
 
-#: useractions.cpp:980
+#: useractions.cpp:989
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "Nei buroblê&d"
 
-#: useractions.cpp:983
+#: useractions.cpp:992
 #, kde-format
 msgid "Kill Window"
 msgstr "Finster ôfbrekke"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1057
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivearje finster (%1)"
@@ -4345,7 +4441,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1736
+#: workspace.cpp:1745
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4718,9 +4814,6 @@ msgstr ""
 
 #~ msgid "Walk Through Desktop List (Reverse)"
 #~ msgstr "Troch Buroblêd List Rinne (Oarsom)"
-
-#~ msgid "&No Border"
-#~ msgstr "Finsterrâne fer&stopje"
 
 #, fuzzy
 #~| msgid "Close Window"

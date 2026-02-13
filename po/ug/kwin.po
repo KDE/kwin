@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-12 00:44+0000\n"
+"POT-Creation-Date: 2026-02-13 00:45+0000\n"
 "PO-Revision-Date: 2013-09-08 07:05+0900\n"
 "Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -1238,10 +1238,176 @@ msgstr ""
 msgid "Primary Selection"
 msgstr ""
 
-#: helpers/killer/killer.cpp:127
+#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:127
 #, kde-format
 msgid "Window Manager"
 msgstr "كۆزنەك باشقۇرغۇ"
+
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#, kde-format
+msgid "ID of resource belonging to the application"
+msgstr "مەزكۇر پروگراممىغا تەۋە بولغان مەنبەنىڭ كىملىكى(ID)"
+
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#, kde-format
+msgid "id"
+msgstr ""
+
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#, kde-format
+msgid "Time of user action causing termination"
+msgstr "جەريان  ئۈزۈش سىگنالىنىڭ ئىشلەتكۈچى مەشغۇلات ۋاقتى"
+
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#, kde-format
+msgid "time"
+msgstr ""
+
+#: helpers/dialoghelper/dialoghelper.cpp:46
+#, kde-format
+msgid "The message to show (fullscreen, noborder)"
+msgstr ""
+
+#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
+#, kde-format
+msgid "KWin helper utility"
+msgstr "KWin ياردەمچى قورالى"
+
+#: helpers/dialoghelper/dialoghelper.cpp:68
+#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:172
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr "ياردەمچى قورالىنى بىۋاسىتە چاقىرىشقا بولمايتتى."
+
+#: helpers/dialoghelper/dialoghelper.cpp:79
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse: use the "
+"%1 keyboard shortcut instead."
+msgstr ""
+"سىز پۈتۈن ئېكران ھالەتتە كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
+"ئەگەر پروگرامما ئۆزى پۈتۈن ئېكراندىن چېكىنىش ھالەت تاللانمىسىنى تەمىنلىمىگەن "
+"بولسا سىز چاشقىنەكنى ئىشلىتىپ پۈتۈن ئېكران ھالىتىدىن چېكىنەلمەيسىز: تېزلەتمە "
+"%1 نى ئىشلىتىپ ئاكتىپلاش كۆزنىكىنىڭ مەشغۇلات تىزىملىكىنى ئىشلىتىپ بۇ "
+"ۋەزىپىنى ئورۇنلاڭ."
+
+#: helpers/dialoghelper/dialoghelper.cpp:85
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse: use the "
+"window menu instead, activated using the %1 keyboard shortcut."
+msgstr ""
+"سىز پۈتۈن ئېكران ھالەتتە كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
+"ئەگەر پروگرامما ئۆزى پۈتۈن ئېكراندىن چېكىنىش ھالەت تاللانمىسىنى تەمىنلىمىگەن "
+"بولسا سىز چاشقىنەكنى ئىشلىتىپ پۈتۈن ئېكران ھالىتىدىن چېكىنەلمەيسىز: تېزلەتمە "
+"%1 نى ئىشلىتىپ ئاكتىپلاش كۆزنىكىنىڭ مەشغۇلات تىزىملىكىنى ئىشلىتىپ بۇ "
+"ۋەزىپىنى ئورۇنلاڭ."
+
+#: helpers/dialoghelper/dialoghelper.cpp:93
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window in fullscreen mode.\n"
+#| "If the application itself does not have an option to turn the fullscreen "
+#| "mode off you will not be able to disable it again using the mouse: use "
+#| "the window operations menu instead, activated using the %1 keyboard "
+#| "shortcut."
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse."
+msgstr ""
+"سىز پۈتۈن ئېكران ھالەتتە كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
+"ئەگەر پروگرامما ئۆزى پۈتۈن ئېكراندىن چېكىنىش ھالەت تاللانمىسىنى تەمىنلىمىگەن "
+"بولسا سىز چاشقىنەكنى ئىشلىتىپ پۈتۈن ئېكران ھالىتىدىن چېكىنەلمەيسىز: تېزلەتمە "
+"%1 نى ئىشلىتىپ ئاكتىپلاش كۆزنىكىنىڭ مەشغۇلات تىزىملىكىنى ئىشلىتىپ بۇ "
+"ۋەزىپىنى ئورۇنلاڭ."
+
+#: helpers/dialoghelper/dialoghelper.cpp:98
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgctxt "@action:button Un-fullscreen"
+msgid "Undo Fullscreen"
+msgstr "پۈتۈن ئېكران(&F)"
+
+#: helpers/dialoghelper/dialoghelper.cpp:101
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse: use the %1 keyboard shortcut instead."
+msgstr ""
+"سىز گىرۋەكسىز كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
+"ئەگەر گىرۋەك بولمىسا چاشقىنەكنى ئىشلىتىپ گىرۋەكنى قايتا قوزغىتالمايسىز: "
+"تېزلەتمە %1 نى ئىشلىتىپ كۆزنەكنىڭ مەشغۇلات تىزىملىكى ئارقىلىق بۇ مەسىلىنى "
+"ھەل قىلىڭ."
+
+#: helpers/dialoghelper/dialoghelper.cpp:106
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse: use the window menu instead, activated using the %1 keyboard "
+"shortcut."
+msgstr ""
+"سىز گىرۋەكسىز كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
+"ئەگەر گىرۋەك بولمىسا چاشقىنەكنى ئىشلىتىپ گىرۋەكنى قايتا قوزغىتالمايسىز: "
+"تېزلەتمە %1 نى ئىشلىتىپ كۆزنەكنىڭ مەشغۇلات تىزىملىكى ئارقىلىق بۇ مەسىلىنى "
+"ھەل قىلىڭ."
+
+#: helpers/dialoghelper/dialoghelper.cpp:112
+#, fuzzy, kde-format
+#| msgid ""
+#| "You have selected to show a window without its border.\n"
+#| "Without the border, you will not be able to enable the border again using "
+#| "the mouse: use the window operations menu instead, activated using the %1 "
+#| "keyboard shortcut."
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse."
+msgstr ""
+"سىز گىرۋەكسىز كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
+"ئەگەر گىرۋەك بولمىسا چاشقىنەكنى ئىشلىتىپ گىرۋەكنى قايتا قوزغىتالمايسىز: "
+"تېزلەتمە %1 نى ئىشلىتىپ كۆزنەكنىڭ مەشغۇلات تىزىملىكى ئارقىلىق بۇ مەسىلىنى "
+"ھەل قىلىڭ."
+
+#: helpers/dialoghelper/dialoghelper.cpp:116
+#, fuzzy, kde-format
+#| msgid "&No Border"
+msgctxt "@action:button"
+msgid "Restore Border"
+msgstr "گىرۋەكسىز(&N)"
+
+#: helpers/dialoghelper/dialoghelper.cpp:133
+#, kde-format
+msgid "Do not show again"
+msgstr ""
 
 #: helpers/killer/killer.cpp:132
 #, kde-format
@@ -1282,36 +1448,6 @@ msgstr "توختاتماقچى بولغان ئاتى"
 #, kde-format
 msgid "name"
 msgstr ""
-
-#: helpers/killer/killer.cpp:140
-#, kde-format
-msgid "ID of resource belonging to the application"
-msgstr "مەزكۇر پروگراممىغا تەۋە بولغان مەنبەنىڭ كىملىكى(ID)"
-
-#: helpers/killer/killer.cpp:140
-#, kde-format
-msgid "id"
-msgstr ""
-
-#: helpers/killer/killer.cpp:142
-#, kde-format
-msgid "Time of user action causing termination"
-msgstr "جەريان  ئۈزۈش سىگنالىنىڭ ئىشلەتكۈچى مەشغۇلات ۋاقتى"
-
-#: helpers/killer/killer.cpp:142
-#, kde-format
-msgid "time"
-msgstr ""
-
-#: helpers/killer/killer.cpp:144
-#, kde-format
-msgid "KWin helper utility"
-msgstr "KWin ياردەمچى قورالى"
-
-#: helpers/killer/killer.cpp:172
-#, kde-format
-msgid "This helper utility is not supposed to be called directly."
-msgstr "ياردەمچى قورالىنى بىۋاسىتە چاقىرىشقا بولمايتتى."
 
 #: helpers/killer/killer.cpp:196
 #, kde-kuit-format
@@ -3666,167 +3802,129 @@ msgstr ""
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: useractions.cpp:162
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
-msgid ""
-"You have selected to show a window without its border.\n"
-"Without the border, you will not be able to enable the border again using "
-"the mouse: use the window menu instead, activated using the %1 keyboard "
-"shortcut."
-msgstr ""
-"سىز گىرۋەكسىز كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
-"ئەگەر گىرۋەك بولمىسا چاشقىنەكنى ئىشلىتىپ گىرۋەكنى قايتا قوزغىتالمايسىز: "
-"تېزلەتمە %1 نى ئىشلىتىپ كۆزنەكنىڭ مەشغۇلات تىزىملىكى ئارقىلىق بۇ مەسىلىنى "
-"ھەل قىلىڭ."
-
-#: useractions.cpp:169
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
-msgid ""
-"You have selected to show a window in fullscreen mode.\n"
-"If the application itself does not have an option to turn the fullscreen "
-"mode off you will not be able to disable it again using the mouse: use the "
-"window menu instead, activated using the %1 keyboard shortcut."
-msgstr ""
-"سىز پۈتۈن ئېكران ھالەتتە كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
-"ئەگەر پروگرامما ئۆزى پۈتۈن ئېكراندىن چېكىنىش ھالەت تاللانمىسىنى تەمىنلىمىگەن "
-"بولسا سىز چاشقىنەكنى ئىشلىتىپ پۈتۈن ئېكران ھالىتىدىن چېكىنەلمەيسىز: تېزلەتمە "
-"%1 نى ئىشلىتىپ ئاكتىپلاش كۆزنىكىنىڭ مەشغۇلات تىزىملىكىنى ئىشلىتىپ بۇ "
-"ۋەزىپىنى ئورۇنلاڭ."
-
-#: useractions.cpp:217
+#: useractions.cpp:224
 #, kde-format
 msgid "&Move"
 msgstr "يۆتكە(&M)"
 
-#: useractions.cpp:222
+#: useractions.cpp:229
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgid "&Resize"
 msgstr "چوڭلۇقىنى ئۆزگەرت(&S)"
 
-#: useractions.cpp:227
+#: useractions.cpp:234
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "ئەڭ ئۈستىدە(&A)"
 
-#: useractions.cpp:233
+#: useractions.cpp:240
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "ئەڭ ئاستىدا(&B)"
 
-#: useractions.cpp:239
+#: useractions.cpp:246
 #, kde-format
 msgid "&Fullscreen"
 msgstr "پۈتۈن ئېكران(&F)"
 
-#: useractions.cpp:245
+#: useractions.cpp:252
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:251
+#: useractions.cpp:258
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr ""
 
-#: useractions.cpp:259
+#: useractions.cpp:266
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
 msgid "Set Window Short&cut…"
 msgstr "كۆزنەك تېزلەتمىسى(&S)…"
 
-#: useractions.cpp:265
+#: useractions.cpp:272
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
 msgid "Configure Special &Window Settings…"
 msgstr "ئالاھىدە كۆزنەك تەڭشىكى(&S)…"
 
-#: useractions.cpp:270
+#: useractions.cpp:277
 #, fuzzy, kde-format
 #| msgid "S&pecial Application Settings..."
 msgid "Configure S&pecial Application Settings…"
 msgstr "ئالاھىدە پروگرامما تەڭشىكى(&P)…"
 
-#: useractions.cpp:276
+#: useractions.cpp:283
 #, kde-format
 msgid "Ma&ximize"
 msgstr "چوڭايت(&X)"
 
-#: useractions.cpp:282
+#: useractions.cpp:289
 #, kde-format
 msgid "Mi&nimize"
 msgstr "كىچىكلەت(&N)"
 
-#: useractions.cpp:288
+#: useractions.cpp:295
 #, kde-format
 msgid "&More Actions"
 msgstr ""
 
-#: useractions.cpp:293
+#: useractions.cpp:300
 #, kde-format
 msgid "&Close"
 msgstr "ياپ(&C)"
 
-#: useractions.cpp:359
+#: useractions.cpp:366
 #, kde-format
 msgid "&Extensions"
 msgstr ""
 
-#: useractions.cpp:409
+#: useractions.cpp:416
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "&Desktops"
 msgstr "بارلىق ئۈستەلئۈستى(&A)"
 
-#: useractions.cpp:425
+#: useractions.cpp:432
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move to &Screen"
 msgstr "كۆزنەكنى %1 ئېكرانغا"
 
-#: useractions.cpp:441
+#: useractions.cpp:448
 #, fuzzy, kde-format
 #| msgid "Ac&tivities"
 msgid "Show in &Activities"
 msgstr "پائالىيەتلەر(&T)"
 
-#: useractions.cpp:457
+#: useractions.cpp:464
 #, kde-format
 msgid "&All Desktops"
 msgstr "بارلىق ئۈستەلئۈستى(&A)"
 
-#: useractions.cpp:492 useractions.cpp:624
+#: useractions.cpp:499 useractions.cpp:631
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move to %1"
 msgstr "كۆزنەكنى %1 ئېكرانغا"
 
-#: useractions.cpp:506
+#: useractions.cpp:513
 #, fuzzy, kde-format
 #| msgid "Window to Next Desktop"
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "كۆزنەكتىن كېيىنكى ئۈستەلئۈستىگە"
 
-#: useractions.cpp:518
+#: useractions.cpp:525
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "ئۈستەلئۈستىگە يۆتكە(&D)"
 
-#: useractions.cpp:549
+#: useractions.cpp:556
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3834,389 +3932,389 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr ""
 
-#: useractions.cpp:576
+#: useractions.cpp:583
 #, kde-format
 msgid "&All Activities"
 msgstr "بارلىق مەشغۇلاتلار(&A)"
 
-#: useractions.cpp:743
+#: useractions.cpp:752
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> ئاللىقاچان ئىشلىتىلىۋاتىدۇ"
 
-#: useractions.cpp:745
+#: useractions.cpp:754
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "%3 دىكى %2 تەرىپىدىن <b>%1</b> ئىشلىتىلىۋاتىدۇ"
 
-#: useractions.cpp:826
+#: useractions.cpp:835
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Window Menu"
 msgstr "كۆزنەكلەر"
 
-#: useractions.cpp:828
+#: useractions.cpp:837
 #, kde-format
 msgid "Close Window"
 msgstr "كۆزنەك ياپ"
 
-#: useractions.cpp:830
+#: useractions.cpp:839
 #, kde-format
 msgid "Maximize Window"
 msgstr "كۆزنەكنى ئەڭ چوڭ قىلىش"
 
-#: useractions.cpp:832
+#: useractions.cpp:841
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "كۆزنەكنى تىك ھالەتتە چوڭايتىش"
 
-#: useractions.cpp:834
+#: useractions.cpp:843
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "كۆزنەكنى گورىزونتال چوڭايتىش"
 
-#: useractions.cpp:836
+#: useractions.cpp:845
 #, kde-format
 msgid "Minimize Window"
 msgstr "كۆزنەكنى كىچىكلەت"
 
-#: useractions.cpp:838
+#: useractions.cpp:847
 #, kde-format
 msgid "Move Window"
 msgstr "كۆزنەكنى يۆتكە"
 
-#: useractions.cpp:840
+#: useractions.cpp:849
 #, kde-format
 msgid "Resize Window"
 msgstr "كۆزنەك چوڭلۇقىنى ئۆزگەرت"
 
-#: useractions.cpp:842
+#: useractions.cpp:851
 #, kde-format
 msgid "Raise Window"
 msgstr "كۆزنەكنى ئۆرلەت"
 
-#: useractions.cpp:844
+#: useractions.cpp:853
 #, kde-format
 msgid "Lower Window"
 msgstr "كۆزنەكنى پەسلەت"
 
-#: useractions.cpp:846
+#: useractions.cpp:855
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "كۆزنەكنى ئۆرلەت/پەسلەتنى ئالماشتۇر"
 
-#: useractions.cpp:848
+#: useractions.cpp:857
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "كۆزنەكنى تولۇق ئېكران قىل"
 
-#: useractions.cpp:850
+#: useractions.cpp:859
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "كۆزنەك گىرۋىكىنى يوشۇر"
 
-#: useractions.cpp:852
+#: useractions.cpp:861
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "كۆزنەك باشقا كۆزنەكلەرنىڭ ئۈستىدە تۇرسۇن"
 
-#: useractions.cpp:854
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "كۆزنەك باشقا كۆزنەكلەرنىڭ ئاستىدا تۇرسۇن"
 
-#: useractions.cpp:856
+#: useractions.cpp:865
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "كۆزنەككە دىققەت قىلىشنى ئاكتىپلاش"
 
-#: useractions.cpp:858
+#: useractions.cpp:867
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "كۆزنەك تېزلەتمىسىنى بېكىتىش"
 
-#: useractions.cpp:860
+#: useractions.cpp:869
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Window to the Center"
 msgstr "كۆزنەكنى گۇرۇپپىغا يۆتكە"
 
-#: useractions.cpp:862
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window Right"
 msgstr "كۆزنەكنى ئونغا يۆتكە"
 
-#: useractions.cpp:864
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Left"
 msgstr "كۆزنەكنى سولغا يۆتكە"
 
-#: useractions.cpp:866
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Up"
 msgstr "كۆزنەكنى سۈتىگە يۆتكە"
 
-#: useractions.cpp:868
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Down"
 msgstr "كۆزنەكنى ئاستىغا يۆتكە"
 
-#: useractions.cpp:870
+#: useractions.cpp:879
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "كۆزنەكنى گورىزونتال چوڭايتىش"
 
-#: useractions.cpp:872
+#: useractions.cpp:881
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "كۆزنەكنى تىك ھالەتتە چوڭايتىش"
 
-#: useractions.cpp:874
+#: useractions.cpp:883
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "كۆزنەكنى توغرا يۆنىلىشتە قىسىپ يىغىپ قوي"
 
-#: useractions.cpp:876
+#: useractions.cpp:885
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "كۆزنەكنى تىك يۆنىلىشتە قىسىپ يىغىپ قوي"
 
-#: useractions.cpp:878
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "كۆزنەكنى سولغا تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:880
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "كۆزنەكنى ئونغا تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:882
+#: useractions.cpp:891
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top Left"
 msgid "Quick Tile Window to the Top"
 msgstr "كۆزنەكنى ئۇستى سول تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:884
+#: useractions.cpp:893
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "كۆزنەكنى ئاستى سول تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:886
+#: useractions.cpp:895
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "كۆزنەكنى ئۇستى سول تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:888
+#: useractions.cpp:897
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "كۆزنەكنى ئاستى سول تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:890
+#: useractions.cpp:899
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "كۆزنەكنى ئۇستى ئوڭ تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:892
+#: useractions.cpp:901
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "كۆزنەكنى ئاستى ئوڭ تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:894
+#: useractions.cpp:903
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "ئۇستىدىكى كۆزنەككە ئالماش"
 
-#: useractions.cpp:896
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "ئاستىدىكى كۆزنەككە ئالماش"
 
-#: useractions.cpp:898
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "ئوڭ تەرەپتىكى كۆزنەككە ئالماش"
 
-#: useractions.cpp:900
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "سول تەرەپتىكى كۆزنەككە ئالماش"
 
-#: useractions.cpp:902
+#: useractions.cpp:911
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:904
+#: useractions.cpp:913
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:907
+#: useractions.cpp:916
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "كۆزنەك بارلىق ئۈستەلئۈستىدە تۇرسۇن"
 
-#: useractions.cpp:910
+#: useractions.cpp:919
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "كۆزنەكنى سولغا تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:912
+#: useractions.cpp:921
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "كۆزنەكنى ئونغا تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:914
+#: useractions.cpp:923
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top Left"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "كۆزنەكنى ئۇستى سول تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:916
+#: useractions.cpp:925
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom Left"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "كۆزنەكنى ئاستى سول تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:927
+#: useractions.cpp:936
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "كۆزنەكتىن %1 ئۈستەلئۈستىگە"
 
-#: useractions.cpp:929
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "كۆزنەكتىن كېيىنكى ئۈستەلئۈستىگە"
 
-#: useractions.cpp:930
+#: useractions.cpp:939
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "كۆزنەكتىن ئالدىنقى ئۈستەلئۈستىگە"
 
-#: useractions.cpp:931
+#: useractions.cpp:940
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئوڭغا"
 
-#: useractions.cpp:933
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى سولغا"
 
-#: useractions.cpp:935
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئۈستىگە"
 
-#: useractions.cpp:937
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئاستىغا"
 
-#: useractions.cpp:941
+#: useractions.cpp:950
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "كۆزنەكنى %1 ئېكرانغا"
 
-#: useractions.cpp:948
+#: useractions.cpp:957
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "كۆزنەكنى كېيىنكى ئېكرانغا"
 
-#: useractions.cpp:950
+#: useractions.cpp:959
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "كۆزنەكتىن ئالدىنقى ئۈستەلئۈستىگە"
 
-#: useractions.cpp:952
+#: useractions.cpp:961
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئوڭغا"
 
-#: useractions.cpp:954
+#: useractions.cpp:963
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى سولغا"
 
-#: useractions.cpp:956
+#: useractions.cpp:965
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window One Screen Up"
 msgstr "كۆزنەكنى %1 ئېكرانغا"
 
-#: useractions.cpp:958
+#: useractions.cpp:967
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئاستىغا"
 
-#: useractions.cpp:962
+#: useractions.cpp:971
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "ئېكران %1 غا ئالماشتۇر"
 
-#: useractions.cpp:969
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "كېيىنكى ئېكرانغا ئالماشتۇر"
 
-#: useractions.cpp:970
+#: useractions.cpp:979
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr ""
 
-#: useractions.cpp:971
+#: useractions.cpp:980
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "ئوڭ تەرەپتىكى كۆزنەككە ئالماش"
 
-#: useractions.cpp:973
+#: useractions.cpp:982
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "سول تەرەپتىكى كۆزنەككە ئالماش"
 
-#: useractions.cpp:975
+#: useractions.cpp:984
 #, fuzzy, kde-format
 #| msgid "Switch to Screen %1"
 msgid "Switch to Screen Above"
 msgstr "ئېكران %1 غا ئالماشتۇر"
 
-#: useractions.cpp:977
+#: useractions.cpp:986
 #, fuzzy, kde-format
 #| msgid "Switch to Screen %1"
 msgid "Switch to Screen Below"
 msgstr "ئېكران %1 غا ئالماشتۇر"
 
-#: useractions.cpp:980
+#: useractions.cpp:989
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Peek at Desktop"
 msgstr "ئۈستەلئۈستىگە يۆتكە(&D)"
 
-#: useractions.cpp:983
+#: useractions.cpp:992
 #, kde-format
 msgid "Kill Window"
 msgstr "كۆزنەكنى ئۆلتۈر"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1057
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "كۆزنەك (%1) نى ئاكتىپلا"
@@ -4312,7 +4410,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1736
+#: workspace.cpp:1745
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4746,9 +4844,6 @@ msgstr ""
 
 #~ msgid "Walk Through Desktop List (Reverse)"
 #~ msgstr "ئۈستەلئۈستى تىزىمىدىن ئۈستەلئۈستى تىزىمىغا ئۆتۈش(تەتۈرى)"
-
-#~ msgid "&No Border"
-#~ msgstr "گىرۋەكسىز(&N)"
 
 #, fuzzy
 #~| msgid "Close Window"

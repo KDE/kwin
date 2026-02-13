@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-10 00:45+0000\n"
-"PO-Revision-Date: 2026-02-10 12:06+0100\n"
+"PO-Revision-Date: 2026-02-12 10:39+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -279,7 +279,7 @@ msgstr "Monstra fenestra seligite"
 #: main.ui:644
 #, kde-format
 msgid "Enable the window list effect"
-msgstr ""
+msgstr "Habilita le effecto de lista de fenestra"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
 #: main.ui:678
@@ -294,12 +294,13 @@ msgstr ""
 #, kde-format
 msgid "The time in milliseconds to wait before showing the task switcher."
 msgstr ""
+"Le tempore in milllisecundas a attender ante monstrar le commutator de carga."
 
 #. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
 #: main.ui:704
 #, kde-format
 msgid "Show delay:"
-msgstr ""
+msgstr "Monstra retardo:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:720
@@ -311,7 +312,7 @@ msgstr "ms"
 #: main.ui:735
 #, kde-format
 msgid "Delay before the window list appears"
-msgstr ""
+msgstr "Retardo ante que le lista de fenestra appare"
 
 #: shortcutsettings.cpp:131
 #, kde-format
