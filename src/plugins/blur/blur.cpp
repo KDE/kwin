@@ -21,7 +21,6 @@
 #include "scene/windowitem.h"
 #include "wayland/backgroundeffect_v1.h"
 #include "wayland/display.h"
-#include "wayland/kde_blur.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -56,9 +55,6 @@ namespace KWin
 {
 
 static const QByteArray s_blurAtomName = QByteArrayLiteral("_KDE_NET_WM_BLUR_BEHIND_REGION");
-
-BlurManagerInterface *BlurEffect::s_blurManager = nullptr;
-QTimer *BlurEffect::s_blurManagerRemoveTimer = nullptr;
 
 static QMatrix4x4 colorTransformMatrix(qreal saturation, qreal contrast)
 {
@@ -166,18 +162,6 @@ BlurEffect::BlurEffect()
     }
 #endif
 
-    if (!s_blurManagerRemoveTimer) {
-        s_blurManagerRemoveTimer = new QTimer(QCoreApplication::instance());
-        s_blurManagerRemoveTimer->setSingleShot(true);
-        s_blurManagerRemoveTimer->callOnTimeout(QCoreApplication::instance(), []() {
-            s_blurManager->remove();
-            s_blurManager = nullptr;
-        });
-    }
-    s_blurManagerRemoveTimer->stop();
-    if (!s_blurManager) {
-        s_blurManager = new BlurManagerInterface(effects->waylandDisplay(), s_blurManagerRemoveTimer);
-    }
     waylandServer()->backgroundEffectManager()->addBlurCapability();
 
     connect(effects, &EffectsHandler::windowAdded, this, &BlurEffect::slotWindowAdded);
@@ -201,10 +185,6 @@ BlurEffect::BlurEffect()
 
 BlurEffect::~BlurEffect()
 {
-    // When compositing is restarted, avoid removing the manager immediately.
-    if (s_blurManager) {
-        s_blurManagerRemoveTimer->start(1000);
-    }
     waylandServer()->backgroundEffectManager()->removeBlurCapability();
 }
 

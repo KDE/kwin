@@ -18,7 +18,6 @@ namespace KWin
 {
 
 class GraphicsBuffer;
-class BlurInterface;
 class ClientConnection;
 class ConfinedPointerV1Interface;
 class CompositorInterface;
@@ -76,7 +75,6 @@ private:
  * @see CompositorInterface
  * @see GraphicsBuffer
  * @see SubSurfaceInterface
- * @see BlurInterface
  * @see ShadowInterface
  * @see SlideInterface
  * @see LinuxDmaBufV1Feedback

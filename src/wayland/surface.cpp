@@ -625,7 +625,6 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->viewport.destinationSize = viewport.destinationSize;
     target->subsurface = subsurface;
     target->shadow = shadow;
-    target->blur = blur;
     target->slide = slide;
     target->input = input;
     target->opaque = opaque;

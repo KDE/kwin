@@ -62,17 +62,6 @@ add_test(NAME kwayland-testSubSurface COMMAND testSubSurface)
 ecm_mark_as_test(testSubSurface)
 
 ########################################################
-# Test Blur
-########################################################
-set( testBlur_SRCS
-        test_wayland_blur.cpp
-    )
-add_executable(testBlur ${testBlur_SRCS})
-target_link_libraries( testBlur Qt::Test Qt::Gui Plasma::KWaylandClient kwin)
-add_test(NAME kwayland-testBlur COMMAND testBlur)
-ecm_mark_as_test(testBlur)
-
-########################################################
 # Test Slide
 ########################################################
 set( testSlide_SRCS

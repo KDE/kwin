@@ -18,8 +18,6 @@
 namespace KWin
 {
 
-class BlurManagerInterface;
-
 struct BlurRenderData
 {
     /// Temporary render targets needed for the Dual Kawase algorithm, the first texture
@@ -174,9 +172,6 @@ private:
 
     QMap<EffectWindow *, QMetaObject::Connection> windowBlurChangedConnections;
     std::unordered_map<EffectWindow *, BlurEffectData> m_windows;
-
-    static BlurManagerInterface *s_blurManager;
-    static QTimer *s_blurManagerRemoveTimer;
 };
 
 inline bool BlurEffect::provides(Effect::Feature feature)

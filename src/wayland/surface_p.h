@@ -79,7 +79,6 @@ struct SurfaceState
     QPoint offset = QPoint();
     QPointer<GraphicsBuffer> buffer;
     QPointer<ShadowInterface> shadow;
-    QPointer<BlurInterface> blur;
     QPointer<SlideInterface> slide;
     ContentType contentType = ContentType::None;
     PresentationModeHint presentationHint = PresentationModeHint::VSync;

@@ -54,8 +54,6 @@ methods to send requests to all clients.
 
 ## Client-owned Resources:
 
-e.g BlurInterface
-
 This is where one instance of our public class represents a single resource. Typically the lifespan of the exported class matches our resource.
 
 In the private class use the QtWaylandServer::interface_name(wl_resource*) constructor to create a wrapper bound to a specific resource.
