@@ -24,6 +24,5 @@ private Q_SLOTS:
     void cleanup();
 
 private:
-    void testRestart();
     QByteArray m_envVariable;
 };
