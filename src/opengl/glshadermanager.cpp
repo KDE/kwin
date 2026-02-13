@@ -209,7 +209,8 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    result *= 1.0 - clamp(0.5 + f / df, 0.0, 1.0);\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
-        stream << "    result = sourceEncodingToNitsInDestinationColorspace(result);\n";
+        stream << "    result = encodingToNits(result, sourceNamedTransferFunction, sourceTransferFunctionParams.x, sourceTransferFunctionParams.y);\n";
+        stream << "    result.rgb = (colorimetryTransform * vec4(result.rgb, 1.0)).rgb;\n";
     }
     if (traits & ShaderTrait::AdjustSaturation) {
         stream << "    result = adjustSaturation(result);\n";
@@ -218,6 +219,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    result *= modulation;\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
+        stream << "    result.rgb = doTonemapping(result.rgb);\n";
         stream << "    result = nitsToDestinationEncoding(result);\n";
     }
 
