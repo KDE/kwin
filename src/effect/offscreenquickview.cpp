@@ -15,6 +15,7 @@
 #include "opengl/glutils.h"
 
 #include <QGuiApplication>
+#include <QPointingDevice>
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QQmlEngine>
@@ -298,7 +299,8 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
     case QEvent::MouseButtonRelease: {
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
         const QPoint widgetPos = d->m_view->mapFromGlobal(me->pos());
-        QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
+        const auto *pointingDevice = static_cast<const QPointingDevice *>(me->device());
+        QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers(), pointingDevice);
         cloneEvent.setAccepted(false);
         QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
@@ -323,7 +325,8 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
         QHoverEvent *he = static_cast<QHoverEvent *>(e);
         const QPointF widgetPos = d->m_view->mapFromGlobal(he->position());
         const QPointF oldWidgetPos = d->m_view->mapFromGlobal(he->oldPos());
-        QHoverEvent cloneEvent(he->type(), widgetPos, oldWidgetPos, he->modifiers());
+        const auto *pointingDevice = static_cast<const QPointingDevice *>(he->device());
+        QHoverEvent cloneEvent(he->type(), widgetPos, oldWidgetPos, he->modifiers(), pointingDevice);
         cloneEvent.setAccepted(false);
         QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
@@ -332,8 +335,9 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
     case QEvent::Wheel: {
         QWheelEvent *we = static_cast<QWheelEvent *>(e);
         const QPointF widgetPos = d->m_view->mapFromGlobal(we->position().toPoint());
+        const auto *pointingDevice = static_cast<const QPointingDevice *>(we->device());
         QWheelEvent cloneEvent(widgetPos, we->globalPosition(), we->pixelDelta(), we->angleDelta(), we->buttons(),
-                               we->modifiers(), we->phase(), we->inverted());
+                               we->modifiers(), we->phase(), we->inverted(), we->source(), pointingDevice);
         cloneEvent.setAccepted(false);
         QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
