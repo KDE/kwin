@@ -35,7 +35,7 @@ static QString outputHash(BackendOutput *output)
 }
 
 /// See KScreen::Config::connectedOutputsHash in libkscreen
-QString connectedOutputsHash(const QList<BackendOutput *> &outputs, bool isLidClosed)
+static QString connectedOutputsHash(const QList<BackendOutput *> &outputs, bool isLidClosed)
 {
     QStringList hashedOutputs;
     hashedOutputs.reserve(outputs.count());
@@ -53,8 +53,9 @@ QString connectedOutputsHash(const QList<BackendOutput *> &outputs, bool isLidCl
     return QString::fromLatin1(hash.toHex());
 }
 
-static QHash<BackendOutput *, QJsonObject> outputsConfig(const QList<BackendOutput *> &outputs, const QString &hash)
+static QHash<BackendOutput *, QJsonObject> outputsConfig(const QList<BackendOutput *> &outputs, bool isLidClosed)
 {
+    const QString hash = connectedOutputsHash(outputs, isLidClosed);
     const QString kscreenJsonPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/") % hash);
     if (kscreenJsonPath.isEmpty()) {
         return {};
@@ -177,9 +178,9 @@ std::shared_ptr<OutputMode> parseMode(BackendOutput *output, const QJsonObject &
     return (it != modes.end()) ? *it : nullptr;
 }
 
-std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *> &outputs, const QString &hash)
+std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *> &outputs, bool isLidClosed)
 {
-    const auto outputsInfo = outputsConfig(outputs, hash);
+    const auto outputsInfo = outputsConfig(outputs, isLidClosed);
     if (outputsInfo.isEmpty()) {
         return std::nullopt;
     }

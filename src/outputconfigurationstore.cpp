@@ -559,7 +559,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
         }
     }
     const auto closestSetup = findPartialSetup(outputs, isLidClosed);
-    const auto kscreenConfig = KScreenIntegration::readOutputConfig(outputs, KScreenIntegration::connectedOutputsHash(outputs, isLidClosed));
+    const auto kscreenConfig = KScreenIntegration::readOutputConfig(outputs, isLidClosed);
     OutputConfiguration ret;
     QPoint rightMostPosition(0, 0);
     int priority = 0;

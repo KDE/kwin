@@ -18,7 +18,11 @@ namespace KWin
 namespace KScreenIntegration
 {
 
-QString connectedOutputsHash(const QList<BackendOutput *> &outputs, bool isLidClosed);
-std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *> &outputs, const QString &hash);
+/**
+ * This function reads the output configuration from the Xorg session. The main usecase is to preserve
+ * existing configuration when a user switches from the Xorg to the Wayland session for the first time.
+ * When the Xorg session is dropped, this function can be dropped some time later.
+ */
+std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *> &outputs, bool isLidClosed);
 }
 }
