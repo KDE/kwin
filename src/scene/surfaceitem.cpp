@@ -226,6 +226,11 @@ WindowQuadList SurfaceItem::buildQuads() const
     return quads;
 }
 
+void SurfaceItem::releaseResources()
+{
+    m_texture.reset();
+}
+
 ContentType SurfaceItem::contentType() const
 {
     return ContentType::None;

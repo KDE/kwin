@@ -29,7 +29,7 @@ class KWIN_EXPORT WorkspaceScene : public Scene
     Q_OBJECT
 
 public:
-    explicit WorkspaceScene(std::unique_ptr<ItemRenderer> renderer);
+    WorkspaceScene();
     ~WorkspaceScene() override;
 
     void initialize();
@@ -37,6 +37,9 @@ public:
     Item *containerItem() const;
     Item *overlayItem() const;
     Item *cursorItem() const;
+
+    void attachRenderer(std::unique_ptr<ItemRenderer> &&renderer) override;
+    void detachRenderer() override;
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     OverlayCandidates overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const override;

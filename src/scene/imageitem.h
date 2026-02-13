@@ -31,6 +31,7 @@ public:
 protected:
     void preprocess() override;
     WindowQuadList buildQuads() const override;
+    void releaseResources() override;
 
     QImage m_image;
     std::unique_ptr<Texture> m_texture;

@@ -335,6 +335,12 @@ void ShadowItem::preprocess()
     }
 }
 
+void ShadowItem::releaseResources()
+{
+    m_ninePatch.reset();
+    m_textureDirty = true;
+}
+
 DecorationShadowTextureCache &DecorationShadowTextureCache::instance()
 {
     static DecorationShadowTextureCache s_instance;

@@ -79,6 +79,7 @@ protected:
 
     void preprocess() override;
     WindowQuadList buildQuads() const override;
+    void releaseResources() override;
 
     Region m_damage;
     OutputTransform m_bufferToSurfaceTransform;

@@ -485,7 +485,7 @@ void InternalWindow::setCaption(const QString &caption)
 void InternalWindow::markAsMapped()
 {
     if (!ready_for_painting) {
-        setupCompositing();
+        setupItem();
         setReadyForPainting();
         workspace()->addInternalWindow(this);
     }

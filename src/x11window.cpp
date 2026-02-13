@@ -339,7 +339,7 @@ bool X11Window::track(xcb_window_t w)
     getWmOpaqueRegion();
     getSkipCloseAnimation();
     updateShadow();
-    setupCompositing();
+    setupItem();
 
     return true;
 }
@@ -455,7 +455,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     setSkipPager((info->state() & NET::SkipPager) != 0);
     setSkipSwitcher((info->state() & NET::SkipSwitcher) != 0);
 
-    setupCompositing();
+    setupItem();
 
     KStartupInfoId asn_id;
     KStartupInfoData asn_data;

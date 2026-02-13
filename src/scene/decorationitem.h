@@ -56,6 +56,8 @@ public:
     qreal devicePixelRatio() const;
     void setDevicePixelRatio(qreal dpr);
 
+    void releaseResources();
+
 Q_SIGNALS:
     void damaged(const Region &region);
 
@@ -93,6 +95,7 @@ private Q_SLOTS:
 protected:
     void preprocess() override;
     WindowQuadList buildQuads() const override;
+    void releaseResources() override;
 
 private:
     Window *m_window;

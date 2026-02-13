@@ -611,8 +611,7 @@ double ItemTreeView::desiredHdrHeadroom() const
     return recursiveMaxHdrHeadroom(m_item);
 }
 
-Scene::Scene(std::unique_ptr<ItemRenderer> &&renderer)
-    : m_renderer(std::move(renderer))
+Scene::Scene()
 {
 }
 
@@ -694,6 +693,16 @@ void Scene::removeView(RenderView *view)
 QList<SurfaceItem *> Scene::scanoutCandidates(ssize_t maxCount) const
 {
     return {};
+}
+
+void Scene::releaseResources(Item *item)
+{
+    item->releaseResources();
+
+    const auto childItems = item->m_childItems;
+    for (Item *childItem : childItems) {
+        releaseResources(childItem);
+    }
 }
 
 } // namespace KWin

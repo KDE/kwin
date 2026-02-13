@@ -93,6 +93,7 @@ Compositor::~Compositor()
 {
     Q_EMIT aboutToDestroy();
     stop(); // this can't be called in the destructor of Compositor
+    m_scene.reset();
     s_compositor = nullptr;
 }
 
@@ -233,16 +234,6 @@ void Compositor::createRenderer()
     }
 }
 
-void Compositor::createScene()
-{
-    if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
-        m_scene = std::make_unique<WorkspaceScene>(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
-    } else {
-        m_scene = std::make_unique<WorkspaceScene>(std::make_unique<ItemRendererQPainter>());
-    }
-    Q_EMIT sceneCreated();
-}
-
 void Compositor::start()
 {
     if (kwinApp()->isTerminating()) {
@@ -283,18 +274,22 @@ void Compositor::start()
         }
     }
 
-    createScene();
+    // When compositing is restarted next time, the scene will be kept around.
+    if (!m_scene) {
+        m_scene = std::make_unique<WorkspaceScene>();
+    }
+
+    if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
+        m_scene->attachRenderer(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
+    } else {
+        m_scene->attachRenderer(std::make_unique<ItemRendererQPainter>());
+    }
 
     handleOutputsChanged();
     connect(workspace(), &Workspace::outputsChanged, this, &Compositor::handleOutputsChanged);
     connect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &Compositor::removeOutput);
 
     m_state = State::On;
-
-    const auto windows = workspace()->windows();
-    for (Window *window : windows) {
-        window->setupCompositing();
-    }
 
     // Sets also the 'effects' pointer.
     new EffectsHandler(this, m_scene.get());
@@ -317,10 +312,6 @@ void Compositor::stop()
     effects = nullptr;
 
     if (Workspace::self()) {
-        const auto windows = workspace()->windows();
-        for (Window *window : windows) {
-            window->finishCompositing();
-        }
         disconnect(workspace(), &Workspace::outputsChanged, this, &Compositor::handleOutputsChanged);
         disconnect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &Compositor::removeOutput);
     }
@@ -337,7 +328,8 @@ void Compositor::stop()
         removeOutput(findOutput(loop));
     }
 
-    m_scene.reset();
+    m_scene->detachRenderer();
+
     m_backend.reset();
 
     m_state = State::Off;

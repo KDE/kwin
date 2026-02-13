@@ -75,6 +75,11 @@ WindowQuadList ImageItem::buildQuads() const
     return ret;
 }
 
+void ImageItem::releaseResources()
+{
+    m_texture.reset();
+}
+
 } // namespace KWin
 
 #include "moc_imageitem.cpp"

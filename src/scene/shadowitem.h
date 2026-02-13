@@ -32,6 +32,7 @@ public:
 protected:
     WindowQuadList buildQuads() const override;
     void preprocess() override;
+    void releaseResources() override;
 
 private Q_SLOTS:
     void handleTextureChanged();

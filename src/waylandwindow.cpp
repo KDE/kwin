@@ -257,7 +257,7 @@ void WaylandWindow::updateGeometry(const RectF &rect)
 void WaylandWindow::markAsMapped()
 {
     if (Q_UNLIKELY(!ready_for_painting)) {
-        setupCompositing();
+        setupItem();
         setReadyForPainting();
     }
 }

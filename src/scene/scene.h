@@ -215,10 +215,12 @@ public:
         PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
     };
 
-    explicit Scene(std::unique_ptr<ItemRenderer> &&renderer);
+    Scene();
     ~Scene() override;
 
     ItemRenderer *renderer() const;
+    virtual void attachRenderer(std::unique_ptr<ItemRenderer> &&renderer) = 0;
+    virtual void detachRenderer() = 0;
 
     void addLogicalRepaint(const Region &logicalRegion);
     void addLogicalRepaint(RenderView *view, const Region &logicalRegion);
@@ -252,6 +254,8 @@ Q_SIGNALS:
     void viewRemoved(RenderView *delegate);
 
 protected:
+    void releaseResources(Item *item);
+
     std::unique_ptr<ItemRenderer> m_renderer;
     QList<RenderView *> m_views;
     Rect m_geometry;

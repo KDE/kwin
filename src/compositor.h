@@ -81,7 +81,6 @@ Q_SIGNALS:
     void compositingToggled(bool active);
     void aboutToDestroy();
     void aboutToToggleCompositing();
-    void sceneCreated();
 
 protected:
     explicit Compositor(QObject *parent = nullptr);
@@ -97,7 +96,6 @@ private Q_SLOTS:
 protected:
     BackendOutput *findOutput(RenderLoop *loop) const;
 
-    void createScene();
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
     void handleOutputsChanged();

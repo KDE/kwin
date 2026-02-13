@@ -194,6 +194,7 @@ Q_SIGNALS:
 protected:
     virtual WindowQuadList buildQuads() const;
     virtual void handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
+    virtual void releaseResources();
     void discardQuads();
     void setColorDescription(const std::shared_ptr<ColorDescription> &description);
     void setRenderingIntent(RenderingIntent intent);
@@ -237,6 +238,8 @@ private:
     RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     PresentationModeHint m_presentationHint = PresentationModeHint::VSync;
     int m_effectCount = 0;
+
+    friend class Scene;
 };
 
 } // namespace KWin

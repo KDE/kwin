@@ -858,8 +858,7 @@ public:
     bool readyForPainting() const; // true if the window has been already painted its contents
     void setOpacity(qreal opacity);
     qreal opacity() const;
-    bool setupCompositing();
-    void finishCompositing();
+    void setupItem();
     EffectWindow *effectWindow();
     const EffectWindow *effectWindow() const;
     SurfaceItem *surfaceItem() const;

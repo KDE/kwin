@@ -198,24 +198,12 @@ void Window::setOpacity(qreal opacity)
     Q_EMIT opacityChanged(this, oldOpacity);
 }
 
-bool Window::setupCompositing()
+void Window::setupItem()
 {
-    WorkspaceScene *scene = Compositor::self()->scene();
-    if (!scene) {
-        return false;
-    }
-
-    m_windowItem = createItem(scene->containerItem());
+    m_windowItem = createItem(Compositor::self()->scene()->containerItem());
 
     connect(windowItem(), &WindowItem::positionChanged, this, &Window::visibleGeometryChanged);
     connect(windowItem(), &WindowItem::boundingRectChanged, this, &Window::visibleGeometryChanged);
-
-    return true;
-}
-
-void Window::finishCompositing()
-{
-    m_windowItem.reset();
 }
 
 void Window::setReadyForPainting()

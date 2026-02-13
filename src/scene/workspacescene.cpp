@@ -86,9 +86,8 @@ namespace KWin
 // Scene
 //****************************************
 
-WorkspaceScene::WorkspaceScene(std::unique_ptr<ItemRenderer> renderer)
-    : Scene(std::move(renderer))
-    , m_containerItem(std::make_unique<RootItem>(this))
+WorkspaceScene::WorkspaceScene()
+    : m_containerItem(std::make_unique<RootItem>(this))
     , m_overlayItem(std::make_unique<RootItem>(this))
     , m_cursorItem(std::make_unique<CursorItem>(m_overlayItem.get()))
 {
@@ -109,6 +108,20 @@ WorkspaceScene::WorkspaceScene(std::unique_ptr<ItemRenderer> renderer)
 
 WorkspaceScene::~WorkspaceScene()
 {
+}
+
+void WorkspaceScene::attachRenderer(std::unique_ptr<ItemRenderer> &&renderer)
+{
+    m_renderer = std::move(renderer);
+}
+
+void WorkspaceScene::detachRenderer()
+{
+    releaseResources(m_containerItem.get());
+    releaseResources(m_overlayItem.get());
+    releaseResources(m_cursorItem.get());
+
+    m_renderer.reset();
 }
 
 void WorkspaceScene::createDndIconItem()

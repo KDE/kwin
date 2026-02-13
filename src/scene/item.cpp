@@ -723,6 +723,10 @@ void Item::handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::ch
 {
 }
 
+void Item::releaseResources()
+{
+}
+
 bool Item::hasVisibleContents() const
 {
     if (!isVisible()) {
