@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-13 02:43+0000\n"
+"POT-Creation-Date: 2026-02-14 03:01+0000\n"
 "PO-Revision-Date: 2026-01-04 17:13+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -4182,7 +4182,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr "சாதனநிரல் அமைப்புகளை நிராகரித்தது"
 
-#: window.cpp:3128
+#: window.cpp:3140
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
