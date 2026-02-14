@@ -25,7 +25,7 @@ namespace KWin
 {
 class GlobalShortcut;
 class SwipeGesture;
-class PinchGesture;
+class StraightPinchGesture;
 class GestureRecognizer;
 
 enum class DeviceType {
@@ -69,8 +69,8 @@ public:
 
     void registerTouchpadSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
     void registerTouchpadSwipe(SwipeGesture *swipeGesture);
-    void registerTouchpadPinch(PinchDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
-    void registerTouchpadPinch(PinchGesture *pinchGesture);
+    void registerTouchpadPinch(StraightPinchDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+    void registerTouchpadPinch(StraightPinchGesture *pinchGesture);
     void registerTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
     void registerTouchscreenSwipe(SwipeGesture *swipeGesture);
     void forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
@@ -168,7 +168,7 @@ struct RealtimeFeedbackSwipeShortcut
 };
 struct RealtimeFeedbackPinchShortcut
 {
-    PinchDirection direction;
+    StraightPinchDirection direction;
     std::function<void(qreal)> scaleCallback;
     uint fingerCount;
 
@@ -191,11 +191,11 @@ public:
     QAction *action() const;
     const Shortcut &shortcut() const;
     SwipeGesture *swipeGesture() const;
-    PinchGesture *pinchGesture() const;
+    StraightPinchGesture *pinchGesture() const;
 
 private:
     std::shared_ptr<SwipeGesture> m_swipeGesture;
-    std::shared_ptr<PinchGesture> m_pinchGesture;
+    std::shared_ptr<StraightPinchGesture> m_pinchGesture;
     Shortcut m_shortcut = {};
     QAction *m_action = nullptr;
 };

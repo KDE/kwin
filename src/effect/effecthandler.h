@@ -243,7 +243,7 @@ public:
      */
     void registerTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
 
-    void registerTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
+    void registerTouchpadPinchShortcut(StraightPinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
 
     /**
      * @brief Registers a global touchscreen swipe gesture shortcut with the provided @p action.

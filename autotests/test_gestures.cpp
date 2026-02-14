@@ -16,7 +16,7 @@
 using namespace KWin;
 
 Q_DECLARE_METATYPE(SwipeDirection);
-Q_DECLARE_METATYPE(PinchDirection);
+Q_DECLARE_METATYPE(StraightPinchDirection);
 
 class GestureTest : public QObject
 {
@@ -98,19 +98,19 @@ void GestureTest::testMinimumDeltaReached()
 void GestureTest::testMinimumScaleDelta()
 {
     // pinch gesture
-    PinchGesture gesture(4);
-    gesture.setDirection(PinchDirection::Contracting);
+    StraightPinchGesture gesture(4);
+    gesture.setDirection(StraightPinchDirection::Contracting);
 
     QCOMPARE(gesture.minimumScaleDeltaReached(1.1), false);
     QCOMPARE(gesture.minimumScaleDeltaReached(1.3), true);
 
     GestureRecognizer recognizer;
-    recognizer.registerPinchGesture(&gesture);
+    recognizer.registerStraightPinchGesture(&gesture);
 
-    QSignalSpy startedSpy(&gesture, &PinchGesture::started);
-    QSignalSpy triggeredSpy(&gesture, &PinchGesture::triggered);
-    QSignalSpy cancelledSpy(&gesture, &PinchGesture::cancelled);
-    QSignalSpy progressSpy(&gesture, &PinchGesture::progress);
+    QSignalSpy startedSpy(&gesture, &StraightPinchGesture::started);
+    QSignalSpy triggeredSpy(&gesture, &StraightPinchGesture::triggered);
+    QSignalSpy cancelledSpy(&gesture, &StraightPinchGesture::cancelled);
+    QSignalSpy progressSpy(&gesture, &StraightPinchGesture::progress);
 
     recognizer.startPinchGesture(4);
     QCOMPARE(startedSpy.count(), 1);
@@ -141,15 +141,15 @@ void GestureTest::testUnregisterSwipeCancels()
 void GestureTest::testUnregisterPinchCancels()
 {
     GestureRecognizer recognizer;
-    auto gesture = std::make_unique<PinchGesture>(1);
-    QSignalSpy startedSpy(gesture.get(), &PinchGesture::started);
-    QSignalSpy cancelledSpy(gesture.get(), &PinchGesture::cancelled);
+    auto gesture = std::make_unique<StraightPinchGesture>(1);
+    QSignalSpy startedSpy(gesture.get(), &StraightPinchGesture::started);
+    QSignalSpy cancelledSpy(gesture.get(), &StraightPinchGesture::cancelled);
 
-    recognizer.registerPinchGesture(gesture.get());
+    recognizer.registerStraightPinchGesture(gesture.get());
     recognizer.startPinchGesture(1);
     QCOMPARE(startedSpy.count(), 1);
     QCOMPARE(cancelledSpy.count(), 0);
-    recognizer.unregisterPinchGesture(gesture.get());
+    recognizer.unregisterStraightPinchGesture(gesture.get());
     QCOMPARE(cancelledSpy.count(), 1);
 
     // delete the gesture should not trigger cancel
@@ -241,24 +241,24 @@ void GestureTest::testNotEmitCallbacksBeforeDirectionDecided()
     SwipeGesture up{4};
     SwipeGesture down{4};
     SwipeGesture right{4};
-    PinchGesture expand{4};
-    PinchGesture contract{4};
+    StraightPinchGesture expand{4};
+    StraightPinchGesture contract{4};
     up.setDirection(SwipeDirection::Up);
     down.setDirection(SwipeDirection::Down);
     right.setDirection(SwipeDirection::Right);
-    expand.setDirection(PinchDirection::Expanding);
-    contract.setDirection(PinchDirection::Contracting);
+    expand.setDirection(StraightPinchDirection::Expanding);
+    contract.setDirection(StraightPinchDirection::Contracting);
     recognizer.registerSwipeGesture(&up);
     recognizer.registerSwipeGesture(&down);
     recognizer.registerSwipeGesture(&right);
-    recognizer.registerPinchGesture(&expand);
-    recognizer.registerPinchGesture(&contract);
+    recognizer.registerStraightPinchGesture(&expand);
+    recognizer.registerStraightPinchGesture(&contract);
 
     QSignalSpy upSpy(&up, &SwipeGesture::progress);
     QSignalSpy downSpy(&down, &SwipeGesture::progress);
     QSignalSpy rightSpy(&right, &SwipeGesture::progress);
-    QSignalSpy expandSpy(&expand, &PinchGesture::progress);
-    QSignalSpy contractSpy(&contract, &PinchGesture::progress);
+    QSignalSpy expandSpy(&expand, &StraightPinchGesture::progress);
+    QSignalSpy contractSpy(&contract, &StraightPinchGesture::progress);
 
     // don't release callback until we know the direction of swipe gesture
     recognizer.startSwipeGesture(4);

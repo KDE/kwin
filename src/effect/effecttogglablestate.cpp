@@ -160,15 +160,15 @@ EffectTogglableGesture::EffectTogglableGesture(EffectTogglableState *state)
 {
 }
 
-static PinchDirection opposite(PinchDirection direction)
+static StraightPinchDirection opposite(StraightPinchDirection direction)
 {
     switch (direction) {
-    case PinchDirection::Contracting:
-        return PinchDirection::Expanding;
-    case PinchDirection::Expanding:
-        return PinchDirection::Contracting;
+    case StraightPinchDirection::Contracting:
+        return StraightPinchDirection::Expanding;
+    case StraightPinchDirection::Expanding:
+        return StraightPinchDirection::Contracting;
     }
-    return PinchDirection::Expanding;
+    return StraightPinchDirection::Expanding;
 }
 
 static SwipeDirection opposite(SwipeDirection direction)
@@ -202,7 +202,7 @@ std::function<void(qreal progress)> EffectTogglableState::regressCallback()
     };
 }
 
-void EffectTogglableGesture::addTouchpadPinchGesture(PinchDirection direction, uint fingerCount)
+void EffectTogglableGesture::addTouchpadPinchGesture(StraightPinchDirection direction, uint fingerCount)
 {
     effects->registerTouchpadPinchShortcut(direction, fingerCount, m_state->activateAction(), m_state->progressCallback());
     effects->registerTouchpadPinchShortcut(opposite(direction), fingerCount, m_state->deactivateAction(), m_state->regressCallback());

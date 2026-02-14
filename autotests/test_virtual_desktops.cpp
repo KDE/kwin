@@ -28,7 +28,7 @@ void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, u
 {
 }
 
-void InputRedirection::registerTouchpadPinchShortcut(PinchDirection direction, uint32_t fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void InputRedirection::registerTouchpadPinchShortcut(StraightPinchDirection direction, uint32_t fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
 }
 

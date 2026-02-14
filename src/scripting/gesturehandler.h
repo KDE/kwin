@@ -13,7 +13,7 @@ class QAction;
 namespace KWin
 {
 
-class PinchGesture;
+class StraightPinchGesture;
 class SwipeGesture;
 
 /*!
@@ -255,7 +255,7 @@ Q_SIGNALS:
     void deviceTypeChanged();
 
 private:
-    std::unique_ptr<PinchGesture> m_gesture;
+    std::unique_ptr<StraightPinchGesture> m_gesture;
     Direction m_direction = Direction::Contracting;
     Device m_deviceType = Device::Touchpad;
     qreal m_progress = 0;

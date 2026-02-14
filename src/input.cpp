@@ -3559,7 +3559,7 @@ void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, u
 #endif
 }
 
-void InputRedirection::registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void InputRedirection::registerTouchpadPinchShortcut(StraightPinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
 #if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->registerTouchpadPinch(direction, fingerCount, onUp, progressCallback);

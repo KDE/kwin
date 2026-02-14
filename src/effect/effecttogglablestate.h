@@ -111,7 +111,7 @@ public:
      */
     EffectTogglableGesture(EffectTogglableState *state);
 
-    void addTouchpadPinchGesture(PinchDirection dir, uint fingerCount);
+    void addTouchpadPinchGesture(StraightPinchDirection dir, uint fingerCount);
     void addTouchpadSwipeGesture(SwipeDirection dir, uint fingerCount);
     void addTouchscreenSwipeGesture(SwipeDirection direction, uint fingerCount);
 

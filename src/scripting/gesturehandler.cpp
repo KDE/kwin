@@ -111,12 +111,12 @@ void PinchGestureHandler::classBegin()
 
 void PinchGestureHandler::componentComplete()
 {
-    m_gesture = std::make_unique<PinchGesture>(m_fingerCount);
-    m_gesture->setDirection(PinchDirection(m_direction));
+    m_gesture = std::make_unique<StraightPinchGesture>(m_fingerCount);
+    m_gesture->setDirection(StraightPinchDirection(m_direction));
 
-    connect(m_gesture.get(), &PinchGesture::triggered, this, &PinchGestureHandler::activated);
-    connect(m_gesture.get(), &PinchGesture::cancelled, this, &PinchGestureHandler::cancelled);
-    connect(m_gesture.get(), &PinchGesture::progress, this, &PinchGestureHandler::setProgress);
+    connect(m_gesture.get(), &StraightPinchGesture::triggered, this, &PinchGestureHandler::activated);
+    connect(m_gesture.get(), &StraightPinchGesture::cancelled, this, &PinchGestureHandler::cancelled);
+    connect(m_gesture.get(), &StraightPinchGesture::progress, this, &PinchGestureHandler::setProgress);
 
     switch (m_deviceType) {
     case Device::Touchpad:

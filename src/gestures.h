@@ -83,19 +83,46 @@ class PinchGesture : public Gesture
 {
     Q_OBJECT
 public:
+    explicit PinchGesture(uint32_t fingerCount);
+    ~PinchGesture() override;
+
+    uint32_t fingerCount() const;
+    /**
+     * The angle threshold for a pinch gesture to be recognized as rotate
+     */
+    static constexpr double s_minimumRotateAngle = 5;
+
+    bool minimumScaleDeltaReached(const qreal &scaleDelta) const;
+    bool minimumAngleDeltaReached(const qreal &angleDelta) const;
+
+Q_SIGNALS:
+    /**
+     * The progress of the gesture if a minimumDelta is set.
+     * The progress is reported in [0.0,1.0]
+     */
+    void progress(qreal);
+
+private:
+    const uint32_t m_fingerCount;
+};
+
+class StraightPinchGesture : public Gesture
+{
+    Q_OBJECT
+public:
     /**
      * Every time the scale of the gesture changes by this much, the callback changes by 1.
      * This is the amount of change for 1 unit of change, like switch by 1 desktop.
      */
     static constexpr double s_minimumScaleDelta = 0.2;
 
-    explicit PinchGesture(uint32_t fingerCount);
-    ~PinchGesture() override;
+    explicit StraightPinchGesture(uint32_t fingerCount);
+    ~StraightPinchGesture() override;
 
     uint32_t fingerCount() const;
 
-    PinchDirection direction() const;
-    void setDirection(PinchDirection direction);
+    StraightPinchDirection direction() const;
+    void setDirection(StraightPinchDirection direction);
 
     qreal scaleDeltaToProgress(const qreal &scaleDelta) const;
     bool minimumScaleDeltaReached(const qreal &scaleDelta) const;
@@ -109,7 +136,40 @@ Q_SIGNALS:
 
 private:
     const uint32_t m_fingerCount;
-    PinchDirection m_direction = PinchDirection::Expanding;
+    StraightPinchDirection m_direction = StraightPinchDirection::Expanding;
+};
+
+class RotatePinchGesture : public Gesture
+{
+    Q_OBJECT
+public:
+    /**
+     * Every time the angle of the gesture changes by this much, the callback changes by 1.
+     * This is the amount of change for 1 unit of change, like switch by 1 desktop.
+     */
+    static constexpr double s_minimumAngleDelta = 2;
+
+    explicit RotatePinchGesture(uint32_t fingerCount);
+    ~RotatePinchGesture() override;
+
+    uint32_t fingerCount() const;
+
+    RotatePinchDirection direction() const;
+    void setDirection(RotatePinchDirection direction);
+
+    qreal angleDeltaToProgress(const qreal &angleDelta) const;
+    bool minimumAngleDeltaReached(const qreal &angleDelta) const;
+
+Q_SIGNALS:
+    /**
+     * The progress of the gesture if a minimumDelta is set.
+     * The progress is reported in [0.0,1.0]
+     */
+    void progress(qreal);
+
+private:
+    const uint32_t m_fingerCount;
+    RotatePinchDirection m_direction = RotatePinchDirection::Clockwise;
 };
 
 class KWIN_EXPORT GestureRecognizer : public QObject
@@ -121,8 +181,10 @@ public:
 
     void registerSwipeGesture(SwipeGesture *gesture);
     void unregisterSwipeGesture(SwipeGesture *gesture);
-    void registerPinchGesture(PinchGesture *gesture);
-    void unregisterPinchGesture(PinchGesture *gesture);
+    void registerStraightPinchGesture(StraightPinchGesture *gesture);
+    void unregisterStraightPinchGesture(StraightPinchGesture *gesture);
+    void registerRotatePinchGesture(RotatePinchGesture *gesture);
+    void unregisterRotatePinchGesture(RotatePinchGesture *gesture);
 
     int startSwipeGesture(uint fingerCount);
     void updateSwipeGesture(const QPointF &delta);
@@ -134,6 +196,16 @@ public:
     void cancelPinchGesture();
     void endPinchGesture();
 
+    int startStraightPinchGesture(uint fingerCount);
+    void updateStarightPinchGesture(qreal scaleData);
+    void cancelStraightPinchGesture();
+    void endStraightPinchGesture();
+
+    int startRotatePinchGesture(uint fingerCount);
+    void updateRotatePinchGesture(qreal angleDelta);
+    void cancelRotatePinchGesture();
+    void endRotatePinchGesture();
+
 private:
     void cancelActiveGestures();
     enum class Axis {
@@ -143,13 +215,16 @@ private:
     };
     int startSwipeGesture(uint fingerCount, const QPointF &startPos);
     QList<SwipeGesture *> m_swipeGestures;
-    QList<PinchGesture *> m_pinchGestures;
+    QList<StraightPinchGesture *> m_straightPinchGestures;
+    QList<RotatePinchGesture *> m_rotatePinchGestures;
     QList<SwipeGesture *> m_activeSwipeGestures;
-    QList<PinchGesture *> m_activePinchGestures;
+    QList<StraightPinchGesture *> m_activeStraightPinchGestures;
+    QList<RotatePinchGesture *> m_activeRotatePinchGestures;
     QMap<Gesture *, QMetaObject::Connection> m_destroyConnections;
 
     QPointF m_currentDelta = QPointF(0, 0);
-    qreal m_currentScale = 1; // For Pinch Gesture recognition
+    qreal m_currentScale = 1; // For Straight Pinch Gesture recognition
+    qreal m_currentAngle = 0; // For Rotate Pinch Gesture recognition
     uint m_currentFingerCount = 0;
     Axis m_currentSwipeAxis = Axis::None;
 };

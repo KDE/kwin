@@ -692,7 +692,7 @@ void EffectsHandler::registerTouchpadSwipeShortcut(SwipeDirection dir, uint fing
     input()->registerTouchpadSwipeShortcut(dir, fingerCount, onUp, progressCallback);
 }
 
-void EffectsHandler::registerTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
+void EffectsHandler::registerTouchpadPinchShortcut(StraightPinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
     input()->registerTouchpadPinchShortcut(dir, fingerCount, onUp, progressCallback);
 }

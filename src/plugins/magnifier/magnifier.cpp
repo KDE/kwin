@@ -64,12 +64,12 @@ MagnifierEffect::MagnifierEffect()
         }
         m_lastPinchProgress = 0;
     });
-    effects->registerTouchpadPinchShortcut(PinchDirection::Expanding, 3, m_touchpadAction.get(), [this](qreal progress) {
+    effects->registerTouchpadPinchShortcut(StraightPinchDirection::Expanding, 3, m_touchpadAction.get(), [this](qreal progress) {
         const qreal delta = progress - m_lastPinchProgress;
         m_lastPinchProgress = progress;
         realtimeZoom(delta);
     });
-    effects->registerTouchpadPinchShortcut(PinchDirection::Contracting, 3, m_touchpadAction.get(), [this](qreal progress) {
+    effects->registerTouchpadPinchShortcut(StraightPinchDirection::Contracting, 3, m_touchpadAction.get(), [this](qreal progress) {
         const qreal delta = progress - m_lastPinchProgress;
         m_lastPinchProgress = progress;
         realtimeZoom(-delta);

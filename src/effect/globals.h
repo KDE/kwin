@@ -130,9 +130,14 @@ enum class SwipeDirection {
     Right,
 };
 
-enum class PinchDirection {
+enum class StraightPinchDirection {
     Expanding,
     Contracting
+};
+
+enum class RotatePinchDirection {
+    Clockwise,
+    Counterclockwise
 };
 
 /**

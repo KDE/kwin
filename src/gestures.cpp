@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "gestures.h"
+#include "effect/globals.h"
 
 #include <QDebug>
 
@@ -48,21 +49,30 @@ bool SwipeGesture::minimumDeltaReached(const QPointF &delta) const
     return deltaToProgress(delta) >= 1.0;
 }
 
-PinchGesture::PinchGesture(uint32_t fingerCount)
+StraightPinchGesture::StraightPinchGesture(uint32_t fingerCount)
     : m_fingerCount(fingerCount)
 {
 }
 
 PinchGesture::~PinchGesture() = default;
 
-qreal PinchGesture::scaleDeltaToProgress(const qreal &scaleDelta) const
+StraightPinchGesture::~StraightPinchGesture() = default;
+
+qreal StraightPinchGesture::scaleDeltaToProgress(const qreal &scaleDelta) const
 {
     return std::abs(scaleDelta - 1) / s_minimumScaleDelta;
 }
 
-bool PinchGesture::minimumScaleDeltaReached(const qreal &scaleDelta) const
+bool StraightPinchGesture::minimumScaleDeltaReached(const qreal &scaleDelta) const
 {
     return scaleDeltaToProgress(scaleDelta) >= 1.0;
+}
+
+RotatePinchGesture::~RotatePinchGesture() = default;
+
+bool RotatePinchGesture::minimumAngleDeltaReached(const qreal &angleDelta) const
+{
+    return angleDelta >= s_minimumAngleDelta;
 }
 
 GestureRecognizer::GestureRecognizer(QObject *parent)
@@ -93,23 +103,23 @@ void GestureRecognizer::unregisterSwipeGesture(KWin::SwipeGesture *gesture)
     }
 }
 
-void GestureRecognizer::registerPinchGesture(KWin::PinchGesture *gesture)
+void GestureRecognizer::registerStraightPinchGesture(KWin::StraightPinchGesture *gesture)
 {
-    Q_ASSERT(!m_pinchGestures.contains(gesture));
-    auto connection = connect(gesture, &QObject::destroyed, this, std::bind(&GestureRecognizer::unregisterPinchGesture, this, gesture));
+    Q_ASSERT(!m_straightPinchGestures.contains(gesture));
+    auto connection = connect(gesture, &QObject::destroyed, this, std::bind(&GestureRecognizer::unregisterStraightPinchGesture, this, gesture));
     m_destroyConnections.insert(gesture, connection);
-    m_pinchGestures << gesture;
+    m_straightPinchGestures << gesture;
 }
 
-void GestureRecognizer::unregisterPinchGesture(KWin::PinchGesture *gesture)
+void GestureRecognizer::unregisterStraightPinchGesture(KWin::StraightPinchGesture *gesture)
 {
     auto it = m_destroyConnections.find(gesture);
     if (it != m_destroyConnections.end()) {
         disconnect(it.value());
         m_destroyConnections.erase(it);
     }
-    m_pinchGestures.removeAll(gesture);
-    if (m_activePinchGestures.removeOne(gesture)) {
+    m_straightPinchGestures.removeAll(gesture);
+    if (m_activeStraightPinchGestures.removeOne(gesture)) {
         Q_EMIT gesture->cancelled();
     }
 }
@@ -117,7 +127,7 @@ void GestureRecognizer::unregisterPinchGesture(KWin::PinchGesture *gesture)
 int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startPos)
 {
     m_currentFingerCount = fingerCount;
-    if (!m_activeSwipeGestures.isEmpty() || !m_activePinchGestures.isEmpty()) {
+    if (!m_activeSwipeGestures.isEmpty() || !m_activeStraightPinchGestures.isEmpty()) {
         return 0;
     }
     int count = 0;
@@ -220,11 +230,15 @@ void GestureRecognizer::cancelActiveGestures()
     for (auto g : std::as_const(m_activeSwipeGestures)) {
         Q_EMIT g->cancelled();
     }
-    for (auto g : std::as_const(m_activePinchGestures)) {
+    for (auto g : std::as_const(m_activeStraightPinchGestures)) {
+        Q_EMIT g->cancelled();
+    }
+    for (auto g : std::as_const(m_activeRotatePinchGestures)) {
         Q_EMIT g->cancelled();
     }
     m_activeSwipeGestures.clear();
-    m_activePinchGestures.clear();
+    m_activeStraightPinchGestures.clear();
+    m_activeRotatePinchGestures.clear();
     m_currentScale = 0;
     m_currentDelta = QPointF(0, 0);
     m_currentSwipeAxis = Axis::None;
@@ -258,16 +272,26 @@ int GestureRecognizer::startPinchGesture(uint fingerCount)
 {
     m_currentFingerCount = fingerCount;
     int count = 0;
-    if (!m_activeSwipeGestures.isEmpty() || !m_activePinchGestures.isEmpty()) {
+    if (!m_activeSwipeGestures.isEmpty() || !m_activeStraightPinchGestures.isEmpty() || !m_activeRotatePinchGestures.isEmpty()) {
         return 0;
     }
-    for (PinchGesture *gesture : std::as_const(m_pinchGestures)) {
+    for (StraightPinchGesture *gesture : std::as_const(m_straightPinchGestures)) {
         if (gesture->fingerCount() != fingerCount) {
             continue;
         }
 
         // direction doesn't matter yet
-        m_activePinchGestures << gesture;
+        m_activeStraightPinchGestures << gesture;
+        count++;
+        Q_EMIT gesture->started();
+    }
+    for (RotatePinchGesture *gesture : std::as_const(m_rotatePinchGestures)) {
+        if (gesture->fingerCount() != fingerCount) {
+            continue;
+        }
+
+        // direction doesn't matter yet
+        m_activeRotatePinchGestures << gesture;
         count++;
         Q_EMIT gesture->started();
     }
@@ -277,35 +301,84 @@ int GestureRecognizer::startPinchGesture(uint fingerCount)
 void GestureRecognizer::updatePinchGesture(qreal scale, qreal angleDelta, const QPointF &posDelta)
 {
     m_currentScale = scale;
+    m_currentAngle = angleDelta;
 
-    // Determine the direction of the swipe
-    PinchDirection direction;
-    if (scale < 1) {
-        direction = PinchDirection::Contracting;
-    } else {
-        direction = PinchDirection::Expanding;
-    }
+    if (angleDelta < PinchGesture::s_minimumRotateAngle) {
+        // TO DO use total angle since start of pinch instead of delta since last event
+        // Straight pinch gesture
 
-    // Eliminate wrong gestures (takes two iterations)
-    for (int i = 0; i < 2; i++) {
-        if (m_activePinchGestures.isEmpty()) {
-            startPinchGesture(m_currentFingerCount);
+        // Determine the direction of the swipe
+        StraightPinchDirection direction;
+        if (scale < 1) {
+            direction = StraightPinchDirection::Contracting;
+        } else {
+            direction = StraightPinchDirection::Expanding;
         }
 
-        for (auto it = m_activePinchGestures.begin(); it != m_activePinchGestures.end();) {
-            auto g = static_cast<PinchGesture *>(*it);
+        // Eliminate wrong gestures (takes two iterations)
+        for (int i = 0; i < 2; i++) {
+            if (m_activeStraightPinchGestures.isEmpty()) {
+                startPinchGesture(m_currentFingerCount);
+            }
 
-            if (g->direction() != direction) {
+            for (auto it = m_activeStraightPinchGestures.begin(); it != m_activeStraightPinchGestures.end();) {
+                auto g = static_cast<StraightPinchGesture *>(*it);
+
+                if (g->direction() != direction) {
+                    Q_EMIT g->cancelled();
+                    it = m_activeStraightPinchGestures.erase(it);
+                    continue;
+                }
+                it++;
+            }
+        }
+
+        // TO DO eliminate rotate pinch gestures?
+
+        for (StraightPinchGesture *g : std::as_const(m_activeStraightPinchGestures)) {
+            Q_EMIT g->progress(g->scaleDeltaToProgress(scale));
+        }
+    } else {
+        // Rotate pinch gesture
+
+        // Determine the direction of the swipe
+        RotatePinchDirection direction;
+        if (angleDelta < 0) {
+            direction = RotatePinchDirection::Counterclockwise;
+        } else {
+            direction = RotatePinchDirection::Clockwise;
+        }
+
+        // Eliminate wrong gestures (takes two iterations each)
+        for (int i = 0; i < 2; i++) {
+            if (m_activeRotatePinchGestures.isEmpty()) {
+                startPinchGesture(m_currentFingerCount);
+            }
+
+            for (auto it = m_activeRotatePinchGestures.begin(); it != m_activeRotatePinchGestures.end();) {
+                auto g = static_cast<RotatePinchGesture *>(*it);
+
+                if (g->direction() != direction) {
+                    Q_EMIT g->cancelled();
+                    it = m_activeRotatePinchGestures.erase(it);
+                    continue;
+                }
+                it++;
+            }
+        }
+        for (int i = 0; i < 2; i++) {
+            for (auto it = m_activeStraightPinchGestures.begin(); it != m_activeStraightPinchGestures.end();) {
+                auto g = static_cast<StraightPinchGesture *>(*it);
+
                 Q_EMIT g->cancelled();
-                it = m_activePinchGestures.erase(it);
+                it = m_activeStraightPinchGestures.erase(it);
                 continue;
             }
-            it++;
         }
-    }
 
-    for (PinchGesture *g : std::as_const(m_activePinchGestures)) {
-        Q_EMIT g->progress(g->scaleDeltaToProgress(scale));
+        for (RotatePinchGesture *g : std::as_const(m_activeRotatePinchGestures)) {
+            Q_EMIT g->progress(angleDelta);
+        }
     }
 }
 
@@ -313,22 +386,32 @@ void GestureRecognizer::cancelPinchGesture()
 {
     cancelActiveGestures();
     m_currentScale = 1;
+    m_currentAngle = 0;
     m_currentFingerCount = 0;
     m_currentSwipeAxis = Axis::None;
 }
 
 void GestureRecognizer::endPinchGesture() // because fingers up
 {
-    for (auto g : std::as_const(m_activePinchGestures)) {
+    for (auto g : std::as_const(m_activeStraightPinchGestures)) {
         if (g->minimumScaleDeltaReached(m_currentScale)) {
             Q_EMIT g->triggered();
         } else {
             Q_EMIT g->cancelled();
         }
     }
+    for (auto g : std::as_const(m_activeRotatePinchGestures)) {
+        if (g->minimumAngleDeltaReached(m_currentAngle)) {
+            Q_EMIT g->triggered();
+        } else {
+            Q_EMIT g->cancelled();
+        }
+    }
     m_activeSwipeGestures.clear();
-    m_activePinchGestures.clear();
+    m_activeStraightPinchGestures.clear();
+    m_activeRotatePinchGestures.clear();
     m_currentScale = 1;
+    m_currentAngle = 0;
     m_currentFingerCount = 0;
     m_currentSwipeAxis = Axis::None;
 }
@@ -348,17 +431,32 @@ void SwipeGesture::setDirection(SwipeDirection direction)
     m_direction = direction;
 }
 
-uint32_t PinchGesture::fingerCount() const
+uint32_t StraightPinchGesture::fingerCount() const
 {
     return m_fingerCount;
 }
 
-PinchDirection PinchGesture::direction() const
+StraightPinchDirection StraightPinchGesture::direction() const
 {
     return m_direction;
 }
 
-void PinchGesture::setDirection(PinchDirection direction)
+void StraightPinchGesture::setDirection(StraightPinchDirection direction)
+{
+    m_direction = direction;
+}
+
+uint32_t RotatePinchGesture::fingerCount() const
+{
+    return m_fingerCount;
+}
+
+RotatePinchDirection RotatePinchGesture::direction() const
+{
+    return m_direction;
+}
+
+void RotatePinchGesture::setDirection(RotatePinchDirection direction)
 {
     m_direction = direction;
 }
