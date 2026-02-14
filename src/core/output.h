@@ -141,17 +141,103 @@ struct CustomModeDefinition
     OutputMode::Flags flags;
 };
 
-/**
- * Generic output representation for window management purposes
+/*!
+ * \qmltype LogicalOutput
+ * \inqmlmodule org.kde.kwin
+ * \nativetype KWin::LogicalOutput
+ *
+ * \brief Generic output representation for window management purposes
+ *
+ * This type cannot be created from QML.
+ */
+
+/*!
+ * \class KWin::LogicalOutput
+ * \inmodule KWin
+ * \inheaderfile core/output.h
+ *
+ * \brief Generic output representation for window management purposes
  */
 class KWIN_EXPORT LogicalOutput : public QObject
 {
     Q_OBJECT
+
+    /*!
+     * \qmlproperty Rect LogicalOutput::geometry
+     *
+     * Returns geometry of this output in device independent pixels
+     */
+
+    /*!
+     * \property KWin::LogicalOutput::geometry
+     *
+     * Returns geometry of this output in device independent pixels
+     */
     Q_PROPERTY(KWin::Rect geometry READ geometry NOTIFY geometryChanged)
+
+    /*!
+     * \qmlproperty real LogicalOutput::devicePixelRatio
+     *
+     * The ratio between physical pixels and logical pixels
+     */
+
+    /*!
+     * \property KWin::LogicalOutput::devicePixelRatio
+     *
+     * The ratio between physical pixels and logical pixels
+     */
     Q_PROPERTY(qreal devicePixelRatio READ scale NOTIFY scaleChanged)
+
+    /*!
+     * \qmlproperty string LogicalOutput::name
+     *
+     * A short identifiable name of this output
+     */
+
+    /*!
+     * \property KWin::LogicalOutput::name
+     *
+     * A short identifiable name of this output
+     */
     Q_PROPERTY(QString name READ name CONSTANT)
+
+    /*!
+     * \qmlproperty string LogicalOutput::manufacturer
+     *
+     * The name of this output's manufacturer
+     */
+
+    /*!
+     * \property KWin::LogicalOutput::manufacturer
+     *
+     * The name of this output's manufacturer
+     */
     Q_PROPERTY(QString manufacturer READ manufacturer CONSTANT)
+
+    /*!
+     * \qmlproperty string LogicalOutput::model
+     *
+     * The model name for this output
+     */
+
+    /*!
+     * \property KWin::LogicalOutput::model
+     *
+     * The model name for this output
+     */
     Q_PROPERTY(QString model READ model CONSTANT)
+
+    /*!
+     * \qmlproperty string LogicalOutput::serialNumber
+     *
+     * The serial number for this output
+     */
+
+    /*!
+     * \property KWin::LogicalOutput::serialNumber
+     *
+     * The serial number for this output
+     */
     Q_PROPERTY(QString serialNumber READ serialNumber CONSTANT)
 
 public:
@@ -159,34 +245,51 @@ public:
     ~LogicalOutput() override;
 
     void ref();
+
     void unref();
 
-    /**
-     * Maps the specified @a rect from the global coordinate system to the output-local coords.
+    /*!
+     * Maps the specified \a rect from the global coordinate system to the output-local coords.
      */
     Rect mapFromGlobal(const Rect &rect) const;
 
-    /**
-     * Maps the specified @a rect from the global coordinate system to the output-local coords.
+    /*!
+     * Maps the specified \a rect from the global coordinate system to the output-local coords.
      */
     RectF mapFromGlobal(const RectF &rect) const;
 
-    /**
-     * Maps a @a rect in this output coordinates to the global coordinate system.
+    /*!
+     * Maps a \a rect in this output coordinates to the global coordinate system.
      */
     RectF mapToGlobal(const RectF &rect) const;
 
-    /**
-     * Maps a @a region in this output coordinates to the global coordinate system.
+    /*!
+     * Maps a \a region in this output coordinates to the global coordinate system.
      */
     Region mapToGlobal(const Region &region) const;
 
+    /*!
+     * \qmlmethod LogicalOutput::mapToGlobal(point pos)
+     *
+     * Maps a \a pos in this output coordinates to the global coordinate system.
+     */
+
+    /*!
+     * Maps a \a pos in this output coordinates to the global coordinate system.
+     */
     Q_INVOKABLE QPointF mapToGlobal(const QPointF &pos) const;
+
+    /*!
+     * \qmlmethod LogicalOutput::mapFromGlobal(point pos)
+     *
+     * Maps the specified \a pos from the global coordinate system to the output-local coords
+     */
+
+    /*!
+     * Maps the specified \a pos from the global coordinate system to the output-local coords
+     */
     Q_INVOKABLE QPointF mapFromGlobal(const QPointF &pos) const;
 
-    /**
-     * Returns a short identifiable name of this output.
-     */
     QString name() const;
     QString description() const;
     QString manufacturer() const;
@@ -194,70 +297,92 @@ public:
     QString serialNumber() const;
     QString uuid() const;
 
-    /**
-     * Returns geometry of this output in device independent pixels.
-     */
     Rect geometry() const;
 
-    /**
+    /*!
      * Returns geometry of this output in device independent pixels, without rounding
      */
     RectF geometryF() const;
 
-    /**
-     * Equivalent to `Rect(QPoint(0, 0), geometry().size())`
+    /*!
+     * Equivalent to Rect(QPoint(0, 0), geometry().size())
      */
     Rect rect() const;
 
-    /**
-     * Equivalent to `RectF(QPointF(0, 0), geometryF().size())`
+    /*!
+     * Equivalent to RectF(QPointF(0, 0), geometryF().size())
      */
     RectF rectF() const;
 
+    /*!
+     * Returns the refresh rate of the output, in milli-Hertz
+     */
     uint32_t refreshRate() const;
 
-    /**
+    /*!
      * Returns whether this output is connected through an internal connector,
      * e.g. LVDS, or eDP.
      */
     bool isInternal() const;
 
-    /**
+    /*!
      * Returns the ratio between physical pixels and logical pixels.
      */
     qreal scale() const;
 
-    /**
+    /*!
      * Returns the non-rotated physical size of this output, in millimeters.
      */
     QSize physicalSize() const;
 
-    /** Returns the resolution of the output.  */
+    /*!
+     * Returns the resolution of the output.
+     */
     QSize pixelSize() const;
+
+    /*!
+     * Returns the native resolution of the output, unaffected by the output transform
+     */
     QSize modeSize() const;
+
+    /*!
+     * Returns the output transform
+     */
     OutputTransform transform() const;
+
+    /*!
+     * Orientates the \a size according to the current output transform
+     */
     QSize orientateSize(const QSize &size) const;
 
+    /*!
+     * Returns \c true if this is a placeholder output; otherwise returns \c false.
+     *
+     * A placeholder output is created when there are no any physical outputs.
+     */
     bool isPlaceholder() const;
 
-    /**
+    /*!
      * The color space in which the scene is blended
      */
     const std::shared_ptr<ColorDescription> &blendingColor() const;
 
+    /*!
+     * Returns the associated physical/backend output device
+     */
     BackendOutput *backendOutput() const;
 
 Q_SIGNALS:
-    /**
+    /*!
      * This signal is emitted when the geometry of this output has changed.
      */
     void geometryChanged();
-    /**
+    /*!
      * This signal is emitted when the device pixel ratio of the output has changed.
      */
     void scaleChanged();
 
-    /**
+    /*!
      * Notifies that the output is about to change configuration based on a
      * user interaction.
      *
@@ -267,7 +392,7 @@ Q_SIGNALS:
      */
     void aboutToChange(OutputChangeSet *changeSet);
 
-    /**
+    /*!
      * Notifies that the output changed based on a user interaction.
      *
      * Be it because it gets a transformation or moved around.
@@ -276,9 +401,17 @@ Q_SIGNALS:
      */
     void changed();
 
+    /*!
+     * This signal is emitted when the blending color description changes
+     */
     void blendingColorChanged();
+
+    /*!
+     * This signal is emitted when the output transform changes, e.g. the output gets rotated, etc
+     */
     void transformChanged();
-    /**
+
+    /*!
      * This signal is emitted when either modeSize or refreshRate change
      */
     void currentModeChanged();
