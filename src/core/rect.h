@@ -18,7 +18,11 @@ namespace KWin
 class RectF;
 
 /*!
- * The Rect type represents a rectangle with integer coordinates.
+ * \class KWin::Rect
+ * \inmodule KWin
+ * \inheaderfile core/rect.h
+ *
+ * \brief The Rect type represents a rectangle with integer coordinates.
  *
  * \note Unlike the QRect, the right() and the bottom() edges of a Rect correspond to \c{x() + width()},
  * and \c{y() + height()}, respectively.
@@ -26,9 +30,33 @@ class RectF;
 class KWIN_EXPORT Rect
 {
     Q_GADGET
+
+    /*!
+     * \property KWin::Rect::x
+     *
+     * The x coordinate of the top left corner
+     */
     Q_PROPERTY(int x READ x WRITE setX)
+
+    /*!
+     * \property KWin::Rect::y
+     *
+     * The y coordinate of the top left corner
+     */
     Q_PROPERTY(int y READ y WRITE setY)
+
+    /*!
+     * \property KWin::Rect::width
+     *
+     * The width of the rectangle
+     */
     Q_PROPERTY(int width READ width WRITE setWidth)
+
+    /*!
+     * \property KWin::Rect::height
+     *
+     * The height of the rectangle
+     */
     Q_PROPERTY(int height READ height WRITE setHeight)
 
 public:
@@ -607,14 +635,42 @@ private:
 };
 
 /*!
- * The RectF type represents a rectangle with floating point coordinates.
+ * \class KWin::RectF
+ * \inmodule KWin
+ * \inheaderfile core/rect.h
+ *
+ * \brief The RectF type represents a rectangle with floating point coordinates.
  */
 class KWIN_EXPORT RectF
 {
     Q_GADGET
+
+    /*!
+     * \property KWin::RectF::x
+     *
+     * The x coordinate of the top left corner
+     */
     Q_PROPERTY(qreal x READ x WRITE setX)
+
+    /*!
+     * \property KWin::RectF::y
+     *
+     * The y coordinate of the top left corner
+     */
     Q_PROPERTY(qreal y READ y WRITE setY)
+
+    /*!
+     * \property KWin::RectF::width
+     *
+     * The width of the rectangle
+     */
     Q_PROPERTY(qreal width READ width WRITE setWidth)
+
+    /*!
+     * \property KWin::RectF::height
+     *
+     * The height of the rectangle
+     */
     Q_PROPERTY(qreal height READ height WRITE setHeight)
 
 public:
