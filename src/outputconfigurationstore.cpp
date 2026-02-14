@@ -790,6 +790,13 @@ double OutputConfigurationStore::chooseScale(BackendOutput *output, OutputMode *
     // Low-but-not-1 scale factors look like a blurry mess; 1x is better here
     if (scale < 1.20) {
         scale = 1.0;
+    } else {
+        // Integer scaling has several advantages,
+        // prefer using 2x over ever so slightly fractional 1.95 or 2.05.
+        const int integerScale = std::round(scale);
+        if (std::abs(integerScale - scale) < 0.06) {
+            scale = integerScale;
+        }
     }
 
     return scale;

@@ -1433,7 +1433,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(285, 190),
                .modes = {ModeInfo(QSize(2880, 1920), 120000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(2880, 1920), 120000, OutputMode::Flag::Preferred) << 2.05 << true;
+        << ModeInfo(QSize(2880, 1920), 120000, OutputMode::Flag::Preferred) << 2.0 << true;
 
     QTest::addRow("DELL XPS 13 1080p 13\"")
         << DeviceType::Laptop
@@ -1484,7 +1484,7 @@ void OutputChangesTest::testGenerateConfigs_data()
                .physicalSizeInMM = QSize(62, 128),
                .modes = {ModeInfo(QSize(1080, 2220), 60000, OutputMode::Flags{}), ModeInfo(QSize(1080, 2220), 120000, OutputMode::Flag::Preferred)},
            }
-        << ModeInfo(QSize(1080, 2220), 120000ul, OutputMode::Flag::Preferred) << 2.95 << true;
+        << ModeInfo(QSize(1080, 2220), 120000ul, OutputMode::Flag::Preferred) << 3.0 << true;
 
     QTest::addRow("OnePlus 6")
         << DeviceType::Phone
@@ -1540,6 +1540,18 @@ void OutputChangesTest::testGenerateConfigs_data()
                },
            }
         << ModeInfo(QSize(1920, 1080), 75000, OutputMode::Flags{}) << 1.0 << true;
+
+    QTest::addRow("Dell P2415Q")
+        << DeviceType::Desktop
+        << Test::OutputInfo{
+               .geometry = Rect(0, 0, 3840, 2160),
+               .internal = false,
+               .physicalSizeInMM = QSize(527, 296),
+               .modes = {
+                   ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred),
+               },
+           }
+        << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred) << 2.0 << true;
 }
 
 void OutputChangesTest::testGenerateConfigs()
