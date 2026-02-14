@@ -273,7 +273,7 @@ msgstr "显示选中窗口"
 #: main.ui:644
 #, kde-format
 msgid "Enable the window list effect"
-msgstr ""
+msgstr "启用窗口列表特效"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
 #: main.ui:678
@@ -285,25 +285,25 @@ msgstr "激活桌面特效时，用于替换列表窗口的特效。"
 #: main.ui:701
 #, kde-format
 msgid "The time in milliseconds to wait before showing the task switcher."
-msgstr ""
+msgstr "显示任务切换器之前的等待时间，单位为毫秒。"
 
 #. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
 #: main.ui:704
 #, kde-format
 msgid "Show delay:"
-msgstr ""
+msgstr "显示延迟："
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:720
 #, kde-format
 msgid " ms"
-msgstr ""
+msgstr " 毫秒"
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:735
 #, kde-format
 msgid "Delay before the window list appears"
-msgstr ""
+msgstr "窗口列表显示延迟"
 
 #: shortcutsettings.cpp:131
 #, kde-format

@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-13 00:45+0000\n"
-"PO-Revision-Date: 2026-01-26 14:29-0300\n"
+"POT-Creation-Date: 2026-02-14 00:45+0000\n"
+"PO-Revision-Date: 2026-02-13 09:18-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.12.1\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1281,7 +1281,7 @@ msgstr "time"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "A mensagem a ser exibida (tela cheia, sem borda)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
 #, kde-format
@@ -1295,12 +1295,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Este assistente não pode ser chamado diretamente."
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1309,8 +1304,8 @@ msgid ""
 msgstr ""
 "Você selecionou mostrar uma janela em modo em tela cheia.\n"
 "Se o aplicativo sozinho não possui uma opção para desabilitar este modo, "
-"você não será capaz de desabilitar novamente, usando o mouse. Em vez disto "
-"use o menu da janela, ativado utilizando o atalho de teclado %1."
+"você não será capaz de desabilitar novamente, usando o mouse. Em vez disto, "
+"use o atalho de teclado %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1326,12 +1321,7 @@ msgstr ""
 "use o menu da janela, ativado utilizando o atalho de teclado %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1339,31 +1329,24 @@ msgid ""
 msgstr ""
 "Você selecionou mostrar uma janela em modo em tela cheia.\n"
 "Se o aplicativo sozinho não possui uma opção para desabilitar este modo, "
-"você não será capaz de desabilitar novamente, usando o mouse. Em vez disto "
-"use o menu da janela, ativado utilizando o atalho de teclado %1."
+"você não será capaz de desabilitar novamente, usando o mouse."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "Tela cheia"
+msgstr "Desfazer tela cheia"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the %1 keyboard shortcut instead."
 msgstr ""
-"Você selecionou mostrar uma janela sem sua borda.\n"
-"Sem a borda, você não conseguirá habilitá-la novamente com o uso do mouse. "
-"Em vez disto use o menu da janela, que é ativado com o atalho %1."
+"Você selecionou exibir uma janela sem borda.\n"
+"Sem a borda, você não poderá habilitá-la novamente usando o mouse. Em vez "
+"disso, use o atalho de teclado %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
 #, kde-format
@@ -1378,32 +1361,25 @@ msgstr ""
 "Em vez disto use o menu da janela, que é ativado com o atalho %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
-"Você selecionou mostrar uma janela sem sua borda.\n"
-"Sem a borda, você não conseguirá habilitá-la novamente com o uso do mouse. "
-"Em vez disto use o menu da janela, que é ativado com o atalho %1."
+"Você selecionou exibir uma janela sem borda.\n"
+"Sem a borda, você não poderá habilitá-la novamente usando o mouse."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
-#, fuzzy, kde-format
-#| msgid "&No Border"
+#, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr "&Sem borda"
+msgstr "Restaurar borda"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "Não mostrar novamente"
 
 #: helpers/killer/killer.cpp:132
 #, kde-format
@@ -3890,321 +3866,327 @@ msgid "Maximize Window Horizontally"
 msgstr "Maximizar janela horizontalmente"
 
 #: useractions.cpp:845
+#, fuzzy, kde-format
+#| msgid "Resize Window"
+msgid "Restore Window"
+msgstr "Redimensionar janela"
+
+#: useractions.cpp:847
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimizar janela"
 
-#: useractions.cpp:847
+#: useractions.cpp:849
 #, kde-format
 msgid "Move Window"
 msgstr "Mover janela"
 
-#: useractions.cpp:849
+#: useractions.cpp:851
 #, kde-format
 msgid "Resize Window"
 msgstr "Redimensionar janela"
 
-#: useractions.cpp:851
+#: useractions.cpp:853
 #, kde-format
 msgid "Raise Window"
 msgstr "Elevar janela"
 
-#: useractions.cpp:853
+#: useractions.cpp:855
 #, kde-format
 msgid "Lower Window"
 msgstr "Diminuir Janela"
 
-#: useractions.cpp:855
+#: useractions.cpp:857
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Alternar entre elevar/diminuir janela"
 
-#: useractions.cpp:857
+#: useractions.cpp:859
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Janela em tela cheia"
 
-#: useractions.cpp:859
+#: useractions.cpp:861
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Alternar barra de título da janela e moldura"
 
-#: useractions.cpp:861
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Manter acima das outras"
 
-#: useractions.cpp:863
+#: useractions.cpp:865
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Manter abaixo das outras"
 
-#: useractions.cpp:865
+#: useractions.cpp:867
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Ativar janela que demanda atenção"
 
-#: useractions.cpp:867
+#: useractions.cpp:869
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Configurar atalhos para a janela"
 
-#: useractions.cpp:869
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Mover janela para o centro"
 
-#: useractions.cpp:871
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Right"
 msgstr "Mover janela para a direita"
 
-#: useractions.cpp:873
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Left"
 msgstr "Mover janela para a esquerda"
 
-#: useractions.cpp:875
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Up"
 msgstr "Mover janela para cima"
 
-#: useractions.cpp:877
+#: useractions.cpp:879
 #, kde-format
 msgid "Move Window Down"
 msgstr "Mover janela para baixo"
 
-#: useractions.cpp:879
+#: useractions.cpp:881
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Expandir janela horizontalmente"
 
-#: useractions.cpp:881
+#: useractions.cpp:883
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Expandir janela verticalmente"
 
-#: useractions.cpp:883
+#: useractions.cpp:885
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Encolher janela horizontalmente"
 
-#: useractions.cpp:885
+#: useractions.cpp:887
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Encolher janela verticalmente"
 
-#: useractions.cpp:887
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Colocar a janela lado a lado à esquerda"
 
-#: useractions.cpp:889
+#: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Colocar a janela lado a lado à direita"
 
-#: useractions.cpp:891
+#: useractions.cpp:893
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Colocar a janela lado a lado parte superior"
 
-#: useractions.cpp:893
+#: useractions.cpp:895
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Colocar a janela lado a lado na parte inferior"
 
-#: useractions.cpp:895
+#: useractions.cpp:897
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Colocar a janela lado a lado parte superior à esquerda"
 
-#: useractions.cpp:897
+#: useractions.cpp:899
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Colocar a janela lado a lado na parte inferior à esquerda"
 
-#: useractions.cpp:899
+#: useractions.cpp:901
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Colocar a janela lado a lado na parte de cima à direita"
 
-#: useractions.cpp:901
+#: useractions.cpp:903
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Colocar a janela lado a lado na parte inferior à direita"
 
-#: useractions.cpp:903
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Mudar para a janela acima"
 
-#: useractions.cpp:905
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Mudar para a janela abaixo"
 
-#: useractions.cpp:907
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Mudar para a janela à direita"
 
-#: useractions.cpp:909
+#: useractions.cpp:911
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Mudar para a janela à esquerda"
 
-#: useractions.cpp:911
+#: useractions.cpp:913
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Aumentar a opacidade da janela ativa em 5%"
 
-#: useractions.cpp:913
+#: useractions.cpp:915
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Diminuir a opacidade da janela ativa em 5%"
 
-#: useractions.cpp:916
+#: useractions.cpp:918
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Manter janela em todas as áreas de trabalho"
 
-#: useractions.cpp:919
+#: useractions.cpp:921
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Janela de mosaico (lado a lado) rápido personalizada à esquerda"
 
-#: useractions.cpp:921
+#: useractions.cpp:923
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Janela de mosaico (lado a lado) rápido personalizada à direita"
 
-#: useractions.cpp:923
+#: useractions.cpp:925
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Janela de mosaico (lado a lado) rápido personalizada na parte superior"
 
-#: useractions.cpp:925
+#: useractions.cpp:927
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Janela de mosaico (lado a lado) rápido personalizada na parte inferior"
 
-#: useractions.cpp:936
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Janela para a área de trabalho %1"
 
-#: useractions.cpp:938
+#: useractions.cpp:940
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Janela para a próxima área de trabalho"
 
-#: useractions.cpp:939
+#: useractions.cpp:941
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Janela para a área de trabalho anterior"
 
-#: useractions.cpp:940
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Janela em uma área de trabalho à direita"
 
-#: useractions.cpp:942
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Janela em uma área de trabalho à esquerda"
 
-#: useractions.cpp:944
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Janela em uma área de trabalho acima"
 
-#: useractions.cpp:946
+#: useractions.cpp:948
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Janela em uma área de trabalho abaixo"
 
-#: useractions.cpp:950
+#: useractions.cpp:952
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Mover janela para a tela %1"
 
-#: useractions.cpp:957
+#: useractions.cpp:959
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Mover janela para a próxima tela"
 
-#: useractions.cpp:959
+#: useractions.cpp:961
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Mover janela para a tela anterior"
 
-#: useractions.cpp:961
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Mover janela em uma área de trabalho à direita"
 
-#: useractions.cpp:963
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Mover janela em uma área de trabalho à esquerda"
 
-#: useractions.cpp:965
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Mover janela uma área de trabalho acima"
 
-#: useractions.cpp:967
+#: useractions.cpp:969
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Mover janela em uma área de trabalho abaixo"
 
-#: useractions.cpp:971
+#: useractions.cpp:973
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Mudar para a tela %1"
 
-#: useractions.cpp:978
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Mudar para a próxima tela"
 
-#: useractions.cpp:979
+#: useractions.cpp:981
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Mudar para a tela anterior"
 
-#: useractions.cpp:980
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Mudar para a tela à direita"
 
-#: useractions.cpp:982
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Mudar para a tela à esquerda"
 
-#: useractions.cpp:984
+#: useractions.cpp:986
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Mudar para a tela acima"
 
-#: useractions.cpp:986
+#: useractions.cpp:988
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Mudar para a tela abaixo"
 
-#: useractions.cpp:989
+#: useractions.cpp:991
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Espiar área de trabalho"
 
-#: useractions.cpp:992
+#: useractions.cpp:994
 #, kde-format
 msgid "Kill Window"
 msgstr "Matar janela"
 
-#: useractions.cpp:1057
+#: useractions.cpp:1059
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Ativar a janela (%1)"
@@ -4298,7 +4280,7 @@ msgstr "A posição da saída %s é muito grande (%d, %d)"
 msgid "The driver rejected the output configuration"
 msgstr "O driver rejeitou a configuração de saída"
 
-#: window.cpp:3128
+#: window.cpp:3140
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-13 00:45+0000\n"
+"POT-Creation-Date: 2026-02-14 00:45+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -3926,325 +3926,331 @@ msgid "Maximize Window Horizontally"
 msgstr "Maximalizovať okno vodorovne"
 
 #: useractions.cpp:845
+#, fuzzy, kde-format
+#| msgid "Resize Window"
+msgid "Restore Window"
+msgstr "Zmeniť veľkosť okna"
+
+#: useractions.cpp:847
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimalizovať okno"
 
-#: useractions.cpp:847
+#: useractions.cpp:849
 #, kde-format
 msgid "Move Window"
 msgstr "Presunúť okno"
 
-#: useractions.cpp:849
+#: useractions.cpp:851
 #, kde-format
 msgid "Resize Window"
 msgstr "Zmeniť veľkosť okna"
 
-#: useractions.cpp:851
+#: useractions.cpp:853
 #, kde-format
 msgid "Raise Window"
 msgstr "Presunúť okno dopredu"
 
-#: useractions.cpp:853
+#: useractions.cpp:855
 #, kde-format
 msgid "Lower Window"
 msgstr "Presunúť okno dozadu"
 
-#: useractions.cpp:855
+#: useractions.cpp:857
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Prepnúť okno dopredu/dozadu"
 
-#: useractions.cpp:857
+#: useractions.cpp:859
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Okno na celú obrazovku"
 
-#: useractions.cpp:859
+#: useractions.cpp:861
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Prepnúť titulný pruh a rám okna"
 
-#: useractions.cpp:861
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Držať okno nad ostatnými"
 
-#: useractions.cpp:863
+#: useractions.cpp:865
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Držať okno pod ostatnými"
 
-#: useractions.cpp:865
+#: useractions.cpp:867
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Aktivovať okno vyžadujúce pozornosť"
 
-#: useractions.cpp:867
+#: useractions.cpp:869
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Nastaviť skratku okna"
 
-#: useractions.cpp:869
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Presunúť okno do stredu"
 
-#: useractions.cpp:871
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Right"
 msgstr "Presunúť okno doprava"
 
-#: useractions.cpp:873
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Left"
 msgstr "Presunúť okno doľava"
 
-#: useractions.cpp:875
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Up"
 msgstr "Presunúť okno nahor"
 
-#: useractions.cpp:877
+#: useractions.cpp:879
 #, kde-format
 msgid "Move Window Down"
 msgstr "Presunúť okno nadol"
 
-#: useractions.cpp:879
+#: useractions.cpp:881
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Rozbaliť okno vodorovne"
 
-#: useractions.cpp:881
+#: useractions.cpp:883
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Rozbaliť okno zvislo"
 
-#: useractions.cpp:883
+#: useractions.cpp:885
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Zbaliť okno vodorovne"
 
-#: useractions.cpp:885
+#: useractions.cpp:887
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Zbaliť okno zvislo"
 
-#: useractions.cpp:887
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Usporiadať okno vedľa seba doľava"
 
-#: useractions.cpp:889
+#: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Usporiadať okno vedľa seba doprava"
 
-#: useractions.cpp:891
+#: useractions.cpp:893
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Okno rýchlej dlaždice na vrch"
 
-#: useractions.cpp:893
+#: useractions.cpp:895
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Okno rýchlej dlaždice na spodok"
 
-#: useractions.cpp:895
+#: useractions.cpp:897
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Rýchla dlaždica okna hore vľavo"
 
-#: useractions.cpp:897
+#: useractions.cpp:899
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Rýchla dlaždica okna dolu vľavo"
 
-#: useractions.cpp:899
+#: useractions.cpp:901
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Rýchla dlaždica okna hore vpravo"
 
-#: useractions.cpp:901
+#: useractions.cpp:903
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Rýchla dlaždica okna dolu vpravo"
 
-#: useractions.cpp:903
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Prepnúť na okno nad"
 
-#: useractions.cpp:905
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Prepnúť na okno pod"
 
-#: useractions.cpp:907
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Prepnúť na okno doprava"
 
-#: useractions.cpp:909
+#: useractions.cpp:911
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Prepnúť na okno doľava"
 
-#: useractions.cpp:911
+#: useractions.cpp:913
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Zvýšiť nepriehľadnosť aktívneho okna o 5 %"
 
-#: useractions.cpp:913
+#: useractions.cpp:915
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Znížiť nepriehľadnosť aktívneho okna o 5 %"
 
-#: useractions.cpp:916
+#: useractions.cpp:918
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Okno na všetkých plochách"
 
-#: useractions.cpp:919
+#: useractions.cpp:921
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Usporiadať okno vedľa seba doľava"
 
-#: useractions.cpp:921
+#: useractions.cpp:923
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Usporiadať okno vedľa seba doprava"
 
-#: useractions.cpp:923
+#: useractions.cpp:925
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Okno rýchlej dlaždice na vrch"
 
-#: useractions.cpp:925
+#: useractions.cpp:927
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Okno rýchlej dlaždice na spodok"
 
-#: useractions.cpp:936
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Okno na plochu %1"
 
-#: useractions.cpp:938
+#: useractions.cpp:940
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Okno na nasledujúcu plochu"
 
-#: useractions.cpp:939
+#: useractions.cpp:941
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Okno na predchádzajúcu plochu"
 
-#: useractions.cpp:940
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Okno o jednu pracovnú plochu doprava"
 
-#: useractions.cpp:942
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Okno o jednu pracovnú plochu doľava"
 
-#: useractions.cpp:944
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Okno o jednu pracovnú plochu hore"
 
-#: useractions.cpp:946
+#: useractions.cpp:948
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Okno o jednu pracovnú plochu dolu"
 
-#: useractions.cpp:950
+#: useractions.cpp:952
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Presunúť okno na obrazovku %1"
 
-#: useractions.cpp:957
+#: useractions.cpp:959
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Presunúť okno na nasledujúcu obrazovku"
 
-#: useractions.cpp:959
+#: useractions.cpp:961
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Presunúť okno na predošlú obrazovku"
 
-#: useractions.cpp:961
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Presunúť okno o jednu obrazovku doprava"
 
-#: useractions.cpp:963
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Presunúť okno o jednu obrazovku doľava"
 
-#: useractions.cpp:965
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Presunúť okno o jednu obrazovku nahor"
 
-#: useractions.cpp:967
+#: useractions.cpp:969
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Presunúť okno o jednu obrazovku nadol"
 
-#: useractions.cpp:971
+#: useractions.cpp:973
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Prepnúť na obrazovku %1"
 
-#: useractions.cpp:978
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Prepnúť na nasledujúcu obrazovku"
 
-#: useractions.cpp:979
+#: useractions.cpp:981
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Prepnúť na predošlú obrazovku"
 
-#: useractions.cpp:980
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Prepnúť na obrazovku napravo"
 
-#: useractions.cpp:982
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Prepnúť na obrazovku naľavo"
 
-#: useractions.cpp:984
+#: useractions.cpp:986
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Prepnúť na obrazovku hore"
 
-#: useractions.cpp:986
+#: useractions.cpp:988
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Prepnúť na obrazovku dole"
 
-#: useractions.cpp:989
+#: useractions.cpp:991
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Nazrieť na plochu"
 
-#: useractions.cpp:992
+#: useractions.cpp:994
 #, kde-format
 msgid "Kill Window"
 msgstr "Zabiť okno"
 
-#: useractions.cpp:1057
+#: useractions.cpp:1059
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivovať okno (%1)"
@@ -4334,7 +4340,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3128
+#: window.cpp:3140
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

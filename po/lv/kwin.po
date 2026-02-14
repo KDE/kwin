@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-13 00:45+0000\n"
+"POT-Creation-Date: 2026-02-14 00:45+0000\n"
 "PO-Revision-Date: 2026-02-06 14:38+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -3865,321 +3865,327 @@ msgid "Maximize Window Horizontally"
 msgstr "Maksimizēt logu horizontāli"
 
 #: useractions.cpp:845
+#, fuzzy, kde-format
+#| msgid "Resize Window"
+msgid "Restore Window"
+msgstr "Mainīt loga izmēru"
+
+#: useractions.cpp:847
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimizēt logu"
 
-#: useractions.cpp:847
+#: useractions.cpp:849
 #, kde-format
 msgid "Move Window"
 msgstr "Pārvietot logu"
 
-#: useractions.cpp:849
+#: useractions.cpp:851
 #, kde-format
 msgid "Resize Window"
 msgstr "Mainīt loga izmēru"
 
-#: useractions.cpp:851
+#: useractions.cpp:853
 #, kde-format
 msgid "Raise Window"
 msgstr "Pacelt logu"
 
-#: useractions.cpp:853
+#: useractions.cpp:855
 #, kde-format
 msgid "Lower Window"
 msgstr "Nolaist logu"
 
-#: useractions.cpp:855
+#: useractions.cpp:857
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Slēgt logu pacelšanu/nolaišanu"
 
-#: useractions.cpp:857
+#: useractions.cpp:859
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Rādīt logu pilnekrāna režīmā"
 
-#: useractions.cpp:859
+#: useractions.cpp:861
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Slēpt vai parādīt loga virsrakstjoslu un ietvaru"
 
-#: useractions.cpp:861
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Paturēt logu virs citiem logiem"
 
-#: useractions.cpp:863
+#: useractions.cpp:865
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Paturēt logu zem citiem logiem"
 
-#: useractions.cpp:865
+#: useractions.cpp:867
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Aktivizēt logu, kad tas pieprasa uzmanību"
 
-#: useractions.cpp:867
+#: useractions.cpp:869
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Iestatīt loga īsceļu"
 
-#: useractions.cpp:869
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Pārvietot logu uz centru"
 
-#: useractions.cpp:871
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Right"
 msgstr "Pārvietot logu pa labi"
 
-#: useractions.cpp:873
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Left"
 msgstr "Pārvietot logu pa kreisi"
 
-#: useractions.cpp:875
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Up"
 msgstr "Pārvietot logu augšup"
 
-#: useractions.cpp:877
+#: useractions.cpp:879
 #, kde-format
 msgid "Move Window Down"
 msgstr "Pārvietot logu lejup"
 
-#: useractions.cpp:879
+#: useractions.cpp:881
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Paplašināt logu horizontāli"
 
-#: useractions.cpp:881
+#: useractions.cpp:883
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Paplašināt logu vertikāli"
 
-#: useractions.cpp:883
+#: useractions.cpp:885
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Saīsināt logu horizontāli"
 
-#: useractions.cpp:885
+#: useractions.cpp:887
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Saīsināt logu vertikāli"
 
-#: useractions.cpp:887
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Ātri flīzēt logu pie kreisās malas"
 
-#: useractions.cpp:889
+#: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Ātri flīzēt logu pie labās malas"
 
-#: useractions.cpp:891
+#: useractions.cpp:893
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Ātri flīzēt logu pie augšējās malas"
 
-#: useractions.cpp:893
+#: useractions.cpp:895
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Ātri flīzēt logu pie apakšējās malas"
 
-#: useractions.cpp:895
+#: useractions.cpp:897
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Ātri flīzēt logu kreisajā augšējā stūrī"
 
-#: useractions.cpp:897
+#: useractions.cpp:899
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Ātri flīzēt logu kreisajā apakšējā stūrī"
 
-#: useractions.cpp:899
+#: useractions.cpp:901
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Ātri flīzēt logu labajā augšējā stūrī"
 
-#: useractions.cpp:901
+#: useractions.cpp:903
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Ātri flīzēt logu labajā apakšējā stūrī"
 
-#: useractions.cpp:903
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Pārslēgties uz logu augstāk"
 
-#: useractions.cpp:905
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Pārslēgties uz logu zemām"
 
-#: useractions.cpp:907
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Pārslēgties uz logu pa labi"
 
-#: useractions.cpp:909
+#: useractions.cpp:911
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Pārslēgties uz logu pa kreisi"
 
-#: useractions.cpp:911
+#: useractions.cpp:913
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Palielināt aktīvā loga necaurspīdību par 5%"
 
-#: useractions.cpp:913
+#: useractions.cpp:915
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Samazināt aktīvā loga necaurspīdību par 5%"
 
-#: useractions.cpp:916
+#: useractions.cpp:918
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Paturēt logu visās darbvirsmās"
 
-#: useractions.cpp:919
+#: useractions.cpp:921
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Pielāgota ātrā logu flīzēšana kreisajā pusē"
 
-#: useractions.cpp:921
+#: useractions.cpp:923
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Pielāgota ātrā logu flīzēšana labajā pusē"
 
-#: useractions.cpp:923
+#: useractions.cpp:925
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Pielāgota ātrā logu flīzēšana augšpusē"
 
-#: useractions.cpp:925
+#: useractions.cpp:927
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Pielāgota ātrā logu flīzēšana apakšpusē"
 
-#: useractions.cpp:936
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Logu uz darbvirsmu „%1“"
 
-#: useractions.cpp:938
+#: useractions.cpp:940
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Logu uz nākamo darbvirsmu"
 
-#: useractions.cpp:939
+#: useractions.cpp:941
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Logu uz iepriekšējo darbvirsmu"
 
-#: useractions.cpp:940
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Logu vienu darbvirsmu pa labi"
 
-#: useractions.cpp:942
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Logu vienu darbvirsmu pa kreisi"
 
-#: useractions.cpp:944
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Logu vienu darbvirsmu uz augšu"
 
-#: useractions.cpp:946
+#: useractions.cpp:948
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Logu vienu darbvirsmu uz leju"
 
-#: useractions.cpp:950
+#: useractions.cpp:952
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Pārvietot logu uz %1. ekrānu"
 
-#: useractions.cpp:957
+#: useractions.cpp:959
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Pārvietot logu uz nākamo ekrānu"
 
-#: useractions.cpp:959
+#: useractions.cpp:961
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Pārvietot logu uz iepriekšējo ekrānu"
 
-#: useractions.cpp:961
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Pārvietot logu vienu ekrānu pa labi"
 
-#: useractions.cpp:963
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Pārvietot logu vienu ekrānu pa kreisi"
 
-#: useractions.cpp:965
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Pārvietot logu vienu ekrānu augstāk"
 
-#: useractions.cpp:967
+#: useractions.cpp:969
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Pārvietot logu vienu ekrānu zemāk"
 
-#: useractions.cpp:971
+#: useractions.cpp:973
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Pārslēgties uz %1. ekrānu"
 
-#: useractions.cpp:978
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Pārslēgties uz nākamo ekrānu"
 
-#: useractions.cpp:979
+#: useractions.cpp:981
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Pārslēgties uz iepriekšējo ekrānu"
 
-#: useractions.cpp:980
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Pārslēgties uz ekrānu pa labi"
 
-#: useractions.cpp:982
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Pārslēgties uz ekrānu pa kreisi"
 
-#: useractions.cpp:984
+#: useractions.cpp:986
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Pārslēgties uz ekrānu augšā"
 
-#: useractions.cpp:986
+#: useractions.cpp:988
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Pārslēgties uz ekrānu apakšā"
 
-#: useractions.cpp:989
+#: useractions.cpp:991
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Palūkoties uz darbvirsmu"
 
-#: useractions.cpp:992
+#: useractions.cpp:994
 #, kde-format
 msgid "Kill Window"
 msgstr "Nobeigt logu"
 
-#: useractions.cpp:1057
+#: useractions.cpp:1059
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivizēt logu (%1)"
@@ -4271,7 +4277,7 @@ msgstr "Izvades „%s“ pozīcija ir pārāk liela (%d, %d)"
 msgid "The driver rejected the output configuration"
 msgstr "Draiveris noraidīja izvades konfigurāciju"
 
-#: window.cpp:3128
+#: window.cpp:3140
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

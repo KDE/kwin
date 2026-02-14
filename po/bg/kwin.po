@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-13 00:45+0000\n"
-"PO-Revision-Date: 2026-01-29 23:03+0100\n"
+"POT-Creation-Date: 2026-02-14 00:45+0000\n"
+"PO-Revision-Date: 2026-02-13 23:40+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -1264,7 +1264,7 @@ msgstr "време"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "Съобщението, което да се покаже (на цял екран, без рамка)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
 #, kde-format
@@ -1278,22 +1278,17 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Този модул не може да се изпълнява директно."
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
 "%1 keyboard shortcut instead."
 msgstr ""
-"Избрахте прозорецът да се показва на цял екран.\n"
-"Програмата не може да се върне отново в прозорец с помощта на мишката. Ако "
-"искате да изключите режима на цял екран, използвайте системното меню на "
-"прозореца, което се извиква с клавишната комбинация „%1“."
+"Избрали сте да покажете прозорец в режим на цял екран.\n"
+"Ако самото приложение няма опция за изключване на режима на цял екран , няма "
+"да можете да го деактивирате отново с помощта на мишката: вместо това "
+"използвайте клавишната комбинация %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1309,45 +1304,32 @@ msgstr ""
 "прозореца, което се извиква с клавишната комбинация „%1“."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse."
 msgstr ""
-"Избрахте прозорецът да се показва на цял екран.\n"
-"Програмата не може да се върне отново в прозорец с помощта на мишката. Ако "
-"искате да изключите режима на цял екран, използвайте системното меню на "
-"прозореца, което се извиква с клавишната комбинация „%1“."
+"Избрали сте да покажете прозорец в режим на цял екран.Ако самото приложение "
+"няма опция за изключване на режима на цял екран, няма да можете да го "
+"деактивирате отново с помощта на мишката."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "Цял екран"
+msgstr "Излизане от цял екран"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the %1 keyboard shortcut instead."
 msgstr ""
-"Избрахте прозорецът да се показва без рамка.\n"
-"Рамката на прозореца не може да бъде активирана с мишката. Ако искате да "
-"включите рамката на прозореца, използвайте системното меню на прозореца, "
-"което се извиква с клавишната комбинация „%1“."
+"Избрали сте да се показва прозорец без рамка.\n"
+"Без рамката няма да можете да я активирате отново с помощта на мишката: "
+"вместо това използвайте клавишната комбинация %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
 #, kde-format
@@ -1363,32 +1345,25 @@ msgstr ""
 "което се извиква с клавишната комбинация „%1“."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
-"Избрахте прозорецът да се показва без рамка.\n"
-"Рамката на прозореца не може да бъде активирана с мишката. Ако искате да "
-"включите рамката на прозореца, използвайте системното меню на прозореца, "
-"което се извиква с клавишната комбинация „%1“."
+"Избрали сте да се показва прозорец без рамка.\n"
+"Без рамката няма да можете да я активирате отново с помощта на мишката."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr ""
+msgstr "Възстановяване на рамката"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "Да не се показва отново"
 
 #: helpers/killer/killer.cpp:132
 #, kde-format
@@ -3861,321 +3836,327 @@ msgid "Maximize Window Horizontally"
 msgstr "Максимизиране на прозорец хоризонтално"
 
 #: useractions.cpp:845
+#, fuzzy, kde-format
+#| msgid "Resize Window"
+msgid "Restore Window"
+msgstr "Промяна размер на прозорец"
+
+#: useractions.cpp:847
 #, kde-format
 msgid "Minimize Window"
 msgstr "Минимизиране на прозорец"
 
-#: useractions.cpp:847
+#: useractions.cpp:849
 #, kde-format
 msgid "Move Window"
 msgstr "Преместване на прозорец"
 
-#: useractions.cpp:849
+#: useractions.cpp:851
 #, kde-format
 msgid "Resize Window"
 msgstr "Промяна размер на прозорец"
 
-#: useractions.cpp:851
+#: useractions.cpp:853
 #, kde-format
 msgid "Raise Window"
 msgstr "Повдигане на прозореца"
 
-#: useractions.cpp:853
+#: useractions.cpp:855
 #, kde-format
 msgid "Lower Window"
 msgstr "Понижаване на прозорец"
 
-#: useractions.cpp:855
+#: useractions.cpp:857
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Превключване на повдигане/сваляне на прозореца"
 
-#: useractions.cpp:857
+#: useractions.cpp:859
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Прозорец на цял екран"
 
-#: useractions.cpp:859
+#: useractions.cpp:861
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Превключване на заглавна лента и рамка"
 
-#: useractions.cpp:861
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Преместване на прозорец над останалите прозорци"
 
-#: useractions.cpp:863
+#: useractions.cpp:865
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Преместване на прозорец под останалите прозорци"
 
-#: useractions.cpp:865
+#: useractions.cpp:867
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Активиране на прозорец при събитие"
 
-#: useractions.cpp:867
+#: useractions.cpp:869
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Настройване бързите клавиши на прозореца"
 
-#: useractions.cpp:869
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Преместване на прозореца в центъра"
 
-#: useractions.cpp:871
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Right"
 msgstr "Преместване на прозореца надясно"
 
-#: useractions.cpp:873
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Left"
 msgstr "Преместване на прозореца наляво"
 
-#: useractions.cpp:875
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Up"
 msgstr "Преместване на прозореца нагоре"
 
-#: useractions.cpp:877
+#: useractions.cpp:879
 #, kde-format
 msgid "Move Window Down"
 msgstr "Преместване на прозореца надолу"
 
-#: useractions.cpp:879
+#: useractions.cpp:881
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Разширяване на прозореца хоризонтално"
 
-#: useractions.cpp:881
+#: useractions.cpp:883
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Разширяване на прозореца вертикално"
 
-#: useractions.cpp:883
+#: useractions.cpp:885
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Стесняване на прозореца хоризонтално"
 
-#: useractions.cpp:885
+#: useractions.cpp:887
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Стесняване на прозореца вертикално"
 
-#: useractions.cpp:887
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Подреждане на прозореца отляво"
 
-#: useractions.cpp:889
+#: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Подреждане на прозореца отдясно"
 
-#: useractions.cpp:891
+#: useractions.cpp:893
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Бързо разделяне на прозореца  нагоре"
 
-#: useractions.cpp:893
+#: useractions.cpp:895
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Бързо разделяне на прозореца надолу"
 
-#: useractions.cpp:895
+#: useractions.cpp:897
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Бързо разделяне на прозореца към горен ляв ъгъл"
 
-#: useractions.cpp:897
+#: useractions.cpp:899
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Бързо разделяне на прозореца към долен ляв ъгъл"
 
-#: useractions.cpp:899
+#: useractions.cpp:901
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Бързо разделяне на прозореца към горен десен ъгъл"
 
-#: useractions.cpp:901
+#: useractions.cpp:903
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Бързо разделяне на прозореца към долен десен ъгъл"
 
-#: useractions.cpp:903
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Превключване към прозореца отгоре"
 
-#: useractions.cpp:905
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Превключване към прозореца отдолу"
 
-#: useractions.cpp:907
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Превключване към прозореца отдясно"
 
-#: useractions.cpp:909
+#: useractions.cpp:911
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Превключване към прозореца отляво"
 
-#: useractions.cpp:911
+#: useractions.cpp:913
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Увеличаване непрозрачността на активния прозорец с 5 %"
 
-#: useractions.cpp:913
+#: useractions.cpp:915
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Намаляване на непрозрачността на активния прозорец с 5 %"
 
-#: useractions.cpp:916
+#: useractions.cpp:918
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Прозорец на всички работни плотове"
 
-#: useractions.cpp:919
+#: useractions.cpp:921
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Бързо подреждане на прозореца отляво"
 
-#: useractions.cpp:921
+#: useractions.cpp:923
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Бързо подреждане на прозореца отдясно"
 
-#: useractions.cpp:923
+#: useractions.cpp:925
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Бързо подреждане на прозореца нагоре"
 
-#: useractions.cpp:925
+#: useractions.cpp:927
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Бързо подреждане на прозореца надолу"
 
-#: useractions.cpp:936
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Прозорец към работен плот %1"
 
-#: useractions.cpp:938
+#: useractions.cpp:940
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Преместване на прозорец на следващия работен плот"
 
-#: useractions.cpp:939
+#: useractions.cpp:941
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Преместване на прозорец на предишния работен плот"
 
-#: useractions.cpp:940
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Преместване на прозорец на десния работен плот"
 
-#: useractions.cpp:942
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Преместване на прозорец на левия работен плот"
 
-#: useractions.cpp:944
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Преместване на прозорец на горния работен плот"
 
-#: useractions.cpp:946
+#: useractions.cpp:948
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Преместване на прозорец на долния работен плот"
 
-#: useractions.cpp:950
+#: useractions.cpp:952
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Преместване на прозорец към екран %1"
 
-#: useractions.cpp:957
+#: useractions.cpp:959
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Преместване на прозорец на следващия екран"
 
-#: useractions.cpp:959
+#: useractions.cpp:961
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Прозорец към предишния екран"
 
-#: useractions.cpp:961
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Преместване на прозорец един екран в дясно"
 
-#: useractions.cpp:963
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Преместване на прозорец един екран в ляво"
 
-#: useractions.cpp:965
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Преместване на прозорец един екран на горе"
 
-#: useractions.cpp:967
+#: useractions.cpp:969
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Преместване на прозорец един екран на долу"
 
-#: useractions.cpp:971
+#: useractions.cpp:973
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Превключване към екран %1"
 
-#: useractions.cpp:978
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Превключване към следващия работен плот"
 
-#: useractions.cpp:979
+#: useractions.cpp:981
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Превключване към предишния екран"
 
-#: useractions.cpp:980
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Превключване към екрана отдясно"
 
-#: useractions.cpp:982
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Превключване към екрана отляво"
 
-#: useractions.cpp:984
+#: useractions.cpp:986
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Превключване към екрана отгоре"
 
-#: useractions.cpp:986
+#: useractions.cpp:988
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Превключване към екрана отдолу"
 
-#: useractions.cpp:989
+#: useractions.cpp:991
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Поглед върху работния плот"
 
-#: useractions.cpp:992
+#: useractions.cpp:994
 #, kde-format
 msgid "Kill Window"
 msgstr "Принудително затваряне на прозорец"
 
-#: useractions.cpp:1057
+#: useractions.cpp:1059
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Активиране на прозорец (%1)"
@@ -4267,7 +4248,7 @@ msgstr "Позицията на изхода %s е прекалено голям
 msgid "The driver rejected the output configuration"
 msgstr "Драйверът отхвърли изходната конфигурация"
 
-#: window.cpp:3128
+#: window.cpp:3140
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

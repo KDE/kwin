@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-13 00:45+0000\n"
+"POT-Creation-Date: 2026-02-14 00:45+0000\n"
 "PO-Revision-Date: 2011-07-17 16:09+0200\n"
 "Last-Translator: Jean Cayron <jean.cayron@base.be>\n"
 "Language-Team: Walloon <linux@walon.org>\n"
@@ -3944,358 +3944,364 @@ msgid "Maximize Window Horizontally"
 msgstr "Mete li fniesse å pus grand sol lårdjeu"
 
 #: useractions.cpp:845
+#, fuzzy, kde-format
+#| msgid "Resize Window"
+msgid "Restore Window"
+msgstr "Candjî l' grandeu del finiesse"
+
+#: useractions.cpp:847
 #, kde-format
 msgid "Minimize Window"
 msgstr "Mete li fniesse å pus ptit"
 
-#: useractions.cpp:847
+#: useractions.cpp:849
 #, kde-format
 msgid "Move Window"
 msgstr "Bodjî l' finiesse"
 
-#: useractions.cpp:849
+#: useractions.cpp:851
 #, kde-format
 msgid "Resize Window"
 msgstr "Candjî l' grandeu del finiesse"
 
-#: useractions.cpp:851
+#: useractions.cpp:853
 #, kde-format
 msgid "Raise Window"
 msgstr "Rimonter l' finiesse"
 
-#: useractions.cpp:853
+#: useractions.cpp:855
 #, kde-format
 msgid "Lower Window"
 msgstr "Baxhî l' finiesse"
 
-#: useractions.cpp:855
+#: useractions.cpp:857
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Passer di rmonter a baxhî l' finiesse"
 
-#: useractions.cpp:857
+#: useractions.cpp:859
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Forrimpli li waitroûle avou l' finiesse"
 
-#: useractions.cpp:859
+#: useractions.cpp:861
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Catchî les boirds del finiesse"
 
-#: useractions.cpp:861
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Mete pa dzeu les ôtes"
 
-#: useractions.cpp:863
+#: useractions.cpp:865
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Mete pa dzo les ôtes"
 
-#: useractions.cpp:865
+#: useractions.cpp:867
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Mete en alaedje li finiesse ki vs a schoyou"
 
-#: useractions.cpp:867
+#: useractions.cpp:869
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Apontyî l' rascourti d' finiesse"
 
-#: useractions.cpp:869
+#: useractions.cpp:871
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Window to the Center"
 msgstr "Bodjî l' finiesse e groupe"
 
-#: useractions.cpp:871
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Right"
 msgstr "Bodjî l' finiessese a droete"
 
-#: useractions.cpp:873
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Left"
 msgstr "Bodjî l' finiessese a hintche"
 
-#: useractions.cpp:875
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Up"
 msgstr "Monter l' finiesse"
 
-#: useractions.cpp:877
+#: useractions.cpp:879
 #, kde-format
 msgid "Move Window Down"
 msgstr "Baxhî l' finiesse"
 
-#: useractions.cpp:879
+#: useractions.cpp:881
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Mete li fniesse å pus grand sol lårdjeu"
 
-#: useractions.cpp:881
+#: useractions.cpp:883
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Mete li fniesse å pus grand so l' hôteu"
 
-#: useractions.cpp:883
+#: useractions.cpp:885
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "Mete li fniesse å pus ptit sol lårdjeu"
 
-#: useractions.cpp:885
+#: useractions.cpp:887
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "Mete li fniesse å pus ptit so l' hôteu"
 
-#: useractions.cpp:887
+#: useractions.cpp:889
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Left"
 msgstr "Evoyî l' purnea sol scribanne a hintche"
 
-#: useractions.cpp:889
+#: useractions.cpp:891
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Right"
 msgstr "Evoyî li purnea sol scribanne a droete"
 
-#: useractions.cpp:891
+#: useractions.cpp:893
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "Evoyî l' purnea sol scribanne a hintche"
 
-#: useractions.cpp:893
+#: useractions.cpp:895
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "Evoyî l' purnea sol scribanne a hintche"
 
-#: useractions.cpp:895
+#: useractions.cpp:897
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "Evoyî l' purnea sol scribanne a hintche"
 
-#: useractions.cpp:897
+#: useractions.cpp:899
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Evoyî l' purnea sol scribanne a hintche"
 
-#: useractions.cpp:899
+#: useractions.cpp:901
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "Evoyî li purnea sol scribanne a droete"
 
-#: useractions.cpp:901
+#: useractions.cpp:903
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Evoyî li purnea sol scribanne a droete"
 
-#: useractions.cpp:903
+#: useractions.cpp:905
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Window Above"
 msgstr "Potchî sol waitroûle 0"
 
-#: useractions.cpp:905
+#: useractions.cpp:907
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Window Below"
 msgstr "Potchî sol sicribanne di dvant"
 
-#: useractions.cpp:907
+#: useractions.cpp:909
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Switch to Window to the Right"
 msgstr "Evoyî li purnea sol scribanne a droete"
 
-#: useractions.cpp:909
+#: useractions.cpp:911
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Switch to Window to the Left"
 msgstr "Evoyî l' purnea sol scribanne a hintche"
 
-#: useractions.cpp:911
+#: useractions.cpp:913
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:913
+#: useractions.cpp:915
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:916
+#: useractions.cpp:918
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Finiesse håyné so tos les scribannes"
 
-#: useractions.cpp:919
+#: useractions.cpp:921
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Evoyî l' purnea sol scribanne a hintche"
 
-#: useractions.cpp:921
+#: useractions.cpp:923
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Evoyî li purnea sol scribanne a droete"
 
-#: useractions.cpp:923
+#: useractions.cpp:925
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Evoyî l' purnea sol scribanne a hintche"
 
-#: useractions.cpp:925
+#: useractions.cpp:927
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Evoyî l' purnea sol scribanne a hintche"
 
-#: useractions.cpp:936
+#: useractions.cpp:938
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "Evoyî l' finiesse sol sicribanne 1"
 
-#: useractions.cpp:938
+#: useractions.cpp:940
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Evoyî l' finiesse sol sicribanne shuvant"
 
-#: useractions.cpp:939
+#: useractions.cpp:941
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Evoyî l' finiesse sol sicribanne di dvant"
 
-#: useractions.cpp:940
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Evoyî l' finiesse sol scribanne a droete"
 
-#: useractions.cpp:942
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Evoyî l' finiesse sol scribanne a hintche"
 
-#: useractions.cpp:944
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Evoyî l' finiesse sol scribanne å dzeu"
 
-#: useractions.cpp:946
+#: useractions.cpp:948
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Evoyî l' finiesse sol scribanne å dzo"
 
-#: useractions.cpp:950
+#: useractions.cpp:952
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgid "Move Window to Screen %1"
 msgstr "Evoyî l' finiesse sol waitroûle 1"
 
-#: useractions.cpp:957
+#: useractions.cpp:959
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "Evoyî l' finiesse sol waitroûle shuvante"
 
-#: useractions.cpp:959
+#: useractions.cpp:961
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "Evoyî l' finiesse sol sicribanne di dvant"
 
-#: useractions.cpp:961
+#: useractions.cpp:963
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Evoyî l' finiesse sol scribanne a droete"
 
-#: useractions.cpp:963
+#: useractions.cpp:965
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Evoyî l' finiesse sol scribanne a hintche"
 
-#: useractions.cpp:965
+#: useractions.cpp:967
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Evoyî l' finiesse sol waitroûle 2"
 
-#: useractions.cpp:967
+#: useractions.cpp:969
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Evoyî l' finiesse sol scribanne å dzo"
 
-#: useractions.cpp:971
+#: useractions.cpp:973
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "Potchî sol waitroûle 1"
 
-#: useractions.cpp:978
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Potchî sol waitroûle shuvante"
 
-#: useractions.cpp:979
+#: useractions.cpp:981
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "Potchî sol sicribanne di dvant"
 
-#: useractions.cpp:980
+#: useractions.cpp:982
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Evoyî li purnea sol scribanne a droete"
 
-#: useractions.cpp:982
+#: useractions.cpp:984
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Evoyî l' purnea sol scribanne a hintche"
 
-#: useractions.cpp:984
+#: useractions.cpp:986
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "Potchî sol waitroûle 0"
 
-#: useractions.cpp:986
+#: useractions.cpp:988
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "Potchî sol waitroûle 0"
 
-#: useractions.cpp:989
+#: useractions.cpp:991
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "Evoyî å &scribanne"
 
-#: useractions.cpp:992
+#: useractions.cpp:994
 #, kde-format
 msgid "Kill Window"
 msgstr "Touwer ene finiesse"
 
-#: useractions.cpp:1057
+#: useractions.cpp:1059
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Dispierter finiesse (%1)"
@@ -4386,7 +4392,7 @@ msgstr ""
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: window.cpp:3128
+#: window.cpp:3140
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

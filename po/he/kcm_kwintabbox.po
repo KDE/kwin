@@ -7,13 +7,13 @@
 # Netanel_h<netanel@gmx.com>, 2009.
 # Diego Iastrubni <elcuco@kde.org>, 2012.
 # Elkana Bardugo <ttv200@gmail.com>, 2017. #zanata
-# SPDX-FileCopyrightText: 2024, 2025 Yaron Shahrabani <sh.yaron@gmail.com>
+# SPDX-FileCopyrightText: 2024, 2025, 2026 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-10 00:45+0000\n"
-"PO-Revision-Date: 2025-11-11 09:15+0200\n"
+"PO-Revision-Date: 2026-02-13 09:20+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 25.08.3\n"
+"X-Generator: Lokalize 25.12.1\n"
 
 #: layoutpreview.cpp:28
 #, kde-format
@@ -282,7 +282,7 @@ msgstr "הצגת החלון הנבחר"
 #: main.ui:644
 #, kde-format
 msgid "Enable the window list effect"
-msgstr ""
+msgstr "הפעלת אפקט רשימת חלונות"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
 #: main.ui:678
@@ -294,25 +294,25 @@ msgstr "האפקט להחלפת רשימת החלונות, כאשר אפקטים
 #: main.ui:701
 #, kde-format
 msgid "The time in milliseconds to wait before showing the task switcher."
-msgstr ""
+msgstr "הזמן במילישניות להמתנה לפני הצגת בורר המשימות."
 
 #. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
 #: main.ui:704
 #, kde-format
 msgid "Show delay:"
-msgstr ""
+msgstr "השהיית תצוגה:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:720
 #, kde-format
 msgid " ms"
-msgstr ""
+msgstr " מ״ש"
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:735
 #, kde-format
 msgid "Delay before the window list appears"
-msgstr ""
+msgstr "השהיה לפני שרשימת החלונות נעלמת"
 
 #: shortcutsettings.cpp:131
 #, kde-format
