@@ -1,4 +1,11 @@
 /*!
+ *  \module KWin
+ *  \title KWin C++ Classes
+ *  \cmakepackage KWin
+ *  \cmaketargetitem KWin::kwin
+ */
+
+/*!
     \qmlmodule org.kde.kwin
     \title KWin Scripting QML Types
 */

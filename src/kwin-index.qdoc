@@ -5,6 +5,8 @@
     \section1 API Reference
 
     \list
+        \li \l{KWin Effects}
+        \li \l{KWin C++ Classes}
         \li \l{KWin Scripting QML Types}
     \endlist
 */

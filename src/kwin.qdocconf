@@ -7,6 +7,12 @@ headerdirs += .
 
 documentationinheaders = true
 
+dependencies += \
+    qtcore \
+    qtgui \
+    qtquick \
+    kcoreaddons
+
 navigation.landingpage = "KWin"
 
 tagfile = kwin.tags
