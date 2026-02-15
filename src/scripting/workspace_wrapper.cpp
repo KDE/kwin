@@ -329,6 +329,18 @@ void WorkspaceWrapper::unconstrain(KWin::Window *below, KWin::Window *above)
     KWin::Workspace::self()->unconstrain(below, above);
 }
 
+void WorkspaceWrapper::previous()
+{
+    const auto desktop = VirtualDesktopManager::self()->previous();
+    setCurrentDesktop(desktop);
+}
+
+void WorkspaceWrapper::next()
+{
+    const auto desktop = VirtualDesktopManager::self()->next();
+    setCurrentDesktop(desktop);
+}
+
 #if KWIN_BUILD_X11
 Window *WorkspaceWrapper::getClient(qulonglong windowId)
 {

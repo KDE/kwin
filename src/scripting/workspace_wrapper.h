@@ -336,6 +336,20 @@ public:
      */
     Q_INVOKABLE void unconstrain(KWin::Window *below, KWin::Window *above);
 
+    /**
+     * Select the previous virtual desktop
+     *
+     * @since 6.7
+     */
+    Q_INVOKABLE void previous();
+
+    /**
+     * Select the next virtual desktop
+     *
+     * @since 6.7
+     */
+    Q_INVOKABLE void next();
+
 public Q_SLOTS:
     // all the available key bindings
     void slotSwitchDesktopNext();

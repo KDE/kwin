@@ -146,6 +146,12 @@ Item {
                             opacity: dropArea.containsDrag || !active ? 0.5 : 1.0
                         }
 
+                        // Timer used to avoid change desktop often
+                        Timer {
+                            id: debounceTimer
+                            interval: Kirigami.Units.longDuration
+                        }
+
                         MouseArea {
                             id: mouseArea
                             anchors.fill: parent
@@ -153,6 +159,17 @@ Item {
                             onClicked: mouse => {
                                 mouse.accepted = true;
                                 delegate.activate();
+                            }
+                            onWheel: wheel => {
+                                if (debounceTimer.running) return;
+                                debounceTimer.start();
+
+                                wheel.accepted = true;
+                                if (wheel.angleDelta.y > 0) {
+                                    KWinComponents.Workspace.next();
+                                } else {
+                                    KWinComponents.Workspace.previous();
+                                }
                             }
                         }
 
