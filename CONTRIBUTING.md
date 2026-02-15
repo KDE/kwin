@@ -19,7 +19,7 @@ Everything codewise for KWin itself is located in the `src` directory.
 
 ### Settings Pages / KCMs
 
-All the settings pages for KWin found in System Settings are located in `src/kcmkwin`.
+All the settings pages for KWin found in System Settings are located in `src/kcms`.
 
 ### Default Decorations
 
