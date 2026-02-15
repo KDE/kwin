@@ -21,6 +21,7 @@
 #include "core/rect.h"
 #include "effect/globals.h"
 // KDE includes
+#include <KConfigWatcher>
 #include <KSharedConfig>
 // Qt
 #include <QList>
@@ -384,6 +385,7 @@ private:
     Qt::Orientations m_virtualDesktopLayout;
     std::vector<std::unique_ptr<Edge>> m_edges;
     KSharedConfig::Ptr m_config;
+    KConfigWatcher::Ptr m_configWatcher;
     ElectricBorderAction m_actionTopLeft;
     ElectricBorderAction m_actionTop;
     ElectricBorderAction m_actionTopRight;
