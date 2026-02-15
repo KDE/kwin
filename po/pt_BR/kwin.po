@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-14 00:45+0000\n"
-"PO-Revision-Date: 2026-02-13 09:18-0300\n"
+"PO-Revision-Date: 2026-02-14 06:23-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -3866,10 +3866,9 @@ msgid "Maximize Window Horizontally"
 msgstr "Maximizar janela horizontalmente"
 
 #: useractions.cpp:845
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "Redimensionar janela"
+msgstr "Restaurar janela"
 
 #: useractions.cpp:847
 #, kde-format

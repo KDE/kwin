@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-14 00:45+0000\n"
-"PO-Revision-Date: 2026-02-13 09:24+0200\n"
+"PO-Revision-Date: 2026-02-14 08:30+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -3860,10 +3860,9 @@ msgid "Maximize Window Horizontally"
 msgstr "Максимізувати вікно горизонтально"
 
 #: useractions.cpp:845
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "Змінити розмір вікна"
+msgstr "Відновити вікно"
 
 #: useractions.cpp:847
 #, kde-format

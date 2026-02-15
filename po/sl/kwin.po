@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1729903 2026-02-14 01:27:31Z scripty $
+# $Id: kwin.po 1729965 2026-02-15 01:28:33Z scripty $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-14 00:45+0000\n"
-"PO-Revision-Date: 2026-02-13 12:17+0100\n"
+"PO-Revision-Date: 2026-02-14 17:53+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -3858,10 +3858,9 @@ msgid "Maximize Window Horizontally"
 msgstr "Razpni okno vodoravno"
 
 #: useractions.cpp:845
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "Spremeni velikost okna"
+msgstr "Obnovi okno"
 
 #: useractions.cpp:847
 #, kde-format

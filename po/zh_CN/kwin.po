@@ -3804,10 +3804,9 @@ msgid "Maximize Window Horizontally"
 msgstr "水平最大化窗口"
 
 #: useractions.cpp:845
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "调整窗口大小"
+msgstr ""
 
 #: useractions.cpp:847
 #, kde-format

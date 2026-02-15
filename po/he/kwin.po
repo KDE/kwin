@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-14 00:45+0000\n"
-"PO-Revision-Date: 2026-02-13 09:59+0200\n"
+"PO-Revision-Date: 2026-02-14 18:16+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -3830,10 +3830,9 @@ msgid "Maximize Window Horizontally"
 msgstr "הגדלת חלון אופקית"
 
 #: useractions.cpp:845
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "שינוי גודל חלון"
+msgstr "שחזור חלון"
 
 #: useractions.cpp:847
 #, kde-format
