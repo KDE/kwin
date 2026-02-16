@@ -383,7 +383,6 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
         data.framebuffer = std::make_unique<GLFramebuffer>(data.texture.get());
     }
 
-    data.texture->setContentTransform(renderTarget.transform());
     return &data;
 }
 
