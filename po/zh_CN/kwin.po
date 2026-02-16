@@ -3806,7 +3806,7 @@ msgstr "水平最大化窗口"
 #: useractions.cpp:845
 #, kde-format
 msgid "Restore Window"
-msgstr ""
+msgstr "恢复窗口"
 
 #: useractions.cpp:847
 #, kde-format
