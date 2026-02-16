@@ -81,7 +81,7 @@ bool XXPipV1Window::acceptsFocus() const
     return false;
 }
 
-XdgSurfaceConfigure *XXPipV1Window::sendRoleConfigure() const
+XdgSurfaceConfigure *XXPipV1Window::sendRoleConfigure()
 {
     surface()->setPreferredBufferScale(nextTargetScale());
     surface()->setPreferredBufferTransform(preferredBufferTransform());

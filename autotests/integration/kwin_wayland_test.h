@@ -319,10 +319,12 @@ public:
 Q_SIGNALS:
     void configureRequested(const Rect &rect);
     void doneReceived();
+    void repositioned(quint32 token);
 
 protected:
     void xdg_popup_configure(int32_t x, int32_t y, int32_t width, int32_t height) override;
     void xdg_popup_popup_done() override;
+    void xdg_popup_repositioned(uint32_t token) override;
 
 private:
     std::unique_ptr<XdgSurface> m_xdgSurface;

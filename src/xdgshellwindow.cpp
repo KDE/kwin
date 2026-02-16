@@ -795,7 +795,7 @@ void XdgToplevelWindow::closeWindow()
     }
 }
 
-XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
+XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure()
 {
     surface()->setPreferredBufferScale(nextTargetScale());
     surface()->setPreferredBufferTransform(preferredBufferTransform());
@@ -1894,9 +1894,12 @@ void XdgPopupWindow::handleRoleDestroyed()
 
 void XdgPopupWindow::handleRepositionRequested(quint32 token)
 {
-    updateRelativePlacement();
-    m_shellSurface->sendRepositioned(token);
-    relayout();
+    m_repositionToken = token;
+
+    if (m_isInitialized) {
+        updateRelativePlacement();
+        relayout();
+    }
 }
 
 void XdgPopupWindow::updateRelativePlacement()
@@ -1991,11 +1994,16 @@ bool XdgPopupWindow::acceptsFocus() const
     return false;
 }
 
-XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure() const
+XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure()
 {
     surface()->setPreferredBufferScale(nextTargetScale());
     surface()->setPreferredBufferTransform(preferredBufferTransform());
     surface()->setPreferredColorDescription(preferredColorDescription());
+
+    if (m_repositionToken) {
+        m_shellSurface->sendRepositioned(*m_repositionToken);
+        m_repositionToken.reset();
+    }
 
     const quint32 serial = m_shellSurface->sendConfigure(m_relativePlacement.toRect());
 
@@ -2032,6 +2040,8 @@ void XdgPopupWindow::initialize()
 
     place(transientPlacement());
     scheduleConfigure();
+
+    m_isInitialized = true;
 }
 
 void XdgPopupWindow::doSetNextTargetScale()
