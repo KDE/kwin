@@ -28,6 +28,9 @@ class QWheelEvent;
 namespace KWin
 {
 
+struct PointerAxisEvent;
+struct PointerButtonEvent;
+struct PointerMotionEvent;
 class Workspace;
 class Window;
 
@@ -175,7 +178,10 @@ public:
         return m_isShown;
     }
 
-    bool handleMouseEvent(QMouseEvent *event);
+    bool pointerMotion(PointerMotionEvent *event);
+    bool pointerButton(PointerButtonEvent *event);
+    bool pointerAxis(PointerAxisEvent *event);
+
     bool handleWheelEvent(QWheelEvent *event);
     void grabbedKeyEvent(QKeyEvent *event);
 

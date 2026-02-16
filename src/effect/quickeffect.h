@@ -154,8 +154,11 @@ public:
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &logicalRegion, LogicalOutput *screen) override;
     bool isActive() const override;
 
-    void windowInputMouseEvent(QEvent *event) override;
     void grabbedKeyboardEvent(QKeyEvent *keyEvent) override;
+
+    void pointerMotion(PointerMotionEvent *event) override;
+    void pointerButton(PointerButtonEvent *event) override;
+    void pointerAxis(PointerAxisEvent *event) override;
 
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
     bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;

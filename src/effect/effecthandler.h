@@ -81,6 +81,9 @@ class WindowPropertyNotifyX11Filter;
 class WorkspaceScene;
 class VirtualDesktop;
 class EglContext;
+struct PointerAxisEvent;
+struct PointerMotionEvent;
+struct PointerButtonEvent;
 class InputDevice;
 class InputDeviceTabletTool;
 
@@ -210,9 +213,6 @@ public:
      */
     void stopMouseInterception(Effect *effect);
     bool isMouseInterception() const;
-
-    bool checkInputWindowEvent(QMouseEvent *e);
-    bool checkInputWindowEvent(QWheelEvent *e);
 
     void grabbedKeyboardEvent(QKeyEvent *e);
     bool hasKeyboardGrab() const;
@@ -744,6 +744,10 @@ public:
     {
         return m_scene;
     }
+
+    bool pointerMotion(PointerMotionEvent *event);
+    bool pointerButton(PointerButtonEvent *event);
+    bool pointerAxis(PointerAxisEvent *event);
 
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);

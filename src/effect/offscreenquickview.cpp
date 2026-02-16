@@ -10,6 +10,7 @@
 #include "effect/offscreenquickview.h"
 #include "effect/effecthandler.h"
 
+#include "input_event.h"
 #include "logging_p.h"
 #include "opengl/eglcontext.h"
 #include "opengl/glutils.h"
@@ -287,69 +288,75 @@ void OffscreenQuickView::update()
     Q_EMIT repaintNeeded();
 }
 
-void OffscreenQuickView::forwardMouseEvent(QEvent *e)
-{
-    if (!d->m_visible) {
-        return;
-    }
-    switch (e->type()) {
-    case QEvent::MouseMove:
-    case QEvent::MouseButtonPress:
-    case QEvent::MouseButtonRelease: {
-        QMouseEvent *me = static_cast<QMouseEvent *>(e);
-        const QPoint widgetPos = d->m_view->mapFromGlobal(me->pos());
-        QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
-        cloneEvent.setAccepted(false);
-        QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
-        e->setAccepted(cloneEvent.isAccepted());
-
-        if (e->type() == QEvent::MouseButtonPress) {
-            const ulong doubleClickInterval = static_cast<ulong>(QGuiApplication::styleHints()->mouseDoubleClickInterval());
-            const bool doubleClick = (me->timestamp() - d->lastMousePressTime < doubleClickInterval) && me->button() == d->lastMousePressButton;
-            d->lastMousePressTime = me->timestamp();
-            d->lastMousePressButton = me->button();
-            if (doubleClick) {
-                d->lastMousePressButton = Qt::NoButton;
-                QMouseEvent doubleClickEvent(QEvent::MouseButtonDblClick, me->position(), me->globalPosition(), me->button(), me->buttons(), me->modifiers());
-                QCoreApplication::sendEvent(d->m_view.get(), &doubleClickEvent);
-            }
-        }
-
-        return;
-    }
-    case QEvent::HoverEnter:
-    case QEvent::HoverLeave:
-    case QEvent::HoverMove: {
-        QHoverEvent *he = static_cast<QHoverEvent *>(e);
-        const QPointF widgetPos = d->m_view->mapFromGlobal(he->position());
-        const QPointF oldWidgetPos = d->m_view->mapFromGlobal(he->oldPos());
-        QHoverEvent cloneEvent(he->type(), widgetPos, oldWidgetPos, he->modifiers());
-        cloneEvent.setAccepted(false);
-        QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
-        e->setAccepted(cloneEvent.isAccepted());
-        return;
-    }
-    case QEvent::Wheel: {
-        QWheelEvent *we = static_cast<QWheelEvent *>(e);
-        const QPointF widgetPos = d->m_view->mapFromGlobal(we->position().toPoint());
-        QWheelEvent cloneEvent(widgetPos, we->globalPosition(), we->pixelDelta(), we->angleDelta(), we->buttons(),
-                               we->modifiers(), we->phase(), we->inverted());
-        cloneEvent.setAccepted(false);
-        QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
-        e->setAccepted(cloneEvent.isAccepted());
-        return;
-    }
-    default:
-        return;
-    }
-}
-
 void OffscreenQuickView::forwardKeyEvent(QKeyEvent *keyEvent)
 {
     if (!d->m_visible) {
         return;
     }
     QCoreApplication::sendEvent(d->m_view.get(), keyEvent);
+}
+
+void OffscreenQuickView::forwardPointerMotionEvent(PointerMotionEvent *event)
+{
+    const QPointF localPosition = d->m_view->mapFromGlobal(event->position);
+    QMouseEvent mouseEvent(QEvent::MouseMove,
+                           localPosition,
+                           event->position,
+                           Qt::NoButton,
+                           event->buttons,
+                           event->modifiers);
+    mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
+    mouseEvent.setAccepted(false);
+    QCoreApplication::sendEvent(d->m_view.get(), &mouseEvent);
+}
+
+void OffscreenQuickView::forwardPointerButtonEvent(PointerButtonEvent *event)
+{
+    const QPointF localPosition = d->m_view->mapFromGlobal(event->position);
+    QMouseEvent mouseEvent(event->state == PointerButtonState::Pressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+                           localPosition,
+                           event->position,
+                           event->button,
+                           event->buttons,
+                           event->modifiers);
+    const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count();
+    mouseEvent.setTimestamp(timestamp);
+    mouseEvent.setAccepted(false);
+    QCoreApplication::sendEvent(d->m_view.get(), &mouseEvent);
+
+    if (event->state == PointerButtonState::Pressed) {
+        const ulong doubleClickInterval = static_cast<ulong>(QGuiApplication::styleHints()->mouseDoubleClickInterval());
+        const bool doubleClick = (timestamp - d->lastMousePressTime < doubleClickInterval) && event->button == d->lastMousePressButton;
+        d->lastMousePressTime = timestamp;
+        d->lastMousePressButton = event->button;
+        if (doubleClick) {
+            d->lastMousePressButton = Qt::NoButton;
+            QMouseEvent doubleClickEvent(QEvent::MouseButtonDblClick,
+                                         localPosition,
+                                         event->position,
+                                         event->button,
+                                         event->buttons,
+                                         event->modifiers);
+            QCoreApplication::sendEvent(d->m_view.get(), &doubleClickEvent);
+        }
+    }
+}
+
+void OffscreenQuickView::forwardPointerAxisEvent(PointerAxisEvent *event)
+{
+    const QPointF localPosition = d->m_view->mapFromGlobal(event->position);
+    QWheelEvent wheelEvent(localPosition,
+                           event->position,
+                           QPoint(),
+                           // Qt expects angleDelta 120 to be a "click" whereas libinput uses 15, hence multiply by 8.
+                           (event->orientation == Qt::Horizontal) ? QPoint(event->delta, 0) : QPoint(0, event->delta) * -8,
+                           event->buttons,
+                           event->modifiers,
+                           Qt::NoScrollPhase,
+                           event->inverted);
+    wheelEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
+    wheelEvent.setAccepted(false);
+    QCoreApplication::sendEvent(d->m_view.get(), &wheelEvent);
 }
 
 bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)

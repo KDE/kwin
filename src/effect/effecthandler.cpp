@@ -549,6 +549,39 @@ bool EffectsHandler::isMouseInterception() const
     return m_grabbedMouseEffects.count() > 0;
 }
 
+bool EffectsHandler::pointerMotion(PointerMotionEvent *event)
+{
+    if (m_grabbedMouseEffects.isEmpty()) {
+        return false;
+    }
+    for (Effect *effect : std::as_const(m_grabbedMouseEffects)) {
+        effect->pointerMotion(event);
+    }
+    return true;
+}
+
+bool EffectsHandler::pointerButton(PointerButtonEvent *event)
+{
+    if (m_grabbedMouseEffects.isEmpty()) {
+        return false;
+    }
+    for (Effect *effect : std::as_const(m_grabbedMouseEffects)) {
+        effect->pointerButton(event);
+    }
+    return true;
+}
+
+bool EffectsHandler::pointerAxis(PointerAxisEvent *event)
+{
+    if (m_grabbedMouseEffects.isEmpty()) {
+        return false;
+    }
+    for (Effect *effect : std::as_const(m_grabbedMouseEffects)) {
+        effect->pointerAxis(event);
+    }
+    return true;
+}
+
 bool EffectsHandler::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     // TODO: reverse call order?
@@ -1118,28 +1151,6 @@ QSize EffectsHandler::virtualScreenSize() const
 void EffectsHandler::defineCursor(Qt::CursorShape shape)
 {
     input()->pointer()->setEffectsOverrideCursor(shape);
-}
-
-bool EffectsHandler::checkInputWindowEvent(QMouseEvent *e)
-{
-    if (m_grabbedMouseEffects.isEmpty()) {
-        return false;
-    }
-    for (Effect *effect : std::as_const(m_grabbedMouseEffects)) {
-        effect->windowInputMouseEvent(e);
-    }
-    return true;
-}
-
-bool EffectsHandler::checkInputWindowEvent(QWheelEvent *e)
-{
-    if (m_grabbedMouseEffects.isEmpty()) {
-        return false;
-    }
-    for (Effect *effect : std::as_const(m_grabbedMouseEffects)) {
-        effect->windowInputMouseEvent(e);
-    }
-    return true;
 }
 
 QPointF EffectsHandler::cursorPos() const

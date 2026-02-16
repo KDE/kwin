@@ -97,10 +97,21 @@ public:
     {
     }
 
-    void windowInputMouseEvent(QEvent *) override
+    void pointerMotion(PointerMotionEvent *event)
     {
         Q_EMIT inputEvent();
     }
+
+    void pointerButton(PointerButtonEvent *event)
+    {
+        Q_EMIT inputEvent();
+    }
+
+    void pointerAxis(PointerAxisEvent *event)
+    {
+        Q_EMIT inputEvent();
+    }
+
     void grabbedKeyboardEvent(QKeyEvent *e) override
     {
         Q_EMIT keyEvent(e->text());

@@ -7,6 +7,7 @@
 #include "effect/quickeffect.h"
 #include "core/output.h"
 #include "effect/effecthandler.h"
+#include "input_event.h"
 
 #include "logging_p.h"
 
@@ -552,19 +553,21 @@ void QuickSceneEffect::stopInternal()
     effects->addRepaintFull();
 }
 
-void QuickSceneEffect::windowInputMouseEvent(QEvent *event)
+void QuickSceneEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
 {
-    Qt::MouseButtons buttons;
-    QPoint globalPosition;
-    if (QMouseEvent *mouseEvent = dynamic_cast<QMouseEvent *>(event)) {
-        buttons = mouseEvent->buttons();
-        globalPosition = mouseEvent->globalPosition().toPoint();
-    } else if (QWheelEvent *wheelEvent = dynamic_cast<QWheelEvent *>(event)) {
-        buttons = wheelEvent->buttons();
-        globalPosition = wheelEvent->globalPosition().toPoint();
-    } else {
-        return;
+    auto *screenView = activeView();
+
+    if (screenView) {
+        // ActiveView may not have an activeFocusItem yet
+        activateView(screenView);
+        screenView->forwardKeyEvent(keyEvent);
     }
+}
+
+void QuickSceneEffect::pointerMotion(PointerMotionEvent *event)
+{
+    const Qt::MouseButtons buttons = event->buttons;
+    const QPoint globalPosition = event->position.toPoint();
 
     if (buttons) {
         if (!d->mouseImplicitGrab) {
@@ -585,18 +588,63 @@ void QuickSceneEffect::windowInputMouseEvent(QEvent *event)
         if (buttons) {
             activateView(target);
         }
-        target->forwardMouseEvent(event);
+        target->forwardPointerMotionEvent(event);
     }
 }
 
-void QuickSceneEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
+void QuickSceneEffect::pointerButton(PointerButtonEvent *event)
 {
-    auto *screenView = activeView();
+    const Qt::MouseButtons buttons = event->buttons;
+    const QPoint globalPosition = event->position.toPoint();
 
-    if (screenView) {
-        // ActiveView may not have an activeFocusItem yet
-        activateView(screenView);
-        screenView->forwardKeyEvent(keyEvent);
+    if (buttons) {
+        if (!d->mouseImplicitGrab) {
+            d->mouseImplicitGrab = viewAt(globalPosition);
+        }
+    }
+
+    QuickSceneView *target = d->mouseImplicitGrab;
+    if (!target) {
+        target = viewAt(globalPosition);
+    }
+
+    if (!buttons) {
+        d->mouseImplicitGrab = nullptr;
+    }
+
+    if (target) {
+        if (buttons) {
+            activateView(target);
+        }
+        target->forwardPointerButtonEvent(event);
+    }
+}
+
+void QuickSceneEffect::pointerAxis(PointerAxisEvent *event)
+{
+    const QPoint globalPosition = event->position.toPoint();
+    const Qt::MouseButtons buttons = event->buttons;
+
+    if (buttons) {
+        if (!d->mouseImplicitGrab) {
+            d->mouseImplicitGrab = viewAt(globalPosition);
+        }
+    }
+
+    QuickSceneView *target = d->mouseImplicitGrab;
+    if (!target) {
+        target = viewAt(globalPosition);
+    }
+
+    if (!buttons) {
+        d->mouseImplicitGrab = nullptr;
+    }
+
+    if (target) {
+        if (buttons) {
+            activateView(target);
+        }
+        target->forwardPointerAxisEvent(event);
     }
 }
 

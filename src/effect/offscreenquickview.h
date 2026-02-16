@@ -32,6 +32,9 @@ namespace KWin
 class GLTexture;
 
 class OffscreenQuickView;
+class PointerAxisEvent;
+class PointerButtonEvent;
+class PointerMotionEvent;
 
 /**
  * @brief The KwinQuickView class provides a convenient API for exporting
@@ -120,16 +123,23 @@ public:
     QImage bufferAsImage() const;
 
     /**
-     * Inject any mouse event into the QQuickWindow.
-     * Local coordinates are transformed
-     * If it is handled the event will be accepted
-     */
-    void forwardMouseEvent(QEvent *mouseEvent);
-    /**
      * Inject a key event into the window.
      * If it is handled the event will be accepted
      */
     void forwardKeyEvent(QKeyEvent *keyEvent);
+
+    /**
+     * Inject a pointer motion event into the QQuickWindow.
+     */
+    void forwardPointerMotionEvent(PointerMotionEvent *event);
+    /**
+     * Inject a pointer button event into the QQuickWindow.
+     */
+    void forwardPointerButtonEvent(PointerButtonEvent *event);
+    /**
+     * Inject a pointer axis event into the QQuickWindow.
+     */
+    void forwardPointerAxisEvent(PointerAxisEvent *event);
 
     bool forwardTouchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     bool forwardTouchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);

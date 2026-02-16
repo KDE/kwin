@@ -360,10 +360,6 @@ void Effect::reconfigure(ReconfigureFlags)
 {
 }
 
-void Effect::windowInputMouseEvent(QEvent *)
-{
-}
-
 void Effect::grabbedKeyboardEvent(QKeyEvent *)
 {
 }
@@ -454,6 +450,18 @@ double Effect::animationTime(std::chrono::milliseconds defaultTime)
 int Effect::requestedEffectChainPosition() const
 {
     return 0;
+}
+
+void Effect::pointerMotion(PointerMotionEvent *event)
+{
+}
+
+void Effect::pointerButton(PointerButtonEvent *event)
+{
+}
+
+void Effect::pointerAxis(PointerAxisEvent *event)
+{
 }
 
 bool Effect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)

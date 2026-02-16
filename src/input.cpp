@@ -541,47 +541,21 @@ public:
         if (!effects) {
             return false;
         }
-        QMouseEvent mouseEvent(QEvent::MouseMove,
-                               event->position,
-                               event->position,
-                               Qt::NoButton,
-                               event->buttons,
-                               event->modifiers);
-        mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
-        mouseEvent.setAccepted(false);
-        return effects->checkInputWindowEvent(&mouseEvent);
+        return effects->pointerMotion(event);
     }
     bool pointerButton(PointerButtonEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        QMouseEvent mouseEvent(event->state == PointerButtonState::Pressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
-                               event->position,
-                               event->position,
-                               event->button,
-                               event->buttons,
-                               event->modifiers);
-        mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
-        mouseEvent.setAccepted(false);
-        return effects->checkInputWindowEvent(&mouseEvent);
+        return effects->pointerButton(event);
     }
     bool pointerAxis(PointerAxisEvent *event) override
     {
         if (!effects) {
             return false;
         }
-        QWheelEvent wheelEvent(event->position,
-                               event->position,
-                               QPoint(),
-                               // Qt expects angleDelta 120 to be a "click" whereas libinput uses 15, hence multiply by 8.
-                               (event->orientation == Qt::Horizontal) ? QPoint(event->delta, 0) : QPoint(0, event->delta) * -8,
-                               event->buttons,
-                               event->modifiers,
-                               Qt::NoScrollPhase,
-                               event->inverted);
-        wheelEvent.setAccepted(false);
-        return effects->checkInputWindowEvent(&wheelEvent);
+        return effects->pointerAxis(event);
     }
     bool keyboardKey(KeyboardKeyEvent *event) override
     {
@@ -1879,30 +1853,14 @@ public:
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
-        QMouseEvent mouseEvent(QEvent::MouseMove,
-                               event->position,
-                               event->position,
-                               Qt::NoButton,
-                               event->buttons,
-                               event->modifiers);
-        mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
-        mouseEvent.setAccepted(false);
-        return workspace()->tabbox()->handleMouseEvent(&mouseEvent);
+        return workspace()->tabbox()->pointerMotion(event);
     }
     bool pointerButton(PointerButtonEvent *event) override
     {
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
-        QMouseEvent mouseEvent(event->state == PointerButtonState::Pressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
-                               event->position,
-                               event->position,
-                               event->button,
-                               event->buttons,
-                               event->modifiers);
-        mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
-        mouseEvent.setAccepted(false);
-        return workspace()->tabbox()->handleMouseEvent(&mouseEvent);
+        return workspace()->tabbox()->pointerButton(event);
     }
     bool keyboardKey(KeyboardKeyEvent *event) override
     {
@@ -1923,16 +1881,7 @@ public:
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
-        QWheelEvent wheelEvent(event->position,
-                               event->position,
-                               QPoint(),
-                               (event->orientation == Qt::Horizontal) ? QPoint(event->delta, 0) : QPoint(0, event->delta),
-                               event->buttons,
-                               event->modifiers,
-                               Qt::NoScrollPhase,
-                               event->inverted);
-        wheelEvent.setAccepted(false);
-        return workspace()->tabbox()->handleWheelEvent(&wheelEvent);
+        return workspace()->tabbox()->pointerAxis(event);
     }
 };
 #endif

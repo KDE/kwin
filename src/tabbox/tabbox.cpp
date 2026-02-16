@@ -19,6 +19,7 @@
 #include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "input.h"
+#include "input_event.h"
 #include "keyboard_input.h"
 #include "pointer_input.h"
 #include "screenedge.h"
@@ -567,48 +568,56 @@ void TabBox::delayedShow()
     m_delayedShowTimer.start(m_delayShowTime);
 }
 
-bool TabBox::handleMouseEvent(QMouseEvent *event)
+bool TabBox::pointerMotion(PointerMotionEvent *event)
 {
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
-        if (effects && effects->checkInputWindowEvent(event)) {
+        if (effects && effects->pointerMotion(event)) {
             return true;
         }
     }
-    switch (event->type()) {
-    case QEvent::MouseMove:
-        if (!m_tabBox->containsPos(event->globalPosition().toPoint())) {
-            // filter out all events which are not on the TabBox window.
-            // We don't want windows to react on the mouse events
-            return true;
-        }
-        return false;
-    case QEvent::MouseButtonPress:
-        if ((!m_isShown && isDisplayed()) || !m_tabBox->containsPos(event->globalPosition().toPoint())) {
-            close(); // click outside closes tab
-            return true;
-        }
-        // fall through
-    case QEvent::MouseButtonRelease:
-    default:
-        // we do not filter it out, the internal filter takes care
-        return false;
+
+    if (!m_tabBox->containsPos(event->position.toPoint())) {
+        // filter out all events which are not on the TabBox window.
+        // We don't want windows to react on the mouse events
+        return true;
     }
     return false;
 }
 
-bool TabBox::handleWheelEvent(QWheelEvent *event)
+bool TabBox::pointerButton(PointerButtonEvent *event)
 {
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
-        if (effects && effects->checkInputWindowEvent(event)) {
+        if (effects && effects->pointerButton(event)) {
             return true;
         }
     }
-    if (event->angleDelta().y() == 0) {
+
+    if (event->state == PointerButtonState::Pressed && !m_tabBox->containsPos(event->position.toPoint())) {
+        close(); // click outside closes tab
+        return true;
+    }
+
+    // we do not filter it out, the internal filter takes care
+    return false;
+}
+
+bool TabBox::pointerAxis(PointerAxisEvent *event)
+{
+    if (!m_isShown && isDisplayed()) {
+        // tabbox has been replaced, check effects
+        if (effects && effects->pointerAxis(event)) {
+            return true;
+        }
+    }
+
+    // TODO feels weird to let horizontal scrolling through.
+    if (event->orientation != Qt::Vertical || event->delta == 0) {
         return false;
     }
-    const QModelIndex index = m_tabBox->nextPrev(event->angleDelta().y() > 0);
+    // TODO accumulate scroll.
+    const QModelIndex index = m_tabBox->nextPrev(event->delta);
     if (index.isValid()) {
         setCurrentIndex(index);
     }

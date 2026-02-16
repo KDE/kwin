@@ -23,7 +23,10 @@ namespace KWin
 class EffectWindow;
 class LogicalOutput;
 class PaintDataPrivate;
+class PointerAxisEvent;
 class RenderTarget;
+class PointerButtonEvent;
+class PointerMotionEvent;
 class RenderViewport;
 struct TabletToolProximityEvent;
 struct TabletToolTipEvent;
@@ -677,7 +680,6 @@ public:
      */
     virtual void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data);
 
-    virtual void windowInputMouseEvent(QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
 
     /**
@@ -723,6 +725,31 @@ public:
      * @since 5.0
      */
     virtual int requestedEffectChainPosition() const;
+
+    /**
+     * A pointer was moved
+     *
+     * @param event The PointerMotionEvent for the event
+     *
+     * @since 6.7
+     */
+    virtual void pointerMotion(PointerMotionEvent *event);
+    /**
+     * A pointer button was moved
+     *
+     * @param event The PointerButtonEvent for the event
+     *
+     * @since 6.7
+     */
+    virtual void pointerButton(PointerButtonEvent *event);
+    /**
+     * A pointer axis was scrollde
+     *
+     * @param event The PointerAxisEvent for the event
+     *
+     * @since 6.7
+     */
+    virtual void pointerAxis(PointerAxisEvent *event);
 
     /**
      * A touch point was pressed.
