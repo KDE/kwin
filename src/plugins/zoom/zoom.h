@@ -21,13 +21,14 @@
 namespace KWin
 {
 
-class CursorItem;
 class GLFramebuffer;
 class GLTexture;
 class GLVertexBuffer;
 class GLShader;
 class FocusTracker;
 class TextCaretTracker;
+class SceneView;
+class ZoomLayer;
 
 class ZoomEffect : public Effect
 {
@@ -97,20 +98,20 @@ private:
     {
         std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> framebuffer;
+        std::unique_ptr<ZoomLayer> outputLayer;
+        std::unique_ptr<SceneView> sceneView;
         QRectF viewport;
         std::shared_ptr<ColorDescription> color = ColorDescription::sRGB;
+        bool rendering = false;
+
+        bool render();
     };
 
     void moveZoom(int x, int y);
     bool screenExistsAt(const QPoint &point) const;
     void realtimeZoom(double delta);
 
-    QPointF calculateCursorItemPosition() const;
-    void showCursor();
-    void hideCursor();
-    GLTexture *ensureCursorTexture();
     OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, LogicalOutput *screen);
-    void markCursorTextureDirty();
 
     GLShader *shaderForZoom(double zoom);
     void trackTextCaret();
@@ -126,8 +127,6 @@ private:
     QPoint m_cursorPoint;
     QPoint m_prevPoint;
     QTime m_lastMouseEvent;
-    std::unique_ptr<CursorItem> m_cursorItem;
-    bool m_cursorHidden = false;
     QTimeLine m_timeline;
     int m_xMove = 0;
     int m_yMove = 0;

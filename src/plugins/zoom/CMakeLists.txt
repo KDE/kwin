@@ -6,6 +6,7 @@ target_sources(zoom PRIVATE
     textcarettracker.cpp
     zoom.cpp
     zoom.qrc
+    zoomlayer.cpp
 )
 
 kconfig_add_kcfg_files(zoom zoomconfig.kcfgc)

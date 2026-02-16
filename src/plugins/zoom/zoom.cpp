@@ -16,11 +16,11 @@
 #include "effect/effecthandler.h"
 #include "focustracker.h"
 #include "opengl/glutils.h"
-#include "scene/cursoritem.h"
 #include "scene/workspacescene.h"
 #include "textcarettracker.h"
 #include "utils/keys.h"
 #include "zoomconfig.h"
+#include "zoomlayer.h"
 
 #include <KConfigGroup>
 #include <KGlobalAccel>
@@ -147,43 +147,7 @@ ZoomEffect::ZoomEffect()
 
 ZoomEffect::~ZoomEffect()
 {
-    // switch off and free resources
-    showCursor();
-    // Save the zoom value.
     saveInitialZoom();
-}
-
-QPointF ZoomEffect::calculateCursorItemPosition() const
-{
-    return Cursors::self()->mouse()->pos() * m_zoom + QPoint(m_xTranslation, m_yTranslation);
-}
-
-void ZoomEffect::showCursor()
-{
-    if (m_cursorHidden) {
-        m_cursorItem.reset();
-        m_cursorHidden = false;
-        effects->showCursor();
-    }
-}
-
-void ZoomEffect::hideCursor()
-{
-    if (m_mouseTracking == MouseTrackingProportional && m_mousePointer == MousePointerKeep) {
-        return; // don't replace the actual cursor by a static image for no reason.
-    }
-    if (!m_cursorHidden) {
-        effects->hideCursor();
-        m_cursorHidden = true;
-
-        if (m_mousePointer == MousePointerKeep || m_mousePointer == MousePointerScale) {
-            m_cursorItem = std::make_unique<CursorItem>(effects->scene()->overlayItem());
-            m_cursorItem->setPosition(calculateCursorItemPosition());
-            connect(Cursors::self()->mouse(), &Cursor::posChanged, m_cursorItem.get(), [this]() {
-                m_cursorItem->setPosition(calculateCursorItemPosition());
-            });
-        }
-    }
 }
 
 void ZoomEffect::reconfigure(ReconfigureFlags)
@@ -263,13 +227,6 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
 
     if (m_zoom == 1.0) {
         m_focusPoint.reset();
-
-        showCursor();
-    } else {
-        hideCursor();
-        if (m_mousePointer == MousePointerScale) {
-            m_cursorItem->setTransform(QTransform::fromScale(m_zoom, m_zoom));
-        }
     }
 
     const QSize screenSize = effects->virtualScreenSize();
@@ -355,11 +312,6 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         }
     }
 
-    if (m_cursorItem) {
-        // x and y translation are changed, update the cursor position
-        m_cursorItem->setPosition(calculateCursorItemPosition());
-    }
-
     effects->prePaintScreen(data, presentTime);
 }
 
@@ -371,6 +323,12 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
     OffscreenData &data = m_offscreenData[screen];
     data.viewport = viewport.renderRect();
     data.color = renderTarget.colorDescription();
+    if (!data.sceneView) {
+        data.outputLayer = std::make_unique<ZoomLayer>(screen);
+        // TODO make this per backend output instead?
+        // Then zoom could be rendered better on mirroring outputs
+        data.sceneView = std::make_unique<SceneView>(effects->scene(), screen, screen->backendOutput(), data.outputLayer.get());
+    }
 
     const GLenum textureFormat = renderTarget.colorDescription() == ColorDescription::sRGB ? GL_RGBA8 : GL_RGBA16F;
     if (!data.texture || data.texture->size() != nativeSize || data.texture->internalFormat() != textureFormat) {
@@ -383,7 +341,6 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
         data.framebuffer = std::make_unique<GLFramebuffer>(data.texture.get());
     }
 
-    data.texture->setContentTransform(renderTarget.transform());
     return &data;
 }
 
@@ -399,41 +356,53 @@ GLShader *ZoomEffect::shaderForZoom(double zoom)
     }
 }
 
+bool ZoomEffect::OffscreenData::render()
+{
+    outputLayer->setFramebuffer(framebuffer.get());
+    if (!outputLayer->preparePresentationTest()) {
+        return false;
+    }
+    const auto beginInfo = outputLayer->beginFrame();
+    if (!beginInfo) {
+        return false;
+    }
+    rendering = true;
+    sceneView->prePaint();
+    const auto bufferDamage = (outputLayer->deviceRepaints() | sceneView->collectDamage()) & Rect(QPoint(), framebuffer->size());
+    const auto repaints = beginInfo->repaint | bufferDamage;
+    outputLayer->resetRepaints();
+    sceneView->paint(beginInfo->renderTarget, QPoint(), repaints);
+    sceneView->postPaint();
+    rendering = false;
+    return outputLayer->endFrame(repaints, bufferDamage, nullptr);
+}
+
 void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
     OffscreenData *offscreenData = ensureOffscreenData(renderTarget, viewport, screen);
-    if (!offscreenData) {
+    if (!offscreenData || offscreenData->rendering) {
         return;
     }
 
     // Render the scene in an offscreen texture and then upscale it.
-    RenderTarget offscreenRenderTarget(offscreenData->framebuffer.get(), renderTarget.colorDescription());
-    RenderViewport offscreenViewport(viewport.renderRect(), viewport.scale(), offscreenRenderTarget, QPoint());
-    GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.get());
-    effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, deviceRegion, screen);
-    GLFramebuffer::popFramebuffer();
-
     const auto scale = viewport.scale();
+    offscreenData->sceneView->setScale(scale * m_zoom);
+    offscreenData->sceneView->setViewport(RectF{
+        viewport.renderRect().x() + m_xTranslation,
+        viewport.renderRect().y() + m_yTranslation,
+        viewport.renderRect().width() / m_zoom,
+        viewport.renderRect().height() / m_zoom,
+    });
 
-    // Render transformed offscreen texture.
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    offscreenData->render();
 
     GLShader *shader = shaderForZoom(m_zoom);
     ShaderManager::instance()->pushShader(shader);
-    for (auto &[screen, offscreen] : m_offscreenData) {
-        QMatrix4x4 matrix;
-        matrix.translate(m_xTranslation * scale, m_yTranslation * scale);
-        matrix.scale(m_zoom, m_zoom);
-        matrix.translate(offscreen.viewport.x() * scale, offscreen.viewport.y() * scale);
-
-        shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix() * matrix);
-        shader->setUniform(GLShader::IntUniform::TextureWidth, offscreen.texture->width());
-        shader->setUniform(GLShader::IntUniform::TextureHeight, offscreen.texture->height());
-        shader->setColorspaceUniforms(offscreen.color, renderTarget.colorDescription(), RenderingIntent::Perceptual);
-
-        offscreen.texture->render(offscreen.viewport.size() * scale);
-    }
+    shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
+    shader->setUniform(GLShader::IntUniform::TextureWidth, offscreenData->texture->width());
+    shader->setUniform(GLShader::IntUniform::TextureHeight, offscreenData->texture->height());
+    shader->setColorspaceUniforms(offscreenData->color, renderTarget.colorDescription(), RenderingIntent::Perceptual);
+    offscreenData->texture->render(offscreenData->viewport.size() * scale);
     ShaderManager::instance()->popShader();
 }
 
@@ -691,9 +660,6 @@ void ZoomEffect::realtimeZoom(double delta)
     setTargetZoom(m_targetZoom + delta);
     // skip the animation, we want this to be real time
     m_zoom = m_targetZoom;
-    if (m_zoom == 1.0) {
-        showCursor();
-    }
 }
 
 void ZoomEffect::trackTextCaret()
