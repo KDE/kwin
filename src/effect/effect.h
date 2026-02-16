@@ -743,7 +743,7 @@ public:
      */
     virtual void pointerButton(PointerButtonEvent *event);
     /**
-     * A pointer axis was scrollde
+     * A pointer axis was scrolled
      *
      * @param event The PointerAxisEvent for the event
      *

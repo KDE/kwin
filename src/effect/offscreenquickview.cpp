@@ -10,6 +10,7 @@
 #include "effect/offscreenquickview.h"
 #include "effect/effecthandler.h"
 
+#include "core/inputdevice.h"
 #include "input_event.h"
 #include "logging_p.h"
 #include "opengl/eglcontext.h"
@@ -39,6 +40,15 @@ namespace KWin
 class Q_DECL_HIDDEN OffscreenQuickView::Private
 {
 public:
+    QPointingDevice *qtPointingDeviceForKWinDevice(InputDevice *device) const
+    {
+        if (device->isTouchpad()) {
+            return touchpadDevice;
+        } else {
+            return mouseDevice;
+        }
+    }
+
     std::unique_ptr<QQuickWindow> m_view;
     std::unique_ptr<QQuickRenderControl> m_renderControl;
     std::unique_ptr<QOffscreenSurface> m_offscreenSurface;
@@ -56,6 +66,9 @@ public:
     bool m_automaticRepaint = true;
 
     std::optional<qreal> m_explicitDpr;
+
+    QPointingDevice *mouseDevice;
+    QPointingDevice *touchpadDevice;
 
     QList<QEventPoint> touchPoints;
     QSet<uint32_t> acceptedTouchPoints;
@@ -155,6 +168,8 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
     connect(d->m_renderControl.get(), &QQuickRenderControl::renderRequested, this, &OffscreenQuickView::handleRenderRequested);
     connect(d->m_renderControl.get(), &QQuickRenderControl::sceneChanged, this, &OffscreenQuickView::handleSceneChanged);
 
+    d->mouseDevice = new QPointingDevice(QStringLiteral("ForwardingMouseDevice"), {}, QInputDevice::DeviceType::Mouse, QPointingDevice::PointerType::Generic, QInputDevice::Capability::Position, 1, 0);
+    d->touchpadDevice = new QPointingDevice(QStringLiteral("ForwardingTouchpadDevice"), {}, QInputDevice::DeviceType::TouchPad, QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position, 10, 3);
     d->touchDevice = new QPointingDevice(QStringLiteral("ForwardingTouchDevice"), {}, QInputDevice::DeviceType::TouchScreen, QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position, 10, {});
 }
 
@@ -304,7 +319,8 @@ void OffscreenQuickView::forwardPointerMotionEvent(PointerMotionEvent *event)
                            event->position,
                            Qt::NoButton,
                            event->buttons,
-                           event->modifiers);
+                           event->modifiers,
+                           d->qtPointingDeviceForKWinDevice(event->device));
     mouseEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
     mouseEvent.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &mouseEvent);
@@ -318,7 +334,8 @@ void OffscreenQuickView::forwardPointerButtonEvent(PointerButtonEvent *event)
                            event->position,
                            event->button,
                            event->buttons,
-                           event->modifiers);
+                           event->modifiers,
+                           d->qtPointingDeviceForKWinDevice(event->device));
     const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count();
     mouseEvent.setTimestamp(timestamp);
     mouseEvent.setAccepted(false);
@@ -336,7 +353,8 @@ void OffscreenQuickView::forwardPointerButtonEvent(PointerButtonEvent *event)
                                          event->position,
                                          event->button,
                                          event->buttons,
-                                         event->modifiers);
+                                         event->modifiers,
+                                         d->qtPointingDeviceForKWinDevice(event->device));
             QCoreApplication::sendEvent(d->m_view.get(), &doubleClickEvent);
         }
     }
@@ -353,7 +371,9 @@ void OffscreenQuickView::forwardPointerAxisEvent(PointerAxisEvent *event)
                            event->buttons,
                            event->modifiers,
                            Qt::NoScrollPhase,
-                           event->inverted);
+                           event->inverted,
+                           Qt::MouseEventNotSynthesized,
+                           d->qtPointingDeviceForKWinDevice(event->device));
     wheelEvent.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
     wheelEvent.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &wheelEvent);
