@@ -212,7 +212,7 @@ void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, co
     }
 }
 
-quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive, GLShader *shader)
+quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, const QEasingCurve &_curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive, GLShader *shader)
 {
     const bool waitAtSource = from.isValid();
     validate(a, meta, &from, &to, w);
@@ -239,6 +239,13 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
 
     if (a == CrossFadePrevious) {
         CrossFadeEffect::redirect(w);
+    }
+
+    QEasingCurve curve(QEasingCurve::BezierSpline);
+    if (_curve.type() == QEasingCurve::OutCubic) {
+        curve.addCubicBezierSegment(QPointF(0, 0.5), QPointF(0, 1), QPointF(1, 1));
+    } else {
+        curve.addCubicBezierSegment(QPointF(0.5, 0), QPointF(1, 0), QPointF(1, 1));
     }
 
     animations.push_back(AniData(
