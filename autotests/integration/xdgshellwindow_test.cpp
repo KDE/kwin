@@ -101,6 +101,7 @@ private Q_SLOTS:
     void testXdgPopupReactive_data();
     void testXdgPopupReactive();
     void testXdgPopupReposition();
+    void testXdgPopupRepositionBeforeInitialCommit();
     void testPointerInputTransform();
     void testReentrantSetFrameGeometry();
     void testDoubleMaximize();
@@ -198,11 +199,52 @@ void TestXdgShellWindow::testXdgPopupReposition()
     QVERIFY(childWindow);
 
     QSignalSpy reconfigureSpy(popup.get(), &Test::XdgPopup::configureRequested);
+    QSignalSpy repositionedSpy(popup.get(), &Test::XdgPopup::repositioned);
 
     popup->reposition(otherPositioner->object(), 500000);
 
     QVERIFY(reconfigureSpy.wait());
     QCOMPARE(reconfigureSpy.count(), 1);
+    QCOMPARE(repositionedSpy.count(), 1);
+    QCOMPARE(repositionedSpy.last().at(0).toUInt(), 500000);
+}
+
+void TestXdgShellWindow::testXdgPopupRepositionBeforeInitialCommit()
+{
+    // This test verifies that reposition requests before the initial commit are handled in a reasonable
+    // way. How this case should be handled is left out of the xdg-shell spec. Also, with explicit sync,
+    // due to transaction fences, the reposition request may be reordered after the initial commit.
+
+    std::unique_ptr<Test::XdgPositioner> positioner(Test::createXdgPositioner());
+    positioner->set_size(10, 10);
+    positioner->set_anchor_rect(10, 10, 10, 10);
+
+    std::unique_ptr<Test::XdgPositioner> otherPositioner(Test::createXdgPositioner());
+    otherPositioner->set_size(50, 50);
+    otherPositioner->set_anchor_rect(10, 10, 10, 10);
+
+    // Create the parent surface.
+    std::unique_ptr<KWayland::Client::Surface> rootSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> root(Test::createXdgToplevelSurface(rootSurface.get()));
+    auto rootWindow = Test::renderAndWaitForShown(rootSurface.get(), QSize(100, 100), Qt::cyan);
+    QVERIFY(rootWindow);
+
+    // Create a popup surface.
+    std::unique_ptr<KWayland::Client::Surface> childSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgPopup> popup(Test::createXdgPopupSurface(childSurface.get(), root->xdgSurface(), positioner.get(), Test::CreationSetup::CreateOnly));
+    popup->reposition(otherPositioner->object(), 666);
+
+    QSignalSpy popupConfigureRequestedSpy(popup.get(), &Test::XdgPopup::configureRequested);
+    QSignalSpy popupRepositionedSpy(popup.get(), &Test::XdgPopup::repositioned);
+    QSignalSpy surfaceConfigureRequestedSpy(popup->xdgSurface(), &Test::XdgSurface::configureRequested);
+    childSurface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(popupRepositionedSpy.count(), 1);
+    QCOMPARE(popupRepositionedSpy.last().at(0).toUInt(), 666);
+
+    popup->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).toUInt());
+    auto childWindow = Test::renderAndWaitForShown(childSurface.get(), QSize(10, 10), Qt::cyan);
+    QVERIFY(childWindow);
 }
 
 void TestXdgShellWindow::initTestCase()

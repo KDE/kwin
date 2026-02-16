@@ -29,7 +29,7 @@ public:
 
 protected:
     bool acceptsFocus() const override;
-    XdgSurfaceConfigure *sendRoleConfigure() const override;
+    XdgSurfaceConfigure *sendRoleConfigure() override;
     void handleRoleDestroyed() override;
     void doSetNextTargetScale() override;
     void doSetPreferredBufferTransform() override;

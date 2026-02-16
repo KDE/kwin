@@ -202,6 +202,11 @@ void XdgPopup::xdg_popup_popup_done()
     Q_EMIT doneReceived();
 }
 
+void XdgPopup::xdg_popup_repositioned(uint32_t token)
+{
+    Q_EMIT repositioned(token);
+}
+
 XdgDecorationManagerV1::~XdgDecorationManagerV1()
 {
     destroy();

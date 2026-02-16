@@ -73,7 +73,7 @@ public:
 protected:
     void moveResizeInternal(const RectF &rect, MoveResizeMode mode) override;
 
-    virtual XdgSurfaceConfigure *sendRoleConfigure() const = 0;
+    virtual XdgSurfaceConfigure *sendRoleConfigure() = 0;
     virtual void handleRoleCommit();
     virtual void handleRolePrecommit();
     virtual void handleRoleDestroyed();
@@ -188,7 +188,7 @@ public:
     void installXdgDialogV1(XdgDialogV1Interface *dialog);
 
 protected:
-    XdgSurfaceConfigure *sendRoleConfigure() const override;
+    XdgSurfaceConfigure *sendRoleConfigure() override;
     void handleRoleCommit() override;
     void handleRolePrecommit() override;
     void handleRoleDestroyed() override;
@@ -300,7 +300,7 @@ public:
 
 protected:
     bool acceptsFocus() const override;
-    XdgSurfaceConfigure *sendRoleConfigure() const override;
+    XdgSurfaceConfigure *sendRoleConfigure() override;
     void handleRoleDestroyed() override;
     void doSetNextTargetScale() override;
     void doSetPreferredBufferTransform() override;
@@ -315,8 +315,10 @@ private:
     void relayout();
 
     XdgPopupInterface *m_shellSurface;
-    bool m_haveExplicitGrab = false;
     RectF m_relativePlacement;
+    std::optional<quint32> m_repositionToken;
+    bool m_haveExplicitGrab = false;
+    bool m_isInitialized = false;
 };
 
 } // namespace KWin
