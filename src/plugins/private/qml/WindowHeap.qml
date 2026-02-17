@@ -345,14 +345,6 @@ FocusScope {
             handled = selectLastItem(WindowHeap.Direction.Right);
             heap.focus = true;
             break;
-        case Qt.Key_PageUp:
-            handled = selectLastItem(WindowHeap.Direction.Up);
-            heap.focus = true;
-            break;
-        case Qt.Key_PageDown:
-            handled = selectLastItem(WindowHeap.Direction.Down);
-            heap.focus = true;
-            break;
         case Qt.Key_Space:
             if (!heap.focus) {
                 break;

@@ -233,6 +233,19 @@ FocusScope {
                     effect.activateView(view)
                 }
             }
+        } else if (event.key === Qt.Key_PageUp || event.key === Qt.Key_PageDown) {
+            const oldIndex = currentDesktopIndex();
+            const delta = event.key === Qt.Key_PageUp ? -1 : +1;
+
+            let newIndex;
+            if (KWinComponents.Workspace.virtualDesktopNavigationWrapsAround) {
+                newIndex = (oldIndex + allDesktopHeaps.count + delta) % allDesktopHeaps.count;
+            } else {
+                newIndex = Math.max(0, Math.min(allDesktopHeaps.count - 1, oldIndex + delta));
+            }
+
+            KWinComponents.Workspace.currentDesktop = allDesktopHeaps.itemAt(newIndex).desktop;
+            event.accepted = (newIndex !== oldIndex);
         } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Space) {
             for (let i = 0; i < allDesktopHeaps.count; i++) {
                 if (allDesktopHeaps.itemAt(i).current) {
