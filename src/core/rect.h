@@ -1656,6 +1656,9 @@ constexpr inline Rect Rect::intersected(const Rect &other) const noexcept
 
 constexpr inline bool Rect::intersects(const Rect &other) const noexcept
 {
+    if (isEmpty() || other.isEmpty()) {
+        return false;
+    }
     return left() < other.right() && other.left() < right()
         && top() < other.bottom() && other.top() < bottom();
 }
@@ -2144,6 +2147,9 @@ constexpr inline RectF RectF::intersected(const RectF &other) const noexcept
 
 constexpr inline bool RectF::intersects(const RectF &other) const noexcept
 {
+    if (isEmpty() || other.isEmpty()) {
+        return false;
+    }
     return left() < other.right() && other.left() < right()
         && top() < other.bottom() && other.top() < bottom();
 }

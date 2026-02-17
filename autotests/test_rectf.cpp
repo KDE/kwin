@@ -1228,7 +1228,6 @@ void TestRectF::intersects_data()
 
     QTest::addRow("empty - empty") << RectF() << RectF() << false;
     QTest::addRow("2,3 4x5 - empty") << RectF(2, 3, 4, 5) << RectF() << false;
-    QTest::addRow("empty - 2,3 4x5") << RectF() << RectF(2, 3, 4, 5) << false;
 
     QTest::addRow("0,0 5x5 - 0,-5 5x5") << RectF(0, 0, 5, 5) << RectF(0, -5, 5, 5) << false;
     QTest::addRow("0,0 5x5 - -5,0 5x5") << RectF(0, 0, 5, 5) << RectF(-5, 0, 5, 5) << false;
@@ -1238,7 +1237,7 @@ void TestRectF::intersects_data()
     QTest::addRow("0,0 5x5 - 5,5 5x5") << RectF(0, 0, 5, 5) << RectF(5, 5, 5, 5) << false;
 
     QTest::addRow("0,0 5x5 - 2,2 5x5") << RectF(0, 0, 5, 5) << RectF(2, 2, 5, 5) << true;
-    QTest::addRow("2,2 5x5 - 0,0 5x5") << RectF(2, 2, 5, 5) << RectF(0, 0, 5, 5) << true;
+    QTest::addRow("0,0 5x5 - 2,2 0x0") << RectF(0, 0, 5, 5) << RectF(2, 2, 0, 0) << false;
 }
 
 void TestRectF::intersects()
@@ -1247,6 +1246,7 @@ void TestRectF::intersects()
     QFETCH(RectF, rect2);
 
     QTEST(rect1.intersects(rect2), "intersects");
+    QTEST(rect2.intersects(rect1), "intersects");
 }
 
 void TestRectF::intersected_data()
@@ -1257,7 +1257,6 @@ void TestRectF::intersected_data()
 
     QTest::addRow("empty - empty") << RectF() << RectF() << RectF();
     QTest::addRow("2,3 4x5 - empty") << RectF(2, 3, 4, 5) << RectF() << RectF();
-    QTest::addRow("empty - 2,3 4x5") << RectF() << RectF(2, 3, 4, 5) << RectF();
 
     QTest::addRow("0,0 5x5 - 0,-5 5x5") << RectF(0, 0, 5, 5) << RectF(0, -5, 5, 5) << RectF();
     QTest::addRow("0,0 5x5 - -5,0 5x5") << RectF(0, 0, 5, 5) << RectF(-5, 0, 5, 5) << RectF();
@@ -1267,7 +1266,7 @@ void TestRectF::intersected_data()
     QTest::addRow("0,0 5x5 - 5,5 5x5") << RectF(0, 0, 5, 5) << RectF(5, 5, 5, 5) << RectF();
 
     QTest::addRow("0,0 5x5 - 2,2 5x5") << RectF(0, 0, 5, 5) << RectF(2, 2, 5, 5) << RectF(2, 2, 3, 3);
-    QTest::addRow("2,2 5x5 - 0,0 5x5") << RectF(2, 2, 5, 5) << RectF(0, 0, 5, 5) << RectF(2, 2, 3, 3);
+    QTest::addRow("0,0 5x5 - 2,2 0x0") << RectF(0, 0, 5, 5) << RectF(2, 2, 0, 0) << RectF();
 }
 
 void TestRectF::intersected()
@@ -1277,15 +1276,23 @@ void TestRectF::intersected()
 
     {
         QTEST(rect1.intersected(rect2), "result");
+        QTEST(rect2.intersected(rect1), "result");
     }
 
     {
         QTEST(rect1 & rect2, "result");
+        QTEST(rect2 & rect1, "result");
     }
 
     {
         RectF tmp = rect1;
         tmp &= rect2;
+        QTEST(tmp, "result");
+    }
+
+    {
+        RectF tmp = rect2;
+        tmp &= rect1;
         QTEST(tmp, "result");
     }
 }
