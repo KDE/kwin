@@ -173,8 +173,8 @@ void UserActionsMenu::showUserActionPrompt(Window *window, UserActionPrompt::Pro
         connect(dialog, &UserActionPrompt::undoRequested, window, [window] {
             window->setNoBorder(false);
         });
-        connect(window, &Window::decorationPolicyChanged, dialog, [window, dialog] {
-            if (!window->noBorder()) {
+        connect(window, &Window::decorationPolicyChanged, dialog, [window, dialog, prompt] {
+            if (!window->noBorder() && dialog->prompt() == prompt) {
                 dialog->quit();
             }
         });
@@ -183,8 +183,8 @@ void UserActionsMenu::showUserActionPrompt(Window *window, UserActionPrompt::Pro
         connect(dialog, &UserActionPrompt::undoRequested, window, [window] {
             window->setFullScreen(false);
         });
-        connect(window, &Window::fullScreenChanged, dialog, [window, dialog] {
-            if (!window->isFullScreen()) {
+        connect(window, &Window::fullScreenChanged, dialog, [window, dialog, prompt] {
+            if (!window->isFullScreen() && dialog->prompt() == prompt) {
                 dialog->quit();
             }
         });
