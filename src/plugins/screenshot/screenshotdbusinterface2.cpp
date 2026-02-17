@@ -129,6 +129,18 @@ static ScreenShotFlags screenShotFlagsFromOptions(const QVariantMap &options)
     return flags;
 }
 
+static std::optional<pid_t> pidToHide(std::optional<pid_t> callerPid, const QVariantMap &options)
+{
+    if (!callerPid.has_value()) {
+        return std::nullopt;
+    }
+    const bool hideCallerWindows = options.value(QStringLiteral("hide-caller-windows"), true).toBool();
+    if (!hideCallerWindows) {
+        return std::nullopt;
+    }
+    return callerPid;
+}
+
 static const QString s_dbusServiceName = QStringLiteral("org.kde.KWin.ScreenShot2");
 static const QString s_dbusInterface = QStringLiteral("org.kde.KWin.ScreenShot2");
 static const QString s_dbusObjectPath = QStringLiteral("/org/kde/KWin/ScreenShot2");
@@ -214,7 +226,7 @@ ScreenShotDBusInterface2::~ScreenShotDBusInterface2()
 
 int ScreenShotDBusInterface2::version() const
 {
-    return 4;
+    return 5;
 }
 
 std::optional<pid_t> ScreenShotDBusInterface2::determineCallerPid() const
@@ -322,7 +334,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureArea(int x, int y, int width, int h
     }
 
     takeScreenShot(area, screenShotFlagsFromOptions(options),
-                   new ScreenShotSinkPipe2(fileDescriptor, message()), pid);
+                   new ScreenShotSinkPipe2(fileDescriptor, message()), pidToHide(pid, options));
 
     setDelayedReply(true);
     return QVariantMap();
@@ -350,7 +362,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
     }
 
     takeScreenShot(screen, screenShotFlagsFromOptions(options),
-                   new ScreenShotSinkPipe2(fileDescriptor, message()), pid);
+                   new ScreenShotSinkPipe2(fileDescriptor, message()), pidToHide(pid, options));
 
     setDelayedReply(true);
     return QVariantMap();
@@ -377,7 +389,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveScreen(const QVariantMap &opt
     }
 
     takeScreenShot(screen, screenShotFlagsFromOptions(options),
-                   new ScreenShotSinkPipe2(fileDescriptor, message()), pid);
+                   new ScreenShotSinkPipe2(fileDescriptor, message()), pidToHide(pid, options));
 
     setDelayedReply(true);
     return QVariantMap();
@@ -425,7 +437,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
             } else {
                 LogicalOutput *screen = effects->screenAt(point.toPoint());
                 takeScreenShot(screen, screenShotFlagsFromOptions(options),
-                               new ScreenShotSinkPipe2(fileDescriptor, replyMessage), pid);
+                               new ScreenShotSinkPipe2(fileDescriptor, replyMessage), pidToHide(pid, options));
             }
         });
         effects->showOnScreenMessage(i18n("Create screen shot with left click or enter.\n"
@@ -451,7 +463,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureWorkspace(const QVariantMap &option
     }
 
     takeScreenShot(effects->virtualScreenGeometry(), screenShotFlagsFromOptions(options),
-                   new ScreenShotSinkPipe2(fileDescriptor, message()), pid);
+                   new ScreenShotSinkPipe2(fileDescriptor, message()), pidToHide(pid, options));
 
     setDelayedReply(true);
     return QVariantMap();
