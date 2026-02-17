@@ -1224,7 +1224,6 @@ void TestRect::intersects_data()
 
     QTest::addRow("empty - empty") << Rect() << Rect() << false;
     QTest::addRow("2,3 4x5 - empty") << Rect(2, 3, 4, 5) << Rect() << false;
-    QTest::addRow("empty - 2,3 4x5") << Rect() << Rect(2, 3, 4, 5) << false;
 
     QTest::addRow("0,0 5x5 - 0,-5 5x5") << Rect(0, 0, 5, 5) << Rect(0, -5, 5, 5) << false;
     QTest::addRow("0,0 5x5 - -5,0 5x5") << Rect(0, 0, 5, 5) << Rect(-5, 0, 5, 5) << false;
@@ -1234,7 +1233,7 @@ void TestRect::intersects_data()
     QTest::addRow("0,0 5x5 - 5,5 5x5") << Rect(0, 0, 5, 5) << Rect(5, 5, 5, 5) << false;
 
     QTest::addRow("0,0 5x5 - 2,2 5x5") << Rect(0, 0, 5, 5) << Rect(2, 2, 5, 5) << true;
-    QTest::addRow("2,2 5x5 - 0,0 5x5") << Rect(2, 2, 5, 5) << Rect(0, 0, 5, 5) << true;
+    QTest::addRow("0,0 5x5 - 2,2 0x0") << Rect(0, 0, 5, 5) << Rect(2, 2, 0, 0) << false;
 }
 
 void TestRect::intersects()
@@ -1243,6 +1242,7 @@ void TestRect::intersects()
     QFETCH(Rect, rect2);
 
     QTEST(rect1.intersects(rect2), "intersects");
+    QTEST(rect2.intersects(rect1), "intersects");
 }
 
 void TestRect::intersected_data()
@@ -1253,7 +1253,6 @@ void TestRect::intersected_data()
 
     QTest::addRow("empty - empty") << Rect() << Rect() << Rect();
     QTest::addRow("2,3 4x5 - empty") << Rect(2, 3, 4, 5) << Rect() << Rect();
-    QTest::addRow("empty - 2,3 4x5") << Rect() << Rect(2, 3, 4, 5) << Rect();
 
     QTest::addRow("0,0 5x5 - 0,-5 5x5") << Rect(0, 0, 5, 5) << Rect(0, -5, 5, 5) << Rect();
     QTest::addRow("0,0 5x5 - -5,0 5x5") << Rect(0, 0, 5, 5) << Rect(-5, 0, 5, 5) << Rect();
@@ -1263,7 +1262,7 @@ void TestRect::intersected_data()
     QTest::addRow("0,0 5x5 - 5,5 5x5") << Rect(0, 0, 5, 5) << Rect(5, 5, 5, 5) << Rect();
 
     QTest::addRow("0,0 5x5 - 2,2 5x5") << Rect(0, 0, 5, 5) << Rect(2, 2, 5, 5) << Rect(2, 2, 3, 3);
-    QTest::addRow("2,2 5x5 - 0,0 5x5") << Rect(2, 2, 5, 5) << Rect(0, 0, 5, 5) << Rect(2, 2, 3, 3);
+    QTest::addRow("0,0 5x5 - 2,2 0x0") << Rect(0, 0, 5, 5) << Rect(2, 2, 0, 0) << Rect();
 }
 
 void TestRect::intersected()
@@ -1273,15 +1272,23 @@ void TestRect::intersected()
 
     {
         QTEST(rect1.intersected(rect2), "result");
+        QTEST(rect2.intersected(rect1), "result");
     }
 
     {
         QTEST(rect1 & rect2, "result");
+        QTEST(rect2 & rect1, "result");
     }
 
     {
         Rect tmp = rect1;
         tmp &= rect2;
+        QTEST(tmp, "result");
+    }
+
+    {
+        Rect tmp = rect2;
+        tmp &= rect1;
         QTEST(tmp, "result");
     }
 }
