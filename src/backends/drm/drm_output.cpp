@@ -391,7 +391,10 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
 {
     const bool effectiveHdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
     const bool effectiveWcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
-    const double brightness = next.currentBrightness.value_or(next.brightnessSetting);
+    double brightness = next.currentBrightness.value_or(next.brightnessSetting);
+    if (!next.brightnessDevice || next.brightnessDevice->usesDdcCi()) {
+        brightness *= next.currentDimming;
+    }
     double maxPossibleArtificialHeadroom = 1.0;
     if (next.brightnessDevice && isInternal() && next.edrPolicy == EdrPolicy::Always) {
         maxPossibleArtificialHeadroom = std::min(1.0 / next.currentBrightness.value_or(next.brightnessSetting), 3.0);
@@ -605,8 +608,14 @@ void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHe
         return;
     }
     if (m_state.brightnessDevice && !m_state.highDynamicRange) {
+        double brightnessFactor = newBrightness;
+        // With DDC/CI, dimming should be applied in software only,
+        // to avoid unnecessary EEPROM writes on the display side
+        if (!m_state.brightnessDevice->usesDdcCi()) {
+            brightnessFactor *= newDimming;
+        }
         constexpr double minLuminance = 0.04;
-        const double effectiveBrightness = (minLuminance + newBrightness) * newArtificialHdrHeadroom - minLuminance;
+        const double effectiveBrightness = (minLuminance + brightnessFactor) * newArtificialHdrHeadroom - minLuminance;
         m_state.brightnessDevice->setBrightness(effectiveBrightness);
     }
     State next = m_state;
