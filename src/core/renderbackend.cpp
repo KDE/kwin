@@ -148,6 +148,16 @@ void OutputFrame::setBrightness(double brightness)
     m_brightness = brightness;
 }
 
+std::optional<double> OutputFrame::dimmingFactor() const
+{
+    return m_dimmingFactor;
+}
+
+void OutputFrame::setDimmingFactor(double factor)
+{
+    m_dimmingFactor = factor;
+}
+
 std::optional<double> OutputFrame::artificialHdrHeadroom() const
 {
     return m_artificialHdrHeadroom;

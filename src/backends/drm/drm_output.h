@@ -79,7 +79,7 @@ private:
     Capabilities computeCapabilities() const;
     void updateInformation();
     void unsetBrightnessDevice() override;
-    void updateBrightness(double newBrightness, double newArtificialHdrHeadroom);
+    void updateBrightness(double newBrightness, double newArtificialHdrHeadroom, double newDimming);
     void maybeScheduleRepaints(const State &next);
     std::optional<uint32_t> decideAutomaticBpcLimit() const;
 

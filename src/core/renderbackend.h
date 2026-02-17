@@ -93,6 +93,9 @@ public:
     std::optional<double> brightness() const;
     void setBrightness(double brightness);
 
+    std::optional<double> dimmingFactor() const;
+    void setDimmingFactor(double factor);
+
     std::optional<double> artificialHdrHeadroom() const;
     void setArtificialHdrHeadroom(double edr);
 
@@ -109,6 +112,7 @@ private:
     std::vector<std::unique_ptr<RenderTimeQuery>> m_renderTimeQueries;
     bool m_presented = false;
     std::optional<double> m_brightness;
+    std::optional<double> m_dimmingFactor;
     std::optional<double> m_artificialHdrHeadroom;
 };
 
