@@ -11,6 +11,7 @@
 #include <sys/wait.h>
 
 #include <KAuth/Action>
+#include <KAuth/ExecuteJob>
 #include <KIconUtils>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -260,7 +261,8 @@ int main(int argc, char *argv[])
                     killer.addArgument(QStringLiteral("signal"), SIGKILL);
                     if (killer.isValid()) {
                         qDebug() << "Using KAuth to kill pid: " << pid;
-                        killer.execute();
+                        auto *job = killer.execute();
+                        job->exec();
                     } else {
                         qDebug() << "KWin process killer action not valid";
                     }
