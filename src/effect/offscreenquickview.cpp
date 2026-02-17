@@ -42,7 +42,7 @@ class Q_DECL_HIDDEN OffscreenQuickView::Private
 public:
     QPointingDevice *qtPointingDeviceForKWinDevice(InputDevice *device) const
     {
-        if (device->isTouchpad()) {
+        if (device && device->isTouchpad()) {
             return touchpadDevice;
         } else {
             return mouseDevice;
