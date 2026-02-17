@@ -80,6 +80,7 @@ Rules::Rules()
     , desktopfilerule(UnusedSetRule)
     , adaptivesyncrule(UnusedForceRule)
     , tearingrule(UnusedForceRule)
+    , excludefromcapturerule(UnusedSetRule)
 {
 }
 
@@ -166,6 +167,7 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_FORCE_RULE(layer, );
     READ_FORCE_RULE(adaptivesync, );
     READ_FORCE_RULE(tearing, );
+    READ_SET_RULE(excludefromcapture);
 }
 
 #undef READ_MATCH_STRING
@@ -301,7 +303,8 @@ bool Rules::isEmpty() const
         && desktopfilerule == UnusedSetRule
         && layerrule == UnusedForceRule
         && adaptivesyncrule == UnusedForceRule
-        && tearingrule == UnusedForceRule;
+        && tearingrule == UnusedForceRule
+        && excludefromcapturerule == UnusedSetRule;
 }
 
 Rules::ForceRule Rules::convertForceRule(int v)
@@ -719,6 +722,7 @@ APPLY_FORCE_RULE(disableglobalshortcuts, DisableGlobalShortcuts, bool)
 APPLY_RULE(desktopfile, DesktopFile, QString)
 APPLY_FORCE_RULE(adaptivesync, AdaptiveSync, bool)
 APPLY_FORCE_RULE(tearing, Tearing, bool)
+APPLY_RULE(excludefromcapture, ExcludeFromCapture, bool)
 
 #undef APPLY_RULE
 #undef APPLY_FORCE_RULE
@@ -778,6 +782,7 @@ bool Rules::discardUsed(bool withdrawn)
     DISCARD_USED_FORCE_RULE(layer);
     DISCARD_USED_FORCE_RULE(adaptivesync);
     DISCARD_USED_FORCE_RULE(tearing);
+    DISCARD_USED_SET_RULE(excludefromcapture);
 
     return changed;
 }
@@ -938,6 +943,7 @@ CHECK_RULE(DesktopFile, QString)
 CHECK_FORCE_RULE(Layer, Layer)
 CHECK_FORCE_RULE(AdaptiveSync, bool)
 CHECK_FORCE_RULE(Tearing, bool)
+CHECK_RULE(ExcludeFromCapture, bool)
 
 #undef CHECK_RULE
 #undef CHECK_FORCE_RULE

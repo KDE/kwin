@@ -80,6 +80,7 @@ public:
     Layer checkLayer(Layer layer) const;
     bool checkAdaptiveSync(bool adaptivesync) const;
     bool checkTearing(bool requestsTearing) const;
+    bool checkExcludeFromCapture(bool exclude, bool init = false) const;
 
 private:
     MaximizeMode checkMaximizeVert(MaximizeMode mode, bool init) const;
@@ -190,6 +191,7 @@ public:
     bool applyLayer(enum Layer &layer) const;
     bool applyAdaptiveSync(bool &adaptivesync) const;
     bool applyTearing(bool &tearing) const;
+    bool applyExcludeFromCapture(bool &exclude, bool init) const;
 
 private:
 #endif
@@ -300,6 +302,8 @@ private:
     ForceRule adaptivesyncrule;
     bool tearing;
     ForceRule tearingrule;
+    bool excludefromcapture;
+    SetRule excludefromcapturerule;
     friend QDebug &operator<<(QDebug &stream, const Rules *);
 };
 

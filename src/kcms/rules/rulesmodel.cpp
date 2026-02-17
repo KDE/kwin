@@ -726,6 +726,11 @@ void RulesModel::populateRuleList()
                          RulePolicy::ForceRule, RuleItem::Boolean,
                          i18n("Allow tearing"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme("monitor-symbolic")));
+
+    addRule(new RuleItem(QLatin1StringView("excludefromcapture"),
+                         RulePolicy::SetRule, RuleItem::Boolean,
+                         i18n("Hide from Screencast"), i18n("Appearance & Fixes"),
+                         QIcon::fromTheme(QStringLiteral("view-private"))));
 }
 
 const QHash<QString, QString> RulesModel::x11PropertyHash()
@@ -747,6 +752,7 @@ const QHash<QString, QString> RulesModel::x11PropertyHash()
         {"desktopFile", "desktopfile"},
         {"desktops", "desktops"},
         {"layer", "layer"},
+        {"excludeFromCapture", "excludefromcapture"},
     };
     return propertyToRule;
 };

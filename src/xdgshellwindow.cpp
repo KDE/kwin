@@ -472,6 +472,8 @@ std::optional<XdgToplevelSessionData> XdgToplevelSessionData::parse(const QVaria
             data.decorationPolicy = DecorationPolicy(value.toUInt());
         } else if (key == QStringLiteral("shortcut")) {
             data.shortcut = value.toString();
+        } else if (key == QStringLiteral("excludeFromCapture")) {
+            data.excludeFromCapture = value.toBool();
         }
     }
 
@@ -496,6 +498,7 @@ QVariant XdgToplevelSessionData::save(const Window *window)
         {QStringLiteral("activities"), window->activities()},
         {QStringLiteral("decorationPolicy"), uint(window->decorationPolicy())},
         {QStringLiteral("shortcut"), window->shortcut().toString()},
+        {QStringLiteral("excludeFromCapture"), window->excludeFromCapture()},
     };
 }
 
@@ -1412,6 +1415,16 @@ QString XdgToplevelWindow::initialShortcut(const std::optional<XdgToplevelSessio
     return shortcut().toString();
 }
 
+bool XdgToplevelWindow::initialExcludeFromCapture(const std::optional<XdgToplevelSessionData> &session) const
+{
+    if (session) {
+        if (const auto exclude = session->excludeFromCapture) {
+            return exclude.value();
+        }
+    }
+    return excludeFromCapture();
+}
+
 void XdgToplevelWindow::initialize()
 {
     setupWindowRules();
@@ -1445,6 +1458,7 @@ void XdgToplevelWindow::initialize()
     setKeepBelow(rules()->checkKeepBelow(initialKeepBelow(sessionData), true));
     setShortcut(rules()->checkShortcut(initialShortcut(sessionData), true));
     setDecorationPolicy(rules()->checkDecorationPolicy(initialDecorationPolicy(sessionData), true));
+    setExcludeFromCapture(rules()->checkExcludeFromCapture(initialExcludeFromCapture(sessionData), true));
 
     workspace()->rulebook()->discardUsed(this, false); // Remove Apply Now rules.
     updateWindowRules(Rules::All);

@@ -146,6 +146,7 @@ QVariantMap clientToVariantMap(const Window *c)
             {QStringLiteral("activities"), c->activities()},
 #endif
             {QStringLiteral("layer"), c->layer()},
+            {QStringLiteral("excludeFromCapture"), c->excludeFromCapture()},
     };
 }
 }

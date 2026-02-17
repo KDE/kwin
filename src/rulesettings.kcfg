@@ -462,5 +462,16 @@
       <label>Tearing rule type</label>
       <default code="true">Rules::UnusedForceRule</default>
     </entry>
+
+    <entry name="excludefromcapture" type="Bool">
+      <label>Hide from screencast</label>
+      <default>false</default>
+    </entry>
+    <entry name="excludefromcapturerule" type="Int">
+      <label>Hide from screencast rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
   </group>
 </kcfg>

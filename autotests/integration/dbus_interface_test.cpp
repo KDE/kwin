@@ -140,6 +140,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
         {QStringLiteral("activities"), QStringList()},
 #endif
         {QStringLiteral("layer"), NormalLayer},
+        {QStringLiteral("excludeFromCapture"), false},
     };
 
     // let's get the window info
@@ -186,6 +187,11 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     window->setSkipSwitcher(true);
     QVERIFY(window->skipSwitcher());
     QCOMPARE(verifyProperty(QStringLiteral("skipSwitcher")), true);
+
+    QVERIFY(!window->excludeFromCapture());
+    window->setExcludeFromCapture(true);
+    QVERIFY(window->excludeFromCapture());
+    QCOMPARE(verifyProperty(QStringLiteral("excludeFromCapture")), true);
 
     // not testing fullscreen, maximizeHorizontal, maximizeVertical and noBorder as those require window geometry changes
 
@@ -275,6 +281,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
         {QStringLiteral("activities"), QStringList()},
 #endif
         {QStringLiteral("layer"), NormalLayer},
+        {QStringLiteral("excludeFromCapture"), false},
     };
 
     // let's get the window info
@@ -324,6 +331,11 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     window->setSkipSwitcher(true);
     QVERIFY(window->skipSwitcher());
     QCOMPARE(verifyProperty(QStringLiteral("skipSwitcher")), true);
+
+    QVERIFY(!window->excludeFromCapture());
+    window->setExcludeFromCapture(true);
+    QVERIFY(window->excludeFromCapture());
+    QCOMPARE(verifyProperty(QStringLiteral("excludeFromCapture")), true);
 
     QVERIFY(!window->noBorder());
     window->setNoBorder(true);

@@ -4490,6 +4490,7 @@ void Window::applyWindowRules()
         setOpacity(rules()->checkOpacityInactive(opacity()));
     }
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName()));
+    setExcludeFromCapture(rules()->checkExcludeFromCapture(excludeFromCapture()));
 }
 
 void Window::setLastUsageSerial(quint32 serial)
@@ -4733,6 +4734,8 @@ bool Window::excludeFromCapture() const
 
 void Window::setExcludeFromCapture(bool newExcludeFromCapture)
 {
+    newExcludeFromCapture = rules()->checkExcludeFromCapture(newExcludeFromCapture);
+
     if (m_excludeFromCapture == newExcludeFromCapture) {
         return;
     }

@@ -136,6 +136,7 @@ public:
     std::optional<QStringList> desktops;
     std::optional<QStringList> activities;
     std::optional<QString> shortcut;
+    std::optional<bool> excludeFromCapture;
 };
 
 class XdgToplevelWindow final : public XdgSurfaceWindow
@@ -243,6 +244,7 @@ private:
     QVector<VirtualDesktop *> initialDesktops(const std::optional<XdgToplevelSessionData> &session) const;
     QString initialShortcut(const std::optional<XdgToplevelSessionData> &session) const;
     QStringList initialActivities(const std::optional<XdgToplevelSessionData> &session) const;
+    bool initialExcludeFromCapture(const std::optional<XdgToplevelSessionData> &session) const;
     DecorationMode preferredDecorationMode() const;
     void configureDecoration();
     void configureXdgDecoration(DecorationMode decorationMode);
