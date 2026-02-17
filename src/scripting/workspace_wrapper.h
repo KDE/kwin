@@ -31,6 +31,7 @@ class WorkspaceWrapper : public QObject
     Q_OBJECT
     Q_PROPERTY(QList<KWin::VirtualDesktop *> desktops READ desktops NOTIFY desktopsChanged)
     Q_PROPERTY(KWin::VirtualDesktop *currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
+    Q_PROPERTY(bool virtualDesktopNavigationWrapsAround READ virtualDesktopNavigationWrapsAround NOTIFY virtualDesktopNavigationWrapsAroundChanged)
     Q_PROPERTY(KWin::Window *activeWindow READ activeWindow WRITE setActiveWindow NOTIFY windowActivated)
     // TODO: write and notify?
     Q_PROPERTY(QSize desktopGridSize READ desktopGridSize NOTIFY desktopLayoutChanged)
@@ -145,6 +146,14 @@ Q_SIGNALS:
     void currentDesktopChanged(KWin::VirtualDesktop *previous);
 
     /**
+     * Emitted whenever the setting on whether navigation in the desktop layout
+     * wraps around at the borders changes.
+     *
+     * @since 6.7
+     */
+    void virtualDesktopNavigationWrapsAroundChanged();
+
+    /**
      * This signal is emitted when the cursor position changes.
      * @see cursorPos()
      */
@@ -217,6 +226,13 @@ public:
     QList<VirtualDesktop *> desktops() const;
     VirtualDesktop *currentDesktop() const;
     void setCurrentDesktop(VirtualDesktop *desktop);
+
+    /**
+     * Whether navigation in the desktop layout wraps around at the borders
+     *
+     * @since 6.7
+     */
+    bool virtualDesktopNavigationWrapsAround() const;
 
     Q_INVOKABLE KWin::LogicalOutput *screenAt(const QPointF &pos) const;
 

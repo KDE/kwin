@@ -44,6 +44,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     connect(vds, &VirtualDesktopManager::desktopMoved, this, &WorkspaceWrapper::desktopsChanged);
     connect(vds, &VirtualDesktopManager::layoutChanged, this, &WorkspaceWrapper::desktopLayoutChanged);
     connect(vds, &VirtualDesktopManager::currentChanged, this, &WorkspaceWrapper::currentDesktopChanged);
+    connect(vds, &VirtualDesktopManager::navigationWrappingAroundChanged, this, &WorkspaceWrapper::virtualDesktopNavigationWrapsAroundChanged);
 #if KWIN_BUILD_ACTIVITIES
     if (KWin::Activities *activities = ws->activities()) {
         connect(activities, &Activities::currentChanged, this, &WorkspaceWrapper::currentActivityChanged);
@@ -77,6 +78,11 @@ void WorkspaceWrapper::setCurrentDesktop(VirtualDesktop *desktop)
         return;
     }
     VirtualDesktopManager::self()->setCurrent(desktop);
+}
+
+bool WorkspaceWrapper::virtualDesktopNavigationWrapsAround() const
+{
+    return VirtualDesktopManager::self()->isNavigationWrappingAround();
 }
 
 Window *WorkspaceWrapper::activeWindow() const
