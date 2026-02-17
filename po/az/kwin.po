@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-14 00:45+0000\n"
+"POT-Creation-Date: 2026-02-17 00:47+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -4357,42 +4357,42 @@ msgstr "Aktiv pəncərə (%1)"
 msgid "unknown"
 msgstr "naməlum"
 
-#: virtualdesktops.cpp:729 virtualdesktops.cpp:808
+#: virtualdesktops.cpp:731 virtualdesktops.cpp:810
 #, kde-format
 msgid "Desktop %1"
 msgstr "İş masası %1"
 
-#: virtualdesktops.cpp:815
+#: virtualdesktops.cpp:817
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Növbəti İŞ Masasına keçid"
 
-#: virtualdesktops.cpp:816
+#: virtualdesktops.cpp:818
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Əvvəlki İş masasına keçid"
 
-#: virtualdesktops.cpp:819
+#: virtualdesktops.cpp:821
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Bir İş masası sağa keçmək"
 
-#: virtualdesktops.cpp:820
+#: virtualdesktops.cpp:822
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Bir İş masası sola keçmək"
 
-#: virtualdesktops.cpp:821
+#: virtualdesktops.cpp:823
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Bir İş masası yuxarı keçmək"
 
-#: virtualdesktops.cpp:822
+#: virtualdesktops.cpp:824
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Bir İş masası aşağı keçmək"
 
-#: virtualdesktops.cpp:910
+#: virtualdesktops.cpp:912
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "%1 İş masasına keçid"

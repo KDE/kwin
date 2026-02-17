@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-14 00:45+0000\n"
-"PO-Revision-Date: 2026-01-24 11:29+0100\n"
+"POT-Creation-Date: 2026-02-17 00:47+0000\n"
+"PO-Revision-Date: 2026-02-17 01:51+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 25.12.1\n"
+"X-Generator: Lokalize 25.12.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -1277,7 +1277,7 @@ msgstr "hora"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "El mensaje que se mostrará (pantalla completa, sin bordes)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
 #, kde-format
@@ -1291,12 +1291,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Esta utilidad de ayuda no debe ser llamada directamente."
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1305,8 +1300,8 @@ msgid ""
 msgstr ""
 "Ha seleccionado mostrar una ventana en modo de pantalla completa.\n"
 "Si la propia aplicación no tiene la opción de desactivar el modo de pantalla "
-"completa, no podrá hacerlo utilizando el ratón. Use, en su lugar, el menú de "
-"la ventana, que se activa con el atajo de teclado «%1»."
+"completa, no podrá hacerlo utilizando el ratón. Use, en su lugar, el atajo "
+"de teclado %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1322,12 +1317,7 @@ msgstr ""
 "la ventana, que se activa con el atajo de teclado «%1»."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1335,23 +1325,16 @@ msgid ""
 msgstr ""
 "Ha seleccionado mostrar una ventana en modo de pantalla completa.\n"
 "Si la propia aplicación no tiene la opción de desactivar el modo de pantalla "
-"completa, no podrá hacerlo utilizando el ratón. Use, en su lugar, el menú de "
-"la ventana, que se activa con el atajo de teclado «%1»."
+"completa, no podrá hacerlo utilizando el ratón."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "Pantalla completa"
+msgstr "Deshacer pantalla completa"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1359,8 +1342,7 @@ msgid ""
 msgstr ""
 "Ha seleccionado mostrar una ventana sin borde.\n"
 "Al no tener borde, no podrá habilitarlo de nuevo utilizando el ratón. Use, "
-"en su lugar, el menú de la ventana, que se activa con el atajo de teclado "
-"«%1»."
+"en su lugar, el atajo de teclado %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
 #, kde-format
@@ -1376,32 +1358,25 @@ msgstr ""
 "«%1»."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
 "Ha seleccionado mostrar una ventana sin borde.\n"
-"Al no tener borde, no podrá habilitarlo de nuevo utilizando el ratón. Use, "
-"en su lugar, el menú de la ventana, que se activa con el atajo de teclado "
-"«%1»."
+"Al no tener borde, no podrá habilitarlo de nuevo utilizando el ratón."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
 #, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr ""
+msgstr "Restaurar borde"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "No volver a mostrar"
 
 #: helpers/killer/killer.cpp:132
 #, kde-format
@@ -3893,10 +3868,9 @@ msgid "Maximize Window Horizontally"
 msgstr "Maximizar la ventana horizontalmente"
 
 #: useractions.cpp:845
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "Redimensionar la ventana"
+msgstr "Restaurar ventana"
 
 #: useractions.cpp:847
 #, kde-format
@@ -4223,42 +4197,42 @@ msgstr "Activar ventana (%1)"
 msgid "unknown"
 msgstr "desconocida"
 
-#: virtualdesktops.cpp:729 virtualdesktops.cpp:808
+#: virtualdesktops.cpp:731 virtualdesktops.cpp:810
 #, kde-format
 msgid "Desktop %1"
 msgstr "Escritorio %1"
 
-#: virtualdesktops.cpp:815
+#: virtualdesktops.cpp:817
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Cambiar al siguiente escritorio"
 
-#: virtualdesktops.cpp:816
+#: virtualdesktops.cpp:818
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Cambiar al escritorio anterior"
 
-#: virtualdesktops.cpp:819
+#: virtualdesktops.cpp:821
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Cambiar al escritorio de la derecha"
 
-#: virtualdesktops.cpp:820
+#: virtualdesktops.cpp:822
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Cambiar al escritorio de la izquierda"
 
-#: virtualdesktops.cpp:821
+#: virtualdesktops.cpp:823
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Cambiar al escritorio superior"
 
-#: virtualdesktops.cpp:822
+#: virtualdesktops.cpp:824
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Cambiar al escritorio inferior"
 
-#: virtualdesktops.cpp:910
+#: virtualdesktops.cpp:912
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Cambiar al escritorio %1"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-14 00:45+0000\n"
+"POT-Creation-Date: 2026-02-17 00:47+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -4370,42 +4370,42 @@ msgstr "Akna aktiveerimine (%1)"
 msgid "unknown"
 msgstr "tundmatu"
 
-#: virtualdesktops.cpp:729 virtualdesktops.cpp:808
+#: virtualdesktops.cpp:731 virtualdesktops.cpp:810
 #, kde-format
 msgid "Desktop %1"
 msgstr "Töölaud %1"
 
-#: virtualdesktops.cpp:815
+#: virtualdesktops.cpp:817
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Lülitumine järgmisele töölauale"
 
-#: virtualdesktops.cpp:816
+#: virtualdesktops.cpp:818
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Lülitumine eelmisele töölauale"
 
-#: virtualdesktops.cpp:819
+#: virtualdesktops.cpp:821
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Lülitumine üks töölaud paremale"
 
-#: virtualdesktops.cpp:820
+#: virtualdesktops.cpp:822
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Lülitumine üks töölaud vasakule"
 
-#: virtualdesktops.cpp:821
+#: virtualdesktops.cpp:823
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Lülitumine üks töölaud üles"
 
-#: virtualdesktops.cpp:822
+#: virtualdesktops.cpp:824
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Lülitumine üks töölaud alla"
 
-#: virtualdesktops.cpp:910
+#: virtualdesktops.cpp:912
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Lülitumine töölauale %1"
