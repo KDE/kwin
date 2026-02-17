@@ -34,7 +34,6 @@ RegionScreenCastSource::RegionScreenCastSource(const Rect &region, qreal scale, 
 
     // TODO once the layer doesn't depend on the output anymore, remove this?
     connect(workspace(), &Workspace::outputsChanged, this, &RegionScreenCastSource::close);
-    connect(Compositor::self(), &Compositor::aboutToToggleCompositing, this, &RegionScreenCastSource::close);
 }
 
 RegionScreenCastSource::~RegionScreenCastSource()
