@@ -740,6 +740,7 @@ ScreenEdges::ScreenEdges()
     , m_timeThreshold(0)
     , m_reactivateThreshold(0)
     , m_virtualDesktopLayout({})
+    , m_configWatcher(KConfigWatcher::create(kwinApp()->config()))
     , m_actionTopLeft(ElectricActionNone)
     , m_actionTop(ElectricActionNone)
     , m_actionTopRight(ElectricActionNone)
@@ -752,6 +753,15 @@ ScreenEdges::ScreenEdges()
     , m_touchTarget(8)
     , m_gestureRecognizer(std::make_unique<ScreenEdgeGestureRecognizer>())
 {
+    connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
+        if (group.name() == QLatin1StringView("ScreenEdges") && names.contains(QByteArrayLiteral("TouchTarget"))) {
+            const int newTouchTarget = group.readEntry("TouchTarget", 8);
+            if (newTouchTarget != m_touchTarget) {
+                m_touchTarget = newTouchTarget;
+                recreateEdges();
+            }
+        }
+    });
 }
 
 ScreenEdges::~ScreenEdges()
