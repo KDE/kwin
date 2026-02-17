@@ -158,7 +158,7 @@ KWin.TabBoxSwitcher {
                                     source: model.icon
                                 }
 
-                                PlasmaComponents3.ToolButton {
+                                PlasmaComponents3.Button {
                                     id: closeButton
                                     anchors {
                                         right: parent.right
