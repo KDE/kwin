@@ -630,7 +630,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     if (!output->currentBrightness().has_value()
         || (!output->highDynamicRange() && output->brightnessDevice() && !output->isInternal())
         || (!output->highDynamicRange() && output->brightnessDevice() && output->brightnessDevice()->brightnessSteps() < 5)) {
-        frame->setBrightness(output->brightnessSetting() * output->dimming());
+        frame->setBrightness(output->brightnessSetting());
     } else {
         // animate much slower for automatic brightness
         double changePerSecond = 3;
@@ -646,8 +646,11 @@ void Compositor::composite(RenderLoop *renderLoop)
         const double maxChangePerFrame = changePerSecond * 1'000.0 / renderLoop->refreshRate();
         // brightness perception is non-linear, gamma 2.2 encoding *roughly* represents that
         const double current = std::pow(*output->currentBrightness(), 1.0 / 2.2);
-        frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting() * output->dimming(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
+        frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
     }
+    // always animate the dimming factor
+    const double maxDimmingChange = 0.5 * 1'000.0 / renderLoop->refreshRate();
+    frame->setDimmingFactor(std::clamp(output->dimming(), output->currentDimming() - maxDimmingChange, output->currentDimming() + maxDimmingChange));
 
     Window *const activeWindow = workspace()->activeWindow();
     SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->frameGeometry().intersects(primaryView->viewport()) ? activeWindow->surfaceItem() : nullptr;
@@ -956,12 +959,13 @@ void Compositor::composite(RenderLoop *renderLoop)
         output->repairPresentation();
     }
 
-    const bool forceRepaintForBrightness = (frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting() * output->dimming()) > 0.001)
+    const bool forceRepaintForBrightness = (frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting()) > 0.001)
         || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001);
+    const bool forceRepaintForDimming = frame->dimmingFactor() && std::abs(*frame->dimmingFactor() - output->currentDimming()) > 0.001;
 
     const bool forceRepaintForOffscreenAnimations = m_renderLoopDrivenAnimationDriver->isRunning();
 
-    if (forceRepaintForBrightness || forceRepaintForOffscreenAnimations) {
+    if (forceRepaintForBrightness || forceRepaintForOffscreenAnimations || forceRepaintForDimming) {
         // we're currently running an animation to change the brightness
         renderLoop->scheduleRepaint();
     }

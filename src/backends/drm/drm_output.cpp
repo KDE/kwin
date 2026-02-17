@@ -325,9 +325,9 @@ bool DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::s
     if (!success) {
         return false;
     }
-    if (frame->brightness() != m_state.currentBrightness || (frame->artificialHdrHeadroom() && frame->artificialHdrHeadroom() != m_state.artificialHdrHeadroom)) {
-        updateBrightness(frame->brightness().value_or(m_state.currentBrightness.value_or(m_state.brightnessSetting)), frame->artificialHdrHeadroom().value_or(m_state.artificialHdrHeadroom));
-    }
+    updateBrightness(frame->brightness().value_or(m_state.currentBrightness.value_or(m_state.brightnessSetting)),
+                     frame->artificialHdrHeadroom().value_or(m_state.artificialHdrHeadroom),
+                     frame->dimmingFactor().value_or(m_state.currentDimming));
     return true;
 }
 
@@ -597,8 +597,13 @@ void DrmOutput::unsetBrightnessDevice()
     updateInformation();
 }
 
-void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHeadroom)
+void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHeadroom, double newDimming)
 {
+    if (m_state.currentBrightness == newBrightness
+        && m_state.artificialHdrHeadroom == newArtificialHdrHeadroom
+        && m_state.currentDimming == newDimming) {
+        return;
+    }
     if (m_state.brightnessDevice && !m_state.highDynamicRange) {
         constexpr double minLuminance = 0.04;
         const double effectiveBrightness = (minLuminance + newBrightness) * newArtificialHdrHeadroom - minLuminance;
@@ -607,6 +612,7 @@ void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHe
     State next = m_state;
     next.currentBrightness = newBrightness;
     next.artificialHdrHeadroom = newArtificialHdrHeadroom;
+    next.currentDimming = newDimming;
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     tryKmsColorOffloading(next);

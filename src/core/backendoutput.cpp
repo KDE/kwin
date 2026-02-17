@@ -631,6 +631,11 @@ std::optional<double> BackendOutput::currentBrightness() const
     return m_state.currentBrightness;
 }
 
+double BackendOutput::currentDimming() const
+{
+    return m_state.currentDimming;
+}
+
 double BackendOutput::artificialHdrHeadroom() const
 {
     return m_state.artificialHdrHeadroom;
