@@ -125,8 +125,8 @@ QColor ColorPickerEffect::pick()
                 if (!beginInfo) {
                     return;
                 }
-                SceneView sceneView(Compositor::self()->scene(), screen, nullptr, &layer);
-                auto cursorView = std::make_unique<ItemTreeView>(&sceneView, Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
+                SceneView sceneView(kwinApp()->scene(), screen, nullptr, &layer);
+                auto cursorView = std::make_unique<ItemTreeView>(&sceneView, kwinApp()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
                 cursorView->setExclusive(true);
                 const Rect pixelDamage = QRect(QPoint(), QSize(1, 1));
                 sceneView.setViewport(QRectF(p, QSizeF(1, 1)));

@@ -97,8 +97,8 @@ void XwaylandServerRestartTest::testRestart()
     QVERIFY(window->isDecorated());
 
     // Render a frame to ensure that the compositor doesn't crash.
-    Compositor::self()->scene()->addRepaintFull();
-    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &WorkspaceScene::frameRendered);
+    kwinApp()->scene()->addRepaintFull();
+    QSignalSpy frameRenderedSpy(kwinApp()->scene(), &WorkspaceScene::frameRendered);
     QVERIFY(frameRenderedSpy.wait());
 
     // Destroy the test window.

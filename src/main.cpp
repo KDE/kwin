@@ -536,7 +536,7 @@ XwaylandInterface *Application::xwayland() const
 
 static PlatformCursorImage grabCursorOpenGL()
 {
-    auto scene = Compositor::self()->scene();
+    auto scene = kwinApp()->scene();
     if (!scene) {
         return PlatformCursorImage{};
     }
@@ -565,7 +565,7 @@ static PlatformCursorImage grabCursorOpenGL()
 
 static PlatformCursorImage grabCursorSoftware()
 {
-    auto scene = Compositor::self()->scene();
+    auto scene = kwinApp()->scene();
     if (!scene) {
         return PlatformCursorImage{};
     }
@@ -623,6 +623,21 @@ void Application::startInteractivePositionSelection(std::function<void(const QPo
         return;
     }
     input()->startInteractivePositionSelection(callback);
+}
+
+WorkspaceScene *Application::scene() const
+{
+    return m_scene.get();
+}
+
+void Application::createScene()
+{
+    m_scene = std::make_unique<WorkspaceScene>();
+}
+
+void Application::destroyScene()
+{
+    m_scene.reset();
 }
 
 } // namespace

@@ -756,7 +756,7 @@ void DebugConsole::initGLTab()
         m_ui->glInfoScrollArea->setVisible(false);
         return;
     }
-    const auto gl = Compositor::self()->scene()->openglContext()->glPlatform();
+    const auto gl = kwinApp()->scene()->openglContext()->glPlatform();
     m_ui->noOpenGLLabel->setVisible(false);
     m_ui->glInfoScrollArea->setVisible(true);
     m_ui->glVendorStringLabel->setText(QString::fromLocal8Bit(gl->glVendorString()));

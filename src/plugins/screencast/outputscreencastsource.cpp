@@ -121,7 +121,7 @@ void OutputScreenCastSource::resume()
 
     m_layer = std::make_unique<ScreencastLayer>(m_output, static_cast<EglBackend *>(Compositor::self()->backend())->openglContext()->displayObject()->nonExternalOnlySupportedDrmFormats());
 
-    m_sceneView = std::make_unique<FilteredSceneView>(Compositor::self()->scene(), m_output, m_layer.get(), m_pidToHide);
+    m_sceneView = std::make_unique<FilteredSceneView>(kwinApp()->scene(), m_output, m_layer.get(), m_pidToHide);
     m_sceneView->setViewport(m_output->geometryF());
     m_sceneView->setScale(m_output->scale());
     connect(m_output, &LogicalOutput::changed, m_sceneView.get(), [this]() {
@@ -129,7 +129,7 @@ void OutputScreenCastSource::resume()
         m_sceneView->setScale(m_output->scale());
     });
 
-    m_cursorView = std::make_unique<ItemTreeView>(m_sceneView.get(), Compositor::self()->scene()->cursorItem(), m_output, nullptr, nullptr);
+    m_cursorView = std::make_unique<ItemTreeView>(m_sceneView.get(), kwinApp()->scene()->cursorItem(), m_output, nullptr, nullptr);
     m_cursorView->setExclusive(!m_renderCursor);
 
     connect(m_layer.get(), &OutputLayer::repaintScheduled, this, &OutputScreenCastSource::frame);

@@ -127,7 +127,7 @@ Region WindowScreenCastSource::render(GLFramebuffer *target, const Region &buffe
     RenderTarget renderTarget(target);
     RenderViewport viewport(boundingRect(), devicePixelRatio(), renderTarget, QPoint());
 
-    WorkspaceScene *scene = Compositor::self()->scene();
+    WorkspaceScene *scene = kwinApp()->scene();
 
     scene->renderer()->beginFrame(renderTarget, viewport);
     glClearColor(0.0, 0.0, 0.0, 0.0);

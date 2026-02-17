@@ -5,7 +5,7 @@
 */
 
 #include "scene/opengl/ninepatch.h"
-#include "compositor.h"
+#include "main.h"
 #include "opengl/eglcontext.h"
 #include "opengl/gltexture.h"
 #include "scene/workspacescene.h"
@@ -124,7 +124,7 @@ NinePatchOpenGL::NinePatchOpenGL(std::unique_ptr<GLTexture> &&texture)
 NinePatchOpenGL::~NinePatchOpenGL()
 {
     // FIXME: It should not be attached to the workspace scene.
-    Compositor::self()->scene()->openglContext()->makeCurrent();
+    kwinApp()->scene()->openglContext()->makeCurrent();
 }
 
 GLTexture *NinePatchOpenGL::texture() const

@@ -123,6 +123,7 @@ ApplicationWayland::~ApplicationWayland()
 
     destroyInputMethod();
     destroyCompositor();
+    destroyScene();
     destroyInput();
 
     delete WaylandServer::self();
@@ -143,6 +144,7 @@ void ApplicationWayland::performStartup()
     auto compositor = Compositor::create();
     compositor->createRenderer();
     createWorkspace();
+    createScene();
     createPlugins();
 
     compositor->start();

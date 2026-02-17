@@ -1083,37 +1083,37 @@ EffectWindow *EffectsHandler::currentTabBoxWindow() const
 
 void EffectsHandler::addRepaintFull()
 {
-    m_compositor->scene()->addRepaintFull();
+    m_scene->addRepaintFull();
 }
 
 void EffectsHandler::addRepaint(const QRect &logicalRegion)
 {
-    m_compositor->scene()->addLogicalRepaint(Rect(logicalRegion));
+    m_scene->addLogicalRepaint(Rect(logicalRegion));
 }
 
 void EffectsHandler::addRepaint(const QRectF &logicalRegion)
 {
-    m_compositor->scene()->addLogicalRepaint(Rect(logicalRegion.toAlignedRect()));
+    m_scene->addLogicalRepaint(Rect(logicalRegion.toAlignedRect()));
 }
 
 void EffectsHandler::addRepaint(const Rect &logicalRegion)
 {
-    m_compositor->scene()->addLogicalRepaint(logicalRegion);
+    m_scene->addLogicalRepaint(logicalRegion);
 }
 
 void EffectsHandler::addRepaint(const RectF &logicalRegion)
 {
-    m_compositor->scene()->addLogicalRepaint(logicalRegion.toAlignedRect());
+    m_scene->addLogicalRepaint(logicalRegion.toAlignedRect());
 }
 
 void EffectsHandler::addRepaint(const Region &logicalRegion)
 {
-    m_compositor->scene()->addLogicalRepaint(logicalRegion);
+    m_scene->addLogicalRepaint(logicalRegion);
 }
 
 void EffectsHandler::addRepaint(int x, int y, int w, int h)
 {
-    m_compositor->scene()->addLogicalRepaint(x, y, w, h);
+    m_scene->addLogicalRepaint(x, y, w, h);
 }
 
 LogicalOutput *EffectsHandler::activeScreen() const
@@ -1217,7 +1217,7 @@ QStringList EffectsHandler::listOfEffects() const
 bool EffectsHandler::loadEffect(const QString &name)
 {
     makeOpenGLContextCurrent();
-    m_compositor->scene()->addRepaintFull();
+    m_scene->addRepaintFull();
 
     return m_effectLoader->loadEffect(name);
 }
@@ -1238,7 +1238,7 @@ void EffectsHandler::unloadEffect(const QString &name)
     effect_order.erase(it);
     effectsChanged();
 
-    m_compositor->scene()->addRepaintFull();
+    m_scene->addRepaintFull();
 }
 
 void EffectsHandler::destroyEffect(Effect *effect)

@@ -51,7 +51,7 @@ WindowThumbnailSource::WindowThumbnailSource(QQuickWindow *view, Window *handle)
         Q_EMIT changed();
     });
 
-    connect(Compositor::self()->scene(), &WorkspaceScene::preFrameRender, this, &WindowThumbnailSource::update);
+    connect(kwinApp()->scene(), &WorkspaceScene::preFrameRender, this, &WindowThumbnailSource::update);
 
     m_handle->refOffscreenRendering();
 }
@@ -67,7 +67,7 @@ WindowThumbnailSource::~WindowThumbnailSource()
         return;
     }
     if (!QOpenGLContext::currentContext()) {
-        Compositor::self()->scene()->openglContext()->makeCurrent();
+        kwinApp()->scene()->openglContext()->makeCurrent();
     }
     m_offscreenTarget.reset();
     m_offscreenTexture.reset();
@@ -141,7 +141,7 @@ void WindowThumbnailSource::update()
     // shared across contexts. Unfortunately, this also introduces a latency of 1
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
-    Compositor::self()->scene()->renderer()->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {});
+    kwinApp()->scene()->renderer()->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, Region::infinite(), WindowPaintData{}, {}, {});
     GLFramebuffer::popFramebuffer();
 
     // The fence is needed to avoid the case where qtquick renderer starts using

@@ -5,7 +5,7 @@
 */
 
 #include "scene/opengl/atlas.h"
-#include "compositor.h"
+#include "main.h"
 #include "opengl/eglcontext.h"
 #include "opengl/gltexture.h"
 #include "scene/workspacescene.h"
@@ -28,7 +28,7 @@ std::unique_ptr<AtlasOpenGL> AtlasOpenGL::create(const QList<QImage> &images)
 AtlasOpenGL::~AtlasOpenGL()
 {
     // FIXME: It should not be attached to the workspace scene.
-    if (WorkspaceScene *scene = Compositor::self()->scene()) {
+    if (WorkspaceScene *scene = kwinApp()->scene()) {
         scene->openglContext()->makeCurrent();
     }
 }

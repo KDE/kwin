@@ -119,10 +119,10 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
     if (!beginInfo) {
         return std::nullopt;
     }
-    SceneView sceneView(Compositor::self()->scene(), screen, nullptr, &layer);
+    SceneView sceneView(kwinApp()->scene(), screen, nullptr, &layer);
     std::unique_ptr<ItemTreeView> cursorView;
     if (!(flags & ScreenShotIncludeCursor)) {
-        cursorView = std::make_unique<ItemTreeView>(&sceneView, Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
+        cursorView = std::make_unique<ItemTreeView>(&sceneView, kwinApp()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
         cursorView->setExclusive(true);
     }
     if (pidToHide.has_value()) {
@@ -189,10 +189,10 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
     if (!beginInfo) {
         return std::nullopt;
     }
-    SceneView sceneView(Compositor::self()->scene(), workspace()->outputs().front(), nullptr, &layer);
+    SceneView sceneView(kwinApp()->scene(), workspace()->outputs().front(), nullptr, &layer);
     std::unique_ptr<ItemTreeView> cursorView;
     if (!(flags & ScreenShotIncludeCursor)) {
-        cursorView = std::make_unique<ItemTreeView>(&sceneView, Compositor::self()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
+        cursorView = std::make_unique<ItemTreeView>(&sceneView, kwinApp()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
         cursorView->setExclusive(true);
     }
     if (pidToHide.has_value()) {
@@ -249,7 +249,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     RenderTarget renderTarget(&offscreenTarget);
     RenderViewport viewport(geometry, scale, renderTarget, QPoint());
 
-    WorkspaceScene *scene = Compositor::self()->scene();
+    WorkspaceScene *scene = kwinApp()->scene();
 
     scene->renderer()->beginFrame(renderTarget, viewport);
     glClearColor(0.0, 0.0, 0.0, 0.0);

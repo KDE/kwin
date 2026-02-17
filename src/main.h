@@ -44,6 +44,7 @@ class Outline;
 class OutlineVisual;
 class Compositor;
 class Window;
+class WorkspaceScene;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -242,6 +243,7 @@ public:
     InputMethod *inputMethod() const;
     virtual XwaylandInterface *xwayland() const;
     TabletModeManager *tabletModeManager() const;
+    WorkspaceScene *scene() const;
 
     /**
      * Starts an interactive window selection process.
@@ -305,12 +307,14 @@ protected:
     void createPlugins();
     void createInputMethod();
     void createTabletModeManager();
+    void createScene();
     void destroyInput();
     void destroyWorkspace();
     void destroyCompositor();
     void destroyPlugins();
     void destroyInputMethod();
     void destroyPlatform();
+    void destroyScene();
     void applyXwaylandScale();
 
     void setTerminating()
@@ -327,6 +331,7 @@ private:
     QList<QPointer<X11EventFilterContainer>> m_genericEventFilters;
     std::unique_ptr<XcbEventFilter> m_eventFilter;
 #endif
+    std::unique_ptr<WorkspaceScene> m_scene;
     bool m_followLocale1 = false;
     bool m_configLock;
     bool m_initiallyLocked = false;

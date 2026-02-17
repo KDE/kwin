@@ -66,10 +66,6 @@ public:
      */
     bool isActive();
 
-    WorkspaceScene *scene() const
-    {
-        return m_scene.get();
-    }
     RenderBackend *backend() const
     {
         return m_backend.get();
@@ -106,7 +102,6 @@ protected:
     CompositingType m_selectedCompositor = NoCompositing;
 
     State m_state = State::Off;
-    std::unique_ptr<WorkspaceScene> m_scene;
     std::unique_ptr<RenderBackend> m_backend;
     std::unordered_map<RenderLoop *, std::unique_ptr<SceneView>> m_primaryViews;
     std::unordered_map<RenderLoop *, std::unordered_map<OutputLayer *, std::unique_ptr<ItemView>>> m_overlayViews;

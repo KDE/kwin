@@ -134,6 +134,7 @@ WaylandTestApplication::~WaylandTestApplication()
     destroyWorkspace();
     destroyInputMethod();
     destroyCompositor();
+    destroyScene();
     destroyInput();
     m_waylandServer.reset();
 }
@@ -218,6 +219,7 @@ void WaylandTestApplication::performStartup()
     auto compositor = Compositor::create();
     compositor->createRenderer();
     createWorkspace();
+    createScene();
     createPlugins();
 
     compositor->start();

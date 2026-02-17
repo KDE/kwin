@@ -1890,7 +1890,7 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral("Compositing is active\n"));
         switch (effects->compositingType()) {
         case OpenGLCompositing: {
-            const auto context = Compositor::self()->scene()->openglContext();
+            const auto context = kwinApp()->scene()->openglContext();
             GLPlatform *platform = context->glPlatform();
             if (context->isOpenGLES()) {
                 support.append(QStringLiteral("Compositing Type: OpenGL ES 2.0\n"));
