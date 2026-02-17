@@ -201,9 +201,6 @@ void Window::setOpacity(qreal opacity)
 void Window::setupItem()
 {
     m_windowItem = createItem(kwinApp()->scene()->containerItem());
-
-    connect(windowItem(), &WindowItem::positionChanged, this, &Window::visibleGeometryChanged);
-    connect(windowItem(), &WindowItem::boundingRectChanged, this, &Window::visibleGeometryChanged);
 }
 
 void Window::setReadyForPainting()

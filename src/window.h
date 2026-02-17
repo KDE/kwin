@@ -1467,11 +1467,6 @@ Q_SIGNALS:
     void frameGeometryAboutToChange();
 
     /**
-     * This signal is emitted when the visible geometry has changed.
-     */
-    void visibleGeometryChanged();
-
-    /**
      * This signal is emitted when associated tile has changed, including from and to none
      */
     void tileChanged(KWin::Tile *tile);

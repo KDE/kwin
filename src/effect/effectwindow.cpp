@@ -116,15 +116,18 @@ EffectWindow::EffectWindow(WindowItem *windowItem)
     connect(d->m_window, &Window::fullScreenChanged, this, [this]() {
         Q_EMIT windowFullScreenChanged(this);
     });
-    connect(d->m_window, &Window::visibleGeometryChanged, this, [this]() {
-        Q_EMIT windowExpandedGeometryChanged(this);
-    });
     connect(d->m_window, &Window::decorationChanged, this, [this]() {
         Q_EMIT windowDecorationChanged(this);
     });
     connect(d->m_window, &Window::desktopsChanged, this, [this]() {
         Q_EMIT windowDesktopsChanged(this);
     });
+
+    const auto emitWindowExpandedGeometryChanged = [this]() {
+        Q_EMIT windowExpandedGeometryChanged(this);
+    };
+    connect(d->m_windowItem, &WindowItem::positionChanged, this, emitWindowExpandedGeometryChanged);
+    connect(d->m_windowItem, &WindowItem::boundingRectChanged, this, emitWindowExpandedGeometryChanged);
 }
 
 EffectWindow::~EffectWindow()
