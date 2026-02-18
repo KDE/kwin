@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-17 00:47+0000\n"
+"POT-Creation-Date: 2026-02-18 00:47+0000\n"
 "PO-Revision-Date: 2008-12-22 16:10+0530\n"
 "Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
 "Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
@@ -1242,28 +1242,28 @@ msgstr ""
 msgid "Primary Selection"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:127
+#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:128
 #, fuzzy, kde-format
 #| msgid "KDE window manager"
 msgid "Window Manager"
 msgstr "KDE উইন্ডো পরিচালন ব্যবস্থা"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "id"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "time"
 msgstr ""
@@ -1273,13 +1273,13 @@ msgstr ""
 msgid "The message to show (fullscreen, noborder)"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:145
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin সহায়ক সামগ্রী"
 
 #: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:172
+#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:173
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "সহায়ক সামগ্রী সরাসরি আরম্ভ করা সম্ভব নয়।"
@@ -1354,47 +1354,47 @@ msgstr "প্রান্ত বিহীন (&N)"
 msgid "Do not show again"
 msgstr ""
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "বন্ধ করার জন্য চিহ্নিত অ্যাপ্লিকেশনের PID"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "pid"
 msgstr ""
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "অ্যাপ্লিকেশন চালনাকারী মেশিনের হোস্ট-নেম"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "hostname"
 msgstr ""
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "বন্ধ করার জন্য চিহ্নিত উইন্ডোর শিরোনাম"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "caption"
 msgstr ""
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "বন্ধ করার জন্য চিহ্নিত অ্যাপ্লিকেশনের নাম"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "name"
 msgstr ""
 
-#: helpers/killer/killer.cpp:196
+#: helpers/killer/killer.cpp:197
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1404,7 +1404,7 @@ msgid ""
 "lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:200
+#: helpers/killer/killer.cpp:201
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1414,32 +1414,32 @@ msgid ""
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:205
 #, fuzzy, kde-format
 #| msgid "Terminate"
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "বন্ধ করুন"
 
-#: helpers/killer/killer.cpp:205
+#: helpers/killer/killer.cpp:206
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr ""
 
-#: helpers/killer/killer.cpp:214
+#: helpers/killer/killer.cpp:215
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr ""
 
-#: helpers/killer/killer.cpp:230
+#: helpers/killer/killer.cpp:231
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr ""
 
-#: helpers/killer/killer.cpp:232
+#: helpers/killer/killer.cpp:233
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -2463,28 +2463,28 @@ msgstr "চিহ্নিত ডেস্কটপে স্থানান্�
 msgid "Add Virtual Desktop"
 msgstr "চিহ্নিত ডেস্কটপে স্থানান্তর (&D)"
 
-#: plugins/overview/qml/Main.qml:378
+#: plugins/overview/qml/Main.qml:425
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "চিহ্নিত ডেস্কটপে স্থানান্তর (&D)"
 
-#: plugins/overview/qml/Main.qml:384
+#: plugins/overview/qml/Main.qml:431
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "চিহ্নিত ডেস্কটপে স্থানান্তর (&D)"
 
-#: plugins/overview/qml/Main.qml:391
+#: plugins/overview/qml/Main.qml:438
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "উইন্ডোর আচরণ কনফিগার করুন...(&e)"
 
-#: plugins/overview/qml/Main.qml:742
+#: plugins/overview/qml/Main.qml:789
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"
@@ -3677,45 +3677,45 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "উইন্ডো স্থানান্তরণ"
 
-#: tabbox/tabbox.cpp:310
+#: tabbox/tabbox.cpp:311
 msgid "Walk Through Windows"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন"
 
-#: tabbox/tabbox.cpp:311
-msgid "Walk Through Windows (Reverse)"
-msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
-
 #: tabbox/tabbox.cpp:312
-#, fuzzy
-#| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows (Reverse)"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
 #: tabbox/tabbox.cpp:313
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows Alternative"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
 #: tabbox/tabbox.cpp:314
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application"
+msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
 #: tabbox/tabbox.cpp:315
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application (Reverse)"
+msgid "Walk Through Windows of Current Application"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
 #: tabbox/tabbox.cpp:316
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application Alternative"
+msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
 #: tabbox/tabbox.cpp:317
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
+
+#: tabbox/tabbox.cpp:318
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"

@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-17 00:47+0000\n"
-"PO-Revision-Date: 2026-01-30 04:02+0000\n"
-"Last-Translator: Charlotte <altronic25@protonmail.com>\n"
-"Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
+"POT-Creation-Date: 2026-02-18 00:47+0000\n"
+"PO-Revision-Date: 2026-02-17 08:43+0000\n"
+"Last-Translator: charlotte <altronic25@protonmail.com>\n"
+"Language-Team: Irish\n"
 "Language: ga\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
 "3 : 4\n"
-"X-Generator: Lokalize 25.12.1\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1138,13 +1138,13 @@ msgstr ""
 #: debug_console.ui:118
 #, kde-format
 msgid "Renderer:"
-msgstr ""
+msgstr "Rindreálaí:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: debug_console.ui:125
 #, kde-format
 msgid "Version:"
-msgstr ""
+msgstr "Leagan:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: debug_console.ui:132
@@ -1168,13 +1168,13 @@ msgstr ""
 #: debug_console.ui:153
 #, kde-format
 msgid "OpenGL Version:"
-msgstr ""
+msgstr "Leagan OpenGL:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: debug_console.ui:160
 #, kde-format
 msgid "GLSL Version:"
-msgstr ""
+msgstr "Leagan GLSL:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
 #: debug_console.ui:226
@@ -1246,28 +1246,28 @@ msgstr ""
 msgid "Primary Selection"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:127
+#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:128
 #, fuzzy, kde-format
 #| msgid "KDE window manager"
 msgid "Window Manager"
 msgstr "Bainisteoir fuinneog KDE"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "Aitheantas na hacmhainne atá ag an bhfeidhmchlár"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "id"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Am an ghnímh úsáideora a rinne an marú"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "time"
 msgstr "am"
@@ -1277,13 +1277,13 @@ msgstr "am"
 msgid "The message to show (fullscreen, noborder)"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:145
 #, kde-format
 msgid "KWin helper utility"
 msgstr "Uirlis chúnta KWin"
 
 #: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:172
+#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:173
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Ní ceart an uirlis chúntach seo a ghlao go díreach."
@@ -1413,49 +1413,49 @@ msgstr "Ga&n Imlíne"
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "Ná taispeáin arís"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "PID an fheidhmchláir le marú"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "pid"
 msgstr ""
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Óstainm a bhfuil an feidhmchlár ag rith air"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "hostname"
 msgstr ""
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Fotheideal na fuinneoige le marú"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "caption"
 msgstr ""
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Ainm an fheidhmchláir le marú"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "name"
 msgstr "ainm"
 
-#: helpers/killer/killer.cpp:196
+#: helpers/killer/killer.cpp:197
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1465,7 +1465,7 @@ msgid ""
 "lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:200
+#: helpers/killer/killer.cpp:201
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1475,31 +1475,31 @@ msgid ""
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:205
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "&Críochnaigh %1"
+msgstr "&Maraigh %1"
 
-#: helpers/killer/killer.cpp:205
+#: helpers/killer/killer.cpp:206
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr ""
+msgstr "&Fan Níos Faide"
 
-#: helpers/killer/killer.cpp:214
+#: helpers/killer/killer.cpp:215
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr ""
+msgstr "Níl ag Freagairt"
 
-#: helpers/killer/killer.cpp:230
+#: helpers/killer/killer.cpp:231
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr ""
 
-#: helpers/killer/killer.cpp:232
+#: helpers/killer/killer.cpp:233
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -2315,10 +2315,9 @@ msgstr "Cló:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "Taispeáin an Deasc"
+msgstr "Taispeáin Téacs:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
@@ -2429,13 +2428,13 @@ msgstr ""
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr ""
+msgstr "Solas Oíche Ar Fionraí"
 
 #: plugins/nightlight/nightlightmanager.cpp:56
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr ""
+msgstr "Solas Oíche Ar Siúl Arís"
 
 #: plugins/nightlight/nightlightmanager.cpp:77
 #, kde-format
@@ -2533,14 +2532,14 @@ msgstr "Bog Go &Deasc"
 msgid "Add Virtual Desktop"
 msgstr "Deasc &Nua"
 
-#: plugins/overview/qml/Main.qml:378
+#: plugins/overview/qml/Main.qml:425
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Bog Go &Deasc"
 
-#: plugins/overview/qml/Main.qml:384
+#: plugins/overview/qml/Main.qml:431
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -2548,14 +2547,14 @@ msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Deasc &Nua"
 
-#: plugins/overview/qml/Main.qml:391
+#: plugins/overview/qml/Main.qml:438
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Cumraigh Oibriú na bhFuinn&eog..."
 
-#: plugins/overview/qml/Main.qml:742
+#: plugins/overview/qml/Main.qml:789
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"
@@ -3753,35 +3752,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Fuinneoga"
 
-#: tabbox/tabbox.cpp:310
+#: tabbox/tabbox.cpp:311
 msgid "Walk Through Windows"
 msgstr "Céimnigh trí na Fuinneoga"
 
-#: tabbox/tabbox.cpp:311
+#: tabbox/tabbox.cpp:312
 msgid "Walk Through Windows (Reverse)"
 msgstr "Céimnigh trí na Fuinneoga (ag cúlú)"
 
-#: tabbox/tabbox.cpp:312
+#: tabbox/tabbox.cpp:313
 msgid "Walk Through Windows Alternative"
 msgstr ""
 
-#: tabbox/tabbox.cpp:313
+#: tabbox/tabbox.cpp:314
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr ""
 
-#: tabbox/tabbox.cpp:314
+#: tabbox/tabbox.cpp:315
 msgid "Walk Through Windows of Current Application"
 msgstr ""
 
-#: tabbox/tabbox.cpp:315
+#: tabbox/tabbox.cpp:316
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr ""
 
-#: tabbox/tabbox.cpp:316
+#: tabbox/tabbox.cpp:317
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr ""
 
-#: tabbox/tabbox.cpp:317
+#: tabbox/tabbox.cpp:318
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 

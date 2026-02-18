@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-17 00:47+0000\n"
+"POT-Creation-Date: 2026-02-18 00:47+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1225,27 +1225,27 @@ msgstr "剪贴板"
 msgid "Primary Selection"
 msgstr "主要选择"
 
-#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:127
+#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:128
 #, kde-format
 msgid "Window Manager"
 msgstr "窗口管理器"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "属于应用程序的资源的 ID"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "id"
 msgstr "ID"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "触发进程终止信号的用户操作时间"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "time"
 msgstr "时间"
@@ -1255,13 +1255,13 @@ msgstr "时间"
 msgid "The message to show (fullscreen, noborder)"
 msgstr "要显示的消息 (全屏，无边框)"
 
-#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:145
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin 辅助工具程序"
 
 #: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:172
+#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:173
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "这一辅助工具程序不应被直接调用。"
@@ -1350,47 +1350,47 @@ msgstr "恢复显示边框"
 msgid "Do not show again"
 msgstr "不再显示"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "要终止的应用程序的进程 ID (PID)"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "pid"
 msgstr "PID"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "应用程序所运行主机的主机名"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "hostname"
 msgstr "主机名"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "要终止的窗口的标题"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "caption"
 msgstr "标题"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "要终止的应用程序的名称"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "name"
 msgstr "名称"
 
-#: helpers/killer/killer.cpp:196
+#: helpers/killer/killer.cpp:197
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1403,7 +1403,7 @@ msgstr ""
 "para><para><emphasis strong='true'>终止此应用程序将关闭其所有窗口。所有未保存"
 "的数据都将丢失。</emphasis></para>"
 
-#: helpers/killer/killer.cpp:200
+#: helpers/killer/killer.cpp:201
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1416,31 +1416,31 @@ msgstr ""
 "</para><para><emphasis strong='true'>终止此应用程序将关闭其所有窗口。所有未保"
 "存的数据都将丢失。</emphasis></para>"
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:205
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "终止 %1(&T)"
 
-#: helpers/killer/killer.cpp:205
+#: helpers/killer/killer.cpp:206
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "继续等待(&W)"
 
-#: helpers/killer/killer.cpp:214
+#: helpers/killer/killer.cpp:215
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "没有响应"
 
-#: helpers/killer/killer.cpp:230
+#: helpers/killer/killer.cpp:231
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "进程 ID：%1"
 
-#: helpers/killer/killer.cpp:232
+#: helpers/killer/killer.cpp:233
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -2423,25 +2423,25 @@ msgstr "删除虚拟桌面"
 msgid "Add Virtual Desktop"
 msgstr "添加虚拟桌面"
 
-#: plugins/overview/qml/Main.qml:378
+#: plugins/overview/qml/Main.qml:425
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "没有其他可显示的虚拟桌面"
 
-#: plugins/overview/qml/Main.qml:384
+#: plugins/overview/qml/Main.qml:431
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "添加虚拟桌面"
 
-#: plugins/overview/qml/Main.qml:391
+#: plugins/overview/qml/Main.qml:438
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "配置虚拟桌面…"
 
-#: plugins/overview/qml/Main.qml:742
+#: plugins/overview/qml/Main.qml:789
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -3585,35 +3585,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "没有打开的窗口"
 
-#: tabbox/tabbox.cpp:310
+#: tabbox/tabbox.cpp:311
 msgid "Walk Through Windows"
 msgstr "遍历窗口"
 
-#: tabbox/tabbox.cpp:311
+#: tabbox/tabbox.cpp:312
 msgid "Walk Through Windows (Reverse)"
 msgstr "遍历窗口 (反向)"
 
-#: tabbox/tabbox.cpp:312
+#: tabbox/tabbox.cpp:313
 msgid "Walk Through Windows Alternative"
 msgstr "遍历窗口交替"
 
-#: tabbox/tabbox.cpp:313
+#: tabbox/tabbox.cpp:314
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "遍历窗口交替 (反向)"
 
-#: tabbox/tabbox.cpp:314
+#: tabbox/tabbox.cpp:315
 msgid "Walk Through Windows of Current Application"
 msgstr "遍历当前应用程序窗口"
 
-#: tabbox/tabbox.cpp:315
+#: tabbox/tabbox.cpp:316
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "遍历当前应用程序窗口 (反向)"
 
-#: tabbox/tabbox.cpp:316
+#: tabbox/tabbox.cpp:317
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "遍历当前应用程序窗口交替"
 
-#: tabbox/tabbox.cpp:317
+#: tabbox/tabbox.cpp:318
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "遍历当前应用程序窗口交替 (反向)"
 

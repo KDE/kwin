@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-17 00:47+0000\n"
+"POT-Creation-Date: 2026-02-18 00:47+0000\n"
 "PO-Revision-Date: 2026-01-04 17:13+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -1253,27 +1253,27 @@ msgstr "பிடிப்புப்பலகை"
 msgid "Primary Selection"
 msgstr "முதன்மையான தேர்வு"
 
-#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:127
+#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:128
 #, kde-format
 msgid "Window Manager"
 msgstr "சாளர மேலாளர்"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "id"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "நிறுத்துமாறு பயனர் கோரிய நேரம்"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "time"
 msgstr "நேரம்"
@@ -1283,13 +1283,13 @@ msgstr "நேரம்"
 msgid "The message to show (fullscreen, noborder)"
 msgstr ""
 
-#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:145
 #, kde-format
 msgid "KWin helper utility"
 msgstr "கேவின் உதவி செயலி"
 
 #: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:172
+#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:173
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "இச்செயலி, நேரடியாக இயக்கப்படக்கூடாத‍து."
@@ -1405,48 +1405,48 @@ msgstr "&விளிம்பு வேண்டாம்"
 msgid "Do not show again"
 msgstr ""
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "நிறுத்த வேண்டிய செயலியின் பணி எண் (PID)"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "pid"
 msgstr "பணியெண்"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "செயலி இயங்கும் கணினியின் புரவன் பெயர்"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "hostname"
 msgstr "புரவன்பெயர்"
 
 # Caption = title?
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "நிறுத்த வேண்டிய சாளரத்தின் தலைப்பு"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "caption"
 msgstr "தலைப்பு"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "நிறுத்த வேண்டிய செயலியின் பெயர்"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "name"
 msgstr "பெயர்"
 
-#: helpers/killer/killer.cpp:196
+#: helpers/killer/killer.cpp:197
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1462,7 +1462,7 @@ msgstr ""
 "<para><emphasis strong='true'>இந்த செயலியை கட்டாயப்படுத்தி மூடுவது, அதன் அனைத்து "
 "சாளரங்களையும் மூடும். சேமிக்காதவற்றை இழப்பீர்.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:200
+#: helpers/killer/killer.cpp:201
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1476,31 +1476,31 @@ msgstr ""
 "செயலியை கட்டாயப்படுத்தி மூடுவது, அதன் அனைத்து சாளரங்களையும் மூடும். சேமிக்காதவற்றை "
 "இழப்பீர்.</emphasis></para>"
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:205
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "%1 என்பதை &நிறுத்து"
 
-#: helpers/killer/killer.cpp:205
+#: helpers/killer/killer.cpp:206
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "இன்னும் நேரம் &காத்திரு"
 
-#: helpers/killer/killer.cpp:214
+#: helpers/killer/killer.cpp:215
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "பதிலளிக்கவில்லை"
 
-#: helpers/killer/killer.cpp:230
+#: helpers/killer/killer.cpp:231
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "பணியின் எண்: %1"
 
-#: helpers/killer/killer.cpp:232
+#: helpers/killer/killer.cpp:233
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -2492,25 +2492,25 @@ msgstr "மெய்நிகர் பணிமேடையை நீக்க�
 msgid "Add Virtual Desktop"
 msgstr "மெய்நிகர் பணிமேடையைச் சேர்"
 
-#: plugins/overview/qml/Main.qml:378
+#: plugins/overview/qml/Main.qml:425
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "காட்டுவதற்கு வேறு மெய்நிகர் பணிமேடை இல்லை"
 
-#: plugins/overview/qml/Main.qml:384
+#: plugins/overview/qml/Main.qml:431
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "மெய்நிகர் பணிமேடையைச் சேர்"
 
-#: plugins/overview/qml/Main.qml:391
+#: plugins/overview/qml/Main.qml:438
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "மெய்நிகர் பணிமேடைகளை அமை…"
 
-#: plugins/overview/qml/Main.qml:742
+#: plugins/overview/qml/Main.qml:789
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -3657,35 +3657,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "திறந்துள்ள சாளரங்கள் இல்லை"
 
-#: tabbox/tabbox.cpp:310
+#: tabbox/tabbox.cpp:311
 msgid "Walk Through Windows"
 msgstr "சாளரங்களின் பட்டியலில் முன்னே செல்"
 
-#: tabbox/tabbox.cpp:311
+#: tabbox/tabbox.cpp:312
 msgid "Walk Through Windows (Reverse)"
 msgstr "சாளரங்களின் பட்டியலில் பின்னே செல்"
 
-#: tabbox/tabbox.cpp:312
+#: tabbox/tabbox.cpp:313
 msgid "Walk Through Windows Alternative"
 msgstr "சாளரங்களின் பட்டியலில் வேறுவிதமாக முன்னே செல்"
 
-#: tabbox/tabbox.cpp:313
+#: tabbox/tabbox.cpp:314
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "சாளரங்களின் பட்டியலில் வேறுவிதமாக பின்னே செல்"
 
-#: tabbox/tabbox.cpp:314
+#: tabbox/tabbox.cpp:315
 msgid "Walk Through Windows of Current Application"
 msgstr "தற்போதைய செயலியின் சாளரங்களின் பட்டியலில் முன்னே செல்"
 
-#: tabbox/tabbox.cpp:315
+#: tabbox/tabbox.cpp:316
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "தற்போதைய செயலியின் சாளரங்களின் பட்டியலில் பின்னே செல்"
 
-#: tabbox/tabbox.cpp:316
+#: tabbox/tabbox.cpp:317
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "தற்போதைய செயலியின் சாளரங்களின் பட்டியலில் இப்படியும் முன்னே செல்"
 
-#: tabbox/tabbox.cpp:317
+#: tabbox/tabbox.cpp:318
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "தற்போதைய செயலியின் சாளரங்களின் பட்டியலில் இப்படியும் பின்னே செல்"
 

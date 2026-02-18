@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-17 00:47+0000\n"
+"POT-Creation-Date: 2026-02-18 00:47+0000\n"
 "PO-Revision-Date: 2026-02-14 15:16+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1244,27 +1244,27 @@ msgstr "Porta-retalls"
 msgid "Primary Selection"
 msgstr "Selecció primària"
 
-#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:127
+#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:128
 #, kde-format
 msgid "Window Manager"
 msgstr "Gestor de finestres"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "ID del recurs que pertany a l'aplicació"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:140
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "id"
 msgstr "ID"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Hora de l'acció de l'usuari que ha provocat l'acabament"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:142
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "time"
 msgstr "hora"
@@ -1274,13 +1274,13 @@ msgstr "hora"
 msgid "The message to show (fullscreen, noborder)"
 msgstr "El missatge a mostrar (pantalla completa, sense vores)"
 
-#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:144
+#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:145
 #, kde-format
 msgid "KWin helper utility"
 msgstr "Utilitat d'ajuda de KWin"
 
 #: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:172
+#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:173
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Esta utilitat d'ajuda no està pensada per a cridar-se directament."
@@ -1374,47 +1374,47 @@ msgstr "Restaura la vora"
 msgid "Do not show again"
 msgstr "No ho tornes a mostrar"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "El PID de l'aplicació que s'ha de finalitzar"
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "pid"
 msgstr "PID"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Nom de l'amfitrió on s'executa l'aplicació"
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "hostname"
 msgstr "nom de l'amfitrió"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Llegenda de la finestra que es finalitzarà"
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "caption"
 msgstr "llegenda"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Nom de l'aplicació que es finalitzarà"
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "name"
 msgstr "nom"
 
-#: helpers/killer/killer.cpp:196
+#: helpers/killer/killer.cpp:197
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1428,7 +1428,7 @@ msgstr ""
 "es tancaran totes les seues finestres. Qualsevol dada no guardada es perdrà."
 "</emphasis></para>"
 
-#: helpers/killer/killer.cpp:200
+#: helpers/killer/killer.cpp:201
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1442,31 +1442,31 @@ msgstr ""
 "es tancaran totes les seues finestres. Qualsevol dada no guardada es perdrà."
 "</emphasis></para>"
 
-#: helpers/killer/killer.cpp:204
+#: helpers/killer/killer.cpp:205
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "Finali&tza %1"
 
-#: helpers/killer/killer.cpp:205
+#: helpers/killer/killer.cpp:206
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "Espera més &llarga"
 
-#: helpers/killer/killer.cpp:214
+#: helpers/killer/killer.cpp:215
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "No respon"
 
-#: helpers/killer/killer.cpp:230
+#: helpers/killer/killer.cpp:231
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "ID del procés: %1"
 
-#: helpers/killer/killer.cpp:232
+#: helpers/killer/killer.cpp:233
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -2471,25 +2471,25 @@ msgstr "Suprimix l'escriptori virtual"
 msgid "Add Virtual Desktop"
 msgstr "Afig un escriptori virtual"
 
-#: plugins/overview/qml/Main.qml:378
+#: plugins/overview/qml/Main.qml:425
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "No hi ha cap altre escriptori virtual que s'haja de mostrar"
 
-#: plugins/overview/qml/Main.qml:384
+#: plugins/overview/qml/Main.qml:431
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Afig un escriptori virtual"
 
-#: plugins/overview/qml/Main.qml:391
+#: plugins/overview/qml/Main.qml:438
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Configura els escriptoris virtuals…"
 
-#: plugins/overview/qml/Main.qml:742
+#: plugins/overview/qml/Main.qml:789
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -3646,35 +3646,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Cap finestra oberta"
 
-#: tabbox/tabbox.cpp:310
+#: tabbox/tabbox.cpp:311
 msgid "Walk Through Windows"
 msgstr "Recorre les finestres"
 
-#: tabbox/tabbox.cpp:311
+#: tabbox/tabbox.cpp:312
 msgid "Walk Through Windows (Reverse)"
 msgstr "Recorre les finestres (a la inversa)"
 
-#: tabbox/tabbox.cpp:312
+#: tabbox/tabbox.cpp:313
 msgid "Walk Through Windows Alternative"
 msgstr "Recorre les finestres en alternativa"
 
-#: tabbox/tabbox.cpp:313
+#: tabbox/tabbox.cpp:314
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Recorre les finestres en alternativa (a la inversa)"
 
-#: tabbox/tabbox.cpp:314
+#: tabbox/tabbox.cpp:315
 msgid "Walk Through Windows of Current Application"
 msgstr "Recorre les finestres de l'aplicació actual"
 
-#: tabbox/tabbox.cpp:315
+#: tabbox/tabbox.cpp:316
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Recorre les finestres de l'aplicació actual (a la inversa)"
 
-#: tabbox/tabbox.cpp:316
+#: tabbox/tabbox.cpp:317
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Recorre les finestres de l'aplicació actual en alternativa"
 
-#: tabbox/tabbox.cpp:317
+#: tabbox/tabbox.cpp:318
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Recorre les finestres de l'aplicació actual en alternativa (a la inversa)"
