@@ -62,6 +62,8 @@ private Q_SLOTS:
 
     void testICCProfiles_data();
     void testICCProfiles();
+    void testBrokenIccProfile_data();
+    void testBrokenIccProfile();
 };
 
 struct DrmCrtcState
@@ -1086,6 +1088,7 @@ void DrmTest::testICCProfiles()
 
     const auto framebuffer = drmPipeline->writebackBuffer();
     GraphicsBufferView map(framebuffer->buffer());
+    QVERIFY(!map.isNull());
 
     float maxError = 0;
     for (int x = 0; x < testPattern.width(); x++) {
@@ -1099,6 +1102,66 @@ void DrmTest::testICCProfiles()
 
     qWarning() << "maxError:" << maxError;
     QCOMPARE_LE(maxError, maxAllowedError);
+}
+
+void DrmTest::testBrokenIccProfile_data()
+{
+    QTest::addColumn<BackendOutput::ColorPowerTradeoff>("colorPowerTradeoff");
+
+    QTest::addRow("Prefer Efficiency") << BackendOutput::ColorPowerTradeoff::PreferEfficiency;
+    QTest::addRow("Prefer Accuracy") << BackendOutput::ColorPowerTradeoff::PreferAccuracy;
+}
+
+void DrmTest::testBrokenIccProfile()
+{
+    // This test verifies that ICC profiles that merged TRC and VCGT for some reason
+    // still apply the TRC as expected.
+    QFETCH(BackendOutput::ColorPowerTradeoff, colorPowerTradeoff);
+    const QString iccProfilePath = QFINDTESTDATA("../data/BENQ_7_SINISTRA15.icc");
+
+    const auto backend = static_cast<DrmBackend *>(kwinApp()->outputBackend());
+    const auto gpu = backend->primaryGpu();
+    if (!gpu->hasWriteback()) {
+        QSKIP("Can't test color management without a writeback connector");
+    }
+    gpu->setWritebackConnectorsOnly(true);
+    backend->updateOutputs();
+    BackendOutput *output = kwinApp()->outputBackend()->outputs().front();
+
+    const std::shared_ptr<IccProfile> profile = IccProfile::load(iccProfilePath).value_or(nullptr);
+    QVERIFY(profile);
+
+    {
+        OutputConfiguration config;
+        const auto change = config.changeSet(output);
+        change->iccProfilePath = iccProfilePath;
+        change->iccProfile = profile;
+        change->colorProfileSource = BackendOutput::ColorProfileSource::ICC;
+        change->colorPowerTradeoff = colorPowerTradeoff;
+        QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
+    }
+
+    Test::XdgToplevelWindow window;
+    QImage img(10, 10, QImage::Format_RGBA8888_Premultiplied);
+    img.fill(qRgba(255, 255, 255, 255));
+    QVERIFY(window.show(img));
+
+    const auto drmPipeline = static_cast<DrmOutput *>(output)->pipeline();
+    QVERIFY(drmPipeline->connector()->isWriteback());
+
+    drmPipeline->setWriteback(true);
+    QVERIFY(window.presentWait());
+    drmPipeline->setWriteback(false);
+
+    const auto framebuffer = drmPipeline->writebackBuffer();
+    GraphicsBufferView map(framebuffer->buffer());
+    QVERIFY(!map.isNull());
+
+    // white must be mapped to the modified white of the ICC profile,
+    // instead of the native white
+    QCOMPARE(qRed(map.image()->pixel(0, 0)), 228);
+    QCOMPARE(qGreen(map.image()->pixel(0, 0)), 233);
+    QCOMPARE(qBlue(map.image()->pixel(0, 0)), 240);
 }
 }
 
