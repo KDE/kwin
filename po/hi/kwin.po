@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-14 03:01+0000\n"
+"POT-Creation-Date: 2026-02-18 03:04+0000\n"
 "PO-Revision-Date: 2024-12-15 19:31+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -1243,89 +1243,89 @@ msgstr ""
 msgid "Primary Selection"
 msgstr ""
 
-#: helpers/killer/killer.cpp:125
+#: helpers/killer/killer.cpp:126
 #, fuzzy, kde-format
 #| msgid "KDE window manager"
 msgid "Window Manager"
 msgstr "केडीई विंडो प्रबंधक"
 
-#: helpers/killer/killer.cpp:130
+#: helpers/killer/killer.cpp:131
 #, fuzzy, kde-format
 #| msgid "PID of the application to terminate."
 msgid "PID of the application to terminate"
 msgstr "जिस अनुप्रयोग को बन्द करना है उसका पीआईडी."
 
-#: helpers/killer/killer.cpp:130
+#: helpers/killer/killer.cpp:131
 #, kde-format
 msgid "pid"
 msgstr ""
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, fuzzy, kde-format
 #| msgid "Hostname on which the application is running."
 msgid "Hostname on which the application is running"
 msgstr "होस्टनाम जहाँ अनुप्रयोग चल रहा है."
 
-#: helpers/killer/killer.cpp:132
+#: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "hostname"
 msgstr ""
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, fuzzy, kde-format
 #| msgid "Caption of the window to be terminated."
 msgid "Caption of the window to be terminated"
 msgstr "जिस अनुप्रयोग को बन्द करना चाहते हैं उसका शीर्षक."
 
-#: helpers/killer/killer.cpp:134
+#: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "caption"
 msgstr ""
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, fuzzy, kde-format
 #| msgid "Name of the application to be terminated."
 msgid "Name of the application to be terminated"
 msgstr "जिस अनुप्रयोग को बन्द करना चाहते हैं उसका नाम."
 
-#: helpers/killer/killer.cpp:136
+#: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "name"
 msgstr ""
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, fuzzy, kde-format
 #| msgid "ID of resource belonging to the application."
 msgid "ID of resource belonging to the application"
 msgstr "अनुप्रयोग से संबंधित साधन का आईडी."
 
-#: helpers/killer/killer.cpp:138
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "id"
 msgstr ""
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:141
 #, fuzzy, kde-format
 #| msgid "Time of user action causing killing."
 msgid "Time of user action causing termination"
 msgstr "उपयोक्ता क्रिया का समय जो बन्द करने का कारण बने."
 
-#: helpers/killer/killer.cpp:140
+#: helpers/killer/killer.cpp:141
 #, kde-format
 msgid "time"
 msgstr ""
 
-#: helpers/killer/killer.cpp:142
+#: helpers/killer/killer.cpp:143
 #, kde-format
 msgid "KWin helper utility"
 msgstr "के-विन मदद यूटिलिटी"
 
-#: helpers/killer/killer.cpp:170
+#: helpers/killer/killer.cpp:171
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "यह मदद यूटिलिटी सीधे ही बुलाया नहीं जा सकता."
 
-#: helpers/killer/killer.cpp:194
+#: helpers/killer/killer.cpp:195
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1335,7 +1335,7 @@ msgid ""
 "lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:198
+#: helpers/killer/killer.cpp:199
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1345,32 +1345,32 @@ msgid ""
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:202
+#: helpers/killer/killer.cpp:203
 #, fuzzy, kde-format
 #| msgid "Terminate"
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "बन्द करें"
 
-#: helpers/killer/killer.cpp:203
+#: helpers/killer/killer.cpp:204
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr ""
 
-#: helpers/killer/killer.cpp:212
+#: helpers/killer/killer.cpp:213
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr ""
 
-#: helpers/killer/killer.cpp:228
+#: helpers/killer/killer.cpp:229
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr ""
 
-#: helpers/killer/killer.cpp:230
+#: helpers/killer/killer.cpp:231
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -4278,42 +4278,42 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: virtualdesktops.cpp:729 virtualdesktops.cpp:808
+#: virtualdesktops.cpp:731 virtualdesktops.cpp:810
 #, kde-format
 msgid "Desktop %1"
 msgstr "डेस्कटॉप %1"
 
-#: virtualdesktops.cpp:815
+#: virtualdesktops.cpp:817
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "अगले डेस्कटॉप पर स्विच करें"
 
-#: virtualdesktops.cpp:816
+#: virtualdesktops.cpp:818
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "पिछले डेस्कटॉप पर स्विच करें"
 
-#: virtualdesktops.cpp:819
+#: virtualdesktops.cpp:821
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "एक डेस्कटॉप दाएँ पर स्विच करें"
 
-#: virtualdesktops.cpp:820
+#: virtualdesktops.cpp:822
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "एक डेस्कटॉप बाएँ पर स्विच करें"
 
-#: virtualdesktops.cpp:821
+#: virtualdesktops.cpp:823
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "एक डेस्कटॉप ऊपर स्विच करें"
 
-#: virtualdesktops.cpp:822
+#: virtualdesktops.cpp:824
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "एक डेस्कटॉप नीचे स्विच करें"
 
-#: virtualdesktops.cpp:910
+#: virtualdesktops.cpp:912
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Desktop %1"
