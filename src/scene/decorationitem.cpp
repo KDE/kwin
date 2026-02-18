@@ -104,7 +104,10 @@ void DecorationRenderer::render(ItemRenderer *itemRenderer, const Region &region
         const qreal dpr = effectiveDevicePixelRatio();
 
         for (int i = 0; i < 4; ++i) {
-            const QSize nativeSize = (decorationRects[i].size() * dpr).toSize();
+            const QSize nativeSize = decorationRects[i]
+                .scaled(dpr)
+                .rounded()
+                .size();
             if (m_images[i].size() != nativeSize || m_images[i].devicePixelRatio() != dpr) {
                 m_images[i] = QImage(nativeSize, QImage::Format_ARGB32_Premultiplied);
                 m_images[i].setDevicePixelRatio(dpr);
@@ -119,23 +122,32 @@ void DecorationRenderer::render(ItemRenderer *itemRenderer, const Region &region
             return Rect();
         }
 
+        const Rect nativeDirtyRect = dirtyRect
+            .scaled(image.devicePixelRatio())
+            .roundedOut();
+        const RectF snappedDirtyRect = nativeDirtyRect.scaled(1 / image.devicePixelRatio());
+
+        const Rect nativePartRect = partRect
+            .scaled(image.devicePixelRatio())
+            .rounded();
+        const RectF snappedPartRect = nativePartRect.scaled(1 / image.devicePixelRatio());
+
         QPainter painter(&image);
         painter.setRenderHint(QPainter::Antialiasing);
-        painter.translate(-partRect.topLeft());
-        painter.setClipRect(dirtyRect);
+        painter.translate(-snappedPartRect.topLeft());
+        painter.setClipRect(snappedDirtyRect);
 
         // clear existing part
         painter.save();
         painter.setCompositionMode(QPainter::CompositionMode_Source);
-        painter.fillRect(dirtyRect, Qt::transparent);
+        painter.fillRect(snappedDirtyRect, Qt::transparent);
         painter.restore();
 
-        m_client->decoration()->paint(&painter, dirtyRect);
+        m_client->decoration()->paint(&painter, snappedDirtyRect);
 
-        return dirtyRect
-            .scaled(image.devicePixelRatio())
-            .rounded()
-            .translated(-(partRect.topLeft() * image.devicePixelRatio()).toPoint());
+        return nativeDirtyRect
+            .translated(-nativePartRect.topLeft())
+            .intersected(image.rect());
     };
 
     Rect repainted[4];
