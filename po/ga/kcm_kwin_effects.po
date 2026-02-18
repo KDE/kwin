@@ -1,32 +1,32 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SPDX-FileCopyrightText: 2026 charlotte <altronic25@protonmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Irish Gaelic <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2026-02-17 08:09+0000\n"
+"Last-Translator: charlotte <altronic25@protonmail.com>\n"
+"Language-Team: Irish\n"
 "Language: ga\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
 "3 : 4\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Charlotte"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "altronic25@protonmail.com"
 
 #: kcm.cpp:35
 #, kde-format
@@ -36,7 +36,7 @@ msgstr ""
 #: kcm.cpp:39
 #, kde-format
 msgid "Vlad Zahorodnii"
-msgstr ""
+msgstr "Vlad Zahorodnii"
 
 #: package/contents/ui/Effect.qml:92
 #, kde-format
@@ -44,18 +44,20 @@ msgid ""
 "Author: %1\n"
 "License: %2"
 msgstr ""
+"Údar: %1\n"
+"Ceadúnas: %2"
 
 #: package/contents/ui/Effect.qml:121
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
-msgstr ""
+msgstr "Taispeáin/Folaigh Físeán"
 
 #: package/contents/ui/Effect.qml:128
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure..."
-msgstr ""
+msgstr "Cumraigh..."
 
 #: package/contents/ui/main.qml:20
 #, kde-format
@@ -72,7 +74,7 @@ msgstr ""
 #: package/contents/ui/main.qml:47
 #, kde-format
 msgid "Configure Filter"
-msgstr ""
+msgstr "Cumraigh Scagaire"
 
 #: package/contents/ui/main.qml:59
 #, kde-format
