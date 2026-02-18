@@ -388,14 +388,15 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
 
 GLShader *ZoomEffect::shaderForZoom(double zoom)
 {
-    if (zoom < m_pixelGridZoom) {
-        return ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
-    } else {
+    if (zoom >= m_pixelGridZoom) {
         if (!m_pixelGridShader) {
             m_pixelGridShader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/zoom/shaders/pixelgrid.frag"));
         }
-        return m_pixelGridShader.get();
+        if (m_pixelGridShader && m_pixelGridShader->isValid()) {
+            return m_pixelGridShader.get();
+        }
     }
+    return ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
 }
 
 void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
