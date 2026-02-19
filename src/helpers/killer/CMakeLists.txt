@@ -1,6 +1,8 @@
 ########### next target ###############
 
-set(kwin_killer_helper_SRCS killer.cpp)
+set(kwin_killer_helper_SRCS killer.cpp killdialog.cpp killdialog.h)
+
+ki18n_wrap_ui(kwin_killer_helper_SRCS killdialog.ui)
 
 add_executable(kwin_killer_helper ${kwin_killer_helper_SRCS})
 
@@ -13,6 +15,7 @@ target_link_libraries(kwin_killer_helper
     KF6::WindowSystem
     Qt::GuiPrivate
     Qt::Widgets
+    Qt::Concurrent
 )
 
 ecm_qt_declare_logging_category(kwin_killer_helper
