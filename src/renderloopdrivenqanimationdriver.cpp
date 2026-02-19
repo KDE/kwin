@@ -20,27 +20,32 @@ RenderLoopDrivenQAnimationDriver::RenderLoopDrivenQAnimationDriver(QObject *pare
 void RenderLoopDrivenQAnimationDriver::advanceToNextFrame(std::chrono::nanoseconds nextFramePresentationTime)
 {
     Q_ASSERT(isRunning());
-    m_nextTime = nextFramePresentationTime;
-    advance();
-}
+    if (m_nextTime && m_nextTime >= nextFramePresentationTime) {
+        return;
+    }
 
-void RenderLoopDrivenQAnimationDriver::start()
-{
-    m_offset = std::chrono::steady_clock::now().time_since_epoch();
-    m_nextTime = m_offset;
-    QAnimationDriver::start();
+    m_nextTime = nextFramePresentationTime;
+    if (!m_offset) {
+        m_offset = nextFramePresentationTime;
+    }
+
+    advance();
 }
 
 void RenderLoopDrivenQAnimationDriver::stop()
 {
-    m_offset = {};
-    m_nextTime = {};
+    m_offset.reset();
+    m_nextTime.reset();
     QAnimationDriver::stop();
 }
 
 qint64 RenderLoopDrivenQAnimationDriver::elapsed() const
 {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(m_nextTime - m_offset).count();
+    if (!m_offset) {
+        return 0;
+    } else {
+        return std::chrono::duration_cast<std::chrono::milliseconds>(*m_nextTime - *m_offset).count();
+    }
 }
 
 } // namespace KWin

@@ -30,14 +30,13 @@ public:
      * The overrides are for Qt's usage
      * we shouldn't need to call them from kwin code
      */
-    void start() override;
     void stop() override;
     qint64 elapsed() const override;
 
 private:
-    std::chrono::nanoseconds m_nextTime = {};
+    std::optional<std::chrono::nanoseconds> m_nextTime = std::nullopt;
     // the elapsed time is a relative offset to when the animationDriver starts
-    std::chrono::nanoseconds m_offset = {};
+    std::optional<std::chrono::nanoseconds> m_offset = std::nullopt;
 };
 
 } // namespace KWin
