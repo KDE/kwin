@@ -854,28 +854,18 @@ public:
     /**
      * @brief Reads the property as a boolean value.
      *
+     * The format is assumed to be @c 32.
+     *
      * If the property reply length is @c 1 the first element is interpreted as a boolean
      * value returning @c true for any value unequal to @c 0 and @c false otherwise.
-     *
-     * @param format Expected format. Defaults to 32.
-     * @param type Expected type Defaults to XCB_ATOM_CARDINAL.
-     * @return bool The first element interpreted as a boolean value or @c false in error case
-     * @see value
-     */
-    inline std::optional<bool> toBool(uint8_t format, xcb_atom_t type)
-    {
-        const auto ret = array<bool>(format, type);
-        if (!ret || ret->size() != 1) {
-            return std::nullopt;
-        }
-        return (*ret)[0];
-    }
-    /**
-     * @brief Overloaded method for convenience.
      */
     inline std::optional<bool> toBool()
     {
-        return toBool(32, m_type);
+        const auto ret = array<uint32_t>(32, m_type);
+        if (!ret || ret->size() != 1) {
+            return std::nullopt;
+        }
+        return bool((*ret)[0]);
     }
 
 private:
