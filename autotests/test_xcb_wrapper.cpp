@@ -358,11 +358,6 @@ void TestXcbWrapper::testPropertyBool()
     prop = Xcb::Property(false, testWindow, blockCompositing, XCB_ATOM_CARDINAL, 0, 100000);
     QCOMPARE(prop.toBool(), true);
 
-    // incorrect type and format
-    // TODO this should just not compile, rather than needing a test...
-    QVERIFY(!prop.toBool(8, XCB_ATOM_STRING).has_value());
-    QVERIFY(!prop.toBool(32, blockCompositing).has_value());
-
     // incorrect value:
     uint32_t d[] = {1, 0};
     testWindow.changeProperty(blockCompositing, XCB_ATOM_CARDINAL, 32, 2, d);
