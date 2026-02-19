@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-18 00:47+0000\n"
+"POT-Creation-Date: 2026-02-19 00:49+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -2585,7 +2585,7 @@ msgstr "स्क्रीनकास्टिंग् कृते OpenGL क
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire धारा निर्मातुं असफलम्"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2594,7 +2594,7 @@ msgstr ""
 "लेफ्ट क्लिक् अथवा एन्टेर् इत्यनेन स्क्रीन शॉट् कृते विण्डो इत्यस्य चयनं कुर्वन्तु ।\n"
 "पलायनं कुर्वन्तु अथवा रद्दं कर्तुं राइट् क्लिक् कुर्वन्तु।"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2778,7 +2778,7 @@ msgstr "Floating Tile योजयन्तु"
 msgid "Delete"
 msgstr "लुप्"
 
-#: plugins/trackmouse/trackmouse.cpp:71
+#: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"

@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-05 00:45+0000\n"
-"PO-Revision-Date: 2013-09-08 07:05+0900\n"
-"Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
+"PO-Revision-Date: 2026-02-17 23:22-0500\n"
+"Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.8\n"
 
 #: main.cpp:152 touch.cpp:119
 #, kde-format
@@ -25,69 +26,67 @@ msgstr "مەشغۇلات يوق"
 #: main.cpp:153 touch.cpp:120
 #, kde-format
 msgid "Peek at Desktop"
-msgstr ""
+msgstr "ئۈستەلئۈستى كۆرسەت"
 
 #: main.cpp:154 touch.cpp:121
 #, kde-format
 msgid "Lock Screen"
-msgstr "ئېكراننى قۇلۇپلاش"
+msgstr "ئېكراننى قۇلۇپلا"
 
 #: main.cpp:155 touch.cpp:122
 #, kde-format
 msgid "Show KRunner"
-msgstr ""
+msgstr "KRunner نى كۆرسەت"
 
 #: main.cpp:156 touch.cpp:123
 #, kde-format
 msgid "Activity Manager"
-msgstr ""
+msgstr "پائالىيەت باشقۇرغۇچ"
 
 #: main.cpp:157 touch.cpp:124
 #, kde-format
 msgid "Application Launcher"
-msgstr ""
+msgstr "پىروگرامما قوزغاتقۇچ"
 
 #: main.cpp:161 touch.cpp:128
 #, kde-format
 msgid "Present Windows"
-msgstr ""
+msgstr "كۆزنەكنى كۆرسەت"
 
 #: main.cpp:162 touch.cpp:129
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "%1 - All Desktops"
-msgstr "بارلىق ئۈستەلئۈستىلىرى"
+msgstr "%1 - بارلىق ئۈستەلئۈستى"
 
 #: main.cpp:163 touch.cpp:130
-#, fuzzy, kde-format
-#| msgid "Current Desktop"
+#, kde-format
 msgid "%1 - Current Desktop"
-msgstr "نۆۋەتتىكى ئۈستەلئۈستى"
+msgstr "%1 - نۆۋەتتىكى ئۈستەلئۈستى"
 
 #: main.cpp:164 touch.cpp:131
 #, kde-format
 msgid "%1 - Current Application"
-msgstr ""
+msgstr "%1 - نۆۋەتتىكى پىروگرامما"
 
 #: main.cpp:166 touch.cpp:133
 #, kde-format
 msgid "Overview"
-msgstr ""
+msgstr "ئىخچام كۆرۈنۈش"
 
 #: main.cpp:167 touch.cpp:134
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "شادا"
 
 #: main.cpp:169 touch.cpp:136
 #, kde-format
 msgid "Toggle window switching"
-msgstr ""
+msgstr "كۆزنەك ئالماشتۇرۇشنى ئالماشتۇر"
 
 #: main.cpp:170 touch.cpp:137
 #, kde-format
 msgid "Toggle alternative window switching"
-msgstr ""
+msgstr "زاپاس كۆزنەك ئالماشتۇرۇشنى ئالماشتۇرىدۇ"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
@@ -96,48 +95,50 @@ msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
 msgstr ""
+"چاشقىنەك نۇر بەلگىسىنى ئېكران گىرۋىكى ياكى بۇلۇڭىغا  ئىتتىرىپ بەلگىلەنگەن "
+"مەشغۇلاتنى قوزغىتالايسىز."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
 #, kde-format
 msgid "&Maximize:"
-msgstr ""
+msgstr "چوڭايت(&M):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderMaximize)
 #: main.ui:77
 #, kde-format
 msgid "Windows dragged to top edge"
-msgstr ""
+msgstr "كۆزنەك يۇقىرى گىرۋەككە سۆرەلدى"
 
 #. i18n: ectx: property (text), widget (QLabel, quickTileLabel)
 #: main.ui:84
 #, kde-format
 msgid "&Tile:"
-msgstr ""
+msgstr "ياي(&T):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderTiling)
 #: main.ui:94
 #, kde-format
 msgid "Windows dragged to left or right edge"
-msgstr ""
+msgstr "كۆزنەك ئوڭ ياكى سول گىرۋەككە سۆرەلدى"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: main.ui:101
 #, kde-format
 msgid "Behavior:"
-msgstr ""
+msgstr "قىلمىش:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "كۆزنەك تولۇق ئېكران بولغاندا ئاكتىپ ھالىتىنى ساقلايدۇ"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr ""
+msgstr "چارەك يېيىشنى قوزغىتىدۇ(&Q):"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -149,13 +150,13 @@ msgstr "%"
 #: main.ui:133
 #, kde-format
 msgid "Outer "
-msgstr ""
+msgstr "سىرتقى "
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: main.ui:149
 #, kde-format
 msgid "of the screen"
-msgstr ""
+msgstr "ئېكران"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
@@ -163,32 +164,33 @@ msgstr ""
 msgid ""
 "Change desktop when the mouse cursor is pushed against the edge of the screen"
 msgstr ""
+"چاشقىنەك نۇر بەلگىسىنى ئېكراننىڭ گىرۋىكىگە ئىتتەرگەندە مەۋھۇم ئۈستەلئۈستىنى "
+"ئالماشتۇرىدۇ"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
 #, kde-format
 msgid "&Switch desktop on edge:"
-msgstr ""
+msgstr "گىرۋەكتە ئۈستەلئۈستىنى ئالماشتۇرىدۇ(&S):"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:188
 #, kde-format
 msgctxt "Switch desktop on edge"
 msgid "Disabled"
-msgstr "ئىناۋەتسىز قىلىنغان"
+msgstr "چەكلەنگەن"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
 #, kde-format
 msgid "Only when moving windows"
-msgstr ""
+msgstr "پەقەت كۆزنەك يۆتكىگەندە ئۈستەلئۈستىنى ئالماشتۇرىدۇ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, fuzzy, kde-format
-#| msgid "Always Enabled"
+#, kde-format
 msgid "Always enabled"
-msgstr "ھەمىشە قوزغات"
+msgstr "ھەمىشە قوزغىتىدۇ"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
@@ -197,12 +199,14 @@ msgid ""
 "Amount of time required for the mouse cursor to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
+"چاشقىنەك نۇر بەلگىسىنى ئېكراننىڭ گىرۋىكىگە ئىتتەرگەندە مەشغۇلاتنى "
+"قوزغىتىشتىن ئىلگىرى كۈتىدىغان ۋاقىت"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
 #, kde-format
 msgid "Activation &delay:"
-msgstr ""
+msgstr "ئاكتىپلاشنى كېچىكتۈرۈش(&D):"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderDelay)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderCooldown)
@@ -218,18 +222,20 @@ msgid ""
 "Amount of time required after triggering an action until the next trigger "
 "can occur"
 msgstr ""
+"بىر مەشغۇلات قوزغىتىلغاندىن كېيىن ئۇنىڭدىن كېيىنكى مەشغۇلاتنىڭ قوزغىلىشى "
+"ئۈچۈن كۈتىدىغان ۋاقىت"
 
 #. i18n: ectx: property (text), widget (QLabel, triggerCooldownLabel)
 #: main.ui:241
 #, kde-format
 msgid "&Reactivation delay:"
-msgstr ""
+msgstr "قايتا ئاكتىپلاشنى كېچىكتۈرۈش(&R):"
 
 #. i18n: ectx: property (text), widget (QLabel, CornerBarrierLabel)
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "بۇلۇڭ قاشاسى(&C):"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -241,19 +247,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"بۇ جايدا  كۆپ ئېكران ئارىسىدا مەۋھۇم بۇلۇڭ قاشاسىنى قوزغىتىپ ياكى "
+"چەكلىيەلەيسىز. بۇلۇڭ قاشاسى نۇر بەلگە ئېكراننىڭ بۇلۇڭىغا تەگكەندە داۋاملىشىپ "
+"باشقا ئېكرانغا يۆتكىلىدۇ. كۆپ ئېكرانلىق مۇھىتتا، بۇ ئىقتىدار ئىشلەتكۈچىنىڭ "
+"مەلۇم كۆرۈنۈش ئېلېمېنتىنى قوزغىتىشىغا قولايلىق يارىتىدۇ، مەسىلەن، كۆزنەك ئەڭ "
+"چوڭ قىلىنغاندا كۆزنەكنى تاقاش توپچىسىنى چېكىشكە ئوخشاش."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "نۇر بەلگىنىڭ ئېكران بۇلۇڭىدىن ھالقىشىنىڭ ئالدىنى ئالىدۇ."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "گىرۋەك قاشاسى(&E):"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -265,6 +276,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"بۇ جايدا كۆپ ئېكران ئارىسىدىكى قاشا چېگراسىنىڭ چوڭلۇقىنى تەڭشىيەلەيسىز. قاشا "
+"نىشانلىغۇچتىن چوقۇم گىرۋەكتىن مەلۇم قوشۇمچە ئارىلىق يۆتكەلسە ئاندىن باشقا "
+"ئېكرانغا يۆتكىلەلەيدىغانلىقىنى تەلەپ قىلىدۇ. كۆپ ئېكرانلىق مۇھىتتا، بۇ "
+"ئىقتىدار ئىشلەتكۈچىنىڭ  Plasma كۆزنەكچىسىگە ئوخشاش ئېكران بىلەن گىرۋەك "
+"ئارىسىدىكى بەزى كۆزنەك ئېلېمېنتلارنى زىيارەت قىلىشىغا قولايلىق يارىتىدۇ."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -272,18 +288,19 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"نۇر بەلگە ئېكران گىرۋىكىدىن ئۆتۈشتىن ئىلگىرى يۆتكىلىدىغان قوشۇمچە مۇساپە."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "يوق"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
@@ -292,21 +309,20 @@ msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
 msgstr ""
+"ئېكران گىرۋىكىدىن ئېكراننىڭ مەركىزىگە سىيرىش ئارقىلىق مەشغۇلاتنى "
+"قوزغىتالايسىز."
 
 #~ msgid "Show Desktop"
 #~ msgstr "ئۈستەلئۈستىنى كۆرسەت"
 
-#, fuzzy
 #~| msgid "Cube"
 #~ msgid "%1 - Cube"
 #~ msgstr "Cube"
 
-#, fuzzy
 #~| msgid "Cylinder"
 #~ msgid "%1 - Cylinder"
 #~ msgstr "سىلىندىر"
 
-#, fuzzy
 #~| msgid "Sphere"
 #~ msgid "%1 - Sphere"
 #~ msgstr "شار"

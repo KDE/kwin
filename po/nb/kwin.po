@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-18 00:47+0000\n"
+"POT-Creation-Date: 2026-02-19 00:49+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -2607,7 +2607,7 @@ msgstr "Krever OpenGL-sammensetting for skjermdeling"
 msgid "Failed to create PipeWire stream"
 msgstr "Klarte ikke starte PipeWire-strøm"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2616,7 +2616,7 @@ msgstr ""
 "Velg vindu å ta skjermbilde av med venstreklikk eller «Enter».\n"
 "Høyreklikk eller trykk «Escape» for å avbryte."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2800,7 +2800,7 @@ msgstr "Legg til flytende flis"
 msgid "Delete"
 msgstr "Slett"
 
-#: plugins/trackmouse/trackmouse.cpp:71
+#: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"

@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-18 00:47+0000\n"
+"POT-Creation-Date: 2026-02-19 00:49+0000\n"
 "PO-Revision-Date: 2025-06-19 10:31+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -2600,7 +2600,7 @@ msgstr "A emisión de pantalla require composición de OpenGL."
 msgid "Failed to create PipeWire stream"
 msgstr "Non se puido crear o fluxo de PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2609,7 +2609,7 @@ msgstr ""
 "Clic esquerdo ou Intro para seleccionar a xanela para capturar.\n"
 "Esc ou clic secundario para cancelar."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2794,7 +2794,7 @@ msgstr "Engadir unha tesela flotante"
 msgid "Delete"
 msgstr "Eliminar"
 
-#: plugins/trackmouse/trackmouse.cpp:71
+#: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"

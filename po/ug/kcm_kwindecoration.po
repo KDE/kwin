@@ -8,34 +8,30 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-28 00:46+0000\n"
-"PO-Revision-Date: 2013-09-08 07:05+0900\n"
-"Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
+"PO-Revision-Date: 2026-02-17 23:21-0500\n"
+"Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.8\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
-#, fuzzy, kde-format
-#| msgctxt "Button showing window actions menu"
-#| msgid "Window Menu"
+#, kde-format
 msgid "Window menu"
 msgstr "كۆزنەك تىزىملىكى"
 
 #: declarative-plugin/buttonsmodel.cpp:58
-#, fuzzy, kde-format
-#| msgctxt "Button showing application menu imported from dbusmenu"
-#| msgid "Application Menu"
+#, kde-format
 msgid "Application menu"
-msgstr "قوللانچى تىزىملىكى"
+msgstr "پىروگرامما تىزىملىكى"
 
 #: declarative-plugin/buttonsmodel.cpp:60
-#, fuzzy, kde-format
-#| msgid "On All Desktops"
+#, kde-format
 msgid "On all desktops"
-msgstr "بارلىق ئۈستەلئۈستىلىرىدە"
+msgstr "ھەممە ئۈستەلئۈستىدە"
 
 #: declarative-plugin/buttonsmodel.cpp:62
 #, kde-format
@@ -55,33 +51,33 @@ msgstr "ياپ"
 #: declarative-plugin/buttonsmodel.cpp:68
 #, kde-format
 msgid "Context help"
-msgstr ""
+msgstr "مەزمۇن ياردەم"
 
 #: declarative-plugin/buttonsmodel.cpp:70
 #, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "باشقا كۆزنەكنىڭ ئاستىدا تۇتىدۇ"
 
 #: declarative-plugin/buttonsmodel.cpp:72
 #, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "باشقا كۆزنەكنىڭ ئۈستىدە تۇتىدۇ"
 
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "ئېكران تارقىتىشتىن يوشۇر"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
 msgid "Spacer"
-msgstr ""
+msgstr "بوشلۇق"
 
 #: kcm.cpp:186
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
-msgstr ""
+msgstr "ئۆرنەك كۆڭۈلدىكى (%1)"
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
@@ -90,6 +86,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"بۇ قورال نۆۋەتتىكى ئاكتىپ جەريانچاقنىڭ بېزەك ئۆرنىكىنى تەڭشەشكە ئىشلىتىلىدۇ، "
+"ئۇنى ئىشلەتكىلى بولمايدىغان قىلىپ تەڭشەش ياكى  ئىشلىتىلىۋاتقان ئۆرنەك قىلىپ "
+"تەڭشەشتىن ساقلىنىدۇ."
 
 #: kwin-applywindowdecoration.cpp:35
 #, kde-format
@@ -98,12 +97,17 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"تەڭشەيدىغان KWin كۆزنەك بېزەك ئۆرنىكىنىڭ ئىسمى. تولۇق يولى بېرىلسە شۇ "
+"يولدىكى مۇندەرىجىدىن ئۆرنەكنى ئىزدەيدۇ ۋە ئۆرنەك بەلگىلىگەن ئىسىم "
+"ئىشلىتىلىدۇ."
 
 #: kwin-applywindowdecoration.cpp:36
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr ""
+"سىستېمىدا ئىشلەتكىلى بولىدىغان ھەممە ئۆرنەك (ۋە قايسىسىنىڭ نۆۋەتتە "
+"ئىشلىتىلىۋاتقىنى ئىكەنلىكى) نى كۆرسىتىدۇ"
 
 #: kwin-applywindowdecoration.cpp:67
 #, kde-format
@@ -111,6 +115,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"%1 نى KWin Aurorae ئۆرنىكى «%2» دەپ يېشىدۇ ۋە نۆۋەتتىكى ئۆرنىكىڭىزگە "
+"تەڭشەشكە تىرىشىدۇ."
 
 #: kwin-applywindowdecoration.cpp:73
 #, kde-format
@@ -118,17 +124,22 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"سىز ھۆججەت يولىنى يەتكۈزمەكچى بولدىڭىز ئەمما بۇ يولدىكى ئۆرنەكنى يېشەلمىدى  "
+"ۋە تەڭشەيدىغان ئۆرنەك بولمىغانلىق سەۋەبىدىن نۆۋەتتىكى مەشغۇلاتتىن چېكىنىدۇ"
 
 #: kwin-applywindowdecoration.cpp:79
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr ""
+"ئىلتىماس قىلىنغان ئۆرنەك «%1» ئاللىبۇرۇن كۆزنەك بېزەك ئۆرنىكىگە تەڭشەلگەن."
 
 #: kwin-applywindowdecoration.cpp:101
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr ""
+"نۇر بەلگە ئۆرنىكى «%1» نۆۋەتتىكى Plasma جەريانچاققا مۇۋەپپەقىيەتلىك "
+"قوللىنىلدى"
 
 #: kwin-applywindowdecoration.cpp:105
 #, kde-format
@@ -136,6 +147,8 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"ئۆرنەك تەڭشىكىنى ساقلىيالمىدى - سەۋەبى ئېنىق ئەمەس، ئەمما ئەسلىگە كەلتۈرگىلى "
+"بولمايدىغان خاتالىق. ئۇنى قايتا سىناپ باقسىڭىز مەسىلە ھەل بولۇشى مۇمكىن."
 
 #: kwin-applywindowdecoration.cpp:109
 #, kde-format
@@ -143,58 +156,58 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
+"«%1» ئۆرنەكنى تاپالمىدى. ئۆرنەك تۆۋەندىكى تاللانمىدىن بىرى بولۇشى كېرەك: %2"
 
 #: kwin-applywindowdecoration.cpp:114
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
-msgstr ""
+msgstr "سىستېمىڭىزدا تۆۋەندىكى KWin كۆزنەك بېزەك ئۆرنىكى بار:"
 
 #: ui/Buttons.qml:85
 #, kde-format
 msgid "Titlebar"
-msgstr ""
+msgstr "ماۋزۇ بالداق"
 
 #: ui/Buttons.qml:245
 #, kde-format
 msgid "Drop button here to remove it"
-msgstr ""
+msgstr "توپچە بۇ جايغا تاشلانسا چىقىرىۋېتىدۇ"
 
 #: ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
-msgstr ""
+msgstr "توپچە بۇ جاي بىلەن ماۋزۇ بالداق ئارىسىدا سۆرىلىدۇ"
 
 #: ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
-msgstr "توپچىلار"
+msgstr "ماۋزۇ بالداق توپچە"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "تىزىملىك توپچا قوش چېكىلسە كۆنەكنى ياپىدۇ"
+msgstr "كۆزنەك تىزىملىك توپچە قوش چېكىلسە كۆزنەكنى ياپىدۇ"
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the window menu button to show the menu."
-msgstr ""
+msgstr "تىزىملىك كۆرسىتىشتە كۆزنەك تىزىملىكىنى چېكىپ بېسىپ تۇرۇلىدۇ."
 
 #: ui/ConfigureTitlebar.qml:59
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr "توپچىلار"
+msgstr "ماۋزۇ بالداق توپچە قورال ئەسكەرتىشىنى كۆرسىتىدۇ"
 
 #: ui/ConfigureTitlebar.qml:73
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always show \"Hide from Screencast\" buttonX"
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" button"
-msgstr ""
+msgstr "«ئېكران تارقىتىشتىن يوشۇر» X توپچەنى ھەمىشە كۆرسىتىدۇ"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -203,6 +216,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screencast"
 msgstr ""
+"ئەگەر كۆزنەك ئېكران تارقىتىشتىن يوشۇرۇلغان بولسا، توپچە چېكىلمىگەندە  ئاندىن "
+"كۆرۈنىدۇ"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -211,141 +226,120 @@ msgid ""
 "To enable this option, add the \"Hide from screencast\" button to the "
 "titlebar first"
 msgstr ""
+"بۇ تاللانمىنى قوزغىتىشتا، ئالدى بىلەن ماۋزۇ بالداققا «ئېكران تارقىتىشتىن "
+"يوشۇر» توپچە قوشۇلۇشى كېرەك"
 
 #: ui/main.qml:29
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
-msgstr "گىرۋەك چوڭلۇقى:"
+msgstr "كۆزنەك گىرۋەك چوڭلۇقى:"
 
 #: ui/main.qml:48
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "توپچىلار"
+msgstr "ماۋزۇ بالداق توپچە سەپلىمىسى…"
 
 #: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "يېڭىسىغا ئېرىش…"
 
 #: ui/Themes.qml:93
 #, kde-format
 msgid "Edit %1 Theme…"
-msgstr ""
+msgstr "%1 ئۆرنەك تەھرىر…"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Border"
+#, kde-format
 msgid "No window borders"
-msgstr "يان گىرۋىكى يوق"
+msgstr "كۆزنەك گىرۋىكى يوق"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Border"
+#, kde-format
 msgid "No side window borders"
-msgstr "يان گىرۋىكى يوق"
+msgstr "كۆزنەك گىرۋەك يېنى يوق"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Tiny window borders"
-msgstr "گىرۋەك چوڭلۇقى:"
+msgstr "كىچىك كۆزنەك گىرۋىكى"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "No Side Border"
+#, kde-format
 msgid "Normal window borders"
-msgstr "يان گىرۋىكى يوق"
+msgstr "ئادەتتىكى كۆزنەك گىرۋىكى"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Large window borders"
-msgstr "گىرۋەك چوڭلۇقى:"
+msgstr "چوڭ كۆزنەك گىرۋىكى"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Very large window borders"
-msgstr "گىرۋەك چوڭلۇقى:"
+msgstr "ئىنتايىن چوڭ كۆزنەك گىرۋىكى"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Huge window borders"
-msgstr "گىرۋەك چوڭلۇقى:"
+msgstr "زور كۆزنەك گىرۋىكى"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Very huge window borders"
-msgstr "گىرۋەك چوڭلۇقى:"
+msgstr "ئىنتايىن زور كۆزنەك گىرۋىكى"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Oversized window borders"
-msgstr "گىرۋەك چوڭلۇقى:"
+msgstr "ئۆتە چوڭ كۆزنەك گىرۋىكى"
 
 #~ msgid "Shade"
 #~ msgstr "تۈرۈش"
 
-#, fuzzy
 #~| msgid "kcmkwindecoration"
 #~ msgctxt "button text"
 #~ msgid "Get New Window Decorations…"
 #~ msgstr "kcmkwindecoration"
 
-#, fuzzy
 #~| msgctxt "@item:inlistbox Border size:"
 #~| msgid "No Border"
 #~ msgid "No Borders"
 #~ msgstr "گىرۋەكسىز"
 
-#, fuzzy
 #~| msgctxt "@item:inlistbox Border size:"
 #~| msgid "Tiny"
 #~ msgid "Tiny"
 #~ msgstr "كىچىك"
 
-#, fuzzy
 #~| msgctxt "@item:inlistbox Border size:"
 #~| msgid "Normal"
 #~ msgid "Normal"
 #~ msgstr "نورمال"
 
-#, fuzzy
 #~| msgctxt "@item:inlistbox Border size:"
 #~| msgid "Large"
 #~ msgid "Large"
 #~ msgstr "چوڭ"
 
-#, fuzzy
 #~| msgctxt "@item:inlistbox Border size:"
 #~| msgid "Very Large"
 #~ msgid "Very Large"
 #~ msgstr "بەك چوڭ"
 
-#, fuzzy
 #~| msgctxt "@item:inlistbox Border size:"
 #~| msgid "Huge"
 #~ msgid "Huge"
 #~ msgstr "ئىنتايىن چوڭ"
 
-#, fuzzy
 #~| msgctxt "@item:inlistbox Border size:"
 #~| msgid "Very Huge"
 #~ msgid "Very Huge"
 #~ msgstr "ئىنتايىن چوڭ"
 
-#, fuzzy
 #~| msgctxt "@item:inlistbox Border size:"
 #~| msgid "Oversized"
 #~ msgid "Oversized"
@@ -359,12 +353,10 @@ msgstr "گىرۋەك چوڭلۇقى:"
 #~ msgid "Your emails"
 #~ msgstr "sahran.ug@gmail.com,  gheyret@gmail.com"
 
-#, fuzzy
 #~| msgid "kcmkwindecoration"
 #~ msgid "Window Decorations"
 #~ msgstr "kcmkwindecoration"
 
-#, fuzzy
 #~| msgid "Close windows by double clicking the menu button"
 #~ msgctxt "popup tip"
 #~ msgid ""
@@ -375,32 +367,26 @@ msgstr "گىرۋەك چوڭلۇقى:"
 #~ msgid "Menu"
 #~ msgstr "تىزىملىك"
 
-#, fuzzy
 #~| msgid "Keep Below Others"
 #~ msgid "Keep below"
 #~ msgstr "ئەڭ ئاستىدا"
 
-#, fuzzy
 #~| msgid "Keep Above Others"
 #~ msgid "Keep above"
 #~ msgstr "ئەڭ ئۈستىدە"
 
-#, fuzzy
 #~| msgid "Search"
 #~ msgid "Search..."
 #~ msgstr "ئىزدە"
 
-#, fuzzy
 #~| msgid "Close windows by double clicking the menu button"
 #~ msgid "Close windows by double clicking &the menu button"
 #~ msgstr "تىزىملىك توپچا قوش چېكىلسە كۆنەكنى ياپىدۇ"
 
-#, fuzzy
 #~| msgid "Border size:"
 #~ msgid "Border si&ze:"
 #~ msgstr "گىرۋەك چوڭلۇقى:"
 
-#, fuzzy
 #~| msgid "Configure Buttons..."
 #~ msgid "Configure %1..."
 #~ msgstr "توپچا سەپلىمە…"

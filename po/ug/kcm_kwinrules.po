@@ -8,24 +8,25 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-23 00:45+0000\n"
-"PO-Revision-Date: 2013-09-08 07:05+0900\n"
-"Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
+"PO-Revision-Date: 2026-02-17 23:21-0500\n"
+"Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.8\n"
 
 #: kcmrules.cpp:228
 #, kde-format
 msgid "Copy of %1"
-msgstr ""
+msgstr "%1 نىڭ كۆپەيتىلمىسى"
 
 #: kcmrules.cpp:414
 #, kde-format
 msgid "Application settings for %1"
-msgstr "«%1» ئۈچۈن پروگرامما تەڭشىكى"
+msgstr "«%1» نىڭ پىروگرامما تەڭشىكى"
 
 #: kcmrules.cpp:436 rulesmodel.cpp:221 rulesmodel.cpp:224
 #, kde-format
@@ -38,28 +39,24 @@ msgid "Unimportant"
 msgstr "مۇھىم ئەمەس"
 
 #: optionsmodel.cpp:199
-#, fuzzy, kde-format
-#| msgid "Exact Match"
+#, kde-format
 msgid "Exact match"
 msgstr "دەلمۇدەل ماسلىق"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Substring Match"
+#, kde-format
 msgid "Substring match"
-msgstr "قىسمەن ماسلىق"
+msgstr "تارماق ھەرپ تىزىقى ماسلىق"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Regular Expression"
+#, kde-format
 msgid "Regular expression"
 msgstr "مۇنتىزىم ئىپادە"
 
 #: optionsmodel.cpp:205
-#, fuzzy, kde-format
-#| msgid "Apply Initially"
+#, kde-format
 msgid "Apply initially"
-msgstr "دەسلەپتە قوللان"
+msgstr "دەسلەپلەشتۈرگەندە قوللان"
 
 #: optionsmodel.cpp:206
 #, kde-format
@@ -67,13 +64,12 @@ msgid ""
 "The window property will be only set to the given value after the window is "
 "created.\n"
 "No further changes will be affected."
-msgstr ""
+msgstr "كۆزنەك خاسلىقى كۆزنەك قۇرۇلغاندىن كېيىن بېرىلگەن قىممەتكە تەڭشىلىدۇ."
 
 #: optionsmodel.cpp:209
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply now"
-msgstr "ھازىرلا قوللان"
+msgstr "ھازىر قوللان"
 
 #: optionsmodel.cpp:210
 #, kde-format
@@ -82,6 +78,8 @@ msgid ""
 "be affected later\n"
 "(this action will be deleted afterwards)."
 msgstr ""
+"ئېكران خاسلىقى دەرھال بېرىلگەن قىممەتكە تەڭشىلىدۇ ۋە كېيىن تەسىر كۆرسەتمەيدۇ "
+"(بۇ مەشغۇلات شۇنىڭدىن كېيىن ئۆچۈرۈلىدۇ)"
 
 #: optionsmodel.cpp:213
 #, kde-format
@@ -94,12 +92,13 @@ msgid ""
 "The value of the window property will be remembered and, every time the "
 "window is created, the last remembered value will be applied."
 msgstr ""
+"كۆزنەك خاسلىقىنىڭ قىممىتىنى ئەستە تۇتىدۇ ۋە ھەر قېتىم كۆزنەك قۇرۇلغاندا "
+"ئالدىنقى قېتىم ئەستە تۇتقان قىممىتىنى قوللىنىدۇ."
 
 #: optionsmodel.cpp:217
-#, fuzzy, kde-format
-#| msgid "Do Not Affect"
+#, kde-format
 msgid "Do not affect"
-msgstr "تەسىر كۆرسەتمە"
+msgstr "تەسىر كۆرسەتمەيدۇ"
 
 #: optionsmodel.cpp:218
 #, kde-format
@@ -108,6 +107,9 @@ msgid ""
 "for it will be used.\n"
 "Specifying this will block more generic window settings from taking effect."
 msgstr ""
+"كۆزنەك خاسلىقى تەسىرگە ئۇچرىمايدۇ ۋە كۆڭۈلدىكى ئۇسۇلدا بىر تەرەپ قىلىنىدۇ.\n"
+"بۇ بەلگىلەنسە تېخىمۇ كۆپ ئادەتتىكى كۆزنەك تەڭشىكىنىڭ كۈچكە ئىگە بولۇشىنى "
+"توسىدۇ."
 
 #: optionsmodel.cpp:221
 #, kde-format
@@ -117,11 +119,10 @@ msgstr "مەجبۇرىي"
 #: optionsmodel.cpp:222
 #, kde-format
 msgid "The window property will be always forced to the given value."
-msgstr ""
+msgstr "كۆزنەك خاسلىقى ھەمىشە مەجبۇرىي ھالدا بېرىلگەن قىممەتنى ئالىدۇ."
 
 #: optionsmodel.cpp:224
-#, fuzzy, kde-format
-#| msgid "Force Temporarily"
+#, kde-format
 msgid "Force temporarily"
 msgstr "ۋاقتىنچە مەجبۇرلا"
 
@@ -131,6 +132,8 @@ msgid ""
 "The window property will be forced to the given value until it is hidden\n"
 "(this action will be deleted after the window is hidden)."
 msgstr ""
+"كۆزنەك خاسلىقى يوشۇرۇلمىغۇچە مەجبۇرىي ھالدا بېرىلگەن قىممەتنى ئالىدۇ. (بۇ "
+"مەشغۇلات كۆزنەك يوشۇرۇلغاندىن كېيىن ئۆچۈرۈلىدۇ)"
 
 #: rulesmodel.cpp:227
 #, kde-format
@@ -138,10 +141,9 @@ msgid "Settings for %1"
 msgstr "«%1» نىڭ تەڭشىكى"
 
 #: rulesmodel.cpp:230
-#, fuzzy, kde-format
-#| msgid "Window settings for %1"
+#, kde-format
 msgid "New window settings"
-msgstr "%1 نىڭ كۆزنەك تەڭشىكى"
+msgstr "يېڭى كۆزنەك تەڭشىكى"
 
 #: rulesmodel.cpp:246
 #, kde-format
@@ -152,6 +154,11 @@ msgid ""
 "recommended you at least limit the window types to avoid special window "
 "types."
 msgstr ""
+"كۆزنەك تۈرىنى مۇھىم ئەمەس دەپ بەلگىلىدىڭىز.\n"
+"بۇ تەڭشەك بارلىق پىروگراممىنىڭ كۆزنىكىگە قوللىنىلىشى مۇمكىنلىكىدىن دېرەك "
+"بېرىدۇ. ئەگەر سىز ھەقىقەتەن ئادەتتىكى تەڭشەكتىن بىرنى قۇرماقچى بولسىڭىز، ھېچ "
+"بولمىغاندا كۆزنەك تۈرىنى چەكلەپ، ئالاھىدە كۆزنەك تۈرىنىڭ قوللىنىلىشىنىڭ "
+"ئالدىنى ئېلىش كېرەك."
 
 #: rulesmodel.cpp:253
 #, kde-format
@@ -160,6 +167,9 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
+"بەزى پىروگرامما قوزغالغاندىن كېيىن كۆزنەك چوڭلۇقى ۋە ئورنىنى ئۆزى تەڭشەيدۇ، "
+"بۇ كۆزنەك چوڭلۇقى ۋە ئورنىنىڭ دەسلەپكى قىممىتىنى قاپلايدۇ. بۇ تەڭشەكنى "
+"مەجبۇرىي قوللانغاندا، «%1» خاسلىقنى «ھەئە» گە مەجبۇرىي تەڭشەيدۇ."
 
 #: rulesmodel.cpp:260
 #, kde-format
@@ -167,119 +177,103 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"ئەگەر تۇتۇقلۇق قىممىتى ئىنتايىن كىچىك تەڭشەلسە ئېكراننىڭ ئوقۇشچانلىقى "
+"تۆۋەنلىشى مۇمكىن. 0% گە تەڭشەلگەندە، كۆزنەك كۆرۈنمەيدۇ."
 
 #: rulesmodel.cpp:387
-#, fuzzy, kde-format
-#| msgid "De&scription:"
+#, kde-format
 msgid "Description"
-msgstr "چۈشەندۈرۈش(&S):"
+msgstr "چۈشەندۈرۈش"
 
 #: rulesmodel.cpp:387 rulesmodel.cpp:395 rulesmodel.cpp:403 rulesmodel.cpp:410
 #: rulesmodel.cpp:416 rulesmodel.cpp:424 rulesmodel.cpp:429 rulesmodel.cpp:435
 #: rulesmodel.cpp:440
-#, fuzzy, kde-format
-#| msgid "&Window matching"
+#, kde-format
 msgid "Window matching"
-msgstr "كۆزنەككە ماسلاشتۇرۇش(&W)"
+msgstr "كۆزنەككە ماسلاشتۇرۇش"
 
 #: rulesmodel.cpp:395
-#, fuzzy, kde-format
-#| msgid "Window &class (application):"
+#, kde-format
 msgid "Window class (application)"
-msgstr "كۆزنەك تىپى(پروگرامما)(&C):"
+msgstr "كۆزنەك تۈرى (پىروگرامما)"
 
 #: rulesmodel.cpp:403
-#, fuzzy, kde-format
-#| msgid "Match w&hole window class"
+#, kde-format
 msgid "Match whole window class"
-msgstr "پۈتۈن كۆزنەك تىپى(class) غا ماسلاشتۇر(&H)"
+msgstr "بارلىق كۆزنەك تۈرىگە ماسلىشىدۇ"
 
 #: rulesmodel.cpp:410
-#, fuzzy, kde-format
-#| msgid "Match w&hole window class"
+#, kde-format
 msgid "Whole window class"
-msgstr "پۈتۈن كۆزنەك تىپى(class) غا ماسلاشتۇر(&H)"
+msgstr "بارلىق كۆزنەك تۈرى"
 
 #: rulesmodel.cpp:416
-#, fuzzy, kde-format
-#| msgid "Window &types:"
+#, kde-format
 msgid "Window types"
-msgstr "كۆزنەك تىپلىرى(&T):"
+msgstr "كۆزنەك تۈرى"
 
 #: rulesmodel.cpp:424
-#, fuzzy, kde-format
-#| msgid "Window &role:"
+#, kde-format
 msgid "Window role"
-msgstr "كۆزنەك رولى(&R):"
+msgstr "كۆزنەك رولى"
 
 #: rulesmodel.cpp:429
-#, fuzzy, kde-format
-#| msgid "Window t&itle:"
+#, kde-format
 msgid "Window title"
-msgstr "كۆزنەك ماۋزۇسى(&I):"
+msgstr "كۆزنەك ماۋزۇسى"
 
 #: rulesmodel.cpp:435
-#, fuzzy, kde-format
-#| msgid "&Machine (hostname):"
+#, kde-format
 msgid "Machine (hostname)"
-msgstr "ماشىنا(كومپيۇتېر ئاتى)(&M):"
+msgstr "ماشىنا (مۇلازىمېتىر ئاتى)"
 
 #: rulesmodel.cpp:440
-#, fuzzy, kde-format
-#| msgid "Window &types:"
+#, kde-format
 msgid "Window tag"
-msgstr "كۆزنەك تىپلىرى(&T):"
+msgstr "كۆزنەك بەلگىسى"
 
 #: rulesmodel.cpp:447
-#, fuzzy, kde-format
-#| msgid "&Position"
+#, kde-format
 msgid "Position"
-msgstr "ئورنى(&P)"
+msgstr "ئورنى"
 
 #: rulesmodel.cpp:447 rulesmodel.cpp:453 rulesmodel.cpp:459 rulesmodel.cpp:464
 #: rulesmodel.cpp:472 rulesmodel.cpp:478 rulesmodel.cpp:497 rulesmodel.cpp:513
 #: rulesmodel.cpp:518 rulesmodel.cpp:523 rulesmodel.cpp:528 rulesmodel.cpp:535
 #: rulesmodel.cpp:549 rulesmodel.cpp:554 rulesmodel.cpp:559
-#, fuzzy, kde-format
-#| msgid "&Size && Position"
+#, kde-format
 msgid "Size & Position"
-msgstr "چوڭلۇقى && ئورنى(&S)"
+msgstr "چوڭلۇقى ۋە ئورنى"
 
 #: rulesmodel.cpp:453
-#, fuzzy, kde-format
-#| msgid "&Size"
+#, kde-format
 msgid "Size"
-msgstr "چوڭلۇقى(&S)"
+msgstr "چوڭلۇقى"
 
 #: rulesmodel.cpp:459
-#, fuzzy, kde-format
-#| msgid "Maximized &horizontally"
+#, kde-format
 msgid "Maximized horizontally"
-msgstr "توغرىسىغا ئەڭ چوڭ(&H)"
+msgstr "توغرىسىغا چوڭايتىلغان"
 
 #: rulesmodel.cpp:464
-#, fuzzy, kde-format
-#| msgid "Maximized &vertically"
+#, kde-format
 msgid "Maximized vertically"
-msgstr "بويىغا ئەڭ چوڭ(&V)"
+msgstr "بويىغا چوڭايتىلغان"
 
 #: rulesmodel.cpp:472
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Virtual desktop"
-msgstr "بارلىق ئۈستەلئۈستىلىرى"
+msgstr "مەۋھۇم ئۈستەلئۈستى"
 
 #: rulesmodel.cpp:478
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Virtual desktops"
-msgstr "بارلىق ئۈستەلئۈستىلىرى"
+msgstr "مەۋھۇم ئۈستەلئۈستى"
 
 #: rulesmodel.cpp:497
-#, fuzzy, kde-format
-#| msgid "A&ctive opacity"
+#, kde-format
 msgid "Activities"
-msgstr "ئاكتىپ غۇۋالىقى"
+msgstr "پائالىيەت"
 
 #: rulesmodel.cpp:513
 #, kde-format
@@ -287,27 +281,24 @@ msgid "Screen"
 msgstr "ئېكران"
 
 #: rulesmodel.cpp:518 rulesmodel.cpp:927
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen"
-msgstr "پۈتۈن ئېكران(&F)"
+msgstr "تولۇق ئېكران"
 
 #: rulesmodel.cpp:523
-#, fuzzy, kde-format
-#| msgid "M&inimized"
+#, kde-format
 msgid "Minimized"
-msgstr "ئەڭ كىچىك(&I)"
+msgstr "كىچىكلىتىلگەن"
 
 #: rulesmodel.cpp:528
-#, fuzzy, kde-format
-#| msgid "Initial p&lacement"
+#, kde-format
 msgid "Initial placement"
-msgstr "دەسلەپكى ئورنى(&L)"
+msgstr "دەسلەپكى ئورنى"
 
 #: rulesmodel.cpp:535
 #, kde-format
 msgid "Ignore requested geometry"
-msgstr ""
+msgstr "ئىلتىماس قىلغان چوڭلۇق ۋە ئورنىغا پەرۋا قىلمايدۇ"
 
 #: rulesmodel.cpp:538
 #, kde-kuit-format
@@ -320,23 +311,28 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"بەزى پىروگرامما قوزغالغاندىن كېيىن كۆزنەك چوڭلۇقى ۋە ئورنىنى ئۆزى تەڭشەيدۇ، "
+"بۇ كۆزنەك باشقۇرغۇچ مايىللىقىدىكى قىممىتىنى قاپلايدۇ. بۇ خاسلىق تەڭشەلسە "
+"ئۇلارنىڭ ئورۇن ئىلتىماسىنى قاپلىۋېتىدۇ.<nl/><nl/>بۇ <interface>چوڭلۇقى</"
+"interface> ۋە <interface>ئورنى</interface>غا تەسىر كۆرسىتىدۇ ئەمما "
+"<interface>چوڭايتىلغان</interface> ياكى <interface>تولۇق ئېكران</interface> "
+"ھالىتىگە تەسىر كۆرسەتمەيدۇ.<nl/><nl/>دىققەت، چوڭلۇقى ۋە ئورنىنى ئوخشاش "
+"بولمىغان <interface>ئېكران</interface> غا خەرىتىلىگىلى بولىدۇ"
 
 #: rulesmodel.cpp:549
-#, fuzzy, kde-format
-#| msgid "M&inimum size"
+#, kde-format
 msgid "Minimum Size"
-msgstr "ئەڭ كىچىك چوڭلۇقى(&I)"
+msgstr "ئەڭ كىچىك چوڭلۇقى"
 
 #: rulesmodel.cpp:554
-#, fuzzy, kde-format
-#| msgid "M&aximum size"
+#, kde-format
 msgid "Maximum Size"
-msgstr "ئەڭ چوڭ چوڭلۇقى(&A)"
+msgstr "ئەڭ چوڭ چوڭلۇقى"
 
 #: rulesmodel.cpp:559
 #, kde-format
 msgid "Obey geometry restrictions"
-msgstr ""
+msgstr "چوڭلۇق ۋە ئورۇن چەكلىمىسىگە بويسۇنىدۇ"
 
 #: rulesmodel.cpp:561
 #, kde-kuit-format
@@ -348,41 +344,44 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
+"سىن ياڭراتقۇچ ياكى تېرمىنالغا ئوخشاش بەزى ئەپلەر KWin دىن ئۇلارنى مەلۇم "
+"تەرەپ نىسبىتىدە چەكلەشنى تەلەپ قىلالايدۇ ياكى پەقەت بىر ھەرپنىڭ ئۆلچىمىدىن "
+"چوڭ قىممەت بىلەن كۆزنەك چوڭلۇقىنى تەڭشەشكە يول قويىدۇ. مەزكۇر خاسلىقنى "
+"ئىشلىتىپ بۇ خىل چەكلىمىلەرگە پەرۋا قىلمىسىمۇ بولىدۇ ۋە بۇ كۆزنەكلەرنى "
+"خالىغانچە چوڭلۇقتا چوڭايتقىلى بولىدۇ.<nl/><nl/>بۇ ئىقتىدار كۆزنەك ئەڭ چوڭ "
+"قىلىنغاندا پۈتۈن ئېكران دائىرىسىگە تولدۇرالماسلىق مەسىلىسىنى ياخشىلايدۇ."
 
 #: rulesmodel.cpp:572
 #, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "باشقا كۆزنەكنىڭ ئۈستىدە تۇتىدۇ"
 
 #: rulesmodel.cpp:572 rulesmodel.cpp:577 rulesmodel.cpp:582 rulesmodel.cpp:588
 #: rulesmodel.cpp:594 rulesmodel.cpp:600
-#, fuzzy, kde-format
-#| msgid "&Arrangement && Access"
+#, kde-format
 msgid "Arrangement & Access"
-msgstr "ئورۇنلاشتۇرۇش && زىيارەت"
+msgstr "ئورۇنلاشتۇرۇش ۋە زىيارەت"
 
 #: rulesmodel.cpp:577
 #, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "باشقا كۆزنەكنىڭ ئاستىدا تۇتىدۇ"
 
 #: rulesmodel.cpp:582
-#, fuzzy, kde-format
-#| msgid "Skip &taskbar"
+#, kde-format
 msgid "Skip taskbar"
-msgstr "ۋەزىپە بالدىقىدىن ئاتلا(&T)"
+msgstr "ۋەزىپە بالداقتىن ئاتلا"
 
 #: rulesmodel.cpp:584
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "كۆزنەكنىڭ ۋەزىپە باشقۇرغۇچتا كۆرۈنۈش ياكى كۆرۈنمەسلىكىنى تىزگىنلەيدۇ."
 
 #: rulesmodel.cpp:588
-#, fuzzy, kde-format
-#| msgid "Skip &taskbar"
+#, kde-format
 msgid "Skip pager"
-msgstr "ۋەزىپە بالدىقىدىن ئاتلا(&T)"
+msgstr "بەت بۆلگۈچتىن ئاتلا"
 
 #: rulesmodel.cpp:590
 #, kde-format
@@ -390,12 +389,13 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"كۆزنەكنىڭ مەۋھۇم ئۈستەلئۈستى باشقۇرغۇچتا كۆرۈنۈش ياكى كۆرۈنمەسلىكىنى "
+"تىزگىنلەيدۇ."
 
 #: rulesmodel.cpp:594
-#, fuzzy, kde-format
-#| msgid "Skip &switcher"
+#, kde-format
 msgid "Skip switcher"
-msgstr "ئالماشتۇرغۇچتىن ئاتلا(&S)"
+msgstr "ئالماشتۇرغۇچتىن ئاتلا"
 
 #: rulesmodel.cpp:596
 #, kde-kuit-format
@@ -404,6 +404,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"كۆزنەكنىڭ <shortcut>Alt+Tab</shortcut> كۆزنەك تىزىمىدا كۆرۈنۈش ياكى "
+"كۆرۈنمەسلىكىنى تىزگىنلەيدۇ."
 
 #: rulesmodel.cpp:600
 #, kde-format
@@ -411,10 +413,9 @@ msgid "Shortcut"
 msgstr "تېزلەتمە"
 
 #: rulesmodel.cpp:606
-#, fuzzy, kde-format
-#| msgid "&No titlebar and frame"
+#, kde-format
 msgid "No titlebar and frame"
-msgstr "ماۋزۇ بالدىقى ۋە كاندۇك يوق(&N)"
+msgstr "ماۋزۇ بالداق ۋە كاندۇك يوق"
 
 #: rulesmodel.cpp:606 rulesmodel.cpp:611 rulesmodel.cpp:617 rulesmodel.cpp:622
 #: rulesmodel.cpp:628 rulesmodel.cpp:655 rulesmodel.cpp:683 rulesmodel.cpp:689
@@ -422,30 +423,27 @@ msgstr "ماۋزۇ بالدىقى ۋە كاندۇك يوق(&N)"
 #: rulesmodel.cpp:722 rulesmodel.cpp:727
 #, kde-format
 msgid "Appearance & Fixes"
-msgstr ""
+msgstr "قىياپەت ۋە تۈزىتىش"
 
 #: rulesmodel.cpp:611
 #, kde-format
 msgid "Titlebar color scheme"
-msgstr ""
+msgstr "ماۋزۇ بالداق رەڭ لايىھەسى"
 
 #: rulesmodel.cpp:617
-#, fuzzy, kde-format
-#| msgid "A&ctive opacity"
+#, kde-format
 msgid "Active opacity"
-msgstr "ئاكتىپ غۇۋالىقى"
+msgstr "ئاكتىپ تۇتۇقلۇقى"
 
 #: rulesmodel.cpp:622
-#, fuzzy, kde-format
-#| msgid "I&nactive opacity"
+#, kde-format
 msgid "Inactive opacity"
-msgstr "پاسسىپ غۇۋالىقى"
+msgstr "پاسسىپ تۇتۇقلۇقى"
 
 #: rulesmodel.cpp:628
-#, fuzzy, kde-format
-#| msgid "&Focus stealing prevention"
+#, kde-format
 msgid "Focus stealing prevention"
-msgstr "فوكۇسنى ئوغرىلاشتىن ساقلان(&F)"
+msgstr "فوكۇسنى ئوغرىلاشتىن ساقلان"
 
 #: rulesmodel.cpp:630
 #, kde-kuit-format
@@ -468,12 +466,31 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"سىز باشقا كۆزنەك بىلەن تەسىرلىشىۋاتقاندا، KWin ئىشلەتكۈچى بىۋاسىتە مەشغۇلات "
+"قىلىپ ئاچمىغان كۆزنەكنىڭ فوكۇس نۇقتىسىنى ئىگىلەپ ۋە ئەڭ ئۈستىگە ئۆرلىتىشىنىڭ "
+"ئالدىنى ئېلىشنى سىنايدۇ. بۇ خاسلىق يەككە كۆزنەك ۋە پىروگراممىنىڭ فوكۇس "
+"نۇقتىسىنى ئىگىلەشنى چەكلەش مېخانىزمىنىڭ دەرىجىسىنى تەڭشەشكە ئىشلىتىلىدۇ.<nl/"
+"><nl/>كۆزنەك سىز بىۋاسىتە مەشغۇلات قىلمىغان ئەھۋالدا ئېچىلغان بولسا، ئوخشاش "
+"بولمىغان فوكۇس نۇقتىسى ئىگىلەشنى چەكلەش دەرىجىسىنىڭ ئۈنۈمى:<nl/"
+"><list><item><emphasis strong='true'>يوق:</emphasis> كۆزنەك ئەڭ ئۈستىگە "
+"ئۆرلەيدۇ ۋە فوكۇس نۇقتىسىغا ئېرىشىدۇ.</item><item><emphasis "
+"strong='true'>تۆۋەن:</emphasis> فوكۇس نۇقتىسى ئىگىلەشنى چەكلەش مىخانىزمى "
+"ئۈنۈمىنى كۆرسىتىدۇ ئەمما KWin نىڭ ھۆكۈم قىلىشى قىيىن بولغان ئەھۋالدا، مەزكۇر "
+"كۆزنەك ئەڭ ئۈستىگە ئۆرلىتىلىپ ۋە فوكۇس نۇقتىسىغا ئېرىشىدۇ.</"
+"item><item><emphasis strong='true'>ئادەتتىكى:</emphasis> فوكۇس نۇقتىسى "
+"ئىگىلەشنى چەكلەش مېخانىزمى ئۈنۈمىنى كۆرسىتىدۇ ئەمما KWin نىڭ ھۆكۈم قىلىشى "
+"قىيىن بولغان ئەھۋالدا، مەزكۇر كۆزنەك ئەڭ ئۈستىگە <emphasis>ئۆرلىتىلمەي</"
+"emphasis> ۋە فوكۇس نۇقتىسىغا ئېرىشمەيدۇ.</item><item><emphasis "
+"strong='true'>يۇقىرى:</emphasis> مەزكۇر كۆزنەك نۆۋەتتىكى فوكۇسلانغان كۆزنەك "
+"بىلەن ئوخشاش بىر ئەپكە تەۋە بولسا، ئاندىن ئەڭ ئۈستىگە ئۆرلىتىلىپ فوكۇس "
+"نۇقتىسىغا ئېرىشىدۇ.</item><item><emphasis strong='true'>تەلتۆكۈس:</emphasis> "
+"كۆزنەك ھەرگىز ئەڭ ئۈستىگە ئۆرلىتىلمەيدۇ ۋە فوكۇس نۇقتىسىغا ئېرىشمەيدۇ.</"
+"item></list>"
 
 #: rulesmodel.cpp:655
-#, fuzzy, kde-format
-#| msgid "&Focus stealing prevention"
+#, kde-format
 msgid "Focus protection"
-msgstr "فوكۇسنى ئوغرىلاشتىن ساقلان(&F)"
+msgstr "فوكۇسنى قوغداش"
 
 #: rulesmodel.cpp:657
 #, kde-kuit-format
@@ -498,22 +515,43 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"بۇ خاسلىق نۆۋەتتىكى ئاكتىپ كۆزنەكنىڭ فوكۇس نۇقتىسىنى ئىگىلەشنى چەكلەش "
+"مىخانىزمىنىڭ دەرىجىسىنى تەڭشەشكە ئىشلىتىلىدۇ. ئۇ ئىشلەتكۈچى بىۋاسىتە "
+"مەشغۇلات قىلىپ ئاچمىغان يېڭى كۆزنەكنىڭ فوكۇس نۇقتىسىنى ئىگىلەشنى چەكلەش "
+"مىخانىزمىنى قاپلاشقا ئىشلىتىلىدۇ.<nl/><nl/>ئەگەر بۇ خاسلىققا ئىگە كۆزنەك "
+"نۆۋەتتە فوكۇس نۇقتىسىغا ئىگە بولسا، ئەمما يېڭى كۆزنەك ئىشلەتكۈچى بىۋاسىتە "
+"مەشغۇلات قىلمىغان ئەھۋالدا ئېچىلغان بولسا، ئوخشاش بولمىغان فوكۇس نۇقتىسى "
+"ئىگىلەشنى چەكلەش دەرىجىسىنىڭ ئۈنۈمى:<nl/><list><item><emphasis "
+"strong='true'>يوق:</emphasis> يېڭى كۆزنەك ئەڭ ئۈستىگە ئۆرلەيدۇ ۋە فوكۇس "
+"نۇقتىسىغا ئېرىشىدۇ.</item><item><emphasis strong='true'>تۆۋەن:</emphasis> "
+"فوكۇس نۇقتىسى ئىگىلەشنى چەكلەش مىخانىزمى يېڭى كۆزنەككە ئۈنۈمىنى كۆرسىتىدۇ "
+"ئەمما KWin نىڭ ھۆكۈم قىلىشى قىيىن بولغان ئەھۋالدا، يېڭى كۆزنەك ئەڭ ئۈستىگە "
+"ئۆرلىتىلىپ ۋە فوكۇس نۇقتىسىغا ئېرىشىدۇ.</item>\n"
+"<item><emphasis strong='true'>ئادەتتىكى:</emphasis> فوكۇس نۇقتىسى ئىگىلەشنى "
+"چەكلەش مىخانىزمى يېڭى كۆزنەككە ئۈنۈمىنى كۆرسىتىدۇ ئەمما KWin نىڭ ھۆكۈم "
+"قىلىشى قىيىن بولغان ئەھۋالدا، يېڭى كۆزنەك ئەڭ ئۈستىگە <emphasis>ئۆرلىتىلمەي</"
+"emphasis> ۋە فوكۇس نۇقتىسىغا ئېرىشمەيدۇ.</item><item><emphasis "
+"strong='true'>يۇقىرى:</emphasis> يېڭى كۆزنەك نۆۋەتتىكى فوكۇسلانغان كۆزنەك "
+"بىلەن ئوخشاش بىر ئەپكە تەۋە بولسا، ئاندىن ئەڭ ئۈستىگە ئۆرلىتىلىپ فوكۇس "
+"نۇقتىسىغا ئېرىشىدۇ.</item><item><emphasis strong='true'>تەلتۆكۈس:</emphasis> "
+"يېڭى كۆزنەك ھەرگىز ئەڭ ئۈستىگە ئۆرلىتىلمەيدۇ ۋە فوكۇس نۇقتىسىغا ئېرىشمەيدۇ.</"
+"item></list>"
 
 #: rulesmodel.cpp:683
-#, fuzzy, kde-format
-#| msgid "Accept &focus"
+#, kde-format
 msgid "Accept focus"
-msgstr "فوكۇسنى قوبۇل قىل(&F)"
+msgstr "فوكۇس قوبۇل قىل"
 
 #: rulesmodel.cpp:685
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
+"كۆزنەك چېكىلگەندە فوكۇس نۇقتىسىغا ئېرىشىش ياكى ئېرىشمەسلىكىنى تىزگىنلەيدۇ."
 
 #: rulesmodel.cpp:689
 #, kde-format
 msgid "Ignore global shortcuts"
-msgstr "ئومۇمىي دائىرىلىك تېزلەتمىگە پەرۋا قىلما"
+msgstr "ئومۇمىيەت تېزلەتمىگە پەرۋا قىلما"
 
 #: rulesmodel.cpp:691
 #, kde-kuit-format
@@ -526,43 +564,48 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"بۇ خاسلىقنى ئىشلىتىپ كۆزنەك فوكۇس نۇقتىسىغا ئېرىشكەندە ئومۇمىيەت تېزلەتمىنىڭ "
+"ئىشلىشىنىڭ ئالدىنى ئالىدۇ. بۇ تەقلىدلىگۈچ، مەۋھۇم كومپيۇتېر قاتارلىق "
+"كۆزنەكتە ئوخشاش تېزلەتمە كۇنۇپكىسىنى بىر تەرەپ قىلىدىغان پىروگراممىلارغا "
+"پايدىلىق.<nl/><nl/>مەزكۇر كۆزنەك ئاكتىپ ھالەتتە بولغاندا، <shortcut>Alt+Tab</"
+"shortcut> نى ئىشلىتىپ كۆزنەكنى چىقارغىلى بولمايدۇ ھەمدە ھەر قانداق ئومۇمىيەت "
+"تېزلەتمىنى ئىشلەتكىلى بولمايدۇ، مەسىلەن، <shortcut>Alt+بوشلۇق</shortcut> "
+"ئارقىلىق KRunner نى قوزغىتىدۇ."
 
 #: rulesmodel.cpp:701
-#, fuzzy, kde-format
-#| msgid "&Closeable"
+#, kde-format
 msgid "Closeable"
-msgstr "ياپقىلى بولىدۇ(&C)"
+msgstr "يېپىشچان"
 
 #: rulesmodel.cpp:706
 #, kde-format
 msgid "Desktop file name"
-msgstr ""
+msgstr "ئۈستەلئۈستى ھۆججەت ئاتى"
 
 #: rulesmodel.cpp:711
 #, kde-format
 msgid "Block compositing"
-msgstr ""
+msgstr "بىرىكتۈرۈشنى توس"
 
 #: rulesmodel.cpp:716
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "قەۋەت"
 
 #: rulesmodel.cpp:722
 #, kde-format
 msgid "Adaptive sync"
-msgstr ""
+msgstr "ماسلىشىشچان قەدەمداش"
 
 #: rulesmodel.cpp:727
 #, kde-format
 msgid "Allow tearing"
-msgstr ""
+msgstr "يىرتىلىشقا يول قويىدۇ"
 
 #: rulesmodel.cpp:778
-#, fuzzy, kde-format
-#| msgid "Window &class (application):"
+#, kde-format
 msgid "Window class not available"
-msgstr "كۆزنەك تىپى(پروگرامما)(&C):"
+msgstr "كۆزنەك تۈرىنى ئىشلەتكىلى بولىدۇ"
 
 #: rulesmodel.cpp:779
 #, kde-kuit-format
@@ -573,35 +616,36 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"بۇ پىروگرامما كۆزنەك ئۈچۈن خىل تەمىنلىمەيدۇ ، شۇڭا KWin ئۇنى ماسلاشتۇرۇپ "
+"ھېچقانداق قائىدىنى ئىشلىتەلمەيدۇ. ئەگەر سىز يەنىلا ئۇنىڭغا بەزى قائىدىلەرنى "
+"قوللانماقچى بولسىڭىز، ئۇنىڭ ئورنىغا كۆزنەكنىڭ ماۋزۇسى قاتارلىق باشقا "
+"خاسلىقنى ماسلاشتۇرۇپ سىناپ بېقىڭ.<nl/><nl/>بۇ كەمتۈكنى پىروگرامما "
+"ئىجادكارىغا مەلۇم قىلىشنى ئويلىشىڭ."
 
 #: rulesmodel.cpp:813
-#, fuzzy, kde-format
-#| msgid "Window &types:"
+#, kde-format
 msgid "All window types"
-msgstr "كۆزنەك تىپلىرى(&T):"
+msgstr "بارلىق كۆزنەك تۈرى"
 
 #: rulesmodel.cpp:814
-#, fuzzy, kde-format
-#| msgid "Normal Window"
+#, kde-format
 msgid "Normal window"
-msgstr "نورمال كۆزنەك"
+msgstr "ئادەتتىكى كۆزنەك"
 
 #: rulesmodel.cpp:815
-#, fuzzy, kde-format
-#| msgid "Dialog Window"
+#, kde-format
 msgid "Dialog window"
-msgstr "سۆزلەشكۈ"
+msgstr "سۆزلەشكۈ كۆزنەك"
 
 #: rulesmodel.cpp:816
-#, fuzzy, kde-format
-#| msgid "Utility Window"
+#, kde-format
 msgid "Utility window"
 msgstr "قورال كۆزنەك"
 
 #: rulesmodel.cpp:817
 #, kde-format
 msgid "Dock (panel)"
-msgstr ""
+msgstr "لەڭگەر (كۆزنەكچە)"
 
 #: rulesmodel.cpp:818
 #, kde-format
@@ -609,16 +653,14 @@ msgid "Toolbar"
 msgstr "قورال بالداق"
 
 #: rulesmodel.cpp:819
-#, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
+#, kde-format
 msgid "Torn-off menu"
-msgstr "بۆلىۋالغان تىزىملىك"
+msgstr "يىرتىلغان تىزىملىك"
 
 #: rulesmodel.cpp:820
-#, fuzzy, kde-format
-#| msgid "Splash Screen"
+#, kde-format
 msgid "Splash screen"
-msgstr "ئېچىلىش ئېكرانى"
+msgstr "مەرھابا ئېكرانى"
 
 #: rulesmodel.cpp:821 rulesmodel.cpp:922
 #, kde-format
@@ -627,39 +669,36 @@ msgstr "ئۈستەلئۈستى"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:823
-#, fuzzy, kde-format
-#| msgid "Standalone Menubar"
+#, kde-format
 msgid "Standalone menubar"
-msgstr "يەككە تىزىملىك بالدىقى"
+msgstr "يەككە تىزىملىك بالداق"
 
 #: rulesmodel.cpp:824 rulesmodel.cpp:930
 #, kde-format
 msgid "On-screen display"
-msgstr ""
+msgstr "ئېكراندا كۆرسىتىش"
 
 #: rulesmodel.cpp:834
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All desktops"
-msgstr "بارلىق ئۈستەلئۈستىلىرى"
+msgstr "بارلىق ئۈستەلئۈستى"
 
 #: rulesmodel.cpp:836
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
-msgstr ""
+msgstr "كۆزنەكنى بارلىق ئۈستەلئۈستىدە ئىشلىتىشچان قىلىدۇ"
 
 #: rulesmodel.cpp:855
-#, fuzzy, kde-format
-#| msgid "A&ctive opacity"
+#, kde-format
 msgid "All activities"
-msgstr "ئاكتىپ غۇۋالىقى"
+msgstr "ھەممە پائالىيەت"
 
 #: rulesmodel.cpp:857
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
-msgstr ""
+msgstr "كۆزنەكنى بارلىق پائالىيەتتە ئىشلىتىشچان قىلىدۇ"
 
 #: rulesmodel.cpp:878
 #, kde-format
@@ -667,21 +706,19 @@ msgid "Default"
 msgstr "كۆڭۈلدىكى"
 
 #: rulesmodel.cpp:879
-#, fuzzy, kde-format
-#| msgid "No Placement"
+#, kde-format
 msgid "No placement"
 msgstr "ئورنى يوق"
 
 #: rulesmodel.cpp:880
 #, kde-format
 msgid "Minimal overlapping"
-msgstr ""
+msgstr "ئەڭ كىچىك دەستىلەش"
 
 #: rulesmodel.cpp:881
-#, fuzzy, kde-format
-#| msgid "Maximizing"
+#, kde-format
 msgid "Maximized"
-msgstr "چوڭايتىۋاتىدۇ"
+msgstr "چوڭايتىلغان"
 
 #: rulesmodel.cpp:882
 #, kde-format
@@ -694,27 +731,22 @@ msgid "Random"
 msgstr "ئىختىيارىي"
 
 #: rulesmodel.cpp:884
-#, fuzzy, kde-format
-#| msgid "Top-Left Corner"
+#, kde-format
 msgid "In top-left corner"
 msgstr "ئۈستى سول بۇلۇڭ"
 
 #: rulesmodel.cpp:885
-#, fuzzy, kde-format
-#| msgid "Under Mouse"
+#, kde-format
 msgid "Under mouse"
 msgstr "چاشقىنەك ئاستىدا"
 
 #: rulesmodel.cpp:886
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "On main window"
 msgstr "ئاساسى كۆزنەكتە"
 
 #: rulesmodel.cpp:893
-#, fuzzy, kde-format
-#| msgctxt "no focus stealing prevention"
-#| msgid "None"
+#, kde-format
 msgid "None"
 msgstr "يوق"
 
@@ -726,7 +758,7 @@ msgstr "تۆۋەن"
 #: rulesmodel.cpp:895 rulesmodel.cpp:924
 #, kde-format
 msgid "Normal"
-msgstr "نورمال"
+msgstr "ئادەتتىكى"
 
 #: rulesmodel.cpp:896
 #, kde-format
@@ -736,125 +768,118 @@ msgstr "يۇقىرى"
 #: rulesmodel.cpp:897
 #, kde-format
 msgid "Extreme"
-msgstr "ئىنتايىن يۇقىرى"
+msgstr "پەۋقۇلئاددە يۇقىرى"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "ئاستى"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "ئۈستى"
 
 #: rulesmodel.cpp:926
-#, fuzzy, kde-format
-#| msgid "&Position"
+#, kde-format
 msgid "Notification"
-msgstr "ئورنى(&P)"
+msgstr "ئۇقتۇرۇش"
 
 #: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "قاڭقىش"
 
 #: rulesmodel.cpp:929
-#, fuzzy, kde-format
-#| msgid "&Position"
+#, kde-format
 msgid "Critical notification"
-msgstr "ئورنى(&P)"
+msgstr "جىددىي ئۇقتۇرۇش"
 
 #: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "دەستىلە"
 
 #: rulesmodel.cpp:956
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "باشقۇرۇلمىغان كۆزنەك"
 
 #: rulesmodel.cpp:957
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
-msgstr ""
+msgstr "كۆزنەك خاسلىقىنى بايقىيالمىدى. بۇ كۆزنەكنى KWin باشقۇرمايدۇ."
 
 #: ui/FileDialogLoader.qml:15
 #, kde-format
 msgid "Select File"
-msgstr ""
+msgstr "ھۆججەت تاللا"
 
 #: ui/FileDialogLoader.qml:27
 #, kde-format
 msgid "KWin Rules (*.kwinrule)"
-msgstr ""
+msgstr "KWin قائىدىسى (*.kwinrule)"
 
 #: ui/main.qml:28
-#, fuzzy, kde-format
-#| msgid "&New..."
+#, kde-format
 msgid "Add New…"
-msgstr "يېڭى(&N)…"
+msgstr "يېڭىدىن قوش…"
 
 #: ui/main.qml:35
-#, fuzzy, kde-format
-#| msgid "&Import"
+#, kde-format
 msgid "Import…"
-msgstr "ئەكىر(&I)"
+msgstr "ئەكىر…"
 
 #: ui/main.qml:40
-#, fuzzy, kde-format
-#| msgid "&Export"
+#, kde-format
 msgid "Cancel Export"
-msgstr "چىقار(&E)"
+msgstr "چىقىرىشتىن ۋاز كەچ"
 
 #: ui/main.qml:40
-#, fuzzy, kde-format
-#| msgid "&Export"
+#, kde-format
 msgid "Export…"
-msgstr "چىقار(&E)"
+msgstr "چىقار…"
 
 #: ui/main.qml:88
 #, kde-format
 msgid "No rules for specific windows are currently set"
-msgstr ""
+msgstr "نۆۋەتتە مۇئەييەن كۆزنەككە بەلگىلەنگەن قائىدە يوق"
 
 #: ui/main.qml:89
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr ""
+msgstr "بىر قانچىنى قوشۇش ئۈچۈن <interface>يېڭىدىن قوش…</interface> چېكىلىدۇ"
 
 #: ui/main.qml:97
 #, kde-format
 msgid "Select the rules to export"
-msgstr ""
+msgstr "چىقىرىدىغان قائىدە تاللىنىدۇ"
 
 #: ui/main.qml:101
 #, kde-format
 msgid "Unselect All"
-msgstr ""
+msgstr "ھەممىنى تاللىما"
 
 #: ui/main.qml:101
 #, kde-format
 msgid "Select All"
-msgstr ""
+msgstr "ھەممىنى تاللا"
 
 #: ui/main.qml:115
 #, kde-format
 msgid "Save Rules"
-msgstr ""
+msgstr "قائىدە ساقلا"
 
 #: ui/main.qml:202
 #, kde-format
 msgid "Edit"
-msgstr "تەھرىرلەش"
+msgstr "تەھرىر"
 
 #: ui/main.qml:208
 #, kde-format
 msgid "Duplicate"
-msgstr ""
+msgstr "كۆچۈر"
 
 #: ui/main.qml:214
 #, kde-format
@@ -864,35 +889,33 @@ msgstr "ئۆچۈر"
 #: ui/main.qml:246
 #, kde-format
 msgid "Import Rules"
-msgstr "تۈزۈملەرنى ئىمپورت قىلىش"
+msgstr "تۈزۈم ئەكىر"
 
 #: ui/main.qml:258
-#, fuzzy, kde-format
-#| msgid "Export Rule"
+#, kde-format
 msgid "Export Rules"
-msgstr "تۈزۈملەرنى ئېكسپورت قىلىش"
+msgstr "تۈزۈم چىقار"
 
 #: ui/OptionsComboBox.qml:35
 #, kde-format
 msgid "None selected"
-msgstr ""
+msgstr "ھېچنېمە تاللانمىغان"
 
 #: ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
-msgstr ""
+msgstr "ھەممىسى تاللاندى"
 
 #: ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"
-msgstr[0] ""
+msgstr[0] "%1 تاللاندى"
 
 #: ui/RulesEditor.qml:66
-#, fuzzy, kde-format
-#| msgid "&Detect Window Properties"
+#, kde-format
 msgid "No window properties changed"
-msgstr "كۆزنەك خاسلىقىنى تاپ(&D)"
+msgstr "ھېچقانداق كۆزنەك خاسلىقى ئۆزگەرمىدى"
 
 #: ui/RulesEditor.qml:67
 #, kde-kuit-format
@@ -901,95 +924,88 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
+"مەزكۇر قائىدىنىڭ تەسىرىگە ئۇچرايدىغان بىر قانچە كۆزنەك خاسلىقىنى قوشۇش ئۈچۈن "
+"<interface>يېڭىدىن قوش…</interface> توپچە چېكىلىدۇ"
 
 #: ui/RulesEditor.qml:88
-#, fuzzy, kde-format
-#| msgid "&New..."
+#, kde-format
 msgid "Add Property..."
-msgstr "يېڭى(&N)…"
+msgstr "خاسلىق قوش…"
 
 #: ui/RulesEditor.qml:99
-#, fuzzy, kde-format
-#| msgid "&Detect Window Properties"
+#, kde-format
 msgid "Detect Window Properties"
-msgstr "كۆزنەك خاسلىقىنى تاپ(&D)"
+msgstr "كۆزنەك خاسلىقىنى بايقا"
 
 #: ui/RulesEditor.qml:115 ui/RulesEditor.qml:126
 #, kde-format
 msgid "Instantly"
-msgstr ""
+msgstr "شۇئان"
 
 #: ui/RulesEditor.qml:116 ui/RulesEditor.qml:131
 #, kde-format
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
-msgstr[0] ""
+msgstr[0] "%1‎‏ سېكۇنتتىن كېيىن"
 
 #: ui/RulesEditor.qml:178
 #, kde-format
 msgid "Add property to the rule"
-msgstr ""
+msgstr "قائىدىگە خاسلىق قوش"
 
 #: ui/RulesEditor.qml:271
-#, fuzzy, kde-format
-#| msgid "&Detect Window Properties"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "كۆزنەك خاسلىقىنى تاپ(&D)"
+msgstr "قوشىدىغان ھېچقانداق خاسلىق قالمىدى"
 
 #: ui/RulesEditor.qml:273
-#, fuzzy, kde-format
-#| msgid "&Detect Window Properties"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "كۆزنەك خاسلىقىنى تاپ(&D)"
+msgstr "«%1» غا ماس كېلىدىغان خاسلىق يوق"
 
 #: ui/RulesEditor.qml:294 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
-msgstr ""
+msgstr "ھەئە"
 
 #: ui/RulesEditor.qml:294 ui/ValueEditor.qml:60
-#, fuzzy, kde-format
-#| msgctxt "no focus stealing prevention"
-#| msgid "None"
+#, kde-format
 msgid "No"
-msgstr "يوق"
+msgstr "ياق"
 
 #: ui/RulesEditor.qml:296 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
-msgstr ""
+msgstr "%1 %"
 
 #: ui/RulesEditor.qml:298
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
-msgstr ""
+msgstr "(%1، %2)"
 
 #: ui/RulesEditor.qml:300
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
-msgstr ""
+msgstr "(%1، %2)"
 
 #: ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
-msgstr ""
+msgstr "x"
 
-#, fuzzy
 #~| msgid "Sh&aded"
 #~ msgid "Shaded"
 #~ msgstr "سايىلىق(&A)"
 
-#, fuzzy
 #~| msgid "&Closeable"
 #~ msgid "Close"
 #~ msgstr "ياپقىلى بولىدۇ(&C)"
 
-#, fuzzy
 #~| msgid "Window &type"
 #~ msgid "Set window type"
 #~ msgstr "كۆزنەك تىپى(&T):"
@@ -1003,7 +1019,6 @@ msgstr ""
 #~ msgid "Window shall (not) appear in the Alt+Tab list"
 #~ msgstr "كۆزنەك Alt+Tab تىزىمىدا كۆرۈنىدۇ(كۆرۈنمەيدۇ)"
 
-#, fuzzy
 #~| msgid "WId of the window for special window settings."
 #~ msgid "KWin id of the window for special window settings."
 #~ msgstr "ئالاھىدە كۆزنەك تەڭشىكى ئۈچۈن كۆزنەكنىڭ كىملىكى(WId)"
@@ -1025,12 +1040,10 @@ msgstr ""
 #~ msgid "Your emails"
 #~ msgstr "sahran.ug@gmail.com,  gheyret@gmail.com"
 
-#, fuzzy
 #~| msgid "Window &role:"
 #~ msgid "Window Rules"
 #~ msgstr "كۆزنەك رولى(&R):"
 
-#, fuzzy
 #~| msgid "Cascade"
 #~ msgid "Cascaded"
 #~ msgstr "دەستىلە"
@@ -1041,7 +1054,6 @@ msgstr ""
 #~ msgid "KWin helper utility"
 #~ msgstr "KWin ياردەمچى قورالى"
 
-#, fuzzy
 #~| msgid "&Detect Window Properties"
 #~ msgid "Select properties"
 #~ msgstr "كۆزنەك خاسلىقىنى تاپ(&D)"

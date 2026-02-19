@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-18 00:47+0000\n"
+"POT-Creation-Date: 2026-02-19 00:49+0000\n"
 "PO-Revision-Date: 2025-05-30 23:12+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2601,7 +2601,7 @@ msgstr "A képernyőfelvételhez OpenGL kompozitálás szükséges"
 msgid "Failed to create PipeWire stream"
 msgstr "A PipeWire adatfolyam létrehozása sikertelen"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2610,7 +2610,7 @@ msgstr ""
 "Válassza ki a fotózandó ablakot bal egérgombbal vagy Enterrel.\n"
 "Megszakításhoz nyomja meg az Escape-et vagy a jobb egérgombot."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2789,7 +2789,7 @@ msgstr "Lebegő mozaik hozzáadása"
 msgid "Delete"
 msgstr "Törlés"
 
-#: plugins/trackmouse/trackmouse.cpp:71
+#: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"

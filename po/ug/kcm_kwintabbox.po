@@ -8,65 +8,65 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-10 00:45+0000\n"
-"PO-Revision-Date: 2013-09-08 07:05+0900\n"
-"Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
+"PO-Revision-Date: 2026-02-17 23:21-0500\n"
+"Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.8\n"
 
 #: layoutpreview.cpp:28
 #, kde-format
 msgid "Launch an interactive preview for a tabbox switcher"
-msgstr ""
+msgstr "بەتكۈچ قۇتىسى ئالماشتۇرغۇچنىڭ تەسىرلىشىشچان ئالدىن كۆزىتىشنى قوزغىتىدۇ"
 
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "كۆزنەك ئالماشتۇرغۇچ QML ئاساسىي ھۆججەت يولى"
 
 #: layoutpreview.cpp:30
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "ئۈستەلئۈستىنىڭ كىچىك كۆرۈنۈشىنىمۇ كۆرسىتىدۇ"
 
 #: layoutpreview.cpp:159
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
-msgstr ""
+msgstr "Dolphin ھۆججەت باشقۇرغۇچ"
 
 #: layoutpreview.cpp:163
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
-msgstr ""
+msgstr "Konqueror توركۆرگۈ"
 
 #: layoutpreview.cpp:167
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
-msgstr ""
+msgstr "KMail  تور خەت"
 
 #: layoutpreview.cpp:171
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
-msgstr ""
+msgstr "سىستېما تەڭشىكى"
 
 #: layoutpreview.cpp:177
-#, fuzzy, kde-format
-#| msgid "Current desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "نۆۋەتتىكى ئۈستەلئۈستى"
+msgstr "ئۈستەلئۈستى كۆرسەت"
 
 #: layoutpreview.cpp:207
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
-msgstr ""
+msgstr "1-ئۈستەلئۈستى"
 
 #: main.cpp:74
 #, kde-format
@@ -76,18 +76,18 @@ msgstr "ئاساس"
 #: main.cpp:75
 #, kde-format
 msgid "Alternative"
-msgstr "زاپاس تۈر"
+msgstr "زاپاس"
 
 #: main.cpp:77
 #, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr ""
+msgstr "يېڭى ۋەزىپە ئالماشتۇرغۇچ ئۇسلۇبىغا ئېرىش…"
 
 #: main.cpp:95
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
-msgstr ""
+msgstr "فوكۇس تۈزۈم تەڭشىكى كۆزنەك ئارقىلىق يول باشلاش ئىقتىدارىنى چەكلەيدۇ."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: main.ui:32
@@ -97,10 +97,9 @@ msgstr "مەزمۇن"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Desktop:"
+#, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr "بارلىق ئۈستەلئۈستىلىرى"
+msgstr "«ئۈستەلئۈستىنى كۆرسەت»  تۈرىنى ئۆز ئىچىگە ئالىدۇ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
@@ -112,37 +111,37 @@ msgstr "يېقىندا ئىشلەتكەن"
 #: main.ui:60
 #, kde-format
 msgid "Stacking order"
-msgstr ""
+msgstr "دەستىلەش تەرتىپى"
 
 #. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
 #: main.ui:68
 #, kde-format
 msgid "Only one window per application"
-msgstr ""
+msgstr "ھەر بىر پىروگرامما پەقەت بىرلا كۆزنەك"
 
 #. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
 #: main.ui:78
 #, kde-format
 msgid "Order minimized windows after unminimized windows"
-msgstr ""
+msgstr "كىچىكلىتىلگەن كۆزنەك كىچىكلىتىلمىگەننىڭ كەينىدە تەرتىپتە"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: main.ui:88
 #, kde-format
 msgid "Sort order:"
-msgstr "تەرتىپلەش تەرتىپى"
+msgstr "تەرتىپلەش تەرتىپى:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: main.ui:114
 #, kde-format
 msgid "Filter windows by"
-msgstr ""
+msgstr "كۆزنەك سۈزگۈچى"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
 #: main.ui:123
 #, kde-format
 msgid "Virtual desktops"
-msgstr ""
+msgstr "مەۋھۇم ئۈستەلئۈستى"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
 #: main.ui:167
@@ -154,13 +153,13 @@ msgstr "نۆۋەتتىكى ئۈستەلئۈستى"
 #: main.ui:174
 #, kde-format
 msgid "All other desktops"
-msgstr ""
+msgstr "باشقا بارلىق ئۈستەلئۈستى"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
 #: main.ui:184
 #, kde-format
 msgid "Activities"
-msgstr "پائالىيەتلەر"
+msgstr "پائالىيەت"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
 #: main.ui:228
@@ -172,62 +171,62 @@ msgstr "نۆۋەتتىكى پائالىيەت"
 #: main.ui:235
 #, kde-format
 msgid "All other activities"
-msgstr ""
+msgstr "باشقا بارلىق پائالىيەت"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
 #: main.ui:245
 #, kde-format
 msgid "Screens"
-msgstr ""
+msgstr "ئېكران"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
 #: main.ui:289
 #, kde-format
 msgid "Current screen"
-msgstr ""
+msgstr "نۆۋەتتىكى ئېكران"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
 #: main.ui:296
 #, kde-format
 msgid "All other screens"
-msgstr ""
+msgstr "باشقا بارلىق ئېكران"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
 #: main.ui:306
 #, kde-format
 msgid "Minimization"
-msgstr ""
+msgstr "كىچىكلىتىش"
 
 #. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
 #: main.ui:350
 #, kde-format
 msgid "Visible windows"
-msgstr ""
+msgstr "كۆرۈنۈشچان كۆزنەك"
 
 #. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
 #: main.ui:357
 #, kde-format
 msgid "Hidden windows"
-msgstr ""
+msgstr "يوشۇرۇن كۆزنەك"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
 #: main.ui:396
 #, kde-format
 msgid "Shortcuts"
-msgstr "تېزلەتمىلەر"
+msgstr "تېزلەتمە"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: main.ui:405 main.ui:448
 #, kde-format
 msgid "Forward"
-msgstr "ئالدى"
+msgstr "ئالدىغا"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: main.ui:428
 #, kde-format
 msgid "All windows"
-msgstr ""
+msgstr "ھەممە كۆزنەك"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -243,13 +242,13 @@ msgstr "ئەكسىچە"
 #: main.ui:474 main.ui:506 main.ui:554 main.ui:586
 #, kde-format
 msgid "or"
-msgstr ""
+msgstr "ياكى"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:538
 #, kde-format
 msgid "Current application"
-msgstr ""
+msgstr "نۆۋەتتىكى پىروگرامما"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: main.ui:615
@@ -264,12 +263,14 @@ msgid ""
 "The currently selected window will be highlighted by fading out all other "
 "windows. This option requires desktop effects to be active."
 msgstr ""
+"نۆۋەتتىكى كۆزنەكنى گەۋدىلەندۈرۈش ئۈچۈن باشقا كۆزنەكلەرنى سۇسلاشتۇرىدۇ. بۇ "
+"تاللانمىغا ئۈستەلئۈستى ئۈنۈمى قوزغىتىلغان بولۇشى زۆرۈر."
 
 #. i18n: ectx: property (text), widget (QLabel, label_HighlightWindows)
 #: main.ui:634
 #, kde-format
 msgid "Show selected window"
-msgstr ""
+msgstr "تاللانغان كۆزنەكنى كۆرسىتىدۇ"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_ShowTabBox)
 #: main.ui:644
@@ -282,6 +283,8 @@ msgstr ""
 #, kde-format
 msgid "The effect to replace the list window when desktop effects are active."
 msgstr ""
+"ئۈستەلئۈستى ئۈنۈمى ئاكتىپلانغاندا تىزىم كۆزنىكىنىڭ ئۈنۈمىنى ئالماشتۇرۇشقا "
+"ئىشلىتىلىدۇ."
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_DelayTime)
 #: main.ui:701
@@ -310,44 +313,43 @@ msgstr ""
 #: shortcutsettings.cpp:131
 #, kde-format
 msgid "Walk Through Windows"
-msgstr "كۆزنەكتىن كۆزنەككە ئۆتۈش"
+msgstr "كۆزنەك ئارىلايدۇ"
 
 #: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr "كۆزنەكتىن كۆزنەككە ئۆتۈش(تەتۈرى)"
+msgstr "كۆزنەك ئارىلايدۇ(تەتۈر)"
 
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr "باشقىچە كۆزنەكتىن كۆزنەككە ئۆتۈش"
+msgstr "نۆۋەتتىكى پىروگراممىنىڭ كۆزنىكىنى ئارىلايدۇ"
 
 #: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "باشقىچە كۆزنەكتىن كۆزنەككە ئۆتۈش(تەتۈرى)"
+msgstr "نۆۋەتتىكى پىروگراممىنىڭ كۆزنىكىنى ئارىلايدۇ(تەتۈر)"
 
 #: shortcutsettings.cpp:136
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr "باشقىچە كۆزنەكتىن كۆزنەككە ئۆتۈش"
+msgstr "باشقىچە كۆزنەكنى ئارىلايدۇ"
 
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "باشقىچە كۆزنەكتىن كۆزنەككە ئۆتۈش(تەتۈرى)"
+msgstr "باشقىچە كۆزنەكنى ئارىلايدۇ(تەتۈر)"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "باشقىچە كۆزنەكتىن كۆزنەككە ئۆتۈش"
+msgstr "نۆۋەتتىكى پىروگراممىنىڭ باشقىچە كۆزنىكىنى ئارىلايدۇ"
 
 #: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "باشقىچە كۆزنەكتىن كۆزنەككە ئۆتۈش(تەتۈرى)"
+msgstr "نۆۋەتتىكى پىروگراممىنىڭ باشقىچە كۆزنىكىنى ئارىلايدۇ(تەتۈر)"
 
-#, fuzzy
 #~| msgid "Desktop:"
 #~ msgid "Show Desktop"
 #~ msgstr "بارلىق ئۈستەلئۈستىلىرى"

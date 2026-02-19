@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-18 00:47+0000\n"
+"POT-Creation-Date: 2026-02-19 00:49+0000\n"
 "PO-Revision-Date: 2026-02-14 02:49+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -2544,7 +2544,7 @@ msgstr "ეკრანის გადაცემისთვის აუც�
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire-ის ნაკადის შექმნის შეცდოა"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2553,7 +2553,7 @@ msgstr ""
 "ფანჯრის ანაბეჭდის მარცხენა წკაპით ან Enter-ით გადაღება.\n"
 "გასაუქმებლად Esc ან მარჯვენა წკაპი."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2742,7 +2742,7 @@ msgstr "მოლივლივე ფილის დამატება"
 msgid "Delete"
 msgstr "წაშლა"
 
-#: plugins/trackmouse/trackmouse.cpp:71
+#: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"

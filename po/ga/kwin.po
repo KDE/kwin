@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-18 00:47+0000\n"
+"POT-Creation-Date: 2026-02-19 00:49+0000\n"
 "PO-Revision-Date: 2026-02-17 08:43+0000\n"
 "Last-Translator: charlotte <altronic25@protonmail.com>\n"
 "Language-Team: Irish\n"
@@ -17,7 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
 "3 : 4\n"
-"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2637,14 +2636,14 @@ msgstr ""
 msgid "Failed to create PipeWire stream"
 msgstr "Níorbh fhéidir sruth PipeWire a chruthú"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2828,7 +2827,7 @@ msgstr ""
 msgid "Delete"
 msgstr "Scrios"
 
-#: plugins/trackmouse/trackmouse.cpp:71
+#: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"

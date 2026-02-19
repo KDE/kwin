@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-18 00:47+0000\n"
+"POT-Creation-Date: 2026-02-19 00:49+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -2849,7 +2849,7 @@ msgstr ""
 msgid "Failed to create PipeWire stream"
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -2861,7 +2861,7 @@ msgstr ""
 "Izaberite prozor za prinudno zatvaranje levim klikom ili Enterom.\n"
 "Escape ili desni klik da odustanete."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -3061,7 +3061,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: plugins/trackmouse/trackmouse.cpp:71
+#: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"

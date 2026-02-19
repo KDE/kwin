@@ -7,412 +7,423 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-18 00:47+0000\n"
-"PO-Revision-Date: 2013-09-08 07:05+0900\n"
-"Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
+"POT-Creation-Date: 2026-02-19 00:49+0000\n"
+"PO-Revision-Date: 2026-02-17 23:24-0500\n"
+"Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.8\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "ئابدۇقادىر ئابلىز, غەيرەت كەنجى"
+msgstr "ئابدۇقادىر ئابلىز، غەيرەت كەنجى"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "sahran.ug@gmail.com,  gheyret@gmail.com"
+msgstr "sahranbay@gmail.com, gheyret@gmail.com"
 
 #: backends/wayland/wayland_output.cpp:481
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "ئوڭ Ctrl بېسىلسا نىشانلىغۇچنى قويۇپ بېرىدۇ"
 
 #: backends/wayland/wayland_output.cpp:483
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "ئوڭ Ctrl بېسىلسا نىشانلىغۇچقا ئېرىشىدۇ"
 
 #: backends/wayland/wayland_output.cpp:487
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr ""
+msgstr "KDE Wayland بىرىكتۈرگۈچ %1"
 
 #: backends/wayland/wayland_output.cpp:490
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- چىقىرىش چەكلەنگەن"
 
 #: backends/wayland/wayland_output.cpp:492
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- چىقىرىش غۇۋالاشتى"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "ئوڭ Ctrl بېسىلسا كىرگۈزۈشنى قويۇپ بېرىدۇ"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "ئوڭ Ctrl بېسىلسا كىرگۈزۈشكە ئېرىشىدۇ"
 
 #: backends/x11/x11_windowed_backend.cpp:498
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "KDE Wayland بىرىكتۈرگۈچ"
 
 #: compositor.cpp:604
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
+"كۆرسىتىش كارتىسى ئەسلىگە قايتۇرۇلغانلىقتىن ئۈستەلئۈستى ئۈنۈمى قايتا "
+"قوزغىتىلدى"
 
 #: core/iccprofile.cpp:334
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "ICC سەپلىمە ھۆججەت «%1» نى ئاچالمىدى"
 
 #: core/iccprofile.cpp:336
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr ""
+msgstr "ICC سەپلىمە ھۆججەت «%1» مەۋجۇت ئەمەس"
 
 #: core/iccprofile.cpp:340
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC سەپلىمە ھۆججەت «%1» نى كۆرسەتكۈچكە ئىشلەتكىلى بولمايدۇ"
 
 #: core/iccprofile.cpp:343
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"ICC سەپلىمە ھۆججەت «%1» دا قوللىمايدىغان باغلىنىش بوشلۇقى بار، پەقەت XYZ "
+"نىلا قوللايدۇ"
 
 #: core/iccprofile.cpp:346
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
+"ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، كىرگۈزۈش/چىقىرىش رەڭ بوشلۇقى RGB ئەمەس"
 
 #: core/iccprofile.cpp:359
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، ئۇنىڭ ئاق نۇقتا ئۇچۇرى يوق"
 
 #: core/iccprofile.cpp:362
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، ئۇنىڭ ئاق نۇقتا ئۇچۇرى ئىناۋەتسىز"
 
 #: core/iccprofile.cpp:375
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
-msgstr ""
+msgstr "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، رەڭ ماسلىقى ماترىسساسىنى يېشەلمىدى"
 
 #: core/iccprofile.cpp:380
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
+"ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، رەڭ ماسلىقى ماترىسساسىنى تەتۈرىگە "
+"ئايلاندۇرالمىدى"
 
 #: core/iccprofile.cpp:393
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
-msgstr ""
+msgstr "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، ئۇنىڭ ئاساسىي رەڭ ئۇچۇرى يوق"
 
 #: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
+"ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، ئۇنىڭ ئاساسىي رەڭ ئۇچۇرىنى ھېسابلىيالمىدى"
 
 #: core/iccprofile.cpp:417
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
-msgstr ""
+msgstr "ICC سەپلىمە ھۆججەت «%1» بۇزۇلغان، ئۇنىڭ ئاساسىي رەڭ ئۇچۇرى ئىناۋەتسىز"
 
 #: core/iccprofile.cpp:433
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr ""
+"ICC سەپلىمە ھۆججەت «%1» پەقەت BToD بەلگىسىنىلا ئۆز ئىچىگە ئالغان، سىستېما "
+"قوللىمايدۇ"
 
 #: core/iccprofile.cpp:472
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "رەڭ سەپلىمە ھۆججەتنىڭ TRC بەلگىسى كەم"
 
 #: debug_console.cpp:86
 #, kde-format
 msgid "Timestamp"
-msgstr ""
+msgstr "ۋاقىت تامغا"
 
 #: debug_console.cpp:91
 #, kde-format
 msgid "Timestamp (µsec)"
-msgstr ""
+msgstr "ۋاقىت تامغا (µsec)"
 
 #: debug_console.cpp:98
 #, kde-format
 msgctxt "A mouse button"
 msgid "Left"
-msgstr ""
+msgstr "سول"
 
 #: debug_console.cpp:100
 #, kde-format
 msgctxt "A mouse button"
 msgid "Right"
-msgstr ""
+msgstr "ئوڭ"
 
 #: debug_console.cpp:102
 #, kde-format
 msgctxt "A mouse button"
 msgid "Middle"
-msgstr ""
+msgstr "ئوتتۇرا"
 
 #: debug_console.cpp:104
 #, kde-format
 msgctxt "A mouse button"
 msgid "Back"
-msgstr ""
+msgstr "قايت"
 
 #: debug_console.cpp:106
 #, kde-format
 msgctxt "A mouse button"
 msgid "Forward"
-msgstr ""
+msgstr "ئالدىغا"
 
 #: debug_console.cpp:108
 #, kde-format
 msgctxt "A mouse button"
 msgid "Task"
-msgstr ""
+msgstr "ۋەزىپە"
 
 #: debug_console.cpp:110
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 4"
-msgstr ""
+msgstr "4-قوشۇمچە توپچە"
 
 #: debug_console.cpp:112
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 5"
-msgstr ""
+msgstr "5-قوشۇمچە توپچە"
 
 #: debug_console.cpp:114
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 6"
-msgstr ""
+msgstr "6-قوشۇمچە توپچە"
 
 #: debug_console.cpp:116
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 7"
-msgstr ""
+msgstr "7-قوشۇمچە توپچە"
 
 #: debug_console.cpp:118
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 8"
-msgstr ""
+msgstr "8-قوشۇمچە توپچە"
 
 #: debug_console.cpp:120
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 9"
-msgstr ""
+msgstr "9-قوشۇمچە توپچە"
 
 #: debug_console.cpp:122
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 10"
-msgstr ""
+msgstr "10-قوشۇمچە توپچە"
 
 #: debug_console.cpp:124
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 11"
-msgstr ""
+msgstr "11-قوشۇمچە توپچە"
 
 #: debug_console.cpp:126
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 12"
-msgstr ""
+msgstr "12-قوشۇمچە توپچە"
 
 #: debug_console.cpp:128
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 13"
-msgstr ""
+msgstr "13-قوشۇمچە توپچە"
 
 #: debug_console.cpp:130
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 14"
-msgstr ""
+msgstr "14-قوشۇمچە توپچە"
 
 #: debug_console.cpp:132
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 15"
-msgstr ""
+msgstr "15-قوشۇمچە توپچە"
 
 #: debug_console.cpp:134
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 16"
-msgstr ""
+msgstr "16-قوشۇمچە توپچە"
 
 #: debug_console.cpp:136
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 17"
-msgstr ""
+msgstr "17-قوشۇمچە توپچە"
 
 #: debug_console.cpp:138
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 18"
-msgstr ""
+msgstr "18-قوشۇمچە توپچە"
 
 #: debug_console.cpp:140
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 19"
-msgstr ""
+msgstr "19-قوشۇمچە توپچە"
 
 #: debug_console.cpp:142
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 20"
-msgstr ""
+msgstr "20-قوشۇمچە توپچە"
 
 #: debug_console.cpp:144
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 21"
-msgstr ""
+msgstr "21-قوشۇمچە توپچە"
 
 #: debug_console.cpp:146
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 22"
-msgstr ""
+msgstr "22-قوشۇمچە توپچە"
 
 #: debug_console.cpp:148
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 23"
-msgstr ""
+msgstr "23-قوشۇمچە توپچە"
 
 #: debug_console.cpp:150
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 24"
-msgstr ""
+msgstr "24-قوشۇمچە توپچە"
 
 #: debug_console.cpp:159 debug_console.cpp:161
 #, kde-format
 msgid "Input Device"
-msgstr ""
+msgstr "كىرگۈزۈش ئۈسكۈنىسى"
 
 #: debug_console.cpp:159
 #, kde-format
 msgctxt "The input device of the event is not known"
 msgid "Unknown"
-msgstr ""
+msgstr "يوچۇن"
 
 #: debug_console.cpp:194
 #, kde-format
 msgctxt "A mouse pointer motion event"
 msgid "Pointer Motion"
-msgstr ""
+msgstr "نىشانلىغۇچ يۆتكىلىشى"
 
 #: debug_console.cpp:199
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta"
-msgstr ""
+msgstr "دېلتا"
 
 #: debug_console.cpp:203
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta (not accelerated)"
-msgstr ""
+msgstr "دېلتا (تېزلىتىلمىگەن)"
 
 #: debug_console.cpp:206
 #, kde-format
 msgctxt "The global mouse pointer position"
 msgid "Global Position"
-msgstr ""
+msgstr "ئومۇمىيەت ئورنى"
 
 #: debug_console.cpp:220
 #, kde-format
 msgctxt "A mouse pointer button press event"
 msgid "Pointer Button Press"
-msgstr ""
+msgstr "ئورۇن توپچە بېسىلسا"
 
 #: debug_console.cpp:223 debug_console.cpp:230
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Button"
-msgstr ""
+msgstr "توپچە"
 
 #: debug_console.cpp:224 debug_console.cpp:231
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Native Button code"
-msgstr ""
+msgstr "ئەسلى توپچە كودى"
 
 #: debug_console.cpp:225 debug_console.cpp:232
 #, kde-format
 msgctxt "All currently pressed buttons in a mouse press/release event"
 msgid "Pressed Buttons"
-msgstr ""
+msgstr "بېسىلغان توپچە"
 
 #: debug_console.cpp:227
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
-msgstr ""
+msgstr "بېسىلغان توپچە قويۇپ بېرىش"
 
 #: debug_console.cpp:244
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
-msgstr ""
+msgstr "نىشانلىغۇچ ئوقى"
 
 #: debug_console.cpp:247
 #, kde-format
 msgctxt "The orientation of a pointer axis event"
 msgid "Orientation"
-msgstr ""
+msgstr "يۆنىلىش"
 
 #: debug_console.cpp:248
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Horizontal"
-msgstr ""
+msgstr "توغرىسىغا"
 
 #: debug_console.cpp:249
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Vertical"
-msgstr ""
+msgstr "بويىغا"
 
 #: debug_console.cpp:250
 #, kde-format
 msgctxt "The angle delta of a pointer axis event"
 msgid "Delta"
-msgstr ""
+msgstr "دېلتا"
 
 #: debug_console.cpp:251
 #, kde-format
@@ -420,838 +431,825 @@ msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr ""
+msgstr "دېلتا (V120)"
 
 #: debug_console.cpp:266
 #, kde-format
 msgctxt "A key press event"
 msgid "Key Press"
-msgstr ""
+msgstr "كۇنۇپكىنىڭ بېسىلىشى"
 
 #: debug_console.cpp:269
 #, kde-format
 msgctxt "A key release event"
 msgid "Key Release"
-msgstr ""
+msgstr "كۇنۇپكىنىڭ قويۇپ بېرىلىشى"
 
 #: debug_console.cpp:278
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
 #: debug_console.cpp:282
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Control"
-msgstr ""
+msgstr "Ctrl"
 
 #: debug_console.cpp:286
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Alt"
-msgstr ""
+msgstr "Alt"
 
 #: debug_console.cpp:290
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Meta"
-msgstr ""
+msgstr "Meta"
 
 #: debug_console.cpp:294
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Keypad"
-msgstr ""
+msgstr "كىچىك ھەرپتاختا"
 
 #: debug_console.cpp:298
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
-msgstr ""
+msgstr "گۇرۇپپا ئالماشتۇرۇش"
 
 #: debug_console.cpp:304
 #, kde-format
 msgctxt "Whether the event is an automatic key repeat"
 msgid "Repeat"
-msgstr ""
+msgstr "قايتىلا"
 
 #: debug_console.cpp:308
 #, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr ""
+msgstr "ئاچقۇچ كودى"
 
 #: debug_console.cpp:309
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
-msgstr ""
+msgstr "Qt::كۇنۇپكا كودى"
 
 #: debug_console.cpp:310
 #, kde-format
 msgctxt "The translated code to an Xkb symbol"
 msgid "Xkb symbol"
-msgstr ""
+msgstr "Xkb بەلگىسى"
 
 #: debug_console.cpp:311
 #, kde-format
 msgctxt "The translated code interpreted as text"
 msgid "Utf8"
-msgstr ""
+msgstr "Utf8"
 
 #: debug_console.cpp:312
 #, kde-format
 msgctxt "The currently active modifiers"
 msgid "Modifiers"
-msgstr ""
+msgstr "بىرىكمە كۇنۇپكا"
 
 #: debug_console.cpp:324
 #, kde-format
 msgctxt "A touch down event"
 msgid "Touch down"
-msgstr ""
+msgstr "تەگكۈزۈپ بېسىش"
 
 #: debug_console.cpp:326 debug_console.cpp:341 debug_console.cpp:356
 #, kde-format
 msgctxt "The id of the touch point in the touch event"
 msgid "Point identifier"
-msgstr ""
+msgstr "نۇقتا پەرقلەندۈرگۈچ"
 
 #: debug_console.cpp:327 debug_console.cpp:342
 #, kde-format
 msgctxt "The global position of the touch point"
 msgid "Global position"
-msgstr ""
+msgstr "ئومۇمىيەت ئورنى"
 
 #: debug_console.cpp:339
 #, kde-format
 msgctxt "A touch motion event"
 msgid "Touch Motion"
-msgstr ""
+msgstr "تەگكۈزۈپ يۆتكىلىشى"
 
 #: debug_console.cpp:354
 #, kde-format
 msgctxt "A touch up event"
 msgid "Touch Up"
-msgstr ""
+msgstr "تەگكۈزۈپ ئۈستىگە"
 
 #: debug_console.cpp:367
 #, kde-format
 msgctxt "A pinch gesture is started"
 msgid "Pinch start"
-msgstr ""
+msgstr "چىمدىشنى باشلا"
 
 #: debug_console.cpp:369
 #, kde-format
 msgctxt "Number of fingers in this pinch gesture"
 msgid "Finger count"
-msgstr ""
+msgstr "بارماق سانى"
 
 #: debug_console.cpp:380
 #, kde-format
 msgctxt "A pinch gesture is updated"
 msgid "Pinch update"
-msgstr ""
+msgstr "چىمدىش يېڭىلاش"
 
 #: debug_console.cpp:382
 #, kde-format
 msgctxt "Current scale in pinch gesture"
 msgid "Scale"
-msgstr ""
+msgstr "نىسبىتى"
 
 #: debug_console.cpp:383
 #, kde-format
 msgctxt "Current angle in pinch gesture"
 msgid "Angle delta"
-msgstr ""
+msgstr "بۇلۇڭ پەرقى"
 
 #: debug_console.cpp:384
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta x"
-msgstr ""
+msgstr "x ئوقى پەرقى"
 
 #: debug_console.cpp:385
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta y"
-msgstr ""
+msgstr "y ئوقى پەرقى"
 
 #: debug_console.cpp:396
 #, kde-format
 msgctxt "A pinch gesture ended"
 msgid "Pinch end"
-msgstr ""
+msgstr "چىمدىش ئاخىرلىشىش"
 
 #: debug_console.cpp:408
 #, kde-format
 msgctxt "A pinch gesture got cancelled"
 msgid "Pinch cancelled"
-msgstr ""
+msgstr "چىمدىشتىن ۋاز كەچتى"
 
 #: debug_console.cpp:420
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
-msgstr ""
+msgstr "سىيرىش باشلاش"
 
 #: debug_console.cpp:422
 #, kde-format
 msgctxt "Number of fingers in this swipe gesture"
 msgid "Finger count"
-msgstr ""
+msgstr "بارماق سانى"
 
 #: debug_console.cpp:433
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
-msgstr ""
+msgstr "سىيرىش يېڭىلاش"
 
 #: debug_console.cpp:435
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta x"
-msgstr ""
+msgstr "x ئوقى پەرقى"
 
 #: debug_console.cpp:436
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta y"
-msgstr ""
+msgstr "y ئوقى پەرقى"
 
 #: debug_console.cpp:447
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
-msgstr ""
+msgstr "سىيرىش ئاخىرلىشىش"
 
 #: debug_console.cpp:459
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
-msgstr ""
+msgstr "سىيرىشتىن ۋاز كەچتى"
 
 #: debug_console.cpp:471
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "باشلاشنى بېسىپ تۇرۇپ"
 
 #: debug_console.cpp:473
 #, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
-msgstr ""
+msgstr "بارماق سانى"
 
 #: debug_console.cpp:484
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "ئاخىرلاشتۇرۇشنى بېسىپ تۇرۇپ"
 
 #: debug_console.cpp:496
 #, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr ""
+msgstr "ۋاز كەچنى بېسىپ تۇرۇپ"
 
 #: debug_console.cpp:508
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "ئېكران %1 غا ئالماشتۇر"
+msgstr "ئۈزچات ئالماشتۇرۇلدى"
 
 #: debug_console.cpp:514
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Notebook lid"
-msgstr ""
+msgstr "خاتىرە كومپيۇتېر قاپقىقى"
 
 #: debug_console.cpp:516
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Tablet mode"
-msgstr ""
+msgstr "سەزگۈر تاختا ھالىتى"
 
 #: debug_console.cpp:518
 #, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
-msgstr ""
+msgstr "ئۈزچات"
 
 #: debug_console.cpp:522
 #, kde-format
 msgctxt "The hardware switch got turned off"
 msgid "Off"
-msgstr ""
+msgstr "تاقاق"
 
 #: debug_console.cpp:525
 #, kde-format
 msgctxt "The hardware switch got turned on"
 msgid "On"
-msgstr ""
+msgstr "ئوچۇق"
 
 #: debug_console.cpp:530
 #, kde-format
 msgctxt "State of a hardware switch (on/off)"
 msgid "State"
-msgstr ""
+msgstr "ھالەت"
 
 #: debug_console.cpp:539
 #, kde-format
 msgid "Tablet Tool Proximity"
-msgstr ""
+msgstr "سەزگۈر تاختا قورال ئارىلىقى"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "ئارىلىقى"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "ئىچى"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "سىرتى"
 
 #: debug_console.cpp:544 debug_console.cpp:562 debug_console.cpp:582
 #: debug_console.cpp:632 debug_console.cpp:649
 #, kde-format
 msgid "Position"
-msgstr ""
+msgstr "ئورنى"
 
 #: debug_console.cpp:546 debug_console.cpp:564 debug_console.cpp:584
 #, kde-format
 msgid "Tilt"
-msgstr ""
+msgstr "قىيسايت"
 
 #: debug_console.cpp:548 debug_console.cpp:566 debug_console.cpp:586
 #, kde-format
 msgid "Rotation"
-msgstr ""
+msgstr "ئايلاندۇر"
 
 #: debug_console.cpp:549 debug_console.cpp:568
 #, kde-format
 msgid "Distance"
-msgstr ""
+msgstr "ئارىلىق"
 
 #: debug_console.cpp:558
 #, kde-format
 msgid "Tablet Tool Axis"
-msgstr ""
+msgstr "سەزگۈر تاختا قورال ئوقى"
 
 #: debug_console.cpp:567 debug_console.cpp:587
 #, kde-format
 msgid "Pressure"
-msgstr ""
+msgstr "بېسىم"
 
 #: debug_console.cpp:577
 #, kde-format
 msgid "Tablet Tool Tip"
-msgstr ""
+msgstr "سەزگۈر تاختا قورال ئۇچى"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "ئۈستى"
+msgstr "ئۇچى"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
-#| msgid "Move Window Down"
+#, kde-format
 msgid "Down"
-msgstr "كۆزنەكنى ئاستىغا يۆتكە"
+msgstr "ئاستى"
 
 #: debug_console.cpp:581
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "ئۈستى"
 
 #: debug_console.cpp:588
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Slider Position"
-msgstr "كۆزنەك مەشغۇلاتلار تىزىملىكى"
+msgstr "سىيرىغۇچ ئورنى"
 
 #: debug_console.cpp:597
 #, kde-format
 msgid "Tablet Tool Button"
-msgstr ""
+msgstr "سەزگۈر تاختا قورال توپچە"
 
 #: debug_console.cpp:599 debug_console.cpp:614
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Button"
-msgstr "چاشقىنەك تەقلىدلەش"
+msgstr "توپچە"
 
 #: debug_console.cpp:600 debug_console.cpp:615
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Pressed"
-msgstr "چاشقىنەك تەقلىدلەش"
+msgstr "بېسىلغان"
 
 #: debug_console.cpp:601 debug_console.cpp:619 debug_console.cpp:636
 #: debug_console.cpp:653 debug_console.cpp:667
 #, kde-format
 msgid "Tablet"
-msgstr ""
+msgstr "سەزگۈر تاختا"
 
 #: debug_console.cpp:612
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr ""
+msgstr "سەزگۈر تاختا توپچە"
 
 #: debug_console.cpp:616 debug_console.cpp:634 debug_console.cpp:651
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "گۇرۇپپا"
 
 #: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
 #, kde-format
 msgid "Mode"
-msgstr ""
+msgstr "ھالىتى"
 
 #: debug_console.cpp:618
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "ھالەت ئالماشتۇرامدۇ"
 
 #: debug_console.cpp:629
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr ""
+msgstr "سەزگۈر تاختا تاسمىسى"
 
 #: debug_console.cpp:631 debug_console.cpp:648 debug_console.cpp:665
 #, kde-format
 msgid "Number"
-msgstr ""
+msgstr "نومۇرى"
 
 #: debug_console.cpp:633 debug_console.cpp:650
 #, kde-format
 msgid "isFinger"
-msgstr ""
+msgstr "بارماقمۇ"
 
 #: debug_console.cpp:646
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr ""
+msgstr "سەزگۈر تاختا ھالقىسى"
 
 #: debug_console.cpp:663
 #, kde-format
 msgid "Tablet Pad Dial"
-msgstr ""
+msgstr "سەزگۈر تاختا نومۇر بۇرىغۇچ"
 
 #: debug_console.cpp:666
 #, kde-format
 msgid "Delta"
-msgstr ""
+msgstr "دېلتا"
 
 #: debug_console.cpp:719
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "ئۈنۈم"
 
 #: debug_console.cpp:949
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "No Mouse Buttons"
-msgstr "چاشقىنەك تەقلىدلەش"
+msgstr "چاشقىنەك توپچىسى يوق"
 
 #: debug_console.cpp:953
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
-msgstr ""
+msgstr "سول"
 
 #: debug_console.cpp:956
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
-msgstr ""
+msgstr "ئوڭ"
 
 #: debug_console.cpp:959
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
-msgstr ""
+msgstr "ئوتتۇرا"
 
 #: debug_console.cpp:962
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
-msgstr ""
+msgstr "قايت"
 
 #: debug_console.cpp:965
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
-msgstr ""
+msgstr "ئالدىغا"
 
 #: debug_console.cpp:968
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
-msgstr ""
+msgstr "1-قوشۇمچە"
 
 #: debug_console.cpp:971
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
-msgstr ""
+msgstr "2-قوشۇمچە"
 
 #: debug_console.cpp:974
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
-msgstr ""
+msgstr "3-قوشۇمچە"
 
 #: debug_console.cpp:977
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
-msgstr ""
+msgstr "4-قوشۇمچە"
 
 #: debug_console.cpp:980
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
-msgstr ""
+msgstr "5-قوشۇمچە"
 
 #: debug_console.cpp:983
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
-msgstr ""
+msgstr "6-قوشۇمچە"
 
 #: debug_console.cpp:986
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
-msgstr ""
+msgstr "7-قوشۇمچە"
 
 #: debug_console.cpp:989
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
-msgstr ""
+msgstr "8-قوشۇمچە"
 
 #: debug_console.cpp:992
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
-msgstr ""
+msgstr "9-قوشۇمچە"
 
 #: debug_console.cpp:995
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
-msgstr ""
+msgstr "10-قوشۇمچە"
 
 #: debug_console.cpp:998
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
-msgstr ""
+msgstr "11-قوشۇمچە"
 
 #: debug_console.cpp:1001
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
-msgstr ""
+msgstr "12-قوشۇمچە"
 
 #: debug_console.cpp:1004
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
-msgstr ""
+msgstr "13-قوشۇمچە"
 
 #: debug_console.cpp:1007
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
-msgstr ""
+msgstr "14-قوشۇمچە"
 
 #: debug_console.cpp:1010
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
-msgstr ""
+msgstr "15-قوشۇمچە"
 
 #: debug_console.cpp:1013
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
-msgstr ""
+msgstr "16-قوشۇمچە"
 
 #: debug_console.cpp:1016
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
-msgstr ""
+msgstr "17-قوشۇمچە"
 
 #: debug_console.cpp:1019
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
-msgstr ""
+msgstr "18-قوشۇمچە"
 
 #: debug_console.cpp:1022
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
-msgstr ""
+msgstr "19-قوشۇمچە"
 
 #: debug_console.cpp:1025
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
-msgstr ""
+msgstr "20-قوشۇمچە"
 
 #: debug_console.cpp:1028
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
-msgstr ""
+msgstr "21-قوشۇمچە"
 
 #: debug_console.cpp:1031
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
-msgstr ""
+msgstr "22-قوشۇمچە"
 
 #: debug_console.cpp:1034
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
-msgstr ""
+msgstr "23-قوشۇمچە"
 
 #: debug_console.cpp:1037
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
-msgstr ""
+msgstr "24-قوشۇمچە"
 
 #: debug_console.cpp:1040
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
-msgstr ""
+msgstr "ۋەزىپە"
 
 #: debug_console.cpp:1427
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "X11 Windows"
-msgstr "كۆزنەكلەر"
+msgstr "X11 كۆزنەك"
 
 #: debug_console.cpp:1429
 #, kde-format
 msgid "X11 Unmanaged Windows"
-msgstr ""
+msgstr "X11 باشقۇرۇلمىغان كۆزنەك"
 
 #: debug_console.cpp:1431
-#, fuzzy, kde-format
-#| msgid "Shade Window"
+#, kde-format
 msgid "Wayland Windows"
-msgstr "سايە كۆزنەك"
+msgstr "Wayland كۆزنەك"
 
 #: debug_console.cpp:1433
-#, fuzzy, kde-format
-#| msgid "Lower Window"
+#, kde-format
 msgid "Internal Windows"
-msgstr "كۆزنەكنى پەسلەت"
+msgstr "ئىچكى كۆزنەك"
 
 #: debug_console.cpp:1790
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "يۈك چۈشۈر"
 
 #: debug_console.cpp:1794
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "يۈكلە"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
 #, kde-format
 msgid "Debug Console"
-msgstr ""
+msgstr "سازلاش تىزگىن سۇپىسى"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:30
 #, kde-format
 msgid "Windows"
-msgstr "كۆزنەكلەر"
+msgstr "كۆزنەك"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:44
 #, kde-format
 msgid "Input Events"
-msgstr ""
+msgstr "كىرگۈزۈش پائالىيىتى"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
 #: debug_console.ui:61
 #, kde-format
 msgid "Input Devices"
-msgstr ""
+msgstr "كىرگۈزۈش ئۈسكۈنىسى"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #: debug_console.ui:71
 #, kde-format
 msgid "OpenGL"
-msgstr ""
+msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
 #: debug_console.ui:77
 #, kde-format
 msgid "No OpenGL compositor running"
-msgstr ""
+msgstr "ئىجرا قىلىنىۋاتقان OpenGL كۆرسىتىش ئۈنۈمى بىرىكتۈرگۈچ يوق"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
 #: debug_console.ui:105
 #, kde-format
 msgid "OpenGL (ES) driver information"
-msgstr ""
+msgstr "OpenGL (ES) قوزغاتقۇ ئۇچۇرى"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:111
 #, kde-format
 msgid "Vendor:"
-msgstr ""
+msgstr "تەمىنلىگۈچى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: debug_console.ui:118
 #, kde-format
 msgid "Renderer:"
-msgstr ""
+msgstr "شەكىللەندۈرگۈچ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: debug_console.ui:125
 #, kde-format
 msgid "Version:"
-msgstr ""
+msgstr "نەشرى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: debug_console.ui:132
 #, kde-format
 msgid "Shading Language Version:"
-msgstr ""
+msgstr "رەڭلىگۈچ تىل نەشرى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: debug_console.ui:139
 #, kde-format
 msgid "Driver:"
-msgstr ""
+msgstr "قوزغاتقۇ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: debug_console.ui:146
 #, kde-format
 msgid "GPU class:"
-msgstr ""
+msgstr "GPU تۈرى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: debug_console.ui:153
 #, kde-format
 msgid "OpenGL Version:"
-msgstr ""
+msgstr "OpenGL نەشرى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: debug_console.ui:160
 #, kde-format
 msgid "GLSL Version:"
-msgstr ""
+msgstr "GLSL نەشرى:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
 #: debug_console.ui:226
 #, kde-format
 msgid "Platform Extensions"
-msgstr ""
+msgstr "سۇپا كېڭەيتىلمىسى"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
 #: debug_console.ui:242
 #, kde-format
 msgid "OpenGL (ES) Extensions"
-msgstr ""
+msgstr "OpenGL (ES) كېڭەيتىلمىسى"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
 #: debug_console.ui:263
-#, fuzzy, kde-format
-#| msgid "Next Layout"
+#, kde-format
 msgid "Keyboard"
-msgstr "كېيىنكى ئورۇنلاشتۇرۇش"
+msgstr "ھەرپتاختا"
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
 #: debug_console.ui:290
-#, fuzzy, kde-format
-#| msgid "Next Layout"
+#, kde-format
 msgid "Keymap Layouts"
-msgstr "كېيىنكى ئورۇنلاشتۇرۇش"
+msgstr "ھەرپتاختا خەرىتە جايلاشتۇرۇلۇشى"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: debug_console.ui:312
-#, fuzzy, kde-format
-#| msgid "Configur&e Window Behavior..."
+#, kde-format
 msgid "Current Layout:"
-msgstr "كۆزنەك ئىش-ھەرىكىتىنى سەپلە(&E)…"
+msgstr "نۆۋەتتىكى جايلاشتۇرۇش:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
 #: debug_console.ui:331
 #, kde-format
 msgid "Modifiers"
-msgstr ""
+msgstr "بىرىكمە كۇنۇپكا"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
 #: debug_console.ui:347
 #, kde-format
 msgid "Active Modifiers"
-msgstr ""
+msgstr "ئاكتىپ بىرىكمە كۇنۇپكا"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
 #: debug_console.ui:363
 #, kde-format
 msgid "LEDs"
-msgstr ""
+msgstr "LED"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
 #: debug_console.ui:379
 #, kde-format
 msgid "Active LEDs"
-msgstr ""
+msgstr "ئاكتىپ LED"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: debug_console.ui:400 debug_console.ui:420
 #, kde-format
 msgid "Clipboard"
-msgstr ""
+msgstr "چاپلاش تاختىسى"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 #: debug_console.ui:466
 #, kde-format
 msgid "Primary Selection"
-msgstr ""
+msgstr "ئاساسىي تاللاش"
 
 #: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:128
 #, kde-format
 msgid "Window Manager"
-msgstr "كۆزنەك باشقۇرغۇ"
+msgstr "كۆزنەك باشقۇرغۇچ"
 
 #: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "ID of resource belonging to the application"
-msgstr "مەزكۇر پروگراممىغا تەۋە بولغان مەنبەنىڭ كىملىكى(ID)"
+msgstr "مەزكۇر پىروگراممىغا تەۋە بولغان مەنبەنىڭ كىملىكى(ID)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
 msgid "id"
-msgstr ""
+msgstr "كىملىك"
 
 #: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
@@ -1261,7 +1259,7 @@ msgstr "جەريان  ئۈزۈش سىگنالىنىڭ ئىشلەتكۈچى مە�
 #: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
 #, kde-format
 msgid "time"
-msgstr ""
+msgstr "ۋاقىت"
 
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
@@ -1285,8 +1283,7 @@ msgstr "ياردەمچى قورالىنى بىۋاسىتە چاقىرىشقا ب
 #| "You have selected to show a window in fullscreen mode.\n"
 #| "If the application itself does not have an option to turn the fullscreen "
 #| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#| "the window menu instead, activated using the %1 keyboard shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1294,19 +1291,13 @@ msgid ""
 "%1 keyboard shortcut instead."
 msgstr ""
 "سىز پۈتۈن ئېكران ھالەتتە كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
-"ئەگەر پروگرامما ئۆزى پۈتۈن ئېكراندىن چېكىنىش ھالەت تاللانمىسىنى تەمىنلىمىگەن "
-"بولسا سىز چاشقىنەكنى ئىشلىتىپ پۈتۈن ئېكران ھالىتىدىن چېكىنەلمەيسىز: تېزلەتمە "
-"%1 نى ئىشلىتىپ ئاكتىپلاش كۆزنىكىنىڭ مەشغۇلات تىزىملىكىنى ئىشلىتىپ بۇ "
-"ۋەزىپىنى ئورۇنلاڭ."
+"ئەگەر پىروگرامما ئۆزى پۈتۈن ئېكراندىن چېكىنىش ھالەت تاللانمىسىنى "
+"تەمىنلىمىگەن بولسا سىز چاشقىنەكنى ئىشلىتىپ پۈتۈن ئېكران ھالىتىدىن "
+"چېكىنەلمەيسىز: ھەرپتاختا تېزلەتمە %1 نى ئىشلىتىپ، كۆزنەك تىزىملىكىنى "
+"ئاكتىپلاپ پۈتۈن ئېكراندىن چېكىنىڭ."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1314,10 +1305,10 @@ msgid ""
 "window menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "سىز پۈتۈن ئېكران ھالەتتە كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
-"ئەگەر پروگرامما ئۆزى پۈتۈن ئېكراندىن چېكىنىش ھالەت تاللانمىسىنى تەمىنلىمىگەن "
-"بولسا سىز چاشقىنەكنى ئىشلىتىپ پۈتۈن ئېكران ھالىتىدىن چېكىنەلمەيسىز: تېزلەتمە "
-"%1 نى ئىشلىتىپ ئاكتىپلاش كۆزنىكىنىڭ مەشغۇلات تىزىملىكىنى ئىشلىتىپ بۇ "
-"ۋەزىپىنى ئورۇنلاڭ."
+"ئەگەر پىروگرامما ئۆزى پۈتۈن ئېكراندىن چېكىنىش ھالەت تاللانمىسىنى "
+"تەمىنلىمىگەن بولسا سىز چاشقىنەكنى ئىشلىتىپ پۈتۈن ئېكران ھالىتىدىن "
+"چېكىنەلمەيسىز: ھەرپتاختا تېزلەتمە %1 نى ئىشلىتىپ، كۆزنەك تىزىملىكىنى "
+"ئاكتىپلاپ پۈتۈن ئېكراندىن چېكىنىڭ."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
 #, fuzzy, kde-format
@@ -1325,33 +1316,32 @@ msgstr ""
 #| "You have selected to show a window in fullscreen mode.\n"
 #| "If the application itself does not have an option to turn the fullscreen "
 #| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#| "the window menu instead, activated using the %1 keyboard shortcut."
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse."
 msgstr ""
 "سىز پۈتۈن ئېكران ھالەتتە كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
-"ئەگەر پروگرامما ئۆزى پۈتۈن ئېكراندىن چېكىنىش ھالەت تاللانمىسىنى تەمىنلىمىگەن "
-"بولسا سىز چاشقىنەكنى ئىشلىتىپ پۈتۈن ئېكران ھالىتىدىن چېكىنەلمەيسىز: تېزلەتمە "
-"%1 نى ئىشلىتىپ ئاكتىپلاش كۆزنىكىنىڭ مەشغۇلات تىزىملىكىنى ئىشلىتىپ بۇ "
-"ۋەزىپىنى ئورۇنلاڭ."
+"ئەگەر پىروگرامما ئۆزى پۈتۈن ئېكراندىن چېكىنىش ھالەت تاللانمىسىنى "
+"تەمىنلىمىگەن بولسا سىز چاشقىنەكنى ئىشلىتىپ پۈتۈن ئېكران ھالىتىدىن "
+"چېكىنەلمەيسىز: ھەرپتاختا تېزلەتمە %1 نى ئىشلىتىپ، كۆزنەك تىزىملىكىنى "
+"ئاكتىپلاپ پۈتۈن ئېكراندىن چېكىنىڭ."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
 #, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#| msgid "Fullscreen"
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "پۈتۈن ئېكران(&F)"
+msgstr "تولۇق ئېكران"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
 #| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#| "the mouse: use the window menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1359,16 +1349,11 @@ msgid ""
 msgstr ""
 "سىز گىرۋەكسىز كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
 "ئەگەر گىرۋەك بولمىسا چاشقىنەكنى ئىشلىتىپ گىرۋەكنى قايتا قوزغىتالمايسىز: "
-"تېزلەتمە %1 نى ئىشلىتىپ كۆزنەكنىڭ مەشغۇلات تىزىملىكى ئارقىلىق بۇ مەسىلىنى "
-"ھەل قىلىڭ."
+"ھەرپتاختا تېزلەتمە %1 نى ئىشلىتىپ كۆزنەك تىزىملىكى ئارقىلىق بۇ مەسىلىنى ھەل "
+"قىلىڭ."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1377,16 +1362,16 @@ msgid ""
 msgstr ""
 "سىز گىرۋەكسىز كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
 "ئەگەر گىرۋەك بولمىسا چاشقىنەكنى ئىشلىتىپ گىرۋەكنى قايتا قوزغىتالمايسىز: "
-"تېزلەتمە %1 نى ئىشلىتىپ كۆزنەكنىڭ مەشغۇلات تىزىملىكى ئارقىلىق بۇ مەسىلىنى "
-"ھەل قىلىڭ."
+"ھەرپتاختا تېزلەتمە %1 نى ئىشلىتىپ كۆزنەك تىزىملىكى ئارقىلىق بۇ مەسىلىنى ھەل "
+"قىلىڭ."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
 #, fuzzy, kde-format
 #| msgid ""
 #| "You have selected to show a window without its border.\n"
 #| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#| "the mouse: use the window menu instead, activated using the %1 keyboard "
+#| "shortcut."
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1394,8 +1379,8 @@ msgid ""
 msgstr ""
 "سىز گىرۋەكسىز كۆزنەك كۆرسىتىشنى تاللىدىڭىز.\n"
 "ئەگەر گىرۋەك بولمىسا چاشقىنەكنى ئىشلىتىپ گىرۋەكنى قايتا قوزغىتالمايسىز: "
-"تېزلەتمە %1 نى ئىشلىتىپ كۆزنەكنىڭ مەشغۇلات تىزىملىكى ئارقىلىق بۇ مەسىلىنى "
-"ھەل قىلىڭ."
+"ھەرپتاختا تېزلەتمە %1 نى ئىشلىتىپ كۆزنەك تىزىملىكى ئارقىلىق بۇ مەسىلىنى ھەل "
+"قىلىڭ."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
 #, fuzzy, kde-format
@@ -1412,42 +1397,42 @@ msgstr ""
 #: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "PID of the application to terminate"
-msgstr "توختاتماقچى بولغان پروگراممىنىڭ كىملىك نومۇرى(PID)"
+msgstr "توختاتماقچى بولغان پىروگراممىنىڭ كىملىك نومۇرى(PID)"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "pid"
-msgstr ""
+msgstr "PID"
 
 #: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "Hostname on which the application is running"
-msgstr "پروگرامما ئىجرا بولۇۋاتقان كومپيۇتېر ئاتى"
+msgstr "پىروگرامما ئىجرا بولۇۋاتقان كومپيۇتېر ئاتى"
 
 #: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "hostname"
-msgstr ""
+msgstr "مۇلازىمېتىر ئاتى"
 
 #: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "Caption of the window to be terminated"
-msgstr "توختاتماقچى بولغان پروگراممىنىڭ ماۋزۇسى"
+msgstr "توختىتىدىغان پىروگراممىنىڭ ماۋزۇسى"
 
 #: helpers/killer/killer.cpp:137
 #, kde-format
 msgid "caption"
-msgstr ""
+msgstr "ماۋزۇ"
 
 #: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "Name of the application to be terminated"
-msgstr "توختاتماقچى بولغان ئاتى"
+msgstr "توختىتىدىغان قوللىنىشچان پىروگرامما ئاتى"
 
 #: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "name"
-msgstr ""
+msgstr "ئاتى"
 
 #: helpers/killer/killer.cpp:197
 #, kde-kuit-format
@@ -1458,6 +1443,10 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
+"<para><application>%1</application> دا ئىنكاس يوق. بۇ پىروگراممىنى "
+"ئاخىرلاشتۇرامدۇ؟</para> <para><emphasis strong='true'>بۇ پىروگرامما "
+"ئاخىرلاشتۇرۇلسا ئۇنىڭ بارلىق كۆزنىكى تاقىلىدۇ. ساقلانمىغان ھەر قانداق سانلىق "
+"مەلۇمات يوقىلىدۇ.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:201
 #, kde-kuit-format
@@ -1468,43 +1457,45 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
+"<para>‏«%1»‎‎‏ / <application>%2</application> دا ئىنكاس يوق. بۇ پىروگراممىنى "
+"ئاخىرلاشتۇرامدۇ؟</para> <para><emphasis strong='true'>بۇ پىروگرامما "
+"ئاخىرلاشتۇرۇلسا ئۇنىڭ بارلىق كۆزنىكى تاقىلىدۇ. ساقلانمىغان ھەر قانداق سانلىق "
+"مەلۇمات يوقىلىدۇ.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:205
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "پروگرامما %1 نى توختات(&T)"
+msgstr "%1 نى ئاخىرلاشتۇر(&T)"
 
 #: helpers/killer/killer.cpp:206
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr ""
+msgstr "ئۇزۇنراق كۈت(&W)"
 
 #: helpers/killer/killer.cpp:215
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr ""
+msgstr "ئىنكاس يوق"
 
 #: helpers/killer/killer.cpp:231
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "جەريان كىملىكى: %1"
 
 #: helpers/killer/killer.cpp:233
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr ""
+msgstr "مۇلازىمېتىر ئاتى: %1"
 
 #: keyboard_layout.cpp:46 keyboard_layout.cpp:56 keyboard_layout.cpp:140
-#, fuzzy, kde-format
-#| msgid "Next Layout"
+#, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr "كېيىنكى ئورۇنلاشتۇرۇش"
+msgstr "ھەرپتاختا جايلاشتۇرۇشنى ئالماشتۇرغۇچ"
 
 #: killwindow.cpp:31
 #, kde-format
@@ -1512,6 +1503,9 @@ msgid ""
 "Select window to force close with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"چاشقىنەك سول توپچىسى چېكىلىپ ياكى enter بېسىلىپ، مەجبۇرىي يېپىلىدىغان كۆزنەك "
+"تاللىنىدۇ.\n"
+"چاشقىنەك ئوڭ توپچىسى چېكىلسە ياكى Escape بېسىلسا ۋاز كېچىدۇ."
 
 #: main.cpp:168 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1530,10 +1524,9 @@ msgid "KDE window manager"
 msgstr "KDE كۆزنەك باشقۇرغۇچ"
 
 #: main.cpp:172
-#, fuzzy, kde-format
-#| msgid "(c) 1999-2008, The KDE Developers"
+#, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
-msgstr "(c) 1999-2008، KDE ئىجادىيەتچىلىرى"
+msgstr "(c) 1999-2019، KDE ئىجادىيەتچىلىرى"
 
 #: main.cpp:174
 #, kde-format
@@ -1558,34 +1551,32 @@ msgstr "Luboš Luňák"
 #: main.cpp:178
 #, kde-format
 msgid "Martin Flöser"
-msgstr ""
+msgstr "Martin Flöser"
 
 #: main.cpp:179
 #, kde-format
 msgid "David Edmundson"
-msgstr ""
+msgstr "David Edmundson"
 
 #: main.cpp:180
 #, kde-format
 msgid "Roman Gilg"
-msgstr ""
+msgstr "Roman Gilg"
 
 #: main.cpp:181
 #, kde-format
 msgid "Vlad Zahorodnii"
-msgstr ""
+msgstr "Vlad Zahorodnii"
 
 #: main.cpp:182
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "ئىنتايىن چوڭ"
+msgstr "Xaver Hugl"
 
 #: main.cpp:191
 #, kde-format
 msgid "Disable configuration options"
-msgstr "سەپلىمە تاللانمىسىنى ئىناۋەتسىز قىل"
+msgstr "سەپلىمە تاللانمىسىنى چەكلەيدۇ"
 
 #: main.cpp:192
 #, kde-format
@@ -1595,54 +1586,57 @@ msgstr "ئەھۋالدىن مەلۇم بولۇشىچە KWin يېقىندا كۆ�
 #: main_wayland.cpp:305
 #, kde-format
 msgid "Start a rootless Xwayland server."
-msgstr ""
+msgstr "root ئىجازىتى يوق Xwayland مۇلازىمىتىنى قوزغىتىدۇ."
 
 #: main_wayland.cpp:308
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
+"ئاڭلايدىغان Wayland ئۇلاق ئىسمى. ئەگەر تەڭشەلمىگەن بولسا «wayland-0» نى "
+"ئىشلىتىدۇ."
 
 #: main_wayland.cpp:312
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
-msgstr ""
+msgstr "X11 سۇپىسىدىكى كۆزنەك ھالىتى ئىشلىتىدىغان X11 كۆرسەتكۈچ."
 
 #: main_wayland.cpp:316
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
-msgstr ""
+msgstr "Wayland سۇپىسىدىكى كۆزنەك ھالىتى ئىشلىتىدىغان Wayland كۆرسەتكۈچ."
 
 #: main_wayland.cpp:318
 #, kde-format
 msgid "Render to a virtual framebuffer."
-msgstr ""
+msgstr "مەۋھۇم كاندۇك يىغلەكنى شەكىللەندۈرىدۇ."
 
 #: main_wayland.cpp:320
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
-msgstr ""
+msgstr "كۆزنەك ھالىتىنىڭ كەڭلىكى. كۆڭۈلدىكى كەڭلىكى 1024."
 
 #: main_wayland.cpp:324
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
-msgstr ""
+msgstr "كۆزنەك ھالىتىنىڭ ئېگىزلىكى. كۆڭۈلدىكى ئېگىزلىكى 768."
 
 #: main_wayland.cpp:329
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
-msgstr ""
+msgstr "كۆزنەك ھالىتىنى تولۇق ئېكران كۆرسىتەمدۇ يوق"
 
 #: main_wayland.cpp:333
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
-msgstr ""
+msgstr "كۆزنەك ھالىتىنىڭ نىسبىتى. كۆڭۈلدىكى قىممىتى 1."
 
 #: main_wayland.cpp:338
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
+"كۆزنەك ھالىتىدە چىقىرىش سۈپىتىدە ئاچىدىغان كۆزنەك سانى. كۆڭۈلدىكى قىممىتى 1"
 
 #: main_wayland.cpp:343
 #, kde-format
@@ -1650,6 +1644,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
+"كىرگەن باغلىنىشقا ئىشلىتىدىغان Wayland ئۇلاق. بۇ ئۇلاق «--socket » بىلەن "
+"بىللە ئۇلاق ئىسمىغا بىرلەشتۈرۈلىدۇ"
 
 #: main_wayland.cpp:347
 #, kde-format
@@ -1657,81 +1653,87 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
+"Xwayland كىرگەن باغلىنىشقا ئىشلىتىدىغان Xwayland ئۇلاق. بۇ ئۇلاقنى كۆپ قېتىم "
+"تەڭشىگىلى بولىدۇ"
 
 #: main_wayland.cpp:351
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr ""
+msgstr "ئالدىن تەڭشەلگەن Xwayland كۆرسەتكۈچنىڭ ئىسمى"
 
 #: main_wayland.cpp:355
 #, kde-format
 msgid "Name of the xauthority file "
-msgstr ""
+msgstr "xauthority ھۆججەتنىڭ ئىسمى"
 
 #: main_wayland.cpp:359
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
+"بۇ ئەمەلىي مىسالدىن چېكىنىدۇ شۇڭا kwin_wayland_wrapper ئۇنى قايتا "
+"قوزغىتالايدۇ."
 
 #: main_wayland.cpp:361
 #, kde-format
 msgid "Render through drm node."
-msgstr ""
+msgstr "drm نۇقتا ئارقىلىق شەكىللەندۈرىدۇ."
 
 #: main_wayland.cpp:362
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"ئىشلەتكۈچى سەپلىمىسىدىن ئەمەس بەلكى locale1 دىن يەرلىك ئۇچۇرنى ئاجرىتىدۇ"
 
 #: main_wayland.cpp:389
 #, kde-format
 msgid "Input method that KWin starts."
-msgstr ""
+msgstr "KWin قوزغىتىدىغان كىرگۈزگۈچ."
 
 #: main_wayland.cpp:395
 #, kde-format
 msgid "Starts the session in locked mode."
-msgstr ""
+msgstr "قۇلۇپلاش ھالىتىدە جەريانچاقنى قوزغىتىدۇ."
 
 #: main_wayland.cpp:399
 #, kde-format
 msgid "Starts the session without lock screen support."
-msgstr ""
+msgstr "قۇلۇپ ئېكرانىنىڭ قوللىشى بولمىغان ھالەتتە جەريانچاقنى قوزغىتىدۇ."
 
 #: main_wayland.cpp:404
 #, kde-format
 msgid "Starts the session without global shortcuts support."
-msgstr ""
+msgstr "ئومۇمىيەت تېزلەتمىنىڭ قوللىشى بولمىغان ھالەتتە جەريانچاقنى قوزغىتىدۇ."
 
 #: main_wayland.cpp:409
 #, kde-format
 msgid "Disable KActivities integration."
-msgstr ""
+msgstr "KActivities توپلاشتۇرۇشنى چەكلەيدۇ."
 
 #: main_wayland.cpp:414
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
-msgstr ""
+msgstr "KWin قوزغاتقان جەريانچاق پىروگرامما  يېپىلغاندىن كېيىن چېكىنىدۇ."
 
 #: main_wayland.cpp:419
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
+"Wayland ۋە Xwayland مۇلازىمېتىر قوزغىتىلغاندىن كېيىن دەرھال قوزغىلىدىغان "
+"پىروگرامما"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: plugins/blur/blur_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Blur strength:"
-msgstr "كۈچلۈكلۈكى(&S):"
+msgstr "غۇۋالىق كۈچى:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:53 plugins/blur/blur_config.ui:107
 #, kde-format
 msgid "Light"
-msgstr "ئاق"
+msgstr "يورۇق"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
@@ -1744,17 +1746,15 @@ msgstr "كۈچلۈك"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: plugins/blur/blur_config.ui:74
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Noise strength:"
-msgstr "كۈچلۈكلۈكى(&S):"
+msgstr "شاۋقۇن كۈچى:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration"
+#, kde-format
 msgid "Saturation:"
-msgstr "ۋاقتى"
+msgstr "تويۇنۇش دەرىجىسى:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -1762,7 +1762,7 @@ msgstr "ۋاقتى"
 #: plugins/videowall/package/contents/ui/config.ui:73
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "يوق"
 
 #: plugins/colorpicker/colorpicker.cpp:153
 #, kde-format
@@ -1770,60 +1770,57 @@ msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"چاشقىنەك سول توپچىسى چېكىلىپ ياكى enter بېسىلىپ، رەڭ تاللايدىغان ئورۇن "
+"تاللىنىدۇ.\n"
+"چاشقىنەك ئوڭ توپچىسى چېكىلسە ياكى Escape بېسىلسا ۋاز كېچىدۇ."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Strength:"
-msgstr "كۈچلۈكلۈكى(&S):"
+msgstr "كۈچى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: plugins/diminactive/diminactive_config.ui:43
 #, kde-format
 msgid "Dim:"
-msgstr ""
+msgstr "غۇۋا:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: plugins/diminactive/diminactive_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Do not animate panels"
+#, kde-format
 msgid "Docks and panels"
-msgstr "تاختايلارنى جانلاندۇرما"
+msgstr "لەڭگەر ۋە تاختا"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:57
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "بارلىق ئۈستەلئۈستى(&A)"
+msgstr "ئۈستەلئۈستى"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:64
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Keep above windows"
-msgstr "ئەڭ ئۈستىدە(&A)"
+msgstr "كۆزنەك ئۈستىدە"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:71
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "By window group"
-msgstr "كۆزنەكلەر"
+msgstr "كۆزنەك گۇرۇپپىسى بويىچە"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:78
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "پۈتۈن ئېكران(&F)"
+msgstr "تولۇق ئېكران كۆزنىكى"
 
 #: plugins/eis/eisinputcapturemanager.cpp:130
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr ""
+msgstr "ئاكتىپ كىرگۈزۈشنى تۇتۇشنى چەكلەيدۇ"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1836,17 +1833,14 @@ msgstr "جانلاندۇرۇم ۋاقتى:"
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "Duration"
+#, kde-format
 msgid "Duration:"
-msgstr "ۋاقتى"
+msgstr "مۇددىتى:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
 #: plugins/scale/package/contents/ui/config.ui:30
-#, fuzzy, kde-format
-#| msgctxt "Duration of rotation"
-#| msgid "Default"
+#, kde-format
 msgid "Default"
 msgstr "كۆڭۈلدىكى"
 
@@ -1856,22 +1850,20 @@ msgstr "كۆڭۈلدىكى"
 #: plugins/scale/package/contents/ui/config.ui:33
 #, kde-format
 msgid " milliseconds"
-msgstr " مىللىي سېكۇنت"
+msgstr " مىللىسېكۇنت"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "كۆزنەك مەشغۇلاتلار تىزىملىكى"
+msgstr "كۆزنەك ئېچىش جانلاندۇرۇمى"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation duration:"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "چۆرگىلىتىش ۋاقتى:"
+msgstr "ئايلاندۇرۇش گىرۋىكى:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1904,50 +1896,47 @@ msgstr "سول"
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation duration:"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "چۆرگىلىتىش ۋاقتى:"
+msgstr "ئايلاندۇرۇش بۇلۇڭى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
 #: plugins/glide/glide_config.ui:119 plugins/glide/glide_config.ui:198
 #, kde-format
 msgid "Distance:"
-msgstr ""
+msgstr "ئارىلىق:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "كۆزنەك مەشغۇلاتلار تىزىملىكى"
+msgstr "كۆزنەك تاقاش جانلاندۇرۇمى"
 
 #: plugins/hidecursor/hidecursor_config.cpp:56
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "ھەرگىز"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " مىللىي سېكۇنت"
+msgstr[0] "%1 سېكۇنت"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr ""
+msgstr "مەشغۇلات بولمىغاندا نۇر بەلگىنى يوشۇرىدۇ:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "كىرگۈزۈۋاتقاندا نۇر بەلگىنى يوشۇرىدۇ"
 
 #: plugins/invert/invert.cpp:44
 #, kde-format
@@ -1960,229 +1949,217 @@ msgid "Toggle Invert Effect on Window"
 msgstr "كۆزنەك تەتۈر قىلىش ئۈنۈمىنى ئالماشتۇر"
 
 #: plugins/invert/invert.cpp:59
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "نۇربەلگە كۇنۇپكىلىرىنى تەتۈر قىل"
+msgstr "ئەكسى ئېكران رەڭگى"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Caps Lock كۇنۇپكىسى ئاكتىپلانغان"
 
 #: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "ھازىر Caps Lock كۇنۇپكىسى پاسسىپ"
 
 #: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Num Lock كۇنۇپكىسى ئاكتىپلانغان"
 
 #: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "ھازىر Num Lock كۇنۇپكىسى پاسسىپ"
 
 #: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Scroll Lock كۇنۇپكىسى ئاكتىپلانغان"
 
 #: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "ھازىر Scroll Lock كۇنۇپكىسى پاسسىپ"
 
 #: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "ھازىر Shift كۇنۇپكىسى ئاكتىپ."
 
 #: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "ھازىر Shift كۇنۇپكىسى پاسسىپ."
 
 #: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "ھازىر Control كۇنۇپكىسى ئاكتىپ."
 
 #: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "ھازىر Control كۇنۇپكىسى پاسسىپ."
 
 #: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "ھازىر Alt كۇنۇپكىسى ئاكتىپ."
 
 #: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "ھازىر Alt كۇنۇپكىسى پاسسىپ."
 
 #: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "ھازىر Meta كۇنۇپكىسى ئاكتىپ."
 
 #: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "ھازىر Meta كۇنۇپكىسى پاسسىپ."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
-#, fuzzy, kde-format
-#| msgid "&All Activities"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "activate"
-msgstr "بارلىق مەشغۇلاتلار(&A)"
+msgstr "ئاكتىپلا"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:44
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "close"
-msgstr "ياپ(&C)"
+msgstr "ياپ"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:47
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "min"
-msgstr ""
+msgstr "مىنۇت"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:50
-#, fuzzy, kde-format
-#| msgid "Mi&nimize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "minimize"
-msgstr "كىچىكلەت(&N)"
+msgstr "كىچىكلەت"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:53
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "max"
-msgstr ""
+msgstr "ئەڭ چوڭ"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:56
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:58
-#, fuzzy, kde-format
-#| msgid "Ma&ximize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "maximize"
-msgstr "چوڭايت(&X)"
+msgstr "چوڭايت"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:59
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "fullscreen"
-msgstr "پۈتۈن ئېكران(&F)"
+msgstr "پۈتۈن ئېكران"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:62
-#, fuzzy, kde-format
-#| msgid "Shade Window"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "shade"
-msgstr "سايە كۆزنەك"
+msgstr "يىغ"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:65
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep above"
-msgstr "ئەڭ ئۈستىدە(&A)"
+msgstr "ئۈستىدە تۇت"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:68
-#, fuzzy, kde-format
-#| msgid "Keep &Below Others"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep below"
-msgstr "ئەڭ ئاستىدا(&B)"
+msgstr "ئاستىدا تۇت"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:75
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "window"
-msgstr "كۆزنەكلەر"
+msgstr "كۆزنەك"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:85
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "name"
-msgstr ""
+msgstr "ئاتى"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:87
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "appname"
-msgstr ""
+msgstr "پىروگرامما ئاتى"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:89
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:145
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
-msgstr "بارلىق ئۈستەلئۈستى(&A)"
+msgstr "ئۈستەلئۈستى"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:259
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop %1"
+#, kde-format
 msgid "Switch to desktop %1"
-msgstr "ئۈستەلئۈستى %1 غا ئالماشتۇر"
+msgstr "%1-ئۈستەلئۈستىگە ئالماشتۇر"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Close running window on %1"
-msgstr ""
+msgstr "%1 دا ئىجرا قىلىنىۋاتقان كۆزنەكنى ياپ"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "(Un)minimize running window on %1"
-msgstr ""
+msgstr "%1 دا ئىجرا قىلىنىۋاتقان كۆزنەكنى چوڭايت/كىچىكلەت"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "Maximize/restore running window on %1"
-msgstr ""
+msgstr "%1 دا ئىجرا قىلىنىۋاتقان كۆزنەكنى چوڭايت/ئەسلىگە كەلتۈر"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr ""
+msgstr "%1 دا ئىجرا قىلىنىۋاتقان كۆزنەكنى پۈتۈن ئېكرانغا ئالماشتۇر"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
 msgid "(Un)shade running window on %1"
-msgstr ""
+msgstr "%1 دا ئىجرا قىلىنىۋاتقان كۆزنەكنى يىغ/ياي"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:313
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr ""
+msgstr "%1 دا ئىجرا قىلىنىۋاتقان كۆزنەكنى ئەڭ ئۈستىدە تۇت"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:316
 #, kde-format
 msgid "Toggle keep below running window on %1"
-msgstr ""
+msgstr "%1 دا ئىجرا قىلىنىۋاتقان كۆزنەكنى ئاستىدا تۇت"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:320
-#, fuzzy, kde-format
-#| msgid "Activate Window (%1)"
+#, kde-format
 msgid "Activate running window on %1"
-msgstr "كۆزنەك (%1) نى ئاكتىپلا"
+msgstr "«%1» دىكى ئىجرا قىلىنىۋاتقان كۆزنەكنى ئاكتىپلا"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: plugins/login/package/contents/ui/config.ui:17
 #, kde-format
 msgid "Fade to black (fullscreen splash screens only)"
 msgstr ""
+"قارىغا سۇسلاشتۇر (پەقەت تولۇق ئېكرانلىق مەرھابا ئېكرانى بىلەنلا چەكلىنىدۇ)"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: plugins/magiclamp/magiclamp_config.ui:36
@@ -2193,28 +2170,24 @@ msgstr "كۆڭۈلدىكى"
 
 #: plugins/mouseclick/mouseclick.cpp:39
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "تەتۈر قىلىش ئۈنۈمىنى ئالماشتۇر"
+msgstr "چاشقىنەك چېكىلىش جانلاندۇرۇمىنى ئالماشتۇرىدۇ"
 
 #: plugins/mouseclick/mouseclick.cpp:46
-#, fuzzy, kde-format
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "سول"
 
 #: plugins/mouseclick/mouseclick.cpp:47
-#, fuzzy, kde-format
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "ئوتتۇرا"
 
 #: plugins/mouseclick/mouseclick.cpp:48
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "ئوڭ"
@@ -2223,57 +2196,51 @@ msgstr "ئوڭ"
 #: plugins/mouseclick/mouseclick_config.ui:21
 #, kde-format
 msgid "Basic Settings"
-msgstr "ئاساسىي تەڭشەكلەر"
+msgstr "ئاساسىي تەڭشەك"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "چاشقىنەك تەقلىدلەش"
+msgstr "چاشقىنەك سول توپچە رەڭگى:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "چاشقىنەك تەقلىدلەش"
+msgstr "چاشقىنەك ئوتتۇرا توپچە رەڭگى:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "چاشقىنەك تەقلىدلەش"
+msgstr "چاشقىنەك ئوڭ توپچە رەڭگى:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
-#, fuzzy, kde-format
-#| msgid "Ad&vanced"
+#, kde-format
 msgid "Advanced Settings"
-msgstr "ئالىي(&V)"
+msgstr "ئالىي تەڭشەك"
 
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: plugins/mouseclick/mouseclick_config.ui:97
 #, kde-format
 msgid "Rings"
-msgstr ""
+msgstr "ھالقا"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
 #: plugins/mouseclick/mouseclick_config.ui:103
 #, kde-format
 msgid "Line Width:"
-msgstr ""
+msgstr "قۇر كەڭلىكى:"
 
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: plugins/mouseclick/mouseclick_config.ui:119
 #: plugins/mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgid " pixel"
-msgstr " چېكىت"
+msgstr " پىكسېل"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: plugins/mouseclick/mouseclick_config.ui:132
@@ -2285,19 +2252,19 @@ msgstr " مىللىسېكۇنت"
 #: plugins/mouseclick/mouseclick_config.ui:145
 #, kde-format
 msgid "Ring Duration:"
-msgstr ""
+msgstr "ھالقا مۇددىتى:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
 #: plugins/mouseclick/mouseclick_config.ui:155
 #, kde-format
 msgid "Ring Radius:"
-msgstr ""
+msgstr "ھالقا رادىئۇسى:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
 #, kde-format
 msgid "Ring Count:"
-msgstr ""
+msgstr "ھالقا سانى:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
@@ -2313,10 +2280,9 @@ msgstr "خەت نۇسخا:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "ئۈستەلئۈستىنى كۆرسەت"
+msgstr "تېكىست كۆرسەت:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
@@ -2334,26 +2300,24 @@ msgid "Clear Mouse Marks"
 msgstr "چاشقىنەك بەلگىسىنى تازىلا"
 
 #: plugins/mousemark/mousemark_config.cpp:87
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] " چېكىت"
+msgstr[0] " پىكسېل"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
 #: plugins/thumbnailaside/thumbnailaside_config.ui:17
 #, kde-format
 msgid "Appearance"
-msgstr "كۆرۈنۈشى"
+msgstr "قىياپەت"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/mousemark/mousemark_config.ui:23
 #, kde-format
 msgid "Wid&th:"
-msgstr ""
+msgstr "كەڭلىك(&T):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/mousemark/mousemark_config.ui:36
@@ -2363,17 +2327,15 @@ msgstr "رەڭ(&C):"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr "Shift+Meta نى بېسىپ تۇرۇپ چاشقىنەكنى يۆتكەش ئارقىلىق سىزىدۇ."
+msgstr "بىرىكمە كۇنۇپكىنى بېسىپ تۇرۇپ چاشقىنەكنى يۆتكەش ئارقىلىق سىزىدۇ"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "سۈپەتلىگۈچىلەر"
+msgstr "ئەركىن سىزىشنىڭ بىرىكمە كۇنۇپكىسى:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2417,344 +2379,336 @@ msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "سۈپەتلىگۈچىلەر"
+msgstr "يا ئوقتا سىزىشنىڭ بىرىكمە كۇنۇپكىسى:"
 
 #: plugins/nightlight/nightlightmanager.cpp:55
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr ""
+msgstr "كېچە چىرىغى ۋاقىتلىق توختىتىلدى"
 
 #: plugins/nightlight/nightlightmanager.cpp:56
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr ""
+msgstr "كېچە چىرىغى ئەسلىگە كەلتۈرۈلدى"
 
 #: plugins/nightlight/nightlightmanager.cpp:77
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "كېچە چىرىغىنى ۋاقىتلىق توختات/ئەسلىگە كەلتۈر"
 
 #: plugins/nightlight/nightlightmanager.cpp:393
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "رەڭ تېمپېراتۇرىسىنى ئالدىن كۆزىتىش"
 
 #: plugins/outputlocator/outputlocator.cpp:50
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "يوچۇن"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "ئىخچام كۆرۈنۈش ۋە شادا كۆرۈنۈشنى دەۋرىي ئالماشتۇر"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
 #: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "شادا كۆرۈنۈش بىلەن ئىخچام كۆرۈنۈشنى دەۋرىي ئالماشتۇر"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:53
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "تەتۈر قىلىش ئۈنۈمىنى ئالماشتۇر"
+msgstr "ئىخچام كۆرۈنۈشنى ئالماشتۇر"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:60
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "تەتۈر قىلىش ئۈنۈمىنى ئالماشتۇر"
+msgstr "شادا كۆرۈنۈشنى ئالماشتۇر"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "كۆزنەكنى كىچىكلەت"
+msgstr "كىچىكلىتىلگەن كۆزنەككە پەرۋا قىلمايدۇ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
 #: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "شادا كۆرۈنۈشتىكى كۆزنەكنى تەشكىللەيدۇ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "ئىزدەش نەتىجىسىدە سۈزۈلگەن كۆزنەك بار:"
 
 #: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "ئىخچام كۆرۈنۈش ۋە شادا كۆرۈنۈشنى دەۋرىي ئالماشتۇر"
 
 #: plugins/overview/overvieweffect.cpp:143
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "تەتۈر قىلىش ئۈنۈمىنى ئالماشتۇر"
+msgstr "ئىخچام كۆرۈنۈشنى ئالماشتۇر"
 
 #: plugins/overview/overvieweffect.cpp:152
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "تەتۈر قىلىش ئۈنۈمىنى ئالماشتۇر"
+msgstr "شادا كۆرۈنۈشنى ئالماشتۇر"
 
 #: plugins/overview/qml/DesktopBar.qml:165
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "ئۈستەلئۈستىگە يۆتكە(&D)"
+msgstr "مەۋھۇم ئۈستەلئۈستىنى ئۆچۈر"
 
 #: plugins/overview/qml/DesktopBar.qml:264
-#, fuzzy, kde-format
-#| msgid "Window to Next Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "كۆزنەكتىن كېيىنكى ئۈستەلئۈستىگە"
+msgstr "مەۋھۇم ئۈستەلئۈستى قوش"
 
 #: plugins/overview/qml/Main.qml:425
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "ئۈستەلئۈستىگە يۆتكە(&D)"
+msgstr "كۆرسىتىدىغان باشقا مەۋھۇم ئۈستەلئۈستى يوق"
 
 #: plugins/overview/qml/Main.qml:431
-#, fuzzy, kde-format
-#| msgid "Window to Next Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
-msgstr "كۆزنەكتىن كېيىنكى ئۈستەلئۈستىگە"
+msgstr "مەۋھۇم ئۈستەلئۈستى قوش"
 
 #: plugins/overview/qml/Main.qml:438
-#, fuzzy, kde-format
-#| msgid "Configur&e Window Behavior..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "كۆزنەك ئىش-ھەرىكىتىنى سەپلە(&E)…"
+msgstr "مەۋھۇم ئۈستەلئۈستى سەپلىمىسى…"
 
 #: plugins/overview/qml/Main.qml:789
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
-msgstr "يۆتكىلىۋاتقان كۆزنەكلەر:"
+msgstr "ماس كەلگەن كۆزنەك يوق"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "تاقاشتا ئاستىغا سۆرىلىدۇ"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:373
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "كۆزنەك ياپ"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window open scale:"
-msgstr "كۆزنەكلەر"
+msgstr "كۆزنەك ئېچىش نىسبىتى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: plugins/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window close scale:"
-msgstr "كۆزنەكلەر"
+msgstr "كۆزنەك تاقاش نىسبىتى:"
 
 #: plugins/screencast/pipewirecore.cpp:63
 #: plugins/screencast/pipewirecore.cpp:92
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "ئاساسىي PipeWire دەۋرىيلىكنى قوزغىتالمىدى"
 
 #: plugins/screencast/pipewirecore.cpp:79
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "PipeWire مەزمۇنىنى قۇرالمىدى"
 
 #: plugins/screencast/pipewirecore.cpp:86
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "PipeWire مەزمۇنىغا باغلىنالمىدى"
 
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
 #: plugins/screencast/screencastmanager.cpp:142
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "بىرىكتۈرۈشنى توڭلات"
+msgstr "قوللىمايدىغان كىرىشتۈرۈش تۈرى"
 
 #: plugins/screencast/screencastmanager.cpp:62
 #, kde-format
 msgid "Could not find window id %1"
-msgstr ""
+msgstr "كۆزنەك كىملىكى %1 نى تاپالمىدى"
 
 #: plugins/screencast/screencastmanager.cpp:109
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "چىقىرىشنى تاپالمىدى"
 
 #: plugins/screencast/screencastmanager.cpp:147
 #, kde-format
 msgid "Invalid region"
-msgstr ""
+msgstr "ئىناۋەتسىز رايون"
 
 #: plugins/screencast/screencaststream.cpp:375
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr ""
+msgstr "ئېكراندىن سىن تۇتۇشتا OpenGL بىرىكتۈرۈش زۆرۈر"
 
 #: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "PipeWire ئېقىمىنى قۇرالمىدى"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"چاشقىنەك سول توپچىسى چېكىلىپ ياكى enter بېسىلىپ، ئېكران تۇتىدىغان كۆزنەك "
+"تاللىنىدۇ.\n"
+"چاشقىنەك ئوڭ توپچىسى چېكىلسە ياكى Escape بېسىلسا ۋاز كېچىدۇ."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"چاشقىنەك سول توپچىسى چېكىلىپ ياكى enter بېسىلىپ، ئېكران تۇتىلىدۇ.\n"
+"چاشقىنەك ئوڭ توپچىسى چېكىلسە ياكى Escape بېسىلسا ۋاز كېچىدۇ."
 
 #: plugins/showcompositing/qml/Main.qml:12
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "بىرىكتۈرۈشنى توڭلات"
+msgstr "كىرىشتۈرۈش"
 
 #: plugins/showfps/qml/Fallback.qml:26 plugins/showfps/qml/Main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr ""
+msgstr "بۇ ئۈنۈم ئاساسىي ئۆلچەم تەكشۈرۈش ئەمەس"
 
 #: plugins/showfps/qml/Main.qml:110
-#, fuzzy, kde-format
-#| msgid "Duration"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "ۋاقتى"
+msgstr "سىزىش مۇددىتى"
 
 #: plugins/showfps/qml/Main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr ""
+msgstr "سىزىش سانى"
 
 #: plugins/showfps/qml/Main.qml:175
-#, fuzzy, kde-format
-#| msgid "Configur&e Window Behavior..."
+#, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr "كۆزنەك ئىش-ھەرىكىتىنى سەپلە(&E)…"
+msgstr "نۆۋەتتىكى FPS"
 
 #: plugins/showfps/qml/Main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "ئەڭ چوڭ كەڭلىكى(&W):"
+msgstr "ئەڭ چوڭ FPS"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: plugins/slide/slide_config.ui:17
 #, kde-format
 msgid "Gap between desktops"
-msgstr ""
+msgstr "ئۈستەلئۈستى ئارىسىدىكى ئارىلىق"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "توغرا يۆنىلىش"
+msgstr "توغرىسىغا:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: plugins/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "تىك يۆنىلىش"
+msgstr "بويىغا:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: plugins/slide/slide_config.ui:72
-#, fuzzy, kde-format
-#| msgid "Slide when grouping"
+#, kde-format
 msgid "Slide desktop background"
-msgstr "گۇرۇپپىلاۋاتقاندا سىيرىسۇن"
+msgstr "ئۈستەلئۈستى تەگلىكىنى سىيرىيدۇ"
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Shift كۇنۇپكىسى قۇلۇپلاندى ۋە بۇنىڭدىكى بارلىق كۇنۇپكا بېسىشلىرى ئۈچۈن "
+"ئاكتىپ ھالەتكە كەلدى."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"كونترول(Ctrl) كۇنۇپكىسى قۇلۇپلاندى ۋە بۇنىڭدىكى بارلىق كۇنۇپكا بېسىشلىرى "
+"ئۈچۈن ئاكتىپ ھالەتكە كەلدى."
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Alt كۇنۇپكىسى قۇلۇپلاندى ۋە بۇنىڭدىكى بارلىق كۇنۇپكا بېسىشلىرى ئۈچۈن ئاكتىپ "
+"ھالەتكە كەلدى."
 
 #: plugins/stickykeys/stickykeys.cpp:29
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Meta كۇنۇپكىسى قۇلۇپلاندى ۋە بۇنىڭدىكى بارلىق كۇنۇپكا بېسىشلىرى ئۈچۈن ئاكتىپ "
+"ھالەتكە كەلدى."
 
 #: plugins/stickykeys/stickykeys.cpp:30
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"AltGr كۇنۇپكىسى قۇلۇپلاندى ۋە بۇنىڭدىكى بارلىق كۇنۇپكا بېسىشلىرى ئۈچۈن "
+"ئاكتىپ ھالەتكە كەلدى."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "نۆۋەتتىكى كۆزنەكنىڭ Thumbnail نى ئالماشتۇر"
+msgstr "نۆۋەتتىكى كۆزنەكنىڭ كىچىك سۈرىتىنى ئالماشتۇر"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:23
 #, kde-format
 msgid "Maximum &width:"
-msgstr "ئەڭ چوڭ كەڭلىكى(&W):"
+msgstr "ئەڭ ئۇزۇن كەڭلىكى(&W):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:36
@@ -2768,14 +2722,13 @@ msgstr "بوشلۇق(&S):"
 #: plugins/thumbnailaside/thumbnailaside_config.ui:106
 #, kde-format
 msgid " pixels"
-msgstr " چېكىت"
+msgstr " پىكسېل"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68
-#, fuzzy, kde-format
-#| msgid "&Opacity"
+#, kde-format
 msgid "&Opacity:"
-msgstr "غۇۋالىقى(&O)"
+msgstr "غۇۋالىقى(&O):"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:87
@@ -2787,48 +2740,45 @@ msgstr " %"
 #: plugins/tileseditor/tileseditoreffect.cpp:32
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "بۆلەك تەھرىرلىگۈچ ئالماشتۇر"
 
 #: plugins/tileseditor/qml/Main.qml:153
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "يان ئارىلىقى:"
 
 #: plugins/tileseditor/qml/Main.qml:163
 #, kde-format
 msgid "Load Layout…"
-msgstr ""
+msgstr "جايلاشتۇرۇشنى يۈكلە…"
 
 #: plugins/tileseditor/qml/Main.qml:270
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "ياپ(&C)"
+msgstr "ياپ"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "ئوڭ/سولغا بۆل"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "ئۈستى/ئاستىغا بۆل"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
-#, fuzzy, kde-format
-#| msgctxt "Floating layout, windows aren't tiled at all"
-#| msgid "Floating"
+#, kde-format
 msgid "Add Floating Tile"
-msgstr "لەيلىتىش"
+msgstr "لەيلىمە بۆلەك قوش"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "ئۆچۈر"
 
-#: plugins/trackmouse/trackmouse.cpp:71
+#: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"
@@ -2838,21 +2788,19 @@ msgstr "چاشقىنەكنى ئىزلا"
 #: plugins/trackmouse/trackmouse_config.ui:26
 #, kde-format
 msgid "Trigger effect with:"
-msgstr ""
+msgstr "ئۈنۈم قوزغىتىش ئۇسۇلى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
-#, fuzzy, kde-format
-#| msgid "Next Layout"
+#, kde-format
 msgid "Keyboard shortcut:"
-msgstr "كېيىنكى ئورۇنلاشتۇرۇش"
+msgstr "ھەرپتاختا تېزلەتمىسى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "سۈپەتلىگۈچىلەر"
+msgstr "بىرىكمە كۇنۇپكا:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
@@ -2878,13 +2826,13 @@ msgstr "بىرىكمە قاڭقىش كۆزنىكى:"
 #: plugins/translucency/package/contents/ui/config.ui:431
 #, kde-format
 msgid "Opaque"
-msgstr "گۇڭگا"
+msgstr "تۇتۇق"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: plugins/translucency/package/contents/ui/config.ui:137
 #, kde-format
 msgid "Dialogs:"
-msgstr "سۆزلەشكۈلەر:"
+msgstr "سۆزلەشكۈ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2898,21 +2846,19 @@ msgstr "سۈزۈك"
 #: plugins/translucency/package/contents/ui/config.ui:188
 #, kde-format
 msgid "Menus:"
-msgstr "تىزىملىكلەر:"
+msgstr "تىزىملىك:"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "كۆزنەكنى يۆتكە"
+msgstr "يۆتكىلىۋاتقان كۆزنەك:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Lower Window"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "كۆزنەكنى پەسلەت"
+msgstr "پاسسىپ كۆزنەك:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:267
@@ -2924,37 +2870,37 @@ msgstr "تىزىملىك يېرىم سۈزۈكلۈكىنى ئايرىم بەلگ
 #: plugins/translucency/package/contents/ui/config.ui:285
 #, kde-format
 msgid "Dropdown menus:"
-msgstr "Dropdown تىزىملىكلىرى:"
+msgstr "تارتما تىزىملىك:"
 
 #. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:329
 #, kde-format
 msgid "Popup menus:"
-msgstr "سەكرىمە تىزىملىكلەر:"
+msgstr "قاڭقىش تىزىملىك:"
 
 #. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:367
 #, kde-format
 msgid "Torn-off menus:"
-msgstr "قاتلانغان تىزىملىك:"
+msgstr "يىرتىلغان تىزىملىك:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::VideoWallConfigForm)
 #: plugins/videowall/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Video Wall"
-msgstr ""
+msgstr "سىن تام"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
 #: plugins/videowall/package/contents/ui/config.ui:20
 #, kde-format
 msgid "Apply to"
-msgstr ""
+msgstr "قوللان"
 
 #. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
 #: plugins/videowall/package/contents/ui/config.ui:32
 #, kde-format
 msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
-msgstr ""
+msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Whitelist)
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Blacklist)
@@ -2962,19 +2908,19 @@ msgstr ""
 #: plugins/videowall/package/contents/ui/config.ui:66
 #, kde-format
 msgid "Comma separated list of window classes"
-msgstr ""
+msgstr "پەش بىلەن ئايرىلغان كۆزنەك تۈرى تىزىمى"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
 #, kde-format
 msgid "All"
-msgstr ""
+msgstr "ھەممىسى"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: plugins/videowall/package/contents/ui/config.ui:54
 #, kde-format
 msgid "Ignore"
-msgstr ""
+msgstr "پەرۋا قىلما"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
 #: plugins/windowview/windowvieweffect.cpp:48
@@ -2984,54 +2930,48 @@ msgstr "بار كۆزنەكلەرنى ئالماشتۇر(نۆۋەتتىكى ئۈ
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
 #: plugins/windowview/windowvieweffect.cpp:57
-#, fuzzy, kde-format
-#| msgid "Keep Window on All Desktops"
+#, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "كۆزنەك بارلىق ئۈستەلئۈستىدە تۇرسۇن"
+msgstr "بار كۆزنەكلەرنى ئالماشتۇر(بارلىق ئۈستەلئۈستى)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
 #: plugins/windowview/windowvieweffect.cpp:66
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr "بار كۆزنەكلەرنى ئالماشتۇر(كۆزنەك تىپى(class))"
+msgstr "بار كۆزنەكلەرنى ئالماشتۇر(كۆزنەك تۈرى)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
 #: plugins/windowview/windowvieweffect.cpp:75
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "بار كۆزنەكلەرنى ئالماشتۇر(نۆۋەتتىكى ئۈستەلئۈستى)"
+msgstr "بار كۆزنەكلەرنى ئالماشتۇر(نۆۋەتتىكى ئۈستەلئۈستىدىكى كۆزنەك تۈرى)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore &minimized windows"
-msgstr "كۆزنەكنى كىچىكلەت"
+msgstr "كىچىكلىتىلگەن كۆزنەككە پەرۋا قىلما(&M)"
 
 #: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr ""
+msgstr "ماس كېلىدىغىنى يوق"
 
 #: plugins/windowview/qml/Main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "كۆزنەكلەر"
+msgstr "كۆزنەك يوق"
 
 #: plugins/windowview/qml/Main.qml:122
-#, fuzzy, kde-format
-#| msgid "Lower Window"
+#, kde-format
 msgid "Filter windows…"
-msgstr "كۆزنەكنى پەسلەت"
+msgstr "كۆزنەك سۈزۈش…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
-#, fuzzy, kde-format
-#| msgid "Ad&vanced"
+#, kde-format
 msgid "Advanced"
-msgstr "ئالىي(&V)"
+msgstr "ئالىي"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: plugins/wobblywindows/wobblywindows_config.ui:26
@@ -3047,10 +2987,9 @@ msgstr "سۆرەش(&G):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/wobblywindows/wobblywindows_config.ui:81
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "&Move factor:"
-msgstr "كۆزنەكنى %1 ئېكرانغا"
+msgstr "يۆتكەش ئامىلى(&M):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:155
@@ -3089,541 +3028,514 @@ msgid "More"
 msgstr "تېخىمۇ كۆپ"
 
 #: plugins/zoom/zoom.cpp:88
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Zoomed Area to Left"
-msgstr "كۆزنەكنى بىر ئۈستەلئۈستى سولغا"
+msgstr "نۆۋەتتىكى نىسبەتلەشتۈرۈلگەن دائىرىنى سولغا يۆتكەيدۇ"
 
 #: plugins/zoom/zoom.cpp:95
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Zoomed Area to Right"
-msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئوڭغا"
+msgstr "نۆۋەتتىكى نىسبەتلەشتۈرۈلگەن دائىرىنى ئوڭغا يۆتكەيدۇ"
 
 #: plugins/zoom/zoom.cpp:102
 #, kde-format
 msgid "Move Zoomed Area Upwards"
-msgstr ""
+msgstr "نۆۋەتتىكى نىسبەتلەشتۈرۈلگەن دائىرىنى ئۈستىگە يۆتكەيدۇ"
 
 #: plugins/zoom/zoom.cpp:109
 #, kde-format
 msgid "Move Zoomed Area Downwards"
-msgstr ""
+msgstr "نۆۋەتتىكى نىسبەتلەشتۈرۈلگەن دائىرىنى ئاستىغا يۆتكەيدۇ"
 
 #: plugins/zoom/zoom.cpp:117
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Move Mouse to Focus"
-msgstr "چاشقىنەك تەقلىدلەش"
+msgstr "چاشقىنەكنى فوكۇسقا يۆتكە"
 
 #: plugins/zoom/zoom.cpp:124
-#, fuzzy, kde-format
-#| msgid "Move Window to Group"
+#, kde-format
 msgid "Move Mouse to Center"
-msgstr "كۆزنەكنى گۇرۇپپىغا يۆتكە"
+msgstr "چاشقىنەكنى مەركەزگە يۆتكە"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
 msgid "Total rules count (legacy)"
-msgstr ""
+msgstr "جەمئىي قائىدە سانى (كونا)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
 #: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Ordered list of rules groups"
-msgstr ""
+msgstr "قائىدە گۇرۇپپىسىنىڭ تەرتىپ تىزىمى"
 
 #. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:10
 #, kde-format
 msgid "Rule description"
-msgstr ""
+msgstr "قائىدە چۈشەندۈرۈشى"
 
 #. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:13
 #, kde-format
 msgid "Rule description (legacy)"
-msgstr ""
+msgstr "قائىدە چۈشەندۈرۈشى (كونا)"
 
 #. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:16
 #, kde-format
 msgid "Delete this rule (for use in imports)"
-msgstr ""
+msgstr "بۇ قائىدىنى ئۆچۈر (ئەكىرىشكە ئىشلىتىلىدۇ)"
 
 #. i18n: ectx: label, entry (enabled), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:20
-#, fuzzy, kde-format
-#| msgid "Tiling Enabled"
+#, kde-format
 msgid "This rule is enabled"
-msgstr "كاھىش ئۈنۈمى ئىناۋەتلىك"
+msgstr "بۇ قائىدە قوزغىتىلدى"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:24
 #, kde-format
 msgid "Window class (application)"
-msgstr ""
+msgstr "كۆزنەك تۈرى (پىروگرامما)"
 
 #. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:27
 #, kde-format
 msgid "Window class string match type"
-msgstr ""
+msgstr "كۆزنەك تۈرى ھەرپ تىزىقى ماس تۈرى"
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:33
 #, kde-format
 msgid "Match whole window class"
-msgstr ""
+msgstr "بارلىق كۆزنەك تۈرىگە ماسلىشىدۇ"
 
 #. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:38
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window role"
-msgstr "كۆزنەكلەر"
+msgstr "كۆزنەك رولى"
 
 #. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:41
 #, kde-format
 msgid "Window role string match type"
-msgstr ""
+msgstr "كۆزنەك رولى تىزىقى ماس تۈرى"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:48
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window title"
-msgstr "كۆزنەكلەر"
+msgstr "كۆزنەك ماۋزۇسى"
 
 #. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:51
 #, kde-format
 msgid "Window title string match type"
-msgstr ""
+msgstr "كۆزنەك ماۋزۇسى تىزىقى ماس تۈرى"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:58
 #, kde-format
 msgid "Machine (hostname)"
-msgstr ""
+msgstr "ماشىنا (مۇلازىمېتىر ئاتى)"
 
 #. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:61
 #, kde-format
 msgid "Machine string match type"
-msgstr ""
+msgstr "ماشىنا تىزىقى ماس تۈرى"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "كۆزنەك باشقۇرغۇ"
+msgstr "كۆزنەك بەلگىسى"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71
 #, kde-format
 msgid "Window tag string match type"
-msgstr ""
+msgstr "كۆزنەك بەلگە تىزىقى ماس تۈرى"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
 #, kde-format
 msgid "Window types that match"
-msgstr ""
+msgstr "ماس كېلىدىغان كۆزنەك تۈرى"
 
 #. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:83
 #, kde-format
 msgid "Initial placement"
-msgstr ""
+msgstr "دەسلەپكى ئورنى"
 
 #. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:88
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Initial placement rule type"
-msgstr "پۈتۈن ئېكران(&F)"
+msgstr "دەسلەپكى ئورۇن قائىدە تۈرى"
 
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:93
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window position"
-msgstr "كۆزنەك مەشغۇلاتلار تىزىملىكى"
+msgstr "كۆزنەك ئورنى"
 
 #. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:97
 #, kde-format
 msgid "Window position rule type"
-msgstr ""
+msgstr "كۆزنەك ئورنى قائىدە تۈرى"
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:104
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window size"
-msgstr "كۆزنەكلەر"
+msgstr "كۆزنەك چوڭلۇقى"
 
 #. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:107
 #, kde-format
 msgid "Window size rule type"
-msgstr ""
+msgstr "كۆزنەك چوڭلۇقى قائىدە تۈرى"
 
 #. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:114
 #, kde-format
 msgid "Window minimum size"
-msgstr ""
+msgstr "كۆزنەكنىڭ ئەڭ كىچىك چوڭلۇقى"
 
 #. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:118
 #, kde-format
 msgid "Window minimum size rule type"
-msgstr ""
+msgstr "كۆزنەكنىڭ ئەڭ كىچىك چوڭلۇقى قائىدە تۈرى"
 
 #. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:123
 #, kde-format
 msgid "Window maximum size"
-msgstr ""
+msgstr "كۆزنەكنىڭ ئەڭ چوڭ چوڭلۇقى"
 
 #. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:127
 #, kde-format
 msgid "Window maximum size rule type"
-msgstr ""
+msgstr "كۆزنەكنىڭ ئەڭ چوڭ چوڭلۇقى قائىدە تۈرى"
 
 #. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:132
 #, kde-format
 msgid "Active opacity"
-msgstr ""
+msgstr "ئاكتىپ تۇتۇقلۇقى"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:138
 #, kde-format
 msgid "Active opacity rule type"
-msgstr ""
+msgstr "ئاكتىپ تۇتۇقلۇق قائىدە تۈرى"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:143
 #, kde-format
 msgid "Inactive opacity"
-msgstr ""
+msgstr "پاسسىپ تۇتۇقلۇقى"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:149
 #, kde-format
 msgid "Inactive opacity rule type"
-msgstr ""
+msgstr "پاسسىپ تۇتۇقلۇق قائىدە تۈرى"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:154
 #, kde-format
 msgid "Ignore requested geometry"
-msgstr ""
+msgstr "ئىلتىماس قىلغان چوڭلۇق ۋە ئورنىغا پەرۋا قىلمايدۇ"
 
 #. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:158
 #, kde-format
 msgid "Ignore requested geometry rule type"
-msgstr ""
+msgstr "ئىلتىماس قىلىنغان چوڭلۇق ۋە ئورۇن قائىدە تۈرىگە پەرۋا قىلمايدۇ"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:165
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop %1"
+#, kde-format
 msgid "List of Desktop Ids"
-msgstr "ئۈستەلئۈستى %1 غا ئالماشتۇر"
+msgstr "ئۈستەلئۈستى كىملىك تىزىمى"
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:169
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Desktop Ids rule type"
-msgstr "ئەڭ ئۈستىدە(&A)"
+msgstr "ئۈستەلئۈستى كىملىك قائىدىسى تۈرى"
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:176
 #, kde-format
 msgid "Screen number"
-msgstr ""
+msgstr "ئېكران نومۇرى"
 
 #. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:180
 #, kde-format
 msgid "Screen number rule type"
-msgstr ""
+msgstr "ئېكران نومۇرى قائىدىسى تۈرى"
 
 #. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:187
-#, fuzzy, kde-format
-#| msgid "&All Activities"
+#, kde-format
 msgid "Activity"
-msgstr "بارلىق مەشغۇلاتلار(&A)"
+msgstr "پائالىيەت"
 
 #. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:190
 #, kde-format
 msgid "Activity rule type"
-msgstr ""
+msgstr "پائالىيەت قائىدىسى تۈرى"
 
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:197
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically"
-msgstr "كۆزنەكنى تىك ھالەتتە چوڭايتىش"
+msgstr "بويىغا چوڭايتىلغان"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:201
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically rule type"
-msgstr "كۆزنەكنى تىك ھالەتتە چوڭايتىش"
+msgstr "بويىغا چوڭايتىش قائىدىسى تۈرى"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:208
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally"
-msgstr "كۆزنەكنى گورىزونتال چوڭايتىش"
+msgstr "توغرىسىغا چوڭايتىلغان"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:212
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally rule type"
-msgstr "كۆزنەكنى گورىزونتال چوڭايتىش"
+msgstr "توغرىسىغا چوڭايتىش قائىدىسى تۈرى"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:219
-#, fuzzy, kde-format
-#| msgid "Mi&nimize"
+#, kde-format
 msgid "Minimized"
-msgstr "كىچىكلەت(&N)"
+msgstr "كىچىكلىتىلگەن"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:223
 #, kde-format
 msgid "Minimized rule type"
-msgstr ""
+msgstr "كىچىكلىتىش قائىدىسى تۈرى"
 
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:230
 #, kde-format
 msgid "Skip taskbar"
-msgstr ""
+msgstr "ۋەزىپە بالداقتىن ئاتلا"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:234
 #, kde-format
 msgid "Skip taskbar rule type"
-msgstr ""
+msgstr "ۋەزىپە بالداقتىن ئاتلاش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:241
 #, kde-format
 msgid "Skip pager"
-msgstr ""
+msgstr "بەت بۆلگۈچتىن ئاتلا"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:245
 #, kde-format
 msgid "Skip pager rule type"
-msgstr ""
+msgstr "بەت بۆلگۈچتىن ئاتلاش قائىدىسى تۈرى"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:252
 #, kde-format
 msgid "Skip switcher"
-msgstr ""
+msgstr "ئالماشتۇرغۇچتىن ئاتلا"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:256
 #, kde-format
 msgid "Skip switcher rule type"
-msgstr ""
+msgstr "ئالماشتۇرغۇچتىن ئاتلاش قائىدىسى تۈرى"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:263
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Keep above"
-msgstr "ئەڭ ئۈستىدە(&A)"
+msgstr "ئۈستىدە تۇت"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:267
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Keep above rule type"
-msgstr "ئەڭ ئۈستىدە(&A)"
+msgstr "ئۈستىدە تۇتۇش قائىدىسى تۈرى"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:274
-#, fuzzy, kde-format
-#| msgid "Keep &Below Others"
+#, kde-format
 msgid "Keep below"
-msgstr "ئەڭ ئاستىدا(&B)"
+msgstr "ئاستىدا تۇت"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:278
-#, fuzzy, kde-format
-#| msgid "Keep &Below Others"
+#, kde-format
 msgid "Keep below rule type"
-msgstr "ئەڭ ئاستىدا(&B)"
+msgstr "ئاستىدا تۇتۇش قائىدىسى تۈر"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:285
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen"
-msgstr "پۈتۈن ئېكران(&F)"
+msgstr "تولۇق ئېكران"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:289
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen rule type"
-msgstr "پۈتۈن ئېكران(&F)"
+msgstr "تولۇق ئېكران قائىدىسى تۈرى"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:296
 #, kde-format
 msgid "No titlebar and frame"
-msgstr ""
+msgstr "ماۋزۇ بالداق ۋە كاندۇك يوق"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:300
 #, kde-format
 msgid "No titlebar rule type"
-msgstr ""
+msgstr "ماۋزۇ بالداق يوق قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:307
 #, kde-format
 msgid "Titlebar color and scheme"
-msgstr ""
+msgstr "ماۋزۇ بالداق رەڭگى ۋە لايىھەسى"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:310
 #, kde-format
 msgid "Titlebar color rule type"
-msgstr ""
+msgstr "ماۋزۇ بالداق رەڭ قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:315
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Block Compositing"
-msgstr "بىرىكتۈرۈشنى توڭلات"
+msgstr "بىرىكتۈرۈشنى توس"
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:319
 #, kde-format
 msgid "Block Compositing rule type"
-msgstr ""
+msgstr "بىرىكتۈرۈشنى توشۇش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:324
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr ""
+msgstr "فوكۇسنى ئوغرىلاشتىن ساقلان"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:330
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr ""
+msgstr "فوكۇسنى ئوغرىلاشتىن ساقلىنىش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:335
 #, kde-format
 msgid "Focus protection"
-msgstr ""
+msgstr "فوكۇسنى قوغداش"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:341
 #, kde-format
 msgid "Focus protection rule type"
-msgstr ""
+msgstr "فوكۇسنى قوغداش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:346
 #, kde-format
 msgid "Accept Focus"
-msgstr ""
+msgstr "فوكۇس قوبۇل قىل"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:350
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr ""
+msgstr "فوكۇس قوبۇل قىلىش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:355
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Closeable"
-msgstr "ياپ(&C)"
+msgstr "يېپىشچان"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:359
 #, kde-format
 msgid "Closeable rule type"
-msgstr ""
+msgstr "يېپىشچانلىق قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:364
 #, kde-format
 msgid "Autogroup with identical"
-msgstr ""
+msgstr "ئوخشاشلىقى بويىچە ئۆزلۈكىدىن گۇرۇپپىلا"
 
 #. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:368
 #, kde-format
 msgid "Autogroup with identical rule type"
-msgstr ""
+msgstr "ئوخشاشلىقى بويىچە ئۆزلۈكىدىن گۇرۇپپىلاش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:373
 #, kde-format
 msgid "Autogroup in foreground"
-msgstr ""
+msgstr "ئالدى سۇپىدا ئۆزلۈكىدىن گۇرۇپپىلاش"
 
 #. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:377
 #, kde-format
 msgid "Autogroup in foreground rule type"
-msgstr ""
+msgstr "ئالدى سۇپىدا ئۆزلۈكىدىن گۇرۇپپىلاش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:382
 #, kde-format
 msgid "Autogroup by ID"
-msgstr ""
+msgstr "كىملىكى بويىچە ئۆزلۈكىدىن گۇرۇپپىلاش"
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:385
 #, kde-format
 msgid "Autogroup by ID rule type"
-msgstr ""
+msgstr "كىملىكى بويىچە ئۆزلۈكىدىن گۇرۇپپىلاش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:390
 #, kde-format
 msgid "Obey geometry restrictions"
-msgstr ""
+msgstr "چوڭلۇق ۋە ئورۇن چەكلىمىسىگە بويسۇنىدۇ"
 
 #. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:394
 #, kde-format
 msgid "Obey geometry restrictions rule type"
-msgstr ""
+msgstr "چوڭلۇق ۋە ئورۇن چەكلىمىسىگە بويسۇنۇش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:399
@@ -3635,96 +3547,91 @@ msgstr "تېزلەتمە"
 #: rulesettings.kcfg:402
 #, kde-format
 msgid "Shortcut rule type"
-msgstr ""
+msgstr "تېزلەتمە قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:409
-#, fuzzy, kde-format
-#| msgid "Block Global Shortcuts"
+#, kde-format
 msgid "Ignore global shortcuts"
-msgstr "ئومۇمىيەت تېزلەتمىلىرىنى چەكلە"
+msgstr "ئومۇمىيەت تېزلەتمىگە پەرۋا قىلما"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:413
 #, kde-format
 msgid "Ignore global shortcuts rule type"
-msgstr ""
+msgstr "ئومۇمىيەت تېزلەتمىگە پەرۋا قىلماسلىق قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:418
 #, kde-format
 msgid "Desktop file name"
-msgstr ""
+msgstr "ئۈستەلئۈستى ھۆججەت ئاتى"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:421
 #, kde-format
 msgid "Desktop file name rule type"
-msgstr ""
+msgstr "ئۈستەلئۈستى ھۆججەت ئاتى قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:428
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "قەۋەت"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:444
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Layer rule type"
-msgstr "ئەڭ ئۈستىدە(&A)"
+msgstr "قەۋەت قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:449
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "ئۆزلۈكىدىن ماسلىشىشنى قەدەمداشلاش"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:453
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "ئەڭ ئۈستىدە(&A)"
+msgstr "ئۆزلۈكىدىن ماسلىشىشنى قەدەمداشلاش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:458
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "يىرتىلىشقا يول قويىدۇ"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:462
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "ئەڭ ئۈستىدە(&A)"
+msgstr "يىرتىلىش قائىدىسىنىڭ تۈرى"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
-#, fuzzy, kde-format
-#| msgid "Config Dialog"
+#, kde-format
 msgid "Dialog"
-msgstr "سەپلىمە سۆزلەشكۈ"
+msgstr "سۆزلەشكۈ"
 
 #. i18n: ectx: property (text), widget (QToolButton, clearButton)
 #: shortcutdialog.ui:25
 #, kde-format
 msgid "..."
-msgstr ""
+msgstr "…"
 
 #: sm.cpp:421
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "تىزىمدىن چىقىشتىن ۋاز كەچ"
 
 #: sm.cpp:422
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "تىزىمدىن چىقىۋەر"
 
 #: sm.cpp:468
 #, kde-format
@@ -3733,52 +3640,53 @@ msgid ""
 "%1\n"
 "Logging out anyway in 2 minutes."
 msgstr ""
+"تۆۋەندىكى ئەپ يېپىلمىدى:\n"
+"%1\n"
+"2 مىنۇت ئىچىدە تىزىمدىن چىقىۋېرىدۇ."
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
-msgstr "ئۈستەلئۈستىگە يۆتكە(&D)"
+msgstr "ئۈستەلئۈستى كۆرسەت"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "كۆزنەكلەر"
+msgstr "ئوچۇق كۆزنەك يوق"
 
 #: tabbox/tabbox.cpp:311
 msgid "Walk Through Windows"
-msgstr "كۆزنەكتىن كۆزنەككە ئۆتۈش"
+msgstr "كۆزنەك ئارىلايدۇ"
 
 #: tabbox/tabbox.cpp:312
 msgid "Walk Through Windows (Reverse)"
-msgstr "كۆزنەكتىن كۆزنەككە ئۆتۈش(تەتۈرى)"
+msgstr "كۆزنەك ئارىلايدۇ(تەتۈر)"
 
 #: tabbox/tabbox.cpp:313
 msgid "Walk Through Windows Alternative"
-msgstr "باشقىچە كۆزنەكتىن كۆزنەككە ئۆتۈش"
+msgstr "باشقىچە كۆزنەكنى ئارىلايدۇ"
 
 #: tabbox/tabbox.cpp:314
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "باشقىچە كۆزنەكتىن كۆزنەككە ئۆتۈش(تەتۈرى)"
+msgstr "باشقىچە كۆزنەكنى ئارىلايدۇ(تەتۈر)"
 
 #: tabbox/tabbox.cpp:315
 msgid "Walk Through Windows of Current Application"
-msgstr ""
+msgstr "نۆۋەتتىكى پىروگراممىنىڭ كۆزنىكىنى ئارىلايدۇ"
 
 #: tabbox/tabbox.cpp:316
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr ""
+msgstr "نۆۋەتتىكى پىروگراممىنىڭ كۆزنىكىنى ئارىلايدۇ(تەتۈر)"
 
 #: tabbox/tabbox.cpp:317
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr ""
+msgstr "نۆۋەتتىكى پىروگراممىنىڭ باشقىچە كۆزنىكىنى ئارىلايدۇ"
 
 #: tabbox/tabbox.cpp:318
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr ""
+msgstr "نۆۋەتتىكى پىروگراممىنىڭ باشقىچە كۆزنىكىنى ئارىلايدۇ(تەتۈر)"
 
 #: tabbox/tabboxhandler.cpp:192
 #, kde-format
@@ -3786,21 +3694,23 @@ msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
 "Contact your distribution about this."
 msgstr ""
+"كۆزنەك ئالماشتۇرغۇچنىڭ ئورنىتىلىشى بۇزۇلغان، مەنبەسى كەم.\n"
+"مەزكۇر سىستېمىنى تارقاتقۇچى بىلەن ئالاقىلىشىڭ."
 
 #: tablet_input.cpp:119
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "سەزگۈر تاختىنى كېيىنكى چىقىرىش ئۈسكۈنىسىگە يۆتكەيدۇ"
 
 #: tablet_input.cpp:199
 #, kde-format
 msgid "Tablet moved to %1"
-msgstr ""
+msgstr "سەزگۈر تاختا %1 غا يۆتكەلدى"
 
 #: tablet_input.cpp:199
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "سەزگۈر تاختا چىقىرىش ئۈسكۈنىسىنى ئالماشتۇردى"
 
 #: useractions.cpp:224
 #, kde-format
@@ -3808,10 +3718,9 @@ msgid "&Move"
 msgstr "يۆتكە(&M)"
 
 #: useractions.cpp:229
-#, fuzzy, kde-format
-#| msgid "Re&size"
+#, kde-format
 msgid "&Resize"
-msgstr "چوڭلۇقىنى ئۆزگەرت(&S)"
+msgstr "چوڭلۇقىنى ئۆزگەرت(&R)"
 
 #: useractions.cpp:234
 #, kde-format
@@ -3831,30 +3740,27 @@ msgstr "پۈتۈن ئېكران(&F)"
 #: useractions.cpp:252
 #, kde-format
 msgid "&No Titlebar and Frame"
-msgstr ""
+msgstr "ماۋزۇ بالداق ۋە كاندۇك يوق(&N)"
 
 #: useractions.cpp:258
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "ئېكران تارقىتىشتىن يوشۇر(&H)"
 
 #: useractions.cpp:266
-#, fuzzy, kde-format
-#| msgid "Window &Shortcut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "كۆزنەك تېزلەتمىسى(&S)…"
+msgstr "كۆزنەك تېزلەتمە تەڭشىكى(&C)…"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "&Special Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "ئالاھىدە كۆزنەك تەڭشىكى(&S)…"
+msgstr "ئالاھىدە كۆزنەك تەڭشىكى سەپلىمىسى(&W)…"
 
 #: useractions.cpp:277
-#, fuzzy, kde-format
-#| msgid "S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "ئالاھىدە پروگرامما تەڭشىكى(&P)…"
+msgstr "ئالاھىدە پىروگرامما تەڭشىكى سەپلىمىسى(&P)…"
 
 #: useractions.cpp:283
 #, kde-format
@@ -3869,7 +3775,7 @@ msgstr "كىچىكلەت(&N)"
 #: useractions.cpp:295
 #, kde-format
 msgid "&More Actions"
-msgstr ""
+msgstr "تېخىمۇ كۆپ مەشغۇلات(&M)"
 
 #: useractions.cpp:300
 #, kde-format
@@ -3879,25 +3785,22 @@ msgstr "ياپ(&C)"
 #: useractions.cpp:366
 #, kde-format
 msgid "&Extensions"
-msgstr ""
+msgstr "كېڭەيتىلمە(&E)"
 
 #: useractions.cpp:416
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "&Desktops"
-msgstr "بارلىق ئۈستەلئۈستى(&A)"
+msgstr "ئۈستەلئۈستى(&D)"
 
 #: useractions.cpp:432
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move to &Screen"
-msgstr "كۆزنەكنى %1 ئېكرانغا"
+msgstr "ئېكرانغا يۆتكە(&S)"
 
 #: useractions.cpp:448
-#, fuzzy, kde-format
-#| msgid "Ac&tivities"
+#, kde-format
 msgid "Show in &Activities"
-msgstr "پائالىيەتلەر(&T)"
+msgstr "پائالىيەتتە كۆرسەت(&A)"
 
 #: useractions.cpp:464
 #, kde-format
@@ -3905,24 +3808,21 @@ msgid "&All Desktops"
 msgstr "بارلىق ئۈستەلئۈستى(&A)"
 
 #: useractions.cpp:499 useractions.cpp:631
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move to %1"
-msgstr "كۆزنەكنى %1 ئېكرانغا"
+msgstr "%1 غا يۆتكە"
 
 #: useractions.cpp:513
-#, fuzzy, kde-format
-#| msgid "Window to Next Desktop"
+#, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
-msgstr "كۆزنەكتىن كېيىنكى ئۈستەلئۈستىگە"
+msgstr "يېڭى ئۈستەلئۈستىگە قوش(&N)"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "ئۈستەلئۈستىگە يۆتكە(&D)"
+msgstr "يېڭى ئۈستەلئۈستىگە يۆتكە"
 
 #: useractions.cpp:556
 #, kde-format
@@ -3930,12 +3830,12 @@ msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
 "number, second the output identifier. E.g. Screen 1 (HDMI1)"
 msgid "Screen &%1 (%2)"
-msgstr ""
+msgstr "ئېكران &%1 (%2)"
 
 #: useractions.cpp:583
 #, kde-format
 msgid "&All Activities"
-msgstr "بارلىق مەشغۇلاتلار(&A)"
+msgstr "بارلىق مەشغۇلات(&A)"
 
 #: useractions.cpp:752
 #, kde-format
@@ -3950,10 +3850,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr "%3 دىكى %2 تەرىپىدىن <b>%1</b> ئىشلىتىلىۋاتىدۇ"
 
 #: useractions.cpp:835
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window Menu"
-msgstr "كۆزنەكلەر"
+msgstr "كۆزنەك تىزىملىكى"
 
 #: useractions.cpp:837
 #, kde-format
@@ -3963,17 +3862,17 @@ msgstr "كۆزنەك ياپ"
 #: useractions.cpp:839
 #, kde-format
 msgid "Maximize Window"
-msgstr "كۆزنەكنى ئەڭ چوڭ قىلىش"
+msgstr "كۆزنەكنى چوڭايت"
 
 #: useractions.cpp:841
 #, kde-format
 msgid "Maximize Window Vertically"
-msgstr "كۆزنەكنى تىك ھالەتتە چوڭايتىش"
+msgstr "كۆزنەكنى بويىغا چوڭايت"
 
 #: useractions.cpp:843
 #, kde-format
 msgid "Maximize Window Horizontally"
-msgstr "كۆزنەكنى گورىزونتال چوڭايتىش"
+msgstr "كۆزنەكنى توغرىسىغا چوڭايت"
 
 #: useractions.cpp:845
 #, fuzzy, kde-format
@@ -4004,49 +3903,47 @@ msgstr "كۆزنەكنى ئۆرلەت"
 #: useractions.cpp:855
 #, kde-format
 msgid "Lower Window"
-msgstr "كۆزنەكنى پەسلەت"
+msgstr "كۆزنەكنى تۆۋەنلەت"
 
 #: useractions.cpp:857
 #, kde-format
 msgid "Toggle Window Raise/Lower"
-msgstr "كۆزنەكنى ئۆرلەت/پەسلەتنى ئالماشتۇر"
+msgstr "كۆزنەكنى ئۆرلەت/تۆۋەنلەتنى ئالماشتۇر"
 
 #: useractions.cpp:859
 #, kde-format
 msgid "Make Window Fullscreen"
-msgstr "كۆزنەكنى تولۇق ئېكران قىل"
+msgstr "كۆزنەكنى تولۇق ئېكرانغا تولدۇر"
 
 #: useractions.cpp:861
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "كۆزنەك گىرۋىكىنى يوشۇر"
+msgstr "كۆزنەك ماۋزۇ بالداق ۋە كاندۇكنى ئالماشتۇرىدۇ"
 
 #: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Above Others"
-msgstr "كۆزنەك باشقا كۆزنەكلەرنىڭ ئۈستىدە تۇرسۇن"
+msgstr "كۆزنەكنى باشقا كۆزنەكنىڭ ئۈستىدە تۇتىدۇ"
 
 #: useractions.cpp:865
 #, kde-format
 msgid "Keep Window Below Others"
-msgstr "كۆزنەك باشقا كۆزنەكلەرنىڭ ئاستىدا تۇرسۇن"
+msgstr "كۆزنەكنى باشقا كۆزنەكنىڭ ئاستىدا تۇتىدۇ"
 
 #: useractions.cpp:867
 #, kde-format
 msgid "Activate Window Demanding Attention"
-msgstr "كۆزنەككە دىققەت قىلىشنى ئاكتىپلاش"
+msgstr "كۆزنەككە دىققەت قىلىشنى ئاكتىپلايدۇ"
 
 #: useractions.cpp:869
 #, kde-format
 msgid "Setup Window Shortcut"
-msgstr "كۆزنەك تېزلەتمىسىنى بېكىتىش"
+msgstr "كۆزنەك تېزلەتمىسىنى تەڭشە"
 
 #: useractions.cpp:871
-#, fuzzy, kde-format
-#| msgid "Move Window to Group"
+#, kde-format
 msgid "Move Window to the Center"
-msgstr "كۆزنەكنى گۇرۇپپىغا يۆتكە"
+msgstr "كۆزنەكنى ئېكراننىڭ مەركىزىگە يۆتكە"
 
 #: useractions.cpp:873
 #, kde-format
@@ -4069,28 +3966,24 @@ msgid "Move Window Down"
 msgstr "كۆزنەكنى ئاستىغا يۆتكە"
 
 #: useractions.cpp:881
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Expand Window Horizontally"
-msgstr "كۆزنەكنى گورىزونتال چوڭايتىش"
+msgstr "كۆزنەكنى توغرىسىغا ياي"
 
 #: useractions.cpp:883
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Expand Window Vertically"
-msgstr "كۆزنەكنى تىك ھالەتتە چوڭايتىش"
+msgstr "كۆزنەكنى بويىغا ياي"
 
 #: useractions.cpp:885
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Horizontally"
+#, kde-format
 msgid "Shrink Window Horizontally"
-msgstr "كۆزنەكنى توغرا يۆنىلىشتە قىسىپ يىغىپ قوي"
+msgstr "كۆزنەكنى توغرىسىغا يىغ"
 
 #: useractions.cpp:887
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Vertically"
+#, kde-format
 msgid "Shrink Window Vertically"
-msgstr "كۆزنەكنى تىك يۆنىلىشتە قىسىپ يىغىپ قوي"
+msgstr "كۆزنەكنى بويىغا يىغ"
 
 #: useractions.cpp:889
 #, kde-format
@@ -4100,19 +3993,17 @@ msgstr "كۆزنەكنى سولغا تېز ئۈستىلەپ قوي"
 #: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Right"
-msgstr "كۆزنەكنى ئونغا تېز ئۈستىلەپ قوي"
+msgstr "كۆزنەكنى ئوڭغا تېز ئۈستىلەپ قوي"
 
 #: useractions.cpp:893
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top Left"
+#, kde-format
 msgid "Quick Tile Window to the Top"
-msgstr "كۆزنەكنى ئۇستى سول تەرەپكە تېز ئۈستىلەپ قوي"
+msgstr "كۆزنەكنى ئۈستىگە تېز ئۈستىلەپ قوي"
 
 #: useractions.cpp:895
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom Left"
+#, kde-format
 msgid "Quick Tile Window to the Bottom"
-msgstr "كۆزنەكنى ئاستى سول تەرەپكە تېز ئۈستىلەپ قوي"
+msgstr "كۆزنەكنى ئاستىغا تېز ئۈستىلەپ قوي"
 
 #: useractions.cpp:897
 #, kde-format
@@ -4157,41 +4048,37 @@ msgstr "سول تەرەپتىكى كۆزنەككە ئالماش"
 #: useractions.cpp:913
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr ""
+msgstr "ئاكتىپ كۆزنەكنىڭ تۇتۇقلۇقىنى 5% غا ئۆستۈر"
 
 #: useractions.cpp:915
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr ""
+msgstr "ئاكتىپ كۆزنەكنىڭ تۇتۇقلۇقىنى 5% غا تۆۋەنلەت"
 
 #: useractions.cpp:918
 #, kde-format
 msgid "Keep Window on All Desktops"
-msgstr "كۆزنەك بارلىق ئۈستەلئۈستىدە تۇرسۇن"
+msgstr "كۆزنەكنى بارلىق ئۈستەلئۈستىدە تۇت"
 
 #: useractions.cpp:921
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "كۆزنەكنى سولغا تېز ئۈستىلەپ قوي"
+msgstr "كۆزنەكنى سولغا ئىختىيارى تېز ئۈستىلەپ قوي"
 
 #: useractions.cpp:923
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "كۆزنەكنى ئونغا تېز ئۈستىلەپ قوي"
+msgstr "كۆزنەكنى ئوڭغا ئىختىيارى تېز ئۈستىلەپ قوي"
 
 #: useractions.cpp:925
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Top Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "كۆزنەكنى ئۇستى سول تەرەپكە تېز ئۈستىلەپ قوي"
+msgstr "كۆزنەكنى ئۈستىگە ئىختىيارى تېز ئۈستىلەپ قوي"
 
 #: useractions.cpp:927
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Bottom Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "كۆزنەكنى ئاستى سول تەرەپكە تېز ئۈستىلەپ قوي"
+msgstr "كۆزنەكنى ئاستىغا ئىختىيارى تېز ئۈستىلەپ قوي"
 
 #: useractions.cpp:938
 #, kde-format
@@ -4229,51 +4116,44 @@ msgid "Window One Desktop Down"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئاستىغا"
 
 #: useractions.cpp:952
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "كۆزنەكنى %1 ئېكرانغا"
+msgstr "كۆزنەكنى %1-ئېكرانغا يۆتكە"
 
 #: useractions.cpp:959
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "كۆزنەكنى كېيىنكى ئېكرانغا"
+msgstr "كۆزنەكنى كېيىنكى ئېكرانغا يۆتكە"
 
 #: useractions.cpp:961
-#, fuzzy, kde-format
-#| msgid "Window to Previous Desktop"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "كۆزنەكتىن ئالدىنقى ئۈستەلئۈستىگە"
+msgstr "كۆزنەكنى ئالدىنقى ئېكرانغا يۆتكە"
 
 #: useractions.cpp:963
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئوڭغا"
+msgstr "كۆزنەكنى ئوڭغا بىر ئېكران يۆتكە"
 
 #: useractions.cpp:965
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "كۆزنەكنى بىر ئۈستەلئۈستى سولغا"
+msgstr "كۆزنەكنى سولغا بىر ئېكران يۆتكە"
 
 #: useractions.cpp:967
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "كۆزنەكنى %1 ئېكرانغا"
+msgstr "كۆزنەكنى ئۈستىگە بىر ئېكران يۆتكە"
 
 #: useractions.cpp:969
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئاستىغا"
+msgstr "كۆزنەكنى ئاستىغا بىر ئېكران يۆتكە"
 
 #: useractions.cpp:973
 #, kde-format
 msgid "Switch to Screen %1"
-msgstr "ئېكران %1 غا ئالماشتۇر"
+msgstr "%1-ئېكرانغا ئالماشتۇر"
 
 #: useractions.cpp:980
 #, kde-format
@@ -4283,42 +4163,37 @@ msgstr "كېيىنكى ئېكرانغا ئالماشتۇر"
 #: useractions.cpp:981
 #, kde-format
 msgid "Switch to Previous Screen"
-msgstr ""
+msgstr "ئالدىنقى ئېكرانغا ئالماشتۇر"
 
 #: useractions.cpp:982
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "ئوڭ تەرەپتىكى كۆزنەككە ئالماش"
+msgstr "ئوڭدىكى ئېكرانغا ئالماشتۇر"
 
 #: useractions.cpp:984
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "سول تەرەپتىكى كۆزنەككە ئالماش"
+msgstr "سولدىكى ئېكرانغا ئالماشتۇر"
 
 #: useractions.cpp:986
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "ئېكران %1 غا ئالماشتۇر"
+msgstr "ئۇستىدىكى ئېكرانغا ئالماشتۇر"
 
 #: useractions.cpp:988
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "ئېكران %1 غا ئالماشتۇر"
+msgstr "ئاستىدىكى ئېكرانغا ئالماشتۇر"
 
 #: useractions.cpp:991
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "ئۈستەلئۈستىگە يۆتكە(&D)"
+msgstr "ئۈستەلئۈستى كۆرسەت"
 
 #: useractions.cpp:994
 #, kde-format
 msgid "Kill Window"
-msgstr "كۆزنەكنى ئۆلتۈر"
+msgstr "كۆزنەكنى يوقات"
 
 #: useractions.cpp:1059
 #, kde-format
@@ -4328,12 +4203,12 @@ msgstr "كۆزنەك (%1) نى ئاكتىپلا"
 #: utils/edid.cpp:360
 #, kde-format
 msgid "unknown"
-msgstr ""
+msgstr "يوچۇن"
 
 #: virtualdesktops.cpp:731 virtualdesktops.cpp:810
 #, kde-format
 msgid "Desktop %1"
-msgstr "ئۈستەلئۈستى %1"
+msgstr "%1-ئۈستەلئۈستى‎‏"
 
 #: virtualdesktops.cpp:817
 #, kde-format
@@ -4373,48 +4248,50 @@ msgstr "ئۈستەلئۈستى %1 غا ئالماشتۇر"
 #: wayland/outputmanagement_v2.cpp:602
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "مۇناسىۋەتلىك بىر چىقىرىشنى ئەمدى ئىشلەتكىلى بولمايدۇ"
 
 #: wayland/outputmanagement_v2.cpp:620
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
-msgstr ""
+msgstr "سەپلىمىنى ئۆزگەرتىپ ھەممە چىقىرىشنى چەكلەشكە يول قويمايدۇ"
 
 #: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "بوش چوڭلۇقتىكى ئىختىيارى ھالەتنى قوشالمايدۇ"
 
 #: wayland/outputmanagement_v2.cpp:635
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "يېڭىلاش نىسبىتى نۆل Hz بولغان ئىختىيارى ھالەتنى قوشالمايدۇ"
 
 #: wayland/outputmanagement_v2.cpp:646
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
 msgid "Position of output %s is way too negative (%d, %d)"
-msgstr ""
+msgstr "%s چىقىرىدىغان ئورۇن بەك چوڭ (%d، %d)"
 
 #: wayland/outputmanagement_v2.cpp:649
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Position of output %s is way too large (%d, %d)"
 msgid "Position of enabled output %s is negative (%d, %d)"
-msgstr ""
+msgstr "%s چىقىرىدىغان ئورۇن بەك چوڭ (%d، %d)"
 
 #: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "%s چىقىرىدىغان ئورۇن بەك چوڭ (%d، %d)"
 
 #: wayland/outputmanagement_v2.cpp:670
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "قوزغاتقۇ چىقىرىش سەپلىمىسىنى رەت قىلدى"
 
 #: window.cpp:3140
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
-msgstr ""
+msgstr "[ئىنكاس يوق]"
 
 #: workspace.cpp:1745
 #, kde-format
@@ -4430,18 +4307,29 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+"KWin قوللاش ئۇچۇرى:\n"
+"تېخنىكىلىق قوللاش تەلەپ قىلغاندا (مەسىلەن، https://discuss.kde.org) "
+"تۆۋەندىكى ئۇچۇر تەمىنلىنىشى كېرەك.\n"
+"بۇ ئۇچۇرلار نۆۋەتتە ئىجرا قىلىنىۋاتقان Kwin ئەمەلىي مىسالىغا مۇناسىۋەتلىك "
+"ئۇچۇر، ئىشلىتىۋاتقان \n"
+"تاللانما، OpenGL قوزغاتقۇ، ئىجرا قىلىنىۋاتقان ئۈنۈم قاتارلىقلارنى ئۆز ئىچىگە "
+"ئالىدۇ.\n"
+"مەزكۇر ئابزاس تېكىسنىڭ ئاستىدىكى ئۇچۇرنى بىۋاسىتە تېخنىكىلىق قوللاش "
+"مۇنبىرىگە چاپلىماي، ئۇنىڭ ئورنىغا توردىكى چاپلاش تاختىسى تور بېكىتى https://"
+"paste.kde.org غا چاپلاڭ.\n"
 
 #: xwayland/xwaylandlauncher.cpp:293
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
+msgstr "Xwayland يىمىرىلدى"
 
-#, fuzzy
+#~ msgid "Position of output %s is negative, that is not supported"
+#~ msgstr "%s چىقىرىدىغان ئورۇن مەنفى، بۇنى قوللىمايدۇ"
+
 #~| msgid "Mouse Emulation"
 #~ msgid "Buttons"
 #~ msgstr "چاشقىنەك تەقلىدلەش"
 
-#, fuzzy
 #~| msgid "&Strength:"
 #~ msgid "Saturation strength:"
 #~ msgstr "كۈچلۈكلۈكى(&S):"
@@ -4450,7 +4338,6 @@ msgstr ""
 #~ msgid "Show Desktop"
 #~ msgstr "ئۈستەلئۈستىنى كۆرسەت"
 
-#, fuzzy
 #~| msgid "Shade Window"
 #~ msgid "Shaded"
 #~ msgstr "سايە كۆزنەك"
@@ -4458,12 +4345,10 @@ msgstr ""
 #~ msgid "Shade Window"
 #~ msgstr "سايە كۆزنەك"
 
-#, fuzzy
 #~| msgid "Move To &Desktop"
 #~ msgid "Move &To Current Desktop"
 #~ msgstr "ئۈستەلئۈستىگە يۆتكە(&D)"
 
-#, fuzzy
 #~| msgid "&All Desktops"
 #~ msgctxt "Create a new desktop and move the window there"
 #~ msgid "&New Desktop"
@@ -4481,27 +4366,22 @@ msgstr ""
 #~ msgid "&Height:"
 #~ msgstr "ئېگىزلىك(&H):"
 
-#, fuzzy
 #~| msgid "Move Window Left"
 #~ msgid "Move Left"
 #~ msgstr "كۆزنەكنى سولغا يۆتكە"
 
-#, fuzzy
 #~| msgid "Move Window Right"
 #~ msgid "Move Right"
 #~ msgstr "كۆزنەكنى ئونغا يۆتكە"
 
-#, fuzzy
 #~| msgid "Move Window Up"
 #~ msgid "Move Up"
 #~ msgstr "كۆزنەكنى سۈتىگە يۆتكە"
 
-#, fuzzy
 #~| msgid "Move Window Down"
 #~ msgid "Move Down"
 #~ msgstr "كۆزنەكنى ئاستىغا يۆتكە"
 
-#, fuzzy
 #~| msgid "Modifiers"
 #~ msgid "Scroll gesture modifier keys:"
 #~ msgstr "سۈپەتلىگۈچىلەر"
@@ -4511,12 +4391,10 @@ msgstr ""
 #~ "چوڭايتىش ۋە كىچىكلىتىش ئېلىپ بارغاندا بەلگىلەنگەن چوڭايتىش ۋە كىچىكلىتىش "
 #~ "نىسبىتى بويىچە چوڭ-كىچىكلىكىنى ئۆزگەرتىدۇ."
 
-#, fuzzy
 #~| msgid "Zoom Factor:"
 #~ msgid "Zoom factor:"
 #~ msgstr "چوڭايتىش ۋە كىچىكلىتىش نىسبىتى:"
 
-#, fuzzy
 #~| msgid "Mouse Pointer:"
 #~ msgid "Mouse pointer:"
 #~ msgstr "چاشقىنەك كۆرسەتكۈچى:"
@@ -4533,7 +4411,6 @@ msgstr ""
 #~ msgid "Hide"
 #~ msgstr "يوشۇر"
 
-#, fuzzy
 #~| msgid "Mouse Tracking:"
 #~ msgid "Mouse tracking:"
 #~ msgstr "چاشقىنەكنى ئىزلاش:"
@@ -4550,12 +4427,10 @@ msgstr ""
 #~ msgid "Push"
 #~ msgstr "قويۇش"
 
-#, fuzzy
 #~| msgid "Tiling Disabled"
 #~ msgid "Disabled"
 #~ msgstr "كاھىش ئۈنۈمى چەكلەنگەن"
 
-#, fuzzy
 #~| msgid ""
 #~| "Enable tracking of the focused location. This needs QAccessible to be "
 #~| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
@@ -4566,12 +4441,10 @@ msgstr ""
 #~ "فوكۇس ئورنىنى ئىزلاشنى قوزغىتىدۇ. پروگراممىغا نىسبەتەن قوزغىتىشتا "
 #~ "(\"export QT_ACCESSIBILITY=1\")"
 
-#, fuzzy
 #~| msgid "Enable Focus Tracking"
 #~ msgid "Enable focus tracking"
 #~ msgstr "فوكۇسنى ئىزلاشنى ئىناۋەتلىك قىل"
 
-#, fuzzy
 #~| msgid ""
 #~| "Enable tracking of the focused location. This needs QAccessible to be "
 #~| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
@@ -4582,7 +4455,6 @@ msgstr ""
 #~ "فوكۇس ئورنىنى ئىزلاشنى قوزغىتىدۇ. پروگراممىغا نىسبەتەن قوزغىتىشتا "
 #~ "(\"export QT_ACCESSIBILITY=1\")"
 
-#, fuzzy
 #~| msgid "Enable Focus Tracking"
 #~ msgid "Enable text cursor tracking"
 #~ msgstr "فوكۇسنى ئىزلاشنى ئىناۋەتلىك قىل"
@@ -4590,12 +4462,10 @@ msgstr ""
 #~ msgid "Window Operations Menu"
 #~ msgstr "كۆزنەك مەشغۇلاتلار تىزىملىكى"
 
-#, fuzzy
 #~| msgid "Toggle Floating"
 #~ msgid "Toggle Show Paint"
 #~ msgstr "لەيلەت ئۈنۈمىنى ئالماشتۇر"
 
-#, fuzzy
 #~| msgid ""
 #~| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 #~| "b><br>This was most likely due to a driver bug.<p>If you think that you "
@@ -4620,7 +4490,6 @@ msgstr ""
 #~ msgid "Required X extensions (XComposite and XDamage) are not available."
 #~ msgstr "زۆرۈر بولغان X كېڭەيتمىلىرى(XComposite ۋە XDamage) يوق."
 
-#, fuzzy
 #~| msgid "GLX/OpenGL and XRender/XFixes are not available."
 #~ msgid "GLX/OpenGL is not available."
 #~ msgstr "GLX/OpenGL ۋە XRender/XFixes نى ئىشلەتكىلى بولمايدۇ."
@@ -4641,7 +4510,6 @@ msgstr ""
 #~ "kwin: كۆزنەك باشقۇرغۇچ تاللاشنى تەلەپ قىلالمىدى، باشقا بىر كۆزنەك "
 #~ "باشقۇرغۇچ ئىجرا قىلىنىۋاتامدۇ؟ (--replace ئىشلىتىپ سىنايدۇ)\n"
 
-#, fuzzy
 #~| msgid ""
 #~| "kwin: unable to claim manager selection, another wm running? (try using "
 #~| "--replace)\n"
@@ -4654,12 +4522,10 @@ msgstr ""
 #~ msgstr ""
 #~ "ئىجرا بولۇۋاتقان ICCCM2.0 گە ماس كېلىدىغان كۆزنەك باشقۇرغۇچنى ئالماشتۇرۇڭ"
 
-#, fuzzy
 #~| msgid "Move To &Desktop"
 #~ msgid "Move to &Desktop"
 #~ msgstr "ئۈستەلئۈستىگە يۆتكە(&D)"
 
-#, fuzzy
 #~| msgctxt "@item:inlistbox Border size:"
 #~| msgid "Tiny"
 #~ msgctxt "@item:inlistbox Button size:"
@@ -4682,20 +4548,17 @@ msgstr ""
 #~ msgid "Huge"
 #~ msgstr "ئىنتايىن چوڭ"
 
-#, fuzzy
 #~| msgctxt "@item:inlistbox Border size:"
 #~| msgid "Very Huge"
 #~ msgctxt "@item:inlistbox Button size:"
 #~ msgid "Very Huge"
 #~ msgstr "ئىنتايىن چوڭ"
 
-#, fuzzy
 #~| msgid "Re&size"
 #~ msgctxt "@item:inlistbox Button size:"
 #~ msgid "Oversized"
 #~ msgstr "چوڭلۇقىنى ئۆزگەرت(&S)"
 
-#, fuzzy
 #~| msgid "Mouse Emulation"
 #~ msgid "Button size:"
 #~ msgstr "چاشقىنەك تەقلىدلەش"
@@ -4716,7 +4579,6 @@ msgstr ""
 #~ "بۇ تاللانما تاللانغاندا كۆزنەك گىرۋىكى ماۋزۇ بالداق رەڭگىدە بويىلىدۇ. "
 #~ "ئۇنداق بولمىسا تەگلىك رەڭگىدە بويايدۇ."
 
-#, fuzzy
 #~| msgid "Close Window"
 #~ msgid "Colored window border"
 #~ msgstr "كۆزنەك ياپ"
@@ -4731,17 +4593,14 @@ msgstr ""
 #~ msgid "Animate buttons"
 #~ msgstr "جانلاندۇرۇم توپچا"
 
-#, fuzzy
 #~| msgid "Maximize Window Horizontally"
 #~ msgid "Split Horizontally"
 #~ msgstr "كۆزنەكنى گورىزونتال چوڭايتىش"
 
-#, fuzzy
 #~| msgid "Maximize Window Vertically"
 #~ msgid "Split Vertically"
 #~ msgstr "كۆزنەكنى تىك ھالەتتە چوڭايتىش"
 
-#, fuzzy
 #~| msgid "Toggle Floating"
 #~ msgid "Toggle Night Light"
 #~ msgstr "لەيلەت ئۈنۈمىنى ئالماشتۇر"
@@ -4749,7 +4608,6 @@ msgstr ""
 #~ msgid "Layout mode:"
 #~ msgstr "جايلاشتۇرۇش ئۇسۇلى:"
 
-#, fuzzy
 #~| msgid "&Close"
 #~ msgid "Closest"
 #~ msgstr "ياپ(&C)"
@@ -4757,7 +4615,6 @@ msgstr ""
 #~ msgid "Natural"
 #~ msgstr "تەبىئىي"
 
-#, fuzzy
 #~| msgid "Setup Window Shortcut"
 #~ msgid "Set window type to"
 #~ msgstr "كۆزنەك تېزلەتمىسىنى بېكىتىش"
@@ -4765,18 +4622,15 @@ msgstr ""
 #~ msgid "milliseconds"
 #~ msgstr "مىللىي سېكۇنت"
 
-#, fuzzy
 #~| msgid "Show Desktop"
 #~ msgid "Show Desktop Grid"
 #~ msgstr "ئۈستەلئۈستىنى كۆرسەت"
 
-#, fuzzy
 #~| msgid "Tiling Disabled"
 #~ msgctxt "Desktop name alignment:"
 #~ msgid "Disabled"
 #~ msgstr "كاھىش ئۈنۈمى چەكلەنگەن"
 
-#, fuzzy
 #~| msgid "To the Right"
 #~ msgid "Top-Right"
 #~ msgstr "ئوڭغا"
@@ -4787,7 +4641,6 @@ msgstr ""
 #~ msgid "Bottom-Left"
 #~ msgstr "تۆۋەن سول"
 
-#, fuzzy
 #~| msgid "To the Left"
 #~ msgid "Top-Left"
 #~ msgstr "سولغا"
@@ -4801,7 +4654,6 @@ msgstr ""
 #~ msgid "Custom"
 #~ msgstr "ئىختىيارى"
 
-#, fuzzy
 #~| msgid "Number of &rows:"
 #~ msgid "N&umber of rows:"
 #~ msgstr "قۇر سانى(&R):"
@@ -4809,17 +4661,14 @@ msgstr ""
 #~ msgid "Desktop &name alignment:"
 #~ msgstr "ئۈستەلئۈستى ئاتىنىڭ توغرىلىنىشى(&N):"
 
-#, fuzzy
 #~| msgid "&Layout mode:"
 #~ msgid "&Grid layout mode:"
 #~ msgstr "جايلاشتۇرۇش ئۇسۇلى(&L):"
 
-#, fuzzy
 #~| msgid "Windows"
 #~ msgid "Windows layout:"
 #~ msgstr "كۆزنەكلەر"
 
-#, fuzzy
 #~| msgid "&All Activities"
 #~ msgid "Activation"
 #~ msgstr "بارلىق مەشغۇلاتلار(&A)"
@@ -4831,7 +4680,6 @@ msgstr ""
 #~ "ئۈستەلئۈستى ئۈنۈمى باشقا بىر پروگرامما تەرىپىدىن توڭلىتىپ قويۇلدى.<br/> "
 #~ "سىز «%1» تېزلەتمىسىنى ئىشلىتىپ ئۇنى قايتا ئىشقا كىرىشتۈرەلەيسىز."
 
-#, fuzzy
 #~| msgid "Window Manager"
 #~ msgctxt ""
 #~ "Entry in context menu of window decoration to open the configuration "
@@ -4851,7 +4699,6 @@ msgstr ""
 #~ msgid "Walk Through Desktop List (Reverse)"
 #~ msgstr "ئۈستەلئۈستى تىزىمىدىن ئۈستەلئۈستى تىزىمىغا ئۆتۈش(تەتۈرى)"
 
-#, fuzzy
 #~| msgid "Close Window"
 #~ msgid "X11 Client Windows"
 #~ msgstr "كۆزنەك ياپ"
@@ -4874,7 +4721,6 @@ msgstr ""
 #~ msgid "Pack Grow Window Vertically"
 #~ msgstr "كۆزنەكنى تىك يۆنىلىشتە سوزۇپ يىغىپ قوي"
 
-#, fuzzy
 #~| msgid "Desktop %1"
 #~ msgid "Desktop number"
 #~ msgstr "ئۈستەلئۈستى %1"
@@ -4903,7 +4749,6 @@ msgstr ""
 #~ msgid "None available"
 #~ msgstr "ئىشلەتكىلى بولىدىغان نەرسە يوق"
 
-#, fuzzy
 #~| msgid "Window Manager"
 #~ msgctxt ""
 #~ "Entry in context menu of window decoration to open the configuration "
@@ -4911,7 +4756,6 @@ msgstr ""
 #~ msgid "Window Manager S&ettings..."
 #~ msgstr "كۆزنەك باشقۇرغۇ"
 
-#, fuzzy
 #~| msgid ""
 #~| "kwin: unable to claim manager selection, another wm running? (try using "
 #~| "--replace)\n"

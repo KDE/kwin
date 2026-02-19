@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-18 00:47+0000\n"
+"POT-Creation-Date: 2026-02-19 00:49+0000\n"
 "PO-Revision-Date: 2026-01-24 17:28+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -2584,7 +2584,7 @@ msgstr "OpenGLren konposizioa pantaila-grabatzeko beharrezkoa da"
 msgid "Failed to create PipeWire stream"
 msgstr "«PipeWire» korrontea sortzea huts egin du"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2594,7 +2594,7 @@ msgstr ""
 "bidez.\n"
 "Ihes edo eskuineko klik uzteko."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2783,7 +2783,7 @@ msgstr "Gehitu lauza higikorra"
 msgid "Delete"
 msgstr "Ezabatu"
 
-#: plugins/trackmouse/trackmouse.cpp:71
+#: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"

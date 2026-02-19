@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-18 00:47+0000\n"
+"POT-Creation-Date: 2026-02-19 00:49+0000\n"
 "PO-Revision-Date: 2026-02-14 18:16+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -2545,7 +2545,7 @@ msgstr "מנהל חלונאי מסוג OpenGL נחוץ להקלטת המסך"
 msgid "Failed to create PipeWire stream"
 msgstr "יצירת תזרים PipeWire נכשלה"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2554,7 +2554,7 @@ msgstr ""
 "נא לבחור חלון לצילום בלחיצה שמאלית או enter.\n"
 "Escape או לחיצה ימנית לביטול."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
@@ -2733,7 +2733,7 @@ msgstr "הוספת אריח צף"
 msgid "Delete"
 msgstr "מחיקה"
 
-#: plugins/trackmouse/trackmouse.cpp:71
+#: plugins/trackmouse/trackmouse.cpp:70
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"
