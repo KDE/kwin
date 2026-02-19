@@ -818,6 +818,7 @@ public:
         if (reply->format != format) {
             return std::nullopt;
         }
+        Q_ASSERT(format == sizeof(T) * 8);
         return std::span(reinterpret_cast<T *>(xcb_get_property_value(reply)), reply->value_len);
     }
     /**
@@ -929,44 +930,44 @@ public:
             return;
         }
         m_sizeHints = nullptr;
-        m_hints = NormalHints(m_window);
+        m_property = Xcb::Property(0, m_window, XCB_ATOM_WM_NORMAL_HINTS, XCB_ATOM_WM_SIZE_HINTS, 0, 18);
     }
     void read()
     {
-        m_sizeHints = m_hints.sizeHints();
+        m_sizeHints = NormalHints::fromProperty(m_property);
     }
 
     bool hasPosition() const
     {
-        return testFlag(NormalHints::SizeHints::UserPosition) || testFlag(NormalHints::SizeHints::ProgramPosition);
+        return testFlag(NormalHints::UserPosition) || testFlag(NormalHints::ProgramPosition);
     }
     bool hasSize() const
     {
-        return testFlag(NormalHints::SizeHints::UserSize) || testFlag(NormalHints::SizeHints::ProgramSize);
+        return testFlag(NormalHints::UserSize) || testFlag(NormalHints::ProgramSize);
     }
     bool hasMinSize() const
     {
-        return testFlag(NormalHints::SizeHints::MinSize);
+        return testFlag(NormalHints::MinSize);
     }
     bool hasMaxSize() const
     {
-        return testFlag(NormalHints::SizeHints::MaxSize);
+        return testFlag(NormalHints::MaxSize);
     }
     bool hasResizeIncrements() const
     {
-        return testFlag(NormalHints::SizeHints::ResizeIncrements);
+        return testFlag(NormalHints::ResizeIncrements);
     }
     bool hasAspect() const
     {
-        return testFlag(NormalHints::SizeHints::Aspect);
+        return testFlag(NormalHints::Aspect);
     }
     bool hasBaseSize() const
     {
-        return testFlag(NormalHints::SizeHints::BaseSize);
+        return testFlag(NormalHints::BaseSize);
     }
     bool hasWindowGravity() const
     {
-        return testFlag(NormalHints::SizeHints::WindowGravity);
+        return testFlag(NormalHints::WindowGravity);
     }
     QSize maxSize() const
     {
@@ -1026,52 +1027,46 @@ private:
     /**
      * NormalHints as specified in ICCCM 4.1.2.3.
      */
-    class NormalHints : public Property
+    struct NormalHints
     {
-    public:
-        struct SizeHints
-        {
-            enum Flags {
-                UserPosition = 1,
-                UserSize = 2,
-                ProgramPosition = 4,
-                ProgramSize = 8,
-                MinSize = 16,
-                MaxSize = 32,
-                ResizeIncrements = 64,
-                Aspect = 128,
-                BaseSize = 256,
-                WindowGravity = 512
-            };
-            qint32 flags = 0;
-            qint32 pad[4] = {0, 0, 0, 0};
-            qint32 minWidth = 0;
-            qint32 minHeight = 0;
-            qint32 maxWidth = 0;
-            qint32 maxHeight = 0;
-            qint32 widthInc = 0;
-            qint32 heightInc = 0;
-            qint32 minAspect[2] = {0, 0};
-            qint32 maxAspect[2] = {0, 0};
-            qint32 baseWidth = 0;
-            qint32 baseHeight = 0;
-            qint32 winGravity = 0;
+        enum Flags {
+            UserPosition = 1,
+            UserSize = 2,
+            ProgramPosition = 4,
+            ProgramSize = 8,
+            MinSize = 16,
+            MaxSize = 32,
+            ResizeIncrements = 64,
+            Aspect = 128,
+            BaseSize = 256,
+            WindowGravity = 512
         };
-        explicit NormalHints()
-            : Property(){};
-        explicit NormalHints(WindowId window)
-            : Property(0, window, XCB_ATOM_WM_NORMAL_HINTS, XCB_ATOM_WM_SIZE_HINTS, 0, 18)
+        qint32 flags = 0;
+        qint32 pad[4] = {0, 0, 0, 0};
+        qint32 minWidth = 0;
+        qint32 minHeight = 0;
+        qint32 maxWidth = 0;
+        qint32 maxHeight = 0;
+        qint32 widthInc = 0;
+        qint32 heightInc = 0;
+        qint32 minAspect[2] = {0, 0};
+        qint32 maxAspect[2] = {0, 0};
+        qint32 baseWidth = 0;
+        qint32 baseHeight = 0;
+        qint32 winGravity = 0;
+
+        static const NormalHints *fromProperty(Xcb::Property &property)
         {
-        }
-        inline SizeHints *sizeHints()
-        {
-            return array<SizeHints>(32, XCB_ATOM_WM_SIZE_HINTS).transform([](std::span<SizeHints> span) {
-                return span.empty() ? nullptr : span.data();
-            }).value_or(nullptr);
+            const auto cardinals = property.array<qint32>();
+            if (!cardinals || cardinals->size_bytes() != sizeof(NormalHints)) {
+                return nullptr;
+            }
+            return reinterpret_cast<const NormalHints *>(cardinals->data());
         }
     };
+
     friend TestXcbSizeHints;
-    bool testFlag(NormalHints::SizeHints::Flags flag) const
+    bool testFlag(NormalHints::Flags flag) const
     {
         if (!m_window || !m_sizeHints) {
             return false;
@@ -1079,8 +1074,8 @@ private:
         return m_sizeHints->flags & flag;
     }
     xcb_window_t m_window = XCB_WINDOW_NONE;
-    NormalHints m_hints;
-    NormalHints::SizeHints *m_sizeHints = nullptr;
+    Xcb::Property m_property;
+    const NormalHints *m_sizeHints = nullptr;
 };
 
 class MotifHints
@@ -1110,7 +1105,7 @@ public:
     }
     void read()
     {
-        m_hints = m_prop.value<MwmHints>(32, m_atom);
+        m_hints = MwmHints::fromProperty(m_prop);
     }
     bool hasDecorationsFlag() const
     {
@@ -1153,8 +1148,17 @@ private:
         uint32_t flags;
         uint32_t functions;
         uint32_t decorations;
-        int32_t input_mode;
+        uint32_t input_mode;
         uint32_t status;
+
+        static std::optional<MwmHints> fromProperty(Xcb::Property &property)
+        {
+            const auto cardinals = property.array<uint32_t>();
+            if (!cardinals || cardinals->size_bytes() != sizeof(MwmHints)) {
+                return std::nullopt;
+            }
+            return *reinterpret_cast<MwmHints *>(cardinals->data());
+        }
     };
     enum class Hints {
         Functions = (1L << 0),
