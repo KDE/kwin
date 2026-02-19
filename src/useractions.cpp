@@ -676,9 +676,8 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     // window menu closed before we destroy the decoration. Otherwise Qt crashes
     QMetaObject::invokeMethod(
         workspace(), [c, op]() {
-            workspace()->performWindowOperation(c, op);
-        },
-        Qt::QueuedConnection);
+        workspace()->performWindowOperation(c, op);
+    }, Qt::QueuedConnection);
 }
 
 //****************************************
