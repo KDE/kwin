@@ -29,6 +29,9 @@ void ColorManagerV1::wp_color_manager_v1_bind_resource(Resource *resource)
     send_supported_feature(resource->handle, feature::feature_set_primaries);
     send_supported_feature(resource->handle, feature::feature_set_luminances);
     send_supported_feature(resource->handle, feature::feature_windows_scrgb);
+    if (resource->version() >= WP_COLOR_MANAGER_V1_FEATURE_WINDOWS_BT2100) {
+        send_supported_feature(resource->handle, feature::feature_windows_bt2100);
+    }
 
     send_supported_primaries_named(resource->handle, primaries::primaries_srgb);
     send_supported_primaries_named(resource->handle, primaries::primaries_pal_m);
@@ -111,6 +114,21 @@ void ColorManagerV1::wp_color_manager_v1_create_windows_scrgb(Resource *resource
         Colorimetry::BT709,
     });
     ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), scrgb, ColorDescriptionType::Windows);
+}
+
+void ColorManagerV1::wp_color_manager_v1_create_windows_bt2100(Resource *resource, uint32_t image_description)
+{
+    const auto bt2100 = std::make_shared<ColorDescription>(ColorDescription{
+        Colorimetry::BT2020,
+        TransferFunction(TransferFunction::PerceptualQuantizer, 0.005, 10'000),
+        203,
+        0,
+        std::nullopt,
+        std::nullopt,
+        Colorimetry::BT2020,
+        Colorimetry::BT709,
+    });
+    ImageDescriptionV1::createReady(resource->client(), image_description, resource->version(), bt2100, ColorDescriptionType::Windows);
 }
 
 ColorFeedbackSurfaceV1::ColorFeedbackSurfaceV1(wl_client *client, uint32_t id, uint32_t version, SurfaceInterface *surface)

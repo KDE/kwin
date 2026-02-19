@@ -33,6 +33,7 @@ private:
     void wp_color_manager_v1_create_icc_creator(Resource *resource, uint32_t obj) override;
     void wp_color_manager_v1_create_parametric_creator(Resource *resource, uint32_t obj) override;
     void wp_color_manager_v1_create_windows_scrgb(Resource *resource, uint32_t image_description) override;
+    void wp_color_manager_v1_create_windows_bt2100(Resource *resource, uint32_t image_description) override;
 };
 
 class ColorFeedbackSurfaceV1 : private QtWaylandServer::wp_color_management_surface_feedback_v1
