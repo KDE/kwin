@@ -827,13 +827,20 @@ public:
      */
     inline std::optional<QByteArray> toByteArray(uint8_t format, xcb_atom_t type)
     {
-        const auto reply = array<const char>(format, type);
-        if (!reply.has_value()) {
+        const PropertyData::reply_type *reply = data();
+        if (!reply) {
             return std::nullopt;
-        } else if (reply->size() == 0) {
+        }
+        if (reply->type != type) {
+            return std::nullopt;
+        }
+        if (reply->format != format) {
+            return std::nullopt;
+        }
+        if (reply->value_len == 0) {
             return QByteArray("", 0); // valid, not null, but empty data
         } else {
-            return QByteArray(reply->data(), reply->size());
+            return QByteArray(static_cast<const char *>(xcb_get_property_value(reply)), xcb_get_property_value_length(reply));
         }
     }
     /**
