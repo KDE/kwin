@@ -297,7 +297,9 @@ void ColorParametricCreatorV1::wp_image_description_creator_params_v1_create(Res
         auto type = ColorDescriptionType::Normal;
         ClientConnection *client = ClientConnection::get(resource->client());
         // TODO remove gamescope from that list, once we have a Windows_PQ image description it can use
-        if (client->executablePath().endsWith("wine-preloader") || client->executablePath().endsWith("gamescope")) {
+        if (client->executablePath().endsWith("wine-preloader")
+            || client->executablePath().endsWith("wine64-preloader")
+            || client->executablePath().endsWith("gamescope")) {
             type = ColorDescriptionType::Windows;
         }
 
