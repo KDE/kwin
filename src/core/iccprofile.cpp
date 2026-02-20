@@ -317,6 +317,62 @@ std::optional<MHC2> parseMhc2Tag(cmsHPROFILE profile)
     return ret;
 }
 
+static constexpr size_t trcSize = 4096;
+
+static uint16_t findToneCurveInput(cmsToneCurve *curve, uint16_t desiredOutput, uint16_t begin, uint16_t end)
+{
+    if (begin == end || begin + 1 == end) {
+        return begin;
+    }
+    const uint16_t middle = std::midpoint(begin, end);
+    const uint16_t v = cmsEvalToneCurve16(curve, middle);
+    if (desiredOutput == v) {
+        return middle;
+    } else if (desiredOutput < v) {
+        return findToneCurveInput(curve, desiredOutput, begin, middle);
+    } else {
+        return findToneCurveInput(curve, desiredOutput, middle, end);
+    }
+}
+
+/**
+ * NOTE this is different from cmsReverseToneCurve, which does not handle
+ *      100% segments at the end in the way we require
+ */
+static std::optional<std::array<uint16_t, trcSize>> inverseToneCurve(cmsToneCurve *curve)
+{
+    if (!cmsIsToneCurveMonotonic(curve) || cmsIsToneCurveDescending(curve)) {
+        return std::nullopt;
+    }
+    constexpr uint16_t max = std::numeric_limits<uint16_t>::max();
+
+    uint16_t peakInput = max;
+    const uint16_t peakValue = cmsEvalToneCurve16(curve, max);
+    if (!peakValue) {
+        return std::nullopt;
+    }
+    // some TRCs have a segment at 100% at the end,
+    // find the first non-100% value
+    for (int32_t i = trcSize - 2; i > 0; i--) {
+        const uint16_t in = std::clamp<double>(std::round(max * (i / double(trcSize - 1))), 0, max);
+        const uint16_t out = cmsEvalToneCurve16(curve, in);
+        if (out < peakValue) {
+            break;
+        } else {
+            peakInput = in;
+        }
+    }
+
+    // now calculate the curve, but ignore everything above peakInput
+    std::array<uint16_t, trcSize> ret;
+    for (uint16_t i = 0; i < trcSize; i++) {
+        const uint16_t desiredOut = std::clamp<double>(std::round(max * (i / double(trcSize - 1))), 0, max);
+        const uint16_t input = findToneCurveInput(curve, desiredOut, 0, peakInput);
+        ret[i] = input;
+    }
+    return ret;
+}
+
 static constexpr XYZ D50{
     .X = 0.9642,
     .Y = 1.0,
@@ -440,7 +496,6 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
     if (cmsIsTag(handle, cmsSigBToA1Tag)) {
         bToA1 = parseBToATag(handle, cmsSigBToA1Tag);
     }
-    constexpr size_t trcSize = 4096;
     std::array<cmsToneCurve *, 3> toneCurves;
     if (bToA0 || bToA1) {
         // the TRC tags are often nonsense when the BToA tag exists, so this estimates the
@@ -471,10 +526,18 @@ std::expected<std::unique_ptr<IccProfile>, QString> IccProfile::load(const QStri
         if (!r || !g || !b) {
             return std::unexpected(i18n("Color profile is missing TRC tags"));
         }
+
+        const auto redCurve = inverseToneCurve(r);
+        const auto greenCurve = inverseToneCurve(g);
+        const auto blueCurve = inverseToneCurve(b);
+        if (!redCurve || !greenCurve || !blueCurve) {
+            return std::unexpected(i18n("Couldn't invert tone curves of ICC profile \"%1\"", qPrintable(path)));
+        }
+
         toneCurves = {
-            cmsReverseToneCurveEx(trcSize, r),
-            cmsReverseToneCurveEx(trcSize, g),
-            cmsReverseToneCurveEx(trcSize, b),
+            cmsBuildTabulatedToneCurve16(nullptr, redCurve->size(), redCurve->data()),
+            cmsBuildTabulatedToneCurve16(nullptr, greenCurve->size(), greenCurve->data()),
+            cmsBuildTabulatedToneCurve16(nullptr, blueCurve->size(), blueCurve->data()),
         };
     }
     std::vector<std::unique_ptr<ColorPipelineStage>> stages;
