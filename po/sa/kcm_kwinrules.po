@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-23 00:45+0000\n"
+"POT-Creation-Date: 2026-02-20 00:47+0000\n"
 "PO-Revision-Date: 2024-12-20 22:01+0530\n"
 "Last-Translator: kali <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -282,7 +282,7 @@ msgstr "गतिविधयः"
 msgid "Screen"
 msgstr "पट"
 
-#: rulesmodel.cpp:518 rulesmodel.cpp:927
+#: rulesmodel.cpp:518 rulesmodel.cpp:933
 #, kde-format
 msgid "Fullscreen"
 msgstr "पूर्णपर्दे"
@@ -417,7 +417,7 @@ msgstr "शीर्षकपट्टिका च फ्रेम च ना�
 #: rulesmodel.cpp:606 rulesmodel.cpp:611 rulesmodel.cpp:617 rulesmodel.cpp:622
 #: rulesmodel.cpp:628 rulesmodel.cpp:655 rulesmodel.cpp:683 rulesmodel.cpp:689
 #: rulesmodel.cpp:701 rulesmodel.cpp:706 rulesmodel.cpp:711 rulesmodel.cpp:716
-#: rulesmodel.cpp:722 rulesmodel.cpp:727
+#: rulesmodel.cpp:722 rulesmodel.cpp:727 rulesmodel.cpp:732
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "रूपम् & निराकरणम्"
@@ -586,12 +586,17 @@ msgstr "अनुकूली समन्वयन"
 msgid "Allow tearing"
 msgstr "विदारणं अनुमन्यताम्"
 
-#: rulesmodel.cpp:778
+#: rulesmodel.cpp:732
+#, kde-format
+msgid "Hide from Screencast"
+msgstr ""
+
+#: rulesmodel.cpp:784
 #, kde-format
 msgid "Window class not available"
 msgstr "विण्डो क्लास् उपलब्धं नास्ति"
 
-#: rulesmodel.cpp:779
+#: rulesmodel.cpp:785
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -605,190 +610,190 @@ msgstr ""
 "स्थाने विण्डो शीर्षकम् इत्यादीनां अन्यगुणानां मेलनं कर्तुं प्रयतस्व।<nl/><nl/>कृपया अनुप्रयोगस्य "
 "विकासकेभ्यः एतत् दोषं निवेदयितुं विचारयन्तु।"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "All window types"
 msgstr "सर्वे विण्डो प्रकाराः"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Normal window"
 msgstr "सामान्यं विण्डो"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:821
 #, kde-format
 msgid "Dialog window"
 msgstr "संवादविण्डो"
 
-#: rulesmodel.cpp:816
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Utility window"
 msgstr "उपयोगिता विण्डो"
 
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "Dock (panel)"
 msgstr "गोदी (पैनल)"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:824
 #, kde-format
 msgid "Toolbar"
 msgstr "टूलबार"
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:825
 #, kde-format
 msgid "Torn-off menu"
 msgstr "विदीर्णं मेनू"
 
-#: rulesmodel.cpp:820
+#: rulesmodel.cpp:826
 #, kde-format
 msgid "Splash screen"
 msgstr "स्पलैश स्क्रीन"
 
-#: rulesmodel.cpp:821 rulesmodel.cpp:922
+#: rulesmodel.cpp:827 rulesmodel.cpp:928
 #, kde-format
 msgid "Desktop"
 msgstr "डेस्कटॉप"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:829
 #, kde-format
 msgid "Standalone menubar"
 msgstr "स्वतन्त्र मेनूबार"
 
-#: rulesmodel.cpp:824 rulesmodel.cpp:930
+#: rulesmodel.cpp:830 rulesmodel.cpp:936
 #, kde-format
 msgid "On-screen display"
 msgstr "पर्दायां प्रदर्शनम्"
 
-#: rulesmodel.cpp:834
+#: rulesmodel.cpp:840
 #, kde-format
 msgid "All desktops"
 msgstr "सर्वे डेस्कटॉप्"
 
-#: rulesmodel.cpp:836
+#: rulesmodel.cpp:842
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "सर्वेषु डेस्कटॉप् मध्ये विण्डो उपलब्धं कुर्वन्तु"
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:861
 #, kde-format
 msgid "All activities"
 msgstr "सर्वाणि कार्याणि"
 
-#: rulesmodel.cpp:857
+#: rulesmodel.cpp:863
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "सर्वेषु कार्येषु विण्डो उपलब्धं कुर्वन्तु"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "Default"
 msgstr "मूलभूतम्‌"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "No placement"
 msgstr "न स्थापनम्"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:886
 #, kde-format
 msgid "Minimal overlapping"
 msgstr "न्यूनतमं आच्छादनम्"
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:887
 #, kde-format
 msgid "Maximized"
 msgstr "अधिकतमं कृतम्"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:888
 #, kde-format
 msgid "Centered"
 msgstr "केन्द्रित"
 
-#: rulesmodel.cpp:883
+#: rulesmodel.cpp:889
 #, kde-format
 msgid "Random"
 msgstr "यदृच्छासङ्ख्या"
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "In top-left corner"
 msgstr "उपरि-वामकोणे"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:891
 #, kde-format
 msgid "Under mouse"
 msgstr "मूषकस्य अधः"
 
-#: rulesmodel.cpp:886
+#: rulesmodel.cpp:892
 #, kde-format
 msgid "On main window"
 msgstr "मुख्यविण्डो इत्यत्र"
 
-#: rulesmodel.cpp:893
+#: rulesmodel.cpp:899
 #, kde-format
 msgid "None"
 msgstr "न कश्चित्"
 
-#: rulesmodel.cpp:894
+#: rulesmodel.cpp:900
 #, kde-format
 msgid "Low"
 msgstr "न्यूनम्‌"
 
-#: rulesmodel.cpp:895 rulesmodel.cpp:924
+#: rulesmodel.cpp:901 rulesmodel.cpp:930
 #, kde-format
 msgid "Normal"
 msgstr "सामान्य"
 
-#: rulesmodel.cpp:896
+#: rulesmodel.cpp:902
 #, kde-format
 msgid "High"
 msgstr "उच्चैः"
 
-#: rulesmodel.cpp:897
+#: rulesmodel.cpp:903
 #, kde-format
 msgid "Extreme"
 msgstr "अति"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Below"
 msgstr "अधः"
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Above"
 msgstr "उपरि"
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:932
 #, kde-format
 msgid "Notification"
 msgstr "अधिसूचना"
 
-#: rulesmodel.cpp:928
+#: rulesmodel.cpp:934
 #, kde-format
 msgid "Popup"
 msgstr "पॉपअप"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:935
 #, kde-format
 msgid "Critical notification"
 msgstr "समीक्षात्मक सूचना"
 
-#: rulesmodel.cpp:931
+#: rulesmodel.cpp:937
 #, kde-format
 msgid "Overlay"
 msgstr "आच्छादनम्"
 
-#: rulesmodel.cpp:956
+#: rulesmodel.cpp:962
 #, kde-format
 msgid "Unmanaged window"
 msgstr "अप्रबन्धितविण्डो"
 
-#: rulesmodel.cpp:957
+#: rulesmodel.cpp:963
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "विण्डो गुणाः ज्ञातुं न शक्तवान् । विण्डो KWin द्वारा न प्रबन्ध्यते ।"

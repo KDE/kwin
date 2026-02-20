@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-19 00:49+0000\n"
+"POT-Creation-Date: 2026-02-20 00:47+0000\n"
 "PO-Revision-Date: 2024-10-21 13:14+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -77,77 +77,82 @@ msgstr "KDE Wayland-kompositør"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Skrivebordseffekter blev genstartet pga. grafiknulstilling"
 
-#: core/iccprofile.cpp:334
+#: core/iccprofile.cpp:390
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr ""
 
-#: core/iccprofile.cpp:336
+#: core/iccprofile.cpp:392
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr ""
 
-#: core/iccprofile.cpp:340
+#: core/iccprofile.cpp:396
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr ""
 
-#: core/iccprofile.cpp:343
+#: core/iccprofile.cpp:399
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
 
-#: core/iccprofile.cpp:346
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
 
-#: core/iccprofile.cpp:359
+#: core/iccprofile.cpp:415
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr ""
 
-#: core/iccprofile.cpp:362
+#: core/iccprofile.cpp:418
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr ""
 
-#: core/iccprofile.cpp:375
+#: core/iccprofile.cpp:431
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
 
-#: core/iccprofile.cpp:380
+#: core/iccprofile.cpp:436
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
 
-#: core/iccprofile.cpp:393
+#: core/iccprofile.cpp:449
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr ""
 
-#: core/iccprofile.cpp:408
+#: core/iccprofile.cpp:464
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 
-#: core/iccprofile.cpp:417
+#: core/iccprofile.cpp:473
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr ""
 
-#: core/iccprofile.cpp:433
+#: core/iccprofile.cpp:489
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr ""
 
-#: core/iccprofile.cpp:472
+#: core/iccprofile.cpp:527
 #, kde-format
 msgid "Color profile is missing TRC tags"
+msgstr ""
+
+#: core/iccprofile.cpp:534
+#, kde-format
+msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr ""
 
 #: debug_console.cpp:86
@@ -1415,6 +1420,82 @@ msgstr "Uden kant"
 msgid "Do not show again"
 msgstr ""
 
+#: helpers/killer/killdialog.cpp:37
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para><emphasis strong='true'>Terminating this application will close all "
+#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+msgctxt "@info"
+msgid ""
+"<para><application>%1</application> is not responding. Do you want to "
+"terminate this application?</para><para><emphasis strong='true'>Terminating "
+"this application will close all of its windows. Any unsaved data will be "
+"lost.</emphasis></para>"
+msgstr ""
+"<para><emphasis strong='true'>Afslutning af denne applikation vil lukke alle "
+"dens vindue. Alt ugemt data vil gå tabt.</emphasis></para>"
+
+#: helpers/killer/killdialog.cpp:41
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para><emphasis strong='true'>Terminating this application will close all "
+#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+msgctxt "@info \"window title\" of application name is not responding."
+msgid ""
+"<para>\"%1\" of <application>%2</application> is not responding. Do you want "
+"to terminate this application?</para><para><emphasis "
+"strong='true'>Terminating this application will close all of its windows. "
+"Any unsaved data will be lost.</emphasis></para>"
+msgstr ""
+"<para><emphasis strong='true'>Afslutning af denne applikation vil lukke alle "
+"dens vindue. Alt ugemt data vil gå tabt.</emphasis></para>"
+
+#: helpers/killer/killdialog.cpp:66
+#, fuzzy, kde-format
+#| msgctxt "@action:button Terminate app"
+#| msgid "&Terminate %1"
+msgid "Terminating %1…"
+msgstr "&Afslut %1"
+
+#: helpers/killer/killdialog.cpp:69
+#, kde-format
+msgctxt "@action:button Terminate app"
+msgid "&Terminate %1"
+msgstr "&Afslut %1"
+
+#: helpers/killer/killdialog.cpp:72
+#, kde-format
+msgctxt "@action:button Wait for frozen app to maybe respond again"
+msgid "&Wait Longer"
+msgstr "&Vent længere"
+
+#: helpers/killer/killdialog.cpp:84
+#, kde-format
+msgctxt "@info"
+msgid "Process ID: %1"
+msgstr "Proces-ID: %1"
+
+#: helpers/killer/killdialog.cpp:91
+#, kde-format
+msgctxt "@info"
+msgid "Host name: %1"
+msgstr "Vværtsnavn: %1"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, KillDialog)
+#: helpers/killer/killdialog.ui:14
+#, kde-format
+msgctxt "@title:window"
+msgid "Not Responding"
+msgstr "Svarer ikke"
+
+#. i18n: ectx: property (title), widget (KCollapsibleGroupBox, kcollapsiblegroupbox)
+#: helpers/killer/killdialog.ui:53
+#, kde-format
+msgid "&Details"
+msgstr ""
+
 #: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "PID of the application to terminate"
@@ -1454,68 +1535,6 @@ msgstr "Navn på programmet som skal afsluttes"
 #, kde-format
 msgid "name"
 msgstr "navn"
-
-#: helpers/killer/killer.cpp:197
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
-msgctxt "@info"
-msgid ""
-"<para><application>%1</application> is not responding. Do you want to "
-"terminate this application?</para><para><emphasis strong='true'>Terminating "
-"this application will close all of its windows. Any unsaved data will be "
-"lost.</emphasis></para>"
-msgstr ""
-"<para><emphasis strong='true'>Afslutning af denne applikation vil lukke alle "
-"dens vindue. Alt ugemt data vil gå tabt.</emphasis></para>"
-
-#: helpers/killer/killer.cpp:201
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
-msgctxt "@info \"window title\" of application name is not responding."
-msgid ""
-"<para>\"%1\" of <application>%2</application> is not responding. Do you want "
-"to terminate this application?</para><para><emphasis "
-"strong='true'>Terminating this application will close all of its windows. "
-"Any unsaved data will be lost.</emphasis></para>"
-msgstr ""
-"<para><emphasis strong='true'>Afslutning af denne applikation vil lukke alle "
-"dens vindue. Alt ugemt data vil gå tabt.</emphasis></para>"
-
-#: helpers/killer/killer.cpp:205
-#, kde-format
-msgctxt "@action:button Terminate app"
-msgid "&Terminate %1"
-msgstr "&Afslut %1"
-
-#: helpers/killer/killer.cpp:206
-#, kde-format
-msgctxt "@action:button Wait for frozen app to maybe respond again"
-msgid "&Wait Longer"
-msgstr "&Vent længere"
-
-#: helpers/killer/killer.cpp:215
-#, kde-format
-msgctxt "@title:window"
-msgid "Not Responding"
-msgstr "Svarer ikke"
-
-#: helpers/killer/killer.cpp:231
-#, kde-format
-msgctxt "@info"
-msgid "Process ID: %1"
-msgstr "Proces-ID: %1"
-
-#: helpers/killer/killer.cpp:233
-#, kde-format
-msgctxt "@info"
-msgid "Host name: %1"
-msgstr "Vværtsnavn: %1"
 
 #: keyboard_layout.cpp:46 keyboard_layout.cpp:56 keyboard_layout.cpp:140
 #, kde-format
@@ -3628,6 +3647,19 @@ msgstr "Tillad flimmer"
 #, kde-format
 msgid "Tearing rule type"
 msgstr "Regeltype for flimmer"
+
+#. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:467
+#, kde-format
+msgid "Hide from screencast"
+msgstr ""
+
+#. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:471
+#, fuzzy, kde-format
+#| msgid "Fullscreen rule type"
+msgid "Hide from screencast rule type"
+msgstr "Type af fuldskærmsregel"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-23 00:45+0000\n"
+"POT-Creation-Date: 2026-02-20 00:47+0000\n"
 "PO-Revision-Date: 2010-07-07 14:59+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -292,7 +292,7 @@ msgstr "ค่าความทึบแ&สงหากทำงานอย�
 msgid "Screen"
 msgstr "หน้าจอเริ่มทำงาน"
 
-#: rulesmodel.cpp:518 rulesmodel.cpp:927
+#: rulesmodel.cpp:518 rulesmodel.cpp:933
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgid "Fullscreen"
@@ -424,7 +424,7 @@ msgstr ""
 #: rulesmodel.cpp:606 rulesmodel.cpp:611 rulesmodel.cpp:617 rulesmodel.cpp:622
 #: rulesmodel.cpp:628 rulesmodel.cpp:655 rulesmodel.cpp:683 rulesmodel.cpp:689
 #: rulesmodel.cpp:701 rulesmodel.cpp:706 rulesmodel.cpp:711 rulesmodel.cpp:716
-#: rulesmodel.cpp:722 rulesmodel.cpp:727
+#: rulesmodel.cpp:722 rulesmodel.cpp:727 rulesmodel.cpp:732
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr ""
@@ -564,13 +564,18 @@ msgstr ""
 msgid "Allow tearing"
 msgstr ""
 
-#: rulesmodel.cpp:778
+#: rulesmodel.cpp:732
+#, kde-format
+msgid "Hide from Screencast"
+msgstr ""
+
+#: rulesmodel.cpp:784
 #, fuzzy, kde-format
 #| msgid "Window &class (application type):"
 msgid "Window class not available"
 msgstr "&คลาสของหน้าต่าง (ประเภทของโปรแกรม):"
 
-#: rulesmodel.cpp:779
+#: rulesmodel.cpp:785
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -580,209 +585,209 @@ msgid ""
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:819
 #, fuzzy, kde-format
 #| msgid "Window &types:"
 msgid "All window types"
 msgstr "&ชนิดของหน้าต่าง:"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:820
 #, fuzzy, kde-format
 #| msgid "Normal Window"
 msgid "Normal window"
 msgstr "หน้าต่างปกติ"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:821
 #, fuzzy, kde-format
 #| msgid "Dialog Window"
 msgid "Dialog window"
 msgstr "กล่องตอบโต้"
 
-#: rulesmodel.cpp:816
+#: rulesmodel.cpp:822
 #, fuzzy, kde-format
 #| msgid "Utility Window"
 msgid "Utility window"
 msgstr "หน้าต่างอรรถประโยชน์"
 
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "Dock (panel)"
 msgstr "แถบพาเนล"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:824
 #, kde-format
 msgid "Toolbar"
 msgstr "แถบเครื่องมือ"
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:825
 #, fuzzy, kde-format
 #| msgid "Torn-Off Menu"
 msgid "Torn-off menu"
 msgstr "เมนูที่แยกออกมาได้"
 
-#: rulesmodel.cpp:820
+#: rulesmodel.cpp:826
 #, fuzzy, kde-format
 #| msgid "Splash Screen"
 msgid "Splash screen"
 msgstr "หน้าจอเริ่มทำงาน"
 
-#: rulesmodel.cpp:821 rulesmodel.cpp:922
+#: rulesmodel.cpp:827 rulesmodel.cpp:928
 #, kde-format
 msgid "Desktop"
 msgstr "พื้นที่ทำงาน"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:829
 #, fuzzy, kde-format
 #| msgid "Standalone Menubar"
 msgid "Standalone menubar"
 msgstr "แถบรายการเมนูเดี่ยว"
 
-#: rulesmodel.cpp:824 rulesmodel.cpp:930
+#: rulesmodel.cpp:830 rulesmodel.cpp:936
 #, kde-format
 msgid "On-screen display"
 msgstr ""
 
-#: rulesmodel.cpp:834
+#: rulesmodel.cpp:840
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "All desktops"
 msgstr "พื้นที่ทำงานทั้งหมด"
 
-#: rulesmodel.cpp:836
+#: rulesmodel.cpp:842
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr ""
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:861
 #, fuzzy, kde-format
 #| msgid "A&ctive opacity in %"
 msgid "All activities"
 msgstr "ค่าความทึบแ&สงหากทำงานอยู่ (เป็น %)"
 
-#: rulesmodel.cpp:857
+#: rulesmodel.cpp:863
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr ""
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "Default"
 msgstr "ค่าปริยาย"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:885
 #, fuzzy, kde-format
 #| msgid "No Placement"
 msgid "No placement"
 msgstr "ไม่ต้องย้ายตำแหน่ง"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:886
 #, kde-format
 msgid "Minimal overlapping"
 msgstr ""
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:887
 #, fuzzy, kde-format
 #| msgid "Maximizing"
 msgid "Maximized"
 msgstr "ขยายใหญ่สุด"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:888
 #, kde-format
 msgid "Centered"
 msgstr "จัดกึ่งกลาง"
 
-#: rulesmodel.cpp:883
+#: rulesmodel.cpp:889
 #, kde-format
 msgid "Random"
 msgstr "สุ่ม"
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:890
 #, fuzzy, kde-format
 #| msgid "Top-Left Corner"
 msgid "In top-left corner"
 msgstr "มุมบนซ้าย"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:891
 #, fuzzy, kde-format
 #| msgid "Under Mouse"
 msgid "Under mouse"
 msgstr "ใต้เมาส์"
 
-#: rulesmodel.cpp:886
+#: rulesmodel.cpp:892
 #, fuzzy, kde-format
 #| msgid "On Main Window"
 msgid "On main window"
 msgstr "บนหน้าต่างหลัก"
 
-#: rulesmodel.cpp:893
+#: rulesmodel.cpp:899
 #, fuzzy, kde-format
 #| msgctxt "no focus stealing prevention"
 #| msgid "None"
 msgid "None"
 msgstr "ไม่ป้องกัน"
 
-#: rulesmodel.cpp:894
+#: rulesmodel.cpp:900
 #, kde-format
 msgid "Low"
 msgstr "ต่ำ"
 
-#: rulesmodel.cpp:895 rulesmodel.cpp:924
+#: rulesmodel.cpp:901 rulesmodel.cpp:930
 #, kde-format
 msgid "Normal"
 msgstr "ปกติ"
 
-#: rulesmodel.cpp:896
+#: rulesmodel.cpp:902
 #, kde-format
 msgid "High"
 msgstr "สูง"
 
-#: rulesmodel.cpp:897
+#: rulesmodel.cpp:903
 #, kde-format
 msgid "Extreme"
 msgstr "เข้มงวดมาก"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Below"
 msgstr ""
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Above"
 msgstr ""
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:932
 #, fuzzy, kde-format
 #| msgid "&Position"
 msgid "Notification"
 msgstr "ตำแห&น่ง"
 
-#: rulesmodel.cpp:928
+#: rulesmodel.cpp:934
 #, kde-format
 msgid "Popup"
 msgstr ""
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:935
 #, fuzzy, kde-format
 #| msgid "&Position"
 msgid "Critical notification"
 msgstr "ตำแห&น่ง"
 
-#: rulesmodel.cpp:931
+#: rulesmodel.cpp:937
 #, kde-format
 msgid "Overlay"
 msgstr ""
 
-#: rulesmodel.cpp:956
+#: rulesmodel.cpp:962
 #, fuzzy, kde-format
 #| msgid "On Main Window"
 msgid "Unmanaged window"
 msgstr "บนหน้าต่างหลัก"
 
-#: rulesmodel.cpp:957
+#: rulesmodel.cpp:963
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-23 00:45+0000\n"
+"POT-Creation-Date: 2026-02-20 00:47+0000\n"
 "PO-Revision-Date: 2020-10-25 18:44+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -288,7 +288,7 @@ msgstr "Kõik tegevused"
 msgid "Screen"
 msgstr "Ekraan"
 
-#: rulesmodel.cpp:518 rulesmodel.cpp:927
+#: rulesmodel.cpp:518 rulesmodel.cpp:933
 #, kde-format
 msgid "Fullscreen"
 msgstr "Täisekraan"
@@ -422,7 +422,7 @@ msgstr "Tiitliriba ja raamita"
 #: rulesmodel.cpp:606 rulesmodel.cpp:611 rulesmodel.cpp:617 rulesmodel.cpp:622
 #: rulesmodel.cpp:628 rulesmodel.cpp:655 rulesmodel.cpp:683 rulesmodel.cpp:689
 #: rulesmodel.cpp:701 rulesmodel.cpp:706 rulesmodel.cpp:711 rulesmodel.cpp:716
-#: rulesmodel.cpp:722 rulesmodel.cpp:727
+#: rulesmodel.cpp:722 rulesmodel.cpp:727 rulesmodel.cpp:732
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Välimus ja parandused"
@@ -555,13 +555,18 @@ msgstr ""
 msgid "Allow tearing"
 msgstr ""
 
-#: rulesmodel.cpp:778
+#: rulesmodel.cpp:732
+#, kde-format
+msgid "Hide from Screencast"
+msgstr ""
+
+#: rulesmodel.cpp:784
 #, fuzzy, kde-format
 #| msgid "Window class (application)"
 msgid "Window class not available"
 msgstr "Akna klass (rakendus)"
 
-#: rulesmodel.cpp:779
+#: rulesmodel.cpp:785
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -571,207 +576,207 @@ msgid ""
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:819
 #, fuzzy, kde-format
 #| msgid "Window types"
 msgid "All window types"
 msgstr "Akna tüübid"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:820
 #, fuzzy, kde-format
 #| msgid "Normal Window"
 msgid "Normal window"
 msgstr "Tavaline aken"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:821
 #, fuzzy, kde-format
 #| msgid "Dialog Window"
 msgid "Dialog window"
 msgstr "Dialoogiaken"
 
-#: rulesmodel.cpp:816
+#: rulesmodel.cpp:822
 #, fuzzy, kde-format
 #| msgid "Utility Window"
 msgid "Utility window"
 msgstr "Utiliidi aken"
 
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Dokk (paneel)"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:824
 #, kde-format
 msgid "Toolbar"
 msgstr "Tööriistariba"
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:825
 #, fuzzy, kde-format
 #| msgid "Torn-Off Menu"
 msgid "Torn-off menu"
 msgstr "Eraldatud menüü"
 
-#: rulesmodel.cpp:820
+#: rulesmodel.cpp:826
 #, fuzzy, kde-format
 #| msgid "Splash Screen"
 msgid "Splash screen"
 msgstr "Käivitusekraan"
 
-#: rulesmodel.cpp:821 rulesmodel.cpp:922
+#: rulesmodel.cpp:827 rulesmodel.cpp:928
 #, kde-format
 msgid "Desktop"
 msgstr "Töölaud"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:829
 #, fuzzy, kde-format
 #| msgid "Standalone Menubar"
 msgid "Standalone menubar"
 msgstr "Eraldi menüüriba"
 
-#: rulesmodel.cpp:824 rulesmodel.cpp:930
+#: rulesmodel.cpp:830 rulesmodel.cpp:936
 #, kde-format
 msgid "On-screen display"
 msgstr ""
 
-#: rulesmodel.cpp:834
+#: rulesmodel.cpp:840
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "All desktops"
 msgstr "Kõik töölauad"
 
-#: rulesmodel.cpp:836
+#: rulesmodel.cpp:842
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr ""
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:861
 #, fuzzy, kde-format
 #| msgid "All Activities"
 msgid "All activities"
 msgstr "Kõik tegevused"
 
-#: rulesmodel.cpp:857
+#: rulesmodel.cpp:863
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr ""
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "Default"
 msgstr "Vaikimisi"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:885
 #, fuzzy, kde-format
 #| msgid "No Placement"
 msgid "No placement"
 msgstr "Paigutus puudub"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:886
 #, fuzzy, kde-format
 #| msgid "Minimal Overlapping"
 msgid "Minimal overlapping"
 msgstr "Minimaalne kattuvus"
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:887
 #, kde-format
 msgid "Maximized"
 msgstr "Maksimeeritud"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:888
 #, kde-format
 msgid "Centered"
 msgstr "Keskjoondatud"
 
-#: rulesmodel.cpp:883
+#: rulesmodel.cpp:889
 #, kde-format
 msgid "Random"
 msgstr "Juhuslik"
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:890
 #, fuzzy, kde-format
 #| msgid "In Top-Left Corner"
 msgid "In top-left corner"
 msgstr "Üleval vasakus nurgas"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:891
 #, fuzzy, kde-format
 #| msgid "Under Mouse"
 msgid "Under mouse"
 msgstr "Hiire all"
 
-#: rulesmodel.cpp:886
+#: rulesmodel.cpp:892
 #, fuzzy, kde-format
 #| msgid "On Main Window"
 msgid "On main window"
 msgstr "Peaaknas"
 
-#: rulesmodel.cpp:893
+#: rulesmodel.cpp:899
 #, kde-format
 msgid "None"
 msgstr "Puudub"
 
-#: rulesmodel.cpp:894
+#: rulesmodel.cpp:900
 #, kde-format
 msgid "Low"
 msgstr "Madal"
 
-#: rulesmodel.cpp:895 rulesmodel.cpp:924
+#: rulesmodel.cpp:901 rulesmodel.cpp:930
 #, kde-format
 msgid "Normal"
 msgstr "Normaalne"
 
-#: rulesmodel.cpp:896
+#: rulesmodel.cpp:902
 #, kde-format
 msgid "High"
 msgstr "Kõrge"
 
-#: rulesmodel.cpp:897
+#: rulesmodel.cpp:903
 #, kde-format
 msgid "Extreme"
 msgstr "Äärmuslik"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Below"
 msgstr ""
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Above"
 msgstr ""
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:932
 #, fuzzy, kde-format
 #| msgid "Position"
 msgid "Notification"
 msgstr "Asukoht"
 
-#: rulesmodel.cpp:928
+#: rulesmodel.cpp:934
 #, kde-format
 msgid "Popup"
 msgstr ""
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:935
 #, fuzzy, kde-format
 #| msgid "Position"
 msgid "Critical notification"
 msgstr "Asukoht"
 
-#: rulesmodel.cpp:931
+#: rulesmodel.cpp:937
 #, kde-format
 msgid "Overlay"
 msgstr ""
 
-#: rulesmodel.cpp:956
+#: rulesmodel.cpp:962
 #, fuzzy, kde-format
 #| msgid "Unmanaged Window"
 msgid "Unmanaged window"
 msgstr "Haldamata aken"
 
-#: rulesmodel.cpp:957
+#: rulesmodel.cpp:963
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

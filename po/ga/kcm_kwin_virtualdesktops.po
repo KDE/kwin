@@ -28,16 +28,12 @@ msgid "Your emails"
 msgstr "kscanne@gmail.com"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "Desktop %1"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
-msgstr[0] "Deasc %1"
-msgstr[1] "Deasc %1"
-msgstr[2] "Deasc %1"
-msgstr[3] "Deasc %1"
-msgstr[4] "Deasc %1"
+msgstr[0] ""
+msgstr[1] ""
 
 #: desktopsmodel.cpp:479
 #, kde-format
@@ -61,11 +57,10 @@ msgid "Rows:"
 msgstr ""
 
 #: ui/main.qml:54
-#, fuzzy, kde-format
-#| msgid "Desktops"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr "Deasca"
+msgstr ""
 
 #: ui/main.qml:90
 #, kde-format
@@ -109,10 +104,9 @@ msgid "Options:"
 msgstr ""
 
 #: ui/main.qml:211
-#, fuzzy, kde-format
-#| msgid "Desktop navigation wraps around"
+#, kde-format
 msgid "Navigation wraps around"
-msgstr "Timfhilleann nascleanúint na ndeasc"
+msgstr ""
 
 #: ui/main.qml:229
 #, kde-format
@@ -133,126 +127,3 @@ msgstr ""
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Taispeáin táscairí do leagan amach na deisce"
-
-#, fuzzy
-#~| msgid "Desktops"
-#~ msgid "Virtual Desktops"
-#~ msgstr "Deasca"
-
-#~ msgid "Desktop %1:"
-#~ msgstr "Deasc %1:"
-
-#~ msgid "Here you can enter the name for desktop %1"
-#~ msgstr "Anseo is féidir leat ainm a thabhairt ar dheasc %1"
-
-#~ msgid ""
-#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
-#~ "virtual desktops you want and how these should be labeled."
-#~ msgstr ""
-#~ "<h1>Deasca Iomadúla</h1>Sa mhodúl seo is féidir leat líon na ndeasc "
-#~ "fíorúil a chumrú agus conas ba chóir iad seo a lipéadú."
-
-#~ msgid "Switch to Next Desktop"
-#~ msgstr "Téigh go dtí an Chéad Deasc Eile"
-
-#~ msgid "Switch to Previous Desktop"
-#~ msgstr "Téigh go dtí an Deasc roimhe seo"
-
-#~ msgid "Switch One Desktop to the Right"
-#~ msgstr "Téigh go dtí an Deasc ar dheis"
-
-#~ msgid "Switch One Desktop to the Left"
-#~ msgstr "Téigh go dtí an Deasc ar chlé"
-
-#~ msgid "Switch One Desktop Up"
-#~ msgstr "Téigh Suas Deasc Amháin"
-
-#~ msgid "Switch One Desktop Down"
-#~ msgstr "Téigh Síos Deasc Amháin"
-
-#~ msgid "Desktop Switching"
-#~ msgstr "Malairt na Deisce"
-
-#~ msgid "Switch to Desktop %1"
-#~ msgstr "Téigh go Deasc %1"
-
-#~ msgid "No Animation"
-#~ msgstr "Gan Bheochan"
-
-#~ msgid "No suitable Shortcut for Desktop %1 found"
-#~ msgstr "Níor aimsíodh aon Aicearra oiriúnach do Dheasc %1"
-
-#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
-#~ msgstr "Sannadh Aicearra comhchoiteann \"%1\" do Dheasc %2"
-
-#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
-#~ msgstr ""
-#~ "Coinbhleacht idir aicearraí: Níorbh fhéidir Aicearra %1 a shannadh do "
-#~ "Dheasc %2"
-
-#~ msgid "Layout"
-#~ msgstr "Leagan Amach"
-
-#~ msgid ""
-#~ "Here you can set how many virtual desktops you want on your KDE desktop."
-#~ msgstr "Anseo is féidir leat líon na ndeasc fíorúil a shocrú."
-
-#, fuzzy
-#~| msgid "Number of desktops:"
-#~ msgid "&Number of desktops:"
-#~ msgstr "Líon na ndeasc:"
-
-#, fuzzy
-#~| msgid "Number of rows:"
-#~ msgid "N&umber of rows:"
-#~ msgstr "Líon na rónna:"
-
-#~ msgid "Desktop Names"
-#~ msgstr "Ainmneacha na nDeasc"
-
-#~ msgid "Switching"
-#~ msgstr "Malartú"
-
-#~ msgid ""
-#~ "Enable this option if you want keyboard or active desktop border "
-#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
-#~ "of the new desktop."
-#~ msgstr ""
-#~ "Cumasaigh an rogha seo más mian leat dul go dtí ciumhais eile na deisce "
-#~ "nuaí nuair a rachaidh tú thar chiumhais na deisce reatha agus "
-#~ "nascleanúint trí imlínte gníomhacha nó tríd an mhéarchlár in éifeacht."
-
-#~ msgid "Desktop Effect Animation"
-#~ msgstr "Beochan Maisíochtaí Deisce"
-
-#~ msgid "Animation:"
-#~ msgstr "Beochan:"
-
-#~ msgid "Desktop Switch On-Screen Display"
-#~ msgstr "Athrú Deasca: Taispeáint Ar Scáileán"
-
-#~ msgid "Duration:"
-#~ msgstr "Aga:"
-
-#~ msgid " msec"
-#~ msgstr " ms"
-
-#~ msgid ""
-#~ "Enabling this option will show a small preview of the desktop layout "
-#~ "indicating the selected desktop."
-#~ msgstr ""
-#~ "Leis an rogha seo, taispeánfar réamhamharc beag ar leagan amach na deisce "
-#~ "a léiríonn an deasc roghnaithe."
-
-#~ msgid "Shortcuts"
-#~ msgstr "Aicearraí"
-
-#~ msgid "Show shortcuts for all possible desktops"
-#~ msgstr "Taispeáin aicearraí do gach deasc atá ar fáil"
-
-#~ msgid "Different widgets for each desktop"
-#~ msgstr "Giuirléidí éagsúla ar gach deasc"
-
-#~ msgid "Mouse wheel over desktop background switches desktop"
-#~ msgstr ""
-#~ "Athraigh an deasc trí roth na luiche a úsáid os cionn chúlra na deisce"
