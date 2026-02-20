@@ -701,7 +701,7 @@
            <string>The time in milliseconds to wait before showing the task switcher.</string>
           </property>
           <property name="text">
-           <string>Show delay:</string>
+           <string>Delay:</string>
           </property>
           <property name="buddy">
            <cstring>kcfg_DelayTime</cstring>
