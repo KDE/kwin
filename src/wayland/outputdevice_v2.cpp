@@ -934,10 +934,10 @@ void OutputDeviceV2Interface::updateIccProfilePath()
 
 void OutputDeviceV2Interface::updateBrightnessMetadata()
 {
-    if (d->m_maxPeakBrightness != d->m_handle->maxPeakBrightness() || d->m_maxAverageBrightness != d->m_handle->maxAverageBrightness() || d->m_minBrightness != d->m_handle->minBrightness()) {
-        d->m_maxPeakBrightness = d->m_handle->maxPeakBrightness();
-        d->m_maxAverageBrightness = d->m_handle->maxAverageBrightness();
-        d->m_minBrightness = d->m_handle->minBrightness();
+    if (d->m_maxPeakBrightness != d->m_handle->advertisedMaxPeakBrightness() || d->m_maxAverageBrightness != d->m_handle->advertisedMaxAverageBrightness() || d->m_minBrightness != d->m_handle->advertisedMinBrightness()) {
+        d->m_maxPeakBrightness = d->m_handle->advertisedMaxPeakBrightness();
+        d->m_maxAverageBrightness = d->m_handle->advertisedMaxAverageBrightness();
+        d->m_minBrightness = d->m_handle->advertisedMinBrightness();
         const auto clientResources = d->resourceMap();
         for (auto resource : clientResources) {
             d->sendBrightnessMetadata(resource);

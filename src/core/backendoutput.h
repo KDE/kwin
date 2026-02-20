@@ -242,9 +242,12 @@ public:
 
     virtual void setChannelFactors(const QVector3D &rgb);
 
-    std::optional<double> maxPeakBrightness() const;
-    std::optional<double> maxAverageBrightness() const;
-    double minBrightness() const;
+    // these values are advertised by the output,
+    // and not configurable by the user
+    std::optional<double> advertisedMaxPeakBrightness() const;
+    std::optional<double> advertisedMaxAverageBrightness() const;
+    double advertisedMinBrightness() const;
+    // these are the configured values from the user
     std::optional<double> maxPeakBrightnessOverride() const;
     std::optional<double> maxAverageBrightnessOverride() const;
     std::optional<double> minBrightnessOverride() const;
