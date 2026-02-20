@@ -73,26 +73,6 @@
 namespace KWin
 {
 #if KWIN_BUILD_X11
-static QByteArray readWindowProperty(xcb_window_t win, xcb_atom_t atom, xcb_atom_t type, int format)
-{
-    if (win == XCB_WINDOW_NONE) {
-        return QByteArray();
-    }
-    uint32_t len = 32768;
-    for (;;) {
-        Xcb::Property prop(false, win, atom, XCB_ATOM_ANY, 0, len);
-        if (prop.isNull()) {
-            // get property failed
-            return QByteArray();
-        }
-        if (prop->bytes_after > 0) {
-            len *= 2;
-            continue;
-        }
-        return prop.toByteArray(format, type).value_or(QByteArray());
-    }
-}
-
 static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
 {
     auto c = kwinApp()->x11Connection();
@@ -795,18 +775,6 @@ void EffectsHandler::removeSupportProperty(const QByteArray &propertyName, Effec
     unregisterSupportProperty(atom);
 }
 #endif
-
-QByteArray EffectsHandler::readRootProperty(long atom, long type, int format) const
-{
-#if KWIN_BUILD_X11
-    if (!kwinApp()->x11Connection()) {
-        return QByteArray();
-    }
-    return readWindowProperty(kwinApp()->x11RootWindow(), atom, type, format);
-#else
-    return {};
-#endif
-}
 
 void EffectsHandler::activateWindow(EffectWindow *effectWindow)
 {

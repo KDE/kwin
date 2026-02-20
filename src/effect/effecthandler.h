@@ -485,8 +485,6 @@ public:
     QPainter *scenePainter();
     void reconfigure();
 
-    QByteArray readRootProperty(long atom, long type, int format) const;
-
 #if KWIN_BUILD_X11
     /**
      * @brief Announces support for the feature with the given name. If no other Effect
