@@ -3208,8 +3208,8 @@ void Window::setOnActivities(const QStringList &newActivitiesList)
     if (Workspace::self()->activities()->serviceStatus() != KActivities::Consumer::Running) {
         return;
     }
-    const auto allActivities = Workspace::self()->activities()->all();
-    const auto activityList = [&] {
+    const QStringList allActivities = Workspace::self()->activities()->all();
+    QStringList effectiveActivities = [&] {
         auto result = rules()->checkActivity(newActivitiesList);
 
         const auto it = std::remove_if(result.begin(), result.end(), [=](const QString &activity) {
@@ -3219,22 +3219,17 @@ void Window::setOnActivities(const QStringList &newActivitiesList)
         return result;
     }();
 
-    const auto allActivityExplicitlyRequested = activityList.isEmpty() || activityList.contains(Activities::nullUuid());
-    const auto allActivitiesCovered = activityList.size() > 1 && activityList.size() == allActivities.size();
-
+    const bool allActivityExplicitlyRequested = effectiveActivities.isEmpty() || effectiveActivities.contains(Activities::nullUuid());
+    const bool allActivitiesCovered = effectiveActivities.size() > 1 && effectiveActivities.size() == allActivities.size();
     if (allActivityExplicitlyRequested || allActivitiesCovered) {
-        if (!m_activityList.isEmpty()) {
-            m_activityList.clear();
-            doSetOnActivities(m_activityList);
-        }
-    } else {
-        if (m_activityList != activityList) {
-            m_activityList = activityList;
-            doSetOnActivities(m_activityList);
-        }
+        effectiveActivities = QStringList();
     }
 
-    updateActivities(false);
+    if (m_activityList != effectiveActivities) {
+        m_activityList = effectiveActivities;
+        doSetOnActivities(m_activityList);
+        updateActivities(false);
+    }
 #endif
 }
 
