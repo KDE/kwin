@@ -27,6 +27,7 @@
 
 #if KWIN_BUILD_X11
 #include "utils/xcbutils.h"
+#include "x11window.h"
 #endif
 
 #include <QGuiApplication>
@@ -268,20 +269,24 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
 
 #if KWIN_BUILD_X11
     if (net_wm_blur_region != XCB_ATOM_NONE) {
-        const QByteArray value = w->readProperty(net_wm_blur_region, XCB_ATOM_CARDINAL, 32);
-        Region region;
-        if (value.size() > 0 && !(value.size() % (4 * sizeof(uint32_t)))) {
-            const uint32_t *cardinals = reinterpret_cast<const uint32_t *>(value.constData());
-            for (unsigned int i = 0; i < value.size() / sizeof(uint32_t);) {
-                int x = cardinals[i++];
-                int y = cardinals[i++];
-                int w = cardinals[i++];
-                int h = cardinals[i++];
-                region += Xcb::fromXNative(Rect(x, y, w, h)).toRect();
+        if (const auto x11Window = qobject_cast<X11Window *>(w->window())) {
+            Xcb::Property wmBlurRegionProperty(false, x11Window->window(), net_wm_blur_region, XCB_ATOM_CARDINAL, 0, 32768);
+            if (const auto cardinals = wmBlurRegionProperty.array<uint32_t>()) {
+                if (cardinals->size() == 0 || cardinals->size() == 1) {
+                    // It means blur background behind whole window.
+                    content = Region();
+                } else if (cardinals->size() % 4 == 0) {
+                    Region region;
+                    for (uint i = 0; i < cardinals->size();) {
+                        const int x = (*cardinals)[i++];
+                        const int y = (*cardinals)[i++];
+                        const int w = (*cardinals)[i++];
+                        const int h = (*cardinals)[i++];
+                        region += Xcb::fromXNative(Rect(x, y, w, h)).toRect();
+                    }
+                    content = region;
+                }
             }
-        }
-        if (!value.isNull()) {
-            content = region;
         }
     }
 #endif
