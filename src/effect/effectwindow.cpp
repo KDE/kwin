@@ -354,47 +354,6 @@ KDecoration3::Decoration *EffectWindow::decoration() const
     return d->m_window->decoration();
 }
 
-QByteArray EffectWindow::readProperty(long atom, long type, int format) const
-{
-#if KWIN_BUILD_X11
-    auto x11Window = qobject_cast<X11Window *>(d->m_window);
-    if (!x11Window) {
-        return QByteArray();
-    }
-    if (!kwinApp()->x11Connection()) {
-        return QByteArray();
-    }
-    uint32_t len = 32768;
-    for (;;) {
-        Xcb::Property prop(false, x11Window->window(), atom, XCB_ATOM_ANY, 0, len);
-        if (prop.isNull()) {
-            // get property failed
-            return QByteArray();
-        }
-        if (prop->bytes_after > 0) {
-            len *= 2;
-            continue;
-        }
-        return prop.toByteArray(format, type).value_or(QByteArray());
-    }
-#endif
-    return {};
-}
-
-void EffectWindow::deleteProperty(long int atom) const
-{
-#if KWIN_BUILD_X11
-    auto x11Window = qobject_cast<X11Window *>(d->m_window);
-    if (!x11Window) {
-        return;
-    }
-    if (!kwinApp()->x11Connection()) {
-        return;
-    }
-    xcb_delete_property(kwinApp()->x11Connection(), x11Window->window(), atom);
-#endif
-}
-
 EffectWindow *EffectWindow::findModal()
 {
     Window *modal = d->m_window->findModal();

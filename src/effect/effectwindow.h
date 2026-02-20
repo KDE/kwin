@@ -442,8 +442,6 @@ public:
      * @since 5.25
      */
     KDecoration3::Decoration *decoration() const;
-    QByteArray readProperty(long atom, long type, int format) const;
-    void deleteProperty(long atom) const;
 
     QString caption() const;
     QIcon icon() const;
