@@ -636,6 +636,11 @@ double BackendOutput::currentDimming() const
     return m_state.currentDimming;
 }
 
+double BackendOutput::maxPossibleArtificialHdrHeadroom() const
+{
+    return m_state.maxPossibleAritificalHdrHeadroom;
+}
+
 double BackendOutput::artificialHdrHeadroom() const
 {
     return m_state.artificialHdrHeadroom;
