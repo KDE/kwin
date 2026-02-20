@@ -17,7 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
 "3 : 4\n"
-"X-Generator: Lokalize 25.12.2\n"
 
 #: kwintabboxconfigform.cpp:80
 #, kde-format
@@ -25,11 +24,9 @@ msgid "KWin"
 msgstr "KWin"
 
 #: layoutpreview.cpp:133
-#, fuzzy, kde-format
-#| msgctxt "An example Desktop Name"
-#| msgid "Desktop 1"
+#, kde-format
 msgid "Show Desktop"
-msgstr "Deasc 1"
+msgstr ""
 
 #: layoutpreview.cpp:163
 #, kde-format
@@ -238,121 +235,3 @@ msgstr ""
 #, kde-format
 msgid "Show selected window"
 msgstr "Taispeáin an fhuinneog roghnaithe"
-
-#~ msgid "Outline selected window"
-#~ msgstr "Aibhsigh an fhuinneog roghnaithe"
-
-#~ msgid "Walk Through Windows"
-#~ msgstr "Céimnigh trí na Fuinneoga"
-
-#~ msgid "Walk Through Windows (Reverse)"
-#~ msgstr "Céimnigh trí na Fuinneoga (ag cúlú)"
-
-#~ msgid "Configure Layout"
-#~ msgstr "Cumraigh Leagan Amach"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Kevin Scannell"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "kscanne@gmail.com"
-
-#~ msgid "These settings are used by the \"Walk Through Windows\" actions."
-#~ msgstr ""
-#~ "Is iad na gníomhartha \"Céimigh trí na Fuinneoga\" a úsáideann na "
-#~ "socruithe seo."
-
-#~ msgid "Highlight selected window"
-#~ msgstr "Aibhsigh an fhuinneog roghnaithe"
-
-#~ msgid "Effect:"
-#~ msgstr "Maisíocht:"
-
-#~ msgid "Display list while switching"
-#~ msgstr "Taispeáin an liosta agus an fhuinneog á malairt"
-
-#~ msgctxt "Name for a window switcher layout showing live window thumbnails"
-#~ msgid "Thumbnails"
-#~ msgstr "Mionsamhlacha"
-
-#~ msgctxt "Name for a window switcher layout showing icon, name and desktop"
-#~ msgid "Informative"
-#~ msgstr "Faisnéiseach"
-
-#~ msgctxt "Name for a window switcher layout showing only icon and name"
-#~ msgid "Compact"
-#~ msgstr "Dlúth"
-
-#~ msgctxt "Name for a window switcher layout showing only the name"
-#~ msgid "Text"
-#~ msgstr "Téacs"
-
-#~ msgctxt "Name for a window switcher layout showing large icons"
-#~ msgid "Large Icons"
-#~ msgstr "Deilbhíní Móra"
-
-#~ msgctxt "Name for a window switcher layout showing small icons"
-#~ msgid "Small Icons"
-#~ msgstr "Deilbhíní Beaga"
-
-#~ msgid "No Effect"
-#~ msgstr "Gan Mhaisíocht"
-
-#~ msgid "Configure Layout..."
-#~ msgstr "Cumraigh Leagan Amach..."
-
-#~ msgid "Item Layout"
-#~ msgstr "Leagan Amach Míreanna"
-
-#~ msgid "Item layout:"
-#~ msgstr "Leagan amach míreanna:"
-
-#~ msgid "Layout:"
-#~ msgstr "Leagan Amach:"
-
-#~ msgid "Vertical"
-#~ msgstr "Ingearach"
-
-#~ msgid "Horizontal"
-#~ msgstr "Cothrománach"
-
-#~ msgid "Tabular"
-#~ msgstr "Táblach"
-
-#~ msgid "Width:"
-#~ msgstr "Leithead:"
-
-#~ msgid "Minimum width, as a percentage of screen width."
-#~ msgstr "Íosleithead, mar chéatadán de leithead an scáileáin."
-
-#~ msgid " %"
-#~ msgstr " %"
-
-#~ msgid "Height:"
-#~ msgstr "Airde:"
-
-#~ msgid "Minimum height, as a percentage of screen height."
-#~ msgstr "Íosairde, mar chéatadán d'airde an scáileáin."
-
-#~ msgid "Show Selected Item"
-#~ msgstr "Taispeáin an Mhír Roghnaithe"
-
-#~ msgid "Top"
-#~ msgstr "Barr"
-
-#~ msgid "Bottom"
-#~ msgstr "Bun"
-
-#~ msgid "Left"
-#~ msgstr "Ar Chlé"
-
-#~ msgid "Right"
-#~ msgstr "Ar Dheis"
-
-#~ msgid "Selected item layout:"
-#~ msgstr "Leagan amach na míre roghnaithe:"
-
-#~ msgid "General"
-#~ msgstr "Ginearálta"

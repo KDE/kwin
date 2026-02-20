@@ -33,17 +33,14 @@ msgid "More actions for this window"
 msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:55
-#, fuzzy, kde-format
-#| msgctxt "Button showing application menu imported from dbusmenu"
-#| msgid "Application Menu"
+#, kde-format
 msgid "Application menu"
-msgstr "Roghchlár Feidhmchlár"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:57
-#, fuzzy, kde-format
-#| msgid "On All Desktops"
+#, kde-format
 msgid "On all desktops"
-msgstr "Ar Gach Deasc"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:59
 #, kde-format
@@ -81,10 +78,9 @@ msgid "Keep above other windows"
 msgstr ""
 
 #: kcm.cpp:49
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
+#, kde-format
 msgid "Window Decorations"
-msgstr "Faigh Maisiúcháin Nua..."
+msgstr ""
 
 #: kcm.cpp:53
 #, kde-format
@@ -195,32 +191,28 @@ msgid "Theme"
 msgstr ""
 
 #: package/contents/ui/main.qml:56
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgctxt "tab label"
 msgid "Titlebar Buttons"
-msgstr "Cnaipí"
+msgstr ""
 
 #: package/contents/ui/main.qml:92
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
-msgstr "Méid na himlíne:"
+msgstr ""
 
 #: package/contents/ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations..."
-msgstr "Faigh Maisiúcháin Nua..."
+msgstr ""
 
 #: package/contents/ui/main.qml:139
-#, fuzzy, kde-format
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
-msgstr "Dún fuinneoga trí dhéchliceáil ar an gcnaipe roghchláir"
+msgstr ""
 
 #: package/contents/ui/main.qml:156
 #, kde-format
@@ -229,11 +221,10 @@ msgid "Click and hold on the menu button to show the menu."
 msgstr ""
 
 #: package/contents/ui/main.qml:163
-#, fuzzy, kde-format
-#| msgid "&Show window button tooltips"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr "Tai&speáin leideanna uirlisí ar chnaipí na fuinneoige"
+msgstr ""
 
 #: package/contents/ui/Themes.qml:90
 #, kde-format
@@ -241,272 +232,46 @@ msgid "Edit %1 Theme"
 msgstr ""
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "No Borders"
-msgstr "Méid na himlíne:"
+msgstr ""
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "No Side Borders"
-msgstr "Méid na himlíne:"
+msgstr ""
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
+#, kde-format
 msgid "Tiny"
-msgstr "An-bheag"
+msgstr ""
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Normal"
+#, kde-format
 msgid "Normal"
-msgstr "Gnáthmhéid"
+msgstr ""
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Large"
+#, kde-format
 msgid "Large"
-msgstr "Mór"
+msgstr ""
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Large"
+#, kde-format
 msgid "Very Large"
-msgstr "An-Mhór"
+msgstr ""
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Huge"
+#, kde-format
 msgid "Huge"
-msgstr "Ollmhór"
+msgstr ""
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Very Huge"
-msgstr "Fíor-ollmhór"
+msgstr ""
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Oversized"
+#, kde-format
 msgid "Oversized"
-msgstr "Fíor-mhórthomhais"
-
-#, fuzzy
-#~| msgid "Close windows by double clicking the menu button"
-#~ msgctxt "popup tip"
-#~ msgid ""
-#~ "Close by double clicking: Keep the window's Menu button pressed until it "
-#~ "appears."
-#~ msgstr "Dún fuinneoga trí dhéchliceáil ar an gcnaipe roghchláir"
-
-#~ msgid "Menu"
-#~ msgstr "Roghchlár"
-
-#, fuzzy
-#~| msgid "Keep Below Others"
-#~ msgid "Keep below"
-#~ msgstr "Coimeád Faoi Chinn Eile"
-
-#, fuzzy
-#~| msgid "Keep Above Others"
-#~ msgid "Keep above"
-#~ msgstr "Coimeád Os Cionn"
-
-#, fuzzy
-#~| msgid "Get New Decorations..."
-#~ msgid "Download New Window Decorations"
-#~ msgstr "Faigh Maisiúcháin Nua..."
-
-#, fuzzy
-#~| msgid "Search"
-#~ msgid "Search..."
-#~ msgstr "Cuardaigh"
-
-#, fuzzy
-#~| msgid "Close windows by double clicking the menu button"
-#~ msgid "Close windows by double clicking &the menu button"
-#~ msgstr "Dún fuinneoga trí dhéchliceáil ar an gcnaipe roghchláir"
-
-#, fuzzy
-#~| msgid "Border size:"
-#~ msgid "Border si&ze:"
-#~ msgstr "Méid na himlíne:"
-
-#, fuzzy
-#~| msgid "Configure Buttons..."
-#~ msgid "Configure %1..."
-#~ msgstr "Cumraigh Cnaipí..."
-
-#~ msgid "Form"
-#~ msgstr "Gnách"
-
-#~ msgid "Button size:"
-#~ msgstr "Méid na gcnaipí:"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Tiny"
-#~ msgstr "An-bheag"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Normal"
-#~ msgstr "Gnáthmhéid"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Large"
-#~ msgstr "Mór"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Large"
-#~ msgstr "An-Mhór"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Huge"
-#~ msgstr "Ollmhór"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Huge"
-#~ msgstr "Fíor-ollmhór"
-
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Oversized"
-#~ msgstr "Fíor-mhórthomhais"
-
-#~ msgid "KDE"
-#~ msgstr "KDE"
-
-#~ msgid "%1 (unavailable)"
-#~ msgstr "%1 (níl ar fáil)"
-
-#~ msgid ""
-#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
-#~ "available item list and the titlebar preview. Similarly, drag items "
-#~ "within the titlebar preview to re-position them."
-#~ msgstr ""
-#~ "Chun cnaipí a chur leis an mbarra teidil, nó a bhaint de, <i>tarraing</i> "
-#~ "míreanna idir an liosta de mhíreanna le fáil agus an réamhamharc ar an "
-#~ "mbarra teidil. Ar an nós céanna, is féidir míreanna a tharraingt go dtí "
-#~ "ionaid nua laistigh den bharra teidil."
-
-#~ msgid "Resize"
-#~ msgstr "Athraigh an mhéid"
-
-#~ msgid "Help"
-#~ msgstr "Cabhair"
-
-#~ msgctxt "Button showing window actions menu"
-#~ msgid "Window Menu"
-#~ msgstr "Roghchlár Fuinneog"
-
-#~ msgid "--- spacer ---"
-#~ msgstr "--- scarthóir ---"
-
-#~ msgid ""
-#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
-#~ "is off, no window button tooltips will be shown."
-#~ msgstr ""
-#~ "Má chuireann tú tic sa bhosca seo taispeánfar leideanna uirlisí i gcnaipí "
-#~ "na fuinneoige. Mura bhfuil tic sa bhosca seo, ní thaispeánfar leideanna."
-
-#~ msgid "Please note that this option is not available on all styles yet."
-#~ msgstr ""
-#~ "Tabhair faoi deara nach bhfuil an rogha seo ar fáil le haghaidh na "
-#~ "stíleanna go léir fós."
-
-#~ msgid "Use custom titlebar button &positions"
-#~ msgstr "Cuir cnai&pí in áiteanna saincheaptha ar an mbarra teidil"
-
-#~ msgid "B&order size:"
-#~ msgstr "Méid &na himlíne:"
-
-#~ msgid "Use this combobox to change the border size of the decoration."
-#~ msgstr ""
-#~ "Úsáid an bosca teaglama seo chun méid imlíne an mhaisiúcháin a athrú."
-
-#~ msgid "Decoration Options"
-#~ msgstr "Roghanna Maisithe"
-
-#~ msgid ""
-#~ "Select the window decoration. This is the look and feel of both the "
-#~ "window borders and the window handle."
-#~ msgstr ""
-#~ "Roghnaigh maisiúchán na fuinneoige. Seo é an chuma a bheidh ar imlínte "
-#~ "agus hanla na fuinneoige."
-
-#~ msgid "Configure Decoration..."
-#~ msgstr "Cumraigh Maisiúchán..."
-
-#~ msgid "Window Decoration Control Module"
-#~ msgstr "Modúl Rialaithe an Mhaisiúcháin"
-
-#~ msgid "(c) 2001 Karol Szwed"
-#~ msgstr "© 2001 Karol Szwed"
-
-#~ msgid "Karol Szwed"
-#~ msgstr "Karol Szwed"
-
-#~ msgid "Oxygen"
-#~ msgstr "Oxygen"
-
-#~ msgid ""
-#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
-#~ "window border decorations, as well as titlebar button positions and "
-#~ "custom decoration options.</p>To choose a theme for your window "
-#~ "decoration click on its name and apply your choice by clicking the \"Apply"
-#~ "\" button below. If you do not want to apply your choice you can click "
-#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
-#~ "theme. There are different options specific for each theme.</p><p>On the "
-#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
-#~ "and you can change the positions of the buttons to your liking.</p>"
-#~ msgstr ""
-#~ "<h1>Maisiúcháin an Bhainisteora Fuinneog</h1><p>Leis an modúl seo is "
-#~ "féidir leat maisiúcháin a roghnú le haghaidh imlínte na bhfuinneog, chomh "
-#~ "maith le hionad an bharra teidil agus sainroghanna maisiúcháin eile.</"
-#~ "p>Chun téama a roghnú le haghaidh do mhaisiúchán, cliceáil a ainm agus "
-#~ "cuir do rogha i bhfeidhm tríd an gcnaipe \"Cuir i bhfeidhm\" thíos a "
-#~ "chliceáil. Mura mian leat do rogha a chur i bhfeidhm is féidir an cnaipe "
-#~ "\"Athshocraigh\" a chliceáil chun do chuid athruithe a chur i gcártaí."
-#~ "<p>Is féidir gach téama a chumrú. Beidh roghanna difriúla ar fáil le gach "
-#~ "téama.</p><p>Sa chluaisín \"Cnaipí\", cuir tic sa bhosca \"Cuir cnaipí in "
-#~ "áiteanna shaincheaptha ar an mbarra teidil\" agus beidh tú in ann do "
-#~ "rogha leagan amach a chur ar na cnaipí.</p>"
-
-#~ msgid "Active Window"
-#~ msgstr "Fuinneog Ghníomhach"
-
-#~ msgid "Inactive Window"
-#~ msgstr "Fuinneog Neamhghníomhach"
-
-#~ msgid "kcmkwindecoration"
-#~ msgstr "kcmkwindecoration"
-
-#~ msgctxt "Caption to decoration preview, %1 author name"
-#~ msgid "by %1"
-#~ msgstr "le %1"
-
-#~ msgid ""
-#~ "No preview available.\n"
-#~ "Most probably there\n"
-#~ "was a problem loading the plugin."
-#~ msgstr ""
-#~ "Níl réamhamharc ar fáil.\n"
-#~ "Is dócha go raibh fadhb\n"
-#~ "agus an breiseán á luchtú."
-
-#~ msgid "&Buttons"
-#~ msgstr "&Cnaipí"
-
-#~ msgid "Ozone"
-#~ msgstr "Ozone"
-
-#~ msgid "KDE 2"
-#~ msgstr "KDE 2"
+msgstr ""

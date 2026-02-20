@@ -74,25 +74,3 @@ msgstr "Suiteáil ó Chomhaid..."
 #, kde-format
 msgid "Get New Scripts..."
 msgstr "Faigh Scripteanna Nua..."
-
-#~ msgid "KWin Scripts"
-#~ msgstr "Scripteanna KWin"
-
-#~ msgid "Configure KWin scripts"
-#~ msgstr "Cumraigh scripteanna KWin"
-
-#~ msgid "Tamás Krutki"
-#~ msgstr "Tamás Krutki"
-
-#~ msgid "KWin script configuration"
-#~ msgstr "Cumraíocht scripte KWin"
-
-#~ msgid "Import KWin script..."
-#~ msgstr "Iompórtáil script KWin..."
-
-#~ msgid ""
-#~ "Cannot import selected script: maybe a script already exists with the "
-#~ "same name or there is a permission problem."
-#~ msgstr ""
-#~ "Ní féidir an script roghnaithe a iompórtáil: seans go bhfuil script ann "
-#~ "leis an ainm céanna, nó nach bhfuil cead agat."

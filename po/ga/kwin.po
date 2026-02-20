@@ -73,18 +73,16 @@ msgid "Timestamp (µsec)"
 msgstr ""
 
 #: debug_console.cpp:101
-#, fuzzy, kde-format
-#| msgid "Top-Left"
+#, kde-format
 msgctxt "A mouse button"
 msgid "Left"
-msgstr "Barr ar Chlé"
+msgstr ""
 
 #: debug_console.cpp:103
-#, fuzzy, kde-format
-#| msgid "Top-Right"
+#, kde-format
 msgctxt "A mouse button"
 msgid "Right"
-msgstr "Barr ar Dheis"
+msgstr ""
 
 #: debug_console.cpp:105
 #, kde-format
@@ -248,11 +246,10 @@ msgid "Unknown"
 msgstr ""
 
 #: debug_console.cpp:199
-#, fuzzy, kde-format
-#| msgid "Slow Motion"
+#, kde-format
 msgctxt "A mouse pointer motion event"
 msgid "Pointer Motion"
-msgstr "Mallghluaiseacht"
+msgstr ""
 
 #: debug_console.cpp:204
 #, kde-format
@@ -267,11 +264,10 @@ msgid "Delta (not accelerated)"
 msgstr ""
 
 #: debug_console.cpp:211
-#, fuzzy, kde-format
-#| msgid "Slow Motion"
+#, kde-format
 msgctxt "The global mouse pointer position"
 msgid "Global Position"
-msgstr "Mallghluaiseacht"
+msgstr ""
 
 #: debug_console.cpp:215
 #, kde-format
@@ -430,18 +426,16 @@ msgid "Point identifier"
 msgstr ""
 
 #: debug_console.cpp:327 debug_console.cpp:342
-#, fuzzy, kde-format
-#| msgid "Slow Motion"
+#, kde-format
 msgctxt "The global position of the touch point"
 msgid "Global position"
-msgstr "Mallghluaiseacht"
+msgstr ""
 
 #: debug_console.cpp:339
-#, fuzzy, kde-format
-#| msgid "Slow Motion"
+#, kde-format
 msgctxt "A touch motion event"
 msgid "Touch Motion"
-msgstr "Mallghluaiseacht"
+msgstr ""
 
 #: debug_console.cpp:354
 #, kde-format
@@ -546,11 +540,10 @@ msgid "Swipe cancelled"
 msgstr ""
 
 #: debug_console.cpp:471
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 2"
+#, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "Téigh go Scáileán 2"
+msgstr ""
 
 #: debug_console.cpp:477
 #, kde-format
@@ -599,10 +592,9 @@ msgid "EventType"
 msgstr ""
 
 #: debug_console.cpp:510 debug_console.cpp:555 debug_console.cpp:569
-#, fuzzy, kde-format
-#| msgid "Slow Motion"
+#, kde-format
 msgid "Position"
-msgstr "Mallghluaiseacht"
+msgstr ""
 
 #: debug_console.cpp:512
 #, kde-format
@@ -620,10 +612,9 @@ msgid "Pressure"
 msgstr ""
 
 #: debug_console.cpp:516
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Buttons"
-msgstr "Aithris Luiche"
+msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
 #: debug_console.cpp:517 debug_console.ui:356
@@ -637,16 +628,14 @@ msgid "Tablet Tool Button"
 msgstr ""
 
 #: debug_console.cpp:527 debug_console.cpp:541
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Button"
-msgstr "Aithris Luiche"
+msgstr ""
 
 #: debug_console.cpp:528 debug_console.cpp:542
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Pressed"
-msgstr "Aithris Luiche"
+msgstr ""
 
 #: debug_console.cpp:529 debug_console.cpp:543 debug_console.cpp:557
 #: debug_console.cpp:571
@@ -680,10 +669,9 @@ msgid "Tablet Pad Ring"
 msgstr ""
 
 #: debug_console.cpp:797
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "No Mouse Buttons"
-msgstr "Aithris Luiche"
+msgstr ""
 
 #: debug_console.cpp:801
 #, kde-format
@@ -692,11 +680,10 @@ msgid "left"
 msgstr ""
 
 #: debug_console.cpp:804
-#, fuzzy, kde-format
-#| msgid "Top-Right"
+#, kde-format
 msgctxt "Mouse Button"
 msgid "right"
-msgstr "Barr ar Dheis"
+msgstr ""
 
 #: debug_console.cpp:807
 #, kde-format
@@ -882,10 +869,9 @@ msgid "Wayland Windows"
 msgstr "Wayland Fuinneoga"
 
 #: debug_console.cpp:1228
-#, fuzzy, kde-format
-#| msgid "Inactive windows:"
+#, kde-format
 msgid "Internal Windows"
-msgstr "Fuinneoga neamhghníomhacha:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -997,24 +983,21 @@ msgstr ""
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
 #: debug_console.ui:288
-#, fuzzy, kde-format
-#| msgid "Next Layout"
+#, kde-format
 msgid "Keyboard"
-msgstr "An Chéad Leagan Amach Eile"
+msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
 #: debug_console.ui:315
-#, fuzzy, kde-format
-#| msgid "Next Layout"
+#, kde-format
 msgid "Keymap Layouts"
-msgstr "An Chéad Leagan Amach Eile"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: debug_console.ui:337
-#, fuzzy, kde-format
-#| msgid "Configur&e Window Behavior..."
+#, kde-format
 msgid "Current Layout:"
-msgstr "Cumraigh Oibriú na bhFuinn&eog..."
+msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
 #: debug_console.ui:372
@@ -1048,10 +1031,9 @@ msgid "Primary Selection"
 msgstr ""
 
 #: helpers/killer/killer.cpp:34
-#, fuzzy, kde-format
-#| msgid "KDE window manager"
+#, kde-format
 msgid "Window Manager"
-msgstr "Bainisteoir fuinneog KDE"
+msgstr ""
 
 #: helpers/killer/killer.cpp:38
 #, kde-format
@@ -1188,10 +1170,9 @@ msgid "Touchpad"
 msgstr "Ceap Tadhaill"
 
 #: keyboard_layout.cpp:45
-#, fuzzy, kde-format
-#| msgid "Next Layout"
+#, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr "An Chéad Leagan Amach Eile"
+msgstr ""
 
 #: killwindow.cpp:32
 #, kde-format
@@ -1408,14 +1389,9 @@ msgstr ""
 "fuinneoga eile ag rith? (Bain triail as --replace).\n"
 
 #: main_x11.cpp:280
-#, fuzzy, kde-format
-#| msgid ""
-#| "kwin: unable to claim manager selection, another wm running? (try using --"
-#| "replace)\n"
+#, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
-"kwin: ní féidir roghnú bainisteora a éileamh; an bhfuil bainisteoir "
-"fuinneoga eile ag rith? (Bain triail as --replace).\n"
 
 #: main_x11.cpp:411
 #, kde-format
@@ -1475,34 +1451,30 @@ msgstr "lánscáileán"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:70
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:72
-#, fuzzy, kde-format
-#| msgid "Unshade"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "shade"
-msgstr "Díscáthaigh"
+msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:73
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:75
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep above"
-msgstr "Coimeád os cionn"
+msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:76
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:78
-#, fuzzy, kde-format
-#| msgid "Keep below others"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep below"
-msgstr "Coimeád faoi chinn eile"
+msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:83
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "window"
-msgstr "Fuinneoga"
+msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:93
 #, kde-format
@@ -1524,10 +1496,9 @@ msgid "desktop"
 msgstr "deasc"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:255
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop %1"
+#, kde-format
 msgid "Switch to desktop %1"
-msgstr "Téigh go Deasc %1"
+msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:296
 #, kde-format
@@ -1565,10 +1536,9 @@ msgid "Toggle keep below running window on %1"
 msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:318
-#, fuzzy, kde-format
-#| msgid "Activate Window (%1)"
+#, kde-format
 msgid "Activate running window on %1"
-msgstr "Gníomhachtaigh Fuinneog (%1)"
+msgstr ""
 
 #: plugins/nightcolor/nightcolormanager.cpp:63
 #, kde-format
@@ -1626,17 +1596,15 @@ msgstr ""
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:20
-#, fuzzy, kde-format
-#| msgid "Slow Motion"
+#, kde-format
 msgid "Window class (application)"
-msgstr "Mallghluaiseacht"
+msgstr ""
 
 #. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:23
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window class string match type"
-msgstr "Fuinneog go Scáileán 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:29
@@ -1646,31 +1614,27 @@ msgstr ""
 
 #. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:34
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window role"
-msgstr "Fuinneoga"
+msgstr ""
 
 #. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:37
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window role string match type"
-msgstr "Fuinneog go Scáileán 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:44
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window title"
-msgstr "Fuinneoga"
+msgstr ""
 
 #. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:47
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window title string match type"
-msgstr "Fuinneog go Scáileán 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:54
@@ -1692,73 +1656,63 @@ msgstr ""
 
 #. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:69
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Initial placement"
-msgstr "&Lánscáileán"
+msgstr ""
 
 #. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:74
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Initial placement rule type"
-msgstr "&Lánscáileán"
+msgstr ""
 
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:79
-#, fuzzy, kde-format
-#| msgid "Slow Motion"
+#, kde-format
 msgid "Window position"
-msgstr "Mallghluaiseacht"
+msgstr ""
 
 #. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:83
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window position rule type"
-msgstr "Fuinneog go Scáileán 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:90
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window size"
-msgstr "Fuinneoga"
+msgstr ""
 
 #. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:93
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window size rule type"
-msgstr "Fuinneog go Scáileán 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:100
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window minimum size"
-msgstr "Fuinneoga"
+msgstr ""
 
 #. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:104
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window minimum size rule type"
-msgstr "Fuinneog go Scáileán 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:109
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window maximum size"
-msgstr "Fuinneoga"
+msgstr ""
 
 #. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:113
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window maximum size rule type"
-msgstr "Fuinneog go Scáileán 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:118
@@ -1768,10 +1722,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:124
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Active opacity rule type"
-msgstr "&Lánscáileán"
+msgstr ""
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:129
@@ -1781,10 +1734,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:135
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Inactive opacity rule type"
-msgstr "&Lánscáileán"
+msgstr ""
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:140
@@ -1800,17 +1752,15 @@ msgstr ""
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:151
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 2"
+#, kde-format
 msgid "List of Desktop Ids"
-msgstr "Téigh go Deasc 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:155
-#, fuzzy, kde-format
-#| msgid "Desktop Cube"
+#, kde-format
 msgid "Desktop Ids rule type"
-msgstr "Ciúb Deisce"
+msgstr ""
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:162
@@ -1820,10 +1770,9 @@ msgstr "Uimhir scáileáin"
 
 #. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:166
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Screen number rule type"
-msgstr "&Lánscáileán"
+msgstr ""
 
 #. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:173
@@ -1833,80 +1782,69 @@ msgstr ""
 
 #. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:176
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Activity rule type"
-msgstr "Fuinneog go Scáileán 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:183
-#, fuzzy, kde-format
-#| msgid "Setup Window Shortcut"
+#, kde-format
 msgid "Set window type to"
-msgstr "Socraigh Aicearra Fuinneoige"
+msgstr ""
 
 #. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:189
-#, fuzzy, kde-format
-#| msgid "Setup Window Shortcut"
+#, kde-format
 msgid "Set window type rule type"
-msgstr "Socraigh Aicearra Fuinneoige"
+msgstr ""
 
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:194
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically"
-msgstr "Uasmhéadaigh Fuinneog go hIngearach"
+msgstr ""
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically rule type"
-msgstr "Uasmhéadaigh Fuinneog go hIngearach"
+msgstr ""
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:205
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally"
-msgstr "Uasmhéadaigh Fuinneog go Cothrománach"
+msgstr ""
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:209
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally rule type"
-msgstr "Uasmhéadaigh Fuinneog go Cothrománach"
+msgstr ""
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:216
-#, fuzzy, kde-format
-#| msgid "Minimize"
+#, kde-format
 msgid "Minimized"
-msgstr "Íoslaghdaigh"
+msgstr ""
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:220
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Minimized rule type"
-msgstr "Uasmhéadaigh Fuinneog go hIngearach"
+msgstr ""
 
 #. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:227
-#, fuzzy, kde-format
-#| msgid "Shade"
+#, kde-format
 msgid "Shaded"
-msgstr "Scáthaigh"
+msgstr ""
 
 #. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:231
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Shaded rule type"
-msgstr "Coimeád os cionn"
+msgstr ""
 
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:238
@@ -1916,10 +1854,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:242
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Skip taskbar rule type"
-msgstr "Coimeád os cionn"
+msgstr ""
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:249
@@ -1929,10 +1866,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:253
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Skip pager rule type"
-msgstr "Coimeád os cionn"
+msgstr ""
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:260
@@ -1942,66 +1878,57 @@ msgstr ""
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:264
-#, fuzzy, kde-format
-#| msgid "Desktop Cube"
+#, kde-format
 msgid "Skip switcher rule type"
-msgstr "Ciúb Deisce"
+msgstr ""
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:271
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Keep above"
-msgstr "Coimeád os cionn"
+msgstr ""
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:275
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Keep above rule type"
-msgstr "Coimeád os cionn"
+msgstr ""
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:282
-#, fuzzy, kde-format
-#| msgid "Keep below others"
+#, kde-format
 msgid "Keep below"
-msgstr "Coimeád faoi chinn eile"
+msgstr ""
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:286
-#, fuzzy, kde-format
-#| msgid "Keep below others"
+#, kde-format
 msgid "Keep below rule type"
-msgstr "Coimeád faoi chinn eile"
+msgstr ""
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:293
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen"
-msgstr "&Lánscáileán"
+msgstr ""
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:297
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen rule type"
-msgstr "&Lánscáileán"
+msgstr ""
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:304
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "No titlebar and frame"
-msgstr "Folaigh Imlíne na Fuinneoga"
+msgstr ""
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:308
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "No titlebar rule type"
-msgstr "Fuinneog go Scáileán 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:315
@@ -2011,24 +1938,21 @@ msgstr ""
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:318
-#, fuzzy, kde-format
-#| msgid "Keep below others"
+#, kde-format
 msgid "Titlebar color rule type"
-msgstr "Coimeád faoi chinn eile"
+msgstr ""
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:323
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Block Compositing"
-msgstr "Cuir Comhshuí Ar Fionraí"
+msgstr ""
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:327
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Block Compositing rule type"
-msgstr "Cuir Comhshuí Ar Fionraí"
+msgstr ""
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
@@ -2038,10 +1962,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:338
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr "&Lánscáileán"
+msgstr ""
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:343
@@ -2051,10 +1974,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:349
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Focus protection rule type"
-msgstr "Fuinneog go Scáileán 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:354
@@ -2064,24 +1986,21 @@ msgstr ""
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:358
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Accept Focus rule type"
-msgstr "Coimeád os cionn"
+msgstr ""
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:363
-#, fuzzy, kde-format
-#| msgid "Close"
+#, kde-format
 msgid "Closeable"
-msgstr "Dún"
+msgstr ""
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:367
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Closeable rule type"
-msgstr "Coimeád os cionn"
+msgstr ""
 
 #. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:372
@@ -2115,10 +2034,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:393
-#, fuzzy, kde-format
-#| msgid "Desktop Cube"
+#, kde-format
 msgid "Autogroup by ID rule type"
-msgstr "Ciúb Deisce"
+msgstr ""
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:398
@@ -2146,31 +2064,27 @@ msgstr ""
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:417
-#, fuzzy, kde-format
-#| msgid "Block Global Shortcuts"
+#, kde-format
 msgid "Ignore global shortcuts"
-msgstr "Cuir Cosc Ar Aicearraí Comhchoiteanna"
+msgstr ""
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:421
-#, fuzzy, kde-format
-#| msgid "Block Global Shortcuts"
+#, kde-format
 msgid "Ignore global shortcuts rule type"
-msgstr "Cuir Cosc Ar Aicearraí Comhchoiteanna"
+msgstr ""
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:426
-#, fuzzy, kde-format
-#| msgid "Desktop Cube"
+#, kde-format
 msgid "Desktop file name"
-msgstr "Ciúb Deisce"
+msgstr ""
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:429
-#, fuzzy, kde-format
-#| msgid "Desktop Cube"
+#, kde-format
 msgid "Desktop file name rule type"
-msgstr "Ciúb Deisce"
+msgstr ""
 
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
@@ -2193,10 +2107,9 @@ msgstr "Ní %1 ann"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialogs:"
+#, kde-format
 msgid "Dialog"
-msgstr "Dialóga:"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QToolButton, clearButton)
 #: shortcutdialog.ui:25
@@ -2297,10 +2210,9 @@ msgid "&Move"
 msgstr "&Bog"
 
 #: useractions.cpp:243
-#, fuzzy, kde-format
-#| msgid "Re&size"
+#, kde-format
 msgid "&Resize"
-msgstr "Athraigh an &mhéid"
+msgstr ""
 
 #: useractions.cpp:248
 #, kde-format
@@ -2318,10 +2230,9 @@ msgid "&Fullscreen"
 msgstr "&Lánscáileán"
 
 #: useractions.cpp:266
-#, fuzzy, kde-format
-#| msgid "Shade"
+#, kde-format
 msgid "&Shade"
-msgstr "Scáthaigh"
+msgstr ""
 
 #: useractions.cpp:272
 #, kde-format
@@ -2329,31 +2240,27 @@ msgid "&No Titlebar and Frame"
 msgstr ""
 
 #: useractions.cpp:280
-#, fuzzy, kde-format
-#| msgid "Window &Shortcut..."
+#, kde-format
 msgid "Set Window Short&cut..."
-msgstr "&Aicearra Fuinneoige..."
+msgstr ""
 
 #: useractions.cpp:286
-#, fuzzy, kde-format
-#| msgid "&Special Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings..."
-msgstr "&Socruithe Speisialta Fuinneoige..."
+msgstr ""
 
 #: useractions.cpp:291
-#, fuzzy, kde-format
-#| msgid "S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings..."
-msgstr "&Socruithe Speisialta Feidhmchláir..."
+msgstr ""
 
 #: useractions.cpp:298
-#, fuzzy, kde-format
-#| msgid "KDE window manager"
+#, kde-format
 msgctxt ""
 "Entry in context menu of window decoration to open the configuration module "
 "of KWin"
 msgid "Configure W&indow Manager..."
-msgstr "Bainisteoir fuinneog KDE"
+msgstr ""
 
 #: useractions.cpp:325
 #, kde-format
@@ -2366,10 +2273,9 @@ msgid "Mi&nimize"
 msgstr "Íos&laghdaigh"
 
 #: useractions.cpp:337
-#, fuzzy, kde-format
-#| msgid "More Actions"
+#, kde-format
 msgid "&More Actions"
-msgstr "Tuilleadh Gníomhartha"
+msgstr ""
 
 #: useractions.cpp:340
 #, kde-format
@@ -2382,22 +2288,19 @@ msgid "&Extensions"
 msgstr ""
 
 #: useractions.cpp:461
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "&Desktops"
-msgstr "G&ach Deasc"
+msgstr ""
 
 #: useractions.cpp:475
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgid "Move to &Desktop"
-msgstr "Bog Go &Deasc"
+msgstr ""
 
 #: useractions.cpp:492
-#, fuzzy, kde-format
-#| msgid "Window to Screen 0"
+#, kde-format
 msgid "Move to &Screen"
-msgstr "Fuinneog go Scáileán 0"
+msgstr ""
 
 #: useractions.cpp:508
 #, kde-format
@@ -2405,10 +2308,9 @@ msgid "Show in &Activities"
 msgstr ""
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Bog Go &Deasc"
+msgstr ""
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format
@@ -2416,12 +2318,10 @@ msgid "&All Desktops"
 msgstr "G&ach Deasc"
 
 #: useractions.cpp:575
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
-msgstr "Deasc &Nua"
+msgstr ""
 
 #: useractions.cpp:646
 #, kde-format
@@ -2429,29 +2329,24 @@ msgid "Move to %1 %2"
 msgstr ""
 
 #: useractions.cpp:659
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
-msgstr "Deasc &Nua"
+msgstr ""
 
 #: useractions.cpp:671
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "Bog Go &Deasc"
+msgstr ""
 
 #: useractions.cpp:702
-#, fuzzy, kde-format
-#| msgctxt "@item:inmenu List of all Screens to send a window to"
-#| msgid "Screen &%1"
+#, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
 "number, second the output identifier. E.g. Screen 1 (HDMI1)"
 msgid "Screen &%1 (%2)"
-msgstr "Scáileán &%1"
+msgstr ""
 
 #: useractions.cpp:728
 #, kde-format
@@ -2459,10 +2354,9 @@ msgid "&All Activities"
 msgstr ""
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Window to Screen 0"
+#, kde-format
 msgid "Move to %1"
-msgstr "Fuinneog go Scáileán 0"
+msgstr ""
 
 #: useractions.cpp:901
 #, kde-format
@@ -2542,10 +2436,9 @@ msgid "Make Window Fullscreen"
 msgstr "Fuinneog ar an Scáileán Iomlán"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Folaigh Imlíne na Fuinneoga"
+msgstr ""
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2568,58 +2461,49 @@ msgid "Setup Window Shortcut"
 msgstr "Socraigh Aicearra Fuinneoige"
 
 #: useractions.cpp:1019
-#, fuzzy, kde-format
-#| msgid "Pack Window to the Left"
+#, kde-format
 msgid "Move Window to the Center"
-msgstr "Pacáil Fuinneog Faoi Chlé"
+msgstr ""
 
 #: useractions.cpp:1021
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Right"
-msgstr "Bog Fuinneog"
+msgstr ""
 
 #: useractions.cpp:1023
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Left"
-msgstr "Bog Fuinneog"
+msgstr ""
 
 #: useractions.cpp:1025
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Up"
-msgstr "Bog Fuinneog"
+msgstr ""
 
 #: useractions.cpp:1027
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Down"
-msgstr "Bog Fuinneog"
+msgstr ""
 
 #: useractions.cpp:1029
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Expand Window Horizontally"
-msgstr "Uasmhéadaigh Fuinneog go Cothrománach"
+msgstr ""
 
 #: useractions.cpp:1031
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Expand Window Vertically"
-msgstr "Uasmhéadaigh Fuinneog go hIngearach"
+msgstr ""
 
 #: useractions.cpp:1033
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Horizontally"
+#, kde-format
 msgid "Shrink Window Horizontally"
-msgstr "Pacáil agus Laghdaigh Fuinneog go Cothrománach"
+msgstr ""
 
 #: useractions.cpp:1035
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Vertically"
+#, kde-format
 msgid "Shrink Window Vertically"
-msgstr "Pacáil agus Laghdaigh Fuinneog go hIngearach"
+msgstr ""
 
 #: useractions.cpp:1037
 #, kde-format
@@ -2632,16 +2516,14 @@ msgid "Quick Tile Window to the Right"
 msgstr ""
 
 #: useractions.cpp:1041
-#, fuzzy, kde-format
-#| msgid "Pack Window to the Left"
+#, kde-format
 msgid "Quick Tile Window to the Top"
-msgstr "Pacáil Fuinneog Faoi Chlé"
+msgstr ""
 
 #: useractions.cpp:1043
-#, fuzzy, kde-format
-#| msgid "Pack Window to the Left"
+#, kde-format
 msgid "Quick Tile Window to the Bottom"
-msgstr "Pacáil Fuinneog Faoi Chlé"
+msgstr ""
 
 #: useractions.cpp:1045
 #, kde-format
@@ -2744,34 +2626,29 @@ msgid "Window to Next Screen"
 msgstr "Fuinneog go dtí an Chéad Scáileán Eile"
 
 #: useractions.cpp:1100
-#, fuzzy, kde-format
-#| msgid "Window to Previous Desktop"
+#, kde-format
 msgid "Window to Previous Screen"
-msgstr "Fuinneog go dtí an Deasc Roimhe Seo"
+msgstr ""
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Fuinneog go dtí an Deasc Ar Dheis"
+msgstr ""
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Fuinneog go dtí an Deasc Ar Chlé"
+msgstr ""
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window to Screen 3"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Fuinneog go Scáileán 3"
+msgstr ""
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Fuinneog go dtí an Deasc Thíos"
+msgstr ""
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2784,40 +2661,34 @@ msgid "Switch to Next Screen"
 msgstr "Téigh go dtí an Chéad Scáileán Eile"
 
 #: useractions.cpp:1120
-#, fuzzy, kde-format
-#| msgid "Switch to Previous Desktop"
+#, kde-format
 msgid "Switch to Previous Screen"
-msgstr "Téigh go dtí an Deasc roimhe seo"
+msgstr ""
 
 #: useractions.cpp:1121
-#, fuzzy, kde-format
-#| msgid "Switch One Desktop to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Téigh go dtí an Deasc ar dheis"
+msgstr ""
 
 #: useractions.cpp:1123
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 3"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Téigh go Scáileán 3"
+msgstr ""
 
 #: useractions.cpp:1125
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 3"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Téigh go Scáileán 3"
+msgstr ""
 
 #: useractions.cpp:1127
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 3"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Téigh go Scáileán 3"
+msgstr ""
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Bog Go &Deasc"
+msgstr ""
 
 #: useractions.cpp:1133
 #, kde-format
@@ -2902,491 +2773,3 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-
-#~ msgid "&No Border"
-#~ msgstr "Ga&n Imlíne"
-
-#~ msgid "Show Desktop"
-#~ msgstr "Taispeáin an Deasc"
-
-#, fuzzy
-#~| msgid "Close Window"
-#~ msgid "X11 Client Windows"
-#~ msgstr "Dún Fuinneog"
-
-#~ msgid "Pack Window to the Right"
-#~ msgstr "Pacáil Fuinneog Faoi Dheis"
-
-#~ msgid "Pack Window to the Left"
-#~ msgstr "Pacáil Fuinneog Faoi Chlé"
-
-#~ msgid "Pack Window Up"
-#~ msgstr "Pacáil Fuinneog Suas"
-
-#~ msgid "Pack Window Down"
-#~ msgstr "Pacáil Fuinneog Faoi Síos"
-
-#~ msgid "Pack Grow Window Horizontally"
-#~ msgstr "Pacáil agus Méadaigh Fuinneog go Cothrománach"
-
-#~ msgid "Pack Grow Window Vertically"
-#~ msgstr "Pacáil agus Méadaigh Fuinneog go hIngearach"
-
-#, fuzzy
-#~| msgid "Desktop Cube"
-#~ msgid "Desktop number"
-#~ msgstr "Ciúb Deisce"
-
-#, fuzzy
-#~| msgid "Configur&e Window Behavior..."
-#~ msgid "Configure virtual keyboards..."
-#~ msgstr "Cumraigh Oibriú na bhFuinn&eog..."
-
-#~ msgid "Walk Through Window Tabs"
-#~ msgstr "Céimnigh trí Clibeanna na Fuinneog"
-
-#, fuzzy
-#~| msgid "KDE window manager"
-#~ msgctxt ""
-#~ "Entry in context menu of window decoration to open the configuration "
-#~ "module of KWin"
-#~ msgid "Window Manager S&ettings..."
-#~ msgstr "Bainisteoir fuinneog KDE"
-
-#, fuzzy
-#~| msgid ""
-#~| "kwin: unable to claim manager selection, another wm running? (try using "
-#~| "--replace)\n"
-#~ msgid "kwin_wayland: an X11 window manager is running on the X11 Display.\n"
-#~ msgstr ""
-#~ "kwin: ní féidir roghnú bainisteora a éileamh; an bhfuil bainisteoir "
-#~ "fuinneoga eile ag rith? (Bain triail as --replace).\n"
-
-#~ msgid "Maintainer"
-#~ msgstr "Cothaitheoir"
-
-#~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
-#~ msgstr "Níl GLX/OpenGL ar fáil agus tiomsaíodh tacaíocht OpenGL amháin."
-
-#~ msgid "Sh&ade"
-#~ msgstr "Scáth&aigh"
-
-#~ msgid "KWin: "
-#~ msgstr "KWin: "
-
-#~ msgid "System"
-#~ msgstr "Córas"
-
-#~ msgid "Navigation"
-#~ msgstr "Nascleanúint"
-
-#~ msgid "Window & Desktop"
-#~ msgstr "Fuinneog agus Deasc"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "Rudaí éagsúla"
-
-#~ msgid "Desktop Switching"
-#~ msgstr "Malairt na Deisce"
-
-#~ msgid ""
-#~ "kwin: it looks like there's already a window manager running. kwin not "
-#~ "started.\n"
-#~ msgstr ""
-#~ "kwin: Is cosúil go bhfuil bainisteoir fuinneog ag rith cheana. Níor "
-#~ "tosaíodh kwin.\n"
-
-#~ msgid ""
-#~ "<p>The window \"<b>%2</b>\" is not responding. It belongs to the "
-#~ "application <b>%1</b> (Process ID = %3, hostname = %4).</p><p>Do you wish "
-#~ "to terminate the application process <em>including <b>all</b> of its "
-#~ "child windows</em>?<br /><b>Any unsaved data will be lost.</b></p>"
-#~ msgstr ""
-#~ "<p>Níl aon fhreagra ón fhuinneog \"<b>%2</b>\". Is leis an  bhfeidhmchlár "
-#~ "<b>%1</b> í (Aitheantas an Phróisis = %3, óstríomhaire = %4).</p><p>An "
-#~ "mian leat an feidhmchlár seo a stopadh, <em><b>gach uile</b> macfhuinneog "
-#~ "san áireamh</em>?<br /><b>Caillfear aon sonraí nach bhfuil sábháilte.</"
-#~ "b></p>"
-
-#~ msgid "Window '%1' demands attention."
-#~ msgstr "Aire de dhíth ar fhuinneog '%1'"
-
-#~ msgctxt "Two-column horizontal tiling layout"
-#~ msgid "Columns"
-#~ msgstr "Colúin"
-
-#~ msgid "Ad&vanced"
-#~ msgstr "Cas&ta"
-
-#~ msgid "*** No Windows ***"
-#~ msgstr "*** Gan Fuinneoga ***"
-
-#~ msgid "To the Right"
-#~ msgstr "Ar Dheis"
-
-#~ msgid "&Opacity"
-#~ msgstr "&Teimhneacht"
-
-#~ msgid ""
-#~ "XRender/XFixes extensions are not available and only XRender support is "
-#~ "compiled."
-#~ msgstr ""
-#~ "Níl eisínteachtaí XRender/XFixes ar fáil agus tiomsaíodh tacaíocht "
-#~ "XRender amháin."
-
-#~ msgid ""
-#~ "Compositing was disabled at compile time.\n"
-#~ "It is likely Xorg development headers were not installed."
-#~ msgstr ""
-#~ "Díchumasaíodh comhshuí ag am tiomsaithe.\n"
-#~ "Is dócha nach raibh na comhaid cheanntáisc forbartha Xorg suiteáilte."
-
-#~ msgid "Tiling Disabled"
-#~ msgstr "Tíliú Díchumasaithe"
-
-#~ msgid "Tiling Enabled"
-#~ msgstr "Tíliú Cumasaithe"
-
-#~ msgid ""
-#~ "Desktop effects were too slow and have been suspended.\n"
-#~ "You can disable functionality checks in System Settings (on the Advanced "
-#~ "tab in Desktop Effects)."
-#~ msgstr ""
-#~ "Bhí na maisíochtaí deisce rómhall agus cuireadh ar fionraí iad.\n"
-#~ "Is féidir leat deimhniú feidhmiúlachta a dhíchumasú i Socruithe an "
-#~ "Chórais (ar an gcluaisín Casta i Maisíochtaí Deisce)."
-
-#~ msgid ""
-#~ "Desktop effects were too slow and have been suspended.\n"
-#~ "If this was only a temporary problem, you can resume using the '%1' "
-#~ "shortcut.\n"
-#~ "You can disable functionality checks in System Settings (on the Advanced "
-#~ "tab in Desktop Effects)."
-#~ msgstr ""
-#~ "Bhí na maisíochtaí deisce rómhall agus cuireadh ar fionraí iad.\n"
-#~ "Más fadhb shealadach atá ann, b'fhéidir leat na maisíochtaí a atosú trí "
-#~ "aicearra '%1'.\n"
-#~ "Is féidir leat deimhniú feidhmiúlachta a dhíchumasú i Socruithe an "
-#~ "Chórais (ar an gcluaisín Casta i Maisíochtaí Deisce)."
-
-#~ msgid ""
-#~ "\n"
-#~ "KWin will now exit..."
-#~ msgstr ""
-#~ "\n"
-#~ "Stopfaidh KWin anois..."
-
-#~ msgid "Window to Desktop 2"
-#~ msgstr "Fuinneog go Deasc 2"
-
-#~ msgid "Window to Desktop 3"
-#~ msgstr "Fuinneog go Deasc 3"
-
-#~ msgid "Window to Desktop 4"
-#~ msgstr "Fuinneog go Deasc 4"
-
-#~ msgid "Window to Desktop 5"
-#~ msgstr "Fuinneog go Deasc 5"
-
-#~ msgid "Window to Desktop 6"
-#~ msgstr "Fuinneog go Deasc 6"
-
-#~ msgid "Window to Desktop 7"
-#~ msgstr "Fuinneog go Deasc 7"
-
-#~ msgid "Window to Desktop 8"
-#~ msgstr "Fuinneog go Deasc 8"
-
-#~ msgid "Window to Desktop 9"
-#~ msgstr "Fuinneog go Deasc 9"
-
-#~ msgid "Window to Desktop 10"
-#~ msgstr "Fuinneog go Deasc 10"
-
-#~ msgid "Window to Desktop 11"
-#~ msgstr "Fuinneog go Deasc 11"
-
-#~ msgid "Window to Desktop 12"
-#~ msgstr "Fuinneog go Deasc 12"
-
-#~ msgid "Window to Desktop 13"
-#~ msgstr "Fuinneog go Deasc 13"
-
-#~ msgid "Window to Desktop 14"
-#~ msgstr "Fuinneog go Deasc 14"
-
-#~ msgid "Window to Desktop 15"
-#~ msgstr "Fuinneog go Deasc 15"
-
-#~ msgid "Window to Desktop 16"
-#~ msgstr "Fuinneog go Deasc 16"
-
-#~ msgid "Window to Desktop 17"
-#~ msgstr "Fuinneog go Deasc 17"
-
-#~ msgid "Window to Desktop 18"
-#~ msgstr "Fuinneog go Deasc 18"
-
-#~ msgid "Window to Desktop 19"
-#~ msgstr "Fuinneog go Deasc 19"
-
-#~ msgid "Window to Desktop 20"
-#~ msgstr "Fuinneog go Deasc 20"
-
-#~ msgid "Window to Screen 4"
-#~ msgstr "Fuinneog go Scáileán 4"
-
-#~ msgid "Window to Screen 5"
-#~ msgstr "Fuinneog go Scáileán 5"
-
-#~ msgid "Window to Screen 6"
-#~ msgstr "Fuinneog go Scáileán 6"
-
-#~ msgid "Window to Screen 7"
-#~ msgstr "Fuinneog go Scáileán 7"
-
-#~ msgid "Switch to Desktop 3"
-#~ msgstr "Téigh go Deasc 3"
-
-#~ msgid "Switch to Desktop 4"
-#~ msgstr "Téigh go Deasc 4"
-
-#~ msgid "Switch to Desktop 5"
-#~ msgstr "Téigh go Deasc 5"
-
-#~ msgid "Switch to Desktop 6"
-#~ msgstr "Téigh go Deasc 6"
-
-#~ msgid "Switch to Desktop 7"
-#~ msgstr "Téigh go Deasc 7"
-
-#~ msgid "Switch to Desktop 8"
-#~ msgstr "Téigh go Deasc 8"
-
-#~ msgid "Switch to Desktop 9"
-#~ msgstr "Téigh go Deasc 9"
-
-#~ msgid "Switch to Desktop 10"
-#~ msgstr "Téigh go Deasc 10"
-
-#~ msgid "Switch to Desktop 11"
-#~ msgstr "Téigh go Deasc 11"
-
-#~ msgid "Switch to Desktop 12"
-#~ msgstr "Téigh go Deasc 12"
-
-#~ msgid "Switch to Desktop 13"
-#~ msgstr "Téigh go Deasc 13"
-
-#~ msgid "Switch to Desktop 14"
-#~ msgstr "Téigh go Deasc 14"
-
-#~ msgid "Switch to Desktop 15"
-#~ msgstr "Téigh go Deasc 15"
-
-#~ msgid "Switch to Desktop 16"
-#~ msgstr "Téigh go Deasc 16"
-
-#~ msgid "Switch to Desktop 17"
-#~ msgstr "Téigh go Deasc 17"
-
-#~ msgid "Switch to Desktop 18"
-#~ msgstr "Téigh go Deasc 18"
-
-#~ msgid "Switch to Desktop 19"
-#~ msgstr "Téigh go Deasc 19"
-
-#~ msgid "Switch to Desktop 20"
-#~ msgstr "Téigh go Deasc 20"
-
-#~ msgid "Switch to Screen 4"
-#~ msgstr "Téigh go Scáileán 4"
-
-#~ msgid "Switch to Screen 5"
-#~ msgstr "Téigh go Scáileán 5"
-
-#~ msgid "Switch to Screen 6"
-#~ msgstr "Téigh go Scáileán 6"
-
-#~ msgid "Switch to Screen 7"
-#~ msgstr "Téigh go Scáileán 7"
-
-#~ msgid "<center><b>%1</b></center>"
-#~ msgstr "<center><b>%1</b></center>"
-
-#~ msgid "Menu"
-#~ msgstr "Roghchlár"
-
-#~ msgid "Not on all desktops"
-#~ msgstr "Ná cuir ar gach deasc"
-
-#~ msgid "On all desktops"
-#~ msgstr "Ar gach deasc"
-
-#~ msgid "Help"
-#~ msgstr "Cabhair"
-
-#~ msgid "Restore"
-#~ msgstr "Athchóirigh"
-
-#~ msgid "Do not keep above others"
-#~ msgstr "Ná coimeád os cionn"
-
-#~ msgid "Do not keep below others"
-#~ msgstr "Ná coimeád faoi chinn eile"
-
-#~ msgid "No window decoration plugin library was found."
-#~ msgstr "Ní bhfuarthas leabharlann bhreiseán maisiúcháin."
-
-#~ msgid "The default decoration plugin is corrupt and could not be loaded."
-#~ msgstr ""
-#~ "Tá an breiseán réamhshocraithe maisiúcháin truaillithe agus níorbh "
-#~ "fhéidir é a luchtú."
-
-#~ msgid "The library %1 is not a KWin plugin."
-#~ msgstr "Ní breiseán KWin í leabharlann %1."
-
-#~ msgid "Window Screenshot to Clipboard"
-#~ msgstr "Sábháil Seat den Fhuinneog sa Ghearrthaisce"
-
-#~ msgid "Desktop Screenshot to Clipboard"
-#~ msgstr "Sábháil Seat den Deasc sa Ghearrthaisce"
-
-#~ msgid "kwin: failure during initialization; aborting"
-#~ msgstr "kwin: teip i rith an tosaithe; ag tobscor"
-
-#~ msgid "Terminate"
-#~ msgstr "Stop"
-
-#~ msgid "Keep Running"
-#~ msgstr "Leanúint den rith"
-
-#~ msgctxt "@title:tab Basic Settings"
-#~ msgid "Basic"
-#~ msgstr "Bunsocruithe"
-
-#~ msgctxt "@title:tab Advanced Settings"
-#~ msgid "Advanced"
-#~ msgstr "Casta"
-
-#~ msgid "Top"
-#~ msgstr "Barr"
-
-#~ msgid "Bottom-Right"
-#~ msgstr "Bun ar Dheis"
-
-#~ msgid "Bottom"
-#~ msgstr "Bun"
-
-#~ msgid "Bottom-Left"
-#~ msgstr "Bun ar Chlé"
-
-#~ msgid "Center"
-#~ msgstr "Láraigh"
-
-#~ msgid "Toggle Invert Effect"
-#~ msgstr "Scoránaigh an Mhaisíocht Inbhéartaithe"
-
-#~ msgid "Toggle Invert Effect on Window"
-#~ msgstr "Scoránaigh an Mhaisíocht Inbhéartaithe ar Fhuinneog"
-
-#~ msgid "Clear All Mouse Marks"
-#~ msgstr "Glan Gach Marc Luiche"
-
-#~ msgid "Clear Last Mouse Mark"
-#~ msgstr "Glan an Marc Luiche Is Déanaí"
-
-#~ msgid "Clear Mouse Marks"
-#~ msgstr "Glan Marcanna Luiche"
-
-#~ msgid "Toggle Present Windows (Current desktop)"
-#~ msgstr "Scoránaigh na Fuinneoga atá ann (Deasc reatha)"
-
-#~ msgid "Toggle Present Windows (All desktops)"
-#~ msgstr "Scoránaigh na Fuinneoga atá ann (Gach deasc)"
-
-#~ msgid ""
-#~ "Filter:\n"
-#~ "%1"
-#~ msgstr ""
-#~ "Scagaire:\n"
-#~ "%1"
-
-#~ msgctxt "@action Enables/Disables an effect that makes windows more sharp"
-#~ msgid "Toggle Sharpen Effect"
-#~ msgstr "Scoránaigh an Mhaisíocht Géaraithe"
-
-#~ msgid "Snow"
-#~ msgstr "Sneachta"
-
-#~ msgid "Toggle Snow on Desktop"
-#~ msgstr "Scoránaigh Sneachta ar an Deasc"
-
-#~ msgid "Toggle Thumbnail for Current Window"
-#~ msgstr "Scoránaigh Mionsamhail na Fuinneoige Reatha"
-
-#~ msgid "Hold Ctrl+Meta keys to see where the mouse cursor is."
-#~ msgstr "Coinnigh Ctrl+Meta síos chun cúrsóir na luiche a aimsiú."
-
-#~ msgid "Path to save video:"
-#~ msgstr "Conair shábháil an fhíseáin:"
-
-#~ msgid "None"
-#~ msgstr "Neamhní"
-
-#~ msgid "X offset:"
-#~ msgstr "Fritháireamh X:"
-
-#~ msgid "Y offset:"
-#~ msgstr "Fritháireamh Y:"
-
-#~ msgid "Shadow opacity:"
-#~ msgstr "Teimhneacht an scátha:"
-
-#~ msgid "Shadow fuzziness:"
-#~ msgstr "Doiléire an scátha:"
-
-#~ msgid "Shadow size (relative to window):"
-#~ msgstr "Méid an scátha (coibhneasta don fhuinneog):"
-
-#~ msgid "Shadow color:"
-#~ msgstr "Dath an scátha:"
-
-#~ msgid "Active window has stronger shadow"
-#~ msgstr "Scáth níos láidre ag an bhfuinneog reatha"
-
-#~ msgid "Select Wallpaper Image File"
-#~ msgstr "Roghnaigh Comhad Íomhá don Chúlbhrat"
-
-#~ msgid "Toggle Expose Effect"
-#~ msgstr "Scoránaigh an mhaisíocht nochta"
-
-#~ msgid "Toggle Expose Effect (incl. other desktops)"
-#~ msgstr "Scoránaigh an Mhaisíocht Nochta (deasca eile san áireamh)"
-
-#~ msgid "Draw window caption on top of window"
-#~ msgstr "Taispeáin fotheideal ag barr na fuinneoige"
-
-#~ msgid "Use for window switching"
-#~ msgstr "Úsáid chun an fhuinneog a mhalartú"
-
-#~ msgid "Activate when cursor is at a specific edge or corner of the screen:"
-#~ msgstr "Gníomhachtaigh nuair atá an cúrsóir ag ciumhais nó cúinne ar leith:"
-
-#~ msgid "for windows on all desktops: "
-#~ msgstr "d'fhuinneoga ar gach deasc: "
-
-#~ msgid "Animate desktop changes"
-#~ msgstr "Beoigh athruithe don deasc"
-
-#~ msgid "Changes opacity of following elements:"
-#~ msgstr "Athraíonn sé teimhneacht na n-eilimintí seo a leanas:"
-
-#~ msgid "Moved/resized windows:"
-#~ msgstr "Fuinneoga a athraíodh a méid/a bogadh:"
-
-#~ msgid "for windows on current desktop: Ctrl+F10"
-#~ msgstr "d'fhuinneoga ar an deasc reatha: Ctrl+F10"
-
-#~ msgid "for windows on all desktops: Ctrl+F11"
-#~ msgstr "d'fhuinneoga ar gach deasc: Ctrl+F11"
