@@ -618,7 +618,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .rgbRange = existingData.rgbRange.value_or(kscreenChangeSet.rgbRange.value_or(BackendOutput::RgbRange::Automatic)),
             .vrrPolicy = existingData.vrrPolicy.value_or(kscreenChangeSet.vrrPolicy.value_or(VrrPolicy::Never)),
             .highDynamicRange = existingData.highDynamicRange.value_or(false),
-            .referenceLuminance = existingData.referenceLuminance.value_or(std::clamp(output->maxAverageBrightness().value_or(200), 200.0, 500.0)),
+            .referenceLuminance = existingData.referenceLuminance.value_or(std::clamp(output->maxAverageBrightnessOverride().value_or(output->advertisedMaxAverageBrightness().value_or(200)), 200.0, 500.0)),
             .wideColorGamut = existingData.wideColorGamut.value_or(false),
             .autoRotationPolicy = existingData.autoRotation.value_or(BackendOutput::AutoRotationPolicy::InTabletMode),
             .colorProfileSource = existingData.colorProfileSource.value_or(BackendOutput::ColorProfileSource::sRGB),

@@ -576,19 +576,19 @@ const std::shared_ptr<ColorDescription> &BackendOutput::colorDescription() const
     return m_state.colorDescription;
 }
 
-std::optional<double> BackendOutput::maxPeakBrightness() const
+std::optional<double> BackendOutput::advertisedMaxPeakBrightness() const
 {
-    return m_state.maxPeakBrightnessOverride ? m_state.maxPeakBrightnessOverride : m_information.maxPeakBrightness;
+    return m_information.maxPeakBrightness;
 }
 
-std::optional<double> BackendOutput::maxAverageBrightness() const
+std::optional<double> BackendOutput::advertisedMaxAverageBrightness() const
 {
-    return m_state.maxAverageBrightnessOverride ? *m_state.maxAverageBrightnessOverride : m_information.maxAverageBrightness;
+    return m_information.maxAverageBrightness;
 }
 
-double BackendOutput::minBrightness() const
+double BackendOutput::advertisedMinBrightness() const
 {
-    return m_state.minBrightnessOverride.value_or(m_information.minBrightness);
+    return m_information.minBrightness;
 }
 
 std::optional<double> BackendOutput::maxPeakBrightnessOverride() const
