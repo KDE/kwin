@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-20 00:47+0000\n"
-"PO-Revision-Date: 2026-02-06 01:55+0200\n"
+"PO-Revision-Date: 2026-02-21 02:13+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -158,10 +158,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Spalvų profilyje nėra TRC žymių"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Nepavyko atverti ICC profilio „%1“"
+msgstr "Nepavyko invertuoti ICC profilio „%1“ tono kreivių"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1269,7 +1268,7 @@ msgstr "laikas"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "Pranešimas, kurį rodyti (visas ekranas, be rėmelio)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:145
 #, kde-format
@@ -1283,12 +1282,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Šio pagelbiklio paslaugų programos negalima iškviesti tiesiogiai."
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1296,9 +1290,9 @@ msgid ""
 "%1 keyboard shortcut instead."
 msgstr ""
 "Jūs pasirinkote rodyti langą visame ekrane.\n"
-"Jei pati programa neturi parinkties išjungti viso ekrano veikseną, tuomet "
-"negalėsite išjungti veikseną naudodami pelę. Vietoje to, naudokite lango "
-"meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
+"Jei pati programa neturi parinkties išjungti viso ekrano veikseną, tada "
+"negalėsite išjungti veikseną naudodami pelę. Vietoje to, naudokite spartųjį "
+"klavišą %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1314,44 +1308,32 @@ msgstr ""
 "meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse."
 msgstr ""
 "Jūs pasirinkote rodyti langą visame ekrane.\n"
-"Jei pati programa neturi parinkties išjungti viso ekrano veikseną, tuomet "
-"negalėsite išjungti veikseną naudodami pelę. Vietoje to, naudokite lango "
-"meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
+"Jei pati programa neturi parinkties išjungti viso ekrano veikseną, tada "
+"negalėsite išjungti veikseną naudodami pelę."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "Visas ekranas"
+msgstr "Atšaukti visą ekraną"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the %1 keyboard shortcut instead."
 msgstr ""
 "Jūs pasirinkote rodyti langą be rėmelio.\n"
-"Be rėmelio negalėsite vėl įjungti rėmelį, naudodami pelę: vietoje pelės, "
-"naudokite lango meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
+"Be rėmelio negalėsite vėl įjungti rėmelį naudodami pelę: vietoje to, "
+"naudokite spartųjį klavišą %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
 #, kde-format
@@ -1366,32 +1348,25 @@ msgstr ""
 "naudokite lango meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
 "Jūs pasirinkote rodyti langą be rėmelio.\n"
-"Be rėmelio negalėsite vėl įjungti rėmelį, naudodami pelę: vietoje pelės, "
-"naudokite lango meniu, kurį galite aktyvuoti sparčiuoju klavišu %1."
+"Be rėmelio negalėsite vėl įjungti rėmelį, naudodami pelę."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
-#, fuzzy, kde-format
-#| msgid "&No Border"
+#, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr "&Nerodyti rėmelio"
+msgstr "Atkurti rėmelį"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "Daugiau neberodyti"
 
 #: helpers/killer/killdialog.cpp:37
 #, kde-kuit-format
@@ -1402,10 +1377,10 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><application>%1</application> nereaguoja. Ar norite nutraukti šios "
-"programos darbą?</para><para><emphasis strong='true'>Nutraukus programos "
-"darbą, bus užverti visi jos langai. Bet kokie neįrašyti duomenys bus "
-"prarasti.</emphasis></para>"
+"<para><application>%1</application> nereaguoja. Ar norite baigti šios "
+"programos darbą?</para><para><emphasis strong='true'>Baigus programos darbą, "
+"bus užverti visi jos langai. Bet kokie neįrašyti duomenys bus prarasti.</"
+"emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:41
 #, kde-kuit-format
@@ -1416,23 +1391,21 @@ msgid ""
 "strong='true'>Terminating this application will close all of its windows. "
 "Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>„%1“ iš <application>%2</application> nereaguoja. Ar norite nutraukti "
-"šios programos darbą?</para><para><emphasis strong='true'>Nutraukus "
-"programos darbą, bus užverti visi jos langai. Bet kokie neįrašyti duomenys "
-"bus prarasti.</emphasis></para>"
+"<para>„%1“ iš <application>%2</application> nereaguoja. Ar norite baigti "
+"šios programos darbą?</para><para><emphasis strong='true'>Baigus programos "
+"darbą, bus užverti visi jos langai. Bet kokie neįrašyti duomenys bus "
+"prarasti.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "&Nutraukti programos %1 darbą"
+msgstr "Baigiamas programos %1 darbas…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "&Nutraukti programos %1 darbą"
+msgstr "&Baigti programos %1 darbą"
 
 #: helpers/killer/killdialog.cpp:72
 #, kde-format
@@ -1463,7 +1436,7 @@ msgstr "Nereaguoja"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Išsamiau"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
@@ -3638,17 +3611,15 @@ msgstr "Plėšymo taisyklės tipas"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:467
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast"
-msgstr "&Slėpti, kai filmuojamas ekranas"
+msgstr "Slėpti, kai filmuojamas ekranas"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:471
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast rule type"
-msgstr "&Slėpti, kai filmuojamas ekranas"
+msgstr "„Slėpti, kai filmuojamas ekranas“ taisyklės tipas"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3916,10 +3887,9 @@ msgid "Maximize Window Horizontally"
 msgstr "Išskleisti langą horizontaliai"
 
 #: useractions.cpp:845
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "Keisti lango dydį"
+msgstr "Atkurti langą"
 
 #: useractions.cpp:847
 #, kde-format

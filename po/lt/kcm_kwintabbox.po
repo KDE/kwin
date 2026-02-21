@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-10 00:45+0000\n"
-"PO-Revision-Date: 2025-12-29 19:56+0200\n"
+"PO-Revision-Date: 2026-02-21 01:56+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -282,7 +282,7 @@ msgstr "Rodyti pasirinktą langą"
 #: main.ui:644
 #, kde-format
 msgid "Enable the window list effect"
-msgstr ""
+msgstr "Įjungti langų sąrašo efektą"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
 #: main.ui:678
@@ -296,24 +296,25 @@ msgstr ""
 #, kde-format
 msgid "The time in milliseconds to wait before showing the task switcher."
 msgstr ""
+"Kiek laiko, milisekundėmis, laukti, prieš parodant užduočių perjungiklį."
 
 #. i18n: ectx: property (text), widget (QLabel, label_DelayTime)
 #: main.ui:704
 #, kde-format
 msgid "Show delay:"
-msgstr ""
+msgstr "Rodymo delsa:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:720
 #, kde-format
 msgid " ms"
-msgstr ""
+msgstr " ms"
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:735
 #, kde-format
 msgid "Delay before the window list appears"
-msgstr ""
+msgstr "Delsa prieš atsirandant langų sąrašui"
 
 #: shortcutsettings.cpp:131
 #, kde-format

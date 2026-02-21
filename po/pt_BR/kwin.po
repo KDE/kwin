@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-20 00:47+0000\n"
-"PO-Revision-Date: 2026-02-14 06:23-0300\n"
+"PO-Revision-Date: 2026-02-20 09:11-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -176,10 +176,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "O perfil de cores não possui tags TRC"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Falha ao abrir o perfil ICC \"%1\""
+msgstr "Não foi possível inverter as curvas de tom do perfil ICC \"%1\""
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1416,11 +1415,9 @@ msgstr ""
 "perdidos.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "&Encerrar %1"
+msgstr "Encerrando %1…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1457,7 +1454,7 @@ msgstr "Não está respondendo"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Detalhes"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
@@ -2582,7 +2579,7 @@ msgstr "Região inválida"
 #: plugins/screencast/screencaststream.cpp:375
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "A composição OpenGL é requerida para transmitir a tela"
+msgstr "A composição OpenGL é requerida para gravar a tela"
 
 #: plugins/screencast/screencaststream.cpp:383
 #, kde-format
@@ -3621,17 +3618,15 @@ msgstr "Tipo de regra de tearing"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:467
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast"
-msgstr "&Ocultar da transmissão de tela"
+msgstr "Ocultar da gravação de tela"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:471
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast rule type"
-msgstr "&Ocultar da transmissão de tela"
+msgstr "Ocultar do tipo de regra de gravação de tela"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3770,7 +3765,7 @@ msgstr "&Sem barra de título e moldura"
 #: useractions.cpp:258
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr "&Ocultar da transmissão de tela"
+msgstr "&Ocultar da gravação de tela"
 
 #: useractions.cpp:266
 #, kde-format

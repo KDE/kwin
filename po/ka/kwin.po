@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-20 00:47+0000\n"
-"PO-Revision-Date: 2026-02-14 02:49+0100\n"
+"PO-Revision-Date: 2026-02-20 06:29+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -157,10 +157,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "ფერების პროფილს TRC ჭდეები აკლია"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "ვერ გავხსენი ICC პროფილი \"%1\""
+msgstr "ICC პროფილის \"%1\" ტონის მრუდების ინვერსია შეუძლებელია"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1398,11 +1397,9 @@ msgstr ""
 "არ შეგინახავთ, დაიკარგება.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "%1-ის მოკვლა"
+msgstr "%1-ის შეწყვეტა…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1439,7 +1436,7 @@ msgstr "არ პასუხობს"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&დეტალები"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
@@ -3595,17 +3592,15 @@ msgstr "ფიფქების წესის ტიპი"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:467
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast"
-msgstr "დამალვა ე&კრანის ვიდეოჩანაწერიდან"
+msgstr "დამალვა ეკრანის გადაცემიდან"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:471
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast rule type"
-msgstr "დამალვა ე&კრანის ვიდეოჩანაწერიდან"
+msgstr "დამალვა ეკრანის გადაცემის წესის ტიპიდან"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

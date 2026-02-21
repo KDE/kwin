@@ -17,15 +17,15 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-20 00:47+0000\n"
-"PO-Revision-Date: 2026-02-16 16:27+0300\n"
+"PO-Revision-Date: 2026-02-20 15:32+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
-"Language-Team: Turkish <kde-i18n-doc@kde.org>\n"
+"Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.07.70\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -160,10 +160,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Renk profilinde TRC künyeleri eksik"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "ICC profili “%1” açılamadı"
+msgstr "“%1” ICC profilinin ton eğrileri ters çevrilemedi"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1401,11 +1400,9 @@ msgstr ""
 "kapatacaktır. Kaydedilmemiş tüm veriler kaybolur.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "&Sonlandır: %1"
+msgstr "%1 sonlandırılıyor…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1442,7 +1439,7 @@ msgstr "Yanıt Vermiyor"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Ayrıntılar"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
@@ -3595,17 +3592,15 @@ msgstr "Yırtılma kuralı türü"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:467
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast"
-msgstr "Ekran Yayımından &Gizle"
+msgstr "Ekran yayınından gizle"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:471
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast rule type"
-msgstr "Ekran Yayımından &Gizle"
+msgstr "Ekran yayınından gizle kuralı türü"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3742,7 +3737,7 @@ msgstr "Başlık Çubuğu ve Çerçeve &Yok"
 #: useractions.cpp:258
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr "Ekran Yayımından &Gizle"
+msgstr "Ekran Yayınından &Gizle"
 
 #: useractions.cpp:266
 #, kde-format

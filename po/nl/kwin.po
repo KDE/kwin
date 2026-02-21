@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-20 00:47+0000\n"
-"PO-Revision-Date: 2026-02-14 12:36+0100\n"
+"PO-Revision-Date: 2026-02-20 13:45+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -170,10 +170,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "In het kleurprofiel ontbreken TRC-tags"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "ICC-profiel \"%1\" openen is mislukt"
+msgstr "Kon tintkrommen van ICC profiel \"%1\" niet inverteren"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1412,11 +1411,9 @@ msgstr ""
 "zullen verloren gaan.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "%1 b&eëindigen"
+msgstr "%1 beëindigen…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1453,7 +1450,7 @@ msgstr "Reageert niet"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Details"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
@@ -3619,17 +3616,15 @@ msgstr "Type regel voor scheuren"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:467
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast"
-msgstr "&Verbergen van schermvideo"
+msgstr "Verbergen voor schermvideo"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:471
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast rule type"
-msgstr "&Verbergen van schermvideo"
+msgstr "Verbergen van type regel van schermvideo"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

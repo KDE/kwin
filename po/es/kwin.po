@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-20 00:47+0000\n"
-"PO-Revision-Date: 2026-02-17 01:51+0100\n"
+"PO-Revision-Date: 2026-02-21 00:39+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -172,10 +172,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "El perfil de color carece de etiquetas TRC."
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "No se ha podido abrir el perfil ICC «%1»."
+msgstr "No se han podido invertir las curvas de tono del perfil ICC «%1»."
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1413,11 +1412,9 @@ msgstr ""
 "haya guardado.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "&Terminar %1"
+msgstr "Terminando %1…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1454,7 +1451,7 @@ msgstr "No responde"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Detalles"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
@@ -3622,17 +3619,15 @@ msgstr "Tipo de regla para «tearing»"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:467
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast"
-msgstr "&Ocultar de la grabación de la pantalla"
+msgstr "Ocultar de la grabación de pantalla"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:471
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast rule type"
-msgstr "&Ocultar de la grabación de la pantalla"
+msgstr "Tipo de regla para ocultar de la grabación de pantalla"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

@@ -3,7 +3,7 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# SPDX-FileCopyrightText: 2013, 2014, 2015, 2016, 2017, 2019, 2020, 2022, 2024 Antoni Bella Pérez <antonibella5@yahoo.com>
+# SPDX-FileCopyrightText: 2013, 2014, 2015, 2016, 2017, 2019, 2020, 2022, 2024, 2026 Antoni Bella Pérez <antonibella5@yahoo.com>
 # SPDX-FileCopyrightText: 1999, 2000, 2001, 2002, 2004, 2005, 2006 Sebastià Pla i Sanz <sps@sastia.com>
 # SPDX-FileCopyrightText: 2005 Albert Astals Cid <aacid@kde.org>
 # SPDX-FileCopyrightText: 2019 Alfredo Vicente <alviboi@gmail.com>
@@ -13,14 +13,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-20 00:47+0000\n"
-"PO-Revision-Date: 2026-02-14 15:16+0100\n"
-"Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
+"PO-Revision-Date: 2026-02-20 15:26+0100\n"
+"Last-Translator: Antoni Bella Pérez <antonibella5@yahoo.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.04.0\n"
+"X-Generator: Lokalize 25.08.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
@@ -163,10 +163,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Manquen les etiquetes TRC del perfil de color"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Ha fallat en obrir el perfil ICC «%1»"
+msgstr "No s'han pogut invertir les corbes de to del perfil ICC «%1»"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1406,11 +1405,9 @@ msgstr ""
 "perdrà.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "Finali&tza %1"
+msgstr "S'està finalitzant %1…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1447,7 +1444,7 @@ msgstr "No respon"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Detalls"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
@@ -3618,17 +3615,15 @@ msgstr "Tipus de regla d'esquinçament"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:467
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast"
-msgstr "&Oculta dels vídeos de captura de pantalla"
+msgstr "Oculta dels vídeos de captura de pantalla"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:471
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast rule type"
-msgstr "&Oculta dels vídeos de captura de pantalla"
+msgstr "Oculta del tipus de regla de vídeo de captura de pantalla"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
