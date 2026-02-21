@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-20 03:19+0000\n"
+"POT-Creation-Date: 2026-02-21 02:46+0000\n"
 "PO-Revision-Date: 2026-02-03 23:54+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2441,7 +2441,7 @@ msgstr "스크린캐스팅에는 OpenGL 컴포지팅이 필요함"
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire 스트림을 만들 수 없음"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2450,7 +2450,7 @@ msgstr ""
 "왼쪽 단추를 누르거나 Enter 키를 눌러서 스크린샷을 찍을 창을 선택합니다.\n"
 "Esc 키나 오른쪽 단추를 누르면 취소합니다."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

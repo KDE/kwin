@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-20 03:19+0000\n"
+"POT-Creation-Date: 2026-02-21 02:46+0000\n"
 "PO-Revision-Date: 2025-12-11 10:23+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -2446,7 +2446,7 @@ msgstr "يتطلب تسجيل الشاشة تركب أوبن‌جي‌إل"
 msgid "Failed to create PipeWire stream"
 msgstr "فشل في إنشاء دفق PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2455,7 +2455,7 @@ msgstr ""
 "حدد إطارًا للشاشة مع النقر الأيسر أو الضغط على زر الدخول. \n"
 "للإلغاء اضغط زر الهروب أو انقر بزر الفأرة الأيمن ."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

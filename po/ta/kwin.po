@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-20 03:19+0000\n"
+"POT-Creation-Date: 2026-02-21 02:46+0000\n"
 "PO-Revision-Date: 2026-01-04 17:13+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -2477,7 +2477,7 @@ msgstr "திரைப்பகிர்வுக்கு OpenGL சாளர�
 msgid "Failed to create PipeWire stream"
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2486,7 +2486,7 @@ msgstr ""
 "இடது கிளிக் அல்லது enter விசையை கொண்டு திரைப்பிடிப்புக்கான  சாளரத்தை தேர்ந்தெடுங்கள்.\n"
 "கைவிட, Escape விசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

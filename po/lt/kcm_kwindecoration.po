@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-28 02:43+0000\n"
-"PO-Revision-Date: 2026-01-19 18:49+0200\n"
+"PO-Revision-Date: 2026-02-21 01:54+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -209,9 +209,7 @@ msgid "Show titlebar button tooltips"
 msgstr "Rodyti antraštės juostos mygtukų paaiškinimus"
 
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" buttonX"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" button"
 msgstr "Visada rodyti mygtuką „Slėpti, kai filmuojamas ekranas“"

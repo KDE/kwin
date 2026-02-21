@@ -6,7 +6,7 @@
 # Henrique Pinto <stampede@coltec.ufmg.br>, 2003.
 # Lisiane Sztoltz Teixeira <lisiane@conectiva.com.br>, 2004.
 # Lisiane Sztoltz Teixeira <lisiane@kdemail.net>, 2004, 2005.
-# SPDX-FileCopyrightText: 2004, 2012, 2025 Marcus Gama <marcus.gama@gmail.com>
+# SPDX-FileCopyrightText: 2004, 2012, 2025, 2026 Marcus Gama <marcus.gama@gmail.com>
 # Diniz Bortolotto <diniz.bortolotto@gmail.com>, 2007, 2008.
 # doutor.zero <doutor.zero@gmail.com>, 2007.
 # Fernando Boaglio <boaglio@kde.org>, 2008.
@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-20 03:19+0000\n"
-"PO-Revision-Date: 2025-12-11 16:24-0300\n"
+"POT-Creation-Date: 2026-02-21 02:46+0000\n"
+"PO-Revision-Date: 2026-02-20 09:06-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.08.3\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -176,10 +176,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "O perfil de cores não possui tags TRC"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Falha ao abrir o perfil ICC \"%1\""
+msgstr "Não foi possível inverter as curvas de tom do perfil ICC \"%1\""
 
 #: debug_console.cpp:86
 #, kde-format
@@ -2482,7 +2481,7 @@ msgstr "A composição OpenGL é requerida para transmitir a tela"
 msgid "Failed to create PipeWire stream"
 msgstr "Falha ao criar fluxo do PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2491,7 +2490,7 @@ msgstr ""
 "Selecione a janela a ser capturada com o clique esquerdo ou enter.\n"
 "Esc ou clique direito para cancelar."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

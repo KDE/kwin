@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1730288 2026-02-20 03:51:45Z scripty $
+# $Id: kwin.po 1730395 2026-02-21 03:19:32Z scripty $
 # $Source$
 #
 #
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-20 03:19+0000\n"
-"PO-Revision-Date: 2025-12-11 06:59+0100\n"
+"POT-Creation-Date: 2026-02-21 02:46+0000\n"
+"PO-Revision-Date: 2026-02-20 07:41+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -171,10 +171,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Barvni profil nima značk TRC"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "ICC profila \"%1\" ni bilo mogoče odpreti"
+msgstr "Ni bilo mogoče invertirati tonskih krivulj ICC profila \"%1\""
 
 #: debug_console.cpp:86
 #, kde-format
@@ -2476,7 +2475,7 @@ msgstr "Za predvajanje zaslona je potreben upodobilnik OpenGL"
 msgid "Failed to create PipeWire stream"
 msgstr "Kreiranje toka PipeWire ni uspelo"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2485,7 +2484,7 @@ msgstr ""
 "Izberite okno za posnetek zaslona z levim klikom ali pritiskom tipke Enter.\n"
 "Tipka Escape ali desni klik za preklic."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

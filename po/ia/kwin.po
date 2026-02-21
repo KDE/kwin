@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-20 03:19+0000\n"
-"PO-Revision-Date: 2026-01-22 17:46+0100\n"
+"POT-Creation-Date: 2026-02-21 02:46+0000\n"
+"PO-Revision-Date: 2026-02-20 18:49+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -158,10 +158,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Profilo de color es mancante etiquettas TRC"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Falleva a aperir profilo de ICC \"%1\""
+msgstr "Non poteva inverter curvas de tono de Profilo de ICC \"%1\""
 
 #: debug_console.cpp:86
 #, kde-format
@@ -2466,7 +2465,7 @@ msgstr "Compositor de OpenGL es requirite per screencasting"
 msgid "Failed to create PipeWire stream"
 msgstr "Falleva a crear fluxo (stream) de PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:413
+#: plugins/screenshot/screenshotdbusinterface2.cpp:425
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2475,7 +2474,7 @@ msgstr ""
 "Selige fenestra pro captura de schermo per cliccar a sinistra o Enter.\n"
 "Escappa o clicca a dextera pro cancellar."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:431
+#: plugins/screenshot/screenshotdbusinterface2.cpp:443
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
