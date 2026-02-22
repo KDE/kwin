@@ -116,4 +116,70 @@
       <arg type="q" name="keycode" direction="in" />
     </signal>
   </interface>
+
+  <!--
+      org.freedesktop.a11y.PointerLocator:
+      @short_description: interface for locating the pointer position in the
+       accessibility tree
+
+      This interface is used by assistive technologies to query the pointer
+      position in the accessibility tree. The compositor is expected to listen on
+      the well-known bus name "org.freedesktop.a11y.Manager" at the object
+      path "/org/freedesktop/a11y/Manager".
+  -->
+  <interface name="org.freedesktop.a11y.PointerLocator">
+
+    <!--
+        QueryPointer:
+
+        Queries the a11y details about the toplevel beneath the mouse pointer,
+        together with the relative position of the mouse pointer on the surface.
+        The most up-to-date coordinates as known to the compositor are returned
+        by this method call.
+
+        Screen readers may use the given information to further query the
+        accessibility tree of the specific application, in order to identify
+        the application-side accessible elements directly underneath the mouse
+        pointer.
+
+        This request will also schedule the emission of a following
+        "PointerPositionChanged" signal, whenever mouse pointer motion would
+        happen.
+
+        The "data" argument is a generic container, so far the only handled keys
+        are relevant to AT-SPI:
+
+        - "app-dbus_name" (type: s): Application D-Bus name in the a11y D-Bus
+        - "toplevel-object-path" (type: o): Object path to the toplevel, in the
+          given D-Bus name.
+
+        If this data is not provided, the focused client will be considered to
+        be the desktop environment itself, and the provided coordinates will be
+        relative to its origin point.
+
+        An error will be returned if the client under the pointer is
+        non-introspectable.
+    -->
+    <method name="QueryPointer">
+      <arg type="a{sv}" name="app_data" direction="out" />
+      <arg type="d" name="rel_x" direction="out" />
+      <arg type="d" name="rel_y" direction="out" />
+    </method>
+
+    <!--
+        PointerPositionChanged:
+
+        This signal is emitted once when two conditions meet:
+        1. A "QueryPointer" method call happened before
+        2. Pointer motion happened after replying to that method call
+
+        The purpose of the signal is being used as a throttling mechanism, so
+        that a11y pointer handling is independent of device specifics like
+        frequency rate at which input is handled.
+
+        The expected response for a screen reader to this signal is scheduling
+        a following "QueryPointer" method call.
+    -->
+    <signal name="PointerPositionChanged"/>
+  </interface>
 </node>

@@ -10,6 +10,7 @@
 */
 #pragma once
 
+#include "a11ypointerlocator.h"
 #include "cursor.h"
 #include "input.h"
 #include "utils/cursortheme.h"
@@ -198,6 +199,8 @@ private:
     std::chrono::microseconds m_lastMoveTime = std::chrono::microseconds::zero();
     friend class PositionUpdateBlocker;
     EdgeBarrierType m_lastEdgeBarrierType = EdgeBarrierType::NormalBarrier;
+
+    A11yPointerLocator m_pointerLocator;
 };
 
 class WaylandCursorImage : public QObject

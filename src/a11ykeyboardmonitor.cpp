@@ -34,7 +34,7 @@ A11yKeyboardMonitor::A11yKeyboardMonitor()
         m_clients.remove(serviceName);
     });
 
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/freedesktop/a11y/Manager"), this, QDBusConnection::ExportScriptableContents);
+    // QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/freedesktop/a11y/Manager"), this, QDBusConnection::ExportScriptableContents);
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.freedesktop.a11y.Manager"));
 }
 
