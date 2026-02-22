@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-21 02:46+0000\n"
-"PO-Revision-Date: 2026-02-19 22:04+0100\n"
+"PO-Revision-Date: 2026-02-21 23:04+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -169,10 +169,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Kolore-profilak TRC etiketak falta ditu"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "ICC profila, \"%1\", irekitzea huts egin du"
+msgstr "Ezin izan dira \"%1\" ICC profileko tonu-kurbak alderantzikatu"
 
 #: debug_console.cpp:86
 #, kde-format
