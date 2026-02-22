@@ -650,7 +650,7 @@ std::shared_ptr<ColorDescription> ColorDescription::dimmed(double brightnessFact
         m_containerColorimetry,
         m_transferFunction,
         m_referenceLuminance * brightnessFactor,
-        m_minLuminance * brightnessFactor,
+        m_minLuminance,
         m_maxAverageLuminance.transform([&](double value) {
         return value * brightnessFactor;
     }),
