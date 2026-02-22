@@ -9,12 +9,12 @@
  */
 
 import QtQuick
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts
 import org.kde.plasma.core as PlasmaCore
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.kwin 3.0 as KWin
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.ksvg as KSvg
+import org.kde.plasma.components as PlasmaComponents3
+import org.kde.kwin as KWin
+import org.kde.kirigami as Kirigami
 
 KWin.TabBoxSwitcher {
     id: tabBox

@@ -8,7 +8,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import org.kde.kirigami 2.18 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.quickcharts as Charts
 import org.kde.quickcharts.controls as ChartControls
 

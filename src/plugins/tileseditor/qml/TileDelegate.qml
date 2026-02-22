@@ -9,7 +9,7 @@ import QtQuick.Layouts
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.kirigami as Kirigami
-import org.kde.plasma.components 3.0 as PlasmaComponents
+import org.kde.plasma.components as PlasmaComponents
 
 Item {
     id: delegate

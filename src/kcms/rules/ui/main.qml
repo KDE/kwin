@@ -9,7 +9,7 @@ import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 import QtQml.Models
 import org.kde.kcmutils as KCM
-import org.kde.kirigami 2.12 as Kirigami
+import org.kde.kirigami as Kirigami
 
 KCM.ScrollViewKCM {
     id: rulesListKCM

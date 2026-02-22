@@ -7,8 +7,8 @@
 import QtQuick
 import QtQuick.Window
 import org.kde.kwin
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.kirigami 2 as Kirigami
+import org.kde.ksvg as KSvg
+import org.kde.kirigami as Kirigami
 
 Window {
     id: window

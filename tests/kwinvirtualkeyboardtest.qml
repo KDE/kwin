@@ -10,7 +10,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import org.kde.plasma.workspace.keyboardlayout 1.0 as Keyboards
+import org.kde.plasma.workspace.keyboardlayout as Keyboards
 import org.kde.layershell as LayerShell
 
 ApplicationWindow

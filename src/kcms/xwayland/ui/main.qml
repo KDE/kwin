@@ -8,7 +8,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2
-import org.kde.kirigami 2.6 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
 import org.kde.kwin.kwinxwaylandsettings
 import org.kde.kquickcontrols

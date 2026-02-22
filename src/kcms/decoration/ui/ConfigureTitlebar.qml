@@ -10,7 +10,7 @@ import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 
 import org.kde.kcmutils as KCM
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 
 KCM.AbstractKCM {
     title: i18n("Titlebar Buttons")

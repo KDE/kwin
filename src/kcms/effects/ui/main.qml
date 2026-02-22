@@ -12,7 +12,7 @@ import QtQuick.Layouts
 
 import org.kde.kcmutils
 import org.kde.config
-import org.kde.kirigami 2 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.newstuff as NewStuff
 
 import org.kde.private.kcms.kwin.effects as Private
