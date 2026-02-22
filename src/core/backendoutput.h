@@ -259,6 +259,7 @@ public:
     std::optional<double> currentBrightness() const;
     double currentDimming() const;
     double artificialHdrHeadroom() const;
+    double maxPossibleArtificialHdrHeadroom() const;
     double dimming() const;
 
     bool detectedDdcCi() const;
@@ -464,6 +465,7 @@ protected:
         bool allowSdrSoftwareBrightness = true;
         /// how much HDR headroom is created by increasing the backlight beyond the user setting
         double artificialHdrHeadroom = 1.0;
+        double maxPossibleArtificialHdrHeadroom = 1.0;
         ColorPowerTradeoff colorPowerTradeoff = ColorPowerTradeoff::PreferEfficiency;
         double dimming = 1.0;
         BrightnessDevice *brightnessDevice = nullptr;

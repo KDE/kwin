@@ -75,6 +75,7 @@ public:
 
 private:
     void tryKmsColorOffloading(State &next);
+    double calculateMaxArtificialHdrHeadroom(const State &next) const;
     std::shared_ptr<ColorDescription> createColorDescription(const State &next) const;
     Capabilities computeCapabilities() const;
     void updateInformation();

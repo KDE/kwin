@@ -387,6 +387,22 @@ static std::shared_ptr<ColorDescription> applyNightLight(const std::shared_ptr<C
     return originalColor->withWhitepoint(newWhite)->dimmed(newWhite.Y);
 }
 
+double DrmOutput::calculateMaxArtificialHdrHeadroom(const State &next) const
+{
+    if (!next.brightnessDevice || !isInternal() || next.edrPolicy == EdrPolicy::Never) {
+        return 1.0;
+    }
+    // just a rough estimate from the Framework 13 laptop.
+    // The less accurate this is, the more the screen will flicker during backlight changes
+    constexpr double relativeLuminanceAtZeroBrightness = 0.04;
+    // to restrict HDR videos from using all the battery and burning your eyes
+    // TODO make it a setting, and/or dependent on the power management state?
+    constexpr double maxHdrHeadroom = 3.0;
+    const double maxPossibleHeadroom = (1 + relativeLuminanceAtZeroBrightness)
+        / (relativeLuminanceAtZeroBrightness + next.currentBrightness.value_or(next.brightnessSetting));
+    return std::min(maxPossibleHeadroom, maxHdrHeadroom);
+}
+
 std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State &next) const
 {
     const bool effectiveHdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
@@ -395,10 +411,6 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
     if (!next.brightnessDevice || next.brightnessDevice->usesDdcCi()) {
         brightness *= next.currentDimming;
     }
-    double maxPossibleArtificialHeadroom = 1.0;
-    if (next.brightnessDevice && isInternal() && next.edrPolicy == EdrPolicy::Always) {
-        maxPossibleArtificialHeadroom = std::min(1.0 / next.currentBrightness.value_or(next.brightnessSetting), 3.0);
-    }
 
     if (next.colorProfileSource == ColorProfileSource::ICC && !effectiveHdr && !effectiveWcg && next.iccProfile) {
         const double maxFALL = next.iccProfile->maxFALL().value_or(200);
@@ -406,13 +418,14 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
         const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(next.iccProfile->colorimetry(), next.sdrGamutWideness);
         const double brightnessFactor = (!next.brightnessDevice && next.allowSdrSoftwareBrightness) ? brightness : 1.0;
         const double effectiveReferenceLuminance = 5 + (maxFALL - 5) * brightnessFactor;
+
         return std::make_shared<ColorDescription>(ColorDescription{
             next.iccProfile->colorimetry(),
-            TransferFunction(TransferFunction::gamma22, minBrightness, maxFALL * next.artificialHdrHeadroom),
+            TransferFunction(TransferFunction::gamma22, minBrightness * next.artificialHdrHeadroom, maxFALL * next.artificialHdrHeadroom),
             effectiveReferenceLuminance,
             minBrightness * next.artificialHdrHeadroom,
-            maxFALL * maxPossibleArtificialHeadroom,
-            maxFALL * maxPossibleArtificialHeadroom,
+            maxFALL * next.maxPossibleArtificialHdrHeadroom,
+            maxFALL * next.maxPossibleArtificialHdrHeadroom,
             next.iccProfile->colorimetry(),
             sdrColor,
         });
@@ -423,8 +436,8 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
     const Colorimetry masteringColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? nativeColorimetry : Colorimetry::BT709;
     const Colorimetry sdrColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? Colorimetry::BT709.interpolateGamutTo(nativeColorimetry, next.sdrGamutWideness) : Colorimetry::BT709;
     // TODO the EDID can contain a gamma value, use that when available and colorSource == ColorProfileSource::EDID
-    const double maxAverageBrightness = effectiveHdr ? next.maxAverageBrightnessOverride.value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(next.referenceLuminance)) : 200;
-    const double maxPeakBrightness = effectiveHdr ? next.maxPeakBrightnessOverride.value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200 * maxPossibleArtificialHeadroom;
+    const double maxAverageBrightness = effectiveHdr ? next.maxAverageBrightnessOverride.value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(next.referenceLuminance)) : 200 * next.maxPossibleArtificialHdrHeadroom;
+    const double maxPeakBrightness = effectiveHdr ? next.maxPeakBrightnessOverride.value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200 * next.maxPossibleArtificialHdrHeadroom;
     const double referenceLuminance = effectiveHdr ? next.referenceLuminance : 200;
     // the min luminance the Wayland protocol defines for SDR is unrealistically high for most modern displays
     // normally that doesn't really matter, but with night light it can lead to increased black levels,
@@ -504,6 +517,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
         m_nextState->customModes = *props->customModes;
         m_nextState->modes = getModes(*m_nextState);
     }
+    m_nextState->maxPossibleArtificialHdrHeadroom = calculateMaxArtificialHdrHeadroom(*m_nextState);
     m_nextState->originalColorDescription = createColorDescription(*m_nextState);
     m_nextState->colorDescription = applyNightLight(m_nextState->originalColorDescription, m_sRgbChannelFactors);
     m_nextState->sharpnessSetting = props->sharpness.value_or(m_state.sharpnessSetting);
@@ -622,6 +636,7 @@ void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHe
     next.currentBrightness = newBrightness;
     next.artificialHdrHeadroom = newArtificialHdrHeadroom;
     next.currentDimming = newDimming;
+    next.maxPossibleArtificialHdrHeadroom = calculateMaxArtificialHdrHeadroom(next);
     next.originalColorDescription = createColorDescription(next);
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     tryKmsColorOffloading(next);
