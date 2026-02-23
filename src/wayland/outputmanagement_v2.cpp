@@ -625,6 +625,12 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         if (!changeset) {
             continue;
         }
+        if (changeset->replicationSource.has_value()) {
+            if (changeset->replicationSource == output->uuid()) {
+                sendFailure(resource, QStringLiteral("An output cannot mirror itself"));
+                return;
+            }
+        }
         if (changeset->customModes.has_value()) {
             for (const auto &info : *changeset->customModes) {
                 if (info.size.isEmpty()) {
