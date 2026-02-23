@@ -978,18 +978,20 @@ void Compositor::handleOutputsChanged()
     m_overlayViews.clear();
     m_primaryViews.clear();
     const auto outputs = kwinApp()->outputBackend()->outputs();
-    for (BackendOutput *output : outputs | std::views::filter(&BackendOutput::isEnabled)) {
-        addOutput(output);
+    for (BackendOutput *output : outputs) {
+        if (LogicalOutput *logicalOutput = workspace()->findOutput(output)) {
+            addOutput(logicalOutput, output);
+        }
     }
 }
 
-void Compositor::addOutput(BackendOutput *output)
+void Compositor::addOutput(LogicalOutput *logicalOutput, BackendOutput *backendOutput)
 {
-    if (output->isPlaceholder()) {
+    if (backendOutput->isPlaceholder()) {
         return;
     }
-    assignOutputLayers(output);
-    connect(output->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    assignOutputLayers(logicalOutput, backendOutput);
+    connect(backendOutput->renderLoop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
 }
 
 void Compositor::removeOutput(BackendOutput *output)
@@ -1003,36 +1005,34 @@ void Compositor::removeOutput(BackendOutput *output)
     m_brokenCursors.erase(output->renderLoop());
 }
 
-void Compositor::assignOutputLayers(BackendOutput *output)
+void Compositor::assignOutputLayers(LogicalOutput *logicalOutput, BackendOutput *backendOutput)
 {
-    LogicalOutput *logical = workspace()->findOutput(output);
-    Q_ASSERT(logical);
-    const auto layers = m_backend->compatibleOutputLayers(output);
+    const auto layers = m_backend->compatibleOutputLayers(backendOutput);
     const auto primaryLayer = findLayer(layers, OutputLayerType::Primary, std::nullopt);
     Q_ASSERT(primaryLayer);
-    auto &sceneView = m_primaryViews[output->renderLoop()];
+    auto &sceneView = m_primaryViews[backendOutput->renderLoop()];
     if (sceneView) {
         sceneView->setLayer(primaryLayer);
     } else {
-        sceneView = std::make_unique<SceneView>(m_scene.get(), logical, output, primaryLayer);
-        sceneView->setScale(output->scale());
-        sceneView->setRenderOffset(output->deviceOffset());
-        const auto updateViewport = [view = sceneView.get(), logical, output]() {
+        sceneView = std::make_unique<SceneView>(m_scene.get(), logicalOutput, backendOutput, primaryLayer);
+        sceneView->setScale(backendOutput->scale());
+        sceneView->setRenderOffset(backendOutput->deviceOffset());
+        const auto updateViewport = [view = sceneView.get(), logicalOutput, backendOutput]() {
             // this matches how the renderer snaps elements to the pixel grid
-            const Rect scaled = logical->geometryF().scaled(output->scale()).rounded();
-            view->setViewport(scaled.scaled(1.0 / output->scale()));
+            const Rect scaled = logicalOutput->geometryF().scaled(backendOutput->scale()).rounded();
+            view->setViewport(scaled.scaled(1.0 / backendOutput->scale()));
         };
         updateViewport();
-        connect(logical, &LogicalOutput::geometryChanged, sceneView.get(), updateViewport);
-        connect(output, &BackendOutput::scaleChanged, sceneView.get(), [view = sceneView.get(), output]() {
-            view->setScale(output->scale());
+        connect(logicalOutput, &LogicalOutput::geometryChanged, sceneView.get(), updateViewport);
+        connect(backendOutput, &BackendOutput::scaleChanged, sceneView.get(), [view = sceneView.get(), backendOutput]() {
+            view->setScale(backendOutput->scale());
         });
-        connect(output, &BackendOutput::deviceOffsetChanged, sceneView.get(), [view = sceneView.get(), output]() {
-            view->setRenderOffset(output->deviceOffset());
+        connect(backendOutput, &BackendOutput::deviceOffsetChanged, sceneView.get(), [view = sceneView.get(), backendOutput]() {
+            view->setRenderOffset(backendOutput->deviceOffset());
         });
     }
     // will be re-assigned in the next composite() pass
-    m_overlayViews.erase(output->renderLoop());
+    m_overlayViews.erase(backendOutput->renderLoop());
 }
 
 } // namespace KWin

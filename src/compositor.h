@@ -101,9 +101,9 @@ protected:
     bool attemptOpenGLCompositing();
     bool attemptQPainterCompositing();
     void handleOutputsChanged();
-    void addOutput(BackendOutput *output);
+    void addOutput(LogicalOutput *logicalOutput, BackendOutput *backendOutput);
     void removeOutput(BackendOutput *output);
-    void assignOutputLayers(BackendOutput *output);
+    void assignOutputLayers(LogicalOutput *logicalOutput, BackendOutput *backendOutput);
 
     CompositingType m_selectedCompositor = NoCompositing;
 
