@@ -205,10 +205,6 @@ void EGLPlatformContext::create(const QSurfaceFormat &format, ::EGLContext share
 
 void EGLPlatformContext::updateFormatFromContext()
 {
-    const EGLSurface oldDrawSurface = eglGetCurrentSurface(EGL_DRAW);
-    const EGLSurface oldReadSurface = eglGetCurrentSurface(EGL_READ);
-    const ::EGLContext oldContext = eglGetCurrentContext();
-
     m_eglContext->makeCurrent();
 
     const char *version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
@@ -246,8 +242,6 @@ void EGLPlatformContext::updateFormatFromContext()
     } else {
         m_format.setProfile(QSurfaceFormat::NoProfile);
     }
-
-    eglMakeCurrent(m_eglDisplay->handle(), oldDrawSurface, oldReadSurface, oldContext);
 }
 
 EGLContext EGLPlatformContext::nativeContext() const
