@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-21 02:46+0000\n"
-"PO-Revision-Date: 2025-12-11 08:52+0100\n"
+"PO-Revision-Date: 2026-02-21 18:29+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 25.12.1\n"
+"X-Generator: Lokalize 25.12.2\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -191,10 +191,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Les étiquettes « TRC » sont absentes du profil de couleurs."
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Impossible d'ouvrir le profil « ICC » « %1 »"
+msgstr "Impossible d'inverser les courbes de teintes du profil « ICC » « %1 »"
 
 #: debug_console.cpp:86
 #, kde-format
