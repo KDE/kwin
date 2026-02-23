@@ -48,7 +48,13 @@ Primary::Primary(xcb_atom_t atom, QObject *parent)
     connect(workspace(), &Workspace::windowActivated, this, &Primary::onActiveWindowChanged);
 }
 
-Primary::~Primary() = default;
+Primary::~Primary()
+{
+    // If m_xSource is the current selection, we do not want onSelectionChanged() to get called
+    // while the Primary is already partially destroyed.
+    disconnect(waylandServer()->seat(), &SeatInterface::primarySelectionChanged, this, &Primary::onSelectionChanged);
+    m_xSource.reset();
+}
 
 bool Primary::x11ClientsCanAccessSelection() const
 {

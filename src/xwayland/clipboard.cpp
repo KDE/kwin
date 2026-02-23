@@ -48,6 +48,14 @@ Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
     connect(workspace(), &Workspace::windowActivated, this, &Clipboard::onActiveWindowChanged);
 }
 
+Clipboard::~Clipboard()
+{
+    // If m_xSource is the current selection, we do not want onSelectionChanged() to get called
+    // while the Clipboard is already partially destroyed.
+    disconnect(waylandServer()->seat(), &SeatInterface::selectionChanged, this, &Clipboard::onSelectionChanged);
+    m_xSource.reset();
+}
+
 bool Clipboard::x11ClientsCanAccessSelection() const
 {
     return qobject_cast<X11Window *>(workspace()->activeWindow());

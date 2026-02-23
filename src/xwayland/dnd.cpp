@@ -73,6 +73,15 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
     connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &Dnd::endDrag);
 }
 
+Dnd::~Dnd()
+{
+    // If there is current dnd originating from an x client, we do not want to process the dragEnded()
+    // signal while the Dnd is already partially destroyed.
+    disconnect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &Dnd::startDrag);
+    disconnect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &Dnd::endDrag);
+    m_xSource.reset();
+}
+
 void Dnd::selectionDisowned()
 {
 }

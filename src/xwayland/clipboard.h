@@ -24,6 +24,7 @@ class Clipboard : public Selection
 
 public:
     Clipboard(xcb_atom_t atom, QObject *parent);
+    ~Clipboard() override;
 
 private:
     void selectionDisowned() override;

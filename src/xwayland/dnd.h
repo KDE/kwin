@@ -34,6 +34,7 @@ class Dnd : public Selection
 
 public:
     explicit Dnd(xcb_atom_t atom, QObject *parent);
+    ~Dnd() override;
 
     static uint32_t version();
     XwlDropHandler *dropHandler() const;
