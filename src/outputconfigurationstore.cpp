@@ -1200,7 +1200,11 @@ void OutputConfigurationStore::load()
                 state.priority = INT_MAX;
             }
             if (const auto it = outputData.find("replicationSource"); it != outputData.end()) {
-                state.replicationSource = it->toString();
+                const QString replicationSource = it->toString();
+                const OutputState &sharedState = outputDatas[state.outputIndex].value();
+                if (sharedState.uuid != replicationSource) {
+                    state.replicationSource = replicationSource;
+                }
             }
             setup.outputs.push_back(state);
         }
