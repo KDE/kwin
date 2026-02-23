@@ -1160,7 +1160,7 @@ void OutputConfigurationStore::load()
             }
             if (const auto it = outputData.find("outputIndex"); it != outputData.end()) {
                 const int index = it->toInt(-1);
-                if (index <= -1 || size_t(index) >= outputDatas.size()) {
+                if (index <= -1 || size_t(index) >= outputDatas.size() || !outputDatas[index].has_value()) {
                     fail = true;
                     break;
                 }
