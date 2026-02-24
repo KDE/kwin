@@ -1117,6 +1117,7 @@ void OutputDeviceV2Interface::updatePriority()
         for (const auto &resource : clientResources) {
             d->sendPriority(resource);
         }
+        scheduleDone();
     }
 }
 
