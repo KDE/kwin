@@ -120,6 +120,8 @@ private Q_SLOTS:
     void intersected();
     void rounded_data();
     void rounded();
+    void roundedIn_data();
+    void roundedIn();
     void roundedOut_data();
     void roundedOut();
     void implicitConversions();
@@ -1328,6 +1330,37 @@ void TestRectF::rounded()
     QVERIFY(std::abs(rect.bottom() - rounded.bottom()) <= 0.5);
 
     QCOMPARE(rect.toRect(), expected);
+}
+
+void TestRectF::roundedIn_data()
+{
+    QTest::addColumn<RectF>("rect");
+    QTest::addColumn<Rect>("expected");
+
+    QTest::addRow("default") << RectF() << Rect();
+
+    QTest::addRow("1,2 3,4") << RectF(QPointF(1, 2), QPointF(3, 4)) << Rect(QPoint(1, 2), QPoint(3, 4));
+    QTest::addRow("1.1,2.1 3.1,4.1") << RectF(QPointF(1.1, 2.1), QPointF(3.1, 4.1)) << Rect(QPoint(2, 3), QPoint(3, 4));
+    QTest::addRow("1.5,2.5 3.5,4.5") << RectF(QPointF(1.5, 2.5), QPointF(3.5, 4.5)) << Rect(QPoint(2, 3), QPoint(3, 4));
+    QTest::addRow("1.9,2.9 3.9,4.9") << RectF(QPointF(1.9, 2.9), QPointF(3.9, 4.9)) << Rect(QPoint(2, 3), QPoint(3, 4));
+
+    QTest::addRow("-3,-4 -1,-2") << RectF(QPointF(-3, -4), QPointF(-1, -2)) << Rect(QPoint(-3, -4), QPoint(-1, -2));
+    QTest::addRow("-3.1,-4.1 -1.1,-2.1") << RectF(QPointF(-3.1, -4.1), QPointF(-1.1, -2.1)) << Rect(QPoint(-3, -4), QPoint(-2, -3));
+    QTest::addRow("-3.5,-4.5 -1.5,-2.5") << RectF(QPointF(-3.5, -4.5), QPointF(-1.5, -2.5)) << Rect(QPoint(-3, -4), QPoint(-2, -3));
+    QTest::addRow("-3.9,-4.9 -1.9,-2.9") << RectF(QPointF(-3.9, -4.9), QPointF(-1.9, -2.9)) << Rect(QPoint(-3, -4), QPoint(-2, -3));
+}
+
+void TestRectF::roundedIn()
+{
+    QFETCH(RectF, rect);
+    QFETCH(Rect, expected);
+
+    const Rect rounded = rect.roundedIn();
+    QCOMPARE(rounded, expected);
+    QVERIFY(std::abs(rect.left() - rounded.left()) < 1.0);
+    QVERIFY(std::abs(rect.top() - rounded.top()) < 1.0);
+    QVERIFY(std::abs(rect.right() - rounded.right()) < 1.0);
+    QVERIFY(std::abs(rect.bottom() - rounded.bottom()) < 1.0);
 }
 
 void TestRectF::roundedOut_data()

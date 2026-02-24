@@ -1145,9 +1145,17 @@ public:
      * Returns a copy of this rectangle with its left, top, right, and bottom edge coordinates rounded
      * to the nearest integers.
      *
-     * \sa roundedOut()
+     * \sa roundedIn(), roundedOut()
      */
     constexpr inline Rect rounded() const noexcept;
+
+    /*!
+     * Returns a copy of this rectangle whose left and top edge coordinates have been ceiled, and
+     * right and bottom edge coordinates have been floored.
+     *
+     * \sa rounded()
+     */
+    constexpr inline Rect roundedIn() const noexcept;
 
     /*!
      * Returns a copy of this rectangle whose left and top edge coordinates have been floored, and
@@ -2158,6 +2166,12 @@ constexpr inline Rect RectF::rounded() const noexcept
 {
     return Rect(QPoint(std::round(left()), std::round(top())),
                 QPoint(std::round(right()), std::round(bottom())));
+}
+
+constexpr inline Rect RectF::roundedIn() const noexcept
+{
+    return Rect(QPoint(std::ceil(left()), std::ceil(top())),
+                QPoint(std::floor(right()), std::floor(bottom())));
 }
 
 constexpr inline Rect RectF::roundedOut() const noexcept

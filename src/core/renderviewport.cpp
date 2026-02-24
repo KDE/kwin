@@ -112,9 +112,11 @@ Rect RenderViewport::mapFromDeviceCoordinatesAligned(const Rect &deviceGeometry)
 
 Rect RenderViewport::mapFromDeviceCoordinatesContained(const Rect &deviceGeometry) const
 {
-    const RectF ret = deviceGeometry.translated(-m_renderOffset).scaled(1.0 / m_scale).translated(m_renderRect.topLeft());
-    return Rect(QPoint(std::ceil(ret.left()), std::ceil(ret.top())),
-                QPoint(std::floor(ret.right()), std::floor(ret.bottom())));
+    return deviceGeometry
+        .translated(-m_renderOffset)
+        .scaled(1.0 / m_scale)
+        .translated(m_renderRect.topLeft())
+        .roundedIn();
 }
 
 Region RenderViewport::mapFromDeviceCoordinatesAligned(const Region &deviceGeometry) const
