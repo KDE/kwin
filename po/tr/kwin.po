@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-21 02:46+0000\n"
+"POT-Creation-Date: 2026-02-24 02:42+0000\n"
 "PO-Revision-Date: 2026-02-20 15:30+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -4151,22 +4151,22 @@ msgstr ""
 "Tüm çıktıları yapılandırma değişiklikleriyle devre dışı bırakmaya izin "
 "verilmiyor"
 
-#: wayland/outputmanagement_v2.cpp:631
+#: wayland/outputmanagement_v2.cpp:637
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Boş bir boyut ile özel bir kip eklenemiyor"
 
-#: wayland/outputmanagement_v2.cpp:635
+#: wayland/outputmanagement_v2.cpp:641
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Sıfır Hz’lik bir yenileme hızıyla özel bir kip eklenemiyor"
 
-#: wayland/outputmanagement_v2.cpp:653
+#: wayland/outputmanagement_v2.cpp:659
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "%s çıkışının konumu pek büyük (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:670
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Sürücü çıktı yapılandırmasını reddetti"
@@ -4177,7 +4177,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Yanıt Vermiyor)"
 
-#: workspace.cpp:1752
+#: workspace.cpp:1755
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

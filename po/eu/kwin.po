@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-21 02:46+0000\n"
+"POT-Creation-Date: 2026-02-24 02:42+0000\n"
 "PO-Revision-Date: 2026-02-21 23:04+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -4170,22 +4170,22 @@ msgstr "Irteera esanguratsuetako bat jada ez dago erabilgarri"
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Konfigurazio aldaketen bidez irteera denak ezgaitzea ez da uzten"
 
-#: wayland/outputmanagement_v2.cpp:631
+#: wayland/outputmanagement_v2.cpp:637
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Ezin da gehitu neurria hutsik duen neurriko modu bat"
 
-#: wayland/outputmanagement_v2.cpp:635
+#: wayland/outputmanagement_v2.cpp:641
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Ezin da zero Hz-ko freskatze-tasa duen neurriko modu bat gehitu"
 
-#: wayland/outputmanagement_v2.cpp:653
+#: wayland/outputmanagement_v2.cpp:659
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "%s irteeren kokapena handiegia da (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:670
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Gidariak irteera konfigurazioa errefusatu du"
@@ -4196,7 +4196,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ez du erantzuten)"
 
-#: workspace.cpp:1752
+#: workspace.cpp:1755
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

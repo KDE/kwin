@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-02-21 02:46+0000\n"
+"POT-Creation-Date: 2026-02-24 02:42+0000\n"
 "PO-Revision-Date: 2026-02-21 14:08+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -4200,22 +4200,22 @@ msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Запрещается отключать все выводы путём изменения параметров конфигурации"
 
-#: wayland/outputmanagement_v2.cpp:631
+#: wayland/outputmanagement_v2.cpp:637
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Невозможно добавить собственный режим без указания размера вывода"
 
-#: wayland/outputmanagement_v2.cpp:635
+#: wayland/outputmanagement_v2.cpp:641
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Невозможно добавить собственный режим с нулевой частотой обновления"
 
-#: wayland/outputmanagement_v2.cpp:653
+#: wayland/outputmanagement_v2.cpp:659
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
 msgstr "Расположение вывода %s (%d, %d) превышает максимально допустимое."
 
-#: wayland/outputmanagement_v2.cpp:670
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Конфигурация вывода отклонена драйвером"
@@ -4227,7 +4227,7 @@ msgid "(Not Responding)"
 msgstr "(не отвечает)"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
-#: workspace.cpp:1752
+#: workspace.cpp:1755
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
