@@ -579,7 +579,7 @@ void Workspace::requestDpmsState(DpmsState state)
         input()->installInputEventFilter(m_dpmsFilter.get());
         m_dpmsTimer.start(animationTime);
         // TODO only do this if sleep is actually requested
-        m_sleepInhibitor = kwinApp()->outputBackend()->session()->delaySleep("dpms animation");
+        m_sleepInhibitor = kwinApp()->session()->delaySleep("dpms animation");
     }
 
     Q_EMIT dpmsStateChanged(animationTime);
@@ -1363,7 +1363,7 @@ void Workspace::updateOutputs()
         output->backendOutput()->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
         Q_EMIT outputAdded(output);
-        wakeUp |= !m_recentlyRemovedDpmsOffOutputs.contains(output->uuid());
+        wakeUp |= !output->isPlaceholder() && !m_recentlyRemovedDpmsOffOutputs.contains(output->uuid());
     }
 
     m_placementTracker->inhibit();

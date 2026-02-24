@@ -150,6 +150,7 @@ private Q_SLOTS:
     void testMirroring();
 
     void testAutoBrightness();
+    void testTemporaryDpmsHotplug();
 };
 
 void OutputChangesTest::initTestCase()
@@ -2396,6 +2397,40 @@ void OutputChangesTest::testAutoBrightness()
     curve.adjust(0.4, 100);
     COMPARE_RANGE(curve.sample(100), 0.4, eta);
     COMPARE_RANGE(curve.sample(101), 0.4, laxEta);
+}
+
+void OutputChangesTest::testTemporaryDpmsHotplug()
+{
+    workspace()->outputConfigureStore()->clear();
+
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 1280, 1200),
+            .connectorName = QStringLiteral("TEST"),
+        },
+    });
+
+    // turn off the outputs
+    workspace()->requestDpmsState(Workspace::DpmsState::Off);
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::AboutToTurnOff);
+    QSignalSpy dpmsChanged(workspace(), &Workspace::dpmsStateChanged);
+    QVERIFY(dpmsChanged.wait());
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
+
+    // remove the output
+    Test::setOutputConfig(QList<Test::OutputInfo>{});
+
+    // displays should still be off
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
+
+    // re-adding the output immediately should keep it off
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = Rect(0, 0, 1280, 1200),
+            .connectorName = QStringLiteral("TEST"),
+        },
+    });
+    QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
 }
 
 } // namespace KWin
