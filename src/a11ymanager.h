@@ -30,6 +30,7 @@ public:
         quint32 modifiers;
     };
 
+    // KeyboardManager
     void GrabKeyboard();
 
     void UngrabKeyboard();
@@ -40,8 +41,15 @@ public:
 
     void SetKeyGrabs(const QList<quint32> &modifiers, const QList<KeyStroke> &keystrokes);
 
+    // PointerLocator
+    QVariantMap QueryPointer(double &rel_x, double &rel_y);
+
 Q_SIGNALS:
+    // KeyboardManager
     void KeyEvent(bool released, quint32 state, quint32 keysym, quint32 unichar, quint16 keycode);
+
+    // PointerLocator
+    void PointerPositionChanged();
 
 public:
     bool processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time);
