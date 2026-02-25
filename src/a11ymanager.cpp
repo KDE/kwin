@@ -11,6 +11,8 @@
 #include "wayland/keyboard.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
+#include "window.h"
+#include "workspace.h"
 #include "xkb.h"
 
 #include <QDBusConnection>
@@ -35,6 +37,7 @@ A11yManager::A11yManager()
     });
 
     new KeyboardMonitorAdaptor(this);
+    new PointerLocatorAdaptor(this);
 
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/freedesktop/a11y/Manager"), this, QDBusConnection::ExportAdaptors);
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.freedesktop.a11y.Manager"));
@@ -195,6 +198,32 @@ bool A11yManager::checkPermission()
     }
 
     return true;
+}
+
+QVariantMap A11yManager::QueryPointer(double &rel_x, double &rel_y)
+{
+    connect(Cursors::self()->mouse(), &Cursor::posChanged, this, [sender = message().service()] {
+        QDBusMessage signal = QDBusMessage::createTargetedSignal(sender, QStringLiteral("/org/freedesktop/a11y/Manager"), QStringLiteral("org.freedesktop.a11y.PointerLocator"), QStringLiteral("PointerPositionChanged"));
+        QDBusConnection::sessionBus().call(signal, QDBus::NoBlock);
+    }, Qt::SingleShotConnection);
+
+    auto window = workspace()->windowUnderMouse(workspace()->activeOutput());
+
+    if (!window) {
+        sendErrorReply("org.freedesktop.a11y.UnknownToplevel", "No window");
+        return {};
+    }
+
+    const auto pointerPos = Cursors::self()->mouse()->pos();
+
+    rel_x = pointerPos.x() - window->bufferGeometry().x();
+    rel_y = pointerPos.y() - window->bufferGeometry().y();
+
+    QVariantMap data{
+        {"pid", window->pid()},
+    };
+
+    return data;
 }
 
 const QDBusArgument &operator>>(const QDBusArgument &arg, A11yManager::KeyStroke &keystroke)
