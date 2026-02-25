@@ -435,7 +435,7 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
             // do something
             if (interface == QByteArrayLiteral("zwp_text_input_manager_v3")) {
                 c->textInputManagerV3 = new TextInputManagerV3();
-                c->textInputManagerV3->init(*c->registry, name, version);
+                c->textInputManagerV3->init(*c->registry, name, 1);
             }
         }
         if (interface == QByteArrayLiteral("xdg_wm_base")) {

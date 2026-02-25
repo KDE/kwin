@@ -12,6 +12,9 @@
 #include <QHash>
 #include <QList>
 #include <QPointer>
+#include <QSet>
+
+#include <optional>
 
 #include <qwayland-server-text-input-unstable-v3.h>
 
@@ -36,6 +39,7 @@ struct TextInputV3State
         QString preeditText;
         quint32 preeditCursorBegin = 0;
         quint32 preeditCursorEnd = 0;
+        QSet<TextInputV3Interface::Action> availableActions;
     } pending;
 
     RectF cursorRectangle;
@@ -50,6 +54,8 @@ struct TextInputV3State
     QString preeditText;
     quint32 preeditCursorBegin = 0;
     quint32 preeditCursorEnd = 0;
+    QSet<TextInputV3Interface::Action> availableActions;
+    std::optional<RectF> committedCursorRectangle;
     quint32 serial = 0;
     bool enabled = false;
 };
@@ -75,6 +81,9 @@ public:
     void sendEnter(SurfaceInterface *surface);
     void sendLeave(SurfaceInterface *surface);
     void sendPreEdit(const QString &text, const quint32 cursorBegin, const quint32 cursorEnd);
+    void sendPreeditHint(uint32_t start, uint32_t end, TextInputV3Interface::PreeditHint hint);
+    void sendLanguage(const QString &language);
+    void sendAction(TextInputV3Interface::Action action);
     void commitString(const QString &text);
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength);
     void done();
@@ -124,8 +133,9 @@ public:
 
     SeatInterface *seat = nullptr;
     QPointer<SurfaceInterface> surface;
-
     QHash<Resource *, TextInputV3State> stateMap;
+    QMetaObject::Connection surfaceCommitConnection;
+    QHash<Resource *, quint32> actionSerialHash;
 
     TextInputV3Interface *q;
     bool isEnabled = false;
@@ -141,6 +151,10 @@ protected:
     void zwp_text_input_v3_set_text_change_cause(Resource *resource, uint32_t cause) override;
     void zwp_text_input_v3_set_cursor_rectangle(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
     void zwp_text_input_v3_commit(Resource *resource) override;
+
+    void zwp_text_input_v3_set_available_actions(Resource *resource, wl_array *available_actions) override;
+    void zwp_text_input_v3_show_input_panel(Resource *resource) override;
+    void zwp_text_input_v3_hide_input_panel(Resource *resource) override;
 };
 
 }

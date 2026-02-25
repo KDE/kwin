@@ -14,8 +14,7 @@ namespace KWin
 {
 namespace
 {
-
-const quint32 s_version = 1;
+const quint32 s_version = 2;
 
 TextInputContentHints convertContentHint(uint32_t hint)
 {
@@ -51,6 +50,15 @@ TextInputContentHints convertContentHint(uint32_t hint)
     }
     if (hints & QtWaylandServer::zwp_text_input_v3::content_hint_spellcheck) {
         ret |= TextInputContentHint::AutoCorrection;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v3::content_hint_on_screen_input_provided) {
+        ret |= TextInputContentHint::OnScreenInputProvided;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v3::content_hint_no_emoji) {
+        ret |= TextInputContentHint::NoEmoji;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v3::content_hint_preedit_shown) {
+        ret |= TextInputContentHint::PreeditShown;
     }
     return ret;
 }
@@ -117,6 +125,7 @@ void TextInputV3State::resetPending()
     pending.surroundingText = QString();
     pending.surroundingTextCursorPosition = 0;
     pending.surroundingTextSelectionAnchor = 0;
+    pending.availableActions.clear();
     resetPendingPreedit();
 }
 
@@ -171,12 +180,14 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_bind_resource(Resource *reso
 {
     // we initialize the serial for the resource to be 0
     stateMap.insert(resource, TextInputV3State());
+    actionSerialHash.insert(resource, 0);
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_destroy_resource(Resource *resource)
 {
     // drop resource from the serial hash
     stateMap.remove(resource);
+    actionSerialHash.remove(resource);
     updateEnabled();
 }
 
@@ -190,6 +201,28 @@ void TextInputV3InterfacePrivate::sendEnter(SurfaceInterface *newSurface)
     // It should be always synchronized with SeatInterface::focusedTextInputSurface.
     Q_ASSERT(!surface && newSurface);
     surface = newSurface;
+    if (surfaceCommitConnection) {
+        QObject::disconnect(surfaceCommitConnection);
+    }
+    // Apply committed cursor rectangle with next surface commit for v2
+    surfaceCommitConnection = QObject::connect(newSurface, &SurfaceInterface::committed, q, [this]() {
+        if (!surface) {
+            return;
+        }
+        const auto clientResources = textInputsForClient(surface->client());
+        for (auto resource : clientResources) {
+            auto state = stateForResource(resource);
+            if (!state || !state->committedCursorRectangle.has_value()) {
+                continue;
+            }
+            const bool changed = (state->cursorRectangle != *state->committedCursorRectangle);
+            state->cursorRectangle = *state->committedCursorRectangle;
+            state->committedCursorRectangle.reset();
+            if (state->enabled && changed) {
+                Q_EMIT q->cursorRectangleChanged(state->cursorRectangle);
+            }
+        }
+    });
     const auto clientResources = textInputsForClient(newSurface->client());
     for (auto resource : clientResources) {
         send_enter(resource->handle, newSurface->resource());
@@ -201,8 +234,17 @@ void TextInputV3InterfacePrivate::sendLeave(SurfaceInterface *leavingSurface)
 {
     // It should be always synchronized with SeatInterface::focusedTextInputSurface.
     Q_ASSERT(leavingSurface && surface == leavingSurface);
-    surface.clear();
     const auto clientResources = textInputsForClient(leavingSurface->client());
+    for (auto resource : clientResources) {
+        if (auto state = stateForResource(resource)) {
+            state->committedCursorRectangle.reset();
+        }
+    }
+    surface.clear();
+    if (surfaceCommitConnection) {
+        QObject::disconnect(surfaceCommitConnection);
+        surfaceCommitConnection = {};
+    }
     for (auto resource : clientResources) {
         send_leave(resource->handle, leavingSurface->resource());
     }
@@ -335,6 +377,10 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_disable(Resource *resource)
     // reset pending state to default
     state->resetPending();
     state->pending.enabled = false;
+    state->preeditText = QString();
+    state->preeditCursorBegin = 0;
+    state->preeditCursorEnd = 0;
+    state->committedCursorRectangle.reset();
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_surrounding_text(Resource *resource, const QString &text, int32_t cursor, int32_t anchor)
@@ -420,10 +466,14 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
         }
     }
 
-    if (state->cursorRectangle != state->pending.cursorRectangle) {
-        state->cursorRectangle = state->pending.cursorRectangle;
-        if (state->enabled) {
-            Q_EMIT q->cursorRectangleChanged(state->cursorRectangle);
+    if (resource->version() >= 2) {
+        state->committedCursorRectangle = state->pending.cursorRectangle;
+    } else {
+        if (state->cursorRectangle != state->pending.cursorRectangle) {
+            state->cursorRectangle = state->pending.cursorRectangle;
+            if (state->enabled) {
+                Q_EMIT q->cursorRectangleChanged(state->cursorRectangle);
+            }
         }
     }
 
@@ -437,6 +487,12 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
         }
     }
 
+    if (state->availableActions != state->pending.availableActions) {
+        state->availableActions = state->pending.availableActions;
+        if (state->enabled) {
+            Q_EMIT q->availableActionsChanged();
+        }
+    }
     Q_EMIT q->stateCommitted(state->serial);
 
     // Gtk text input implementation expect done to be sent after every commit to synchronize the serial value between commit() and done().
@@ -512,6 +568,11 @@ void TextInputV3Interface::sendPreEditString(const QString &text, quint32 cursor
     d->sendPreEdit(text, cursorBegin, cursorEnd);
 }
 
+void TextInputV3Interface::sendPreEditHint(quint32 start, quint32 end, PreeditHint hint)
+{
+    d->sendPreeditHint(start, end, hint);
+}
+
 void TextInputV3Interface::commitString(const QString &text)
 {
     d->commitString(text);
@@ -520,6 +581,24 @@ void TextInputV3Interface::commitString(const QString &text)
 void TextInputV3Interface::done()
 {
     d->done();
+}
+
+void TextInputV3Interface::setLanguage(const QString &languageTag)
+{
+    d->sendLanguage(languageTag);
+}
+
+void TextInputV3Interface::performAction(Action action)
+{
+    d->sendAction(action);
+}
+
+QSet<TextInputV3Interface::Action> TextInputV3Interface::availableActions() const
+{
+    if (auto state = d->stateForFocusedSurface()) {
+        return state->availableActions;
+    }
+    return {};
 }
 
 QPointer<SurfaceInterface> TextInputV3Interface::surface() const
@@ -553,6 +632,88 @@ bool TextInputV3Interface::clientSupportsTextInput(ClientConnection *client) con
     return client && d->resourceMap().contains(*client);
 }
 
+bool TextInputV3Interface::implicitShowPanelRequired() const
+{
+    if (!d->surface) {
+        return false;
+    }
+    const auto clientResources = d->enabledTextInputsForClient(d->surface->client());
+    for (auto resource : clientResources) {
+        if (resource->version() >= 2) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void TextInputV3InterfacePrivate::sendPreeditHint(uint32_t start, uint32_t end, TextInputV3Interface::PreeditHint hint)
+{
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        if (resource->version() >= 2) {
+            send_preedit_hint(resource->handle, start, end, static_cast<uint32_t>(hint));
+        }
+    }
+}
+
+void TextInputV3InterfacePrivate::sendLanguage(const QString &language)
+{
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        if (resource->version() >= 2) {
+            send_language(resource->handle, language);
+        }
+    }
+}
+
+void TextInputV3InterfacePrivate::sendAction(TextInputV3Interface::Action action)
+{
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        if (resource->version() >= 2) {
+            quint32 &serial = actionSerialHash[resource];
+            serial++;
+            send_action(resource->handle, static_cast<uint32_t>(action), serial);
+        }
+    }
+}
+
+void TextInputV3InterfacePrivate::zwp_text_input_v3_set_available_actions(Resource *resource, wl_array *available_actions)
+{
+    auto state = stateForResource(resource);
+    if (!state) {
+        return;
+    }
+    // zwp_text_input_v3_set_available_actions is no-op if enabled request is not pending
+    if (!state->pending.enabled) {
+        return;
+    }
+    const auto *data = static_cast<uint32_t *>(available_actions->data);
+    const size_t count = available_actions->size / sizeof(uint32_t);
+    state->pending.availableActions.clear();
+    for (size_t i = 0; i < count; ++i) {
+        state->pending.availableActions.insert(static_cast<TextInputV3Interface::Action>(data[i]));
+    }
+}
+
+void TextInputV3InterfacePrivate::zwp_text_input_v3_show_input_panel(Resource *resource)
+{
+    Q_EMIT q->requestShowInputPanel();
+}
+
+void TextInputV3InterfacePrivate::zwp_text_input_v3_hide_input_panel(Resource *resource)
+{
+    Q_EMIT q->requestHideInputPanel();
+}
 }
 
 #include "moc_textinput_v3.cpp"
