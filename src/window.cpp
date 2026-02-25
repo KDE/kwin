@@ -2683,7 +2683,7 @@ void Window::updateDecorationInputShape()
     const RectF innerRect = RectF(QPointF(borderLeft(), borderTop()), decoratedWindow()->size());
     const RectF outerRect = innerRect + borders + resizeBorders;
 
-    m_decoration.inputRegion = Region(outerRect.roundedOut()) - innerRect.roundedOut();
+    m_decoration.inputRegion = Region(outerRect.roundedOut()) - innerRect.roundedIn();
 }
 
 void Window::updateDecorationBorderRadius()
