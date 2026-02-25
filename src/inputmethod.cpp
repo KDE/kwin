@@ -36,6 +36,9 @@
 #include "wayland/textinput_v3.h"
 #include "xkb.h"
 
+// For v1 preedit styling enums
+#include "qwayland-server-text-input-unstable-v1.h"
+
 #include <KLocalizedString>
 #include <KShell>
 
@@ -135,6 +138,8 @@ void InputMethod::init()
     connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
     connect(textInputV3, &TextInputV3Interface::enableRequested, this, &InputMethod::textInputInterfaceV3EnableRequested);
     connect(textInputV3, &TextInputV3Interface::cursorRectangleChanged, this, &InputMethod::cursorRectangleChanged);
+    connect(textInputV3, &TextInputV3Interface::requestShowInputPanel, this, &InputMethod::show);
+    connect(textInputV3, &TextInputV3Interface::requestHideInputPanel, this, &InputMethod::hide);
 
     connect(m_internalContext, &InternalInputMethodContext::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
     connect(m_internalContext, &InternalInputMethodContext::contentTypeChanged, this, &InputMethod::contentTypeChanged);
@@ -445,7 +450,7 @@ void InputMethod::textInputInterfaceV3EnabledChanged()
 
     auto t3 = waylandServer()->seat()->textInputV3();
     refreshActive();
-    if (t3->isEnabled()) {
+    if (t3->isEnabled() && t3->implicitShowPanelRequired()) {
         show();
     } else {
         // reset value of preedit when textinput is disabled
@@ -624,6 +629,10 @@ void InputMethod::setLanguage(uint32_t serial, const QString &language)
     if (t2 && t2->isEnabled()) {
         t2->setLanguage(language);
     }
+    auto t3 = waylandServer()->seat()->textInputV3();
+    if (t3 && t3->isEnabled()) {
+        t3->setLanguage(language);
+    }
 }
 
 void InputMethod::setTextDirection(uint32_t serial, Qt::LayoutDirection direction)
@@ -654,11 +663,31 @@ void InputMethod::setPreeditStyling(quint32 index, quint32 length, quint32 style
     }
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3 && t3->isEnabled()) {
-        // preedit style: highlight(4) or selection(6)
-        if (style == 4 || style == 6) {
-            preedit.highlightRanges.emplace_back(index, index + length);
+        using V1 = QtWaylandServer::zwp_text_input_v1;
+        switch (style) {
+        case V1::preedit_style_default:
+            break;
+        case V1::preedit_style_active:
+            t3->sendPreEditHint(index, index + length, TextInputV3Interface::PreeditHint::Prefix);
+            break;
+        case V1::preedit_style_inactive:
+            t3->sendPreEditHint(index, index + length, TextInputV3Interface::PreeditHint::Suffix);
+            break;
+        case V1::preedit_style_highlight:
+            t3->sendPreEditHint(index, index + length, TextInputV3Interface::PreeditHint::Prediction);
+            break;
+        case V1::preedit_style_underline:
+            t3->sendPreEditHint(index, index + length, TextInputV3Interface::PreeditHint::Whole);
+            break;
+        case V1::preedit_style_selection:
+            t3->sendPreEditHint(index, index + length, TextInputV3Interface::PreeditHint::Selection);
+            break;
+        case V1::preedit_style_incorrect:
+            t3->sendPreEditHint(index, index + length, TextInputV3Interface::PreeditHint::ComposeError);
+            break;
         }
     }
+    preedit.highlightRanges.emplace_back(index, index + length);
 }
 
 void InputMethod::setPreeditString(uint32_t serial, const QString &text, const QString &commit)
@@ -758,8 +787,6 @@ void InputMethod::adoptInputMethodContext()
         inputContext->sendSurroundingText(t2->surroundingText(), t2->surroundingTextCursorPosition(), t2->surroundingTextSelectionAnchor());
         inputContext->sendPreferredLanguage(t2->preferredLanguage());
         inputContext->sendContentType(t2->contentHints(), t2->contentPurpose());
-        connect(inputContext, &InputMethodContextV1Interface::language, this, &InputMethod::setLanguage);
-        connect(inputContext, &InputMethodContextV1Interface::textDirection, this, &InputMethod::setTextDirection);
     } else if (t3 && t3->isEnabled()) {
         inputContext->sendSurroundingText(t3->surroundingText(), t3->surroundingTextCursorPosition(), t3->surroundingTextSelectionAnchor());
         inputContext->sendContentType(t3->contentHints(), t3->contentPurpose());
@@ -776,6 +803,8 @@ void InputMethod::adoptInputMethodContext()
 
     inputContext->sendCommitState(m_serial++);
 
+    connect(inputContext, &InputMethodContextV1Interface::language, this, &InputMethod::setLanguage);
+    connect(inputContext, &InputMethodContextV1Interface::textDirection, this, &InputMethod::setTextDirection);
     connect(inputContext, &InputMethodContextV1Interface::keysym, this, &InputMethod::keysymReceived, Qt::UniqueConnection);
     connect(inputContext, &InputMethodContextV1Interface::key, this, &InputMethod::key, Qt::UniqueConnection);
     connect(inputContext, &InputMethodContextV1Interface::modifiers, this, &InputMethod::modifiers, Qt::UniqueConnection);
@@ -972,7 +1001,10 @@ void InputMethod::forceActivate()
 void InputMethod::textInputInterfaceV3EnableRequested()
 {
     refreshActive();
-    show();
+    auto t3 = waylandServer()->seat()->textInputV3();
+    if (t3->implicitShowPanelRequired()) {
+        show();
+    }
 }
 
 }

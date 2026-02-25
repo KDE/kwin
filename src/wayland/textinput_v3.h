@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QObject>
+#include <QSet>
 
 #include "core/rect.h"
 #include "textinput.h"
@@ -60,6 +61,23 @@ class KWIN_EXPORT TextInputV3Interface : public QObject
 
 public:
     ~TextInputV3Interface() override;
+
+    enum class Action : uint32_t {
+        None = 0,
+        Submit = 1,
+    };
+    Q_ENUM(Action)
+
+    enum class PreeditHint : uint32_t {
+        Whole = 1,
+        Selection = 2,
+        Prediction = 3,
+        Prefix = 4,
+        Suffix = 5,
+        SpellingError = 6,
+        ComposeError = 7,
+    };
+    Q_ENUM(PreeditHint)
 
     /**
      * @see cursorRectangleChanged
@@ -132,6 +150,7 @@ public:
      * @param cursorEnd
      */
     void sendPreEditString(const QString &text, quint32 cursorBegin, quint32 cursorEnd);
+    void sendPreEditHint(quint32 start, quint32 end, PreeditHint hint);
 
     /**
      * Notify when @p text should be inserted into the editor widget.
@@ -153,10 +172,16 @@ public:
      */
     void done();
 
+    void setLanguage(const QString &languageTag);
+    void performAction(Action action);
+    QSet<Action> availableActions() const;
+
     /**
      * @return whether @p client supports text-input-v3
      */
     bool clientSupportsTextInput(ClientConnection *client) const;
+
+    bool implicitShowPanelRequired() const;
 
 Q_SIGNALS:
 
@@ -198,6 +223,10 @@ Q_SIGNALS:
      * @see surface
      */
     void enableRequested();
+
+    void requestShowInputPanel();
+    void requestHideInputPanel();
+    void availableActionsChanged();
 
 private:
     friend class TextInputManagerV3InterfacePrivate;

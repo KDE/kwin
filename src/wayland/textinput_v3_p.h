@@ -11,6 +11,7 @@
 #include <QHash>
 #include <QList>
 #include <QPointer>
+#include <QSet>
 
 #include <qwayland-server-text-input-unstable-v3.h>
 
@@ -38,6 +39,9 @@ public:
     void sendEnter(SurfaceInterface *surface);
     void sendLeave(SurfaceInterface *surface);
     void sendPreEdit(const QString &text, const quint32 cursorBegin, const quint32 cursorEnd);
+    void sendPreeditHint(uint32_t start, uint32_t end, TextInputV3Interface::PreeditHint hint);
+    void sendLanguage(const QString &language);
+    void sendAction(TextInputV3Interface::Action action);
     void commitString(const QString &text);
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength);
     void done();
@@ -68,6 +72,15 @@ public:
     quint32 preeditCursorBegin = 0;
     quint32 preeditCursorEnd = 0;
 
+    // Since v3 version 2: cursor rectangle commit semantics
+    Rect committedCursorRectangle;
+    bool hasCommittedCursorRectangle = false;
+    QMetaObject::Connection surfaceCommitConnection;
+
+    QString language;
+    QSet<TextInputV3Interface::Action> availableActions;
+    QHash<Resource *, quint32> actionSerialHash;
+
     struct
     {
         Rect cursorRectangle;
@@ -81,6 +94,8 @@ public:
         QString preeditText;
         quint32 preeditCursorBegin = 0;
         quint32 preeditCursorEnd = 0;
+        // Since v3 version 2
+        QSet<TextInputV3Interface::Action> availableActions;
     } pending;
 
     QHash<Resource *, quint32> serialHash;
@@ -103,6 +118,11 @@ protected:
     void zwp_text_input_v3_set_text_change_cause(Resource *resource, uint32_t cause) override;
     void zwp_text_input_v3_set_cursor_rectangle(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
     void zwp_text_input_v3_commit(Resource *resource) override;
+
+    // Since v3 version 2
+    void zwp_text_input_v3_set_available_actions(Resource *resource, wl_array *available_actions) override;
+    void zwp_text_input_v3_show_input_panel(Resource *resource) override;
+    void zwp_text_input_v3_hide_input_panel(Resource *resource) override;
 };
 
 }
