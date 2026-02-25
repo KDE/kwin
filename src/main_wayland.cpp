@@ -140,6 +140,7 @@ void ApplicationWayland::performStartup()
     createInput();
     createInputMethod();
     createTabletModeManager();
+    createA11yManager();
 
     auto compositor = Compositor::create();
     compositor->createRenderer();
