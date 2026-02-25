@@ -134,6 +134,8 @@ void Selection::setWlSource(AbstractDataSource *source)
     m_waylandSource = source;
     if (source) {
         m_xSource.reset();
+        // discard any incoming targets for pending requests, as they are now outdated
+        m_requestTargetsTimestamp.reset();
     }
 
     ownSelection(m_waylandSource != nullptr);
@@ -141,6 +143,7 @@ void Selection::setWlSource(AbstractDataSource *source)
 
 void Selection::requestTargets()
 {
+    m_requestTargetsTimestamp = m_timestamp;
     // will lead to a selection request event for the new owner
     xcb_convert_selection(kwinApp()->x11Connection(), m_window, m_atom, atoms->targets, atoms->wl_selection, m_timestamp);
 }
@@ -301,6 +304,9 @@ bool Selection::handleSelectionTargets(xcb_selection_notify_event_t *event)
         return false;
     }
     if (event->property == XCB_ATOM_NONE) {
+        return true;
+    }
+    if (event->time != m_requestTargetsTimestamp) {
         return true;
     }
 

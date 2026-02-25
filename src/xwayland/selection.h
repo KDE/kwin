@@ -122,6 +122,8 @@ protected:
     xcb_window_t m_window = XCB_WINDOW_NONE;
     xcb_timestamp_t m_timestamp = 0;
 
+    std::optional<xcb_timestamp_t> m_requestTargetsTimestamp = std::nullopt;
+
     // Active source, if any. Only one of them at max can exist
     // at the same time.
     AbstractDataSource *m_waylandSource = nullptr;

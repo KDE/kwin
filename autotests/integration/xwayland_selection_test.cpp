@@ -9,6 +9,8 @@
 #include "atoms.h"
 #include "core/output.h"
 #include "utils/pipe.h"
+#include "wayland/abstract_data_source.h"
+#include "wayland/display.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -76,6 +78,33 @@ static QByteArray generateText(size_t size)
     }
     return result;
 }
+
+class TestDataSource : public AbstractDataSource
+{
+    Q_OBJECT
+public:
+    explicit TestDataSource(const QHash<QString, QByteArray> &mimeData)
+        : m_mimeData(mimeData)
+    {
+    }
+    ~TestDataSource() override
+    {
+        Q_EMIT aboutToBeDestroyed();
+    }
+    void requestData(const QString &mimeType, FileDescriptor fd) override
+    {
+        const QByteArray data = m_mimeData.value(mimeType);
+        ::write(fd.get(), data.data(), data.size());
+    }
+    void cancel() override { }
+    QStringList mimeTypes() const override
+    {
+        return m_mimeData.keys();
+    }
+
+private:
+    QHash<QString, QByteArray> m_mimeData;
+};
 
 class X11Object
 {
@@ -550,6 +579,7 @@ private Q_SLOTS:
     void primarySelectionWaylandToX11();
     void emptyPrimarySelectionWaylandToX11();
     void snoopPrimarySelection();
+    void waylandClipboardChangesBeforeTargets();
 
 private:
     QMimeDatabase m_mimeDatabase;
@@ -1299,6 +1329,50 @@ void XwaylandSelectionTest::snoopPrimarySelection()
     workspace()->activateWindow(waylandWindow);
     actualData = X11SelectionReader::read(x11Display.get(), x11Window->window(), atoms->primary, x11Display->mimeTypeToAtom(mimeType), atoms->wl_selection, XCB_CURRENT_TIME);
     QCOMPARE(actualData, QByteArray());
+}
+
+void XwaylandSelectionTest::waylandClipboardChangesBeforeTargets()
+{
+    // If an X11 client claims a selection, the data bridge code will not set a data source immediately.
+    // Instead, it'll ask the X11 client for TARGETS. The reason for that is that wayland clients
+    // expect mime types to be announced with the wl_data_offer. This test verifies that if the wayland clipboard
+    // changes before a TARGETS reply arrives, the X11 clients will still be able to get the clipboard data set by the Wayland client.
+
+    // Show an X11 window.
+    std::unique_ptr<X11Display> x11Display = X11Display::create();
+    QVERIFY(x11Display);
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
+    QVERIFY(x11Window);
+
+    // Copy.
+    const QMimeType plainText = m_mimeDatabase.mimeTypeForName(QStringLiteral("text/plain"));
+    const QByteArray plainData = generateText(42);
+    auto x11Selection = std::make_unique<X11SelectionOwner>(x11Display.get(), atoms->clipboard, QList<QMimeType>{plainText}, [plainText, plainData](const QMimeType &mimeType) {
+        if (mimeType == plainText) {
+            return X11SelectionData{
+                .data = plainData,
+                .type = atoms->text,
+                .format = 8,
+            };
+        }
+        return X11SelectionData();
+    });
+
+    QSignalSpy waylandServerSeatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
+
+    // When KWin requests TARGETS from the X11 owner, an alternative selection appears (to mimic klipper doing something silly)
+    std::unique_ptr<TestDataSource> overrideSource;
+    x11Selection->setOnTargets([&]() {
+        overrideSource = std::make_unique<TestDataSource>(QHash<QString, QByteArray>{{QStringLiteral("text/plain"), QByteArrayLiteral("test data source")}});
+        waylandServer()->seat()->setSelection(overrideSource.get(), waylandServer()->display()->nextSerial());
+    });
+    x11Selection->setOwner(true);
+
+    waylandServerSeatSelectionChangedSpy.wait();
+
+    QCOMPARE(waylandServer()->seat()->selection(), overrideSource.get());
+    const QByteArray actualData = X11SelectionReader::read(x11Display.get(), x11Window->window(), atoms->clipboard, x11Display->mimeTypeToAtom(plainText), atoms->wl_selection, XCB_CURRENT_TIME);
+    QCOMPARE(actualData, "test data source");
 }
 
 } // namespace KWin
