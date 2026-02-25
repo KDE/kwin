@@ -14,6 +14,7 @@
 #if KWIN_BUILD_X11
 #include "atoms.h"
 #endif
+#include "a11ymanager.h"
 #include "compositor.h"
 #include "core/outputbackend.h"
 #include "core/rendertarget.h"
@@ -274,6 +275,16 @@ void Application::createTabletModeManager()
 TabletModeManager *Application::tabletModeManager() const
 {
     return m_tabletModeManager.get();
+}
+
+void Application::createA11yManager()
+{
+    m_a11yManager = std::make_unique<A11yManager>();
+}
+
+A11yManager *Application::a11yManager() const
+{
+    return m_a11yManager.get();
 }
 
 #if KWIN_BUILD_X11

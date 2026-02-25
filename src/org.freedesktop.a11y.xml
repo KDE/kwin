@@ -94,7 +94,9 @@
         If such event is received, this second event is processed normally.
     -->
     <method name="SetKeyGrabs">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QList&lt;quint32&gt;"/>
       <arg type="au" name="modifiers" direction="in" />
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QList&lt;KWin::A11yManager::KeyStroke&gt;"/>
       <arg type="a(uu)" name="keystrokes" direction="in" />
     </method>
 

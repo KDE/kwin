@@ -30,7 +30,7 @@ target_compile_definitions(kwin PRIVATE
 
 target_sources(kwin PRIVATE
     3rdparty/xcursor.c
-    a11ykeyboardmonitor.cpp
+    a11ymanager.cpp
     activation.cpp
     appmenu.cpp
     client_machine.cpp
@@ -330,6 +330,8 @@ qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionMa
 qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin::PluginManagerDBusInterface)
 qt_add_dbus_interface(kwin_dbus_SRCS org.freedesktop.DBus.Properties.xml dbusproperties_interface)
 
+qt_add_dbus_adaptor(kwin_dbus_SRCS org.freedesktop.a11y.xml a11ymanager.h KWin::A11yManager)
+
 set_source_files_properties(net.hadess.SensorProxy.xml PROPERTIES
     NO_NAMESPACE ON
 )
@@ -461,7 +463,6 @@ endif()
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h
-    a11ykeyboardmonitor.h
     activities.h
     appmenu.h
     client_machine.h

@@ -207,6 +207,7 @@ void WaylandTestApplication::performStartup()
     createInput();
     createVirtualInputDevices();
     createTabletModeManager();
+    createA11yManager();
 
     auto compositor = Compositor::create();
     compositor->createRenderer();

@@ -10,6 +10,7 @@
 
 #include "config-kwin.h"
 
+#include "a11ymanager.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "inputmethod.h"
@@ -284,7 +285,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
     }
 
     if (!waylandServer()->isKeyboardShortcutsInhibited()) {
-        const bool ret = m_a11yKeyboardMonitor.processKey(key, state, time);
+        const bool ret = kwinApp()->a11yManager()->processKey(key, state, time);
         if (ret) {
             return;
         }

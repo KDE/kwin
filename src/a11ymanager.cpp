@@ -4,7 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-#include "a11ykeyboardmonitor.h"
+#include "a11ymanager.h"
+
+#include "a11yadaptor.h"
 #include "keyboard_input.h"
 #include "wayland/keyboard.h"
 #include "wayland/seat.h"
@@ -12,20 +14,18 @@
 #include "xkb.h"
 
 #include <QDBusConnection>
-#include <QDBusConnectionInterface>
+#include <QDBusMessage>
 #include <QDBusMetaType>
-#include <QDBusServiceWatcher>
-
-using namespace std::literals;
+#include <QDBusReply>
 
 namespace KWin
 {
 
-A11yKeyboardMonitor::A11yKeyboardMonitor()
+A11yManager::A11yManager()
     : QObject()
 {
-    qDBusRegisterMetaType<A11yKeyboardMonitor::KeyStroke>();
-    qDBusRegisterMetaType<QList<A11yKeyboardMonitor::KeyStroke>>();
+    qDBusRegisterMetaType<A11yManager::KeyStroke>();
+    qDBusRegisterMetaType<QList<A11yManager::KeyStroke>>();
 
     m_dbusWatcher.setConnection(QDBusConnection::sessionBus());
     m_dbusWatcher.setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
@@ -34,11 +34,13 @@ A11yKeyboardMonitor::A11yKeyboardMonitor()
         m_clients.remove(serviceName);
     });
 
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/freedesktop/a11y/Manager"), this, QDBusConnection::ExportScriptableContents);
+    new KeyboardMonitorAdaptor(this);
+
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/freedesktop/a11y/Manager"), this, QDBusConnection::ExportAdaptors);
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.freedesktop.a11y.Manager"));
 }
 
-bool A11yKeyboardMonitor::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time)
+bool A11yManager::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time)
 {
     const auto mods = xkb_state_serialize_mods(input()->keyboard()->xkb()->state(), xkb_state_component(XKB_STATE_MODS_EFFECTIVE));
 
@@ -106,7 +108,7 @@ bool A11yKeyboardMonitor::processKey(uint32_t key, KeyboardKeyState state, std::
     return false;
 }
 
-void A11yKeyboardMonitor::GrabKeyboard()
+void A11yManager::GrabKeyboard()
 {
     if (!checkPermission()) {
         return;
@@ -117,7 +119,7 @@ void A11yKeyboardMonitor::GrabKeyboard()
     m_clients[message().service()].grabbed = true;
 }
 
-void A11yKeyboardMonitor::UngrabKeyboard()
+void A11yManager::UngrabKeyboard()
 {
     if (!checkPermission()) {
         return;
@@ -130,7 +132,7 @@ void A11yKeyboardMonitor::UngrabKeyboard()
     m_clients[message().service()].grabbed = false;
 }
 
-void A11yKeyboardMonitor::WatchKeyboard()
+void A11yManager::WatchKeyboard()
 {
     if (!checkPermission()) {
         return;
@@ -141,7 +143,7 @@ void A11yKeyboardMonitor::WatchKeyboard()
     m_clients[message().service()].watched = true;
 }
 
-void A11yKeyboardMonitor::UnwatchKeyboard()
+void A11yManager::UnwatchKeyboard()
 {
     if (!checkPermission()) {
         return;
@@ -154,7 +156,7 @@ void A11yKeyboardMonitor::UnwatchKeyboard()
     m_clients[message().service()].watched = false;
 }
 
-void A11yKeyboardMonitor::SetKeyGrabs(const QList<quint32> &modifiers, const QList<A11yKeyboardMonitor::KeyStroke> &keystrokes)
+void A11yManager::SetKeyGrabs(const QList<quint32> &modifiers, const QList<A11yManager::KeyStroke> &keystrokes)
 {
     if (!checkPermission()) {
         return;
@@ -168,7 +170,7 @@ void A11yKeyboardMonitor::SetKeyGrabs(const QList<quint32> &modifiers, const QLi
     m_clients[message().service()].lastModifier = 0;
 }
 
-void A11yKeyboardMonitor::emitKeyEvent(const QString &name, bool released, quint32 state, quint32 keysym, quint32 unichar, quint16 keycode)
+void A11yManager::emitKeyEvent(const QString &name, bool released, quint32 state, quint32 keysym, quint32 unichar, quint16 keycode)
 {
     QDBusMessage signal = QDBusMessage::createTargetedSignal(name, QStringLiteral("/org/freedesktop/a11y/Manager"), QStringLiteral("org.freedesktop.a11y.KeyboardMonitor"), QStringLiteral("KeyEvent"));
     QVariant keycodeVariant;
@@ -177,7 +179,7 @@ void A11yKeyboardMonitor::emitKeyEvent(const QString &name, bool released, quint
     QDBusConnection::sessionBus().call(signal, QDBus::NoBlock);
 }
 
-bool A11yKeyboardMonitor::checkPermission()
+bool A11yManager::checkPermission()
 {
     QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.DBus"), QStringLiteral("/org/freedesktop/DBus"), QStringLiteral("org.freedesktop.DBus"), "GetNameOwner");
     msg.setArguments({QStringLiteral("org.gnome.Orca.KeyboardMonitor")});
@@ -191,7 +193,7 @@ bool A11yKeyboardMonitor::checkPermission()
     return true;
 }
 
-const QDBusArgument &operator>>(const QDBusArgument &arg, A11yKeyboardMonitor::KeyStroke &keystroke)
+const QDBusArgument &operator>>(const QDBusArgument &arg, A11yManager::KeyStroke &keystroke)
 {
     arg.beginStructure();
     arg >> keystroke.keysym;
@@ -201,7 +203,7 @@ const QDBusArgument &operator>>(const QDBusArgument &arg, A11yKeyboardMonitor::K
     return arg;
 }
 
-const QDBusArgument &operator<<(QDBusArgument &arg, const A11yKeyboardMonitor::KeyStroke &keystroke)
+const QDBusArgument &operator<<(QDBusArgument &arg, const A11yManager::KeyStroke &keystroke)
 {
     arg.beginStructure();
     arg << keystroke.keysym;

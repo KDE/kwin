@@ -31,6 +31,7 @@ class QCommandLineParser;
 namespace KWin
 {
 
+class A11yManager;
 class OutputBackend;
 class Session;
 class X11EventFilter;
@@ -244,6 +245,7 @@ public:
     virtual XwaylandInterface *xwayland() const;
     TabletModeManager *tabletModeManager() const;
     WorkspaceScene *scene() const;
+    A11yManager *a11yManager() const;
 
     /**
      * Starts an interactive window selection process.
@@ -308,6 +310,7 @@ protected:
     void createInputMethod();
     void createTabletModeManager();
     void createScene();
+    void createA11yManager();
     void destroyInput();
     void destroyWorkspace();
     void destroyCompositor();
@@ -356,6 +359,7 @@ private:
     std::unique_ptr<PluginManager> m_pluginManager;
     std::unique_ptr<InputMethod> m_inputMethod;
     std::unique_ptr<TabletModeManager> m_tabletModeManager;
+    std::unique_ptr<A11yManager> m_a11yManager;
 };
 
 inline bool Application::initiallyLocked() const

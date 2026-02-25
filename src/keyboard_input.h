@@ -8,7 +8,6 @@
 */
 #pragma once
 
-#include "a11ykeyboardmonitor.h"
 #include "input.h"
 
 #include <QObject>
@@ -86,7 +85,6 @@ private:
     KeyboardLayout *m_keyboardLayout = nullptr;
     QList<uint32_t> m_pressedKeys;
     QList<uint32_t> m_filteredKeys;
-    A11yKeyboardMonitor m_a11yKeyboardMonitor;
 };
 
 }
