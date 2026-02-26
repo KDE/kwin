@@ -11,6 +11,7 @@
 
 #include "core/inputdevice.h"
 #include "main.h"
+#include "utils/signalspy.h"
 #include "window.h"
 
 // KWayland
