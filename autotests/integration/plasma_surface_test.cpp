@@ -109,7 +109,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QCOMPARE(window->isOnAllDesktops(), false);
 
     // now let's try to change that
-    QSignalSpy onAllDesktopsSpy(window, &Window::desktopsChanged);
+    SignalSpy onAllDesktopsSpy(window, &Window::desktopsChanged);
     QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
     plasmaSurface->setRole(role);
     QFETCH(bool, expectedOnAllDesktops);
@@ -197,7 +197,7 @@ void PlasmaSurfaceTest::testOSDPlacement()
     QCOMPARE(window->frameGeometry(), RectF(1280 / 2 - 100 / 2, 2 * 1024 / 3 - 50 / 2, 100, 50));
 
     // change size of window
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     Test::render(surface.get(), QSize(200, 100), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->frameGeometry(), RectF(1280 / 2 - 200 / 2, 2 * 1024 / 3 - 100 / 2, 200, 100));

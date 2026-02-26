@@ -101,7 +101,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     panelShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_top);
     panelSurface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(panelConfigureRequestedSpy.wait());
     Window *panel = Test::renderAndWaitForShown(panelSurface.get(), panelConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
     QVERIFY(panel);
@@ -109,7 +109,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     QCOMPARE(panel->frameGeometry(), panelRect);
 
     // Create the test window.
-    QSignalSpy plasmaWindowCreatedSpy(Test::waylandWindowManagement(), &KWayland::Client::PlasmaWindowManagement::windowCreated);
+    SignalSpy plasmaWindowCreatedSpy(Test::waylandWindowManagement(), &KWayland::Client::PlasmaWindowManagement::windowCreated);
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));

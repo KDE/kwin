@@ -5,9 +5,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
 // KWin
+#include "utils/signalspy.h"
 #include "wayland/appmenu.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
@@ -69,7 +69,7 @@ void TestAppmenu::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    KWin::SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -85,9 +85,9 @@ void TestAppmenu::init()
     QVERIFY(m_queue->isValid());
 
     KWayland::Client::Registry registry;
-    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
+    KWin::SignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
-    QSignalSpy appmenuSpy(&registry, &KWayland::Client::Registry::appMenuAnnounced);
+    KWin::SignalSpy appmenuSpy(&registry, &KWayland::Client::Registry::appMenuAnnounced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -134,13 +134,13 @@ void TestAppmenu::cleanup()
 
 void TestAppmenu::testCreateAndSet()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
+    KWin::SignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<KWin::SurfaceInterface *>();
-    QSignalSpy appMenuCreated(m_appmenuManagerInterface, &KWin::AppMenuManagerInterface::appMenuCreated);
+    KWin::SignalSpy appMenuCreated(m_appmenuManagerInterface, &KWin::AppMenuManagerInterface::appMenuCreated);
 
     QVERIFY(!m_appmenuManagerInterface->appMenuForSurface(serverSurface));
 
@@ -152,7 +152,7 @@ void TestAppmenu::testCreateAndSet()
     QCOMPARE(appMenuInterface->address().serviceName, QString());
     QCOMPARE(appMenuInterface->address().objectPath, QString());
 
-    QSignalSpy appMenuChangedSpy(appMenuInterface, &KWin::AppMenuInterface::addressChanged);
+    KWin::SignalSpy appMenuChangedSpy(appMenuInterface, &KWin::AppMenuInterface::addressChanged);
 
     appmenu->setAddress("net.somename", "/test/path");
 
@@ -161,7 +161,7 @@ void TestAppmenu::testCreateAndSet()
     QCOMPARE(appMenuInterface->address().objectPath, QString("/test/path"));
 
     // and destroy
-    QSignalSpy destroyedSpy(appMenuInterface, &QObject::destroyed);
+    KWin::SignalSpy destroyedSpy(appMenuInterface, &QObject::destroyed);
     delete appmenu;
     QVERIFY(destroyedSpy.wait());
     QVERIFY(!m_appmenuManagerInterface->appMenuForSurface(serverSurface));

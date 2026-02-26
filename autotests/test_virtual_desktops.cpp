@@ -7,12 +7,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "input.h"
+#include "utils/signalspy.h"
 #include "virtualdesktops.h"
 // KDE
 #include <KConfigGroup>
 
 #include <QAction>
-#include <QSignalSpy>
 #include <QTest>
 
 namespace KWin
@@ -118,8 +118,8 @@ void TestVirtualDesktops::count()
     // start with a useful desktop count
     vds->setCount(s_countInitValue);
 
-    QSignalSpy spy(vds, &VirtualDesktopManager::countChanged);
-    QSignalSpy desktopsRemoved(vds, &VirtualDesktopManager::desktopRemoved);
+    SignalSpy spy(vds, &VirtualDesktopManager::countChanged);
+    SignalSpy desktopsRemoved(vds, &VirtualDesktopManager::desktopRemoved);
 
     auto vdToRemove = vds->desktops().last();
 
@@ -172,7 +172,7 @@ void TestVirtualDesktops::navigationWrapsAround()
     vds->setNavigationWrappingAround(init);
     QCOMPARE(vds->isNavigationWrappingAround(), init);
 
-    QSignalSpy spy(vds, &VirtualDesktopManager::navigationWrappingAroundChanged);
+    SignalSpy spy(vds, &VirtualDesktopManager::navigationWrappingAroundChanged);
     vds->setNavigationWrappingAround(request);
     QCOMPARE(vds->isNavigationWrappingAround(), result);
     QCOMPARE(spy.isEmpty(), !signal);
@@ -205,7 +205,7 @@ void TestVirtualDesktops::current()
     vds->setCurrent(init);
     QCOMPARE(vds->current(), init);
 
-    QSignalSpy spy(vds, &VirtualDesktopManager::currentChanged);
+    SignalSpy spy(vds, &VirtualDesktopManager::currentChanged);
 
     QFETCH(uint, request);
     QFETCH(uint, result);
@@ -249,7 +249,7 @@ void TestVirtualDesktops::currentChangeOnCountChange()
     vds->setCount(initCount);
     vds->setCurrent(initCurrent);
 
-    QSignalSpy spy(vds, &VirtualDesktopManager::currentChanged);
+    SignalSpy spy(vds, &VirtualDesktopManager::currentChanged);
 
     QFETCH(uint, request);
     QFETCH(uint, current);
@@ -498,7 +498,7 @@ void TestVirtualDesktops::updateLayout_data()
 void TestVirtualDesktops::updateLayout()
 {
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    QSignalSpy spy(vds, &VirtualDesktopManager::layoutChanged);
+    SignalSpy spy(vds, &VirtualDesktopManager::layoutChanged);
     // call update layout - implicitly through setCount
     QFETCH(uint, desktop);
     QFETCH(QSize, result);

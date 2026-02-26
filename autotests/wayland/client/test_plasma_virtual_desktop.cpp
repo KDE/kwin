@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
 // KWin
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/plasmavirtualdesktop.h"
@@ -82,7 +82,7 @@ void TestVirtualDesktop::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -98,11 +98,11 @@ void TestVirtualDesktop::init()
     QVERIFY(m_queue->isValid());
 
     KWayland::Client::Registry registry;
-    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
+    SignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
-    QSignalSpy plasmaVirtualDesktopManagementSpy(&registry, &KWayland::Client::Registry::plasmaVirtualDesktopManagementAnnounced);
+    SignalSpy plasmaVirtualDesktopManagementSpy(&registry, &KWayland::Client::Registry::plasmaVirtualDesktopManagementAnnounced);
 
-    QSignalSpy windowManagementSpy(&registry, &KWayland::Client::Registry::plasmaWindowManagementAnnounced);
+    SignalSpy windowManagementSpy(&registry, &KWayland::Client::Registry::plasmaWindowManagementAnnounced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -129,7 +129,7 @@ void TestVirtualDesktop::init()
     m_windowManagement =
         registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
 
-    QSignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
+    SignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
     m_windowInterface = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
     m_windowInterface->setPid(1337);
 
@@ -168,8 +168,8 @@ void TestVirtualDesktop::cleanup()
 
 void TestVirtualDesktop::testCreate()
 {
-    QSignalSpy desktopCreatedSpy(m_plasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::desktopCreated);
-    QSignalSpy managementDoneSpy(m_plasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::done);
+    KWin::SignalSpy desktopCreatedSpy(m_plasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::desktopCreated);
+    KWin::SignalSpy managementDoneSpy(m_plasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::done);
 
     // on this createDesktop bind() isn't called already, the desktopadded signals will be sent after bind happened
     KWin::PlasmaVirtualDesktopInterface *desktop1Int = m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-1"));
@@ -185,7 +185,7 @@ void TestVirtualDesktop::testCreate()
     QCOMPARE(m_plasmaVirtualDesktopManagement->desktops().length(), 1);
 
     KWayland::Client::PlasmaVirtualDesktop *desktop1 = m_plasmaVirtualDesktopManagement->desktops().first();
-    QSignalSpy desktop1DoneSpy(desktop1, &KWayland::Client::PlasmaVirtualDesktop::done);
+    KWin::SignalSpy desktop1DoneSpy(desktop1, &KWayland::Client::PlasmaVirtualDesktop::done);
     desktop1Int->sendDone();
     QVERIFY(desktop1DoneSpy.wait());
 
@@ -213,12 +213,12 @@ void TestVirtualDesktop::testCreate()
 
     // get the clients
     KWayland::Client::PlasmaVirtualDesktop *desktop2 = m_plasmaVirtualDesktopManagement->desktops()[1];
-    QSignalSpy desktop2DoneSpy(desktop2, &KWayland::Client::PlasmaVirtualDesktop::done);
+    KWin::SignalSpy desktop2DoneSpy(desktop2, &KWayland::Client::PlasmaVirtualDesktop::done);
     desktop2Int->sendDone();
     QVERIFY(desktop2DoneSpy.wait());
 
     KWayland::Client::PlasmaVirtualDesktop *desktop3 = m_plasmaVirtualDesktopManagement->desktops()[2];
-    QSignalSpy desktop3DoneSpy(desktop3, &KWayland::Client::PlasmaVirtualDesktop::done);
+    KWin::SignalSpy desktop3DoneSpy(desktop3, &KWayland::Client::PlasmaVirtualDesktop::done);
     desktop3Int->sendDone();
     QVERIFY(desktop3DoneSpy.wait());
 
@@ -245,7 +245,7 @@ void TestVirtualDesktop::testSetRows()
     // rebuild some desktops
     testCreate();
 
-    QSignalSpy rowsChangedSpy(m_plasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::rowsChanged);
+    KWin::SignalSpy rowsChangedSpy(m_plasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::rowsChanged);
 
     m_plasmaVirtualDesktopManagementInterface->setRows(3);
     QVERIFY(rowsChangedSpy.wait());
@@ -265,7 +265,7 @@ void TestVirtualDesktop::testConnectNewClient()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    QSignalSpy plasmaVirtualDesktopManagementSpy(&registry, &KWayland::Client::Registry::plasmaVirtualDesktopManagementAnnounced);
+    KWin::SignalSpy plasmaVirtualDesktopManagementSpy(&registry, &KWayland::Client::Registry::plasmaVirtualDesktopManagementAnnounced);
 
     QVERIFY(plasmaVirtualDesktopManagementSpy.wait());
 
@@ -274,7 +274,7 @@ void TestVirtualDesktop::testConnectNewClient()
                                                       plasmaVirtualDesktopManagementSpy.first().last().value<quint32>(),
                                                       this);
 
-    QSignalSpy managementDoneSpy(otherPlasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::done);
+    KWin::SignalSpy managementDoneSpy(otherPlasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::done);
 
     QVERIFY(managementDoneSpy.wait());
     QCOMPARE(otherPlasmaVirtualDesktopManagement->desktops().length(), 3);
@@ -290,9 +290,9 @@ void TestVirtualDesktop::testDestroy()
     KWin::PlasmaVirtualDesktopInterface *desktop1Int = m_plasmaVirtualDesktopManagementInterface->desktops().first();
     KWayland::Client::PlasmaVirtualDesktop *desktop1 = m_plasmaVirtualDesktopManagement->desktops().first();
 
-    QSignalSpy desktop1IntDestroyedSpy(desktop1Int, &QObject::destroyed);
-    QSignalSpy desktop1DestroyedSpy(desktop1, &QObject::destroyed);
-    QSignalSpy desktop1RemovedSpy(desktop1, &KWayland::Client::PlasmaVirtualDesktop::removed);
+    KWin::SignalSpy desktop1IntDestroyedSpy(desktop1Int, &QObject::destroyed);
+    KWin::SignalSpy desktop1DestroyedSpy(desktop1, &QObject::destroyed);
+    KWin::SignalSpy desktop1RemovedSpy(desktop1, &KWayland::Client::PlasmaVirtualDesktop::removed);
     m_plasmaVirtualDesktopManagementInterface->removeDesktop(QStringLiteral("0-1"));
 
     // test that both server and client desktoip interfaces go away
@@ -309,7 +309,7 @@ void TestVirtualDesktop::testDestroy()
     }
 
     // Test the desktopRemoved signal of the manager, remove another desktop as the signals can't be tested at the same time
-    QSignalSpy desktopManagerRemovedSpy(m_plasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::desktopRemoved);
+    KWin::SignalSpy desktopManagerRemovedSpy(m_plasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::desktopRemoved);
     m_plasmaVirtualDesktopManagementInterface->removeDesktop(QStringLiteral("0-2"));
     QVERIFY(desktopManagerRemovedSpy.wait());
     QCOMPARE(desktopManagerRemovedSpy.takeFirst().at(0).toString(), QStringLiteral("0-2"));
@@ -332,8 +332,8 @@ void TestVirtualDesktop::testActivate()
     KWayland::Client::PlasmaVirtualDesktop *desktop2 = m_plasmaVirtualDesktopManagement->desktops()[1];
     QVERIFY(!desktop2Int->isActive());
 
-    QSignalSpy requestActivateSpy(desktop2Int, &KWin::PlasmaVirtualDesktopInterface::activateRequested);
-    QSignalSpy activatedSpy(desktop2, &KWayland::Client::PlasmaVirtualDesktop::activated);
+    KWin::SignalSpy requestActivateSpy(desktop2Int, &KWin::PlasmaVirtualDesktopInterface::activateRequested);
+    KWin::SignalSpy activatedSpy(desktop2, &KWayland::Client::PlasmaVirtualDesktop::activated);
 
     desktop2->requestActivate();
     QVERIFY(requestActivateSpy.wait());
@@ -356,7 +356,7 @@ void TestVirtualDesktop::testActivate()
     QVERIFY(!desktop1Int->isActive());
 
     // Test the deactivated signal
-    QSignalSpy deactivatedSpy(desktop2, &KWayland::Client::PlasmaVirtualDesktop::deactivated);
+    KWin::SignalSpy deactivatedSpy(desktop2, &KWayland::Client::PlasmaVirtualDesktop::deactivated);
 
     for (auto *deskInt : m_plasmaVirtualDesktopManagementInterface->desktops()) {
         if (deskInt->id() == desktop1->id()) {
@@ -372,13 +372,13 @@ void TestVirtualDesktop::testEnterLeaveDesktop()
 {
     testCreate();
 
-    QSignalSpy enterRequestedSpy(m_windowInterface, &KWin::PlasmaWindowInterface::enterPlasmaVirtualDesktopRequested);
+    KWin::SignalSpy enterRequestedSpy(m_windowInterface, &KWin::PlasmaWindowInterface::enterPlasmaVirtualDesktopRequested);
     m_window->requestEnterVirtualDesktop(QStringLiteral("0-1"));
     QVERIFY(enterRequestedSpy.wait());
 
     QCOMPARE(enterRequestedSpy.takeFirst().at(0).toString(), QStringLiteral("0-1"));
 
-    QSignalSpy virtualDesktopEnteredSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaVirtualDesktopEntered);
+    KWin::SignalSpy virtualDesktopEnteredSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaVirtualDesktopEntered);
 
     // agree to the request
     m_windowInterface->addPlasmaVirtualDesktop(QStringLiteral("0-1"));
@@ -404,13 +404,13 @@ void TestVirtualDesktop::testEnterLeaveDesktop()
     QCOMPARE(m_window->plasmaVirtualDesktops().length(), 2);
 
     // remove a desktop
-    QSignalSpy leaveRequestedSpy(m_windowInterface, &KWin::PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested);
+    KWin::SignalSpy leaveRequestedSpy(m_windowInterface, &KWin::PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested);
     m_window->requestLeaveVirtualDesktop(QStringLiteral("0-1"));
     QVERIFY(leaveRequestedSpy.wait());
 
     QCOMPARE(leaveRequestedSpy.takeFirst().at(0).toString(), QStringLiteral("0-1"));
 
-    QSignalSpy virtualDesktopLeftSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaVirtualDesktopLeft);
+    KWin::SignalSpy virtualDesktopLeftSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaVirtualDesktopLeft);
 
     // agree to the request
     m_windowInterface->removePlasmaVirtualDesktop(QStringLiteral("0-1"));
@@ -434,8 +434,8 @@ void TestVirtualDesktop::testEnterLeaveDesktop()
 void TestVirtualDesktop::testAllDesktops()
 {
     testCreate();
-    QSignalSpy virtualDesktopEnteredSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaVirtualDesktopEntered);
-    QSignalSpy virtualDesktopLeftSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaVirtualDesktopLeft);
+    KWin::SignalSpy virtualDesktopEnteredSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaVirtualDesktopEntered);
+    KWin::SignalSpy virtualDesktopLeftSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaVirtualDesktopLeft);
 
     // in the beginning the window is on desktop 1 and desktop 3
     m_windowInterface->addPlasmaVirtualDesktop(QStringLiteral("0-1"));
@@ -468,9 +468,9 @@ void TestVirtualDesktop::testCreateRequested()
     // rebuild some desktops
     testCreate();
 
-    QSignalSpy desktopCreateRequestedSpy(m_plasmaVirtualDesktopManagementInterface,
-                                         &KWin::PlasmaVirtualDesktopManagementInterface::desktopCreateRequested);
-    QSignalSpy desktopCreatedSpy(m_plasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::desktopCreated);
+    KWin::SignalSpy desktopCreateRequestedSpy(m_plasmaVirtualDesktopManagementInterface,
+                                              &KWin::PlasmaVirtualDesktopManagementInterface::desktopCreateRequested);
+    KWin::SignalSpy desktopCreatedSpy(m_plasmaVirtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::desktopCreated);
 
     // listen for createdRequested
     m_plasmaVirtualDesktopManagement->requestCreateVirtualDesktop(QStringLiteral("Desktop"), 1);
@@ -491,7 +491,7 @@ void TestVirtualDesktop::testCreateRequested()
     QCOMPARE(m_plasmaVirtualDesktopManagement->desktops().count(), 4);
 
     KWayland::Client::PlasmaVirtualDesktop *desktop = m_plasmaVirtualDesktopManagement->desktops().at(1);
-    QSignalSpy desktopDoneSpy(desktop, &KWayland::Client::PlasmaVirtualDesktop::done);
+    KWin::SignalSpy desktopDoneSpy(desktop, &KWayland::Client::PlasmaVirtualDesktop::done);
     desktopInt->sendDone();
     // desktopDoneSpy.wait();
     // check the order is correct
@@ -506,8 +506,8 @@ void TestVirtualDesktop::testRemoveRequested()
     // rebuild some desktops
     testCreate();
 
-    QSignalSpy desktopRemoveRequestedSpy(m_plasmaVirtualDesktopManagementInterface,
-                                         &KWin::PlasmaVirtualDesktopManagementInterface::desktopRemoveRequested);
+    KWin::SignalSpy desktopRemoveRequestedSpy(m_plasmaVirtualDesktopManagementInterface,
+                                              &KWin::PlasmaVirtualDesktopManagementInterface::desktopRemoveRequested);
 
     // request a remove, just check the request arrived, ignore the request.
     m_plasmaVirtualDesktopManagement->requestRemoveVirtualDesktop(QStringLiteral("0-1"));

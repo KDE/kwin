@@ -100,8 +100,8 @@ void TabBoxTest::testCapsLock()
     QVERIFY(c3->isActive());
 
     // Setup tabbox signal spies
-    QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
-    QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
+    SignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
+    SignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
 
     // enable capslock
     quint32 timestamp = 0;
@@ -166,8 +166,8 @@ void TabBoxTest::testMoveForward()
     QVERIFY(c3->isActive());
 
     // Setup tabbox signal spies
-    QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
-    QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
+    SignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
+    SignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
 
     // press alt+tab
     quint32 timestamp = 0;
@@ -220,8 +220,8 @@ void TabBoxTest::testMoveBackward()
     QVERIFY(c3->isActive());
 
     // Setup tabbox signal spies
-    QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
-    QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
+    SignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
+    SignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
 
     // press alt+shift+tab
     quint32 timestamp = 0;
@@ -259,8 +259,8 @@ void TabBoxTest::testKeyboardFocus()
     QVERIFY(Test::waitForWaylandKeyboard());
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
-    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy leftSpy(keyboard.get(), &KWayland::Client::Keyboard::left);
+    SignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy leftSpy(keyboard.get(), &KWayland::Client::Keyboard::left);
 
     // add a window
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -270,8 +270,8 @@ void TabBoxTest::testKeyboardFocus()
     // the keyboard focus will be moved to the surface after it's mapped
     QVERIFY(enteredSpy.wait());
 
-    QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
-    QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
+    SignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
+    SignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
 
     // press alt+tab
     quint32 timestamp = 0;
@@ -352,8 +352,8 @@ void TabBoxTest::testActiveClientOutsideModel()
     QCOMPARE(workspace()->activeOutput(), outputs[1]);
 
     // Setup tabbox signal spies
-    QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
-    QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
+    SignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
+    SignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
 
     // Press Alt+Tab, this will only show clients on the same output
     quint32 timestamp = 0;

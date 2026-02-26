@@ -288,7 +288,7 @@ public:
         if (wlbuffer) {
             wl_buffer_destroy(wlbuffer);
         }
-        QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
+        SignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
         return spy.wait();
     }
 
@@ -418,7 +418,7 @@ void DrmTest::testCursorLayer()
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
     Test::pointerMotion(window.m_window->frameGeometry().center(), time++);
     QVERIFY(enteredSpy.wait());
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
@@ -531,7 +531,7 @@ void DrmTest::testDirectScanout()
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
     Test::pointerMotion(window.m_window->frameGeometry().center(), time++);
     QVERIFY(enteredSpy.wait());
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
@@ -624,7 +624,7 @@ void DrmTest::testOverlay()
 
     // if there's a visible cursor, a non-primary plane should be used to present it
     std::unique_ptr<KWayland::Client::Pointer> pointer{Test::waylandSeat()->createPointer()};
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
     Test::pointerMotion(window.m_window->frameGeometry().center(), time++);
     QVERIFY(enteredSpy.wait());
     auto cursorShapeDevice = Test::createCursorShapeDeviceV1(pointer.get());
@@ -686,7 +686,7 @@ void DrmTest::testDpms()
     QVERIFY(dummy.show());
 
     workspace()->requestDpmsState(Workspace::DpmsState::Off);
-    QSignalSpy stateChange(workspace(), &Workspace::dpmsStateChanged);
+    SignalSpy stateChange(workspace(), &Workspace::dpmsStateChanged);
     // requesting dpms off multiple times must not mess up renderloop inhibition
     // or cause further state changes!
     workspace()->requestDpmsState(Workspace::DpmsState::Off);

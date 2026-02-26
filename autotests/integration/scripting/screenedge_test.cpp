@@ -133,13 +133,13 @@ void ScreenEdgeTest::testEdge()
     QVERIFY(Scripting::self()->isScriptLoaded(scriptToLoad));
     auto s = Scripting::self()->findScript(scriptToLoad);
     QVERIFY(s);
-    QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
+    SignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
     s->run();
     QVERIFY(runningChangedSpy.wait());
     QCOMPARE(runningChangedSpy.count(), 1);
     QCOMPARE(runningChangedSpy.first().first().toBool(), true);
     // triggering the edge will result in show desktop being triggered
-    QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
+    SignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
 
     // trigger the edge
     QFETCH(QPoint, triggerPos);
@@ -180,13 +180,13 @@ void ScreenEdgeTest::testTouchEdge()
     QVERIFY(Scripting::self()->isScriptLoaded(scriptToLoad));
     auto s = Scripting::self()->findScript(scriptToLoad);
     QVERIFY(s);
-    QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
+    SignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
     s->run();
     QVERIFY(runningChangedSpy.wait());
     QCOMPARE(runningChangedSpy.count(), 1);
     QCOMPARE(runningChangedSpy.first().first().toBool(), true);
     // triggering the edge will result in show desktop being triggered
-    QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
+    SignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
 
     // trigger the edge
     QFETCH(QPoint, triggerPos);
@@ -217,11 +217,11 @@ void ScreenEdgeTest::testEdgeUnregister()
     configGroup.sync();
     const QPoint triggerPos = QPoint(0, 512);
 
-    QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
+    SignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
     s->run();
     QVERIFY(runningChangedSpy.wait());
 
-    QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
+    SignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
 
     // trigger the edge
     KWin::input()->pointer()->warp(triggerPos);
@@ -259,11 +259,11 @@ void ScreenEdgeTest::testDeclarativeTouchEdge()
     QVERIFY(Scripting::self()->isScriptLoaded(scriptToLoad));
 
     auto s = Scripting::self()->findScript(scriptToLoad);
-    QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
+    SignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
     s->run();
     QTRY_COMPARE(runningChangedSpy.count(), 1);
 
-    QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
+    SignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
 
     // Trigger the edge through touch
     quint32 timestamp = 0;

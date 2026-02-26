@@ -11,8 +11,6 @@
 #include "cursor.h"
 #include "wayland_server.h"
 
-#include <QSignalSpy>
-
 namespace KWin
 {
 
@@ -36,7 +34,7 @@ void PlatformCursorTest::initTestCase()
     });
 
     // QCursor requires QScreen but our QPA will create QScreen later on a timer timeout.
-    QSignalSpy screenAddedSpy(qGuiApp, &QGuiApplication::screenAdded);
+    SignalSpy screenAddedSpy(qGuiApp, &QGuiApplication::screenAdded);
     QVERIFY(screenAddedSpy.wait());
 }
 

@@ -81,7 +81,7 @@ void MinimizeAllScriptTest::init()
 
     AbstractScript *script = Scripting::self()->findScript(s_scriptName);
     QVERIFY(script);
-    QSignalSpy runningChangedSpy(script, &AbstractScript::runningChanged);
+    SignalSpy runningChangedSpy(script, &AbstractScript::runningChanged);
     script->run();
     QTRY_COMPARE(runningChangedSpy.count(), 1);
 }

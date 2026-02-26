@@ -16,7 +16,6 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingReply>
-#include <QSignalSpy>
 #include <QTest>
 
 #include <virtualkeyboardinterface.h>
@@ -68,11 +67,11 @@ void VirtualKeyboardDBusTest::testEnabled()
 {
     VirtualKeyboardDBus dbus(KWin::kwinApp()->inputMethod());
     OrgKdeKwinVirtualKeyboardInterface iface(QStringLiteral("org.kde.kwin.testvirtualkeyboard"), QStringLiteral("/VirtualKeyboard"), QDBusConnection::sessionBus());
-    QSignalSpy helperChangedSpy(&iface, &OrgKdeKwinVirtualKeyboardInterface::enabledChanged);
+    SignalSpy helperChangedSpy(&iface, &OrgKdeKwinVirtualKeyboardInterface::enabledChanged);
 
     QCOMPARE(dbus.isEnabled(), false);
     QCOMPARE(dbus.property("enabled").toBool(), false);
-    QSignalSpy enabledChangedSpy(&dbus, &VirtualKeyboardDBus::enabledChanged);
+    SignalSpy enabledChangedSpy(&dbus, &VirtualKeyboardDBus::enabledChanged);
 
     QVERIFY(iface.isValid());
     QCOMPARE(iface.enabled(), false);

@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
-// WaylandServer
+
+#include "utils/signalspy.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
 // Wayland
@@ -32,7 +32,7 @@ private Q_SLOTS:
 void TestWaylandServerDisplay::testSocketName()
 {
     KWin::Display display;
-    QSignalSpy changedSpy(&display, &KWin::Display::socketNamesChanged);
+    SignalSpy changedSpy(&display, &KWin::Display::socketNamesChanged);
     QCOMPARE(display.socketNames(), QStringList());
     const QString testSName = QStringLiteral("fooBar");
     display.addSocketName(testSName);
@@ -52,7 +52,7 @@ void TestWaylandServerDisplay::testStartStop()
     QVERIFY(!runtimeDir.exists(testSocketName));
 
     std::unique_ptr<KWin::Display> display(new KWin::Display);
-    QSignalSpy runningSpy(display.get(), &KWin::Display::runningChanged);
+    SignalSpy runningSpy(display.get(), &KWin::Display::runningChanged);
     display->addSocketName(testSocketName);
     QVERIFY(!display->isRunning());
     display->start();
@@ -71,7 +71,7 @@ void TestWaylandServerDisplay::testClientConnection()
     KWin::Display display;
     display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-client-connection"));
     display.start();
-    QSignalSpy connectedSpy(&display, &KWin::Display::clientConnected);
+    SignalSpy connectedSpy(&display, &KWin::Display::clientConnected);
 
     int sv[2];
     QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) >= 0);
@@ -116,10 +116,10 @@ void TestWaylandServerDisplay::testClientConnection()
     QCOMPARE(connectedSpy.last().first().value<ClientConnection *>(), client2);
 
     // and destroy
-    QSignalSpy clientDestroyedSpy(connection, &QObject::destroyed);
+    SignalSpy clientDestroyedSpy(connection, &QObject::destroyed);
     wl_client_destroy(client);
     QCOMPARE(clientDestroyedSpy.count(), 1);
-    QSignalSpy client2DestroyedSpy(client2, &QObject::destroyed);
+    SignalSpy client2DestroyedSpy(client2, &QObject::destroyed);
     client2->destroy();
     QCOMPARE(client2DestroyedSpy.count(), 1);
     close(sv[0]);
@@ -152,14 +152,14 @@ void TestWaylandServerDisplay::testAutoSocketName()
     QVERIFY(qputenv("XDG_RUNTIME_DIR", runtimeDir.path().toUtf8()));
 
     KWin::Display display0;
-    QSignalSpy socketNameChangedSpy0(&display0, &KWin::Display::socketNamesChanged);
+    SignalSpy socketNameChangedSpy0(&display0, &KWin::Display::socketNamesChanged);
     QVERIFY(display0.addSocketName());
     display0.start();
     QVERIFY(display0.isRunning());
     QCOMPARE(socketNameChangedSpy0.count(), 1);
 
     KWin::Display display1;
-    QSignalSpy socketNameChangedSpy1(&display1, &KWin::Display::socketNamesChanged);
+    SignalSpy socketNameChangedSpy1(&display1, &KWin::Display::socketNamesChanged);
     QVERIFY(display1.addSocketName());
     display1.start();
     QVERIFY(display1.isRunning());

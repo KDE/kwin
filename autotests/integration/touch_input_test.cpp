@@ -22,7 +22,6 @@
 #include <KWayland/Client/touch.h>
 
 #include <QAction>
-#include <QSignalSpy>
 
 namespace KWin
 {
@@ -110,7 +109,7 @@ TouchInputTest::WindowHandle TouchInputTest::showWindow(bool decorated)
         decoration = Test::createXdgToplevelDecorationV1(shellSurface.get());
         decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
     }
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     VERIFY(surfaceConfigureRequestedSpy.wait());
     // let's render
@@ -165,11 +164,11 @@ void TouchInputTest::testMultipleTouchPoints()
     QCOMPARE(window->isDecorated(), decorated);
     window->move(QPoint(100, 100));
     QVERIFY(window);
-    QSignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
-    QSignalSpy pointAddedSpy(m_touch, &KWayland::Client::Touch::pointAdded);
-    QSignalSpy pointMovedSpy(m_touch, &KWayland::Client::Touch::pointMoved);
-    QSignalSpy pointRemovedSpy(m_touch, &KWayland::Client::Touch::pointRemoved);
-    QSignalSpy endedSpy(m_touch, &KWayland::Client::Touch::sequenceEnded);
+    SignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
+    SignalSpy pointAddedSpy(m_touch, &KWayland::Client::Touch::pointAdded);
+    SignalSpy pointMovedSpy(m_touch, &KWayland::Client::Touch::pointMoved);
+    SignalSpy pointRemovedSpy(m_touch, &KWayland::Client::Touch::pointRemoved);
+    SignalSpy endedSpy(m_touch, &KWayland::Client::Touch::sequenceEnded);
 
     quint32 timestamp = 1;
     Test::touchDown(1, window->mapFromLocal(QPointF(25, 25)), timestamp++);
@@ -226,9 +225,9 @@ void TouchInputTest::testCancel()
     auto [window, surface, shellSurface, decoration] = showWindow();
     window->move(QPoint(100, 100));
     QVERIFY(window);
-    QSignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
-    QSignalSpy cancelSpy(m_touch, &KWayland::Client::Touch::sequenceCanceled);
-    QSignalSpy pointRemovedSpy(m_touch, &KWayland::Client::Touch::pointRemoved);
+    SignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
+    SignalSpy cancelSpy(m_touch, &KWayland::Client::Touch::sequenceCanceled);
+    SignalSpy pointRemovedSpy(m_touch, &KWayland::Client::Touch::pointRemoved);
 
     quint32 timestamp = 1;
     Test::touchDown(1, QPointF(125, 125), timestamp++);
@@ -255,7 +254,7 @@ void TouchInputTest::testTouchMouseAction()
     QVERIFY(c2->isActive());
 
     // also create a sequence started spy as the touch event should be passed through
-    QSignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
+    SignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
 
     quint32 timestamp = 1;
     Test::touchDown(1, c1->frameGeometry().center(), timestamp++);
@@ -289,7 +288,7 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
     // This test verifies that a maximized window gets it's touch focus
     // if decoration was focused and then destroyed on maximize with BorderlessMaximizedWindows option.
 
-    QSignalSpy sequenceEndedSpy(m_touch, &KWayland::Client::Touch::sequenceEnded);
+    SignalSpy sequenceEndedSpy(m_touch, &KWayland::Client::Touch::sequenceEnded);
 
     // Enable the borderless maximized windows option.
     auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
@@ -303,9 +302,9 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
     std::unique_ptr<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.get()));
 
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy decorationConfigureRequestedSpy(decoration.get(), &Test::XdgToplevelDecorationV1::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy decorationConfigureRequestedSpy(decoration.get(), &Test::XdgToplevelDecorationV1::configureRequested);
     decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
@@ -348,7 +347,7 @@ void TouchInputTest::testUpdateFocusOnDecorationDestroy()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280, 1024), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
@@ -396,7 +395,7 @@ void TouchInputTest::testGestureDetection()
     QVERIFY(callbackTriggered);
 
     // verify that gestures are canceled properly
-    QSignalSpy gestureCancelled(&action, &QAction::triggered);
+    SignalSpy gestureCancelled(&action, &QAction::triggered);
     Test::touchUp(0, timestamp++);
     QVERIFY(gestureCancelled.wait());
 

@@ -179,8 +179,8 @@ private:
     std::unique_ptr<Test::XdgToplevel> m_shellSurface;
     std::unique_ptr<Test::XdgToplevelDecorationV1> m_decoration;
 
-    std::unique_ptr<QSignalSpy> m_toplevelConfigureRequestedSpy;
-    std::unique_ptr<QSignalSpy> m_surfaceConfigureRequestedSpy;
+    std::unique_ptr<SignalSpy> m_toplevelConfigureRequestedSpy;
+    std::unique_ptr<SignalSpy> m_surfaceConfigureRequestedSpy;
 };
 
 void TestXdgShellWindowRules::initTestCase()
@@ -242,8 +242,8 @@ void TestXdgShellWindowRules::createTestWindow(ClientFlags flags)
     m_decoration = Test::createXdgToplevelDecorationV1(m_shellSurface.get());
 
     // Add signal watchers
-    m_toplevelConfigureRequestedSpy = std::make_unique<QSignalSpy>(m_shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    m_surfaceConfigureRequestedSpy = std::make_unique<QSignalSpy>(m_shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    m_toplevelConfigureRequestedSpy = std::make_unique<SignalSpy>(m_shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    m_surfaceConfigureRequestedSpy = std::make_unique<SignalSpy>(m_shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     m_shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
     m_decoration->set_mode(decorationMode);
@@ -330,9 +330,9 @@ void TestXdgShellWindowRules::testPositionApply()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // One should still be able to move the window around.
-    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
@@ -379,9 +379,9 @@ void TestXdgShellWindowRules::testPositionRemember()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // One should still be able to move the window around.
-    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
@@ -429,7 +429,7 @@ void TestXdgShellWindowRules::testPositionForce()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // User should not be able to move the window.
-    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -460,7 +460,7 @@ void TestXdgShellWindowRules::testPositionApplyNow()
     QVERIFY(m_window->isMovableAcrossScreens());
     QCOMPARE(m_window->pos(), QPoint(0, 0));
 
-    QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
 
     setWindowRule("position", QPoint(42, 42), int(Rules::ApplyNow));
 
@@ -471,9 +471,9 @@ void TestXdgShellWindowRules::testPositionApplyNow()
     // We still have to be able to move the window around.
     QVERIFY(m_window->isMovable());
     QVERIFY(m_window->isMovableAcrossScreens());
-    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
@@ -517,7 +517,7 @@ void TestXdgShellWindowRules::testPositionForceTemporarily()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // User should not be able to move the window.
-    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -591,10 +591,10 @@ void TestXdgShellWindowRules::testSizeApply()
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Resizing));
 
     // One still should be able to resize the window.
-    QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
-    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
+    SignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
+    SignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
@@ -688,10 +688,10 @@ void TestXdgShellWindowRules::testSizeRemember()
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Resizing));
 
     // One should still be able to resize the window.
-    QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
-    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
+    SignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
+    SignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
@@ -778,7 +778,7 @@ void TestXdgShellWindowRules::testSizeForce()
     QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     // Any attempt to resize the window should not succeed.
-    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -836,7 +836,7 @@ void TestXdgShellWindowRules::testSizeApplyNow()
     QCOMPARE(m_toplevelConfigureRequestedSpy->last().first().toSize(), QSize(480, 640));
 
     // Draw the surface with the new size.
-    QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
     m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(m_surface.get(), QSize(480, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
@@ -872,7 +872,7 @@ void TestXdgShellWindowRules::testSizeForceTemporarily()
     QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     // Any attempt to resize the window should not succeed.
-    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -979,7 +979,7 @@ void TestXdgShellWindowRules::testMaximizeApply()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
     m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(m_surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
@@ -1056,7 +1056,7 @@ void TestXdgShellWindowRules::testMaximizeRemember()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
     m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(m_surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
@@ -1202,7 +1202,7 @@ void TestXdgShellWindowRules::testMaximizeApplyNow()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Draw contents of the maximized client.
-    QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
     m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(m_surface.get(), QSize(1280, 1024), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
@@ -2279,7 +2279,7 @@ void TestXdgShellWindowRules::testShortcutDontAffect()
     QVERIFY(m_window->isMinimized());
 
     // If we press the window shortcut, nothing should happen.
-    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
+    SignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2304,7 +2304,7 @@ void TestXdgShellWindowRules::testShortcutApply()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
+    SignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     m_window->setMinimized(true);
@@ -2363,7 +2363,7 @@ void TestXdgShellWindowRules::testShortcutRemember()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
+    SignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     m_window->setMinimized(true);
@@ -2410,7 +2410,7 @@ void TestXdgShellWindowRules::testShortcutForce()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
+    SignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     m_window->setMinimized(true);
@@ -2462,7 +2462,7 @@ void TestXdgShellWindowRules::testShortcutApplyNow()
 
     // The window should now have a window shortcut assigned.
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
+    SignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
@@ -2505,7 +2505,7 @@ void TestXdgShellWindowRules::testShortcutForceTemporarily()
     createTestWindow();
 
     // If we press the window shortcut, the window should be brought back to user.
-    QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
+    SignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     m_window->setMinimized(true);
@@ -2986,7 +2986,7 @@ void TestXdgShellWindowRules::testMatchAfterNameChange()
     QVERIFY(window->isActive());
     QCOMPARE(window->keepAbove(), false);
 
-    QSignalSpy desktopFileNameSpy(window, &Window::desktopFileNameChanged);
+    SignalSpy desktopFileNameSpy(window, &Window::desktopFileNameChanged);
 
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
     QVERIFY(desktopFileNameSpy.wait());

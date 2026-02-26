@@ -161,8 +161,8 @@ void TestGameController::testResetIdleTime()
     const auto idleTimeout = std::chrono::milliseconds(1000);
     KWin::IdleDetector idleDetector(idleTimeout, KWin::IdleDetector::OperatingMode::FollowsInhibitors);
 
-    QSignalSpy idleSpy(&idleDetector, &KWin::IdleDetector::idle);
-    QSignalSpy resumeSpy(&idleDetector, &KWin::IdleDetector::resumed);
+    SignalSpy idleSpy(&idleDetector, &KWin::IdleDetector::idle);
+    SignalSpy resumeSpy(&idleDetector, &KWin::IdleDetector::resumed);
 
     // Wait until we actually become idle
     // Give it up to ~3s to fire (dev sessions can be a bit noisy)
@@ -232,8 +232,8 @@ void TestGameController::testKeyboardMapping()
     Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
-    QSignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
     QVERIFY(keyboardEnteredSpy.wait());
 
     libevdev_set_name(m_evdev, "Test Virtual Game Controller");
@@ -340,8 +340,8 @@ void TestGameController::testPointerMapping()
     QVERIFY(window != nullptr);
 
     std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
 
     const QRectF startGeometry = window->frameGeometry();
     input()->pointer()->warp(startGeometry.center());
@@ -447,8 +447,8 @@ void TestGameController::testAnalogStickPointerMovement()
     QVERIFY(window != nullptr);
 
     std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy motionSpy(pointer.get(), &KWayland::Client::Pointer::motion);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy motionSpy(pointer.get(), &KWayland::Client::Pointer::motion);
 
     // Position pointer in center of window
     const QRectF startGeometry = window->frameGeometry();

@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
-// WaylandServer
+
+#include "utils/signalspy.h"
 #include "wayland/display.h"
 
 using namespace KWin;
@@ -30,7 +30,7 @@ void NoXdgRuntimeDirTest::testCreate()
     // the server cannot start, but should not crash
     const QString testSocketName = QStringLiteral("kwayland-test-no-xdg-runtime-dir-0");
     KWin::Display display;
-    QSignalSpy runningSpy(&display, &KWin::Display::runningChanged);
+    SignalSpy runningSpy(&display, &KWin::Display::runningChanged);
     QVERIFY(!display.addSocketName(testSocketName));
     display.start();
 

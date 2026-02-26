@@ -167,7 +167,7 @@ void KWinBindingsTest::testSwitchWindowScript()
         QVERIFY(Scripting::self()->isScriptLoaded(tmpFile.fileName()));
         auto s = Scripting::self()->findScript(tmpFile.fileName());
         QVERIFY(s);
-        QSignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
+        SignalSpy runningChangedSpy(s, &AbstractScript::runningChanged);
         s->run();
         QTRY_COMPARE(runningChangedSpy.count(), 1);
     };
@@ -216,7 +216,7 @@ void KWinBindingsTest::testWindowToDesktop()
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QSignalSpy desktopsChangedSpy(window, &Window::desktopsChanged);
+    SignalSpy desktopsChangedSpy(window, &Window::desktopsChanged);
     QCOMPARE(workspace()->activeWindow(), window);
 
     QFETCH(int, desktop);

@@ -70,7 +70,7 @@ void KeyboardInputTest::init()
     m_firstSurface = Test::createSurface(m_firstConnection->compositor);
     m_firstShellSurface = Test::createXdgToplevelSurface(m_firstConnection->xdgShell, m_firstSurface.get());
     m_firstWindow = Test::renderAndWaitForShown(m_firstConnection->shm, m_firstSurface.get(), QSize(100, 100), Qt::cyan);
-    QSignalSpy firstEnteredSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy firstEnteredSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
     QVERIFY(firstEnteredSpy.wait());
 
     m_secondConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::Seat);
@@ -79,7 +79,7 @@ void KeyboardInputTest::init()
     m_secondSurface = Test::createSurface(m_secondConnection->compositor);
     m_secondShellSurface = Test::createXdgToplevelSurface(m_secondConnection->xdgShell, m_secondSurface.get());
     m_secondWindow = Test::renderAndWaitForShown(m_secondConnection->shm, m_secondSurface.get(), QSize(100, 100), Qt::cyan);
-    QSignalSpy secondEnteredSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy secondEnteredSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
     QVERIFY(secondEnteredSpy.wait());
 }
 
@@ -98,10 +98,10 @@ void KeyboardInputTest::cleanup()
 
 void KeyboardInputTest::implicitGrab()
 {
-    QSignalSpy firstEnteredSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy firstKeyChangedSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
-    QSignalSpy secondEnteredSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy secondKeyChangedSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy firstEnteredSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy firstKeyChangedSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy secondEnteredSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy secondKeyChangedSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
 
     quint32 timestamp = 0;
     Test::keyboardKeyPressed(KEY_Q, timestamp++);
@@ -124,10 +124,10 @@ void KeyboardInputTest::implicitGrabByClosedWindow()
     // This test verifies that an implicit grab is preserved even after the window is closed. Note:
     // currently it is not the case, but it should be.
 
-    QSignalSpy firstEnteredSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy firstKeyChangedSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
-    QSignalSpy secondEnteredSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy secondKeyChangedSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy firstEnteredSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy firstKeyChangedSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy secondEnteredSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy secondKeyChangedSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
 
     quint32 timestamp = 0;
     Test::keyboardKeyPressed(KEY_Q, timestamp++);
@@ -151,16 +151,16 @@ void KeyboardInputTest::globalShortcut()
     // This test verifies that keys are not leaked to the clients when pressing a global shortcut.
 
 #if KWIN_BUILD_GLOBALSHORTCUTS
-    QSignalSpy firstEnteredSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy firstKeyChangedSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
-    QSignalSpy secondEnteredSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy secondKeyChangedSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy firstEnteredSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy firstKeyChangedSpy(m_firstKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy secondEnteredSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy secondKeyChangedSpy(m_secondKeyboard.get(), &KWayland::Client::Keyboard::keyChanged);
 
     auto action = std::make_unique<QAction>();
     action->setObjectName(QStringLiteral("test"));
     action->setProperty("componentName", QStringLiteral("test"));
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::META | Qt::Key_Space}, KGlobalAccel::NoAutoloading);
-    QSignalSpy actionTriggeredSpy(action.get(), &QAction::triggered);
+    SignalSpy actionTriggeredSpy(action.get(), &QAction::triggered);
 
     // the client should not see the space key being pressed or released
     quint32 timestamp = 0;

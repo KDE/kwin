@@ -103,7 +103,7 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     xcb_flush(c.get());
 
     // we should get a window for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -124,7 +124,7 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     xcb_flush(c.get());
     c.reset();
 
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
 }
 

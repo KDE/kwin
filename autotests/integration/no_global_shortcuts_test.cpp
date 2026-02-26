@@ -108,7 +108,7 @@ void NoGlobalShortcutsTest::testKGlobalAccel()
     std::unique_ptr<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName(QStringLiteral("globalshortcuts-test-meta-shift-w"));
-    QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
+    SignalSpy triggeredSpy(action.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::META | Qt::SHIFT | Qt::Key_W}, KGlobalAccel::NoAutoloading);
 
     // press meta+shift+w
@@ -132,7 +132,7 @@ void NoGlobalShortcutsTest::testPointerShortcut()
 {
     // based on LockScreenTest::testPointerShortcut
     std::unique_ptr<QAction> action(new QAction(nullptr));
-    QSignalSpy actionSpy(action.get(), &QAction::triggered);
+    SignalSpy actionSpy(action.get(), &QAction::triggered);
     input()->registerPointerShortcut(Qt::MetaModifier, Qt::LeftButton, action.get());
 
     // try to trigger the shortcut
@@ -162,7 +162,7 @@ void NoGlobalShortcutsTest::testAxisShortcut()
 {
     // based on LockScreenTest::testAxisShortcut
     std::unique_ptr<QAction> action(new QAction(nullptr));
-    QSignalSpy actionSpy(action.get(), &QAction::triggered);
+    SignalSpy actionSpy(action.get(), &QAction::triggered);
     QFETCH(Qt::Orientation, direction);
     QFETCH(int, sign);
     PointerAxisDirection axisDirection = PointerAxisUp;
@@ -191,7 +191,7 @@ void NoGlobalShortcutsTest::testAxisShortcut()
 void NoGlobalShortcutsTest::testScreenEdge()
 {
     // based on LockScreenTest::testScreenEdge
-    QSignalSpy screenEdgeSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
+    SignalSpy screenEdgeSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
     QCOMPARE(screenEdgeSpy.count(), 0);
 
     quint32 timestamp = 1;

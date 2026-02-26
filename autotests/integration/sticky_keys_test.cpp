@@ -103,7 +103,7 @@ void StickyKeysTest::testStick()
     Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(10, 10), Qt::blue);
     QVERIFY(waylandWindow);
 
-    QSignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
+    SignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
     QVERIFY(modifierSpy.wait());
     modifierSpy.clear();
 
@@ -145,7 +145,7 @@ void StickyKeysTest::testLock_data()
     QTest::addRow("AltGr") << KEY_RIGHTALT << 128 << Test::KeyStateV1::key_altgr;
 }
 
-static bool waitSignals(QSignalSpy &one, QSignalSpy &two)
+static bool waitSignals(SignalSpy &one, SignalSpy &two)
 {
     int count2 = two.count();
     if (!one.wait()) {
@@ -179,11 +179,11 @@ void StickyKeysTest::testLock()
     QVERIFY(waylandWindow);
     waylandWindow->move(QPoint(0, 0));
 
-    QSignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
+    SignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
     QVERIFY(modifierSpy.wait());
     modifierSpy.clear();
 
-    QSignalSpy keyStateSpy(Test::keyState(), &Test::KeyStateV1::stateChanged);
+    SignalSpy keyStateSpy(Test::keyState(), &Test::KeyStateV1::stateChanged);
 
     quint32 timestamp = 0;
 
@@ -254,7 +254,7 @@ void StickyKeysTest::testDisableTwoKeys()
     Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(10, 10), Qt::blue);
     QVERIFY(waylandWindow);
 
-    QSignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
+    SignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
     QVERIFY(modifierSpy.wait());
     modifierSpy.clear();
 
@@ -331,7 +331,7 @@ void StickyKeysTest::testMouse()
     Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(10, 10), Qt::blue);
     QVERIFY(waylandWindow);
 
-    QSignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
+    SignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
     QVERIFY(modifierSpy.wait());
     modifierSpy.clear();
 

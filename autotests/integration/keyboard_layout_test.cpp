@@ -364,7 +364,7 @@ void KeyboardLayoutTest::testVirtualDesktopPolicy()
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
     // check there are no more layouts left in config than the last actual non-default layouts number
-    QSignalSpy deletedDesktopSpy(deletedDesktop, &VirtualDesktop::aboutToBeDestroyed);
+    SignalSpy deletedDesktopSpy(deletedDesktop, &VirtualDesktop::aboutToBeDestroyed);
     QVERIFY(deletedDesktopSpy.wait());
     resetLayouts();
     QCOMPARE(layoutGroup.keyList().filter(QStringLiteral("LayoutDefault")).count(), 1);

@@ -173,8 +173,8 @@ void A11yKeyboardMonitorTest::testWatchKeyboard()
 
     A11yKeyboardWatcher watcher;
 
-    QSignalSpy clientKeySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
-    QSignalSpy a11ySpy(&watcher, &A11yKeyboardWatcher::keyEvent);
+    SignalSpy clientKeySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy a11ySpy(&watcher, &A11yKeyboardWatcher::keyEvent);
     QVERIFY(a11ySpy.wait());
     QCOMPARE(a11ySpy.first()[0], false);
     QCOMPARE(a11ySpy.first()[1], 0);
@@ -221,8 +221,8 @@ void A11yKeyboardMonitorTest::testGrabKeyboard()
     quint32 timestamp = 0;
     Test::keyboardKeyPressed(KEY_A, ++timestamp);
 
-    QSignalSpy clientKeySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
-    QSignalSpy a11ySpy(&watcher, &A11yKeyboardGrabber::keyEvent);
+    SignalSpy clientKeySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy a11ySpy(&watcher, &A11yKeyboardGrabber::keyEvent);
     QVERIFY(a11ySpy.wait());
     QCOMPARE(a11ySpy.first()[0], false);
     QCOMPARE(a11ySpy.first()[1], 0);
@@ -272,7 +272,7 @@ void A11yKeyboardMonitorTest::testKeyGrabs()
     quint32 timestamp = 0;
     Test::keyboardKeyPressed(KEY_A, ++timestamp);
 
-    QSignalSpy clientKeySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy clientKeySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
 
     QVERIFY(Test::waylandSync());
     QCOMPARE(clientKeySpy.count(), 1);
@@ -288,7 +288,7 @@ void A11yKeyboardMonitorTest::testKeyGrabs()
     QCOMPARE(clientKeySpy.first()[1].value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Released);
     clientKeySpy.clear();
 
-    QSignalSpy a11ySpy(&grabber, &A11yKeyboardStrokeGrabber::keyEvent);
+    SignalSpy a11ySpy(&grabber, &A11yKeyboardStrokeGrabber::keyEvent);
 
     Test::keyboardKeyPressed(KEY_CAPSLOCK, ++timestamp);
 
@@ -344,8 +344,8 @@ void A11yKeyboardMonitorTest::testPressCapslockTwice()
     quint32 timestamp = 0;
     Test::keyboardKeyPressed(KEY_CAPSLOCK, ++timestamp);
 
-    QSignalSpy clientKeySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
-    QSignalSpy a11ySpy(&grabber, &A11yKeyboardStrokeGrabber::keyEvent);
+    SignalSpy clientKeySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy a11ySpy(&grabber, &A11yKeyboardStrokeGrabber::keyEvent);
     QVERIFY(a11ySpy.wait());
     QCOMPARE(a11ySpy.first()[0], false);
     QCOMPARE(a11ySpy.first()[1], 0);

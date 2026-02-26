@@ -32,8 +32,6 @@
 #include <KDecoration3/Decoration>
 #include <KDecoration3/DecorationSettings>
 
-#include <QSignalSpy>
-
 #include <linux/input.h>
 
 Q_DECLARE_METATYPE(Qt::WindowFrameSection)
@@ -95,8 +93,8 @@ std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr
     std::unique_ptr<Test::XdgToplevelDecorationV1> decoration = Test::createXdgToplevelDecorationV1(shellSurface.get());
     VERIFY(decoration.get());
 
-    QSignalSpy decorationConfigureRequestedSpy(decoration.get(), &Test::XdgToplevelDecorationV1::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy decorationConfigureRequestedSpy(decoration.get(), &Test::XdgToplevelDecorationV1::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -256,7 +254,7 @@ void DecorationInputTest::testDoubleClickClose()
     });
 
     // double click
-    QSignalSpy closedSpy(window, &Window::closed);
+    SignalSpy closedSpy(window, &Window::closed);
     window->ref();
     PRESS;
     RELEASE;
@@ -364,8 +362,8 @@ void DecorationInputTest::testPressToMove()
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
     window->move(workspace()->activeOutput()->geometry().center() - QPoint(window->width() / 2, window->height() / 2));
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
 
     quint32 timestamp = 1;
     MOTION(QPoint(window->frameGeometry().center().x(), window->y() + window->frameMargins().top() / 2.0));
@@ -421,8 +419,8 @@ void DecorationInputTest::testTapToMove()
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
     window->move(workspace()->activeOutput()->geometry().center() - QPoint(window->width() / 2, window->height() / 2));
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
 
     quint32 timestamp = 1;
     QPoint p = QPoint(window->frameGeometry().center().x(), window->y() + window->frameMargins().top() / 2.0);
@@ -485,7 +483,7 @@ void DecorationInputTest::testResizeOutsideWindow()
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
     window->move(workspace()->activeOutput()->geometry().center() - QPoint(window->width() / 2, window->height() / 2));
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
 
     // go to border
     quint32 timestamp = 1;
@@ -701,8 +699,8 @@ void DecorationInputTest::testTouchEvents()
 
     EventHelper helper;
     window->decoration()->installEventFilter(&helper);
-    QSignalSpy hoverMoveSpy(&helper, &EventHelper::hoverMove);
-    QSignalSpy hoverLeaveSpy(&helper, &EventHelper::hoverLeave);
+    SignalSpy hoverMoveSpy(&helper, &EventHelper::hoverMove);
+    SignalSpy hoverLeaveSpy(&helper, &EventHelper::hoverLeave);
 
     quint32 timestamp = 1;
     const QPoint tapPoint(window->frameGeometry().center().x(), window->frameMargins().top() / 2.0);
@@ -738,7 +736,7 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     // first create a keyboard
     auto keyboard = Test::waylandSeat()->createKeyboard(Test::waylandSeat());
     QVERIFY(keyboard);
-    QSignalSpy enteredSpy(keyboard, &KWayland::Client::Keyboard::entered);
+    SignalSpy enteredSpy(keyboard, &KWayland::Client::Keyboard::entered);
 
     const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
@@ -746,9 +744,9 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QVERIFY(!window->noBorder());
     QVERIFY(enteredSpy.wait());
 
-    QSignalSpy keyEvent(keyboard, &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy keyEvent(keyboard, &KWayland::Client::Keyboard::keyChanged);
 
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     window->decoratedWindow()->requestShowToolTip(QStringLiteral("test"));
     // now we should get an internal window
     QVERIFY(windowAddedSpy.wait());

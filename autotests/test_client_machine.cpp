@@ -9,11 +9,11 @@
 #include "testutils.h"
 // KWin
 #include "client_machine.h"
+#include "utils/signalspy.h"
 #include "utils/xcbutils.h"
 // Qt
 #include <QApplication>
 #include <QLoggingCategory>
-#include <QSignalSpy>
 #include <QTest>
 #include <private/qtx11extras_p.h>
 // xcb
@@ -114,7 +114,7 @@ void TestClientMachine::hostName()
     setClientMachineProperty(window, hostName);
 
     ClientMachine clientMachine;
-    QSignalSpy spy(&clientMachine, &ClientMachine::localhostChanged);
+    SignalSpy spy(&clientMachine, &ClientMachine::localhostChanged);
     clientMachine.resolve(window, XCB_WINDOW_NONE);
     QTEST(clientMachine.hostName(), "expectedHost");
 
@@ -134,7 +134,7 @@ void TestClientMachine::emptyHostName()
     const uint32_t values[] = {true};
     Xcb::Window window(geometry, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     ClientMachine clientMachine;
-    QSignalSpy spy(&clientMachine, &ClientMachine::localhostChanged);
+    SignalSpy spy(&clientMachine, &ClientMachine::localhostChanged);
     clientMachine.resolve(window, XCB_WINDOW_NONE);
     QCOMPARE(clientMachine.hostName(), ClientMachine::localhost());
     QVERIFY(clientMachine.isLocal());

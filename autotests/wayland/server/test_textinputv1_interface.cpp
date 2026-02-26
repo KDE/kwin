@@ -4,10 +4,10 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-#include <QSignalSpy>
 #include <QTest>
 #include <QThread>
 
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/seat.h"
@@ -27,6 +27,7 @@ using namespace KWin;
 
 Q_DECLARE_METATYPE(QtWayland::zwp_text_input_v1::content_purpose)
 Q_DECLARE_METATYPE(QtWayland::zwp_text_input_v1::content_hint)
+Q_DECLARE_OPAQUE_POINTER(wl_surface *)
 
 class TextInputV1 : public QObject, public QtWayland::zwp_text_input_v1
 {
@@ -117,7 +118,7 @@ void TestTextInputV1Interface::initTestCase()
     new TextInputManagerV1Interface(&m_display);
 
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -145,9 +146,9 @@ void TestTextInputV1Interface::initTestCase()
         m_clientSeat = registry->createSeat(name, version);
     });
 
-    QSignalSpy allAnnouncedSpy(registry, &KWayland::Client::Registry::interfaceAnnounced);
-    QSignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
-    QSignalSpy shmSpy(registry, &KWayland::Client::Registry::shmAnnounced);
+    SignalSpy allAnnouncedSpy(registry, &KWayland::Client::Registry::interfaceAnnounced);
+    SignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
+    SignalSpy shmSpy(registry, &KWayland::Client::Registry::shmAnnounced);
     registry->setEventQueue(m_queue);
     registry->create(m_connection->display());
     QVERIFY(registry->isValid());
@@ -190,7 +191,7 @@ TestTextInputV1Interface::~TestTextInputV1Interface()
 void TestTextInputV1Interface::testEnableDisable()
 {
     // create a surface
-    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    SignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -199,12 +200,12 @@ void TestTextInputV1Interface::testEnableDisable()
     m_serverTextInputV1 = m_seat->textInputV1();
     QVERIFY(m_serverTextInputV1);
 
-    QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
-    QSignalSpy textInputEnabledSpy(m_serverTextInputV1, &TextInputV1Interface::enabledChanged);
-    QSignalSpy cursorRectangleChangedSpy(m_serverTextInputV1, &TextInputV1Interface::cursorRectangleChanged);
+    SignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
+    SignalSpy textInputEnabledSpy(m_serverTextInputV1, &TextInputV1Interface::enabledChanged);
+    SignalSpy cursorRectangleChangedSpy(m_serverTextInputV1, &TextInputV1Interface::cursorRectangleChanged);
 
-    QSignalSpy surfaceEnterSpy(m_clientTextInputV1, &TextInputV1::surface_enter);
-    QSignalSpy surfaceLeaveSpy(m_clientTextInputV1, &TextInputV1::surface_leave);
+    SignalSpy surfaceEnterSpy(m_clientTextInputV1, &TextInputV1::surface_enter);
+    SignalSpy surfaceLeaveSpy(m_clientTextInputV1, &TextInputV1::surface_leave);
 
     // Enter the textinput
 
@@ -243,7 +244,7 @@ void TestTextInputV1Interface::testEnableDisable()
 void TestTextInputV1Interface::testEvents()
 {
     // create a surface
-    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    SignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -252,8 +253,8 @@ void TestTextInputV1Interface::testEvents()
     m_serverTextInputV1 = m_seat->textInputV1();
     QVERIFY(m_serverTextInputV1);
 
-    QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
-    QSignalSpy textInputEnabledSpy(m_serverTextInputV1, &TextInputV1Interface::enabledChanged);
+    SignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
+    SignalSpy textInputEnabledSpy(m_serverTextInputV1, &TextInputV1Interface::enabledChanged);
 
     // Enter the textinput
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
@@ -268,9 +269,9 @@ void TestTextInputV1Interface::testEvents()
     m_clientTextInputV1->activate(*m_clientSeat, *clientSurface);
     QVERIFY(textInputEnabledSpy.wait());
 
-    QSignalSpy preEditSpy(m_clientTextInputV1, &TextInputV1::preedit_string);
-    QSignalSpy commitStringSpy(m_clientTextInputV1, &TextInputV1::commit_string);
-    QSignalSpy deleteSurroundingSpy(m_clientTextInputV1, &TextInputV1::delete_surrounding_text);
+    SignalSpy preEditSpy(m_clientTextInputV1, &TextInputV1::preedit_string);
+    SignalSpy commitStringSpy(m_clientTextInputV1, &TextInputV1::commit_string);
+    SignalSpy deleteSurroundingSpy(m_clientTextInputV1, &TextInputV1::delete_surrounding_text);
 
     m_serverTextInputV1->preEdit("Hello KDE community!", "Hello");
     m_serverTextInputV1->deleteSurroundingText(6, 10);
@@ -312,7 +313,7 @@ void TestTextInputV1Interface::testContentPurpose_data()
 void TestTextInputV1Interface::testContentPurpose()
 {
     // create a surface
-    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    SignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -321,8 +322,8 @@ void TestTextInputV1Interface::testContentPurpose()
     m_serverTextInputV1 = m_seat->textInputV1();
     QVERIFY(m_serverTextInputV1);
 
-    QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
-    QSignalSpy textInputEnabledSpy(m_serverTextInputV1, &TextInputV1Interface::enabledChanged);
+    SignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
+    SignalSpy textInputEnabledSpy(m_serverTextInputV1, &TextInputV1Interface::enabledChanged);
 
     // Enter the textinput
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
@@ -341,7 +342,7 @@ void TestTextInputV1Interface::testContentPurpose()
     // Default should be normal content purpose
     QCOMPARE(m_serverTextInputV1->contentPurpose(), TextInputContentPurpose::Normal);
 
-    QSignalSpy contentTypeChangedSpy(m_serverTextInputV1, &TextInputV1Interface::contentTypeChanged);
+    SignalSpy contentTypeChangedSpy(m_serverTextInputV1, &TextInputV1Interface::contentTypeChanged);
 
     QFETCH(QtWayland::zwp_text_input_v1::content_purpose, clientPurpose);
     m_clientTextInputV1->activate(*m_clientSeat, *clientSurface);
@@ -397,7 +398,7 @@ void TestTextInputV1Interface::testContentHints_data()
 void TestTextInputV1Interface::testContentHints()
 {
     // create a surface
-    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    SignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -406,8 +407,8 @@ void TestTextInputV1Interface::testContentHints()
     m_serverTextInputV1 = m_seat->textInputV1();
     QVERIFY(m_serverTextInputV1);
 
-    QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
-    QSignalSpy textInputEnabledSpy(m_serverTextInputV1, &TextInputV1Interface::enabledChanged);
+    SignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
+    SignalSpy textInputEnabledSpy(m_serverTextInputV1, &TextInputV1Interface::enabledChanged);
 
     // Enter the textinput
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
@@ -430,7 +431,7 @@ void TestTextInputV1Interface::testContentHints()
     QVERIFY(textInputEnabledSpy.wait());
     m_totalCommits++;
 
-    QSignalSpy contentTypeChangedSpy(m_serverTextInputV1, &TextInputV1Interface::contentTypeChanged);
+    SignalSpy contentTypeChangedSpy(m_serverTextInputV1, &TextInputV1Interface::contentTypeChanged);
 
     QFETCH(quint32, clientHint);
     m_clientTextInputV1->activate(*m_clientSeat, *clientSurface);

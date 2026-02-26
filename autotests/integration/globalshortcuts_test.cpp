@@ -134,7 +134,7 @@ void GlobalShortcutsTest::testNonLatinLayout()
     action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName("globalshortcuts-test-non-latin-layout");
 
-    QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
+    SignalSpy triggeredSpy(action.get(), &QAction::triggered);
 
     KGlobalAccel::self()->stealShortcutSystemwide(seq);
     KGlobalAccel::self()->setShortcut(action.get(), {seq}, KGlobalAccel::NoAutoloading);
@@ -157,7 +157,7 @@ void GlobalShortcutsTest::testConsumedShift()
     std::unique_ptr<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName(QStringLiteral("globalshortcuts-test-consumed-shift"));
-    QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
+    SignalSpy triggeredSpy(action.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::Key_Percent}, KGlobalAccel::NoAutoloading);
 
     // press shift+5
@@ -180,7 +180,7 @@ void GlobalShortcutsTest::testRepeatedTrigger()
     std::unique_ptr<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName(QStringLiteral("globalshortcuts-test-consumed-shift"));
-    QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
+    SignalSpy triggeredSpy(action.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::Key_Percent}, KGlobalAccel::NoAutoloading);
 
     // we need to configure the key repeat first. It is only enabled on libinput
@@ -239,7 +239,7 @@ void GlobalShortcutsTest::testMetaShiftW()
     std::unique_ptr<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName(QStringLiteral("globalshortcuts-test-meta-shift-w"));
-    QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
+    SignalSpy triggeredSpy(action.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::META | Qt::SHIFT | Qt::Key_W}, KGlobalAccel::NoAutoloading);
 
     // press meta+shift+w
@@ -263,7 +263,7 @@ void GlobalShortcutsTest::testComponseKey()
     std::unique_ptr<QAction> action(new QAction(nullptr));
     action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName(QStringLiteral("globalshortcuts-accent"));
-    QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
+    SignalSpy triggeredSpy(action.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::NoModifier}, KGlobalAccel::NoAutoloading);
 
     // press & release `
@@ -279,13 +279,13 @@ void GlobalShortcutsTest::testKeypad()
     auto zeroAction = std::make_unique<QAction>();
     zeroAction->setProperty("componentName", QStringLiteral("kwin"));
     zeroAction->setObjectName(QStringLiteral("globalshortcuts-test-keypad-0"));
-    QSignalSpy zeroActionTriggeredSpy(zeroAction.get(), &QAction::triggered);
+    SignalSpy zeroActionTriggeredSpy(zeroAction.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(zeroAction.get(), QList<QKeySequence>{Qt::MetaModifier | Qt::KeypadModifier | Qt::Key_0}, KGlobalAccel::NoAutoloading);
 
     auto insertAction = std::make_unique<QAction>();
     insertAction->setProperty("componentName", QStringLiteral("kwin"));
     insertAction->setObjectName(QStringLiteral("globalshortcuts-test-keypad-ins"));
-    QSignalSpy insertActionTriggeredSpy(insertAction.get(), &QAction::triggered);
+    SignalSpy insertActionTriggeredSpy(insertAction.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(insertAction.get(), QList<QKeySequence>{Qt::MetaModifier | Qt::KeypadModifier | Qt::Key_Insert}, KGlobalAccel::NoAutoloading);
 
     // Turn on numlock
@@ -336,7 +336,7 @@ void GlobalShortcutsTest::testX11WindowShortcut()
     xcb_map_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -369,7 +369,7 @@ void GlobalShortcutsTest::testX11WindowShortcut()
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     // destroy window again
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -424,7 +424,7 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     QVERIFY(window->isActive());
     QCOMPARE(window->shortcut(), QKeySequence());
 
-    QSignalSpy shortcutDialogAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy shortcutDialogAddedSpy(workspace(), &Workspace::windowAdded);
     workspace()->slotSetupWindowShortcut();
     QTRY_COMPARE(shortcutDialogAddedSpy.count(), 1);
     auto dialog = shortcutDialogAddedSpy.first().first().value<InternalWindow *>();

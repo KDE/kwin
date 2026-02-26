@@ -89,7 +89,7 @@ void TestFractionalScale::testToplevel()
 {
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::FractionalScaleV1> fractionalScale(Test::createFractionalScaleV1(surface.get()));
-    QSignalSpy fractionalScaleChanged(fractionalScale.get(), &Test::FractionalScaleV1::preferredScaleChanged);
+    SignalSpy fractionalScaleChanged(fractionalScale.get(), &Test::FractionalScaleV1::preferredScaleChanged);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
 
     // above call commits the surface and blocks for the configure event. We should have received the scale already
@@ -113,7 +113,7 @@ void TestFractionalScale::testPopup()
 {
     std::unique_ptr<KWayland::Client::Surface> toplevelSurface(Test::createSurface());
     std::unique_ptr<Test::FractionalScaleV1> toplevelFractionalScale(Test::createFractionalScaleV1(toplevelSurface.get()));
-    QSignalSpy toplevelFractionalScaleChanged(toplevelFractionalScale.get(), &Test::FractionalScaleV1::preferredScaleChanged);
+    SignalSpy toplevelFractionalScaleChanged(toplevelFractionalScale.get(), &Test::FractionalScaleV1::preferredScaleChanged);
     std::unique_ptr<Test::XdgToplevel> toplevel(Test::createXdgToplevelSurface(toplevelSurface.get()));
 
     // above call commits the surface and blocks for the configure event. We should have received the scale already
@@ -128,7 +128,7 @@ void TestFractionalScale::testPopup()
 
     std::unique_ptr<KWayland::Client::Surface> popupSurface(Test::createSurface());
     std::unique_ptr<Test::FractionalScaleV1> popupFractionalScale(Test::createFractionalScaleV1(popupSurface.get()));
-    QSignalSpy popupFractionalScaleChanged(popupFractionalScale.get(), &Test::FractionalScaleV1::preferredScaleChanged);
+    SignalSpy popupFractionalScaleChanged(popupFractionalScale.get(), &Test::FractionalScaleV1::preferredScaleChanged);
     std::unique_ptr<Test::XdgPositioner> positioner(Test::createXdgPositioner());
     positioner->set_size(10, 10);
     positioner->set_anchor_rect(10, 10, 10, 10);

@@ -445,7 +445,7 @@ static X11Window *createX11Window(xcb_connection_t *connection, const Rect &geom
     xcb_map_window(connection, windowId);
     xcb_flush(connection);
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     if (!windowCreatedSpy.wait()) {
         return nullptr;
     }
@@ -479,7 +479,7 @@ void ActivationTest::testActiveFullscreen()
 
     // the Wayland window should become active
     // and the X11 window should not be in the active layer anymore
-    QSignalSpy stackingOrder(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrder(workspace(), &Workspace::stackingOrderChanged);
     workspace()->activateWindow(waylandWindow.m_window);
     QCOMPARE(workspace()->activeWindow(), waylandWindow.m_window);
     QCOMPARE(x11Window->layer(), Layer::NormalLayer);
@@ -512,7 +512,7 @@ void ActivationTest::testXdgActivation()
 
     auto windows = setupWindows(time);
 
-    QSignalSpy activationSpy(workspace(), &Workspace::windowActivated);
+    SignalSpy activationSpy(workspace(), &Workspace::windowActivated);
 
     // activating a window without a valid token should fail
     Test::xdgActivation()->activate(QString(), *windows[1]->m_surface);
@@ -810,11 +810,11 @@ void ActivationTest::testXdgActivationBeforeInitialCommit()
     {
         std::unique_ptr<KWayland::Client::Surface> duckSurface(Test::createSurface());
         std::unique_ptr<Test::XdgToplevel> duckShellSurface(Test::createXdgToplevelSurface(duckSurface.get(), Test::CreationSetup::CreateOnly));
-        QSignalSpy toplevelConfigureRequestedSpy(duckShellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(duckShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelConfigureRequestedSpy(duckShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(duckShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
         // Wait for the compositor side window to be created.
-        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        SignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
         QVERIFY(windowCreatedSpy.wait());
         Window *duckWindow = windowCreatedSpy.last().at(0).value<Window *>();
 
@@ -847,11 +847,11 @@ void ActivationTest::testXdgActivationBeforeInitialCommit()
     {
         std::unique_ptr<KWayland::Client::Surface> wolfSurface(Test::createSurface());
         std::unique_ptr<Test::XdgToplevel> wolfShellSurface(Test::createXdgToplevelSurface(wolfSurface.get(), Test::CreationSetup::CreateOnly));
-        QSignalSpy toplevelConfigureRequestedSpy(wolfShellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(wolfShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelConfigureRequestedSpy(wolfShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(wolfShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
         // Wait for the compositor side window to be created.
-        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        SignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
         QVERIFY(windowCreatedSpy.wait());
         Window *wolfWindow = windowCreatedSpy.last().at(0).value<Window *>();
 
@@ -909,11 +909,11 @@ void ActivationTest::testXdgActivationBeforeMap()
     {
         std::unique_ptr<KWayland::Client::Surface> duckSurface(Test::createSurface());
         std::unique_ptr<Test::XdgToplevel> duckShellSurface(Test::createXdgToplevelSurface(duckSurface.get(), Test::CreationSetup::CreateOnly));
-        QSignalSpy toplevelConfigureRequestedSpy(duckShellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(duckShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelConfigureRequestedSpy(duckShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(duckShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
         // Wait for the compositor side window to be created.
-        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        SignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
         QVERIFY(windowCreatedSpy.wait());
         Window *duckWindow = windowCreatedSpy.last().at(0).value<Window *>();
 
@@ -946,11 +946,11 @@ void ActivationTest::testXdgActivationBeforeMap()
     {
         std::unique_ptr<KWayland::Client::Surface> wolfSurface(Test::createSurface());
         std::unique_ptr<Test::XdgToplevel> wolfShellSurface(Test::createXdgToplevelSurface(wolfSurface.get(), Test::CreationSetup::CreateOnly));
-        QSignalSpy toplevelConfigureRequestedSpy(wolfShellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(wolfShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelConfigureRequestedSpy(wolfShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(wolfShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
         // Wait for the compositor side window to be created.
-        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        SignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
         QVERIFY(windowCreatedSpy.wait());
         Window *wolfWindow = windowCreatedSpy.last().at(0).value<Window *>();
 
@@ -1005,7 +1005,7 @@ void ActivationTest::testGlobalShortcutActivation()
     // The spy emulates the latter behavior.
     TokenSpy tokenSpy;
     input()->installInputEventSpy(&tokenSpy);
-    QSignalSpy activationSpy(workspace(), &Workspace::windowActivated);
+    SignalSpy activationSpy(workspace(), &Workspace::windowActivated);
 
     uint32_t time = 0;
 
@@ -1042,7 +1042,7 @@ void ActivationTest::testFocusMovesFromClosedDialogToParentWindow()
 {
     // This test verifies that input focus moves from a closed dialog to the parent window as expected.
 
-    QSignalSpy windowActivatedSpy(workspace(), &Workspace::windowActivated);
+    SignalSpy windowActivatedSpy(workspace(), &Workspace::windowActivated);
 
     std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -1098,7 +1098,7 @@ void ActivationTest::testFullAreaLayerSurfaceUnderlay()
     shellSurface->set_keyboard_interactivity(1);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
@@ -1136,7 +1136,7 @@ void ActivationTest::testFullAreaLayerSurfaceOverlay()
     shellSurface->set_keyboard_interactivity(1);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
@@ -1173,7 +1173,7 @@ void ActivationTest::testPartialAreaLayerSurfaceOverlay()
     shellSurface->set_keyboard_interactivity(1);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());

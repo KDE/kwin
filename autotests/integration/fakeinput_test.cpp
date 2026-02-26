@@ -55,7 +55,7 @@ void FakeInputTest::initTestCase()
 
 void FakeInputTest::init()
 {
-    QSignalSpy deviceAddedSpy(input(), &InputRedirection::deviceAdded);
+    SignalSpy deviceAddedSpy(input(), &InputRedirection::deviceAdded);
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::FakeInput | Test::AdditionalWaylandInterface::Seat));
 
     QVERIFY(deviceAddedSpy.wait());
@@ -72,7 +72,7 @@ void FakeInputTest::testPointerMotion()
     Test::FakeInput *fakeInput = Test::waylandFakeInput();
 
     // without an authentication we shouldn't get the signals
-    QSignalSpy pointerMotionSpy(m_inputDevice, &InputDevice::pointerMotion);
+    SignalSpy pointerMotionSpy(m_inputDevice, &InputDevice::pointerMotion);
     fakeInput->pointer_motion(wl_fixed_from_double(1), wl_fixed_from_double(2));
     QVERIFY(Test::waylandSync());
     QVERIFY(pointerMotionSpy.isEmpty());
@@ -94,7 +94,7 @@ void FakeInputTest::testMotionAbsolute()
     Test::FakeInput *fakeInput = Test::waylandFakeInput();
 
     // without an authentication we shouldn't get the signals
-    QSignalSpy pointerMotionAbsoluteSpy(m_inputDevice, &InputDevice::pointerMotionAbsolute);
+    SignalSpy pointerMotionAbsoluteSpy(m_inputDevice, &InputDevice::pointerMotionAbsolute);
     fakeInput->pointer_motion_absolute(wl_fixed_from_double(1), wl_fixed_from_double(2));
     QVERIFY(Test::waylandSync());
     QVERIFY(pointerMotionAbsoluteSpy.isEmpty());
@@ -125,7 +125,7 @@ void FakeInputTest::testPointerButton()
     Test::FakeInput *fakeInput = Test::waylandFakeInput();
 
     // without an authentication we shouldn't get the signals
-    QSignalSpy pointerButtonSpy(m_inputDevice, &InputDevice::pointerButtonChanged);
+    SignalSpy pointerButtonSpy(m_inputDevice, &InputDevice::pointerButtonChanged);
     QFETCH(quint32, linuxButton);
     fakeInput->button(linuxButton, WL_POINTER_BUTTON_STATE_PRESSED);
     QVERIFY(Test::waylandSync());
@@ -150,7 +150,7 @@ void FakeInputTest::testPointerVerticalAxis()
     Test::FakeInput *fakeInput = Test::waylandFakeInput();
 
     // without an authentication we shouldn't get the signals
-    QSignalSpy pointerAxisSpy(m_inputDevice, &InputDevice::pointerAxisChanged);
+    SignalSpy pointerAxisSpy(m_inputDevice, &InputDevice::pointerAxisChanged);
     fakeInput->axis(WL_POINTER_AXIS_VERTICAL_SCROLL, wl_fixed_from_double(15));
     QVERIFY(Test::waylandSync());
     QVERIFY(pointerAxisSpy.isEmpty());
@@ -168,7 +168,7 @@ void FakeInputTest::testPointerHorizontalAxis()
     Test::FakeInput *fakeInput = Test::waylandFakeInput();
 
     // without an authentication we shouldn't get the signals
-    QSignalSpy pointerAxisSpy(m_inputDevice, &InputDevice::pointerAxisChanged);
+    SignalSpy pointerAxisSpy(m_inputDevice, &InputDevice::pointerAxisChanged);
     fakeInput->axis(WL_POINTER_AXIS_HORIZONTAL_SCROLL, wl_fixed_from_double(15));
     QVERIFY(Test::waylandSync());
     QVERIFY(pointerAxisSpy.isEmpty());
@@ -186,11 +186,11 @@ void FakeInputTest::testTouch()
     Test::FakeInput *fakeInput = Test::waylandFakeInput();
 
     // without an authentication we shouldn't get the signals
-    QSignalSpy touchDownSpy(m_inputDevice, &InputDevice::touchDown);
-    QSignalSpy touchUpSpy(m_inputDevice, &InputDevice::touchUp);
-    QSignalSpy touchMotionSpy(m_inputDevice, &InputDevice::touchMotion);
-    QSignalSpy touchFrameSpy(m_inputDevice, &InputDevice::touchFrame);
-    QSignalSpy touchCanceledSpy(m_inputDevice, &InputDevice::touchCanceled);
+    SignalSpy touchDownSpy(m_inputDevice, &InputDevice::touchDown);
+    SignalSpy touchUpSpy(m_inputDevice, &InputDevice::touchUp);
+    SignalSpy touchMotionSpy(m_inputDevice, &InputDevice::touchMotion);
+    SignalSpy touchFrameSpy(m_inputDevice, &InputDevice::touchFrame);
+    SignalSpy touchCanceledSpy(m_inputDevice, &InputDevice::touchCanceled);
     fakeInput->touch_down(0, wl_fixed_from_double(1), wl_fixed_from_double(2));
     QVERIFY(Test::waylandSync());
     QVERIFY(touchDownSpy.isEmpty());
@@ -279,7 +279,7 @@ void FakeInputTest::testKeyboardKey()
     Test::FakeInput *fakeInput = Test::waylandFakeInput();
 
     // without an authentication we shouldn't get the signals
-    QSignalSpy keyboardKeySpy(m_inputDevice, &InputDevice::keyChanged);
+    SignalSpy keyboardKeySpy(m_inputDevice, &InputDevice::keyChanged);
     QFETCH(quint32, linuxKey);
     fakeInput->keyboard_key(linuxKey, WL_KEYBOARD_KEY_STATE_PRESSED);
     QVERIFY(Test::waylandSync());
@@ -329,7 +329,7 @@ void FakeInputTest::testKeySym()
     sendKey(0x01000000 | 0x1F60A); // smily face
     sendKey(XKB_KEY_f);
 
-    QSignalSpy receivedTextChangedSpy(keyboard, &Test::SimpleKeyboard::receviedTextChanged);
+    SignalSpy receivedTextChangedSpy(keyboard, &Test::SimpleKeyboard::receviedTextChanged);
     bool matched = false;
     for (int i = 0; i < 10; ++i) {
         if (keyboard->receviedText() == "aB äÄ 안😊f") {

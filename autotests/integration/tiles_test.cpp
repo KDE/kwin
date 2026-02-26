@@ -55,7 +55,7 @@ static X11Window *createWindow(xcb_connection_t *connection, const Rect &geometr
     xcb_map_window(connection, windowId);
     xcb_flush(connection);
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     if (!windowCreatedSpy.wait()) {
         return nullptr;
     }
@@ -219,12 +219,12 @@ void TilesTest::testWindowInteraction()
 
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
 
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
 
     auto rootWindow = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
     QVERIFY(rootWindow);
-    QSignalSpy frameGeometryChangedSpy(rootWindow, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(rootWindow, &Window::frameGeometryChanged);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 1);
@@ -289,12 +289,12 @@ void TilesTest::testAssignedTileDeletion()
 
     std::unique_ptr<Test::XdgToplevel> root(Test::createXdgToplevelSurface(rootSurface.get()));
 
-    QSignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
 
     auto rootWindow = Test::renderAndWaitForShown(rootSurface.get(), QSize(100, 100), Qt::cyan);
     QVERIFY(rootWindow);
-    QSignalSpy frameGeometryChangedSpy(rootWindow, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(rootWindow, &Window::frameGeometryChanged);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 1);
@@ -353,13 +353,13 @@ void TilesTest::resizeTileFromWindow()
 
     std::unique_ptr<Test::XdgToplevel> root(Test::createXdgToplevelSurface(rootSurface.get()));
 
-    QSignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
 
     Test::XdgToplevel::States states;
     auto window = Test::renderAndWaitForShown(rootSurface.get(), QSize(100, 100), Qt::cyan);
     QVERIFY(window);
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 1);
@@ -378,7 +378,7 @@ void TilesTest::resizeTileFromWindow()
     auto topLeftTile = qobject_cast<CustomTile *>(leftTile->childTiles().first());
     QVERIFY(topLeftTile);
     QCOMPARE(topLeftTile->windowGeometry(), RectF(4, 4, 506, 506));
-    QSignalSpy tileGeometryChangedSpy(topLeftTile, &Tile::windowGeometryChanged);
+    SignalSpy tileGeometryChangedSpy(topLeftTile, &Tile::windowGeometryChanged);
     auto bottomLeftTile = qobject_cast<CustomTile *>(leftTile->childTiles().last());
     QVERIFY(bottomLeftTile);
     QCOMPARE(bottomLeftTile->windowGeometry(), RectF(4, 514, 506, 506));
@@ -396,9 +396,9 @@ void TilesTest::resizeTileFromWindow()
     QCOMPARE(window->frameGeometry(), RectF(4, 4, 506, 506));
 
     QCOMPARE(workspace()->activeWindow(), window);
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy moveResizedChangedSpy(window, &Window::moveResizedChanged);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy moveResizedChangedSpy(window, &Window::moveResizedChanged);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
 
     // begin resize
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
@@ -580,9 +580,9 @@ void TilesTest::testPerDesktopTiles()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
     window->setOnAllDesktops(true);
 
-    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
-    QSignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy tileChangedSpy(window, &Window::tileChanged);
+    SignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     auto ackConfigure = [&]() {
@@ -644,9 +644,9 @@ void TilesTest::sendToOutput()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
     window->setOnAllDesktops(true);
 
-    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
-    QSignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy tileChangedSpy(window, &Window::tileChanged);
+    SignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     auto ackConfigure = [&]() {
@@ -758,9 +758,9 @@ void TilesTest::tileAndMaximize()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
     window->setOnAllDesktops(true);
 
-    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
-    QSignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy tileChangedSpy(window, &Window::tileChanged);
+    SignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     auto ackConfigure = [&]() {
@@ -834,8 +834,8 @@ void TilesTest::evacuateFromRemovedDesktop()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::cyan);
     window->setOnAllDesktops(true);
 
-    QSignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     auto ackConfigure = [&]() {

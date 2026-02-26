@@ -5,11 +5,11 @@
 */
 // Qt
 #include <QHash>
-#include <QSignalSpy>
 #include <QTest>
 #include <QThread>
-// WaylandServer
+
 #include "core/inputdevice.h"
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/seat.h"
@@ -390,7 +390,7 @@ void TestTabletInterface::initTestCase()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -420,7 +420,7 @@ void TestTabletInterface::initTestCase()
         m_clientSeat = registry->createSeat(name, version);
     });
     registry->setEventQueue(m_queue);
-    QSignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
+    SignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
     registry->create(m_connection->display());
     QVERIFY(registry->isValid());
     registry->setup();
@@ -430,7 +430,7 @@ void TestTabletInterface::initTestCase()
     m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
     QVERIFY(m_clientCompositor->isValid());
 
-    QSignalSpy surfaceSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    SignalSpy surfaceSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
     for (int i = 0; i < 3; ++i) {
         m_surfacesClient += m_clientCompositor->createSurface(this);
     }
@@ -462,7 +462,7 @@ void TestTabletInterface::testAdd()
     TabletSeatV2Interface *seatInterface = m_tabletManager->seat(m_seat);
     QVERIFY(seatInterface);
 
-    QSignalSpy tabletSpy(m_tabletSeatClient, &TabletSeat::tabletAdded);
+    SignalSpy tabletSpy(m_tabletSeatClient, &TabletSeat::tabletAdded);
     m_tabletDevice = new DummyInputDevice();
     m_tabletDevice->setTabletTool(true);
     m_tabletDevice->setVendor(1);
@@ -474,7 +474,7 @@ void TestTabletInterface::testAdd()
     QVERIFY(tabletSpy.wait() || tabletSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_tablets.count(), 1);
 
-    QSignalSpy toolSpy(m_tabletSeatClient, &TabletSeat::toolAdded);
+    SignalSpy toolSpy(m_tabletSeatClient, &TabletSeat::toolAdded);
     m_toolDevice = new DummyInputDeviceTabletTool();
     m_toolDevice->setSerialId(0);
     m_toolDevice->setUniqueId(0);
@@ -501,7 +501,7 @@ void TestTabletInterface::testAddPad()
     TabletSeatV2Interface *seatInterface = m_tabletManager->seat(m_seat);
     QVERIFY(seatInterface);
 
-    QSignalSpy tabletPadSpy(m_tabletSeatClient, &TabletSeat::padAdded);
+    SignalSpy tabletPadSpy(m_tabletSeatClient, &TabletSeat::padAdded);
     m_tabletPadDevice = new DummyInputDevice();
     m_tabletPadDevice->setTabletPad(true);
     m_tabletPadDevice->setName(QStringLiteral("tabletpad"));
@@ -517,7 +517,7 @@ void TestTabletInterface::testAddPad()
 
     QCOMPARE(m_surfaces.count(), 3);
     QVERIFY(m_tabletSeatClient->m_pads[0]->buttonStates.isEmpty());
-    QSignalSpy buttonSpy(m_tabletSeatClient->m_pads[0], &TabletPad::buttonReceived);
+    SignalSpy buttonSpy(m_tabletSeatClient->m_pads[0], &TabletPad::buttonReceived);
     m_tabletPad->setCurrentSurface(m_surfaces[0], m_tablet);
     m_tabletPad->sendButton(123ms, 0, QtWayland::zwp_tablet_pad_v2::button_state_pressed);
     QVERIFY(buttonSpy.count() || buttonSpy.wait(100));
@@ -539,7 +539,7 @@ void TestTabletInterface::testInteractSimple()
 {
     QFETCH(TabletSeat *, tabletSeatClient);
     tabletSeatClient->m_tools[0]->surfaceApproximated.clear();
-    QSignalSpy frameSpy(tabletSeatClient->m_tools[0], &Tool::frame);
+    SignalSpy frameSpy(tabletSeatClient->m_tools[0], &Tool::frame);
 
     QVERIFY(!m_tool->isClientSupported());
     m_tool->setCurrentSurface(m_surfaces[0]);
@@ -569,7 +569,7 @@ void TestTabletInterface::testInteractSurfaceChange()
 {
     QFETCH(TabletSeat *, tabletSeatClient);
     tabletSeatClient->m_tools[0]->surfaceApproximated.clear();
-    QSignalSpy frameSpy(tabletSeatClient->m_tools[0], &Tool::frame);
+    SignalSpy frameSpy(tabletSeatClient->m_tools[0], &Tool::frame);
 
     QVERIFY(!m_tool->isClientSupported());
     m_tool->setCurrentSurface(m_surfaces[0]);

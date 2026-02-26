@@ -80,7 +80,7 @@ void DontCrashEmptyDecorationTest::testBug361551()
     xcb_flush(c);
 
     // we should get a window for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -96,7 +96,7 @@ void DontCrashEmptyDecorationTest::testBug361551()
     xcb_destroy_window(c, windowId);
     xcb_flush(c);
 
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
 }
 

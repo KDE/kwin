@@ -112,7 +112,7 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     // find the effectsloader
     auto effectloader = effects->findChild<AbstractEffectLoader *>();
     QVERIFY(effectloader);
-    QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
+    SignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
 
     Effect *slidingPoupus = nullptr;
     Effect *otherEffect = nullptr;
@@ -136,13 +136,13 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
 
     QVERIFY(!slidingPoupus->isActive());
     QVERIFY(!otherEffect->isActive());
-    QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
+    SignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
 
     // the test created the slide protocol, let's create a Registry and listen for it
     std::unique_ptr<KWayland::Client::Registry> registry(new KWayland::Client::Registry);
     registry->create(Test::waylandConnection());
 
-    QSignalSpy interfacesAnnouncedSpy(registry.get(), &KWayland::Client::Registry::interfacesAnnounced);
+    SignalSpy interfacesAnnouncedSpy(registry.get(), &KWayland::Client::Registry::interfacesAnnounced);
     registry->setup();
     QVERIFY(interfacesAnnouncedSpy.wait());
     auto slideInterface = registry->interface(KWayland::Client::Registry::Interface::Slide);
@@ -176,9 +176,9 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     shellSurface.reset();
     surface.reset();
 
-    QSignalSpy windowClosedSpy(window, &Window::closed);
+    SignalSpy windowClosedSpy(window, &Window::closed);
 
-    QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
+    SignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
     QVERIFY(windowClosedSpy.wait());
 
     // again we should have the sliding popups active

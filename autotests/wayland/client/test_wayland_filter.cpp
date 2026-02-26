@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
 // KWin
+#include "utils/signalspy.h"
 #include "wayland/clientconnection.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
@@ -104,7 +104,7 @@ void TestFilter::testFilter()
 
     // setup connection
     std::unique_ptr<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread());
-    QSignalSpy connectedSpy(connection.get(), &KWayland::Client::ConnectionThread::connected);
+    KWin::SignalSpy connectedSpy(connection.get(), &KWayland::Client::ConnectionThread::connected);
     connection->setSocketName(s_socketName);
 
     std::unique_ptr<QThread> thread(new QThread(this));
@@ -128,9 +128,9 @@ void TestFilter::testFilter()
     queue.setup(connection.get());
 
     KWayland::Client::Registry registry;
-    QSignalSpy registryDoneSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
-    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
-    QSignalSpy slideSpy(&registry, &KWayland::Client::Registry::slideAnnounced);
+    KWin::SignalSpy registryDoneSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
+    KWin::SignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
+    KWin::SignalSpy slideSpy(&registry, &KWayland::Client::Registry::slideAnnounced);
 
     registry.setEventQueue(&queue);
     registry.create(connection->display());

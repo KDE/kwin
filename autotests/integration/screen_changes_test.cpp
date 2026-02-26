@@ -61,9 +61,9 @@ void ScreenChangesTest::testScreenAddRemove()
 
     // first create a registry to get signals about Outputs announced/removed
     KWayland::Client::Registry registry;
-    QSignalSpy allAnnounced(&registry, &KWayland::Client::Registry::interfacesAnnounced);
-    QSignalSpy outputAnnouncedSpy(&registry, &KWayland::Client::Registry::outputAnnounced);
-    QSignalSpy outputRemovedSpy(&registry, &KWayland::Client::Registry::outputRemoved);
+    SignalSpy allAnnounced(&registry, &KWayland::Client::Registry::interfacesAnnounced);
+    SignalSpy outputAnnouncedSpy(&registry, &KWayland::Client::Registry::outputAnnounced);
+    SignalSpy outputRemovedSpy(&registry, &KWayland::Client::Registry::outputRemoved);
     registry.create(Test::waylandConnection());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -107,14 +107,14 @@ void ScreenChangesTest::testScreenAddRemove()
     // let's create the output objects to ensure they are correct
     std::unique_ptr<KWayland::Client::Output> o1(registry.createOutput(outputAnnouncedSpy.first().first().value<quint32>(), outputAnnouncedSpy.first().last().value<quint32>()));
     QVERIFY(o1->isValid());
-    QSignalSpy o1ChangedSpy(o1.get(), &KWayland::Client::Output::changed);
+    SignalSpy o1ChangedSpy(o1.get(), &KWayland::Client::Output::changed);
     QVERIFY(o1ChangedSpy.wait());
     KWin::LogicalOutput *serverOutput1 = workspace()->findOutput(o1->name()); // use wl_output.name to find the compositor side output
     QCOMPARE(o1->globalPosition(), serverOutput1->geometry().topLeft());
     QCOMPARE(o1->pixelSize(), serverOutput1->modeSize());
     std::unique_ptr<KWayland::Client::Output> o2(registry.createOutput(outputAnnouncedSpy.last().first().value<quint32>(), outputAnnouncedSpy.last().last().value<quint32>()));
     QVERIFY(o2->isValid());
-    QSignalSpy o2ChangedSpy(o2.get(), &KWayland::Client::Output::changed);
+    SignalSpy o2ChangedSpy(o2.get(), &KWayland::Client::Output::changed);
     QVERIFY(o2ChangedSpy.wait());
     KWin::LogicalOutput *serverOutput2 = workspace()->findOutput(o2->name()); // use wl_output.name to find the compositor side output
     QCOMPARE(o2->globalPosition(), serverOutput2->geometry().topLeft());
@@ -122,12 +122,12 @@ void ScreenChangesTest::testScreenAddRemove()
 
     // and check XDGOutput is synced
     std::unique_ptr<KWayland::Client::XdgOutput> xdgO1(xdgOutputManager->getXdgOutput(o1.get()));
-    QSignalSpy xdgO1ChangedSpy(xdgO1.get(), &KWayland::Client::XdgOutput::changed);
+    SignalSpy xdgO1ChangedSpy(xdgO1.get(), &KWayland::Client::XdgOutput::changed);
     QVERIFY(xdgO1ChangedSpy.wait());
     QCOMPARE(xdgO1->logicalPosition(), serverOutput1->geometry().topLeft());
     QCOMPARE(xdgO1->logicalSize(), serverOutput1->geometry().size());
     std::unique_ptr<KWayland::Client::XdgOutput> xdgO2(xdgOutputManager->getXdgOutput(o2.get()));
-    QSignalSpy xdgO2ChangedSpy(xdgO2.get(), &KWayland::Client::XdgOutput::changed);
+    SignalSpy xdgO2ChangedSpy(xdgO2.get(), &KWayland::Client::XdgOutput::changed);
     QVERIFY(xdgO2ChangedSpy.wait());
     QCOMPARE(xdgO2->logicalPosition(), serverOutput2->geometry().topLeft());
     QCOMPARE(xdgO2->logicalSize(), serverOutput2->geometry().size());
@@ -140,8 +140,8 @@ void ScreenChangesTest::testScreenAddRemove()
     outputAnnouncedSpy.clear();
     outputRemovedSpy.clear();
 
-    QSignalSpy o1RemovedSpy(o1.get(), &KWayland::Client::Output::removed);
-    QSignalSpy o2RemovedSpy(o2.get(), &KWayland::Client::Output::removed);
+    SignalSpy o1RemovedSpy(o1.get(), &KWayland::Client::Output::removed);
+    SignalSpy o2RemovedSpy(o2.get(), &KWayland::Client::Output::removed);
 
     const QList<Rect> geometries2{Rect(0, 0, 1280, 1024)};
     Test::setOutputConfig(geometries2);

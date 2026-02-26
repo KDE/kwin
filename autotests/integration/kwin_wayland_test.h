@@ -20,7 +20,6 @@
 
 // Qt
 #include <QMimeType>
-#include <QSignalSpy>
 #include <QTest>
 
 #include <optional>

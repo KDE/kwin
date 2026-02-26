@@ -77,7 +77,7 @@ void XwaylandServerCrashTest::testCrash()
     xcb_map_window(c.get(), windowId1);
     xcb_flush(c.get());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     QPointer<X11Window> window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -94,13 +94,13 @@ void XwaylandServerCrashTest::testCrash()
     xcb_map_window(c.get(), windowId2);
     xcb_flush(c.get());
 
-    QSignalSpy unmanagedAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy unmanagedAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(unmanagedAddedSpy.wait());
     QPointer<X11Window> unmanaged = unmanagedAddedSpy.last().first().value<X11Window *>();
     QVERIFY(unmanaged);
 
     // Let's pretend that the Xwayland process has crashed.
-    QSignalSpy x11ConnectionChangedSpy(kwinApp(), &Application::x11ConnectionChanged);
+    SignalSpy x11ConnectionChangedSpy(kwinApp(), &Application::x11ConnectionChanged);
     Xwl::Xwayland *xwayland = static_cast<Xwl::Xwayland *>(kwinApp()->xwayland());
     xwayland->xwaylandLauncher()->process()->terminate();
     QVERIFY(x11ConnectionChangedSpy.wait());
@@ -114,7 +114,7 @@ void XwaylandServerCrashTest::testCrash()
 
     // Render a frame to ensure that the compositor doesn't crash.
     Compositor::self()->scene()->addRepaintFull();
-    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &WorkspaceScene::frameRendered);
+    SignalSpy frameRenderedSpy(Compositor::self()->scene(), &WorkspaceScene::frameRendered);
     QVERIFY(frameRenderedSpy.wait());
 }
 

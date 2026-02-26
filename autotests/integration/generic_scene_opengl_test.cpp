@@ -16,7 +16,6 @@
 #include "window.h"
 
 #include <KConfigGroup>
-#include <QSignalSpy>
 
 using namespace KWin;
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_scene_opengl-0");
@@ -73,7 +72,7 @@ void GenericSceneOpenGLTest::initTestCase()
 void GenericSceneOpenGLTest::testRestart()
 {
     // simple restart of the OpenGL compositor without any windows being shown
-    QSignalSpy sceneCreatedSpy(KWin::Compositor::self(), &Compositor::sceneCreated);
+    SignalSpy sceneCreatedSpy(KWin::Compositor::self(), &Compositor::sceneCreated);
     KWin::Compositor::self()->reinitialize();
     if (sceneCreatedSpy.isEmpty()) {
         QVERIFY(sceneCreatedSpy.wait());

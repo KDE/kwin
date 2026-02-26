@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
-// WaylandServer
+
+#include "utils/signalspy.h"
 #include "wayland/display.h"
 #include "wayland/keyboard.h"
 #include "wayland/pointer.h"
@@ -37,7 +37,7 @@ void TestWaylandServerSeat::testCapabilities()
     QVERIFY(!seat->hasPointer());
     QVERIFY(!seat->hasTouch());
 
-    QSignalSpy keyboardSpy(seat, &SeatInterface::hasKeyboardChanged);
+    SignalSpy keyboardSpy(seat, &SeatInterface::hasKeyboardChanged);
     seat->setHasKeyboard(true);
     QCOMPARE(keyboardSpy.count(), 1);
     QVERIFY(keyboardSpy.last().first().toBool());
@@ -49,7 +49,7 @@ void TestWaylandServerSeat::testCapabilities()
     seat->setHasKeyboard(false);
     QCOMPARE(keyboardSpy.count(), 2);
 
-    QSignalSpy pointerSpy(seat, &SeatInterface::hasPointerChanged);
+    SignalSpy pointerSpy(seat, &SeatInterface::hasPointerChanged);
     seat->setHasPointer(true);
     QCOMPARE(pointerSpy.count(), 1);
     QVERIFY(pointerSpy.last().first().toBool());
@@ -61,7 +61,7 @@ void TestWaylandServerSeat::testCapabilities()
     seat->setHasPointer(false);
     QCOMPARE(pointerSpy.count(), 2);
 
-    QSignalSpy touchSpy(seat, &SeatInterface::hasTouchChanged);
+    SignalSpy touchSpy(seat, &SeatInterface::hasTouchChanged);
     seat->setHasTouch(true);
     QCOMPARE(touchSpy.count(), 1);
     QVERIFY(touchSpy.last().first().toBool());
@@ -112,7 +112,7 @@ void TestWaylandServerSeat::testPointerPos()
     display.start();
     SeatInterface *seat = new SeatInterface(&display, QStringLiteral("seat0"), &display);
     seat->setHasPointer(true);
-    QSignalSpy seatPosSpy(seat, &SeatInterface::pointerPosChanged);
+    SignalSpy seatPosSpy(seat, &SeatInterface::pointerPosChanged);
 
     QCOMPARE(seat->pointerPos(), QPointF());
 

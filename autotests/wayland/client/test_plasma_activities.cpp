@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
 // KWin
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/plasmawindowmanagement.h"
@@ -69,7 +69,7 @@ void TestActivities::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -85,9 +85,9 @@ void TestActivities::init()
     QVERIFY(m_queue->isValid());
 
     KWayland::Client::Registry registry;
-    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
+    SignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
-    QSignalSpy windowManagementSpy(&registry, &KWayland::Client::Registry::plasmaWindowManagementAnnounced);
+    SignalSpy windowManagementSpy(&registry, &KWayland::Client::Registry::plasmaWindowManagementAnnounced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -106,7 +106,7 @@ void TestActivities::init()
     m_windowManagement =
         registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
 
-    QSignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
+    SignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
     m_windowInterface = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
     m_windowInterface->setPid(1337);
 
@@ -143,13 +143,13 @@ void TestActivities::cleanup()
 
 void TestActivities::testEnterLeaveActivity()
 {
-    QSignalSpy enterRequestedSpy(m_windowInterface, &KWin::PlasmaWindowInterface::enterPlasmaActivityRequested);
+    KWin::SignalSpy enterRequestedSpy(m_windowInterface, &KWin::PlasmaWindowInterface::enterPlasmaActivityRequested);
     m_window->requestEnterActivity(QStringLiteral("0-1"));
     enterRequestedSpy.wait();
 
     QCOMPARE(enterRequestedSpy.takeFirst().at(0).toString(), QStringLiteral("0-1"));
 
-    QSignalSpy activityEnteredSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaActivityEntered);
+    KWin::SignalSpy activityEnteredSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaActivityEntered);
 
     // agree to the request
     m_windowInterface->addPlasmaActivity(QStringLiteral("0-1"));
@@ -171,13 +171,13 @@ void TestActivities::testEnterLeaveActivity()
     QCOMPARE(m_window->plasmaActivities()[1], QStringLiteral("0-3"));
 
     // remove an activity
-    QSignalSpy leaveRequestedSpy(m_windowInterface, &KWin::PlasmaWindowInterface::leavePlasmaActivityRequested);
+    KWin::SignalSpy leaveRequestedSpy(m_windowInterface, &KWin::PlasmaWindowInterface::leavePlasmaActivityRequested);
     m_window->requestLeaveActivity(QStringLiteral("0-1"));
     leaveRequestedSpy.wait();
 
     QCOMPARE(leaveRequestedSpy.takeFirst().at(0).toString(), QStringLiteral("0-1"));
 
-    QSignalSpy activityLeftSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaActivityLeft);
+    KWin::SignalSpy activityLeftSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaActivityLeft);
 
     // agree to the request
     m_windowInterface->removePlasmaActivity(QStringLiteral("0-1"));

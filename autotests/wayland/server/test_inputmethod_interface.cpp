@@ -6,13 +6,12 @@
 */
 // Qt
 #include <QHash>
-#include <QSignalSpy>
 #include <QTest>
 #include <QThread>
 
 #include "../../../tests/fakeoutput.h"
 
-// WaylandServer
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/inputmethod_v1.h"
@@ -211,7 +210,7 @@ void TestInputMethodInterface::initTestCase()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -228,7 +227,7 @@ void TestInputMethodInterface::initTestCase()
     QVERIFY(m_queue->isValid());
 
     auto registry = new KWayland::Client::Registry(this);
-    QSignalSpy interfacesSpy(registry, &KWayland::Client::Registry::interfacesAnnounced);
+    SignalSpy interfacesSpy(registry, &KWayland::Client::Registry::interfacesAnnounced);
     connect(registry, &KWayland::Client::Registry::outputAnnounced, this, [this, registry](quint32 name, quint32 version) {
         m_output = new KWayland::Client::Output(this);
         m_output->setup(registry->bindOutput(name, version));
@@ -244,7 +243,7 @@ void TestInputMethodInterface::initTestCase()
         m_clientSeat = registry->createSeat(name, version);
     });
     registry->setEventQueue(m_queue);
-    QSignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
+    SignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
     registry->create(m_connection->display());
     QVERIFY(registry->isValid());
     registry->setup();
@@ -256,7 +255,7 @@ void TestInputMethodInterface::initTestCase()
 
     QVERIFY(interfacesSpy.count() || interfacesSpy.wait());
 
-    QSignalSpy surfaceSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    SignalSpy surfaceSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
     for (int i = 0; i < 3; ++i) {
         m_clientCompositor->createSurface(this);
     }
@@ -288,7 +287,7 @@ TestInputMethodInterface::~TestInputMethodInterface()
 
 void TestInputMethodInterface::testAdd()
 {
-    QSignalSpy panelSpy(m_inputPanelIface, &InputPanelV1Interface::inputPanelSurfaceAdded);
+    SignalSpy panelSpy(m_inputPanelIface, &InputPanelV1Interface::inputPanelSurfaceAdded);
     QPointer<InputPanelSurfaceV1Interface> panelSurfaceIface;
     connect(m_inputPanelIface, &InputPanelV1Interface::inputPanelSurfaceAdded, this, [&panelSurfaceIface](InputPanelSurfaceV1Interface *surface) {
         panelSurfaceIface = surface;
@@ -301,7 +300,7 @@ void TestInputMethodInterface::testAdd()
     Q_ASSERT(panelSurfaceIface);
     Q_ASSERT(panelSurfaceIface->surface() == m_surfaces.constLast());
 
-    QSignalSpy panelTopLevelSpy(panelSurfaceIface, &InputPanelSurfaceV1Interface::topLevel);
+    SignalSpy panelTopLevelSpy(panelSurfaceIface, &InputPanelSurfaceV1Interface::topLevel);
     panelSurface->set_toplevel(*m_output, InputPanelSurface::position_center_bottom);
     QVERIFY(panelTopLevelSpy.wait());
 }
@@ -309,8 +308,8 @@ void TestInputMethodInterface::testAdd()
 void TestInputMethodInterface::testActivate()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
+    SignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
+    SignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
     QVERIFY(!m_inputMethodIface->context());
@@ -331,8 +330,8 @@ void TestInputMethodInterface::testActivate()
 void TestInputMethodInterface::testContext()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
+    SignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
+    SignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
     QVERIFY(!m_inputMethodIface->context());
@@ -351,7 +350,7 @@ void TestInputMethodInterface::testContext()
     quint32 serial = 1;
 
     // commit some text
-    QSignalSpy commitStringSpy(serverContext, &KWin::InputMethodContextV1Interface::commitString);
+    SignalSpy commitStringSpy(serverContext, &KWin::InputMethodContextV1Interface::commitString);
     imContext->commit_string(serial, "hello");
     QVERIFY(commitStringSpy.wait());
     QCOMPARE(commitStringSpy.count(), serial);
@@ -360,7 +359,7 @@ void TestInputMethodInterface::testContext()
     serial++;
 
     // preedit styling event
-    QSignalSpy preeditStylingSpy(serverContext, &KWin::InputMethodContextV1Interface::preeditStyling);
+    SignalSpy preeditStylingSpy(serverContext, &KWin::InputMethodContextV1Interface::preeditStyling);
     // protocol does not document 3rd argument mean in much details (styling)
     imContext->preedit_styling(0, 5, 1);
     QVERIFY(preeditStylingSpy.wait());
@@ -370,14 +369,14 @@ void TestInputMethodInterface::testContext()
     QCOMPARE(preeditStylingSpy.last().at(2).value<quint32>(), 1);
 
     // preedit cursor event
-    QSignalSpy preeditCursorSpy(serverContext, &KWin::InputMethodContextV1Interface::preeditCursor);
+    SignalSpy preeditCursorSpy(serverContext, &KWin::InputMethodContextV1Interface::preeditCursor);
     imContext->preedit_cursor(3);
     QVERIFY(preeditCursorSpy.wait());
     QCOMPARE(preeditCursorSpy.count(), 1);
     QCOMPARE(preeditCursorSpy.last().at(0).value<quint32>(), 3);
 
     // commit preedit_string
-    QSignalSpy preeditStringSpy(serverContext, &KWin::InputMethodContextV1Interface::preeditString);
+    SignalSpy preeditStringSpy(serverContext, &KWin::InputMethodContextV1Interface::preeditString);
     imContext->preedit_string(serial, "hello", "kde");
     QVERIFY(preeditStringSpy.wait());
     QCOMPARE(preeditStringSpy.count(), 1);
@@ -387,7 +386,7 @@ void TestInputMethodInterface::testContext()
     serial++;
 
     // delete surrounding text
-    QSignalSpy deleteSurroundingSpy(serverContext, &KWin::InputMethodContextV1Interface::deleteSurroundingText);
+    SignalSpy deleteSurroundingSpy(serverContext, &KWin::InputMethodContextV1Interface::deleteSurroundingText);
     imContext->delete_surrounding_text(0, 5);
     QVERIFY(deleteSurroundingSpy.wait());
     QCOMPARE(deleteSurroundingSpy.count(), 1);
@@ -395,7 +394,7 @@ void TestInputMethodInterface::testContext()
     QCOMPARE(deleteSurroundingSpy.last().at(1).value<quint32>(), 5);
 
     // set cursor position
-    QSignalSpy cursorPositionSpy(serverContext, &KWin::InputMethodContextV1Interface::cursorPosition);
+    SignalSpy cursorPositionSpy(serverContext, &KWin::InputMethodContextV1Interface::cursorPosition);
     imContext->cursor_position(2, 4);
     QVERIFY(cursorPositionSpy.wait());
     QCOMPARE(cursorPositionSpy.count(), 1);
@@ -403,7 +402,7 @@ void TestInputMethodInterface::testContext()
     QCOMPARE(cursorPositionSpy.last().at(1).value<quint32>(), 4);
 
     // invoke action
-    QSignalSpy invokeActionSpy(imContext, &InputMethodV1Context::invoke_action);
+    SignalSpy invokeActionSpy(imContext, &InputMethodV1Context::invoke_action);
     serverContext->sendInvokeAction(3, 5);
     QVERIFY(invokeActionSpy.wait());
     QCOMPARE(invokeActionSpy.count(), 1);
@@ -411,14 +410,14 @@ void TestInputMethodInterface::testContext()
     QCOMPARE(invokeActionSpy.last().at(1).value<quint32>(), 5);
 
     // preferred language
-    QSignalSpy preferredLanguageSpy(imContext, &InputMethodV1Context::preferred_language);
+    SignalSpy preferredLanguageSpy(imContext, &InputMethodV1Context::preferred_language);
     serverContext->sendPreferredLanguage("gu_IN");
     QVERIFY(preferredLanguageSpy.wait());
     QCOMPARE(preferredLanguageSpy.count(), 1);
     QCOMPARE(preferredLanguageSpy.last().at(0).value<QString>(), "gu_IN");
 
     // surrounding text
-    QSignalSpy surroundingTextSpy(imContext, &InputMethodV1Context::surrounding_text);
+    SignalSpy surroundingTextSpy(imContext, &InputMethodV1Context::surrounding_text);
     serverContext->sendSurroundingText("Hello Plasma!", 2, 4);
     QVERIFY(surroundingTextSpy.wait());
     QCOMPARE(surroundingTextSpy.count(), 1);
@@ -427,7 +426,7 @@ void TestInputMethodInterface::testContext()
     QCOMPARE(surroundingTextSpy.last().at(2).value<quint32>(), 4);
 
     // reset
-    QSignalSpy resetSpy(imContext, &InputMethodV1Context::reset);
+    SignalSpy resetSpy(imContext, &InputMethodV1Context::reset);
     serverContext->sendReset();
     QVERIFY(resetSpy.wait());
     QCOMPARE(resetSpy.count(), 1);
@@ -443,8 +442,8 @@ void TestInputMethodInterface::testContext()
 void TestInputMethodInterface::testGrabkeyboard()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
+    SignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
+    SignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
     QVERIFY(!m_inputMethodIface->context());
@@ -460,12 +459,12 @@ void TestInputMethodInterface::testGrabkeyboard()
     InputMethodV1Context *imContext = m_inputMethod->context();
     QVERIFY(imContext);
 
-    QSignalSpy keyEventSpy(serverContext, &KWin::InputMethodContextV1Interface::key);
+    SignalSpy keyEventSpy(serverContext, &KWin::InputMethodContextV1Interface::key);
     imContext->key(0, 123, 56, 1);
     QEXPECT_FAIL("", "We should be not get key event if keyboard is not grabbed", Continue);
     QVERIFY(!keyEventSpy.wait(200));
 
-    QSignalSpy modifierEventSpy(serverContext, &KWin::InputMethodContextV1Interface::modifiers);
+    SignalSpy modifierEventSpy(serverContext, &KWin::InputMethodContextV1Interface::modifiers);
     imContext->modifiers(1234, 0, 0, 0, 0);
     QEXPECT_FAIL("", "We should be not get modifiers event if keyboard is not grabbed", Continue);
     QVERIFY(!modifierEventSpy.wait(200));
@@ -509,8 +508,8 @@ void TestInputMethodInterface::testContentHints_data()
 void TestInputMethodInterface::testContentHints()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
+    SignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
+    SignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
     QVERIFY(!m_inputMethodIface->context());
@@ -526,7 +525,7 @@ void TestInputMethodInterface::testContentHints()
     InputMethodV1Context *imContext = m_inputMethod->context();
     QVERIFY(imContext);
 
-    QSignalSpy contentTypeChangedSpy(imContext, &InputMethodV1Context::content_type_changed);
+    SignalSpy contentTypeChangedSpy(imContext, &InputMethodV1Context::content_type_changed);
 
     QFETCH(KWin::TextInputContentHints, serverHints);
     serverContext->sendContentType(serverHints, KWin::TextInputContentPurpose::Normal);
@@ -567,8 +566,8 @@ void TestInputMethodInterface::testContentPurpose_data()
 void TestInputMethodInterface::testContentPurpose()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
+    SignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
+    SignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
     QVERIFY(!m_inputMethodIface->context());
@@ -584,7 +583,7 @@ void TestInputMethodInterface::testContentPurpose()
     InputMethodV1Context *imContext = m_inputMethod->context();
     QVERIFY(imContext);
 
-    QSignalSpy contentTypeChangedSpy(imContext, &InputMethodV1Context::content_type_changed);
+    SignalSpy contentTypeChangedSpy(imContext, &InputMethodV1Context::content_type_changed);
 
     QFETCH(KWin::TextInputContentPurpose, serverPurpose);
     serverContext->sendContentType(KWin::TextInputContentHints(KWin::TextInputContentHint::None), serverPurpose);
@@ -604,12 +603,12 @@ void TestInputMethodInterface::testContentPurpose()
 void TestInputMethodInterface::testKeyboardGrab()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
+    SignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
 
     m_inputMethodIface->sendActivate();
     QVERIFY(inputMethodActivateSpy.wait());
 
-    QSignalSpy keyboardGrabSpy(m_inputMethodIface->context(), &InputMethodContextV1Interface::keyboardGrabRequested);
+    SignalSpy keyboardGrabSpy(m_inputMethodIface->context(), &InputMethodContextV1Interface::keyboardGrabRequested);
     InputMethodV1Context *imContext = m_inputMethod->context();
     QVERIFY(imContext);
     KWayland::Client::Keyboard *keyboard = new KWayland::Client::Keyboard(this);
@@ -617,7 +616,7 @@ void TestInputMethodInterface::testKeyboardGrab()
     QVERIFY(keyboard->isValid());
     QVERIFY(keyboardGrabSpy.count() || keyboardGrabSpy.wait());
 
-    QSignalSpy keyboardSpy(keyboard, &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy keyboardSpy(keyboard, &KWayland::Client::Keyboard::keyChanged);
     m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, KeyboardKeyState::Pressed);
     m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, KeyboardKeyState::Released);
     keyboardSpy.wait();

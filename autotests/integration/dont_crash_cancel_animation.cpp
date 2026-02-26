@@ -26,8 +26,6 @@
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
-#include <QSignalSpy>
-
 namespace KWin
 {
 
@@ -96,7 +94,7 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
     QTest::qWait(200);
 
     // wait for the window to be passed to Deleted
-    QSignalSpy windowDeletedSpy(window, &Window::closed);
+    SignalSpy windowDeletedSpy(window, &Window::closed);
 
     surface.reset();
 

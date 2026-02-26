@@ -5,9 +5,9 @@
 */
 // Qt
 #include <QImage>
-#include <QSignalSpy>
 #include <QTest>
 // KWin
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/surface.h"
@@ -66,7 +66,7 @@ void TestShmPool::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -77,7 +77,7 @@ void TestShmPool::init()
     QVERIFY(connectedSpy.wait());
 
     KWayland::Client::Registry registry;
-    QSignalSpy shmSpy(&registry, &KWayland::Client::Registry::shmAnnounced);
+    SignalSpy shmSpy(&registry, &KWayland::Client::Registry::shmAnnounced);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();

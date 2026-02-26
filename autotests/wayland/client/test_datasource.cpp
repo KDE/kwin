@@ -5,10 +5,10 @@
 */
 // Qt
 #include <QMimeDatabase>
-#include <QSignalSpy>
 #include <QTemporaryFile>
 #include <QTest>
 
+#include "utils/signalspy.h"
 #include "wayland/datadevicemanager.h"
 #include "wayland/datasource.h"
 #include "wayland/display.h"
@@ -59,7 +59,7 @@ void TestDataSource::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -75,7 +75,7 @@ void TestDataSource::init()
     QVERIFY(m_queue->isValid());
 
     KWayland::Client::Registry registry;
-    QSignalSpy dataDeviceManagerSpy(&registry, &KWayland::Client::Registry::dataDeviceManagerAnnounced);
+    SignalSpy dataDeviceManagerSpy(&registry, &KWayland::Client::Registry::dataDeviceManagerAnnounced);
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
     QCOMPARE(registry.eventQueue(), m_queue);
@@ -118,7 +118,7 @@ void TestDataSource::testOffer()
     using namespace KWin;
 
     qRegisterMetaType<KWin::DataSourceInterface *>();
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWin::DataDeviceManagerInterface::dataSourceCreated);
+    SignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWin::DataDeviceManagerInterface::dataSourceCreated);
 
     std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
@@ -130,7 +130,7 @@ void TestDataSource::testOffer()
     QVERIFY(!serverDataSource.isNull());
     QCOMPARE(serverDataSource->mimeTypes().count(), 0);
 
-    QSignalSpy offeredSpy(serverDataSource.data(), &KWin::AbstractDataSource::mimeTypeOffered);
+    SignalSpy offeredSpy(serverDataSource.data(), &KWin::AbstractDataSource::mimeTypeOffered);
 
     const QString plain = QStringLiteral("text/plain");
     QMimeDatabase db;
@@ -173,12 +173,12 @@ void TestDataSource::testTargetAccepts()
 {
     using namespace KWin;
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWin::DataDeviceManagerInterface::dataSourceCreated);
+    SignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWin::DataDeviceManagerInterface::dataSourceCreated);
 
     std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
 
-    QSignalSpy targetAcceptsSpy(dataSource.get(), &KWayland::Client::DataSource::targetAccepts);
+    SignalSpy targetAcceptsSpy(dataSource.get(), &KWayland::Client::DataSource::targetAccepts);
 
     QVERIFY(dataSourceCreatedSpy.wait());
     QCOMPARE(dataSourceCreatedSpy.count(), 1);
@@ -195,11 +195,11 @@ void TestDataSource::testRequestSend()
 {
     using namespace KWin;
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWin::DataDeviceManagerInterface::dataSourceCreated);
+    SignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWin::DataDeviceManagerInterface::dataSourceCreated);
 
     std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
-    QSignalSpy sendRequestedSpy(dataSource.get(), &KWayland::Client::DataSource::sendDataRequested);
+    SignalSpy sendRequestedSpy(dataSource.get(), &KWayland::Client::DataSource::sendDataRequested);
 
     const QString plain = QStringLiteral("text/plain");
     QVERIFY(dataSourceCreatedSpy.wait());
@@ -223,11 +223,11 @@ void TestDataSource::testCancel()
 {
     using namespace KWin;
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWin::DataDeviceManagerInterface::dataSourceCreated);
+    SignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWin::DataDeviceManagerInterface::dataSourceCreated);
 
     std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
-    QSignalSpy cancelledSpy(dataSource.get(), &KWayland::Client::DataSource::cancelled);
+    SignalSpy cancelledSpy(dataSource.get(), &KWayland::Client::DataSource::cancelled);
 
     QVERIFY(dataSourceCreatedSpy.wait());
 
@@ -242,7 +242,7 @@ void TestDataSource::testServerGet()
 {
     using namespace KWin;
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWin::DataDeviceManagerInterface::dataSourceCreated);
+    SignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWin::DataDeviceManagerInterface::dataSourceCreated);
 
     std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());

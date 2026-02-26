@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include <QSignalSpy>
 #include <QSize>
 #include <QTest>
 
@@ -25,6 +24,7 @@
 #include "drm_plane.h"
 #include "drm_pointer.h"
 #include "qpainter/qpainterbackend.h"
+#include "utils/signalspy.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland/drmlease_v1.h"
@@ -492,7 +492,7 @@ void DrmTest::testVrrChange()
     const auto output = gpu->drmOutputs().front();
     QVERIFY(!(output->capabilities() & BackendOutput::Capability::Vrr));
 
-    QSignalSpy capsChanged(output, &BackendOutput::capabilitiesChanged);
+    SignalSpy capsChanged(output, &BackendOutput::capabilitiesChanged);
 
     conn->setVrrCapable(true);
     QVERIFY(gpu->updateOutputs());

@@ -473,12 +473,12 @@ void OutputChangesTest::testMaximizedWindowRestoredAfterEnablingOutput()
     QVERIFY(window);
 
     // kwin will send a configure event with the activated state.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     // Move the window to the right monitor and make it maximized.
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     window->move(QPointF(1280 + 50, 100));
     window->maximize(MaximizeFull);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -540,12 +540,12 @@ void OutputChangesTest::testFullScreenWindowRestoredAfterEnablingOutput()
     QVERIFY(window);
 
     // kwin will send a configure event with the activated state.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     // Move the window to the right monitor and make it fullscreen.
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     window->move(QPointF(1280 + 50, 100));
     window->setFullScreen(true);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -607,13 +607,13 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     QVERIFY(window);
 
     // kwin will send a configure event with the activated state.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy tileChangedSpy(window, &Window::tileChanged);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     // Move the window to the right monitor and tile it to the right.
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     window->move(QPointF(1280 + 50, 100));
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -693,8 +693,8 @@ void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
     QVERIFY(window);
 
     // kwin will send a configure event with the current state.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(100, 50));
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
@@ -711,7 +711,7 @@ void OutputChangesTest::testQuickTileUntileWindowRestoredAfterEnablingOutput()
     }
 
     // Move the window to the second output and tile it to the right.
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     window->move(QPointF(1280 + 50, 100));
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -799,8 +799,8 @@ void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
     QVERIFY(window);
 
     // kwin will send a configure event with the activated state.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     const RectF originalGeometry = window->moveResizeGeometry();
@@ -817,7 +817,7 @@ void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
     const RectF customTileGeom = workspace()->rootTile(workspace()->findOutput(outputs[1]))->childTiles()[tileIndex]->windowGeometry();
 
     // Move the window to the right monitor and put it in the middle tile.
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     window->move(customTileGeom.topLeft() + QPointF(50, 50));
     const auto geomBeforeTiling = window->moveResizeGeometry();
     window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Custom);
@@ -955,8 +955,8 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
     QVERIFY(window);
 
     // kwin will send a configure event with the activated state.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     const RectF originalGeometry = window->moveResizeGeometry();
@@ -970,7 +970,7 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
     }
 
     // Move the window to the right monitor and make it maximized.
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     window->move(QPointF(1280 + 50, 100));
     window->maximize(maximizeMode);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -1045,7 +1045,7 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
     shellSurface->set_maximized();
     {
-        QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         shellSurface->xdgSurface()->surface()->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().first().toUInt());
@@ -1085,9 +1085,9 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
         workspace()->applyOutputConfiguration(config);
     }
 
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     // The window will be moved to its prior position on the left monitor, and still maximized
     QCOMPARE(window->frameGeometry(), originalGeometry);
@@ -1156,8 +1156,8 @@ void OutputChangesTest::testMaximizedWindowDoesntDisappear()
     QVERIFY(window);
 
     // kwin will send a configure event with the activated state.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     window->move(workspace()->findOutput(outputs[1])->geometry().topLeft() + QPoint(3500, 500));
@@ -1165,7 +1165,7 @@ void OutputChangesTest::testMaximizedWindowDoesntDisappear()
     QVERIFY(workspace()->findOutput(outputs[1])->geometryF().contains(originalGeometry));
 
     // vertically maximize the window
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     window->maximize(maximizeMode);
 
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -1265,7 +1265,7 @@ static X11Window *createX11Window(xcb_connection_t *connection, const Rect &geom
     xcb_map_window(connection, windowId);
     xcb_flush(connection);
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     if (!windowCreatedSpy.wait()) {
         return nullptr;
     }
@@ -2219,10 +2219,10 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
     QVERIFY(window);
 
     // kwin will send a configure event with the active state.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
-    QSignalSpy frameCallback(surface.get(), &KWayland::Client::Surface::frameRendered);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy tileChangedSpy(window, &Window::tileChanged);
+    SignalSpy frameCallback(surface.get(), &KWayland::Client::Surface::frameRendered);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     QVERIFY(workspace()->findOutput(external)->geometryF().contains(window->frameGeometry()));
@@ -2232,7 +2232,7 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
     // possibly tile it
     QFETCH(QuickTileFlag, tileMode);
     if (tileMode != QuickTileFlag::None) {
-        QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+        SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
         window->setQuickTileModeAtCurrentPosition(tileMode);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -2254,7 +2254,7 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
 
     if (tileMode != QuickTileFlag::None) {
         // react to the configure event
-        QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+        SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
 
@@ -2278,7 +2278,7 @@ void OutputChangesTest::testEvacuateTiledWindowFromRemovedOutput()
 
     if (tileMode != QuickTileFlag::None) {
         // react to the configure event
-        QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+        SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
         Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
@@ -2425,7 +2425,7 @@ void OutputChangesTest::testTemporaryDpmsHotplug()
     // turn off the outputs
     workspace()->requestDpmsState(Workspace::DpmsState::Off);
     QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::AboutToTurnOff);
-    QSignalSpy dpmsChanged(workspace(), &Workspace::dpmsStateChanged);
+    SignalSpy dpmsChanged(workspace(), &Workspace::dpmsStateChanged);
     QVERIFY(dpmsChanged.wait());
     QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
 

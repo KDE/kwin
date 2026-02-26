@@ -123,8 +123,8 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     xcb_flush(connection());
 
     X11EventReaderHelper eventReader(c.get());
-    QSignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
-    QSignalSpy leftSpy(&eventReader, &X11EventReaderHelper::left);
+    SignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
+    SignalSpy leftSpy(&eventReader, &X11EventReaderHelper::left);
 
     xcb_window_t windowId = xcb_generate_id(c.get());
     const Rect windowGeometry = Rect(0, 0, 100, 200);
@@ -145,7 +145,7 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     xcb_map_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -171,7 +171,7 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     QCOMPARE(leftSpy.last().first().toPoint(), (window->frameGeometry().center() - QPointF(window->frameMargins().left(), window->frameMargins().top())).toPoint());
 
     // destroy window again
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -193,8 +193,8 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     }
 
     X11EventReaderHelper eventReader(c.get());
-    QSignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
-    QSignalSpy leftSpy(&eventReader, &X11EventReaderHelper::left);
+    SignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
+    SignalSpy leftSpy(&eventReader, &X11EventReaderHelper::left);
 
     // Extents of the client-side drop-shadow.
     NETStrut clientFrameExtent;
@@ -229,7 +229,7 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     xcb_map_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -257,7 +257,7 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     QCOMPARE(leftSpy.last().first().toPoint(), QPoint(60, 105));
 
     // Destroy the window.
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());

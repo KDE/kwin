@@ -4,7 +4,6 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
 // client
 #include "KWayland/Client/compositor.h"
@@ -16,6 +15,7 @@
 #include "KWayland/Client/surface.h"
 #include "KWayland/Client/textinput.h"
 // server
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/seat.h"
@@ -85,7 +85,7 @@ void TextInputTest::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -99,7 +99,7 @@ void TextInputTest::init()
     m_queue->setup(m_connection);
 
     KWayland::Client::Registry registry;
-    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
+    SignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     registry.setEventQueue(m_queue);
     registry.create(m_connection);
     QVERIFY(registry.isValid());
@@ -108,7 +108,7 @@ void TextInputTest::init()
 
     m_seat = registry.createSeat(registry.interface(KWayland::Client::Registry::Interface::Seat).name, registry.interface(KWayland::Client::Registry::Interface::Seat).version, this);
     QVERIFY(m_seat->isValid());
-    QSignalSpy hasKeyboardSpy(m_seat, &KWayland::Client::Seat::hasKeyboardChanged);
+    SignalSpy hasKeyboardSpy(m_seat, &KWayland::Client::Seat::hasKeyboardChanged);
     QVERIFY(hasKeyboardSpy.wait());
     m_keyboard = m_seat->createKeyboard(this);
     QVERIFY(m_keyboard->isValid());
@@ -157,7 +157,7 @@ void TextInputTest::cleanup()
 
 SurfaceInterface *TextInputTest::waitForSurface()
 {
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    SignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
     if (!surfaceCreatedSpy.wait(500)) {
         return nullptr;
     }
@@ -187,9 +187,9 @@ void TextInputTest::testEnterLeave()
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
     QVERIFY(textInput != nullptr);
-    QSignalSpy enteredSpy(textInput.get(), &KWayland::Client::TextInput::entered);
-    QSignalSpy leftSpy(textInput.get(), &KWayland::Client::TextInput::left);
-    QSignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputSurfaceChanged);
+    SignalSpy enteredSpy(textInput.get(), &KWayland::Client::TextInput::entered);
+    SignalSpy leftSpy(textInput.get(), &KWayland::Client::TextInput::left);
+    SignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputSurfaceChanged);
 
     // now let's try to enter it
     QVERIFY(!m_seatInterface->focusedTextInputSurface());
@@ -207,7 +207,7 @@ void TextInputTest::testEnterLeave()
     QCOMPARE(textInputChangedSpy.count(), 1);
     auto serverTextInput = m_seatInterface->textInputV2();
     QVERIFY(serverTextInput);
-    QSignalSpy enabledChangedSpy(serverTextInput, &TextInputV2Interface::enabledChanged);
+    SignalSpy enabledChangedSpy(serverTextInput, &TextInputV2Interface::enabledChanged);
     if (updatesDirectly) {
         QVERIFY(enabledChangedSpy.wait());
         enabledChangedSpy.clear();
@@ -252,7 +252,7 @@ void TextInputTest::testEnterLeave()
     QVERIFY(enabledChangedSpy.wait());
 
     // delete the client and wait for the server to catch up
-    QSignalSpy unboundSpy(serverSurface, &QObject::destroyed);
+    SignalSpy unboundSpy(serverSurface, &QObject::destroyed);
     surface.reset();
     QVERIFY(unboundSpy.wait());
     QVERIFY(leftSpy.wait());
@@ -265,7 +265,7 @@ void TextInputTest::testFocusedBeforeCreateTextInput()
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     // now let's try to enter it
-    QSignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputSurfaceChanged);
+    SignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputSurfaceChanged);
     QVERIFY(!m_seatInterface->focusedTextInputSurface());
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedTextInputSurface(), serverSurface);
@@ -277,8 +277,8 @@ void TextInputTest::testFocusedBeforeCreateTextInput()
     QVERIFY(serverSurface);
     std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
-    QSignalSpy enteredSpy(textInput.get(), &KWayland::Client::TextInput::entered);
-    QSignalSpy leftSpy(textInput.get(), &KWayland::Client::TextInput::left);
+    SignalSpy enteredSpy(textInput.get(), &KWayland::Client::TextInput::entered);
+    SignalSpy leftSpy(textInput.get(), &KWayland::Client::TextInput::left);
 
     // and trigger an enter
     if (enteredSpy.isEmpty()) {
@@ -318,9 +318,9 @@ void TextInputTest::testShowHidePanel()
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
-    QSignalSpy showPanelRequestedSpy(ti, &TextInputV2Interface::requestShowInputPanel);
-    QSignalSpy hidePanelRequestedSpy(ti, &TextInputV2Interface::requestHideInputPanel);
-    QSignalSpy inputPanelStateChangedSpy(textInput.get(), &KWayland::Client::TextInput::inputPanelStateChanged);
+    SignalSpy showPanelRequestedSpy(ti, &TextInputV2Interface::requestShowInputPanel);
+    SignalSpy hidePanelRequestedSpy(ti, &TextInputV2Interface::requestHideInputPanel);
+    SignalSpy inputPanelStateChangedSpy(textInput.get(), &KWayland::Client::TextInput::inputPanelStateChanged);
 
     QCOMPARE(textInput->isInputPanelVisible(), false);
     textInput->showInputPanel();
@@ -354,7 +354,7 @@ void TextInputTest::testCursorRectangle()
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
     QCOMPARE(ti->cursorRectangle(), Rect());
-    QSignalSpy cursorRectangleChangedSpy(ti, &TextInputV2Interface::cursorRectangleChanged);
+    SignalSpy cursorRectangleChangedSpy(ti, &TextInputV2Interface::cursorRectangleChanged);
 
     textInput->setCursorRectangle(Rect(10, 20, 30, 40));
     QVERIFY(cursorRectangleChangedSpy.wait());
@@ -379,7 +379,7 @@ void TextInputTest::testPreferredLanguage()
     QVERIFY(ti);
     QVERIFY(ti->preferredLanguage().isEmpty());
 
-    QSignalSpy preferredLanguageChangedSpy(ti, &TextInputV2Interface::preferredLanguageChanged);
+    SignalSpy preferredLanguageChangedSpy(ti, &TextInputV2Interface::preferredLanguageChanged);
     textInput->setPreferredLanguage(QStringLiteral("foo"));
     QVERIFY(preferredLanguageChangedSpy.wait());
     QCOMPARE(ti->preferredLanguage(), QStringLiteral("foo").toUtf8());
@@ -402,7 +402,7 @@ void TextInputTest::testReset()
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
-    QSignalSpy stateUpdatedSpy(ti, &TextInputV2Interface::stateUpdated);
+    SignalSpy stateUpdatedSpy(ti, &TextInputV2Interface::stateUpdated);
 
     textInput->reset();
     QVERIFY(stateUpdatedSpy.wait());
@@ -428,7 +428,7 @@ void TextInputTest::testSurroundingText()
     QCOMPARE(ti->surroundingTextCursorPosition(), 0);
     QCOMPARE(ti->surroundingTextSelectionAnchor(), 0);
 
-    QSignalSpy surroundingTextChangedSpy(ti, &TextInputV2Interface::surroundingTextChanged);
+    SignalSpy surroundingTextChangedSpy(ti, &TextInputV2Interface::surroundingTextChanged);
 
     textInput->setSurroundingText(QStringLiteral("100 €, 100 $"), 5, 6);
     QVERIFY(surroundingTextChangedSpy.wait());
@@ -497,7 +497,7 @@ void TextInputTest::testContentHints()
     QVERIFY(ti);
     QCOMPARE(ti->contentHints(), KWin::TextInputContentHints());
 
-    QSignalSpy contentTypeChangedSpy(ti, &TextInputV2Interface::contentTypeChanged);
+    SignalSpy contentTypeChangedSpy(ti, &TextInputV2Interface::contentTypeChanged);
     QFETCH(KWayland::Client::TextInput::ContentHints, clientHints);
     textInput->setContentType(clientHints, KWayland::Client::TextInput::ContentPurpose::Normal);
     QVERIFY(contentTypeChangedSpy.wait());
@@ -550,7 +550,7 @@ void TextInputTest::testContentPurpose()
     QVERIFY(ti);
     QCOMPARE(ti->contentPurpose(), KWin::TextInputContentPurpose::Normal);
 
-    QSignalSpy contentTypeChangedSpy(ti, &TextInputV2Interface::contentTypeChanged);
+    SignalSpy contentTypeChangedSpy(ti, &TextInputV2Interface::contentTypeChanged);
     QFETCH(KWayland::Client::TextInput::ContentPurpose, clientPurpose);
     textInput->setContentType(KWayland::Client::TextInput::ContentHints(), clientPurpose);
     QVERIFY(contentTypeChangedSpy.wait());
@@ -597,7 +597,7 @@ void TextInputTest::testTextDirection()
     QVERIFY(ti);
 
     // let's send the new text direction
-    QSignalSpy textDirectionChangedSpy(textInput.get(), &KWayland::Client::TextInput::textDirectionChanged);
+    SignalSpy textDirectionChangedSpy(textInput.get(), &KWayland::Client::TextInput::textDirectionChanged);
     QFETCH(Qt::LayoutDirection, textDirection);
     ti->setTextDirection(textDirection);
     QVERIFY(textDirectionChangedSpy.wait());
@@ -632,7 +632,7 @@ void TextInputTest::testLanguage()
     QVERIFY(ti);
 
     // let's send the new language
-    QSignalSpy langugageChangedSpy(textInput.get(), &KWayland::Client::TextInput::languageChanged);
+    SignalSpy langugageChangedSpy(textInput.get(), &KWayland::Client::TextInput::languageChanged);
     ti->setLanguage(QByteArrayLiteral("foo"));
     QVERIFY(langugageChangedSpy.wait());
     QCOMPARE(textInput->language(), QByteArrayLiteral("foo"));
@@ -665,7 +665,7 @@ void TextInputTest::testKeyEvent()
     QVERIFY(ti);
 
     // TODO: test modifiers
-    QSignalSpy keyEventSpy(textInput.get(), &KWayland::Client::TextInput::keyEvent);
+    SignalSpy keyEventSpy(textInput.get(), &KWayland::Client::TextInput::keyEvent);
     m_seatInterface->setTimestamp(100ms);
     ti->keysymPressed(2);
     QVERIFY(keyEventSpy.wait());
@@ -707,7 +707,7 @@ void TextInputTest::testPreEdit()
     QVERIFY(ti);
 
     // now let's pass through some pre-edit events
-    QSignalSpy composingTextChangedSpy(textInput.get(), &KWayland::Client::TextInput::composingTextChanged);
+    SignalSpy composingTextChangedSpy(textInput.get(), &KWayland::Client::TextInput::composingTextChanged);
     ti->setPreEditCursor(1);
     ti->preEdit(QByteArrayLiteral("foo"), QByteArrayLiteral("bar"));
     QVERIFY(composingTextChangedSpy.wait());
@@ -750,7 +750,7 @@ void TextInputTest::testCommit()
     QVERIFY(ti);
 
     // now let's commit
-    QSignalSpy committedSpy(textInput.get(), &KWayland::Client::TextInput::committed);
+    SignalSpy committedSpy(textInput.get(), &KWayland::Client::TextInput::committed);
     ti->setCursorPosition(3, 4);
     ti->deleteSurroundingText(2, 1);
     ti->commitString(QByteArrayLiteral("foo"));

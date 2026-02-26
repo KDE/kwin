@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
 // KWin
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/slide.h"
@@ -66,7 +66,7 @@ void TestSlide::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    KWin::SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -82,9 +82,9 @@ void TestSlide::init()
     QVERIFY(m_queue->isValid());
 
     KWayland::Client::Registry registry;
-    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
+    KWin::SignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
-    QSignalSpy slideSpy(&registry, &KWayland::Client::Registry::slideAnnounced);
+    KWin::SignalSpy slideSpy(&registry, &KWayland::Client::Registry::slideAnnounced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -132,12 +132,12 @@ void TestSlide::cleanup()
 
 void TestSlide::testCreate()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
+    KWin::SignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<KWin::SurfaceInterface *>();
-    QSignalSpy slideChanged(serverSurface, &KWin::SurfaceInterface::slideOnShowHideChanged);
+    KWin::SignalSpy slideChanged(serverSurface, &KWin::SurfaceInterface::slideOnShowHideChanged);
 
     auto slide = m_slideManager->createSlide(surface.get(), surface.get());
     slide->setLocation(KWayland::Client::Slide::Location::Top);
@@ -150,7 +150,7 @@ void TestSlide::testCreate()
     QCOMPARE(serverSurface->slideOnShowHide()->offset(), 15);
 
     // and destroy
-    QSignalSpy destroyedSpy(serverSurface->slideOnShowHide(), &QObject::destroyed);
+    KWin::SignalSpy destroyedSpy(serverSurface->slideOnShowHide(), &QObject::destroyed);
     delete slide;
     QVERIFY(destroyedSpy.wait());
 }
@@ -158,12 +158,12 @@ void TestSlide::testCreate()
 void TestSlide::testSurfaceDestroy()
 {
     using namespace KWin;
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    KWin::SignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<SurfaceInterface *>();
-    QSignalSpy slideChanged(serverSurface, &SurfaceInterface::slideOnShowHideChanged);
+    KWin::SignalSpy slideChanged(serverSurface, &SurfaceInterface::slideOnShowHideChanged);
 
     std::unique_ptr<KWayland::Client::Slide> slide(m_slideManager->createSlide(surface.get()));
     slide->commit();
@@ -173,8 +173,8 @@ void TestSlide::testSurfaceDestroy()
     QVERIFY(serverSlide);
 
     // destroy the parent surface
-    QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
-    QSignalSpy slideDestroyedSpy(serverSlide, &QObject::destroyed);
+    KWin::SignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
+    KWin::SignalSpy slideDestroyedSpy(serverSlide, &QObject::destroyed);
     surface.reset();
     QVERIFY(surfaceDestroyedSpy.wait());
     QVERIFY(slideDestroyedSpy.isEmpty());

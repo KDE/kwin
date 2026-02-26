@@ -121,7 +121,7 @@ std::optional<QImage> ScreencastingTest::oneFrameAndClose(Test::ScreencastingStr
         }
     });
 
-    QSignalSpy spy(&pwStream, &PipeWireSourceStream::frameReceived);
+    SignalSpy spy(&pwStream, &PipeWireSourceStream::frameReceived);
     if (!spy.wait()) {
         qDebug() << "Did not receive any frames";
     }
@@ -192,12 +192,12 @@ void ScreencastingTest::testWindowWithPopupDynamic()
     connect(stream.get(), &Test::ScreencastingStreamV1::closed, qGuiApp, [&pwStream] {
         pwStream.setActive(false);
     });
-    QSignalSpy createdSpy(stream.get(), &Test::ScreencastingStreamV1::created);
+    SignalSpy createdSpy(stream.get(), &Test::ScreencastingStreamV1::created);
     QVERIFY(createdSpy.wait());
     pwStream.createStream(createdSpy.first().first().toUInt(), 0);
 
     auto fetchNextImageFrame = [&pwStream](QImage::Format format) {
-        QSignalSpy frameSpy(&pwStream, &PipeWireSourceStream::frameReceived);
+        SignalSpy frameSpy(&pwStream, &PipeWireSourceStream::frameReceived);
         if (!frameSpy.wait()) {
             Q_ASSERT_X(false, "", "no frame received");
             return QImage();

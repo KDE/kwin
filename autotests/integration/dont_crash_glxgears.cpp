@@ -15,8 +15,6 @@
 
 #include <KDecoration3/Decoration>
 
-#include <QSignalSpy>
-
 namespace KWin
 {
 
@@ -46,7 +44,7 @@ void DontCrashGlxgearsTest::testGlxgears()
     // closing a glxgears window through Aurorae themes used to crash KWin
     // Let's make sure that doesn't happen anymore
 
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
 
     QProcess glxgears;
     glxgears.setProgram(QStringLiteral("glxgears"));
@@ -58,7 +56,7 @@ void DontCrashGlxgearsTest::testGlxgears()
     QCOMPARE(workspace()->windows().count(), 1);
     Window *glxgearsWindow = workspace()->windows().first();
     QVERIFY(glxgearsWindow->isDecorated());
-    QSignalSpy closedSpy(glxgearsWindow, &X11Window::closed);
+    SignalSpy closedSpy(glxgearsWindow, &X11Window::closed);
     KDecoration3::Decoration *decoration = glxgearsWindow->decoration();
     QVERIFY(decoration);
 

@@ -191,7 +191,7 @@ static X11Window *createWindow(xcb_connection_t *connection, const Rect &geometr
     xcb_map_window(connection, windowId);
     xcb_flush(connection);
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     if (!windowCreatedSpy.wait()) {
         return nullptr;
     }
@@ -210,7 +210,7 @@ void X11WindowTest::testMaximizedFull()
     // Make the window maximized.
     const RectF originalGeometry = window->frameGeometry();
     const RectF workArea = workspace()->clientArea(MaximizeArea, window);
-    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    SignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
     window->maximize(MaximizeFull);
     QCOMPARE(maximizedChangedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
@@ -267,7 +267,7 @@ void X11WindowTest::testRequestMaximizedFull()
         info.setState(NET::Max, NET::Max);
         xcb_flush(c.get());
     }
-    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    SignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
     QVERIFY(maximizedChangedSpy.wait());
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
@@ -295,7 +295,7 @@ void X11WindowTest::testMaximizedVertical()
     // Make the window maximized.
     const RectF originalGeometry = window->frameGeometry();
     const RectF workArea = workspace()->clientArea(MaximizeArea, window);
-    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    SignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
     window->maximize(MaximizeVertical);
     QCOMPARE(maximizedChangedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeVertical);
@@ -352,7 +352,7 @@ void X11WindowTest::testRequestMaximizedVertical()
         info.setState(NET::MaxVert, NET::MaxVert);
         xcb_flush(c.get());
     }
-    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    SignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
     QVERIFY(maximizedChangedSpy.wait());
     QCOMPARE(window->maximizeMode(), MaximizeVertical);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
@@ -380,7 +380,7 @@ void X11WindowTest::testMaximizedHorizontal()
     // Make the window maximized.
     const RectF originalGeometry = window->frameGeometry();
     const RectF workArea = workspace()->clientArea(MaximizeArea, window);
-    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    SignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
     window->maximize(MaximizeHorizontal);
     QCOMPARE(maximizedChangedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
@@ -437,7 +437,7 @@ void X11WindowTest::testRequestMaximizedHorizontal()
         info.setState(NET::MaxHoriz, NET::MaxHoriz);
         xcb_flush(c.get());
     }
-    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    SignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
     QVERIFY(maximizedChangedSpy.wait());
     QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
@@ -469,9 +469,9 @@ void X11WindowTest::testInteractiveMoveUnmaximizeFull()
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
 
     // Start interactive move.
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     const qreal xOffset = 0.2;
     const qreal yOffset = 0.5;
     quint32 timestamp = 0;
@@ -514,9 +514,9 @@ void X11WindowTest::testInteractiveMoveUnmaximizeInitiallyFull()
     });
 
     // Start interactive move.
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     const qreal xOffset = 0.2;
     const qreal yOffset = 0.5;
     quint32 timestamp = 0;
@@ -563,9 +563,9 @@ void X11WindowTest::testInteractiveMoveUnmaximizeHorizontal()
     QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
 
     // Start interactive move.
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     const qreal xOffset = 0.2;
     const qreal yOffset = 0.5;
     quint32 timestamp = 0;
@@ -608,9 +608,9 @@ void X11WindowTest::testInteractiveMoveUnmaximizeInitiallyHorizontal()
     });
 
     // Start interactive move.
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     const qreal xOffset = 0.2;
     const qreal yOffset = 0.5;
     quint32 timestamp = 0;
@@ -657,9 +657,9 @@ void X11WindowTest::testInteractiveMoveUnmaximizeVertical()
     QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
 
     // Start interactive move.
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     const qreal xOffset = 0.2;
     const qreal yOffset = 0.5;
     quint32 timestamp = 0;
@@ -702,9 +702,9 @@ void X11WindowTest::testInteractiveMoveUnmaximizeInitiallyVertical()
     });
 
     // Start interactive move.
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     const qreal xOffset = 0.2;
     const qreal yOffset = 0.5;
     quint32 timestamp = 0;
@@ -747,7 +747,7 @@ void X11WindowTest::testFullScreen()
     // Make the window maximized.
     const RectF originalGeometry = window->frameGeometry();
     const RectF screenArea = workspace()->clientArea(ScreenArea, window);
-    QSignalSpy fullScreenChangedSpy(window, &Window::fullScreenChanged);
+    SignalSpy fullScreenChangedSpy(window, &Window::fullScreenChanged);
     window->setFullScreen(true);
     QCOMPARE(fullScreenChangedSpy.count(), 1);
     QCOMPARE(window->isFullScreen(), true);
@@ -804,7 +804,7 @@ void X11WindowTest::testRequestFullScreen()
         info.setState(NET::FullScreen, NET::FullScreen);
         xcb_flush(c.get());
     }
-    QSignalSpy fullScreenChangedSpy(window, &Window::fullScreenChanged);
+    SignalSpy fullScreenChangedSpy(window, &Window::fullScreenChanged);
     QVERIFY(fullScreenChangedSpy.wait());
     QCOMPARE(window->isFullScreen(), true);
     QCOMPARE(window->isRequestedFullScreen(), true);
@@ -830,7 +830,7 @@ void X11WindowTest::testKeepBelow()
     X11Window *window = createWindow(c.get(), Rect(0, 0, 100, 200));
 
     // Set keep below.
-    QSignalSpy keepBelowChangedSpy(window, &Window::keepBelowChanged);
+    SignalSpy keepBelowChangedSpy(window, &Window::keepBelowChanged);
     window->setKeepBelow(true);
     QCOMPARE(keepBelowChangedSpy.count(), 1);
     QVERIFY(window->keepBelow());
@@ -876,7 +876,7 @@ void X11WindowTest::testKeepAbove()
     X11Window *window = createWindow(c.get(), Rect(0, 0, 100, 200));
 
     // Set keep above.
-    QSignalSpy keepAboveChangedSpy(window, &Window::keepAboveChanged);
+    SignalSpy keepAboveChangedSpy(window, &Window::keepAboveChanged);
     window->setKeepAbove(true);
     QCOMPARE(keepAboveChangedSpy.count(), 1);
     QVERIFY(window->keepAbove());
@@ -922,7 +922,7 @@ void X11WindowTest::testMinimized()
     X11Window *window = createWindow(c.get(), Rect(0, 0, 100, 200));
 
     // Minimize.
-    QSignalSpy minimizedChangedSpy(window, &Window::minimizedChanged);
+    SignalSpy minimizedChangedSpy(window, &Window::minimizedChanged);
     window->setMinimized(true);
     QCOMPARE(minimizedChangedSpy.count(), 1);
     QVERIFY(window->isMinimized());
@@ -992,7 +992,7 @@ void X11WindowTest::testRequestMinimized()
                        reinterpret_cast<const char *>(&event));
         xcb_flush(c.get());
     }
-    QSignalSpy minimizedChangedSpy(window, &Window::minimizedChanged);
+    SignalSpy minimizedChangedSpy(window, &Window::minimizedChanged);
     QVERIFY(minimizedChangedSpy.wait());
     QVERIFY(window->isMinimized());
 }
@@ -1007,7 +1007,7 @@ void X11WindowTest::testSkipSwitcher()
     X11Window *window = createWindow(c.get(), Rect(0, 0, 100, 200));
 
     // Set skip switcher.
-    QSignalSpy skipSwitcherChangedSpy(window, &Window::skipSwitcherChanged);
+    SignalSpy skipSwitcherChangedSpy(window, &Window::skipSwitcherChanged);
     window->setSkipSwitcher(true);
     QCOMPARE(skipSwitcherChangedSpy.count(), 1);
     QVERIFY(window->skipSwitcher());
@@ -1058,7 +1058,7 @@ void X11WindowTest::testRequestSkipSwitcher()
         info.setState(NET::SkipSwitcher, NET::SkipSwitcher);
         xcb_flush(c.get());
     }
-    QSignalSpy skipSwitcherChangedSpy(window, &Window::skipSwitcherChanged);
+    SignalSpy skipSwitcherChangedSpy(window, &Window::skipSwitcherChanged);
     QVERIFY(skipSwitcherChangedSpy.wait());
     QVERIFY(window->skipSwitcher());
 
@@ -1082,7 +1082,7 @@ void X11WindowTest::testSkipPager()
     X11Window *window = createWindow(c.get(), Rect(0, 0, 100, 200));
 
     // Set skip pager.
-    QSignalSpy skipPagerChangedSpy(window, &Window::skipPagerChanged);
+    SignalSpy skipPagerChangedSpy(window, &Window::skipPagerChanged);
     window->setSkipPager(true);
     QCOMPARE(skipPagerChangedSpy.count(), 1);
     QVERIFY(window->skipPager());
@@ -1133,7 +1133,7 @@ void X11WindowTest::testRequestSkipPager()
         info.setState(NET::SkipPager, NET::SkipPager);
         xcb_flush(c.get());
     }
-    QSignalSpy skipPagerChangedSpy(window, &Window::skipPagerChanged);
+    SignalSpy skipPagerChangedSpy(window, &Window::skipPagerChanged);
     QVERIFY(skipPagerChangedSpy.wait());
     QVERIFY(window->skipPager());
 
@@ -1157,7 +1157,7 @@ void X11WindowTest::testSkipTaskbar()
     X11Window *window = createWindow(c.get(), Rect(0, 0, 100, 200));
 
     // Set skip taskbar.
-    QSignalSpy skipTaskbarChangedSpy(window, &Window::skipTaskbarChanged);
+    SignalSpy skipTaskbarChangedSpy(window, &Window::skipTaskbarChanged);
     window->setSkipTaskbar(true);
     QCOMPARE(skipTaskbarChangedSpy.count(), 1);
     QVERIFY(window->skipTaskbar());
@@ -1208,7 +1208,7 @@ void X11WindowTest::testRequestSkipTaskbar()
         info.setState(NET::SkipTaskbar, NET::SkipTaskbar);
         xcb_flush(c.get());
     }
-    QSignalSpy skipTaskbarChangedSpy(window, &Window::skipTaskbarChanged);
+    SignalSpy skipTaskbarChangedSpy(window, &Window::skipTaskbarChanged);
     QVERIFY(skipTaskbarChangedSpy.wait());
     QVERIFY(window->skipTaskbar());
 
@@ -1250,7 +1250,7 @@ void X11WindowTest::testOpacity()
         info.setOpacityF(0.8);
         xcb_flush(c.get());
     }
-    QSignalSpy opacityChangedSpy(window, &Window::opacityChanged);
+    SignalSpy opacityChangedSpy(window, &Window::opacityChanged);
     QVERIFY(opacityChangedSpy.wait());
     QCOMPARE(window->opacity(), effectiveOpacity(0.8));
 }
@@ -1270,9 +1270,9 @@ void X11WindowTest::testNetWmKeyboardMove()
         root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::KeyboardMove, XCB_BUTTON_INDEX_1);
         xcb_flush(c.get());
     }
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveMove());
@@ -1307,9 +1307,9 @@ void X11WindowTest::testNetWmKeyboardMoveCancel()
         root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::KeyboardMove, XCB_BUTTON_INDEX_ANY);
         xcb_flush(c.get());
     }
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveMove());
@@ -1347,9 +1347,9 @@ void X11WindowTest::testNetWmKeyboardResize()
         root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width()), Xcb::toXNative(window->y() + window->height()), NET::KeyboardSize, XCB_BUTTON_INDEX_1);
         xcb_flush(c.get());
     }
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveResize());
@@ -1384,9 +1384,9 @@ void X11WindowTest::testNetWmKeyboardResizeCancel()
         root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width()), Xcb::toXNative(window->y() + window->height()), NET::KeyboardSize, XCB_BUTTON_INDEX_1);
         xcb_flush(c.get());
     }
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveResize());
@@ -1427,9 +1427,9 @@ void X11WindowTest::testNetWmButtonMove()
         root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::Move, XCB_BUTTON_INDEX_1);
         xcb_flush(c.get());
     }
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveMove());
@@ -1460,7 +1460,7 @@ void X11WindowTest::testNetWmButtonMoveNotPressed()
         root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::Move, XCB_BUTTON_INDEX_1);
         xcb_flush(c.get());
     }
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
     QVERIFY(!interactiveMoveResizeStartedSpy.wait(10));
 }
 
@@ -1485,9 +1485,9 @@ void X11WindowTest::testNetWmButtonMoveCancel()
         root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::Move, XCB_BUTTON_INDEX_1);
         xcb_flush(c.get());
     }
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveMove());
@@ -1593,9 +1593,9 @@ void X11WindowTest::testNetWmButtonSize()
         root.moveResizeRequest(window->window(), Xcb::toXNative(initialPointer.x()), Xcb::toXNative(initialPointer.y()), direction, XCB_BUTTON_INDEX_1);
         xcb_flush(c.get());
     }
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveResize());
@@ -1627,7 +1627,7 @@ void X11WindowTest::testNetWmButtonSizeNotPressed()
         root.moveResizeRequest(window->window(), Xcb::toXNative(window->x()), Xcb::toXNative(window->y()), NET::TopLeft, XCB_BUTTON_INDEX_1);
         xcb_flush(c.get());
     }
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
     QVERIFY(!interactiveMoveResizeStartedSpy.wait(10));
 }
 
@@ -1653,9 +1653,9 @@ void X11WindowTest::testNetWmButtonSizeCancel()
         root.moveResizeRequest(window->window(), Xcb::toXNative(window->x()), Xcb::toXNative(window->y()), NET::TopLeft, XCB_BUTTON_INDEX_1);
         xcb_flush(c.get());
     }
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveResize());
@@ -1698,16 +1698,16 @@ void X11WindowTest::testMinimumSize()
     xcb_map_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
 
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     // Begin resize.
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
@@ -1771,7 +1771,7 @@ void X11WindowTest::testMinimumSize()
     QVERIFY(!window->isInteractiveResize());
 
     // Destroy the window.
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -1802,16 +1802,16 @@ void X11WindowTest::testMaximumSize()
     xcb_map_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
 
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     // Begin resize.
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
@@ -1874,7 +1874,7 @@ void X11WindowTest::testMaximumSize()
     QVERIFY(!window->isInteractiveResize());
 
     // Destroy the window.
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -1922,7 +1922,7 @@ void X11WindowTest::testTrimCaption()
     xcb_flush(c.get());
 
     // we should get a window for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -1934,7 +1934,7 @@ void X11WindowTest::testTrimCaption()
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
     xcb_destroy_window(c.get(), windowId);
     c.reset();
@@ -1964,7 +1964,7 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
     xcb_flush(c.get());
 
     // we should get a window for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -2085,7 +2085,7 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
     xcb_flush(c.get());
 
     // we should get a window for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -2143,21 +2143,21 @@ void X11WindowTest::testCaptionChanges()
     xcb_flush(c.get());
 
     // we should get a window for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
     QCOMPARE(window->window(), windowId);
     QCOMPARE(window->caption(), QStringLiteral("foo"));
 
-    QSignalSpy captionChangedSpy(window, &X11Window::captionChanged);
+    SignalSpy captionChangedSpy(window, &X11Window::captionChanged);
     info.setName("bar");
     xcb_flush(c.get());
     QVERIFY(captionChangedSpy.wait());
     QCOMPARE(window->caption(), QStringLiteral("bar"));
 
     // and destroy the window again
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
@@ -2170,7 +2170,7 @@ void X11WindowTest::testCaptionWmName()
     // this test verifies that a caption set through WM_NAME is read correctly
 
     // open glxgears as that one only uses WM_NAME
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
 
     QProcess glxgears;
     glxgears.setProgram(QStringLiteral("glxgears"));
@@ -2211,7 +2211,7 @@ void X11WindowTest::testFullscreenWindowGroups()
     xcb_map_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -2267,7 +2267,7 @@ void X11WindowTest::testActivateFocusedWindow()
     Test::XcbConnectionPtr connection = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(connection.get()));
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 
     const Rect windowGeometry(0, 0, 100, 200);
     xcb_size_hints_t hints{};
@@ -2346,7 +2346,7 @@ void X11WindowTest::testReentrantMoveResize()
     xcb_map_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -2429,7 +2429,7 @@ void X11WindowTest::testCloseTransient()
     QCOMPARE(workspace()->activeWindow(), child);
 
     // Close the child.
-    QSignalSpy childClosedSpy(child, &Window::closed);
+    SignalSpy childClosedSpy(child, &Window::closed);
     xcb_unmap_window(c.get(), child->window());
     xcb_destroy_window(c.get(), child->window());
     xcb_flush(c.get());
@@ -2460,7 +2460,7 @@ void X11WindowTest::testCloseInactiveTransient()
     QCOMPARE(workspace()->activeWindow(), unrelated);
 
     // Close the child.
-    QSignalSpy childClosedSpy(child, &Window::closed);
+    SignalSpy childClosedSpy(child, &Window::closed);
     xcb_unmap_window(c.get(), child->window());
     xcb_destroy_window(c.get(), child->window());
     xcb_flush(c.get());
@@ -2494,7 +2494,7 @@ void X11WindowTest::testCloseGroupTransient()
     QCOMPARE(workspace()->activeWindow(), dialog);
 
     // Close the dialog.
-    QSignalSpy dialogClosedSpy(dialog, &Window::closed);
+    SignalSpy dialogClosedSpy(dialog, &Window::closed);
     xcb_unmap_window(c.get(), dialog->window());
     xcb_destroy_window(c.get(), dialog->window());
     xcb_flush(c.get());
@@ -2536,7 +2536,7 @@ void X11WindowTest::testCloseInactiveGroupTransient()
     QCOMPARE(workspace()->activeWindow(), unrelated);
 
     // Close the dialog.
-    QSignalSpy dialogClosedSpy(dialog, &Window::closed);
+    SignalSpy dialogClosedSpy(dialog, &Window::closed);
     xcb_unmap_window(c.get(), dialog->window());
     xcb_destroy_window(c.get(), dialog->window());
     xcb_flush(c.get());
@@ -2562,7 +2562,7 @@ void X11WindowTest::testModal()
         info.setState(NET::Modal, NET::Modal);
         xcb_flush(c.get());
     }
-    QSignalSpy modalChangedSpy(child, &Window::modalChanged);
+    SignalSpy modalChangedSpy(child, &Window::modalChanged);
     QVERIFY(modalChangedSpy.wait());
     QVERIFY(child->isModal());
 
@@ -2624,7 +2624,7 @@ void X11WindowTest::testGroupModal()
         info.setState(NET::Modal, NET::Modal);
         xcb_flush(c.get());
     }
-    QSignalSpy modalChangedSpy(dialog, &Window::modalChanged);
+    SignalSpy modalChangedSpy(dialog, &Window::modalChanged);
     QVERIFY(modalChangedSpy.wait());
     QVERIFY(dialog->isModal());
 
@@ -2679,13 +2679,13 @@ void X11WindowTest::testCloseModal()
         info.setState(NET::Modal, NET::Modal);
         xcb_flush(c.get());
     }
-    QSignalSpy modalChangedSpy(child, &Window::modalChanged);
+    SignalSpy modalChangedSpy(child, &Window::modalChanged);
     QVERIFY(modalChangedSpy.wait());
     QVERIFY(child->isModal());
     QCOMPARE(workspace()->activeWindow(), child);
 
     // Close the child.
-    QSignalSpy childClosedSpy(child, &Window::closed);
+    SignalSpy childClosedSpy(child, &Window::closed);
     xcb_unmap_window(c.get(), child->window());
     xcb_destroy_window(c.get(), child->window());
     xcb_flush(c.get());
@@ -2713,7 +2713,7 @@ void X11WindowTest::testCloseInactiveModal()
         info.setState(NET::Modal, NET::Modal);
         xcb_flush(c.get());
     }
-    QSignalSpy modalChangedSpy(child, &Window::modalChanged);
+    SignalSpy modalChangedSpy(child, &Window::modalChanged);
     QVERIFY(modalChangedSpy.wait());
     QVERIFY(child->isModal());
     QCOMPARE(workspace()->activeWindow(), child);
@@ -2727,7 +2727,7 @@ void X11WindowTest::testCloseInactiveModal()
     QCOMPARE(workspace()->activeWindow(), unrelated);
 
     // Close the child.
-    QSignalSpy childClosedSpy(child, &Window::closed);
+    SignalSpy childClosedSpy(child, &Window::closed);
     xcb_unmap_window(c.get(), child->window());
     xcb_destroy_window(c.get(), child->window());
     xcb_flush(c.get());
@@ -2764,13 +2764,13 @@ void X11WindowTest::testCloseGroupModal()
         info.setState(NET::Modal, NET::Modal);
         xcb_flush(c.get());
     }
-    QSignalSpy modalChangedSpy(dialog, &Window::modalChanged);
+    SignalSpy modalChangedSpy(dialog, &Window::modalChanged);
     QVERIFY(modalChangedSpy.wait());
     QVERIFY(dialog->isModal());
     QCOMPARE(workspace()->activeWindow(), dialog);
 
     // Close the dialog.
-    QSignalSpy dialogClosedSpy(dialog, &Window::closed);
+    SignalSpy dialogClosedSpy(dialog, &Window::closed);
     xcb_unmap_window(c.get(), dialog->window());
     xcb_destroy_window(c.get(), dialog->window());
     xcb_flush(c.get());
@@ -2807,7 +2807,7 @@ void X11WindowTest::testCloseInactiveGroupModal()
         info.setState(NET::Modal, NET::Modal);
         xcb_flush(c.get());
     }
-    QSignalSpy modalChangedSpy(dialog, &Window::modalChanged);
+    SignalSpy modalChangedSpy(dialog, &Window::modalChanged);
     QVERIFY(modalChangedSpy.wait());
     QVERIFY(dialog->isModal());
     QCOMPARE(workspace()->activeWindow(), dialog);
@@ -2821,7 +2821,7 @@ void X11WindowTest::testCloseInactiveGroupModal()
     QCOMPARE(workspace()->activeWindow(), unrelated);
 
     // Close the dialog.
-    QSignalSpy dialogClosedSpy(dialog, &Window::closed);
+    SignalSpy dialogClosedSpy(dialog, &Window::closed);
     xcb_unmap_window(c.get(), dialog->window());
     xcb_destroy_window(c.get(), dialog->window());
     xcb_flush(c.get());
@@ -2854,7 +2854,7 @@ void X11WindowTest::testStackAboveFromApplication()
     // window1 and window2 belong to the same application, window1 will be raised only above window2.
     root.restackRequest(window1->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1, window3, window4}));
 
@@ -2890,7 +2890,7 @@ void X11WindowTest::testStackAboveFromTool()
     // window1 and window2 belong to the same application, but window1 will be raised globally because of the from_tool flag.
     root.restackRequest(window1->window(), NET::FromTool, XCB_WINDOW_NONE, XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window3, window4, window1}));
 
@@ -2920,7 +2920,7 @@ void X11WindowTest::testStackAboveSibling()
     // Restack window1 above window3.
     root.restackRequest(window1->window(), NET::FromApplication, window3->window(), XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window3, window1}));
 
@@ -2961,7 +2961,7 @@ void X11WindowTest::testStackBelowFromApplication()
 
     root.restackRequest(window3->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window3, window1, window2, window4}));
 
@@ -2996,7 +2996,7 @@ void X11WindowTest::testStackBelowFromTool()
     // window2 and window3 belong to the same application, but window3 will be lowered globally because of the from_tool flag.
     root.restackRequest(window3->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window3, window1, window2, window4}));
 
@@ -3026,7 +3026,7 @@ void X11WindowTest::testStackBelowSibling()
     // Restack window3 below window2.
     root.restackRequest(window3->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window3, window2}));
 
@@ -3077,7 +3077,7 @@ void X11WindowTest::testStackTopIfFromApplication()
     // Restack window1 above window2, no change will occur because there's no overlap.
     root.restackRequest(window1->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_TOP_IF, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(!stackingOrderChangedSpy.wait(10));
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
 
@@ -3126,7 +3126,7 @@ void X11WindowTest::testStackTopIfFromTool()
     // Restack window1 above window2, no change will occur because there's no overlap.
     root.restackRequest(window1->window(), NET::FromTool, window2->window(), XCB_STACK_MODE_TOP_IF, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(!stackingOrderChangedSpy.wait(10));
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
 
@@ -3178,7 +3178,7 @@ void X11WindowTest::testStackBottomIfFromApplication()
     // Restack window3 below window2, no change will occur because there's no overlap.
     root.restackRequest(window3->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_BOTTOM_IF, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(!stackingOrderChangedSpy.wait(10));
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
 
@@ -3230,7 +3230,7 @@ void X11WindowTest::testStackBottomIfFromTool()
     // Restack window3 below window2, no change will occur because there's no overlap.
     root.restackRequest(window3->window(), NET::FromTool, window2->window(), XCB_STACK_MODE_BOTTOM_IF, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(!stackingOrderChangedSpy.wait(10));
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
 
@@ -3282,7 +3282,7 @@ void X11WindowTest::testStackOppositeFromApplication()
     // window2 is above window1, so it will be lowered
     root.restackRequest(window2->window(), NET::FromApplication, window1->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1, window3}));
 
@@ -3327,7 +3327,7 @@ void X11WindowTest::testStackOppositeFromTool()
     // window2 is above window1, so it will be lowered
     root.restackRequest(window2->window(), NET::FromTool, window1->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1, window3}));
 
@@ -3368,7 +3368,7 @@ void X11WindowTest::testStackOppositeNoSibling()
 
     root.restackRequest(window2->window(), NET::FromTool, XCB_WINDOW_NONE, XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
     xcb_flush(c.get());
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window3, window2}));
 
@@ -3396,7 +3396,7 @@ void X11WindowTest::testOverrideRedirectReparent()
 
     xcb_reparent_window(c.get(), child->window(), parent->window(), 0, 0);
     xcb_flush(c.get());
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(!windowAddedSpy.wait(10));
 }
 
@@ -3559,7 +3559,7 @@ public:
 
     bool waitForAndProcessConfigure(const QSize &expectedSize)
     {
-        QSignalSpy configure(this, &X11TestWindow::handledConfigure);
+        SignalSpy configure(this, &X11TestWindow::handledConfigure);
         const auto t = std::chrono::steady_clock::now();
         while (std::chrono::steady_clock::now() < t + 5s) {
             if (!configure.wait()) {
@@ -3643,7 +3643,7 @@ void X11WindowTest::testRandrEmulation()
     X11TestWindow window(x11Display.get(), QSize(100, 100));
 
     // present something, so that Xwayland creates a surface for the window
-    QSignalSpy surface(window.m_window, &X11Window::surfaceChanged);
+    SignalSpy surface(window.m_window, &X11Window::surfaceChanged);
     QVERIFY(window.present(QSize(100, 100)));
     QVERIFY(window.m_window->surface() || surface.wait());
     QVERIFY(window.m_window->surface());
@@ -3718,7 +3718,7 @@ void X11WindowTest::testRandrEmulation()
     }
 
     // wait for the window to be reconfigured, and react to it
-    QSignalSpy commit(window.m_window->surface(), &SurfaceInterface::committed);
+    SignalSpy commit(window.m_window->surface(), &SurfaceInterface::committed);
     QVERIFY(window.waitForAndProcessConfigure(emulatedSize));
     QCOMPARE(window.m_window->isFullScreen(), true);
     QCOMPARE(window.m_window->moveResizeGeometry().size(), workspace()->outputs().front()->geometryF().size());
@@ -3833,7 +3833,7 @@ void X11WindowTest::testRestoreFocusToDestroyedWindow()
     auto activeWindowDestroyer = std::make_unique<DestroyWindowOnFocusInTask>(firstWindow->window(), secondWindow->window());
 
     // Let the window manager side catch up with the X11 events.
-    QSignalSpy windowActivatedSpy(workspace(), &Workspace::windowActivated);
+    SignalSpy windowActivatedSpy(workspace(), &Workspace::windowActivated);
     QVERIFY(windowActivatedSpy.wait());
     QCOMPARE(workspace()->activeWindow(), firstWindow);
 }

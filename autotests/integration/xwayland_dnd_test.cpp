@@ -42,9 +42,9 @@ static const int xdndVersion = 5;
 
 class X11Display;
 
-static bool waitTwo(QSignalSpy &firstSpy, const char *firstText, QSignalSpy &secondSpy, const char *secondText, int timeout = 5000)
+static bool waitTwo(SignalSpy &firstSpy, const char *firstText, SignalSpy &secondSpy, const char *secondText, int timeout = 5000)
 {
-    const std::array<QSignalSpy *, 2> spies{&firstSpy, &secondSpy};
+    const std::array<SignalSpy *, 2> spies{&firstSpy, &secondSpy};
     const std::array<const char *, 2> labels{firstText, secondText};
     const std::array<qsizetype, 2> initialCounts{firstSpy.count(), secondSpy.count()};
 
@@ -108,7 +108,7 @@ template<typename T>
 static bool waitFuture(const QFuture<T> &future)
 {
     QFutureWatcher<T> watcher;
-    QSignalSpy finishedSpy(&watcher, &QFutureWatcher<T>::finished);
+    SignalSpy finishedSpy(&watcher, &QFutureWatcher<T>::finished);
     watcher.setFuture(future);
     return finishedSpy.wait();
 }
@@ -207,7 +207,7 @@ static X11Window *createX11Window(xcb_connection_t *connection, const Rect &geom
     xcb_map_window(connection, windowId);
     xcb_flush(connection);
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     if (!windowCreatedSpy.wait()) {
         return nullptr;
     }
@@ -592,7 +592,7 @@ public:
     static QByteArray read(X11Display *display, xcb_window_t requestor, xcb_atom_t selection, xcb_atom_t target, xcb_atom_t property, xcb_timestamp_t timestamp)
     {
         X11SelectionReader reader(display, requestor, selection, target, property, timestamp);
-        QSignalSpy doneSpy(&reader, &X11SelectionReader::done);
+        SignalSpy doneSpy(&reader, &X11SelectionReader::done);
         doneSpy.wait();
         return doneSpy.last().at(0).value<QByteArray>();
     }
@@ -1035,28 +1035,28 @@ void XwaylandDndTest::x11ToX11()
     QVERIFY(sourceWindow);
 
     X11DropHandler sourceDropHandler(x11Display.get(), sourceWindow->window());
-    QSignalSpy sourceDropHandlerEnteredSpy(&sourceDropHandler, &X11DropHandler::entered);
-    QSignalSpy sourceDropHandlerLeftSpy(&sourceDropHandler, &X11DropHandler::left);
-    QSignalSpy sourceDropHandlerPositionSpy(&sourceDropHandler, &X11DropHandler::position);
-    QSignalSpy sourceDropHandlerDroppedSpy(&sourceDropHandler, &X11DropHandler::dropped);
+    SignalSpy sourceDropHandlerEnteredSpy(&sourceDropHandler, &X11DropHandler::entered);
+    SignalSpy sourceDropHandlerLeftSpy(&sourceDropHandler, &X11DropHandler::left);
+    SignalSpy sourceDropHandlerPositionSpy(&sourceDropHandler, &X11DropHandler::position);
+    SignalSpy sourceDropHandlerDroppedSpy(&sourceDropHandler, &X11DropHandler::dropped);
 
     // Initialize the target window.
     auto targetWindow = createXdndAwareTestWindow(x11Display->connection(), Rect(100, 0, 100, 100));
     QVERIFY(targetWindow);
 
     X11DropHandler targetDropHandler(x11Display.get(), targetWindow->window());
-    QSignalSpy targetDropHandlerEnteredSpy(&targetDropHandler, &X11DropHandler::entered);
-    QSignalSpy targetDropHandlerLeftSpy(&targetDropHandler, &X11DropHandler::left);
-    QSignalSpy targetDropHandlerPositionSpy(&targetDropHandler, &X11DropHandler::position);
-    QSignalSpy targetDropHandlerDroppedSpy(&targetDropHandler, &X11DropHandler::dropped);
+    SignalSpy targetDropHandlerEnteredSpy(&targetDropHandler, &X11DropHandler::entered);
+    SignalSpy targetDropHandlerLeftSpy(&targetDropHandler, &X11DropHandler::left);
+    SignalSpy targetDropHandlerPositionSpy(&targetDropHandler, &X11DropHandler::position);
+    SignalSpy targetDropHandlerDroppedSpy(&targetDropHandler, &X11DropHandler::dropped);
 
     // Move the pointer to the center of the source window and initiate drag-and-drop.
     X11Pointer pointer(x11Display.get());
-    QSignalSpy enteredSpy(&pointer, &X11Pointer::entered);
-    QSignalSpy leftSpy(&pointer, &X11Pointer::left);
-    QSignalSpy motionSpy(&pointer, &X11Pointer::motion);
-    QSignalSpy pressedSpy(&pointer, &X11Pointer::pressed);
-    QSignalSpy releasedSpy(&pointer, &X11Pointer::released);
+    SignalSpy enteredSpy(&pointer, &X11Pointer::entered);
+    SignalSpy leftSpy(&pointer, &X11Pointer::left);
+    SignalSpy motionSpy(&pointer, &X11Pointer::motion);
+    SignalSpy pressedSpy(&pointer, &X11Pointer::pressed);
+    SignalSpy releasedSpy(&pointer, &X11Pointer::released);
 
     quint32 timestamp = 0;
     Test::pointerMotion(QPointF(50, 50), timestamp++);
@@ -1123,7 +1123,7 @@ void XwaylandDndTest::x11ToX11()
     QCOMPARE(data, QByteArrayLiteral("x11 -> x11"));
 
     // Finish drag-and-drop.
-    QSignalSpy dragSourceFinishedSpy(x11Drag.get(), &X11Drag::finished);
+    SignalSpy dragSourceFinishedSpy(x11Drag.get(), &X11Drag::finished);
     targetDropHandler.sendFinish(true, atoms->xdnd_action_copy);
     QVERIFY(dragSourceFinishedSpy.wait());
 }
@@ -1162,10 +1162,10 @@ void XwaylandDndTest::x11ToWayland()
 
     // Initialize the wayland window.
     auto waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
-    QSignalSpy waylandDataDeviceDragEnteredSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragEntered);
-    QSignalSpy waylandDataDeviceDragLeftSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragLeft);
-    QSignalSpy waylandDataDeviceDragMotionSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragMotion);
-    QSignalSpy waylandDataDeviceDroppedSpy(waylandDataDevice, &KWayland::Client::DataDevice::dropped);
+    SignalSpy waylandDataDeviceDragEnteredSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragEntered);
+    SignalSpy waylandDataDeviceDragLeftSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragLeft);
+    SignalSpy waylandDataDeviceDragMotionSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragMotion);
+    SignalSpy waylandDataDeviceDroppedSpy(waylandDataDevice, &KWayland::Client::DataDevice::dropped);
 
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
@@ -1182,11 +1182,11 @@ void XwaylandDndTest::x11ToWayland()
 
     // Move the pointer to the center of the source X11 window and initiate a drag-and-drop session.
     X11Pointer x11Pointer(x11Display.get());
-    QSignalSpy x11PointerEnteredSpy(&x11Pointer, &X11Pointer::entered);
-    QSignalSpy x11PointerLeftSpy(&x11Pointer, &X11Pointer::left);
-    QSignalSpy x11PointerMotionSpy(&x11Pointer, &X11Pointer::motion);
-    QSignalSpy x11PointerPressedSpy(&x11Pointer, &X11Pointer::pressed);
-    QSignalSpy x11PointerReleasedSpy(&x11Pointer, &X11Pointer::released);
+    SignalSpy x11PointerEnteredSpy(&x11Pointer, &X11Pointer::entered);
+    SignalSpy x11PointerLeftSpy(&x11Pointer, &X11Pointer::left);
+    SignalSpy x11PointerMotionSpy(&x11Pointer, &X11Pointer::motion);
+    SignalSpy x11PointerPressedSpy(&x11Pointer, &X11Pointer::pressed);
+    SignalSpy x11PointerReleasedSpy(&x11Pointer, &X11Pointer::released);
 
     quint32 timestamp = 0;
     Test::pointerMotion(QPointF(150, 50), timestamp++);
@@ -1198,7 +1198,7 @@ void XwaylandDndTest::x11ToWayland()
     QCOMPARE(x11PointerPressedSpy.count(), 1);
     QCOMPARE(x11PointerReleasedSpy.count(), 0);
 
-    QSignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
+    SignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
     X11SelectionOwner x11DragSelection(x11Display.get(), atoms->xdnd_selection, offeredMimeTypes, [&acceptedMimeType, &acceptedMimeData](const QMimeType &mimeType) {
         if (mimeType == acceptedMimeType) {
             return X11SelectionData{
@@ -1262,7 +1262,7 @@ void XwaylandDndTest::x11ToWayland()
     QCOMPARE(data.result(), acceptedMimeData);
 
     // Finish drag and drop.
-    QSignalSpy x11DragFinishedSpy(x11Drag.get(), &X11Drag::finished);
+    SignalSpy x11DragFinishedSpy(x11Drag.get(), &X11Drag::finished);
     offer->dragAndDropFinished();
     QVERIFY(x11DragFinishedSpy.wait());
 }
@@ -1275,9 +1275,9 @@ void XwaylandDndTest::noAcceptedMimeTypeX11ToWayland()
 
     // Initialize the wayland window.
     auto waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
-    QSignalSpy waylandDataDeviceDragEnteredSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragEntered);
-    QSignalSpy waylandDataDeviceDragLeftSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragLeft);
-    QSignalSpy waylandDataDeviceDroppedSpy(waylandDataDevice, &KWayland::Client::DataDevice::dropped);
+    SignalSpy waylandDataDeviceDragEnteredSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragEntered);
+    SignalSpy waylandDataDeviceDragLeftSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragLeft);
+    SignalSpy waylandDataDeviceDroppedSpy(waylandDataDevice, &KWayland::Client::DataDevice::dropped);
 
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
@@ -1294,15 +1294,15 @@ void XwaylandDndTest::noAcceptedMimeTypeX11ToWayland()
 
     // Move the pointer to the center of the source X11 window and initiate a drag-and-drop session.
     X11Pointer x11Pointer(x11Display.get());
-    QSignalSpy x11PointerEnteredSpy(&x11Pointer, &X11Pointer::entered);
-    QSignalSpy x11PointerPressedSpy(&x11Pointer, &X11Pointer::pressed);
+    SignalSpy x11PointerEnteredSpy(&x11Pointer, &X11Pointer::entered);
+    SignalSpy x11PointerPressedSpy(&x11Pointer, &X11Pointer::pressed);
 
     quint32 timestamp = 0;
     Test::pointerMotion(QPointF(150, 50), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     KWAIT_TWO(x11PointerEnteredSpy, x11PointerPressedSpy);
 
-    QSignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
+    SignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
     const QMimeType plainText = m_mimeDb.mimeTypeForName(QStringLiteral("text/plain"));
     X11SelectionOwner x11DragSelection(x11Display.get(), atoms->xdnd_selection, {plainText}, [plainText](const QMimeType &mimeType) {
         if (mimeType == plainText) {
@@ -1323,7 +1323,7 @@ void XwaylandDndTest::noAcceptedMimeTypeX11ToWayland()
     QCOMPARE(waylandDataDeviceDragEnteredSpy.last().at(1).value<QPointF>(), QPointF(50, 50));
 
     // Drop.
-    QSignalSpy x11DragFinishedSpy(x11Drag.get(), &X11Drag::finished);
+    SignalSpy x11DragFinishedSpy(x11Drag.get(), &X11Drag::finished);
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     KWAIT_TWO(waylandDataDeviceDragLeftSpy, x11DragFinishedSpy);
     QCOMPARE(waylandDataDeviceDroppedSpy.count(), 0);
@@ -1337,9 +1337,9 @@ void XwaylandDndTest::destroyX11ToWaylandSource()
 
     // Initialize the wayland window.
     auto waylandDataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
-    QSignalSpy waylandDataDeviceDragEnteredSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragEntered);
-    QSignalSpy waylandDataDeviceDragLeftSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragLeft);
-    QSignalSpy waylandDataDeviceDroppedSpy(waylandDataDevice, &KWayland::Client::DataDevice::dropped);
+    SignalSpy waylandDataDeviceDragEnteredSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragEntered);
+    SignalSpy waylandDataDeviceDragLeftSpy(waylandDataDevice, &KWayland::Client::DataDevice::dragLeft);
+    SignalSpy waylandDataDeviceDroppedSpy(waylandDataDevice, &KWayland::Client::DataDevice::dropped);
 
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
@@ -1356,15 +1356,15 @@ void XwaylandDndTest::destroyX11ToWaylandSource()
 
     // Move the pointer to the center of the source X11 window and initiate a drag-and-drop session.
     auto x11Pointer = std::make_unique<X11Pointer>(x11Display.get());
-    QSignalSpy x11PointerEnteredSpy(x11Pointer.get(), &X11Pointer::entered);
-    QSignalSpy x11PointerPressedSpy(x11Pointer.get(), &X11Pointer::pressed);
+    SignalSpy x11PointerEnteredSpy(x11Pointer.get(), &X11Pointer::entered);
+    SignalSpy x11PointerPressedSpy(x11Pointer.get(), &X11Pointer::pressed);
 
     quint32 timestamp = 0;
     Test::pointerMotion(QPointF(150, 50), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     KWAIT_TWO(x11PointerEnteredSpy, x11PointerPressedSpy);
 
-    QSignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
+    SignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
     const QMimeType plainText = m_mimeDb.mimeTypeForName(QStringLiteral("text/plain"));
     auto x11DragSelection = std::make_unique<X11SelectionOwner>(x11Display.get(), atoms->xdnd_selection, QList<QMimeType>{plainText}, [plainText](const QMimeType &mimeType) {
         if (mimeType == plainText) {
@@ -1440,8 +1440,8 @@ void XwaylandDndTest::waylandToX11()
         }
         close(fd);
     });
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
-    QSignalSpy waylandDataSourceDragAndDropFinishedSpy(waylandDataSource, &KWayland::Client::DataSource::dragAndDropFinished);
+    SignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy waylandDataSourceDragAndDropFinishedSpy(waylandDataSource, &KWayland::Client::DataSource::dragAndDropFinished);
 
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
@@ -1457,17 +1457,17 @@ void XwaylandDndTest::waylandToX11()
     QVERIFY(x11Window);
 
     X11Pointer x11Pointer(x11Display.get());
-    QSignalSpy x11PointerEnteredSpy(&x11Pointer, &X11Pointer::entered);
-    QSignalSpy x11PointerLeftSpy(&x11Pointer, &X11Pointer::left);
-    QSignalSpy x11PointerMotionSpy(&x11Pointer, &X11Pointer::motion);
-    QSignalSpy x11PointerPressedSpy(&x11Pointer, &X11Pointer::pressed);
-    QSignalSpy x11PointerReleasedSpy(&x11Pointer, &X11Pointer::released);
+    SignalSpy x11PointerEnteredSpy(&x11Pointer, &X11Pointer::entered);
+    SignalSpy x11PointerLeftSpy(&x11Pointer, &X11Pointer::left);
+    SignalSpy x11PointerMotionSpy(&x11Pointer, &X11Pointer::motion);
+    SignalSpy x11PointerPressedSpy(&x11Pointer, &X11Pointer::pressed);
+    SignalSpy x11PointerReleasedSpy(&x11Pointer, &X11Pointer::released);
 
     X11DropHandler x11DropHandler(x11Display.get(), x11Window->window());
-    QSignalSpy x11DropHandlerEnteredSpy(&x11DropHandler, &X11DropHandler::entered);
-    QSignalSpy x11DropHandlerLeftSpy(&x11DropHandler, &X11DropHandler::left);
-    QSignalSpy x11DropHandlerPositionSpy(&x11DropHandler, &X11DropHandler::position);
-    QSignalSpy x11DropHandlerDroppedSpy(&x11DropHandler, &X11DropHandler::dropped);
+    SignalSpy x11DropHandlerEnteredSpy(&x11DropHandler, &X11DropHandler::entered);
+    SignalSpy x11DropHandlerLeftSpy(&x11DropHandler, &X11DropHandler::left);
+    SignalSpy x11DropHandlerPositionSpy(&x11DropHandler, &X11DropHandler::position);
+    SignalSpy x11DropHandlerDroppedSpy(&x11DropHandler, &X11DropHandler::dropped);
 
     // Move the pointer to the center of the wayland surface and start a drag-and-drop operation.
     quint32 timestamp = 0;
@@ -1475,7 +1475,7 @@ void XwaylandDndTest::waylandToX11()
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(waylandPointerButtonSpy.wait());
 
-    QSignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
+    SignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
     waylandDataDevice->startDrag(waylandPointerButtonSpy.last().at(0).value<quint32>(), waylandDataSource, surface.get());
     QVERIFY(dragStartedSpy.wait());
 
@@ -1566,8 +1566,8 @@ void XwaylandDndTest::noAcceptedMimeTypeWaylandToX11()
         }
         close(fd);
     });
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
-    QSignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
+    SignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
 
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
@@ -1583,10 +1583,10 @@ void XwaylandDndTest::noAcceptedMimeTypeWaylandToX11()
     QVERIFY(x11Window);
 
     X11DropHandler x11DropHandler(x11Display.get(), x11Window->window());
-    QSignalSpy x11DropHandlerEnteredSpy(&x11DropHandler, &X11DropHandler::entered);
-    QSignalSpy x11DropHandlerLeftSpy(&x11DropHandler, &X11DropHandler::left);
-    QSignalSpy x11DropHandlerPositionSpy(&x11DropHandler, &X11DropHandler::position);
-    QSignalSpy x11DropHandlerDroppedSpy(&x11DropHandler, &X11DropHandler::dropped);
+    SignalSpy x11DropHandlerEnteredSpy(&x11DropHandler, &X11DropHandler::entered);
+    SignalSpy x11DropHandlerLeftSpy(&x11DropHandler, &X11DropHandler::left);
+    SignalSpy x11DropHandlerPositionSpy(&x11DropHandler, &X11DropHandler::position);
+    SignalSpy x11DropHandlerDroppedSpy(&x11DropHandler, &X11DropHandler::dropped);
 
     // Move the pointer to the center of the wayland surface and start a drag-and-drop operation.
     quint32 timestamp = 0;
@@ -1594,7 +1594,7 @@ void XwaylandDndTest::noAcceptedMimeTypeWaylandToX11()
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(waylandPointerButtonSpy.wait());
 
-    QSignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
+    SignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
     waylandDataDevice->startDrag(waylandPointerButtonSpy.last().at(0).value<quint32>(), waylandDataSource, surface.get());
     QVERIFY(dragStartedSpy.wait());
 
@@ -1634,8 +1634,8 @@ void XwaylandDndTest::destroyWaylandToX11Source()
         }
         close(fd);
     });
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
-    QSignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
+    SignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
 
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
@@ -1651,10 +1651,10 @@ void XwaylandDndTest::destroyWaylandToX11Source()
     QVERIFY(x11Window);
 
     X11DropHandler x11DropHandler(x11Display.get(), x11Window->window());
-    QSignalSpy x11DropHandlerEnteredSpy(&x11DropHandler, &X11DropHandler::entered);
-    QSignalSpy x11DropHandlerLeftSpy(&x11DropHandler, &X11DropHandler::left);
-    QSignalSpy x11DropHandlerPositionSpy(&x11DropHandler, &X11DropHandler::position);
-    QSignalSpy x11DropHandlerDroppedSpy(&x11DropHandler, &X11DropHandler::dropped);
+    SignalSpy x11DropHandlerEnteredSpy(&x11DropHandler, &X11DropHandler::entered);
+    SignalSpy x11DropHandlerLeftSpy(&x11DropHandler, &X11DropHandler::left);
+    SignalSpy x11DropHandlerPositionSpy(&x11DropHandler, &X11DropHandler::position);
+    SignalSpy x11DropHandlerDroppedSpy(&x11DropHandler, &X11DropHandler::dropped);
 
     // Move the pointer to the center of the wayland surface and start a drag-and-drop operation.
     quint32 timestamp = 0;
@@ -1662,7 +1662,7 @@ void XwaylandDndTest::destroyWaylandToX11Source()
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(waylandPointerButtonSpy.wait());
 
-    QSignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
+    SignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
     waylandDataDevice->startDrag(waylandPointerButtonSpy.last().at(0).value<quint32>(), waylandDataSource, surface.get());
     QVERIFY(dragStartedSpy.wait());
 
@@ -1700,8 +1700,8 @@ void XwaylandDndTest::cancelWaylandToX11()
         }
         close(fd);
     });
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
-    QSignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
+    SignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
 
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
@@ -1717,10 +1717,10 @@ void XwaylandDndTest::cancelWaylandToX11()
     QVERIFY(x11Window);
 
     X11DropHandler x11DropHandler(x11Display.get(), x11Window->window());
-    QSignalSpy x11DropHandlerEnteredSpy(&x11DropHandler, &X11DropHandler::entered);
-    QSignalSpy x11DropHandlerLeftSpy(&x11DropHandler, &X11DropHandler::left);
-    QSignalSpy x11DropHandlerPositionSpy(&x11DropHandler, &X11DropHandler::position);
-    QSignalSpy x11DropHandlerDroppedSpy(&x11DropHandler, &X11DropHandler::dropped);
+    SignalSpy x11DropHandlerEnteredSpy(&x11DropHandler, &X11DropHandler::entered);
+    SignalSpy x11DropHandlerLeftSpy(&x11DropHandler, &X11DropHandler::left);
+    SignalSpy x11DropHandlerPositionSpy(&x11DropHandler, &X11DropHandler::position);
+    SignalSpy x11DropHandlerDroppedSpy(&x11DropHandler, &X11DropHandler::dropped);
 
     // Move the pointer to the center of the wayland surface and start a drag-and-drop operation.
     quint32 timestamp = 0;
@@ -1728,7 +1728,7 @@ void XwaylandDndTest::cancelWaylandToX11()
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(waylandPointerButtonSpy.wait());
 
-    QSignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
+    SignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
     waylandDataDevice->startDrag(waylandPointerButtonSpy.last().at(0).value<quint32>(), waylandDataSource, surface.get());
     QVERIFY(dragStartedSpy.wait());
 
@@ -1766,8 +1766,8 @@ void XwaylandDndTest::waylandToXdndUnawareWindow()
         }
         close(fd);
     });
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
-    QSignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
+    SignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy waylandDataSourceCancelledSpy(waylandDataSource, &KWayland::Client::DataSource::cancelled);
 
     auto surface = Test::createSurface();
     auto shellSurface = Test::createXdgToplevelSurface(surface.get());
@@ -1783,10 +1783,10 @@ void XwaylandDndTest::waylandToXdndUnawareWindow()
     QVERIFY(x11Window);
 
     X11DropHandler x11DropHandler(x11Display.get(), x11Window->window());
-    QSignalSpy x11DropHandlerEnteredSpy(&x11DropHandler, &X11DropHandler::entered);
-    QSignalSpy x11DropHandlerLeftSpy(&x11DropHandler, &X11DropHandler::left);
-    QSignalSpy x11DropHandlerPositionSpy(&x11DropHandler, &X11DropHandler::position);
-    QSignalSpy x11DropHandlerDroppedSpy(&x11DropHandler, &X11DropHandler::dropped);
+    SignalSpy x11DropHandlerEnteredSpy(&x11DropHandler, &X11DropHandler::entered);
+    SignalSpy x11DropHandlerLeftSpy(&x11DropHandler, &X11DropHandler::left);
+    SignalSpy x11DropHandlerPositionSpy(&x11DropHandler, &X11DropHandler::position);
+    SignalSpy x11DropHandlerDroppedSpy(&x11DropHandler, &X11DropHandler::dropped);
 
     // Move the pointer to the center of the wayland surface and start a drag-and-drop operation.
     quint32 timestamp = 0;
@@ -1794,7 +1794,7 @@ void XwaylandDndTest::waylandToXdndUnawareWindow()
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(waylandPointerButtonSpy.wait());
 
-    QSignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
+    SignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
     waylandDataDevice->startDrag(waylandPointerButtonSpy.last().at(0).value<quint32>(), waylandDataSource, surface.get());
     QVERIFY(dragStartedSpy.wait());
 

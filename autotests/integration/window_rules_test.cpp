@@ -109,7 +109,7 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     xcb_map_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -122,7 +122,7 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     QCOMPARE(window->maximizeMode(), MaximizeVertical);
 
     // destroy window again
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
@@ -171,7 +171,7 @@ void WindowRuleTest::testWindowClassChange()
     xcb_map_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -184,14 +184,14 @@ void WindowRuleTest::testWindowClassChange()
     QCOMPARE(window->keepAbove(), false);
 
     // now change class
-    QSignalSpy windowClassChangedSpy{window, &X11Window::windowClassChanged};
+    SignalSpy windowClassChangedSpy{window, &X11Window::windowClassChanged};
     xcb_icccm_set_wm_class(c.get(), windowId, 23, "org.kde.foo\0org.kde.foo");
     xcb_flush(c.get());
     QVERIFY(windowClassChangedSpy.wait());
     QCOMPARE(window->keepAbove(), true);
 
     // destroy window
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());

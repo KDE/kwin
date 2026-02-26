@@ -110,8 +110,8 @@ void TestButtonRebind::testKey()
     Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
-    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
     QVERIFY(enteredSpy.wait());
 
     // 0x119 is Qt::ExtraButton7
@@ -151,8 +151,8 @@ void TestButtonRebind::testMouse()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
 
     const RectF startGeometry = window->frameGeometry();
     input()->pointer()->warp(startGeometry.center());
@@ -198,8 +198,8 @@ void TestButtonRebind::testMouseKeyboardMod()
     kwinApp()->pluginManager()->loadPlugin(s_pluginName);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
-    QSignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy keyboardKeyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy keyboardKeyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
 
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
@@ -207,8 +207,8 @@ void TestButtonRebind::testMouseKeyboardMod()
     QVERIFY(keyboardEnteredSpy.wait());
 
     std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy pointerEnteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy pointerButtonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy pointerEnteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy pointerButtonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
 
     const RectF startGeometry = window->frameGeometry();
 
@@ -249,8 +249,8 @@ void TestButtonRebind::testDisabled()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
 
     const RectF startGeometry = window->frameGeometry();
     input()->pointer()->warp(startGeometry.center());
@@ -283,8 +283,8 @@ void TestButtonRebind::testBindingTabletPad()
     Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
-    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
     QVERIFY(enteredSpy.wait());
 
     Test::tabletPadButtonPressed(1, timestamp++);
@@ -310,8 +310,8 @@ void TestButtonRebind::testBindingTabletPadDialScroll()
     Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy axisChangedSpy(pointer.get(), &KWayland::Client::Pointer::axisChanged);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy axisChangedSpy(pointer.get(), &KWayland::Client::Pointer::axisChanged);
     QVERIFY(enteredSpy.wait());
 
     // twisting the dial "up"
@@ -349,8 +349,8 @@ void TestButtonRebind::testBindingTabletPadDialKey()
     Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
-    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
     QVERIFY(enteredSpy.wait());
 
     // twisting the dial "up"
@@ -386,8 +386,8 @@ void TestButtonRebind::testBindingTabletRingKey()
     Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
-    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
     QVERIFY(enteredSpy.wait());
 
     // touching the dial "clockwise"
@@ -428,8 +428,8 @@ void TestButtonRebind::testBindingTabletTool()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
-    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
     QVERIFY(enteredSpy.wait());
 
     const RectF startGeometry = window->frameGeometry();
@@ -458,8 +458,8 @@ void TestButtonRebind::testMouseTabletCursorSync()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
 
     const RectF startGeometry = window->frameGeometry();
 

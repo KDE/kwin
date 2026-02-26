@@ -118,8 +118,8 @@ std::tuple<TestPlacement::PlaceWindowResult, TestPlacement::WindowHandle> TestPl
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly);
 
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     surfaceConfigureRequestedSpy.wait();
 
@@ -186,7 +186,7 @@ void TestPlacement::testPlaceMaximized()
     panelShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_top);
     panelShellSurface->set_exclusive_zone(20);
     panelSurface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(panelConfigureRequestedSpy.wait());
     Test::renderAndWaitForShown(panelSurface.get(), panelConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
 
@@ -213,7 +213,7 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
     panelShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_top);
     panelShellSurface->set_exclusive_zone(20);
     panelSurface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(panelConfigureRequestedSpy.wait());
     Test::renderAndWaitForShown(panelSurface.get(), panelConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
 
@@ -224,8 +224,8 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
         std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
         auto shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly);
         shellSurface->set_fullscreen(nullptr);
-        QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
 
@@ -377,13 +377,13 @@ void TestPlacement::testFullscreen()
     window->sendToOutput(outputs[0]);
 
     // Wait for the configure event with the activated state.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     window->setFullScreen(true);
 
-    QSignalSpy geometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy geometryChangedSpy(window, &Window::frameGeometryChanged);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);

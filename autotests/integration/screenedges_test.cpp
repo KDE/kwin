@@ -141,7 +141,7 @@ void ScreenEdgesTest::testTouchCallback()
 
     // let's reserve an action
     QAction action;
-    QSignalSpy actionTriggeredSpy(&action, &QAction::triggered);
+    SignalSpy actionTriggeredSpy(&action, &QAction::triggered);
 
     // reserve on edge
     QFETCH(KWin::ElectricBorder, border);
@@ -227,7 +227,7 @@ void ScreenEdgesTest::testPushBack()
     s->reconfigure();
 
     TestObject callback;
-    QSignalSpy spy(&callback, &TestObject::gotCallback);
+    SignalSpy spy(&callback, &TestObject::gotCallback);
 
     QFETCH(ElectricBorder, border);
     s->reserve(border, &callback, "callback");
@@ -255,7 +255,7 @@ void ScreenEdgesTest::testObjectEdge()
     // This test verifies that a screen edge reserved by a script or any QObject is activated.
 
     TestObject callback;
-    QSignalSpy spy(&callback, &TestObject::gotCallback);
+    SignalSpy spy(&callback, &TestObject::gotCallback);
 
     // Reserve a screen edge border.
     QFETCH(ElectricBorder, border);
@@ -315,7 +315,7 @@ void ScreenEdgesTest::testMultipleEntry_data()
 void ScreenEdgesTest::testMultipleEntry()
 {
     TestObject callback;
-    QSignalSpy spy(&callback, &TestObject::gotCallback);
+    SignalSpy spy(&callback, &TestObject::gotCallback);
 
     // Reserve a screen edge border.
     QFETCH(ElectricBorder, border);

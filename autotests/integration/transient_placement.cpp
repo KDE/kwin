@@ -27,8 +27,6 @@
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
 
-#include <QSignalSpy>
-
 struct PopupLayout
 {
     KWin::Rect anchorRect;
@@ -443,8 +441,8 @@ void TransientPlacementTest::testXdgPopup()
     positioner->set_gravity(layout.gravity);
     positioner->set_constraint_adjustment(layout.constraint);
     std::unique_ptr<Test::XdgPopup> popup(Test::createXdgPopupSurface(transientSurface.get(), parentShellSurface->xdgSurface(), positioner.get(), Test::CreationSetup::CreateOnly));
-    QSignalSpy popupConfigureRequestedSpy(popup.get(), &Test::XdgPopup::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(popup->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy popupConfigureRequestedSpy(popup.get(), &Test::XdgPopup::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(popup->xdgSurface(), &Test::XdgSurface::configureRequested);
     transientSurface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -473,7 +471,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     dockSurface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // now render and map the window
-    QSignalSpy dockConfigureRequestedSpy(dockShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy dockConfigureRequestedSpy(dockShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(dockConfigureRequestedSpy.wait());
     auto dock = Test::renderAndWaitForShown(dockSurface.get(), dockConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
     QVERIFY(dock);
@@ -517,12 +515,12 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(Test::waitForWindowClosed(transient));
 
     // now parent to fullscreen - on fullscreen the panel is ignored
-    QSignalSpy toplevelConfigureRequestedSpy(parentShellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(parentShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(parentShellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(parentShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     parent->setFullScreen(true);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     parentShellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    QSignalSpy frameGeometryChangedSpy{parent, &Window::frameGeometryChanged};
+    SignalSpy frameGeometryChangedSpy{parent, &Window::frameGeometryChanged};
     Test::render(parentSurface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(parent->frameGeometry(), RectF(output->geometry()));

@@ -167,7 +167,7 @@ void ScriptedEffectsTest::testEffectsHandler()
 {
     // this triggers and tests some of the signals in EffectHandler, which is exposed to JS as context property "effects"
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
-    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
     auto waitFor = [&effectOutputSpy](const QString &expected) {
         QVERIFY(effectOutputSpy.count() > 0 || effectOutputSpy.wait());
         QCOMPARE(effectOutputSpy.first().first(), expected);
@@ -210,7 +210,7 @@ void ScriptedEffectsTest::testEffectsContext()
     // this tests misc non-objects exposed to the script engine: animationTime, displaySize, use of external enums
 
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
-    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(effect->load("effectContext"));
     QCOMPARE(effectOutputSpy[0].first(), "1280x1024");
     QCOMPARE(effectOutputSpy[1].first(), "100");
@@ -227,7 +227,7 @@ void ScriptedEffectsTest::testShortcuts()
 
     // this tests method registerShortcut
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
-    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(effect->load("shortcutsTest"));
     QCOMPARE(effect->actions().count(), 1);
     auto action = effect->actions()[0];
@@ -257,7 +257,7 @@ void ScriptedEffectsTest::testAnimations()
     QFETCH(int, animationCount);
 
     auto *effect = new ScriptedEffectWithDebugSpy;
-    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(effect->load(file));
 
     // animated after window added connect
@@ -325,7 +325,7 @@ void ScriptedEffectsTest::testScreenEdge()
 {
     // this test checks registerScreenEdge functions
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
-    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(effect->load("screenEdgeTest"));
     effect->borderActivated(KWin::ElectricTopRight);
     QCOMPARE(effectOutputSpy.count(), 1);
@@ -335,7 +335,7 @@ void ScriptedEffectsTest::testScreenEdgeTouch()
 {
     // this test checks registerTouchScreenEdge functions
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
-    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(effect->load("screenEdgeTouchTest"));
     effect->actions()[0]->trigger();
     QCOMPARE(effectOutputSpy.count(), 1);
@@ -355,9 +355,9 @@ void ScriptedEffectsTest::testFullScreenEffect()
     QFETCH(QString, file);
 
     auto *effectMain = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
-    QSignalSpy effectOutputSpy(effectMain, &ScriptedEffectWithDebugSpy::testOutput);
-    QSignalSpy fullScreenEffectActiveSpy(effects, &EffectsHandler::hasActiveFullScreenEffectChanged);
-    QSignalSpy isActiveFullScreenEffectSpy(effectMain, &ScriptedEffect::isActiveFullScreenEffectChanged);
+    SignalSpy effectOutputSpy(effectMain, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy fullScreenEffectActiveSpy(effects, &EffectsHandler::hasActiveFullScreenEffectChanged);
+    SignalSpy isActiveFullScreenEffectSpy(effectMain, &ScriptedEffect::isActiveFullScreenEffectChanged);
 
     QVERIFY(effectMain->load(file));
 
@@ -365,7 +365,7 @@ void ScriptedEffectsTest::testFullScreenEffect()
     // shown as being someone else
     auto effectOther = new ScriptedEffectWithDebugSpy();
     QVERIFY(effectOther->load("screenEdgeTouchTest"));
-    QSignalSpy isActiveFullScreenEffectSpyOther(effectOther, &ScriptedEffect::isActiveFullScreenEffectChanged);
+    SignalSpy isActiveFullScreenEffectSpyOther(effectOther, &ScriptedEffect::isActiveFullScreenEffectChanged);
 
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
@@ -425,7 +425,7 @@ void ScriptedEffectsTest::testKeepAlive()
     QFETCH(bool, keepAlive);
 
     auto *effect = new ScriptedEffectWithDebugSpy;
-    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(effect->load(file));
 
     // create a window
@@ -441,7 +441,7 @@ void ScriptedEffectsTest::testKeepAlive()
     QCOMPARE(effect->state().size(), 0);
 
     // trigger windowClosed signal
-    QSignalSpy deletedRemovedSpy(workspace(), &Workspace::deletedRemoved);
+    SignalSpy deletedRemovedSpy(workspace(), &Workspace::deletedRemoved);
     surface.reset();
     QVERIFY(effectOutputSpy.count() == 1 || effectOutputSpy.wait());
 
@@ -471,7 +471,7 @@ void ScriptedEffectsTest::testGrab()
 
     // load the test effect
     auto effect = new ScriptedEffectWithDebugSpy;
-    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(effect->load(QStringLiteral("grabTest")));
 
     // create test window
@@ -496,12 +496,12 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindow()
 
     // load effect that will hold the window grab
     auto owner = new ScriptedEffectWithDebugSpy;
-    QSignalSpy ownerOutputSpy(owner, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy ownerOutputSpy(owner, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(owner->load(QStringLiteral("grabAlreadyGrabbedWindowTest_owner")));
 
     // load effect that will try to grab already grabbed window
     auto grabber = new ScriptedEffectWithDebugSpy;
-    QSignalSpy grabberOutputSpy(grabber, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy grabberOutputSpy(grabber, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(grabber->load(QStringLiteral("grabAlreadyGrabbedWindowTest_grabber")));
 
     // create test window
@@ -530,12 +530,12 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindowForced()
 
     // load effect that initially will be holding the window grab
     auto owner = new ScriptedEffectWithDebugSpy;
-    QSignalSpy ownerOutputSpy(owner, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy ownerOutputSpy(owner, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(owner->load(QStringLiteral("grabAlreadyGrabbedWindowForcedTest_owner")));
 
     // load effect that will try to steal the window grab
     auto thief = new ScriptedEffectWithDebugSpy;
-    QSignalSpy thiefOutputSpy(thief, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy thiefOutputSpy(thief, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(thief->load(QStringLiteral("grabAlreadyGrabbedWindowForcedTest_thief")));
 
     // create test window
@@ -564,7 +564,7 @@ void ScriptedEffectsTest::testUngrab()
 
     // load the test effect
     auto effect = new ScriptedEffectWithDebugSpy;
-    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
     QVERIFY(effect->load(QStringLiteral("ungrabTest")));
 
     // create test window
@@ -640,7 +640,7 @@ void ScriptedEffectsTest::testRedirect()
     // a window was minimized, it will try to reverse animation for it
     QTest::qWait(250);
 
-    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
 
     window->setMinimized(true);
 
@@ -726,7 +726,7 @@ void ScriptedEffectsTest::testComplete()
 
     // minimize the test window, when the test effect sees that a window was
     // minimized, it will try to complete animation for it
-    QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
+    SignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
 
     window->setMinimized(true);
 

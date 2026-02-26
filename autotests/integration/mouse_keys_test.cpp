@@ -79,7 +79,7 @@ void MouseKeysTest::testMove()
     Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(1000, 1000), Qt::blue);
     QVERIFY(waylandWindow);
 
-    QSignalSpy pointerSpy(pointer.get(), &KWayland::Client::Pointer::motion);
+    SignalSpy pointerSpy(pointer.get(), &KWayland::Client::Pointer::motion);
 
     quint32 timestamp = 0;
 
@@ -151,7 +151,7 @@ void MouseKeysTest::testClick()
     Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(1000, 1000), Qt::blue);
     QVERIFY(waylandWindow);
 
-    QSignalSpy pointerSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy pointerSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
 
     quint32 timestamp = 0;
 

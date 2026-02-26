@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
 // KWin
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/xdgdecoration_v1.h"
@@ -70,7 +70,7 @@ void TestXdgDecoration::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -86,9 +86,9 @@ void TestXdgDecoration::init()
     QVERIFY(m_queue->isValid());
 
     m_registry = new KWayland::Client::Registry();
-    QSignalSpy compositorSpy(m_registry, &KWayland::Client::Registry::compositorAnnounced);
-    QSignalSpy xdgShellSpy(m_registry, &KWayland::Client::Registry::xdgShellStableAnnounced);
-    QSignalSpy xdgDecorationManagerSpy(m_registry, &KWayland::Client::Registry::xdgDecorationAnnounced);
+    SignalSpy compositorSpy(m_registry, &KWayland::Client::Registry::compositorAnnounced);
+    SignalSpy xdgShellSpy(m_registry, &KWayland::Client::Registry::xdgShellStableAnnounced);
+    SignalSpy xdgDecorationManagerSpy(m_registry, &KWayland::Client::Registry::xdgDecorationAnnounced);
 
     QVERIFY(!m_registry->eventQueue());
     m_registry->setEventQueue(m_queue);
@@ -176,9 +176,9 @@ void TestXdgDecoration::testDecoration()
     QFETCH(KWayland::Client::XdgDecoration::Mode, setMode);
     QFETCH(KWin::XdgToplevelDecorationV1Interface::Mode, setModeExp);
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QSignalSpy shellSurfaceCreatedSpy(m_xdgShellInterface, &XdgShellInterface::toplevelCreated);
-    QSignalSpy decorationCreatedSpy(m_xdgDecorationManagerInterface, &XdgDecorationManagerV1Interface::decorationCreated);
+    SignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    SignalSpy shellSurfaceCreatedSpy(m_xdgShellInterface, &XdgShellInterface::toplevelCreated);
+    SignalSpy decorationCreatedSpy(m_xdgDecorationManagerInterface, &XdgDecorationManagerV1Interface::decorationCreated);
 
     // create shell surface and deco object
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
@@ -198,8 +198,8 @@ void TestXdgDecoration::testDecoration()
     QCOMPARE(decorationIface->toplevel(), shellSurfaceIface);
     QCOMPARE(decorationIface->preferredMode(), XdgToplevelDecorationV1Interface::Mode::Undefined);
 
-    QSignalSpy clientConfiguredSpy(decoration.get(), &KWayland::Client::XdgDecoration::modeChanged);
-    QSignalSpy modeRequestedSpy(decorationIface, &XdgToplevelDecorationV1Interface::preferredModeChanged);
+    SignalSpy clientConfiguredSpy(decoration.get(), &KWayland::Client::XdgDecoration::modeChanged);
+    SignalSpy modeRequestedSpy(decorationIface, &XdgToplevelDecorationV1Interface::preferredModeChanged);
 
     // server configuring a client
     decorationIface->sendConfigure(configuredMode);

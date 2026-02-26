@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
 // KWin
+#include "utils/signalspy.h"
 #include "wayland/display.h"
 #include "wayland/output.h"
 #include "wayland/xdgoutput_v1.h"
@@ -76,7 +76,7 @@ void TestXdgOutput::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -120,8 +120,8 @@ void TestXdgOutput::testChanges()
     // verify the server modes
     using namespace KWin;
     KWayland::Client::Registry registry;
-    QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
-    QSignalSpy xdgOutputAnnounced(&registry, &KWayland::Client::Registry::xdgOutputAnnounced);
+    SignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
+    SignalSpy xdgOutputAnnounced(&registry, &KWayland::Client::Registry::xdgOutputAnnounced);
 
     registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
@@ -133,7 +133,7 @@ void TestXdgOutput::testChanges()
     }
 
     KWayland::Client::Output output;
-    QSignalSpy outputChanged(&output, &KWayland::Client::Output::changed);
+    SignalSpy outputChanged(&output, &KWayland::Client::Output::changed);
 
     output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
     QVERIFY(outputChanged.wait());
@@ -142,7 +142,7 @@ void TestXdgOutput::testChanges()
         registry.createXdgOutputManager(xdgOutputAnnounced.first().first().value<quint32>(), xdgOutputAnnounced.first().last().value<quint32>(), this));
 
     std::unique_ptr<KWayland::Client::XdgOutput> xdgOutput(xdgOutputManager->getXdgOutput(&output, this));
-    QSignalSpy xdgOutputChanged(xdgOutput.get(), &KWayland::Client::XdgOutput::changed);
+    SignalSpy xdgOutputChanged(xdgOutput.get(), &KWayland::Client::XdgOutput::changed);
 
     // check details are sent on client bind
     QVERIFY(xdgOutputChanged.wait());

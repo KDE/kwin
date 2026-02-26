@@ -432,7 +432,7 @@ void ColorManagementTest::testSetImageDescription()
 
     QFETCH(bool, protocolError);
     if (protocolError) {
-        QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+        SignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
         QVERIFY(error.wait(50ms));
         return;
     }
@@ -458,23 +458,23 @@ void ColorManagementTest::testSetImageDescription()
     QFETCH(bool, shouldSucceed);
     QFETCH(std::optional<std::shared_ptr<ColorDescription>>, expectedResult);
     if (shouldSucceed) {
-        QSignalSpy ready(&imageDescr, &ImageDescription::ready);
+        SignalSpy ready(&imageDescr, &ImageDescription::ready);
         QVERIFY(ready.wait(50ms));
 
         cmSurf->set_image_description(imageDescr.object(), waylandRenderIntent);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-        QSignalSpy colorChange(window->surface(), &SurfaceInterface::colorDescriptionChanged);
+        SignalSpy colorChange(window->surface(), &SurfaceInterface::colorDescriptionChanged);
         QVERIFY(colorChange.wait());
 
         QCOMPARE(*window->surface()->colorDescription(), *expectedResult.value_or(input));
         QCOMPARE(window->surface()->renderingIntent(), renderingIntent);
     } else {
-        QSignalSpy fail(&imageDescr, &ImageDescription::failed);
+        SignalSpy fail(&imageDescr, &ImageDescription::failed);
         QVERIFY(fail.wait(50ms));
 
         // trying to use a failed image description should cause an error
-        QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+        SignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
         cmSurf->set_image_description(imageDescr.object(), waylandRenderIntent);
         QVERIFY(error.wait(50ms));
     }
@@ -488,7 +488,7 @@ void ColorManagementTest::testUnsupportedPrimaries()
     QtWayland::wp_image_description_creator_params_v1 creator = QtWayland::wp_image_description_creator_params_v1(Test::colorManager()->create_parametric_creator());
     creator.set_primaries_named(-1);
     wp_image_description_creator_params_v1_create(creator.object());
-    QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+    SignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(error.wait(50ms));
 }
 
@@ -497,7 +497,7 @@ void ColorManagementTest::testNoPrimaries()
     QtWayland::wp_image_description_creator_params_v1 creator = QtWayland::wp_image_description_creator_params_v1(Test::colorManager()->create_parametric_creator());
     creator.set_tf_named(WP_COLOR_MANAGER_V1_TRANSFER_FUNCTION_EXT_LINEAR);
     wp_image_description_creator_params_v1_create(creator.object());
-    QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+    SignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(error.wait(50ms));
 }
 
@@ -506,7 +506,7 @@ void ColorManagementTest::testNoTf()
     QtWayland::wp_image_description_creator_params_v1 creator = QtWayland::wp_image_description_creator_params_v1(Test::colorManager()->create_parametric_creator());
     creator.set_primaries_named(WP_COLOR_MANAGER_V1_PRIMARIES_CIE1931_XYZ);
     wp_image_description_creator_params_v1_create(creator.object());
-    QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+    SignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(error.wait(50ms));
 }
 
@@ -525,13 +525,13 @@ void ColorManagementTest::testRenderIntentOnly()
     auto cmSurf = std::make_unique<ColorManagementSurface>(Test::colorManager()->get_surface(*surface));
     ImageDescription imageDescr = createImageDescription(cmSurf.get(), *color);
 
-    QSignalSpy ready(&imageDescr, &ImageDescription::ready);
+    SignalSpy ready(&imageDescr, &ImageDescription::ready);
     QVERIFY(ready.wait(50ms));
 
     cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy colorChange(window->surface(), &SurfaceInterface::colorDescriptionChanged);
+    SignalSpy colorChange(window->surface(), &SurfaceInterface::colorDescriptionChanged);
     QVERIFY(colorChange.wait());
 
     QCOMPARE(*window->surface()->colorDescription(), *color);
@@ -553,13 +553,13 @@ void ColorManagementTest::testInertError()
     auto cmSurf = std::make_unique<ColorManagementSurface>(Test::colorManager()->get_surface(*surface));
     ImageDescription imageDescr = createImageDescription(cmSurf.get(), *ColorDescription::sRGB);
 
-    QSignalSpy ready(&imageDescr, &ImageDescription::ready);
+    SignalSpy ready(&imageDescr, &ImageDescription::ready);
     QVERIFY(ready.wait(50ms));
 
     surface.reset();
     cmSurf->set_image_description(imageDescr.object(), WP_COLOR_MANAGER_V1_RENDER_INTENT_PERCEPTUAL);
 
-    QSignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+    SignalSpy error(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(error.wait(50ms));
 }
 

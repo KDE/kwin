@@ -66,7 +66,7 @@ void SubsurfaceTest::doubleCommitDamage()
     SurfaceInterface *kwinSurface = window.m_window->surface()->above().front()->surface();
     QVERIFY(kwinSurface);
 
-    QSignalSpy damaged(kwinSurface, &SurfaceInterface::damaged);
+    SignalSpy damaged(kwinSurface, &SurfaceInterface::damaged);
 
     // damage from a first commit must not be overwritten by a second commit
     surface->damageBuffer(QRect(0, 0, 10, 10));

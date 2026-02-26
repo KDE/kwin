@@ -122,9 +122,9 @@ void FifoTest::testFifo()
     }
 
     {
-        QSignalSpy discarded1(frames[0].get(), &Test::WpPresentationFeedback::discarded);
-        QSignalSpy discarded2(frames[1].get(), &Test::WpPresentationFeedback::discarded);
-        QSignalSpy presented(frames[2].get(), &Test::WpPresentationFeedback::presented);
+        SignalSpy discarded1(frames[0].get(), &Test::WpPresentationFeedback::discarded);
+        SignalSpy discarded2(frames[1].get(), &Test::WpPresentationFeedback::discarded);
+        SignalSpy presented(frames[2].get(), &Test::WpPresentationFeedback::presented);
 
         QVERIFY(presented.wait(100));
         QVERIFY(discarded1.count());
@@ -402,10 +402,10 @@ void FifoTest::testBarrierNotClearedByEmptyCommit()
     fifo->wait_barrier();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy firstSpy(firstFrame.get(), &Test::WpPresentationFeedback::presented);
+    SignalSpy firstSpy(firstFrame.get(), &Test::WpPresentationFeedback::presented);
     QVERIFY(firstSpy.wait(100));
 
-    QSignalSpy secondSpy(secondFrame.get(), &Test::WpPresentationFeedback::presented);
+    SignalSpy secondSpy(secondFrame.get(), &Test::WpPresentationFeedback::presented);
     QVERIFY(secondSpy.wait(100));
 
     // the second frame should be presented in the refresh cycle after the first one

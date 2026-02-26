@@ -117,10 +117,10 @@ void MoveResizeWindowTest::testMove()
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
     QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 50));
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy moveResizedChangedSpy(window, &Window::moveResizedChanged);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy moveResizedChangedSpy(window, &Window::moveResizedChanged);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
 
     // begin move
     QVERIFY(workspace()->moveResizeWindow() == nullptr);
@@ -176,8 +176,8 @@ void MoveResizeWindowTest::testResize()
 
     // Wait for the initial configure event.
     Test::XdgToplevel::States states;
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
@@ -201,11 +201,11 @@ void MoveResizeWindowTest::testResize()
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
     QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 50));
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy moveResizedChangedSpy(window, &Window::moveResizedChanged);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy moveResizedChangedSpy(window, &Window::moveResizedChanged);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
 
     // begin resize
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
@@ -416,8 +416,8 @@ void MoveResizeWindowTest::testGrowShrink()
 
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     QVERIFY(shellSurface != nullptr);
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     // let's render
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(toplevelConfigureRequestedSpy.wait());
@@ -434,7 +434,7 @@ void MoveResizeWindowTest::testGrowShrink()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::red);
 
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     m_connection->flush();
     QVERIFY(frameGeometryChangedSpy.wait());
     QTEST(window->frameGeometry(), "expectedGeometry");
@@ -498,9 +498,9 @@ void MoveResizeWindowTest::testClientSideMove()
 {
     input()->pointer()->warp(QPointF(640, 512));
     std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy pointerEnteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy pointerLeftSpy(pointer.get(), &KWayland::Client::Pointer::left);
-    QSignalSpy buttonSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy pointerEnteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy pointerLeftSpy(pointer.get(), &KWayland::Client::Pointer::left);
+    SignalSpy buttonSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -516,14 +516,14 @@ void MoveResizeWindowTest::testClientSideMove()
     quint32 timestamp = 1;
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(buttonSpy.wait());
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
     shellSurface->move(*Test::waylandSeat(), buttonSpy.first().first().value<quint32>());
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(window->isInteractiveMove(), true);
     QVERIFY(pointerLeftSpy.wait());
 
     // move a bit
-    QSignalSpy clientMoveStepSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy clientMoveStepSpy(window, &Window::interactiveMoveResizeStepped);
     const QPointF startPoint = startGeometry.center();
     const int dragDistance = QApplication::startDragDistance();
     // Why?
@@ -578,13 +578,13 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboard()
     QVERIFY(window);
 
     // The client should receive a configure event upon becoming active.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     surfaceConfigureRequestedSpy.clear();
 
     window->move(windowRect.topLeft());
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     QCOMPARE(window->frameGeometry(), windowRect);
     window->setVirtualKeyboardGeometry(keyboardRect);
@@ -637,12 +637,12 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboardWithMaximize()
     QVERIFY(window);
 
     // The client should receive a configure event upon becoming active.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     window->move(QPoint(100, 300));
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     QCOMPARE(window->frameGeometry(), RectF(100, 300, 500, 800));
     window->setVirtualKeyboardGeometry(RectF(0, 100, 1280, 500));
@@ -685,12 +685,12 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboardWithFullScreen()
     QVERIFY(window);
 
     // The client should receive a configure event upon becoming active.
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     window->move(QPoint(100, 300));
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     QCOMPARE(window->frameGeometry(), RectF(100, 300, 500, 800));
     window->setVirtualKeyboardGeometry(RectF(0, 100, 1280, 500));
@@ -733,8 +733,8 @@ void MoveResizeWindowTest::testDestroyMoveClient()
     QVERIFY(window);
 
     // Start moving the client.
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QCOMPARE(window->isInteractiveMove(), false);
@@ -767,8 +767,8 @@ void MoveResizeWindowTest::testDestroyResizeClient()
     QVERIFY(window);
 
     // Start resizing the client.
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QCOMPARE(window->isInteractiveMove(), false);
@@ -813,10 +813,10 @@ void MoveResizeWindowTest::testCancelInteractiveMoveResize()
     QVERIFY(shellSurface != nullptr);
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
-    QSignalSpy frameGeomtryChangedSpy(window, &Window::frameGeometryChanged);
-    QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy frameGeomtryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
@@ -840,8 +840,8 @@ void MoveResizeWindowTest::testCancelInteractiveMoveResize()
     const RectF geometryRestore = window->geometryRestore();
 
     // Start resizing the client.
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QCOMPARE(window->isInteractiveMove(), false);
     QCOMPARE(window->isInteractiveResize(), false);
@@ -889,8 +889,8 @@ std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr
     std::unique_ptr<Test::XdgToplevelDecorationV1> decoration = Test::createXdgToplevelDecorationV1(shellSurface.get());
     VERIFY(decoration.get());
 
-    QSignalSpy decorationConfigureRequestedSpy(decoration.get(), &Test::XdgToplevelDecorationV1::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy decorationConfigureRequestedSpy(decoration.get(), &Test::XdgToplevelDecorationV1::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -928,7 +928,7 @@ std::pair<std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::Laye
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     VERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
     COMPARE(requestedSize, geometry.size());
@@ -1016,8 +1016,8 @@ void MoveResizeWindowTest::testRestrictedMove()
     QCOMPARE(window->frameGeometry().topLeft(), QPoint(500, 500));
 
     // move to center of titlebar
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     quint32 timestamp = 1;
     MOTION(QPoint(window->frameGeometry().center().x(), window->frameGeometry().y() + window->frameMargins().top() - 2));
     PRESS;
@@ -1101,8 +1101,8 @@ void MoveResizeWindowTest::testRestrictedMoveMultiMonitor()
     QCOMPARE(window->frameGeometry().topLeft(), initialPoint);
 
     // move to center of titlebar
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     quint32 timestamp = 1;
     MOTION(QPoint(window->frameGeometry().center().x(), window->frameGeometry().y() + window->frameMargins().top() - 2));
     PRESS;
@@ -1156,10 +1156,10 @@ void MoveResizeWindowTest::testRestrictedResizeUp()
     window->layoutDecorationRects(decorationLeft, decorationTop, decorationRight, decorationBottom);
     QVERIFY(!decorationTop.isEmpty());
 
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
 
     quint32 timestamp = 1;
 
@@ -1220,10 +1220,10 @@ void MoveResizeWindowTest::testRestrictedResizeRight()
     window->layoutDecorationRects(decorationLeft, decorationTop, decorationRight, decorationBottom);
     QVERIFY(!decorationTop.isEmpty());
 
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
 
     quint32 timestamp = 1;
 

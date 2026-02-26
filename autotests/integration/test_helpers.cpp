@@ -8,8 +8,6 @@
 */
 #include <config-kwin.h>
 
-#include <QSignalSpy>
-
 #include "kwin_wayland_test.h"
 
 #if KWIN_BUILD_X11
@@ -380,7 +378,7 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
     // setup connection
     auto connection = std::make_unique<Connection>();
     connection->connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(connection->connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(connection->connection, &KWayland::Client::ConnectionThread::connected);
     connection->connection->setSocketFd(sx[1]);
 
     connection->thread = new QThread(kwinApp());
@@ -578,7 +576,7 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
         }
     });
 
-    QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
+    SignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
     registry->create(connection->connection);
     if (!registry->isValid()) {
         return nullptr;
@@ -770,7 +768,7 @@ private:
 bool Connection::sync()
 {
     WaylandSyncPoint syncPoint(connection, queue);
-    QSignalSpy doneSpy(&syncPoint, &WaylandSyncPoint::done);
+    SignalSpy doneSpy(&syncPoint, &WaylandSyncPoint::done);
     return doneSpy.wait();
 }
 
@@ -939,7 +937,7 @@ bool waitForWaylandSurface(Window *window)
     if (window->surface()) {
         return true;
     }
-    QSignalSpy surfaceChangedSpy(window, &Window::surfaceChanged);
+    SignalSpy surfaceChangedSpy(window, &Window::surfaceChanged);
     return surfaceChangedSpy.wait();
 }
 
@@ -953,7 +951,7 @@ bool waitForWaylandPointer()
 
 bool waitForWaylandPointer(KWayland::Client::Seat *seat)
 {
-    QSignalSpy hasPointerSpy(seat, &KWayland::Client::Seat::hasPointerChanged);
+    SignalSpy hasPointerSpy(seat, &KWayland::Client::Seat::hasPointerChanged);
     return hasPointerSpy.wait();
 }
 
@@ -967,7 +965,7 @@ bool waitForWaylandTouch()
 
 bool waitForWaylandTouch(KWayland::Client::Seat *seat)
 {
-    QSignalSpy hasTouchSpy(seat, &KWayland::Client::Seat::hasTouchChanged);
+    SignalSpy hasTouchSpy(seat, &KWayland::Client::Seat::hasTouchChanged);
     return hasTouchSpy.wait();
 }
 
@@ -981,7 +979,7 @@ bool waitForWaylandKeyboard()
 
 bool waitForWaylandKeyboard(KWayland::Client::Seat *seat)
 {
-    QSignalSpy hasKeyboardSpy(seat, &KWayland::Client::Seat::hasKeyboardChanged);
+    SignalSpy hasKeyboardSpy(seat, &KWayland::Client::Seat::hasKeyboardChanged);
     return hasKeyboardSpy.wait();
 }
 
@@ -990,7 +988,7 @@ bool waitForWaylandTabletTool(Test::WpTabletToolV2 *tool)
     if (tool->ready()) {
         return true;
     }
-    QSignalSpy doneSpy(tool, &WpTabletToolV2::done);
+    SignalSpy doneSpy(tool, &WpTabletToolV2::done);
     return doneSpy.wait();
 }
 
@@ -1020,7 +1018,7 @@ void render(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, 
 
 Window *waitForWaylandWindowShown(int timeout)
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     if (!windowAddedSpy.wait(timeout)) {
         return nullptr;
     }
@@ -1046,7 +1044,7 @@ Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QImage &
 
 Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QImage &img, int timeout)
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     render(shm, surface, img);
     flushWaylandConnection();
     if (!windowAddedSpy.wait(timeout)) {
@@ -1149,7 +1147,7 @@ std::unique_ptr<FractionalScaleV1> createFractionalScaleV1(KWayland::Client::Sur
 
 static void waitForConfigured(XdgSurface *shellSurface)
 {
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface, &XdgSurface::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface, &XdgSurface::configureRequested);
 
     shellSurface->surface()->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -1319,7 +1317,7 @@ std::unique_ptr<XdgSessionV1> createXdgSessionV1(XdgSessionManagerV1 *manager, X
 
 bool waitForWindowClosed(Window *window)
 {
-    QSignalSpy closedSpy(window, &Window::closed);
+    SignalSpy closedSpy(window, &Window::closed);
     return closedSpy.wait();
 }
 
@@ -1329,7 +1327,7 @@ bool lockScreen()
     if (waylandServer()->isScreenLocked()) {
         return false;
     }
-    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
+    SignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
     ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     if (lockStateChangedSpy.count() != 1) {
         return false;
@@ -1338,7 +1336,7 @@ bool lockScreen()
         return false;
     }
     if (ScreenLocker::KSldApp::self()->lockState() != ScreenLocker::KSldApp::Locked) {
-        QSignalSpy lockedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::locked);
+        SignalSpy lockedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::locked);
         if (!lockedSpy.wait()) {
             return false;
         }
@@ -1348,7 +1346,7 @@ bool lockScreen()
 
 bool unlockScreen()
 {
-    QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
+    SignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
     using namespace ScreenLocker;
     const auto children = KSldApp::self()->children();
     for (auto it = children.begin(); it != children.end(); ++it) {
@@ -1365,7 +1363,7 @@ bool unlockScreen()
         return true;
     }
     if (ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked) {
-        QSignalSpy lockedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked);
+        SignalSpy lockedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked);
         if (!lockedSpy.wait()) {
             return false;
         }
@@ -1982,7 +1980,7 @@ XdgActivationToken::~XdgActivationToken()
 
 QString XdgActivationToken::commitAndWait()
 {
-    QSignalSpy received(this, &XdgActivationToken::tokenReceived);
+    SignalSpy received(this, &XdgActivationToken::tokenReceived);
     commit();
     received.wait();
     return m_token;
@@ -2501,20 +2499,20 @@ bool XdgToplevelWindow::presentWait()
 {
     const auto feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*m_surface));
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
+    SignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
     return spy.wait();
 }
 
 bool XdgToplevelWindow::waitSurfaceConfigure()
 {
-    QSignalSpy surfaceConfigure(m_toplevel->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy surfaceConfigure(m_toplevel->xdgSurface(), &Test::XdgSurface::configureRequested);
     return surfaceConfigure.wait();
 }
 
 std::optional<QSize> XdgToplevelWindow::handleConfigure(const QColor &color)
 {
-    QSignalSpy toplevelConfigure(m_toplevel.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigure(m_toplevel->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigure(m_toplevel.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigure(m_toplevel->xdgSurface(), &Test::XdgSurface::configureRequested);
     if (!toplevelConfigure.wait()) {
         return std::nullopt;
     }
@@ -2525,7 +2523,7 @@ std::optional<QSize> XdgToplevelWindow::handleConfigure(const QColor &color)
         return ret;
     }
     Test::render(m_surface.get(), toplevelConfigure.last().at(0).toSize(), color);
-    QSignalSpy frameGeometryChanged(m_window, &KWin::Window::frameGeometryChanged);
+    SignalSpy frameGeometryChanged(m_window, &KWin::Window::frameGeometryChanged);
     if (!frameGeometryChanged.wait()) {
         return std::nullopt;
     }

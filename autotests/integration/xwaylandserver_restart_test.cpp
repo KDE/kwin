@@ -60,8 +60,8 @@ void XwaylandServerRestartTest::testRestart()
 
     Xwl::Xwayland *xwayland = static_cast<Xwl::Xwayland *>(kwinApp()->xwayland());
 
-    QSignalSpy startedSpy(xwayland, &Xwl::Xwayland::started);
-    QSignalSpy stoppedSpy(xwayland, &Xwl::Xwayland::errorOccurred);
+    SignalSpy startedSpy(xwayland, &Xwl::Xwayland::started);
+    SignalSpy stoppedSpy(xwayland, &Xwl::Xwayland::errorOccurred);
 
     Test::createX11Connection(); // trigger an X11 start
     QTRY_COMPARE(startedSpy.count(), 1);
@@ -89,7 +89,7 @@ void XwaylandServerRestartTest::testRestart()
     xcb_map_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
     QVERIFY(window);
@@ -98,7 +98,7 @@ void XwaylandServerRestartTest::testRestart()
 
     // Render a frame to ensure that the compositor doesn't crash.
     Compositor::self()->scene()->addRepaintFull();
-    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &WorkspaceScene::frameRendered);
+    SignalSpy frameRenderedSpy(Compositor::self()->scene(), &WorkspaceScene::frameRendered);
     QVERIFY(frameRenderedSpy.wait());
 
     // Destroy the test window.

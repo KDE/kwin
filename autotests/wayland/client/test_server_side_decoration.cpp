@@ -4,9 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
-#include <QSignalSpy>
 #include <QTest>
 // KWin
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/server_decoration.h"
@@ -90,7 +90,7 @@ void TestServerSideDecoration::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -116,8 +116,8 @@ void TestServerSideDecoration::init()
         }
     });
 
-    QSignalSpy interfacesAnnouncedSpy(m_registry, &KWayland::Client::Registry::interfacesAnnounced);
-    QSignalSpy compositorSpy(m_registry, &KWayland::Client::Registry::compositorAnnounced);
+    SignalSpy interfacesAnnouncedSpy(m_registry, &KWayland::Client::Registry::interfacesAnnounced);
+    SignalSpy compositorSpy(m_registry, &KWayland::Client::Registry::compositorAnnounced);
 
     QVERIFY(!m_registry->eventQueue());
     m_registry->setEventQueue(m_queue);
@@ -184,8 +184,8 @@ void TestServerSideDecoration::testCreate()
     m_serverSideDecorationManagerInterface->setDefaultMode(serverMode);
     QCOMPARE(m_serverSideDecorationManagerInterface->defaultMode(), serverMode);
 
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QSignalSpy decorationCreated(m_serverSideDecorationManagerInterface, &ServerSideDecorationManagerInterface::decorationCreated);
+    SignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    SignalSpy decorationCreated(m_serverSideDecorationManagerInterface, &ServerSideDecorationManagerInterface::decorationCreated);
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
@@ -196,7 +196,7 @@ void TestServerSideDecoration::testCreate()
     // create server side deco
     auto serverSideDecoration = std::make_unique<ServerSideDecoration>();
     serverSideDecoration->init(m_serverSideDecorationManager->create(*surface.get()));
-    QSignalSpy modeChangedSpy(serverSideDecoration.get(), &ServerSideDecoration::modeChanged);
+    SignalSpy modeChangedSpy(serverSideDecoration.get(), &ServerSideDecoration::modeChanged);
 
     QVERIFY(decorationCreated.wait());
 
@@ -211,7 +211,7 @@ void TestServerSideDecoration::testCreate()
     QTEST(modeChangedSpy.last().at(0).value<ServerSideDecorationManager::mode>(), "clientMode");
 
     // and destroy
-    QSignalSpy destroyedSpy(serverDeco, &QObject::destroyed);
+    SignalSpy destroyedSpy(serverDeco, &QObject::destroyed);
     serverSideDecoration.reset();
     QVERIFY(destroyedSpy.wait());
 }
@@ -249,20 +249,20 @@ void TestServerSideDecoration::testRequest()
     m_serverSideDecorationManagerInterface->setDefaultMode(defaultMode);
     QCOMPARE(m_serverSideDecorationManagerInterface->defaultMode(), defaultMode);
 
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QSignalSpy decorationCreated(m_serverSideDecorationManagerInterface, &ServerSideDecorationManagerInterface::decorationCreated);
+    SignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    SignalSpy decorationCreated(m_serverSideDecorationManagerInterface, &ServerSideDecorationManagerInterface::decorationCreated);
 
     // create server side deco
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
 
     auto serverSideDecoration = std::make_unique<ServerSideDecoration>();
     serverSideDecoration->init(m_serverSideDecorationManager->create(*surface.get()));
-    QSignalSpy modeChangedSpy(serverSideDecoration.get(), &ServerSideDecoration::modeChanged);
+    SignalSpy modeChangedSpy(serverSideDecoration.get(), &ServerSideDecoration::modeChanged);
     QVERIFY(decorationCreated.wait());
 
     auto serverDeco = decorationCreated.first().first().value<ServerSideDecorationInterface *>();
     QVERIFY(serverDeco);
-    QSignalSpy preferredModeChangedSpy(serverDeco, &ServerSideDecorationInterface::preferredModeChanged);
+    SignalSpy preferredModeChangedSpy(serverDeco, &ServerSideDecorationInterface::preferredModeChanged);
 
     // after binding the client should get the default mode
     QVERIFY(modeChangedSpy.wait());
@@ -294,8 +294,8 @@ void TestServerSideDecoration::testRequest()
 void TestServerSideDecoration::testSurfaceDestroy()
 {
     using namespace KWin;
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QSignalSpy decorationCreated(m_serverSideDecorationManagerInterface, &ServerSideDecorationManagerInterface::decorationCreated);
+    SignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    SignalSpy decorationCreated(m_serverSideDecorationManagerInterface, &ServerSideDecorationManagerInterface::decorationCreated);
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
@@ -303,14 +303,14 @@ void TestServerSideDecoration::testSurfaceDestroy()
     auto serverSurface = serverSurfaceCreated.first().first().value<SurfaceInterface *>();
     auto serverSideDecoration = std::make_unique<ServerSideDecoration>();
     serverSideDecoration->init(m_serverSideDecorationManager->create(*surface.get()));
-    QSignalSpy modeChangedSpy(serverSideDecoration.get(), &ServerSideDecoration::modeChanged);
+    SignalSpy modeChangedSpy(serverSideDecoration.get(), &ServerSideDecoration::modeChanged);
     QVERIFY(decorationCreated.wait());
     auto serverDeco = decorationCreated.first().first().value<ServerSideDecorationInterface *>();
     QVERIFY(serverDeco);
 
     // destroy the parent surface
-    QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
-    QSignalSpy decorationDestroyedSpy(serverDeco, &QObject::destroyed);
+    SignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
+    SignalSpy decorationDestroyedSpy(serverDeco, &QObject::destroyed);
     surface.reset();
     QVERIFY(surfaceDestroyedSpy.wait());
     QVERIFY(decorationDestroyedSpy.isEmpty());

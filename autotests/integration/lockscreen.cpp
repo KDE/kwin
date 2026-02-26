@@ -36,7 +36,6 @@
 #include <KGlobalAccel>
 
 #include <QAction>
-#include <QSignalSpy>
 
 #include <linux/input.h>
 
@@ -122,24 +121,24 @@ Q_SIGNALS:
     void keyEvent(const QString &);
 };
 
-#define LOCK                                                                                                     \
-    do {                                                                                                         \
-        QVERIFY(!waylandServer()->isScreenLocked());                                                             \
-        QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged); \
-        ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);                             \
-        QTRY_COMPARE(ScreenLocker::KSldApp::self()->lockState(), ScreenLocker::KSldApp::Locked);                 \
-        QVERIFY(waylandServer()->isScreenLocked());                                                              \
+#define LOCK                                                                                                    \
+    do {                                                                                                        \
+        QVERIFY(!waylandServer()->isScreenLocked());                                                            \
+        SignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged); \
+        ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);                            \
+        QTRY_COMPARE(ScreenLocker::KSldApp::self()->lockState(), ScreenLocker::KSldApp::Locked);                \
+        QVERIFY(waylandServer()->isScreenLocked());                                                             \
     } while (false)
 
-#define UNLOCK                                                                                                   \
-    do {                                                                                                         \
-        QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged); \
-        unlock();                                                                                                \
-        if (lockStateChangedSpy.count() != 1) {                                                                  \
-            QVERIFY(lockStateChangedSpy.wait());                                                                 \
-        }                                                                                                        \
-        QCOMPARE(lockStateChangedSpy.count(), 1);                                                                \
-        QVERIFY(!waylandServer()->isScreenLocked());                                                             \
+#define UNLOCK                                                                                                  \
+    do {                                                                                                        \
+        SignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged); \
+        unlock();                                                                                               \
+        if (lockStateChangedSpy.count() != 1) {                                                                 \
+            QVERIFY(lockStateChangedSpy.wait());                                                                \
+        }                                                                                                       \
+        QCOMPARE(lockStateChangedSpy.count(), 1);                                                               \
+        QVERIFY(!waylandServer()->isScreenLocked());                                                            \
     } while (false)
 
 #define MOTION(target) Test::pointerMotion(target, timestamp++)
@@ -232,7 +231,7 @@ void LockScreenTest::testStackingOrder()
 {
     // This test verifies that the lockscreen greeter is placed above other windows.
 
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
 
     LOCK;
     QVERIFY(windowAddedSpy.wait());
@@ -249,8 +248,8 @@ void LockScreenTest::testPointer()
 {
     std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
     QVERIFY(pointer != nullptr);
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer.get(), &KWayland::Client::Pointer::left);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy leftSpy(pointer.get(), &KWayland::Client::Pointer::left);
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
@@ -292,8 +291,8 @@ void LockScreenTest::testPointerButton()
 {
     std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
     QVERIFY(pointer != nullptr);
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
@@ -331,8 +330,8 @@ void LockScreenTest::testPointerAxis()
 {
     std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
     QVERIFY(pointer != nullptr);
-    QSignalSpy axisChangedSpy(pointer.get(), &KWayland::Client::Pointer::axisChanged);
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy axisChangedSpy(pointer.get(), &KWayland::Client::Pointer::axisChanged);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
@@ -369,9 +368,9 @@ void LockScreenTest::testKeyboard()
 {
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(m_seat->createKeyboard());
     QVERIFY(keyboard != nullptr);
-    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy leftSpy(keyboard.get(), &KWayland::Client::Keyboard::left);
-    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy leftSpy(keyboard.get(), &KWayland::Client::Keyboard::left);
+    SignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
@@ -430,7 +429,7 @@ public Q_SLOTS:
 
 void LockScreenTest::testScreenEdge()
 {
-    QSignalSpy screenEdgeSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
+    SignalSpy screenEdgeSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
     QCOMPARE(screenEdgeSpy.count(), 0);
 
     TestObject callback;
@@ -455,7 +454,7 @@ void LockScreenTest::testScreenEdge()
 void LockScreenTest::testEffects()
 {
     std::unique_ptr<HelperEffect> effect(new HelperEffect);
-    QSignalSpy inputSpy(effect.get(), &HelperEffect::inputEvent);
+    SignalSpy inputSpy(effect.get(), &HelperEffect::inputEvent);
     effects->startMouseInterception(effect.get(), Qt::ArrowCursor);
 
     quint32 timestamp = 1;
@@ -494,7 +493,7 @@ void LockScreenTest::testEffects()
 void LockScreenTest::testEffectsKeyboard()
 {
     std::unique_ptr<HelperEffect> effect(new HelperEffect);
-    QSignalSpy inputSpy(effect.get(), &HelperEffect::keyEvent);
+    SignalSpy inputSpy(effect.get(), &HelperEffect::keyEvent);
     effects->grabKeyboard(effect.get());
 
     quint32 timestamp = 1;
@@ -534,7 +533,7 @@ void LockScreenTest::testEffectsKeyboardAutorepeat()
     // while the key is pressed the Effect should get auto repeated events
     // but the lock screen should filter them out
     std::unique_ptr<HelperEffect> effect(new HelperEffect);
-    QSignalSpy inputSpy(effect.get(), &HelperEffect::keyEvent);
+    SignalSpy inputSpy(effect.get(), &HelperEffect::keyEvent);
     effects->grabKeyboard(effect.get());
 
     // we need to configure the key repeat first. It is only enabled on libinput
@@ -572,7 +571,7 @@ void LockScreenTest::testMoveWindow()
 {
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    SignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
     quint32 timestamp = 1;
 
     workspace()->slotWindowMove();
@@ -615,7 +614,7 @@ void LockScreenTest::testPointerShortcut()
 #endif
 
     std::unique_ptr<QAction> action(new QAction(nullptr));
-    QSignalSpy actionSpy(action.get(), &QAction::triggered);
+    SignalSpy actionSpy(action.get(), &QAction::triggered);
     input()->registerPointerShortcut(Qt::MetaModifier, Qt::LeftButton, action.get());
 
     // try to trigger the shortcut
@@ -663,7 +662,7 @@ void LockScreenTest::testAxisShortcut_data()
 void LockScreenTest::testAxisShortcut()
 {
     std::unique_ptr<QAction> action(new QAction(nullptr));
-    QSignalSpy actionSpy(action.get(), &QAction::triggered);
+    SignalSpy actionSpy(action.get(), &QAction::triggered);
     QFETCH(Qt::Orientation, direction);
     QFETCH(int, sign);
     PointerAxisDirection axisDirection = PointerAxisUp;
@@ -713,7 +712,7 @@ void LockScreenTest::testKeyboardShortcutsDisabledWhenLocked()
 #endif
 
     std::unique_ptr<QAction> action(new QAction(nullptr));
-    QSignalSpy actionSpy(action.get(), &QAction::triggered);
+    SignalSpy actionSpy(action.get(), &QAction::triggered);
     action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName("LockScreenTest::testKeyboardShortcut");
     KGlobalAccel::self()->setDefaultShortcut(action.get(), QList<QKeySequence>{Qt::CTRL | Qt::META | Qt::ALT | Qt::Key_Space});
@@ -769,7 +768,7 @@ void LockScreenTest::testKeyboardLockShortcut()
     // Verify the screen is not locked
     QVERIFY(!waylandServer()->isScreenLocked());
 
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
 
     // Trigger the shortcut
     quint32 timestamp = 1;
@@ -796,9 +795,9 @@ void LockScreenTest::testTouch()
     QVERIFY(touch->isValid());
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
-    QSignalSpy sequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
-    QSignalSpy cancelSpy(touch, &KWayland::Client::Touch::sequenceCanceled);
-    QSignalSpy pointRemovedSpy(touch, &KWayland::Client::Touch::pointRemoved);
+    SignalSpy sequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
+    SignalSpy cancelSpy(touch, &KWayland::Client::Touch::sequenceCanceled);
+    SignalSpy pointRemovedSpy(touch, &KWayland::Client::Touch::pointRemoved);
 
     quint32 timestamp = 1;
     Test::touchDown(1, QPointF(25, 25), timestamp++);

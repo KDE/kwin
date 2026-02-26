@@ -29,7 +29,6 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingReply>
-#include <QSignalSpy>
 #include <QTest>
 
 #include <KWayland/Client/compositor.h>
@@ -126,8 +125,8 @@ void InputMethodTest::cleanup()
 
 void InputMethodTest::testOpenClose()
 {
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -136,9 +135,9 @@ void InputMethodTest::testOpenClose()
     QVERIFY(window);
     QVERIFY(window->isActive());
     QCOMPARE(window->frameGeometry().size(), QSize(1280, 1024));
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
@@ -148,7 +147,7 @@ void InputMethodTest::testOpenClose()
     touchNow();
     textInput->enable(surface.get());
     textInput->showInputPanel();
-    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    SignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
     QVERIFY(windowAddedSpy.wait());
     QCOMPARE(paneladded.count(), 1);
 
@@ -203,8 +202,8 @@ void InputMethodTest::testEnableDisableV3()
     touchNow();
     textInputV3->enable();
 
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QSignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     // just enabling the text-input should not show it but rather on commit
     QVERIFY(!kwinApp()->inputMethod()->isActive());
     textInputV3->commit();
@@ -221,7 +220,7 @@ void InputMethodTest::testEnableDisableV3()
     kwinApp()->inputMethod()->hide();
     QVERIFY(!keyboardClient->isShown());
 
-    QSignalSpy hiddenChangedSpy(keyboardClient, &Window::hiddenChanged);
+    SignalSpy hiddenChangedSpy(keyboardClient, &Window::hiddenChanged);
     // Force enable the text input object. This is what's done by Gtk.
     textInputV3->enable();
     textInputV3->commit();
@@ -251,17 +250,17 @@ void InputMethodTest::testEnableActive()
     QVERIFY(window->isActive());
 
     // Show the keyboard
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
     textInput->enable(surface.get());
-    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    SignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
     QVERIFY(paneladded.wait());
     textInput->showInputPanel();
     QVERIFY(windowAddedSpy.wait());
     QVERIFY(kwinApp()->inputMethod()->isActive());
 
     // Ask the keyboard to be shown again.
-    QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     textInput->enable(surface.get());
     textInput->showInputPanel();
     activateSpy.wait(200);
@@ -278,10 +277,10 @@ void InputMethodTest::testHidePanel()
     QVERIFY(!kwinApp()->inputMethod()->isActive());
 
     touchNow();
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
 
-    QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
@@ -291,7 +290,7 @@ void InputMethodTest::testHidePanel()
     waylandServer()->seat()->setFocusedTextInputSurface(window->surface());
 
     textInput->enable(surface.get());
-    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    SignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
     QVERIFY(paneladded.wait());
     textInput->showInputPanel();
     QVERIFY(windowAddedSpy.wait());
@@ -321,9 +320,9 @@ void InputMethodTest::testUnmapPanel()
     QVERIFY(!kwinApp()->inputMethod()->isActive());
 
     touchNow();
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
 
-    QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
@@ -333,7 +332,7 @@ void InputMethodTest::testUnmapPanel()
     waylandServer()->seat()->setFocusedTextInputSurface(window->surface());
 
     textInput->enable(surface.get());
-    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    SignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
     QVERIFY(paneladded.wait());
     textInput->showInputPanel();
     QVERIFY(windowAddedSpy.wait());
@@ -349,7 +348,7 @@ void InputMethodTest::testUnmapPanel()
     QVERIFY(keyboardWindow);
     QVERIFY(kwinApp()->inputMethod()->isVisible());
 
-    QSignalSpy panelHiddenSpy(kwinApp()->inputMethod(), &InputMethod::visibleChanged);
+    SignalSpy panelHiddenSpy(kwinApp()->inputMethod(), &InputMethod::visibleChanged);
     ipsurface->attachBuffer((wl_buffer *)nullptr);
     ipsurface->commit();
     QVERIFY(panelHiddenSpy.count() || panelHiddenSpy.wait());
@@ -373,16 +372,16 @@ void InputMethodTest::testReactivateFocus()
     QCOMPARE(window->frameGeometry().size(), QSize(1280, 1024));
 
     // Show the keyboard
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
     textInput->enable(surface.get());
-    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
+    SignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
     QVERIFY(paneladded.wait());
     textInput->showInputPanel();
     QVERIFY(windowAddedSpy.wait());
     QVERIFY(kwinApp()->inputMethod()->isActive());
 
-    QSignalSpy activeSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy activeSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
 
     // Hide keyboard like keyboardToggle button on navigation panel
     kwinApp()->inputMethod()->setActive(false);
@@ -405,10 +404,10 @@ void InputMethodTest::testSwitchFocusedSurfaces()
     touchNow();
     QVERIFY(!kwinApp()->inputMethod()->isActive());
 
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
 
-    QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
     QList<Window *> windows;
@@ -447,10 +446,10 @@ void InputMethodTest::testV2V3SameClient()
     touchNow();
     QVERIFY(!kwinApp()->inputMethod()->isActive());
 
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
 
-    QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
     auto textInputV3 = std::make_unique<Test::TextInputV3>();
@@ -527,8 +526,8 @@ void InputMethodTest::testV3Styling()
     textInputV3->init(Test::waylandTextInputManagerV3()->get_text_input(*(Test::waylandSeat())));
     textInputV3->enable();
 
-    QSignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
-    QSignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    SignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
     // just enabling the text-input should not show it but rather on commit
     QVERIFY(!kwinApp()->inputMethod()->isActive());
     textInputV3->commit();
@@ -536,7 +535,7 @@ void InputMethodTest::testV3Styling()
     QVERIFY(kwinApp()->inputMethod()->isActive());
     QVERIFY(inputMethodActivateSpy.wait());
     auto context = Test::inputMethod()->context();
-    QSignalSpy textInputPreeditSpy(textInputV3.get(), &Test::TextInputV3::preeditString);
+    SignalSpy textInputPreeditSpy(textInputV3.get(), &Test::TextInputV3::preeditString);
     zwp_input_method_context_v1_preedit_cursor(context, 0);
     zwp_input_method_context_v1_preedit_styling(context, 0, 3, 7);
     zwp_input_method_context_v1_preedit_string(context, 0, "ABCD", "ABCD");
@@ -619,7 +618,7 @@ void InputMethodTest::testDisableShowInputPanel()
 
     std::unique_ptr<KWayland::Client::TextInput> textInputV2(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
-    QSignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     // just enabling the text-input should not show it but rather on commit
     QVERIFY(!kwinApp()->inputMethod()->isActive());
     textInputV2->enable(surface.get());
@@ -633,7 +632,7 @@ void InputMethodTest::testDisableShowInputPanel()
     QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
     QVERIFY(!kwinApp()->inputMethod()->isActive());
 
-    QSignalSpy requestShowInputPanelSpy(waylandServer()->seat()->textInputV2(), &TextInputV2Interface::requestShowInputPanel);
+    SignalSpy requestShowInputPanelSpy(waylandServer()->seat()->textInputV2(), &TextInputV2Interface::requestShowInputPanel);
     textInputV2->showInputPanel();
     QVERIFY(requestShowInputPanelSpy.count() || requestShowInputPanelSpy.wait());
     QVERIFY(!kwinApp()->inputMethod()->isActive());
@@ -656,8 +655,8 @@ void InputMethodTest::testModifierForwarding()
     textInputV3->init(Test::waylandTextInputManagerV3()->get_text_input(*(Test::waylandSeat())));
     textInputV3->enable();
 
-    QSignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
-    QSignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    SignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
     // just enabling the text-input should not show it but rather on commit
     QVERIFY(!kwinApp()->inputMethod()->isActive());
     textInputV3->commit();
@@ -667,13 +666,13 @@ void InputMethodTest::testModifierForwarding()
     auto context = Test::inputMethod()->context();
     std::unique_ptr<KWayland::Client::Keyboard> keyboardGrab(new KWayland::Client::Keyboard);
     keyboardGrab->setup(zwp_input_method_context_v1_grab_keyboard(context));
-    QSignalSpy modifierSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::modifiersChanged);
+    SignalSpy modifierSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::modifiersChanged);
     // Wait for initial modifiers update
     QVERIFY(modifierSpy.wait());
 
     quint32 timestamp = 1;
 
-    QSignalSpy keySpy(keyboardGrab.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy keySpy(keyboardGrab.get(), &KWayland::Client::Keyboard::keyChanged);
     bool keyChanged = false;
     bool modifiersChanged = false;
     // We want to verify the order of two signals, so SignalSpy is not very useful here.
@@ -731,7 +730,7 @@ void InputMethodTest::testFakeEventFallback()
 
     // Since we don't have a way to communicate with the client, manually activate
     // the input method.
-    QSignalSpy inputMethodActiveSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    SignalSpy inputMethodActiveSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
     kwinApp()->inputMethod()->setActive(true);
     QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
 
@@ -741,7 +740,7 @@ void InputMethodTest::testFakeEventFallback()
 
     zwp_input_method_context_v1_commit_string(context, 0, "aB äÄ 안 😊");
 
-    QSignalSpy receivedTextChangedSpy(keyboard, &Test::SimpleKeyboard::receviedTextChanged);
+    SignalSpy receivedTextChangedSpy(keyboard, &Test::SimpleKeyboard::receviedTextChanged);
     bool matched = false;
     for (int i = 0; i < 100; ++i) {
         if (keyboard->receviedText() == "aB äÄ 안 😊") {
@@ -781,10 +780,10 @@ void InputMethodTest::testOverlayPositioning()
     QVERIFY(!kwinApp()->inputMethod()->isActive());
 
     touchNow();
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
 
-    QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
@@ -833,11 +832,11 @@ void InputMethodTest::testV3AutoCommit()
     textInputV3->init(Test::waylandTextInputManagerV3()->get_text_input(*(Test::waylandSeat())));
     textInputV3->enable();
 
-    QSignalSpy textInputPreeditSpy(textInputV3.get(), &Test::TextInputV3::preeditString);
-    QSignalSpy textInputCommitTextSpy(textInputV3.get(), &Test::TextInputV3::commitString);
+    SignalSpy textInputPreeditSpy(textInputV3.get(), &Test::TextInputV3::preeditString);
+    SignalSpy textInputCommitTextSpy(textInputV3.get(), &Test::TextInputV3::commitString);
 
-    QSignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
-    QSignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    SignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
     // just enabling the text-input should not show it but rather on commit
     QVERIFY(!kwinApp()->inputMethod()->isActive());
     textInputV3->commit();
@@ -861,7 +860,7 @@ void InputMethodTest::testV3AutoCommit()
 
     // **************
     // Mouse clicks
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     textInputV3->disable();
     textInputV3->enable();
     const QList<Window *> windows = workspace()->windows();
@@ -930,22 +929,22 @@ void InputMethodTest::testSendRepeatInfo()
     auto *wlKeyboard = static_cast<wl_keyboard *>(*legacyKeyboard);
     QVERIFY(wl_proxy_get_version(reinterpret_cast<wl_proxy *>(wlKeyboard)) == 5);
 
-    QSignalSpy keyrepeatSpy(legacyKeyboard.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    SignalSpy keyrepeatSpy(legacyKeyboard.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
     // Wait for initial modifiers update
     QVERIFY(keyrepeatSpy.wait());
     QVERIFY(legacyKeyboard->isKeyRepeatEnabled());
     auto surface = Test::createSurface(legacyClient->compositor);
     auto shellSurface = Test::createXdgToplevelSurface(legacyClient->xdgShell, surface.get());
     Test::renderAndWaitForShown(legacyClient->shm, surface.get(), QSize(100, 100), Qt::cyan);
-    QSignalSpy firstEnteredSpy(legacyKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy firstEnteredSpy(legacyKeyboard.get(), &KWayland::Client::Keyboard::entered);
     QVERIFY(firstEnteredSpy.wait());
 
     auto textInputV3 = std::make_unique<Test::TextInputV3>();
     textInputV3->init(legacyClient->textInputManagerV3->get_text_input(*legacyClient->seat));
     textInputV3->enable();
 
-    QSignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
-    QSignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    SignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
     // just enabling the text-input should not show it but rather on commit
     QVERIFY(!kwinApp()->inputMethod()->isActive());
     textInputV3->commit();
@@ -956,7 +955,7 @@ void InputMethodTest::testSendRepeatInfo()
     std::unique_ptr<KWayland::Client::Keyboard> keyboardGrab(new KWayland::Client::Keyboard);
     keyboardGrab->setup(zwp_input_method_context_v1_grab_keyboard(context));
 
-    QSignalSpy keygrabRepeatSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    SignalSpy keygrabRepeatSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
     // Wait for initial modifiers update
     QVERIFY(keygrabRepeatSpy.wait());
     QVERIFY(keyboardGrab->isKeyRepeatEnabled());
@@ -979,22 +978,22 @@ void InputMethodTest::testSendRepeatInfoV10()
     auto keyboard = std::unique_ptr<KWayland::Client::Keyboard>(client->seat->createKeyboard());
     auto *wlKeyboard = static_cast<wl_keyboard *>(*keyboard);
     QVERIFY(wl_proxy_get_version(reinterpret_cast<wl_proxy *>(wlKeyboard)) == seatInterface.version);
-    QSignalSpy keyrepeatSpy(keyboard.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    SignalSpy keyrepeatSpy(keyboard.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
     // Wait for initial modifiers update
     QVERIFY(keyrepeatSpy.wait());
     QVERIFY(!keyboard->isKeyRepeatEnabled());
     auto surface = Test::createSurface(client->compositor);
     auto shellSurface = Test::createXdgToplevelSurface(client->xdgShell, surface.get());
     Test::renderAndWaitForShown(client->shm, surface.get(), QSize(100, 100), Qt::cyan);
-    QSignalSpy firstEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy firstEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
     QVERIFY(firstEnteredSpy.wait());
 
     auto textInputV3 = std::make_unique<Test::TextInputV3>();
     textInputV3->init(client->textInputManagerV3->get_text_input(*client->seat));
     textInputV3->enable();
 
-    QSignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
-    QSignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    SignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    SignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
     // just enabling the text-input should not show it but rather on commit
     QVERIFY(!kwinApp()->inputMethod()->isActive());
     textInputV3->commit();
@@ -1005,7 +1004,7 @@ void InputMethodTest::testSendRepeatInfoV10()
     std::unique_ptr<KWayland::Client::Keyboard> keyboardGrab(new KWayland::Client::Keyboard);
     keyboardGrab->setup(zwp_input_method_context_v1_grab_keyboard(context));
 
-    QSignalSpy keygrabRepeatSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
+    SignalSpy keygrabRepeatSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::keyRepeatChanged);
     // Wait for initial modifiers update
     QVERIFY(keygrabRepeatSpy.wait());
 

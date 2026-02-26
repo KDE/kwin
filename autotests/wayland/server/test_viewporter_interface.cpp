@@ -4,10 +4,10 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-#include <QSignalSpy>
 #include <QTest>
 #include <QThread>
 
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/surface.h"
@@ -69,7 +69,7 @@ void TestViewporterInterface::initTestCase()
     m_serverCompositor = new CompositorInterface(&m_display, this);
 
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -92,9 +92,9 @@ void TestViewporterInterface::initTestCase()
             m_viewporter->init(*registry, id, version);
         }
     });
-    QSignalSpy allAnnouncedSpy(registry, &KWayland::Client::Registry::interfaceAnnounced);
-    QSignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
-    QSignalSpy shmSpy(registry, &KWayland::Client::Registry::shmAnnounced);
+    SignalSpy allAnnouncedSpy(registry, &KWayland::Client::Registry::interfaceAnnounced);
+    SignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
+    SignalSpy shmSpy(registry, &KWayland::Client::Registry::shmAnnounced);
     registry->setEventQueue(m_queue);
     registry->create(m_connection->display());
     QVERIFY(registry->isValid());
@@ -135,15 +135,15 @@ TestViewporterInterface::~TestViewporterInterface()
 void TestViewporterInterface::testCropScale()
 {
     // Create a test surface.
-    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    SignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
 
-    QSignalSpy serverSurfaceMappedSpy(serverSurface, &SurfaceInterface::mapped);
-    QSignalSpy serverSurfaceSizeChangedSpy(serverSurface, &SurfaceInterface::sizeChanged);
-    QSignalSpy bufferSourceBoxChangedSpy(serverSurface, &SurfaceInterface::bufferSourceBoxChanged);
+    SignalSpy serverSurfaceMappedSpy(serverSurface, &SurfaceInterface::mapped);
+    SignalSpy serverSurfaceSizeChangedSpy(serverSurface, &SurfaceInterface::sizeChanged);
+    SignalSpy bufferSourceBoxChangedSpy(serverSurface, &SurfaceInterface::bufferSourceBoxChanged);
 
     // Map the surface.
     QImage image(QSize(200, 100), QImage::Format_ARGB32_Premultiplied);

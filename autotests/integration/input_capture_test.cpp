@@ -19,7 +19,6 @@
 #include <QDBusReply>
 #include <QDBusUnixFileDescriptor>
 #include <QObject>
-#include <QSignalSpy>
 #include <QSocketNotifier>
 
 #include <libei.h>
@@ -144,15 +143,15 @@ void TestInputCapture::testInputCapture()
     QCOMPARE(keyboard->enteredSurface(), surface.get());
     QCOMPARE(pointer->enteredSurface(), surface.get());
 
-    QSignalSpy motionSpy(pointer.get(), &KWayland::Client::Pointer::motion);
-    QSignalSpy buttonSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
-    QSignalSpy axisSpy(pointer.get(), &KWayland::Client::Pointer::axisChanged);
-    QSignalSpy keySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy motionSpy(pointer.get(), &KWayland::Client::Pointer::motion);
+    SignalSpy buttonSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy axisSpy(pointer.get(), &KWayland::Client::Pointer::axisChanged);
+    SignalSpy keySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
 
     auto ei = ei_new_receiver(nullptr);
     ei_setup_backend_fd(ei, capture.eifd);
     QSocketNotifier eiNotifier(ei_get_fd(ei), QSocketNotifier::Read);
-    QSignalSpy eiReadableSpy(&eiNotifier, &QSocketNotifier::activated);
+    SignalSpy eiReadableSpy(&eiNotifier, &QSocketNotifier::activated);
 
     int numDevices = 0;
     while (numDevices != 3 && eiReadableSpy.wait()) {
@@ -332,7 +331,7 @@ void TestInputCapture::disconnectingEiRemovesCapture()
     auto ei = ei_new_receiver(nullptr);
     ei_setup_backend_fd(ei, capture.eifd);
     QSocketNotifier eiNotifier(ei_get_fd(ei), QSocketNotifier::Read);
-    QSignalSpy eiReadableSpy(&eiNotifier, &QSocketNotifier::activated);
+    SignalSpy eiReadableSpy(&eiNotifier, &QSocketNotifier::activated);
 
     bool connected = false;
     while (!connected && eiReadableSpy.wait()) {

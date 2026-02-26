@@ -194,8 +194,8 @@ void X11KeyReadTest::testWaylandWindowHasFocus()
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
-    QSignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
-    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    SignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
+    SignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
 
     Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(10, 10), Qt::blue);
     QVERIFY(waylandWindow->isActive());
@@ -353,7 +353,7 @@ QList<KeyAction> X11KeyReadTest::recievedX11EventsForInput(const QList<KeyAction
 
     X11EventRecorder eventReader(c.get());
 
-    QSignalSpy fenceEventSpy(&eventReader, &X11EventRecorder::fenceReceived);
+    SignalSpy fenceEventSpy(&eventReader, &X11EventRecorder::fenceReceived);
 
     for (const KeyAction &action : keysIn) {
         if (action.first == State::Press) {

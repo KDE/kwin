@@ -9,6 +9,7 @@
 #include "atoms.h"
 #include "core/output.h"
 #include "utils/pipe.h"
+#include "wayland/abstract_data_source.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -63,7 +64,7 @@ template<typename T>
 static bool waitFuture(const QFuture<T> &future)
 {
     QFutureWatcher<T> watcher;
-    QSignalSpy finishedSpy(&watcher, &QFutureWatcher<T>::finished);
+    SignalSpy finishedSpy(&watcher, &QFutureWatcher<T>::finished);
     watcher.setFuture(future);
     return finishedSpy.wait();
 }
@@ -436,7 +437,7 @@ public:
     static QByteArray read(X11Display *display, xcb_window_t requestor, xcb_atom_t selection, xcb_atom_t target, xcb_atom_t property, xcb_timestamp_t timestamp)
     {
         X11SelectionReader reader(display, requestor, selection, target, property, timestamp);
-        QSignalSpy doneSpy(&reader, &X11SelectionReader::done);
+        SignalSpy doneSpy(&reader, &X11SelectionReader::done);
         doneSpy.wait();
         return doneSpy.last().at(0).value<QByteArray>();
     }
@@ -509,7 +510,7 @@ static X11Window *createX11Window(xcb_connection_t *connection, const Rect &geom
     xcb_map_window(connection, windowId);
     xcb_flush(connection);
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     if (!windowCreatedSpy.wait()) {
         return nullptr;
     }
@@ -632,12 +633,12 @@ void XwaylandSelectionTest::clipboardX11ToWayland()
         return X11SelectionData();
     });
 
-    QSignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
+    SignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
     x11Selection->setOwner(true);
     QVERIFY(seatSelectionChangedSpy.wait());
 
     // Paste.
-    QSignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionOffered);
+    SignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionOffered);
     workspace()->activateWindow(waylandWindow);
     QVERIFY(waylandDataDeviceSelectionOfferedSpy.wait());
     KWayland::Client::DataOffer *offer = waylandDataDevice->offeredSelection();
@@ -648,7 +649,7 @@ void XwaylandSelectionTest::clipboardX11ToWayland()
     QCOMPARE(data.result(), acceptedMimeData);
 
     // Clear selection.
-    QSignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionCleared);
+    SignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionCleared);
     x11Selection->setOwner(false);
     QVERIFY(waylandDataDeviceSelectionClearedSpy.wait());
 }
@@ -679,12 +680,12 @@ void XwaylandSelectionTest::emptyClipboardX11ToWayland()
         };
     });
 
-    QSignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
+    SignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
     x11Selection->setOwner(true);
     QVERIFY(seatSelectionChangedSpy.wait());
 
     // Paste.
-    QSignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionOffered);
+    SignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionOffered);
     workspace()->activateWindow(waylandWindow);
     QVERIFY(waylandDataDeviceSelectionOfferedSpy.wait());
     KWayland::Client::DataOffer *offer = waylandDataDevice->offeredSelection();
@@ -696,7 +697,7 @@ void XwaylandSelectionTest::emptyClipboardX11ToWayland()
     QCOMPARE(data.result(), QByteArray());
 
     // Clear selection.
-    QSignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionCleared);
+    SignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionCleared);
     x11Selection->setOwner(false);
     QVERIFY(waylandDataDeviceSelectionClearedSpy.wait());
 }
@@ -742,7 +743,7 @@ void XwaylandSelectionTest::clipboardX11ToWaylandSwitchFocusBeforeTargets()
     x11Selection->setOwner(true);
 
     // Paste, the wayland window will be activated when kwin reads the TARGETS property.
-    QSignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionOffered);
+    SignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionOffered);
     QVERIFY(waylandDataDeviceSelectionOfferedSpy.wait());
     KWayland::Client::DataOffer *offer = waylandDataDevice->offeredSelection();
     QCOMPARE(offer->offeredMimeTypes(), {plainText});
@@ -793,7 +794,7 @@ void XwaylandSelectionTest::clipboardWaylandToX11()
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -811,7 +812,7 @@ void XwaylandSelectionTest::clipboardWaylandToX11()
         close(fd);
     });
 
-    QSignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
+    SignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
     waylandDataDevice->setSelection(waylandPointerButtonSpy.constFirst().at(0).value<quint32>(), waylandDataSource);
     QVERIFY(seatSelectionChangedSpy.wait());
 
@@ -851,7 +852,7 @@ void XwaylandSelectionTest::emptyClipboardWaylandToX11()
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -865,7 +866,7 @@ void XwaylandSelectionTest::emptyClipboardWaylandToX11()
         close(fd);
     });
 
-    QSignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
+    SignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
     waylandDataDevice->setSelection(waylandPointerButtonSpy.constFirst().at(0).value<quint32>(), waylandDataSource);
     QVERIFY(seatSelectionChangedSpy.wait());
 
@@ -909,7 +910,7 @@ void XwaylandSelectionTest::snoopClipboard()
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -925,7 +926,7 @@ void XwaylandSelectionTest::snoopClipboard()
         close(fd);
     });
 
-    QSignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
+    SignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
     waylandDataDevice->setSelection(waylandPointerButtonSpy.constFirst().at(0).value<quint32>(), waylandDataSource);
     QVERIFY(seatSelectionChangedSpy.wait());
 
@@ -993,12 +994,12 @@ void XwaylandSelectionTest::primarySelectionX11ToWayland()
         return X11SelectionData();
     });
 
-    QSignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
+    SignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
     x11Selection->setOwner(true);
     QVERIFY(seatPrimarySelectionChangedSpy.wait());
 
     // Paste.
-    QSignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    SignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
     workspace()->activateWindow(waylandWindow);
     QVERIFY(waylandDataDeviceSelectionOfferedSpy.wait());
     Test::WpPrimarySelectionOfferV1 *offer = waylandDataDevice->offer();
@@ -1009,7 +1010,7 @@ void XwaylandSelectionTest::primarySelectionX11ToWayland()
     QCOMPARE(data.result(), acceptedMimeData);
 
     // Clear selection.
-    QSignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
+    SignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
     x11Selection->setOwner(false);
     QVERIFY(waylandDataDeviceSelectionClearedSpy.wait());
 }
@@ -1040,12 +1041,12 @@ void XwaylandSelectionTest::emptyPrimarySelectionX11ToWayland()
         };
     });
 
-    QSignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
+    SignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
     x11Selection->setOwner(true);
     QVERIFY(seatPrimarySelectionChangedSpy.wait());
 
     // Paste.
-    QSignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    SignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
     workspace()->activateWindow(waylandWindow);
     QVERIFY(waylandDataDeviceSelectionOfferedSpy.wait());
     Test::WpPrimarySelectionOfferV1 *offer = waylandDataDevice->offer();
@@ -1057,7 +1058,7 @@ void XwaylandSelectionTest::emptyPrimarySelectionX11ToWayland()
     QCOMPARE(data.result(), QByteArray());
 
     // Clear selection.
-    QSignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
+    SignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
     x11Selection->setOwner(false);
     QVERIFY(waylandDataDeviceSelectionClearedSpy.wait());
 }
@@ -1103,7 +1104,7 @@ void XwaylandSelectionTest::primarySelectionX11ToWaylandSwitchFocusBeforeTargets
     x11Selection->setOwner(true);
 
     // Paste, the wayland window will be activated when kwin reads the TARGETS property.
-    QSignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    SignalSpy waylandDataDeviceSelectionOfferedSpy(waylandDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
     QVERIFY(waylandDataDeviceSelectionOfferedSpy.wait());
     Test::WpPrimarySelectionOfferV1 *offer = waylandDataDevice->offer();
     QCOMPARE(offer->mimeTypes(), {plainText});
@@ -1154,7 +1155,7 @@ void XwaylandSelectionTest::primarySelectionWaylandToX11()
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_MIDDLE, timestamp++);
@@ -1172,7 +1173,7 @@ void XwaylandSelectionTest::primarySelectionWaylandToX11()
         close(fd);
     });
 
-    QSignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
+    SignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
     waylandDataDevice->set_selection(waylandDataSource->object(), waylandPointerButtonSpy.constFirst().at(0).value<quint32>());
     QVERIFY(seatPrimarySelectionChangedSpy.wait());
 
@@ -1211,7 +1212,7 @@ void XwaylandSelectionTest::emptyPrimarySelectionWaylandToX11()
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_MIDDLE, timestamp++);
@@ -1225,7 +1226,7 @@ void XwaylandSelectionTest::emptyPrimarySelectionWaylandToX11()
         close(fd);
     });
 
-    QSignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
+    SignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
     waylandDataDevice->set_selection(waylandDataSource->object(), waylandPointerButtonSpy.constFirst().at(0).value<quint32>());
     QVERIFY(seatPrimarySelectionChangedSpy.wait());
 
@@ -1268,7 +1269,7 @@ void XwaylandSelectionTest::snoopPrimarySelection()
     QVERIFY(waylandWindow);
 
     // Copy.
-    QSignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy waylandPointerButtonSpy(waylandPointer, &KWayland::Client::Pointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(waylandWindow->frameGeometry().center(), timestamp++);
     Test::pointerButtonPressed(BTN_MIDDLE, timestamp++);
@@ -1284,7 +1285,7 @@ void XwaylandSelectionTest::snoopPrimarySelection()
         close(fd);
     });
 
-    QSignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
+    SignalSpy seatPrimarySelectionChangedSpy(waylandServer()->seat(), &SeatInterface::primarySelectionChanged);
     waylandDataDevice->set_selection(waylandDataSource->object(), waylandPointerButtonSpy.constFirst().at(0).value<quint32>());
     QVERIFY(seatPrimarySelectionChangedSpy.wait());
 

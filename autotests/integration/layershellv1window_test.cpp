@@ -112,7 +112,7 @@ void LayerShellV1WindowTest::testOutput()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
 
@@ -172,7 +172,7 @@ void LayerShellV1WindowTest::testAnchor()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
     QCOMPARE(requestedSize, QSize(280, 124));
@@ -244,7 +244,7 @@ void LayerShellV1WindowTest::testMargins()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
 
@@ -285,7 +285,7 @@ void LayerShellV1WindowTest::testLayer()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
 
@@ -321,8 +321,8 @@ void LayerShellV1WindowTest::testChangeLayer()
     surface2->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surfaces.
-    QSignalSpy configureRequestedSpy1(shellSurface1.get(), &Test::LayerSurfaceV1::configureRequested);
-    QSignalSpy configureRequestedSpy2(shellSurface2.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy1(shellSurface1.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy2(shellSurface2.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy2.wait());
     const QSize requestedSize1 = configureRequestedSpy1.last().at(1).toSize();
     const QSize requestedSize2 = configureRequestedSpy2.last().at(1).toSize();
@@ -339,7 +339,7 @@ void LayerShellV1WindowTest::testChangeLayer()
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2}));
 
     // Move the first layer shell window to the top layer.
-    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    SignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     shellSurface1->set_layer(Test::LayerShellV1::layer_top);
     surface1->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(stackingOrderChangedSpy.wait());
@@ -416,7 +416,7 @@ void LayerShellV1WindowTest::testPlacementArea()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
 
@@ -452,7 +452,7 @@ void LayerShellV1WindowTest::testPlacementAreaAfterOutputLayoutChange()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the layer surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
     Window *window = Test::renderAndWaitForShown(surface.get(), configureRequestedSpy.last().at(1).toSize(), Qt::red);
@@ -515,7 +515,7 @@ void LayerShellV1WindowTest::testFill()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
 
@@ -553,8 +553,8 @@ void LayerShellV1WindowTest::testStack()
     surface2->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surfaces.
-    QSignalSpy configureRequestedSpy1(shellSurface1.get(), &Test::LayerSurfaceV1::configureRequested);
-    QSignalSpy configureRequestedSpy2(shellSurface2.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy1(shellSurface1.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy2(shellSurface2.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy2.wait());
     const QSize requestedSize1 = configureRequestedSpy1.last().at(1).toSize();
     const QSize requestedSize2 = configureRequestedSpy2.last().at(1).toSize();
@@ -595,7 +595,7 @@ void LayerShellV1WindowTest::testKeyboardInteractivityNone()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
 
@@ -623,7 +623,7 @@ void LayerShellV1WindowTest::testKeyboardInteractivityOnDemand()
     shellSurface1->set_size(280, 124);
     surface1->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy configureRequestedSpy1(shellSurface1.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy1(shellSurface1.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy1.wait());
     const QSize requestedSize1 = configureRequestedSpy1.last().at(1).toSize();
     shellSurface1->ack_configure(configureRequestedSpy1.last().at(0).toUInt());
@@ -638,7 +638,7 @@ void LayerShellV1WindowTest::testKeyboardInteractivityOnDemand()
     shellSurface2->set_size(280, 124);
     surface2->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy configureRequestedSpy2(shellSurface2.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy2(shellSurface2.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy2.wait());
     const QSize requestedSize2 = configureRequestedSpy2.last().at(1).toSize();
     shellSurface2->ack_configure(configureRequestedSpy2.last().at(0).toUInt());
@@ -683,7 +683,7 @@ void LayerShellV1WindowTest::testActivate()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
 
@@ -697,7 +697,7 @@ void LayerShellV1WindowTest::testActivate()
     shellSurface->set_keyboard_interactivity(1);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy activeChangedSpy(window, &Window::activeChanged);
+    SignalSpy activeChangedSpy(window, &Window::activeChanged);
     QTEST(activeChangedSpy.wait(1000), "active");
 
     // Destroy the window.
@@ -716,7 +716,7 @@ void LayerShellV1WindowTest::testUnmap()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
 
     // Map the layer surface.
@@ -775,7 +775,7 @@ void LayerShellV1WindowTest::testScreenEdge()
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
     const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
 
@@ -785,7 +785,7 @@ void LayerShellV1WindowTest::testScreenEdge()
     QVERIFY(window);
     QVERIFY(!window->isActive());
 
-    QSignalSpy hiddenChangedSpy(window, &Window::hiddenChanged);
+    SignalSpy hiddenChangedSpy(window, &Window::hiddenChanged);
     quint32 timestamp = 0;
 
     // The layer surface will be hidden and shown when the screen edge is activated or deactivated.
@@ -816,7 +816,7 @@ void LayerShellV1WindowTest::testScreenEdge()
 
     // The approaching state will be reset if the window is shown manually.
     {
-        QSignalSpy approachingSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
+        SignalSpy approachingSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
         screenEdge->activate();
         QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(!window->isShown());
@@ -857,7 +857,7 @@ void LayerShellV1WindowTest::testUnconfiguredBuffer()
     shellSurface->set_size(100, 50);
     Test::render(surface.get(), QSize(100, 50), Qt::blue);
 
-    QSignalSpy connectionErrorSpy(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+    SignalSpy connectionErrorSpy(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(connectionErrorSpy.wait());
 }
 

@@ -342,7 +342,7 @@ void StackingOrderTest::testDeletedTransient()
         transient2->unref();
     });
 
-    QSignalSpy windowClosedSpy(transient2, &Window::closed);
+    SignalSpy windowClosedSpy(transient2, &Window::closed);
     transient2ShellSurface.reset();
     transient2Surface.reset();
     QVERIFY(windowClosedSpy.wait());
@@ -409,7 +409,7 @@ void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
 
     Test::XcbConnectionPtr conn = Test::createX11Connection();
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 
     // Create the group leader.
     xcb_window_t leaderWid = createGroupWindow(conn.get(), geometry);
@@ -523,7 +523,7 @@ void StackingOrderTest::testRaiseGroupTransient()
 
     Test::XcbConnectionPtr conn = Test::createX11Connection();
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 
     // Create the group leader.
     xcb_window_t leaderWid = createGroupWindow(conn.get(), geometry);
@@ -655,7 +655,7 @@ void StackingOrderTest::testDeletedGroupTransient()
 
     Test::XcbConnectionPtr conn = Test::createX11Connection();
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 
     // Create the group leader.
     xcb_window_t leaderWid = createGroupWindow(conn.get(), geometry);
@@ -749,7 +749,7 @@ void StackingOrderTest::testDeletedGroupTransient()
         transient->unref();
     });
 
-    QSignalSpy windowClosedSpy(transient, &X11Window::closed);
+    SignalSpy windowClosedSpy(transient, &X11Window::closed);
     xcb_unmap_window(conn.get(), transientWid);
     xcb_flush(conn.get());
     QVERIFY(windowClosedSpy.wait());
@@ -768,7 +768,7 @@ void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()
 
     Test::XcbConnectionPtr conn = Test::createX11Connection();
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 
     // Create the group leader.
     xcb_window_t leaderWid = createGroupWindow(conn.get(), geometry);

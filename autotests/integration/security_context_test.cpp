@@ -90,11 +90,11 @@ void SecurityContextTest::testSecurityContext()
     delete securityContext;
 
     qputenv("WAYLAND_DISPLAY", tempDir.filePath("socket").toUtf8());
-    QSignalSpy clientConnectedspy(waylandServer()->display(), &Display::clientConnected);
+    SignalSpy clientConnectedspy(waylandServer()->display(), &Display::clientConnected);
 
     // connect a client using the newly created listening socket
     KWayland::Client::ConnectionThread restrictedClientConnection;
-    QSignalSpy connectedSpy(&restrictedClientConnection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy connectedSpy(&restrictedClientConnection, &KWayland::Client::ConnectionThread::connected);
     QThread restictedClientThread;
     auto restictedClientThreadQuitter = qScopeGuard([&restictedClientThread]() {
         restictedClientThread.quit();
@@ -112,8 +112,8 @@ void SecurityContextTest::testSecurityContext()
     // verify that the globals for the restricted client does not contain the security context
     KWayland::Client::Registry registry;
     registry.create(&restrictedClientConnection);
-    QSignalSpy interfaceAnnounced(&registry, &KWayland::Client::Registry::interfaceAnnounced);
-    QSignalSpy allAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
+    SignalSpy interfaceAnnounced(&registry, &KWayland::Client::Registry::interfaceAnnounced);
+    SignalSpy allAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     registry.setup();
     QVERIFY(allAnnouncedSpy.wait());
     for (auto interfaceSignal : interfaceAnnounced) {
@@ -129,8 +129,8 @@ void SecurityContextTest::testSecurityContext()
 
     // new clients can't connect anymore
     KWayland::Client::ConnectionThread restrictedClientConnection2;
-    QSignalSpy connectedSpy2(&restrictedClientConnection2, &KWayland::Client::ConnectionThread::connected);
-    QSignalSpy failedSpy2(&restrictedClientConnection2, &KWayland::Client::ConnectionThread::failed);
+    SignalSpy connectedSpy2(&restrictedClientConnection2, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy failedSpy2(&restrictedClientConnection2, &KWayland::Client::ConnectionThread::failed);
     QThread restictedClientThread2;
     auto restictedClientThreadQuitter2 = qScopeGuard([&restictedClientThread2]() {
         restictedClientThread2.quit();
@@ -181,12 +181,12 @@ void SecurityContextTest::testClosedCloseFdOnStartup()
     QVERIFY(Test::waylandSync());
 
     qputenv("WAYLAND_DISPLAY", tempDir.filePath("socket").toUtf8());
-    QSignalSpy clientConnectedspy(waylandServer()->display(), &Display::clientConnected);
+    SignalSpy clientConnectedspy(waylandServer()->display(), &Display::clientConnected);
 
     // new clients can't connect anymore
     KWayland::Client::ConnectionThread restrictedClientConnection;
-    QSignalSpy connectedSpy(&restrictedClientConnection, &KWayland::Client::ConnectionThread::connected);
-    QSignalSpy failedSpy(&restrictedClientConnection, &KWayland::Client::ConnectionThread::failed);
+    SignalSpy connectedSpy(&restrictedClientConnection, &KWayland::Client::ConnectionThread::connected);
+    SignalSpy failedSpy(&restrictedClientConnection, &KWayland::Client::ConnectionThread::failed);
     QThread restictedClientThread;
     auto restictedClientThreadQuitter = qScopeGuard([&restictedClientThread]() {
         restictedClientThread.quit();

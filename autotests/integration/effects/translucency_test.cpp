@@ -74,7 +74,7 @@ void TranslucencyTest::init()
     // find the effectsloader
     auto effectloader = effects->findChild<AbstractEffectLoader *>();
     QVERIFY(effectloader);
-    QSignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
+    SignalSpy effectLoadedSpy(effectloader, &AbstractEffectLoader::effectLoaded);
 
     QVERIFY(!effects->isEffectLoaded(QStringLiteral("translucency")));
     QVERIFY(effects->loadEffect(QStringLiteral("translucency")));
@@ -99,7 +99,7 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     // test tries to simulate the condition of bug 366081
     QVERIFY(!m_translucencyEffect->isActive());
 
-    QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
+    SignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
 
     // create an xcb window
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -120,7 +120,7 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     xcb_flush(c.get());
 
     // we should get a window for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -154,7 +154,7 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
     xcb_destroy_window(c.get(), windowId);
     c.reset();
@@ -165,7 +165,7 @@ void TranslucencyTest::testDialogClose()
     // this test simulates the condition of BUG 342716
     // with translucency settings for window type dialog the effect never ends when the window gets destroyed
     QVERIFY(!m_translucencyEffect->isActive());
-    QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
+    SignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
 
     // create an xcb window
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -188,7 +188,7 @@ void TranslucencyTest::testDialogClose()
     xcb_flush(c.get());
 
     // we should get a window for it
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
     X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
     QVERIFY(window);
@@ -202,9 +202,9 @@ void TranslucencyTest::testDialogClose()
     xcb_unmap_window(c.get(), windowId);
     xcb_flush(c.get());
 
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    SignalSpy windowClosedSpy(window, &X11Window::closed);
 
-    QSignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
+    SignalSpy windowDeletedSpy(effects, &EffectsHandler::windowDeleted);
     QVERIFY(windowClosedSpy.wait());
     if (windowDeletedSpy.isEmpty()) {
         QVERIFY(windowDeletedSpy.wait());

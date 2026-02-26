@@ -6,13 +6,12 @@
 
 // Qt
 #include <QHash>
-#include <QSignalSpy>
 #include <QTest>
 #include <QThread>
 
 #include <wayland-client.h>
 
-// WaylandServer
+#include "utils/signalspy.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/screencast_v1.h"
@@ -101,7 +100,7 @@ void TestScreencastV1Interface::initTestCase()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    KWin::SignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -118,7 +117,7 @@ void TestScreencastV1Interface::initTestCase()
 
     KWayland::Client::Registry registry;
 
-    QSignalSpy screencastSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
+    KWin::SignalSpy screencastSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     m_screencastInterface = new KWin::ScreencastV1Interface(m_display, this);
     connect(m_screencastInterface,
             &KWin::ScreencastV1Interface::windowScreencastRequested,
@@ -170,11 +169,11 @@ void TestScreencastV1Interface::testCreate()
     auto stream = m_screencast->createWindowStream("3");
     QVERIFY(stream);
 
-    QSignalSpy spyWorking(stream, &ScreencastStreamV1::created);
+    KWin::SignalSpy spyWorking(stream, &ScreencastStreamV1::created);
     QVERIFY(spyWorking.count() || spyWorking.wait());
     QVERIFY(m_triggered);
 
-    QSignalSpy spyStop(m_triggered, &KWin::ScreencastStreamV1Interface::finished);
+    KWin::SignalSpy spyStop(m_triggered, &KWin::ScreencastStreamV1Interface::finished);
     stream->close();
     QVERIFY(spyStop.count() || spyStop.wait());
 }

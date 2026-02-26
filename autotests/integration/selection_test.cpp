@@ -59,7 +59,7 @@ template<typename T>
 static bool waitFuture(const QFuture<T> &future)
 {
     QFutureWatcher<T> watcher;
-    QSignalSpy finishedSpy(&watcher, &QFutureWatcher<T>::finished);
+    SignalSpy finishedSpy(&watcher, &QFutureWatcher<T>::finished);
     watcher.setFuture(future);
     return finishedSpy.wait();
 }
@@ -153,7 +153,7 @@ void SelectionTest::selection()
 
     // Activate the source window.
     std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
@@ -162,7 +162,7 @@ void SelectionTest::selection()
     sourceDataDevice->setSelection(sourceEnteredSerial, dataSource.get());
 
     // The target device shouldn't receive an offer while it's not focused.
-    QSignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
+    SignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
     QVERIFY(!targetDataDeviceSelectionOfferedSpy.wait(100));
 
     workspace()->activateWindow(targetWindow);
@@ -181,7 +181,7 @@ void SelectionTest::selection()
     QCOMPARE(htmlData.result(), QByteArray());
 
     // Clear selection.
-    QSignalSpy targetDataDeviceSelectionClearedSpy(targetDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
+    SignalSpy targetDataDeviceSelectionClearedSpy(targetDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
     sourceDataDevice->setSelection(sourceEnteredSerial, nullptr);
     QVERIFY(targetDataDeviceSelectionClearedSpy.wait());
 }
@@ -206,7 +206,7 @@ void SelectionTest::internalSelection()
     auto window = Test::renderAndWaitForShown(connection->shm, surface.get(), QSize(100, 100), Qt::red);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(connection->seat->createKeyboard());
-    QSignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
     workspace()->activateWindow(window);
     QVERIFY(keyboardEnteredSpy.wait());
     const quint32 enteredSerial = keyboardEnteredSpy.last().at(0).value<quint32>();
@@ -214,7 +214,7 @@ void SelectionTest::internalSelection()
     // Set the selection.
     dataDevice->setSelection(enteredSerial, dataSource.get());
 
-    QSignalSpy dataDeviceSelectionOfferedSpy(dataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
+    SignalSpy dataDeviceSelectionOfferedSpy(dataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
     QVERIFY(dataDeviceSelectionOfferedSpy.wait());
     KWayland::Client::DataOffer *offer = dataDevice->offeredSelection();
     QCOMPARE(offer->offeredMimeTypes(), QList<QMimeType>{plainText()});
@@ -230,7 +230,7 @@ void SelectionTest::internalSelection()
     QCOMPARE(htmlData.result(), QByteArray());
 
     // Clear selection.
-    QSignalSpy selectionClearedSpy(dataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
+    SignalSpy selectionClearedSpy(dataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
     dataDevice->setSelection(enteredSerial, nullptr);
     QVERIFY(selectionClearedSpy.wait());
 }
@@ -265,7 +265,7 @@ void SelectionTest::destroySelection()
 
     // Activate the source window.
     std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
@@ -274,14 +274,14 @@ void SelectionTest::destroySelection()
     sourceDataDevice->setSelection(sourceEnteredSerial, dataSource.get());
 
     // Activate the target window and wait for the data offer.
-    QSignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
+    SignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
     workspace()->activateWindow(targetWindow);
     QVERIFY(targetDataDeviceSelectionOfferedSpy.wait());
     KWayland::Client::DataOffer *offer = targetDataDevice->offeredSelection();
     QCOMPARE(offer->offeredMimeTypes(), QList<QMimeType>{plainText()});
 
     // Destroy the data source.
-    QSignalSpy targetDataDeviceSelectionClearedSpy(targetDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
+    SignalSpy targetDataDeviceSelectionClearedSpy(targetDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
     dataSource.reset();
     QVERIFY(targetDataDeviceSelectionClearedSpy.wait());
 }
@@ -306,12 +306,12 @@ void SelectionTest::invalidSerialForSelection()
     Test::renderAndWaitForShown(connection->shm, surface.get(), QSize(100, 100), Qt::red);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(connection->seat->createKeyboard());
-    QSignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
     QVERIFY(keyboardEnteredSpy.wait());
     const quint32 enteredSerial = keyboardEnteredSpy.last().at(0).value<quint32>();
 
     // Set the selection.
-    QSignalSpy dataSourceCancelledSpy(dataSource.get(), &KWayland::Client::DataSource::cancelled);
+    SignalSpy dataSourceCancelledSpy(dataSource.get(), &KWayland::Client::DataSource::cancelled);
     dataDevice->setSelection(enteredSerial - 100, dataSource.get());
     QVERIFY(dataSourceCancelledSpy.wait(100));
 }
@@ -357,8 +357,8 @@ void SelectionTest::unsetSupersededSelection()
     auto secondWindow = Test::renderAndWaitForShown(secondConnection->shm, secondSurface.get(), QSize(100, 100), Qt::blue);
 
     // Activate the first window and set the selection.
-    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
+    SignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
     workspace()->activateWindow(firstWindow);
     QVERIFY(firstKeyboardEnteredSpy.wait());
 
@@ -367,8 +367,8 @@ void SelectionTest::unsetSupersededSelection()
     QVERIFY(firstDataDeviceSelectionOfferedSpy.wait());
 
     // Activate the second window and set the selection.
-    QSignalSpy secondKeyboardEnteredSpy(secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
+    SignalSpy secondKeyboardEnteredSpy(secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
     workspace()->activateWindow(secondWindow);
     QVERIFY(secondKeyboardEnteredSpy.wait());
 
@@ -377,7 +377,7 @@ void SelectionTest::unsetSupersededSelection()
     QVERIFY(secondDataDeviceSelectionOfferedSpy.wait());
 
     // Attempt to unset the first selection.
-    QSignalSpy secondDataDeviceSelectionClearedSpy(secondDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
+    SignalSpy secondDataDeviceSelectionClearedSpy(secondDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
     firstDataDevice->setSelection(firstEnteredSerial, nullptr);
     QVERIFY(!secondDataDeviceSelectionClearedSpy.wait(100));
 
@@ -416,14 +416,14 @@ void SelectionTest::receiveFromWithdrawnSelectionOffer()
 
     // Focus the source window, and set the selection.
     std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
     sourceDataDevice->setSelection(sourceEnteredSerial, dataSource.get());
 
     // The target client should be offered the selection when its window gets focused.
-    QSignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
+    SignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
     workspace()->activateWindow(targetWindow);
     QVERIFY(targetDataDeviceSelectionOfferedSpy.wait());
     std::unique_ptr<KWayland::Client::DataOffer> offer = targetDataDevice->takeOfferedSelection();
@@ -481,16 +481,16 @@ void SelectionTest::singleSelectionPerClient()
     auto thirdWindow = Test::renderAndWaitForShown(secondConnection->shm, thirdSurface.get(), QSize(100, 100), Qt::green);
 
     // Activate the first window and set the selection.
-    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
     workspace()->activateWindow(firstWindow);
     QVERIFY(firstKeyboardEnteredSpy.wait());
     const quint32 firstEnteredSerial = firstKeyboardEnteredSpy.last().at(0).value<quint32>();
     firstDataDevice->setSelection(firstEnteredSerial, firstDataSource.get());
 
-    QSignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
-    QSignalSpy firstDataDeviceSelectionClearedSpy(firstDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
-    QSignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
-    QSignalSpy secondDataDeviceSelectionClearedSpy(secondDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
+    SignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
+    SignalSpy firstDataDeviceSelectionClearedSpy(firstDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
+    SignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &KWayland::Client::DataDevice::selectionOffered);
+    SignalSpy secondDataDeviceSelectionClearedSpy(secondDataDevice.get(), &KWayland::Client::DataDevice::selectionCleared);
 
     QVERIFY(firstDataDeviceSelectionOfferedSpy.wait());
 
@@ -584,7 +584,7 @@ void SelectionTest::primarySelection()
 
     // Activate the source window.
     std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
@@ -593,7 +593,7 @@ void SelectionTest::primarySelection()
     sourceDataDevice->set_selection(dataSource->object(), sourceEnteredSerial);
 
     // The target device shouldn't receive an offer while it's not focused.
-    QSignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    SignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
     QVERIFY(!targetDataDeviceSelectionOfferedSpy.wait(100));
 
     workspace()->activateWindow(targetWindow);
@@ -612,7 +612,7 @@ void SelectionTest::primarySelection()
     QCOMPARE(htmlData.result(), QByteArray());
 
     // Clear selection.
-    QSignalSpy targetDataDeviceSelectionClearedSpy(targetDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
+    SignalSpy targetDataDeviceSelectionClearedSpy(targetDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
     sourceDataDevice->set_selection(nullptr, sourceEnteredSerial);
     QVERIFY(targetDataDeviceSelectionClearedSpy.wait());
 }
@@ -637,7 +637,7 @@ void SelectionTest::internalPrimarySelection()
     auto window = Test::renderAndWaitForShown(connection->shm, surface.get(), QSize(100, 100), Qt::red);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(connection->seat->createKeyboard());
-    QSignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
     workspace()->activateWindow(window);
     QVERIFY(keyboardEnteredSpy.wait());
     const quint32 enteredSerial = keyboardEnteredSpy.last().at(0).value<quint32>();
@@ -645,7 +645,7 @@ void SelectionTest::internalPrimarySelection()
     // Set the selection.
     dataDevice->set_selection(dataSource->object(), enteredSerial);
 
-    QSignalSpy dataDeviceSelectionOfferedSpy(dataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    SignalSpy dataDeviceSelectionOfferedSpy(dataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
     QVERIFY(dataDeviceSelectionOfferedSpy.wait());
     Test::WpPrimarySelectionOfferV1 *offer = dataDevice->offer();
     QCOMPARE(offer->mimeTypes(), QList<QMimeType>{plainText()});
@@ -661,7 +661,7 @@ void SelectionTest::internalPrimarySelection()
     QCOMPARE(htmlData.result(), QByteArray());
 
     // Clear selection.
-    QSignalSpy selectionClearedSpy(dataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
+    SignalSpy selectionClearedSpy(dataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
     dataDevice->set_selection(nullptr, enteredSerial);
     QVERIFY(selectionClearedSpy.wait());
 }
@@ -696,7 +696,7 @@ void SelectionTest::destroyPrimarySelection()
 
     // Activate the source window.
     std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
@@ -705,14 +705,14 @@ void SelectionTest::destroyPrimarySelection()
     sourceDataDevice->set_selection(dataSource->object(), sourceEnteredSerial);
 
     // Activate the target window and wait for the data offer.
-    QSignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    SignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
     workspace()->activateWindow(targetWindow);
     QVERIFY(targetDataDeviceSelectionOfferedSpy.wait());
     Test::WpPrimarySelectionOfferV1 *offer = targetDataDevice->offer();
     QCOMPARE(offer->mimeTypes(), QList<QMimeType>{plainText()});
 
     // Destroy the data source.
-    QSignalSpy targetDataDeviceSelectionClearedSpy(targetDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
+    SignalSpy targetDataDeviceSelectionClearedSpy(targetDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
     dataSource.reset();
     QVERIFY(targetDataDeviceSelectionClearedSpy.wait());
 }
@@ -737,12 +737,12 @@ void SelectionTest::invalidSerialForPrimarySelection()
     Test::renderAndWaitForShown(connection->shm, surface.get(), QSize(100, 100), Qt::red);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(connection->seat->createKeyboard());
-    QSignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
     QVERIFY(keyboardEnteredSpy.wait());
     const quint32 enteredSerial = keyboardEnteredSpy.last().at(0).value<quint32>();
 
     // Set the selection.
-    QSignalSpy dataSourceCancelledSpy(dataSource.get(), &Test::WpPrimarySelectionSourceV1::cancelled);
+    SignalSpy dataSourceCancelledSpy(dataSource.get(), &Test::WpPrimarySelectionSourceV1::cancelled);
     dataDevice->set_selection(dataSource->object(), enteredSerial - 100);
     QVERIFY(dataSourceCancelledSpy.wait());
 }
@@ -788,8 +788,8 @@ void SelectionTest::unsetSupersededPrimarySelection()
     auto secondWindow = Test::renderAndWaitForShown(secondConnection->shm, secondSurface.get(), QSize(100, 100), Qt::blue);
 
     // Activate the first window and set the selection.
-    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    SignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
     workspace()->activateWindow(firstWindow);
     QVERIFY(firstKeyboardEnteredSpy.wait());
 
@@ -798,8 +798,8 @@ void SelectionTest::unsetSupersededPrimarySelection()
     QVERIFY(firstDataDeviceSelectionOfferedSpy.wait());
 
     // Activate the second window and set the selection.
-    QSignalSpy secondKeyboardEnteredSpy(secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
-    QSignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    SignalSpy secondKeyboardEnteredSpy(secondKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
     workspace()->activateWindow(secondWindow);
     QVERIFY(secondKeyboardEnteredSpy.wait());
 
@@ -808,7 +808,7 @@ void SelectionTest::unsetSupersededPrimarySelection()
     QVERIFY(secondDataDeviceSelectionOfferedSpy.wait());
 
     // Attempt to unset the first selection.
-    QSignalSpy secondDataDeviceSelectionClearedSpy(secondDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
+    SignalSpy secondDataDeviceSelectionClearedSpy(secondDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
     firstDataDevice->set_selection(nullptr, firstEnteredSerial);
     QVERIFY(!secondDataDeviceSelectionClearedSpy.wait(100));
 
@@ -847,14 +847,14 @@ void SelectionTest::receiveFromWithdrawnPrimarySelectionOffer()
 
     // Focus the source window, and set the primary selection.
     std::unique_ptr<KWayland::Client::Keyboard> sourceKeyboard(sourceConnection->seat->createKeyboard());
-    QSignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy sourceKeyboardEnteredSpy(sourceKeyboard.get(), &KWayland::Client::Keyboard::entered);
     workspace()->activateWindow(sourceWindow);
     QVERIFY(sourceKeyboardEnteredSpy.wait());
     const quint32 sourceEnteredSerial = sourceKeyboardEnteredSpy.last().at(0).value<quint32>();
     sourceDataDevice->set_selection(dataSource->object(), sourceEnteredSerial);
 
     // The target client should be offered the selection when its window gets focused.
-    QSignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    SignalSpy targetDataDeviceSelectionOfferedSpy(targetDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
     workspace()->activateWindow(targetWindow);
     QVERIFY(targetDataDeviceSelectionOfferedSpy.wait());
     std::unique_ptr<Test::WpPrimarySelectionOfferV1> offer = targetDataDevice->takeOffer();
@@ -912,16 +912,16 @@ void SelectionTest::singlePrimarySelectionPerClient()
     auto thirdWindow = Test::renderAndWaitForShown(secondConnection->shm, thirdSurface.get(), QSize(100, 100), Qt::green);
 
     // Activate the first window and set the selection.
-    QSignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
+    SignalSpy firstKeyboardEnteredSpy(firstKeyboard.get(), &KWayland::Client::Keyboard::entered);
     workspace()->activateWindow(firstWindow);
     QVERIFY(firstKeyboardEnteredSpy.wait());
     const quint32 firstEnteredSerial = firstKeyboardEnteredSpy.last().at(0).value<quint32>();
     firstDataDevice->set_selection(firstDataSource->object(), firstEnteredSerial);
 
-    QSignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
-    QSignalSpy firstDataDeviceSelectionClearedSpy(firstDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
-    QSignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
-    QSignalSpy secondDataDeviceSelectionClearedSpy(secondDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
+    SignalSpy firstDataDeviceSelectionOfferedSpy(firstDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    SignalSpy firstDataDeviceSelectionClearedSpy(firstDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
+    SignalSpy secondDataDeviceSelectionOfferedSpy(secondDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionOffered);
+    SignalSpy secondDataDeviceSelectionClearedSpy(secondDataDevice.get(), &Test::WpPrimarySelectionDeviceV1::selectionCleared);
 
     QVERIFY(firstDataDeviceSelectionOfferedSpy.wait());
 

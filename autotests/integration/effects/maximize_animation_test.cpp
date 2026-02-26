@@ -92,8 +92,8 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Wait for the initial configure event.
     Test::XdgToplevel::States states;
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
@@ -129,8 +129,8 @@ void MaximizeAnimationTest::testMaximizeRestore()
     QVERIFY(!effect->isActive());
 
     // Maximize the window.
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QSignalSpy maximizeChangedSpy(window, &Window::maximizedChanged);
+    SignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    SignalSpy maximizeChangedSpy(window, &Window::maximizedChanged);
 
     workspace()->slotWindowMaximize();
     QVERIFY(surfaceConfigureRequestedSpy.wait());

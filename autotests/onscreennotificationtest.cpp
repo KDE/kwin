@@ -9,12 +9,12 @@
 
 #include "input.h"
 #include "onscreennotification.h"
+#include "utils/signalspy.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>
 
 #include <QQmlEngine>
-#include <QSignalSpy>
 #include <QTest>
 
 QTEST_MAIN(OnScreenNotificationTest);
@@ -47,7 +47,7 @@ void OnScreenNotificationTest::show()
     notification.setEngine(new QQmlEngine(&notification));
     notification.setMessage(QStringLiteral("Some text so that we see it in the test"));
 
-    QSignalSpy visibleChangedSpy(&notification, &OnScreenNotification::visibleChanged);
+    KWin::SignalSpy visibleChangedSpy(&notification, &OnScreenNotification::visibleChanged);
     QCOMPARE(notification.isVisible(), false);
     notification.setVisible(true);
     QCOMPARE(notification.isVisible(), true);
@@ -79,7 +79,7 @@ void OnScreenNotificationTest::show()
 void OnScreenNotificationTest::timeout()
 {
     OnScreenNotification notification;
-    QSignalSpy timeoutChangedSpy(&notification, &OnScreenNotification::timeoutChanged);
+    KWin::SignalSpy timeoutChangedSpy(&notification, &OnScreenNotification::timeoutChanged);
     QCOMPARE(notification.timeout(), 0);
     notification.setTimeout(1000);
     QCOMPARE(notification.timeout(), 1000);
@@ -94,7 +94,7 @@ void OnScreenNotificationTest::timeout()
 void OnScreenNotificationTest::iconName()
 {
     OnScreenNotification notification;
-    QSignalSpy iconNameChangedSpy(&notification, &OnScreenNotification::iconNameChanged);
+    KWin::SignalSpy iconNameChangedSpy(&notification, &OnScreenNotification::iconNameChanged);
     QCOMPARE(notification.iconName(), QString());
     notification.setIconName(QStringLiteral("foo"));
     QCOMPARE(notification.iconName(), QStringLiteral("foo"));
@@ -109,7 +109,7 @@ void OnScreenNotificationTest::iconName()
 void OnScreenNotificationTest::message()
 {
     OnScreenNotification notification;
-    QSignalSpy messageChangedSpy(&notification, &OnScreenNotification::messageChanged);
+    KWin::SignalSpy messageChangedSpy(&notification, &OnScreenNotification::messageChanged);
     QCOMPARE(notification.message(), QString());
     notification.setMessage(QStringLiteral("foo"));
     QCOMPARE(notification.message(), QStringLiteral("foo"));

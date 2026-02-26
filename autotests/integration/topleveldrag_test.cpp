@@ -66,8 +66,8 @@ void TestToplevelDrag::testDragging()
 
     Test::pointerMotion({50, 10}, ++timestamp);
     Test::pointerButtonPressed(BTN_LEFT, ++timestamp);
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy buttonStateChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    SignalSpy buttonStateChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
     QVERIFY(enteredSpy.wait());
     QVERIFY(!buttonStateChangedSpy.isEmpty() || buttonStateChangedSpy.wait());
     QCOMPARE(pointer->enteredSurface(), surface.get());
@@ -79,7 +79,7 @@ void TestToplevelDrag::testDragging()
     toplevelDrag->attach(shellSurface->object(), enteredPosition.x(), enteredPosition.y());
     std::unique_ptr<KWayland::Client::DataDevice> dataDevice(Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat()));
     dataDevice->startDrag(serial, dataSource.get(), surface.get());
-    QSignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
+    SignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
     QVERIFY(dragStartedSpy.wait());
     QVERIFY(waylandServer()->seat()->dragSource());
     QVERIFY(waylandServer()->seat()->xdgTopleveldrag());
@@ -112,7 +112,7 @@ void TestToplevelDrag::testAttachUnmappedToplevel()
 
     Test::pointerMotion({50, 10}, ++timestamp);
     Test::pointerButtonPressed(BTN_LEFT, ++timestamp);
-    QSignalSpy buttonStateChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy buttonStateChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
     QVERIFY(!buttonStateChangedSpy.isEmpty() || buttonStateChangedSpy.wait());
     QCOMPARE(pointer->enteredSurface(), surface.get());
     const uint serial = buttonStateChangedSpy[0][0].toUInt();
@@ -124,7 +124,7 @@ void TestToplevelDrag::testAttachUnmappedToplevel()
     toplevelDrag->attach(draggedToplevel->object(), 0, 0);
     std::unique_ptr<KWayland::Client::DataDevice> dataDevice(Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat()));
     dataDevice->startDrag(serial, dataSource.get(), surface.get());
-    QSignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
+    SignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
     QVERIFY(dragStartedSpy.wait());
     QVERIFY(waylandServer()->seat()->dragSource());
     QVERIFY(waylandServer()->seat()->xdgTopleveldrag());
@@ -165,7 +165,7 @@ void TestToplevelDrag::testMapAttachedAfterDragEnd()
 
     Test::pointerMotion({50, 10}, ++timestamp);
     Test::pointerButtonPressed(BTN_LEFT, ++timestamp);
-    QSignalSpy buttonStateChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    SignalSpy buttonStateChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
     QVERIFY(buttonStateChangedSpy.wait());
     QCOMPARE(pointer->enteredSurface(), surface.get());
     const uint serial = buttonStateChangedSpy[0][0].toUInt();
@@ -177,7 +177,7 @@ void TestToplevelDrag::testMapAttachedAfterDragEnd()
     toplevelDrag->attach(draggedToplevel->object(), 0, 0);
     std::unique_ptr<KWayland::Client::DataDevice> dataDevice(Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat()));
     dataDevice->startDrag(serial, dataSource.get(), surface.get());
-    QSignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
+    SignalSpy dragStartedSpy(waylandServer()->seat(), &SeatInterface::dragStarted);
     QVERIFY(dragStartedSpy.wait());
     QVERIFY(waylandServer()->seat()->dragSource());
     QVERIFY(waylandServer()->seat()->xdgTopleveldrag());

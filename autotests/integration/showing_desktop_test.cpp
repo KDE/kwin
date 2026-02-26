@@ -90,7 +90,7 @@ void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
         | Test::LayerSurfaceV1::anchor_left
         | Test::LayerSurfaceV1::anchor_right);
     desktopSurface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy desktopConfigureRequestedSpy(desktopShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy desktopConfigureRequestedSpy(desktopShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(desktopConfigureRequestedSpy.wait());
     auto desktop = Test::renderAndWaitForShown(desktopSurface.get(), desktopConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
     QVERIFY(desktop);
@@ -150,7 +150,7 @@ void ShowingDesktopTest::testDontQuitAfterActivatingDock()
                                     | Test::LayerSurfaceV1::anchor_left
                                     | Test::LayerSurfaceV1::anchor_right);
     desktopSurface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy desktopConfigureRequestedSpy(desktopShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy desktopConfigureRequestedSpy(desktopShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(desktopConfigureRequestedSpy.wait());
     auto desktop = Test::renderAndWaitForShown(desktopSurface.get(), desktopConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
 
@@ -161,7 +161,7 @@ void ShowingDesktopTest::testDontQuitAfterActivatingDock()
     dockShellSurface->set_exclusive_zone(50);
     dockShellSurface->set_keyboard_interactivity(1);
     dockSurface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy dockConfigureRequestedSpy(dockShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy dockConfigureRequestedSpy(dockShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(dockConfigureRequestedSpy.wait());
     auto dock = Test::renderAndWaitForShown(dockSurface.get(), dockConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
 
@@ -223,7 +223,7 @@ void ShowingDesktopTest::testDontQuitAfterAddingDock()
     dockShellSurface->set_exclusive_zone(50);
     dockShellSurface->set_keyboard_interactivity(1);
     dockSurface->commit(KWayland::Client::Surface::CommitFlag::None);
-    QSignalSpy dockConfigureRequestedSpy(dockShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    SignalSpy dockConfigureRequestedSpy(dockShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(dockConfigureRequestedSpy.wait());
     auto dock = Test::renderAndWaitForShown(dockSurface.get(), dockConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
     QVERIFY(dock->isActive());

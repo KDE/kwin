@@ -103,7 +103,7 @@ void TestXdgSession::cleanup()
 void TestXdgSession::addToplevelSession()
 {
     std::unique_ptr<Test::XdgSessionV1> session(Test::createXdgSessionV1(Test::XdgSessionManagerV1::reason_launch));
-    QSignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
+    SignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
     QVERIFY(sessionCreatedSpy.wait());
 
     // If the toplevel is added to the session for the first time, we should receive a created event, but no restored event.
@@ -112,9 +112,9 @@ void TestXdgSession::addToplevelSession()
         std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
         std::unique_ptr<Test::XdgToplevelSessionV1> toplevelSession(session->add(shellSurface.get(), QStringLiteral("foo")));
 
-        QSignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
-        QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
+        SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         QCOMPARE(sessionCreatedSpy.count(), 1);
@@ -132,9 +132,9 @@ void TestXdgSession::addToplevelSession()
         std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
         std::unique_ptr<Test::XdgToplevelSessionV1> toplevelSession(session->add(shellSurface.get(), QStringLiteral("foo")));
 
-        QSignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
-        QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
+        SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         QCOMPARE(sessionCreatedSpy.count(), 1);
@@ -158,8 +158,8 @@ void TestXdgSession::addMappedToplevelSession()
     std::unique_ptr<Test::XdgSessionV1> session(Test::createXdgSessionV1(Test::XdgSessionManagerV1::reason_launch));
     std::unique_ptr<Test::XdgToplevelSessionV1> toplevelSession(session->add(shellSurface.get(), QStringLiteral("foo")));
 
-    QSignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
-    QSignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
+    SignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
+    SignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
     QVERIFY(sessionCreatedSpy.wait());
     QCOMPARE(sessionCreatedSpy.count(), 1);
     QCOMPARE(toplevelSessionRestoredSpy.count(), 0);
@@ -168,7 +168,7 @@ void TestXdgSession::addMappedToplevelSession()
 void TestXdgSession::restoreToplevelSession()
 {
     std::unique_ptr<Test::XdgSessionV1> session(Test::createXdgSessionV1(Test::XdgSessionManagerV1::reason_launch));
-    QSignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
+    SignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
     QVERIFY(sessionCreatedSpy.wait());
 
     // Add the toplevel to the session.
@@ -177,9 +177,9 @@ void TestXdgSession::restoreToplevelSession()
         std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
         std::unique_ptr<Test::XdgToplevelSessionV1> toplevelSession(session->add(shellSurface.get(), QStringLiteral("foo")));
 
-        QSignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
-        QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
+        SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         QCOMPARE(toplevelSessionRestoredSpy.count(), 0);
@@ -196,9 +196,9 @@ void TestXdgSession::restoreToplevelSession()
         std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
         std::unique_ptr<Test::XdgToplevelSessionV1> toplevelSession(session->restore(shellSurface.get(), QStringLiteral("foo")));
 
-        QSignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
-        QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
+        SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         QCOMPARE(toplevelSessionRestoredSpy.count(), 1);
@@ -215,9 +215,9 @@ void TestXdgSession::restoreToplevelSession()
         std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
         std::unique_ptr<Test::XdgToplevelSessionV1> toplevelSession(session->restore(shellSurface.get(), QStringLiteral("bar")));
 
-        QSignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
-        QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
+        SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         QCOMPARE(toplevelSessionRestoredSpy.count(), 0);
@@ -234,7 +234,7 @@ void TestXdgSession::restoreMappedToplevelSession()
     // This test verifies that a protocol error will be posted if a client attempts to restore a mapped toplevel.
 
     std::unique_ptr<Test::XdgSessionV1> session(Test::createXdgSessionV1(Test::XdgSessionManagerV1::reason_launch));
-    QSignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
+    SignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
     QVERIFY(sessionCreatedSpy.wait());
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -243,7 +243,7 @@ void TestXdgSession::restoreMappedToplevelSession()
 
     std::unique_ptr<Test::XdgToplevelSessionV1> toplevelSession(session->restore(shellSurface.get(), QStringLiteral("foo")));
 
-    QSignalSpy connectionErrorSpy(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
+    SignalSpy connectionErrorSpy(Test::waylandConnection(), &KWayland::Client::ConnectionThread::errorOccurred);
     QVERIFY(connectionErrorSpy.wait());
 }
 
@@ -254,12 +254,12 @@ void TestXdgSession::replaceSession()
         auto connection = Test::Connection::setup(Test::AdditionalWaylandInterface::XdgSessionV1);
 
         std::unique_ptr<Test::XdgSessionV1> firstSession = Test::createXdgSessionV1(connection->sessionManager.get(), Test::XdgSessionManagerV1::reason_launch);
-        QSignalSpy sessionCreatedSpy(firstSession.get(), &Test::XdgSessionV1::created);
+        SignalSpy sessionCreatedSpy(firstSession.get(), &Test::XdgSessionV1::created);
         QVERIFY(sessionCreatedSpy.wait());
 
         const QString sessionId = sessionCreatedSpy.last().at(0).toString();
         std::unique_ptr<Test::XdgSessionV1> secondSession = Test::createXdgSessionV1(connection->sessionManager.get(), Test::XdgSessionManagerV1::reason_launch, sessionId);
-        QSignalSpy connectionErrorSpy(connection->connection, &KWayland::Client::ConnectionThread::errorOccurred);
+        SignalSpy connectionErrorSpy(connection->connection, &KWayland::Client::ConnectionThread::errorOccurred);
         QVERIFY(connectionErrorSpy.wait());
     }
 
@@ -269,16 +269,16 @@ void TestXdgSession::replaceSession()
         auto secondConnection = Test::Connection::setup(Test::AdditionalWaylandInterface::XdgSessionV1);
 
         std::unique_ptr<Test::XdgSessionV1> firstSession = Test::createXdgSessionV1(firstConnection->sessionManager.get(), Test::XdgSessionManagerV1::reason_launch);
-        QSignalSpy firstSessionCreatedSpy(firstSession.get(), &Test::XdgSessionV1::created);
-        QSignalSpy firstSessionReplacedSpy(firstSession.get(), &Test::XdgSessionV1::replaced);
+        SignalSpy firstSessionCreatedSpy(firstSession.get(), &Test::XdgSessionV1::created);
+        SignalSpy firstSessionReplacedSpy(firstSession.get(), &Test::XdgSessionV1::replaced);
         QVERIFY(firstSessionCreatedSpy.wait());
         QCOMPARE(firstSessionReplacedSpy.count(), 0);
         QCOMPARE(firstSessionReplacedSpy.count(), 0);
 
         const QString sessionId = firstSessionCreatedSpy.last().at(0).toString();
         std::unique_ptr<Test::XdgSessionV1> secondSession = Test::createXdgSessionV1(secondConnection->sessionManager.get(), Test::XdgSessionManagerV1::reason_launch, sessionId);
-        QSignalSpy secondSessionCreatedSpy(secondSession.get(), &Test::XdgSessionV1::created);
-        QSignalSpy secondSessionReplacedSpy(secondSession.get(), &Test::XdgSessionV1::replaced);
+        SignalSpy secondSessionCreatedSpy(secondSession.get(), &Test::XdgSessionV1::created);
+        SignalSpy secondSessionReplacedSpy(secondSession.get(), &Test::XdgSessionV1::replaced);
         QVERIFY(secondSessionCreatedSpy.wait());
         QCOMPARE(secondSessionReplacedSpy.count(), 0);
 
@@ -294,7 +294,7 @@ void TestXdgSession::replaceSession()
 void TestXdgSession::restoreTemplate(RestoreFuncs funcs)
 {
     std::unique_ptr<Test::XdgSessionV1> session(Test::createXdgSessionV1(Test::XdgSessionManagerV1::reason_launch));
-    QSignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
+    SignalSpy sessionCreatedSpy(session.get(), &Test::XdgSessionV1::created);
     QVERIFY(sessionCreatedSpy.wait());
 
     {
@@ -302,9 +302,9 @@ void TestXdgSession::restoreTemplate(RestoreFuncs funcs)
         std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
         std::unique_ptr<Test::XdgToplevelSessionV1> toplevelSession(session->add(shellSurface.get(), QStringLiteral("foo")));
 
-        QSignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
-        QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
+        SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         QCOMPARE(toplevelSessionRestoredSpy.count(), 0);
@@ -328,9 +328,9 @@ void TestXdgSession::restoreTemplate(RestoreFuncs funcs)
         std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
         std::unique_ptr<Test::XdgToplevelSessionV1> toplevelSession(session->restore(shellSurface.get(), QStringLiteral("foo")));
 
-        QSignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
-        QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        SignalSpy toplevelSessionRestoredSpy(toplevelSession.get(), &Test::XdgToplevelSessionV1::restored);
+        SignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+        SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         QCOMPARE(toplevelSessionRestoredSpy.count(), 1);

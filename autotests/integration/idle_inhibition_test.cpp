@@ -195,14 +195,14 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     QVERIFY(shellSurface != nullptr);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    SignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     // Create the inhibitor object.
     std::unique_ptr<Test::IdleInhibitorV1> inhibitor(Test::createIdleInhibitorV1(surface.get()));
     QVERIFY(inhibitor);
 
     // Map the window.
-    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    SignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     Test::render(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(windowAddedSpy.isEmpty());
     QVERIFY(windowAddedSpy.wait());
