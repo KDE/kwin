@@ -148,10 +148,6 @@ void TestInputCapture::testInputCapture()
     QSignalSpy buttonSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
     QSignalSpy axisSpy(pointer.get(), &KWayland::Client::Pointer::axisChanged);
     QSignalSpy keySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
-    QVERIFY(motionSpy.isValid());
-    QVERIFY(buttonSpy.isValid());
-    QVERIFY(axisSpy.isValid());
-    QVERIFY(keySpy.isValid());
 
     auto ei = ei_new_receiver(nullptr);
     ei_setup_backend_fd(ei, capture.eifd);

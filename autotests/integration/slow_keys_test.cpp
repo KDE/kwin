@@ -83,7 +83,6 @@ void SlowKeysTest::testSlow()
     QVERIFY(enteredSpy.wait());
 
     QSignalSpy keySpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
-    QVERIFY(keySpy.isValid());
 
     quint32 timestamp = 0;
 

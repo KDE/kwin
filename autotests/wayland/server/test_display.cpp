@@ -153,7 +153,6 @@ void TestWaylandServerDisplay::testAutoSocketName()
 
     KWin::Display display0;
     QSignalSpy socketNameChangedSpy0(&display0, &KWin::Display::socketNamesChanged);
-    QVERIFY(socketNameChangedSpy0.isValid());
     QVERIFY(display0.addSocketName());
     display0.start();
     QVERIFY(display0.isRunning());
@@ -161,7 +160,6 @@ void TestWaylandServerDisplay::testAutoSocketName()
 
     KWin::Display display1;
     QSignalSpy socketNameChangedSpy1(&display1, &KWin::Display::socketNamesChanged);
-    QVERIFY(socketNameChangedSpy1.isValid());
     QVERIFY(display1.addSocketName());
     display1.start();
     QVERIFY(display1.isRunning());

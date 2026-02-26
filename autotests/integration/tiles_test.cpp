@@ -360,7 +360,6 @@ void TilesTest::resizeTileFromWindow()
     auto window = Test::renderAndWaitForShown(rootSurface.get(), QSize(100, 100), Qt::cyan);
     QVERIFY(window);
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 1);
@@ -398,11 +397,8 @@ void TilesTest::resizeTileFromWindow()
 
     QCOMPARE(workspace()->activeWindow(), window);
     QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
-    QVERIFY(interactiveMoveResizeStartedSpy.isValid());
     QSignalSpy moveResizedChangedSpy(window, &Window::moveResizedChanged);
-    QVERIFY(moveResizedChangedSpy.isValid());
     QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
-    QVERIFY(interactiveMoveResizeFinishedSpy.isValid());
 
     // begin resize
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);

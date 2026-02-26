@@ -747,7 +747,6 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QVERIFY(enteredSpy.wait());
 
     QSignalSpy keyEvent(keyboard, &KWayland::Client::Keyboard::keyChanged);
-    QVERIFY(keyEvent.isValid());
 
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     window->decoratedWindow()->requestShowToolTip(QStringLiteral("test"));

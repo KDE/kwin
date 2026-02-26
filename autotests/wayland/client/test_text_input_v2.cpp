@@ -158,9 +158,6 @@ void TextInputTest::cleanup()
 SurfaceInterface *TextInputTest::waitForSurface()
 {
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    if (!surfaceCreatedSpy.isValid()) {
-        return nullptr;
-    }
     if (!surfaceCreatedSpy.wait(500)) {
         return nullptr;
     }

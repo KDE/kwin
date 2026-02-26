@@ -381,9 +381,6 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
     auto connection = std::make_unique<Connection>();
     connection->connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(connection->connection, &KWayland::Client::ConnectionThread::connected);
-    if (!connectedSpy.isValid()) {
-        return nullptr;
-    }
     connection->connection->setSocketFd(sx[1]);
 
     connection->thread = new QThread(kwinApp());
@@ -582,9 +579,6 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
-    if (!allAnnounced.isValid()) {
-        return nullptr;
-    }
     registry->create(connection->connection);
     if (!registry->isValid()) {
         return nullptr;
@@ -1027,9 +1021,6 @@ void render(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, 
 Window *waitForWaylandWindowShown(int timeout)
 {
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    if (!windowAddedSpy.isValid()) {
-        return nullptr;
-    }
     if (!windowAddedSpy.wait(timeout)) {
         return nullptr;
     }
@@ -1056,9 +1047,6 @@ Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QImage &
 Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QImage &img, int timeout)
 {
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    if (!windowAddedSpy.isValid()) {
-        return nullptr;
-    }
     render(shm, surface, img);
     flushWaylandConnection();
     if (!windowAddedSpy.wait(timeout)) {
@@ -1332,9 +1320,6 @@ std::unique_ptr<XdgSessionV1> createXdgSessionV1(XdgSessionManagerV1 *manager, X
 bool waitForWindowClosed(Window *window)
 {
     QSignalSpy closedSpy(window, &Window::closed);
-    if (!closedSpy.isValid()) {
-        return false;
-    }
     return closedSpy.wait();
 }
 
@@ -1345,9 +1330,6 @@ bool lockScreen()
         return false;
     }
     QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
-    if (!lockStateChangedSpy.isValid()) {
-        return false;
-    }
     ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     if (lockStateChangedSpy.count() != 1) {
         return false;
@@ -1357,9 +1339,6 @@ bool lockScreen()
     }
     if (ScreenLocker::KSldApp::self()->lockState() != ScreenLocker::KSldApp::Locked) {
         QSignalSpy lockedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::locked);
-        if (!lockedSpy.isValid()) {
-            return false;
-        }
         if (!lockedSpy.wait()) {
             return false;
         }
@@ -1370,9 +1349,6 @@ bool lockScreen()
 bool unlockScreen()
 {
     QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
-    if (!lockStateChangedSpy.isValid()) {
-        return false;
-    }
     using namespace ScreenLocker;
     const auto children = KSldApp::self()->children();
     for (auto it = children.begin(); it != children.end(); ++it) {
@@ -1390,9 +1366,6 @@ bool unlockScreen()
     }
     if (ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked) {
         QSignalSpy lockedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked);
-        if (!lockedSpy.isValid()) {
-            return false;
-        }
         if (!lockedSpy.wait()) {
             return false;
         }
