@@ -46,6 +46,9 @@ RuntimeDependencies:
     'plasma/libplasma': '@same'
     'plasma/plasma-workspace': '@same' # kscreenlocker needs it
 
+Environment:
+ KSIGNALSPY_WAIT_TIMEOUT: "30"
+
 Options:
  ctest-arguments: '--repeat until-pass:3 --timeout 90'
  use-ccache: True
