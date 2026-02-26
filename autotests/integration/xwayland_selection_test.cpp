@@ -9,6 +9,7 @@
 #include "atoms.h"
 #include "core/output.h"
 #include "utils/pipe.h"
+#include "wayland/display.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -536,6 +537,7 @@ private Q_SLOTS:
     void clipboardX11ToWayland_data();
     void clipboardX11ToWayland();
     void emptyClipboardX11ToWayland();
+    void multiStepSelectionChangeX11ToWayland();
     void clipboardX11ToWaylandSwitchFocusBeforeTargets();
     void clipboardWaylandToX11_data();
     void clipboardWaylandToX11();
@@ -696,7 +698,58 @@ void XwaylandSelectionTest::emptyClipboardX11ToWayland()
     // Clear selection.
     QSignalSpy waylandDataDeviceSelectionClearedSpy(waylandDataDevice, &KWayland::Client::DataDevice::selectionCleared);
     x11Selection->setOwner(false);
+    // Note, that it is expected for this to be delayed
     QVERIFY(waylandDataDeviceSelectionClearedSpy.wait());
+}
+
+void XwaylandSelectionTest::multiStepSelectionChangeX11ToWayland()
+{
+    // This test verifies that when a client sets an empty selection and a real selection back-to-back Wayland clients get notified once
+
+    // Show a Wayland window.
+    std::unique_ptr<KWayland::Client::Surface> waylandSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> waylandShellSurface = Test::createXdgToplevelSurface(waylandSurface.get());
+    Window *waylandWindow = Test::renderAndWaitForShown(waylandSurface.get(), QSize(100, 100), Qt::red);
+    QVERIFY(waylandWindow);
+
+    // Show an X11 window.
+    std::unique_ptr<X11Display> x11Display = X11Display::create();
+    QVERIFY(x11Display);
+    X11Window *x11Window = createX11Window(x11Display->connection(), Rect(0, 0, 100, 100));
+    QVERIFY(x11Window);
+
+    // Copy.
+    auto x11Selection = std::make_unique<X11SelectionOwner>(x11Display.get(), atoms->clipboard, QList<QMimeType>{}, [](const QMimeType &mimeType) {
+        return X11SelectionData{
+            .data = QByteArrayLiteral("foobar"),
+            .type = atoms->text,
+            .format = 8,
+        };
+    });
+
+    QSignalSpy seatSelectionChangedSpy(waylandServer()->seat(), &SeatInterface::selectionChanged);
+    x11Selection->setOwner(true);
+    QVERIFY(seatSelectionChangedSpy.wait());
+    seatSelectionChangedSpy.clear();
+
+    x11Selection->setOwner(false);
+
+    auto x11Selection2 = std::make_unique<X11SelectionOwner>(x11Display.get(), atoms->clipboard, QList<QMimeType>{}, [](const QMimeType &mimeType) {
+        return X11SelectionData{
+            .data = QByteArrayLiteral("foobar"),
+            .type = atoms->text,
+            .format = 8,
+        };
+    });
+    x11Selection2->setOwner(true);
+
+    QTest::qWait(500);
+    // The selection is active, but we only had one change notification
+    QVERIFY(waylandServer()->seat()->selection());
+    QCOMPARE(seatSelectionChangedSpy.count(), 1);
+
+    // explicitly cleanup test
+    waylandServer()->seat()->setSelection(nullptr, waylandServer()->display()->nextSerial());
 }
 
 void XwaylandSelectionTest::clipboardX11ToWaylandSwitchFocusBeforeTargets()

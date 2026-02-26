@@ -96,7 +96,14 @@ void Clipboard::onActiveWindowChanged()
 
 void Clipboard::selectionDisowned()
 {
-    m_xSource.reset();
+    // selectionDisowned is sometimes called before selectionClaimed when swapping data
+    // we want to batch them
+    QTimer::singleShot(std::chrono::milliseconds(100), this, [this, currentSource = m_xSource.get()]() {
+        // guard it changing while we wait for the timer
+        if (m_xSource && m_xSource.get() == currentSource) {
+            m_xSource.reset();
+        }
+    });
 }
 
 void Clipboard::selectionClaimed(xcb_xfixes_selection_notify_event_t *event)
