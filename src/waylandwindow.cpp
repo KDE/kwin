@@ -12,6 +12,7 @@
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland/surface.h"
+#include "wayland/xdgdbusannotation_v1.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -46,6 +47,14 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
 
     updateResourceName();
     updateShadow();
+
+    const auto annots = surface->dbusAnnotations();
+    for (auto annotation : annots) {
+        m_dbusAnnotations << annotation;
+    }
+    connect(surface, &SurfaceInterface::dbusAnnotationAdded, this, [this](XdgDBusAnnotationV1 *annotation) {
+        m_dbusAnnotations << annotation;
+    });
 }
 
 std::unique_ptr<WindowItem> WaylandWindow::createItem(Item *parentItem)

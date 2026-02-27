@@ -185,6 +185,13 @@ void SurfaceInterfacePrivate::setSlide(const QPointer<SlideInterface> &slide)
     pending->committed |= SurfaceState::Field::Slide;
 }
 
+void SurfaceInterfacePrivate::installDBusAnnotation(XdgDBusAnnotationV1 *annotation)
+{
+    dbusAnnotations.append(annotation);
+
+    Q_EMIT q->dbusAnnotationAdded(annotation);
+}
+
 void SurfaceInterfacePrivate::recursivelyEmitIdleInhibitChanged()
 {
     Q_EMIT q->inhibitsIdleChanged();
@@ -946,6 +953,11 @@ RectF SurfaceInterface::boundingRect() const
 ShadowInterface *SurfaceInterface::shadow() const
 {
     return d->current->shadow;
+}
+
+QList<XdgDBusAnnotationV1 *> SurfaceInterface::dbusAnnotations() const
+{
+    return d->dbusAnnotations;
 }
 
 RegionF SurfaceInterface::blurRegion() const
