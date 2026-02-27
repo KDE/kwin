@@ -4491,7 +4491,7 @@ void X11Window::setShortcutInternal()
 bool X11Window::hitTest(const QPointF &point) const
 {
     if (isDecorated()) {
-        if (m_decoration.inputRegion.contains(flooredPoint(mapToFrame(point)))) {
+        if (m_decoration.inputRegion.contains(mapToFrame(point))) {
             return true;
         }
     }

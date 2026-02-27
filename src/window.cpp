@@ -348,7 +348,7 @@ QMatrix4x4 Window::inputTransformation() const
 bool Window::hitTest(const QPointF &point) const
 {
     if (isDecorated()) {
-        if (m_decoration.inputRegion.contains(flooredPoint(mapToFrame(point)))) {
+        if (m_decoration.inputRegion.contains(mapToFrame(point))) {
             return true;
         }
     }
@@ -2658,7 +2658,7 @@ void Window::setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration)
 void Window::updateDecorationInputShape()
 {
     if (!isDecorated()) {
-        m_decoration.inputRegion = Region();
+        m_decoration.inputRegion = RegionF();
         return;
     }
 
@@ -2668,7 +2668,7 @@ void Window::updateDecorationInputShape()
     const RectF innerRect = RectF(QPointF(borderLeft(), borderTop()), decoratedWindow()->size());
     const RectF outerRect = innerRect + borders + resizeBorders;
 
-    m_decoration.inputRegion = Region(outerRect.roundedOut()) - innerRect.roundedIn();
+    m_decoration.inputRegion = RegionF(outerRect) - innerRect;
 }
 
 void Window::updateDecorationBorderRadius()
