@@ -59,6 +59,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${WaylandProtocols_DATADIR}/staging/single-pixel-buffer/single-pixel-buffer-v1.xml
         ${WaylandProtocols_DATADIR}/staging/tearing-control/tearing-control-v1.xml
         ${WaylandProtocols_DATADIR}/staging/xdg-activation/xdg-activation-v1.xml
+        ${WaylandProtocols_DATADIR}/staging/xdg-dbus-annotation/xdg-dbus-annotation-v1.xml
         ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
         ${WaylandProtocols_DATADIR}/staging/xdg-system-bell/xdg-system-bell-v1.xml
         ${WaylandProtocols_DATADIR}/staging/xdg-toplevel-drag/xdg-toplevel-drag-v1.xml
@@ -160,6 +161,7 @@ target_sources(kwin PRIVATE
     transaction.cpp
     viewporter.cpp
     xdgactivation_v1.cpp
+    xdgdbusannotation_v1.cpp
     xdgdecoration_v1.cpp
     xdgdialog_v1.cpp
     xdgforeign_v2.cpp

@@ -15,6 +15,7 @@
 #include <QPointer>
 // Wayland
 #include "qwayland-server-wayland.h"
+#include "xdgdbusannotation_v1.h"
 // C++
 #include <deque>
 #include <optional>
@@ -141,6 +142,7 @@ public:
     void installPointerConstraint(ConfinedPointerV1Interface *confinement);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
     void removeIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
+    void installDBusAnnotation(XdgDBusAnnotationV1 *annotation);
     void recursivelyEmitIdleInhibitChanged();
 
     RectF computeBufferSourceBox() const;
@@ -204,6 +206,7 @@ public:
     ColorRepresentationSurfaceV1 *colorRepresentation = nullptr;
     ExtBlurSurfaceV1 *extBlur = nullptr;
     ExtBackgroundEffectSurfaceV1 *extBackgroundeffect = nullptr;
+    QList<XdgDBusAnnotationV1 *> dbusAnnotations;
 
     struct
     {

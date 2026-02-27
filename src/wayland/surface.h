@@ -32,6 +32,7 @@ class Transaction;
 class SyncReleasePoint;
 class RawSurfaceAttachedState;
 class RawSurfaceExtension;
+class XdgDBusAnnotationV1;
 
 enum class ColorDescriptionType {
     Normal,
@@ -183,6 +184,8 @@ public:
      * @returns The Shadow for this Surface.
      */
     ShadowInterface *shadow() const;
+
+    QList<XdgDBusAnnotationV1 *> dbusAnnotations() const;
 
     RegionF blurRegion() const;
 
@@ -462,6 +465,8 @@ Q_SIGNALS:
     void presentationModeHintChanged();
     void bufferReleasePointChanged();
     void alphaMultiplierChanged();
+
+    void dbusAnnotationAdded(XdgDBusAnnotationV1 *annotation);
 
     /**
      * Emitted when the Surface has been committed.

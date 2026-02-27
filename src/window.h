@@ -59,6 +59,7 @@ class Shadow;
 class SurfaceItem;
 class VirtualDesktop;
 class WindowItem;
+class XdgDBusAnnotationV1;
 
 namespace Decoration
 {
@@ -1938,6 +1939,8 @@ protected:
     QString m_description;
 
     QString m_activationToken;
+
+    QList<XdgDBusAnnotationV1 *> m_dbusAnnotations;
 };
 
 inline RectF Window::bufferGeometry() const

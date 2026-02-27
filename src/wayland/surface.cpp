@@ -240,6 +240,13 @@ void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerV1Interfac
     Q_EMIT q->pointerConstraintsChanged();
 }
 
+void SurfaceInterfacePrivate::installDBusAnnotation(XdgDBusAnnotationV1 *annotation)
+{
+    dbusAnnotations.append(annotation);
+
+    Q_EMIT q->dbusAnnotationAdded(annotation);
+}
+
 void SurfaceInterfacePrivate::recursivelyEmitIdleInhibitChanged()
 {
     Q_EMIT q->inhibitsIdleChanged();
@@ -959,6 +966,11 @@ RectF SurfaceInterface::boundingRect() const
 ShadowInterface *SurfaceInterface::shadow() const
 {
     return d->current->shadow;
+}
+
+QList<XdgDBusAnnotationV1 *> SurfaceInterface::dbusAnnotations() const
+{
+    return d->dbusAnnotations;
 }
 
 RegionF SurfaceInterface::blurRegion() const

@@ -38,6 +38,7 @@
 #include "wayland/output.h"
 #include "wayland/plasmawindowmanagement.h"
 #include "wayland/surface.h"
+#include "wayland/xdgdbusannotation_v1.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
