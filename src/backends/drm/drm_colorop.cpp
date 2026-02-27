@@ -434,10 +434,9 @@ bool DrmLut3DColorOp::canBeUsedFor(const ColorOp &op, bool normalizedInput)
     if ((!normalizedInput && op.input.max > 1 + eta) || op.input.min < -eta) {
         return false;
     }
-    // restricted to simple multipliers and matrices for now,
+    // restricted to simple multipliers and clamps for now,
     // as everything else requires more effort to be yield good results
     return std::holds_alternative<ColorMultiplier>(op.operation)
-        || std::holds_alternative<ColorMatrix>(op.operation)
         || std::holds_alternative<ColorClamp>(op.operation);
 }
 
