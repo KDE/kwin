@@ -44,6 +44,7 @@ class Outline;
 class OutlineVisual;
 class Compositor;
 class Window;
+class X11Async;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -171,6 +172,8 @@ public:
     {
         return -1;
     }
+
+    void x11AsyncRoundtrip(const QObject *context, std::function<void()> callback);
 
 #endif
 
@@ -326,6 +329,7 @@ private:
     QList<QPointer<X11EventFilterContainer>> m_eventFilters;
     QList<QPointer<X11EventFilterContainer>> m_genericEventFilters;
     std::unique_ptr<XcbEventFilter> m_eventFilter;
+    std::unique_ptr<X11Async> m_x11Async;
 #endif
     bool m_followLocale1 = false;
     bool m_configLock;

@@ -277,6 +277,7 @@ endif()
 if (KWIN_BUILD_X11)
     target_sources(kwin
         PRIVATE
+            async.cpp
             atoms.cpp
             events.cpp
             group.cpp

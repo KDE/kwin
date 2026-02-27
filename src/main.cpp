@@ -12,6 +12,7 @@
 #include "config-kwin.h"
 
 #if KWIN_BUILD_X11
+#include "async.h"
 #include "atoms.h"
 #endif
 #include "compositor.h"
@@ -279,11 +280,13 @@ TabletModeManager *Application::tabletModeManager() const
 #if KWIN_BUILD_X11
 void Application::installNativeX11EventFilter()
 {
+    m_x11Async = std::make_unique<X11Async>();
     installNativeEventFilter(m_eventFilter.get());
 }
 
 void Application::removeNativeX11EventFilter()
 {
+    m_x11Async.reset();
     removeNativeEventFilter(m_eventFilter.get());
 }
 #endif
@@ -378,8 +381,17 @@ void Application::unregisterEventFilter(X11EventFilter *filter)
     delete container;
 }
 
+void Application::x11AsyncRoundtrip(const QObject *context, std::function<void()> callback)
+{
+    m_x11Async->roundtrip(context, callback);
+}
+
 bool Application::dispatchEvent(xcb_generic_event_t *event)
 {
+    if (m_x11Async->event(event)) {
+        return true;
+    }
+
     static const QList<QByteArray> s_xcbEerrors({QByteArrayLiteral("Success"),
                                                  QByteArrayLiteral("BadRequest"),
                                                  QByteArrayLiteral("BadValue"),
