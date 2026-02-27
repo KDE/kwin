@@ -12,7 +12,6 @@
 #include "x11_windowed_backend.h"
 #include "x11_windowed_logging.h"
 
-#include "compositor.h"
 #include "core/graphicsbuffer.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
@@ -450,7 +449,7 @@ bool X11WindowedOutput::testPresentation(const std::shared_ptr<OutputFrame> &fra
 
 bool X11WindowedOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
-    auto cursorLayers = Compositor::self()->backend()->compatibleOutputLayers(this) | std::views::filter([](OutputLayer *layer) {
+    auto cursorLayers = m_backend->renderBackend()->compatibleOutputLayers(this) | std::views::filter([](OutputLayer *layer) {
         return layer->type() == OutputLayerType::CursorOnly;
     });
     if (!cursorLayers.empty()) {

@@ -30,6 +30,7 @@ namespace KWin
 {
 class X11WindowedBackend;
 class X11WindowedOutput;
+class RenderBackend;
 class RenderDevice;
 
 class X11WindowedInputDevice : public InputDevice
@@ -124,6 +125,9 @@ public:
     RenderDevice *renderDevice() const;
     EglDisplay *sceneEglDisplayObject() const override;
 
+    RenderBackend *renderBackend() const;
+    void setRenderBackend(RenderBackend *backend);
+
 private:
     void createOutputs();
     void grabKeyboard(xcb_timestamp_t time);
@@ -176,6 +180,7 @@ private:
 
     QList<X11WindowedOutput *> m_outputs;
     QHash<int, xcb_render_pictformat_t> m_pictureFormats;
+    RenderBackend *m_renderBackend = nullptr;
 };
 
 } // namespace KWin

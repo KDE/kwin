@@ -164,6 +164,7 @@ void X11WindowedEglCursorLayer::releaseBuffers()
 X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
     : m_backend(backend)
 {
+    m_backend->setRenderBackend(this);
 }
 
 X11WindowedEglBackend::~X11WindowedEglBackend()
@@ -173,6 +174,8 @@ X11WindowedEglBackend::~X11WindowedEglBackend()
         static_cast<X11WindowedOutput *>(output)->setOutputLayers({});
     }
     cleanup();
+
+    m_backend->setRenderBackend(nullptr);
 }
 
 X11WindowedBackend *X11WindowedEglBackend::backend() const

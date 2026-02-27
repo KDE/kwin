@@ -128,6 +128,8 @@ X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backe
     , m_backend(backend)
     , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
+    m_backend->setRenderBackend(this);
+
     const auto outputs = m_backend->outputs();
     for (BackendOutput *output : outputs) {
         addOutput(output);
@@ -142,6 +144,8 @@ X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
     for (BackendOutput *output : outputs) {
         static_cast<X11WindowedOutput *>(output)->setOutputLayers({});
     }
+
+    m_backend->setRenderBackend(nullptr);
 }
 
 void X11WindowedQPainterBackend::addOutput(BackendOutput *output)

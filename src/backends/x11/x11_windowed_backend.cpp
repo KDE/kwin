@@ -796,6 +796,16 @@ RenderDevice *X11WindowedBackend::renderDevice() const
     return m_renderDevice.get();
 }
 
+RenderBackend *X11WindowedBackend::renderBackend() const
+{
+    return m_renderBackend;
+}
+
+void X11WindowedBackend::setRenderBackend(RenderBackend *backend)
+{
+    m_renderBackend = backend;
+}
+
 } // namespace KWin
 
 #include "moc_x11_windowed_backend.cpp"
