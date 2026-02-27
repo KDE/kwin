@@ -348,6 +348,10 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 {
     Q_ASSERT(m_client == XCB_WINDOW_NONE);
 
+    kwinApp()->x11AsyncRoundtrip(this, []() {
+        qDebug() << "async roundtrip has been performed successfully";
+    });
+
     StackingUpdatesBlocker stacking_blocker(workspace());
 
     Xcb::WindowAttributes attr(w);
