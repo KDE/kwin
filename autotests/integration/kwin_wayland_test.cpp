@@ -208,13 +208,12 @@ void WaylandTestApplication::performStartup()
     createVirtualInputDevices();
     createTabletModeManager();
 
-    auto compositor = Compositor::create();
-    compositor->createRenderer();
     createWorkspace();
     createScene();
-    createPlugins();
-
+    auto compositor = Compositor::create();
     compositor->start();
+
+    createPlugins();
 
     waylandServer()->initWorkspace();
 

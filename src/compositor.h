@@ -71,8 +71,6 @@ public:
         return m_backend.get();
     }
 
-    void createRenderer();
-
 Q_SIGNALS:
     void compositingToggled(bool active);
     void aboutToDestroy();

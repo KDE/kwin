@@ -187,8 +187,18 @@ bool Compositor::attemptQPainterCompositing()
     return true;
 }
 
-void Compositor::createRenderer()
+void Compositor::start()
 {
+    if (kwinApp()->isTerminating()) {
+        return;
+    }
+    if (m_state != State::Off) {
+        return;
+    }
+
+    Q_EMIT aboutToToggleCompositing();
+    m_state = State::Starting;
+
     // If compositing has been restarted, try to use the last used compositing type.
     const QList<CompositingType> availableCompositors = kwinApp()->outputBackend()->supportedCompositors();
     QList<CompositingType> candidateCompositors;
@@ -230,23 +240,6 @@ void Compositor::createRenderer()
             qCCritical(KWIN_CORE) << "Could not fulfill the requested compositing mode in KWIN_COMPOSE:" << type << ". Exiting.";
             qApp->quit();
         }
-    }
-}
-
-void Compositor::start()
-{
-    if (kwinApp()->isTerminating()) {
-        return;
-    }
-    if (m_state != State::Off) {
-        return;
-    }
-
-    Q_EMIT aboutToToggleCompositing();
-    m_state = State::Starting;
-
-    if (!m_backend) {
-        createRenderer();
     }
 
     if (!m_backend) {

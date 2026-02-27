@@ -141,13 +141,12 @@ void ApplicationWayland::performStartup()
     createInputMethod();
     createTabletModeManager();
 
-    auto compositor = Compositor::create();
-    compositor->createRenderer();
     createWorkspace();
     createScene();
-    createPlugins();
-
+    auto compositor = Compositor::create();
     compositor->start();
+
+    createPlugins();
 
     // Note that we start accepting client connections after creating the Workspace.
     if (!waylandServer()->start()) {
