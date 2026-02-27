@@ -16,6 +16,7 @@
 #include <QTimer>
 // Wayland
 #include "qwayland-server-wayland.h"
+#include "xdgdbusannotation_v1.h"
 // C++
 #include <deque>
 #include <optional>
@@ -148,6 +149,7 @@ public:
     void setSlide(const QPointer<SlideInterface> &slide);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
     void removeIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
+    void installDBusAnnotation(XdgDBusAnnotationV1 *annotation);
     void recursivelyEmitIdleInhibitChanged();
 
     RectF computeBufferSourceBox() const;
@@ -214,6 +216,7 @@ public:
     ExtBlurSurfaceV1 *extBlur = nullptr;
     ExtBackgroundEffectSurfaceV1 *extBackgroundeffect = nullptr;
     QTimer fifoFallbackTimer;
+    QList<XdgDBusAnnotationV1 *> dbusAnnotations;
 
     struct
     {
