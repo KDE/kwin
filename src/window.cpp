@@ -38,6 +38,7 @@
 #include "wayland/output.h"
 #include "wayland/plasmawindowmanagement.h"
 #include "wayland/surface.h"
+#include "wayland/xdgdbusannotation_v1.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -4724,6 +4725,11 @@ void Window::setExcludeFromCapture(bool newExcludeFromCapture)
     }
 
     Q_EMIT excludeFromCaptureChanged();
+}
+
+void Window::installDBusAnnotation(XdgDBusAnnotationV1 *annotation)
+{
+    m_dbusAnnotations << annotation;
 }
 
 } // namespace KWin

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="xdg_dbus_annotation_v1">
+  <copyright><![CDATA[
+    Copyright © 2017 David Edmundson
+    Copyrihgt © 2023 Janet Blackquill
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice (including the next
+    paragraph) shall be included in all copies or substantial portions of the
+    Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+  ]]></copyright>
+
+  <description summary="Wayland protocol for associating D-Bus objects with annotation targets">
+    This description provides a high-level overview of the interplay between
+    the interfaces defined in this protocol. For details, see the protocol
+    specification.
+
+    The dbus_annotation_manager allows a client to request the creation of an annotation
+    object associated with an wl_surface or itself. The annotation object allows a client to
+    notify the compositor of a D-Bus object associated with itself.
+
+    Clients should request the creation of an dbus_annotation object when they create a
+    D-Bus object associated with an wl_surface or themselves, and should release the object when they
+    destroy a D-Bus object associated with their wl_surface or themselves.
+
+    wl_surface objects are annotation targets, as is the client itself.
+    Different annotation targets can have annotations requested
+    using the annotate_client or annotate_surface requests.
+
+    Each annotation target can only have one annotation with a given interface name.
+    The already_annotated protocol error will be raised if the client requests more than
+    one dbus_annotation object with a given interface name for an annotation target.
+  </description>
+
+  <interface name="xdg_dbus_annotation_manager_v1" version="1">
+    <description summary="controller object for registering dbus objects associated with wl_surfaces or clients">
+      An object that provides access to the creation of dbus_annotation objects.
+    </description>
+
+    <request name="destroy" type="destructor">
+      <description summary="release the memory for the application menu manager object">
+        Destroy the xdg_dbus_annotation_manager object. xdg_dbus_annotation objects created from this
+        object remain valid and should be destroyed separately.
+      </description>
+    </request>
+
+    <request name="annotate_client">
+      <description summary="create client annotation">
+        Creates an annotation associated with the client
+      </description>
+      <arg name="interface" type="string">
+        <description summary="identifies what kind of dbus object this is expected to be">
+          The interface other D-Bus clients can expect the object specified by the
+          annotation to implement.
+        </description>
+      </arg>
+      <arg name="id" type="new_id" interface="xdg_dbus_annotation_v1"/>
+    </request>
+
+    <request name="annotate_surface">
+      <description summary="create surface annotation">
+        Creates an annotation associated with a given wl_surface
+      </description>
+      <arg name="interface" type="string">
+        <description summary="identifies what kind of dbus object this is expected to be">
+          The interface other D-Bus clients can expect the object specified by the
+          annotation to implement.
+        </description>
+      </arg>
+      <arg name="id" type="new_id" interface="xdg_dbus_annotation_v1"/>
+      <arg name="surface" type="object" interface="wl_surface">
+        <description summary="the surface to annotate">
+          The surface to associate the annotation with
+        </description>
+      </arg>
+    </request>
+
+    <enum name="error">
+      <entry name="already_annotated" value="0" summary="given wl_surface or client already has a dbus_annotation with the same interface"/>
+    </enum>
+  </interface>
+
+  <interface name="xdg_dbus_annotation_v1" version="1">
+    <description summary="controller object for associating dbus objects with an wl_surface">
+      An object that provides access to clients to notify the compositor of
+      associated D-Bus objects for an wl_surface.
+
+      If not applicable, clients should remove this object.
+    </description>
+
+    <request name="destroy" type="destructor">
+      <description summary="release the dbus annotation object"/>
+    </request>
+
+    <request name="set_service">
+      <description summary="notify the compositor of a dbus object's service">
+        Set or update the pending service name corresponding to the
+        D-Bus object.
+
+        Strings should be formatted according to the relevant D-Bus specifications.
+      </description>
+      <arg name="service_name" type="string" summary="the dbus service name of a dbus object"/>
+    </request>
+
+    <request name="set_object_path">
+      <description summary="notify the compositor of a dbus object's object path">
+        Set or update the pending object path corresponding to the
+        D-Bus object.
+
+        Strings should be formatted according to the relevant D-Bus specifications.
+      </description>
+      <arg name="object_path" type="string" summary="the dbus object path of a dbus object"/>
+    </request>
+  </interface>
+</protocol>

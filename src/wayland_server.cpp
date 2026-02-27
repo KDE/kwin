@@ -80,6 +80,7 @@
 #include "wayland/tearingcontrol_v1.h"
 #include "wayland/viewporter.h"
 #include "wayland/xdgactivation_v1.h"
+#include "wayland/xdgdbusannotation_v1.h"
 #include "wayland/xdgdecoration_v1.h"
 #include "wayland/xdgdialog_v1.h"
 #include "wayland/xdgforeign_v2.h"
@@ -407,6 +408,14 @@ bool WaylandServer::init()
     m_dataDeviceManager = new DataDeviceManagerInterface(m_display, m_display);
     new DataControlDeviceManagerV1Interface(m_display, m_display);
     new CursorShapeManagerV1Interface(m_display, m_display);
+
+    auto dbusAnnotationManager = new XdgDBusAnnotationManagerV1(m_display, m_display);
+
+    connect(dbusAnnotationManager, &XdgDBusAnnotationManagerV1::annotationCreated, this, [this](XdgDBusAnnotationV1 *annotation) {
+        if (auto window = findWindow(annotation->surface())) {
+            window->installDBusAnnotation(annotation);
+        }
+    });
 
     const auto kwinConfig = kwinApp()->config();
     if (kwinConfig->group(QStringLiteral("Wayland")).readEntry("EnablePrimarySelection", true)) {
