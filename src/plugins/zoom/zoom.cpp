@@ -274,22 +274,40 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
 
     const QSize screenSize = effects->virtualScreenSize();
 
+    QPoint trackPoint = m_cursorPoint;
+
+    // use the focusPoint if focus tracking is enabled
+    if (m_focusPoint) {
+        bool acceptFocus = true;
+        if (m_mouseTracking != MouseTrackingDisabled && m_focusDelay > 0) {
+            // Wait some time for the mouse before doing the switch. This serves as threshold
+            // to prevent the focus from jumping around to much while working with the mouse.
+            acceptFocus = m_lastMouseEvent.isNull() || m_lastMouseEvent.msecsTo(m_lastFocusEvent) > m_focusDelay;
+        }
+        if (acceptFocus) {
+            trackPoint = *m_focusPoint;
+            if (m_mouseTracking == MouseTrackingDisabled) {
+                m_prevPoint = trackPoint;
+            }
+        }
+    }
+
     // mouse-tracking allows navigation of the zoom-area using the mouse.
     switch (m_mouseTracking) {
     case MouseTrackingProportional:
-        m_xTranslation = -int(m_cursorPoint.x() * (m_zoom - 1.0));
-        m_yTranslation = -int(m_cursorPoint.y() * (m_zoom - 1.0));
+        m_xTranslation = -int(trackPoint.x() * (m_zoom - 1.0));
+        m_yTranslation = -int(trackPoint.y() * (m_zoom - 1.0));
         m_prevPoint = m_cursorPoint;
         break;
     case MouseTrackingCentered:
         m_prevPoint = m_cursorPoint;
-        m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - m_prevPoint.x() * m_zoom)));
-        m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - m_prevPoint.y() * m_zoom)));
+        m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - trackPoint.x() * m_zoom)));
+        m_yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * m_zoom), int(screenSize.height() / 2 - trackPoint.y() * m_zoom)));
         break;
     case MouseTrackingCenteredStrict:
         m_prevPoint = m_cursorPoint;
-        m_xTranslation = int(screenSize.width() / 2 - m_prevPoint.x() * m_zoom);
-        m_yTranslation = int(screenSize.height() / 2 - m_prevPoint.y() * m_zoom);
+        m_xTranslation = int(screenSize.width() / 2 - trackPoint.x() * m_zoom);
+        m_yTranslation = int(screenSize.height() / 2 - trackPoint.y() * m_zoom);
         break;
     case MouseTrackingDisabled:
         m_xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * m_zoom), int(screenSize.width() / 2 - m_prevPoint.x() * m_zoom)));
@@ -297,8 +315,8 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         break;
     case MouseTrackingPush: {
         // touching an edge of the screen moves the zoom-area in that direction.
-        const int x = m_cursorPoint.x() * m_zoom - m_prevPoint.x() * (m_zoom - 1.0);
-        const int y = m_cursorPoint.y() * m_zoom - m_prevPoint.y() * (m_zoom - 1.0);
+        const int x = trackPoint.x() * m_zoom - m_prevPoint.x() * (m_zoom - 1.0);
+        const int y = trackPoint.y() * m_zoom - m_prevPoint.y() * (m_zoom - 1.0);
         const int threshold = 4;
         const RectF currScreen = effects->screenAt(QPoint(x, y))->geometry();
 
@@ -338,21 +356,6 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         m_yTranslation = -int(m_prevPoint.y() * (m_zoom - 1.0));
         break;
     }
-    }
-
-    // use the focusPoint if focus tracking is enabled
-    if (m_focusPoint) {
-        bool acceptFocus = true;
-        if (m_mouseTracking != MouseTrackingDisabled && m_focusDelay > 0) {
-            // Wait some time for the mouse before doing the switch. This serves as threshold
-            // to prevent the focus from jumping around to much while working with the mouse.
-            acceptFocus = m_lastMouseEvent.isNull() || m_lastMouseEvent.msecsTo(m_lastFocusEvent) > m_focusDelay;
-        }
-        if (acceptFocus) {
-            m_xTranslation = -int(m_focusPoint->x() * (m_zoom - 1.0));
-            m_yTranslation = -int(m_focusPoint->y() * (m_zoom - 1.0));
-            m_prevPoint = *m_focusPoint;
-        }
     }
 
     if (m_cursorItem) {
