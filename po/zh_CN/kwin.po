@@ -148,10 +148,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "ICC 色彩特性文件缺少 TRC 标签"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "打开 ICC 色彩特性文件“%1”失败"
+msgstr ""
 
 #: debug_console.cpp:86
 #, kde-format
