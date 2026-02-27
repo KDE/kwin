@@ -150,6 +150,7 @@ WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     , m_backend(b)
     , m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {
+    m_backend->setRenderBackend(this);
     const auto waylandOutputs = m_backend->waylandOutputs();
     for (auto *output : waylandOutputs) {
         createOutput(output);
@@ -163,6 +164,7 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
     for (auto *output : waylandOutputs) {
         output->setOutputLayers({});
     }
+    m_backend->setRenderBackend(nullptr);
 }
 
 void WaylandQPainterBackend::createOutput(BackendOutput *output)

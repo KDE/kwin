@@ -8,10 +8,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_backend.h"
-#include "compositor.h"
 #include "core/drmdevice.h"
 #include "core/renderdevice.h"
-#include "input.h"
 #include "wayland-client/linuxdmabuf.h"
 #include "wayland_display.h"
 #include "wayland_egl_backend.h"
@@ -514,7 +512,7 @@ std::unique_ptr<QPainterBackend> WaylandBackend::createQPainterBackend()
 WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurface) const
 {
     for (WaylandOutput *output : m_outputs) {
-        const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
+        const auto layers = m_renderBackend->compatibleOutputLayers(output);
         const bool isALayer = std::ranges::any_of(layers, [nativeSurface](OutputLayer *layer) {
             if (layer->type() == OutputLayerType::CursorOnly) {
                 return false;
@@ -534,7 +532,7 @@ WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurfa
 KWayland::Client::SubSurface *WaylandBackend::findSubSurface(KWayland::Client::Surface *nativeSurface) const
 {
     for (WaylandOutput *output : m_outputs) {
-        const auto layers = Compositor::self()->backend()->compatibleOutputLayers(output);
+        const auto layers = m_renderBackend->compatibleOutputLayers(output);
         const auto it = std::ranges::find_if(layers, [nativeSurface](OutputLayer *layer) {
             // cursor-only layers are a different class
             // and can't be a subsurface
@@ -682,6 +680,16 @@ DrmDevice *WaylandBackend::drmDevice() const
 RenderDevice *WaylandBackend::renderDevice() const
 {
     return m_renderDevice.get();
+}
+
+RenderBackend *WaylandBackend::renderBackend() const
+{
+    return m_renderBackend;
+}
+
+void WaylandBackend::setRenderBackend(RenderBackend *backend)
+{
+    m_renderBackend = backend;
 }
 
 WaylandBuffer::WaylandBuffer(wl_buffer *handle, GraphicsBuffer *graphicsBuffer)

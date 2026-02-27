@@ -47,6 +47,7 @@ namespace KWin
 {
 class GraphicsBuffer;
 class DrmDevice;
+class RenderBackend;
 class RenderDevice;
 
 namespace Wayland
@@ -243,10 +244,9 @@ public:
 
     DrmDevice *drmDevice() const;
 
-    void setEglBackend(WaylandEglBackend *eglBackend)
-    {
-        m_eglBackend = eglBackend;
-    }
+    RenderBackend *renderBackend() const;
+    void setRenderBackend(RenderBackend *backend);
+
     EglDisplay *sceneEglDisplayObject() const override;
     RenderDevice *renderDevice() const;
 
@@ -261,7 +261,7 @@ private:
     WaylandBackendOptions m_options;
     std::unique_ptr<WaylandDisplay> m_display;
     std::unique_ptr<WaylandSeat> m_seat;
-    WaylandEglBackend *m_eglBackend = nullptr;
+    RenderBackend *m_renderBackend = nullptr;
     QList<WaylandOutput *> m_outputs;
     bool m_pointerLockRequested = false;
     std::unique_ptr<RenderDevice> m_renderDevice;

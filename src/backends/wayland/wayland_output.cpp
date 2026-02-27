@@ -8,7 +8,6 @@
 */
 #include "wayland_output.h"
 #include "color_manager.h"
-#include "compositor.h"
 #include "core/outputconfiguration.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
@@ -260,7 +259,7 @@ const wl_callback_listener WaylandOutput::s_frameCallbackListener{
 
 bool WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 {
-    auto cursorLayers = Compositor::self()->backend()->compatibleOutputLayers(this) | std::views::filter([](OutputLayer *layer) {
+    auto cursorLayers = m_backend->renderBackend()->compatibleOutputLayers(this) | std::views::filter([](OutputLayer *layer) {
         return layer->type() == OutputLayerType::CursorOnly;
     });
     if (m_hasPointerLock && std::ranges::any_of(cursorLayers, &OutputLayer::isEnabled)) {

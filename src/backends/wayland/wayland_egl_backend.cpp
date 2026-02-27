@@ -232,7 +232,7 @@ WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
 {
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createOutputLayers);
 
-    b->setEglBackend(this);
+    b->setRenderBackend(this);
 }
 
 WaylandEglBackend::~WaylandEglBackend()
