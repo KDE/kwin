@@ -60,7 +60,7 @@ public:
     };
     Modifiers modifiers;
 
-    bool updateKey(quint32 key, KeyboardKeyState state);
+    void updateKeyState(quint32 key, KeyboardKeyState state);
 
 protected:
     void keyboard_release(Resource *resource) override;

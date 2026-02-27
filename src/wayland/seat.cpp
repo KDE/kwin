@@ -896,6 +896,14 @@ KeyboardInterface *SeatInterface::keyboard() const
     return d->keyboard.get();
 }
 
+void SeatInterface::updateKeyState(quint32 keyCode, KeyboardKeyState state)
+{
+    if (!d->keyboard) {
+        return;
+    }
+    d->keyboard->updateKeyState(keyCode, state);
+}
+
 void SeatInterface::notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state, uint32_t serial)
 {
     if (!d->keyboard) {

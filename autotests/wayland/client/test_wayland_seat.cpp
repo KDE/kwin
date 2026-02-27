@@ -1437,22 +1437,21 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyChangedSpy.at(4).at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Released);
     QCOMPARE(keyChangedSpy.at(4).at(2).value<quint32>(), quint32(5));
 
-    // releasing a key which is already released should not set a key changed
     m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released, m_display->nextSerial());
     QVERIFY(sync());
-    QCOMPARE(keyChangedSpy.count(), 5);
+    QCOMPARE(keyChangedSpy.count(), 6);
     // let's press it again
     m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed, m_display->nextSerial());
     QVERIFY(keyChangedSpy.wait());
-    QCOMPARE(keyChangedSpy.count(), 6);
+    QCOMPARE(keyChangedSpy.count(), 7);
     // press again should be ignored
     m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed, m_display->nextSerial());
     QVERIFY(sync());
-    QCOMPARE(keyChangedSpy.count(), 6);
+    QCOMPARE(keyChangedSpy.count(), 8);
     // and release
     m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released, m_display->nextSerial());
     QVERIFY(keyChangedSpy.wait());
-    QCOMPARE(keyChangedSpy.count(), 7);
+    QCOMPARE(keyChangedSpy.count(), 9);
 
     m_seatInterface->notifyKeyboardModifiers(1, 2, 3, 4);
     QVERIFY(modifierSpy.wait());

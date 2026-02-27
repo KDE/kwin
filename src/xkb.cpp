@@ -792,6 +792,9 @@ void Xkb::updateKey(uint32_t key, KeyboardKeyState state)
     } else {
         m_keysym = sym;
     }
+    if (m_seat) {
+        m_seat->updateKeyState(key, state);
+    }
     updateModifiers();
     updateConsumedModifiers(key);
 }
