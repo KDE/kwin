@@ -150,7 +150,7 @@ msgstr "ICC 色彩特性文件缺少 TRC 标签"
 #: core/iccprofile.cpp:534
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr ""
+msgstr "无法反转 ICC 特性文件“%1”的阶调曲线曲线"
 
 #: debug_console.cpp:86
 #, kde-format
