@@ -223,6 +223,14 @@ QVariantMap A11yManager::QueryPointer(double &rel_x, double &rel_y)
         {"pid", window->pid()},
     };
 
+    if (!window->a11yService().isEmpty()) {
+        data["app-dbus-name"] = window->a11yService();
+    }
+
+    if (!window->a11yPath().isEmpty()) {
+        data["toplevel-object-path"] = QDBusObjectPath(window->a11yPath());
+    }
+
     return data;
 }
 
