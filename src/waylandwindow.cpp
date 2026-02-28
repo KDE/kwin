@@ -51,9 +51,17 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
     const auto annots = surface->dbusAnnotations();
     for (auto annotation : annots) {
         m_dbusAnnotations << annotation;
+        if (annotation->interface() == QLatin1StringView("org.a11y.atspi.Accessible")) {
+            connect(annotation, &XdgDBusAnnotationV1::updated, this, &Window::a11yServiceChanged);
+            connect(annotation, &XdgDBusAnnotationV1::updated, this, &Window::a11yPathChanged);
+        }
     }
     connect(surface, &SurfaceInterface::dbusAnnotationAdded, this, [this](XdgDBusAnnotationV1 *annotation) {
         m_dbusAnnotations << annotation;
+        if (annotation->interface() == QLatin1StringView("org.a11y.atspi.Accessible")) {
+            connect(annotation, &XdgDBusAnnotationV1::updated, this, &Window::a11yServiceChanged);
+            connect(annotation, &XdgDBusAnnotationV1::updated, this, &Window::a11yPathChanged);
+        }
     });
 }
 

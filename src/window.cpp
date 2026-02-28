@@ -4721,6 +4721,28 @@ void Window::setExcludeFromCapture(bool newExcludeFromCapture)
     Q_EMIT excludeFromCaptureChanged();
 }
 
+QString Window::a11yService() const
+{
+    for (const auto annotation : std::as_const(m_dbusAnnotations)) {
+        if (annotation->interface() == QLatin1StringView("org.a11y.atspi.Accessible")) {
+            return annotation->service();
+        }
+    }
+
+    return QString();
+}
+
+QString Window::a11yPath() const
+{
+    for (const auto annotation : std::as_const(m_dbusAnnotations)) {
+        if (annotation->interface() == QLatin1StringView("org.a11y.atspi.Accessible")) {
+            return annotation->objectPath();
+        }
+    }
+
+    return QString();
+}
+
 } // namespace KWin
 
 #include "moc_window.cpp"

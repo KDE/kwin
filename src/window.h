@@ -619,6 +619,9 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(bool excludeFromCapture READ excludeFromCapture WRITE setExcludeFromCapture NOTIFY excludeFromCaptureChanged FINAL)
 
+    Q_PROPERTY(QString a11yService READ a11yService NOTIFY a11yServiceChanged)
+
+    Q_PROPERTY(QString a11yPath READ a11yPath NOTIFY a11yPathChanged)
 public:
     ~Window() override;
 
@@ -1418,6 +1421,10 @@ public:
     bool excludeFromCapture() const;
     void setExcludeFromCapture(bool newExcludeFromCapture);
 
+    QString a11yService() const;
+
+    QString a11yPath() const;
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1535,6 +1542,8 @@ Q_SIGNALS:
     void borderRadiusChanged();
     void excludeFromCaptureChanged();
     void decorationPolicyChanged();
+    void a11yServiceChanged();
+    void a11yPathChanged();
 
 protected:
     Window();
