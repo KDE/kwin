@@ -4727,9 +4727,36 @@ void Window::setExcludeFromCapture(bool newExcludeFromCapture)
     Q_EMIT excludeFromCaptureChanged();
 }
 
+QString Window::a11yService() const
+{
+    for (const auto annotation : std::as_const(m_dbusAnnotations)) {
+        if (annotation->interface() == QLatin1StringView("org.a11y.atspi.Accessible")) {
+            return annotation->service();
+        }
+    }
+
+    return QString();
+}
+
+QString Window::a11yPath() const
+{
+    for (const auto annotation : std::as_const(m_dbusAnnotations)) {
+        if (annotation->interface() == QLatin1StringView("org.a11y.atspi.Accessible")) {
+            return annotation->objectPath();
+        }
+    }
+
+    return QString();
+}
+
 void Window::installDBusAnnotation(XdgDBusAnnotationV1 *annotation)
 {
     m_dbusAnnotations << annotation;
+
+    if (annotation->interface() == QLatin1StringView("org.a11y.atspi.Accessible")) {
+        connect(annotation, &XdgDBusAnnotationV1::updated, this, &Window::a11yServiceChanged);
+        connect(annotation, &XdgDBusAnnotationV1::updated, this, &Window::a11yPathChanged);
+    }
 }
 
 } // namespace KWin
