@@ -137,7 +137,7 @@ void GameController::logEvent(input_event *ev)
         return;
     }
 
-    const qint64 timestamp = ev->time.tv_sec * 1000 + ev->time.tv_usec / 1000;
+    const qint64 timestamp = ev->input_event_sec * 1000 + ev->input_event_usec / 1000;
 
     if (ev->type == EV_SYN) {
         qCDebug(KWIN_GAMECONTROLLER) << "Device:" << libevdev_get_name(m_evdev.get()) << "time(ms):" << timestamp << "Event: -------------- SYN_REPORT ------------";
