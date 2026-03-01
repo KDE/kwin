@@ -74,7 +74,7 @@ void EmulatedInputDevice::emulateInputDevice(input_event &ev)
 void EmulatedInputDevice::evkeyMapping(input_event *ev)
 {
     KeyboardKeyState state = ev->value ? KWin::KeyboardKeyState::Pressed : KWin::KeyboardKeyState::Released;
-    const std::chrono::microseconds time = std::chrono::seconds(ev->time.tv_sec) + std::chrono::microseconds(ev->time.tv_usec);
+    const std::chrono::microseconds time = std::chrono::seconds(ev->input_event_sec) + std::chrono::microseconds(ev->input_event_usec);
 
     switch (ev->code) {
     case BTN_SOUTH: // A button → Enter
@@ -116,7 +116,7 @@ void EmulatedInputDevice::evabsMapping(input_event *ev)
     const int maximumValue = libevdev_get_abs_maximum(m_device, ev->code);
     const PointerButtonState pointerState = maximumValue > 0 && ev->value >= maximumValue * 0.9 ? KWin::PointerButtonState::Pressed : KWin::PointerButtonState::Released;
     KeyboardKeyState keyState = ev->value ? KWin::KeyboardKeyState::Pressed : KWin::KeyboardKeyState::Released;
-    const std::chrono::microseconds time = std::chrono::seconds(ev->time.tv_sec) + std::chrono::microseconds(ev->time.tv_usec);
+    const std::chrono::microseconds time = std::chrono::seconds(ev->input_event_sec) + std::chrono::microseconds(ev->input_event_usec);
 
     switch (ev->code) {
     // analog triggers
