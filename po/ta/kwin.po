@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-24 02:42+0000\n"
-"PO-Revision-Date: 2026-01-04 17:13+0530\n"
+"PO-Revision-Date: 2026-02-28 12:04+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.12.0\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -51,12 +51,12 @@ msgstr "கே.டீ.யீ. Wayland சாளரநிரல் %1"
 #: backends/wayland/wayland_output.cpp:490
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- வெளியீடு முடக்கப்பட்டுள்ளது"
 
 #: backends/wayland/wayland_output.cpp:492
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- வெளியீடு மங்கலாக்கப்பட்டுள்ளது"
 
 #: backends/x11/x11_windowed_backend.cpp:497
 #, kde-format
@@ -166,10 +166,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "நிறப்பயன்முறையில் TRC குறிச்சொற்களை காணவில்லை."
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "\"%1\" எனும் ICC பயன்முறையை திறக்க முடியவில்லை"
+msgstr "\"%1\" எனும் ICC பயன்முறையிலுள்ள tone curve தனை புரட்ட முடியவில்லை"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1336,11 +1335,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "இச்செயலி, நேரடியாக இயக்கப்படக்கூடாத‍து."
 
 #: helpers/killer/killer.cpp:195
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><emphasis strong='true'>Terminating this application will close all "
-#| "of its windows. Any unsaved data will be lost.</emphasis></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
@@ -1348,8 +1343,9 @@ msgid ""
 "this application will close all of its windows. Any unsaved data will be "
 "lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>இந்த செயலியை கட்டாயப்படுத்தி மூடுவது, அதன் அனைத்து "
-"சாளரங்களையும் மூடும். சேமிக்காதவற்றை இழப்பீர்.</emphasis></para>"
+"<para><application>%1</application> பதிலளிக்கவில்லை. இச்செயலியைக் கட்டாயமாக "
+"நிறுத்த வேண்டுமா?<emphasis strong='true'>இந்த செயலியை கட்டாயப்படுத்தி மூடுவது, அதன் "
+"அனைத்து சாளரங்களையும் மூடும். சேமிக்காதவற்றை இழப்பீர்.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:199
 #, kde-kuit-format
@@ -3037,10 +3033,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
-#, fuzzy, kde-format
-#| msgid "Window Manager"
+#, kde-format
 msgid "Window tag"
-msgstr "சாளர மேலாளர்"
+msgstr "சாளர குறிச்சொல்"
 
 #. i18n: ectx: label, entry (tagmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:71

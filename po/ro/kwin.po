@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-24 02:42+0000\n"
-"PO-Revision-Date: 2026-02-08 18:31+0000\n"
+"PO-Revision-Date: 2026-02-28 22:52+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Lokalize 25.08.1\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -159,10 +159,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Profilul de culoare nu conține marcaje TRC"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Eșec la deschiderea profilului ICC „%1”"
+msgstr "Inversarea curbelor de tonalitate ale profilului ICC „%1” a eșuat"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -3605,8 +3604,8 @@ msgid ""
 "the mouse: use the window menu instead, activated using the %1 keyboard "
 "shortcut."
 msgstr ""
-"Ați optat pentru afișarea ferestrei fără chenar.\n"
-"Fără chenar nu veți mai putea să activați chenarul din nou folosind mausul. "
+"Ați optat pentru afișarea ferestrei fără contur.\n"
+"Fără contur nu veți mai putea să activați conturul din nou folosind mausul. "
 "Folosiți în schimb meniul ferestrei, activat prin combinația de taste %1."
 
 #: useractions.cpp:169
