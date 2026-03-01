@@ -1,4 +1,5 @@
 # Translation of kwin into Japanese.
+# SPDX-FileCopyrightText: 2026 Mint <5602mint@gmail.com>
 # This file is distributed under the same license as the kdebase package.
 # Noboru Sinohara <shinobo@leo.bekkoame.ne.jp>, 2002.
 # Ryuichi Kakuda <ryuk@user.script.nu>, 2004.
@@ -14,9 +15,9 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-28 00:46+0000\n"
-"PO-Revision-Date: 2021-10-03 17:31-0700\n"
-"Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
-"Language-Team: Japanese <kde-jp@kde.org>\n"
+"PO-Revision-Date: 2026-02-23 16:22+0900\n"
+"Last-Translator: Mint <5602mint@gmail.com>\n"
+"Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,20 +25,21 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-"Taiki Komoda,Noboru Sinohara,Ryuichi Kakuda, Fumiaki Okushi,Shinichi Tsunoda"
+"Taiki Komoda,Noboru Sinohara,Ryuichi Kakuda, Fumiaki Okushi,Shinichi Tsunoda,"
+"Mint"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 "kom@kde.gr.jp,shinobo@leo.bekkoame.ne.jp,ryuk@user.script.nu,okushi@kde.gr."
-"jp,tsuno@ngy.1st.ne.jp"
+"jp,tsuno@ngy.1st.ne.jp,5602mint@gmail.com"
 
 #: backends/wayland/wayland_output.cpp:481
 #, kde-format
@@ -167,269 +169,269 @@ msgstr ""
 #: debug_console.cpp:86
 #, kde-format
 msgid "Timestamp"
-msgstr ""
+msgstr "タイムスタンプ"
 
 #: debug_console.cpp:91
 #, kde-format
 msgid "Timestamp (µsec)"
-msgstr ""
+msgstr "タイムスタンプ (マイクロ秒)"
 
 #: debug_console.cpp:98
 #, kde-format
 msgctxt "A mouse button"
 msgid "Left"
-msgstr ""
+msgstr "左"
 
 #: debug_console.cpp:100
 #, kde-format
 msgctxt "A mouse button"
 msgid "Right"
-msgstr ""
+msgstr "右"
 
 #: debug_console.cpp:102
 #, kde-format
 msgctxt "A mouse button"
 msgid "Middle"
-msgstr ""
+msgstr "中ボタン"
 
 #: debug_console.cpp:104
 #, kde-format
 msgctxt "A mouse button"
 msgid "Back"
-msgstr ""
+msgstr "戻る"
 
 #: debug_console.cpp:106
 #, kde-format
 msgctxt "A mouse button"
 msgid "Forward"
-msgstr ""
+msgstr "進む"
 
 #: debug_console.cpp:108
 #, kde-format
 msgctxt "A mouse button"
 msgid "Task"
-msgstr ""
+msgstr "タスク"
 
 #: debug_console.cpp:110
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 4"
-msgstr ""
+msgstr "追加ボタン 4"
 
 #: debug_console.cpp:112
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 5"
-msgstr ""
+msgstr "追加ボタン 5"
 
 #: debug_console.cpp:114
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 6"
-msgstr ""
+msgstr "追加ボタン 6"
 
 #: debug_console.cpp:116
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 7"
-msgstr ""
+msgstr "追加ボタン 7"
 
 #: debug_console.cpp:118
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 8"
-msgstr ""
+msgstr "追加ボタン 8"
 
 #: debug_console.cpp:120
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 9"
-msgstr ""
+msgstr "追加ボタン 9"
 
 #: debug_console.cpp:122
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 10"
-msgstr ""
+msgstr "追加ボタン 10"
 
 #: debug_console.cpp:124
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 11"
-msgstr ""
+msgstr "追加ボタン 11"
 
 #: debug_console.cpp:126
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 12"
-msgstr ""
+msgstr "追加ボタン 12"
 
 #: debug_console.cpp:128
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 13"
-msgstr ""
+msgstr "追加ボタン 13"
 
 #: debug_console.cpp:130
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 14"
-msgstr ""
+msgstr "追加ボタン 14"
 
 #: debug_console.cpp:132
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 15"
-msgstr ""
+msgstr "追加ボタン 15"
 
 #: debug_console.cpp:134
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 16"
-msgstr ""
+msgstr "追加ボタン 16"
 
 #: debug_console.cpp:136
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 17"
-msgstr ""
+msgstr "追加ボタン 17"
 
 #: debug_console.cpp:138
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 18"
-msgstr ""
+msgstr "追加ボタン 18"
 
 #: debug_console.cpp:140
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 19"
-msgstr ""
+msgstr "追加ボタン 19"
 
 #: debug_console.cpp:142
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 20"
-msgstr ""
+msgstr "追加ボタン 20"
 
 #: debug_console.cpp:144
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 21"
-msgstr ""
+msgstr "追加ボタン 21"
 
 #: debug_console.cpp:146
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 22"
-msgstr ""
+msgstr "追加ボタン 22"
 
 #: debug_console.cpp:148
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 23"
-msgstr ""
+msgstr "追加ボタン 23"
 
 #: debug_console.cpp:150
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 24"
-msgstr ""
+msgstr "追加ボタン 24"
 
 #: debug_console.cpp:159 debug_console.cpp:161
 #, kde-format
 msgid "Input Device"
-msgstr ""
+msgstr "入力デバイス"
 
 #: debug_console.cpp:159
 #, kde-format
 msgctxt "The input device of the event is not known"
 msgid "Unknown"
-msgstr ""
+msgstr "不明"
 
 #: debug_console.cpp:194
 #, kde-format
 msgctxt "A mouse pointer motion event"
 msgid "Pointer Motion"
-msgstr ""
+msgstr "ポインタ 移動"
 
 #: debug_console.cpp:199
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta"
-msgstr ""
+msgstr "デルタ"
 
 #: debug_console.cpp:203
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta (not accelerated)"
-msgstr ""
+msgstr "デルタ (加速なし)"
 
 #: debug_console.cpp:206
 #, kde-format
 msgctxt "The global mouse pointer position"
 msgid "Global Position"
-msgstr ""
+msgstr "絶対位置"
 
 #: debug_console.cpp:220
 #, kde-format
 msgctxt "A mouse pointer button press event"
 msgid "Pointer Button Press"
-msgstr ""
+msgstr "ポインタボタン 押下"
 
 #: debug_console.cpp:223 debug_console.cpp:230
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Button"
-msgstr ""
+msgstr "ボタン"
 
 #: debug_console.cpp:224 debug_console.cpp:231
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Native Button code"
-msgstr ""
+msgstr "ネイティブボタンコード"
 
 #: debug_console.cpp:225 debug_console.cpp:232
 #, kde-format
 msgctxt "All currently pressed buttons in a mouse press/release event"
 msgid "Pressed Buttons"
-msgstr ""
+msgstr "押下ボタン"
 
 #: debug_console.cpp:227
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
-msgstr ""
+msgstr "ポインタボタン リリース"
 
 #: debug_console.cpp:244
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
-msgstr ""
+msgstr "ポインタ 方向入力"
 
 #: debug_console.cpp:247
 #, kde-format
 msgctxt "The orientation of a pointer axis event"
 msgid "Orientation"
-msgstr ""
+msgstr "向き"
 
 #: debug_console.cpp:248
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Horizontal"
-msgstr ""
+msgstr "水平"
 
 #: debug_console.cpp:249
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Vertical"
-msgstr ""
+msgstr "垂直"
 
 #: debug_console.cpp:250
 #, kde-format
 msgctxt "The angle delta of a pointer axis event"
 msgid "Delta"
-msgstr ""
+msgstr "デルタ"
 
 #: debug_console.cpp:251
 #, kde-format
@@ -437,295 +439,293 @@ msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr ""
+msgstr "デルタ (V120)"
 
 #: debug_console.cpp:266
 #, kde-format
 msgctxt "A key press event"
 msgid "Key Press"
-msgstr ""
+msgstr "キー 押下"
 
 #: debug_console.cpp:269
 #, kde-format
 msgctxt "A key release event"
 msgid "Key Release"
-msgstr ""
+msgstr "キー リリース"
 
 #: debug_console.cpp:278
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
 #: debug_console.cpp:282
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Control"
-msgstr ""
+msgstr "Control"
 
 #: debug_console.cpp:286
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Alt"
-msgstr ""
+msgstr "Alt"
 
 #: debug_console.cpp:290
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Meta"
-msgstr ""
+msgstr "Meta"
 
 #: debug_console.cpp:294
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Keypad"
-msgstr ""
+msgstr "キーパッド"
 
 #: debug_console.cpp:298
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
-msgstr ""
+msgstr "グループ切り替え"
 
 #: debug_console.cpp:304
 #, kde-format
 msgctxt "Whether the event is an automatic key repeat"
 msgid "Repeat"
-msgstr ""
+msgstr "リピート"
 
 #: debug_console.cpp:308
 #, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr ""
+msgstr "キーコード"
 
 #: debug_console.cpp:309
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
-msgstr ""
+msgstr "Qt::Key コード"
 
 #: debug_console.cpp:310
 #, kde-format
 msgctxt "The translated code to an Xkb symbol"
 msgid "Xkb symbol"
-msgstr ""
+msgstr "Xkb シンボル"
 
 #: debug_console.cpp:311
 #, kde-format
 msgctxt "The translated code interpreted as text"
 msgid "Utf8"
-msgstr ""
+msgstr "Utf8"
 
 #: debug_console.cpp:312
 #, kde-format
 msgctxt "The currently active modifiers"
 msgid "Modifiers"
-msgstr ""
+msgstr "修飾子"
 
 #: debug_console.cpp:324
 #, kde-format
 msgctxt "A touch down event"
 msgid "Touch down"
-msgstr ""
+msgstr "タッチ 開始"
 
 #: debug_console.cpp:326 debug_console.cpp:341 debug_console.cpp:356
 #, kde-format
 msgctxt "The id of the touch point in the touch event"
 msgid "Point identifier"
-msgstr ""
+msgstr "ポイント識別子"
 
 #: debug_console.cpp:327 debug_console.cpp:342
 #, kde-format
 msgctxt "The global position of the touch point"
 msgid "Global position"
-msgstr ""
+msgstr "絶対位置"
 
 #: debug_console.cpp:339
 #, kde-format
 msgctxt "A touch motion event"
 msgid "Touch Motion"
-msgstr ""
+msgstr "タッチ 移動"
 
 #: debug_console.cpp:354
 #, kde-format
 msgctxt "A touch up event"
 msgid "Touch Up"
-msgstr ""
+msgstr "移動"
 
 #: debug_console.cpp:367
 #, kde-format
 msgctxt "A pinch gesture is started"
 msgid "Pinch start"
-msgstr ""
+msgstr "ピンチ 開始"
 
 #: debug_console.cpp:369
 #, kde-format
 msgctxt "Number of fingers in this pinch gesture"
 msgid "Finger count"
-msgstr ""
+msgstr "指カウント"
 
 #: debug_console.cpp:380
 #, kde-format
 msgctxt "A pinch gesture is updated"
 msgid "Pinch update"
-msgstr ""
+msgstr "ピンチ 更新"
 
 #: debug_console.cpp:382
 #, kde-format
 msgctxt "Current scale in pinch gesture"
 msgid "Scale"
-msgstr ""
+msgstr "スケール"
 
 #: debug_console.cpp:383
 #, kde-format
 msgctxt "Current angle in pinch gesture"
 msgid "Angle delta"
-msgstr ""
+msgstr "方向デルタ"
 
 #: debug_console.cpp:384
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta x"
-msgstr ""
+msgstr "デルタ x"
 
 #: debug_console.cpp:385
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta y"
-msgstr ""
+msgstr "デルタ y"
 
 #: debug_console.cpp:396
 #, kde-format
 msgctxt "A pinch gesture ended"
 msgid "Pinch end"
-msgstr ""
+msgstr "ピンチ 終了"
 
 #: debug_console.cpp:408
 #, kde-format
 msgctxt "A pinch gesture got cancelled"
 msgid "Pinch cancelled"
-msgstr ""
+msgstr "ピンチ キャンセル"
 
 #: debug_console.cpp:420
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
-msgstr ""
+msgstr "スワイプ 開始"
 
 #: debug_console.cpp:422
 #, kde-format
 msgctxt "Number of fingers in this swipe gesture"
 msgid "Finger count"
-msgstr ""
+msgstr "指カウント"
 
 #: debug_console.cpp:433
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
-msgstr ""
+msgstr "スワイプ 更新"
 
 #: debug_console.cpp:435
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta x"
-msgstr ""
+msgstr "デルタ x"
 
 #: debug_console.cpp:436
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta y"
-msgstr ""
+msgstr "デルタ y"
 
 #: debug_console.cpp:447
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
-msgstr ""
+msgstr "スワイプ 終了"
 
 #: debug_console.cpp:459
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
-msgstr ""
+msgstr "スワイプ キャンセル"
 
 #: debug_console.cpp:471
 #, kde-format
 msgctxt "A hold gesture is started"
 msgid "Hold start"
-msgstr ""
+msgstr "長押し 開始"
 
 #: debug_console.cpp:473
 #, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
-msgstr ""
+msgstr "指カウント"
 
 #: debug_console.cpp:484
 #, kde-format
 msgctxt "A hold gesture ended"
 msgid "Hold end"
-msgstr ""
+msgstr "長押し 終了"
 
 #: debug_console.cpp:496
 #, kde-format
 msgctxt "A hold gesture got cancelled"
 msgid "Hold cancelled"
-msgstr ""
+msgstr "長押し キャンセル"
 
 #: debug_console.cpp:508
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "ウィンドウのタブを切り替え"
+msgstr "スイッチ 切り替え"
 
 #: debug_console.cpp:514
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Notebook lid"
-msgstr ""
+msgstr "ノートパソコン ふた"
 
 #: debug_console.cpp:516
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Tablet mode"
-msgstr ""
+msgstr "タブレットモード"
 
 #: debug_console.cpp:518
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
-msgstr "ウィンドウのタブを切り替え"
+msgstr "スイッチ"
 
 #: debug_console.cpp:522
 #, kde-format
 msgctxt "The hardware switch got turned off"
 msgid "Off"
-msgstr ""
+msgstr "OFF"
 
 #: debug_console.cpp:525
 #, kde-format
 msgctxt "The hardware switch got turned on"
 msgid "On"
-msgstr ""
+msgstr "ON"
 
 #: debug_console.cpp:530
 #, kde-format
 msgctxt "State of a hardware switch (on/off)"
 msgid "State"
-msgstr ""
+msgstr "状態"
 
 #: debug_console.cpp:539
 #, kde-format
 msgid "Tablet Tool Proximity"
-msgstr ""
+msgstr "タブレットツール 近接"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "近接"
 
 #: debug_console.cpp:543
 #, kde-format
@@ -741,54 +741,52 @@ msgstr ""
 #: debug_console.cpp:632 debug_console.cpp:649
 #, kde-format
 msgid "Position"
-msgstr ""
+msgstr "位置"
 
 #: debug_console.cpp:546 debug_console.cpp:564 debug_console.cpp:584
 #, kde-format
 msgid "Tilt"
-msgstr ""
+msgstr "傾き"
 
 #: debug_console.cpp:548 debug_console.cpp:566 debug_console.cpp:586
 #, kde-format
 msgid "Rotation"
-msgstr ""
+msgstr "回転"
 
 #: debug_console.cpp:549 debug_console.cpp:568
 #, kde-format
 msgid "Distance"
-msgstr ""
+msgstr "距離"
 
 #: debug_console.cpp:558
 #, kde-format
 msgid "Tablet Tool Axis"
-msgstr ""
+msgstr "タブレットツール 方向"
 
 #: debug_console.cpp:567 debug_console.cpp:587
 #, kde-format
 msgid "Pressure"
-msgstr ""
+msgstr "筆圧"
 
 #: debug_console.cpp:577
 #, kde-format
 msgid "Tablet Tool Tip"
-msgstr ""
+msgstr "タブレットツール 指先ボタン"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Tip"
-msgstr "上"
+msgstr "指先"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "下へ移動"
+msgstr "下"
 
 #: debug_console.cpp:581
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "上"
 
 #: debug_console.cpp:588
 #, fuzzy, kde-format
@@ -799,38 +797,38 @@ msgstr "ウィンドウ操作メニュー"
 #: debug_console.cpp:597
 #, kde-format
 msgid "Tablet Tool Button"
-msgstr ""
+msgstr "タブレットツール ボタン"
 
 #: debug_console.cpp:599 debug_console.cpp:614
 #, kde-format
 msgid "Button"
-msgstr ""
+msgstr "ボタン"
 
 #: debug_console.cpp:600 debug_console.cpp:615
 #, kde-format
 msgid "Pressed"
-msgstr ""
+msgstr "押下"
 
 #: debug_console.cpp:601 debug_console.cpp:619 debug_console.cpp:636
 #: debug_console.cpp:653 debug_console.cpp:667
 #, kde-format
 msgid "Tablet"
-msgstr ""
+msgstr "タブレット"
 
 #: debug_console.cpp:612
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr ""
+msgstr "タブレットパッド ボタン"
 
 #: debug_console.cpp:616 debug_console.cpp:634 debug_console.cpp:651
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "グループ"
 
 #: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
 #, kde-format
 msgid "Mode"
-msgstr ""
+msgstr "モー尾"
 
 #: debug_console.cpp:618
 #, kde-format
@@ -840,7 +838,7 @@ msgstr ""
 #: debug_console.cpp:629
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr ""
+msgstr "タブレットパッド ストリップ"
 
 #: debug_console.cpp:631 debug_console.cpp:648 debug_console.cpp:665
 #, kde-format
@@ -855,249 +853,246 @@ msgstr ""
 #: debug_console.cpp:646
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr ""
+msgstr "タブレットパッド リング"
 
 #: debug_console.cpp:663
 #, kde-format
 msgid "Tablet Pad Dial"
-msgstr ""
+msgstr "タブレットパッド ダイヤル"
 
 #: debug_console.cpp:666
 #, kde-format
 msgid "Delta"
-msgstr ""
+msgstr "デルタ"
 
 #: debug_console.cpp:719
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "効果"
 
 #: debug_console.cpp:949
 #, kde-format
 msgid "No Mouse Buttons"
-msgstr ""
+msgstr "マウスボタンなし"
 
 #: debug_console.cpp:953
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
-msgstr ""
+msgstr "左"
 
 #: debug_console.cpp:956
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
-msgstr ""
+msgstr "右"
 
 #: debug_console.cpp:959
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
-msgstr ""
+msgstr "中ボタン"
 
 #: debug_console.cpp:962
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
-msgstr ""
+msgstr "戻る"
 
 #: debug_console.cpp:965
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
-msgstr ""
+msgstr "進む"
 
 #: debug_console.cpp:968
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
-msgstr ""
+msgstr "追加 1"
 
 #: debug_console.cpp:971
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
-msgstr ""
+msgstr "追加 2"
 
 #: debug_console.cpp:974
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
-msgstr ""
+msgstr "追加 3"
 
 #: debug_console.cpp:977
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
-msgstr ""
+msgstr "追加 4"
 
 #: debug_console.cpp:980
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
-msgstr ""
+msgstr "追加 5"
 
 #: debug_console.cpp:983
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
-msgstr ""
+msgstr "追加 6"
 
 #: debug_console.cpp:986
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
-msgstr ""
+msgstr "追加 7"
 
 #: debug_console.cpp:989
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
-msgstr ""
+msgstr "追加 8"
 
 #: debug_console.cpp:992
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
-msgstr ""
+msgstr "追加 9"
 
 #: debug_console.cpp:995
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
-msgstr ""
+msgstr "追加 10"
 
 #: debug_console.cpp:998
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
-msgstr ""
+msgstr "追加 11"
 
 #: debug_console.cpp:1001
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
-msgstr ""
+msgstr "追加 12"
 
 #: debug_console.cpp:1004
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
-msgstr ""
+msgstr "追加 13"
 
 #: debug_console.cpp:1007
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
-msgstr ""
+msgstr "追加 14"
 
 #: debug_console.cpp:1010
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
-msgstr ""
+msgstr "追加 15"
 
 #: debug_console.cpp:1013
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
-msgstr ""
+msgstr "追加 16"
 
 #: debug_console.cpp:1016
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
-msgstr ""
+msgstr "追加 17"
 
 #: debug_console.cpp:1019
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
-msgstr ""
+msgstr "追加 18"
 
 #: debug_console.cpp:1022
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
-msgstr ""
+msgstr "追加 19"
 
 #: debug_console.cpp:1025
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
-msgstr ""
+msgstr "追加 20"
 
 #: debug_console.cpp:1028
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
-msgstr ""
+msgstr "追加 21"
 
 #: debug_console.cpp:1031
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
-msgstr ""
+msgstr "追加 22"
 
 #: debug_console.cpp:1034
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
-msgstr ""
+msgstr "追加 23"
 
 #: debug_console.cpp:1037
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
-msgstr ""
+msgstr "追加 24"
 
 #: debug_console.cpp:1040
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
-msgstr ""
+msgstr "タスク"
 
 #: debug_console.cpp:1427
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "X11 Windows"
-msgstr "ウィンドウ"
+msgstr "X11 ウィンドウ"
 
 #: debug_console.cpp:1429
 #, kde-format
 msgid "X11 Unmanaged Windows"
-msgstr ""
+msgstr "X11 管理外ウィンドウ"
 
 #: debug_console.cpp:1431
-#, fuzzy, kde-format
-#| msgid "Shade Window"
+#, kde-format
 msgid "Wayland Windows"
-msgstr "ウィンドウをシェード"
+msgstr "Wayland ウィンドウ"
 
 #: debug_console.cpp:1433
-#, fuzzy, kde-format
-#| msgid "Lower Window"
+#, kde-format
 msgid "Internal Windows"
-msgstr "ウィンドウを背面に"
+msgstr "内部ウィンドウ"
 
 #: debug_console.cpp:1790
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "アンロード"
 
 #: debug_console.cpp:1794
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "ロード"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
 #, kde-format
 msgid "Debug Console"
-msgstr ""
+msgstr "デバッグコンソール"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:30
@@ -1109,91 +1104,91 @@ msgstr "ウィンドウ"
 #: debug_console.ui:44
 #, kde-format
 msgid "Input Events"
-msgstr ""
+msgstr "入力イベント"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
 #: debug_console.ui:61
 #, kde-format
 msgid "Input Devices"
-msgstr ""
+msgstr "入力デバイス"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #: debug_console.ui:71
 #, kde-format
 msgid "OpenGL"
-msgstr ""
+msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
 #: debug_console.ui:77
 #, kde-format
 msgid "No OpenGL compositor running"
-msgstr ""
+msgstr "動作中の OpenGL コンソールなし"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
 #: debug_console.ui:105
 #, kde-format
 msgid "OpenGL (ES) driver information"
-msgstr ""
+msgstr "OpenGL (ES) ドライバ情報"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:111
 #, kde-format
 msgid "Vendor:"
-msgstr ""
+msgstr "ベンダー:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: debug_console.ui:118
 #, kde-format
 msgid "Renderer:"
-msgstr ""
+msgstr "レンダラー:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: debug_console.ui:125
 #, kde-format
 msgid "Version:"
-msgstr ""
+msgstr "バージョン:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: debug_console.ui:132
 #, kde-format
 msgid "Shading Language Version:"
-msgstr ""
+msgstr "シェーディング言語 バージョン:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: debug_console.ui:139
 #, kde-format
 msgid "Driver:"
-msgstr ""
+msgstr "ドライバ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: debug_console.ui:146
 #, kde-format
 msgid "GPU class:"
-msgstr ""
+msgstr "GPU クラス:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: debug_console.ui:153
 #, kde-format
 msgid "OpenGL Version:"
-msgstr ""
+msgstr "OpenGL バージョン:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: debug_console.ui:160
 #, kde-format
 msgid "GLSL Version:"
-msgstr ""
+msgstr "GLSL バージョン:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
 #: debug_console.ui:226
 #, kde-format
 msgid "Platform Extensions"
-msgstr ""
+msgstr "プラットフォーム 拡張機能"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
 #: debug_console.ui:242
 #, kde-format
 msgid "OpenGL (ES) Extensions"
-msgstr ""
+msgstr "OpenGL (ES) 拡張機能"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
 #: debug_console.ui:263
@@ -1205,56 +1200,55 @@ msgstr "キーボード"
 #: debug_console.ui:290
 #, kde-format
 msgid "Keymap Layouts"
-msgstr ""
+msgstr "キーマップレイアウト"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: debug_console.ui:312
 #, kde-format
 msgid "Current Layout:"
-msgstr ""
+msgstr "現在のレイアウト:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
 #: debug_console.ui:331
 #, kde-format
 msgid "Modifiers"
-msgstr ""
+msgstr "修飾子"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
 #: debug_console.ui:347
 #, kde-format
 msgid "Active Modifiers"
-msgstr ""
+msgstr "アクティブな修飾子"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
 #: debug_console.ui:363
 #, kde-format
 msgid "LEDs"
-msgstr ""
+msgstr "LED"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
 #: debug_console.ui:379
 #, kde-format
 msgid "Active LEDs"
-msgstr ""
+msgstr "アクティブな LED"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: debug_console.ui:400 debug_console.ui:420
 #, kde-format
 msgid "Clipboard"
-msgstr ""
+msgstr "クリップボード"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 #: debug_console.ui:466
 #, kde-format
 msgid "Primary Selection"
-msgstr ""
+msgstr "プライマリセレクション"
 
 #: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:128
-#, fuzzy, kde-format
-#| msgid "KDE window manager"
+#, kde-format
 msgid "Window Manager"
-msgstr "KDE ウィンドウマネージャ"
+msgstr "ウィンドウマネージャ"
 
 #: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
 #, kde-format
@@ -1313,13 +1307,7 @@ msgstr ""
 "い。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window operations menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1329,8 +1317,7 @@ msgstr ""
 "ウィンドウをフルスクリーンにしました。\n"
 "アプリケーションにフルスクリーンモードを解除する機能がない場合、マウスを使っ"
 "てフルスクリーンモードを解除することはできません。その場合、キーボードショー"
-"トカットの %1 を使ってウィンドウ操作メニューを表示し、そこから解除してくださ"
-"い。"
+"トカットの %1 を使ってウィンドウメニューを表示し、そこから解除してください。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
 #, fuzzy, kde-format
@@ -1376,12 +1363,7 @@ msgstr ""
 "ください。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window operations menu instead, activated using the %1 "
-#| "keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
@@ -1390,8 +1372,8 @@ msgid ""
 msgstr ""
 "ウィンドウの枠を消しました。\n"
 "枠なしでは、マウスを使って枠を再び表示させることはできません。キーボード"
-"ショートカットの %1 を使ってウィンドウ操作メニューを表示し、そこから設定して"
-"ください。"
+"ショートカットの %1 を使ってウィンドウメニューを表示し、そこから設定してくだ"
+"さい。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
 #, fuzzy, kde-format
@@ -1601,27 +1583,27 @@ msgstr "Luboš Luňák"
 #: main.cpp:178
 #, kde-format
 msgid "Martin Flöser"
-msgstr ""
+msgstr "Martin Flöser"
 
 #: main.cpp:179
 #, kde-format
 msgid "David Edmundson"
-msgstr ""
+msgstr "David Edmundson"
 
 #: main.cpp:180
 #, kde-format
 msgid "Roman Gilg"
-msgstr ""
+msgstr "Roman Gilg"
 
 #: main.cpp:181
 #, kde-format
 msgid "Vlad Zahorodnii"
-msgstr ""
+msgstr "Vlad Zahorodnii"
 
 #: main.cpp:182
 #, kde-format
 msgid "Xaver Hugl"
-msgstr ""
+msgstr "Xaver Hugl"
 
 #: main.cpp:191
 #, kde-format
@@ -1762,16 +1744,14 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: plugins/blur/blur_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Blur strength:"
+#, kde-format
 msgid "Blur strength:"
-msgstr "ぼけの強さ:"
+msgstr "ぼかしの強度:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:53 plugins/blur/blur_config.ui:107
-#, fuzzy, kde-format
-#| msgid "Light"
+#, kde-format
 msgid "Light"
 msgstr "弱"
 
@@ -1780,31 +1760,27 @@ msgstr "弱"
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationNone)
 #: plugins/blur/blur_config.ui:60 plugins/blur/blur_config.ui:114
 #: plugins/blur/blur_config.ui:168
-#, fuzzy, kde-format
-#| msgid "Strong"
+#, kde-format
 msgid "Strong"
 msgstr "強"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: plugins/blur/blur_config.ui:74
-#, fuzzy, kde-format
-#| msgid "Noise strength:"
+#, kde-format
 msgid "Noise strength:"
-msgstr "ノイズの強さ:"
+msgstr "ノイズの強度:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Saturation:"
-msgstr "経過時間:"
+msgstr "彩度:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
 #: plugins/blur/blur_config.ui:161
 #: plugins/videowall/package/contents/ui/config.ui:73
-#, fuzzy, kde-format
-#| msgid "None"
+#, kde-format
 msgid "None"
 msgstr "なし"
 
@@ -1874,33 +1850,29 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/fadedesktop/package/contents/ui/config.ui:17
 #: plugins/magiclamp/magiclamp_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Animation duration:"
+#, kde-format
 msgid "Animation duration:"
 msgstr "アニメーションの長さ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Duration:"
-msgstr "経過時間:"
+msgstr "長さ:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
 #: plugins/scale/package/contents/ui/config.ui:30
-#, fuzzy, kde-format
-#| msgid "Default"
+#, kde-format
 msgid "Default"
-msgstr "標準"
+msgstr "デフォルト"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: plugins/glide/glide_config.ui:35 plugins/magiclamp/magiclamp_config.ui:39
 #: plugins/scale/package/contents/ui/config.ui:33
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid " milliseconds"
 msgstr " ミリ秒"
 
@@ -1991,13 +1963,13 @@ msgstr[0] " ミリ秒"
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr ""
+msgstr "動いていないときカーソルを非表示:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "タイピング中カーソルを非表示"
 
 #: plugins/invert/invert.cpp:44
 #, fuzzy, kde-format
@@ -2233,16 +2205,14 @@ msgstr "ウィンドウをアクティブに (%1)"
 #: plugins/login/package/contents/ui/config.ui:17
 #, kde-format
 msgid "Fade to black (fullscreen splash screens only)"
-msgstr ""
+msgstr "黒にフェード (フルスクリーンのスプラッシュスクリーンのみ)"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: plugins/magiclamp/magiclamp_config.ui:36
-#, fuzzy, kde-format
-#| msgctxt "Duration of rotation"
-#| msgid "Default"
+#, kde-format
 msgctxt "Duration of rotation"
 msgid "Default"
-msgstr "標準"
+msgstr "デフォルト"
 
 #: plugins/mouseclick/mouseclick.cpp:42
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2381,20 +2351,17 @@ msgid "Show Text:"
 msgstr "デスクトップを表示"
 
 #: plugins/mousemark/mousemark.cpp:43
-#, fuzzy, kde-format
-#| msgid "Clear All Mouse Marks"
+#, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "すべてのマウスマークをクリア"
 
 #: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:52
-#, fuzzy, kde-format
-#| msgid "Clear Last Mouse Mark"
+#, kde-format
 msgid "Clear Last Mouse Mark"
-msgstr "最後のマウスマークをクリア"
+msgstr "直近のマウスマークを取り消し"
 
 #: plugins/mousemark/mousemark_config.cpp:46
-#, fuzzy, kde-format
-#| msgid "Clear Mouse Marks"
+#, kde-format
 msgid "Clear Mouse Marks"
 msgstr "マウスマークをクリア"
 
@@ -2403,13 +2370,12 @@ msgstr "マウスマークをクリア"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
+msgstr[0] " ピクセル"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
 #: plugins/thumbnailaside/thumbnailaside_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Appearance"
+#, kde-format
 msgid "Appearance"
 msgstr "外観"
 
@@ -2417,30 +2383,25 @@ msgstr "外観"
 #: plugins/mousemark/mousemark_config.ui:23
 #, kde-format
 msgid "Wid&th:"
-msgstr ""
+msgstr "太さ(&T):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/mousemark/mousemark_config.ui:36
-#, fuzzy, kde-format
-#| msgid "&Color:"
+#, kde-format
 msgid "&Color:"
 msgstr "色(&C):"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr ""
-"<p align=\"left\">Shift とメタキーを押しながらマウスを動かして描画します。</"
-"p>"
+msgstr "修飾キーを押しながらマウスを動かすことで、線や矢印を描くことができます"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "修飾キー:"
+msgstr "手書きの修飾キー:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2448,8 +2409,7 @@ msgstr "修飾キー:"
 #: plugins/mousemark/mousemark_config.ui:125
 #: plugins/mousemark/mousemark_config.ui:179
 #: plugins/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgid "Alt"
+#, kde-format
 msgid "Alt"
 msgstr "Alt"
 
@@ -2459,8 +2419,7 @@ msgstr "Alt"
 #: plugins/mousemark/mousemark_config.ui:132
 #: plugins/mousemark/mousemark_config.ui:186
 #: plugins/trackmouse/trackmouse_config.ui:72
-#, fuzzy, kde-format
-#| msgid "Ctrl"
+#, kde-format
 msgid "Ctrl"
 msgstr "Ctrl"
 
@@ -2470,8 +2429,7 @@ msgstr "Ctrl"
 #: plugins/mousemark/mousemark_config.ui:139
 #: plugins/mousemark/mousemark_config.ui:193
 #: plugins/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgid "Shift"
+#, kde-format
 msgid "Shift"
 msgstr "Shift"
 
@@ -2481,17 +2439,15 @@ msgstr "Shift"
 #: plugins/mousemark/mousemark_config.ui:146
 #: plugins/mousemark/mousemark_config.ui:200
 #: plugins/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgid "Meta"
+#, kde-format
 msgid "Meta"
 msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "修飾キー:"
+msgstr "矢印の修飾キー:"
 
 #: plugins/nightlight/nightlightmanager.cpp:55
 #, kde-format
@@ -2528,109 +2484,96 @@ msgstr "不明"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "オーバービューとグリッドビューを切り替え"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
 #: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "グリッドビューとオーバービューを切り替え"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:53
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "オーバービューをオン/オフ"
+msgstr "オーバービューを切り替え"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:60
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "オーバービューをオン/オフ"
+msgstr "グリッドビューを切り替え"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "ウィンドウを最小化"
+msgstr "最小化されたウィンドウを無視:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OrganizedGrid)
 #: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "グリッドビューでウィンドウを管理:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "フィルタリングされたウィンドウを検索結果に含める:"
 
 #: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "オーバービューとグリッドビューを切り替え"
 
 #: plugins/overview/overvieweffect.cpp:143
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "オーバービューをオン/オフ"
+msgstr "オーバービューを切り替え"
 
 #: plugins/overview/overvieweffect.cpp:152
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "オーバービューをオン/オフ"
+msgstr "グリッドビューを切り替え"
 
 #: plugins/overview/qml/DesktopBar.qml:165
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "デスクトップへ移動(&D)"
+msgstr "仮想デスクトップを削除"
 
 #: plugins/overview/qml/DesktopBar.qml:264
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "新しいデスクトップ(&N)"
+msgstr "仮想デスクトップを追加"
 
 #: plugins/overview/qml/Main.qml:425
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "デスクトップへ移動(&D)"
+msgstr "ほかに仮想デスクトップなし"
 
 #: plugins/overview/qml/Main.qml:431
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
-msgstr "新しいデスクトップ(&N)"
+msgstr "仮想デスクトップを追加"
 
 #: plugins/overview/qml/Main.qml:438
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "デスクトップへ移動(&D)"
+msgstr "仮想デスクトップを設定…"
 
 #: plugins/overview/qml/Main.qml:789
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
-msgstr "移動中のウィンドウ:"
+msgstr "検索結果なし"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:229
 #, kde-format
@@ -2646,17 +2589,15 @@ msgstr "ウィンドウを閉じる"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window open scale:"
-msgstr "ウィンドウ"
+msgstr "ウィンドウを開くときの開始スケール:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: plugins/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window close scale:"
-msgstr "ウィンドウ"
+msgstr "ウィンドウを閉じるときの終了スケール:"
 
 #: plugins/screencast/pipewirecore.cpp:63
 #: plugins/screencast/pipewirecore.cpp:92
@@ -2765,19 +2706,17 @@ msgstr "最大幅(&W):"
 #: plugins/slide/slide_config.ui:17
 #, kde-format
 msgid "Gap between desktops"
-msgstr ""
+msgstr "デスクトップ間の間隔"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#, kde-format
 msgid "Horizontal:"
 msgstr "水平:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: plugins/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#, kde-format
 msgid "Vertical:"
 msgstr "垂直:"
 
@@ -2785,7 +2724,7 @@ msgstr "垂直:"
 #: plugins/slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
-msgstr ""
+msgstr "デスクトップ背景をスライド"
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
@@ -2819,22 +2758,19 @@ msgstr ""
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
-#, fuzzy, kde-format
-#| msgid "Toggle Thumbnail for Current Window"
+#, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "現在のウィンドウのサムネイルをオン/オフ"
+msgstr "現在のウィンドウのサムネイル表示を切り替え"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:23
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgid "Maximum &width:"
 msgstr "最大幅(&W):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:36
-#, fuzzy, kde-format
-#| msgid "&Spacing:"
+#, kde-format
 msgid "&Spacing:"
 msgstr "間隔(&S):"
 
@@ -2842,22 +2778,19 @@ msgstr "間隔(&S):"
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:55
 #: plugins/thumbnailaside/thumbnailaside_config.ui:106
-#, fuzzy, kde-format
-#| msgid " pixels"
+#, kde-format
 msgid " pixels"
 msgstr " ピクセル"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68
-#, fuzzy, kde-format
-#| msgid "&Opacity:"
+#, kde-format
 msgid "&Opacity:"
 msgstr "不透明度(&O):"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:87
-#, fuzzy, no-c-format, kde-format
-#| msgid " %"
+#, no-c-format, kde-format
 msgid " %"
 msgstr " %"
 
@@ -2918,10 +2851,9 @@ msgstr "マウスを捕捉"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/trackmouse/trackmouse_config.ui:26
-#, fuzzy, kde-format
-#| msgid "Trigger effect with:"
+#, kde-format
 msgid "Trigger effect with:"
-msgstr "エフェクトのトリガー:"
+msgstr "マウスを追跡するとき:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
@@ -2939,38 +2871,33 @@ msgstr "修飾キー:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Translucency"
+#, kde-format
 msgid "Translucency"
 msgstr "半透明性"
 
 #. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
 #: plugins/translucency/package/contents/ui/config.ui:20
-#, fuzzy, kde-format
-#| msgid "General Translucency Settings"
+#, kde-format
 msgid "General Translucency Settings"
-msgstr "半透明性の全般設定"
+msgstr "全般設定"
 
 #. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
 #: plugins/translucency/package/contents/ui/config.ui:64
-#, fuzzy, kde-format
-#| msgid "Combobox popups:"
+#, kde-format
 msgid "Combobox popups:"
-msgstr "コンボボックスのポップアップ:"
+msgstr "コンボボックスポップアップ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: plugins/translucency/package/contents/ui/config.ui:121
 #: plugins/translucency/package/contents/ui/config.ui:441
-#, fuzzy, kde-format
-#| msgid "Opaque"
+#, kde-format
 msgid "Opaque"
 msgstr "不透明"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: plugins/translucency/package/contents/ui/config.ui:137
-#, fuzzy, kde-format
-#| msgid "Dialogs:"
+#, kde-format
 msgid "Dialogs:"
 msgstr "ダイアログ:"
 
@@ -2978,15 +2905,13 @@ msgstr "ダイアログ:"
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/translucency/package/contents/ui/config.ui:156
 #: plugins/translucency/package/contents/ui/config.ui:428
-#, fuzzy, kde-format
-#| msgid "Transparent"
+#, kde-format
 msgid "Transparent"
 msgstr "透明"
 
 #. i18n: ectx: property (text), widget (QLabel, menus_label)
 #: plugins/translucency/package/contents/ui/config.ui:188
-#, fuzzy, kde-format
-#| msgid "Menus:"
+#, kde-format
 msgid "Menus:"
 msgstr "メニュー:"
 
@@ -2999,45 +2924,39 @@ msgstr "フルスクリーン(&F)"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "ウィンドウを移動"
+msgstr "移動中のウィンドウ:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:236
-#, fuzzy, kde-format
-#| msgid "Lower Window"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "ウィンドウを背面に"
+msgstr "非アクティブのウィンドウ:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:277
-#, fuzzy, kde-format
-#| msgid "Set menu translucency independently"
+#, kde-format
 msgid "Set menu translucency independently"
-msgstr "メニューのタイプごとに半透明性を設定する"
+msgstr "メニューの不透明性を個別に設定"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:295
-#, fuzzy, kde-format
-#| msgid "Dropdown menus:"
+#, kde-format
 msgid "Dropdown menus:"
 msgstr "ドロップダウンメニュー:"
 
 #. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:339
-#, fuzzy, kde-format
-#| msgid "Popup menus:"
+#, kde-format
 msgid "Popup menus:"
 msgstr "ポップアップメニュー:"
 
 #. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:377
-#, fuzzy, kde-format
-#| msgid "Torn-off menus:"
+#, kde-format
 msgid "Torn-off menus:"
-msgstr "分離されたメニュー:"
+msgstr "切り離しメニュー:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::VideoWallConfigForm)
 #: plugins/videowall/package/contents/ui/config.ui:14
@@ -3132,73 +3051,63 @@ msgstr "ウィンドウを背面に"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
-#, fuzzy, kde-format
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced"
-msgstr "詳細"
+msgstr "プロモード"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: plugins/wobblywindows/wobblywindows_config.ui:26
-#, fuzzy, kde-format
-#| msgid "&Stiffness:"
+#, kde-format
 msgid "&Stiffness:"
 msgstr "硬さ(&S):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: plugins/wobblywindows/wobblywindows_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Dra&g:"
+#, kde-format
 msgid "Dra&g:"
-msgstr "ドラッグ(&G):"
+msgstr "張力(&G):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/wobblywindows/wobblywindows_config.ui:81
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgid "&Move factor:"
-msgstr "デスクトップへ移動(&D)"
+msgstr "引っ張る力(&M):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Wo&bble when moving"
+#, kde-format
 msgid "Wo&bble when moving"
-msgstr "移動で揺らす(&B)"
+msgstr "動かすときにふにゃらせる(&B)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:162
-#, fuzzy, kde-format
-#| msgid "Wobble when &resizing"
+#, kde-format
 msgid "Wobble when &resizing"
-msgstr "リサイズで揺らす(&R)"
+msgstr "リサイズ時にふにゃらせる(&R)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
 #: plugins/wobblywindows/wobblywindows_config.ui:182
-#, fuzzy, kde-format
-#| msgid "Enable &advanced mode"
+#, kde-format
 msgid "Enable &advanced mode"
-msgstr "詳細モードを有効にする(&A)"
+msgstr "プロモードを有効化(&A)"
 
 #. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:192
-#, fuzzy, kde-format
-#| msgid "&Wobbliness"
+#, kde-format
 msgid "&Wobbliness"
-msgstr "揺れの度合い(&W)"
+msgstr "ふにゃふにゃ度(&W)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/wobblywindows/wobblywindows_config.ui:201
-#, fuzzy, kde-format
-#| msgid "Less"
+#, kde-format
 msgid "Less"
-msgstr "小さく"
+msgstr "弱"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/wobblywindows/wobblywindows_config.ui:224
-#, fuzzy, kde-format
-#| msgid "More"
+#, kde-format
 msgid "More"
-msgstr "大きく"
+msgstr "強"
 
 #: plugins/zoom/zoom.cpp:88
 #, fuzzy, kde-format
@@ -3857,18 +3766,16 @@ msgid ""
 msgstr ""
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for temporarily hiding all windows"
 msgid "Peek at Desktop"
-msgstr "デスクトップへ移動(&D)"
+msgstr "デスクトップを表示"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:207
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "ウィンドウ"
+msgstr "開いているウィンドウなし"
 
 #: tabbox/tabbox.cpp:311
 msgid "Walk Through Windows"
@@ -3968,22 +3875,19 @@ msgid "&Hide from Screencast"
 msgstr ""
 
 #: useractions.cpp:266
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "ウィンドウにショートカットを割り当てる(&C)..."
+msgstr "ウィンドウにショートカットを割り当てる(&C)…"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "ウィンドウ固有の設定(&W)..."
+msgstr "ウィンドウ固有の設定(&W)…"
 
 #: useractions.cpp:277
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "アプリケーション固有の設定(&P)..."
+msgstr "アプリケーション固有の設定(&P)…"
 
 #: useractions.cpp:283
 #, kde-format
@@ -4017,16 +3921,14 @@ msgid "&Desktops"
 msgstr "すべてのデスクトップ(&A)"
 
 #: useractions.cpp:432
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgid "Move to &Screen"
-msgstr "デスクトップへ移動(&D)"
+msgstr "スクリーンを移動(&S)"
 
 #: useractions.cpp:448
-#, fuzzy, kde-format
-#| msgid "Ac&tivities"
+#, kde-format
 msgid "Show in &Activities"
-msgstr "アクティビティ(&T)"
+msgstr "アクティビティに表示(&A)"
 
 #: useractions.cpp:464
 #, kde-format
@@ -4034,25 +3936,21 @@ msgid "&All Desktops"
 msgstr "すべてのデスクトップ(&A)"
 
 #: useractions.cpp:499 useractions.cpp:631
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgid "Move to %1"
-msgstr "デスクトップへ移動(&D)"
+msgstr "%1 へ移動"
 
 #: useractions.cpp:513
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
-msgstr "新しいデスクトップ(&N)"
+msgstr "新しいデスクトップに追加"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "デスクトップへ移動(&D)"
+msgstr "新しいデスクトップへ移動"
 
 #: useractions.cpp:556
 #, fuzzy, kde-format
@@ -4582,260 +4480,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#, fuzzy
-#~| msgid "Blur strength:"
-#~ msgid "Saturation strength:"
-#~ msgstr "ぼけの強さ:"
-
-#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
-#~ msgid "Show Desktop"
-#~ msgstr "デスクトップを表示"
-
-#, fuzzy
-#~| msgid "&Shade"
-#~ msgid "Shaded"
-#~ msgstr "シェード(&S)"
-
-#~ msgid "Shade Window"
-#~ msgstr "ウィンドウをシェード"
-
-#, fuzzy
-#~| msgid "Move To &Desktop"
-#~ msgid "Move &To Current Desktop"
-#~ msgstr "デスクトップへ移動(&D)"
-
-#, fuzzy
-#~| msgctxt "Create a new desktop and move there the window"
-#~| msgid "&New Desktop"
-#~ msgctxt "Create a new desktop and move the window there"
-#~ msgid "&New Desktop"
-#~ msgstr "新しいデスクトップ(&N)"
-
-#, fuzzy
-#~| msgid "Size"
-#~ msgid "Size"
-#~ msgstr "サイズ"
-
-#, fuzzy
-#~| msgid "&Width:"
-#~ msgid "&Width:"
-#~ msgstr "幅(&W):"
-
-#, fuzzy
-#~| msgid " px"
-#~ msgid " px"
-#~ msgstr " ピクセル"
-
-#, fuzzy
-#~| msgid "&Height:"
-#~ msgid "&Height:"
-#~ msgstr "高さ(&H):"
-
-#, fuzzy
-#~| msgid "Move Window Left"
-#~ msgid "Move Left"
-#~ msgstr "ウィンドウを左に移動"
-
-#, fuzzy
-#~| msgid "Move Window Right"
-#~ msgid "Move Right"
-#~ msgstr "ウィンドウを右に移動"
-
-#~ msgid "Move Up"
-#~ msgstr "上へ移動"
-
-#~ msgid "Move Down"
-#~ msgstr "下へ移動"
-
-#, fuzzy
-#~| msgid "Modifier keys:"
-#~ msgid "Scroll gesture modifier keys:"
-#~ msgstr "修飾キー:"
-
-#, fuzzy
-#~| msgid "Zoom Factor:"
-#~ msgid "Zoom factor:"
-#~ msgstr "ズーム率:"
-
-#, fuzzy
-#~| msgid "Pack Window to the Left"
-#~ msgid "Mouse pointer:"
-#~ msgstr "ウィンドウを左へ寄せる"
-
-#, fuzzy
-#~| msgid "Proportional"
-#~ msgid "Proportional"
-#~ msgstr "比例"
-
-#, fuzzy
-#~| msgid "Centered"
-#~ msgid "Centered"
-#~ msgstr "中央揃え"
-
-#, fuzzy
-#~| msgid "Disabled"
-#~ msgid "Disabled"
-#~ msgstr "無効"
-
-#~ msgid "Window Operations Menu"
-#~ msgstr "ウィンドウ操作メニュー"
-
-#, fuzzy
-#~| msgid "Show &panels"
-#~ msgid "Toggle Show Paint"
-#~ msgstr "パネルを表示する(&P)"
-
-#~ msgid "&Shade"
-#~ msgstr "シェード(&S)"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr "必要な X 拡張 (XComposite と XDamage) がありません"
-
-#~ msgid ""
-#~ "KWin is unstable.\n"
-#~ "It seems to have crashed several times in a row.\n"
-#~ "You can select another window manager to run:"
-#~ msgstr ""
-#~ "KWin が不安定です。\n"
-#~ "何度も連続してクラッシュしたようです。\n"
-#~ "他のウィンドウマネージャを選択できます:"
-
-#~ msgid ""
-#~ "kwin: unable to claim manager selection, another wm running? (try using --"
-#~ "replace)\n"
-#~ msgstr ""
-#~ "kwin: ウィンドウマネージャになれませんでした。他のマネージャが実行中です"
-#~ "か？ (--replace オプションを試してみてください)\n"
-
-#, fuzzy
-#~| msgid ""
-#~| "kwin: unable to claim manager selection, another wm running? (try using "
-#~| "--replace)\n"
-#~ msgid "kwin: another window manager is running (try using --replace)\n"
-#~ msgstr ""
-#~ "kwin: ウィンドウマネージャになれませんでした。他のマネージャが実行中です"
-#~ "か？ (<icode>--replace</icode> オプションを試してみてください)\n"
-
-#~ msgid "Replace already-running ICCCM2.0-compliant window manager"
-#~ msgstr "既に動作している ICCCM2.0 準拠のウィンドウマネージャを置き換える"
-
-#~ msgid "Move to &Desktop"
-#~ msgstr "デスクトップへ移動(&D)"
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Button size:"
-#~| msgid "Normal"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Normal"
-#~ msgstr "普通"
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Button size:"
-#~| msgid "Large"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Large"
-#~ msgstr "大"
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Button size:"
-#~| msgid "Very Large"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Large"
-#~ msgstr "より大"
-
-#, fuzzy
-#~| msgctxt "@item:inlistbox Button size:"
-#~| msgid "Huge"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Huge"
-#~ msgstr "とても大"
-
-#, fuzzy
-#~| msgid "&Resize"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Oversized"
-#~ msgstr "リサイズ(&R)"
-
-#, fuzzy
-#~| msgid "Button size:"
-#~ msgid "Button size:"
-#~ msgstr "ボタンのサイズ:"
-
-#, fuzzy
-#~| msgid "Config Dialog"
-#~ msgid "Config Dialog"
-#~ msgstr "設定ダイアログ"
-
-#, fuzzy
-#~| msgid "Title &Alignment"
-#~ msgid "Title &Alignment"
-#~ msgstr "タイトルの配置(&A)"
-
-#, fuzzy
-#~| msgid "Center"
-#~ msgid "Center"
-#~ msgstr "中央"
-
-#, fuzzy
-#~| msgid ""
-#~| "Check this option if the window border should be painted in the titlebar "
-#~| "color. Otherwise it will be painted in the background color."
-#~ msgid ""
-#~ "Check this option if the window border should be painted in the titlebar "
-#~ "color. Otherwise it will be painted in the background color."
-#~ msgstr ""
-#~ "ウィンドウの枠をタイトルバーの色で描画させるには、このオプションをチェック"
-#~ "してください。選択されていない場合、背景色で描画します。"
-
-#, fuzzy
-#~| msgid "Close Window"
-#~ msgid "Colored window border"
-#~ msgstr "ウィンドウを閉じる"
-
-#, fuzzy
-#~| msgid ""
-#~| "Check this option if you want the buttons to fade in when the mouse "
-#~| "pointer hovers over them and fade out again when it moves away."
-#~ msgid ""
-#~ "Check this option if you want the buttons to fade in when the mouse "
-#~ "pointer hovers over them and fade out again when it moves away."
-#~ msgstr ""
-#~ "マウスがボタン上に来たらフェードイン、外れたらフェードアウトさせるには、こ"
-#~ "のオプションをチェックしてください。"
-
-#, fuzzy
-#~| msgid "Animate buttons"
-#~ msgid "Animate buttons"
-#~ msgstr "ボタンのアニメーション表示"
-
-#, fuzzy
-#~| msgid "Maximize Window Horizontally"
-#~ msgid "Split Horizontally"
-#~ msgstr "ウィンドウを横に最大化"
-
-#, fuzzy
-#~| msgid "Maximize Window Vertically"
-#~ msgid "Split Vertically"
-#~ msgstr "ウィンドウを縦に最大化"
-
-#, fuzzy
-#~| msgid "Show &panels"
-#~ msgid "Toggle Night Light"
-#~ msgstr "パネルを表示する(&P)"
-
-# ACCELERATOR added by translator
-#, fuzzy
-#~| msgid "Layout mode:"
-#~ msgid "Layout mode:"
-#~ msgstr "配置モード(&L):"
-
-#, fuzzy
-#~| msgid "&Close"
-#~ msgid "Closest"
-#~ msgstr "閉じる(&C)"
-
-#, fuzzy
-#~| msgid "Natural"
-#~ msgid "Natural"
-#~ msgstr "自然"

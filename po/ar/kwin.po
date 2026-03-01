@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-28 00:46+0000\n"
-"PO-Revision-Date: 2026-02-25 21:42+0400\n"
+"PO-Revision-Date: 2026-02-28 12:43+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -4268,10 +4268,9 @@ msgid "The driver rejected the output configuration"
 msgstr "رفض السائق ضبط الإخراج"
 
 #: wayland/outputmanagement_v2.cpp:679
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr " المفتاح Alt مفعّل الآن."
+msgstr "الجلسة ليست نشطة"
 
 #: window.cpp:3125
 #, kde-format

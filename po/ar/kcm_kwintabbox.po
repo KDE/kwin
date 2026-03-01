@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-26 00:46+0000\n"
-"PO-Revision-Date: 2026-02-11 20:53+0400\n"
+"PO-Revision-Date: 2026-02-28 12:43+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -294,7 +294,7 @@ msgstr "الوقت بالمللي ثانية الذي يجب الانتظار ق
 #: main.ui:704
 #, kde-format
 msgid "Delay:"
-msgstr ""
+msgstr "التأخير:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:720

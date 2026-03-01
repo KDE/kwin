@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-28 00:46+0000\n"
-"PO-Revision-Date: 2026-02-24 04:47+0100\n"
+"PO-Revision-Date: 2026-02-28 07:59+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -4290,10 +4290,9 @@ msgid "The driver rejected the output configuration"
 msgstr "დრაივერმა უარყო გამოტანის კონფიგურაცია"
 
 #: wayland/outputmanagement_v2.cpp:679
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "ღილაკი Alt ახლა აქტიურია."
+msgstr "სესია აქტიური არაა"
 
 #: window.cpp:3125
 #, kde-format

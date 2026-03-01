@@ -4254,10 +4254,9 @@ msgid "The driver rejected the output configuration"
 msgstr "驱动程序拒绝了输出配置"
 
 #: wayland/outputmanagement_v2.cpp:679
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "Alt 键已激活。"
+msgstr ""
 
 #: window.cpp:3125
 #, kde-format
