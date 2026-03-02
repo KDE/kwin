@@ -96,6 +96,9 @@ XdgSurfaceWindow::~XdgSurfaceWindow()
 
 WindowType XdgSurfaceWindow::windowType() const
 {
+    if (m_windowType == WindowType::Unknown) {
+        return transientFor() ? WindowType::Dialog : WindowType::Normal;
+    }
     return m_windowType;
 }
 
@@ -506,6 +509,7 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
     : XdgSurfaceWindow(shellSurface->xdgSurface())
     , m_shellSurface(shellSurface)
 {
+    m_windowType = WindowType::Unknown;
     setOutput(workspace()->activeOutput());
     setMoveResizeOutput(workspace()->activeOutput());
     setDesktops({VirtualDesktopManager::self()->currentDesktop()});
