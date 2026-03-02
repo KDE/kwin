@@ -8,6 +8,7 @@
 
 #include "display.h"
 #include "xdgforeign_v2_p.h"
+#include "xdgshell.h"
 
 #include <QUuid>
 
@@ -102,7 +103,13 @@ void XdgExporterV2Interface::zxdg_exporter_v2_export_toplevel(Resource *resource
 {
     SurfaceInterface *surface = SurfaceInterface::get(surface_resource);
     if (!surface) {
-        wl_resource_post_error(resource->handle, 0, "Invalid  surface");
+        wl_resource_post_error(resource->handle, error_invalid_surface, "Invalid  surface");
+        return;
+    }
+
+    XdgToplevelInterface *toplevel = XdgToplevelInterface::get(resource->handle);
+    if (!toplevel) {
+        wl_resource_post_error(resource->handle, error_invalid_surface, "Not a XDG toplevel");
         return;
     }
 
