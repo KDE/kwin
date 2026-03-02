@@ -19,6 +19,12 @@
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
 #include "utils/envvar.h"
+#include "vulkan/vulkan_device.h"
+#include "vulkan/vulkan_logging.h"
+#include "vulkan/vulkan_swapchain.h"
+#include "vulkan/vulkan_texture.h"
+
+#include <vulkan/vulkan.hpp>
 
 namespace KWin
 {
@@ -62,6 +68,19 @@ static std::optional<DrmFormat> chooseFormat(uint32_t inputFormat, const FormatM
 
 std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats)
 {
+    if (copyDevice->isInReset()) {
+        // avoid creating a suboptimal swapchain while in a reset
+        return nullptr;
+    }
+    if (copyDevice->vulkanDevice() && copyDevice->vulkanDevice()->supportedFormats().containsFormat(format, modifier)) {
+        const auto fmt = chooseFormat(format, copyDevice->vulkanDevice()->supportedFormats(), importFormats);
+        if (fmt) {
+            auto swapchain = VulkanSwapchain::create(copyDevice->vulkanDevice(), targetDevice->allocator(), size, fmt->format, fmt->modifiers);
+            if (swapchain) {
+                return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, std::move(swapchain));
+            }
+        }
+    }
     if (copyDevice->eglDisplay() && copyDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats().containsFormat(format, modifier)) {
         const auto context = copyDevice->eglContext();
         if (!context) {
@@ -91,6 +110,18 @@ MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *target
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &MultiGpuSwapchain::handleDeviceRemoved);
 }
 
+MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, std::unique_ptr<VulkanSwapchain> &&swapchain)
+    : m_targetDevice(targetDevice)
+    , m_copyDevice(copyDevice)
+    , m_vulkanSwapchain(std::move(swapchain))
+    , m_format(m_vulkanSwapchain->format())
+    , m_modifier(m_vulkanSwapchain->modifier())
+    , m_size(m_vulkanSwapchain->size())
+{
+    connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &MultiGpuSwapchain::handleDeviceRemoved);
+    connect(m_copyDevice->vulkanDevice(), &VulkanDevice::deviceLost, this, &MultiGpuSwapchain::handleGpuReset);
+}
+
 MultiGpuSwapchain::~MultiGpuSwapchain()
 {
     deleteResources();
@@ -101,7 +132,105 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyRgbBuffer(GraphicsB
     if (!m_copyDevice || !m_targetDevice || !buffer->dmabufAttributes()) {
         return std::nullopt;
     }
+    if (m_vulkanSwapchain) {
+        return copyWithVulkan(buffer, damage, std::move(sync), frame);
+    } else {
+        return copyWithEGL(buffer, damage, std::move(sync), frame);
+    }
+}
 
+std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(GraphicsBuffer *src, const Region &damage, FileDescriptor &&sync, OutputFrame *frame)
+{
+    // TODO add timestamp queries for this
+
+    if (damage.isEmpty() && m_currentVulkanSlot) {
+        return Ret{
+            .buffer = m_currentVulkanSlot->buffer(),
+            .sync = m_currentVulkanSlot->releaseFd().duplicate(),
+        };
+    }
+
+    const auto srcVk = m_copyDevice->vulkanDevice();
+    const auto srcTexture = srcVk->importBuffer(src, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+    if (!srcTexture) {
+        qCWarning(KWIN_VULKAN, "Could not import buffer for multi GPU copy!");
+        m_journal.clear();
+        return std::nullopt;
+    }
+
+    m_currentVulkanSlot = m_vulkanSwapchain->acquire();
+    if (!m_currentVulkanSlot) {
+        qCWarning(KWIN_VULKAN, "Swapchain acquire failed!");
+        m_journal.clear();
+        return std::nullopt;
+    }
+
+    const Rect completeRect{QPoint(), m_size};
+    const Region toRender = (m_journal.accumulate(m_currentVulkanSlot->age(), completeRect) | damage) & completeRect;
+    if (toRender.isEmpty()) {
+        return Ret{
+            .buffer = m_currentVulkanSlot->buffer(),
+            .sync = FileDescriptor{},
+        };
+    }
+    m_journal.add(damage);
+
+    const vk::CommandBuffer commandBuffer(srcVk->createCommandBuffer());
+    vk::Result result = commandBuffer.begin(vk::CommandBufferBeginInfo{
+        vk::CommandBufferUsageFlagBits::eOneTimeSubmit,
+    });
+    if (result != vk::Result::eSuccess) {
+        m_journal.clear();
+        return std::nullopt;
+    }
+    const std::vector<vk::ImageBlit> regions = toRender.rects() | std::views::transform([&completeRect](const Rect &rect) {
+        return vk::ImageBlit{
+            // src
+            vk::ImageSubresourceLayers{
+                vk::ImageAspectFlagBits::eColor,
+                0,
+                0,
+                1,
+            },
+            std::array{
+                vk::Offset3D{rect.left(), completeRect.height() - rect.bottom(), 0},
+                vk::Offset3D{rect.right(), completeRect.height() - rect.top(), 1},
+            },
+            // dst
+            vk::ImageSubresourceLayers{
+                vk::ImageAspectFlagBits::eColor,
+                0,
+                0,
+                1,
+            },
+            std::array{
+                vk::Offset3D{rect.left(), completeRect.height() - rect.bottom(), 0},
+                vk::Offset3D{rect.right(), completeRect.height() - rect.top(), 1},
+            },
+        };
+    }) | std::ranges::to<std::vector>();
+    commandBuffer.blitImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
+                            m_currentVulkanSlot->texture()->handle(), vk::ImageLayout::eGeneral,
+                            regions, vk::Filter::eNearest);
+    result = commandBuffer.end();
+    if (result != vk::Result::eSuccess) {
+        m_journal.clear();
+        return std::nullopt;
+    }
+    auto completionFd = srcVk->submit(commandBuffer, std::move(sync));
+    if (!completionFd.has_value()) {
+        m_needsRecreation = true;
+        return std::nullopt;
+    }
+    m_vulkanSwapchain->release(m_currentVulkanSlot.get(), completionFd->duplicate());
+    return Ret{
+        .buffer = m_currentVulkanSlot->buffer(),
+        .sync = std::move(*completionFd),
+    };
+}
+
+std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame)
+{
     if (damage.isEmpty() && m_currentEglSlot) {
         return Ret{
             .buffer = m_currentEglSlot->buffer(),
@@ -180,6 +309,10 @@ void MultiGpuSwapchain::deleteResources()
         m_eglSwapchain.reset();
         m_copyContext.reset();
     }
+    if (m_vulkanSwapchain) {
+        m_currentVulkanSlot.reset();
+        m_vulkanSwapchain.reset();
+    }
     m_copyDevice = nullptr;
     m_targetDevice = nullptr;
 }
@@ -189,6 +322,10 @@ void MultiGpuSwapchain::resetDamageTracking()
     m_currentEglSlot.reset();
     if (m_eglSwapchain) {
         m_eglSwapchain->resetBufferAge();
+    }
+    m_currentVulkanSlot.reset();
+    if (m_vulkanSwapchain) {
+        m_vulkanSwapchain->resetBufferAge();
     }
     m_journal.clear();
 }

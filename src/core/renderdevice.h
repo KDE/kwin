@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/drm_formats.h"
 #include "kwin_export.h"
 
 #include <QHash>
@@ -55,6 +56,12 @@ public:
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
     /**
+     * @returns all format+modifiers that can be imported with either
+     *          EGL or Vulkan
+     */
+    const FormatModifierMap &allImportableFormats() const;
+
+    /**
      * @returns whether or not this device is handling a GPU reset at the moment.
      *          This can be used to avoid attempting to allocate new GPU resources
      *          until the reset is complete
@@ -71,6 +78,7 @@ private:
     const std::unique_ptr<EglDisplay> m_display;
     const VkInstance m_vulkanInstance;
     std::unique_ptr<VulkanDevice> m_vulkanDevice;
+    FormatModifierMap m_allImportableFormats;
     std::weak_ptr<EglContext> m_eglContext;
     bool m_inReset = false;
 
