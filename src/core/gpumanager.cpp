@@ -9,9 +9,15 @@
 #include "gpumanager.h"
 #include "drmdevice.h"
 #include "utils/common.h"
+#include "utils/envvar.h"
 #include "utils/udev.h"
 
 #include <QSocketNotifier>
+#include <vulkan/vulkan.hpp>
+
+// This takes care of loading extension functions
+// as long as the vulkan-hpp versions of the functions are used
+VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
 namespace KWin
 {
@@ -26,11 +32,16 @@ GpuManager::GpuManager()
     m_udevMonitor->filterSubsystemDevType("drm");
     connect(m_udevNotifier.get(), &QSocketNotifier::activated, this, &GpuManager::handleUdevEvent);
     m_udevMonitor->enable();
+    initVulkan();
     scanForRenderDevices();
 }
 
 GpuManager::~GpuManager()
 {
+    m_renderDevices.clear();
+    if (m_vulkanInstance) {
+        vkDestroyInstance(m_vulkanInstance, nullptr);
+    }
 }
 
 const std::vector<std::unique_ptr<RenderDevice>> &GpuManager::renderDevices() const
@@ -73,13 +84,57 @@ void GpuManager::scanForRenderDevices()
         if (findDevice(udevDevice->devNum())) {
             continue;
         }
-        auto device = RenderDevice::open(udevDevice->devNode());
+        auto device = RenderDevice::open(udevDevice->devNode(), m_vulkanInstance);
         if (!device) {
             continue;
         }
         qCDebug(KWIN_CORE, "Adding render device %s", qPrintable(device->drmDevice()->path()));
         m_renderDevices.push_back(std::move(device));
     }
+}
+
+void GpuManager::initVulkan()
+{
+    // this makes createInstance work
+    VULKAN_HPP_DEFAULT_DISPATCHER.init();
+    vk::ApplicationInfo appInfo{
+        "kwin_wayland",
+        VK_MAKE_VERSION(PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH),
+        "kwin_wayland",
+        VK_MAKE_VERSION(1, 0, 0),
+        VK_MAKE_VERSION(1, 3, 0),
+    };
+    std::vector<const char *> validationLayers;
+    if (environmentVariableBoolValue("KWIN_VULKAN_VALIDATION").value_or(PROJECT_VERSION_PATCH >= 80)) {
+        validationLayers.push_back("VK_LAYER_KHRONOS_validation");
+    }
+    vk::InstanceCreateInfo instanceCI{
+        vk::InstanceCreateFlags(),
+        &appInfo,
+        validationLayers,
+    };
+    auto [result, instance] = vk::createInstance(instanceCI, nullptr);
+    if (result != vk::Result::eSuccess) {
+        // try again without the validation layer
+        validationLayers.clear();
+        instanceCI.setPEnabledLayerNames(validationLayers);
+        std::tie(result, instance) = vk::createInstance(instanceCI, nullptr);
+        if (result == vk::Result::eSuccess) {
+            qCWarning(KWIN_CORE, "Vulkan validation layer is not installed");
+        }
+    }
+    if (result != vk::Result::eSuccess) {
+        qCWarning(KWIN_CORE) << "couldn't create a vulkan instance:" << vk::to_string(result).c_str();
+        return;
+    }
+    m_vulkanInstance = instance;
+    // this loads all other function pointers for us
+    VULKAN_HPP_DEFAULT_DISPATCHER.init(instance);
+}
+
+VkInstance GpuManager::vulkanInstance() const
+{
+    return m_vulkanInstance;
 }
 
 void GpuManager::handleUdevEvent()
@@ -96,7 +151,7 @@ void GpuManager::handleUdevEvent()
             if (renderDevIt != m_renderDevices.end()) {
                 continue;
             }
-            auto device = RenderDevice::open(udevDevice->devNode());
+            auto device = RenderDevice::open(udevDevice->devNode(), m_vulkanInstance);
             if (!device) {
                 continue;
             }

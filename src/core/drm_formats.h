@@ -19,6 +19,7 @@
 #include <libdrm/drm_fourcc.h>
 #include <optional>
 #include <stdint.h>
+#include <vulkan/vulkan_core.h>
 
 namespace KWin
 {
@@ -70,6 +71,7 @@ struct KWIN_EXPORT FormatInfo
     uint32_t alphaBits;
     uint32_t bitsPerPixel;
     GLint openglFormat;
+    VkFormat vulkanFormat;
     bool floatingPoint;
 
     static const QHash<uint32_t, YuvConversion> s_drmConversions;
