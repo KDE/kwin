@@ -129,21 +129,6 @@ bool DrmOutput::presentAsync(OutputLayer *layer, std::optional<std::chrono::nano
     return m_pipeline->presentAsync(layer, allowedVrrDelay);
 }
 
-QList<std::shared_ptr<OutputMode>> DrmOutput::getModes(const State &state) const
-{
-    const auto drmModes = m_pipeline->connector()->modes();
-
-    QList<std::shared_ptr<OutputMode>> ret;
-    ret.reserve(drmModes.count());
-    for (const auto &drmMode : drmModes) {
-        ret.append(drmMode);
-    }
-    for (const auto &custom : state.customModes) {
-        ret.append(m_pipeline->connector()->generateMode(custom.size, custom.refreshRate / 1000.0f, custom.flags | OutputMode::Flag::Custom));
-    }
-    return ret;
-}
-
 DrmPlane::Transformations outputToPlaneTransform(OutputTransform transform)
 {
     using PlaneTrans = DrmPlane::Transformation;
@@ -175,16 +160,29 @@ void DrmOutput::updateConnectorProperties()
     updateInformation();
 
     State next = m_state;
-    next.modes = getModes(next);
-    if (!next.currentMode) {
-        // some mode needs to be set
-        next.currentMode = next.modes.constFirst();
-    }
-    if (!next.modes.contains(next.currentMode)) {
-        next.currentMode->setRemoved();
-        next.modes.push_front(next.currentMode);
-    }
+    populateModes(&next);
     setState(next);
+}
+
+void DrmOutput::populateModes(State *next) const
+{
+    next->modes.clear();
+
+    const auto drmModes = m_pipeline->connector()->modes();
+    for (const auto &drmMode : drmModes) {
+        next->modes.append(drmMode);
+    }
+
+    for (const auto &custom : next->customModes) {
+        next->modes.append(m_pipeline->connector()->generateMode(custom.size, custom.refreshRate / 1000.0f, custom.flags | OutputMode::Flag::Custom));
+    }
+
+    if (!next->currentMode) {
+        next->currentMode = next->modes.constFirst();
+    } else if (!next->modes.contains(next->currentMode)) {
+        next->currentMode->setRemoved();
+        next->modes.push_front(next->currentMode);
+    }
 }
 
 static const bool s_allowColorspaceIntel = qEnvironmentVariableIntValue("KWIN_DRM_ALLOW_INTEL_COLORSPACE") == 1;
@@ -515,7 +513,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_nextState->dpmsMode = props->dpmsMode.value_or(m_state.dpmsMode);
     if (props->customModes.has_value()) {
         m_nextState->customModes = *props->customModes;
-        m_nextState->modes = getModes(*m_nextState);
+        populateModes(&*m_nextState);
     }
     m_nextState->maxPossibleArtificialHdrHeadroom = calculateMaxArtificialHdrHeadroom(*m_nextState);
     m_nextState->originalColorDescription = createColorDescription(*m_nextState);
