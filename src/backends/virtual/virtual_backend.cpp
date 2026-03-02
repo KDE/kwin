@@ -9,6 +9,7 @@
 #include "virtual_backend.h"
 
 #include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/renderdevice.h"
 #include "virtual_egl_backend.h"
 #include "virtual_output.h"
@@ -28,7 +29,7 @@ static std::unique_ptr<RenderDevice> findRenderDevice()
 #if defined(Q_OS_LINUX)
     // Workaround for libdrm being unaware of faux bus.
     if (qEnvironmentVariableIsSet("CI")) {
-        return RenderDevice::open(QStringLiteral("/dev/dri/card1"));
+        return RenderDevice::open(QStringLiteral("/dev/dri/card1"), GpuManager::s_self->vulkanInstance());
     }
 #endif
 #endif
@@ -64,7 +65,7 @@ static std::unique_ptr<RenderDevice> findRenderDevice()
 #endif
 
         if (device->available_nodes & (1 << nodeType)) {
-            if (auto ret = RenderDevice::open(device->nodes[nodeType])) {
+            if (auto ret = RenderDevice::open(device->nodes[nodeType], GpuManager::s_self->vulkanInstance())) {
                 return ret;
             }
         }
