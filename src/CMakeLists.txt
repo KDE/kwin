@@ -228,6 +228,7 @@ target_sources(kwin PRIVATE
     virtualkeyboard_dbus.cpp
     vulkan/vulkan_device.cpp
     vulkan/vulkan_logging.cpp
+    vulkan/vulkan_swapchain.cpp
     vulkan/vulkan_texture.cpp
     wayland_server.cpp
     waylandshellintegration.cpp
@@ -681,6 +682,7 @@ install(FILES
 install(FILES
     vulkan/vulkan_device.h
     vulkan/vulkan_logging.h
+    vulkan/vulkan_swapchain.h
     vulkan/vulkan_texture.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/vulkan COMPONENT Devel
 )
