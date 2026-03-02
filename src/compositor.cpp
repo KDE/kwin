@@ -674,6 +674,10 @@ void Compositor::composite(RenderLoop *renderLoop)
         .requiredAlphaBits = 0,
     });
 
+    if (!primaryView->layer()) {
+        qCritical() << "No output layer for primary view on" << output;
+    }
+
     // slowly adjust the artificial HDR headroom for the next frame. Note that
     // - this has to happen (right) after prePaint, so that the scene's stacking order is valid
     // - this is only done for internal displays, because external displays usually apply slow animations to brightness changes
@@ -777,12 +781,21 @@ void Compositor::composite(RenderLoop *renderLoop)
         } else {
             view->setUnderlay(false);
         }
+        if (!view->layer()) {
+            qCritical() << "An overlay layer has no plane on" << output << "cursor:" << isCursor;
+        }
     }
 
     QList<OutputLayer *> toUpdate;
 
     // disable entirely unused output layers
     for (OutputLayer *layer : unusedOutputLayers) {
+        const bool unused = std::none_of(layers.constBegin(), layers.constEnd(), [&layer](const auto &data) {
+            return data.view->layer() == layer;
+        });
+        if (!unused) {
+            qCritical() << "A used layer is unexpectedly marked as unused on" << output;
+        }
         m_overlayViews[renderLoop].erase(layer);
         layer->setEnabled(false);
         // TODO only add the layer to `toUpdate` when necessary
@@ -991,6 +1004,9 @@ void Compositor::assignOutputLayers(LogicalOutput *logicalOutput, BackendOutput 
     const auto layers = m_backend->compatibleOutputLayers(backendOutput);
     const auto primaryLayer = findLayer(layers, OutputLayerType::Primary, std::nullopt);
     Q_ASSERT(primaryLayer);
+    if (!primaryLayer) {
+        qFatal("An output has no matching primary layer. This should never happen.");
+    }
     auto &sceneView = m_primaryViews[backendOutput->renderLoop()];
     if (sceneView) {
         sceneView->setLayer(primaryLayer);
