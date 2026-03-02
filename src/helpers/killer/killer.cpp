@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
     QString hostname = parser.value(hostNameOption);
     bool pid_ok = false;
     pid_t pid = parser.value(pidOption).toULong(&pid_ok);
-    QString caption = parser.value(windowNameOption);
+    QString windowName = parser.value(windowNameOption);
     QString appname = parser.value(applicationNameOption);
     QString windowHandle = parser.value(widOption);
 
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
 
     if (!pid_ok || pid == 0 || windowHandle.isEmpty()
         || (isX11 && (!time_ok || timestamp == XCB_CURRENT_TIME))
-        || hostname.isEmpty() || caption.isEmpty() || appname.isEmpty()) {
+        || hostname.isEmpty() || windowName.isEmpty() || appname.isEmpty()) {
         fprintf(stdout, "%s\n", qPrintable(i18n("This helper utility is not supposed to be called directly.")));
         parser.showHelp(1);
     }
@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
         QApplication::setApplicationDisplayName(appname);
     }
 
-    KillDialog dialog(appname, icon);
+    KillDialog dialog(appname, icon, windowName);
     dialog.setPid(pid);
     dialog.setHostName(hostname);
 

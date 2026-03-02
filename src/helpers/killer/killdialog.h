@@ -17,7 +17,7 @@ class KillDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit KillDialog(const QString &applicationName, const QIcon &applicationIcon, QWidget *parent = nullptr);
+    explicit KillDialog(const QString &applicationName, const QIcon &applicationIcon, const QString &windowName, QWidget *parent = nullptr);
 
     void setPid(pid_t pid);
     void setHostName(const QString &hostName);

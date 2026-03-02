@@ -18,7 +18,7 @@
 #include <QStyleOption>
 #include <QWindow>
 
-KillDialog::KillDialog(const QString &applicationName, const QIcon &applicationIcon, QWidget *parent)
+KillDialog::KillDialog(const QString &applicationName, const QIcon &applicationIcon, const QString &windowName, QWidget *parent)
     : QDialog(parent)
 {
     m_ui.setupUi(this);
@@ -26,7 +26,7 @@ KillDialog::KillDialog(const QString &applicationName, const QIcon &applicationI
     option.initFrom(this);
 
     // Drop redundant application name, cf. QXcbWindow::setWindowTitle.
-    QString caption = applicationName.toHtmlEscaped();
+    QString caption = windowName.toHtmlEscaped();
     const QString titleSeparator = QString::fromUtf8(" \xe2\x80\x94 "); // // U+2014, EM DASH
     caption.remove(titleSeparator + applicationName);
     caption.remove(QStringLiteral(" – ") + applicationName); // EN dash (Firefox)
