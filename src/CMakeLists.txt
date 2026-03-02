@@ -634,8 +634,8 @@ install(FILES
     opengl/eglswapchain.h
     opengl/eglutils_p.h
     opengl/glframebuffer.h
-    opengl/gllut3D.h
     opengl/gllut.h
+    opengl/gllut3D.h
     opengl/glplatform.h
     opengl/glrendertimequery.h
     opengl/glshader.h

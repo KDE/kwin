@@ -325,6 +325,10 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const FormatModifierMap
         m_surface = std::move(m_oldSurface);
         return true;
     }
+    if (m_gpu != m_eglBackend->gpu() && m_gpu->renderDevice() && m_gpu->renderDevice()->isInReset()) {
+        // avoid creating a suboptimal swapchain until the reset is complete
+        return false;
+    }
     if (auto newSurface = createSurface(size, formats, tradeoff, requiredAlphaBits)) {
         m_oldSurface = std::move(m_surface);
         if (m_oldSurface) {
@@ -443,7 +447,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         if (!m_eglBackend->gpu()->renderDevice() || !m_gpu->renderDevice()) {
             return nullptr;
         }
-        renderModifiers.intersect(m_gpu->renderDevice()->eglDisplay()->allSupportedDrmFormats().value(format));
+        renderModifiers.intersect(m_gpu->renderDevice()->allImportableFormats().value(format));
         // transferring non-linear buffers with implicit modifiers between GPUs is likely to yield wrong results
         renderModifiers.erase(DRM_FORMAT_MOD_INVALID);
     } else if (cpuCopy) {
