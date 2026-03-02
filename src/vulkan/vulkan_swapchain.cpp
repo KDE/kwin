@@ -47,6 +47,11 @@ bool VulkanSwapchainSlot::isBusy() const
     return m_buffer->isReferenced() || (m_releaseFd.isValid() && !m_releaseFd.isReadable());
 }
 
+const FileDescriptor &VulkanSwapchainSlot::releaseFd() const
+{
+    return m_releaseFd;
+}
+
 VulkanSwapchain::VulkanSwapchain(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, uint64_t modifier, const std::shared_ptr<VulkanSwapchainSlot> &initialSlot)
     : m_device(device)
     , m_allocator(allocator)
@@ -112,6 +117,13 @@ void VulkanSwapchain::release(VulkanSwapchainSlot *released, FileDescriptor &&re
         } else if (slot->age() > 0) {
             slot->m_age++;
         }
+    }
+}
+
+void VulkanSwapchain::resetBufferAge()
+{
+    for (const auto &slot : std::as_const(m_slots)) {
+        slot->m_age = 0;
     }
 }
 

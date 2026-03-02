@@ -442,7 +442,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         if (!m_eglBackend->gpu()->renderDevice() || !m_gpu->renderDevice()) {
             return nullptr;
         }
-        renderModifiers.intersect(m_gpu->renderDevice()->eglDisplay()->allSupportedDrmFormats().value(format));
+        renderModifiers.intersect(m_gpu->renderDevice()->allImportableFormats().value(format));
         // transferring non-linear buffers with implicit modifiers between GPUs is likely to yield wrong results
         renderModifiers.erase(DRM_FORMAT_MOD_INVALID);
     } else if (cpuCopy) {

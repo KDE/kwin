@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/drm_formats.h"
 #include "kwin_export.h"
 
 #include <QHash>
@@ -53,12 +54,19 @@ public:
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
+    /**
+     * @returns all format+modifiers that can be imported with either
+     *          EGL or Vulkan
+     */
+    const FormatModifierMap &allImportableFormats() const;
+
     static std::unique_ptr<RenderDevice> open(const QString &path, VkInstance vkInstance, int authenticatedFd = -1);
 
 private:
     const std::unique_ptr<DrmDevice> m_device;
     const std::unique_ptr<EglDisplay> m_display;
     const std::unique_ptr<VulkanDevice> m_vulkanDevice;
+    const FormatModifierMap m_allImportableFormats;
     std::weak_ptr<EglContext> m_eglContext;
 
     QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
