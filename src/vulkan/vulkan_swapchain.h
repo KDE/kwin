@@ -35,6 +35,7 @@ public:
     VulkanTexture *texture() const;
     int age() const;
     bool isBusy() const;
+    const FileDescriptor &releaseFd() const;
 
 private:
     GraphicsBuffer *const m_buffer;
@@ -56,6 +57,8 @@ public:
 
     std::shared_ptr<VulkanSwapchainSlot> acquire();
     void release(VulkanSwapchainSlot *slot, FileDescriptor &&releaseFd);
+
+    void resetBufferAge();
 
     static std::unique_ptr<VulkanSwapchain> create(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, const ModifierList &modifiers);
 
