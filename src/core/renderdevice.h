@@ -13,6 +13,7 @@
 #include <QObject>
 #include <QSize>
 #include <memory>
+#include <vulkan/vulkan_core.h>
 
 typedef void *EGLImageKHR;
 
@@ -23,13 +24,14 @@ class DrmDevice;
 class EglDisplay;
 class EglContext;
 class GraphicsBuffer;
+class VulkanDevice;
 
 class KWIN_EXPORT RenderDevice : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display);
+    explicit RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display, VkInstance vulkanInstance);
     ~RenderDevice();
 
     /**
@@ -46,15 +48,31 @@ public:
      */
     std::shared_ptr<EglContext> eglContext(EglContext *shareContext = nullptr);
 
+    VulkanDevice *vulkanDevice() const;
+
+    // TODO move these + caching to EglDisplay?
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
-    static std::unique_ptr<RenderDevice> open(const QString &path, int authenticatedFd = -1);
+    /**
+     * @returns whether or not this device is handling a GPU reset at the moment.
+     *          This can be used to avoid attempting to allocate new GPU resources
+     *          until the reset is complete
+     */
+    bool isInReset() const;
+
+    static std::unique_ptr<RenderDevice> open(const QString &path, VkInstance vkInstance, int authenticatedFd = -1);
 
 private:
+    void handleVulkanDeviceLoss();
+    void createVulkanDevice();
+
     const std::unique_ptr<DrmDevice> m_device;
     const std::unique_ptr<EglDisplay> m_display;
+    const VkInstance m_vulkanInstance;
+    std::unique_ptr<VulkanDevice> m_vulkanDevice;
     std::weak_ptr<EglContext> m_eglContext;
+    bool m_inReset = false;
 
     QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
 };
