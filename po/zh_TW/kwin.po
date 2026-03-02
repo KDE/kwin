@@ -17,14 +17,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-28 00:46+0000\n"
-"PO-Revision-Date: 2026-01-28 20:00+0900\n"
+"PO-Revision-Date: 2026-03-02 06:14+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.03.70\n"
+"X-Generator: Lokalize 25.11.70\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, kde-format
@@ -160,10 +160,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "色彩描述檔缺乏 TRC 標籤"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "無法開啟 ICC 描述檔「%1」"
+msgstr "無法反轉 ICC 描述檔「%1」的色調曲線"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1273,7 +1272,7 @@ msgstr "時間"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "要顯示的訊息（全螢幕、無邊框）"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:145
 #, kde-format
@@ -1287,21 +1286,16 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "此協助公用程式不支援直接呼叫。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
 "%1 keyboard shortcut instead."
 msgstr ""
-"您已經選擇要視窗以全螢幕模式顯示。\n"
-"如果該應用程式本身沒有關閉全螢幕模式的選項，您將無法使用滑鼠將其關閉：要使用"
-"視窗選單來代替，使用 %1 鍵盤捷徑來作用它。"
+"您已選擇以全螢幕模式顯示視窗。\n"
+"如果該應用程式本身沒有離開全螢幕模式的選項，您將無法使用滑鼠離開全螢幕：請改"
+"用 %1 鍵盤快捷鍵來離開全螢幕。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1316,43 +1310,30 @@ msgstr ""
 "視窗選單來代替，使用 %1 鍵盤捷徑來作用它。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse."
 msgstr ""
-"您已經選擇要視窗以全螢幕模式顯示。\n"
-"如果該應用程式本身沒有關閉全螢幕模式的選項，您將無法使用滑鼠將其關閉：要使用"
-"視窗選單來代替，使用 %1 鍵盤捷徑來作用它。"
+"您已選擇以全螢幕模式顯示視窗。\n"
+"如果該應用程式本身沒有離開全螢幕模式的選項，您將無法使用滑鼠離開全螢幕。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "全螢幕"
+msgstr "復原全螢幕"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the %1 keyboard shortcut instead."
 msgstr ""
-"您已經選擇顯示無邊框的視窗。\n"
-"沒有邊框，您將無法使用滑鼠讓邊框再次出現：要使用視窗選單來代替，使用 %1 鍵盤"
-"捷徑來作用它。"
+"您已選擇以無邊框模式顯示視窗。\n"
+"沒有邊框時您將無法使用重新啟用邊框：請改用 %1 鍵盤快捷鍵來啟用它。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
 #, kde-format
@@ -1367,32 +1348,25 @@ msgstr ""
 "捷徑來作用它。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
-"您已經選擇顯示無邊框的視窗。\n"
-"沒有邊框，您將無法使用滑鼠讓邊框再次出現：要使用視窗選單來代替，使用 %1 鍵盤"
-"捷徑來作用它。"
+"您已選擇以無邊框模式顯示視窗。\n"
+"沒有邊框時您將無法使用重新啟用邊框。"
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
-#, fuzzy, kde-format
-#| msgid "&No Border"
+#, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr "沒有邊框(&N)"
+msgstr "復原邊框"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "不要再顯示"
 
 #: helpers/killer/killdialog.cpp:37
 #, kde-kuit-format
@@ -1421,11 +1395,9 @@ msgstr ""
 "所有未儲存的資料將會遺失。</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "終止 %1(&T)"
+msgstr "正在終止 %1…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1462,7 +1434,7 @@ msgstr "沒有回應"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "詳細資料(&D)"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
@@ -2838,10 +2810,9 @@ msgstr "選單："
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "全螢幕視窗"
+msgstr "排除全螢幕視窗"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -3606,17 +3577,15 @@ msgstr "撕裂規則類型"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:467
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast"
-msgstr "從螢幕錄製當中隱藏(&H)"
+msgstr "從螢幕錄製當中隱藏"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:471
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast rule type"
-msgstr "從螢幕錄製當中隱藏(&H)"
+msgstr "「從螢幕錄製當中隱藏」規則類型"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3884,10 +3853,9 @@ msgid "Maximize Window Horizontally"
 msgstr "水平最大化視窗"
 
 #: useractions.cpp:845
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "重新調整視窗大小"
+msgstr "復原視窗"
 
 #: useractions.cpp:847
 #, kde-format
@@ -4267,7 +4235,7 @@ msgstr "不允許透過設定值變更來停用所有輸出"
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 無法鏡像自己"
 
 #: wayland/outputmanagement_v2.cpp:637
 #, kde-format
@@ -4280,22 +4248,19 @@ msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "無法新增更新頻率是 0 Hz 的自訂模式"
 
 #: wayland/outputmanagement_v2.cpp:652
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too negative (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr "輸出 %s 的位置負到不合理 (%d, %d)"
+msgstr "輸出 %1 的位置負到不合理 (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:655
-#, fuzzy, kde-format
-#| msgid "Position of enabled output %s is negative (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
-msgstr "已啟用的輸出 %s 的位置是負的 (%d, %d)"
+msgstr "已啟用的輸出 %1 的位置是負的 (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:659
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr "輸出 %s 的位置大到不合理 (%d, %d)"
+msgstr "輸出 %1 的位置大到不合理 (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:676
 #, kde-format
@@ -4303,10 +4268,9 @@ msgid "The driver rejected the output configuration"
 msgstr "驅動程式回絕了提供的輸出配置"
 
 #: wayland/outputmanagement_v2.cpp:679
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "Alt 按鍵目前作用中。"
+msgstr "工作階段並非作用中"
 
 #: window.cpp:3125
 #, kde-format

@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-28 00:46+0000\n"
-"PO-Revision-Date: 2026-02-21 23:05+0100\n"
+"PO-Revision-Date: 2026-03-01 13:04+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -2848,10 +2848,9 @@ msgstr "Menuak:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "Pantaila-osoko leihoak"
+msgstr "Baztertu pantaila-osoko leihoak"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -4277,7 +4276,7 @@ msgstr "Konfigurazio aldaketen bidez irteera denak ezgaitzea ez da uzten"
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1(e)k ezin du bere burua ispilatu"
 
 #: wayland/outputmanagement_v2.cpp:637
 #, kde-format
@@ -4290,22 +4289,19 @@ msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Ezin da zero Hz-ko freskatze-tasa duen neurriko modu bat gehitu"
 
 #: wayland/outputmanagement_v2.cpp:652
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too negative (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr "%s irteeraren kokapena negatiboegia da (%d, %d)"
+msgstr "%1 irteeraren kokapena negatiboegia da (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:655
-#, fuzzy, kde-format
-#| msgid "Position of enabled output %s is negative (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
-msgstr "Gaitutako %s irteeraren kokapena negatiboa da (%d, %d)"
+msgstr "Gaitutako %1 irteeraren kokapena negatiboa da (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:659
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr "%s irteeren kokapena handiegia da (%d, %d)"
+msgstr "%1 irteeren kokapena handiegia da (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:676
 #, kde-format
@@ -4313,10 +4309,9 @@ msgid "The driver rejected the output configuration"
 msgstr "Gidariak irteera konfigurazioa errefusatu du"
 
 #: wayland/outputmanagement_v2.cpp:679
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "Alt tekla aktibo dago orain."
+msgstr "Saioa ez dago aktibo"
 
 #: window.cpp:3125
 #, kde-format

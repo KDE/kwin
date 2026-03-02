@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-28 00:46+0000\n"
-"PO-Revision-Date: 2026-02-21 08:37+0100\n"
+"PO-Revision-Date: 2026-03-01 08:03+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -2856,10 +2856,9 @@ msgstr "Menu:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "Finestre a schermo intero"
+msgstr "Escludi le finestre a schermo intero"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -4292,7 +4291,7 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 non può rispecchiare se stesso"
 
 #: wayland/outputmanagement_v2.cpp:637
 #, kde-format
@@ -4308,22 +4307,19 @@ msgstr ""
 "aggiornamento di zero Hz"
 
 #: wayland/outputmanagement_v2.cpp:652
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too negative (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr "La posizione dell'uscita %s è troppo negativa (%d, %d)"
+msgstr "La posizione dell'uscita %1 è troppo negativa (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:655
-#, fuzzy, kde-format
-#| msgid "Position of enabled output %s is negative (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
-msgstr "La posizione dell'uscita abilitata %s è negativa (%d, %d)"
+msgstr "La posizione dell'uscita abilitata %1 è negativa (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:659
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr "La posizione dell'uscita %s è troppo grande (%d, %d)"
+msgstr "La posizione dell'uscita %1 è troppo grande (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:676
 #, kde-format
@@ -4331,10 +4327,9 @@ msgid "The driver rejected the output configuration"
 msgstr "Il driver ha rifiutato la configurazione di uscita"
 
 #: wayland/outputmanagement_v2.cpp:679
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "Il tasto Alt è ora attivo."
+msgstr "La sessione non è attiva"
 
 #: window.cpp:3125
 #, kde-format

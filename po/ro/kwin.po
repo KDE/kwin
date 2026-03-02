@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-28 00:46+0000\n"
-"PO-Revision-Date: 2026-02-16 22:14+0000\n"
+"PO-Revision-Date: 2026-02-28 22:52+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Lokalize 25.08.1\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -159,10 +159,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Profilul de culoare nu conține marcaje TRC"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Eșec la deschiderea profilului ICC „%1”"
+msgstr "Inversarea curbelor de tonalitate ale profilului ICC „%1” a eșuat"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1400,11 +1399,9 @@ msgstr ""
 "emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "&Termină %1"
+msgstr "Se termină %1…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1441,7 +1438,7 @@ msgstr "Nu răspunde"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Detalii"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
@@ -2843,10 +2840,9 @@ msgstr "Meniuri:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "Ferestre pe tot ecranul"
+msgstr "Exclude ferestrele în ecran complet"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -3611,17 +3607,15 @@ msgstr "Tip de regulă cu permiterea frânturilor"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:467
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast"
-msgstr "Asc&unde din difuzarea ecranului"
+msgstr "Ascunde din difuzarea ecranului"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:471
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast rule type"
-msgstr "Asc&unde din difuzarea ecranului"
+msgstr "Tip de regulă cu ascundere din difuzarea ecranului"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -4272,7 +4266,7 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 nu se poate oglindi pe sine însăși"
 
 #: wayland/outputmanagement_v2.cpp:637
 #, kde-format
@@ -4285,22 +4279,19 @@ msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Nu se poate adăuga regim personalizat cu rată de împrospătare zero Hz"
 
 #: wayland/outputmanagement_v2.cpp:652
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too negative (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr "Poziția afișajului %s e mult prea negativă (%d, %d)"
+msgstr "Poziția ieșirii %1 e mult prea negativă (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:655
-#, fuzzy, kde-format
-#| msgid "Position of enabled output %s is negative (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
-msgstr "Poziția afișajului activat %s e negativă (%d, %d)"
+msgstr "Poziția ieșirii active %1 e negativă (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:659
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr "Poziția afișajului %s e mult prea mare (%d, %d)"
+msgstr "Poziția ieșirii %1 e mult prea mare (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:676
 #, kde-format
@@ -4308,10 +4299,9 @@ msgid "The driver rejected the output configuration"
 msgstr "Driver-ul a respins configurația ieșirilor"
 
 #: wayland/outputmanagement_v2.cpp:679
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "Tasta Alt este acum activă."
+msgstr "Sesiunea nu e activă"
 
 #: window.cpp:3125
 #, kde-format

@@ -4256,7 +4256,7 @@ msgstr "驱动程序拒绝了输出配置"
 #: wayland/outputmanagement_v2.cpp:679
 #, kde-format
 msgid "The session is not active"
-msgstr ""
+msgstr "会话不在活动状态"
 
 #: window.cpp:3125
 #, kde-format
