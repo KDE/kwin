@@ -180,8 +180,15 @@ void DrmOutput::populateModes(State *next) const
     if (!next->currentMode) {
         next->currentMode = next->modes.constFirst();
     } else if (!next->modes.contains(next->currentMode)) {
-        next->currentMode->setRemoved();
-        next->modes.push_front(next->currentMode);
+        const auto it = std::ranges::find_if(next->modes, [&](const auto &mode) {
+            return *static_cast<DrmConnectorMode *>(next->currentMode.get()) == *static_cast<DrmConnectorMode *>(mode.get());
+        });
+        if (it != next->modes.end()) {
+            next->currentMode = *it;
+        } else {
+            next->currentMode->setRemoved();
+            next->modes.push_front(next->currentMode);
+        }
     }
 }
 

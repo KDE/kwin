@@ -98,12 +98,12 @@ static inline bool checkIfEqual(const drmModeModeInfo *one, const drmModeModeInf
         && one->vscan == two->vscan;
 }
 
-bool DrmConnectorMode::operator==(const DrmConnectorMode &otherMode)
+bool DrmConnectorMode::operator==(const DrmConnectorMode &otherMode) const
 {
     return checkIfEqual(&m_nativeMode, &otherMode.m_nativeMode);
 }
 
-bool DrmConnectorMode::operator==(const drmModeModeInfo &otherMode)
+bool DrmConnectorMode::operator==(const drmModeModeInfo &otherMode) const
 {
     return checkIfEqual(&m_nativeMode, &otherMode);
 }
