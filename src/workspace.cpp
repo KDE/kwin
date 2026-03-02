@@ -1276,8 +1276,17 @@ LogicalOutput *Workspace::findOutput(LogicalOutput *reference, Direction directi
     }
 }
 
+static bool wantsToManage(const BackendOutput *output)
+{
+    return output->isEnabled() && !output->isNonDesktop();
+}
+
 LogicalOutput *Workspace::findOutput(BackendOutput *backendOutput) const
 {
+    if (!wantsToManage(backendOutput)) {
+        return nullptr;
+    }
+
     const auto it = std::ranges::find_if(m_outputs, [backendOutput](LogicalOutput *logical) {
         return logical->backendOutput() == backendOutput
             || logical->uuid() == backendOutput->replicationSource();
@@ -1310,7 +1319,7 @@ void Workspace::updateOutputs()
     for (BackendOutput *output : availableOutputs) {
         output->setAutoRotateAvailable(m_orientationSensor->isAvailable());
         output->setAutoBrightnessAvailable(m_lightSensor->isAvailable());
-        if (output->isNonDesktop() || !output->isEnabled()) {
+        if (!wantsToManage(output)) {
             continue;
         }
         const auto replicationSource = std::ranges::find_if(availableOutputs, [output](BackendOutput *other) {
