@@ -384,6 +384,7 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalC
     // - not be entirely covered by other opaque windows
     SurfaceItem *surfaceItem = dynamic_cast<SurfaceItem *>(item);
     const Rect deviceRect = mapToDevice(view, item, item->rect());
+    const Region deviceOpaque = mapToDevice(view, item, item->opaque());
     if (surfaceItem
         && !surfaceItem->rect().isEmpty()
         && surfaceItem->frameTimeEstimation().transform([](const auto t) {
@@ -395,7 +396,7 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalC
         && !opaque.contains(deviceRect)
         && !effected.intersects(deviceRect)) {
         if (occupied.intersects(deviceRect) || (!corners.isEmpty() && corners.top().radius.clips(item->rect(), corners.top().box))) {
-            const bool isOpaque = surfaceItem->opaque().contains(surfaceItem->rect().roundedOut());
+            const bool isOpaque = deviceOpaque.contains(deviceRect);
             if (!isOpaque) {
                 // only fully opaque items can be used as underlays
                 return false;
@@ -415,7 +416,7 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalC
     } else {
         occupied += deviceRect;
     }
-    opaque += mapToDevice(view, item, item->opaque());
+    opaque += deviceOpaque;
 
     for (; it != children.rend(); it++) {
         Item *const child = *it;
