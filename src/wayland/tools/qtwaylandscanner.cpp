@@ -572,6 +572,7 @@ bool Scanner::process()
             printf("        Resource *add(struct ::wl_client *client, int version);\n");
             printf("        Resource *add(struct ::wl_client *client, int id, int version);\n");
             printf("        Resource *add(struct wl_list *resource_list, struct ::wl_client *client, int id, int version);\n");
+            printf("        Resource *add(struct ::wl_resource *resource);\n");
             printf("\n");
             printf("        Resource *resource() { return m_resource; }\n");
             printf("        const Resource *resource() const { return m_resource; }\n");
@@ -797,6 +798,12 @@ bool Scanner::process()
             printf("        Resource *resource = bind(client, id, version);\n");
             printf("        m_resource_map.insert(client, resource);\n");
             printf("        return resource;\n");
+            printf("    }\n");
+            printf("\n");
+
+            printf("    %s::Resource *%s::add(struct ::wl_resource *resource)\n", interfaceName, interfaceName);
+            printf("    {\n");
+            printf("        return bind(resource);\n");
             printf("    }\n");
             printf("\n");
 
