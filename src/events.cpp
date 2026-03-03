@@ -452,7 +452,7 @@ void X11Window::clientMessageEvent(xcb_client_message_event_t *e)
 
 void X11Window::configureNotifyEvent(xcb_configure_notify_event_t *e)
 {
-    RectF newgeom(Xcb::fromXNative(e->x), Xcb::fromXNative(e->y), Xcb::fromXNative(e->width), Xcb::fromXNative(e->height));
+    const RectF newgeom = Xcb::fromXNative(Rect(e->x, e->y, e->width, e->height));
     if (newgeom != m_frameGeometry) {
         Q_EMIT frameGeometryAboutToChange();
 
