@@ -23,7 +23,77 @@
 namespace KWin
 {
 
-static const quint32 s_version = 20;
+static const quint32 s_version = 21;
+
+class OutputDeviceRegistryV2Private : public QtWaylandServer::kde_output_device_registry_v2
+{
+public:
+    explicit OutputDeviceRegistryV2Private(Display *display);
+
+    void announce(Resource *resource, OutputDeviceV2Interface *outputDevice);
+
+    Display *display;
+    QHash<BackendOutput *, OutputDeviceV2Interface *> outputDevices;
+
+protected:
+    void kde_output_device_registry_v2_bind_resource(Resource *resource) override;
+    void kde_output_device_registry_v2_stop(Resource *resource) override;
+};
+
+OutputDeviceRegistryV2Private::OutputDeviceRegistryV2Private(Display *display)
+    : QtWaylandServer::kde_output_device_registry_v2(*display, s_version)
+    , display(display)
+{
+}
+
+void OutputDeviceRegistryV2Private::announce(Resource *target, OutputDeviceV2Interface *outputDevice)
+{
+    outputDevice->offer(target->client(), target->version(), [this, target](wl_resource *resource) {
+        send_output(target->handle, resource);
+    });
+}
+
+void OutputDeviceRegistryV2Private::kde_output_device_registry_v2_bind_resource(Resource *resource)
+{
+    if (resource->version() < 21) {
+        wl_resource_post_error(resource->handle, error_unsupported_version, "unsupported version");
+        return;
+    }
+
+    for (const auto &outputDevice : std::as_const(outputDevices)) {
+        announce(resource, outputDevice);
+    }
+}
+
+void OutputDeviceRegistryV2Private::kde_output_device_registry_v2_stop(Resource *resource)
+{
+    send_finished(resource->handle);
+    wl_resource_destroy(resource->handle);
+}
+
+OutputDeviceRegistryV2::OutputDeviceRegistryV2(Display *display, QObject *parent)
+    : QObject(parent)
+    , d(std::make_unique<OutputDeviceRegistryV2Private>(display))
+{
+}
+
+void OutputDeviceRegistryV2::offer(BackendOutput *output)
+{
+    auto outputDevice = new OutputDeviceV2Interface(d->display, output);
+    d->outputDevices[output] = outputDevice;
+
+    const auto resources = d->resourceMap();
+    for (const auto &resource : resources) {
+        d->announce(resource, outputDevice);
+    }
+}
+
+void OutputDeviceRegistryV2::withdraw(BackendOutput *output)
+{
+    if (auto outputDevice = d->outputDevices.take(output)) {
+        outputDevice->remove();
+    }
+}
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -199,6 +269,7 @@ public:
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
     void kde_output_device_v2_destroy_global() override;
+    void kde_output_device_v2_release(Resource *resource) override;
 };
 
 class OutputDeviceModeV2InterfacePrivate : public QtWaylandServer::kde_output_device_mode_v2
@@ -361,6 +432,13 @@ void OutputDeviceV2Interface::remove()
         displayPrivate->outputdevicesV2.removeOne(this);
     }
 
+    const auto resources = d->resourceMap();
+    for (const auto resource : resources) {
+        if (resource->version() >= KDE_OUTPUT_DEVICE_V2_REMOVED_SINCE_VERSION) {
+            d->send_removed(resource->handle);
+        }
+    }
+
     // NOTE that output modes can only be deleted after the global remove,
     // otherwise the client temporarily has an output without any modes
     d->globalRemove();
@@ -371,6 +449,16 @@ void OutputDeviceV2Interface::scheduleDone()
     d->m_doneTimer.start();
 }
 
+template<typename AnnounceCallback>
+void OutputDeviceV2Interface::offer(wl_client *client, uint32_t version, AnnounceCallback onAnnounce)
+{
+    wl_resource *resource = wl_resource_create(client, &kde_output_device_v2_interface, version, 0);
+    onAnnounce(resource);
+
+    // This will add the resource to the resource map and call the bind_resource callback.
+    d->add(resource);
+}
+
 BackendOutput *OutputDeviceV2Interface::handle() const
 {
     return d->m_handle;
@@ -379,6 +467,11 @@ BackendOutput *OutputDeviceV2Interface::handle() const
 void OutputDeviceV2InterfacePrivate::kde_output_device_v2_destroy_global()
 {
     delete q;
+}
+
+void OutputDeviceV2InterfacePrivate::kde_output_device_v2_release(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
 }
 
 void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource *resource)

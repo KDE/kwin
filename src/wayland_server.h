@@ -35,7 +35,7 @@ class PlasmaShellInterface;
 class PlasmaWindowActivationFeedbackInterface;
 class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
-class OutputDeviceV2Interface;
+class OutputDeviceRegistryV2;
 class OutputManagementV2Interface;
 class XdgExportedSurface;
 class XdgForeignV2Interface;
@@ -294,7 +294,7 @@ private:
     LinuxDrmSyncObjV1Interface *m_linuxDrmSyncObj = nullptr;
     QList<Window *> m_windows;
     QHash<LogicalOutput *, OutputInterface *> m_waylandOutputs;
-    QHash<BackendOutput *, OutputDeviceV2Interface *> m_waylandOutputDevices;
+    OutputDeviceRegistryV2 *m_outputDeviceRegistry;
     DrmLeaseManagerV1 *m_leaseManager = nullptr;
     OutputOrderV1Interface *m_outputOrder = nullptr;
     ColorManagerV1 *m_colorManager = nullptr;

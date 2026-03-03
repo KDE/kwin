@@ -305,15 +305,13 @@ void WaylandServer::registerXdgGenericWindow(Window *window)
 void WaylandServer::handleOutputAdded(BackendOutput *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
-        m_waylandOutputDevices.insert(output, new OutputDeviceV2Interface(m_display, output));
+        m_outputDeviceRegistry->offer(output);
     }
 }
 
 void WaylandServer::handleOutputRemoved(BackendOutput *output)
 {
-    if (auto outputDevice = m_waylandOutputDevices.take(output)) {
-        outputDevice->remove();
-    }
+    m_outputDeviceRegistry->withdraw(output);
 }
 
 void WaylandServer::handleOutputEnabled(LogicalOutput *output)
@@ -476,6 +474,7 @@ bool WaylandServer::init()
     });
 
     m_outputManagement = new OutputManagementV2Interface(m_display, m_display);
+    m_outputDeviceRegistry = new OutputDeviceRegistryV2(m_display, m_display);
 
     m_xdgOutputManagerV1 = new XdgOutputManagerV1Interface(m_display, m_display);
     new SubCompositorInterface(m_display, m_display);

@@ -15,6 +15,7 @@
 #include <QUuid>
 #include <memory>
 
+struct wl_client;
 struct wl_resource;
 
 namespace KWin
@@ -26,6 +27,21 @@ class Display;
 class OutputDeviceV2InterfacePrivate;
 class OutputDeviceModeV2Interface;
 class OutputDeviceModeV2InterfacePrivate;
+class OutputDeviceRegistryV2Private;
+
+class KWIN_EXPORT OutputDeviceRegistryV2 : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit OutputDeviceRegistryV2(Display *display, QObject *parent = nullptr);
+
+    void offer(BackendOutput *output);
+    void withdraw(BackendOutput *output);
+
+private:
+    std::unique_ptr<OutputDeviceRegistryV2Private> d;
+};
 
 /** @class OutputDeviceV2Interface
  *
@@ -41,6 +57,9 @@ class KWIN_EXPORT OutputDeviceV2Interface : public QObject
 public:
     explicit OutputDeviceV2Interface(Display *display, BackendOutput *handle, QObject *parent = nullptr);
     ~OutputDeviceV2Interface() override;
+
+    template<typename AnnounceCallback>
+    void offer(wl_client *client, uint32_t version, AnnounceCallback onAnnounce);
 
     void remove();
 
