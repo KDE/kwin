@@ -75,6 +75,7 @@
         "Description[lt]": "Laipsniškai pereiti tarp virtualių darbalaukių, kai jie perjungiami",
         "Description[lv]": "Izgaist starp virtuālām darbvirsmām to pārslēgšanas laikā",
         "Description[nl]": "Laat virtuele bureaubladen vervagen en opkomen bij het wisselen",
+        "Description[nn]": "Ton inn og ut ved veksling mellom virtuelle skrivebord",
         "Description[pl]": "Przenikanie przy przełączaniu pomiędzy pulpitami wirtualnymi",
         "Description[pt]": "Transição com desvanecimento ao mudar entre ambientes de trabalho virtuais",
         "Description[pt_BR]": "Desvanecer entre áreas de trabalho virtuais ao alternar",
