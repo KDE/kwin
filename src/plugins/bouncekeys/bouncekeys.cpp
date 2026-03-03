@@ -36,17 +36,25 @@ void BounceKeysFilter::loadConfig(const KConfigGroup &group)
 bool BounceKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
 {
     switch (event->state) {
-    case KWin::KeyboardKeyState::Repeated:
     case KWin::KeyboardKeyState::Pressed:
         if (auto it = m_lastEvent.find(event->key); it == m_lastEvent.end()) {
             // first time is always good
-            m_lastEvent[event->key] = event->timestamp;
+            m_lastEvent[event->key].lastReceived = event->timestamp;
+            m_lastEvent[event->key].rejected = false;
             return false;
         } else {
-            auto last = *it;
-            *it = event->timestamp;
+            auto last = it->lastReceived;
+            it->lastReceived = event->timestamp;
 
-            return event->timestamp - last < m_delay;
+            it->rejected = event->timestamp - last < m_delay;
+            return it->rejected;
+        }
+    case KWin::KeyboardKeyState::Repeated:
+        if (auto it = m_lastEvent.find(event->key); it == m_lastEvent.end()) {
+            // should never happen normally, just let it through
+            return false;
+        } else {
+            return it->rejected;
         }
     case KWin::KeyboardKeyState::Released:
         return false;

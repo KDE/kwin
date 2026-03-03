@@ -21,9 +21,15 @@ public:
     bool keyboardKey(KWin::KeyboardKeyEvent *event) override;
 
 private:
+    struct BounceKeyInfo
+    {
+        std::chrono::microseconds lastReceived;
+        bool rejected;
+    };
+
     void loadConfig(const KConfigGroup &group);
 
     KConfigWatcher::Ptr m_configWatcher;
     std::chrono::milliseconds m_delay;
-    QHash<int, std::chrono::microseconds> m_lastEvent;
+    QHash<int, BounceKeyInfo> m_lastEvent;
 };
