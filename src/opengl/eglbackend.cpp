@@ -157,22 +157,23 @@ void EglBackend::initWayland()
         qCWarning(KWIN_OPENGL) << "No render node have been found, not initializing wl-drm";
     }
 
-    const auto formats = m_renderDevice->eglDisplay()->allSupportedDrmFormats();
-    auto filterFormats = [this, &formats](std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
+    auto filterFormats = [this](std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
         FormatModifierMap set;
-        for (auto it = formats.constBegin(); it != formats.constEnd(); it++) {
+        const auto &allFormats = m_renderDevice->eglDisplay()->allSupportedDrmFormats();
+        const auto &nonExternalOnly = m_renderDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats();
+        for (auto it = allFormats.constBegin(); it != allFormats.constEnd(); it++) {
             const auto info = FormatInfo::get(it.key());
             if (bpc && (!info || bpc != info->bitsPerColor)) {
                 continue;
             }
 
             const bool externalOnlySupported = withExternalOnlyYUV && info && info->yuvConversion();
-            ModifierList modifiers = externalOnlySupported ? it->allModifiers : it->nonExternalOnlyModifiers;
+            ModifierList modifiers = externalOnlySupported ? nonExternalOnly[it.key()] : *it;
 
             if (externalOnlySupported && !modifiers.empty()) {
                 if (auto yuv = info->yuvConversion()) {
                     for (auto plane : std::as_const(yuv->plane)) {
-                        const auto planeModifiers = formats.value(plane.format).allModifiers;
+                        const auto planeModifiers = allFormats.value(plane.format);
                         erase_if(modifiers, [&planeModifiers](uint64_t mod) {
                             return !planeModifiers.contains(mod);
                         });

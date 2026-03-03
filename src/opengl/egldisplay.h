@@ -27,13 +27,6 @@ class GLTexture;
 class KWIN_EXPORT EglDisplay
 {
 public:
-    struct DrmFormatInfo
-    {
-        ModifierList allModifiers;
-        ModifierList nonExternalOnlyModifiers;
-        ModifierList externalOnlyModifiers;
-    };
-
     EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions, bool owning = true);
     ~EglDisplay();
 
@@ -47,8 +40,8 @@ public:
     bool supportsBufferAge() const;
     bool supportsNativeFence() const;
 
-    FormatModifierMap nonExternalOnlySupportedDrmFormats() const;
-    QHash<uint32_t, DrmFormatInfo> allSupportedDrmFormats() const;
+    const FormatModifierMap &nonExternalOnlySupportedDrmFormats() const;
+    const FormatModifierMap &allSupportedDrmFormats() const;
     bool isExternalOnly(uint32_t format, uint64_t modifier) const;
 
     EGLImageKHR createImage(EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLint *attrib_list) const;
@@ -61,7 +54,12 @@ public:
     static std::unique_ptr<EglDisplay> create(::EGLDisplay display, bool owning = true);
 
 private:
-    QHash<uint32_t, DrmFormatInfo> queryImportFormats() const;
+    struct Formats
+    {
+        FormatModifierMap nonExternalOnly;
+        FormatModifierMap all;
+    };
+    Formats queryImportFormats() const;
     QString determineRenderNode() const;
 
     const ::EGLDisplay m_handle;
@@ -72,7 +70,8 @@ private:
 
     const bool m_supportsBufferAge;
     const bool m_supportsNativeFence;
-    QHash<uint32_t, DrmFormatInfo> m_importFormats;
+    FormatModifierMap m_nonExternalOnlyFormats;
+    FormatModifierMap m_allFormats;
 
     struct
     {

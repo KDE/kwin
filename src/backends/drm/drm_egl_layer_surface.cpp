@@ -394,10 +394,10 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
             });
         });
         if (needsLinear) {
-            const auto renderFormats = m_eglBackend->eglDisplayObject()->allSupportedDrmFormats();
+            const auto renderFormats = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats();
             const bool noLinearSupport = std::ranges::none_of(sortedFormats, [&renderFormats](const auto &formatInfo) {
                 const auto it = renderFormats.constFind(formatInfo.drmFormat);
-                return it != renderFormats.cend() && it->nonExternalOnlyModifiers.contains(DRM_FORMAT_MOD_LINEAR);
+                return it != renderFormats.cend() && it->contains(DRM_FORMAT_MOD_LINEAR);
             });
             if (noLinearSupport) {
                 bufferTarget = BufferTarget::Dumb;
@@ -448,23 +448,23 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Dumb;
     ModifierList renderModifiers;
     auto ret = std::make_unique<Surface>();
-    const auto drmFormat = m_eglBackend->eglDisplayObject()->allSupportedDrmFormats()[format];
+    const auto drmFormat = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats()[format];
     if (importMode == MultiGpuImportMode::Egl) {
         ret->importContext = m_eglBackend->contextForGpu(m_gpu);
         if (!ret->importContext || ret->importContext->isSoftwareRenderer()) {
             return nullptr;
         }
         const auto importDrmFormat = ret->importContext->displayObject()->allSupportedDrmFormats()[format];
-        renderModifiers = importDrmFormat.allModifiers.intersected(drmFormat.nonExternalOnlyModifiers);
+        renderModifiers = importDrmFormat.intersected(drmFormat);
         // transferring non-linear buffers with implicit modifiers between GPUs is likely to yield wrong results
         renderModifiers.erase(DRM_FORMAT_MOD_INVALID);
     } else if (cpuCopy) {
         if (!cpuCopyFormats.contains(format)) {
             return nullptr;
         }
-        renderModifiers = drmFormat.nonExternalOnlyModifiers;
+        renderModifiers = drmFormat;
     } else {
-        renderModifiers = modifiers.intersected(drmFormat.nonExternalOnlyModifiers);
+        renderModifiers = modifiers.intersected(drmFormat);
     }
     if (renderModifiers.empty()) {
         return nullptr;
