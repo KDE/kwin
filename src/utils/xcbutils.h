@@ -53,12 +53,6 @@ QSizeF KWIN_EXPORT fromXNative(const QSize &value);
  */
 qreal KWIN_EXPORT nativeRound(qreal value);
 
-/** Floors a given value to using the scale as a base
- *  Use when flooring to ints from Xwayland
- *  i.e floor(a/scale) * scale
- */
-RectF KWIN_EXPORT nativeFloor(const RectF &value);
-
 QString KWIN_EXPORT atomName(xcb_atom_t atom);
 
 QStringList KWIN_EXPORT atomToMimeTypes(xcb_atom_t atom);

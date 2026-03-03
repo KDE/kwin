@@ -31,11 +31,6 @@ QSizeF Xcb::fromXNative(const QSize &value)
 {
     return value;
 }
-
-RectF Xcb::nativeFloor(const RectF &value)
-{
-    return value;
-}
 }
 
 QDebug operator<<(QDebug dbg, const KWin::Rect &rect)

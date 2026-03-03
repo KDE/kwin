@@ -577,19 +577,6 @@ qreal nativeRound(qreal value)
     return fromXNative(toXNative(value));
 }
 
-static qreal nativeFloor(qreal value)
-{
-    return std::floor(value * kwinApp()->xwaylandScale()) / kwinApp()->xwaylandScale();
-}
-
-RectF nativeFloor(const RectF &rect)
-{
-    const auto output = workspace()->outputAt(rect.center());
-    const RectF outputRect = output->mapFromGlobal(rect);
-    return output->mapToGlobal(RectF(nativeFloor(outputRect.left()), nativeFloor(outputRect.top()),
-                                     nativeFloor(outputRect.width()), nativeFloor(outputRect.height())));
-}
-
 QString atomName(xcb_atom_t atom)
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
