@@ -154,7 +154,7 @@ void Options::setXwaylandEavesdropsMouse(bool eavesdropsMouse)
         return;
     }
     m_xwaylandEavesdropsMouse = eavesdropsMouse;
-    Q_EMIT xwaylandEavesdropsChanged();
+    Q_EMIT xwaylandEavesdropsMouseChanged();
 }
 
 void Options::setXWaylandEisNoPrompt(bool doNotPrompt)
