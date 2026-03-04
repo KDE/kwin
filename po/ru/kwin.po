@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-03 00:48+0000\n"
-"PO-Revision-Date: 2026-02-21 14:09+0200\n"
+"PO-Revision-Date: 2026-02-26 19:46+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -2878,10 +2878,9 @@ msgstr "Меню:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "Распахнутые на весь экран окна"
+msgstr "Исключить окна, распахнутые во весь экран"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -4307,7 +4306,7 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 не может отражаться само на себя"
 
 #: wayland/outputmanagement_v2.cpp:637
 #, kde-format
@@ -4321,24 +4320,20 @@ msgstr ""
 "Невозможно добавить пользовательский режим с частотой обновления ноль Герц"
 
 #: wayland/outputmanagement_v2.cpp:652
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too negative (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr "Указано слишком отрицательное значение расположение вывода %s: %d,%d"
+msgstr "Указано слишком отрицательное значение расположение вывода %1: (%2,%3)"
 
 #: wayland/outputmanagement_v2.cpp:655
-#, fuzzy, kde-format
-#| msgid "Position of enabled output %s is negative (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr ""
-"Расположение задействованного вывода превышает допустимые отрицательные "
-"значения: %s: %d,%d"
+"Расположение включённого вывода %1 имеет отрицательные координаты (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:659
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr "Расположение вывода %s (%d, %d) превышает максимально допустимое."
+msgstr "Расположение вывода %1 намного превышает допустимое (%2, %3)."
 
 #: wayland/outputmanagement_v2.cpp:676
 #, kde-format
