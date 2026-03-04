@@ -38,6 +38,7 @@ public:
     std::shared_ptr<GLTexture> texture() const;
     GLFramebuffer *framebuffer() const;
     int age() const;
+    const FileDescriptor &releaseFd() const;
 
     static std::shared_ptr<EglSwapchainSlot> create(EglContext *context, GraphicsBuffer *buffer);
 

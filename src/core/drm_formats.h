@@ -36,6 +36,7 @@ public:
     void erase(uint64_t modifier);
     void insert(const ModifierList &other);
 
+    void intersect(const ModifierList &other);
     ModifierList intersected(const ModifierList &other) const;
 };
 

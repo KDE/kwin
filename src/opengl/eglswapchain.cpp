@@ -59,6 +59,11 @@ bool EglSwapchainSlot::isBusy() const
     return m_buffer->isReferenced() || (m_releaseFd.isValid() && !m_releaseFd.isReadable());
 }
 
+const FileDescriptor &EglSwapchainSlot::releaseFd() const
+{
+    return m_releaseFd;
+}
+
 std::shared_ptr<EglSwapchainSlot> EglSwapchainSlot::create(EglContext *context, GraphicsBuffer *buffer)
 {
     auto texture = context->importDmaBufAsTexture(*buffer->dmabufAttributes());

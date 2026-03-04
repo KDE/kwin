@@ -27,7 +27,6 @@ class DrmFramebuffer;
 class EglSwapchain;
 class EglSwapchainSlot;
 class QPainterSwapchain;
-class ShadowBuffer;
 class EglContext;
 class EglGbmBackend;
 class GraphicsBuffer;
@@ -38,6 +37,7 @@ class ColorTransformation;
 class GlLookUpTable;
 class IccProfile;
 class IccShader;
+class MultiGpuSwapchain;
 
 class EglGbmLayerSurface : public QObject
 {
@@ -66,7 +66,7 @@ private:
         None,
         Dmabuf,
         LinearDmabuf,
-        Egl,
+        GpuCopy,
         DumbBuffer
     };
     struct Surface
@@ -80,12 +80,9 @@ private:
         std::shared_ptr<EglSwapchainSlot> currentSlot;
         DamageJournal damageJournal;
         std::unique_ptr<QPainterSwapchain> importDumbSwapchain;
-        std::shared_ptr<EglContext> importContext;
-        std::shared_ptr<EglSwapchain> importGbmSwapchain;
-        QHash<GraphicsBuffer *, std::shared_ptr<GLTexture>> importedTextureCache;
+        std::unique_ptr<MultiGpuSwapchain> importSwapchain;
         QImage cpuCopyCache;
         MultiGpuImportMode importMode;
-        DamageJournal importDamageJournal;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
         BufferTarget bufferTarget;
         double scale = 1;
@@ -113,7 +110,7 @@ private:
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;
     std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const;
-    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const;
+    std::shared_ptr<DrmFramebuffer> importWithCopy(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const;
     std::shared_ptr<DrmFramebuffer> importWithCpu(Surface *surface, EglSwapchainSlot *source, OutputFrame *frame) const;
 
     std::unique_ptr<Surface> m_surface;
