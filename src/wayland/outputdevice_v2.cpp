@@ -5,13 +5,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "outputdevice_v2.h"
-
-#include "display.h"
-#include "display_p.h"
-#include "utils/common.h"
-#include "utils/resource.h"
-
 #include "core/backendoutput.h"
+#include "display.h"
+#include "utils/resource.h"
 
 #include <QDebug>
 #include <QPointer>
@@ -218,7 +214,6 @@ public:
     void sendAutoBrightness(Resource *resource);
 
     OutputDeviceV2Interface *q;
-    QPointer<Display> m_display;
     BackendOutput *m_handle;
     QSize m_physicalSize;
     QPoint m_globalPosition;
@@ -306,19 +301,12 @@ protected:
 OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, BackendOutput *handle)
     : QtWaylandServer::kde_output_device_v2(*display, s_version)
     , q(q)
-    , m_display(display)
     , m_handle(handle)
 {
-    DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
-    displayPrivate->outputdevicesV2.append(q);
 }
 
 OutputDeviceV2InterfacePrivate::~OutputDeviceV2InterfacePrivate()
 {
-    if (m_display) {
-        DisplayPrivate *displayPrivate = DisplayPrivate::get(m_display);
-        displayPrivate->outputdevicesV2.removeOne(q);
-    }
 }
 
 OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, BackendOutput *handle, QObject *parent)
@@ -426,11 +414,6 @@ void OutputDeviceV2Interface::remove()
     }
 
     d->m_doneTimer.stop();
-
-    if (d->m_display) {
-        DisplayPrivate *displayPrivate = DisplayPrivate::get(d->m_display);
-        displayPrivate->outputdevicesV2.removeOne(this);
-    }
 
     const auto resources = d->resourceMap();
     for (const auto resource : resources) {

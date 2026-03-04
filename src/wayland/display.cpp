@@ -180,11 +180,6 @@ QList<OutputInterface *> Display::outputs() const
     return d->outputs;
 }
 
-QList<OutputDeviceV2Interface *> Display::outputDevices() const
-{
-    return d->outputdevicesV2;
-}
-
 QList<OutputInterface *> Display::outputsIntersecting(const Rect &rect) const
 {
     QList<OutputInterface *> outputs;
