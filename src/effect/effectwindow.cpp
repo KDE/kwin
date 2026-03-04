@@ -193,6 +193,7 @@ bool EffectWindow::hasDecoration() const
 bool EffectWindow::isVisible() const
 {
     return !isMinimized()
+        && !isHidden()
         && isOnCurrentDesktop()
         && isOnCurrentActivity();
 }

@@ -230,6 +230,7 @@ class KWIN_EXPORT EffectWindow : public QObject
      * Whether the window is currently visible to the user, that is:
      * <ul>
      * <li>Not minimized</li>
+     * <li>Not hidden</li>
      * <li>On current desktop</li>
      * <li>On current activity</li>
      * </ul>

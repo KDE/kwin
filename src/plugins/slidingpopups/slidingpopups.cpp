@@ -439,7 +439,7 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
         return;
     }
 
-    if (!w->isVisible()) {
+    if (!w->isOnCurrentDesktop() || !w->isOnCurrentActivity()) {
         return;
     }
 
@@ -475,7 +475,7 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
         return;
     }
 
-    if (!w->isVisible()) {
+    if (!w->isOnCurrentDesktop() || !w->isOnCurrentActivity()) {
         return;
     }
 
