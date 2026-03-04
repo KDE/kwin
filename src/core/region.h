@@ -237,6 +237,11 @@ public:
     QSpan<const Rect> rects() const;
 
     /*!
+     * Returns a copy of the region grown by the given \a margins.
+     */
+    Region grownBy(const QMargins &margins) const;
+
+    /*!
      * Returns \c true if this region is equal to the \a other region; otherwise returns \c false.
      */
     bool operator==(const Region &other) const;
@@ -755,6 +760,11 @@ public:
      * Returns the rectangles that this region is made of.
      */
     QSpan<const RectF> rects() const;
+
+    /*!
+     * Returns a copy of the region grown by the given \a margins.
+     */
+    RegionF grownBy(const QMarginsF &margins) const;
 
     /*!
      * Returns \c true if this region is equal to the \a other region; otherwise returns \c false.

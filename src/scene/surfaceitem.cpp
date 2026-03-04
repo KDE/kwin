@@ -110,20 +110,6 @@ RegionF SurfaceItem::mapFromBuffer(const Region &region) const
     return result;
 }
 
-static RegionF expandRegion(const RegionF &region, const QMarginsF &padding)
-{
-    if (region.isEmpty()) {
-        return RegionF();
-    }
-
-    RegionF ret;
-    for (const RectF &rect : region.rects()) {
-        ret += rect.marginsAdded(padding);
-    }
-
-    return ret;
-}
-
 void SurfaceItem::addDamage(const Region &region)
 {
     if (m_lastDamage) {
@@ -150,7 +136,7 @@ void SurfaceItem::addDamage(const Region &region)
             // Simplified version of ceil(ceil(0.5 * output_scale / surface_scale) / output_scale)
             const int xPadding = std::ceil(0.5 / xScale);
             const int yPadding = std::ceil(0.5 / yScale);
-            viewDamage = expandRegion(viewDamage, QMargins(xPadding, yPadding, xPadding, yPadding));
+            viewDamage = viewDamage.grownBy(QMarginsF(xPadding, yPadding, xPadding, yPadding));
         }
         scheduleRepaint(view, viewDamage);
     }

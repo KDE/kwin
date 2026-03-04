@@ -214,6 +214,8 @@ private Q_SLOTS:
     void roundedIn();
     void roundedOut_data();
     void roundedOut();
+    void grownBy_data();
+    void grownBy();
 
 private:
     const QSize gridSize = testGridSize();
@@ -690,6 +692,35 @@ void TestRegionF::roundedOut()
 {
     QFETCH(RegionF, region);
     QTEST(region.roundedOut(), "expected");
+}
+
+void TestRegionF::grownBy_data()
+{
+    QTest::addColumn<RegionF>("region");
+    QTest::addColumn<QMarginsF>("margins");
+    QTest::addColumn<RegionF>("expected");
+
+    QTest::addRow("empty region, empty margins") << RegionF() << QMarginsF() << RegionF();
+    QTest::addRow("empty region, not empty margins") << RegionF() << QMarginsF(1, 2, 3, 4) << RegionF(RectF(QPointF(-1, -2), QPointF(3, 4)));
+
+    QTest::addRow("simple region") << RegionF(RectF(QPointF(0, 0), QPointF(5, 5))) << QMarginsF(1, 2, 3, 4) << RegionF(RectF(QPointF(-1, -2), QPointF(8, 9)));
+
+    QTest::addRow("complex region - conjoined")
+        << (RegionF(RectF(QPointF(0, 0), QPointF(6, 6))) | RegionF(RectF(QPointF(6, 3), QPointF(12, 9))))
+        << QMarginsF(1, 2, 3, 4)
+        << (RegionF(RectF(QPointF(-1, -2), QPointF(9, 10))) | RegionF(RectF(QPointF(5, 1), QPointF(15, 13))));
+
+    QTest::addRow("complex region - disjoint")
+        << (RegionF(RectF(QPointF(0, 0), QPointF(6, 6))) | RegionF(RectF(QPointF(10, 10), QPointF(16, 16))))
+        << QMarginsF(1, 2, 3, 4)
+        << (RegionF(RectF(QPointF(-1, -2), QPointF(9, 10))) | RegionF(RectF(QPointF(9, 8), QPointF(19, 20))));
+}
+
+void TestRegionF::grownBy()
+{
+    QFETCH(RegionF, region);
+    QFETCH(QMarginsF, margins);
+    QTEST(region.grownBy(margins), "expected");
 }
 
 QTEST_MAIN(TestRegionF)

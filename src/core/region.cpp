@@ -203,6 +203,25 @@ QSpan<const Rect> Region::rects() const
     }
 }
 
+Region Region::grownBy(const QMargins &margins) const
+{
+    if (m_rects.isEmpty()) {
+        return Region(m_bounds.grownBy(margins));
+    }
+
+    QList<Rect> grown;
+    grown.reserve(m_rects.size());
+    for (const Rect &rect : m_rects) {
+        grown.append(rect.grownBy(margins));
+    }
+
+    Region ret;
+    ret.assignRectsSortedByY(grown);
+    ret.m_bounds = m_bounds.grownBy(margins);
+
+    return ret;
+}
+
 static Rect slicedRect(const Rect &rect, int top, int bottom)
 {
     const int left = rect.left();
@@ -1500,6 +1519,25 @@ QSpan<const RectF> RegionF::rects() const
     } else {
         return QSpan(m_rects);
     }
+}
+
+RegionF RegionF::grownBy(const QMarginsF &margins) const
+{
+    if (m_rects.isEmpty()) {
+        return RegionF(m_bounds.grownBy(margins));
+    }
+
+    QList<RectF> grown;
+    grown.reserve(m_rects.size());
+    for (const RectF &rect : m_rects) {
+        grown.append(rect.grownBy(margins));
+    }
+
+    RegionF ret;
+    ret.assignRectsSortedByY(grown);
+    ret.m_bounds = m_bounds.grownBy(margins);
+
+    return ret;
 }
 
 static RectF slicedRect(const RectF &rect, qreal top, qreal bottom)

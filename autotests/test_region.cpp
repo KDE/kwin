@@ -212,6 +212,8 @@ private Q_SLOTS:
     void fromRectsSortedByY();
     void fromAndToQRegion_data();
     void fromAndToQRegion();
+    void grownBy_data();
+    void grownBy();
 
 private:
     const QSize gridSize = testGridSize();
@@ -646,6 +648,35 @@ void TestRegion::fromAndToQRegion()
 
     QCOMPARE(Region(qtRegion), region);
     QCOMPARE(QRegion(region), qtRegion);
+}
+
+void TestRegion::grownBy_data()
+{
+    QTest::addColumn<Region>("region");
+    QTest::addColumn<QMargins>("margins");
+    QTest::addColumn<Region>("expected");
+
+    QTest::addRow("empty region, empty margins") << Region() << QMargins() << Region();
+    QTest::addRow("empty region, not empty margins") << Region() << QMargins(1, 2, 3, 4) << Region(Rect(QPoint(-1, -2), QPoint(3, 4)));
+
+    QTest::addRow("simple region") << Region(Rect(QPoint(0, 0), QPoint(5, 5))) << QMargins(1, 2, 3, 4) << Region(Rect(QPoint(-1, -2), QPoint(8, 9)));
+
+    QTest::addRow("complex region - conjoined")
+        << (Region(Rect(QPoint(0, 0), QPoint(6, 6))) | Region(Rect(QPoint(6, 3), QPoint(12, 9))))
+        << QMargins(1, 2, 3, 4)
+        << (Region(Rect(QPoint(-1, -2), QPoint(9, 10))) | Region(Rect(QPoint(5, 1), QPoint(15, 13))));
+
+    QTest::addRow("complex region - disjoint")
+        << (Region(Rect(QPoint(0, 0), QPoint(6, 6))) | Region(Rect(QPoint(10, 10), QPoint(16, 16))))
+        << QMargins(1, 2, 3, 4)
+        << (Region(Rect(QPoint(-1, -2), QPoint(9, 10))) | Region(Rect(QPoint(9, 8), QPoint(19, 20))));
+}
+
+void TestRegion::grownBy()
+{
+    QFETCH(Region, region);
+    QFETCH(QMargins, margins);
+    QTEST(region.grownBy(margins), "expected");
 }
 
 QTEST_MAIN(TestRegion)
