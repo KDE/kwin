@@ -1,15 +1,14 @@
-# German translations for kwin package
 # German translation for kwin.
 # Copyright (C) 2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
-# SPDX-FileCopyrightText: 2025 Philipp Kiemle <l10n.daphipz@fastmail.de>
+# SPDX-FileCopyrightText: 2025-2026 Philipp Kiemle <l10n.daphipz@fastmail.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2025-09-07 19:32+0200\n"
+"PO-Revision-Date: 2026-02-28 01:11+0100\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -17,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #: ui/AnimationComboBox.qml:49
 #, kde-format
@@ -60,7 +59,7 @@ msgstr "Sofort"
 #, kde-format
 msgctxt "@title:group"
 msgid "Desktop animations"
-msgstr "Arbeisflächenamimationen"
+msgstr "Arbeitsflächenamimationen"
 
 #: ui/main.qml:97
 #, kde-format
