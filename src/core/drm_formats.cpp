@@ -42,12 +42,53 @@ void ModifierList::erase(uint64_t modifier)
     removeOne(modifier);
 }
 
+void ModifierList::insert(const ModifierList &other)
+{
+    for (const uint64_t &mod : other) {
+        insert(mod);
+    }
+}
+
 ModifierList ModifierList::intersected(const ModifierList &other) const
 {
     ModifierList ret;
     std::ranges::copy_if(*this, std::back_inserter(ret), [&other](uint64_t modifier) {
         return other.contains(modifier);
     });
+    return ret;
+}
+
+FormatModifierMap::FormatModifierMap()
+{
+}
+
+FormatModifierMap::FormatModifierMap(QHash<uint32_t, ModifierList> &&move)
+    : QHash<uint32_t, ModifierList>(std::move(move))
+{
+}
+
+FormatModifierMap::FormatModifierMap(const QHash<uint32_t, ModifierList> &copy)
+    : QHash<uint32_t, ModifierList>(copy)
+{
+}
+
+FormatModifierMap::FormatModifierMap(const std::initializer_list<std::pair<uint32_t, ModifierList>> &list)
+    : QHash<uint32_t, ModifierList>(list)
+{
+}
+
+bool FormatModifierMap::containsFormat(uint32_t format, uint64_t modifier) const
+{
+    const auto it = find(format);
+    return it != end() && it->contains(modifier);
+}
+
+FormatModifierMap FormatModifierMap::merged(const FormatModifierMap &other) const
+{
+    auto ret = *this;
+    for (auto it = other.begin(); it != other.end(); it++) {
+        ret[it.key()].insert(it.value());
+    }
     return ret;
 }
 

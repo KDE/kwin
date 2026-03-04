@@ -366,15 +366,12 @@ bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, con
     case MultiGpuImportMode::None:
     case MultiGpuImportMode::Dmabuf:
     case MultiGpuImportMode::LinearDmabuf: {
-        const auto format = surface->gbmSwapchain->format();
-        return formats.contains(format) && (surface->gbmSwapchain->modifier() == DRM_FORMAT_MOD_INVALID || formats[format].contains(surface->gbmSwapchain->modifier()));
+        return formats.containsFormat(surface->gbmSwapchain->format(), surface->gbmSwapchain->modifier());
     }
     case MultiGpuImportMode::DumbBuffer:
         return formats.contains(surface->importDumbSwapchain->format());
     case MultiGpuImportMode::Egl: {
-        const auto format = surface->importGbmSwapchain->format();
-        const auto it = formats.find(format);
-        return it != formats.end() && (surface->importGbmSwapchain->modifier() == DRM_FORMAT_MOD_INVALID || it->contains(surface->importGbmSwapchain->modifier()));
+        return formats.containsFormat(surface->importGbmSwapchain->format(), surface->importGbmSwapchain->modifier());
     }
     }
     Q_UNREACHABLE();
@@ -396,8 +393,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         if (needsLinear) {
             const auto renderFormats = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats();
             const bool noLinearSupport = std::ranges::none_of(sortedFormats, [&renderFormats](const auto &formatInfo) {
-                const auto it = renderFormats.constFind(formatInfo.drmFormat);
-                return it != renderFormats.cend() && it->contains(DRM_FORMAT_MOD_LINEAR);
+                return renderFormats.containsFormat(formatInfo.drmFormat, DRM_FORMAT_MOD_LINEAR);
             });
             if (noLinearSupport) {
                 bufferTarget = BufferTarget::Dumb;

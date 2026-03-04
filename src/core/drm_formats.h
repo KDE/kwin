@@ -33,10 +33,22 @@ public:
 
     void insert(uint64_t modifier);
     void erase(uint64_t modifier);
+    void insert(const ModifierList &other);
 
     ModifierList intersected(const ModifierList &other) const;
 };
-using FormatModifierMap = QHash<uint32_t, ModifierList>;
+
+class KWIN_EXPORT FormatModifierMap : public QHash<uint32_t, ModifierList>
+{
+public:
+    FormatModifierMap();
+    FormatModifierMap(QHash<uint32_t, ModifierList> &&move);
+    FormatModifierMap(const QHash<uint32_t, ModifierList> &copy);
+    FormatModifierMap(const std::initializer_list<std::pair<uint32_t, ModifierList>> &list);
+
+    FormatModifierMap merged(const FormatModifierMap &other) const;
+    bool containsFormat(uint32_t format, uint64_t modifier) const;
+};
 
 struct YuvFormat
 {
