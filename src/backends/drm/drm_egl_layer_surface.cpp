@@ -18,6 +18,7 @@
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
+#include "multigpuswapchain.h"
 #include "opengl/eglnativefence.h"
 #include "opengl/eglswapchain.h"
 #include "opengl/gllut.h"
@@ -61,12 +62,7 @@ EglGbmLayerSurface::~EglGbmLayerSurface() = default;
 
 EglGbmLayerSurface::Surface::~Surface()
 {
-    if (importContext) {
-        importContext->makeCurrent();
-        importGbmSwapchain.reset();
-        importedTextureCache.clear();
-        importContext.reset();
-    }
+    importSwapchain.reset();
     if (context) {
         context->makeCurrent();
     }
@@ -316,7 +312,6 @@ void EglGbmLayerSurface::forgetDamage()
 {
     if (m_surface) {
         m_surface->damageJournal.clear();
-        m_surface->importDamageJournal.clear();
         m_surface->shadowDamageJournal.clear();
     }
 }
@@ -340,9 +335,8 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const FormatModifierMap
             if (m_oldSurface->shadowSwapchain) {
                 m_oldSurface->shadowSwapchain->resetBufferAge();
             }
-            if (m_oldSurface->importGbmSwapchain) {
-                m_oldSurface->importGbmSwapchain->resetBufferAge();
-                m_oldSurface->importDamageJournal.clear();
+            if (m_oldSurface->importSwapchain) {
+                m_oldSurface->importSwapchain->resetDamageTracking();
             }
         }
         m_surface = std::move(newSurface);
@@ -371,9 +365,8 @@ bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, con
     }
     case MultiGpuImportMode::DumbBuffer:
         return formats.contains(surface->importDumbSwapchain->format());
-    case MultiGpuImportMode::Egl: {
-        return formats.containsFormat(surface->importGbmSwapchain->format(), surface->importGbmSwapchain->modifier());
-    }
+    case MultiGpuImportMode::GpuCopy:
+        return formats.containsFormat(surface->importSwapchain->format(), surface->importSwapchain->modifier());
     }
     Q_UNREACHABLE();
 }
@@ -421,7 +414,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
             return surface;
         }
     }
-    if (auto surface = doTestFormats(sortedFormats, MultiGpuImportMode::Egl)) {
+    if (auto surface = doTestFormats(sortedFormats, MultiGpuImportMode::GpuCopy)) {
         // qCDebug(KWIN_DRM) << "chose egl import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
         return surface;
     }
@@ -443,25 +436,21 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
 std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, uint32_t format, const ModifierList &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget, BackendOutput::ColorPowerTradeoff tradeoff, uint32_t requiredAlphaBits) const
 {
     const bool cpuCopy = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Dumb;
-    ModifierList renderModifiers;
     auto ret = std::make_unique<Surface>();
-    const auto drmFormat = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats()[format];
-    if (importMode == MultiGpuImportMode::Egl) {
-        ret->importContext = m_gpu->renderDevice()->eglContext();
-        if (!ret->importContext || ret->importContext->isSoftwareRenderer()) {
+    ModifierList renderModifiers = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats()[format];
+    if (importMode == MultiGpuImportMode::GpuCopy) {
+        if (!m_eglBackend->gpu()->renderDevice() || !m_gpu->renderDevice()) {
             return nullptr;
         }
-        const auto importDrmFormat = ret->importContext->displayObject()->allSupportedDrmFormats()[format];
-        renderModifiers = importDrmFormat.intersected(drmFormat);
+        renderModifiers.intersect(m_gpu->renderDevice()->eglDisplay()->allSupportedDrmFormats().value(format));
         // transferring non-linear buffers with implicit modifiers between GPUs is likely to yield wrong results
         renderModifiers.erase(DRM_FORMAT_MOD_INVALID);
     } else if (cpuCopy) {
         if (!cpuCopyFormats.contains(format)) {
             return nullptr;
         }
-        renderModifiers = drmFormat;
     } else {
-        renderModifiers = modifiers.intersected(drmFormat);
+        renderModifiers.intersect(modifiers);
     }
     if (renderModifiers.empty()) {
         return nullptr;
@@ -477,9 +466,9 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     }
     if (cpuCopy) {
         ret->importDumbSwapchain = std::make_unique<QPainterSwapchain>(m_gpu->drmDevice()->allocator(), size, format);
-    } else if (importMode == MultiGpuImportMode::Egl) {
-        ret->importGbmSwapchain = createGbmSwapchain(m_gpu, ret->importContext.get(), size, format, modifiers, MultiGpuImportMode::None, BufferTarget::Normal);
-        if (!ret->importGbmSwapchain) {
+    } else if (importMode == MultiGpuImportMode::GpuCopy) {
+        ret->importSwapchain = MultiGpuSwapchain::create(m_gpu->renderDevice(), m_gpu->drmDevice(), format, ret->gbmSwapchain->modifier(), size, FormatModifierMap{{format, modifiers}});
+        if (!ret->importSwapchain) {
             return nullptr;
         }
     }
@@ -521,7 +510,9 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
     }
     if (const auto ret = importBuffer(surface, slot.get(), FileDescriptor{}, nullptr, Region::infinite())) {
         // clear the render journal, because this was just a nonsense frame
-        surface->importDamageJournal.clear();
+        if (surface->importSwapchain) {
+            surface->importSwapchain->resetDamageTracking();
+        }
         surface->currentSlot = slot;
         surface->currentFramebuffer = ret;
         return ret;
@@ -534,8 +525,8 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surfac
 {
     if (surface->bufferTarget == BufferTarget::Dumb || surface->importMode == MultiGpuImportMode::DumbBuffer) {
         return importWithCpu(surface, slot, frame);
-    } else if (surface->importMode == MultiGpuImportMode::Egl) {
-        return importWithEgl(surface, slot, std::move(readFence), frame, damagedDeviceRegion);
+    } else if (surface->importMode == MultiGpuImportMode::GpuCopy) {
+        return importWithCopy(surface, slot, std::move(readFence), frame, damagedDeviceRegion);
     } else {
         const auto ret = m_gpu->importBuffer(slot->buffer(), std::move(readFence));
         if (!ret) {
@@ -545,9 +536,9 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surfac
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCopy(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame, const Region &damagedDeviceRegion) const
 {
-    Q_ASSERT(surface->importGbmSwapchain);
+    Q_ASSERT(surface->importSwapchain);
 
     const auto renderDevice = m_gpu->renderDevice();
     // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
@@ -555,83 +546,14 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
         glFinish();
     }
 
-    if (!surface->importContext->makeCurrent()) {
-        qCWarning(KWIN_DRM, "Failed to make import context current");
+    const Region bufferDamage = source->texture()->contentTransform().map(damagedDeviceRegion, source->texture()->size());
+    auto imported = surface->importSwapchain->copyRgbBuffer(source->buffer(), bufferDamage, std::move(readFence), frame);
+    if (!imported) {
         // this is probably caused by a GPU reset, let's not take any chances
         surface->needsRecreation = true;
         return nullptr;
     }
-    const auto restoreContext = qScopeGuard([this]() {
-        m_eglBackend->openglContext()->makeCurrent();
-    });
-    if (surface->importContext->checkGraphicsResetStatus() != GL_NO_ERROR) {
-        qCWarning(KWIN_DRM, "Detected GPU reset on secondary GPU %s", qPrintable(m_gpu->drmDevice()->path()));
-        surface->needsRecreation = true;
-        return nullptr;
-    }
-    std::unique_ptr<GLRenderTimeQuery> renderTime;
-    if (frame) {
-        renderTime = std::make_unique<GLRenderTimeQuery>(surface->importContext);
-        renderTime->begin();
-    }
-
-    if (readFence.isValid()) {
-        const auto destinationFence = EGLNativeFence::importFence(surface->importContext->displayObject(), std::move(readFence));
-        destinationFence.waitSync();
-    }
-
-    auto &sourceTexture = surface->importedTextureCache[source->buffer()];
-    if (!sourceTexture) {
-        sourceTexture = surface->importContext->importDmaBufAsTexture(*source->buffer()->dmabufAttributes());
-    }
-    if (!sourceTexture) {
-        qCWarning(KWIN_DRM, "failed to import the source texture!");
-        return nullptr;
-    }
-    auto slot = surface->importGbmSwapchain->acquire();
-    if (!slot) {
-        qCWarning(KWIN_DRM, "failed to import the local texture!");
-        return nullptr;
-    }
-
-    slot->texture()->setContentTransform(source->texture()->contentTransform());
-
-    const Region deviceRepaint = damagedDeviceRegion | surface->importDamageJournal.accumulate(slot->age(), Region::infinite());
-    surface->importDamageJournal.add(damagedDeviceRegion);
-
-    const auto mapping = slot->texture()->contentTransform().combine(OutputTransform::FlipY);
-    const QSize rotatedSize = mapping.map(slot->texture()->size());
-    const Region repaint = mapping.map(deviceRepaint & Rect(QPoint(), rotatedSize), rotatedSize);
-
-    GLFramebuffer *fbo = slot->framebuffer();
-    surface->importContext->pushFramebuffer(fbo);
-
-    const auto shader = surface->importContext->shaderManager()->pushShader(sourceTexture->target() == GL_TEXTURE_EXTERNAL_OES ? ShaderTrait::MapExternalTexture : ShaderTrait::MapTexture);
-    QMatrix4x4 mat;
-    mat.scale(1, -1);
-    mat.ortho(QRect(QPoint(), fbo->size()));
-    shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
-
-    if (const auto vbo = uploadGeometry(repaint, fbo->size())) {
-        sourceTexture->bind();
-        vbo->render(GL_TRIANGLES);
-        sourceTexture->unbind();
-    }
-
-    surface->importContext->popFramebuffer();
-    surface->importContext->shaderManager()->popShader();
-    glFlush();
-    EGLNativeFence endFence(renderDevice->eglDisplay());
-    if (!endFence.isValid() || s_forcePresentSync) {
-        glFinish();
-    }
-    surface->importGbmSwapchain->release(slot, endFence.fileDescriptor().duplicate());
-    if (frame) {
-        renderTime->end();
-        frame->addRenderTimeQuery(std::move(renderTime));
-    }
-
-    return m_gpu->importBuffer(slot->buffer(), endFence.takeFileDescriptor());
+    return m_gpu->importBuffer(imported->buffer, std::move(imported->sync));
 }
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface *surface, EglSwapchainSlot *source, OutputFrame *frame) const

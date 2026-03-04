@@ -49,6 +49,13 @@ void ModifierList::insert(const ModifierList &other)
     }
 }
 
+void ModifierList::intersect(const ModifierList &other)
+{
+    erase_if(*this, [&other](const uint64_t &mod) {
+        return !other.contains(mod);
+    });
+}
+
 ModifierList ModifierList::intersected(const ModifierList &other) const
 {
     ModifierList ret;
