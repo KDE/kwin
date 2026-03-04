@@ -120,6 +120,7 @@ target_sources(kwin PRIVATE
     lidswitchtracker.cpp
     main.cpp
     mousebuttons.cpp
+    multigpuswapchain.cpp
     onscreennotification.cpp
     opengl/abstract_opengl_context_attribute_builder.cpp
     opengl/egl_context_attribute_builder.cpp
@@ -497,6 +498,7 @@ install(FILES
     lidswitchtracker.h
     main.h
     mousebuttons.h
+    multigpuswapchain.h
     netinfo.h
     onscreennotification.h
     options.h
