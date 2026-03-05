@@ -76,7 +76,9 @@ bool InternalWindow::hitTest(const QPointF &point) const
     const QRegion mask = m_handle->mask();
     if (!mask.isEmpty() && !mask.contains(mapToLocal(point).toPoint())) {
         return false;
-    } else if (m_handle->property("outputOnly").toBool()) {
+    } else if (m_internalWindowFlags.testFlag(Qt::WindowTransparentForInput)) {
+        return false;
+    } else if (m_handle->property("outputOnly").toBool()) { // from Dialog, this is being deprecated in Plasma but still used by lots of kwin scripts
         return false;
     }
 
