@@ -80,9 +80,6 @@ int Application::crashes = 0;
 
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
-#if KWIN_BUILD_X11
-    , m_eventFilter(new XcbEventFilter())
-#endif
     , m_configLock(false)
     , m_config(KSharedConfig::openConfig(QStringLiteral("kwinrc")))
     , m_kxkbConfig()
@@ -275,18 +272,6 @@ TabletModeManager *Application::tabletModeManager() const
 {
     return m_tabletModeManager.get();
 }
-
-#if KWIN_BUILD_X11
-void Application::installNativeX11EventFilter()
-{
-    installNativeEventFilter(m_eventFilter.get());
-}
-
-void Application::removeNativeX11EventFilter()
-{
-    removeNativeEventFilter(m_eventFilter.get());
-}
-#endif
 
 void Application::destroyInput()
 {
@@ -486,15 +471,6 @@ xcb_timestamp_t Application::x11Time() const
 {
     return monotonicTime();
 }
-
-bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)
-{
-    if (eventType == "xcb_generic_event_t") {
-        return kwinApp()->dispatchEvent(static_cast<xcb_generic_event_t *>(message));
-    }
-    return false;
-}
-
 #endif
 
 QProcessEnvironment Application::processStartupEnvironment() const

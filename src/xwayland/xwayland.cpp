@@ -397,10 +397,9 @@ void Xwayland::dispatchEvents(DispatchEventsMode mode)
     auto pollEventFunc = mode == DispatchEventsMode::Poll ? xcb_poll_for_event : xcb_poll_for_queued_event;
 
     while (xcb_generic_event_t *event = pollEventFunc(connection)) {
-        qintptr result = 0;
-
-        QAbstractEventDispatcher *dispatcher = QCoreApplication::eventDispatcher();
-        dispatcher->filterNativeEvent(QByteArrayLiteral("xcb_generic_event_t"), event, &result);
+        if (!m_dataBridge->dispatchEvent(event)) {
+            kwinApp()->dispatchEvent(event);
+        }
         free(event);
     }
 
@@ -553,7 +552,6 @@ bool Xwayland::createX11Connection()
     m_app->setX11RootWindow(screen->root);
 
     m_app->createAtoms();
-    m_app->installNativeX11EventFilter();
 
     installSocketNotifier();
 
@@ -573,7 +571,6 @@ void Xwayland::destroyX11Connection()
     Q_EMIT m_app->x11ConnectionAboutToBeDestroyed();
 
     m_app->destroyAtoms();
-    m_app->removeNativeX11EventFilter();
 
     xcb_disconnect(m_app->x11Connection());
 
