@@ -15,6 +15,7 @@
 namespace KWin
 {
 
+class CursorItem;
 class DragAndDropIconItem;
 class EffectWindow;
 class EglContext;
@@ -22,14 +23,14 @@ class Item;
 class SurfaceItem;
 class WindowItem;
 class WindowPaintData;
-class CursorItem;
+class Workspace;
 
 class KWIN_EXPORT WorkspaceScene : public Scene
 {
     Q_OBJECT
 
 public:
-    WorkspaceScene();
+    explicit WorkspaceScene(Workspace *workspace);
     ~WorkspaceScene() override;
 
     void initialize();
@@ -112,6 +113,7 @@ private:
     void destroyDndIconItem();
     void updateCursor();
 
+    Workspace *m_workspace;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
     PaintContext m_paintContext;

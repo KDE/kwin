@@ -624,7 +624,7 @@ WorkspaceScene *Application::scene() const
 
 void Application::createScene()
 {
-    m_scene = std::make_unique<WorkspaceScene>();
+    m_scene = std::make_unique<WorkspaceScene>(workspace());
 }
 
 void Application::destroyScene()

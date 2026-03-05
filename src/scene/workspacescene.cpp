@@ -86,14 +86,15 @@ namespace KWin
 // Scene
 //****************************************
 
-WorkspaceScene::WorkspaceScene()
-    : m_containerItem(std::make_unique<RootItem>(this))
+WorkspaceScene::WorkspaceScene(Workspace *workspace)
+    : m_workspace(workspace)
+    , m_containerItem(std::make_unique<RootItem>(this))
     , m_overlayItem(std::make_unique<RootItem>(this))
     , m_cursorItem(std::make_unique<CursorItem>(m_overlayItem.get()))
 {
-    setGeometry(workspace()->geometry());
-    connect(workspace(), &Workspace::geometryChanged, this, [this]() {
-        setGeometry(workspace()->geometry());
+    setGeometry(workspace->geometry());
+    connect(workspace, &Workspace::geometryChanged, this, [this]() {
+        setGeometry(m_workspace->geometry());
     });
 
     connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &WorkspaceScene::createDndIconItem);
@@ -135,7 +136,7 @@ void WorkspaceScene::createDndIconItem()
     auto updatePosition = [this]() {
         const auto position = waylandServer()->seat()->dragPosition();
         m_dndIcon->setPosition(position);
-        m_dndIcon->setOutput(workspace()->outputAt(position));
+        m_dndIcon->setOutput(m_workspace->outputAt(position));
     };
 
     updatePosition();
