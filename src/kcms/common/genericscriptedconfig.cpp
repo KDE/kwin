@@ -111,6 +111,14 @@ void GenericScriptedConfig::createUi()
 
     uiFile.open(QFile::ReadOnly);
     QWidget *customConfigForm = loader->load(&uiFile, widget());
+
+    if (!customConfigForm) {
+        auto errorLabel = new QLabel(i18n("Error loading widget from %1: %2", uiPath, loader->errorString()));
+        layout->addWidget(errorLabel);
+
+        return;
+    }
+
     m_translator->addContextToMonitor(customConfigForm->objectName());
     uiFile.close();
 
