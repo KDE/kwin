@@ -1,20 +1,20 @@
-# SPDX-FileCopyrightText: 2002, 2003, 2004 Thomas Diehl <thd@kde.org>
-# SPDX-FileCopyrightText: 2005, 2006, 2007, 2008, 2009, 2010 Thomas Reitelbach <tr@erdfunkstelle.de>
-# SPDX-FileCopyrightText: 2005, 2006Stephan Johach <hunsum@gmx.de>
+# SPDX-FileCopyrightText: 2002-2004 Thomas Diehl <thd@kde.org>
+# SPDX-FileCopyrightText: 2005-2006 Stephan Johach <hunsum@gmx.de>
+# SPDX-FileCopyrightText: 2005-2010 Thomas Reitelbach <tr@erdfunkstelle.de>
 # SPDX-FileCopyrightText: 2010 Johannes Obermayr <johannesobermayr@gmx.de>
-# SPDX-FileCopyrightText: 2010, 2011, 2012, 2013, 2015, 2016, 2018, 2020, 2021, 2022, 2023 Frederik Schwarzer <schwarzer@kde.org>
-# SPDX-FileCopyrightText: 2010, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 Burkhard Lück <lueck@hube-lueck.de>
-# SPDX-FileCopyrightText: 2012, 2024, 2025 Frank Steinmetzger <Warp_7@gmx.de>
+# SPDX-FileCopyrightText: 2010, 2012-2021 Burkhard Lück <lueck@hube-lueck.de>
+# SPDX-FileCopyrightText: 2010-2013, 2015-2016, 2018, 2020-2023 Frederik Schwarzer <schwarzer@kde.org>
+# SPDX-FileCopyrightText: 2012, 2024-2025 Frank Steinmetzger <Warp_7@gmx.de>
 # SPDX-FileCopyrightText: 2023 Jannick Kuhr <opensource@kuhr.org>
 # SPDX-FileCopyrightText: 2024 Flori G <Renner03@protonmail.com>
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
-# SPDX-FileCopyrightText: 2025 Philipp Kiemle <l10n.daphipz@fastmail.de>
+# SPDX-FileCopyrightText: 2025-2026 Philipp Kiemle <l10n.daphipz@fastmail.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-03 00:48+0000\n"
-"PO-Revision-Date: 2025-12-23 18:41+0100\n"
+"PO-Revision-Date: 2026-03-01 16:36+0100\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.3\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -851,7 +851,7 @@ msgstr ""
 #: debug_console.cpp:629
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr ""
+msgstr "Tablet-Pad-Streifen"
 
 #: debug_console.cpp:631 debug_console.cpp:648 debug_console.cpp:665
 #, kde-format
@@ -1286,7 +1286,7 @@ msgstr "Zeit"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "Die anzuzeigende Nachricht (Vollbild, kein Rahmen)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:145
 #, kde-format
@@ -1300,23 +1300,18 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "Dieses Hilfsprogramm ist nicht für den direkten Aufruf gedacht."
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse: use the "
 "%1 keyboard shortcut instead."
 msgstr ""
-"Sie haben festgelegt, dass das Fenster im Vollbildmodus angezeigt werden "
+"Sie haben festgelegt, dass ein Fenster im Vollbildmodus angezeigt werden "
 "soll.\n"
-"Falls das Programm selbst über keine Möglichkeit verfügt, diesen Modus zu "
+"Falls die Anwendung selbst über keine Möglichkeit verfügt, diesen Modus zu "
 "verlassen, können Sie das nicht mit Hilfe der Maus tun. Verwenden Sie "
-"stattdessen das Fenstermenü, das über den Tastenbefehl %1 aktiviert wird."
+"stattdessen den Tastaturkurzbefehl %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1333,47 +1328,33 @@ msgstr ""
 "stattdessen das Fenstermenü, das über den Tastenbefehl %1 aktiviert wird."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
 "mode off you will not be able to disable it again using the mouse."
 msgstr ""
-"Sie haben festgelegt, dass das Fenster im Vollbildmodus angezeigt werden "
+"Sie haben festgelegt, dass ein Fenster im Vollbildmodus angezeigt werden "
 "soll.\n"
-"Falls das Programm selbst über keine Möglichkeit verfügt, diesen Modus zu "
-"verlassen, können Sie das nicht mit Hilfe der Maus tun. Verwenden Sie "
-"stattdessen das Fenstermenü, das über den Tastenbefehl %1 aktiviert wird."
+"Falls die Anwendung selbst über keine Möglichkeit verfügt, diesen Modus zu "
+"verlassen, können Sie das nicht mit Hilfe der Maus tun."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "Vollbild"
+msgstr "Vollbildmodus verlassen"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the %1 keyboard shortcut instead."
 msgstr ""
-"Sie haben festgelegt, dass ein Fenster ohne Umrandung angezeigt werden "
-"soll.\n"
-"Der vorherige Zustand lässt sich nicht mit Hilfe der Maus wiederherstellen. "
-"Verwenden Sie stattdessen das Fenstermenü, das über den Tastenbefehl %1 "
-"aktiviert wird."
+"Sie haben festgelegt, dass ein Fenster ohne Rahmen angezeigt werden soll.\n"
+"Der vorherige Zustand lässt sich ohne Rahmen nicht mit Hilfe der Maus "
+"wiederherstellen. Verwenden Sie stattdessen den Tastaturkurzbefehl %1."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
 #, kde-format
@@ -1383,41 +1364,32 @@ msgid ""
 "the mouse: use the window menu instead, activated using the %1 keyboard "
 "shortcut."
 msgstr ""
-"Sie haben festgelegt, dass ein Fenster ohne Umrandung angezeigt werden "
-"soll.\n"
+"Sie haben festgelegt, dass ein Fenster ohne Rahmen angezeigt werden soll.\n"
 "Der vorherige Zustand lässt sich nicht mit Hilfe der Maus wiederherstellen. "
 "Verwenden Sie stattdessen das Fenstermenü, das über den Tastenbefehl %1 "
 "aktiviert wird."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
-"Sie haben festgelegt, dass ein Fenster ohne Umrandung angezeigt werden "
-"soll.\n"
-"Der vorherige Zustand lässt sich nicht mit Hilfe der Maus wiederherstellen. "
-"Verwenden Sie stattdessen das Fenstermenü, das über den Tastenbefehl %1 "
-"aktiviert wird."
+"Sie haben festgelegt, dass ein Fenster ohne Rahmen angezeigt werden soll.\n"
+"Der vorherige Zustand lässt sich ohne Rahmen nicht mit Hilfe der Maus "
+"wiederherstellen."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
-#, fuzzy, kde-format
-#| msgid "&No Border"
+#, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr "Keine &Umrandung"
+msgstr "Fensterrahmen wiederherstellen"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "Nicht erneut anzeigen"
 
 #: helpers/killer/killdialog.cpp:37
 #, kde-kuit-format
@@ -1489,7 +1461,7 @@ msgstr "Reagiert nicht"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Details"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
@@ -2602,10 +2574,9 @@ msgstr "Fehler beim Verbinden mit PipeWire-Kontext"
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
 #: plugins/screencast/screencastmanager.cpp:142
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Unsupported compositing type"
-msgstr "Compositing aussetzen"
+msgstr "Nicht unterstützter Compositing-Typ"
 
 #: plugins/screencast/screencastmanager.cpp:62
 #, kde-format
@@ -3674,7 +3645,7 @@ msgstr "Regelart für Tearing"
 #: rulesettings.kcfg:467
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "Vor Bildschirmaufzeichnung verbergen"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:471
@@ -3822,7 +3793,7 @@ msgstr "Ohne &Titelleiste und Rahmen"
 #: useractions.cpp:258
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "Vor Bildschirmaufzeichnung &verbergen"
 
 #: useractions.cpp:266
 #, kde-format
@@ -3952,10 +3923,9 @@ msgid "Maximize Window Horizontally"
 msgstr "Fenster waagerecht maximieren"
 
 #: useractions.cpp:845
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "Fenstergröße ändern"
+msgstr "Fenster wiederherstellen"
 
 #: useractions.cpp:847
 #, kde-format
@@ -4337,7 +4307,7 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 kann sich nicht selbst spiegeln"
 
 #: wayland/outputmanagement_v2.cpp:637
 #, kde-format
