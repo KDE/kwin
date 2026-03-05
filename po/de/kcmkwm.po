@@ -1,18 +1,18 @@
-# SPDX-FileCopyrightText: 2002, 2003, 2004 Thomas Diehl <thd@kde.org>
-# SPDX-FileCopyrightText: 2005, 2006 Stephan Johach <hunsum@gmx.de>
-# SPDX-FileCopyrightText: 2005, 2006, 2007, 2008, 2009, 2010 Thomas Reitelbach <tr@erdfunkstelle.de>
+# SPDX-FileCopyrightText: 2002-2004 Thomas Diehl <thd@kde.org>
+# SPDX-FileCopyrightText: 2005-2006 Stephan Johach <hunsum@gmx.de>
+# SPDX-FileCopyrightText: 2005-2010 Thomas Reitelbach <tr@erdfunkstelle.de>
 # SPDX-FileCopyrightText: 2008, 2013, 2015, 2017, 2019, 2021 Burkhard Lück <lueck@hube-lueck.de>
-# SPDX-FileCopyrightText: 2009, 2010, 2011, 2012, 2013, 2020, 2021, 2023 Frederik Schwarzer <schwarzer@kde.org>
+# SPDX-FileCopyrightText: 2009-2013, 2020-2021, 2023 Frederik Schwarzer <schwarzer@kde.org>
 # SPDX-FileCopyrightText: 2010 Johannes Obermayr <johannesobermayr@gmx.de>
 # SPDX-FileCopyrightText: 2020 Frank Steinmetzger <Warp_7@gmx.de>
 # SPDX-FileCopyrightText: 2023 Jannick Kuhr <opensource@kuhr.org>
-# SPDX-FileCopyrightText: 2025 Philipp Kiemle <l10n.daphipz@fastmail.de>
+# SPDX-FileCopyrightText: 2025-2026 Philipp Kiemle <l10n.daphipz@fastmail.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2025-12-23 18:36+0100\n"
+"PO-Revision-Date: 2026-03-01 16:33+0100\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.3\n"
+"X-Generator: Lokalize 25.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -62,7 +62,7 @@ msgstr ""
 #: actions.ui:43 actions.ui:83 actions.ui:123
 #, kde-format
 msgid "Activate, raise and pass click"
-msgstr "Aktivieren, nach vorn und mit Klick ansprechen"
+msgstr "Aktivieren, nach vorn holen und mit Klick ansprechen"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -94,7 +94,7 @@ msgstr "Aktivieren"
 #: mouse.ui:513
 #, kde-format
 msgid "Activate and raise"
-msgstr "Aktivieren und nach vorne"
+msgstr "Aktivieren und nach vorn holen"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -165,7 +165,7 @@ msgstr "Aktivieren und blättern"
 #: actions.ui:173
 #, kde-format
 msgid "Activate, raise and scroll"
-msgstr "Aktivieren, nach vorne und blättern"
+msgstr "Aktivieren, nach vorn holen und blättern"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: actions.ui:184
@@ -239,7 +239,7 @@ msgstr "Verschieben"
 #: actions.ui:270 actions.ui:340 actions.ui:410
 #, kde-format
 msgid "Activate, raise and move"
-msgstr "Aktivieren, nach vorne und verschieben"
+msgstr "Aktivieren, nach vorn holen und verschieben"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -254,7 +254,7 @@ msgstr "Aktivieren, nach vorne und verschieben"
 #: mouse.ui:361 mouse.ui:423 mouse.ui:476 mouse.ui:538
 #, kde-format
 msgid "Toggle raise and lower"
-msgstr "Nach vorn bringen und hinten stellen umschalten"
+msgstr "„Nach vorn holen und nach hinten stellen“ umschalten"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -277,7 +277,7 @@ msgstr "Größe ändern"
 #: mouse.ui:351 mouse.ui:413 mouse.ui:466 mouse.ui:528
 #, kde-format
 msgid "Raise"
-msgstr "Nach vorne"
+msgstr "Nach vorn holen"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -406,7 +406,7 @@ msgstr ""
 #: actions.ui:475 mouse.ui:102
 #, kde-format
 msgid "Raise/lower"
-msgstr "Nach vorn bringen/hinten stellen"
+msgstr "Nach vorn holen/nach hinten stellen"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -700,7 +700,7 @@ msgstr "Aktivierung nach Klick"
 #: focus.ui:41
 #, kde-format
 msgid "Click to focus (mouse precedence)"
-msgstr "Aktivierung nach Klick - Vorrang für Maus"
+msgstr "Aktivierung nach Klick – Vorrang für Maus"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:46
@@ -712,7 +712,7 @@ msgstr "Aktivierung bei Mauskontakt"
 #: focus.ui:51
 #, kde-format
 msgid "Focus follows mouse (mouse precedence)"
-msgstr "Aktivierung bei Mauskontakt - Vorrang für Maus"
+msgstr "Aktivierung bei Mauskontakt – Vorrang für Maus"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:56
@@ -880,7 +880,7 @@ msgstr ""
 #: focus.ui:156
 #, kde-format
 msgid "&Click raises active window"
-msgstr "&Aktives Fenster auf Klick nach vorne holen"
+msgstr "&Aktives Fenster mit Klick nach vorn holen"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:165
@@ -896,7 +896,7 @@ msgstr ""
 #: focus.ui:168
 #, kde-format
 msgid "&Raise on hover, delayed by:"
-msgstr "Her&vorheben beim Überfahren, verzögert um:"
+msgstr "Beim Überfahren nach &vorn holen, verzögert um:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
 #: focus.ui:175
@@ -1338,7 +1338,7 @@ msgstr ""
 #: moving.ui:126
 #, kde-format
 msgid "Only when overlapping"
-msgstr "Nur wenn sie sich überlappen"
+msgstr "Nur, wenn sie sich überlappen"
 
 #: windows.cpp:97
 #, kde-format
@@ -1362,7 +1362,7 @@ msgstr ""
 "<em>Aktivierung nach Klick – Vorrang für Maus:</em> Dies ist fast wie "
 "<em>Aktivierung nach Klick</em>. Wenn ein aktives Fenster durch das System "
 "gewählt werden muss, z. B. wenn das zurzeit aktive Fenster geschlossen "
-"wurde, dann ist das Fenster unter dem Mauszeiger der bevorzugte Kandidat. "
+"wurde, ist das Fenster unter dem Mauszeiger der bevorzugte Kandidat. "
 "Ungewöhnliche aber mögliche Variante von <em>Aktivierung nach Klick</em>."
 
 #: windows.cpp:106
@@ -1389,7 +1389,7 @@ msgid ""
 msgstr ""
 "Dies ist fast wie <em>Aktivierung bei Mauskontakt</em>. Wenn ein aktives "
 "Fenster durch das System gewählt werden muss, z. B. wenn das gerade aktive "
-"Fenster geschlossen wurde, dann ist das Fenster unter dem Mauszeiger der "
+"Fenster geschlossen wurde, ist das Fenster unter dem Mauszeiger der "
 "bevorzugte Kandidat. Wählen Sie diese Einstellung für eine durch Mauskontakt "
 "gesteuerte Aktivierung."
 
