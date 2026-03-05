@@ -85,11 +85,6 @@ void WindowScreenCastSource::unwatch(Window *window)
     disconnect(window, &Window::damaged, this, &WindowScreenCastSource::frame);
 }
 
-quint32 WindowScreenCastSource::drmFormat() const
-{
-    return DRM_FORMAT_ARGB8888;
-}
-
 QSize WindowScreenCastSource::textureSize() const
 {
     return (boundingRect().size() * m_windows[0]->targetScale()).toSize();
@@ -147,6 +142,11 @@ std::chrono::nanoseconds WindowScreenCastSource::clock() const
 uint WindowScreenCastSource::refreshRate() const
 {
     return m_windows[0]->output()->refreshRate();
+}
+
+bool WindowScreenCastSource::needsAlpha() const
+{
+    return true;
 }
 
 void WindowScreenCastSource::pause()

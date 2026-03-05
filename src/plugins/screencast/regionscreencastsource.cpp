@@ -51,14 +51,14 @@ qreal RegionScreenCastSource::devicePixelRatio() const
     return m_scale;
 }
 
-quint32 RegionScreenCastSource::drmFormat() const
-{
-    return DRM_FORMAT_ARGB8888;
-}
-
 std::chrono::nanoseconds RegionScreenCastSource::clock() const
 {
     return m_last;
+}
+
+bool RegionScreenCastSource::needsAlpha() const
+{
+    return false;
 }
 
 void RegionScreenCastSource::setRenderCursor(bool enable)

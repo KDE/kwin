@@ -74,16 +74,32 @@ static const struct
         .spaFormat = SPA_VIDEO_FORMAT_xRGB,
     },
     {
-        .drmFormat = DRM_FORMAT_NV12,
-        .spaFormat = SPA_VIDEO_FORMAT_NV12,
-    },
-    {
         .drmFormat = DRM_FORMAT_RGB888,
         .spaFormat = SPA_VIDEO_FORMAT_BGR,
     },
     {
         .drmFormat = DRM_FORMAT_BGR888,
         .spaFormat = SPA_VIDEO_FORMAT_RGB,
+    },
+    {
+        .drmFormat = DRM_FORMAT_BGRA1010102,
+        .spaFormat = SPA_VIDEO_FORMAT_ARGB_210LE,
+    },
+    {
+        .drmFormat = DRM_FORMAT_RGBA1010102,
+        .spaFormat = SPA_VIDEO_FORMAT_ABGR_210LE,
+    },
+    {
+        .drmFormat = DRM_FORMAT_ABGR2101010,
+        .spaFormat = SPA_VIDEO_FORMAT_RGBA_102LE,
+    },
+    {
+        .drmFormat = DRM_FORMAT_ARGB2101010,
+        .spaFormat = SPA_VIDEO_FORMAT_BGRA_102LE,
+    },
+    {
+        .drmFormat = DRM_FORMAT_ABGR16161616F,
+        .spaFormat = SPA_VIDEO_FORMAT_RGBA_F16,
     },
 };
 
@@ -151,8 +167,6 @@ void ScreenCastStream::newStreamParams()
 {
     qCDebug(KWIN_SCREENCAST) << objectName() << "announcing stream params. with dmabuf:" << m_dmabufParams.has_value();
     const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) : (1 << SPA_DATA_MemFd);
-    const int bpp = m_videoFormat.format == SPA_VIDEO_FORMAT_RGB || m_videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
-    const int stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
 
     struct spa_pod_dynamic_builder pod_builder;
     struct spa_pod_frame f;
@@ -179,6 +193,8 @@ void ScreenCastStream::newStreamParams()
                         SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(3, 2, 4),
                         SPA_PARAM_BUFFERS_dataType, SPA_POD_CHOICE_FLAGS_Int(buffertypes), 0);
     if (!m_dmabufParams) {
+        const int bpp = m_videoFormat.format == SPA_VIDEO_FORMAT_RGB || m_videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
+        const int stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
         spa_pod_builder_add(&pod_builder.b,
                             SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(1),
                             SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
@@ -229,8 +245,8 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
     }
 
     spa_format_video_raw_parse(format, &m_videoFormat);
-    auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier);
-    if (modifierProperty) {
+    const bool reallocationRequired = !m_dmabufParams || m_dmabufParams->width != m_resolution.width() || m_dmabufParams->height != m_resolution.height();
+    if (auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier)) {
         const uint32_t valueCount = SPA_POD_CHOICE_N_VALUES(&modifierProperty->value);
         const uint64_t *values = (uint64_t *)SPA_POD_CHOICE_VALUES(&modifierProperty->value); // values[0] is the preferred choice
 
@@ -241,7 +257,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
             receivedModifiers.insert(values[i]);
         }
 
-        if (!m_dmabufParams || m_dmabufParams->width != m_resolution.width() || m_dmabufParams->height != m_resolution.height() || !receivedModifiers.contains(m_dmabufParams->modifier)) {
+        if (reallocationRequired || !receivedModifiers.contains(m_dmabufParams->modifier)) {
             // DRM_MOD_INVALID should be used as a last option. Do not just remove it it's the only
             // item on the list
             if (receivedModifiers.size() > 1) {
@@ -258,11 +274,42 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
                 }
             }
 
-            qCDebug(KWIN_SCREENCAST) << objectName() << "Stream dmabuf modifiers received, offering our best suited modifier" << m_dmabufParams.has_value();
+            qCWarning(KWIN_SCREENCAST) << objectName() << "Stream dmabuf modifiers received, offering our best suited modifier" << m_dmabufParams.has_value();
             char buffer[2048];
             auto params = buildFormats(m_dmabufParams.has_value(), buffer);
             pw_stream_update_params(m_pwStream, params.data(), params.count());
             return;
+        }
+    } else if (auto formatProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_format)) {
+        std::span<const spa_video_format> values((spa_video_format *)SPA_POD_CHOICE_VALUES(&formatProperty->value), SPA_POD_CHOICE_N_VALUES(&formatProperty->value));
+        if (reallocationRequired || !std::ranges::contains(values, m_drmFormat)) {
+            // attempt to change the format to something the client supports
+            const auto supported = Compositor::self()->backend()->supportedFormats();
+            for (spa_video_format spaFormat : values) {
+                const uint32_t drmFormat = spaVideoFormatToDrmFormat(spaFormat);
+                if (drmFormat == DRM_FORMAT_INVALID) {
+                    continue;
+                }
+                if (!m_possibleDmabufFormats.contains(drmFormat)) {
+                    continue;
+                }
+                const auto mods = supported.value(drmFormat);
+                const auto opt = testCreateDmaBuf(m_resolution, drmFormat, mods);
+                if (opt.has_value()) {
+                    m_dmabufParams = opt;
+                    m_drmFormat = drmFormat;
+                    m_modifiers = mods;
+
+                    qCDebug(KWIN_SCREENCAST) << objectName() << "Changing stream format to" << FormatInfo::drmFormatName(m_drmFormat);
+                    char buffer[2048];
+                    auto params = buildFormats(m_dmabufParams.has_value(), buffer);
+                    pw_stream_update_params(m_pwStream, params.data(), params.count());
+                    return;
+                } else {
+                    // avoid trying this again later on
+                    m_possibleDmabufFormats.removeOne(drmFormat);
+                }
+            }
         }
     } else {
         m_dmabufParams.reset();
@@ -398,29 +445,57 @@ uint ScreenCastStream::nodeId()
     return m_pwNodeId;
 }
 
+QList<uint32_t> filterAndSort(const FormatModifierMap &supported, bool needsAlpha)
+{
+    QList<uint32_t> ret = supported.keys();
+    // remove all formats we don't want or can't support
+    erase_if(ret, [needsAlpha](uint32_t format) {
+        const bool supported = std::ranges::any_of(supportedFormats, [format](const auto &pair) {
+            return pair.drmFormat == format;
+        });
+        if (!supported) {
+            return true;
+        }
+        const auto info = FormatInfo::get(format);
+        if (!info.has_value()) {
+            return true;
+        }
+        return info->bitsPerColor < 8 || info->bitsPerPixel > 64 || (needsAlpha && info->alphaBits < 8);
+    });
+    std::ranges::sort(ret, [](uint32_t left, uint32_t right) {
+        const auto leftInfo = FormatInfo::get(left);
+        const auto rightInfo = FormatInfo::get(right);
+        // Prefer 10bpc if possible, as it's both high bit depth and low banwdith
+        const bool left10 = leftInfo->bitsPerColor == 10;
+        const bool right10 = rightInfo->bitsPerColor == 10;
+        if (left10 != right10) {
+            return left10;
+        }
+        // Prefer higher bit depths over more efficiency.
+        // This is important for HDR with an alpha component.
+        // TODO change this preference based on the colorspace?
+        if (leftInfo->bitsPerColor != rightInfo->bitsPerColor) {
+            return leftInfo->bitsPerColor > rightInfo->bitsPerColor;
+        }
+        // At the same bit depth, prefer low bandwidth for better performance
+        return leftInfo->bitsPerPixel < rightInfo->bitsPerPixel;
+    });
+    return ret;
+}
+
 bool ScreenCastStream::createStream()
 {
+    const auto supported = Compositor::self()->backend()->supportedFormats();
+    m_possibleDmabufFormats = filterAndSort(supported, m_source->needsAlpha());
+    if (m_possibleDmabufFormats.isEmpty()) {
+        return false;
+    }
+
     const QByteArray objname = "kwin-screencast-" + objectName().toUtf8();
     m_pwStream = pw_stream_new(m_pwCore->pwCore, objname, nullptr);
 
-    const auto supported = Compositor::self()->backend()->supportedFormats();
-    auto itModifiers = supported.constFind(m_source->drmFormat());
-
-    // If the offered format is not available for dmabuf, prefer converting to another one than resorting to memfd
-    if (itModifiers == supported.constEnd() && !supported.isEmpty()) {
-        itModifiers = supported.constFind(DRM_FORMAT_ARGB8888);
-        if (itModifiers != supported.constEnd()) {
-            m_drmFormat = itModifiers.key();
-        }
-    }
-
-    if (itModifiers == supported.constEnd()) {
-        m_drmFormat = m_source->drmFormat();
-        m_modifiers = {DRM_FORMAT_MOD_INVALID};
-    } else {
-        m_drmFormat = itModifiers.key();
-        m_modifiers = *itModifiers;
-    }
+    m_drmFormat = m_possibleDmabufFormats.front();
+    m_modifiers = supported.value(m_drmFormat);
     m_hasDmaBuf = testCreateDmaBuf(m_resolution, m_drmFormat, m_modifiers).has_value();
 
     char buffer[2048];
