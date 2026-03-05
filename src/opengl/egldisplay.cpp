@@ -276,33 +276,36 @@ EglDisplay::Formats EglDisplay::queryImportFormats() const
         return {};
     }
     Formats ret;
+    const ModifierList implicitModifiers = {DRM_FORMAT_MOD_INVALID, DRM_FORMAT_MOD_LINEAR};
     for (const auto format : std::as_const(formats)) {
-        if (m_functions.queryDmaBufModifiersEXT != nullptr) {
-            EGLint count = 0;
-            const EGLBoolean success = m_functions.queryDmaBufModifiersEXT(m_handle, format, 0, nullptr, nullptr, &count);
-            if (success && count > 0) {
-                QList<uint64_t> tmp;
-                tmp.resize(count);
-                QList<EGLBoolean> externalOnly(count);
-                if (m_functions.queryDmaBufModifiersEXT(m_handle, format, count, tmp.data(), externalOnly.data(), &count)) {
-                    auto &allModifiers = ret.all[format];
-                    auto &nonExternalOnly = ret.nonExternalOnly[format];
-                    allModifiers = ModifierList(tmp);
-                    nonExternalOnly = allModifiers;
-                    for (int i = allModifiers.size() - 1; i >= 0; i--) {
-                        if (externalOnly[i]) {
-                            nonExternalOnly.erase(tmp[i]);
-                        }
+        EGLint count = 0;
+        const bool success = m_functions.queryDmaBufModifiersEXT
+            && m_functions.queryDmaBufModifiersEXT(m_handle, format, 0, nullptr, nullptr, &count);
+        if (success && count > 0) {
+            QList<uint64_t> tmp;
+            tmp.resize(count);
+            QList<EGLBoolean> externalOnly(count);
+            if (m_functions.queryDmaBufModifiersEXT(m_handle, format, count, tmp.data(), externalOnly.data(), &count)) {
+                auto &allModifiers = ret.all[format];
+                auto &nonExternalOnly = ret.nonExternalOnly[format];
+                allModifiers = ModifierList(tmp);
+                nonExternalOnly = allModifiers;
+                for (int i = allModifiers.size() - 1; i >= 0; i--) {
+                    if (externalOnly[i]) {
+                        nonExternalOnly.erase(tmp[i]);
                     }
-                    if (!allModifiers.contains(DRM_FORMAT_MOD_INVALID)) {
-                        allModifiers.insert(DRM_FORMAT_MOD_INVALID);
-                        if (!nonExternalOnly.empty()) {
-                            nonExternalOnly.insert(DRM_FORMAT_MOD_INVALID);
-                        }
+                }
+                if (!allModifiers.contains(DRM_FORMAT_MOD_INVALID)) {
+                    allModifiers.insert(DRM_FORMAT_MOD_INVALID);
+                    if (!nonExternalOnly.empty()) {
+                        nonExternalOnly.insert(DRM_FORMAT_MOD_INVALID);
                     }
-                    continue;
                 }
             }
+        } else {
+            // no explicit modifiers are supported -> fall back to implicit modifiers
+            ret.all[format] = implicitModifiers;
+            ret.nonExternalOnly[format] = implicitModifiers;
         }
     }
     return ret;
