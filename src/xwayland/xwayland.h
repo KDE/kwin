@@ -19,9 +19,6 @@
 
 #include "xwayland_interface.h"
 
-#include <memory>
-
-class KSelectionOwner;
 class QSocketNotifier;
 
 namespace KWin
@@ -88,8 +85,6 @@ private:
     std::unique_ptr<QSocketNotifier> m_socketNotifier;
 
     Application *m_app;
-    std::unique_ptr<KSelectionOwner> m_windowManagerSelectionOwner;
-    std::unique_ptr<KSelectionOwner> m_compositingManagerSelectionOwner;
     std::unique_ptr<DataBridge> m_dataBridge;
 
     std::unique_ptr<XrandrEventFilter> m_xrandrEventsFilter;

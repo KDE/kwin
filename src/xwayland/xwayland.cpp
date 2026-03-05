@@ -18,6 +18,7 @@
 #include "xwaylandlauncher.h"
 #include "xwldrophandler.h"
 
+#include "atoms.h"
 #include "core/backendoutput.h"
 #include "keyboard_input.h"
 #include "main_wayland.h"
@@ -31,7 +32,6 @@
 #include "xkb.h"
 #include "xwayland_logging.h"
 
-#include <KSelectionOwner>
 #include <wayland/keyboard.h>
 #include <wayland/pointer.h>
 #include <wayland/seat.h>
@@ -444,8 +444,6 @@ void Xwayland::handleXwaylandFinished()
     uninstallSocketNotifier();
 
     m_dataBridge.reset();
-    m_compositingManagerSelectionOwner.reset();
-    m_windowManagerSelectionOwner.reset();
 
     m_inputFilter.reset();
     disconnect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
@@ -463,16 +461,17 @@ void Xwayland::handleXwaylandReady()
 
     qCInfo(KWIN_XWL) << "Xwayland server started on display" << m_launcher->displayName();
 
-    m_compositingManagerSelectionOwner = std::make_unique<KSelectionOwner>("_NET_WM_CM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
-    m_compositingManagerSelectionOwner->claim(true);
+    // Helper window to claim _NET_WM_CM_S0 and WM_S0 selections. It will be destroyed together with our connection.
+    const xcb_window_t selectionOwner = xcb_generate_id(kwinApp()->x11Connection());
+    xcb_create_window(kwinApp()->x11Connection(), XCB_COPY_FROM_PARENT, selectionOwner, kwinApp()->x11RootWindow(), 0, 0, 1, 1, 0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
 
+    xcb_set_selection_owner(kwinApp()->x11Connection(), selectionOwner, atoms->net_wm_cm_s0, XCB_CURRENT_TIME);
     xcb_composite_redirect_subwindows(kwinApp()->x11Connection(),
                                       kwinApp()->x11RootWindow(),
                                       XCB_COMPOSITE_REDIRECT_MANUAL);
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
-    m_windowManagerSelectionOwner = std::make_unique<KSelectionOwner>("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
-    m_windowManagerSelectionOwner->claim(true);
+    xcb_set_selection_owner(kwinApp()->x11Connection(), selectionOwner, atoms->wm_s0, XCB_CURRENT_TIME);
 
     m_dataBridge = std::make_unique<DataBridge>();
 

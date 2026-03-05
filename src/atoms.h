@@ -27,6 +27,9 @@ class KWIN_EXPORT Atoms
 public:
     Atoms();
 
+    Xcb::Atom wm_s0;
+    Xcb::Atom net_wm_cm_s0;
+
     Xcb::Atom activities;
 
     Xcb::Atom wm_protocols;
