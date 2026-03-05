@@ -114,12 +114,18 @@ void SurfaceItem::addDamage(const Region &region)
 {
     const auto now = std::chrono::steady_clock::now();
     if (m_lastDamage) {
+        if (!m_accumulatedTimeDiffs) {
+            m_accumulatedTimeDiffs = 0ns;
+        }
+
         const auto diff = now - *m_lastDamage;
+        *m_accumulatedTimeDiffs += diff;
         m_lastDamageTimeDiffs.push_back(diff);
+
         if (m_lastDamageTimeDiffs.size() > 100) {
+            *m_accumulatedTimeDiffs -= m_lastDamageTimeDiffs.front();
             m_lastDamageTimeDiffs.pop_front();
         }
-        m_frameTimeEstimation = std::accumulate(m_lastDamageTimeDiffs.begin(), m_lastDamageTimeDiffs.end(), 0ns) / m_lastDamageTimeDiffs.size();
     }
     m_lastDamage = now;
     m_damage += region;
@@ -251,11 +257,14 @@ std::optional<std::chrono::nanoseconds> SurfaceItem::recursiveFrameTimeEstimatio
 
 std::optional<std::chrono::nanoseconds> SurfaceItem::frameTimeEstimation() const
 {
-    if (m_lastDamage && std::chrono::steady_clock::now() - *m_lastDamage > std::chrono::milliseconds(100)) {
+    if (!m_accumulatedTimeDiffs) {
+        return std::nullopt;
+    }
+    if (std::chrono::steady_clock::now() - *m_lastDamage > 100ms) {
         // the surface seems to have stopped rendering entirely
         return std::nullopt;
     } else {
-        return m_frameTimeEstimation;
+        return *m_accumulatedTimeDiffs / m_lastDamageTimeDiffs.size();
     }
 }
 

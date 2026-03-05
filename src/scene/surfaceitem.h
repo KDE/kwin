@@ -92,8 +92,8 @@ protected:
     bool m_hasAlphaChannel = false;
     std::unique_ptr<Texture> m_texture;
     std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
+    std::optional<std::chrono::nanoseconds> m_accumulatedTimeDiffs;
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;
-    std::optional<std::chrono::nanoseconds> m_frameTimeEstimation;
     std::shared_ptr<SyncReleasePoint> m_bufferReleasePoint;
 };
 
