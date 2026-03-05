@@ -254,7 +254,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         showCursor();
     } else {
         hideCursor();
-        if (m_mousePointer == MousePointerScale) {
+        if (m_cursorItem && m_mousePointer == MousePointerScale) {
             m_cursorItem->setTransform(QTransform::fromScale(m_zoom, m_zoom));
         }
     }
