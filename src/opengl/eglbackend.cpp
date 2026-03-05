@@ -168,7 +168,7 @@ void EglBackend::initWayland()
             }
 
             const bool externalOnlySupported = withExternalOnlyYUV && info && info->yuvConversion();
-            ModifierList modifiers = externalOnlySupported ? nonExternalOnly[it.key()] : *it;
+            ModifierList modifiers = externalOnlySupported ? *it : nonExternalOnly[it.key()];
 
             if (externalOnlySupported && !modifiers.empty()) {
                 if (auto yuv = info->yuvConversion()) {
