@@ -159,7 +159,7 @@ public:
 
     void registerEventFilter(X11EventFilter *filter);
     void unregisterEventFilter(X11EventFilter *filter);
-    bool dispatchEvent(xcb_generic_event_t *event);
+    void dispatchEvent(xcb_generic_event_t *event);
 
     virtual pid_t xwaylandPid() const
     {

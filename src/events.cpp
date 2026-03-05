@@ -125,23 +125,22 @@ static Qt::MouseButton x11ToQtMouseButton(int button)
 /**
  * Handles workspace specific XCB event
  */
-bool Workspace::workspaceEvent(xcb_generic_event_t *e)
+void Workspace::workspaceEvent(xcb_generic_event_t *e)
 {
-    const uint8_t eventType = e->response_type & ~0x80;
-
     const xcb_window_t eventWindow = findEventWindow(e);
     if (eventWindow != XCB_WINDOW_NONE) {
         if (X11Window *window = findClient(eventWindow)) {
             if (window->windowEvent(e)) {
-                return true;
+                return;
             }
         } else if (X11Window *window = findUnmanaged(eventWindow)) {
             if (window->windowEvent(e)) {
-                return true;
+                return;
             }
         }
     }
 
+    const uint8_t eventType = e->response_type & ~0x80;
     switch (eventType) {
     case XCB_CREATE_NOTIFY: {
         const auto *event = reinterpret_cast<xcb_create_notify_event_t *>(e);
@@ -152,10 +151,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
         break;
     }
-    case XCB_UNMAP_NOTIFY: {
-        const auto *event = reinterpret_cast<xcb_unmap_notify_event_t *>(e);
-        return (event->event != event->window); // hide wm typical event from Qt
-    }
     case XCB_MAP_REQUEST: {
         const auto *event = reinterpret_cast<xcb_map_request_event_t *>(e);
         if (!createX11Window(event->window, false)) {
@@ -163,15 +158,14 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             const uint32_t values[] = {XCB_STACK_MODE_ABOVE};
             xcb_configure_window(kwinApp()->x11Connection(), event->window, XCB_CONFIG_WINDOW_STACK_MODE, values);
         }
-        return true;
+        break;
     }
     case XCB_MAP_NOTIFY: {
         const auto *event = reinterpret_cast<xcb_map_notify_event_t *>(e);
         if (event->override_redirect && event->event == kwinApp()->x11RootWindow()) {
             createUnmanaged(event->window);
-            return false;
         }
-        return (event->event != event->window); // hide wm typical event from Qt
+        break;
     }
 
     case XCB_CONFIGURE_REQUEST: {
@@ -197,7 +191,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 values[i++] = event->border_width;
             }
             xcb_configure_window(kwinApp()->x11Connection(), event->window, value_mask, values);
-            return true;
         }
         break;
     }
@@ -228,14 +221,9 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 }
             }
         }
-    }
-        // fall through
-    case XCB_FOCUS_OUT:
-        return true; // always eat these, they would tell Qt that KWin is the active app
-    default:
         break;
     }
-    return false;
+    }
 }
 
 // ****************************************

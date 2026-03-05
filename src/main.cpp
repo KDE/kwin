@@ -363,7 +363,7 @@ void Application::unregisterEventFilter(X11EventFilter *filter)
     delete container;
 }
 
-bool Application::dispatchEvent(xcb_generic_event_t *event)
+void Application::dispatchEvent(xcb_generic_event_t *event)
 {
     static const QList<QByteArray> s_xcbEerrors({QByteArrayLiteral("Success"),
                                                  QByteArrayLiteral("BadRequest"),
@@ -410,10 +410,10 @@ bool Application::dispatchEvent(xcb_generic_event_t *event)
                           int(error->major_code), extension.name.constData(),
                           int(error->minor_code),
                           extension.opCodes.size() > error->minor_code ? extension.opCodes.at(error->minor_code).constData() : "Unknown");
-                return true;
+                return;
             }
         }
-        return false;
+        return;
     }
 
     if (x11EventType == XCB_GE_GENERIC) {
@@ -429,7 +429,7 @@ bool Application::dispatchEvent(xcb_generic_event_t *event)
             }
             X11EventFilter *filter = container->filter();
             if (filter->extension() == ge->extension && filter->genericEventTypes().contains(ge->event_type) && filter->event(event)) {
-                return true;
+                return;
             }
         }
     } else {
@@ -443,16 +443,14 @@ bool Application::dispatchEvent(xcb_generic_event_t *event)
             }
             X11EventFilter *filter = container->filter();
             if (filter->eventTypes().contains(x11EventType) && filter->event(event)) {
-                return true;
+                return;
             }
         }
     }
 
     if (workspace()) {
-        return workspace()->workspaceEvent(event);
+        workspace()->workspaceEvent(event);
     }
-
-    return false;
 }
 
 static quint32 monotonicTime()

@@ -105,7 +105,7 @@ public:
     bool hasWindow(const Window *);
 
 #if KWIN_BUILD_X11
-    bool workspaceEvent(xcb_generic_event_t *);
+    void workspaceEvent(xcb_generic_event_t *);
 
     UInt32Serial x11FocusSerial() const;
     void setX11FocusSerial(UInt32Serial serial);
