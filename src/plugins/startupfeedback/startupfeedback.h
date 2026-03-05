@@ -20,7 +20,6 @@
 
 #include <chrono>
 
-class KSelectionOwner;
 namespace KWin
 {
 
@@ -84,7 +83,6 @@ private:
     qreal m_bounceSizesRatio;
 #if KWIN_BUILD_X11
     KStartupInfo *m_startupInfo;
-    KSelectionOwner *m_selection;
 #endif
     QString m_currentStartup;
     QMap<QString, Startup> m_startups;

@@ -20,9 +20,6 @@
 #include <QTimer>
 // KDE
 #include <KConfigGroup>
-#if KWIN_BUILD_X11
-#include <KSelectionOwner>
-#endif
 #include <KSharedConfig>
 #include <KWindowSystem>
 // KWin
@@ -78,7 +75,6 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     : m_bounceSizesRatio(1.0)
 #if KWIN_BUILD_X11
     , m_startupInfo(new KStartupInfo(KStartupInfo::CleanOnCantDetect, this))
-    , m_selection(nullptr)
 #endif
     , m_active(false)
     , m_frame(0)
@@ -89,11 +85,6 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     , m_splashVisible(false)
 {
 #if KWIN_BUILD_X11
-    // TODO: move somewhere that is x11-specific
-    if (KWindowSystem::isPlatformX11()) {
-        m_selection = new KSelectionOwner("_KDE_STARTUP_FEEDBACK", effects->xcbConnection(), effects->x11RootWindow(), this);
-        m_selection->claim(true);
-    }
     connect(m_startupInfo, &KStartupInfo::gotNewStartup, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
         const auto icon = QIcon::fromTheme(data.findIcon(), QIcon::fromTheme(QStringLiteral("system-run")));
         Q_EMIT effects->startupAdded(id.id(), icon);
