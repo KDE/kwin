@@ -55,13 +55,11 @@ class KWIN_EXPORT OutputDeviceV2Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit OutputDeviceV2Interface(Display *display, BackendOutput *handle, QObject *parent = nullptr);
+    explicit OutputDeviceV2Interface(BackendOutput *handle);
     ~OutputDeviceV2Interface() override;
 
     template<typename AnnounceCallback>
     void offer(wl_client *client, uint32_t version, AnnounceCallback onAnnounce);
-
-    void remove();
 
     BackendOutput *handle() const;
 

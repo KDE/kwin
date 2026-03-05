@@ -28,8 +28,7 @@ public:
 
     void announce(Resource *resource, OutputDeviceV2Interface *outputDevice);
 
-    Display *display;
-    QHash<BackendOutput *, OutputDeviceV2Interface *> outputDevices;
+    std::unordered_map<BackendOutput *, std::unique_ptr<OutputDeviceV2Interface>> outputDevices;
 
 protected:
     void kde_output_device_registry_v2_bind_resource(Resource *resource) override;
@@ -38,7 +37,6 @@ protected:
 
 OutputDeviceRegistryV2Private::OutputDeviceRegistryV2Private(Display *display)
     : QtWaylandServer::kde_output_device_registry_v2(*display, s_version)
-    , display(display)
 {
 }
 
@@ -56,8 +54,8 @@ void OutputDeviceRegistryV2Private::kde_output_device_registry_v2_bind_resource(
         return;
     }
 
-    for (const auto &outputDevice : std::as_const(outputDevices)) {
-        announce(resource, outputDevice);
+    for (const auto &[handle, outputDevice] : outputDevices) {
+        announce(resource, outputDevice.get());
     }
 }
 
@@ -75,20 +73,18 @@ OutputDeviceRegistryV2::OutputDeviceRegistryV2(Display *display, QObject *parent
 
 void OutputDeviceRegistryV2::offer(BackendOutput *output)
 {
-    auto outputDevice = new OutputDeviceV2Interface(d->display, output);
-    d->outputDevices[output] = outputDevice;
+    auto &outputDevice = d->outputDevices[output];
+    outputDevice = std::make_unique<OutputDeviceV2Interface>(output);
 
     const auto resources = d->resourceMap();
     for (const auto &resource : resources) {
-        d->announce(resource, outputDevice);
+        d->announce(resource, outputDevice.get());
     }
 }
 
 void OutputDeviceRegistryV2::withdraw(BackendOutput *output)
 {
-    if (auto outputDevice = d->outputDevices.take(output)) {
-        outputDevice->remove();
-    }
+    d->outputDevices.erase(output);
 }
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
@@ -175,7 +171,7 @@ static QtWaylandServer::kde_output_device_v2::edr_policy kwinEdrPolicyToOutputDe
 class OutputDeviceV2InterfacePrivate : public QtWaylandServer::kde_output_device_v2
 {
 public:
-    OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, BackendOutput *handle);
+    OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, BackendOutput *handle);
     ~OutputDeviceV2InterfacePrivate() override;
 
     void sendGeometry(Resource *resource);
@@ -263,7 +259,6 @@ public:
 
 protected:
     void kde_output_device_v2_bind_resource(Resource *resource) override;
-    void kde_output_device_v2_destroy_global() override;
     void kde_output_device_v2_release(Resource *resource) override;
 };
 
@@ -298,9 +293,8 @@ protected:
     Resource *kde_output_device_mode_v2_allocate() override;
 };
 
-OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, BackendOutput *handle)
-    : QtWaylandServer::kde_output_device_v2(*display, s_version)
-    , q(q)
+OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, BackendOutput *handle)
+    : q(q)
     , m_handle(handle)
 {
 }
@@ -309,9 +303,8 @@ OutputDeviceV2InterfacePrivate::~OutputDeviceV2InterfacePrivate()
 {
 }
 
-OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, BackendOutput *handle, QObject *parent)
-    : QObject(parent)
-    , d(new OutputDeviceV2InterfacePrivate(this, display, handle))
+OutputDeviceV2Interface::OutputDeviceV2Interface(BackendOutput *handle)
+    : d(new OutputDeviceV2InterfacePrivate(this, handle))
 {
     updateEnabled();
     updateManufacturer();
@@ -405,26 +398,16 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, BackendOutput
 
 OutputDeviceV2Interface::~OutputDeviceV2Interface()
 {
-}
-
-void OutputDeviceV2Interface::remove()
-{
-    if (d->isGlobalRemoved()) {
-        return;
-    }
-
     d->m_doneTimer.stop();
 
     const auto resources = d->resourceMap();
     for (const auto resource : resources) {
-        if (resource->version() >= KDE_OUTPUT_DEVICE_V2_REMOVED_SINCE_VERSION) {
-            d->send_removed(resource->handle);
-        }
+        d->send_removed(resource->handle);
     }
 
-    // NOTE that output modes can only be deleted after the global remove,
-    // otherwise the client temporarily has an output without any modes
-    d->globalRemove();
+    // The output modes should be deleted after the removed event is sent, otherwise the client
+    // will temporarily have an output without any modes, which is illegal and can make clients crash.
+    d->m_modes.clear();
 }
 
 void OutputDeviceV2Interface::scheduleDone()
@@ -447,11 +430,6 @@ BackendOutput *OutputDeviceV2Interface::handle() const
     return d->m_handle;
 }
 
-void OutputDeviceV2InterfacePrivate::kde_output_device_v2_destroy_global()
-{
-    delete q;
-}
-
 void OutputDeviceV2InterfacePrivate::kde_output_device_v2_release(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
@@ -459,10 +437,6 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_release(Resource *reso
 
 void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource *resource)
 {
-    if (isGlobalRemoved()) {
-        return;
-    }
-
     sendGeometry(resource);
     sendScale(resource);
     sendEisaId(resource);
@@ -1212,7 +1186,7 @@ void OutputDeviceV2Interface::updateAutoBrightness()
 
 OutputDeviceV2Interface *OutputDeviceV2Interface::get(wl_resource *native)
 {
-    if (auto devicePrivate = resource_cast<OutputDeviceV2InterfacePrivate *>(native); devicePrivate && !devicePrivate->isGlobalRemoved()) {
+    if (auto devicePrivate = resource_cast<OutputDeviceV2InterfacePrivate *>(native)) {
         return devicePrivate->q;
     }
     return nullptr;
