@@ -137,11 +137,6 @@ X11Window::X11Window()
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Window::updateCaption);
     connect(options, &Options::condensedTitleChanged, this, &X11Window::updateCaption);
 
-    m_releaseTimer.setSingleShot(true);
-    connect(&m_releaseTimer, &QTimer::timeout, this, [this]() {
-        releaseWindow();
-    });
-
     // SELI TODO: Initialize xsizehints??
 }
 
@@ -180,11 +175,6 @@ void X11Window::deleteClient(X11Window *c)
     delete c;
 }
 
-bool X11Window::hasScheduledRelease() const
-{
-    return m_releaseTimer.isActive();
-}
-
 /**
  * Releases the window. The client has done its job and the window is still existing.
  */
@@ -205,10 +195,6 @@ void X11Window::releaseWindow(bool on_shutdown)
     // events. If we could refcount event masks on the X server side, that would help but it is unlikely
     // to happen because Wayland already exists.
     if (isUnmanaged()) {
-        m_releaseTimer.stop();
-        if (Xcb::Extensions::self()->isShapeAvailable()) {
-            xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);
-        }
         workspace()->removeUnmanaged(this);
     } else {
         cleanTabBox();
@@ -270,7 +256,6 @@ void X11Window::destroyWindow()
     Q_EMIT closed();
 
     if (isUnmanaged()) {
-        m_releaseTimer.stop();
         workspace()->removeUnmanaged(this);
     } else {
         cleanTabBox();

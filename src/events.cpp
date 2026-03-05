@@ -169,22 +169,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     case XCB_MAP_NOTIFY: {
         const auto *event = reinterpret_cast<xcb_map_notify_event_t *>(e);
         if (event->override_redirect && event->event == kwinApp()->x11RootWindow()) {
-            X11Window *window = findUnmanaged(event->window);
-            if (window == nullptr) {
-                window = createUnmanaged(event->window);
-            }
-            if (window) {
-                // if hasScheduledRelease is true, it means a unamp and map sequence has occurred.
-                // since release is scheduled after map notify, this old Unmanaged will get released
-                // before KWIN has chance to remanage it again. so release it right now.
-                if (window->hasScheduledRelease()) {
-                    window->releaseWindow();
-                    window = createUnmanaged(event->window);
-                }
-                if (window) {
-                    return window->windowEvent(e);
-                }
-            }
+            createUnmanaged(event->window);
+            return false;
         }
         return (event->event != event->window); // hide wm typical event from Qt
     }
@@ -283,17 +269,9 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         case XCB_DESTROY_NOTIFY:
             destroyWindow();
             break;
-        case XCB_UNMAP_NOTIFY: {
-            // using 1 msec to not just move it at the end of the event loop but add an very short
-            // timespan to cover cases like unmap() followed by destroy(). The only other way to
-            // ensure that the window is not destroyed when we do the release handling is to grab
-            // the XServer which we do not want to do for an Unmanaged. The timespan of 1 msec is
-            // short enough to not cause problems in the close window animations.
-            // It's of course still possible that we miss the destroy in which case non-fatal
-            // X errors are reported to the event loop and logged by Qt.
-            m_releaseTimer.start(1);
+        case XCB_UNMAP_NOTIFY:
+            releaseWindow();
             break;
-        }
         case XCB_CONFIGURE_NOTIFY:
             configureNotifyEvent(reinterpret_cast<xcb_configure_notify_event_t *>(e));
             break;

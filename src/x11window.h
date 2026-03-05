@@ -105,7 +105,6 @@ public:
     bool manage(xcb_window_t w, bool isMapped);
 
     void releaseWindow(bool on_shutdown = false);
-    bool hasScheduledRelease() const;
 
     void destroyWindow() override;
 
@@ -415,7 +414,6 @@ private:
     bool sessionActivityOverride;
 
     QTimer *m_focusOutTimer;
-    QTimer m_releaseTimer;
     QPointer<VirtualDesktop> m_netWmDesktop;
 
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
