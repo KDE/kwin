@@ -803,7 +803,7 @@ bool Scanner::process()
 
             printf("    %s::Resource *%s::add(struct ::wl_resource *resource)\n", interfaceName, interfaceName);
             printf("    {\n");
-            printf("        return bind(resource);\n");
+            printf("        return *m_resource_map.insert(wl_resource_get_client(resource), bind(resource));\n");
             printf("    }\n");
             printf("\n");
 
