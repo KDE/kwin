@@ -119,6 +119,7 @@ private:
     QString m_error;
     ModifierList m_modifiers;
     std::optional<ScreenCastDmaBufTextureParams> m_dmabufParams; // when fixated
+    QList<uint32_t> m_possibleDmabufFormats;
 
     struct
     {

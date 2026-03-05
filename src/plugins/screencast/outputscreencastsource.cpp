@@ -43,11 +43,6 @@ OutputScreenCastSource::~OutputScreenCastSource()
     pause();
 }
 
-quint32 OutputScreenCastSource::drmFormat() const
-{
-    return DRM_FORMAT_ARGB8888;
-}
-
 QSize OutputScreenCastSource::textureSize() const
 {
     return m_output->pixelSize();
@@ -56,6 +51,11 @@ QSize OutputScreenCastSource::textureSize() const
 qreal OutputScreenCastSource::devicePixelRatio() const
 {
     return m_output->scale();
+}
+
+bool OutputScreenCastSource::needsAlpha() const
+{
+    return false;
 }
 
 void OutputScreenCastSource::setRenderCursor(bool enable)

@@ -29,7 +29,7 @@ public:
     uint refreshRate() const override;
     QSize textureSize() const override;
     qreal devicePixelRatio() const override;
-    quint32 drmFormat() const override;
+    bool needsAlpha() const override;
 
     void setRenderCursor(bool enable) override;
     Region render(GLFramebuffer *target, const Region &bufferRepair) override;

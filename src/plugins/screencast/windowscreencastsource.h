@@ -23,10 +23,10 @@ public:
     explicit WindowScreenCastSource(Window *window);
     ~WindowScreenCastSource() override;
 
-    quint32 drmFormat() const override;
     QSize textureSize() const override;
     qreal devicePixelRatio() const override;
     uint refreshRate() const override;
+    bool needsAlpha() const override;
 
     void setRenderCursor(bool enable) override;
     Region render(GLFramebuffer *target, const Region &bufferDamage) override;

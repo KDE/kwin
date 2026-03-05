@@ -25,10 +25,10 @@ public:
     explicit RegionScreenCastSource(const Rect &region, qreal scale, std::optional<pid_t> pidToHide);
     ~RegionScreenCastSource() override;
 
-    quint32 drmFormat() const override;
     QSize textureSize() const override;
     qreal devicePixelRatio() const override;
     uint refreshRate() const override;
+    bool needsAlpha() const override;
 
     void setRenderCursor(bool enable) override;
     Region render(GLFramebuffer *target, const Region &bufferRepair) override;

@@ -27,9 +27,9 @@ public:
     explicit ScreenCastSource();
 
     virtual uint refreshRate() const = 0;
-    virtual quint32 drmFormat() const = 0;
     virtual QSize textureSize() const = 0;
     virtual qreal devicePixelRatio() const = 0;
+    virtual bool needsAlpha() const = 0;
 
     virtual void setRenderCursor(bool enable) = 0;
     virtual Region render(GLFramebuffer *target, const Region &bufferRepair) = 0;
