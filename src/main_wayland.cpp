@@ -143,7 +143,7 @@ void ApplicationWayland::performStartup()
 
     createWorkspace();
     createScene();
-    auto compositor = Compositor::create();
+    auto compositor = Compositor::create(scene());
     compositor->start();
 
     createPlugins();

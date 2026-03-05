@@ -55,10 +55,10 @@
 namespace KWin
 {
 
-Compositor *Compositor::create(QObject *parent)
+Compositor *Compositor::create(WorkspaceScene *scene, QObject *parent)
 {
     Q_ASSERT(!s_compositor);
-    auto *compositor = new Compositor(parent);
+    auto *compositor = new Compositor(scene, parent);
     s_compositor = compositor;
     return compositor;
 }
@@ -69,8 +69,9 @@ Compositor *Compositor::self()
     return s_compositor;
 }
 
-Compositor::Compositor(QObject *workspace)
+Compositor::Compositor(WorkspaceScene *scene, QObject *workspace)
     : QObject(workspace)
+    , m_scene(scene)
     , m_allowOverlaysEnv(environmentVariableBoolValue("KWIN_USE_OVERLAYS"))
     , m_renderLoopDrivenAnimationDriver(new RenderLoopDrivenQAnimationDriver(this))
 {
@@ -267,9 +268,9 @@ void Compositor::start()
     }
 
     if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
-        kwinApp()->scene()->attachRenderer(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
+        m_scene->attachRenderer(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
     } else {
-        kwinApp()->scene()->attachRenderer(std::make_unique<ItemRendererQPainter>());
+        m_scene->attachRenderer(std::make_unique<ItemRendererQPainter>());
     }
 
     handleOutputsChanged();
@@ -279,7 +280,7 @@ void Compositor::start()
     m_state = State::On;
 
     // Sets also the 'effects' pointer.
-    new EffectsHandler(this, kwinApp()->scene());
+    new EffectsHandler(this, m_scene);
 
     Q_EMIT compositingToggled(true);
 }
@@ -315,7 +316,7 @@ void Compositor::stop()
         removeOutput(findOutput(loop));
     }
 
-    kwinApp()->scene()->detachRenderer();
+    m_scene->detachRenderer();
 
     m_backend.reset();
 
@@ -586,7 +587,6 @@ void Compositor::composite(RenderLoop *renderLoop)
         return;
     }
 
-    WorkspaceScene *scene = kwinApp()->scene();
     BackendOutput *output = findOutput(renderLoop);
     LogicalOutput *logicalOutput = workspace()->findOutput(output);
     const auto primaryView = m_primaryViews[renderLoop].get();
@@ -702,7 +702,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     const size_t maxUnderlayCount = std::ranges::count_if(specialLayers, [primaryView](OutputLayer *layer) {
         return layer->minZpos() < primaryView->layer()->zpos();
     });
-    const auto [overlayCandidates, underlayCandidates] = scene->overlayCandidates(specialLayers.size(), maxOverlayCount, maxUnderlayCount);
+    const auto [overlayCandidates, underlayCandidates] = m_scene->overlayCandidates(specialLayers.size(), maxOverlayCount, maxUnderlayCount);
     auto overlayAssignments = assignOverlays(primaryView, underlayCandidates, overlayCandidates, specialLayers);
     if (overlayAssignments.empty()) {
         // the cursor is important, so try again without other over/underlays
@@ -915,7 +915,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
-    scene->frame(primaryView, frame.get());
+    m_scene->frame(primaryView, frame.get());
     for (auto &layer : layers) {
         layer.view->postPaint();
     }
@@ -988,7 +988,7 @@ void Compositor::assignOutputLayers(LogicalOutput *logicalOutput, BackendOutput 
     if (sceneView) {
         sceneView->setLayer(primaryLayer);
     } else {
-        sceneView = std::make_unique<SceneView>(kwinApp()->scene(), logicalOutput, backendOutput, primaryLayer);
+        sceneView = std::make_unique<SceneView>(m_scene, logicalOutput, backendOutput, primaryLayer);
         sceneView->setScale(backendOutput->scale());
         sceneView->setRenderOffset(backendOutput->deviceOffset());
         const auto updateViewport = [view = sceneView.get(), logicalOutput, backendOutput]() {

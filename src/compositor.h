@@ -39,7 +39,7 @@ class KWIN_EXPORT Compositor : public QObject
 {
     Q_OBJECT
 public:
-    static Compositor *create(QObject *parent = nullptr);
+    static Compositor *create(WorkspaceScene *scene, QObject *parent = nullptr);
 
     enum class State {
         On = 0,
@@ -77,7 +77,7 @@ Q_SIGNALS:
     void aboutToToggleCompositing();
 
 protected:
-    explicit Compositor(QObject *parent = nullptr);
+    explicit Compositor(WorkspaceScene *scene, QObject *parent = nullptr);
 
     static Compositor *s_compositor;
 
@@ -98,8 +98,8 @@ protected:
     void assignOutputLayers(LogicalOutput *logicalOutput, BackendOutput *backendOutput);
 
     CompositingType m_selectedCompositor = NoCompositing;
-
     State m_state = State::Off;
+    WorkspaceScene *m_scene;
     std::unique_ptr<RenderBackend> m_backend;
     std::unordered_map<RenderLoop *, std::unique_ptr<SceneView>> m_primaryViews;
     std::unordered_map<RenderLoop *, std::unordered_map<OutputLayer *, std::unique_ptr<ItemView>>> m_overlayViews;
