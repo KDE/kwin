@@ -400,9 +400,6 @@ private:
     int bit_depth = 24;
     RegionF opaque_region;
     RegionF m_shapeRegion;
-    friend struct ResetupRulesProcedure;
-
-    friend bool performTransiencyCheck();
 
     Xcb::StringProperty fetchActivities() const;
     void readActivities(Xcb::StringProperty &property);
@@ -411,8 +408,6 @@ private:
     bool sessionActivityOverride;
 
     QPointer<VirtualDesktop> m_netWmDesktop;
-
-    QMetaObject::Connection m_edgeGeometryTrackingConnection;
 
     QMarginsF m_clientFrameExtents;
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set

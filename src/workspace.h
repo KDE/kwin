@@ -749,7 +749,6 @@ private:
     std::shared_ptr<FileDescriptor> m_sleepInhibitor;
 
 private:
-    friend bool performTransiencyCheck();
     friend Workspace *workspace();
 };
 
