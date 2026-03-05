@@ -195,6 +195,15 @@ void X11Window::releaseWindow(bool on_shutdown)
     markAsDeleted();
     Q_EMIT closed();
 
+    // Even though the window is released, we leave the event mask for the window as is. In other words,
+    // we will potentially continue receiving PropertyNotify and other events. The event mask is not
+    // reset because it is possible that other places in the window manager have also requested
+    // additional events.
+    //
+    // For example, if a client uses the focused window for selection data transfers and we reset the
+    // event mask here, that will break active xwayland data transfers because they rely on PropertyNotify
+    // events. If we could refcount event masks on the X server side, that would help but it is unlikely
+    // to happen because Wayland already exists.
     if (isUnmanaged()) {
         m_releaseTimer.stop();
         if (Xcb::Extensions::self()->isShapeAvailable()) {
