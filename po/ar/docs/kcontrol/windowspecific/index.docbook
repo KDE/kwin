@@ -1,0 +1,2204 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>قواعد النوافذ</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Parts of this documentation was converted from the KDE UserBase <ulink url="https://userbase.kde.org/KWin_Rules"
+>KWin Rules</ulink
+> page and updated by the &kde; Documentation team to Plasma 5.8.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+<othercredit role="translator"
+><firstname
+>زايد</firstname
+><surname
+>السعيدي</surname
+><affiliation
+><address
+><email
+>zayed.alsaidi@gmail.com</email
+></address
+></affiliation
+><contrib
+>التّرجمة العربيّة</contrib
+></othercredit
+> 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>2016-06-23</date>
+      <releaseinfo
+>بلازما 5.8</releaseinfo>
+<abstract>
+<para
+>تستطيع هنا تخصيص إعدادات نافذة معينة لبعض النوافذ فقط.</para>
+      </abstract>
+<keywordset>
+<keyword
+>كيدي</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>إعدادات النافذة</keyword>
+<keyword
+>موضع النافذة</keyword>
+<keyword
+>حجم النافذة</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>إعدادات النافذة المحددة: بداية سريعة</title>
+
+<para
+>تستطيع هنا تخصيص إعدادات نافذة معينة لبعض النوافذ فقط.</para>
+
+<note>
+<para
+>يرجى ملاحظة أن هذا الضبط لن يسري مفعوله إذا لم تستخدم KWin كمدير نوافذ. إذا استخدمت مدير نوافذ مختلف، يرجى مراجعة وثائقه لمعرفة كيفية تخصيص سلوك النوافذ.</para>
+</note>
+
+<para
+>كثير من الإعدادات التي تستطيع ضبطها هنا هي نفسها التي تستطيع ضبطها بشكل عام في وحدة <guilabel
+>سلوك النافذة</guilabel
+> في إعدادات النظام، ومع ذلك فإن بعضها أكثر تفصيلاً.</para>
+
+<para
+>وهي تشمل الأبعاد، والموضع، وما إذا كان يجب إبقاء النافذة فوق أو تحت غيرها، ومنع سرقة التركيز، وإعدادات الشفافية.</para>
+
+<para
+>تستطيع الوصول إلى هذه الوحدة بطريقتين: من شريط عنوان التطبيق الذي ترغب في ضبطه، أو من إعدادات النظام. إذا بدأتها من داخل إعدادات النظام، فتستطيع استخدام <guibutton
+>جديد...</guibutton
+> لإنشاء تشكيلة نافذة، وزر <guibutton
+>اكتشف خاصيّات النّافذة</guibutton
+> في الحوار الناتج لملء المعلومات المطلوبة جزئياً للتطبيق الذي ترغب في ضبطه.</para>
+
+<para
+>تستطيع أيضاً في أي وقت <guibutton
+>تعديل...</guibutton
+> أو <guibutton
+>حذف</guibutton
+> أي تشكيلة إعدادات مخزنة، وإعادة ترتيب القائمة. يؤثر إعادة ترتيب القائمة باستخدام أزرار <guibutton
+>انقل للأعلى</guibutton
+> و <guibutton
+>انقل للأسفل</guibutton
+> على كيفية تطبيقها.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>نظرة عامة</title
+> 
+<para
+>يتيح KWin للمستخدم النهائي تحديد قواعد لتغيير سمات نافذة التطبيق. </para>
+<para
+>على سبيل المثال، عند بدء تشغيل تطبيق، يمكن إجباره على العمل دائماً على <emphasis
+>سطح المكتب الافتراضي 2</emphasis
+>. أو يمكن التحايل على خلل في تطبيق ما لإجبار النافذة على البقاء فوق النوافذ الأخرى. </para>
+<para
+>وُفّرت <link linkend="examples"
+>أمثلة</link
+> خطوة بخطوة جنباً إلى جنب مع معلومات مفصلة عن استخدام <link linkend="kwin-rule-editor"
+>محرر قواعد KWin</link
+> لتحديد <link linkend="window-matching"
+>مطابقة النافذة</link
+> و <link linkend="window-attributes"
+>سمات النافذة</link
+>. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>أمثلة والتحايل على التطبيقات</title
+> 
+<para
+>لمعرفة ما هو ممكن، وُفّرت <link linkend="examples"
+>أمثلة</link
+> مفصلة يمكن استخدامها أيضاً كنموذج لقواعدك الخاصة. </para>
+<para
+>خُصّصت صفحة خاصة لمعالجة <link linkend="application-workarounds"
+>التحايل على التطبيقات</link
+>. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>محرر قواعد KWin</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>استدعاء محرر قواعد KWin</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>توجد عدة طرق لاستدعاء محرر قواعد KWin. إليك اثنتان منها: </para>
+<itemizedlist>
+<listitem
+><para
+>انقر بزر الفأرة الأيمن على شريط عنوان أي نافذة، واختر <menuchoice
+><guimenu
+>إجراءات إضافية</guimenu
+><guimenuitem
+>إعدادات مدير النوافذ...</guimenuitem
+></menuchoice
+> وفي نافذة <guilabel
+>ضبط</guilabel
+>، اختر <guilabel
+>قواعد النوافذ</guilabel
+> أو</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>إعدادات النظام</guimenu
+><guisubmenu
+>سلوك النافذة</guisubmenu
+><guimenuitem
+>قواعد النوافذ</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>تُستخدم النافذة الرئيسية لـ: </para>
+<itemizedlist>
+<listitem
+><para
+>التأثير على القواعد باستخدام <guilabel
+>جديد...</guilabel
+>، و <guilabel
+>تعديل...</guilabel
+> و <guilabel
+>حذف</guilabel
+></para
+></listitem>
+<listitem
+><para
+>مشاركة القواعد مع الآخرين عبر <guilabel
+>استيراد</guilabel
+> و <guilabel
+>تصدير</guilabel
+></para
+></listitem>
+<listitem
+><para
+>ضمان <link linkend="rule-evaluation"
+>تقييم القاعدة</link
+> المطلوب باستخدام <guilabel
+>انقل للأعلى</guilabel
+> و <guilabel
+>انقل للأسفل</guilabel
+></para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>تقييم القاعدة</title
+> 
+<para
+>عند بدء تشغيل تطبيق (أو تعديل القواعد)، يُقيّم KWin القواعد من أعلى القائمة إلى أسفلها. لجميع القواعد التي تطابق نافذة ما، تُطبق المجموعة الجماعية من السمات على النافذة، ثم تُعرض النافذة. </para>
+<para
+>إذا قامت قاعدتان متطابقتان أو أكثر بتمكين نفس السمة، يُستخدم الإعداد الموجود في القاعدة <emphasis
+>الأولى</emphasis
+> في القائمة. </para>
+<para
+><tip
+><para
+>تستطيع تفصيل النوافذ الابنة للتطبيق بوضع القواعد الأكثر تقييداً أولاً - انظر مثال <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>كوبيتي ونافذة دردشة كوبيتي</link
+>.</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>محرر القواعد</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>يتكون المحرر من أربعة ألسنة: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>مطابقة النافذة</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>الحجم والموضع</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>الترتيب والوصول</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>المظهر والإصلاحات</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>كما يوحي الاسم، تُستخدم <guilabel
+>مطابقة النافذة</guilabel
+> لتحديد معايير لمطابقة نافذة واحدة أو أكثر. تُستخدم الألسنة الثلاثة الأخرى لتغيير سمات النوافذ المتطابقة. </para>
+<para
+><tip
+><para
+>يمكن أن تتأثر اللوحات أيضاً.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>مطابقة النافذة</title
+> 
+<para
+>كل قاعدة نافذة لها معايير <link linkend="window-matching"
+>مطابقة نافذة</link
+> يحددها المستخدم. يستخدم KWin المعايير لتحديد ما إذا كانت القاعدة قابلة للتطبيق على تطبيق ما. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>سمات النافذة</title
+> 
+<para
+>إلى جانب معايير مطابقة النافذة، تحتوي كل قاعدة نافذة على مجموعة من <link linkend="window-attributes"
+>سمات النافذة</link
+>. تتجاوز هذه السمات إعدادات التطبيق المقابلة وتُطبق قبل عرض النافذة بواسطة KWin. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>مطابقة النافذة</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>يُستخدم لسان <guilabel
+>مطابقة النافذة</guilabel
+> لتحديد المعايير التي يستخدمها KWin لتقييم ما إذا كانت القاعدة قابلة للتطبيق على نافذة معينة. </para>
+<para
+>يمكن تحديد صفر (تطابق أي نافذة) أو أكثر مما يلي: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>فئة النافذة (تطبيق)</guilabel
+> - يطابق الفئة.<itemizedlist
+> <listitem
+><para
+><guilabel
+>طابق فئة النافذة بالكامل</guilabel
+> - يتضمن مطابقة الفئة الثانوية.</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>دور النافذة</guilabel
+> - يقصر المطابقة على وظيفة النافذة (مثلاً <emphasis
+>النافذة الرئيسية</emphasis
+>، أو <emphasis
+>نافذة الدردشة</emphasis
+>، إلخ.)</para
+></listitem>
+<listitem
+><para
+><guilabel
+>أنواع النوافذ</guilabel
+> - يقصر المطابقة على نوع النافذة: <guilabel
+>نافذة عادية</guilabel
+>، <guilabel
+>نافذة حوار</guilabel
+>، إلخ.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>عنوان النافذة</guilabel
+> - يقصر المطابقة على عنوان النافذة.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>الآلة (اسم المضيف)</guilabel
+> - يقصر المطابقة على اسم المضيف المرتبط بالنافذة.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>بينما يمكن إدخال المعلومات أعلاه يدوياً، فإن الطريقة المفضلة هي استخدام زر <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+>.</para
+></tip>
+</para>
+<para
+>لكل حقل، يمكن تطبيق العوامل التالية على قيمة الحقل: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>غير مهم</guilabel
+> - يتجاهل الحقل.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>تطابق تام</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>تطابق السلسلة الفرعية</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+>كل من <guilabel
+>مطابقة تامة</guilabel
+> و <guilabel
+>تطابق سلسلة فرعية</guilabel
+> ينفذان مطابقة غير حساسة لحالة الأحرف. على سبيل المثال، تطابق <emphasis
+>AB</emphasis
+> السلاسل <emphasis
+>AB</emphasis
+> و <emphasis
+>ab</emphasis
+> و <emphasis
+>Ab</emphasis
+> و <emphasis
+>aB</emphasis
+>.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>تعبير نمطي</guilabel
+> - نُفّذت تعبيرات Qt النمطية - انظر <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+>مطابقة الأنماط باستخدام التعبيرات النمطية</ulink
+>.</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>اكتشف خاصيّات النّافذة</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>تبسط وظيفة <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> عملية إدخال معايير المطابقة. </para>
+<orderedlist>
+<listitem
+><para
+>بدء تشغيل التطبيق الذي ترغب في إنشاء قاعدة له.</para
+></listitem>
+<listitem
+><para
+>بعد ذلك، في لسان <guilabel
+>مطابقة النافذة</guilabel
+>، اضبط عدد ثواني التأخير قبل بدء وظيفة <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+>. القيمة المبدئية هي صفر ثانية.</para
+></listitem>
+<listitem
+><para
+>نُقر على <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> و</para
+></listitem>
+<listitem
+><para
+>عندما يتحول مؤشر الفأرة إلى شعيرة متصالبة، ضعه داخل نافذة التطبيق (ليس شريط العنوان) وانقر بزر الفأرة الأيسر.</para
+></listitem>
+<listitem
+><para
+>عُرِضت نافذة جديدة تحتوي على معلومات حول النافذة المختارة. حدد الحقول المطلوبة:<itemizedlist>
+<listitem
+><para
+><guilabel
+>اسم الفئة الثانوية</guilabel
+> - بعض التطبيقات لها اسم فئة ثانوية. يمكن استخدام هذه القيمة لتقييد النوافذ بهذه القيمة.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>دور النافذة</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>نوع النافذة</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>عنوان النّافذة</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+>نُقر على زر <guilabel
+>موافق</guilabel
+> لملء معايير <guilabel
+>مطابقة النافذة</guilabel
+> تلقائياً. </para>
+<para
+>باستخدام مزيج من المعلومات، يمكن تطبيق قاعدة على تطبيق كامل (بواسطة <guilabel
+>الفئة</guilabel
+>) أو على <guilabel
+>نوع</guilabel
+> نافذة معين داخل <guilabel
+>الفئة</guilabel
+> - كأن تكون <guilabel
+>شريط أدوات</guilabel
+> مثلاً. </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>سمات النافذة</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>جُمّعت السمات التي يمكن ضبطها حسب الوظيفة في ثلاثة ألسنة: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>الحجم والموضع</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>الترتيب والوصول</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>المظهر والإصلاحات</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>لكل سمة مجموعة من المعاملات التي تحدد كيفية التصرف بها. </para>
+<sect1 id="parameters"
+><title
+>المعاملات</title>
+<para
+>تقبل كل سمة، كحد أدنى، واحداً من المعاملات التالية. سُرِدت وسائط إضافية خاصة بالسمة ضمن تعريف كل <link linkend="attributes"
+>سمة</link
+>. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>لا يتأثر</emphasis
+></term>
+    <listitem>
+    <para
+>ضمان أن أي قاعدة لاحقة، تطابق النافذة، لا تؤثر على السمة.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>طبّق مبدئياً</emphasis
+></term>
+    <listitem>
+    <para
+>بدء النافذة بالسمة والسماح بتغييرها في وقت التشغيل.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>تذكّر</emphasis
+></term>
+    <listitem>
+    <para
+>استخدام إعداد السمة كما هو محدد في القاعدة، وإذا غُيّر في وقت التشغيل، تُحفظ القيمة الجديدة وتُستخدم بدلاً منها.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>أجبر</emphasis
+></term>
+    <listitem>
+    <para
+>لا يمكن تغيير الإعداد في وقت التشغيل.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>طبق الآن، أجبر مؤقتاً</emphasis
+></term>
+    <listitem>
+    <para
+>تطبيق/إجبار الإعداد مرة واحدة وإلغاء تعيين السمة. الفرق بين الاثنين هو أنه في وقت التشغيل، يسمح <guilabel
+>طبق الآن</guilabel
+> بتغيير السمة بينما يمنع <guilabel
+>أجبر مؤقتاً</guilabel
+> تغييرها حتى تُغلق جميع النوافذ المتأثرة.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>بالنسبة لـ <guilabel
+>طبق الآن</guilabel
+>، إذا لم تكن للقاعدة سمات أخرى محددة، تُحذف القاعدة بعد التقييم، بينما في <guilabel
+>أجبر مؤقتاً</guilabel
+>، تُحذف القاعدة بعد انتهاء آخر نافذة متأثرة.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>صفات</title>
+<para
+><tip
+><para
+>يقوم زر <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> بملء القيم الخاصة بالسمات تلقائياً - لمزيد من المعلومات انظر <link linkend="window-matching"
+>مطابقة النافذة</link
+>. على سبيل المثال، تُضبط قيم الارتفاع والعرض لسمة <guilabel
+>الحجم</guilabel
+> حسب ارتفاع وعرض النافذة المكتشفة.</para
+></tip>
+</para>
+<para
+><tip
+><para
+>تُستخدم وسائط <guilabel
+>نعم/لا</guilabel
+> لتبديل السمات بين التشغيل والإيقاف. التسامح مع القواعد اللغوية يساعد المرء على فهم كيفية معالجة الإعداد. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> على سبيل المثال، السمة <guilabel
+>تخطى شريط المهام</guilabel
+>، عندما تُضبط على <guilabel
+>لا</guilabel
+> تعني عدم تخطي شريط المهام. بعبارة أخرى، إظهار النافذة في شريط المهام. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>الحجم والموضع</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>الموضع</emphasis
+></term>
+    <listitem>
+    <para
+>وضع الركن العلوي الأيسر للنافذة عند إحداثيات x,y المحددة.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>نقطة أصل KWin، وهي (0,0)، تقع في أعلى يسار سطح المكتب.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>الحجم</emphasis
+></term>
+    <listitem>
+    <para
+>عرض وارتفاع النافذة.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>مكبرة أفقياً، مكبرة رأسياً</emphasis
+></term>
+    <listitem>
+    <para
+>تُستخدم هذه السمات لتبديل سمة النافذة بين التكبير الأفقي الأقصى/الأدنى.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>سطح المكتب، النشاط، الشاشة</emphasis
+></term>
+    <listitem>
+    <para
+>وضع النافذة على <emphasis
+>سطح المكتب (الافتراضي)</emphasis
+>، أو <emphasis
+>النشاط</emphasis
+> أو <emphasis
+>الشاشة</emphasis
+> المحددة. استخدم <guilabel
+>كل أسطح المكتب</guilabel
+> لوضع النافذة على جميع <emphasis
+>أسطح المكتب الافتراضية</emphasis
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>ملء الشاشة، مصغرة، مظللة</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل سمات النافذة بين ملء الشاشة، والتصغير، والتظليل. على سبيل المثال، يمكن بدء نافذة مصغرة أو إذا بدأت مصغرة، يمكن إجبارها على عدم ذلك.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>تُحاكى سمة التكبير باستخدام كل من <guilabel
+>مكبرة أفقياً</guilabel
+> و <guilabel
+>مكبرة رأسياً</guilabel
+> أو <guilabel
+>الموضع المبدئي</guilabel
+> مع وسيط <guilabel
+>التكبير</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>الموضع المبدئي</emphasis
+></term>
+    <listitem>
+    <para
+>تجاوز استراتيجية وضع النوافذ العالمية بواحدة مما يلي:</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>المبدئي</guilabel
+> - استخدام استراتيجية وضع النوافذ العالمية.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>بلا موضع</guilabel
+> - الزاوية العلوية اليسرى.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>أدنى تداخل</guilabel
+> - توضع حيث لا توجد نافذة أخرى.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>مكبرة</guilabel
+> - بدء النافذة مكبرة.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>مركزة</guilabel
+> - وسط سطح المكتب.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>عشوائي</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>في زاوِيَة أعلى اليسار</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>تحت الفأرة</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>على النافذة الرئيسية</guilabel
+> - يقصر وضع النافذة الابنة على حدود النافذة الأب.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>تجاهل طلب الأبعاد</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كان سيُقبل أو يُتجاهل موضع الأبعاد المطلوب للنافذة. لتجنب التعارض بين استراتيجية الوضع المبدئية وطلب النافذة، تُتجاهل استراتيجية الوضع عند قبول طلب النافذة.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>الحجم الأدنى، الحجم الأقصى</emphasis
+></term>
+    <listitem>
+    <para
+>الحجم الأدنى والأقصى المسموح به للنافذة.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>التزم بقيود الأبعاد</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كان سيُلتزم بنسبة العرض إلى الارتفاع المطلوبة للنافذة أو <emphasis
+>الزيادة الأساسية</emphasis
+>. لفهم هذه السمة، يلزم توفر بعض المعلومات الخلفية. باختصار، يجب على النوافذ أن تطلب من مدير النوافذ زيادة أساسية: وهي الحد الأدنى لعدد بكسلات <emphasis
+>الارتفاع</emphasis
+> × <emphasis
+>العرض</emphasis
+> لكل طلب تغيير حجم. عادة ما تكون 1x1. لكن النوافذ الأخرى، مثل محاكيات الطرفية أو المحررات، تستخدم خطوطاً ثابتة العرض وتطلب زيادتها الأساسية وفقاً لحجم حرف واحد.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>الترتيب والوصول</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>ابقِ في الأعلى، ابقِ في الأسفل</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كان سيُبقى على النافذة فوق/تحت جميع النوافذ الأخرى.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>الجمع الآليّ للمتطابقات</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل تجميع النوافذ (المعروف باسم <emphasis
+>تبويب</emphasis
+>).</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>الجمع الآليّ في المقدمة</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كانت النافذة ستصبح نشطة عند إضافتها إلى المجموعة الآلية الحالية.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>الجمع الآليّ بالمعرف</emphasis
+></term>
+    <listitem>
+    <para
+>إنشاء مجموعة عبر معرف يحدده المستخدم. يمكن لأكثر من قاعدة مشاركة نفس المعرف للسماح بتجميع نوافذ تبدو غير مرتبطة.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>تخطى شريط المهام</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كانت النافذة ستُعرض في شريط المهام.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>تخطّى المنادي</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كانت النافذة ستُعرض في المنادي.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>تخطّى مبدل المهام</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كانت النافذة ستُعرض في قائمة <guilabel
+>ALT+TAB</guilabel
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>الاختصار</emphasis
+></term>
+    <listitem>
+    <para
+>تعيين اختصار للنافذة. عند النقر على <guilabel
+>تحرير...</guilabel
+>، ستظهر تعليمات إضافية.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>المظهر والإصلاحات</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>بلا شريط العنوان والإطار</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كان سيُعرض شريط العنوان والإطار حول النافذة.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>مخطط لون شريط العنوان</emphasis
+></term>
+    <listitem>
+    <para
+>اختيار مخطط ألوان لشريط عنوان النافذة.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>عتمة النافذة النشطة/غير النشطة</emphasis
+></term>
+    <listitem>
+    <para
+>عندما تكون النافذة نشطة/غير نشطة، تُضبط عتمتها بالنسبة المئوية المحددة.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>لا يمكن التأثير على <guilabel
+>عتمة النافذة النشطة/غير النشطة</guilabel
+> إلا عند تمكين <guilabel
+>تأثيرات سطح المكتب</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>منع سرقة التركيز</emphasis
+></term>
+    <listitem>
+    <para
+>عندما تريد نافذة الحصول على التركيز، يمكن التحكم في مقياس (من <guilabel
+>لا شيء</guilabel
+> إلى <guilabel
+>أقصى حد</guilabel
+>) فيما إذا كان سيُلبى الطلب وتوضع فوق جميع النوافذ الأخرى، أو يُتجاهل طلبها (مما قد يترك النافذة خلف النوافذ الأخرى):</para>
+<itemizedlist>
+<listitem
+><para
+>لا شيء - منح التركيز للنافذة دائماً.</para
+></listitem>
+<listitem
+><para
+>منخفض</para
+></listitem>
+<listitem
+><para
+>عادي</para
+></listitem>
+<listitem
+><para
+>عالي</para
+></listitem>
+<listitem
+><para
+>أقصى حد - يُرفض طلب تركيز النافذة. لا يُمنح التركيز إلا بطلب صريح عبر الفأرة.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>انظر <guilabel
+>اقبل التركيز</guilabel
+> لجعل النافذة للقراءة فقط - لا تقبل أي إدخال من لوحة المفاتيح.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>أقبل التركيز</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كانت النافذة تقبل الإدخال من لوحة المفاتيح. لجعل النافذة للقراءة فقط.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>تجاهل الاختصارات العامة</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كان سيُتجاهل الاختصارات العالمية (كما هي محددة في <menuchoice
+><guimenu
+>إعدادات النظام</guimenu
+><guisubmenu
+>الاختصارات والإيماءات</guisubmenu
+><guimenuitem
+>الاختصارات العالمية</guimenuitem
+></menuchoice
+> أو بتشغيل <varname
+>kcmshell6 keys</varname
+> في <guilabel
+>كونسول</guilabel
+>) بينما تكون النافذة نشطة.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>قابلة للإغلاق</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كان سيُعرض زر <guilabel
+>إغلاق</guilabel
+> على شريط العنوان.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>قد يظل بإمكان المستخدم النهائي إغلاق نافذة الطرفية عن طريق إنهاء جلسة الصدفة، ومع ذلك فإن استخدام <guilabel
+>اقبل التركيز</guilabel
+> لتعطيل إدخال لوحة المفاتيح سيجعل إغلاق النافذة أكثر صعوبة.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>نوع النافذة</emphasis
+></term>
+    <listitem>
+    <para
+>تغيير النافذة إلى نوع آخر ووراثة خصائص تلك النافذة:</para>
+<itemizedlist>
+<listitem
+><para
+>نافذة عادية</para
+></listitem>
+<listitem
+><para
+>نافذة الحوار</para
+></listitem>
+<listitem
+><para
+>أداة النافذة</para
+></listitem>
+<listitem
+><para
+>إرساء (اللوحة)</para
+></listitem>
+<listitem
+><para
+>شريط الأدوات</para
+></listitem>
+<listitem
+><para
+>قائمة ممزقة</para
+></listitem>
+<listitem
+><para
+>شاشة البدء</para
+></listitem>
+<listitem
+><para
+>سطح المكتب</para
+></listitem>
+<listitem
+><para
+>شريط أدوات مستقل</para
+></listitem>
+<listitem
+><para
+>على شاشة العرض</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>استخدم هذا بحذر لأنه قد يؤدي لنتائج غير مرغوبة. على سبيل المثال، تُغلق <guilabel
+>شاشة البدء</guilabel
+> آلياً بواسطة KWin عند النقر عليها.</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>التركيب الكتلي</emphasis
+></term>
+    <listitem>
+    <para
+>تبديل ما إذا كان سيُعطل التركيب بينما النافذة <emphasis
+>موجودة</emphasis
+>. إذا كان التركيب مُمكناً وحددت القاعدة تعطيل التركيب، فبينما تكون <emphasis
+>أي</emphasis
+> نافذة متطابقة موجودة، سيُعطل التركيب. يُعاد تمكين التركيب عند انتهاء آخر نافذة متطابقة.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>أمثلة</title>
+<para
+><note
+><para
+>يفصل المثال الأول جميع الخطوات اللازمة لإنشاء القواعد. من أجل الحفاظ على حجم هذه الصفحة قابلاً للإدارة، تذكر الأمثلة اللاحقة الخطوات الخاصة بالمثال فقط.</para
+></note>
+</para>
+<para
+><note
+><para
+>تشير سمة <guilabel
+>المنادي</guilabel
+> إلى <guilabel
+>مدير سطح المكتب الافتراضي</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>تثبيت نافذة على سطح مكتب وتعيين سمات أخرى</title>
+<para
+>تثبيت أكريغاتور على <emphasis
+>سطح المكتب الافتراضي 2</emphasis
+>. بالإضافة إلى ذلك، بدء تشغيل التطبيق بحجم وموضع مفضلين. لكل سمة، استخدم <guilabel
+>طبق مبدئياً</guilabel
+> كـ <link linkend="parameters"
+>معامل</link
+> بحيث يمكن تجاوزه في وقت التشغيل. </para>
+<para
+>أُنشئت قاعدة KWin كالتالي: </para>
+<orderedlist>
+<listitem
+><para
+>بدء تشغيل أكريغاتور على <emphasis
+>سطح المكتب الثاني</emphasis
+>، وتغيير حجمه ووضعه بما يناسب: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>نُقر بزر الفأرة الأيمن على شريط العنوان واختيار <menuchoice
+><guimenu
+>إجراءات إضافية</guimenu
+><guimenuitem
+>إعدادات مدير النوافذ...</guimenuitem
+></menuchoice
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>اختيار <guilabel
+>قواعد النوافذ</guilabel
+> في العمود الأيسر والنقر على <guilabel
+>جديد...</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>عُرِضت نافذة <guilabel
+>تحرير الإعدادات الخاصة بالنافذة</guilabel
+>. لسان <guilabel
+>مطابقة النافذة</guilabel
+> هو اللسان المبدئي: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>نُقر على <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> بتأخير <guilabel
+>0 ثانية</guilabel
+> وسيتحول المؤشر فوراً إلى شعيرة متصالبة. انقر (في أي مكان) داخل نافذة أكريغاتور (ولكن ليس شريط العنوان). عُرِضت معايير النافذة. طابق فقط حسب اسم الفئة الأساسي لذا اترك مربعات الاختيار غير محددة - لمزيد من المعلومات انظر <link linkend="window-matching"
+>مطابقة النافذة</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>عند النقر على <guilabel
+>موافق</guilabel
+>، تقوم النافذة السابقة بملء النتائج في لسان <guilabel
+>مطابقة النافذة</guilabel
+>. أدخل نصاً ذا معنى في حقل <guilabel
+>الوصف</guilabel
+> (الذي يُعرض في نافذة <guilabel
+>قاعدة KWin</guilabel
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>مُكّنت سمات النافذة: <guilabel
+>الموضع</guilabel
+>، و <guilabel
+>الحجم</guilabel
+> و <guilabel
+>سطح المكتب</guilabel
+>. ضُبطت القيم المبدئية بواسطة <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> ويمكن تجاوزها: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>عند النقر على <guilabel
+>موافق</guilabel
+> في النافذة السابقة، يُرجع إلى <guilabel
+>قواعد KWin</guilabel
+> الرئيسية. سُرِدت القاعدة الجديدة مع وصفها: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>نُقر على <guilabel
+>موافق</guilabel
+> لإغلاق النافذة.</para
+></listitem>
+<listitem
+><para
+>تمّ.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>تطبيق على جميع أسطح المكتب ومعالجة نافذة ابنة واحدة بشكل فريد</title>
+<para
+>باستثناء نوافذ المحادثة، يُعرض كوبيتي ونوافذه الابنة على جميع أسطح المكتب مع تخطي صينية النظام والمنادي. بالنسبة لنوافذ المحادثة الابنة، تُعامل مثل النافذة الأب باستثناء إظهارها في صينية النظام. </para>
+<para
+>لكل سمة، استخدم معامل <guilabel
+>أجبر</guilabel
+> بحيث لا يمكن تجاوزها. </para>
+<para
+>من أجل تنفيذ ما سبق، يلزم إنشاء قاعدتين: </para>
+<orderedlist>
+<listitem
+><para
+>قاعدة لـ <guilabel
+>دردشة كوبيتي</guilabel
+> و</para
+></listitem>
+<listitem
+><para
+>قاعدة لـ كوبيتي</para
+></listitem>
+</orderedlist>
+<para
+>تعد معايير مطابقة قاعدة <guilabel
+>دردشة كوبيتي</guilabel
+> أكثر تقييداً من قاعدة <emphasis
+>كوبيتي</emphasis
+> لأنها تحتاج إلى مطابقة دور نافذة معين: نافذة الدردشة. نظراً لعملية <link linkend="rule-evaluation"
+>تقييم القاعدة</link
+>، يجب أن تسبق قاعدة <guilabel
+>دردشة كوبيتي</guilabel
+> قاعدة كوبيتي في <link linkend="kopete-kwin-rule-list"
+>قائمة قواعد KWin لكوبيتي</link
+>. </para>
+<sect2 id="kopete-chat-rule"
+><title
+>قاعدة دردشة كوبيتي</title>
+<para
+>بافتراض أن نافذة <guilabel
+>دردشة كوبيتي</guilabel
+> مفتوحة: </para>
+<orderedlist>
+<listitem
+><para
+>استخدم <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> وحدد نافذة <guilabel
+>دردشة كوبيتي</guilabel
+>. حدد مربع <guilabel
+>دور النافذة</guilabel
+> لقصر المعايير على نوافذ الدردشة - لمزيد من المعلومات انظر <link linkend="window-matching"
+>مطابقة النافذة</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>عند النقر على <guilabel
+>موافق</guilabel
+> في النافذة السابقة، تُملأ النتائج تلقائياً في لسان <guilabel
+>مطابقة النافذة</guilabel
+>. أدخل نصاً ذا معنى في مربع <guilabel
+>الوصف</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>مُكّنت السمات التالية: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>نُقر للمتابعة وإكمال إدخال القاعدة.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>ضُبطت سمة <guilabel
+>تخطى شريط المهام</guilabel
+> على <guilabel
+>لا</guilabel
+> لإظهار النافذة في شريط المهام وهو ما يعني تقريباً: <emphasis
+>لا</emphasis
+> <emphasis
+>لا تقم</emphasis
+> <emphasis
+>بتخطي شريط المهام</emphasis
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>قاعدة كوبيتي</title>
+<para
+>بافتراض أن كوبيتي مفتوح: </para>
+<orderedlist>
+<listitem
+><para
+>استخدم <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> وحدد نافذة كوبيتي. طابق فقط حسب اسم الفئة الأساسي لذا اترك مربعات الاختيار غير محددة - لمزيد من المعلومات انظر <link linkend="window-matching"
+>مطابقة النافذة</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>عند النقر على <guilabel
+>موافق</guilabel
+> في النافذة السابقة، تُملأ النتائج تلقائياً في لسان <guilabel
+>مطابقة النافذة</guilabel
+>. أدخل نصاً ذا معنى في مربع <guilabel
+>الوصف</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>مُكّنت السمات التالية: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>نُقر للمتابعة وإكمال إدخال القاعدة.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>قائمة قواعد KWin لكوبيتي</title>
+<para
+>كما ذُكر، نظراً لعملية <link linkend="rule-evaluation"
+>تقييم القاعدة</link
+>، يجب أن تسبق قاعدة <guilabel
+>دردشة كوبيتي</guilabel
+> قاعدة كوبيتي: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>منع ظهور نافذة في المنادي</title>
+<para
+>لا تسمح <guilabel
+>ملاحظات كيدي</guilabel
+> حالياً لملاحظاتها بتخطي المنادي، ومع ذلك فإن قاعدة بسيطة تحل هذا القصور. </para>
+<para
+>بافتراض توفر نافذة <emphasis
+>ملاحظة ملصقة</emphasis
+>: </para>
+<orderedlist>
+<listitem
+><para
+>استخدم <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> وحدد أي نافذة <emphasis
+>ملاحظة ملصقة</emphasis
+>. طابق فقط حسب اسم الفئة الأساسي لذا اترك مربعات الاختيار غير محددة - لمزيد من المعلومات انظر <link linkend="window-matching"
+>مطابقة النافذة</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>عند النقر على <guilabel
+>موافق</guilabel
+> في النافذة السابقة، تُملأ النتائج تلقائياً في لسان <guilabel
+>مطابقة النافذة</guilabel
+>. أدخل نصاً ذا معنى في مربع <guilabel
+>الوصف</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>مُكّنت سمة <guilabel
+>تخطى المنادي</guilabel
+> مع معامل <guilabel
+>أجبر</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>نُقر للمتابعة وإكمال إدخال القاعدة.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>إجبار نافذة على البقاء في الأعلى</title>
+<para
+>لإظهار نافذة نشطة في الأعلى، اضبط سمة <guilabel
+>منع سرقة التركيز</guilabel
+> الخاصة بها على <guilabel
+>لا شيء</guilabel
+>، عادةً بالاقتران مع معامل <guilabel
+>أجبر</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>قواعد متعددة لكل تطبيق</title>
+<para
+>يحتوي تطبيق <application
+>ثندربيرد</application
+> على عدة نوافذ ابنة مختلفة. هذا المثال: </para>
+<itemizedlist>
+<listitem
+><para
+>تثبيت النافذة الرئيسية لـ <application
+>ثندربيرد</application
+> على <emphasis
+>سطح المكتب الافتراضي 1</emphasis
+> بحجم وموقع محددين على سطح المكتب.</para
+></listitem>
+<listitem
+><para
+>السماح لنافذة محرر <application
+>ثندربيرد</application
+> بالتواجد على أي سطح مكتب وعند تنشيطها، إجبار التركيز عليها وإظهارها فوق جميع النوافذ.</para
+></listitem>
+<listitem
+><para
+>إظهار تذكير <application
+>ثندربيرد</application
+> في الأعلى وعدم إعطائه التركيز حتى لا يُصرف عن غير قصد.</para
+></listitem>
+</itemizedlist>
+<para
+>تعد معايير مطابقة كل قاعدة مقيدة بما يكفي بحيث لا يكون ترتيبها داخل نافذة KWin الرئيسية مهماً للتأثير على <link linkend="rule-evaluation"
+>تقييم القاعدة</link
+>. </para>
+<sect2 id="thunderbird---main"
+><title
+>ثندربيرد - الرئيسي</title>
+<para
+>بافتراض أن نافذة <guilabel
+>ثندربيرد الرئيسي</guilabel
+> مفتوحة، وبالحجم والموقع المناسبين: </para>
+<orderedlist>
+<listitem
+><para
+>استخدم <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> وحدد نافذة <guilabel
+>ثندربيرد الرئيسي</guilabel
+>. حدد مربع <guilabel
+>دور النافذة</guilabel
+> لقصر المعايير على النافذة الرئيسية - لمزيد من المعلومات انظر <link linkend="window-matching"
+>مطابقة النافذة</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>عند النقر على <guilabel
+>موافق</guilabel
+> في النافذة السابقة، تُملأ النتائج تلقائياً في لسان <guilabel
+>مطابقة النافذة</guilabel
+>. أدخل نصاً ذا معنى في مربع <guilabel
+>الوصف</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>مُكّنت السمات التالية: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>نُقر للمتابعة وإكمال إدخال القاعدة.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>ثندربيرد - المحرر</title>
+<para
+>بافتراض أن نافذة <guilabel
+>محرر ثندربيرد</guilabel
+> مفتوحة: </para>
+<orderedlist>
+<listitem
+><para
+>استخدم <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> وحدد نافذة <guilabel
+>محرر ثندربيرد</guilabel
+>. حدد مربعي <guilabel
+>دور النافذة</guilabel
+> و <guilabel
+>نوع النافذة</guilabel
+> لقصر المعايير على نوافذ التحرير - لمزيد من المعلومات انظر <link linkend="window-matching"
+>مطابقة النافذة</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>عند النقر على <guilabel
+>موافق</guilabel
+> في النافذة السابقة، تُملأ النتائج تلقائياً في لسان <guilabel
+>مطابقة النافذة</guilabel
+>. أدخل نصاً ذا معنى في مربع <guilabel
+>الوصف</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>مُكّنت السمات التالية: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>نُقر للمتابعة وإكمال إدخال القاعدة.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>ثندربيرد - التذكير</title>
+<para
+>بافتراض أن نافذة <guilabel
+>تذكير ثندربيرد</guilabel
+> مفتوحة: </para>
+<orderedlist>
+<listitem
+><para
+>استخدم <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> وحدد نافذة <guilabel
+>تذكير ثندربيرد</guilabel
+>. حدد مربعي <guilabel
+>اسم الفئة الثانوية</guilabel
+> و <guilabel
+>نوع النافذة</guilabel
+> لقصر المعايير على نوافذ التذكير - لمزيد من المعلومات انظر <link linkend="window-matching"
+>مطابقة النافذة</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>عند النقر على <guilabel
+>موافق</guilabel
+> في النافذة السابقة، تُملأ النتائج تلقائياً في لسان <guilabel
+>مطابقة النافذة</guilabel
+>. أدخل نصاً ذا معنى في مربع <guilabel
+>الوصف</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>مُكّنت السمات التالية: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>نُقر للمتابعة وإكمال إدخال القاعدة.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>التحايل على التطبيقات</title>
+<para
+>إليك فيما يلي طرق للتحايل على التطبيقات التي لا تتصرف كما ينبغي. </para>
+<para
+><tip
+><para
+>إذا لم تكن معتاداً على إنشاء قواعد KWin، فانظر هذا <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>المثال المفصل</link
+> لتبني عليه قاعدتك الجديدة.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>خطأ تغيير الحجم في ملء الشاشة</title>
+<para
+>قد يواجه إيماكس و <guilabel
+>gVim</guilabel
+>، عند تكبيرهما (وضع ملء الشاشة) وفي ظروف معينة، مشاكل في تغيير حجم النافذة - انظر <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
+>تغيير حجم نافذة إيماكس ...</ulink
+> ستعمل قاعدة KWin على الالتفاف على هذه المشكلة. </para>
+<para
+>بافتراض أن نافذة إيماكس مفتوحة: </para>
+<orderedlist>
+<listitem
+><para
+>استخدم <guilabel
+>اكتشف خاصيّات النّافذة</guilabel
+> وحدد نافذة إيماكس. طابق فقط حسب <guilabel
+>اسم الفئة الأساسي</guilabel
+> لذا اترك مربعات الاختيار غير محددة - لمزيد من المعلومات انظر <link linkend="window-matching"
+>مطابقة النافذة</link
+> <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>عند النقر على <guilabel
+>موافق</guilabel
+> في النافذة السابقة، تُملأ النتائج تلقائياً في لسان <guilabel
+>مطابقة النافذة</guilabel
+>. أدخل نصاً ذا معنى في مربع نص <guilabel
+>الوصف</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>تُجوهل طلب ملء الشاشة لإيماكس عن طريق تمكين سمة <guilabel
+>التزم بقيود الأبعاد</guilabel
+>، وتبديلها إلى الإيقاف (<guilabel
+>لا</guilabel
+>) للتجاهل واختيار معامل <guilabel
+>أجبر</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>نُقر للمتابعة وإكمال إدخال القاعدة.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>الحقوق والترخيص</title>
+      <para
+>حقوق نشر التوثيق انظر تاريخ صفحة قواعد KWin في قاعدة المستخدمين <ulink url="https://userbase.kde.org/index.php?title=KWin_Rules&amp;action=history"
+>KWin Rules page history</ulink
+></para>
+      <para
+>الترجمة: زايد السعيدي <email
+>zayed.alsaidi@gmail.com</email
+></para
+> &underFDL; </chapter>
+&documentation.index;
+</book>

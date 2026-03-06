@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinvirtualkeyboard" lang="&language;">
+<articleinfo>
+
+<title
+>لوحة مفاتيح افتراضية</title>
+<authorgroup>
+<author
+><firstname
+>Yuri</firstname
+> <surname
+>Chornoivan</surname
+> </author>
+<othercredit role="translator"
+><firstname
+>زايد</firstname
+><surname
+>السعيدي</surname
+><affiliation
+><address
+><email
+>zayed.alsaidi@gmail.com</email
+></address
+></affiliation
+><contrib
+>التّرجمة العربيّة</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-27</date>
+<releaseinfo
+>بلازما 5.22</releaseinfo>
+
+<keywordset>
+<keyword
+>كيدي</keyword>
+<keyword
+>إعدادات النظام</keyword>
+<keyword
+>افتراضي</keyword>
+<keyword
+>لوحة المفاتيح</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>تتيح لك هذه الوحدة اختيار لوحة المفاتيح الافتراضية التي تريد استخدامها. ستُفعّل لوحة المفاتيح الافتراضية آليًا عند عدم اكتشاف لوحة مفاتيح فعلية. </para>
+
+<para
+>حدد <ulink url="https://en.wikipedia.org/wiki/Virtual_keyboard"
+>لوحة مفاتيح افتراضية</ulink
+> من القائمة أو اختر <guilabel
+>لا شيء</guilabel
+> إذا كنت لا ترغب في استخدام أي لوحة مفاتيح افتراضية. </para>
+
+<para
+>يُنصح بتثبيت محركات طرق الإدخال المقابلة قبل استخدام هذه الوحدة. </para>
+
+</article>
