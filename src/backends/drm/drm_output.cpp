@@ -412,16 +412,18 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
 {
     const bool effectiveHdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
     const bool effectiveWcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
-    double brightness = next.currentBrightness.value_or(next.brightnessSetting);
+    double brightnessFactor = 1.0;
+    if ((!next.brightnessDevice && next.allowSdrSoftwareBrightness) || effectiveHdr) {
+        brightnessFactor = next.currentBrightness.value_or(next.brightnessSetting);
+    }
     if (!next.brightnessDevice || next.brightnessDevice->usesDdcCi()) {
-        brightness *= next.currentDimming;
+        brightnessFactor *= next.currentDimming;
     }
 
     if (next.colorProfileSource == ColorProfileSource::ICC && !effectiveHdr && !effectiveWcg && next.iccProfile) {
         const double maxFALL = next.iccProfile->maxFALL().value_or(200);
         const double minBrightness = next.iccProfile->relativeBlackPoint().value_or(0) * maxFALL;
         const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(next.iccProfile->colorimetry(), next.sdrGamutWideness);
-        const double brightnessFactor = (!next.brightnessDevice && next.allowSdrSoftwareBrightness) ? brightness : 1.0;
         const double effectiveReferenceLuminance = 5 + (maxFALL - 5) * brightnessFactor;
 
         return std::make_shared<ColorDescription>(ColorDescription{
@@ -453,7 +455,6 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
     // to work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
     const double minBrightness = effectiveHdr ? next.minBrightnessOverride.value_or(transferFunction.minLuminance) : transferFunction.minLuminance;
 
-    const double brightnessFactor = (!next.brightnessDevice && next.allowSdrSoftwareBrightness) || effectiveHdr ? brightness : 1.0;
     const double effectiveReferenceLuminance = 5 + (referenceLuminance - 5) * brightnessFactor;
     return std::make_shared<ColorDescription>(ColorDescription{
         containerColorimetry,
