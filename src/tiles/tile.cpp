@@ -152,7 +152,7 @@ RectF Tile::relativeGeometry() const
 
 RectF Tile::absoluteGeometry() const
 {
-    const RectF geom = m_tiling->output()->geometryF();
+    const RectF geom = workspace()->clientArea(MaximizeArea, m_tiling->output(), m_desktop);
     return RectF(std::round(geom.x() + m_relativeGeometry.x() * geom.width()),
                  std::round(geom.y() + m_relativeGeometry.y() * geom.height()),
                  std::round(m_relativeGeometry.width() * geom.width()),
@@ -161,7 +161,7 @@ RectF Tile::absoluteGeometry() const
 
 RectF Tile::absoluteGeometryInScreen() const
 {
-    const RectF geom = m_tiling->output()->geometryF();
+    const RectF geom = workspace()->clientArea(MaximizeArea, m_tiling->output(), m_desktop);
     return RectF(std::round(m_relativeGeometry.x() * geom.width()),
                  std::round(m_relativeGeometry.y() * geom.height()),
                  std::round(m_relativeGeometry.width() * geom.width()),
@@ -178,13 +178,13 @@ RectF Tile::windowGeometry() const
     effectiveMargins.setBottom(m_relativeGeometry.bottom() < 1.0 ? m_padding / 2.0 : m_padding);
 
     const auto geom = absoluteGeometry();
-    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), m_desktop)) - effectiveMargins;
+    return geom.intersected(m_tiling->output()->geometryF()) - effectiveMargins;
 }
 
 RectF Tile::maximizedWindowGeometry() const
 {
     const auto geom = absoluteGeometry();
-    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), m_desktop));
+    return geom.intersected(m_tiling->output()->geometryF());
 }
 
 Qt::Edges Tile::anchors() const
