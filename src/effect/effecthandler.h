@@ -765,7 +765,7 @@ public:
     }
 #endif
 
-    std::unique_ptr<ConfigurableGesture> registerGesture(const QByteArray &uniqueHandle, const QString &userString);
+    std::unique_ptr<ConfigurableGesture> registerGesture(QAction *shortcutAction);
 
 Q_SIGNALS:
     /**

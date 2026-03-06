@@ -71,8 +71,7 @@ public:
         return m_status;
     }
 
-    void addGesture(ConfigurableGesture *gesture);
-    void addInverseGesture(ConfigurableGesture *gesture);
+    void addGesture(ConfigurableGesture *gesture, ConfigurableGesture *inverseGesture);
 
 Q_SIGNALS:
     void inProgressChanged();

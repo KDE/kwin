@@ -22,6 +22,7 @@ class QAction;
 #if KWIN_BUILD_GLOBALSHORTCUTS
 class KGlobalAccelD;
 class KGlobalAccelInterface;
+class KGlobalShortcutTrigger;
 #endif
 namespace KWin
 {
@@ -81,8 +82,8 @@ public:
     // autotest helper
     void forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {}, std::function<void()> cancelledCallback = {});
 
-    std::unique_ptr<ConfigurableGesture> registerGesture(const QByteArray &uniqueHandle, const QString &userString);
-    void unregisterGesture(ConfigurableGesture *gesture);
+    std::unique_ptr<ConfigurableGesture> registerGesture(QAction *associatedShortcutAction);
+    void unregisterGesture(ConfigurableGesture *gesture); //< automatically called by ConfigurableGesture destructor
 
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
@@ -122,15 +123,42 @@ public:
 
     void cancelModiferOnlySequence();
 
-private:
+private Q_SLOTS:
     void objectDeleted(QObject *object);
+#if KWIN_BUILD_GLOBALSHORTCUTS
+    void onKGlobalShortcutTriggerActive(const KGlobalShortcutTrigger &trigger,
+                                        bool active,
+                                        const QString &componentName,
+                                        const QString &actionId,
+                                        const QString &componentFriendlyName,
+                                        const QString &actionFriendlyName);
+#endif
+
+private:
     bool add(GlobalShortcut sc, DeviceType device = DeviceType::Touchpad);
+#if KWIN_BUILD_GLOBALSHORTCUTS
+    using TriggerId = QPair<QString, QString>; // trigger.type(), .serializedTriggerParams()
+    using ActionUniquePair = QPair<QString, QString>; // componentUniqueName, actionUniqueName
+    bool activateGesture(ConfigurableGesture *gesture, const KGlobalShortcutTrigger &trigger);
+    void deactivateGesture(ConfigurableGesture *gesture, const TriggerId &);
+#endif
 
     QList<GlobalShortcut> m_shortcuts;
 
 #if KWIN_BUILD_GLOBALSHORTCUTS
     std::unique_ptr<KGlobalAccelD> m_kglobalAccel;
     KGlobalAccelInterface *m_kglobalAccelInterface = nullptr;
+
+    struct ActiveGesture
+    {
+        ActionUniquePair actionUniquePair;
+        ConfigurableGesture *configurableGesture = nullptr;
+
+        ActiveGesture() = default;
+        ActiveGesture(const ActionUniquePair &actionUnique, ConfigurableGesture *gesture);
+    };
+    QHash<ActionUniquePair, ConfigurableGesture *> m_registeredGestures;
+    QHash<TriggerId, ActiveGesture> m_kglobalAccelGestures;
 #endif
     std::unique_ptr<GestureRecognizer> m_touchpadGestureRecognizer;
     std::unique_ptr<GestureRecognizer> m_touchscreenGestureRecognizer;

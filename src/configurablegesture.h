@@ -12,6 +12,9 @@
 #include <QObject>
 #include <QPointer>
 
+#include <map>
+#include <memory>
+
 class QAction;
 
 namespace KWin
@@ -22,21 +25,25 @@ class GlobalShortcutsManager;
 class KWIN_EXPORT ConfigurableGesture : public QObject
 {
     Q_OBJECT
+
 public:
     explicit ConfigurableGesture(GlobalShortcutsManager *manager);
     ~ConfigurableGesture();
 
-    QAction *forwardAction() const;
-    QAction *reverseAction() const;
+    using TriggerId = QPair<QString, QString>;
+
+    // individual actions that will emit ConfigurableGesture::released,
+    // these can be dropped to unregister any associated gesture shortcut
+    QAction *makeGestureAction(const TriggerId &id);
+    void dropGestureAction(const TriggerId &id);
 
 Q_SIGNALS:
-    void forwardProgress(double value);
-    void reverseProgress(double value);
+    void progress(double value);
+    void released(bool checked = true);
 
 private:
     QPointer<GlobalShortcutsManager> m_manager;
-    std::unique_ptr<QAction> m_forwardAction;
-    std::unique_ptr<QAction> m_backwardAction;
+    std::map<TriggerId, std::unique_ptr<QAction>> m_gestureActions;
 };
 
 }

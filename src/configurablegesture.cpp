@@ -16,8 +16,6 @@ namespace KWin
 
 ConfigurableGesture::ConfigurableGesture(GlobalShortcutsManager *manager)
     : m_manager(manager)
-    , m_forwardAction(std::make_unique<QAction>())
-    , m_backwardAction(std::make_unique<QAction>())
 {
 }
 
@@ -28,13 +26,17 @@ ConfigurableGesture::~ConfigurableGesture()
     }
 }
 
-QAction *ConfigurableGesture::forwardAction() const
+QAction *ConfigurableGesture::makeGestureAction(const TriggerId &id)
 {
-    return m_forwardAction.get();
+    auto iteratorInsertedPair = m_gestureActions.insert_or_assign(id, std::make_unique<QAction>());
+    QAction *gestureAction = iteratorInsertedPair.first->second.get();
+    connect(gestureAction, &QAction::triggered, this, &ConfigurableGesture::released);
+    return gestureAction;
 }
 
-QAction *ConfigurableGesture::reverseAction() const
+void ConfigurableGesture::dropGestureAction(const TriggerId &id)
 {
-    return m_backwardAction.get();
+    m_gestureActions.erase(id);
 }
+
 }

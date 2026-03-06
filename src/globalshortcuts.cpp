@@ -11,6 +11,7 @@
 // config
 #include "config-kwin.h"
 // kwin
+#include "configurablegesture.h"
 #include "effect/globals.h"
 #include "gestures.h"
 #include "main.h"
@@ -19,6 +20,7 @@
 #if KWIN_BUILD_GLOBALSHORTCUTS
 #include <kglobalaccel_interface.h>
 #include <kglobalacceld.h>
+#include <kglobalshortcuttrigger.h>
 #endif
 // Qt
 #include <QAction>
@@ -89,6 +91,12 @@ PinchGesture *GlobalShortcut::pinchGesture() const
     return m_pinchGesture.get();
 }
 
+GlobalShortcutsManager::ActiveGesture::ActiveGesture(const ActionUniquePair &actionUnique, ConfigurableGesture *gesture)
+    : actionUniquePair(actionUnique)
+    , configurableGesture(gesture)
+{
+}
+
 GlobalShortcutsManager::GlobalShortcutsManager(QObject *parent)
     : QObject(parent)
     , m_touchpadGestureRecognizer(new GestureRecognizer(this))
@@ -111,6 +119,14 @@ void GlobalShortcutsManager::init()
     } else {
         m_kglobalAccelInterface = m_kglobalAccel->interface();
         qCDebug(KWIN_CORE) << "KGlobalAcceld inited";
+
+        // clang-format off
+        connect(m_kglobalAccelInterface, // actually a KGlobalAccelImpl from kglobalaccel_plugin.h
+                SIGNAL(triggerActive(KGlobalShortcutTrigger,bool,QString,QString,QString,QString)),
+                this,
+                SLOT(onKGlobalShortcutTriggerActive(KGlobalShortcutTrigger,bool,QString,QString,QString,QString)),
+                Qt::QueuedConnection); // allow time for registerGesture() before activating the gesture
+        // clang-format on
     }
 #endif
 }
@@ -348,31 +364,169 @@ void GlobalShortcutsManager::cancelModiferOnlySequence()
 #endif
 }
 
-std::unique_ptr<ConfigurableGesture> GlobalShortcutsManager::registerGesture(const QByteArray &uniqueHandle, const QString &userString)
+std::unique_ptr<ConfigurableGesture> GlobalShortcutsManager::registerGesture(QAction *associatedShortcutAction)
 {
     auto ret = std::make_unique<ConfigurableGesture>(this);
-    // TODO add an actual config for this
-    if (uniqueHandle == "builtin_overview") {
-        registerTouchpadSwipe(SwipeDirection::Up, 4, ret->forwardAction(), [gesture = ret.get()](qreal progress) {
-            Q_EMIT gesture->forwardProgress(progress);
-        });
-        registerTouchpadSwipe(SwipeDirection::Down, 4, ret->reverseAction(), [gesture = ret.get()](qreal progress) {
-            Q_EMIT gesture->reverseProgress(progress);
-        });
-        registerTouchscreenSwipe(SwipeDirection::Up, 3, ret->forwardAction(), [gesture = ret.get()](qreal progress) {
-            Q_EMIT gesture->forwardProgress(progress);
-        });
-        registerTouchscreenSwipe(SwipeDirection::Down, 3, ret->reverseAction(), [gesture = ret.get()](qreal progress) {
-            Q_EMIT gesture->reverseProgress(progress);
-        });
+#if KWIN_BUILD_GLOBALSHORTCUTS
+    ConfigurableGesture *gesture = ret.get();
+    connect(associatedShortcutAction, &QAction::destroyed, this, [this, gesture] {
+        unregisterGesture(gesture);
+    });
+
+    const QString componentName = associatedShortcutAction->property("componentName").isValid()
+        ? associatedShortcutAction->property("componentName").toString()
+        : QCoreApplication::applicationName();
+    const ActionUniquePair actionUniquePair = qMakePair(componentName, associatedShortcutAction->objectName());
+    m_registeredGestures[actionUniquePair] = gesture;
+
+    // activate gestures that KGlobalAccel already wanted active, but are only now registered here by KWin
+    for (auto [triggerId, activeGesture] : m_kglobalAccelGestures.asKeyValueRange()) {
+        if (activeGesture.actionUniquePair == actionUniquePair) {
+            if (activeGesture.configurableGesture != gesture) {
+                deactivateGesture(activeGesture.configurableGesture, triggerId);
+            }
+            if (activateGesture(gesture, KGlobalShortcutTrigger(triggerId.first, triggerId.second))) {
+                activeGesture.configurableGesture = gesture;
+            }
+        }
     }
+#endif
     return ret;
 }
 
 void GlobalShortcutsManager::unregisterGesture(ConfigurableGesture *gesture)
 {
-    // TODO for later
+    if (gesture == nullptr) {
+        return;
+    }
+
+#if KWIN_BUILD_GLOBALSHORTCUTS
+    m_kglobalAccelGestures.removeIf([this, gesture](const std::pair<const TriggerId &, ActiveGesture &> &elem) -> bool {
+        const auto &[triggerId, activeGesture] = elem;
+        if (activeGesture.configurableGesture == gesture) {
+            deactivateGesture(gesture, triggerId);
+            return true;
+        }
+        return false;
+    });
+
+    m_registeredGestures.removeIf([gesture](decltype(m_registeredGestures)::iterator it) -> bool {
+        return it.value() == gesture;
+    });
+#endif
 }
+
+#if KWIN_BUILD_GLOBALSHORTCUTS
+void GlobalShortcutsManager::onKGlobalShortcutTriggerActive(const KGlobalShortcutTrigger &trigger,
+                                                            bool active,
+                                                            const QString &componentName,
+                                                            const QString &actionId,
+                                                            const QString &componentFriendlyName,
+                                                            const QString &actionFriendlyName)
+{
+    const TriggerId triggerId = qMakePair(trigger.type(), trigger.serializedTriggerParams());
+
+    if (active) {
+        ActiveGesture &activeGesture = m_kglobalAccelGestures[triggerId];
+        const ActionUniquePair actionUniquePair = qMakePair(componentName, actionId);
+
+        if (activeGesture.actionUniquePair != actionUniquePair) {
+            deactivateGesture(activeGesture.configurableGesture, triggerId);
+        }
+
+        // activate a gesture that KWin had already registered and KGlobalAccel now wants active
+        // (or if not yet registered, still mark it as active without hooking up the gesture yet)
+        auto kwinGesture = m_registeredGestures.constFind(actionUniquePair);
+        if (kwinGesture != m_registeredGestures.constEnd() && activateGesture(kwinGesture.value(), trigger)) {
+            activeGesture = ActiveGesture(actionUniquePair, kwinGesture.value());
+        } else {
+            activeGesture = ActiveGesture(actionUniquePair, nullptr);
+        }
+    }
+
+    if (!active) {
+        if (auto it = m_kglobalAccelGestures.constFind(triggerId); it != m_kglobalAccelGestures.constEnd()) {
+            deactivateGesture(it.value().configurableGesture, triggerId);
+            m_kglobalAccelGestures.erase(it);
+        }
+    }
+}
+
+static std::optional<SwipeDirection> toKWinSwipeDirection(KGlobalShortcutTriggerTypes::SwipeDirection direction)
+{
+    switch (direction) {
+    case KGlobalShortcutTriggerTypes::SwipeDirection::Left:
+        return ::KWin::SwipeDirection::Left;
+    case KGlobalShortcutTriggerTypes::SwipeDirection::Up:
+        return ::KWin::SwipeDirection::Up;
+    case KGlobalShortcutTriggerTypes::SwipeDirection::Right:
+        return ::KWin::SwipeDirection::Right;
+    case KGlobalShortcutTriggerTypes::SwipeDirection::Down:
+        return ::KWin::SwipeDirection::Down;
+    default:
+        return std::nullopt;
+    }
+}
+
+static std::optional<PinchDirection> toKWinPinchDirection(KGlobalShortcutTriggerTypes::PinchDirection direction)
+{
+    switch (direction) {
+    case KGlobalShortcutTriggerTypes::PinchDirection::Expanding:
+        return ::KWin::PinchDirection::Expanding;
+    case KGlobalShortcutTriggerTypes::PinchDirection::Contracting:
+        return ::KWin::PinchDirection::Contracting;
+    default:
+        return std::nullopt;
+    }
+}
+
+bool GlobalShortcutsManager::activateGesture(ConfigurableGesture *gesture, const KGlobalShortcutTrigger &trigger)
+{
+    auto makeId = [](const KGlobalShortcutTrigger &trigger) -> TriggerId {
+        return qMakePair(trigger.type(), trigger.serializedTriggerParams());
+    };
+
+    if (const auto *g = trigger.asTouchpadSwipeGesture()) {
+        if (const auto direction = toKWinSwipeDirection(g->direction); direction.has_value()) {
+            registerTouchpadSwipe(*direction, g->fingerCount, gesture->makeGestureAction(makeId(trigger)), [gesture](qreal progress) {
+                Q_EMIT gesture->progress(progress);
+            });
+            return true;
+        }
+    } else if (const auto *g = trigger.asTouchscreenSwipeGesture()) {
+        if (const auto direction = toKWinSwipeDirection(g->direction); direction.has_value()) {
+            registerTouchscreenSwipe(*direction, g->fingerCount, gesture->makeGestureAction(makeId(trigger)), [gesture](qreal progress) {
+                Q_EMIT gesture->progress(progress);
+            });
+            return true;
+        }
+    } else if (const auto *g = trigger.asTouchpadPinchGesture()) {
+        if (const auto direction = toKWinPinchDirection(g->direction); direction.has_value()) {
+            registerTouchpadPinch(*direction, g->fingerCount, gesture->makeGestureAction(makeId(trigger)), [gesture](qreal progress) {
+                Q_EMIT gesture->progress(progress);
+            });
+            return true;
+        }
+    } /* else if (const auto *g = trigger.asTouchscreenPinchGesture()) { // pinch not currently implemented for touchscreens?
+        if (const auto direction = toKWinPinchDirection(g->direction); direction.has_value()) {
+            registerTouchscreenPinch(*direction, g->fingerCount, gesture->makeGestureAction(makeId(trigger)), [gesture](qreal progress) {
+                Q_EMIT gesture->progress(progress);
+            });
+            return true;
+        }
+    }*/
+    // TODO: support more gesture types (incl. hold gestures, screen edge gestures, line shape gestures)
+
+    return false;
+}
+
+void GlobalShortcutsManager::deactivateGesture(ConfigurableGesture *gesture, const TriggerId &triggerId)
+{
+    if (gesture) {
+        gesture->dropGestureAction(triggerId);
+    }
+}
+#endif // KWIN_BUILD_GLOBALSHORTCUTS
 
 } // namespace
 

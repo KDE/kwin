@@ -203,20 +203,12 @@ std::function<void(qreal progress)> EffectTogglableState::regressCallback()
     };
 }
 
-void EffectTogglableState::addGesture(ConfigurableGesture *gesture)
+void EffectTogglableState::addGesture(ConfigurableGesture *gesture, ConfigurableGesture *inverseGesture)
 {
-    connect(gesture, &ConfigurableGesture::forwardProgress, this, &EffectTogglableState::setProgress);
-    connect(gesture, &ConfigurableGesture::reverseProgress, this, &EffectTogglableState::setRegress);
-    connect(gesture->forwardAction(), &QAction::triggered, activateAction(), &QAction::triggered);
-    connect(gesture->reverseAction(), &QAction::triggered, deactivateAction(), &QAction::triggered);
-}
-
-void EffectTogglableState::addInverseGesture(ConfigurableGesture *gesture)
-{
-    connect(gesture, &ConfigurableGesture::forwardProgress, this, &EffectTogglableState::setRegress);
-    connect(gesture, &ConfigurableGesture::reverseProgress, this, &EffectTogglableState::setProgress);
-    connect(gesture->forwardAction(), &QAction::triggered, deactivateAction(), &QAction::triggered);
-    connect(gesture->reverseAction(), &QAction::triggered, activateAction(), &QAction::triggered);
+    connect(gesture, &ConfigurableGesture::progress, this, &EffectTogglableState::setProgress);
+    connect(inverseGesture, &ConfigurableGesture::progress, this, &EffectTogglableState::setRegress);
+    connect(gesture, &ConfigurableGesture::released, activateAction(), &QAction::trigger);
+    connect(inverseGesture, &ConfigurableGesture::released, deactivateAction(), &QAction::trigger);
 }
 
 void EffectTogglableGesture::addTouchpadPinchGesture(PinchDirection direction, uint fingerCount)

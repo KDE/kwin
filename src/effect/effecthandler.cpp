@@ -1603,9 +1603,9 @@ void EffectsHandler::configChanged(const KConfigGroup &group, const QByteArrayLi
     }
 }
 
-std::unique_ptr<ConfigurableGesture> EffectsHandler::registerGesture(const QByteArray &uniqueHandle, const QString &userString)
+std::unique_ptr<ConfigurableGesture> EffectsHandler::registerGesture(QAction *associatedShortcutAction)
 {
-    return input()->shortcuts()->registerGesture(uniqueHandle, userString);
+    return input()->shortcuts()->registerGesture(associatedShortcutAction);
 }
 
 EffectsHandler *effects = nullptr;

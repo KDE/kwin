@@ -31,12 +31,8 @@ OverviewEffect::OverviewEffect()
     , m_gridState(new EffectTogglableState(this))
     , m_border(new EffectTogglableTouchBorder(m_overviewState))
     , m_gridBorder(new EffectTogglableTouchBorder(m_gridState))
-    , m_gesture(effects->registerGesture("builtin_overview", "overview effect"))
     , m_shutdownTimer(new QTimer(this))
 {
-    m_overviewState->addGesture(m_gesture.get());
-    m_transitionState->addGesture(m_gesture.get());
-    m_gridState->addInverseGesture(m_gesture.get());
     m_transitionState->stop();
 
     connect(m_overviewState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::overviewGestureInProgressChanged);
@@ -140,6 +136,12 @@ OverviewEffect::OverviewEffect()
     KGlobalAccel::setGlobalShortcut(reverseCycleAction, QList<QKeySequence>{});
 
     KGlobalAccel::setInverseShortcutActions(cycleAction, reverseCycleAction);
+
+    m_forwardGesture = effects->registerGesture(cycleAction);
+    m_backwardGesture = effects->registerGesture(reverseCycleAction);
+    m_overviewState->addGesture(m_forwardGesture.get(), m_backwardGesture.get());
+    m_transitionState->addGesture(m_forwardGesture.get(), m_backwardGesture.get());
+    m_gridState->addGesture(m_backwardGesture.get(), m_forwardGesture.get());
 
     auto overviewAction = m_overviewState->toggleAction();
     overviewAction->setObjectName(QStringLiteral("Overview"));

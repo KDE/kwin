@@ -3541,6 +3541,15 @@ void InputRedirection::forceRegisterTouchscreenSwipeShortcut(SwipeDirection dire
 #endif
 }
 
+std::unique_ptr<ConfigurableGesture> InputRedirection::registerGesture(QAction *associatedShortcutAction)
+{
+#if KWIN_BUILD_GLOBALSHORTCUTS
+    return m_shortcuts->registerGesture(associatedShortcutAction);
+#else
+    return nullptr;
+#endif
+}
+
 void InputRedirection::warpPointer(const QPointF &pos)
 {
     m_pointer->warp(pos);

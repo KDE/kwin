@@ -22,6 +22,7 @@
 namespace KWin
 {
 
+class ConfigurableGesture;
 class CursorItem;
 class GLFramebuffer;
 class GLTexture;
@@ -143,6 +144,8 @@ private:
     std::unique_ptr<QAction> m_zoomOutAxisAction;
     Qt::KeyboardModifiers m_axisModifiers;
     std::unique_ptr<QAction> m_touchpadAction;
+    std::unique_ptr<ConfigurableGesture> m_zoomInGesture;
+    std::unique_ptr<ConfigurableGesture> m_zoomOutGesture;
     double m_lastPinchProgress = 0;
 
     std::unique_ptr<TextCaretTracker> m_textCaretTracker;

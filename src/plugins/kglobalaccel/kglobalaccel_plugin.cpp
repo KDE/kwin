@@ -10,6 +10,8 @@
 
 #include "input.h"
 
+#include <KGlobalShortcutTrigger>
+
 #include <QDebug>
 
 KGlobalAccelImpl::KGlobalAccelImpl(QObject *parent)
@@ -21,6 +23,18 @@ KGlobalAccelImpl::~KGlobalAccelImpl() = default;
 
 bool KGlobalAccelImpl::grabKey(int key, bool grab)
 {
+    return true;
+}
+
+bool KGlobalAccelImpl::setTriggerActive(const KGlobalShortcutTrigger &trigger,
+                                        bool active,
+                                        const QString &componentName,
+                                        const QString &actionId,
+                                        const QString &componentFriendlyName,
+                                        const QString &actionFriendlyName)
+{
+    // TODO: enable/disable gesture
+    Q_EMIT triggerActive(trigger, active, componentName, actionId, componentFriendlyName, actionFriendlyName);
     return true;
 }
 
@@ -46,6 +60,11 @@ bool KGlobalAccelImpl::checkPointerPressed(Qt::MouseButtons buttons)
 bool KGlobalAccelImpl::checkAxisTriggered(int axis)
 {
     return axisTriggered(axis);
+}
+
+bool KGlobalAccelImpl::checkTriggerEvent(const KGlobalShortcutTrigger &trigger, ShortcutTriggerEvent event)
+{
+    return triggerEvent(trigger, event);
 }
 
 void KGlobalAccelImpl::cancelModiferOnlySequence()

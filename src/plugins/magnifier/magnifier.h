@@ -20,6 +20,7 @@ class QAction;
 namespace KWin
 {
 
+class ConfigurableGesture;
 class GLFramebuffer;
 class GLTexture;
 
@@ -68,6 +69,8 @@ private:
     std::unique_ptr<QAction> m_zoomOutAxisAction;
     Qt::KeyboardModifiers m_axisModifiers;
     std::unique_ptr<QAction> m_touchpadAction;
+    std::unique_ptr<ConfigurableGesture> m_zoomInGesture;
+    std::unique_ptr<ConfigurableGesture> m_zoomOutGesture;
     double m_lastPinchProgress = 0;
     AnimationClock m_clock;
     QSize m_magnifierSize;
