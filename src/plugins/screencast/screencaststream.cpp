@@ -745,7 +745,7 @@ QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2
 
     spa_pod_builder podBuilder = SPA_POD_BUILDER_INIT(buffer, 2048);
     spa_fraction defFramerate = SPA_FRACTION(0, 1);
-    spa_fraction minFramerate = SPA_FRACTION(1, 1);
+    spa_fraction minFramerate = SPA_FRACTION(0, 1);
     spa_fraction maxFramerate = SPA_FRACTION(m_source->refreshRate() / 1000, 1);
 
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
