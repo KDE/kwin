@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-03 00:48+0000\n"
+"POT-Creation-Date: 2026-03-06 00:45+0000\n"
 "PO-Revision-Date: 2026-02-26 19:46+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -2600,12 +2600,12 @@ msgstr "Не удалось найти поток вывода"
 msgid "Invalid region"
 msgstr "Недопустимая область"
 
-#: plugins/screencast/screencaststream.cpp:375
+#: plugins/screencast/screencaststream.cpp:372
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Для трансляции экрана требуются графические эффекты OpenGL"
 
-#: plugins/screencast/screencaststream.cpp:383
+#: plugins/screencast/screencaststream.cpp:380
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Не удалось создать поток PipeWire"
@@ -4353,7 +4353,7 @@ msgid "(Not Responding)"
 msgstr "(не отвечает)"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
-#: workspace.cpp:1757
+#: workspace.cpp:1753
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

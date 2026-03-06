@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-03 00:48+0000\n"
+"POT-Creation-Date: 2026-03-06 00:45+0000\n"
 "PO-Revision-Date: 2026-02-28 22:52+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -2560,12 +2560,12 @@ msgstr "Nu s-a putut găsi ieșirea"
 msgid "Invalid region"
 msgstr "Regiune eronată"
 
-#: plugins/screencast/screencaststream.cpp:375
+#: plugins/screencast/screencaststream.cpp:372
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Compoziționarea OpenGL e necesară pentru difuzarea ecranului"
 
-#: plugins/screencast/screencaststream.cpp:383
+#: plugins/screencast/screencaststream.cpp:380
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Crearea fluxului PipeWire a eșuat"
@@ -4309,7 +4309,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(nu răspunde)"
 
-#: workspace.cpp:1757
+#: workspace.cpp:1753
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

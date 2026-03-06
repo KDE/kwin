@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>إيماءات شاشة اللمس</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>زايد</firstname
+><surname
+>السعيدي</surname
+><affiliation
+><address
+><email
+>zayed.alsaidi@gmail.com</email
+></address
+></affiliation
+><contrib
+>التّرجمة العربيّة</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-10</date>
+<releaseinfo
+>بلازما 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>كيدي</keyword>
+<keyword
+>إعدادات النظام</keyword>
+<keyword
+>لمس</keyword>
+<keyword
+>شاشة</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>يمكنك تنشيط التأثيرات عن طريق التمرير من حافة الشاشة نحو مركزها. هنا يمكنك تكوين التأثير الذي سيُفعّل على كل حافة من حواف الشاشة. </para>
+
+<para
+>انقر بأي زر من أزرار الفأرة على مربع واختَر تأثيرًا من القائمة السياقية. الحواف ذات المربع الأزرق مرتبطة بالفعل بتأثير، بينما يشير المربع الرمادي إلى عدم تحديد أي تأثير لهذه الحافة.</para>
+
+<para
+>يعتمد عدد العناصر التي يمكن الوصول إليها في القائمة السياقية على الإعدادات الموجودة في وحدة <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>تأثيرات سطح المكتب</guilabel
+></ulink
+> في فئة <guilabel
+>مساحة العمل</guilabel
+>. اختر تأثيراتك المفضلة من مجموعة <guilabel
+>إدارة النوافذ</guilabel
+>. سيؤدي هذا إلى تنشيط العناصر المقابلة في القائمة السياقية.</para>
+</article>

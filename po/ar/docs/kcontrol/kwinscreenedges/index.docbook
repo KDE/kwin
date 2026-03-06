@@ -1,0 +1,114 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>حواف الشاشة</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>زايد</firstname
+><surname
+>السعيدي</surname
+><affiliation
+><address
+><email
+>zayed.alsaidi@gmail.com</email
+></address
+></affiliation
+><contrib
+>التّرجمة العربيّة</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2023-01-30</date>
+<releaseinfo
+>بلازما 5.27</releaseinfo>
+
+<keywordset>
+<keyword
+>كيدي</keyword>
+<keyword
+>إعدادات النظام</keyword>
+<keyword
+>سطح المكتب</keyword>
+<keyword
+>تأثيرات</keyword>
+<keyword
+>شاشة</keyword>
+<keyword
+>حافة</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>تسمح لك حواف الشاشة النشطة بتنشيط التأثيرات عن طريق دفع مؤشر الفأرة باتجاه حافة الشاشة. يمكنك هنا تهيئة التأثير الذي سيتم تنشيطه عند كل حافة وزاوية من زوايا الشاشة. </para>
+
+<para
+>انقر بأي زر من أزرار الفأرة على مربع واختَر تأثيرًا من القائمة السياقية. الحواف ذات المربع الأزرق مرتبطة بالفعل بتأثير، بينما يشير المربع الرمادي إلى عدم تحديد أي تأثير لهذه الحافة.</para>
+
+<para
+>يعتمد عدد العناصر التي يمكن الوصول إليها في القائمة السياقية على الإعدادات الموجودة في وحدة <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>تأثيرات سطح المكتب</guilabel
+></ulink
+> في فئة <guilabel
+>مساحة العمل</guilabel
+>. اختر تأثيراتك المفضلة من مجموعة <guilabel
+>إدارة النوافذ</guilabel
+>. سيؤدي هذا إلى تنشيط العناصر المقابلة في القائمة السياقية.</para>
+
+<para
+>إذا كنت تبحث عن إعداد لتمكين تبديل أسطح المكتب عن طريق دفع مؤشر الفأرة باتجاه حافة الشاشة، فاختر أحد تأثيرات <guilabel
+>عرض النوافذ</guilabel
+> من القائمة السياقية.</para>
+
+<para
+>يمكنك تمكين <guilabel
+>تكبير: النوافذ المسحوبة إلى الحافة العلوية</guilabel
+>، أو <guilabel
+>تبليط: النوافذ المسحوبة إلى الحافة اليسرى أو اليمنى</guilabel
+> أو <guilabel
+>تفعيل التبليط الُربعي في:</guilabel
+> وتعيين نسبة مئوية من الشاشة لتفعيل التبليط. </para>
+
+<tip>
+<para
+>في لسان تبويب <guilabel
+>الحركة</guilabel
+> ضمن وحدة إعدادات <guilabel
+>سلوك النوافذ</guilabel
+> في قسم <guilabel
+>إدارة النوافذ</guilabel
+> بإعدادات النظام، يمكنك تهيئة مناطق الجذب للنوافذ التي يتم نقلها إلى حواف الشاشة، أو المركز أو النوافذ الأخرى عندما تقترب منها. </para>
+</tip>
+
+<para
+>عطّل خيار <guilabel
+>البقاء نشطًا عندما تكون النوافذ بملء الشاشة</guilabel
+> لمنع تفعيل إجراءات حواف الشاشة عندما يعمل أحد التطبيقات بوضع ملء الشاشة.</para>
+
+<para
+>باستخدام عنصر <guilabel
+>تبديل سطح المكتب عند الحافة</guilabel
+>، قم بتهيئة ما إذا كنت تريد التبديل إلى سطح مكتب آخر عند دفع مؤشر الفأرة إلى حافة الشاشة، على سبيل المثال: فقط عند تحريك النوافذ. </para>
+<para
+><guilabel
+>تأخير التنشيط</guilabel
+> هو مقدار الوقت المطلوب لدفع مؤشر الفأرة باتجاه حافة الشاشة قبل تفعيل الإجراء. </para>
+<para
+><guilabel
+>تأخير إعادة التنشيط</guilabel
+> هو مقدار الوقت المطلوب بعد تفعيل إجراء ما قبل أن يحدث التفعيل التالي. </para>
+</article>
