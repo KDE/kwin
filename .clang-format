@@ -84,3 +84,30 @@ AllowAllArgumentsOnNextLine: false
 
 # Indent lambdas to the start of the line, not to the start of the lambda
 LambdaBodyIndentation: OuterScope
+
+# Append trailing commas to enums
+EnumTrailingComma: Insert
+
+# We always add braces to if, while, and for statements
+InsertBraces: true
+
+# Insert trailing empty line at the end of file
+InsertNewlineAtEOF: true
+
+# Remove trailing commas from functions
+RemoveSemicolon: true
+
+# SIGNAL and SLOT expect normalized values, i.e. without whitespace
+WhitespaceSensitiveMacros: [SIGNAL, SLOT]
+
+# Add empty lines at the beginning and the end of namespace body
+WrapNamespaceBodyWithEmptyLines: Always
+
+# Avoid stray empty lines
+KeepEmptyLines:
+  AtEndOfFile: false
+  AtStartOfBlock: false
+  AtStartOfFile: false
+
+# Group class members and fields by access modifiers
+EmptyLineBeforeAccessModifier: Always
