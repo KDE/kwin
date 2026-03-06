@@ -171,11 +171,6 @@ private:
      * @param prompt The prompt to sohw
      */
     void showUserActionPrompt(Window *window, UserActionPrompt::Prompt prompt);
-    /**
-     * Hide the feedback dialog for a given window
-     * @param window The window a dialog might be attached to
-     */
-    void hideUserActionPrompt(Window *window);
 
     /**
      * The actual main context menu which is show when the UserActionsMenu is invoked.

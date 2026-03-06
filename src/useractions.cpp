@@ -195,13 +195,6 @@ void UserActionsMenu::showUserActionPrompt(Window *window, UserActionPrompt::Pro
     dialog->start();
 }
 
-void UserActionsMenu::hideUserActionPrompt(Window *window)
-{
-    if (auto *dialog = window->findChild<UserActionPrompt *>()) {
-        dialog->quit();
-    }
-}
-
 void UserActionsMenu::init()
 {
     if (m_menu) {
@@ -655,16 +648,12 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
 
     switch (op) {
     case Options::FullScreenOp:
-        if (c->isFullScreen()) {
-            hideUserActionPrompt(c);
-        } else if (c->isFullScreenable()) {
+        if (!c->isFullScreen() && c->isFullScreenable()) {
             showUserActionPrompt(c, UserActionPrompt::Prompt::FullScreen);
         }
         break;
     case Options::NoBorderOp:
-        if (c->noBorder()) {
-            hideUserActionPrompt(c);
-        } else if (c->userCanSetNoBorder()) {
+        if (!c->noBorder() && c->userCanSetNoBorder()) {
             showUserActionPrompt(c, UserActionPrompt::Prompt::NoBorder);
         }
         break;
