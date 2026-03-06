@@ -117,6 +117,22 @@ void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
             newModes.push_back(std::make_shared<OutputMode>(custom.size, custom.refreshRate, custom.flags | OutputMode::Flag::Custom));
         }
         next.modes = newModes;
+
+        if (!next.currentMode) {
+            next.currentMode = next.modes.front();
+        } else if (!next.modes.contains(next.currentMode)) {
+            const auto it = std::ranges::find_if(next.modes, [&next](const auto &mode) {
+                return mode->size() == next.currentMode->size()
+                    && mode->refreshRate() == next.currentMode->refreshRate()
+                    && mode->flags() == next.currentMode->flags();
+            });
+            if (it != next.modes.end()) {
+                next.currentMode = *it;
+            } else {
+                next.modes.push_front(next.currentMode);
+                next.currentMode->setRemoved();
+            }
+        }
     }
 
     setState(next);
