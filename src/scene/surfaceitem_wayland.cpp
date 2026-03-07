@@ -85,7 +85,7 @@ RegionF SurfaceItemWayland::shape() const
 RegionF SurfaceItemWayland::opaque() const
 {
     if (m_surface) {
-        return RegionF(m_surface->opaque());
+        return m_surface->opaque();
     }
     return RegionF();
 }

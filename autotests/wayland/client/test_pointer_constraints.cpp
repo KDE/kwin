@@ -199,7 +199,7 @@ void TestPointerConstraints::testLockPointer()
     QVERIFY(!serverSurface->confinedPointer());
 
     QCOMPARE(serverLockedPointer->isLocked(), false);
-    QCOMPARE(serverLockedPointer->region(), KWin::Region(0, 0, 100, 100));
+    QCOMPARE(serverLockedPointer->region(), KWin::RegionF(0, 0, 100, 100));
     QFETCH(LockedPointerV1Interface::LifeTime, serverLifeTime);
     QCOMPARE(serverLockedPointer->lifeTime(), serverLifeTime);
     // setting to unlocked now should not trigger an unlocked spy
@@ -214,12 +214,12 @@ void TestPointerConstraints::testLockPointer()
     QVERIFY(!regionChangedSpy.wait(500));
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(regionChangedSpy.wait());
-    QCOMPARE(serverLockedPointer->region(), KWin::Region(0, 5, 10, 20));
+    QCOMPARE(serverLockedPointer->region(), KWin::RegionF(0, 5, 10, 20));
     // and unset region again
     lockedPointer->setRegion(nullptr);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(regionChangedSpy.wait());
-    QCOMPARE(serverLockedPointer->region(), KWin::Region(0, 0, 100, 100));
+    QCOMPARE(serverLockedPointer->region(), KWin::RegionF(0, 0, 100, 100));
 
     // let's lock the surface
     QSignalSpy lockedChangedSpy(serverLockedPointer, &LockedPointerV1Interface::lockedChanged);
@@ -315,7 +315,7 @@ void TestPointerConstraints::testConfinePointer()
     QVERIFY(!serverSurface->lockedPointer());
 
     QCOMPARE(serverConfinedPointer->isConfined(), false);
-    QCOMPARE(serverConfinedPointer->region(), KWin::Region(0, 0, 100, 100));
+    QCOMPARE(serverConfinedPointer->region(), KWin::RegionF(0, 0, 100, 100));
     QFETCH(ConfinedPointerV1Interface::LifeTime, serverLifeTime);
     QCOMPARE(serverConfinedPointer->lifeTime(), serverLifeTime);
     // setting to unconfined now should not trigger an unconfined spy
@@ -330,12 +330,12 @@ void TestPointerConstraints::testConfinePointer()
     QVERIFY(!regionChangedSpy.wait(500));
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(regionChangedSpy.wait());
-    QCOMPARE(serverConfinedPointer->region(), KWin::Region(0, 5, 10, 20));
+    QCOMPARE(serverConfinedPointer->region(), KWin::RegionF(0, 5, 10, 20));
     // and unset region again
     confinedPointer->setRegion(nullptr);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(regionChangedSpy.wait());
-    QCOMPARE(serverConfinedPointer->region(), KWin::Region(0, 0, 100, 100));
+    QCOMPARE(serverConfinedPointer->region(), KWin::RegionF(0, 0, 100, 100));
 
     // let's confine the surface
     QSignalSpy confinedChangedSpy(serverConfinedPointer, &ConfinedPointerV1Interface::confinedChanged);

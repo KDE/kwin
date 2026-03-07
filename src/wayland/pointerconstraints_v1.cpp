@@ -143,17 +143,17 @@ LockedPointerV1InterfacePrivate::LockedPointerV1InterfacePrivate(LockedPointerV1
 
 void LockedPointerV1InterfacePrivate::apply(LockedPointerV1Commit *commit)
 {
-    const Region oldRegion = effectiveRegion;
+    const RegionF oldRegion = effectiveRegion;
     const QPointF oldHint = hint;
 
     if (commit->region.has_value()) {
-        region = commit->region->scaledAndRoundedOut(1.0 / surface->scaleOverride());
+        region = commit->region->scaled(1.0 / surface->scaleOverride());
     }
     if (commit->hint.has_value()) {
         hint = commit->hint.value() / surface->scaleOverride();
     }
 
-    effectiveRegion = Region(surface->input());
+    effectiveRegion = surface->input();
     if (!region.isEmpty()) {
         effectiveRegion &= region;
     }
@@ -205,7 +205,7 @@ LockedPointerV1Interface::LifeTime LockedPointerV1Interface::lifeTime() const
     return d->lifeTime;
 }
 
-Region LockedPointerV1Interface::region() const
+RegionF LockedPointerV1Interface::region() const
 {
     return d->effectiveRegion;
 }
@@ -261,13 +261,13 @@ ConfinedPointerV1InterfacePrivate::ConfinedPointerV1InterfacePrivate(ConfinedPoi
 
 void ConfinedPointerV1InterfacePrivate::apply(ConfinedPointerV1Commit *commit)
 {
-    const Region oldRegion = effectiveRegion;
+    const RegionF oldRegion = effectiveRegion;
 
     if (commit->region.has_value()) {
-        region = commit->region->scaledAndRoundedOut(1.0 / surface->scaleOverride());
+        region = commit->region->scaled(1.0 / surface->scaleOverride());
     }
 
-    effectiveRegion = Region(surface->input());
+    effectiveRegion = surface->input();
     if (!region.isEmpty()) {
         effectiveRegion &= region;
     }
@@ -310,7 +310,7 @@ ConfinedPointerV1Interface::LifeTime ConfinedPointerV1Interface::lifeTime() cons
     return d->lifeTime;
 }
 
-Region ConfinedPointerV1Interface::region() const
+RegionF ConfinedPointerV1Interface::region() const
 {
     return d->effectiveRegion;
 }

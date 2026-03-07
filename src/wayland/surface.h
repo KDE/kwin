@@ -133,8 +133,8 @@ public:
     std::shared_ptr<PresentationFeedback> presentationFeedback(LogicalOutput *output);
     bool hasPresentationFeedback() const;
 
-    Region opaque() const;
-    Region input() const;
+    RegionF opaque() const;
+    RegionF input() const;
     Region bufferDamage() const;
     RectF bufferSourceBox() const;
     /**
@@ -184,7 +184,7 @@ public:
      */
     ShadowInterface *shadow() const;
 
-    Region blurRegion() const;
+    RegionF blurRegion() const;
 
     /**
      * @returns The Slide for this Surface.
@@ -396,8 +396,8 @@ Q_SIGNALS:
      * @see damage
      */
     void damaged(const Region &);
-    void opaqueChanged(const Region &);
-    void inputChanged(const Region &);
+    void opaqueChanged(const RegionF &);
+    void inputChanged(const RegionF &);
     /**
      * This signal is emitted when the buffer transform has changed.
      */

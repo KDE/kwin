@@ -264,8 +264,8 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
 
 void BlurEffect::updateBlurRegion(EffectWindow *w)
 {
-    std::optional<Region> content;
-    std::optional<Region> frame;
+    std::optional<RegionF> content;
+    std::optional<RegionF> frame;
 
 #if KWIN_BUILD_X11
     if (net_wm_blur_region != XCB_ATOM_NONE) {
@@ -274,15 +274,15 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
             if (const auto cardinals = wmBlurRegionProperty.array<uint32_t>()) {
                 if (cardinals->size() == 0 || cardinals->size() == 1) {
                     // It means blur background behind whole window.
-                    content = Region();
+                    content = RegionF();
                 } else if (cardinals->size() % 4 == 0) {
-                    Region region;
+                    RegionF region;
                     for (uint i = 0; i < cardinals->size();) {
                         const int x = (*cardinals)[i++];
                         const int y = (*cardinals)[i++];
                         const int w = (*cardinals)[i++];
                         const int h = (*cardinals)[i++];
-                        region += Xcb::fromXNative(Rect(x, y, w, h)).toRect();
+                        region += Xcb::fromXNative(Rect(x, y, w, h));
                     }
                     content = region;
                 }
@@ -300,7 +300,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
     if (auto internal = w->internalWindow()) {
         const auto property = internal->property("kwin_blur");
         if (property.isValid()) {
-            content = property.value<Region>();
+            content = property.value<RegionF>();
         }
     }
 
@@ -432,31 +432,31 @@ bool BlurEffect::decorationSupportsBlurBehind(const EffectWindow *w) const
     return w->decoration() && !w->decoration()->blurRegion().isNull();
 }
 
-Region BlurEffect::decorationBlurRegion(const EffectWindow *w) const
+RegionF BlurEffect::decorationBlurRegion(const EffectWindow *w) const
 {
     if (!decorationSupportsBlurBehind(w)) {
-        return Region();
+        return RegionF();
     }
 
-    Region decorationRegion = Region(Rect(w->decoration()->rect().toAlignedRect())) - w->contentsRect().toRect();
+    RegionF decorationRegion = RegionF(w->decoration()->rect()) - w->contentsRect();
     //! we return only blurred regions that belong to decoration region
-    return decorationRegion.intersected(Region(w->decoration()->blurRegion()));
+    return decorationRegion.intersected(RegionF(w->decoration()->blurRegion()));
 }
 
-Region BlurEffect::blurRegion(EffectWindow *w) const
+RegionF BlurEffect::blurRegion(EffectWindow *w) const
 {
-    Region region;
+    RegionF region;
 
     if (auto it = m_windows.find(w); it != m_windows.end()) {
-        const std::optional<Region> &content = it->second.content;
-        const std::optional<Region> &frame = it->second.frame;
+        const std::optional<RegionF> &content = it->second.content;
+        const std::optional<RegionF> &frame = it->second.frame;
         if (content.has_value()) {
             if (content->isEmpty()) {
                 // An empty region means that the blur effect should be enabled
                 // for the whole window.
-                region = Rect(w->contentsRect().toRect());
+                region = RectF(w->contentsRect());
             } else {
-                region = content->translated(w->contentsRect().topLeft().toPoint()) & w->contentsRect().toRect();
+                region = content->translated(w->contentsRect().topLeft()) & w->contentsRect();
             }
             if (frame.has_value()) {
                 region += frame.value();
@@ -601,11 +601,11 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     }
 
     // Compute the effective blur shape. Note that if the window is transformed, so will be the blur shape.
-    Region blurShape = blurRegion(w).translated(w->pos().toPoint());
+    RegionF blurShape = blurRegion(w).translated(w->pos());
     if (data.xScale() != 1 || data.yScale() != 1) {
-        QPoint pt = blurShape.boundingRect().topLeft();
-        Region scaledShape;
-        for (const Rect &r : blurShape.rects()) {
+        QPointF pt = blurShape.boundingRect().topLeft();
+        RegionF scaledShape;
+        for (const RectF &r : blurShape.rects()) {
             const QPointF topLeft(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
                                   pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
             const QPoint bottomRight(std::floor(topLeft.x() + r.width() * data.xScale()) - 1,
@@ -617,8 +617,8 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         blurShape.translate(std::round(data.xTranslation()), std::round(data.yTranslation()));
     }
 
-    const QRect backgroundRect = blurShape.boundingRect();
-    const QRect scaledBackgroundRect = snapToPixelGrid(scaledRect(backgroundRect, viewport.scale()));
+    const Rect backgroundRect = blurShape.boundingRect().rounded();
+    const QRect scaledBackgroundRect = snapToPixelGrid(backgroundRect.scaled(viewport.scale()));
     const QRect deviceBackgroundRect = snapToPixelGrid(viewport.mapToDeviceCoordinates(backgroundRect));
     const auto opacity = w->opacity() * data.opacity();
 
@@ -628,7 +628,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     if (deviceRegion != Region::infinite()) {
         for (const Rect &clipRect : deviceRegion.rects()) {
             const RectF deviceClipRect = clipRect.translated(-deviceBackgroundRect.topLeft());
-            for (const Rect &shapeRect : blurShape.rects()) {
+            for (const RectF &shapeRect : blurShape.rects()) {
                 const RectF deviceShapeRect = shapeRect.translated(-backgroundRect.topLeft()).scaled(viewport.scale()).rounded();
                 if (const QRectF intersected = deviceClipRect.intersected(deviceShapeRect); !intersected.isEmpty()) {
                     effectiveShape.append(intersected);
@@ -636,7 +636,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             }
         }
     } else {
-        for (const Rect &rect : blurShape.rects()) {
+        for (const RectF &rect : blurShape.rects()) {
             effectiveShape.append(rect.translated(-backgroundRect.topLeft()).scaled(viewport.scale()).rounded());
         }
     }

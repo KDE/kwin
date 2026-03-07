@@ -56,8 +56,8 @@ public:
 
     LockedPointerV1Interface *q;
     LockedPointerV1Interface::LifeTime lifeTime;
-    Region effectiveRegion;
-    Region region;
+    RegionF effectiveRegion;
+    RegionF region;
     QPointF hint = QPointF(-1, -1);
     bool isLocked = false;
 
@@ -89,8 +89,8 @@ public:
 
     ConfinedPointerV1Interface *q;
     ConfinedPointerV1Interface::LifeTime lifeTime;
-    Region effectiveRegion;
-    Region region;
+    RegionF effectiveRegion;
+    RegionF region;
     bool isConfined = false;
 
 protected:

@@ -155,7 +155,7 @@ public:
      */
     bool contains(const QPointF &position) const;
     bool inputContains(const QPointF &position) const;
-    Region mapToBuffer(const Region &region) const;
+    Region mapToBuffer(const RegionF &region) const;
 
     CompositorInterface *compositor;
     SurfaceInterface *q;
@@ -165,8 +165,9 @@ public:
     RectF bufferSourceBox;
     QSizeF surfaceSize = QSizeF(0, 0);
 
-    Region inputRegion;
-    Region opaqueRegion;
+    RegionF inputRegion;
+    RegionF opaqueRegion;
+    RegionF blurRegion;
     GraphicsBufferRef bufferRef;
     Region bufferDamage;
     bool mapped = false;

@@ -729,7 +729,7 @@ void PointerInputRedirection::updatePointerConstraints()
             }
             return;
         }
-        if (canConstrain && cf->region().contains(flooredPoint(focus()->mapToLocal(m_pos)))) {
+        if (canConstrain && cf->region().contains(focus()->mapToLocal(m_pos))) {
             cf->setConfined(true);
             m_confined = true;
             m_confinedPointerRegionConnection = connect(cf, &ConfinedPointerV1Interface::regionChanged, this, [this]() {
@@ -741,7 +741,7 @@ void PointerInputRedirection::updatePointerConstraints()
                     return;
                 }
                 const auto cf = s->confinedPointer();
-                if (!cf->region().contains(flooredPoint(focus()->mapToLocal(m_pos)))) {
+                if (!cf->region().contains(focus()->mapToLocal(m_pos))) {
                     // pointer no longer in confined region, break the confinement
                     cf->setConfined(false);
                     m_confined = false;
@@ -772,7 +772,7 @@ void PointerInputRedirection::updatePointerConstraints()
             }
             return;
         }
-        if (canConstrain && lock->region().contains(flooredPoint(focus()->mapToLocal(m_pos)))) {
+        if (canConstrain && lock->region().contains(focus()->mapToLocal(m_pos))) {
             lock->setLocked(true);
             m_locked = true;
 
@@ -816,7 +816,7 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
     }
 
     const QPointF localPos = focus()->mapToLocal(pos);
-    if (cf->region().contains(flooredPoint(localPos))) {
+    if (cf->region().contains(localPos)) {
         return pos;
     }
 
@@ -824,12 +824,12 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
 
     // allow either x or y to pass
     QPointF p(currentPos.x(), localPos.y());
-    if (cf->region().contains(flooredPoint(p))) {
+    if (cf->region().contains(p)) {
         return focus()->mapFromLocal(p);
     }
 
     p = QPointF(localPos.x(), currentPos.y());
-    if (cf->region().contains(flooredPoint(p))) {
+    if (cf->region().contains(p)) {
         return focus()->mapFromLocal(p);
     }
 

@@ -680,7 +680,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const RectF oldBufferSourceBox = bufferSourceBox;
-    const Region oldInputRegion = inputRegion;
+    const RegionF oldInputRegion = inputRegion;
 
     next->mergeInto(current.get());
     bufferRef = current->buffer;
@@ -703,38 +703,37 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         } else {
             surfaceSize = current->bufferTransform.map(current->buffer->size() / current->bufferScale);
         }
+        surfaceSize /= scaleOverride;
 
-        const Rect surfaceRect = RectF(QPointF(0, 0), surfaceSize).toAlignedRect();
+        const RectF surfaceRect = RectF(QPointF(0, 0), surfaceSize);
         const Rect bufferRect = Rect(QPoint(0, 0), current->buffer->size());
 
-        inputRegion = current->input & surfaceRect;
+        inputRegion = current->input
+            .scaled(1.0 / scaleOverride)
+            .intersected(surfaceRect);
 
         if (!current->buffer->hasAlphaChannel()) {
             opaqueRegion = surfaceRect;
         } else {
-            opaqueRegion = current->opaque & surfaceRect;
+            opaqueRegion = current->opaque
+                .scaled(1.0 / scaleOverride)
+                .intersected(surfaceRect);
         }
 
         bufferDamage = current->bufferDamage
-                           .united(mapToBuffer(current->damage.intersected(surfaceRect)))
+                           .united(mapToBuffer(current->damage.scaled(1.0 / scaleOverride).intersected(surfaceRect)))
                            .intersected(bufferRect);
         current->damage = Region();
         current->bufferDamage = Region();
-
-        if (scaleOverride != 1.0) {
-            // Rounding out is not great with opaque regions. Ideally, we should only round, but
-            // it can make 1px wide or tall rects disappear with scale factors less than 100%.
-            opaqueRegion = opaqueRegion.scaledAndRoundedOut(1.0 / scaleOverride);
-            inputRegion = inputRegion.scaledAndRoundedOut(1.0 / scaleOverride);
-            surfaceSize = surfaceSize / scaleOverride;
-        }
     } else {
         surfaceSize = QSizeF(0, 0);
         bufferSourceBox = RectF();
         bufferDamage = Region();
-        inputRegion = Region();
-        opaqueRegion = Region();
+        inputRegion = RegionF();
+        opaqueRegion = RegionF();
     }
+
+    blurRegion = current->blurRegion.scaled(1.0 / scaleOverride);
 
     if (opaqueRegionChanged) {
         Q_EMIT q->opaqueChanged(opaqueRegion);
@@ -848,10 +847,10 @@ bool SurfaceInterfacePrivate::contains(const QPointF &position) const
 
 bool SurfaceInterfacePrivate::inputContains(const QPointF &position) const
 {
-    return contains(position) && inputRegion.contains(QPoint(std::floor(position.x()), std::floor(position.y())));
+    return contains(position) && inputRegion.contains(position);
 }
 
-Region SurfaceInterfacePrivate::mapToBuffer(const Region &region) const
+Region SurfaceInterfacePrivate::mapToBuffer(const RegionF &region) const
 {
     if (region.isEmpty()) {
         return Region();
@@ -862,7 +861,7 @@ Region SurfaceInterfacePrivate::mapToBuffer(const Region &region) const
     const qreal yScale = sourceBox.height() / surfaceSize.height();
 
     Region result;
-    for (const Rect &rect : region.rects()) {
+    for (const RectF &rect : region.rects()) {
         result += current->bufferTransform.map(rect.scaled(xScale, yScale), sourceBox.size()).translated(bufferSourceBox.topLeft()).roundedOut();
     }
     return result;
@@ -873,12 +872,12 @@ Region SurfaceInterface::bufferDamage() const
     return d->bufferDamage;
 }
 
-Region SurfaceInterface::opaque() const
+RegionF SurfaceInterface::opaque() const
 {
     return d->opaqueRegion;
 }
 
-Region SurfaceInterface::input() const
+RegionF SurfaceInterface::input() const
 {
     return d->inputRegion;
 }
@@ -966,9 +965,9 @@ ShadowInterface *SurfaceInterface::shadow() const
     return d->current->shadow;
 }
 
-Region SurfaceInterface::blurRegion() const
+RegionF SurfaceInterface::blurRegion() const
 {
-    return d->current->blurRegion;
+    return d->blurRegion;
 }
 
 SlideInterface *SurfaceInterface::slideOnShowHide() const

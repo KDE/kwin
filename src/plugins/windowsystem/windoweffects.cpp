@@ -53,7 +53,7 @@ void WindowEffects::slideWindow(QWindow *window, KWindowEffects::SlideFromLocati
 void WindowEffects::enableBlurBehind(QWindow *window, bool enable, const QRegion &region)
 {
     if (enable) {
-        window->setProperty("kwin_blur", QVariant::fromValue(Region(region)));
+        window->setProperty("kwin_blur", QVariant::fromValue(RegionF(region)));
     } else {
         window->setProperty("kwin_blur", {});
     }

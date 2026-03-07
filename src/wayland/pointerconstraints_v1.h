@@ -83,7 +83,7 @@ public:
      * @see regionChanged
      * @see SurfaceInterface::input
      */
-    Region region() const;
+    RegionF region() const;
 
     /**
      * Indicates where the mouse cursor should be positioned after it has been unlocked again.
@@ -199,7 +199,7 @@ public:
      * @see regionChanged
      * @see SurfaceInterface::input
      */
-    Region region() const;
+    RegionF region() const;
 
     /**
      * Whether the Compositor set this pointer confinement to be active.
