@@ -897,9 +897,9 @@ GraphicsBuffer *SurfaceInterface::buffer() const
     return d->bufferRef.buffer();
 }
 
-QPoint SurfaceInterface::offset() const
+QPointF SurfaceInterface::offset() const
 {
-    return d->current->offset / d->scaleOverride;
+    return QPointF(d->current->offset) / d->scaleOverride;
 }
 
 SurfaceInterface *SurfaceInterface::get(wl_resource *native)

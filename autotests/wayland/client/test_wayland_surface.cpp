@@ -269,7 +269,7 @@ void TestWaylandSurface::testDamage()
         s->damage(QRect(0, 0, 10, 10));
         s->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(damageSpy.wait());
-        QCOMPARE(serverSurface->offset(), QPoint(55, 55)); // offset is surface local so scale doesn't change this
+        QCOMPARE(serverSurface->offset(), QPointF(55, 55)); // offset is surface local so scale doesn't change this
         QCOMPARE(serverSurface->bufferDamage(), KWin::Region(0, 0, 10, 10));
         QCOMPARE(damageSpy.first().first().value<KWin::Region>(), KWin::Region(0, 0, 10, 10));
         QVERIFY(serverSurface->isMapped());

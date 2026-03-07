@@ -149,7 +149,7 @@ public:
      * @returns the current GraphicsBuffer, might be @c nullptr.
      */
     GraphicsBuffer *buffer() const;
-    QPoint offset() const;
+    QPointF offset() const;
     /**
      * Returns the current size of the surface, in surface coordinates.
      *
