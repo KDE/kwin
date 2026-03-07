@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-06 00:45+0000\n"
+"POT-Creation-Date: 2026-03-07 00:45+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -1550,7 +1550,7 @@ msgstr "Názov aplikácie k ukončeniu"
 msgid "name"
 msgstr "názov"
 
-#: keyboard_layout.cpp:46 keyboard_layout.cpp:56 keyboard_layout.cpp:140
+#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "Prepínač rozloženia klávesnice"
@@ -2003,12 +2003,12 @@ msgstr ""
 msgid "Toggle Invert Effect"
 msgstr "Zapnúť efekt inverzie"
 
-#: plugins/invert/invert.cpp:52
+#: plugins/invert/invert.cpp:51
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Zapnúť efekt inverzie na okno"
 
-#: plugins/invert/invert.cpp:59
+#: plugins/invert/invert.cpp:57
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr "Invertovať farby obrazovky"
@@ -2234,19 +2234,19 @@ msgstr "Štandardné"
 msgid "Toggle Mouse Click Animation"
 msgstr "Prepnúť efekt kliknutia myši"
 
-#: plugins/mouseclick/mouseclick.cpp:49
+#: plugins/mouseclick/mouseclick.cpp:48
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Ľavé"
 
-#: plugins/mouseclick/mouseclick.cpp:50
+#: plugins/mouseclick/mouseclick.cpp:49
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Stredné"
 
-#: plugins/mouseclick/mouseclick.cpp:51
+#: plugins/mouseclick/mouseclick.cpp:50
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -2349,7 +2349,7 @@ msgstr "Zobraziť text:"
 msgid "Clear All Mouse Marks"
 msgstr "Vyčistiť všetky stopy myši"
 
-#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:52
+#: plugins/mousemark/mousemark.cpp:48 plugins/mousemark/mousemark_config.cpp:51
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Vyčistiť poslednú stopu myši"
@@ -2359,7 +2359,7 @@ msgstr "Vyčistiť poslednú stopu myši"
 msgid "Clear Mouse Marks"
 msgstr "Vyčistiť stopy myši"
 
-#: plugins/mousemark/mousemark_config.cpp:87
+#: plugins/mousemark/mousemark_config.cpp:85
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"
@@ -2487,20 +2487,20 @@ msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:46
-#: plugins/overview/overvieweffect.cpp:135
+#: plugins/overview/kcm/overvieweffectkcm.cpp:45
+#: plugins/overview/overvieweffect.cpp:133
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
 msgstr ""
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:53
+#: plugins/overview/kcm/overvieweffectkcm.cpp:50
 #, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "Prepnúť prehľad"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:60
+#: plugins/overview/kcm/overvieweffectkcm.cpp:55
 #, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
@@ -2530,13 +2530,13 @@ msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:143
+#: plugins/overview/overvieweffect.cpp:138
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Prepnúť prehľad"
 
-#: plugins/overview/overvieweffect.cpp:152
+#: plugins/overview/overvieweffect.cpp:144
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
@@ -2799,8 +2799,8 @@ msgstr "&Nepriehľadnosť:"
 msgid " %"
 msgstr " %"
 
-#: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:32
+#: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:36
+#: plugins/tileseditor/tileseditoreffect.cpp:31
 #, kde-format
 msgid "Toggle Tiles Editor"
 msgstr "Prepnúť editor dlaždíc"
@@ -2993,26 +2993,26 @@ msgstr "Všetky"
 msgid "Ignore"
 msgstr "Ignorovať"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:41
 #: plugins/windowview/windowvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "Zapnúť efekt súčasné okná (Aktuálna plocha)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:57
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:46
+#: plugins/windowview/windowvieweffect.cpp:56
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "Zapnúť efekt súčasné okná (Všetky okná)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:66
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:51
+#: plugins/windowview/windowvieweffect.cpp:64
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "Zapnúť efekt súčasné okná (trieda okna)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:75
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
+#: plugins/windowview/windowvieweffect.cpp:72
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "Zapnúť efekt súčasné okná (Trieda okna na aktuálnej ploche)"
@@ -3098,32 +3098,32 @@ msgstr "Menej"
 msgid "More"
 msgstr "Viac"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:85
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Presunúť priblíženú oblasť vľavo"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Presunúť priblíženú oblasť vpravo"
 
-#: plugins/zoom/zoom.cpp:102
+#: plugins/zoom/zoom.cpp:97
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Presunúť priblíženú oblasť hore"
 
-#: plugins/zoom/zoom.cpp:109
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Presunúť priblíženú oblasť dolu"
 
-#: plugins/zoom/zoom.cpp:117
+#: plugins/zoom/zoom.cpp:110
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Posunúť myš na zameranie"
 
-#: plugins/zoom/zoom.cpp:124
+#: plugins/zoom/zoom.cpp:116
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Posunúť myš na stred"
@@ -3926,370 +3926,370 @@ msgstr "Obrazovka &%1 (%2)"
 msgid "&All Activities"
 msgstr "Všetky &aktivity"
 
-#: useractions.cpp:752
+#: useractions.cpp:751
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> sa už používa"
 
-#: useractions.cpp:754
+#: useractions.cpp:753
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> už používa %2 v %3"
 
-#: useractions.cpp:835
+#: useractions.cpp:833
 #, fuzzy, kde-format
 #| msgid "Window role"
 msgid "Window Menu"
 msgstr "Úloha okna"
 
-#: useractions.cpp:837
+#: useractions.cpp:835
 #, kde-format
 msgid "Close Window"
 msgstr "Zavrieť okno"
 
-#: useractions.cpp:839
+#: useractions.cpp:837
 #, kde-format
 msgid "Maximize Window"
 msgstr "Maximalizovať okno"
 
-#: useractions.cpp:841
+#: useractions.cpp:839
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Maximalizovať okno zvislo"
 
-#: useractions.cpp:843
+#: useractions.cpp:841
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Maximalizovať okno vodorovne"
 
-#: useractions.cpp:845
+#: useractions.cpp:843
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgid "Restore Window"
 msgstr "Zmeniť veľkosť okna"
 
-#: useractions.cpp:847
+#: useractions.cpp:845
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimalizovať okno"
 
-#: useractions.cpp:849
+#: useractions.cpp:847
 #, kde-format
 msgid "Move Window"
 msgstr "Presunúť okno"
 
-#: useractions.cpp:851
+#: useractions.cpp:849
 #, kde-format
 msgid "Resize Window"
 msgstr "Zmeniť veľkosť okna"
 
-#: useractions.cpp:853
+#: useractions.cpp:851
 #, kde-format
 msgid "Raise Window"
 msgstr "Presunúť okno dopredu"
 
-#: useractions.cpp:855
+#: useractions.cpp:853
 #, kde-format
 msgid "Lower Window"
 msgstr "Presunúť okno dozadu"
 
-#: useractions.cpp:857
+#: useractions.cpp:855
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Prepnúť okno dopredu/dozadu"
 
-#: useractions.cpp:859
+#: useractions.cpp:857
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Okno na celú obrazovku"
 
-#: useractions.cpp:861
+#: useractions.cpp:859
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Prepnúť titulný pruh a rám okna"
 
-#: useractions.cpp:863
+#: useractions.cpp:861
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Držať okno nad ostatnými"
 
-#: useractions.cpp:865
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Držať okno pod ostatnými"
 
-#: useractions.cpp:867
+#: useractions.cpp:865
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Aktivovať okno vyžadujúce pozornosť"
 
-#: useractions.cpp:869
+#: useractions.cpp:867
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Nastaviť skratku okna"
 
-#: useractions.cpp:871
+#: useractions.cpp:869
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Presunúť okno do stredu"
 
-#: useractions.cpp:873
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window Right"
 msgstr "Presunúť okno doprava"
 
-#: useractions.cpp:875
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Left"
 msgstr "Presunúť okno doľava"
 
-#: useractions.cpp:877
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Up"
 msgstr "Presunúť okno nahor"
 
-#: useractions.cpp:879
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Down"
 msgstr "Presunúť okno nadol"
 
-#: useractions.cpp:881
+#: useractions.cpp:879
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Rozbaliť okno vodorovne"
 
-#: useractions.cpp:883
+#: useractions.cpp:881
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Rozbaliť okno zvislo"
 
-#: useractions.cpp:885
+#: useractions.cpp:883
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Zbaliť okno vodorovne"
 
-#: useractions.cpp:887
+#: useractions.cpp:885
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Zbaliť okno zvislo"
 
-#: useractions.cpp:889
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Usporiadať okno vedľa seba doľava"
 
-#: useractions.cpp:891
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Usporiadať okno vedľa seba doprava"
 
-#: useractions.cpp:893
+#: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Okno rýchlej dlaždice na vrch"
 
-#: useractions.cpp:895
+#: useractions.cpp:893
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Okno rýchlej dlaždice na spodok"
 
-#: useractions.cpp:897
+#: useractions.cpp:895
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Rýchla dlaždica okna hore vľavo"
 
-#: useractions.cpp:899
+#: useractions.cpp:897
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Rýchla dlaždica okna dolu vľavo"
 
-#: useractions.cpp:901
+#: useractions.cpp:899
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Rýchla dlaždica okna hore vpravo"
 
-#: useractions.cpp:903
+#: useractions.cpp:901
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Rýchla dlaždica okna dolu vpravo"
 
-#: useractions.cpp:905
+#: useractions.cpp:903
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Prepnúť na okno nad"
 
-#: useractions.cpp:907
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Prepnúť na okno pod"
 
-#: useractions.cpp:909
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Prepnúť na okno doprava"
 
-#: useractions.cpp:911
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Prepnúť na okno doľava"
 
-#: useractions.cpp:913
+#: useractions.cpp:911
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Zvýšiť nepriehľadnosť aktívneho okna o 5 %"
 
-#: useractions.cpp:915
+#: useractions.cpp:913
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Znížiť nepriehľadnosť aktívneho okna o 5 %"
 
-#: useractions.cpp:918
+#: useractions.cpp:916
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Okno na všetkých plochách"
 
-#: useractions.cpp:921
+#: useractions.cpp:919
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Usporiadať okno vedľa seba doľava"
 
-#: useractions.cpp:923
+#: useractions.cpp:921
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Usporiadať okno vedľa seba doprava"
 
-#: useractions.cpp:925
+#: useractions.cpp:923
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Okno rýchlej dlaždice na vrch"
 
-#: useractions.cpp:927
+#: useractions.cpp:925
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Okno rýchlej dlaždice na spodok"
 
-#: useractions.cpp:938
+#: useractions.cpp:936
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Okno na plochu %1"
 
-#: useractions.cpp:940
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Okno na nasledujúcu plochu"
 
-#: useractions.cpp:941
+#: useractions.cpp:939
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Okno na predchádzajúcu plochu"
 
-#: useractions.cpp:942
+#: useractions.cpp:940
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Okno o jednu pracovnú plochu doprava"
 
-#: useractions.cpp:944
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Okno o jednu pracovnú plochu doľava"
 
-#: useractions.cpp:946
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Okno o jednu pracovnú plochu hore"
 
-#: useractions.cpp:948
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Okno o jednu pracovnú plochu dolu"
 
-#: useractions.cpp:952
+#: useractions.cpp:950
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Presunúť okno na obrazovku %1"
 
-#: useractions.cpp:959
+#: useractions.cpp:957
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Presunúť okno na nasledujúcu obrazovku"
 
-#: useractions.cpp:961
+#: useractions.cpp:959
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Presunúť okno na predošlú obrazovku"
 
-#: useractions.cpp:963
+#: useractions.cpp:961
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Presunúť okno o jednu obrazovku doprava"
 
-#: useractions.cpp:965
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Presunúť okno o jednu obrazovku doľava"
 
-#: useractions.cpp:967
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Presunúť okno o jednu obrazovku nahor"
 
-#: useractions.cpp:969
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Presunúť okno o jednu obrazovku nadol"
 
-#: useractions.cpp:973
+#: useractions.cpp:971
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Prepnúť na obrazovku %1"
 
-#: useractions.cpp:980
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Prepnúť na nasledujúcu obrazovku"
 
-#: useractions.cpp:981
+#: useractions.cpp:979
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Prepnúť na predošlú obrazovku"
 
-#: useractions.cpp:982
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Prepnúť na obrazovku napravo"
 
-#: useractions.cpp:984
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Prepnúť na obrazovku naľavo"
 
-#: useractions.cpp:986
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Prepnúť na obrazovku hore"
 
-#: useractions.cpp:988
+#: useractions.cpp:986
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Prepnúť na obrazovku dole"
 
-#: useractions.cpp:991
+#: useractions.cpp:989
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Nazrieť na plochu"
 
-#: useractions.cpp:994
+#: useractions.cpp:992
 #, kde-format
 msgid "Kill Window"
 msgstr "Zabiť okno"
 
-#: useractions.cpp:1059
+#: useractions.cpp:1057
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivovať okno (%1)"

@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-06 00:45+0000\n"
+"POT-Creation-Date: 2026-03-07 00:45+0000\n"
 "PO-Revision-Date: 2025-06-19 10:31+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -1531,7 +1531,7 @@ msgstr "Nome da aplicación para terminar"
 msgid "name"
 msgstr "nome"
 
-#: keyboard_layout.cpp:46 keyboard_layout.cpp:56 keyboard_layout.cpp:140
+#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "Selector de disposición de teclado"
@@ -1982,12 +1982,12 @@ msgstr "Agochar o cursor ao escribir."
 msgid "Toggle Invert Effect"
 msgstr "Conmutar o efecto de inversión"
 
-#: plugins/invert/invert.cpp:52
+#: plugins/invert/invert.cpp:51
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Conmutar o efecto de inversión na xanela"
 
-#: plugins/invert/invert.cpp:59
+#: plugins/invert/invert.cpp:57
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr "Inverter as cores da pantalla"
@@ -2212,19 +2212,19 @@ msgstr "Predeterminada"
 msgid "Toggle Mouse Click Animation"
 msgstr "Conmutar a animación do clic co rato"
 
-#: plugins/mouseclick/mouseclick.cpp:49
+#: plugins/mouseclick/mouseclick.cpp:48
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Esquerda"
 
-#: plugins/mouseclick/mouseclick.cpp:50
+#: plugins/mouseclick/mouseclick.cpp:49
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Medio"
 
-#: plugins/mouseclick/mouseclick.cpp:51
+#: plugins/mouseclick/mouseclick.cpp:50
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -2327,7 +2327,7 @@ msgstr "Amosar o texto:"
 msgid "Clear All Mouse Marks"
 msgstr "Limpar todas as marcas do rato"
 
-#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:52
+#: plugins/mousemark/mousemark.cpp:48 plugins/mousemark/mousemark_config.cpp:51
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Limpar a última marca do rato"
@@ -2337,7 +2337,7 @@ msgstr "Limpar a última marca do rato"
 msgid "Clear Mouse Marks"
 msgstr "Limpar as marcas do rato"
 
-#: plugins/mousemark/mousemark_config.cpp:87
+#: plugins/mousemark/mousemark_config.cpp:85
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"
@@ -2458,20 +2458,20 @@ msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Intercalar a vista xeral e a vista de grade"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:46
-#: plugins/overview/overvieweffect.cpp:135
+#: plugins/overview/kcm/overvieweffectkcm.cpp:45
+#: plugins/overview/overvieweffect.cpp:133
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
 msgstr "Intercalar a vista de grade e a vista xeral"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:53
+#: plugins/overview/kcm/overvieweffectkcm.cpp:50
 #, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "Conmutar a vista xeral"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:60
+#: plugins/overview/kcm/overvieweffectkcm.cpp:55
 #, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
@@ -2501,13 +2501,13 @@ msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Intercalar a vista xeral e a vista de grade"
 
-#: plugins/overview/overvieweffect.cpp:143
+#: plugins/overview/overvieweffect.cpp:138
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Conmutar a vista xeral"
 
-#: plugins/overview/overvieweffect.cpp:152
+#: plugins/overview/overvieweffect.cpp:144
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
@@ -2772,8 +2772,8 @@ msgstr "&Opacidade:"
 msgid " %"
 msgstr " %"
 
-#: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:32
+#: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:36
+#: plugins/tileseditor/tileseditoreffect.cpp:31
 #, kde-format
 msgid "Toggle Tiles Editor"
 msgstr "Conmutar o editor de teselas"
@@ -2965,26 +2965,26 @@ msgstr "Todo"
 msgid "Ignore"
 msgstr "Ignorar"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:41
 #: plugins/windowview/windowvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "Conmutar o presentar as xanelas (só o escritorio actual)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:57
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:46
+#: plugins/windowview/windowvieweffect.cpp:56
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "Conmutar o presentar as xanelas (todos os escritorios)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:66
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:51
+#: plugins/windowview/windowvieweffect.cpp:64
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "Conmutar o presentar as xanelas (clase da xanela)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:75
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
+#: plugins/windowview/windowvieweffect.cpp:72
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "Conmutar presentar as xanelas (clase de xanela no escritorio actual)"
@@ -3070,32 +3070,32 @@ msgstr "Menos"
 msgid "More"
 msgstr "Máis"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:85
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Mover á esquerda a área ampliada"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Mover á dereita a área ampliada"
 
-#: plugins/zoom/zoom.cpp:102
+#: plugins/zoom/zoom.cpp:97
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Subir a área ampliada"
 
-#: plugins/zoom/zoom.cpp:109
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Baixar a área ampliada"
 
-#: plugins/zoom/zoom.cpp:117
+#: plugins/zoom/zoom.cpp:110
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Mover o rato ao foco"
 
-#: plugins/zoom/zoom.cpp:124
+#: plugins/zoom/zoom.cpp:116
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mover o rato ao centro"
@@ -3894,365 +3894,365 @@ msgstr "Pantalla &%1 (%2)"
 msgid "&All Activities"
 msgstr "&Todas as actividades"
 
-#: useractions.cpp:752
+#: useractions.cpp:751
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> xa está a ser usado"
 
-#: useractions.cpp:754
+#: useractions.cpp:753
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> é usado por %2 en %3"
 
-#: useractions.cpp:835
+#: useractions.cpp:833
 #, kde-format
 msgid "Window Menu"
 msgstr "Menú de xanela"
 
-#: useractions.cpp:837
+#: useractions.cpp:835
 #, kde-format
 msgid "Close Window"
 msgstr "Pechar a xanela"
 
-#: useractions.cpp:839
+#: useractions.cpp:837
 #, kde-format
 msgid "Maximize Window"
 msgstr "Maximizar a xanela"
 
-#: useractions.cpp:841
+#: useractions.cpp:839
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Maximizar verticalmente a xanela"
 
-#: useractions.cpp:843
+#: useractions.cpp:841
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Maximizar horizontalmente a xanela"
 
-#: useractions.cpp:845
+#: useractions.cpp:843
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgid "Restore Window"
 msgstr "Cambiar o tamaño da xanela"
 
-#: useractions.cpp:847
+#: useractions.cpp:845
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimizar a xanela"
 
-#: useractions.cpp:849
+#: useractions.cpp:847
 #, kde-format
 msgid "Move Window"
 msgstr "Mover a xanela"
 
-#: useractions.cpp:851
+#: useractions.cpp:849
 #, kde-format
 msgid "Resize Window"
 msgstr "Cambiar o tamaño da xanela"
 
-#: useractions.cpp:853
+#: useractions.cpp:851
 #, kde-format
 msgid "Raise Window"
 msgstr "Achegar a xanela"
 
-#: useractions.cpp:855
+#: useractions.cpp:853
 #, kde-format
 msgid "Lower Window"
 msgstr "Afastar a xanela"
 
-#: useractions.cpp:857
+#: useractions.cpp:855
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Conmutar o achegar/afastar a xanela"
 
-#: useractions.cpp:859
+#: useractions.cpp:857
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Pór a xanela a pantalla completa"
 
-#: useractions.cpp:861
+#: useractions.cpp:859
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Conmutar a barra de título e o marco da xanela"
 
-#: useractions.cpp:863
+#: useractions.cpp:861
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Manter a xanela sobre as outras"
 
-#: useractions.cpp:865
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Manter a xanela baixo as outras"
 
-#: useractions.cpp:867
+#: useractions.cpp:865
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Activar a xanela demandante de atención"
 
-#: useractions.cpp:869
+#: useractions.cpp:867
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Configurar os atallos da xanela"
 
-#: useractions.cpp:871
+#: useractions.cpp:869
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Mover a xanela ao centro"
 
-#: useractions.cpp:873
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window Right"
 msgstr "Mover a xanela á dereita"
 
-#: useractions.cpp:875
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Left"
 msgstr "Mover a xanela á esquerda"
 
-#: useractions.cpp:877
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Up"
 msgstr "Subir a xanela"
 
-#: useractions.cpp:879
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Down"
 msgstr "Baixar a xanela"
 
-#: useractions.cpp:881
+#: useractions.cpp:879
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Expandir a xanela horizontalmente"
 
-#: useractions.cpp:883
+#: useractions.cpp:881
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Expandir a xanela verticalmente"
 
-#: useractions.cpp:885
+#: useractions.cpp:883
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Recoller a xanela horizontalmente"
 
-#: useractions.cpp:887
+#: useractions.cpp:885
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Recoller a xanela verticalmente"
 
-#: useractions.cpp:889
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Dispor rapidamente a xanela en mosaico cara á esquerda"
 
-#: useractions.cpp:891
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Dispor rapidamente a xanela en mosaico cara á dereita"
 
-#: useractions.cpp:893
+#: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Dispor rapidamente a xanela en mosaico cara arriba"
 
-#: useractions.cpp:895
+#: useractions.cpp:893
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Dispor rapidamente a xanela en mosaico cara abaixo"
 
-#: useractions.cpp:897
+#: useractions.cpp:895
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Dispor rapidamente a xanela en mosaico cara arriba á esquerda"
 
-#: useractions.cpp:899
+#: useractions.cpp:897
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Dispor rapidamente a xanela en mosaico cara ao fondo á esquerda"
 
-#: useractions.cpp:901
+#: useractions.cpp:899
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Dispor rapidamente a xanela en mosaico cara arriba á dereita"
 
-#: useractions.cpp:903
+#: useractions.cpp:901
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Dispor rapidamente a xanela en mosaico cara ao fondo á dereita"
 
-#: useractions.cpp:905
+#: useractions.cpp:903
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Ir á xanela de riba"
 
-#: useractions.cpp:907
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Ir á xanela en baixo"
 
-#: useractions.cpp:909
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Ir á xanela da dereita"
 
-#: useractions.cpp:911
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Ir á xanela da esquerda"
 
-#: useractions.cpp:913
+#: useractions.cpp:911
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Aumentar a opacidade da xanela activa un 5%"
 
-#: useractions.cpp:915
+#: useractions.cpp:913
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Diminuír a opacidade da xanela activa un 5%"
 
-#: useractions.cpp:918
+#: useractions.cpp:916
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Manter a xanela en todos os escritorios"
 
-#: useractions.cpp:921
+#: useractions.cpp:919
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Dispor rapidamente a xanela en mosaico cara á esquerda (personalizada)"
 
-#: useractions.cpp:923
+#: useractions.cpp:921
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Dispor rapidamente a xanela en mosaico cara á dereita (personalizada)"
 
-#: useractions.cpp:925
+#: useractions.cpp:923
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Dispor rapidamente a xanela en mosaico cara arriba (personalizada)"
 
-#: useractions.cpp:927
+#: useractions.cpp:925
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Dispor rapidamente a xanela en mosaico cara abaixo (personalizada)"
 
-#: useractions.cpp:938
+#: useractions.cpp:936
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Xanela ao escritorio %1"
 
-#: useractions.cpp:940
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Xanela ao seguinte escritorio"
 
-#: useractions.cpp:941
+#: useractions.cpp:939
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Xanela ao anterior escritorio"
 
-#: useractions.cpp:942
+#: useractions.cpp:940
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Xanela un escritorio á dereita"
 
-#: useractions.cpp:944
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Xanela un escritorio á esquerda"
 
-#: useractions.cpp:946
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Xanela un escritorio cara riba"
 
-#: useractions.cpp:948
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Xanela un escritorio cara baixo"
 
-#: useractions.cpp:952
+#: useractions.cpp:950
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Mover a xanela á pantalla %1"
 
-#: useractions.cpp:959
+#: useractions.cpp:957
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Mover a xanela á seguinte pantalla"
 
-#: useractions.cpp:961
+#: useractions.cpp:959
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Mover a xanela á pantalla anterior"
 
-#: useractions.cpp:963
+#: useractions.cpp:961
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Mover a xanela unha pantalla á dereita"
 
-#: useractions.cpp:965
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Mover a xanela unha pantalla á esquerda"
 
-#: useractions.cpp:967
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Subir a xanela unha pantalla"
 
-#: useractions.cpp:969
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Baixar a xanela unha pantalla"
 
-#: useractions.cpp:973
+#: useractions.cpp:971
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Ir á pantalla %1"
 
-#: useractions.cpp:980
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Ir á seguinte pantalla"
 
-#: useractions.cpp:981
+#: useractions.cpp:979
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Ir á anterior pantalla"
 
-#: useractions.cpp:982
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Ir á pantalla da dereita"
 
-#: useractions.cpp:984
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Ir á pantalla da esquerda"
 
-#: useractions.cpp:986
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Ir á pantalla superior"
 
-#: useractions.cpp:988
+#: useractions.cpp:986
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Ir á pantalla inferior"
 
-#: useractions.cpp:991
+#: useractions.cpp:989
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Ollar o escritorio"
 
-#: useractions.cpp:994
+#: useractions.cpp:992
 #, kde-format
 msgid "Kill Window"
 msgstr "Matar a xanela"
 
-#: useractions.cpp:1059
+#: useractions.cpp:1057
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Activar a xanela (%1)"

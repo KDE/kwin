@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-06 00:45+0000\n"
+"POT-Creation-Date: 2026-03-07 00:45+0000\n"
 "PO-Revision-Date: 2025-03-15 10:38+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -1532,7 +1532,7 @@ msgstr "Nomo de la aplikiĝo finita"
 msgid "name"
 msgstr "nomo"
 
-#: keyboard_layout.cpp:46 keyboard_layout.cpp:56 keyboard_layout.cpp:140
+#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "Klavaro Aranĝo Ŝaltilo"
@@ -1983,12 +1983,12 @@ msgstr "Kaŝi kursoron je tajpado"
 msgid "Toggle Invert Effect"
 msgstr "Baskuligi Inversig-Efekton"
 
-#: plugins/invert/invert.cpp:52
+#: plugins/invert/invert.cpp:51
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Baskuligi Inversig-Efekton sur Fenestro"
 
-#: plugins/invert/invert.cpp:59
+#: plugins/invert/invert.cpp:57
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr "Inverti Ekranajn Kolorojn"
@@ -2213,19 +2213,19 @@ msgstr "Defaŭlte"
 msgid "Toggle Mouse Click Animation"
 msgstr "Baskuligi Musklakan Vigligon"
 
-#: plugins/mouseclick/mouseclick.cpp:49
+#: plugins/mouseclick/mouseclick.cpp:48
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Maldekstre"
 
-#: plugins/mouseclick/mouseclick.cpp:50
+#: plugins/mouseclick/mouseclick.cpp:49
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Mezo"
 
-#: plugins/mouseclick/mouseclick.cpp:51
+#: plugins/mouseclick/mouseclick.cpp:50
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -2328,7 +2328,7 @@ msgstr "Montri Tekston:"
 msgid "Clear All Mouse Marks"
 msgstr "Forigi Ĉiujn Musmarkojn"
 
-#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:52
+#: plugins/mousemark/mousemark.cpp:48 plugins/mousemark/mousemark_config.cpp:51
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Forigi Lastan Musmarkon"
@@ -2338,7 +2338,7 @@ msgstr "Forigi Lastan Musmarkon"
 msgid "Clear Mouse Marks"
 msgstr "Forviŝi Musmarkojn"
 
-#: plugins/mousemark/mousemark_config.cpp:87
+#: plugins/mousemark/mousemark_config.cpp:85
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"
@@ -2458,20 +2458,20 @@ msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Cirkuli tra Overview kaj Grid-View"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:46
-#: plugins/overview/overvieweffect.cpp:135
+#: plugins/overview/kcm/overvieweffectkcm.cpp:45
+#: plugins/overview/overvieweffect.cpp:133
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
 msgstr "Cirkuli tra Grid-View kaj Overview"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:53
+#: plugins/overview/kcm/overvieweffectkcm.cpp:50
 #, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "Baskuligi Overview"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:60
+#: plugins/overview/kcm/overvieweffectkcm.cpp:55
 #, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
@@ -2501,13 +2501,13 @@ msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Cirkuli tra Overview kaj Grid-View"
 
-#: plugins/overview/overvieweffect.cpp:143
+#: plugins/overview/overvieweffect.cpp:138
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Baskuligi Overview"
 
-#: plugins/overview/overvieweffect.cpp:152
+#: plugins/overview/overvieweffect.cpp:144
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
@@ -2776,8 +2776,8 @@ msgstr "&Opako:"
 msgid " %"
 msgstr " %"
 
-#: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:32
+#: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:36
+#: plugins/tileseditor/tileseditoreffect.cpp:31
 #, kde-format
 msgid "Toggle Tiles Editor"
 msgstr "Baskuligi Kahel-redaktilon"
@@ -2969,26 +2969,26 @@ msgstr "Ĉiuj"
 msgid "Ignore"
 msgstr "Ignori"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:41
 #: plugins/windowview/windowvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "Baskuligi Prezenti fenestrojn (Nuna labortablo)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:57
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:46
+#: plugins/windowview/windowvieweffect.cpp:56
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "Baskuligi aktualajn fenestrojn (ĉiuj labortabloj)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:66
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:51
+#: plugins/windowview/windowvieweffect.cpp:64
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "Baskuligi Prezenti Fenestrojn (Fenestra klaso)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:75
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
+#: plugins/windowview/windowvieweffect.cpp:72
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "Baskuligi Prezenti Fenestrojn (Fenestra klaso sur nuna labortablo)"
@@ -3074,32 +3074,32 @@ msgstr "Malpli"
 msgid "More"
 msgstr "Pli"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:85
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Movu Zomitan Areon maldekstren"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Movu Zomitan Areon dekstren"
 
-#: plugins/zoom/zoom.cpp:102
+#: plugins/zoom/zoom.cpp:97
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Movu Zomitan Areon Supren"
 
-#: plugins/zoom/zoom.cpp:109
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Movu Zomitan Areon Malsupren"
 
-#: plugins/zoom/zoom.cpp:117
+#: plugins/zoom/zoom.cpp:110
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Movu Muson al Fokuso"
 
-#: plugins/zoom/zoom.cpp:124
+#: plugins/zoom/zoom.cpp:116
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Movu la muson al Centro"
@@ -3900,366 +3900,366 @@ msgstr "Ekrano &%1 (%2)"
 msgid "&All Activities"
 msgstr "&Ĉiuj Agadoj"
 
-#: useractions.cpp:752
+#: useractions.cpp:751
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> jam estas uzata"
 
-#: useractions.cpp:754
+#: useractions.cpp:753
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> estas uzata de %2 en %3"
 
-#: useractions.cpp:835
+#: useractions.cpp:833
 #, fuzzy, kde-format
 #| msgid "Window role"
 msgid "Window Menu"
 msgstr "Fenestra rolo"
 
-#: useractions.cpp:837
+#: useractions.cpp:835
 #, kde-format
 msgid "Close Window"
 msgstr "Fermi fenestron"
 
-#: useractions.cpp:839
+#: useractions.cpp:837
 #, kde-format
 msgid "Maximize Window"
 msgstr "Maksimumigi fenestron"
 
-#: useractions.cpp:841
+#: useractions.cpp:839
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Maksimumigi fenestron vertikale"
 
-#: useractions.cpp:843
+#: useractions.cpp:841
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Maksimumigi fenestron horizontale"
 
-#: useractions.cpp:845
+#: useractions.cpp:843
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgid "Restore Window"
 msgstr "Regrandigi fenestron"
 
-#: useractions.cpp:847
+#: useractions.cpp:845
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimumigi fenestron"
 
-#: useractions.cpp:849
+#: useractions.cpp:847
 #, kde-format
 msgid "Move Window"
 msgstr "Movi fenestron"
 
-#: useractions.cpp:851
+#: useractions.cpp:849
 #, kde-format
 msgid "Resize Window"
 msgstr "Regrandigi fenestron"
 
-#: useractions.cpp:853
+#: useractions.cpp:851
 #, kde-format
 msgid "Raise Window"
 msgstr "Malfonigi fenestron"
 
-#: useractions.cpp:855
+#: useractions.cpp:853
 #, kde-format
 msgid "Lower Window"
 msgstr "Fonigi fenestron"
 
-#: useractions.cpp:857
+#: useractions.cpp:855
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Baskuli inter malfonigo/fonigo de la fenestro"
 
-#: useractions.cpp:859
+#: useractions.cpp:857
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Tutekranigi fenestron"
 
-#: useractions.cpp:861
+#: useractions.cpp:859
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Baskuligi Fenestran Titolbreton kaj Kadron"
 
-#: useractions.cpp:863
+#: useractions.cpp:861
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Fiksi fenestron super la aliaj"
 
-#: useractions.cpp:865
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Fiksi fenestron sub la aliaj"
 
-#: useractions.cpp:867
+#: useractions.cpp:865
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Aktivigi fenestron kiu petas atenton"
 
-#: useractions.cpp:869
+#: useractions.cpp:867
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Agordi fenestran fulmoklavon"
 
-#: useractions.cpp:871
+#: useractions.cpp:869
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Movi Fenestron al la Centro"
 
-#: useractions.cpp:873
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window Right"
 msgstr "Movi Fenestron Dekstren"
 
-#: useractions.cpp:875
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Left"
 msgstr "Movi Fenestron Maldekstren"
 
-#: useractions.cpp:877
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Up"
 msgstr "Movi Fenestron Supren"
 
-#: useractions.cpp:879
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Down"
 msgstr "Movi Fenestron Malsupren"
 
-#: useractions.cpp:881
+#: useractions.cpp:879
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Pligrandigi Fenestron Horizontale"
 
-#: useractions.cpp:883
+#: useractions.cpp:881
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Vastigi Fenestron Vertike"
 
-#: useractions.cpp:885
+#: useractions.cpp:883
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Ŝrumpi Fenestron Horizontale"
 
-#: useractions.cpp:887
+#: useractions.cpp:885
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Ŝrumpi Fenestron Vertikale"
 
-#: useractions.cpp:889
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Rapida Kahela Fenestro maldekstren"
 
-#: useractions.cpp:891
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Rapida Kahela Fenestro dekstre"
 
-#: useractions.cpp:893
+#: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Rapida Kahela Fenestro al la Supro"
 
-#: useractions.cpp:895
+#: useractions.cpp:893
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Rapida Kahela Fenestro al la Malsupro"
 
-#: useractions.cpp:897
+#: useractions.cpp:895
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Rapida Kahela Fenestro al la Supre Maldekstre"
 
-#: useractions.cpp:899
+#: useractions.cpp:897
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Rapida Kahela Fenestro al la Malsupra Maldekstre"
 
-#: useractions.cpp:901
+#: useractions.cpp:899
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Rapida Kahela Fenestro supre Dekstre"
 
-#: useractions.cpp:903
+#: useractions.cpp:901
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Rapida Kahela Fenestro malsupre Dekstre"
 
-#: useractions.cpp:905
+#: useractions.cpp:903
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Ŝanĝi al Fenestro Supre"
 
-#: useractions.cpp:907
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Ŝanĝi al la Malsupra Fenestro"
 
-#: useractions.cpp:909
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Ŝanĝi al Fenestro dekstre"
 
-#: useractions.cpp:911
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Ŝanĝi al Fenestro maldekstre"
 
-#: useractions.cpp:913
+#: useractions.cpp:911
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Pliigi Opakecon de Aktiva Fenestro je 5%"
 
-#: useractions.cpp:915
+#: useractions.cpp:913
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Malpliigu Opakecon de Aktiva Fenestro je 5%"
 
-#: useractions.cpp:918
+#: useractions.cpp:916
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Fiksi fenestron en ĉiuj labortabloj"
 
-#: useractions.cpp:921
+#: useractions.cpp:919
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Propra Rapid-Kahela Fenestro je la Maldekstro"
 
-#: useractions.cpp:923
+#: useractions.cpp:921
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Propra Rapid-Kahela Fenestro ja le Dekstro"
 
-#: useractions.cpp:925
+#: useractions.cpp:923
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Propra Rapid-Kahela Fenestro je la Supro"
 
-#: useractions.cpp:927
+#: useractions.cpp:925
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Propra Rapid-Kahela Fenestro je la Malsupro"
 
-#: useractions.cpp:938
+#: useractions.cpp:936
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Fenestro al labortablo %1"
 
-#: useractions.cpp:940
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Fenestro al sekva labortablo"
 
-#: useractions.cpp:941
+#: useractions.cpp:939
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Fenestro al antaŭa labortablo"
 
-#: useractions.cpp:942
+#: useractions.cpp:940
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Fenestro al labortablo dekstrapuda"
 
-#: useractions.cpp:944
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Fenestro al labortablo maldekstrapuda"
 
-#: useractions.cpp:946
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Fenestro al supra labortablo"
 
-#: useractions.cpp:948
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Fenestro al suba labortablo"
 
-#: useractions.cpp:952
+#: useractions.cpp:950
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Movi fenestron al ekrano %1"
 
-#: useractions.cpp:959
+#: useractions.cpp:957
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Movi fenestron al sekva ekrano"
 
-#: useractions.cpp:961
+#: useractions.cpp:959
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Movi fenestron al antaŭa ekrano"
 
-#: useractions.cpp:963
+#: useractions.cpp:961
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Movi fenestron unu ekranon dekstren"
 
-#: useractions.cpp:965
+#: useractions.cpp:963
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Movi fenestron unu ekranon maldekstren"
 
-#: useractions.cpp:967
+#: useractions.cpp:965
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Movi fenestron unu ekranon Supren"
 
-#: useractions.cpp:969
+#: useractions.cpp:967
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Movi fenestron unu ekranon Malsupren"
 
-#: useractions.cpp:973
+#: useractions.cpp:971
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Ŝanĝi al Ekrano %1"
 
-#: useractions.cpp:980
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Iri al sekva ekrano"
 
-#: useractions.cpp:981
+#: useractions.cpp:979
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Ŝalti al Antaŭa Ekrano"
 
-#: useractions.cpp:982
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Ŝanĝi al Ekrano dekstre"
 
-#: useractions.cpp:984
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Ŝanĝi al Ekrano maldekstren"
 
-#: useractions.cpp:986
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Ŝanĝi al Ekrano Supre"
 
-#: useractions.cpp:988
+#: useractions.cpp:986
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Ŝanĝi al Ekrano Malsupre"
 
-#: useractions.cpp:991
+#: useractions.cpp:989
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Rigardi Labortablon"
 
-#: useractions.cpp:994
+#: useractions.cpp:992
 #, kde-format
 msgid "Kill Window"
 msgstr "Mortigi fenestron"
 
-#: useractions.cpp:1059
+#: useractions.cpp:1057
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivigi Fenestron (%1)"

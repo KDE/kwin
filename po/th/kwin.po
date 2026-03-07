@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-06 00:45+0000\n"
+"POT-Creation-Date: 2026-03-07 00:45+0000\n"
 "PO-Revision-Date: 2025-03-01 14:53+0700\n"
 "Last-Translator: Pongsakorn S. <kde@xerusion.me>\n"
 "Language-Team: Thai\n"
@@ -1521,7 +1521,7 @@ msgstr "ชื่อของโปรแกรมที่จะสั่งใ
 msgid "name"
 msgstr ""
 
-#: keyboard_layout.cpp:46 keyboard_layout.cpp:56 keyboard_layout.cpp:140
+#: keyboard_layout.cpp:46 keyboard_layout.cpp:54 keyboard_layout.cpp:136
 #, fuzzy, kde-format
 #| msgid "Next Layout"
 msgid "Keyboard Layout Switcher"
@@ -1981,12 +1981,12 @@ msgstr ""
 msgid "Toggle Invert Effect"
 msgstr "เปิด/ปิด ลูกเล่นกลับค่าสี"
 
-#: plugins/invert/invert.cpp:52
+#: plugins/invert/invert.cpp:51
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "เปิด/ปิด ลูกเล่นกลับค่าสีบนหน้าต่าง"
 
-#: plugins/invert/invert.cpp:59
+#: plugins/invert/invert.cpp:57
 #, fuzzy, kde-format
 #| msgid "Invert cursor keys"
 msgid "Invert Screen Colors"
@@ -2225,21 +2225,21 @@ msgstr "ค่าปริยาย"
 msgid "Toggle Mouse Click Animation"
 msgstr "เปิด/ปิด ลูกเล่นแสดงหน้าต่างรวม"
 
-#: plugins/mouseclick/mouseclick.cpp:49
+#: plugins/mouseclick/mouseclick.cpp:48
 #, fuzzy, kde-format
 #| msgid "Top-Left"
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "บนซ้าย"
 
-#: plugins/mouseclick/mouseclick.cpp:50
+#: plugins/mouseclick/mouseclick.cpp:49
 #, fuzzy, kde-format
 #| msgid "Middle button:"
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "ปุ่มกลาง:"
 
-#: plugins/mouseclick/mouseclick.cpp:51
+#: plugins/mouseclick/mouseclick.cpp:50
 #, fuzzy, kde-format
 #| msgid "Top-Right"
 msgctxt "Right mouse button"
@@ -2354,7 +2354,7 @@ msgstr "แสดงพื้นที่ทำงาน"
 msgid "Clear All Mouse Marks"
 msgstr "ล้างจุดมาร์กสีด้วยเมาส์ทั้งหมด"
 
-#: plugins/mousemark/mousemark.cpp:49 plugins/mousemark/mousemark_config.cpp:52
+#: plugins/mousemark/mousemark.cpp:48 plugins/mousemark/mousemark_config.cpp:51
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "ล้างจุดมาร์กสีด้วยเมาส์ครั้งหลังสุด"
@@ -2364,7 +2364,7 @@ msgstr "ล้างจุดมาร์กสีด้วยเมาส์ค
 msgid "Clear Mouse Marks"
 msgstr "ล้างจุดมาร์กสีของเมาส์"
 
-#: plugins/mousemark/mousemark_config.cpp:87
+#: plugins/mousemark/mousemark_config.cpp:85
 #, fuzzy, kde-format
 #| msgid " pixel"
 #| msgid_plural " pixels"
@@ -2488,21 +2488,21 @@ msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:46
-#: plugins/overview/overvieweffect.cpp:135
+#: plugins/overview/kcm/overvieweffectkcm.cpp:45
+#: plugins/overview/overvieweffect.cpp:133
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
 msgstr ""
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:53
+#: plugins/overview/kcm/overvieweffectkcm.cpp:50
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "เปิด/ปิด ลูกเล่นกลับค่าสี"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:60
+#: plugins/overview/kcm/overvieweffectkcm.cpp:55
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgctxt "@action Grid View is the name of a KWin effect"
@@ -2534,14 +2534,14 @@ msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:143
+#: plugins/overview/overvieweffect.cpp:138
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "เปิด/ปิด ลูกเล่นกลับค่าสี"
 
-#: plugins/overview/overvieweffect.cpp:152
+#: plugins/overview/overvieweffect.cpp:144
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgctxt "@action Grid view is the name of a Kwin effect"
@@ -2816,8 +2816,8 @@ msgstr "ความทึบแสง"
 msgid " %"
 msgstr " %"
 
-#: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:32
+#: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:36
+#: plugins/tileseditor/tileseditoreffect.cpp:31
 #, fuzzy, kde-format
 #| msgid "Toggle Tiling"
 msgid "Toggle Tiles Editor"
@@ -3019,27 +3019,27 @@ msgstr ""
 msgid "Ignore"
 msgstr ""
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:41
 #: plugins/windowview/windowvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "เปิด/ปิด ลูกเล่นกับหน้าต่างต่าง ๆ ในปัจจุบัน (บนพื้นที่ทำงานปัจจุบัน)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:57
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:46
+#: plugins/windowview/windowvieweffect.cpp:56
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "เปิด/ปิด ลูกเล่นกับหน้าต่างต่าง ๆ ในปัจจุบัน (บนพื้นที่ทำงานทั้งหมด)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:66
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:51
+#: plugins/windowview/windowvieweffect.cpp:64
 #, fuzzy, kde-format
 #| msgid "Toggle Present Windows (All desktops)"
 msgid "Toggle Present Windows (Window class)"
 msgstr "เปิด/ปิด ลูกเล่นกับหน้าต่างต่าง ๆ ในปัจจุบัน (บนพื้นที่ทำงานทั้งหมด)"
 
-#: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:75
+#: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
+#: plugins/windowview/windowvieweffect.cpp:72
 #, fuzzy, kde-format
 #| msgid "Toggle Present Windows (Current desktop)"
 msgid "Toggle Present Windows (Window class on current desktop)"
@@ -3132,35 +3132,35 @@ msgstr "น้อย"
 msgid "More"
 msgstr "มาก"
 
-#: plugins/zoom/zoom.cpp:88
+#: plugins/zoom/zoom.cpp:85
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านซ้ายหนึ่งระดับ"
 
-#: plugins/zoom/zoom.cpp:95
+#: plugins/zoom/zoom.cpp:91
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านขวาหนึ่งระดับ"
 
-#: plugins/zoom/zoom.cpp:102
+#: plugins/zoom/zoom.cpp:97
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:109
+#: plugins/zoom/zoom.cpp:103
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:117
+#: plugins/zoom/zoom.cpp:110
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Move Mouse to Focus"
 msgstr "การจำลองเมาส์"
 
-#: plugins/zoom/zoom.cpp:124
+#: plugins/zoom/zoom.cpp:116
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Mouse to Center"
@@ -4007,397 +4007,397 @@ msgstr "ปรับหน้าต่างไปยังจอภาพ 1"
 msgid "&All Activities"
 msgstr "กิจกรรม&ทั้งหมด"
 
-#: useractions.cpp:752
+#: useractions.cpp:751
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> ถูกใช้งานอยู่แล้ว"
 
-#: useractions.cpp:754
+#: useractions.cpp:753
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> ถูกใช้งานโดย %2 ใน %3"
 
-#: useractions.cpp:835
+#: useractions.cpp:833
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Window Menu"
 msgstr "หน้าต่างต่าง ๆ"
 
-#: useractions.cpp:837
+#: useractions.cpp:835
 #, kde-format
 msgid "Close Window"
 msgstr "ปิดหน้าต่าง"
 
-#: useractions.cpp:839
+#: useractions.cpp:837
 #, kde-format
 msgid "Maximize Window"
 msgstr "ขยายหน้าต่างใหญ่สุด"
 
-#: useractions.cpp:841
+#: useractions.cpp:839
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "ขยายหน้าต่างใหญ่สุดทางแนวตั้ง"
 
-#: useractions.cpp:843
+#: useractions.cpp:841
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "ขยายหน้าต่างใหญ่สุดทางแนวนอน"
 
-#: useractions.cpp:845
+#: useractions.cpp:843
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgid "Restore Window"
 msgstr "ปรับขนาดหน้าต่าง"
 
-#: useractions.cpp:847
+#: useractions.cpp:845
 #, kde-format
 msgid "Minimize Window"
 msgstr "ย่อหน้าต่างเล็กสุด"
 
-#: useractions.cpp:849
+#: useractions.cpp:847
 #, kde-format
 msgid "Move Window"
 msgstr "ย้ายหน้าต่าง"
 
-#: useractions.cpp:851
+#: useractions.cpp:849
 #, kde-format
 msgid "Resize Window"
 msgstr "ปรับขนาดหน้าต่าง"
 
-#: useractions.cpp:853
+#: useractions.cpp:851
 #, kde-format
 msgid "Raise Window"
 msgstr "ส่งหน้าต่างให้อยู่เหนือหน้าต่างอื่นหนึ่งชั้น"
 
-#: useractions.cpp:855
+#: useractions.cpp:853
 #, kde-format
 msgid "Lower Window"
 msgstr "ส่งหน้าต่างให้อยู่ใต้หน้าต่างอื่นหนึ่งชั้น"
 
-#: useractions.cpp:857
+#: useractions.cpp:855
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "สลับหน้าต่างไปอยู่เหนือ/ใต้หน้าต่างอื่น"
 
-#: useractions.cpp:859
+#: useractions.cpp:857
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "ปรับหน้าต่างให้เต็มจอ"
 
-#: useractions.cpp:861
+#: useractions.cpp:859
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "ซ่อนกรอบของหน้าต่าง"
 
-#: useractions.cpp:863
+#: useractions.cpp:861
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "ให้หน้าต่างอยู่ด้านบนหน้าต่างอื่น"
 
-#: useractions.cpp:865
+#: useractions.cpp:863
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "ให้หน้าต่างอยู่ด้านล่างหน้าต่างอื่น"
 
-#: useractions.cpp:867
+#: useractions.cpp:865
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "เรียกใช้หน้าต่างที่เรียกร้องความสนใจมา"
 
-#: useractions.cpp:869
+#: useractions.cpp:867
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "ตั้งค่าปุ่มพิมพ์ลัดของหน้าต่าง"
 
-#: useractions.cpp:871
+#: useractions.cpp:869
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Window to the Center"
 msgstr "ย้ายหน้าต่างไปยังกลุ่ม"
 
-#: useractions.cpp:873
+#: useractions.cpp:871
 #, kde-format
 msgid "Move Window Right"
 msgstr "ย้ายหน้าต่างไปด้านขวา"
 
-#: useractions.cpp:875
+#: useractions.cpp:873
 #, kde-format
 msgid "Move Window Left"
 msgstr "ย้ายหน้าต่างไปด้านซ้าย"
 
-#: useractions.cpp:877
+#: useractions.cpp:875
 #, kde-format
 msgid "Move Window Up"
 msgstr "ย้ายหน้าต่างขึ้น"
 
-#: useractions.cpp:879
+#: useractions.cpp:877
 #, kde-format
 msgid "Move Window Down"
 msgstr "ย้ายหน้าต่างลง"
 
-#: useractions.cpp:881
+#: useractions.cpp:879
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "ขยายหน้าต่างใหญ่สุดทางแนวนอน"
 
-#: useractions.cpp:883
+#: useractions.cpp:881
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "ขยายหน้าต่างใหญ่สุดทางแนวตั้ง"
 
-#: useractions.cpp:885
+#: useractions.cpp:883
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "ปรับขนาดหน้าต่างให้เล็กพอเหมาะทางแนวนอน"
 
-#: useractions.cpp:887
+#: useractions.cpp:885
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "ปรับขนาดหน้าต่างให้เล็กพอเหมาะทางแนวตั้ง"
 
-#: useractions.cpp:889
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:891
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "ปูหน้าต่างด่วนจากทางขวา"
 
-#: useractions.cpp:893
+#: useractions.cpp:891
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:895
+#: useractions.cpp:893
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:897
+#: useractions.cpp:895
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:899
+#: useractions.cpp:897
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:901
+#: useractions.cpp:899
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "ปูหน้าต่างด่วนจากทางขวา"
 
-#: useractions.cpp:903
+#: useractions.cpp:901
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "ปูหน้าต่างด่วนจากทางขวา"
 
-#: useractions.cpp:905
+#: useractions.cpp:903
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "สลับไปยังหน้าต่างที่อยู่ด้านบน"
 
-#: useractions.cpp:907
+#: useractions.cpp:905
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "สลับไปยังหน้าต่างที่อยู่ด้านล่าง"
 
-#: useractions.cpp:909
+#: useractions.cpp:907
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "สลับไปยังหน้าต่างที่อยู่ด้านขวา"
 
-#: useractions.cpp:911
+#: useractions.cpp:909
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "สลับไปยังหน้าต่างที่อยู่ด้านซ้าย"
 
-#: useractions.cpp:913
+#: useractions.cpp:911
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:915
+#: useractions.cpp:913
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:918
+#: useractions.cpp:916
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "ให้หน้าต่างอยู่บนพื้นที่ทำงานทั้งหมด"
 
-#: useractions.cpp:921
+#: useractions.cpp:919
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:923
+#: useractions.cpp:921
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "ปูหน้าต่างด่วนจากทางขวา"
 
-#: useractions.cpp:925
+#: useractions.cpp:923
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:927
+#: useractions.cpp:925
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:938
+#: useractions.cpp:936
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงาน 1"
 
-#: useractions.cpp:940
+#: useractions.cpp:938
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานถัดไป"
 
-#: useractions.cpp:941
+#: useractions.cpp:939
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานก่อนหน้า"
 
-#: useractions.cpp:942
+#: useractions.cpp:940
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านขวาหนึ่งระดับ"
 
-#: useractions.cpp:944
+#: useractions.cpp:942
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านซ้ายหนึ่งระดับ"
 
-#: useractions.cpp:946
+#: useractions.cpp:944
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านบนหนึ่งระดับ"
 
-#: useractions.cpp:948
+#: useractions.cpp:946
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านล่างหนึ่งระดับ"
 
-#: useractions.cpp:952
+#: useractions.cpp:950
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgid "Move Window to Screen %1"
 msgstr "ปรับหน้าต่างไปยังจอภาพ 1"
 
-#: useractions.cpp:959
+#: useractions.cpp:957
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "ปรับหน้าต่างไปยังจอภาพถัดไป"
 
-#: useractions.cpp:961
+#: useractions.cpp:959
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานก่อนหน้า"
 
-#: useractions.cpp:963
+#: useractions.cpp:961
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านขวาหนึ่งระดับ"
 
-#: useractions.cpp:965
+#: useractions.cpp:963
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านซ้ายหนึ่งระดับ"
 
-#: useractions.cpp:967
+#: useractions.cpp:965
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "ปรับหน้าต่างไปยังจอภาพ 2"
 
-#: useractions.cpp:969
+#: useractions.cpp:967
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านล่างหนึ่งระดับ"
 
-#: useractions.cpp:973
+#: useractions.cpp:971
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "สลับไปยังจอภาพ 1"
 
-#: useractions.cpp:980
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "สลับไปยังจอภาพถัดไป"
 
-#: useractions.cpp:981
+#: useractions.cpp:979
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "สลับไปยังพื้นที่ทำงานก่อนหน้า"
 
-#: useractions.cpp:982
+#: useractions.cpp:980
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "สลับไปยังหน้าต่างที่อยู่ด้านขวา"
 
-#: useractions.cpp:984
+#: useractions.cpp:982
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "สลับไปยังหน้าต่างที่อยู่ด้านซ้าย"
 
-#: useractions.cpp:986
+#: useractions.cpp:984
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "สลับไปยังจอภาพ 10"
 
-#: useractions.cpp:988
+#: useractions.cpp:986
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "สลับไปยังจอภาพ 10"
 
-#: useractions.cpp:991
+#: useractions.cpp:989
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "ไปยังพื้&นที่ทำงาน"
 
-#: useractions.cpp:994
+#: useractions.cpp:992
 #, kde-format
 msgid "Kill Window"
 msgstr "บังคับปิดหน้าต่าง"
 
-#: useractions.cpp:1059
+#: useractions.cpp:1057
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "เรียกใช้งานหน้าต่าง (%1)"
