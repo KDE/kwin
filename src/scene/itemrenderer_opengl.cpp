@@ -87,7 +87,6 @@ void ItemRendererOpenGL::endFrame()
             for (const auto &releasePoint : m_releasePoints) {
                 releasePoint->addReleaseFence(fence.fileDescriptor());
             }
-            m_releasePoints.clear();
         }
     }
     m_releasePoints.clear();
