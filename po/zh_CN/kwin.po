@@ -2125,7 +2125,7 @@ msgstr "圆环环数："
 #: plugins/mouseclick/mouseclick_config.ui:210
 #, kde-format
 msgid "Text"
-msgstr "文字"
+msgstr "文本"
 
 #. i18n: ectx: property (text), widget (QLabel, font_label)
 #: plugins/mouseclick/mouseclick_config.ui:216
@@ -2137,7 +2137,7 @@ msgstr "字体："
 #: plugins/mouseclick/mouseclick_config.ui:233
 #, kde-format
 msgid "Show Text:"
-msgstr "显示文字："
+msgstr "显示文本："
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
