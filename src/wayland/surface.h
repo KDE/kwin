@@ -294,6 +294,8 @@ public:
      */
     QPointF toSurfaceLocal(const QPointF &point) const;
 
+    QSizeF snappedSize(const QSizeF &size) const;
+
     /**
      * @returns if the client thinks the content of this surface is suitable for presentation with tearing
      */

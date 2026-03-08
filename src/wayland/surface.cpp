@@ -1174,6 +1174,12 @@ QPointF SurfaceInterface::toSurfaceLocal(const QPointF &point) const
     return QPointF(point.x() * d->scaleOverride, point.y() * d->scaleOverride);
 }
 
+QSizeF SurfaceInterface::snappedSize(const QSizeF &size) const
+{
+    return QSizeF(std::round(size.width() * d->scaleOverride) / d->scaleOverride,
+                  std::round(size.height() * d->scaleOverride) / d->scaleOverride);
+}
+
 PresentationModeHint SurfaceInterface::presentationModeHint() const
 {
     return d->current->presentationHint;

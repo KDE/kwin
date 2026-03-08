@@ -14,7 +14,7 @@ namespace KWin
 struct LayerShellV1ConfigureEvent
 {
     quint32 serial;
-    QSize size;
+    QSizeF size;
 };
 
 class AutoHideScreenEdgeV1Interface;

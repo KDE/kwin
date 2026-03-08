@@ -44,9 +44,9 @@ class LayerSurfaceV1Commit : public SurfaceAttachedState<LayerSurfaceV1Commit>
 public:
     std::optional<LayerSurfaceV1Interface::Layer> layer;
     std::optional<Qt::Edges> anchor;
-    std::optional<QMargins> margins;
-    std::optional<QSize> desiredSize;
-    std::optional<int> exclusiveZone;
+    std::optional<QMarginsF> margins;
+    std::optional<QSizeF> desiredSize;
+    std::optional<qreal> exclusiveZone;
     std::optional<Qt::Edge> exclusiveEdge;
     std::optional<quint32> acknowledgedConfigure;
     std::optional<bool> acceptsFocus;
@@ -57,9 +57,9 @@ struct LayerSurfaceV1State
     QQueue<quint32> serials;
     LayerSurfaceV1Interface::Layer layer = LayerSurfaceV1Interface::BottomLayer;
     Qt::Edges anchor;
-    QMargins margins;
-    QSize desiredSize = QSize(0, 0);
-    int exclusiveZone = 0;
+    QMarginsF margins;
+    QSizeF desiredSize = QSizeF(0, 0);
+    qreal exclusiveZone = 0;
     Qt::Edge exclusiveEdge = Qt::Edge();
     bool acceptsFocus = false;
     bool configured = false;
@@ -171,7 +171,11 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_destroy_resource(Reso
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_size(Resource *resource, uint32_t width, uint32_t height)
 {
-    pending->desiredSize = QSize(width, height);
+    if (Q_UNLIKELY(!surface)) {
+        return;
+    }
+    pending->desiredSize = QSizeF(width / surface->scaleOverride(),
+                                  height / surface->scaleOverride());
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_anchor(Resource *resource, uint32_t anchor)
@@ -220,12 +224,21 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_edge(Re
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Resource *, int32_t zone)
 {
-    pending->exclusiveZone = zone;
+    if (Q_UNLIKELY(!surface)) {
+        return;
+    }
+    pending->exclusiveZone = zone / surface->scaleOverride();
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_margin(Resource *, int32_t top, int32_t right, int32_t bottom, int32_t left)
 {
-    pending->margins = QMargins(left, top, right, bottom);
+    if (Q_UNLIKELY(!surface)) {
+        return;
+    }
+    pending->margins = QMarginsF(left / surface->scaleOverride(),
+                                 top / surface->scaleOverride(),
+                                 right / surface->scaleOverride(),
+                                 bottom / surface->scaleOverride());
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_keyboard_interactivity(Resource *resource, uint32_t keyboard_interactivity)
@@ -425,7 +438,7 @@ Qt::Edges LayerSurfaceV1Interface::anchor() const
     return d->state.anchor;
 }
 
-QSize LayerSurfaceV1Interface::desiredSize() const
+QSizeF LayerSurfaceV1Interface::desiredSize() const
 {
     return d->state.desiredSize;
 }
@@ -440,32 +453,12 @@ LayerSurfaceV1Interface::Layer LayerSurfaceV1Interface::layer() const
     return d->state.layer;
 }
 
-QMargins LayerSurfaceV1Interface::margins() const
+QMarginsF LayerSurfaceV1Interface::margins() const
 {
     return d->state.margins;
 }
 
-int LayerSurfaceV1Interface::leftMargin() const
-{
-    return d->state.margins.left();
-}
-
-int LayerSurfaceV1Interface::topMargin() const
-{
-    return d->state.margins.top();
-}
-
-int LayerSurfaceV1Interface::rightMargin() const
-{
-    return d->state.margins.right();
-}
-
-int LayerSurfaceV1Interface::bottomMargin() const
-{
-    return d->state.margins.bottom();
-}
-
-int LayerSurfaceV1Interface::exclusiveZone() const
+qreal LayerSurfaceV1Interface::exclusiveZone() const
 {
     return d->state.exclusiveZone;
 }
@@ -505,7 +498,7 @@ QString LayerSurfaceV1Interface::scope() const
     return d->scope;
 }
 
-quint32 LayerSurfaceV1Interface::sendConfigure(const QSize &size)
+quint32 LayerSurfaceV1Interface::sendConfigure(const QSizeF &size)
 {
     if (d->state.closed) {
         qCWarning(KWIN_CORE) << "Cannot configure a closed layer shell surface";
@@ -515,7 +508,8 @@ quint32 LayerSurfaceV1Interface::sendConfigure(const QSize &size)
     const uint32_t serial = d->shell->display()->nextSerial();
     d->state.serials << serial;
 
-    d->send_configure(serial, size.width(), size.height());
+    const QSize nativeSize = (size * d->surface->scaleOverride()).toSize();
+    d->send_configure(serial, nativeSize.width(), nativeSize.height());
     d->state.configured = true;
 
     return serial;
