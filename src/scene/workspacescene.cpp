@@ -224,13 +224,13 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
         if (!delegate->shouldRenderItem(child)) {
             continue;
         }
-        if (child->isVisible() && !occluded.contains(child->mapToView(child->boundingRect(), delegate).roundedOut())) {
+        if (child->isVisible() && !occluded.contains(child->mapToView(child->boundingRect(), delegate).rounded())) {
             if (!addCandidates(delegate, static_cast<SurfaceItem *>(child), candidates, maxCount, occluded, corners)) {
                 return false;
             }
         }
     }
-    if (occluded.contains(item->mapToView(item->boundingRect(), delegate).roundedOut())) {
+    if (occluded.contains(item->mapToView(item->boundingRect(), delegate).rounded())) {
         return true;
     }
     if (delegate->shouldRenderItem(item)) {
@@ -264,7 +264,7 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
         if (!delegate->shouldRenderItem(child)) {
             continue;
         }
-        if (child->isVisible() && !occluded.contains(child->mapToView(child->boundingRect(), delegate).roundedOut())) {
+        if (child->isVisible() && !occluded.contains(child->mapToView(child->boundingRect(), delegate).rounded())) {
             if (!addCandidates(delegate, static_cast<SurfaceItem *>(child), candidates, maxCount, occluded, corners)) {
                 return false;
             }
