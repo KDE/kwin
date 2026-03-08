@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-02-26 00:46+0000\n"
-"PO-Revision-Date: 2026-02-21 01:56+0200\n"
+"PO-Revision-Date: 2026-03-07 20:49+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -302,7 +302,7 @@ msgstr ""
 #: main.ui:704
 #, kde-format
 msgid "Delay:"
-msgstr ""
+msgstr "Delsa:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:720
