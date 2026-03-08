@@ -302,7 +302,7 @@ void TestSubSurface::testPosition()
 
     // both client and server should have a default position
     QCOMPARE(subSurface->position(), QPoint());
-    QCOMPARE(serverSubSurface->position(), QPoint());
+    QCOMPARE(serverSubSurface->position(), QPointF());
 
     QSignalSpy positionChangedSpy(serverSubSurface, &KWin::SubSurfaceInterface::positionChanged);
 
@@ -312,14 +312,14 @@ void TestSubSurface::testPosition()
     // ensure it's processed on server side
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface->position(), QPoint());
+    QCOMPARE(serverSubSurface->position(), QPointF());
     // changing once more
     subSurface->setPosition(QPoint(20, 30));
     QCOMPARE(subSurface->position(), QPoint(20, 30));
     // ensure it's processed on server side
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSubSurface->position(), QPoint());
+    QCOMPARE(serverSubSurface->position(), QPointF());
 
     // committing the parent surface should update the position
     QSignalSpy parentCommittedSpy(serverSubSurface->parentSurface(), &SurfaceInterface::committed);
@@ -327,7 +327,7 @@ void TestSubSurface::testPosition()
     QVERIFY(parentCommittedSpy.wait());
     QCOMPARE(positionChangedSpy.count(), 1);
     QCOMPARE(positionChangedSpy.first().first().toPoint(), QPoint(20, 30));
-    QCOMPARE(serverSubSurface->position(), QPoint(20, 30));
+    QCOMPARE(serverSubSurface->position(), QPointF(20, 30));
 }
 
 void TestSubSurface::testPlaceAbove()

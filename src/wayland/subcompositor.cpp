@@ -206,7 +206,7 @@ SurfaceRole *SubSurfaceInterface::role()
     return &role;
 }
 
-QPoint SubSurfaceInterface::position() const
+QPointF SubSurfaceInterface::position() const
 {
     return d->position;
 }
@@ -282,7 +282,7 @@ void SubSurfaceInterface::parentApplyState()
 {
     auto parentPrivate = SurfaceInterfacePrivate::get(d->parent);
     if (parentPrivate->current->committed & SurfaceState::Field::SubsurfacePosition) {
-        const QPoint &pos = parentPrivate->current->subsurface.position[this];
+        const QPointF pos = QPointF(parentPrivate->current->subsurface.position[this]) / d->parent->scaleOverride();
         if (d->position != pos) {
             d->position = pos;
             Q_EMIT positionChanged(pos);
