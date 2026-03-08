@@ -53,7 +53,7 @@ void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_create(Resource 
         return;
     }
 
-    auto shadow = new ShadowInterface(q, shadow_resource);
+    auto shadow = new ShadowInterface(s, shadow_resource);
 
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
     surfacePrivate->setShadow(QPointer<ShadowInterface>(shadow));
@@ -113,7 +113,7 @@ public:
     void attach(Commit::Flags flag, wl_resource *buffer);
 
     ShadowInterface *q;
-    ShadowManagerInterface *manager;
+    QPointer<SurfaceInterface> surface;
     Commit pending;
 
     GraphicsBufferRef left;
@@ -264,26 +264,38 @@ void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_bottom_left(Resource *re
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_left_offset(Resource *resource, wl_fixed_t offset)
 {
+    if (Q_UNLIKELY(!surface)) {
+        return;
+    }
     pending.flags = Commit::Flags(pending.flags | Commit::Offset);
-    pending.offset.setLeft(wl_fixed_to_double(offset));
+    pending.offset.setLeft(wl_fixed_to_double(offset) / surface->scaleOverride());
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_top_offset(Resource *resource, wl_fixed_t offset)
 {
+    if (Q_UNLIKELY(!surface)) {
+        return;
+    }
     pending.flags = Commit::Flags(pending.flags | Commit::Offset);
-    pending.offset.setTop(wl_fixed_to_double(offset));
+    pending.offset.setTop(wl_fixed_to_double(offset) / surface->scaleOverride());
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_right_offset(Resource *resource, wl_fixed_t offset)
 {
+    if (Q_UNLIKELY(!surface)) {
+        return;
+    }
     pending.flags = Commit::Flags(pending.flags | Commit::Offset);
-    pending.offset.setRight(wl_fixed_to_double(offset));
+    pending.offset.setRight(wl_fixed_to_double(offset) / surface->scaleOverride());
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_bottom_offset(Resource *resource, wl_fixed_t offset)
 {
+    if (Q_UNLIKELY(!surface)) {
+        return;
+    }
     pending.flags = Commit::Flags(pending.flags | Commit::Offset);
-    pending.offset.setBottom(wl_fixed_to_double(offset));
+    pending.offset.setBottom(wl_fixed_to_double(offset) / surface->scaleOverride());
 }
 
 ShadowInterfacePrivate::ShadowInterfacePrivate(ShadowInterface *_q, wl_resource *resource)
@@ -292,11 +304,11 @@ ShadowInterfacePrivate::ShadowInterfacePrivate(ShadowInterface *_q, wl_resource 
 {
 }
 
-ShadowInterface::ShadowInterface(ShadowManagerInterface *manager, wl_resource *resource)
+ShadowInterface::ShadowInterface(SurfaceInterface *surface, wl_resource *resource)
     : QObject()
     , d(new ShadowInterfacePrivate(this, resource))
 {
-    d->manager = manager;
+    d->surface = surface;
 }
 
 ShadowInterface::~ShadowInterface() = default;
