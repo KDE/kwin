@@ -183,7 +183,9 @@ void InputMethod::hide()
 bool InputMethod::shouldShowOnActive() const
 {
     static bool alwaysShowIm = qEnvironmentVariableIntValue("KWIN_IM_SHOW_ALWAYS") != 0;
-    return alwaysShowIm || input()->touch() == input()->lastInputHandler()
+    return alwaysShowIm
+        || kwinApp()->config()->group(QStringLiteral("Wayland")).readEntry("AlwaysShowVirtualKeyboard", false)
+        || input()->touch() == input()->lastInputHandler()
         || input()->tablet() == input()->lastInputHandler();
 }
 

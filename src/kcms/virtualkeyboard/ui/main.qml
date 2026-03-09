@@ -7,6 +7,7 @@
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls as QQC2
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
 
@@ -35,6 +36,27 @@ KCM.GridViewKCM {
         }
         onDoubleClicked: {
             kcm.save();
+        }
+    }
+
+    footer: ColumnLayout {
+        RowLayout {
+            spacing: Kirigami.Units.smallSpacing
+
+            QQC2.CheckBox {
+                text: i18n("Always show virtual keyboard when a text field is active")
+                checked: kcm.settings.alwaysShowVirtualKeyboard
+                onToggled: kcm.settings.alwaysShowVirtualKeyboard = checked
+
+                KCM.SettingStateBinding {
+                    configObject: kcm.settings
+                    settingName: "AlwaysShowVirtualKeyboard"
+                }
+            }
+
+            Kirigami.ContextualHelpButton {
+                toolTipText: i18nc("@info:tooltip", "By default, virtual keyboard panels are only shown when interacting with a text field via touch input, not when using a mouse.")
+            }
         }
     }
 }

@@ -315,6 +315,9 @@
     </group>
     <group name="Wayland">
         <entry name="InputMethod" type="Path" />
+        <entry name="AlwaysShowVirtualKeyboard" type="Bool">
+            <default>false</default>
+        </entry>
         <entry name="DoubleTapWakeup" type="Bool">
             <default>true</default>
         </entry>
