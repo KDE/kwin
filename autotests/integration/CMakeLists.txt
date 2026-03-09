@@ -12,6 +12,8 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
 qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
     PRIVATE_CODE
     FILES
+        ${Wayland_DATADIR}/wayland.xml
+
         ${CMAKE_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
         ${CMAKE_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
         ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml

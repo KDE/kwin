@@ -579,6 +579,9 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
         if (flags & AdditionalWaylandInterface::Viewporter && interface == wp_viewporter_interface.name) {
             c->viewporter = std::make_unique<WaylandClient::Viewporter>(*c->registry, name, 1u);
         }
+        if (flags.testFlag(AdditionalWaylandInterface::Seat) && interface == wl_seat_interface.name) {
+            c->kwinSeat = std::make_unique<WlSeat>(*c->registry, name, version);
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -726,6 +729,7 @@ Connection::~Connection()
     linuxDmabuf.reset();
     colorRepresentation.reset();
     viewporter.reset();
+    kwinSeat.reset();
 
     delete queue; // Must be destroyed last
     queue = nullptr;
@@ -2330,6 +2334,51 @@ XdgToplevelDragV1::~XdgToplevelDragV1()
     destroy();
 }
 
+WlSeat::WlSeat(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::wl_seat(registry, id, version)
+{
+}
+
+WlSeat::~WlSeat()
+{
+    release();
+}
+
+std::unique_ptr<WlKeyboard> WlSeat::getKeyboard()
+{
+    return std::make_unique<WlKeyboard>(get_keyboard());
+}
+
+WlKeyboard::WlKeyboard(::wl_keyboard *object)
+    : QtWayland::wl_keyboard(object)
+{
+}
+
+WlKeyboard::~WlKeyboard()
+{
+    release();
+}
+
+void WlKeyboard::keyboard_keymap(uint32_t format, int32_t fd, uint32_t size)
+{
+    ::close(fd);
+}
+
+void WlKeyboard::keyboard_enter(uint32_t serial, ::wl_surface *surface, wl_array *keys)
+{
+    Q_EMIT enter(serial, surface);
+}
+
+void WlKeyboard::keyboard_leave(uint32_t serial, ::wl_surface *surface)
+{
+    Q_EMIT leave(serial, surface);
+}
+
+void WlKeyboard::keyboard_key(uint32_t serial, uint32_t time, uint32_t keyValue, uint32_t state)
+{
+    Q_EMIT key(serial, time, keyValue, key_state(state));
+}
+
 void keyboardKeyPressed(quint32 key, quint32 time)
 {
     auto virtualKeyboard = static_cast<WaylandTestApplication *>(kwinApp())->virtualKeyboard();
@@ -2474,15 +2523,27 @@ void tabletToolTipEvent(const QPointF &pos, qreal pressure, qreal xTilt, qreal y
     Q_EMIT tablet->tabletToolTipEvent(pos, pressure, xTilt, yTilt, rotation, distance, tipDown, sliderPosition, tool, std::chrono::milliseconds(time), tablet);
 }
 
-XdgToplevelWindow::XdgToplevelWindow(const std::function<void(XdgToplevel *toplevel)> &setup)
-    : m_surface(createSurface())
-    , m_toplevel(createXdgToplevelSurface(m_surface.get(), setup))
+XdgToplevelWindow::XdgToplevelWindow(const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup)
+    : XdgToplevelWindow(s_waylandConnection.get(), setup)
 {
 }
 
-XdgToplevelWindow::XdgToplevelWindow(const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup)
-    : m_surface(createSurface())
-    , m_toplevel(createXdgToplevelSurface(m_surface.get(), [this, &setup](XdgToplevel *toplevel) {
+XdgToplevelWindow::XdgToplevelWindow(const std::function<void(XdgToplevel *toplevel)> &setup)
+    : XdgToplevelWindow(s_waylandConnection.get(), setup)
+{
+}
+
+XdgToplevelWindow::XdgToplevelWindow(Connection *connection, const std::function<void(XdgToplevel *toplevel)> &setup)
+    : m_connection(connection)
+    , m_surface(createSurface(connection->compositor))
+    , m_toplevel(createXdgToplevelSurface(connection->xdgShell, m_surface.get(), setup))
+{
+}
+
+XdgToplevelWindow::XdgToplevelWindow(Connection *connection, const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup)
+    : m_connection(connection)
+    , m_surface(createSurface(connection->compositor))
+    , m_toplevel(createXdgToplevelSurface(connection->xdgShell, m_surface.get(), [this, &setup](XdgToplevel *toplevel) {
         setup(m_surface.get(), toplevel);
     }))
 {
@@ -2499,13 +2560,13 @@ XdgToplevelWindow::~XdgToplevelWindow()
 
 bool XdgToplevelWindow::show(const QSize &size, const QColor &color)
 {
-    m_window = renderAndWaitForShown(m_surface.get(), size, color);
+    m_window = renderAndWaitForShown(m_connection->shm, m_surface.get(), size, color);
     return m_window != nullptr;
 }
 
 bool XdgToplevelWindow::show(const QImage &image)
 {
-    m_window = renderAndWaitForShown(m_surface.get(), image);
+    m_window = renderAndWaitForShown(m_connection->shm, m_surface.get(), image);
     return m_window != nullptr;
 }
 
@@ -2526,7 +2587,7 @@ bool XdgToplevelWindow::unmapAndWaitForClosed()
 
 bool XdgToplevelWindow::presentWait()
 {
-    const auto feedback = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*m_surface));
+    const auto feedback = std::make_unique<Test::WpPresentationFeedback>(m_connection->presentationTime->feedback(*m_surface));
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QSignalSpy spy(feedback.get(), &Test::WpPresentationFeedback::presented);
     return spy.wait();
@@ -2551,7 +2612,7 @@ std::optional<QSize> XdgToplevelWindow::handleConfigure(const QColor &color)
         m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
         return ret;
     }
-    Test::render(m_surface.get(), toplevelConfigure.last().at(0).toSize(), color);
+    Test::render(m_connection->shm, m_surface.get(), toplevelConfigure.last().at(0).toSize(), color);
     QSignalSpy frameGeometryChanged(m_window, &KWin::Window::frameGeometryChanged);
     if (!frameGeometryChanged.wait()) {
         return std::nullopt;

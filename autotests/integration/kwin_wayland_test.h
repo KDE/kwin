@@ -43,6 +43,7 @@
 #include "qwayland-security-context-v1.h"
 #include "qwayland-tablet-v2.h"
 #include "qwayland-text-input-unstable-v3.h"
+#include "qwayland-wayland.h"
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
 #include "qwayland-xdg-activation-v1.h"
 #include "qwayland-xdg-decoration-unstable-v1.h"
@@ -1014,6 +1015,36 @@ public:
     ~ColorRepresentationSurfaceV1() override;
 };
 
+class WlKeyboard;
+
+class WlSeat : public QtWayland::wl_seat
+{
+public:
+    explicit WlSeat(::wl_registry *registry, uint32_t id, int version);
+    ~WlSeat() override;
+
+    std::unique_ptr<WlKeyboard> getKeyboard();
+};
+
+class WlKeyboard : public QObject, public QtWayland::wl_keyboard
+{
+    Q_OBJECT
+public:
+    explicit WlKeyboard(::wl_keyboard *object);
+    ~WlKeyboard() override;
+
+Q_SIGNALS:
+    void enter(uint32_t serial, ::wl_surface *surface);
+    void leave(uint32_t serial, ::wl_surface *surface);
+    void key(uint32_t serial, uint32_t time, uint32_t key, key_state state);
+
+private:
+    void keyboard_keymap(uint32_t format, int32_t fd, uint32_t size) override;
+    void keyboard_enter(uint32_t serial, ::wl_surface *surface, wl_array *keys) override;
+    void keyboard_leave(uint32_t serial, ::wl_surface *surface) override;
+    void keyboard_key(uint32_t serial, uint32_t time, uint32_t key, uint32_t state) override;
+};
+
 struct Connection
 {
     static std::unique_ptr<Connection> setup(AdditionalWaylandInterfaces interfaces = AdditionalWaylandInterfaces());
@@ -1066,6 +1097,8 @@ struct Connection
     std::unique_ptr<WaylandClient::LinuxDmabufV1> linuxDmabuf;
     std::unique_ptr<ColorRepresentationV1> colorRepresentation;
     std::unique_ptr<WaylandClient::Viewporter> viewporter;
+    // TODO port everything away from KWayland::Client::Seat
+    std::unique_ptr<WlSeat> kwinSeat;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -1430,6 +1463,8 @@ class XdgToplevelWindow
 public:
     explicit XdgToplevelWindow(const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup);
     explicit XdgToplevelWindow(const std::function<void(XdgToplevel *toplevel)> &setup = {});
+    explicit XdgToplevelWindow(Connection *connection, const std::function<void(KWayland::Client::Surface *surface, XdgToplevel *toplevel)> &setup);
+    explicit XdgToplevelWindow(Connection *connection, const std::function<void(XdgToplevel *toplevel)> &setup = {});
     XdgToplevelWindow(const XdgToplevelWindow &copy) = delete;
     ~XdgToplevelWindow();
 
@@ -1446,6 +1481,7 @@ public:
     bool waitSurfaceConfigure();
     std::optional<QSize> handleConfigure(const QColor &color = Qt::blue);
 
+    Connection *m_connection = nullptr;
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<XdgToplevel> m_toplevel;
     Window *m_window = nullptr;

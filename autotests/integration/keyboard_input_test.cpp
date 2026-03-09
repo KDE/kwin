@@ -35,6 +35,7 @@ private Q_SLOTS:
     void implicitGrab();
     void implicitGrabByClosedWindow();
     void globalShortcut();
+    void testServerSideKeyRepeat();
 
 private:
     std::unique_ptr<Test::Connection> m_firstConnection;
@@ -187,6 +188,30 @@ void KeyboardInputTest::globalShortcut()
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     QVERIFY(firstKeyChangedSpy.wait());
 #endif
+}
+
+void KeyboardInputTest::testServerSideKeyRepeat()
+{
+    const auto keyboard = m_firstConnection->kwinSeat->getKeyboard();
+    QSignalSpy enter(keyboard.get(), &Test::WlKeyboard::enter);
+    QSignalSpy key(keyboard.get(), &Test::WlKeyboard::key);
+
+    Test::XdgToplevelWindow window{m_firstConnection.get()};
+    QVERIFY(window.show());
+    QVERIFY(enter.wait());
+
+    uint32_t timestamp = 0;
+    Test::keyboardKeyPressed(KEY_SPACE, timestamp++);
+    QVERIFY(key.wait());
+    QCOMPARE(key.last().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_pressed);
+
+    // afer some time, we should get a key repeat
+    QVERIFY(key.wait());
+    QCOMPARE(key.last().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_repeated);
+
+    Test::keyboardKeyReleased(KEY_SPACE, timestamp++);
+    QVERIFY(key.wait());
+    QCOMPARE(key.last().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_released);
 }
 
 } // namespace KWin
