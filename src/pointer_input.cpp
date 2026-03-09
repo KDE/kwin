@@ -721,38 +721,23 @@ void PointerInputRedirection::updatePointerConstraints()
     const bool canConstrain = m_enableConstraints && focus() == workspace()->activeWindow();
     const auto cf = s->confinedPointer();
     if (cf) {
-        if (cf->isConfined()) {
-            if (!canConstrain) {
+        if (canConstrain) {
+            if (cf->region().contains(flooredPoint(focus()->mapToLocal(m_pos)))) {
+                cf->setConfined(true);
+                m_confined = true;
+                if (!m_confinedPointerRegionConnection) {
+                    m_confinedPointerRegionConnection = connect(cf, &ConfinedPointerV1Interface::regionChanged,
+                                                                this, &PointerInputRedirection::updatePointerConstraints,
+                                                                Qt::QueuedConnection);
+                }
+            } else {
                 cf->setConfined(false);
                 m_confined = false;
-                disconnectConfinedPointerRegionConnection();
             }
-            return;
-        }
-        if (canConstrain && cf->region().contains(flooredPoint(focus()->mapToLocal(m_pos)))) {
-            cf->setConfined(true);
-            m_confined = true;
-            m_confinedPointerRegionConnection = connect(cf, &ConfinedPointerV1Interface::regionChanged, this, [this]() {
-                if (!focus()) {
-                    return;
-                }
-                const auto s = focus()->surface();
-                if (!s) {
-                    return;
-                }
-                const auto cf = s->confinedPointer();
-                if (!cf->region().contains(flooredPoint(focus()->mapToLocal(m_pos)))) {
-                    // pointer no longer in confined region, break the confinement
-                    cf->setConfined(false);
-                    m_confined = false;
-                } else {
-                    if (!cf->isConfined()) {
-                        cf->setConfined(true);
-                        m_confined = true;
-                    }
-                }
-            });
-            return;
+        } else if (cf->isConfined()) {
+            cf->setConfined(false);
+            m_confined = false;
+            disconnectConfinedPointerRegionConnection();
         }
     } else {
         m_confined = false;
