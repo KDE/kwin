@@ -193,6 +193,10 @@ void TestInputCapture::testInputCapture()
             auto event = ei_get_event(ei);
             QCOMPARE(ei_event_get_type(event), EI_EVENT_DEVICE_START_EMULATING);
             ei_event_unref(event);
+            if (ei_device_has_capability(ei_event_get_device(event), EI_DEVICE_CAP_KEYBOARD)) {
+                event = ei_get_event(ei);
+                QCOMPARE(ei_event_get_type(event), EI_EVENT_KEYBOARD_MODIFIERS);
+            }
         }
 
         auto event = ei_get_event(ei);
