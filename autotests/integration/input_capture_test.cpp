@@ -42,10 +42,10 @@ enum class PortalCapabilities {
 class InputCapture
 {
 public:
-    InputCapture()
+    InputCapture(PortalCapabilities capabilities = PortalCapabilities::All)
     {
         auto msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), kwinInputCapturePath, kwinInputCaptureManagerInterface, QStringLiteral("addInputCapture"));
-        msg << static_cast<uint>(PortalCapabilities::All);
+        msg << static_cast<uint>(capabilities);
         QDBusReply<QDBusObjectPath> captureReply = QDBusConnection::sessionBus().call(msg);
         QVERIFY2(captureReply.isValid(), QTest::toString(captureReply.error()));
         dbusPath = captureReply.value().path();
@@ -87,6 +87,7 @@ private Q_SLOTS:
     void testInputCapture_data();
     void testInputCapture();
     void disconnectingEiRemovesCapture();
+    void testModifierHandling();
 };
 
 void TestInputCapture::init()
@@ -356,6 +357,86 @@ void TestInputCapture::disconnectingEiRemovesCapture()
     ei_unref(ei);
 
     QTRY_COMPARE(QDBusConnection::sessionBus().objectRegisteredAt(capture.dbusPath), nullptr);
+}
+
+void TestInputCapture::testModifierHandling()
+{
+    int timestamp = 0;
+
+    InputCapture capture(PortalCapabilities::Keyboard);
+    if (!capture.setupSuccessfully()) {
+        return;
+    }
+
+    auto ei = ei_new_receiver(nullptr);
+    ei_setup_backend_fd(ei, capture.eifd);
+    QSocketNotifier eiNotifier(ei_get_fd(ei), QSocketNotifier::Read);
+    QSignalSpy eiReadableSpy(&eiNotifier, &QSocketNotifier::activated);
+
+    bool setup = false;
+    while (!setup && eiReadableSpy.wait()) {
+        ei_dispatch(ei);
+        while (auto event = ei_get_event(ei)) {
+            switch (const auto type = ei_event_get_type(event)) {
+            case EI_EVENT_CONNECT:
+#if HAVE_EI_EVENT_SYNC
+            case EI_EVENT_SYNC:
+#endif
+                break;
+            case EI_EVENT_SEAT_ADDED:
+                ei_seat_bind_capabilities(ei_event_get_seat(event), EI_DEVICE_CAP_KEYBOARD, nullptr);
+            case EI_EVENT_DEVICE_ADDED:
+                break;
+            case EI_EVENT_DEVICE_RESUMED:
+                setup = true;
+                break;
+            default:
+                qFatal() << "unexpected event:" << type;
+            }
+            ei_event_unref(event);
+        }
+    }
+
+    Test::pointerMotion({0, 0}, ++timestamp);
+    Test::pointerMotionRelative({-1, -1}, ++timestamp);
+
+    QVERIFY(eiReadableSpy.wait());
+    ei_dispatch(ei);
+    auto event = ei_get_event(ei);
+    QCOMPARE(ei_event_get_type(event), EI_EVENT_DEVICE_START_EMULATING);
+    ei_event_unref(event);
+
+    event = ei_get_event(ei);
+    QCOMPARE(ei_event_get_type(event), EI_EVENT_KEYBOARD_MODIFIERS);
+    ei_event_unref(event);
+
+    Test::keyboardKeyPressed(KEY_LEFTSHIFT, ++timestamp);
+
+    QVERIFY(eiReadableSpy.wait());
+    ei_dispatch(ei);
+    event = ei_get_event(ei);
+    QCOMPARE(ei_event_get_type(event), EI_EVENT_KEYBOARD_KEY);
+    QCOMPARE(ei_event_keyboard_get_key(event), KEY_LEFTSHIFT);
+    QCOMPARE(ei_event_keyboard_get_key_is_press(event), true);
+    ei_event_unref(event);
+
+    event = ei_get_event(ei);
+    QCOMPARE(ei_event_get_type(event), EI_EVENT_FRAME);
+    ei_event_unref(event);
+
+    event = ei_get_event(ei);
+    QCOMPARE(ei_event_get_type(event), EI_EVENT_KEYBOARD_MODIFIERS);
+    QCOMPARE(ei_event_keyboard_get_xkb_mods_depressed(event), 1);
+    ei_event_unref(event);
+
+    Test::keyboardKeyReleased(KEY_LEFTSHIFT, ++timestamp);
+
+    auto msg = QDBusMessage::createMethodCall(QDBusConnection::sessionBus().baseService(), kwinInputCapturePath, kwinInputCaptureManagerInterface, QStringLiteral("removeInputCapture"));
+    msg << QDBusObjectPath(capture.dbusPath);
+    QDBusReply<void> removeReply = QDBusConnection::sessionBus().call(msg);
+    QVERIFY2(removeReply.isValid(), QTest::toString(removeReply.error()));
+
+    ei_unref(ei);
 }
 
 WAYLANDTEST_MAIN(TestInputCapture)
