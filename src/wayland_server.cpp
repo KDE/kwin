@@ -317,18 +317,14 @@ void WaylandServer::handleOutputRemoved(BackendOutput *output)
 void WaylandServer::handleOutputEnabled(LogicalOutput *output)
 {
     if (!output->isPlaceholder()) {
-        auto waylandOutput = new OutputInterface(waylandServer()->display(), output);
+        auto waylandOutput = m_outputList->offer(output);
         m_xdgOutputManagerV1->offer(waylandOutput);
-
-        m_waylandOutputs.insert(output, waylandOutput);
     }
 }
 
 void WaylandServer::handleOutputDisabled(LogicalOutput *output)
 {
-    if (auto waylandOutput = m_waylandOutputs.take(output)) {
-        waylandOutput->remove();
-    }
+    m_outputList->withdraw(output);
 }
 
 bool WaylandServer::start()
@@ -472,6 +468,8 @@ bool WaylandServer::init()
             window->installServerDecoration(decoration);
         }
     });
+
+    m_outputList = new OutputList(m_display, m_display);
 
     m_outputManagement = new OutputManagementV2Interface(m_display, m_display);
     m_outputDeviceRegistry = new OutputDeviceRegistryV2(m_display, m_display);

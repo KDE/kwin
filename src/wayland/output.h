@@ -25,7 +25,23 @@ namespace KWin
 {
 class ClientConnection;
 class Display;
+class OutputInterface;
 class OutputInterfacePrivate;
+class OutputListPrivate;
+
+class KWIN_EXPORT OutputList : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit OutputList(Display *display, QObject *parent = nullptr);
+
+    OutputInterface *offer(LogicalOutput *output);
+    void withdraw(LogicalOutput *output);
+
+private:
+    std::unique_ptr<OutputListPrivate> d;
+};
 
 /**
  * The OutputInterface class represents a screen. This class corresponds to the Wayland
@@ -38,6 +54,9 @@ class KWIN_EXPORT OutputInterface : public QObject
 public:
     explicit OutputInterface(Display *display, LogicalOutput *handle, QObject *parent = nullptr);
     ~OutputInterface() override;
+
+    template<typename AnnounceCallback>
+    void offer(wl_client *client, uint32_t version, AnnounceCallback onAnnounce);
 
     bool isRemoved() const;
     void remove();

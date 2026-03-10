@@ -30,7 +30,7 @@ class DataDeviceManagerInterface;
 class ServerSideDecorationManagerInterface;
 class ServerSideDecorationPaletteManagerInterface;
 class SurfaceInterface;
-class OutputInterface;
+class OutputList;
 class PlasmaShellInterface;
 class PlasmaWindowActivationFeedbackInterface;
 class PlasmaVirtualDesktopManagementInterface;
@@ -293,7 +293,7 @@ private:
     PresentationTime *m_presentationTime = nullptr;
     LinuxDrmSyncObjV1Interface *m_linuxDrmSyncObj = nullptr;
     QList<Window *> m_windows;
-    QHash<LogicalOutput *, OutputInterface *> m_waylandOutputs;
+    OutputList *m_outputList;
     OutputDeviceRegistryV2 *m_outputDeviceRegistry;
     DrmLeaseManagerV1 *m_leaseManager = nullptr;
     OutputOrderV1Interface *m_outputOrder = nullptr;

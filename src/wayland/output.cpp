@@ -22,7 +22,79 @@
 
 namespace KWin
 {
-static const int s_version = 4;
+static const int s_version = 5;
+
+class OutputListPrivate : public QtWaylandServer::wl_output_list
+{
+public:
+    explicit OutputListPrivate(Display *display);
+
+    void announce(Resource *target, OutputInterface *output);
+
+    Display *display;
+    QHash<LogicalOutput *, OutputInterface *> outputs;
+
+protected:
+    void output_list_bind_resource(Resource *resource) override;
+    void output_list_stop(Resource *resource) override;
+};
+
+OutputListPrivate::OutputListPrivate(Display *display)
+    : QtWaylandServer::wl_output_list(*display, s_version)
+    , display(display)
+{
+}
+
+void OutputListPrivate::announce(Resource *target, OutputInterface *output)
+{
+    output->offer(target->client(), target->version(), [this, target](wl_resource *resource) {
+        send_output(target->handle, resource);
+    });
+}
+
+void OutputListPrivate::output_list_bind_resource(Resource *resource)
+{
+    if (resource->version() < 5) {
+        wl_resource_post_error(resource->handle, error_unsupported_version, "unsupported version");
+        return;
+    }
+
+    for (const auto &[handle, outputDevice] : std::as_const(outputs).asKeyValueRange()) {
+        announce(resource, outputDevice);
+    }
+}
+
+void OutputListPrivate::output_list_stop(Resource *resource)
+{
+    send_finished(resource->handle);
+    wl_resource_destroy(resource->handle);
+}
+
+OutputList::OutputList(Display *display, QObject *parent)
+    : QObject(parent)
+    , d(std::make_unique<OutputListPrivate>(display))
+{
+}
+
+OutputInterface *OutputList::offer(LogicalOutput *handle)
+{
+    auto &output = d->outputs[handle];
+    output = new OutputInterface(d->display, handle);
+
+    const auto resources = d->resourceMap();
+    for (const auto &resource : resources) {
+        d->announce(resource, output);
+    }
+
+    return output;
+}
+
+void OutputList::withdraw(LogicalOutput *handle)
+{
+    if (auto output = d->outputs.take(handle)) {
+        output->remove();
+    }
+}
 
 class OutputInterfacePrivate : public QtWaylandServer::wl_output
 {
@@ -256,6 +328,16 @@ OutputInterface::~OutputInterface()
     remove();
 }
 
+template<typename AnnounceCallback>
+void OutputInterface::offer(wl_client *client, uint32_t version, AnnounceCallback onAnnounce)
+{
+    wl_resource *resource = wl_resource_create(client, &wl_output_interface, version, 0);
+    onAnnounce(resource);
+
+    // This will add the resource to the resource map and call the bind_resource callback.
+    d->add(resource);
+}
+
 Display *OutputInterface::display() const
 {
     return d->display;
@@ -280,6 +362,13 @@ void OutputInterface::remove()
     d->doneTimer.stop();
     if (d->handle) {
         disconnect(d->handle, nullptr, this, nullptr);
+    }
+
+    const auto resources = d->resourceMap();
+    for (const auto resource : resources) {
+        if (resource->version() >= WL_OUTPUT_REMOVED_SINCE_VERSION) {
+            d->send_removed(resource->handle);
+        }
     }
 
     if (d->display) {
