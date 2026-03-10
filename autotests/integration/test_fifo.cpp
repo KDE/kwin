@@ -44,6 +44,7 @@ private Q_SLOTS:
     void testFifoWaitOnly();
     void testFifoOnSubsurfaces();
     void testBarrierNotClearedByEmptyCommit();
+    void testFifoWithExplicitReset();
 };
 
 class FifoV1Surface : public QObject, public QtWayland::wp_fifo_v1
@@ -412,6 +413,33 @@ void FifoTest::testBarrierNotClearedByEmptyCommit()
     const auto refreshDuration = secondSpy.last().at(1).value<std::chrono::nanoseconds>();
     const auto diff = thisTimestamp - lastTimestamp;
     QCOMPARE_GT(diff, refreshDuration / 2);
+}
+
+void FifoTest::testFifoWithExplicitReset()
+{
+    // This test verifies that pending transactions with fifo barriers
+    // will not be stuck when the shell surface is destroyed
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*surface));
+
+    for (int i = 0; i < 2; i++) {
+        fifo->set_barrier();
+        fifo->wait_barrier();
+        surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    }
+
+    surface->attachBuffer(static_cast<wl_buffer *>(nullptr), QPoint());
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    shellSurface.reset();
+
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface.get()));
+    auto window2 = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window2 && window2->isShown());
 }
 
 }
