@@ -163,7 +163,9 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
         Q_EMIT windowActivated(window ? window->effectWindow() : nullptr);
     });
     connect(ws, &Workspace::deletedRemoved, this, [this](KWin::Window *d) {
-        Q_EMIT windowDeleted(d->effectWindow());
+        if (d->effectWindow()) {
+            Q_EMIT windowDeleted(d->effectWindow());
+        }
     });
     connect(ws->sessionManager(), &SessionManager::stateChanged, this, &KWin::EffectsHandler::sessionStateChanged);
     connect(vds, &VirtualDesktopManager::layoutChanged, this, [this](int width, int height) {
