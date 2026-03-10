@@ -347,6 +347,9 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
         pending->damage = Region();
         pending->bufferDamage = Region();
     }
+    if (!pending->buffer) {
+        pending->fifoBarrier = false;
+    }
     pending->mainSurfaceRoleGeneration = q->mainSurfaceRoleGeneration();
 
     // unless a protocol overrides the properties, we need to assume some YUV->RGB conversion

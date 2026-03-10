@@ -45,6 +45,7 @@ private Q_SLOTS:
     void testFifoOnSubsurfaces();
     void testBarrierNotClearedByEmptyCommit();
     void testFifoWithExplicitReset();
+    void testFifoOnUnmappedSurface();
 };
 
 class FifoV1Surface : public QObject, public QtWayland::wp_fifo_v1
@@ -440,6 +441,33 @@ void FifoTest::testFifoWithExplicitReset()
     std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface.get()));
     auto window2 = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window2 && window2->isShown());
+}
+
+void FifoTest::testFifoOnUnmappedSurface()
+{
+    // This test verifies that transactions on a toplevel that is never mapped
+    // don't get stuck because of fifo barriers
+
+    Test::XdgToplevelWindow window;
+
+    auto fifo = std::make_unique<FifoV1Surface>(Test::fifoManager()->get_fifo(*window.m_surface));
+
+    std::array<std::unique_ptr<Test::WpPresentationFeedback>, 3> frames;
+    for (size_t i = 0; i < frames.size(); i++) {
+        fifo->set_barrier();
+        fifo->wait_barrier();
+        frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*window.m_surface));
+        window.m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    }
+    window.m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    // all frames should be immediately discarded
+    QSignalSpy spy0(frames[0].get(), &Test::WpPresentationFeedback::discarded);
+    QSignalSpy spy1(frames[1].get(), &Test::WpPresentationFeedback::discarded);
+    QSignalSpy spy2(frames[2].get(), &Test::WpPresentationFeedback::discarded);
+    QVERIFY(spy0.wait());
+    QVERIFY(spy1.count() || spy1.wait());
+    QVERIFY(spy2.count() || spy2.wait());
 }
 
 }
