@@ -23,6 +23,7 @@ public:
     EisInputCaptureFilter(EisInputCaptureManager *m_manager);
 
     void clearTouches();
+    void setPendingModifierChange(bool pendingModifierChange);
 
     bool pointerMotion(PointerMotionEvent *event) override;
     bool pointerButton(PointerButtonEvent *event) override;
@@ -54,6 +55,7 @@ public:
 private:
     EisInputCaptureManager *m_manager;
     QHash<qint32, eis_touch *> m_touches;
+    bool m_hasPendingModifierChange = false;
 };
 
 }

@@ -112,6 +112,15 @@ EisInputCaptureManager::EisInputCaptureManager()
         }
     });
 
+    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this] {
+        // This will not handle other sources of modifier changes like changing keyboard
+        // layout but should be fine for now as all input is filtered out while a capture
+        // is active
+        if (m_activeCapture) {
+            m_inputFilter->setPendingModifierChange(true);
+        }
+    });
+
     m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
     m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
     connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, [this](const QString &service) {
@@ -209,6 +218,7 @@ void EisInputCaptureManager::deactivate()
 {
     m_activeCapture = nullptr;
     m_inputFilter->clearTouches();
+    m_inputFilter->setPendingModifierChange(false);
     input()->uninstallInputEventFilter(m_inputFilter.get());
     Cursors::self()->showCursor();
 }
