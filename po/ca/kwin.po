@@ -4233,6 +4233,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "L'Xwayland ha fallat"
-
-#~ msgid "Position of output %s is negative, that is not supported"
-#~ msgstr "La posició de la sortida %s és negativa. Això no està implementat"
