@@ -758,6 +758,7 @@ QPoint BackendOutput::deviceOffset() const
 // TODO move these quirks to libdisplay-info?
 static const std::array s_brokenDdcCi = {
     std::make_pair(QByteArrayLiteral("SAM"), QByteArrayLiteral("Odyssey G5")),
+    std::make_pair(QByteArrayLiteral("SAM"), QByteArrayLiteral("LS24D60xU")),
 };
 
 bool BackendOutput::isDdcCiKnownBroken() const
