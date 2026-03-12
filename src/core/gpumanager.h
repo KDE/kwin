@@ -10,6 +10,8 @@
 #include "kwin_export.h"
 #include "renderdevice.h"
 
+#include <sys/types.h>
+
 class QSocketNotifier;
 
 namespace KWin
