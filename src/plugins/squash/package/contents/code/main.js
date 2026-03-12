@@ -50,6 +50,7 @@ var squashEffect = {
             window: window,
             curve: QEasingCurve.InCubic,
             duration: squashEffect.duration,
+            keepAlive: false,
             animations: [
                 {
                     type: Effect.Size,
@@ -120,6 +121,7 @@ var squashEffect = {
             window: window,
             curve: QEasingCurve.OutCubic,
             duration: squashEffect.duration,
+            keepAlive: false,
             animations: [
                 {
                     type: Effect.Size,
