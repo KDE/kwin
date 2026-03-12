@@ -169,9 +169,9 @@ public:
     /**
      * Returns the window geometry of the XdgSurfaceInterface.
      *
-     * This method will return an invalid Rect if the window geometry is not set by the client.
+     * This method will return an invalid RectF if the window geometry is not set by the client.
      */
-    Rect windowGeometry() const;
+    RectF windowGeometry() const;
 
     /**
      * Returns the XdgSurfaceInterface for the specified wayland resource object \a resource.
@@ -192,7 +192,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the window geometry has been changed.
      */
-    void windowGeometryChanged(const Rect &rect);
+    void windowGeometryChanged(const RectF &rect);
 
     /**
      * This signal is emitted when the surface has been unmapped and its state has been reset.
@@ -299,12 +299,12 @@ public:
     /**
      * Returns the minimum window geometry size of the toplevel surface.
      */
-    QSize minimumSize() const;
+    QSizeF minimumSize() const;
 
     /**
      * Returns the maximum window geometry size of the toplevel surface.
      */
-    QSize maximumSize() const;
+    QSizeF maximumSize() const;
 
     QIcon customIcon() const;
 
@@ -317,7 +317,7 @@ public:
      * Sends a configure event to the client. \a size specifies the new window geometry size. A size
      * of zero means the client should decide its own window dimensions.
      */
-    quint32 sendConfigure(const QSize &size, const States &states);
+    quint32 sendConfigure(const QSizeF &size, const States &states);
 
     /**
      * Sends a close event to the client. The client may choose to ignore this request.
@@ -328,7 +328,7 @@ public:
      * Sends an event to the client specifying the maximum bounds for the surface size. Must be
      * called before sendConfigure().
      */
-    void sendConfigureBounds(const QSize &size);
+    void sendConfigureBounds(const QSizeF &size);
 
     /**
      * Sends an event to the client specifying allowed actions by the compositor.
@@ -373,17 +373,17 @@ Q_SIGNALS:
      * This signal is emitted when the toplevel has requested the window menu to be shown at
      * \a pos. The \a seat and the \a serial indicate the user action that triggered the request.
      */
-    void windowMenuRequested(KWin::SeatInterface *seat, const QPoint &pos, quint32 serial);
+    void windowMenuRequested(KWin::SeatInterface *seat, const QPointF &pos, quint32 serial);
 
     /**
      * This signal is emitted when the toplevel's minimum size has been changed.
      */
-    void minimumSizeChanged(const QSize &size);
+    void minimumSizeChanged(const QSizeF &size);
 
     /**
      * This signal is emitted when the toplevel's maximum size has been changed.
      */
-    void maximumSizeChanged(const QSize &size);
+    void maximumSizeChanged(const QSizeF &size);
 
     void customIconChanged();
 
@@ -481,7 +481,7 @@ public:
     /**
      * Returns the window geometry size of the surface that is to be positioned.
      */
-    QSize size() const;
+    QSizeF size() const;
 
     /**
      * Returns whether the surface should respond to movements in its parent window.
@@ -501,7 +501,16 @@ public:
 
 private:
     XdgPositioner(const QSharedDataPointer<XdgPositionerData> &data);
+
+    void setPopupScale(qreal scale);
+    void setParentScale(qreal scale);
+
     QSharedDataPointer<XdgPositionerData> d;
+    qreal m_popupScale = 1;
+    qreal m_parentScale = 1;
+
+    friend class XdgPopupInterface;
+    friend class XdgPopupInterfacePrivate;
 };
 
 /**
@@ -554,7 +563,7 @@ public:
     /**
      * Sends a configure event to the client and returns the serial number of the event.
      */
-    quint32 sendConfigure(const Rect &rect);
+    quint32 sendConfigure(const RectF &rect);
 
     /**
      * Sends a popup done event to the client.

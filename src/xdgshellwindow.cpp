@@ -271,9 +271,9 @@ void XdgSurfaceWindow::moveResizeInternal(const RectF &rect, MoveResizeMode mode
         // and current client sizes have to be rounded to integers
         const QSizeF requestedFrameSize = snapToPixels(rect.size(), nextTargetScale());
         const QSizeF requestedClientSize = nextFrameSizeToClientSize(requestedFrameSize);
-        const QSize roundedRequestedClientSize = requestedClientSize.toSize();
+        const QSizeF roundedRequestedClientSize = surface()->snappedSize(requestedClientSize);
 
-        const QSize roundedClientSize = clientSize().toSize();
+        const QSizeF roundedClientSize = surface()->snappedSize(clientSize());
         if (roundedRequestedClientSize == roundedClientSize) {
             const RectF snappedRect = RectF(rect.topLeft(), nextClientSizeToFrameSize(snapToPixels(roundedClientSize, nextTargetScale())));
             updateGeometry(m_nextGravity.apply(snappedRect, rect));
@@ -1042,8 +1042,7 @@ void XdgToplevelWindow::handleAppIdChanged()
     setDesktopFileName(applicationId);
 }
 
-void XdgToplevelWindow::handleWindowMenuRequested(SeatInterface *seat, const QPoint &surfacePos,
-                                                  quint32 serial)
+void XdgToplevelWindow::handleWindowMenuRequested(SeatInterface *seat, const QPointF &surfacePos, quint32 serial)
 {
     performMousePressCommand(Options::MouseOperationsMenu, mapFromLocal(surfacePos));
 }

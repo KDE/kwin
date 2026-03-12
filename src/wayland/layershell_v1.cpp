@@ -256,7 +256,7 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_get_popup(Resource *r
         return;
     }
 
-    popupPrivate->parentSurface = surface;
+    popupPrivate->attachTo(surface);
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_ack_configure(Resource *resource, uint32_t serial)

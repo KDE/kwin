@@ -211,8 +211,7 @@ protected:
 private:
     void handleWindowTitleChanged();
     void handleAppIdChanged();
-    void handleWindowMenuRequested(SeatInterface *seat,
-                                   const QPoint &surfacePos, quint32 serial);
+    void handleWindowMenuRequested(SeatInterface *seat, const QPointF &surfacePos, quint32 serial);
     void handleMoveRequested(SeatInterface *seat, quint32 serial);
     void handleResizeRequested(SeatInterface *seat, Gravity anchor, quint32 serial);
     void handleStatesAcknowledged(const XdgToplevelInterface::States &states);
