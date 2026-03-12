@@ -141,6 +141,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
 #endif
         {QStringLiteral("layer"), NormalLayer},
         {QStringLiteral("excludeFromCapture"), false},
+        {QStringLiteral("hasTransientParent"), false},
     };
 
     // let's get the window info
@@ -282,6 +283,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
 #endif
         {QStringLiteral("layer"), NormalLayer},
         {QStringLiteral("excludeFromCapture"), false},
+        {QStringLiteral("hasTransientParent"), false},
     };
 
     // let's get the window info

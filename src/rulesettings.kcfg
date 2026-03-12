@@ -74,6 +74,17 @@
       <max code="true">Rules::LastStringMatch</max>
     </entry>
 
+    <entry name="hastransientparent" type="Bool">
+      <label>Has parent window</label>
+      <default>false</default>
+    </entry>
+    <entry name="hastransientparentmatch" type="Int">
+      <label>Has parent window match type</label>
+      <default code="true">Rules::UnimportantBoolMatch</default>
+      <min code="true">Rules::FirstBoolMatch</min>
+      <max code="true">Rules::LastBoolMatch</max>
+    </entry>
+
     <entry name="types" type="UInt">
       <label>Window types that match</label>
       <default>NET::AllTypesMask</default>

@@ -441,6 +441,11 @@ void RulesModel::populateRuleList()
                                     QIcon::fromTheme("edit-comment")));
     tag->setFlag(RuleItem::AffectsDescription);
 
+    addRule(new RuleItem(QLatin1StringView("hastransientparent"),
+                         RulePolicy::BoolMatch, RuleItem::Boolean,
+                         i18n("Has parent window"), i18n("Window matching"),
+                         QIcon::fromTheme("window-duplicate")));
+
     // Size & Position
     auto position = addRule(new RuleItem(QLatin1StringView("position"),
                                          RulePolicy::SetRule, RuleItem::Point,
@@ -753,6 +758,7 @@ const QHash<QString, QString> RulesModel::x11PropertyHash()
         {"desktops", "desktops"},
         {"layer", "layer"},
         {"excludeFromCapture", "excludefromcapture"},
+        {"hasTransientParent", "hastransientparent"},
     };
     return propertyToRule;
 }

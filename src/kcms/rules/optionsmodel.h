@@ -108,6 +108,7 @@ public:
     enum Type {
         NoPolicy,
         StringMatch,
+        BoolMatch,
         SetRule,
         ForceRule,
     };

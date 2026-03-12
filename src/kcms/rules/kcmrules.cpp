@@ -363,6 +363,10 @@ QModelIndex KCMKWinRules::findRuleWithProperties(const QVariantMap &info, bool w
                 score += settings->tagmatch() == Rules::ExactMatch ? 3 : 1;
                 generic = false;
             }
+            if (settings->hastransientparentmatch() != Rules::UnimportantBoolMatch) {
+                score += 3; // really 3? FIXME when I do "for this window" on kwrite main window it still uses the rule with "no parent"
+                generic = false;
+            }
             if (settings->types() != NET::AllTypesMask) {
                 // Checks that type fits the mask, and only one of the types
                 int bits = 0;
@@ -406,6 +410,7 @@ void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVar
     const QString title = info.value("caption").toString();
     const QString machine = info.value("clientMachine").toString();
     const QString tag = info.value("tag").toString();
+    const bool hasTransientParent = info.value("hasTransientParent").toBool();
 
     settings->setDefaults();
 
@@ -484,6 +489,9 @@ void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVar
     } else {
         settings->setTagmatch(Rules::ExactMatch);
     }
+    settings->setHastransientparent(hasTransientParent);
+    // really?
+    settings->setTagmatch(Rules::UnimportantBoolMatch);
 }
 
 K_PLUGIN_CLASS_WITH_JSON(KCMKWinRules, "kcm_kwinrules.json");

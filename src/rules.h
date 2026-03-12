@@ -128,6 +128,12 @@ public:
         ApplyNow, // apply immediately, then forget the setting
         ForceTemporarily, // apply and force until the window is withdrawn
     };
+    enum BoolMatch {
+        UnimportantBoolMatch,
+        FirstBoolMatch = UnimportantBoolMatch,
+        ExactBoolMatch,
+        LastBoolMatch = ExactBoolMatch,
+    };
     enum StringMatch {
         FirstStringMatch,
         UnimportantMatch = FirstStringMatch,
@@ -201,6 +207,7 @@ private:
     bool matchTitle(const QString &match_title) const;
     bool matchClientMachine(const QString &match_machine, bool local) const;
     bool matchTag(const QString &match_tag) const;
+    bool matchTransientParent(const Window *transientParent) const;
 #ifdef KCMRULES
 
 private:
@@ -230,6 +237,8 @@ private:
     StringMatch clientmachinematch;
     QString tag;
     StringMatch tagmatch;
+    bool hastransientparent;
+    BoolMatch hastransientparentmatch;
     WindowTypes types; // types for matching
     PlacementPolicy placement;
     ForceRule placementrule;

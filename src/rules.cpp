@@ -43,6 +43,8 @@ Rules::Rules()
     , titlematch(UnimportantMatch)
     , clientmachinematch(UnimportantMatch)
     , tagmatch(UnimportantMatch)
+    , hastransientparent(false)
+    , hastransientparentmatch(UnimportantBoolMatch)
     , types(NET::AllTypesMask)
     , placementrule(UnusedForceRule)
     , positionrule(UnusedSetRule)
@@ -115,6 +117,8 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_MATCH_STRING(title, );
     READ_MATCH_STRING(clientmachine, .toLower());
     READ_MATCH_STRING(tag, );
+    hastransientparent = settings->hastransientparent();
+    hastransientparentmatch = static_cast<BoolMatch>(settings->hastransientparentmatch());
     types = WindowTypes(settings->types());
     READ_FORCE_RULE(placement, );
     READ_SET_RULE(position);
@@ -211,6 +215,9 @@ void Rules::write(RuleSettings *settings) const
     WRITE_MATCH_STRING(title, Title, false);
     WRITE_MATCH_STRING(clientmachine, Clientmachine, false);
     WRITE_MATCH_STRING(tag, Tag, false);
+    settings->setHastransientparentmatch(hastransientparentmatch);
+    // FIXME for string it does "isempty || force" but we have a bool. should we have an optional<bool>?! but how?
+    settings->setHastransientparent(hastransientparent);
     settings->setTypes(types);
     WRITE_FORCE_RULE(placement, Placement, );
     WRITE_SET_RULE(position, Position, );
@@ -466,6 +473,14 @@ bool Rules::matchTag(const QString &match_tag) const
     return true;
 }
 
+bool Rules::matchTransientParent(const Window *transientParent) const
+{
+    if (hastransientparentmatch == ExactBoolMatch) {
+        return bool(transientParent) == hastransientparent;
+    }
+    return true;
+}
+
 #ifndef KCMRULES
 bool Rules::match(const Window *c) const
 {
@@ -491,6 +506,9 @@ bool Rules::match(const Window *c) const
         return false;
     }
     if (!matchTag(c->tag())) {
+        return false;
+    }
+    if (!matchTransientParent(c->transientFor())) {
         return false;
     }
     return true;

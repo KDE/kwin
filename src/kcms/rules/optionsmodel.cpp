@@ -183,6 +183,7 @@ QString RulePolicy::policyKey(const QString &key) const
     case NoPolicy:
         return QString();
     case StringMatch:
+    case BoolMatch:
         return QStringLiteral("%1match").arg(key);
     case SetRule:
     case ForceRule:
@@ -199,6 +200,10 @@ QList<RulePolicy::Data> RulePolicy::policyOptions(RulePolicy::Type type)
         {Rules::ExactMatch, i18n("Exact match")},
         {Rules::SubstringMatch, i18n("Substring match")},
         {Rules::RegExpMatch, i18n("Regular expression")}};
+    static const auto boolMatchOptions = QList<RulePolicy::Data>{
+        {Rules::UnimportantMatch, i18n("Unimportant")},
+        {Rules::ExactMatch, i18n("Exact match")},
+    };
 
     static const auto setRuleOptions = QList<RulePolicy::Data>{
         {Rules::Apply,
@@ -236,6 +241,8 @@ QList<RulePolicy::Data> RulePolicy::policyOptions(RulePolicy::Type type)
         return {};
     case StringMatch:
         return stringMatchOptions;
+    case BoolMatch:
+        return boolMatchOptions;
     case SetRule:
         return setRuleOptions;
     case ForceRule:
