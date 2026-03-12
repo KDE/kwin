@@ -1269,8 +1269,8 @@ inline RegionF::RegionF(RegionF &&other)
 
 inline RegionF RegionF::infinite()
 {
-    return RegionF(std::numeric_limits<qreal>::min() / 2,
-                   std::numeric_limits<qreal>::min() / 2,
+    return RegionF(std::numeric_limits<qreal>::lowest() / 2,
+                   std::numeric_limits<qreal>::lowest() / 2,
                    std::numeric_limits<qreal>::max(),
                    std::numeric_limits<qreal>::max());
 }
