@@ -42,14 +42,9 @@ static QLayout *setupOutput(Registry::AnnouncedInterface outputInterface, Regist
 {
     Output *output = registry->createOutput(outputInterface.name, outputInterface.version, registry);
     QLabel *label = new QLabel(output->model());
-    QObject::connect(
-        output,
-        &Output::changed,
-        label,
-        [label, output] {
-            label->setText(output->model());
-        },
-        Qt::QueuedConnection);
+    QObject::connect(output, &Output::changed, label, [label, output] {
+        label->setText(output->model());
+    }, Qt::QueuedConnection);
 
     Dpms *dpms = nullptr;
     if (manager) {
@@ -75,26 +70,16 @@ static QLayout *setupOutput(Registry::AnnouncedInterface outputInterface, Regist
     bg->addButton(offButton, QDialogButtonBox::ActionRole);
 
     if (dpms) {
-        QObject::connect(
-            dpms,
-            &Dpms::supportedChanged,
-            supportedLabel,
-            [supportedLabel, dpms, standbyButton, suspendButton, offButton] {
-                const bool supported = dpms->isSupported();
-                supportedLabel->setText(supportedToString(supported));
-                standbyButton->setEnabled(supported);
-                suspendButton->setEnabled(supported);
-                offButton->setEnabled(supported);
-            },
-            Qt::QueuedConnection);
-        QObject::connect(
-            dpms,
-            &Dpms::modeChanged,
-            modeLabel,
-            [modeLabel, dpms] {
-                modeLabel->setText(modeToString(dpms->mode()));
-            },
-            Qt::QueuedConnection);
+        QObject::connect(dpms, &Dpms::supportedChanged, supportedLabel, [supportedLabel, dpms, standbyButton, suspendButton, offButton] {
+            const bool supported = dpms->isSupported();
+            supportedLabel->setText(supportedToString(supported));
+            standbyButton->setEnabled(supported);
+            suspendButton->setEnabled(supported);
+            offButton->setEnabled(supported);
+        }, Qt::QueuedConnection);
+        QObject::connect(dpms, &Dpms::modeChanged, modeLabel, [modeLabel, dpms] {
+            modeLabel->setText(modeToString(dpms->mode()));
+        }, Qt::QueuedConnection);
         QObject::connect(standbyButton, &QPushButton::clicked, dpms, [dpms] {
             dpms->requestMode(Dpms::Mode::Standby);
         });
@@ -123,44 +108,39 @@ int main(int argc, char **argv)
     ConnectionThread *connection = ConnectionThread::fromApplication();
     Registry registry;
     registry.create(connection);
-    QObject::connect(
-        &registry,
-        &Registry::interfacesAnnounced,
-        &app,
-        [&registry, &window] {
-            const bool hasDpms = registry.hasInterface(Registry::Interface::Dpms);
-            QLabel *hasDpmsLabel = new QLabel(&window);
-            if (hasDpms) {
-                hasDpmsLabel->setText(QStringLiteral("Compositor provides a DpmsManager"));
-            } else {
-                hasDpmsLabel->setText(QStringLiteral("Compositor does not provide a DpmsManager"));
-            }
+    QObject::connect(&registry, &Registry::interfacesAnnounced, &app, [&registry, &window] {
+        const bool hasDpms = registry.hasInterface(Registry::Interface::Dpms);
+        QLabel *hasDpmsLabel = new QLabel(&window);
+        if (hasDpms) {
+            hasDpmsLabel->setText(QStringLiteral("Compositor provides a DpmsManager"));
+        } else {
+            hasDpmsLabel->setText(QStringLiteral("Compositor does not provide a DpmsManager"));
+        }
 
-            QVBoxLayout *layout = new QVBoxLayout;
-            layout->addWidget(hasDpmsLabel);
+        QVBoxLayout *layout = new QVBoxLayout;
+        layout->addWidget(hasDpmsLabel);
+        QFrame *hline = new QFrame;
+        hline->setFrameShape(QFrame::HLine);
+        layout->addWidget(hline);
+
+        DpmsManager *dpmsManager = nullptr;
+        if (hasDpms) {
+            const auto dpmsData = registry.interface(Registry::Interface::Dpms);
+            dpmsManager = registry.createDpmsManager(dpmsData.name, dpmsData.version);
+        }
+
+        // get all Outputs
+        const auto outputs = registry.interfaces(Registry::Interface::Output);
+        for (auto o : outputs) {
+            layout->addLayout(setupOutput(o, &registry, dpmsManager));
             QFrame *hline = new QFrame;
             hline->setFrameShape(QFrame::HLine);
             layout->addWidget(hline);
+        }
 
-            DpmsManager *dpmsManager = nullptr;
-            if (hasDpms) {
-                const auto dpmsData = registry.interface(Registry::Interface::Dpms);
-                dpmsManager = registry.createDpmsManager(dpmsData.name, dpmsData.version);
-            }
-
-            // get all Outputs
-            const auto outputs = registry.interfaces(Registry::Interface::Output);
-            for (auto o : outputs) {
-                layout->addLayout(setupOutput(o, &registry, dpmsManager));
-                QFrame *hline = new QFrame;
-                hline->setFrameShape(QFrame::HLine);
-                layout->addWidget(hline);
-            }
-
-            window.setLayout(layout);
-            window.show();
-        },
-        Qt::QueuedConnection);
+        window.setLayout(layout);
+        window.show();
+    }, Qt::QueuedConnection);
     registry.setup();
 
     return app.exec();

@@ -420,12 +420,9 @@ VirtualDesktop *VirtualDesktopManager::desktopForX11Id(uint id) const
 
 VirtualDesktop *VirtualDesktopManager::desktopForId(const QString &id) const
 {
-    auto desk = std::find_if(
-        m_desktops.constBegin(),
-        m_desktops.constEnd(),
-        [id](const VirtualDesktop *desk) {
-            return desk->id() == id;
-        });
+    auto desk = std::find_if(m_desktops.constBegin(), m_desktops.constEnd(), [id](const VirtualDesktop *desk) {
+        return desk->id() == id;
+    });
 
     if (desk != m_desktops.constEnd()) {
         return *desk;

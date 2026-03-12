@@ -382,11 +382,9 @@ QList<EffectWindow *> getMainWindows(T *c)
     const auto mainwindows = c->mainWindows();
     QList<EffectWindow *> ret;
     ret.reserve(mainwindows.size());
-    std::transform(std::cbegin(mainwindows), std::cend(mainwindows),
-                   std::back_inserter(ret),
-                   [](auto window) {
-                       return window->effectWindow();
-                   });
+    std::transform(std::cbegin(mainwindows), std::cend(mainwindows), std::back_inserter(ret), [](auto window) {
+        return window->effectWindow();
+    });
     return ret;
 }
 

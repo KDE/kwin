@@ -155,10 +155,9 @@ void SheetEffect::slotWindowAdded(EffectWindow *w)
     animation.timeLine.setEasingCurve(QEasingCurve::Linear);
 
     const auto windows = effects->stackingOrder();
-    auto parentIt = std::find_if(windows.constBegin(), windows.constEnd(),
-                                 [w](EffectWindow *p) {
-                                     return p->findModal() == w;
-                                 });
+    auto parentIt = std::find_if(windows.constBegin(), windows.constEnd(), [w](EffectWindow *p) {
+        return p->findModal() == w;
+    });
     if (parentIt != windows.constEnd()) {
         animation.parentY = (*parentIt)->y();
     }
@@ -188,10 +187,9 @@ void SheetEffect::slotWindowClosed(EffectWindow *w)
     animation.timeLine.setEasingCurve(QEasingCurve::Linear);
 
     const auto windows = effects->stackingOrder();
-    auto parentIt = std::find_if(windows.constBegin(), windows.constEnd(),
-                                 [w](EffectWindow *p) {
-                                     return p->findModal() == w;
-                                 });
+    auto parentIt = std::find_if(windows.constBegin(), windows.constEnd(), [w](EffectWindow *p) {
+        return p->findModal() == w;
+    });
     if (parentIt != windows.constEnd()) {
         animation.parentY = (*parentIt)->y();
     }

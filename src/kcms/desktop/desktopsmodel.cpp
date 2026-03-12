@@ -42,48 +42,45 @@ DesktopsModel::DesktopsModel(QObject *parent)
     qDBusRegisterMetaType<KWin::DBusDesktopDataStruct>();
     qDBusRegisterMetaType<KWin::DBusDesktopDataVector>();
 
-    m_serviceWatcher = new QDBusServiceWatcher(s_serviceName,
-                                               QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForOwnerChange);
+    m_serviceWatcher = new QDBusServiceWatcher(s_serviceName, QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForOwnerChange);
 
-    QObject::connect(m_serviceWatcher, &QDBusServiceWatcher::serviceRegistered,
-                     this, [this]() {
-                         reset();
-                     });
+    QObject::connect(m_serviceWatcher, &QDBusServiceWatcher::serviceRegistered, this, [this]() {
+        reset();
+    });
 
-    QObject::connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered,
-                     this, [this]() {
-                         QDBusConnection::sessionBus().disconnect(
-                             s_serviceName,
-                             s_virtDesktopsPath,
-                             s_virtualDesktopsInterface,
-                             QStringLiteral("desktopCreated"),
-                             this,
-                             SLOT(desktopCreated(QString, KWin::DBusDesktopDataStruct)));
+    QObject::connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, [this]() {
+        QDBusConnection::sessionBus().disconnect(
+            s_serviceName,
+            s_virtDesktopsPath,
+            s_virtualDesktopsInterface,
+            QStringLiteral("desktopCreated"),
+            this,
+            SLOT(desktopCreated(QString, KWin::DBusDesktopDataStruct)));
 
-                         QDBusConnection::sessionBus().disconnect(
-                             s_serviceName,
-                             s_virtDesktopsPath,
-                             s_virtualDesktopsInterface,
-                             QStringLiteral("desktopRemoved"),
-                             this,
-                             SLOT(desktopRemoved(QString)));
+        QDBusConnection::sessionBus().disconnect(
+            s_serviceName,
+            s_virtDesktopsPath,
+            s_virtualDesktopsInterface,
+            QStringLiteral("desktopRemoved"),
+            this,
+            SLOT(desktopRemoved(QString)));
 
-                         QDBusConnection::sessionBus().disconnect(
-                             s_serviceName,
-                             s_virtDesktopsPath,
-                             s_virtualDesktopsInterface,
-                             QStringLiteral("desktopDataChanged"),
-                             this,
-                             SLOT(desktopDataChanged(QString, KWin::DBusDesktopDataStruct)));
+        QDBusConnection::sessionBus().disconnect(
+            s_serviceName,
+            s_virtDesktopsPath,
+            s_virtualDesktopsInterface,
+            QStringLiteral("desktopDataChanged"),
+            this,
+            SLOT(desktopDataChanged(QString, KWin::DBusDesktopDataStruct)));
 
-                         QDBusConnection::sessionBus().disconnect(
-                             s_serviceName,
-                             s_virtDesktopsPath,
-                             s_virtualDesktopsInterface,
-                             QStringLiteral("rowsChanged"),
-                             this,
-                             SLOT(desktopRowsChanged(uint)));
-                     });
+        QDBusConnection::sessionBus().disconnect(
+            s_serviceName,
+            s_virtDesktopsPath,
+            s_virtualDesktopsInterface,
+            QStringLiteral("rowsChanged"),
+            this,
+            SLOT(desktopRowsChanged(uint)));
+    });
 
     reset();
 }

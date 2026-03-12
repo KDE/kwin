@@ -57,19 +57,14 @@ WaylandClientTest::~WaylandClientTest()
 
 void WaylandClientTest::init()
 {
-    connect(
-        m_connectionThreadObject,
-        &ConnectionThread::connected,
-        this,
-        [this]() {
-            // create the event queue for the main gui thread
-            m_eventQueue = new EventQueue(this);
-            m_eventQueue->setup(m_connectionThreadObject);
-            // setup registry
-            Registry *registry = new Registry(this);
-            setupRegistry(registry);
-        },
-        Qt::QueuedConnection);
+    connect(m_connectionThreadObject, &ConnectionThread::connected, this, [this]() {
+        // create the event queue for the main gui thread
+        m_eventQueue = new EventQueue(this);
+        m_eventQueue->setup(m_connectionThreadObject);
+        // setup registry
+        Registry *registry = new Registry(this);
+        setupRegistry(registry);
+    }, Qt::QueuedConnection);
 
     m_connectionThreadObject->moveToThread(m_connectionThread);
     m_connectionThread->start();

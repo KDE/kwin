@@ -500,19 +500,17 @@ void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedWindowImpl *
     QCoreApplication::instance()->sendEvent(now->decoration(), &event);
     now->window()->processDecorationMove(pos, m_lastPosition);
 
-    m_decorationGeometryConnection = connect(
-        decoration()->window(), &Window::frameGeometryChanged, this, [this]() {
-            // ensure maximize button gets the leave event when maximizing/restore a window, see BUG 385140
-            const auto oldDeco = decoration();
-            update();
-            if (oldDeco && oldDeco == decoration() && !decoration()->window()->isInteractiveMove() && !decoration()->window()->isInteractiveResize()) {
-                // position of window did not change, we need to send HoverMotion manually
-                const QPointF p = m_lastPosition - decoration()->window()->pos();
-                QHoverEvent event(QEvent::HoverMove, p, p);
-                QCoreApplication::instance()->sendEvent(decoration()->decoration(), &event);
-            }
-        },
-        Qt::QueuedConnection);
+    m_decorationGeometryConnection = connect(decoration()->window(), &Window::frameGeometryChanged, this, [this]() {
+        // ensure maximize button gets the leave event when maximizing/restore a window, see BUG 385140
+        const auto oldDeco = decoration();
+        update();
+        if (oldDeco && oldDeco == decoration() && !decoration()->window()->isInteractiveMove() && !decoration()->window()->isInteractiveResize()) {
+            // position of window did not change, we need to send HoverMotion manually
+            const QPointF p = m_lastPosition - decoration()->window()->pos();
+            QHoverEvent event(QEvent::HoverMove, p, p);
+            QCoreApplication::instance()->sendEvent(decoration()->decoration(), &event);
+        }
+    }, Qt::QueuedConnection);
 
     // if our decoration gets destroyed whilst it has focus, we pass focus on to the same client
     m_decorationDestroyedConnection = connect(now, &QObject::destroyed, this, &TabletInputRedirection::update, Qt::QueuedConnection);

@@ -797,11 +797,9 @@ QStringList Window::desktopIds() const
     const auto desks = desktops();
     QStringList ids;
     ids.reserve(desks.count());
-    std::transform(desks.constBegin(), desks.constEnd(),
-                   std::back_inserter(ids),
-                   [](const VirtualDesktop *vd) {
-                       return vd->id();
-                   });
+    std::transform(desks.constBegin(), desks.constEnd(), std::back_inserter(ids), [](const VirtualDesktop *vd) {
+        return vd->id();
+    });
     return ids;
 }
 

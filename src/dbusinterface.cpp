@@ -155,22 +155,21 @@ QVariantMap DBusInterface::queryWindowInfo()
 {
     m_replyQueryWindowInfo = message();
     setDelayedReply(true);
-    kwinApp()->startInteractiveWindowSelection(
-        [this](Window *t) {
-            if (!t) {
-                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
-                    QStringLiteral("org.kde.KWin.Error.UserCancel"),
-                    QStringLiteral("User cancelled the query")));
-                return;
-            }
-            if (t->isClient()) {
-                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createReply(clientToVariantMap(t)));
-            } else {
-                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
-                    QStringLiteral("org.kde.KWin.Error.InvalidWindow"),
-                    QStringLiteral("Tried to query information about an unmanaged window")));
-            }
-        });
+    kwinApp()->startInteractiveWindowSelection([this](Window *t) {
+        if (!t) {
+            QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
+                QStringLiteral("org.kde.KWin.Error.UserCancel"),
+                QStringLiteral("User cancelled the query")));
+            return;
+        }
+        if (t->isClient()) {
+            QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createReply(clientToVariantMap(t)));
+        } else {
+            QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
+                QStringLiteral("org.kde.KWin.Error.InvalidWindow"),
+                QStringLiteral("Tried to query information about an unmanaged window")));
+        }
+    });
     return QVariantMap{};
 }
 
@@ -405,11 +404,9 @@ DBusDesktopDataVector VirtualDesktopManagerDBusInterface::desktops() const
     DBusDesktopDataVector desktopVect;
     desktopVect.reserve(m_manager->count());
 
-    std::transform(desks.constBegin(), desks.constEnd(),
-                   std::back_inserter(desktopVect),
-                   [](const VirtualDesktop *vd) {
-                       return DBusDesktopDataStruct{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
-                   });
+    std::transform(desks.constBegin(), desks.constEnd(), std::back_inserter(desktopVect), [](const VirtualDesktop *vd) {
+        return DBusDesktopDataStruct{.position = vd->x11DesktopNumber() - 1, .id = vd->id(), .name = vd->name()};
+    });
 
     return desktopVect;
 }

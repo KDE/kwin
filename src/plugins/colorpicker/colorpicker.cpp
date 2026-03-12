@@ -82,69 +82,68 @@ QColor ColorPickerEffect::pick()
     m_replyMessage = message();
     setDelayedReply(true);
     showInfoMessage();
-    effects->startInteractivePositionSelection(
-        [this](const QPointF &p) {
-            hideInfoMessage();
-            if (p == QPointF(-1, -1)) {
-                // error condition
-                QDBusConnection::sessionBus().send(m_replyMessage.createErrorReply(QStringLiteral("org.kde.kwin.ColorPicker.Error.Cancelled"), "Color picking got cancelled"));
+    effects->startInteractivePositionSelection([this](const QPointF &p) {
+        hideInfoMessage();
+        if (p == QPointF(-1, -1)) {
+            // error condition
+            QDBusConnection::sessionBus().send(m_replyMessage.createErrorReply(QStringLiteral("org.kde.kwin.ColorPicker.Error.Cancelled"), "Color picking got cancelled"));
+            setPicking(false);
+        } else {
+            const auto turnOffPicking = qScopeGuard([this] {
                 setPicking(false);
-            } else {
-                const auto turnOffPicking = qScopeGuard([this] {
-                    setPicking(false);
-                });
+            });
 
-                const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
-                if (!eglBackend) {
-                    return;
-                }
-                const auto context = eglBackend->openglContext();
-                if (!context || !context->makeCurrent()) {
-                    return;
-                }
-
-                const auto offscreenTexture = GLTexture::allocate(GL_RGB8, QSize(1, 1));
-                if (!offscreenTexture) {
-                    return;
-                }
-                const auto target = std::make_unique<GLFramebuffer>(offscreenTexture.get());
-                if (!target->valid()) {
-                    return;
-                }
-
-                auto screen = effects->screenAt(p.toPoint());
-                if (!screen) {
-                    return;
-                }
-
-                ColorPickerLayer layer(screen->backendOutput(), target.get());
-                if (!layer.preparePresentationTest()) {
-                    return;
-                }
-                const auto beginInfo = layer.beginFrame();
-                if (!beginInfo) {
-                    return;
-                }
-                SceneView sceneView(kwinApp()->scene(), screen, nullptr, &layer);
-                auto cursorView = std::make_unique<ItemTreeView>(&sceneView, kwinApp()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
-                cursorView->setExclusive(true);
-                const Rect pixelDamage = QRect(QPoint(), QSize(1, 1));
-                sceneView.setViewport(QRectF(p, QSizeF(1, 1)));
-                sceneView.prePaint();
-                sceneView.paint(beginInfo->renderTarget, QPoint(), pixelDamage);
-                sceneView.postPaint();
-                if (!layer.endFrame(pixelDamage, pixelDamage, nullptr)) {
-                    return;
-                }
-
-                GLFramebuffer::pushFramebuffer(target.get());
-                QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGB888);
-                context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGB, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
-                GLFramebuffer::popFramebuffer();
-
-                QDBusConnection::sessionBus().send(m_replyMessage.createReply(snapshot.pixelColor(0, 0)));
+            const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
+            if (!eglBackend) {
+                return;
             }
-        });
+            const auto context = eglBackend->openglContext();
+            if (!context || !context->makeCurrent()) {
+                return;
+            }
+
+            const auto offscreenTexture = GLTexture::allocate(GL_RGB8, QSize(1, 1));
+            if (!offscreenTexture) {
+                return;
+            }
+            const auto target = std::make_unique<GLFramebuffer>(offscreenTexture.get());
+            if (!target->valid()) {
+                return;
+            }
+
+            auto screen = effects->screenAt(p.toPoint());
+            if (!screen) {
+                return;
+            }
+
+            ColorPickerLayer layer(screen->backendOutput(), target.get());
+            if (!layer.preparePresentationTest()) {
+                return;
+            }
+            const auto beginInfo = layer.beginFrame();
+            if (!beginInfo) {
+                return;
+            }
+            SceneView sceneView(kwinApp()->scene(), screen, nullptr, &layer);
+            auto cursorView = std::make_unique<ItemTreeView>(&sceneView, kwinApp()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
+            cursorView->setExclusive(true);
+            const Rect pixelDamage = QRect(QPoint(), QSize(1, 1));
+            sceneView.setViewport(QRectF(p, QSizeF(1, 1)));
+            sceneView.prePaint();
+            sceneView.paint(beginInfo->renderTarget, QPoint(), pixelDamage);
+            sceneView.postPaint();
+            if (!layer.endFrame(pixelDamage, pixelDamage, nullptr)) {
+                return;
+            }
+
+            GLFramebuffer::pushFramebuffer(target.get());
+            QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGB888);
+            context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGB, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
+            GLFramebuffer::popFramebuffer();
+
+            QDBusConnection::sessionBus().send(m_replyMessage.createReply(snapshot.pixelColor(0, 0)));
+        }
+    });
     return QColor();
 }
 

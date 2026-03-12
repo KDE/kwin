@@ -73,33 +73,31 @@ void PinchGesture::initWayland()
     Registry *r = new Registry(c);
     r->create(c);
 
-    connect(r, &Registry::interfacesAnnounced, this,
-            [this, r] {
-                const auto gi = r->interface(Registry::Interface::PointerGesturesUnstableV1);
-                if (gi.name == 0) {
-                    return;
-                }
-                m_pointerGestures = r->createPointerGestures(gi.name, gi.version, this);
+    connect(r, &Registry::interfacesAnnounced, this, [this, r] {
+        const auto gi = r->interface(Registry::Interface::PointerGesturesUnstableV1);
+        if (gi.name == 0) {
+            return;
+        }
+        m_pointerGestures = r->createPointerGestures(gi.name, gi.version, this);
 
-                // now create seat
-                const auto si = r->interface(Registry::Interface::Seat);
-                if (si.name == 0) {
-                    return;
-                }
-                auto seat = r->createSeat(si.name, si.version, this);
-                connect(seat, &Seat::hasKeyboardChanged, this,
-                        [this, seat](bool hasPointer) {
-                            if (hasPointer) {
-                                m_pointer = seat->createPointer(this);
-                                setupGesture();
-                            } else {
-                                delete m_pointer;
-                                delete m_gesture;
-                                m_pointer = nullptr;
-                                m_gesture = nullptr;
-                            }
-                        });
-            });
+        // now create seat
+        const auto si = r->interface(Registry::Interface::Seat);
+        if (si.name == 0) {
+            return;
+        }
+        auto seat = r->createSeat(si.name, si.version, this);
+        connect(seat, &Seat::hasKeyboardChanged, this, [this, seat](bool hasPointer) {
+            if (hasPointer) {
+                m_pointer = seat->createPointer(this);
+                setupGesture();
+            } else {
+                delete m_pointer;
+                delete m_gesture;
+                m_pointer = nullptr;
+                m_gesture = nullptr;
+            }
+        });
+    });
 
     r->setup();
     c->roundtrip();
@@ -111,23 +109,20 @@ void PinchGesture::setupGesture()
         return;
     }
     m_gesture = m_pointerGestures->createPinchGesture(m_pointer, this);
-    connect(m_gesture, &PointerPinchGesture::updated, this,
-            [this](const QSizeF &delta, qreal scale) {
-                m_progressScale = scale;
-                Q_EMIT progressScaleChanged();
-            });
-    connect(m_gesture, &PointerPinchGesture::ended, this,
-            [this] {
-                m_scale = m_scale * m_progressScale;
-                m_progressScale = 1.0;
-                Q_EMIT scaleChanged();
-                Q_EMIT progressScaleChanged();
-            });
-    connect(m_gesture, &PointerPinchGesture::cancelled, this,
-            [this] {
-                m_progressScale = 1.0;
-                Q_EMIT progressScaleChanged();
-            });
+    connect(m_gesture, &PointerPinchGesture::updated, this, [this](const QSizeF &delta, qreal scale) {
+        m_progressScale = scale;
+        Q_EMIT progressScaleChanged();
+    });
+    connect(m_gesture, &PointerPinchGesture::ended, this, [this] {
+        m_scale = m_scale * m_progressScale;
+        m_progressScale = 1.0;
+        Q_EMIT scaleChanged();
+        Q_EMIT progressScaleChanged();
+    });
+    connect(m_gesture, &PointerPinchGesture::cancelled, this, [this] {
+        m_progressScale = 1.0;
+        Q_EMIT progressScaleChanged();
+    });
 }
 
 int main(int argc, char *argv[])

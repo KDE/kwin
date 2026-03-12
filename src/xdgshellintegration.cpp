@@ -52,10 +52,9 @@ void XdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)
     // underlying surface is unmapped. XdgToplevelWindow is re-created right away since
     // we don't want too loose any window requests that are allowed to be sent prior to
     // the first initial commit, e.g. set_maximized or set_fullscreen.
-    connect(toplevel, &XdgToplevelInterface::resetOccurred,
-            this, [this, toplevel] {
-                createXdgToplevelWindow(toplevel);
-            });
+    connect(toplevel, &XdgToplevelInterface::resetOccurred, this, [this, toplevel] {
+        createXdgToplevelWindow(toplevel);
+    });
 
     createXdgToplevelWindow(toplevel);
 }

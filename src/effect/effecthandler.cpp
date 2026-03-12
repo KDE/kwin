@@ -1009,11 +1009,9 @@ QList<EffectWindow *> EffectsHandler::currentTabBoxWindowList() const
     const auto clients = workspace()->tabbox()->currentClientList();
     QList<EffectWindow *> ret;
     ret.reserve(clients.size());
-    std::transform(std::cbegin(clients), std::cend(clients),
-                   std::back_inserter(ret),
-                   [](auto client) {
-                       return client->effectWindow();
-                   });
+    std::transform(std::cbegin(clients), std::cend(clients), std::back_inserter(ret), [](auto client) {
+        return client->effectWindow();
+    });
     return ret;
 #else
     return QList<EffectWindow *>();
@@ -1171,11 +1169,9 @@ QStringList EffectsHandler::loadedEffects() const
 {
     QStringList listModules;
     listModules.reserve(loaded_effects.count());
-    std::transform(loaded_effects.constBegin(), loaded_effects.constEnd(),
-                   std::back_inserter(listModules),
-                   [](const EffectPair &pair) {
-                       return pair.first;
-                   });
+    std::transform(loaded_effects.constBegin(), loaded_effects.constEnd(), std::back_inserter(listModules), [](const EffectPair &pair) {
+        return pair.first;
+    });
     return listModules;
 }
 
@@ -1194,10 +1190,9 @@ bool EffectsHandler::loadEffect(const QString &name)
 
 void EffectsHandler::unloadEffect(const QString &name)
 {
-    auto it = std::find_if(effect_order.begin(), effect_order.end(),
-                           [name](EffectPair &pair) {
-                               return pair.first == name;
-                           });
+    auto it = std::find_if(effect_order.begin(), effect_order.end(), [name](EffectPair &pair) {
+        return pair.first == name;
+    });
     if (it == effect_order.end()) {
         qCDebug(KWIN_CORE) << "EffectsHandler::unloadEffect : Effect not loaded :" << name;
         return;
@@ -1257,10 +1252,9 @@ void EffectsHandler::reconfigureEffect(const QString &name)
 
 bool EffectsHandler::isEffectLoaded(const QString &name) const
 {
-    auto it = std::find_if(loaded_effects.constBegin(), loaded_effects.constEnd(),
-                           [&name](const EffectPair &pair) {
-                               return pair.first == name;
-                           });
+    auto it = std::find_if(loaded_effects.constBegin(), loaded_effects.constEnd(), [&name](const EffectPair &pair) {
+        return pair.first == name;
+    });
     return it != loaded_effects.constEnd();
 }
 
@@ -1281,11 +1275,9 @@ QList<bool> EffectsHandler::areEffectsSupported(const QStringList &names)
 {
     QList<bool> retList;
     retList.reserve(names.count());
-    std::transform(names.constBegin(), names.constEnd(),
-                   std::back_inserter(retList),
-                   [this](const QString &name) {
-                       return isEffectSupported(name);
-                   });
+    std::transform(names.constBegin(), names.constEnd(), std::back_inserter(retList), [this](const QString &name) {
+        return isEffectSupported(name);
+    });
     return retList;
 }
 
@@ -1375,10 +1367,9 @@ QVariant EffectsHandler::kwinOption(KWinOption kwopt)
 
 QString EffectsHandler::supportInformation(const QString &name) const
 {
-    auto it = std::find_if(loaded_effects.constBegin(), loaded_effects.constEnd(),
-                           [name](const EffectPair &pair) {
-                               return pair.first == name;
-                           });
+    auto it = std::find_if(loaded_effects.constBegin(), loaded_effects.constEnd(), [name](const EffectPair &pair) {
+        return pair.first == name;
+    });
     if (it == loaded_effects.constEnd()) {
         return QString();
     }

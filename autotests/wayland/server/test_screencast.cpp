@@ -118,23 +118,18 @@ void TestScreencastV1Interface::initTestCase()
 
     QSignalSpy screencastSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     m_screencastInterface = new KWin::ScreencastV1Interface(m_display, this);
-    connect(m_screencastInterface,
-            &KWin::ScreencastV1Interface::windowScreencastRequested,
-            this,
-            [this](KWin::ScreencastStreamV1Interface *stream, const QString &winid) {
-                stream->sendCreated(123);
-                m_triggered = stream;
-            });
+    connect(m_screencastInterface, &KWin::ScreencastV1Interface::windowScreencastRequested, this, [this](KWin::ScreencastStreamV1Interface *stream, const QString &winid) {
+        stream->sendCreated(123);
+        m_triggered = stream;
+    });
 
-    connect(&registry,
-            &KWayland::Client::Registry::interfaceAnnounced,
-            this,
-            [this, &registry](const QByteArray &interfaceName, quint32 name, quint32 version) {
-                if (interfaceName != "zkde_screencast_unstable_v1")
-                    return;
-                m_screencast = new ScreencastV1(this);
-                m_screencast->init(&*registry, name, version);
-            });
+    connect(&registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, &registry](const QByteArray &interfaceName, quint32 name, quint32 version) {
+        if (interfaceName != "zkde_screencast_unstable_v1") {
+            return;
+        }
+        m_screencast = new ScreencastV1(this);
+        m_screencast->init(&*registry, name, version);
+    });
     registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());

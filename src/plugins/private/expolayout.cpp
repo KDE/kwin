@@ -378,10 +378,9 @@ void ExpoLayout::updatePolish()
 
     QRectF area = QRectF(0, 0, width(), height());
 
-    std::sort(m_cells.begin(), m_cells.end(),
-              [](const ExpoCell *a, const ExpoCell *b) {
-                  return a->persistentKey() < b->persistentKey();
-              });
+    std::sort(m_cells.begin(), m_cells.end(), [](const ExpoCell *a, const ExpoCell *b) {
+        return a->persistentKey() < b->persistentKey();
+    });
 
     // Estimate the scale factor we need to apply by simple heuristics
     qreal totalArea = 0;

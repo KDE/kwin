@@ -30,14 +30,12 @@ void KillWindow::start()
 {
     OSD::show(i18n("Select window to force close with left click or enter.\nEscape or right click to cancel."),
               QStringLiteral("window-close"));
-    kwinApp()->startInteractiveWindowSelection(
-        [](KWin::Window *window) {
-            OSD::hide();
-            if (window) {
-                window->killWindow();
-            }
-        },
-        QByteArrayLiteral("pirate"));
+    kwinApp()->startInteractiveWindowSelection([](KWin::Window *window) {
+        OSD::hide();
+        if (window) {
+            window->killWindow();
+        }
+    }, QByteArrayLiteral("pirate"));
 }
 
 } // namespace

@@ -64,18 +64,13 @@ XdgTest::~XdgTest()
 
 void XdgTest::init()
 {
-    connect(
-        m_connectionThreadObject,
-        &ConnectionThread::connected,
-        this,
-        [this] {
-            m_eventQueue = new EventQueue(this);
-            m_eventQueue->setup(m_connectionThreadObject);
+    connect(m_connectionThreadObject, &ConnectionThread::connected, this, [this] {
+        m_eventQueue = new EventQueue(this);
+        m_eventQueue->setup(m_connectionThreadObject);
 
-            Registry *registry = new Registry(this);
-            setupRegistry(registry);
-        },
-        Qt::QueuedConnection);
+        Registry *registry = new Registry(this);
+        setupRegistry(registry);
+    }, Qt::QueuedConnection);
     m_connectionThreadObject->moveToThread(m_connectionThread);
     m_connectionThread->start();
 
@@ -102,13 +97,10 @@ void XdgTest::setupRegistry(Registry *registry)
         Q_ASSERT(m_surface);
         m_xdgShellSurface = m_xdgShell->createSurface(m_surface, this);
         Q_ASSERT(m_xdgShellSurface);
-        connect(m_xdgShellSurface,
-                &XdgShellSurface::configureRequested,
-                this,
-                [this](const QSize &size, KWayland::Client::XdgShellSurface::States states, int serial) {
-                    m_xdgShellSurface->ackConfigure(serial);
-                    render();
-                });
+        connect(m_xdgShellSurface, &XdgShellSurface::configureRequested, this, [this](const QSize &size, KWayland::Client::XdgShellSurface::States states, int serial) {
+            m_xdgShellSurface->ackConfigure(serial);
+            render();
+        });
 
         m_xdgShellSurface->setTitle(QStringLiteral("Test Window"));
 

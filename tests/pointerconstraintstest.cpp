@@ -42,32 +42,27 @@ void WaylandBackend::init(QQuickView *view)
 
 void WaylandBackend::setupRegistry(Registry *registry)
 {
-    connect(registry, &Registry::compositorAnnounced, this,
-            [this, registry](quint32 name, quint32 version) {
-                m_compositor = registry->createCompositor(name, version, this);
-            });
-    connect(registry, &Registry::seatAnnounced, this,
-            [this, registry](quint32 name, quint32 version) {
-                m_seat = registry->createSeat(name, version, this);
-                if (m_seat->hasPointer()) {
-                    m_pointer = m_seat->createPointer(this);
-                }
-                connect(m_seat, &Seat::hasPointerChanged, this,
-                        [this]() {
-                            delete m_pointer;
-                            m_pointer = m_seat->createPointer(this);
-                        });
-            });
-    connect(registry, &Registry::pointerConstraintsUnstableV1Announced, this,
-            [this, registry](quint32 name, quint32 version) {
-                m_pointerConstraints = registry->createPointerConstraints(name, version, this);
-            });
-    connect(registry, &Registry::interfacesAnnounced, this,
-            [this] {
-                Q_ASSERT(m_compositor);
-                Q_ASSERT(m_seat);
-                Q_ASSERT(m_pointerConstraints);
-            });
+    connect(registry, &Registry::compositorAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_compositor = registry->createCompositor(name, version, this);
+    });
+    connect(registry, &Registry::seatAnnounced, this, [this, registry](quint32 name, quint32 version) {
+        m_seat = registry->createSeat(name, version, this);
+        if (m_seat->hasPointer()) {
+            m_pointer = m_seat->createPointer(this);
+        }
+        connect(m_seat, &Seat::hasPointerChanged, this, [this]() {
+            delete m_pointer;
+            m_pointer = m_seat->createPointer(this);
+        });
+    });
+    connect(registry, &Registry::pointerConstraintsUnstableV1Announced, this, [this, registry](quint32 name, quint32 version) {
+        m_pointerConstraints = registry->createPointerConstraints(name, version, this);
+    });
+    connect(registry, &Registry::interfacesAnnounced, this, [this] {
+        Q_ASSERT(m_compositor);
+        Q_ASSERT(m_seat);
+        Q_ASSERT(m_pointerConstraints);
+    });
     registry->create(m_connectionThreadObject);
     registry->setup();
 }

@@ -210,19 +210,17 @@ void ScriptedEffectLoader::queryAndLoadAll()
     }
     // perform querying for the services in a thread
     QFutureWatcher<QList<KPluginMetaData>> *watcher = new QFutureWatcher<QList<KPluginMetaData>>(this);
-    m_queryConnection = connect(
-        watcher, &QFutureWatcher<QList<KPluginMetaData>>::finished, this, [this, watcher]() {
-            const auto effects = watcher->result();
-            for (const auto &effect : effects) {
-                const LoadEffectFlags flags = readConfig(effect.pluginId(), effect.isEnabledByDefault());
-                if (flags.testFlag(LoadEffectFlag::Load)) {
-                    m_queue->enqueue(qMakePair(effect, flags));
-                }
+    m_queryConnection = connect(watcher, &QFutureWatcher<QList<KPluginMetaData>>::finished, this, [this, watcher]() {
+        const auto effects = watcher->result();
+        for (const auto &effect : effects) {
+            const LoadEffectFlags flags = readConfig(effect.pluginId(), effect.isEnabledByDefault());
+            if (flags.testFlag(LoadEffectFlag::Load)) {
+                m_queue->enqueue(qMakePair(effect, flags));
             }
-            watcher->deleteLater();
-            m_queryConnection = QMetaObject::Connection();
-        },
-        Qt::QueuedConnection);
+        }
+        watcher->deleteLater();
+        m_queryConnection = QMetaObject::Connection();
+    }, Qt::QueuedConnection);
     watcher->setFuture(QtConcurrent::run(&ScriptedEffectLoader::findAllEffects, this));
 }
 
@@ -274,10 +272,9 @@ bool PluginEffectLoader::hasEffect(const QString &name) const
 
 KPluginMetaData PluginEffectLoader::findEffect(const QString &name) const
 {
-    const auto plugins = KPluginMetaData::findPlugins(m_pluginSubDirectory,
-                                                      [name](const KPluginMetaData &data) {
-                                                          return data.pluginId().compare(name, Qt::CaseInsensitive) == 0;
-                                                      });
+    const auto plugins = KPluginMetaData::findPlugins(m_pluginSubDirectory, [name](const KPluginMetaData &data) {
+        return data.pluginId().compare(name, Qt::CaseInsensitive) == 0;
+    });
     if (plugins.isEmpty()) {
         return KPluginMetaData();
     }
