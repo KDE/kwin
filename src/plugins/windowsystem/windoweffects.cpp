@@ -61,17 +61,7 @@ void WindowEffects::enableBlurBehind(QWindow *window, bool enable, const QRegion
 
 void WindowEffects::enableBackgroundContrast(QWindow *window, bool enable, qreal contrast, qreal intensity, qreal saturation, const QRegion &region)
 {
-    if (enable) {
-        window->setProperty("kwin_background_region", QVariant::fromValue(Region(region)));
-        window->setProperty("kwin_background_contrast", contrast);
-        window->setProperty("kwin_background_intensity", intensity);
-        window->setProperty("kwin_background_saturation", saturation);
-    } else {
-        window->setProperty("kwin_background_region", {});
-        window->setProperty("kwin_background_contrast", {});
-        window->setProperty("kwin_background_intensity", {});
-        window->setProperty("kwin_background_saturation", {});
-    }
+    // The background contrast effect has been merged with the blur effect and its params are global.
 }
 
 }
