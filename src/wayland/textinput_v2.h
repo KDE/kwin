@@ -87,7 +87,7 @@ public:
     /**
      * @see cursorRectangleChanged
      */
-    Rect cursorRectangle() const;
+    RectF cursorRectangle() const;
 
     /**
      * @see contentTypeChanged
@@ -226,7 +226,7 @@ public:
      * @param visible Whether the input panel is currently visible
      * @param overlappedSurfaceArea The overlapping area in surface local coordinates
      */
-    void setInputPanelState(bool visible, const Rect &overlappedSurfaceArea);
+    void setInputPanelState(bool visible, const RectF &overlappedSurfaceArea);
 
     /**
      * Sets the language of the input text. The @p languageTag is a RFC-3066 format language tag.
@@ -257,7 +257,7 @@ Q_SIGNALS:
     /**
      * @see cursorRectangle
      */
-    void cursorRectangleChanged(const Rect &rect);
+    void cursorRectangleChanged(const RectF &rect);
     /**
      * Emitted when the {@link contentPurpose} and/or {@link contentHints} changes.
      * @see contentPurpose

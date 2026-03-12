@@ -64,7 +64,7 @@ public:
     /**
      * @see cursorRectangleChanged
      */
-    Rect cursorRectangle() const;
+    RectF cursorRectangle() const;
 
     /**
      * @see contentTypeChanged
@@ -163,7 +163,7 @@ Q_SIGNALS:
     /**
      * @see cursorRectangle
      */
-    void cursorRectangleChanged(const Rect &rect);
+    void cursorRectangleChanged(const RectF &rect);
     /**
      * Emitted when the {@link contentPurpose} and/or {@link contentHints} changes.
      * @see contentPurpose

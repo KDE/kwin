@@ -52,7 +52,7 @@ public:
         return inputInterface->d.get();
     }
 
-    Rect cursorRectangle;
+    RectF cursorRectangle;
     TextInputContentHints contentHints = TextInputContentHint::None;
     TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;
 
@@ -70,7 +70,7 @@ public:
 
     struct
     {
-        Rect cursorRectangle;
+        RectF cursorRectangle;
         TextInputChangeCause surroundingTextChangeCause = TextInputChangeCause::InputMethod;
         TextInputContentHints contentHints = TextInputContentHint::None;
         TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;

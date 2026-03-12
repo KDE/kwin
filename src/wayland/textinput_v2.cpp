@@ -297,12 +297,13 @@ void TextInputV2InterfacePrivate::sendInputPanelState()
     }
     const QList<Resource *> textInputs = textInputsForClient(focusedSurface->client());
     for (auto resource : textInputs) {
+        const Rect nativeOverlappedSurfaceArea = overlappedSurfaceArea.scaled(focusedSurface->scaleOverride()).rounded();
         send_input_panel_state(resource->handle,
                                inputPanelVisible ? ZWP_TEXT_INPUT_V2_INPUT_PANEL_VISIBILITY_VISIBLE : ZWP_TEXT_INPUT_V2_INPUT_PANEL_VISIBILITY_HIDDEN,
-                               overlappedSurfaceArea.x(),
-                               overlappedSurfaceArea.y(),
-                               overlappedSurfaceArea.width(),
-                               overlappedSurfaceArea.height());
+                               nativeOverlappedSurfaceArea.x(),
+                               nativeOverlappedSurfaceArea.y(),
+                               nativeOverlappedSurfaceArea.width(),
+                               nativeOverlappedSurfaceArea.height());
     }
 }
 
@@ -390,7 +391,10 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_set_content_type(Resource *r
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_set_cursor_rectangle(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    const Rect rect = Rect(x, y, width, height);
+    if (!focusedSurface) {
+        return;
+    }
+    const RectF rect = Rect(x, y, width, height).scaled(1.0 / focusedSurface->scaleOverride());
     if (cursorRectangle != rect) {
         cursorRectangle = rect;
         Q_EMIT q->cursorRectangleChanged(cursorRectangle);
@@ -498,7 +502,7 @@ void TextInputV2Interface::setPreEditCursor(qint32 index)
     d->setPreEditCursor(index);
 }
 
-void TextInputV2Interface::setInputPanelState(bool visible, const Rect &overlappedSurfaceArea)
+void TextInputV2Interface::setInputPanelState(bool visible, const RectF &overlappedSurfaceArea)
 {
     if (d->inputPanelVisible == visible && d->overlappedSurfaceArea == overlappedSurfaceArea) {
         // not changed
@@ -542,7 +546,7 @@ QPointer<SurfaceInterface> TextInputV2Interface::surface() const
     return d->focusedSurface;
 }
 
-Rect TextInputV2Interface::cursorRectangle() const
+RectF TextInputV2Interface::cursorRectangle() const
 {
     return d->cursorRectangle;
 }
