@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1731650 $
+# Version: $Revision: 1732071 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-07 00:45+0000\n"
+"POT-Creation-Date: 2026-03-12 00:45+0000\n"
 "PO-Revision-Date: 2025-12-06 15:39+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -65,17 +65,17 @@ msgstr "- Wyjście wyłączone"
 msgid "- Output dimmed"
 msgstr "- Wyjście przyciemnione"
 
-#: backends/x11/x11_windowed_backend.cpp:496
+#: backends/x11/x11_windowed_backend.cpp:499
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Naciśnij prawy przycisk Ctrl, aby zwolnić wprowadzanie"
 
-#: backends/x11/x11_windowed_backend.cpp:496
+#: backends/x11/x11_windowed_backend.cpp:499
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Naciśnij prawy przycisk Ctrl, aby przechwycić wprowadzanie"
 
-#: backends/x11/x11_windowed_backend.cpp:497
+#: backends/x11/x11_windowed_backend.cpp:500
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "Kompozytor KDE Wayland"
@@ -1533,7 +1533,7 @@ msgstr ""
 "przyciskiem myszy lub klawiszem enter.\n"
 "Naciśnij klawisz Escape lub kliknij prawym przyciskiem myszy, aby zaniechać."
 
-#: main.cpp:168 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:171 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
@@ -1544,67 +1544,67 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:170 main.cpp:194
+#: main.cpp:173 main.cpp:197
 #, kde-format
 msgid "KDE window manager"
 msgstr "Zarządzanie oknami KDE"
 
-#: main.cpp:172
+#: main.cpp:175
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, Programiści KDE"
 
-#: main.cpp:174
+#: main.cpp:177
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:175
+#: main.cpp:178
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:176
+#: main.cpp:179
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:177
+#: main.cpp:180
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:178
+#: main.cpp:181
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:179
+#: main.cpp:182
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:180
+#: main.cpp:183
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:181
+#: main.cpp:184
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:182
+#: main.cpp:185
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:191
+#: main.cpp:194
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Wyłącz możliwość ustawiania"
 
-#: main.cpp:192
+#: main.cpp:195
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Powiadom, że KWin ostatnio n razy został przerwany z powodu awarii"

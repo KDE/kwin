@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-07 00:45+0000\n"
+"POT-Creation-Date: 2026-03-12 00:45+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -58,17 +58,17 @@ msgstr "- आउटपुट् अक्षमम्"
 msgid "- Output dimmed"
 msgstr "- आउटपुट मन्द"
 
-#: backends/x11/x11_windowed_backend.cpp:496
+#: backends/x11/x11_windowed_backend.cpp:499
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "इनपुट् अनग्रैब् कर्तुं right control नुदन्तु"
 
-#: backends/x11/x11_windowed_backend.cpp:496
+#: backends/x11/x11_windowed_backend.cpp:499
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "इनपुट् ग्रहीतुं right control key नुदन्तु"
 
-#: backends/x11/x11_windowed_backend.cpp:497
+#: backends/x11/x11_windowed_backend.cpp:500
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "केडीई वेलैण्ड रचनाकार"
@@ -1538,7 +1538,7 @@ msgstr ""
 "वामक्लिक् अथवा प्रविष्ट्या बलात् बन्दं कर्तुं विण्डो चिनोतु ।\n"
 "पलायनं कुर्वन्तु अथवा रद्दं कर्तुं राइट् क्लिक् कुर्वन्तु।"
 
-#: main.cpp:168 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:171 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
@@ -1549,67 +1549,67 @@ msgstr ""
 msgid "KWin"
 msgstr "केविन्"
 
-#: main.cpp:170 main.cpp:194
+#: main.cpp:173 main.cpp:197
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE विण्डो प्रबन्धकः"
 
-#: main.cpp:172
+#: main.cpp:175
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(ग) १९९९-२०१९, द केडीई डेवलपर्स"
 
-#: main.cpp:174
+#: main.cpp:177
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "मथियस एट्रिच्"
 
-#: main.cpp:175
+#: main.cpp:178
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "क्रिस्टियन तिबिर्ना"
 
-#: main.cpp:176
+#: main.cpp:179
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "डैनियल एम. डुले"
 
-#: main.cpp:177
+#: main.cpp:180
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "लुबोश लुňák"
 
-#: main.cpp:178
+#: main.cpp:181
 #, kde-format
 msgid "Martin Flöser"
 msgstr "मार्टिन् फ्लोसर"
 
-#: main.cpp:179
+#: main.cpp:182
 #, kde-format
 msgid "David Edmundson"
 msgstr "डेविड् एडमण्ड्सनः"
 
-#: main.cpp:180
+#: main.cpp:183
 #, kde-format
 msgid "Roman Gilg"
 msgstr "रोमन गिल्ग्"
 
-#: main.cpp:181
+#: main.cpp:184
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "व्लाद ज़ाहोरोदनी"
 
-#: main.cpp:182
+#: main.cpp:185
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "जेवियर हग्ले"
 
-#: main.cpp:191
+#: main.cpp:194
 #, kde-format
 msgid "Disable configuration options"
 msgstr "विन्यासविकल्पान् निष्क्रियं कुर्वन्तु"
 
-#: main.cpp:192
+#: main.cpp:195
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "KWin अद्यतने n वारं दुर्घटनाम् अभवत् इति सूचयन्तु"

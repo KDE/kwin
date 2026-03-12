@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-07 00:45+0000\n"
+"POT-Creation-Date: 2026-03-12 00:45+0000\n"
 "PO-Revision-Date: 2010-09-24 21:47+0530\n"
 "Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
 "Language-Team: Maithili <bhashaghar@googlegroups.com>\n"
@@ -61,17 +61,17 @@ msgstr ""
 msgid "- Output dimmed"
 msgstr ""
 
-#: backends/x11/x11_windowed_backend.cpp:496
+#: backends/x11/x11_windowed_backend.cpp:499
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr ""
 
-#: backends/x11/x11_windowed_backend.cpp:496
+#: backends/x11/x11_windowed_backend.cpp:499
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr ""
 
-#: backends/x11/x11_windowed_backend.cpp:497
+#: backends/x11/x11_windowed_backend.cpp:500
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr ""
@@ -1523,7 +1523,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:168 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:171 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:45
@@ -1534,69 +1534,69 @@ msgstr ""
 msgid "KWin"
 msgstr "के-विन"
 
-#: main.cpp:170 main.cpp:194
+#: main.cpp:173 main.cpp:197
 #, kde-format
 msgid "KDE window manager"
 msgstr "केडीई विंडो प्रबंधक"
 
-#: main.cpp:172
+#: main.cpp:175
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr ""
 
-#: main.cpp:174
+#: main.cpp:177
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "मेथियास एट्रिच"
 
-#: main.cpp:175
+#: main.cpp:178
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "क्रिश्चियन टिबरिना"
 
-#: main.cpp:176
+#: main.cpp:179
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "डेनियल एम. डुले"
 
-#: main.cpp:177
+#: main.cpp:180
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:178
+#: main.cpp:181
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:179
+#: main.cpp:182
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:180
+#: main.cpp:183
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:181
+#: main.cpp:184
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:182
+#: main.cpp:185
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Very Huge"
 msgid "Xaver Hugl"
 msgstr "अत्यंत विशाल"
 
-#: main.cpp:191
+#: main.cpp:194
 #, kde-format
 msgid "Disable configuration options"
 msgstr "कान्फिगरेशन विकल्प अक्षम करू"
 
-#: main.cpp:192
+#: main.cpp:195
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "इंगित करैत अछि जे के-विन हाले मे बहुत बेर क्रैश भेल अछि"
