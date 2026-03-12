@@ -683,10 +683,11 @@ void TestColorspaces::testNightLightNoTonemapping()
 
     // the color pipeline should not have any tonemapping steps in it
     const auto pipeline = ColorPipeline::create(src, dst, RenderingIntent::Perceptual);
-    QCOMPARE(pipeline.ops.size(), 3);
+    QCOMPARE(pipeline.ops.size(), 4);
     QVERIFY(std::holds_alternative<ColorTransferFunction>(pipeline.ops[0].operation));
     QVERIFY(std::holds_alternative<ColorMatrix>(pipeline.ops[1].operation));
-    QVERIFY(std::holds_alternative<InverseColorTransferFunction>(pipeline.ops[2].operation));
+    QVERIFY(std::holds_alternative<ColorClamp>(pipeline.ops[2].operation));
+    QVERIFY(std::holds_alternative<InverseColorTransferFunction>(pipeline.ops[3].operation));
 }
 
 QTEST_MAIN(TestColorspaces)

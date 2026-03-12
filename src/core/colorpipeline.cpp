@@ -70,19 +70,24 @@ ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &fro
     const QVector3D blue = toOther.map(mdBlue);
     const QVector3D white = toOther.map(mdWhite);
 
-    ret.addMatrix(toOther, getValueRange({black, red, green, blue, white}), ColorspaceType::LinearRGB);
+    const ValueRange matrixOutputRange = getValueRange({black, red, green, blue, white});
+    ret.addMatrix(toOther, matrixOutputRange, ColorspaceType::LinearRGB);
 
     // NOTE that this is different from currentOutputRange().max, as the range
     // also takes the gamut into account. For tone mapping, we don't care about
     // the gamut though, only the luminance of white is relevant
     const double maxWhiteLuminance = std::max({white.x(), white.y(), white.z()});
-    if (!s_disableTonemapping && maxWhiteLuminance > maxOutputLuminance * 1.01 && intent == RenderingIntent::Perceptual) {
+    constexpr double eta = 1.001;
+    if (!s_disableTonemapping && maxWhiteLuminance > maxOutputLuminance * eta && intent == RenderingIntent::Perceptual) {
         ret.addTonemapper(to->containerColorimetry(), to->referenceLuminance(), maxWhiteLuminance, maxOutputLuminance);
         // if values outside of [0; 1] are possible, we must clamp
-    } else if (inputType == InputType::FloatingPoint || from->range() == EncodingRange::Limited || maxLum < from->transferFunction().maxLuminance) {
+    } else if (inputType == InputType::FloatingPoint
+               || from->range() == EncodingRange::Limited
+               || maxLum < from->transferFunction().maxLuminance
+               || matrixOutputRange.max > maxOutputLuminance * eta) {
         ret.addClamp(ValueRange{
             .min = to->minLuminance(),
-            .max = to->maxHdrLuminance().value_or(to->referenceLuminance()),
+            .max = maxOutputLuminance,
         });
     }
 
