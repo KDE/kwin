@@ -19,6 +19,7 @@
 
 namespace KWin
 {
+
 // forward declarations
 class Tile;
 class TileManager;
@@ -179,7 +180,7 @@ public:
         ///< whole area (all screens together), ignore struts
         FullArea,
         ///< one whole screen, ignore struts
-        ScreenArea
+        ScreenArea,
     };
     Q_ENUM(ClientAreaOption)
     enum ElectricBorder {
@@ -192,7 +193,7 @@ public:
         ElectricLeft,
         ElectricTopLeft,
         ELECTRIC_COUNT,
-        ElectricNone
+        ElectricNone,
     };
     Q_ENUM(ElectricBorder)
 
@@ -454,6 +455,7 @@ public Q_SLOTS:
 class QtScriptWorkspaceWrapper : public WorkspaceWrapper
 {
     Q_OBJECT
+
 public:
     /**
      * List of windows currently managed by KWin.
@@ -468,6 +470,7 @@ class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
     Q_OBJECT
 
     Q_PROPERTY(QQmlListProperty<KWin::Window> windows READ windows)
+
 public:
     QQmlListProperty<KWin::Window> windows();
     static qsizetype countWindowList(QQmlListProperty<KWin::Window> *window);

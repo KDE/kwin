@@ -15,9 +15,11 @@
 
 namespace KWin
 {
+
 class MagicLampEffectConfig : public KCModule
 {
     Q_OBJECT
+
 public:
     explicit MagicLampEffectConfig(QObject *parent, const KPluginMetaData &data);
 

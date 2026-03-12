@@ -15,6 +15,7 @@
 
 namespace KWin
 {
+
 EisInputCaptureFilter::EisInputCaptureFilter(EisInputCaptureManager *manager)
     : InputEventFilter(InputFilterOrder::EisInput)
     , m_manager(manager)
@@ -243,4 +244,5 @@ bool EisInputCaptureFilter::holdGestureCancelled(PointerHoldGestureCancelEvent *
     }
     return true;
 }
+
 }

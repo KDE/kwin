@@ -54,6 +54,7 @@ private:
 class ScriptedEffectConfig : public GenericScriptedConfig
 {
     Q_OBJECT
+
 public:
     ScriptedEffectConfig(const QString &keyword, QWidget *parent, const QVariantList &args);
     ~ScriptedEffectConfig() override;
@@ -67,6 +68,7 @@ protected:
 class ScriptingConfig : public GenericScriptedConfig
 {
     Q_OBJECT
+
 public:
     ScriptingConfig(const QString &keyword, QWidget *parent, const QVariantList &args);
     ~ScriptingConfig() override;

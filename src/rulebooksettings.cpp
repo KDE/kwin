@@ -15,6 +15,7 @@
 
 namespace KWin
 {
+
 RuleBookSettings::RuleBookSettings(KSharedConfig::Ptr config, QObject *parent)
     : RuleBookSettingsBase(config, parent)
 {
@@ -86,8 +87,8 @@ void RuleBookSettings::usrRead()
 bool RuleBookSettings::usrIsSaveNeeded() const
 {
     return isSaveNeeded() || std::any_of(m_list.cbegin(), m_list.cend(), [](const auto &settings) {
-               return settings->isSaveNeeded();
-           });
+        return settings->isSaveNeeded();
+    });
 }
 
 int RuleBookSettings::ruleCount() const
@@ -148,4 +149,5 @@ QString RuleBookSettings::generateGroupName()
 {
     return QUuid::createUuid().toString(QUuid::WithoutBraces);
 }
+
 }

@@ -17,7 +17,9 @@ class Session;
 
 namespace LibInput
 {
+
 class Connection;
+
 }
 
 class KWIN_EXPORT LibinputBackend : public InputBackend

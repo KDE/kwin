@@ -13,6 +13,7 @@
 
 namespace KWin
 {
+
 class AbstractDataSource;
 class DataDeviceInterface;
 class DataOfferInterface;

@@ -799,6 +799,7 @@ const BackendOutput::State &DrmOutput::nextState() const
 {
     return m_nextState ? *m_nextState : m_state;
 }
+
 }
 
 #include "moc_drm_output.cpp"

@@ -51,7 +51,6 @@ void TouchpadShortcuts::disable()
 
 void TouchpadShortcuts::enableOrDisableTouchpads(bool enable)
 {
-
     bool changed = false;
     const auto devices = input()->devices();
     for (InputDevice *device : devices) {

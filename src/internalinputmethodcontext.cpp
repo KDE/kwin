@@ -16,7 +16,8 @@
 #include <QTextCharFormat>
 #include <QWindow>
 
-namespace KWin {
+namespace KWin
+{
 
 InternalInputMethodContext::InternalInputMethodContext(QObject *parent)
     : QPlatformInputContext()
@@ -210,4 +211,4 @@ int InternalInputMethodContext::indexFromWayland(const QString &text, int length
     }
 }
 
-} //namespace
+} // namespace

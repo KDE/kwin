@@ -56,5 +56,6 @@ const ModifierList &Swapchain::modifiers() const
 {
     return m_allocationOptions.modifiers;
 }
+
 }
 }

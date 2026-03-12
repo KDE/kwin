@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class OffscreenQuickScene;
 
 class OutputLocatorEffect : public KWin::Effect
@@ -33,4 +34,5 @@ private:
     QTimer m_showTimer;
     std::unordered_map<LogicalOutput *, std::unique_ptr<OffscreenQuickScene>> m_scenesByScreens;
 };
+
 }

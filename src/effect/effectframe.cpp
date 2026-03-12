@@ -20,7 +20,6 @@ EffectFrameQuickScene::EffectFrameQuickScene(EffectFrameStyle style, bool static
     , m_point(position)
     , m_alignment(alignment)
 {
-
     QString name;
     switch (style) {
     case EffectFrameNone:
@@ -203,18 +202,20 @@ void EffectFrameQuickScene::reposition()
 
     QRect geometry(QPoint(), size.toSize());
 
-    if (m_alignment & Qt::AlignLeft)
+    if (m_alignment & Qt::AlignLeft) {
         geometry.moveLeft(m_point.x());
-    else if (m_alignment & Qt::AlignRight)
+    } else if (m_alignment & Qt::AlignRight) {
         geometry.moveLeft(m_point.x() - geometry.width());
-    else
+    } else {
         geometry.moveLeft(m_point.x() - geometry.width() / 2);
-    if (m_alignment & Qt::AlignTop)
+    }
+    if (m_alignment & Qt::AlignTop) {
         geometry.moveTop(m_point.y());
-    else if (m_alignment & Qt::AlignBottom)
+    } else if (m_alignment & Qt::AlignBottom) {
         geometry.moveTop(m_point.y() - geometry.height());
-    else
+    } else {
         geometry.moveTop(m_point.y() - geometry.height() / 2);
+    }
 
     if (geometry == this->geometry()) {
         return;

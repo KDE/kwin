@@ -27,7 +27,7 @@ class RenderViewport;
 enum EffectFrameStyle {
     EffectFrameNone, ///< Displays no frame around the contents.
     EffectFrameUnstyled, ///< Displays a basic box around the contents.
-    EffectFrameStyled ///< Displays a Plasma-styled frame around the contents.
+    EffectFrameStyled, ///< Displays a Plasma-styled frame around the contents.
 };
 
 class EffectFrameQuickScene : public OffscreenQuickScene

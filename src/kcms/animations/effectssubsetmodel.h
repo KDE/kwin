@@ -23,7 +23,7 @@ public:
 
     enum Mode {
         ExclusiveGroupMode, // Filter all except specified exlusiveGroup (ExclusiveRole)
-        WhitelistMode // Filter all except specified effect ids (ServiceNameRole)
+        WhitelistMode, // Filter all except specified effect ids (ServiceNameRole)
     };
 
     void defaults();

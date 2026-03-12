@@ -14,6 +14,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class PrimarySelectionSourceV1InterfacePrivate;
 
 /**
@@ -23,6 +24,7 @@ class PrimarySelectionSourceV1InterfacePrivate;
 class KWIN_EXPORT PrimarySelectionSourceV1Interface : public AbstractDataSource
 {
     Q_OBJECT
+
 public:
     ~PrimarySelectionSourceV1Interface() override;
 

@@ -51,6 +51,7 @@ private:
 class KWIN_EXPORT BackendOutput : public QObject
 {
     Q_OBJECT
+
 public:
     enum class DpmsMode {
         On,
@@ -100,7 +101,7 @@ public:
     enum class AutoRotationPolicy {
         Never = 0,
         InTabletMode,
-        Always
+        Always,
     };
     Q_ENUM(AutoRotationPolicy);
     enum class ColorProfileSource {

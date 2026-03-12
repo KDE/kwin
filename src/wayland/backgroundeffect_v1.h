@@ -23,6 +23,7 @@ class SurfaceInterface;
 class KWIN_EXPORT ExtBackgroundEffectManagerV1 : public QObject, private QtWaylandServer::ext_background_effect_manager_v1
 {
     Q_OBJECT
+
 public:
     explicit ExtBackgroundEffectManagerV1(Display *display, QObject *parent);
 

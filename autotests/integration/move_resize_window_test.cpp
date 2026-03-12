@@ -1,4 +1,3 @@
-
 /*
     KWin - the KDE window manager
     This file is part of the KDE project.
@@ -1253,6 +1252,7 @@ void MoveResizeWindowTest::testRestrictedResizeRight()
     surface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::MoveResizeWindowTest)

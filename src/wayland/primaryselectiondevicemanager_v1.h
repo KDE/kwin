@@ -12,6 +12,7 @@
 
 namespace KWin
 {
+
 class Display;
 class PrimarySelectionSourceV1Interface;
 class PrimarySelectionDeviceManagerV1InterfacePrivate;

@@ -20,6 +20,7 @@ struct wl_buffer;
 
 namespace KWin
 {
+
 class EglSwapchainSlot;
 class EglSwapchain;
 class GLFramebuffer;
@@ -28,6 +29,7 @@ class GLRenderTimeQuery;
 
 namespace Wayland
 {
+
 class WaylandBackend;
 class WaylandOutput;
 class WaylandEglBackend;
@@ -92,6 +94,7 @@ private:
 class WaylandEglBackend : public EglBackend
 {
     Q_OBJECT
+
 public:
     WaylandEglBackend(WaylandBackend *b);
     ~WaylandEglBackend() override;

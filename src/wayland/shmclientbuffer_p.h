@@ -7,9 +7,9 @@
 #pragma once
 
 #include "core/graphicsbuffer.h"
-#include "wayland/shmclientbuffer.h"
 #include "utils/filedescriptor.h"
 #include "utils/memorymap.h"
+#include "wayland/shmclientbuffer.h"
 
 #include "qwayland-server-wayland.h"
 

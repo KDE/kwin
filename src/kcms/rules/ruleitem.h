@@ -41,11 +41,13 @@ public:
         AffectsWarning = 1u << 2,
         AffectsDescription = 1u << 3,
         SuggestionOnly = 1u << 4,
-        AllFlags = 0b11111
+        AllFlags = 0b11111,
     };
 
 public:
-    RuleItem(){};
+    RuleItem()
+    {
+    }
     RuleItem(const QString &key,
              const RulePolicy::Type policyType,
              const Type type,

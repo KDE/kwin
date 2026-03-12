@@ -109,4 +109,5 @@ std::unique_ptr<ColorTransformation> ColorTransformation::createScalingTransform
     }
     return transform;
 }
+
 }

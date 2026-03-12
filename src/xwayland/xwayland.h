@@ -26,11 +26,13 @@ class QSocketNotifier;
 
 namespace KWin
 {
+
 class LogicalOutput;
 class Application;
 
 namespace Xwl
 {
+
 class XrandrEventFilter;
 class XwaylandInputFilter;
 class XwaylandLauncher;
@@ -69,7 +71,7 @@ private:
 
     enum class DispatchEventsMode {
         Poll,
-        EventQueue
+        EventQueue,
     };
     void dispatchEvents(DispatchEventsMode mode);
 

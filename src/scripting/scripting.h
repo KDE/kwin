@@ -36,12 +36,14 @@ typedef QList<QPair<bool, QPair<QString, QString>>> LoadScriptList;
 
 namespace KWin
 {
+
 class Window;
 class QtScriptWorkspaceWrapper;
 
 class KWIN_EXPORT AbstractScript : public QObject
 {
     Q_OBJECT
+
 public:
     AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
     ~AbstractScript() override;
@@ -103,6 +105,7 @@ public:
 class Script : public AbstractScript, QDBusContext
 {
     Q_OBJECT
+
 public:
     Script(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
     virtual ~Script();
@@ -252,6 +255,7 @@ private:
 class DeclarativeScript : public AbstractScript
 {
     Q_OBJECT
+
 public:
     explicit DeclarativeScript(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
     ~DeclarativeScript() override;
@@ -270,6 +274,7 @@ private:
 class JSEngineGlobalMethodsWrapper : public QObject
 {
     Q_OBJECT
+
 public:
     //------------------------------------------------------------------
     // enums copy&pasted from kwinglobals.h for exporting
@@ -290,7 +295,7 @@ public:
         ///< whole area (all screens together), ignore struts
         FullArea,
         ///< one whole screen, ignore struts
-        ScreenArea
+        ScreenArea,
     };
     Q_ENUM(ClientAreaOption)
     explicit JSEngineGlobalMethodsWrapper(DeclarativeScript *parent);
@@ -310,6 +315,7 @@ class KWIN_EXPORT Scripting : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
+
 private:
     explicit Scripting(QObject *parent);
     QStringList scriptList;

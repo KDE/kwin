@@ -158,4 +158,5 @@ FormatModifierMap VirtualEglGbmLayer::supportedDrmFormats() const
 {
     return m_eglBackend->supportedFormats();
 }
+
 }

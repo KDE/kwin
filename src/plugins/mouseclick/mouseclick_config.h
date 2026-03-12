@@ -21,6 +21,7 @@ namespace KWin
 class MouseClickEffectConfig : public KCModule
 {
     Q_OBJECT
+
 public:
     explicit MouseClickEffectConfig(QObject *parent, const KPluginMetaData &data);
 

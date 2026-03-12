@@ -17,6 +17,7 @@ namespace KWin
 class LidSwitchTracker : public QObject, InputEventSpy
 {
     Q_OBJECT
+
 public:
     explicit LidSwitchTracker();
 

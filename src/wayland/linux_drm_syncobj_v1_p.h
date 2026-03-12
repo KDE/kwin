@@ -29,4 +29,5 @@ private:
 
     const std::shared_ptr<SyncTimeline> m_timeline;
 };
+
 }

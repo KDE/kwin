@@ -14,6 +14,7 @@ struct eis_touch;
 
 namespace KWin
 {
+
 class EisInputCaptureManager;
 
 class EisInputCaptureFilter : public InputEventFilter
@@ -54,4 +55,5 @@ private:
     EisInputCaptureManager *m_manager;
     QHash<qint32, eis_touch *> m_touches;
 };
+
 }

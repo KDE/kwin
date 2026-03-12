@@ -666,6 +666,7 @@ void DecorationInputTest::testModifierScrollOpacity()
 class EventHelper : public QObject
 {
     Q_OBJECT
+
 public:
     EventHelper()
         : QObject()

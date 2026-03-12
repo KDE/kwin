@@ -15,6 +15,7 @@
 
 namespace KWin
 {
+
 static const int s_version = 1;
 
 RelativePointerManagerV1InterfacePrivate::RelativePointerManagerV1InterfacePrivate(Display *display)

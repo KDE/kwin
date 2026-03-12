@@ -141,6 +141,7 @@ void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
 
     Q_EMIT changed();
 }
+
 }
 
 #include "moc_drm_virtual_output.cpp"

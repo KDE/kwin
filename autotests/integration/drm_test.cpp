@@ -230,6 +230,7 @@ std::optional<DrmOutputState> DrmOutputState::read(BackendOutput *output)
 class DmabufWindow : public QObject
 {
     Q_OBJECT
+
 public:
     explicit DmabufWindow(std::function<void(Test::XdgToplevel *toplevel)> setup = [](Test::XdgToplevel *toplevel) { })
         : m_surface(Test::createSurface())

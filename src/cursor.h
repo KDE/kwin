@@ -23,6 +23,7 @@ class LogicalOutput;
 
 namespace ExtendedCursor
 {
+
 /**
  * Extension of Qt::CursorShape with values not currently present there
  */
@@ -34,8 +35,9 @@ enum Shape {
     SizeWest = 0x100 + 4,
     SizeSouthEast = 0x100 + 5,
     SizeSouth = 0x100 + 6,
-    SizeSouthWest = 0x100 + 7
+    SizeSouthWest = 0x100 + 7,
 };
+
 }
 
 /**
@@ -146,6 +148,7 @@ private:
 class KWIN_EXPORT Cursors : public QObject
 {
     Q_OBJECT
+
 public:
     Cursors();
 
@@ -193,6 +196,7 @@ inline int Cursor::themeSize() const
 {
     return m_themeSize;
 }
+
 }
 
 Q_DECLARE_METATYPE(KWin::CursorShape)

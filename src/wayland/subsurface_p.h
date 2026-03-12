@@ -16,6 +16,7 @@
 
 namespace KWin
 {
+
 class SubCompositorInterfacePrivate : public QtWaylandServer::wl_subcompositor
 {
 public:

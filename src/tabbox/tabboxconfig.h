@@ -23,6 +23,7 @@ namespace KWin
 {
 namespace TabBox
 {
+
 class TabBoxConfigPrivate;
 
 /**
@@ -46,7 +47,7 @@ public:
     enum ClientDesktopMode {
         AllDesktopsClients, ///< Windows from all desktops are included.
         OnlyCurrentDesktopClients, ///< Only Windows on current desktop are included
-        ExcludeCurrentDesktopClients ///< Exclude Windows on current desktop
+        ExcludeCurrentDesktopClients, ///< Exclude Windows on current desktop
     };
     /**
      * ClientActivitiesMode defines whether windows from the current activity or from all
@@ -55,7 +56,7 @@ public:
     enum ClientActivitiesMode {
         AllActivitiesClients, ///< Windows from all Activities are included.
         OnlyCurrentActivityClients, ///< Only Windows on current activity are included
-        ExcludeCurrentActivityClients ///< Exclude Windows on current activity
+        ExcludeCurrentActivityClients, ///< Exclude Windows on current activity
     };
     /**
      * ClientApplicationsMode defines which windows from the current application or from all
@@ -64,7 +65,7 @@ public:
     enum ClientApplicationsMode {
         AllWindowsAllApplications, ///< Windows from all applications are included
         OneWindowPerApplication, ///< Only one Window for each application is included
-        AllWindowsCurrentApplication ///< Only Windows for the current application are included
+        AllWindowsCurrentApplication, ///< Only Windows for the current application are included
     };
     /**
      * ClientMinimizedMode defines which windows are included in the Window List
@@ -73,7 +74,7 @@ public:
     enum ClientMinimizedMode {
         IgnoreMinimizedStatus, ///< Windows are included no matter they are minimized or not
         ExcludeMinimizedClients, ///< Exclude minimized Windows
-        OnlyMinimizedClients ///< Only minimized Windows are included
+        OnlyMinimizedClients, ///< Only minimized Windows are included
     };
     /**
      * ShowDesktopMode defines whether a Window representing the desktop
@@ -81,7 +82,7 @@ public:
      */
     enum ShowDesktopMode {
         DoNotShowDesktopClient, ///< A Window representing the desktop is not included
-        ShowDesktopClient ///< A Window representing the desktop is included
+        ShowDesktopClient, ///< A Window representing the desktop is included
     };
     /**
      * OrderMinimizedMode defines whether the Windows considered part of the
@@ -89,7 +90,7 @@ public:
      */
     enum OrderMinimizedMode {
         NoGroupByMinimized, ///< Windows are not grouped by whether they are minimized
-        GroupByMinimized ///< Windows are grouped by whether they are minimized or not
+        GroupByMinimized, ///< Windows are grouped by whether they are minimized or not
     };
     /**
      * ClientActivitiesMode defines whether windows from the current activity or from all
@@ -98,7 +99,7 @@ public:
     enum ClientMultiScreenMode {
         IgnoreMultiScreen, ///< Windows are included independently of the screen they are on
         OnlyCurrentScreenClients, ///< Only Windows on current screen are included
-        ExcludeCurrentScreenClients ///< Exclude Windows from the current screen
+        ExcludeCurrentScreenClients, ///< Exclude Windows from the current screen
     };
     /**
      * ClientSwitchingMode defines the sorting of the Windows in the
@@ -106,7 +107,7 @@ public:
      */
     enum ClientSwitchingMode {
         FocusChainSwitching, ///< Sort by recently used. Most recently used Window is the first
-        StackingOrderSwitching ///< Sort by current stacking order
+        StackingOrderSwitching, ///< Sort by current stacking order
     };
     TabBoxConfig();
     ~TabBoxConfig();

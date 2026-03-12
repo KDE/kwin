@@ -45,8 +45,7 @@ SyncReleasePoint::~SyncReleasePoint()
 
 static FileDescriptor mergeSyncFds(const FileDescriptor &fd1, const FileDescriptor &fd2)
 {
-    struct sync_merge_data data
-    {
+    struct sync_merge_data data{
         .name = "merged release fence",
         .fd2 = fd2.get(),
         .fence = -1,
@@ -157,4 +156,5 @@ bool SyncTimeline::isMaterialized(uint64_t timelinePoint)
                                    nullptr)
             == 0);
 }
+
 }

@@ -21,6 +21,7 @@ class Display;
 class TearingControlManagerV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     TearingControlManagerV1Interface(Display *display, QObject *parent = nullptr);
     ~TearingControlManagerV1Interface() override;
@@ -28,4 +29,5 @@ public:
 private:
     std::unique_ptr<TearingControlManagerV1InterfacePrivate> d;
 };
+
 }

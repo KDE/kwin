@@ -18,6 +18,7 @@ namespace KWin
 class SlowKeysFilter : public Plugin, public InputEventFilter
 {
     Q_OBJECT
+
 public:
     explicit SlowKeysFilter();
 
@@ -33,4 +34,5 @@ private:
     bool m_keysRejectBeep = false;
     QHash<int, std::chrono::milliseconds> m_firstEvent;
 };
+
 }

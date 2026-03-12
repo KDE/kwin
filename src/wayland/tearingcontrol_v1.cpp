@@ -102,6 +102,7 @@ void TearingControlV1Interface::wp_tearing_control_v1_destroy_resource(Resource 
 {
     delete this;
 }
+
 }
 
 #include "moc_tearingcontrol_v1.cpp"

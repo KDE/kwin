@@ -18,6 +18,7 @@ class OutputOrderV1InterfacePrivate;
 class OutputOrderV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     explicit OutputOrderV1Interface(Display *display, QObject *parent);
     ~OutputOrderV1Interface() override;

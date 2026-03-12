@@ -20,6 +20,7 @@ namespace KDecoration3
 
 namespace Configuration
 {
+
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration3");
 
 DecorationsModel::DecorationsModel(QObject *parent)

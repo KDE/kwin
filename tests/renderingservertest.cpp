@@ -78,6 +78,7 @@ static void readDisplayFromPipe(int pipe)
 class CompositorWindow : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit CompositorWindow(QWidget *parent = nullptr);
     virtual ~CompositorWindow();

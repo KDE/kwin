@@ -14,6 +14,7 @@ namespace KWin
 {
 namespace
 {
+
 const quint32 s_version = 1;
 
 TextInputContentHints convertContentHint(uint32_t hint)
@@ -103,6 +104,7 @@ TextInputChangeCause convertChangeCause(uint32_t cause)
         return TextInputChangeCause::Other;
     }
 }
+
 }
 
 TextInputManagerV3InterfacePrivate::TextInputManagerV3InterfacePrivate(TextInputManagerV3Interface *_q, Display *display)
@@ -497,6 +499,7 @@ bool TextInputV3Interface::clientSupportsTextInput(ClientConnection *client) con
 {
     return client && d->resourceMap().contains(*client);
 }
+
 }
 
 #include "moc_textinput_v3.cpp"

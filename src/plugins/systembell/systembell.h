@@ -27,6 +27,7 @@ class XdgSystemBellV1Interface;
 class SystemBellEffect : public OffscreenEffect
 {
     Q_OBJECT
+
 public:
     SystemBellEffect();
     ~SystemBellEffect() override;

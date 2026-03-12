@@ -18,11 +18,14 @@
 
 namespace KActivities
 {
+
 class Controller;
+
 }
 
 namespace KWin
 {
+
 class Window;
 class VirtualDesktop;
 

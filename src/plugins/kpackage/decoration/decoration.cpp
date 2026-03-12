@@ -9,6 +9,7 @@
 class DecorationPackage : public KPackage::PackageStructure
 {
     Q_OBJECT
+
 public:
     using KPackage::PackageStructure::PackageStructure;
     void initPackage(KPackage::Package *package) override

@@ -14,6 +14,7 @@
 class GenericSceneOpenGLTest : public QObject
 {
     Q_OBJECT
+
 public:
     ~GenericSceneOpenGLTest() override;
 

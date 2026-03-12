@@ -18,6 +18,7 @@ namespace KDecoration3
 {
 namespace Preview
 {
+
 class PreviewClient : public QObject, public DecoratedWindowPrivateV4
 {
     Q_OBJECT
@@ -48,6 +49,7 @@ class PreviewClient : public QObject, public DecoratedWindowPrivateV4
     Q_PROPERTY(bool bordersLeftEdge READ bordersLeftEdge WRITE setBordersLeftEdge NOTIFY bordersLeftEdgeChanged)
     Q_PROPERTY(bool bordersRightEdge READ bordersRightEdge WRITE setBordersRightEdge NOTIFY bordersRightEdgeChanged)
     Q_PROPERTY(bool bordersBottomEdge READ bordersBottomEdge WRITE setBordersBottomEdge NOTIFY bordersBottomEdgeChanged)
+
 public:
     explicit PreviewClient(DecoratedWindow *client, Decoration *decoration);
     ~PreviewClient() override;

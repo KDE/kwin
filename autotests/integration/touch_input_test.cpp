@@ -438,6 +438,7 @@ void TouchInputTest::testGestureDetection()
     Test::touchUp(1, timestamp++);
     Test::touchUp(2, timestamp++);
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::TouchInputTest)

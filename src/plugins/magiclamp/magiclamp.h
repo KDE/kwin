@@ -59,7 +59,7 @@ private:
         Top,
         Bottom,
         Left,
-        Right
+        Right,
     };
 };
 

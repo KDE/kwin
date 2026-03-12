@@ -1448,7 +1448,7 @@ bool primaryNodeAvailable()
 void XcbConnectionDeleter::operator()(xcb_connection_t *pointer)
 {
     xcb_disconnect(pointer);
-};
+}
 
 Test::XcbConnectionPtr createX11Connection()
 {
@@ -2619,6 +2619,7 @@ std::optional<QSize> XdgToplevelWindow::handleConfigure(const QColor &color)
     }
     return ret;
 }
+
 }
 }
 

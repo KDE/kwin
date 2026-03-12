@@ -132,4 +132,5 @@ private:
     friend class OutputDeviceModeV2InterfacePrivate;
     std::unique_ptr<OutputDeviceModeV2InterfacePrivate> d;
 };
+
 }

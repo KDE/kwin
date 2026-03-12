@@ -15,6 +15,7 @@
 
 namespace KWin
 {
+
 class Window;
 
 namespace Xwl

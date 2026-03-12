@@ -25,6 +25,7 @@
 
 namespace KWin
 {
+
 static const int s_version = 5;
 
 LinuxDmaBufV1ClientBufferIntegrationPrivate::LinuxDmaBufV1ClientBufferIntegrationPrivate(LinuxDmaBufV1ClientBufferIntegration *q, Display *display)

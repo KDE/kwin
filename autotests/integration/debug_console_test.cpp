@@ -382,6 +382,7 @@ void DebugConsoleTest::testWaylandClient()
 class HelperWindow : public QRasterWindow
 {
     Q_OBJECT
+
 public:
     HelperWindow()
         : QRasterWindow(nullptr)

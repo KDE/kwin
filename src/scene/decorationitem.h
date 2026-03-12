@@ -10,7 +10,9 @@
 
 namespace KDecoration3
 {
+
 class Decoration;
+
 }
 
 namespace KWin
@@ -25,7 +27,9 @@ class LogicalOutput;
 
 namespace Decoration
 {
+
 class DecoratedWindowImpl;
+
 }
 
 class KWIN_EXPORT DecorationRenderer : public QObject

@@ -19,12 +19,15 @@ namespace KWin
 {
 namespace Xwl
 {
+
 class Xwayland;
+
 }
 
 class ApplicationWayland : public Application
 {
     Q_OBJECT
+
 public:
     ApplicationWayland(int &argc, char **argv);
     ~ApplicationWayland() override;

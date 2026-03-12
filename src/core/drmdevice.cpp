@@ -120,4 +120,5 @@ std::unique_ptr<DrmDevice> DrmDevice::openWithAuthentication(const QString &path
     }
     return std::unique_ptr<DrmDevice>(new DrmDevice(path, buf.st_rdev, std::move(fd), device));
 }
+
 }

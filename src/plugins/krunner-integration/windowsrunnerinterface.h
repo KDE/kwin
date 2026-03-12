@@ -21,6 +21,7 @@
 
 namespace KWin
 {
+
 class VirtualDesktop;
 class Window;
 
@@ -28,6 +29,7 @@ class WindowsRunner : public Plugin, protected QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.WindowsRunner")
+
 public:
     explicit WindowsRunner();
 
@@ -57,4 +59,5 @@ private:
     RemoteMatch windowsMatch(const Window *window, const WindowsRunnerAction action = ActivateAction, qreal relevance = 1.0, qreal categoryRelevance = HighestCategoryRelevance) const;
     bool actionSupported(const Window *window, const WindowsRunnerAction action) const;
 };
+
 }

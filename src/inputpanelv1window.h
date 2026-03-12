@@ -15,11 +15,13 @@
 
 namespace KWin
 {
+
 class LogicalOutput;
 
 class InputPanelV1Window : public WaylandWindow
 {
     Q_OBJECT
+
 public:
     InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurface);
 

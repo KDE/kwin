@@ -41,6 +41,7 @@ class Xkb;
 class KWIN_EXPORT KeyboardInputRedirection : public QObject
 {
     Q_OBJECT
+
 public:
     explicit KeyboardInputRedirection(InputRedirection *parent);
     ~KeyboardInputRedirection() override;

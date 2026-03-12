@@ -16,6 +16,7 @@
 
 namespace KWin
 {
+
 class Window;
 class LogicalOutput;
 
@@ -44,7 +45,7 @@ public:
         WindowRole = Qt::UserRole + 1,
         OutputRole,
         DesktopRole,
-        ActivityRole
+        ActivityRole,
     };
 
     explicit WindowModel(QObject *parent = nullptr);

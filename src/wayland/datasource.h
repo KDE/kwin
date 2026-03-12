@@ -13,6 +13,7 @@
 
 namespace KWin
 {
+
 class DataSourceInterfacePrivate;
 class XdgToplevelDragV1Interface;
 
@@ -22,6 +23,7 @@ class XdgToplevelDragV1Interface;
 class KWIN_EXPORT DataSourceInterface : public AbstractDataSource
 {
     Q_OBJECT
+
 public:
     virtual ~DataSourceInterface();
 

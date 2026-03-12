@@ -17,9 +17,11 @@ class KActionCollection;
 
 namespace KWin
 {
+
 class ThumbnailAsideEffectConfig : public KCModule
 {
     Q_OBJECT
+
 public:
     explicit ThumbnailAsideEffectConfig(QObject *parent, const KPluginMetaData &data);
 

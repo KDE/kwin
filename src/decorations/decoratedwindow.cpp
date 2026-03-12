@@ -352,6 +352,7 @@ void DecoratedWindowImpl::popup(const KDecoration3::Positioner &positioner, QMen
         menu->popup(position.toPoint());
     }
 }
+
 }
 }
 

@@ -117,6 +117,7 @@ void BounceKeysTest::testBounce()
     QCOMPARE(keySpy.first()[1].value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Released);
     keySpy.clear();
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::BounceKeysTest)

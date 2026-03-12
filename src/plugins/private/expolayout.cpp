@@ -12,7 +12,6 @@
 #include <deque>
 #include <tuple>
 
-
 ExpoCell::ExpoCell(QQuickItem *parent)
     : QQuickItem(parent)
 {

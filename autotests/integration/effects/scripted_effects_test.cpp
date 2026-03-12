@@ -66,6 +66,7 @@ private:
 class ScriptedEffectWithDebugSpy : public KWin::ScriptedEffect
 {
     Q_OBJECT
+
 public:
     ScriptedEffectWithDebugSpy();
     bool load(const QString &name);

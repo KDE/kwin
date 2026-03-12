@@ -33,7 +33,9 @@ public:
         , m_pos(point)
         , m_time(time)
         , m_frame(std::move(frame))
-        , m_press(press){};
+        , m_press(press)
+    {
+    }
 
     int m_button;
     QPoint m_pos;
@@ -63,7 +65,7 @@ public:
     {
         m_labelDown.append(i18n("↓"));
         m_labelUp.append(i18n("↑"));
-    };
+    }
 
     inline void setPressed(bool pressed)
     {
@@ -96,6 +98,7 @@ class MouseClickEffect
     Q_PROPERTY(bool showText READ isShowText)
     Q_PROPERTY(QFont font READ font)
     Q_PROPERTY(bool enabled READ isEnabled)
+
 public:
     MouseClickEffect();
     ~MouseClickEffect() override;

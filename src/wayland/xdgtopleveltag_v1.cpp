@@ -36,4 +36,5 @@ void XdgToplevelTagManagerV1::xdg_toplevel_tag_manager_v1_set_toplevel_descripti
     interface->description = description;
     Q_EMIT interface->q->descriptionChanged();
 }
+
 }

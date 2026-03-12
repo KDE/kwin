@@ -147,4 +147,5 @@ struct DrmDeleter<drmModeLesseeListRes>
 
 template<typename T>
 using DrmUniquePtr = std::unique_ptr<T, DrmDeleter<T>>;
+
 }

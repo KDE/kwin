@@ -9,6 +9,7 @@
 
 namespace KWin
 {
+
 static const quint32 s_version = 1;
 
 IdleInhibitManagerV1InterfacePrivate::IdleInhibitManagerV1InterfacePrivate(IdleInhibitManagerV1Interface *_q, Display *display)

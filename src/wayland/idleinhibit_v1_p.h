@@ -39,4 +39,5 @@ protected:
 
     const QPointer<SurfaceInterface> m_surface;
 };
+
 }

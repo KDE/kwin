@@ -38,6 +38,7 @@ class RenderLoopDrivenQAnimationDriver;
 class KWIN_EXPORT Compositor : public QObject
 {
     Q_OBJECT
+
 public:
     static Compositor *create(QObject *parent = nullptr);
 
@@ -45,7 +46,7 @@ public:
         On = 0,
         Off,
         Starting,
-        Stopping
+        Stopping,
     };
 
     ~Compositor() override;

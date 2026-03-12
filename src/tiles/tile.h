@@ -43,7 +43,7 @@ public:
     enum class LayoutDirection {
         Floating = 0,
         Horizontal = 1,
-        Vertical = 2
+        Vertical = 2,
     };
     Q_ENUM(LayoutDirection)
 

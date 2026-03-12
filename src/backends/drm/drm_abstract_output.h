@@ -20,6 +20,7 @@ class OutputFrame;
 class DrmAbstractOutput : public BackendOutput
 {
     Q_OBJECT
+
 public:
     explicit DrmAbstractOutput();
 

@@ -33,6 +33,7 @@ class MainWindow;
 class Backend : public QObject
 {
     Q_OBJECT
+
 public:
     Backend(QObject *parent = nullptr)
         : QObject(parent)
@@ -99,7 +100,7 @@ Q_SIGNALS:
 protected:
     enum class Mode {
         Wayland = 0,
-        X = 1
+        X = 1,
     };
 
     QQuickView *view() const
@@ -122,6 +123,7 @@ private:
 class WaylandBackend : public Backend
 {
     Q_OBJECT
+
 public:
     WaylandBackend(QObject *parent = nullptr);
 
@@ -157,6 +159,7 @@ private:
 class XBackend : public Backend
 {
     Q_OBJECT
+
 public:
     XBackend(QObject *parent = nullptr);
 

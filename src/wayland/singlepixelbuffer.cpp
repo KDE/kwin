@@ -100,4 +100,5 @@ SinglePixelClientBuffer *SinglePixelClientBuffer::get(wl_resource *resource)
         return nullptr;
     }
 }
+
 }

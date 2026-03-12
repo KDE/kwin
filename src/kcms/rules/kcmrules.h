@@ -13,6 +13,7 @@
 
 namespace KWin
 {
+
 class RuleSettings;
 
 class KCMKWinRules : public KQuickConfigModule

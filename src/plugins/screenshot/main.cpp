@@ -16,6 +16,7 @@ class KWIN_EXPORT ScreenshotManagerFactory : public PluginFactory
     Q_OBJECT
     Q_PLUGIN_METADATA(IID PluginFactory_iid FILE "metadata.json")
     Q_INTERFACES(KWin::PluginFactory)
+
 public:
     explicit ScreenshotManagerFactory() = default;
 

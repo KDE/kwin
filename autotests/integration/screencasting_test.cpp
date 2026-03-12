@@ -41,6 +41,7 @@ namespace KWin
 class ScreencastingTest : public GenericSceneOpenGLTest
 {
     Q_OBJECT
+
 public:
     ScreencastingTest()
         : GenericSceneOpenGLTest(QByteArrayLiteral("O2"))

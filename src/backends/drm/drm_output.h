@@ -35,6 +35,7 @@ class OutputChangeSet;
 class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
     Q_OBJECT
+
 public:
     explicit DrmOutput(const std::shared_ptr<DrmConnector> &connector, DrmPipeline *pipeline);
 

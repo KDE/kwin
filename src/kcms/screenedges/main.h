@@ -17,6 +17,7 @@
 
 namespace KWin
 {
+
 class KWinScreenEdgeData;
 class KWinScreenEdgesConfigForm;
 class KWinScreenEdgeScriptSettings;
@@ -52,7 +53,7 @@ private:
         Grid,
         TabBox,
         TabBoxAlternative,
-        EffectCount
+        EffectCount,
     };
 
     void monitorInit();

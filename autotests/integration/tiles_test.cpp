@@ -887,6 +887,7 @@ void TilesTest::evacuateFromRemovedDesktop()
         QCOMPARE(window->frameGeometry(), RectF(0, 0, 100, 100));
     }
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::TilesTest)

@@ -13,11 +13,13 @@
 
 namespace KWin
 {
+
 class Window;
 
 class PopupInputFilter : public QObject, public InputEventFilter
 {
     Q_OBJECT
+
 public:
     explicit PopupInputFilter();
     bool pointerButton(PointerButtonEvent *event) override;
@@ -33,4 +35,5 @@ private:
 
     QList<Window *> m_popupWindows;
 };
+
 }

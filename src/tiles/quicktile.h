@@ -21,6 +21,7 @@ class VirtualDesktop;
 class KWIN_EXPORT QuickRootTile : public Tile
 {
     Q_OBJECT
+
 public:
     QuickRootTile(TileManager *tiling, VirtualDesktop *desktop);
     ~QuickRootTile();

@@ -25,6 +25,7 @@ class Workspace;
 class PlacementTracker : public QObject
 {
     Q_OBJECT
+
 public:
     PlacementTracker(Workspace *workspace);
 

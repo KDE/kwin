@@ -20,6 +20,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Display;
 class Gravity;
 class OutputInterface;

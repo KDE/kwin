@@ -17,6 +17,7 @@
 
 namespace KWin
 {
+
 static const int s_version = 6;
 
 XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
@@ -120,8 +121,9 @@ Display *XdgShellInterface::display() const
 quint32 XdgShellInterface::ping(XdgSurfaceInterface *surface)
 {
     XdgShellInterfacePrivate::Resource *clientResource = d->resourceForXdgSurface(surface);
-    if (!clientResource)
+    if (!clientResource) {
         return 0;
+    }
 
     quint32 serial = d->display->nextSerial();
     d->send_ping(clientResource->handle, serial);
@@ -1290,8 +1292,9 @@ RectF XdgPositioner::placement(const RectF &bounds) const
 XdgPositioner XdgPositioner::get(::wl_resource *resource)
 {
     XdgPositionerPrivate *xdgPositionerPrivate = XdgPositionerPrivate::get(resource);
-    if (xdgPositionerPrivate)
+    if (xdgPositionerPrivate) {
         return XdgPositioner(xdgPositionerPrivate->data);
+    }
     return XdgPositioner();
 }
 

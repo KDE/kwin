@@ -61,4 +61,5 @@ private:
     QImage m_image;
     std::unique_ptr<CpuRenderTimeQuery> m_renderTime;
 };
+
 }

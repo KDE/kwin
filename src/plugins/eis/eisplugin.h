@@ -10,12 +10,15 @@
 
 namespace KWin
 {
+
 class EisInputCaptureManager;
+
 };
 
 class EisPlugin : public KWin::Plugin
 {
     Q_OBJECT
+
 public:
     EisPlugin();
     ~EisPlugin() override;

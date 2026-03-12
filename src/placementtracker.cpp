@@ -211,6 +211,7 @@ void PlacementTracker::uninhibit()
     Q_ASSERT(m_inhibitCount > 0);
     m_inhibitCount--;
 }
+
 }
 
 #include "moc_placementtracker.cpp"

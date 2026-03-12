@@ -96,6 +96,7 @@ std::optional<std::pair<DrmUniquePtr<drmModePropertyRes>, uint64_t>> DrmProperty
         return std::nullopt;
     }
 }
+
 }
 
 QDebug operator<<(QDebug s, const KWin::DrmObject *obj)

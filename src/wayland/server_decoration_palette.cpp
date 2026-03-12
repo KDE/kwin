@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 static const quint32 s_version = 1;
 
 class ServerSideDecorationPaletteManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_server_decoration_palette_manager

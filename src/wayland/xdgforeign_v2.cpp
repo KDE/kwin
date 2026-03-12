@@ -13,6 +13,7 @@
 
 namespace KWin
 {
+
 static const quint32 s_exporterVersion = 1;
 static const quint32 s_importerVersion = 1;
 

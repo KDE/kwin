@@ -40,6 +40,7 @@ namespace KWin
 class ImageDescription : public QObject, public QtWayland::wp_image_description_v1
 {
     Q_OBJECT
+
 public:
     explicit ImageDescription(::wp_image_description_v1 *descr)
         : QtWayland::wp_image_description_v1(descr)
@@ -69,6 +70,7 @@ Q_SIGNALS:
 class ColorManagementSurface : public QObject, public QtWayland::wp_color_management_surface_v1
 {
     Q_OBJECT
+
 public:
     explicit ColorManagementSurface(::wp_color_management_surface_v1 *obj)
         : QtWayland::wp_color_management_surface_v1(obj)

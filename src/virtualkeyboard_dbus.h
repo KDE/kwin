@@ -23,6 +23,7 @@ class KWIN_EXPORT VirtualKeyboardDBus : public QObject
     Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
     Q_PROPERTY(bool visible READ isVisible NOTIFY visibleChanged)
     Q_PROPERTY(bool activeClientSupportsTextInput READ activeClientSupportsTextInput NOTIFY activeClientSupportsTextInputChanged)
+
 public:
     explicit VirtualKeyboardDBus(InputMethod *inputMethod);
     ~VirtualKeyboardDBus() override;

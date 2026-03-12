@@ -1,4 +1,3 @@
-
 /*
     SPDX-FileCopyrightText: 2022 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
@@ -59,6 +58,7 @@ enum class OutputLayerType {
 class KWIN_EXPORT OutputLayer : public QObject
 {
     Q_OBJECT
+
 public:
     explicit OutputLayer(BackendOutput *output, OutputLayerType type);
     explicit OutputLayer(BackendOutput *output, OutputLayerType type, int zpos, int minZpos, int maxZpos);

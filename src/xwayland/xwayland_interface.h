@@ -16,6 +16,7 @@ class QProcess;
 
 namespace KWin
 {
+
 class AbstractDropHandler;
 class Window;
 

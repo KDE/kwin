@@ -135,6 +135,7 @@ void VirtualDesktopPolicy::clearCache()
 
 namespace
 {
+
 template<typename T, typename U>
 quint32 getLayout(const T &layouts, const U &reference)
 {
@@ -145,6 +146,7 @@ quint32 getLayout(const T &layouts, const U &reference)
         return it.value();
     }
 }
+
 }
 
 void VirtualDesktopPolicy::desktopChanged()

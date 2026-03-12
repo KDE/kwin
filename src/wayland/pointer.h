@@ -16,6 +16,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class PointerSurfaceCursorPrivate;
 class PointerSurfaceCursor;
 class PointerInterfacePrivate;

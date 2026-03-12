@@ -15,12 +15,14 @@ namespace KDecoration3
 
 namespace Preview
 {
+
 class PreviewBridge;
 
 class ButtonsModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
+
 public:
     explicit ButtonsModel(const QList<DecorationButtonType> &buttons, QObject *parent = nullptr);
     explicit ButtonsModel(QObject *parent = nullptr);

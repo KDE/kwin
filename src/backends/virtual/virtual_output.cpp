@@ -164,6 +164,7 @@ OutputLayer *VirtualOutput::outputLayer() const
 {
     return m_layer.get();
 }
+
 }
 
 #include "moc_virtual_output.cpp"

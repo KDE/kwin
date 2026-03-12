@@ -9,6 +9,7 @@
 
 namespace KWin
 {
+
 AbstractDropHandler::AbstractDropHandler(QObject *parent)
     : QObject(parent)
 {

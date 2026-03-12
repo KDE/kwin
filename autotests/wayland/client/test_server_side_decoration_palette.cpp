@@ -38,6 +38,7 @@ public:
 class TestServerSideDecorationPalette : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestServerSideDecorationPalette(QObject *parent = nullptr);
 private Q_SLOTS:

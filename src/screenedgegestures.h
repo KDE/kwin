@@ -21,6 +21,7 @@ class ScreenEdgeGestureRecognizer;
 class KWIN_EXPORT ScreenEdgeGesture : public QObject
 {
     Q_OBJECT
+
 public:
     explicit ScreenEdgeGesture(ScreenEdgeGestureRecognizer *recognizer, SwipeDirection direction, const RectF &geometry);
     ~ScreenEdgeGesture() override;
@@ -46,6 +47,7 @@ private:
 class KWIN_EXPORT ScreenEdgeGestureRecognizer : public QObject
 {
     Q_OBJECT
+
 public:
     static constexpr double s_activationDistance = 44;
 

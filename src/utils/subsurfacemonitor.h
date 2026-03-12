@@ -13,8 +13,10 @@
 
 namespace KWin
 {
+
 class SurfaceInterface;
 class SubSurfaceInterface;
+
 }
 
 namespace KWin

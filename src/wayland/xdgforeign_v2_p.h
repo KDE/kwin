@@ -16,6 +16,7 @@
 
 namespace KWin
 {
+
 class XdgExportedV2Interface;
 class XdgImportedV2Interface;
 class XdgImporterV2Interface;
@@ -98,6 +99,7 @@ protected:
 class XdgImportedV2Interface : public QObject, QtWaylandServer::zxdg_imported_v2
 {
     Q_OBJECT
+
 public:
     explicit XdgImportedV2Interface(XdgExportedSurface *exported, wl_resource *resource);
 
@@ -119,4 +121,5 @@ protected:
     void zxdg_imported_v2_destroy(Resource *resource) override;
     void zxdg_imported_v2_destroy_resource(Resource *resource) override;
 };
+
 }

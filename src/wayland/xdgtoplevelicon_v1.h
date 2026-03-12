@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class Display;
 class XdgToplevelInterface;
 class XdgToplevelIconManagerV1InterfacePrivate;
@@ -21,6 +22,7 @@ class XdgToplevelIconManagerV1InterfacePrivate;
 class KWIN_EXPORT XdgToplevelIconManagerV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     XdgToplevelIconManagerV1Interface(Display *display, QObject *parent = nullptr);
     ~XdgToplevelIconManagerV1Interface() override;
@@ -28,4 +30,5 @@ public:
 private:
     std::unique_ptr<XdgToplevelIconManagerV1InterfacePrivate> d;
 };
+
 }

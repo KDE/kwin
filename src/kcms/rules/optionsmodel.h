@@ -67,7 +67,9 @@ public:
         : QAbstractListModel()
         , m_data(data)
         , m_index(0)
-        , m_useFlags(useFlags){};
+        , m_useFlags(useFlags)
+    {
+    }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
@@ -107,13 +109,15 @@ public:
         NoPolicy,
         StringMatch,
         SetRule,
-        ForceRule
+        ForceRule,
     };
 
 public:
     RulePolicy(Type type)
         : OptionsModel(policyOptions(type))
-        , m_type(type){};
+        , m_type(type)
+    {
+    }
 
     Type type() const;
     int value() const;

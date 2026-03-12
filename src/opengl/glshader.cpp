@@ -508,4 +508,5 @@ void GLShader::setColorspaceUniforms(const std::shared_ptr<ColorDescription> &sr
     setUniform(Mat4Uniform::DestinationToLMS, dst->containerColorimetry().toLMS());
     setUniform(Mat4Uniform::LMSToDestination, dst->containerColorimetry().fromLMS());
 }
+
 }

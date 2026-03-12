@@ -205,7 +205,6 @@ bool MouseKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
         || event->nativeScanCode == KEY_KP7
         || event->nativeScanCode == KEY_KP8
         || event->nativeScanCode == KEY_KP9) {
-
         if (!m_keyStates[event->nativeScanCode] && event->state == KWin::KeyboardKeyState::Pressed && m_currentKey == 0) {
             m_keyStates[event->nativeScanCode] = true;
             m_delayTimer.start();

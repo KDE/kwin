@@ -76,4 +76,5 @@ private:
     QPropertyAnimation *m_animation = nullptr;
     bool m_containsPointer = false;
 };
+
 }

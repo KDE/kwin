@@ -20,11 +20,14 @@ class QProcess;
 
 namespace KWin
 {
+
 class KWinTabBoxConfigForm;
 namespace TabBox
 {
+
 class KWinTabboxData;
 class TabBoxSettings;
+
 }
 
 class KWinTabBoxConfig : public KCModule

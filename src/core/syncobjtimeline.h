@@ -62,4 +62,5 @@ private:
     uint32_t m_handle = 0;
     FileDescriptor m_fileDescriptor;
 };
+
 }

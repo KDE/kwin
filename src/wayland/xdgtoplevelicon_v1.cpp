@@ -20,6 +20,7 @@
 
 namespace KWin
 {
+
 static constexpr int version = 1;
 
 class XdgToplevelIconV1Interface : public QtWaylandServer::xdg_toplevel_icon_v1
@@ -157,4 +158,5 @@ XdgToplevelIconManagerV1Interface::XdgToplevelIconManagerV1Interface(Display *di
 }
 
 XdgToplevelIconManagerV1Interface::~XdgToplevelIconManagerV1Interface() = default;
+
 }

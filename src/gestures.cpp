@@ -190,7 +190,6 @@ void GestureRecognizer::updateSwipeGesture(const QPointF &delta)
 
     // Eliminate wrong gestures (takes two iterations)
     for (int i = 0; i < 2; i++) {
-
         if (m_activeSwipeGestures.isEmpty()) {
             startSwipeGesture(m_currentFingerCount);
         }

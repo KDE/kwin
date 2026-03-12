@@ -15,6 +15,7 @@
 static const int s_version = 1;
 namespace KWin
 {
+
 class DataControlDeviceManagerV1InterfacePrivate : public QtWaylandServer::ext_data_control_manager_v1
 {
 public:

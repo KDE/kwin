@@ -616,6 +616,7 @@ public:
 class KWIN_EXPORT Effect : public QObject
 {
     Q_OBJECT
+
 public:
     // TODO: is that ok here?
     /*!
@@ -677,7 +678,7 @@ public:
      * \value ReconfigureAll Everything needs to be reconfigured
      */
     enum ReconfigureFlag {
-        ReconfigureAll = 1 << 0
+        ReconfigureAll = 1 << 0,
     };
     Q_DECLARE_FLAGS(ReconfigureFlags, ReconfigureFlag)
 
@@ -1098,6 +1099,7 @@ int Effect::animationTime(std::chrono::milliseconds defaultDuration)
 class KWIN_EXPORT EffectPluginFactory : public KPluginFactory
 {
     Q_OBJECT
+
 public:
     /*!
      * Default constructs the plugin factory.
@@ -1166,6 +1168,7 @@ public:
         Q_OBJECT                                                                       \
         Q_PLUGIN_METADATA(IID EffectPluginFactory_iid FILE jsonFile)                   \
         Q_INTERFACES(KPluginFactory)                                                   \
+                                                                                       \
     public:                                                                            \
         explicit KWIN_PLUGIN_FACTORY_NAME()                                            \
         {                                                                              \

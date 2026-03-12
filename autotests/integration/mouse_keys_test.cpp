@@ -214,6 +214,7 @@ void MouseKeysTest::testClick()
     QCOMPARE(pointerSpy.first()[3], (int)KWayland::Client::Pointer::ButtonState::Released);
     pointerSpy.clear();
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::MouseKeysTest)

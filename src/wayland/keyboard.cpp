@@ -18,6 +18,7 @@
 
 namespace KWin
 {
+
 KeyboardInterfacePrivate::KeyboardInterfacePrivate(SeatInterface *s)
     : seat(s)
 {
@@ -298,6 +299,7 @@ bool KeyboardInterface::clientUseCompositorRepetition(ClientConnection *client) 
         return keyboardResource->version() >= WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION;
     });
 }
+
 }
 
 #include "moc_keyboard.cpp"

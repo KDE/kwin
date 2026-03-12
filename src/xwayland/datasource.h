@@ -75,5 +75,6 @@ private:
     bool m_accepted = false;
     bool m_dndFinished = false;
 };
+
 }
 }

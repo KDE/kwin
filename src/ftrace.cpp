@@ -20,6 +20,7 @@
 
 namespace KWin
 {
+
 KWIN_SINGLETON_FACTORY(KWin::FTraceLogger)
 
 FTraceLogger::FTraceLogger(QObject *parent)

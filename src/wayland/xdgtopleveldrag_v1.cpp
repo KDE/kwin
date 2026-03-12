@@ -21,6 +21,7 @@
 
 namespace KWin
 {
+
 constexpr int version = 1;
 
 class XdgToplevelDragV1InterfacePrivate : public QtWaylandServer::xdg_toplevel_drag_v1
@@ -126,6 +127,7 @@ XdgToplevelDragManagerV1Interface::XdgToplevelDragManagerV1Interface(Display *di
 }
 
 XdgToplevelDragManagerV1Interface::~XdgToplevelDragManagerV1Interface() = default;
+
 }
 
 #include "moc_xdgtopleveldrag_v1.cpp"

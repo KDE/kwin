@@ -144,7 +144,6 @@ public:
 
     void invalidateDecoration() override;
 
-
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
     RectF resizeWithChecks(const RectF &geometry, const QSizeF &size) const override;
     RectF resizeWithChecks(const RectF &geometry, qreal w, qreal h, xcb_gravity_t gravity) const;
@@ -352,7 +351,7 @@ private:
         Withdrawn, ///< Not handled, as per ICCCM WithdrawnState
         Mapped, ///< The frame is mapped
         Unmapped, ///< The frame is not mapped
-        Kept ///< The frame should be unmapped, but is kept (For compositing)
+        Kept, ///< The frame should be unmapped, but is kept (For compositing)
     };
     MappingState mapping_state;
 
@@ -382,7 +381,7 @@ private:
 
     enum FullScreenMode {
         FullScreenNone,
-        FullScreenNormal
+        FullScreenNormal,
     } m_fullscreenMode;
 
     MaximizeMode max_mode;

@@ -160,7 +160,7 @@ struct libinput_event_switch : libinput_event
 {
     enum class State {
         Off,
-        On
+        On,
     };
     State state = State::Off;
 };

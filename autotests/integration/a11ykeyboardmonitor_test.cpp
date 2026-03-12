@@ -30,6 +30,7 @@ namespace KWin
 class A11yKeyboardWatcher : public QObject
 {
     Q_OBJECT
+
 public:
     A11yKeyboardWatcher()
     {
@@ -56,6 +57,7 @@ Q_SIGNALS:
 class A11yKeyboardGrabber : public QObject
 {
     Q_OBJECT
+
 public:
     A11yKeyboardGrabber()
     {
@@ -82,6 +84,7 @@ Q_SIGNALS:
 class A11yKeyboardStrokeGrabber : public QObject
 {
     Q_OBJECT
+
 public:
     struct KeyStroke
     {
@@ -414,6 +417,7 @@ const QDBusArgument &operator<<(QDBusArgument &arg, const A11yKeyboardStrokeGrab
 
     return arg;
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::A11yKeyboardMonitorTest)

@@ -1125,7 +1125,7 @@ unsigned int libinput_device_config_rotation_get_angle(struct libinput_device *d
 
 enum libinput_config_status
 libinput_device_config_rotation_set_angle(struct libinput_device *device,
-					  unsigned int degrees_cw)
+                                          unsigned int degrees_cw)
 {
     if (!device->pointer) {
         return LIBINPUT_CONFIG_STATUS_UNSUPPORTED;

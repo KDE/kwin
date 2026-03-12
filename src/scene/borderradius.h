@@ -13,7 +13,9 @@
 
 namespace KDecoration3
 {
+
 class BorderRadius;
+
 }
 
 namespace KWin

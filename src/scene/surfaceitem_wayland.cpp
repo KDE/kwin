@@ -299,6 +299,7 @@ RegionF SurfaceItemXwayland::opaque() const
     return RegionF();
 }
 #endif
+
 } // namespace KWin
 
 #include "moc_surfaceitem_wayland.cpp"

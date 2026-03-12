@@ -20,6 +20,7 @@ class QDBusServiceWatcher;
 
 namespace KWin
 {
+
 class BarrierSpy;
 class EisInputCapture;
 class EisInputCaptureFilter;
@@ -36,6 +37,7 @@ struct EisInputCaptureBarrier
 class EisInputCaptureManager : public QObject, public QDBusContext
 {
     Q_OBJECT
+
 public:
     EisInputCaptureManager();
     ~EisInputCaptureManager();
@@ -59,4 +61,5 @@ private:
     QAction *m_disableCaptureAction;
     friend class BarrierSpy;
 };
+
 }

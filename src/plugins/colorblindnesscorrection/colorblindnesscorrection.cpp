@@ -103,7 +103,7 @@ void ColorBlindnessCorrectionEffect::loadData()
         m_shader->setUniform("defectMatrix", defectMatrix);
     }
 
-    for (const auto windows = effects->stackingOrder(); EffectWindow * w : windows) {
+    for (const auto windows = effects->stackingOrder(); EffectWindow *w : windows) {
         correctColor(w);
     }
     effects->addRepaintFull();

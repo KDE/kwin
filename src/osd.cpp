@@ -63,5 +63,6 @@ void hide(HideFlags flags)
     osd()->setSkipCloseAnimation(flags.testFlag(HideFlag::SkipCloseAnimation));
     osd()->setVisible(false);
 }
+
 }
 }

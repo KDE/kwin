@@ -183,4 +183,5 @@ bool LinuxDrmSyncObjSurfaceV1::maybeEmitProtocolErrors()
     }
     return false;
 }
+
 }

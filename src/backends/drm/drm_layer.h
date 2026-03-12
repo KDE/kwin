@@ -53,4 +53,5 @@ protected:
 
     DrmPlane *m_plane = nullptr;
 };
+
 }

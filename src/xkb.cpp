@@ -1226,8 +1226,6 @@ void Xkb::setModifierLocked(KWin::Xkb::Modifier mod, bool locked)
     }
 }
 
-
-
 quint32 Xkb::numberOfLayouts() const
 {
     if (!m_keymap) {
@@ -1255,7 +1253,6 @@ std::optional<Xkb::KeyCode> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
             uint num_syms = xkb_keymap_key_get_syms_by_level(m_keymap, keycode, layout, currentLevel, &syms);
             for (uint sym = 0; sym < num_syms; sym++) {
                 if (syms[sym] == keysym) {
-
                     xkb_mod_mask_t masks[1]; // this function returns every way to shift to this level, we just need 1
                     int nMasks = xkb_keymap_key_get_mods_for_level(
                         m_keymap, keycode, layout, currentLevel,
@@ -1383,6 +1380,7 @@ xkb_keymap *Xkb::createKeymapForKeysym(xkb_keycode_t newKeycode,
     }
     return newMap;
 }
+
 }
 
 #include "moc_xkb.cpp"

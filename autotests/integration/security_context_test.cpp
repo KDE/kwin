@@ -197,6 +197,7 @@ void SecurityContextTest::testClosedCloseFdOnStartup()
     QVERIFY(connectedSpy.isEmpty());
     QVERIFY(clientConnectedspy.isEmpty());
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::SecurityContextTest)

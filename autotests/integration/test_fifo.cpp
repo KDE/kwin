@@ -1,4 +1,3 @@
-
 /*
     SPDX-FileCopyrightText: 2024 Xaver Hugl <xaver.hugl@gmail.com>
 
@@ -50,6 +49,7 @@ private Q_SLOTS:
 class FifoV1Surface : public QObject, public QtWayland::wp_fifo_v1
 {
     Q_OBJECT
+
 public:
     explicit FifoV1Surface(::wp_fifo_v1 *obj)
         : QtWayland::wp_fifo_v1(obj)
@@ -413,6 +413,7 @@ void FifoTest::testBarrierNotClearedByEmptyCommit()
     const auto diff = thisTimestamp - lastTimestamp;
     QCOMPARE_GT(diff, refreshDuration / 2);
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::FifoTest)

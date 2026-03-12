@@ -23,6 +23,7 @@ using namespace KWayland::Client;
 class XdgForeignTest : public QObject
 {
     Q_OBJECT
+
 public:
     explicit XdgForeignTest(QObject *parent = nullptr);
     virtual ~XdgForeignTest();

@@ -38,7 +38,9 @@
 
 namespace
 {
+
 constexpr int defaultFocusPolicyIndex = CLICK_TO_FOCUS;
+
 }
 
 KWinFocusConfigForm::KWinFocusConfigForm(QWidget *parent)

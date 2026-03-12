@@ -18,11 +18,14 @@ struct wl_client;
 
 namespace KWin
 {
+
 class LogicalOutput;
+
 }
 
 namespace KWin
 {
+
 class ClientConnection;
 class Display;
 class OutputInterfacePrivate;

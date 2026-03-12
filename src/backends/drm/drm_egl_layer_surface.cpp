@@ -676,6 +676,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface *surfa
     }
     return ret;
 }
+
 }
 
 #include "moc_drm_egl_layer_surface.cpp"

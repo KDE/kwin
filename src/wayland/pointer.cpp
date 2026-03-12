@@ -19,6 +19,7 @@
 
 namespace KWin
 {
+
 class PointerSurfaceCursorPrivate
 {
 public:

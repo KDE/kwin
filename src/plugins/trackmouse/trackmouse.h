@@ -37,6 +37,7 @@ class TrackMouseEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(Qt::KeyboardModifiers modifiers READ modifiers)
+
 public:
     TrackMouseEffect();
     ~TrackMouseEffect() override;
@@ -60,7 +61,7 @@ private:
     enum class State {
         ActivatedByModifiers,
         ActivatedByShortcut,
-        Inactive
+        Inactive,
     };
 
     bool needMouseEvents() const;

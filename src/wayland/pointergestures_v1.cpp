@@ -15,6 +15,7 @@
 
 namespace KWin
 {
+
 static const int s_version = 3;
 
 PointerGesturesV1InterfacePrivate::PointerGesturesV1InterfacePrivate(Display *display)

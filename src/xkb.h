@@ -38,6 +38,7 @@ class SeatInterface;
 class KWIN_EXPORT Xkb : public QObject
 {
     Q_OBJECT
+
 public:
     enum Modifier {
         NoModifier = 0,
@@ -124,7 +125,8 @@ public:
     /**
      * Returns a pair of <keycode, level> for the given keysym.
      */
-    struct KeyCode {
+    struct KeyCode
+    {
         xkb_keycode_t keyCode = 0;
         uint level = 0;
         xkb_mod_mask_t modifiers = 0;
@@ -151,7 +153,6 @@ public:
      */
     bool updateToKeymapForKeySym(xkb_keycode_t newKeycode,
                                  xkb_keysym_t customSym);
-
 
 public Q_SLOTS:
     void reconfigure();

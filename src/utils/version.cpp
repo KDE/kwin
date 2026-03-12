@@ -84,4 +84,5 @@ QByteArray Version::toByteArray() const
         return QByteArray::number(m_major) + '.' + QByteArray::number(m_minor) + '.' + QByteArray::number(m_patch);
     }
 }
+
 }

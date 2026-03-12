@@ -34,6 +34,7 @@ using namespace KWayland::Client;
 class SubSurfaceTest : public QObject
 {
     Q_OBJECT
+
 public:
     explicit SubSurfaceTest(QObject *parent = nullptr);
     virtual ~SubSurfaceTest();

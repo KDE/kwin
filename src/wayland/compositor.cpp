@@ -13,6 +13,7 @@
 
 namespace KWin
 {
+
 static const int s_version = 6;
 
 class CompositorInterfacePrivate : public QtWaylandServer::wl_compositor

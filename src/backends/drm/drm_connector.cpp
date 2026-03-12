@@ -440,7 +440,6 @@ QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj)
 {
     QDebugStateSaver saver(s);
     if (obj) {
-
         QString connState = QStringLiteral("Disconnected");
         if (!obj->m_conn || obj->m_conn->connection == DRM_MODE_UNKNOWNCONNECTION) {
             connState = QStringLiteral("Unknown Connection");
@@ -515,4 +514,5 @@ BackendOutput::RgbRange DrmConnector::broadcastRgbToRgbRange(BroadcastRgbOptions
         Q_UNREACHABLE();
     }
 }
+
 }

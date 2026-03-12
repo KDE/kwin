@@ -19,6 +19,7 @@ class Transaction;
 class FifoManagerV1 : public QObject, public QtWaylandServer::wp_fifo_manager_v1
 {
     Q_OBJECT
+
 public:
     explicit FifoManagerV1(Display *display, QObject *parent);
 

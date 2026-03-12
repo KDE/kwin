@@ -29,6 +29,7 @@ K_PLUGIN_CLASS(KWin::ThumbnailAsideEffectConfig)
 
 namespace KWin
 {
+
 ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QObject *parent, const KPluginMetaData &data)
     : KCModule(parent, data)
 {

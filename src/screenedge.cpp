@@ -156,8 +156,8 @@ void Edge::reserve(QObject *object, const char *slot)
 void Edge::reserveTouchCallBack(QAction *action, TouchCallback::CallbackFunction callback)
 {
     if (std::any_of(m_touchCallbacks.constBegin(), m_touchCallbacks.constEnd(), [action](const TouchCallback &c) {
-            return c.touchUpAction() == action;
-        })) {
+        return c.touchUpAction() == action;
+    })) {
         return;
     }
     reserveTouchCallBack(TouchCallback(action, callback));
@@ -166,8 +166,8 @@ void Edge::reserveTouchCallBack(QAction *action, TouchCallback::CallbackFunction
 void Edge::reserveTouchCallBack(const TouchCallback &callback)
 {
     if (std::any_of(m_touchCallbacks.constBegin(), m_touchCallbacks.constEnd(), [callback](const TouchCallback &c) {
-            return c.touchUpAction() == callback.touchUpAction();
-        })) {
+        return c.touchUpAction() == callback.touchUpAction();
+    })) {
         return;
     }
     const bool wasTouch = activatesForTouchGesture();

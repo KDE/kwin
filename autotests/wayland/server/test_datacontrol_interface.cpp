@@ -42,6 +42,7 @@ class DataControlDeviceManager : public QObject, public QtWayland::ext_data_cont
 class DataControlOffer : public QObject, public QtWayland::ext_data_control_offer_v1
 {
     Q_OBJECT
+
 public:
     ~DataControlOffer()
     {
@@ -65,6 +66,7 @@ private:
 class DataControlDevice : public QObject, public QtWayland::ext_data_control_device_v1
 {
     Q_OBJECT
+
 public:
     ~DataControlDevice()
     {
@@ -97,6 +99,7 @@ protected:
 class DataControlSource : public QObject, public QtWayland::ext_data_control_source_v1
 {
     Q_OBJECT
+
 public:
     ~DataControlSource()
     {
@@ -109,6 +112,7 @@ public:
 class TestDataSource : public AbstractDataSource
 {
     Q_OBJECT
+
 public:
     TestDataSource()
         : AbstractDataSource(nullptr)
@@ -121,7 +125,9 @@ public:
     void requestData(const QString &mimeType, FileDescriptor fd) override
     {
     }
-    void cancel() override{};
+    void cancel() override
+    {
+    }
     QStringList mimeTypes() const override
     {
         return {"text/test1", "text/test2"};

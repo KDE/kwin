@@ -62,6 +62,7 @@ void XWaylandInputTest::init()
 class X11EventReaderHelper : public QObject
 {
     Q_OBJECT
+
 public:
     X11EventReaderHelper(xcb_connection_t *c);
 

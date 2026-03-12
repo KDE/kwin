@@ -15,6 +15,7 @@
 
 namespace KWin
 {
+
 static const quint32 s_version = 3;
 
 class PlasmaVirtualDesktopInterfacePrivate : public QtWaylandServer::org_kde_plasma_virtual_desktop

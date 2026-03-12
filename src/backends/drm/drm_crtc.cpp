@@ -131,4 +131,5 @@ void DrmCrtc::releaseCurrentBuffer()
         m_currentBuffer->releaseBuffer();
     }
 }
+
 }

@@ -22,10 +22,12 @@ class QTimer;
 
 namespace KWin
 {
+
 class AbstractDataSource;
 
 namespace Xwl
 {
+
 class TransferWltoX;
 class TransferXtoWl;
 class XwlDataSource;

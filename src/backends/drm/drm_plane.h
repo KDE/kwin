@@ -30,6 +30,7 @@ class DrmCrtc;
 class DrmPlane : public DrmObject
 {
     Q_GADGET
+
 public:
     DrmPlane(DrmGpu *gpu, uint32_t planeId);
 
@@ -56,7 +57,7 @@ public:
     enum class TypeIndex : uint64_t {
         Overlay = 0,
         Primary = 1,
-        Cursor = 2
+        Cursor = 2,
     };
     enum class Transformation : uint32_t {
         Rotate0 = 1 << 0,
@@ -64,7 +65,7 @@ public:
         Rotate180 = 1 << 2,
         Rotate270 = 1 << 3,
         ReflectX = 1 << 4,
-        ReflectY = 1 << 5
+        ReflectY = 1 << 5,
     };
     Q_ENUM(Transformation)
     Q_DECLARE_FLAGS(Transformations, Transformation)
@@ -72,16 +73,16 @@ public:
     enum class PixelBlendMode : uint64_t {
         None,
         PreMultiplied,
-        Coverage
+        Coverage,
     };
     enum class ColorEncoding : uint64_t {
         BT601_YCbCr,
         BT709_YCbCr,
-        BT2020_YCbCr
+        BT2020_YCbCr,
     };
     enum class ColorRange : uint64_t {
         Limited_YCbCr,
-        Full_YCbCr
+        Full_YCbCr,
     };
 
     DrmEnumProperty<TypeIndex> type;

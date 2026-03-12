@@ -40,11 +40,14 @@ class QMouseEvent;
 
 namespace KDecoration3
 {
+
 class Decoration;
+
 }
 
 namespace KWin
 {
+
 class PlasmaWindowInterface;
 class SurfaceInterface;
 class Group;
@@ -59,8 +62,10 @@ class WindowItem;
 
 namespace Decoration
 {
+
 class DecoratedWindowImpl;
 class DecorationPalette;
+
 }
 
 using ElectricBorderMode = std::variant<QuickTileMode, MaximizeMode>;
@@ -612,6 +617,7 @@ class KWIN_EXPORT Window : public QObject
      * It will also be applied for all transient windows recursively.
      */
     Q_PROPERTY(bool excludeFromCapture READ excludeFromCapture WRITE setExcludeFromCapture NOTIFY excludeFromCaptureChanged FINAL)
+
 public:
     ~Window() override;
 
@@ -746,7 +752,7 @@ public:
         SizeModeAny,
         SizeModeFixedW, ///< Try not to affect width
         SizeModeFixedH, ///< Try not to affect height
-        SizeModeMax ///< Try not to make it larger in either direction
+        SizeModeMax, ///< Try not to make it larger in either direction
     };
 
     virtual QSizeF constrainClientSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
@@ -845,7 +851,9 @@ public:
      * Refresh Window's cache of activities
      * Called when activity daemon status changes
      */
-    virtual void checkActivities(){};
+    virtual void checkActivities()
+    {
+    }
 
     virtual QString windowRole() const;
     QString resourceName() const;
@@ -919,7 +927,9 @@ public:
      * @see hasPopupGrab
      * @since 5.10
      */
-    virtual void popupDone(){};
+    virtual void popupDone()
+    {
+    }
 
     /**
      * @brief Finds the Window matching the condition expressed in @p func in @p list.
@@ -1309,7 +1319,7 @@ public:
 
     enum class SameApplicationCheck {
         RelaxedForActive = 1 << 0,
-        AllowCrossProcesses = 1 << 1
+        AllowCrossProcesses = 1 << 1,
     };
     Q_DECLARE_FLAGS(SameApplicationChecks, SameApplicationCheck)
     static bool belongToSameApplication(const Window *c1, const Window *c2, SameApplicationChecks checks = SameApplicationChecks());

@@ -16,6 +16,7 @@ class QSocketNotifier;
 
 namespace KWin
 {
+
 static const quint32 s_version = 1;
 
 class SecurityContextManagerV1InterfacePrivate : public QtWaylandServer::wp_security_context_manager_v1

@@ -31,6 +31,7 @@ class ThumbnailAsideEffect
     Q_PROPERTY(int spacing READ configuredSpacing)
     Q_PROPERTY(qreal opacity READ configuredOpacity)
     Q_PROPERTY(int screen READ configuredScreen)
+
 public:
     ThumbnailAsideEffect();
     void reconfigure(ReconfigureFlags) override;

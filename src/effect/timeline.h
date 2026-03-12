@@ -64,7 +64,7 @@ public:
      */
     enum Direction {
         Forward,
-        Backward
+        Backward,
     };
 
     /**
@@ -232,7 +232,7 @@ public:
 
     enum class RedirectMode {
         Strict,
-        Relaxed
+        Relaxed,
     };
 
     /**

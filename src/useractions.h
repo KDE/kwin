@@ -47,6 +47,7 @@ class Window;
 class KWIN_EXPORT UserActionsMenu : public QObject
 {
     Q_OBJECT
+
 public:
     explicit UserActionsMenu(QObject *parent = nullptr);
     ~UserActionsMenu() override;
@@ -220,6 +221,7 @@ class ShortcutDialog
     : public QDialog
 {
     Q_OBJECT
+
 public:
     explicit ShortcutDialog(const QKeySequence &cut);
     void accept() override;

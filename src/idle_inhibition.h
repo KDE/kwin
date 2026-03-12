@@ -15,11 +15,13 @@
 
 namespace KWin
 {
+
 class Window;
 
 class IdleInhibition : public QObject
 {
     Q_OBJECT
+
 public:
     explicit IdleInhibition(QObject *parent = nullptr);
     ~IdleInhibition() override;
@@ -37,4 +39,5 @@ private:
 
     QMap<Window *, QMetaObject::Connection> m_connections;
 };
+
 }

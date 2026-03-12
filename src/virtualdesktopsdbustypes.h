@@ -21,6 +21,7 @@ struct DBusDesktopDataStruct
     QString name;
 };
 typedef QList<DBusDesktopDataStruct> DBusDesktopDataVector;
+
 }
 
 const QDBusArgument &operator<<(QDBusArgument &argument, const KWin::DBusDesktopDataStruct &desk);

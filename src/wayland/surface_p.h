@@ -21,6 +21,7 @@
 
 namespace KWin
 {
+
 class IdleInhibitorV1Interface;
 class ViewportInterface;
 class ContentTypeV1Interface;

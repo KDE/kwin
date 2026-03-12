@@ -9,7 +9,9 @@
 
 namespace KSvg
 {
+
 class ImageSet;
+
 }
 
 class ScreenPreviewWidgetPrivate;

@@ -16,6 +16,7 @@
 
 namespace KWin
 {
+
 DataSourceInterfacePrivate::DataSourceInterfacePrivate(DataSourceInterface *_q, ::wl_resource *resource)
     : QtWaylandServer::wl_data_source(resource)
     , q(_q)

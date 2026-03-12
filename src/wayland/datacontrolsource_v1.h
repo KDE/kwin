@@ -14,6 +14,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class DataControlSourceV1InterfacePrivate;
 
 /**

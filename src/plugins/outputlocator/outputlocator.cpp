@@ -112,6 +112,7 @@ void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const Re
         effects->renderOffscreenQuickView(renderTarget, viewport, it->second.get());
     }
 }
+
 }
 
 #include "moc_outputlocator.cpp"

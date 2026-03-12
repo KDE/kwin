@@ -20,6 +20,7 @@ class QQmlComponent;
 
 namespace KWin
 {
+
 class OutlineVisual;
 
 /**
@@ -40,6 +41,7 @@ class KWIN_EXPORT Outline : public QObject
     Q_PROPERTY(KWin::Rect visualParentGeometry READ visualParentGeometry NOTIFY visualParentGeometryChanged)
     Q_PROPERTY(KWin::Rect unifiedGeometry READ unifiedGeometry NOTIFY unifiedGeometryChanged)
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
+
 public:
     explicit Outline();
     ~Outline() override;
@@ -128,4 +130,5 @@ protected:
     std::unique_ptr<QQmlComponent> m_qmlComponent;
     std::unique_ptr<QObject> m_mainItem;
 };
+
 }

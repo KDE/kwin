@@ -57,6 +57,7 @@ class KWIN_EXPORT VirtualDesktop : public QObject
      * \qmlproperty string VirtualDesktop::name
      */
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+
 public:
     explicit VirtualDesktop(QObject *parent = nullptr);
     ~VirtualDesktop() override;
@@ -173,6 +174,7 @@ class KWIN_EXPORT VirtualDesktopManager : public QObject
      * Whether navigation in the desktop layout wraps around at the borders.
      */
     Q_PROPERTY(bool navigationWrappingAround READ isNavigationWrappingAround WRITE setNavigationWrappingAround NOTIFY navigationWrappingAroundChanged)
+
 public:
     ~VirtualDesktopManager() override;
 
@@ -245,7 +247,7 @@ public:
         Right,
         Left,
         Next,
-        Previous
+        Previous,
     };
     VirtualDesktop *inDirection(VirtualDesktop *desktop, Direction direction, bool wrap = true);
     uint inDirection(uint desktop, Direction direction, bool wrap = true);

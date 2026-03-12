@@ -18,6 +18,7 @@
 
 namespace KWin
 {
+
 class DataControlDeviceV1InterfacePrivate : public QtWaylandServer::ext_data_control_device_v1
 {
 public:
@@ -146,6 +147,7 @@ void DataControlDeviceV1Interface::sendPrimarySelection(AbstractDataSource *othe
     DataControlOfferV1Interface *offer = d->createDataOffer(other);
     d->send_primary_selection(offer ? offer->resource() : nullptr);
 }
+
 }
 
 #include "moc_datacontroldevice_v1.cpp"

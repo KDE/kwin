@@ -18,9 +18,11 @@ class KActionCollection;
 
 namespace KWin
 {
+
 class TrackMouseEffectConfig : public KCModule
 {
     Q_OBJECT
+
 public:
     explicit TrackMouseEffectConfig(QObject *parent, const KPluginMetaData &data);
     ~TrackMouseEffectConfig() override;

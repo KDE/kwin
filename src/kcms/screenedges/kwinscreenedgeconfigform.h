@@ -14,7 +14,9 @@
 
 namespace Ui
 {
+
 class KWinScreenEdgesConfigUI;
+
 }
 
 namespace KWin

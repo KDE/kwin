@@ -23,6 +23,7 @@
 class TestWaylandOutput : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestWaylandOutput(QObject *parent = nullptr);
 private Q_SLOTS:

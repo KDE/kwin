@@ -21,6 +21,7 @@
 
 namespace KWin
 {
+
 KWIN_EXPORT Q_NAMESPACE
 
     enum CompositingType {
@@ -132,7 +133,7 @@ enum class SwipeDirection {
 
 enum class PinchDirection {
     Expanding,
-    Contracting
+    Contracting,
 };
 
 /**
@@ -281,7 +282,7 @@ Q_ENUM_NS(VrrPolicy);
 
 enum class PresentationModeHint {
     VSync,
-    Async
+    Async,
 };
 Q_ENUM_NS(PresentationModeHint);
 
@@ -422,6 +423,7 @@ enum class OutputConfigurationError {
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)
 
 #define KWIN_SINGLETON_VARIABLE(ClassName, variableName) \
+                                                         \
 public:                                                  \
     static ClassName *create(QObject *parent = nullptr); \
     static ClassName *self()                             \

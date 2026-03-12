@@ -13,6 +13,7 @@
 
 namespace KWin
 {
+
 class Display;
 class SeatInterface;
 class IdleTimeoutInterface;

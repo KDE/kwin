@@ -18,6 +18,7 @@ class SurfaceInterface;
 class ColorRepresentationManagerV1 : public QObject, private QtWaylandServer::wp_color_representation_manager_v1
 {
     Q_OBJECT
+
 public:
     explicit ColorRepresentationManagerV1(Display *display, QObject *parent);
 

@@ -231,6 +231,7 @@ std::unique_ptr<LinuxDmabufFeedbackV1> LinuxDmabufV1::getSurfaceFeedback(wl_surf
 {
     return std::make_unique<LinuxDmabufFeedbackV1>(zwp_linux_dmabuf_v1_get_surface_feedback(m_dmabuf, surface));
 }
+
 }
 
 #include "moc_linuxdmabuf.cpp"

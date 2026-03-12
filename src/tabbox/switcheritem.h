@@ -36,6 +36,7 @@ class SwitcherItem : public QObject
     Q_PROPERTY(QObject *item READ item WRITE setItem NOTIFY itemChanged)
 
     Q_CLASSINFO("DefaultProperty", "item")
+
 public:
     SwitcherItem(QObject *parent = nullptr);
     ~SwitcherItem() override;

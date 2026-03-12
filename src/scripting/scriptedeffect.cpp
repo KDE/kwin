@@ -47,7 +47,7 @@ struct AnimationSettings
         Duration = 1 << 3,
         FullScreen = 1 << 4,
         KeepAlive = 1 << 5,
-        FrozenTime = 1 << 6
+        FrozenTime = 1 << 6,
     };
     AnimationEffect::Attribute type;
     QEasingCurve::Type curve;

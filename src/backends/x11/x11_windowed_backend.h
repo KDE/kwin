@@ -28,6 +28,7 @@ class QSocketNotifier;
 
 namespace KWin
 {
+
 class X11WindowedBackend;
 class X11WindowedOutput;
 class RenderDevice;

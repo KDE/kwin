@@ -143,7 +143,7 @@ static inline bool isIrrelevant(const Window *window, const Window *regarding, V
         || !window->isOnDesktop(desktop)
         || !window->isOnCurrentActivity()
         || window->isDesktop();
-};
+}
 
 /**
  * Place the client \a c according to a really smart placement algorithm :-)
@@ -254,7 +254,6 @@ std::optional<PlacementCommand> Placement::placeSmart(const Window *window, cons
 
         // really need to loop? test if there's any overlap
         if (overlap > none) {
-
             possible = area_xr;
             if (possible - cw > x) {
                 possible -= cw;
@@ -275,7 +274,6 @@ std::optional<PlacementCommand> Placement::placeSmart(const Window *window, cons
                 // if not enough room above or under the current tested client
                 // determine the first non-overlapped x position
                 if ((y < yb) && (yt < ch + y)) {
-
                     if ((xr > x) && (possible > xr)) {
                         possible = xr;
                     }

@@ -28,6 +28,7 @@ class DrmDevice;
 class KWIN_EXPORT LinuxDmaBufV1Feedback : public QObject
 {
     Q_OBJECT
+
 public:
     ~LinuxDmaBufV1Feedback() override;
 

@@ -10,6 +10,7 @@
 
 namespace KWin
 {
+
 static constexpr int s_version = 1;
 
 class FixesInterfacePrivate : public QtWaylandServer::wl_fixes

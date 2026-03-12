@@ -12,6 +12,7 @@
 
 namespace KWin
 {
+
 class Display;
 class PlasmaVirtualDesktopInterface;
 class PlasmaVirtualDesktopInterfacePrivate;
@@ -94,6 +95,7 @@ private:
 class KWIN_EXPORT PlasmaVirtualDesktopInterface : public QObject
 {
     Q_OBJECT
+
 public:
     ~PlasmaVirtualDesktopInterface() override;
 

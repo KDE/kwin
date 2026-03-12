@@ -36,6 +36,7 @@ private:
 class KWIN_EXPORT ShadowInterface : public QObject
 {
     Q_OBJECT
+
 public:
     ~ShadowInterface() override;
 

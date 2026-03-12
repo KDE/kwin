@@ -17,6 +17,7 @@
 
 namespace KWin
 {
+
 class RootInfo;
 
 class RootInfoFilter : public X11EventFilter

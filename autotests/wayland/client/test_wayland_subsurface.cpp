@@ -30,6 +30,7 @@ Q_DECLARE_METATYPE(KWayland::Client::SubSurface::Mode)
 class TestSubSurface : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestSubSurface(QObject *parent = nullptr);
 private Q_SLOTS:

@@ -12,6 +12,7 @@
 
 namespace KWin
 {
+
 class LayerShellV1InterfacePrivate;
 class LayerSurfaceV1Interface;
 class LayerSurfaceV1InterfacePrivate;

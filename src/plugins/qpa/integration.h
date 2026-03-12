@@ -29,6 +29,7 @@ class Screen;
 class Integration : public QObject, public QPlatformIntegration
 {
     Q_OBJECT
+
 public:
     explicit Integration();
     ~Integration() override;

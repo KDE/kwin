@@ -85,30 +85,30 @@ public:
     enum class BroadcastRgbOptions : uint64_t {
         Automatic = 0,
         Full = 1,
-        Limited = 2
+        Limited = 2,
     };
     enum class LinkStatus : uint64_t {
         Good = 0,
-        Bad = 1
+        Bad = 1,
     };
     enum class DrmContentType : uint64_t {
         None = 0,
         Graphics = 1,
         Photo = 2,
         Cinema = 3,
-        Game = 4
+        Game = 4,
     };
     enum class PanelOrientation : uint64_t {
         Normal = 0,
         UpsideDown = 1,
         LeftUp = 2,
-        RightUp = 3
+        RightUp = 3,
     };
     enum class ScalingMode : uint64_t {
         None = 0,
         Full = 1,
         Center = 2,
-        Full_Aspect = 3
+        Full_Aspect = 3,
     };
     enum class Colorspace : uint64_t {
         Default,

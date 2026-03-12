@@ -16,6 +16,7 @@
 
 namespace KWin
 {
+
 class DataOfferInterfacePrivate : public QtWaylandServer::wl_data_offer
 {
 public:
@@ -208,6 +209,7 @@ void DataOfferInterface::dndAction(DnDAction action)
     }
     d->send_action(wlAction);
 }
+
 }
 
 #include "moc_dataoffer.cpp"

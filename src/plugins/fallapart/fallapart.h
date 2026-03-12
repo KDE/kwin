@@ -27,6 +27,7 @@ class FallApartEffect : public OffscreenEffect
 {
     Q_OBJECT
     Q_PROPERTY(int blockSize READ configuredBlockSize)
+
 public:
     FallApartEffect();
     void reconfigure(ReconfigureFlags) override;

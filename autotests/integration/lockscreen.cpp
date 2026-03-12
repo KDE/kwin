@@ -87,6 +87,7 @@ private:
 class HelperEffect : public Effect
 {
     Q_OBJECT
+
 public:
     HelperEffect()
     {

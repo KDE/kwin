@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class Display;
 class PointerGesturesV1InterfacePrivate;
 

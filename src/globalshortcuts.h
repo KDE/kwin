@@ -23,6 +23,7 @@ class KGlobalAccelInterface;
 #endif
 namespace KWin
 {
+
 class GlobalShortcut;
 class SwipeGesture;
 class PinchGesture;
@@ -30,7 +31,7 @@ class GestureRecognizer;
 
 enum class DeviceType {
     Touchpad,
-    Touchscreen
+    Touchscreen,
 };
 
 /**
@@ -45,6 +46,7 @@ enum class DeviceType {
 class GlobalShortcutsManager : public QObject
 {
     Q_OBJECT
+
 public:
     explicit GlobalShortcutsManager(QObject *parent = nullptr);
     ~GlobalShortcutsManager() override;

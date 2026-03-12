@@ -8,6 +8,7 @@
 
 namespace KWin
 {
+
 static int s_lastDeviceId = 0;
 
 FakeInputDevice::FakeInputDevice(QObject *parent)

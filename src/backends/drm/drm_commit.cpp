@@ -319,4 +319,5 @@ void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp)
     }
     m_pipeline->pageFlipped(timestamp);
 }
+
 }

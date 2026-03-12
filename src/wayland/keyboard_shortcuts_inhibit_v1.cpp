@@ -17,6 +17,7 @@ static const int s_version = 1;
 
 namespace KWin
 {
+
 class KeyboardShortcutsInhibitorV1InterfacePrivate : public QtWaylandServer::zwp_keyboard_shortcuts_inhibitor_v1
 {
 public:

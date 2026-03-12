@@ -47,6 +47,7 @@ using namespace std::chrono_literals;
 
 namespace
 {
+
 #if defined(Q_OS_LINUX)
 std::optional<QString> exeOf(pid_t pid)
 {

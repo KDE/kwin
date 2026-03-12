@@ -31,6 +31,7 @@ namespace KWayland
 {
 namespace Client
 {
+
 class Keyboard;
 class Pointer;
 class PointerSwipeGesture;
@@ -40,11 +41,13 @@ class Seat;
 class Surface;
 class Touch;
 class SubSurface;
+
 }
 }
 
 namespace KWin
 {
+
 class GraphicsBuffer;
 class DrmDevice;
 class RenderDevice;
@@ -114,6 +117,7 @@ private:
 class WaylandSeat : public QObject
 {
     Q_OBJECT
+
 public:
     WaylandSeat(KWayland::Client::Seat *nativeSeat, WaylandBackend *backend);
     ~WaylandSeat() override;

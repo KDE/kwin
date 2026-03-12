@@ -21,7 +21,9 @@
 
 namespace KDecoration3
 {
+
 class DecorationState;
+
 }
 
 namespace KWin

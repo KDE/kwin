@@ -15,6 +15,7 @@
 
 namespace KWin
 {
+
 class Rules;
 class RuleSettings;
 

@@ -29,7 +29,7 @@ public:
     enum class ConfiguredMode {
         Auto,
         Off,
-        On
+        On,
     };
 
     explicit TabletModeManager();
@@ -57,4 +57,5 @@ private:
     bool m_detecting = false;
     ConfiguredMode m_configuredMode = ConfiguredMode::Auto;
 };
+
 }

@@ -25,7 +25,7 @@ enum XwaylandEavesdropsMode {
     None,
     NonCharacterKeys,
     AllKeysWithModifier,
-    All
+    All,
 };
 
 /**
@@ -185,6 +185,7 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(Qt::Corner pictureInPictureHomeCorner READ pictureInPictureHomeCorner WRITE setPictureInPictureHomeCorner NOTIFY pictureInPictureHomeCornerChanged)
     Q_PROPERTY(int pictureInPictureMargin READ pictureInPictureMargin WRITE setPictureInPictureMargin NOTIFY pictureInPictureMarginChanged)
     Q_PROPERTY(bool overlayVirtualKeyboardOnWindows READ overlayVirtualKeyboardOnWindows WRITE setOverlayVirtualKeyboardOnWindows NOTIFY overlayVirtualKeyboardOnWindowsChanged)
+
 public:
     explicit Options(QObject *parent = nullptr);
     ~Options() override;
@@ -224,7 +225,7 @@ public:
          * the mouse points onto the desktop, the desktop has focus. The same holds
          * for windows on the dock.
          */
-        FocusStrictlyUnderMouse
+        FocusStrictlyUnderMouse,
     };
     Q_ENUM(FocusPolicy)
 
@@ -473,7 +474,7 @@ public:
         MouseWheelAboveBelow,
         MouseWheelPreviousNextDesktop,
         MouseWheelChangeOpacity,
-        MouseWheelNothing
+        MouseWheelNothing,
     };
     Q_ENUM(MouseWheelCommand)
 

@@ -40,7 +40,7 @@ public:
         Inactive,
         Activating,
         Deactivating,
-        Active
+        Active,
     };
 
     WindowViewEffect();

@@ -1023,7 +1023,7 @@ private:
             ResizeIncrements = 64,
             Aspect = 128,
             BaseSize = 256,
-            WindowGravity = 512
+            WindowGravity = 512,
         };
         qint32 flags = 0;
         qint32 pad[4] = {0, 0, 0, 0};
@@ -1146,7 +1146,7 @@ private:
     };
     enum class Hints {
         Functions = (1L << 0),
-        Decorations = (1L << 1)
+        Decorations = (1L << 1),
     };
     enum class Functions {
         All = (1L << 0),
@@ -1154,7 +1154,7 @@ private:
         Move = (1L << 2),
         Minimize = (1L << 3),
         Maximize = (1L << 4),
-        Close = (1L << 5)
+        Close = (1L << 5),
     };
     bool testFunction(Functions flag) const
     {
@@ -1179,6 +1179,7 @@ private:
 
 namespace RandR
 {
+
 XCB_WRAPPER(ScreenInfo, xcb_randr_get_screen_info, xcb_window_t)
 
 XCB_WRAPPER_DATA(ScreenResourcesData, xcb_randr_get_screen_resources, xcb_window_t)
@@ -1415,6 +1416,7 @@ public:
 private:
     xcb_atom_t m_type;
 };
+
 }
 
 class ExtensionData

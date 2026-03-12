@@ -22,6 +22,7 @@ namespace Decoration
 class SettingsImpl : public QObject, public KDecoration3::DecorationSettingsPrivateV2
 {
     Q_OBJECT
+
 public:
     explicit SettingsImpl(KDecoration3::DecorationSettings *parent);
     ~SettingsImpl() override;
@@ -59,5 +60,6 @@ private:
     bool m_alwaysShowExcludeFromCapture = false;
     QFont m_font;
 };
+
 } // Decoration
 } // KWin

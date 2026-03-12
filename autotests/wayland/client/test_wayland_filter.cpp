@@ -28,6 +28,7 @@ class TestDisplay;
 class TestFilter : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestFilter(QObject *parent = nullptr);
 private Q_SLOTS:

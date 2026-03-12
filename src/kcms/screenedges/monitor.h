@@ -25,7 +25,9 @@ class QMenu;
 
 namespace KSvg
 {
+
 class FrameSvg;
+
 }
 
 namespace KWin
@@ -34,6 +36,7 @@ namespace KWin
 class Monitor : public ScreenPreviewWidget
 {
     Q_OBJECT
+
 public:
     explicit Monitor(QWidget *parent);
     ~Monitor();
@@ -57,7 +60,7 @@ public:
         TopRight,
         BottomLeft,
         BottomRight,
-        None
+        None,
     };
 Q_SIGNALS:
     void changed();

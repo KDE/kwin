@@ -60,6 +60,7 @@ class Window;
  */
 namespace TabBox
 {
+
 class ClientModel;
 class TabBoxConfig;
 class TabBoxHandlerPrivate;
@@ -74,6 +75,7 @@ class TabBoxHandlerPrivate;
 class TabBoxHandler : public QObject
 {
     Q_OBJECT
+
 public:
     TabBoxHandler(QObject *parent);
     ~TabBoxHandler() override;

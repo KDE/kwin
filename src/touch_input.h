@@ -24,12 +24,15 @@ class Window;
 
 namespace Decoration
 {
+
 class DecoratedWindowImpl;
+
 }
 
 class KWIN_EXPORT TouchInputRedirection : public InputDeviceHandler
 {
     Q_OBJECT
+
 public:
     explicit TouchInputRedirection(InputRedirection *parent);
     ~TouchInputRedirection() override;

@@ -457,7 +457,6 @@ void KWin::TabletInputRedirection::tabletPadRingEvent(int number, qreal position
 
 void KWin::TabletInputRedirection::tabletPadDialEvent(int number, double delta, quint32 group, std::chrono::microseconds time, InputDevice *device)
 {
-
     TabletPadDialEvent event{
         .device = device,
         .number = number,

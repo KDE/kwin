@@ -12,6 +12,7 @@
 
 namespace KWin
 {
+
 static const int s_version = 1;
 
 SubCompositorInterfacePrivate::SubCompositorInterfacePrivate(Display *display, SubCompositorInterface *q)

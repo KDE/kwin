@@ -277,6 +277,7 @@ bool SurfaceItem::hasAlphaChannel() const
 {
     return m_hasAlphaChannel;
 }
+
 } // namespace KWin
 
 #include "moc_surfaceitem.cpp"

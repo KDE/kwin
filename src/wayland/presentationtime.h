@@ -21,6 +21,7 @@ class SurfaceInterface;
 class PresentationTime : public QObject, QtWaylandServer::wp_presentation
 {
     Q_OBJECT
+
 public:
     explicit PresentationTime(Display *display, QObject *parent);
 

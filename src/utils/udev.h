@@ -21,6 +21,7 @@ struct udev_monitor;
 
 namespace KWin
 {
+
 class Udev;
 
 class KWIN_EXPORT UdevDevice

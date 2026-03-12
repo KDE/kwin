@@ -94,4 +94,5 @@ void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDu
         wl_resource_destroy(resource);
     }
 }
+
 }

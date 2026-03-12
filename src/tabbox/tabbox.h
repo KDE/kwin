@@ -36,6 +36,7 @@ class Window;
 
 namespace TabBox
 {
+
 class TabBoxConfig;
 class TabBox;
 
@@ -74,6 +75,7 @@ private:
 class KWIN_EXPORT TabBox : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TabBox();
     ~TabBox();

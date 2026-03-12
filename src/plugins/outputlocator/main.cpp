@@ -8,7 +8,9 @@
 
 namespace KWin
 {
+
 KWIN_EFFECT_FACTORY(OutputLocatorEffect, "metadata.json.stripped");
+
 }
 
 #include "main.moc"

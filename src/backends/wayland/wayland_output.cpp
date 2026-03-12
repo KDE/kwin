@@ -559,6 +559,7 @@ QList<OutputLayer *> WaylandOutput::outputLayers() const
 {
     return m_layers | std::views::transform(&std::unique_ptr<OutputLayer>::get) | std::ranges::to<QList>();
 }
+
 }
 }
 

@@ -22,6 +22,7 @@ namespace KWin
 class Gesture : public QObject
 {
     Q_OBJECT
+
 public:
     ~Gesture() override;
 
@@ -48,6 +49,7 @@ Q_SIGNALS:
 class SwipeGesture : public Gesture
 {
     Q_OBJECT
+
 public:
     static constexpr double s_minimumDelta = 200;
 
@@ -82,6 +84,7 @@ private:
 class PinchGesture : public Gesture
 {
     Q_OBJECT
+
 public:
     /**
      * Every time the scale of the gesture changes by this much, the callback changes by 1.
@@ -115,6 +118,7 @@ private:
 class KWIN_EXPORT GestureRecognizer : public QObject
 {
     Q_OBJECT
+
 public:
     GestureRecognizer(QObject *parent = nullptr);
     ~GestureRecognizer() override;

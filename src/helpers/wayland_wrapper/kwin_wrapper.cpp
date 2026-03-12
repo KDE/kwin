@@ -46,6 +46,7 @@ using namespace std::chrono_literals;
 class KWinWrapper : public QObject
 {
     Q_OBJECT
+
 public:
     KWinWrapper(QObject *parent);
     ~KWinWrapper();

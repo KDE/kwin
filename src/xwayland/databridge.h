@@ -16,11 +16,13 @@
 
 namespace KWin
 {
+
 class SurfaceInterface;
 class Window;
 
 namespace Xwl
 {
+
 class Clipboard;
 class Dnd;
 class Primary;

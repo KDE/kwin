@@ -26,6 +26,7 @@ class QTimer;
 
 namespace KWin
 {
+
 class XwaylandSocket;
 
 namespace Xwl
@@ -34,6 +35,7 @@ namespace Xwl
 class KWIN_EXPORT XwaylandLauncher : public QObject
 {
     Q_OBJECT
+
 public:
     explicit XwaylandLauncher();
     ~XwaylandLauncher();

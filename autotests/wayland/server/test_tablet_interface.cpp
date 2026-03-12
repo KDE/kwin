@@ -39,6 +39,7 @@ public:
 class TabletPad : public QObject, public QtWayland::zwp_tablet_pad_v2
 {
     Q_OBJECT
+
 public:
     TabletPad(::zwp_tablet_pad_v2 *t)
         : QtWayland::zwp_tablet_pad_v2(t)
@@ -79,6 +80,7 @@ Q_SIGNALS:
 class Tool : public QObject, public QtWayland::zwp_tablet_tool_v2
 {
     Q_OBJECT
+
 public:
     Tool(::zwp_tablet_tool_v2 *t)
         : QtWayland::zwp_tablet_tool_v2(t)
@@ -103,6 +105,7 @@ Q_SIGNALS:
 class TabletSeat : public QObject, public QtWayland::zwp_tablet_seat_v2
 {
     Q_OBJECT
+
 public:
     TabletSeat(::zwp_tablet_seat_v2 *seat)
         : QtWayland::zwp_tablet_seat_v2(seat)
@@ -330,6 +333,7 @@ private:
 class TestTabletInterface : public QObject
 {
     Q_OBJECT
+
 public:
     TestTabletInterface()
     {

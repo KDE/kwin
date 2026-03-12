@@ -122,4 +122,5 @@ bool FileDescriptor::isReadable(int fd)
     };
     return poll(&pfd, 1, 0) && (pfd.revents & (POLLIN | POLLNVAL)) != 0;
 }
+
 }

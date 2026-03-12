@@ -13,6 +13,7 @@ static const int s_version = 1;
 
 namespace KWin
 {
+
 class ViewporterInterfacePrivate : public QtWaylandServer::wp_viewporter
 {
 protected:

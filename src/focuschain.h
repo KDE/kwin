@@ -15,6 +15,7 @@
 
 namespace KWin
 {
+
 // forward declarations
 class Window;
 class LogicalOutput;
@@ -38,12 +39,13 @@ class VirtualDesktop;
 class FocusChain : public QObject
 {
     Q_OBJECT
+
 public:
     enum Change {
         MakeFirst,
         MakeLast,
         Update,
-        MakeFirstMinimized = MakeFirst
+        MakeFirstMinimized = MakeFirst,
     };
     explicit FocusChain() = default;
 

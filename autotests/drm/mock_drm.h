@@ -25,7 +25,8 @@ class MockEncoder;
 class MockObject;
 class MockPlane;
 
-class MockProperty {
+class MockProperty
+{
 public:
     MockProperty(MockObject *obj, QString name, uint64_t initialValue, uint32_t flags, QList<QByteArray> enums = {});
     ~MockProperty() = default;
@@ -38,7 +39,8 @@ public:
     QList<QByteArray> enums;
 };
 
-class MockPropertyBlob {
+class MockPropertyBlob
+{
 public:
     MockPropertyBlob(MockGpu *gpu, const void *data, size_t size);
     ~MockPropertyBlob();
@@ -49,7 +51,8 @@ public:
     size_t size;
 };
 
-class MockObject {
+class MockObject
+{
 public:
     MockObject(MockGpu *gpu);
     virtual ~MockObject();
@@ -64,7 +67,8 @@ public:
     MockGpu *gpu;
 };
 
-class MockConnector : public MockObject {
+class MockConnector : public MockObject
+{
 public:
     MockConnector(MockGpu *gpu, bool nonDesktop = false);
     MockConnector(const MockConnector &obj) = default;
@@ -79,7 +83,8 @@ public:
     QList<drmModeModeInfo> modes;
 };
 
-class MockEncoder : public MockObject {
+class MockEncoder : public MockObject
+{
 public:
     MockEncoder(MockGpu *gpu, uint32_t possible_crtcs);
     MockEncoder(const MockEncoder &obj) = default;
@@ -90,7 +95,8 @@ public:
     uint32_t possible_clones = 0;
 };
 
-class MockCrtc : public MockObject {
+class MockCrtc : public MockObject
+{
 public:
     MockCrtc(MockGpu *gpu, const std::shared_ptr<MockPlane> &legacyPlane, int pipeIndex, int gamma_size = 255);
     MockCrtc(const MockCrtc &obj) = default;
@@ -109,10 +115,11 @@ public:
 enum class PlaneType {
     Primary = 0,
     Overlay,
-    Cursor
+    Cursor,
 };
 
-class MockPlane : public MockObject {
+class MockPlane : public MockObject
+{
 public:
     MockPlane(MockGpu *gpu, PlaneType type, int crtcIndex);
     MockPlane(const MockPlane &obj) = default;
@@ -124,7 +131,8 @@ public:
     PlaneType type;
 };
 
-class MockFb {
+class MockFb
+{
 public:
     MockFb(MockGpu *gpu, uint32_t width, uint32_t height);
     ~MockFb();
@@ -134,7 +142,8 @@ public:
     MockGpu *gpu;
 };
 
-struct Prop {
+struct Prop
+{
     uint32_t obj;
     uint32_t prop;
     uint64_t value;
@@ -146,14 +155,16 @@ struct MockLease
     QList<uint32_t> objects;
 };
 
-struct _drmModeAtomicReq {
+struct _drmModeAtomicReq
+{
     bool legacyEmulation = false;
     QList<Prop> props;
 };
 
 #define MOCKDRM_DEVICE_CAP_ATOMIC 0xFF
 
-class MockGpu {
+class MockGpu
+{
 public:
     MockGpu(int fd, const QString &devNode, int numCrtcs, int gammaSize = 255);
     ~MockGpu();

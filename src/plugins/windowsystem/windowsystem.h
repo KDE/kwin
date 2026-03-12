@@ -15,6 +15,7 @@ namespace KWin
 class WindowSystem : public QObject, public KWindowSystemPrivateV3
 {
     Q_OBJECT
+
 public:
     WindowSystem();
     void activateWindow(QWindow *win, long time) override;

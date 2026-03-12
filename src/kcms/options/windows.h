@@ -66,6 +66,7 @@ public:
 class KFocusConfig : public KCModule
 {
     Q_OBJECT
+
 public:
     KFocusConfig(KWinOptionsSettings *settings, QWidget *parent);
 
@@ -91,6 +92,7 @@ private:
 class KMovingConfig : public KCModule
 {
     Q_OBJECT
+
 public:
     KMovingConfig(KWinOptionsSettings *settings, QWidget *parent);
 
@@ -105,6 +107,7 @@ private:
 class KAdvancedConfig : public KCModule
 {
     Q_OBJECT
+
 public:
     KAdvancedConfig(KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings, QWidget *parent);
 

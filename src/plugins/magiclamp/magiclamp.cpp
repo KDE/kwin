@@ -225,7 +225,6 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
             const float maxY = icon.y() - geo.y();
 
             for (WindowQuad &quad : quads) {
-
                 if (quad[0].y() != lastQuad[0].y() || quad[2].y() != lastQuad[2].y()) {
                     quadFactor = quad[0].y() + (geo.height() - quad[0].y()) * progress;
                     offset[0] = (icon.y() + quad[0].y() - geo.y()) * progress * ((quadFactor * quadFactor * quadFactor) / height_cube);
@@ -256,7 +255,6 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
             const float minY = icon.y() + icon.height() - geo.y();
 
             for (WindowQuad &quad : quads) {
-
                 if (quad[0].y() != lastQuad[0].y() || quad[2].y() != lastQuad[2].y()) {
                     quadFactor = geo.height() - quad[0].y() + (quad[0].y()) * progress;
                     offset[0] = (geo.y() - icon.height() + geo.height() + quad[0].y() - icon.y()) * progress * ((quadFactor * quadFactor * quadFactor) / height_cube);
@@ -290,7 +288,6 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
             const float minX = icon.x() + icon.width() - geo.x();
 
             for (WindowQuad &quad : quads) {
-
                 if (quad[0].x() != lastQuad[0].x() || quad[1].x() != lastQuad[1].x()) {
                     quadFactor = geo.width() - quad[0].x() + (quad[0].x()) * progress;
                     offset[0] = (geo.x() - icon.width() + geo.width() + quad[0].x() - icon.x()) * progress * ((quadFactor * quadFactor * quadFactor) / width_cube);
@@ -324,7 +321,6 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
             const float maxX = icon.x() - geo.x();
 
             for (WindowQuad &quad : quads) {
-
                 if (quad[0].x() != lastQuad[0].x() || quad[1].x() != lastQuad[1].x()) {
                     quadFactor = quad[0].x() + (geo.width() - quad[0].x()) * progress;
                     offset[0] = (icon.x() + quad[0].x() - geo.x()) * progress * ((quadFactor * quadFactor * quadFactor) / width_cube);

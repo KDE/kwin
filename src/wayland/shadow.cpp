@@ -12,6 +12,7 @@
 
 namespace KWin
 {
+
 static const quint32 s_version = 2;
 
 class ShadowManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_shadow_manager

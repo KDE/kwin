@@ -21,6 +21,7 @@
 
 namespace KWin
 {
+
 // forward declarations
 class GLVertexBuffer;
 

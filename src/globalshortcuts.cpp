@@ -28,6 +28,7 @@
 
 namespace KWin
 {
+
 GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
     : m_shortcut(sc)
     , m_action(action)
@@ -211,7 +212,6 @@ bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt, K
             // trying the variants
             if (check(mods | Qt::ShiftModifier, keyQt, state)) {
                 return true;
-
             }
             if (check(mods | Qt::ShiftModifier, Qt::Key_Tab, state)) {
                 return true;

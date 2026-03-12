@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class DataControlSourceV1InterfacePrivate : public QtWaylandServer::ext_data_control_source_v1
 {
 public:

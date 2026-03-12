@@ -13,6 +13,7 @@
 
 namespace KWin
 {
+
 static constexpr int s_version = 1;
 
 class LockscreenOverlayV1InterfacePrivate : public QtWaylandServer::kde_lockscreen_overlay_v1

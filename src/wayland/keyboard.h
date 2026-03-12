@@ -11,6 +11,7 @@
 
 namespace KWin
 {
+
 class ClientConnection;
 class SeatInterface;
 class SurfaceInterface;
@@ -22,6 +23,7 @@ class KeyboardInterfacePrivate;
 class KWIN_EXPORT KeyboardInterface : public QObject
 {
     Q_OBJECT
+
 public:
     ~KeyboardInterface() override;
 

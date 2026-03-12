@@ -46,6 +46,7 @@ struct Trigger
 class ButtonRebindsFilter : public KWin::Plugin, public KWin::InputEventFilter
 {
     Q_OBJECT
+
 public:
     enum TriggerType {
         Pointer,
@@ -53,7 +54,7 @@ public:
         TabletToolButtonType,
         TabletDial,
         TabletRing,
-        LastType
+        LastType,
     };
     Q_ENUM(TriggerType)
     using SingleKeybind = QKeySequence;

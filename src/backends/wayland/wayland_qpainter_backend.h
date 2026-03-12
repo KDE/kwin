@@ -19,6 +19,7 @@
 
 namespace KWin
 {
+
 class BackendOutput;
 class GraphicsBufferAllocator;
 class QPainterSwapchainSlot;
@@ -26,6 +27,7 @@ class QPainterSwapchain;
 
 namespace Wayland
 {
+
 class WaylandBackend;
 class WaylandDisplay;
 class WaylandOutput;
@@ -81,6 +83,7 @@ private:
 class WaylandQPainterBackend : public QPainterBackend
 {
     Q_OBJECT
+
 public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;

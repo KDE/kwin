@@ -35,6 +35,7 @@ class InternalInputMethodContext;
 class KWIN_EXPORT InputMethod : public QObject
 {
     Q_OBJECT
+
 public:
     enum ForwardModifiersForce {
         NoForce = 0,

@@ -25,6 +25,7 @@ class SwitcherItem;
 class LayoutPreview : public QObject
 {
     Q_OBJECT
+
 public:
     explicit LayoutPreview(const QString &path, bool showDesktopThumbnail = false, QObject *parent = nullptr);
     ~LayoutPreview() override;
@@ -39,6 +40,7 @@ private:
 class ExampleClientModel : public QAbstractListModel
 {
     Q_OBJECT
+
 public:
     enum {
         CaptionRole = Qt::UserRole + 1,
@@ -91,6 +93,7 @@ class SwitcherItem : public QObject
     Q_PROPERTY(QObject *item READ item WRITE setItem NOTIFY itemChanged)
 
     Q_CLASSINFO("DefaultProperty", "item")
+
 public:
     SwitcherItem(QObject *parent = nullptr);
     ~SwitcherItem() override;

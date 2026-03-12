@@ -27,6 +27,7 @@ namespace KWin
 class GetAddrInfo : public QObject
 {
     Q_OBJECT
+
 public:
     explicit GetAddrInfo(const QString &hostName, QObject *parent = nullptr);
     ~GetAddrInfo() override;
@@ -57,6 +58,7 @@ private:
 class ClientMachine : public QObject
 {
     Q_OBJECT
+
 public:
     explicit ClientMachine(QObject *parent = nullptr);
     ~ClientMachine() override;

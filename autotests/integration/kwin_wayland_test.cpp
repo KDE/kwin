@@ -8,6 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "backends/drm/drm_backend.h"
 #include "backends/virtual/virtual_backend.h"
 #include "compositor.h"
 #include "core/outputconfiguration.h"
@@ -19,7 +20,6 @@
 #include "pluginmanager.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "backends/drm/drm_backend.h"
 
 #include <KWayland/Client/seat.h>
 
@@ -406,6 +406,7 @@ QString Test::SimpleKeyboard::receviedText()
 {
     return m_receviedText;
 }
+
 }
 
 #include "moc_kwin_wayland_test.cpp"

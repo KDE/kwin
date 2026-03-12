@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class LogicalOutput;
 class ScreenCastStream;
 class PipeWireCore;

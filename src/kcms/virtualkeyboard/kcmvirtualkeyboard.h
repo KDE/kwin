@@ -17,6 +17,7 @@ class VirtualKeyboardSettings;
 class VirtualKeyboardsModel : public QAbstractListModel
 {
     Q_OBJECT
+
 public:
     enum Roles {
         DesktopFileNameRole = Qt::UserRole + 1,

@@ -27,6 +27,7 @@
 
 namespace KWin
 {
+
 class DrmOutput;
 class DrmObject;
 class DrmCrtc;
@@ -47,6 +48,7 @@ class RenderDevice;
 class DrmLease : public QObject
 {
     Q_OBJECT
+
 public:
     DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QList<DrmOutput *> &outputs);
     ~DrmLease();
@@ -67,6 +69,7 @@ private:
 class KWIN_EXPORT DrmGpu : public QObject
 {
     Q_OBJECT
+
 public:
     /**
      * This should always be longer than any real pageflip can take, even with PSR and modesets

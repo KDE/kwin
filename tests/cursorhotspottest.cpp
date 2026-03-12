@@ -12,6 +12,7 @@
 class MouseCursorWidget : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit MouseCursorWidget();
     ~MouseCursorWidget() override;
@@ -29,6 +30,7 @@ private:
 
 namespace
 {
+
 QCursor createCenterHotspotCursor()
 {
     QPixmap cursor(64, 64);

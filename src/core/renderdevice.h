@@ -27,6 +27,7 @@ class GraphicsBuffer;
 class KWIN_EXPORT RenderDevice : public QObject
 {
     Q_OBJECT
+
 public:
     explicit RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display);
     ~RenderDevice();

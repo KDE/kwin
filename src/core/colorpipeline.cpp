@@ -538,6 +538,7 @@ ColorClamp::ColorClamp(double minValue, double maxValue)
     , m_maxValue(maxValue)
 {
 }
+
 }
 
 QDebug operator<<(QDebug debug, const KWin::ColorOp &op)

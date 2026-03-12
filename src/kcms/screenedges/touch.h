@@ -19,6 +19,7 @@ class QShowEvent;
 
 namespace KWin
 {
+
 class KWinTouchScreenData;
 class KWinTouchScreenEdgeConfigForm;
 class KWinTouchScreenScriptSettings;
@@ -54,7 +55,7 @@ private:
         Grid,
         TabBox,
         TabBoxAlternative,
-        EffectCount
+        EffectCount,
     };
 
     void monitorInit();

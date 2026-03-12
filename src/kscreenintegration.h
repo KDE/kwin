@@ -24,5 +24,6 @@ namespace KScreenIntegration
  * When the Xorg session is dropped, this function can be dropped some time later.
  */
 std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *> &outputs, bool isLidClosed);
+
 }
 }

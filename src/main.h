@@ -75,6 +75,7 @@ class KWIN_EXPORT Application : public QApplication
 #endif
     Q_PROPERTY(KSharedConfigPtr config READ config WRITE setConfig)
     Q_PROPERTY(KSharedConfigPtr kxkbConfig READ kxkbConfig WRITE setKxkbConfig)
+
 public:
     ~Application() override;
 

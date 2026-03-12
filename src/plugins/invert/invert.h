@@ -23,6 +23,7 @@ class GLShader;
 class InvertEffect : public OffscreenEffect
 {
     Q_OBJECT
+
 public:
     InvertEffect();
     ~InvertEffect() override;

@@ -40,6 +40,7 @@ class DBusInterface : public QObject, protected QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin")
+
 public:
     explicit DBusInterface(QObject *parent);
     ~DBusInterface() override;
@@ -145,6 +146,7 @@ class CompositorDBusInterface : public QObject
     Q_PROPERTY(QStringList supportedOpenGLPlatformInterfaces READ supportedOpenGLPlatformInterfaces)
 
     Q_PROPERTY(bool platformRequiresCompositing READ platformRequiresCompositing)
+
 public:
     explicit CompositorDBusInterface(Compositor *parent);
     ~CompositorDBusInterface() override = default;

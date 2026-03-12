@@ -22,8 +22,7 @@ static void announceChangedProperties(const QVariantMap &properties)
     QDBusMessage message = QDBusMessage::createSignal(
         QStringLiteral("/org/kde/KWin/NightLight"),
         QStringLiteral("org.freedesktop.DBus.Properties"),
-        QStringLiteral("PropertiesChanged")
-    );
+        QStringLiteral("PropertiesChanged"));
 
     message.setArguments({
         QStringLiteral("org.kde.KWin.NightLight"),

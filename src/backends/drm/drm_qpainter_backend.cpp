@@ -61,6 +61,7 @@ std::unique_ptr<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput
 {
     return std::make_unique<DrmVirtualQPainterLayer>(output);
 }
+
 }
 
 #include "moc_drm_qpainter_backend.cpp"

@@ -17,6 +17,7 @@
 
 namespace KWin
 {
+
 class ClientConnection;
 class PointerPinchGestureV1Interface;
 class PointerSwipeGestureV1Interface;

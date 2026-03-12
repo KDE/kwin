@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 KeyNotificationPlugin::KeyNotificationPlugin()
     : m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
 {
@@ -122,6 +123,7 @@ void KeyNotificationPlugin::loadConfig(const KConfigGroup &group)
     m_enabled = group.readEntry("kNotifyModifiers", false);
     m_useBellWhenLocksChange = group.readEntry("ToggleKeysBeep", false);
 }
+
 }
 
 #include "moc_keynotification.cpp"

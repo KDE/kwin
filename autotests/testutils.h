@@ -14,10 +14,12 @@
 
 namespace
 {
+
 static void forceXcb()
 {
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("xcb"));
 }
+
 }
 
 namespace KWin

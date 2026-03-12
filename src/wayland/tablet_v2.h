@@ -15,6 +15,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class ClientConnection;
 class Display;
 class InputDevice;
@@ -51,6 +52,7 @@ class TabletPadGroupV2InterfacePrivate;
 class KWIN_EXPORT TabletManagerV2Interface : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TabletManagerV2Interface(Display *d, QObject *parent);
     virtual ~TabletManagerV2Interface();
@@ -64,6 +66,7 @@ private:
 class KWIN_EXPORT TabletSurfaceCursorV2 : public QObject
 {
     Q_OBJECT
+
 public:
     ~TabletSurfaceCursorV2() override;
     QPointF hotspot() const;
@@ -84,6 +87,7 @@ using TabletCursorSourceV2 = std::variant<TabletSurfaceCursorV2 *, QByteArray>;
 class KWIN_EXPORT TabletToolV2Interface : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~TabletToolV2Interface();
 
@@ -96,7 +100,7 @@ public:
         Finger = 0x145, ///< Finger
         Mouse = 0x146, ///< Mouse
         Lens = 0x147, ///< Lens
-        Totem
+        Totem,
     };
     Q_ENUM(Type)
 
@@ -165,6 +169,7 @@ private:
 class KWIN_EXPORT TabletPadV2Interface : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~TabletPadV2Interface();
 
@@ -191,6 +196,7 @@ private:
 class KWIN_EXPORT TabletPadRingV2Interface : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~TabletPadRingV2Interface();
 
@@ -215,6 +221,7 @@ private:
 class KWIN_EXPORT TabletPadStripV2Interface : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~TabletPadStripV2Interface();
 
@@ -238,6 +245,7 @@ private:
 class KWIN_EXPORT TabletPadDialV2Interface : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~TabletPadDialV2Interface();
 
@@ -255,6 +263,7 @@ private:
 class KWIN_EXPORT TabletPadGroupV2Interface : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~TabletPadGroupV2Interface();
 
@@ -276,6 +285,7 @@ private:
 class KWIN_EXPORT TabletV2Interface : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~TabletV2Interface();
 
@@ -296,6 +306,7 @@ private:
 class KWIN_EXPORT TabletSeatV2Interface : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~TabletSeatV2Interface();
 

@@ -11,6 +11,7 @@
 
 namespace
 {
+
 const QMap<QString, KDecoration3::BorderSize> s_borderSizes{
     {QStringLiteral("None"), KDecoration3::BorderSize::None},
     {QStringLiteral("NoSides"), KDecoration3::BorderSize::NoSides},
@@ -45,6 +46,7 @@ const QHash<KDecoration3::DecorationButtonType, QChar> s_buttonNames{
     {KDecoration3::DecorationButtonType::ExcludeFromCapture, QChar('E')},
     {KDecoration3::DecorationButtonType::Spacer, QChar('_')},
 };
+
 }
 
 namespace Utils

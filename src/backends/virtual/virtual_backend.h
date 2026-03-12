@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class VirtualBackend;
 class VirtualOutput;
 class DrmDevice;

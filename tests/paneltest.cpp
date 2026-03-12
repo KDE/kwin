@@ -35,6 +35,7 @@ using namespace KWayland::Client;
 class PanelTest : public QObject
 {
     Q_OBJECT
+
 public:
     explicit PanelTest(QObject *parent = nullptr);
     virtual ~PanelTest();

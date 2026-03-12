@@ -1608,7 +1608,6 @@ void Workspace::sendWindowToDesktops(Window *window, const QList<VirtualDesktop 
             restackWindowUnderActive(window);
         }
     } else {
-
         // raise the window on the desktop it has been added to
         raiseWindow(window);
         // but set a new active window on the current desktop
@@ -2663,7 +2662,6 @@ QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool 
     }
 
     if (options->windowSnapZone() || !borderSnapZone.isNull() || options->centerSnapZone()) {
-
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
         const LogicalOutput *output = outputAt(pos + window->rect().center());
         if (maxRect.isNull()) {

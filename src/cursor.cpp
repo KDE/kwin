@@ -21,6 +21,7 @@
 
 namespace KWin
 {
+
 Cursors *Cursors::s_self = nullptr;
 Cursors *Cursors::self()
 {

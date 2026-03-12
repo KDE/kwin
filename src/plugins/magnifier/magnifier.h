@@ -28,6 +28,7 @@ class MagnifierEffect : public Effect
     Q_OBJECT
     Q_PROPERTY(QSize magnifierSize READ magnifierSize)
     Q_PROPERTY(qreal targetZoom READ targetZoom)
+
 public:
     MagnifierEffect();
     ~MagnifierEffect() override;

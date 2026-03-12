@@ -13,6 +13,7 @@ namespace KWin
 
 namespace
 {
+
 const quint32 s_version = 1;
 
 // helpers
@@ -555,6 +556,7 @@ bool TextInputV2Interface::clientSupportsTextInput(ClientConnection *client) con
 {
     return client && d->resourceMap().contains(*client);
 }
+
 }
 
 #include "moc_textinput_v2.cpp"

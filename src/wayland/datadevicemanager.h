@@ -15,6 +15,7 @@
 
 namespace KWin
 {
+
 class Display;
 class DataSourceInterface;
 class DataDeviceManagerInterfacePrivate;

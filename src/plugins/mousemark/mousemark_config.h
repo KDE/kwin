@@ -22,6 +22,7 @@ namespace KWin
 class MouseMarkEffectConfig : public KCModule
 {
     Q_OBJECT
+
 public:
     explicit MouseMarkEffectConfig(QObject *parent, const KPluginMetaData &data);
 

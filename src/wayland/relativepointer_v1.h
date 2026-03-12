@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class Display;
 class RelativePointerManagerV1InterfacePrivate;
 

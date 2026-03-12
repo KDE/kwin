@@ -42,10 +42,11 @@ class IccShader;
 class EglGbmLayerSurface : public QObject
 {
     Q_OBJECT
+
 public:
     enum class BufferTarget {
         Normal,
-        Dumb
+        Dumb,
     };
     explicit EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
     ~EglGbmLayerSurface();
@@ -67,7 +68,7 @@ private:
         Dmabuf,
         LinearDmabuf,
         Egl,
-        DumbBuffer
+        DumbBuffer,
     };
     struct Surface
     {

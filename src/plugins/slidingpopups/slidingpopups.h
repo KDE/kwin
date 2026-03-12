@@ -75,7 +75,7 @@ private:
 
     enum class AnimationKind {
         In,
-        Out
+        Out,
     };
 
     struct Animation
@@ -92,7 +92,7 @@ private:
         Left,
         Top,
         Right,
-        Bottom
+        Bottom,
     };
 
     struct AnimationData

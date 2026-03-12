@@ -16,6 +16,7 @@ namespace KWin
 class EisDevice : public InputDevice
 {
     Q_OBJECT
+
 public:
     explicit EisDevice(eis_device *device, QObject *parent = nullptr);
     ~EisDevice() override;

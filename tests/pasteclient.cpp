@@ -31,6 +31,7 @@ using namespace KWayland::Client;
 class PasteClient : public QObject
 {
     Q_OBJECT
+
 public:
     explicit PasteClient(QObject *parent = nullptr);
     virtual ~PasteClient();

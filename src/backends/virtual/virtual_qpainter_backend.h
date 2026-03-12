@@ -50,6 +50,7 @@ private:
 class VirtualQPainterBackend : public QPainterBackend
 {
     Q_OBJECT
+
 public:
     VirtualQPainterBackend(VirtualBackend *backend);
     ~VirtualQPainterBackend() override;

@@ -117,8 +117,8 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
 
     const qreal scale = context->renderTargetScale;
     const QPointF itemToDeviceTranslation = context->transformStack.top().map(QPointF(0., 0.))
-                                          - context->viewportOrigin
-                                          + context->renderOffset;
+        - context->viewportOrigin
+        + context->renderOffset;
 
     RenderGeometry geometry;
     geometry.reserve(quads.count() * 6);

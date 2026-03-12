@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class ClientConnectionPrivate
 {
 public:
@@ -149,6 +150,7 @@ ClientConnection *ClientConnection::get(wl_client *native)
 {
     return static_cast<ClientConnection *>(wl_client_get_user_data(native));
 }
+
 }
 
 #include "moc_clientconnection.cpp"

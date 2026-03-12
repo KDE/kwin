@@ -13,8 +13,10 @@ namespace KWayland
 {
 namespace Client
 {
+
 class Surface;
 class SubSurface;
+
 }
 }
 
@@ -29,7 +31,9 @@ namespace KWin
 {
 namespace WaylandClient
 {
+
 class Viewport;
+
 }
 
 namespace Wayland

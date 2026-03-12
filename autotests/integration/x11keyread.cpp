@@ -37,7 +37,7 @@ using namespace KWin;
 
 enum class State {
     Press,
-    Release
+    Release,
 } state;
 typedef QPair<State, int> KeyAction;
 Q_DECLARE_METATYPE(KeyAction);
@@ -133,9 +133,9 @@ void X11KeyReadTest::testSimpleLetter()
 void X11KeyReadTest::onlyModifier()
 {
     QList<KeyAction> keyEvents = {
-                                  {State::Press, KEY_LEFTALT},
-                                  {State::Release, KEY_LEFTALT},
-                                  };
+        {State::Press, KEY_LEFTALT},
+        {State::Release, KEY_LEFTALT},
+    };
     auto received = recievedX11EventsForInput(keyEvents);
 
     QList<KeyAction> expected;
@@ -157,11 +157,11 @@ void X11KeyReadTest::onlyModifier()
 void X11KeyReadTest::letterWithModifier()
 {
     QList<KeyAction> keyEvents = {
-                                  {State::Press, KEY_LEFTALT},
-                                  {State::Press, KEY_F},
-                                  {State::Release, KEY_F},
-                                  {State::Release, KEY_LEFTALT},
-                                  };
+        {State::Press, KEY_LEFTALT},
+        {State::Press, KEY_F},
+        {State::Release, KEY_F},
+        {State::Release, KEY_LEFTALT},
+    };
     auto received = recievedX11EventsForInput(keyEvents);
 
     QList<KeyAction> expected;
@@ -271,6 +271,7 @@ void X11KeyReadTest::tabBox()
 class X11EventRecorder : public QObject
 {
     Q_OBJECT
+
 public:
     X11EventRecorder(xcb_connection_t *c);
     QList<KeyAction> keyEvents() const
@@ -324,7 +325,6 @@ void X11EventRecorder::processXcbEvents()
         if (responseType == XCB_GE_GENERIC) {
             auto *geEvent = reinterpret_cast<xcb_ge_generic_event_t *>(event);
             if (geEvent->event_type == XCB_INPUT_KEY_PRESS || geEvent->event_type == XCB_INPUT_KEY_RELEASE) {
-
                 auto keyEvent = reinterpret_cast<xcb_input_key_press_event_t *>(geEvent);
                 int nativeKeyCode = keyEvent->detail - 0x08;
 

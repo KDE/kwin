@@ -57,6 +57,7 @@ namespace KWayland
 {
 namespace Client
 {
+
 class AppMenuManager;
 class ConnectionThread;
 class Compositor;
@@ -76,14 +77,17 @@ class SubSurface;
 class Surface;
 class TextInputManager;
 class DataDeviceManager;
+
 }
 }
 
 namespace QtWayland
 {
+
 class zwp_input_panel_surface_v1;
 class zwp_text_input_v3;
 class zwp_text_input_manager_v3;
+
 }
 
 class ScreencastingV1;
@@ -93,8 +97,10 @@ namespace KWin
 
 namespace WaylandClient
 {
+
 class LinuxDmabufV1;
 class Viewporter;
+
 }
 
 class WaylandServer;
@@ -102,19 +108,24 @@ class WaylandServer;
 #if KWIN_BUILD_X11
 namespace Xwl
 {
+
 class Xwayland;
+
 }
 #endif
 
 namespace Test
 {
+
 class VirtualInputDevice;
 class VirtualInputDeviceTabletTool;
+
 }
 
 class WaylandTestApplication : public Application
 {
     Q_OBJECT
+
 public:
     WaylandTestApplication(int &argc, char **argv, bool runOnKMS);
     ~WaylandTestApplication() override;
@@ -181,6 +192,7 @@ public:
 class TextInputV3 : public QObject, public QtWayland::zwp_text_input_v3
 {
     Q_OBJECT
+
 public:
     ~TextInputV3() override
     {
@@ -273,7 +285,7 @@ public:
         Maximized = 1 << 0,
         Fullscreen = 1 << 1,
         Resizing = 1 << 2,
-        Activated = 1 << 3
+        Activated = 1 << 3,
     };
     Q_DECLARE_FLAGS(States, State)
 
@@ -369,6 +381,7 @@ public:
 class WaylandOutputConfigurationV2 : public QObject, public QtWayland::kde_output_configuration_v2
 {
     Q_OBJECT
+
 public:
     WaylandOutputConfigurationV2(struct ::kde_output_configuration_v2 *object);
 
@@ -384,6 +397,7 @@ protected:
 class WaylandOutputManagementV2 : public QObject, public QtWayland::kde_output_management_v2
 {
     Q_OBJECT
+
 public:
     WaylandOutputManagementV2(struct ::wl_registry *registry, int id, int version);
 
@@ -502,6 +516,7 @@ private:
 class MockInputMethod : public QObject, QtWayland::zwp_input_method_v1
 {
     Q_OBJECT
+
 public:
     enum class Mode {
         TopLevel,
@@ -539,6 +554,7 @@ private:
 class FractionalScaleManagerV1 : public QObject, public QtWayland::wp_fractional_scale_manager_v1
 {
     Q_OBJECT
+
 public:
     ~FractionalScaleManagerV1() override;
 };
@@ -546,6 +562,7 @@ public:
 class FractionalScaleV1 : public QObject, public QtWayland::wp_fractional_scale_v1
 {
     Q_OBJECT
+
 public:
     ~FractionalScaleV1() override;
     int preferredScale();
@@ -563,6 +580,7 @@ private:
 class ScreenEdgeManagerV1 : public QObject, public QtWayland::kde_screen_edge_manager_v1
 {
     Q_OBJECT
+
 public:
     ~ScreenEdgeManagerV1() override;
 };
@@ -570,6 +588,7 @@ public:
 class AutoHideScreenEdgeV1 : public QObject, public QtWayland::kde_auto_hide_screen_edge_v1
 {
     Q_OBJECT
+
 public:
     AutoHideScreenEdgeV1(ScreenEdgeManagerV1 *manager, KWayland::Client::Surface *surface, uint32_t border);
     ~AutoHideScreenEdgeV1() override;
@@ -578,6 +597,7 @@ public:
 class CursorShapeManagerV1 : public QObject, public QtWayland::wp_cursor_shape_manager_v1
 {
     Q_OBJECT
+
 public:
     ~CursorShapeManagerV1() override;
 };
@@ -585,6 +605,7 @@ public:
 class CursorShapeDeviceV1 : public QObject, public QtWayland::wp_cursor_shape_device_v1
 {
     Q_OBJECT
+
 public:
     CursorShapeDeviceV1(CursorShapeManagerV1 *manager, KWayland::Client::Pointer *pointer);
     ~CursorShapeDeviceV1() override;
@@ -901,6 +922,7 @@ public:
 class WpPresentationFeedback : public QObject, public QtWayland::wp_presentation_feedback
 {
     Q_OBJECT
+
 public:
     explicit WpPresentationFeedback(struct ::wp_presentation_feedback *obj);
     ~WpPresentationFeedback() override;
@@ -917,6 +939,7 @@ private:
 class XdgActivationToken : public QObject, public QtWayland::xdg_activation_token_v1
 {
     Q_OBJECT
+
 public:
     explicit XdgActivationToken(::xdg_activation_token_v1 *object);
     ~XdgActivationToken() override;
@@ -988,6 +1011,7 @@ public:
 class KeyStateV1 : public QObject, public QtWayland::org_kde_kwin_keystate
 {
     Q_OBJECT
+
 public:
     explicit KeyStateV1(::wl_registry *registry, uint32_t id, int version);
     ~KeyStateV1() override;
@@ -1029,6 +1053,7 @@ public:
 class WlKeyboard : public QObject, public QtWayland::wl_keyboard
 {
     Q_OBJECT
+
 public:
     explicit WlKeyboard(::wl_keyboard *object);
     ~WlKeyboard() override;
@@ -1398,6 +1423,7 @@ private:
 class ScreencastingV1 : public QObject, public QtWayland::zkde_screencast_unstable_v1
 {
     Q_OBJECT
+
 public:
     explicit ScreencastingV1(QObject *parent = nullptr)
         : QObject(parent)
@@ -1426,6 +1452,7 @@ using XkbStatePtr = std::unique_ptr<xkb_state, decltype(&xkb_state_unref)>;
 class SimpleKeyboard : public QObject
 {
     Q_OBJECT
+
 public:
     explicit SimpleKeyboard(QObject *parent = nullptr);
     KWayland::Client::Keyboard *keyboard();
@@ -1486,6 +1513,7 @@ public:
     std::unique_ptr<XdgToplevel> m_toplevel;
     Window *m_window = nullptr;
 };
+
 }
 
 }

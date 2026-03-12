@@ -12,6 +12,7 @@
 
 namespace KWin
 {
+
 class EffectsModel;
 
 class DesktopEffectsData : public KCModuleData

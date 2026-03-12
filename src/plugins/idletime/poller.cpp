@@ -51,7 +51,7 @@ void KWinIdleTimePoller::removeTimeout(int nextTimeout)
     delete m_timeouts.take(nextTimeout);
 }
 
-QList< int > KWinIdleTimePoller::timeouts() const
+QList<int> KWinIdleTimePoller::timeouts() const
 {
     return m_timeouts.keys();
 }

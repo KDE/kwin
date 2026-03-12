@@ -40,6 +40,7 @@ Q_DECLARE_FLAGS(DnDActions, DnDAction)
 class KWIN_EXPORT AbstractDataSource : public QObject
 {
     Q_OBJECT
+
 public:
     virtual bool isAccepted() const
     {
@@ -48,7 +49,7 @@ public:
 
     virtual void accept(const QString &mimeType)
     {
-    };
+    }
     virtual void requestData(const QString &mimeType, FileDescriptor fd) = 0;
     virtual void cancel() = 0;
 
@@ -60,7 +61,7 @@ public:
     virtual DnDActions supportedDragAndDropActions() const
     {
         return {};
-    };
+    }
     virtual DnDAction selectedDndAction() const
     {
         return DnDAction::None;
@@ -107,7 +108,7 @@ public:
     virtual wl_client *client() const
     {
         return nullptr;
-    };
+    }
 
     /**
      * Called from kwin core code, this updates the keyboard modifiers currently pressed

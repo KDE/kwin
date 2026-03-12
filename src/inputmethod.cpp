@@ -573,7 +573,7 @@ void InputMethod::forwardKeySym(int keySym)
         waylandServer()->seat()->notifyKeyboardKey(unmappedKeyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
         waylandServer()->seat()->keyboard()->setKeymap(input()->keyboard()->xkb()->keymapContents());
     } else {
-        waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers , 0, 0, input()->keyboard()->xkb()->currentLayout());
+        waylandServer()->seat()->notifyKeyboardModifiers(keyCode->modifiers, 0, 0, input()->keyboard()->xkb()->currentLayout());
         waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Pressed, waylandServer()->display()->nextSerial());
         waylandServer()->seat()->notifyKeyboardKey(keyCode->keyCode, KeyboardKeyState::Released, waylandServer()->display()->nextSerial());
     }
@@ -974,6 +974,7 @@ void InputMethod::textInputInterfaceV3EnableRequested()
     refreshActive();
     show();
 }
+
 }
 
 #include "moc_inputmethod.cpp"

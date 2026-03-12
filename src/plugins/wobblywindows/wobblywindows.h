@@ -37,6 +37,7 @@ class WobblyWindowsEffect : public OffscreenEffect
     Q_PROPERTY(qreal stopAcceleration READ stopAcceleration)
     Q_PROPERTY(bool moveWobble READ isMoveWobble)
     Q_PROPERTY(bool resizeWobble READ isResizeWobble)
+
 public:
     WobblyWindowsEffect();
     ~WobblyWindowsEffect() override;

@@ -25,6 +25,7 @@ struct zwp_linux_dmabuf_v1;
 
 namespace KWin
 {
+
 class GraphicsBuffer;
 
 namespace WaylandClient
@@ -33,6 +34,7 @@ namespace WaylandClient
 class KWIN_EXPORT LinuxDmabufFeedbackV1 : public QObject
 {
     Q_OBJECT
+
 public:
     explicit LinuxDmabufFeedbackV1(zwp_linux_dmabuf_feedback_v1 *feedback);
     ~LinuxDmabufFeedbackV1();

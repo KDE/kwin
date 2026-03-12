@@ -20,6 +20,7 @@ class A11yKeyboardMonitor : public QObject, protected QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.a11y.KeyboardMonitor")
+
 public:
     explicit A11yKeyboardMonitor();
 

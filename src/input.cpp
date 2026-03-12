@@ -1380,6 +1380,7 @@ std::optional<Options::MouseCommand> windowWheelCommand(PointerAxisEvent *event,
         return std::nullopt;
     }
 }
+
 }
 
 class InternalWindowEventFilter : public InputEventFilter
@@ -2570,6 +2571,7 @@ static AbstractDropHandler *dropHandler(Window *window)
 class DragAndDropInputFilter : public QObject, public InputEventFilter
 {
     Q_OBJECT
+
 public:
     DragAndDropInputFilter()
         : InputEventFilter(InputFilterOrder::DragAndDrop)

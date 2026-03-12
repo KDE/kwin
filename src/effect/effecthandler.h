@@ -53,7 +53,9 @@ Q_DECLARE_LOGGING_CATEGORY(KWINEFFECTS)
 
 namespace KDecoration3
 {
+
 class Decoration;
+
 }
 
 namespace KWin
@@ -674,7 +676,7 @@ public:
          * The on-screen-message should skip the close window animation.
          * @see EffectWindow::skipsCloseAnimation
          */
-        SkipsCloseAnimation = 1
+        SkipsCloseAnimation = 1,
     };
     Q_DECLARE_FLAGS(OnScreenMessageHideFlags, OnScreenMessageHideFlag)
     /**

@@ -24,6 +24,7 @@ RenderLoop *DrmAbstractOutput::renderLoop() const
 {
     return m_renderLoop.get();
 }
+
 }
 
 #include "moc_drm_abstract_output.cpp"

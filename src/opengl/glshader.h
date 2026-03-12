@@ -27,7 +27,7 @@ class KWIN_EXPORT GLShader
 public:
     enum Flags {
         NoFlags = 0,
-        ExplicitLinking = (1 << 0)
+        ExplicitLinking = (1 << 0),
     };
 
     GLShader(const QString &vertexfile, const QString &fragmentfile, unsigned int flags = NoFlags);
@@ -88,25 +88,25 @@ public:
         DestinationToLMS,
         LMSToDestination,
         YuvToRgb,
-        MatrixCount
+        MatrixCount,
     };
 
     enum class Vec2Uniform {
         Offset,
         SourceTransferFunctionParams,
         DestinationTransferFunctionParams,
-        Vec2UniformCount
+        Vec2UniformCount,
     };
 
     enum class Vec3Uniform {
-        PrimaryBrightness = 0
+        PrimaryBrightness = 0,
     };
 
     enum class Vec4Uniform {
         ModulationConstant,
         Box,
         CornerRadius,
-        Vec4UniformCount
+        Vec4UniformCount,
     };
 
     enum class FloatUniform {
@@ -115,7 +115,7 @@ public:
         SourceReferenceLuminance,
         DestinationReferenceLuminance,
         MaxTonemappingLuminance,
-        FloatUniformCount
+        FloatUniformCount,
     };
 
     enum class IntUniform {
@@ -127,12 +127,12 @@ public:
         Sampler,
         Sampler1,
         Thickness,
-        IntUniformCount
+        IntUniformCount,
     };
 
     enum class ColorUniform {
         Color,
-        ColorUniformCount
+        ColorUniformCount,
     };
 
     bool setUniform(Mat3Uniform uniform, const QMatrix3x3 &value);

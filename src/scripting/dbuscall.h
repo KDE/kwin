@@ -106,6 +106,7 @@ class DBusCall : public QObject
      * This property specifies the arguments that will be passed to the request.
      */
     Q_PROPERTY(QVariantList arguments READ arguments WRITE setArguments NOTIFY argumentsChanged)
+
 public:
     explicit DBusCall(QObject *parent = nullptr);
     ~DBusCall() override;

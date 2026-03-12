@@ -12,11 +12,14 @@
 
 namespace KDecoration3
 {
+
 class Decoration;
+
 }
 
 namespace KWin
 {
+
 class Window;
 class DecorationItem;
 class EffectWindow;

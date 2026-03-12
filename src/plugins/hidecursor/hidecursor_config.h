@@ -35,6 +35,7 @@ Q_SIGNALS:
 class HideCursorEffectConfig : public KCModule
 {
     Q_OBJECT
+
 public:
     explicit HideCursorEffectConfig(QObject *parent, const KPluginMetaData &data);
 

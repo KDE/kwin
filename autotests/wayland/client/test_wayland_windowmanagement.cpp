@@ -31,6 +31,7 @@ Q_DECLARE_METATYPE(ClientWindowVoidSetter)
 class TestWindowManagement : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestWindowManagement(QObject *parent = nullptr);
 private Q_SLOTS:

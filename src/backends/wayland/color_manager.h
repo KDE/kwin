@@ -46,6 +46,7 @@ private:
 class ImageDescriptionListener : public QObject
 {
     Q_OBJECT
+
 public:
     explicit ImageDescriptionListener(wp_image_description_info_v1 *info);
 
@@ -76,6 +77,7 @@ private:
 class ColorSurfaceFeedback : public QObject
 {
     Q_OBJECT
+
 public:
     explicit ColorSurfaceFeedback(wp_color_management_surface_feedback_v1 *);
     ~ColorSurfaceFeedback();
@@ -92,5 +94,6 @@ private:
     wp_color_management_surface_feedback_v1 *const m_feedback;
     std::shared_ptr<ColorDescription> m_preferred = ColorDescription::sRGB;
 };
+
 }
 }

@@ -8,15 +8,16 @@
 */
 
 #include "watchdoglogging.h"
-#include <unistd.h>
-#include <sys/types.h>
 #include <QCoreApplication>
 #include <QTimer>
+#include <sys/types.h>
 #include <systemd/sd-daemon.h>
+#include <unistd.h>
 
 class Watchdog : public QObject
 {
     Q_OBJECT
+
 public:
     Watchdog(QObject *parent)
         : QObject(parent)

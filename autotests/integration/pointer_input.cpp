@@ -1191,6 +1191,7 @@ void PointerInputTest::testCursorShapeV1()
 class HelperEffect : public Effect
 {
     Q_OBJECT
+
 public:
     HelperEffect()
     {
@@ -2101,6 +2102,7 @@ void PointerInputTest::testTabletCursorSyncRelative()
     // Reset
     tablet->setTabletToolIsRelative(false);
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::PointerInputTest)

@@ -21,6 +21,7 @@ class SurfaceInterface;
 class ColorManagerV1 : public QObject, private QtWaylandServer::wp_color_manager_v1
 {
     Q_OBJECT
+
 public:
     explicit ColorManagerV1(Display *display, QObject *parent);
 
@@ -130,6 +131,7 @@ private:
 class ColorManagementOutputV1 : public QObject, private QtWaylandServer::wp_color_management_output_v1
 {
     Q_OBJECT
+
 public:
     explicit ColorManagementOutputV1(wl_client *client, uint32_t id, uint32_t version, OutputInterface *output);
 

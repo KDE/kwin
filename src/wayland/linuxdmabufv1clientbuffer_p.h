@@ -127,4 +127,5 @@ protected:
     void zwp_linux_dmabuf_feedback_v1_bind_resource(Resource *resource) override;
     void zwp_linux_dmabuf_feedback_v1_destroy(Resource *resource) override;
 };
+
 }

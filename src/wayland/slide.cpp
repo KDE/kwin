@@ -11,6 +11,7 @@
 
 namespace KWin
 {
+
 static const quint32 s_version = 1;
 
 class SlideManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_slide_manager

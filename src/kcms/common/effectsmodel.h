@@ -125,7 +125,7 @@ public:
         /**
          * The effect is enabled.
          */
-        Enabled = Qt::Checked
+        Enabled = Qt::Checked,
     };
 
     explicit EffectsModel(QObject *parent = nullptr);
@@ -170,7 +170,7 @@ public:
         /**
          * Do not discard unsaved changes when reloading the model.
          */
-        KeepDirty
+        KeepDirty,
     };
 
     /**

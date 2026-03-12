@@ -54,7 +54,6 @@ public:
 
 int main(int argc, char *argv[])
 {
-
     QApplication app(argc, argv);
     QWidget window1(nullptr, Qt::Window);
     window1.setWindowTitle("Window 1");

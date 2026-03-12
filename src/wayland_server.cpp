@@ -908,6 +908,7 @@ WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(Wayl
     });
 }
 #endif
+
 }
 
 #include "moc_wayland_server.cpp"

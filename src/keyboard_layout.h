@@ -24,17 +24,21 @@ class QDBusArgument;
 
 namespace KWin
 {
+
 class Xkb;
 class KeyboardLayoutDBusInterface;
 
 namespace KeyboardLayoutSwitching
 {
+
 class Policy;
+
 }
 
 class KWIN_EXPORT KeyboardLayout : public QObject, public InputEventSpy
 {
     Q_OBJECT
+
 public:
     explicit KeyboardLayout(Xkb *xkb, const KSharedConfigPtr &config);
 

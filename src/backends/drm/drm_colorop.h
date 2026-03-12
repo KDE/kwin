@@ -212,4 +212,5 @@ private:
     std::unique_ptr<DrmAbstractColorOp> m_op;
     std::unique_ptr<DrmColorOp> m_nextOp;
 };
+
 }

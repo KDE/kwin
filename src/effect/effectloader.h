@@ -21,6 +21,7 @@
 
 namespace KWin
 {
+
 class Effect;
 class EffectPluginFactory;
 
@@ -34,7 +35,7 @@ class EffectPluginFactory;
  */
 enum class LoadEffectFlag {
     Load = 1 << 0, ///< Effect should be loaded
-    CheckDefaultFunction = 1 << 2 ///< The Check Default Function needs to be invoked if the Effect provides it
+    CheckDefaultFunction = 1 << 2, ///< The Check Default Function needs to be invoked if the Effect provides it
 };
 Q_DECLARE_FLAGS(LoadEffectFlags, LoadEffectFlag)
 
@@ -57,6 +58,7 @@ Q_DECLARE_FLAGS(LoadEffectFlags, LoadEffectFlag)
 class KWIN_EXPORT AbstractEffectLoader : public QObject
 {
     Q_OBJECT
+
 public:
     ~AbstractEffectLoader() override;
 
@@ -216,6 +218,7 @@ class EffectLoadQueue;
 class AbstractEffectLoadQueue : public QObject
 {
     Q_OBJECT
+
 public:
     explicit AbstractEffectLoadQueue(QObject *parent = nullptr)
         : QObject(parent)
@@ -282,6 +285,7 @@ private:
 class KWIN_EXPORT ScriptedEffectLoader : public AbstractEffectLoader
 {
     Q_OBJECT
+
 public:
     explicit ScriptedEffectLoader(QObject *parent = nullptr);
     ~ScriptedEffectLoader() override;
@@ -309,6 +313,7 @@ private:
 class PluginEffectLoader : public AbstractEffectLoader
 {
     Q_OBJECT
+
 public:
     explicit PluginEffectLoader(QObject *parent = nullptr);
     ~PluginEffectLoader() override;
@@ -335,6 +340,7 @@ private:
 class KWIN_EXPORT EffectLoader : public AbstractEffectLoader
 {
     Q_OBJECT
+
 public:
     explicit EffectLoader(QObject *parent = nullptr);
     ~EffectLoader() override;

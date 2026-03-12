@@ -28,7 +28,9 @@ class QTextEdit;
 
 namespace Ui
 {
+
 class DebugConsole;
+
 }
 
 namespace KWin
@@ -44,6 +46,7 @@ class WaylandWindow;
 class KWIN_EXPORT DebugConsoleModel : public QAbstractItemModel
 {
     Q_OBJECT
+
 public:
     explicit DebugConsoleModel(QObject *parent = nullptr);
     ~DebugConsoleModel() override;
@@ -87,6 +90,7 @@ private:
 class DebugConsoleDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
+
 public:
     explicit DebugConsoleDelegate(QObject *parent = nullptr);
     ~DebugConsoleDelegate() override;
@@ -97,6 +101,7 @@ public:
 class KWIN_EXPORT DebugConsole : public QWidget
 {
     Q_OBJECT
+
 public:
     DebugConsole();
     ~DebugConsole() override;
@@ -158,6 +163,7 @@ private:
 class InputDeviceModel : public QAbstractItemModel
 {
     Q_OBJECT
+
 public:
     explicit InputDeviceModel(QObject *parent = nullptr);
     ~InputDeviceModel() override;

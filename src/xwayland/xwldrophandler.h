@@ -25,6 +25,7 @@ class Dnd;
 class XwlDropHandler : public AbstractDropHandler
 {
     Q_OBJECT
+
 public:
     XwlDropHandler(Dnd *dnd);
 
@@ -39,5 +40,6 @@ private:
     QList<Xvisit *> m_visits;
     Xvisit *m_currentVisit = nullptr;
 };
+
 }
 }

@@ -37,6 +37,7 @@
 class TestWaylandSurface : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestWaylandSurface(QObject *parent = nullptr);
 private Q_SLOTS:

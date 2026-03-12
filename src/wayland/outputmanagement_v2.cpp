@@ -40,6 +40,7 @@ protected:
 class OutputConfigurationV2Interface : public QObject, QtWaylandServer::kde_output_configuration_v2
 {
     Q_OBJECT
+
 public:
     explicit OutputConfigurationV2Interface(wl_resource *resource);
 

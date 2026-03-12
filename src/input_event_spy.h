@@ -16,6 +16,7 @@ class QPointF;
 
 namespace KWin
 {
+
 struct KeyboardKeyEvent;
 struct PointerAxisEvent;
 struct PointerButtonEvent;

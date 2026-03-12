@@ -140,4 +140,5 @@ void ExternalBrightnessDeviceV1::kde_external_brightness_device_v1_commit(Resour
         }
     }
 }
+
 }

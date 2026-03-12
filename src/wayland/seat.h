@@ -19,6 +19,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class AbstractDataSource;
 class AbstractDropHandler;
 class ClientConnection;
@@ -38,6 +39,7 @@ class XdgToplevelDragV1Interface;
 class TouchPoint : public QObject
 {
     Q_OBJECT
+
 public:
     TouchPoint(qint32 id, quint32 serial, SurfaceInterface *surface, SeatInterface *seat);
 
@@ -102,6 +104,7 @@ public:
 class KWIN_EXPORT SeatInterface : public QObject
 {
     Q_OBJECT
+
 public:
     explicit SeatInterface(Display *display, const QString &name, QObject *parent = nullptr);
     virtual ~SeatInterface();

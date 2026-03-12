@@ -136,7 +136,7 @@ protected:
                 break;
             }
 
-            pollfd fds[2] = { { m_fd, POLLIN, 0 }, { m_quitPipe[0], POLLIN, 0 } };
+            pollfd fds[2] = {{m_fd, POLLIN, 0}, {m_quitPipe[0], POLLIN, 0}};
             poll(fds, 2, -1);
 
             if (fds[1].revents & POLLIN) {
@@ -228,7 +228,7 @@ bool WaylandDisplay::initialize(const QString &socketName)
     connect(m_eventThread.get(), &WaylandEventThread::available, this, &WaylandDisplay::flush, Qt::QueuedConnection);
     m_eventThread->start();
 
-    static wl_registry_listener registryListener {
+    static wl_registry_listener registryListener{
         .global = registry_global,
         .global_remove = registry_global_remove,
     };

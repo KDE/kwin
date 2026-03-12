@@ -13,6 +13,7 @@
 
 namespace KWin
 {
+
 class ClientConnection;
 class Display;
 class PointerInterface;

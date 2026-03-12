@@ -64,4 +64,5 @@ void XdgSystemBellV1Interface::remove()
 {
     d->globalRemove();
 }
+
 }

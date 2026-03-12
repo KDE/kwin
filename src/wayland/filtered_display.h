@@ -10,6 +10,7 @@
 
 namespace KWin
 {
+
 class FilteredDisplayPrivate;
 
 /**
@@ -20,6 +21,7 @@ class FilteredDisplayPrivate;
 class KWIN_EXPORT FilteredDisplay : public Display
 {
     Q_OBJECT
+
 public:
     FilteredDisplay(QObject *parent);
     ~FilteredDisplay() override;

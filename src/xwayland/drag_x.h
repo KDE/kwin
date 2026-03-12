@@ -18,10 +18,12 @@
 
 namespace KWin
 {
+
 class Window;
 
 namespace Xwl
 {
+
 class XwlDataSource;
 class WlVisit;
 class Dnd;

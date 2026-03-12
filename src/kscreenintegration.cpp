@@ -24,6 +24,7 @@ namespace KWin
 {
 namespace KScreenIntegration
 {
+
 /// See KScreen::Output::hashMd5
 static QString outputHash(BackendOutput *output)
 {
@@ -261,5 +262,6 @@ std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *>
     }
     return cfg;
 }
+
 }
 }

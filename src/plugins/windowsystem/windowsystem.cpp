@@ -86,6 +86,7 @@ QFuture<QString> WindowSystem::xdgActivationToken(QWindow *window, uint32_t seri
     auto token = KWin::waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, appId);
     return QtFuture::makeReadyFuture(token);
 }
+
 }
 
 #include "moc_windowsystem.cpp"

@@ -31,6 +31,7 @@ class QWheelEvent;
 
 namespace KWin
 {
+
 class IdleDetector;
 class Window;
 class GlobalShortcutsManager;
@@ -73,7 +74,9 @@ struct TouchUpEvent;
 
 namespace Decoration
 {
+
 class DecoratedWindowImpl;
+
 }
 
 class InputBackend;
@@ -90,6 +93,7 @@ class InputDevice;
 class KWIN_EXPORT InputRedirection : public QObject
 {
     Q_OBJECT
+
 public:
     ~InputRedirection() override;
     void init();
@@ -340,6 +344,7 @@ private:
 
 namespace InputFilterOrder
 {
+
 enum Order {
     PlaceholderOutput,
     Dpms,
@@ -367,6 +372,7 @@ enum Order {
     InputMethod,
     Forward,
 };
+
 }
 
 /**
@@ -466,6 +472,7 @@ private:
 class KWIN_EXPORT InputDeviceHandler : public QObject
 {
     Q_OBJECT
+
 public:
     ~InputDeviceHandler() override;
     virtual void init();

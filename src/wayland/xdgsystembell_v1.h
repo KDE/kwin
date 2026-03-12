@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class ClientConnection;
 class Display;
 class SurfaceInterface;
@@ -22,6 +23,7 @@ class XdgSystemBellV1InterfacePrivate;
 class KWIN_EXPORT XdgSystemBellV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     XdgSystemBellV1Interface(Display *display, QObject *parent = nullptr);
     ~XdgSystemBellV1Interface();
@@ -34,4 +36,5 @@ Q_SIGNALS:
 private:
     std::unique_ptr<XdgSystemBellV1InterfacePrivate> d;
 };
+
 }

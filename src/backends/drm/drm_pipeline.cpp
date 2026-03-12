@@ -721,4 +721,5 @@ std::chrono::nanoseconds DrmPipeline::presentationDeadline() const
 {
     return m_commitThread->safetyMargin();
 }
+
 }

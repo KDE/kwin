@@ -24,6 +24,7 @@
 class TestVirtualDesktop : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestVirtualDesktop(QObject *parent = nullptr);
 private Q_SLOTS:

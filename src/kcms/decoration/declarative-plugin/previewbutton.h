@@ -12,10 +12,12 @@
 
 namespace KDecoration3
 {
+
 class Decoration;
 
 namespace Preview
 {
+
 class PreviewBridge;
 class Settings;
 

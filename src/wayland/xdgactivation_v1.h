@@ -18,6 +18,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Display;
 class SurfaceInterface;
 class SeatInterface;
@@ -29,6 +30,7 @@ class KWIN_EXPORT XdgActivationV1Interface : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(XdgActivationV1Interface)
+
 public:
     explicit XdgActivationV1Interface(Display *display, QObject *parent = nullptr);
     ~XdgActivationV1Interface() override;

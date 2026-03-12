@@ -13,12 +13,12 @@
 
 #include <cmath>
 
-//#define COMPUTE_STATS
+// #define COMPUTE_STATS
 
 // if you enable it and run kwin in a terminal from the session it manages,
 // be sure to redirect the output of kwin in a file or
 // you'll probably get deadlocks.
-//#define VERBOSE_MODE
+// #define VERBOSE_MODE
 
 #if defined COMPUTE_STATS && !defined VERBOSE_MODE
 #ifdef __GNUC__

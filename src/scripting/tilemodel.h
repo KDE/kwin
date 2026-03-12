@@ -36,7 +36,7 @@ class KWIN_EXPORT TileModel : public QAbstractItemModel
 
 public:
     enum Roles {
-        TileRole = Qt::UserRole + 1
+        TileRole = Qt::UserRole + 1,
     };
     explicit TileModel(Tile *parent = nullptr);
     ~TileModel() override;

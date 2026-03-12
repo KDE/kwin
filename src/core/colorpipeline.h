@@ -160,6 +160,7 @@ public:
 };
 
 KWIN_EXPORT bool isFuzzyIdentity(const QMatrix4x4 &mat);
+
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::ColorOp &op);

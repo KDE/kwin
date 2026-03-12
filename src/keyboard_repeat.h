@@ -16,11 +16,13 @@ class QTimer;
 
 namespace KWin
 {
+
 class Xkb;
 
 class KeyboardRepeat : public QObject, public InputEventSpy
 {
     Q_OBJECT
+
 public:
     explicit KeyboardRepeat(Xkb *xkb);
     ~KeyboardRepeat() override;

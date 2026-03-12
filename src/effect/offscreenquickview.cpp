@@ -562,12 +562,12 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
     // points to Stationary so we only have one touch point with a different
     // state.
     touchPoints.erase(std::remove_if(touchPoints.begin(), touchPoints.end(), [](QTouchEvent::TouchPoint &point) {
-                          if (point.state() == QEventPoint::Released) {
-                              return true;
-                          }
-                          QMutableEventPoint::setState(point, QEventPoint::Stationary);
-                          return false;
-                      }),
+        if (point.state() == QEventPoint::Released) {
+            return true;
+        }
+        QMutableEventPoint::setState(point, QEventPoint::Stationary);
+        return false;
+    }),
                       touchPoints.end());
 
     // QtQuick Pointer Handlers incorrectly consider a touch point with ID 0

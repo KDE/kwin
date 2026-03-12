@@ -156,4 +156,5 @@ QList<QSize> DrmPipelineLayer::recommendedSizes() const
         return {};
     }
 }
+
 }

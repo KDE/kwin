@@ -1,4 +1,3 @@
-
 /*
     SPDX-FileCopyrightText: 2026 Xaver Hugl <xaver.hugl@kde.org>
 

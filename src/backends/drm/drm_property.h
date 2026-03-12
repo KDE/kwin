@@ -9,8 +9,8 @@
 */
 
 #pragma once
-#include "drm_pointer.h"
 #include "drm_logging.h"
+#include "drm_pointer.h"
 
 #include <QByteArray>
 #include <QList>
@@ -145,4 +145,5 @@ public:
         }
     }
 };
+
 }

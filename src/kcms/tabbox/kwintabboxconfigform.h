@@ -18,7 +18,9 @@
 
 namespace Ui
 {
+
 class KWinTabBoxConfigForm;
+
 }
 
 namespace KWin
@@ -26,8 +28,10 @@ namespace KWin
 
 namespace TabBox
 {
+
 class TabBoxSettings;
 class ShortcutSettings;
+
 }
 
 class KWinTabBoxConfigForm : public QWidget

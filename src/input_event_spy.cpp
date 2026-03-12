@@ -130,4 +130,5 @@ void InputEventSpy::tabletPadRingEvent(TabletPadRingEvent *event)
 void InputEventSpy::tabletPadDialEvent(TabletPadDialEvent *event)
 {
 }
+
 }

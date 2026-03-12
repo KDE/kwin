@@ -16,6 +16,7 @@
 
 namespace KWin
 {
+
 class TextInputManagerV2InterfacePrivate : public QtWaylandServer::zwp_text_input_manager_v2
 {
 public:

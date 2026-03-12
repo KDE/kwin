@@ -28,6 +28,7 @@ namespace KWin
 {
 namespace QPA
 {
+
 static quint32 s_windowId = 0;
 
 Window::Window(QWindow *window)
@@ -51,7 +52,6 @@ Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const F
         || !formats.contains(m_swapchain->format())
         || m_swapchain->modifiers() != formats[m_swapchain->format()]
         || (!software && m_eglContext.lock() != context)) {
-
         GraphicsBufferAllocator *allocator;
         if (software) {
             static ShmGraphicsBufferAllocator shmAllocator;

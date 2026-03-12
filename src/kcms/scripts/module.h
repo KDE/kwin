@@ -24,6 +24,7 @@ class Module : public KQuickConfigModule
     Q_PROPERTY(QList<KPluginMetaData> pendingDeletions READ pendingDeletions NOTIFY pendingDeletionsChanged)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY messageChanged)
     Q_PROPERTY(QString infoMessage READ infoMessage NOTIFY messageChanged)
+
 public:
     explicit Module(QObject *parent, const KPluginMetaData &data);
 

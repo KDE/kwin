@@ -16,6 +16,7 @@ static const int s_version = 1;
 
 namespace KWin
 {
+
 class FractionalScaleManagerV1InterfacePrivate : public QtWaylandServer::wp_fractional_scale_manager_v1
 {
 protected:

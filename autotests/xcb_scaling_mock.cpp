@@ -31,6 +31,7 @@ QSizeF Xcb::fromXNative(const QSize &value)
 {
     return value;
 }
+
 }
 
 QDebug operator<<(QDebug dbg, const KWin::Rect &rect)

@@ -11,6 +11,7 @@
 
 namespace KWin
 {
+
 // TODO: We need to wait for an ack_configure either here or in xdgshellclient.cpp.
 
 XdgDecorationManagerV1InterfacePrivate::XdgDecorationManagerV1InterfacePrivate(XdgDecorationManagerV1Interface *manager)

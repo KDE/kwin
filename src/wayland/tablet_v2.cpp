@@ -20,6 +20,7 @@
 
 namespace KWin
 {
+
 static int s_version = 2;
 
 class TabletV2InterfacePrivate : public QtWaylandServer::zwp_tablet_v2
@@ -147,8 +148,9 @@ public:
 
     std::ranges::subrange<QMultiMap<struct ::wl_client *, Resource *>::const_iterator> targetResources() const
     {
-        if (!m_surface)
+        if (!m_surface) {
             return {};
+        }
 
         ClientConnection *client = m_surface->client();
         const auto [start, end] = resourceMap().equal_range(*client);
@@ -167,8 +169,9 @@ public:
     void zwp_tablet_tool_v2_bind_resource(QtWaylandServer::zwp_tablet_tool_v2::Resource *resource) override
     {
         TabletSurfaceCursorV2 *&c = m_cursors[resource->client()];
-        if (!c)
+        if (!c) {
             c = new TabletSurfaceCursorV2;
+        }
     }
 
     void zwp_tablet_tool_v2_set_cursor(Resource *resource, uint32_t serial, struct ::wl_resource *_surface, int32_t hotspot_x, int32_t hotspot_y) override
@@ -193,8 +196,8 @@ public:
         c->d->update(serial, surface, hotspot);
         const auto resources = targetResources();
         if (std::any_of(resources.begin(), resources.end(), [resource](const Resource *res) {
-                return res->handle == resource->handle;
-            })) {
+            return res->handle == resource->handle;
+        })) {
             Q_EMIT q->cursorChanged(c);
         }
     }
@@ -275,8 +278,9 @@ SurfaceInterface *TabletToolV2Interface::currentSurface() const
 
 void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface)
 {
-    if (d->m_surface == surface)
+    if (d->m_surface == surface) {
         return;
+    }
 
     TabletV2Interface *const lastTablet = d->m_lastTablet;
     if (d->m_surface && d->resourceMap().contains(*d->m_surface->client())) {

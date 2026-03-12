@@ -535,7 +535,7 @@ bool Shm::init()
 
 uint32_t toXNative(qreal value)
 {
-    //debug helper, check for things getting mangled
+    // debug helper, check for things getting mangled
     if (!qFuzzyIsNull(std::fmod(kwinApp()->xwaylandScale() * value, 1))) {
         qCDebug(KWIN_CORE) << "precision lost! floating value sent to X" << kwinApp()->xwaylandScale() * value;
     }

@@ -22,6 +22,7 @@ class Display;
 class DrmLeaseManagerV1 : public QObject
 {
     Q_OBJECT
+
 public:
     DrmLeaseManagerV1(DrmBackend *backend, Display *display, QObject *parent = nullptr);
     ~DrmLeaseManagerV1();
@@ -36,4 +37,5 @@ private:
     Display *const m_display;
     QHash<DrmGpu *, DrmLeaseDeviceV1Interface *> m_leaseDevices;
 };
+
 }

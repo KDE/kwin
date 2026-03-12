@@ -20,6 +20,7 @@ class PointerInterface;
 class PointerWarpV1 : public QObject, public QtWaylandServer::wp_pointer_warp_v1
 {
     Q_OBJECT
+
 public:
     explicit PointerWarpV1(Display *display, QObject *parent);
 

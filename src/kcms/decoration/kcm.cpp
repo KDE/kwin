@@ -32,7 +32,9 @@ Q_DECLARE_METATYPE(KDecoration3::BorderSize)
 
 namespace
 {
+
 const KDecoration3::BorderSize s_defaultRecommendedBorderSize = KDecoration3::BorderSize::Normal;
+
 }
 
 KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const KPluginMetaData &metaData)

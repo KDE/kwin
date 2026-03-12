@@ -155,6 +155,7 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
 class HelperWindow : public QRasterWindow
 {
     Q_OBJECT
+
 public:
     HelperWindow();
     ~HelperWindow() override;

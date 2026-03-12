@@ -17,6 +17,7 @@ class Display;
 class KWIN_EXPORT XdgToplevelTagManagerV1 : public QObject, public QtWaylandServer::xdg_toplevel_tag_manager_v1
 {
     Q_OBJECT
+
 public:
     explicit XdgToplevelTagManagerV1(Display *display, QObject *parent);
 

@@ -9,8 +9,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-//#define QT_CLEAN_NAMESPACE
-// own
+// #define QT_CLEAN_NAMESPACE
+//  own
 #include "tabbox.h"
 // tabbox
 #include "tabbox/tabbox_logging.h"
@@ -906,7 +906,7 @@ TabBox::Direction TabBox::matchShortcuts(const KeyboardKeyEvent &keyEvent, const
     }
 
     return Steady;
-};
+}
 
 void TabBox::keyPress(const KeyboardKeyEvent &keyEvent)
 {
@@ -1079,6 +1079,7 @@ void TabBox::removeTabBoxGrab()
 {
     m_forcedGlobalMouseGrab = false;
 }
+
 } // namespace TabBox
 } // namespace
 

@@ -115,7 +115,7 @@ void OptionsModel::resetValue()
 bool OptionsModel::useFlags() const
 {
     return m_useFlags;
-};
+}
 
 uint OptionsModel::bitMask(int index) const
 {

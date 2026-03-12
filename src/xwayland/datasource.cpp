@@ -78,6 +78,7 @@ bool XwlDataSource::isDndFinished() const
 {
     return m_dndFinished;
 }
+
 }
 }
 

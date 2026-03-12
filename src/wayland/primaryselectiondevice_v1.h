@@ -15,6 +15,7 @@ struct wl_client;
 
 namespace KWin
 {
+
 class AbstractDataSource;
 class PrimarySelectionDeviceManagerV1Interface;
 class PrimarySelectionOfferV1Interface;
@@ -33,6 +34,7 @@ class PrimarySelectionDeviceV1InterfacePrivate;
 class KWIN_EXPORT PrimarySelectionDeviceV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~PrimarySelectionDeviceV1Interface();
 

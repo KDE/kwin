@@ -14,6 +14,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Display;
 class SurfaceInterface;
 class AppMenuInterface;
@@ -58,6 +59,7 @@ private:
 class KWIN_EXPORT AppMenuInterface : public QObject
 {
     Q_OBJECT
+
 public:
     /**
      * Structure containing DBus service name and path

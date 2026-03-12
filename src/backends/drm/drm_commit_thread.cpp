@@ -412,4 +412,5 @@ void DrmCommitThread::handlePing()
     m_ping = true;
     m_pong.notify_one();
 }
+
 }

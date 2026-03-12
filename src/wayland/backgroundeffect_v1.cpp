@@ -115,4 +115,5 @@ void ExtBackgroundEffectSurfaceV1::ext_background_effect_surface_v1_set_blur_reg
     }
     surfPriv->pending->committed |= SurfaceState::Field::Blur;
 }
+
 }

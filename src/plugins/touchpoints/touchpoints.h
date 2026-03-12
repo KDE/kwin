@@ -24,6 +24,7 @@ class TouchPointsEffect
     Q_PROPERTY(int ringLife READ ringLife)
     Q_PROPERTY(int ringSize READ ringSize)
     Q_PROPERTY(int ringCount READ ringCount)
+
 public:
     TouchPointsEffect();
     ~TouchPointsEffect() override;

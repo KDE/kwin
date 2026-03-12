@@ -30,6 +30,7 @@ private:
 class ContentTypeV1Interface : public QObject, private QtWaylandServer::wp_content_type_v1
 {
     Q_OBJECT
+
 public:
     ContentTypeV1Interface(SurfaceInterface *surface, wl_client *client, uint32_t id);
 

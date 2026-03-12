@@ -19,6 +19,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class DataDeviceManagerInterface;
 class DataOfferInterface;
 class DataSourceInterface;
@@ -79,6 +80,7 @@ private:
 class KWIN_EXPORT DataDeviceInterface : public AbstractDropHandler
 {
     Q_OBJECT
+
 public:
     virtual ~DataDeviceInterface();
 

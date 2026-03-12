@@ -24,4 +24,5 @@ std::shared_ptr<OutputChangeSet> OutputConfiguration::constChangeSet(BackendOutp
 {
     return m_properties[output];
 }
+
 }

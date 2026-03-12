@@ -46,6 +46,7 @@ protected:
 class TestServerSideDecoration : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestServerSideDecoration(QObject *parent = nullptr);
 private Q_SLOTS:

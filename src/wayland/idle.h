@@ -13,6 +13,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Display;
 class IdleInterfacePrivate;
 

@@ -16,6 +16,7 @@
 
 namespace KWin
 {
+
 static const int s_version = 1;
 
 class XdgActivationTokenV1Interface : public QtWaylandServer::xdg_activation_token_v1

@@ -21,6 +21,7 @@ class SlideBackEffect
     : public Effect
 {
     Q_OBJECT
+
 public:
     SlideBackEffect();
 

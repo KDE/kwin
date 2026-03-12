@@ -17,6 +17,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Display;
 class OutputInterface;
 class ScreencastV1InterfacePrivate;
@@ -27,6 +28,7 @@ class ClientConnection;
 class KWIN_EXPORT ScreencastStreamV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     ~ScreencastStreamV1Interface() override;
 

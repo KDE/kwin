@@ -14,6 +14,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Display;
 class SurfaceInterface;
 class ServerSideDecorationPaletteInterface;
@@ -56,6 +57,7 @@ private:
 class KWIN_EXPORT ServerSideDecorationPaletteInterface : public QObject
 {
     Q_OBJECT
+
 public:
     ~ServerSideDecorationPaletteInterface() override;
 

@@ -12,6 +12,7 @@
 
 namespace KWin
 {
+
 class Display;
 class SurfaceInterface;
 class XdgForeignV2InterfacePrivate;
@@ -44,6 +45,7 @@ private:
 class KWIN_EXPORT XdgForeignV2Interface : public QObject
 {
     Q_OBJECT
+
 public:
     XdgForeignV2Interface(Display *display, QObject *parent = nullptr);
     ~XdgForeignV2Interface() override;

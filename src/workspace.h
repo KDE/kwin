@@ -41,18 +41,24 @@ namespace KWin
 
 namespace Decoration
 {
+
 class DecorationBridge;
+
 }
 
 namespace Xcb
 {
+
 class Tree;
 class Window;
+
 }
 
 namespace TabBox
 {
+
 class TabBox;
+
 }
 
 class Gravity;
@@ -93,6 +99,7 @@ class LightSensor;
 class KWIN_EXPORT Workspace : public QObject
 {
     Q_OBJECT
+
 public:
     explicit Workspace();
     ~Workspace() override;
@@ -311,7 +318,7 @@ public:
         DirectionSouth,
         DirectionWest,
         DirectionPrev,
-        DirectionNext
+        DirectionNext,
     };
     LogicalOutput *findOutput(LogicalOutput *reference, Direction direction, bool wrapAround = false) const;
     LogicalOutput *findOutput(const QString &name) const;
@@ -435,7 +442,7 @@ public:
         Off,
         TurningOff,
         AboutToTurnOff,
-        On
+        On,
     };
     void requestDpmsState(DpmsState state);
     DpmsState dpmsState() const;

@@ -22,6 +22,7 @@ using namespace KWayland::Client;
 class PlasmaSurfaceTest : public QObject
 {
     Q_OBJECT
+
 public:
     explicit PlasmaSurfaceTest(QObject *parent = nullptr);
     virtual ~PlasmaSurfaceTest();

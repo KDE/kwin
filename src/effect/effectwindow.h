@@ -21,7 +21,9 @@ class QWindow;
 
 namespace KDecoration3
 {
+
 class Decoration;
+
 }
 
 namespace KWin

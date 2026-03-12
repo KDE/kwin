@@ -14,7 +14,9 @@
 class QTimer;
 namespace KSvg
 {
+
 class Svg;
+
 }
 
 namespace KWin
@@ -25,6 +27,7 @@ class ImageItem;
 class ScreenEdgeEffect : public Effect
 {
     Q_OBJECT
+
 public:
     ScreenEdgeEffect();
     ~ScreenEdgeEffect() override;

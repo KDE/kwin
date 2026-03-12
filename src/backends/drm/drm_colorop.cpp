@@ -588,4 +588,5 @@ bool DrmColorOp::updateProperties()
     }
     Q_UNREACHABLE();
 }
+
 }

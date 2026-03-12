@@ -134,7 +134,8 @@ bool ScriptedEffectLoader::loadEffect(const KPluginMetaData &effect, LoadEffectF
         return loadDeclarativeEffect(effect);
     } else {
         qCWarning(KWIN_CORE, "Failed to load %s effect: invalid X-Plasma-API field: %s. "
-                             "Available options are javascript, and declarativescript", qPrintable(name), qPrintable(api));
+                             "Available options are javascript, and declarativescript",
+                  qPrintable(name), qPrintable(api));
     }
 
     return false;

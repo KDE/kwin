@@ -24,13 +24,14 @@ class Effect;
 class KWIN_EXPORT EffectTogglableState : public QObject
 {
     Q_OBJECT
+
 public:
     enum class Status {
         Inactive,
         Activating,
         Deactivating,
         Active,
-        Stopped
+        Stopped,
     };
     Q_ENUM(Status)
 

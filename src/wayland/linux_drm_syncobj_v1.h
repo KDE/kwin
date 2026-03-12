@@ -26,6 +26,7 @@ class DrmDevice;
 class KWIN_EXPORT LinuxDrmSyncObjV1Interface : public QObject, private QtWaylandServer::wp_linux_drm_syncobj_manager_v1
 {
     Q_OBJECT
+
 public:
     explicit LinuxDrmSyncObjV1Interface(Display *display, QObject *parent, DrmDevice *drmDevice);
 
@@ -60,4 +61,5 @@ private:
 
     const QPointer<SurfaceInterface> m_surface;
 };
+
 }

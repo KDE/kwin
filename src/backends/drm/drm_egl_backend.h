@@ -38,6 +38,7 @@ class EglDisplay;
 class EglGbmBackend : public EglBackend, public DrmRenderBackend
 {
     Q_OBJECT
+
 public:
     EglGbmBackend(DrmBackend *drmBackend);
     ~EglGbmBackend() override;

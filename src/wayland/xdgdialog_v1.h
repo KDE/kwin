@@ -24,6 +24,7 @@ class XdgToplevelInterface;
 class XdgDialogWmV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     XdgDialogWmV1Interface(Display *display, QObject *parent = nullptr);
     ~XdgDialogWmV1Interface() override;
@@ -40,6 +41,7 @@ private:
 class XdgDialogV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     ~XdgDialogV1Interface() override;
 

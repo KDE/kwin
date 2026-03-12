@@ -28,6 +28,7 @@ class DrmLeaseV1Interface;
 class DrmLeaseDeviceV1Interface : public QObject, public QtWaylandServer::wp_drm_lease_device_v1
 {
     Q_OBJECT
+
 public:
     explicit DrmLeaseDeviceV1Interface(Display *display, DrmGpu *gpu);
     ~DrmLeaseDeviceV1Interface();
@@ -68,6 +69,7 @@ private:
 class DrmLeaseConnectorV1Interface : public QObject, public QtWaylandServer::wp_drm_lease_connector_v1
 {
     Q_OBJECT
+
 public:
     explicit DrmLeaseConnectorV1Interface(DrmLeaseDeviceV1Interface *leaseDevice, DrmOutput *output);
 
@@ -110,6 +112,7 @@ protected:
 class DrmLeaseV1Interface : public QObject, private QtWaylandServer::wp_drm_lease_v1
 {
     Q_OBJECT
+
 public:
     DrmLeaseV1Interface(DrmLeaseDeviceV1Interface *device, const QList<DrmLeaseConnectorV1Interface *> &connectors, wl_resource *resource);
     ~DrmLeaseV1Interface();

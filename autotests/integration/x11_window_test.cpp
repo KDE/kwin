@@ -3475,6 +3475,7 @@ X11Object::~X11Object()
 class X11TestWindow : public QObject, public X11Object
 {
     Q_OBJECT
+
 public:
     X11TestWindow(X11Display *display, const QSize &size)
         : X11Object(display)
@@ -3727,6 +3728,7 @@ public:
         }
         return false;
     }
+
 private:
     xcb_window_t m_triggerId;
     xcb_window_t m_windowId;

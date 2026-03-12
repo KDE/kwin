@@ -1323,7 +1323,7 @@ static QByteArray readEdid(const QString &path)
     QFile file(path);
     (void)file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
     return file.readAll();
-};
+}
 
 void OutputChangesTest::testGenerateConfigs_data()
 {

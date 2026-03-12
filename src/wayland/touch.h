@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class ClientConnection;
 class SeatInterface;
 class SurfaceInterface;

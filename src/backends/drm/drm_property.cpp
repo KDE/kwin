@@ -165,4 +165,5 @@ bool DrmProperty::isValid() const
 {
     return m_propId != 0;
 }
+
 }

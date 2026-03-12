@@ -49,7 +49,7 @@ private:
     enum State {
         Off,
         ShowingCache,
-        Blending
+        Blending,
     };
     State m_state = Off;
 };

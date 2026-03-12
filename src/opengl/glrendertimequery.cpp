@@ -84,4 +84,5 @@ std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
         .end = end,
     };
 }
+
 }

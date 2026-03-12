@@ -7,9 +7,9 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
+#include "core/outputconfiguration.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "core/outputconfiguration.h"
 
 namespace KWin
 {

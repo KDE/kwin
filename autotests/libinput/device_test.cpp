@@ -170,6 +170,7 @@ private Q_SLOTS:
 
 namespace
 {
+
 template<typename T>
 T dbusProperty(const QString &name, const char *property)
 {
@@ -179,6 +180,7 @@ T dbusProperty(const QString &name, const char *property)
         QStringLiteral("org.kde.KWin.InputDevice")};
     return interface.property(property).value<T>();
 }
+
 }
 
 void TestLibinputDevice::initTestCase()

@@ -1178,6 +1178,7 @@ void ActivationTest::testPartialAreaLayerSurfaceOverlay()
     Test::renderAndWaitForShown(surface.get(), requestedSize, Qt::red);
     QCOMPARE(workspace()->activeWindow(), window.m_window);
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::ActivationTest)

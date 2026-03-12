@@ -72,6 +72,7 @@
 
 namespace KWin
 {
+
 #if KWIN_BUILD_X11
 static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
 {

@@ -247,7 +247,7 @@ void EGLPlatformContext::updateFormatFromContext()
 EGLContext EGLPlatformContext::nativeContext() const
 {
     return m_eglContext->handle();
-};
+}
 
 EGLConfig EGLPlatformContext::config() const
 {

@@ -84,9 +84,9 @@ void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
     desktopShellSurface->set_size(0, 0);
     desktopShellSurface->set_exclusive_zone(-1);
     desktopShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_bottom
-        | Test::LayerSurfaceV1::anchor_top
-        | Test::LayerSurfaceV1::anchor_left
-        | Test::LayerSurfaceV1::anchor_right);
+                                    | Test::LayerSurfaceV1::anchor_top
+                                    | Test::LayerSurfaceV1::anchor_left
+                                    | Test::LayerSurfaceV1::anchor_right);
     desktopSurface->commit(KWayland::Client::Surface::CommitFlag::None);
     QSignalSpy desktopConfigureRequestedSpy(desktopShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(desktopConfigureRequestedSpy.wait());

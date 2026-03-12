@@ -15,6 +15,7 @@
 static const int s_version = 1;
 namespace KWin
 {
+
 class PrimarySelectionDeviceManagerV1InterfacePrivate : public QtWaylandServer::zwp_primary_selection_device_manager_v1
 {
 public:
@@ -74,6 +75,7 @@ PrimarySelectionDeviceManagerV1Interface::PrimarySelectionDeviceManagerV1Interfa
 }
 
 PrimarySelectionDeviceManagerV1Interface::~PrimarySelectionDeviceManagerV1Interface() = default;
+
 }
 
 #include "moc_primaryselectiondevicemanager_v1.cpp"

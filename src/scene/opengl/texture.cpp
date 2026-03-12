@@ -6,11 +6,11 @@
 
 #include "scene/opengl/texture.h"
 #include "compositor.h"
+#include "core/drm_formats.h"
 #include "core/graphicsbufferview.h"
 #include "opengl/eglbackend.h"
 #include "opengl/gltexture.h"
 #include "utils/common.h"
-#include "core/drm_formats.h"
 
 namespace KWin
 {

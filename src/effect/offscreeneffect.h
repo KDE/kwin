@@ -99,6 +99,7 @@ private:
 class KWIN_EXPORT CrossFadeEffect : public Effect
 {
     Q_OBJECT
+
 public:
     explicit CrossFadeEffect(QObject *parent = nullptr);
     ~CrossFadeEffect() override;

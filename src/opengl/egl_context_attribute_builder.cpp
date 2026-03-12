@@ -11,6 +11,7 @@
 
 namespace KWin
 {
+
 std::vector<int> EglContextAttributeBuilder::build() const
 {
     std::vector<int> attribs;

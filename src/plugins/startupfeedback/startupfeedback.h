@@ -32,6 +32,7 @@ class StartupFeedbackEffect
 {
     Q_OBJECT
     Q_PROPERTY(int type READ type)
+
 public:
     StartupFeedbackEffect();
     ~StartupFeedbackEffect() override;
@@ -65,7 +66,7 @@ private:
         NoFeedback,
         BouncingFeedback,
         BlinkingFeedback,
-        PassiveFeedback
+        PassiveFeedback,
     };
 
     struct Startup
@@ -102,4 +103,5 @@ private:
     bool m_splashVisible;
     std::chrono::seconds m_timeout;
 };
+
 } // namespace

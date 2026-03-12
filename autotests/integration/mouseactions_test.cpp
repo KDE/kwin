@@ -260,6 +260,7 @@ void MouseActionsTest::testMouseActivateRaiseOnReleaseAndPassClickInteractiveMov
     Test::pointerButtonReleased(BTN_LEFT, time++);
     QCOMPARE(workspace()->stackingOrder(), (QList{window2.m_window, window1.m_window}));
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::MouseActionsTest)

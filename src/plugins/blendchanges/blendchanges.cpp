@@ -18,6 +18,7 @@ using namespace std::chrono_literals;
 
 namespace KWin
 {
+
 BlendChanges::BlendChanges()
     : CrossFadeEffect()
 {

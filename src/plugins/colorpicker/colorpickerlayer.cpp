@@ -40,4 +40,5 @@ bool ColorPickerLayer::doEndFrame(const Region &renderedRegion, const Region &da
 void ColorPickerLayer::releaseBuffers()
 {
 }
+
 }

@@ -93,8 +93,8 @@ void TestPlasmaShell::init()
     m_registry->setup();
 
     QVERIFY(interfacesAnnouncedSpy.wait());
-#define CREATE(variable, factory, iface)                                                                                                                      \
-    variable =                                                                                                                                                \
+#define CREATE(variable, factory, iface)                                                                                                                                                          \
+    variable =                                                                                                                                                                                    \
         m_registry->create##factory(m_registry->interface(KWayland::Client::Registry::Interface::iface).name, m_registry->interface(KWayland::Client::Registry::Interface::iface).version, this); \
     QVERIFY(variable);
 

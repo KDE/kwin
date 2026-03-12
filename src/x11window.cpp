@@ -3729,7 +3729,6 @@ void X11Window::maximize(MaximizeMode mode, const RectF &restore)
     }
 
     switch (max_mode) {
-
     case MaximizeVertical: {
         if (old_mode & MaximizeHorizontal) { // actually restoring from MaximizeFull
             if (geometryRestore().width() == 0) {

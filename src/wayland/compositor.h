@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class CompositorInterfacePrivate;
 class Display;
 

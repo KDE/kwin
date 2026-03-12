@@ -44,4 +44,5 @@ inline FileDescriptor::operator bool() const
 {
     return isValid();
 }
+
 }

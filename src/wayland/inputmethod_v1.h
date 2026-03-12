@@ -16,6 +16,7 @@
 
 namespace KWin
 {
+
 class OutputInterface;
 class SurfaceInterface;
 class SurfaceRole;
@@ -41,6 +42,7 @@ class InputKeyboardV1InterfacePrivate;
 class KWIN_EXPORT InputMethodV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     InputMethodV1Interface(Display *d, QObject *parent);
     ~InputMethodV1Interface() override;
@@ -68,6 +70,7 @@ private:
 class KWIN_EXPORT InputMethodContextV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     ~InputMethodContextV1Interface() override;
 
@@ -108,6 +111,7 @@ private:
 class KWIN_EXPORT InputPanelV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     InputPanelV1Interface(Display *display, QObject *parent);
     ~InputPanelV1Interface() override;
@@ -125,6 +129,7 @@ private:
 class KWIN_EXPORT InputPanelSurfaceV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     ~InputPanelSurfaceV1Interface() override;
 
@@ -154,6 +159,7 @@ private:
 class KWIN_EXPORT InputMethodGrabV1 : public QObject
 {
     Q_OBJECT
+
 public:
     ~InputMethodGrabV1() override;
 

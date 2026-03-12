@@ -77,7 +77,7 @@ public:
     enum UsageHint {
         Dynamic, ///< frequent changes, but used several times for rendering
         Static, ///< No changes to data
-        Stream ///< Data only used once for rendering, updated very frequently
+        Stream, ///< Data only used once for rendering, updated very frequently
     };
 
     explicit GLVertexBuffer(UsageHint hint);

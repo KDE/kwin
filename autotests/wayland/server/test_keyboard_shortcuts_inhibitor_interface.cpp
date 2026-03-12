@@ -29,6 +29,7 @@ using namespace KWin;
 class KeyboardShortcutsInhibitManager : public QObject, public QtWayland::zwp_keyboard_shortcuts_inhibit_manager_v1
 {
     Q_OBJECT
+
 public:
     KeyboardShortcutsInhibitManager(wl_registry *registry, quint32 id, quint32 version)
         : QtWayland::zwp_keyboard_shortcuts_inhibit_manager_v1(registry, id, version)
@@ -39,6 +40,7 @@ public:
 class KeyboardShortcutsInhibitor : public QObject, public QtWayland::zwp_keyboard_shortcuts_inhibitor_v1
 {
     Q_OBJECT
+
 public:
     KeyboardShortcutsInhibitor(::zwp_keyboard_shortcuts_inhibitor_v1 *inhibitorV1)
         : QtWayland::zwp_keyboard_shortcuts_inhibitor_v1(inhibitorV1)
@@ -63,6 +65,7 @@ Q_SIGNALS:
 class TestKeyboardShortcutsInhibitorInterface : public QObject
 {
     Q_OBJECT
+
 public:
     TestKeyboardShortcutsInhibitorInterface()
     {

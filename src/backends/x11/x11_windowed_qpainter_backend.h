@@ -70,6 +70,7 @@ private:
 class X11WindowedQPainterBackend : public QPainterBackend
 {
     Q_OBJECT
+
 public:
     X11WindowedQPainterBackend(X11WindowedBackend *backend);
     ~X11WindowedQPainterBackend() override;

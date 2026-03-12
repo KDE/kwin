@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 static const int s_version = 1;
 
 PointerConstraintsV1InterfacePrivate::PointerConstraintsV1InterfacePrivate(Display *display)

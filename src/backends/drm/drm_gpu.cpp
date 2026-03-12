@@ -1136,6 +1136,7 @@ uint32_t DrmLease::lesseeId() const
 {
     return m_lesseeId;
 }
+
 }
 
 QDebug &operator<<(QDebug &s, const KWin::DrmGpu *gpu)

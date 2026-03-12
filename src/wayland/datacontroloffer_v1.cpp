@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class DataControlOfferV1InterfacePrivate : public QtWaylandServer::ext_data_control_offer_v1
 {
 public:

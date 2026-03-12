@@ -1485,4 +1485,5 @@ bool OutputConfigurationStore::isAutoBrightnessActive(const QList<BackendOutput 
             && output->dpmsMode() == BackendOutput::DpmsMode::On;
     });
 }
+
 }

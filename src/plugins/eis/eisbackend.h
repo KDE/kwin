@@ -24,12 +24,14 @@ class QDBusServiceWatcher;
 
 namespace KWin
 {
+
 class DbusEisContext;
 class XWaylandEisContext;
 
 class EisBackend : public KWin::InputBackend, public QDBusContext
 {
     Q_OBJECT
+
 public:
     explicit EisBackend(QObject *parent = nullptr);
     ~EisBackend() override;

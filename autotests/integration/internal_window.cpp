@@ -58,6 +58,7 @@ private Q_SLOTS:
 class HelperWindow : public QRasterWindow
 {
     Q_OBJECT
+
 public:
     HelperWindow();
     ~HelperWindow() override;

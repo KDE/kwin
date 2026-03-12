@@ -1332,6 +1332,7 @@ CursorTheme CursorImage::theme() const
 {
     return m_waylandImage.theme();
 }
+
 }
 
 #include "moc_pointer_input.cpp"

@@ -25,10 +25,12 @@ struct libinput_device;
 
 namespace KWin
 {
+
 class LogicalOutput;
 
 namespace LibInput
 {
+
 enum class ConfigKey;
 
 class TabletTool : public InputDeviceTabletTool

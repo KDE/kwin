@@ -19,6 +19,7 @@ namespace KWin
 class InternalInputMethodContext : public QPlatformInputContext
 {
     Q_OBJECT
+
 public:
     InternalInputMethodContext(QObject *parent);
     ~InternalInputMethodContext() override;

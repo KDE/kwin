@@ -14,10 +14,12 @@
 
 namespace KWin
 {
+
 class LogicalOutput;
 
 namespace QPA
 {
+
 class Integration;
 class PlatformCursor;
 

@@ -12,6 +12,7 @@ namespace KWayland
 {
 namespace Client
 {
+
 class Compositor;
 class ConnectionThread;
 class EventQueue;
@@ -19,6 +20,7 @@ class Output;
 class Registry;
 class ShmPool;
 class Surface;
+
 }
 }
 
@@ -28,6 +30,7 @@ class QTimer;
 class WaylandClientTest : public QObject
 {
     Q_OBJECT
+
 public:
     explicit WaylandClientTest(QObject *parent = nullptr);
     virtual ~WaylandClientTest();

@@ -14,7 +14,9 @@
 
 namespace Ui
 {
+
 class KWinTouchScreenConfigUi;
+
 }
 
 namespace KWin

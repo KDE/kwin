@@ -16,6 +16,7 @@
 class TestFTrace : public QObject
 {
     Q_OBJECT
+
 public:
     TestFTrace();
 private Q_SLOTS:

@@ -304,6 +304,7 @@ QList<DrmColorOp *> DrmPlane::colorPipelines() const
 {
     return m_colorPipelines;
 }
+
 }
 
 #include "moc_drm_plane.cpp"

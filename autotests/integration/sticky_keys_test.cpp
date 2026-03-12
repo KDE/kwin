@@ -358,6 +358,7 @@ void StickyKeysTest::testMouse()
     QCOMPARE(modifierSpy.first()[0], 0); // verify that mod is not depressed
     QCOMPARE(modifierSpy.first()[1], 0); // verify that mod is not latched any more
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::StickyKeysTest)

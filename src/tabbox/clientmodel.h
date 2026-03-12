@@ -34,6 +34,7 @@ class ClientModel
     : public QAbstractItemModel
 {
     Q_OBJECT
+
 public:
     enum {
         ClientRole = Qt::UserRole, ///< The Window
@@ -42,7 +43,7 @@ public:
         IconRole = Qt::UserRole + 3, // TODO: to be removed
         WIdRole = Qt::UserRole + 5, ///< The window ID of Window
         MinimizedRole = Qt::UserRole + 6, ///< Window is minimized
-        CloseableRole = Qt::UserRole + 7 ///< Window can be closed
+        CloseableRole = Qt::UserRole + 7, ///< Window can be closed
     };
     explicit ClientModel(QObject *parent = nullptr);
     ~ClientModel() override;

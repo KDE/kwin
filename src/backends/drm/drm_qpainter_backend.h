@@ -24,6 +24,7 @@ class DrmPipeline;
 class DrmQPainterBackend : public QPainterBackend, public DrmRenderBackend
 {
     Q_OBJECT
+
 public:
     DrmQPainterBackend(DrmBackend *backend);
     ~DrmQPainterBackend();
@@ -37,4 +38,5 @@ public:
 private:
     DrmBackend *m_backend;
 };
+
 }

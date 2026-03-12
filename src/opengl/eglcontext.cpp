@@ -687,4 +687,5 @@ bool EglContext::isFailed() const
 {
     return m_failed;
 }
+
 }

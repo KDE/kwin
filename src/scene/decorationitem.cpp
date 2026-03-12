@@ -105,9 +105,9 @@ void DecorationRenderer::render(ItemRenderer *itemRenderer, const RegionF &regio
 
         for (int i = 0; i < 4; ++i) {
             const QSize nativeSize = decorationRects[i]
-                .scaled(dpr)
-                .rounded()
-                .size();
+                                         .scaled(dpr)
+                                         .rounded()
+                                         .size();
             if (m_images[i].size() != nativeSize || m_images[i].devicePixelRatio() != dpr) {
                 m_images[i] = QImage(nativeSize, QImage::Format_ARGB32_Premultiplied);
                 m_images[i].setDevicePixelRatio(dpr);
@@ -123,13 +123,13 @@ void DecorationRenderer::render(ItemRenderer *itemRenderer, const RegionF &regio
         }
 
         const Rect nativeDirtyRect = dirtyRect
-            .scaled(image.devicePixelRatio())
-            .roundedOut();
+                                         .scaled(image.devicePixelRatio())
+                                         .roundedOut();
         const RectF snappedDirtyRect = nativeDirtyRect.scaled(1 / image.devicePixelRatio());
 
         const Rect nativePartRect = partRect
-            .scaled(image.devicePixelRatio())
-            .rounded();
+                                        .scaled(image.devicePixelRatio())
+                                        .rounded();
         const RectF snappedPartRect = nativePartRect.scaled(1 / image.devicePixelRatio());
 
         QPainter painter(&image);

@@ -35,6 +35,7 @@ enum class DecorationPolicy;
 class SessionManager : public QObject, public QDBusContext
 {
     Q_OBJECT
+
 public:
     enum SMSavePhase {
         SMSavePhase0, // saving global state in "phase 0"

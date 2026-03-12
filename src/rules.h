@@ -115,7 +115,7 @@ public:
         Screen = 1 << 17,
         DesktopFile = 1 << 18,
         Layer = 1 << 19,
-        All = 0xffffffff
+        All = 0xffffffff,
     };
     Q_DECLARE_FLAGS(Types, Type)
     // All these values are saved to the cfg file, and are also used in kstart!
@@ -126,7 +126,7 @@ public:
         Apply, // apply only after initial mapping
         Remember, // like apply, and remember the value when the window is withdrawn
         ApplyNow, // apply immediately, then forget the setting
-        ForceTemporarily // apply and force until the window is withdrawn
+        ForceTemporarily, // apply and force until the window is withdrawn
     };
     enum StringMatch {
         FirstStringMatch,
@@ -134,15 +134,15 @@ public:
         ExactMatch,
         SubstringMatch,
         RegExpMatch,
-        LastStringMatch = RegExpMatch
+        LastStringMatch = RegExpMatch,
     };
     enum SetRule {
         UnusedSetRule = Unused,
-        SetRuleDummy = 256 // so that it's at least short int
+        SetRuleDummy = 256, // so that it's at least short int
     };
     enum ForceRule {
         UnusedForceRule = Unused,
-        ForceRuleDummy = 256 // so that it's at least short int
+        ForceRuleDummy = 256, // so that it's at least short int
     };
     void write(RuleSettings *) const;
     bool isEmpty() const;
@@ -202,6 +202,7 @@ private:
     bool matchClientMachine(const QString &match_machine, bool local) const;
     bool matchTag(const QString &match_tag) const;
 #ifdef KCMRULES
+
 private:
 #endif
     void readFromSettings(const RuleSettings *settings);
@@ -311,6 +312,7 @@ private:
 class KWIN_EXPORT RuleBook : public QObject
 {
     Q_OBJECT
+
 public:
     explicit RuleBook();
     ~RuleBook() override;

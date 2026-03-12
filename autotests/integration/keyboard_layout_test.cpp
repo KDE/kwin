@@ -35,12 +35,12 @@ using namespace KWin;
 class KeyboardLayoutTest : public QObject
 {
     Q_OBJECT
+
 public:
     KeyboardLayoutTest()
         : layoutsReconfiguredSpy(this, &KeyboardLayoutTest::layoutListChanged)
         , layoutChangedSpy(this, &KeyboardLayoutTest::layoutChanged)
     {
-
         QVERIFY(QDBusConnection::sessionBus().connect(QStringLiteral("org.kde.keyboard"), QStringLiteral("/Layouts"), QStringLiteral("org.kde.KeyboardLayouts"), QStringLiteral("layoutListChanged"), this, SIGNAL(layoutListChanged())));
         QVERIFY(QDBusConnection::sessionBus().connect(QStringLiteral("org.kde.keyboard"), QStringLiteral("/Layouts"), QStringLiteral("org.kde.KeyboardLayouts"), QStringLiteral("layoutChanged"), this, SIGNAL(layoutChanged(uint))));
     }

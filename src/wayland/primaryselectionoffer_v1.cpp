@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class PrimarySelectionOfferV1InterfacePrivate : public QtWaylandServer::zwp_primary_selection_offer_v1
 {
 public:

@@ -26,6 +26,7 @@ namespace KWayland
 {
 namespace Client
 {
+
 class Compositor;
 class PointerConstraints;
 class PointerGestures;
@@ -34,13 +35,16 @@ class Seat;
 class XdgDecorationManager;
 class XdgShell;
 class SubCompositor;
+
 }
 }
 
 namespace KWin::WaylandClient
 {
+
 class LinuxDmabufV1;
 class Viewporter;
+
 }
 
 namespace KWin

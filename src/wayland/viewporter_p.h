@@ -12,6 +12,7 @@
 
 namespace KWin
 {
+
 class SurfaceInterface;
 
 class ViewportInterface : public QtWaylandServer::wp_viewport

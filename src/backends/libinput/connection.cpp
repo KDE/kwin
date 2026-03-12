@@ -296,8 +296,7 @@ void Connection::processEvents()
             KeyEvent *ke = static_cast<KeyEvent *>(event.get());
             const int seatKeyCount = libinput_event_keyboard_get_seat_key_count(*ke);
             const int keyState = libinput_event_keyboard_get_key_state(*ke);
-            if ((keyState == LIBINPUT_KEY_STATE_PRESSED && seatKeyCount != 1) ||
-                (keyState == LIBINPUT_KEY_STATE_RELEASED && seatKeyCount != 0)) {
+            if ((keyState == LIBINPUT_KEY_STATE_PRESSED && seatKeyCount != 1) || (keyState == LIBINPUT_KEY_STATE_RELEASED && seatKeyCount != 0)) {
                 break;
             }
             Q_EMIT ke->device()->keyChanged(ke->key(), ke->state(), ke->time(), ke->device());
@@ -352,8 +351,7 @@ void Connection::processEvents()
             PointerEvent *pe = static_cast<PointerEvent *>(event.get());
             const int seatButtonCount = libinput_event_pointer_get_seat_button_count(*pe);
             const int buttonState = libinput_event_pointer_get_button_state(*pe);
-            if ((buttonState == LIBINPUT_BUTTON_STATE_PRESSED && seatButtonCount != 1) ||
-                (buttonState == LIBINPUT_BUTTON_STATE_RELEASED && seatButtonCount != 0)) {
+            if ((buttonState == LIBINPUT_BUTTON_STATE_PRESSED && seatButtonCount != 1) || (buttonState == LIBINPUT_BUTTON_STATE_RELEASED && seatButtonCount != 0)) {
                 break;
             }
             Q_EMIT pe->device()->pointerButtonChanged(pe->button(), pe->buttonState(), pe->time(), pe->device());
@@ -753,6 +751,7 @@ QStringList Connection::ListTouch() const
         | std::views::transform(&Device::sysName)
         | std::ranges::to<QStringList>();
 }
+
 }
 }
 

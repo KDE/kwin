@@ -24,6 +24,7 @@
 
 namespace KWin
 {
+
 static int s_version = 1;
 
 class InputKeyboardV1InterfacePrivate : public QtWaylandServer::wl_keyboard

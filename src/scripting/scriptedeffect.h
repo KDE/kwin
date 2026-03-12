@@ -57,7 +57,7 @@ public:
         WindowForceBackgroundContrastRole, ///< For fullscreen effects to enforce the background contrast,
     };
     enum EasingCurve {
-        GaussianCurve = 128
+        GaussianCurve = 128,
     };
     // copied from kwinglutils.h
     enum class ShaderTrait {
@@ -201,7 +201,7 @@ protected:
 private:
     enum class AnimationType {
         Animate,
-        Set
+        Set,
     };
 
     QJSValue animate_helper(const QJSValue &object, AnimationType animationType);
@@ -221,4 +221,5 @@ private:
     std::map<uint, std::unique_ptr<GLShader>> m_shaders;
     uint m_nextShaderId{1u};
 };
+
 }

@@ -27,6 +27,7 @@ namespace KeyboardLayoutSwitching
 class Policy : public QObject
 {
     Q_OBJECT
+
 public:
     ~Policy() override;
 
@@ -55,6 +56,7 @@ private:
 class GlobalPolicy : public Policy
 {
     Q_OBJECT
+
 public:
     explicit GlobalPolicy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config);
     ~GlobalPolicy() override;
@@ -79,6 +81,7 @@ private:
 class VirtualDesktopPolicy : public Policy
 {
     Q_OBJECT
+
 public:
     explicit VirtualDesktopPolicy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config);
     ~VirtualDesktopPolicy() override;
@@ -100,6 +103,7 @@ private:
 class WindowPolicy : public Policy
 {
     Q_OBJECT
+
 public:
     explicit WindowPolicy(Xkb *xkb, KeyboardLayout *layout);
     ~WindowPolicy() override;
@@ -120,6 +124,7 @@ private:
 class ApplicationPolicy : public Policy
 {
     Q_OBJECT
+
 public:
     explicit ApplicationPolicy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config);
     ~ApplicationPolicy() override;

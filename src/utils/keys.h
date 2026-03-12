@@ -56,4 +56,5 @@ static inline Qt::KeyboardModifiers stringToKeyboardModifiers(QStringView string
 
     return modifiers;
 }
+
 }

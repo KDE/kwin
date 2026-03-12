@@ -16,6 +16,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Display;
 class SubCompositorInterfacePrivate;
 class SurfaceInterface;

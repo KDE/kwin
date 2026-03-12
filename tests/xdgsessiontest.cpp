@@ -7,7 +7,6 @@
 #include "qwayland-xdg-shell.h"
 #include "qwayland-xx-session-management-v1.h"
 
-#include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QApplication>
 #include <QCommandLineOption>
 #include <QCommandLineParser>
@@ -15,6 +14,7 @@
 #include <QPainter>
 #include <QWidget>
 #include <QWindow>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtWaylandClient/QWaylandClientExtensionTemplate>
 #include <qpa/qplatformwindow_p.h>
 

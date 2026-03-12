@@ -15,6 +15,7 @@
 
 namespace KWin
 {
+
 class XdgToplevelDecorationV1Interface;
 class XXPipV1Interface;
 

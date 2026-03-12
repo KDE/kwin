@@ -16,6 +16,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class DataDeviceInterface;
 class AbstractDataSource;
 class DataOfferInterfacePrivate;
@@ -27,6 +28,7 @@ class DataOfferInterfacePrivate;
 class KWIN_EXPORT DataOfferInterface : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~DataOfferInterface();
 

@@ -22,6 +22,7 @@
 class TestSlide : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestSlide(QObject *parent = nullptr);
 private Q_SLOTS:

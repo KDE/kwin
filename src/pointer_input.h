@@ -23,6 +23,7 @@ class QWindow;
 
 namespace KWin
 {
+
 class Window;
 class CursorImage;
 class InputDevice;
@@ -35,13 +36,15 @@ class SurfaceInterface;
 
 namespace Decoration
 {
-class DecoratedWindowImpl;
-}
 
+class DecoratedWindowImpl;
+
+}
 
 class KWIN_EXPORT PointerInputRedirection : public InputDeviceHandler
 {
     Q_OBJECT
+
 public:
     explicit PointerInputRedirection(InputRedirection *parent);
     ~PointerInputRedirection() override;
@@ -157,7 +160,7 @@ private:
     void processWarp(const QPointF &pos, std::chrono::microseconds time, InputDevice *device = nullptr);
     enum class MotionType {
         Motion,
-        Warp
+        Warp,
     };
     void processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device, MotionType type);
     void cleanupDecoration(Decoration::DecoratedWindowImpl *old, Decoration::DecoratedWindowImpl *now) override;
@@ -203,6 +206,7 @@ private:
 class WaylandCursorImage : public QObject
 {
     Q_OBJECT
+
 public:
     explicit WaylandCursorImage(QObject *parent = nullptr);
 
@@ -220,6 +224,7 @@ private:
 class CursorImage : public QObject
 {
     Q_OBJECT
+
 public:
     explicit CursorImage(PointerInputRedirection *parent = nullptr);
     ~CursorImage() override;
@@ -271,4 +276,5 @@ private:
         CursorSource *cursor = nullptr;
     } m_serverCursor;
 };
+
 }

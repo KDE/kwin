@@ -278,7 +278,7 @@ Colorimetry::Colorimetry(xy red, xy green, xy blue, xy white)
                                  xyY(blue.x, blue.y, 1.0).toXYZ().asVector()))
                                 .inverted()
                                 .map(
-        xyY(white.x, white.y, 1.0).toXYZ().asVector());
+                                    xyY(white.x, white.y, 1.0).toXYZ().asVector());
     m_red = xyY(red.x, red.y, brightness.x()).toXYZ();
     m_green = xyY(green.x, green.y, brightness.y()).toXYZ();
     m_blue = xyY(blue.x, blue.y, brightness.z()).toXYZ();
@@ -908,6 +908,7 @@ double TransferFunction::bt1886B() const
     const double powWhite = std::pow(maxLuminance, 1.0 / 2.4);
     return powBlack / (powWhite - powBlack);
 }
+
 }
 
 QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf)

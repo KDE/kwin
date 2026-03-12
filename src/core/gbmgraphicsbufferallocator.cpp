@@ -142,15 +142,15 @@ static GraphicsBuffer *allocateDumb(gbm_device *device, const GraphicsBufferOpti
     }
 
     return new DumbGraphicsBuffer(gbm_device_get_fd(device), createArgs.handle, DmaBufAttributes{
-        .planeCount = 1,
-        .width = options.size.width(),
-        .height = options.size.height(),
-        .format = options.format,
-        .modifier = DRM_FORMAT_MOD_LINEAR,
-        .fd = {FileDescriptor(primeFd), FileDescriptor{}, FileDescriptor{}, FileDescriptor{}},
-        .offset = {0, 0, 0, 0},
-        .pitch = {createArgs.pitch, 0, 0, 0},
-    });
+                                                                                    .planeCount = 1,
+                                                                                    .width = options.size.width(),
+                                                                                    .height = options.size.height(),
+                                                                                    .format = options.format,
+                                                                                    .modifier = DRM_FORMAT_MOD_LINEAR,
+                                                                                    .fd = {FileDescriptor(primeFd), FileDescriptor{}, FileDescriptor{}, FileDescriptor{}},
+                                                                                    .offset = {0, 0, 0, 0},
+                                                                                    .pitch = {createArgs.pitch, 0, 0, 0},
+                                                                                });
 }
 
 static GraphicsBuffer *allocateDmaBuf(gbm_device *device, const GraphicsBufferOptions &options)

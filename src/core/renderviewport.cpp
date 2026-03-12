@@ -208,4 +208,5 @@ Region RenderViewport::mapToRenderTargetTexture(const Region &logicalGeometry) c
     }
     return ret;
 }
+
 }

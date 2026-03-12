@@ -58,7 +58,6 @@ WindowThumbnailSource::WindowThumbnailSource(QQuickWindow *view, Window *handle)
 
 WindowThumbnailSource::~WindowThumbnailSource()
 {
-
     if (m_handle) {
         m_handle->unrefOffscreenRendering();
     }

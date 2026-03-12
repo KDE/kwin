@@ -28,6 +28,7 @@ namespace Decoration
 class DecorationPalette : public QObject
 {
     Q_OBJECT
+
 public:
     DecorationPalette(const QString &colorScheme);
 

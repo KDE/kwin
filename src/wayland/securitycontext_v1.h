@@ -15,6 +15,7 @@ class Display;
 class SecurityContextManagerV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     SecurityContextManagerV1Interface(Display *display, QObject *parent = nullptr);
     ~SecurityContextManagerV1Interface() override;
@@ -22,4 +23,5 @@ public:
 private:
     std::unique_ptr<SecurityContextManagerV1InterfacePrivate> d;
 };
+
 }

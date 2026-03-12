@@ -13,6 +13,7 @@
 
 namespace KWin
 {
+
 class DataSourceInterface;
 class XdgToplevelDragV1Interface;
 
@@ -41,4 +42,5 @@ protected:
 private:
     void offer(const QString &mimeType);
 };
+
 }

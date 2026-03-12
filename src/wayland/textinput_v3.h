@@ -14,6 +14,7 @@
 struct wl_resource;
 namespace KWin
 {
+
 class ClientConnection;
 class Display;
 class SeatInterface;
@@ -33,6 +34,7 @@ class TextInputManagerV3InterfacePrivate;
 class KWIN_EXPORT TextInputManagerV3Interface : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TextInputManagerV3Interface(Display *display, QObject *parent = nullptr);
     ~TextInputManagerV3Interface() override;
@@ -55,6 +57,7 @@ private:
 class KWIN_EXPORT TextInputV3Interface : public QObject
 {
     Q_OBJECT
+
 public:
     ~TextInputV3Interface() override;
 

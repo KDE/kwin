@@ -307,7 +307,7 @@ DesktopBackground::DesktopBackground(QQuickItem *parent)
 
     connect(this, &QQuickItem::windowChanged, this, &DesktopBackground::stretchToScreen);
     stretchToScreen();
-};
+}
 
 void DesktopBackground::stretchToScreen()
 {
@@ -320,7 +320,7 @@ void DesktopBackground::stretchToScreen()
         return;
     }
     setImplicitSize(screen->size().width(), screen->size().height());
-};
+}
 
 } // namespace KWin
 } // namespace TabBox

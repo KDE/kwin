@@ -13,6 +13,7 @@
 
 namespace KWin
 {
+
 class Display;
 class OutputInterface;
 class XdgOutputManagerV1InterfacePrivate;

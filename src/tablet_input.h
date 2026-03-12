@@ -17,6 +17,7 @@
 
 namespace KWin
 {
+
 class Cursor;
 class InputDeviceTabletTool;
 class TabletToolV2Interface;
@@ -25,12 +26,15 @@ class Window;
 
 namespace Decoration
 {
+
 class DecoratedWindowImpl;
+
 }
 
 class TabletInputRedirection : public InputDeviceHandler
 {
     Q_OBJECT
+
 public:
     explicit TabletInputRedirection(InputRedirection *parent);
     ~TabletInputRedirection() override;

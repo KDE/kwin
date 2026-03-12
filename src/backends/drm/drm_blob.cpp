@@ -39,4 +39,5 @@ std::shared_ptr<DrmBlob> DrmBlob::create(DrmGpu *gpu, const void *data, uint32_t
         return nullptr;
     }
 }
+
 }

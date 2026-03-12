@@ -2424,6 +2424,7 @@ void QuickTilingTest::testRestorePriorityOrder()
     QTRY_COMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QTRY_COMPARE(window->frameGeometry(), originalGeometry);
 }
+
 }
 
 WAYLANDTEST_MAIN(KWin::QuickTilingTest)

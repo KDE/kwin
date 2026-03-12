@@ -16,6 +16,7 @@
 
 namespace KWin
 {
+
 class PrimarySelectionDeviceV1InterfacePrivate : public QtWaylandServer::zwp_primary_selection_device_v1
 {
 public:

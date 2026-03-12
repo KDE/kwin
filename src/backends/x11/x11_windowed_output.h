@@ -76,6 +76,7 @@ private:
 class KWIN_EXPORT X11WindowedOutput : public BackendOutput
 {
     Q_OBJECT
+
 public:
     explicit X11WindowedOutput(X11WindowedBackend *backend);
     ~X11WindowedOutput() override;

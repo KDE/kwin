@@ -15,6 +15,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Display;
 class XdgDecorationManagerV1InterfacePrivate;
 class XdgToplevelDecorationV1Interface;

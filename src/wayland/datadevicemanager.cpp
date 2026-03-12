@@ -13,6 +13,7 @@
 
 namespace KWin
 {
+
 static const quint32 s_version = 3;
 
 class DataDeviceManagerInterfacePrivate : public QtWaylandServer::wl_data_device_manager

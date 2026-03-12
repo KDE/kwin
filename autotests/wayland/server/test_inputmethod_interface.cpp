@@ -38,6 +38,7 @@ using namespace KWin;
 class InputPanelSurface : public QObject, public QtWayland::zwp_input_panel_surface_v1
 {
     Q_OBJECT
+
 public:
     InputPanelSurface(::zwp_input_panel_surface_v1 *t)
         : QtWayland::zwp_input_panel_surface_v1(t)
@@ -64,6 +65,7 @@ public:
 class InputMethodV1Context : public QObject, public QtWayland::zwp_input_method_context_v1
 {
     Q_OBJECT
+
 public:
     quint32 contentPurpose()
     {
@@ -112,6 +114,7 @@ private:
 class InputMethodV1 : public QObject, public QtWayland::zwp_input_method_v1
 {
     Q_OBJECT
+
 public:
     InputMethodV1(struct ::wl_registry *registry, int id, int version)
         : QtWayland::zwp_input_method_v1(registry, id, version)
@@ -132,13 +135,13 @@ protected:
         m_context = new InputMethodV1Context();
         m_context->init(context);
         Q_EMIT activated();
-    };
+    }
     void zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context) override
     {
         delete m_context;
         m_context = nullptr;
         Q_EMIT deactivated();
-    };
+    }
 
 private:
     InputMethodV1Context *m_context;
@@ -147,6 +150,7 @@ private:
 class TestInputMethodInterface : public QObject
 {
     Q_OBJECT
+
 public:
     TestInputMethodInterface()
     {

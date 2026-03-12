@@ -655,6 +655,7 @@ void Workspace::blockStackingUpdates(bool block)
 
 namespace
 {
+
 template<class T>
 QList<T *> ensureStackingOrderInList(const QList<Window *> &stackingOrder, const QList<T *> &list)
 {
@@ -677,6 +678,7 @@ QList<T *> ensureStackingOrderInList(const QList<Window *> &stackingOrder, const
     }
     return result;
 }
+
 }
 
 #if KWIN_BUILD_X11

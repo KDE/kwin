@@ -40,7 +40,7 @@ private:
         StateFadingOut,
         StateFadedOut,
         StateFadingIn,
-        LastState
+        LastState,
     };
     struct ScreenState
     {

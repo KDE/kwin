@@ -114,41 +114,42 @@ void DBusInterface::replace()
 
 namespace
 {
+
 QVariantMap clientToVariantMap(const Window *c)
 {
-    return
-    {
+    return {
         {QStringLiteral("resourceClass"), c->resourceClass()},
-            {QStringLiteral("resourceName"), c->resourceName()},
-            {QStringLiteral("desktopFile"), c->desktopFileName()},
-            {QStringLiteral("role"), c->windowRole()},
-            {QStringLiteral("caption"), c->captionNormal()},
-            {QStringLiteral("clientMachine"), c->wmClientMachine(true)},
-            {QStringLiteral("localhost"), c->isLocalhost()},
-            {QStringLiteral("type"), int(c->windowType())},
-            {QStringLiteral("x"), c->x()},
-            {QStringLiteral("y"), c->y()},
-            {QStringLiteral("width"), c->width()},
-            {QStringLiteral("height"), c->height()},
-            {QStringLiteral("desktops"), c->desktopIds()},
-            {QStringLiteral("minimized"), c->isMinimized()},
-            {QStringLiteral("fullscreen"), c->isFullScreen()},
-            {QStringLiteral("keepAbove"), c->keepAbove()},
-            {QStringLiteral("keepBelow"), c->keepBelow()},
-            {QStringLiteral("noBorder"), c->noBorder()},
-            {QStringLiteral("skipTaskbar"), c->skipTaskbar()},
-            {QStringLiteral("skipPager"), c->skipPager()},
-            {QStringLiteral("skipSwitcher"), c->skipSwitcher()},
-            {QStringLiteral("maximizeHorizontal"), c->maximizeMode() & MaximizeHorizontal},
-            {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical},
-            {QStringLiteral("uuid"), c->internalId().toString()},
+        {QStringLiteral("resourceName"), c->resourceName()},
+        {QStringLiteral("desktopFile"), c->desktopFileName()},
+        {QStringLiteral("role"), c->windowRole()},
+        {QStringLiteral("caption"), c->captionNormal()},
+        {QStringLiteral("clientMachine"), c->wmClientMachine(true)},
+        {QStringLiteral("localhost"), c->isLocalhost()},
+        {QStringLiteral("type"), int(c->windowType())},
+        {QStringLiteral("x"), c->x()},
+        {QStringLiteral("y"), c->y()},
+        {QStringLiteral("width"), c->width()},
+        {QStringLiteral("height"), c->height()},
+        {QStringLiteral("desktops"), c->desktopIds()},
+        {QStringLiteral("minimized"), c->isMinimized()},
+        {QStringLiteral("fullscreen"), c->isFullScreen()},
+        {QStringLiteral("keepAbove"), c->keepAbove()},
+        {QStringLiteral("keepBelow"), c->keepBelow()},
+        {QStringLiteral("noBorder"), c->noBorder()},
+        {QStringLiteral("skipTaskbar"), c->skipTaskbar()},
+        {QStringLiteral("skipPager"), c->skipPager()},
+        {QStringLiteral("skipSwitcher"), c->skipSwitcher()},
+        {QStringLiteral("maximizeHorizontal"), c->maximizeMode() & MaximizeHorizontal},
+        {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical},
+        {QStringLiteral("uuid"), c->internalId().toString()},
 #if KWIN_BUILD_ACTIVITIES
-            {QStringLiteral("activities"), c->activities()},
+        {QStringLiteral("activities"), c->activities()},
 #endif
-            {QStringLiteral("layer"), c->layer()},
-            {QStringLiteral("excludeFromCapture"), c->excludeFromCapture()},
+        {QStringLiteral("layer"), c->layer()},
+        {QStringLiteral("excludeFromCapture"), c->excludeFromCapture()},
     };
 }
+
 }
 
 QVariantMap DBusInterface::queryWindowInfo()

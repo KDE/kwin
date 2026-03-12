@@ -18,6 +18,7 @@ namespace KWin
 class ShowCompositingEffect : public Effect
 {
     Q_OBJECT
+
 public:
     ShowCompositingEffect();
     ~ShowCompositingEffect() override;

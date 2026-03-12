@@ -16,15 +16,20 @@ class QQuickItem;
 
 namespace KDecoration3
 {
+
 enum class BorderSize;
 
 namespace Preview
 {
+
 class ButtonsModel;
+
 }
 namespace Configuration
 {
+
 class DecorationsModel;
+
 }
 }
 

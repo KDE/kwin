@@ -28,6 +28,7 @@ class PlasmaWindowActivationInterface;
 class KWIN_EXPORT XdgActivationV1Integration : public QObject
 {
     Q_OBJECT
+
 public:
     XdgActivationV1Integration(XdgActivationV1Interface *activation, QObject *parent);
 

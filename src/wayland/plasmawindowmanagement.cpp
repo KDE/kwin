@@ -23,6 +23,7 @@
 
 namespace KWin
 {
+
 static const quint32 s_version = 20;
 static const quint32 s_activationVersion = 1;
 
@@ -1188,6 +1189,7 @@ void PlasmaWindowInterfacePrivate::setClientGeometry(const Rect &geometry)
         send_client_geometry(resource->handle, clientGeometry.x(), clientGeometry.y(), clientGeometry.width(), clientGeometry.height());
     }
 }
+
 }
 
 #include "moc_plasmawindowmanagement.cpp"

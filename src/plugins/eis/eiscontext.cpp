@@ -364,4 +364,5 @@ void EisContext::handleEvents()
         eis_event_unref(event);
     }
 }
+
 }

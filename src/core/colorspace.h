@@ -292,6 +292,7 @@ private:
     YUVMatrixCoefficients m_yuvCoefficients = YUVMatrixCoefficients::Identity;
     EncodingRange m_range = EncodingRange::Full;
 };
+
 }
 
 inline bool operator==(const std::shared_ptr<KWin::ColorDescription> &left, const std::shared_ptr<KWin::ColorDescription> &right)

@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 TouchInterfacePrivate *TouchInterfacePrivate::get(TouchInterface *touch)
 {
     return touch->d.get();

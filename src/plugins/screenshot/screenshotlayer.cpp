@@ -40,4 +40,5 @@ bool ScreenshotLayer::doEndFrame(const Region &renderedRegion, const Region &dam
 void ScreenshotLayer::releaseBuffers()
 {
 }
+
 }

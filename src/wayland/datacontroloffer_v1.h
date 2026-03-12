@@ -15,6 +15,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class AbstractDataSource;
 class DataControlDeviceV1Interface;
 class DataControlSourceV1Interface;

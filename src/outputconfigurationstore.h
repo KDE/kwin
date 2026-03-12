@@ -124,4 +124,5 @@ private:
     QList<OutputState> m_outputs;
     QList<Setup> m_setups;
 };
+
 }

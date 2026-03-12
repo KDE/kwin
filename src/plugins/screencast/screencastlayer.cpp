@@ -49,4 +49,5 @@ bool ScreencastLayer::doEndFrame(const Region &renderedRegion, const Region &dam
 void ScreencastLayer::releaseBuffers()
 {
 }
+
 }

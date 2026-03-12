@@ -22,6 +22,7 @@
 class TestXdgOutput : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestXdgOutput(QObject *parent = nullptr);
 private Q_SLOTS:

@@ -29,6 +29,7 @@ class Window;
 class KWIN_EXPORT RenderView : public QObject
 {
     Q_OBJECT
+
 public:
     explicit RenderView(LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer);
 
@@ -99,6 +100,7 @@ protected:
 class KWIN_EXPORT SceneView : public RenderView
 {
     Q_OBJECT
+
 public:
     explicit SceneView(Scene *scene, LogicalOutput *logicalOutput, BackendOutput *backendOutput, OutputLayer *layer);
     ~SceneView() override;

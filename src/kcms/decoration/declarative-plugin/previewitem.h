@@ -10,12 +10,14 @@
 
 namespace KDecoration3
 {
+
 class Decoration;
 class DecorationShadow;
 class DecorationSettings;
 
 namespace Preview
 {
+
 class PreviewBridge;
 class PreviewClient;
 class Settings;
@@ -31,6 +33,7 @@ class PreviewItem : public QQuickPaintedItem
     Q_PROPERTY(KDecoration3::DecorationShadow *shadow READ shadow NOTIFY shadowChanged)
     Q_PROPERTY(QColor windowColor READ windowColor WRITE setWindowColor NOTIFY windowColorChanged)
     Q_PROPERTY(bool drawBackground READ isDrawingBackground WRITE setDrawingBackground NOTIFY drawingBackgroundChanged)
+
 public:
     PreviewItem(QQuickItem *parent = nullptr);
     ~PreviewItem() override;
@@ -74,7 +77,7 @@ protected:
 
 private:
     void paintShadow(QPainter *painter, int &paddingLeft, int &paddingRight, int &paddingTop, int &paddingBottom);
-    template <typename E>
+    template<typename E>
     void proxyPassEvent(E *event) const;
     void syncSize();
     void createDecoration();

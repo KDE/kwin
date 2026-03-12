@@ -34,6 +34,7 @@ namespace KWin
 {
 namespace LibInput
 {
+
 static const QRectF s_identityRect = QRectF(0, 0, 1, 1);
 
 TabletTool::TabletTool(libinput_tablet_tool *handle)
@@ -275,6 +276,7 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
 
 namespace
 {
+
 QMatrix4x4 getMatrix(libinput_device *device, std::function<int(libinput_device *, float[6])> getter)
 {
     float matrix[6];
@@ -328,6 +330,7 @@ bool setOrientedCalibrationMatrix(libinput_device *device, QMatrix4x4 matrix, Qt
     float data[6]{matrix(0, 0), matrix(0, 1), matrix(0, 2), matrix(1, 0), matrix(1, 1), matrix(1, 2)};
     return libinput_device_config_calibration_set_matrix(device, data) == LIBINPUT_CONFIG_STATUS_SUCCESS;
 }
+
 }
 
 Device::Device(libinput_device *device, QObject *parent)
@@ -1200,6 +1203,7 @@ bool Device::isVirtual() const
 {
     return m_isVirtual;
 }
+
 }
 }
 

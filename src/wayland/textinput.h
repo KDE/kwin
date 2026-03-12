@@ -139,6 +139,7 @@ enum class TextInputChangeCause {
      */
     Other,
 };
+
 }
 
 Q_DECLARE_METATYPE(KWin::TextInputContentHint)

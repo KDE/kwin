@@ -86,6 +86,7 @@ void XwlDropHandler::motion(const QPointF &position)
         m_currentVisit->sendPosition(position);
     }
 }
+
 }
 
 #include "moc_xwldrophandler.cpp"

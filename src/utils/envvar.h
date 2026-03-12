@@ -31,4 +31,5 @@ inline std::optional<bool> environmentVariableBoolValue(const char *name)
         return v == 1;
     });
 }
+
 }

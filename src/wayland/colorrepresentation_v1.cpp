@@ -157,4 +157,5 @@ bool ColorRepresentationSurfaceV1::maybeEmitProtocolErrors()
     }
     return true;
 }
+
 }

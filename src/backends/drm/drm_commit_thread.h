@@ -27,6 +27,7 @@ using TimePoint = std::chrono::steady_clock::time_point;
 class DrmCommitThread : public QObject
 {
     Q_OBJECT
+
 public:
     explicit DrmCommitThread(DrmGpu *gpu, const QString &name);
     ~DrmCommitThread();

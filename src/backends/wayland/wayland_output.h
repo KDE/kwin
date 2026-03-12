@@ -20,10 +20,12 @@ namespace KWayland
 {
 namespace Client
 {
+
 class Surface;
 class Pointer;
 class LockedPointer;
 class XdgDecoration;
+
 }
 }
 
@@ -39,14 +41,18 @@ struct wl_callback_listener;
 
 namespace KWin
 {
+
 class OutputFrame;
 namespace WaylandClient
 {
+
 class Viewport;
+
 }
 
 namespace Wayland
 {
+
 class WaylandBackend;
 class ColorSurfaceFeedback;
 
@@ -77,6 +83,7 @@ private:
 class WaylandOutput : public BackendOutput
 {
     Q_OBJECT
+
 public:
     WaylandOutput(const QString &name, WaylandBackend *backend);
     ~WaylandOutput() override;

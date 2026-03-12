@@ -17,6 +17,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class ConfinedPointerV1InterfacePrivate;
 class Display;
 class LockedPointerV1InterfacePrivate;

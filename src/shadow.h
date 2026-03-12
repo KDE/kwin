@@ -20,8 +20,10 @@
 
 namespace KDecoration3
 {
+
 class Decoration;
 class DecorationShadow;
+
 }
 
 namespace KWin
@@ -48,6 +50,7 @@ class Window;
 class KWIN_EXPORT Shadow : public QObject
 {
     Q_OBJECT
+
 public:
     explicit Shadow(Window *window);
     ~Shadow() override;
@@ -97,7 +100,7 @@ public:
         ShadowElementBottomLeft,
         ShadowElementLeft,
         ShadowElementTopLeft,
-        ShadowElementsCount
+        ShadowElementsCount,
     };
     QSizeF elementSize(ShadowElements element) const;
 

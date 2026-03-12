@@ -30,6 +30,7 @@ protected:
 class DpmsInterface : public QObject, QtWaylandServer::org_kde_kwin_dpms
 {
     Q_OBJECT
+
 public:
     explicit DpmsInterface(OutputInterface *output, wl_resource *resource);
 

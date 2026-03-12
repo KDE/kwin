@@ -20,6 +20,7 @@ class SurfaceInterface;
 class FrogColorManagementV1 : public QObject, private QtWaylandServer::frog_color_management_factory_v1
 {
     Q_OBJECT
+
 public:
     explicit FrogColorManagementV1(Display *display, QObject *parent);
     ~FrogColorManagementV1() override;
@@ -32,6 +33,7 @@ private:
 class FrogColorManagementSurfaceV1 : public QObject, private QtWaylandServer::frog_color_managed_surface
 {
     Q_OBJECT
+
 public:
     explicit FrogColorManagementSurfaceV1(SurfaceInterface *surface, wl_client *client, uint32_t id);
     ~FrogColorManagementSurfaceV1() override;

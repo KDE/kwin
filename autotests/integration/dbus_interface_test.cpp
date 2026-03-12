@@ -76,12 +76,14 @@ void TestDbusInterface::cleanup()
 
 namespace
 {
+
 QDBusPendingCall getWindowInfo(const QUuid &uuid)
 {
     auto msg = QDBusMessage::createMethodCall(s_destination, s_path, s_interface, QStringLiteral("getWindowInfo"));
     msg.setArguments({uuid.toString()});
     return QDBusConnection::sessionBus().asyncCall(msg);
 }
+
 }
 
 void TestDbusInterface::testGetWindowInfoInvalidUuid()

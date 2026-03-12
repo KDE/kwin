@@ -18,6 +18,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Display;
 class SurfaceInterface;
 
@@ -27,6 +28,7 @@ class KWIN_EXPORT LockscreenOverlayV1Interface : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(LockscreenOverlayV1Interface)
+
 public:
     explicit LockscreenOverlayV1Interface(Display *display, QObject *parent = nullptr);
     ~LockscreenOverlayV1Interface() override;

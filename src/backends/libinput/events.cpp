@@ -378,5 +378,6 @@ TabletPadDialEvent::TabletPadDialEvent(libinput_event *event, libinput_event_typ
     , m_tabletPadEvent(libinput_event_get_tablet_pad_event(event))
 {
 }
+
 }
 }

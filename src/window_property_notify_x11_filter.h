@@ -12,6 +12,7 @@
 
 namespace KWin
 {
+
 class EffectsHandler;
 
 class WindowPropertyNotifyX11Filter : public X11EventFilter

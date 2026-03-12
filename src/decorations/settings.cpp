@@ -22,6 +22,7 @@ namespace KWin
 {
 namespace Decoration
 {
+
 SettingsImpl::SettingsImpl(KDecoration3::DecorationSettings *parent)
     : QObject()
     , DecorationSettingsPrivateV2(parent)

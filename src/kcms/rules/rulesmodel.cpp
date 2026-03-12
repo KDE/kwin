@@ -755,7 +755,7 @@ const QHash<QString, QString> RulesModel::x11PropertyHash()
         {"excludeFromCapture", "excludefromcapture"},
     };
     return propertyToRule;
-};
+}
 
 void RulesModel::setSuggestedProperties(const QVariantMap &info)
 {

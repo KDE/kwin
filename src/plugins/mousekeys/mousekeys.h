@@ -40,6 +40,7 @@ public:
 class MouseKeysFilter : public KWin::Plugin, public KWin::InputEventFilter
 {
     Q_OBJECT
+
 public:
     explicit MouseKeysFilter();
     ~MouseKeysFilter() override;

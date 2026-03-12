@@ -22,6 +22,7 @@
 
 namespace KWin
 {
+
 static const int s_version = 4;
 
 class OutputInterfacePrivate : public QtWaylandServer::wl_output

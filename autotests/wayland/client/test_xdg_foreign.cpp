@@ -24,6 +24,7 @@
 class TestForeign : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestForeign(QObject *parent = nullptr);
 private Q_SLOTS:

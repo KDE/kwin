@@ -112,7 +112,7 @@ public:
     enum class CommitMode {
         Test,
         TestAllowModeset,
-        CommitModeset
+        CommitModeset,
     };
     Q_ENUM(CommitMode)
     static Error commitPipelines(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects = {});

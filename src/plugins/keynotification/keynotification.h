@@ -14,9 +14,11 @@
 
 namespace KWin
 {
+
 class KeyNotificationPlugin : public KWin::Plugin
 {
     Q_OBJECT
+
 public:
     explicit KeyNotificationPlugin();
 
@@ -32,4 +34,5 @@ private:
     Qt::KeyboardModifiers m_currentModifiers;
     bool m_useBellWhenLocksChange = false;
 };
+
 }

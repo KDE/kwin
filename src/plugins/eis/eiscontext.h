@@ -66,4 +66,5 @@ public:
 
     const QByteArray socketName;
 };
+
 }

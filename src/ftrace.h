@@ -19,6 +19,7 @@
 
 namespace KWin
 {
+
 /**
  * FTraceLogger is a singleton utility for writing log messages using ftrace
  *

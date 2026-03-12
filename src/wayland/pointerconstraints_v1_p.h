@@ -16,6 +16,7 @@
 
 namespace KWin
 {
+
 class PointerConstraintsV1InterfacePrivate : public QtWaylandServer::zwp_pointer_constraints_v1
 {
 public:

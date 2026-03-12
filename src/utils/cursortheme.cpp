@@ -165,8 +165,8 @@ void CursorThemePrivate::discoverXCursors(const QString &packagePath)
             }
         }
         registry.insert(shape, std::make_shared<CursorThemeEntry>(CursorThemeXEntryInfo{
-            .path = entry.absoluteFilePath(),
-        }));
+                                   .path = entry.absoluteFilePath(),
+                               }));
     }
 }
 
@@ -193,8 +193,8 @@ void CursorThemePrivate::discoverSvgCursors(const QString &packagePath)
             }
         }
         registry.insert(shape, std::make_shared<CursorThemeEntry>(CursorThemeSvgEntryInfo{
-            .path = entry.absoluteFilePath(),
-        }));
+                                   .path = entry.absoluteFilePath(),
+                               }));
     }
 }
 

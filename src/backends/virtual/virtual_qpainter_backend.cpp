@@ -111,6 +111,7 @@ QList<OutputLayer *> VirtualQPainterBackend::compatibleOutputLayers(BackendOutpu
 {
     return {static_cast<VirtualOutput *>(output)->outputLayer()};
 }
+
 }
 
 #include "moc_virtual_qpainter_backend.cpp"

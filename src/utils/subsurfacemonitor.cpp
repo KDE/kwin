@@ -35,8 +35,8 @@ void SubSurfaceMonitor::registerSubSurface(SubSurfaceInterface *subSurface)
             this, &SubSurfaceMonitor::subSurfaceUnmapped);
     connect(surface, &SurfaceInterface::committed,
             this, [this, subSurface]() {
-                Q_EMIT subSurfaceCommitted(subSurface);
-            });
+        Q_EMIT subSurfaceCommitted(subSurface);
+    });
 
     registerSurface(surface);
 }

@@ -352,4 +352,5 @@ void EglDisplay::destroyImage(EGLImageKHR image) const
     Q_ASSERT(m_functions.destroyImageKHR);
     m_functions.destroyImageKHR(m_handle, image);
 }
+
 }

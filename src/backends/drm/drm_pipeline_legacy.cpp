@@ -247,4 +247,5 @@ bool DrmPipeline::setCursorLegacy(DrmPipelineLayer *layer)
     }
     return ret == 0;
 }
+
 }

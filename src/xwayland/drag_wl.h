@@ -17,12 +17,14 @@
 
 namespace KWin
 {
+
 class SurfaceInterface;
 class Window;
 class X11Window;
 
 namespace Xwl
 {
+
 class Xvisit;
 class Dnd;
 

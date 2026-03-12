@@ -23,6 +23,7 @@ class ProximitySensor;
 class KWIN_EXPORT DpmsInputEventFilter : public QObject, public InputEventFilter
 {
     Q_OBJECT
+
 public:
     DpmsInputEventFilter();
     ~DpmsInputEventFilter() override;

@@ -25,6 +25,7 @@ using namespace KWayland::Client;
 class XdgTest : public QObject
 {
     Q_OBJECT
+
 public:
     explicit XdgTest(QObject *parent = nullptr);
     virtual ~XdgTest();

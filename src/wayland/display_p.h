@@ -18,6 +18,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class ClientConnection;
 class Display;
 class OutputInterface;
@@ -55,6 +56,7 @@ public:
 class SecurityContext : public QObject
 {
     Q_OBJECT
+
 public:
     SecurityContext(Display *display, FileDescriptor &&listenFd, FileDescriptor &&closeFd, const QString &appId);
     ~SecurityContext() override;

@@ -25,6 +25,7 @@ Q_DECLARE_METATYPE(KWin::AppMenuInterface::InterfaceAddress)
 class TestAppmenu : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestAppmenu(QObject *parent = nullptr);
 private Q_SLOTS:

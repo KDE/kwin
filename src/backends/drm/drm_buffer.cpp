@@ -123,4 +123,5 @@ std::shared_ptr<KWin::DrmFramebufferData> DrmFramebuffer::data() const
 {
     return m_data;
 }
+
 }

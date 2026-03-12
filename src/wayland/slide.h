@@ -14,6 +14,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Display;
 class SlideManagerInterfacePrivate;
 class SlideInterfacePrivate;
@@ -35,6 +36,7 @@ private:
 class KWIN_EXPORT SlideInterface : public QObject
 {
     Q_OBJECT
+
 public:
     enum Location {
         Left = 0, /**< Slide from the left edge of the screen */
@@ -62,4 +64,5 @@ private:
 
     std::unique_ptr<SlideInterfacePrivate> d;
 };
+
 }

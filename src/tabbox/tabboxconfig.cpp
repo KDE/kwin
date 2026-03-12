@@ -13,6 +13,7 @@ namespace KWin
 {
 namespace TabBox
 {
+
 class TabBoxConfigPrivate
 {
 public:

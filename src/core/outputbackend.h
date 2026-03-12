@@ -33,6 +33,7 @@ class BackendOutput;
 class KWIN_EXPORT OutputBackend : public QObject
 {
     Q_OBJECT
+
 public:
     ~OutputBackend() override;
 

@@ -136,4 +136,5 @@ void EglGbmLayer::releaseBuffers()
     m_scanoutBuffer.reset();
     m_surface.destroyResources();
 }
+
 }

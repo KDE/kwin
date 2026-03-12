@@ -40,6 +40,7 @@
 
 namespace KWin
 {
+
 static const int s_version = 10;
 
 SeatInterfacePrivate *SeatInterfacePrivate::get(SeatInterface *seat)
@@ -1328,6 +1329,7 @@ DragAndDropIcon *SeatInterface::dragIcon() const
 {
     return d->drag.dragIcon;
 }
+
 }
 
 #include "moc_seat.cpp"

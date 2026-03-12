@@ -43,6 +43,7 @@ ShortcutSettings *KWinTabboxData::shortcutConfig() const
 {
     return m_shortcutConfig;
 }
+
 }
 }
 

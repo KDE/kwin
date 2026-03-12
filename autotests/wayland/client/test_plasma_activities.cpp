@@ -22,6 +22,7 @@
 class TestActivities : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestActivities(QObject *parent = nullptr);
 private Q_SLOTS:

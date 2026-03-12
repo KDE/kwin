@@ -17,6 +17,7 @@ namespace KWin
 {
 namespace TabBox
 {
+
 class TabBoxSettings;
 class SwitchEffectSettings;
 class ShortcutSettings;

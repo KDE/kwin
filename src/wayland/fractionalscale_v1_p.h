@@ -12,6 +12,7 @@
 
 namespace KWin
 {
+
 class SurfaceInterface;
 
 class FractionalScaleV1Interface : protected QtWaylandServer::wp_fractional_scale_v1

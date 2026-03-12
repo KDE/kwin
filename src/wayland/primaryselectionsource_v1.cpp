@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class PrimarySelectionSourceV1InterfacePrivate : public QtWaylandServer::zwp_primary_selection_source_v1
 {
 public:

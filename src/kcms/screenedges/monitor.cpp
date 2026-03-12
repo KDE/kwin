@@ -283,6 +283,7 @@ bool Monitor::Corner::active() const
 {
     return m_active;
 }
+
 } // namespace
 
 #include "moc_monitor.cpp"

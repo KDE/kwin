@@ -16,6 +16,7 @@ struct wl_resource;
 
 namespace KWin
 {
+
 class Display;
 class SurfaceInterface;
 class PlasmaShellSurfaceInterface;
@@ -59,6 +60,7 @@ private:
 class KWIN_EXPORT PlasmaShellSurfaceInterface : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~PlasmaShellSurfaceInterface();
 

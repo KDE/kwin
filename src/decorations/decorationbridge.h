@@ -15,7 +15,9 @@
 class KPluginFactory;
 namespace KDecoration3
 {
+
 class DecorationSettings;
+
 }
 
 namespace KWin
@@ -29,6 +31,7 @@ namespace Decoration
 class KWIN_EXPORT DecorationBridge : public KDecoration3::DecorationBridge
 {
     Q_OBJECT
+
 public:
     explicit DecorationBridge();
 
@@ -78,5 +81,6 @@ private:
     std::shared_ptr<KDecoration3::DecorationSettings> m_settings;
     bool m_noPlugin;
 };
+
 } // Decoration
 } // KWin

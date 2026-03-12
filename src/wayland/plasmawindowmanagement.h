@@ -16,6 +16,7 @@ class QSize;
 
 namespace KWin
 {
+
 class Display;
 class OutputInterface;
 class PlasmaWindowActivationFeedbackInterfacePrivate;
@@ -108,6 +109,7 @@ private:
 class KWIN_EXPORT PlasmaWindowInterface : public QObject
 {
     Q_OBJECT
+
 public:
     ~PlasmaWindowInterface() override;
 

@@ -325,5 +325,6 @@ const std::shared_ptr<ColorDescription> &ColorSurfaceFeedback::preferredColor() 
 {
     return m_preferred;
 }
+
 }
 }

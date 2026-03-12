@@ -16,6 +16,7 @@ struct wl_client;
 
 namespace KWin
 {
+
 class ClientConnectionPrivate;
 class Display;
 
@@ -30,6 +31,7 @@ class Display;
 class KWIN_EXPORT ClientConnection : public QObject
 {
     Q_OBJECT
+
 public:
     virtual ~ClientConnection();
 

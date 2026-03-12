@@ -27,6 +27,7 @@
 
 namespace KWin
 {
+
 DisplayPrivate *DisplayPrivate::get(Display *display)
 {
     return display->d.get();

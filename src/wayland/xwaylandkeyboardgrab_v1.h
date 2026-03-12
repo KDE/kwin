@@ -26,6 +26,7 @@ class XWaylandKeyboardGrabManagerV1InterfacePrivate;
 class KWIN_EXPORT XWaylandKeyboardGrabManagerV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     explicit XWaylandKeyboardGrabManagerV1Interface(Display *display, QObject *parent = nullptr);
     ~XWaylandKeyboardGrabManagerV1Interface() override;
@@ -39,6 +40,7 @@ private:
 class KWIN_EXPORT XWaylandKeyboardGrabV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     ~XWaylandKeyboardGrabV1Interface() override;
 

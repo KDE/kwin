@@ -12,6 +12,7 @@
 
 namespace KWin
 {
+
 class RegionInterface : public QtWaylandServer::wl_region
 {
 public:

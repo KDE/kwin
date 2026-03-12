@@ -79,7 +79,7 @@ void XwaylandLauncher::addEnvironmentVariables(const QMap<QString, QString> &ext
 void XwaylandLauncher::passFileDescriptors(std::vector<FileDescriptor> &&fds)
 {
     m_fdsToPreserve.reserve(m_fdsToPreserve.size() + fds.size());
-    for (auto & fd : fds) {
+    for (auto &fd : fds) {
         m_fdsToPreserve.emplace_back(std::move(fd));
     }
 }

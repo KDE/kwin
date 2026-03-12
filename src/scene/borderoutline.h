@@ -12,7 +12,9 @@
 
 namespace KDecoration3
 {
+
 class BorderOutline;
+
 }
 
 namespace KWin

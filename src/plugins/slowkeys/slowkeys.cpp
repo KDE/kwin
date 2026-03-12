@@ -93,5 +93,6 @@ bool SlowKeysFilter::keyboardKey(KeyboardKeyEvent *event)
 
     Q_UNREACHABLE();
 }
+
 }
 #include "moc_slowkeys.cpp"

@@ -23,6 +23,7 @@
 class TestXdgDecoration : public QObject
 {
     Q_OBJECT
+
 public:
     explicit TestXdgDecoration(QObject *parent = nullptr);
 private Q_SLOTS:

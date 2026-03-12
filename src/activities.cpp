@@ -170,6 +170,7 @@ void Activities::toggleWindowOnActivity(Window *window, const QString &activity,
     }
     ws->rearrange();
 }
+
 } // namespace
 
 #include "moc_activities.cpp"

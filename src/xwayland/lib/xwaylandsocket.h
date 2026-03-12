@@ -18,7 +18,7 @@ class XwaylandSocket
 public:
     enum class OperationMode {
         CloseFdsOnExec,
-        TransferFdsOnExec
+        TransferFdsOnExec,
     };
 
     XwaylandSocket(OperationMode operationMode);

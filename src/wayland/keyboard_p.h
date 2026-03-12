@@ -15,6 +15,7 @@
 
 namespace KWin
 {
+
 class ClientConnection;
 
 class KeyboardInterfacePrivate : public QtWaylandServer::wl_keyboard

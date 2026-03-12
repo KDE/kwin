@@ -592,7 +592,7 @@ static float limitedLuma(float value)
 static float limitedChroma(float value)
 {
     return (128 + 224 * value) / 255.0;
-};
+}
 
 void TestColorspaces::testYCbCr()
 {

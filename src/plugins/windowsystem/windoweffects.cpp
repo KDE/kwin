@@ -73,4 +73,5 @@ void WindowEffects::enableBackgroundContrast(QWindow *window, bool enable, qreal
         window->setProperty("kwin_background_saturation", {});
     }
 }
+
 }

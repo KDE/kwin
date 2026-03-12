@@ -17,12 +17,14 @@ namespace KDecoration3
 
 namespace Preview
 {
+
 class ButtonsModel;
 class PreviewBridge;
 
 class BorderSizesModel : public QAbstractListModel
 {
     Q_OBJECT
+
 public:
     explicit BorderSizesModel(QObject *parent = nullptr);
     ~BorderSizesModel() override;
@@ -54,6 +56,7 @@ class PreviewSettings : public QObject, public DecorationSettingsPrivateV2
     Q_PROPERTY(QAbstractItemModel *borderSizesModel READ borderSizesModel CONSTANT)
     Q_PROPERTY(int borderSizesIndex READ borderSizesIndex WRITE setBorderSizesIndex NOTIFY borderSizesIndexChanged)
     Q_PROPERTY(QFont font READ font WRITE setFont NOTIFY fontChanged)
+
 public:
     explicit PreviewSettings(DecorationSettings *parent);
     ~PreviewSettings() override;
@@ -128,6 +131,7 @@ class Settings : public QObject
     Q_PROPERTY(KDecoration3::Preview::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
     Q_PROPERTY(KDecoration3::DecorationSettings *settings READ settingsPointer NOTIFY settingsChanged)
     Q_PROPERTY(int borderSizesIndex READ borderSizesIndex WRITE setBorderSizesIndex NOTIFY borderSizesIndexChanged)
+
 public:
     explicit Settings(QObject *parent = nullptr);
     ~Settings() override;

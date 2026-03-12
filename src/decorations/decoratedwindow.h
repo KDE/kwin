@@ -26,6 +26,7 @@ namespace Decoration
 class DecoratedWindowImpl : public QObject, public KDecoration3::DecoratedWindowPrivateV4
 {
     Q_OBJECT
+
 public:
     explicit DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration);
     ~DecoratedWindowImpl() override;

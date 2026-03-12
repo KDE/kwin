@@ -17,6 +17,7 @@ namespace Configuration
 class DecorationsModel : public QAbstractListModel
 {
     Q_OBJECT
+
 public:
     enum DecorationRole {
         PluginNameRole = Qt::UserRole + 1,

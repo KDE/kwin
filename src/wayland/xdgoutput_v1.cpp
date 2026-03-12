@@ -20,6 +20,7 @@
 
 namespace KWin
 {
+
 static const quint32 s_version = 3;
 
 class XdgOutputV1Interface : public QObject, public QtWaylandServer::zxdg_output_v1
@@ -214,6 +215,7 @@ void XdgOutputV1Interface::resend()
         }
     }
 }
+
 }
 
 #include "moc_xdgoutput_v1.cpp"

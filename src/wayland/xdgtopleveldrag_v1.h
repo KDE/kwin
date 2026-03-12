@@ -27,6 +27,7 @@ class XdgToplevelInterface;
 class KWIN_EXPORT XdgToplevelDragV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     ~XdgToplevelDragV1Interface() override;
 
@@ -46,6 +47,7 @@ private:
 class KWIN_EXPORT XdgToplevelDragManagerV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
     XdgToplevelDragManagerV1Interface(Display *display, QObject *parent = nullptr);
     ~XdgToplevelDragManagerV1Interface() override;
@@ -53,4 +55,5 @@ public:
 private:
     std::unique_ptr<XdgToplevelDragManagerV1InterfacePrivate> d;
 };
+
 }

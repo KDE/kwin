@@ -170,7 +170,6 @@ bool StickyKeysFilter::keyboardKey(KWin::KeyboardKeyEvent *event)
 
         // a non-modifier key was pressed, unlatch all unlocked modifiers
         for (auto it = m_keyStates.keyValueBegin(); it != m_keyStates.keyValueEnd(); ++it) {
-
             if (it->second == Locked) {
                 continue;
             }
@@ -204,7 +203,6 @@ bool StickyKeysFilter::pointerButton(KWin::PointerButtonEvent *event)
     if (event->state == KWin::PointerButtonState::Released) {
         // unlatch all unlocked modifiers
         for (auto it = m_keyStates.keyValueBegin(); it != m_keyStates.keyValueEnd(); ++it) {
-
             if (it->second == Locked) {
                 continue;
             }

@@ -34,6 +34,7 @@ class PreviewBridge : public KDecoration3::DecorationBridge
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
     Q_PROPERTY(QString kcmoduleName READ kcmoduleName WRITE setKcmoduleName NOTIFY kcmoduleNameChanged)
     Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
+
 public:
     explicit PreviewBridge(QObject *parent = nullptr);
     ~PreviewBridge() override;

@@ -10,6 +10,7 @@
 
 namespace KWin
 {
+
 class VirtualDesktop;
 
 /*!

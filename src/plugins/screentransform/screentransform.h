@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+
 class GLFramebuffer;
 class GLShader;
 class GLTexture;

@@ -28,6 +28,7 @@ private:
 class SinglePixelClientBuffer : public GraphicsBuffer
 {
     Q_OBJECT
+
 public:
     explicit SinglePixelClientBuffer(uint32_t r, uint32_t g, uint32_t b, uint32_t a, wl_client *client, uint32_t id);
 

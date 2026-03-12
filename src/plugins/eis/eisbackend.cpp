@@ -39,7 +39,7 @@ namespace KWin
         static_assert(                                    \
             requires { typename T; }, "T is not a type"); \
         return #T;                                        \
-        }()
+    }()
 
 EisBackend::EisBackend(QObject *parent)
     : KWin::InputBackend(parent)
@@ -195,4 +195,5 @@ eis_device *EisBackend::createKeyboard(eis_seat *seat)
 
     return device;
 }
+
 }

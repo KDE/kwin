@@ -29,6 +29,7 @@ class QQuickWindow;
 
 namespace KWin
 {
+
 class GLTexture;
 
 class OffscreenQuickView;
@@ -54,7 +55,7 @@ public:
         /** The contents will be available as a texture in the shared contexts. Image will be blank */
         Texture,
         /** The contents will be blit during the update into a QImage buffer. */
-        Image
+        Image,
     };
 
     /**

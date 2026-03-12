@@ -18,6 +18,7 @@
 
 namespace KWin
 {
+
 // forward declare method
 void cleanupGL();
 

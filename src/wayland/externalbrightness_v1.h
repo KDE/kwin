@@ -22,6 +22,7 @@ class LogicalOutput;
 class ExternalBrightnessV1 : public QObject, private QtWaylandServer::kde_external_brightness_v1
 {
     Q_OBJECT
+
 public:
     explicit ExternalBrightnessV1(Display *display, QObject *parent);
 

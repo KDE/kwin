@@ -202,7 +202,8 @@ public:
                   Bottom = 1 << 3,
                   Horizontal = Left | Right,
                   Vertical = Top | Bottom,
-                  Mouse = 1 << 4 };
+                  Mouse = 1 << 4,
+    };
     Q_ENUM(Anchor)
 
     enum Attribute {
@@ -227,7 +228,7 @@ public:
          * The uniform location must be provided as metadata.
          **/
         ShaderUniform,
-        NonFloatBase = Position
+        NonFloatBase = Position,
     };
     Q_ENUM(Attribute)
 
@@ -237,7 +238,8 @@ public:
                     RelativeSourceY,
                     RelativeTargetX,
                     RelativeTargetY,
-                    Axis };
+                    Axis,
+    };
     Q_ENUM(MetaType)
 
     /**
@@ -247,7 +249,7 @@ public:
      */
     enum Direction {
         Forward, ///< The animation goes from source to target.
-        Backward ///< The animation goes from target to source.
+        Backward, ///< The animation goes from target to source.
     };
     Q_ENUM(Direction)
 
@@ -271,7 +273,7 @@ public:
          * Terminate the animation when it reaches the target position. If this flag
          * is not set, then the animation will be persistent.
          */
-        TerminateAtTarget = 0x02
+        TerminateAtTarget = 0x02,
     };
     Q_DECLARE_FLAGS(TerminationFlags, TerminationFlag)
     Q_FLAG(TerminationFlags)
