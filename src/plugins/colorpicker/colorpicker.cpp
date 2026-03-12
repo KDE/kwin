@@ -9,6 +9,7 @@
 #include "colorpicker.h"
 #include "colorpickerlayer.h"
 
+#include "colorpickersceneview.h"
 #include "compositor.h"
 #include "core/output.h"
 #include "core/pixelgrid.h"
@@ -124,7 +125,7 @@ QColor ColorPickerEffect::pick()
             if (!beginInfo) {
                 return;
             }
-            SceneView sceneView(kwinApp()->scene(), screen, nullptr, &layer);
+            ColorPickerSceneView sceneView(kwinApp()->scene(), screen, &layer);
             auto cursorView = std::make_unique<ItemTreeView>(&sceneView, kwinApp()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
             cursorView->setExclusive(true);
             const Rect pixelDamage = QRect(QPoint(), QSize(1, 1));
