@@ -11,7 +11,11 @@
 namespace KWin
 {
 
+#ifdef HAVE_ACK_GLOBAL_REMOVE
+static constexpr int s_version = 2;
+#else
 static constexpr int s_version = 1;
+#endif
 
 class FixesInterfacePrivate : public QtWaylandServer::wl_fixes
 {
@@ -21,6 +25,9 @@ public:
 protected:
     void fixes_destroy(Resource *resource) override;
     void fixes_destroy_registry(Resource *resource, struct ::wl_resource *registry) override;
+#ifdef HAVE_ACK_GLOBAL_REMOVE
+    void fixes_ack_global_remove(Resource *resource, struct ::wl_resource *registry, uint32_t name) override;
+#endif
 };
 
 FixesInterfacePrivate::FixesInterfacePrivate(Display *display)
@@ -37,6 +44,13 @@ void FixesInterfacePrivate::fixes_destroy_registry(Resource *resource, struct ::
 {
     wl_resource_destroy(registry);
 }
+
+#ifdef HAVE_ACK_GLOBAL_REMOVE
+void FixesInterfacePrivate::fixes_ack_global_remove(Resource *resource, struct ::wl_resource *registry, uint32_t name)
+{
+    wl_fixes_handle_ack_global_remove(resource->handle, registry, name);
+}
+#endif
 
 FixesInterface::FixesInterface(Display *display, QObject *parent)
     : QObject(parent)
