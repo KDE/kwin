@@ -13,11 +13,11 @@
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
 #include "utils/common.h"
+#include "utils/envvar.h"
 #include "vulkan/vulkan_device.h"
 #include "vulkan/vulkan_logging.h"
 
 #include <expected>
-#include <vulkan/vulkan.hpp>
 #include <vulkan/vulkan_raii.hpp>
 #if __has_include(<sys/sysmacros.h>)
 #include <sys/sysmacros.h>
@@ -38,10 +38,46 @@ static FormatModifierMap getImportFormats(EglDisplay *eglDisplay, VulkanDevice *
     return ret;
 }
 
-RenderDevice::RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display, VkInstance vulkanInstance)
+// NOTE that we have to create an instance per render device, as Mesa
+// only updates the list of devices on the first vkEnumeratePhysicalDevices
+// call per VkInstance!
+static vk::raii::Instance createVulkanInstance(const vk::raii::Context &context)
+{
+    vk::ApplicationInfo appInfo{
+        "kwin_wayland",
+        VK_MAKE_VERSION(PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH),
+        "kwin_wayland",
+        VK_MAKE_VERSION(1, 0, 0),
+        VK_MAKE_VERSION(1, 3, 0),
+    };
+    std::vector<const char *> validationLayers;
+    if (environmentVariableBoolValue("KWIN_VULKAN_VALIDATION").value_or(PROJECT_VERSION_PATCH >= 80)) {
+        validationLayers.push_back("VK_LAYER_KHRONOS_validation");
+    }
+    vk::InstanceCreateInfo instanceCI{
+        vk::InstanceCreateFlags(),
+        &appInfo,
+        validationLayers,
+    };
+    auto [result, instance] = context.createInstance(instanceCI);
+    // auto [result, instance] = vk::raii::createInstance(instanceCI, nullptr);
+    if (result != vk::Result::eSuccess && !validationLayers.empty()) {
+        // try again without the validation layer
+        validationLayers.clear();
+        instanceCI.setPEnabledLayerNames(validationLayers);
+        auto [result, instance] = context.createInstance(instanceCI);
+        if (result == vk::Result::eSuccess) {
+            qCWarning(KWIN_CORE, "Vulkan validation layer is not installed");
+            return std::move(instance);
+        }
+    }
+    return std::move(instance);
+}
+
+RenderDevice::RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display)
     : m_device(std::move(device))
     , m_display(std::move(display))
-    , m_vulkanInstance(vulkanInstance)
+    , m_vulkanInstance(createVulkanInstance(m_vulkanContext))
 {
     createVulkanDevice();
     m_allImportableFormats = getImportFormats(m_display.get(), m_vulkanDevice.get());
@@ -140,14 +176,14 @@ static constexpr std::array s_requiredVulkanExtensions = {
     VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,
 };
 
-static std::unique_ptr<VulkanDevice> openVulkanDevice(VkInstance instance, DrmDevice *drm)
+static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &instance, DrmDevice *drm)
 {
-    const auto [enumerateResult, physicalDevices] = vk::Instance(instance).enumeratePhysicalDevices();
+    const auto [enumerateResult, physicalDevices] = instance.enumeratePhysicalDevices();
     if (enumerateResult != vk::Result::eSuccess) {
         qCWarning(KWIN_VULKAN) << "querying vulkan devices failed:" << vk::to_string(enumerateResult);
         return nullptr;
     }
-    for (const vk::PhysicalDevice &physicalDevice : physicalDevices) {
+    for (const vk::raii::PhysicalDevice &physicalDevice : physicalDevices) {
         const auto [extensionPropResult, extensionProps] = physicalDevice.enumerateDeviceExtensionProperties();
         if (extensionPropResult != vk::Result::eSuccess) {
             continue;
@@ -173,9 +209,9 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(VkInstance instance, DrmDe
             continue;
         }
 
-        vk::PhysicalDeviceDrmPropertiesEXT drmProps;
-        vk::PhysicalDeviceProperties2 properties({}, &drmProps);
-        physicalDevice.getProperties2(&properties);
+        const auto propertiesChain = physicalDevice.getProperties2<vk::PhysicalDeviceProperties2, vk::PhysicalDeviceDrmPropertiesEXT>();
+        const auto &drmProps = propertiesChain.get<vk::PhysicalDeviceDrmPropertiesEXT>();
+        const auto &properties = propertiesChain.get<vk::PhysicalDeviceProperties2>();
         if (!drmProps.hasRender) {
             qCDebug(KWIN_VULKAN, "Skipping device without a render node");
             continue;
@@ -221,17 +257,15 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(VkInstance instance, DrmDe
             .pEnabledFeatures = &features,
         };
 
-        VkDevice logicalDevice;
-        VkResult result = vkCreateDevice(physicalDevice, &deviceCI, nullptr, &logicalDevice);
-        if (result != VK_SUCCESS) {
+        auto [result, logicalDevice] = physicalDevice.createDevice(deviceCI);
+        if (result != vk::Result::eSuccess) {
             qCWarning(KWIN_VULKAN, "vkCreateDevice failed: %s", vk::to_string(vk::Result(result)).c_str());
             continue;
         }
 
         auto ret = std::make_unique<VulkanDevice>(
-            instance,
             physicalDevice,
-            logicalDevice,
+            std::move(logicalDevice),
             queueProperties | std::ranges::to<std::vector<VkQueueFamilyProperties>>());
         if (ret->supportedFormats().isEmpty()) {
             continue;
@@ -265,7 +299,7 @@ bool RenderDevice::isInReset() const
     return m_inReset;
 }
 
-std::unique_ptr<RenderDevice> RenderDevice::open(const QString &path, VkInstance vkInstance, int authenticatedFd)
+std::unique_ptr<RenderDevice> RenderDevice::open(const QString &path, int authenticatedFd)
 {
     auto drmDevice = DrmDevice::openWithAuthentication(path, authenticatedFd);
     if (!drmDevice) {
@@ -275,7 +309,7 @@ std::unique_ptr<RenderDevice> RenderDevice::open(const QString &path, VkInstance
     if (!eglDisplay) {
         return nullptr;
     }
-    return std::make_unique<RenderDevice>(std::move(drmDevice), std::move(eglDisplay), vkInstance);
+    return std::make_unique<RenderDevice>(std::move(drmDevice), std::move(eglDisplay));
 }
 
 }

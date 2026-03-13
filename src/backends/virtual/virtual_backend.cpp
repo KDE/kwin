@@ -29,7 +29,7 @@ static std::unique_ptr<RenderDevice> findRenderDevice()
 #if defined(Q_OS_LINUX)
     // Workaround for libdrm being unaware of faux bus.
     if (qEnvironmentVariableIsSet("CI")) {
-        return RenderDevice::open(QStringLiteral("/dev/dri/card1"), GpuManager::self()->vulkanInstance());
+        return RenderDevice::open(QStringLiteral("/dev/dri/card1"));
     }
 #endif
 #endif
@@ -65,7 +65,7 @@ static std::unique_ptr<RenderDevice> findRenderDevice()
 #endif
 
         if (device->available_nodes & (1 << nodeType)) {
-            if (auto ret = RenderDevice::open(device->nodes[nodeType], GpuManager::self()->vulkanInstance())) {
+            if (auto ret = RenderDevice::open(device->nodes[nodeType])) {
                 return ret;
             }
         }

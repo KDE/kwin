@@ -17,7 +17,7 @@
 #include <deque>
 #include <memory>
 #include <optional>
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_raii.hpp>
 
 namespace KWin
 {
@@ -32,7 +32,7 @@ class KWIN_EXPORT VulkanDevice : public QObject
     Q_OBJECT
 
 public:
-    explicit VulkanDevice(VkInstance instance, VkPhysicalDevice physicalDevice, VkDevice logicalDevice, std::vector<VkQueueFamilyProperties> &&queueProperties);
+    explicit VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice, std::vector<VkQueueFamilyProperties> &&queueProperties);
     VulkanDevice(VulkanDevice &&other) = delete;
     VulkanDevice(const VulkanDevice &) = delete;
     ~VulkanDevice();
@@ -41,13 +41,13 @@ public:
     std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage);
 
     const FormatModifierMap &supportedFormats() const;
-    VkDevice logicalDevice() const;
+    const vk::raii::Device &logicalDevice() const;
 
-    VkQueue transferQueue() const;
-    VkCommandBuffer createCommandBuffer();
-    VkSemaphore importSemaphore(FileDescriptor &&syncFd) const;
+    const vk::raii::Queue &transferQueue() const;
+    vk::raii::CommandBuffer createCommandBuffer();
+    std::optional<vk::raii::Semaphore> importSemaphore(FileDescriptor &&syncFd) const;
 
-    std::optional<FileDescriptor> submit(VkCommandBuffer buffer, FileDescriptor &&syncFd);
+    std::optional<FileDescriptor> submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd);
 
     /**
      * Handle the "VK_ERROR_DEVICE_LOST" error by flagging this device as lost and releasing
@@ -82,20 +82,20 @@ Q_SIGNALS:
 private:
     FormatModifierMap queryFormats(VkImageUsageFlags flags) const;
     void createQueues();
-    std::optional<uint32_t> findMemoryType(uint32_t typeBits, VkMemoryPropertyFlags memoryPropertyFlags) const;
+    std::optional<uint32_t> findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const;
 
-    VkPhysicalDevice m_physical = nullptr;
-    VkDevice m_logical = nullptr;
+    vk::raii::PhysicalDevice m_physical;
+    vk::raii::Device m_logical;
     FormatModifierMap m_formats;
     std::vector<VkQueueFamilyProperties> m_queueProperties;
-    VkQueue m_transferQueue = nullptr;
-    VkCommandPool m_commandPool = nullptr;
+    vk::raii::Queue m_transferQueue;
+    vk::raii::CommandPool m_commandPool;
     uint32_t m_queueFamilyIndex;
-    VkPhysicalDeviceMemoryProperties m_memoryProperties;
+    vk::PhysicalDeviceMemoryProperties m_memoryProperties;
     struct SubmittedCommand
     {
-        VkSemaphore waitSemaphore;
-        VkCommandBuffer buffer;
+        vk::raii::Semaphore waitSemaphore;
+        vk::raii::CommandBuffer buffer;
         FileDescriptor completionSyncFd;
     };
     std::deque<SubmittedCommand> m_submittedCommandBuffers;

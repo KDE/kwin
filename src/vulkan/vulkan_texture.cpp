@@ -14,23 +14,19 @@
 namespace KWin
 {
 
-VulkanTexture::VulkanTexture(VulkanDevice *device, VkFormat format, VkImage image, std::vector<VkDeviceMemory> &&memory)
+VulkanTexture::VulkanTexture(VulkanDevice *device, VkFormat format, vk::raii::Image &&image, std::vector<vk::raii::DeviceMemory> &&memory)
     : m_device(device)
     , m_format(format)
     , m_memory(std::move(memory))
-    , m_image(image)
+    , m_image(std::move(image))
 {
 }
 
 VulkanTexture::~VulkanTexture()
 {
-    vkDestroyImage(m_device->logicalDevice(), m_image, nullptr);
-    for (const VkDeviceMemory &memory : m_memory) {
-        vkFreeMemory(m_device->logicalDevice(), memory, nullptr);
-    }
 }
 
-VkImage VulkanTexture::handle() const
+const vk::raii::Image &VulkanTexture::handle() const
 {
     return m_image;
 }
