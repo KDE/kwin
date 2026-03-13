@@ -813,6 +813,10 @@ bool Scanner::process()
             printf("        m_global = wl_global_create(display, &::%s_interface, version, this, bind_func);\n", interfaceName);
             printf("        m_displayDestroyedListener.notify = %s::display_destroy_func;\n", interfaceName);
             printf("        m_displayDestroyedListener.parent = this;\n");
+            printf("        wl_global_set_withdrawn_listener(m_global, [](wl_global *global) {\n");
+            printf("            auto object = static_cast<%s *>(wl_global_get_user_data(global));\n", interfaceName);
+            printf("            object->%s_destroy_global();\n", interfaceNameStripped);
+            printf("        });\n");
             printf("        wl_display_add_destroy_listener(display, &m_displayDestroyedListener);\n");
             printf("    }\n");
             printf("\n");
@@ -885,11 +889,11 @@ bool Scanner::process()
             printf("        if (!m_global || m_globalRemovedEvent)\n");
             printf("            return;\n");
             printf("\n");
-            printf("        wl_global_remove(m_global);\n");
-            printf("\n");
             printf("        struct wl_event_loop *event_loop = wl_display_get_event_loop(m_display);\n");
             printf("        m_globalRemovedEvent = wl_event_loop_add_timer(event_loop, deferred_destroy_global_func, this);\n");
             printf("        wl_event_source_timer_update(m_globalRemovedEvent, 300000);\n");
+            printf("\n");
+            printf("        wl_global_remove(m_global);\n");
             printf("    }\n");
             printf("\n");
 
