@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2026-01-22 14:33+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -1189,7 +1189,7 @@ msgstr "Basso a dextera"
 msgid "Margin:"
 msgstr "Margine:"
 
-#: windows.cpp:91
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1199,7 +1199,7 @@ msgstr ""
 "ille. Iste comportamento es commun con altere systemas operative (systemas "
 "operational) e probabilemente illo es lo que tu vole."
 
-#: windows.cpp:94
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1215,7 +1215,7 @@ msgstr ""
 "canditato preferite. Variante inusual, ma possibile de <em>Pulsa pro "
 "focalisar </em>"
 
-#: windows.cpp:97
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1230,7 +1230,7 @@ msgstr ""
 "Pensa como <em>Pulsa pro focalisar</em> solmente sin haber lo pulsate in "
 "realitate."
 
-#: windows.cpp:100
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1244,7 +1244,7 @@ msgstr ""
 "preferite. Selige isto, si tu vole un foco controllate per le flottar supra "
 "del mus."
 
-#: windows.cpp:103
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1259,7 +1259,7 @@ msgstr ""
 "em> contradice le politica e non functionara.Probabilemente tu volerea usar "
 "in su loco<em>Foco seque mus - Precedentia de mus</em>!"
 
-#: windows.cpp:106
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

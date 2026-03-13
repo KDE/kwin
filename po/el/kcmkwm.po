@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2024-09-19 17:37+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -1255,7 +1255,7 @@ msgstr ""
 msgid "Margin:"
 msgstr ""
 
-#: windows.cpp:91
+#: windows.cpp:93
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus</b><br>\n"
@@ -1271,7 +1271,7 @@ msgstr ""
 "Αυτή η συμπεριφορά είναι κοινή σε άλλα λειτουργικά συστήματα και<br>\n"
 "πιθανόν αυτή που επιθυμείτε."
 
-#: windows.cpp:94
+#: windows.cpp:96
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus - Mouse Precedence</b><br>\n"
@@ -1295,7 +1295,7 @@ msgstr ""
 "το παράθυρο κάτω από το ποντίκι είναι το προτιμώμενο.<br><br>\n"
 "Ασυνήθιστη, αλλά πιθανή παραλλαγή της <i>Κλικ για εστίαση</i>."
 
-#: windows.cpp:97
+#: windows.cpp:99
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse</b><br>\n"
@@ -1318,7 +1318,7 @@ msgstr ""
 "Σκεφτείτε τη όπως η πολιτική <i>Κλικ για εστίαση</i> χωρίς όμως να "
 "χρειάζονται πραγματικά κλικ."
 
-#: windows.cpp:100
+#: windows.cpp:102
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
@@ -1341,7 +1341,7 @@ msgstr ""
 "το παράθυρο κάτω από το ποντίκι είναι το προτιμώμενο.<br><br>\n"
 "Επιλέξτε αυτή, εάν θέλετε εστίαση που ελέγχεται με την αιώρηση."
 
-#: windows.cpp:103
+#: windows.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Under Mouse</b><br>\n"
@@ -1370,7 +1370,7 @@ msgstr ""
 "Αντί αυτής ίσως να θέλετε να χρησιμοποιήσετε την πολιτική<br>\n"
 "<i>Η εστίαση ακολουθεί το ποντίκι - Το ποντίκι έχει προτεραιότητα</i>!"
 
-#: windows.cpp:106
+#: windows.cpp:108
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Strictly Under Mouse</b><br>\n"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2025-06-19 09:38+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -1197,7 +1197,7 @@ msgstr ""
 msgid "Margin:"
 msgstr ""
 
-#: windows.cpp:91
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1207,7 +1207,7 @@ msgstr ""
 "comportamento é o habitual noutros sistemas operativos, e probabelmente o "
 "que busca."
 
-#: windows.cpp:94
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1221,7 +1221,7 @@ msgstr ""
 "ao pechar a activa) a xanela baixo o rato ten preferencia. Unha variante "
 "pouco habitual pero posíbel de <em>Premer para enfocar</em>."
 
-#: windows.cpp:97
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1234,7 +1234,7 @@ msgstr ""
 "<em>prevención de roubo do foco</em> funciona como de costume. É como "
 "<em>Premer para enfocar</em> pero sen premer."
 
-#: windows.cpp:100
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1247,7 +1247,7 @@ msgstr ""
 "punteiro é a candidata preferida. Escolla isto se quere un foco controlado "
 "ao pousar o punteiro."
 
-#: windows.cpp:103
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1262,7 +1262,7 @@ msgstr ""
 "e non funcionarán. O máis probábel é que prefira <em>Foco tras o rato "
 "(precedencia do rato)</em> en vez de isto!"
 
-#: windows.cpp:106
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

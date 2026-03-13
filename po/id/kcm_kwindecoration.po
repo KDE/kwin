@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-28 00:46+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2022-09-27 18:04+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -76,7 +76,7 @@ msgstr ""
 msgid "Spacer"
 msgstr ""
 
-#: kcm.cpp:186
+#: kcm.cpp:188
 #, fuzzy, kde-format
 #| msgctxt "%1 is the name of a border size"
 #| msgid "Theme's default (%1)"
@@ -259,60 +259,60 @@ msgstr ""
 msgid "Edit %1 Theme…"
 msgstr "Edit Tema %1"
 
-#: utils.cpp:25
+#: utils.cpp:26
 #, fuzzy, kde-format
 #| msgid "No Side Borders"
 msgid "No window borders"
 msgstr "Tanpa Bingkai Sisi"
 
-#: utils.cpp:26
+#: utils.cpp:27
 #, fuzzy, kde-format
 #| msgid "No Side Borders"
 msgid "No side window borders"
 msgstr "Tanpa Bingkai Sisi"
 
-#: utils.cpp:27
+#: utils.cpp:28
 #, fuzzy, kde-format
 #| msgctxt "Selector label"
 #| msgid "Window border size:"
 msgid "Tiny window borders"
 msgstr "Ukuran bingkai jendela:"
 
-#: utils.cpp:28
+#: utils.cpp:29
 #, fuzzy, kde-format
 #| msgid "No Side Borders"
 msgid "Normal window borders"
 msgstr "Tanpa Bingkai Sisi"
 
-#: utils.cpp:29
+#: utils.cpp:30
 #, fuzzy, kde-format
 #| msgctxt "Selector label"
 #| msgid "Window border size:"
 msgid "Large window borders"
 msgstr "Ukuran bingkai jendela:"
 
-#: utils.cpp:30
+#: utils.cpp:31
 #, fuzzy, kde-format
 #| msgctxt "Selector label"
 #| msgid "Window border size:"
 msgid "Very large window borders"
 msgstr "Ukuran bingkai jendela:"
 
-#: utils.cpp:31
+#: utils.cpp:32
 #, fuzzy, kde-format
 #| msgctxt "Selector label"
 #| msgid "Window border size:"
 msgid "Huge window borders"
 msgstr "Ukuran bingkai jendela:"
 
-#: utils.cpp:32
+#: utils.cpp:33
 #, fuzzy, kde-format
 #| msgctxt "Selector label"
 #| msgid "Window border size:"
 msgid "Very huge window borders"
 msgstr "Ukuran bingkai jendela:"
 
-#: utils.cpp:33
+#: utils.cpp:34
 #, fuzzy, kde-format
 #| msgctxt "Selector label"
 #| msgid "Window border size:"

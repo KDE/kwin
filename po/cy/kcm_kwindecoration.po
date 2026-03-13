@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-28 00:46+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2004-07-03 22:37+0100\n"
 "Last-Translator: KD at KGyfieithu <kyfieithu@dotmon.com>\n"
 "Language-Team: Cymraeg <cy@li.org>\n"
@@ -75,7 +75,7 @@ msgstr ""
 msgid "Spacer"
 msgstr ""
 
-#: kcm.cpp:186
+#: kcm.cpp:188
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
@@ -233,47 +233,47 @@ msgstr ""
 msgid "Edit %1 Theme…"
 msgstr ""
 
-#: utils.cpp:25
+#: utils.cpp:26
 #, fuzzy, kde-format
 msgid "No window borders"
 msgstr "Maint ffin: Bach Iawn"
 
-#: utils.cpp:26
+#: utils.cpp:27
 #, fuzzy, kde-format
 msgid "No side window borders"
 msgstr "Maint ffin: Bach Iawn"
 
-#: utils.cpp:27
+#: utils.cpp:28
 #, fuzzy, kde-format
 msgid "Tiny window borders"
 msgstr "Maint ffin: Bach Iawn"
 
-#: utils.cpp:28
+#: utils.cpp:29
 #, fuzzy, kde-format
 msgid "Normal window borders"
 msgstr "Maint ffin: Bach Iawn"
 
-#: utils.cpp:29
+#: utils.cpp:30
 #, fuzzy, kde-format
 msgid "Large window borders"
 msgstr "Maint ffin: Bach Iawn"
 
-#: utils.cpp:30
+#: utils.cpp:31
 #, fuzzy, kde-format
 msgid "Very large window borders"
 msgstr "Maint ffin: Bach Iawn"
 
-#: utils.cpp:31
+#: utils.cpp:32
 #, fuzzy, kde-format
 msgid "Huge window borders"
 msgstr "Maint ffin: Bach Iawn"
 
-#: utils.cpp:32
+#: utils.cpp:33
 #, fuzzy, kde-format
 msgid "Very huge window borders"
 msgstr "Maint ffin: Bach Iawn"
 
-#: utils.cpp:33
+#: utils.cpp:34
 #, fuzzy, kde-format
 msgid "Oversized window borders"
 msgstr "Maint ffin: Bach Iawn"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2025-08-19 11:20+0300\n"
 "Last-Translator: Toms Trasūns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -1184,7 +1184,7 @@ msgstr "Apakšā pa labi"
 msgid "Margin:"
 msgstr "Attālums līdz malai:"
 
-#: windows.cpp:91
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1193,7 +1193,7 @@ msgstr ""
 "<em>Klikšķināt, lai fokusētu:</em> logs kļūst aktīvs, kad to klikšķina. Šī "
 "uzvedība ir ierasta citās operētājsistēmās un, iespējams, arī jums."
 
-#: windows.cpp:94
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1208,7 +1208,7 @@ msgstr ""
 "kas atrodas zem peles kursora. Neierasts, bet iespējams variants iespējai "
 "<em>Klikšķināt, lai fokusētu</em>."
 
-#: windows.cpp:97
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1222,7 +1222,7 @@ msgstr ""
 "zaudēšanas novēršana </em> notiek ierastā veidā. Domājiet, kā <em>Klikšķis, "
 "lai fokusētu</em>, bet bez klikšķināšanas."
 
-#: windows.cpp:100
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1235,7 +1235,7 @@ msgstr ""
 "pirmais kandidāts būs logs zem peles kursora. Izvēlieties šo iespēju, ja "
 "vēlaties fokusu, ko kontrolē pele bez klikšķināšanas."
 
-#: windows.cpp:103
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1250,7 +1250,7 @@ msgstr ""
 "un nedarbosies. Tā vietā visdrīzāk gribēsiet lietot iespēju <em>Fokuss seko "
 "pelei (peles priekšroka)</em>!"
 
-#: windows.cpp:106
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

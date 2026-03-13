@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2025-12-06 13:48+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
@@ -1189,7 +1189,7 @@ msgstr "Neðst til hægri"
 msgid "Margin:"
 msgstr "Mörk:"
 
-#: windows.cpp:91
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1198,7 +1198,7 @@ msgstr ""
 "<em>Smella til að fá fókus:</em> Gluggi verður virkur þegar þú smellir á "
 "hann. Þessi hegðun er algeng í stýrikerfum og líklega það sem þú vilt."
 
-#: windows.cpp:94
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1213,7 +1213,7 @@ msgstr ""
 "músarbendlinum. Óvenjulegt en mögulegt tilbrigði við <em>Smella til að fá "
 "fókus</em>."
 
-#: windows.cpp:97
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1227,7 +1227,7 @@ msgstr ""
 "líta á þetta sem <em>Smella til að fá fókus</em> nema án þess að þurfa að "
 "smella."
 
-#: windows.cpp:100
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1240,7 +1240,7 @@ msgstr ""
 "undir músinni valinn. Veldu þetta ef þú vilt stjórna fókusnum með því að "
 "sveima með músinni."
 
-#: windows.cpp:103
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1254,7 +1254,7 @@ msgstr ""
 "+Tab</em> stangast á við þessa virknireglu og eru því óvirk. Þú vilt mjög "
 "líklega nota <em>Fókus fylgir mús (mús í forgangi)</em> í staðinn!"
 
-#: windows.cpp:106
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

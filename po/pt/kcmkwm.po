@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2026-02-01 14:43+0000\n"
 "Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
 "Language-Team: pt\n"
@@ -1206,7 +1206,7 @@ msgstr "Canto inferior direito"
 msgid "Margin:"
 msgstr "Margem:"
 
-#: windows.cpp:91
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1216,7 +1216,7 @@ msgstr ""
 "Este comportamento é comum noutros sistemas operativos e, provavelmente, é o "
 "que pretende."
 
-#: windows.cpp:94
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1231,7 +1231,7 @@ msgstr ""
 "a candidata preferencial. Variante incomum, mas possível, de <em>Clicar para "
 "dar foco</em>."
 
-#: windows.cpp:97
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1245,7 +1245,7 @@ msgstr ""
 "habitualmente. Semelhante a <em>Clicar para dar foco</em>, apenas sem "
 "necessidade de efetivamente clicar."
 
-#: windows.cpp:100
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1258,7 +1258,7 @@ msgstr ""
 "ativa foi fechada), a janela sob o rato é a candidata preferencial. Escolha "
 "esta opção se desejar que dar foco seja controlado por pairar."
 
-#: windows.cpp:103
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1274,7 +1274,7 @@ msgstr ""
 "desejará utilizar <em>Dar foco segue o ponteiro do rato (precedência do "
 "rato)</em>!"
 
-#: windows.cpp:106
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

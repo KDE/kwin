@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-28 00:46+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2024-02-27 07:45\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -80,7 +80,7 @@ msgstr ""
 msgid "Spacer"
 msgstr "Прамежак"
 
-#: kcm.cpp:186
+#: kcm.cpp:188
 #, fuzzy, kde-format
 #| msgctxt "%1 is the name of a border size"
 #| msgid "Theme's default (%1)"
@@ -256,55 +256,55 @@ msgstr "Атрымаць новыя…"
 msgid "Edit %1 Theme…"
 msgstr "Рэдагаваць тэму \"%1\""
 
-#: utils.cpp:25
+#: utils.cpp:26
 #, fuzzy, kde-format
 #| msgid "No Window Borders"
 msgid "No window borders"
 msgstr "Без бакавых межаў"
 
-#: utils.cpp:26
+#: utils.cpp:27
 #, fuzzy, kde-format
 #| msgid "No Side Window Borders"
 msgid "No side window borders"
 msgstr "Без бакавых межаў акон"
 
-#: utils.cpp:27
+#: utils.cpp:28
 #, fuzzy, kde-format
 #| msgid "Tiny Window Borders"
 msgid "Tiny window borders"
 msgstr "Маленькія межы акон"
 
-#: utils.cpp:28
+#: utils.cpp:29
 #, fuzzy, kde-format
 #| msgid "Normal Window Borders"
 msgid "Normal window borders"
 msgstr "Звычайныя межы акон"
 
-#: utils.cpp:29
+#: utils.cpp:30
 #, fuzzy, kde-format
 #| msgid "Large Window Borders"
 msgid "Large window borders"
 msgstr "Вялікія межы акон"
 
-#: utils.cpp:30
+#: utils.cpp:31
 #, fuzzy, kde-format
 #| msgid "Very Large Window Borders"
 msgid "Very large window borders"
 msgstr "Вельмі вялікія межы акон"
 
-#: utils.cpp:31
+#: utils.cpp:32
 #, fuzzy, kde-format
 #| msgid "Huge Window Borders"
 msgid "Huge window borders"
 msgstr "Вялізныя межы акон"
 
-#: utils.cpp:32
+#: utils.cpp:33
 #, fuzzy, kde-format
 #| msgid "Very Huge Window Borders"
 msgid "Very huge window borders"
 msgstr "Велізарныя межы акон"
 
-#: utils.cpp:33
+#: utils.cpp:34
 #, fuzzy, kde-format
 #| msgid "Oversized Window Borders"
 msgid "Oversized window borders"

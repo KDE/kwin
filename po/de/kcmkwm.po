@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2026-03-01 16:33+0100\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -1213,7 +1213,7 @@ msgstr "Unten rechts"
 msgid "Margin:"
 msgstr "Rand:"
 
-#: windows.cpp:91
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1223,7 +1223,7 @@ msgstr ""
 "Maus hinein klicken. Dieses Verhalten ist in vielen Betriebssystemen "
 "gebräuchlich und wahrscheinlich die gewünschte Einstellung."
 
-#: windows.cpp:94
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1238,7 +1238,7 @@ msgstr ""
 "wurde, ist das Fenster unter dem Mauszeiger der bevorzugte Kandidat. "
 "Ungewöhnliche aber mögliche Variante von <em>Aktivierung nach Klick</em>."
 
-#: windows.cpp:97
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1252,7 +1252,7 @@ msgstr ""
 "unerwünschter Aktivierung</em> funktioniert normal. Dies ist wie "
 "<em>Aktivierung nach Klick</em>, nur ohne tatsächlich klicken zu müssen."
 
-#: windows.cpp:100
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1267,7 +1267,7 @@ msgstr ""
 "gesteuerte Aktivierung."
 
 # Hier brauche ich eine zweite Meinung bzgl. "tabbox". Die bisherige Übersetzung sagt "Zwischen Arbeitsflächen umschalten", was eigentlich keinen Sinn ergibt.
-#: windows.cpp:103
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1283,7 +1283,7 @@ msgstr ""
 "sollten stattdessen besser <em>Aktivierung bei Mauskontakt – Vorrang für "
 "Maus</em> verwenden."
 
-#: windows.cpp:106
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

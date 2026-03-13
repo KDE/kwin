@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-12 00:45+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2026-03-01 08:03+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -1245,27 +1245,27 @@ msgstr "Appunti"
 msgid "Primary Selection"
 msgstr "Selezione primaria"
 
-#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:128
+#: helpers/dialoghelper/dialoghelper.cpp:38 helpers/killer/killer.cpp:129
 #, kde-format
 msgid "Window Manager"
 msgstr "Gestore delle finestre"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "ID della risorsa appartenente all'applicazione"
 
-#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:141
+#: helpers/dialoghelper/dialoghelper.cpp:43 helpers/killer/killer.cpp:142
 #, kde-format
 msgid "id"
 msgstr "id"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Ora dell'azione dell'utente che ha causato l'interruzione"
 
-#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:143
+#: helpers/dialoghelper/dialoghelper.cpp:45 helpers/killer/killer.cpp:144
 #, kde-format
 msgid "time"
 msgstr "ora"
@@ -1275,14 +1275,14 @@ msgstr "ora"
 msgid "The message to show (fullscreen, noborder)"
 msgstr "Il messaggio da mostrare (schermo intero, senza bordi)"
 
-#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:145
+#: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
 #, kde-format
 msgid "KWin helper utility"
 msgstr "Accessorio di supporto di KWin"
 
 # XXX helper -> "di supporto"?
 #: helpers/dialoghelper/dialoghelper.cpp:68
-#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:173
+#: helpers/dialoghelper/dialoghelper.cpp:118 helpers/killer/killer.cpp:174
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr ""
@@ -1447,42 +1447,42 @@ msgstr "Non risponde"
 msgid "&Details"
 msgstr "&Dettagli"
 
-#: helpers/killer/killer.cpp:133
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "PID dell'applicazione da far terminare"
 
-#: helpers/killer/killer.cpp:133
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:135
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Nome host su cui l'applicazione è in esecuzione"
 
-#: helpers/killer/killer.cpp:135
+#: helpers/killer/killer.cpp:136
 #, kde-format
 msgid "hostname"
 msgstr "nome host"
 
-#: helpers/killer/killer.cpp:137
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Titolo della finestra da far terminare"
 
-#: helpers/killer/killer.cpp:137
+#: helpers/killer/killer.cpp:138
 #, kde-format
 msgid "caption"
 msgstr "titolo"
 
-#: helpers/killer/killer.cpp:139
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Nome dell'applicazione da far terminare"
 
-#: helpers/killer/killer.cpp:139
+#: helpers/killer/killer.cpp:140
 #, kde-format
 msgid "name"
 msgstr "nome"
@@ -1505,7 +1505,7 @@ msgstr ""
 #: main.cpp:171 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
-#: plugins/thumbnailaside/thumbnailaside_config.cpp:45
+#: plugins/thumbnailaside/thumbnailaside_config.cpp:46
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:31
 #: plugins/trackmouse/trackmouse_config.cpp:44
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:36
@@ -1955,72 +1955,72 @@ msgstr "Attiva/disattiva effetto inversione sulla finestra"
 msgid "Invert Screen Colors"
 msgstr "Inverti i colori dello schermo"
 
-#: plugins/keynotification/keynotification.cpp:44
+#: plugins/keynotification/keynotification.cpp:45
 #, kde-format
 msgid "The Caps Lock key has been activated"
 msgstr "Il tasto Bloc Maiusc è stato attivato"
 
-#: plugins/keynotification/keynotification.cpp:48
+#: plugins/keynotification/keynotification.cpp:49
 #, kde-format
 msgid "The Caps Lock key is now inactive"
 msgstr "Il tasto Bloc Maiusc è ora inattivo"
 
-#: plugins/keynotification/keynotification.cpp:52
+#: plugins/keynotification/keynotification.cpp:53
 #, kde-format
 msgid "The Num Lock key has been activated"
 msgstr "Il tasto Bloc Num è stato attivato"
 
-#: plugins/keynotification/keynotification.cpp:56
+#: plugins/keynotification/keynotification.cpp:57
 #, kde-format
 msgid "The Num Lock key is now inactive"
 msgstr "Il tasto Bloc Num è ora inattivo"
 
-#: plugins/keynotification/keynotification.cpp:60
+#: plugins/keynotification/keynotification.cpp:61
 #, kde-format
 msgid "The Scroll Lock key has been activated"
 msgstr "Il tasto Bloc Scorr è stato attivato"
 
-#: plugins/keynotification/keynotification.cpp:64
+#: plugins/keynotification/keynotification.cpp:65
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
 msgstr "Il tasto Bloc Scorr è ora inattivo"
 
-#: plugins/keynotification/keynotification.cpp:77
+#: plugins/keynotification/keynotification.cpp:78
 #, kde-format
 msgid "The Shift key is now active."
 msgstr "Il tasto Shift è ora attivo."
 
-#: plugins/keynotification/keynotification.cpp:81
+#: plugins/keynotification/keynotification.cpp:82
 #, kde-format
 msgid "The Shift key is now inactive."
 msgstr "Il tasto Shift è ora inattivo."
 
-#: plugins/keynotification/keynotification.cpp:85
+#: plugins/keynotification/keynotification.cpp:86
 #, kde-format
 msgid "The Control key is now active."
 msgstr "Il tasto Ctrl è ora attivo."
 
-#: plugins/keynotification/keynotification.cpp:89
+#: plugins/keynotification/keynotification.cpp:90
 #, kde-format
 msgid "The Control key is now inactive."
 msgstr "Il tasto Ctrl è ora inattivo."
 
-#: plugins/keynotification/keynotification.cpp:93
+#: plugins/keynotification/keynotification.cpp:94
 #, kde-format
 msgid "The Alt key is now active."
 msgstr "Il tasto Alt è ora attivo."
 
-#: plugins/keynotification/keynotification.cpp:97
+#: plugins/keynotification/keynotification.cpp:98
 #, kde-format
 msgid "The Alt key is now inactive."
 msgstr "Il tasto Alt è ora inattivo."
 
-#: plugins/keynotification/keynotification.cpp:101
+#: plugins/keynotification/keynotification.cpp:102
 #, kde-format
 msgid "The Meta key is now active."
 msgstr "Il tasto Meta è ora attivo."
 
-#: plugins/keynotification/keynotification.cpp:105
+#: plugins/keynotification/keynotification.cpp:106
 #, kde-format
 msgid "The Meta key is now inactive."
 msgstr "Il tasto Meta è ora inattivo."
@@ -2705,7 +2705,7 @@ msgstr ""
 "successive."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
-#: plugins/thumbnailaside/thumbnailaside_config.cpp:50
+#: plugins/thumbnailaside/thumbnailaside_config.cpp:51
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
 msgstr "Attiva/disattiva miniatura per la finestra attuale"
@@ -4236,108 +4236,108 @@ msgstr "Attiva finestra (%1)"
 msgid "unknown"
 msgstr "sconosciuto"
 
-#: virtualdesktops.cpp:731 virtualdesktops.cpp:810
+#: virtualdesktops.cpp:728 virtualdesktops.cpp:807
 #, kde-format
 msgid "Desktop %1"
 msgstr "Desktop %1"
 
-#: virtualdesktops.cpp:817
+#: virtualdesktops.cpp:814
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Vai al desktop successivo"
 
-#: virtualdesktops.cpp:818
+#: virtualdesktops.cpp:815
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Vai al desktop precedente"
 
-#: virtualdesktops.cpp:821
+#: virtualdesktops.cpp:818
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Vai un desktop a destra"
 
-#: virtualdesktops.cpp:822
+#: virtualdesktops.cpp:819
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Vai un desktop a sinistra"
 
-#: virtualdesktops.cpp:823
+#: virtualdesktops.cpp:820
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Vai al desktop superiore"
 
-#: virtualdesktops.cpp:824
+#: virtualdesktops.cpp:821
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Vai al desktop inferiore"
 
-#: virtualdesktops.cpp:912
+#: virtualdesktops.cpp:909
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Vai al desktop %1"
 
-#: wayland/outputmanagement_v2.cpp:602
+#: wayland/outputmanagement_v2.cpp:603
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Una delle uscite rilevanti non è più disponibile"
 
-#: wayland/outputmanagement_v2.cpp:620
+#: wayland/outputmanagement_v2.cpp:621
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Non è consentito disabilitare tutte le uscite tramite modifiche alla "
 "configurazione"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 non può rispecchiare se stesso"
 
-#: wayland/outputmanagement_v2.cpp:637
+#: wayland/outputmanagement_v2.cpp:638
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr ""
 "Impossibile aggiungere una modalità personalizzata con una dimensione vuota"
 
-#: wayland/outputmanagement_v2.cpp:641
+#: wayland/outputmanagement_v2.cpp:642
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "Impossibile aggiungere una modalità personalizzata con una frequenza di "
 "aggiornamento di zero Hz"
 
-#: wayland/outputmanagement_v2.cpp:652
+#: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "La posizione dell'uscita %1 è troppo negativa (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:655
+#: wayland/outputmanagement_v2.cpp:656
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "La posizione dell'uscita abilitata %1 è negativa (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:659
+#: wayland/outputmanagement_v2.cpp:660
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "La posizione dell'uscita %1 è troppo grande (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:677
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Il driver ha rifiutato la configurazione di uscita"
 
-#: wayland/outputmanagement_v2.cpp:679
+#: wayland/outputmanagement_v2.cpp:680
 #, kde-format
 msgid "The session is not active"
 msgstr "La sessione non è attiva"
 
-#: window.cpp:3125
+#: window.cpp:3123
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Non risponde)"
 
-#: workspace.cpp:1753
+#: workspace.cpp:1752
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

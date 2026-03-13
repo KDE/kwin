@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2013-10-18 20:17+0000\n"
 "Last-Translator: Samir Ribić <Unknown>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -1275,7 +1275,7 @@ msgstr ""
 msgid "Margin:"
 msgstr ""
 
-#: windows.cpp:91
+#: windows.cpp:93
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus</b><br>\n"
@@ -1291,7 +1291,7 @@ msgstr ""
 "Ovo ponašanje je uobičajeno u drugim operativnim sistemima i <br>\n"
 "vjerovatno je ono što želite."
 
-#: windows.cpp:94
+#: windows.cpp:96
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus - Mouse Precedence</b><br>\n"
@@ -1314,7 +1314,7 @@ msgstr ""
 "prozor pod mišem je preferirani kandidat.<br><br>\n"
 "Neobična, ali moguća varijanta <i>Klik na fokus</i>."
 
-#: windows.cpp:97
+#: windows.cpp:99
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse</b><br>\n"
@@ -1335,7 +1335,7 @@ msgstr ""
 "Sprečavanje krađe fokusa radi kao obično.<br><br>\n"
 "Gledajte na ovo kao <i>klik na fokus</i> bez potrebe za stvarnim klikom."
 
-#: windows.cpp:100
+#: windows.cpp:102
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
@@ -1357,7 +1357,7 @@ msgstr ""
 "prozor pod mišem je preferirani kandidat.<br><br>\n"
 "Odaberite ovo za fokus kontrolisan nadlijetanjem."
 
-#: windows.cpp:103
+#: windows.cpp:105
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Under Mouse</b><br>\n"
@@ -1384,7 +1384,7 @@ msgstr ""
 "Možda želite koristiti<br>\n"
 "<i>Fokus prati miša - prioritet mišem</i> umjesto toga!"
 
-#: windows.cpp:106
+#: windows.cpp:108
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Strictly Under Mouse</b><br>\n"

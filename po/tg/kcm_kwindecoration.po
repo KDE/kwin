@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-01-28 00:46+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2019-09-16 13:55+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Spacer"
 msgstr ""
 
-#: kcm.cpp:186
+#: kcm.cpp:188
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
@@ -225,47 +225,47 @@ msgstr ""
 msgid "Edit %1 Theme…"
 msgstr ""
 
-#: utils.cpp:25
+#: utils.cpp:26
 #, fuzzy, kde-format
 msgid "No window borders"
 msgstr "Border size: Tiny"
 
-#: utils.cpp:26
+#: utils.cpp:27
 #, fuzzy, kde-format
 msgid "No side window borders"
 msgstr "Border size: Tiny"
 
-#: utils.cpp:27
+#: utils.cpp:28
 #, fuzzy, kde-format
 msgid "Tiny window borders"
 msgstr "Border size: Tiny"
 
-#: utils.cpp:28
+#: utils.cpp:29
 #, fuzzy, kde-format
 msgid "Normal window borders"
 msgstr "Border size: Tiny"
 
-#: utils.cpp:29
+#: utils.cpp:30
 #, fuzzy, kde-format
 msgid "Large window borders"
 msgstr "Border size: Tiny"
 
-#: utils.cpp:30
+#: utils.cpp:31
 #, fuzzy, kde-format
 msgid "Very large window borders"
 msgstr "Border size: Tiny"
 
-#: utils.cpp:31
+#: utils.cpp:32
 #, fuzzy, kde-format
 msgid "Huge window borders"
 msgstr "Border size: Tiny"
 
-#: utils.cpp:32
+#: utils.cpp:33
 #, fuzzy, kde-format
 msgid "Very huge window borders"
 msgstr "Border size: Tiny"
 
-#: utils.cpp:33
+#: utils.cpp:34
 #, fuzzy, kde-format
 msgid "Oversized window borders"
 msgstr "Border size: Tiny"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2025-04-05 10:32+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -1188,7 +1188,7 @@ msgstr ""
 msgid "Margin:"
 msgstr ""
 
-#: windows.cpp:91
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1198,7 +1198,7 @@ msgstr ""
 "når musepekeren er over det. Denne atferden er vanlig i andre operativsystem "
 "og er trulig det du vil ha."
 
-#: windows.cpp:94
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1213,7 +1213,7 @@ msgstr ""
 "den foretrukkede kandidaten. Uvanlig, men mulig variant av <em>Trykk for "
 "fokus</em>."
 
-#: windows.cpp:97
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1226,7 +1226,7 @@ msgstr ""
 "fokus. Fokusstjeling hindres på vanlig måte. Tenk på dette som <em>Trykk for "
 "fokus</em>, men uten at det er nødvendig å trykke."
 
-#: windows.cpp:100
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1240,7 +1240,7 @@ msgstr ""
 "musepekeren den foretrukkede kandidaten. Velg dette hvis du ønsker fokus "
 "styrt av plasseringa til musepekeren."
 
-#: windows.cpp:103
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1255,7 +1255,7 @@ msgstr ""
 "ikke virke. Du vil trulig heller ville bruke <em>Fokus følger musa – "
 "musprioritet</em> i stedet."
 
-#: windows.cpp:106
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "

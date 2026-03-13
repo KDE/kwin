@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-13 00:45+0000\n"
 "PO-Revision-Date: 2025-08-02 05:09+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1179,7 +1179,7 @@ msgstr "ქვედა მარჯვენა"
 msgid "Margin:"
 msgstr "მინდორი:"
 
-#: windows.cpp:91
+#: windows.cpp:93
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1189,7 +1189,7 @@ msgstr ""
 "დააწკაპუნეთ. ეს ქცევა საერთოა ოპერაციულ სისტემებს შორის და როგორც წესი ისაა, "
 "რაც თქვენ გჭირდებათ."
 
-#: windows.cpp:94
+#: windows.cpp:96
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1204,7 +1204,7 @@ msgstr ""
 "ქვეშაა, სასურველი კანდიდატი ხდება. <em>წკაპი ფოკუსისთვის</em>-ის უცნაური, "
 "მაგრამ შესაძლო ვარიანტი."
 
-#: windows.cpp:97
+#: windows.cpp:99
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1218,7 +1218,7 @@ msgstr ""
 "em> ხდება. იფიქრეთ ამაზ, როგორც <em>დააწკაპუნეთ კურსორისთვის</em>-ზე, "
 "დაწკაპუნების საჭიროების გარეშე."
 
-#: windows.cpp:100
+#: windows.cpp:102
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1231,7 +1231,7 @@ msgstr ""
 "რომელიც თაგუნა კურსორის ქვეშ იმყოფება, ფოკუსის მისაღებად სასურველი კანდიდატი "
 "გახდება. აირჩიეთ, თუ გადატარებით მართვადი ფოკუსი გჭირდებათ."
 
-#: windows.cpp:103
+#: windows.cpp:105
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1246,7 +1246,7 @@ msgstr ""
 "აქტივაციის ამ პოლიტიკას და არ იმუშავებენ. ალბათ, სჯობს, <em>ფოკუსი დასდევს "
 "თაგუნას (თაგუნას უპირატესობა)</em> აირჩიოთ!"
 
-#: windows.cpp:106
+#: windows.cpp:108
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
