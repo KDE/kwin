@@ -49,6 +49,11 @@
         "Description[vi]": "Chọn bàn phím ảo để dùng",
         "Description[zh_CN]": "选择要使用的虚拟键盘",
         "Description[zh_TW]": "選取要使用的虛擬鍵盤",
+        "FormFactors": [
+            "desktop",
+            "handset",
+            "tablet"
+        ],
         "Icon": "input-keyboard-virtual",
         "Name": "Virtual Keyboard",
         "Name[ar]": "لوحة مفاتيح افتراضية",
