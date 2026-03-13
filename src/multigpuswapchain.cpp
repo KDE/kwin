@@ -175,7 +175,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
     }
     m_journal.add(damage);
 
-    const vk::CommandBuffer commandBuffer(srcVk->createCommandBuffer());
+    auto commandBuffer = srcVk->createCommandBuffer();
     vk::Result result = commandBuffer.begin(vk::CommandBufferBeginInfo{
         vk::CommandBufferUsageFlagBits::eOneTimeSubmit,
     });
@@ -217,7 +217,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         m_journal.clear();
         return std::nullopt;
     }
-    auto completionFd = srcVk->submit(commandBuffer, std::move(sync));
+    auto completionFd = srcVk->submit(std::move(commandBuffer), std::move(sync));
     if (!completionFd.has_value()) {
         m_needsRecreation = true;
         return std::nullopt;

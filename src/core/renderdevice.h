@@ -14,7 +14,7 @@
 #include <QObject>
 #include <QSize>
 #include <memory>
-#include <vulkan/vulkan_core.h>
+#include <vulkan/vulkan_raii.hpp>
 
 typedef void *EGLImageKHR;
 
@@ -32,7 +32,7 @@ class KWIN_EXPORT RenderDevice : public QObject
     Q_OBJECT
 
 public:
-    explicit RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display, VkInstance vulkanInstance);
+    explicit RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display);
     ~RenderDevice();
 
     /**
@@ -68,7 +68,7 @@ public:
      */
     bool isInReset() const;
 
-    static std::unique_ptr<RenderDevice> open(const QString &path, VkInstance vkInstance, int authenticatedFd = -1);
+    static std::unique_ptr<RenderDevice> open(const QString &path, int authenticatedFd = -1);
 
 private:
     void handleVulkanDeviceLoss();
@@ -76,7 +76,8 @@ private:
 
     const std::unique_ptr<DrmDevice> m_device;
     const std::unique_ptr<EglDisplay> m_display;
-    const VkInstance m_vulkanInstance;
+    const vk::raii::Context m_vulkanContext;
+    const vk::raii::Instance m_vulkanInstance;
     std::unique_ptr<VulkanDevice> m_vulkanDevice;
     FormatModifierMap m_allImportableFormats;
     std::weak_ptr<EglContext> m_eglContext;

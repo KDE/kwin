@@ -14,39 +14,31 @@
 
 #include <QDebug>
 #include <sys/stat.h>
-#include <vulkan/vulkan.hpp>
 
 namespace KWin
 {
 
-VulkanDevice::VulkanDevice(VkInstance instance, VkPhysicalDevice physicalDevice, VkDevice logicalDevice, std::vector<VkQueueFamilyProperties> &&queueProperties)
+VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice, std::vector<VkQueueFamilyProperties> &&queueProperties)
     : m_physical(physicalDevice)
-    , m_logical(logicalDevice)
+    , m_logical(std::move(logicalDevice))
     // TODO it might be useful to have separate lists for sample + transfer_src
     // and sample + color attachment + transfer_dst
     , m_formats(queryFormats(VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
     , m_queueProperties(std::move(queueProperties))
+    , m_transferQueue(nullptr)
+    , m_commandPool(nullptr)
 {
-    vkGetPhysicalDeviceMemoryProperties(physicalDevice, &m_memoryProperties);
+    m_memoryProperties = physicalDevice.getMemoryProperties();
     createQueues();
 }
 
 VulkanDevice::~VulkanDevice()
 {
-    vkQueueWaitIdle(m_transferQueue);
+    m_transferQueue.waitIdle();
     m_importedTextures.clear();
-    for (const SubmittedCommand &cmd : m_submittedCommandBuffers) {
-        vkFreeCommandBuffers(m_logical, m_commandPool, 1, &cmd.buffer);
-        if (cmd.waitSemaphore) {
-            vkDestroySemaphore(m_logical, cmd.waitSemaphore, nullptr);
-        }
-    }
-    if (m_commandPool) {
-        vkDestroyCommandPool(m_logical, m_commandPool, nullptr);
-    }
-    if (m_logical) {
-        vkDestroyDevice(m_logical, nullptr);
-    }
+    m_submittedCommandBuffers.clear();
+    m_commandPool.clear();
+    m_logical.clear();
 }
 
 void VulkanDevice::createQueues()
@@ -64,10 +56,10 @@ void VulkanDevice::createQueues()
     }
     Q_ASSERT(it != m_queueProperties.end());
     m_queueFamilyIndex = std::distance(m_queueProperties.begin(), it);
-    vkGetDeviceQueue(m_logical, m_queueFamilyIndex, 0, &m_transferQueue);
+    m_transferQueue = m_logical.getQueue(m_queueFamilyIndex, 0);
 
     // only one queue for now -> also only one command pool
-    auto [result, cmdPool] = vk::Device(m_logical).createCommandPool(vk::CommandPoolCreateInfo{
+    auto [result, cmdPool] = m_logical.createCommandPool(vk::CommandPoolCreateInfo{
         vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
         m_queueFamilyIndex,
     });
@@ -75,7 +67,7 @@ void VulkanDevice::createQueues()
         qCCritical(KWIN_VULKAN) << "creating a command pool failed:" << vk::to_string(result);
         return;
     }
-    m_commandPool = cmdPool;
+    m_commandPool = std::move(cmdPool);
 }
 
 std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer, VkImageUsageFlags usage)
@@ -172,17 +164,17 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
         vk::ImageLayout::eUndefined,
         &externalCI,
     };
-    const vk::Device logical = vk::Device(m_logical);
-    auto [imageResult, image] = logical.createImageUnique(imageCI);
+    auto [imageResult, image] = m_logical.createImage(imageCI);
     if (imageResult != vk::Result::eSuccess) {
         qCWarning(KWIN_VULKAN) << "creating vulkan image failed!" << vk::to_string(imageResult);
         return nullptr;
     }
 
-    std::array<vk::BindImageMemoryInfo, 4> bindInfos;
-    std::array<vk::BindImagePlaneMemoryInfo, 4> planeInfo;
-    std::vector<vk::UniqueDeviceMemory> deviceMemory;
     const uint32_t memoryCount = disjoint ? attributes->planeCount : 1;
+    std::vector<vk::BindImageMemoryInfo> bindInfos;
+    bindInfos.resize(memoryCount);
+    std::array<vk::BindImagePlaneMemoryInfo, 4> planeInfo;
+    std::vector<vk::raii::DeviceMemory> deviceMemory;
 
     std::array<FileDescriptor, 4> duplicatedFds;
     for (size_t i = 0; i < memoryCount; i++) {
@@ -190,12 +182,12 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     }
 
     for (uint32_t i = 0; i < memoryCount; i++) {
-        const auto [memoryFdResult, memoryFdProperties] = logical.getMemoryFdPropertiesKHR(vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT, duplicatedFds[i].get());
+        const auto [memoryFdResult, memoryFdProperties] = m_logical.getMemoryFdPropertiesKHR(vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT, duplicatedFds[i].get());
         if (memoryFdResult != vk::Result::eSuccess) {
             qCWarning(KWIN_VULKAN) << "failed to get memory fd properties!" << vk::to_string(memoryFdResult);
             return nullptr;
         }
-        vk::ImageMemoryRequirementsInfo2 memRequirementsInfo{image.get()};
+        vk::ImageMemoryRequirementsInfo2 memRequirementsInfo{image};
         vk::ImagePlaneMemoryRequirementsInfo planeRequirementsInfo;
         if (disjoint) {
             switch (i) {
@@ -214,7 +206,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
             }
             memRequirementsInfo.setPNext(&planeRequirementsInfo);
         }
-        const vk::MemoryRequirements2 memRequirements = logical.getImageMemoryRequirements2(memRequirementsInfo);
+        const vk::MemoryRequirements2 memRequirements = m_logical.getImageMemoryRequirements2(memRequirementsInfo);
         const auto memoryIndex = findMemoryType(memRequirements.memoryRequirements.memoryTypeBits & memoryFdProperties.memoryTypeBits, {});
         if (!memoryIndex) {
             qCWarning(KWIN_VULKAN, "couldn't find a suitable memory type for %x & %x = %x",
@@ -223,16 +215,16 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
             return nullptr;
         }
 
-        vk::MemoryDedicatedAllocateInfo dedicatedInfo{image.get()};
+        vk::MemoryDedicatedAllocateInfo dedicatedInfo{image};
         vk::ImportMemoryFdInfoKHR importInfo(vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT, duplicatedFds[i].get(), &dedicatedInfo);
         vk::MemoryAllocateInfo memoryAI(memRequirements.memoryRequirements.size, memoryIndex.value(), &importInfo);
-        auto [allocateResult, memory] = logical.allocateMemoryUnique(memoryAI);
+        auto [allocateResult, memory] = m_logical.allocateMemory(memoryAI);
         if (allocateResult != vk::Result::eSuccess) {
             qCWarning(KWIN_VULKAN, "'Allocating' memory for dmabuf failed: %s", vk::to_string(allocateResult).c_str());
             return nullptr;
         }
 
-        bindInfos[i] = vk::BindImageMemoryInfo{image.get(), memory.get(), 0};
+        bindInfos[i] = vk::BindImageMemoryInfo{image, memory, 0};
         if (disjoint) {
             planeInfo[i] = vk::BindImagePlaneMemoryInfo{
                 planeRequirementsInfo.planeAspect,
@@ -241,7 +233,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
         }
         deviceMemory.push_back(std::move(memory));
     }
-    const vk::Result bindResult = logical.bindImageMemory2(memoryCount, bindInfos.data());
+    const vk::Result bindResult = m_logical.bindImageMemory2(bindInfos);
     if (bindResult != vk::Result::eSuccess) {
         qCWarning(KWIN_VULKAN) << "failed to bind image to memory";
         return nullptr;
@@ -250,13 +242,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     for (FileDescriptor &fd : duplicatedFds) {
         fd.take();
     }
-
-    std::vector<VkDeviceMemory> nonHppMemory;
-    nonHppMemory.reserve(deviceMemory.size());
-    for (auto &memory : deviceMemory) {
-        nonHppMemory.push_back(memory.release());
-    }
-    return std::make_shared<VulkanTexture>(this, format->vulkanFormat, image.release(), std::move(nonHppMemory));
+    return std::make_shared<VulkanTexture>(this, format->vulkanFormat, std::move(image), std::move(deviceMemory));
 }
 
 FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const
@@ -330,7 +316,7 @@ FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const
     return ret;
 }
 
-std::optional<uint32_t> VulkanDevice::findMemoryType(uint32_t typeBits, VkMemoryPropertyFlags memoryPropertyFlags) const
+std::optional<uint32_t> VulkanDevice::findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const
 {
     for (uint32_t i = 0; i < m_memoryProperties.memoryTypeCount; i++) {
         if ((typeBits & (1 << i)) && ((m_memoryProperties.memoryTypes[i].propertyFlags & memoryPropertyFlags) == memoryPropertyFlags)) {
@@ -345,34 +331,30 @@ const FormatModifierMap &VulkanDevice::supportedFormats() const
     return m_formats;
 }
 
-VkDevice VulkanDevice::logicalDevice() const
+const vk::raii::Device &VulkanDevice::logicalDevice() const
 {
     return m_logical;
 }
 
-VkQueue VulkanDevice::transferQueue() const
+const vk::raii::Queue &VulkanDevice::transferQueue() const
 {
     return m_transferQueue;
 }
 
-VkCommandBuffer VulkanDevice::createCommandBuffer()
+vk::raii::CommandBuffer VulkanDevice::createCommandBuffer()
 {
     // clean up old command buffers first
     for (auto it = m_submittedCommandBuffers.begin(); it != m_submittedCommandBuffers.end();) {
         const SubmittedCommand &cmd = *it;
         // TODO use a QSocketNotifier per submission to do this asynchronously?
         if (cmd.completionSyncFd.isReadable()) {
-            vkFreeCommandBuffers(m_logical, m_commandPool, 1, &cmd.buffer);
-            if (cmd.waitSemaphore) {
-                vkDestroySemaphore(m_logical, cmd.waitSemaphore, nullptr);
-            }
             it = m_submittedCommandBuffers.erase(it);
         } else {
             it++;
         }
     }
 
-    auto [result, buffers] = vk::Device(m_logical).allocateCommandBuffers(vk::CommandBufferAllocateInfo{
+    auto [result, buffers] = m_logical.allocateCommandBuffers(vk::CommandBufferAllocateInfo{
         m_commandPool,
         vk::CommandBufferLevel::ePrimary,
         1,
@@ -381,68 +363,67 @@ VkCommandBuffer VulkanDevice::createCommandBuffer()
         qCWarning(KWIN_VULKAN) << "Failed to create a command buffer" << vk::to_string(result);
         return nullptr;
     }
-    return buffers.front();
+    return std::move(buffers.front());
 }
 
-VkSemaphore VulkanDevice::importSemaphore(FileDescriptor &&syncFd) const
+std::optional<vk::raii::Semaphore> VulkanDevice::importSemaphore(FileDescriptor &&syncFd) const
 {
     if (!syncFd.isValid()) {
-        return nullptr;
+        return std::nullopt;
     }
     vk::SemaphoreCreateInfo ci{};
-    auto [result, semaphore] = vk::Device(m_logical).createSemaphoreUnique(ci);
+    auto [result, semaphore] = m_logical.createSemaphore(ci);
     if (result != vk::Result::eSuccess) {
-        return nullptr;
+        return std::nullopt;
     }
     vk::ImportSemaphoreFdInfoKHR importInfo{
-        semaphore.get(),
+        semaphore,
         vk::SemaphoreImportFlagBits::eTemporary,
         vk::ExternalSemaphoreHandleTypeFlagBits::eSyncFd,
         syncFd.take(),
     };
-    result = vk::Device(m_logical).importSemaphoreFdKHR(importInfo);
+    result = m_logical.importSemaphoreFdKHR(importInfo);
     if (result != vk::Result::eSuccess) {
-        return nullptr;
+        return std::nullopt;
     }
-    return semaphore.release();
+    return std::move(semaphore);
 }
 
-std::optional<FileDescriptor> VulkanDevice::submit(VkCommandBuffer buffer, FileDescriptor &&syncFd)
+std::optional<FileDescriptor> VulkanDevice::submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd)
 {
-    auto cleanup = qScopeGuard([this, buffer]() {
-        vkFreeCommandBuffers(m_logical, m_commandPool, 1, &buffer);
-    });
     vk::ExportFenceCreateInfo exportCI{
         vk::ExternalFenceHandleTypeFlagBits::eSyncFd,
     };
-    auto [fenceResult, fence] = vk::Device(m_logical).createFenceUnique(vk::FenceCreateInfo{
-        vk::FenceCreateFlags{}, &exportCI});
+    auto [fenceResult, fence] = m_logical.createFence(vk::FenceCreateInfo{
+        vk::FenceCreateFlags{},
+        &exportCI,
+    });
     if (fenceResult != vk::Result::eSuccess) {
         return std::nullopt;
     }
     std::vector<vk::Semaphore> waitSemaphores;
     std::vector<vk::PipelineStageFlags> waitFlags;
-    const VkSemaphore waitSemaphore = importSemaphore(std::move(syncFd));
-    if (waitSemaphore) {
-        waitSemaphores.push_back(waitSemaphore);
+    auto waitSemaphore = importSemaphore(std::move(syncFd));
+    if (waitSemaphore.has_value()) {
+        waitSemaphores.push_back(*waitSemaphore);
         waitFlags.push_back(vk::PipelineStageFlagBits::eAllCommands);
     }
     vk::CommandBuffer hppBuffer(buffer);
-    vk::Result result = vk::Queue(m_transferQueue).submit(vk::SubmitInfo{
-                                                              waitSemaphores,
-                                                              waitFlags,
-                                                              hppBuffer,
-                                                              {},
-                                                          },
-                                                          fence.get());
+    vk::Result result = m_transferQueue.submit(vk::SubmitInfo{
+                                                   waitSemaphores,
+                                                   waitFlags,
+                                                   hppBuffer,
+                                                   {},
+                                               },
+                                               fence);
     if (result == vk::Result::eErrorDeviceLost) {
         handleDeviceLoss();
         return std::nullopt;
     } else if (result != vk::Result::eSuccess) {
         return std::nullopt;
     }
-    const auto [fdResult, fd] = vk::Device(m_logical).getFenceFdKHR(vk::FenceGetFdInfoKHR{
-        fence.get(),
+    const auto [fdResult, fd] = m_logical.getFenceFdKHR(vk::FenceGetFdInfoKHR{
+        fence,
         vk::ExternalFenceHandleTypeFlagBits::eSyncFd,
     });
     if (fdResult != vk::Result::eSuccess) {
@@ -450,11 +431,10 @@ std::optional<FileDescriptor> VulkanDevice::submit(VkCommandBuffer buffer, FileD
     }
     FileDescriptor ret{fd};
     m_submittedCommandBuffers.push_back(SubmittedCommand{
-        .waitSemaphore = waitSemaphore,
-        .buffer = buffer,
+        .waitSemaphore = waitSemaphore ? std::move(*waitSemaphore) : nullptr,
+        .buffer = std::move(buffer),
         .completionSyncFd = ret.duplicate(),
     });
-    cleanup.dismiss();
     return ret;
 }
 

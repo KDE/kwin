@@ -9,9 +9,7 @@
 #pragma once
 #include "kwin_export.h"
 
-#include <vulkan/vulkan.h>
-
-#include <QImage>
+#include <vulkan/vulkan_raii.hpp>
 
 namespace KWin
 {
@@ -21,19 +19,19 @@ class VulkanDevice;
 class KWIN_EXPORT VulkanTexture
 {
 public:
-    explicit VulkanTexture(VulkanDevice *device, VkFormat format, VkImage image, std::vector<VkDeviceMemory> &&memory);
+    explicit VulkanTexture(VulkanDevice *device, VkFormat format, vk::raii::Image &&image, std::vector<vk::raii::DeviceMemory> &&memory);
     VulkanTexture(VulkanTexture &&other) = delete;
     VulkanTexture(const VulkanTexture &) = delete;
     ~VulkanTexture();
 
-    VkImage handle() const;
+    const vk::raii::Image &handle() const;
     VkFormat format() const;
 
 private:
     VulkanDevice *m_device;
     VkFormat m_format;
-    std::vector<VkDeviceMemory> m_memory;
-    VkImage m_image;
+    std::vector<vk::raii::DeviceMemory> m_memory;
+    vk::raii::Image m_image;
 };
 
 }

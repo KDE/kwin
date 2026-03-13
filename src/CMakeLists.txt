@@ -30,7 +30,6 @@ target_compile_definitions(kwin PRIVATE
 target_compile_definitions(kwin PUBLIC
     -DVULKAN_HPP_NO_EXCEPTIONS=1
     -DVULKAN_HPP_ASSERT_ON_RESULT=void
-    -DVULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1
 )
 
 target_sources(kwin PRIVATE
