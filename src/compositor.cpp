@@ -655,8 +655,10 @@ void Compositor::composite(RenderLoop *renderLoop)
         frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
     }
     // always animate the dimming factor
-    const double maxDimmingChange = 0.5 * 1'000.0 / renderLoop->refreshRate();
-    frame->setDimmingFactor(std::clamp(output->dimming(), output->currentDimming() - maxDimmingChange, output->currentDimming() + maxDimmingChange));
+    const double maxDimChange = 0.5 * 1'000.0 / renderLoop->refreshRate();
+    // undim more quickly to not get into the way of using the system again after it's been idle.
+    const double maxUndimChange = 6 * maxDimChange;
+    frame->setDimmingFactor(std::clamp(output->dimming(), output->currentDimming() - maxDimChange, output->currentDimming() + maxUndimChange));
 
     Window *const activeWindow = workspace()->activeWindow();
     SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->frameGeometry().intersects(primaryView->viewport()) ? activeWindow->surfaceItem() : nullptr;
