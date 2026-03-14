@@ -55,6 +55,7 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QObject *parent, const KPluginMetaD
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::SHIFT | Qt::META | Qt::Key_F12));
 
     m_ui.editor->addCollection(m_actionCollection);
+    connect(m_ui.editor, &KShortcutsEditor::keyChange, this, &MouseMarkEffectConfig::markAsChanged);
 
     connect(m_ui.kcfg_LineWidth, qOverload<int>(&QSpinBox::valueChanged), this, [this]() {
         updateSpinBoxSuffix();
