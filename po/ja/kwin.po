@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-13 00:45+0000\n"
+"POT-Creation-Date: 2026-03-14 00:45+0000\n"
 "PO-Revision-Date: 2026-03-01 17:09+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
@@ -2365,7 +2365,7 @@ msgstr "直近のマウスマークを取り消し"
 msgid "Clear Mouse Marks"
 msgstr "マウスマークをクリア"
 
-#: plugins/mousemark/mousemark_config.cpp:85
+#: plugins/mousemark/mousemark_config.cpp:86
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"

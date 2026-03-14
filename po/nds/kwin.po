@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-13 00:45+0000\n"
+"POT-Creation-Date: 2026-03-14 00:45+0000\n"
 "PO-Revision-Date: 2014-08-21 16:21+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -2384,7 +2384,7 @@ msgstr "Lest Muusmarken wegmaken"
 msgid "Clear Mouse Marks"
 msgstr "Muusmarken wegmaken"
 
-#: plugins/mousemark/mousemark_config.cpp:85
+#: plugins/mousemark/mousemark_config.cpp:86
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"

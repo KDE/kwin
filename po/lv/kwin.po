@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-13 00:45+0000\n"
+"POT-Creation-Date: 2026-03-14 00:45+0000\n"
 "PO-Revision-Date: 2026-02-06 14:38+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -2309,7 +2309,7 @@ msgstr "Notīrīt pēdējās peles pēdas"
 msgid "Clear Mouse Marks"
 msgstr "Tīrīt peles pēdas"
 
-#: plugins/mousemark/mousemark_config.cpp:85
+#: plugins/mousemark/mousemark_config.cpp:86
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"

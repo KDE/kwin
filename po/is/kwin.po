@@ -7,13 +7,13 @@
 # Richard Allen <ra@ra.is>, 2000.
 # Pjetur G. Hjaltason <pjetur@pjetur.net>, 2003.
 # Arnar Leosson <leosson@frisurf.no>, 2005.
-# SPDX-FileCopyrightText: 2008, 2009, 2010, 2022, 2024, 2025 Sveinn í Felli <sveinki@nett.is>
+# SPDX-FileCopyrightText: 2008, 2009, 2010, 2022, 2024, 2025, 2026 Sveinn í Felli <sveinki@nett.is>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-13 00:45+0000\n"
-"PO-Revision-Date: 2025-12-04 09:07+0000\n"
+"POT-Creation-Date: 2026-03-14 00:45+0000\n"
+"PO-Revision-Date: 2026-03-13 11:11+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
 "Language: is\n"
@@ -162,10 +162,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Engin TRC-merki í litasniði"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Gat ekki opnað ICC-litasnið \"%1\""
+msgstr "Gat ekki snúið við litferlum ICC-litasniðsins \"%1\""
 
 #: debug_console.cpp:86
 #, kde-format
@@ -2310,7 +2309,7 @@ msgstr "Hreinsa síðasta músarmerki"
 msgid "Clear Mouse Marks"
 msgstr "Hreinsa músarmerki"
 
-#: plugins/mousemark/mousemark_config.cpp:85
+#: plugins/mousemark/mousemark_config.cpp:86
 #, kde-format
 msgctxt "Suffix"
 msgid " pixel"
@@ -4293,12 +4292,12 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:638
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Get ekki bætt við sérsniðnum ham með auðri stærð"
 
 #: wayland/outputmanagement_v2.cpp:642
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "Get ekki bætt við sérsniðnum ham með uppfærslutíðni upp á núll Hz"
 
 #: wayland/outputmanagement_v2.cpp:653
 #, kde-format
