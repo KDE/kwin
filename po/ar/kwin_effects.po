@@ -2,13 +2,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, 2014.
 # Abdalrahim Fakhouri <abdilra7eem@yahoo.com>, 2014.
-# SPDX-FileCopyrightText: 2021, 2022, 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2021, 2022, 2025, 2026 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2025-08-04 20:12+0400\n"
+"PO-Revision-Date: 2026-03-14 10:49+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1080,7 +1080,7 @@ msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
-"تمكين تتبع الموقع المركز. يحتاج هذا إلى تمكين QAccessible لكل تطبيق  "
+"تمكين تتبع الموقع المركز. يحتاج هذا إلى تمكين QAccessible لكل تطبيق "
 "(\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON = 1\")."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)

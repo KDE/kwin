@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-02-28 12:43+0400\n"
+"PO-Revision-Date: 2026-03-14 10:50+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -962,7 +962,7 @@ msgstr "فئة معالج الرسوميات:"
 #: debug_console.ui:178
 #, kde-format
 msgid "OpenGL Version:"
-msgstr "إصدارة  أوبن‌جي‌إل:"
+msgstr "إصدارة أوبن‌جي‌إل:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: debug_console.ui:185
@@ -980,7 +980,7 @@ msgstr "امتدادات المنصة"
 #: debug_console.ui:267
 #, kde-format
 msgid "OpenGL (ES) Extensions"
-msgstr "امتدادات  أوبن‌جي‌إل (ES)"
+msgstr "امتدادات أوبن‌جي‌إل (ES)"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
 #: debug_console.ui:288
