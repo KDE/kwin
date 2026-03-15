@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-15 00:46+0000\n"
 "PO-Revision-Date: 2024-01-19 21:53+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -98,3 +98,8 @@ msgstr "%1 nesatur derīgu „metadata.json“ datni"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 nepastāv"
+
+#: genericscriptedconfig.cpp:116
+#, kde-format
+msgid "Error loading widget from %1: %2"
+msgstr ""

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-15 00:46+0000\n"
 "PO-Revision-Date: 2023-06-18 18:54+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -97,6 +97,11 @@ msgstr "%1 non contén un ficheiro metadata.json válido"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 non existe"
+
+#: genericscriptedconfig.cpp:116
+#, kde-format
+msgid "Error loading widget from %1: %2"
+msgstr ""
 
 #~ msgctxt "Category of Desktop Effects, used as section header"
 #~ msgid "Candy"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-15 00:46+0000\n"
 "PO-Revision-Date: 2024-02-16 20:28+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -103,3 +103,8 @@ msgstr "%1 は有効な matadata.json ファイルを含んでいません"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 は存在しません"
+
+#: genericscriptedconfig.cpp:116
+#, kde-format
+msgid "Error loading widget from %1: %2"
+msgstr ""

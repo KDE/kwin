@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-15 00:46+0000\n"
 "PO-Revision-Date: 2023-07-23 21:14+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -98,6 +98,11 @@ msgstr "%1에 올바른 metadata.json 파일이 없음"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1이(가) 없음"
+
+#: genericscriptedconfig.cpp:116
+#, kde-format
+msgid "Error loading widget from %1: %2"
+msgstr ""
 
 #~ msgctxt "Category of Desktop Effects, used as section header"
 #~ msgid "Candy"
