@@ -98,7 +98,7 @@ int main(int argc, char **argv)
                                                                       QStringLiteral("org.kde.KWin"),
                                                                       QStringLiteral("reloadConfig"));
                     QDBusConnection::sessionBus().send(message);
-                    ts << i18n("Successfully applied the cursor theme %1 to your current Plasma session",
+                    ts << i18n("Successfully applied the pointer theme %1 to your current Plasma session",
                                model->data(model->index(index), KDecoration3::Configuration::DecorationsModel::ThemeNameRole).toString())
                        << Qt::endl;
                 } else {
