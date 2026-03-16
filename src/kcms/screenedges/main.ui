@@ -280,7 +280,7 @@
         <string>Here you can enable or disable the virtual corner barrier between screens. The barrier prevents the cursor from moving to another screen when it is already touching a screen corner. This makes it easier to trigger user interface elements like maximized windows' close buttons when using multiple screens.</string>
        </property>
        <property name="toolTip">
-        <string comment="@info:tooltip">Prevents cursors from crossing at screen corners.</string>
+        <string comment="@info:tooltip">Prevents the pointer from crossing at screen corners.</string>
        </property>
       </widget>
      </item>
