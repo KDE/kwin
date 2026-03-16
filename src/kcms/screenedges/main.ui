@@ -20,7 +20,7 @@
    <item>
     <widget class="QLabel" name="infoLabel">
      <property name="text">
-      <string>You can trigger an action by pushing the mouse cursor against the corresponding screen edge or corner.</string>
+      <string>You can trigger an action by pushing the mouse pointer against the corresponding screen edge or corner.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -171,7 +171,7 @@
      <item row="5" column="0">
       <widget class="QLabel" name="desktopSwitchLabel">
        <property name="toolTip">
-        <string>Change desktop when the mouse cursor is pushed against the edge of the screen</string>
+        <string>Change desktop when the mouse pointer is pushed against the edge of the screen</string>
        </property>
        <property name="text">
         <string>&amp;Switch desktop on edge:</string>
@@ -203,7 +203,7 @@
      <item row="6" column="0">
       <widget class="QLabel" name="activationDelayLabel">
        <property name="toolTip">
-        <string>Amount of time required for the mouse cursor to be pushed against the edge of the screen before the action is triggered</string>
+        <string>Amount of time required for the mouse pointer to be pushed against the edge of the screen before the action is triggered</string>
        </property>
        <property name="text">
         <string>Activation &amp;delay:</string>
@@ -277,7 +277,7 @@
      <item row="8" column="1">
       <widget class="QCheckBox" name="kcfg_CornerBarrier">
        <property name="whatsThis">
-        <string>Here you can enable or disable the virtual corner barrier between screens. The barrier prevents the cursor from moving to another screen when it is already touching a screen corner. This makes it easier to trigger user interface elements like maximized windows' close buttons when using multiple screens.</string>
+        <string>Here you can enable or disable the virtual corner barrier between screens. The barrier prevents the pointer from moving to another screen when it is already touching a screen corner. This makes it easier to trigger user interface elements like maximized windows' close buttons when using multiple screens.</string>
        </property>
        <property name="toolTip">
         <string comment="@info:tooltip">Prevents the pointer from crossing at screen corners.</string>
@@ -300,7 +300,7 @@
         <string>Here you can set size of the edge barrier between different screens. The barrier adds additional distance you have to move your pointer before it crosses the edge onto the other screen. This makes it easier to access user interface elements like Plasma Panels that are located on an edge between screens.</string>
        </property>
        <property name="toolTip">
-        <string comment="@info:tooltip">Additional distance cursor needs to travel to cross screen edges.</string>
+        <string comment="@info:tooltip">Additional distance the pointer needs to travel to cross screen edges.</string>
        </property>
        <property name="specialValueText">
         <string>None</string>
