@@ -106,7 +106,7 @@ bool WaylandEglLayer::doEndFrame(const Region &renderedDeviceRegion, const Regio
     glFlush();
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
 
-    setBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()), damagedDeviceRegion);
+    setBuffer(m_buffer->buffer(), damagedDeviceRegion);
     m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
 
     m_damageJournal.add(damagedDeviceRegion);
@@ -118,11 +118,7 @@ bool WaylandEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::sha
     if (!test()) {
         return false;
     }
-    auto presentationBuffer = m_backend->backend()->importBuffer(buffer);
-    if (!presentationBuffer) {
-        return false;
-    }
-    setBuffer(presentationBuffer, Region::infinite());
+    setBuffer(buffer, Region::infinite());
     return true;
 }
 

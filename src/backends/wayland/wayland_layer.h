@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/graphicsbuffer.h"
 #include "core/outputlayer.h"
 
 namespace KWayland
@@ -48,7 +49,7 @@ public:
     ~WaylandLayer() override;
 
     bool test() const;
-    void setBuffer(wl_buffer *buffer, const Region &deviceDamagedRegion);
+    void setBuffer(GraphicsBuffer *buffer, const Region &deviceDamagedRegion);
     void commit(PresentationMode presentationMode);
 
     KWayland::Client::Surface *surface() const;
@@ -63,6 +64,8 @@ protected:
     wp_fractional_scale_v1 *m_fractionalScale = nullptr;
     std::unique_ptr<WaylandClient::Viewport> m_viewport;
     std::shared_ptr<ColorDescription> m_previousColor;
+    GraphicsBufferRef m_pendingBuffer;
+    Region m_pendingDamage;
 };
 
 }
