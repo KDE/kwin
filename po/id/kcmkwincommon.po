@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-16 02:39+0000\n"
 "PO-Revision-Date: 2022-09-27 17:14+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -100,6 +100,11 @@ msgstr ""
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
+msgstr ""
+
+#: genericscriptedconfig.cpp:116
+#, kde-format
+msgid "Error loading widget from %1: %2"
 msgstr ""
 
 #~ msgctxt "Category of Desktop Effects, used as section header"

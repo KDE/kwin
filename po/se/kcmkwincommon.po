@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-16 02:39+0000\n"
 "PO-Revision-Date: 2007-12-27 19:05+0100\n"
 "Last-Translator: Børre Gaup <boerre@skolelinux.no>\n"
 "Language-Team: Northern Sami <l10n-no@lister.huftis.org>\n"
@@ -98,4 +98,9 @@ msgstr ""
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
+msgstr ""
+
+#: genericscriptedconfig.cpp:116
+#, kde-format
+msgid "Error loading widget from %1: %2"
 msgstr ""

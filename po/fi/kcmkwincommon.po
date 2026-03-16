@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-16 02:39+0000\n"
 "PO-Revision-Date: 2023-04-27 12:17+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -109,6 +109,11 @@ msgstr "%1 ei sisällä kelvollista metadata.json-tiedostoa"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "Tiedostoa %1 ei ole olemassa"
+
+#: genericscriptedconfig.cpp:116
+#, kde-format
+msgid "Error loading widget from %1: %2"
+msgstr ""
 
 #~ msgctxt "Category of Desktop Effects, used as section header"
 #~ msgid "Candy"

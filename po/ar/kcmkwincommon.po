@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-16 02:39+0000\n"
 "PO-Revision-Date: 2023-04-27 12:45+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -98,3 +98,8 @@ msgstr "لا يحوي %1 على ملف metadata.json صالح"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 غير موجود"
+
+#: genericscriptedconfig.cpp:116
+#, kde-format
+msgid "Error loading widget from %1: %2"
+msgstr ""

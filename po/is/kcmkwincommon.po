@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-03-16 02:39+0000\n"
 "PO-Revision-Date: 2025-10-04 21:32+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -97,3 +97,8 @@ msgstr "%1 inniheldur ekki gilda metadata.json-skrá"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 er ekki til"
+
+#: genericscriptedconfig.cpp:116
+#, kde-format
+msgid "Error loading widget from %1: %2"
+msgstr ""
