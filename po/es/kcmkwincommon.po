@@ -1,15 +1,15 @@
 # Spanish translations for kcmkwincommon.po package.
-# Copyright (C) 2019-2025 This file is copyright:
+# Copyright (C) 2019-2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 # Automatically generated, 2019.
 #
-# SPDX-FileCopyrightText: 2019, 2022, 2023, 2025 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2019, 2022, 2023, 2025, 2026 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincommon\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-16 02:39+0000\n"
-"PO-Revision-Date: 2025-05-18 15:02+0100\n"
+"PO-Revision-Date: 2026-03-16 14:20+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.03.90\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -103,4 +103,4 @@ msgstr "%1 no existe"
 #: genericscriptedconfig.cpp:116
 #, kde-format
 msgid "Error loading widget from %1: %2"
-msgstr ""
+msgstr "Error al cargar widget desde %1: %2"
