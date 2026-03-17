@@ -48,9 +48,9 @@
 #include "qwayland-xdg-activation-v1.h"
 #include "qwayland-xdg-decoration-unstable-v1.h"
 #include "qwayland-xdg-dialog-v1.h"
+#include "qwayland-xdg-session-management-v1.h"
 #include "qwayland-xdg-shell.h"
 #include "qwayland-xdg-toplevel-drag-v1.h"
-#include "qwayland-xx-session-management-v1.h"
 #include "qwayland-zkde-screencast-unstable-v1.h"
 
 namespace KWayland
@@ -964,27 +964,27 @@ public:
     std::unique_ptr<XdgActivationToken> createToken();
 };
 
-class XdgToplevelSessionV1 : public QObject, public QtWayland::xx_toplevel_session_v1
+class XdgToplevelSessionV1 : public QObject, public QtWayland::xdg_toplevel_session_v1
 {
     Q_OBJECT
 
 public:
-    explicit XdgToplevelSessionV1(::xx_toplevel_session_v1 *session);
+    explicit XdgToplevelSessionV1(::xdg_toplevel_session_v1 *session);
     ~XdgToplevelSessionV1() override;
 
 Q_SIGNALS:
     void restored();
 
 protected:
-    void xx_toplevel_session_v1_restored(struct ::xdg_toplevel *surface) override;
+    void xdg_toplevel_session_v1_restored() override;
 };
 
-class XdgSessionV1 : public QObject, public QtWayland::xx_session_v1
+class XdgSessionV1 : public QObject, public QtWayland::xdg_session_v1
 {
     Q_OBJECT
 
 public:
-    explicit XdgSessionV1(::xx_session_v1 *session);
+    explicit XdgSessionV1(::xdg_session_v1 *session);
     ~XdgSessionV1() override;
 
     std::unique_ptr<XdgToplevelSessionV1> add(XdgToplevel *toplevel, const QString &toplevelId);
@@ -996,12 +996,12 @@ Q_SIGNALS:
     void replaced();
 
 protected:
-    void xx_session_v1_created(const QString &id) override;
-    void xx_session_v1_restored() override;
-    void xx_session_v1_replaced() override;
+    void xdg_session_v1_created(const QString &id) override;
+    void xdg_session_v1_restored() override;
+    void xdg_session_v1_replaced() override;
 };
 
-class XdgSessionManagerV1 : public QtWayland::xx_session_manager_v1
+class XdgSessionManagerV1 : public QtWayland::xdg_session_manager_v1
 {
 public:
     XdgSessionManagerV1(::wl_registry *registry, uint32_t id, int version);

@@ -548,7 +548,7 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
             }
         }
         if (flags & AdditionalWaylandInterface::XdgSessionV1) {
-            if (interface == xx_session_manager_v1_interface.name) {
+            if (interface == xdg_session_manager_v1_interface.name) {
                 c->sessionManager = std::make_unique<XdgSessionManagerV1>(*c->registry, name, version);
             }
         }
@@ -2040,8 +2040,8 @@ std::unique_ptr<XdgActivationToken> XdgActivation::createToken()
     return std::make_unique<XdgActivationToken>(get_activation_token());
 }
 
-XdgToplevelSessionV1::XdgToplevelSessionV1(::xx_toplevel_session_v1 *session)
-    : QtWayland::xx_toplevel_session_v1(session)
+XdgToplevelSessionV1::XdgToplevelSessionV1(::xdg_toplevel_session_v1 *session)
+    : QtWayland::xdg_toplevel_session_v1(session)
 {
 }
 
@@ -2050,13 +2050,13 @@ XdgToplevelSessionV1::~XdgToplevelSessionV1()
     destroy();
 }
 
-void XdgToplevelSessionV1::xx_toplevel_session_v1_restored(struct ::xdg_toplevel *surface)
+void XdgToplevelSessionV1::xdg_toplevel_session_v1_restored()
 {
     Q_EMIT restored();
 }
 
-XdgSessionV1::XdgSessionV1(::xx_session_v1 *session)
-    : QtWayland::xx_session_v1(session)
+XdgSessionV1::XdgSessionV1(::xdg_session_v1 *session)
+    : QtWayland::xdg_session_v1(session)
 {
 }
 
@@ -2075,23 +2075,23 @@ std::unique_ptr<XdgToplevelSessionV1> XdgSessionV1::restore(XdgToplevel *topleve
     return std::make_unique<XdgToplevelSessionV1>(restore_toplevel(toplevel->object(), toplevelId));
 }
 
-void XdgSessionV1::xx_session_v1_created(const QString &id)
+void XdgSessionV1::xdg_session_v1_created(const QString &id)
 {
     Q_EMIT created(id);
 }
 
-void XdgSessionV1::xx_session_v1_restored()
+void XdgSessionV1::xdg_session_v1_restored()
 {
     Q_EMIT restored();
 }
 
-void XdgSessionV1::xx_session_v1_replaced()
+void XdgSessionV1::xdg_session_v1_replaced()
 {
     Q_EMIT replaced();
 }
 
 XdgSessionManagerV1::XdgSessionManagerV1(::wl_registry *registry, uint32_t id, int version)
-    : QtWayland::xx_session_manager_v1(registry, id, version)
+    : QtWayland::xdg_session_manager_v1(registry, id, version)
 {
 }
 

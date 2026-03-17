@@ -15,7 +15,6 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
         ${Wayland_DATADIR}/wayland.xml
 
         ${CMAKE_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
-        ${CMAKE_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
         ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
         ${WaylandProtocols_DATADIR}/stable/tablet/tablet-v2.xml
         ${WaylandProtocols_DATADIR}/stable/viewporter/viewporter.xml
@@ -28,6 +27,7 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
         ${WaylandProtocols_DATADIR}/staging/security-context/security-context-v1.xml
         ${WaylandProtocols_DATADIR}/staging/xdg-activation/xdg-activation-v1.xml
         ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
+        ${WaylandProtocols_DATADIR}/staging/xdg-session-management/xdg-session-management-v1.xml
         ${WaylandProtocols_DATADIR}/staging/xdg-toplevel-drag/xdg-toplevel-drag-v1.xml
         ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
         ${WaylandProtocols_DATADIR}/unstable/primary-selection/primary-selection-unstable-v1.xml
