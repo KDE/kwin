@@ -348,6 +348,3 @@ msgstr "Céimnigh trí Fuinneoga an Fheidhmchláir Reatha Malartach"
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Céimnigh trí Fuinneoga an Fheidhmchláir Reatha Malartach (ag cúlú)"
-
-#~ msgid "Show delay:"
-#~ msgstr "Taispeáin an moille:"

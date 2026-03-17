@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-14 00:45+0000\n"
-"PO-Revision-Date: 2026-03-01 16:36+0100\n"
+"PO-Revision-Date: 2026-03-13 22:13+0100\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.12.2\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -102,7 +102,7 @@ msgstr "ICC-Profil „%1“ kann nicht für Bildschirme genutzt werden"
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
-"ICC-Profil „%1“ hat einen nichtunterstützten Verbindungsraum, nur XYZ wird "
+"ICC-Profil „%1“ hat einen nicht unterstützten Verbindungsraum, nur XYZ wird "
 "unterstützt"
 
 #: core/iccprofile.cpp:402
@@ -126,7 +126,7 @@ msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr ""
 "ICC-Profil „%1“ ist beschädigt, das Auslesen der chromatischen "
-"Adaptionsmatrix ist fehlgeschlagen"
+"Adaptationsmatrix ist fehlgeschlagen"
 
 #: core/iccprofile.cpp:436
 #, kde-format
@@ -134,7 +134,7 @@ msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr ""
 "ICC-Profil „%1“ ist beschädigt, das Invertieren der chromatischen "
-"Adaptionsmatrix ist fehlgeschlagen"
+"Adaptationsmatrix ist fehlgeschlagen"
 
 # ich weiß nicht, ob primaries sich auf Farben bezieht
 #: core/iccprofile.cpp:449
