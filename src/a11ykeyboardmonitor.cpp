@@ -40,6 +40,10 @@ A11yKeyboardMonitor::A11yKeyboardMonitor()
 
 bool A11yKeyboardMonitor::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time)
 {
+    if (!input()->keyboard()->xkb()->state()) {
+        return false;
+    }
+
     const auto mods = xkb_state_serialize_mods(input()->keyboard()->xkb()->state(), xkb_state_component(XKB_STATE_MODS_EFFECTIVE));
 
     const auto keysym = input()->keyboard()->xkb()->toKeysym(key);
