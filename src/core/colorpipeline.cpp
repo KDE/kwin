@@ -383,13 +383,32 @@ void ColorPipeline::add1DLUT(const std::shared_ptr<ColorTransformation> &transfo
 
 void ColorPipeline::addClamp(const ValueRange &range)
 {
+    // any values outside of the range we clamp to don't need to be
+    // preserved, so we can directly clamp the last output range here
+    if (!ops.empty()) {
+        auto &last = ops.back();
+        last.output.min = std::clamp(last.output.min, range.min, range.max);
+        last.output.max = std::clamp(last.output.max, range.min, range.max);
+        if (auto otherClamp = std::get_if<ColorClamp>(&last.operation)) {
+            otherClamp->m_minValue = std::clamp(otherClamp->m_minValue, range.min, range.max);
+            otherClamp->m_maxValue = std::clamp(otherClamp->m_maxValue, range.min, range.max);
+            ValueRange &beforeLastOutput = ops.size() > 1 ? ops[ops.size() - 2].output : inputRange;
+            beforeLastOutput.min = std::clamp(beforeLastOutput.min, otherClamp->m_minValue, otherClamp->m_maxValue);
+            beforeLastOutput.max = std::clamp(beforeLastOutput.max, otherClamp->m_minValue, otherClamp->m_maxValue);
+            last.input = beforeLastOutput;
+            return;
+        }
+    } else {
+        inputRange.min = std::clamp(inputRange.min, range.min, range.max);
+        inputRange.max = std::clamp(inputRange.max, range.min, range.max);
+    }
     ops.push_back(ColorOp{
         .input = currentOutputRange(),
         .inputSpace = currentOutputSpace(),
         .operation = ColorClamp(range),
         .output = ValueRange{
-            .min = std::clamp(range.min, currentOutputRange().min, currentOutputRange().max),
-            .max = std::clamp(range.max, currentOutputRange().min, currentOutputRange().max),
+            .min = std::clamp(currentOutputRange().min, range.min, range.max),
+            .max = std::clamp(currentOutputRange().max, range.min, range.max),
         },
         .outputSpace = currentOutputSpace(),
     });
