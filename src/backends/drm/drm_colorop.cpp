@@ -292,17 +292,6 @@ DrmLutColorOp16::DrmLutColorOp16(DrmAbstractColorOp *next, DrmProperty *prop, Dr
 
 std::optional<DrmAbstractColorOp::Priority> DrmLutColorOp16::colorOpPreference(const ColorOp::Operation &op)
 {
-    // TODO use the input scaling matrix to handle negative min luminance?
-    if (const auto tf = std::get_if<ColorTransferFunction>(&op)) {
-        if (tf->tf.minLuminance < 0) {
-            return std::nullopt;
-        }
-    }
-    if (const auto tf = std::get_if<InverseColorTransferFunction>(&op)) {
-        if (tf->tf.minLuminance < 0) {
-            return std::nullopt;
-        }
-    }
     if (std::holds_alternative<ColorTransferFunction>(op) || std::holds_alternative<InverseColorTransferFunction>(op)
         || std::holds_alternative<ColorTonemapper>(op) || std::holds_alternative<std::shared_ptr<ColorTransformation>>(op)) {
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
@@ -352,7 +341,25 @@ void DrmLutColorOp16::bypass(DrmAtomicCommit *commit)
 
 std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp16::inputScaling(const ColorOp &op) const
 {
-    if (op.input.max <= 1.001) {
+    if (op.input.min < -0.001) {
+        // needs an offset to be possible
+        QMatrix4x4 mat;
+        mat.translate(op.input.min, op.input.min, op.input.min);
+        mat.scale(op.input.max - op.input.min);
+        return Scaling{
+            .scaling = ColorMatrix(mat),
+            .inverse = ColorOp{
+                .input = op.input,
+                .inputSpace = op.inputSpace,
+                .operation = ColorMatrix(mat.inverted()),
+                .output = ValueRange{
+                    .min = 0,
+                    .max = 1,
+                },
+                .outputSpace = op.inputSpace,
+            },
+        };
+    } else if (op.input.max <= 1.001) {
         return std::nullopt;
     }
     return Scaling{
@@ -372,7 +379,25 @@ std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp16::inputScaling(const C
 
 std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp16::outputScaling(const ColorOp &op) const
 {
-    if (op.output.max <= 1.001) {
+    if (op.output.min < -0.001) {
+        // needs an offset to be possible
+        QMatrix4x4 mat;
+        mat.scale(1.0 / (op.output.max - op.output.min));
+        mat.translate(-op.output.min, -op.output.min, -op.output.min);
+        return Scaling{
+            .scaling = ColorMatrix(mat),
+            .inverse = ColorOp{
+                .input = ValueRange{
+                    .min = 0,
+                    .max = 1,
+                },
+                .inputSpace = op.inputSpace,
+                .operation = ColorMatrix(mat.inverted()),
+                .output = op.output,
+                .outputSpace = op.outputSpace,
+            },
+        };
+    } else if (op.output.max <= 1.001) {
         return std::nullopt;
     }
     return Scaling{
@@ -402,17 +427,6 @@ DrmLutColorOp32::DrmLutColorOp32(DrmAbstractColorOp *next, DrmProperty *prop, Dr
 
 std::optional<DrmAbstractColorOp::Priority> DrmLutColorOp32::colorOpPreference(const ColorOp::Operation &op)
 {
-    // TODO use the input scaling matrix to handle negative min luminance?
-    if (const auto tf = std::get_if<ColorTransferFunction>(&op)) {
-        if (tf->tf.minLuminance < 0) {
-            return std::nullopt;
-        }
-    }
-    if (const auto tf = std::get_if<InverseColorTransferFunction>(&op)) {
-        if (tf->tf.minLuminance < 0) {
-            return std::nullopt;
-        }
-    }
     if (std::holds_alternative<ColorTransferFunction>(op) || std::holds_alternative<InverseColorTransferFunction>(op)
         || std::holds_alternative<ColorTonemapper>(op) || std::holds_alternative<std::shared_ptr<ColorTransformation>>(op)) {
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
@@ -462,7 +476,25 @@ void DrmLutColorOp32::bypass(DrmAtomicCommit *commit)
 
 std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp32::inputScaling(const ColorOp &op) const
 {
-    if (op.input.max <= 1.001) {
+    if (op.input.min < -0.001) {
+        // needs an offset to be possible
+        QMatrix4x4 mat;
+        mat.translate(op.input.min, op.input.min, op.input.min);
+        mat.scale(op.input.max - op.input.min);
+        return Scaling{
+            .scaling = ColorMatrix(mat),
+            .inverse = ColorOp{
+                .input = op.input,
+                .inputSpace = op.inputSpace,
+                .operation = ColorMatrix(mat.inverted()),
+                .output = ValueRange{
+                    .min = 0,
+                    .max = 1,
+                },
+                .outputSpace = op.inputSpace,
+            },
+        };
+    } else if (op.input.max <= 1.001) {
         return std::nullopt;
     }
     return Scaling{
@@ -482,7 +514,25 @@ std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp32::inputScaling(const C
 
 std::optional<DrmAbstractColorOp::Scaling> DrmLutColorOp32::outputScaling(const ColorOp &op) const
 {
-    if (op.output.max <= 1.001) {
+    if (op.output.min < -0.001) {
+        // needs an offset to be possible
+        QMatrix4x4 mat;
+        mat.scale(1.0 / (op.output.max - op.output.min));
+        mat.translate(-op.output.min, -op.output.min, -op.output.min);
+        return Scaling{
+            .scaling = ColorMatrix(mat),
+            .inverse = ColorOp{
+                .input = ValueRange{
+                    .min = 0,
+                    .max = 1,
+                },
+                .inputSpace = op.inputSpace,
+                .operation = ColorMatrix(mat.inverted()),
+                .output = op.output,
+                .outputSpace = op.outputSpace,
+            },
+        };
+    } else if (op.output.max <= 1.001) {
         return std::nullopt;
     }
     return Scaling{
