@@ -284,7 +284,8 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
         return child->isVisible()
             && child->opacity() != 0.0
             && !child->boundingRect().isEmpty()
-            && painted_delegate->shouldRenderItem(child);
+            && painted_delegate->shouldRenderItem(child)
+            && painted_delegate->viewport().intersects(child->mapToView(child->boundingRect(), painted_delegate));
     });
     if (needsRendering) {
         return {};
