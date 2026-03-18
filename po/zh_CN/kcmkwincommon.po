@@ -101,4 +101,4 @@ msgstr "%1 不存在"
 #: genericscriptedconfig.cpp:116
 #, kde-format
 msgid "Error loading widget from %1: %2"
-msgstr ""
+msgstr "加载来自 %1 的小部件时出错：%2"
