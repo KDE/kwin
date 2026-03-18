@@ -443,7 +443,7 @@ void X11WindowedOutput::setPrimaryBuffer(GraphicsBuffer *buffer)
     m_pendingBuffer = importBuffer(buffer);
 }
 
-bool X11WindowedOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+bool X11WindowedOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame, ErrorLogging logging)
 {
     return true;
 }

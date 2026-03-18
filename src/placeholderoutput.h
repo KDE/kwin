@@ -19,7 +19,7 @@ public:
     PlaceholderOutput(const QSize &size, qreal scale = 1);
     ~PlaceholderOutput() override;
 
-    bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
+    bool testPresentation(const std::shared_ptr<OutputFrame> &frame, ErrorLogging logging) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
     RenderLoop *renderLoop() const override;
 

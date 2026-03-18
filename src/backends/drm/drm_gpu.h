@@ -92,6 +92,7 @@ public:
     bool forceLowBandwidthMode() const;
     bool asyncPageflipSupported() const;
     bool colorPipelineSupported() const;
+    bool commitFeedbackSupported() const;
     bool isI915() const;
     bool isNVidia() const;
     bool isAmdgpu() const;
@@ -117,7 +118,7 @@ public:
     bool updateOutputs();
     void removeOutputs();
 
-    DrmPipeline::Error testPendingConfiguration();
+    DrmCommit::Error testPendingConfiguration();
     void releaseUnusedBuffers();
     bool needsModeset() const;
     void maybeModeset(DrmPipeline *pipeline, const std::shared_ptr<OutputFrame> &frame);
@@ -150,8 +151,8 @@ private:
     void setRenderDevice(RenderDevice *device);
     void updateRenderDevice();
 
-    DrmPipeline::Error checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs, std::chrono::steady_clock::time_point deadline);
-    DrmPipeline::Error testPipelines();
+    DrmCommit::Error checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs, std::chrono::steady_clock::time_point deadline);
+    DrmCommit::Error testPipelines();
     QList<DrmObject *> unusedModesetObjects() const;
     void assignOutputLayers();
 
@@ -176,6 +177,7 @@ private:
     bool m_forceLowBandwidthMode = false;
     bool m_forceImplicitModifiers = false;
     bool m_sharpnessSupported = false;
+    bool m_commitFeedbackSupported = false;
     clockid_t m_presentationClock;
     RenderDevice *m_renderDevice = nullptr;
     std::unique_ptr<RenderDevice> m_softwareRenderDevice;

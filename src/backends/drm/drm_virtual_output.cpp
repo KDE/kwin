@@ -49,7 +49,7 @@ DrmVirtualOutput::~DrmVirtualOutput()
 {
 }
 
-bool DrmVirtualOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+bool DrmVirtualOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame, ErrorLogging logging)
 {
     return true;
 }

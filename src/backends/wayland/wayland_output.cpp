@@ -258,7 +258,7 @@ const wl_callback_listener WaylandOutput::s_frameCallbackListener{
     .done = &WaylandOutput::handleFrame,
 };
 
-bool WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+bool WaylandOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame, ErrorLogging logging)
 {
     auto cursorLayers = Compositor::self()->backend()->compatibleOutputLayers(this) | std::views::filter([](OutputLayer *layer) {
         return layer->type() == OutputLayerType::CursorOnly;

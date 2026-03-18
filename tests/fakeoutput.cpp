@@ -13,7 +13,7 @@ FakeBackendOutput::FakeBackendOutput()
     setMode(QSize(1024, 720), 60000);
 }
 
-bool FakeBackendOutput::testPresentation(const std::shared_ptr<KWin::OutputFrame> &frame)
+bool FakeBackendOutput::testPresentation(const std::shared_ptr<KWin::OutputFrame> &frame, ErrorLogging logging)
 {
     return false;
 }

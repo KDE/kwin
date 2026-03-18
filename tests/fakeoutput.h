@@ -17,7 +17,7 @@ class FakeBackendOutput : public KWin::BackendOutput
 public:
     FakeBackendOutput();
 
-    bool testPresentation(const std::shared_ptr<KWin::OutputFrame> &frame) override;
+    bool testPresentation(const std::shared_ptr<KWin::OutputFrame> &frame, ErrorLogging logging) override;
     bool present(const QList<KWin::OutputLayer *> &layersToUpdate, const std::shared_ptr<KWin::OutputFrame> &frame) override;
     KWin::RenderLoop *renderLoop() const override;
     void setName(const QString &name);

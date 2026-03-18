@@ -33,27 +33,28 @@ static DrmPipelineLayer *findLayer(const auto &layers, OutputLayerType type)
     return it == layers.end() ? nullptr : static_cast<DrmPipelineLayer *>(*it);
 }
 
-DrmPipeline::Error DrmPipeline::presentLegacy(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
+DrmCommit::Error DrmPipeline::presentLegacy(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
-    if (Error err = applyPendingChangesLegacy(); err != Error::None) {
+    if (auto err = applyPendingChangesLegacy(); err != DrmCommit::Error::None) {
         return err;
     }
     if (auto cursor = findLayer(layersToUpdate, OutputLayerType::CursorOnly); cursor && !setCursorLegacy(cursor)) {
-        return Error::InvalidArguments;
+        return DrmCommit::Error::InvalidArguments;
     }
     // always present on the crtc, for presentation feedback
     const auto primary = findLayer(m_pending.layers, OutputLayerType::Primary);
     const auto buffer = primary->currentBuffer();
     if (primary->sourceRect() != primary->targetRect() || primary->targetRect() != Rect(QPoint(0, 0), buffer->buffer()->size())) {
-        return Error::InvalidArguments;
+        return DrmCommit::Error::InvalidArguments;
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, frame);
-    if (!commit->doPageflip(m_pending.presentationMode)) {
+    auto err = commit->doPageflip(m_pending.presentationMode);
+    if (err != DrmCommit::Error::None) {
         qCDebug(KWIN_DRM) << "Page flip failed:" << strerror(errno);
-        return errnoToError();
+        return err;
     }
     m_commitThread->setPendingCommit(std::move(commit));
-    return Error::None;
+    return DrmCommit::Error::None;
 }
 
 void DrmPipeline::forceLegacyModeset()
@@ -64,34 +65,35 @@ void DrmPipeline::forceLegacyModeset()
     }
 }
 
-DrmPipeline::Error DrmPipeline::legacyModeset()
+DrmCommit::Error DrmPipeline::legacyModeset()
 {
     const auto primary = findLayer(m_pending.layers, OutputLayerType::Primary);
     const auto buffer = primary->currentBuffer();
     if (!buffer) {
-        return Error::InvalidArguments;
+        return DrmCommit::Error::InvalidArguments;
     }
     if (primary->sourceRect() != RectF(QPoint(0, 0), buffer->buffer()->size())) {
-        return Error::InvalidArguments;
+        return DrmCommit::Error::InvalidArguments;
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, nullptr);
-    if (!commit->doModeset(m_connector, m_pending.mode.get())) {
+    const auto err = commit->doModeset(m_connector, m_pending.mode.get());
+    if (err != DrmCommit::Error::None) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
-        return errnoToError();
+        return err;
     }
-    return Error::None;
+    return DrmCommit::Error::None;
 }
 
-DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects)
+DrmCommit::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects)
 {
-    Error err = Error::None;
+    DrmCommit::Error err = DrmCommit::Error::None;
     for (DrmPipeline *pipeline : pipelines) {
         err = pipeline->applyPendingChangesLegacy();
-        if (err != Error::None) {
+        if (err != DrmCommit::Error::None) {
             break;
         }
     }
-    if (err != Error::None) {
+    if (err != DrmCommit::Error::None) {
         // at least try to revert the config
         for (DrmPipeline *pipeline : pipelines) {
             pipeline->revertPendingChanges();
@@ -113,7 +115,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *>
     return err;
 }
 
-DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
+DrmCommit::Error DrmPipeline::applyPendingChangesLegacy()
 {
     if (!m_pending.active && m_pending.crtc) {
         drmModeSetCursor(gpu()->fd(), m_pending.crtc->id(), 0, 0, 0);
@@ -125,12 +127,12 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         if (colorTransforms) {
             // while it's technically possible to set CRTC color management properties,
             // it may result in glitches
-            return DrmPipeline::Error::InvalidArguments;
+            return DrmCommit::Error::InvalidArguments;
         }
         const bool shouldEnableVrr = m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync;
         if (m_pending.crtc->vrrEnabled.isValid() && !m_pending.crtc->vrrEnabled.setPropertyLegacy(shouldEnableVrr)) {
             qCWarning(KWIN_DRM) << "Setting vrr failed!" << strerror(errno);
-            return errnoToError();
+            return DrmCommit::errnoToError();
         }
         if (m_connector->broadcastRGB.isValid()) {
             m_connector->broadcastRGB.setEnumLegacy(DrmConnector::rgbRangeToBroadcastRgb(m_pending.rgbRange));
@@ -150,23 +152,24 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
             const auto blob = createHdrMetadata(m_pending.hdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22);
             m_connector->hdrMetadata.setPropertyLegacy(blob ? blob->blobId() : 0);
         } else if (m_pending.hdr) {
-            return DrmPipeline::Error::InvalidArguments;
+            return DrmCommit::Error::InvalidArguments;
         }
         if (m_connector->colorspace.isValid()) {
             m_connector->colorspace.setEnumLegacy(m_pending.wcg ? DrmConnector::Colorspace::BT2020_RGB : DrmConnector::Colorspace::Default);
         } else if (m_pending.wcg) {
-            return DrmPipeline::Error::InvalidArguments;
+            return DrmCommit::Error::InvalidArguments;
         }
         const auto currentModeContent = m_pending.crtc->queryCurrentMode();
         if (m_pending.crtc != m_next.crtc || *m_pending.mode != currentModeContent) {
             qCDebug(KWIN_DRM) << "Using legacy path to set mode" << m_pending.mode->nativeMode()->name;
-            Error err = legacyModeset();
-            if (err != Error::None) {
+            DrmCommit::Error err = legacyModeset();
+            if (err != DrmCommit::Error::None) {
                 return err;
             }
         }
         if (m_pending.crtcColorPipeline != m_currentLegacyGamma) {
-            if (Error err = setLegacyGamma(); err != Error::None) {
+            const auto err = setLegacyGamma();
+            if (err != DrmCommit::Error::None) {
                 return err;
             }
         }
@@ -180,12 +183,12 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
     }
     if (!m_connector->dpms.setPropertyLegacy(activePending() ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF)) {
         qCWarning(KWIN_DRM) << "Setting legacy dpms failed!" << strerror(errno);
-        return errnoToError();
+        return DrmCommit::errnoToError();
     }
-    return Error::None;
+    return DrmCommit::Error::None;
 }
 
-DrmPipeline::Error DrmPipeline::setLegacyGamma()
+DrmCommit::Error DrmPipeline::setLegacyGamma()
 {
     QList<uint16_t> red(m_pending.crtc->gammaRampSize());
     QList<uint16_t> green(m_pending.crtc->gammaRampSize());
@@ -202,7 +205,7 @@ DrmPipeline::Error DrmPipeline::setLegacyGamma()
                 output *= mult->factors;
             } else {
                 // not supported
-                return Error::InvalidArguments;
+                return DrmCommit::Error::InvalidArguments;
             }
         }
         red[i] = std::clamp(output.x(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max();
@@ -211,10 +214,10 @@ DrmPipeline::Error DrmPipeline::setLegacyGamma()
     }
     if (drmModeCrtcSetGamma(gpu()->fd(), m_pending.crtc->id(), m_pending.crtc->gammaRampSize(), red.data(), green.data(), blue.data()) != 0) {
         qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
-        return errnoToError();
+        return DrmCommit::errnoToError();
     }
     m_currentLegacyGamma = m_pending.crtcColorPipeline;
-    return DrmPipeline::Error::None;
+    return DrmCommit::Error::None;
 }
 
 bool DrmPipeline::setCursorLegacy(DrmPipelineLayer *layer)

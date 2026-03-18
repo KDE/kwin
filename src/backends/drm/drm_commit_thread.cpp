@@ -151,7 +151,7 @@ void DrmCommitThread::submit()
 {
     DrmAtomicCommit *commit = m_commits.front().get();
     const auto vrr = commit->isVrr();
-    const bool success = commit->commit();
+    const bool success = commit->commit() == DrmCommit::Error::None;
     if (success) {
         m_vrr = vrr.value_or(m_vrr);
         m_tearing = commit->isTearing();
@@ -186,7 +186,7 @@ void DrmCommitThread::submit()
             std::ranges::move(m_commits, std::back_inserter(m_commitsToDelete));
             m_commits.clear();
             m_commits.push_back(std::move(newCommit));
-            if (m_commits.front()->test()) {
+            if (m_commits.front()->test(BackendOutput::ErrorLogging::Full) == DrmCommit::Error::None) {
                 // presentation didn't fail after all, try again
                 submit();
                 return;
@@ -269,13 +269,13 @@ void DrmCommitThread::optimizeCommits(TimePoint pageflipTarget)
         if (front) {
             duplicate = std::make_unique<DrmAtomicCommit>(*front);
             duplicate->merge(commit.get());
-            if (!duplicate->test()) {
+            if (duplicate->test() != DrmCommit::Error::None) {
                 m_commitsToDelete.push_back(std::move(duplicate));
                 it++;
                 continue;
             }
         } else {
-            if (!commit->test()) {
+            if (commit->test() != DrmCommit::Error::None) {
                 it++;
                 continue;
             }
@@ -285,7 +285,7 @@ void DrmCommitThread::optimizeCommits(TimePoint pageflipTarget)
         for (const auto &otherCommit : m_commits) {
             if (otherCommit != commit) {
                 duplicate->merge(otherCommit.get());
-                if (!duplicate->test()) {
+                if (duplicate->test() != DrmCommit::Error::None) {
                     success = false;
                     break;
                 }

@@ -42,7 +42,7 @@ public:
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
 
-    bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
+    bool testPresentation(const std::shared_ptr<OutputFrame> &frame, ErrorLogging logging) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
     void repairPresentation() override;
     bool overlayLayersLikelyBroken() const override;

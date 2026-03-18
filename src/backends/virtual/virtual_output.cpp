@@ -49,7 +49,7 @@ RenderLoop *VirtualOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-bool VirtualOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+bool VirtualOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame, ErrorLogging logging)
 {
     return true;
 }

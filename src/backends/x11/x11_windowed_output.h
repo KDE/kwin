@@ -114,7 +114,7 @@ public:
     void handlePresentIdleNotify(xcb_present_idle_notify_event_t *event);
 
     void setPrimaryBuffer(GraphicsBuffer *buffer);
-    bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
+    bool testPresentation(const std::shared_ptr<OutputFrame> &frame, ErrorLogging logging) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
     void setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&layers);

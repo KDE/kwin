@@ -100,7 +100,7 @@ public:
 
     void lockPointer(KWayland::Client::Pointer *pointer, bool lock);
 
-    bool testPresentation(const std::shared_ptr<OutputFrame> &frame) override;
+    bool testPresentation(const std::shared_ptr<OutputFrame> &frame, ErrorLogging logging) override;
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
 
     void frameDiscarded();

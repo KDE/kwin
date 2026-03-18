@@ -402,17 +402,17 @@ OutputConfigurationError DrmBackend::applyOutputChanges(const OutputConfiguratio
             }
         }
         const auto error = gpu->testPendingConfiguration();
-        if (error != DrmPipeline::Error::None) {
+        if (error != DrmCommit::Error::None) {
             for (DrmOutput *output : std::as_const(toBeEnabled)) {
                 output->revertQueuedChanges();
             }
             for (DrmOutput *output : std::as_const(toBeDisabled)) {
                 output->revertQueuedChanges();
             }
-            if (error == DrmPipeline::Error::NotEnoughCrtcs) {
+            if (error == DrmCommit::Error::NotEnoughCrtcs) {
                 // TODO make this more specific, this is per GPU!
                 return OutputConfigurationError::TooManyEnabledOutputs;
-            } else if (error == DrmPipeline::Error::Timeout) {
+            } else if (error == DrmCommit::Error::Timeout) {
                 return OutputConfigurationError::Timeout;
             } else {
                 return OutputConfigurationError::Unknown;

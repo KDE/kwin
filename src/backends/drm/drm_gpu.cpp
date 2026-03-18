@@ -48,6 +48,9 @@
 #ifndef DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP
 #define DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP 0x15
 #endif
+#ifndef DRM_CAP_ATOMIC_ERROR_REPORTING
+#define DRM_CAP_ATOMIC_ERROR_REPORTING 0x16
+#endif
 #ifndef DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE
 #define DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE 7
 #endif
@@ -121,6 +124,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     }
 
     m_colorPipelineSupported = drmSetClientCap(fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
+    m_commitFeedbackSupported = drmGetCap(fd, DRM_CAP_ATOMIC_ERROR_REPORTING, &capability) == 0 && capability == 1;
 
     m_delayedModesetTimer.setInterval(0);
     m_delayedModesetTimer.setSingleShot(true);
@@ -359,10 +363,10 @@ void DrmGpu::removeOutputs()
     }
 }
 
-DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs, std::chrono::steady_clock::time_point deadline)
+DrmCommit::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors, const QList<DrmCrtc *> &crtcs, std::chrono::steady_clock::time_point deadline)
 {
     if (std::chrono::steady_clock::now() > deadline) {
-        return DrmPipeline::Error::Timeout;
+        return DrmCommit::Error::Timeout;
     }
     if (connectors.isEmpty()) {
         const auto result = testPipelines();
@@ -382,7 +386,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
     }
     if (crtcs.isEmpty()) {
         // we have no crtc left to drive this connector
-        return DrmPipeline::Error::NotEnoughCrtcs;
+        return DrmCommit::Error::NotEnoughCrtcs;
     }
     DrmCrtc *currentCrtc = nullptr;
     if (m_atomicModeSetting) {
@@ -396,8 +400,8 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(currentCrtc);
             pipeline->setCrtc(currentCrtc);
-            DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft, deadline);
-            if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending || err == DrmPipeline::Error::Timeout) {
+            DrmCommit::Error err = checkCrtcAssignment(connectors, crtcsLeft, deadline);
+            if (err == DrmCommit::Error::None || err == DrmCommit::Error::NoPermission || err == DrmCommit::Error::FramePending || err == DrmCommit::Error::Timeout) {
                 return err;
             }
         }
@@ -407,20 +411,20 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(crtc);
             pipeline->setCrtc(crtc);
-            DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcsLeft, deadline);
-            if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending || err == DrmPipeline::Error::Timeout) {
+            DrmCommit::Error err = checkCrtcAssignment(connectors, crtcsLeft, deadline);
+            if (err == DrmCommit::Error::None || err == DrmCommit::Error::NoPermission || err == DrmCommit::Error::FramePending || err == DrmCommit::Error::Timeout) {
                 return err;
             }
         }
     }
-    return DrmPipeline::Error::InvalidArguments;
+    return DrmCommit::Error::InvalidArguments;
 }
 
 static const std::chrono::milliseconds s_checkCrtcTimeout = environmentVariableIntValue("KWIN_DRM_PENDING_CONFIG_TIMEOUT").transform([](int value) {
     return std::chrono::milliseconds(value);
 }).value_or(3s);
 
-DrmPipeline::Error DrmGpu::testPendingConfiguration()
+DrmCommit::Error DrmGpu::testPendingConfiguration()
 {
     QList<DrmConnector *> connectors;
     QList<DrmCrtc *> crtcs;
@@ -449,7 +453,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
     }
     m_forceLowBandwidthMode = false;
     auto err = checkCrtcAssignment(connectors, crtcs, std::chrono::steady_clock::now() + s_checkCrtcTimeout);
-    if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
+    if (err == DrmCommit::Error::None || err == DrmCommit::Error::NoPermission || err == DrmCommit::Error::FramePending) {
         return err;
     }
     const bool hasPreferAccuracy = std::ranges::any_of(m_drmOutputs, [](const auto &output) {
@@ -488,11 +492,11 @@ void DrmGpu::releaseUnusedBuffers()
     }
 }
 
-DrmPipeline::Error DrmGpu::testPipelines()
+DrmCommit::Error DrmGpu::testPipelines()
 {
     if (m_pipelines.empty()) {
         // nothing to do
-        return DrmPipeline::Error::None;
+        return DrmCommit::Error::None;
     }
     assignOutputLayers();
     for (DrmPipeline *pipeline : m_pipelines) {
@@ -509,14 +513,15 @@ DrmPipeline::Error DrmGpu::testPipelines()
                 layer->setEnabled(true);
                 // ensure we have suitable buffers for the test
                 if (!layer->preparePresentationTest()) {
-                    return DrmPipeline::Error::InvalidArguments;
+                    return DrmCommit::Error::InvalidArguments;
                 }
             } else {
                 layer->setEnabled(false);
             }
         }
     }
-    return DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedModesetObjects());
+    return DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset,
+                                        unusedModesetObjects(), BackendOutput::ErrorLogging::Full);
 }
 
 DrmOutput *DrmGpu::findOutput(quint32 connector)
@@ -643,7 +648,7 @@ std::unique_ptr<DrmLease> DrmGpu::leaseOutputs(const QList<DrmOutput *> &outputs
         output->pipeline()->setEnable(true);
         output->pipeline()->setActive(false);
     }
-    if (testPendingConfiguration() != DrmPipeline::Error::None) {
+    if (testPendingConfiguration() != DrmCommit::Error::None) {
         return nullptr;
     }
 
@@ -715,6 +720,11 @@ bool DrmGpu::sharpnessSupported() const
 bool DrmGpu::colorPipelineSupported() const
 {
     return m_colorPipelineSupported;
+}
+
+bool DrmGpu::commitFeedbackSupported() const
+{
+    return m_commitFeedbackSupported;
 }
 
 bool DrmGpu::isI915() const
@@ -839,19 +849,19 @@ void DrmGpu::doModeset()
         return;
     }
     m_inModeset = true;
-    const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
+    const DrmCommit::Error err = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedModesetObjects());
     for (DrmPipeline *pipeline : std::as_const(pipelines)) {
         if (pipeline->modesetPresentPending()) {
             pipeline->resetModesetPresentPending();
         }
     }
     m_forceModeset = false;
-    if (err == DrmPipeline::Error::None) {
+    if (err == DrmCommit::Error::None) {
         for (const auto &[pipeline, frame] : m_pendingModesetFrames) {
             frame->presented(std::chrono::steady_clock::now().time_since_epoch(), PresentationMode::VSync);
         }
     } else {
-        if (err != DrmPipeline::Error::FramePending) {
+        if (err != DrmCommit::Error::FramePending) {
             QTimer::singleShot(0, m_platform, &DrmBackend::updateOutputs);
         }
     }

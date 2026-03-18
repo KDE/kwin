@@ -42,7 +42,7 @@ RenderLoop *PlaceholderOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-bool PlaceholderOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+bool PlaceholderOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame, ErrorLogging logging)
 {
     return false;
 }

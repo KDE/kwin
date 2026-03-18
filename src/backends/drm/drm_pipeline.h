@@ -21,6 +21,7 @@
 #include "core/output.h"
 #include "core/renderloop_p.h"
 #include "drm_blob.h"
+#include "drm_commit.h"
 #include "drm_connector.h"
 #include "drm_plane.h"
 
@@ -41,25 +42,12 @@ public:
     DrmPipeline(DrmConnector *conn);
     ~DrmPipeline();
 
-    enum class Error {
-        None,
-        OutofMemory,
-        InvalidArguments,
-        NoPermission,
-        FramePending,
-        TestBufferFailed,
-        NotEnoughCrtcs,
-        Timeout,
-        Unknown,
-    };
-    Q_ENUM(Error)
-
     /**
      * tests the pending commit first and commits it if the test passes
      * if the test fails, there is a guarantee for no lasting changes
      */
-    Error present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame);
-    Error testPresent(const std::shared_ptr<OutputFrame> &frame);
+    DrmCommit::Error present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame);
+    DrmCommit::Error testPresent(const std::shared_ptr<OutputFrame> &frame, BackendOutput::ErrorLogging logging);
     void maybeModeset(const std::shared_ptr<OutputFrame> &frame);
     void forceLegacyModeset();
 
@@ -115,29 +103,29 @@ public:
         CommitModeset,
     };
     Q_ENUM(CommitMode)
-    static Error commitPipelines(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects = {});
+    static DrmCommit::Error commitPipelines(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects = {}, BackendOutput::ErrorLogging logging = BackendOutput::ErrorLogging::Limited);
 
 private:
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
-    static Error errnoToError();
     std::shared_ptr<DrmBlob> createHdrMetadata(TransferFunction::Type transferFunction) const;
 
     // legacy only
-    Error presentLegacy(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame);
-    Error legacyModeset();
-    Error setLegacyGamma();
-    Error applyPendingChangesLegacy();
+    DrmCommit::Error presentLegacy(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame);
+    DrmCommit::Error legacyModeset();
+    DrmCommit::Error setLegacyGamma();
+    DrmCommit::Error applyPendingChangesLegacy();
     bool setCursorLegacy(DrmPipelineLayer *layer);
-    static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects);
+    static DrmCommit::Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects);
 
     // atomic modesetting only
-    Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode, const std::shared_ptr<OutputFrame> &frame);
+    DrmCommit::Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode, const std::shared_ptr<OutputFrame> &frame);
     bool prepareAtomicModeset(DrmAtomicCommit *commit);
-    Error prepareAtomicPresentation(DrmAtomicCommit *commit, const std::shared_ptr<OutputFrame> &frame);
-    Error prepareAtomicPlane(DrmAtomicCommit *commit, DrmPlane *plane, DrmPipelineLayer *layer, const std::shared_ptr<OutputFrame> &frame);
+    DrmCommit::Error prepareAtomicPresentation(DrmAtomicCommit *commit, const std::shared_ptr<OutputFrame> &frame);
+    DrmCommit::Error prepareAtomicPlane(DrmAtomicCommit *commit, DrmPlane *plane, DrmPipelineLayer *layer, const std::shared_ptr<OutputFrame> &frame);
     void prepareAtomicDisable(DrmAtomicCommit *commit);
-    static Error commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, CommitMode mode, const std::shared_ptr<OutputFrame> &frame, const QList<DrmObject *> &unusedObjects);
+    static DrmCommit::Error commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, CommitMode mode, const std::shared_ptr<OutputFrame> &frame,
+                                                  const QList<DrmObject *> &unusedObjects, BackendOutput::ErrorLogging logging);
 
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;

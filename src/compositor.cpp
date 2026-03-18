@@ -804,14 +804,14 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     // test and downgrade the configuration until the test is successful
-    bool result = output->testPresentation(frame);
+    bool result = output->testPresentation(frame, BackendOutput::ErrorLogging::Limited);
     if (!result) {
         bool primaryFailure = false;
         auto &primary = layers.front();
         if (primary.directScanout) {
             if (prepareRendering(primary.view, logicalOutput, output, primary.requiredAlphaBits)) {
                 primary.directScanout = false;
-                result = output->testPresentation(frame);
+                result = output->testPresentation(frame, BackendOutput::ErrorLogging::Limited);
             } else {
                 primaryFailure = true;
                 // this should be very rare, but could happen with GPU resets
@@ -832,7 +832,8 @@ void Compositor::composite(RenderLoop *renderLoop)
                         layer.view->layer()->setEnabled(false);
                         layer.view->layer()->scheduleRepaint(nullptr);
                     }
-                    result = output->testPresentation(frame);
+                    // only log warnings if falling back to primary-plane only isn't enough
+                    result = output->testPresentation(frame, priority ? BackendOutput::ErrorLogging::Full : BackendOutput::ErrorLogging::Limited);
                     if (result) {
                         break;
                     }

@@ -20,6 +20,24 @@
 #include <QThread>
 #include <set>
 
+#ifndef DRM_MODE_ATOMIC_FAILURE_STRING_LEN
+#define DRM_MODE_ATOMIC_FAILURE_STRING_LEN 128
+struct drm_mode_atomic_err_code
+{
+    __u64 failure_code;
+    __u64 failure_objs_ptr;
+    __u64 reserved;
+    __u32 count_objs;
+    char failure_string[DRM_MODE_ATOMIC_FAILURE_STRING_LEN];
+};
+enum drm_mode_atomic_failure_codes {
+    DRM_MODE_ATOMIC_INVALID_API_USAGE,
+    DRM_MODE_ATOMIC_CRTC_NEED_FULL_MODESET,
+    DRM_MODE_ATOMIC_NEED_FULL_MODESET,
+    DRM_MODE_ATOMIC_ASYNC_PROP_CHANGED,
+};
+#endif
+
 using namespace std::chrono_literals;
 
 namespace KWin
@@ -43,6 +61,22 @@ DrmGpu *DrmCommit::gpu() const
 void DrmCommit::setDefunct()
 {
     m_defunct = true;
+}
+
+DrmCommit::Error DrmCommit::errnoToError()
+{
+    switch (errno) {
+    case EINVAL:
+        return DrmCommit::Error::InvalidArguments;
+    case EBUSY:
+        return DrmCommit::Error::FramePending;
+    case ENOMEM:
+        return DrmCommit::Error::OutofMemory;
+    case EACCES:
+        return DrmCommit::Error::NoPermission;
+    default:
+        return DrmCommit::Error::Unknown;
+    }
 }
 
 DrmAtomicCommit::DrmAtomicCommit(DrmGpu *gpu)
@@ -102,36 +136,36 @@ void DrmAtomicCommit::setPresentationMode(PresentationMode mode)
     m_mode = mode;
 }
 
-bool DrmAtomicCommit::test()
+DrmCommit::Error DrmAtomicCommit::test(BackendOutput::ErrorLogging logging)
 {
     uint32_t flags = DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK;
     if (isTearing()) {
         flags |= DRM_MODE_PAGE_FLIP_ASYNC;
     }
-    return doCommit(flags);
+    return doCommit(flags, logging);
 }
 
-bool DrmAtomicCommit::testAllowModeset()
+DrmCommit::Error DrmAtomicCommit::testAllowModeset(BackendOutput::ErrorLogging logging)
 {
-    return doCommit(DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_ALLOW_MODESET);
+    return doCommit(DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_ALLOW_MODESET, logging);
 }
 
-bool DrmAtomicCommit::commit()
+DrmCommit::Error DrmAtomicCommit::commit(BackendOutput::ErrorLogging logging)
 {
     uint32_t flags = DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_PAGE_FLIP_EVENT;
     if (isTearing()) {
         flags |= DRM_MODE_PAGE_FLIP_ASYNC;
     }
-    return doCommit(flags);
+    return doCommit(flags, logging);
 }
 
-bool DrmAtomicCommit::commitModeset()
+DrmCommit::Error DrmAtomicCommit::commitModeset(BackendOutput::ErrorLogging logging)
 {
     m_modeset = true;
-    return doCommit(DRM_MODE_ATOMIC_ALLOW_MODESET);
+    return doCommit(DRM_MODE_ATOMIC_ALLOW_MODESET, logging);
 }
 
-bool DrmAtomicCommit::doCommit(uint32_t flags)
+DrmCommit::Error DrmAtomicCommit::doCommit(uint32_t flags, BackendOutput::ErrorLogging logging)
 {
     std::vector<uint32_t> objects;
     std::vector<uint32_t> propertyCounts;
@@ -163,7 +197,49 @@ bool DrmAtomicCommit::doCommit(uint32_t flags)
         .reserved = 0,
         .user_data = reinterpret_cast<uint64_t>(this),
     };
-    return drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
+    drm_mode_atomic_err_code error{};
+    if (m_gpu->commitFeedbackSupported()) {
+        commitData.reserved = reinterpret_cast<uint64_t>(&error);
+    }
+    const bool ret = drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
+    if (ret) {
+        return Error::None;
+    } else {
+        // FIXME this enum is missing a catch-all case!
+        Error err = Error::InvalidArguments;
+        const char *description = "";
+        switch (error.failure_code) {
+        case DRM_MODE_ATOMIC_INVALID_API_USAGE:
+            // always log this
+            logging = BackendOutput::ErrorLogging::Full;
+            err = Error::InvalidApiUsage;
+            description = "invalid API usage";
+            break;
+        case DRM_MODE_ATOMIC_CRTC_NEED_FULL_MODESET:
+        case DRM_MODE_ATOMIC_NEED_FULL_MODESET:
+            err = DrmCommit::Error::NeedsModeset;
+            description = "required modeset";
+            break;
+        case DRM_MODE_ATOMIC_ASYNC_PROP_CHANGED:
+            err = DrmCommit::Error::AsyncFlipPropChanged;
+            description = "disallowed properties in async flip";
+            break;
+        default:
+            err = errnoToError();
+            description = strerror(errno);
+            break;
+        }
+        if (logging == BackendOutput::ErrorLogging::Full) {
+            qCWarning(KWIN_DRM, "Atomic %s%s%s%scommit failed because of %s: %s",
+                      flags & DRM_MODE_ATOMIC_NONBLOCK ? "non-blocking " : "",
+                      flags & DRM_MODE_PAGE_FLIP_ASYNC ? "async " : "",
+                      flags & DRM_MODE_ATOMIC_ALLOW_MODESET ? "modeset " : "",
+                      flags & DRM_MODE_ATOMIC_TEST_ONLY ? "test " : "",
+                      description,
+                      error.failure_string);
+        }
+        return err;
+    }
 }
 
 void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
@@ -285,25 +361,31 @@ DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<Dr
 {
 }
 
-bool DrmLegacyCommit::doModeset(DrmConnector *connector, DrmConnectorMode *mode)
+DrmCommit::Error DrmLegacyCommit::doModeset(DrmConnector *connector, DrmConnectorMode *mode)
 {
     uint32_t connectorId = connector->id();
     if (drmModeSetCrtc(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), 0, 0, &connectorId, 1, mode->nativeMode()) == 0) {
         m_crtc->setCurrent(m_buffer);
-        return true;
+        return Error::None;
     } else {
-        return false;
+        qCWarning(KWIN_DRM, "Legacy modeset failed: %s", strerror(errno));
+        return errnoToError();
     }
 }
 
-bool DrmLegacyCommit::doPageflip(PresentationMode mode)
+DrmCommit::Error DrmLegacyCommit::doPageflip(PresentationMode mode)
 {
     m_mode = mode;
     uint32_t flags = DRM_MODE_PAGE_FLIP_EVENT;
     if (mode == PresentationMode::Async || mode == PresentationMode::AdaptiveAsync) {
         flags |= DRM_MODE_PAGE_FLIP_ASYNC;
     }
-    return drmModePageFlip(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), flags, this) == 0;
+    if (drmModePageFlip(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), flags, this) == 0) {
+        return Error::None;
+    } else {
+        qCWarning(KWIN_DRM, "Legacy pageflip failed: %s", strerror(errno));
+        return errnoToError();
+    }
 }
 
 void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp)

@@ -272,7 +272,7 @@ void DrmOutput::updateInformation()
     setInformation(nextInfo);
 }
 
-bool DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
+bool DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame, ErrorLogging logging)
 {
     m_desiredPresentationMode = frame->presentationMode();
     const auto layers = m_pipeline->layers();
@@ -298,18 +298,18 @@ bool DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
             m_pipeline->setPresentationMode(PresentationMode::VSync);
         }
     }
-    DrmPipeline::Error err = m_pipeline->testPresent(frame);
-    if (err != DrmPipeline::Error::None && frame->presentationMode() == PresentationMode::AdaptiveAsync) {
+    DrmCommit::Error err = m_pipeline->testPresent(frame, logging);
+    if (err != DrmCommit::Error::None && frame->presentationMode() == PresentationMode::AdaptiveAsync) {
         // tearing can fail in various circumstances, but vrr shouldn't
         m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
-        err = m_pipeline->testPresent(frame);
+        err = m_pipeline->testPresent(frame, logging);
     }
-    if (err != DrmPipeline::Error::None && frame->presentationMode() != PresentationMode::VSync) {
+    if (err != DrmCommit::Error::None && frame->presentationMode() != PresentationMode::VSync) {
         // retry with the most basic presentation mode
         m_pipeline->setPresentationMode(PresentationMode::VSync);
-        err = m_pipeline->testPresent(frame);
+        err = m_pipeline->testPresent(frame, logging);
     }
-    return err == DrmPipeline::Error::None;
+    return err == DrmCommit::Error::None;
 }
 
 bool DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
@@ -324,7 +324,7 @@ bool DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::s
         success = true;
     } else {
         // the presentation mode of the pipeline is already set in testPresentation
-        success = m_pipeline->present(layersToUpdate, frame) == DrmPipeline::Error::None;
+        success = m_pipeline->present(layersToUpdate, frame) == DrmCommit::Error::None;
     }
     m_renderLoop->setPresentationMode(m_pipeline->presentationMode());
     if (!success) {
@@ -719,7 +719,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         }
     }
     m_pipeline->setCrtcColorPipeline(colorPipeline);
-    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
+    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmCommit::Error::None) {
         m_pipeline->applyPendingChanges();
         next.layerBlendingColor = next.blendingColor;
         m_needsShadowBuffer = false;
@@ -732,7 +732,7 @@ void DrmOutput::tryKmsColorOffloading(State &next)
         ColorPipeline simplerPipeline(ValueRange{0, 1}, ColorspaceType::NonLinearRGB);
         simplerPipeline.addMatrix(next.blendingColor->toOther(*encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation), colorPipeline.currentOutputRange(), ColorspaceType::NonLinearRGB);
         m_pipeline->setCrtcColorPipeline(simplerPipeline);
-        if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
+        if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmCommit::Error::None) {
             m_pipeline->applyPendingChanges();
             next.layerBlendingColor = next.blendingColor;
             m_needsShadowBuffer = false;

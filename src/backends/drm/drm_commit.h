@@ -16,6 +16,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "core/backendoutput.h"
 #include "core/renderloop.h"
 #include "drm_pointer.h"
 #include "drm_property.h"
@@ -39,9 +40,27 @@ class DrmCommit
 public:
     virtual ~DrmCommit();
 
+    enum class Error {
+        None,
+        OutofMemory,
+        InvalidArguments,
+        NoPermission,
+        FramePending,
+        TestBufferFailed,
+        NotEnoughCrtcs,
+        Timeout,
+        Unknown,
+        NeedsModeset,
+        InvalidApiUsage,
+        AsyncFlipPropChanged,
+    };
+    Q_ENUM(Error)
+
     DrmGpu *gpu() const;
     virtual void pageFlipped(std::chrono::nanoseconds timestamp) = 0;
     void setDefunct();
+
+    static Error errnoToError();
 
 protected:
     DrmCommit(DrmGpu *gpu);
@@ -68,10 +87,10 @@ public:
     void setVrr(DrmCrtc *crtc, bool vrr);
     void setPresentationMode(PresentationMode mode);
 
-    bool test();
-    bool testAllowModeset();
-    bool commit();
-    bool commitModeset();
+    Error test(BackendOutput::ErrorLogging logging = BackendOutput::ErrorLogging::Limited);
+    Error testAllowModeset(BackendOutput::ErrorLogging logging = BackendOutput::ErrorLogging::Limited);
+    Error commit(BackendOutput::ErrorLogging logging = BackendOutput::ErrorLogging::Limited);
+    Error commitModeset(BackendOutput::ErrorLogging logging = BackendOutput::ErrorLogging::Limited);
 
     void pageFlipped(std::chrono::nanoseconds timestamp) override;
 
@@ -90,7 +109,7 @@ public:
     bool isTearing() const;
 
 private:
-    bool doCommit(uint32_t flags);
+    Error doCommit(uint32_t flags, BackendOutput::ErrorLogging logging);
 
     const QList<DrmPipeline *> m_pipelines;
     std::optional<std::chrono::steady_clock::time_point> m_targetPageflipTime;
@@ -110,8 +129,8 @@ class DrmLegacyCommit : public DrmCommit
 public:
     DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame);
 
-    bool doModeset(DrmConnector *connector, DrmConnectorMode *mode);
-    bool doPageflip(PresentationMode mode);
+    Error doModeset(DrmConnector *connector, DrmConnectorMode *mode);
+    Error doPageflip(PresentationMode mode);
     void pageFlipped(std::chrono::nanoseconds timestamp) override;
 
 private:
