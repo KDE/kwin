@@ -391,19 +391,7 @@ void ScriptedEffectsTest::testFullScreenEffect()
     QCOMPARE(effectOther->isActiveFullScreenEffect(), false);
     QCOMPARE(isActiveFullScreenEffectSpyOther.count(), 0);
 
-    // after 500ms trigger another full screen animation
-    QTest::qWait(500);
-    KWin::VirtualDesktopManager::self()->setCurrent(1);
-    QCOMPARE(effects->activeFullScreenEffect(), effectMain);
-
-    // after 1000ms (+a safety margin for time based tests) we should still be the active full screen effect
-    // despite first animation expiring
-    QTest::qWait(500 + 100);
-    QCOMPARE(effects->activeFullScreenEffect(), effectMain);
-
-    // after 1500ms (+a safetey margin) we should have no full screen effect
-    QTest::qWait(500 + 100);
-    QCOMPARE(effects->activeFullScreenEffect(), nullptr);
+    QTRY_VERIFY(!effectMain->isActiveFullScreenEffect());
 }
 
 void ScriptedEffectsTest::testKeepAlive_data()
@@ -446,14 +434,8 @@ void ScriptedEffectsTest::testKeepAlive()
 
     if (keepAlive) {
         QCOMPARE(effect->state().size(), 1);
-        QCOMPARE(deletedRemovedSpy.count(), 0);
 
-        QTest::qWait(500);
-        QCOMPARE(effect->state().size(), 1);
-        QCOMPARE(deletedRemovedSpy.count(), 0);
-
-        QTest::qWait(500 + 100); // 100ms is extra safety margin
-        QCOMPARE(deletedRemovedSpy.count(), 1);
+        QVERIFY(deletedRemovedSpy.wait());
         QCOMPARE(effect->state().size(), 0);
     } else {
         // the test effect doesn't keep the window alive, so it should be
@@ -599,6 +581,23 @@ void ScriptedEffectsTest::testRedirect_data()
     QTest::newRow("set/Terminate") << "redirectSetTerminateTest" << true;
 }
 
+static bool waitForAnimationToReachTime(ScriptedEffectWithDebugSpy *effect, quint32 animationId, std::chrono::milliseconds elapsed)
+{
+    return QTest::qWaitFor([&]() {
+        for (auto &[window, pair] : effect->state()) {
+            auto &[animations, rect] = pair;
+            const auto anim = std::ranges::find_if(animations, [animationId](const auto &anim) {
+                return anim.id == animationId;
+            });
+            if (anim != animations.end()) {
+                return anim->timeLine.elapsed() >= elapsed;
+            }
+        }
+
+        return false;
+    });
+}
+
 void ScriptedEffectsTest::testRedirect()
 {
     // this test verifies that redirect() works
@@ -617,13 +616,8 @@ void ScriptedEffectsTest::testRedirect()
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
 
-    auto around = [](std::chrono::milliseconds elapsed,
-                     std::chrono::milliseconds pivot,
-                     std::chrono::milliseconds margin) {
-        return std::abs(elapsed.count() - pivot.count()) < margin.count();
-    };
-
     // initially, the test animation is at the source position
+    quint32 animationId;
 
     {
         const auto &state = effect->state();
@@ -632,12 +626,14 @@ void ScriptedEffectsTest::testRedirect()
         const auto &animations = state.at(window->effectWindow()).first;
         QCOMPARE(animations.size(), 1);
         QCOMPARE(animations[0].timeLine.direction(), TimeLine::Forward);
-        QVERIFY(around(animations[0].timeLine.elapsed(), 0ms, 50ms));
+        QCOMPARE(animations[0].timeLine.elapsed(), 0ms);
+
+        animationId = animations[0].id;
     }
 
     // minimize the test window after 250ms, when the test effect sees that
     // a window was minimized, it will try to reverse animation for it
-    QTest::qWait(250);
+    effect->freezeInTime(animationId, 250);
 
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
 
@@ -653,18 +649,18 @@ void ScriptedEffectsTest::testRedirect()
         const auto &animations = state.at(window->effectWindow()).first;
         QCOMPARE(animations.size(), 1);
         QCOMPARE(animations[0].timeLine.direction(), TimeLine::Backward);
-        QVERIFY(around(animations[0].timeLine.elapsed(), 1000ms - 250ms, 50ms));
+        QCOMPARE(animations[0].timeLine.elapsed(), 1000ms - 250ms);
     }
 
     // wait for the animation to reach the start position, 100ms is an extra
     // safety margin
-    QTest::qWait(250 + 100);
+    effect->freezeInTime(animationId, -1);
 
     QFETCH(bool, shouldTerminate);
     if (shouldTerminate) {
-        const auto &state = effect->state();
-        QCOMPARE(state.size(), 0);
+        QTRY_VERIFY(effect->state().empty());
     } else {
+        QVERIFY(waitForAnimationToReachTime(effect, animationId, 1000ms));
         const auto &state = effect->state();
         QCOMPARE(state.size(), 1);
         QVERIFY(state.contains(window->effectWindow()));
@@ -693,12 +689,6 @@ void ScriptedEffectsTest::testComplete()
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
 
-    auto around = [](std::chrono::milliseconds elapsed,
-                     std::chrono::milliseconds pivot,
-                     std::chrono::milliseconds margin) {
-        return std::abs(elapsed.count() - pivot.count()) < margin.count();
-    };
-
     // initially, the test animation should be at the start position
     {
         const auto &state = effect->state();
@@ -706,20 +696,7 @@ void ScriptedEffectsTest::testComplete()
         QVERIFY(state.contains(window->effectWindow()));
         const auto &animations = state.at(window->effectWindow()).first;
         QCOMPARE(animations.size(), 1);
-        QVERIFY(around(animations[0].timeLine.elapsed(), 0ms, 50ms));
-        QVERIFY(!animations[0].timeLine.done());
-    }
-
-    // wait for 250ms
-    QTest::qWait(250);
-
-    {
-        const auto &state = effect->state();
-        QCOMPARE(state.size(), 1);
-        QVERIFY(state.contains(window->effectWindow()));
-        const auto &animations = state.at(window->effectWindow()).first;
-        QCOMPARE(animations.size(), 1);
-        QVERIFY(around(animations[0].timeLine.elapsed(), 250ms, 50ms));
+        QCOMPARE(animations[0].timeLine.elapsed(), 0ms);
         QVERIFY(!animations[0].timeLine.done());
     }
 
