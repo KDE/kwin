@@ -20,6 +20,7 @@ namespace KWin
 
 class BlurManagerInterface;
 class ContrastManagerInterface;
+class BackgroundEffectItem;
 
 struct BlurRenderData
 {
@@ -43,7 +44,7 @@ struct BlurEffectData
      */
     std::unordered_map<RenderView *, BlurRenderData> render;
 
-    ItemEffect windowEffect;
+    std::unique_ptr<BackgroundEffectItem> blurItem;
 
     /**
      * Color transformation matrix (contrast, and saturation).
@@ -64,7 +65,6 @@ public:
 
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data) override;
 
     bool provides(Feature feature) override;
@@ -151,8 +151,6 @@ private:
 #if KWIN_BUILD_X11
     long net_wm_blur_region = 0;
 #endif
-    Region m_paintedDeviceArea; // keeps track of all painted areas (from bottom to top)
-    Region m_currentDeviceBlur; // keeps track of currently blurred area of the windows (from bottom to top)
     RenderView *m_currentView = nullptr;
 
     QMatrix4x4 m_colorMatrix;
