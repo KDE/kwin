@@ -329,19 +329,7 @@ public:
      */
     int mask;
     /*!
-     * \variable KWin::WindowPrePaintData::devicePaint
-     * Region that will be painted, in device coordinates.
-     */
-    Region devicePaint;
-    /*!
-     * \variable KWin::WindowPrePaintData::deviceOpaque
-     * Region indicating the opaque content. It can be used to avoid painting
-     * windows occluded by the opaque region.
-     */
-    Region deviceOpaque;
-    /*!
      * Simple helper that sets data to say the window will be painted as non-opaque.
-     * Takes also care of changing the regions.
      */
     void setTranslucent();
     /*!

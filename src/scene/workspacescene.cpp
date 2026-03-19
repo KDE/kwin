@@ -608,7 +608,7 @@ void WorkspaceScene::preparePaintGenericScreen()
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
             .deviceRegion = Region::infinite(),
-            .deviceOpaque = data.deviceOpaque,
+            .deviceOpaque = Region{},
             .mask = data.mask,
         });
     }
@@ -638,16 +638,16 @@ void WorkspaceScene::preparePaintSimpleScreen()
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
 
-        // Clip out the decoration for opaque windows; the decoration is drawn in the second pass.
-        if (window->opacity() == 1.0) {
-            addOpaqueRegionRecursive(painted_delegate, windowItem, std::nullopt, data.deviceOpaque);
-        }
-
         effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data);
+
+        Region opaque;
+        if (window->opacity() == 1.0 && !(data.mask & PAINT_WINDOW_TRANSLUCENT)) {
+            addOpaqueRegionRecursive(painted_delegate, windowItem, std::nullopt, opaque);
+        }
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
             .deviceRegion = Region{},
-            .deviceOpaque = data.deviceOpaque,
+            .deviceOpaque = std::move(opaque),
             .mask = data.mask,
         });
     }
