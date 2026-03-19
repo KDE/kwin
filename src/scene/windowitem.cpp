@@ -93,6 +93,11 @@ EffectWindow *WindowItem::effectWindow() const
     return m_effectWindow.get();
 }
 
+Item *WindowItem::windowContainer() const
+{
+    return m_windowContainer.get();
+}
+
 void WindowItem::refVisible(int reason)
 {
     if (reason & PAINT_DISABLED_BY_HIDDEN) {

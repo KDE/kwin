@@ -65,6 +65,7 @@
 #include "effect/effecthandler.h"
 #include "opengl/eglbackend.h"
 #include "opengl/eglcontext.h"
+#include "scene/backgroundeffectitem.h"
 #include "scene/decorationitem.h"
 #include "scene/dndiconitem.h"
 #include "scene/itemrenderer.h"
@@ -568,15 +569,30 @@ static void resetRepaintsHelper(Item *item, SceneView *delegate)
     }
 }
 
-static void accumulateRepaints(Item *item, SceneView *delegate, Region *repaints)
+static void accumulateRepaints(Item *item, SceneView *view, Region *windowRepaints, Region *previousRepaints, Region *forceTranslucent)
 {
-    if (delegate->shouldRenderItem(item)) {
-        *repaints += item->takeDeviceRepaints(delegate);
+    const auto childItems = item->sortedChildItems();
+    auto childIt = childItems.begin();
+    for (; childIt != childItems.end() && (*childIt)->z() < 0; childIt++) {
+        accumulateRepaints(*childIt, view, windowRepaints, previousRepaints, forceTranslucent);
+    }
+    if (auto background = qobject_cast<BackgroundEffectItem *>(item)) {
+        const Rect viewRect = view->mapToDeviceCoordinates(item->mapToView(item->rect(), view)).rounded();
+        if (previousRepaints->intersects(viewRect)) {
+            *windowRepaints |= viewRect;
+            *previousRepaints |= viewRect;
+            if (uint32_t pixels = background->pixelsToExpandRepaintsBelowOpaqueRegions()) {
+                *forceTranslucent |= previousRepaints->grownBy(QMargins(pixels, pixels, pixels, pixels)) & viewRect;
+            }
+        }
+    } else if (view->shouldRenderItem(item)) {
+        const Region repaints = item->takeDeviceRepaints(view);
+        *windowRepaints |= repaints;
+        *previousRepaints |= repaints;
     }
 
-    const auto childItems = item->childItems();
-    for (Item *childItem : childItems) {
-        accumulateRepaints(childItem, delegate, repaints);
+    for (; childIt != childItems.end(); childIt++) {
+        accumulateRepaints(*childIt, view, windowRepaints, previousRepaints, forceTranslucent);
     }
 }
 
@@ -587,7 +603,6 @@ void WorkspaceScene::preparePaintGenericScreen()
 
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
-        data.devicePaint = Region::infinite(); // no clipping, so doesn't really matter
 
         effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data);
         m_paintContext.phase2Data.append(Phase2Data{
@@ -631,7 +646,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
         effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data);
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
-            .deviceRegion = data.devicePaint & painted_delegate->deviceRect(),
+            .deviceRegion = Region{},
             .deviceOpaque = data.deviceOpaque,
             .mask = data.mask,
         });
@@ -645,21 +660,27 @@ Region WorkspaceScene::collectDamage()
         m_paintContext.deviceDamage = painted_delegate->deviceRect();
         return m_paintContext.deviceDamage;
     } else {
-        // Perform an occlusion cull pass, remove surface damage occluded by opaque windows.
+        // collect all damage, from bottom to top
+        Region previousRepaints;
+        Region forceTranslucent;
+        for (auto &data : m_paintContext.phase2Data) {
+            data.deviceOpaque -= forceTranslucent;
+            accumulateRepaints(data.item, painted_delegate, &data.deviceRegion, &previousRepaints, &forceTranslucent);
+        }
+        accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.deviceDamage, &previousRepaints, &forceTranslucent);
+
+        // Perform an occlusion cull pass, to remove surface damage occluded by opaque windows.
         Region opaque;
-        for (int i = m_paintContext.phase2Data.size() - 1; i >= 0; --i) {
-            auto &paintData = m_paintContext.phase2Data[i];
-            accumulateRepaints(paintData.item, painted_delegate, &paintData.deviceRegion);
-            m_paintContext.deviceDamage += paintData.deviceRegion - opaque;
-            // TODO change effects API, so occlusion culling is per item, rather than per window
+        for (auto &paintData : m_paintContext.phase2Data | std::views::reverse) {
+            m_paintContext.deviceDamage |= paintData.deviceRegion - opaque;
+
+            // TODO make occlusion culling per item, rather than per window
             const bool canCover = painted_delegate->shouldRenderItem(paintData.item->surfaceItem())
                 || painted_delegate->shouldRenderHole(paintData.item->surfaceItem());
             if (!(paintData.mask & (PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED)) && canCover) {
                 opaque += paintData.deviceOpaque;
             }
         }
-
-        accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.deviceDamage);
 
         return m_paintContext.deviceDamage & painted_delegate->deviceRect();
     }

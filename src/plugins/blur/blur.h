@@ -18,6 +18,8 @@
 namespace KWin
 {
 
+class BackgroundEffectItem;
+
 struct BlurRenderData
 {
     /// Temporary render targets needed for the Dual Kawase algorithm, the first texture
@@ -40,7 +42,7 @@ struct BlurEffectData
      */
     std::unordered_map<RenderView *, BlurRenderData> render;
 
-    ItemEffect windowEffect;
+    std::unique_ptr<BackgroundEffectItem> blurItem;
 };
 
 class BlurEffect : public KWin::Effect
@@ -56,7 +58,6 @@ public:
 
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data) override;
-    void prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data) override;
     void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data) override;
 
     bool provides(Feature feature) override;
@@ -143,8 +144,6 @@ private:
 #if KWIN_BUILD_X11
     long net_wm_blur_region = 0;
 #endif
-    Region m_paintedDeviceArea; // keeps track of all painted areas (from bottom to top)
-    Region m_currentDeviceBlur; // keeps track of currently blurred area of the windows (from bottom to top)
     RenderView *m_currentView = nullptr;
 
     QMatrix4x4 m_colorMatrix;
