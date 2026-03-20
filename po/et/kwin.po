@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-14 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -1999,14 +1999,16 @@ msgstr[1] " msek"
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
-msgid "Hide cursor on inactivity:"
+msgid "Hide pointer on inactivity:"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, kde-format
-msgid "Hide cursor on typing"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "A mouse pointer motion event"
+#| msgid "Pointer Motion"
+msgid "Hide pointer on typing"
+msgstr "Kursori liikumine"
 
 #: plugins/invert/invert.cpp:44
 #, kde-format

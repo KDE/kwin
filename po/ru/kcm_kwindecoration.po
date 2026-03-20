@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-13 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2026-01-28 16:49+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -147,8 +147,11 @@ msgid ""
 msgstr "Оформление окон «%1» уже используется в Plasma."
 
 #: kwin-applywindowdecoration.cpp:101
-#, kde-format
-msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+#, fuzzy, kde-format
+#| msgid ""
+#| "Successfully applied the cursor theme %1 to your current Plasma session"
+msgid ""
+"Successfully applied the pointer theme %1 to your current Plasma session"
 msgstr "Набор курсоров %1 успешно задан для использования в Plasma"
 
 #: kwin-applywindowdecoration.cpp:105

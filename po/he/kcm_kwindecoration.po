@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-13 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2026-01-28 08:15+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -142,8 +142,11 @@ msgid ""
 msgstr "ערכת העיצוב המבוקשת „%1” כבר מוגדרת כערכת עיצוב העיטורים של החלונות."
 
 #: kwin-applywindowdecoration.cpp:101
-#, kde-format
-msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+#, fuzzy, kde-format
+#| msgid ""
+#| "Successfully applied the cursor theme %1 to your current Plasma session"
+msgid ""
+"Successfully applied the pointer theme %1 to your current Plasma session"
 msgstr "ערכת עיצוב הסמנים %1 הוחלה בהצלחה על הפעלת הפלזמה הנוכחית שלך"
 
 #: kwin-applywindowdecoration.cpp:105

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-14 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2026-03-02 12:42+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -1919,14 +1919,16 @@ msgstr[1] "%1 secundas"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, kde-format
-msgid "Hide cursor on inactivity:"
+#, fuzzy, kde-format
+#| msgid "Hide cursor on inactivity:"
+msgid "Hide pointer on inactivity:"
 msgstr "Cela cursor sur inactivitate:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, kde-format
-msgid "Hide cursor on typing"
+#, fuzzy, kde-format
+#| msgid "Hide cursor on typing"
+msgid "Hide pointer on typing"
 msgstr "Cela cursor sur typar"
 
 #: plugins/invert/invert.cpp:44

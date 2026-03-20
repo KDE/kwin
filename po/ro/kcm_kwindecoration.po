@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-13 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2026-02-08 17:38+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -138,8 +138,11 @@ msgstr ""
 "ferestrelor."
 
 #: kwin-applywindowdecoration.cpp:101
-#, kde-format
-msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+#, fuzzy, kde-format
+#| msgid ""
+#| "Successfully applied the cursor theme %1 to your current Plasma session"
+msgid ""
+"Successfully applied the pointer theme %1 to your current Plasma session"
 msgstr ""
 "Tematica pentru cursor %1 a fost aplicată cu succes la sesiunea Plasma "
 "actuală"

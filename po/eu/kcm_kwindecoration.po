@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-13 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2026-02-19 21:52+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -141,8 +141,11 @@ msgstr ""
 "Eskatutako «%1» gaia dagoeneko leihoak apaintzeko gai gisa ezarria dago."
 
 #: kwin-applywindowdecoration.cpp:101
-#, kde-format
-msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+#, fuzzy, kde-format
+#| msgid ""
+#| "Successfully applied the cursor theme %1 to your current Plasma session"
+msgid ""
+"Successfully applied the pointer theme %1 to your current Plasma session"
 msgstr "%1 kurtsore-gaia ondo aplikatu zaio zure uneko Plasma saioari"
 
 #: kwin-applywindowdecoration.cpp:105

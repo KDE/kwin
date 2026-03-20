@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-13 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2025-06-19 10:03+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.gal>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -142,8 +142,11 @@ msgstr ""
 "xanelas."
 
 #: kwin-applywindowdecoration.cpp:101
-#, kde-format
-msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+#, fuzzy, kde-format
+#| msgid ""
+#| "Successfully applied the cursor theme %1 to your current Plasma session"
+msgid ""
+"Successfully applied the pointer theme %1 to your current Plasma session"
 msgstr "Aplicouse o tema de cursores %1 á sesión actual de Plasma."
 
 #: kwin-applywindowdecoration.cpp:105

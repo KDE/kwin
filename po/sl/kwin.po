@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1732221 2026-03-14 01:28:00Z scripty $
+# $Id: kwin.po 1732682 2026-03-20 01:27:30Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-14 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2026-02-28 08:58+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1927,14 +1927,16 @@ msgstr[3] "%1 sekunde"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, kde-format
-msgid "Hide cursor on inactivity:"
+#, fuzzy, kde-format
+#| msgid "Hide cursor on inactivity:"
+msgid "Hide pointer on inactivity:"
 msgstr "Skrij kazalko pri neaktivnosti:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, kde-format
-msgid "Hide cursor on typing"
+#, fuzzy, kde-format
+#| msgid "Hide cursor on typing"
+msgid "Hide pointer on typing"
 msgstr "Skrij kazalko pri tipkanju"
 
 #: plugins/invert/invert.cpp:44

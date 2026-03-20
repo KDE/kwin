@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-13 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2024-02-18 17:42+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -127,8 +127,11 @@ msgid ""
 msgstr "கோரப்பட்ட \"%1\" ஏற்கனவே விளிம்புத்திட்டமாக அமைக்கப்பட்டுள்ளது."
 
 #: kwin-applywindowdecoration.cpp:101
-#, kde-format
-msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+#, fuzzy, kde-format
+#| msgid ""
+#| "Successfully applied the cursor theme %1 to your current Plasma session"
+msgid ""
+"Successfully applied the pointer theme %1 to your current Plasma session"
 msgstr ""
 "தற்போதைய பிளாஸ்மா அமர்வுக்கு %1 சுட்டிக்குறித்திட்டம் வெற்றிகரமாக செயல்படுத்தப்பட்டுள்ளது"
 

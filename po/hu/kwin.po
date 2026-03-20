@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-14 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2025-05-30 23:12+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1968,14 +1968,16 @@ msgstr[1] "%1 másodperc"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, kde-format
-msgid "Hide cursor on inactivity:"
+#, fuzzy, kde-format
+#| msgid "Hide cursor on inactivity:"
+msgid "Hide pointer on inactivity:"
 msgstr "Kurzor elrejtése inaktivitáskor:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, kde-format
-msgid "Hide cursor on typing"
+#, fuzzy, kde-format
+#| msgid "Hide cursor on typing"
+msgid "Hide pointer on typing"
 msgstr "Kurzor elrejtése gépeléskor"
 
 #: plugins/invert/invert.cpp:44

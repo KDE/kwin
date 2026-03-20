@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-14 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2024-11-11 19:00\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -1986,14 +1986,16 @@ msgstr[3] "%1 секунды"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, kde-format
-msgid "Hide cursor on inactivity:"
+#, fuzzy, kde-format
+#| msgid "Hide cursor on inactivity:"
+msgid "Hide pointer on inactivity:"
 msgstr "Хаванне курсора пры неактыўсці:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, kde-format
-msgid "Hide cursor on typing"
+#, fuzzy, kde-format
+#| msgid "Hide cursor on typing"
+msgid "Hide pointer on typing"
 msgstr "Хаваць курсор падчас уводу"
 
 #: plugins/invert/invert.cpp:44

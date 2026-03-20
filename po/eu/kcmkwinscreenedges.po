@@ -1,24 +1,24 @@
 # Translation for kcmkwinscreenedges.po to Euskara/Basque (eu).
-# Copyright (C) 2010-2024 This file is copyright:
+# Copyright (C) 2010-2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# SPDX-FileCopyrightText: 2023, 2024 KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>
+# SPDX-FileCopyrightText: 2023, 2024, 2026 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
 #
 # Translators:
-# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2010, 2011, 2014, 2017, 2018, 2019, 2021, 2022, 2024.
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2010, 2011, 2014, 2017, 2018, 2019, 2021, 2022, 2024, 2026.
 # Hizkuntza Politikarako Sailburuordetza <hizpol@ej-gv.es>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-17 00:45+0000\n"
-"PO-Revision-Date: 2024-08-30 09:33+0200\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
+"PO-Revision-Date: 2026-03-19 20:25+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.08.0\n"
+"X-Generator: Lokalize 25.12.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: main.cpp:152 touch.cpp:119
@@ -93,9 +93,12 @@ msgstr "Aktibatu/desaktibatu ordezko leiho-aldatzea"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "You can trigger an action by pushing the mouse cursor against the "
+#| "corresponding screen edge or corner."
 msgid ""
-"You can trigger an action by pushing the mouse cursor against the "
+"You can trigger an action by pushing the mouse pointer against the "
 "corresponding screen edge or corner."
 msgstr ""
 "Ekintza bat eragin dezakezu saguaren kurtsorea dagokion pantaila ertzaren "
@@ -185,9 +188,13 @@ msgstr "-(e)an"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Change desktop when the mouse cursor is pushed against the edge of the "
+#| "screen"
 msgid ""
-"Change desktop when the mouse cursor is pushed against the edge of the screen"
+"Change desktop when the mouse pointer is pushed against the edge of the "
+"screen"
 msgstr ""
 "Aldatu mahaigaina, saguaren kurtsorea pantailaren ertzaren aurka bultzatzen "
 "denean"
@@ -219,9 +226,12 @@ msgstr "Beti gaituta"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Amount of time required for the mouse cursor to be pushed against the "
+#| "edge of the screen before the action is triggered"
 msgid ""
-"Amount of time required for the mouse cursor to be pushed against the edge "
+"Amount of time required for the mouse pointer to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
 "Ekintza eragiteko saguaren kurtsoreak leiho-ertzaren aurka bultzatzen eman "
@@ -264,10 +274,16 @@ msgstr "Iz&kinetako langa:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Here you can enable or disable the virtual corner barrier between "
+#| "screens. The barrier prevents the cursor from moving to another screen "
+#| "when it is already touching a screen corner. This makes it easier to "
+#| "trigger user interface elements like maximized windows' close buttons "
+#| "when using multiple screens."
 msgid ""
 "Here you can enable or disable the virtual corner barrier between screens. "
-"The barrier prevents the cursor from moving to another screen when it is "
+"The barrier prevents the pointer from moving to another screen when it is "
 "already touching a screen corner. This makes it easier to trigger user "
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
@@ -280,12 +296,10 @@ msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Prevents cursors from crossing at screen corners."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents the pointer from crossing at screen corners."
-msgstr "Kurtsoreek pantailako izkinetatik gurutzatzea saihesten du."
+msgstr "Erakuslea pantailako izkinetatik igarotzea saihesten du."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
@@ -311,9 +325,11 @@ msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Additional distance cursor needs to travel to cross screen edges."
 msgctxt "@info:tooltip"
-msgid "Additional distance cursor needs to travel to cross screen edges."
+msgid "Additional distance the pointer needs to travel to cross screen edges."
 msgstr ""
 "Pantaila-ertzak zeharkatzeko kurtsoreak egin behar duen distantzia "
 "gehiegarria."

@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1732221 $
+# Version: $Revision: 1732682 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-14 00:45+0000\n"
+"POT-Creation-Date: 2026-03-20 00:45+0000\n"
 "PO-Revision-Date: 2025-12-06 15:39+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -1955,14 +1955,16 @@ msgstr[2] "%1 sekund"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, kde-format
-msgid "Hide cursor on inactivity:"
+#, fuzzy, kde-format
+#| msgid "Hide cursor on inactivity:"
+msgid "Hide pointer on inactivity:"
 msgstr "Ukryj wskaźnik myszy przy jego bezruchu:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, kde-format
-msgid "Hide cursor on typing"
+#, fuzzy, kde-format
+#| msgid "Hide cursor on typing"
+msgid "Hide pointer on typing"
 msgstr "Ukryj wskaźnik myszy podczas pisania"
 
 #: plugins/invert/invert.cpp:44
