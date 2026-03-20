@@ -58,6 +58,7 @@ namespace KWin
 {
 
 static const std::optional<bool> s_modifiersEnv = environmentVariableBoolValue("KWIN_DRM_USE_MODIFIERS");
+static const std::optional<bool> s_colorPipelineEnv = environmentVariableBoolValue("KWIN_DRM_USE_COLOR_PIPELINE");
 
 DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     : m_fd(fd)
@@ -120,7 +121,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
         m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
     }
 
-    m_colorPipelineSupported = drmSetClientCap(fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
+    m_colorPipelineSupported = s_colorPipelineEnv.value_or(true) && drmSetClientCap(fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
 
     m_delayedModesetTimer.setInterval(0);
     m_delayedModesetTimer.setSingleShot(true);
