@@ -246,6 +246,19 @@ public:
      */
     Q_INVOKABLE void activateView(QuickSceneView *view);
 
+    /*!
+     * Returns \c true if view caching is enabled; otherwise returns \c false.
+     *
+     * When view caching is enabled, scene views are kept alive but suspended
+     * between activations rather than being destroyed and recreated.
+     */
+    bool isViewCachingEnabled() const;
+
+    /*!
+     * Enables or disables view caching.
+     */
+    void setViewCachingEnabled(bool enabled);
+
     QQmlComponent *delegate() const;
     void setDelegate(QQmlComponent *delegate);
 
@@ -308,6 +321,7 @@ Q_SIGNALS:
     void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, LogicalOutput *screen);
     void activeViewChanged(KWin::QuickSceneView *view);
     void delegateChanged();
+    void activated();
 
 protected:
     /*!
@@ -326,6 +340,7 @@ private:
     void removeScreen(LogicalOutput *screen);
     void startInternal();
     void stopInternal();
+    void clearCachedViews();
 
     std::unique_ptr<QuickSceneEffectPrivate> d;
     friend class QuickSceneEffectPrivate;

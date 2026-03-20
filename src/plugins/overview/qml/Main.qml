@@ -837,12 +837,21 @@ FocusScope {
         id: desktopModel
     }
 
-    Component.onCompleted: {
+    function start() {
+        overviewVal = 0;
+        gridVal = 0;
         // The following line unbinds the verticalDesktopBar, meaning that it
         // won't react to changes in number of desktops or rows. This is because we
         // don't want the desktop bar changing screenside whilst the user is
         // interacting with it, e.g. by adding desktops
-        container.verticalDesktopBar = container.verticalDesktopBar
-        organized = true
+        container.verticalDesktopBar = container.verticalDesktopBar;
+        organized = true;
+    }
+
+    Connections {
+        target: effect
+        function onActivated() {
+            container.start();
+        }
     }
 }

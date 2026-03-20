@@ -158,6 +158,8 @@ OverviewEffect::OverviewEffect()
     });
     delegate->loadFromModule(QStringLiteral("org.kde.kwin.overview"), QStringLiteral("Main"), QQmlComponent::Asynchronous);
     setDelegate(delegate);
+
+    setViewCachingEnabled(true);
 }
 
 OverviewEffect::~OverviewEffect()
