@@ -44,7 +44,6 @@
 #include "wayland/filtered_display.h"
 #include "wayland/fixes.h"
 #include "wayland/fractionalscale_v1.h"
-#include "wayland/frog_colormanagement_v1.h"
 #include "wayland/idle.h"
 #include "wayland/idleinhibit_v1.h"
 #include "wayland/idlenotify_v1.h"
@@ -515,7 +514,6 @@ bool WaylandServer::init()
         }
     });
 
-    new FrogColorManagementV1(m_display, m_display);
     new PresentationTime(m_display, m_display);
     m_colorManager = new ColorManagerV1(m_display, m_display);
     m_xdgDialogWm = new KWin::XdgDialogWmV1Interface(m_display, m_display);
