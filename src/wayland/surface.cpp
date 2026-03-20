@@ -350,6 +350,12 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     if (!pending->buffer) {
         pending->fifoBarrier = false;
     }
+    if (subsurface.handle) {
+        SurfaceInterface *main = subsurface.handle->mainSurface();
+        if (main && !main->isMapped()) {
+            pending->fifoBarrier = false;
+        }
+    }
     pending->mainSurfaceRoleGeneration = q->mainSurfaceRoleGeneration();
 
     // unless a protocol overrides the properties, we need to assume some YUV->RGB conversion
