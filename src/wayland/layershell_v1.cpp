@@ -126,6 +126,7 @@ void LayerShellV1InterfacePrivate::zwlr_layer_shell_v1_get_layer_surface(Resourc
     } else {
         surface->setRole(LayerSurfaceV1Interface::role());
     }
+    surface->nextRoleGeneration();
 
     wl_resource *layerSurfaceResource = wl_resource_create(resource->client(), &zwlr_layer_surface_v1_interface, resource->version(), id);
     if (!layerSurfaceResource) {
@@ -402,6 +403,9 @@ LayerSurfaceV1Interface::LayerSurfaceV1Interface(LayerShellV1Interface *shell,
 
 LayerSurfaceV1Interface::~LayerSurfaceV1Interface()
 {
+    if (d->surface) {
+        d->surface->nextRoleGeneration();
+    }
 }
 
 SurfaceRole *LayerSurfaceV1Interface::role()

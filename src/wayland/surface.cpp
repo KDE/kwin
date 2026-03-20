@@ -347,6 +347,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
         pending->damage = Region();
         pending->bufferDamage = Region();
     }
+    pending->mainSurfaceRoleGeneration = q->mainSurfaceRoleGeneration();
 
     // unless a protocol overrides the properties, we need to assume some YUV->RGB conversion
     // matrix and color space to be attached to YUV formats
@@ -525,6 +526,23 @@ void SurfaceInterface::setRole(SurfaceRole *role)
     d->role = role;
 }
 
+uint32_t SurfaceInterface::mainSurfaceRoleGeneration() const
+{
+    if (d->subsurface.handle) {
+        SurfaceInterface *main = d->subsurface.handle->mainSurface();
+        return main ? main->mainSurfaceRoleGeneration() : 0;
+    }
+    return d->mainSurfaceRoleGeneration;
+}
+
+void SurfaceInterface::nextRoleGeneration()
+{
+    d->mainSurfaceRoleGeneration++;
+    if (d->firstTransaction) {
+        d->firstTransaction->tryApply();
+    }
+}
+
 uint32_t SurfaceInterface::id() const
 {
     return wl_resource_get_id(resource());
@@ -643,6 +661,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->range = range;
     target->presentationFeedback = std::move(presentationFeedback);
     target->blurRegion = blurRegion;
+    target->mainSurfaceRoleGeneration = mainSurfaceRoleGeneration;
 
     auto previousExtensions = std::exchange(target->extensions, {});
     for (const auto &[extension, sourceState] : extensions) {

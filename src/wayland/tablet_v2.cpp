@@ -79,6 +79,13 @@ public:
     {
     }
 
+    ~TabletSurfaceCursorV2Private()
+    {
+        if (m_surface) {
+            m_surface->nextRoleGeneration();
+        }
+    }
+
     void update(quint32 serial, SurfaceInterface *surface, const QPointF &hotspot)
     {
         const bool diff = m_serial != serial || m_surface != surface || m_hotspot != hotspot;
@@ -190,6 +197,7 @@ public:
                 surface->setRole(&cursorRole);
             }
             hotspot /= surface->client()->scaleOverride();
+            surface->nextRoleGeneration();
         }
 
         TabletSurfaceCursorV2 *c = m_cursors[resource->client()];

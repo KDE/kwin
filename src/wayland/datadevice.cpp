@@ -102,6 +102,7 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
         } else {
             iconSurface->setRole(DragAndDropIcon::role());
         }
+        iconSurface->nextRoleGeneration();
 
         // drag icon lifespan is mapped to surface lifespan
         dragIcon = new DragAndDropIcon(iconSurface);

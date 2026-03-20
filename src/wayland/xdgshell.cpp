@@ -200,6 +200,7 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_toplevel(Resource *resource, ui
     } else {
         surface->setRole(XdgToplevelInterface::role());
     }
+    surface->nextRoleGeneration();
 
     wl_resource *toplevelResource = wl_resource_create(resource->client(), &xdg_toplevel_interface, resource->version(), id);
 
@@ -217,6 +218,7 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint3
     } else {
         surface->setRole(XdgPopupInterface::role());
     }
+    surface->nextRoleGeneration();
 
     XdgPositioner positioner = XdgPositioner::get(positionerResource);
     if (!positioner.isComplete()) {
@@ -848,6 +850,9 @@ XdgPopupInterface::~XdgPopupInterface()
     XdgSurfaceInterfacePrivate *surfacePrivate = XdgSurfaceInterfacePrivate::get(d->xdgSurface);
     surfacePrivate->popup = nullptr;
     surfacePrivate->pending = nullptr;
+    if (d->surface) {
+        d->surface->nextRoleGeneration();
+    }
 }
 
 SurfaceRole *XdgPopupInterface::role()

@@ -40,6 +40,7 @@ class XwaylandSurfaceV1InterfacePrivate : public SurfaceExtension<XwaylandSurfac
 {
 public:
     XwaylandSurfaceV1InterfacePrivate(XwaylandShellV1Interface *shell, SurfaceInterface *surface, wl_client *client, uint32_t id, int version, XwaylandSurfaceV1Interface *q);
+    ~XwaylandSurfaceV1InterfacePrivate() override;
 
     void apply(XwaylandSurfaceV1Commit *commit);
 
@@ -76,6 +77,7 @@ void XwaylandShellV1InterfacePrivate::xwayland_shell_v1_get_xwayland_surface(Res
     } else {
         surface->setRole(XwaylandSurfaceV1Interface::role());
     }
+    surface->nextRoleGeneration();
 
     auto xwaylandSurface = new XwaylandSurfaceV1Interface(q, surface, resource->client(), id, resource->version());
     m_surfaces.append(xwaylandSurface);
@@ -90,6 +92,13 @@ XwaylandSurfaceV1InterfacePrivate::XwaylandSurfaceV1InterfacePrivate(XwaylandShe
     , q(q)
     , shell(shell)
 {
+}
+
+XwaylandSurfaceV1InterfacePrivate::~XwaylandSurfaceV1InterfacePrivate()
+{
+    if (surface) {
+        surface->nextRoleGeneration();
+    }
 }
 
 void XwaylandSurfaceV1InterfacePrivate::apply(XwaylandSurfaceV1Commit *commit)

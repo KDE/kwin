@@ -120,6 +120,17 @@ public:
     void setRole(SurfaceRole *role);
 
     /**
+     * Returns which generation of surface role this surface is at,
+     * which can be used to compare against the surface role generation
+     * of pending transactions.
+     */
+    uint32_t mainSurfaceRoleGeneration() const;
+    /**
+     * Increments the surface role generation counter.
+     */
+    void nextRoleGeneration();
+
+    /**
      * Maps the specified @a point in this surface's coordinate system to the equivalent point
      * within the @a child's coordinate system, and returns the mapped point.
      *
