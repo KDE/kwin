@@ -1,16 +1,16 @@
 # Translation of kcmkwincommon.po to Euskara/Basque (eu).
-# Copyright (C) 2019-2023 This file is copyright:
+# Copyright (C) 2019-2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>.
+# SPDX-FileCopyrightText: 2026 KDE euskaratzeko proiektuaren arduraduna <xalba@ni.eus>
 #
 # Translators:
-# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2019, 2022, 2023.
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2019, 2022, 2023, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-16 02:39+0000\n"
-"PO-Revision-Date: 2023-04-20 21:53+0200\n"
+"PO-Revision-Date: 2026-03-19 20:19+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -28,7 +28,7 @@ msgstr "Iñigo Salvador Azurmendi"
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "xalba@euskalnet.net"
+msgstr "xalba@ni.eus"
 
 #: effectsmodel.cpp:48
 #, kde-format
@@ -104,7 +104,7 @@ msgstr "%1 ez da existitzen"
 #: genericscriptedconfig.cpp:116
 #, kde-format
 msgid "Error loading widget from %1: %2"
-msgstr ""
+msgstr "Errorea %1(e)tik trepeta zamatzean: %2"
 
 #~ msgctxt "Category of Desktop Effects, used as section header"
 #~ msgid "Candy"

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Lukáš Tinkl <lukas@kde.org>, 2010, 2012.
 # Jan Holíček <jan.holicek@gmail.com>, 2010.
-# SPDX-FileCopyrightText: 2011, 2012, 2019, 2023, 2024 Vít Pelčák <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2011, 2012, 2019, 2023, 2024, 2026 Vít Pelčák <vit@pelcak.org>
 # SPDX-FileCopyrightText: 2024 Vit Pelcak <vit@pelcak.org>
 #
 msgid ""
@@ -10,15 +10,15 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2024-09-17 15:44+0200\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2026-03-19 10:11+0100\n"
+"Last-Translator:  Vít Pelčák <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: layoutpreview.cpp:28
 #, kde-format
@@ -28,36 +28,36 @@ msgstr ""
 #: layoutpreview.cpp:29
 #, kde-format
 msgid "Path to the Window Switcher QML main file"
-msgstr ""
+msgstr "cesta k hlavnímu souboru Přepínače Oken QML"
 
 #: layoutpreview.cpp:30
 #, kde-format
 msgid "Show also a thumbnail for the desktop"
-msgstr ""
+msgstr "Ukázat jak náhled pro pracovnáí plochu"
 
 #: layoutpreview.cpp:159
 #, kde-format
 msgctxt "The name of KDE's file manager in this language, if translated"
 msgid "Dolphin"
-msgstr ""
+msgstr "Dolphin"
 
 #: layoutpreview.cpp:163
 #, kde-format
 msgctxt "The name of KDE's web browser in this language, if translated"
 msgid "Konqueror"
-msgstr ""
+msgstr "Konqueror"
 
 #: layoutpreview.cpp:167
 #, kde-format
 msgctxt "The name of KDE's email client in this language, if translated"
 msgid "KMail"
-msgstr ""
+msgstr "KMail"
 
 #: layoutpreview.cpp:171
 #, kde-format
 msgctxt "The name of KDE's System Settings app in this language, if translated"
 msgid "System Settings"
-msgstr ""
+msgstr "Nastavení systému"
 
 #: layoutpreview.cpp:177
 #, kde-format
@@ -101,7 +101,7 @@ msgstr "Obsah"
 #: main.ui:41
 #, kde-format
 msgid "Include \"Peek at Desktop\" entry"
-msgstr ""
+msgstr "Zahrnout položku \"Nakouknout na pracovní plochu\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
