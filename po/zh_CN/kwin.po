@@ -1107,7 +1107,7 @@ msgstr "OpenGL"
 #: debug_console.ui:77
 #, kde-format
 msgid "No OpenGL compositor running"
-msgstr "没有正在运行的 OpenGL 显示特效合成器"
+msgstr "没有正在运行的 OpenGL 显示合成器"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
 #: debug_console.ui:105
