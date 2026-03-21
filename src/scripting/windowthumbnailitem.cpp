@@ -284,9 +284,24 @@ void WindowThumbnailItem::resetSource()
     m_source.reset();
 }
 
+bool WindowThumbnailItem::isLive() const
+{
+    return m_live;
+}
+
+void WindowThumbnailItem::setLive(bool live)
+{
+    if (m_live == live) {
+        return;
+    }
+    m_live = live;
+    updateSource();
+    Q_EMIT liveChanged();
+}
+
 void WindowThumbnailItem::updateSource()
 {
-    if (useGlThumbnails() && window() && m_client) {
+    if (useGlThumbnails() && window() && m_client && m_live) {
         m_source = WindowThumbnailSource::getOrCreate(window(), m_client);
         connect(m_source.get(), &WindowThumbnailSource::changed, this, &WindowThumbnailItem::update);
     } else {

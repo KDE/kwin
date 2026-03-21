@@ -50,6 +50,8 @@ ExpoCell {
     property bool closeButtonVisible: true
     // Show a text label under this thumbnail
     property bool windowTitleVisible: true
+    // Whether the thumbnail source should be updated
+    property bool thumbnailLive: true
 
     // Same as for window heap
     property bool animationEnabled: false
@@ -119,6 +121,7 @@ ExpoCell {
         KWinComponents.WindowThumbnail {
             id: thumbSource
             wId: thumb.window.internalId
+            live: thumb.thumbnailLive
             scale: targetScale
             width: mainContent.width
             height: mainContent.height
