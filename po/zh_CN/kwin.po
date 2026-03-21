@@ -1107,7 +1107,7 @@ msgstr "OpenGL"
 #: debug_console.ui:77
 #, kde-format
 msgid "No OpenGL compositor running"
-msgstr "没有正在运行的 OpenGL 显示特效合成器"
+msgstr "没有正在运行的 OpenGL 显示合成器"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
 #: debug_console.ui:105
@@ -1886,17 +1886,15 @@ msgstr[0] "%1 秒"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on inactivity:"
+#, kde-format
 msgid "Hide pointer on inactivity:"
-msgstr "无活动时隐藏光标："
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide pointer on typing"
-msgstr "键盘输入时隐藏光标"
+msgstr ""
 
 #: plugins/invert/invert.cpp:44
 #, kde-format

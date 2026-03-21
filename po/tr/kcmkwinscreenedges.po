@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-20 00:45+0000\n"
-"PO-Revision-Date: 2026-03-17 13:58+0300\n"
+"PO-Revision-Date: 2026-03-20 13:02+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -92,15 +92,12 @@ msgstr "Alternatif Pencere Değiştirmeyi Aç/Kapat"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, fuzzy, kde-format
-#| msgid ""
-#| "You can trigger an action by pushing the mouse cursor against the "
-#| "corresponding screen edge or corner."
+#, kde-format
 msgid ""
 "You can trigger an action by pushing the mouse pointer against the "
 "corresponding screen edge or corner."
 msgstr ""
-"Fare imlecini karşılık gelen ekran kenarı veya köşesine iterek bir eylem "
+"Fare işaretçisini karşılık gelen ekran kenarı veya köşesine iterek bir eylem "
 "tetikleyebilirsiniz."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
@@ -165,14 +162,12 @@ msgstr "dışında tetiklenir"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
-#, fuzzy, kde-format
-#| msgid ""
-#| "Change desktop when the mouse cursor is pushed against the edge of the "
-#| "screen"
+#, kde-format
 msgid ""
 "Change desktop when the mouse pointer is pushed against the edge of the "
 "screen"
-msgstr "Fare imleci ekran kenarlığına doğru itildiğinde masaüstünü değiştir"
+msgstr ""
+"Fare işaretçisi ekran kenarlığına doğru itildiğinde masaüstünü değiştir"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
@@ -201,16 +196,13 @@ msgstr "Her zaman etkin"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
-#, fuzzy, kde-format
-#| msgid ""
-#| "Amount of time required for the mouse cursor to be pushed against the "
-#| "edge of the screen before the action is triggered"
+#, kde-format
 msgid ""
 "Amount of time required for the mouse pointer to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
-"Eylem tetiklenmeden önce fare imlecinin ekran kenarlığına itilmesi gereken "
-"sürenin miktarı"
+"Eylem tetiklenmeden önce fare işaretçisinin ekran kenarlığına itilmesi "
+"gereken sürenin miktarı"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -249,13 +241,7 @@ msgstr "&Köşe bariyeri:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
-#, fuzzy, kde-format
-#| msgid ""
-#| "Here you can enable or disable the virtual corner barrier between "
-#| "screens. The barrier prevents the cursor from moving to another screen "
-#| "when it is already touching a screen corner. This makes it easier to "
-#| "trigger user interface elements like maximized windows' close buttons "
-#| "when using multiple screens."
+#, kde-format
 msgid ""
 "Here you can enable or disable the virtual corner barrier between screens. "
 "The barrier prevents the pointer from moving to another screen when it is "
@@ -264,10 +250,10 @@ msgid ""
 "screens."
 msgstr ""
 "Burada ekranlar arasındaki sanal köşe bariyerini etkinleştirebilir veya "
-"devre dışı bırakabilirsiniz. Bariyer, imleç halihazırda ekranın bir köşesine "
-"dokunuyorken onun başka bir ekrana geçmesini önler. Bu, birden çok ekran "
-"kullanıldığında büyütülmüş pencerelerin kapatma düğmeleri gibi kullanıcı "
-"arayüzü ögelerinin tetiklenmesini kolaylaştırır."
+"devre dışı bırakabilirsiniz. Bariyer, işaretçi halihazırda ekranın bir "
+"köşesine dokunuyorken onun başka bir ekrana geçmesini önler. Bu, birden çok "
+"ekran kullanıldığında büyütülmüş pencerelerin kapatma düğmeleri gibi "
+"kullanıcı arayüzü ögelerinin tetiklenmesini kolaylaştırır."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
@@ -300,12 +286,11 @@ msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Additional distance cursor needs to travel to cross screen edges."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance the pointer needs to travel to cross screen edges."
-msgstr "İmlecin ekran kenarlarını geçmek için kat etmesi gereken ek uzaklık."
+msgstr ""
+"İşaretçinin ekran kenarlarını geçmek için kat etmesi gereken ek uzaklık"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306

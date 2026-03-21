@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-20 00:45+0000\n"
-"PO-Revision-Date: 2026-03-17 08:12-0300\n"
+"PO-Revision-Date: 2026-03-20 09:43-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -94,10 +94,7 @@ msgstr "Alternar a mudança alternativa de janelas"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, fuzzy, kde-format
-#| msgid ""
-#| "You can trigger an action by pushing the mouse cursor against the "
-#| "corresponding screen edge or corner."
+#, kde-format
 msgid ""
 "You can trigger an action by pushing the mouse pointer against the "
 "corresponding screen edge or corner."
@@ -167,10 +164,7 @@ msgstr "da tela"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
-#, fuzzy, kde-format
-#| msgid ""
-#| "Change desktop when the mouse cursor is pushed against the edge of the "
-#| "screen"
+#, kde-format
 msgid ""
 "Change desktop when the mouse pointer is pushed against the edge of the "
 "screen"
@@ -205,10 +199,7 @@ msgstr "Sempre habilitado"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
-#, fuzzy, kde-format
-#| msgid ""
-#| "Amount of time required for the mouse cursor to be pushed against the "
-#| "edge of the screen before the action is triggered"
+#, kde-format
 msgid ""
 "Amount of time required for the mouse pointer to be pushed against the edge "
 "of the screen before the action is triggered"
@@ -253,13 +244,7 @@ msgstr "&Barreira de canto:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
-#, fuzzy, kde-format
-#| msgid ""
-#| "Here you can enable or disable the virtual corner barrier between "
-#| "screens. The barrier prevents the cursor from moving to another screen "
-#| "when it is already touching a screen corner. This makes it easier to "
-#| "trigger user interface elements like maximized windows' close buttons "
-#| "when using multiple screens."
+#, kde-format
 msgid ""
 "Here you can enable or disable the virtual corner barrier between screens. "
 "The barrier prevents the pointer from moving to another screen when it is "
@@ -268,8 +253,8 @@ msgid ""
 "screens."
 msgstr ""
 "Aqui você pode habilitar ou desabilitar a barreira de canto virtual entre "
-"telas. A barreira impede que o cursor se mova para outra tela quando ele já "
-"estiver tocando em um canto da tela. Isso facilita o acionamento de "
+"telas. A barreira impede que o ponteiro se mova para outra tela quando ele "
+"já estiver tocando em um canto da tela. Isso facilita o acionamento de "
 "elementos da interface do usuário, como botões de fechar janelas "
 "maximizadas, ao usar várias telas."
 
@@ -304,13 +289,11 @@ msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Additional distance cursor needs to travel to cross screen edges."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance the pointer needs to travel to cross screen edges."
 msgstr ""
-"Distância adicional que o cursos precisa se deslocar para atravessar as "
+"Distância adicional que o ponteiro precisa se deslocar para atravessar as "
 "bordas da tela."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)

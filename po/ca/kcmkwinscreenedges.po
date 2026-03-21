@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-20 00:45+0000\n"
-"PO-Revision-Date: 2026-03-17 10:26+0100\n"
+"PO-Revision-Date: 2026-03-20 10:00+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -94,15 +94,12 @@ msgstr "Commuta a un canvi de finestres alternatiu"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, fuzzy, kde-format
-#| msgid ""
-#| "You can trigger an action by pushing the mouse cursor against the "
-#| "corresponding screen edge or corner."
+#, kde-format
 msgid ""
 "You can trigger an action by pushing the mouse pointer against the "
 "corresponding screen edge or corner."
 msgstr ""
-"Podeu activar una acció empenyent el cursor del ratolí contra la vora o "
+"Podeu activar una acció empenyent el punter del ratolí contra la vora o "
 "cantonada corresponent de la pantalla."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
@@ -167,15 +164,12 @@ msgstr "exterior de la pantalla"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
-#, fuzzy, kde-format
-#| msgid ""
-#| "Change desktop when the mouse cursor is pushed against the edge of the "
-#| "screen"
+#, kde-format
 msgid ""
 "Change desktop when the mouse pointer is pushed against the edge of the "
 "screen"
 msgstr ""
-"Canvia l'escriptori quan s'empenyi el cursor del ratolí contra la vora de la "
+"Canvia l'escriptori quan s'empenyi el punter del ratolí contra la vora de la "
 "pantalla"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
@@ -205,15 +199,12 @@ msgstr "Sempre activat"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
-#, fuzzy, kde-format
-#| msgid ""
-#| "Amount of time required for the mouse cursor to be pushed against the "
-#| "edge of the screen before the action is triggered"
+#, kde-format
 msgid ""
 "Amount of time required for the mouse pointer to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
-"Interval de temps requerit quan s'empeny el cursor del ratolí contra la vora "
+"Interval de temps requerit quan s'empeny el punter del ratolí contra la vora "
 "de la pantalla abans d'activar l'acció"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
@@ -253,13 +244,7 @@ msgstr "Barrera de &cantonada:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
-#, fuzzy, kde-format
-#| msgid ""
-#| "Here you can enable or disable the virtual corner barrier between "
-#| "screens. The barrier prevents the cursor from moving to another screen "
-#| "when it is already touching a screen corner. This makes it easier to "
-#| "trigger user interface elements like maximized windows' close buttons "
-#| "when using multiple screens."
+#, kde-format
 msgid ""
 "Here you can enable or disable the virtual corner barrier between screens. "
 "The barrier prevents the pointer from moving to another screen when it is "
@@ -268,7 +253,7 @@ msgid ""
 "screens."
 msgstr ""
 "Aquí podeu activar o desactivar la barrera de cantonades virtuals entre "
-"pantalles. La barrera impedeix que el cursor es mogui a una altra pantalla "
+"pantalles. La barrera impedeix que el punter es mogui a una altra pantalla "
 "quan ja està tocant una cantonada de la pantalla. Això fa més fàcil activar "
 "elements d'interfície d'usuari com els botons de tancament de finestres "
 "maximitzades quan s'utilitzen diverses pantalles."
@@ -304,13 +289,11 @@ msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Additional distance cursor needs to travel to cross screen edges."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance the pointer needs to travel to cross screen edges."
 msgstr ""
-"Distància addicional que el cursor ha de moure's per a creuar les vores de "
+"Distància addicional que el punter ha de moure's per a creuar les vores de "
 "la pantalla."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)

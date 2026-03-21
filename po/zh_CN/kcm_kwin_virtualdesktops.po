@@ -37,17 +37,17 @@ msgstr[0] "桌面 %1"
 #: desktopsmodel.cpp:476
 #, kde-format
 msgid "There was an error connecting to the compositor."
-msgstr "连接到显示特效合成器时出错。"
+msgstr "连接到显示合成器时出错。"
 
 #: desktopsmodel.cpp:672
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
-msgstr "保存显示特效合成器设置时出错。"
+msgstr "保存显示合成器设置时出错。"
 
 #: desktopsmodel.cpp:675
 #, kde-format
 msgid "There was an error requesting information from the compositor."
-msgstr "获取显示特效合成器信息时出错。"
+msgstr "获取显示合成器信息时出错。"
 
 #: ui/main.qml:26
 #, kde-format

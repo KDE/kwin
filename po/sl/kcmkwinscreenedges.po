@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-20 00:45+0000\n"
-"PO-Revision-Date: 2026-03-17 06:30+0100\n"
+"PO-Revision-Date: 2026-03-20 06:49+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -96,22 +96,19 @@ msgstr "Preklopi drugotno preklapljanje oken"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, fuzzy, kde-format
-#| msgid ""
-#| "You can trigger an action by pushing the mouse cursor against the "
-#| "corresponding screen edge or corner."
+#, kde-format
 msgid ""
 "You can trigger an action by pushing the mouse pointer against the "
 "corresponding screen edge or corner."
 msgstr ""
-"Da sprožite dejanje, potisnite miškino kazalko ob ustrezen rob ali v "
-"ustrezen kot zaslona."
+"Dejanje lahko sprožite tako, da kazalec miške pritisnete na ustrezni rob ali "
+"vogal zaslona."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
 #, kde-format
 msgid "&Maximize:"
-msgstr "&Razpni:"
+msgstr "Razpni:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderMaximize)
 #: main.ui:77
@@ -147,7 +144,7 @@ msgstr "Ostani dejaven, kadar so okna celozaslonska"
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr "Sproži &četrtinsko tlakovanje na:"
+msgstr "Sproži četrtinsko tlakovanje na:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -169,10 +166,7 @@ msgstr "zaslona"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
-#, fuzzy, kde-format
-#| msgid ""
-#| "Change desktop when the mouse cursor is pushed against the edge of the "
-#| "screen"
+#, kde-format
 msgid ""
 "Change desktop when the mouse pointer is pushed against the edge of the "
 "screen"
@@ -182,7 +176,7 @@ msgstr "Spremeni namizje, ko je miškina kazalka potisnjena ob rob zaslona"
 #: main.ui:177
 #, kde-format
 msgid "&Switch desktop on edge:"
-msgstr "&Na robu preklopi namizje:"
+msgstr "Na robu preklopi namizje:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:188
@@ -205,22 +199,19 @@ msgstr "Vedno omogočeno"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
-#, fuzzy, kde-format
-#| msgid ""
-#| "Amount of time required for the mouse cursor to be pushed against the "
-#| "edge of the screen before the action is triggered"
+#, kde-format
 msgid ""
 "Amount of time required for the mouse pointer to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
-"Čas, potreben za tiščanje miškine kazalke ob rob zaslona, preden se sproži "
-"dejanje"
+"Čas, ki je potreben, da se kazalec miške tišči ob rob zaslona, ​​preden se "
+"sproži dejanje"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
 #, kde-format
 msgid "Activation &delay:"
-msgstr "&Zakasnitev sprožitve:"
+msgstr "Zakasnitev sprožitve:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderDelay)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderCooldown)
@@ -242,23 +233,17 @@ msgstr ""
 #: main.ui:241
 #, kde-format
 msgid "&Reactivation delay:"
-msgstr "Z&akasnitev ponovne sprožitve:"
+msgstr "Zakasnitev ponovne sprožitve:"
 
 #. i18n: ectx: property (text), widget (QLabel, CornerBarrierLabel)
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr "&Kotna pregrada:"
+msgstr "Vogalna pregrada:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
-#, fuzzy, kde-format
-#| msgid ""
-#| "Here you can enable or disable the virtual corner barrier between "
-#| "screens. The barrier prevents the cursor from moving to another screen "
-#| "when it is already touching a screen corner. This makes it easier to "
-#| "trigger user interface elements like maximized windows' close buttons "
-#| "when using multiple screens."
+#, kde-format
 msgid ""
 "Here you can enable or disable the virtual corner barrier between screens. "
 "The barrier prevents the pointer from moving to another screen when it is "
@@ -268,7 +253,7 @@ msgid ""
 msgstr ""
 "Tukaj lahko omogočite ali onemogočite navidezno kotno pregrado med zasloni. "
 "Pregrada preprečuje, da bi se kazalec premaknil na drug zaslon, ko se že "
-"dotika kota zaslona. To olajša sprožitev elementov uporabniškega vmesnika, "
+"dotika vogala zaslona. To olajša sprožitev elementov uporabniškega vmesnika, "
 "kot so gumbi za zapiranje razpetih oken, kadar uporabljate več zaslonov."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
@@ -276,13 +261,13 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents the pointer from crossing at screen corners."
-msgstr "Preprečuje kazalki križanja v kotih zaslona."
+msgstr "Preprečuje kazalki križanja v vogalih zaslona."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr "Ro&bna pregrada:"
+msgstr "Robna pregrada:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -301,9 +286,7 @@ msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Additional distance cursor needs to travel to cross screen edges."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance the pointer needs to travel to cross screen edges."
 msgstr ""

@@ -2,21 +2,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Martin Schlander <mschlander@opensuse.org>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020, 2022.
 # scootergrisen, 2019.
-# SPDX-FileCopyrightText: 2024 rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>
+# SPDX-FileCopyrightText: 2024, 2026 rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-20 00:45+0000\n"
-"PO-Revision-Date: 2024-10-21 13:14+0200\n"
-"Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
+"PO-Revision-Date: 2026-03-20 21:54+0100\n"
+"Last-Translator: Rasmus Rosendahl-Kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -46,14 +46,12 @@ msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland-kompositør %1"
 
 #: backends/wayland/wayland_output.cpp:490
-#, fuzzy, kde-format
-#| msgid "- Output disabled"
+#, kde-format
 msgid "- Output disabled"
 msgstr "- Output slået fra"
 
 #: backends/wayland/wayland_output.cpp:492
-#, fuzzy, kde-format
-#| msgid "- Output dimmed"
+#, kde-format
 msgid "- Output dimmed"
 msgstr "- Output dæmpet"
 
@@ -80,38 +78,40 @@ msgstr "Skrivebordseffekter blev genstartet pga. grafiknulstilling"
 #: core/iccprofile.cpp:390
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
-msgstr ""
+msgstr "Kunne ikke åbne ICC-profil \"%1\""
 
 #: core/iccprofile.cpp:392
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
-msgstr ""
+msgstr "ICC-profil \"%1\" eksisterer ikke"
 
 #: core/iccprofile.cpp:396
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
-msgstr ""
+msgstr "ICC-profil \"%1\" kan ikke bruges til skærme"
 
 #: core/iccprofile.cpp:399
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr ""
+"ICC-profil \"%1\" har ikke-understøttet forbindelsesområde; kun XYZ "
+"understøttes"
 
 #: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
-msgstr ""
+msgstr "ICC-profil \"%1\" virker ikke; input/ouput-farverummet er ikke RGB"
 
 #: core/iccprofile.cpp:415
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
-msgstr ""
+msgstr "ICC-profil \"%1\" virker ikke; den har intet hvidpunkt"
 
 #: core/iccprofile.cpp:418
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
-msgstr ""
+msgstr "ICC-profil \"%1\" virker ikke; dens hvidpunkt er ugyldig"
 
 #: core/iccprofile.cpp:431
 #, kde-format
@@ -148,7 +148,7 @@ msgstr ""
 #: core/iccprofile.cpp:527
 #, kde-format
 msgid "Color profile is missing TRC tags"
-msgstr ""
+msgstr "Farveprofil mangler TRC-mærkater"
 
 #: core/iccprofile.cpp:534
 #, kde-format
@@ -423,14 +423,12 @@ msgid "Delta"
 msgstr "Delta"
 
 #: debug_console.cpp:251
-#, fuzzy, kde-format
-#| msgctxt "Current delta in pinch gesture"
-#| msgid "Delta x"
+#, kde-format
 msgctxt ""
 "The normalized V120 angle delta of a pointer axis event. V120 is a technical "
 "term and shouldn't be changed."
 msgid "Delta (V120)"
-msgstr "Delta x"
+msgstr "Delta (V120)"
 
 #: debug_console.cpp:266
 #, kde-format
@@ -649,9 +647,7 @@ msgid "Hold start"
 msgstr ""
 
 #: debug_console.cpp:473
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgctxt "Number of fingers in this hold gesture"
 msgid "Finger count"
 msgstr "Fingerantal"
@@ -721,17 +717,17 @@ msgstr "Tablet-værktøj"
 #: debug_console.cpp:543
 #, kde-format
 msgid "Proximity"
-msgstr ""
+msgstr "Afstand"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Ind"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Ud"
 
 #: debug_console.cpp:544 debug_console.cpp:562 debug_console.cpp:582
 #: debug_console.cpp:632 debug_console.cpp:649
@@ -750,10 +746,9 @@ msgid "Rotation"
 msgstr "Rotation"
 
 #: debug_console.cpp:549 debug_console.cpp:568
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance"
-msgstr "Afstand:"
+msgstr "Afstand"
 
 #: debug_console.cpp:558
 #, fuzzy, kde-format
@@ -779,21 +774,19 @@ msgid "Tip"
 msgstr "Øverst"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Flyt ned"
+msgstr "Ned"
 
 #: debug_console.cpp:581
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Op"
 
 #: debug_console.cpp:588
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Position"
+msgstr "Sliderposition"
 
 #: debug_console.cpp:597
 #, kde-format
@@ -824,14 +817,12 @@ msgstr "Tablet pad-knap"
 #: debug_console.cpp:616 debug_console.cpp:634 debug_console.cpp:651
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Gruppe"
 
 #: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
-#, fuzzy, kde-format
-#| msgctxt "@label"
-#| msgid "Mode:"
+#, kde-format
 msgid "Mode"
-msgstr "Tilstand:"
+msgstr "Tilstand"
 
 #: debug_console.cpp:618
 #, kde-format
@@ -865,9 +856,7 @@ msgid "Tablet Pad Dial"
 msgstr "Tablet pad-ring"
 
 #: debug_console.cpp:666
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgid "Delta"
 msgstr "Delta"
 
@@ -1096,10 +1085,9 @@ msgstr "Indlæs"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, DebugConsole)
 #: debug_console.ui:14
-#, fuzzy, kde-format
-#| msgid "Quit Debug Console"
+#, kde-format
 msgid "Debug Console"
-msgstr "Afslut fejlsøgningskonsol"
+msgstr "Fejlsøgningskonsol"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:30
@@ -1280,7 +1268,7 @@ msgstr "tid"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "Beskeden vises (fuldskærm, grænseløs)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
 #, kde-format
@@ -1350,11 +1338,10 @@ msgstr ""
 "brug af %1 tastaturgenvejen."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "Fuldskærm"
+msgstr "Fortryd fuldskærm"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
 #, fuzzy, kde-format
@@ -1409,16 +1396,15 @@ msgstr ""
 "tastaturgenvejen."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
-#, fuzzy, kde-format
-#| msgid "&No Border"
+#, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr "Uden kant"
+msgstr "Gendan kant"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "Vis ikke igen"
 
 #: helpers/killer/killdialog.cpp:37
 #, fuzzy, kde-kuit-format
@@ -1453,11 +1439,9 @@ msgstr ""
 "dens vindue. Alt ugemt data vil gå tabt.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "&Afslut %1"
+msgstr "&Lukker %1"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1494,7 +1478,7 @@ msgstr "Svarer ikke"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "&Detaljer"
 
 #: helpers/killer/killer.cpp:134
 #, kde-format
@@ -1794,10 +1778,9 @@ msgstr "Styrke på støj:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelSaturation)
 #: plugins/blur/blur_config.ui:128
-#, fuzzy, kde-format
-#| msgid "Duration:"
+#, kde-format
 msgid "Saturation:"
-msgstr "Varighed:"
+msgstr "Farvemætning:"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #. i18n: ectx: property (text), widget (QLabel, labelSaturationStrong)
@@ -1972,15 +1955,13 @@ msgstr[1] "%1 sekunder"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on inactivity:"
+#, kde-format
 msgid "Hide pointer on inactivity:"
 msgstr "Skjul markør ved inaktivitet:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide pointer on typing"
 msgstr "Skjul markør når der skrives"
 
@@ -3661,7 +3642,7 @@ msgstr "Regeltype for flimmer"
 #: rulesettings.kcfg:467
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "Skjul fra skærmcast"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:471
@@ -3810,7 +3791,7 @@ msgstr "&Ingen titellinje og ramme"
 #: useractions.cpp:258
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "&Skjul fra skærmcast"
 
 #: useractions.cpp:266
 #, kde-format
@@ -4318,47 +4299,49 @@ msgstr "Skift til skrivebord %1"
 #: wayland/outputmanagement_v2.cpp:603
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
-msgstr ""
+msgstr "En af de relevante outputs er ikke længere tilgængelig"
 
 #: wayland/outputmanagement_v2.cpp:621
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
+"Det er ikke tilladt at deaktivere alle outputs gennem konfigurationsændringer"
 
 #: wayland/outputmanagement_v2.cpp:631
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1 kan ikke spejle sig selv"
 
 #: wayland/outputmanagement_v2.cpp:638
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Kan ikke tilføle en tilpasset tilstand med tom størrelse"
 
 #: wayland/outputmanagement_v2.cpp:642
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
+"Kan ikke tilføje en tilpasset tilstand med en genopfriskningsrate på nul Hz"
 
 #: wayland/outputmanagement_v2.cpp:653
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr ""
+msgstr "Placering af output %1 er alt for negativ (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:656
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
-msgstr ""
+msgstr "Placering af aktiveret output %1 er negativ (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:660
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr ""
+msgstr "Placering af output %1 er alt for stor (%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:677
 #, kde-format
 msgid "The driver rejected the output configuration"
-msgstr ""
+msgstr "Driveren afviste outputkonfigurationen"
 
 #: wayland/outputmanagement_v2.cpp:680
 #, fuzzy, kde-format

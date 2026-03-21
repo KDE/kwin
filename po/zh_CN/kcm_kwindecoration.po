@@ -127,12 +127,10 @@ msgid ""
 msgstr "请求的主题“%1”已经设置为窗口装饰主题。"
 
 #: kwin-applywindowdecoration.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Successfully applied the cursor theme %1 to your current Plasma session"
+#, kde-format
 msgid ""
 "Successfully applied the pointer theme %1 to your current Plasma session"
-msgstr "成功应用光标主题 %1 到当前的 Plasma 会话。"
+msgstr ""
 
 #: kwin-applywindowdecoration.cpp:105
 #, kde-format
