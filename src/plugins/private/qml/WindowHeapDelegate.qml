@@ -80,28 +80,28 @@ ExpoCell {
     bottomMargin: icon.height / 4 + (caption.visible ? caption.height + Kirigami.Units.smallSpacing : 0) + Kirigami.Units.largeSpacing
 
     Behavior on x {
-        enabled: thumb.isReady
+        enabled: thumb.isReady && thumb.animationEnabled
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.InOutCubic
         }
     }
     Behavior on y {
-        enabled: thumb.isReady
+        enabled: thumb.isReady && thumb.animationEnabled
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.InOutCubic
         }
     }
     Behavior on width {
-        enabled: thumb.isReady
+        enabled: thumb.isReady && thumb.animationEnabled
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.InOutCubic
         }
     }
     Behavior on height {
-        enabled: thumb.isReady
+        enabled: thumb.isReady && thumb.animationEnabled
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.InOutCubic

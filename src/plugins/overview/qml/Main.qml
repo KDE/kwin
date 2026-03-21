@@ -675,7 +675,7 @@ FocusScope {
                     focus: current
                     padding: Kirigami.Units.largeSpacing
                     animationDuration: effect.animationDuration
-                    animationEnabled:  (gridVal !== 0 || mainBackground.current) && organized
+                    animationEnabled: (gridVal !== 0 || overviewVal !== 0) && organized
                     organized: container.state !== "initial"
                     dndManagerStore: desktopGrid.dndManagerStore
                     model: KWinComponents.WindowFilterModel {
@@ -690,6 +690,7 @@ FocusScope {
                                     ~KWinComponents.WindowFilterModel.Notification &
                                     ~KWinComponents.WindowFilterModel.CriticalNotification
                     }
+
                     delegate: WindowHeapDelegate {
                         windowHeap: heap
                         offsetX: mainBackground.deltaColumn * container.width * (gridVal > 0 ? 0 : 1) + (dragHandler.active ? (dragHandler.centroid.pressPosition.x - dragHandler.centroid.position.x) : 0)
@@ -852,6 +853,9 @@ FocusScope {
         target: effect
         function onActivated() {
             container.start();
+        }
+        function onDeactivated() {
+            container.organized = false;
         }
     }
 }

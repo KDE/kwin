@@ -322,6 +322,7 @@ Q_SIGNALS:
     void activeViewChanged(KWin::QuickSceneView *view);
     void delegateChanged();
     void activated();
+    void deactivated();
 
 protected:
     /*!

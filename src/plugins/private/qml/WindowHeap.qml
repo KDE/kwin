@@ -158,7 +158,7 @@ FocusScope {
                     // Make sure it is positioned before enabling its animations.
                     expoLayout.forceLayout();
                 }
-                object.animationEnabled = true;
+                object.animationEnabled = Qt.binding(() => heap.animationEnabled);
             }
         }
     }

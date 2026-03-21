@@ -591,6 +591,8 @@ void QuickSceneEffect::startInternal()
 
 void QuickSceneEffect::stopInternal()
 {
+    Q_EMIT deactivated();
+
     disconnect(effects, &EffectsHandler::screenAdded, this, &QuickSceneEffect::handleScreenAdded);
     disconnect(effects, &EffectsHandler::screenRemoved, this, &QuickSceneEffect::handleScreenRemoved);
 
