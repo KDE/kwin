@@ -46,7 +46,7 @@
         "Description[tr]": "Masaüstü efektleri için bileşikleştirici ayarlarını yapılandır",
         "Description[uk]": "Налаштовування параметрів засобу композиції для ефектів стільниці",
         "Description[vi]": "Cấu hình các thiết lập trình kết hợp cho các hiệu ứng bàn làm việc",
-        "Description[zh_CN]": "配置桌面的显示特效合成器设置",
+        "Description[zh_CN]": "配置桌面特效的显示合成器设置",
         "Description[zh_TW]": "設定合成器的桌面效果選項",
         "FormFactors": [
             "desktop",
