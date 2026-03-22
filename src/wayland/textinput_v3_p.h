@@ -7,6 +7,7 @@
 
 #include "clientconnection.h"
 #include "textinput_v3.h"
+#include "wayland/surface.h"
 
 #include <QHash>
 #include <QList>
@@ -16,6 +17,43 @@
 
 namespace KWin
 {
+
+struct TextInputV3State
+{
+    void resetPending();
+    void resetPendingPreedit();
+
+    struct
+    {
+        Rect cursorRectangle;
+        TextInputChangeCause surroundingTextChangeCause = TextInputChangeCause::InputMethod;
+        TextInputContentHints contentHints = TextInputContentHint::None;
+        TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;
+        bool enabled = false;
+        QString surroundingText;
+        qint32 surroundingTextCursorPosition = 0;
+        qint32 surroundingTextSelectionAnchor = 0;
+        QString preeditText;
+        quint32 preeditCursorBegin = 0;
+        quint32 preeditCursorEnd = 0;
+    } pending;
+
+    Rect cursorRectangle;
+    TextInputContentHints contentHints = TextInputContentHint::None;
+    TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;
+
+    QString surroundingText;
+    qint32 surroundingTextCursorPosition = 0;
+    qint32 surroundingTextSelectionAnchor = 0;
+    TextInputChangeCause surroundingTextChangeCause = TextInputChangeCause::InputMethod;
+
+    QString preeditText;
+    quint32 preeditCursorBegin = 0;
+    quint32 preeditCursorEnd = 0;
+    quint32 serial = 0;
+    bool enabled = false;
+};
+
 class TextInputManagerV3InterfacePrivate : public QtWaylandServer::zwp_text_input_manager_v3
 {
 public:
@@ -46,47 +84,48 @@ public:
     QList<TextInputV3InterfacePrivate::Resource *> textInputsForClient(ClientConnection *client) const;
     QList<TextInputV3InterfacePrivate::Resource *> enabledTextInputsForClient(ClientConnection *client) const;
 
+    TextInputV3State *stateForResource(Resource *resource)
+    {
+        auto it = stateMap.find(resource);
+        if (it == stateMap.end()) {
+            return nullptr;
+        }
+        return &it.value();
+    }
+
+    const TextInputV3State *stateForResource(Resource *resource) const
+    {
+        auto it = stateMap.find(resource);
+        if (it == stateMap.end()) {
+            return nullptr;
+        }
+        return &it.value();
+    }
+
+    TextInputV3State *stateForFocusedSurface()
+    {
+        if (!surface) {
+            return nullptr;
+        }
+        auto resources = textInputsForClient(surface->client());
+        for (auto resource : resources) {
+            auto state = stateForResource(resource);
+            if (state && state->enabled) {
+                return state;
+            }
+        }
+        return nullptr;
+    }
+
     static TextInputV3InterfacePrivate *get(TextInputV3Interface *inputInterface)
     {
         return inputInterface->d.get();
     }
 
-    Rect cursorRectangle;
-    TextInputContentHints contentHints = TextInputContentHint::None;
-    TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;
-
     SeatInterface *seat = nullptr;
     QPointer<SurfaceInterface> surface;
 
-    QString surroundingText;
-    qint32 surroundingTextCursorPosition = 0;
-    qint32 surroundingTextSelectionAnchor = 0;
-    TextInputChangeCause surroundingTextChangeCause = TextInputChangeCause::InputMethod;
-
-    QString preeditText;
-    quint32 preeditCursorBegin = 0;
-    quint32 preeditCursorEnd = 0;
-
-    struct
-    {
-        Rect cursorRectangle;
-        TextInputChangeCause surroundingTextChangeCause = TextInputChangeCause::InputMethod;
-        TextInputContentHints contentHints = TextInputContentHint::None;
-        TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;
-        bool enabled = false;
-        QString surroundingText;
-        qint32 surroundingTextCursorPosition = 0;
-        qint32 surroundingTextSelectionAnchor = 0;
-        QString preeditText;
-        quint32 preeditCursorBegin = 0;
-        quint32 preeditCursorEnd = 0;
-    } pending;
-
-    QHash<Resource *, quint32> serialHash;
-    QHash<Resource *, bool> enabledHash;
-
-    void defaultPending();
-    void defaultPendingPreedit();
+    QHash<Resource *, TextInputV3State> stateMap;
 
     TextInputV3Interface *q;
     bool isEnabled = false;

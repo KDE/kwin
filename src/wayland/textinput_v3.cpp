@@ -105,6 +105,26 @@ TextInputChangeCause convertChangeCause(uint32_t cause)
 }
 }
 
+void TextInputV3State::resetPending()
+{
+    pending.cursorRectangle = Rect();
+    pending.surroundingTextChangeCause = TextInputChangeCause::InputMethod;
+    pending.contentHints = TextInputContentHints(TextInputContentHint::None);
+    pending.contentPurpose = TextInputContentPurpose::Normal;
+    pending.enabled = false;
+    pending.surroundingText = QString();
+    pending.surroundingTextCursorPosition = 0;
+    pending.surroundingTextSelectionAnchor = 0;
+    resetPendingPreedit();
+}
+
+void TextInputV3State::resetPendingPreedit()
+{
+    pending.preeditText = QString();
+    pending.preeditCursorBegin = 0;
+    pending.preeditCursorEnd = 0;
+}
+
 TextInputManagerV3InterfacePrivate::TextInputManagerV3InterfacePrivate(TextInputManagerV3Interface *_q, Display *display)
     : QtWaylandServer::zwp_text_input_manager_v3(*display, s_version)
     , q(_q)
@@ -148,15 +168,13 @@ TextInputV3InterfacePrivate::TextInputV3InterfacePrivate(SeatInterface *seat, Te
 void TextInputV3InterfacePrivate::zwp_text_input_v3_bind_resource(Resource *resource)
 {
     // we initialize the serial for the resource to be 0
-    serialHash.insert(resource, 0);
-    enabledHash.insert(resource, false);
+    stateMap.insert(resource, TextInputV3State());
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_destroy_resource(Resource *resource)
 {
     // drop resource from the serial hash
-    serialHash.remove(resource);
-    enabledHash.remove(resource);
+    stateMap.remove(resource);
     updateEnabled();
 }
 
@@ -195,12 +213,17 @@ void TextInputV3InterfacePrivate::sendPreEdit(const QString &text, const quint32
         return;
     }
 
-    pending.preeditText = text;
-    pending.preeditCursorBegin = cursorBegin;
-    pending.preeditCursorEnd = cursorEnd;
-
     const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
     for (auto resource : textInputs) {
+        auto state = stateForResource(resource);
+        if (!state) {
+            continue;
+        }
+
+        state->pending.preeditText = text;
+        state->pending.preeditCursorBegin = cursorBegin;
+        state->pending.preeditCursorEnd = cursorEnd;
+
         // Special handling for empty preedit, send null instead of empty string.
         // text in preedit_string is defined as allow-null, however qt wayland can't generate a
         // null ptr call from either null QString() or empty QString().
@@ -241,14 +264,17 @@ void TextInputV3InterfacePrivate::done()
     }
     const QList<Resource *> textInputs = enabledTextInputsForClient(surface->client());
 
-    preeditText = pending.preeditText;
-    preeditCursorBegin = pending.preeditCursorBegin;
-    preeditCursorEnd = pending.preeditCursorEnd;
-    defaultPendingPreedit();
-
     for (auto resource : textInputs) {
+        auto state = stateForResource(resource);
+        if (!state) {
+            continue;
+        }
+        state->preeditText = state->pending.preeditText;
+        state->preeditCursorBegin = state->pending.preeditCursorBegin;
+        state->preeditCursorEnd = state->pending.preeditCursorEnd;
+        state->resetPendingPreedit();
         // zwp_text_input_v3.done takes the serial argument which is equal to number of commit requests issued
-        send_done(resource->handle, serialHash[resource]);
+        send_done(resource->handle, state->serial);
     }
 }
 
@@ -262,7 +288,8 @@ QList<TextInputV3InterfacePrivate::Resource *> TextInputV3InterfacePrivate::enab
     QList<TextInputV3InterfacePrivate::Resource *> result;
     const auto [start, end] = resourceMap().equal_range(client->client());
     for (auto it = start; it != end; ++it) {
-        if (enabledHash[*it]) {
+        auto state = stateForResource(*it);
+        if (state && state->enabled) {
             result.append(*it);
         }
     }
@@ -275,7 +302,8 @@ void TextInputV3InterfacePrivate::updateEnabled()
     if (surface) {
         const auto clientResources = textInputsForClient(surface->client());
         newEnabled = std::any_of(clientResources.begin(), clientResources.end(), [this](Resource *resource) {
-            return enabledHash[resource];
+            auto state = stateForResource(resource);
+            return state && state->enabled;
         });
     }
 
@@ -287,134 +315,138 @@ void TextInputV3InterfacePrivate::updateEnabled()
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_enable(Resource *resource)
 {
+    auto state = stateForResource(resource);
+    if (!state) {
+        return;
+    }
     // reset pending state to default
-    defaultPending();
-    pending.enabled = true;
+    state->resetPending();
+    state->pending.enabled = true;
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_disable(Resource *resource)
 {
+    auto state = stateForResource(resource);
+    if (!state) {
+        return;
+    }
     // reset pending state to default
-    defaultPending();
-    preeditText = QString();
-    preeditCursorBegin = 0;
-    preeditCursorEnd = 0;
+    state->resetPending();
+    state->pending.enabled = false;
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_surrounding_text(Resource *resource, const QString &text, int32_t cursor, int32_t anchor)
 {
-    // zwp_text_input_v3_set_surrounding_text is no-op if enabled request is not pending
-    if (!pending.enabled) {
+    auto state = stateForResource(resource);
+    if (!state) {
         return;
     }
-    pending.surroundingText = text;
-    pending.surroundingTextCursorPosition = cursor;
-    pending.surroundingTextSelectionAnchor = anchor;
+    // zwp_text_input_v3_set_surrounding_text is no-op if enabled request is not pending
+    if (!state->pending.enabled) {
+        return;
+    }
+    state->pending.surroundingText = text;
+    state->pending.surroundingTextCursorPosition = cursor;
+    state->pending.surroundingTextSelectionAnchor = anchor;
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_content_type(Resource *resource, uint32_t hint, uint32_t purpose)
 {
-    // zwp_text_input_v3_set_content_type is no-op if enabled request is not pending
-    if (!pending.enabled) {
+    auto state = stateForResource(resource);
+    if (!state) {
         return;
     }
-    pending.contentHints = convertContentHint(hint);
-    pending.contentPurpose = convertContentPurpose(purpose);
+    // zwp_text_input_v3_set_content_type is no-op if enabled request is not pending
+    if (!state->pending.enabled) {
+        return;
+    }
+    state->pending.contentHints = convertContentHint(hint);
+    state->pending.contentPurpose = convertContentPurpose(purpose);
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_cursor_rectangle(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    // zwp_text_input_v3_set_cursor_rectangle is no-op if enabled request is not pending
-    if (!pending.enabled) {
+    auto state = stateForResource(resource);
+    if (!state) {
         return;
     }
-    pending.cursorRectangle = Rect(x, y, width, height);
+    // zwp_text_input_v3_set_cursor_rectangle is no-op if enabled request is not pending
+    if (!state->pending.enabled) {
+        return;
+    }
+    state->pending.cursorRectangle = Rect(x, y, width, height);
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_text_change_cause(Resource *resource, uint32_t cause)
 {
-    // zwp_text_input_v3_set_text_change_cause is no-op if enabled request is not pending
-    if (!pending.enabled) {
+    auto state = stateForResource(resource);
+    if (!state) {
         return;
     }
-    pending.surroundingTextChangeCause = convertChangeCause(cause);
+    // zwp_text_input_v3_set_text_change_cause is no-op if enabled request is not pending
+    if (!state->pending.enabled) {
+        return;
+    }
+    state->pending.surroundingTextChangeCause = convertChangeCause(cause);
 }
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
 {
-    serialHash[resource]++;
+    auto state = stateForResource(resource);
+    if (!state) {
+        return;
+    }
+    state->serial++;
 
-    auto &resourceEnabled = enabledHash[resource];
-    const auto oldResourceEnabled = resourceEnabled;
-    if (resourceEnabled != pending.enabled) {
-        resourceEnabled = pending.enabled;
+    const auto oldResourceEnabled = state->enabled;
+    // state->pending.enabled is not reset.
+    state->enabled = state->pending.enabled;
+
+    if (state->surroundingTextChangeCause != state->pending.surroundingTextChangeCause) {
+        state->surroundingTextChangeCause = state->pending.surroundingTextChangeCause;
+        state->pending.surroundingTextChangeCause = TextInputChangeCause::InputMethod;
     }
 
-    if (surroundingTextChangeCause != pending.surroundingTextChangeCause) {
-        surroundingTextChangeCause = pending.surroundingTextChangeCause;
-        pending.surroundingTextChangeCause = TextInputChangeCause::InputMethod;
-    }
-
-    if (contentHints != pending.contentHints || contentPurpose != pending.contentPurpose) {
-        contentHints = pending.contentHints;
-        contentPurpose = pending.contentPurpose;
-        if (resourceEnabled) {
+    if (state->contentHints != state->pending.contentHints || state->contentPurpose != state->pending.contentPurpose) {
+        state->contentHints = state->pending.contentHints;
+        state->contentPurpose = state->pending.contentPurpose;
+        if (state->enabled) {
             Q_EMIT q->contentTypeChanged();
         }
     }
 
-    if (cursorRectangle != pending.cursorRectangle) {
-        cursorRectangle = pending.cursorRectangle;
-        if (resourceEnabled) {
-            Q_EMIT q->cursorRectangleChanged(cursorRectangle);
+    if (state->cursorRectangle != state->pending.cursorRectangle) {
+        state->cursorRectangle = state->pending.cursorRectangle;
+        if (state->enabled) {
+            Q_EMIT q->cursorRectangleChanged(state->cursorRectangle);
         }
     }
 
-    if (surroundingText != pending.surroundingText || surroundingTextCursorPosition != pending.surroundingTextCursorPosition
-        || surroundingTextSelectionAnchor != pending.surroundingTextSelectionAnchor) {
-        surroundingText = pending.surroundingText;
-        surroundingTextCursorPosition = pending.surroundingTextCursorPosition;
-        surroundingTextSelectionAnchor = pending.surroundingTextSelectionAnchor;
-        if (resourceEnabled) {
+    if (state->surroundingText != state->pending.surroundingText || state->surroundingTextCursorPosition != state->pending.surroundingTextCursorPosition
+        || state->surroundingTextSelectionAnchor != state->pending.surroundingTextSelectionAnchor) {
+        state->surroundingText = state->pending.surroundingText;
+        state->surroundingTextCursorPosition = state->pending.surroundingTextCursorPosition;
+        state->surroundingTextSelectionAnchor = state->pending.surroundingTextSelectionAnchor;
+        if (state->enabled) {
             Q_EMIT q->surroundingTextChanged();
         }
     }
 
-    Q_EMIT q->stateCommitted(serialHash[resource]);
+    Q_EMIT q->stateCommitted(state->serial);
 
     // Gtk text input implementation expect done to be sent after every commit to synchronize the serial value between commit() and done().
     // So we need to send the current preedit text with done().
     // If current preedit is empty, there is no need to send it.
-    if (!preeditText.isEmpty() || preeditCursorBegin != 0 || preeditCursorEnd != 0) {
-        send_preedit_string(resource->handle, preeditText, preeditCursorBegin, preeditCursorEnd);
+    if (!state->preeditText.isEmpty() || state->preeditCursorBegin != 0 || state->preeditCursorEnd != 0) {
+        send_preedit_string(resource->handle, state->preeditText, state->preeditCursorBegin, state->preeditCursorEnd);
     }
-    send_done(resource->handle, serialHash[resource]);
+    send_done(resource->handle, state->serial);
 
-    if (resourceEnabled && oldResourceEnabled) {
+    if (state->enabled && oldResourceEnabled) {
         Q_EMIT q->enableRequested();
     }
 
     updateEnabled();
-}
-
-void TextInputV3InterfacePrivate::defaultPending()
-{
-    pending.cursorRectangle = Rect();
-    pending.surroundingTextChangeCause = TextInputChangeCause::InputMethod;
-    pending.contentHints = TextInputContentHints(TextInputContentHint::None);
-    pending.contentPurpose = TextInputContentPurpose::Normal;
-    pending.enabled = false;
-    pending.surroundingText = QString();
-    pending.surroundingTextCursorPosition = 0;
-    pending.surroundingTextSelectionAnchor = 0;
-    defaultPendingPreedit();
-}
-
-void TextInputV3InterfacePrivate::defaultPendingPreedit()
-{
-    pending.preeditText = QString();
-    pending.preeditCursorBegin = 0;
-    pending.preeditCursorEnd = 0;
 }
 
 TextInputV3Interface::TextInputV3Interface(SeatInterface *seat)
@@ -427,27 +459,42 @@ TextInputV3Interface::~TextInputV3Interface() = default;
 
 TextInputContentHints TextInputV3Interface::contentHints() const
 {
-    return d->contentHints;
+    if (auto state = d->stateForFocusedSurface()) {
+        return state->contentHints;
+    }
+    return TextInputContentHint::None;
 }
 
 TextInputContentPurpose TextInputV3Interface::contentPurpose() const
 {
-    return d->contentPurpose;
+    if (auto state = d->stateForFocusedSurface()) {
+        return state->contentPurpose;
+    }
+    return TextInputContentPurpose::Normal;
 }
 
 QString TextInputV3Interface::surroundingText() const
 {
-    return d->surroundingText;
+    if (auto state = d->stateForFocusedSurface()) {
+        return state->surroundingText;
+    }
+    return {};
 }
 
 qint32 TextInputV3Interface::surroundingTextCursorPosition() const
 {
-    return d->surroundingTextCursorPosition;
+    if (auto state = d->stateForFocusedSurface()) {
+        return state->surroundingTextCursorPosition;
+    }
+    return 0;
 }
 
 qint32 TextInputV3Interface::surroundingTextSelectionAnchor() const
 {
-    return d->surroundingTextSelectionAnchor;
+    if (auto state = d->stateForFocusedSurface()) {
+        return state->surroundingTextSelectionAnchor;
+    }
+    return 0;
 }
 
 void TextInputV3Interface::deleteSurroundingText(quint32 beforeLength, quint32 afterLength)
@@ -485,7 +532,10 @@ QPointer<SurfaceInterface> TextInputV3Interface::surface() const
 
 Rect TextInputV3Interface::cursorRectangle() const
 {
-    return d->cursorRectangle;
+    if (auto state = d->stateForFocusedSurface()) {
+        return state->cursorRectangle;
+    }
+    return {};
 }
 
 bool TextInputV3Interface::isEnabled() const
