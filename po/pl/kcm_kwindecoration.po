@@ -1,7 +1,7 @@
 # translation of kcmkwindecoration.po to Polish
-# Version: $Revision: 1728744 $
+# Version: $Revision: 1732857 $
 # translation of kcmkwindecoration.po to
-# SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
+# SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025, 2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Norbert Popiołek <norbert@kde.com.pl>\n"
 # Michał Rudolf <mrudolf@kdewebdev.org>, 2002.
 # Michal Rudolf <mrudolf@kdewebdev.org>, 2002, 2003, 2004, 2005, 2009.
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-28 02:43+0000\n"
-"PO-Revision-Date: 2025-07-19 08:47+0200\n"
+"PO-Revision-Date: 2026-03-21 06:25+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
 "Language: pl\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 25.04.3\n"
+"X-Generator: Lokalize 25.08.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
 #, kde-format
@@ -71,7 +71,7 @@ msgstr "Utrzymuj nad innymi oknami"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screencast"
-msgstr ""
+msgstr "Ukryj z udostępnienia ekranu"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -207,7 +207,7 @@ msgstr "Pokaż podpowiedź po najechaniu na przycisk paska tytułu"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screencast\" button"
-msgstr ""
+msgstr "Zawsze pokazuj przycisk \"Ukryj z udostępniania ekranu\""
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -216,6 +216,8 @@ msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screencast"
 msgstr ""
+"Gdy niezaznaczone, to przycisk pokaże się tylko, gdy okno jest ukryte z "
+"udostępniania ekranu"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -224,6 +226,8 @@ msgid ""
 "To enable this option, add the \"Hide from screencast\" button to the "
 "titlebar first"
 msgstr ""
+"Aby włączyć to ustawienie, najpierw dodaj przycisk \"Ukryj z udostępniania\" "
+"na pasku tytułu"
 
 #: ui/main.qml:29
 #, kde-format

@@ -1,8 +1,8 @@
 # translation of kwin.po to
-# Version: $Revision: 1732289 $
+# Version: $Revision: 1732857 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
-# SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
+# SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Norbert Popiołek <norbert@kde.com.pl>
 # Michał Rudolf <mrudolf@kdewebdev.org>, 2002.
 # Michal Rudolf <mrudolf@kdewebdev.org>, 2002, 2003.
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-15 02:43+0000\n"
-"PO-Revision-Date: 2025-12-06 15:39+0100\n"
+"PO-Revision-Date: 2026-03-21 06:36+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
 "Language: pl\n"
@@ -170,10 +170,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Brakuje znaczników TRC w profilu barw"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "Nie udało się otworzyć profilu ICC \"%1\""
+msgstr "Nie udało się odwrócić krzywych odcieni dla profilu ICC \"%1\""
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1826,7 +1825,7 @@ msgstr[2] "%1 sekund"
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr "Ukryj wskaźnik myszy przy jego bezruchu:"
+msgstr "Ukryj wskaźnik myszy przy bezruchu:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
@@ -3519,7 +3518,7 @@ msgstr "Okno dialogowe"
 #: shortcutdialog.ui:25
 #, kde-format
 msgid "..."
-msgstr "..."
+msgstr "…"
 
 #: sm.cpp:421
 #, kde-format
@@ -4178,17 +4177,17 @@ msgstr ""
 #: wayland/outputmanagement_v2.cpp:637
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
-msgstr ""
+msgstr "Nie można dodać własnego trybu o zerowym rozmiarze"
 
 #: wayland/outputmanagement_v2.cpp:641
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
-msgstr ""
+msgstr "Nie można dodać własnego trybu o odświeżaniu równym zero Hz"
 
 #: wayland/outputmanagement_v2.cpp:659
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "Położenie wyjścia %s jest zbyt dodatnie (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:676
 #, kde-format
@@ -4227,7 +4226,7 @@ msgstr ""
 #: xwayland/xwaylandlauncher.cpp:295
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr "Xwayland napotkał usterkę"
+msgstr "Xwayland wysypał się"
 
 #~ msgid "Buttons"
 #~ msgstr "Przyciski"
