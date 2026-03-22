@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Maciej Wikło <maciej.wiklo@wp.pl>, 2009.
 # Marta Rybczyńska <kde-i18n@rybczynska.net>, 2010, 2011.
-# SPDX-FileCopyrightText: 2011, 2012, 2013, 2015, 2019, 2021, 2022, 2024, 2025 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
+# SPDX-FileCopyrightText: 2011, 2012, 2013, 2015, 2019, 2021, 2022, 2024, 2025, 2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # krzysztof <x-men@mixbox.pl>, 2012.
 #
 msgid ""
