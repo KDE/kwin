@@ -50,21 +50,6 @@ static bool isHighlightWindow(EffectWindow *window)
     return window->isNormalWindow() || window->isDialog();
 }
 
-static bool shouldAnimate(EffectWindow *window, bool isTarget)
-{
-    // Always animate the highlighted window no matter what desktop it's on
-    if (isTarget) {
-        return true;
-    }
-
-    // Skip deleted or background windows that are not on the current desktop/activity
-    if (window->isDeleted() || !window->isOnCurrentDesktop() || !window->isOnCurrentActivity()) {
-        return false;
-    }
-
-    return true;
-}
-
 void HighlightWindowEffect::highlightWindows(const QStringList &windows)
 {
     QList<EffectWindow *> effectWindows;
@@ -99,16 +84,16 @@ void HighlightWindowEffect::prepareHighlighting()
 {
     const QList<EffectWindow *> windows = effects->stackingOrder();
     for (EffectWindow *window : windows) {
-        bool isTarget = isHighlighted(window);
-
-        if (!isHighlightWindow(window) || !shouldAnimate(window, isTarget)) {
+        if (window->isDeleted() || !isHighlightWindow(window)) {
             continue;
         }
 
         if (isHighlighted(window)) {
             startHighlightAnimation(window);
-        } else {
+        } else if (window->isVisible()) {
             startGhostAnimation(window);
+        } else {
+            startRevertAnimation(window);
         }
     }
 }
@@ -117,9 +102,7 @@ void HighlightWindowEffect::finishHighlighting()
 {
     const QList<EffectWindow *> windows = effects->stackingOrder();
     for (EffectWindow *window : windows) {
-        bool isTarget = isHighlighted(window);
-
-        if (!isHighlightWindow(window) || !shouldAnimate(window, isTarget)) {
+        if (window->isDeleted() || !isHighlightWindow(window)) {
             continue;
         }
 
