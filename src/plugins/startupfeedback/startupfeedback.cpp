@@ -414,10 +414,7 @@ QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size) 
 {
     const qreal devicePixelRatio = pm.devicePixelRatioF();
     const QSize &adjustedSize = size * m_bounceSizesRatio;
-    QImage scaled = pm.toImage().scaled(adjustedSize * devicePixelRatio, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    if (scaled.format() != QImage::Format_ARGB32_Premultiplied && scaled.format() != QImage::Format_ARGB32) {
-        scaled.convertTo(QImage::Format_ARGB32);
-    }
+    const QImage scaled = pm.toImage().scaled(adjustedSize * devicePixelRatio, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     QImage result(feedbackIconSize() * devicePixelRatio, QImage::Format_ARGB32_Premultiplied);
     result.fill(Qt::transparent);
