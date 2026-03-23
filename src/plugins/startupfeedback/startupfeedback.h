@@ -75,8 +75,8 @@ private:
 
     void start(const Startup &startup);
     void stop();
-    QImage scalePixmap(const QPixmap &pm, const QSize &size, qreal devicePixelRatio) const;
-    void prepareTextures(const QPixmap &pix, qreal devicePixelRatio);
+    QImage scalePixmap(const QPixmap &pm, const QSize &size) const;
+    void prepareTextures(const QPixmap &pix);
     QRect feedbackRect() const;
     QSize feedbackIconSize() const;
 

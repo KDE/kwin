@@ -347,8 +347,8 @@ void StartupFeedbackEffect::start(const Startup &startup)
         m_bounceSizesRatio = iconSize / 16.0;
     }
 
-    const QPixmap iconPixmap = startup.icon.pixmap(iconSize);
-    prepareTextures(iconPixmap, output->scale());
+    const QPixmap iconPixmap = startup.icon.pixmap(QSize(iconSize, iconSize), output->scale());
+    prepareTextures(iconPixmap);
     m_dirtyRect = m_currentGeometry = feedbackRect();
     effects->addRepaint(m_dirtyRect);
 }
@@ -380,13 +380,13 @@ void StartupFeedbackEffect::stop()
     effects->addRepaintFull();
 }
 
-void StartupFeedbackEffect::prepareTextures(const QPixmap &pix, qreal devicePixelRatio)
+void StartupFeedbackEffect::prepareTextures(const QPixmap &pix)
 {
     effects->makeOpenGLContextCurrent();
     switch (m_type) {
     case BouncingFeedback:
         for (int i = 0; i < 5; ++i) {
-            m_bouncingTextures[i] = GLTexture::upload(scalePixmap(pix, BOUNCE_SIZES[i], devicePixelRatio));
+            m_bouncingTextures[i] = GLTexture::upload(scalePixmap(pix, BOUNCE_SIZES[i]));
             if (!m_bouncingTextures[i]) {
                 return;
             }
@@ -410,20 +410,21 @@ void StartupFeedbackEffect::prepareTextures(const QPixmap &pix, qreal devicePixe
     }
 }
 
-QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size, qreal devicePixelRatio) const
+QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size) const
 {
+    const qreal devicePixelRatio = pm.devicePixelRatioF();
     const QSize &adjustedSize = size * m_bounceSizesRatio;
-    QImage scaled = pm.toImage().scaled(adjustedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    QImage scaled = pm.toImage().scaled(adjustedSize * devicePixelRatio, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     if (scaled.format() != QImage::Format_ARGB32_Premultiplied && scaled.format() != QImage::Format_ARGB32) {
         scaled.convertTo(QImage::Format_ARGB32);
     }
 
     QImage result(feedbackIconSize() * devicePixelRatio, QImage::Format_ARGB32);
+    result.fill(Qt::transparent);
     result.setDevicePixelRatio(devicePixelRatio);
 
     QPainter p(&result);
     p.setCompositionMode(QPainter::CompositionMode_Source);
-    p.fillRect(result.rect(), Qt::transparent);
     p.drawImage(QRectF((20 * m_bounceSizesRatio - adjustedSize.width()) / 2,
                        (20 * m_bounceSizesRatio - adjustedSize.height()) / 2,
                        adjustedSize.width(),
