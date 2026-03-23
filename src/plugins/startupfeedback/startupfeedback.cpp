@@ -419,7 +419,7 @@ QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size) 
         scaled.convertTo(QImage::Format_ARGB32);
     }
 
-    QImage result(feedbackIconSize() * devicePixelRatio, QImage::Format_ARGB32);
+    QImage result(feedbackIconSize() * devicePixelRatio, QImage::Format_ARGB32_Premultiplied);
     result.fill(Qt::transparent);
     result.setDevicePixelRatio(devicePixelRatio);
 
