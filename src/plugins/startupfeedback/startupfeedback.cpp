@@ -414,19 +414,20 @@ QImage StartupFeedbackEffect::scalePixmap(const QPixmap &pm, const QSize &size) 
 {
     const qreal devicePixelRatio = pm.devicePixelRatioF();
     const QSize &adjustedSize = size * m_bounceSizesRatio;
-    const QImage scaled = pm.toImage().scaled(adjustedSize * devicePixelRatio, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     QImage result(feedbackIconSize() * devicePixelRatio, QImage::Format_ARGB32_Premultiplied);
     result.fill(Qt::transparent);
     result.setDevicePixelRatio(devicePixelRatio);
 
     QPainter p(&result);
+    p.setRenderHint(QPainter::SmoothPixmapTransform);
     p.setCompositionMode(QPainter::CompositionMode_Source);
-    p.drawImage(QRectF((20 * m_bounceSizesRatio - adjustedSize.width()) / 2,
-                       (20 * m_bounceSizesRatio - adjustedSize.height()) / 2,
-                       adjustedSize.width(),
-                       adjustedSize.height()),
-                scaled);
+    p.drawPixmap(QRectF((20 * m_bounceSizesRatio - adjustedSize.width()) / 2,
+                        (20 * m_bounceSizesRatio - adjustedSize.height()) / 2,
+                        adjustedSize.width(),
+                        adjustedSize.height()),
+                 pm,
+                 pm.rect());
     return result;
 }
 
