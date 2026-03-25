@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-15 02:43+0000\n"
-"PO-Revision-Date: 2026-03-14 10:50+0400\n"
+"PO-Revision-Date: 2026-03-24 10:34+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -3162,7 +3162,7 @@ msgstr "مكبّرة عمودياً"
 #: rulesettings.kcfg:201
 #, kde-format
 msgid "Maximized vertically rule type"
-msgstr "نوع القاعدة لكبّر النّافذة رأسيًّا"
+msgstr "نوع القاعدة لكبّر النّافذة عموديًا"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:208
@@ -3747,7 +3747,7 @@ msgstr "كبّر النّافذة"
 #: useractions.cpp:832
 #, kde-format
 msgid "Maximize Window Vertically"
-msgstr "كبّر النّافذة رأسيًّا"
+msgstr "كبّر النّافذة عموديًا"
 
 #: useractions.cpp:834
 #, kde-format
@@ -3847,7 +3847,7 @@ msgstr "كبّر النّافذة أفقيًّا"
 #: useractions.cpp:872
 #, kde-format
 msgid "Expand Window Vertically"
-msgstr "كبّر النّافذة رأسيًّا"
+msgstr "كبّر النّافذة عموديًا"
 
 #: useractions.cpp:874
 #, kde-format
@@ -3857,7 +3857,7 @@ msgstr "قلص النافذة أفقيًا"
 #: useractions.cpp:876
 #, kde-format
 msgid "Shrink Window Vertically"
-msgstr "قلص النافذة رأسيًا"
+msgstr "قلص النافذة عموديًا"
 
 #: useractions.cpp:878
 #, kde-format

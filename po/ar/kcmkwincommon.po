@@ -1,13 +1,13 @@
 # Copyright (C) 2025 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# SPDX-FileCopyrightText: 2021, 2022, 2023, 2025 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2021, 2022, 2023, 2025, 2026 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-16 02:39+0000\n"
-"PO-Revision-Date: 2023-04-27 12:45+0400\n"
+"PO-Revision-Date: 2026-03-23 22:29+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -102,4 +102,4 @@ msgstr "%1 غير موجود"
 #: genericscriptedconfig.cpp:116
 #, kde-format
 msgid "Error loading widget from %1: %2"
-msgstr ""
+msgstr "حدث خطأ أثناء تحميل عنصر واجهة المستخدم من %1: %2"

@@ -6,14 +6,14 @@
 # محمد سعد  Mohamed SAAD <metehyi@free.fr>, 2006.
 # AbdulAziz AlSharif <a.a-a.s@hotmail.com>, 2007.
 # Youssef Chahibi <chahibi@gmail.com>, 2007.
-# SPDX-FileCopyrightText: 2008, 2024, 2025 zayed <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2008, 2024, 2025, 2026 zayed <zayed.alsaidi@gmail.com>
 # Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2025-08-13 18:34+0400\n"
+"PO-Revision-Date: 2026-03-24 11:03+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -928,7 +928,7 @@ msgstr "كبّر"
 #: mouse.ui:48 mouse.ui:596 mouse.ui:631 mouse.ui:666
 #, kde-format
 msgid "Vertically maximize"
-msgstr "تكبير رأسي"
+msgstr "تكبير عمودي"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
