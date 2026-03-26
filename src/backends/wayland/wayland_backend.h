@@ -217,6 +217,7 @@ public:
 
     std::unique_ptr<InputBackend> createInputBackend() override;
     std::unique_ptr<EglBackend> createOpenGLBackend(RenderDevice *device) override;
+    std::unique_ptr<VulkanBackend> createVulkanBackend(RenderDevice *device) override;
 
     WaylandDisplay *display() const
     {

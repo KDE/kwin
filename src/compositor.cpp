@@ -31,11 +31,13 @@
 #include "renderloopdrivenqanimationdriver.h"
 #include "scene/cursoritem.h"
 #include "scene/itemrenderer_opengl.h"
+#include "scene/itemrenderer_vulkan.h"
 #include "scene/surfaceitem.h"
 #include "scene/surfaceitem_wayland.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
 #include "utils/envvar.h"
+#include "vulkan/vulkan_backend.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -295,6 +297,33 @@ bool Compositor::attemptOpenGLCompositing()
     return true;
 }
 
+bool Compositor::attemptVulkanCompositing()
+{
+    if (!m_primaryDevice) {
+        m_primaryDevice = selectRenderDevice();
+        if (!m_primaryDevice) {
+            qCWarning(KWIN_CORE, "Found no render device!");
+            return false;
+        }
+        qCDebug(KWIN_CORE, "Chose %s as the primary GPU", qPrintable(m_primaryDevice->path()));
+    }
+
+    const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
+    if (forceEnv == "V") {
+        qCWarning(KWIN_CORE) << "Vulkan compositing forced by environment variable";
+    } else if (!forceEnv.isEmpty()) {
+        return false;
+    }
+    std::unique_ptr<VulkanBackend> backend = kwinApp()->outputBackend()->createVulkanBackend(m_primaryDevice);
+    if (!backend) {
+        qCDebug(KWIN_CORE) << "Vulkan compositing failed?";
+        return false;
+    }
+    m_backend = std::move(backend);
+    qCDebug(KWIN_CORE) << "Vulkan compositing has been successfully initialized";
+    return true;
+}
+
 void Compositor::createRenderer()
 {
     // If compositing has been restarted, try to use the last used compositing type.
@@ -324,6 +353,10 @@ void Compositor::createRenderer()
             break;
         case QPainterCompositing:
             stop = true;
+            break;
+        case VulkanCompositing:
+            qCDebug(KWIN_CORE) << "Attempting to start Vulkan compositing";
+            stop = attemptVulkanCompositing();
             break;
         case NoCompositing:
             qCDebug(KWIN_CORE) << "Starting without compositing...";
@@ -371,12 +404,20 @@ void Compositor::start()
         case QPainterCompositing:
             QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
             break;
+        case VulkanCompositing:
+            // TODO support Vulkan in the QPA
+            QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
+            break;
         }
     }
 
     const auto &devices = GpuManager::self()->renderDevices();
     for (const auto &device : devices) {
-        kwinApp()->scene()->attachRenderer(device.get(), std::make_unique<ItemRendererOpenGL>(device.get()));
+        if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
+            kwinApp()->scene()->attachRenderer(device.get(), std::make_unique<ItemRendererOpenGL>(device.get()));
+        } else if (const auto vulkan = qobject_cast<VulkanBackend *>(m_backend.get())) {
+            kwinApp()->scene()->attachRenderer(device.get(), std::make_unique<ItemRendererVulkan>(device.get()));
+        }
         connect(device.get(), &RenderDevice::resetDetected, this, &Compositor::gpuResetDetected);
     }
 

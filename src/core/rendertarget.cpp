@@ -6,6 +6,7 @@
 
 #include "core/rendertarget.h"
 #include "opengl/glutils.h"
+#include "vulkan/vulkan_texture.h"
 
 namespace KWin
 {
@@ -26,6 +27,14 @@ RenderTarget::RenderTarget(GraphicsBuffer *buffer,
 {
 }
 
+RenderTarget::RenderTarget(VulkanTexture *texture, const std::shared_ptr<ColorDescription> &colorDescription)
+    : m_vulkanTexture(texture)
+    // TODO we may need a transform in the texture for Vulkan, too?
+    , m_transform(OutputTransform())
+    , m_colorDescription(colorDescription)
+{
+}
+
 QSize RenderTarget::transformedSize() const
 {
     return m_transform.map(size());
@@ -40,6 +49,8 @@ QSize RenderTarget::size() const
 {
     if (m_buffer) {
         return m_buffer->size();
+    } else if (m_vulkanTexture) {
+        return m_vulkanTexture->size();
     } else {
         return m_framebuffer->size();
     }
@@ -58,6 +69,11 @@ GLFramebuffer *RenderTarget::framebuffer() const
 GLTexture *RenderTarget::texture() const
 {
     return m_framebuffer->colorAttachment();
+}
+
+VulkanTexture *RenderTarget::vulkanTexture() const
+{
+    return m_vulkanTexture;
 }
 
 GraphicsBuffer *RenderTarget::buffer() const

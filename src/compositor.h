@@ -99,6 +99,7 @@ protected:
     BackendOutput *findOutput(RenderLoop *loop) const;
 
     bool attemptOpenGLCompositing();
+    bool attemptVulkanCompositing();
     void handleOutputsChanged();
     void addOutput(LogicalOutput *logicalOutput, BackendOutput *backendOutput);
     void removeOutput(BackendOutput *output);

@@ -29,8 +29,8 @@ class OutputConfiguration;
 class EglDisplay;
 class Session;
 class BackendOutput;
-class EglContext;
 class RenderDevice;
+class VulkanBackend;
 
 class KWIN_EXPORT OutputBackend : public QObject
 {
@@ -42,6 +42,7 @@ public:
     virtual bool initialize() = 0;
     virtual std::unique_ptr<InputBackend> createInputBackend();
     virtual std::unique_ptr<EglBackend> createOpenGLBackend(RenderDevice *device);
+    virtual std::unique_ptr<VulkanBackend> createVulkanBackend(RenderDevice *device);
 
     /**
      * The CompositingTypes supported by the Platform.
@@ -86,8 +87,6 @@ Q_SIGNALS:
 
 protected:
     explicit OutputBackend(QObject *parent = nullptr);
-
-    EglContext *m_globalShareContext = nullptr;
 };
 
 } // namespace KWin
