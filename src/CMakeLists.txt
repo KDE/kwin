@@ -176,6 +176,7 @@ target_sources(kwin PRIVATE
     scene/itemrenderer.cpp
     scene/itemrenderer_opengl.cpp
     scene/itemrenderer_qpainter.cpp
+    scene/itemrenderer_vulkan.cpp
     scene/ninepatch.cpp
     scene/opengl/atlas.cpp
     scene/opengl/ninepatch.cpp
@@ -190,6 +191,9 @@ target_sources(kwin PRIVATE
     scene/surfaceitem_internal.cpp
     scene/surfaceitem_wayland.cpp
     scene/texture.cpp
+    scene/vulkan/atlas.cpp
+    scene/vulkan/ninepatch.cpp
+    scene/vulkan/texture.cpp
     scene/windowitem.cpp
     scene/workspacescene.cpp
     screenedge.cpp
@@ -226,6 +230,7 @@ target_sources(kwin PRIVATE
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp
     virtualkeyboard_dbus.cpp
+    vulkan/vulkan_backend.cpp
     vulkan/vulkan_device.cpp
     vulkan/vulkan_logging.cpp
     vulkan/vulkan_swapchain.cpp
@@ -661,6 +666,7 @@ install(FILES
     scene/itemrenderer.h
     scene/itemrenderer_opengl.h
     scene/itemrenderer_qpainter.h
+    scene/itemrenderer_vulkan.h
     scene/ninepatch.h
     scene/opengl/atlas.h
     scene/opengl/ninepatch.h
@@ -675,12 +681,16 @@ install(FILES
     scene/surfaceitem_internal.h
     scene/surfaceitem_wayland.h
     scene/texture.h
+    scene/vulkan/atlas.h
+    scene/vulkan/ninepatch.h
+    scene/vulkan/texture.h
     scene/windowitem.h
     scene/workspacescene.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/scene COMPONENT Devel
 )
 
 install(FILES
+    vulkan/vulkan_backend.h
     vulkan/vulkan_device.h
     vulkan/vulkan_logging.h
     vulkan/vulkan_swapchain.h

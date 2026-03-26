@@ -16,11 +16,13 @@ namespace KWin
 
 class GLFramebuffer;
 class GLTexture;
+class VulkanTexture;
 
 class KWIN_EXPORT RenderTarget
 {
 public:
     explicit RenderTarget(GLFramebuffer *fbo, const std::shared_ptr<ColorDescription> &colorDescription = ColorDescription::sRGB);
+    explicit RenderTarget(VulkanTexture *texture, const std::shared_ptr<ColorDescription> &colorDescription = ColorDescription::sRGB);
     explicit RenderTarget(QImage *image, const std::shared_ptr<ColorDescription> &colorDescription = ColorDescription::sRGB);
 
     QSize transformedSize() const;
@@ -33,10 +35,12 @@ public:
     QImage *image() const;
     GLFramebuffer *framebuffer() const;
     GLTexture *texture() const;
+    VulkanTexture *vulkanTexture() const;
 
 private:
     QImage *m_image = nullptr;
     GLFramebuffer *m_framebuffer = nullptr;
+    VulkanTexture *m_vulkanTexture = nullptr;
     const OutputTransform m_transform;
     const std::shared_ptr<ColorDescription> m_colorDescription;
 };

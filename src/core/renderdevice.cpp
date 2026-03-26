@@ -40,7 +40,7 @@ static vk::raii::Instance createVulkanInstance(const vk::raii::Context &context)
         "kwin_wayland",
         VK_MAKE_VERSION(PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH),
         "kwin_wayland",
-        VK_MAKE_VERSION(1, 0, 0),
+        VK_MAKE_VERSION(1, 1, 0),
         VK_MAKE_VERSION(1, 3, 0),
     };
     std::vector<const char *> validationLayers;

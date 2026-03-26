@@ -12,11 +12,13 @@
 
 #include "core/backendoutput.h"
 #include "core/brightnessdevice.h"
+#include "core/drm_formats.h"
 #include "core/drmdevice.h"
 #include "core/graphicsbufferview.h"
 #include "core/outputbackend.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
+#include "core/renderdevice.h"
 #include "core/renderloop.h"
 #include "cursor.h"
 #include "cursorsource.h"
@@ -30,17 +32,17 @@
 #include "scene/cursoritem.h"
 #include "scene/itemrenderer_opengl.h"
 #include "scene/itemrenderer_qpainter.h"
+#include "scene/itemrenderer_vulkan.h"
 #include "scene/surfaceitem.h"
 #include "scene/surfaceitem_wayland.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
 #include "utils/envvar.h"
+#include "vulkan/vulkan_backend.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-
-#include "core/drm_formats.h"
 
 #include <KCrash>
 #if KWIN_BUILD_NOTIFICATIONS
@@ -144,13 +146,6 @@ static QVariantHash collectCrashInformation(const EglBackend *backend)
 
 bool Compositor::attemptOpenGLCompositing()
 {
-    std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend();
-    if (!backend->init()) {
-        return false;
-    }
-
-    KCrash::setGPUData(collectCrashInformation(backend.get()));
-
     const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
     if (!forceEnv.isEmpty()) {
         if (qstrcmp(forceEnv, "O2") == 0 || qstrcmp(forceEnv, "O2ES") == 0) {
@@ -159,11 +154,17 @@ bool Compositor::attemptOpenGLCompositing()
             // OpenGL 2 disabled by environment variable
             return false;
         }
-    } else {
-        if (backend->openglContext()->glPlatform()->recommendedCompositor() < OpenGLCompositing) {
-            qCDebug(KWIN_CORE) << "Driver does not recommend OpenGL compositing";
-            return false;
-        }
+    }
+    std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend();
+    if (!backend->init()) {
+        return false;
+    }
+
+    KCrash::setGPUData(collectCrashInformation(backend.get()));
+
+    if (forceEnv.isEmpty() && backend->openglContext()->glPlatform()->recommendedCompositor() != OpenGLCompositing) {
+        qCDebug(KWIN_CORE) << "Driver does not recommend OpenGL compositing";
+        return false;
     }
 
     // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
@@ -184,6 +185,24 @@ bool Compositor::attemptQPainterCompositing()
     }
     m_backend = std::move(backend);
     qCDebug(KWIN_CORE) << "QPainter compositing has been successfully initialized";
+    return true;
+}
+
+bool Compositor::attemptVulkanCompositing()
+{
+    const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
+    if (forceEnv == "V") {
+        qCWarning(KWIN_CORE) << "Vulkan compositing forced by environment variable";
+    } else if (!forceEnv.isEmpty()) {
+        return false;
+    }
+    std::unique_ptr<VulkanBackend> backend = kwinApp()->outputBackend()->createVulkanBackend();
+    if (!backend) {
+        qCDebug(KWIN_CORE) << "Vulkan compositing failed?";
+        return false;
+    }
+    m_backend = std::move(backend);
+    qCDebug(KWIN_CORE) << "Vulkan compositing has been successfully initialized";
     return true;
 }
 
@@ -217,6 +236,10 @@ void Compositor::createRenderer()
         case QPainterCompositing:
             qCDebug(KWIN_CORE) << "Attempting to load the QPainter scene";
             stop = attemptQPainterCompositing();
+            break;
+        case VulkanCompositing:
+            qCDebug(KWIN_CORE) << "Attempting to start Vulkan compositing";
+            stop = attemptVulkanCompositing();
             break;
         case NoCompositing:
             qCDebug(KWIN_CORE) << "Starting without compositing...";
@@ -270,11 +293,17 @@ void Compositor::start()
         case QPainterCompositing:
             QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
             break;
+        case VulkanCompositing:
+            // TODO support Vulkan in the QPA
+            QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
+            break;
         }
     }
 
     if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
         kwinApp()->scene()->attachRenderer(std::make_unique<ItemRendererOpenGL>(eglBackend->eglDisplayObject()));
+    } else if (const auto vulkan = qobject_cast<VulkanBackend *>(m_backend.get())) {
+        kwinApp()->scene()->attachRenderer(std::make_unique<ItemRendererVulkan>(vulkan->renderDevice()->vulkanDevice()));
     } else {
         kwinApp()->scene()->attachRenderer(std::make_unique<ItemRendererQPainter>());
     }

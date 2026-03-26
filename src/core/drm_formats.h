@@ -50,6 +50,7 @@ public:
     FormatModifierMap(const std::initializer_list<std::pair<uint32_t, ModifierList>> &list);
 
     FormatModifierMap merged(const FormatModifierMap &other) const;
+    FormatModifierMap intersected(const FormatModifierMap &other) const;
     bool containsFormat(uint32_t format, uint64_t modifier) const;
 };
 

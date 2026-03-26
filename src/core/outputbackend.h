@@ -29,6 +29,7 @@ class OutputConfiguration;
 class EglDisplay;
 class Session;
 class BackendOutput;
+class VulkanBackend;
 
 class KWIN_EXPORT OutputBackend : public QObject
 {
@@ -41,6 +42,7 @@ public:
     virtual std::unique_ptr<InputBackend> createInputBackend();
     virtual std::unique_ptr<EglBackend> createOpenGLBackend();
     virtual std::unique_ptr<QPainterBackend> createQPainterBackend();
+    virtual std::unique_ptr<VulkanBackend> createVulkanBackend();
 
     virtual EglDisplay *sceneEglDisplayObject() const = 0;
     /**
