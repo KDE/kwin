@@ -29,7 +29,6 @@ class OutputConfiguration;
 class EglDisplay;
 class Session;
 class BackendOutput;
-class EglContext;
 class RenderDevice;
 class RenderBackend;
 class OutputLayer;
@@ -94,7 +93,6 @@ protected:
     explicit OutputBackend(QObject *parent = nullptr);
 
     RenderBackend *m_renderBackend = nullptr;
-    EglContext *m_globalShareContext = nullptr;
 };
 
 } // namespace KWin

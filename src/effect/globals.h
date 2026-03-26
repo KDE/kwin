@@ -39,6 +39,7 @@ KWIN_EXPORT Q_NAMESPACE
          * user configs
          */
         QPainterCompositing = 1 << 2,
+        VulkanCompositing = 1 << 3,
     };
 
 enum clientAreaOption {

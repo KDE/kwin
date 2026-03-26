@@ -31,11 +31,13 @@
 #include "renderloopdrivenqanimationdriver.h"
 #include "scene/cursoritem.h"
 #include "scene/itemrenderer_opengl.h"
+#include "scene/itemrenderer_vulkan.h"
 #include "scene/surfaceitem.h"
 #include "scene/surfaceitem_wayland.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
 #include "utils/envvar.h"
+#include "vulkan/vulkan_backend.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -295,26 +297,31 @@ bool Compositor::attemptOpenGLCompositing()
     return true;
 }
 
-void Compositor::createRenderer()
+bool Compositor::attemptVulkanCompositing()
 {
-    // If compositing has been restarted, try to use the last used compositing type.
-    const QList<CompositingType> availableCompositors = kwinApp()->outputBackend()->supportedCompositors();
-    QList<CompositingType> candidateCompositors;
-
-    if (m_selectedCompositor != NoCompositing) {
-        candidateCompositors.append(m_selectedCompositor);
-    } else {
-        candidateCompositors = availableCompositors;
-
-        const auto userConfigIt = std::find(candidateCompositors.begin(), candidateCompositors.end(), options->compositingMode());
-        if (userConfigIt != candidateCompositors.end()) {
-            candidateCompositors.erase(userConfigIt);
-            candidateCompositors.prepend(options->compositingMode());
-        } else {
-            qCWarning(KWIN_CORE) << "Configured compositor not supported by Platform. Falling back to defaults";
+    if (!m_primaryDevice) {
+        m_primaryDevice = selectRenderDevice();
+        if (!m_primaryDevice) {
+            qCWarning(KWIN_CORE, "Found no render device!");
+            return false;
         }
+        qCDebug(KWIN_CORE, "Chose %s as the primary GPU", qPrintable(m_primaryDevice->path()));
     }
 
+    const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
+    if (forceEnv == "V") {
+        qCWarning(KWIN_CORE) << "Vulkan compositing forced by environment variable";
+    } else if (!forceEnv.isEmpty()) {
+        return false;
+    }
+    m_backend = std::make_unique<VulkanBackend>(m_primaryDevice);
+    qCDebug(KWIN_CORE) << "Vulkan compositing has been successfully initialized";
+    return true;
+}
+
+void Compositor::createRenderer()
+{
+    const auto candidateCompositors = kwinApp()->outputBackend()->supportedCompositors();
     for (auto type : std::as_const(candidateCompositors)) {
         bool stop = false;
         switch (type) {
@@ -325,6 +332,10 @@ void Compositor::createRenderer()
         case QPainterCompositing:
             stop = true;
             break;
+        case VulkanCompositing:
+            qCDebug(KWIN_CORE) << "Attempting to start Vulkan compositing";
+            stop = attemptVulkanCompositing();
+            break;
         case NoCompositing:
             qCDebug(KWIN_CORE) << "Starting without compositing...";
             stop = true;
@@ -333,8 +344,6 @@ void Compositor::createRenderer()
 
         if (stop) {
             break;
-        } else if (qEnvironmentVariableIsSet("KWIN_COMPOSE")) {
-            qCFatal(KWIN_CORE) << "Could not fulfill the requested compositing mode in KWIN_COMPOSE:" << type << ". Exiting.";
         }
     }
 
@@ -373,12 +382,20 @@ void Compositor::start()
         case QPainterCompositing:
             QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
             break;
+        case VulkanCompositing:
+            // TODO support Vulkan in the QPA
+            QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
+            break;
         }
     }
 
     const auto &devices = GpuManager::self()->renderDevices();
     for (const auto &device : devices) {
-        kwinApp()->scene()->attachRenderer(device.get(), std::make_unique<ItemRendererOpenGL>(device.get()));
+        if (const auto eglBackend = qobject_cast<EglBackend *>(m_backend.get())) {
+            kwinApp()->scene()->attachRenderer(device.get(), std::make_unique<ItemRendererOpenGL>(device.get()));
+        } else if (const auto vulkan = qobject_cast<VulkanBackend *>(m_backend.get())) {
+            kwinApp()->scene()->attachRenderer(device.get(), std::make_unique<ItemRendererVulkan>(device.get()));
+        }
         connect(device.get(), &RenderDevice::resetDetected, this, &Compositor::gpuResetDetected);
     }
 

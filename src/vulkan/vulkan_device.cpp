@@ -26,6 +26,7 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     , m_physical(physicalDevice)
     , m_logical(std::move(logicalDevice))
     , m_transferFormats(queryFormats(VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
+    , m_storageFormats(queryFormats(VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_STORAGE_BIT))
     , m_queueProperties(std::move(queueProperties))
     , m_deviceLimits(m_physical.getProperties().limits)
     , m_minImportedHostPointerAlignment(minImportedHostPointerAlignment)
@@ -259,8 +260,49 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     for (FileDescriptor &fd : duplicatedFds) {
         fd.take();
     }
-    return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), std::move(image),
-                                           std::move(deviceMemory), QSize(attributes->width, attributes->height));
+
+    // we will only use the general image layout everywhere else,
+    // so transition the image here once and then never again.
+    // NOTE this is just here to appease the validation layers.
+    // It *must* not actually modify the buffer in any way!
+    auto commandBuffer = m_graphicsQueue->createCommandBuffer();
+    commandBuffer.begin(vk::CommandBufferBeginInfo{vk::CommandBufferUsageFlagBits::eOneTimeSubmit});
+    vk::ImageMemoryBarrier toTransferSrc{
+        vk::AccessFlags{},
+        vk::AccessFlagBits::eTransferWrite,
+        vk::ImageLayout::eUndefined,
+        vk::ImageLayout::eGeneral,
+        vk::QueueFamilyIgnored,
+        vk::QueueFamilyIgnored,
+        *image,
+        vk::ImageSubresourceRange{vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1},
+    };
+    commandBuffer.pipelineBarrier(vk::PipelineStageFlagBits::eFragmentShader, vk::PipelineStageFlagBits::eTransfer, {}, {}, {}, toTransferSrc);
+    commandBuffer.end();
+    // FIXME this is terrible. Instead, pass the command buffer in as
+    // an argument, and leave synchronization up to the caller?
+    m_graphicsQueue->submitBlocking(std::move(commandBuffer));
+
+    auto [viewResult, view] = m_logical.createImageView(vk::ImageViewCreateInfo{
+        vk::ImageViewCreateFlags{},
+        *image,
+        vk::ImageViewType::e2D,
+        vk::Format(format->vulkanFormat),
+        vk::ComponentMapping{format->vulkanSwizzles},
+        vk::ImageSubresourceRange{
+            vk::ImageAspectFlagBits::eColor,
+            0,
+            1,
+            0,
+            1,
+        },
+    });
+    if (viewResult != vk::Result::eSuccess) {
+        return nullptr;
+    }
+    return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), vk::ComponentMapping{}, std::move(image),
+                                           std::move(deviceMemory), QSize(attributes->width, attributes->height),
+                                           std::move(view));
 }
 
 std::shared_ptr<VulkanBuffer> VulkanDevice::importDmabufAsBuffer(const DmaBufAttributes *attributes, vk::BufferUsageFlags usage)
@@ -507,6 +549,11 @@ std::optional<VkDeviceSize> VulkanDevice::minImportedHostPointerAlignment() cons
 const FormatModifierMap &VulkanDevice::transferFormats() const
 {
     return m_transferFormats;
+}
+
+const FormatModifierMap &VulkanDevice::storageFormats() const
+{
+    return m_storageFormats;
 }
 
 const vk::raii::Device &VulkanDevice::logicalDevice() const

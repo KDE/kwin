@@ -33,6 +33,7 @@ public:
 
     void initialize();
 
+    Item *rootItem() const;
     Item *containerItem() const;
     Item *overlayItem() const;
     Item *cursorItem() const;
@@ -120,7 +121,8 @@ private:
     void updateCursor();
 
     PaintContext m_paintContext;
-    std::unique_ptr<Item> m_containerItem;
+    std::unique_ptr<Item> m_rootItem;
+    std::unique_ptr<Item> m_windowContainer;
     std::unique_ptr<Item> m_overlayItem;
     std::unique_ptr<DragAndDropIconItem> m_dndIcon;
     std::unique_ptr<CursorItem> m_cursorItem;

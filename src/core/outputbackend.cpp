@@ -14,6 +14,7 @@
 #include "opengl/egldisplay.h"
 #include "output.h"
 #include "outputconfiguration.h"
+#include "vulkan/vulkan_backend.h"
 
 namespace KWin
 {

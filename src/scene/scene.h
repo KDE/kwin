@@ -143,14 +143,10 @@ public:
     bool shouldRenderItem(Item *item) const override;
     bool shouldRenderHole(Item *item) const override;
     bool presentationIsZeroCopy(Item *item) const override;
+    bool shouldHideItem(Item *item) const;
 
     void addWindowFilter(std::function<bool(Window *)> filter);
     bool shouldHideWindow(Window *window) const;
-    /**
-     * @returns whether or not the Item and all its children should be hidden from this view
-     *          and all overlays or underlays related to it.
-     */
-    bool shouldHideItem(Item *item) const;
 
 protected:
     Scene *m_scene;
