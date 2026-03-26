@@ -125,7 +125,7 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
     case PW_STREAM_STATE_PAUSED:
         if (nodeId() == 0 && m_pwStream) {
             m_pwNodeId = pw_stream_get_node_id(m_pwStream);
-            Q_EMIT ready(nodeId());
+            Q_EMIT ready(nodeId(), objectSerial());
         }
         m_pendingFrame.stop();
         m_pendingContents = Contents();
@@ -396,6 +396,11 @@ uint ScreenCastStream::framerate()
 uint ScreenCastStream::nodeId()
 {
     return m_pwNodeId;
+}
+
+uint64_t ScreenCastStream::objectSerial() const
+{
+    return pw_properties_get_uint64(pw_stream_get_properties(m_pwStream), PW_KEY_OBJECT_SERIAL, 0);
 }
 
 bool ScreenCastStream::createStream()

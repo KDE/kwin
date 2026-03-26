@@ -35,6 +35,7 @@ public:
     void sendCreated(quint32 nodeid);
     void sendFailed(const QString &error);
     void sendClosed();
+    void sendObjectSerial(quint64 objectSerial);
 
     ClientConnection *connection() const;
 

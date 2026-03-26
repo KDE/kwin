@@ -62,6 +62,7 @@ public:
     bool init();
     uint framerate();
     uint nodeId();
+    uint64_t objectSerial() const;
     QString error() const
     {
         return m_error;
@@ -77,7 +78,7 @@ public Q_SLOTS:
     void invalidateCursor();
 
 Q_SIGNALS:
-    void ready(quint32 nodeId);
+    void ready(quint32 nodeId, quint64 objectSerial);
     void closed();
 
 private:

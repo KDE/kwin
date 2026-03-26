@@ -16,7 +16,7 @@
 namespace KWin
 {
 
-static int s_version = 5;
+static int s_version = 6;
 
 class ScreencastStreamV1InterfacePrivate : public QtWaylandServer::zkde_screencast_stream_unstable_v1
 {
@@ -68,6 +68,13 @@ void ScreencastStreamV1Interface::sendClosed()
 {
     if (!d->stopped) {
         d->send_closed();
+    }
+}
+
+void ScreencastStreamV1Interface::sendObjectSerial(quint64 objectSerial)
+{
+    if (d->resource()->version() >= ZKDE_SCREENCAST_STREAM_UNSTABLE_V1_SERIAL_SINCE_VERSION) {
+        d->send_serial(objectSerial >> 32, objectSerial);
     }
 }
 
