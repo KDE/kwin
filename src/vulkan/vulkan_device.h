@@ -32,7 +32,8 @@ class KWIN_EXPORT VulkanDevice : public QObject
     Q_OBJECT
 
 public:
-    explicit VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice, std::vector<VkQueueFamilyProperties> &&queueProperties);
+    explicit VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice,
+                          std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type);
     VulkanDevice(VulkanDevice &&other) = delete;
     VulkanDevice(const VulkanDevice &) = delete;
     ~VulkanDevice();
@@ -40,6 +41,8 @@ public:
     std::shared_ptr<VulkanTexture> importBuffer(GraphicsBuffer *buffer, VkImageUsageFlags usage);
     std::shared_ptr<VulkanTexture> importDmabuf(const DmaBufAttributes *attributes, VkImageUsageFlags usage);
 
+    bool isSoftwareRenderer() const;
+    vk::PhysicalDeviceType type() const;
     const FormatModifierMap &supportedFormats() const;
     const vk::raii::Device &logicalDevice() const;
 
@@ -85,6 +88,7 @@ private:
     FormatModifierMap queryFormats(VkImageUsageFlags flags) const;
     std::optional<uint32_t> findMemoryType(uint32_t typeBits, vk::MemoryPropertyFlags memoryPropertyFlags) const;
 
+    vk::PhysicalDeviceType m_type;
     vk::raii::PhysicalDevice m_physical;
     vk::raii::Device m_logical;
     FormatModifierMap m_formats;

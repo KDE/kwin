@@ -187,20 +187,33 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
         qCWarning(KWIN_VULKAN) << "querying vulkan devices failed:" << vk::to_string(enumerateResult);
         return nullptr;
     }
+    // with faux devices like vkms and vgem, we can only do software rendering
+    const bool needsSoftwareDevice = drm->busType() == DRM_BUS_FAUX;
     for (const vk::raii::PhysicalDevice &physicalDevice : physicalDevices) {
+        const auto basicProperties = physicalDevice.getProperties2();
+        const bool isSoftwareDevice = basicProperties.properties.deviceType == vk::PhysicalDeviceType::eCpu;
+        const char *deviceName = basicProperties.properties.deviceName.data();
+        if (isSoftwareDevice != needsSoftwareDevice) {
+            continue;
+        }
+
         const auto [extensionPropResult, extensionProps] = physicalDevice.enumerateDeviceExtensionProperties();
         if (extensionPropResult != vk::Result::eSuccess) {
             continue;
         }
-        std::vector missingExtensions = s_requiredVulkanExtensions | std::ranges::to<std::vector>();
+        std::vector usedExtensions = s_requiredVulkanExtensions | std::ranges::to<std::vector>();
+        if (isSoftwareDevice) {
+            // software devices don't usually have a render node
+            std::erase(usedExtensions, VK_EXT_PHYSICAL_DEVICE_DRM_EXTENSION_NAME);
+        }
+        std::vector missingExtensions = usedExtensions;
         std::erase_if(missingExtensions, [&extensionProps](std::string_view required) {
             return std::ranges::any_of(extensionProps, [required](const auto &ext) {
                 return required == ext.extensionName;
             });
         });
         if (!missingExtensions.empty()) {
-            const auto basicProperties = physicalDevice.getProperties2();
-            qCWarning(KWIN_VULKAN, "Device %s misses required Vulkan extensions", basicProperties.properties.deviceName.data());
+            qCWarning(KWIN_VULKAN, "Device %s misses required Vulkan extensions", deviceName);
             for (const char *str : missingExtensions) {
                 qCWarning(KWIN_VULKAN) << str;
             }
@@ -210,26 +223,27 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             vk::ExternalFenceHandleTypeFlagBits::eSyncFd,
         });
         if (!(fenceProperties.externalFenceFeatures & vk::ExternalFenceFeatureFlagBits::eExportable)) {
-            qCWarning(KWIN_VULKAN, "Vulkan device can't export sync fds");
+            qCWarning(KWIN_VULKAN, "Vulkan device %s can't export sync fds", deviceName);
             continue;
         }
 
-        const auto propertiesChain = physicalDevice.getProperties2<vk::PhysicalDeviceProperties2, vk::PhysicalDeviceDrmPropertiesEXT>();
-        const auto &drmProps = propertiesChain.get<vk::PhysicalDeviceDrmPropertiesEXT>();
-        const auto &properties = propertiesChain.get<vk::PhysicalDeviceProperties2>();
-        if (!drmProps.hasRender) {
-            qCDebug(KWIN_VULKAN, "Skipping device without a render node");
-            continue;
-        }
-        if (drm->deviceId() != makedev(drmProps.renderMajor, drmProps.renderMinor)) {
-            continue;
+        if (!isSoftwareDevice) {
+            const auto propertiesChain = physicalDevice.getProperties2<vk::PhysicalDeviceProperties2, vk::PhysicalDeviceDrmPropertiesEXT>();
+            const auto &drmProps = propertiesChain.get<vk::PhysicalDeviceDrmPropertiesEXT>();
+            if (!drmProps.hasRender) {
+                qCDebug(KWIN_VULKAN, "Skipping device %s without a render node", deviceName);
+                continue;
+            }
+            if (drm->deviceId() != makedev(drmProps.renderMajor, drmProps.renderMinor)) {
+                continue;
+            }
         }
         std::vector<vk::QueueFamilyProperties> queueProperties = physicalDevice.getQueueFamilyProperties();
         const bool hasTransfer = std::ranges::any_of(queueProperties, [](const vk::QueueFamilyProperties &props) {
             return bool(props.queueFlags & vk::QueueFlagBits::eTransfer);
         });
         if (!hasTransfer) {
-            qCWarning(KWIN_VULKAN, "Physical device has no transfer queue");
+            qCWarning(KWIN_VULKAN, "Physical device %s has no transfer queue", deviceName);
             continue;
         }
 
@@ -257,25 +271,26 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             .pQueueCreateInfos = queueInfo.data(),
             .enabledLayerCount = 0,
             .ppEnabledLayerNames = nullptr,
-            .enabledExtensionCount = s_requiredVulkanExtensions.size(),
-            .ppEnabledExtensionNames = s_requiredVulkanExtensions.data(),
+            .enabledExtensionCount = uint32_t(usedExtensions.size()),
+            .ppEnabledExtensionNames = usedExtensions.data(),
             .pEnabledFeatures = &features,
         };
 
         auto [result, logicalDevice] = physicalDevice.createDevice(deviceInfo);
         if (result != vk::Result::eSuccess) {
-            qCWarning(KWIN_VULKAN, "vkCreateDevice failed: %s", vk::to_string(vk::Result(result)).c_str());
+            qCWarning(KWIN_VULKAN, "vkCreateDevice for %s failed: %s", deviceName, vk::to_string(vk::Result(result)).c_str());
             continue;
         }
 
         auto ret = std::make_unique<VulkanDevice>(
             physicalDevice,
             std::move(logicalDevice),
-            queueProperties | std::ranges::to<std::vector<VkQueueFamilyProperties>>());
+            queueProperties | std::ranges::to<std::vector<VkQueueFamilyProperties>>(),
+            basicProperties.properties.deviceType);
         if (ret->supportedFormats().isEmpty()) {
             continue;
         }
-        qCWarning(KWIN_VULKAN, "Found Vulkan device %s for %s", properties.properties.deviceName.data(), qPrintable(drm->path()));
+        qCWarning(KWIN_VULKAN, "Found Vulkan device %s for %s", deviceName, qPrintable(drm->path()));
         return ret;
     }
     qCDebug(KWIN_VULKAN, "No Vulkan device found for %s", qPrintable(drm->path()));

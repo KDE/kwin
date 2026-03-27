@@ -18,8 +18,10 @@
 namespace KWin
 {
 
-VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice, std::vector<VkQueueFamilyProperties> &&queueProperties)
-    : m_physical(physicalDevice)
+VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::Device &&logicalDevice,
+                           std::vector<VkQueueFamilyProperties> &&queueProperties, vk::PhysicalDeviceType type)
+    : m_type(type)
+    , m_physical(physicalDevice)
     , m_logical(std::move(logicalDevice))
     // TODO it might be useful to have separate lists for sample + transfer_src
     // and sample + color attachment + transfer_dst
@@ -328,6 +330,16 @@ std::optional<uint32_t> VulkanDevice::findMemoryType(uint32_t typeBits, vk::Memo
         }
     }
     return std::nullopt;
+}
+
+bool VulkanDevice::isSoftwareRenderer() const
+{
+    return m_type == vk::PhysicalDeviceType::eCpu;
+}
+
+vk::PhysicalDeviceType VulkanDevice::type() const
+{
+    return m_type;
 }
 
 const FormatModifierMap &VulkanDevice::supportedFormats() const
