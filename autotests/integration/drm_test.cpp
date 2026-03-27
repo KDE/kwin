@@ -12,6 +12,7 @@
 #include "backends/drm/drm_pointer.h"
 #include "compositor.h"
 #include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
@@ -51,6 +52,7 @@ private Q_SLOTS:
     void testOverlay_data();
     void testOverlay();
     void testDpms();
+    void checkVulkanDevice();
 };
 
 struct DrmCrtcState
@@ -709,6 +711,16 @@ void DrmTest::testDpms()
     QVERIFY(state.has_value());
     QVERIFY(state->crtc.has_value());
     QVERIFY(state->crtc->active);
+}
+
+void DrmTest::checkVulkanDevice()
+{
+    const auto &devices = GpuManager::self()->renderDevices();
+    QCOMPARE_GE(devices.size(), 1);
+    for (const auto &device : devices) {
+        qWarning() << device->drmDevice()->path() << "has Vulkan device?" << bool(device->vulkanDevice());
+    }
+    QVERIFY(devices.front()->vulkanDevice());
 }
 
 }
