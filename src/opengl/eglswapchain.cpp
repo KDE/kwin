@@ -130,6 +130,9 @@ std::shared_ptr<EglSwapchainSlot> EglSwapchain::acquire()
         qCWarning(KWIN_OPENGL) << "Failed to allocate an egl gbm swapchain graphics buffer";
         return nullptr;
     }
+    // With EglContext::runOnContextThread, we may not be on the main thread here,
+    // but the GraphicsBuffer must always be on the main thread!
+    buffer->moveToThread(QCoreApplication::instance()->thread());
 
     auto slot = EglSwapchainSlot::create(m_context, buffer);
     if (!slot) {
@@ -173,6 +176,10 @@ std::shared_ptr<EglSwapchain> EglSwapchain::create(GraphicsBufferAllocator *allo
     if (!seed) {
         return nullptr;
     }
+    // With EglContext::runOnContextThread, we may not be on the main thread here,
+    // but the GraphicsBuffer must always be on the main thread!
+    seed->moveToThread(QCoreApplication::instance()->thread());
+
     const auto first = EglSwapchainSlot::create(context, seed);
     if (!first) {
         return nullptr;

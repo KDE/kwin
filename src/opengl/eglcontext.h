@@ -14,6 +14,8 @@
 #include <QByteArray>
 #include <QList>
 #include <QStack>
+#include <QThread>
+#include <condition_variable>
 #include <epoxy/egl.h>
 
 namespace KWin
@@ -100,6 +102,15 @@ public:
     GLFramebuffer *popFramebuffer();
     GLFramebuffer *currentFramebuffer();
 
+    /**
+     * If possible, runs the function on a thread with the context current.
+     * This will never make a current context non-current, and is thus safe
+     * to call in a compositing cycle.
+     *
+     * @returns whether or not the function was called and succeeded
+     */
+    bool runOnContextThread(std::function<bool()> &&func);
+
     static EglContext *currentContext();
     static std::unique_ptr<EglContext> create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext);
 
@@ -113,7 +124,7 @@ private:
     void glResolveFunctions(const std::function<resolveFuncPtr(const char *)> &resolveFunction);
     void initDebugOutput();
 
-    static EglContext *s_currentContext;
+    static thread_local EglContext *s_currentContext;
 
     const QByteArrayView m_versionString;
     const Version m_version;
@@ -152,6 +163,16 @@ private:
     QStack<GLFramebuffer *> m_fbos;
     uint32_t m_vao = 0;
     bool m_failed = false;
+
+    struct
+    {
+        std::unique_ptr<QThread> thread;
+        std::condition_variable taskAvailable;
+        std::condition_variable taskDone;
+        std::optional<std::function<bool()>> task;
+        std::optional<bool> returnValue;
+        std::mutex mutex;
+    } m_contextThread;
 };
 
 }

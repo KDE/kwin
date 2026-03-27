@@ -26,16 +26,14 @@ GLRenderTimeQuery::~GLRenderTimeQuery()
     if (!m_gpuProbe.query) {
         return;
     }
-    const auto previousContext = EglContext::currentContext();
     const auto context = m_context.lock();
-    if (!context || !context->makeCurrent()) {
-        qCWarning(KWIN_OPENGL, "Could not delete render time query because no context is current");
+    if (!context) {
         return;
     }
-    glDeleteQueries(1, &m_gpuProbe.query);
-    if (previousContext && previousContext != context.get()) {
-        previousContext->makeCurrent();
-    }
+    context->runOnContextThread([this]() {
+        glDeleteQueries(1, &m_gpuProbe.query);
+        return true;
+    });
 }
 
 void GLRenderTimeQuery::begin()
@@ -62,17 +60,16 @@ std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
 {
     Q_ASSERT(m_hasResult);
     if (m_gpuProbe.query) {
-        const auto previousContext = EglContext::currentContext();
         const auto context = m_context.lock();
-        if (!context || !context->makeCurrent()) {
+        if (!context || context->isFailed()) {
             return std::nullopt;
         }
         GLint64 end = 0;
-        glGetQueryObjecti64v(m_gpuProbe.query, GL_QUERY_RESULT, &end);
+        context->runOnContextThread([&]() {
+            glGetQueryObjecti64v(m_gpuProbe.query, GL_QUERY_RESULT, &end);
+            return true;
+        });
         m_gpuProbe.end = std::chrono::nanoseconds(end);
-        if (previousContext && previousContext != context.get()) {
-            previousContext->makeCurrent();
-        }
     }
 
     // timings are pretty unpredictable in the sub-millisecond range; this minimum

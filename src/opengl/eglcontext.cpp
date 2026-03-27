@@ -28,7 +28,7 @@
 namespace KWin
 {
 
-EglContext *EglContext::s_currentContext = nullptr;
+thread_local EglContext *EglContext::s_currentContext = nullptr;
 
 std::unique_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext)
 {
@@ -152,6 +152,11 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
 
 EglContext::~EglContext()
 {
+    if (m_contextThread.thread) {
+        m_contextThread.thread->requestInterruption();
+        m_contextThread.taskAvailable.notify_all();
+        m_contextThread.thread.reset();
+    }
     const bool current = makeCurrent();
     if (m_vao && current) {
         glDeleteVertexArrays(1, &m_vao);
@@ -686,6 +691,48 @@ GLFramebuffer *EglContext::currentFramebuffer()
 bool EglContext::isFailed() const
 {
     return m_failed;
+}
+
+bool EglContext::runOnContextThread(std::function<bool()> &&func)
+{
+    Q_ASSERT(QCoreApplication::instance()->thread() == QThread::currentThread());
+
+    // if possible and safe, run on the main thread instead, which should be faster
+    if (currentContext() == this) {
+        return func();
+    } else if (!currentContext()) {
+        return makeCurrent() && func();
+    }
+    if (!m_contextThread.thread) {
+        m_contextThread.thread.reset(QThread::create([this]() {
+            std::unique_lock lock(m_contextThread.mutex);
+            const auto thread = QThread::currentThread();
+            while (!thread->isInterruptionRequested()) {
+                if (m_contextThread.task.has_value()) {
+                    // a context cannot be current on two threads at once, so we
+                    // must make it current and doneCurrent every time
+                    if (!makeCurrent()) {
+                        m_contextThread.returnValue = false;
+                        continue;
+                    }
+                    m_contextThread.returnValue = (*m_contextThread.task)();
+                    m_contextThread.task.reset();
+                    doneCurrent();
+                    m_contextThread.taskDone.notify_all();
+                }
+                m_contextThread.taskAvailable.wait(lock);
+            }
+        }));
+        m_contextThread.thread->setObjectName("context thread");
+        m_contextThread.thread->start();
+    }
+    std::unique_lock lock(m_contextThread.mutex);
+    m_contextThread.task = std::move(func);
+    m_contextThread.taskAvailable.notify_all();
+    m_contextThread.taskDone.wait(lock, [this]() {
+        return m_contextThread.returnValue.has_value();
+    });
+    return *std::exchange(m_contextThread.returnValue, std::nullopt);
 }
 
 }
