@@ -191,11 +191,11 @@ bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::s
     if (!compat) {
         qCWarning(KWIN_OPENGL, "Couldn't find a compatible GPU for a buffer");
         return false;
-    } else if (compat == m_backend->renderDevice()) {
+    } else if (compat == m_backend->renderDevice() && compat->eglDisplay()->allSupportedDrmFormats().containsFormat(attribs->format, attribs->modifier)) {
         m_mgpuSwapchain.reset();
         m_releasePoint = releasePoint;
     } else {
-        // need to do a multi gpu copy
+        // need to do a copy, either between two GPUs, or from Vulkan to OpenGL
         m_mgpuSwapchain = MultiGpuSwapchain::create(compat, m_backend->renderDevice()->drmDevice(), attribs->format, attribs->modifier, buffer->size(),
                                                     m_backend->renderDevice()->eglDisplay()->nonExternalOnlySupportedDrmFormats());
         EGLNativeFence releaseFence(m_backend->eglDisplayObject());

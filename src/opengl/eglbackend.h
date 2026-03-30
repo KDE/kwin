@@ -62,6 +62,7 @@ protected:
     bool hasClientExtension(const QByteArray &ext) const;
     bool isOpenGLES() const;
     bool createContext();
+    void updateDmabufTranches();
 
     bool ensureGlobalShareContext();
     void destroyGlobalShareContext();
