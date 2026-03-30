@@ -126,6 +126,13 @@ void KWin::AbstractScript::stop()
     deleteLater();
 }
 
+QDBusVariant KWin::AbstractScript::evaluate(const QString &program)
+{
+    Q_UNUSED(program)
+    // Default implementation returns an empty variant; overridden in Script.
+    return QDBusVariant();
+}
+
 KWin::ScriptTimer::ScriptTimer(QObject *parent)
     : QTimer(parent)
 {
@@ -156,59 +163,6 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject *pa
     }
     if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QSizeF>()) {
         QMetaType::registerConverter<QJSValue, QSizeF>(scriptValueToSizeF);
-    }
-}
-
-KWin::Script::~Script()
-{
-}
-
-void KWin::Script::run()
-{
-    if (running() || m_starting) {
-        return;
-    }
-
-    if (calledFromDBus()) {
-        m_invocationContext = message();
-        setDelayedReply(true);
-    }
-
-    m_starting = true;
-    QFutureWatcher<QByteArray> *watcher = new QFutureWatcher<QByteArray>(this);
-    connect(watcher, &QFutureWatcherBase::finished, this, &Script::slotScriptLoadedFromFile);
-    watcher->setFuture(QtConcurrent::run(&KWin::Script::loadScriptFromFile, this, fileName()));
-}
-
-QByteArray KWin::Script::loadScriptFromFile(const QString &fileName)
-{
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly)) {
-        return QByteArray();
-    }
-    QByteArray result(file.readAll());
-    return result;
-}
-
-void KWin::Script::slotScriptLoadedFromFile()
-{
-    QFutureWatcher<QByteArray> *watcher = dynamic_cast<QFutureWatcher<QByteArray> *>(sender());
-    if (!watcher) {
-        // not invoked from a QFutureWatcher
-        return;
-    }
-    if (watcher->result().isNull()) {
-        // do not load empty script
-        deleteLater();
-        watcher->deleteLater();
-
-        if (m_invocationContext.type() == QDBusMessage::MethodCallMessage) {
-            auto reply = m_invocationContext.createErrorReply("org.kde.kwin.Scripting.FileError", QString("Could not open %1").arg(fileName()));
-            QDBusConnection::sessionBus().send(reply);
-            m_invocationContext = QDBusMessage();
-        }
-
-        return;
     }
 
     // Install console functions (e.g. console.assert(), console.log(), etc).
@@ -273,8 +227,87 @@ void KWin::Script::slotScriptLoadedFromFile()
         }
     )"));
     Q_ASSERT(!result.isError());
+}
 
-    result = m_engine->evaluate(QString::fromUtf8(watcher->result()), fileName());
+KWin::Script::~Script()
+{
+}
+
+QDBusVariant KWin::Script::evaluate(const QString &program)
+{
+    qDebug() << "DAVE running: " << program;
+    // Dave, either here. Or exposed as Scripting::evaluate and that has a 'Script m_scriptForEvaluation' as a context it keeps..
+    const QVariant result = m_engine->evaluate(program).toVariant();
+
+    if (result.typeId() == qMetaTypeId<KWin::Window*>()) {
+        return QDBusVariant(result.value<KWin::Window*>()->internalId().toString());
+    }
+
+    if (result.typeId() == qMetaTypeId<QList<KWin::Window*>>()) {
+        const QList<KWin::Window*> windows = result.value<QList<KWin::Window*>>();
+        QVariantList windowIds;
+        for (KWin::Window* window : windows) {
+            windowIds << window->internalId().toString();
+        }
+        return QDBusVariant(windowIds);
+    }
+
+    if (result.isNull()) {
+        // you can't have a null DBus variant, nor an optional
+        return QDBusVariant(QVariantMap());
+    }
+    return QDBusVariant(result);
+}
+
+void KWin::Script::run()
+{
+    if (running() || m_starting) {
+        return;
+    }
+
+    if (calledFromDBus()) {
+        m_invocationContext = message();
+        setDelayedReply(true);
+    }
+
+    m_starting = true;
+    QFutureWatcher<QByteArray> *watcher = new QFutureWatcher<QByteArray>(this);
+    connect(watcher, &QFutureWatcherBase::finished, this, &Script::slotScriptLoadedFromFile);
+    watcher->setFuture(QtConcurrent::run(&KWin::Script::loadScriptFromFile, this, fileName()));
+}
+
+QByteArray KWin::Script::loadScriptFromFile(const QString &fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        return QByteArray();
+    }
+    QByteArray result(file.readAll());
+    return result;
+}
+
+void KWin::Script::slotScriptLoadedFromFile()
+{
+    QFutureWatcher<QByteArray> *watcher = dynamic_cast<QFutureWatcher<QByteArray> *>(sender());
+    if (!watcher) {
+        // not invoked from a QFutureWatcher
+        return;
+    }
+    if (watcher->result().isNull()) {
+        // do not load empty script
+        deleteLater();
+        watcher->deleteLater();
+
+        if (m_invocationContext.type() == QDBusMessage::MethodCallMessage) {
+            auto reply = m_invocationContext.createErrorReply("org.kde.kwin.Scripting.FileError", QString("Could not open %1").arg(fileName()));
+            QDBusConnection::sessionBus().send(reply);
+            m_invocationContext = QDBusMessage();
+        }
+
+        return;
+    }
+
+    QJSValue result = m_engine->evaluate(QString::fromUtf8(watcher->result()), fileName());
     if (result.isError()) {
         qCWarning(KWIN_SCRIPTING, "%s:%d: error: %s", qPrintable(fileName()),
                   result.property(QStringLiteral("lineNumber")).toInt(),

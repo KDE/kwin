@@ -6,5 +6,9 @@
     </method>
     <method name="run">
     </method>
+    <method name="evaluate">
+      <arg direction="in" type="s" name="program"/>
+      <arg direction="out" type="v" name="result"/>
+    </method>
   </interface>
 </node>

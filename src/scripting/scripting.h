@@ -21,6 +21,7 @@
 
 #include <QDBusContext>
 #include <QDBusMessage>
+#include <QDBusVariant>
 
 class QQmlComponent;
 class QQmlContext;
@@ -69,6 +70,7 @@ public:
 public Q_SLOTS:
     void stop();
     virtual void run() = 0;
+    virtual QDBusVariant evaluate(const QString &program);
 
 Q_SIGNALS:
     void runningChanged(bool);
@@ -109,6 +111,7 @@ class Script : public AbstractScript, QDBusContext
 public:
     Script(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
     virtual ~Script();
+    QDBusVariant evaluate(const QString &program) override;
 
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
