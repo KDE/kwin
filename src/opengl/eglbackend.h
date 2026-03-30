@@ -34,6 +34,8 @@ class KWIN_EXPORT EglBackend : public RenderBackend
     Q_OBJECT
 
 public:
+    ~EglBackend() override;
+
     virtual bool init() = 0;
     CompositingType compositingType() const override final;
     bool checkGraphicsReset() override final;
@@ -54,7 +56,6 @@ public:
 
 protected:
     EglBackend();
-    ~EglBackend() override;
 
     void cleanup();
     void setRenderDevice(RenderDevice *device);
@@ -66,9 +67,7 @@ protected:
     void updateDmabufTranches();
 
     bool ensureGlobalShareContext();
-    void destroyGlobalShareContext();
     ::EGLContext createContextInternal(::EGLContext sharedContext);
-    void teardown();
 
     std::unique_ptr<EglContext> m_globalShareContext;
     RenderDevice *m_renderDevice = nullptr;

@@ -34,13 +34,14 @@ namespace KWin
 
 EglBackend::EglBackend()
 {
-    connect(Compositor::self(), &Compositor::aboutToDestroy, this, &EglBackend::teardown);
     connect(GpuManager::s_self.get(), &GpuManager::renderDeviceAdded, this, &EglBackend::updateDmabufTranches);
     connect(GpuManager::s_self.get(), &GpuManager::renderDeviceRemoved, this, &EglBackend::updateDmabufTranches);
 }
 
 EglBackend::~EglBackend()
 {
+    m_globalShareContext.reset();
+    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
 }
 
 CompositingType EglBackend::compositingType() const
@@ -103,21 +104,6 @@ bool EglBackend::ensureGlobalShareContext()
     } else {
         return false;
     }
-}
-
-void EglBackend::destroyGlobalShareContext()
-{
-    EglDisplay *const eglDisplay = kwinApp()->outputBackend()->sceneEglDisplayObject();
-    if (!eglDisplay || !m_globalShareContext) {
-        return;
-    }
-    m_globalShareContext.reset();
-    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
-}
-
-void EglBackend::teardown()
-{
-    destroyGlobalShareContext();
 }
 
 void EglBackend::cleanup()

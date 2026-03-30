@@ -88,6 +88,9 @@ Compositor::Compositor(QObject *workspace)
     });
 
     FTraceLogger::create();
+
+    connect(kwinApp()->outputBackend(), &OutputBackend::aboutToChangeEglDisplay, this, &Compositor::stop);
+    connect(kwinApp()->outputBackend(), &OutputBackend::eglDisplayChanged, this, &Compositor::start);
 }
 
 Compositor::~Compositor()
