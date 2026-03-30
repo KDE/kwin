@@ -76,7 +76,7 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyD
         if (fmt) {
             auto swapchain = VulkanSwapchain::create(copyDevice->vulkanDevice(), targetDevice->allocator(), size, fmt->format, fmt->modifiers);
             if (swapchain) {
-                return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, std::move(swapchain));
+                return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, std::move(swapchain), format);
             }
         }
     }
@@ -91,13 +91,13 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyD
         }
         auto eglSwapchain = EglSwapchain::create(copyDevice->drmDevice()->allocator(), context.get(), size, formatMod->format, formatMod->modifiers);
         if (eglSwapchain) {
-            return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, context, std::move(eglSwapchain));
+            return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, context, std::move(eglSwapchain), format);
         }
     }
     return nullptr;
 }
 
-MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, const std::shared_ptr<EglContext> &eglContext, std::shared_ptr<EglSwapchain> &&eglSwapchain)
+MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, const std::shared_ptr<EglContext> &eglContext, std::shared_ptr<EglSwapchain> &&eglSwapchain, uint32_t sourceFormat)
     : m_targetDevice(targetDevice)
     , m_copyDevice(copyDevice)
     , m_copyContext(eglContext)
@@ -105,17 +105,19 @@ MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *target
     , m_format(m_eglSwapchain->format())
     , m_modifier(m_eglSwapchain->modifier())
     , m_size(m_eglSwapchain->size())
+    , m_sourceFormat(sourceFormat)
 {
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &MultiGpuSwapchain::handleDeviceRemoved);
 }
 
-MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, std::unique_ptr<VulkanSwapchain> &&swapchain)
+MultiGpuSwapchain::MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, std::unique_ptr<VulkanSwapchain> &&swapchain, uint32_t sourceFormat)
     : m_targetDevice(targetDevice)
     , m_copyDevice(copyDevice)
     , m_vulkanSwapchain(std::move(swapchain))
     , m_format(m_vulkanSwapchain->format())
     , m_modifier(m_vulkanSwapchain->modifier())
     , m_size(m_vulkanSwapchain->size())
+    , m_sourceFormat(sourceFormat)
 {
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &MultiGpuSwapchain::handleDeviceRemoved);
     connect(m_copyDevice->vulkanDevice(), &VulkanDevice::deviceLost, this, &MultiGpuSwapchain::handleGpuReset);
@@ -403,6 +405,22 @@ QSize MultiGpuSwapchain::size() const
 bool MultiGpuSwapchain::needsRecreation() const
 {
     return m_needsRecreation;
+}
+
+bool MultiGpuSwapchain::isSuitableFor(GraphicsBuffer *buffer) const
+{
+    if (!m_copyDevice || !m_targetDevice || needsRecreation()) {
+        return false;
+    }
+    const auto attrs = buffer->dmabufAttributes();
+    if (!attrs || attrs->format != m_sourceFormat || buffer->size() != m_size) {
+        return false;
+    }
+    if (m_vulkanSwapchain) {
+        return m_copyDevice->vulkanDevice()->supportedFormats().containsFormat(attrs->format, attrs->modifier);
+    } else {
+        return m_copyDevice->eglDisplay()->allSupportedDrmFormats().containsFormat(attrs->format, attrs->modifier);
+    }
 }
 
 }

@@ -302,6 +302,11 @@ EglDisplay *EglBackend::eglDisplayObject() const
     return m_renderDevice->eglDisplay();
 }
 
+RenderDevice *EglBackend::renderDevice() const
+{
+    return m_renderDevice;
+}
+
 EglContext *EglBackend::openglContext() const
 {
     return m_context.get();

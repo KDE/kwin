@@ -34,8 +34,8 @@ class KWIN_EXPORT MultiGpuSwapchain : public QObject
 {
     Q_OBJECT
 public:
-    explicit MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, const std::shared_ptr<EglContext> &eglContext, std::shared_ptr<EglSwapchain> &&eglSwapchain);
-    explicit MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, std::unique_ptr<VulkanSwapchain> &&swapchain);
+    explicit MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, const std::shared_ptr<EglContext> &eglContext, std::shared_ptr<EglSwapchain> &&eglSwapchain, uint32_t sourceFormat);
+    explicit MultiGpuSwapchain(RenderDevice *copyDevice, DrmDevice *targetDevice, std::unique_ptr<VulkanSwapchain> &&swapchain, uint32_t sourceFormat);
     ~MultiGpuSwapchain() override;
 
     struct Ret
@@ -53,6 +53,8 @@ public:
     uint64_t modifier() const;
     QSize size() const;
     bool needsRecreation() const;
+
+    bool isSuitableFor(GraphicsBuffer *buffer) const;
 
     /**
      * NOTE that the copyDevice needs to be chosen carefully. Importing a buffer to a given device
@@ -84,5 +86,6 @@ private:
     const uint64_t m_modifier;
     const QSize m_size;
     bool m_needsRecreation = false;
+    const uint32_t m_sourceFormat;
 };
 }

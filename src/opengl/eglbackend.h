@@ -41,6 +41,7 @@ public:
     EglContext *openglContext() const;
     std::shared_ptr<EglContext> openglContextRef() const;
     EglDisplay *eglDisplayObject() const;
+    RenderDevice *renderDevice() const;
 
     bool testImportBuffer(GraphicsBuffer *buffer) override;
     FormatModifierMap supportedFormats() const override;
