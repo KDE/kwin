@@ -24,8 +24,9 @@ class GraphicsBufferAllocator;
 class VulkanDevice;
 class VulkanTexture;
 class VulkanSwapchain;
+class SyncReleasePoint;
 
-class KWIN_EXPORT VulkanSwapchainSlot
+class KWIN_EXPORT VulkanSwapchainSlot : public std::enable_shared_from_this<VulkanSwapchainSlot>
 {
 public:
     explicit VulkanSwapchainSlot(GraphicsBuffer *buffer, std::shared_ptr<VulkanTexture> &&texture);
@@ -36,13 +37,16 @@ public:
     int age() const;
     bool isBusy() const;
     const FileDescriptor &releaseFd() const;
+    std::shared_ptr<SyncReleasePoint> releasePoint();
 
 private:
     GraphicsBuffer *const m_buffer;
     std::shared_ptr<VulkanTexture> m_texture;
     int m_age = 0;
     FileDescriptor m_releaseFd;
+    std::weak_ptr<SyncReleasePoint> m_releasePoint;
     friend class VulkanSwapchain;
+    friend class VulkanReleasePoint;
 };
 
 class KWIN_EXPORT VulkanSwapchain

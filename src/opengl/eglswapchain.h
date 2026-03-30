@@ -27,8 +27,9 @@ class GraphicsBuffer;
 class GLFramebuffer;
 class GLTexture;
 class EglContext;
+class SyncReleasePoint;
 
-class KWIN_EXPORT EglSwapchainSlot
+class KWIN_EXPORT EglSwapchainSlot : public std::enable_shared_from_this<EglSwapchainSlot>
 {
 public:
     EglSwapchainSlot(GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> &&framebuffer, const std::shared_ptr<GLTexture> &texture);
@@ -39,6 +40,7 @@ public:
     GLFramebuffer *framebuffer() const;
     int age() const;
     const FileDescriptor &releaseFd() const;
+    std::shared_ptr<SyncReleasePoint> releasePoint();
 
     static std::shared_ptr<EglSwapchainSlot> create(EglContext *context, GraphicsBuffer *buffer);
 
@@ -50,7 +52,9 @@ private:
     std::shared_ptr<GLTexture> m_texture;
     int m_age = 0;
     FileDescriptor m_releaseFd;
+    std::weak_ptr<SyncReleasePoint> m_releasePoint;
     friend class EglSwapchain;
+    friend class EglReleasePoint;
 };
 
 class KWIN_EXPORT EglSwapchain

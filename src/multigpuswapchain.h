@@ -28,6 +28,7 @@ class RenderDevice;
 class VulkanDevice;
 class VulkanSwapchain;
 class VulkanSwapchainSlot;
+class SyncReleasePoint;
 
 class KWIN_EXPORT MultiGpuSwapchain : public QObject
 {
@@ -41,8 +42,10 @@ public:
     {
         GraphicsBuffer *buffer;
         FileDescriptor sync;
+        std::shared_ptr<SyncReleasePoint> releasePoint;
     };
-    std::optional<Ret> copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame);
+    std::optional<Ret> copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                     const std::shared_ptr<SyncReleasePoint> &releasePoint);
 
     void resetDamageTracking();
 
@@ -61,8 +64,10 @@ public:
     static std::unique_ptr<MultiGpuSwapchain> create(RenderDevice *copyDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats);
 
 private:
-    std::optional<Ret> copyWithVulkan(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame);
-    std::optional<Ret> copyWithEGL(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame);
+    std::optional<Ret> copyWithVulkan(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                      const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    std::optional<Ret> copyWithEGL(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                   const std::shared_ptr<SyncReleasePoint> &releasePoint);
     void handleDeviceRemoved(RenderDevice *device);
     void handleGpuReset();
     void deleteResources();

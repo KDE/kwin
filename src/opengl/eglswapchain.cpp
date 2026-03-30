@@ -10,6 +10,7 @@
 #include "opengl/eglswapchain.h"
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferallocator.h"
+#include "core/syncobjtimeline.h"
 #include "opengl/eglcontext.h"
 #include "opengl/glutils.h"
 #include "utils/common.h"
@@ -19,6 +20,31 @@
 
 namespace KWin
 {
+
+class EglReleasePoint : public SyncReleasePoint
+{
+public:
+    explicit EglReleasePoint(const std::shared_ptr<EglSwapchainSlot> &slot);
+
+    void addReleaseFence(const FileDescriptor &fd) override;
+
+private:
+    std::shared_ptr<EglSwapchainSlot> m_slot;
+};
+
+EglReleasePoint::EglReleasePoint(const std::shared_ptr<EglSwapchainSlot> &slot)
+    : m_slot(slot)
+{
+}
+
+void EglReleasePoint::addReleaseFence(const FileDescriptor &fd)
+{
+    if (m_slot->m_releaseFd.isValid()) {
+        m_slot->m_releaseFd = m_slot->m_releaseFd.mergeSyncFds(fd, m_slot->m_releaseFd);
+    } else {
+        m_slot->m_releaseFd = fd.duplicate();
+    }
+}
 
 EglSwapchainSlot::EglSwapchainSlot(GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> &&framebuffer, const std::shared_ptr<GLTexture> &texture)
     : m_buffer(buffer)
@@ -62,6 +88,16 @@ bool EglSwapchainSlot::isBusy() const
 const FileDescriptor &EglSwapchainSlot::releaseFd() const
 {
     return m_releaseFd;
+}
+
+std::shared_ptr<SyncReleasePoint> EglSwapchainSlot::releasePoint()
+{
+    auto ret = m_releasePoint.lock();
+    if (!ret) {
+        ret = std::make_shared<EglReleasePoint>(shared_from_this());
+        m_releasePoint = ret;
+    }
+    return ret;
 }
 
 std::shared_ptr<EglSwapchainSlot> EglSwapchainSlot::create(EglContext *context, GraphicsBuffer *buffer)

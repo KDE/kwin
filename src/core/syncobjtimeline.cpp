@@ -10,21 +10,6 @@
 #include <sys/ioctl.h>
 #include <xf86drm.h>
 
-#if defined(Q_OS_LINUX)
-#include <linux/sync_file.h>
-#else
-struct sync_merge_data
-{
-    char name[32];
-    __s32 fd2;
-    __s32 fence;
-    __u32 flags;
-    __u32 pad;
-};
-#define SYNC_IOC_MAGIC '>'
-#define SYNC_IOC_MERGE _IOWR(SYNC_IOC_MAGIC, 3, struct sync_merge_data)
-#endif
-
 namespace KWin
 {
 
@@ -43,28 +28,10 @@ SyncObjReleasePoint::~SyncObjReleasePoint()
     }
 }
 
-static FileDescriptor mergeSyncFds(const FileDescriptor &fd1, const FileDescriptor &fd2)
-{
-    struct sync_merge_data data{
-        .name = "merged release fence",
-        .fd2 = fd2.get(),
-        .fence = -1,
-    };
-    int err = -1;
-    do {
-        err = ioctl(fd1.get(), SYNC_IOC_MERGE, &data);
-    } while (err == -1 && (errno == EINTR || errno == EAGAIN));
-    if (err < 0) {
-        return FileDescriptor{};
-    } else {
-        return FileDescriptor(data.fence);
-    }
-}
-
 void SyncObjReleasePoint::addReleaseFence(const FileDescriptor &fd)
 {
     if (m_releaseFence.isValid()) {
-        m_releaseFence = mergeSyncFds(m_releaseFence, fd);
+        m_releaseFence = FileDescriptor::mergeSyncFds(m_releaseFence, fd);
     } else {
         m_releaseFence = fd.duplicate();
     }

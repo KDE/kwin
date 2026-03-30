@@ -35,6 +35,7 @@ public:
 
     static bool isReadable(int fd);
     static bool isClosed(int fd);
+    static FileDescriptor mergeSyncFds(const FileDescriptor &one, const FileDescriptor &two);
 
 private:
     int m_fd = -1;

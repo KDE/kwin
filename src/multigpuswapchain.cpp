@@ -11,6 +11,7 @@
 #include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
 #include "core/renderbackend.h"
+#include "core/syncobjtimeline.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
@@ -125,19 +126,21 @@ MultiGpuSwapchain::~MultiGpuSwapchain()
     deleteResources();
 }
 
-std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame)
+std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyRgbBuffer(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                                                       const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (!m_copyDevice || !m_targetDevice || !buffer->dmabufAttributes()) {
         return std::nullopt;
     }
     if (m_vulkanSwapchain) {
-        return copyWithVulkan(buffer, damage, std::move(sync), frame);
+        return copyWithVulkan(buffer, damage, std::move(sync), frame, releasePoint);
     } else {
-        return copyWithEGL(buffer, damage, std::move(sync), frame);
+        return copyWithEGL(buffer, damage, std::move(sync), frame, releasePoint);
     }
 }
 
-std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(GraphicsBuffer *src, const Region &damage, FileDescriptor &&sync, OutputFrame *frame)
+std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(GraphicsBuffer *src, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                                                        const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     // TODO add timestamp queries for this
 
@@ -145,6 +148,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         return Ret{
             .buffer = m_currentVulkanSlot->buffer(),
             .sync = m_currentVulkanSlot->releaseFd().duplicate(),
+            .releasePoint = m_currentVulkanSlot->releasePoint(),
         };
     }
 
@@ -169,6 +173,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         return Ret{
             .buffer = m_currentVulkanSlot->buffer(),
             .sync = FileDescriptor{},
+            .releasePoint = m_currentVulkanSlot->releasePoint(),
         };
     }
     m_journal.add(damage);
@@ -220,19 +225,25 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         m_needsRecreation = true;
         return std::nullopt;
     }
+    if (releasePoint) {
+        releasePoint->addReleaseFence(*completionFd);
+    }
     m_vulkanSwapchain->release(m_currentVulkanSlot.get(), completionFd->duplicate());
     return Ret{
         .buffer = m_currentVulkanSlot->buffer(),
         .sync = std::move(*completionFd),
+        .releasePoint = m_currentVulkanSlot->releasePoint(),
     };
 }
 
-std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame)
+std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
+                                                                     const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     if (damage.isEmpty() && m_currentEglSlot) {
         return Ret{
             .buffer = m_currentEglSlot->buffer(),
             .sync = m_currentEglSlot->releaseFd().duplicate(),
+            .releasePoint = m_currentEglSlot->releasePoint(),
         };
     }
 
@@ -286,9 +297,13 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithEGL(GraphicsBuf
         renderTime->end();
         frame->addRenderTimeQuery(std::move(renderTime));
     }
+    if (releasePoint) {
+        releasePoint->addReleaseFence(fence.fileDescriptor());
+    }
     return Ret{
         .buffer = m_currentEglSlot->buffer(),
         .sync = fence.takeFileDescriptor(),
+        .releasePoint = m_currentEglSlot->releasePoint(),
     };
 }
 
