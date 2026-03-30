@@ -272,12 +272,12 @@ std::unique_ptr<GLShader> ShaderManager::generateCustomShader(ShaderTraits trait
     const auto vertex = preprocess(vertexSource.isEmpty() ? generateVertexSource(traits) : vertexSource);
     const auto fragment = preprocess(fragmentSource.isEmpty() ? generateFragmentSource(traits) : fragmentSource);
     if (!vertex || !fragment) {
-        return nullptr;
+        return std::unique_ptr<GLShader>(new GLShader());
     }
 
     std::unique_ptr<GLShader> shader{new GLShader(GLShader::ExplicitLinking)};
     if (!shader->load(*vertex, *fragment)) {
-        return nullptr;
+        return std::unique_ptr<GLShader>(new GLShader());
     }
 
     shader->bindAttributeLocation("position", VA_Position);
