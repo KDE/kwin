@@ -12,6 +12,7 @@
 
 #include "core/backendoutput.h"
 #include "core/brightnessdevice.h"
+#include "core/drm_formats.h"
 #include "core/drmdevice.h"
 #include "core/graphicsbufferview.h"
 #include "core/outputbackend.h"
@@ -25,6 +26,7 @@
 #include "ftrace.h"
 #include "opengl/eglbackend.h"
 #include "opengl/glplatform.h"
+#include "outline.h"
 #include "qpainter/qpainterbackend.h"
 #include "renderloopdrivenqanimationdriver.h"
 #include "scene/cursoritem.h"
@@ -33,14 +35,13 @@
 #include "scene/surfaceitem.h"
 #include "scene/surfaceitem_wayland.h"
 #include "scene/workspacescene.h"
+#include "tabbox/tabbox.h"
 #include "utils/common.h"
 #include "utils/envvar.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-
-#include "core/drm_formats.h"
 
 #include <KCrash>
 #if KWIN_BUILD_NOTIFICATIONS
@@ -308,6 +309,11 @@ void Compositor::stop()
     if (Workspace::self()) {
         disconnect(workspace(), &Workspace::outputsChanged, this, &Compositor::handleOutputsChanged);
         disconnect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &Compositor::removeOutput);
+
+        // internal windows need to be hidden before compositing stops, so we can
+        // safely change the EGL display without causing issues with the QPA
+        workspace()->tabbox()->close(true);
+        workspace()->outline()->hide();
     }
 
     if (m_backend->compositingType() == OpenGLCompositing) {

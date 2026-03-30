@@ -54,6 +54,7 @@ public:
 
 protected:
     EglBackend();
+    ~EglBackend() override;
 
     void cleanup();
     void setRenderDevice(RenderDevice *device);
@@ -69,6 +70,7 @@ protected:
     ::EGLContext createContextInternal(::EGLContext sharedContext);
     void teardown();
 
+    std::unique_ptr<EglContext> m_globalShareContext;
     RenderDevice *m_renderDevice = nullptr;
     std::shared_ptr<EglContext> m_context;
     QList<QByteArray> m_clientExtensions;

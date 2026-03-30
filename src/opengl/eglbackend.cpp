@@ -32,13 +32,15 @@
 namespace KWin
 {
 
-static std::unique_ptr<EglContext> s_globalShareContext;
-
 EglBackend::EglBackend()
 {
     connect(Compositor::self(), &Compositor::aboutToDestroy, this, &EglBackend::teardown);
     connect(GpuManager::s_self.get(), &GpuManager::renderDeviceAdded, this, &EglBackend::updateDmabufTranches);
     connect(GpuManager::s_self.get(), &GpuManager::renderDeviceRemoved, this, &EglBackend::updateDmabufTranches);
+}
+
+EglBackend::~EglBackend()
+{
 }
 
 CompositingType EglBackend::compositingType() const
@@ -92,11 +94,11 @@ bool EglBackend::checkGraphicsReset()
 
 bool EglBackend::ensureGlobalShareContext()
 {
-    if (!s_globalShareContext) {
-        s_globalShareContext = EglContext::create(m_renderDevice->eglDisplay(), EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
+    if (!m_globalShareContext) {
+        m_globalShareContext = EglContext::create(m_renderDevice->eglDisplay(), EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
     }
-    if (s_globalShareContext) {
-        kwinApp()->outputBackend()->setSceneEglGlobalShareContext(s_globalShareContext->handle());
+    if (m_globalShareContext) {
+        kwinApp()->outputBackend()->setSceneEglGlobalShareContext(m_globalShareContext->handle());
         return true;
     } else {
         return false;
@@ -106,10 +108,10 @@ bool EglBackend::ensureGlobalShareContext()
 void EglBackend::destroyGlobalShareContext()
 {
     EglDisplay *const eglDisplay = kwinApp()->outputBackend()->sceneEglDisplayObject();
-    if (!eglDisplay || !s_globalShareContext) {
+    if (!eglDisplay || !m_globalShareContext) {
         return;
     }
-    s_globalShareContext.reset();
+    m_globalShareContext.reset();
     kwinApp()->outputBackend()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
 }
 
@@ -283,7 +285,7 @@ bool EglBackend::createContext()
     if (!ensureGlobalShareContext()) {
         return false;
     }
-    m_context = m_renderDevice->eglContext(s_globalShareContext.get());
+    m_context = m_renderDevice->eglContext(m_globalShareContext.get());
     return m_context != nullptr;
 }
 
