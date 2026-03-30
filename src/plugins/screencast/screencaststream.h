@@ -10,7 +10,7 @@
 
 #include "core/drm_formats.h"
 #include "utils/damagejournal.h"
-#include "wayland/screencast_v1.h"
+#include "wayland/screencast_v2.h"
 
 #include <QHash>
 #include <QObject>
@@ -71,13 +71,13 @@ public:
 
     void scheduleRecord(Contents contents = Content::Video);
 
-    void setCursorMode(ScreencastV1Interface::CursorMode mode);
+    void setCursorMode(ScreencastStreamV2Interface::CursorMode mode);
 
 public Q_SLOTS:
     void invalidateCursor();
 
 Q_SIGNALS:
-    void ready(quint32 nodeId);
+    void ready(quint32 nodeId, quint64 objectSerial);
     void closed();
 
 private:
@@ -123,7 +123,7 @@ private:
 
     struct
     {
-        ScreencastV1Interface::CursorMode mode = ScreencastV1Interface::Hidden;
+        ScreencastStreamV2Interface::CursorMode mode = ScreencastStreamV2Interface::CursorMode::Hidden;
         const QSize bitmapSize = QSize(256, 256);
         bool visible = false;
         bool invalid = true;

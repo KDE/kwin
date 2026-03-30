@@ -87,16 +87,16 @@ ecm_mark_as_test(testViewporterInterface)
 ########################################################
 # Test ScreencastV1Interface
 ########################################################
-add_executable(testScreencastV1Interface)
-qt6_generate_wayland_protocol_client_sources(testScreencastV1Interface
+add_executable(testScreencastV2Interface)
+qt6_generate_wayland_protocol_client_sources(testScreencastV2Interface
     PRIVATE_CODE
     FILES
-        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-screencast-v2.xml
 )
-target_sources(testScreencastV1Interface PRIVATE test_screencast.cpp ${SCREENCAST_SRCS})
-target_link_libraries(testScreencastV1Interface Qt::Test kwin Wayland::Client Plasma::KWaylandClient)
-add_test(NAME kwayland-testScreencastV1Interface COMMAND testScreencastV1Interface)
-ecm_mark_as_test(testScreencastV1Interface)
+target_sources(testScreencastV2Interface PRIVATE test_screencast.cpp ${SCREENCAST_SRCS})
+target_link_libraries(testScreencastV2Interface Qt::Test kwin Wayland::Client Plasma::KWaylandClient)
+add_test(NAME kwayland-testScreencastV2Interface COMMAND testScreencastV2Interface)
+ecm_mark_as_test(testScreencastV2Interface)
 
 ########################################################
 # Test InputMethod Interface

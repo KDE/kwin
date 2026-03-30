@@ -125,7 +125,7 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
     case PW_STREAM_STATE_PAUSED:
         if (nodeId() == 0 && m_pwStream) {
             m_pwNodeId = pw_stream_get_node_id(m_pwStream);
-            Q_EMIT ready(nodeId());
+            Q_EMIT ready(nodeId(), /*objectSerial*/ 0);
         }
         m_pendingFrame.stop();
         m_pendingContents = Contents();
@@ -437,10 +437,10 @@ bool ScreenCastStream::createStream()
     }
 
     switch (m_cursor.mode) {
-    case ScreencastV1Interface::Hidden:
+    case ScreencastStreamV2Interface::CursorMode::Hidden:
         break;
-    case ScreencastV1Interface::Embedded:
-    case ScreencastV1Interface::Metadata:
+    case ScreencastStreamV2Interface::CursorMode::Embedded:
+    case ScreencastStreamV2Interface::CursorMode::Metadata:
         m_cursor.changedConnection = connect(Cursors::self(), &Cursors::currentCursorChanged, this, &ScreenCastStream::invalidateCursor);
         m_cursor.positionChangedConnection = connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
             scheduleRecord(Content::Cursor);
@@ -582,17 +582,17 @@ void ScreenCastStream::record(Contents contents)
 
     Contents effectiveContents = contents;
     switch (m_cursor.mode) {
-    case ScreencastV1Interface::Hidden:
+    case ScreencastStreamV2Interface::CursorMode::Hidden:
         m_source->setRenderCursor(false);
         break;
-    case ScreencastV1Interface::Metadata:
+    case ScreencastStreamV2Interface::CursorMode::Metadata:
         effectiveContents |= Content::Cursor;
         m_source->setRenderCursor(false);
         if (effectiveContents & Content::Cursor) {
             addCursorMetadata(spa_buffer, Cursors::self()->currentCursor());
         }
         break;
-    case ScreencastV1Interface::Embedded:
+    case ScreencastStreamV2Interface::CursorMode::Embedded:
         effectiveContents |= Content::Cursor | Content::Video;
         m_source->setRenderCursor(m_source->includesCursor(Cursors::self()->currentCursor()));
         break;
@@ -862,7 +862,7 @@ void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
     }
 }
 
-void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode)
+void ScreenCastStream::setCursorMode(ScreencastStreamV2Interface::CursorMode mode)
 {
     m_cursor.mode = mode;
 }

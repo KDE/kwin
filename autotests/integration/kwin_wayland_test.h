@@ -37,6 +37,7 @@
 #include "qwayland-kde-output-device-v2.h"
 #include "qwayland-kde-output-management-v2.h"
 #include "qwayland-kde-screen-edge-v1.h"
+#include "qwayland-kde-screencast-v2.h"
 #include "qwayland-keystate.h"
 #include "qwayland-presentation-time.h"
 #include "qwayland-primary-selection-unstable-v1.h"
@@ -51,7 +52,6 @@
 #include "qwayland-xdg-shell.h"
 #include "qwayland-xdg-toplevel-drag-v1.h"
 #include "qwayland-xx-session-management-v1.h"
-#include "qwayland-zkde-screencast-unstable-v1.h"
 
 namespace KWayland
 {
@@ -89,8 +89,6 @@ class zwp_text_input_v3;
 class zwp_text_input_manager_v3;
 
 }
-
-class ScreencastingV1;
 
 namespace KWin
 {
@@ -173,12 +171,12 @@ private:
 namespace Test
 {
 
-class ScreencastingV1;
 class MockInputMethod;
 class WpTabletV2;
 class WpTabletPadV2;
 class WpTabletSeatV2;
 class WpTabletToolV2;
+class ScreencastingManagerV2;
 
 class TextInputManagerV3 : public QtWayland::zwp_text_input_manager_v3
 {
@@ -807,7 +805,7 @@ enum class AdditionalWaylandInterface : uint64_t {
     TextInputManagerV3 = 1 << 13,
     OutputDeviceV2 = 1 << 14,
     FractionalScaleManagerV1 = 1 << 15,
-    ScreencastingV1 = 1 << 16,
+    ScreencastingV2 = 1 << 16,
     ScreenEdgeV1 = 1 << 17,
     CursorShapeV1 = 1 << 18,
     FakeInput = 1 << 19,
@@ -1104,7 +1102,7 @@ struct Connection
     LayerShellV1 *layerShellV1 = nullptr;
     TextInputManagerV3 *textInputManagerV3 = nullptr;
     FractionalScaleManagerV1 *fractionalScaleManagerV1 = nullptr;
-    ScreencastingV1 *screencastingV1 = nullptr;
+    ScreencastingManagerV2 *screencastingV2 = nullptr;
     ScreenEdgeManagerV1 *screenEdgeManagerV1 = nullptr;
     CursorShapeManagerV1 *cursorShapeManagerV1 = nullptr;
     FakeInput *fakeInput = nullptr;
@@ -1186,7 +1184,7 @@ WaylandOutputManagementV2 *waylandOutputManagementV2();
 KWayland::Client::TextInputManager *waylandTextInputManager();
 QList<KWayland::Client::Output *> waylandOutputs();
 KWayland::Client::Output *waylandOutput(const QString &name);
-ScreencastingV1 *screencasting();
+ScreencastingManagerV2 *screencasting();
 QList<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
 FakeInput *waylandFakeInput();
 SecurityContextManagerV1 *waylandSecurityContextManagerV1();
@@ -1371,21 +1369,22 @@ void applyMotifHints(xcb_connection_t *connection, xcb_window_t window, const Mo
 MockInputMethod *inputMethod();
 KWayland::Client::Surface *inputPanelSurface();
 
-class ScreencastingStreamV1 : public QObject, public QtWayland::zkde_screencast_stream_unstable_v1
+class ScreencastingStreamV2 : public QObject, public QtWayland::kde_screencast_stream_v2
 {
     Q_OBJECT
-    friend class ScreencastingV1;
+    friend class ScreencastingManagerV2;
 
 public:
-    ScreencastingStreamV1(QObject *parent)
+    ScreencastingStreamV2(::kde_screencast_stream_v2 *object, QObject *parent)
         : QObject(parent)
+        , kde_screencast_stream_v2(object)
     {
     }
 
-    ~ScreencastingStreamV1() override
+    ~ScreencastingStreamV2() override
     {
         if (isInitialized()) {
-            close();
+            destroy();
         }
     }
 
@@ -1395,18 +1394,25 @@ public:
         return *m_nodeId;
     }
 
-    void zkde_screencast_stream_unstable_v1_created(uint32_t node) override
+    quint64 objectSerial() const
+    {
+        Q_ASSERT(m_objectSerial.has_value());
+        return *m_objectSerial;
+    }
+
+    void kde_screencast_stream_v2_created(uint32_t node, uint32_t object_serial_hi, uint32_t object_serial_lo) override
     {
         m_nodeId = node;
+        m_objectSerial = quint64(object_serial_hi) << 32 | object_serial_lo;
         Q_EMIT created(node);
     }
 
-    void zkde_screencast_stream_unstable_v1_closed() override
+    void kde_screencast_stream_v2_closed() override
     {
         Q_EMIT closed();
     }
 
-    void zkde_screencast_stream_unstable_v1_failed(const QString &error) override
+    void kde_screencast_stream_v2_failed(const QString &error) override
     {
         Q_EMIT failed(error);
     }
@@ -1418,29 +1424,32 @@ Q_SIGNALS:
 
 private:
     std::optional<uint> m_nodeId;
+    std::optional<quint64> m_objectSerial;
 };
 
-class ScreencastingV1 : public QObject, public QtWayland::zkde_screencast_unstable_v1
+class ScreencastingManagerV2 : public QObject, public QtWayland::kde_screencast_manager_v2
 {
     Q_OBJECT
 
 public:
-    explicit ScreencastingV1(QObject *parent = nullptr)
+    explicit ScreencastingManagerV2(QObject *parent = nullptr)
         : QObject(parent)
     {
     }
 
-    ScreencastingStreamV1 *createOutputStream(wl_output *output, pointer mode)
+    ScreencastingStreamV2 *createOutputStream(const QString &name, pointer_mode mode)
     {
-        auto stream = new ScreencastingStreamV1(this);
-        stream->init(stream_output(output, mode));
+        auto params = stream_output(name);
+        kde_screencast_output_params_v2_set_pointer_mode(params, mode);
+        auto stream = new ScreencastingStreamV2(kde_screencast_output_params_v2_create_stream(params), this);
         return stream;
     }
 
-    ScreencastingStreamV1 *createWindowStream(const QString &uuid, pointer mode)
+    ScreencastingStreamV2 *createWindowStream(const QString &uuid, pointer_mode mode)
     {
-        auto stream = new ScreencastingStreamV1(this);
-        stream->init(stream_window(uuid, mode));
+        auto params = stream_window(uuid.toUtf8().constData());
+        kde_screencast_window_params_v2_set_pointer_mode(params, mode);
+        auto stream = new ScreencastingStreamV2(kde_screencast_window_params_v2_create_stream(params), this);
         return stream;
     }
 };

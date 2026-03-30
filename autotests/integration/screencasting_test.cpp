@@ -83,7 +83,7 @@ private Q_SLOTS:
     void testOutputCasting();
 
 private:
-    std::optional<QImage> oneFrameAndClose(Test::ScreencastingStreamV1 *stream);
+    std::optional<QImage> oneFrameAndClose(Test::ScreencastingStreamV2 *stream);
 };
 
 void ScreencastingTest::init()
@@ -92,24 +92,24 @@ void ScreencastingTest::init()
         QSKIP("CI has pipewire 1.2 that has known process callback issues"); // TODO: Remove it later when CI ships pipewire 1.2 with the fix
     }
 
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ScreencastingV1 | Test::AdditionalWaylandInterface::PresentationTime));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::ScreencastingV2 | Test::AdditionalWaylandInterface::PresentationTime));
     QVERIFY(KWin::Test::screencasting());
     Cursors::self()->hideCursor();
 }
 
-std::optional<QImage> ScreencastingTest::oneFrameAndClose(Test::ScreencastingStreamV1 *stream)
+std::optional<QImage> ScreencastingTest::oneFrameAndClose(Test::ScreencastingStreamV2 *stream)
 {
     Q_ASSERT(stream);
     PipeWireSourceStream pwStream;
     qDebug() << "start" << stream;
-    connect(stream, &Test::ScreencastingStreamV1::failed, qGuiApp, [](const QString &error) {
+    connect(stream, &Test::ScreencastingStreamV2::failed, qGuiApp, [](const QString &error) {
         qDebug() << "stream failed with error" << error;
         Q_ASSERT(false);
     });
-    connect(stream, &Test::ScreencastingStreamV1::closed, qGuiApp, [&pwStream] {
+    connect(stream, &Test::ScreencastingStreamV2::closed, qGuiApp, [&pwStream] {
         pwStream.setActive(false);
     });
-    connect(stream, &Test::ScreencastingStreamV1::created, qGuiApp, [&pwStream](quint32 nodeId) {
+    connect(stream, &Test::ScreencastingStreamV2::created, qGuiApp, [&pwStream](quint32 nodeId) {
         pwStream.createStream(nodeId, 0);
     });
 
@@ -135,7 +135,7 @@ void ScreencastingTest::testWindowCasting()
     Test::XdgToplevelWindow window;
     QVERIFY(window.show(sourceImage));
 
-    auto stream = KWin::Test::screencasting()->createWindowStream(window.m_window->internalId().toString(), QtWayland::zkde_screencast_unstable_v1::pointer_hidden);
+    auto stream = KWin::Test::screencasting()->createWindowStream(window.m_window->internalId().toString(), Test::ScreencastingManagerV2::pointer_mode_hidden);
 
     std::optional<QImage> img = oneFrameAndClose(stream);
     QVERIFY(img);
@@ -164,7 +164,7 @@ void ScreencastingTest::testWindowWithPopup()
     auto popupWindow = Test::renderAndWaitForShown(popupSurface.get(), popupImage);
     QVERIFY(popupWindow);
 
-    std::unique_ptr<Test::ScreencastingStreamV1> stream(KWin::Test::screencasting()->createWindowStream(window.m_window->internalId().toString(), Test::ScreencastingV1::pointer_hidden));
+    std::unique_ptr<Test::ScreencastingStreamV2> stream(KWin::Test::screencasting()->createWindowStream(window.m_window->internalId().toString(), Test::ScreencastingManagerV2::pointer_mode_hidden));
 
     QImage expectedImage = windowImage;
     QPainter(&expectedImage).drawImage(anchoRect.bottomRight(), popupImage);
@@ -182,16 +182,16 @@ void ScreencastingTest::testWindowWithPopupDynamic()
     Test::XdgToplevelWindow window;
     QVERIFY(window.show(windowImage));
 
-    std::unique_ptr<Test::ScreencastingStreamV1> stream(KWin::Test::screencasting()->createWindowStream(window.m_window->internalId().toString(), Test::ScreencastingV1::pointer_hidden));
+    std::unique_ptr<Test::ScreencastingStreamV2> stream(KWin::Test::screencasting()->createWindowStream(window.m_window->internalId().toString(), Test::ScreencastingManagerV2::pointer_mode_hidden));
 
     PipeWireSourceStream pwStream;
-    connect(stream.get(), &Test::ScreencastingStreamV1::failed, qGuiApp, [](const QString &error) {
+    connect(stream.get(), &Test::ScreencastingStreamV2::failed, qGuiApp, [](const QString &error) {
         QFAIL("Creating stream failed: " + error.toUtf8());
     });
-    connect(stream.get(), &Test::ScreencastingStreamV1::closed, qGuiApp, [&pwStream] {
+    connect(stream.get(), &Test::ScreencastingStreamV2::closed, qGuiApp, [&pwStream] {
         pwStream.setActive(false);
     });
-    QSignalSpy createdSpy(stream.get(), &Test::ScreencastingStreamV1::created);
+    QSignalSpy createdSpy(stream.get(), &Test::ScreencastingStreamV2::created);
     QVERIFY(createdSpy.wait());
     pwStream.createStream(createdSpy.first().first().toUInt(), 0);
 
@@ -256,7 +256,7 @@ void ScreencastingTest::testOutputCasting()
 
     QVERIFY(window.presentWait());
 
-    auto stream = KWin::Test::screencasting()->createOutputStream(theOutput->output(), QtWayland::zkde_screencast_unstable_v1::pointer_hidden);
+    auto stream = KWin::Test::screencasting()->createOutputStream(theOutput->name(), Test::ScreencastingManagerV2::pointer_mode_hidden);
 
     std::optional<QImage> img = oneFrameAndClose(stream);
     QVERIFY(img);

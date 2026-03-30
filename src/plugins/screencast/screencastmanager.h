@@ -10,7 +10,7 @@
 
 #include "plugin.h"
 
-#include "wayland/screencast_v1.h"
+#include "wayland/screencast_v2.h"
 
 namespace KWin
 {
@@ -27,30 +27,18 @@ public:
     explicit ScreencastManager();
 
 private:
-    void streamWindow(ScreencastStreamV1Interface *stream,
-                      const QString &winid,
-                      ScreencastV1Interface::CursorMode mode);
-    void streamWaylandOutput(ScreencastStreamV1Interface *stream,
-                             OutputInterface *output,
-                             ScreencastV1Interface::CursorMode mode);
+    void streamWindow(ScreencastStreamV2Interface *stream, const ScreencastWindowParamsV2 &params);
+    void streamWaylandOutput(ScreencastStreamV2Interface *stream, const ScreencastOutputParamsV2 &params);
     void
-    streamOutput(ScreencastStreamV1Interface *stream, LogicalOutput *output, ScreencastV1Interface::CursorMode mode);
-    void streamVirtualOutput(ScreencastStreamV1Interface *stream,
-                             const QString &name,
-                             const QString &description,
-                             const QSize &size,
-                             double scale,
-                             ScreencastV1Interface::CursorMode mode);
-    void streamRegion(ScreencastStreamV1Interface *stream,
-                      const Rect &geometry,
-                      qreal scale,
-                      ScreencastV1Interface::CursorMode mode);
+    streamOutput(ScreencastStreamV2Interface *stream, LogicalOutput *output, ScreencastStreamV2Interface::CursorMode mode);
+    void streamVirtualOutput(ScreencastStreamV2Interface *stream, const ScreencastVirtualOutputParamsV2 &params);
+    void streamRegion(ScreencastStreamV2Interface *stream, const ScreencastRegionParamsV2 &params);
 
-    void integrateStreams(ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream);
+    void integrateStreams(ScreencastStreamV2Interface *waylandStream, ScreenCastStream *stream);
 
     std::shared_ptr<PipeWireCore> getPipewireConnection();
 
-    ScreencastV1Interface *m_screencast;
+    ScreencastManagerV2Interface *m_screencast;
     std::shared_ptr<PipeWireCore> m_pipewireConnectionCache;
 };
 

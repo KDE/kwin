@@ -30,14 +30,14 @@ namespace KWin
 {
 
 ScreencastManager::ScreencastManager()
-    : m_screencast(new ScreencastV1Interface(waylandServer()->display(), this))
+    : m_screencast(new ScreencastManagerV2Interface(waylandServer()->display(), this))
 {
     getPipewireConnection();
 
-    connect(m_screencast, &ScreencastV1Interface::windowScreencastRequested, this, &ScreencastManager::streamWindow);
-    connect(m_screencast, &ScreencastV1Interface::outputScreencastRequested, this, &ScreencastManager::streamWaylandOutput);
-    connect(m_screencast, &ScreencastV1Interface::virtualOutputScreencastRequested, this, &ScreencastManager::streamVirtualOutput);
-    connect(m_screencast, &ScreencastV1Interface::regionScreencastRequested, this, &ScreencastManager::streamRegion);
+    connect(m_screencast, &ScreencastManagerV2Interface::windowScreencastRequested, this, &ScreencastManager::streamWindow);
+    connect(m_screencast, &ScreencastManagerV2Interface::outputScreencastRequested, this, &ScreencastManager::streamWaylandOutput);
+    connect(m_screencast, &ScreencastManagerV2Interface::virtualOutputScreencastRequested, this, &ScreencastManager::streamVirtualOutput);
+    connect(m_screencast, &ScreencastManagerV2Interface::regionScreencastRequested, this, &ScreencastManager::streamRegion);
 }
 
 static bool isSupportedCompositingType()
@@ -48,62 +48,59 @@ static bool isSupportedCompositingType()
     return false;
 }
 
-void ScreencastManager::streamWindow(ScreencastStreamV1Interface *waylandStream,
-                                     const QString &winid,
-                                     ScreencastV1Interface::CursorMode mode)
+void ScreencastManager::streamWindow(ScreencastStreamV2Interface *waylandStream, const ScreencastWindowParamsV2 &params)
+
 {
     if (!isSupportedCompositingType()) {
         waylandStream->sendFailed(i18n("Unsupported compositing type"));
         return;
     }
 
-    auto window = Workspace::self()->findWindow(QUuid(winid));
+    auto window = Workspace::self()->findWindow(QUuid(params.window()));
     if (!window) {
-        waylandStream->sendFailed(i18n("Could not find window id %1", winid));
+        waylandStream->sendFailed(i18n("Could not find window id %1", params.window()));
         return;
     }
 
     auto stream = new ScreenCastStream(new WindowScreenCastSource(window), getPipewireConnection(), this);
     stream->setObjectName(window->desktopFileName());
-    stream->setCursorMode(mode);
+    stream->setCursorMode(params.cursorMode());
 
     integrateStreams(waylandStream, stream);
 }
 
-void ScreencastManager::streamVirtualOutput(ScreencastStreamV1Interface *stream,
-                                            const QString &name,
-                                            const QString &description,
-                                            const QSize &size,
-                                            double scale,
-                                            ScreencastV1Interface::CursorMode mode)
+void ScreencastManager::streamVirtualOutput(ScreencastStreamV2Interface *stream, const ScreencastVirtualOutputParamsV2 &params)
 {
     if (!isSupportedCompositingType()) {
         stream->sendFailed(i18n("Unsupported compositing type"));
         return;
     }
 
-    auto output = kwinApp()->outputBackend()->createVirtualOutput(name, description, size, scale);
-    streamOutput(stream, workspace()->findOutput(output), mode);
-    connect(stream, &ScreencastStreamV1Interface::finished, output, [output] {
+    auto output = kwinApp()->outputBackend()->createVirtualOutput(params.name(), params.description(), params.size(), params.scale());
+    streamOutput(stream, workspace()->findOutput(output), params.cursorMode());
+    connect(stream, &ScreencastStreamV2Interface::finished, output, [output] {
         kwinApp()->outputBackend()->removeVirtualOutput(output);
     });
 }
 
-void ScreencastManager::streamWaylandOutput(ScreencastStreamV1Interface *waylandStream,
-                                            OutputInterface *output,
-                                            ScreencastV1Interface::CursorMode mode)
+void ScreencastManager::streamWaylandOutput(ScreencastStreamV2Interface *waylandStream, const ScreencastOutputParamsV2 &params)
 {
     if (!isSupportedCompositingType()) {
         waylandStream->sendFailed(i18n("Unsupported compositing type"));
         return;
     }
 
-    streamOutput(waylandStream, output->handle(), mode);
+    auto output = workspace()->findOutput(params.output());
+    if (!output) {
+        waylandStream->sendFailed(i18n("No such output %1", params.output()));
+    }
+
+    streamOutput(waylandStream, output, params.cursorMode());
 }
 
-void ScreencastManager::streamOutput(ScreencastStreamV1Interface *waylandStream,
+void ScreencastManager::streamOutput(ScreencastStreamV2Interface *waylandStream,
                                      LogicalOutput *streamOutput,
-                                     ScreencastV1Interface::CursorMode mode)
+                                     ScreencastStreamV2Interface::CursorMode mode)
 {
     if (!streamOutput) {
         waylandStream->sendFailed(i18n("Could not find output"));
@@ -136,39 +133,40 @@ static qreal devicePixelRatioForRegion(const Rect &region)
     return devicePixelRatio;
 }
 
-void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream, const Rect &geometry, qreal scale, ScreencastV1Interface::CursorMode mode)
+void ScreencastManager::streamRegion(ScreencastStreamV2Interface *waylandStream, const ScreencastRegionParamsV2 &params)
 {
     if (!isSupportedCompositingType()) {
         waylandStream->sendFailed(i18n("Unsupported compositing type"));
         return;
     }
 
-    if (!geometry.isValid()) {
+    if (!params.region().isValid()) {
         waylandStream->sendFailed(i18n("Invalid region"));
         return;
     }
 
+    double scale = params.scale();
     if (scale == 0) {
-        scale = devicePixelRatioForRegion(geometry);
+        scale = devicePixelRatioForRegion(params.region());
     }
 
-    auto source = new RegionScreenCastSource(geometry, scale, waylandStream->connection()->processId());
+    auto source = new RegionScreenCastSource(params.region(), scale, waylandStream->connection()->processId());
     auto stream = new ScreenCastStream(source, getPipewireConnection(), this);
-    stream->setObjectName(rectToString(geometry));
-    stream->setCursorMode(mode);
+    stream->setObjectName(rectToString(params.region()));
+    stream->setCursorMode(params.cursorMode());
 
     integrateStreams(waylandStream, stream);
 }
 
-void ScreencastManager::integrateStreams(ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream)
+void ScreencastManager::integrateStreams(ScreencastStreamV2Interface *waylandStream, ScreenCastStream *stream)
 {
-    connect(waylandStream, &ScreencastStreamV1Interface::finished, stream, &ScreenCastStream::close);
+    connect(waylandStream, &ScreencastStreamV2Interface::finished, stream, &ScreenCastStream::close);
     connect(stream, &ScreenCastStream::closed, waylandStream, [stream, waylandStream] {
         waylandStream->sendClosed();
         stream->deleteLater();
     });
-    connect(stream, &ScreenCastStream::ready, stream, [waylandStream](uint nodeid) {
-        waylandStream->sendCreated(nodeid);
+    connect(stream, &ScreenCastStream::ready, waylandStream, [waylandStream](uint nodeid, quint64 objectSerial) {
+        waylandStream->sendCreated(nodeid, objectSerial);
     });
     if (!stream->init()) {
         waylandStream->sendFailed(stream->error());

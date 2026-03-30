@@ -23,6 +23,8 @@
 
 #include <drm_fourcc.h>
 
+#include <QImageWriter>
+
 namespace KWin
 {
 
@@ -75,6 +77,7 @@ Region OutputScreenCastSource::render(QImage *target, const Region &bufferRepair
     GLFramebuffer buffer(texture.get());
     const Region ret = render(&buffer, Region::infinite());
     grabTexture(texture.get(), target);
+    QImageWriter("image.png").write(*target);
     return ret;
 }
 

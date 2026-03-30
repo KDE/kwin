@@ -15,7 +15,7 @@
 // WaylandServer
 #include "wayland/compositor.h"
 #include "wayland/display.h"
-#include "wayland/screencast_v1.h"
+#include "wayland/screencast_v2.h"
 #include "wayland/seat.h"
 
 #include <KWayland/Client/compositor.h>
@@ -24,54 +24,58 @@
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
 
-#include "qwayland-zkde-screencast-unstable-v1.h"
+#include "qwayland-kde-screencast-v2.h"
 
-class ScreencastStreamV1 : public QObject, public QtWayland::zkde_screencast_stream_unstable_v1
+class ScreencastStreamV2 : public QObject, public QtWayland::kde_screencast_stream_v2
 {
     Q_OBJECT
 
 public:
-    ScreencastStreamV1(::zkde_screencast_stream_unstable_v1 *obj, QObject *parent)
+    ScreencastStreamV2(::kde_screencast_stream_v2 *obj, QObject *parent)
         : QObject(parent)
-        , zkde_screencast_stream_unstable_v1(obj)
+        , kde_screencast_stream_v2(obj)
+    {
+    }
+    ~ScreencastStreamV2()
     {
     }
 
-    void zkde_screencast_stream_unstable_v1_created(uint32_t node) override
+    void kde_screencast_stream_v2_created(uint32_t node, uint32_t object_serial_hi, uint32_t object_serial_lo) override
     {
-        Q_EMIT created(node);
+        Q_EMIT created(node, quint64(object_serial_hi) << 32 | object_serial_lo);
     }
 
 Q_SIGNALS:
-    void created(quint32 node);
+    void created(quint32 node, quint64 object_serial);
 };
 
-class ScreencastV1 : public QObject, public QtWayland::zkde_screencast_unstable_v1
+class ScreencastManagerV2 : public QObject, public QtWayland::kde_screencast_manager_v2
 {
     Q_OBJECT
 
 public:
-    ScreencastV1(QObject *parent)
+    ScreencastManagerV2(QObject *parent)
         : QObject(parent)
     {
     }
 
-    ScreencastStreamV1 *createWindowStream(const QString &uuid)
+    ScreencastStreamV2 *createWindowStream(const QString &uuid)
     {
-        return new ScreencastStreamV1(stream_window(uuid, 2), this);
+        auto params = stream_window(uuid.toUtf8().constData());
+        return new ScreencastStreamV2(kde_screencast_window_params_v2_create_stream(params), this);
     }
 };
 
-class TestScreencastV1Interface : public QObject
+class TestScreencastV2Interface : public QObject
 {
     Q_OBJECT
 
 public:
-    TestScreencastV1Interface()
+    TestScreencastV2Interface()
     {
     }
 
-    ~TestScreencastV1Interface() override;
+    ~TestScreencastV2Interface() override;
 
 private Q_SLOTS:
     void initTestCase();
@@ -80,16 +84,16 @@ private Q_SLOTS:
 private:
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue = nullptr;
-    ScreencastV1 *m_screencast = nullptr;
+    ScreencastManagerV2 *m_screencast = nullptr;
 
-    KWin::ScreencastV1Interface *m_screencastInterface = nullptr;
+    KWin::ScreencastManagerV2Interface *m_screencastInterface = nullptr;
 
-    QPointer<KWin::ScreencastStreamV1Interface> m_triggered = nullptr;
+    QPointer<KWin::ScreencastStreamV2Interface> m_triggered = nullptr;
     QThread *m_thread;
     KWin::Display *m_display = nullptr;
 };
 
-void TestScreencastV1Interface::initTestCase()
+void TestScreencastV2Interface::initTestCase()
 {
     delete m_display;
     m_display = new KWin::Display(this);
@@ -117,17 +121,17 @@ void TestScreencastV1Interface::initTestCase()
     KWayland::Client::Registry registry;
 
     QSignalSpy screencastSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
-    m_screencastInterface = new KWin::ScreencastV1Interface(m_display, this);
-    connect(m_screencastInterface, &KWin::ScreencastV1Interface::windowScreencastRequested, this, [this](KWin::ScreencastStreamV1Interface *stream, const QString &winid) {
-        stream->sendCreated(123);
+    m_screencastInterface = new KWin::ScreencastManagerV2Interface(m_display, this);
+    connect(m_screencastInterface, &KWin::ScreencastManagerV2Interface::windowScreencastRequested, this, [this](KWin::ScreencastStreamV2Interface *stream) {
+        stream->sendCreated(123, 456);
         m_triggered = stream;
     });
 
     connect(&registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, &registry](const QByteArray &interfaceName, quint32 name, quint32 version) {
-        if (interfaceName != "zkde_screencast_unstable_v1") {
+        if (interfaceName != ScreencastManagerV2::interface()->name) {
             return;
         }
-        m_screencast = new ScreencastV1(this);
+        m_screencast = new ScreencastManagerV2(this);
         m_screencast->init(&*registry, name, version);
     });
     registry.setEventQueue(m_queue);
@@ -141,7 +145,7 @@ void TestScreencastV1Interface::initTestCase()
     QVERIFY(m_screencast);
 }
 
-TestScreencastV1Interface::~TestScreencastV1Interface()
+TestScreencastV2Interface::~TestScreencastV2Interface()
 {
     delete m_queue;
     m_queue = nullptr;
@@ -158,20 +162,20 @@ TestScreencastV1Interface::~TestScreencastV1Interface()
     delete m_display;
 }
 
-void TestScreencastV1Interface::testCreate()
+void TestScreencastV2Interface::testCreate()
 {
     auto stream = m_screencast->createWindowStream("3");
     QVERIFY(stream);
 
-    QSignalSpy spyWorking(stream, &ScreencastStreamV1::created);
+    QSignalSpy spyWorking(stream, &ScreencastStreamV2::created);
     QVERIFY(spyWorking.count() || spyWorking.wait());
     QVERIFY(m_triggered);
 
-    QSignalSpy spyStop(m_triggered, &KWin::ScreencastStreamV1Interface::finished);
-    stream->close();
+    QSignalSpy spyStop(m_triggered, &KWin::ScreencastStreamV2Interface::finished);
+    stream->destroy();
     QVERIFY(spyStop.count() || spyStop.wait());
 }
 
-QTEST_GUILESS_MAIN(TestScreencastV1Interface)
+QTEST_GUILESS_MAIN(TestScreencastV2Interface)
 
 #include "test_screencast.moc"
