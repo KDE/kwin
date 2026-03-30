@@ -28,13 +28,13 @@ struct sync_merge_data
 namespace KWin
 {
 
-SyncReleasePoint::SyncReleasePoint(const std::shared_ptr<SyncTimeline> &timeline, uint64_t timelinePoint)
+SyncObjReleasePoint::SyncObjReleasePoint(const std::shared_ptr<SyncTimeline> &timeline, uint64_t timelinePoint)
     : m_timeline(timeline)
     , m_timelinePoint(timelinePoint)
 {
 }
 
-SyncReleasePoint::~SyncReleasePoint()
+SyncObjReleasePoint::~SyncObjReleasePoint()
 {
     if (m_releaseFence.isValid()) {
         m_timeline->moveInto(m_timelinePoint, m_releaseFence);
@@ -61,7 +61,7 @@ static FileDescriptor mergeSyncFds(const FileDescriptor &fd1, const FileDescript
     }
 }
 
-void SyncReleasePoint::addReleaseFence(const FileDescriptor &fd)
+void SyncObjReleasePoint::addReleaseFence(const FileDescriptor &fd)
 {
     if (m_releaseFence.isValid()) {
         m_releaseFence = mergeSyncFds(m_releaseFence, fd);
@@ -70,12 +70,12 @@ void SyncReleasePoint::addReleaseFence(const FileDescriptor &fd)
     }
 }
 
-SyncTimeline *SyncReleasePoint::timeline() const
+SyncTimeline *SyncObjReleasePoint::timeline() const
 {
     return m_timeline.get();
 }
 
-uint64_t SyncReleasePoint::timelinePoint() const
+uint64_t SyncObjReleasePoint::timelinePoint() const
 {
     return m_timelinePoint;
 }

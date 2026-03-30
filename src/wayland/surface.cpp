@@ -9,6 +9,7 @@
 #include "colormanagement_v1.h"
 #include "colorrepresentation_v1.h"
 #include "compositor.h"
+#include "core/syncobjtimeline.h"
 #include "display.h"
 #include "fractionalscale_v1_p.h"
 #include "fractionalscale_v2.h"

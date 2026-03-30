@@ -38,6 +38,7 @@ class FifoBarrier;
 class ColorRepresentationSurfaceV1;
 class ExtBlurSurfaceV1;
 class ExtBackgroundEffectSurfaceV1;
+class SyncObjReleasePoint;
 
 struct SurfaceState
 {
@@ -92,7 +93,7 @@ struct SurfaceState
         std::shared_ptr<SyncTimeline> timeline;
         uint64_t point = 0;
     } acquirePoint;
-    std::shared_ptr<SyncReleasePoint> releasePoint;
+    std::shared_ptr<SyncObjReleasePoint> releasePoint;
     double alphaMultiplier = 1;
     YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity;
     EncodingRange range = EncodingRange::Full;
