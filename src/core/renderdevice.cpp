@@ -52,18 +52,18 @@ static vk::raii::Instance createVulkanInstance(const vk::raii::Context &context)
         &appInfo,
         validationLayers,
     };
-    auto [result, instance] = context.createInstance(instanceInfo);
-    if (result != vk::Result::eSuccess && !validationLayers.empty()) {
+    auto instance = context.createInstance(instanceInfo);
+    if (!instance && !validationLayers.empty()) {
         // try again without the validation layer
         validationLayers.clear();
         instanceInfo.setPEnabledLayerNames(validationLayers);
-        auto [result, instance] = context.createInstance(instanceInfo);
-        if (result == vk::Result::eSuccess) {
+        instance = context.createInstance(instanceInfo);
+        if (!instance) {
             qCWarning(KWIN_CORE, "Vulkan validation layer is not installed");
-            return std::move(instance);
+            return nullptr;
         }
     }
-    return std::move(instance);
+    return std::move(*instance);
 }
 
 static FormatModifierMap getImportFormats(EglDisplay *eglDisplay, VulkanDevice *vulkanDevice)
@@ -182,16 +182,13 @@ static constexpr std::array s_requiredVulkanExtensions = {
 
 static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &instance, DrmDevice *drm)
 {
-    const auto [enumerateResult, physicalDevices] = instance.enumeratePhysicalDevices();
-    if (enumerateResult != vk::Result::eSuccess) {
-        qCWarning(KWIN_VULKAN) << "querying vulkan devices failed:" << vk::to_string(enumerateResult);
+    const auto physicalDevices = instance.enumeratePhysicalDevices();
+    if (!physicalDevices) {
+        qCWarning(KWIN_VULKAN) << "querying vulkan devices failed:" << vk::to_string(physicalDevices.error());
         return nullptr;
     }
-    for (const vk::raii::PhysicalDevice &physicalDevice : physicalDevices) {
-        const auto [extensionPropResult, extensionProps] = physicalDevice.enumerateDeviceExtensionProperties();
-        if (extensionPropResult != vk::Result::eSuccess) {
-            continue;
-        }
+    for (const vk::raii::PhysicalDevice &physicalDevice : *physicalDevices) {
+        const auto extensionProps = physicalDevice.enumerateDeviceExtensionProperties();
         std::vector missingExtensions = s_requiredVulkanExtensions | std::ranges::to<std::vector>();
         std::erase_if(missingExtensions, [&extensionProps](std::string_view required) {
             return std::ranges::any_of(extensionProps, [required](const auto &ext) {
@@ -262,15 +259,15 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             .pEnabledFeatures = &features,
         };
 
-        auto [result, logicalDevice] = physicalDevice.createDevice(deviceInfo);
-        if (result != vk::Result::eSuccess) {
-            qCWarning(KWIN_VULKAN, "vkCreateDevice failed: %s", vk::to_string(vk::Result(result)).c_str());
+        auto logicalDevice = physicalDevice.createDevice(deviceInfo);
+        if (!logicalDevice) {
+            qCWarning(KWIN_VULKAN, "vkCreateDevice failed: %s", vk::to_string(vk::Result(logicalDevice.error())).c_str());
             continue;
         }
 
         auto ret = std::make_unique<VulkanDevice>(
             physicalDevice,
-            std::move(logicalDevice),
+            std::move(*logicalDevice),
             queueProperties | std::ranges::to<std::vector<VkQueueFamilyProperties>>());
         if (ret->supportedFormats().isEmpty()) {
             continue;

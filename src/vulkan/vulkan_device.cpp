@@ -57,21 +57,21 @@ void VulkanDevice::getQueue()
     }
     Q_ASSERT(it != m_queueProperties.end());
     m_queueFamilyIndex = std::distance(m_queueProperties.begin(), it);
-    m_transferQueue = m_logical.getQueue(m_queueFamilyIndex, 0);
+    m_transferQueue = m_logical.getQueue(m_queueFamilyIndex, 0).value();
 }
 
 void VulkanDevice::createCommandPool()
 {
     // only one queue for now -> also only one command pool
-    auto [result, cmdPool] = m_logical.createCommandPool(vk::CommandPoolCreateInfo{
+    auto cmdPool = m_logical.createCommandPool(vk::CommandPoolCreateInfo{
         vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
         m_queueFamilyIndex,
     });
-    if (result != vk::Result::eSuccess) {
-        qCCritical(KWIN_VULKAN) << "creating a command pool failed:" << vk::to_string(result);
+    if (!cmdPool) {
+        qCCritical(KWIN_VULKAN) << "creating a command pool failed:" << vk::to_string(cmdPool.error());
         return;
     }
-    m_commandPool = std::move(cmdPool);
+    m_commandPool = std::move(*cmdPool);
 }
 
 std::shared_ptr<VulkanTexture> VulkanDevice::importBuffer(GraphicsBuffer *buffer, VkImageUsageFlags usage)
@@ -168,9 +168,9 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
         vk::ImageLayout::eUndefined,
         &externalInfo,
     };
-    auto [imageResult, image] = m_logical.createImage(imageInfo);
-    if (imageResult != vk::Result::eSuccess) {
-        qCWarning(KWIN_VULKAN) << "creating vulkan image failed!" << vk::to_string(imageResult);
+    auto image = m_logical.createImage(imageInfo);
+    if (!image) {
+        qCWarning(KWIN_VULKAN) << "creating vulkan image failed!" << vk::to_string(image.error());
         return nullptr;
     }
 
@@ -186,12 +186,8 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     }
 
     for (uint32_t i = 0; i < memoryCount; i++) {
-        const auto [memoryFdResult, memoryFdProperties] = m_logical.getMemoryFdPropertiesKHR(vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT, duplicatedFds[i].get());
-        if (memoryFdResult != vk::Result::eSuccess) {
-            qCWarning(KWIN_VULKAN) << "failed to get memory fd properties!" << vk::to_string(memoryFdResult);
-            return nullptr;
-        }
-        vk::ImageMemoryRequirementsInfo2 memRequirementsInfo{image};
+        const auto memoryFdProperties = m_logical.getMemoryFdPropertiesKHR(vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT, duplicatedFds[i].get());
+        vk::ImageMemoryRequirementsInfo2 memRequirementsInfo{**image};
         vk::ImagePlaneMemoryRequirementsInfo planeRequirementsInfo;
         if (disjoint) {
             switch (i) {
@@ -219,34 +215,35 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
             return nullptr;
         }
 
-        vk::MemoryDedicatedAllocateInfo dedicatedInfo{image};
+        vk::MemoryDedicatedAllocateInfo dedicatedInfo{**image};
         vk::ImportMemoryFdInfoKHR importInfo(vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT, duplicatedFds[i].get(), &dedicatedInfo);
         vk::MemoryAllocateInfo memoryInfo(memRequirements.memoryRequirements.size, memoryIndex.value(), &importInfo);
-        auto [allocateResult, memory] = m_logical.allocateMemory(memoryInfo);
-        if (allocateResult != vk::Result::eSuccess) {
-            qCWarning(KWIN_VULKAN, "'Allocating' memory for dmabuf failed: %s", vk::to_string(allocateResult).c_str());
+        auto memory = m_logical.allocateMemory(memoryInfo);
+        if (!memory) {
+            qCWarning(KWIN_VULKAN, "'Allocating' memory for dmabuf failed: %s", vk::to_string(memory.error()).c_str());
             return nullptr;
         }
 
-        bindInfos[i] = vk::BindImageMemoryInfo{image, memory, 0};
+        bindInfos[i] = vk::BindImageMemoryInfo{**image, **memory, 0};
         if (disjoint) {
             planeInfo[i] = vk::BindImagePlaneMemoryInfo{
                 planeRequirementsInfo.planeAspect,
             };
             bindInfos[i].setPNext(&planeInfo[i]);
         }
-        deviceMemory.push_back(std::move(memory));
+        deviceMemory.push_back(std::move(*memory));
     }
-    const vk::Result bindResult = m_logical.bindImageMemory2(bindInfos);
-    if (bindResult != vk::Result::eSuccess) {
-        qCWarning(KWIN_VULKAN) << "failed to bind image to memory";
-        return nullptr;
-    }
+    // FIXME do the void thing
+    // const vk::Result bindResult = m_logical.bindImageMemory2(bindInfos);
+    // if (bindResult != vk::Result::eSuccess) {
+    //     qCWarning(KWIN_VULKAN) << "failed to bind image to memory";
+    //     return nullptr;
+    // }
     // on successful import, the driver takes ownership of the file descriptors
     for (FileDescriptor &fd : duplicatedFds) {
         fd.take();
     }
-    return std::make_shared<VulkanTexture>(this, format->vulkanFormat, std::move(image), std::move(deviceMemory));
+    return std::make_shared<VulkanTexture>(this, format->vulkanFormat, std::move(*image), std::move(deviceMemory));
 }
 
 FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const
@@ -261,7 +258,7 @@ FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const
             {},
             &modifierInfos,
         };
-        vk::PhysicalDevice physical{m_physical};
+        vk::PhysicalDevice physical{*m_physical};
         physical.getFormatProperties2(vk::Format(info.vulkanFormat), &formatProps);
         if (modifierInfos.drmFormatModifierCount == 0) {
             continue;
@@ -358,16 +355,16 @@ vk::raii::CommandBuffer VulkanDevice::createCommandBuffer()
         }
     }
 
-    auto [result, buffers] = m_logical.allocateCommandBuffers(vk::CommandBufferAllocateInfo{
-        m_commandPool,
+    auto buffers = m_logical.allocateCommandBuffers(vk::CommandBufferAllocateInfo{
+        *m_commandPool,
         vk::CommandBufferLevel::ePrimary,
         1,
     });
-    if (result != vk::Result::eSuccess) {
-        qCWarning(KWIN_VULKAN) << "Failed to create a command buffer" << vk::to_string(result);
+    if (!buffers) {
+        qCWarning(KWIN_VULKAN) << "Failed to create a command buffer" << vk::to_string(buffers.error());
         return nullptr;
     }
-    return std::move(buffers.front());
+    return std::move(buffers->front());
 }
 
 std::optional<vk::raii::Semaphore> VulkanDevice::importSemaphore(FileDescriptor &&syncFd) const
@@ -376,23 +373,24 @@ std::optional<vk::raii::Semaphore> VulkanDevice::importSemaphore(FileDescriptor 
         return std::nullopt;
     }
     vk::SemaphoreCreateInfo semaphoreInfo{};
-    auto [result, semaphore] = m_logical.createSemaphore(semaphoreInfo);
-    if (result != vk::Result::eSuccess) {
+    auto semaphore = m_logical.createSemaphore(semaphoreInfo);
+    if (!semaphore) {
         return std::nullopt;
     }
     vk::ImportSemaphoreFdInfoKHR importInfo{
-        semaphore,
+        **semaphore,
         vk::SemaphoreImportFlagBits::eTemporary,
         vk::ExternalSemaphoreHandleTypeFlagBits::eSyncFd,
         syncFd.get(),
     };
-    result = m_logical.importSemaphoreFdKHR(importInfo);
-    if (result != vk::Result::eSuccess) {
-        return std::nullopt;
-    }
+    // FIXME do the void thing
+    // auto = logical.importSemaphoreFdKHR(importInfo);
+    // if (result != vk::Result::eSuccess) {
+    //     return std::nullopt;
+    // }
     // the driver takes ownership of the fd on successful import
     syncFd.take();
-    return std::move(semaphore);
+    return std::move(*semaphore);
 }
 
 std::optional<FileDescriptor> VulkanDevice::submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd)
@@ -400,38 +398,39 @@ std::optional<FileDescriptor> VulkanDevice::submit(vk::raii::CommandBuffer &&buf
     vk::ExportFenceCreateInfo exportInfo{
         vk::ExternalFenceHandleTypeFlagBits::eSyncFd,
     };
-    auto [fenceResult, fence] = m_logical.createFence(vk::FenceCreateInfo{
+    auto fence= m_logical.createFence(vk::FenceCreateInfo{
         vk::FenceCreateFlags{},
         &exportInfo,
     });
-    if (fenceResult != vk::Result::eSuccess) {
+    if (!fence) {
         return std::nullopt;
     }
     std::vector<vk::Semaphore> waitSemaphores;
     std::vector<vk::PipelineStageFlags> waitFlags;
     auto waitSemaphore = importSemaphore(std::move(syncFd));
     if (waitSemaphore.has_value()) {
-        waitSemaphores.push_back(*waitSemaphore);
+        waitSemaphores.push_back(**waitSemaphore);
         waitFlags.push_back(vk::PipelineStageFlagBits::eAllCommands);
     }
-    vk::Result result = m_transferQueue.submit(vk::SubmitInfo{
-                                                   waitSemaphores,
-                                                   waitFlags,
-                                                   *buffer,
-                                                   {},
-                                               },
-                                               fence);
-    if (result == vk::Result::eErrorDeviceLost) {
-        handleDeviceLoss();
-        return std::nullopt;
-    } else if (result != vk::Result::eSuccess) {
-        return std::nullopt;
-    }
-    const auto [fdResult, fd] = m_logical.getFenceFdKHR(vk::FenceGetFdInfoKHR{
-        fence,
+    // FIXME
+    // vk::Result result = m_transferQueue.submit(vk::SubmitInfo{
+    //                                                waitSemaphores,
+    //                                                waitFlags,
+    //                                                *buffer,
+    //                                                {},
+    //                                            },
+    //                                            fence);
+    // if (result == vk::Result::eErrorDeviceLost) {
+    //     handleDeviceLoss();
+    //     return std::nullopt;
+    // } else if (result != vk::Result::eSuccess) {
+    //     return std::nullopt;
+    // }
+    const auto fd = m_logical.getFenceFdKHR(vk::FenceGetFdInfoKHR{
+        **fence,
         vk::ExternalFenceHandleTypeFlagBits::eSyncFd,
     });
-    if (fdResult != vk::Result::eSuccess) {
+    if (!fd) {
         return std::nullopt;
     }
     FileDescriptor ret{fd};

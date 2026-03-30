@@ -201,6 +201,7 @@ set_package_properties(epoxy PROPERTIES
 )
 
 find_package(Vulkan REQUIRED)
+message(WARNING ${Vulkan_VERSION})
 
 find_package(Wayland 1.24)
 set_package_properties(Wayland PROPERTIES

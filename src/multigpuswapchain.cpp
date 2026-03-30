@@ -174,13 +174,23 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
     m_journal.add(damage);
 
     auto commandBuffer = srcVk->createCommandBuffer();
-    vk::Result result = commandBuffer.begin(vk::CommandBufferBeginInfo{
-        vk::CommandBufferUsageFlagBits::eOneTimeSubmit,
-    });
+    auto result = [&commandBuffer] {
+        vk::CommandBufferBeginInfo beginInfo{
+                vk::CommandBufferUsageFlagBits::eOneTimeSubmit,
+        };
+        if constexpr (std::is_same_v<decltype(commandBuffer.begin(beginInfo)), void>)  {
+            commandBuffer.begin(beginInfo);
+            return vk::Result::eSuccess;
+         } else {
+            return commandBuffer.begin(beginInfo);
+        };
+    }();
+
     if (result != vk::Result::eSuccess) {
         m_journal.clear();
         return std::nullopt;
     }
+
     const std::vector<vk::ImageBlit> regions = toRender.rects() | std::views::transform([&completeRect](const Rect &rect) {
         return vk::ImageBlit{
             // src
@@ -207,10 +217,19 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
             },
         };
     }) | std::ranges::to<std::vector>();
-    commandBuffer.blitImage(srcTexture->handle(), vk::ImageLayout::eGeneral,
-                            m_currentVulkanSlot->texture()->handle(), vk::ImageLayout::eGeneral,
+    commandBuffer.blitImage(*srcTexture->handle(), vk::ImageLayout::eGeneral,
+                            *m_currentVulkanSlot->texture()->handle(), vk::ImageLayout::eGeneral,
                             regions, vk::Filter::eNearest);
-    result = commandBuffer.end();
+
+     result = [&commandBuffer] {
+        if constexpr (std::is_same_v<decltype(commandBuffer.end()), void>)  {
+            commandBuffer.end();
+            return vk::Result::eSuccess;
+         } else {
+            return commandBuffer.end();
+        };
+    }();
+
     if (result != vk::Result::eSuccess) {
         m_journal.clear();
         return std::nullopt;
