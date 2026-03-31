@@ -252,6 +252,29 @@ std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk:
         return nullptr;
     }
     image.bindMemory(memory, 0);
+
+    // we will only use the general image layout everywhere else,
+    // so transition the image here once and then never again.
+    auto commandBuffer = device->createCommandBuffer();
+    commandBuffer.begin(vk::CommandBufferBeginInfo{vk::CommandBufferUsageFlagBits::eOneTimeSubmit});
+    vk::ImageMemoryBarrier toTransferSrc{
+        vk::AccessFlags{},
+        vk::AccessFlagBits::eTransferWrite,
+        vk::ImageLayout::eUndefined,
+        vk::ImageLayout::eGeneral,
+        vk::QueueFamilyIgnored,
+        vk::QueueFamilyIgnored,
+        *image,
+        vk::ImageSubresourceRange{vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1},
+    };
+    commandBuffer.pipelineBarrier(vk::PipelineStageFlagBits::eFragmentShader, vk::PipelineStageFlagBits::eTransfer, {}, {}, {}, toTransferSrc);
+    commandBuffer.end();
+    device->submit(std::move(commandBuffer), FileDescriptor{});
+
+    // FIXME this is terrible. Instead, pass the command buffer in as
+    // an argument, and leave synchronization up to the caller.
+    device->waitIdle();
+
     std::vector<vk::raii::DeviceMemory> mem;
     mem.push_back(std::move(memory));
     return std::make_unique<VulkanTexture>(device, format, std::move(image), std::move(mem), size);
