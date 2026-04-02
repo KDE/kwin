@@ -181,7 +181,9 @@ void DrmOutput::populateModes(State *next) const
         next->currentMode = next->modes.constFirst();
     } else if (!next->modes.contains(next->currentMode)) {
         const auto it = std::ranges::find_if(next->modes, [&](const auto &mode) {
-            return *static_cast<DrmConnectorMode *>(next->currentMode.get()) == *static_cast<DrmConnectorMode *>(mode.get());
+            return next->currentMode->size() == mode->size()
+                && next->currentMode->refreshRate() == mode->refreshRate()
+                && next->currentMode->flags() == mode->flags();
         });
         if (it != next->modes.end()) {
             next->currentMode = *it;
