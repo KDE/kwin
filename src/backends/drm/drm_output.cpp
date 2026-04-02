@@ -177,6 +177,19 @@ void DrmOutput::populateModes(State *next) const
         next->modes.append(m_pipeline->connector()->generateMode(custom.size, custom.refreshRate / 1000.0f, custom.flags | OutputMode::Flag::Custom));
     }
 
+    static const bool noCustomModeQuirk = qEnvironmentVariableIntValue("KWIN_DRM_NO_CUSTOM_MODE_QUIRK");
+    if (!noCustomModeQuirk) {
+        if (!next->desiredModeSize.isEmpty() && next->desiredModeRefreshRate && next->desiredModeFlags) {
+            for (const auto &mode : std::as_const(next->modes)) {
+                const auto drmMode = std::static_pointer_cast<DrmConnectorMode>(mode);
+                if (next->desiredModeSize == mode->size() && next->desiredModeRefreshRate == drmMode->refreshRate() && next->desiredModeFlags == drmMode->flags()) {
+                    next->currentMode = drmMode;
+                    break;
+                }
+            }
+        }
+    }
+
     if (!next->currentMode) {
         next->currentMode = next->modes.constFirst();
     } else if (!next->modes.contains(next->currentMode)) {
