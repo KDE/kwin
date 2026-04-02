@@ -1446,6 +1446,7 @@ void OutputConfigurationStore::save()
                 obj["flags"] = int(mode.flags);
                 modes.append(obj);
             }
+            o["customModes"] = modes;
         }
         if (output.automaticBrightness) {
             o["automaticBrightness"] = *output.automaticBrightness;
