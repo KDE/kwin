@@ -460,10 +460,10 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
         const auto modes = output->modes();
         const auto modeIt = std::find_if(modes.begin(), modes.end(), [&state](const auto &mode) {
             return state.mode
+                && !mode->isRemoved()
                 && mode->size() == state.mode->size
                 && mode->refreshRate() == state.mode->refreshRate
-                && (!state.mode->flags || state.mode->flags == mode->flags())
-                && !(mode->flags() & OutputMode::Flag::Removed);
+                && (!state.mode->flags || state.mode->flags == mode->flags());
         });
         std::optional<std::shared_ptr<OutputMode>> mode = modeIt == modes.end() ? std::nullopt : std::optional(*modeIt);
         if (!mode.has_value() || !*mode) {
@@ -739,8 +739,7 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(BackendOutput *
     const auto modes = output->modes();
     auto notPotentiallyBroken = modes | std::ranges::views::filter([](const auto &mode) {
         // generated modes aren't guaranteed to work, so don't choose one as the default
-        return !(mode->flags() & OutputMode::Flag::Generated)
-            && !(mode->flags() & OutputMode::Flag::Removed);
+        return !mode->isRemoved() && !(mode->flags() & OutputMode::Flag::Generated);
     });
     if (notPotentiallyBroken.empty()) {
         // there's nothing more we can do

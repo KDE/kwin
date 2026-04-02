@@ -113,7 +113,6 @@ public:
     enum class Flag : uint {
         Preferred = 0x1,
         Generated = 0x2,
-        Removed = 0x4,
         Custom = 0x8,
         ReducedBlanking = 0x10,
     };
@@ -126,12 +125,14 @@ public:
     uint32_t refreshRate() const;
     Flags flags() const;
 
+    bool isRemoved() const;
     void setRemoved();
 
 private:
     const QSize m_size;
     const uint32_t m_refreshRate;
-    Flags m_flags;
+    const Flags m_flags;
+    bool m_removed = false;
 };
 
 struct CustomModeDefinition
