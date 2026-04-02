@@ -334,6 +334,10 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
             if (refreshRate == 0) {
                 refreshRate = output->currentMode()->refreshRate();
             }
+            std::optional<uint32_t> flags = changeSet->desiredModeFlags.value_or(output->desiredModeFlags());
+            if (!flags) {
+                flags = output->currentMode()->flags();
+            }
             m_outputs[*outputIndex] = OutputState{
                 .edidIdentifier = output->edid().identifier(),
                 .connectorName = output->name(),
@@ -342,6 +346,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                 .mode = ModeData{
                     .size = modeSize,
                     .refreshRate = refreshRate,
+                    .flags = flags,
                 },
                 .scaleSetting = changeSet->scaleSetting.value_or(output->scaleSetting()),
                 .transform = changeSet->transform.value_or(output->transform()),
@@ -388,6 +393,10 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
             if (refreshRate == 0) {
                 refreshRate = output->currentMode()->refreshRate();
             }
+            std::optional<uint32_t> flags = output->desiredModeFlags();
+            if (!flags) {
+                flags = output->currentMode()->flags();
+            }
             m_outputs[*outputIndex] = OutputState{
                 .edidIdentifier = output->edid().identifier(),
                 .connectorName = output->name(),
@@ -396,6 +405,7 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
                 .mode = ModeData{
                     .size = modeSize,
                     .refreshRate = refreshRate,
+                    .flags = flags,
                 },
                 .scaleSetting = output->scaleSetting(),
                 .transform = output->transform(),
@@ -452,6 +462,7 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
             return state.mode
                 && mode->size() == state.mode->size
                 && mode->refreshRate() == state.mode->refreshRate
+                && (!state.mode->flags || state.mode->flags == mode->flags())
                 && !(mode->flags() & OutputMode::Flag::Removed);
         });
         std::optional<std::shared_ptr<OutputMode>> mode = modeIt == modes.end() ? std::nullopt : std::optional(*modeIt);
@@ -464,6 +475,7 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
             .mode = mode,
             .desiredModeSize = state.mode.has_value() ? std::make_optional(state.mode->size) : std::nullopt,
             .desiredModeRefreshRate = state.mode.has_value() ? std::make_optional(state.mode->refreshRate) : std::nullopt,
+            .desiredModeFlags = state.mode.has_value() ? std::make_optional(state.mode->flags) : std::nullopt,
             .enabled = setupState.enabled,
             .pos = setupState.position,
             .scale = state.scaleSetting,
@@ -655,7 +667,8 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
         const auto modeIt = std::find_if(modes.begin(), modes.end(), [&existingData](const auto &mode) {
             return existingData.mode
                 && mode->size() == existingData.mode->size
-                && mode->refreshRate() == existingData.mode->refreshRate;
+                && mode->refreshRate() == existingData.mode->refreshRate
+                && (!existingData.mode->flags || mode->flags() == existingData.mode->flags);
         });
         const auto mode = modeIt == modes.end() ? kscreenChangeSet.mode.value_or(chooseMode(output)).lock() : *modeIt;
 
@@ -664,6 +677,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .mode = mode,
             .desiredModeSize = mode->size(),
             .desiredModeRefreshRate = mode->refreshRate(),
+            .desiredModeFlags = mode->flags(),
             .enabled = setupState ? setupState->enabled : enable,
             .pos = setupState ? setupState->position : rightMostPosition,
             // kscreen scale is unreliable because it gets overwritten with the value 1 on Xorg,
@@ -962,10 +976,15 @@ void OutputConfigurationStore::load()
             const int width = obj["width"].toInt(0);
             const int height = obj["height"].toInt(0);
             const int refreshRate = obj["refreshRate"].toInt(0);
+            std::optional<uint32_t> flags;
+            if (const auto it = obj.find("flags"); it != obj.end()) {
+                flags = it->toInt(0);
+            }
             if (width > 0 && height > 0 && refreshRate > 0) {
                 state.mode = ModeData{
                     .size = QSize(width, height),
                     .refreshRate = uint32_t(refreshRate),
+                    .flags = flags,
                 };
                 qCDebug(KWIN_OUTPUT_CONFIG, "Read mode %dx%d@%u for output %s", width, height, refreshRate, qPrintable(state.edidIdentifier));
             }
@@ -1306,6 +1325,9 @@ void OutputConfigurationStore::save()
             mode["width"] = output.mode->size.width();
             mode["height"] = output.mode->size.height();
             mode["refreshRate"] = int(output.mode->refreshRate);
+            if (output.mode->flags) {
+                mode["flags"] = int(*output.mode->flags);
+            }
             o["mode"] = mode;
         }
         if (output.scaleSetting) {

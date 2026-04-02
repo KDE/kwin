@@ -169,6 +169,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_mode(Resource *
         change->mode = modePtr;
         change->desiredModeSize = modePtr->size();
         change->desiredModeRefreshRate = modePtr->refreshRate();
+        change->desiredModeFlags = modePtr->flags();
     } else {
         invalid = true;
     }

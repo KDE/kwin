@@ -95,6 +95,7 @@ void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
     next.scaleSetting = props->scaleSetting.value_or(m_state.scaleSetting);
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
+    next.desiredModeFlags = props->desiredModeFlags.value_or(m_state.desiredModeFlags);
     next.currentMode = props->mode.value_or(m_state.currentMode).lock();
     if (!next.currentMode) {
         next.currentMode = next.modes.front();

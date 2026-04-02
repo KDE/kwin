@@ -219,6 +219,7 @@ public:
     std::shared_ptr<OutputMode> currentMode() const;
     QSize desiredModeSize() const;
     uint32_t desiredModeRefreshRate() const;
+    std::optional<uint32_t> desiredModeFlags() const;
     DpmsMode dpmsMode() const;
 
     uint32_t overscan() const;
@@ -435,6 +436,7 @@ protected:
         std::shared_ptr<OutputMode> currentMode;
         QSize desiredModeSize;
         uint32_t desiredModeRefreshRate = 0;
+        std::optional<uint32_t> desiredModeFlags = std::nullopt;
         DpmsMode dpmsMode = DpmsMode::On;
         SubPixel subPixel = SubPixel::Unknown;
         bool enabled = false;

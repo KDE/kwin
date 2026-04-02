@@ -380,6 +380,7 @@ void WaylandOutput::applyChanges(const OutputConfiguration &config)
     // next.scale = props->scale.value_or(m_state.scale);
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
+    next.desiredModeFlags = props->desiredModeFlags.value_or(m_state.desiredModeFlags);
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
     next.dpmsMode = props->dpmsMode.value_or(m_state.dpmsMode);

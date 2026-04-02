@@ -500,6 +500,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_nextState->brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
     m_nextState->desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     m_nextState->desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
+    m_nextState->desiredModeFlags = props->desiredModeFlags.value_or(m_state.desiredModeFlags);
     m_nextState->allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
     m_nextState->colorPowerTradeoff = props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff);
     m_nextState->dimming = props->dimming.value_or(m_state.dimming);
