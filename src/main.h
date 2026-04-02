@@ -176,7 +176,7 @@ public:
 
     qreal xwaylandScale() const
     {
-        return m_xwaylandScale;
+        return m_xwaylandScale.value_or(1.0);
     }
 
     void setXwaylandScale(qreal scale);
@@ -346,7 +346,7 @@ private:
     std::unique_ptr<Session> m_session;
     std::unique_ptr<OutputBackend> m_outputBackend;
     bool m_terminating = false;
-    qreal m_xwaylandScale = 1;
+    std::optional<qreal> m_xwaylandScale;
     QProcessEnvironment m_processEnvironment;
     std::unique_ptr<PluginManager> m_pluginManager;
     std::unique_ptr<InputMethod> m_inputMethod;

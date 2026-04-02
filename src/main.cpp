@@ -331,7 +331,7 @@ void Application::applyXwaylandScale()
 
     KConfigGroup xwaylandGroup = kwinApp()->config()->group(QStringLiteral("Xwayland"));
     if (xwaylandClientsScale) {
-        xwaylandGroup.writeEntry("Scale", m_xwaylandScale, KConfig::Notify);
+        xwaylandGroup.writeEntry("Scale", xwaylandScale(), KConfig::Notify);
     } else {
         xwaylandGroup.deleteEntry("Scale", KConfig::Notify);
     }
