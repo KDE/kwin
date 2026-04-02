@@ -46,7 +46,11 @@ Window::~Window()
 
 Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const FormatModifierMap &formats)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     const QSize nativeSize = geometry().size() * devicePixelRatio();
+#else
+    const QSize nativeSize = (geometry().size() * devicePixelRatio()).toSize();
+#endif
     const bool software = window()->surfaceType() == QSurface::RasterSurface; // RasterGLSurface is unsupported by us
     if (!m_swapchain || m_swapchain->size() != nativeSize
         || !formats.contains(m_swapchain->format())
@@ -115,7 +119,11 @@ void Window::lower()
     // Left blank intentionally to suppress warnings in QPlatformWindow::lower().
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
 void Window::setGeometry(const QRect &rect)
+#else
+void Window::setGeometry(const QRectF &rect)
+#endif
 {
     if (m_handle) {
         m_handle->moveResize(rect);
@@ -154,7 +162,11 @@ void Window::map()
     m_handle = new InternalWindow(window());
 
     m_exposed = true;
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(), geometry().size()));
+#else
+    QWindowSystemInterface::handleExposeEvent(window(), QRectF(QPoint(), geometry().size()).toAlignedRect());
+#endif
 }
 
 void Window::unmap()

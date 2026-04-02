@@ -29,7 +29,11 @@ public:
 
     QPaintDevice *paintDevice() override;
     void flush(QWindow *window, const QRegion &region, const QPoint &offset) override;
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     void resize(const QSize &size, const QRegion &staticContents) override;
+#else
+    void resize(const QSizeF &size, const QRegion &staticContents) override;
+#endif
     void beginPaint(const QRegion &region) override;
     void endPaint() override;
 

@@ -33,7 +33,11 @@ QPaintDevice *BackingStore::paintDevice()
     return m_bufferView->image();
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
 void BackingStore::resize(const QSize &size, const QRegion &staticContents)
+#else
+void BackingStore::resize(const QSizeF &size, const QRegion &staticContents)
+#endif
 {
     QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(window()->handle());
     platformWindow->invalidateSurface();

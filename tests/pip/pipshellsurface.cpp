@@ -9,6 +9,14 @@
 #include <QtGui/qpa/qwindowsysteminterface.h>
 #include <QtWaylandClient/private/qwaylandinputdevice_p.h>
 
+static QRect scaledAndRoundedRect(const QRectF &rect, qreal scale)
+{
+    return QRect(QPoint(std::round(rect.x() * scale),
+                        std::round(rect.y() * scale)),
+                 QPoint(std::round((rect.x() + rect.width()) * scale) - 1,
+                        std::round((rect.y() + rect.height()) * scale) - 1));
+}
+
 XdgWmBase::XdgWmBase()
     : QWaylandClientExtensionTemplate<XdgWmBase>(6)
 {
@@ -82,7 +90,11 @@ bool PipShellSurface::isExposed() const
 
 void PipShellSurface::applyConfigure()
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     QSize size = window()->windowContentGeometry().size();
+#else
+    QSizeF size = window()->windowContentGeometry().size();
+#endif
     if (m_pendingSize.width() > 0) {
         size.setWidth(m_pendingSize.width());
     }
@@ -93,12 +105,22 @@ void PipShellSurface::applyConfigure()
     window()->resizeFromApplyConfigure(size);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
 void PipShellSurface::setWindowGeometry(const QRect &rect)
 {
     if (window()->isExposed()) {
         xdg_surface::set_window_geometry(rect.x(), rect.y(), rect.width(), rect.height());
     }
 }
+#else
+void PipShellSurface::setWindowGeometry(const QRectF &rect)
+{
+    if (window()->isExposed()) {
+        const QRect nativeRect = scaledAndRoundedRect(rect, clientToCompositorScale());
+        xdg_surface::set_window_geometry(nativeRect.x(), nativeRect.y(), nativeRect.width(), nativeRect.height());
+    }
+}
+#endif
 
 bool PipShellSurface::move(QtWaylandClient::QWaylandInputDevice *inputDevice)
 {
@@ -145,7 +167,11 @@ void PipShellSurface::xx_pip_v1_configure_bounds(int32_t width, int32_t height)
 
 void PipShellSurface::xx_pip_v1_configure_size(int32_t width, int32_t height)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     m_pendingSize = QSize(width, height);
+#else
+    m_pendingSize = QSizeF(width, height) / compositorToClientScale();
+#endif
 }
 
 void PipShellSurface::xx_pip_v1_closed()

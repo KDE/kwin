@@ -33,7 +33,11 @@ public:
     void invalidateSurface() override;
     QSurfaceFormat format() const override;
     void setVisible(bool visible) override;
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     void setGeometry(const QRect &rect) override;
+#else
+    void setGeometry(const QRectF &rect) override;
+#endif
     WId winId() const override;
     qreal devicePixelRatio() const override;
     void requestActivateWindow() override;
