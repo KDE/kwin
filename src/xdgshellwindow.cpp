@@ -821,10 +821,10 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure()
         QSizeF bounds = workspace()->clientArea(PlacementArea, this, moveResizeOutput()).size();
         bounds.setWidth(std::max(1.0, bounds.width() - framePadding.width()));
         bounds.setHeight(std::max(1.0, bounds.height() - framePadding.height()));
-        m_shellSurface->sendConfigureBounds(bounds.toSize());
+        m_shellSurface->sendConfigureBounds(bounds);
     }
 
-    const quint32 serial = m_shellSurface->sendConfigure(nextClientSize.toSize(), m_nextStates);
+    const quint32 serial = m_shellSurface->sendConfigure(nextClientSize, m_nextStates);
 
     XdgToplevelConfigure *configureEvent = new XdgToplevelConfigure();
     configureEvent->bounds = moveResizeGeometry();
@@ -2018,7 +2018,7 @@ XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure()
         m_repositionToken.reset();
     }
 
-    const quint32 serial = m_shellSurface->sendConfigure(m_relativePlacement.toRect());
+    const quint32 serial = m_shellSurface->sendConfigure(m_relativePlacement);
 
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
     configureEvent->bounds = moveResizeGeometry();
