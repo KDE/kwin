@@ -1407,8 +1407,8 @@ static std::optional<QPointF> confineInteractiveMove(const RectF &geometry, int 
         // convert visibleSubrect top left to window top left
         // Allow the window to be moved "geometry.width() - minVisibleWidth" pixels offscreen to the left
         rect.setLeft(rect.left() - geometry.width() + minVisibleWidth);
-        const QPointF closest(std::clamp(anchor.x(), rect.x(), rect.x() + rect.width()),
-                              std::clamp(anchor.y(), rect.y(), rect.y() + rect.height()));
+        const QPointF closest(std::clamp(anchor.x(), rect.left(), rect.right()),
+                              std::clamp(anchor.y(), rect.top(), rect.bottom()));
         const qreal score = QLineF(anchor, closest).length();
 
         if (!candidate || score < bestScore) {
@@ -1463,8 +1463,8 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
     }
 
     const auto clampPoint = [](const RectF &rect, const QPointF &point) {
-        return QPointF(std::clamp(point.x(), rect.x(), rect.x() + rect.width()),
-                       std::clamp(point.y(), rect.y(), rect.y() + rect.height()));
+        return QPointF(std::clamp(point.x(), rect.left(), rect.right()),
+                       std::clamp(point.y(), rect.top(), rect.bottom()));
     };
 
     // calculate distance, considering movement constraints in the different modes of resizing
@@ -1530,7 +1530,7 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
     case Gravity::BottomRight:
         for (RectF rect : visibleSubrectRegion.rects()) {
             // convert top-right of visible titlebar subrect to top-right of the window
-            rect.setRight(availableArea.left() + availableArea.width());
+            rect.setRight(availableArea.right());
 
             const QPointF closest = clampPoint(rect, anchor);
             const qreal score = calcDistance(anchor, closest);
