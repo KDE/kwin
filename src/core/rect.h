@@ -143,6 +143,16 @@ public:
     constexpr inline bool contains(int x, int y) const noexcept;
 
     /*!
+     * Returns the closest point inside this rectangle to the specified \a point. If the given
+     * point already lies in the rectangle, it will be returned as is.
+     *
+     * The right and bottom edges are considered to be outside the rectangle.
+     *
+     * The rectangle must not be empty.
+     */
+    constexpr inline QPoint confine(const QPoint &point) const noexcept;
+
+    /*!
      * Returns the left edge coordinate. Equivalent to left().
      *
      * \sa left(), setX()
@@ -814,6 +824,16 @@ public:
     constexpr inline bool contains(qreal x, qreal y) const noexcept;
 
     /*!
+     * Returns the closest point inside this rectangle to the specified \a point. If the given
+     * point already lies in the rectangle, it will be returned as is.
+     *
+     * The right and bottom edges are considered to be outside the rectangle.
+     *
+     * The rectangle must not be empty.
+     */
+    constexpr inline QPointF confine(const QPointF &point) const noexcept;
+
+    /*!
      * Returns the left edge coordinate. Equivalent to left().
      *
      * \sa left(), setX()
@@ -1476,6 +1496,13 @@ constexpr inline bool Rect::contains(int x, int y) const noexcept
     return contains(QPoint(x, y));
 }
 
+constexpr inline QPoint Rect::confine(const QPoint &point) const noexcept
+{
+    Q_ASSERT(!isEmpty());
+    return QPoint(std::clamp(point.x(), left(), right() - 1),
+                  std::clamp(point.y(), top(), bottom() - 1));
+}
+
 constexpr inline int Rect::x() const noexcept
 {
     return m_left;
@@ -1995,6 +2022,13 @@ constexpr inline bool RectF::contains(const QPointF &point) const noexcept
 constexpr inline bool RectF::contains(qreal x, qreal y) const noexcept
 {
     return contains(QPointF(x, y));
+}
+
+constexpr inline QPointF RectF::confine(const QPointF &point) const noexcept
+{
+    Q_ASSERT(!isEmpty());
+    return QPointF(std::clamp(point.x(), left(), std::nextafter(right(), left())),
+                   std::clamp(point.y(), top(), std::nextafter(bottom(), top())));
 }
 
 constexpr inline qreal RectF::x() const noexcept

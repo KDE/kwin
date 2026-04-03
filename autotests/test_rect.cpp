@@ -122,6 +122,8 @@ private Q_SLOTS:
     void normalized();
     void span_data();
     void span();
+    void confine_data();
+    void confine();
     void implicitConversions();
 };
 
@@ -1346,6 +1348,26 @@ void TestRect::span()
     QFETCH(QPoint, point2);
     QTEST(Rect::span(point1, point2), "rect");
     QTEST(Rect::span(point2, point1), "rect");
+}
+
+void TestRect::confine_data()
+{
+    QTest::addColumn<Rect>("rect");
+    QTest::addColumn<QPoint>("point");
+    QTest::addColumn<QPoint>("confined");
+
+    QTest::addRow("inside") << Rect(QPoint(0, 0), QPoint(3, 4)) << QPoint(1, 2) << QPoint(1, 2);
+    QTest::addRow("top-left") << Rect(QPoint(0, 0), QPoint(3, 4)) << QPoint(0, 0) << QPoint(0, 0);
+    QTest::addRow("top-right") << Rect(QPoint(0, 0), QPoint(3, 4)) << QPoint(3, 0) << QPoint(2, 0);
+    QTest::addRow("bottom-right") << Rect(QPoint(0, 0), QPoint(3, 4)) << QPoint(3, 4) << QPoint(2, 3);
+    QTest::addRow("bottom-left") << Rect(QPoint(0, 0), QPoint(3, 4)) << QPoint(0, 4) << QPoint(0, 3);
+}
+
+void TestRect::confine()
+{
+    QFETCH(Rect, rect);
+    QFETCH(QPoint, point);
+    QTEST(rect.confine(point), "confined");
 }
 
 void TestRect::implicitConversions()

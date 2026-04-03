@@ -130,6 +130,8 @@ private Q_SLOTS:
     void roundedIn();
     void roundedOut_data();
     void roundedOut();
+    void confine_data();
+    void confine();
     void implicitConversions();
 };
 
@@ -1477,6 +1479,29 @@ void TestRectF::roundedOut()
     QVERIFY(std::abs(rect.bottom() - rounded.bottom()) < 1.0);
 
     QCOMPARE(rect.toAlignedRect(), expected);
+}
+
+void TestRectF::confine_data()
+{
+    QTest::addColumn<RectF>("rect");
+    QTest::addColumn<QPointF>("point");
+    QTest::addColumn<QPointF>("confined");
+
+    const qreal maxX = std::nextafter(qreal(3), qreal(0));
+    const qreal maxY = std::nextafter(qreal(4), qreal(0));
+
+    QTest::addRow("inside") << RectF(QPointF(0, 0), QPointF(3, 4)) << QPointF(1, 2) << QPointF(1, 2);
+    QTest::addRow("top-left") << RectF(QPointF(0, 0), QPointF(3, 4)) << QPointF(0, 0) << QPointF(0, 0);
+    QTest::addRow("top-right") << RectF(QPointF(0, 0), QPointF(3, 4)) << QPointF(3, 0) << QPointF(maxX, 0);
+    QTest::addRow("bottom-right") << RectF(QPointF(0, 0), QPointF(3, 4)) << QPointF(3, 4) << QPointF(maxX, maxY);
+    QTest::addRow("bottom-left") << RectF(QPointF(0, 0), QPointF(3, 4)) << QPointF(0, 4) << QPointF(0, maxY);
+}
+
+void TestRectF::confine()
+{
+    QFETCH(RectF, rect);
+    QFETCH(QPointF, point);
+    QTEST(rect.confine(point), "confined");
 }
 
 void TestRectF::implicitConversions()
