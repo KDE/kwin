@@ -42,11 +42,12 @@ enum StrutArea {
 };
 Q_DECLARE_FLAGS(StrutAreas, StrutArea)
 
-class KWIN_EXPORT StrutRect : public Rect
+class KWIN_EXPORT StrutRect : public RectF
 {
 public:
-    explicit StrutRect(Rect rect = Rect(), StrutArea area = StrutAreaInvalid);
-    StrutRect(int x, int y, int width, int height, StrutArea area = StrutAreaInvalid);
+    explicit StrutRect(RectF rect = RectF(), StrutArea area = StrutAreaInvalid);
+    StrutRect(const QPointF &topLeft, const QPointF &bottomRight, StrutArea area = StrutAreaInvalid);
+    StrutRect(qreal x, qreal y, qreal width, qreal height, StrutArea area = StrutAreaInvalid);
     StrutRect(const StrutRect &other);
     StrutRect &operator=(const StrutRect &other);
     inline StrutArea area() const

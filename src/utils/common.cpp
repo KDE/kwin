@@ -34,20 +34,26 @@ namespace KWin
 // StrutRect
 //************************************
 
-StrutRect::StrutRect(Rect rect, StrutArea area)
-    : Rect(rect)
+StrutRect::StrutRect(RectF rect, StrutArea area)
+    : RectF(rect)
     , m_area(area)
 {
 }
 
-StrutRect::StrutRect(int x, int y, int width, int height, StrutArea area)
-    : Rect(x, y, width, height)
+StrutRect::StrutRect(const QPointF &topLeft, const QPointF &bottomRight, StrutArea area)
+    : RectF(topLeft, bottomRight)
+    , m_area(area)
+{
+}
+
+StrutRect::StrutRect(qreal x, qreal y, qreal width, qreal height, StrutArea area)
+    : RectF(x, y, width, height)
     , m_area(area)
 {
 }
 
 StrutRect::StrutRect(const StrutRect &other)
-    : Rect(other)
+    : RectF(other)
     , m_area(other.area())
 {
 }
@@ -55,7 +61,7 @@ StrutRect::StrutRect(const StrutRect &other)
 StrutRect &StrutRect::operator=(const StrutRect &other)
 {
     if (this != &other) {
-        Rect::operator=(other);
+        RectF::operator=(other);
         m_area = other.area();
     }
     return *this;

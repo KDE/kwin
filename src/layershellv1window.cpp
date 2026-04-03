@@ -140,37 +140,37 @@ StrutRect LayerShellV1Window::strutRect(StrutArea area) const
     switch (area) {
     case StrutAreaLeft:
         if (m_shellSurface->exclusiveEdge() == Qt::LeftEdge) {
-            return StrutRect(m_moveResizeGeometry.x(),
-                             m_moveResizeGeometry.y(),
-                             m_shellSurface->exclusiveZone(),
-                             m_moveResizeGeometry.height(),
+            return StrutRect(QPointF(m_moveResizeGeometry.left(),
+                                     m_moveResizeGeometry.top()),
+                             QPointF(m_moveResizeGeometry.left() + m_shellSurface->exclusiveZone(),
+                                     m_moveResizeGeometry.bottom()),
                              StrutAreaLeft);
         }
         return StrutRect();
     case StrutAreaRight:
         if (m_shellSurface->exclusiveEdge() == Qt::RightEdge) {
-            return StrutRect(m_moveResizeGeometry.x() + m_moveResizeGeometry.width() - m_shellSurface->exclusiveZone(),
-                             m_moveResizeGeometry.y(),
-                             m_shellSurface->exclusiveZone(),
-                             m_moveResizeGeometry.height(),
+            return StrutRect(QPointF(m_moveResizeGeometry.right() - m_shellSurface->exclusiveZone(),
+                                     m_moveResizeGeometry.top()),
+                             QPointF(m_moveResizeGeometry.right(),
+                                     m_moveResizeGeometry.bottom()),
                              StrutAreaRight);
         }
         return StrutRect();
     case StrutAreaTop:
         if (m_shellSurface->exclusiveEdge() == Qt::TopEdge) {
-            return StrutRect(m_moveResizeGeometry.x(),
-                             m_moveResizeGeometry.y(),
-                             m_moveResizeGeometry.width(),
-                             m_shellSurface->exclusiveZone(),
+            return StrutRect(QPointF(m_moveResizeGeometry.left(),
+                                     m_moveResizeGeometry.top()),
+                             QPointF(m_moveResizeGeometry.right(),
+                                     m_moveResizeGeometry.top() + m_shellSurface->exclusiveZone()),
                              StrutAreaTop);
         }
         return StrutRect();
     case StrutAreaBottom:
         if (m_shellSurface->exclusiveEdge() == Qt::BottomEdge) {
-            return StrutRect(m_moveResizeGeometry.x(),
-                             m_moveResizeGeometry.y() + m_moveResizeGeometry.height() - m_shellSurface->exclusiveZone(),
-                             m_moveResizeGeometry.width(),
-                             m_shellSurface->exclusiveZone(),
+            return StrutRect(QPointF(m_moveResizeGeometry.left(),
+                                     m_moveResizeGeometry.bottom() - m_shellSurface->exclusiveZone()),
+                             QPointF(m_moveResizeGeometry.right(),
+                                     m_moveResizeGeometry.bottom()),
                              StrutAreaBottom);
         }
         return StrutRect();

@@ -1321,15 +1321,15 @@ qreal Window::titlebarThickness() const
  *
  * See doc/moveresizerestriction for more details on algorithm.
  */
-static Region interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, Gravity gravity, int minWidth, int minHeight)
+static RegionF interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, Gravity gravity, int minWidth, int minHeight)
 {
     const auto outputs = workspace()->outputs();
     const auto struts = workspace()->restrictedMoveArea();
     const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput());
 
-    Region offscreenArea(availableArea.toAlignedRect());
+    RegionF offscreenArea(availableArea);
     for (const LogicalOutput *output : outputs) {
-        offscreenArea -= Region(output->geometry());
+        offscreenArea -= output->geometry();
     }
 
     RectF initialRect = availableArea;
@@ -1357,7 +1357,7 @@ static Region interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, G
         Q_UNREACHABLE();
     }
 
-    Region availableRegion(initialRect.roundedOut());
+    RegionF availableRegion(initialRect);
 
     switch (gravity) {
     case Gravity::None:
@@ -1365,20 +1365,20 @@ static Region interactiveMoveResizeVisibleSubrectRegion(const RectF &geometry, G
     case Gravity::Left:
     case Gravity::TopLeft:
     case Gravity::BottomLeft:
-        for (const Rect &rect : struts) {
+        for (const RectF &rect : struts) {
             availableRegion -= rect.adjusted(-minWidth, -minHeight, 0, 0);
         }
-        for (const Rect &rect : offscreenArea.rects()) {
+        for (const RectF &rect : offscreenArea.rects()) {
             availableRegion -= rect.adjusted(-minWidth, -minHeight, 0, 0);
         }
         break;
     case Gravity::Right:
     case Gravity::TopRight:
     case Gravity::BottomRight:
-        for (const Rect &rect : struts) {
+        for (const RectF &rect : struts) {
             availableRegion -= rect.adjusted(0, -minHeight, minWidth, 0);
         }
-        for (const Rect &rect : offscreenArea.rects()) {
+        for (const RectF &rect : offscreenArea.rects()) {
             availableRegion -= rect.adjusted(0, -minHeight, minWidth, 0);
         }
         break;
@@ -1401,14 +1401,14 @@ static std::optional<QPointF> confineInteractiveMove(const RectF &geometry, int 
 
     minVisibleWidth = std::min(std::floor(geometry.width()), qreal(minVisibleWidth));
 
-    const Region visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, Gravity::None, minVisibleWidth, minVisibleHeight);
+    const RegionF visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, Gravity::None, minVisibleWidth, minVisibleHeight);
     const QPointF anchor = geometry.topLeft();
-    for (Rect rect : visibleSubrectRegion.rects()) {
+    for (RectF rect : visibleSubrectRegion.rects()) {
         // convert visibleSubrect top left to window top left
         // Allow the window to be moved "geometry.width() - minVisibleWidth" pixels offscreen to the left
         rect.setLeft(rect.left() - geometry.width() + minVisibleWidth);
-        const QPointF closest(std::clamp<qreal>(anchor.x(), rect.x(), rect.x() + rect.width()),
-                              std::clamp<qreal>(anchor.y(), rect.y(), rect.y() + rect.height()));
+        const QPointF closest(std::clamp(anchor.x(), rect.x(), rect.x() + rect.width()),
+                              std::clamp(anchor.y(), rect.y(), rect.y() + rect.height()));
         const qreal score = QLineF(anchor, closest).length();
 
         if (!candidate || score < bestScore) {
@@ -1444,7 +1444,7 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
         minVisibleWidth = std::min(std::floor(geometry.width()), qreal(minVisibleWidth));
     }
 
-    const Region visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, gravity, minVisibleWidth, minVisibleHeight);
+    const RegionF visibleSubrectRegion = interactiveMoveResizeVisibleSubrectRegion(geometry, gravity, minVisibleWidth, minVisibleHeight);
     QPointF anchor;
     switch (gravity) {
     case Gravity::Top:
@@ -1498,7 +1498,7 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
     switch (gravity) {
     case Gravity::Top:
         // resizing from the top is handled like moving the window to avoid zero width rectangles when window width is equal to minVisibleWidth
-        for (Rect rect : visibleSubrectRegion.rects()) {
+        for (RectF rect : visibleSubrectRegion.rects()) {
             // convert top-left of visible titlebar subrect to top-left of the window
             rect.setLeft(rect.left() - geometry.width() + minVisibleWidth);
 
@@ -1513,7 +1513,7 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
     case Gravity::Left:
     case Gravity::TopLeft:
     case Gravity::BottomLeft:
-        for (Rect rect : visibleSubrectRegion.rects()) {
+        for (RectF rect : visibleSubrectRegion.rects()) {
             // convert top-left of visible titlebar subrect to top-left of the window
             rect.setLeft(availableArea.left());
 
@@ -3967,8 +3967,8 @@ void Window::checkWorkspacePosition(RectF oldGeometry, LogicalOutput *oldOutput)
     // If the window was touching an edge before but not now move it so it is again.
     // Old and new maximums have different starting values so windows on the screen
     // edge will move when a new strut is placed on the edge.
-    Rect oldScreenArea;
-    Rect screenArea;
+    RectF oldScreenArea;
+    RectF screenArea;
     if (workspace()->inRearrange()) {
         // check if the window is on an about to be destroyed output
         LogicalOutput *newOutput = oldOutput;
@@ -3994,18 +3994,18 @@ void Window::checkWorkspacePosition(RectF oldGeometry, LogicalOutput *oldOutput)
         return;
     }
 
-    const Rect oldGeomTall = Rect(QPoint(oldGeometry.left(), oldScreenArea.top()), QPoint(oldGeometry.right(), oldScreenArea.bottom())); // Full screen height
-    const Rect oldGeomWide = Rect(QPoint(oldScreenArea.left(), oldGeometry.top()), QPoint(oldScreenArea.right(), oldGeometry.bottom())); // Full screen width
-    int oldTopMax = oldScreenArea.top();
-    int oldRightMax = oldScreenArea.right();
-    int oldBottomMax = oldScreenArea.bottom();
-    int oldLeftMax = oldScreenArea.left();
-    int topMax = screenArea.top();
-    int rightMax = screenArea.right();
-    int bottomMax = screenArea.bottom();
-    int leftMax = screenArea.left();
-    const Rect newGeomTall(QPoint(newGeom.left(), screenArea.top()), QPoint(newGeom.right(), screenArea.bottom())); // Full screen height
-    const Rect newGeomWide(QPoint(screenArea.left(), newGeom.top()), QPoint(screenArea.right(), newGeom.bottom())); // Full screen width
+    const RectF oldGeomTall = RectF(QPointF(oldGeometry.left(), oldScreenArea.top()), QPointF(oldGeometry.right(), oldScreenArea.bottom())); // Full screen height
+    const RectF oldGeomWide = RectF(QPointF(oldScreenArea.left(), oldGeometry.top()), QPointF(oldScreenArea.right(), oldGeometry.bottom())); // Full screen width
+    qreal oldTopMax = oldScreenArea.top();
+    qreal oldRightMax = oldScreenArea.right();
+    qreal oldBottomMax = oldScreenArea.bottom();
+    qreal oldLeftMax = oldScreenArea.left();
+    qreal topMax = screenArea.top();
+    qreal rightMax = screenArea.right();
+    qreal bottomMax = screenArea.bottom();
+    qreal leftMax = screenArea.left();
+    const RectF newGeomTall(QPointF(newGeom.left(), screenArea.top()), QPointF(newGeom.right(), screenArea.bottom())); // Full screen height
+    const RectF newGeomWide(QPointF(screenArea.left(), newGeom.top()), QPointF(screenArea.right(), newGeom.bottom())); // Full screen width
     // Get the max strut point for each side where the window is (E.g. Highest point for
     // the bottom struts bounded by the window's left and right sides).
 
@@ -4014,29 +4014,29 @@ void Window::checkWorkspacePosition(RectF oldGeometry, LogicalOutput *oldOutput)
         &Workspace::restrictedMoveArea; //... when e.g. active desktop or screen changes
 
     const auto oldStrutsTop = (workspace()->*moveAreaFunc)(StrutAreaTop);
-    for (const Rect &r : oldStrutsTop) {
-        Rect rect = r & oldGeomTall;
+    for (const RectF &r : oldStrutsTop) {
+        RectF rect = r & oldGeomTall;
         if (!rect.isEmpty()) {
             oldTopMax = std::max(oldTopMax, rect.bottom());
         }
     }
     const auto oldStrutsRight = (workspace()->*moveAreaFunc)(StrutAreaRight);
-    for (const Rect &r : oldStrutsRight) {
-        Rect rect = r & oldGeomWide;
+    for (const RectF &r : oldStrutsRight) {
+        RectF rect = r & oldGeomWide;
         if (!rect.isEmpty()) {
             oldRightMax = std::min(oldRightMax, rect.left());
         }
     }
     const auto oldStrutsBottom = (workspace()->*moveAreaFunc)(StrutAreaBottom);
-    for (const Rect &r : oldStrutsBottom) {
-        Rect rect = r & oldGeomTall;
+    for (const RectF &r : oldStrutsBottom) {
+        RectF rect = r & oldGeomTall;
         if (!rect.isEmpty()) {
             oldBottomMax = std::min(oldBottomMax, rect.top());
         }
     }
     const auto oldStrutsLeft = (workspace()->*moveAreaFunc)(StrutAreaLeft);
-    for (const Rect &r : oldStrutsLeft) {
-        Rect rect = r & oldGeomWide;
+    for (const RectF &r : oldStrutsLeft) {
+        RectF rect = r & oldGeomWide;
         if (!rect.isEmpty()) {
             oldLeftMax = std::max(oldLeftMax, rect.right());
         }
@@ -4044,29 +4044,29 @@ void Window::checkWorkspacePosition(RectF oldGeometry, LogicalOutput *oldOutput)
 
     // These 4 compute new bounds
     const auto newStrutsTop = workspace()->restrictedMoveArea(StrutAreaTop);
-    for (const Rect &r : newStrutsTop) {
-        Rect rect = r & newGeomTall;
+    for (const RectF &r : newStrutsTop) {
+        RectF rect = r & newGeomTall;
         if (!rect.isEmpty()) {
             topMax = std::max(topMax, rect.bottom());
         }
     }
     const auto newStrutsRight = workspace()->restrictedMoveArea(StrutAreaRight);
-    for (const Rect &r : newStrutsRight) {
-        Rect rect = r & newGeomWide;
+    for (const RectF &r : newStrutsRight) {
+        RectF rect = r & newGeomWide;
         if (!rect.isEmpty()) {
             rightMax = std::min(rightMax, rect.left());
         }
     }
     const auto newStrutsBottom = workspace()->restrictedMoveArea(StrutAreaBottom);
-    for (const Rect &r : newStrutsBottom) {
-        Rect rect = r & newGeomTall;
+    for (const RectF &r : newStrutsBottom) {
+        RectF rect = r & newGeomTall;
         if (!rect.isEmpty()) {
             bottomMax = std::min(bottomMax, rect.top());
         }
     }
     const auto newStrutsLeft = workspace()->restrictedMoveArea(StrutAreaLeft);
-    for (const Rect &r : newStrutsLeft) {
-        Rect rect = r & newGeomWide;
+    for (const RectF &r : newStrutsLeft) {
+        RectF rect = r & newGeomWide;
         if (!rect.isEmpty()) {
             leftMax = std::max(leftMax, rect.right());
         }
