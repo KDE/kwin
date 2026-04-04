@@ -31,7 +31,7 @@ InternalInputMethodContext::~InternalInputMethodContext()
 
 bool InternalInputMethodContext::isEnabled() const
 {
-    return QGuiApplication::focusObject() != nullptr;
+    return QGuiApplication::focusObject() != nullptr && inputMethodAccepted();
 }
 
 QString InternalInputMethodContext::surroundingText() const
