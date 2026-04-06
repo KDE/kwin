@@ -32,11 +32,9 @@ GpuManager::GpuManager()
     m_udevMonitor->filterSubsystemDevType("drm");
     connect(m_udevNotifier.get(), &QSocketNotifier::activated, this, &GpuManager::handleUdevEvent);
     m_udevMonitor->enable();
-    if (auto udmabuf = RenderDevice::open("/dev/udmabuf")) {
-        m_renderDevices.push_back(std::move(udmabuf));
-    } else {
-        qCWarning(KWIN_CORE, "Could not open udmabuf device!");
-    }
+    auto udmabuf = RenderDevice::open("/dev/udmabuf");
+    Q_ASSERT(udmabuf);
+    m_renderDevices.push_back(std::move(udmabuf));
     scanForRenderDevices();
 }
 

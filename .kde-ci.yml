@@ -50,7 +50,7 @@ Options:
  ctest-arguments: '--repeat until-pass:3'
  per-test-timeout: 90
  require-passing-tests-on: ['Linux/Qt6']
- run-tests-on: ['Linux']
+ run-tests-on: ['Linux', 'FreeBSD']
  tests-run-in-parallel: True
  use-ccache: True
  cppcheck-arguments: '--enable=warning,style,performance --library=kwin-cppcheck.xml --suppress-xml=cppcheck-suppressions.xml'
