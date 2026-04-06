@@ -58,7 +58,7 @@ public:
      * to system memory, and rendering performance on the dedicated GPU will suffer.
      * Scanning out buffers from one GPU while it's on another GPU is also usually impossible.
      */
-    static std::unique_ptr<MultiGpuSwapchain> create(RenderDevice *copyDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats);
+    static std::unique_ptr<MultiGpuSwapchain> create(RenderDevice *copyDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats, bool scanout);
 
 private:
     std::optional<Ret> copyWithVulkan(GraphicsBuffer *buffer, const Region &damage, FileDescriptor &&sync, OutputFrame *frame);

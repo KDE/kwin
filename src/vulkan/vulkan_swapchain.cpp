@@ -52,12 +52,13 @@ const FileDescriptor &VulkanSwapchainSlot::releaseFd() const
     return m_releaseFd;
 }
 
-VulkanSwapchain::VulkanSwapchain(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, uint64_t modifier, std::shared_ptr<VulkanSwapchainSlot> &&initialSlot)
+VulkanSwapchain::VulkanSwapchain(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, uint64_t modifier, bool scanout, std::shared_ptr<VulkanSwapchainSlot> &&initialSlot)
     : m_device(device)
     , m_allocator(allocator)
     , m_size(size)
     , m_format(format)
     , m_modifier(modifier)
+    , m_scanout(scanout)
     , m_slots({std::move(initialSlot)})
 {
 }
@@ -93,6 +94,7 @@ std::shared_ptr<VulkanSwapchainSlot> VulkanSwapchain::acquire()
         .size = m_size,
         .format = m_format,
         .modifiers = {m_modifier},
+        .scanout = m_scanout,
     });
     if (!buffer) {
         qCWarning(KWIN_VULKAN) << "Failed to allocate a vulkan swapchain buffer";
@@ -127,12 +129,13 @@ void VulkanSwapchain::resetBufferAge()
     }
 }
 
-std::unique_ptr<VulkanSwapchain> VulkanSwapchain::create(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, const ModifierList &modifiers)
+std::unique_ptr<VulkanSwapchain> VulkanSwapchain::create(VulkanDevice *device, GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, const ModifierList &modifiers, bool scanout)
 {
     GraphicsBuffer *buffer = allocator->allocate(GraphicsBufferOptions{
         .size = size,
         .format = format,
         .modifiers = modifiers,
+        .scanout = scanout,
     });
     if (!buffer) {
         qCWarning(KWIN_VULKAN) << "Failed to allocate a graphics buffer for a Vulkan swapchain";
@@ -143,7 +146,7 @@ std::unique_ptr<VulkanSwapchain> VulkanSwapchain::create(VulkanDevice *device, G
         return nullptr;
     }
     auto slot = std::make_shared<VulkanSwapchainSlot>(buffer, std::move(texture));
-    return std::make_unique<VulkanSwapchain>(device, allocator, size, format, buffer->dmabufAttributes()->modifier, std::move(slot));
+    return std::make_unique<VulkanSwapchain>(device, allocator, size, format, buffer->dmabufAttributes()->modifier, scanout, std::move(slot));
 }
 
 }

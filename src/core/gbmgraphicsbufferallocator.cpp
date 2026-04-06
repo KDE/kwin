@@ -158,13 +158,18 @@ static GraphicsBuffer *allocateDumb(gbm_device *device, dev_t deviceId, const Gr
 
 static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const GraphicsBufferOptions &options)
 {
+    uint32_t flags = GBM_BO_USE_RENDERING;
+    if (options.scanout) {
+        flags |= GBM_BO_USE_SCANOUT;
+    }
     if (!options.modifiers.empty() && !(options.modifiers.size() == 1 && options.modifiers.front() == DRM_FORMAT_MOD_INVALID)) {
-        gbm_bo *bo = gbm_bo_create_with_modifiers(device,
-                                                  options.size.width(),
-                                                  options.size.height(),
-                                                  options.format,
-                                                  options.modifiers.data(),
-                                                  options.modifiers.size());
+        gbm_bo *bo = gbm_bo_create_with_modifiers2(device,
+                                                   options.size.width(),
+                                                   options.size.height(),
+                                                   options.format,
+                                                   options.modifiers.data(),
+                                                   options.modifiers.size(),
+                                                   flags);
         if (bo) {
             std::optional<DmaBufAttributes> attributes = dmaBufAttributesForBo(bo, deviceId);
             if (!attributes.has_value()) {
@@ -175,7 +180,6 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const 
         }
     }
 
-    uint32_t flags = GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING;
     if (options.modifiers.size() == 1 && options.modifiers.front() == DRM_FORMAT_MOD_LINEAR) {
         flags |= GBM_BO_USE_LINEAR;
     } else if (!options.modifiers.empty() && !options.modifiers.contains(DRM_FORMAT_MOD_INVALID)) {

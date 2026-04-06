@@ -33,6 +33,9 @@ struct GraphicsBufferOptions
 
     /// Whether the graphics buffer should be suitable for software rendering.
     bool software = false;
+
+    /// Whether the graphics buffer should be suitable for scanout
+    bool scanout = false;
 };
 
 class KWIN_EXPORT GraphicsBufferAllocator
