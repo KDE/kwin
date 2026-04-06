@@ -78,8 +78,9 @@ static FormatModifierMap getImportFormats(EglDisplay *eglDisplay, VulkanDevice *
     return ret;
 }
 
-RenderDevice::RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display)
+RenderDevice::RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display, bool isSoftware)
     : m_device(std::move(device))
+    , m_isSoftware(isSoftware)
     , m_display(std::move(display))
     , m_vulkanInstance(createVulkanInstance(m_vulkanContext))
 {
@@ -180,24 +181,18 @@ static constexpr std::array s_requiredVulkanExtensions = {
     VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,
 };
 
-static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &instance, DrmDevice *drm)
+static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &instance, DrmDevice *drm, bool softwareOnly)
 {
     const auto [enumerateResult, physicalDevices] = instance.enumeratePhysicalDevices();
     if (enumerateResult != vk::Result::eSuccess) {
         qCWarning(KWIN_VULKAN) << "querying vulkan devices failed:" << vk::to_string(enumerateResult);
         return nullptr;
     }
-#if HAVE_LIBDRM_FAUX
-    // with faux devices like vkms and vgem, we can only do software rendering
-    const bool needsSoftwareDevice = drm->busType() == DRM_BUS_FAUX;
-#else
-    const bool needsSoftwareDevice = false;
-#endif
     for (const vk::raii::PhysicalDevice &physicalDevice : physicalDevices) {
         const auto basicProperties = physicalDevice.getProperties2();
         const bool isSoftwareDevice = basicProperties.properties.deviceType == vk::PhysicalDeviceType::eCpu;
         const char *deviceName = basicProperties.properties.deviceName.data();
-        if (isSoftwareDevice != needsSoftwareDevice) {
+        if (isSoftwareDevice != softwareOnly) {
             continue;
         }
 
@@ -317,7 +312,7 @@ void RenderDevice::createVulkanDevice()
     if (!*m_vulkanInstance) {
         return;
     }
-    m_vulkanDevice = openVulkanDevice(m_vulkanInstance, m_device.get());
+    m_vulkanDevice = openVulkanDevice(m_vulkanInstance, m_device.get(), m_isSoftware);
     if (m_vulkanDevice) {
         connect(m_vulkanDevice.get(), &VulkanDevice::deviceLost, this, &RenderDevice::handleVulkanDeviceLoss);
     }
@@ -327,6 +322,11 @@ void RenderDevice::createVulkanDevice()
 bool RenderDevice::isInReset() const
 {
     return m_inReset;
+}
+
+bool RenderDevice::isSoftwareDevice() const
+{
+    return m_isSoftware;
 }
 
 std::unique_ptr<RenderDevice> RenderDevice::open(const QString &path, int authenticatedFd)
@@ -339,7 +339,13 @@ std::unique_ptr<RenderDevice> RenderDevice::open(const QString &path, int authen
     if (!eglDisplay) {
         return nullptr;
     }
-    return std::make_unique<RenderDevice>(std::move(drmDevice), std::move(eglDisplay));
+#if HAVE_LIBDRM_FAUX
+    // with faux devices like vkms and vgem, we can only do software rendering
+    const bool isSoftwareOnly = drmDevice->busType() == DRM_BUS_FAUX || path == "/dev/udmabuf";
+#else
+    const bool isSoftwareOnly = path == "/dev/udmabuf";
+#endif
+    return std::make_unique<RenderDevice>(std::move(drmDevice), std::move(eglDisplay), isSoftwareOnly);
 }
 
 }

@@ -32,7 +32,7 @@ class KWIN_EXPORT RenderDevice : public QObject
     Q_OBJECT
 
 public:
-    explicit RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display);
+    explicit RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<EglDisplay> &&display, bool isSoftware);
     ~RenderDevice();
 
     /**
@@ -68,6 +68,12 @@ public:
      */
     bool isInReset() const;
 
+    /**
+     * @returns whether or not this render device will definitely rely on software
+     *          rendering. This is expected to have false negatives!
+     */
+    bool isSoftwareDevice() const;
+
     static std::unique_ptr<RenderDevice> open(const QString &path, int authenticatedFd = -1);
 
 private:
@@ -75,6 +81,7 @@ private:
     void createVulkanDevice();
 
     const std::unique_ptr<DrmDevice> m_device;
+    const bool m_isSoftware;
     const std::unique_ptr<EglDisplay> m_display;
     const vk::raii::Context m_vulkanContext;
     const vk::raii::Instance m_vulkanInstance;

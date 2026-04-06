@@ -113,7 +113,7 @@ public:
     const QList<DrmPipeline *> pipelines() const;
 
     RenderDevice *renderDevice() const;
-    bool hasRenderNode() const;
+    bool isSoftwareRendering() const;
 
     bool updateOutputs();
     void removeOutputs();
@@ -180,7 +180,6 @@ private:
     bool m_sharpnessSupported = false;
     clockid_t m_presentationClock;
     RenderDevice *m_renderDevice = nullptr;
-    std::unique_ptr<RenderDevice> m_softwareRenderDevice;
     DrmBackend *const m_platform;
     std::optional<Version> m_nvidiaDriverVersion;
 

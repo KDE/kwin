@@ -151,7 +151,6 @@ DrmGpu::~DrmGpu()
     m_connectors.clear();
     m_planes.clear();
     m_socketNotifier.reset();
-    m_softwareRenderDevice.reset();
     m_platform->session()->closeRestricted(m_fd);
 }
 
@@ -1082,9 +1081,9 @@ RenderDevice *DrmGpu::renderDevice() const
     return m_renderDevice;
 }
 
-bool DrmGpu::hasRenderNode() const
+bool DrmGpu::isSoftwareRendering() const
 {
-    return m_softwareRenderDevice == nullptr;
+    return !m_renderDevice || m_renderDevice->isSoftwareDevice();
 }
 
 void DrmGpu::setRenderDevice(RenderDevice *device)
@@ -1100,17 +1099,10 @@ void DrmGpu::updateRenderDevice()
 {
     if (RenderDevice *renderDev = GpuManager::self()->compatibleRenderDevice(m_drmDevice.get())) {
         setRenderDevice(renderDev);
-        m_softwareRenderDevice.reset();
-        return;
+    } else {
+        qCWarning(KWIN_DRM, "DrmGpu %s has no compatible render device!", qPrintable(m_drmDevice->path()));
+        setRenderDevice(nullptr);
     }
-    // for software rendering, fall back to the primary node
-    if (!m_softwareRenderDevice) {
-        m_softwareRenderDevice = RenderDevice::open(m_drmDevice->path(), m_fd);
-        if (!m_softwareRenderDevice) {
-            qCWarning(KWIN_DRM, "Opening render device for %s failed", qPrintable(m_drmDevice->path()));
-        }
-    }
-    setRenderDevice(m_softwareRenderDevice.get());
 }
 
 DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QList<DrmOutput *> &outputs)
