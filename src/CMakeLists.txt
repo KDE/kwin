@@ -73,6 +73,7 @@ target_sources(kwin PRIVATE
     core/session_noop.cpp
     core/shmgraphicsbufferallocator.cpp
     core/syncobjtimeline.cpp
+    core/udmabufallocator.cpp
     cursor.cpp
     cursorsource.cpp
     dbusinterface.cpp
@@ -583,6 +584,7 @@ install(FILES
     core/session_logind.h
     core/session_noop.h
     core/shmgraphicsbufferallocator.h
+    core/udmabufallocator.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/core COMPONENT Devel)
 
 install(FILES
