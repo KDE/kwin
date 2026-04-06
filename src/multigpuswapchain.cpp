@@ -81,6 +81,12 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyD
         }
     }
     if (copyDevice->eglDisplay() && copyDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats().containsFormat(format, modifier)) {
+        // creating the copy context will make it current
+        const auto restoreContext = qScopeGuard([ctx = EglContext::currentContext()]() {
+            if (ctx) {
+                ctx->makeCurrent();
+            }
+        });
         const auto context = copyDevice->eglContext();
         if (!context) {
             return nullptr;
@@ -355,6 +361,11 @@ void MultiGpuSwapchain::handleDeviceRemoved(RenderDevice *device)
 void MultiGpuSwapchain::deleteResources()
 {
     if (m_copyContext) {
+        const auto restoreContext = qScopeGuard([ctx = EglContext::currentContext()]() {
+            if (ctx) {
+                ctx->makeCurrent();
+            }
+        });
         m_copyContext->makeCurrent();
         m_currentEglSlot.reset();
         m_eglSwapchain.reset();
