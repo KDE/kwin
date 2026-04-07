@@ -109,6 +109,31 @@ std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buff
     return ret;
 }
 
+bool VulkanQueue::submitBlocking(vk::raii::CommandBuffer &&buffer)
+{
+    auto [fenceResult, fence] = m_device->logicalDevice().createFence(vk::FenceCreateInfo{
+        vk::FenceCreateFlags{},
+    });
+    if (fenceResult != vk::Result::eSuccess) {
+        return false;
+    }
+    vk::Result result = m_handle.submit(vk::SubmitInfo{
+                                            {},
+                                            {},
+                                            *buffer,
+                                            {},
+                                        },
+                                        fence);
+    if (result == vk::Result::eErrorDeviceLost) {
+        m_device->handleDeviceLoss();
+        return false;
+    } else if (result != vk::Result::eSuccess) {
+        return false;
+    }
+    result = m_device->logicalDevice().waitForFences(*fence, true, UINT64_MAX);
+    return result == vk::Result::eSuccess;
+}
+
 void VulkanQueue::waitIdle()
 {
     m_handle.waitIdle();
