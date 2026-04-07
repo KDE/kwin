@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-06 02:37+0000\n"
-"PO-Revision-Date: 2026-03-01 17:09+0900\n"
+"PO-Revision-Date: 2026-03-31 10:49+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 25.12.2\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3372,7 +3372,7 @@ msgstr "フルスクリーン(&F)"
 #: rulesettings.kcfg:296
 #, kde-format
 msgid "No titlebar and frame"
-msgstr ""
+msgstr "タイトルバーとフレームを消す"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:300
@@ -3737,12 +3737,12 @@ msgstr "フルスクリーン(&F)"
 #: useractions.cpp:245
 #, kde-format
 msgid "&No Titlebar and Frame"
-msgstr ""
+msgstr "タイトルバーとフレームを消す(&N)"
 
 #: useractions.cpp:251
 #, kde-format
 msgid "&Hide from Screencast"
-msgstr ""
+msgstr "画面録画から消す(&H)"
 
 #: useractions.cpp:259
 #, kde-format
@@ -3849,10 +3849,9 @@ msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
 #: useractions.cpp:826
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window Menu"
-msgstr "ウィンドウ"
+msgstr "ウィンドウメニュー"
 
 #: useractions.cpp:828
 #, kde-format
@@ -3910,10 +3909,9 @@ msgid "Make Window Fullscreen"
 msgstr "ウィンドウをフルスクリーンに"
 
 #: useractions.cpp:850
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "ウィンドウの枠を隠す"
+msgstr "ウィンドウのタイトルバーと枠の表示を切り替え"
 
 #: useractions.cpp:852
 #, kde-format
@@ -3936,10 +3934,9 @@ msgid "Setup Window Shortcut"
 msgstr "ウィンドウショートカットの設定"
 
 #: useractions.cpp:860
-#, fuzzy, kde-format
-#| msgid "Pack Window to the Left"
+#, kde-format
 msgid "Move Window to the Center"
-msgstr "ウィンドウを左へ寄せる"
+msgstr "ウィンドウを中央に移動"
 
 #: useractions.cpp:862
 #, kde-format
@@ -3962,28 +3959,24 @@ msgid "Move Window Down"
 msgstr "ウィンドウを下に移動"
 
 #: useractions.cpp:870
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Expand Window Horizontally"
-msgstr "ウィンドウを横に最大化"
+msgstr "ウィンドウを横に拡大"
 
 #: useractions.cpp:872
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Expand Window Vertically"
-msgstr "ウィンドウを縦に最大化"
+msgstr "ウィンドウを縦に拡大"
 
 #: useractions.cpp:874
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Horizontally"
+#, kde-format
 msgid "Shrink Window Horizontally"
-msgstr "ウィンドウを左へ縮める"
+msgstr "ウィンドウを横に縮小"
 
 #: useractions.cpp:876
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Vertically"
+#, kde-format
 msgid "Shrink Window Vertically"
-msgstr "ウィンドウを上へ縮める"
+msgstr "ウィンドウを縦に縮小"
 
 #: useractions.cpp:878
 #, kde-format
@@ -3996,40 +3989,34 @@ msgid "Quick Tile Window to the Right"
 msgstr "ウィンドウを右にタイル化"
 
 #: useractions.cpp:882
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Quick Tile Window to the Top"
-msgstr "ウィンドウを左にタイル化"
+msgstr "ウィンドウを上にタイル化"
 
 #: useractions.cpp:884
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Quick Tile Window to the Bottom"
-msgstr "ウィンドウを左にタイル化"
+msgstr "ウィンドウを下にタイル化"
 
 #: useractions.cpp:886
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Quick Tile Window to the Top Left"
-msgstr "ウィンドウを左にタイル化"
+msgstr "ウィンドウを左上にタイル化"
 
 #: useractions.cpp:888
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Quick Tile Window to the Bottom Left"
-msgstr "ウィンドウを左にタイル化"
+msgstr "ウィンドウを左下にタイル化"
 
 #: useractions.cpp:890
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Quick Tile Window to the Top Right"
-msgstr "ウィンドウを右にタイル化"
+msgstr "ウィンドウを右上にタイル化"
 
 #: useractions.cpp:892
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Quick Tile Window to the Bottom Right"
-msgstr "ウィンドウを右にタイル化"
+msgstr "ウィンドウを右下にタイル化"
 
 #: useractions.cpp:894
 #, kde-format
@@ -4054,12 +4041,12 @@ msgstr "左のウィンドウに切り替え"
 #: useractions.cpp:902
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr ""
+msgstr "アクティブウィンドウの不透明度を 5% 上げる"
 
 #: useractions.cpp:904
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr ""
+msgstr "アクティブウィンドウの不透明度を 5% 下げる"
 
 #: useractions.cpp:907
 #, kde-format
@@ -4067,34 +4054,29 @@ msgid "Keep Window on All Desktops"
 msgstr "ウィンドウをすべてのデスクトップに表示"
 
 #: useractions.cpp:910
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Left"
-msgstr "ウィンドウを左にタイル化"
+msgstr "ウィンドウをカスタムタイルで左にタイル化"
 
 #: useractions.cpp:912
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Custom Quick Tile Window to the Right"
-msgstr "ウィンドウを右にタイル化"
+msgstr "ウィンドウをカスタムタイルで右にタイル化"
 
 #: useractions.cpp:914
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Top"
-msgstr "ウィンドウを左にタイル化"
+msgstr "ウィンドウをカスタムタイルで上にタイル化"
 
 #: useractions.cpp:916
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
-msgstr "ウィンドウを左にタイル化"
+msgstr "ウィンドウをカスタムタイルで下にタイル化"
 
 #: useractions.cpp:927
-#, fuzzy, kde-format
-#| msgid "Window to Desktop 1"
+#, kde-format
 msgid "Window to Desktop %1"
-msgstr "ウィンドウをデスクトップ 1 へ"
+msgstr "ウィンドウをデスクトップ %1 へ"
 
 #: useractions.cpp:929
 #, kde-format
@@ -4127,46 +4109,39 @@ msgid "Window One Desktop Down"
 msgstr "ウィンドウを一つ下のデスクトップへ"
 
 #: useractions.cpp:941
-#, fuzzy, kde-format
-#| msgid "Window to Screen 1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "ウィンドウをスクリーン 1 へ"
+msgstr "ウィンドウをスクリーン %1 へ"
 
 #: useractions.cpp:948
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
 msgstr "ウィンドウを次のスクリーンへ"
 
 #: useractions.cpp:950
-#, fuzzy, kde-format
-#| msgid "Window to Previous Desktop"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "ウィンドウを前のデスクトップへ"
+msgstr "ウィンドウを前のスクリーンへ"
 
 #: useractions.cpp:952
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "ウィンドウを一つ右のデスクトップへ"
+msgstr "ウィンドウを一つ右のスクリーンへ"
 
 #: useractions.cpp:954
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "ウィンドウを一つ左のデスクトップへ"
+msgstr "ウィンドウを一つ左のスクリーンへ"
 
 #: useractions.cpp:956
-#, fuzzy, kde-format
-#| msgid "Window to Screen 1"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "ウィンドウをスクリーン 1 へ"
+msgstr "ウィンドウを一つ上のスクリーンへ"
 
 #: useractions.cpp:958
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "ウィンドウを一つ下のデスクトップへ"
+msgstr "ウィンドウを一つ下のスクリーンへ"
 
 #: useractions.cpp:962
 #, kde-format
@@ -4179,40 +4154,34 @@ msgid "Switch to Next Screen"
 msgstr "次のスクリーンに切り替え"
 
 #: useractions.cpp:970
-#, fuzzy, kde-format
-#| msgid "Switch to Previous Desktop"
+#, kde-format
 msgid "Switch to Previous Screen"
-msgstr "前のデスクトップに切り替え"
+msgstr "前のスクリーンに切り替え"
 
 #: useractions.cpp:971
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "右のウィンドウに切り替え"
+msgstr "右のスクリーンに切り替え"
 
 #: useractions.cpp:973
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "左のウィンドウに切り替え"
+msgstr "左のスクリーンに切り替え"
 
 #: useractions.cpp:975
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "スクリーン %1 に切り替え"
+msgstr "上のスクリーンに切り替え"
 
 #: useractions.cpp:977
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "スクリーン %1 に切り替え"
+msgstr "下のスクリーンに切り替え"
 
 #: useractions.cpp:980
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "デスクトップへ移動(&D)"
+msgstr "デスクトップをプレビュー"
 
 #: useractions.cpp:983
 #, kde-format
@@ -4227,7 +4196,7 @@ msgstr "ウィンドウをアクティブに (%1)"
 #: utils/edid.cpp:360
 #, kde-format
 msgid "unknown"
-msgstr ""
+msgstr "不明"
 
 #: virtualdesktops.cpp:731 virtualdesktops.cpp:810
 #, kde-format
