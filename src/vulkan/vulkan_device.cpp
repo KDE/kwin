@@ -40,6 +40,7 @@ VulkanDevice::~VulkanDevice()
 {
     Q_EMIT deviceLost();
     m_graphicsQueue.reset();
+    m_computeQueue.reset();
     m_transferQueue.reset();
     m_importedTextures.clear();
     m_importedBuffers.clear();
@@ -58,6 +59,15 @@ void VulkanDevice::getQueues()
     if (transferIt != transfer.end()) {
         m_transferQueue = VulkanQueue::create(this, std::distance(m_queueProperties.begin(), transferIt.base()));
     }
+
+    auto compute = m_queueProperties | std::views::filter([](const vk::QueueFamilyProperties &props) {
+        return bool(props.queueFlags & vk::QueueFlagBits::eCompute);
+    });
+    const auto computeIt = std::ranges::min_element(compute, [](const VkQueueFamilyProperties &left, const VkQueueFamilyProperties &right) {
+        return std::popcount(left.queueFlags) < std::popcount(right.queueFlags);
+    });
+    Q_ASSERT(computeIt != compute.end());
+    m_computeQueue = VulkanQueue::create(this, std::distance(m_queueProperties.begin(), computeIt.base()));
 
     auto it = std::ranges::find_if(m_queueProperties, [](const vk::QueueFamilyProperties &props) {
         return bool(props.queueFlags & vk::QueueFlagBits::eGraphics);
@@ -518,6 +528,11 @@ const vk::raii::Device &VulkanDevice::logicalDevice() const
 VulkanQueue *VulkanDevice::graphicsQueue() const
 {
     return m_graphicsQueue.get();
+}
+
+VulkanQueue *VulkanDevice::computeQueue() const
+{
+    return m_computeQueue.get();
 }
 
 VulkanQueue *VulkanDevice::transferQueue() const
