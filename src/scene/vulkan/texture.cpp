@@ -53,7 +53,10 @@ void ImageTextureVulkan::upload(const QImage &image, const Rect &region)
         return;
     }
     if (!m_texture || m_texture->size() != image.size() || m_texture->format() != *format) {
-        m_texture = VulkanTexture::allocate(m_device, *format, image.size(), vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc);
+        m_texture = VulkanTexture::allocate(m_device, *format, image.size(),
+                                            vk::ImageUsageFlagBits::eSampled
+                                                | vk::ImageUsageFlagBits::eTransferSrc
+                                                | vk::ImageUsageFlagBits::eTransferDst);
         if (!m_texture) {
             return;
         }
@@ -67,6 +70,7 @@ std::unique_ptr<BufferTextureVulkan> BufferTextureVulkan::create(VulkanDevice *d
     if (texture->attach(buffer)) {
         return texture;
     }
+    qWarning() << "attach fail :(";
     return nullptr;
 }
 
@@ -121,7 +125,7 @@ bool BufferTextureVulkan::loadShmTexture(GraphicsBuffer *buffer)
         return false;
     }
 
-    auto texture = VulkanTexture::upload(m_device, *view.image(), vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc);
+    auto texture = VulkanTexture::upload(m_device, *view.image(), vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst);
     if (Q_UNLIKELY(!texture)) {
         return false;
     }
@@ -186,7 +190,10 @@ bool BufferTextureVulkan::loadSinglePixelTexture(GraphicsBuffer *buffer)
     // TODO this shouldn't allocate a texture,
     // the renderer should just use a color in the shader
     const GraphicsBufferView view(buffer);
-    auto texture = VulkanTexture::upload(m_device, *view.image(), vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc);
+    auto texture = VulkanTexture::upload(m_device, *view.image(),
+                                         vk::ImageUsageFlagBits::eSampled
+                                             | vk::ImageUsageFlagBits::eTransferSrc
+                                             | vk::ImageUsageFlagBits::eTransferDst);
     if (Q_UNLIKELY(!texture)) {
         return false;
     }

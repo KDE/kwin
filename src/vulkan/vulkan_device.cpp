@@ -25,7 +25,7 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     , m_logical(std::move(logicalDevice))
     // TODO it might be useful to have separate lists for sample + transfer_src
     // and sample + color attachment + transfer_dst
-    , m_formats(queryFormats(VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
+    , m_formats(queryFormats(VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT))
     , m_queueProperties(std::move(queueProperties))
     , m_transferQueue(nullptr)
     , m_commandPool(nullptr)
@@ -248,8 +248,49 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     for (FileDescriptor &fd : duplicatedFds) {
         fd.take();
     }
+
+    // we will only use the general image layout everywhere else,
+    // so transition the image here once and then never again.
+    // NOTE this is just here to appease the validation layers.
+    // It *must* not actually modify the buffer in any way!
+    auto commandBuffer = createCommandBuffer();
+    commandBuffer.begin(vk::CommandBufferBeginInfo{vk::CommandBufferUsageFlagBits::eOneTimeSubmit});
+    vk::ImageMemoryBarrier toTransferSrc{
+        vk::AccessFlags{},
+        vk::AccessFlagBits::eTransferWrite,
+        vk::ImageLayout::eUndefined,
+        vk::ImageLayout::eGeneral,
+        vk::QueueFamilyIgnored,
+        vk::QueueFamilyIgnored,
+        *image,
+        vk::ImageSubresourceRange{vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1},
+    };
+    commandBuffer.pipelineBarrier(vk::PipelineStageFlagBits::eFragmentShader, vk::PipelineStageFlagBits::eTransfer, {}, {}, {}, toTransferSrc);
+    commandBuffer.end();
+    // FIXME this is terrible. Instead, pass the command buffer in as
+    // an argument, and leave synchronization up to the caller?
+    submitBlocking(std::move(commandBuffer));
+
+    auto [viewResult, view] = m_logical.createImageView(vk::ImageViewCreateInfo{
+        vk::ImageViewCreateFlags{},
+        *image,
+        vk::ImageViewType::e2D,
+        vk::Format(format->vulkanFormat),
+        vk::ComponentMapping{},
+        vk::ImageSubresourceRange{
+            vk::ImageAspectFlagBits::eColor,
+            0,
+            1,
+            0,
+            1,
+        },
+    });
+    if (viewResult != vk::Result::eSuccess) {
+        return nullptr;
+    }
     return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), std::move(image),
-                                           std::move(deviceMemory), QSize(attributes->width, attributes->height));
+                                           std::move(deviceMemory), QSize(attributes->width, attributes->height),
+                                           std::move(view));
 }
 
 FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const

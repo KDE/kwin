@@ -48,12 +48,14 @@ std::optional<vk::Format> VulkanTexture::qImageToVulkanFormat(QImage::Format for
 }
 
 VulkanTexture::VulkanTexture(VulkanDevice *device, vk::Format format, vk::raii::Image &&image,
-                             std::vector<vk::raii::DeviceMemory> &&memory, const QSize &size)
+                             std::vector<vk::raii::DeviceMemory> &&memory, const QSize &size,
+                             vk::raii::ImageView &&view)
     : m_device(device)
     , m_format(format)
     , m_memory(std::move(memory))
     , m_image(std::move(image))
     , m_size(size)
+    , m_view(std::move(view))
 {
 }
 
@@ -69,6 +71,11 @@ QSize VulkanTexture::size() const
 const vk::raii::Image &VulkanTexture::handle() const
 {
     return m_image;
+}
+
+const vk::raii::ImageView &VulkanTexture::view() const
+{
+    return m_view;
 }
 
 vk::Format VulkanTexture::format() const
@@ -277,20 +284,42 @@ std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk:
 
     std::vector<vk::raii::DeviceMemory> mem;
     mem.push_back(std::move(memory));
-    return std::make_unique<VulkanTexture>(device, format, std::move(image), std::move(mem), size);
+    auto [viewResult, view] = device->logicalDevice().createImageView(vk::ImageViewCreateInfo{
+        vk::ImageViewCreateFlags{},
+        *image,
+        vk::ImageViewType::e2D,
+        format,
+        vk::ComponentMapping{},
+        vk::ImageSubresourceRange{
+            vk::ImageAspectFlagBits::eColor,
+            0,
+            1,
+            0,
+            1,
+        },
+    });
+    if (viewResult != vk::Result::eSuccess) {
+        return nullptr;
+    }
+    return std::make_unique<VulkanTexture>(device, format, std::move(image), std::move(mem), size, std::move(view));
 }
 
 std::unique_ptr<VulkanTexture> VulkanTexture::upload(VulkanDevice *device, const QImage &image, vk::ImageUsageFlags usage)
 {
-    const auto format = qImageToVulkanFormat(image.format());
+    Q_ASSERT(usage & vk::ImageUsageFlagBits::eTransferDst);
+    QImage img = image;
+    auto format = qImageToVulkanFormat(image.format());
     if (!format) {
-        return nullptr;
+        img = image.convertedTo(QImage::Format::Format_RGBA8888_Premultiplied);
+        format = vk::Format::eR8G8B8A8Unorm;
     }
-    auto ret = allocate(device, *format, image.size(), usage);
+    auto ret = allocate(device, *format, img.size(), usage);
     if (!ret) {
         return nullptr;
     }
-    ret->update(image);
+    if (!ret->update(img)) {
+        return nullptr;
+    }
     return ret;
 }
 

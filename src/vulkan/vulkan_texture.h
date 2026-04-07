@@ -27,7 +27,8 @@ public:
     static std::unique_ptr<VulkanTexture> upload(VulkanDevice *device, const QImage &image, vk::ImageUsageFlags usage);
 
     explicit VulkanTexture(VulkanDevice *device, vk::Format format, vk::raii::Image &&image,
-                           std::vector<vk::raii::DeviceMemory> &&memory, const QSize &size);
+                           std::vector<vk::raii::DeviceMemory> &&memory, const QSize &size,
+                           vk::raii::ImageView &&view);
     VulkanTexture(VulkanTexture &&other) = delete;
     VulkanTexture(const VulkanTexture &) = delete;
     ~VulkanTexture();
@@ -44,6 +45,7 @@ public:
     QImage download() const;
 
     const vk::raii::Image &handle() const;
+    const vk::raii::ImageView &view() const;
     vk::Format format() const;
     QSize size() const;
 
@@ -53,6 +55,7 @@ private:
     std::vector<vk::raii::DeviceMemory> m_memory;
     vk::raii::Image m_image;
     QSize m_size;
+    vk::raii::ImageView m_view;
 };
 
 }

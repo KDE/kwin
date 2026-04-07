@@ -21,6 +21,7 @@ namespace KWin
 
 class VulkanDevice;
 class VulkanTexture;
+class VulkanShader;
 class SyncReleasePoint;
 
 class ItemRendererVulkan : public ItemRenderer
@@ -29,7 +30,6 @@ public:
     struct RenderNode
     {
         VulkanTexture *texture;
-        RenderGeometry geometry;
         QMatrix4x4 transformMatrix;
         int firstVertex = 0;
         int vertexCount = 0;
@@ -44,6 +44,12 @@ public:
         QColor borderColor;
         bool paintHole = false;
         bool hasFloatingPointColor = false;
+    };
+
+    struct ItemData
+    {
+        QVector4D rect;
+        QVector4D color;
     };
 
     struct RenderCorner
@@ -65,6 +71,8 @@ public:
         const qreal renderTargetScale;
         const QPointF viewportOrigin;
         const QPoint renderOffset;
+        const QSize viewportSize;
+        std::vector<ItemData> uniform;
     };
 
     explicit ItemRendererVulkan(VulkanDevice *device);
@@ -95,8 +103,8 @@ private:
     void createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter);
 
     VulkanDevice *const m_device;
-    vk::raii::CommandBuffer m_commandBuffer{nullptr};
     std::unordered_set<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
+    std::unique_ptr<VulkanShader> m_shader;
 };
 
 }
