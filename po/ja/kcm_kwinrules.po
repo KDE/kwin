@@ -6,20 +6,21 @@
 # Yukiko Bando <ybando@k6.dion.ne.jp>, 2006, 2007, 2010.
 # R.Suga <21r.suga@gmail.com>, 2022.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2005, 2015, 2022, 2023.
+# SPDX-FileCopyrightText: 2026 Mint <5602mint@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2023-12-03 13:43+0900\n"
-"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
-"Language-Team: Japanese <kde-jp@kde.org>\n"
+"PO-Revision-Date: 2026-03-27 23:51+0900\n"
+"Last-Translator: Mint <5602mint@gmail.com>\n"
+"Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 25.12.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -27,14 +28,14 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Kenshi Muto,Shinichi Tsunoda,R.Suga,Ryuichi Yamada"
+msgstr "Kenshi Muto,Shinichi Tsunoda,R.Suga,Ryuichi Yamada,Mint"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 "kmuto@debian.org,tsuno@ngy.1st.ne.jp,21r.suga@gmail.com,"
-"ryuichi_ya220@outlook.jp"
+"ryuichi_ya220@outlook.jp,5602mint@gmail.com"
 
 #: kcmrules.cpp:28
 #, kde-format
@@ -115,7 +116,7 @@ msgstr "ウィンドウ固有の設定を編集"
 #: optionsmodel.cpp:198
 #, kde-format
 msgid "Unimportant"
-msgstr "重要でない"
+msgstr "指定しない"
 
 #: optionsmodel.cpp:199
 #, kde-format
@@ -144,9 +145,8 @@ msgid ""
 "created.\n"
 "No further changes will be affected."
 msgstr ""
-"ウィンドウプロパティは、ウィンドウが作成された後に 指定された値に設定されま"
-"す。\n"
-"他の変更は影響を受けません。"
+"ウィンドウが作成された時点でウィンドウプロパティを指定した値に設定します。\n"
+"値は固定されず、これ以降も変更することができます。"
 
 #: optionsmodel.cpp:209
 #, kde-format
@@ -160,9 +160,9 @@ msgid ""
 "be affected later\n"
 "(this action will be deleted afterwards)."
 msgstr ""
-"ウィンドウプロパティはすぐに指定された値に設定され、後で影響を受けることはあ"
-"りません\n"
-"(このアクションは後で削除されます)。"
+"適用をクリックした時点で指定したウィンドウプロパティを即座に反映します。これ"
+"以降適用される設定に影響されません。\n"
+"(その後、このアクションは自動的に削除されます。)"
 
 #: optionsmodel.cpp:213
 #, kde-format
@@ -175,13 +175,13 @@ msgid ""
 "The value of the window property will be remembered and, every time the "
 "window is created, the last remembered value will be applied."
 msgstr ""
-"ウィンドウプロパティの値が記憶され、ウィンドウが作成されるたびに 最後に記憶さ"
-"れた値が適用されます。"
+"ウィンドウプロパティの値は保存され、ウィンドウが作成されるたびに最後に保存さ"
+"れた値に設定します。"
 
 #: optionsmodel.cpp:217
 #, kde-format
 msgid "Do Not Affect"
-msgstr "作用しない"
+msgstr "影響しない"
 
 #: optionsmodel.cpp:218
 #, kde-format
@@ -190,8 +190,10 @@ msgid ""
 "for it will be used.\n"
 "Specifying this will block more generic window settings from taking effect."
 msgstr ""
-"ウィンドウプロパティは影響を受けないため、デフォルトの処理が使用されます。\n"
-"これを指定すると、子ウィンドウの設定が有効になりません。"
+"このウィンドウプロパティに何もしません。そのためこの設定より前に適用された設"
+"定が使用されます。\n"
+"これに指定すると、これ以降このプロパティに適用される設定を無効化することがで"
+"きます。"
 
 #: optionsmodel.cpp:221
 #, kde-format
@@ -201,7 +203,7 @@ msgstr "強制"
 #: optionsmodel.cpp:222
 #, kde-format
 msgid "The window property will be always forced to the given value."
-msgstr "ウィンドウプロパティは必ず指定された値に強制されます。"
+msgstr "ウィンドウプロパティを常に設定した値に強制します。"
 
 #: optionsmodel.cpp:224
 #, kde-format
@@ -214,8 +216,8 @@ msgid ""
 "The window property will be forced to the given value until it is hidden\n"
 "(this action will be deleted after the window is hidden)."
 msgstr ""
-"ウィンドウプロパティは、非表示になるまで指定された値に強制されます\n"
-"(このアクションは、ウィンドウが非表示になった後に削除されます)。"
+"ウィンドウが非表示になるまでウィンドウプロパティを指定した値に強制します。\n"
+"(このアクションはウィンドウが非表示になった後に削除されます。)"
 
 #: package/contents/ui/FileDialogLoader.qml:14
 #, kde-format
@@ -423,11 +425,10 @@ msgid ""
 "recommended you at least limit the window types to avoid special window "
 "types."
 msgstr ""
-"ウィンドウクラスに「重要でない」を選択しました。\n"
-"これは設定がすべてのアプリケーションのウィンドウに適用されるかもしれないとい"
-"うことを意味します。本当に一般的な設定を作成したいのであれば、特別なウィンド"
-"ウタイプを避けるために少なくともウィンドウタイプを制限することをお勧めしま"
-"す。"
+"ウィンドウクラスに「指定しない」が選択されました。\n"
+"これにより設定がすべてのアプリケーションのウィンドウに適用される可能性があり"
+"ます。全般的な設定を作成したいときは、特殊なタイプのウィンドウに設定が適用さ"
+"れてしまうことを防ぐため、ウィンドウタイプを指定することをおすすめします。"
 
 #: rulesmodel.cpp:244
 #, kde-format
@@ -436,9 +437,9 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
-"一部のアプリケーションは、起動後に独自の座標を設定し、サイズと位置の初期設定"
-"を上書きします。これらの設定を適用するには、プロパティ \"%1\" を \"はい\" に"
-"強制してください。"
+"一部のアプリケーションは、起動時に独自の座標を設定し、ここで指定したサイズと"
+"位置の設定を上書きすることがあります。強制的に設定するには、「%1」のプロパ"
+"ティを「はい」に強制してください。"
 
 #: rulesmodel.cpp:359
 #, kde-format
@@ -806,7 +807,7 @@ msgstr "すべてのウィンドウタイプ"
 #: rulesmodel.cpp:739
 #, kde-format
 msgid "Normal Window"
-msgstr "標準ウィンドウ"
+msgstr "通常ウィンドウ"
 
 #: rulesmodel.cpp:740
 #, kde-format
