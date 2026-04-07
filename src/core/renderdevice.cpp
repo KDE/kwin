@@ -191,6 +191,8 @@ static constexpr std::array s_requiredVulkanExtensions = {
     // allow importing and exporting sync fds
     VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME,
     VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,
+    // allows using shader objects
+    VK_EXT_SHADER_OBJECT_EXTENSION_NAME,
 };
 
 static const auto s_supportHostMemoryPointer = environmentVariableBoolValue("KWIN_SUPPORT_EXTERNAL_MEMORY_HOST");
@@ -261,6 +263,13 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             qCWarning(KWIN_VULKAN, "Physical device %s has no graphics queue", deviceName);
             continue;
         }
+        const bool hasCompute = std::ranges::any_of(queueProperties, [](const vk::QueueFamilyProperties &props) {
+            return bool(props.queueFlags & vk::QueueFlagBits::eCompute);
+        });
+        if (!hasCompute) {
+            qCWarning(KWIN_VULKAN, "Physical device %s has no compute queue", deviceName);
+            continue;
+        }
 
         std::optional<VkDeviceSize> minImportedHostPointerAlignment;
         const bool supportsHostMemory = std::ranges::any_of(extensionProps, [](const vk::ExtensionProperties &props) {
@@ -293,6 +302,7 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
         features.get<vk::PhysicalDeviceFeatures2>().features.robustBufferAccess = true;
         features.get<vk::PhysicalDeviceHostQueryResetFeatures>().hostQueryReset = true;
         features.get<vk::PhysicalDeviceSynchronization2Features>().synchronization2 = true;
+        features.get<vk::PhysicalDeviceShaderObjectFeaturesEXT>().shaderObject = true;
 
         vk::DeviceCreateInfo deviceInfo{
             vk::DeviceCreateFlags{},
@@ -461,7 +471,7 @@ FileDescriptor RenderDevice::clearBuffer(GraphicsBuffer *buffer)
         if (result != vk::Result::eSuccess) {
             return FileDescriptor{};
         }
-        return m_vulkanDevice->graphicsQueue()->submit(std::move(cmd), FileDescriptor{}, {buffer}).value_or(FileDescriptor{});
+        return m_vulkanDevice->graphicsQueue()->submit(std::move(cmd), FileDescriptor{}, {buffer}, {}).value_or(FileDescriptor{});
     } else if (auto context = eglContext()) {
         if (!context->makeCurrent()) {
             return FileDescriptor{};
