@@ -227,12 +227,16 @@ bool AtlasVulkan::reset(const QList<QImage> &images)
         return false;
     }
 
-    const auto format = VulkanTexture::qImageToVulkanFormat(images.front().format());
+    QList<QImage> actualImages = images;
+    auto format = VulkanTexture::qImageToVulkanFormat(images.front().format());
     if (!format.has_value()) {
-        return false;
+        for (auto &img : actualImages) {
+            img = img.convertedTo(QImage::Format_RGBA8888_Premultiplied);
+        }
+        format = vk::Format::eR8G8B8A8Unorm;
     }
     if (!m_texture || m_texture->size() != textureSize || m_texture->format() != *format) {
-        m_texture = VulkanTexture::allocate(m_device, *format, textureSize, vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc);
+        m_texture = VulkanTexture::allocate(m_device, *format, textureSize, vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst);
         if (!m_texture) {
             m_sprites.clear();
             return false;

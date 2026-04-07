@@ -17,7 +17,7 @@ namespace KWin
 
 std::unique_ptr<NinePatchVulkan> NinePatchVulkan::create(VulkanDevice *device, const QImage &image)
 {
-    auto texture = VulkanTexture::upload(device, image, vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc);
+    auto texture = VulkanTexture::upload(device, image, vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst);
     if (!texture) {
         return nullptr;
     }
@@ -74,7 +74,7 @@ std::unique_ptr<NinePatchVulkan> NinePatchVulkan::create(VulkanDevice *device,
 
     // TODO optimization for alpha-only textures
 
-    auto texture = VulkanTexture::upload(device, image, vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc);
+    auto texture = VulkanTexture::upload(device, image, vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst);
     if (!texture) {
         return nullptr;
     }

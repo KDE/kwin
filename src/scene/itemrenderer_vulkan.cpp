@@ -17,6 +17,7 @@
 #include "scene/imageitem.h"
 #include "scene/item.h"
 #include "scene/outlinedborderitem.h"
+#include "scene/scene.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem.h"
 #include "scene/vulkan/atlas.h"
@@ -25,6 +26,7 @@
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
 #include "vulkan/vulkan_device.h"
+#include "vulkan/vulkan_shader.h"
 #include "vulkan/vulkan_texture.h"
 
 namespace KWin
@@ -33,6 +35,7 @@ namespace KWin
 ItemRendererVulkan::ItemRendererVulkan(RenderDevice *device)
     : ItemRenderer(device)
     , m_device(device->vulkanDevice())
+    , m_shader(VulkanShader::compileFromPath(m_device, "/home/xaver/kde/src/kwin/src/scene/vulkan/composite.spv"))
 {
 }
 
@@ -95,6 +98,7 @@ std::optional<OutputLayerBeginFrameInfo> ItemRendererVulkan::beginFrame(const Ou
 FileDescriptor ItemRendererVulkan::endFrame(const Region &repainted, RenderView *view, OutputFrame *frame)
 {
     if (!m_renderedAnything) {
+        m_releasePoints.clear();
         return FileDescriptor{};
     }
     auto fd = m_device->graphicsQueue()->submit(std::move(m_commandBuffer), FileDescriptor{}, {});
@@ -105,47 +109,6 @@ FileDescriptor ItemRendererVulkan::endFrame(const Region &repainted, RenderView 
     }
     m_releasePoints.clear();
     return fd ? std::move(*fd) : FileDescriptor{};
-}
-
-// TODO always clip with a scissor region instead
-// or, with a compute shader, with the region.
-static RenderGeometry clipQuads(ItemRenderer *renderer, const Item *item, const ItemRendererVulkan::RenderContext *context)
-{
-    const WindowQuadList quads = item->quads(renderer);
-
-    const qreal scale = context->renderTargetScale;
-    const QPointF itemToDeviceTranslation = context->transformStack.top().map(QPointF(0., 0.))
-        - context->viewportOrigin
-        + context->renderOffset;
-
-    RenderGeometry geometry;
-    geometry.reserve(quads.count() * 6);
-
-    // split all quads in bounding rect with the actual rects in the region
-    for (const WindowQuad &quad : std::as_const(quads)) {
-        if (context->deviceClip != Region::infinite() && !context->hardwareClipping) {
-            // Scale to device coordinates, rounding as needed.
-            const RectF deviceBounds = quad.bounds().scaled(scale).rounded();
-
-            for (const Rect &deviceClipRect : context->deviceClip.rects()) {
-                const RectF relativeDeviceClipRect = RectF(deviceClipRect).translated(-itemToDeviceTranslation);
-                const RectF intersected = relativeDeviceClipRect.intersected(deviceBounds);
-                if (intersected.isValid()) {
-                    if (deviceBounds == intersected) {
-                        // case 1: completely contains, include and do not check other rects
-                        geometry.appendWindowQuad(quad, scale);
-                        break;
-                    }
-                    // case 2: intersection
-                    geometry.appendSubQuad(quad, intersected, scale);
-                }
-            }
-        } else {
-            geometry.appendWindowQuad(quad, scale);
-        }
-    }
-
-    return geometry;
 }
 
 void ItemRendererVulkan::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
@@ -202,121 +165,51 @@ void ItemRendererVulkan::createRenderNode(Item *item, RenderContext *context, co
 
     item->preprocess(this);
 
-    RenderGeometry geometry = clipQuads(this, item, context);
-
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
-        if (!geometry.isEmpty()) {
-            const auto ninePatch = static_cast<NinePatchVulkan *>(shadowItem->ninePatch(m_renderDevice));
-            if (ninePatch && ninePatch->texture()) {
-                RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                    .texture = ninePatch->texture(),
-                    .geometry = geometry,
-                    .transformMatrix = context->transformStack.top(),
-                    .opacity = context->opacityStack.top(),
-                    .hasAlpha = true,
-                    .colorDescription = item->colorDescription(),
-                    .renderingIntent = item->renderingIntent(),
-                    .bufferReleasePoint = nullptr,
-                    .paintHole = hole,
-                });
-                // TODO
-                // renderNode.geometry.postProcessTextureCoordinates(ninePatch->texture()->matrix(UnnormalizedCoordinates));
-            }
+        const auto ninePatch = static_cast<NinePatchVulkan *>(shadowItem->ninePatch(m_renderDevice));
+        if (ninePatch && ninePatch->texture()) {
+            Rect viewRect = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded();
+            context->uniform.push_back(ItemData{
+                .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.right(), viewRect.bottom()),
+                .color = QVector4D(1.0, 1.0f, 1.0f, 1.0f),
+            });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
-        if (!geometry.isEmpty()) {
-            auto atlas = static_cast<const AtlasVulkan *>(decorationItem->atlas(m_renderDevice));
-            if (atlas && atlas->texture()) {
-                RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                    .texture = atlas->texture(),
-                    .geometry = geometry,
-                    .transformMatrix = context->transformStack.top(),
-                    .opacity = context->opacityStack.top(),
-                    .hasAlpha = true,
-                    .colorDescription = item->colorDescription(),
-                    .renderingIntent = item->renderingIntent(),
-                    .bufferReleasePoint = nullptr,
-                    .paintHole = hole,
-                });
-                // TODO
-                // renderNode.geometry.postProcessTextureCoordinates(atlas->texture()->matrix(UnnormalizedCoordinates));
-            }
+        auto atlas = static_cast<const AtlasVulkan *>(decorationItem->atlas(m_renderDevice));
+        if (atlas && atlas->texture()) {
+            Rect viewRect = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded();
+            context->uniform.push_back(ItemData{
+                .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.right(), viewRect.bottom()),
+                .color = QVector4D(0.5f, 0.5f, 0.5f, 1.0f),
+            });
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
         auto texture = static_cast<TextureVulkan *>(surfaceItem->texture(m_renderDevice));
         if (texture && texture->texture()) {
-            if (!geometry.isEmpty()) {
-                RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                    .texture = texture->texture(),
-                    .geometry = geometry,
-                    .transformMatrix = context->transformStack.top(),
-                    .opacity = context->opacityStack.top(),
-                    .hasAlpha = surfaceItem->hasAlphaChannel(),
-                    .colorDescription = item->colorDescription(),
-                    .renderingIntent = item->renderingIntent(),
-                    .bufferReleasePoint = texture->releasePoint(),
-                    .paintHole = hole,
-                    .hasFloatingPointColor = texture->isFloatingPoint(),
-                });
-                // TODO
-                // renderNode.geometry.postProcessTextureCoordinates(texture->planes().at(0)->matrix(UnnormalizedCoordinates));
-
-                if (!context->cornerStack.isEmpty()) {
-                    const auto &top = context->cornerStack.top();
-
-                    // renderNode.traits |= ShaderTrait::RoundedCorners;
-                    renderNode.hasAlpha = true;
-                    renderNode.box = QVector4D(top.box.x() + top.box.width() * 0.5,
-                                               top.box.y() + top.box.height() * 0.5,
-                                               top.box.width() * 0.5,
-                                               top.box.height() * 0.5),
-                    renderNode.borderRadius = top.radius.toVector();
-                }
-            }
+            Rect viewRect = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded();
+            context->uniform.push_back(ItemData{
+                .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.right(), viewRect.bottom()),
+                .color = QVector4D(viewRect.left() / float(context->viewportSize.width()),
+                                   viewRect.right() / float(context->viewportSize.width()),
+                                   viewRect.top() / float(context->viewportSize.height()),
+                                   1.0f),
+            });
         }
     } else if (auto imageItem = qobject_cast<ImageItem *>(item)) {
-        if (!geometry.isEmpty()) {
-            auto texture = static_cast<TextureVulkan *>(imageItem->texture(m_renderDevice));
-            if (texture && texture->texture()) {
-                RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
-                    .texture = texture->texture(),
-                    .geometry = geometry,
-                    .transformMatrix = context->transformStack.top(),
-                    .opacity = context->opacityStack.top(),
-                    .hasAlpha = imageItem->image().hasAlphaChannel(),
-                    .colorDescription = item->colorDescription(),
-                    .renderingIntent = item->renderingIntent(),
-                    .bufferReleasePoint = nullptr,
-                    .paintHole = hole,
-                });
-                // TODO
-                // renderNode.geometry.postProcessTextureCoordinates(texture->planes()[0]->matrix(UnnormalizedCoordinates));
-            }
+        auto texture = static_cast<TextureVulkan *>(imageItem->texture(m_renderDevice));
+        if (texture && texture->texture()) {
+            Rect viewRect = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded();
+            context->uniform.push_back(ItemData{
+                .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.right(), viewRect.bottom()),
+                .color = QVector4D(0.2f, 0.8f, 0.2f, 1.0f),
+            });
         }
     } else if (auto borderItem = qobject_cast<OutlinedBorderItem *>(item)) {
-        // TODO
-        // if (!geometry.isEmpty()) {
-        //     const BorderOutline outline = borderItem->outline();
-        //     const int thickness = std::round(outline.thickness() * context->renderTargetScale);
-        //     const RectF outerRect = snapToPixelGridF(scaledRect(borderItem->rect(), context->renderTargetScale));
-        //     const RectF innerRect = outerRect.adjusted(thickness, thickness, -thickness, -thickness);
-        //     context->renderNodes.append(RenderNode{
-        //         .geometry = geometry,
-        //         .transformMatrix = context->transformStack.top(),
-        //         .opacity = context->opacityStack.top(),
-        //         .hasAlpha = true,
-        //         .colorDescription = borderItem->colorDescription(),
-        //         .renderingIntent = borderItem->renderingIntent(),
-        //         .box = QVector4D(innerRect.x() + innerRect.width() * 0.5,
-        //                          innerRect.y() + innerRect.height() * 0.5,
-        //                          innerRect.width() * 0.5,
-        //                          innerRect.height() * 0.5),
-        //         .borderRadius = outline.radius().scaled(context->renderTargetScale).rounded().toVector(),
-        //         .borderThickness = thickness,
-        //         .borderColor = outline.color(),
-        //         .paintHole = hole,
-        //     });
-        // }
+        Rect viewRect = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded();
+        context->uniform.push_back(ItemData{
+            .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.right(), viewRect.bottom()),
+            .color = QVector4D(1.0f, 0.0f, 0.0f, 1.0f),
+        });
     }
 
     for (Item *childItem : sortedChildItems) {
@@ -356,6 +249,7 @@ bool ItemRendererVulkan::renderItem(const RenderTarget &renderTarget, const Rend
         .renderTargetScale = viewport.scale(),
         .viewportOrigin = viewport.scaledRenderRect().topLeft(),
         .renderOffset = viewport.renderOffset(),
+        .viewportSize = viewport.deviceSize(),
     };
 
     renderContext.transformStack.push(QMatrix4x4());
@@ -363,28 +257,91 @@ bool ItemRendererVulkan::renderItem(const RenderTarget &renderTarget, const Rend
 
     createRenderNode(item, &renderContext, filter, holeFilter);
 
-    int totalVertexCount = 0;
-    for (const RenderNode &node : std::as_const(renderContext.renderNodes)) {
-        totalVertexCount += node.geometry.count();
-    }
-    if (totalVertexCount == 0) {
-        return true;
-    }
-
-    // TODO Will we even use vertices for this renderer, instead of item shapes directly?
-    // for (int i = 0, v = 0; i < renderContext.renderNodes.count(); i++) {
-    //     RenderNode &renderNode = renderContext.renderNodes[i];
-    //     renderNode.firstVertex = v;
-    //     renderNode.vertexCount = renderNode.geometry.count();
-    //     renderNode.geometry.copy(map->subspan(v));
-    //     v += renderNode.geometry.count();
-    // }
-
-    // The scissor region must be in the render target local coordinate system.
+    // TODO actually use this
     const QSize bufferOffset = renderTarget.transform().map(QSize(viewport.renderOffset().x(), viewport.renderOffset().y()));
     Region scissorRegion = Rect(QPoint(bufferOffset.width(), bufferOffset.height()), renderTarget.size() - 2 * bufferOffset);
     if (renderContext.hardwareClipping) {
         scissorRegion &= viewport.transform().map(deviceRegion & renderTarget.transformedRect(), renderTarget.transformedSize());
+    }
+
+    if (renderContext.uniform.empty()) {
+        return true;
+    }
+
+    const vk::DeviceSize bufferSize = renderContext.uniform.size() * sizeof(ItemData);
+    vk::BufferCreateInfo bufferInfo{
+        vk::BufferCreateFlags(),
+        bufferSize,
+        vk::BufferUsageFlagBits::eStorageBuffer,
+    };
+    // FIXME clearn up lifetime of this,
+    // then move the command buffer submission to endFrame?
+    auto uboMemory = m_device->allocateMemory(bufferInfo, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent);
+    if (!*uboMemory) {
+        return false;
+    }
+    auto [bufResult, buffer] = m_device->logicalDevice().createBuffer(bufferInfo);
+    if (bufResult != vk::Result::eSuccess) {
+        return false;
+    }
+    buffer.bindMemory(uboMemory, 0);
+    auto [mapResult, dataPtr] = uboMemory.mapMemory(0, bufferSize);
+    if (mapResult != vk::Result::eSuccess) {
+        return false;
+    }
+    std::memcpy(dataPtr, renderContext.uniform.data(), bufferSize);
+    uboMemory.unmapMemory();
+
+    vk::DescriptorBufferInfo descriptorBufferInfo{
+        *buffer,
+        0,
+        bufferSize,
+    };
+    m_device->logicalDevice().updateDescriptorSets(vk::WriteDescriptorSet{
+                                                       *m_shader->bufferSet(),
+                                                       0,
+                                                       0,
+                                                       vk::DescriptorType::eStorageBuffer,
+                                                       {},
+                                                       descriptorBufferInfo,
+                                                   },
+                                                   {});
+
+    vk::DescriptorImageInfo descriptorImageInfo{
+        {}, // sampler
+        renderTarget.vulkanTexture()->view(),
+        vk::ImageLayout::eGeneral,
+    };
+    m_device->logicalDevice().updateDescriptorSets(vk::WriteDescriptorSet{
+                                                       *m_shader->imageSet(),
+                                                       0,
+                                                       0,
+                                                       vk::DescriptorType::eStorageImage,
+                                                       descriptorImageInfo,
+                                                   },
+                                                   {});
+
+    // FIXME we need to require a compute queue for this...
+    auto cmd = m_device->graphicsQueue()->createCommandBuffer();
+    cmd.begin(vk::CommandBufferBeginInfo{
+        vk::CommandBufferUsageFlagBits::eOneTimeSubmit,
+    });
+    cmd.bindShadersEXT(vk::ShaderStageFlagBits::eCompute, *m_shader->handle());
+    std::vector<vk::DescriptorSet> descriptorSets{
+        *m_shader->imageSet(),
+        *m_shader->bufferSet(),
+    };
+    cmd.bindDescriptorSets(
+        vk::PipelineBindPoint::eCompute,
+        *m_shader->pipelineLayout(),
+        0,
+        descriptorSets,
+        {});
+    cmd.pushConstants<uint32_t>(*m_shader->pipelineLayout(), vk::ShaderStageFlagBits::eCompute, 0, renderContext.uniform.size());
+    cmd.dispatch(renderTarget.size().width() / 16, renderTarget.size().height() / 16, 1);
+    cmd.end();
+    if (!m_device->graphicsQueue()->submitBlocking(std::move(cmd))) {
+        qWarning() << "submit failed!";
     }
 
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {

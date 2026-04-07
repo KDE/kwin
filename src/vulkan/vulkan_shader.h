@@ -15,16 +15,32 @@ namespace KWin
 class VulkanShader
 {
 public:
-    explicit VulkanShader(vk::raii::ShaderEXT &&shader);
+    struct Descriptor
+    {
+        vk::raii::DescriptorSetLayout layout;
+        vk::raii::DescriptorPool pool;
+        vk::raii::DescriptorSet set;
+    };
+
+    explicit VulkanShader(VulkanDevice *device, vk::raii::ShaderEXT &&shader,
+                          Descriptor &&image, Descriptor &&buffer,
+                          vk::raii::PipelineLayout &&pipelineLayout);
     ~VulkanShader();
 
     const vk::raii::ShaderEXT &handle() const;
+    const vk::raii::DescriptorSet &imageSet() const;
+    const vk::raii::DescriptorSet &bufferSet() const;
+    const vk::raii::PipelineLayout &pipelineLayout() const;
 
     static std::unique_ptr<VulkanShader> compile(VulkanDevice *device, QByteArrayView spirV);
     static std::unique_ptr<VulkanShader> compileFromPath(VulkanDevice *device, const QString &path);
 
 private:
+    VulkanDevice *const m_device;
     vk::raii::ShaderEXT m_shader;
+    Descriptor m_imageDescriptor;
+    Descriptor m_bufferDescriptor;
+    vk::raii::PipelineLayout m_pipelineLayout;
 };
 
 }

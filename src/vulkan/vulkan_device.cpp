@@ -260,8 +260,49 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     for (FileDescriptor &fd : duplicatedFds) {
         fd.take();
     }
+
+    // we will only use the general image layout everywhere else,
+    // so transition the image here once and then never again.
+    // NOTE this is just here to appease the validation layers.
+    // It *must* not actually modify the buffer in any way!
+    auto commandBuffer = m_graphicsQueue->createCommandBuffer();
+    commandBuffer.begin(vk::CommandBufferBeginInfo{vk::CommandBufferUsageFlagBits::eOneTimeSubmit});
+    vk::ImageMemoryBarrier toTransferSrc{
+        vk::AccessFlags{},
+        vk::AccessFlagBits::eTransferWrite,
+        vk::ImageLayout::eUndefined,
+        vk::ImageLayout::eGeneral,
+        vk::QueueFamilyIgnored,
+        vk::QueueFamilyIgnored,
+        *image,
+        vk::ImageSubresourceRange{vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1},
+    };
+    commandBuffer.pipelineBarrier(vk::PipelineStageFlagBits::eFragmentShader, vk::PipelineStageFlagBits::eTransfer, {}, {}, {}, toTransferSrc);
+    commandBuffer.end();
+    // FIXME this is terrible. Instead, pass the command buffer in as
+    // an argument, and leave synchronization up to the caller?
+    m_graphicsQueue->submitBlocking(std::move(commandBuffer));
+
+    auto [viewResult, view] = m_logical.createImageView(vk::ImageViewCreateInfo{
+        vk::ImageViewCreateFlags{},
+        *image,
+        vk::ImageViewType::e2D,
+        vk::Format(format->vulkanFormat),
+        vk::ComponentMapping{},
+        vk::ImageSubresourceRange{
+            vk::ImageAspectFlagBits::eColor,
+            0,
+            1,
+            0,
+            1,
+        },
+    });
+    if (viewResult != vk::Result::eSuccess) {
+        return nullptr;
+    }
     return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), std::move(image),
-                                           std::move(deviceMemory), QSize(attributes->width, attributes->height));
+                                           std::move(deviceMemory), QSize(attributes->width, attributes->height),
+                                           std::move(view));
 }
 
 std::shared_ptr<VulkanBuffer> VulkanDevice::importDmabufAsBuffer(const DmaBufAttributes *attributes, vk::BufferUsageFlags usage)
