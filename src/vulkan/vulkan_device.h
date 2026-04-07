@@ -55,6 +55,7 @@ public:
     std::optional<vk::raii::Semaphore> importSemaphore(FileDescriptor &&syncFd) const;
 
     std::optional<FileDescriptor> submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd);
+    bool submitBlocking(vk::raii::CommandBuffer &&buffer);
     /**
      * NOTE avoid using this if at all possible, it's obviously terrible for performance!
      */

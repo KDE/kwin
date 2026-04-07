@@ -178,6 +178,8 @@ static constexpr std::array s_requiredVulkanExtensions = {
     // allow importing and exporting sync fds
     VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME,
     VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,
+    // allows using shader objects
+    VK_EXT_SHADER_OBJECT_EXTENSION_NAME,
 };
 
 static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &instance, DrmDevice *drm)
@@ -251,33 +253,27 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             continue;
         }
 
-        std::vector<VkDeviceQueueCreateInfo> queueInfo;
-        float priority = 1;
+        std::vector<vk::DeviceQueueCreateInfo> queueInfo;
+        std::vector<float> priority{1.0f};
         for (uint32_t i = 0; i < queueProperties.size(); i++) {
-            queueInfo.push_back(VkDeviceQueueCreateInfo{
-                .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-                .pNext = nullptr,
-                .flags = {},
-                .queueFamilyIndex = i,
-                .queueCount = 1,
-                .pQueuePriorities = &priority,
-            });
+            queueInfo.push_back(vk::DeviceQueueCreateInfo{vk::DeviceQueueCreateFlags{}, i, priority});
         }
 
-        VkPhysicalDeviceFeatures features{
-            .robustBufferAccess = true,
-        };
-        VkDeviceCreateInfo deviceInfo{
-            .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-            .pNext = nullptr,
-            .flags = {},
-            .queueCreateInfoCount = uint32_t(queueInfo.size()),
-            .pQueueCreateInfos = queueInfo.data(),
-            .enabledLayerCount = 0,
-            .ppEnabledLayerNames = nullptr,
-            .enabledExtensionCount = uint32_t(usedExtensions.size()),
-            .ppEnabledExtensionNames = usedExtensions.data(),
-            .pEnabledFeatures = &features,
+        vk::PhysicalDeviceFeatures2 features;
+        features.features.robustBufferAccess = true;
+        features.features.shaderStorageImageWriteWithoutFormat = true;
+
+        vk::PhysicalDeviceShaderObjectFeaturesEXT shaderObjectFeatures;
+        shaderObjectFeatures.shaderObject = true;
+        features.pNext = &shaderObjectFeatures;
+
+        vk::DeviceCreateInfo deviceInfo{
+            vk::DeviceCreateFlags{},
+            queueInfo,
+            {},
+            usedExtensions,
+            nullptr,
+            static_cast<void *>(&features),
         };
 
         auto [result, logicalDevice] = physicalDevice.createDevice(deviceInfo);

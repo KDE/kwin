@@ -233,6 +233,7 @@ target_sources(kwin PRIVATE
     vulkan/vulkan_backend.cpp
     vulkan/vulkan_device.cpp
     vulkan/vulkan_logging.cpp
+    vulkan/vulkan_shader.cpp
     vulkan/vulkan_swapchain.cpp
     vulkan/vulkan_texture.cpp
     wayland_server.cpp
@@ -693,6 +694,7 @@ install(FILES
     vulkan/vulkan_backend.h
     vulkan/vulkan_device.h
     vulkan/vulkan_logging.h
+    vulkan/vulkan_shader.h
     vulkan/vulkan_swapchain.h
     vulkan/vulkan_texture.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/vulkan COMPONENT Devel

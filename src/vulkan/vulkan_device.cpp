@@ -456,6 +456,31 @@ std::optional<FileDescriptor> VulkanDevice::submit(vk::raii::CommandBuffer &&buf
     return ret;
 }
 
+bool VulkanDevice::submitBlocking(vk::raii::CommandBuffer &&buffer)
+{
+    auto [fenceResult, fence] = m_logical.createFence(vk::FenceCreateInfo{
+        vk::FenceCreateFlags{},
+    });
+    if (fenceResult != vk::Result::eSuccess) {
+        return false;
+    }
+    vk::Result result = m_transferQueue.submit(vk::SubmitInfo{
+                                                   {},
+                                                   {},
+                                                   *buffer,
+                                                   {},
+                                               },
+                                               fence);
+    if (result == vk::Result::eErrorDeviceLost) {
+        handleDeviceLoss();
+        return false;
+    } else if (result != vk::Result::eSuccess) {
+        return false;
+    }
+    result = m_logical.waitForFences(*fence, true, UINT64_MAX);
+    return result == vk::Result::eSuccess;
+}
+
 void VulkanDevice::handleDeviceLoss()
 {
     if (m_lost) {
