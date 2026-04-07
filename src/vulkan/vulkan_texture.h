@@ -19,6 +19,7 @@ namespace KWin
 {
 
 class VulkanDevice;
+class VulkanDescriptor;
 
 class KWIN_EXPORT VulkanTexture
 {
@@ -36,6 +37,8 @@ public:
     VulkanTexture(VulkanTexture &&other) = delete;
     VulkanTexture(const VulkanTexture &) = delete;
     ~VulkanTexture();
+
+    VulkanDevice *device() const;
 
     /**
      * NOTE the format and size have to match in order for the update to work

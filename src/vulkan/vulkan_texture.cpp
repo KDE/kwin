@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "vulkan_texture.h"
+#include "vulkan_descriptor.h"
 #include "vulkan_device.h"
 #include "vulkan_logging.h"
 
@@ -97,6 +98,11 @@ VulkanTexture::~VulkanTexture()
 {
 }
 
+VulkanDevice *VulkanTexture::device() const
+{
+    return m_device;
+}
+
 QSize VulkanTexture::size() const
 {
     return m_size;
@@ -171,8 +177,7 @@ bool VulkanTexture::downloadTo(QImage &target, FileDescriptor &&sync) const
     });
     commandBuffer.end();
 
-    m_device->graphicsQueue()->submit(std::move(commandBuffer), std::move(sync), {});
-    m_device->graphicsQueue()->waitIdle();
+    m_device->graphicsQueue()->submitBlocking(std::move(commandBuffer), std::move(sync));
 
     // use mapMemory/unmapMemory (Vulkan 1.0) instead of mapMemory2/unmapMemory2 (Vulkan 1.4)
     // for compatibility with lavapipe and other drivers that don't support 1.4
@@ -257,9 +262,8 @@ bool VulkanTexture::update(const QImage &img, const Region &region, const QPoint
         regions,
     });
     commandBuffer.end();
-    m_device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{}, {});
+    m_device->graphicsQueue()->submitBlocking(std::move(commandBuffer), FileDescriptor{});
 
-    m_device->graphicsQueue()->waitIdle();
     return true;
 }
 
@@ -312,11 +316,10 @@ std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk:
     };
     commandBuffer.pipelineBarrier(vk::PipelineStageFlagBits::eFragmentShader, vk::PipelineStageFlagBits::eTransfer, {}, {}, {}, toTransferSrc);
     commandBuffer.end();
-    device->graphicsQueue()->submit(std::move(commandBuffer), FileDescriptor{}, {});
 
     // FIXME this is terrible. Instead, pass the command buffer in as
     // an argument, and leave synchronization up to the caller.
-    device->graphicsQueue()->waitIdle();
+    device->graphicsQueue()->submitBlocking(std::move(commandBuffer), FileDescriptor{});
 
     vk::raii::ImageView view{nullptr};
     if (usage & (vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eStorage)) {
