@@ -8,6 +8,22 @@ qt_add_dbus_interface(effects_interface_SRCS ${kwin_effects_dbus_xml} kwineffect
 add_library(KWinEffectsInterface STATIC ${effects_interface_SRCS})
 set_property(TARGET KWinEffectsInterface PROPERTY POSITION_INDEPENDENT_CODE ON)
 
+function(compile_vulkan_shader TARGET SOURCE_FILE DESTINATION_FILE)
+    add_custom_command(
+        COMMAND glslc
+        ARGS -fshader-stage=compute "${CMAKE_CURRENT_LIST_DIR}/${SOURCE_FILE}" -o "${CMAKE_CURRENT_BINARY_DIR}/${DESTINATION_FILE}"
+        DEPENDS "${SOURCE_FILE}"
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${DESTINATION_FILE}"
+    )
+    target_sources(${TARGET} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/${DESTINATION_FILE}")
+    install(
+        FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/${DESTINATION_FILE}
+        DESTINATION
+            {CMAKE_INSTALL_DATADIR}/${DESTINATION_FILE}
+    )
+endfunction()
+
 target_link_libraries(KWinEffectsInterface Qt::DBus)
 
 add_subdirectory(helpers)
@@ -232,10 +248,12 @@ target_sources(kwin PRIVATE
     virtualdesktopsdbustypes.cpp
     virtualkeyboard_dbus.cpp
     vulkan/vulkan_buffer.cpp
+    vulkan/vulkan_descriptor.cpp
     vulkan/vulkan_device.cpp
     vulkan/vulkan_logging.cpp
     vulkan/vulkan_queue.cpp
     vulkan/vulkan_render_time_query.cpp
+    vulkan/vulkan_shader.cpp
     vulkan/vulkan_texture.cpp
     wayland_server.cpp
     waylandshellintegration.cpp
@@ -690,10 +708,12 @@ install(FILES
 
 install(FILES
     vulkan/vulkan_buffer.h
+    vulkan/vulkan_descriptor.h
     vulkan/vulkan_device.h
     vulkan/vulkan_logging.h
     vulkan/vulkan_queue.h
     vulkan/vulkan_render_time_query.h
+    vulkan/vulkan_shader.h
     vulkan/vulkan_texture.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/vulkan COMPONENT Devel
 )

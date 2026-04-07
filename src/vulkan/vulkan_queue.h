@@ -10,10 +10,10 @@
 #include "core/graphicsbuffer.h"
 #include "kwin_export.h"
 #include "utils/filedescriptor.h"
+#include "vulkan_descriptor.h"
 
 #include <QSocketNotifier>
 #include <deque>
-#include <vulkan/vulkan_raii.hpp>
 
 namespace KWin
 {
@@ -30,7 +30,10 @@ public:
     const vk::raii::Queue &handle() const;
 
     vk::raii::CommandBuffer createCommandBuffer();
-    std::optional<FileDescriptor> submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd, std::vector<GraphicsBufferRef> &&graphicsBuffers);
+    std::optional<FileDescriptor> submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd,
+                                         std::vector<GraphicsBufferRef> &&graphicsBuffers,
+                                         std::vector<VulkanDescriptor> &&descriptors);
+    bool submitBlocking(vk::raii::CommandBuffer &&buffer);
 
     /**
      * NOTE avoid using this if at all possible, it's obviously terrible for performance!
@@ -47,6 +50,7 @@ private:
         FileDescriptor completionSyncFd;
         QSocketNotifier notifier{QSocketNotifier::Read};
         std::vector<GraphicsBufferRef> graphicsBuffers;
+        std::vector<VulkanDescriptor> descriptors;
     };
 
     VulkanDevice *const m_device;

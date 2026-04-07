@@ -56,6 +56,7 @@ public:
     const vk::raii::Device &logicalDevice() const;
 
     VulkanQueue *graphicsQueue() const;
+    VulkanQueue *computeQueue() const;
     VulkanQueue *transferQueue() const;
 
     std::span<const VkQueueFamilyProperties> queueFamilyProperties() const;
@@ -117,6 +118,7 @@ private:
     QString m_name;
 
     std::unique_ptr<VulkanQueue> m_graphicsQueue;
+    std::unique_ptr<VulkanQueue> m_computeQueue;
     std::unique_ptr<VulkanQueue> m_transferQueue;
 
     QHash<GraphicsBuffer *, std::shared_ptr<VulkanTexture>> m_importedTextures;

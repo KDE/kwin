@@ -50,7 +50,9 @@ vk::raii::CommandBuffer VulkanQueue::createCommandBuffer()
     return std::move(buffers.front());
 }
 
-std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd, std::vector<GraphicsBufferRef> &&graphicsBuffers)
+std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd,
+                                                  std::vector<GraphicsBufferRef> &&graphicsBuffers,
+                                                  std::vector<VulkanDescriptor> &&descriptors)
 {
     vk::ExportFenceCreateInfo exportInfo{
         vk::ExternalFenceHandleTypeFlagBits::eSyncFd,
@@ -99,6 +101,7 @@ std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buff
     command->notifier.setSocket(command->completionSyncFd.get());
     command->notifier.setEnabled(true);
     command->graphicsBuffers = std::move(graphicsBuffers);
+    command->descriptors = std::move(descriptors);
 
     QObject::connect(&command->notifier, &QSocketNotifier::activated, &command->notifier, [this, cmd = command.get()]() {
         const auto it = std::ranges::find(m_submittedCommandBuffers, cmd, &std::unique_ptr<SubmittedCommand>::get);
@@ -107,6 +110,31 @@ std::optional<FileDescriptor> VulkanQueue::submit(vk::raii::CommandBuffer &&buff
     });
     m_submittedCommandBuffers.push_back(std::move(command));
     return ret;
+}
+
+bool VulkanQueue::submitBlocking(vk::raii::CommandBuffer &&buffer)
+{
+    auto [fenceResult, fence] = m_device->logicalDevice().createFence(vk::FenceCreateInfo{
+        vk::FenceCreateFlags{},
+    });
+    if (fenceResult != vk::Result::eSuccess) {
+        return false;
+    }
+    vk::Result result = m_handle.submit(vk::SubmitInfo{
+                                            {},
+                                            {},
+                                            *buffer,
+                                            {},
+                                        },
+                                        fence);
+    if (result == vk::Result::eErrorDeviceLost) {
+        m_device->handleDeviceLoss();
+        return false;
+    } else if (result != vk::Result::eSuccess) {
+        return false;
+    }
+    result = m_device->logicalDevice().waitForFences(*fence, true, UINT64_MAX);
+    return result == vk::Result::eSuccess;
 }
 
 void VulkanQueue::waitIdle()

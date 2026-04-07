@@ -183,6 +183,8 @@ static constexpr std::array s_requiredVulkanExtensions = {
     // allow importing and exporting sync fds
     VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME,
     VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,
+    // allows using shader objects
+    VK_EXT_SHADER_OBJECT_EXTENSION_NAME,
 };
 
 static const auto s_supportHostMemoryPointer = environmentVariableBoolValue("KWIN_SUPPORT_EXTERNAL_MEMORY_HOST");
@@ -253,6 +255,13 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             qCWarning(KWIN_VULKAN, "Physical device %s has no graphics queue", deviceName);
             continue;
         }
+        const bool hasCompute = std::ranges::any_of(queueProperties, [](const vk::QueueFamilyProperties &props) {
+            return bool(props.queueFlags & vk::QueueFlagBits::eCompute);
+        });
+        if (!hasCompute) {
+            qCWarning(KWIN_VULKAN, "Physical device %s has no compute queue", deviceName);
+            continue;
+        }
 
         std::optional<VkDeviceSize> minImportedHostPointerAlignment;
         const bool supportsHostMemory = std::ranges::any_of(extensionProps, [](const vk::ExtensionProperties &props) {
@@ -265,17 +274,10 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             minImportedHostPointerAlignment = hostProperties.minImportedHostPointerAlignment;
         }
 
-        std::vector<VkDeviceQueueCreateInfo> queueInfo;
-        float priority = 1;
+        std::vector<vk::DeviceQueueCreateInfo> queueInfo;
+        std::vector<float> priority{1.0f};
         for (uint32_t i = 0; i < queueProperties.size(); i++) {
-            queueInfo.push_back(VkDeviceQueueCreateInfo{
-                .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-                .pNext = nullptr,
-                .flags = {},
-                .queueFamilyIndex = i,
-                .queueCount = 1,
-                .pQueuePriorities = &priority,
-            });
+            queueInfo.push_back(vk::DeviceQueueCreateInfo{vk::DeviceQueueCreateFlags{}, i, priority});
         }
 
         const auto featuresChain = physicalDevice.getFeatures2<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceHostQueryResetFeatures>();
@@ -284,25 +286,20 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             continue;
         }
 
-        vk::PhysicalDeviceHostQueryResetFeatures hostQueryReset;
-        hostQueryReset.hostQueryReset = true;
-        vk::PhysicalDeviceSynchronization2Features syncFeatures;
-        syncFeatures.synchronization2 = true;
-        syncFeatures.pNext = &hostQueryReset;
-        VkPhysicalDeviceFeatures features{
-            .robustBufferAccess = true,
-        };
-        VkDeviceCreateInfo deviceInfo{
-            .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-            .pNext = &syncFeatures,
-            .flags = {},
-            .queueCreateInfoCount = uint32_t(queueInfo.size()),
-            .pQueueCreateInfos = queueInfo.data(),
-            .enabledLayerCount = 0,
-            .ppEnabledLayerNames = nullptr,
-            .enabledExtensionCount = uint32_t(usedExtensions.size()),
-            .ppEnabledExtensionNames = usedExtensions.data(),
-            .pEnabledFeatures = &features,
+        vk::StructureChain<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceSynchronization2Features, vk::PhysicalDeviceHostQueryResetFeatures, vk::PhysicalDeviceShaderObjectFeaturesEXT> features;
+        features.get<vk::PhysicalDeviceFeatures2>().features.robustBufferAccess = true;
+        features.get<vk::PhysicalDeviceFeatures2>().features.shaderStorageImageWriteWithoutFormat = true;
+        features.get<vk::PhysicalDeviceHostQueryResetFeatures>().hostQueryReset = true;
+        features.get<vk::PhysicalDeviceSynchronization2Features>().synchronization2 = true;
+        features.get<vk::PhysicalDeviceShaderObjectFeaturesEXT>().shaderObject = true;
+
+        vk::DeviceCreateInfo deviceInfo{
+            vk::DeviceCreateFlags{},
+            queueInfo,
+            {},
+            usedExtensions,
+            nullptr,
+            &features,
         };
 
         auto [result, logicalDevice] = physicalDevice.createDevice(deviceInfo);

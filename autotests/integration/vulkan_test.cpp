@@ -8,7 +8,9 @@
 
 #include "core/gpumanager.h"
 #include "core/renderdevice.h"
+#include "vulkan/vulkan_descriptor.h"
 #include "vulkan/vulkan_device.h"
+#include "vulkan/vulkan_shader.h"
 #include "vulkan/vulkan_texture.h"
 #include "wayland_server.h"
 
@@ -24,6 +26,7 @@ private Q_SLOTS:
     void testUploadPattern();
     void testUpdateRegion();
     void testUpdateCorners();
+    void testComputeShader();
 
 private:
     VulkanDevice *m_device = nullptr;
@@ -157,6 +160,50 @@ void VulkanTest::testUpdateCorners()
     QCOMPARE(QColor(downloaded.pixel(63, 63)).red(), 255);
 
     QCOMPARE(QColor(downloaded.pixel(32, 32)).red(), 0);
+}
+
+void VulkanTest::testComputeShader()
+{
+    const std::array layouts{
+        vk::DescriptorSetLayoutBinding(0, vk::DescriptorType::eStorageImage, 1, vk::ShaderStageFlagBits::eCompute),
+        vk::DescriptorSetLayoutBinding(0, vk::DescriptorType::eCombinedImageSampler, 1, vk::ShaderStageFlagBits::eCompute),
+    };
+    const auto shader = VulkanShader::compileFromPath(m_device, QT_TESTCASE_BUILDDIR + QStringLiteral("/data/vulkan_test_shader.spv"), layouts);
+    QVERIFY(shader);
+
+    QImage img(64, 64, QImage::Format_RGBA8888_Premultiplied);
+    for (int x = 0; x < img.width(); x++) {
+        for (int y = 0; y < img.width(); y++) {
+            img.setPixel(x, y, qRgba(x, y, 0, 255));
+        }
+    }
+    auto src = VulkanTexture::upload(m_device, img, vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled);
+    auto dst = VulkanTexture::allocate(m_device, vk::Format::eR8G8B8A8Unorm, QSize(64, 64),
+                                       vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eStorage);
+
+    auto cmd = m_device->computeQueue()->createCommandBuffer();
+    QCOMPARE(cmd.begin(vk::CommandBufferBeginInfo{
+                 vk::CommandBufferUsageFlagBits::eOneTimeSubmit,
+             }),
+             vk::Result::eSuccess);
+
+    cmd.bindShadersEXT(vk::ShaderStageFlagBits::eCompute, *shader->handle());
+
+    auto outDescriptor = VulkanDescriptor::allocate(m_device, shader->descriptorSetLayouts()[0], vk::DescriptorType::eStorageImage);
+    QVERIFY(outDescriptor);
+    outDescriptor->write(dst.get());
+
+    auto inDescriptor = VulkanDescriptor::allocate(m_device, shader->descriptorSetLayouts()[1], vk::DescriptorType::eCombinedImageSampler);
+    QVERIFY(inDescriptor);
+    inDescriptor->write(src.get());
+
+    cmd.bindDescriptorSets(vk::PipelineBindPoint::eCompute, *shader->pipelineLayout(), 0, {*outDescriptor->set(), *inDescriptor->set()}, {});
+    cmd.dispatch(dst->size().width() / 16, dst->size().height() / 16, 1);
+
+    QCOMPARE(cmd.end(), vk::Result::eSuccess);
+    QVERIFY(m_device->computeQueue()->submitBlocking(std::move(cmd)));
+
+    QCOMPARE(img, dst->download());
 }
 
 } // namespace KWin
