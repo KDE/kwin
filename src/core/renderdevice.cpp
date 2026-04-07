@@ -191,6 +191,8 @@ static constexpr std::array s_requiredVulkanExtensions = {
     // allow importing and exporting sync fds
     VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME,
     VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,
+    // allows using shader objects
+    VK_EXT_SHADER_OBJECT_EXTENSION_NAME,
 };
 
 static const auto s_supportHostMemoryPointer = environmentVariableBoolValue("KWIN_SUPPORT_EXTERNAL_MEMORY_HOST");
@@ -274,16 +276,9 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
         }
 
         std::vector<VkDeviceQueueCreateInfo> queueInfo;
-        float priority = 1;
+        std::array priority{1.0f};
         for (uint32_t i = 0; i < queueProperties.size(); i++) {
-            queueInfo.push_back(VkDeviceQueueCreateInfo{
-                .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-                .pNext = nullptr,
-                .flags = {},
-                .queueFamilyIndex = i,
-                .queueCount = 1,
-                .pQueuePriorities = &priority,
-            });
+            queueInfo.push_back(vk::DeviceQueueCreateInfo{vk::DeviceQueueCreateFlags{}, i, priority});
         }
 
         const auto featuresChain = physicalDevice.getFeatures2<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceHostQueryResetFeatures>();
@@ -294,15 +289,23 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
 
         vk::PhysicalDeviceHostQueryResetFeatures hostQueryReset;
         hostQueryReset.hostQueryReset = true;
+
         vk::PhysicalDeviceSynchronization2Features syncFeatures;
         syncFeatures.synchronization2 = true;
         syncFeatures.pNext = &hostQueryReset;
-        VkPhysicalDeviceFeatures features{
-            .robustBufferAccess = true,
-        };
+
+        vk::PhysicalDeviceShaderObjectFeaturesEXT shaderObjectFeatures;
+        shaderObjectFeatures.shaderObject = true;
+        shaderObjectFeatures.pNext = &syncFeatures;
+
+        vk::PhysicalDeviceFeatures2 features;
+        features.features.robustBufferAccess = true;
+        features.features.shaderStorageImageWriteWithoutFormat = true;
+        features.pNext = &shaderObjectFeatures;
+
         VkDeviceCreateInfo deviceInfo{
             .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-            .pNext = &syncFeatures,
+            .pNext = &features,
             .flags = {},
             .queueCreateInfoCount = uint32_t(queueInfo.size()),
             .pQueueCreateInfos = queueInfo.data(),
@@ -310,7 +313,6 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             .ppEnabledLayerNames = nullptr,
             .enabledExtensionCount = uint32_t(usedExtensions.size()),
             .ppEnabledExtensionNames = usedExtensions.data(),
-            .pEnabledFeatures = &features,
         };
 
         auto [result, logicalDevice] = physicalDevice.createDevice(deviceInfo);

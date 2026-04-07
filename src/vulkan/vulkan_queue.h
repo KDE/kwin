@@ -31,6 +31,7 @@ public:
 
     vk::raii::CommandBuffer createCommandBuffer();
     std::optional<FileDescriptor> submit(vk::raii::CommandBuffer &&buffer, FileDescriptor &&syncFd, std::vector<GraphicsBufferRef> &&graphicsBuffers);
+    bool submitBlocking(vk::raii::CommandBuffer &&buffer);
 
     /**
      * NOTE avoid using this if at all possible, it's obviously terrible for performance!

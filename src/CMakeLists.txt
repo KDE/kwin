@@ -241,6 +241,7 @@ target_sources(kwin PRIVATE
     vulkan/vulkan_logging.cpp
     vulkan/vulkan_queue.cpp
     vulkan/vulkan_render_time_query.cpp
+    vulkan/vulkan_shader.cpp
     vulkan/vulkan_texture.cpp
     wayland_server.cpp
     waylandshellintegration.cpp
@@ -704,6 +705,7 @@ install(FILES
     vulkan/vulkan_logging.h
     vulkan/vulkan_queue.h
     vulkan/vulkan_render_time_query.h
+    vulkan/vulkan_shader.h
     vulkan/vulkan_texture.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/vulkan COMPONENT Devel
 )
