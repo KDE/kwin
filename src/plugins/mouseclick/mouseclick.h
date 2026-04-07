@@ -10,12 +10,12 @@
 #pragma once
 
 #include "effect/effect.h"
-#include "effect/effectframe.h"
-#include "effect/timeline.h"
+#include "effect/offscreenquickview.h"
 #include <KLocalizedString>
 #include <QFont>
 #include <QHash>
 #include <deque>
+#include <memory>
 
 namespace KWin
 {
@@ -24,25 +24,6 @@ namespace KWin
 
 class EffectFrame;
 class InputDeviceTabletTool;
-
-class MouseClickMouseEvent
-{
-public:
-    MouseClickMouseEvent(int button, QPoint point, int time, std::unique_ptr<EffectFrame> &&frame, bool press)
-        : m_button(button)
-        , m_pos(point)
-        , m_time(time)
-        , m_frame(std::move(frame))
-        , m_press(press)
-    {
-    }
-
-    int m_button;
-    QPoint m_pos;
-    int m_time;
-    std::unique_ptr<EffectFrame> m_frame;
-    bool m_press;
-};
 
 class TabletToolEvent
 {
@@ -131,21 +112,11 @@ private Q_SLOTS:
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
-    std::unique_ptr<EffectFrame> createEffectFrame(const QPoint &pos, const QString &text);
-    inline void drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
+    void initOffscreenViews();
+    void cleanupOffscreenViews();
 
     inline bool isReleased(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons);
     inline bool isPressed(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons);
-
-    inline float computeRadius(const MouseClickMouseEvent *click, int ring);
-    inline float computeAlpha(const MouseClickMouseEvent *click, int ring);
-
-    void repaint();
-
-    void drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
-    void drawCircleQPainter(const QColor &color, float cx, float cy, float r);
-    void paintScreenSetupGl(const RenderTarget &renderTarget, const QMatrix4x4 &projectionMatrix);
-    void paintScreenFinishGl();
 
     TabletToolEvent &getOrCreateTabletPoint(InputDeviceTabletTool *tool);
 
@@ -156,11 +127,11 @@ private:
     float m_ringMaxSize;
     bool m_showText;
     QFont m_font;
-    AnimationClock m_clock;
 
-    std::deque<std::unique_ptr<MouseClickMouseEvent>> m_clicks;
-    std::unique_ptr<MouseButton> m_buttons[BUTTON_COUNT];
+    // std::unique_ptr<MouseButton> m_buttons[BUTTON_COUNT];
     QHash<InputDeviceTabletTool *, TabletToolEvent> m_tabletTools;
+
+    std::unordered_map<LogicalOutput *, std::unique_ptr<OffscreenQuickScene>> m_scenesByScreens;
 
     bool m_enabled;
 };

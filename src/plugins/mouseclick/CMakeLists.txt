@@ -19,6 +19,17 @@ target_link_libraries(mouseclick PRIVATE
     KF6::I18n
 )
 
+#Dave, I hate it when people use org.kde for things not in tree, what sort of example is this.
+qt6_add_qml_module(mouseclick
+    NO_PLUGIN
+    URI org.kde.kwin.mouseclick
+    RESOURCE_PREFIX /qt/qml
+    QML_FILES
+        qml/Main.qml
+)
+
+
+
 ##########################
 ## configuration dialog
 ##########################
