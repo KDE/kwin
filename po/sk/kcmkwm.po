@@ -19,8 +19,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.12.1\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Lokalize 25.12.1\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
@@ -47,8 +47,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:46
-#, fuzzy, kde-format
-#| msgid "Activate and raise"
+#, kde-format
 msgid "Activate, pass click and raise on release"
 msgstr "Aktivovať a presunúť dopredu"
 
@@ -1421,7 +1420,6 @@ msgstr ""
 #~ "automaticky pridaná do aktuálnej skupiny."
 
 #, fuzzy
-#~| msgid "Switch to automatically grouped windows immediately"
 #~ msgid "&Switch to automatically grouped windows immediately"
 #~ msgstr "Okamžite prepínať na automaticky zoskupené okná"
 
@@ -1431,7 +1429,6 @@ msgstr ""
 #~ "skryté."
 
 #, fuzzy
-#~| msgid "Hide inactive window tabs from the taskbar"
 #~ msgid "&Hide inactive window tabs from the taskbar"
 #~ msgstr "Skryť neaktívne karty okna z panelu úloh"
 
@@ -1446,7 +1443,6 @@ msgstr ""
 #~ msgstr "Automaticky zoskupovať podobné okná"
 
 #, fuzzy
-#~| msgid "Start Window Tab Drag"
 #~ msgid "Start window tab drag"
 #~ msgstr "Spustiť ťahanie okna na kartu"
 
