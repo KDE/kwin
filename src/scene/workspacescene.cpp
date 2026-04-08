@@ -88,10 +88,12 @@ namespace KWin
 //****************************************
 
 WorkspaceScene::WorkspaceScene()
-    : m_containerItem(std::make_unique<RootItem>(this))
-    , m_overlayItem(std::make_unique<RootItem>(this))
+    : m_rootItem(std::make_unique<RootItem>(this))
+    , m_windowContainerItem(std::make_unique<Item>(m_rootItem.get()))
+    , m_overlayItem(std::make_unique<Item>(m_rootItem.get()))
     , m_cursorItem(std::make_unique<CursorItem>(m_overlayItem.get()))
 {
+    m_overlayItem->setZ(1);
     setGeometry(workspace()->geometry());
     connect(workspace(), &Workspace::geometryChanged, this, [this]() {
         setGeometry(workspace()->geometry());
@@ -118,9 +120,7 @@ void WorkspaceScene::attachRenderer(std::unique_ptr<ItemRenderer> &&renderer)
 
 void WorkspaceScene::detachRenderer()
 {
-    releaseResources(m_containerItem.get());
-    releaseResources(m_overlayItem.get());
-    releaseResources(m_cursorItem.get());
+    releaseResources(m_rootItem.get());
 
     m_renderer.reset();
 }
@@ -160,7 +160,7 @@ void WorkspaceScene::updateCursor()
 
 Item *WorkspaceScene::containerItem() const
 {
-    return m_containerItem.get();
+    return m_windowContainerItem.get();
 }
 
 Item *WorkspaceScene::overlayItem() const
@@ -309,7 +309,7 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
     if (!effects->blocksDirectScanout()) {
         Region occlusion;
         QStack<ClipCorner> corners;
-        const auto items = m_containerItem->sortedChildItems();
+        const auto items = m_windowContainerItem->sortedChildItems();
         for (Item *item : items | std::views::reverse) {
             if (!item->isVisible() || !painted_delegate->shouldRenderItem(item) || !painted_delegate->viewport().intersects(item->mapToView(item->boundingRect(), painted_delegate))) {
                 continue;
@@ -475,7 +475,7 @@ Scene::OverlayCandidates WorkspaceScene::overlayCandidates(ssize_t maxTotalCount
     if (effects->blocksDirectScanout()) {
         return fallback();
     }
-    const auto items = m_containerItem->sortedChildItems();
+    const auto items = m_windowContainerItem->sortedChildItems();
     for (Item *item : items | std::views::reverse) {
         if (!findOverlayCandidates(painted_delegate, item, maxTotalCount, maxOverlayCount, maxUnderlayCount, occupied, opaque, effected, overlays, underlays, cornerStack)) {
             return fallback();
@@ -521,10 +521,7 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 {
     LogicalOutput *logicalOutput = delegate->logicalOutput();
     const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(logicalOutput->backendOutput()->renderLoop()->lastPresentationTimestamp());
-    m_containerItem->framePainted(delegate, logicalOutput, frame, frameTime);
-    if (m_overlayItem) {
-        m_overlayItem->framePainted(delegate, logicalOutput, frame, frameTime);
-    }
+    m_rootItem->framePainted(delegate, logicalOutput, frame, frameTime);
 }
 
 void WorkspaceScene::prePaint(SceneView *delegate)
@@ -780,7 +777,7 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
 
 void WorkspaceScene::createStackingOrder()
 {
-    QList<Item *> items = m_containerItem->sortedChildItems();
+    QList<Item *> items = m_windowContainerItem->sortedChildItems();
     for (Item *item : std::as_const(items)) {
         WindowItem *windowItem = static_cast<WindowItem *>(item);
         if (painted_delegate && painted_delegate->shouldHideWindow(windowItem->window())) {
