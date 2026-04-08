@@ -23,13 +23,14 @@ public:
     };
 
     explicit VulkanShader(VulkanDevice *device, vk::raii::ShaderEXT &&shader,
-                          Descriptor &&image, Descriptor &&buffer,
+                          Descriptor &&image, Descriptor &&buffer, Descriptor &&texturesDescriptor,
                           vk::raii::PipelineLayout &&pipelineLayout);
     ~VulkanShader();
 
     const vk::raii::ShaderEXT &handle() const;
     const vk::raii::DescriptorSet &imageSet() const;
     const vk::raii::DescriptorSet &bufferSet() const;
+    const vk::raii::DescriptorSet &textureSet() const;
     const vk::raii::PipelineLayout &pipelineLayout() const;
 
     static std::unique_ptr<VulkanShader> compile(VulkanDevice *device, QByteArrayView spirV);
@@ -40,6 +41,7 @@ private:
     vk::raii::ShaderEXT m_shader;
     Descriptor m_imageDescriptor;
     Descriptor m_bufferDescriptor;
+    Descriptor m_texturesDescriptor;
     vk::raii::PipelineLayout m_pipelineLayout;
 };
 

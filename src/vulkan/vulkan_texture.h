@@ -22,13 +22,19 @@ class VulkanDevice;
 class KWIN_EXPORT VulkanTexture
 {
 public:
-    static std::optional<vk::Format> qImageToVulkanFormat(QImage::Format format);
-    static std::unique_ptr<VulkanTexture> allocate(VulkanDevice *device, vk::Format format, const QSize &size, vk::ImageUsageFlags usage);
+    struct FormatWithSwizzle
+    {
+        vk::Format format;
+        vk::ComponentMapping swizzles;
+        std::optional<QImage::Format> intermediaryCopy;
+    };
+    static std::optional<FormatWithSwizzle> qImageToVulkanFormat(QImage::Format format);
+    static std::unique_ptr<VulkanTexture> allocate(VulkanDevice *device, vk::Format format, vk::ComponentMapping swizzles, const QSize &size, vk::ImageUsageFlags usage);
     static std::unique_ptr<VulkanTexture> upload(VulkanDevice *device, const QImage &image, vk::ImageUsageFlags usage);
 
-    explicit VulkanTexture(VulkanDevice *device, vk::Format format, vk::raii::Image &&image,
-                           std::vector<vk::raii::DeviceMemory> &&memory, const QSize &size,
-                           vk::raii::ImageView &&view);
+    explicit VulkanTexture(VulkanDevice *device, vk::Format format, vk::ComponentMapping viewSwizzles,
+                           vk::raii::Image &&image, std::vector<vk::raii::DeviceMemory> &&memory,
+                           const QSize &size, vk::raii::ImageView &&view);
     VulkanTexture(VulkanTexture &&other) = delete;
     VulkanTexture(const VulkanTexture &) = delete;
     ~VulkanTexture();
@@ -46,16 +52,20 @@ public:
 
     const vk::raii::Image &handle() const;
     const vk::raii::ImageView &view() const;
+    const vk::raii::Sampler &sampler();
     vk::Format format() const;
+    vk::ComponentMapping swizzles() const;
     QSize size() const;
 
 private:
     VulkanDevice *m_device;
     vk::Format m_format;
+    vk::ComponentMapping m_swizzles;
     std::vector<vk::raii::DeviceMemory> m_memory;
     vk::raii::Image m_image;
     QSize m_size;
     vk::raii::ImageView m_view;
+    vk::raii::Sampler m_sampler;
 };
 
 }

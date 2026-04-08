@@ -14,6 +14,7 @@
 #include "scene/item.h"
 #include "scene/itemrenderer.h"
 #include "scene/surfaceitem.h"
+#include "scene/windowitem.h"
 
 namespace KWin
 {
@@ -290,6 +291,12 @@ bool SceneView::shouldRenderHole(Item *item) const
     return std::ranges::any_of(m_underlayViews, [item](RenderView *view) {
         return view->shouldRenderItem(item);
     });
+}
+
+bool SceneView::shouldHideItem(Item *item) const
+{
+    auto windowItem = qobject_cast<WindowItem *>(item);
+    return windowItem && shouldHideWindow(windowItem->window());
 }
 
 Scene *SceneView::scene() const

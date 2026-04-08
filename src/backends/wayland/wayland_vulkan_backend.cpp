@@ -69,7 +69,8 @@ std::optional<OutputLayerBeginFrameInfo> WaylandVulkanLayer::doBeginFrame()
 
 bool WaylandVulkanLayer::doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame)
 {
-    setBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()), damagedDeviceRegion);
+    // TODO damage tracking
+    setBuffer(m_backend->backend()->importBuffer(m_buffer->buffer()), Region::infinite());
     return true;
 }
 

@@ -79,16 +79,27 @@ void ItemRendererVulkan::beginFrame(const RenderTarget &renderTarget, const Rend
 
 void ItemRendererVulkan::endFrame()
 {
-    // FIXME we need to return the sync fd to the output layer / VulkanSwapchain somehow...
-    // Maybe the command buffer should be stored and submitted in the output layer instead?
-    // FIXME 2: submitting an empty command buffer is not allowed, so we need to guard against it!
-    // auto fd = m_device->submit(std::move(m_commandBuffer), FileDescriptor{});
-    // if (fd) {
-    //     for (const auto &releasePoint : m_releasePoints) {
-    //         releasePoint->addReleaseFence(*fd);
-    //     }
-    // }
     m_releasePoints.clear();
+}
+
+static QVector4D rectAsBox(const RectF &rect)
+{
+    return QVector4D{
+        float(rect.x() + rect.width() * 0.5),
+        float(rect.y() + rect.height() * 0.5),
+        float(rect.width() * 0.5),
+        float(rect.height() * 0.5),
+    };
+}
+
+static QVector4D rectAsVector(const RectF &rect)
+{
+    return QVector4D{
+        float(rect.left()),
+        float(rect.top()),
+        float(rect.width()),
+        float(rect.height()),
+    };
 }
 
 void ItemRendererVulkan::createRenderNode(Item *item, RenderContext *context, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
@@ -129,18 +140,12 @@ void ItemRendererVulkan::createRenderNode(Item *item, RenderContext *context, co
     }
 
     if (const BorderRadius radius = item->borderRadius(); !radius.isNull()) {
-        const RectF nativeRect = snapToPixelGridF(scaledRect(item->rect(), context->renderTargetScale));
-        const BorderRadius nativeRadius = radius.scaled(context->renderTargetScale).rounded();
         context->cornerStack.push({
-            .box = nativeRect,
-            .radius = nativeRadius,
+            .box = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded(),
+            .radius = radius.scaled(context->renderTargetScale).rounded(),
         });
     } else if (!context->cornerStack.isEmpty()) {
-        const auto &top = std::as_const(context->cornerStack).top();
-        context->cornerStack.push({
-            .box = matrix.inverted().mapRect(top.box),
-            .radius = top.radius,
-        });
+        context->cornerStack.push(context->cornerStack.top());
     }
 
     item->preprocess();
@@ -148,47 +153,76 @@ void ItemRendererVulkan::createRenderNode(Item *item, RenderContext *context, co
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
         const auto ninePatch = static_cast<NinePatchVulkan *>(shadowItem->ninePatch());
         if (ninePatch && ninePatch->texture()) {
-            Rect viewRect = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded();
-            context->uniform.push_back(ItemData{
-                .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.right(), viewRect.bottom()),
-                .color = QVector4D(1.0, 1.0f, 1.0f, 1.0f),
-            });
+            // Rect viewRect = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded();
+            // context->uniform.push_back(ItemData{
+            //     .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.width(), viewRect.height()),
+            //     .color = QVector4D(1.0, 1.0f, 1.0f, 1.0f),
+            // });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
         auto atlas = static_cast<const AtlasVulkan *>(decorationItem->atlas());
         if (atlas && atlas->texture()) {
-            Rect viewRect = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded();
-            context->uniform.push_back(ItemData{
-                .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.right(), viewRect.bottom()),
-                .color = QVector4D(0.5f, 0.5f, 0.5f, 1.0f),
-            });
+            const auto shape = decorationItem->shape();
+            for (const RectF &rect : shape.rects()) {
+                Rect viewRect = RectF(context->transformStack.top().mapRect(rect.scaled(scale))).rounded();
+                context->uniform.push_back(ItemData{
+                    .rect = rectAsVector(viewRect),
+                    .color = QVector4D(0.5f, 0.5f, 0.5f, 1.0f),
+                    .textureIndex = hole ? -1 : int(context->textures.size()),
+                    .outlineWidth = -1,
+                    // FIXME uv coordinates!
+                    .box = rectAsBox(context->cornerStack.empty() ? viewRect : context->cornerStack.top().box),
+                    .cornerRadius = context->cornerStack.empty() ? QVector4D(0, 0, 0, 0) : context->cornerStack.top().radius.toVector(),
+                });
+            }
+            if (!hole) {
+                context->textures.push_back(atlas->texture());
+            }
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
         auto texture = static_cast<TextureVulkan *>(surfaceItem->texture());
         if (texture && texture->texture()) {
             Rect viewRect = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded();
             context->uniform.push_back(ItemData{
-                .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.right(), viewRect.bottom()),
-                .color = QVector4D(viewRect.left() / float(context->viewportSize.width()),
-                                   viewRect.right() / float(context->viewportSize.width()),
-                                   viewRect.top() / float(context->viewportSize.height()),
-                                   1.0f),
+                .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.width(), viewRect.height()),
+                .color = QVector4D(0.2f, 0.2f, 0.8f, 1.0f),
+                .textureIndex = hole ? -1 : int(context->textures.size()),
+                .outlineWidth = -1,
+                .box = rectAsBox(context->cornerStack.empty() ? viewRect : context->cornerStack.top().box & viewRect),
+                .cornerRadius = context->cornerStack.empty() ? QVector4D(0, 0, 0, 0) : context->cornerStack.top().radius.toVector(),
             });
+            if (!hole) {
+                context->textures.push_back(texture->texture());
+            }
         }
     } else if (auto imageItem = qobject_cast<ImageItem *>(item)) {
         auto texture = static_cast<TextureVulkan *>(imageItem->texture());
         if (texture && texture->texture()) {
             Rect viewRect = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded();
             context->uniform.push_back(ItemData{
-                .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.right(), viewRect.bottom()),
+                .rect = rectAsVector(viewRect),
                 .color = QVector4D(0.2f, 0.8f, 0.2f, 1.0f),
+                .textureIndex = hole ? -1 : int(context->textures.size()),
+                .outlineWidth = -1,
+                .box = rectAsBox(context->cornerStack.empty() ? viewRect : context->cornerStack.top().box),
+                .cornerRadius = context->cornerStack.empty() ? QVector4D(0, 0, 0, 0) : context->cornerStack.top().radius.toVector(),
             });
+            if (!hole) {
+                context->textures.push_back(texture->texture());
+            }
         }
     } else if (auto borderItem = qobject_cast<OutlinedBorderItem *>(item)) {
         Rect viewRect = RectF(context->transformStack.top().mapRect(item->rect().scaled(scale))).rounded();
         context->uniform.push_back(ItemData{
-            .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.right(), viewRect.bottom()),
-            .color = QVector4D(1.0f, 0.0f, 0.0f, 1.0f),
+            .rect = QVector4D(viewRect.left(), viewRect.top(), viewRect.width(), viewRect.height()),
+            .color = QVector4D(borderItem->outline().color().redF(),
+                               borderItem->outline().color().greenF(),
+                               borderItem->outline().color().blueF(),
+                               hole ? 0 : borderItem->outline().color().alphaF()),
+            .textureIndex = -1,
+            .outlineWidth = float(borderItem->outline().thickness()),
+            .box = rectAsBox(viewRect),
+            .cornerRadius = borderItem->outline().radius().toVector(),
         });
     }
 
@@ -299,6 +333,22 @@ void ItemRendererVulkan::renderItem(const RenderTarget &renderTarget, const Rend
                                                    },
                                                    {});
 
+    auto textureImageInfos = renderContext.textures | std::views::transform([](VulkanTexture *texture) {
+        return vk::DescriptorImageInfo{
+            texture->sampler(),
+            texture->view(),
+            vk::ImageLayout::eGeneral,
+        };
+    }) | std::ranges::to<std::vector>();
+    m_device->logicalDevice().updateDescriptorSets(vk::WriteDescriptorSet{
+                                                       *m_shader->textureSet(),
+                                                       0,
+                                                       0,
+                                                       vk::DescriptorType::eCombinedImageSampler,
+                                                       textureImageInfos,
+                                                   },
+                                                   {});
+
     // FIXME we need to require a compute queue for this...
     auto cmd = m_device->createCommandBuffer();
     cmd.begin(vk::CommandBufferBeginInfo{
@@ -308,6 +358,7 @@ void ItemRendererVulkan::renderItem(const RenderTarget &renderTarget, const Rend
     std::vector<vk::DescriptorSet> descriptorSets{
         *m_shader->imageSet(),
         *m_shader->bufferSet(),
+        *m_shader->textureSet(),
     };
     cmd.bindDescriptorSets(
         vk::PipelineBindPoint::eCompute,

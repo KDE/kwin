@@ -50,6 +50,12 @@ public:
     {
         QVector4D rect;
         QVector4D color;
+        int textureIndex;
+        float outlineWidth;
+        int padding;
+        int padding2;
+        QVector4D box;
+        QVector4D cornerRadius;
     };
 
     struct RenderCorner
@@ -73,6 +79,7 @@ public:
         const QPoint renderOffset;
         const QSize viewportSize;
         std::vector<ItemData> uniform;
+        std::vector<VulkanTexture *> textures;
     };
 
     explicit ItemRendererVulkan(VulkanDevice *device);

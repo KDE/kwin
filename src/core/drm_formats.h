@@ -73,6 +73,7 @@ struct KWIN_EXPORT FormatInfo
     uint32_t bitsPerPixel;
     GLint openglFormat;
     VkFormat vulkanFormat;
+    VkComponentMapping vulkanSwizzles;
     bool floatingPoint;
 
     static const QHash<uint32_t, YuvConversion> s_drmConversions;

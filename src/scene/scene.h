@@ -130,6 +130,7 @@ public:
      */
     bool shouldRenderItem(Item *item) const override;
     bool shouldRenderHole(Item *item) const override;
+    bool shouldHideItem(Item *item) const;
 
     void addWindowFilter(std::function<bool(Window *)> filter);
     bool shouldHideWindow(Window *window) const;

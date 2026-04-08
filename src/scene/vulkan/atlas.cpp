@@ -194,6 +194,7 @@ bool AtlasVulkan::reset(const QList<QImage> &images)
     // a vertical sprite, it will be rotated. At the moment, it is optimized for storing decorations.
     Rect atlasRect;
     QList<Sprite> sprites;
+    QImage::Format imageFormat = QImage::Format_Invalid;
     for (const QImage &image : images) {
         if (image.isNull()) {
             sprites.append({
@@ -201,6 +202,7 @@ bool AtlasVulkan::reset(const QList<QImage> &images)
                 .rotated = false,
             });
         } else {
+            imageFormat = image.format();
             const bool rotated = image.width() < image.height();
 
             QSize outerSize = image.size().grownBy(padding);
@@ -227,16 +229,12 @@ bool AtlasVulkan::reset(const QList<QImage> &images)
         return false;
     }
 
-    QList<QImage> actualImages = images;
-    auto format = VulkanTexture::qImageToVulkanFormat(images.front().format());
+    auto format = VulkanTexture::qImageToVulkanFormat(imageFormat);
     if (!format.has_value()) {
-        for (auto &img : actualImages) {
-            img = img.convertedTo(QImage::Format_RGBA8888_Premultiplied);
-        }
-        format = vk::Format::eR8G8B8A8Unorm;
+        return false;
     }
-    if (!m_texture || m_texture->size() != textureSize || m_texture->format() != *format) {
-        m_texture = VulkanTexture::allocate(m_device, *format, textureSize, vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst);
+    if (!m_texture || m_texture->size() != textureSize || m_texture->format() != format->format || m_texture->swizzles() != format->swizzles) {
+        m_texture = VulkanTexture::allocate(m_device, format->format, format->swizzles, textureSize, vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferDst);
         if (!m_texture) {
             m_sprites.clear();
             return false;

@@ -26,7 +26,11 @@ VulkanTexture *TextureVulkan::texture() const
 
 std::unique_ptr<ImageTextureVulkan> ImageTextureVulkan::create(VulkanDevice *device, const QImage &image)
 {
-    return nullptr;
+    auto ret = std::make_unique<ImageTextureVulkan>(device);
+    if (!ret->upload(image)) {
+        return nullptr;
+    }
+    return ret;
 }
 
 ImageTextureVulkan::ImageTextureVulkan(VulkanDevice *device)
@@ -52,8 +56,8 @@ void ImageTextureVulkan::upload(const QImage &image, const Rect &region)
         m_texture.reset();
         return;
     }
-    if (!m_texture || m_texture->size() != image.size() || m_texture->format() != *format) {
-        m_texture = VulkanTexture::allocate(m_device, *format, image.size(),
+    if (!m_texture || m_texture->size() != image.size() || m_texture->format() != format->format || m_texture->swizzles() != format->swizzles) {
+        m_texture = VulkanTexture::allocate(m_device, format->format, format->swizzles, image.size(),
                                             vk::ImageUsageFlagBits::eSampled
                                                 | vk::ImageUsageFlagBits::eTransferSrc
                                                 | vk::ImageUsageFlagBits::eTransferDst);
@@ -70,7 +74,6 @@ std::unique_ptr<BufferTextureVulkan> BufferTextureVulkan::create(VulkanDevice *d
     if (texture->attach(buffer)) {
         return texture;
     }
-    qWarning() << "attach fail :(";
     return nullptr;
 }
 

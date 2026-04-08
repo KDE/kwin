@@ -276,7 +276,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
         *image,
         vk::ImageViewType::e2D,
         vk::Format(format->vulkanFormat),
-        vk::ComponentMapping{},
+        vk::ComponentMapping{format->vulkanSwizzles},
         vk::ImageSubresourceRange{
             vk::ImageAspectFlagBits::eColor,
             0,
@@ -288,7 +288,7 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     if (viewResult != vk::Result::eSuccess) {
         return nullptr;
     }
-    return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), std::move(image),
+    return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), vk::ComponentMapping{}, std::move(image),
                                            std::move(deviceMemory), QSize(attributes->width, attributes->height),
                                            std::move(view));
 }

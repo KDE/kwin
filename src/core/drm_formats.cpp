@@ -130,6 +130,9 @@ const QHash<uint32_t, YuvConversion> FormatInfo::s_drmConversions = {
 // NOTE the mapping of drm formats to Vulkan formats isn't straight-forward.
 // - for non-packed 8 and 16 bits per channel formats, the channel order is inverted vs. drm
 // - for packed formats, the channel order matches drm
+
+static const VkComponentMapping s_opaqueSwizzle{VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G, VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_ONE};
+
 const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
     {DRM_FORMAT_XRGB8888, FormatInfo{
                               .drmFormat = DRM_FORMAT_XRGB8888,
@@ -138,6 +141,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 32,
                               .openglFormat = GL_RGBA8,
                               .vulkanFormat = VK_FORMAT_B8G8R8A8_UNORM,
+                              .vulkanSwizzles = s_opaqueSwizzle,
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_XBGR8888, FormatInfo{
@@ -147,6 +151,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 32,
                               .openglFormat = GL_RGBA8,
                               .vulkanFormat = VK_FORMAT_R8G8B8A8_UNORM,
+                              .vulkanSwizzles = s_opaqueSwizzle,
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_RGBX8888, FormatInfo{
@@ -156,6 +161,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 32,
                               .openglFormat = GL_RGBA8,
                               .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .vulkanSwizzles = s_opaqueSwizzle,
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_BGRX8888, FormatInfo{
@@ -165,6 +171,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 32,
                               .openglFormat = GL_RGBA8,
                               .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .vulkanSwizzles = s_opaqueSwizzle,
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_ARGB8888, FormatInfo{
@@ -174,6 +181,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 32,
                               .openglFormat = GL_RGBA8,
                               .vulkanFormat = VK_FORMAT_B8G8R8A8_UNORM,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_ABGR8888, FormatInfo{
@@ -183,6 +191,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 32,
                               .openglFormat = GL_RGBA8,
                               .vulkanFormat = VK_FORMAT_R8G8B8A8_UNORM,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_RGBA8888, FormatInfo{
@@ -192,6 +201,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 32,
                               .openglFormat = GL_RGBA8,
                               .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_BGRA8888, FormatInfo{
@@ -201,6 +211,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 32,
                               .openglFormat = GL_RGBA8,
                               .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_XRGB2101010, FormatInfo{
@@ -210,6 +221,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
                                  .vulkanFormat = VK_FORMAT_A2R10G10B10_UNORM_PACK32,
+                                 .vulkanSwizzles = s_opaqueSwizzle,
                                  .floatingPoint = false,
                              }},
     {DRM_FORMAT_XBGR2101010, FormatInfo{
@@ -219,6 +231,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
                                  .vulkanFormat = VK_FORMAT_A2B10G10R10_UNORM_PACK32,
+                                 .vulkanSwizzles = s_opaqueSwizzle,
                                  .floatingPoint = false,
                              }},
     {DRM_FORMAT_RGBX1010102, FormatInfo{
@@ -228,6 +241,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
                                  .vulkanFormat = VK_FORMAT_UNDEFINED,
+                                 .vulkanSwizzles = s_opaqueSwizzle,
                                  .floatingPoint = false,
                              }},
     {DRM_FORMAT_BGRX1010102, FormatInfo{
@@ -237,6 +251,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
                                  .vulkanFormat = VK_FORMAT_UNDEFINED,
+                                 .vulkanSwizzles = s_opaqueSwizzle,
                                  .floatingPoint = false,
                              }},
     {DRM_FORMAT_ARGB2101010, FormatInfo{
@@ -246,6 +261,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
                                  .vulkanFormat = VK_FORMAT_A2R10G10B10_UNORM_PACK32,
+                                 .vulkanSwizzles = VkComponentMapping{},
                                  .floatingPoint = false,
                              }},
     {DRM_FORMAT_ABGR2101010, FormatInfo{
@@ -255,6 +271,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
                                  .vulkanFormat = VK_FORMAT_A2B10G10R10_UNORM_PACK32,
+                                 .vulkanSwizzles = VkComponentMapping{},
                                  .floatingPoint = false,
                              }},
     {DRM_FORMAT_RGBA1010102, FormatInfo{
@@ -264,6 +281,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
                                  .vulkanFormat = VK_FORMAT_UNDEFINED,
+                                 .vulkanSwizzles = VkComponentMapping{},
                                  .floatingPoint = false,
                              }},
     {DRM_FORMAT_BGRA1010102, FormatInfo{
@@ -273,6 +291,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                  .bitsPerPixel = 32,
                                  .openglFormat = GL_RGB10_A2,
                                  .vulkanFormat = VK_FORMAT_UNDEFINED,
+                                 .vulkanSwizzles = VkComponentMapping{},
                                  .floatingPoint = false,
                              }},
     {DRM_FORMAT_XRGB16161616, FormatInfo{
@@ -282,6 +301,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                   .bitsPerPixel = 64,
                                   .openglFormat = GL_RGBA16,
                                   .vulkanFormat = VK_FORMAT_UNDEFINED,
+                                  .vulkanSwizzles = s_opaqueSwizzle,
                                   .floatingPoint = false,
                               }},
     {DRM_FORMAT_XBGR16161616, FormatInfo{
@@ -291,6 +311,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                   .bitsPerPixel = 64,
                                   .openglFormat = GL_RGBA16,
                                   .vulkanFormat = VK_FORMAT_R16G16B16A16_UNORM,
+                                  .vulkanSwizzles = s_opaqueSwizzle,
                                   .floatingPoint = false,
                               }},
     {DRM_FORMAT_ARGB16161616, FormatInfo{
@@ -300,6 +321,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                   .bitsPerPixel = 64,
                                   .openglFormat = GL_RGBA16,
                                   .vulkanFormat = VK_FORMAT_UNDEFINED,
+                                  .vulkanSwizzles = VkComponentMapping{},
                                   .floatingPoint = false,
                               }},
     {DRM_FORMAT_ABGR16161616, FormatInfo{
@@ -309,6 +331,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                   .bitsPerPixel = 64,
                                   .openglFormat = GL_RGBA16,
                                   .vulkanFormat = VK_FORMAT_R16G16B16A16_UNORM,
+                                  .vulkanSwizzles = VkComponentMapping{},
                                   .floatingPoint = false,
                               }},
     {DRM_FORMAT_XRGB16161616F, FormatInfo{
@@ -318,6 +341,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                    .bitsPerPixel = 64,
                                    .openglFormat = GL_RGBA16F,
                                    .vulkanFormat = VK_FORMAT_UNDEFINED,
+                                   .vulkanSwizzles = s_opaqueSwizzle,
                                    .floatingPoint = true,
                                }},
     {DRM_FORMAT_XBGR16161616F, FormatInfo{
@@ -327,6 +351,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                    .bitsPerPixel = 64,
                                    .openglFormat = GL_RGBA16F,
                                    .vulkanFormat = VK_FORMAT_R16G16B16A16_SFLOAT,
+                                   .vulkanSwizzles = s_opaqueSwizzle,
                                    .floatingPoint = true,
                                }},
     {DRM_FORMAT_ARGB16161616F, FormatInfo{
@@ -336,6 +361,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                    .bitsPerPixel = 64,
                                    .openglFormat = GL_RGBA16F,
                                    .vulkanFormat = VK_FORMAT_UNDEFINED,
+                                   .vulkanSwizzles = VkComponentMapping{},
                                    .floatingPoint = true,
                                }},
     {DRM_FORMAT_ABGR16161616F, FormatInfo{
@@ -345,6 +371,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                                    .bitsPerPixel = 64,
                                    .openglFormat = GL_RGBA16F,
                                    .vulkanFormat = VK_FORMAT_R16G16B16A16_SFLOAT,
+                                   .vulkanSwizzles = VkComponentMapping{},
                                    .floatingPoint = true,
                                }},
     {DRM_FORMAT_ARGB4444, FormatInfo{
@@ -354,6 +381,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGBA4,
                               .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_ABGR4444, FormatInfo{
@@ -363,6 +391,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGBA4,
                               .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_RGBA4444, FormatInfo{
@@ -372,6 +401,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGBA4,
                               .vulkanFormat = VK_FORMAT_R4G4B4A4_UNORM_PACK16,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_BGRA4444, FormatInfo{
@@ -381,6 +411,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGBA4,
                               .vulkanFormat = VK_FORMAT_B4G4R4A4_UNORM_PACK16,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_ARGB1555, FormatInfo{
@@ -390,6 +421,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGB5_A1,
                               .vulkanFormat = VK_FORMAT_A1R5G5B5_UNORM_PACK16,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_ABGR1555, FormatInfo{
@@ -399,6 +431,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGB5_A1,
                               .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_RGBA5551, FormatInfo{
@@ -408,6 +441,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGB5_A1,
                               .vulkanFormat = VK_FORMAT_R5G5B5A1_UNORM_PACK16,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     {DRM_FORMAT_BGRA5551, FormatInfo{
@@ -417,6 +451,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 16,
                               .openglFormat = GL_RGB5_A1,
                               .vulkanFormat = VK_FORMAT_B5G5R5A1_UNORM_PACK16,
+                              .vulkanSwizzles = VkComponentMapping{},
                               .floatingPoint = false,
                           }},
     // TODO support YUV formats with Vulkan
@@ -427,6 +462,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                           .bitsPerPixel = 24,
                           .openglFormat = GL_R8,
                           .vulkanFormat = VK_FORMAT_UNDEFINED,
+                          .vulkanSwizzles = VkComponentMapping{},
                           .floatingPoint = false,
                       }},
     {DRM_FORMAT_P010, FormatInfo{
@@ -436,6 +472,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                           .bitsPerPixel = 48,
                           .openglFormat = GL_R16,
                           .vulkanFormat = VK_FORMAT_UNDEFINED,
+                          .vulkanSwizzles = VkComponentMapping{},
                           .floatingPoint = false,
                       }},
     {DRM_FORMAT_XYUV8888, FormatInfo{
@@ -445,6 +482,7 @@ const std::unordered_map<uint32_t, FormatInfo> FormatInfo::s_knownFormats = {
                               .bitsPerPixel = 32,
                               .openglFormat = GL_RGBA8,
                               .vulkanFormat = VK_FORMAT_UNDEFINED,
+                              .vulkanSwizzles = s_opaqueSwizzle,
                               .floatingPoint = false,
                           }},
 };

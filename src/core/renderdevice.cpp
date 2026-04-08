@@ -180,6 +180,8 @@ static constexpr std::array s_requiredVulkanExtensions = {
     VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,
     // allows using shader objects
     VK_EXT_SHADER_OBJECT_EXTENSION_NAME,
+    // allows using non-uniform indexing in shader
+    VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME,
 };
 
 static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &instance, DrmDevice *drm)
@@ -266,6 +268,15 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
         vk::PhysicalDeviceShaderObjectFeaturesEXT shaderObjectFeatures;
         shaderObjectFeatures.shaderObject = true;
         features.pNext = &shaderObjectFeatures;
+
+        vk::PhysicalDeviceDescriptorIndexingFeaturesEXT descriptorIndexing;
+        descriptorIndexing.runtimeDescriptorArray = true;
+        descriptorIndexing.shaderSampledImageArrayNonUniformIndexing = true;
+        shaderObjectFeatures.pNext = &descriptorIndexing;
+
+        vk::PhysicalDeviceComputeShaderDerivativesFeaturesKHR derivatives;
+        derivatives.computeDerivativeGroupQuads = true;
+        descriptorIndexing.pNext = &derivatives;
 
         vk::DeviceCreateInfo deviceInfo{
             vk::DeviceCreateFlags{},
