@@ -193,6 +193,8 @@ static constexpr std::array s_requiredVulkanExtensions = {
     VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,
     // allows using shader objects
     VK_EXT_SHADER_OBJECT_EXTENSION_NAME,
+    // allows using non-uniform indexing in shader
+    VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME,
 };
 
 static const auto s_supportHostMemoryPointer = environmentVariableBoolValue("KWIN_SUPPORT_EXTERNAL_MEMORY_HOST");
@@ -275,7 +277,7 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             minImportedHostPointerAlignment = hostProperties.minImportedHostPointerAlignment;
         }
 
-        std::vector<VkDeviceQueueCreateInfo> queueInfo;
+        std::vector<vk::DeviceQueueCreateInfo> queueInfo;
         std::array priority{1.0f};
         for (uint32_t i = 0; i < queueProperties.size(); i++) {
             queueInfo.push_back(vk::DeviceQueueCreateInfo{vk::DeviceQueueCreateFlags{}, i, priority});
@@ -287,8 +289,17 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
             continue;
         }
 
+        vk::PhysicalDeviceDescriptorIndexingFeaturesEXT descriptorIndexing;
+        descriptorIndexing.runtimeDescriptorArray = true;
+        descriptorIndexing.shaderSampledImageArrayNonUniformIndexing = true;
+
+        vk::PhysicalDeviceComputeShaderDerivativesFeaturesKHR derivatives;
+        derivatives.computeDerivativeGroupQuads = true;
+        descriptorIndexing.pNext = &derivatives;
+
         vk::PhysicalDeviceHostQueryResetFeatures hostQueryReset;
         hostQueryReset.hostQueryReset = true;
+        hostQueryReset.pNext = &derivatives;
 
         vk::PhysicalDeviceSynchronization2Features syncFeatures;
         syncFeatures.synchronization2 = true;
@@ -303,16 +314,13 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
         features.features.shaderStorageImageWriteWithoutFormat = true;
         features.pNext = &shaderObjectFeatures;
 
-        VkDeviceCreateInfo deviceInfo{
-            .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-            .pNext = &features,
-            .flags = {},
-            .queueCreateInfoCount = uint32_t(queueInfo.size()),
-            .pQueueCreateInfos = queueInfo.data(),
-            .enabledLayerCount = 0,
-            .ppEnabledLayerNames = nullptr,
-            .enabledExtensionCount = uint32_t(usedExtensions.size()),
-            .ppEnabledExtensionNames = usedExtensions.data(),
+        vk::DeviceCreateInfo deviceInfo{
+            vk::DeviceCreateFlags{},
+            queueInfo,
+            {},
+            usedExtensions,
+            nullptr,
+            static_cast<void *>(&features),
         };
 
         auto [result, logicalDevice] = physicalDevice.createDevice(deviceInfo);

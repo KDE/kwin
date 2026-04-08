@@ -15,39 +15,91 @@
 namespace KWin
 {
 
-std::optional<vk::Format> VulkanTexture::qImageToVulkanFormat(QImage::Format format)
+std::optional<VulkanTexture::FormatWithSwizzle> VulkanTexture::qImageToVulkanFormat(QImage::Format format)
 {
-    // TODO support the rest of the formats using swizzles?
     switch (format) {
     case QImage::Format_Alpha8:
     case QImage::Format_Grayscale8:
-        return vk::Format::eR8Unorm;
+        return FormatWithSwizzle{
+            vk::Format::eR8Unorm,
+            vk::ComponentMapping{},
+            std::nullopt,
+        };
     case QImage::Format_Grayscale16:
-        return vk::Format::eR16Unorm;
+        return FormatWithSwizzle{
+            vk::Format::eR16Unorm,
+            vk::ComponentMapping{},
+            std::nullopt,
+        };
     case QImage::Format_RGB16:
-        return vk::Format::eR5G6B5UnormPack16;
+        return FormatWithSwizzle{
+            vk::Format::eR5G6B5UnormPack16,
+            vk::ComponentMapping{},
+            std::nullopt,
+        };
     case QImage::Format_RGB555:
-        return vk::Format::eA1R5G5B5UnormPack16;
+        return FormatWithSwizzle{
+            vk::Format::eA1R5G5B5UnormPack16,
+            vk::ComponentMapping{},
+            std::nullopt,
+        };
     case QImage::Format_RGB888:
-        return vk::Format::eR8G8B8Unorm;
+        return FormatWithSwizzle{
+            vk::Format::eR8G8B8Unorm,
+            vk::ComponentMapping{},
+            std::nullopt,
+        };
     case QImage::Format_RGB444:
     case QImage::Format_ARGB4444_Premultiplied:
-        return vk::Format::eR4G4B4A4UnormPack16;
+        return FormatWithSwizzle{
+            vk::Format::eR4G4B4A4UnormPack16,
+            vk::ComponentMapping{},
+            std::nullopt,
+        };
     case QImage::Format_RGBX8888:
     case QImage::Format_RGBA8888_Premultiplied:
-        return vk::Format::eR8G8B8A8Unorm;
+        return FormatWithSwizzle{
+            vk::Format::eR8G8B8A8Unorm,
+            vk::ComponentMapping{},
+            std::nullopt,
+        };
+    case QImage::Format_ARGB32:
+    case QImage::Format_ARGB32_Premultiplied:
+        return FormatWithSwizzle{
+            vk::Format::eR8G8B8A8Unorm,
+            vk::ComponentMapping{
+                vk::ComponentSwizzle::eB,
+                vk::ComponentSwizzle::eG,
+                vk::ComponentSwizzle::eR,
+                vk::ComponentSwizzle::eA,
+            },
+            std::nullopt,
+        };
+    case QImage::Format_RGB32:
+        return FormatWithSwizzle{
+            vk::Format::eR8G8B8A8Unorm,
+            vk::ComponentMapping{
+                vk::ComponentSwizzle::eB,
+                vk::ComponentSwizzle::eG,
+                vk::ComponentSwizzle::eR,
+                vk::ComponentSwizzle::eA,
+            },
+            QImage::Format_ARGB32,
+        };
     case QImage::Format_BGR30:
     case QImage::Format_A2BGR30_Premultiplied:
-        return vk::Format::eA2B10G10R10UnormPack32;
+        return FormatWithSwizzle{
+            vk::Format::eA2B10G10R10UnormPack32,
+            vk::ComponentMapping{},
+            std::nullopt,
+        };
     case QImage::Format_RGBX64:
     case QImage::Format_RGBA64_Premultiplied:
-        return vk::Format::eR16G16B16A16Unorm;
-    case QImage::Format_RGBX16FPx4:
-    case QImage::Format_RGBA16FPx4_Premultiplied:
-        return vk::Format::eR16G16B16A16Sfloat;
-    case QImage::Format_RGBX32FPx4:
-    case QImage::Format_RGBA32FPx4_Premultiplied:
-        return vk::Format::eR32G32B32A32Sfloat;
+        return FormatWithSwizzle{
+            vk::Format::eR16G16B16A16Unorm,
+            vk::ComponentMapping{},
+            std::nullopt,
+        };
     default:
         return std::nullopt;
     }
@@ -74,15 +126,17 @@ std::optional<QImage::Format> VulkanTexture::vulkanToQImageFormat(vk::Format for
     }
 }
 
-VulkanTexture::VulkanTexture(VulkanDevice *device, vk::Format format, vk::raii::Image &&image,
-                             std::vector<vk::raii::DeviceMemory> &&memory, const QSize &size,
-                             vk::raii::ImageView &&view)
+VulkanTexture::VulkanTexture(VulkanDevice *device, vk::Format format, vk::ComponentMapping swizzles,
+                             vk::raii::Image &&image, std::vector<vk::raii::DeviceMemory> &&memory,
+                             const QSize &size, vk::raii::ImageView &&view)
     : m_device(device)
     , m_format(format)
+    , m_swizzles(swizzles)
     , m_memory(std::move(memory))
     , m_image(std::move(image))
     , m_size(size)
     , m_view(std::move(view))
+    , m_sampler(nullptr)
 {
 }
 
@@ -105,9 +159,34 @@ const vk::raii::ImageView &VulkanTexture::view() const
     return m_view;
 }
 
+const vk::raii::Sampler &VulkanTexture::sampler()
+{
+    if (!*m_sampler) {
+        auto [result, sampler] = m_device->logicalDevice().createSampler(vk::SamplerCreateInfo{
+            vk::SamplerCreateFlags{},
+            vk::Filter::eLinear,
+            vk::Filter::eLinear,
+            vk::SamplerMipmapMode::eNearest,
+            vk::SamplerAddressMode::eClampToEdge,
+            vk::SamplerAddressMode::eClampToEdge,
+            vk::SamplerAddressMode::eClampToEdge,
+        });
+        if (result != vk::Result::eSuccess) {
+            return m_sampler;
+        }
+        m_sampler = std::move(sampler);
+    }
+    return m_sampler;
+}
+
 vk::Format VulkanTexture::format() const
 {
     return m_format;
+}
+
+vk::ComponentMapping VulkanTexture::swizzles() const
+{
+    return m_swizzles;
 }
 
 bool VulkanTexture::downloadTo(QImage &target, FileDescriptor &&sync) const
@@ -192,8 +271,16 @@ QImage VulkanTexture::download() const
 
 bool VulkanTexture::update(const QImage &img, const Region &region, const QPoint &offset)
 {
-    if (img.size() != m_size || qImageToVulkanFormat(img.format()) != m_format) {
+    if (img.size() != m_size) {
         return false;
+    }
+    auto fmt = qImageToVulkanFormat(img.format());
+    if (!fmt || fmt->format != m_format || fmt->swizzles != m_swizzles) {
+        return false;
+    }
+    QImage tmp = img;
+    if (fmt->intermediaryCopy) {
+        tmp = img.convertToFormat(*fmt->intermediaryCopy);
     }
     // FIXME this is terrible. Instead, pass the command buffer in as
     // an argument, and leave synchronization up to the caller?
@@ -201,7 +288,7 @@ bool VulkanTexture::update(const QImage &img, const Region &region, const QPoint
 
     vk::BufferCreateInfo bufferInfo{
         vk::BufferCreateFlags(),
-        vk::DeviceSize(img.sizeInBytes()),
+        vk::DeviceSize(tmp.sizeInBytes()),
         vk::BufferUsageFlagBits::eTransferSrc,
     };
     auto stagingMemory = m_device->allocateMemory(bufferInfo, vk::MemoryPropertyFlagBits::eHostVisible);
@@ -213,21 +300,21 @@ bool VulkanTexture::update(const QImage &img, const Region &region, const QPoint
         return false;
     }
     stagingBuffer.bindMemory(stagingMemory, 0);
-    auto [mapResult, dataPtr] = stagingMemory.mapMemory(0, vk::DeviceSize(img.sizeInBytes()));
+    auto [mapResult, dataPtr] = stagingMemory.mapMemory(0, vk::DeviceSize(tmp.sizeInBytes()));
     if (mapResult != vk::Result::eSuccess) {
         return false;
     }
-    std::memcpy(dataPtr, img.constBits(), img.sizeInBytes());
+    std::memcpy(dataPtr, tmp.constBits(), tmp.sizeInBytes());
     stagingMemory.unmapMemory();
 
     auto commandBuffer = m_device->graphicsQueue()->createCommandBuffer();
     commandBuffer.begin(vk::CommandBufferBeginInfo{vk::CommandBufferUsageFlagBits::eOneTimeSubmit});
-    const uint32_t bytesPerPixel = img.depth() / 8;
-    const auto regions = region.rects() | std::views::transform([&img, &offset, bytesPerPixel](const Rect &rect) {
+    const uint32_t bytesPerPixel = tmp.depth() / 8;
+    const auto regions = region.rects() | std::views::transform([&tmp, &offset, bytesPerPixel](const Rect &rect) {
         return vk::BufferImageCopy2{
-            vk::DeviceSize(rect.y() * img.bytesPerLine() + rect.x() * bytesPerPixel), // offset in bytes
-            uint32_t(img.width()), // row length
-            uint32_t(img.height()), // image height
+            vk::DeviceSize(rect.y() * tmp.bytesPerLine() + rect.x() * bytesPerPixel), // offset in bytes
+            uint32_t(tmp.width()), // row length
+            uint32_t(tmp.height()), // image height
             vk::ImageSubresourceLayers{
                 vk::ImageAspectFlagBits::eColor,
                 0, // mip map level
@@ -256,7 +343,7 @@ bool VulkanTexture::update(const QImage &img)
     return update(img, Region(0, 0, img.width(), img.height()));
 }
 
-std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk::Format format, const QSize &size, vk::ImageUsageFlags usage)
+std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk::Format format, vk::ComponentMapping swizzles, const QSize &size, vk::ImageUsageFlags usage)
 {
     vk::ImageCreateInfo info{
         vk::ImageCreateFlags(),
@@ -312,7 +399,7 @@ std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk:
         *image,
         vk::ImageViewType::e2D,
         format,
-        vk::ComponentMapping{},
+        swizzles,
         vk::ImageSubresourceRange{
             vk::ImageAspectFlagBits::eColor,
             0,
@@ -324,7 +411,7 @@ std::unique_ptr<VulkanTexture> VulkanTexture::allocate(VulkanDevice *device, vk:
     if (viewResult != vk::Result::eSuccess) {
         return nullptr;
     }
-    return std::make_unique<VulkanTexture>(device, format, std::move(image), std::move(mem), size, std::move(view));
+    return std::make_unique<VulkanTexture>(device, format, swizzles, std::move(image), std::move(mem), size, std::move(view));
 }
 
 std::unique_ptr<VulkanTexture> VulkanTexture::upload(VulkanDevice *device, const QImage &image, vk::ImageUsageFlags usage)
@@ -333,10 +420,10 @@ std::unique_ptr<VulkanTexture> VulkanTexture::upload(VulkanDevice *device, const
     QImage img = image;
     auto format = qImageToVulkanFormat(image.format());
     if (!format) {
-        img = image.convertedTo(QImage::Format::Format_RGBA8888_Premultiplied);
-        format = vk::Format::eR8G8B8A8Unorm;
+        qCWarning(KWIN_VULKAN) << "Attempted to upload image with unsupported format" << image.format();
+        return nullptr;
     }
-    auto ret = allocate(device, *format, img.size(), usage);
+    auto ret = allocate(device, format->format, format->swizzles, img.size(), usage);
     if (!ret) {
         return nullptr;
     }

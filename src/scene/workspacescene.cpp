@@ -92,10 +92,13 @@ namespace KWin
 //****************************************
 
 WorkspaceScene::WorkspaceScene()
-    : m_containerItem(std::make_unique<RootItem>(this))
-    , m_overlayItem(std::make_unique<RootItem>(this))
+    : m_rootItem(std::make_unique<RootItem>(this))
+    , m_windowContainer(std::make_unique<Item>(m_rootItem.get()))
+    , m_overlayItem(std::make_unique<Item>(m_rootItem.get()))
     , m_cursorItem(std::make_unique<CursorItem>(m_overlayItem.get()))
 {
+    m_overlayItem->setZ(1);
+    m_windowContainer->setZ(0);
     setGeometry(workspace()->geometry());
     connect(workspace(), &Workspace::geometryChanged, this, [this]() {
         setGeometry(workspace()->geometry());
@@ -134,10 +137,7 @@ void WorkspaceScene::attachRenderer(RenderDevice *device, std::unique_ptr<ItemRe
 
 void WorkspaceScene::detachRenderer(RenderDevice *device)
 {
-    releaseResources(device, m_containerItem.get());
-    releaseResources(device, m_overlayItem.get());
-    releaseResources(device, m_cursorItem.get());
-
+    releaseResources(device, m_rootItem.get());
     m_renderers.erase(device);
 }
 
@@ -174,9 +174,14 @@ void WorkspaceScene::updateCursor()
     }
 }
 
+Item *WorkspaceScene::rootItem() const
+{
+    return m_rootItem.get();
+}
+
 Item *WorkspaceScene::containerItem() const
 {
-    return m_containerItem.get();
+    return m_windowContainer.get();
 }
 
 Item *WorkspaceScene::overlayItem() const
@@ -469,7 +474,7 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
     }
 
     if (!result) {
-        result = findOverlayCandidates(painted_delegate, m_containerItem.get(), maxTotalCount, occupied, opaque, effected, overlays, underlays, cornerStack, needsCompositedScene);
+        result = findOverlayCandidates(painted_delegate, m_rootItem.get(), maxTotalCount, occupied, opaque, effected, overlays, underlays, cornerStack, needsCompositedScene);
         if (result.has_value() && !*result) {
             return fallback();
         }
@@ -520,10 +525,7 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
 {
     LogicalOutput *logicalOutput = delegate->logicalOutput();
     const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(logicalOutput->backendOutput()->renderLoop()->lastPresentationTimestamp());
-    m_containerItem->framePainted(delegate, logicalOutput, frame, frameTime);
-    if (m_overlayItem) {
-        m_overlayItem->framePainted(delegate, logicalOutput, frame, frameTime);
-    }
+    m_rootItem->framePainted(delegate, logicalOutput, frame, frameTime);
 }
 
 void WorkspaceScene::prePaint(SceneView *delegate, OutputFrame *frame)
@@ -531,8 +533,7 @@ void WorkspaceScene::prePaint(SceneView *delegate, OutputFrame *frame)
     painted_delegate = delegate;
     painted_screen = painted_delegate->logicalOutput();
 
-    m_containerItem->prepareFrame(painted_delegate, painted_screen, painted_delegate->nextPresentationTimestamp());
-    m_overlayItem->prepareFrame(painted_delegate, painted_screen, painted_delegate->nextPresentationTimestamp());
+    m_rootItem->prepareFrame(painted_delegate, painted_screen, painted_delegate->nextPresentationTimestamp());
 
     createStackingOrder();
 
@@ -608,7 +609,7 @@ void WorkspaceScene::preparePaintGenericScreen()
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
 
-        effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data);
+        // effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data);
         m_paintContext.phase2Data.append(Phase2Data{
             .item = windowItem,
             .deviceRegion = Region::infinite(),
@@ -645,7 +646,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
         WindowPrePaintData data;
         data.mask = m_paintContext.mask;
 
-        effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data);
+        // effects->prePaintWindow(painted_delegate, windowItem->effectWindow(), data);
 
         Region opaque;
         if (window->opacity() == 1.0 && !(data.mask & PAINT_WINDOW_TRANSLUCENT)) {
@@ -720,9 +721,24 @@ FileDescriptor WorkspaceScene::paint(const OutputLayerBeginFrameInfo &info,
 
     RenderViewport viewport(painted_delegate->viewport(), painted_delegate->scale(), renderInfo->renderTarget, deviceOffset);
     const Region repaint = (renderInfo->repaint | deviceRepaint) & renderInfo->renderTarget.transformedRect();
-    if (!effects->paintScreen(renderInfo->renderTarget, viewport, m_paintContext.mask, repaint, painted_screen)) {
-        return FileDescriptor{};
-    }
+
+    std::ignore = renderer->renderItem(renderInfo->renderTarget, viewport, m_rootItem.get(), 0, repaint, WindowPaintData{}, [this](Item *item) {
+        return !painted_delegate->shouldRenderItem(item) || painted_delegate->shouldHideItem(item);
+    }, [this](Item *item) {
+        return painted_delegate->shouldRenderHole(item);
+    });
+
+    // if (m_overlayItem) {
+    //     const Rect bounds = viewport.mapToDeviceCoordinates(m_overlayItem->mapToScene(m_overlayItem->boundingRect())).toRect();
+    //     const Region deviceRepaint = deviceRegion & bounds;
+    //     if (!deviceRepaint.isEmpty()) {
+    //         m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, deviceRepaint, WindowPaintData{}, [this](Item *item) {
+    //             return !painted_delegate->shouldRenderItem(item);
+    //         }, [this](Item *item) {
+    //             return painted_delegate->shouldRenderHole(item);
+    //         });
+    //     }
+    // }
 
     Q_EMIT frameRendered();
     return renderer->endFrame(repaint, painted_delegate, frame);
@@ -807,7 +823,7 @@ bool WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
 
 void WorkspaceScene::createStackingOrder()
 {
-    QList<Item *> items = m_containerItem->sortedChildItems();
+    QList<Item *> items = m_windowContainer->sortedChildItems();
     for (Item *item : std::as_const(items)) {
         WindowItem *windowItem = static_cast<WindowItem *>(item);
         if (painted_delegate && painted_delegate->shouldHideWindow(windowItem->window())) {

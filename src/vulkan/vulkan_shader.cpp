@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "vulkan_shader.h"
+#include "vulkan_logging.h"
 
 #include <QFile>
 
@@ -14,12 +15,13 @@ namespace KWin
 {
 
 VulkanShader::VulkanShader(VulkanDevice *device, vk::raii::ShaderEXT &&shader,
-                           Descriptor &&image, Descriptor &&buffer,
+                           Descriptor &&image, Descriptor &&buffer, Descriptor &&texturesDescriptor,
                            vk::raii::PipelineLayout &&pipelineLayout)
     : m_device(device)
     , m_shader(std::move(shader))
     , m_imageDescriptor(std::move(image))
     , m_bufferDescriptor(std::move(buffer))
+    , m_texturesDescriptor(std::move(texturesDescriptor))
     , m_pipelineLayout(std::move(pipelineLayout))
 {
 }
@@ -43,6 +45,11 @@ const vk::raii::DescriptorSet &VulkanShader::bufferSet() const
     return m_bufferDescriptor.set;
 }
 
+const vk::raii::DescriptorSet &VulkanShader::textureSet() const
+{
+    return m_texturesDescriptor.set;
+}
+
 const vk::raii::PipelineLayout &VulkanShader::pipelineLayout() const
 {
     return m_pipelineLayout;
@@ -63,10 +70,17 @@ std::unique_ptr<VulkanShader> VulkanShader::compile(VulkanDevice *device, QByteA
     if (bufferResult != vk::Result::eSuccess) {
         return nullptr;
     }
+    vk::DescriptorSetLayoutBinding textureLayoutBinding(0, vk::DescriptorType::eCombinedImageSampler, 1000, vk::ShaderStageFlagBits::eCompute);
+    vk::DescriptorSetLayoutCreateInfo textureLayoutInfo{vk::DescriptorSetLayoutCreateFlags{}, textureLayoutBinding};
+    auto [textureResult, textureLayout] = device->logicalDevice().createDescriptorSetLayout(textureLayoutInfo);
+    if (textureResult != vk::Result::eSuccess) {
+        return nullptr;
+    }
 
     std::vector<vk::DescriptorSetLayout> descriptorLayouts{
         *imageLayout,
         *bufferLayout,
+        *textureLayout,
     };
     vk::PushConstantRange pushConstants{
         vk::ShaderStageFlagBits::eCompute,
@@ -117,9 +131,25 @@ std::unique_ptr<VulkanShader> VulkanShader::compile(VulkanDevice *device, QByteA
     if (bufferSetResult != vk::Result::eSuccess) {
         return nullptr;
     }
+
+    vk::DescriptorPoolSize texturePoolSize(vk::DescriptorType::eCombinedImageSampler, 1000);
+    vk::DescriptorPoolCreateInfo texturePoolInfo(vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet, 1, texturePoolSize);
+    auto [texturePoolResult, texturePool] = device->logicalDevice().createDescriptorPool(texturePoolInfo);
+    if (bufferPoolResult != vk::Result::eSuccess) {
+        return nullptr;
+    }
+    auto [textureSetResult, textureSet] = device->logicalDevice().allocateDescriptorSets(vk::DescriptorSetAllocateInfo{
+        *texturePool,
+        *textureLayout,
+    });
+    if (textureSetResult != vk::Result::eSuccess) {
+        return nullptr;
+    }
+
     std::vector<vk::DescriptorSetLayout> layouts{
         *imageLayout,
         *bufferLayout,
+        *textureLayout,
     };
     auto [layoutResult, layout] = device->logicalDevice().createPipelineLayout(vk::PipelineLayoutCreateInfo{
         vk::PipelineLayoutCreateFlags{},
@@ -133,6 +163,7 @@ std::unique_ptr<VulkanShader> VulkanShader::compile(VulkanDevice *device, QByteA
     return std::make_unique<VulkanShader>(device, std::move(shader),
                                           Descriptor{std::move(imageLayout), std::move(imagePool), std::move(imageSet.front())},
                                           Descriptor{std::move(bufferLayout), std::move(bufferPool), std::move(bufferSet.front())},
+                                          Descriptor{std::move(textureLayout), std::move(texturePool), std::move(textureSet.front())},
                                           std::move(layout));
 }
 

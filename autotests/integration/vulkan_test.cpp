@@ -49,7 +49,7 @@ void VulkanTest::initTestCase()
 
 void VulkanTest::testAllocateImage()
 {
-    auto texture = VulkanTexture::allocate(m_device, vk::Format::eR8G8B8A8Unorm, QSize(64, 64),
+    auto texture = VulkanTexture::allocate(m_device, vk::Format::eR8G8B8A8Unorm, vk::ComponentMapping{}, QSize(64, 64),
                                            vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eSampled);
     QVERIFY(texture != nullptr);
     QCOMPARE(texture->size(), QSize(64, 64));
