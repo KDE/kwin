@@ -80,12 +80,10 @@ class ScaleEffect {
     }
 
     setupForcedRoles(window) {
-        window.setData(Effect.WindowForceBackgroundContrastRole, true);
         window.setData(Effect.WindowForceBlurRole, true);
     }
 
     cleanupForcedRoles(window) {
-        window.setData(Effect.WindowForceBackgroundContrastRole, null);
         window.setData(Effect.WindowForceBlurRole, null);
     }
 
