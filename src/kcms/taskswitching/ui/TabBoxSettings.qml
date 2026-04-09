@@ -11,6 +11,7 @@ import QtQuick.Controls as QQC2
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
 import org.kde.kquickcontrols as KQuickControls
+import org.kde.newstuff as NewStuff
 
 import org.kde.kwin.kcmtaskswitching as TaskSwitching
 
@@ -26,27 +27,49 @@ Kirigami.FormLayout {
         Kirigami.FormData.isSection: true
     }
 
-    TabBoxLayoutsComboBox {
+    RowLayout {
         Kirigami.FormData.label: i18nc("Task switcher style", "Switcher style:")
-        Layout.minimumWidth: Kirigami.Units.gridUnit * 12
+        Kirigami.FormData.buddyFor: layoutsComboBox
 
-        tabBoxSettings: root.tabBoxSettings
+        spacing: Kirigami.Units.smallSpacing
 
-        KCM.SettingStateProxy {
-            id: layoutNameComboBoxShowTabBoxState
-            configObject: root.tabBoxSettings
-            settingName: "ShowTabBox"
+        TabBoxLayoutsComboBox {
+            id: layoutsComboBox
+            Layout.minimumWidth: Kirigami.Units.gridUnit * 12
+
+            tabBoxSettings: root.tabBoxSettings
+
+            KCM.SettingStateProxy {
+                id: layoutNameComboBoxShowTabBoxState
+                configObject: root.tabBoxSettings
+                settingName: "ShowTabBox"
+            }
+
+            KCM.SettingStateProxy {
+                id: layoutNameComboBoxLayoutNameState
+                configObject: root.tabBoxSettings
+                settingName: "LayoutName"
+            }
+
+            KCM.SettingHighlighter {
+                highlight: !layoutNameComboBoxShowTabBoxState.defaulted || !layoutNameComboBoxLayoutNameState.defaulted
+            }
         }
 
-        KCM.SettingStateProxy {
-            id: layoutNameComboBoxLayoutNameState
-            configObject: root.tabBoxSettings
-            settingName: "LayoutName"
+        NewStuff.Button {
+            configFile: "kwinswitcher.knsrc"
+            text: i18nc("@action:button", "Get New…")
+            visibleWhenDisabled: true
+            onEntryEvent: (entry, event) => {
+                if (event === NewStuff.Entry.StatusChangedEvent) {
+                    kcm.ghnsEntryChanged();
+                }
+            }
         }
+    }
 
-        KCM.SettingHighlighter {
-            highlight: !layoutNameComboBoxShowTabBoxState.defaulted || !layoutNameComboBoxLayoutNameState.defaulted
-        }
+    Item {
+        Kirigami.FormData.isSection: true
     }
 
     QQC2.CheckBox {
