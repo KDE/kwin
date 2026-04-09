@@ -422,7 +422,6 @@ void SlideEffect::finishedSwitching()
     m_slideEffectScreens.clear();
     const QList<EffectWindow *> windows = effects->stackingOrder();
     for (EffectWindow *w : windows) {
-        w->setData(WindowForceBackgroundContrastRole, QVariant());
         w->setData(WindowForceBlurRole, QVariant());
     }
     effects->setActiveFullScreenEffect(nullptr);
@@ -566,7 +565,6 @@ void SlideEffect::windowAdded(EffectWindow *w)
         slideScreen->windowAdded(w);
     }
     if (isActive()) {
-        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
         w->setData(WindowForceBlurRole, QVariant(true));
     }
 }
