@@ -181,7 +181,6 @@ void SlidingPopupsEffect::postPaintScreen()
 
         if (animationIt->second.timeLine.done()) {
             if (!w->isDeleted()) {
-                w->setData(WindowForceBackgroundContrastRole, QVariant());
                 w->setData(WindowForceBlurRole, QVariant());
             }
             animationIt = m_animations.erase(animationIt);
@@ -460,7 +459,6 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
     }
 
     w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
-    w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     w->setData(WindowForceBlurRole, QVariant(true));
 
     w->addRepaintFull();
@@ -499,7 +497,6 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
     }
 
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
-    w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     w->setData(WindowForceBlurRole, QVariant(true));
 
     w->addRepaintFull();
@@ -509,7 +506,6 @@ void SlidingPopupsEffect::stopAnimations()
 {
     for (const auto &[window, animation] : m_animations) {
         if (!window->isDeleted()) {
-            window->setData(WindowForceBackgroundContrastRole, QVariant());
             window->setData(WindowForceBlurRole, QVariant());
         }
     }
