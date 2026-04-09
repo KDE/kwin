@@ -10,7 +10,6 @@ import QtQuick.Controls as QQC2
 
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
-import org.kde.newstuff as NewStuff
 
 import org.kde.kwin.kcmtaskswitching
 
@@ -21,20 +20,6 @@ KCM.AbstractKCM {
     leftPadding: 0
     rightPadding: 0
     bottomPadding: 0
-
-    actions: [
-        NewStuff.Action {
-            id: newStuffButton
-            text: i18n("&Get New Task Switcher Styles")
-            configFile: "kwinswitcher.knsrc"
-            viewMode: NewStuff.Page.ViewMode.Tiles
-            onEntryEvent: (entry, event) => {
-                if (event === NewStuff.Entry.StatusChangedEvent) {
-                    kcm.ghnsEntryChanged();
-                }
-            }
-        }
-    ]
 
     ColumnLayout {
         anchors.fill: parent
@@ -49,19 +34,19 @@ KCM.AbstractKCM {
                 //       Accessibility & Power Managment KCMs
                 Kirigami.Action {
                     text: i18nc("@title:tab", "Task Switcher")
-                    icon.name: "preferences-system-tabbox"
+                    icon.name: "preferences-system-tabbox-symbolic"
                     checked: stackLayout.currentIndex === 0
                     onTriggered: stackLayout.currentIndex = 0
                 },
                 Kirigami.Action {
                     text: i18nc("@title:tab", "Task Switcher (Alternative)")
-                    icon.name: "preferences-system-tabbox"
+                    icon.name: "preferences-system-tabbox-symbolic"
                     checked: stackLayout.currentIndex === 1
                     onTriggered: stackLayout.currentIndex = 1
                 },
                 Kirigami.Action {
                     text: i18nc("@title:tab", "Overview")
-                    icon.name: "desktop-symbolic"
+                    icon.name: "preferences-system-windows-effect-overview-symbolic"
                     checked: stackLayout.currentIndex === 2
                     onTriggered: stackLayout.currentIndex = 2
                 }
