@@ -106,22 +106,12 @@ public:
 
     void show();
     void hide();
+    void scheduleFrame();
 
     bool automaticRepaint() const;
     void setAutomaticRepaint(bool set);
 
     void setDevicePixelRatio(qreal dpr);
-
-    /**
-     * Returns the current output of the scene graph
-     * @note The render context must valid at the time of calling
-     */
-    GLTexture *bufferAsTexture();
-
-    /**
-     * Returns the current output of the scene graph
-     */
-    QImage bufferAsImage() const;
 
     /**
      * Inject a key event into the window.
@@ -148,10 +138,6 @@ public:
     void forwardTouchCancel();
 
 Q_SIGNALS:
-    /**
-     * The frame buffer has changed, contents need re-rendering on screen
-     */
-    void repaintNeeded();
     void geometryChanged(const QRect &oldGeometry, const QRect &newGeometry);
     void renderRequested();
     void sceneChanged();

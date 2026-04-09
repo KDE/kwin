@@ -668,6 +668,7 @@ Region WorkspaceScene::collectDamage()
 
         // Perform an occlusion cull pass, to remove surface damage occluded by opaque windows.
         Region opaque;
+        addOpaqueRegionRecursive(painted_delegate, m_overlayItem.get(), std::nullopt, opaque);
         for (auto &paintData : m_paintContext.phase2Data | std::views::reverse) {
             m_paintContext.deviceDamage |= paintData.deviceRegion - opaque;
 

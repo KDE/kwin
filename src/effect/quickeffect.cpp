@@ -156,7 +156,7 @@ void QuickSceneView::resetDirty()
 void QuickSceneView::scheduleRepaint()
 {
     markDirty();
-    effects->addRepaint(geometry());
+    scheduleFrame();
 }
 
 QuickSceneView *QuickSceneView::findView(QQuickItem *item)
@@ -405,7 +405,6 @@ void QuickSceneEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             screenView->resetDirty();
             screenView->update();
         }
-        effects->renderOffscreenQuickView(renderTarget, viewport, screenView.get());
     }
 }
 

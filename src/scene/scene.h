@@ -259,6 +259,7 @@ public:
     virtual double desiredHdrHeadroom() const = 0;
 
 Q_SIGNALS:
+    void viewAdded(SceneView *view);
     void viewRemoved(RenderView *delegate);
 
 protected:

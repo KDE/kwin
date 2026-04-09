@@ -17,8 +17,14 @@
 #include "input_event.h"
 #include "logging_p.h"
 #include "opengl/eglcontext.h"
+#include "opengl/eglnativefence.h"
 #include "opengl/eglswapchain.h"
 #include "opengl/glutils.h"
+#include "scene/bufferitem.h"
+#include "scene/imageitem.h"
+#include "scene/itemrenderer.h"
+#include "scene/texture.h"
+#include "scene/workspacescene.h"
 
 #include <QGuiApplication>
 #include <QQmlComponent>
@@ -59,6 +65,9 @@ public:
     std::unique_ptr<QOpenGLContext> m_glcontext;
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_currentSlot;
+    std::unique_ptr<ImageItem> m_imageItem;
+    std::unique_ptr<BufferItem> m_bufferItem;
+    Item *m_item = nullptr;
 
     std::unique_ptr<QTimer> m_repaintTimer;
     QImage m_image;
@@ -122,6 +131,8 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
     if (!usingGl) {
         qCDebug(LIBKWINEFFECTS) << "QtQuick Software rendering mode detected";
         d->m_useBlit = true;
+        d->m_imageItem = std::make_unique<ImageItem>(effects->scene()->overlayItem());
+        d->m_item = d->m_imageItem.get();
         // explicitly do not call QQuickRenderControl::initialize, see Qt docs
     } else {
         QSurfaceFormat format;
@@ -147,7 +158,12 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
         d->m_view->setGraphicsDevice(QQuickGraphicsDevice::fromOpenGLContext(d->m_glcontext.get()));
         d->m_renderControl->initialize();
         d->m_glcontext->doneCurrent();
+        d->m_bufferItem = std::make_unique<BufferItem>(effects->scene()->overlayItem());
+        d->m_item = d->m_bufferItem.get();
     }
+    connect(this, &OffscreenQuickView::geometryChanged, d->m_item, [this]() {
+        d->m_item->setGeometry(geometry());
+    });
 
     auto updateSize = [this]() {
         contentItem()->setSize(d->m_view->size());
@@ -209,6 +225,8 @@ void OffscreenQuickView::handleSceneChanged()
 {
     if (d->m_automaticRepaint) {
         d->m_repaintTimer->start();
+    } else {
+        d->m_item->scheduleFrame();
     }
     Q_EMIT sceneChanged();
 }
@@ -217,6 +235,8 @@ void OffscreenQuickView::handleRenderRequested()
 {
     if (d->m_automaticRepaint) {
         d->m_repaintTimer->start();
+    } else {
+        d->m_item->scheduleFrame();
     }
     Q_EMIT renderRequested();
 }
@@ -291,16 +311,23 @@ void OffscreenQuickView::update()
 
     if (d->m_useBlit) {
         d->m_image = d->m_view->grabWindow();
+        d->m_imageItem->setImage(d->m_image);
+    } else {
+        d->m_bufferItem->setBuffer(d->m_currentSlot->buffer(), d->m_currentSlot->releasePoint());
     }
+    d->m_item->setPosition(geometry().topLeft());
+    d->m_item->setSize(geometry().size());
 
     if (usingGl) {
+        EGLNativeFence fence(EglContext::currentContext()->displayObject());
+        d->m_swapchain->release(d->m_currentSlot, fence.takeFileDescriptor());
         QOpenGLFramebufferObject::bindDefault();
         d->m_glcontext->doneCurrent();
         if (previousContext) {
             previousContext->makeCurrent();
         }
     }
-    Q_EMIT repaintNeeded();
+    d->m_item->scheduleRepaint(d->m_item->rect());
 }
 
 void OffscreenQuickView::forwardKeyEvent(QKeyEvent *keyEvent)
@@ -475,6 +502,7 @@ void OffscreenQuickView::setVisible(bool visible)
         return;
     }
     d->m_visible = visible;
+    d->m_item->setVisible(visible);
 
     if (visible) {
         Q_EMIT d->m_renderControl->renderRequested();
@@ -501,28 +529,9 @@ void OffscreenQuickView::hide()
     setVisible(false);
 }
 
-GLTexture *OffscreenQuickView::bufferAsTexture()
+void OffscreenQuickView::scheduleFrame()
 {
-    if (d->m_useBlit) {
-        d->m_textureExport = GLTexture::upload(d->m_image);
-        if (!d->m_textureExport) {
-            qCWarning(LIBKWINEFFECTS, "Uploading texture for OffscreenQuickView failed!");
-        } else {
-            d->m_textureExport->setFilter(GL_LINEAR);
-        }
-        return d->m_textureExport.get();
-    } else {
-        if (!d->m_currentSlot) {
-            qCWarning(LIBKWINEFFECTS, "OffscreenQuickView has no current slot!");
-            return nullptr;
-        }
-        return d->m_currentSlot->texture().get();
-    }
-}
-
-QImage OffscreenQuickView::bufferAsImage() const
-{
-    return d->m_image;
+    d->m_item->scheduleFrame();
 }
 
 QSize OffscreenQuickView::size() const
