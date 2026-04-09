@@ -109,7 +109,6 @@ var fadeDesktopEffect = {
         for (var i = 0; i < stackingOrder.length; ++i) {
             var w = stackingOrder[i];
             w.setData(Effect.WindowForceBlurRole, isActiveFullScreen);
-            w.setData(Effect.WindowForceBackgroundContrastRole, isActiveFullScreen);
         }
     },
     init: function () {

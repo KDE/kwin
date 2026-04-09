@@ -338,7 +338,6 @@ void SlideEffect::prepareSwitching()
             effects->setElevatedWindow(w, true);
             m_elevatedWindows << w;
         }
-        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
         w->setData(WindowForceBlurRole, QVariant(true));
     }
 }
@@ -350,7 +349,6 @@ void SlideEffect::finishedSwitching()
     }
     const QList<EffectWindow *> windows = effects->stackingOrder();
     for (EffectWindow *w : windows) {
-        w->setData(WindowForceBackgroundContrastRole, QVariant());
         w->setData(WindowForceBlurRole, QVariant());
     }
 
@@ -454,7 +452,6 @@ void SlideEffect::windowAdded(EffectWindow *w)
         effects->setElevatedWindow(w, true);
         m_elevatedWindows << w;
     }
-    w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     w->setData(WindowForceBlurRole, QVariant(true));
 
     m_windowData[w] = WindowData{

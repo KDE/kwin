@@ -103,7 +103,6 @@ enum DataRole {
     WindowMinimizedGrabRole,
     WindowUnminimizedGrabRole,
     WindowForceBlurRole, ///< For fullscreen effects to enforce blurring of windows,
-    WindowForceBackgroundContrastRole, ///< For fullscreen effects to enforce the background contrast,
 };
 
 /**
