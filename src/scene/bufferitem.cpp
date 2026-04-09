@@ -61,7 +61,7 @@ void BufferItem::preprocess()
 WindowQuadList BufferItem::buildQuads() const
 {
     const RectF geometry = boundingRect();
-    if (geometry.isEmpty()) {
+    if (geometry.isEmpty() || !m_buffer) {
         return WindowQuadList{};
     }
 

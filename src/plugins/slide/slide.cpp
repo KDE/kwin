@@ -409,7 +409,6 @@ void SlideEffectScreen::prepareSwitching()
             effects->setElevatedWindow(w, true);
             m_elevatedWindows << w;
         }
-        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
         w->setData(WindowForceBlurRole, QVariant(true));
     }
 }
@@ -433,7 +432,6 @@ void SlideEffectScreen::finishedSwitching()
         if (w->screen() != m_screen) {
             continue;
         }
-        w->setData(WindowForceBackgroundContrastRole, QVariant());
         w->setData(WindowForceBlurRole, QVariant());
     }
 
@@ -565,7 +563,6 @@ void SlideEffectScreen::windowAdded(EffectWindow *w)
         effects->setElevatedWindow(w, true);
         m_elevatedWindows << w;
     }
-    w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     w->setData(WindowForceBlurRole, QVariant(true));
 
     m_windowData[w] = WindowData{
