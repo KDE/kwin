@@ -24,6 +24,7 @@ public:
     ~ImageItem() override;
 
     Texture *texture() const;
+    void setTexture(std::unique_ptr<Texture> &&texture);
 
     QImage image() const;
     void setImage(const QImage &image);

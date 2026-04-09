@@ -26,6 +26,11 @@ Texture *ImageItem::texture() const
     return m_texture.get();
 }
 
+void ImageItem::setTexture(std::unique_ptr<Texture> &&texture)
+{
+    m_texture = std::move(texture);
+}
+
 QImage ImageItem::image() const
 {
     return m_image;
