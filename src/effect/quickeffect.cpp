@@ -165,7 +165,7 @@ void QuickSceneView::resetDirty()
 void QuickSceneView::scheduleRepaint()
 {
     markDirty();
-    effects->addRepaint(geometry());
+    scheduleFrame();
 }
 
 VirtualDesktop *QuickSceneView::currentDesktop() const
@@ -446,7 +446,6 @@ void QuickSceneEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             screenView->resetDirty();
             screenView->update();
         }
-        effects->renderOffscreenQuickView(renderTarget, viewport, screenView.get());
     }
 }
 

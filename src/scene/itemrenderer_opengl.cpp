@@ -12,6 +12,7 @@
 #include "core/syncobjtimeline.h"
 #include "effect/effect.h"
 #include "opengl/eglnativefence.h"
+#include "scene/bufferitem.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
 #include "scene/opengl/atlas.h"
@@ -290,6 +291,25 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = imageItem->image().hasAlphaChannel(),
+                    .colorDescription = item->colorDescription(),
+                    .renderingIntent = item->renderingIntent(),
+                    .bufferReleasePoint = texture->releasePoint(),
+                    .paintHole = hole,
+                });
+                renderNode.geometry.postProcessTextureCoordinates(texture->planes()[0]->matrix(UnnormalizedCoordinates));
+            }
+        }
+    } else if (auto bufferItem = qobject_cast<BufferItem *>(item)) {
+        if (!geometry.isEmpty()) {
+            auto texture = static_cast<TextureOpenGL *>(bufferItem->texture());
+            if (texture && !texture->planes().isEmpty()) {
+                RenderNode &renderNode = context->renderNodes.emplace_back(RenderNode{
+                    .traits = ShaderTrait::MapTexture,
+                    .textures = texture->planes(),
+                    .geometry = geometry,
+                    .transformMatrix = context->transformStack.top(),
+                    .opacity = context->opacityStack.top(),
+                    .hasAlpha = bufferItem->hasAlphaChannel(),
                     .colorDescription = item->colorDescription(),
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = texture->releasePoint(),

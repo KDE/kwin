@@ -11,31 +11,35 @@
 #include "core/output.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "scene/workspacescene.h"
 
 namespace KWin
 {
 
 ShowCompositingEffect::ShowCompositingEffect()
 {
+    connect(effects->scene(), &WorkspaceScene::viewRemoved, this, &ShowCompositingEffect::removeView);
 }
 
-ShowCompositingEffect::~ShowCompositingEffect() = default;
+ShowCompositingEffect::~ShowCompositingEffect()
+{
+}
+
+void ShowCompositingEffect::removeView(RenderView *view)
+{
+    m_scene.erase(view);
+}
 
 void ShowCompositingEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     effects->prePaintScreen(data);
-    if (!m_scene) {
-        m_scene = std::make_unique<OffscreenQuickScene>();
-        m_scene->loadFromModule(QStringLiteral("org.kde.kwin.showcompositing"), QStringLiteral("Main"), {});
+    auto &scene = m_scene[data.view];
+    if (!scene) {
+        scene = std::make_unique<OffscreenQuickScene>();
+        scene->loadFromModule(QStringLiteral("org.kde.kwin.showcompositing"), QStringLiteral("Main"), {});
     }
-}
-
-void ShowCompositingEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
-{
-    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
-    const auto rect = viewport.renderRect();
-    m_scene->setGeometry(QRect(rect.x() + rect.width() - 300, rect.y(), 300, 150));
-    effects->renderOffscreenQuickView(renderTarget, viewport, m_scene.get());
+    const auto rect = data.view->viewport();
+    scene->setGeometry(QRect(rect.x() + rect.width() - 300, rect.y(), 300, 150));
 }
 
 bool ShowCompositingEffect::supported()

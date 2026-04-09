@@ -1,11 +1,13 @@
 /*
     SPDX-FileCopyrightText: 2022 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2026 Xaver Hugl <xaver.hugl@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #pragma once
 
+#include "core/graphicsbuffer.h"
 #include "scene/item.h"
 
 #include <QImage>
@@ -15,27 +17,27 @@ namespace KWin
 
 class Texture;
 
-class KWIN_EXPORT ImageItem : public Item
+class KWIN_EXPORT BufferItem : public Item
 {
     Q_OBJECT
 
 public:
-    explicit ImageItem(Item *parent = nullptr);
-    ~ImageItem() override;
+    explicit BufferItem(Item *parent = nullptr);
+    ~BufferItem() override;
 
     Texture *texture() const;
-
-    QImage image() const;
-    void setImage(const QImage &image);
+    void setBuffer(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    bool hasAlphaChannel() const;
 
 protected:
     void preprocess() override;
     WindowQuadList buildQuads() const override;
     void releaseResources() override;
 
-    QImage m_image;
     std::unique_ptr<Texture> m_texture;
-    qint64 m_textureKey = 0;
+    GraphicsBufferRef m_buffer;
+    std::shared_ptr<SyncReleasePoint> m_releasePoint;
+    bool m_bufferDirty = false;
 };
 
 } // namespace KWin

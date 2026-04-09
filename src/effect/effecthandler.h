@@ -712,13 +712,6 @@ public:
     bool isColorPickerActive() const;
 
     /**
-     * Render the supplied OffscreenQuickView onto the scene
-     * It can be called at any point during the scene rendering
-     * @since 5.18
-     */
-    void renderOffscreenQuickView(const RenderTarget &renderTarget, const RenderViewport &viewport, OffscreenQuickView *effectQuickView) const;
-
-    /**
      * The status of the session i.e if the user is logging out
      * @since 5.18
      */

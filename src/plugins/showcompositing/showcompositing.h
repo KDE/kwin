@@ -24,13 +24,14 @@ public:
     ~ShowCompositingEffect() override;
 
     void prePaintScreen(ScreenPrePaintData &data) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     bool blocksDirectScanout() const override;
 
     static bool supported();
 
 private:
-    std::unique_ptr<OffscreenQuickScene> m_scene;
+    void removeView(RenderView *view);
+
+    std::unordered_map<RenderView *, std::unique_ptr<OffscreenQuickScene>> m_scene;
 };
 
 } // namespace KWin

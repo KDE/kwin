@@ -16,7 +16,9 @@
 namespace KWin
 {
 
-class ShowFpsEffect : public Effect
+class RenderView;
+
+class ShowFpsScreen : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int fps READ fps NOTIFY fpsChanged)
@@ -26,39 +28,47 @@ class ShowFpsEffect : public Effect
     Q_PROPERTY(QColor paintColor READ paintColor NOTIFY paintChanged)
 
 public:
-    ShowFpsEffect();
-    ~ShowFpsEffect() override;
-
     int fps() const;
     int maximumFps() const;
     int paintDuration() const;
     int paintAmount() const;
     QColor paintColor() const;
 
-    void prePaintScreen(ScreenPrePaintData &data) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, KWin::WindowPaintData &data) override;
-    void postPaintScreen() override;
-
-    static bool supported();
-
 Q_SIGNALS:
     void fpsChanged();
     void maximumFpsChanged();
     void paintChanged();
 
-private:
+public:
     std::unique_ptr<OffscreenQuickScene> m_scene;
-
-    uint32_t m_maximumFps = 0;
-
     int m_fps = 0;
     int m_newFps = 0;
+    uint32_t m_maximumFps = 0;
     std::chrono::steady_clock::time_point m_lastFpsTime;
-
     int m_paintDuration = 0;
     int m_paintAmount = 0;
     QElapsedTimer m_paintDurationTimer;
+};
+
+class ShowFpsEffect : public Effect
+{
+    Q_OBJECT
+
+public:
+    ShowFpsEffect();
+    ~ShowFpsEffect() override;
+
+    void prePaintScreen(ScreenPrePaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, KWin::WindowPaintData &data) override;
+    void postPaintScreen() override;
+
+    static bool supported();
+
+private:
+    void removeView(RenderView *view);
+
+    std::unordered_map<RenderView *, std::unique_ptr<ShowFpsScreen>> m_data;
+    RenderView *m_currentView = nullptr;
 };
 
 } // namespace KWin

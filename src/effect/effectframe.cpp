@@ -227,13 +227,6 @@ void EffectFrameQuickScene::reposition()
 EffectFrame::EffectFrame(EffectFrameStyle style, bool staticSize, QPoint position, Qt::Alignment alignment)
     : m_view(new EffectFrameQuickScene(style, staticSize, position, alignment))
 {
-    connect(m_view, &OffscreenQuickScene::repaintNeeded, this, [this] {
-        effects->addRepaint(geometry());
-    });
-    connect(m_view, &OffscreenQuickScene::geometryChanged, this, [](const QRect &oldGeometry, const QRect &newGeometry) {
-        effects->addRepaint(oldGeometry);
-        effects->addRepaint(newGeometry);
-    });
 }
 
 EffectFrame::~EffectFrame()
@@ -319,8 +312,6 @@ void EffectFrame::render(const RenderTarget &renderTarget, const RenderViewport 
 
     m_view->setOpacity(opacity);
     m_view->setFrameOpacity(frameOpacity);
-
-    effects->renderOffscreenQuickView(renderTarget, viewport, m_view);
 }
 
 QString EffectFrame::text() const

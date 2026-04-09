@@ -153,7 +153,10 @@ OverviewEffect::OverviewEffect()
     gridAction->setAutoRepeat(false);
     KGlobalAccel::self()->setGlobalShortcut(gridAction, QKeySequence(Qt::META | Qt::Key_G));
 
-    connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
+    connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
+        m_overviewState->deactivate();
+        setRunning(false);
+    });
 
     OverviewConfig::instance(effects->config());
     reconfigure(ReconfigureAll);

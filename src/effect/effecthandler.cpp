@@ -1507,61 +1507,6 @@ Effect *EffectsHandler::findEffect(const QString &name) const
     return (*it).second;
 }
 
-void EffectsHandler::renderOffscreenQuickView(const RenderTarget &renderTarget, const RenderViewport &viewport, OffscreenQuickView *w) const
-{
-    if (!w->isVisible()) {
-        return;
-    }
-    if (compositingType() == OpenGLCompositing) {
-        GLTexture *t = w->bufferAsTexture();
-        if (!t) {
-            return;
-        }
-
-        ShaderTraits traits = ShaderTrait::MapTexture | ShaderTrait::TransformColorspace;
-        const qreal a = w->opacity();
-        if (a != 1.0) {
-            traits |= ShaderTrait::Modulate;
-        }
-
-        GLShader *shader = ShaderManager::instance()->pushShader(traits);
-        const QRectF rect = scaledRect(w->geometry(), viewport.scale());
-
-        QMatrix4x4 mvp(viewport.projectionMatrix());
-        mvp.translate(rect.x(), rect.y());
-        shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
-
-        if (a != 1.0) {
-            shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(a, a, a, a));
-        }
-        shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
-
-        const bool alphaBlending = w->hasAlphaChannel() || (a != 1.0);
-        if (alphaBlending) {
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        }
-
-        t->render(rect.size());
-
-        if (alphaBlending) {
-            glDisable(GL_BLEND);
-        }
-
-        ShaderManager::instance()->popShader();
-    } else if (compositingType() == QPainterCompositing) {
-        QPainter *painter = effects->scenePainter();
-        const QImage buffer = w->bufferAsImage();
-        if (buffer.isNull()) {
-            return;
-        }
-        painter->save();
-        painter->setOpacity(w->opacity());
-        painter->drawImage(w->geometry(), buffer);
-        painter->restore();
-    }
-}
-
 SessionState EffectsHandler::sessionState() const
 {
     return Workspace::self()->sessionManager()->state();

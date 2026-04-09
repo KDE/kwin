@@ -167,6 +167,7 @@ target_sources(kwin PRIVATE
     scene/backgroundeffectitem.cpp
     scene/borderoutline.cpp
     scene/borderradius.cpp
+    scene/bufferitem.cpp
     scene/cursoritem.cpp
     scene/decorationitem.cpp
     scene/dndiconitem.cpp
@@ -652,6 +653,7 @@ install(FILES
     scene/backgroundeffectitem.h
     scene/borderoutline.h
     scene/borderradius.h
+    scene/bufferitem.h
     scene/cursoritem.h
     scene/decorationitem.h
     scene/dndiconitem.h
