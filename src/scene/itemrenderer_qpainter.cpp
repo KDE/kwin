@@ -31,7 +31,7 @@ ItemRendererQPainter::~ItemRendererQPainter()
 {
 }
 
-std::unique_ptr<Texture> ItemRendererQPainter::createTexture(GraphicsBuffer *buffer)
+std::unique_ptr<Texture> ItemRendererQPainter::createTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     return BufferTextureQPainter::create(buffer);
 }

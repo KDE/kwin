@@ -25,7 +25,7 @@ std::unique_ptr<ImageTextureQPainter> ImageTextureQPainter::create(const QImage 
     return texture;
 }
 
-void ImageTextureQPainter::attach(GraphicsBuffer *buffer, const Region &region)
+void ImageTextureQPainter::attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     Q_UNREACHABLE();
 }
@@ -43,14 +43,14 @@ void ImageTextureQPainter::upload(const QImage &image, const Rect &rect)
 std::unique_ptr<BufferTextureQPainter> BufferTextureQPainter::create(GraphicsBuffer *buffer)
 {
     auto texture = std::make_unique<BufferTextureQPainter>();
-    if (texture->attach(buffer)) {
+    if (texture->attach(buffer, nullptr)) {
         return texture;
     }
 
     return nullptr;
 }
 
-bool BufferTextureQPainter::attach(GraphicsBuffer *buffer)
+bool BufferTextureQPainter::attach(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     const GraphicsBufferView view(buffer);
     if (Q_LIKELY(!view.isNull())) {
@@ -62,7 +62,7 @@ bool BufferTextureQPainter::attach(GraphicsBuffer *buffer)
     return !m_image.isNull();
 }
 
-void BufferTextureQPainter::attach(GraphicsBuffer *buffer, const Region &region)
+void BufferTextureQPainter::attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
     const GraphicsBufferView view(buffer);
     if (Q_UNLIKELY(view.isNull())) {
