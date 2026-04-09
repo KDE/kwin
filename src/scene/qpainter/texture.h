@@ -31,7 +31,7 @@ class ImageTextureQPainter : public TextureQPainter
 public:
     static std::unique_ptr<ImageTextureQPainter> create(const QImage &image);
 
-    void attach(GraphicsBuffer *buffer, const Region &region) override;
+    void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
 
     void upload(const QImage &image);
     void upload(const QImage &image, const Rect &rect) override;
@@ -42,8 +42,8 @@ class BufferTextureQPainter : public TextureQPainter
 public:
     static std::unique_ptr<BufferTextureQPainter> create(GraphicsBuffer *buffer);
 
-    bool attach(GraphicsBuffer *buffer);
-    void attach(GraphicsBuffer *buffer, const Region &region) override;
+    bool attach(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) override;
 
     void upload(const QImage &image, const Rect &rect) override;
 };

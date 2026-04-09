@@ -16,6 +16,7 @@ namespace KWin
 class GraphicsBuffer;
 class Rect;
 class Region;
+class SyncReleasePoint;
 
 class Texture
 {
@@ -24,8 +25,9 @@ public:
 
     QSize size() const;
     bool isFloatingPoint() const;
+    std::shared_ptr<SyncReleasePoint> releasePoint() const;
 
-    virtual void attach(GraphicsBuffer *buffer, const Region &region) = 0;
+    virtual void attach(GraphicsBuffer *buffer, const Region &region, const std::shared_ptr<SyncReleasePoint> &releasePoint) = 0;
     virtual void upload(const QImage &image, const Rect &region) = 0;
 
 protected:
@@ -33,6 +35,7 @@ protected:
 
     QSize m_size;
     bool m_isFloatingPoint = false;
+    std::shared_ptr<SyncReleasePoint> m_releasePoint;
 };
 
 } // namespace KWin
