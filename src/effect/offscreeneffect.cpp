@@ -391,20 +391,17 @@ void CrossFadeEffect::redirect(EffectWindow *window)
     offscreenData = std::make_unique<CrossFadeWindowData>();
     offscreenData->m_windowEffect = ItemEffect(window->windowItem());
 
-    // Avoid including blur and contrast effects. During a normal painting cycle they
+    // Avoid including blur effects. During a normal painting cycle they
     // won't be included, but since we call effects->drawWindow() outside usual compositing
     // cycle, we have to prevent backdrop effects kicking in.
     const QVariant blurRole = window->data(WindowForceBlurRole);
     window->setData(WindowForceBlurRole, QVariant());
-    const QVariant contrastRole = window->data(WindowForceBackgroundContrastRole);
-    window->setData(WindowForceBackgroundContrastRole, QVariant());
 
     effects->makeOpenGLContextCurrent();
     (void)offscreenData->maybeRender(window);
     offscreenData->frameGeometryAtCapture = window->frameGeometry();
 
     window->setData(WindowForceBlurRole, blurRole);
-    window->setData(WindowForceBackgroundContrastRole, contrastRole);
 }
 
 void CrossFadeEffect::unredirect(EffectWindow *window)
