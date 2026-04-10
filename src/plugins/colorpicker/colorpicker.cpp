@@ -138,8 +138,8 @@ QColor ColorPickerEffect::pick()
                 }
 
                 GLFramebuffer::pushFramebuffer(target.get());
-                QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGB888);
-                context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGB, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
+                QImage snapshot = QImage(offscreenTexture->size(), QImage::Format_RGBA8888);
+                context->glReadnPixels(0, 0, snapshot.width(), snapshot.height(), GL_RGBA, GL_UNSIGNED_BYTE, snapshot.sizeInBytes(), static_cast<GLvoid *>(snapshot.bits()));
                 GLFramebuffer::popFramebuffer();
 
                 QDBusConnection::sessionBus().send(m_replyMessage.createReply(snapshot.pixelColor(0, 0)));
