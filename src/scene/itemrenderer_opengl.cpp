@@ -5,15 +5,21 @@
 */
 
 #include "scene/itemrenderer_opengl.h"
+#include "compositor.h"
 #include "core/colorpipeline.h"
+#include "core/drmdevice.h"
 #include "core/pixelgrid.h"
+#include "core/renderbackend.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "core/syncobjtimeline.h"
 #include "effect/effect.h"
+#include "input.h"
 #include "opengl/eglnativefence.h"
+#include "opengl/eglswapchain.h"
 #include "scene/bufferitem.h"
 #include "scene/decorationitem.h"
+#include "scene/effectitem.h"
 #include "scene/imageitem.h"
 #include "scene/opengl/atlas.h"
 #include "scene/opengl/ninepatch.h"
@@ -69,8 +75,11 @@ std::unique_ptr<Atlas> ItemRendererOpenGL::createAtlas(const QList<QImage> &spri
     return AtlasOpenGL::create(sprites);
 }
 
+static uint32_t s_itemCounter = 0;
+
 void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
 {
+    s_itemCounter = 0;
     GLFramebuffer *fbo = renderTarget.framebuffer();
     GLFramebuffer::pushFramebuffer(fbo);
 
@@ -314,9 +323,15 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = texture->releasePoint(),
                     .paintHole = hole,
+                    .effectItem = qobject_cast<EffectItem *>(item),
                 });
                 renderNode.geometry.postProcessTextureCoordinates(texture->planes()[0]->matrix(UnnormalizedCoordinates));
             }
+        } else if (auto effectItem = qobject_cast<EffectItem *>(item)) {
+            context->renderNodes.push_back(RenderNode{
+                .transformMatrix = context->transformStack.top(),
+                .effectItem = effectItem,
+            });
         }
     } else if (auto borderItem = qobject_cast<OutlinedBorderItem *>(item)) {
         if (!geometry.isEmpty()) {
@@ -447,7 +462,44 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     ShaderTraits lastTraits;
     GLShader *shader = nullptr;
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
-        const RenderNode &renderNode = renderContext.renderNodes[i];
+        RenderNode &renderNode = renderContext.renderNodes[i];
+
+        if (renderNode.effectItem) {
+            GLTexture *background = nullptr;
+            if (renderNode.effectItem->needsBackgroundTexture()) {
+                const Rect cacheRect = RectF(renderNode.transformMatrix.mapRect(renderNode.effectItem->rect().scaled(viewport.scale()))).rounded();
+                auto cache = renderNode.effectItem->backgroundCache();
+                if (!cache || cache->size() != cacheRect.size()) {
+                    // TODO match the rendertarget format instead?
+                    auto swapchain = EglSwapchain::create(Compositor::self()->backend()->drmDevice()->allocator(),
+                                                          EglContext::currentContext(), cacheRect.size(), DRM_FORMAT_ARGB8888,
+                                                          Compositor::self()->backend()->supportedFormats()[DRM_FORMAT_ARGB8888]);
+                    renderNode.effectItem->setBackgroundCache(std::move(swapchain));
+                    cache = renderNode.effectItem->backgroundCache();
+                }
+                const Region region = scissorRegion & cacheRect;
+                if (!region.isEmpty()) {
+                    if (auto slot = cache->acquire()) {
+                        for (const Rect &rect : region.rects()) {
+                            slot->framebuffer()->blitFromRenderTarget(renderTarget, viewport, rect.scaled(1.0 / viewport.scale()),
+                                                                      rect.translated(-cacheRect.topLeft()));
+                        }
+                        background = slot->texture().get();
+                        m_releasePoints.insert(slot->releasePoint());
+                        EGLNativeFence fence(EglContext::currentContext()->displayObject());
+                        cache->release(slot, fence.takeFileDescriptor());
+                        // the blit may change the active vbo
+                        vbo->bindArrays();
+                    }
+                }
+            }
+            auto tex = static_cast<TextureOpenGL *>(renderNode.effectItem->prepareRendering(background));
+            if (tex) {
+                renderNode.textures = tex->planes();
+            } else {
+                continue;
+            }
+        }
 
         ShaderTraits traits = renderNode.traits;
         if (renderNode.opacity != 1.0 || data.brightness() != 1.0) {

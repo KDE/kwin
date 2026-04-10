@@ -42,6 +42,7 @@
 
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <QFileInfo>
 
 #include <KDecoration3/Decoration>
 
@@ -84,6 +85,21 @@ static QMatrix4x4 colorTransformMatrix(qreal saturation, qreal contrast)
     }
 
     return contrastMatrix * saturationMatrix;
+}
+
+BlurItem::BlurItem(WindowItem *parentItem)
+    : BackgroundEffectItem(parentItem)
+{
+    setNeedsBackgroundTexture(true);
+}
+
+Texture *BlurItem::prepareRendering(GLTexture *background) const
+{
+    if (!QFileInfo::exists("/home/xaver/blurbackground.png")) {
+        background->toImage().flipped().save("/home/xaver/blurbackground.png");
+    }
+    // TODO implement this...
+    return nullptr;
 }
 
 BlurEffect::BlurEffect()
@@ -317,7 +333,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
         data.content = content;
         data.frame = frame;
         if (!data.blurItem) {
-            data.blurItem = std::make_unique<BackgroundEffectItem>(w->windowItem());
+            data.blurItem = std::make_unique<BlurItem>(w->windowItem());
         }
         data.blurItem->setPixelsToExpandRepaintsBelowOpaqueRegions(m_expandSize);
         data.blurItem->setEffectBoundingRect(blurRegion(w).boundingRect());

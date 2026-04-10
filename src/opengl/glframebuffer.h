@@ -109,7 +109,7 @@ public:
      * Blits from @a source rectangle in logical coordinates in the current framebuffer to the @a destination rectangle in texture-local coordinates
      * in this framebuffer, taking into account any transformations the source render target may have
      */
-    bool blitFromRenderTarget(const RenderTarget &sourceRenderTarget, const RenderViewport &sourceViewport, const Rect &source, const Rect &destination);
+    bool blitFromRenderTarget(const RenderTarget &sourceRenderTarget, const RenderViewport &sourceViewport, const RectF &source, const Rect &destination);
 
     /**
      * @returns the color attachment of this fbo. May be nullptr

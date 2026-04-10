@@ -16,6 +16,7 @@ namespace KWin
 {
 
 class EglDisplay;
+class EffectItem;
 
 class KWIN_EXPORT ItemRendererOpenGL : public ItemRenderer
 {
@@ -39,6 +40,7 @@ public:
         QColor borderColor;
         bool paintHole = false;
         bool hasFloatingPointColor = false;
+        EffectItem *effectItem = nullptr;
     };
 
     struct RenderCorner

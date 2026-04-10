@@ -9,7 +9,7 @@
 
 #include "effect/effect.h"
 #include "opengl/glutils.h"
-#include "scene/item.h"
+#include "scene/backgroundeffectitem.h"
 
 #include <QList>
 
@@ -18,7 +18,17 @@
 namespace KWin
 {
 
-class BackgroundEffectItem;
+class WindowItem;
+
+class BlurItem : public BackgroundEffectItem
+{
+    Q_OBJECT
+
+public:
+    explicit BlurItem(WindowItem *parentItem);
+
+    Texture *prepareRendering(GLTexture *background) const override;
+};
 
 struct BlurRenderData
 {
@@ -42,7 +52,7 @@ struct BlurEffectData
      */
     std::unordered_map<RenderView *, BlurRenderData> render;
 
-    std::unique_ptr<BackgroundEffectItem> blurItem;
+    std::unique_ptr<BlurItem> blurItem;
 };
 
 class BlurEffect : public KWin::Effect

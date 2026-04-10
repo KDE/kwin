@@ -14,7 +14,7 @@ namespace KWin
 
 // TODO make this generic for all items
 BackgroundEffectItem::BackgroundEffectItem(WindowItem *parentItem)
-    : Item(parentItem)
+    : EffectItem(parentItem)
     , m_windowItem(parentItem)
 {
     setZ(-1'000'000);
