@@ -44,10 +44,12 @@ Kirigami.FormLayout {
     }
 
     QQC2.CheckBox {
-        text: i18nc("@option:check", "Ignore minimized windows")
+        text: i18nc("@option:check", "Show minimized windows")
 
-        checked: kcm.overviewSettings.ignoreMinimized
-        onToggled: kcm.overviewSettings.ignoreMinimized = checked
+        // Intentionally inverted, so the unchecked state is not a double negative
+
+        checked: !kcm.overviewSettings.ignoreMinimized
+        onToggled: kcm.overviewSettings.ignoreMinimized = !checked
 
         KCM.SettingStateBinding {
             configObject: kcm.overviewSettings
