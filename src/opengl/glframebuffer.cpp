@@ -266,7 +266,7 @@ void GLFramebuffer::blitFromFramebuffer(const Rect &source, const Rect &destinat
     GLFramebuffer::popFramebuffer();
 }
 
-bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget, const RenderViewport &sourceViewport, const Rect &source, const Rect &destination)
+bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget, const RenderViewport &sourceViewport, const RectF &source, const Rect &destination)
 {
     OutputTransform transform = sourceRenderTarget.texture() ? sourceRenderTarget.texture()->contentTransform() : OutputTransform();
 
@@ -276,7 +276,7 @@ bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget,
     const bool mirrorY = transform == OutputTransform::FlipY;
     if ((normal || mirrorX || mirrorY) && EglContext::currentContext()->supportsBlits()) {
         // either no transformation or flipping only
-        blitFromFramebuffer(sourceViewport.mapToRenderTarget(source), destination, GL_LINEAR, mirrorX, mirrorY);
+        blitFromFramebuffer(sourceViewport.mapToRenderTarget(source).rounded(), destination, GL_LINEAR, mirrorX, mirrorY);
         return true;
     } else {
         const auto texture = sourceRenderTarget.texture();
@@ -295,7 +295,7 @@ bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget,
         ShaderBinder binder(ShaderTrait::MapTexture);
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
 
-        texture->render(sourceViewport.mapToRenderTargetTexture(source), Region::infinite(), destination.size(), 1);
+        texture->render(sourceViewport.mapToRenderTargetTexture(source).rounded(), Region::infinite(), destination.size(), 1);
 
         GLFramebuffer::popFramebuffer();
         return true;

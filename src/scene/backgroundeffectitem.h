@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "item.h"
+#include "scene/effectitem.h"
 
 namespace KWin
 {
@@ -16,10 +16,9 @@ class WindowItem;
 
 /**
  * A helper item for background effects like blur. It represents the
- * effect in the scene and expands the repaint region when needed,
- * but it isn't (yet) involved in any rendering of its own.
+ * effect in the scene and expands the repaint region when needed.
  */
-class KWIN_EXPORT BackgroundEffectItem : public Item
+class KWIN_EXPORT BackgroundEffectItem : public EffectItem
 {
     Q_OBJECT
 

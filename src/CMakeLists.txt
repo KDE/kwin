@@ -170,6 +170,7 @@ target_sources(kwin PRIVATE
     scene/cursoritem.cpp
     scene/decorationitem.cpp
     scene/dndiconitem.cpp
+    scene/effectitem.cpp
     scene/imageitem.cpp
     scene/item.cpp
     scene/itemgeometry.cpp
@@ -655,6 +656,7 @@ install(FILES
     scene/cursoritem.h
     scene/decorationitem.h
     scene/dndiconitem.h
+    scene/effectitem.h
     scene/imageitem.h
     scene/item.h
     scene/itemgeometry.h
