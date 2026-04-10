@@ -14,12 +14,26 @@
 
 #include <KConfigGroup>
 
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/registry.h>
-#include <KWayland/Client/slide.h>
-#include <KWayland/Client/surface.h>
-
 using namespace KWin;
+
+namespace
+{
+
+class Slide : public QtWayland::org_kde_kwin_slide
+{
+public:
+    explicit Slide(::org_kde_kwin_slide *object)
+        : QtWayland::org_kde_kwin_slide(object)
+    {
+    }
+
+    ~Slide() override
+    {
+        release();
+    }
+};
+
+}
 
 class SlidingPopupsTest : public QObject
 {
@@ -70,7 +84,7 @@ void SlidingPopupsTest::initTestCase()
 
 void SlidingPopupsTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection());
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Slide));
 }
 
 void SlidingPopupsTest::cleanup()
@@ -137,23 +151,14 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     QVERIFY(!otherEffect->isActive());
     QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
 
-    // the test created the slide protocol, let's create a Registry and listen for it
-    std::unique_ptr<KWayland::Client::Registry> registry(new KWayland::Client::Registry);
-    registry->create(Test::waylandConnection());
-
-    QSignalSpy interfacesAnnouncedSpy(registry.get(), &KWayland::Client::Registry::interfacesAnnounced);
-    registry->setup();
-    QVERIFY(interfacesAnnouncedSpy.wait());
-    auto slideInterface = registry->interface(KWayland::Client::Registry::Interface::Slide);
-    QVERIFY(slideInterface.name != 0);
-    std::unique_ptr<KWayland::Client::SlideManager> slideManager(registry->createSlideManager(slideInterface.name, slideInterface.version));
-    QVERIFY(slideManager);
+    QVERIFY(Test::slideManager());
 
     // create Wayland window
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    auto surface = Test::createSurface();
     QVERIFY(surface);
-    std::unique_ptr<KWayland::Client::Slide> slide(slideManager->createSlide(surface.get()));
-    slide->setLocation(KWayland::Client::Slide::Location::Left);
+    auto slide = std::make_unique<Slide>(Test::slideManager()->create(*surface));
+    QVERIFY(slide->isInitialized());
+    slide->set_location(ORG_KDE_KWIN_SLIDE_LOCATION_LEFT);
     slide->commit();
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     QVERIFY(shellSurface);

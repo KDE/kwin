@@ -41,6 +41,7 @@
 #include "qwayland-presentation-time.h"
 #include "qwayland-primary-selection-unstable-v1.h"
 #include "qwayland-security-context-v1.h"
+#include "qwayland-slide.h"
 #include "qwayland-tablet-v2.h"
 #include "qwayland-text-input-unstable-v3.h"
 #include "qwayland-wayland.h"
@@ -825,6 +826,7 @@ enum class AdditionalWaylandInterface : uint64_t {
     LinuxDmabuf = 1ull << 31,
     ColorRepresentation = 1ull << 32,
     Viewporter = 1ull << 33,
+    Slide = 1ull << 34,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -910,6 +912,13 @@ class FifoManagerV1 : public QtWayland::wp_fifo_manager_v1
 public:
     explicit FifoManagerV1(::wl_registry *registry, uint32_t id, int version);
     ~FifoManagerV1() override;
+};
+
+class SlideManager : public QtWayland::org_kde_kwin_slide_manager
+{
+public:
+    explicit SlideManager(::wl_registry *registry, uint32_t id, int version);
+    ~SlideManager() override;
 };
 
 class PresentationTime : public QtWayland::wp_presentation
@@ -1112,6 +1121,7 @@ struct Connection
     XdgWmDialogV1 *xdgWmDialogV1;
     std::unique_ptr<ColorManagerV1> colorManager;
     std::unique_ptr<FifoManagerV1> fifoManager;
+    std::unique_ptr<SlideManager> slideManager;
     std::unique_ptr<PresentationTime> presentationTime;
     std::unique_ptr<XdgActivation> xdgActivation;
     std::unique_ptr<XdgSessionManagerV1> sessionManager;
@@ -1192,6 +1202,7 @@ FakeInput *waylandFakeInput();
 SecurityContextManagerV1 *waylandSecurityContextManagerV1();
 ColorManagerV1 *colorManager();
 FifoManagerV1 *fifoManager();
+SlideManager *slideManager();
 PresentationTime *presentationTime();
 XdgActivation *xdgActivation();
 WpTabletManagerV2 *tabletManager();

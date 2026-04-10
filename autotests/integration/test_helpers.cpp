@@ -539,6 +539,11 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
                 c->fifoManager = std::make_unique<FifoManagerV1>(*c->registry, name, version);
             }
         }
+        if (flags & AdditionalWaylandInterface::Slide) {
+            if (interface == QtWayland::org_kde_kwin_slide_manager::interface()->name) {
+                c->slideManager = std::make_unique<SlideManager>(*c->registry, name, version);
+            }
+        }
         if (interface == wp_presentation_interface.name) {
             c->presentationTime = std::make_unique<PresentationTime>(*c->registry, name, version);
         }
@@ -719,6 +724,7 @@ Connection::~Connection()
     xdgWmDialogV1 = nullptr;
     colorManager.reset();
     fifoManager.reset();
+    slideManager.reset();
     presentationTime.reset();
     xdgActivation.reset();
     sessionManager.reset();
@@ -897,6 +903,11 @@ ColorManagerV1 *colorManager()
 FifoManagerV1 *fifoManager()
 {
     return s_waylandConnection->fifoManager.get();
+}
+
+SlideManager *slideManager()
+{
+    return s_waylandConnection->slideManager.get();
 }
 
 PresentationTime *presentationTime()
@@ -1968,6 +1979,16 @@ FifoManagerV1::FifoManagerV1(::wl_registry *registry, uint32_t id, int version)
 FifoManagerV1::~FifoManagerV1()
 {
     wp_fifo_manager_v1_destroy(object());
+}
+
+SlideManager::SlideManager(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::org_kde_kwin_slide_manager(registry, id, version)
+{
+}
+
+SlideManager::~SlideManager()
+{
+    org_kde_kwin_slide_manager_destroy(object());
 }
 
 PresentationTime::PresentationTime(::wl_registry *registry, uint32_t id, int version)
