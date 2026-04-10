@@ -887,6 +887,7 @@ void InputMethod::startInputMethod()
     close(socket);
     connect(m_inputMethodProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this](int exitCode, QProcess::ExitStatus exitStatus) {
         if (exitStatus == QProcess::CrashExit) {
+            m_keyboardGrab = nullptr;
             m_inputMethodCrashes++;
             m_inputMethodCrashTimer.start();
             qWarning() << "Input Method crashed" << m_inputMethodProcess->program() << m_inputMethodProcess->arguments() << exitCode << exitStatus;
