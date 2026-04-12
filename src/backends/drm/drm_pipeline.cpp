@@ -297,6 +297,13 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
         if (layer->colorDescription()->range() == EncodingRange::Limited) {
             return Error::InvalidArguments;
         }
+        // Workaround for the proprietary NVIDIA driver, which defaults to
+        // limited color range (16-235) when COLOR_RANGE is not explicitly
+        // set, even for RGB content. This makes the desktop look washed out.
+        // See https://github.com/NVIDIA/open-gpu-kernel-modules/discussions/1105
+        if (gpu()->isNVidia() && plane->colorRange.isValid()) {
+            commit->addEnum(plane->colorRange, DrmPlane::ColorRange::Full_YCbCr);
+        }
         break;
     case YUVMatrixCoefficients::BT601:
         if (!plane->colorEncoding.isValid() || !plane->colorRange.isValid()) {
