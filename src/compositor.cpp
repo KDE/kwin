@@ -958,6 +958,11 @@ void Compositor::assignOutputLayers(LogicalOutput *logicalOutput, BackendOutput 
             // this matches how the renderer snaps elements to the pixel grid
             Rect scaled = logicalOutput->geometryF().scaled(backendOutput->scale()).rounded();
             if (const auto tileInfo = backendOutput->tileInfo(); tileInfo && workspace()->primaryTileGroupOutput(tileInfo->groupId)) {
+                // FIXME this assumes the output isn't rotated...
+                // [left, right] would need to be mapped to
+                // [left -> top]
+                // [right -> bottom]
+                // (or top<->bottom flipped)
                 const int32_t x = std::round(scaled.x() + scaled.width() * tileInfo->tileLocation.x() / double(tileInfo->completeSizeInTiles.width()));
                 const int32_t y = std::round(scaled.y() + scaled.height() * tileInfo->tileLocation.y() / double(tileInfo->completeSizeInTiles.height()));
                 const int32_t w = std::round(scaled.width() / double(tileInfo->completeSizeInTiles.width()));

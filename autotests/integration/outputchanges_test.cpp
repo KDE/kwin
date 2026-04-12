@@ -151,6 +151,7 @@ private Q_SLOTS:
     void testMirroring();
     void testMirrorNormalDisplay_data();
     void testMirrorNormalDisplay();
+    void testTiledDisplay_data();
     void testTiledDisplay();
     void testMirrorTiledDisplay();
     void testTiledDisplayMirrors_data();
@@ -2595,34 +2596,54 @@ void OutputChangesTest::testTemporaryDpmsHotplug()
     QCOMPARE(workspace()->dpmsState(), Workspace::DpmsState::Off);
 }
 
+void OutputChangesTest::testTiledDisplay_data()
+{
+    QTest::addColumn<OutputTransform::Kind>("transform");
+    QTest::addColumn<QPoint>("windowPosition");
+
+    QTest::addRow("normal") << OutputTransform::Kind::Normal << QPoint(150, 25);
+    QTest::addRow("rotate180") << OutputTransform::Kind::Rotate180 << QPoint(150, 25);
+    QTest::addRow("rotate90") << OutputTransform::Kind::Rotate90 << QPoint(50, 150);
+}
+
 void OutputChangesTest::testTiledDisplay()
 {
+    QFETCH(OutputTransform::Kind, transform);
+    QFETCH(QPoint, windowPosition);
+
     Test::setOutputConfig({
         Test::OutputInfo{
-            .geometry = Rect(0, 0, 200, 100),
+            .geometry = Rect(0, 0, 200, 200),
             .internal = false,
             .tileInfo = BackendOutput::TileInfo{
                 .groupId = 1,
                 .completeSizeInTiles = QSize(2, 1),
                 .tileLocation = QPoint(1, 0),
-                .tileSizeInPixels = QSize(200, 100),
-                .completeSizeInPixels = QSize(400, 100),
+                .tileSizeInPixels = QSize(200, 200),
+                .completeSizeInPixels = QSize(400, 200),
             },
         },
         Test::OutputInfo{
-            .geometry = Rect(0, 0, 200, 100),
+            .geometry = Rect(0, 0, 200, 200),
             .internal = false,
             .tileInfo = BackendOutput::TileInfo{
                 .groupId = 1,
                 .completeSizeInTiles = QSize(2, 1),
                 .tileLocation = QPoint(0, 0),
-                .tileSizeInPixels = QSize(200, 100),
-                .completeSizeInPixels = QSize(400, 100),
+                .tileSizeInPixels = QSize(200, 200),
+                .completeSizeInPixels = QSize(400, 200),
             },
         },
     });
 
     const auto backendOutputs = kwinApp()->outputBackend()->outputs();
+    {
+        OutputConfiguration cfg;
+        cfg.changeSet(backendOutputs[1])->manualTransform = transform;
+        cfg.changeSet(backendOutputs[1])->transform = transform;
+        QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
+    }
+
     QCOMPARE(backendOutputs.size(), 2);
     QVERIFY(backendOutputs[0]->tileInfo().has_value());
     QCOMPARE(backendOutputs[0]->tileInfo()->tileLocation, QPoint(1, 0));
@@ -2633,8 +2654,7 @@ void OutputChangesTest::testTiledDisplay()
     QCOMPARE(logicalOutputs.size(), 1);
     QCOMPARE(logicalOutputs[0]->backendOutput(), backendOutputs[1]);
 
-    QCOMPARE(logicalOutputs[0]->geometry(), Rect(QPoint(), QSize(400, 100)));
-    QCOMPARE(logicalOutputs[0]->modeSize(), QSize(400, 100));
+    QCOMPARE(logicalOutputs[0]->modeSize(), QSize(400, 200));
 
     VirtualEglLayer *rightLayer = static_cast<VirtualEglLayer *>(static_cast<VirtualOutput *>(backendOutputs[0])->outputLayer());
     VirtualEglLayer *leftLayer = static_cast<VirtualEglLayer *>(static_cast<VirtualOutput *>(backendOutputs[1])->outputLayer());
@@ -2643,7 +2663,7 @@ void OutputChangesTest::testTiledDisplay()
 
     Test::XdgToplevelWindow window;
     QVERIFY(window.show(QSize(100, 50), Qt::white));
-    window.m_window->move(QPoint(150, 25));
+    window.m_window->move(windowPosition);
     QVERIFY(window.presentWait());
 
     const QImage left = leftLayer->texture()->toImage();
@@ -2653,25 +2673,30 @@ void OutputChangesTest::testTiledDisplay()
     const auto white = qRgb(255, 255, 255);
     const auto black = qRgb(0, 0, 0);
 
+    // FIXME it's not so simple
+    const auto map = [&](const QPoint &point) {
+        return OutputTransform(transform).map(point, logicalOutputs[0]->pixelSize());
+    };
+
     const auto topLeftInside = geom.topLeft();
-    QCOMPARE(left.pixel(topLeftInside - QPoint(0, 0)), white);
-    QCOMPARE(left.pixel(topLeftInside - QPoint(1, 0)), black);
-    QCOMPARE(left.pixel(topLeftInside - QPoint(0, 1)), black);
+    QCOMPARE(left.pixel(map(topLeftInside - QPoint(0, 0))), white);
+    QCOMPARE(left.pixel(map(topLeftInside - QPoint(1, 0))), black);
+    QCOMPARE(left.pixel(map(topLeftInside - QPoint(0, 1))), black);
 
     const auto bottomLeftInside = geom.bottomLeft() - QPoint(0, 1);
-    QCOMPARE(left.pixel(bottomLeftInside - QPoint(0, 0)), white);
-    QCOMPARE(left.pixel(bottomLeftInside - QPoint(1, 0)), black);
-    QCOMPARE(left.pixel(bottomLeftInside + QPoint(0, 1)), black);
+    QCOMPARE(left.pixel(map(bottomLeftInside - QPoint(0, 0))), white);
+    QCOMPARE(left.pixel(map(bottomLeftInside - QPoint(1, 0))), black);
+    QCOMPARE(left.pixel(map(bottomLeftInside + QPoint(0, 1))), black);
 
     const auto topRightInside = geom.topRight() - QPoint(200, 0) - QPoint(1, 0);
-    QCOMPARE(right.pixel(topRightInside - QPoint(0, 0)), white);
-    QCOMPARE(right.pixel(topRightInside + QPoint(1, 0)), black);
-    QCOMPARE(right.pixel(topRightInside - QPoint(0, 1)), black);
+    QCOMPARE(right.pixel(map(topRightInside - QPoint(0, 0))), white);
+    QCOMPARE(right.pixel(map(topRightInside + QPoint(1, 0))), black);
+    QCOMPARE(right.pixel(map(topRightInside - QPoint(0, 1))), black);
 
     const auto bottomRightInside = geom.bottomRight() - QPoint(200, 0) - QPoint(1, 1);
-    QCOMPARE(right.pixel(bottomRightInside - QPoint(0, 0)), white);
-    QCOMPARE(right.pixel(bottomRightInside + QPoint(1, 0)), black);
-    QCOMPARE(right.pixel(bottomRightInside + QPoint(0, 1)), black);
+    QCOMPARE(right.pixel(map(bottomRightInside - QPoint(0, 0))), white);
+    QCOMPARE(right.pixel(map(bottomRightInside + QPoint(1, 0))), black);
+    QCOMPARE(right.pixel(map(bottomRightInside + QPoint(0, 1))), black);
 }
 
 void OutputChangesTest::testMirrorTiledDisplay()
