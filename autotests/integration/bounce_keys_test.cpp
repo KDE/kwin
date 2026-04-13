@@ -10,6 +10,7 @@
 #include "kwin_wayland_test.h"
 
 #include "keyboard_input.h"
+#include "ksignalspy.h"
 #include "pluginmanager.h"
 #include "pointer_input.h"
 #include "wayland_server.h"
@@ -72,8 +73,8 @@ void BounceKeysTest::testBounce()
 {
     const auto keyboard = m_connection->kwinSeat->getKeyboard();
     QVERIFY(keyboard);
-    QSignalSpy enteredSpy(keyboard.get(), &Test::WlKeyboard::enter);
-    QSignalSpy keySpy(keyboard.get(), &Test::WlKeyboard::key);
+    KSignalSpy enteredSpy(keyboard.get(), &Test::WlKeyboard::enter);
+    KSignalSpy keySpy(keyboard.get(), &Test::WlKeyboard::key);
 
     Test::XdgToplevelWindow window{m_connection.get()};
     QVERIFY(window.show());
@@ -84,34 +85,34 @@ void BounceKeysTest::testBounce()
     // Press a key, verify that it goes through
     Test::keyboardKeyPressed(KEY_A, timestamp);
     QVERIFY(keySpy.wait());
-    QCOMPARE(keySpy.first()[2], KEY_A);
-    QCOMPARE(keySpy.first().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_pressed);
+    QCOMPARE(std::get<2>(keySpy.first()), KEY_A);
+    QCOMPARE(std::get<3>(keySpy.first()), Test::WlKeyboard::key_state::key_state_pressed);
     keySpy.clear();
 
     Test::keyboardKeyReleased(KEY_A, timestamp++);
     QVERIFY(keySpy.wait());
-    QCOMPARE(keySpy.first()[2], KEY_A);
-    QCOMPARE(keySpy.first().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_released);
+    QCOMPARE(std::get<2>(keySpy.first()), KEY_A);
+    QCOMPARE(std::get<3>(keySpy.first()), Test::WlKeyboard::key_state::key_state_released);
     keySpy.clear();
 
     // Press it again within the bounce interval, verify that it does *not* go through
     timestamp += 100;
     Test::keyboardKeyPressed(KEY_A, timestamp);
-    QVERIFY(!keySpy.wait(100));
+    QVERIFY(!keySpy.wait(std::chrono::milliseconds{100}));
     keySpy.clear();
 
     // Press it again after the bounce interval, verify that it does go through
     timestamp += 1000;
     Test::keyboardKeyPressed(KEY_A, timestamp);
     QVERIFY(keySpy.wait());
-    QCOMPARE(keySpy.first()[2], KEY_A);
-    QCOMPARE(keySpy.first().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_pressed);
+    QCOMPARE(std::get<2>(keySpy.first()), KEY_A);
+    QCOMPARE(std::get<3>(keySpy.first()), Test::WlKeyboard::key_state::key_state_pressed);
     keySpy.clear();
 
     Test::keyboardKeyReleased(KEY_A, timestamp++);
     QVERIFY(keySpy.wait());
-    QCOMPARE(keySpy.first()[2], KEY_A);
-    QCOMPARE(keySpy.first().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_released);
+    QCOMPARE(std::get<2>(keySpy.first()), KEY_A);
+    QCOMPARE(std::get<3>(keySpy.first()), Test::WlKeyboard::key_state::key_state_released);
     keySpy.clear();
 }
 
@@ -119,8 +120,8 @@ void BounceKeysTest::testBounceKeyRepeat()
 {
     const auto keyboard = m_connection->kwinSeat->getKeyboard();
     QVERIFY(keyboard);
-    QSignalSpy enteredSpy(keyboard.get(), &Test::WlKeyboard::enter);
-    QSignalSpy keySpy(keyboard.get(), &Test::WlKeyboard::key);
+    KSignalSpy enteredSpy(keyboard.get(), &Test::WlKeyboard::enter);
+    KSignalSpy keySpy(keyboard.get(), &Test::WlKeyboard::key);
 
     Test::XdgToplevelWindow window{m_connection.get()};
     QVERIFY(window.show());
@@ -131,50 +132,50 @@ void BounceKeysTest::testBounceKeyRepeat()
     // Press and repeat a key within the bounce interval, make sure the repeat goes through
     Test::keyboardKeyPressed(KEY_B, timestamp);
     QVERIFY(keySpy.wait());
-    QCOMPARE(keySpy.first()[2], KEY_B);
-    QCOMPARE(keySpy.first().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_pressed);
+    QCOMPARE(std::get<2>(keySpy.first()), KEY_B);
+    QCOMPARE(std::get<3>(keySpy.first()), Test::WlKeyboard::key_state::key_state_pressed);
     keySpy.clear();
 
     // wait for the repeat
     QVERIFY(keySpy.wait());
-    QCOMPARE(keySpy.first()[2], KEY_B);
-    QCOMPARE(keySpy.first().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_repeated);
+    QCOMPARE(std::get<2>(keySpy.first()), KEY_B);
+    QCOMPARE(std::get<3>(keySpy.first()), Test::WlKeyboard::key_state::key_state_repeated);
     keySpy.clear();
 
     Test::keyboardKeyReleased(KEY_B, timestamp++);
     QVERIFY(keySpy.wait());
-    QCOMPARE(keySpy.first()[2], KEY_B);
-    QCOMPARE(keySpy.first().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_released);
+    QCOMPARE(std::get<2>(keySpy.first()), KEY_B);
+    QCOMPARE(std::get<3>(keySpy.first()), Test::WlKeyboard::key_state::key_state_released);
     keySpy.clear();
 
     // Press and repeat it again within the bounce interval, verify that the repeat does *not* go through
     timestamp += 100;
     Test::keyboardKeyPressed(KEY_B, timestamp++);
-    QVERIFY(!keySpy.wait(100));
+    QVERIFY(!keySpy.wait(std::chrono::milliseconds{100}));
     keySpy.clear();
 
     // the repeat should get blocked
-    QVERIFY(!keySpy.wait(100));
+    QVERIFY(!keySpy.wait(std::chrono::milliseconds{100}));
     keySpy.clear();
 
     // Press and repeat it again after the bounce interval, verify that it does go through
     timestamp += 1000;
     Test::keyboardKeyPressed(KEY_B, timestamp);
     QVERIFY(keySpy.wait());
-    QCOMPARE(keySpy.first()[2], KEY_B);
-    QCOMPARE(keySpy.first().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_pressed);
+    QCOMPARE(std::get<2>(keySpy.first()), KEY_B);
+    QCOMPARE(std::get<3>(keySpy.first()), Test::WlKeyboard::key_state::key_state_pressed);
     keySpy.clear();
 
     // wait for the repeat again
     QVERIFY(keySpy.wait());
-    QCOMPARE(keySpy.first()[2], KEY_B);
-    QCOMPARE(keySpy.first().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_repeated);
+    QCOMPARE(std::get<2>(keySpy.first()), KEY_B);
+    QCOMPARE(std::get<3>(keySpy.first()), Test::WlKeyboard::key_state::key_state_repeated);
     keySpy.clear();
 
     Test::keyboardKeyReleased(KEY_B, timestamp++);
     QVERIFY(keySpy.wait());
-    QCOMPARE(keySpy.first()[2], KEY_B);
-    QCOMPARE(keySpy.first().last().value<Test::WlKeyboard::key_state>(), Test::WlKeyboard::key_state::key_state_released);
+    QCOMPARE(std::get<2>(keySpy.first()), KEY_B);
+    QCOMPARE(std::get<3>(keySpy.first()), Test::WlKeyboard::key_state::key_state_released);
     keySpy.clear();
 }
 

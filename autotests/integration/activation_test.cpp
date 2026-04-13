@@ -16,6 +16,7 @@
 #include "window.h"
 #include "workspace.h"
 #include "xdgactivationv1.h"
+#include "ksignalspy.h"
 
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
@@ -443,11 +444,11 @@ static X11Window *createX11Window(xcb_connection_t *connection, const Rect &geom
     xcb_map_window(connection, windowId);
     xcb_flush(connection);
 
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    KSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     if (!windowCreatedSpy.wait()) {
         return nullptr;
     }
-    return windowCreatedSpy.last().first().value<X11Window *>();
+    return qobject_cast<KWin::X11Window*>(std::get<0>(windowCreatedSpy.last()));
 }
 #endif
 
@@ -477,7 +478,7 @@ void ActivationTest::testActiveFullscreen()
 
     // the Wayland window should become active
     // and the X11 window should not be in the active layer anymore
-    QSignalSpy stackingOrder(workspace(), &Workspace::stackingOrderChanged);
+    KSignalSpy stackingOrder(workspace(), &Workspace::stackingOrderChanged);
     workspace()->activateWindow(waylandWindow.m_window);
     QCOMPARE(workspace()->activeWindow(), waylandWindow.m_window);
     QCOMPARE(x11Window->layer(), Layer::NormalLayer);
@@ -510,7 +511,7 @@ void ActivationTest::testXdgActivation()
 
     auto windows = setupWindows(time);
 
-    QSignalSpy activationSpy(workspace(), &Workspace::windowActivated);
+    KSignalSpy activationSpy(workspace(), &Workspace::windowActivated);
 
     // activating a window without a valid token should fail
     Test::xdgActivation()->activate(QString(), *windows[1]->m_surface);
@@ -808,13 +809,13 @@ void ActivationTest::testXdgActivationBeforeInitialCommit()
     {
         std::unique_ptr<KWayland::Client::Surface> duckSurface(Test::createSurface());
         std::unique_ptr<Test::XdgToplevel> duckShellSurface(Test::createXdgToplevelSurface(duckSurface.get(), Test::CreationSetup::CreateOnly));
-        QSignalSpy toplevelConfigureRequestedSpy(duckShellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(duckShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        KSignalSpy toplevelConfigureRequestedSpy(duckShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        KSignalSpy surfaceConfigureRequestedSpy(duckShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
         // Wait for the compositor side window to be created.
-        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        KSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
         QVERIFY(windowCreatedSpy.wait());
-        Window *duckWindow = windowCreatedSpy.last().at(0).value<Window *>();
+        Window *duckWindow = std::get<0>(windowCreatedSpy.last());
 
         // Attempt to activate the window, waylandSync() is needed to make sure that the compositor
         // side has processed the activation request before we check the compositor state.
@@ -833,8 +834,8 @@ void ActivationTest::testXdgActivationBeforeInitialCommit()
         QVERIFY(surfaceConfigureRequestedSpy.wait());
 
         // Map the window.
-        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
-        duckShellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        QCOMPARE(std::get<0>(toplevelConfigureRequestedSpy.last()), QSize(0, 0));
+        duckShellSurface->xdgSurface()->ack_configure(std::get<0>(surfaceConfigureRequestedSpy.last()));
         Test::renderAndWaitForShown(duckSurface.get(), QSize(800, 600), Qt::blue);
 
         // The window should not be activate because of the invalid activation token.
@@ -845,13 +846,13 @@ void ActivationTest::testXdgActivationBeforeInitialCommit()
     {
         std::unique_ptr<KWayland::Client::Surface> wolfSurface(Test::createSurface());
         std::unique_ptr<Test::XdgToplevel> wolfShellSurface(Test::createXdgToplevelSurface(wolfSurface.get(), Test::CreationSetup::CreateOnly));
-        QSignalSpy toplevelConfigureRequestedSpy(wolfShellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(wolfShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        KSignalSpy toplevelConfigureRequestedSpy(wolfShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        KSignalSpy surfaceConfigureRequestedSpy(wolfShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
         // Wait for the compositor side window to be created.
-        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        KSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
         QVERIFY(windowCreatedSpy.wait());
-        Window *wolfWindow = windowCreatedSpy.last().at(0).value<Window *>();
+        Window *wolfWindow = std::get<0>(windowCreatedSpy.last());
 
         // Attempt to activate the window, waylandSync() is needed to make sure that the compositor
         // side has processed the activation request before we check the compositor state.
@@ -870,8 +871,8 @@ void ActivationTest::testXdgActivationBeforeInitialCommit()
         QVERIFY(surfaceConfigureRequestedSpy.wait());
 
         // Map the window.
-        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
-        wolfShellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        QCOMPARE(std::get<0>(toplevelConfigureRequestedSpy.last()), QSize(0, 0));
+        wolfShellSurface->xdgSurface()->ack_configure(std::get<0>(surfaceConfigureRequestedSpy.last()));
         Test::renderAndWaitForShown(wolfSurface.get(), QSize(800, 600), Qt::blue);
 
         // The window should be activated as expected.
@@ -907,13 +908,13 @@ void ActivationTest::testXdgActivationBeforeMap()
     {
         std::unique_ptr<KWayland::Client::Surface> duckSurface(Test::createSurface());
         std::unique_ptr<Test::XdgToplevel> duckShellSurface(Test::createXdgToplevelSurface(duckSurface.get(), Test::CreationSetup::CreateOnly));
-        QSignalSpy toplevelConfigureRequestedSpy(duckShellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(duckShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        KSignalSpy toplevelConfigureRequestedSpy(duckShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        KSignalSpy surfaceConfigureRequestedSpy(duckShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
         // Wait for the compositor side window to be created.
-        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        KSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
         QVERIFY(windowCreatedSpy.wait());
-        Window *duckWindow = windowCreatedSpy.last().at(0).value<Window *>();
+        Window *duckWindow = std::get<0>(windowCreatedSpy.last());
 
         // Commit the initial state.
         duckShellSurface->set_app_id(QStringLiteral("org.kde.duck"));
@@ -932,8 +933,8 @@ void ActivationTest::testXdgActivationBeforeMap()
         QVERIFY(!workspace()->stackingOrder().contains(duckWindow));
 
         // Map the window.
-        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
-        duckShellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        QCOMPARE(std::get<0>(toplevelConfigureRequestedSpy.last()), QSize(0, 0));
+        duckShellSurface->xdgSurface()->ack_configure(std::get<0>(surfaceConfigureRequestedSpy.last()));
         Test::renderAndWaitForShown(duckSurface.get(), QSize(800, 600), Qt::blue);
 
         // The window should not be activate because of the invalid activation token.
@@ -944,13 +945,13 @@ void ActivationTest::testXdgActivationBeforeMap()
     {
         std::unique_ptr<KWayland::Client::Surface> wolfSurface(Test::createSurface());
         std::unique_ptr<Test::XdgToplevel> wolfShellSurface(Test::createXdgToplevelSurface(wolfSurface.get(), Test::CreationSetup::CreateOnly));
-        QSignalSpy toplevelConfigureRequestedSpy(wolfShellSurface.get(), &Test::XdgToplevel::configureRequested);
-        QSignalSpy surfaceConfigureRequestedSpy(wolfShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+        KSignalSpy toplevelConfigureRequestedSpy(wolfShellSurface.get(), &Test::XdgToplevel::configureRequested);
+        KSignalSpy surfaceConfigureRequestedSpy(wolfShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
         // Wait for the compositor side window to be created.
-        QSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
+        KSignalSpy windowCreatedSpy(waylandServer(), &WaylandServer::windowCreated);
         QVERIFY(windowCreatedSpy.wait());
-        Window *wolfWindow = windowCreatedSpy.last().at(0).value<Window *>();
+        Window *wolfWindow = std::get<0>(windowCreatedSpy.last());
 
         // Commit the initial state.
         wolfShellSurface->set_app_id(QStringLiteral("org.kde.wolf"));
@@ -969,8 +970,8 @@ void ActivationTest::testXdgActivationBeforeMap()
         QVERIFY(!workspace()->stackingOrder().contains(wolfWindow));
 
         // Map the window.
-        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
-        wolfShellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        QCOMPARE(std::get<0>(toplevelConfigureRequestedSpy.last()), QSize(0, 0));
+        wolfShellSurface->xdgSurface()->ack_configure(std::get<0>(surfaceConfigureRequestedSpy.last()));
         Test::renderAndWaitForShown(wolfSurface.get(), QSize(800, 600), Qt::blue);
 
         // The window should be activated as expected.
@@ -1003,7 +1004,7 @@ void ActivationTest::testGlobalShortcutActivation()
     // The spy emulates the latter behavior.
     TokenSpy tokenSpy;
     input()->installInputEventSpy(&tokenSpy);
-    QSignalSpy activationSpy(workspace(), &Workspace::windowActivated);
+    KSignalSpy activationSpy(workspace(), &Workspace::windowActivated);
 
     uint32_t time = 0;
 
@@ -1040,14 +1041,14 @@ void ActivationTest::testFocusMovesFromClosedDialogToParentWindow()
 {
     // This test verifies that input focus moves from a closed dialog to the parent window as expected.
 
-    QSignalSpy windowActivatedSpy(workspace(), &Workspace::windowActivated);
+    KSignalSpy windowActivatedSpy(workspace(), &Workspace::windowActivated);
 
     std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(windowActivatedSpy.count(), 1);
-    QCOMPARE(windowActivatedSpy.last().at(0).value<Window *>(), window);
+    QCOMPARE(std::get<0>(windowActivatedSpy.last()), window);
     QCOMPARE(workspace()->activeWindow(), window);
 
     std::unique_ptr<KWayland::Client::Surface> transientSurface{Test::createSurface()};
@@ -1056,14 +1057,14 @@ void ActivationTest::testFocusMovesFromClosedDialogToParentWindow()
     auto transient = Test::renderAndWaitForShown(transientSurface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(transient);
     QCOMPARE(windowActivatedSpy.count(), 2);
-    QCOMPARE(windowActivatedSpy.last().at(0).value<Window *>(), transient);
+    QCOMPARE(std::get<0>(windowActivatedSpy.last()), transient);
     QCOMPARE(workspace()->activeWindow(), transient);
 
     transientShellSurface.reset();
     transientSurface.reset();
     QVERIFY(windowActivatedSpy.wait());
     QCOMPARE(windowActivatedSpy.count(), 3);
-    QCOMPARE(windowActivatedSpy.last().at(0).value<Window *>(), window);
+    QCOMPARE(std::get<0>(windowActivatedSpy.last()), window);
 }
 
 void ActivationTest::testFullAreaLayerSurfaceUnderlay_data()
@@ -1096,10 +1097,10 @@ void ActivationTest::testFullAreaLayerSurfaceUnderlay()
     shellSurface->set_keyboard_interactivity(1);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    KSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
-    const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
-    shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
+    const QSize requestedSize = std::get<1>(configureRequestedSpy.last());
+    shellSurface->ack_configure(std::get<0>(configureRequestedSpy.last()));
     Test::renderAndWaitForShown(surface.get(), requestedSize, Qt::red);
     QCOMPARE(workspace()->activeWindow(), window.m_window);
 }
@@ -1134,10 +1135,10 @@ void ActivationTest::testFullAreaLayerSurfaceOverlay()
     shellSurface->set_keyboard_interactivity(1);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    KSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
-    const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
-    shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
+    const QSize requestedSize = std::get<1>(configureRequestedSpy.last());
+    shellSurface->ack_configure(std::get<0>(configureRequestedSpy.last()));
     Window *overlayWindow = Test::renderAndWaitForShown(surface.get(), requestedSize, Qt::red);
     QCOMPARE(workspace()->activeWindow(), overlayWindow);
 }
@@ -1171,10 +1172,10 @@ void ActivationTest::testPartialAreaLayerSurfaceOverlay()
     shellSurface->set_keyboard_interactivity(1);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    KSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(configureRequestedSpy.wait());
-    const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
-    shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
+    const QSize requestedSize = std::get<1>(configureRequestedSpy.last());
+    shellSurface->ack_configure(std::get<0>(configureRequestedSpy.last()));
     Test::renderAndWaitForShown(surface.get(), requestedSize, Qt::red);
     QCOMPARE(workspace()->activeWindow(), window.m_window);
 }
