@@ -253,6 +253,7 @@ public:
     QList<RenderView *> views() const;
     void addView(RenderView *view);
     void removeView(RenderView *view);
+    std::span<SceneView *const> sceneViews() const;
 
     virtual QList<Item *> layerCandidates(ssize_t maxTotalCount) const = 0;
     virtual void prePaint(SceneView *view, OutputFrame *frame = nullptr) = 0;
@@ -271,6 +272,7 @@ protected:
 
     std::unordered_map<RenderDevice *, std::unique_ptr<ItemRenderer>> m_renderers;
     QList<RenderView *> m_views;
+    QList<SceneView *> m_sceneViews;
     Rect m_geometry;
 };
 

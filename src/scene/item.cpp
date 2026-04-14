@@ -759,12 +759,12 @@ void Item::prepareFrame(SceneView *view, LogicalOutput *output, std::chrono::nan
     collectItems(list, output, view);
     for (QPointer<Item> item : list) {
         if (item) {
-            item->handlePrepareFrame(timestamp);
+            item->handlePrepareFrame(view, timestamp);
         }
     }
 }
 
-void Item::handlePrepareFrame(std::chrono::nanoseconds timestamp)
+void Item::handlePrepareFrame(SceneView *view, std::chrono::nanoseconds timestamp)
 {
 }
 
@@ -775,7 +775,7 @@ bool Item::isAncestorOf(const Item *item) const
     });
 }
 
-void Item::handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void Item::handleFramePainted(SceneView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
 }
 

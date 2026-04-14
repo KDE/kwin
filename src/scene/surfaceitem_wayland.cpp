@@ -243,23 +243,42 @@ void SurfaceItemWayland::handleCommitTiming()
     scheduleFrame(m_surface->requestedTimingOfNextCommit());
 }
 
-void SurfaceItemWayland::handlePrepareFrame(std::chrono::nanoseconds timestamp)
+SceneView *SurfaceItemWayland::primaryView() const
 {
-    if (!m_surface) {
+    const auto views = scene()->sceneViews();
+    auto relevant = views | std::views::filter([this](SceneView *view) {
+        const RectF geometry = mapToView(boundingRect(), view);
+        return view->viewport().intersects(geometry);
+    });
+    auto it = std::ranges::max_element(relevant, [](SceneView *left, SceneView *right) {
+        return left->refreshRate() < right->refreshRate();
+    });
+    return it == relevant.end() ? nullptr : *it;
+}
+
+void SurfaceItemWayland::handlePrepareFrame(SceneView *view, std::chrono::nanoseconds timestamp)
+{
+    if (!m_surface || view != primaryView()) {
         return;
     }
     m_surface->tryApplyState(timestamp);
 }
 
-void SurfaceItemWayland::handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void SurfaceItemWayland::handleFramePainted(SceneView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
     if (!m_surface) {
         return;
     }
+    // TODO also only send frame callbacks on the primary view.
+    // Right now this is needed because offscreen windows of some
+    // applications don't react to configure events without this.
     m_surface->frameRendered(timestamp.count());
+    if (view != primaryView()) {
+        return;
+    }
     if (frame) {
         // FIXME make frame always valid
-        if (auto feedback = m_surface->presentationFeedback(output)) {
+        if (auto feedback = m_surface->presentationFeedback()) {
             frame->addFeedback(std::move(feedback), view && view->presentationIsZeroCopy(this) ? PresentationFeedbackFlag::ZeroCopy : PresentationFeedbackFlags{});
         }
     }
