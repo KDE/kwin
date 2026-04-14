@@ -141,7 +141,7 @@ public:
     void frameRendered(quint32 msec);
     bool hasFrameCallbacks() const;
 
-    std::shared_ptr<PresentationFeedback> presentationFeedback(LogicalOutput *output);
+    std::shared_ptr<PresentationFeedback> presentationFeedback();
     bool hasPresentationFeedback() const;
 
     RegionF opaque() const;

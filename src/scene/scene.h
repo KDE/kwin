@@ -246,6 +246,7 @@ public:
     QList<RenderView *> views() const;
     void addView(RenderView *view);
     void removeView(RenderView *view);
+    std::span<SceneView *const> sceneViews() const;
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
     struct OverlayCandidates
@@ -269,6 +270,7 @@ protected:
 
     std::unique_ptr<ItemRenderer> m_renderer;
     QList<RenderView *> m_views;
+    QList<SceneView *> m_sceneViews;
     Rect m_geometry;
 };
 

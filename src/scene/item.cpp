@@ -718,15 +718,19 @@ void Item::removeEffect()
     m_effectCount--;
 }
 
-void Item::framePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void Item::framePainted(SceneView *view, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
     // The visibility of the item itself is not checked here to be able to paint hidden items for
     // things like screncasts or thumbnails
-    handleFramePainted(output, frame, timestamp);
+    handleFramePainted(view, frame, timestamp);
     for (const auto child : std::as_const(m_childItems)) {
-        if (child->explicitVisible() && workspace()->outputAt(child->mapToScene(child->boundingRect()).center()) == output) {
-            child->framePainted(view, output, frame, timestamp);
+        if (!child->explicitVisible()) {
+            continue;
         }
+        if (view && !view->viewport().intersects(child->mapToView(child->boundingRect(), view))) {
+            continue;
+        }
+        child->framePainted(view, frame, timestamp);
     }
 }
 
@@ -737,7 +741,7 @@ bool Item::isAncestorOf(const Item *item) const
     });
 }
 
-void Item::handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void Item::handleFramePainted(SceneView *view, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
 }
 

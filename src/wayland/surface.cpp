@@ -574,11 +574,8 @@ void SurfaceInterface::frameRendered(quint32 msec)
     }
 }
 
-std::shared_ptr<PresentationFeedback> SurfaceInterface::presentationFeedback(LogicalOutput *output)
+std::shared_ptr<PresentationFeedback> SurfaceInterface::presentationFeedback()
 {
-    if (output && (!d->primaryOutput || d->primaryOutput->handle() != output)) {
-        return nullptr;
-    }
     return d->current->presentationFeedback;
 }
 

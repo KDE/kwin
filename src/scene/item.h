@@ -30,6 +30,7 @@ class DrmDevice;
 class Item;
 class LogicalOutput;
 class OutputFrame;
+class SceneView;
 
 class KWIN_EXPORT ItemEffect
 {
@@ -174,7 +175,7 @@ public:
     void addEffect();
     void removeEffect();
 
-    void framePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
+    void framePainted(SceneView *view, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
     bool isAncestorOf(const Item *item) const;
     /**
@@ -203,7 +204,7 @@ Q_SIGNALS:
 
 protected:
     virtual WindowQuadList buildQuads() const;
-    virtual void handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
+    virtual void handleFramePainted(SceneView *view, OutputFrame *frame, std::chrono::milliseconds timestamp);
     virtual void releaseResources();
     void discardQuads();
     void setColorDescription(const std::shared_ptr<ColorDescription> &description);

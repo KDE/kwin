@@ -57,7 +57,8 @@ private Q_SLOTS:
 
 private:
     SurfaceItemWayland *getOrCreateSubSurfaceItem(SubSurfaceInterface *s);
-    void handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp) override;
+    void handleFramePainted(SceneView *view, OutputFrame *frame, std::chrono::milliseconds timestamp) override;
+    SceneView *primaryView() const;
 
     QPointer<SurfaceInterface> m_surface;
     struct ScanoutFeedback

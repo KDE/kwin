@@ -709,12 +709,21 @@ QList<RenderView *> Scene::views() const
 void Scene::addView(RenderView *view)
 {
     m_views.append(view);
+    if (auto sceneView = qobject_cast<SceneView *>(view)) {
+        m_sceneViews.push_back(sceneView);
+    }
 }
 
 void Scene::removeView(RenderView *view)
 {
     m_views.removeOne(view);
+    m_sceneViews.removeOne(view);
     Q_EMIT viewRemoved(view);
+}
+
+std::span<SceneView *const> Scene::sceneViews() const
+{
+    return m_sceneViews;
 }
 
 QList<SurfaceItem *> Scene::scanoutCandidates(ssize_t maxCount) const

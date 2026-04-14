@@ -8,6 +8,7 @@
 #include "core/backendoutput.h"
 #include "core/drmdevice.h"
 #include "core/renderbackend.h"
+#include "scene.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/subcompositor.h"
 #include "wayland/surface.h"
@@ -236,23 +237,39 @@ void SurfaceItemWayland::handleAlphaMultiplierChanged()
     setOpacity(m_surface->alphaMultiplier());
 }
 
-void SurfaceItemWayland::handleFramePainted(LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+SceneView *SurfaceItemWayland::primaryView() const
+{
+    const auto views = scene()->sceneViews();
+    auto relevant = views | std::views::filter([this](SceneView *view) {
+        const RectF geometry = mapToView(boundingRect(), view);
+        return view->viewport().intersects(geometry);
+    });
+    auto it = std::ranges::max_element(relevant, [](SceneView *left, SceneView *right) {
+        return left->refreshRate() < right->refreshRate();
+    });
+    return it == relevant.end() ? nullptr : *it;
+}
+
+void SurfaceItemWayland::handleFramePainted(SceneView *view, OutputFrame *frame, std::chrono::milliseconds timestamp)
 {
     if (!m_surface) {
         return;
     }
+    if (view && view != primaryView()) {
+        return;
+    }
     m_surface->frameRendered(timestamp.count());
+    // FIXME make frame always valid
     if (frame) {
-        // FIXME make frame always valid
-        if (auto feedback = m_surface->presentationFeedback(output)) {
+        if (auto feedback = m_surface->presentationFeedback()) {
             frame->addFeedback(std::move(feedback));
         }
     }
-    // TODO only call this once per refresh cycle
+    // TODO only call this at most once per refresh cycle
     m_surface->clearFifoBarrier();
-    if (m_fifoFallbackTimer.isActive() && output) {
+    if (m_fifoFallbackTimer.isActive()) {
         // TODO once we can rely on frame being not-nullptr, use its refresh duration instead
-        const auto refreshDuration = std::chrono::nanoseconds(1'000'000'000'000) / output->backendOutput()->refreshRate();
+        const auto refreshDuration = std::chrono::nanoseconds(1'000'000'000'000) / (view ? view->refreshRate() : 30'000);
         // some games don't work properly if the refresh rate goes too low with FIFO. 30Hz is assumed to be fine here.
         // this must still be slower than the actual screen though, or fifo behavior would be broken!
         const auto fallbackRefreshDuration = std::max(refreshDuration * 5 / 4, std::chrono::nanoseconds(1'000'000'000) / 30);
