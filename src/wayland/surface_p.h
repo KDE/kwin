@@ -180,7 +180,6 @@ public:
     Transaction *lastTransaction = nullptr;
 
     QList<OutputInterface *> outputs;
-    QPointer<OutputInterface> primaryOutput;
     std::optional<qreal> preferredBufferScale;
     std::optional<OutputTransform> preferredBufferTransform;
     std::optional<std::shared_ptr<ColorDescription>> preferredColorDescription;
