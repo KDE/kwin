@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-02-17 08:43+0000\n"
+"PO-Revision-Date: 2026-03-17 15:04+0000\n"
 "Last-Translator: charlotte <altronic25@protonmail.com>\n"
 "Language-Team: Irish\n"
 "Language: ga\n"
@@ -17,16 +17,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
 "3 : 4\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Séamus Ó Ciardhuáin,Kevin Scannell"
+msgstr "Séamus Ó Ciardhuáin,Kevin Scannell,Charlotte"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "seoc@iolfree.ie,kscanne@gmail.com"
+msgstr "seoc@iolfree.ie,kscanne@gmail.com,altronic25@protonmail.com"
 
 #: composite.cpp:646
 #, kde-format
@@ -614,7 +615,7 @@ msgstr ""
 #: debug_console.cpp:516
 #, kde-format
 msgid "Buttons"
-msgstr ""
+msgstr "Cnaipí"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
 #: debug_console.cpp:517 debug_console.ui:356
@@ -630,7 +631,7 @@ msgstr ""
 #: debug_console.cpp:527 debug_console.cpp:541
 #, kde-format
 msgid "Button"
-msgstr ""
+msgstr "Cnaipe"
 
 #: debug_console.cpp:528 debug_console.cpp:542
 #, kde-format
@@ -683,7 +684,7 @@ msgstr ""
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
-msgstr ""
+msgstr "deis"
 
 #: debug_console.cpp:807
 #, kde-format
@@ -1022,7 +1023,7 @@ msgstr ""
 #: debug_console.ui:425 debug_console.ui:445
 #, kde-format
 msgid "Clipboard"
-msgstr ""
+msgstr "Gearrthaisce"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:491
@@ -1043,7 +1044,7 @@ msgstr "PID an fheidhmchláir le marú"
 #: helpers/killer/killer.cpp:38
 #, kde-format
 msgid "pid"
-msgstr ""
+msgstr "pid"
 
 #: helpers/killer/killer.cpp:40
 #, kde-format
@@ -1053,7 +1054,7 @@ msgstr "Óstainm a bhfuil an feidhmchlár ag rith air"
 #: helpers/killer/killer.cpp:40
 #, kde-format
 msgid "hostname"
-msgstr ""
+msgstr "óstainm"
 
 #: helpers/killer/killer.cpp:42
 #, kde-format
@@ -1063,7 +1064,7 @@ msgstr "Fotheideal na fuinneoige le marú"
 #: helpers/killer/killer.cpp:42
 #, kde-format
 msgid "caption"
-msgstr ""
+msgstr "teideal"
 
 #: helpers/killer/killer.cpp:44
 #, kde-format
@@ -1474,7 +1475,7 @@ msgstr ""
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "window"
-msgstr ""
+msgstr "fuinneog"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:93
 #, kde-format
@@ -1503,7 +1504,7 @@ msgstr ""
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:296
 #, kde-format
 msgid "Close running window on %1"
-msgstr ""
+msgstr "Dún fuinneog ag rith ar %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
@@ -1910,7 +1911,7 @@ msgstr ""
 #: rulesettings.kcfg:293
 #, kde-format
 msgid "Fullscreen"
-msgstr ""
+msgstr "Lánscáileán"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:297
@@ -2109,7 +2110,7 @@ msgstr "Ní %1 ann"
 #: shortcutdialog.ui:14
 #, kde-format
 msgid "Dialog"
-msgstr ""
+msgstr "Dialóg"
 
 #. i18n: ectx: property (text), widget (QToolButton, clearButton)
 #: shortcutdialog.ui:25
@@ -2232,7 +2233,7 @@ msgstr "&Lánscáileán"
 #: useractions.cpp:266
 #, kde-format
 msgid "&Shade"
-msgstr ""
+msgstr "&Scáthaigh"
 
 #: useractions.cpp:272
 #, kde-format
@@ -2290,12 +2291,12 @@ msgstr ""
 #: useractions.cpp:461
 #, kde-format
 msgid "&Desktops"
-msgstr ""
+msgstr "&Deasca"
 
 #: useractions.cpp:475
 #, kde-format
 msgid "Move to &Desktop"
-msgstr ""
+msgstr "Bog go &Deasc"
 
 #: useractions.cpp:492
 #, kde-format
@@ -2321,7 +2322,7 @@ msgstr "G&ach Deasc"
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
-msgstr ""
+msgstr "Deasc &Nua"
 
 #: useractions.cpp:646
 #, kde-format
@@ -2346,7 +2347,7 @@ msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
 "number, second the output identifier. E.g. Screen 1 (HDMI1)"
 msgid "Screen &%1 (%2)"
-msgstr ""
+msgstr "Scáileán &%1 (%2)"
 
 #: useractions.cpp:728
 #, kde-format
