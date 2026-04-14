@@ -4,13 +4,13 @@
 # Diego Iastrubni <elcuco@kde.org>, 2005, 2006, 2008, 2012.
 # elkana bardugo <ttv200@gmail.com>, 2016.
 # Elkana Bardugo <ttv200@gmail.com>, 2017. #zanata
-# SPDX-FileCopyrightText: 2023, 2024, 2025 Yaron Shahrabani <sh.yaron@gmail.com>
+# SPDX-FileCopyrightText: 2023, 2024, 2025, 2026 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-23 02:42+0000\n"
-"PO-Revision-Date: 2025-08-02 21:08+0300\n"
+"PO-Revision-Date: 2026-04-13 08:05+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 25.04.3\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -330,7 +330,7 @@ msgstr "גודל מרבי"
 #: rulesmodel.cpp:559
 #, kde-format
 msgid "Obey geometry restrictions"
-msgstr "אכיפת הגבלות גודל ומקום"
+msgstr "נאכף הגבלות גודל ומקום"
 
 #: rulesmodel.cpp:561
 #, kde-kuit-format
@@ -350,7 +350,7 @@ msgstr ""
 #: rulesmodel.cpp:572
 #, kde-format
 msgid "Keep above other windows"
-msgstr "להגביה מעל לחלונות אחרים"
+msgstr "מוגבה מעל לחלונות אחרים"
 
 #: rulesmodel.cpp:572 rulesmodel.cpp:577 rulesmodel.cpp:582 rulesmodel.cpp:588
 #: rulesmodel.cpp:594 rulesmodel.cpp:600
@@ -361,7 +361,7 @@ msgstr "סידור וגישה"
 #: rulesmodel.cpp:577
 #, kde-format
 msgid "Keep below other windows"
-msgstr "להנמיך מתחת לחלונות אחרים"
+msgstr "מונמך מתחת לחלונות אחרים"
 
 #: rulesmodel.cpp:582
 #, kde-format
@@ -372,7 +372,7 @@ msgstr "לא יופיע בשורת המשימות"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr "שולט האם החלון מופיע במנהל המשימות."
+msgstr "שליטה האם החלון מופיע במנהל המשימות."
 
 #: rulesmodel.cpp:588
 #, kde-format
@@ -384,7 +384,7 @@ msgstr "לא יופיע בדפדפן המשימות"
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr "שולט האם החלון מופיע במנהל שולחנות העבודה הווירטואליים."
+msgstr "שליטה האם החלון מופיע במנהל שולחנות העבודה הווירטואליים."
 
 #: rulesmodel.cpp:594
 #, kde-format
@@ -397,7 +397,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
-msgstr "שולט האם החלון מופיע ברשימת החלונות ב־<shortcut>Alt+Tab</shortcut>."
+msgstr "שליטה האם החלון מופיע ברשימת החלונות ב־<shortcut>Alt+Tab</shortcut>."
 
 #: rulesmodel.cpp:600
 #, kde-format
@@ -876,7 +876,7 @@ msgstr "לא נבחר כלום"
 #: ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
-msgstr "כולם נבחרו"
+msgstr "כולם נבחרים"
 
 #: ui/OptionsComboBox.qml:43
 #, kde-format

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-06 02:37+0000\n"
-"PO-Revision-Date: 2026-02-17 08:43+0000\n"
+"PO-Revision-Date: 2026-03-17 15:04+0000\n"
 "Last-Translator: charlotte <altronic25@protonmail.com>\n"
 "Language-Team: Irish\n"
 "Language: ga\n"
@@ -17,16 +17,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
 "3 : 4\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Séamus Ó Ciardhuáin,Kevin Scannell"
+msgstr "Séamus Ó Ciardhuáin,Kevin Scannell,Charlotte"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "seoc@iolfree.ie,kscanne@gmail.com"
+msgstr "seoc@iolfree.ie,kscanne@gmail.com,altronic25@protonmail.com"
 
 #: backends/wayland/wayland_output.cpp:481
 #, kde-format
@@ -788,7 +789,7 @@ msgstr ""
 #: debug_console.cpp:599 debug_console.cpp:614
 #, kde-format
 msgid "Button"
-msgstr ""
+msgstr "Cnaipe"
 
 #: debug_console.cpp:600 debug_console.cpp:615
 #, kde-format
@@ -872,7 +873,7 @@ msgstr ""
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
-msgstr ""
+msgstr "deis"
 
 #: debug_console.cpp:959
 #, kde-format
@@ -1223,7 +1224,7 @@ msgstr ""
 #: debug_console.ui:400 debug_console.ui:420
 #, kde-format
 msgid "Clipboard"
-msgstr ""
+msgstr "Gearrthaisce"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 #: debug_console.ui:466
@@ -1244,7 +1245,7 @@ msgstr "PID an fheidhmchláir le marú"
 #: helpers/killer/killer.cpp:131
 #, kde-format
 msgid "pid"
-msgstr ""
+msgstr "pid"
 
 #: helpers/killer/killer.cpp:133
 #, kde-format
@@ -1254,7 +1255,7 @@ msgstr "Óstainm a bhfuil an feidhmchlár ag rith air"
 #: helpers/killer/killer.cpp:133
 #, kde-format
 msgid "hostname"
-msgstr ""
+msgstr "óstainm"
 
 #: helpers/killer/killer.cpp:135
 #, kde-format
@@ -1264,7 +1265,7 @@ msgstr "Fotheideal na fuinneoige le marú"
 #: helpers/killer/killer.cpp:135
 #, kde-format
 msgid "caption"
-msgstr ""
+msgstr "teideal"
 
 #: helpers/killer/killer.cpp:137
 #, kde-format
@@ -1348,13 +1349,13 @@ msgstr "Níl ag Freagairt"
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Aitheantas an Phróisis: %1"
 
 #: helpers/killer/killer.cpp:231
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr ""
+msgstr "Óstainm: %1"
 
 #: keyboard_layout.cpp:46 keyboard_layout.cpp:56 keyboard_layout.cpp:140
 #, kde-format
@@ -1763,7 +1764,7 @@ msgstr ""
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "Riamh"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
@@ -1935,7 +1936,7 @@ msgstr ""
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "window"
-msgstr ""
+msgstr "fuinneog"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:85
 #, kde-format
@@ -1964,7 +1965,7 @@ msgstr ""
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Close running window on %1"
-msgstr ""
+msgstr "Dún fuinneog ag rith ar %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
@@ -2246,7 +2247,7 @@ msgstr "Solas Oíche Ar Siúl Arís"
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Scoránaigh an Solas Oíche"
 
 #: plugins/nightlight/nightlightmanager.cpp:393
 #, kde-format
@@ -2363,7 +2364,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
-msgstr ""
+msgstr "Dún fuinneog"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
@@ -2664,7 +2665,7 @@ msgstr "Teimhneach"
 #: plugins/translucency/package/contents/ui/config.ui:137
 #, kde-format
 msgid "Dialogs:"
-msgstr ""
+msgstr "Dialóga:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2792,7 +2793,7 @@ msgstr ""
 #: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Windows"
-msgstr ""
+msgstr "Gan Fuinneoga"
 
 #: plugins/windowview/qml/Main.qml:122
 #, kde-format
@@ -3229,7 +3230,7 @@ msgstr ""
 #: rulesettings.kcfg:285
 #, kde-format
 msgid "Fullscreen"
-msgstr ""
+msgstr "Lánscáileán"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:289
@@ -3409,7 +3410,7 @@ msgstr ""
 #: rulesettings.kcfg:428
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Sraith"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:444
@@ -3445,7 +3446,7 @@ msgstr ""
 #: shortcutdialog.ui:14
 #, kde-format
 msgid "Dialog"
-msgstr ""
+msgstr "Dialóg"
 
 #. i18n: ectx: property (text), widget (QToolButton, clearButton)
 #: shortcutdialog.ui:25
@@ -3483,7 +3484,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr ""
+msgstr "Gan Fuinneoga Oscailte"
 
 #: tabbox/tabbox.cpp:310
 msgid "Walk Through Windows"
@@ -3635,7 +3636,7 @@ msgstr ""
 #: useractions.cpp:409
 #, kde-format
 msgid "&Desktops"
-msgstr ""
+msgstr "&Deasca"
 
 #: useractions.cpp:425
 #, kde-format
@@ -3675,7 +3676,7 @@ msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
 "number, second the output identifier. E.g. Screen 1 (HDMI1)"
 msgid "Screen &%1 (%2)"
-msgstr ""
+msgstr "Scáileán &%1 (%2)"
 
 #: useractions.cpp:576
 #, kde-format
