@@ -208,8 +208,8 @@ Q_SIGNALS:
 
 protected:
     virtual WindowQuadList buildQuads(ItemRenderer *renderer) const;
-    virtual void handlePrepareFrame(std::chrono::nanoseconds timestamp);
-    virtual void handleFramePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
+    virtual void handlePrepareFrame(SceneView *view, std::chrono::nanoseconds timestamp);
+    virtual void handleFramePainted(SceneView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
     virtual void releaseResources(RenderDevice *device);
     void discardQuads();
     void setColorDescription(const std::shared_ptr<ColorDescription> &description);
