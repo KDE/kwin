@@ -192,21 +192,6 @@ QList<OutputInterface *> Display::outputsIntersecting(const Rect &rect) const
     return outputs;
 }
 
-OutputInterface *Display::largestIntersectingOutput(const Rect &rect) const
-{
-    OutputInterface *returnOutput = nullptr;
-    uint64_t biggestArea = 0;
-    for (auto *output : std::as_const(d->outputs)) {
-        const Rect intersect = output->handle()->geometry().intersected(rect);
-        const uint64_t area = intersect.width() * intersect.height();
-        if (area > biggestArea) {
-            biggestArea = area;
-            returnOutput = output;
-        }
-    }
-    return returnOutput;
-}
-
 QList<SeatInterface *> Display::seats() const
 {
     return d->seats;
