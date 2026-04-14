@@ -101,7 +101,6 @@ public:
     QList<SeatInterface *> seats() const;
     QList<OutputInterface *> outputs() const;
     QList<OutputInterface *> outputsIntersecting(const Rect &rect) const;
-    OutputInterface *largestIntersectingOutput(const Rect &rect) const;
 
     /**
      * Returns the graphics buffer for the given @a resource, or @c null if there's no buffer.
