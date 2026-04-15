@@ -29,6 +29,7 @@ public:
 
     void updateScreens();
     void updateKeymap();
+    void forwardModifiers(uint32_t depressed, uint32_t latched, uint32_t locked, uint32_t group);
 
     virtual bool allowConnection(eis_client *client) const
     {

@@ -134,6 +134,15 @@ void EisContext::updateKeymap()
     }
 }
 
+void EisContext::forwardModifiers(uint32_t depressed, uint32_t latched, uint32_t locked, uint32_t group)
+{
+    for (const auto &client : m_clients) {
+        if (client->keyboard) {
+            eis_device_keyboard_send_xkb_modifiers(client->keyboard->handle(), depressed, latched, locked, group);
+        }
+    }
+}
+
 static std::chrono::microseconds currentTime()
 {
     return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch());
