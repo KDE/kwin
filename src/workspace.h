@@ -34,6 +34,7 @@ class KConfigGroup;
 class KStartupInfo;
 class KStartupInfoData;
 class KStartupInfoId;
+class QAction;
 class QLightSensor;
 
 namespace KWin
@@ -578,9 +579,9 @@ private:
     void init();
     void initShortcuts();
     template<typename Slot>
-    void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, Slot slot, bool autoRepeat);
+    QAction *initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, Slot slot, bool autoRepeat);
     template<typename T, typename Slot>
-    void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, bool autoRepeat);
+    QAction *initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, bool autoRepeat);
     void setupWindowShortcut(Window *window);
     bool switchWindow(Window *window, Direction direction, QPoint curPos, VirtualDesktop *desktop);
     void desktopResized(const QHash<Window *, LogicalOutput *> &oldOutputs);
