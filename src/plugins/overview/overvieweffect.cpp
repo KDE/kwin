@@ -137,25 +137,27 @@ OverviewEffect::OverviewEffect()
     connect(cycleAction, &QAction::triggered, this, &OverviewEffect::cycle);
     cycleAction->setObjectName(QStringLiteral("Cycle Overview"));
     cycleAction->setText(i18nc("@action Grid View and Overview are the name of KWin effects", "Cycle through Overview and Grid View"));
-    KGlobalAccel::self()->setGlobalShortcut(cycleAction, QList<QKeySequence>{});
+    KGlobalAccel::setGlobalShortcut(cycleAction, QList<QKeySequence>{});
 
     auto reverseCycleAction = new QAction(this);
     connect(reverseCycleAction, &QAction::triggered, this, &OverviewEffect::reverseCycle);
     reverseCycleAction->setObjectName(QStringLiteral("Cycle Overview Opposite"));
     reverseCycleAction->setText(i18nc("@action Grid View and Overview are the name of KWin effects", "Cycle through Grid View and Overview"));
-    KGlobalAccel::self()->setGlobalShortcut(reverseCycleAction, QList<QKeySequence>{});
+    KGlobalAccel::setGlobalShortcut(reverseCycleAction, QList<QKeySequence>{});
+
+    KGlobalAccel::setInverseShortcutActions(cycleAction, reverseCycleAction);
 
     auto overviewAction = m_overviewState->toggleAction();
     overviewAction->setObjectName(QStringLiteral("Overview"));
     overviewAction->setText(i18nc("@action Overview is the name of a Kwin effect", "Toggle Overview"));
     overviewAction->setAutoRepeat(false);
-    KGlobalAccel::self()->setGlobalShortcut(overviewAction, QKeySequence(Qt::META | Qt::Key_W));
+    KGlobalAccel::setGlobalShortcut(overviewAction, QKeySequence(Qt::META | Qt::Key_W));
 
     auto gridAction = m_gridState->toggleAction();
     gridAction->setObjectName(QStringLiteral("Grid View"));
     gridAction->setText(i18nc("@action Grid view is the name of a Kwin effect", "Toggle Grid View"));
     gridAction->setAutoRepeat(false);
-    KGlobalAccel::self()->setGlobalShortcut(gridAction, QKeySequence(Qt::META | Qt::Key_G));
+    KGlobalAccel::setGlobalShortcut(gridAction, QKeySequence(Qt::META | Qt::Key_G));
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::deactivateNow);
 
