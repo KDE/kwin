@@ -22,6 +22,8 @@
 namespace KWin
 {
 
+class EglContext;
+
 class KWIN_EXPORT GLShader
 {
 public:
@@ -146,6 +148,7 @@ protected:
     void resolveLocations();
 
 private:
+    EglContext *const m_context;
     unsigned int m_program;
     bool m_locationsResolved : 1;
     QHash<Mat3Uniform, int> m_matrix3Locations;

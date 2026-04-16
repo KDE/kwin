@@ -181,7 +181,7 @@ GLuint EGLPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) c
     return 0;
 }
 
-void EGLPlatformContext::create(const QSurfaceFormat &format, ::EGLContext shareContext)
+void EGLPlatformContext::create(const QSurfaceFormat &format, EglContext *shareContext)
 {
     if (!eglBindAPI(isOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API)) {
         qCWarning(KWIN_QPA) << "eglBindAPI failed:" << getEglErrorString();

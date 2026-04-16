@@ -19,7 +19,8 @@ namespace KWin
 {
 
 GLShader::GLShader()
-    : m_locationsResolved(false)
+    : m_context(EglContext::currentContext())
+    , m_locationsResolved(false)
 {
     m_program = glCreateProgram();
 }
@@ -28,6 +29,11 @@ GLShader::~GLShader()
 {
     if (!EglContext::currentContext()) {
         qCWarning(KWIN_OPENGL, "Could not delete shader because no context is current");
+        return;
+    }
+    Q_ASSERT(m_context->isCompatibleWith(EglContext::currentContext()));
+    if (!m_context->isCompatibleWith(EglContext::currentContext())) {
+        qCCritical(KWIN_OPENGL, "Attempted to delete a shader in the wrong context!");
         return;
     }
     if (m_program) {

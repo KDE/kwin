@@ -63,7 +63,7 @@ public:
     void invalidateContext() override;
 
 private:
-    void create(const QSurfaceFormat &format, ::EGLContext shareContext);
+    void create(const QSurfaceFormat &format, EglContext *shareContext);
     void updateFormatFromContext();
 
     EglDisplay *const m_eglDisplay;

@@ -38,7 +38,7 @@ using glGetnUniformfv_func = void (*)(GLuint program, GLint location, GLsizei bu
 class KWIN_EXPORT EglContext : public std::enable_shared_from_this<EglContext>
 {
 public:
-    EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context);
+    EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context, EglContext *shareContext);
     ~EglContext();
 
     bool makeCurrent();
@@ -101,8 +101,14 @@ public:
     GLFramebuffer *popFramebuffer();
     GLFramebuffer *currentFramebuffer();
 
+    /**
+     * @returns if this context can share OpenGL resources with @param other,
+     *          either through context sharing or being the same context
+     */
+    bool isCompatibleWith(EglContext *other) const;
+
     static EglContext *currentContext();
-    static std::shared_ptr<EglContext> create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext);
+    static std::shared_ptr<EglContext> create(EglDisplay *display, EGLConfig config, EglContext *sharedContext);
 
 private:
     static ::EGLContext createContext(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext);
@@ -116,6 +122,7 @@ private:
 
     static EglContext *s_currentContext;
 
+    EglContext *const m_shareContext;
     const QByteArrayView m_versionString;
     const Version m_version;
     const QByteArrayView m_glslVersionString;

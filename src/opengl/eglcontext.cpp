@@ -30,9 +30,9 @@ namespace KWin
 
 EglContext *EglContext::s_currentContext = nullptr;
 
-std::shared_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext)
+std::shared_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig config, EglContext *sharedContext)
 {
-    auto handle = createContext(display, config, sharedContext);
+    auto handle = createContext(display, config, sharedContext ? sharedContext->handle() : EGL_NO_CONTEXT);
     if (!handle) {
         return nullptr;
     }
@@ -40,7 +40,7 @@ std::shared_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig co
         eglDestroyContext(display->handle(), handle);
         return nullptr;
     }
-    auto ret = std::make_shared<EglContext>(display, config, handle);
+    auto ret = std::make_shared<EglContext>(display, config, handle, sharedContext);
     s_currentContext = ret.get();
     if (!ret->checkSupported()) {
         return nullptr;
@@ -104,8 +104,9 @@ static eglFuncPtr getProcAddress(const char *name)
     return eglGetProcAddress(name);
 }
 
-EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context)
-    : m_versionString((const char *)glGetString(GL_VERSION))
+EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context, EglContext *shareContext)
+    : m_shareContext(shareContext)
+    , m_versionString((const char *)glGetString(GL_VERSION))
     , m_version(Version::parseString(m_versionString))
     , m_glslVersionString((const char *)glGetString(GL_SHADING_LANGUAGE_VERSION))
     , m_glslVersion(Version::parseString(m_glslVersionString))
@@ -131,12 +132,14 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
     , m_display(display)
     , m_handle(context)
     , m_config(config)
-    , m_shaderManager(std::make_unique<ShaderManager>())
-    , m_streamingBuffer(std::make_unique<GLVertexBuffer>(GLVertexBuffer::Stream))
-    , m_indexBuffer(std::make_unique<IndexBuffer>())
 {
     glResolveFunctions(&getProcAddress);
     initDebugOutput();
+    // we can only create OpenGL resources after the context is set as the current one
+    s_currentContext = this;
+    m_shaderManager = std::make_unique<ShaderManager>();
+    m_streamingBuffer = std::make_unique<GLVertexBuffer>(GLVertexBuffer::Stream);
+    m_indexBuffer = std::make_unique<IndexBuffer>();
     if (haveBufferStorage() && haveSyncFences()) {
         if (qgetenv("KWIN_PERSISTENT_VBO") != QByteArrayLiteral("0")) {
             m_streamingBuffer->setPersistent();
@@ -688,6 +691,16 @@ GLFramebuffer *EglContext::currentFramebuffer()
 bool EglContext::isFailed() const
 {
     return m_failed;
+}
+
+bool EglContext::isCompatibleWith(EglContext *other) const
+{
+    // technically speaking, context sharing could be done
+    // more indirectly, but we don't do that in KWin
+    return other == this
+        || other->m_shareContext == this
+        || other == m_shareContext
+        || (m_shareContext && other->m_shareContext == this->m_shareContext);
 }
 
 }

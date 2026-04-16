@@ -19,6 +19,8 @@
 namespace KWin
 {
 
+class EglContext;
+
 class KWIN_EXPORT GlLookUpTable
 {
 public:
@@ -35,6 +37,7 @@ public:
 private:
     const GLuint m_handle;
     const size_t m_size;
+    EglContext *const m_context;
 };
 
 }
