@@ -74,6 +74,14 @@ class WindowThumbnailItem : public QQuickItem
      */
     Q_PROPERTY(KWin::Window *client READ client WRITE setClient NOTIFY clientChanged)
 
+    /*!
+     * \qmlproperty bool WindowThumbnail::live
+     *
+     * Controls whether the thumbnail source is updated live.
+     * Defaults to true.
+     */
+    Q_PROPERTY(bool live READ isLive WRITE setLive NOTIFY liveChanged)
+
 public:
     explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
     ~WindowThumbnailItem() override;
@@ -83,6 +91,9 @@ public:
 
     Window *client() const;
     void setClient(Window *client);
+
+    bool isLive() const;
+    void setLive(bool live);
 
     QSGTextureProvider *textureProvider() const override;
     bool isTextureProvider() const override;
@@ -95,6 +106,7 @@ protected:
 Q_SIGNALS:
     void wIdChanged();
     void clientChanged();
+    void liveChanged();
 
 private Q_SLOTS:
     /**
@@ -117,6 +129,7 @@ private:
 
     QUuid m_wId;
     QPointer<Window> m_client;
+    bool m_live = true;
 
     mutable ThumbnailTextureProvider *m_provider = nullptr;
     std::shared_ptr<WindowThumbnailSource> m_source;
