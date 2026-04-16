@@ -260,7 +260,7 @@ private:
     bool establishTabBoxGrab();
     void removeTabBoxGrab();
     template<typename Slot>
-    void key(const KLazyLocalizedString &actionName, Slot slot, const QList<QKeySequence> &shortcuts = QList<QKeySequence>());
+    QAction *key(const KLazyLocalizedString &actionName, Slot slot, const QList<QKeySequence> &shortcuts = QList<QKeySequence>());
 
     Direction matchShortcuts(const KeyboardKeyEvent &keyEvent, const QList<QKeySequence> &forward, const QList<QKeySequence> &backward) const;
 

@@ -791,21 +791,22 @@ void Workspace::closeActivePopup()
 }
 
 template<typename Slot>
-void Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, Slot slot, bool autoRepeat)
+QAction *Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, Slot slot, bool autoRepeat)
 {
-    initShortcut(actionName, description, shortcut, this, slot, autoRepeat);
+    return initShortcut(actionName, description, shortcut, this, slot, autoRepeat);
 }
 
 template<typename T, typename Slot>
-void Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, bool autoRepeat)
+QAction *Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, bool autoRepeat)
 {
     QAction *a = new QAction(this);
     a->setAutoRepeat(autoRepeat);
     a->setProperty("componentName", QStringLiteral("kwin"));
     a->setObjectName(actionName);
     a->setText(description);
-    KGlobalAccel::self()->setGlobalShortcut(a, QList<QKeySequence>{shortcut});
+    KGlobalAccel::setGlobalShortcut(a, QList<QKeySequence>{shortcut});
     connect(a, &QAction::triggered, receiver, slot);
+    return a;
 }
 
 /**
@@ -840,10 +841,12 @@ void Workspace::initShortcuts()
                  0, &Workspace::slotWindowMove, true);
     initShortcut("Window Resize", i18n("Resize Window"),
                  0, &Workspace::slotWindowResize, true);
-    initShortcut("Window Raise", i18n("Raise Window"),
-                 0, &Workspace::slotWindowRaise, true);
-    initShortcut("Window Lower", i18n("Lower Window"),
-                 0, &Workspace::slotWindowLower, true);
+    QAction *windowRaiseAction = initShortcut("Window Raise", i18n("Raise Window"),
+                                              0, &Workspace::slotWindowRaise, true);
+    QAction *windowLowerAction = initShortcut("Window Lower", i18n("Lower Window"),
+                                              0, &Workspace::slotWindowLower, true);
+    KGlobalAccel::setInverseShortcutActions(windowRaiseAction, windowLowerAction);
+
     initShortcut("Toggle Window Raise/Lower", i18n("Toggle Window Raise/Lower"),
                  0, &Workspace::slotWindowRaiseOrLower, true);
     initShortcut("Window Fullscreen", i18n("Make Window Fullscreen"),
@@ -860,22 +863,30 @@ void Workspace::initShortcuts()
                  0, &Workspace::slotSetupWindowShortcut, true);
     initShortcut("Window Move Center", i18n("Move Window to the Center"), 0,
                  &Workspace::slotWindowCenter, true);
-    initShortcut("Window Pack Right", i18n("Move Window Right"),
-                 0, &Workspace::slotWindowMoveRight, true);
-    initShortcut("Window Pack Left", i18n("Move Window Left"),
-                 0, &Workspace::slotWindowMoveLeft, true);
-    initShortcut("Window Pack Up", i18n("Move Window Up"),
-                 0, &Workspace::slotWindowMoveUp, true);
-    initShortcut("Window Pack Down", i18n("Move Window Down"),
-                 0, &Workspace::slotWindowMoveDown, true);
-    initShortcut("Window Grow Horizontal", i18n("Expand Window Horizontally"),
-                 0, &Workspace::slotWindowExpandHorizontal, true);
-    initShortcut("Window Grow Vertical", i18n("Expand Window Vertically"),
-                 0, &Workspace::slotWindowExpandVertical, true);
-    initShortcut("Window Shrink Horizontal", i18n("Shrink Window Horizontally"),
-                 0, &Workspace::slotWindowShrinkHorizontal, true);
-    initShortcut("Window Shrink Vertical", i18n("Shrink Window Vertically"),
-                 0, &Workspace::slotWindowShrinkVertical, true);
+    QAction *windowPackRightAction = initShortcut("Window Pack Right", i18n("Move Window Right"),
+                                                  0, &Workspace::slotWindowMoveRight, true);
+    QAction *windowPackLeftAction = initShortcut("Window Pack Left", i18n("Move Window Left"),
+                                                 0, &Workspace::slotWindowMoveLeft, true);
+    KGlobalAccel::setInverseShortcutActions(windowPackRightAction, windowPackLeftAction);
+
+    QAction *windowPackUpAction = initShortcut("Window Pack Up", i18n("Move Window Up"),
+                                               0, &Workspace::slotWindowMoveUp, true);
+    QAction *windowPackDownAction = initShortcut("Window Pack Down", i18n("Move Window Down"),
+                                                 0, &Workspace::slotWindowMoveDown, true);
+    KGlobalAccel::setInverseShortcutActions(windowPackUpAction, windowPackDownAction);
+
+    QAction *windowGrowHorizontalAction = initShortcut("Window Grow Horizontal", i18n("Expand Window Horizontally"),
+                                                       0, &Workspace::slotWindowExpandHorizontal, true);
+    QAction *windowShrinkHorizontalAction = initShortcut("Window Shrink Horizontal", i18n("Shrink Window Horizontally"),
+                                                         0, &Workspace::slotWindowShrinkHorizontal, true);
+    KGlobalAccel::setInverseShortcutActions(windowGrowHorizontalAction, windowShrinkHorizontalAction);
+
+    QAction *windowGrowVerticalAction = initShortcut("Window Grow Vertical", i18n("Expand Window Vertically"),
+                                                     0, &Workspace::slotWindowExpandVertical, true);
+    QAction *windowShrinkVerticalAction = initShortcut("Window Shrink Vertical", i18n("Shrink Window Vertically"),
+                                                       0, &Workspace::slotWindowShrinkVertical, true);
+    KGlobalAccel::setInverseShortcutActions(windowGrowVerticalAction, windowShrinkVerticalAction);
+
     initShortcut("Window Quick Tile Left", i18n("Quick Tile Window to the Left"),
                  Qt::META | Qt::Key_Left, std::bind(&Workspace::quickTileWindow, this, QuickTileFlag::Left), true);
     initShortcut("Window Quick Tile Right", i18n("Quick Tile Window to the Right"),
@@ -892,18 +903,23 @@ void Workspace::initShortcuts()
                  0, std::bind(&Workspace::quickTileWindow, this, QuickTileFlag::Top | QuickTileFlag::Right), true);
     initShortcut("Window Quick Tile Bottom Right", i18n("Quick Tile Window to the Bottom Right"),
                  0, std::bind(&Workspace::quickTileWindow, this, QuickTileFlag::Bottom | QuickTileFlag::Right), true);
-    initShortcut("Switch Window Up", i18n("Switch to Window Above"),
-                 Qt::META | Qt::ALT | Qt::Key_Up, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionNorth), true);
-    initShortcut("Switch Window Down", i18n("Switch to Window Below"),
-                 Qt::META | Qt::ALT | Qt::Key_Down, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionSouth), true);
-    initShortcut("Switch Window Right", i18n("Switch to Window to the Right"),
-                 Qt::META | Qt::ALT | Qt::Key_Right, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionEast), true);
-    initShortcut("Switch Window Left", i18n("Switch to Window to the Left"),
-                 Qt::META | Qt::ALT | Qt::Key_Left, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionWest), true);
-    initShortcut("Increase Opacity", i18n("Increase Opacity of Active Window by 5%"),
-                 0, &Workspace::slotIncreaseWindowOpacity, true);
-    initShortcut("Decrease Opacity", i18n("Decrease Opacity of Active Window by 5%"),
-                 0, &Workspace::slotLowerWindowOpacity, true);
+    QAction *switchWindowUpAction = initShortcut("Switch Window Up", i18n("Switch to Window Above"),
+                                                 Qt::META | Qt::ALT | Qt::Key_Up, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionNorth), true);
+    QAction *switchWindowDownAction = initShortcut("Switch Window Down", i18n("Switch to Window Below"),
+                                                   Qt::META | Qt::ALT | Qt::Key_Down, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionSouth), true);
+    KGlobalAccel::setInverseShortcutActions(switchWindowUpAction, switchWindowDownAction);
+
+    QAction *switchWindowRightAction = initShortcut("Switch Window Right", i18n("Switch to Window to the Right"),
+                                                    Qt::META | Qt::ALT | Qt::Key_Right, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionEast), true);
+    QAction *switchWindowLeftAction = initShortcut("Switch Window Left", i18n("Switch to Window to the Left"),
+                                                   Qt::META | Qt::ALT | Qt::Key_Left, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionWest), true);
+    KGlobalAccel::setInverseShortcutActions(switchWindowRightAction, switchWindowLeftAction);
+
+    QAction *increaseOpacityAction = initShortcut("Increase Opacity", i18n("Increase Opacity of Active Window by 5%"),
+                                                  0, &Workspace::slotIncreaseWindowOpacity, true);
+    QAction *decreaseOpacityAction = initShortcut("Decrease Opacity", i18n("Decrease Opacity of Active Window by 5%"),
+                                                  0, &Workspace::slotLowerWindowOpacity, true);
+    KGlobalAccel::setInverseShortcutActions(increaseOpacityAction, decreaseOpacityAction);
 
     initShortcut("Window On All Desktops", i18n("Keep Window on All Desktops"),
                  0, &Workspace::slotWindowOnAllDesktops, true);
@@ -927,16 +943,21 @@ void Workspace::initShortcuts()
         };
         initShortcut(QStringLiteral("Window to Desktop %1").arg(i + 1), i18n("Window to Desktop %1", i + 1), 0, handler, true);
     }
-    initShortcut("Window to Next Desktop", i18n("Window to Next Desktop"), 0, &Workspace::slotWindowToNextDesktop, true);
-    initShortcut("Window to Previous Desktop", i18n("Window to Previous Desktop"), 0, &Workspace::slotWindowToPreviousDesktop, true);
-    initShortcut("Window One Desktop to the Right", i18n("Window One Desktop to the Right"),
-                 Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToDesktopRight, true);
-    initShortcut("Window One Desktop to the Left", i18n("Window One Desktop to the Left"),
-                 Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToDesktopLeft, true);
-    initShortcut("Window One Desktop Up", i18n("Window One Desktop Up"),
-                 Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Up, &Workspace::slotWindowToDesktopUp, true);
-    initShortcut("Window One Desktop Down", i18n("Window One Desktop Down"),
-                 Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Down, &Workspace::slotWindowToDesktopDown, true);
+    QAction *windowToNextDesktopAction = initShortcut("Window to Next Desktop", i18n("Window to Next Desktop"), 0, &Workspace::slotWindowToNextDesktop, true);
+    QAction *windowToPreviousDesktopAction = initShortcut("Window to Previous Desktop", i18n("Window to Previous Desktop"), 0, &Workspace::slotWindowToPreviousDesktop, true);
+    KGlobalAccel::setInverseShortcutActions(windowToNextDesktopAction, windowToPreviousDesktopAction);
+
+    QAction *windowOneDesktopRightAction = initShortcut("Window One Desktop to the Right", i18n("Window One Desktop to the Right"),
+                                                        Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToDesktopRight, true);
+    QAction *windowOneDesktopLeftAction = initShortcut("Window One Desktop to the Left", i18n("Window One Desktop to the Left"),
+                                                       Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToDesktopLeft, true);
+    KGlobalAccel::setInverseShortcutActions(windowOneDesktopRightAction, windowOneDesktopLeftAction);
+
+    QAction *windowOneDesktopUpAction = initShortcut("Window One Desktop Up", i18n("Window One Desktop Up"),
+                                                     Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Up, &Workspace::slotWindowToDesktopUp, true);
+    QAction *windowOneDesktopDownAction = initShortcut("Window One Desktop Down", i18n("Window One Desktop Down"),
+                                                       Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Down, &Workspace::slotWindowToDesktopDown, true);
+    KGlobalAccel::setInverseShortcutActions(windowOneDesktopUpAction, windowOneDesktopDownAction);
 
     for (int i = 0; i < 8; ++i) {
         initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Move Window to Screen %1", i), 0, [this, i]() {
@@ -946,18 +967,23 @@ void Workspace::initShortcuts()
             }
         }, true);
     }
-    initShortcut("Window to Next Screen", i18n("Move Window to Next Screen"),
-                 Qt::META | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToNextScreen, true);
-    initShortcut("Window to Previous Screen", i18n("Move Window to Previous Screen"),
-                 Qt::META | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToPrevScreen, true);
-    initShortcut("Window One Screen to the Right", i18n("Move Window One Screen to the Right"),
-                 0, &Workspace::slotWindowToRightScreen, true);
-    initShortcut("Window One Screen to the Left", i18n("Move Window One Screen to the Left"),
-                 0, &Workspace::slotWindowToLeftScreen, true);
-    initShortcut("Window One Screen Up", i18n("Move Window One Screen Up"),
-                 0, &Workspace::slotWindowToAboveScreen, true);
-    initShortcut("Window One Screen Down", i18n("Move Window One Screen Down"),
-                 0, &Workspace::slotWindowToBelowScreen, true);
+    QAction *windowToNextScreenAction = initShortcut("Window to Next Screen", i18n("Move Window to Next Screen"),
+                                                     Qt::META | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToNextScreen, true);
+    QAction *windowToPreviousScreenAction = initShortcut("Window to Previous Screen", i18n("Move Window to Previous Screen"),
+                                                         Qt::META | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToPrevScreen, true);
+    KGlobalAccel::setInverseShortcutActions(windowToNextScreenAction, windowToPreviousScreenAction);
+
+    QAction *windowOneScreenRightAction = initShortcut("Window One Screen to the Right", i18n("Move Window One Screen to the Right"),
+                                                       0, &Workspace::slotWindowToRightScreen, true);
+    QAction *windowOneScreenLeftAction = initShortcut("Window One Screen to the Left", i18n("Move Window One Screen to the Left"),
+                                                      0, &Workspace::slotWindowToLeftScreen, true);
+    KGlobalAccel::setInverseShortcutActions(windowOneScreenRightAction, windowOneScreenLeftAction);
+
+    QAction *windowOneScreenUpAction = initShortcut("Window One Screen Up", i18n("Move Window One Screen Up"),
+                                                    0, &Workspace::slotWindowToAboveScreen, true);
+    QAction *windowOneScreenDownAction = initShortcut("Window One Screen Down", i18n("Move Window One Screen Down"),
+                                                      0, &Workspace::slotWindowToBelowScreen, true);
+    KGlobalAccel::setInverseShortcutActions(windowOneScreenUpAction, windowOneScreenDownAction);
 
     for (int i = 0; i < 8; ++i) {
         initShortcut(QStringLiteral("Switch to Screen %1").arg(i), i18n("Switch to Screen %1", i), 0, [this, i]() {
@@ -967,16 +993,21 @@ void Workspace::initShortcuts()
             }
         }, true);
     }
-    initShortcut("Switch to Next Screen", i18n("Switch to Next Screen"), 0, &Workspace::slotSwitchToNextScreen, true);
-    initShortcut("Switch to Previous Screen", i18n("Switch to Previous Screen"), 0, &Workspace::slotSwitchToPrevScreen, true);
-    initShortcut("Switch to Screen to the Right", i18n("Switch to Screen to the Right"),
-                 0, &Workspace::slotSwitchToRightScreen, true);
-    initShortcut("Switch to Screen to the Left", i18n("Switch to Screen to the Left"),
-                 0, &Workspace::slotSwitchToLeftScreen, true);
-    initShortcut("Switch to Screen Above", i18n("Switch to Screen Above"),
-                 0, &Workspace::slotSwitchToAboveScreen, true);
-    initShortcut("Switch to Screen Below", i18n("Switch to Screen Below"),
-                 0, &Workspace::slotSwitchToBelowScreen, true);
+    QAction *switchToNextScreenAction = initShortcut("Switch to Next Screen", i18n("Switch to Next Screen"), 0, &Workspace::slotSwitchToNextScreen, true);
+    QAction *switchToPreviousScreenAction = initShortcut("Switch to Previous Screen", i18n("Switch to Previous Screen"), 0, &Workspace::slotSwitchToPrevScreen, true);
+    KGlobalAccel::setInverseShortcutActions(switchToNextScreenAction, switchToPreviousScreenAction);
+
+    QAction *switchToScreenRightAction = initShortcut("Switch to Screen to the Right", i18n("Switch to Screen to the Right"),
+                                                      0, &Workspace::slotSwitchToRightScreen, true);
+    QAction *switchToScreenLeftAction = initShortcut("Switch to Screen to the Left", i18n("Switch to Screen to the Left"),
+                                                     0, &Workspace::slotSwitchToLeftScreen, true);
+    KGlobalAccel::setInverseShortcutActions(switchToScreenRightAction, switchToScreenLeftAction);
+
+    QAction *switchToScreenAboveAction = initShortcut("Switch to Screen Above", i18n("Switch to Screen Above"),
+                                                      0, &Workspace::slotSwitchToAboveScreen, true);
+    QAction *switchToScreenBelowAction = initShortcut("Switch to Screen Below", i18n("Switch to Screen Below"),
+                                                      0, &Workspace::slotSwitchToBelowScreen, true);
+    KGlobalAccel::setInverseShortcutActions(switchToScreenAboveAction, switchToScreenBelowAction);
 
     initShortcut("Show Desktop", i18n("Peek at Desktop"),
                  Qt::META | Qt::Key_D, &Workspace::slotToggleShowDesktop, false);
