@@ -47,7 +47,7 @@ private:
 class KWIN_EXPORT QPainterSwapchain
 {
 public:
-    QPainterSwapchain(GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format);
+    QPainterSwapchain(GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, bool scanout);
     ~QPainterSwapchain();
 
     QSize size() const;
@@ -61,6 +61,7 @@ private:
     QList<std::shared_ptr<QPainterSwapchainSlot>> m_slots;
     QSize m_size;
     uint32_t m_format;
+    bool m_scanout;
 };
 
 }

@@ -319,13 +319,15 @@ void OffscreenQuickView::update(OutputFrame *frame)
             if (d->m_scanoutDevice) {
                 d->m_swapchain = EglSwapchain::create(d->m_scanoutDevice->allocator(),
                                                       EglContext::currentContext(), nativeSize,
-                                                      format, d->m_scanoutFormats.value(format));
+                                                      format, d->m_scanoutFormats.value(format),
+                                                      true);
             }
             if (!d->m_swapchain) {
                 // TODO add non-scanout feedback on the item for this?
                 d->m_swapchain = EglSwapchain::create(Compositor::self()->backend()->drmDevice()->allocator(),
                                                       EglContext::currentContext(), nativeSize,
-                                                      format, Compositor::self()->backend()->supportedFormats()[format]);
+                                                      format, Compositor::self()->backend()->supportedFormats()[format],
+                                                      false);
             }
             if (!d->m_swapchain) {
                 d->m_glcontext->doneCurrent();

@@ -53,10 +53,11 @@ std::shared_ptr<QPainterSwapchainSlot> QPainterSwapchainSlot::create(GraphicsBuf
     return std::make_shared<QPainterSwapchainSlot>(buffer, std::move(view));
 }
 
-QPainterSwapchain::QPainterSwapchain(GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format)
+QPainterSwapchain::QPainterSwapchain(GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format, bool scanout)
     : m_allocator(allocator)
     , m_size(size)
     , m_format(format)
+    , m_scanout(scanout)
 {
 }
 
@@ -86,6 +87,7 @@ std::shared_ptr<QPainterSwapchainSlot> QPainterSwapchain::acquire()
         .size = m_size,
         .format = m_format,
         .software = true,
+        .scanout = m_scanout,
     });
     if (!buffer) {
         qCWarning(KWIN_QPAINTER) << "Failed to allocate a qpainter swapchain graphics buffer";

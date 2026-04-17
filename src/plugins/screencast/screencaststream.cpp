@@ -284,6 +284,7 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
                                                                        .size = QSize(m_videoFormat.size.width, m_videoFormat.size.height),
                                                                        .format = spaVideoFormatToDrmFormat(m_videoFormat.format),
                                                                        .modifiers = {m_videoFormat.modifier},
+                                                                       .scanout = false,
                                                                    })) {
             pwBuffer->user_data = dmabuf;
             m_allBuffers.push_back(dmabuf);
@@ -296,6 +297,7 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
                                                                      .size = QSize(m_videoFormat.size.width, m_videoFormat.size.height),
                                                                      .format = spaVideoFormatToDrmFormat(m_videoFormat.format),
                                                                      .software = true,
+                                                                     .scanout = false,
                                                                  })) {
             pwBuffer->user_data = memfd;
             m_allBuffers.push_back(memfd);
@@ -883,6 +885,7 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         .size = size,
         .format = format,
         .modifiers = modifiers,
+        .scanout = false,
     });
     if (!buffer) {
         return std::nullopt;

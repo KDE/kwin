@@ -3600,6 +3600,7 @@ public:
             .format = DRM_FORMAT_XRGB8888,
             .modifiers = ModifierList{DRM_FORMAT_MOD_LINEAR},
             .software = true,
+            .scanout = false,
         });
         if (!buffer) {
             return false;

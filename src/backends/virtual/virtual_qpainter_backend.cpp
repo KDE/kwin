@@ -34,7 +34,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::doBeginFrame()
 {
     const QSize nativeSize(m_output->modeSize());
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
-        m_swapchain = std::make_unique<QPainterSwapchain>(m_backend->graphicsBufferAllocator(), nativeSize, DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_unique<QPainterSwapchain>(m_backend->graphicsBufferAllocator(), nativeSize, DRM_FORMAT_XRGB8888, false);
     }
 
     m_current = m_swapchain->acquire();

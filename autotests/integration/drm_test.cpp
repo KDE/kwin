@@ -249,6 +249,7 @@ public:
             .format = DRM_FORMAT_XRGB8888,
             .modifiers = formats[DRM_FORMAT_XRGB8888],
             .software = false,
+            .scanout = false,
         });
         auto wlbuffer = Test::linuxDmabuf()->importBuffer(m_buffer.buffer());
         m_surface->attachBuffer(wlbuffer);
@@ -268,12 +269,12 @@ public:
                 if (!tranche.formats.contains(m_buffer->dmabufAttributes()->format)) {
                     continue;
                 }
-                // scanout flag is currently implicit in GraphicsBufferOptions
                 m_buffer = m_device->allocator()->allocate(GraphicsBufferOptions{
                     .size = m_buffer->size(),
                     .format = m_buffer->dmabufAttributes()->format,
                     .modifiers = tranche.formats[m_buffer->dmabufAttributes()->format],
                     .software = false,
+                    .scanout = tranche.scanout,
                 });
                 auto wlbuffer = Test::linuxDmabuf()->importBuffer(m_buffer.buffer());
                 m_surface->attachBuffer(wlbuffer);

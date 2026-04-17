@@ -35,7 +35,7 @@ DrmQPainterLayer::DrmQPainterLayer(DrmPlane::TypeIndex type)
 std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::doBeginFrame()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = std::make_shared<QPainterSwapchain>(scanoutDevice()->allocator(), targetRect().size(), supportedDrmFormats().contains(DRM_FORMAT_ARGB8888) ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<QPainterSwapchain>(scanoutDevice()->allocator(), targetRect().size(), supportedDrmFormats().contains(DRM_FORMAT_ARGB8888) ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888, true);
         m_damageJournal = DamageJournal();
     }
 
@@ -70,7 +70,7 @@ bool DrmQPainterLayer::doEndFrame(const Region &renderedDeviceRegion, const Regi
 bool DrmQPainterLayer::preparePresentationTest()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = std::make_shared<QPainterSwapchain>(scanoutDevice()->allocator(), targetRect().size(), supportedDrmFormats().contains(DRM_FORMAT_ARGB8888) ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<QPainterSwapchain>(scanoutDevice()->allocator(), targetRect().size(), supportedDrmFormats().contains(DRM_FORMAT_ARGB8888) ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888, true);
         m_currentBuffer = m_swapchain->acquire();
         if (m_currentBuffer) {
             m_currentFramebuffer = gpu()->importBuffer(m_currentBuffer->buffer(), FileDescriptor{});

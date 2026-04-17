@@ -66,7 +66,7 @@ static std::optional<DrmFormat> chooseFormat(uint32_t inputFormat, const FormatM
     return ret;
 }
 
-std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats)
+std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyDevice, DrmDevice *targetDevice, uint32_t format, uint64_t modifier, const QSize &size, const FormatModifierMap &importFormats, bool scanout)
 {
     if (copyDevice->isInReset()) {
         // avoid creating a suboptimal swapchain while in a reset
@@ -75,7 +75,7 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyD
     if (copyDevice->vulkanDevice() && copyDevice->vulkanDevice()->supportedFormats().containsFormat(format, modifier)) {
         const auto fmt = chooseFormat(format, copyDevice->vulkanDevice()->supportedFormats(), importFormats);
         if (fmt) {
-            auto swapchain = VulkanSwapchain::create(copyDevice->vulkanDevice(), targetDevice->allocator(), size, fmt->format, fmt->modifiers);
+            auto swapchain = VulkanSwapchain::create(copyDevice->vulkanDevice(), targetDevice->allocator(), size, fmt->format, fmt->modifiers, scanout);
             if (swapchain) {
                 return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, std::move(swapchain));
             }
@@ -96,7 +96,7 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyD
         if (!formatMod) {
             return nullptr;
         }
-        auto eglSwapchain = EglSwapchain::create(copyDevice->drmDevice()->allocator(), context.get(), size, formatMod->format, formatMod->modifiers);
+        auto eglSwapchain = EglSwapchain::create(copyDevice->drmDevice()->allocator(), context.get(), size, formatMod->format, formatMod->modifiers, scanout);
         if (eglSwapchain) {
             return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, context, std::move(eglSwapchain));
         }

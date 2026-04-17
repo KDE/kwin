@@ -59,19 +59,20 @@ private:
 class KWIN_EXPORT EglSwapchain
 {
 public:
-    EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, const std::shared_ptr<EglSwapchainSlot> &seed);
+    EglSwapchain(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, uint64_t modifier, bool scanout, const std::shared_ptr<EglSwapchainSlot> &seed);
     ~EglSwapchain();
 
     QSize size() const;
     uint32_t format() const;
     uint64_t modifier() const;
+    bool scanout() const;
 
     std::shared_ptr<EglSwapchainSlot> acquire();
     void release(std::shared_ptr<EglSwapchainSlot> slot, FileDescriptor &&releaseFence);
 
     void resetBufferAge();
 
-    static std::shared_ptr<EglSwapchain> create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const ModifierList &modifiers);
+    static std::shared_ptr<EglSwapchain> create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const ModifierList &modifiers, bool scanout);
 
 private:
     GraphicsBufferAllocator *m_allocator;
@@ -79,6 +80,7 @@ private:
     QSize m_size;
     uint32_t m_format;
     uint64_t m_modifier;
+    bool m_scanout;
     QList<std::shared_ptr<EglSwapchainSlot>> m_slots;
 };
 

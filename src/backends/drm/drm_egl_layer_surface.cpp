@@ -144,7 +144,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
                     }
                     modifiers = {DRM_FORMAT_MOD_LINEAR};
                 }
-                m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->drmDevice()->allocator(), m_eglBackend->openglContext(), m_surface->gbmSwapchain->size(), format.drmFormat, modifiers);
+                m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->drmDevice()->allocator(), m_eglBackend->openglContext(), m_surface->gbmSwapchain->size(), format.drmFormat, modifiers, false);
                 if (m_surface->shadowSwapchain) {
                     break;
                 }
@@ -474,9 +474,9 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         return nullptr;
     }
     if (cpuCopy) {
-        ret->importDumbSwapchain = std::make_unique<QPainterSwapchain>(m_gpu->drmDevice()->allocator(), size, format);
+        ret->importDumbSwapchain = std::make_unique<QPainterSwapchain>(m_gpu->drmDevice()->allocator(), size, format, true);
     } else if (importMode == MultiGpuImportMode::GpuCopy) {
-        ret->importSwapchain = MultiGpuSwapchain::create(m_gpu->renderDevice(), m_gpu->drmDevice(), format, ret->gbmSwapchain->modifier(), size, FormatModifierMap{{format, modifiers}});
+        ret->importSwapchain = MultiGpuSwapchain::create(m_gpu->renderDevice(), m_gpu->drmDevice(), format, ret->gbmSwapchain->modifier(), size, FormatModifierMap{{format, modifiers}}, true);
         if (!ret->importSwapchain) {
             return nullptr;
         }
@@ -491,12 +491,13 @@ std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu
 {
     const bool linearSupported = modifiers.contains(DRM_FORMAT_MOD_LINEAR);
     const bool preferLinear = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Dumb;
+    const bool scanout = importMode != MultiGpuImportMode::GpuCopy && bufferTarget != BufferTarget::Dumb;
     if (linearSupported && preferLinear) {
-        if (const auto swapchain = EglSwapchain::create(gpu->drmDevice()->allocator(), context, size, format, linearModifier)) {
+        if (const auto swapchain = EglSwapchain::create(gpu->drmDevice()->allocator(), context, size, format, linearModifier, scanout)) {
             return swapchain;
         }
     }
-    return EglSwapchain::create(gpu->drmDevice()->allocator(), context, size, format, modifiers);
+    return EglSwapchain::create(gpu->drmDevice()->allocator(), context, size, format, modifiers, scanout);
 }
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *surface) const

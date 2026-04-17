@@ -67,6 +67,7 @@ Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const F
                     .format = it.key(),
                     .modifiers = it.value(),
                     .software = software,
+                    .scanout = false,
                 };
                 auto buffer = allocator->allocate(options);
                 if (!buffer) {
