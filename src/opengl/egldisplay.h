@@ -39,6 +39,7 @@ public:
 
     bool supportsBufferAge() const;
     bool supportsNativeFence() const;
+    bool isSoftwareDevice() const;
 
     const FormatModifierMap &nonExternalOnlySupportedDrmFormats() const;
     const FormatModifierMap &allSupportedDrmFormats() const;
@@ -70,6 +71,7 @@ private:
 
     const bool m_supportsBufferAge;
     const bool m_supportsNativeFence;
+    const bool m_isSoftwareDevice;
     FormatModifierMap m_nonExternalOnlyFormats;
     FormatModifierMap m_allFormats;
 
