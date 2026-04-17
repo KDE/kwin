@@ -57,6 +57,7 @@ public:
     void deactivate();
     void processEvents();
 
+    QList<Device *> devices() const;
     QStringList devicesSysNames() const;
 
     QStringList ListPointers() const;

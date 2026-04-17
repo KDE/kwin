@@ -26,18 +26,22 @@ LibinputBackend::LibinputBackend(Session *session, QObject *parent)
     },
         Qt::QueuedConnection);
 
-    // Direct connection because the deviceAdded() and the deviceRemoved() signals are emitted
-    // from the main thread.
     connect(m_connection, &LibInput::Connection::deviceAdded,
-            this, &InputBackend::deviceAdded, Qt::DirectConnection);
+            this, &InputBackend::deviceAdded);
     connect(m_connection, &LibInput::Connection::deviceRemoved,
-            this, &InputBackend::deviceRemoved, Qt::DirectConnection);
+            this, &InputBackend::deviceRemoved);
 }
 
 LibinputBackend::~LibinputBackend()
 {
-    m_connection->deleteLater();
+    // Notify the main thread about removed input devices. The deviceRemoved() signal cannot
+    // be emitted from the connection thread otherwise it will be queued, which we don't want.
+    const auto devices = m_connection->devices();
+    for (const auto device : devices) {
+        Q_EMIT deviceRemoved(device);
+    }
 
+    m_connection->deleteLater();
     m_thread.quit();
     m_thread.wait();
 }

@@ -126,10 +126,6 @@ Connection::Connection(std::unique_ptr<Context> &&input)
 
 Connection::~Connection()
 {
-    for (Device *device : std::as_const(m_devices)) {
-        Q_EMIT deviceRemoved(device);
-    }
-
     m_eventQueue.clear();
     qDeleteAll(m_devices);
     qDeleteAll(m_tools);
@@ -719,6 +715,11 @@ void Connection::slotKGlobalSettingsNotifyChange(int type, int arg)
             }
         }
     }
+}
+
+QList<Device *> Connection::devices() const
+{
+    return m_devices;
 }
 
 QStringList Connection::devicesSysNames() const
