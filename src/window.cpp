@@ -4003,6 +4003,7 @@ void Window::sendToOutput(LogicalOutput *newOutput)
     for (auto it = tso.constBegin(), end = tso.constEnd(); it != end; ++it) {
         (*it)->sendToOutput(newOutput);
     }
+    updateWindowRules(Rules::Screen);
     finishInteractiveOutputChange(oldOutput);
 }
 

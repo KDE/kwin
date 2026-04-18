@@ -1256,6 +1256,9 @@ void XdgToplevelWindow::initialize()
 {
     setupWindowRules();
 
+    LogicalOutput *initialOutput = rules()->checkOutput(moveResizeOutput(), true);
+    setOutput(initialOutput);
+    setMoveResizeOutput(initialOutput);
     std::optional<XdgToplevelSessionData> sessionData;
     if (m_shellSurface->session()) {
         sessionData = XdgToplevelSessionData::parse(m_shellSurface->session()->read());
