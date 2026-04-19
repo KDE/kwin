@@ -7,13 +7,14 @@
 # SPDX-FileCopyrightText: 2024 Nicolai Weitkemper <kontakt@nicolaiweitkemper.de>
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
 # SPDX-FileCopyrightText: 2026 Philipp Kiemle <l10n.daphipz@fastmail.de>
+# SPDX-FileCopyrightText: 2026 Alexander Becker <alex-at-kde-l10n-de@freenet.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-02-26 16:38+0100\n"
-"Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
+"PO-Revision-Date: 2026-04-16 21:40+0200\n"
+"Last-Translator: Alexander Becker <alex-at-kde-l10n-de@freenet.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -167,7 +168,8 @@ msgstr "Höhe des Bildschirms"
 #, kde-format
 msgid ""
 "Change desktop when the mouse cursor is pushed against the edge of the screen"
-msgstr "Arbeitsfläche wechseln, wenn die Maus an einen Bildschirmrand anstößt"
+msgstr ""
+"Arbeitsfläche wechseln, wenn der Mauszeiger an einen Bildschirmrand anstößt"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
@@ -201,7 +203,7 @@ msgid ""
 "Amount of time required for the mouse cursor to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
-"Benötigte Zeit zum Anstoßen an einen Arbeitsflächenrand, bevor die Aktion "
+"Zum Anstoßen an einen Bildschirmrand benötigte Zeit, bevor die Aktion "
 "ausgelöst wird"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
