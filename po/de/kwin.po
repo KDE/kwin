@@ -9,13 +9,14 @@
 # SPDX-FileCopyrightText: 2024 Flori G <Renner03@protonmail.com>
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
 # SPDX-FileCopyrightText: 2025-2026 Philipp Kiemle <l10n.daphipz@fastmail.de>
+# SPDX-FileCopyrightText: 2026 Alexander Becker <alex-at-kde-l10n-de@freenet.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-06 02:37+0000\n"
-"PO-Revision-Date: 2026-03-13 22:13+0100\n"
-"Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
+"PO-Revision-Date: 2026-04-16 21:42+0200\n"
+"Last-Translator: Alexander Becker <alex-at-kde-l10n-de@freenet.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -165,10 +166,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "Dem Farbprofil fehlen TRC-Tags"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "ICC-Profil „%1“ kann nicht geöffnet werden"
+msgstr "Invertierung von Tonwertkurven des ICC-Profils „%1“ ist fehlgeschlagen"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -741,12 +741,12 @@ msgstr "Annäherung"
 #: debug_console.cpp:543
 #, kde-format
 msgid "In"
-msgstr ""
+msgstr "Ein"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Out"
-msgstr ""
+msgstr "Aus"
 
 #: debug_console.cpp:544 debug_console.cpp:562 debug_console.cpp:582
 #: debug_console.cpp:632 debug_console.cpp:649
@@ -780,32 +780,29 @@ msgid "Pressure"
 msgstr "Druck"
 
 #: debug_console.cpp:577
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet Tool Tip"
-msgstr "Tablet-Werkzeug"
+msgstr "Tablet-Werkzeug Spitze"
 
 #: debug_console.cpp:581
 #, kde-format
 msgid "Tip"
-msgstr "Tipp"
+msgstr "Spitze"
 
 #: debug_console.cpp:581
-#, fuzzy, kde-format
-#| msgid "Move Down"
+#, kde-format
 msgid "Down"
-msgstr "Nach unten"
+msgstr "Gesenkt"
 
 #: debug_console.cpp:581
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Angehoben"
 
 #: debug_console.cpp:588
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Slider Position"
-msgstr "Position"
+msgstr "Position des Schiebereglers"
 
 #: debug_console.cpp:597
 #, kde-format
@@ -836,7 +833,7 @@ msgstr "Tablet-Pad-Knopf"
 #: debug_console.cpp:616 debug_console.cpp:634 debug_console.cpp:651
 #, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Gruppe"
 
 #: debug_console.cpp:617 debug_console.cpp:635 debug_console.cpp:652
 #, kde-format
@@ -846,7 +843,7 @@ msgstr "Modus"
 #: debug_console.cpp:618
 #, kde-format
 msgid "Is Mode Switch"
-msgstr ""
+msgstr "Ist Wahlschalter"
 
 #: debug_console.cpp:629
 #, kde-format
@@ -1720,12 +1717,12 @@ msgstr "Nach Fenstergruppe"
 msgid "Fullscreen windows"
 msgstr "Vollbildfenster"
 
+# Eingabeaufnahme oder Einfangen der Eingabe?
 #: plugins/eis/eisinputcapturemanager.cpp:130
-#, fuzzy, kde-format
-#| msgid "Disable KActivities integration."
+#, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
-msgstr "KActivities-Integration deaktivieren."
+msgstr "Aktive Eingabeerfassung deaktivieren"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -2290,10 +2287,9 @@ msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Sondertasten:"
+msgstr "Sondertasten für Zeichnen mit Pfeiltasten:"
 
 #: plugins/nightlight/nightlightmanager.cpp:55
 #, kde-format
@@ -3623,10 +3619,11 @@ msgstr "Tablet zur nächsten Ausgabe verschieben"
 msgid "Tablet moved to %1"
 msgstr "Tablet nach %1 verschoben"
 
+# gewechselt oder getauscht?
 #: tablet_input.cpp:199
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Tablets haben die Ausgaben gewechselt"
 
 #: useractions.cpp:162
 #, kde-format
@@ -4198,16 +4195,20 @@ msgstr ""
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr ""
+"Ein benutzerdefinierter Modus mit leerer Größenangabe kann nicht hinzugefügt "
+"werden"
 
 #: wayland/outputmanagement_v2.cpp:641
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
+"Ein benutzerdefinierter Modus mit einer Wiederholrate von 0 Hz kann nicht "
+"hinzugefügt werden"
 
 #: wayland/outputmanagement_v2.cpp:659
 #, kde-format
 msgid "Position of output %s is way too large (%d, %d)"
-msgstr ""
+msgstr "Position der Ausgabe %s ist zu groß (%d, %d)"
 
 #: wayland/outputmanagement_v2.cpp:676
 #, kde-format

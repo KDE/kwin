@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2026-03-01 11:39+0100\n"
+"PO-Revision-Date: 2026-04-18 16:31+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 26.03.70\n"
+"X-Generator: Lokalize 25.12.3\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -22,7 +22,7 @@ msgstr ""
 #, kde-format
 msgctxt "@item:inlistbox"
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #: ui/main.qml:37
 #, kde-format
@@ -38,76 +38,80 @@ msgid ""
 "animations when <interface>animation speed</interface> is "
 "<interface>Instant</interface>."
 msgstr ""
+"Nokre program støttar ikkje denne innstillingar: For eksempel kan du ikkje "
+"endra kor lenge animasjonar varer i GTK-program. Men animasjonane vert like "
+"vel slegne av dersom du set <interface>animasjonsfart</interface> til "
+"<interface>Med ein gong</interface>."
 
 #: ui/main.qml:76
 #, kde-format
 msgctxt "Animation speed"
 msgid "Slow"
-msgstr ""
+msgstr "Sakte"
 
 #: ui/main.qml:85
 #, kde-format
 msgctxt "Animation speed"
 msgid "Instant"
-msgstr ""
+msgstr "Med ein gong"
 
 #: ui/main.qml:93
 #, kde-format
 msgctxt "@title:group"
 msgid "Desktop animations"
-msgstr ""
+msgstr "Skrivebordsanimasjonar"
 
 #: ui/main.qml:97
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window open/close:"
-msgstr ""
+msgstr "Opning/lukking av vindauge:"
 
 #: ui/main.qml:98
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window maximize:"
-msgstr ""
+msgstr "Maksimering av vindauge:"
 
 #: ui/main.qml:99
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window minimize:"
-msgstr ""
+msgstr "Minimering av vindauge:"
 
 #: ui/main.qml:100
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Window full screen:"
-msgstr ""
+msgstr "Vindauge til fullskjerm:"
 
 #: ui/main.qml:101
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Peek at desktop:"
-msgstr ""
+msgstr "Kikk på skrivebordet:"
 
 #: ui/main.qml:102
 #, kde-format
 msgctxt "@label:listbox"
 msgid "Virtual desktop switching:"
-msgstr ""
+msgstr "Byte av virtuelt skrivebord:"
 
 #: ui/main.qml:130 ui/main.qml:197
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
-msgstr ""
+msgstr "Set opp …"
 
 #: ui/main.qml:157
 #, kde-format
 msgctxt ""
 "@option:check %1 is the name of an animation, e.g. 'Login' or 'Logout'"
 msgid "%1:"
-msgstr ""
+msgstr "%1:"
 
 #: ui/main.qml:225
 #, kde-format
 msgctxt "@title:group translate as short as possible"
 msgid "More effects settings:"
-msgstr ""
+msgstr "Fleire effektinnstillingar:"
