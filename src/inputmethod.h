@@ -81,6 +81,11 @@ public:
     bool activeClientSupportsTextInput() const;
     void forceActivate();
 
+    /**
+     * This is for injecting text input directly from sources other than the input method.
+     */
+    void sendText(const QString &text);
+
     void commitPendingText();
 
     // for use by the QPA

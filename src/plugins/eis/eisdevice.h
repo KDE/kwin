@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2024 David Redondo <kde@david-redondo.de>
+    SPDX-FileCopyrightText: 2026 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
@@ -7,6 +8,7 @@
 #pragma once
 
 #include "core/inputdevice.h"
+#include "xkb.h"
 
 #include <memory>
 
@@ -50,6 +52,9 @@ public:
     bool isTabletPad() const override;
     bool isTabletModeSwitch() const override;
     bool isLidSwitch() const override;
+
+    void sendKey(uint32_t keyCode, KeyboardKeyState state);
+    void sendKeySym(xkb_keysym_t keySym, KeyboardKeyState state);
 
 private:
     eis_device *m_device;

@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2024 David Redondo <kde@david-redondo.de>
+    SPDX-FileCopyrightText: 2026 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
@@ -7,6 +8,9 @@
 #include "eiscontext.h"
 
 #include "config-eis.h"
+
+#include "main.h"
+#include "inputmethod.h"
 
 #include "eisbackend.h"
 #include "eisdevice.h"
@@ -53,6 +57,9 @@ public:
     std::unique_ptr<EisDevice> absoluteDevice;
     std::unique_ptr<EisDevice> pointer;
     std::unique_ptr<EisDevice> keyboard;
+#if EIS_HAVE_16
+    std::unique_ptr<EisDevice> text;
+#endif
 };
 
 DbusEisContext::DbusEisContext(KWin::EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities, int cookie, const QString &dbusService)
@@ -93,6 +100,11 @@ EisContext::~EisContext()
         if (client->keyboard) {
             Q_EMIT m_backend->deviceRemoved(client->keyboard.get());
         }
+#if EIS_HAVE_16
+        if (client->text) {
+            Q_EMIT m_backend->deviceRemoved(client->text.get());
+        }
+#endif
     }
 
     eis_unref(m_eisContext);
@@ -105,6 +117,11 @@ void EisContext::updateScreens()
             client->absoluteDevice->changeDevice(m_backend->createAbsoluteDevice(client->seat));
         }
     }
+}
+
+static std::chrono::microseconds currentTime()
+{
+    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch());
 }
 
 void EisContext::updateKeymap()
@@ -130,7 +147,17 @@ void EisContext::connectClient(eis_client *client)
     const char *clientName = eis_client_get_name(client);
     eis_client_connect(client);
     auto seat = eis_client_new_seat(client, QByteArrayLiteral(" seat").prepend(clientName));
-    constexpr std::array allCapabilities{EIS_DEVICE_CAP_POINTER, EIS_DEVICE_CAP_POINTER_ABSOLUTE, EIS_DEVICE_CAP_KEYBOARD, EIS_DEVICE_CAP_TOUCH, EIS_DEVICE_CAP_SCROLL, EIS_DEVICE_CAP_BUTTON};
+    constexpr std::array allCapabilities{
+        EIS_DEVICE_CAP_POINTER,
+        EIS_DEVICE_CAP_POINTER_ABSOLUTE,
+        EIS_DEVICE_CAP_KEYBOARD,
+        EIS_DEVICE_CAP_TOUCH,
+        EIS_DEVICE_CAP_SCROLL,
+        EIS_DEVICE_CAP_BUTTON,
+#if EIS_HAVE_16
+        EIS_DEVICE_CAP_TEXT,
+#endif
+    };
     for (auto capability : allCapabilities) {
         if (m_allowedCapabilities & capability) {
             eis_seat_configure_capability(seat, capability);
@@ -140,11 +167,6 @@ void EisContext::connectClient(eis_client *client)
     eis_seat_add(seat);
     m_clients.emplace_back(std::make_unique<EisClient>(client, seat));
     qCDebug(KWIN_EIS) << "New eis client" << clientName;
-}
-
-static std::chrono::microseconds currentTime()
-{
-    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch());
 }
 
 void EisContext::handleEvents()
@@ -200,6 +222,10 @@ void EisContext::handleEvents()
             updateDevice(clientSeat->absoluteDevice, &EisBackend::createAbsoluteDevice, eis_event_seat_has_capability(event, EIS_DEVICE_CAP_POINTER_ABSOLUTE) || eis_event_seat_has_capability(event, EIS_DEVICE_CAP_TOUCH));
             updateDevice(clientSeat->pointer, &EisBackend::createPointer, eis_event_seat_has_capability(event, EIS_DEVICE_CAP_POINTER));
             updateDevice(clientSeat->keyboard, &EisBackend::createKeyboard, eis_event_seat_has_capability(event, EIS_DEVICE_CAP_KEYBOARD));
+#if EIS_HAVE_16
+            updateDevice(clientSeat->text, &EisBackend::createText, eis_event_seat_has_capability(event, EIS_DEVICE_CAP_TEXT));
+#endif
+
             break;
         }
         case EIS_EVENT_DEVICE_CLOSED: {
@@ -212,6 +238,10 @@ void EisContext::handleEvents()
                 seat->keyboard.reset();
             } else if (device == seat->pointer.get()) {
                 seat->pointer.reset();
+#if EIS_HAVE_16
+            } else if (device == seat->text.get()) {
+                seat->text.reset();
+#endif
             }
             break;
         }
@@ -308,18 +338,7 @@ void EisContext::handleEvents()
         case EIS_EVENT_KEYBOARD_KEY: {
             const quint32 key = eis_event_keyboard_get_key(event);
             const bool press = eis_event_keyboard_get_key_is_press(event);
-            qCDebug(KWIN_EIS) << device->name() << "key" << key << press;
-            if (press) {
-                if (device->pressedKeys.contains(key)) {
-                    continue;
-                }
-                device->pressedKeys.insert(key);
-            } else {
-                if (!device->pressedKeys.remove(key)) {
-                    continue;
-                }
-            }
-            Q_EMIT device->keyChanged(key, press ? KeyboardKeyState::Pressed : KeyboardKeyState::Released, currentTime(), device);
+            device->sendKey(key, press ? KeyboardKeyState::Pressed : KeyboardKeyState::Released);
             break;
         }
         case EIS_EVENT_TOUCH_DOWN: {
@@ -350,12 +369,23 @@ void EisContext::handleEvents()
             Q_EMIT device->touchMotion(id, {x, y}, currentTime(), device);
             break;
         }
+#if EIS_HAVE_16
+        case EIS_EVENT_TEXT_KEYSYM: {
+            const auto keySym = eis_event_text_get_keysym(event);
+            const bool isPress = eis_event_text_get_keysym_is_press(event);
+            device->sendKeySym(keySym, isPress ? KeyboardKeyState::Pressed : KeyboardKeyState::Released);
+            break;
+        }
+        case EIS_EVENT_TEXT_UTF8: {
+            const auto text = QString::fromUtf8(eis_event_text_get_utf8(event));
+            kwinApp()->inputMethod()->sendText(text);
+            break;
+        }
+#endif
         case EIS_EVENT_PONG:
         case EIS_EVENT_SYNC:
 #if EIS_HAVE_16
         case EIS_EVENT_DEVICE_READY:
-        case EIS_EVENT_TEXT_KEYSYM:
-        case EIS_EVENT_TEXT_UTF8:
         case EIS_EVENT_SEAT_DEVICE_REQUESTED:
 #endif
             break;

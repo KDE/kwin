@@ -209,6 +209,10 @@ endif()
 if (KWIN_BUILD_EIS)
     pkg_check_modules(PKG_libei REQUIRED IMPORTED_TARGET libei-1.0)
     integrationTest(NAME testInputCapture SRCS input_capture_test.cpp  LIBS PkgConfig::PKG_libei PROPERTIES RUN_SERIAL TRUE)
+    integrationTest(NAME testLibeiInput SRCS libei_test.cpp LIBS PkgConfig::PKG_libei PROPERTIES RUN_SERIAL TRUE)
+    if (PKG_libei_VERSION VERSION_GREATER_EQUAL "1.6")
+        target_compile_definitions(testLibeiInput PRIVATE -DEIS_HAVE_16=1)
+    endif()
 endif()
 
 

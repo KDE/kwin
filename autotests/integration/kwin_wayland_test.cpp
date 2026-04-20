@@ -404,6 +404,12 @@ KWayland::Client::Keyboard *Test::SimpleKeyboard::keyboard()
     return m_keyboard;
 }
 
+void Test::SimpleKeyboard::clearReceivedText()
+{
+    m_receviedText.clear();
+    Q_EMIT receviedTextChanged();
+}
+
 QString Test::SimpleKeyboard::receviedText()
 {
     return m_receviedText;
