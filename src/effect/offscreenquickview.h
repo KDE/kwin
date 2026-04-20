@@ -32,6 +32,7 @@ namespace KWin
 class GLTexture;
 
 class OffscreenQuickView;
+class OutputFrame;
 
 /**
  * @brief The KwinQuickView class provides a convenient API for exporting
@@ -86,7 +87,7 @@ public:
      * It can be manually invoked to update the contents immediately.
      * Note this will change the GL context
      */
-    void update();
+    void update(OutputFrame *frame);
 
     /** The invisible root item of the window */
     QQuickItem *contentItem() const;

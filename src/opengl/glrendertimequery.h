@@ -22,6 +22,7 @@ class EglContext;
 class KWIN_EXPORT GLRenderTimeQuery : public RenderTimeQuery
 {
 public:
+    explicit GLRenderTimeQuery();
     explicit GLRenderTimeQuery(const std::shared_ptr<EglContext> &context);
     ~GLRenderTimeQuery();
 

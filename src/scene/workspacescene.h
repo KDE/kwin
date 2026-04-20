@@ -40,7 +40,7 @@ public:
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     OverlayCandidates overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const override;
-    void prePaint(SceneView *delegate) override;
+    void prePaint(SceneView *delegate, OutputFrame *frame) override;
     Region collectDamage() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) override;

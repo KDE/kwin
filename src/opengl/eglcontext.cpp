@@ -30,7 +30,7 @@ namespace KWin
 
 EglContext *EglContext::s_currentContext = nullptr;
 
-std::unique_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext)
+std::shared_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext)
 {
     auto handle = createContext(display, config, sharedContext);
     if (!handle) {
@@ -40,7 +40,7 @@ std::unique_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig co
         eglDestroyContext(display->handle(), handle);
         return nullptr;
     }
-    auto ret = std::make_unique<EglContext>(display, config, handle);
+    auto ret = std::make_shared<EglContext>(display, config, handle);
     s_currentContext = ret.get();
     if (!ret->checkSupported()) {
         return nullptr;

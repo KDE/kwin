@@ -46,7 +46,7 @@ public:
     virtual RectF viewport() const = 0;
     virtual qreal scale() const = 0;
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const = 0;
-    virtual void prePaint() = 0;
+    virtual void prePaint(OutputFrame *frame = nullptr) = 0;
     virtual Region collectDamage() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &logicalRegion) = 0;
     virtual void postPaint() = 0;
@@ -109,7 +109,7 @@ public:
     void setScale(qreal scale);
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
-    void prePaint() override;
+    void prePaint(OutputFrame *frame = nullptr) override;
     Region collectDamage() override;
     void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) override;
     void postPaint() override;
@@ -150,7 +150,7 @@ public:
     RectF viewport() const override;
     bool isVisible() const override;
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
-    void prePaint() override;
+    void prePaint(OutputFrame *frame = nullptr) override;
     Region collectDamage() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &logicalRegion) override;
@@ -241,7 +241,7 @@ public:
         QList<Item *> underlays;
     };
     virtual OverlayCandidates overlayCandidates(ssize_t maxTotalCount, ssize_t maxOverlayCount, ssize_t maxUnderlayCount) const = 0;
-    virtual void prePaint(SceneView *view) = 0;
+    virtual void prePaint(SceneView *view, OutputFrame *frame = nullptr) = 0;
     virtual Region collectDamage() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QPoint &deviceOffset, const Region &deviceRegion) = 0;
     virtual void postPaint() = 0;

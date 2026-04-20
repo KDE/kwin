@@ -685,7 +685,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     };
     QList<LayerData> layers;
 
-    primaryView->prePaint();
+    primaryView->prePaint(frame.get());
     layers.push_back(LayerData{
         .view = primaryView,
         .directScanout = false,
@@ -778,7 +778,7 @@ void Compositor::composite(RenderLoop *renderLoop)
                 view = std::make_unique<ItemView>(primaryView, item, logicalOutput, output, layer);
             }
         }
-        view->prePaint();
+        view->prePaint(frame.get());
         layers.push_back(LayerData{
             .view = view.get(),
             .directScanout = !isCursor,

@@ -13,6 +13,11 @@
 namespace KWin
 {
 
+GLRenderTimeQuery::GLRenderTimeQuery()
+    : GLRenderTimeQuery(EglContext::currentContext()->shared_from_this())
+{
+}
+
 GLRenderTimeQuery::GLRenderTimeQuery(const std::shared_ptr<EglContext> &context)
     : m_context(context)
 {

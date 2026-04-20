@@ -30,6 +30,7 @@ struct TabletToolTipEvent;
 struct TabletToolAxisEvent;
 class WindowPaintDataPrivate;
 class RenderView;
+class OutputFrame;
 
 /** @defgroup kwineffects KWin effects library
  * KWin effects library contains necessary classes for creating new KWin
@@ -437,6 +438,11 @@ public:
     Region paint;
     LogicalOutput *screen = nullptr;
     RenderView *view = nullptr;
+
+    /**!
+     * \variable KWin::ScreenPrePaintData::frame
+     */
+    OutputFrame *frame = nullptr;
 };
 
 /**

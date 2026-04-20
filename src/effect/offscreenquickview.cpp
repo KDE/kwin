@@ -12,6 +12,7 @@
 
 #include "logging_p.h"
 #include "opengl/eglcontext.h"
+#include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
 
 #include <QGuiApplication>
@@ -150,7 +151,9 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
     d->m_repaintTimer->setSingleShot(true);
     d->m_repaintTimer->setInterval(10);
 
-    connect(d->m_repaintTimer.get(), &QTimer::timeout, this, &OffscreenQuickView::update);
+    connect(d->m_repaintTimer.get(), &QTimer::timeout, this, [this]() {
+        update(nullptr);
+    });
     connect(d->m_renderControl.get(), &QQuickRenderControl::renderRequested, this, &OffscreenQuickView::handleRenderRequested);
     connect(d->m_renderControl.get(), &QQuickRenderControl::sceneChanged, this, &OffscreenQuickView::handleSceneChanged);
 
@@ -209,7 +212,7 @@ void OffscreenQuickView::handleRenderRequested()
     Q_EMIT renderRequested();
 }
 
-void OffscreenQuickView::update()
+void OffscreenQuickView::update(OutputFrame *frame)
 {
     if (!d->m_visible) {
         return;
@@ -220,11 +223,15 @@ void OffscreenQuickView::update()
 
     bool usingGl = d->m_glcontext != nullptr;
     EglContext *previousContext = EglContext::currentContext();
+    std::unique_ptr<GLRenderTimeQuery> renderTime;
 
     if (usingGl) {
         if (!d->m_glcontext->makeCurrent(d->m_offscreenSurface.get())) {
             // probably a context loss event, kwin is about to reset all the effects anyway
             return;
+        }
+        if (frame) {
+            renderTime = std::make_unique<GLRenderTimeQuery>();
         }
 
         qreal dpr = d->m_view->screen() ? d->m_view->screen()->devicePixelRatio() : 1.0;
@@ -279,6 +286,10 @@ void OffscreenQuickView::update()
 
     if (usingGl) {
         QOpenGLFramebufferObject::bindDefault();
+        if (frame && renderTime) {
+            renderTime->end();
+            frame->addRenderTimeQuery(std::move(renderTime));
+        }
         d->m_glcontext->doneCurrent();
         if (previousContext) {
             previousContext->makeCurrent();

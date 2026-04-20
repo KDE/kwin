@@ -512,7 +512,7 @@ void WorkspaceScene::frame(SceneView *delegate, OutputFrame *frame)
     }
 }
 
-void WorkspaceScene::prePaint(SceneView *delegate)
+void WorkspaceScene::prePaint(SceneView *delegate, OutputFrame *frame)
 {
     painted_delegate = delegate;
     painted_screen = painted_delegate->logicalOutput();
@@ -534,6 +534,7 @@ void WorkspaceScene::prePaint(SceneView *delegate)
     prePaintData.mask = 0;
     prePaintData.screen = painted_screen;
     prePaintData.view = delegate;
+    prePaintData.frame = frame;
 
     effects->makeOpenGLContextCurrent();
     Q_EMIT preFrameRender();

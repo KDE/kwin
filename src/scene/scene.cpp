@@ -192,9 +192,9 @@ QList<SurfaceItem *> SceneView::scanoutCandidates(ssize_t maxCount) const
     return m_scene->scanoutCandidates(maxCount);
 }
 
-void SceneView::prePaint()
+void SceneView::prePaint(OutputFrame *frame)
 {
-    m_scene->prePaint(this);
+    m_scene->prePaint(this, frame);
 }
 
 Region SceneView::collectDamage()
@@ -375,7 +375,7 @@ QList<SurfaceItem *> ItemView::scanoutCandidates(ssize_t maxCount) const
     }
 }
 
-void ItemView::prePaint()
+void ItemView::prePaint(OutputFrame *frame)
 {
 }
 

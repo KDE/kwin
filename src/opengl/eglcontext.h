@@ -15,6 +15,7 @@
 #include <QList>
 #include <QStack>
 #include <epoxy/egl.h>
+#include <memory>
 
 namespace KWin
 {
@@ -34,7 +35,7 @@ using glGetnTexImage_func = void (*)(GLenum target, GLint level, GLenum format, 
                                      GLsizei bufSize, void *pixels);
 using glGetnUniformfv_func = void (*)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
-class KWIN_EXPORT EglContext
+class KWIN_EXPORT EglContext : public std::enable_shared_from_this<EglContext>
 {
 public:
     EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context);
@@ -94,7 +95,7 @@ public:
     GLFramebuffer *currentFramebuffer();
 
     static EglContext *currentContext();
-    static std::unique_ptr<EglContext> create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext);
+    static std::shared_ptr<EglContext> create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext);
 
 private:
     static ::EGLContext createContext(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext);
