@@ -69,13 +69,15 @@ public:
      */
     void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
-    void registerTouchpadSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+    void registerTouchpadSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {}, std::function<void()> cancelledCallback = {});
     void registerTouchpadSwipe(SwipeGesture *swipeGesture);
-    void registerTouchpadPinch(PinchDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+    void registerTouchpadPinch(PinchDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {}, std::function<void()> cancelledCallback = {});
     void registerTouchpadPinch(PinchGesture *pinchGesture);
-    void registerTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+    void registerTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {}, std::function<void()> cancelledCallback = {});
     void registerTouchscreenSwipe(SwipeGesture *swipeGesture);
-    void forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+
+    // autotest helper
+    void forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {}, std::function<void()> cancelledCallback = {});
 
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
@@ -160,6 +162,7 @@ struct RealtimeFeedbackSwipeShortcut
     DeviceType device;
     SwipeDirection direction;
     std::function<void(qreal)> progressCallback;
+    std::function<void()> cancelledCallback;
     uint fingerCount;
 
     template<typename T>
@@ -172,6 +175,7 @@ struct RealtimeFeedbackPinchShortcut
 {
     PinchDirection direction;
     std::function<void(qreal)> scaleCallback;
+    std::function<void()> cancelledCallback;
     uint fingerCount;
 
     template<typename T>
