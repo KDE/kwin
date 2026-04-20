@@ -113,7 +113,7 @@ public:
     void registerTouchpadPinchShortcut(PinchDirection direction, uint32_t fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback = {});
     void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
     void forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
-    std::unique_ptr<ConfigurableGesture> registerGesture(QAction *associatedShortcutAction);
+    ConfigurableGesture *registerGesture(QAction *shortcutAction);
 
     bool supportsPointerWarping() const;
     void warpPointer(const QPointF &pos);

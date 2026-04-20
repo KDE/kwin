@@ -33,7 +33,8 @@ public:
                           const QString &actionFriendlyName) override;
 
 Q_SIGNALS:
-    void triggerActive(const KGlobalShortcutTrigger &trigger,
+    void triggerActive(const QString &triggerType,
+                       const QString &serializedTriggerParams,
                        bool active,
                        const QString &componentName,
                        const QString &actionId,
@@ -44,6 +45,6 @@ public Q_SLOTS:
     bool checkKeyPressed(int keyQt, KWin::KeyboardKeyState state);
     bool checkPointerPressed(Qt::MouseButtons buttons);
     bool checkAxisTriggered(int axis);
-    bool checkTriggerEvent(const KGlobalShortcutTrigger &trigger, ShortcutTriggerEvent event);
+    bool checkTriggerEvent(const QString &triggerType, const QString &serializedTriggerParams, int shortcutTriggerEventEnum);
     void cancelModiferOnlySequence();
 };

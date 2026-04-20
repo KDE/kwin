@@ -91,12 +91,6 @@ PinchGesture *GlobalShortcut::pinchGesture() const
     return m_pinchGesture.get();
 }
 
-GlobalShortcutsManager::ActiveGesture::ActiveGesture(const ActionUniquePair &actionUnique, ConfigurableGesture *gesture)
-    : actionUniquePair(actionUnique)
-    , configurableGesture(gesture)
-{
-}
-
 GlobalShortcutsManager::GlobalShortcutsManager(QObject *parent)
     : QObject(parent)
     , m_touchpadGestureRecognizer(new GestureRecognizer(this))
@@ -122,9 +116,9 @@ void GlobalShortcutsManager::init()
 
         // clang-format off
         connect(m_kglobalAccelInterface, // actually a KGlobalAccelImpl from kglobalaccel_plugin.h
-                SIGNAL(triggerActive(KGlobalShortcutTrigger,bool,QString,QString,QString,QString)),
+                SIGNAL(triggerActive(QString,QString,bool,QString,QString,QString,QString)),
                 this,
-                SLOT(onKGlobalShortcutTriggerActive(KGlobalShortcutTrigger,bool,QString,QString,QString,QString)),
+                SLOT(onKGlobalShortcutTriggerActive(QString,QString,bool,QString,QString,QString,QString)),
                 Qt::QueuedConnection); // allow time for registerGesture() before activating the gesture
         // clang-format on
     }
@@ -364,34 +358,38 @@ void GlobalShortcutsManager::cancelModiferOnlySequence()
 #endif
 }
 
-std::unique_ptr<ConfigurableGesture> GlobalShortcutsManager::registerGesture(QAction *associatedShortcutAction)
+static QString getComponentName(QAction *shortcutAction)
 {
-    auto ret = std::make_unique<ConfigurableGesture>(this);
-#if KWIN_BUILD_GLOBALSHORTCUTS
-    ConfigurableGesture *gesture = ret.get();
-    connect(associatedShortcutAction, &QAction::destroyed, this, [this, gesture] {
-        unregisterGesture(gesture);
-    });
+    auto componentNameProp = shortcutAction->property("componentName");
+    return componentNameProp.isValid() ? componentNameProp.toString() : QCoreApplication::applicationName();
+}
 
-    const QString componentName = associatedShortcutAction->property("componentName").isValid()
-        ? associatedShortcutAction->property("componentName").toString()
-        : QCoreApplication::applicationName();
-    const ActionUniquePair actionUniquePair = qMakePair(componentName, associatedShortcutAction->objectName());
-    m_registeredGestures[actionUniquePair] = gesture;
+static QString makeShortcutActionKey(const QString &componentName, const QString &actionId)
+{
+    return componentName % ":" % actionId;
+}
+
+ConfigurableGesture *GlobalShortcutsManager::registerGesture(QAction *shortcutAction)
+{
+    auto gesture = new ConfigurableGesture(this, shortcutAction);
+#if KWIN_BUILD_GLOBALSHORTCUTS
+    gesture->setObjectName(makeShortcutActionKey(getComponentName(shortcutAction), shortcutAction->objectName()));
+
+    ConfigurableGesture *previousGesture = m_perActionGestures.value(gesture->objectName(), nullptr);
+    m_perActionGestures[gesture->objectName()] = gesture;
 
     // activate gestures that KGlobalAccel already wanted active, but are only now registered here by KWin
-    for (auto [triggerId, activeGesture] : m_kglobalAccelGestures.asKeyValueRange()) {
-        if (activeGesture.actionUniquePair == actionUniquePair) {
-            if (activeGesture.configurableGesture != gesture) {
-                deactivateGesture(activeGesture.configurableGesture, triggerId);
-            }
-            if (activateGesture(gesture, KGlobalShortcutTrigger(triggerId.first, triggerId.second))) {
-                activeGesture.configurableGesture = gesture;
-            }
+    for (auto [triggerId, active] : m_kglobalAccelActiveTriggers.asKeyValueRange()) {
+        if (active.shortcutActionKey == gesture->objectName()) {
+            activateGesture(active, gesture, triggerId);
         }
     }
+
+    if (previousGesture && previousGesture->isAutoCreated()) {
+        m_autoGestures.erase(previousGesture->objectName());
+    }
 #endif
-    return ret;
+    return gesture;
 }
 
 void GlobalShortcutsManager::unregisterGesture(ConfigurableGesture *gesture)
@@ -401,53 +399,81 @@ void GlobalShortcutsManager::unregisterGesture(ConfigurableGesture *gesture)
     }
 
 #if KWIN_BUILD_GLOBALSHORTCUTS
-    m_kglobalAccelGestures.removeIf([this, gesture](const std::pair<const TriggerId &, ActiveGesture &> &elem) -> bool {
-        const auto &[triggerId, activeGesture] = elem;
-        if (activeGesture.configurableGesture == gesture) {
-            deactivateGesture(gesture, triggerId);
-            return true;
-        }
-        return false;
-    });
+    ConfigurableGesture *replacementGesture = nullptr;
 
-    m_registeredGestures.removeIf([gesture](decltype(m_registeredGestures)::iterator it) -> bool {
-        return it.value() == gesture;
-    });
+    auto it = m_perActionGestures.find(gesture->objectName());
+    if (it != m_perActionGestures.end() && it.value() == gesture) {
+        if (gesture->triggerActionCount() > 0 || gesture->isAutoCreated()) {
+            m_perActionGestures.erase(it);
+        } else {
+            // we unregistered a manually registered ConfigurableGesture, replace it with the
+            // next one in line (or create an auto gesture if the list is empty)
+            replacementGesture = ensureAutoGesture(gesture->objectName());
+            it.value() = replacementGesture;
+        }
+    }
+
+    for (auto [triggerId, active] : m_kglobalAccelActiveTriggers.asKeyValueRange()) {
+        if (active.configurableGesture == gesture) {
+            if (replacementGesture) {
+                activateGesture(active, replacementGesture, triggerId);
+            } else {
+                deactivateGesture(active);
+            }
+        }
+    }
 #endif
 }
 
 #if KWIN_BUILD_GLOBALSHORTCUTS
-void GlobalShortcutsManager::onKGlobalShortcutTriggerActive(const KGlobalShortcutTrigger &trigger,
+ConfigurableGesture *GlobalShortcutsManager::ensureAutoGesture(const QString &shortcutActionKey)
+{
+    auto &autoGesture = m_autoGestures[shortcutActionKey];
+    if (!autoGesture) {
+        autoGesture = std::make_unique<ConfigurableGesture>(this);
+        autoGesture->setObjectName(shortcutActionKey);
+        autoGesture->setAutoCreated();
+    }
+    return autoGesture.get();
+}
+
+void GlobalShortcutsManager::onKGlobalShortcutTriggerActive(const QString &triggerType,
+                                                            const QString &serializedTriggerParams,
                                                             bool active,
                                                             const QString &componentName,
                                                             const QString &actionId,
                                                             const QString &componentFriendlyName,
                                                             const QString &actionFriendlyName)
 {
-    const TriggerId triggerId = qMakePair(trigger.type(), trigger.serializedTriggerParams());
+    const QString shortcutActionKey = makeShortcutActionKey(componentName, actionId);
+    const TriggerId triggerId = qMakePair(triggerType, serializedTriggerParams);
 
     if (active) {
-        ActiveGesture &activeGesture = m_kglobalAccelGestures[triggerId];
-        const ActionUniquePair actionUniquePair = qMakePair(componentName, actionId);
-
-        if (activeGesture.actionUniquePair != actionUniquePair) {
-            deactivateGesture(activeGesture.configurableGesture, triggerId);
+        // Ensure that m_perActionGestures[shortcutActionKey] exists while any of the action's
+        // triggers is active. The actual ConfigurableGesture corresponding to this action is only
+        // created on demand, if no other ConfigurableGesture has been registered by KWin code.
+        ConfigurableGesture *actionGesture = m_perActionGestures.value(shortcutActionKey, nullptr);
+        if (!actionGesture) {
+            actionGesture = ensureAutoGesture(shortcutActionKey);
+            m_perActionGestures[shortcutActionKey] = actionGesture;
         }
 
-        // activate a gesture that KWin had already registered and KGlobalAccel now wants active
-        // (or if not yet registered, still mark it as active without hooking up the gesture yet)
-        auto kwinGesture = m_registeredGestures.constFind(actionUniquePair);
-        if (kwinGesture != m_registeredGestures.constEnd() && activateGesture(kwinGesture.value(), trigger)) {
-            activeGesture = ActiveGesture(actionUniquePair, kwinGesture.value());
-        } else {
-            activeGesture = ActiveGesture(actionUniquePair, nullptr);
-        }
+        ActiveTriggerInfo &active = m_kglobalAccelActiveTriggers[triggerId];
+        active.shortcutActionKey = shortcutActionKey;
+
+        activateGesture(active, actionGesture, triggerId);
     }
 
     if (!active) {
-        if (auto it = m_kglobalAccelGestures.constFind(triggerId); it != m_kglobalAccelGestures.constEnd()) {
-            deactivateGesture(it.value().configurableGesture, triggerId);
-            m_kglobalAccelGestures.erase(it);
+        if (auto it = m_kglobalAccelActiveTriggers.find(triggerId); it != m_kglobalAccelActiveTriggers.end()) {
+            deactivateGesture(it.value());
+            m_kglobalAccelActiveTriggers.erase(it);
+        }
+        if (auto it = m_perActionGestures.find(shortcutActionKey); it != m_perActionGestures.end()) {
+            if (!it.value() || it.value()->triggerActionCount() == 0) {
+                m_perActionGestures.erase(it);
+                m_autoGestures.erase(shortcutActionKey);
+            }
         }
     }
 }
@@ -480,38 +506,62 @@ static std::optional<PinchDirection> toKWinPinchDirection(KGlobalShortcutTrigger
     }
 }
 
-bool GlobalShortcutsManager::activateGesture(ConfigurableGesture *gesture, const KGlobalShortcutTrigger &trigger)
+bool GlobalShortcutsManager::activateGesture(ActiveTriggerInfo &active, ConfigurableGesture *gesture, const TriggerId &triggerId)
 {
-    auto makeId = [](const KGlobalShortcutTrigger &trigger) -> TriggerId {
-        return qMakePair(trigger.type(), trigger.serializedTriggerParams());
+    deactivateGesture(active); // don't allow duplicate gestures with the same trigger parameters
+
+    if (!gesture) {
+        return false;
+    }
+
+    auto assignNewTriggerAction = [this, &active, gesture, &triggerId]() -> QAction * {
+        active.configurableGesture = gesture;
+        delete active.gestureAction; // should be nullptr already, but make sure we won't leak
+        active.gestureAction = gesture->makeAutoCountingTriggerAction();
+
+        if (active.configurableGesture->isAutoCreated()) {
+            auto sendTriggered = [interface = m_kglobalAccelInterface, triggerId]() {
+                if (interface) {
+                    QMetaObject::invokeMethod(interface,
+                                              "checkTriggerEvent",
+                                              Qt::QueuedConnection,
+                                              Q_ARG(QString, triggerId.first),
+                                              Q_ARG(QString, triggerId.second),
+                                              Q_ARG(int, static_cast<int>(ShortcutTriggerEvent::Triggered)));
+                }
+            };
+            connect(active.configurableGesture, &ConfigurableGesture::triggered, active.gestureAction, sendTriggered);
+        }
+        return active.gestureAction;
     };
+
+    auto emitProgress = [gesture](qreal progress) {
+        Q_EMIT gesture->progress(progress);
+    };
+    auto emitCancelled = [gesture]() {
+        Q_EMIT gesture->cancelled();
+    };
+
+    KGlobalShortcutTrigger trigger(triggerId.first, triggerId.second);
 
     if (const auto *g = trigger.asTouchpadSwipeGesture()) {
         if (const auto direction = toKWinSwipeDirection(g->direction); direction.has_value()) {
-            registerTouchpadSwipe(*direction, g->fingerCount, gesture->makeGestureAction(makeId(trigger)), [gesture](qreal progress) {
-                Q_EMIT gesture->progress(progress);
-            });
+            registerTouchpadSwipe(*direction, g->fingerCount, assignNewTriggerAction(), emitProgress, emitCancelled);
             return true;
         }
     } else if (const auto *g = trigger.asTouchscreenSwipeGesture()) {
         if (const auto direction = toKWinSwipeDirection(g->direction); direction.has_value()) {
-            registerTouchscreenSwipe(*direction, g->fingerCount, gesture->makeGestureAction(makeId(trigger)), [gesture](qreal progress) {
-                Q_EMIT gesture->progress(progress);
-            });
+            registerTouchscreenSwipe(*direction, g->fingerCount, assignNewTriggerAction(), emitProgress, emitCancelled);
             return true;
         }
     } else if (const auto *g = trigger.asTouchpadPinchGesture()) {
         if (const auto direction = toKWinPinchDirection(g->direction); direction.has_value()) {
-            registerTouchpadPinch(*direction, g->fingerCount, gesture->makeGestureAction(makeId(trigger)), [gesture](qreal progress) {
-                Q_EMIT gesture->progress(progress);
-            });
+            registerTouchpadPinch(*direction, g->fingerCount, assignNewTriggerAction(), emitProgress, emitCancelled);
             return true;
         }
     } /* else if (const auto *g = trigger.asTouchscreenPinchGesture()) { // pinch not currently implemented for touchscreens?
         if (const auto direction = toKWinPinchDirection(g->direction); direction.has_value()) {
-            registerTouchscreenPinch(*direction, g->fingerCount, gesture->makeGestureAction(makeId(trigger)), [gesture](qreal progress) {
-                Q_EMIT gesture->progress(progress);
-            });
+            registerTouchscreenPinch(*direction, g->fingerCount, assignNewTriggerAction(), emitProgress, emitCancelled);
             return true;
         }
     }*/
@@ -520,11 +570,14 @@ bool GlobalShortcutsManager::activateGesture(ConfigurableGesture *gesture, const
     return false;
 }
 
-void GlobalShortcutsManager::deactivateGesture(ConfigurableGesture *gesture, const TriggerId &triggerId)
+void GlobalShortcutsManager::deactivateGesture(ActiveTriggerInfo &active)
 {
-    if (gesture) {
-        gesture->dropGestureAction(triggerId);
-    }
+    active.configurableGesture = nullptr;
+
+    // we'd use unique_ptr<QAction> and .reset(), but then we need m_kglobalAccelActiveTriggers
+    // to be an unordered_map for moveability, and unordered_map doesn't natively support pair keys
+    delete active.gestureAction;
+    active.gestureAction = nullptr;
 }
 #endif // KWIN_BUILD_GLOBALSHORTCUTS
 

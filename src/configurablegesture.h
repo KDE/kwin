@@ -12,9 +12,6 @@
 #include <QObject>
 #include <QPointer>
 
-#include <map>
-#include <memory>
-
 class QAction;
 
 namespace KWin
@@ -27,23 +24,30 @@ class KWIN_EXPORT ConfigurableGesture : public QObject
     Q_OBJECT
 
 public:
-    explicit ConfigurableGesture(GlobalShortcutsManager *manager);
+    explicit ConfigurableGesture(GlobalShortcutsManager *manager, QObject *parent = nullptr);
     ~ConfigurableGesture();
 
-    using TriggerId = QPair<QString, QString>;
-
-    // individual actions that will emit ConfigurableGesture::released,
-    // these can be dropped to unregister any associated gesture shortcut
-    QAction *makeGestureAction(const TriggerId &id);
-    void dropGestureAction(const TriggerId &id);
+    // for internal use by GlobalShortcutsManager
+    size_t triggerActionCount() const;
+    QAction *makeAutoCountingTriggerAction();
+    void setAutoCreated();
+    bool isAutoCreated() const;
 
 Q_SIGNALS:
     void progress(double value);
-    void released(bool checked = true);
+
+    // convenience signal, emitted when either cancelled or triggered signals are emitted
+    void released(bool triggered);
+
+    // `triggered` parameter is included so another QAction::triggered() or also the released()
+    // signal can be chained - it's always false for cancelled() and always true for triggered()
+    void cancelled(bool triggered = false);
+    void triggered(bool triggered = true);
 
 private:
     QPointer<GlobalShortcutsManager> m_manager;
-    std::map<TriggerId, std::unique_ptr<QAction>> m_gestureActions;
+    size_t m_count = 0; //< number of associated actions for individual gesture triggers
+    bool m_isAutoCreated = false;
 };
 
 }

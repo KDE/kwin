@@ -137,11 +137,11 @@ OverviewEffect::OverviewEffect()
 
     KGlobalAccel::setInverseShortcutActions(cycleAction, reverseCycleAction);
 
-    m_forwardGesture = effects->registerGesture(cycleAction);
-    m_backwardGesture = effects->registerGesture(reverseCycleAction);
-    m_overviewState->addGesture(m_forwardGesture.get(), m_backwardGesture.get());
-    m_transitionState->addGesture(m_forwardGesture.get(), m_backwardGesture.get());
-    m_gridState->addGesture(m_backwardGesture.get(), m_forwardGesture.get());
+    ConfigurableGesture *forwardGesture = effects->registerGesture(cycleAction);
+    ConfigurableGesture *backwardGesture = effects->registerGesture(reverseCycleAction);
+    m_overviewState->addGesture(forwardGesture, backwardGesture);
+    m_transitionState->addGesture(forwardGesture, backwardGesture);
+    m_gridState->addGesture(backwardGesture, forwardGesture);
 
     auto overviewAction = m_overviewState->toggleAction();
     overviewAction->setObjectName(QStringLiteral("Overview"));

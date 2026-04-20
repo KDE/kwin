@@ -33,8 +33,7 @@ bool KGlobalAccelImpl::setTriggerActive(const KGlobalShortcutTrigger &trigger,
                                         const QString &componentFriendlyName,
                                         const QString &actionFriendlyName)
 {
-    // TODO: enable/disable gesture
-    Q_EMIT triggerActive(trigger, active, componentName, actionId, componentFriendlyName, actionFriendlyName);
+    Q_EMIT triggerActive(trigger.type(), trigger.serializedTriggerParams(), active, componentName, actionId, componentFriendlyName, actionFriendlyName);
     return true;
 }
 
@@ -62,9 +61,10 @@ bool KGlobalAccelImpl::checkAxisTriggered(int axis)
     return axisTriggered(axis);
 }
 
-bool KGlobalAccelImpl::checkTriggerEvent(const KGlobalShortcutTrigger &trigger, ShortcutTriggerEvent event)
+bool KGlobalAccelImpl::checkTriggerEvent(const QString &triggerType, const QString &serializedTriggerParams, int shortcutTriggerEventEnum)
 {
-    return triggerEvent(trigger, event);
+    return triggerEvent(KGlobalShortcutTrigger(triggerType, serializedTriggerParams),
+                        static_cast<ShortcutTriggerEvent>(shortcutTriggerEventEnum));
 }
 
 void KGlobalAccelImpl::cancelModiferOnlySequence()

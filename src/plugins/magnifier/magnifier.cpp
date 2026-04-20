@@ -67,16 +67,16 @@ MagnifierEffect::MagnifierEffect()
         }
         m_lastPinchProgress = 0;
     });
-    m_zoomInGesture = effects->registerGesture(zoomInAction);
-    m_zoomOutGesture = effects->registerGesture(zoomOutAction);
-    connect(m_zoomInGesture.get(), &ConfigurableGesture::released, m_touchpadAction.get(), &QAction::triggered);
-    connect(m_zoomOutGesture.get(), &ConfigurableGesture::released, m_touchpadAction.get(), &QAction::triggered);
-    connect(m_zoomInGesture.get(), &ConfigurableGesture::progress, this, [this](qreal progress) {
+    ConfigurableGesture *zoomInGesture = effects->registerGesture(zoomInAction);
+    ConfigurableGesture *zoomOutGesture = effects->registerGesture(zoomOutAction);
+    connect(zoomInGesture, &ConfigurableGesture::released, m_touchpadAction.get(), &QAction::triggered);
+    connect(zoomOutGesture, &ConfigurableGesture::released, m_touchpadAction.get(), &QAction::triggered);
+    connect(zoomInGesture, &ConfigurableGesture::progress, this, [this](qreal progress) {
         const qreal delta = progress - m_lastPinchProgress;
         m_lastPinchProgress = progress;
         realtimeZoom(delta);
     });
-    connect(m_zoomOutGesture.get(), &ConfigurableGesture::progress, this, [this](qreal progress) {
+    connect(zoomOutGesture, &ConfigurableGesture::progress, this, [this](qreal progress) {
         const qreal delta = progress - m_lastPinchProgress;
         m_lastPinchProgress = progress;
         realtimeZoom(-delta);

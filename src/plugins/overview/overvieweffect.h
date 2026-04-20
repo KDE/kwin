@@ -85,8 +85,6 @@ private:
     EffectTogglableState *const m_gridState;
     EffectTogglableTouchBorder *const m_border;
     EffectTogglableTouchBorder *const m_gridBorder;
-    std::unique_ptr<ConfigurableGesture> m_forwardGesture;
-    std::unique_ptr<ConfigurableGesture> m_backwardGesture;
 
     QTimer *m_shutdownTimer;
     QList<ElectricBorder> m_borderActivate;

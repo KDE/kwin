@@ -14,29 +14,45 @@
 namespace KWin
 {
 
-ConfigurableGesture::ConfigurableGesture(GlobalShortcutsManager *manager)
-    : m_manager(manager)
+ConfigurableGesture::ConfigurableGesture(GlobalShortcutsManager *manager, QObject *parent)
+    : QObject(parent)
+    , m_manager(manager)
 {
+    connect(this, &ConfigurableGesture::triggered, this, &ConfigurableGesture::released);
+    connect(this, &ConfigurableGesture::cancelled, this, &ConfigurableGesture::released);
 }
 
 ConfigurableGesture::~ConfigurableGesture()
 {
-    if (auto m = m_manager) {
+    if (GlobalShortcutsManager *m = m_manager; m != nullptr) {
         m->unregisterGesture(this);
     }
 }
 
-QAction *ConfigurableGesture::makeGestureAction(const TriggerId &id)
+size_t ConfigurableGesture::triggerActionCount() const
 {
-    auto iteratorInsertedPair = m_gestureActions.insert_or_assign(id, std::make_unique<QAction>());
-    QAction *gestureAction = iteratorInsertedPair.first->second.get();
-    connect(gestureAction, &QAction::triggered, this, &ConfigurableGesture::released);
-    return gestureAction;
+    return m_count;
 }
 
-void ConfigurableGesture::dropGestureAction(const TriggerId &id)
+QAction *ConfigurableGesture::makeAutoCountingTriggerAction()
 {
-    m_gestureActions.erase(id);
+    auto action = new QAction(this);
+    ++m_count;
+    connect(action, &QAction::triggered, this, &ConfigurableGesture::triggered);
+    connect(action, &QObject::destroyed, this, [this] {
+        --m_count;
+    });
+    return action;
+}
+
+void ConfigurableGesture::setAutoCreated()
+{
+    m_isAutoCreated = true;
+}
+
+bool ConfigurableGesture::isAutoCreated() const
+{
+    return m_isAutoCreated;
 }
 
 }
