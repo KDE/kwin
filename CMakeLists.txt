@@ -64,6 +64,7 @@ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     UiTools
     WaylandClient
     Widgets
+    ShaderTools
     Svg
 )
 

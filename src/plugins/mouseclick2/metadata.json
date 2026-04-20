@@ -1,0 +1,9 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "Mouse click effect 2",
+        "EnabledByDefault": true,
+        "License": "GPL",
+        "Name": "Mouse Click 2"
+    }
+}
