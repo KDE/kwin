@@ -13,6 +13,7 @@
 #include "scene/imageitem.h"
 #include "scene/itemrenderer.h"
 #include "scene/workspacescene.h"
+#include "screenitem.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -117,6 +118,7 @@ void MouseClickEffect2::initOffscreenViews()
     for (const auto output : screens) {
         auto scene = new OffscreenQuickScene();
 
+        qmlRegisterType<ScreenContentsItem>("org.kde.kwin.mouseclick", 1, 0, "ScreenContentsItem");
         scene->loadFromModule(QStringLiteral("org.kde.kwin.mouseclick"), QStringLiteral("Main"), {{QStringLiteral("effect"), QVariant::fromValue(this)}});
         scene->setGeometry(output->geometry());
         m_scenesByScreens[output].reset(scene);

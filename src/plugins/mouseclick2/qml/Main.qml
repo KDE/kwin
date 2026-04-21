@@ -9,12 +9,18 @@ import QtQuick.Layouts
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.kirigami as Kirigami
-import org.kde.ksvg as KSvg
-import org.kde.plasma.components as PlasmaComponents
-import org.kde.kitemmodels as KitemModels
+import org.kde.kwin.mouseclick
 
-Rectangle {
+Item {
     id: root
+    Rectangle {
+        width: 50
+        height:50
+    }
+    ScreenContentsItem {
+        width: 300
+        height: 300
+    }
 }
 /*
     readonly property QtObject effect: KWinComponents.SceneView.effect

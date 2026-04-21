@@ -11,9 +11,15 @@ kwin_add_builtin_effect(mouseclick2 ${mousemark_SOURCES})
 
 ecm_add_qml_module(mouseclick2
     URI org.kde.kwin.mouseclick
+    GENERATE_PLUGIN_SOURCE
     QML_FILES
         qml/Main.qml
     QT_NO_PLUGIN
+)
+
+target_sources(mouseclick2 PRIVATE
+    screenitem.h
+    screenitem.cpp
 )
 
 qt6_add_shaders(mouseclick2 "shaders"
