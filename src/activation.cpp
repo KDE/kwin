@@ -252,6 +252,15 @@ void Workspace::setActiveWindow(Window *window)
         m_focusChain->update(m_activeWindow, FocusChain::MakeFirst);
         m_activeWindow->demandAttention(false);
         m_activeWindow->setActive(true);
+
+        // activating a client can cause a non active fullscreen window to loose the ActiveLayer status on > 1 screens
+        if (outputs().count() > 1) {
+            for (auto it = m_windows.begin(); it != m_windows.end(); ++it) {
+                if (*it != m_activeWindow && (*it)->layer() == ActiveLayer && (*it)->output() == m_activeWindow->output()) {
+                    (*it)->updateLayer();
+                }
+            }
+        }
     }
 
     if (window) {
