@@ -181,18 +181,6 @@ void DrmOutput::refreshModes(State *nextState) const
 
 void DrmOutput::maybeFixCurrentMode(State *next) const
 {
-    static const bool noCustomModeQuirk = qEnvironmentVariableIntValue("KWIN_DRM_NO_CUSTOM_MODE_QUIRK");
-    if (!noCustomModeQuirk) {
-        if (!next->desiredMode.isEmpty()) {
-            for (const auto &mode : std::as_const(next->modes)) {
-                if (next->desiredMode == mode->modeline()) {
-                    next->currentMode = mode;
-                    break;
-                }
-            }
-        }
-    }
-
     if (!next->currentMode) {
         next->currentMode = next->modes.constFirst();
     } else if (!next->modes.contains(next->currentMode)) {
