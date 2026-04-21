@@ -37,6 +37,7 @@
 #include <KWayland/Client/plasmawindowmanagement.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/pointerconstraints.h>
+#include <KWayland/Client/region.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shadow.h>
@@ -264,8 +265,8 @@ CursorShapeManagerV1::~CursorShapeManagerV1()
     destroy();
 }
 
-CursorShapeDeviceV1::CursorShapeDeviceV1(CursorShapeManagerV1 *manager, KWayland::Client::Pointer *pointer)
-    : QtWayland::wp_cursor_shape_device_v1(manager->get_pointer(*pointer))
+CursorShapeDeviceV1::CursorShapeDeviceV1(CursorShapeManagerV1 *manager, WlPointer *pointer)
+    : QtWayland::wp_cursor_shape_device_v1(manager->get_pointer(pointer->object()))
 {
 }
 
@@ -643,8 +644,9 @@ std::unique_ptr<Connection> Connection::setup(AdditionalWaylandInterfaces flags)
         }
     }
     if (flags.testFlag(AdditionalWaylandInterface::PointerConstraints)) {
-        connection->pointerConstraints = registry->createPointerConstraints(registry->interface(KWayland::Client::Registry::Interface::PointerConstraintsUnstableV1).name,
-                                                                            registry->interface(KWayland::Client::Registry::Interface::PointerConstraintsUnstableV1).version);
+        connection->pointerConstraints = new WpPointerConstraintsV1(*registry,
+                                                                    registry->interface(KWayland::Client::Registry::Interface::PointerConstraintsUnstableV1).name,
+                                                                    registry->interface(KWayland::Client::Registry::Interface::PointerConstraintsUnstableV1).version);
         if (!connection->pointerConstraints->isValid()) {
             return nullptr;
         }
@@ -834,7 +836,7 @@ KWayland::Client::PlasmaWindowManagement *waylandWindowManagement()
     return s_waylandConnection->windowManagement;
 }
 
-KWayland::Client::PointerConstraints *waylandPointerConstraints()
+WpPointerConstraintsV1 *waylandPointerConstraints()
 {
     return s_waylandConnection->pointerConstraints;
 }
@@ -1329,7 +1331,7 @@ std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Clien
     return std::make_unique<AutoHideScreenEdgeV1>(manager, surface, border);
 }
 
-std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer)
+std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(WlPointer *pointer)
 {
     CursorShapeManagerV1 *manager = s_waylandConnection->cursorShapeManagerV1;
     if (!manager) {
@@ -2467,13 +2469,24 @@ WlPointer::~WlPointer()
     release();
 }
 
+bool WlPointer::isValid() const
+{
+    return isInitialized();
+}
+
 ::wl_surface *WlPointer::enteredSurface() const
 {
     return m_enteredSurface;
 }
 
+void WlPointer::setCursor(KWayland::Client::Surface *surface, const QPoint &hotspot)
+{
+    set_cursor(m_enterSerial, surface ? *surface : nullptr, hotspot.x(), hotspot.y());
+}
+
 void WlPointer::pointer_enter(uint32_t serial, ::wl_surface *surface, wl_fixed_t surface_x, wl_fixed_t surface_y)
 {
+    m_enterSerial = serial;
     m_enteredSurface = surface;
     Q_EMIT entered(serial, surface, QPointF(wl_fixed_to_double(surface_x), wl_fixed_to_double(surface_y)));
 }
@@ -2492,6 +2505,113 @@ void WlPointer::pointer_motion(uint32_t time, wl_fixed_t surface_x, wl_fixed_t s
 void WlPointer::pointer_button(uint32_t serial, uint32_t time, uint32_t button, uint32_t state)
 {
     Q_EMIT buttonStateChanged(serial, time, button, state);
+}
+
+void WlPointer::pointer_axis(uint32_t time, uint32_t axis, wl_fixed_t value)
+{
+    Q_EMIT axisChanged(time, axis, wl_fixed_to_double(value));
+}
+
+WpPointerConstraintsV1::WpPointerConstraintsV1(::wl_registry *registry, uint32_t id, int version)
+    : QtWayland::zwp_pointer_constraints_v1(registry, id, version)
+{
+}
+
+WpPointerConstraintsV1::~WpPointerConstraintsV1()
+{
+    destroy();
+}
+
+bool WpPointerConstraintsV1::isValid() const
+{
+    return isInitialized();
+}
+
+std::unique_ptr<WpLockedPointerV1> WpPointerConstraintsV1::lockPointer(KWayland::Client::Surface *surface, WlPointer *pointer, KWayland::Client::Region *region, LifeTime lifeTime)
+{
+    wl_region *wlRegion = nullptr;
+    if (region) {
+        wlRegion = region->operator wl_region *();
+    }
+    return std::make_unique<WpLockedPointerV1>(lock_pointer(*surface,
+                                                            pointer->object(),
+                                                            wlRegion,
+                                                            uint32_t(lifeTime)));
+}
+
+std::unique_ptr<WpConfinedPointerV1> WpPointerConstraintsV1::confinePointer(KWayland::Client::Surface *surface, WlPointer *pointer, KWayland::Client::Region *region, LifeTime lifeTime)
+{
+    wl_region *wlRegion = nullptr;
+    if (region) {
+        wlRegion = region->operator wl_region *();
+    }
+    return std::make_unique<WpConfinedPointerV1>(confine_pointer(*surface,
+                                                                 pointer->object(),
+                                                                 wlRegion,
+                                                                 uint32_t(lifeTime)));
+}
+
+WpLockedPointerV1::WpLockedPointerV1(::zwp_locked_pointer_v1 *object)
+    : QtWayland::zwp_locked_pointer_v1(object)
+{
+}
+
+WpLockedPointerV1::~WpLockedPointerV1()
+{
+    destroy();
+}
+
+void WpLockedPointerV1::setCursorPositionHint(const QPointF &position)
+{
+    set_cursor_position_hint(wl_fixed_from_double(position.x()), wl_fixed_from_double(position.y()));
+}
+
+void WpLockedPointerV1::setRegion(KWayland::Client::Region *region)
+{
+    wl_region *wlRegion = nullptr;
+    if (region) {
+        wlRegion = region->operator wl_region *();
+    }
+    set_region(wlRegion);
+}
+
+void WpLockedPointerV1::zwp_locked_pointer_v1_locked()
+{
+    Q_EMIT locked();
+}
+
+void WpLockedPointerV1::zwp_locked_pointer_v1_unlocked()
+{
+    Q_EMIT unlocked();
+}
+
+WpConfinedPointerV1::WpConfinedPointerV1(::zwp_confined_pointer_v1 *object)
+    : QtWayland::zwp_confined_pointer_v1(object)
+{
+}
+
+WpConfinedPointerV1::~WpConfinedPointerV1()
+{
+    destroy();
+}
+
+void WpConfinedPointerV1::setRegion(KWayland::Client::Region *region)
+{
+    wl_region *wlRegion = nullptr;
+    if (region) {
+        wlRegion = region->operator wl_region *();
+    }
+    set_region(wlRegion);
+}
+
+void WpConfinedPointerV1::zwp_confined_pointer_v1_confined()
+{
+    Q_EMIT confined();
+}
+
+void WpConfinedPointerV1::zwp_confined_pointer_v1_unconfined()
+{
+    Q_EMIT unconfined();
 }
 
 WlTouch::WlTouch(::wl_touch *object)

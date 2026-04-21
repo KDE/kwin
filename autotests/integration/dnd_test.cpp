@@ -147,7 +147,7 @@ void DndTest::pointerDrag()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Setup the data source.
-    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
@@ -159,9 +159,9 @@ void DndTest::pointerDrag()
         }
         close(fd);
     });
-    QSignalSpy pointerButtonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
-    QSignalSpy pointerEnteredSpy(pointer, &KWayland::Client::Pointer::entered);
-    QSignalSpy pointerLeftSpy(pointer, &KWayland::Client::Pointer::left);
+    QSignalSpy pointerButtonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
+    QSignalSpy pointerEnteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy pointerLeftSpy(pointer.get(), &Test::WlPointer::left);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDragMotionSpy(dataDevice, &KWayland::Client::DataDevice::dragMotion);
@@ -277,8 +277,8 @@ void DndTest::pointerDrag()
     // Drop.
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(pointerEnteredSpy.wait());
-    QCOMPARE(pointer->enteredSurface(), targetSurface.get());
-    QCOMPARE(pointerEnteredSpy.last().at(1).value<QPointF>(), QPointF(60, 50));
+    QCOMPARE(pointer->enteredSurface(), targetSurface->operator wl_surface *());
+    QCOMPARE(pointerEnteredSpy.last().at(2).value<QPointF>(), QPointF(60, 50));
 
     QCOMPARE(dataDeviceDragEnteredSpy.count(), 2);
     QCOMPARE(dataDeviceDragMotionSpy.count(), 2);
@@ -308,14 +308,14 @@ void DndTest::pointerSubSurfaceDrag()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Setup the data source.
-    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy pointerButtonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
-    QSignalSpy pointerEnteredSpy(pointer, &KWayland::Client::Pointer::entered);
-    QSignalSpy pointerLeftSpy(pointer, &KWayland::Client::Pointer::left);
+    QSignalSpy pointerButtonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
+    QSignalSpy pointerEnteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy pointerLeftSpy(pointer.get(), &Test::WlPointer::left);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDragMotionSpy(dataDevice, &KWayland::Client::DataDevice::dragMotion);
@@ -403,8 +403,8 @@ void DndTest::pointerSubSurfaceDrag()
     // Drop.
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(pointerEnteredSpy.wait());
-    QCOMPARE(pointer->enteredSurface(), childSurface.get());
-    QCOMPARE(pointerEnteredSpy.last().at(1).value<QPointF>(), QPointF(25, 50));
+    QCOMPARE(pointer->enteredSurface(), childSurface->operator wl_surface *());
+    QCOMPARE(pointerEnteredSpy.last().at(2).value<QPointF>(), QPointF(25, 50));
     QCOMPARE(dataDeviceDroppedSpy.count(), 1);
 
     // Finish drag-and-drop.
@@ -431,12 +431,12 @@ void DndTest::pointerDragAction()
     QFETCH(KWayland::Client::DataDeviceManager::DnDAction, action);
 
     // Setup the data source.
-    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move | KWayland::Client::DataDeviceManager::DnDAction::Ask);
-    QSignalSpy pointerButtonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy pointerButtonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
     QSignalSpy dataSourceSelectedDragAndDropActionChangedSpy(dataSource, &KWayland::Client::DataSource::selectedDragAndDropActionChanged);
@@ -504,12 +504,12 @@ void DndTest::inertPointerDragOffer()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Setup the data source.
-    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy pointerButtonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy pointerButtonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
@@ -607,7 +607,7 @@ void DndTest::invalidSerialForPointerDrag()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Setup the data source.
-    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
@@ -621,7 +621,7 @@ void DndTest::invalidSerialForPointerDrag()
     window->move(QPointF(0, 0));
 
     // Move the pointer to the center of the subsurface and click the left mouse button.
-    QSignalSpy pointerButtonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy pointerButtonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     quint32 timestamp = 0;
     Test::pointerMotion(QPointF(75, 50), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
@@ -641,12 +641,12 @@ void DndTest::cancelPointerDrag()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Setup the data source.
-    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy pointerButtonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy pointerButtonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
@@ -688,12 +688,12 @@ void DndTest::destroyPointerDragSource()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Setup the data source.
-    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy pointerButtonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy pointerButtonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
@@ -733,12 +733,12 @@ void DndTest::noAcceptedMimeTypePointerDrag()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Setup the data source.
-    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy pointerButtonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy pointerButtonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
@@ -785,12 +785,12 @@ void DndTest::noSelectedActionPointerDrag()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Setup the data source.
-    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy pointerButtonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy pointerButtonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);
@@ -837,12 +837,12 @@ void DndTest::secondPointerDrag()
     QVERIFY(Test::waitForWaylandPointer());
 
     // Setup the data source.
-    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto pointer = Test::kwinSeat()->getPointer();
     auto dataDevice = Test::waylandDataDeviceManager()->getDataDevice(Test::waylandSeat(), Test::waylandSeat());
     auto dataSource = Test::waylandDataDeviceManager()->createDataSource(Test::waylandSeat());
     dataSource->offer(QStringLiteral("text/plain"));
     dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
-    QSignalSpy pointerButtonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy pointerButtonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
     QSignalSpy dataDeviceDragEnteredSpy(dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dataDeviceDragLeftSpy(dataDevice, &KWayland::Client::DataDevice::dragLeft);
     QSignalSpy dataDeviceDroppedSpy(dataDevice, &KWayland::Client::DataDevice::dropped);

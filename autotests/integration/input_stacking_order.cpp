@@ -87,11 +87,11 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     // other window should gain focus without a mouse event in between
 
     // create pointer and signal spy for enter and leave signals
-    auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer, &KWayland::Client::Pointer::left);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy leftSpy(pointer.get(), &Test::WlPointer::left);
 
     // now create the two windows and make them overlap
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -124,7 +124,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
     // window 2 should have focus
-    QCOMPARE(pointer->enteredSurface(), surface2.get());
+    QCOMPARE(pointer->enteredSurface(), surface2->operator wl_surface *());
     // also on the server
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window2->surface());
 
@@ -136,7 +136,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QCOMPARE(leftSpy.count(), 1);
     // and an enter to window1
     QCOMPARE(enteredSpy.count(), 2);
-    QCOMPARE(pointer->enteredSurface(), surface1.get());
+    QCOMPARE(pointer->enteredSurface(), surface1->operator wl_surface *());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window1->surface());
 
     // let's destroy window1, that should pass focus to window2 again
@@ -145,7 +145,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QVERIFY(windowClosedSpy.wait());
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 3);
-    QCOMPARE(pointer->enteredSurface(), surface2.get());
+    QCOMPARE(pointer->enteredSurface(), surface2->operator wl_surface *());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window2->surface());
 }
 

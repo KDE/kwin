@@ -20,7 +20,6 @@
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/keyboard.h>
-#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/region.h>
 #include <KWayland/Client/seat.h>
@@ -119,10 +118,10 @@ void TestPointerConstraints::testConfinedPointer()
     // simple interaction test to verify that the pointer gets confined
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    std::unique_ptr<KWayland::Client::ConfinedPointer> confinedPointer(Test::waylandPointerConstraints()->confinePointer(surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::OneShot));
-    QSignalSpy confinedSpy(confinedPointer.get(), &KWayland::Client::ConfinedPointer::confined);
-    QSignalSpy unconfinedSpy(confinedPointer.get(), &KWayland::Client::ConfinedPointer::unconfined);
+    auto pointer = Test::kwinSeat()->getPointer();
+    auto confinedPointer = Test::waylandPointerConstraints()->confinePointer(surface.get(), pointer.get(), nullptr, Test::WpPointerConstraintsV1::LifeTime::OneShot);
+    QSignalSpy confinedSpy(confinedPointer.get(), &Test::WpConfinedPointerV1::confined);
+    QSignalSpy unconfinedSpy(confinedPointer.get(), &Test::WpConfinedPointerV1::unconfined);
 
     // now map the window
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
@@ -200,9 +199,9 @@ void TestPointerConstraints::testConfinedPointer()
     QCOMPARE(input()->pointer()->isConstrained(), false);
 
     // reconfine pointer (this time with persistent life time)
-    confinedPointer.reset(Test::waylandPointerConstraints()->confinePointer(surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::Persistent));
-    QSignalSpy confinedSpy2(confinedPointer.get(), &KWayland::Client::ConfinedPointer::confined);
-    QSignalSpy unconfinedSpy2(confinedPointer.get(), &KWayland::Client::ConfinedPointer::unconfined);
+    confinedPointer = Test::waylandPointerConstraints()->confinePointer(surface.get(), pointer.get(), nullptr, Test::WpPointerConstraintsV1::LifeTime::Persistent);
+    QSignalSpy confinedSpy2(confinedPointer.get(), &Test::WpConfinedPointerV1::confined);
+    QSignalSpy unconfinedSpy2(confinedPointer.get(), &Test::WpConfinedPointerV1::unconfined);
 
     // activate it again, this confines again
     workspace()->activateWindow(static_cast<Window *>(input()->pointer()->focus()));
@@ -252,8 +251,8 @@ void TestPointerConstraints::testConfinedPointer()
     QCOMPARE(input()->pointer()->isConstrained(), false);
 
     // confine again
-    confinedPointer.reset(Test::waylandPointerConstraints()->confinePointer(surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::Persistent));
-    QSignalSpy confinedSpy3(confinedPointer.get(), &KWayland::Client::ConfinedPointer::confined);
+    confinedPointer = Test::waylandPointerConstraints()->confinePointer(surface.get(), pointer.get(), nullptr, Test::WpPointerConstraintsV1::LifeTime::Persistent);
+    QSignalSpy confinedSpy3(confinedPointer.get(), &Test::WpConfinedPointerV1::confined);
     QVERIFY(confinedSpy3.wait());
     QCOMPARE(input()->pointer()->isConstrained(), true);
 
@@ -271,10 +270,10 @@ void TestPointerConstraints::testLockedPointer()
     // the various ways to unlock are not tested as that's already verified by testConfinedPointer
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    std::unique_ptr<KWayland::Client::LockedPointer> lockedPointer(Test::waylandPointerConstraints()->lockPointer(surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::OneShot));
-    QSignalSpy lockedSpy(lockedPointer.get(), &KWayland::Client::LockedPointer::locked);
-    QSignalSpy unlockedSpy(lockedPointer.get(), &KWayland::Client::LockedPointer::unlocked);
+    auto pointer = Test::kwinSeat()->getPointer();
+    auto lockedPointer = Test::waylandPointerConstraints()->lockPointer(surface.get(), pointer.get(), nullptr, Test::WpPointerConstraintsV1::LifeTime::OneShot);
+    QSignalSpy lockedSpy(lockedPointer.get(), &Test::WpLockedPointerV1::locked);
+    QSignalSpy unlockedSpy(lockedPointer.get(), &Test::WpLockedPointerV1::unlocked);
 
     // now map the window
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
@@ -302,8 +301,8 @@ void TestPointerConstraints::testLockedPointer()
     KWin::input()->pointer()->warp(window->frameGeometry().center() + QPoint(1, 1));
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), window->frameGeometry().center() + QPoint(1, 1));
 
-    lockedPointer.reset(Test::waylandPointerConstraints()->lockPointer(surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::Persistent));
-    QSignalSpy lockedSpy2(lockedPointer.get(), &KWayland::Client::LockedPointer::locked);
+    lockedPointer = Test::waylandPointerConstraints()->lockPointer(surface.get(), pointer.get(), nullptr, Test::WpPointerConstraintsV1::LifeTime::Persistent);
+    QSignalSpy lockedSpy2(lockedPointer.get(), &Test::WpLockedPointerV1::locked);
 
     // activate the window again, this should lock again
     workspace()->activateWindow(static_cast<Window *>(input()->pointer()->focus()));
@@ -333,10 +332,10 @@ void TestPointerConstraints::testCloseWindowWithLockedPointer()
     // test case which verifies that the pointer gets unlocked when the window for it gets closed
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    std::unique_ptr<KWayland::Client::LockedPointer> lockedPointer(Test::waylandPointerConstraints()->lockPointer(surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::OneShot));
-    QSignalSpy lockedSpy(lockedPointer.get(), &KWayland::Client::LockedPointer::locked);
-    QSignalSpy unlockedSpy(lockedPointer.get(), &KWayland::Client::LockedPointer::unlocked);
+    auto pointer = Test::kwinSeat()->getPointer();
+    auto lockedPointer = Test::waylandPointerConstraints()->lockPointer(surface.get(), pointer.get(), nullptr, Test::WpPointerConstraintsV1::LifeTime::OneShot);
+    QSignalSpy lockedSpy(lockedPointer.get(), &Test::WpLockedPointerV1::locked);
+    QSignalSpy unlockedSpy(lockedPointer.get(), &Test::WpLockedPointerV1::unlocked);
 
     // now map the window
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);

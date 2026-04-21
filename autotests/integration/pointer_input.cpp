@@ -171,11 +171,11 @@ void PointerInputTest::testWarpingUpdatesFocus()
     // this test verifies that warping the pointer creates pointer enter and leave events
 
     // create pointer and signal spy for enter and leave signals
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer, &KWayland::Client::Pointer::left);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy leftSpy(pointer.get(), &Test::WlPointer::left);
 
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -196,9 +196,9 @@ void PointerInputTest::testWarpingUpdatesFocus()
     input()->pointer()->warp(QPoint(25, 25));
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
-    QCOMPARE(enteredSpy.first().at(1).toPointF(), QPointF(25, 25));
+    QCOMPARE(enteredSpy.first().at(2).toPointF(), QPointF(25, 25));
     // window should have focus
-    QCOMPARE(pointer->enteredSurface(), surface.get());
+    QCOMPARE(pointer->enteredSurface(), surface->operator wl_surface *());
     // also on the server
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
 
@@ -216,11 +216,11 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
     // this test verifies that warping the pointer creates pointer motion events
 
     // create pointer and signal spy for enter and motion
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
-    QSignalSpy movedSpy(pointer, &KWayland::Client::Pointer::motion);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy movedSpy(pointer.get(), &Test::WlPointer::motion);
 
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -236,7 +236,7 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
     // enter
     Test::pointerMotion(QPointF(25, 25), 1);
     QVERIFY(enteredSpy.wait());
-    QCOMPARE(enteredSpy.first().at(1).toPointF(), QPointF(25, 25));
+    QCOMPARE(enteredSpy.first().at(2).toPointF(), QPointF(25, 25));
 
     // now warp
     input()->pointer()->warp(QPoint(26, 26));
@@ -250,10 +250,10 @@ void PointerInputTest::testWarpingBetweenWindows()
     // This test verifies that the compositor will send correct events when the pointer
     // leaves one window and enters another window.
 
-    std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer(m_seat));
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer.get(), &KWayland::Client::Pointer::left);
-    QSignalSpy motionSpy(pointer.get(), &KWayland::Client::Pointer::motion);
+    auto pointer = Test::kwinSeat()->getPointer();
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy leftSpy(pointer.get(), &Test::WlPointer::left);
+    QSignalSpy motionSpy(pointer.get(), &Test::WlPointer::motion);
 
     // create windows
     std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
@@ -273,19 +273,19 @@ void PointerInputTest::testWarpingBetweenWindows()
     Test::pointerMotion(window1->frameGeometry().center(), timestamp++);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
-    QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(50, 25));
+    QCOMPARE(enteredSpy.last().at(2).toPointF(), QPointF(50, 25));
     QCOMPARE(leftSpy.count(), 0);
     QCOMPARE(motionSpy.count(), 0);
-    QCOMPARE(pointer->enteredSurface(), surface1.get());
+    QCOMPARE(pointer->enteredSurface(), surface1->operator wl_surface *());
 
     // put the pointer at the center of the second window
     Test::pointerMotion(window2->frameGeometry().center(), timestamp++);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
-    QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(100, 50));
+    QCOMPARE(enteredSpy.last().at(2).toPointF(), QPointF(100, 50));
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(motionSpy.count(), 0);
-    QCOMPARE(pointer->enteredSurface(), surface2.get());
+    QCOMPARE(pointer->enteredSurface(), surface2->operator wl_surface *());
 }
 
 void PointerInputTest::testUpdateFocusAfterScreenChange()
@@ -294,11 +294,11 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     // screen due to removal of screen
 
     // create pointer and signal spy for enter and motion
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer, &KWayland::Client::Pointer::left);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy leftSpy(pointer.get(), &Test::WlPointer::left);
 
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -338,10 +338,10 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
     // if decoration was focused and then destroyed on maximize with BorderlessMaximizedWindows option.
 
     // create pointer for focus tracking
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy buttonStateChangedSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy buttonStateChangedSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
 
     // Enable the borderless maximized windows option.
     auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
@@ -414,7 +414,7 @@ void PointerInputTest::testUpdateFocusOnDecorationDestroy()
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(buttonStateChangedSpy.wait());
-    QCOMPARE(pointer->enteredSurface(), surface.get());
+    QCOMPARE(pointer->enteredSurface(), surface->operator wl_surface *());
 
     // Destroy the window.
     shellSurface.reset();
@@ -466,10 +466,10 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     // this test ensures that Alt+mouse button press triggers unrestricted move
 
     // create pointer and signal spy for button events
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy buttonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy buttonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
 
     // first modify the config for this run
     QFETCH(QString, modKey);
@@ -587,10 +587,10 @@ void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled(
     // this test ensures that Alt+mouse button press triggers unrestricted move
 
     // create pointer and signal spy for button events
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy buttonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy buttonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
 
     // first modify the config for this run
     KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
@@ -663,10 +663,10 @@ void PointerInputTest::testModifierScrollOpacity()
     // pass the wheel to the window
 
     // create pointer and signal spy for button events
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy axisSpy(pointer, &KWayland::Client::Pointer::axisChanged);
+    QSignalSpy axisSpy(pointer.get(), &Test::WlPointer::axisChanged);
 
     // first modify the config for this run
     QFETCH(QString, modKey);
@@ -722,10 +722,10 @@ void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
     // pass the wheel to the window
 
     // create pointer and signal spy for button events
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy axisSpy(pointer, &KWayland::Client::Pointer::axisChanged);
+    QSignalSpy axisSpy(pointer.get(), &Test::WlPointer::axisChanged);
 
     // first modify the config for this run
     KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
@@ -771,10 +771,10 @@ void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
 void PointerInputTest::testScrollAction()
 {
     // this test verifies that scroll on inactive window performs a mouse action
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy axisSpy(pointer, &KWayland::Client::Pointer::axisChanged);
+    QSignalSpy axisSpy(pointer.get(), &Test::WlPointer::axisChanged);
 
     // first modify the config for this run
     KConfigGroup group = kwinApp()->config()->group(QStringLiteral("MouseBindings"));
@@ -821,7 +821,7 @@ void PointerInputTest::testScrollAction()
 void PointerInputTest::testFocusFollowsMouse()
 {
     // need to create a pointer, otherwise it doesn't accept focus
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
     // move cursor out of the way of first window to be created
@@ -995,10 +995,10 @@ void PointerInputTest::testMouseActionActiveWindow()
     // click raise option
 
     // create a button spy - all clicks should be passed through
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy buttonSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy buttonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
 
     // adjust config for this run
     QFETCH(bool, clickRaise);
@@ -1071,10 +1071,10 @@ void PointerInputTest::testCursorImage()
     // this test verifies that the pointer image gets updated correctly from the client provided data
 
     // we need a pointer to get the enter event
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
 
     // move cursor somewhere the new window won't open
     auto cursor = Cursors::self()->mouse();
@@ -1156,7 +1156,7 @@ void PointerInputTest::testCursorShapeV1()
     // this test verifies the integration of the cursor-shape-v1 protocol
 
     // get the pointer
-    std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     std::unique_ptr<Test::CursorShapeDeviceV1> cursorShapeDevice(Test::createCursorShapeDeviceV1(pointer.get()));
 
     // move cursor somewhere the new window won't open
@@ -1170,7 +1170,7 @@ void PointerInputTest::testCursorShapeV1()
     QVERIFY(window);
 
     // move the pointer to the center of the window
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
     input()->pointer()->warp(window->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
 
@@ -1206,10 +1206,10 @@ void PointerInputTest::testEffectOverrideCursorImage()
     // this test verifies the effect cursor override handling
 
     // we need a pointer to get the enter event and set a cursor
-    std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     std::unique_ptr<Test::CursorShapeDeviceV1> cursorShapeDevice(Test::createCursorShapeDeviceV1(pointer.get()));
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer.get(), &KWayland::Client::Pointer::left);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy leftSpy(pointer.get(), &Test::WlPointer::left);
     QSignalSpy cursorChanged(Cursors::self(), &Cursors::currentCursorChanged);
 
     // move cursor somewhere the new window won't open
@@ -1271,13 +1271,13 @@ void PointerInputTest::testPopup()
     // a button press outside the window should dismiss the popup
 
     // first create a parent surface
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer, &KWayland::Client::Pointer::left);
-    QSignalSpy buttonStateChangedSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
-    QSignalSpy motionSpy(pointer, &KWayland::Client::Pointer::motion);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy leftSpy(pointer.get(), &Test::WlPointer::left);
+    QSignalSpy buttonStateChangedSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
+    QSignalSpy motionSpy(pointer.get(), &Test::WlPointer::motion);
 
     input()->pointer()->warp(QPointF(800, 800));
 
@@ -1328,7 +1328,7 @@ void PointerInputTest::testPopup()
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(leftSpy.count(), 1);
-    QCOMPARE(pointer->enteredSurface(), popupSurface.get());
+    QCOMPARE(pointer->enteredSurface(), popupSurface->operator wl_surface *());
 
     // let's move the pointer outside of the popup window
     // this should not really change anything, it gets a leave event
@@ -1348,13 +1348,13 @@ void PointerInputTest::testDecoCancelsPopup()
     // cancels the popup
 
     // first create a parent surface
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer, &KWayland::Client::Pointer::left);
-    QSignalSpy buttonStateChangedSpy(pointer, &KWayland::Client::Pointer::buttonStateChanged);
-    QSignalSpy motionSpy(pointer, &KWayland::Client::Pointer::motion);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy leftSpy(pointer.get(), &Test::WlPointer::left);
+    QSignalSpy buttonStateChangedSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
+    QSignalSpy motionSpy(pointer.get(), &Test::WlPointer::motion);
 
     input()->pointer()->warp(QPointF(800, 800));
 
@@ -1417,11 +1417,11 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     // see BUG: 372876
 
     // first create a parent surface
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer, &KWayland::Client::Pointer::left);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy leftSpy(pointer.get(), &Test::WlPointer::left);
 
     input()->pointer()->warp(QPointF(800, 800));
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -1671,10 +1671,10 @@ void PointerInputTest::testResizeCursor()
     QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
 
     // we need a pointer to get the enter event
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
 
     // create a test window
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -1758,10 +1758,10 @@ void PointerInputTest::testMoveCursor()
     QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
 
     // we need a pointer to get the enter event
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
 
     // create a test window
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -1946,11 +1946,11 @@ void PointerInputTest::testTabletNoCursorSync()
     // This test verifies that moving the stylus cursor doesn't reflect the mouse pointer.
 
     // create pointer and signal spy for enter and leave signals
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
 
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
 
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -1984,11 +1984,11 @@ void PointerInputTest::testTabletCursorSync()
     cfg->sync();
 
     // create pointer and signal spy for enter and leave signals
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
 
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
 
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -2016,9 +2016,9 @@ void PointerInputTest::testTabletCursorSync()
     QCOMPARE(enteredSpy.count(), 1);
 
     // It will be 30px since the center is 25px, and we moved 5px with the mouse.
-    QCOMPARE(enteredSpy.first().at(1).toPointF(), QPointF(50, 30));
+    QCOMPARE(enteredSpy.first().at(2).toPointF(), QPointF(50, 30));
     // window should have focus
-    QCOMPARE(pointer->enteredSurface(), surface.get());
+    QCOMPARE(pointer->enteredSurface(), surface->operator wl_surface *());
     // also on the server
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
 }
@@ -2032,12 +2032,12 @@ void PointerInputTest::testTabletCursorSyncRelative()
     cfg->sync();
 
     // create pointer and signal spy for enter and leave signals
-    auto pointer = m_seat->createPointer(m_seat);
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
 
-    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
-    QSignalSpy motionSpy(pointer, &KWayland::Client::Pointer::motion);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy motionSpy(pointer.get(), &Test::WlPointer::motion);
 
     // create a window
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -2063,9 +2063,9 @@ void PointerInputTest::testTabletCursorSyncRelative()
     QCOMPARE(enteredSpy.count(), 1);
 
     // It will be 30px since the center is 25px, and we moved 5px with the mouse.
-    QCOMPARE(enteredSpy.first().at(1).toPointF(), QPointF(50, 25));
+    QCOMPARE(enteredSpy.first().at(2).toPointF(), QPointF(50, 25));
     // window should have focus
-    QCOMPARE(pointer->enteredSurface(), surface.get());
+    QCOMPARE(pointer->enteredSurface(), surface->operator wl_surface *());
     // also on the server
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
 

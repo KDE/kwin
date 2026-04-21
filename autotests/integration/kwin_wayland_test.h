@@ -38,6 +38,7 @@
 #include "qwayland-kde-output-management-v2.h"
 #include "qwayland-kde-screen-edge-v1.h"
 #include "qwayland-keystate.h"
+#include "qwayland-pointer-constraints-unstable-v1.h"
 #include "qwayland-presentation-time.h"
 #include "qwayland-primary-selection-unstable-v1.h"
 #include "qwayland-security-context-v1.h"
@@ -68,6 +69,7 @@ class PlasmaShell;
 class PlasmaWindowManagement;
 class Pointer;
 class PointerConstraints;
+class Region;
 class Registry;
 class Seat;
 class ShadowManager;
@@ -91,6 +93,8 @@ class zwp_text_input_manager_v3;
 }
 
 class ScreencastingV1;
+
+Q_DECLARE_OPAQUE_POINTER(wl_surface *)
 
 namespace KWin
 {
@@ -180,6 +184,7 @@ class WpTabletV2;
 class WpTabletPadV2;
 class WpTabletSeatV2;
 class WpTabletToolV2;
+class WlPointer;
 
 class TextInputManagerV3 : public QtWayland::zwp_text_input_manager_v3
 {
@@ -608,7 +613,7 @@ class CursorShapeDeviceV1 : public QObject, public QtWayland::wp_cursor_shape_de
     Q_OBJECT
 
 public:
-    CursorShapeDeviceV1(CursorShapeManagerV1 *manager, KWayland::Client::Pointer *pointer);
+    CursorShapeDeviceV1(CursorShapeManagerV1 *manager, WlPointer *pointer);
     ~CursorShapeDeviceV1() override;
 };
 
@@ -1100,21 +1105,88 @@ public:
     explicit WlPointer(::wl_pointer *object);
     ~WlPointer() override;
 
+    bool isValid() const;
     ::wl_surface *enteredSurface() const;
+    void setCursor(KWayland::Client::Surface *surface, const QPoint &hotspot = QPoint());
 
 Q_SIGNALS:
     void entered(uint32_t serial, ::wl_surface *surface, const QPointF &position);
     void left(uint32_t serial, ::wl_surface *surface);
     void motion(const QPointF &position, uint32_t time);
     void buttonStateChanged(uint32_t serial, uint32_t time, uint32_t button, uint32_t state);
+    void axisChanged(uint32_t time, uint32_t axis, qreal delta);
 
 private:
     void pointer_enter(uint32_t serial, ::wl_surface *surface, wl_fixed_t surface_x, wl_fixed_t surface_y) override;
     void pointer_leave(uint32_t serial, ::wl_surface *surface) override;
     void pointer_motion(uint32_t time, wl_fixed_t surface_x, wl_fixed_t surface_y) override;
     void pointer_button(uint32_t serial, uint32_t time, uint32_t button, uint32_t state) override;
+    void pointer_axis(uint32_t time, uint32_t axis, wl_fixed_t value) override;
 
     ::wl_surface *m_enteredSurface = nullptr;
+    uint32_t m_enterSerial = 0;
+};
+
+class WpLockedPointerV1;
+class WpConfinedPointerV1;
+
+class WpPointerConstraintsV1 : public QObject, public QtWayland::zwp_pointer_constraints_v1
+{
+    Q_OBJECT
+
+public:
+    enum class LifeTime {
+        OneShot = 1,
+        Persistent = 2,
+    };
+
+    explicit WpPointerConstraintsV1(::wl_registry *registry, uint32_t id, int version);
+    ~WpPointerConstraintsV1() override;
+
+    bool isValid() const;
+
+    std::unique_ptr<WpLockedPointerV1> lockPointer(KWayland::Client::Surface *surface, WlPointer *pointer, KWayland::Client::Region *region, LifeTime lifeTime);
+    std::unique_ptr<WpConfinedPointerV1> confinePointer(KWayland::Client::Surface *surface, WlPointer *pointer, KWayland::Client::Region *region, LifeTime lifeTime);
+};
+
+class WpLockedPointerV1 : public QObject
+    , public QtWayland::zwp_locked_pointer_v1
+{
+    Q_OBJECT
+
+public:
+    explicit WpLockedPointerV1(::zwp_locked_pointer_v1 *object);
+    ~WpLockedPointerV1() override;
+
+    void setCursorPositionHint(const QPointF &position);
+    void setRegion(KWayland::Client::Region *region);
+
+Q_SIGNALS:
+    void locked();
+    void unlocked();
+
+private:
+    void zwp_locked_pointer_v1_locked() override;
+    void zwp_locked_pointer_v1_unlocked() override;
+};
+
+class WpConfinedPointerV1 : public QObject, public QtWayland::zwp_confined_pointer_v1
+{
+    Q_OBJECT
+
+public:
+    explicit WpConfinedPointerV1(::zwp_confined_pointer_v1 *object);
+    ~WpConfinedPointerV1() override;
+
+    void setRegion(KWayland::Client::Region *region);
+
+Q_SIGNALS:
+    void confined();
+    void unconfined();
+
+private:
+    void zwp_confined_pointer_v1_confined() override;
+    void zwp_confined_pointer_v1_unconfined() override;
 };
 
 class WlTouch : public QObject, public QtWayland::wl_touch
@@ -1144,7 +1216,7 @@ struct Connection
     KWayland::Client::Seat *seat = nullptr;
     KWayland::Client::PlasmaShell *plasmaShell = nullptr;
     KWayland::Client::PlasmaWindowManagement *windowManagement = nullptr;
-    KWayland::Client::PointerConstraints *pointerConstraints = nullptr;
+    WpPointerConstraintsV1 *pointerConstraints = nullptr;
     KWayland::Client::Registry *registry = nullptr;
     WaylandOutputManagementV2 *outputManagementV2 = nullptr;
     QThread *thread = nullptr;
@@ -1237,7 +1309,7 @@ WlSeat *kwinSeat();
 KWayland::Client::DataDeviceManager *waylandDataDeviceManager();
 KWayland::Client::PlasmaShell *waylandPlasmaShell();
 KWayland::Client::PlasmaWindowManagement *waylandWindowManagement();
-KWayland::Client::PointerConstraints *waylandPointerConstraints();
+WpPointerConstraintsV1 *waylandPointerConstraints();
 KWayland::Client::AppMenuManager *waylandAppMenuManager();
 WaylandOutputManagementV2 *waylandOutputManagementV2();
 KWayland::Client::TextInputManager *waylandTextInputManager();
@@ -1319,7 +1391,7 @@ std::unique_ptr<XdgPopup> createXdgPopupSurface(KWayland::Client::Surface *surfa
 std::unique_ptr<XdgToplevelDecorationV1> createXdgToplevelDecorationV1(XdgToplevel *toplevel);
 std::unique_ptr<IdleInhibitorV1> createIdleInhibitorV1(KWayland::Client::Surface *surface);
 std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border);
-std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer);
+std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(WlPointer *pointer);
 std::unique_ptr<XdgDialogV1> createXdgDialogV1(XdgToplevel *toplevel);
 std::unique_ptr<XdgSessionV1> createXdgSessionV1(XdgSessionManagerV1::reason reason, const QString &sessionId = QString());
 std::unique_ptr<XdgSessionV1> createXdgSessionV1(XdgSessionManagerV1 *manager, XdgSessionManagerV1::reason reason, const QString &sessionId = QString());
@@ -1597,6 +1669,7 @@ Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
         qunsetenv("QT_QPA_PLATFORM_PLUGIN_PATH");                                                                                         \
         qunsetenv("KWIN_FORCE_OWN_QPA");                                                                                                  \
         app.setAttribute(Qt::AA_Use96Dpi, true);                                                                                          \
+        qRegisterMetaType<wl_surface *>("::wl_surface*");                                                                                \
         TestObject tc;                                                                                                                    \
         return QTest::qExec(&tc, argc, argv);                                                                                             \
     }

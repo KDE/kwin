@@ -500,10 +500,10 @@ void MoveResizeWindowTest::testPointerMoveEnd()
 void MoveResizeWindowTest::testClientSideMove()
 {
     input()->pointer()->warp(QPointF(640, 512));
-    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy pointerEnteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy pointerLeftSpy(pointer.get(), &KWayland::Client::Pointer::left);
-    QSignalSpy buttonSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    auto pointer = Test::kwinSeat()->getPointer();
+    QSignalSpy pointerEnteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy pointerLeftSpy(pointer.get(), &Test::WlPointer::left);
+    QSignalSpy buttonSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));

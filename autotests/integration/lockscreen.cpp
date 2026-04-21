@@ -246,10 +246,10 @@ void LockScreenTest::testStackingOrder()
 
 void LockScreenTest::testPointer()
 {
-    std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer != nullptr);
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy leftSpy(pointer.get(), &KWayland::Client::Pointer::left);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy leftSpy(pointer.get(), &Test::WlPointer::left);
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
@@ -289,10 +289,10 @@ void LockScreenTest::testPointer()
 
 void LockScreenTest::testPointerButton()
 {
-    std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer != nullptr);
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
-    QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
+    QSignalSpy buttonChangedSpy(pointer.get(), &Test::WlPointer::buttonStateChanged);
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
@@ -328,10 +328,10 @@ void LockScreenTest::testPointerButton()
 
 void LockScreenTest::testPointerAxis()
 {
-    std::unique_ptr<KWayland::Client::Pointer> pointer(m_seat->createPointer());
+    auto pointer = Test::kwinSeat()->getPointer();
     QVERIFY(pointer != nullptr);
-    QSignalSpy axisChangedSpy(pointer.get(), &KWayland::Client::Pointer::axisChanged);
-    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy axisChangedSpy(pointer.get(), &Test::WlPointer::axisChanged);
+    QSignalSpy enteredSpy(pointer.get(), &Test::WlPointer::entered);
 
     auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
