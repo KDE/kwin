@@ -108,7 +108,12 @@ void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
             newModes.push_back(mode);
         }
         for (const auto &custom : next.customModes) {
-            newModes.push_back(std::make_shared<OutputMode>(OutputModeline(custom.size, custom.refreshRate, custom.flags | OutputModeline::Flag::Custom)));
+            const OutputModeline modeline = OutputModeline::custom(custom);
+            if (auto mode = modeline.match(next.modes)) {
+                newModes.push_back(mode);
+            } else {
+                newModes.push_back(std::make_shared<OutputMode>(modeline));
+            }
         }
         next.modes = newModes;
     }
@@ -121,15 +126,8 @@ void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
     if (!next.currentMode) {
         next.currentMode = next.modes.front();
     } else if (!next.modes.contains(next.currentMode)) {
-        const auto it = std::ranges::find_if(next.modes, [&next](const auto &mode) {
-            return mode->modeline() == next.currentMode->modeline();
-        });
-        if (it != next.modes.end()) {
-            next.currentMode = *it;
-        } else {
-            next.modes.push_front(next.currentMode);
-            next.currentMode->setRemoved();
-        }
+        next.modes.push_front(next.currentMode);
+        next.currentMode->setRemoved();
     }
 
     setState(next);

@@ -167,6 +167,7 @@ void DrmOutput::updateConnectorProperties()
 
 void DrmOutput::refreshModes(State *nextState) const
 {
+    const auto previousModes = nextState->modes;
     nextState->modes.clear();
 
     const auto drmModes = m_pipeline->connector()->modes();
@@ -175,7 +176,12 @@ void DrmOutput::refreshModes(State *nextState) const
     }
 
     for (const auto &custom : nextState->customModes) {
-        nextState->modes.append(m_pipeline->connector()->generateMode(custom.size, custom.refreshRate / 1000.0f, custom.flags | OutputModeline::Flag::Custom));
+        const OutputModeline modeline = OutputModeline::custom(custom);
+        if (auto mode = modeline.match(previousModes)) {
+            nextState->modes.append(mode);
+        } else {
+            nextState->modes.append(m_pipeline->connector()->generateMode(custom.size, custom.refreshRate / 1000.0f, custom.flags | OutputModeline::Flag::Custom));
+        }
     }
 }
 
@@ -184,15 +190,8 @@ void DrmOutput::maybeFixCurrentMode(State *next) const
     if (!next->currentMode) {
         next->currentMode = next->modes.constFirst();
     } else if (!next->modes.contains(next->currentMode)) {
-        const auto it = std::ranges::find_if(next->modes, [&](const auto &mode) {
-            return next->currentMode->modeline() == mode->modeline();
-        });
-        if (it != next->modes.end()) {
-            next->currentMode = *it;
-        } else {
-            next->currentMode->setRemoved();
-            next->modes.push_front(next->currentMode);
-        }
+        next->currentMode->setRemoved();
+        next->modes.push_front(next->currentMode);
     }
 }
 
