@@ -617,11 +617,21 @@ void TestInputMethodInterface::testKeyboardGrab()
     QVERIFY(keyboard->isValid());
     QVERIFY(keyboardGrabSpy.count() || keyboardGrabSpy.wait());
 
+    QPointer<InputMethodGrabV1> serverKeyboardGrab = m_inputMethodIface->context()->keyboardGrab();
+    QVERIFY(serverKeyboardGrab);
+    QSignalSpy keyboardGrabDestroyedSpy(serverKeyboardGrab, &QObject::destroyed);
+
     QSignalSpy keyboardSpy(keyboard, &KWayland::Client::Keyboard::keyChanged);
     m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, KeyboardKeyState::Pressed);
     m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, KeyboardKeyState::Released);
     keyboardSpy.wait();
     QCOMPARE(keyboardSpy.count(), 2);
+
+    delete keyboard;
+    wl_display_flush(m_connection->display());
+    QVERIFY(keyboardGrabDestroyedSpy.wait());
+    QVERIFY(!serverKeyboardGrab);
+    QVERIFY(!m_inputMethodIface->context()->keyboardGrab());
 
     m_inputMethodIface->sendDeactivate();
 }
