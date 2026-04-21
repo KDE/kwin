@@ -374,7 +374,7 @@ void DrmTest::testModesets()
     // verify that we can cycle through modes
     for (const auto &mode : output->modes()) {
         OutputConfiguration cfg;
-        cfg.changeSet(output)->mode = mode;
+        cfg.changeSet(output)->currentMode = mode->modeline();
         QCOMPARE(workspace()->applyOutputConfiguration(cfg), OutputConfigurationError::None);
         QVERIFY(window.presentWait());
 

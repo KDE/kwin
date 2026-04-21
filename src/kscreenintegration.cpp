@@ -166,17 +166,12 @@ OutputTransform toKWinTransform(int rotation)
     }
 }
 
-std::shared_ptr<OutputMode> parseMode(BackendOutput *output, const QJsonObject &modeInfo)
+std::optional<OutputModeline> parseMode(const QJsonObject &modeInfo)
 {
     const QJsonObject size = modeInfo["size"].toObject();
     const QSize modeSize = QSize(size["width"].toInt(), size["height"].toInt());
     const uint32_t refreshRate = std::round(modeInfo["refresh"].toDouble() * 1000);
-
-    const auto modes = output->modes();
-    auto it = std::find_if(modes.begin(), modes.end(), [&modeSize, &refreshRate](const auto &mode) {
-        return mode->size() == modeSize && mode->refreshRate() == refreshRate;
-    });
-    return (it != modes.end()) ? *it : nullptr;
+    return OutputModeline(modeSize, refreshRate);
 }
 
 std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *> &outputs, bool isLidClosed)
@@ -235,8 +230,8 @@ std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *>
             }
 
             if (const QJsonObject modeInfo = globalInfo["mode"].toObject(); !modeInfo.isEmpty()) {
-                if (auto mode = KScreenIntegration::parseMode(output, modeInfo)) {
-                    props->mode = mode;
+                if (auto mode = KScreenIntegration::parseMode(modeInfo)) {
+                    props->currentMode = mode;
                 }
             }
         } else {
@@ -244,12 +239,11 @@ std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *>
             props->pos = pos;
             props->transform = output->panelOrientation();
         }
-        const auto mode = props->mode.value_or(output->currentMode()).lock();
-        if (!mode) {
-            qCWarning(KWIN_CORE) << "Every enabled output should have a mode";
-            continue;
-        }
-        const double width = mode->size().width() / props->scale.value_or(output->scale());
+
+        const QSize modeSize = props->currentMode.transform([](const auto &modeline) {
+            return modeline.size();
+        }).value_or(output->modeSize());
+        const double width = modeSize.width() / props->scale.value_or(output->scale());
         pos.setX(pos.x() + std::round(width));
     }
 

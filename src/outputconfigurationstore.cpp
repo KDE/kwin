@@ -108,10 +108,11 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
 
 static QSize calculatePixelSize(OutputChangeSet *change, BackendOutput *output)
 {
-    const auto mode = change->mode.value_or(output->currentMode()).lock();
-    Q_ASSERT(mode);
+    const QSize modeSize = change->currentMode.transform([](const auto &modeline) {
+        return modeline.size();
+    }).value_or(output->modeSize());
     const auto transform = change->transform.value_or(output->transform());
-    return transform.map(mode->size());
+    return transform.map(modeSize);
 }
 
 static double mirrorScale(QSize srcPixelSize, double srcScale, QSize dstPixelSize)
@@ -385,27 +386,35 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
         const auto &setupState = *std::find_if(setup->outputs.begin(), setup->outputs.end(), [outputIndex = outputIndex](const auto &state) {
             return state.outputIndex == outputIndex;
         });
-        const auto modes = output->modes();
-        auto modeIt = std::find_if(modes.begin(), modes.end(), [&state](const auto &mode) {
-            return state.mode
-                && !mode->isRemoved()
-                && mode->modeline() == state.mode;
-        });
-        // This is fallback for output configs prior to 6.6.5, which didn't have flags.
-        if (modeIt == modes.end() && state.mode) {
-            modeIt = std::ranges::find_if(modes, [&state](const auto &mode) {
-                return state.mode->size() == mode->modeline().size()
-                    && state.mode->refreshRate() == mode->modeline().refreshRate();
-            });
+
+        std::optional<OutputModeline> effectiveMode;
+        if (state.mode) {
+            const auto availableModes = output->modes();
+            if (state.mode->match(availableModes)) {
+                effectiveMode = state.mode;
+            }
+
+            // This is fallback for output configs prior to 6.6.5, which didn't have flags.
+            if (!effectiveMode) {
+                for (const auto &mode : availableModes) {
+                    if (mode->isRemoved()) {
+                        continue;
+                    }
+                    if (state.mode->size() == mode->size() && state.mode->refreshRate() == mode->refreshRate()) {
+                        effectiveMode = mode->modeline();
+                        break;
+                    }
+                }
+            }
         }
-        std::optional<std::shared_ptr<OutputMode>> mode = modeIt == modes.end() ? std::nullopt : std::optional(*modeIt);
-        if (!mode.has_value() || !*mode) {
-            mode = chooseMode(output);
+        if (!effectiveMode) {
+            effectiveMode = chooseMode(output)->modeline();
             qCDebug(KWIN_OUTPUT_CONFIG, "Chose new mode for output %s: %dx%d@%u",
-                    qPrintable(state.edidIdentifier), (*mode)->size().width(), (*mode)->size().height(), (*mode)->refreshRate());
+                    qPrintable(state.edidIdentifier), effectiveMode->size().width(), effectiveMode->size().height(), effectiveMode->refreshRate());
         }
+
         *ret.changeSet(output) = OutputChangeSet{
-            .mode = mode,
+            .currentMode = effectiveMode,
             .desiredMode = state.mode,
             .enabled = setupState.enabled,
             .pos = setupState.position,
@@ -475,12 +484,12 @@ std::optional<OutputConfiguration> OutputConfigurationStore::generateLidClosedCo
     }
 
     const auto getSize = [](OutputChangeSet *changeset, BackendOutput *output) {
-        auto mode = changeset->mode ? changeset->mode->lock() : nullptr;
-        if (!mode) {
-            mode = output->currentMode();
-        }
+        const QSize modeSize = changeset->currentMode.transform([](const auto &modeline) {
+            return modeline.size();
+        }).value_or(output->modeSize());
+
         const auto scale = changeset->scale.value_or(output->scale());
-        return QSize(std::ceil(mode->size().width() / scale), std::ceil(mode->size().height() / scale));
+        return QSize(std::ceil(modeSize.width() / scale), std::ceil(modeSize.height() / scale));
     };
     const QPoint internalPos = internalChangeset->pos.value_or(internalOutput->position());
     const QSize internalSize = getSize(internalChangeset.get(), internalOutput);
@@ -594,28 +603,46 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
         const bool enable = kscreenChangeSet.enabled.value_or(!isLidClosed || !output->isInternal() || outputs.size() == 1);
         const OutputState existingData = outputIndex ? m_outputs[*outputIndex] : OutputState{};
 
-        const auto modes = output->modes();
-        auto modeIt = std::find_if(modes.begin(), modes.end(), [&existingData](const auto &mode) {
-            return existingData.mode == mode->modeline();
-        });
-        // This is fallback for output configs prior to 6.6.5, which didn't have flags.
-        if (modeIt == modes.end()) {
-            modeIt = std::ranges::find_if(modes, [&existingData](const auto &mode) {
-                return existingData.mode->size() == mode->modeline().size()
-                    && existingData.mode->refreshRate() == mode->modeline().refreshRate();
-            });
+        std::optional<OutputModeline> modeline;
+        if (existingData.mode) {
+            const auto availableModes = output->modes();
+            if (existingData.mode->match(availableModes)) {
+                modeline = existingData.mode;
+            }
+
+            // This is fallback for output configs prior to 6.6.5, which didn't have flags.
+            if (!modeline) {
+                for (const auto &mode : availableModes) {
+                    if (mode->isRemoved()) {
+                        continue;
+                    }
+                    if (existingData.mode->size() == mode->size() && existingData.mode->refreshRate() == mode->refreshRate()) {
+                        modeline = mode->modeline();
+                        break;
+                    }
+                }
+            }
         }
-        const auto mode = modeIt == modes.end() ? kscreenChangeSet.mode.value_or(chooseMode(output)).lock() : *modeIt;
+        if (!modeline) {
+            if (kscreenChangeSet.currentMode) {
+                if (kscreenChangeSet.currentMode->match(output->modes())) {
+                    modeline = kscreenChangeSet.currentMode;
+                }
+            }
+        }
+        if (!modeline) {
+            modeline = chooseMode(output)->modeline();
+        }
 
         const auto changeset = ret.changeSet(output);
         *changeset = {
-            .mode = mode,
-            .desiredMode = mode->modeline(),
+            .currentMode = modeline,
+            .desiredMode = modeline,
             .enabled = setupState ? setupState->enabled : enable,
             .pos = setupState ? setupState->position : rightMostPosition,
             // kscreen scale is unreliable because it gets overwritten with the value 1 on Xorg,
             // and we don't know if it's from Xorg or the 5.27 Wayland session... so just ignore it
-            .scaleSetting = existingData.scaleSetting.value_or(chooseScale(output, mode.get())),
+            .scaleSetting = existingData.scaleSetting.value_or(chooseScale(output, modeline->size())),
             .transform = existingData.transform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
             .manualTransform = existingData.manualTransform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
             .overscan = existingData.overscan.value_or(kscreenChangeSet.overscan.value_or(0)),
@@ -647,7 +674,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             priority++;
         }
         if (*changeset->enabled) {
-            const auto modeSize = changeset->transform->map(mode->size());
+            const auto modeSize = changeset->transform->map(modeline->size());
             const QPoint topRight = QPoint(std::ceil(changeset->pos->x() + modeSize.width() / *changeset->scaleSetting), changeset->pos->y());
             if (topRight.x() > rightMostPosition.x() || (topRight.x() == rightMostPosition.x() && topRight.y() < rightMostPosition.y())) {
                 rightMostPosition = topRight;
@@ -731,7 +758,7 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(BackendOutput *
     }
 }
 
-double OutputConfigurationStore::chooseScale(BackendOutput *output, OutputMode *mode) const
+double OutputConfigurationStore::chooseScale(BackendOutput *output, const QSize &modeSize) const
 {
     if (output->physicalSize().height() < 3 || output->physicalSize().width() < 3) {
         // A screen less than 3mm wide or tall doesn't make any sense; these are
@@ -779,12 +806,12 @@ double OutputConfigurationStore::chooseScale(BackendOutput *output, OutputMode *
         minSize = 800;
     }
 
-    const double dpiX = mode->size().width() / (output->physicalSize().width() / 25.4);
-    const double maxScaleX = std::clamp(mode->size().width() / minSize, 1.0, 3.0);
+    const double dpiX = modeSize.width() / (output->physicalSize().width() / 25.4);
+    const double maxScaleX = std::clamp(modeSize.width() / minSize, 1.0, 3.0);
     const double scaleX = std::clamp(dpiX / targetDpi, 1.0, maxScaleX);
 
-    const double dpiY = mode->size().height() / (output->physicalSize().height() / 25.4);
-    const double maxScaleY = std::clamp(mode->size().height() / minSize, 1.0, 3.0);
+    const double dpiY = modeSize.height() / (output->physicalSize().height() / 25.4);
+    const double maxScaleY = std::clamp(modeSize.height() / minSize, 1.0, 3.0);
     const double scaleY = std::clamp(dpiY / targetDpi, 1.0, maxScaleY);
 
     double scale = std::min(scaleX, scaleY);

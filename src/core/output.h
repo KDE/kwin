@@ -133,6 +133,8 @@ public:
     uint32_t refreshRate() const;
     Flags flags() const;
 
+    std::shared_ptr<OutputMode> match(const QList<std::shared_ptr<OutputMode>> &modes) const;
+
 private:
     QSize m_size;
     uint32_t m_refreshRate;

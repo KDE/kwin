@@ -24,7 +24,7 @@ class BrightnessDevice;
 class KWIN_EXPORT OutputChangeSet
 {
 public:
-    std::optional<std::weak_ptr<OutputMode>> mode;
+    std::optional<OutputModeline> currentMode;
     std::optional<OutputModeline> desiredMode;
     std::optional<bool> enabled;
     std::optional<QPoint> pos;

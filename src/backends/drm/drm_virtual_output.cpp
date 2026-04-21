@@ -93,11 +93,6 @@ void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
     next.position = props->pos.value_or(m_state.position);
     next.scale = props->scale.value_or(m_state.scale);
     next.scaleSetting = props->scaleSetting.value_or(m_state.scaleSetting);
-    next.desiredMode = props->desiredMode.value_or(m_state.desiredMode);
-    next.currentMode = props->mode.value_or(m_state.currentMode).lock();
-    if (!next.currentMode) {
-        next.currentMode = next.modes.front();
-    }
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
     next.priority = props->priority.value_or(m_state.priority);
@@ -116,19 +111,24 @@ void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
             newModes.push_back(std::make_shared<OutputMode>(OutputModeline(custom.size, custom.refreshRate, custom.flags | OutputModeline::Flag::Custom)));
         }
         next.modes = newModes;
+    }
 
-        if (!next.currentMode) {
-            next.currentMode = next.modes.front();
-        } else if (!next.modes.contains(next.currentMode)) {
-            const auto it = std::ranges::find_if(next.modes, [&next](const auto &mode) {
-                return mode->modeline() == next.currentMode->modeline();
-            });
-            if (it != next.modes.end()) {
-                next.currentMode = *it;
-            } else {
-                next.modes.push_front(next.currentMode);
-                next.currentMode->setRemoved();
-            }
+    next.desiredMode = props->desiredMode.value_or(m_state.desiredMode);
+    if (props->currentMode) {
+        next.currentMode = props->currentMode->match(next.modes);
+    }
+
+    if (!next.currentMode) {
+        next.currentMode = next.modes.front();
+    } else if (!next.modes.contains(next.currentMode)) {
+        const auto it = std::ranges::find_if(next.modes, [&next](const auto &mode) {
+            return mode->modeline() == next.currentMode->modeline();
+        });
+        if (it != next.modes.end()) {
+            next.currentMode = *it;
+        } else {
+            next.modes.push_front(next.currentMode);
+            next.currentMode->setRemoved();
         }
     }
 

@@ -74,6 +74,19 @@ OutputModeline::Flags OutputModeline::flags() const
     return m_flags;
 }
 
+std::shared_ptr<OutputMode> OutputModeline::match(const QList<std::shared_ptr<OutputMode>> &modes) const
+{
+    for (const auto &mode : modes) {
+        if (mode->isRemoved()) {
+            continue;
+        }
+        if (mode->modeline() == *this) {
+            return mode;
+        }
+    }
+    return nullptr;
+}
+
 OutputMode::OutputMode(const OutputModeline &modeline)
     : m_modeline(modeline)
 {

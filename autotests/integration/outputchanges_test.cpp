@@ -1584,7 +1584,7 @@ void OutputChangesTest::testGenerateConfigs()
 
     QFETCH(OutputModeline, defaultMode);
 
-    const auto mode = outputConfig->mode->lock();
+    const auto mode = outputConfig->currentMode;
     QVERIFY(mode);
     QCOMPARE(mode->size(), defaultMode.size());
     QCOMPARE(mode->refreshRate(), defaultMode.refreshRate());
@@ -2035,7 +2035,7 @@ void OutputChangesTest::testSettingRestoration_initialParsingFailure()
         // change the mode, so that we know if a new config entry was generated
         OutputConfiguration config;
         const auto changeSet = config.changeSet(outputs[0]);
-        changeSet->mode = outputs[0]->modes()[1];
+        changeSet->currentMode = outputs[0]->modes()[1]->modeline();
         changeSet->desiredMode = OutputModeline(QSize(640, 480), 60000);
         workspace()->applyOutputConfiguration(config);
     }
@@ -2119,7 +2119,7 @@ void OutputChangesTest::testSettingRestoration_replacedMode()
         // first, select the second mode
         OutputConfiguration config;
         const auto changeSet = config.changeSet(output);
-        changeSet->mode = output->modes()[1];
+        changeSet->currentMode = output->modes()[1]->modeline();
         changeSet->desiredMode = OutputModeline(QSize(1280, 1024), 60000);
         workspace()->applyOutputConfiguration(config);
     }

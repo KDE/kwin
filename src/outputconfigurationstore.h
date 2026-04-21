@@ -49,7 +49,7 @@ private:
     void applyOrientationReading(OutputConfiguration &config, const QList<BackendOutput *> &outputs, AccelerometerOrientation orientation, bool isTabletMode);
     std::optional<OutputConfiguration> generateLidClosedConfig(const QList<BackendOutput *> &outputs);
     std::shared_ptr<OutputMode> chooseMode(BackendOutput *output) const;
-    double chooseScale(BackendOutput *output, OutputMode *mode) const;
+    double chooseScale(BackendOutput *output, const QSize &modeSize) const;
     void load();
     void save();
 

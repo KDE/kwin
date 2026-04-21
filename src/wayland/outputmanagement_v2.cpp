@@ -167,7 +167,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_mode(Resource *
             invalid = true;
             return;
         }
-        change->mode = modePtr;
+        change->currentMode = modePtr->modeline();
         change->desiredMode = modePtr->modeline();
     } else {
         invalid = true;

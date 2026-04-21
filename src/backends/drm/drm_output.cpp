@@ -160,23 +160,27 @@ void DrmOutput::updateConnectorProperties()
     updateInformation();
 
     State next = m_state;
-    populateModes(&next);
+    refreshModes(&next);
+    maybeFixCurrentMode(&next);
     setState(next);
 }
 
-void DrmOutput::populateModes(State *next) const
+void DrmOutput::refreshModes(State *nextState) const
 {
-    next->modes.clear();
+    nextState->modes.clear();
 
     const auto drmModes = m_pipeline->connector()->modes();
     for (const auto &drmMode : drmModes) {
-        next->modes.append(drmMode);
+        nextState->modes.append(drmMode);
     }
 
-    for (const auto &custom : next->customModes) {
-        next->modes.append(m_pipeline->connector()->generateMode(custom.size, custom.refreshRate / 1000.0f, custom.flags | OutputModeline::Flag::Custom));
+    for (const auto &custom : nextState->customModes) {
+        nextState->modes.append(m_pipeline->connector()->generateMode(custom.size, custom.refreshRate / 1000.0f, custom.flags | OutputModeline::Flag::Custom));
     }
+}
 
+void DrmOutput::maybeFixCurrentMode(State *next) const
+{
     static const bool noCustomModeQuirk = qEnvironmentVariableIntValue("KWIN_DRM_NO_CUSTOM_MODE_QUIRK");
     if (!noCustomModeQuirk) {
         if (!next->desiredMode.isEmpty()) {
@@ -523,11 +527,6 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
 
 bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
 {
-    const auto mode = props->mode.value_or(currentMode()).lock();
-    if (!mode) {
-        return false;
-    }
-
     m_nextState = m_state;
     m_nextState->enabled = props->enabled.value_or(m_state.enabled);
     m_nextState->position = props->pos.value_or(m_state.position);
@@ -535,7 +534,6 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_nextState->scaleSetting = props->scaleSetting.value_or(m_state.scaleSetting);
     m_nextState->transform = props->transform.value_or(m_state.transform);
     m_nextState->manualTransform = props->manualTransform.value_or(m_state.manualTransform);
-    m_nextState->currentMode = mode;
     m_nextState->overscan = props->overscan.value_or(m_state.overscan);
     m_nextState->rgbRange = props->rgbRange.value_or(m_state.rgbRange);
     m_nextState->highDynamicRange = props->highDynamicRange.value_or(m_state.highDynamicRange);
@@ -571,9 +569,15 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_nextState->automaticMaxBitsPerColorLimit = decideAutomaticBpcLimit();
     m_nextState->edrPolicy = props->edrPolicy.value_or(m_state.edrPolicy);
     m_nextState->dpmsMode = props->dpmsMode.value_or(m_state.dpmsMode);
-    if (props->customModes.has_value()) {
+    if (props->customModes) {
         m_nextState->customModes = *props->customModes;
-        populateModes(&*m_nextState);
+        refreshModes(&*m_nextState);
+    }
+    if (props->currentMode) {
+        m_nextState->currentMode = props->currentMode->match(m_nextState->modes);
+    }
+    if (props->customModes || props->currentMode) {
+        maybeFixCurrentMode(&*m_nextState);
     }
     m_nextState->maxPossibleArtificialHdrHeadroom = calculateMaxArtificialHdrHeadroom(*m_nextState);
     m_nextState->originalColorDescription = createColorDescription(*m_nextState);
@@ -587,7 +591,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
 
     const bool bt2020 = m_nextState->wideColorGamut && (capabilities() & Capability::WideColorGamut);
     const bool hdr = m_nextState->highDynamicRange && (capabilities() & Capability::HighDynamicRange);
-    m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(mode));
+    m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(m_nextState->currentMode));
     m_pipeline->setOverscan(m_nextState->overscan);
     m_pipeline->setRgbRange(m_nextState->rgbRange);
     m_pipeline->setEnable(m_nextState->enabled);

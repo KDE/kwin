@@ -84,7 +84,8 @@ private:
     void updateBrightness(double newBrightness, double newArtificialHdrHeadroom, double newDimming);
     void maybeScheduleRepaints(const State &next);
     std::optional<uint32_t> decideAutomaticBpcLimit() const;
-    void populateModes(State *state) const;
+    void refreshModes(State *nextState) const;
+    void maybeFixCurrentMode(State *nextState) const;
 
     DrmGpu *const m_gpu;
     DrmPipeline *m_pipeline;
