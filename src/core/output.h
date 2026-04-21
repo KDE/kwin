@@ -32,6 +32,7 @@ namespace KWin
 class BackendOutput;
 class OutputChangeSet;
 class OutputMode;
+struct CustomModeDefinition;
 
 /**
  * The OutputTransform type is used to describe the transform applied to the output content.
@@ -134,6 +135,9 @@ public:
     Flags flags() const;
 
     std::shared_ptr<OutputMode> match(const QList<std::shared_ptr<OutputMode>> &modes) const;
+    std::optional<CustomModeDefinition> match(const QList<CustomModeDefinition> &definitions) const;
+
+    static OutputModeline custom(const CustomModeDefinition &definition);
 
 private:
     QSize m_size;
@@ -160,6 +164,7 @@ private:
     bool m_removed = false;
 };
 
+// TODO: Replace it with the OutputModeline type.
 struct CustomModeDefinition
 {
     QSize size;

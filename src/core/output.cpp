@@ -18,6 +18,8 @@
 
 #include <QJSEngine>
 
+#include <libxcvt/libxcvt.h>
+
 namespace KWin
 {
 
@@ -85,6 +87,35 @@ std::shared_ptr<OutputMode> OutputModeline::match(const QList<std::shared_ptr<Ou
         }
     }
     return nullptr;
+}
+
+std::optional<CustomModeDefinition> OutputModeline::match(const QList<CustomModeDefinition> &definitions) const
+{
+    for (const auto &definition : definitions) {
+        if (OutputModeline::custom(definition) == *this) {
+            return definition;
+        }
+    }
+    return std::nullopt;
+}
+
+OutputModeline OutputModeline::custom(const CustomModeDefinition &definition)
+{
+    libxcvt_mode_info *modeInfo = libxcvt_gen_mode_info(definition.size.width(),
+                                                        definition.size.height(),
+                                                        definition.refreshRate / 1000.0f,
+                                                        definition.flags & OutputModeline::Flag::ReducedBlanking,
+                                                        false);
+
+    uint64_t refreshRate = (modeInfo->dot_clock * 1000000LL / modeInfo->htotal + modeInfo->vtotal / 2) / modeInfo->vtotal;
+    if (modeInfo->mode_flags & LIBXCVT_MODE_FLAG_INTERLACE) {
+        refreshRate *= 2;
+    }
+
+    OutputModeline modeline(QSize(modeInfo->hdisplay, modeInfo->vdisplay), refreshRate, definition.flags | OutputModeline::Flag::Generated | OutputModeline::Flag::Custom);
+
+    free(modeInfo);
+    return modeline;
 }
 
 OutputMode::OutputMode(const OutputModeline &modeline)

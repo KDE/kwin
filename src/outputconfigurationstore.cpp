@@ -389,20 +389,30 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
 
         std::optional<OutputModeline> effectiveMode;
         if (state.mode) {
-            const auto availableModes = output->modes();
-            if (state.mode->match(availableModes)) {
-                effectiveMode = state.mode;
-            }
-
-            // This is fallback for output configs prior to 6.6.5, which didn't have flags.
-            if (!effectiveMode) {
-                for (const auto &mode : availableModes) {
-                    if (mode->isRemoved()) {
-                        continue;
+            // Note that a custom mode can potentially have a matching object in the output->modes()
+            // list but no matching entry in the state.customModes list.
+            if (state.mode->flags() & OutputModeline::Flag::Custom) {
+                if (state.customModes) {
+                    if (state.mode->match(*state.customModes)) {
+                        effectiveMode = state.mode;
                     }
-                    if (state.mode->size() == mode->size() && state.mode->refreshRate() == mode->refreshRate()) {
-                        effectiveMode = mode->modeline();
-                        break;
+                }
+            } else {
+                const auto availableModes = output->modes();
+                if (state.mode->match(availableModes)) {
+                    effectiveMode = state.mode;
+                }
+
+                // This is fallback for output configs prior to 6.6.5, which didn't have flags.
+                if (!effectiveMode) {
+                    for (const auto &mode : availableModes) {
+                        if (mode->isRemoved()) {
+                            continue;
+                        }
+                        if (state.mode->size() == mode->size() && state.mode->refreshRate() == mode->refreshRate()) {
+                            effectiveMode = mode->modeline();
+                            break;
+                        }
                     }
                 }
             }
@@ -605,20 +615,30 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
 
         std::optional<OutputModeline> modeline;
         if (existingData.mode) {
-            const auto availableModes = output->modes();
-            if (existingData.mode->match(availableModes)) {
-                modeline = existingData.mode;
-            }
-
-            // This is fallback for output configs prior to 6.6.5, which didn't have flags.
-            if (!modeline) {
-                for (const auto &mode : availableModes) {
-                    if (mode->isRemoved()) {
-                        continue;
+            // Note that a custom mode can potentially have a matching object in the output->modes()
+            // list but no matching entry in the state.customModes list.
+            if (existingData.mode->flags() & OutputModeline::Flag::Custom) {
+                if (existingData.customModes) {
+                    if (existingData.mode->match(*existingData.customModes)) {
+                        modeline = existingData.mode;
                     }
-                    if (existingData.mode->size() == mode->size() && existingData.mode->refreshRate() == mode->refreshRate()) {
-                        modeline = mode->modeline();
-                        break;
+                }
+            } else {
+                const auto availableModes = output->modes();
+                if (existingData.mode->match(availableModes)) {
+                    modeline = existingData.mode;
+                }
+
+                // This is fallback for output configs prior to 6.6.5, which didn't have flags.
+                if (!modeline) {
+                    for (const auto &mode : availableModes) {
+                        if (mode->isRemoved()) {
+                            continue;
+                        }
+                        if (existingData.mode->size() == mode->size() && existingData.mode->refreshRate() == mode->refreshRate()) {
+                            modeline = mode->modeline();
+                            break;
+                        }
                     }
                 }
             }
