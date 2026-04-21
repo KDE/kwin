@@ -53,14 +53,6 @@ private:
     void load();
     void save();
 
-    struct ModeData
-    {
-        QSize size;
-        uint32_t refreshRate;
-        // TODO: Eventually convert it from std::optional to a regular property. The output flags
-        // are stored in std::optional because previous versions (6.6.4 and prior) did not save the flags.
-        std::optional<uint32_t> flags;
-    };
     struct OutputState
     {
         // identification data. Empty if invalid
@@ -69,7 +61,7 @@ private:
         QString edidHash;
         QString mstPath;
         // actual state
-        std::optional<ModeData> mode;
+        std::optional<OutputModeline> mode;
         std::optional<double> scaleSetting;
         std::optional<OutputTransform> transform;
         std::optional<OutputTransform> manualTransform;

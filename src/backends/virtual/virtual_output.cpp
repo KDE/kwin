@@ -61,15 +61,14 @@ bool VirtualOutput::present(const QList<OutputLayer *> &layersToUpdate, const st
     return true;
 }
 
-void VirtualOutput::init(const QSize &pixelSize, qreal scale, const QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> &modes)
+void VirtualOutput::init(const QSize &pixelSize, qreal scale, const QList<OutputModeline> &modes)
 {
     QList<std::shared_ptr<OutputMode>> modeList;
     for (const auto &mode : modes) {
-        const auto &[size, refresh, flags] = mode;
-        modeList.push_back(std::make_shared<OutputMode>(size, refresh, flags));
+        modeList.push_back(std::make_shared<OutputMode>(mode));
     }
     if (modeList.empty()) {
-        modeList.push_back(std::make_shared<OutputMode>(pixelSize, 60000, OutputMode::Flag::Preferred));
+        modeList.push_back(std::make_shared<OutputMode>(OutputModeline(pixelSize, 60000, OutputModeline::Flag::Preferred)));
     }
 
     m_renderLoop->setRefreshRate(modeList.front()->refreshRate());
@@ -96,9 +95,7 @@ void VirtualOutput::applyChanges(const OutputConfiguration &config)
     next.position = props->pos.value_or(m_state.position);
     next.scale = props->scale.value_or(m_state.scale);
     next.scaleSetting = props->scaleSetting.value_or(m_state.scaleSetting);
-    next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
-    next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
-    next.desiredModeFlags = props->desiredModeFlags.value_or(m_state.desiredModeFlags);
+    next.desiredMode = props->desiredMode.value_or(m_state.desiredMode);
     next.currentMode = props->mode.value_or(m_state.currentMode).lock();
     if (!next.currentMode) {
         next.currentMode = next.modes.front();
@@ -112,13 +109,13 @@ void VirtualOutput::applyChanges(const OutputConfiguration &config)
 
         QList<std::shared_ptr<OutputMode>> newModes;
         for (const auto &mode : next.modes) {
-            if (mode->flags() & OutputMode::Flag::Custom) {
+            if (mode->flags() & OutputModeline::Flag::Custom) {
                 continue;
             }
             newModes.push_back(mode);
         }
         for (const auto &custom : next.customModes) {
-            newModes.push_back(std::make_shared<OutputMode>(custom.size, custom.refreshRate, custom.flags | OutputMode::Flag::Custom));
+            newModes.push_back(std::make_shared<OutputMode>(OutputModeline(custom.size, custom.refreshRate, custom.flags | OutputModeline::Flag::Custom)));
         }
         next.modes = newModes;
 
@@ -126,9 +123,7 @@ void VirtualOutput::applyChanges(const OutputConfiguration &config)
             next.currentMode = next.modes.front();
         } else if (!next.modes.contains(next.currentMode)) {
             const auto it = std::ranges::find_if(next.modes, [&next](const auto &mode) {
-                return mode->size() == next.currentMode->size()
-                    && mode->refreshRate() == next.currentMode->refreshRate()
-                    && mode->flags() == next.currentMode->flags();
+                return mode->modeline() == next.currentMode->modeline();
             });
             if (it != next.modes.end()) {
                 next.currentMode = *it;

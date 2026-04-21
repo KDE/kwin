@@ -31,6 +31,7 @@ namespace KWin
 
 class BackendOutput;
 class OutputChangeSet;
+class OutputMode;
 
 /**
  * The OutputTransform type is used to describe the transform applied to the output content.
@@ -110,7 +111,7 @@ private:
     Kind m_kind = Kind::Normal;
 };
 
-class KWIN_EXPORT OutputMode
+class KWIN_EXPORT OutputModeline
 {
 public:
     enum class Flag : uint {
@@ -121,20 +122,39 @@ public:
     };
     Q_DECLARE_FLAGS(Flags, Flag)
 
-    OutputMode(const QSize &size, uint32_t refreshRate, Flags flags = {});
+    OutputModeline();
+    OutputModeline(const QSize &size, uint32_t refreshRate, Flags flags = {});
+
+    bool operator==(const OutputModeline &other) const = default;
+    bool operator!=(const OutputModeline &other) const = default;
+
+    bool isEmpty() const;
+    QSize size() const;
+    uint32_t refreshRate() const;
+    Flags flags() const;
+
+private:
+    QSize m_size;
+    uint32_t m_refreshRate;
+    Flags m_flags;
+};
+
+class KWIN_EXPORT OutputMode
+{
+public:
+    explicit OutputMode(const OutputModeline &modeline);
     virtual ~OutputMode() = default;
 
     QSize size() const;
     uint32_t refreshRate() const;
-    Flags flags() const;
+    OutputModeline::Flags flags() const;
+    OutputModeline modeline() const;
 
     bool isRemoved() const;
     void setRemoved();
 
 private:
-    const QSize m_size;
-    const uint32_t m_refreshRate;
-    const Flags m_flags;
+    const OutputModeline m_modeline;
     bool m_removed = false;
 };
 
@@ -142,7 +162,7 @@ struct CustomModeDefinition
 {
     QSize size;
     uint32_t refreshRate;
-    OutputMode::Flags flags;
+    OutputModeline::Flags flags;
 };
 
 /*!

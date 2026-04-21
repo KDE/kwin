@@ -46,7 +46,7 @@ void FractionalRepaintTest::initTestCase()
     // default config of a OnePlus 6
     Test::setOutputConfig({Test::OutputInfo{
         .scale = 2.65,
-        .modes = {{QSize(1080, 2280), 60'000ul, OutputMode::Flag::Preferred}},
+        .modes = {{QSize(1080, 2280), 60'000ul, OutputModeline::Flag::Preferred}},
     }});
 
     // make sure open/close effects don't get in the way

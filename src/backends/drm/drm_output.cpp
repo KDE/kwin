@@ -174,16 +174,15 @@ void DrmOutput::populateModes(State *next) const
     }
 
     for (const auto &custom : next->customModes) {
-        next->modes.append(m_pipeline->connector()->generateMode(custom.size, custom.refreshRate / 1000.0f, custom.flags | OutputMode::Flag::Custom));
+        next->modes.append(m_pipeline->connector()->generateMode(custom.size, custom.refreshRate / 1000.0f, custom.flags | OutputModeline::Flag::Custom));
     }
 
     static const bool noCustomModeQuirk = qEnvironmentVariableIntValue("KWIN_DRM_NO_CUSTOM_MODE_QUIRK");
     if (!noCustomModeQuirk) {
-        if (!next->desiredModeSize.isEmpty() && next->desiredModeRefreshRate && next->desiredModeFlags) {
+        if (!next->desiredMode.isEmpty()) {
             for (const auto &mode : std::as_const(next->modes)) {
-                const auto drmMode = std::static_pointer_cast<DrmConnectorMode>(mode);
-                if (next->desiredModeSize == mode->size() && next->desiredModeRefreshRate == drmMode->refreshRate() && next->desiredModeFlags == drmMode->flags()) {
-                    next->currentMode = drmMode;
+                if (next->desiredMode == mode->modeline()) {
+                    next->currentMode = mode;
                     break;
                 }
             }
@@ -194,9 +193,7 @@ void DrmOutput::populateModes(State *next) const
         next->currentMode = next->modes.constFirst();
     } else if (!next->modes.contains(next->currentMode)) {
         const auto it = std::ranges::find_if(next->modes, [&](const auto &mode) {
-            return next->currentMode->size() == mode->size()
-                && next->currentMode->refreshRate() == mode->refreshRate()
-                && next->currentMode->flags() == mode->flags();
+            return next->currentMode->modeline() == mode->modeline();
         });
         if (it != next->modes.end()) {
             next->currentMode = *it;
@@ -554,9 +551,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_nextState->vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     m_nextState->colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
     m_nextState->brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
-    m_nextState->desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
-    m_nextState->desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
-    m_nextState->desiredModeFlags = props->desiredModeFlags.value_or(m_state.desiredModeFlags);
+    m_nextState->desiredMode = props->desiredMode.value_or(m_state.desiredMode);
     m_nextState->allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
     m_nextState->colorPowerTradeoff = props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff);
     m_nextState->dimming = props->dimming.value_or(m_state.dimming);

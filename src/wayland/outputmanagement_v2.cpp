@@ -102,7 +102,7 @@ private:
 
     std::optional<QSize> m_resolution;
     std::optional<uint32_t> m_refreshRate;
-    OutputMode::Flags m_flags = OutputMode::Flag::Custom;
+    OutputModeline::Flags m_flags = OutputModeline::Flag::Custom;
 };
 
 OutputManagementV2InterfacePrivate::OutputManagementV2InterfacePrivate(Display *display)
@@ -168,9 +168,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_mode(Resource *
             return;
         }
         change->mode = modePtr;
-        change->desiredModeSize = modePtr->size();
-        change->desiredModeRefreshRate = modePtr->refreshRate();
-        change->desiredModeFlags = modePtr->flags();
+        change->desiredMode = modePtr->modeline();
     } else {
         invalid = true;
     }
@@ -581,7 +579,7 @@ void OutputModeListV2::kde_mode_list_v2_set_refresh_rate(Resource *resource, uin
 
 void OutputModeListV2::kde_mode_list_v2_set_reduced_blanking(Resource *resource, uint32_t reduced)
 {
-    m_flags.setFlag(OutputMode::Flag::ReducedBlanking, reduced == 1);
+    m_flags.setFlag(OutputModeline::Flag::ReducedBlanking, reduced == 1);
 }
 
 void OutputConfigurationV2Interface::sendFailure(Resource *resource, const QString &reason)

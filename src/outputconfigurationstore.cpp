@@ -325,28 +325,17 @@ void OutputConfigurationStore::storeConfig(const QList<BackendOutput *> &allOutp
         }
         const std::optional<QString> existingUuid = m_outputs[*outputIndex].uuid;
 
-        QSize modeSize = output->desiredModeSize();
-        if (modeSize.isEmpty()) {
-            modeSize = output->currentMode()->size();
+        OutputModeline modeline = output->desiredMode();
+        if (modeline.isEmpty()) {
+            modeline = output->currentMode()->modeline();
         }
-        uint32_t refreshRate = output->desiredModeRefreshRate();
-        if (refreshRate == 0) {
-            refreshRate = output->currentMode()->refreshRate();
-        }
-        std::optional<uint32_t> flags = output->desiredModeFlags();
-        if (!flags) {
-            flags = output->currentMode()->flags();
-        }
+
         m_outputs[*outputIndex] = OutputState{
             .edidIdentifier = output->edid().identifier(),
             .connectorName = output->name(),
             .edidHash = output->edid().hash(),
             .mstPath = output->mstPath(),
-            .mode = ModeData{
-                .size = modeSize,
-                .refreshRate = refreshRate,
-                .flags = flags,
-            },
+            .mode = modeline,
             .scaleSetting = output->scaleSetting(),
             .transform = output->transform(),
             .manualTransform = output->manualTransform(),
@@ -397,13 +386,18 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
             return state.outputIndex == outputIndex;
         });
         const auto modes = output->modes();
-        const auto modeIt = std::find_if(modes.begin(), modes.end(), [&state](const auto &mode) {
+        auto modeIt = std::find_if(modes.begin(), modes.end(), [&state](const auto &mode) {
             return state.mode
                 && !mode->isRemoved()
-                && mode->size() == state.mode->size
-                && mode->refreshRate() == state.mode->refreshRate
-                && (!state.mode->flags || state.mode->flags == mode->flags());
+                && mode->modeline() == state.mode;
         });
+        // This is fallback for output configs prior to 6.6.5, which didn't have flags.
+        if (modeIt == modes.end() && state.mode) {
+            modeIt = std::ranges::find_if(modes, [&state](const auto &mode) {
+                return state.mode->size() == mode->modeline().size()
+                    && state.mode->refreshRate() == mode->modeline().refreshRate();
+            });
+        }
         std::optional<std::shared_ptr<OutputMode>> mode = modeIt == modes.end() ? std::nullopt : std::optional(*modeIt);
         if (!mode.has_value() || !*mode) {
             mode = chooseMode(output);
@@ -412,9 +406,7 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
         }
         *ret.changeSet(output) = OutputChangeSet{
             .mode = mode,
-            .desiredModeSize = state.mode.has_value() ? std::make_optional(state.mode->size) : std::nullopt,
-            .desiredModeRefreshRate = state.mode.has_value() ? std::make_optional(state.mode->refreshRate) : std::nullopt,
-            .desiredModeFlags = state.mode.has_value() ? std::make_optional(state.mode->flags) : std::nullopt,
+            .desiredMode = state.mode,
             .enabled = setupState.enabled,
             .pos = setupState.position,
             .scale = state.scaleSetting,
@@ -603,20 +595,22 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
         const OutputState existingData = outputIndex ? m_outputs[*outputIndex] : OutputState{};
 
         const auto modes = output->modes();
-        const auto modeIt = std::find_if(modes.begin(), modes.end(), [&existingData](const auto &mode) {
-            return existingData.mode
-                && mode->size() == existingData.mode->size
-                && mode->refreshRate() == existingData.mode->refreshRate
-                && (!existingData.mode->flags || mode->flags() == existingData.mode->flags);
+        auto modeIt = std::find_if(modes.begin(), modes.end(), [&existingData](const auto &mode) {
+            return existingData.mode == mode->modeline();
         });
+        // This is fallback for output configs prior to 6.6.5, which didn't have flags.
+        if (modeIt == modes.end()) {
+            modeIt = std::ranges::find_if(modes, [&existingData](const auto &mode) {
+                return existingData.mode->size() == mode->modeline().size()
+                    && existingData.mode->refreshRate() == mode->modeline().refreshRate();
+            });
+        }
         const auto mode = modeIt == modes.end() ? kscreenChangeSet.mode.value_or(chooseMode(output)).lock() : *modeIt;
 
         const auto changeset = ret.changeSet(output);
         *changeset = {
             .mode = mode,
-            .desiredModeSize = mode->size(),
-            .desiredModeRefreshRate = mode->refreshRate(),
-            .desiredModeFlags = mode->flags(),
+            .desiredMode = mode->modeline(),
             .enabled = setupState ? setupState->enabled : enable,
             .pos = setupState ? setupState->position : rightMostPosition,
             // kscreen scale is unreliable because it gets overwritten with the value 1 on Xorg,
@@ -678,7 +672,7 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(BackendOutput *
     const auto modes = output->modes();
     auto notPotentiallyBroken = modes | std::ranges::views::filter([](const auto &mode) {
         // generated modes aren't guaranteed to work, so don't choose one as the default
-        return !mode->isRemoved() && !(mode->flags() & OutputMode::Flag::Generated);
+        return !mode->isRemoved() && !(mode->flags() & OutputModeline::Flag::Generated);
     });
     if (notPotentiallyBroken.empty()) {
         // there's nothing more we can do
@@ -687,7 +681,7 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(BackendOutput *
 
     // try to figure out the native resolution; the biggest preferred mode usually has that
     auto preferredOnly = notPotentiallyBroken | std::ranges::views::filter([](const auto &mode) {
-        return (mode->flags() & OutputMode::Flag::Preferred);
+        return (mode->flags() & OutputModeline::Flag::Preferred);
     });
     const auto nativeSize = std::ranges::max_element(preferredOnly, findBiggestFastest);
 
@@ -921,16 +915,9 @@ void OutputConfigurationStore::load()
             const int width = obj["width"].toInt(0);
             const int height = obj["height"].toInt(0);
             const int refreshRate = obj["refreshRate"].toInt(0);
-            std::optional<uint32_t> flags;
-            if (const auto it = obj.find("flags"); it != obj.end()) {
-                flags = it->toInt(0);
-            }
+            const auto flags = OutputModeline::Flags(obj["flags"].toInt(0));
             if (width > 0 && height > 0 && refreshRate > 0) {
-                state.mode = ModeData{
-                    .size = QSize(width, height),
-                    .refreshRate = uint32_t(refreshRate),
-                    .flags = flags,
-                };
+                state.mode = OutputModeline(QSize(width, height), refreshRate, flags);
                 qCDebug(KWIN_OUTPUT_CONFIG, "Read mode %dx%d@%u for output %s", width, height, refreshRate, qPrintable(state.edidIdentifier));
             }
         }
@@ -1098,7 +1085,7 @@ void OutputConfigurationStore::load()
                     modes.push_back(CustomModeDefinition{
                         .size = QSize(width, height),
                         .refreshRate = uint32_t(refreshRate),
-                        .flags = OutputMode::Flags(flags),
+                        .flags = OutputModeline::Flags(flags),
                     });
                 }
             }
@@ -1267,12 +1254,10 @@ void OutputConfigurationStore::save()
         }
         if (output.mode) {
             QJsonObject mode;
-            mode["width"] = output.mode->size.width();
-            mode["height"] = output.mode->size.height();
-            mode["refreshRate"] = int(output.mode->refreshRate);
-            if (output.mode->flags) {
-                mode["flags"] = int(*output.mode->flags);
-            }
+            mode["width"] = output.mode->size().width();
+            mode["height"] = output.mode->size().height();
+            mode["refreshRate"] = int(output.mode->refreshRate());
+            mode["flags"] = int(output.mode->flags());
             o["mode"] = mode;
         }
         if (output.scaleSetting) {

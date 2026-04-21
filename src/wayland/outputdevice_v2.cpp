@@ -287,7 +287,7 @@ public:
     std::weak_ptr<OutputMode> m_handle;
     QSize m_size;
     int m_refreshRate = 60000;
-    OutputMode::Flags m_flags;
+    OutputModeline::Flags m_flags;
 
 protected:
     Resource *kde_output_device_mode_v2_allocate() override;
@@ -1251,15 +1251,15 @@ void OutputDeviceModeV2InterfacePrivate::bindResource(Resource *resource)
     send_size(resource->handle, m_size.width(), m_size.height());
     send_refresh(resource->handle, m_refreshRate);
 
-    if (m_flags & OutputMode::Flag::Preferred) {
+    if (m_flags & OutputModeline::Flag::Preferred) {
         send_preferred(resource->handle);
     }
     if (resource->version() >= KDE_OUTPUT_DEVICE_MODE_V2_FLAGS_CUSTOM) {
         uint32_t flags = 0;
-        if (m_flags & OutputMode::Flag::Custom) {
+        if (m_flags & OutputModeline::Flag::Custom) {
             flags |= KDE_OUTPUT_DEVICE_MODE_V2_FLAGS_CUSTOM;
         }
-        if (m_flags & OutputMode::Flag::ReducedBlanking) {
+        if (m_flags & OutputModeline::Flag::ReducedBlanking) {
             flags |= KDE_OUTPUT_DEVICE_MODE_V2_FLAGS_REDUCED_BLANKING;
         }
         send_flags(resource->handle, flags);

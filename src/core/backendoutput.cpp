@@ -299,19 +299,9 @@ std::shared_ptr<OutputMode> BackendOutput::currentMode() const
     return m_state.currentMode;
 }
 
-QSize BackendOutput::desiredModeSize() const
+OutputModeline BackendOutput::desiredMode() const
 {
-    return m_state.desiredModeSize;
-}
-
-uint32_t BackendOutput::desiredModeRefreshRate() const
-{
-    return m_state.desiredModeRefreshRate;
-}
-
-std::optional<uint32_t> BackendOutput::desiredModeFlags() const
-{
-    return m_state.desiredModeFlags;
+    return m_state.desiredMode;
 }
 
 BackendOutput::SubPixel BackendOutput::subPixel() const
@@ -340,9 +330,7 @@ void BackendOutput::applyChanges(const OutputConfiguration &config)
         next.iccProfile = IccProfile::load(*props->iccProfilePath).value_or(nullptr);
     }
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
-    next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
-    next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
-    next.desiredModeFlags = props->desiredModeFlags.value_or(m_state.desiredModeFlags);
+    next.desiredMode = props->desiredMode.value_or(m_state.desiredMode);
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
     next.priority = props->priority.value_or(m_state.priority);

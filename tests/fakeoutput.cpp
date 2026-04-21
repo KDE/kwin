@@ -30,7 +30,7 @@ KWin::RenderLoop *FakeBackendOutput::renderLoop() const
 
 void FakeBackendOutput::setMode(QSize size, uint32_t refreshRate)
 {
-    auto mode = std::make_shared<KWin::OutputMode>(size, refreshRate);
+    auto mode = std::make_shared<KWin::OutputMode>(KWin::OutputModeline(size, refreshRate));
 
     State state = m_state;
     state.modes = {mode};

@@ -345,7 +345,7 @@ void WaylandOutput::framePresented(std::chrono::nanoseconds timestamp, uint32_t 
 {
     if (refreshRate != this->refreshRate()) {
         m_refreshRate = refreshRate;
-        const auto mode = std::make_shared<OutputMode>(pixelSize(), m_refreshRate);
+        const auto mode = std::make_shared<OutputMode>(OutputModeline(pixelSize(), m_refreshRate));
         State next = m_state;
         next.modes = {mode};
         next.currentMode = mode;
@@ -378,9 +378,7 @@ void WaylandOutput::applyChanges(const OutputConfiguration &config)
     // intentionally ignored, as it would get overwritten
     // with the fractional scale protocol anyways
     // next.scale = props->scale.value_or(m_state.scale);
-    next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
-    next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
-    next.desiredModeFlags = props->desiredModeFlags.value_or(m_state.desiredModeFlags);
+    next.desiredMode = props->desiredMode.value_or(m_state.desiredMode);
     next.uuid = props->uuid.value_or(m_state.uuid);
     next.replicationSource = props->replicationSource.value_or(m_state.replicationSource);
     next.dpmsMode = props->dpmsMode.value_or(m_state.dpmsMode);
@@ -430,7 +428,7 @@ void WaylandOutput::init(const QSize &pixelSize, qreal scale, bool fullscreen)
 {
     m_renderLoop->setRefreshRate(m_refreshRate);
 
-    auto mode = std::make_shared<OutputMode>(pixelSize, m_refreshRate);
+    auto mode = std::make_shared<OutputMode>(OutputModeline(pixelSize, m_refreshRate));
 
     State initialState;
     initialState.modes = {mode};
@@ -463,7 +461,7 @@ void WaylandOutput::applyConfigure(const QSize &size, quint32 serial)
 {
     m_xdgShellSurface->ackConfigure(serial);
     if (!size.isEmpty()) {
-        auto mode = std::make_shared<OutputMode>(size * m_pendingScale, m_refreshRate);
+        auto mode = std::make_shared<OutputMode>(OutputModeline(size * m_pendingScale, m_refreshRate));
 
         State next = m_state;
         next.modes = {mode};

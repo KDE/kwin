@@ -105,7 +105,7 @@ void FifoTest::testFifo()
         Test::OutputInfo{
             .geometry = Rect(0, 0, 200, 200),
             .modes = {
-                std::make_tuple(QSize(200, 200), refreshRate, OutputMode::Flag::Preferred),
+                OutputModeline(QSize(200, 200), refreshRate, OutputModeline::Flag::Preferred),
             },
         },
     });
@@ -318,7 +318,7 @@ void FifoTest::testFifoOnSubsurfaces()
         Test::OutputInfo{
             .geometry = Rect(0, 0, 200, 200),
             .modes = {
-                std::make_tuple(QSize(200, 200), 60'000, OutputMode::Flag::Preferred),
+                OutputModeline(QSize(200, 200), 60'000, OutputModeline::Flag::Preferred),
             },
         },
     });

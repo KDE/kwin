@@ -25,9 +25,7 @@ class KWIN_EXPORT OutputChangeSet
 {
 public:
     std::optional<std::weak_ptr<OutputMode>> mode;
-    std::optional<QSize> desiredModeSize;
-    std::optional<uint32_t> desiredModeRefreshRate;
-    std::optional<std::optional<uint32_t>> desiredModeFlags;
+    std::optional<OutputModeline> desiredMode;
     std::optional<bool> enabled;
     std::optional<QPoint> pos;
     std::optional<double> scale;

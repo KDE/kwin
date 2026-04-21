@@ -42,26 +42,61 @@ QDebug operator<<(QDebug debug, const LogicalOutput *output)
     return debug;
 }
 
-OutputMode::OutputMode(const QSize &size, uint32_t refreshRate, Flags flags)
+OutputModeline::OutputModeline()
+    : OutputModeline(QSize(), 0, {})
+{
+}
+
+OutputModeline::OutputModeline(const QSize &size, uint32_t refreshRate, OutputModeline::Flags flags)
     : m_size(size)
     , m_refreshRate(refreshRate)
     , m_flags(flags)
 {
 }
 
-QSize OutputMode::size() const
+bool OutputModeline::isEmpty() const
+{
+    return m_size.isEmpty();
+}
+
+QSize OutputModeline::size() const
 {
     return m_size;
 }
 
-uint32_t OutputMode::refreshRate() const
+uint32_t OutputModeline::refreshRate() const
 {
     return m_refreshRate;
 }
 
-OutputMode::Flags OutputMode::flags() const
+OutputModeline::Flags OutputModeline::flags() const
 {
     return m_flags;
+}
+
+OutputMode::OutputMode(const OutputModeline &modeline)
+    : m_modeline(modeline)
+{
+}
+
+QSize OutputMode::size() const
+{
+    return m_modeline.size();
+}
+
+uint32_t OutputMode::refreshRate() const
+{
+    return m_modeline.refreshRate();
+}
+
+OutputModeline::Flags OutputMode::flags() const
+{
+    return m_modeline.flags();
+}
+
+OutputModeline OutputMode::modeline() const
+{
+    return m_modeline;
 }
 
 bool OutputMode::isRemoved() const

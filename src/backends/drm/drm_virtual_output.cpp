@@ -26,7 +26,7 @@ DrmVirtualOutput::DrmVirtualOutput(DrmBackend *backend, const QString &name, con
 {
     connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
 
-    auto mode = std::make_shared<OutputMode>(size, 60000, OutputMode::Flag::Preferred);
+    auto mode = std::make_shared<OutputMode>(OutputModeline(size, 60000, OutputModeline::Flag::Preferred));
     m_renderLoop->setRefreshRate(mode->refreshRate());
 
     setInformation(Information{
@@ -93,9 +93,7 @@ void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
     next.position = props->pos.value_or(m_state.position);
     next.scale = props->scale.value_or(m_state.scale);
     next.scaleSetting = props->scaleSetting.value_or(m_state.scaleSetting);
-    next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
-    next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
-    next.desiredModeFlags = props->desiredModeFlags.value_or(m_state.desiredModeFlags);
+    next.desiredMode = props->desiredMode.value_or(m_state.desiredMode);
     next.currentMode = props->mode.value_or(m_state.currentMode).lock();
     if (!next.currentMode) {
         next.currentMode = next.modes.front();
@@ -109,13 +107,13 @@ void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
 
         QList<std::shared_ptr<OutputMode>> newModes;
         for (const auto &mode : next.modes) {
-            if (mode->flags() & OutputMode::Flag::Custom) {
+            if (mode->flags() & OutputModeline::Flag::Custom) {
                 continue;
             }
             newModes.push_back(mode);
         }
         for (const auto &custom : next.customModes) {
-            newModes.push_back(std::make_shared<OutputMode>(custom.size, custom.refreshRate, custom.flags | OutputMode::Flag::Custom));
+            newModes.push_back(std::make_shared<OutputMode>(OutputModeline(custom.size, custom.refreshRate, custom.flags | OutputModeline::Flag::Custom)));
         }
         next.modes = newModes;
 
@@ -123,9 +121,7 @@ void DrmVirtualOutput::applyChanges(const OutputConfiguration &config)
             next.currentMode = next.modes.front();
         } else if (!next.modes.contains(next.currentMode)) {
             const auto it = std::ranges::find_if(next.modes, [&next](const auto &mode) {
-                return mode->size() == next.currentMode->size()
-                    && mode->refreshRate() == next.currentMode->refreshRate()
-                    && mode->flags() == next.currentMode->flags();
+                return mode->modeline() == next.currentMode->modeline();
             });
             if (it != next.modes.end()) {
                 next.currentMode = *it;

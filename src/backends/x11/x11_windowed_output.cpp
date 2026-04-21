@@ -210,7 +210,7 @@ void X11WindowedOutput::init(const QSize &pixelSize, qreal scale, bool fullscree
     const int refreshRate = 60000; // TODO: get refresh rate via randr
     m_renderLoop->setRefreshRate(refreshRate);
 
-    auto mode = std::make_shared<OutputMode>(pixelSize, m_renderLoop->refreshRate());
+    auto mode = std::make_shared<OutputMode>(OutputModeline(pixelSize, m_renderLoop->refreshRate()));
 
     State initialState;
     initialState.modes = {mode};
@@ -300,7 +300,7 @@ void X11WindowedOutput::initXInputForWindow()
 
 void X11WindowedOutput::resize(const QSize &pixelSize)
 {
-    auto mode = std::make_shared<OutputMode>(pixelSize, m_renderLoop->refreshRate());
+    auto mode = std::make_shared<OutputMode>(OutputModeline(pixelSize, m_renderLoop->refreshRate()));
 
     State next = m_state;
     next.modes = {mode};

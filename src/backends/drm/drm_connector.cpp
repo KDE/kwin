@@ -45,17 +45,17 @@ uint32_t DrmConnector::refreshRateForMode(_drmModeModeInfo *m)
     return refreshRate;
 }
 
-static OutputMode::Flags flagsForMode(const drmModeModeInfo *info, OutputMode::Flags additionalFlags)
+static OutputModeline::Flags flagsForMode(const drmModeModeInfo *info, OutputModeline::Flags additionalFlags)
 {
-    OutputMode::Flags flags = additionalFlags;
+    OutputModeline::Flags flags = additionalFlags;
     if (info->type & DRM_MODE_TYPE_PREFERRED) {
-        flags |= OutputMode::Flag::Preferred;
+        flags |= OutputModeline::Flag::Preferred;
     }
     return flags;
 }
 
-DrmConnectorMode::DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode, Flags additionalFlags)
-    : OutputMode(resolutionForMode(&nativeMode), DrmConnector::refreshRateForMode(&nativeMode), flagsForMode(&nativeMode, additionalFlags))
+DrmConnectorMode::DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode, OutputModeline::Flags additionalFlags)
+    : OutputMode(OutputModeline(resolutionForMode(&nativeMode), DrmConnector::refreshRateForMode(&nativeMode), flagsForMode(&nativeMode, additionalFlags)))
     , m_connector(connector)
     , m_nativeMode(nativeMode)
 {
@@ -305,7 +305,7 @@ bool DrmConnector::updateProperties()
         // reload modes
         m_driverModes.clear();
         for (int i = 0; i < m_conn->count_modes; i++) {
-            m_driverModes.append(std::make_shared<DrmConnectorMode>(this, m_conn->modes[i], OutputMode::Flags()));
+            m_driverModes.append(std::make_shared<DrmConnectorMode>(this, m_conn->modes[i], OutputModeline::Flags()));
         }
         m_modes.clear();
         m_modes.append(m_driverModes);
@@ -397,7 +397,7 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
             if (size.width() > maxSize.width() || size.height() > maxSize.height() || bandwidthEstimation > maxBandwidthEstimation) {
                 continue;
             }
-            const auto generatedMode = generateMode(size, refreshRate / 1000.0, OutputMode::Flags{});
+            const auto generatedMode = generateMode(size, refreshRate / 1000.0, OutputModeline::Flags{});
             const bool alreadyExists = std::ranges::any_of(m_driverModes, [generatedMode](const auto &mode) {
                 return mode->size() == generatedMode->size()
                     && std::round(mode->refreshRate() / 1000.0) == std::round(generatedMode->refreshRate() / 1000.0);
@@ -411,9 +411,9 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
     return ret;
 }
 
-std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, float refreshRate, OutputMode::Flags flags)
+std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, float refreshRate, OutputModeline::Flags flags)
 {
-    auto modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate, flags & OutputMode::Flag::ReducedBlanking, false);
+    auto modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate, flags & OutputModeline::Flag::ReducedBlanking, false);
 
     drmModeModeInfo mode{
         .clock = uint32_t(modeInfo->dot_clock),
@@ -434,7 +434,7 @@ std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, 
     sprintf(mode.name, "%dx%d@%d", size.width(), size.height(), mode.vrefresh);
 
     free(modeInfo);
-    return std::make_shared<DrmConnectorMode>(this, mode, flags | OutputMode::Flag::Generated);
+    return std::make_shared<DrmConnectorMode>(this, mode, flags | OutputModeline::Flag::Generated);
 }
 
 QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj)
