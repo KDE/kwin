@@ -27,8 +27,6 @@ public:
         return m_settings;
     }
 
-    void save() override;
-
     Q_INVOKABLE void logout() const;
 
 Q_SIGNALS:

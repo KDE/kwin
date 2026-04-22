@@ -1,2 +1,3 @@
 #pragma once
 #cmakedefine01 EIS_HAVE_GET_CLIENT_PID
+#cmakedefine PROMPTER_BIN "${PROMPTER_BIN}"

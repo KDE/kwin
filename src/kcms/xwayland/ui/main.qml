@@ -19,29 +19,6 @@ KCM.SimpleKCM {
     implicitWidth: Kirigami.Units.gridUnit * 48
     implicitHeight: Kirigami.Units.gridUnit * 33
 
-     header: Kirigami.InlineMessage {
-        id: takeEffectNextTimeMsg
-        Layout.fillWidth: true
-        type: Kirigami.MessageType.Information
-        position: Kirigami.InlineMessage.Position.Header
-        text: i18nc("@info", "Changes will take effect the next time you log in.")
-        actions: [
-            Kirigami.Action {
-                icon.name: "system-log-out-symbolic"
-                text: i18nc("@action:button", "Log Out Now")
-                onTriggered: {
-                    kcm.logout()
-                }
-            }
-        ]
-        Connections {
-            target: kcm
-            function onShowLogoutMessage() {
-                takeEffectNextTimeMsg.visible = true;
-            }
-        }
-    }
-
     ColumnLayout {
         id: column
         spacing: 0
@@ -248,14 +225,52 @@ KCM.SimpleKCM {
                 Kirigami.FormData.isSection: true
             }
 
+            QQC2.ButtonGroup {
+                id: xwaylandGroup
+            }
+
             ColumnLayout {
                 Kirigami.FormData.label: i18nc("@title:group", "Control of pointer and keyboard:")
-                Kirigami.FormData.buddyFor: totalControl
+                Kirigami.FormData.buddyFor: allowedApps
                 Layout.fillWidth: true
                 spacing : 0
-                QQC2.CheckBox {
+                RowLayout {
+                    QQC2.RadioButton {
+                        id: allowedApps
+                        text:  i18nc("@option:check Allowed control of pointer and keyboard without asking for permissions for allowed apps", "Allowed apps")
+                        QQC2.ButtonGroup.group: xwaylandGroup
+                        checked: !kcm.settings.xwaylandEisNoPrompt
+                        onToggled: kcm.settings.xwaylandEisNoPrompt = !checked
+                    }
+                    QQC2.Button {
+                        text: i18nc("@action:button", "See Allowed Applications…")
+                        enabled: allowedApps.checked
+                        onClicked: {
+                            kcm.push(appsPage)
+                        }
+                    }
+                }
+                QQC2.Label {
+                    Layout.fillWidth: true
+                    leftPadding: Application.layoutDirection === Qt.LeftToRight ?
+                    allowedApps.contentItem.leftPadding : padding
+                    rightPadding: Application.layoutDirection === Qt.RightToLeft ?
+                    allowedApps.contentItem.rightPadding : padding
+                    text: i18nc("@info:usagetip", "Moderate security; XWayland-using apps claiming to be something on this list will be able to take control of the computer, because XWayland-using apps’ identities can’t be verified")
+                    textFormat: Text.PlainText
+                    wrapMode: Text.Wrap
+                    elide: Text.ElideRight
+                    font: Kirigami.Theme.smallFont
+                    opacity: 0.8
+                }
+            }
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing : 0
+                QQC2.RadioButton {
                     id: totalControl
-                    text: i18nc("@option:check Allow control of pointer and keyboard without asking for permission", "Allow without asking for permission")
+                    text: i18nc("@option:radio Allow control of pointer and keyboard without asking for permission", "Allow without asking for permission")
+                    QQC2.ButtonGroup.group: xwaylandGroup
                     checked: kcm.settings.xwaylandEisNoPrompt
                     onToggled: kcm.settings.xwaylandEisNoPrompt = checked
                 }
@@ -274,7 +289,39 @@ KCM.SimpleKCM {
                 }
             }
         }
-
+        KCM.ScrollViewKCM {
+            id: appsPage
+            visible: false
+            title: i18nc("@title:window title of the page opened by the 'See allowed applications' button", "Applications allowed to control the pointer and keyboard")
+            view: ListView {
+                model: kcm.settings.xwaylandEisNoPromptApps
+                delegate: QQC2.ItemDelegate {
+                    id: delegate
+                    width: ListView.view.width
+                    text: modelData
+                    icon.name: modelData
+                    contentItem: RowLayout {
+                        spacing: Kirigami.Units.smallSpacing
+                        Kirigami.IconTitleSubtitle {
+                            Layout.fillWidth: true
+                            icon: icon.fromControlsIcon(delegate.icon)
+                            title: delegate.text
+                            selected: delegate.highlighted || delegate.down
+                            font: delegate.font
+                        }
+                        QQC2.ToolButton {
+                            icon.name: "list-remove-symbolic"
+                            display: QQC2.AbstractButton.IconOnly
+                            text: i18nc("@info:tooltip %1 is the name of the app/binary", "Do not allow %1 to control the pointer and keyboard without asking", modelData)
+                            QQC2.ToolTip.text: text
+                            QQC2.ToolTip.visible: hovered
+                            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+                            onClicked: kcm.settings.xwaylandEisNoPromptApps = kcm.settings.xwaylandEisNoPromptApps.filter(app => app != modelData)
+                        }
+                    }
+                }
+            }
+        }
         Kirigami.InlineMessage {
             Layout.fillWidth: true
             Layout.margins: Kirigami.Units.gridUnit

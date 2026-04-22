@@ -38,15 +38,6 @@ void KcmXwayland::logout() const
     QDBusConnection::sessionBus().asyncCall(method);
 }
 
-void KcmXwayland::save()
-{
-    bool modifiedXwaylandEis = m_settings->xwaylandEisNoPromptItem()->isSaveNeeded();
-    KQuickManagedConfigModule::save();
-    if (modifiedXwaylandEis) {
-        Q_EMIT showLogoutMessage();
-    }
-}
-
 KcmXwayland::~KcmXwayland() = default;
 
 #include "kcmkwinxwayland.moc"

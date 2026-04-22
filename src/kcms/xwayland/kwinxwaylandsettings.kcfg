@@ -20,5 +20,6 @@
         <entry name="XwaylandEisNoPrompt" type="Bool">
             <default>false</default>
         </entry>
+        <entry name="XwaylandEisNoPromptApps" type="StringList" />
     </group>
 </kcfg>

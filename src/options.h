@@ -262,6 +262,10 @@ public:
     {
         return m_xwaylandEisNoPrompt;
     }
+    QStringList xwaylandEisNoPromptApps() const
+    {
+        return m_xwaylandEisNoPromptApps;
+    }
 
     /**
      * Whether clicking on a window raises it in FocusFollowsMouse
@@ -656,6 +660,7 @@ public:
     void setXwaylandEavesdrops(XwaylandEavesdropsMode mode);
     void setXwaylandEavesdropsMouse(bool eavesdropsMouse);
     void setXWaylandEisNoPrompt(bool doNotPrompt);
+    void setXWaylandEisNoPromptApps(const QStringList &apps);
     void setNextFocusPrefersMouse(bool nextFocusPrefersMouse);
     void setClickRaise(bool clickRaise);
     void setAutoRaise(bool autoRaise);
@@ -809,6 +814,10 @@ public:
     {
         return false;
     }
+    static QStringList defaultXwaylandEisNotPromptApps()
+    {
+        return QStringList();
+    }
     static ActivationDesktopPolicy defaultActivationDesktopPolicy()
     {
         return ActivationDesktopPolicy::SwitchToOtherDesktop;
@@ -829,6 +838,7 @@ Q_SIGNALS:
     void xwaylandEavesdropsChanged();
     void xwaylandEavesdropsMouseChanged();
     void xwaylandEisNoPromptChanged();
+    void xwaylandEisNoPromptAppsChanged();
     void nextFocusPrefersMouseChanged();
     void clickRaiseChanged();
     void autoRaiseChanged();
@@ -911,6 +921,7 @@ private:
     XwaylandEavesdropsMode m_xwaylandEavesdrops;
     bool m_xwaylandEavesdropsMouse;
     bool m_xwaylandEisNoPrompt;
+    QStringList m_xwaylandEisNoPromptApps;
 
     CompositingType m_compositingMode;
     WindowOperation OpTitlebarDblClick;

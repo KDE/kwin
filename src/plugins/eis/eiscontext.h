@@ -31,18 +31,19 @@ public:
     void updateKeymap();
     void forwardModifiers(uint32_t depressed, uint32_t latched, uint32_t locked, uint32_t group);
 
-    virtual bool allowConnection(eis_client *client) const
+    virtual void connectionRequested(eis_client *client)
     {
-        return true;
+        connectClient(client);
     }
+    void connectClient(eis_client *client);
 
 protected:
     eis *m_eisContext;
+    EisBackend *m_backend;
 
 private:
     void handleEvents();
 
-    EisBackend *m_backend;
     QFlags<eis_device_capability> m_allowedCapabilities;
     QSocketNotifier m_socketNotifier;
     std::vector<std::unique_ptr<EisClient>> m_clients;
@@ -63,7 +64,7 @@ class XWaylandEisContext : public EisContext
 {
 public:
     XWaylandEisContext(EisBackend *backend);
-    bool allowConnection(eis_client *client) const override;
+    void connectionRequested(eis_client *client) override;
 
     const QByteArray socketName;
 };
