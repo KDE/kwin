@@ -161,6 +161,10 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                                             QByteArrayLiteral("BT2020_YCC"),
                                                         })
     , path(this, QByteArrayLiteral("PATH"))
+    , panelType(this, QByteArrayLiteral("panel_type"), {
+                                                           QByteArrayLiteral("unknown"),
+                                                           QByteArrayLiteral("OLED"),
+                                                       })
 {
 }
 
@@ -269,6 +273,7 @@ bool DrmConnector::updateProperties()
     scalingMode.update(props);
     colorspace.update(props);
     path.update(props);
+    panelType.update(props);
 
     if (gpu()->atomicModeSetting() && !crtcId.isValid()) {
         qCWarning(KWIN_DRM) << "Failed to update the basic connector properties (CRTC_ID)";
