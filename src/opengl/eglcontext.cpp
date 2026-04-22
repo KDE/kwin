@@ -176,6 +176,8 @@ bool EglContext::makeCurrent(EGLSurface surface)
     }
     const bool ret = eglMakeCurrent(m_display->handle(), surface, surface, m_handle) == EGL_TRUE;
     if (ret) {
+        Q_ASSERT(m_handle != EGL_NO_CONTEXT);
+        Q_ASSERT(eglGetCurrentContext() == m_handle);
         s_currentContext = this;
     } else {
         // QOpenGLContext::doneCurrent unset the context, we need to mirror that here!
