@@ -631,7 +631,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
         // This is usually not necessary with external monitors, as they default to 100% in HDR mode on their own,
         // and is known to even cause problems with some buggy ones.
         // This is however needed for laptop displays to have the desired luminance levels
-        m_state.brightnessDevice->setBrightness(1.0);
+        m_state.brightnessDevice->setBrightness(1.0, minBrightnessForBacklight());
     }
 
     Q_EMIT changed();
@@ -661,7 +661,7 @@ void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHe
         }
         constexpr double minLuminance = 0.04;
         const double effectiveBrightness = (minLuminance + brightnessFactor) * newArtificialHdrHeadroom - minLuminance;
-        m_state.brightnessDevice->setBrightness(effectiveBrightness);
+        m_state.brightnessDevice->setBrightness(effectiveBrightness, minBrightnessForBacklight());
     }
     State next = m_state;
     next.currentBrightness = newBrightness;
@@ -672,6 +672,20 @@ void DrmOutput::updateBrightness(double newBrightness, double newArtificialHdrHe
     next.colorDescription = applyNightLight(next.originalColorDescription, m_sRgbChannelFactors);
     tryKmsColorOffloading(next);
     setState(next);
+}
+
+double DrmOutput::minBrightnessForBacklight() const
+{
+    if (!m_state.brightnessDevice || m_state.brightnessDevice->usesDdcCi()) {
+        return 0;
+    }
+    if (m_connector->panelType.isValid() && m_connector->panelType.enumValue() == DrmConnector::PanelType::OLED) {
+        // OLED panels can't display colors correctly on very low brightness values
+        return 0.01;
+    } else {
+        // some LCD turn off at zero brightness
+        return 1.0 / m_state.brightnessDevice->brightnessSteps();
+    }
 }
 
 void DrmOutput::revertQueuedChanges()

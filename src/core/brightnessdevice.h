@@ -21,7 +21,7 @@ class BrightnessDevice
 public:
     virtual ~BrightnessDevice() = default;
 
-    virtual void setBrightness(double brightness) = 0;
+    virtual void setBrightness(double brightness, double minBrightness) = 0;
 
     virtual std::optional<double> observedBrightness() const = 0;
     virtual bool isInternal() const = 0;

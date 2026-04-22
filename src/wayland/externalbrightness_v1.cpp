@@ -57,12 +57,12 @@ ExternalBrightnessDeviceV1::~ExternalBrightnessDeviceV1()
     }
 }
 
-void ExternalBrightnessDeviceV1::setBrightness(double brightness)
+void ExternalBrightnessDeviceV1::setBrightness(double brightness, double minRelativeBrightness)
 {
     m_observedBrightness.reset();
 
-    const uint32_t minBrightness = m_internal ? 1 : 0; // some laptop screens turn off at brightness 0
-    const uint32_t val = std::round(std::lerp(minBrightness, m_maxBrightness, std::clamp(brightness, 0.0, 1.0)));
+    m_minBrightness = std::round(m_maxBrightness * minRelativeBrightness);
+    const uint32_t val = std::round(std::lerp(m_minBrightness, m_maxBrightness, std::clamp(brightness, 0.0, 1.0)));
     send_requested_brightness(val);
 }
 
@@ -70,8 +70,7 @@ std::optional<double> ExternalBrightnessDeviceV1::observedBrightness() const
 {
     std::optional<double> fractional = std::nullopt;
     if (m_observedBrightness.has_value()) {
-        const uint32_t minBrightness = m_internal ? 1 : 0; // some laptop screens turn off at brightness 0
-        fractional = std::clamp((*m_observedBrightness - minBrightness) / static_cast<double>(m_maxBrightness - minBrightness), 0.0, 1.0);
+        fractional = std::clamp((*m_observedBrightness - m_minBrightness) / static_cast<double>(m_maxBrightness - m_minBrightness), 0.0, 1.0);
     }
     return fractional;
 }
@@ -93,7 +92,7 @@ bool ExternalBrightnessDeviceV1::usesDdcCi() const
 
 int ExternalBrightnessDeviceV1::brightnessSteps() const
 {
-    return m_maxBrightness - (m_internal ? 1 : 0);
+    return m_maxBrightness;
 }
 
 void ExternalBrightnessDeviceV1::kde_external_brightness_device_v1_destroy_resource(Resource *resource)

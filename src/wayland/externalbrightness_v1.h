@@ -48,7 +48,7 @@ public:
     explicit ExternalBrightnessDeviceV1(ExternalBrightnessV1 *global, wl_client *client, uint32_t id, uint32_t version);
     ~ExternalBrightnessDeviceV1() override;
 
-    void setBrightness(double brightness) override;
+    void setBrightness(double brightness, double minBrightness) override;
 
     std::optional<double> observedBrightness() const override;
     bool isInternal() const override;
@@ -70,6 +70,7 @@ private:
     QByteArray m_edidBeginning;
     std::optional<uint32_t> m_observedBrightness;
     uint32_t m_maxBrightness = 1;
+    uint32_t m_minBrightness = 0;
     bool m_internal = false;
     bool m_usesDdcCi = false;
     bool m_done = false;
