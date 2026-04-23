@@ -364,8 +364,6 @@ private:
     void cleanGrouping();
     void checkGroupTransients();
     void setTransient(xcb_window_t new_transient_for_id);
-    void setNetWmDesktop(VirtualDesktop *desktop);
-    void updateNetWmDesktopId();
 
     bool wantsFrameCallbackHeartbeat() const;
     void setFrameCallbackHeartbeat(bool enabled);
@@ -405,8 +403,6 @@ private:
     bool activitiesDefined; // whether the x property was actually set
 
     bool sessionActivityOverride;
-
-    QPointer<VirtualDesktop> m_netWmDesktop;
 
     QMarginsF m_clientFrameExtents;
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set

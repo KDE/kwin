@@ -697,24 +697,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
             if (maincl) {
                 setOnActivities(maincl->activities());
             }
-        } else if (RootInfo::desktopEnabled()) { // a transient shall appear on its leader and not drag that around
-            int desktopId = 0;
-            if (info->desktop()) {
-                desktopId = info->desktop(); // Window had the initial desktop property, force it
-            }
-            if (desktopId == 0 && asn_valid && asn_data.desktop() != 0) {
-                desktopId = asn_data.desktop();
-            }
-            if (desktopId) {
-                if (desktopId == NET::OnAllDesktops) {
-                    initialDesktops = QList<VirtualDesktop *>{};
-                } else {
-                    VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId);
-                    if (desktop) {
-                        initialDesktops = QList<VirtualDesktop *>{desktop};
-                    }
-                }
-            }
         }
 #if KWIN_BUILD_ACTIVITIES
         if (Workspace::self()->activities() && !isMapped && !skipTaskbar() && isNormalWindow() && !activitiesDefined) {
@@ -740,11 +722,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         }
     }
     setDesktops(rules()->checkDesktops(*initialDesktops, !isMapped));
-    if (RootInfo::desktopEnabled()) {
-        info->setDesktop(desktopId());
-    } else {
-        info->setDesktop(1);
-    }
+    info->setDesktop(1);
     workspace()->updateOnAllDesktopsOfTransients(this); // SELI TODO
     // onAllDesktopsChange(); // Decoration doesn't exist here yet
 
@@ -1500,34 +1478,7 @@ void X11Window::doSetDesktop()
     if (isDeleted()) {
         return;
     }
-    setNetWmDesktop(m_desktops.isEmpty() ? nullptr : m_desktops.last());
     updateVisibility();
-}
-
-void X11Window::setNetWmDesktop(VirtualDesktop *desktop)
-{
-    if (m_netWmDesktop == desktop) {
-        return;
-    }
-    if (m_netWmDesktop) {
-        disconnect(m_netWmDesktop, &VirtualDesktop::x11DesktopNumberChanged, this, &X11Window::updateNetWmDesktopId);
-    }
-    if (desktop) {
-        connect(desktop, &VirtualDesktop::x11DesktopNumberChanged, this, &X11Window::updateNetWmDesktopId);
-    }
-
-    m_netWmDesktop = desktop;
-    updateNetWmDesktopId();
-}
-
-void X11Window::updateNetWmDesktopId()
-{
-    if (isDeleted()) {
-        return;
-    }
-    if (RootInfo::desktopEnabled()) {
-        info->setDesktop(m_netWmDesktop ? m_netWmDesktop->x11DesktopNumber() : -1);
-    }
 }
 
 void X11Window::doSetDemandsAttention()
@@ -4283,22 +4234,6 @@ void X11Window::startupIdChanged()
     bool asn_valid = workspace()->checkStartupNotification(window(), asn_id, asn_data);
     if (!asn_valid) {
         return;
-    }
-
-    if (RootInfo::desktopEnabled()) {
-        // If the ASN contains desktop, move it to the desktop, otherwise move it to the current
-        // desktop (since the new ASN should make the window act like if it's a new application
-        // launched). However don't affect the window's desktop if it's set to be on all desktops.
-
-        if (asn_data.desktop() != 0 && !isOnAllDesktops()) {
-            if (asn_data.desktop() == -1) {
-                workspace()->sendWindowToDesktops(this, {}, true);
-            } else {
-                if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(asn_data.desktop())) {
-                    workspace()->sendWindowToDesktops(this, {desktop}, true);
-                }
-            }
-        }
     }
 
     if (asn_data.xinerama() != -1) {

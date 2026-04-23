@@ -128,12 +128,6 @@ void RootInfo::destroy()
     xcb_destroy_window(kwinApp()->x11Connection(), supportWindow);
 }
 
-bool RootInfo::desktopEnabled()
-{
-    static const bool enabled = environmentVariableIntValue("KWIN_XWAYLAND_ENABLE_NETWM_DESKTOP").value_or(0);
-    return enabled;
-}
-
 RootInfo::RootInfo(xcb_window_t w, const char *name, NET::Properties properties, NET::WindowTypes types,
                    NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr)
     : NETRootInfo(kwinApp()->x11Connection(), w, name, properties, types, states, properties2, actions, scr)
@@ -262,17 +256,6 @@ WinInfo::WinInfo(X11Window *c, xcb_window_t window,
     : NETWinInfo(kwinApp()->x11Connection(), window, rwin, properties, properties2, NET::WindowManager)
     , m_client(c)
 {
-}
-
-void WinInfo::changeDesktop(int desktopId)
-{
-    if (RootInfo::desktopEnabled()) {
-        if (desktopId == NET::OnAllDesktops) {
-            Workspace::self()->sendWindowToDesktops(m_client, {}, true);
-        } else if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId)) {
-            Workspace::self()->sendWindowToDesktops(m_client, {desktop}, true);
-        }
-    }
 }
 
 void WinInfo::changeFullscreenMonitors(NETFullscreenMonitors topology)

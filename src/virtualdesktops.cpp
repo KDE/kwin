@@ -257,19 +257,11 @@ void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
 
     // Nothing will be connected to rootInfo
     if (m_rootInfo) {
-        if (RootInfo::desktopEnabled()) {
-            updateRootInfo();
-            m_rootInfo->setCurrentDesktop(currentDesktop()->x11DesktopNumber());
-            for (auto *vd : std::as_const(m_desktops)) {
-                m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
-            }
-        } else {
-            m_rootInfo->setNumberOfDesktops(1);
-            m_rootInfo->setDesktopViewport(1, NETPoint{});
-            m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, 1, 1, NET::DesktopLayoutCornerTopLeft);
-            m_rootInfo->setCurrentDesktop(1);
-            m_rootInfo->setDesktopName(1, "Desktop 1");
-        }
+        m_rootInfo->setNumberOfDesktops(1);
+        m_rootInfo->setDesktopViewport(1, NETPoint{});
+        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, 1, 1, NET::DesktopLayoutCornerTopLeft);
+        m_rootInfo->setCurrentDesktop(1);
+        m_rootInfo->setDesktopName(1, "Desktop 1");
     }
 #endif
 }
@@ -474,38 +466,16 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const
 
     connect(vd, &VirtualDesktop::nameChanged, this, &VirtualDesktopManager::save);
 
-#if KWIN_BUILD_X11
-    if (RootInfo::desktopEnabled()) {
-        connect(vd, &VirtualDesktop::nameChanged, this, [this, vd]() {
-            if (m_rootInfo) {
-                m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
-            }
-        });
-
-        if (m_rootInfo) {
-            m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
-        }
-    }
-#endif
-
     m_desktops.insert(position, vd);
 
     // update the id of displaced desktops
     for (uint i = position + 1; i < (uint)m_desktops.count(); ++i) {
         m_desktops[i]->setX11DesktopNumber(i + 1);
-#if KWIN_BUILD_X11
-        if (RootInfo::desktopEnabled()) {
-            if (m_rootInfo) {
-                m_rootInfo->setDesktopName(i + 1, m_desktops[i]->name().toUtf8().data());
-            }
-        }
-#endif
     }
 
     save();
 
     updateLayout();
-    updateRootInfo();
     Q_EMIT desktopAdded(vd);
     Q_EMIT countChanged(m_desktops.count() - 1, m_desktops.count());
     return vd;
@@ -531,13 +501,6 @@ void VirtualDesktopManager::removeVirtualDesktop(VirtualDesktop *desktop)
 
     for (int j = i; j < m_desktops.count(); ++j) {
         m_desktops[j]->setX11DesktopNumber(j + 1);
-#if KWIN_BUILD_X11
-        if (RootInfo::desktopEnabled()) {
-            if (m_rootInfo) {
-                m_rootInfo->setDesktopName(j + 1, m_desktops[j]->name().toUtf8().data());
-            }
-        }
-#endif
     }
 
     VirtualDesktop *newDesktop = (i < m_desktops.count()) ? m_desktops.at(i) : m_desktops.constLast();
@@ -551,7 +514,6 @@ void VirtualDesktopManager::removeVirtualDesktop(VirtualDesktop *desktop)
     }
 
     updateLayout();
-    updateRootInfo();
     save();
 
     Q_EMIT desktopRemoved(desktop);
@@ -579,13 +541,6 @@ void VirtualDesktopManager::moveVirtualDesktop(VirtualDesktop *desktop, int posi
 
     for (int i = 0; i < m_desktops.size(); ++i) {
         m_desktops[i]->setX11DesktopNumber(i + 1);
-#if KWIN_BUILD_X11
-        if (RootInfo::desktopEnabled()) {
-            if (m_rootInfo) {
-                m_rootInfo->setDesktopName(m_desktops[i]->x11DesktopNumber(), m_desktops[i]->name().toUtf8().data());
-            }
-        }
-#endif
     }
 
     updateLayout();
@@ -682,23 +637,10 @@ void VirtualDesktopManager::setCount(uint count)
             m_desktops << vd;
             newDesktops << vd;
             connect(vd, &VirtualDesktop::nameChanged, this, &VirtualDesktopManager::save);
-#if KWIN_BUILD_X11
-            if (RootInfo::desktopEnabled()) {
-                connect(vd, &VirtualDesktop::nameChanged, this, [this, vd]() {
-                    if (m_rootInfo) {
-                        m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
-                    }
-                });
-                if (m_rootInfo) {
-                    m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
-                }
-            }
-#endif
         }
     }
 
     updateLayout();
-    updateRootInfo();
 
     if (!s_loadingDesktopSettings) {
         save();
@@ -723,25 +665,6 @@ void VirtualDesktopManager::setRows(uint rows)
     m_rows = rows;
 
     updateLayout();
-    updateRootInfo();
-}
-
-void VirtualDesktopManager::updateRootInfo()
-{
-#if KWIN_BUILD_X11
-    if (!RootInfo::desktopEnabled()) {
-        return;
-    }
-
-    if (m_rootInfo) {
-        const int n = count();
-        m_rootInfo->setNumberOfDesktops(n);
-        NETPoint *viewports = new NETPoint[n];
-        m_rootInfo->setDesktopViewport(n, *viewports);
-        delete[] viewports;
-        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, m_grid.width(), m_grid.height(), NET::DesktopLayoutCornerTopLeft);
-    }
-#endif
 }
 
 void VirtualDesktopManager::updateLayout()
@@ -772,13 +695,6 @@ void VirtualDesktopManager::load()
 
     for (int i = 1; i <= n; i++) {
         QString s = group.readEntry(QStringLiteral("Name_%1").arg(i), i18n("Desktop %1", i));
-#if KWIN_BUILD_X11
-        if (RootInfo::desktopEnabled()) {
-            if (m_rootInfo) {
-                m_rootInfo->setDesktopName(i, s.toUtf8().data());
-            }
-        }
-#endif
         m_desktops[i - 1]->setName(s);
 
         const QString sId = group.readEntry(QStringLiteral("Id_%1").arg(i), QString());
@@ -822,13 +738,6 @@ void VirtualDesktopManager::save()
         const QString defaultvalue = defaultName(position);
         if (s.isEmpty()) {
             s = defaultvalue;
-#if KWIN_BUILD_X11
-            if (RootInfo::desktopEnabled()) {
-                if (m_rootInfo) {
-                    m_rootInfo->setDesktopName(position, s.toUtf8().data());
-                }
-            }
-#endif
         }
 
         if (s != defaultvalue) {

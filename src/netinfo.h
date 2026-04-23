@@ -40,8 +40,6 @@ public:
     static RootInfo *create();
     static void destroy();
 
-    static bool desktopEnabled();
-
     RootInfo(xcb_window_t w, const char *name, NET::Properties properties, NET::WindowTypes types,
              NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr = -1);
 
@@ -80,7 +78,6 @@ class WinInfo : public NETWinInfo
 public:
     WinInfo(X11Window *c, xcb_window_t window,
             xcb_window_t rwin, NET::Properties properties, NET::Properties2 properties2);
-    void changeDesktop(int desktop) override;
     void changeFullscreenMonitors(NETFullscreenMonitors topology) override;
     void changeState(NET::States state, NET::States mask) override;
     void disable();

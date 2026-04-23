@@ -1066,10 +1066,6 @@ void Workspace::updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop
             (c)->updateVisibility();
         }
     }
-    // Now propagate the change, after hiding, before showing
-    if (rootInfo() && RootInfo::desktopEnabled() && output == m_activeOutput) {
-        rootInfo()->setCurrentDesktop(newDesktop->x11DesktopNumber());
-    }
 #endif
 
     // FIXME: Keep Move/Resize window across activities

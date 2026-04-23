@@ -348,11 +348,6 @@ public:
     void moveVirtualDesktop(VirtualDesktop *desktop, int position);
 
     /**
-     * Updates the net root info for new number of desktops
-     */
-    void updateRootInfo();
-
-    /**
      * @returns The maximum number of desktops that KWin supports.
      */
     static uint maximum();
