@@ -149,6 +149,7 @@ private:
     ConfigurableGesture *ensureAutoGesture(const QString &shortcutActionKey);
     bool activateGesture(ActiveTriggerInfo &active, ConfigurableGesture *gesture, const TriggerId &triggerId);
     void deactivateGesture(ActiveTriggerInfo &active);
+    void initDefaultGestures();
 #endif
 
     QList<GlobalShortcut> m_shortcuts;

@@ -121,6 +121,8 @@ void GlobalShortcutsManager::init()
                 SLOT(onKGlobalShortcutTriggerActive(QString,QString,bool,QString,QString,QString,QString)),
                 Qt::QueuedConnection); // allow time for registerGesture() before activating the gesture
         // clang-format on
+
+        initDefaultGestures();
     }
 #endif
 }
@@ -578,6 +580,38 @@ void GlobalShortcutsManager::deactivateGesture(ActiveTriggerInfo &active)
     // to be an unordered_map for moveability, and unordered_map doesn't natively support pair keys
     delete active.gestureAction;
     active.gestureAction = nullptr;
+}
+
+void GlobalShortcutsManager::initDefaultGestures()
+{
+    // The initial idea was to add default gesture assignments to registerGesture() as a parameter,
+    // but KGlobalAccelD support is optional and so a list of triggers shouldn't be exposed in the
+    // the GlobalShortcutsManager API. Instead, we just define all default gestures here centrally.
+
+    using SwipeDir = KGlobalShortcutTriggerTypes::SwipeDirection;
+    using PinchDir = KGlobalShortcutTriggerTypes::PinchDirection;
+
+    auto makeSwipes = [](int fingers, SwipeDir direction) -> QList<KGlobalShortcutTrigger> {
+        return {
+            {KGlobalShortcutTriggerTypes::TouchpadSwipeGesture{.fingerCount = fingers, .direction = direction}},
+            {KGlobalShortcutTriggerTypes::TouchscreenSwipeGesture{.fingerCount = fingers, .direction = direction}},
+        };
+    };
+    auto makePinches = [](int fingers, PinchDir direction) -> QList<KGlobalShortcutTrigger> {
+        return {
+            {KGlobalShortcutTriggerTypes::TouchpadPinchGesture{.fingerCount = fingers, .direction = direction}},
+            {KGlobalShortcutTriggerTypes::TouchscreenPinchGesture{.fingerCount = fingers, .direction = direction}},
+        };
+    };
+
+    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Cycle Overview", makeSwipes(3, SwipeDir::Up));
+    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Cycle Overview Opposite", makeSwipes(3, SwipeDir::Down));
+    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Switch One Desktop Down", makeSwipes(4, SwipeDir::Up));
+    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Switch One Desktop Up", makeSwipes(4, SwipeDir::Down));
+    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Switch One Desktop to the Left", makeSwipes(4, SwipeDir::Right));
+    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Switch One Desktop to the Right", makeSwipes(4, SwipeDir::Left));
+    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "view_zoom_in", makePinches(3, PinchDir::Expanding));
+    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "view_zoom_out", makePinches(3, PinchDir::Contracting));
 }
 #endif // KWIN_BUILD_GLOBALSHORTCUTS
 
