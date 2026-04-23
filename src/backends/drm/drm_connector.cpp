@@ -95,7 +95,8 @@ static inline bool checkIfEqual(const drmModeModeInfo *one, const drmModeModeInf
         && one->vsync_start == two->vsync_start
         && one->vsync_end == two->vsync_end
         && one->vtotal == two->vtotal
-        && one->vscan == two->vscan;
+        && one->vscan == two->vscan
+        && one->flags == two->flags;
 }
 
 bool DrmConnectorMode::operator==(const DrmConnectorMode &otherMode) const
