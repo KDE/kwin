@@ -53,6 +53,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     connect(surface, &SurfaceInterface::unmapped,
             this, &SurfaceItemWayland::handleSurfaceMappedChanged);
     setVisible(surface->isMapped());
+    connect(surface, &SurfaceInterface::opaqueChanged, this, &SurfaceItem::opaqueChanged);
 
     SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {

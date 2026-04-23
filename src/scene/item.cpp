@@ -156,6 +156,7 @@ void Item::setScene(Scene *scene)
         }
         m_deviceRepaints.clear();
         disconnect(m_scene, &Scene::viewRemoved, this, &Item::removeRepaints);
+        Q_EMIT m_scene->itemRemoved(this);
     }
     if (scene) {
         connect(scene, &Scene::viewRemoved, this, &Item::removeRepaints);

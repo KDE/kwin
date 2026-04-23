@@ -254,6 +254,7 @@ public:
 Q_SIGNALS:
     void viewAdded(SceneView *view);
     void viewRemoved(RenderView *delegate);
+    void itemRemoved(Item *item);
 
 protected:
     void releaseResources(Item *item);

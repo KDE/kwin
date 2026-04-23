@@ -1811,7 +1811,7 @@ DebugConsoleEffectsTab::DebugConsoleEffectsTab(QWidget *parent)
     availableEffects.removeDuplicates();
 
     // Show these debugging effects at the top of the list, sort the rest so they can be easily found
-    const QStringList priorityEffects = {QStringLiteral("showcompositing"), QStringLiteral("showfps"), QStringLiteral("showpaint")};
+    const QStringList priorityEffects = {QStringLiteral("showcompositing"), QStringLiteral("showopaque"), QStringLiteral("showfps"), QStringLiteral("showpaint")};
     std::sort(availableEffects.begin(), availableEffects.end(), [&priorityEffects](const QString &a, const QString &b) {
         const int indexA = priorityEffects.indexOf(a);
         const int indexB = priorityEffects.indexOf(b);

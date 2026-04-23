@@ -74,6 +74,7 @@ public:
 
 Q_SIGNALS:
     void damaged();
+    void opaqueChanged();
 
 protected:
     explicit SurfaceItem(Item *parent = nullptr);

@@ -1,0 +1,12 @@
+{
+    "KPlugin": {
+        "Category": "Tools",
+        "Description": "Display the opaque region of surface items",
+        "EnabledByDefault": false,
+        "License": "GPL",
+        "Name": "Show Opaque"
+    },
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}
