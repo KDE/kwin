@@ -421,6 +421,10 @@ double DrmOutput::calculateMaxArtificialHdrHeadroom(const State &next) const
     if (!next.brightnessDevice || !isInternal() || next.edrPolicy == EdrPolicy::Never) {
         return 1.0;
     }
+    const bool effectiveHdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
+    if (effectiveHdr) {
+        return 1.0;
+    }
     // just a rough estimate from the Framework 13 laptop.
     // The less accurate this is, the more the screen will flicker during backlight changes
     constexpr double relativeLuminanceAtZeroBrightness = 0.04;
@@ -444,50 +448,78 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
         brightnessFactor *= next.currentDimming;
     }
 
-    if (next.colorProfileSource == ColorProfileSource::ICC && !effectiveHdr && !effectiveWcg && next.iccProfile) {
-        const double maxFALL = next.iccProfile->maxFALL().value_or(200);
-        const double minBrightness = next.iccProfile->relativeBlackPoint().value_or(0) * maxFALL;
-        const auto sdrColor = Colorimetry::BT709.interpolateGamutTo(next.iccProfile->colorimetry(), next.sdrGamutWideness);
-        const double effectiveReferenceLuminance = 5 + (maxFALL - 5) * brightnessFactor;
+    double minLuminance = 0.01;
+    double maxAverageLuminance = 200;
+    double maxLuminance = 200;
+    double maxReferenceLuminance = maxLuminance;
 
-        return std::make_shared<ColorDescription>(ColorDescription{
-            next.iccProfile->colorimetry(),
-            TransferFunction(TransferFunction::gamma22, minBrightness * next.artificialHdrHeadroom, maxFALL * next.artificialHdrHeadroom),
-            effectiveReferenceLuminance,
-            minBrightness * next.artificialHdrHeadroom,
-            maxFALL * next.maxPossibleArtificialHdrHeadroom,
-            maxFALL * next.maxPossibleArtificialHdrHeadroom,
-            next.iccProfile->colorimetry(),
-            sdrColor,
-        });
+    TransferFunction transferFunction{TransferFunction::Type::gamma22, minLuminance, maxLuminance};
+    Colorimetry containerColorimetry = Colorimetry::BT709;
+    Colorimetry nativeColorimetry = Colorimetry::BT709;
+
+    auto profileSource = next.colorProfileSource;
+    auto iccProfile = effectiveHdr ? nullptr : next.iccProfile;
+    if (!iccProfile && profileSource == ColorProfileSource::ICC) {
+        // can't do anything
+        profileSource = ColorProfileSource::sRGB;
+    }
+    if (effectiveHdr && profileSource == ColorProfileSource::sRGB) {
+        // we don't support HDR without a color profile
+        profileSource = ColorProfileSource::EDID;
+    }
+    if (effectiveWcg && !effectiveHdr && profileSource == ColorProfileSource::ICC) {
+        // there's no dedicated ICC profile for this case
+        profileSource = ColorProfileSource::EDID;
+    }
+    switch (profileSource) {
+    case ColorProfileSource::sRGB:
+        // all the default values are for this case
+        transferFunction = TransferFunction(TransferFunction::Type::gamma22, minLuminance * next.artificialHdrHeadroom, maxLuminance * next.artificialHdrHeadroom);
+        break;
+    case ColorProfileSource::ICC:
+        nativeColorimetry = iccProfile->colorimetry();
+        containerColorimetry = nativeColorimetry;
+        maxAverageLuminance = iccProfile->maxFALL().value_or(maxAverageLuminance);
+        maxLuminance = maxAverageLuminance;
+        maxReferenceLuminance = maxAverageLuminance;
+        minLuminance = iccProfile->relativeBlackPoint().value_or(0) * maxAverageLuminance;
+        transferFunction = TransferFunction(TransferFunction::gamma22, minLuminance * next.artificialHdrHeadroom, maxLuminance * next.artificialHdrHeadroom);
+        break;
+    case ColorProfileSource::EDID:
+        if (m_information.edid.isValid() && m_information.edid.defaultColorimetry()) {
+            nativeColorimetry = *m_information.edid.defaultColorimetry();
+        }
+        if (effectiveWcg) {
+            containerColorimetry = Colorimetry::BT2020;
+        } else {
+            containerColorimetry = nativeColorimetry;
+        }
+        if (effectiveHdr) {
+            transferFunction = TransferFunction(TransferFunction::PerceptualQuantizer);
+            // HDR screens are weird, sending them the min. luminance from the EDID does
+            // *not* make all of them present the darkest luminance the display can show.
+            // To work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
+            minLuminance = next.minBrightnessOverride.value_or(transferFunction.minLuminance);
+            maxAverageLuminance = next.maxAverageBrightnessOverride.value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(next.referenceLuminance));
+            maxLuminance = next.maxPeakBrightnessOverride.value_or(m_connector->edid()->desiredMaxLuminance().value_or(800));
+            maxReferenceLuminance = next.referenceLuminance;
+        } else {
+            // TODO get luminance values from EDID?
+            transferFunction = TransferFunction(TransferFunction::gamma22, minLuminance * next.artificialHdrHeadroom, maxLuminance * next.artificialHdrHeadroom);
+        }
+        break;
     }
 
-    const Colorimetry nativeColorimetry = m_information.edid.nativeColorimetry().value_or(Colorimetry::BT709);
-    const Colorimetry containerColorimetry = effectiveWcg ? Colorimetry::BT2020 : (next.colorProfileSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::BT709);
-    const Colorimetry masteringColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? nativeColorimetry : Colorimetry::BT709;
-    const Colorimetry sdrColorimetry = (effectiveWcg || next.colorProfileSource == ColorProfileSource::EDID) ? Colorimetry::BT709.interpolateGamutTo(nativeColorimetry, next.sdrGamutWideness) : Colorimetry::BT709;
-    // TODO the EDID can contain a gamma value, use that when available and colorSource == ColorProfileSource::EDID
-    const double maxAverageBrightness = effectiveHdr ? next.maxAverageBrightnessOverride.value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(next.referenceLuminance)) : 200 * next.maxPossibleArtificialHdrHeadroom;
-    const double maxPeakBrightness = effectiveHdr ? next.maxPeakBrightnessOverride.value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200 * next.maxPossibleArtificialHdrHeadroom;
-    const double referenceLuminance = effectiveHdr ? next.referenceLuminance : 200;
-    // the min luminance the Wayland protocol defines for SDR is unrealistically high for most modern displays
-    // normally that doesn't really matter, but with night light it can lead to increased black levels,
-    // which are really noticeable when they're tinted red
-    const double minSdrLuminance = 0.01;
-    const auto transferFunction = effectiveHdr ? TransferFunction{TransferFunction::PerceptualQuantizer} : TransferFunction{TransferFunction::gamma22, minSdrLuminance * next.artificialHdrHeadroom, referenceLuminance * next.artificialHdrHeadroom};
-    // HDR screens are weird, sending them the min. luminance from the EDID does *not* make all of them present the darkest luminance the display can show
-    // to work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
-    const double minBrightness = effectiveHdr ? next.minBrightnessOverride.value_or(transferFunction.minLuminance) : transferFunction.minLuminance;
-
-    const double effectiveReferenceLuminance = 5 + (referenceLuminance - 5) * brightnessFactor;
+    Colorimetry sdrColorimetry = Colorimetry::BT709.interpolateGamutTo(nativeColorimetry, next.sdrGamutWideness);
+    const double effectiveReferenceLuminance = 5 + (maxReferenceLuminance - 5) * brightnessFactor;
     return std::make_shared<ColorDescription>(ColorDescription{
         containerColorimetry,
         transferFunction,
         effectiveReferenceLuminance,
-        minBrightness,
-        maxAverageBrightness,
-        maxPeakBrightness,
-        masteringColorimetry,
+        minLuminance,
+        maxAverageLuminance * next.maxPossibleArtificialHdrHeadroom,
+        maxLuminance * next.maxPossibleArtificialHdrHeadroom,
+        nativeColorimetry,
         sdrColorimetry,
     });
 }
