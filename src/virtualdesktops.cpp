@@ -635,6 +635,7 @@ void VirtualDesktopManager::setCount(uint count)
             }
             m_desktops << vd;
             newDesktops << vd;
+            connect(vd, &VirtualDesktop::nameChanged, this, &VirtualDesktopManager::save);
 #if KWIN_BUILD_X11
             if (RootInfo::desktopEnabled()) {
                 connect(vd, &VirtualDesktop::nameChanged, this, [this, vd]() {
