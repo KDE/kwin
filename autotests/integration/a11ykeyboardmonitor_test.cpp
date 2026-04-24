@@ -235,6 +235,19 @@ void A11yKeyboardMonitorTest::testGrabKeyboard()
     QCOMPARE(clientKeySpy.count(), 0);
     clientKeySpy.clear();
 
+    // wait for repeat
+    QVERIFY(a11ySpy.wait());
+    QCOMPARE(a11ySpy.first()[0], false);
+    QCOMPARE(a11ySpy.first()[1], 0);
+    QCOMPARE(a11ySpy.first()[2], XKB_KEY_a);
+    QCOMPARE(a11ySpy.first()[3], QLatin1Char('a').unicode());
+    QCOMPARE(a11ySpy.first()[4], KEY_A + 8);
+    a11ySpy.clear();
+
+    QVERIFY(Test::waylandSync());
+    QCOMPARE(clientKeySpy.count(), 0);
+    clientKeySpy.clear();
+
     Test::keyboardKeyReleased(KEY_A, ++timestamp);
     QVERIFY(a11ySpy.wait());
     QCOMPARE(a11ySpy.first()[0], true);

@@ -39,21 +39,20 @@ void KeyboardRepeat::handleKeyRepeat()
     Q_EMIT keyRepeat(m_key, m_time);
 }
 
-void KeyboardRepeat::keyboardKey(KeyboardKeyEvent *event)
+void KeyboardRepeat::keyboardKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time)
 {
-    if (event->state == KeyboardKeyState::Repeated) {
+    if (state == KeyboardKeyState::Repeated) {
         return;
     }
-    const quint32 key = event->nativeScanCode;
-    if (event->state == KeyboardKeyState::Pressed) {
+    if (state == KeyboardKeyState::Pressed) {
         // TODO: don't get these values from WaylandServer
         if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyboard()->keyRepeatDelay() != 0) {
             m_timer->setInterval(waylandServer()->seat()->keyboard()->keyRepeatDelay());
             m_key = key;
-            m_time = event->timestamp;
+            m_time = time;
             m_timer->start();
         }
-    } else if (event->state == KeyboardKeyState::Released) {
+    } else if (state == KeyboardKeyState::Released) {
         if (key == m_key) {
             m_timer->stop();
         }

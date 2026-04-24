@@ -37,6 +37,7 @@ class InputRedirection;
 class KeyboardLayout;
 class ModifiersChangedSpy;
 class Xkb;
+class KeyboardRepeat;
 
 class KWIN_EXPORT KeyboardInputRedirection : public QObject
 {
@@ -87,6 +88,7 @@ private:
     QList<uint32_t> m_pressedKeys;
     QList<uint32_t> m_filteredKeys;
     A11yKeyboardMonitor m_a11yKeyboardMonitor;
+    KeyboardRepeat *m_keyRepeatSpy;
 };
 
 }

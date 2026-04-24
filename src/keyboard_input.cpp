@@ -162,10 +162,9 @@ void KeyboardInputRedirection::init()
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
 
-    KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.get());
-    connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
+    m_keyRepeatSpy = new KeyboardRepeat(m_xkb.get());
+    connect(m_keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
             std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
-    m_input->installInputEventSpy(keyRepeatSpy);
 
     connect(workspace(), &QObject::destroyed, this, [this] {
         m_inited = false;
@@ -282,6 +281,8 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
     if (!m_inited) {
         return;
     }
+
+    m_keyRepeatSpy->keyboardKey(key, state, time);
 
     if (!waylandServer()->isKeyboardShortcutsInhibited()) {
         const bool ret = m_a11yKeyboardMonitor.processKey(key, state, time);
