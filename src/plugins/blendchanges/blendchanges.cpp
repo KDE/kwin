@@ -39,7 +39,7 @@ bool BlendChanges::supported()
 
 void KWin::BlendChanges::start(int delay)
 {
-    int animationDuration = animationTime(400ms);
+    const std::chrono::milliseconds animationDuration = animationTime(400ms);
 
     if (!supported() || m_state != Off) {
         return;
@@ -56,7 +56,7 @@ void KWin::BlendChanges::start(int delay)
     }
 
     QTimer::singleShot(delay, this, [this, animationDuration]() {
-        m_timeline.setDuration(std::chrono::milliseconds(animationDuration));
+        m_timeline.setDuration(animationDuration);
         effects->addRepaintFull();
         m_state = Blending;
     });

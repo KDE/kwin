@@ -1037,18 +1037,18 @@ public:
      *
      * \a defaultTime default animation time in milliseconds
      */
-    static double animationTime(const KConfigGroup &cfg, const QString &key, std::chrono::milliseconds defaultTime);
+    static std::chrono::milliseconds animationTime(const KConfigGroup &cfg, const QString &key, std::chrono::milliseconds defaultTime);
     /*!
      * \overload Use this variant if the animation time is hardcoded and not configurable
      * in the effect itself.
      */
-    static double animationTime(std::chrono::milliseconds defaultTime);
+    static std::chrono::milliseconds animationTime(std::chrono::milliseconds defaultTime);
     /*!
      * \overload Use this variant if animation time is provided through a KConfigXT generated class
      * having a property called "duration".
      */
     template<typename T>
-    int animationTime(std::chrono::milliseconds defaultDuration);
+    std::chrono::milliseconds animationTime(std::chrono::milliseconds defaultDuration);
     /*!
      * Linearly interpolates between \a x and \a y.
      *
@@ -1078,7 +1078,7 @@ public Q_SLOTS:
 };
 
 template<typename T>
-int Effect::animationTime(std::chrono::milliseconds defaultDuration)
+std::chrono::milliseconds Effect::animationTime(std::chrono::milliseconds defaultDuration)
 {
     return animationTime(T::duration() != 0 ? std::chrono::milliseconds(T::duration()) : defaultDuration);
 }

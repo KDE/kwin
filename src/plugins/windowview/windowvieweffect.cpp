@@ -147,7 +147,7 @@ int WindowViewEffect::requestedEffectChainPosition() const
 void WindowViewEffect::reconfigure(ReconfigureFlags)
 {
     WindowViewConfig::self()->read();
-    setAnimationDuration(animationTime(300ms));
+    setAnimationDuration(animationTime(300ms).count());
 
     for (ElectricBorder border : std::as_const(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);

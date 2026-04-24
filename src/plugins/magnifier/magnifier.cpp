@@ -137,7 +137,7 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data)
     const int time = m_clock.tick(data.view).count();
 
     if (m_zoom != m_targetZoom) {
-        double diff = time / animationTime(500ms);
+        double diff = double(time) / animationTime(500ms).count();
         if (m_targetZoom > m_zoom) {
             m_zoom = std::min(m_zoom * std::max(1 + diff, 1.2), m_targetZoom);
         } else {

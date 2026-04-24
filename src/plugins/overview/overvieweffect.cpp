@@ -179,7 +179,7 @@ OverviewEffect::~OverviewEffect()
 void OverviewEffect::reconfigure(ReconfigureFlags)
 {
     OverviewConfig::self()->read();
-    setAnimationDuration(animationTime(300ms));
+    setAnimationDuration(animationTime(300ms).count());
     setFilterWindows(OverviewConfig::filterWindows());
 
     for (const ElectricBorder &border : std::as_const(m_borderActivate)) {

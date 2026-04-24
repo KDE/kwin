@@ -248,9 +248,9 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
 
         const float zoomDist = std::abs(m_targetZoom - m_sourceZoom);
         if (m_targetZoom > m_zoom) {
-            m_zoom = std::min(m_zoom + ((zoomDist * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor)))), m_targetZoom);
+            m_zoom = std::min(m_zoom + ((zoomDist * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor))).count()), m_targetZoom);
         } else {
-            m_zoom = std::max(m_zoom - ((zoomDist * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor)))), m_targetZoom);
+            m_zoom = std::max(m_zoom - ((zoomDist * time) / animationTime(std::chrono::milliseconds(int(150 * m_zoomFactor))).count()), m_targetZoom);
         }
     }
 

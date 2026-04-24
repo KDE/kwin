@@ -135,10 +135,10 @@ quint64 HighlightWindowEffect::startGhostAnimation(EffectWindow *window)
 {
     quint64 &animationId = m_animations[window];
     if (animationId) {
-        retarget(animationId, FPx2(m_ghostOpacity, m_ghostOpacity), m_fadeDuration);
+        retarget(animationId, FPx2(m_ghostOpacity, m_ghostOpacity), m_fadeDuration.count());
     } else {
         const qreal startOpacity = isInitiallyHidden(window) ? 0 : 1;
-        animationId = set(window, Opacity, 0, m_fadeDuration, FPx2(m_ghostOpacity, m_ghostOpacity),
+        animationId = set(window, Opacity, 0, m_fadeDuration.count(), FPx2(m_ghostOpacity, m_ghostOpacity),
                           m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
     }
     return animationId;
@@ -148,10 +148,10 @@ quint64 HighlightWindowEffect::startHighlightAnimation(EffectWindow *window)
 {
     quint64 &animationId = m_animations[window];
     if (animationId) {
-        retarget(animationId, FPx2(1.0, 1.0), m_fadeDuration);
+        retarget(animationId, FPx2(1.0, 1.0), m_fadeDuration.count());
     } else {
         const qreal startOpacity = isInitiallyHidden(window) ? 0 : 1;
-        animationId = set(window, Opacity, 0, m_fadeDuration, FPx2(1.0, 1.0),
+        animationId = set(window, Opacity, 0, m_fadeDuration.count(), FPx2(1.0, 1.0),
                           m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
     }
     return animationId;
@@ -163,7 +163,7 @@ void HighlightWindowEffect::startRevertAnimation(EffectWindow *window)
     if (animationId) {
         const qreal startOpacity = isHighlighted(window) ? 1 : m_ghostOpacity;
         const qreal endOpacity = isInitiallyHidden(window) ? 0 : 1;
-        animate(window, Opacity, 0, m_fadeDuration, FPx2(endOpacity, endOpacity),
+        animate(window, Opacity, 0, m_fadeDuration.count(), FPx2(endOpacity, endOpacity),
                 m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
         cancel(animationId);
     }

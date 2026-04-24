@@ -48,7 +48,7 @@ void MagicLampEffect::reconfigure(ReconfigureFlags)
     const std::chrono::milliseconds d = MagicLampConfig::animationDuration() != 0
         ? std::chrono::milliseconds(MagicLampConfig::animationDuration())
         : 250ms;
-    m_duration = std::chrono::milliseconds(static_cast<int>(animationTime(d)));
+    m_duration = animationTime(d);
 }
 
 void MagicLampEffect::prePaintScreen(ScreenPrePaintData &data)
