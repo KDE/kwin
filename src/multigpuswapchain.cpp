@@ -22,6 +22,7 @@
 #include "utils/envvar.h"
 #include "vulkan/vulkan_device.h"
 #include "vulkan/vulkan_logging.h"
+#include "vulkan/vulkan_render_time_query.h"
 #include "vulkan/vulkan_swapchain.h"
 #include "vulkan/vulkan_texture.h"
 
@@ -148,8 +149,6 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyRgbBuffer(GraphicsB
 std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(GraphicsBuffer *src, const Region &damage, FileDescriptor &&sync, OutputFrame *frame,
                                                                         const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
-    // TODO add timestamp queries for this
-
     if (damage.isEmpty() && m_currentVulkanSlot) {
         return Ret{
             .buffer = m_currentVulkanSlot->buffer(),
@@ -158,8 +157,8 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         };
     }
 
-    const auto srcVk = m_copyDevice->vulkanDevice();
-    const auto srcTexture = srcVk->importBuffer(src, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+    const auto copyVk = m_copyDevice->vulkanDevice();
+    const auto srcTexture = copyVk->importBuffer(src, VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
     if (!srcTexture) {
         qCWarning(KWIN_VULKAN, "Could not import buffer for multi GPU copy!");
         m_journal.clear();
@@ -184,13 +183,18 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
     }
     m_journal.add(damage);
 
-    auto commandBuffer = srcVk->createCommandBuffer();
+    auto commandBuffer = copyVk->createCommandBuffer();
     vk::Result result = commandBuffer.begin(vk::CommandBufferBeginInfo{
         vk::CommandBufferUsageFlagBits::eOneTimeSubmit,
     });
     if (result != vk::Result::eSuccess) {
         m_journal.clear();
         return std::nullopt;
+    }
+
+    std::unique_ptr<VulkanRenderTimeQuery> query;
+    if (frame) {
+        query = VulkanRenderTimeQuery::begin(copyVk, commandBuffer, copyVk->transferQueueFamily());
     }
 
     vk::ImageMemoryBarrier2 memoryBarrier{
@@ -201,7 +205,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         vk::ImageLayout::eGeneral,
         vk::ImageLayout::eGeneral,
         vk::QueueFamilyExternal,
-        srcVk->transferQueueFamily(),
+        copyVk->transferQueueFamily(),
         m_currentVulkanSlot->texture()->handle(),
         vk::ImageSubresourceRange{
             vk::ImageAspectFlagBits::eColor,
@@ -248,7 +252,7 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
                             m_currentVulkanSlot->texture()->handle(), vk::ImageLayout::eGeneral,
                             regions, vk::Filter::eNearest);
 
-    memoryBarrier.setSrcQueueFamilyIndex(srcVk->transferQueueFamily());
+    memoryBarrier.setSrcQueueFamilyIndex(copyVk->transferQueueFamily());
     memoryBarrier.setDstQueueFamilyIndex(vk::QueueFamilyExternal);
     commandBuffer.pipelineBarrier2(vk::DependencyInfo{
         vk::DependencyFlags{},
@@ -257,12 +261,17 @@ std::optional<MultiGpuSwapchain::Ret> MultiGpuSwapchain::copyWithVulkan(Graphics
         memoryBarrier,
     });
 
+    if (query) {
+        query->end(commandBuffer);
+        frame->addRenderTimeQuery(std::move(query));
+    }
+
     result = commandBuffer.end();
     if (result != vk::Result::eSuccess) {
         m_journal.clear();
         return std::nullopt;
     }
-    auto completionFd = srcVk->submit(std::move(commandBuffer), std::move(sync));
+    auto completionFd = copyVk->submit(std::move(commandBuffer), std::move(sync));
     if (!completionFd.has_value()) {
         m_needsRecreation = true;
         return std::nullopt;

@@ -29,6 +29,7 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     , m_queueProperties(std::move(queueProperties))
     , m_transferQueue(nullptr)
     , m_commandPool(nullptr)
+    , m_deviceLimits(m_physical.getProperties().limits)
 {
     m_memoryProperties = physicalDevice.getMemoryProperties();
     getQueue();
@@ -37,6 +38,7 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
 
 VulkanDevice::~VulkanDevice()
 {
+    Q_EMIT deviceLost();
     m_transferQueue.waitIdle();
     m_importedTextures.clear();
     m_submittedCommandBuffers.clear();
@@ -361,6 +363,16 @@ const vk::raii::Queue &VulkanDevice::transferQueue() const
 uint32_t VulkanDevice::transferQueueFamily() const
 {
     return m_queueFamilyIndex;
+}
+
+std::span<const VkQueueFamilyProperties> VulkanDevice::queueFamilyProperties() const
+{
+    return m_queueProperties;
+}
+
+float VulkanDevice::nanosecondsPerQueryTick() const
+{
+    return m_deviceLimits.timestampPeriod;
 }
 
 vk::raii::CommandBuffer VulkanDevice::createCommandBuffer()

@@ -52,6 +52,9 @@ public:
 
     const vk::raii::Queue &transferQueue() const;
     uint32_t transferQueueFamily() const;
+    std::span<const VkQueueFamilyProperties> queueFamilyProperties() const;
+    float nanosecondsPerQueryTick() const;
+
     vk::raii::CommandBuffer createCommandBuffer();
     std::optional<vk::raii::Semaphore> importSemaphore(FileDescriptor &&syncFd) const;
 
@@ -113,6 +116,7 @@ private:
         FileDescriptor completionSyncFd;
     };
     std::deque<SubmittedCommand> m_submittedCommandBuffers;
+    vk::PhysicalDeviceLimits m_deviceLimits;
 
     QHash<GraphicsBuffer *, std::shared_ptr<VulkanTexture>> m_importedTextures;
     bool m_lost = false;
