@@ -544,6 +544,7 @@ int main(int argc, char *argv[])
             .outputCount = outputCount,
             .outputScale = outputScale,
             .outputSize = initialWindowSize,
+            .fullscreen = fullscreen,
         }));
         break;
     }
