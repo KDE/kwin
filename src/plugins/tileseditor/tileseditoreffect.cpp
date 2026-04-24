@@ -50,7 +50,7 @@ QVariantMap TilesEditorEffect::initialProperties(LogicalOutput *screen)
 
 void TilesEditorEffect::reconfigure(ReconfigureFlags)
 {
-    setAnimationDuration(animationTime(200ms));
+    setAnimationDuration(animationTime(200ms).count());
 }
 
 void TilesEditorEffect::toggle()

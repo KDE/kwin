@@ -80,8 +80,7 @@ void DimInactiveEffect::reconfigure(ReconfigureFlags flags)
         ? m_activeWindow->group()
         : nullptr;
 
-    m_fullScreenTransition.timeLine.setDuration(
-        std::chrono::milliseconds(static_cast<int>(animationTime(250ms))));
+    m_fullScreenTransition.timeLine.setDuration(animationTime(250ms));
 
     effects->addRepaintFull();
 }
@@ -208,8 +207,7 @@ bool DimInactiveEffect::canDimWindow(const EffectWindow *w) const
 void DimInactiveEffect::scheduleInTransition(EffectWindow *w)
 {
     TimeLine &timeLine = m_transitions[w];
-    timeLine.setDuration(
-        std::chrono::milliseconds(static_cast<int>(animationTime(160ms))));
+    timeLine.setDuration(animationTime(160ms));
     if (timeLine.done()) {
         // If the Out animation is still active, then we're truncating
         // duration of the timeline(from 250ms to 160ms). If the timeline
@@ -243,8 +241,7 @@ void DimInactiveEffect::scheduleGroupInTransition(EffectWindow *w)
 void DimInactiveEffect::scheduleOutTransition(EffectWindow *w)
 {
     TimeLine &timeLine = m_transitions[w];
-    timeLine.setDuration(
-        std::chrono::milliseconds(static_cast<int>(animationTime(250ms))));
+    timeLine.setDuration(animationTime(250ms));
     if (timeLine.done()) {
         timeLine.reset();
     }

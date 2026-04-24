@@ -99,7 +99,7 @@ void ScreenTransformEffect::addScreen(LogicalOutput *screen)
         auto &state = m_states[screen];
         state.m_oldTransform = screen->transform();
         state.m_oldGeometry = screen->geometry();
-        state.m_timeLine.setDuration(std::chrono::milliseconds(long(animationTime(250ms))));
+        state.m_timeLine.setDuration(animationTime(250ms));
         state.m_timeLine.setEasingCurve(QEasingCurve::InOutCubic);
         state.m_angle = transformAngle(changeSet->transform.value(), state.m_oldTransform);
         state.m_prev.texture = std::move(texture);

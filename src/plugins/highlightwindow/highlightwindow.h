@@ -50,7 +50,7 @@ private:
     QList<EffectWindow *> m_highlightedWindows;
     QHash<EffectWindow *, quint64> m_animations;
     QEasingCurve m_easingCurve;
-    int m_fadeDuration;
+    std::chrono::milliseconds m_fadeDuration;
     float m_ghostOpacity = 0;
 };
 

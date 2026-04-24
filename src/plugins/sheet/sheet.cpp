@@ -41,10 +41,9 @@ void SheetEffect::reconfigure(ReconfigureFlags flags)
     SheetConfig::self()->read();
 
     // TODO: Rename AnimationTime config key to Duration.
-    const double d = animationTime(SheetConfig::animationTime() != 0
-                                       ? std::chrono::milliseconds(SheetConfig::animationTime())
-                                       : 300ms);
-    m_duration = std::chrono::milliseconds(int(d));
+    m_duration = animationTime(SheetConfig::animationTime() != 0
+                                   ? std::chrono::milliseconds(SheetConfig::animationTime())
+                                   : 300ms);
 }
 
 void SheetEffect::prePaintWindow(RenderView *view, EffectWindow *w, WindowPrePaintData &data)
