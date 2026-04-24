@@ -493,7 +493,7 @@ quint64 ScriptedEffect::animate(KWin::EffectWindow *window, KWin::AnimationEffec
     } else if (curve == GaussianCurve) {
         qec.setCustomType(qecGaussian);
     }
-    return AnimationEffect::animate(window, attribute, metaData, ms, fpx2FromScriptValue(to), qec,
+    return AnimationEffect::animate(window, attribute, metaData, std::chrono::milliseconds(ms), fpx2FromScriptValue(to), qec,
                                     delay, fpx2FromScriptValue(from), fullScreen, keepAlive, findShader(shaderId));
 }
 
@@ -512,7 +512,7 @@ quint64 ScriptedEffect::set(KWin::EffectWindow *window, KWin::AnimationEffect::A
     } else if (curve == GaussianCurve) {
         qec.setCustomType(qecGaussian);
     }
-    return AnimationEffect::set(window, attribute, metaData, ms, fpx2FromScriptValue(to), qec,
+    return AnimationEffect::set(window, attribute, metaData, std::chrono::milliseconds(ms), fpx2FromScriptValue(to), qec,
                                 delay, fpx2FromScriptValue(from), fullScreen, keepAlive, findShader(shaderId));
 }
 
@@ -523,7 +523,7 @@ QJSValue ScriptedEffect::set(const QJSValue &object)
 
 bool ScriptedEffect::retarget(quint64 animationId, const QJSValue &newTarget, int newRemainingTime)
 {
-    return AnimationEffect::retarget(animationId, fpx2FromScriptValue(newTarget), newRemainingTime);
+    return AnimationEffect::retarget(animationId, fpx2FromScriptValue(newTarget), newRemainingTime != -1 ? std::make_optional(std::chrono::milliseconds(newRemainingTime)) : std::nullopt);
 }
 
 bool ScriptedEffect::retarget(const QList<quint64> &animationIds, const QJSValue &newTarget, int newRemainingTime)

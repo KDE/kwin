@@ -212,7 +212,7 @@ void AnimationEffect::validate(Attribute a, uint &meta, FPx2 *from, FPx2 *to, co
     }
 }
 
-quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive, GLShader *shader)
+quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, std::chrono::milliseconds duration, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive, GLShader *shader)
 {
     const bool waitAtSource = from.isValid();
     validate(a, meta, &from, &to, w);
@@ -258,7 +258,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
 
     animation.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_MINIMIZE | EffectWindow::PAINT_DISABLED_BY_DESKTOP | EffectWindow::PAINT_DISABLED);
     animation.timeLine.setDirection(TimeLine::Forward);
-    animation.timeLine.setDuration(std::chrono::milliseconds(ms));
+    animation.timeLine.setDuration(duration);
     animation.timeLine.setEasingCurve(curve);
     animation.timeLine.setSourceRedirectMode(TimeLine::RedirectMode::Strict);
     animation.timeLine.setTargetRedirectMode(TimeLine::RedirectMode::Relaxed);
@@ -287,7 +287,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
     return ret_id;
 }
 
-bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime)
+bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, std::optional<std::chrono::milliseconds> newRemainingTime)
 {
     if (animationId == d->m_justEndedAnimation) {
         return false; // this is just ending, do not try to retarget it
@@ -303,7 +303,9 @@ bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemai
             anim->to.set(newTarget[0], newTarget[1]);
 
             anim->timeLine.setDirection(TimeLine::Forward);
-            anim->timeLine.setDuration(std::chrono::milliseconds(newRemainingTime));
+            if (newRemainingTime) {
+                anim->timeLine.setDuration(*newRemainingTime);
+            }
             anim->timeLine.reset();
 
             if (anim->attribute == CrossFadePrevious) {
