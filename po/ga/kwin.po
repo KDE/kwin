@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-03-17 15:04+0000\n"
+"PO-Revision-Date: 2026-04-15 09:20+0100\n"
 "Last-Translator: charlotte <altronic25@protonmail.com>\n"
 "Language-Team: Irish\n"
 "Language: ga\n"
@@ -66,12 +66,12 @@ msgstr "Níl GLX/OpenGL ar fáil."
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
 msgid "Timestamp"
-msgstr ""
+msgstr "Stampa ama"
 
 #: debug_console.cpp:89 debug_console.cpp:94
 #, kde-format
 msgid "Timestamp (µsec)"
-msgstr ""
+msgstr "Stampa ama (µsec)"
 
 #: debug_console.cpp:101
 #, kde-format
@@ -89,25 +89,25 @@ msgstr ""
 #, kde-format
 msgctxt "A mouse button"
 msgid "Middle"
-msgstr ""
+msgstr "Lár"
 
 #: debug_console.cpp:107
 #, kde-format
 msgctxt "A mouse button"
 msgid "Back"
-msgstr ""
+msgstr "Ar Ais"
 
 #: debug_console.cpp:109
 #, kde-format
 msgctxt "A mouse button"
 msgid "Forward"
-msgstr ""
+msgstr "Ar Aghaidh"
 
 #: debug_console.cpp:111
 #, kde-format
 msgctxt "A mouse button"
 msgid "Task"
-msgstr ""
+msgstr "Tasc"
 
 #: debug_console.cpp:113
 #, kde-format
