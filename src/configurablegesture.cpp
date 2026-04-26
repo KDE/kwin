@@ -38,7 +38,6 @@ QAction *ConfigurableGesture::makeAutoCountingTriggerAction()
 {
     auto action = new QAction(this);
     ++m_count;
-    connect(action, &QAction::triggered, this, &ConfigurableGesture::triggered);
     connect(action, &QObject::destroyed, this, [this] {
         --m_count;
     });

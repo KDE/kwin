@@ -506,15 +506,25 @@ bool GlobalShortcutsManager::activateGesture(ActiveTriggerInfo &active, Configur
         return false;
     }
 
-    auto assignNewTriggerAction = [this, &active, gesture, &trigger]() -> QAction * {
+    enum class Supports {
+        LiveUpdates,
+        TriggeredOnly,
+    };
+
+    auto assignNewTriggerAction = [this, &active, gesture, &trigger](Supports sup) -> QAction * {
         active.configurableGesture = gesture;
         active.gestureAction.reset(gesture->makeAutoCountingTriggerAction());
 
-        if (active.configurableGesture->isAutoCreated()) {
+        // Gestures with live updates should be handled via progress/triggered/cancelled/released
+        // signals. For all others, invoke the shortcut action directly. This way, gesture slots
+        // don't have to consider the special case where the gesture was triggered without prior progress.
+        if (sup == Supports::LiveUpdates && !active.configurableGesture->isAutoCreated()) {
+            connect(active.gestureAction.get(), &QAction::triggered, gesture, &ConfigurableGesture::triggered);
+        } else {
             auto sendTriggered = [this, trigger]() {
                 m_kglobalAccel->triggerEvent(trigger, ShortcutTriggerEvent::Triggered);
             };
-            connect(active.configurableGesture, &ConfigurableGesture::triggered, active.gestureAction.get(), sendTriggered);
+            connect(active.gestureAction.get(), &QAction::triggered, active.gestureAction.get(), sendTriggered);
         }
         return active.gestureAction.get();
     };
@@ -528,25 +538,29 @@ bool GlobalShortcutsManager::activateGesture(ActiveTriggerInfo &active, Configur
 
     if (const auto *g = trigger.asTouchpadSwipeGesture()) {
         if (const auto direction = toKWinSwipeDirection(g->direction); direction.has_value()) {
-            registerTouchpadSwipe(*direction, g->fingerCount, assignNewTriggerAction(), emitProgress, emitCancelled);
+            registerTouchpadSwipe(*direction, g->fingerCount, assignNewTriggerAction(Supports::LiveUpdates), emitProgress, emitCancelled);
             return true;
         }
     } else if (const auto *g = trigger.asTouchscreenSwipeGesture()) {
         if (const auto direction = toKWinSwipeDirection(g->direction); direction.has_value()) {
-            registerTouchscreenSwipe(*direction, g->fingerCount, assignNewTriggerAction(), emitProgress, emitCancelled);
+            registerTouchscreenSwipe(*direction, g->fingerCount, assignNewTriggerAction(Supports::LiveUpdates), emitProgress, emitCancelled);
             return true;
         }
     } else if (const auto *g = trigger.asTouchpadPinchGesture()) {
         if (const auto direction = toKWinPinchDirection(g->direction); direction.has_value()) {
-            registerTouchpadPinch(*direction, g->fingerCount, assignNewTriggerAction(), emitProgress, emitCancelled);
+            registerTouchpadPinch(*direction, g->fingerCount, assignNewTriggerAction(Supports::LiveUpdates), emitProgress, emitCancelled);
             return true;
         }
     } /* else if (const auto *g = trigger.asTouchscreenPinchGesture()) { // pinch not currently implemented for touchscreens?
         if (const auto direction = toKWinPinchDirection(g->direction); direction.has_value()) {
-            registerTouchscreenPinch(*direction, g->fingerCount, assignNewTriggerAction(), emitProgress, emitCancelled);
+            registerTouchscreenPinch(*direction, g->fingerCount, assignNewTriggerAction(Supports::LiveUpdates), emitProgress, emitCancelled);
             return true;
         }
     }*/
+    else if (const auto *g = trigger.asLineShapeGesture()) {
+        registerStroke(Qt::NoModifier, g->points, assignNewTriggerAction(Supports::TriggeredOnly));
+        return true;
+    }
     // TODO: support more gesture types (incl. hold gestures, screen edge gestures, line shape gestures)
 
     return false;
