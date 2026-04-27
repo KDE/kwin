@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-24 02:42+0000\n"
-"PO-Revision-Date: 2026-02-03 23:54+0100\n"
+"PO-Revision-Date: 2026-04-26 21:31+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -151,10 +151,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "색 프로필에 TRC 태그가 없음"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "\"%1\" ICC 프로필을 열 수 없음"
+msgstr "\"%1\" ICC 프로필의 톤 커브를 반전할 수 없음"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -3571,8 +3570,8 @@ msgid ""
 "the mouse: use the window menu instead, activated using the %1 keyboard "
 "shortcut."
 msgstr ""
-"창의 경계선이 보이지 않게 하도록 설정했습니다.\n"
-"경계선이 없을 때는 마우스를 사용해서 경계선을 다시 보이게 할 수 없습니다. 키"
+"창의 테두리가 보이지 않게 하도록 설정했습니다.\n"
+"테두리가 없을 때는 마우스를 사용해서 테두리를 다시 보이게 할 수 없습니다. 키"
 "보드 단축키 %1을(를) 사용해서 창 메뉴를 호출하십시오."
 
 #: useractions.cpp:169
