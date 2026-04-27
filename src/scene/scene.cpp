@@ -14,6 +14,7 @@
 #include "scene/item.h"
 #include "scene/itemrenderer.h"
 #include "scene/surfaceitem.h"
+#include "wayland/surface.h"
 
 namespace KWin
 {
@@ -712,6 +713,19 @@ void Scene::releaseResources(Item *item)
     const auto childItems = item->m_childItems;
     for (Item *childItem : childItems) {
         releaseResources(childItem);
+    }
+}
+
+void Scene::addFifoBarrier(SurfaceInterface *surface)
+{
+    m_fifoBarriers.append(surface);
+}
+
+void Scene::clearFifoBarriers()
+{
+    const auto barriers = std::exchange(m_fifoBarriers, {});
+    for (const auto &barrier : barriers) {
+        barrier->clearFifoBarrier();
     }
 }
 

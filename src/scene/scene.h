@@ -25,6 +25,7 @@ class OutputFrame;
 class Item;
 class SurfaceItem;
 class Window;
+class SurfaceInterface;
 
 class KWIN_EXPORT RenderView : public QObject
 {
@@ -251,6 +252,9 @@ public:
     virtual void frame(SceneView *delegate, OutputFrame *frame) = 0;
     virtual double desiredHdrHeadroom() const = 0;
 
+    void addFifoBarrier(SurfaceInterface *surface);
+    void clearFifoBarriers();
+
 Q_SIGNALS:
     void viewAdded(SceneView *view);
     void viewRemoved(RenderView *delegate);
@@ -260,6 +264,7 @@ protected:
 
     std::unique_ptr<ItemRenderer> m_renderer;
     QList<RenderView *> m_views;
+    QList<SurfaceInterface *> m_fifoBarriers;
     Rect m_geometry;
 };
 

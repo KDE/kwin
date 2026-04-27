@@ -893,6 +893,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         output->repairPresentation();
     }
 
+    scene->clearFifoBarriers();
+
     const bool forceRepaintForBrightness = (frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting()) > 0.001)
         || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001);
     const bool forceRepaintForDimming = frame->dimmingFactor() && std::abs(*frame->dimmingFactor() - output->currentDimming()) > 0.001;
