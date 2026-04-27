@@ -80,7 +80,8 @@ void StrokeEffect::deactivate(int timeout)
         m_isStrokeActive = false;
         Q_EMIT strokeActiveChanged();
     }
-    m_shutdownTimer->start(timeout);
+    realDeactivate();
+    // m_shutdownTimer->start(timeout);
 }
 
 void StrokeEffect::realDeactivate()
