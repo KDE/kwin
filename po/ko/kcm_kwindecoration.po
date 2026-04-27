@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2023-07-23 21:08+0200\n"
+"PO-Revision-Date: 2026-04-26 21:33+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -246,12 +246,12 @@ msgstr "%1 테마 편집"
 #: utils.cpp:25
 #, kde-format
 msgid "No Borders"
-msgstr "경계선 없음"
+msgstr "테두리 없음"
 
 #: utils.cpp:26
 #, kde-format
 msgid "No Side Borders"
-msgstr "옆쪽 경계선 없음"
+msgstr "옆쪽 테두리 없음"
 
 #: utils.cpp:27
 #, kde-format

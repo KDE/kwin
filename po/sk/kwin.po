@@ -1383,7 +1383,7 @@ msgstr "Spustí sedenie bez podpory globálnych skratiek."
 #: main_wayland.cpp:406 main_x11.cpp:418
 #, kde-format
 msgid "Disable KActivities integration."
-msgstr "Zakázať integrácoi KActivities."
+msgstr "Zakázať integráciu KActivities."
 
 #: main_wayland.cpp:411
 #, kde-format
