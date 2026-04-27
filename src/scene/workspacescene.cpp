@@ -752,6 +752,7 @@ void WorkspaceScene::createStackingOrder()
             continue;
         }
         if (windowItem->isVisible()) {
+            windowItem->window()->ref();
             stacking_order.append(windowItem);
         }
     }
@@ -759,6 +760,9 @@ void WorkspaceScene::createStackingOrder()
 
 void WorkspaceScene::clearStackingOrder()
 {
+    for (WindowItem *windowItem : std::as_const(stacking_order)) {
+        windowItem->window()->unref();
+    }
     stacking_order.clear();
 }
 
