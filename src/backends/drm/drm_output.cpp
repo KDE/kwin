@@ -440,7 +440,7 @@ std::shared_ptr<ColorDescription> DrmOutput::createColorDescription(const State 
     if ((!next.brightnessDevice && next.allowSdrSoftwareBrightness) || effectiveHdr) {
         brightnessFactor = next.currentBrightness.value_or(next.brightnessSetting);
     }
-    if (!next.brightnessDevice || next.brightnessDevice->usesDdcCi()) {
+    if (!next.brightnessDevice || next.brightnessDevice->usesDdcCi() || effectiveHdr) {
         brightnessFactor *= next.currentDimming;
     }
 
