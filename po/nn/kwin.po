@@ -4397,7 +4397,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgctxt "@label"
-#~ msgid "Compositing"
-#~ msgstr "Samansetjing"

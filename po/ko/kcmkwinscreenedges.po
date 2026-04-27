@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# SPDX-FileCopyrightText: 2009, 2010, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Shinjo Park <kde@peremen.name>
+# SPDX-FileCopyrightText: 2009, 2010, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2026 Shinjo Park <kde@peremen.name>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-20 00:45+0000\n"
-"PO-Revision-Date: 2024-12-10 01:15+0100\n"
+"PO-Revision-Date: 2026-04-26 21:26+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.08.1\n"
 
 #: main.cpp:152 touch.cpp:119
 #, kde-format
@@ -89,14 +89,12 @@ msgstr "대체 창 전환 사용/사용 안 함"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, fuzzy, kde-format
-#| msgid ""
-#| "You can trigger an action by pushing the mouse cursor against the "
-#| "corresponding screen edge or corner."
+#, kde-format
 msgid ""
 "You can trigger an action by pushing the mouse pointer against the "
 "corresponding screen edge or corner."
-msgstr "동작을 실행하려면 화면의 원하는 쪽 경계나 모서리로 마우스를 미십시오."
+msgstr ""
+"동작을 실행하려면 화면의 원하는 쪽 경계나 모서리로 마우스 포인터를 미십시오."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -160,14 +158,11 @@ msgstr "화면의"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
-#, fuzzy, kde-format
-#| msgid ""
-#| "Change desktop when the mouse cursor is pushed against the edge of the "
-#| "screen"
+#, kde-format
 msgid ""
 "Change desktop when the mouse pointer is pushed against the edge of the "
 "screen"
-msgstr "화면 경계선 쪽으로 마우스 커서를 밀 때 바탕 화면 전환"
+msgstr "화면 경계선 쪽으로 마우스 포인터를 밀 때 바탕 화면 전환"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
@@ -196,14 +191,11 @@ msgstr "항상 사용함"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
-#, fuzzy, kde-format
-#| msgid ""
-#| "Amount of time required for the mouse cursor to be pushed against the "
-#| "edge of the screen before the action is triggered"
+#, kde-format
 msgid ""
 "Amount of time required for the mouse pointer to be pushed against the edge "
 "of the screen before the action is triggered"
-msgstr "마우스 커서를 다음 시간 이상 밀고 있으면 동작이 활성화됩니다"
+msgstr "마우스 포인터를 다음 시간 이상 밀고 있으면 동작이 활성화됩니다"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -240,13 +232,7 @@ msgstr "모서리 배리어(&C):"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
-#, fuzzy, kde-format
-#| msgid ""
-#| "Here you can enable or disable the virtual corner barrier between "
-#| "screens. The barrier prevents the cursor from moving to another screen "
-#| "when it is already touching a screen corner. This makes it easier to "
-#| "trigger user interface elements like maximized windows' close buttons "
-#| "when using multiple screens."
+#, kde-format
 msgid ""
 "Here you can enable or disable the virtual corner barrier between screens. "
 "The barrier prevents the pointer from moving to another screen when it is "
@@ -255,18 +241,16 @@ msgid ""
 "screens."
 msgstr ""
 "화면 간 가상 모서리 배리어를 활성화하거나 비활성화할 수 있습니다. 화면 모서리"
-"에 커서가 닿았을 때 다른 화면으로 커서가 이동하는 것을 방지합니다. 화면 여러 "
-"개를 사용할 때 최대화된 창의 닫기 단추 등 사용자 인터페이스 구성 요소에 쉽게 "
-"접근할 수 있습니다."
+"에 포인터가 닿았을 때 다른 화면으로 포인터가 이동하는 것을 방지합니다. 화면 "
+"여러 개를 사용할 때 최대화된 창의 닫기 단추 등 사용자 인터페이스 구성 요소에 "
+"쉽게 접근할 수 있습니다."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Prevents cursors from crossing at screen corners."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents the pointer from crossing at screen corners."
-msgstr "커서가 화면 모서리에서 교차하는 것을 방지합니다."
+msgstr "포인터가 화면 모서리에서 건너가는 것을 방지합니다."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
@@ -291,12 +275,10 @@ msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Additional distance cursor needs to travel to cross screen edges."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance the pointer needs to travel to cross screen edges."
-msgstr "화면 경계를 넘어갈 때 필요한 추가 커서 거리입니다."
+msgstr "화면 경계를 넘어갈 때 필요한 추가 포인터 거리입니다."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-24 00:45+0000\n"
-"PO-Revision-Date: 2026-02-03 23:54+0100\n"
+"PO-Revision-Date: 2026-04-26 21:31+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -151,10 +151,9 @@ msgid "Color profile is missing TRC tags"
 msgstr "색 프로필에 TRC 태그가 없음"
 
 #: core/iccprofile.cpp:534
-#, fuzzy, kde-format
-#| msgid "Failed to open ICC profile \"%1\""
+#, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
-msgstr "\"%1\" ICC 프로필을 열 수 없음"
+msgstr "\"%1\" ICC 프로필의 톤 커브를 반전할 수 없음"
 
 #: debug_console.cpp:86
 #, kde-format
@@ -1262,7 +1261,7 @@ msgstr "시간"
 #: helpers/dialoghelper/dialoghelper.cpp:46
 #, kde-format
 msgid "The message to show (fullscreen, noborder)"
-msgstr ""
+msgstr "표시할 메시지(전체 화면, 테두리 없음)"
 
 #: helpers/dialoghelper/dialoghelper.cpp:48 helpers/killer/killer.cpp:146
 #, kde-format
@@ -1276,12 +1275,7 @@ msgid "This helper utility is not supposed to be called directly."
 msgstr "이 도우미 유틸리티는 직접 호출되지 않습니다."
 
 #: helpers/dialoghelper/dialoghelper.cpp:79
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1290,8 +1284,7 @@ msgid ""
 msgstr ""
 "창을 전체 화면 모드로 보이도록 설정했습니다.\n"
 "앱에서 전체 화면 모드를 제어할 수 없을 때에는 마우스를 사용해서 전체 화면 모"
-"드에서 벗어날 수 없습니다. 키보드 단축키 %1을(를) 사용해서 창 메뉴를 호출하십"
-"시오."
+"드에서 벗어날 수 없습니다. 키보드 단축키 %1을(를) 사용하십시오."
 
 #: helpers/dialoghelper/dialoghelper.cpp:85
 #, kde-format
@@ -1307,12 +1300,7 @@ msgstr ""
 "시오."
 
 #: helpers/dialoghelper/dialoghelper.cpp:93
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window in fullscreen mode.\n"
-#| "If the application itself does not have an option to turn the fullscreen "
-#| "mode off you will not be able to disable it again using the mouse: use "
-#| "the window menu instead, activated using the %1 keyboard shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
 "If the application itself does not have an option to turn the fullscreen "
@@ -1320,31 +1308,24 @@ msgid ""
 msgstr ""
 "창을 전체 화면 모드로 보이도록 설정했습니다.\n"
 "앱에서 전체 화면 모드를 제어할 수 없을 때에는 마우스를 사용해서 전체 화면 모"
-"드에서 벗어날 수 없습니다. 키보드 단축키 %1을(를) 사용해서 창 메뉴를 호출하십"
-"시오."
+"드에서 벗어날 수 없습니다."
 
 #: helpers/dialoghelper/dialoghelper.cpp:98
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "@action:button Un-fullscreen"
 msgid "Undo Fullscreen"
-msgstr "전체 화면"
+msgstr "전체 화면 실행 취소"
 
 #: helpers/dialoghelper/dialoghelper.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse: use the %1 keyboard shortcut instead."
 msgstr ""
-"창의 경계선이 보이지 않게 하도록 설정했습니다.\n"
-"경계선이 없을 때는 마우스를 사용해서 경계선을 다시 보이게 할 수 없습니다. 키"
-"보드 단축키 %1을(를) 사용해서 창 메뉴를 호출하십시오."
+"창의 테두리가 보이지 않게 하도록 설정했습니다.\n"
+"테두리가 없을 때는 마우스를 사용해서 테두리를 다시 보이게 할 수 없습니다. 키"
+"보드 단축키 %1을(를) 사용하십시오."
 
 #: helpers/dialoghelper/dialoghelper.cpp:106
 #, kde-format
@@ -1354,37 +1335,30 @@ msgid ""
 "the mouse: use the window menu instead, activated using the %1 keyboard "
 "shortcut."
 msgstr ""
-"창의 경계선이 보이지 않게 하도록 설정했습니다.\n"
-"경계선이 없을 때는 마우스를 사용해서 경계선을 다시 보이게 할 수 없습니다. 키"
+"창의 테두리가 보이지 않게 하도록 설정했습니다.\n"
+"테두리가 없을 때는 마우스를 사용해서 테두리를 다시 보이게 할 수 없습니다. 키"
 "보드 단축키 %1을(를) 사용해서 창 메뉴를 호출하십시오."
 
 #: helpers/dialoghelper/dialoghelper.cpp:112
-#, fuzzy, kde-format
-#| msgid ""
-#| "You have selected to show a window without its border.\n"
-#| "Without the border, you will not be able to enable the border again using "
-#| "the mouse: use the window menu instead, activated using the %1 keyboard "
-#| "shortcut."
+#, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
 "Without the border, you will not be able to enable the border again using "
 "the mouse."
 msgstr ""
-"창의 경계선이 보이지 않게 하도록 설정했습니다.\n"
-"경계선이 없을 때는 마우스를 사용해서 경계선을 다시 보이게 할 수 없습니다. 키"
-"보드 단축키 %1을(를) 사용해서 창 메뉴를 호출하십시오."
+"창의 테두리가 보이지 않게 하도록 설정했습니다.\n"
+"테두리가 없을 때는 마우스를 사용해서 테두리를 다시 보이게 할 수 없습니다."
 
 #: helpers/dialoghelper/dialoghelper.cpp:116
-#, fuzzy, kde-format
-#| msgid "&No Border"
+#, kde-format
 msgctxt "@action:button"
 msgid "Restore Border"
-msgstr "테두리 없음(&N)"
+msgstr "테두리 복원"
 
 #: helpers/dialoghelper/dialoghelper.cpp:133
 #, kde-format
 msgid "Do not show again"
-msgstr ""
+msgstr "다시 보지 않기"
 
 #: helpers/killer/killdialog.cpp:37
 #, kde-kuit-format
@@ -1413,11 +1387,9 @@ msgstr ""
 "면 자식 창도 종료됩니다. 저장하지 않은 데이터는 손실됩니다.</emphasis></para>"
 
 #: helpers/killer/killdialog.cpp:66
-#, fuzzy, kde-format
-#| msgctxt "@action:button Terminate app"
-#| msgid "&Terminate %1"
+#, kde-format
 msgid "Terminating %1…"
-msgstr "%1 강제 종료(&T)"
+msgstr "%1 강제 종료 중…"
 
 #: helpers/killer/killdialog.cpp:69
 #, kde-format
@@ -1454,7 +1426,7 @@ msgstr "응답 없음"
 #: helpers/killer/killdialog.ui:53
 #, kde-format
 msgid "&Details"
-msgstr ""
+msgstr "자세히(&D)"
 
 #: helpers/killer/killer.cpp:134
 #, kde-format
@@ -1922,17 +1894,15 @@ msgstr[0] "%1초"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on inactivity:"
+#, kde-format
 msgid "Hide pointer on inactivity:"
-msgstr "활동 중단 시 커서 숨기기:"
+msgstr "활동 중단 시 포인터 숨기기:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide pointer on typing"
-msgstr "입력할 때 커서 숨기기"
+msgstr "입력할 때 포인터 숨기기"
 
 #: plugins/invert/invert.cpp:44
 #, kde-format
@@ -2473,10 +2443,9 @@ msgid "Add Virtual Desktop"
 msgstr "가상 바탕 화면 추가"
 
 #: plugins/overview/qml/DesktopBar.qml:262
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgid "Virtual Desktop limit reached"
-msgstr "가상 바탕 화면 추가"
+msgstr "가상 바탕 화면 한계에 도달함"
 
 #: plugins/overview/qml/Main.qml:427
 #, kde-format
@@ -2828,10 +2797,9 @@ msgstr "메뉴:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "전체 화면 창"
+msgstr "전체 화면 창 제외"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -3146,18 +3114,15 @@ msgstr "창 태그 문자열 일치 형식"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "열린 창 없음"
+msgstr "부모 창 있음"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
-#, fuzzy, kde-format
-#| msgid "Set window type to"
+#, kde-format
 msgid "Has parent window match type"
-msgstr "다음으로 창 종류 설정"
+msgstr "부모 창 일치 형식이 있음"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89
@@ -3611,17 +3576,15 @@ msgstr "티어링 규칙 종류"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast"
-msgstr "스크린캐스트에서 숨기기(&H)"
+msgstr "스크린캐스트에서 숨기기"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, fuzzy, kde-format
-#| msgid "&Hide from Screencast"
+#, kde-format
 msgid "Hide from screencast rule type"
-msgstr "스크린캐스트에서 숨기기(&H)"
+msgstr "스크린캐스트 규칙 형식에서 숨기기"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3889,10 +3852,9 @@ msgid "Maximize Window Horizontally"
 msgstr "창 수평 최대화"
 
 #: useractions.cpp:832
-#, fuzzy, kde-format
-#| msgid "Resize Window"
+#, kde-format
 msgid "Restore Window"
-msgstr "창 크기 조정"
+msgstr "창 복원"
 
 #: useractions.cpp:834
 #, kde-format
@@ -4272,7 +4234,7 @@ msgstr "설정 변경으로 모든 출력 비활성화는 허용되지 않음"
 #: wayland/outputmanagement_v2.cpp:632
 #, kde-format
 msgid "%1 cannot mirror itself"
-msgstr ""
+msgstr "%1이(가) 자기 자신을 복제할 수 없음"
 
 #: wayland/outputmanagement_v2.cpp:639
 #, kde-format
@@ -4285,22 +4247,19 @@ msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "화면 주사율이 0 Hz인 사용자 정의 모드를 추가할 수 없음"
 
 #: wayland/outputmanagement_v2.cpp:654
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too negative (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
-msgstr "출력 %s의 위치가 너무 낮음(%d, %d)"
+msgstr "출력 %1의 위치가 너무 낮음(%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:657
-#, fuzzy, kde-format
-#| msgid "Position of enabled output %s is negative (%d, %d)"
+#, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
-msgstr "활성화된 출력 %s의 위치가 너무 낮음(%d, %d)"
+msgstr "활성화된 출력 %1의 위치가 너무 낮음(%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:661
-#, fuzzy, kde-format
-#| msgid "Position of output %s is way too large (%d, %d)"
+#, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
-msgstr "출력 %s의 위치가 너무 큼(%d, %d)"
+msgstr "출력 %1의 위치가 너무 큼(%2, %3)"
 
 #: wayland/outputmanagement_v2.cpp:678
 #, kde-format
@@ -4308,10 +4267,9 @@ msgid "The driver rejected the output configuration"
 msgstr "드라이버에서 출력 설정을 거부함"
 
 #: wayland/outputmanagement_v2.cpp:681
-#, fuzzy, kde-format
-#| msgid "The Alt key is now active."
+#, kde-format
 msgid "The session is not active"
-msgstr "Alt 키가 활성화되었습니다."
+msgstr "세션이 활성화되어 있지 않음"
 
 #: window.cpp:3132
 #, kde-format
