@@ -593,9 +593,16 @@ void GlobalShortcutsManager::initDefaultGestures()
             {KGlobalShortcutTriggerTypes::TouchscreenPinchGesture{.fingerCount = fingers, .direction = direction}},
         };
     };
+    auto makePoints = [](QList<QPointF> points) -> QSet<KGlobalShortcutTrigger> {
+        return {
+            {KGlobalShortcutTriggerTypes::LineShapeGesture{.points = std::move(points)}},
+        };
+    };
 
-    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Cycle Overview", makeSwipes(3, SwipeDir::Up));
-    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Cycle Overview Opposite", makeSwipes(3, SwipeDir::Down));
+    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Cycle Overview",
+                                               makeSwipes(3, SwipeDir::Up) + makePoints({{0.0, 1.0}, {0.0, 0.0}}));
+    m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Cycle Overview Opposite",
+                                               makeSwipes(3, SwipeDir::Down) + makePoints({{0.0, 0.0}, {0.0, 1.0}}));
     m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Switch One Desktop Down", makeSwipes(4, SwipeDir::Up));
     m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Switch One Desktop Up", makeSwipes(4, SwipeDir::Down));
     m_kglobalAccel->setDefaultShortcutTriggers("kwin", "Switch One Desktop to the Left", makeSwipes(4, SwipeDir::Right));
