@@ -69,7 +69,7 @@ float scaledFillRatio(vec2 pixelOffset, vec2 splitOrigin, vec2 splitDirection, v
     vec2 perpendicularDirection = vec2(-splitDirection.y, splitDirection.x);
     float splitSide = sign(dot(offsetFromSplit, perpendicularDirection));
     float scaledDistance = splitSide * length(distanceFromSplit * scale);
-    return smoothstep(-sqrt(2) / 2, sqrt(2) / 2, scaledDistance);
+    return smoothstep(-sqrt(2.0) / 2.0, sqrt(2.0) / 2.0, scaledDistance);
 }
 
 vec3 sampleLinear(in vec2 uv)
@@ -80,7 +80,7 @@ vec3 sampleLinear(in vec2 uv)
 void main()
 {
     vec2 textureSize = vec2(textureWidth, textureHeight);
-    vec2 pixelSize = 1 / textureSize;
+    vec2 pixelSize = vec2(1.0) / textureSize;
     vec2 scale = vec2(zoomLevel);
     vec2 pixelOffset = (fract(texcoord0 * textureSize) - 0.5);
     vec2 pixelCoord = texcoord0 - pixelOffset * pixelSize;
@@ -131,8 +131,8 @@ void main()
         // Stronger weight is given to the imaginary line going straight through the middle of this 2x2 corner
         //
         // Weaker gradients win.
-        float upwardGradient = (4 * colorDistance(B1, C2)) + colorDistance(B2, C3) + colorDistance(C1, D2) + colorDistance(A1, B2) + colorDistance(B0, C1);
-        float downwardGradient = (4 * colorDistance(C1, B2)) + colorDistance(C2, B3) + colorDistance(D1, C2) + colorDistance(B1, A2) + colorDistance(C0, B1);
+        float upwardGradient = (4.0 * colorDistance(B1, C2)) + colorDistance(B2, C3) + colorDistance(C1, D2) + colorDistance(A1, B2) + colorDistance(B0, C1);
+        float downwardGradient = (4.0 * colorDistance(C1, B2)) + colorDistance(C2, B3) + colorDistance(D1, C2) + colorDistance(B1, A2) + colorDistance(C0, B1);
 
         bool downwardIsDominant = (DOMINANT_DIRECTION_THRESHOLD * downwardGradient) < upwardGradient;
 
@@ -156,8 +156,8 @@ void main()
         // Stronger weight is given to the imaginary line going straight through the middle of this 2x2 corner
         //
         // Weaker gradients win.
-        float downwardGradient = (4 * colorDistance(B2, C3)) + colorDistance(B3, C4) + colorDistance(C2, D3) + colorDistance(A2, B3) + colorDistance(B1, C2);
-        float upwardGradient = (4 * colorDistance(C2, B3)) + colorDistance(C3, B4) + colorDistance(D2, C3) + colorDistance(B2, A3) + colorDistance(C1, B2);
+        float downwardGradient = (4.0 * colorDistance(B2, C3)) + colorDistance(B3, C4) + colorDistance(C2, D3) + colorDistance(A2, B3) + colorDistance(B1, C2);
+        float upwardGradient = (4.0 * colorDistance(C2, B3)) + colorDistance(C3, B4) + colorDistance(D2, C3) + colorDistance(B2, A3) + colorDistance(C1, B2);
 
         bool downwardIsDominant = (DOMINANT_DIRECTION_THRESHOLD * downwardGradient) < upwardGradient;
 
@@ -181,8 +181,8 @@ void main()
         // Stronger weight is given to the imaginary line going straight through the middle of this 2x2 corner
         //
         // Weaker gradients win.
-        float downwardGradient = (4 * colorDistance(D2, C1)) + colorDistance(C2, D3) + colorDistance(D1, E2) + colorDistance(B1, C2) + colorDistance(C0, D1);
-        float upwardGradient = (4 * colorDistance(D1, C2)) + colorDistance(D2, C3) + colorDistance(E1, D2) + colorDistance(C1, B2) + colorDistance(D0, C1);
+        float downwardGradient = (4.0 * colorDistance(D2, C1)) + colorDistance(C2, D3) + colorDistance(D1, E2) + colorDistance(B1, C2) + colorDistance(C0, D1);
+        float upwardGradient = (4.0 * colorDistance(D1, C2)) + colorDistance(D2, C3) + colorDistance(E1, D2) + colorDistance(C1, B2) + colorDistance(D0, C1);
 
         bool downwardIsDominant = (DOMINANT_DIRECTION_THRESHOLD * downwardGradient) < upwardGradient;
 
@@ -206,8 +206,8 @@ void main()
         // Stronger weight is given to the imaginary line going straight through the middle of this 2x2 corner
         //
         // Weaker gradients win.
-        float downwardGradient = (4 * colorDistance(C2, D3)) + colorDistance(C3, D4) + colorDistance(D2, E3) + colorDistance(B2, C3) + colorDistance(C1, D2);
-        float upwardGradient = (4 * colorDistance(D2, C3)) + colorDistance(D3, C4) + colorDistance(E2, D3) + colorDistance(C2, B3) + colorDistance(D1, C2);
+        float downwardGradient = (4.0 * colorDistance(C2, D3)) + colorDistance(C3, D4) + colorDistance(D2, E3) + colorDistance(B2, C3) + colorDistance(C1, D2);
+        float upwardGradient = (4.0 * colorDistance(D2, C3)) + colorDistance(D3, C4) + colorDistance(E2, D3) + colorDistance(C2, B3) + colorDistance(D1, C2);
 
         bool upwardwardIsDominant = (DOMINANT_DIRECTION_THRESHOLD * upwardGradient) < downwardGradient;
 
@@ -234,12 +234,12 @@ void main()
         // and filling each side of the split with different colors, or if we should
         // fall back on nearest neighbour
         bool splitDiagonally = dominantCorner || (!bottomLeftBlend && !topRightBlend && !isCorner);
-        vec2 origin = vec2(0, -1 / sqrt(2));
+        vec2 origin = vec2(0, -1.0 / sqrt(2.0));
         vec2 direction = vec2(-1, 1);
         if (splitDiagonally) {
-            float isShallow = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != B3 && C3 != B3) ? 1 : 0;
-            float isSteep = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != D1 && D1 != D2) ? 1 : 0;
-            origin = vec2(0, -0.5 * (1 - 0.5 * isShallow));
+            float isShallow = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != B3 && C3 != B3) ? 1.0 : 0.0;
+            float isSteep = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != D1 && D1 != D2) ? 1.0 : 0.0;
+            origin = vec2(0, -0.5 * (1.0 - 0.5 * isShallow));
             direction.x -= isShallow;
             direction.y += isSteep;
         }
@@ -263,12 +263,12 @@ void main()
         // and filling each side of the split with different colors, or if we should
         // fall back on nearest neighbour
         bool splitDiagonally = dominantCorner || (!bottomRightBlend && !topLeftBlend && !isCorner);
-        vec2 origin = vec2(1 / sqrt(2), 0);
+        vec2 origin = vec2(1.0 / sqrt(2.0), 0);
         vec2 direction = vec2(-1, -1);
         if (splitDiagonally) {
-            float isShallow = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != D3 && D2 != D3) ? 1 : 0;
-            float isSteep = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != B1 && C1 != B1) ? 1 : 0;
-            origin = vec2(0.5 * (1 - 0.5 * isShallow), 0);
+            float isShallow = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != D3 && D2 != D3) ? 1.0 : 0.0;
+            float isSteep = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != B1 && C1 != B1) ? 1.0 : 0.0;
+            origin = vec2(0.5 * (1.0 - 0.5 * isShallow), 0);
             direction.x -= isSteep;
             direction.y -= isShallow;
         }
@@ -292,12 +292,12 @@ void main()
         // and filling each side of the split with different colors, or if we should
         // fall back on nearest neighbour
         bool splitDiagonally = dominantCorner || (!topLeftBlend && !bottomRightBlend && !isCorner);
-        vec2 origin = vec2(-1 / sqrt(2), 0);
+        vec2 origin = vec2(-1.0 / sqrt(2.0), 0);
         vec2 direction = vec2(1, 1);
         if (splitDiagonally) {
-            float isShallow = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != B1 && B2 != B1) ? 1 : 0;
-            float isSteep = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != D3 && C3 != D3) ? 1 : 0;
-            origin = vec2(-0.5 * (1 - 0.5 * isShallow), 0);
+            float isShallow = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != B1 && B2 != B1) ? 1.0 : 0.0;
+            float isSteep = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != D3 && C3 != D3) ? 1.0 : 0.0;
+            origin = vec2(-0.5 * (1.0 - 0.5 * isShallow), 0);
             direction.x += isSteep;
             direction.y += isShallow;
         }
@@ -321,12 +321,12 @@ void main()
         // and filling each side of the split with different colors, or if we should
         // fall back on nearest neighbour
         bool splitDiagonally = dominantCorner || (!topRightBlend && !bottomLeftBlend && !isCorner);
-        vec2 origin = vec2(0, 1 / sqrt(2));
+        vec2 origin = vec2(0, 1.0 / sqrt(2.0));
         vec2 direction = vec2(1, -1);
         if (splitDiagonally) {
-            float isShallow = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != D1 && C1 != D1) ? 1 : 0;
-            float isSteep = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != B3 && B3 != B2) ? 1 : 0;
-            origin = vec2(0, 0.5 * (1 - 0.5 * isShallow));
+            float isShallow = ((STEEPNESS_THRESHOLD * shallow <= steep) && C2 != D1 && C1 != D1) ? 1.0 : 0.0;
+            float isSteep = ((STEEPNESS_THRESHOLD * steep <= shallow) && C2 != B3 && B3 != B2) ? 1.0 : 0.0;
+            origin = vec2(0, 0.5 * (1.0 - 0.5 * isShallow));
             direction.x += isShallow;
             direction.y -= isSteep;
         }
