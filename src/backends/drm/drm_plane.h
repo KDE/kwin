@@ -17,6 +17,7 @@
 #include <QMap>
 #include <QPoint>
 #include <QSize>
+#include <deque>
 #include <memory>
 #include <qobjectdefs.h>
 
@@ -112,7 +113,7 @@ public:
 
 private:
     std::shared_ptr<DrmFramebuffer> m_current;
-    QList<std::shared_ptr<DrmFramebufferData>> m_lastBuffers;
+    std::deque<std::shared_ptr<DrmFramebufferData>> m_lastBuffers;
 
     FormatModifierMap m_supportedFormats;
     FormatModifierMap m_lowBandwidthFormats;

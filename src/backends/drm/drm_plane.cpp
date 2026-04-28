@@ -247,9 +247,11 @@ void DrmPlane::setCurrentBuffer(const std::shared_ptr<DrmFramebuffer> &b)
     }
 
     m_current = b;
-    if (b && !m_lastBuffers.contains(b->data())) {
-        m_lastBuffers.prepend(b->data());
+    if (b) {
+        m_lastBuffers.push_front(b->data());
         m_lastBuffers.resize(4);
+    } else {
+        m_lastBuffers.clear();
     }
 }
 
