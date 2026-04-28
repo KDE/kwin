@@ -163,6 +163,8 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     m_pixelGridZoom = ZoomConfig::pixelGridZoom();
     // Track moving of the mouse.
     m_mouseTracking = MouseTrackingType(ZoomConfig::mouseTracking());
+    // Pixel gap between edge of screen and push boundary when using MouseTrackingPush
+    m_pushEdgeThreshold = ZoomConfig::pushEdgeThreshold();
 
     if (ZoomConfig::enableFocusTracking()) {
         if (m_targetZoom > 1) {
@@ -278,16 +280,17 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         // touching an edge of the screen moves the zoom-area in that direction.
         const int x = trackPoint.x() * m_zoom - m_prevPoint.x() * (m_zoom - 1.0);
         const int y = trackPoint.y() * m_zoom - m_prevPoint.y() * (m_zoom - 1.0);
-        const int threshold = 4;
-        const RectF currScreen = effects->screenAt(QPoint(x, y))->geometry();
+        const RectF currentScreen = effects->screenAt(QPoint(x, y))->geometry();
+        double horizontalThreshold = std::round(currentScreen.width() / 2.0 * std::min(1.0, std::max(0.0, m_pushEdgeThreshold)));
+        double verticalThreshold = std::round(currentScreen.height() / 2.0 * std::min(1.0, std::max(0.0, m_pushEdgeThreshold)));
 
         // bounds of the screen the cursor's on
-        const int screenTop = currScreen.top();
-        const int screenLeft = currScreen.left();
-        const int screenRight = currScreen.right();
-        const int screenBottom = currScreen.bottom();
-        const int screenCenterX = currScreen.center().x();
-        const int screenCenterY = currScreen.center().y();
+        const int screenTop = currentScreen.top();
+        const int screenLeft = currentScreen.left();
+        const int screenRight = currentScreen.right();
+        const int screenBottom = currentScreen.bottom();
+        const int screenCenterX = currentScreen.center().x();
+        const int screenCenterY = currentScreen.center().y();
 
         // figure out whether we have adjacent displays in all 4 directions
         // We pan within the screen in directions where there are no adjacent screens.
@@ -297,15 +300,15 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         const bool adjacentBottom = screenExistsAt(QPoint(screenCenterX, screenBottom + 1));
 
         m_xMove = m_yMove = 0;
-        if (x < screenLeft + threshold && !adjacentLeft) {
-            m_xMove = (x - threshold - screenLeft) / m_zoom;
-        } else if (x > screenRight - threshold && !adjacentRight) {
-            m_xMove = (x + threshold - screenRight) / m_zoom;
+        if (x < screenLeft + horizontalThreshold && !adjacentLeft) {
+            m_xMove = (x - horizontalThreshold - screenLeft) / m_zoom;
+        } else if (x > screenRight - horizontalThreshold && !adjacentRight) {
+            m_xMove = (x + horizontalThreshold - screenRight) / m_zoom;
         }
-        if (y < screenTop + threshold && !adjacentTop) {
-            m_yMove = (y - threshold - screenTop) / m_zoom;
-        } else if (y > screenBottom - threshold && !adjacentBottom) {
-            m_yMove = (y + threshold - screenBottom) / m_zoom;
+        if (y < screenTop + verticalThreshold && !adjacentTop) {
+            m_yMove = (y - verticalThreshold - screenTop) / m_zoom;
+        } else if (y > screenBottom - verticalThreshold && !adjacentBottom) {
+            m_yMove = (y + verticalThreshold - screenBottom) / m_zoom;
         }
         if (m_xMove) {
             m_prevPoint.setX(m_prevPoint.x() + m_xMove);

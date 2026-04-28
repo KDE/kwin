@@ -117,6 +117,7 @@ private:
     int m_yMove = 0;
     int m_xTranslation = 0;
     int m_yTranslation = 0;
+    double m_pushEdgeThreshold = 0.01;
     double m_moveFactor = 20.0;
     AnimationClock m_clock;
     std::map<LogicalOutput *, OffscreenData> m_offscreenData;
