@@ -42,7 +42,8 @@ public:
 
     void setInitialState(QObject *object) override
     {
-        m_view = std::make_unique<QuickSceneView>(m_effect, m_screen);
+        const bool alpha = object->property("hasAlphaChannel").toBool();
+        m_view = std::make_unique<QuickSceneView>(m_effect, m_screen, alpha);
         m_view->setAutomaticRepaint(false);
         m_view->setRootItem(qobject_cast<QQuickItem *>(object));
     }
@@ -93,8 +94,8 @@ bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, LogicalOutput *sc
     return it != views.end() && item->window() == it->second->window();
 }
 
-QuickSceneView::QuickSceneView(QuickSceneEffect *effect, LogicalOutput *screen)
-    : OffscreenQuickView(ExportMode::Texture, false)
+QuickSceneView::QuickSceneView(QuickSceneEffect *effect, LogicalOutput *screen, bool alpha)
+    : OffscreenQuickView(ExportMode::Texture, alpha)
     , m_effect(effect)
     , m_screen(screen)
 {
