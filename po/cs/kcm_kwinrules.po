@@ -60,7 +60,7 @@ msgstr "Regulární výraz"
 #: optionsmodel.cpp:205
 #, kde-format
 msgid "Match"
-msgstr ""
+msgstr "Odpovídá"
 
 #: optionsmodel.cpp:210
 #, kde-format

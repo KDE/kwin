@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-24 00:45+0000\n"
+"POT-Creation-Date: 2026-04-28 00:46+0000\n"
 "PO-Revision-Date: 2026-04-24 09:47+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1818,7 +1818,7 @@ msgstr "Per grup de finestres"
 msgid "Fullscreen windows"
 msgstr "Finestres a pantalla completa"
 
-#: plugins/eis/eisinputcapturemanager.cpp:130
+#: plugins/eis/eisinputcapturemanager.cpp:139
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
@@ -4236,42 +4236,42 @@ msgstr "Activa la finestra (%1)"
 msgid "unknown"
 msgstr "desconegut"
 
-#: virtualdesktops.cpp:774 virtualdesktops.cpp:853
+#: virtualdesktops.cpp:697 virtualdesktops.cpp:762
 #, kde-format
 msgid "Desktop %1"
 msgstr "Escriptori %1"
 
-#: virtualdesktops.cpp:860
+#: virtualdesktops.cpp:769
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Canvia a l'escriptori següent"
 
-#: virtualdesktops.cpp:861
+#: virtualdesktops.cpp:770
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Canvia a l'escriptori anterior"
 
-#: virtualdesktops.cpp:864
+#: virtualdesktops.cpp:773
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Canvia un escriptori a la dreta"
 
-#: virtualdesktops.cpp:865
+#: virtualdesktops.cpp:774
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Canvia un escriptori a l'esquerra"
 
-#: virtualdesktops.cpp:866
+#: virtualdesktops.cpp:775
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Canvia un escriptori amunt"
 
-#: virtualdesktops.cpp:867
+#: virtualdesktops.cpp:776
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Canvia un escriptori avall"
 
-#: virtualdesktops.cpp:968
+#: virtualdesktops.cpp:877
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Canvia a l'escriptori %1"
@@ -4335,7 +4335,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(No respon)"
 
-#: workspace.cpp:1778
+#: workspace.cpp:1774
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

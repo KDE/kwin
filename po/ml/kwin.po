@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-24 00:45+0000\n"
+"POT-Creation-Date: 2026-04-28 00:46+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -1754,7 +1754,7 @@ msgstr "ജാലകം നീക്കുക"
 msgid "Fullscreen windows"
 msgstr "&സ്ക്രീന്‍ പൂര്‍ണ്ണവലിപ്പത്തിലാക്കുക"
 
-#: plugins/eis/eisinputcapturemanager.cpp:130
+#: plugins/eis/eisinputcapturemanager.cpp:139
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
@@ -4210,42 +4210,42 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: virtualdesktops.cpp:774 virtualdesktops.cpp:853
+#: virtualdesktops.cpp:697 virtualdesktops.cpp:762
 #, kde-format
 msgid "Desktop %1"
 msgstr "പണിയിടം %1"
 
-#: virtualdesktops.cpp:860
+#: virtualdesktops.cpp:769
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "അടുത്ത പണിയിടത്തിലേയ്ക്കു് മാറുക"
 
-#: virtualdesktops.cpp:861
+#: virtualdesktops.cpp:770
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "മുമ്പുള്ള പണിയിടത്തിലേയ്ക്ക് മാറുക"
 
-#: virtualdesktops.cpp:864
+#: virtualdesktops.cpp:773
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "ഒരു പണിയിടം വലത്തേയ്ക്കു് മാറുക"
 
-#: virtualdesktops.cpp:865
+#: virtualdesktops.cpp:774
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "ഒരു പണിയിടം ഇടത്തേയ്ക്കു് മാറുക"
 
-#: virtualdesktops.cpp:866
+#: virtualdesktops.cpp:775
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "ഒരു പണിയിടം മുകളിലേയ്ക്കു് മാറുക"
 
-#: virtualdesktops.cpp:867
+#: virtualdesktops.cpp:776
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "ഒരു പണിയിടം താഴോട്ടു് മാറുക"
 
-#: virtualdesktops.cpp:968
+#: virtualdesktops.cpp:877
 #, fuzzy, kde-format
 msgid "Switch to Desktop %1"
 msgstr "പണിയിടം 1-ലേക്കു് മാറുക"
@@ -4306,7 +4306,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1778
+#: workspace.cpp:1774
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

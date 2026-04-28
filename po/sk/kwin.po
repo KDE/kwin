@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-24 00:45+0000\n"
+"POT-Creation-Date: 2026-04-28 00:46+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -1808,7 +1808,7 @@ msgstr "Podľa skupiny okna"
 msgid "Fullscreen windows"
 msgstr "Okná na celú obrazovku"
 
-#: plugins/eis/eisinputcapturemanager.cpp:130
+#: plugins/eis/eisinputcapturemanager.cpp:139
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
@@ -4223,42 +4223,42 @@ msgstr "Aktivovať okno (%1)"
 msgid "unknown"
 msgstr "neznáme"
 
-#: virtualdesktops.cpp:774 virtualdesktops.cpp:853
+#: virtualdesktops.cpp:697 virtualdesktops.cpp:762
 #, kde-format
 msgid "Desktop %1"
 msgstr "Plocha %1"
 
-#: virtualdesktops.cpp:860
+#: virtualdesktops.cpp:769
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Prepnúť na nasledujúcu plochu"
 
-#: virtualdesktops.cpp:861
+#: virtualdesktops.cpp:770
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Prepnúť na predchádzajúcu plochu"
 
-#: virtualdesktops.cpp:864
+#: virtualdesktops.cpp:773
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Prepnúť o jednu plochu doprava"
 
-#: virtualdesktops.cpp:865
+#: virtualdesktops.cpp:774
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Prepnúť o jednu plochu doľava"
 
-#: virtualdesktops.cpp:866
+#: virtualdesktops.cpp:775
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Prepnúť o jednu plochu hore"
 
-#: virtualdesktops.cpp:867
+#: virtualdesktops.cpp:776
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Prepnúť o jednu plochu dolu"
 
-#: virtualdesktops.cpp:968
+#: virtualdesktops.cpp:877
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Prepnúť na plochu %1"
@@ -4320,7 +4320,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Neodpovedá)"
 
-#: workspace.cpp:1778
+#: workspace.cpp:1774
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

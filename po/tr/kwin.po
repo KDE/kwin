@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-24 00:45+0000\n"
+"POT-Creation-Date: 2026-04-28 00:46+0000\n"
 "PO-Revision-Date: 2026-04-24 16:12+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -1800,7 +1800,7 @@ msgstr "Pencere grubuna göre"
 msgid "Fullscreen windows"
 msgstr "Tam ekran pencereler"
 
-#: plugins/eis/eisinputcapturemanager.cpp:130
+#: plugins/eis/eisinputcapturemanager.cpp:139
 #, kde-format
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
@@ -4207,42 +4207,42 @@ msgstr "Pencereyi Etkinleştir (%1)"
 msgid "unknown"
 msgstr "bilinmiyor"
 
-#: virtualdesktops.cpp:774 virtualdesktops.cpp:853
+#: virtualdesktops.cpp:697 virtualdesktops.cpp:762
 #, kde-format
 msgid "Desktop %1"
 msgstr "Masaüstü %1"
 
-#: virtualdesktops.cpp:860
+#: virtualdesktops.cpp:769
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Sonraki Masaüstüne Geç"
 
-#: virtualdesktops.cpp:861
+#: virtualdesktops.cpp:770
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Önceki Masaüstüne Geç"
 
-#: virtualdesktops.cpp:864
+#: virtualdesktops.cpp:773
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Bir Sağ Masaüstüne Geç"
 
-#: virtualdesktops.cpp:865
+#: virtualdesktops.cpp:774
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Bir Sol Masaüstüne Geç"
 
-#: virtualdesktops.cpp:866
+#: virtualdesktops.cpp:775
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Bir Üst Masaüstüne Geç"
 
-#: virtualdesktops.cpp:867
+#: virtualdesktops.cpp:776
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Bir Alt Masaüstüne Geç"
 
-#: virtualdesktops.cpp:968
+#: virtualdesktops.cpp:877
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "%1. Masaüstüne Geç"
@@ -4305,7 +4305,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Yanıt Vermiyor)"
 
-#: workspace.cpp:1778
+#: workspace.cpp:1774
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
