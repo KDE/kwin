@@ -164,7 +164,6 @@ public:
         return cap_suffix;
     }
 
-    QPointF gravityAdjustment(xcb_gravity_t gravity) const;
     const QPointF calculateGravitation(bool invert) const;
 
     void NETMoveResize(qreal x_root, qreal y_root, NET::Direction direction, xcb_button_t button);
@@ -331,7 +330,7 @@ private:
 
     DecorationMode preferredDecorationMode() const;
     void updateDecoration(bool check_workspace_pos, bool force = false);
-    void createDecoration();
+    void createDecoration(bool force);
     void destroyDecoration();
 
     void checkOutput();

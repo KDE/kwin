@@ -940,29 +940,98 @@ DecorationMode X11Window::preferredDecorationMode() const
     Q_UNREACHABLE();
 }
 
+static QPointF decorationGravityAdjustement(const QMarginsF &margins, xcb_gravity_t gravity)
+{
+    qreal dx = 0;
+    qreal dy = 0;
+
+    // dx, dy specify how the client window moves to make space for the frame.
+    // In general we have to compute the reference point and from that figure
+    // out how much we need to shift the client, however given that we ignore
+    // the border width attribute and the extents of the server-side decoration
+    // are known in advance, we can simplify the math quite a bit and express
+    // the required window gravity adjustment in terms of border sizes.
+    switch (gravity) {
+    case XCB_GRAVITY_NORTH_WEST: // move down right
+    default:
+        dx = Xcb::nativeRound(margins.left());
+        dy = Xcb::nativeRound(margins.top());
+        break;
+    case XCB_GRAVITY_NORTH: // move right
+        dx = 0;
+        dy = Xcb::nativeRound(margins.top());
+        break;
+    case XCB_GRAVITY_NORTH_EAST: // move down left
+        dx = -Xcb::nativeRound(margins.right());
+        dy = Xcb::nativeRound(margins.top());
+        break;
+    case XCB_GRAVITY_WEST: // move right
+        dx = Xcb::nativeRound(margins.left());
+        dy = 0;
+        break;
+    case XCB_GRAVITY_CENTER:
+        dx = Xcb::fromXNative((int(Xcb::toXNative(margins.left())) - int(Xcb::toXNative(margins.right()))) / 2);
+        dy = Xcb::fromXNative((int(Xcb::toXNative(margins.top())) - int(Xcb::toXNative(margins.bottom()))) / 2);
+        break;
+    case XCB_GRAVITY_STATIC: // don't move
+        dx = 0;
+        dy = 0;
+        break;
+    case XCB_GRAVITY_EAST: // move left
+        dx = -Xcb::nativeRound(margins.right());
+        dy = 0;
+        break;
+    case XCB_GRAVITY_SOUTH_WEST: // move up right
+        dx = Xcb::nativeRound(margins.left());
+        dy = -Xcb::nativeRound(margins.bottom());
+        break;
+    case XCB_GRAVITY_SOUTH: // move up
+        dx = 0;
+        dy = -Xcb::nativeRound(margins.bottom());
+        break;
+    case XCB_GRAVITY_SOUTH_EAST: // move up left
+        dx = -Xcb::nativeRound(margins.right());
+        dy = -Xcb::nativeRound(margins.bottom());
+        break;
+    }
+
+    return QPointF(dx, dy);
+}
+
 void X11Window::updateDecoration(bool check_workspace_pos, bool force)
 {
-    const bool wantsDecoration = preferredDecorationMode() == DecorationMode::Server;
+    const QSizeF previousClientSize = frameSizeToClientSize(clientSize());
 
-    if (!force && (isDecorated() == wantsDecoration)) {
-        return;
+    const QMarginsF previousFrameMargins = frameMargins();
+    const QPointF previousClientAdjustement = decorationGravityAdjustement(previousFrameMargins, m_geometryHints.windowGravity());
+    const QPointF previousFrameAdjustment = previousClientAdjustement
+        - QPointF(Xcb::nativeRound(previousFrameMargins.left()),
+                  Xcb::nativeRound(previousFrameMargins.top()));
+
+    switch (preferredDecorationMode()) {
+    case DecorationMode::None:
+    case DecorationMode::Client:
+        destroyDecoration();
+        break;
+    case DecorationMode::Server:
+        createDecoration(force);
+        break;
     }
-    RectF oldgeom = moveResizeGeometry();
+
+    const QMargins currentFrameMargins = frameMargins();
+    const QPointF currentGravityAdjustment = decorationGravityAdjustement(currentFrameMargins, m_geometryHints.windowGravity());
+    const QPointF currentFrameAdjustement = currentGravityAdjustment
+        - QPointF(Xcb::nativeRound(currentFrameMargins.left()),
+                  Xcb::nativeRound(currentFrameMargins.top()));
+
+    const RectF geometry(pos() - previousFrameAdjustment + currentFrameAdjustement, clientSizeToFrameSize(previousClientSize));
+
     blockGeometryUpdates(true);
-    if (force) {
-        destroyDecoration();
-    }
-    if (wantsDecoration) {
-        createDecoration();
-    } else {
-        destroyDecoration();
-    }
-    updateShadow();
+    moveResize(geometry);
     if (check_workspace_pos) {
-        checkWorkspacePosition(oldgeom);
+        checkWorkspacePosition();
     }
     blockGeometryUpdates(false);
-    updateFrameExtents();
 }
 
 void X11Window::invalidateDecoration()
@@ -970,8 +1039,12 @@ void X11Window::invalidateDecoration()
     updateDecoration(true, true);
 }
 
-void X11Window::createDecoration()
+void X11Window::createDecoration(bool force)
 {
+    if (decoration() && !force) {
+        return;
+    }
+
     std::shared_ptr<KDecoration3::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
     if (decoration) {
         connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
@@ -990,18 +1063,21 @@ void X11Window::createDecoration()
             }
         });
     }
-    setDecoration(decoration);
 
-    moveResize(RectF(calculateGravitation(false), clientSizeToFrameSize(clientSize())));
+    setDecoration(decoration);
+    updateShadow();
+    updateFrameExtents();
 }
 
 void X11Window::destroyDecoration()
 {
-    if (isDecorated()) {
-        QPointF grav = calculateGravitation(true);
-        setDecoration(nullptr);
-        moveResize(RectF(grav, clientSizeToFrameSize(clientSize())));
+    if (!decoration()) {
+        return;
     }
+
+    setDecoration(nullptr);
+    updateShadow();
+    updateFrameExtents();
 }
 
 void X11Window::detectNoBorder()
@@ -3124,67 +3200,9 @@ void X11Window::setAllowCommits(bool allow)
                         atoms->xwayland_allow_commits, XCB_ATOM_CARDINAL, 32, 1, &value);
 }
 
-QPointF X11Window::gravityAdjustment(xcb_gravity_t gravity) const
-{
-    qreal dx = 0;
-    qreal dy = 0;
-
-    // dx, dy specify how the client window moves to make space for the frame.
-    // In general we have to compute the reference point and from that figure
-    // out how much we need to shift the client, however given that we ignore
-    // the border width attribute and the extents of the server-side decoration
-    // are known in advance, we can simplify the math quite a bit and express
-    // the required window gravity adjustment in terms of border sizes.
-    switch (gravity) {
-    case XCB_GRAVITY_NORTH_WEST: // move down right
-    default:
-        dx = Xcb::nativeRound(borderLeft());
-        dy = Xcb::nativeRound(borderTop());
-        break;
-    case XCB_GRAVITY_NORTH: // move right
-        dx = 0;
-        dy = Xcb::nativeRound(borderTop());
-        break;
-    case XCB_GRAVITY_NORTH_EAST: // move down left
-        dx = -Xcb::nativeRound(borderRight());
-        dy = Xcb::nativeRound(borderTop());
-        break;
-    case XCB_GRAVITY_WEST: // move right
-        dx = Xcb::nativeRound(borderLeft());
-        dy = 0;
-        break;
-    case XCB_GRAVITY_CENTER:
-        dx = Xcb::fromXNative((int(Xcb::toXNative(borderLeft())) - int(Xcb::toXNative(borderRight()))) / 2);
-        dy = Xcb::fromXNative((int(Xcb::toXNative(borderTop())) - int(Xcb::toXNative(borderBottom()))) / 2);
-        break;
-    case XCB_GRAVITY_STATIC: // don't move
-        dx = 0;
-        dy = 0;
-        break;
-    case XCB_GRAVITY_EAST: // move left
-        dx = -Xcb::nativeRound(borderRight());
-        dy = 0;
-        break;
-    case XCB_GRAVITY_SOUTH_WEST: // move up right
-        dx = Xcb::nativeRound(borderLeft());
-        dy = -Xcb::nativeRound(borderBottom());
-        break;
-    case XCB_GRAVITY_SOUTH: // move up
-        dx = 0;
-        dy = -Xcb::nativeRound(borderBottom());
-        break;
-    case XCB_GRAVITY_SOUTH_EAST: // move up left
-        dx = -Xcb::nativeRound(borderRight());
-        dy = -Xcb::nativeRound(borderBottom());
-        break;
-    }
-
-    return QPointF(dx, dy);
-}
-
 const QPointF X11Window::calculateGravitation(bool invert) const
 {
-    const QPointF adjustment = gravityAdjustment(m_geometryHints.windowGravity());
+    const QPointF adjustment = decorationGravityAdjustement(frameMargins(), m_geometryHints.windowGravity());
 
     // translate from client movement to frame movement
     const qreal dx = adjustment.x() - Xcb::nativeRound(borderLeft());
@@ -3253,14 +3271,14 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
     }
     if (value_mask & configurePositionMask) {
         QPointF new_pos = framePosToClientPos(pos());
-        new_pos -= gravityAdjustment(xcb_gravity_t(gravity));
+        new_pos -= decorationGravityAdjustement(frameMargins(), xcb_gravity_t(gravity));
         if (value_mask & XCB_CONFIG_WINDOW_X) {
             new_pos.setX(rx);
         }
         if (value_mask & XCB_CONFIG_WINDOW_Y) {
             new_pos.setY(ry);
         }
-        new_pos += gravityAdjustment(xcb_gravity_t(gravity));
+        new_pos += decorationGravityAdjustement(frameMargins(), xcb_gravity_t(gravity));
         new_pos = clientPosToFramePos(new_pos);
 
         qreal nw = clientSize().width();
