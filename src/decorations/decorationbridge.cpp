@@ -94,6 +94,15 @@ bool DecorationBridge::hasPlugin()
     return !bridge->m_noPlugin && bridge->m_factory;
 }
 
+QSet<KDecoration3::Style> DecorationBridge::supportedStyles()
+{
+    const DecorationBridge *bridge = workspace()->decorationBridge();
+    if (!bridge) {
+        return {};
+    }
+    return bridge->m_supportedStyles;
+}
+
 void DecorationBridge::init()
 {
     m_noPlugin = readNoPlugin();
@@ -186,6 +195,7 @@ void DecorationBridge::loadMetaData(const QJsonObject &object)
     m_recommendedBorderSize = QString();
     m_theme = QString();
     m_defaultTheme = QString();
+    m_supportedStyles = {KDecoration3::Style::Titled};
 
     // load the settings
     const QJsonValue decoSettings = object.value(s_pluginName);
@@ -194,9 +204,18 @@ void DecorationBridge::loadMetaData(const QJsonObject &object)
         return;
     }
     const QVariantMap decoSettingsMap = decoSettings.toObject().toVariantMap();
-    auto recBorderSizeIt = decoSettingsMap.find(QStringLiteral("recommendedBorderSize"));
-    if (recBorderSizeIt != decoSettingsMap.end()) {
-        m_recommendedBorderSize = recBorderSizeIt.value().toString();
+    if (auto it = decoSettingsMap.find(QStringLiteral("recommendedBorderSize")); it != decoSettingsMap.end()) {
+        m_recommendedBorderSize = it.value().toString();
+    }
+    if (auto it = decoSettingsMap.find(QStringLiteral("styles")); it != decoSettingsMap.end()) {
+        const QStringList styles = it->toStringList();
+        for (const QString &style : styles) {
+            if (style == QLatin1StringView("titled")) {
+                m_supportedStyles.insert(KDecoration3::Style::Titled);
+            } else if (style == QLatin1StringView("shadow")) {
+                m_supportedStyles.insert(KDecoration3::Style::Shadow);
+            }
+        }
     }
     findTheme(decoSettingsMap);
 
@@ -227,7 +246,7 @@ std::unique_ptr<KDecoration3::DecorationSettingsPrivate> DecorationBridge::setti
     return std::unique_ptr<SettingsImpl>(new SettingsImpl(parent));
 }
 
-KDecoration3::Decoration *DecorationBridge::createDecoration(Window *window)
+KDecoration3::Decoration *DecorationBridge::createDecoration(Window *window, KDecoration3::Style style)
 {
     if (m_noPlugin) {
         return nullptr;
@@ -235,7 +254,10 @@ KDecoration3::Decoration *DecorationBridge::createDecoration(Window *window)
     if (!m_factory) {
         return nullptr;
     }
-    QVariantMap args({{QStringLiteral("bridge"), QVariant::fromValue(this)}});
+    QVariantMap args({
+        {QStringLiteral("bridge"), QVariant::fromValue(this)},
+        {QStringLiteral("style"), QVariant::fromValue(style)},
+    });
 
     if (!m_theme.isEmpty()) {
         args.insert(QStringLiteral("theme"), m_theme);

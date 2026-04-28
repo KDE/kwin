@@ -607,6 +607,7 @@ void X11Window::shapeNotifyEvent(xcb_shape_notify_event_t *e)
     case XCB_SHAPE_SK_BOUNDING:
     case XCB_SHAPE_SK_CLIP:
         updateShapeRegion();
+        updateDecoration(false);
         break;
     case XCB_SHAPE_SK_INPUT:
         break;

@@ -430,6 +430,10 @@ enum class DecorationPolicy {
      * Force the server side decoration mode.
      */
     Server,
+    /**
+     * Force the server side drop shadow + maybe an outline.
+     */
+    Shadow,
 };
 
 } // namespace

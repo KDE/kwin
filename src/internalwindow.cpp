@@ -279,7 +279,7 @@ void InternalWindow::setDecorationPolicy(DecorationPolicy policy)
 
 void InternalWindow::createDecoration(const RectF &oldGeometry)
 {
-    std::shared_ptr<KDecoration3::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
+    std::shared_ptr<KDecoration3::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this, KDecoration3::Style::Titled));
     if (decoration) {
         decoration->apply(decoration->nextState()->clone());
         connect(decoration.get(), &KDecoration3::Decoration::nextStateChanged, this, [this](auto state) {
@@ -314,6 +314,7 @@ DecorationMode InternalWindow::preferredDecorationMode() const
     case DecorationPolicy::Server:
         return DecorationMode::Server;
     case DecorationPolicy::ClientPreference:
+    case DecorationPolicy::Shadow:
         if (m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup)) {
             return DecorationMode::Client;
         } else {

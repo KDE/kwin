@@ -1571,6 +1571,12 @@ DecorationMode XdgToplevelWindow::preferredDecorationMode() const
         return DecorationMode::None;
     case DecorationPolicy::Server:
         return DecorationMode::Server;
+    case DecorationPolicy::Shadow:
+        if (Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::Shadow)) {
+            return DecorationMode::Shadow;
+        } else {
+            return DecorationMode::Client;
+        }
     case DecorationPolicy::ClientPreference:
         if (m_xdgDecoration) {
             switch (m_xdgDecoration->preferredMode()) {
@@ -1621,14 +1627,20 @@ void XdgToplevelWindow::configureDecoration()
         clearDecoration();
         break;
     case DecorationMode::Server:
-        if (!m_nextDecoration) {
-            m_nextDecoration.reset(Workspace::self()->decorationBridge()->createDecoration(this));
+    case DecorationMode::Shadow: {
+        const auto style = decorationMode == DecorationMode::Server
+            ? KDecoration3::Style::Titled
+            : KDecoration3::Style::Shadow;
+
+        if (!m_nextDecoration || m_nextDecoration->style() != style) {
+            m_nextDecoration.reset(Workspace::self()->decorationBridge()->createDecoration(this, style));
             if (m_nextDecoration) {
                 connect(m_nextDecoration.get(), &KDecoration3::Decoration::nextStateChanged, this, &XdgToplevelWindow::processDecorationState);
                 m_nextDecorationState = m_nextDecoration->nextState()->clone();
             }
         }
         break;
+    }
     }
 
     // All decoration updates are synchronized to toplevel configure events.
@@ -1662,6 +1674,7 @@ void XdgToplevelWindow::configureXdgDecoration(DecorationMode decorationMode)
         m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Client);
         break;
     case DecorationMode::Server:
+    case DecorationMode::Shadow:
         m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Server);
         break;
     }
@@ -1677,6 +1690,7 @@ void XdgToplevelWindow::configureServerDecoration(DecorationMode decorationMode)
         m_serverDecoration->setMode(ServerSideDecorationManagerInterface::Mode::Client);
         break;
     case DecorationMode::Server:
+    case DecorationMode::Shadow:
         m_serverDecoration->setMode(ServerSideDecorationManagerInterface::Mode::Server);
         break;
     }

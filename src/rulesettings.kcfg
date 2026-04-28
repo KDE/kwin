@@ -324,6 +324,7 @@
         <choice name="None" value="none" />
         <choice name="ClientPreference" value="client-preference" />
         <choice name="Server" value="server" />
+        <choice name="Shadow" value="shadow" />
       </choices>
       <default code="true">KWin::DecorationPolicy::ClientPreference</default>
     </entry>

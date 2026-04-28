@@ -936,6 +936,7 @@ QList<OptionsModel::Data> RulesModel::decorationPolicyData() const
         {int(DecorationPolicy::None), i18nc("Never draw a server side decoration", "Never")},
         {int(DecorationPolicy::ClientPreference), i18nc("Draw a server side decoration if the application asks for it", "If the application asks")},
         {int(DecorationPolicy::Server), i18nc("Always draw a server side decoration", "Always")},
+        {int(DecorationPolicy::Shadow), i18nc("Always draw a server side drop shadow", "Only shadow")},
     };
     return modelData;
 }
