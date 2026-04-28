@@ -80,7 +80,7 @@ public:
     /*!
      * Constructs a scene view for the given \a effect and \a screen.
      */
-    explicit QuickSceneView(QuickSceneEffect *effect, LogicalOutput *screen);
+    explicit QuickSceneView(QuickSceneEffect *effect, LogicalOutput *screen, bool alpha);
     ~QuickSceneView() override;
 
     QuickSceneEffect *effect() const;
