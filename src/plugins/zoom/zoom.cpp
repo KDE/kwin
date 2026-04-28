@@ -15,7 +15,9 @@
 #include "cursor.h"
 #include "effect/effecthandler.h"
 #include "focustracker.h"
+#include "input.h"
 #include "opengl/glutils.h"
+#include "pointer_input.h"
 #include "textcarettracker.h"
 #include "utils/keys.h"
 #include "zoomconfig.h"
@@ -150,6 +152,9 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     m_pixelGridZoom = ZoomConfig::pixelGridZoom();
     // Track moving of the mouse.
     m_mouseTracking = MouseTrackingType(ZoomConfig::mouseTracking());
+    // Focus/caret tracking margin in pixels
+    m_pushEdgeThresholdFocusTracking = ZoomConfig::focusTrackingMargin();
+    m_cursorFollowsZoomArea = ZoomConfig::keepCursorWithinZoomArea();
 
     if (ZoomConfig::enableFocusTracking()) {
         if (m_targetZoom > 1) {
@@ -224,6 +229,8 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
 
     QPoint trackPoint = m_cursorPoint;
 
+    bool trackingFocus = false;
+
     // use the focusPoint if focus tracking is enabled
     if (m_focusPoint) {
         bool acceptFocus = true;
@@ -234,6 +241,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         }
         if (acceptFocus) {
             trackPoint = *m_focusPoint;
+            trackingFocus = true;
             if (m_mouseTracking == MouseTrackingDisabled) {
                 m_prevPoint = trackPoint;
             }
@@ -265,33 +273,36 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         // touching an edge of the screen moves the zoom-area in that direction.
         const int x = trackPoint.x() * m_zoom - m_prevPoint.x() * (m_zoom - 1.0);
         const int y = trackPoint.y() * m_zoom - m_prevPoint.y() * (m_zoom - 1.0);
-        const int threshold = 4;
-        const RectF currScreen = effects->screenAt(QPoint(x, y))->geometry();
+        const RectF currentScreen = effects->screenAt(trackingFocus ? m_prevPoint : QPoint(x, y))->geometry();
+        int threshold = trackingFocus ? m_pushEdgeThresholdFocusTracking : m_pushEdgeThreshold;
 
         // bounds of the screen the cursor's on
-        const int screenTop = currScreen.top();
-        const int screenLeft = currScreen.left();
-        const int screenRight = currScreen.right();
-        const int screenBottom = currScreen.bottom();
-        const int screenCenterX = currScreen.center().x();
-        const int screenCenterY = currScreen.center().y();
+        const int screenTop = currentScreen.top();
+        const int screenLeft = currentScreen.left();
+        const int screenRight = currentScreen.right();
+        const int screenBottom = currentScreen.bottom();
 
-        // figure out whether we have adjacent displays in all 4 directions
-        // We pan within the screen in directions where there are no adjacent screens.
-        const bool adjacentLeft = screenExistsAt(QPoint(screenLeft - 1, screenCenterY));
-        const bool adjacentRight = screenExistsAt(QPoint(screenRight + 1, screenCenterY));
-        const bool adjacentTop = screenExistsAt(QPoint(screenCenterX, screenTop - 1));
-        const bool adjacentBottom = screenExistsAt(QPoint(screenCenterX, screenBottom + 1));
+        // for multiple monitor setups, panning is more complex than a simple workspace boundary check
+        //
+        // When panning with the mouse, we pan by pushing on screen edges that aren't adjacent to another screen in the layout.
+        // That way you can still move between monitors without accidentally panning.
+        //
+        // For text caret tracking, we instead want to prevent the cursor from moving to another screen.
+        // That way, you don't have to turn your head to face a new monitor when typing longer lines of text.
+        const bool boundaryLeft = trackingFocus || !screenExistsAt(QPoint(screenLeft - 1, y));
+        const bool boundaryRight = trackingFocus || !screenExistsAt(QPoint(screenRight + 1, y));
+        const bool boundaryTop = trackingFocus || !screenExistsAt(QPoint(x, screenTop - 1));
+        const bool boundaryBottom = trackingFocus || !screenExistsAt(QPoint(x, screenBottom + 1));
 
         m_xMove = m_yMove = 0;
-        if (x < screenLeft + threshold && !adjacentLeft) {
+        if (x < screenLeft + threshold && boundaryLeft) {
             m_xMove = (x - threshold - screenLeft) / m_zoom;
-        } else if (x > screenRight - threshold && !adjacentRight) {
+        } else if (x > screenRight - threshold && boundaryRight) {
             m_xMove = (x + threshold - screenRight) / m_zoom;
         }
-        if (y < screenTop + threshold && !adjacentTop) {
+        if (y < screenTop + threshold && boundaryTop) {
             m_yMove = (y - threshold - screenTop) / m_zoom;
-        } else if (y > screenBottom - threshold && !adjacentBottom) {
+        } else if (y > screenBottom - threshold && boundaryBottom) {
             m_yMove = (y + threshold - screenBottom) / m_zoom;
         }
         if (m_xMove) {
@@ -304,6 +315,15 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         m_yTranslation = -int(m_prevPoint.y() * (m_zoom - 1.0));
         break;
     }
+    }
+
+    if (trackingFocus && m_cursorFollowsZoomArea) {
+        bool hideCursorAfterWarp = effects->isCursorHidden();
+        QPointF currentPosition = effects->cursorPos();
+        input()->pointer()->warp(currentPosition + QPointF(m_xMove, m_yMove));
+        if (hideCursorAfterWarp) {
+            effects->hideCursor();
+        }
     }
 
     effects->prePaintScreen(data);
