@@ -102,11 +102,18 @@ enum class DecorationMode {
      */
     None,
     /**
-     * The window decoration is drawn by the client.
+     * The window decoration is drawn by the client. The client is responsible for drawing both
+     * the titlebar and the drop shadow.
      */
     Client,
     /**
-     * The window decoration is drawn by the compositor.
+     * The window decoration is drawn by the client, but the compositor can draw a drop shadow
+     * around the window and potentially round corners.
+     */
+    Shadow,
+    /**
+     * The window decoration is drawn by the compositor. The compositor is responsible for drawing
+     * both the titlebar and the drop shadow.
      */
     Server,
 };

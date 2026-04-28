@@ -34,6 +34,13 @@ class QTimer;
 class KStartupInfoData;
 class KStartupInfoId;
 
+namespace KDecoration3
+{
+
+enum class Style;
+
+}
+
 namespace KWin
 {
 
@@ -330,8 +337,9 @@ private:
 
     DecorationMode preferredDecorationMode() const;
     void updateDecoration(bool check_workspace_pos, bool force = false);
-    void createDecoration(bool force);
+    void createDecoration(KDecoration3::Style style, bool force);
     void destroyDecoration();
+    bool wantsServerDropShadow() const;
 
     void checkOutput();
     void handleXwaylandScaleChanged();

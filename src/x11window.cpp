@@ -931,13 +931,23 @@ DecorationMode X11Window::preferredDecorationMode() const
         if (!m_clientFrameExtents.isNull()) {
             return DecorationMode::Client;
         } else if (m_wantsNoDecoration) {
-            return DecorationMode::None;
+            return wantsServerDropShadow() ? DecorationMode::Shadow : DecorationMode::None;
         } else {
             return DecorationMode::Server;
         }
     }
 
     Q_UNREACHABLE();
+}
+
+bool X11Window::wantsServerDropShadow() const
+{
+    if (!Decoration::DecorationBridge::supportedStyles().contains(KDecoration3::Style::Shadow)) {
+        return false;
+    } else {
+        static const bool wants = environmentVariableBoolValue("KWIN_X11_USE_SSD_DROP_SHADOW").value_or(true);
+        return wants;
+    }
 }
 
 static QPointF decorationGravityAdjustement(const QMarginsF &margins, xcb_gravity_t gravity)
@@ -1013,8 +1023,11 @@ void X11Window::updateDecoration(bool check_workspace_pos, bool force)
     case DecorationMode::Client:
         destroyDecoration();
         break;
+    case DecorationMode::Shadow:
+        createDecoration(KDecoration3::Style::Shadow, force);
+        break;
     case DecorationMode::Server:
-        createDecoration(force);
+        createDecoration(KDecoration3::Style::Titled, force);
         break;
     }
 
@@ -1039,13 +1052,13 @@ void X11Window::invalidateDecoration()
     updateDecoration(true, true);
 }
 
-void X11Window::createDecoration(bool force)
+void X11Window::createDecoration(KDecoration3::Style style, bool force)
 {
-    if (decoration() && !force) {
+    if ((decoration() && decoration()->style() == style) && !force) {
         return;
     }
 
-    std::shared_ptr<KDecoration3::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
+    std::shared_ptr<KDecoration3::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this, style));
     if (decoration) {
         decoration->apply(decoration->nextState()->clone());
 
