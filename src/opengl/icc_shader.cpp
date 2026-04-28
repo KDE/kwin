@@ -48,7 +48,7 @@ IccShader::~IccShader()
 {
 }
 
-bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const std::shared_ptr<ColorDescription> &inputColor, RenderingIntent intent)
+bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const std::shared_ptr<ColorDescription> &inputColor, const Colorimetry &wireColor, const TransferFunction::Type &wireTransfer, RenderingIntent intent)
 {
     if (!profile) {
         m_toXYZD50.setToIdentity();
@@ -156,16 +156,25 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const std
                 qCCritical(KWIN_OPENGL, "Couldn't represent ICC profile in the ICC shader!");
                 return false;
             }
+        } else if (profile->hasMHC2Tag()) {
+            toXYZD50 = wireColor.fromXYZ() * profile->mhc2Matrix() * inputColor->containerColorimetry().toXYZ();
+
+            TransferFunction wireTF(wireTransfer, 0, 1);
+            const auto sample = [&wireTF, &vcgt](size_t x) {
+                const float relativeX = x / double(lutSize - 1);
+                QVector3D ret(relativeX, relativeX, relativeX);
+                ret = wireTF.nitsToEncoded(ret);
+                if (vcgt) {
+                    ret = vcgt->transform(ret);
+                }
+                return ret;
+            };
+            A = GlLookUpTable::create(sample, lutSize);
+            if (!A) {
+                return false;
+            }
         } else {
             toXYZD50 = linearizedInput.toOther(linearizedProfile, intent);
-
-            if (!profile->mhc2Matrix().isIdentity()) {
-                // The pipeline for MHC2 is quite weird:
-                // SourceRGBtoXYZ -> XYZtoXYZAdjust -> XYZtoTargetRGB
-                // "TargetRGB" is BT.709 or BT.2020, not the actual target primaries.
-                // As this code path is only used for SDR, we always use BT.709
-                toXYZD50 = Colorimetry::BT709.fromXYZ() * profile->mhc2Matrix() * linearizedProfile.containerColorimetry().toXYZ();
-            }
 
             const auto inverseEOTF = profile->inverseTransferFunction();
             const auto sample = [inverseEOTF, vcgt](size_t x) {
@@ -200,10 +209,10 @@ GLShader *IccShader::shader() const
     return m_shader.get();
 }
 
-void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const std::shared_ptr<ColorDescription> &inputColor, RenderingIntent intent)
+void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const std::shared_ptr<ColorDescription> &inputColor, const Colorimetry &wireColor, const TransferFunction::Type &wireTransfer, RenderingIntent intent)
 {
     // this failing can be silently ignored, it should only happen with GPU resets and gets corrected later
-    setProfile(profile, inputColor, intent);
+    setProfile(profile, inputColor, wireColor, wireTransfer, intent);
 
     m_shader->setUniform(m_locations.toXYZD50, m_toXYZD50);
     m_shader->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, inputColor->transferFunction().type);

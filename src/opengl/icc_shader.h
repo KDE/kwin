@@ -28,10 +28,10 @@ public:
     ~IccShader();
 
     GLShader *shader() const;
-    void setUniforms(const std::shared_ptr<IccProfile> &profile, const std::shared_ptr<ColorDescription> &inputColor, RenderingIntent intent);
+    void setUniforms(const std::shared_ptr<IccProfile> &profile, const std::shared_ptr<ColorDescription> &inputColor, const Colorimetry &wireColor, const TransferFunction::Type &wireTransfer, RenderingIntent intent);
 
 private:
-    bool setProfile(const std::shared_ptr<IccProfile> &profile, const std::shared_ptr<ColorDescription> &inputColor, RenderingIntent intent);
+    bool setProfile(const std::shared_ptr<IccProfile> &profile, const std::shared_ptr<ColorDescription> &inputColor, const Colorimetry &wireColor, const TransferFunction::Type &wireTransfer, RenderingIntent intent);
 
     std::unique_ptr<GLShader> m_shader;
     std::shared_ptr<IccProfile> m_profile;

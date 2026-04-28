@@ -42,6 +42,8 @@ public:
     /**
      * The VCGT is a non-standard tag that needs to be applied before
      * pixels are sent to the display. May be nullptr!
+     * If the profile has a MHC2 tag, this returns the 1D LUT from that tag
+     * rather than the actual VCGT tag.
      */
     std::shared_ptr<ColorTransformation> vcgt() const;
     /**
@@ -57,6 +59,18 @@ public:
     std::optional<double> maxFALL() const;
     std::optional<double> maxCLL() const;
 
+    /**
+     * If the non-standard 'MHC2' tag is used, the behavior of
+     * the profile changes in three ways:
+     * - the mhc2 matrix must be applied in XYZ space. It can be
+     *   assumed to be scale-invariant
+     * - the wire colorimetry must be used to convert back to RGB
+     *   (instead of the native gamut encoded in this profile)
+     * - the wire transfer function must be used instead of the
+     *   TRC encoded in this profile (which is often nonsense)
+     */
+    bool hasMHC2Tag() const;
+
     static std::expected<std::unique_ptr<IccProfile>, QString> load(const QString &path);
     static const ColorDescription s_connectionSpace;
 
@@ -71,6 +85,7 @@ private:
     const std::optional<double> m_relativeBlackPoint;
     const std::optional<double> m_maxFALL;
     const std::optional<double> m_maxCLL;
+    const bool m_hasMHC2;
 };
 
 }

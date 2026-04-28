@@ -752,13 +752,15 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     }
     if (usesICC) {
         colorPipeline.addTransferFunction(encoding->transferFunction(), ColorspaceType::LinearRGB);
-        colorPipeline.addMultiplier(1.0 / encoding->transferFunction().maxLuminance);
-        if (!next.iccProfile->mhc2Matrix().isIdentity()) {
-            // NOTE the spec assumes BT.709 or BT.2020 is used as the target colorspace, *not* the native colorspace!
-            const auto calibration = Colorimetry::BT709.fromXYZ() * next.iccProfile->mhc2Matrix() * encoding->containerColorimetry().toXYZ();
+        if (next.iccProfile->hasMHC2Tag()) {
+            const auto calibration = wireColor(next).fromXYZ() * next.iccProfile->mhc2Matrix() * encoding->containerColorimetry().toXYZ();
             colorPipeline.addMatrix(calibration, colorPipeline.currentOutputRange(), ColorspaceType::LinearRGB);
+            colorPipeline.addMultiplier(1.0 / encoding->transferFunction().maxLuminance);
+            colorPipeline.addInverseTransferFunction(TransferFunction(TransferFunction::gamma22, 0, 1.0), ColorspaceType::NonLinearRGB);
+        } else {
+            colorPipeline.addMultiplier(1.0 / encoding->transferFunction().maxLuminance);
+            colorPipeline.add1DLUT(next.iccProfile->inverseTransferFunction(), ColorspaceType::NonLinearRGB);
         }
-        colorPipeline.add1DLUT(next.iccProfile->inverseTransferFunction(), ColorspaceType::NonLinearRGB);
         if (next.iccProfile->vcgt()) {
             colorPipeline.add1DLUT(next.iccProfile->vcgt(), ColorspaceType::NonLinearRGB);
         }
@@ -843,6 +845,24 @@ void DrmOutput::setAutoBrightnessAvailable(bool isAvailable)
 const BackendOutput::State &DrmOutput::nextState() const
 {
     return m_nextState ? *m_nextState : m_state;
+}
+
+Colorimetry DrmOutput::wireColor(const State &next) const
+{
+    if (next.wideColorGamut && (capabilities() & Capability::WideColorGamut)) {
+        return Colorimetry::BT2020;
+    } else {
+        return Colorimetry::BT709;
+    }
+}
+
+TransferFunction::Type DrmOutput::wireTransfer(const State &next) const
+{
+    if (next.highDynamicRange && (capabilities() & Capability::HighDynamicRange)) {
+        return TransferFunction::Type::PerceptualQuantizer;
+    } else {
+        return TransferFunction::Type::gamma22;
+    }
 }
 
 }

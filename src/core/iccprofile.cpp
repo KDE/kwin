@@ -18,6 +18,11 @@
 namespace KWin
 {
 
+static cmsTagSignature stringToSignature(std::string_view str)
+{
+    return cmsTagSignature((uint32_t(str[3]) << 0) | (uint32_t(str[2]) << 8) | (uint32_t(str[1]) << 16) | (uint32_t(str[0]) << 24));
+}
+
 static const Colorimetry CIEXYZD50 = Colorimetry{
     XYZ{1.0, 0.0, 0.0},
     XYZ{0.0, 1.0, 0.0},
@@ -42,6 +47,7 @@ IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry,
     , m_relativeBlackPoint(relativeBlackPoint)
     , m_maxFALL(maxFALL)
     , m_maxCLL(maxCLL)
+    , m_hasMHC2(cmsIsTag(m_handle, stringToSignature("MHC2")))
 {
 }
 
@@ -83,6 +89,11 @@ std::shared_ptr<ColorTransformation> IccProfile::vcgt() const
 const QMatrix4x4 &IccProfile::mhc2Matrix() const
 {
     return m_xyzMatrix;
+}
+
+bool IccProfile::hasMHC2Tag() const
+{
+    return m_hasMHC2;
 }
 
 const ColorPipeline *IccProfile::BToATag(RenderingIntent intent) const
@@ -249,11 +260,6 @@ static std::optional<ColorPipeline> parseBToATag(cmsHPROFILE profile, cmsTagSign
         }
     }
     return ret;
-}
-
-static cmsTagSignature stringToSignature(std::string_view str)
-{
-    return cmsTagSignature((uint32_t(str[3]) << 0) | (uint32_t(str[2]) << 8) | (uint32_t(str[1]) << 16) | (uint32_t(str[0]) << 24));
 }
 
 struct MHC2

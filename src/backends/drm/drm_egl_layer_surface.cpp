@@ -78,9 +78,10 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
                                                                             const FormatModifierMap &formats,
                                                                             const std::shared_ptr<ColorDescription> &blendingColor,
                                                                             const std::shared_ptr<ColorDescription> &layerBlendingColor,
-                                                                            const std::shared_ptr<IccProfile> &iccProfile, double scale,
-                                                                            BackendOutput::ColorPowerTradeoff tradeoff, bool useShadowBuffer,
-                                                                            uint32_t requiredAlphaBits)
+                                                                            const std::shared_ptr<IccProfile> &iccProfile,
+                                                                            const Colorimetry &wireColor, const TransferFunction::Type &wireTransfer,
+                                                                            double scale, BackendOutput::ColorPowerTradeoff tradeoff,
+                                                                            bool useShadowBuffer, uint32_t requiredAlphaBits)
 {
     if (!checkSurface(bufferSize, formats, tradeoff, requiredAlphaBits)) {
         return std::nullopt;
@@ -103,13 +104,19 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     m_surface->currentSlot = slot;
     m_surface->scale = scale;
 
-    if (m_surface->blendingColor != blendingColor || m_surface->layerBlendingColor != layerBlendingColor || m_surface->iccProfile != iccProfile) {
+    if (m_surface->blendingColor != blendingColor
+        || m_surface->layerBlendingColor != layerBlendingColor
+        || m_surface->iccProfile != iccProfile
+        || m_surface->wireColor != wireColor
+        || m_surface->wireTransfer != wireTransfer) {
         m_surface->damageJournal.clear();
         m_surface->shadowDamageJournal.clear();
         m_surface->needsShadowBuffer = useShadowBuffer;
         m_surface->blendingColor = blendingColor;
         m_surface->layerBlendingColor = layerBlendingColor;
         m_surface->iccProfile = iccProfile;
+        m_surface->wireColor = wireColor;
+        m_surface->wireTransfer = wireTransfer;
         if (iccProfile) {
             if (!m_surface->iccShader) {
                 m_surface->iccShader = IccShader::create();
@@ -236,7 +243,9 @@ bool EglGbmLayerSurface::endRendering(const Region &damagedDeviceRegion, OutputF
         ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         // this transform is absolute colorimetric, whitepoint adjustment is done in compositing already
         if (m_surface->iccShader) {
-            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->blendingColor, RenderingIntent::AbsoluteColorimetricNoAdaptation);
+            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->blendingColor,
+                                              m_surface->wireColor, m_surface->wireTransfer,
+                                              RenderingIntent::AbsoluteColorimetricNoAdaptation);
         } else {
             binder.shader()->setColorspaceUniforms(m_surface->blendingColor, m_surface->layerBlendingColor, RenderingIntent::AbsoluteColorimetricNoAdaptation);
         }

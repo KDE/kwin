@@ -73,6 +73,8 @@ public:
     void maybeUpdateDpmsState();
 
     const State &nextState() const;
+    Colorimetry wireColor(const State &next) const;
+    TransferFunction::Type wireTransfer(const State &next) const;
 
 private:
     void tryKmsColorOffloading(State &next);

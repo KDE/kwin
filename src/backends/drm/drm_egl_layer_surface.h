@@ -51,7 +51,13 @@ public:
     explicit EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const FormatModifierMap &formats, const std::shared_ptr<ColorDescription> &blendingColor, const std::shared_ptr<ColorDescription> &layerBlendingColor, const std::shared_ptr<IccProfile> &iccProfile, double scale, BackendOutput::ColorPowerTradeoff tradeoff, bool useShadowBuffer, uint32_t requiredAlphaBits);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const FormatModifierMap &formats,
+                                                            const std::shared_ptr<ColorDescription> &blendingColor,
+                                                            const std::shared_ptr<ColorDescription> &layerBlendingColor,
+                                                            const std::shared_ptr<IccProfile> &iccProfile,
+                                                            const Colorimetry &wireColor, const TransferFunction::Type &wireTransfer,
+                                                            double scale, BackendOutput::ColorPowerTradeoff tradeoff,
+                                                            bool useShadowBuffer, uint32_t requiredAlphaBits);
     bool endRendering(const Region &damagedDeviceRegion, OutputFrame *frame);
 
     void destroyResources();
@@ -96,6 +102,8 @@ private:
         double brightness = 1.0;
         std::unique_ptr<IccShader> iccShader;
         std::shared_ptr<IccProfile> iccProfile;
+        Colorimetry wireColor = Colorimetry::BT709;
+        TransferFunction::Type wireTransfer = TransferFunction::Type::gamma22;
         DamageJournal shadowDamageJournal;
         BackendOutput::ColorPowerTradeoff tradeoff = BackendOutput::ColorPowerTradeoff::PreferEfficiency;
 

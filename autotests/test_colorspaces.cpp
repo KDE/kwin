@@ -486,7 +486,7 @@ void TestColorspaces::testIccShader()
     {
         auto shader = IccShader::create();
         ShaderBinder binder{shader->shader()};
-        shader->setUniforms(profile, imageColorspace, intent);
+        shader->setUniforms(profile, imageColorspace, Colorimetry::BT709, TransferFunction::gamma22, intent);
 
         QMatrix4x4 proj;
         proj.ortho(QRectF(0, 0, input.width(), input.height()));
