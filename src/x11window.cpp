@@ -1047,6 +1047,8 @@ void X11Window::createDecoration(bool force)
 
     std::shared_ptr<KDecoration3::Decoration> decoration(Workspace::self()->decorationBridge()->createDecoration(this));
     if (decoration) {
+        decoration->apply(decoration->nextState()->clone());
+
         connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
             if (isDeleted()) {
                 return;
@@ -1056,7 +1058,6 @@ void X11Window::createDecoration(bool force)
             updateFrameExtents();
         });
 
-        decoration->apply(decoration->nextState()->clone());
         connect(decoration.get(), &KDecoration3::Decoration::nextStateChanged, this, [this](auto state) {
             if (!isDeleted()) {
                 m_decoration.decoration->apply(state->clone());
