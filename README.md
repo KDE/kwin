@@ -15,13 +15,12 @@ Please refer to the [contributing document](CONTRIBUTING.md) for everything you 
 
 # Contacting KWin development team
 
- * mailing list: [kwin@kde.org](https://mail.kde.org/mailman/listinfo/kwin)
  * IRC: #kde-kwin on irc.libera.chat
  * Matrix: [#kwin:kde.org](https://go.kde.org/matrix/#/#kwin:kde.org)
 
 # Support
 ## Application Developer
-If you are an application developer having questions regarding windowing systems (either X11 or Wayland) please do not hesitate to contact us. Preferable through our mailing list. Ideally subscribe to the mailing list, so that your mail doesn't get stuck in the moderation queue.
+If you are an application developer having questions regarding windowing systems (either X11 or Wayland) please do not hesitate to contact us.
 
 ## End user
 Please contact the support channels of your Linux distribution for user support. The KWin development team does not provide end user support.
