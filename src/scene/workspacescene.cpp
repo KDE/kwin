@@ -312,7 +312,7 @@ static std::optional<bool> findOverlayCandidates(SceneView *view, Item *item, ss
         }
     }
 
-    const Rect deviceRect = mapToDevice(view, item, item->rect());
+    const Rect deviceRect = mapToDevice(view, item, item->rect()) & view->deviceRect();
     // if the item is empty or completely covered, ignore it
     if (!deviceRect.isEmpty() && !opaque.contains(deviceRect)) {
         // for the Item to be possibly relevant for over- or underlays, it needs to
