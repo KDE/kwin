@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-04-29 00:47+0000\n"
 "PO-Revision-Date: 2025-05-31 12:29+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -17,19 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 25.04.1\n"
 
-#: ui/main.qml:27
-#, kde-format
-msgctxt "@info"
-msgid "Changes will take effect the next time you log in."
-msgstr "Ändringar får effekt nästa gång du loggar in.."
-
-#: ui/main.qml:31
-#, kde-format
-msgctxt "@action:button"
-msgid "Log Out Now"
-msgstr "Logga ut nu"
-
-#: ui/main.qml:52
+#: ui/main.qml:29
 #, kde-kuit-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -43,31 +31,31 @@ msgstr ""
 ">Om du använder några sådana program kan du välja önskad balans mellan "
 "säkerhet och kompatibilitet här."
 
-#: ui/main.qml:73
+#: ui/main.qml:50
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
 msgstr "Lyssna på tangentanvändning:"
 
-#: ui/main.qml:80
+#: ui/main.qml:57
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
 msgstr "Förhindrat"
 
-#: ui/main.qml:96
+#: ui/main.qml:73
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr "Säkrast: globala genvägar fungerar inte i X11-program"
 
-#: ui/main.qml:110
+#: ui/main.qml:87
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Bara Meta-, Ctrl-, Alt- och Skift-tangenter"
 
-#: ui/main.qml:126
+#: ui/main.qml:103
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -77,7 +65,7 @@ msgstr ""
 "Hög säkerhet: håll nere för att tala och andra globala genvägar med enbart "
 "väljartangenter fungerar i X11-program"
 
-#: ui/main.qml:140
+#: ui/main.qml:117
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
@@ -87,19 +75,19 @@ msgstr ""
 "Som ovan, men också alla tangenter som används medan Ctrl-, Alt- och Meta-"
 "tangenter också hålls nere"
 
-#: ui/main.qml:156
+#: ui/main.qml:133
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr "Medelsäkert: alla globala genvägar fungerar i X11-program"
 
-#: ui/main.qml:170
+#: ui/main.qml:147
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
 msgstr "Alltid tillåtet"
 
-#: ui/main.qml:186
+#: ui/main.qml:163
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -108,7 +96,7 @@ msgid ""
 msgstr ""
 "Minst säkert: alla X11-program kan se all text du skriver in i alla program"
 
-#: ui/main.qml:200
+#: ui/main.qml:177
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -120,19 +108,19 @@ msgstr ""
 "tillåter skadlig programvara att stjäla lösenord och spionera på text som du "
 "skriver. Se till att du förstår och accepterar denna risk."
 
-#: ui/main.qml:216
+#: ui/main.qml:193
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
 msgstr "Lyssna på musknappar:"
 
-#: ui/main.qml:222
+#: ui/main.qml:199
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
 msgstr "Tillåtet"
 
-#: ui/main.qml:238
+#: ui/main.qml:215
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -141,27 +129,72 @@ msgid ""
 msgstr ""
 "Medelsäkert: globala genvägar som omfattar musknappar fungerar i X11-program"
 
-#: ui/main.qml:252
+#: ui/main.qml:233
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr "Kontroll över pekare och tangentbord:"
 
-#: ui/main.qml:258
-#, kde-format
+#: ui/main.qml:240
+#, fuzzy, kde-format
+#| msgctxt "@option:radio Listening for mouse buttons is allowed"
+#| msgid "Allowed"
 msgctxt ""
-"@option:check Allow control of pointer and keyboard without asking for "
+"@option:check Allowed control of pointer and keyboard without asking for "
+"permissions for allowed apps"
+msgid "Allowed apps"
+msgstr "Tillåtet"
+
+#: ui/main.qml:246
+#, kde-format
+msgctxt "@action:button"
+msgid "See Allowed Applications…"
+msgstr ""
+
+#: ui/main.qml:259
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"Moderate security; XWayland-using apps claiming to be something on this list "
+"will be able to take control of the computer, because XWayland-using apps’ "
+"identities can’t be verified"
+msgstr ""
+
+#: ui/main.qml:272
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "@option:check Allow control of pointer and keyboard without asking for "
+#| "permission"
+#| msgid "Allow without asking for permission"
+msgctxt ""
+"@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
 msgstr "Tillåt utan att fråga efter tillåtelse"
 
-#: ui/main.qml:268
+#: ui/main.qml:283
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr "Minst säkert: alla X11-program kan ta kontroll över datorn"
 
-#: ui/main.qml:282
+#: ui/main.qml:295
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Control of pointer and keyboard:"
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "Kontroll över pekare och tangentbord:"
+
+#: ui/main.qml:315
+#, kde-format
+msgctxt "@info:tooltip %1 is the name of the app/binary"
+msgid "Do not allow %1 to control the pointer and keyboard without asking"
+msgstr ""
+
+#: ui/main.qml:329
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -172,6 +205,14 @@ msgstr ""
 "Observera att användning av inställningen reducerar systemets säkerhet "
 "drastiskt och tillåter skadlig programvara att ta fullständig kontroll över "
 "pekaren och tangentbordet. Se till att du förstår och accepterar denna risk."
+
+#~ msgctxt "@info"
+#~ msgid "Changes will take effect the next time you log in."
+#~ msgstr "Ändringar får effekt nästa gång du loggar in.."
+
+#~ msgctxt "@action:button"
+#~ msgid "Log Out Now"
+#~ msgstr "Logga ut nu"
 
 #~ msgid ""
 #~ "Some legacy X11 apps require the ability to read keystrokes typed in "

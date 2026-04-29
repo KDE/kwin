@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-04-29 00:47+0000\n"
 "PO-Revision-Date: 2025-05-30 22:23+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -17,19 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 25.04.1\n"
 
-#: ui/main.qml:27
-#, kde-format
-msgctxt "@info"
-msgid "Changes will take effect the next time you log in."
-msgstr "A változtatások a következő bejelentkezéskor lépnek érvénybe."
-
-#: ui/main.qml:31
-#, kde-format
-msgctxt "@action:button"
-msgid "Log Out Now"
-msgstr "Kijelentkezés most"
-
-#: ui/main.qml:52
+#: ui/main.qml:29
 #, kde-kuit-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -39,32 +27,32 @@ msgid ""
 "balance of security and compatibility here."
 msgstr ""
 
-#: ui/main.qml:73
+#: ui/main.qml:50
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
 msgstr ""
 
-#: ui/main.qml:80
+#: ui/main.qml:57
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
 msgstr ""
 
-#: ui/main.qml:96
+#: ui/main.qml:73
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr ""
 
-#: ui/main.qml:110
+#: ui/main.qml:87
 #, fuzzy, kde-format
 #| msgid "Only Meta, Control, Alt and Shift keys"
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Csak Meta, Control, Alt és Shift billentyűk"
 
-#: ui/main.qml:126
+#: ui/main.qml:103
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -72,7 +60,7 @@ msgid ""
 "work in X11 apps"
 msgstr ""
 
-#: ui/main.qml:140
+#: ui/main.qml:117
 #, fuzzy, kde-format
 #| msgid ""
 #| "As above, plus any key typed while the Control, Alt, or Meta keys are "
@@ -85,20 +73,20 @@ msgstr ""
 "Mint fent, plusz bármely billentyű, amelyet a Control, Alt vagy Meta "
 "billentyűk lenyomva tartása közben gépeltek be"
 
-#: ui/main.qml:156
+#: ui/main.qml:133
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
 
-#: ui/main.qml:170
+#: ui/main.qml:147
 #, fuzzy, kde-format
 #| msgid "Always"
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
 msgstr "Mindig"
 
-#: ui/main.qml:186
+#: ui/main.qml:163
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -106,7 +94,7 @@ msgid ""
 "application"
 msgstr ""
 
-#: ui/main.qml:200
+#: ui/main.qml:177
 #, fuzzy, kde-format
 #| msgid ""
 #| "Note that using this setting will reduce system security to that of the "
@@ -123,20 +111,20 @@ msgstr ""
 "rosszindulatú szoftvereknek jelszavak ellopását vagy a begépelt szöveg utáni "
 "kémkedést. Győzödjön meg róla, hogy megértette és elfogadja ezt a kockázatot."
 
-#: ui/main.qml:216
+#: ui/main.qml:193
 #, fuzzy, kde-format
 #| msgid "Additionally include mouse buttons"
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
 msgstr "Továbbá egérgombok"
 
-#: ui/main.qml:222
+#: ui/main.qml:199
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
 msgstr ""
 
-#: ui/main.qml:238
+#: ui/main.qml:215
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -144,27 +132,70 @@ msgid ""
 "apps"
 msgstr ""
 
-#: ui/main.qml:252
+#: ui/main.qml:233
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr "Mutató és billentyűzet vezérlése:"
 
-#: ui/main.qml:258
+#: ui/main.qml:240
 #, kde-format
 msgctxt ""
-"@option:check Allow control of pointer and keyboard without asking for "
+"@option:check Allowed control of pointer and keyboard without asking for "
+"permissions for allowed apps"
+msgid "Allowed apps"
+msgstr ""
+
+#: ui/main.qml:246
+#, kde-format
+msgctxt "@action:button"
+msgid "See Allowed Applications…"
+msgstr ""
+
+#: ui/main.qml:259
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"Moderate security; XWayland-using apps claiming to be something on this list "
+"will be able to take control of the computer, because XWayland-using apps’ "
+"identities can’t be verified"
+msgstr ""
+
+#: ui/main.qml:272
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "@option:check Allow control of pointer and keyboard without asking for "
+#| "permission"
+#| msgid "Allow without asking for permission"
+msgctxt ""
+"@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
 msgstr "Engedélyezés jogosultságkérés nélkül"
 
-#: ui/main.qml:268
+#: ui/main.qml:283
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
 
-#: ui/main.qml:282
+#: ui/main.qml:295
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Control of pointer and keyboard:"
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "Mutató és billentyűzet vezérlése:"
+
+#: ui/main.qml:315
+#, kde-format
+msgctxt "@info:tooltip %1 is the name of the app/binary"
+msgid "Do not allow %1 to control the pointer and keyboard without asking"
+msgstr ""
+
+#: ui/main.qml:329
 #, fuzzy, kde-format
 #| msgid ""
 #| "Note that using this setting will reduce system security to that of the "
@@ -180,6 +211,14 @@ msgstr ""
 "biztonságát az X11 munkamenet szintjére azzal, hogy lehetővé teszi "
 "rosszindulatú szoftvereknek jelszavak ellopását vagy a begépelt szöveg utáni "
 "kémkedést. Győzödjön meg róla, hogy megértette és elfogadja ezt a kockázatot."
+
+#~ msgctxt "@info"
+#~ msgid "Changes will take effect the next time you log in."
+#~ msgstr "A változtatások a következő bejelentkezéskor lépnek érvénybe."
+
+#~ msgctxt "@action:button"
+#~ msgid "Log Out Now"
+#~ msgstr "Kijelentkezés most"
 
 #~ msgid ""
 #~ "Some legacy X11 apps require the ability to read keystrokes typed in "

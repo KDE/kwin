@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-28 00:46+0000\n"
+"POT-Creation-Date: 2026-04-29 00:47+0000\n"
 "PO-Revision-Date: 2026-02-06 14:38+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -34,29 +34,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "andris.m@delfi.lv, maris.kde@gmail.com, toms.trasuns@posteo.net"
 
-#: backends/wayland/wayland_output.cpp:482
+#: backends/wayland/wayland_output.cpp:480
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Spiediet labo „Control“ taustiņu, lai atdotu peles kursoru"
 
-#: backends/wayland/wayland_output.cpp:484
+#: backends/wayland/wayland_output.cpp:482
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Spiediet labo „Control“ taustiņu, lai paņemtu peles kursoru"
 
-#: backends/wayland/wayland_output.cpp:488
+#: backends/wayland/wayland_output.cpp:486
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE „Wayland“ kompozitors „%1“"
 
-#: backends/wayland/wayland_output.cpp:491
+#: backends/wayland/wayland_output.cpp:489
 #, kde-format
 msgid "- Output disabled"
 msgstr "— Izvade ir izslēgta"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:491
 #, kde-format
 msgid "- Output dimmed"
 msgstr "— Izvade ir aptumšota"
@@ -1830,6 +1830,48 @@ msgstr "Pilnekrāna logi"
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
 msgstr "Izslēdz aktīvās ievades uztveršanu"
+
+#: plugins/eis/eisprompter.cpp:51
+#, fuzzy, kde-format
+#| msgctxt "A keyboard modifier"
+#| msgid "Control"
+msgctxt "@title:window"
+msgid "Remote Control"
+msgstr "Control"
+
+#: plugins/eis/eisprompter.cpp:52
+#, kde-format
+msgctxt "@info keep '-' it's markdon"
+msgid "%1 is asking to control input devices"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:64
+#, kde-format
+msgctxt "@option:check"
+msgid "Always allow apps claiming to be %1"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:66
+#, kde-kuit-format
+msgctxt "@info:tooltip"
+msgid ""
+"Identities of legacy X11 apps cannot be verified. Any app claiming to be "
+"<application>%1</application> will be able to control input devices. You can "
+"revoke this permission later on <application>System Settings</application>’ "
+"“Legacy X11 App Support” page."
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:69
+#, kde-format
+msgctxt "@action:button Allow control of input devices"
+msgid "Allow"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:70
+#, kde-format
+msgctxt "@action:button Deny control of input devices"
+msgid "Deny"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4287,57 +4329,57 @@ msgstr "Pārslēgties vienu darbvirsmu uz leju"
 msgid "Switch to Desktop %1"
 msgstr "Pārslēgties uz %1. darbvirsmu"
 
-#: wayland/outputmanagement_v2.cpp:604
+#: wayland/outputmanagement_v2.cpp:602
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Viena no nepieciešamajām izvadēm vairs nav pieejama"
 
-#: wayland/outputmanagement_v2.cpp:622
+#: wayland/outputmanagement_v2.cpp:620
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Nav atļauta visu izvadu izslēgšana caur konfigurācijas izmaiņām"
 
-#: wayland/outputmanagement_v2.cpp:632
+#: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:639
+#: wayland/outputmanagement_v2.cpp:637
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Nav iespējams pievienot pielāgotu režīmu ar tukšu izmēru"
 
-#: wayland/outputmanagement_v2.cpp:643
+#: wayland/outputmanagement_v2.cpp:641
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "Nav iespējams pievienot pielāgotu režīmu ar nulles hercu atsvaidzināšanas "
 "ātrumu"
 
-#: wayland/outputmanagement_v2.cpp:654
+#: wayland/outputmanagement_v2.cpp:652
 #, fuzzy, kde-format
 #| msgid "Position of output %s is way too negative (%d, %d)"
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "Izvades „%s“ pozīcija ir pārāk negatīva (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:657
+#: wayland/outputmanagement_v2.cpp:655
 #, fuzzy, kde-format
 #| msgid "Position of enabled output %s is negative (%d, %d)"
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "Ieslēgtās izvades „%s“ pozīcija ir negatīva (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:661
+#: wayland/outputmanagement_v2.cpp:659
 #, fuzzy, kde-format
 #| msgid "Position of output %s is way too large (%d, %d)"
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "Izvades „%s“ pozīcija ir pārāk liela (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:678
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Draiveris noraidīja izvades konfigurāciju"
 
-#: wayland/outputmanagement_v2.cpp:681
+#: wayland/outputmanagement_v2.cpp:679
 #, fuzzy, kde-format
 #| msgid "The Alt key is now active."
 msgid "The session is not active"
@@ -4373,7 +4415,7 @@ msgstr ""
 "piemēram, https://paste.kde.org, tā vietā, lai tekstu ielīmētu pašās "
 "atbalsta ziņās.\n"
 
-#: xwayland/xwaylandlauncher.cpp:293
+#: xwayland/xwaylandlauncher.cpp:287
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "„Xwayland“ ir avarējis"

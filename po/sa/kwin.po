@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-28 00:46+0000\n"
+"POT-Creation-Date: 2026-04-29 00:47+0000\n"
 "PO-Revision-Date: 2025-03-02 14:47+0530\n"
 "Last-Translator: Shreekant Kalwar <skkalwar999@gmail.com>\n"
 "Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
@@ -29,30 +29,30 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "skkalwar999@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:482
+#: backends/wayland/wayland_output.cpp:480
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "सूचकं अनग्राब् कर्तुं right control नुदन्तु"
 
-#: backends/wayland/wayland_output.cpp:484
+#: backends/wayland/wayland_output.cpp:482
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "सूचकं ग्रहीतुं दक्षिणनियन्त्रणकुंजी नुदन्तु"
 
-#: backends/wayland/wayland_output.cpp:488
+#: backends/wayland/wayland_output.cpp:486
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "WHERE Wayland रचनाकार %1"
 
-#: backends/wayland/wayland_output.cpp:491
+#: backends/wayland/wayland_output.cpp:489
 #, fuzzy, kde-format
 #| msgid "- Output disabled"
 msgid "- Output disabled"
 msgstr "- आउटपुट् अक्षमम्"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:491
 #, fuzzy, kde-format
 #| msgid "- Output dimmed"
 msgid "- Output dimmed"
@@ -1845,6 +1845,48 @@ msgstr "पूर्णपर्दे विण्डोज"
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
 msgstr "सक्रियइनपुटग्रहणं निष्क्रियं कुरु।"
+
+#: plugins/eis/eisprompter.cpp:51
+#, fuzzy, kde-format
+#| msgctxt "A keyboard modifier"
+#| msgid "Control"
+msgctxt "@title:window"
+msgid "Remote Control"
+msgstr "नियंत्रणं"
+
+#: plugins/eis/eisprompter.cpp:52
+#, kde-format
+msgctxt "@info keep '-' it's markdon"
+msgid "%1 is asking to control input devices"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:64
+#, kde-format
+msgctxt "@option:check"
+msgid "Always allow apps claiming to be %1"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:66
+#, kde-kuit-format
+msgctxt "@info:tooltip"
+msgid ""
+"Identities of legacy X11 apps cannot be verified. Any app claiming to be "
+"<application>%1</application> will be able to control input devices. You can "
+"revoke this permission later on <application>System Settings</application>’ "
+"“Legacy X11 App Support” page."
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:69
+#, kde-format
+msgctxt "@action:button Allow control of input devices"
+msgid "Allow"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:70
+#, kde-format
+msgctxt "@action:button Deny control of input devices"
+msgid "Deny"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4300,52 +4342,52 @@ msgstr "एकं डेस्कटॉपं अधः स्विच कु�
 msgid "Switch to Desktop %1"
 msgstr "डेस्कटॉप %1 प्रति स्विच् कुर्वन्तु"
 
-#: wayland/outputmanagement_v2.cpp:604
+#: wayland/outputmanagement_v2.cpp:602
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "प्रासंगिकनिर्गमानाम् एकं उत्पादनं अधुना उपलब्धं नास्ति"
 
-#: wayland/outputmanagement_v2.cpp:622
+#: wayland/outputmanagement_v2.cpp:620
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "विन्यासपरिवर्तनद्वारा सर्वाणि निर्गमानाम् अक्षमीकरणं न अनुमतम्"
 
-#: wayland/outputmanagement_v2.cpp:632
+#: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:639
+#: wayland/outputmanagement_v2.cpp:637
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:643
+#: wayland/outputmanagement_v2.cpp:641
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:654
+#: wayland/outputmanagement_v2.cpp:652
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:657
+#: wayland/outputmanagement_v2.cpp:655
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:661
+#: wayland/outputmanagement_v2.cpp:659
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:678
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "चालकः निर्गमविन्यासं अङ्गीकृतवान्"
 
-#: wayland/outputmanagement_v2.cpp:681
+#: wayland/outputmanagement_v2.cpp:679
 #, fuzzy, kde-format
 #| msgid "The Alt key is now active."
 msgid "The session is not active"
@@ -4378,7 +4420,7 @@ msgstr ""
 "कृपया अस्य परिचयपाठस्य अधः प्रदत्तां सूचनां पेस्ट् बिन् सेवायां स्थापयन्तु\n"
 "समर्थनसूत्रेषु चिनोतुः स्थाने https://paste.kde.org इव ।\n"
 
-#: xwayland/xwaylandlauncher.cpp:293
+#: xwayland/xwaylandlauncher.cpp:287
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland दुर्घटना अभवत्"

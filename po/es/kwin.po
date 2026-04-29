@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-28 00:46+0000\n"
+"POT-Creation-Date: 2026-04-29 00:47+0000\n"
 "PO-Revision-Date: 2026-04-24 17:48+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -42,29 +42,29 @@ msgstr ""
 "ecuadra@eloihr.net,jaime@kde.org,vicente@oan.es,yo@miguelrevilla.com,the."
 "blue.valkyrie@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:482
+#: backends/wayland/wayland_output.cpp:480
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pulse la tecla de Control derecha para liberar el puntero"
 
-#: backends/wayland/wayland_output.cpp:484
+#: backends/wayland/wayland_output.cpp:482
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pulse la tecla de Control derecha para capturar el puntero"
 
-#: backends/wayland/wayland_output.cpp:488
+#: backends/wayland/wayland_output.cpp:486
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Compositor de KDE Wayland %1"
 
-#: backends/wayland/wayland_output.cpp:491
+#: backends/wayland/wayland_output.cpp:489
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Salida desactivada"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:491
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Salida atenuada"
@@ -1825,6 +1825,48 @@ msgstr "Ventanas a pantalla completa"
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
 msgstr "Desactivar la captura de la entrada activa"
+
+#: plugins/eis/eisprompter.cpp:51
+#, fuzzy, kde-format
+#| msgctxt "A keyboard modifier"
+#| msgid "Control"
+msgctxt "@title:window"
+msgid "Remote Control"
+msgstr "Control"
+
+#: plugins/eis/eisprompter.cpp:52
+#, kde-format
+msgctxt "@info keep '-' it's markdon"
+msgid "%1 is asking to control input devices"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:64
+#, kde-format
+msgctxt "@option:check"
+msgid "Always allow apps claiming to be %1"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:66
+#, kde-kuit-format
+msgctxt "@info:tooltip"
+msgid ""
+"Identities of legacy X11 apps cannot be verified. Any app claiming to be "
+"<application>%1</application> will be able to control input devices. You can "
+"revoke this permission later on <application>System Settings</application>’ "
+"“Legacy X11 App Support” page."
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:69
+#, kde-format
+msgctxt "@action:button Allow control of input devices"
+msgid "Allow"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:70
+#, kde-format
+msgctxt "@action:button Deny control of input devices"
+msgid "Deny"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4277,56 +4319,56 @@ msgstr "Cambiar al escritorio inferior"
 msgid "Switch to Desktop %1"
 msgstr "Cambiar al escritorio %1"
 
-#: wayland/outputmanagement_v2.cpp:604
+#: wayland/outputmanagement_v2.cpp:602
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Una de las salidas relevantes ya no está disponible"
 
-#: wayland/outputmanagement_v2.cpp:622
+#: wayland/outputmanagement_v2.cpp:620
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "No está permitido desactivar todas las salidas mediante cambios de la "
 "configuración"
 
-#: wayland/outputmanagement_v2.cpp:632
+#: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 no se puede reflejar a sí mismo"
 
-#: wayland/outputmanagement_v2.cpp:639
+#: wayland/outputmanagement_v2.cpp:637
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "No se puede añadir un modo personalizado con un tamaño vacío"
 
-#: wayland/outputmanagement_v2.cpp:643
+#: wayland/outputmanagement_v2.cpp:641
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "No se puede añadir un modo personalizado con una frecuencia de actualización "
 "de cero Hz"
 
-#: wayland/outputmanagement_v2.cpp:654
+#: wayland/outputmanagement_v2.cpp:652
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "La posición de la salida %1 es demasiado negativa (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:657
+#: wayland/outputmanagement_v2.cpp:655
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "La posición de la salida activada %1 es demasiado negativa (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:661
+#: wayland/outputmanagement_v2.cpp:659
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "La posición de la salida %1 es demasiado grande (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:678
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "El controlador ha rechazado la configuración de salida"
 
-#: wayland/outputmanagement_v2.cpp:681
+#: wayland/outputmanagement_v2.cpp:679
 #, kde-format
 msgid "The session is not active"
 msgstr "La sesión no está activa"
@@ -4362,7 +4404,7 @@ msgstr ""
 "servicio de bandeja de pegar como https://paste.kde.org en lugar de pegarla "
 "en hilos de ayuda.\n"
 
-#: xwayland/xwaylandlauncher.cpp:293
+#: xwayland/xwaylandlauncher.cpp:287
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ha fallado"

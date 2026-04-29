@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-28 00:46+0000\n"
+"POT-Creation-Date: 2026-04-29 00:47+0000\n"
 "PO-Revision-Date: 2026-03-01 13:04+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -39,29 +39,29 @@ msgstr ""
 "xalba@ni.eus,etxaurre@teleline.es,marcos@euskalgnu.org,juanirigoien@yahoo.es,"
 "igaztanaga@gmail.com,hizpol@ej-gv.es"
 
-#: backends/wayland/wayland_output.cpp:482
+#: backends/wayland/wayland_output.cpp:480
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Sakatu eskuineko kontrol tekla erakuslea heltzeko"
 
-#: backends/wayland/wayland_output.cpp:484
+#: backends/wayland/wayland_output.cpp:482
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Sakatu eskuineko kontrol tekla erakuslea askatzeko"
 
-#: backends/wayland/wayland_output.cpp:488
+#: backends/wayland/wayland_output.cpp:486
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland konposatzailea %1"
 
-#: backends/wayland/wayland_output.cpp:491
+#: backends/wayland/wayland_output.cpp:489
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Irteera ezgaituta"
 
-#: backends/wayland/wayland_output.cpp:493
+#: backends/wayland/wayland_output.cpp:491
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Irteera motelduta"
@@ -1818,6 +1818,48 @@ msgstr "Pantaila-osoko leihoak"
 msgctxt "@action shortcut"
 msgid "Disable Active Input Capture"
 msgstr "Ezgaitu sarrera aktiboa atzematea"
+
+#: plugins/eis/eisprompter.cpp:51
+#, fuzzy, kde-format
+#| msgctxt "A keyboard modifier"
+#| msgid "Control"
+msgctxt "@title:window"
+msgid "Remote Control"
+msgstr "Kontrola"
+
+#: plugins/eis/eisprompter.cpp:52
+#, kde-format
+msgctxt "@info keep '-' it's markdon"
+msgid "%1 is asking to control input devices"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:64
+#, kde-format
+msgctxt "@option:check"
+msgid "Always allow apps claiming to be %1"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:66
+#, kde-kuit-format
+msgctxt "@info:tooltip"
+msgid ""
+"Identities of legacy X11 apps cannot be verified. Any app claiming to be "
+"<application>%1</application> will be able to control input devices. You can "
+"revoke this permission later on <application>System Settings</application>’ "
+"“Legacy X11 App Support” page."
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:69
+#, kde-format
+msgctxt "@action:button Allow control of input devices"
+msgid "Allow"
+msgstr ""
+
+#: plugins/eis/eisprompter.cpp:70
+#, kde-format
+msgctxt "@action:button Deny control of input devices"
+msgid "Deny"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -4274,52 +4316,52 @@ msgstr "Aldatu beheko mahaigainera"
 msgid "Switch to Desktop %1"
 msgstr "Aldatu %1 mahaigainera"
 
-#: wayland/outputmanagement_v2.cpp:604
+#: wayland/outputmanagement_v2.cpp:602
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Irteera esanguratsuetako bat jada ez dago erabilgarri"
 
-#: wayland/outputmanagement_v2.cpp:622
+#: wayland/outputmanagement_v2.cpp:620
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Konfigurazio aldaketen bidez irteera denak ezgaitzea ez da uzten"
 
-#: wayland/outputmanagement_v2.cpp:632
+#: wayland/outputmanagement_v2.cpp:630
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1(e)k ezin du bere burua ispilatu"
 
-#: wayland/outputmanagement_v2.cpp:639
+#: wayland/outputmanagement_v2.cpp:637
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Ezin da gehitu neurria hutsik duen neurriko modu bat"
 
-#: wayland/outputmanagement_v2.cpp:643
+#: wayland/outputmanagement_v2.cpp:641
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Ezin da zero Hz-ko freskatze-tasa duen neurriko modu bat gehitu"
 
-#: wayland/outputmanagement_v2.cpp:654
+#: wayland/outputmanagement_v2.cpp:652
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "%1 irteeraren kokapena negatiboegia da (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:657
+#: wayland/outputmanagement_v2.cpp:655
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "Gaitutako %1 irteeraren kokapena negatiboa da (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:661
+#: wayland/outputmanagement_v2.cpp:659
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "%1 irteeren kokapena handiegia da (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:678
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Gidariak irteera konfigurazioa errefusatu du"
 
-#: wayland/outputmanagement_v2.cpp:681
+#: wayland/outputmanagement_v2.cpp:679
 #, kde-format
 msgid "The session is not active"
 msgstr "Saioa ez dago aktibo"
@@ -4355,7 +4397,7 @@ msgstr ""
 "batean, «https://paste.kde.org» lekuan adibidez, euskarri-orrian egin "
 "ordez.\n"
 
-#: xwayland/xwaylandlauncher.cpp:293
+#: xwayland/xwaylandlauncher.cpp:287
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland kraskatu egin da"

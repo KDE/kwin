@@ -543,8 +543,8 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
-"Keď je to povolené, aplikácie ktoré si dokážu pamätať umiestnenie svojich "
-"okien to môžu robiť. Toto prepíše režim umiestňovania okien definovaný "
+"Keď je to povolené, aplikácie, ktoré si dokážu pamätať umiestnenie svojich "
+"okien, to môžu robiť. Toto prepíše režim umiestňovania okien definovaný "
 "vyššie."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)

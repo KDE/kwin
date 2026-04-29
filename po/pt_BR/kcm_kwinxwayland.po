@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-04-29 00:47+0000\n"
 "PO-Revision-Date: 2025-08-20 20:52-0300\n"
 "Last-Translator: Guilherme Marçal Silva <guimarcalsilva@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -19,19 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Lokalize 25.08.0\n"
 
-#: ui/main.qml:27
-#, kde-format
-msgctxt "@info"
-msgid "Changes will take effect the next time you log in."
-msgstr "As alterações só terão efeito na próxima vez que iniciar a sessão."
-
-#: ui/main.qml:31
-#, kde-format
-msgctxt "@action:button"
-msgid "Log Out Now"
-msgstr "Encerrar sessão agora"
-
-#: ui/main.qml:52
+#: ui/main.qml:29
 #, kde-kuit-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -46,31 +34,31 @@ msgstr ""
 "aplicativos, pode escolher seu equilíbrio preferido de segurança e "
 "compatibilidade aqui."
 
-#: ui/main.qml:73
+#: ui/main.qml:50
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
 msgstr "Captura das teclas digitadas:"
 
-#: ui/main.qml:80
+#: ui/main.qml:57
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
 msgstr "Proibido"
 
-#: ui/main.qml:96
+#: ui/main.qml:73
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr "O mais seguro; atalhos globais não funcionarão em aplicativos X11"
 
-#: ui/main.qml:110
+#: ui/main.qml:87
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Apenas teclas Meta, Control, Alt e Shift"
 
-#: ui/main.qml:126
+#: ui/main.qml:103
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -80,7 +68,7 @@ msgstr ""
 "Alta segurança; atalhos globais push-to-talk e outros atalhos globais com "
 "modificadores funcionarão em aplicativos X11"
 
-#: ui/main.qml:140
+#: ui/main.qml:117
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
@@ -90,20 +78,20 @@ msgstr ""
 "Igual acima, mais qualquer tecla enquanto Ctrl, Alt ou Meta também estiverem "
 "pressionadas"
 
-#: ui/main.qml:156
+#: ui/main.qml:133
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
 "Segurança moderada; todos os atalhos globais funcionarão em aplicativos X11"
 
-#: ui/main.qml:170
+#: ui/main.qml:147
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
 msgstr "Sempre permitir"
 
-#: ui/main.qml:186
+#: ui/main.qml:163
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -113,7 +101,7 @@ msgstr ""
 "O menos seguro; todos os aplicativos X11 poderão ver qualquer texto que você "
 "digitar em qualquer aplicativo"
 
-#: ui/main.qml:200
+#: ui/main.qml:177
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -125,19 +113,19 @@ msgstr ""
 "permitirá que programas maliciosos roubem senhas e espiem o texto que você "
 "digita. Certifique-se que você entende e aceita esse risco."
 
-#: ui/main.qml:216
+#: ui/main.qml:193
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
 msgstr "Captura dos botões do mouse:"
 
-#: ui/main.qml:222
+#: ui/main.qml:199
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
 msgstr "Permitido"
 
-#: ui/main.qml:238
+#: ui/main.qml:215
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -147,21 +135,50 @@ msgstr ""
 "Segurança moderada; atalhos globais envolvendo botões do mouse funcionarão "
 "em aplicativos X11"
 
-#: ui/main.qml:252
+#: ui/main.qml:233
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr "Controle do ponteiro e do teclado:"
 
-#: ui/main.qml:258
-#, kde-format
+#: ui/main.qml:240
+#, fuzzy, kde-format
+#| msgctxt "@option:radio Listening for mouse buttons is allowed"
+#| msgid "Allowed"
 msgctxt ""
-"@option:check Allow control of pointer and keyboard without asking for "
+"@option:check Allowed control of pointer and keyboard without asking for "
+"permissions for allowed apps"
+msgid "Allowed apps"
+msgstr "Permitido"
+
+#: ui/main.qml:246
+#, kde-format
+msgctxt "@action:button"
+msgid "See Allowed Applications…"
+msgstr ""
+
+#: ui/main.qml:259
+#, kde-format
+msgctxt "@info:usagetip"
+msgid ""
+"Moderate security; XWayland-using apps claiming to be something on this list "
+"will be able to take control of the computer, because XWayland-using apps’ "
+"identities can’t be verified"
+msgstr ""
+
+#: ui/main.qml:272
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "@option:check Allow control of pointer and keyboard without asking for "
+#| "permission"
+#| msgid "Allow without asking for permission"
+msgctxt ""
+"@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
 msgstr "Permitir sem perguntar primeiro"
 
-#: ui/main.qml:268
+#: ui/main.qml:283
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
@@ -169,7 +186,23 @@ msgstr ""
 "O menos seguro; todos os aplicativos X11 poderão assumir o controle do "
 "computador"
 
-#: ui/main.qml:282
+#: ui/main.qml:295
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Control of pointer and keyboard:"
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "Controle do ponteiro e do teclado:"
+
+#: ui/main.qml:315
+#, kde-format
+msgctxt "@info:tooltip %1 is the name of the app/binary"
+msgid "Do not allow %1 to control the pointer and keyboard without asking"
+msgstr ""
+
+#: ui/main.qml:329
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -180,6 +213,14 @@ msgstr ""
 "Note que o uso desta configuração reduzirá drasticamente a segurança do "
 "sistema e permitirá que programas maliciosos assumam o controle total do seu "
 "ponteiro e teclado. Certifique-se que você entende e aceita esse risco."
+
+#~ msgctxt "@info"
+#~ msgid "Changes will take effect the next time you log in."
+#~ msgstr "As alterações só terão efeito na próxima vez que iniciar a sessão."
+
+#~ msgctxt "@action:button"
+#~ msgid "Log Out Now"
+#~ msgstr "Encerrar sessão agora"
 
 #~ msgid ""
 #~ "Some legacy X11 apps require the ability to read keystrokes typed in "
