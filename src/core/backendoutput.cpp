@@ -20,7 +20,7 @@ namespace KWin
 {
 
 AutoBrightnessCurve::AutoBrightnessCurve()
-    : m_luxAtBrightness({0, 0, 0, 0, 0, 0})
+    : m_luxAtBrightness({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 {
 }
 
@@ -56,7 +56,7 @@ void AutoBrightnessCurve::adjust(double brightness, double lux)
     // in lux
     constexpr double minAbsDifference = 1;
     // unitless factor
-    constexpr double minRelativeDifference = 0.1;
+    constexpr double minRelativeDifference = 0.5 / (s_controlPointCount - 1);
 
     // the constraints on the curve are:
     // - it must be strictly monotonic, so
@@ -170,15 +170,37 @@ QJsonArray AutoBrightnessCurve::toArray() const
 
 std::optional<AutoBrightnessCurve> AutoBrightnessCurve::fromArray(const QJsonArray &array)
 {
-    if (array.size() != s_controlPointCount) {
+    // also accept 6 control points since that is how it was in 6.6.x
+    if (array.size() != s_controlPointCount && array.size() != 6) {
         return std::nullopt;
     }
     size_t index = 0;
     AutoBrightnessCurve ret;
-    for (const auto &value : array) {
-        ret.m_luxAtBrightness[index] = value.toDouble(0.0);
-        index++;
+
+    if (array.size() == 6) {
+        // this case assumes that there are 11 control points
+        static_assert(s_controlPointCount == 11);
+
+        // for the first 5 points (0%, 20%, 40%, 60%, 80%) also interpolate 10%, 30%, 50%, 70%, 90%
+        for (size_t i = 0; i < array.size() - 1; i++) {
+            double low = array[i].toDouble(0.0);
+            double high = array[i + 1].toDouble(0.0);
+
+            ret.m_luxAtBrightness[index] = low;
+            ret.m_luxAtBrightness[index + 1] = (low + high) / 2;
+
+            index += 2;
+        }
+
+        // copy the last point normally (100%)
+        ret.m_luxAtBrightness[index] = array[array.size() - 1].toDouble(0.0);
+    } else {
+        for (const auto &value : array) {
+            ret.m_luxAtBrightness[index] = value.toDouble(0.0);
+            index++;
+        }
     }
+
     return ret;
 }
 

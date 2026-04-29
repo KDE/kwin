@@ -43,7 +43,7 @@ public:
     static std::optional<AutoBrightnessCurve> fromArray(const QJsonArray &array);
 
 private:
-    static constexpr size_t s_controlPointCount = 6;
+    static constexpr size_t s_controlPointCount = 11;
     // brightness in lux. First value is 0% brightness, last is 100%
     std::array<double, s_controlPointCount> m_luxAtBrightness;
 };
