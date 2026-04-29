@@ -42,8 +42,7 @@ public:
     PlacementPolicy checkPlacement(PlacementPolicy placement) const;
     RectF checkGeometry(RectF rect, bool init = false) const;
     RectF checkGeometrySafe(RectF rect, bool init = false) const;
-    // use 'invalidPoint' with checkPosition, unlike QSize() and Rect(), QPoint() is a valid point
-    QPointF checkPositionSafe(QPointF pos, bool init = false) const;
+    std::optional<QPointF> checkPositionSafe(bool init = false) const;
     QPointF checkPosition(QPointF pos, bool init = false) const;
     QSizeF checkSize(QSizeF s, bool init = false) const;
     QSizeF checkMinSize(QSizeF s) const;

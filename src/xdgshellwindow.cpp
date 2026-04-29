@@ -1239,14 +1239,14 @@ void XdgToplevelWindow::sendPing(PingReason reason)
     m_pings.insert(serial, reason);
 }
 
-QPointF XdgToplevelWindow::initialPosition(const std::optional<XdgToplevelSessionData> &session) const
+std::optional<QPointF> XdgToplevelWindow::initialPosition(const std::optional<XdgToplevelSessionData> &session) const
 {
     if (session) {
         if (session->position && workspace()->outputLayoutId() == session->outputLayoutId) {
             return session->position.value();
         }
     }
-    return invalidPoint;
+    return std::nullopt;
 }
 
 QSizeF XdgToplevelWindow::initialSize(const std::optional<XdgToplevelSessionData> &session) const
@@ -1443,9 +1443,11 @@ void XdgToplevelWindow::initialize()
     }
 
     // Move or resize the window only if enforced by a window rule.
-    const QPointF forcedPosition = rules()->checkPositionSafe(initialPosition(sessionData), true);
-    if (forcedPosition != invalidPoint) {
-        place(forcedPosition);
+    auto position = rules()->checkPositionSafe(true).or_else([&]() {
+        return initialPosition(sessionData);
+    });
+    if (position) {
+        place(*position);
     }
     const QSizeF forcedSize = rules()->checkSize(initialSize(sessionData), true);
     if (forcedSize.isValid()) {
