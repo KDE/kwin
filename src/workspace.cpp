@@ -1278,7 +1278,7 @@ static bool wantsToManage(const BackendOutput *output)
     return output->isEnabled() && !output->isNonDesktop();
 }
 
-LogicalOutput *Workspace::findOutput(BackendOutput *backendOutput) const
+LogicalOutput *Workspace::findOutput(const BackendOutput *backendOutput) const
 {
     if (!wantsToManage(backendOutput)) {
         return nullptr;
