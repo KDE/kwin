@@ -245,15 +245,11 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
-"Tu môžete povoliť alebo zakázať virtuálnu bariéru medzi obrazovkami. Bariéra "
-"zabraňuje presunutiu kurzora na inú obrazovku, keď sa už dotýka rohu "
+"Tu môžete povoliť alebo zakázať virtuálnu rohovú bariéru medzi obrazovkami. "
+"Bariéra zabraňuje presunutiu kurzora na inú obrazovku, keď sa už dotýka rohu "
 "obrazovky. To uľahčuje spúšťanie prvkov používateľského rozhrania, ako sú "
 "tlačidlá na zatvorenie maximalizovaných okien, pri používaní viacerých "
-"obrazoviek.Tu môžete povoliť alebo zakázať virtuálnu bariéru medzi "
-"obrazovkami. Bariéra zabraňuje presunutiu kurzora na inú obrazovku, keď sa "
-"už dotýka rohu obrazovky. To uľahčuje spúšťanie prvkov používateľského "
-"rozhrania, ako sú tlačidlá na zatvorenie maximalizovaných okien, pri "
-"používaní viacerých obrazoviek."
+"obrazoviek."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
