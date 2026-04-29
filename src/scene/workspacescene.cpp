@@ -267,24 +267,31 @@ static bool isCandidate(SurfaceItem *item, const Rect &deviceRect, bool isOpaque
     return isOpaque && info->bitsPerPixel <= 32 && deviceRect.contains(view->deviceRect());
 }
 
-static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalCount,
-                                  Region &occupied, Region &opaque, Region &effected,
-                                  QList<Item *> &overlays, QList<Item *> &underlays,
-                                  QStack<ClipCorner> &corners, bool &needsCompositedScene)
+/**
+ * This returns
+ * - true if the search is complete and the visible parts of
+          the scene are fully represented in underlays and overlays,
+ * - std::nullopt if it can still be continued,
+ * - false if the search failed and should be stopped
+ */
+static std::optional<bool> findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalCount,
+                                                 Region &occupied, Region &opaque, Region &effected,
+                                                 QList<Item *> &overlays, QList<Item *> &underlays,
+                                                 QStack<ClipCorner> &corners, bool &needsCompositedScene)
 {
     if (opaque.contains(view->deviceRect())) {
         return true;
     }
     if (!item || !item->isVisible() || item->opacity() == 0.0 || item->boundingRect().isEmpty()
         || !view->viewport().intersects(item->mapToView(item->boundingRect(), view))) {
-        return true;
+        return std::nullopt;
     }
     if (item->hasEffects()) {
         // can't put this item, any children on items below this one
         // on an overlay/underlay, as we don't know what the effect does
         effected += mapToDevice(view, item, item->boundingRect());
         needsCompositedScene = true;
-        return true;
+        return std::nullopt;
     }
     maybePushCorners(item, corners);
     auto cleanupCorners = qScopeGuard([&corners]() {
@@ -300,8 +307,8 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalC
         if (child->z() < 0) {
             break;
         }
-        if (!findOverlayCandidates(view, child, maxTotalCount, occupied, opaque, effected, overlays, underlays, corners, needsCompositedScene)) {
-            return false;
+        if (auto ret = findOverlayCandidates(view, child, maxTotalCount, occupied, opaque, effected, overlays, underlays, corners, needsCompositedScene)) {
+            return ret;
         }
     }
 
@@ -349,15 +356,18 @@ static bool findOverlayCandidates(SceneView *view, Item *item, ssize_t maxTotalC
             needsCompositedScene = true;
         }
         opaque += deviceOpaque;
+        if (opaque.contains(view->deviceRect())) {
+            return true;
+        }
     }
 
     for (; it != children.rend(); it++) {
         Item *const child = *it;
-        if (!findOverlayCandidates(view, child, maxTotalCount, occupied, opaque, effected, overlays, underlays, corners, needsCompositedScene)) {
-            return false;
+        if (auto ret = findOverlayCandidates(view, child, maxTotalCount, occupied, opaque, effected, overlays, underlays, corners, needsCompositedScene)) {
+            return ret;
         }
     }
-    return true;
+    return std::nullopt;
 }
 
 static const bool s_forceSoftwareCursor = environmentVariableBoolValue("KWIN_FORCE_SW_CURSOR").value_or(false);
@@ -404,6 +414,7 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
     QList<Item *> underlays;
     QStack<ClipCorner> cornerStack;
     bool needsCompositedScene = false;
+    std::optional<bool> result;
 
     const auto overlayItems = m_overlayItem->sortedChildItems();
     for (Item *item : overlayItems | std::views::reverse) {
@@ -426,15 +437,21 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
             }
             continue;
         }
-        if (!findOverlayCandidates(painted_delegate, item, maxTotalCount, occupied, opaque, effected, overlays, underlays, cornerStack, needsCompositedScene)) {
-            return fallback();
+        result = findOverlayCandidates(painted_delegate, item, maxTotalCount, occupied, opaque, effected, overlays, underlays, cornerStack, needsCompositedScene);
+        if (result.has_value()) {
+            if (*result) {
+                break;
+            } else {
+                return fallback();
+            }
         }
     }
 
     if (effects->blocksDirectScanout()) {
         needsCompositedScene = true;
-    } else {
-        if (!findOverlayCandidates(painted_delegate, m_containerItem.get(), maxTotalCount, occupied, opaque, effected, overlays, underlays, cornerStack, needsCompositedScene)) {
+    } else if (!result) {
+        result = findOverlayCandidates(painted_delegate, m_containerItem.get(), maxTotalCount, occupied, opaque, effected, overlays, underlays, cornerStack, needsCompositedScene);
+        if (result.has_value() && !*result) {
             return fallback();
         }
     }
