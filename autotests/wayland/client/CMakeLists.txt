@@ -84,22 +84,6 @@ add_test(NAME kwayland-testDataSource COMMAND testDataSource)
 ecm_mark_as_test(testDataSource)
 
 ########################################################
-# Test ServerSideDecoration
-########################################################
-set( testServerSideDecoration_SRCS
-        test_server_side_decoration.cpp
-    )
-add_executable(testServerSideDecoration ${testServerSideDecoration_SRCS})
-qt6_generate_wayland_protocol_client_sources(testServerSideDecoration
-    PRIVATE_CODE
-    FILES
-        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration.xml
-)
-target_link_libraries( testServerSideDecoration Qt::Test Qt::Gui Plasma::KWaylandClient kwin Wayland::Client)
-add_test(NAME kwayland-testServerSideDecoration COMMAND testServerSideDecoration)
-ecm_mark_as_test(testServerSideDecoration)
-
-########################################################
 # Test PlasmaShell
 ########################################################
 set( testPlasmaShell_SRCS
