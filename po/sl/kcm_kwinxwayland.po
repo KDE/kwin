@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-29 00:47+0000\n"
-"PO-Revision-Date: 2025-05-30 07:09+0200\n"
+"PO-Revision-Date: 2026-04-29 09:30+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.9\n"
 
 #: ui/main.qml:29
 #, kde-kuit-format
@@ -140,20 +140,18 @@ msgid "Control of pointer and keyboard:"
 msgstr "Kontrola kazalca in tipkovnice:"
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "Dovoljeno"
+msgstr "Dovoljene aplikacije"
 
 #: ui/main.qml:246
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Glejte dovoljene aplikacije…"
 
 #: ui/main.qml:259
 #, kde-format
@@ -163,18 +161,17 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"Zmerna varnost; Aplikacije, ki uporabljajo XWayland in trdijo, da so na tem "
+"seznamu, bodo lahko prevzele nadzor nad računalnikom, ker identitet "
+"aplikacij, ki uporabljajo XWayland, ni mogoče preveriti."
 
 #: ui/main.qml:272
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
 msgid "Allow without asking for permission"
-msgstr "Dovoli brez vprašanja za dovoljenje"
+msgstr "Dovoli brez prošnje za dovoljenje"
 
 #: ui/main.qml:283
 #, kde-format
@@ -184,20 +181,18 @@ msgstr ""
 "Najmanj varno; vse aplikacije X11 bodo lahko prevzele nadzor nad računalnikom"
 
 #: ui/main.qml:295
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Kontrola kazalca in tipkovnice:"
+msgstr "Aplikacije, ki lahko upravljajo kazalec in tipkovnico"
 
 #: ui/main.qml:315
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
+msgstr "Ne dovoli %1, da upravlja kazalec in tipkovnico brez vprašanja"
 
 #: ui/main.qml:329
 #, kde-format

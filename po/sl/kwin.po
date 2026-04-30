@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1735754 2026-04-29 01:30:41Z scripty $
+# $Id: kwin.po 1735818 2026-04-30 01:28:00Z scripty $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-29 00:47+0000\n"
-"PO-Revision-Date: 2026-04-24 07:21+0200\n"
+"PO-Revision-Date: 2026-04-29 09:34+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -1819,24 +1819,22 @@ msgid "Disable Active Input Capture"
 msgstr "Onemogoči aktivni zajem vnosa"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Control"
+msgstr "Daljinski upravljalnik"
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-format
 msgctxt "@info keep '-' it's markdon"
 msgid "%1 is asking to control input devices"
-msgstr ""
+msgstr "%1 prosi za nadzor vhodnih naprav"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Vedno dovoli aplikacijam, ki trdijo, da so %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1847,18 +1845,23 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Identitet starejših aplikacij X11 ni mogoče preveriti. Vsaka aplikacija, ki "
+"trdi, da je <application>%1</application>, bo lahko nadzorovala vhodne "
+"naprave. To dovoljenje lahko prekličete pozneje na strani "
+"<application>Sistemske nastavitve</application> v \"Podpora za starejše "
+"aplikacije X11\""
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Dovoli"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Zavrni"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)

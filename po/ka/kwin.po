@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-29 00:47+0000\n"
-"PO-Revision-Date: 2026-04-24 03:32+0200\n"
+"PO-Revision-Date: 2026-04-29 05:37+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -1804,24 +1804,22 @@ msgid "Disable Active Input Capture"
 msgstr "აქტიური შეყვანის ჩაწერის გათიშვა"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "კონტროლი"
+msgstr "დაშორებული მართვა"
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-format
 msgctxt "@info keep '-' it's markdon"
 msgid "%1 is asking to control input devices"
-msgstr ""
+msgstr "%1 ითხოვს შეყვანის მოწყობილობების კონტროლს"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "ყოველთვის დაშვება აპების, რომლებიც აცხადებენ, რომ არიან %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1832,18 +1830,23 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"ძველი X11 აპების იდენტიფიკაციის გადამოწმება შეუძლებელია. ნებისმიერი აპი, "
+"რომელიც ამტკიცებს, რომ არის <application>%1</application>, შეძლებს შეყვანის "
+"მოწყობილობის მართვას. ამ უფლების გაუქმება ნებისმიერ დროს შეგიძლიათ "
+"<application>სისტემის მორგების</application> ფანჯრის \"მოძველებული X11 "
+"აპების მხარდაჭერის\" გვერდზე."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "დაშვება"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "უარყოფა"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)

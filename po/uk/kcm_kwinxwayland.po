@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2022, 2023, 2024, 2025.
+# Yuri Chornoivan <yurchor@ukr.net>, 2022, 2023, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-29 00:47+0000\n"
-"PO-Revision-Date: 2025-05-30 09:47+0300\n"
+"PO-Revision-Date: 2026-04-29 08:47+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -142,20 +142,18 @@ msgid "Control of pointer and keyboard:"
 msgstr "Керування вказівником і клавіатурою:"
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "Дозволено"
+msgstr "Дозволені програми"
 
 #: ui/main.qml:246
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Переглянути дозволені програми…"
 
 #: ui/main.qml:259
 #, kde-format
@@ -165,13 +163,13 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"Помірний рівень безпеки; програми, що використовують XWayland і претендують "
+"на те, щоб бути частиною цього списку, зможуть керувати комп'ютером, "
+"оскільки ідентифікаційні дані програм, що використовують XWayland, неможливо "
+"перевірити."
 
 #: ui/main.qml:272
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -185,20 +183,18 @@ msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr "Найменший захист; усі програми X11 зможуть керувати вашим комп'ютером"
 
 #: ui/main.qml:295
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Керування вказівником і клавіатурою:"
+msgstr "Програми, яким дозволено керувати вказівником і клавіатурою"
 
 #: ui/main.qml:315
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
+msgstr "Не дозволяти %1 керувати вказівником миші та клавіатурою без запиту"
 
 #: ui/main.qml:329
 #, kde-format

@@ -140,20 +140,18 @@ msgid "Control of pointer and keyboard:"
 msgstr "Ovládanie ukazovateľa a klávesnice:"
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "Povolené"
+msgstr "Povolené aplikácie"
 
 #: ui/main.qml:246
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Zobraziť povolené aplikácie…"
 
 #: ui/main.qml:259
 #, kde-format
@@ -163,13 +161,12 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"Stredná bezpečnosť; aplikácie používajúce XWayland, ktoré sa vydávajú za "
+"niečo z tohto zoznamu, budú môcť prevziať kontrolu nad počítačom, pretože "
+"identity aplikácií používajúcich XWayland nie je možné overiť"
 
 #: ui/main.qml:272
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -185,20 +182,18 @@ msgstr ""
 "počítačom"
 
 #: ui/main.qml:295
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Ovládanie ukazovateľa a klávesnice:"
+msgstr "Aplikácie s povolením ovládať ukazovateľ a klávesnicu"
 
 #: ui/main.qml:315
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
+msgstr "Nepovoliť %1 ovládať ukazovateľ a klávesnicu bez žiadosti"
 
 #: ui/main.qml:329
 #, kde-format

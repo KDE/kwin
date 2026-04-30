@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-29 00:47+0000\n"
-"PO-Revision-Date: 2026-04-24 12:32+0200\n"
+"PO-Revision-Date: 2026-04-29 10:41+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -1824,24 +1824,22 @@ msgid "Disable Active Input Capture"
 msgstr "Vangen van actieve invoer uitschakelen"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Besturing"
+msgstr "Afstandsbediening"
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-format
 msgctxt "@info keep '-' it's markdon"
 msgid "%1 is asking to control input devices"
-msgstr ""
+msgstr "%1 vraagt om invoerapparaten te besturen"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Altijd toepassingen toestaan die claimen %1 te zijn"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1852,18 +1850,23 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"De identiteit van oudere X11-toepassingen kan niet worden geverifieerd. Elke "
+"toepassing die beweert <application>%1</application> te zijn, kan "
+"invoerapparaten bedienen. U kunt deze toestemming later intrekken via de "
+"pagina 'Ondersteuning voor oudere X11-apps' in "
+"<application>Systeeminstellingen</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Toestaan"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Ontzeggen"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)

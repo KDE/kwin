@@ -1,15 +1,15 @@
 # Translation of kcm_kwinxwayland.po to Catalan (Valencian)
-# Copyright (C) 2022-2025 This_file_is_part_of_KDE
+# Copyright (C) 2022-2026 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 Josep M. Ferrer <txemaq@gmail.com>
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025, 2026 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-29 00:47+0000\n"
-"PO-Revision-Date: 2025-05-30 10:34+0200\n"
+"PO-Revision-Date: 2026-04-29 10:57+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #: ui/main.qml:29
 #, kde-kuit-format
@@ -144,20 +144,18 @@ msgid "Control of pointer and keyboard:"
 msgstr "Control del punter i del teclat:"
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "Permés"
+msgstr "Aplicacions permeses"
 
 #: ui/main.qml:246
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Veure les aplicacions permeses…"
 
 #: ui/main.qml:259
 #, kde-format
@@ -167,13 +165,13 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"Seguretat moderada; les aplicacions que utilitzen XWayland que afirmen ser "
+"alguna cosa en esta llista podran prendre el control de l'ordinador, perquè "
+"les identitats de les aplicacions que utilitzen XWayland no es poden "
+"verificar"
 
 #: ui/main.qml:272
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -189,20 +187,18 @@ msgstr ""
 "l'ordinador"
 
 #: ui/main.qml:295
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Control del punter i del teclat:"
+msgstr "Aplicacions permeses a controlar el punter i el teclat"
 
 #: ui/main.qml:315
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
+msgstr "No permetes que %1 controle el punter i el teclat sense preguntar"
 
 #: ui/main.qml:329
 #, kde-format
@@ -216,11 +212,3 @@ msgstr ""
 "seguretat del sistema i permetrà que programari maliciós prenga un control "
 "complet del punter i del teclat. Assegureu-vos que enteneu i accepteu este "
 "risc."
-
-#~ msgctxt "@info"
-#~ msgid "Changes will take effect the next time you log in."
-#~ msgstr "Els canvis s'efectuaran la pròxima vegada que us connecteu."
-
-#~ msgctxt "@action:button"
-#~ msgid "Log Out Now"
-#~ msgstr "Ix ara"

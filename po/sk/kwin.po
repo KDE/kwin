@@ -1815,24 +1815,22 @@ msgid "Disable Active Input Capture"
 msgstr "Zakázať integrácoi KActivities."
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Ovládanie"
+msgstr "Vzdialené ovládanie"
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-format
 msgctxt "@info keep '-' it's markdon"
 msgid "%1 is asking to control input devices"
-msgstr ""
+msgstr "%1 žiada o ovládanie vstupných zariadení"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Vždy povoliť aplikáciám, ktoré sa vydávajú za %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1843,18 +1841,22 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Identity starších aplikácií X11 nie je možné overiť. Akákoľvek aplikácia, "
+"ktorá sa vydáva za <application>%1</application>, bude môcť ovládať vstupné "
+"zariadenia. Toto povolenie môžete neskôr odvolať na stránke „Odkaz na starší "
+"X11” v <application>Systémových nastavení</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Povoliť"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Odmietnuť"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
