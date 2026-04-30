@@ -458,12 +458,17 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     QList<uint64_t> renderModifiers;
     auto ret = std::make_unique<Surface>();
     const auto drmFormat = m_eglBackend->eglDisplayObject()->allSupportedDrmFormats()[format];
+    QList<uint64_t> eglImportModifiers;
     if (importMode == MultiGpuImportMode::Egl) {
         ret->importContext = m_eglBackend->contextForGpu(m_gpu);
         if (!ret->importContext || ret->importContext->isSoftwareRenderer()) {
             return nullptr;
         }
         const auto importDrmFormat = ret->importContext->displayObject()->allSupportedDrmFormats()[format];
+        eglImportModifiers = filterModifiers(modifiers, importDrmFormat.nonExternalOnlyModifiers);
+        if (eglImportModifiers.empty()) {
+            return nullptr;
+        }
         renderModifiers = filterModifiers(importDrmFormat.allModifiers,
                                           drmFormat.nonExternalOnlyModifiers);
         // transferring non-linear buffers with implicit modifiers between GPUs is likely to yield wrong results
@@ -491,7 +496,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     if (cpuCopy) {
         ret->importDumbSwapchain = std::make_unique<QPainterSwapchain>(m_gpu->drmDevice()->allocator(), size, format);
     } else if (importMode == MultiGpuImportMode::Egl) {
-        ret->importGbmSwapchain = createGbmSwapchain(m_gpu, ret->importContext.get(), size, format, modifiers, MultiGpuImportMode::None, BufferTarget::Normal);
+        ret->importGbmSwapchain = createGbmSwapchain(m_gpu, ret->importContext.get(), size, format, eglImportModifiers, MultiGpuImportMode::None, BufferTarget::Normal);
         if (!ret->importGbmSwapchain) {
             return nullptr;
         }
