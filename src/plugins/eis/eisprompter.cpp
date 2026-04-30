@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 
     // Try to be close to the strings of xdg-desktop-portal-kde
     const QString title = i18nc("@title:window", "Remote Control");
-    const QString text = i18nc("@info keep '-' it's markdon", "%1 is asking to control input devices", clientName);
+    const QString text = xi18nc("@info", "<application>%1</application> is asking to control input devices", clientName);
     QDialog dialog;
     QVBoxLayout layout(&dialog);
     QHBoxLayout mainLayout;
