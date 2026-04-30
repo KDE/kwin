@@ -1,21 +1,21 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 Emir SARI <emir_sari@icloud.com>
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025, 2026 Emir SARI <emir_sari@icloud.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2025-05-31 00:14+0300\n"
-"Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
+"PO-Revision-Date: 2026-04-29 14:53+0300\n"
+"Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: ui/main.qml:27
 #, kde-format
@@ -74,8 +74,8 @@ msgid ""
 "High security; push-to-talk and other modifier-only global shortcuts will "
 "work in X11 apps"
 msgstr ""
-"Yüksek güvenlikli; bas–konuş ve diğer niteleyiciye özel global kısayollar "
-"X11 uygulamalarında çalışır."
+"Yüksek düzey güvenlikli; bas–konuş ve diğer niteleyiciye özel global "
+"kısayollar X11 uygulamalarında çalışır."
 
 #: ui/main.qml:140
 #, kde-format
@@ -91,7 +91,8 @@ msgstr ""
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
-msgstr "Orta güvenlikli, tüm global kısayollar X11 uygulamalarında çalışır."
+msgstr ""
+"Orta düzey güvenlikli, tüm global kısayollar X11 uygulamalarında çalışır."
 
 #: ui/main.qml:170
 #, kde-format
@@ -141,7 +142,7 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
-"Orta güvenlikli; fare düğmelerini içeren global kısayollar X11 "
+"Orta düzey güvenlikli; fare düğmelerini içeren global kısayollar X11 "
 "uygulamalarında çalışır."
 
 #: ui/main.qml:252
@@ -174,7 +175,7 @@ msgid ""
 "keyboard. Make sure you understand and accept this risk."
 msgstr ""
 "Bu ayarı kullanmanın sistem güvenliğini önemli ölçüde azaltacağını ve kötü "
-"amaçlı yazılımların işaretçinizin ve klavyenizin tam denetimini ellerina "
+"amaçlı yazılımların işaretçinizin ve klavyenizin tam denetimini ellerine "
 "almalarına izin vereceğini unutmayın. Anladığınızdan ve bu riski kabul "
 "ettiğinizden emin olun."
 
