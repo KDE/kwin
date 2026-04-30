@@ -196,13 +196,13 @@ QString RulePolicy::policyKey(const QString &key) const
 QList<RulePolicy::Data> RulePolicy::policyOptions(RulePolicy::Type type)
 {
     static const auto stringMatchOptions = QList<RulePolicy::Data>{
-        {Rules::UnimportantMatch, i18n("Unimportant")},
-        {Rules::ExactMatch, i18n("Exact match")},
-        {Rules::SubstringMatch, i18n("Substring match")},
-        {Rules::RegExpMatch, i18n("Regular expression")}};
+        {Rules::UnimportantMatch, i18nc("@item:inlistbox", "Unimportant")},
+        {Rules::ExactMatch, i18nc("@item:inlistbox", "Exact match")},
+        {Rules::SubstringMatch, i18nc("@item:inlistbox", "Substring match")},
+        {Rules::RegExpMatch, i18nc("@item:inlistbox", "Regular expression")}};
     static const auto boolMatchOptions = QList<RulePolicy::Data>{
-        {Rules::UnimportantMatch, i18n("Unimportant")},
-        {Rules::ExactMatch, i18n("Match")},
+        {Rules::UnimportantMatch, i18nc("@item:inlistbox", "Unimportant")},
+        {Rules::ExactMatch, i18nc("@item:inlistbox This is a noun", "Match")},
     };
 
     static const auto setRuleOptions = QList<RulePolicy::Data>{
