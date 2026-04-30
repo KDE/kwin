@@ -343,7 +343,9 @@ void DrmOutput::repairPresentation()
 {
     // read back drm properties, most likely our info is out of date somehow
     // or we need a modeset
-    QTimer::singleShot(0, m_gpu->platform(), &DrmBackend::updateOutputs);
+    QTimer::singleShot(0, m_gpu->platform(), [backend = m_gpu->platform()]() {
+        backend->updateOutputs();
+    });
 }
 
 bool DrmOutput::recommendsOverlayUse() const

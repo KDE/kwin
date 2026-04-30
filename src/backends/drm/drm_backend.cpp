@@ -106,7 +106,7 @@ bool DrmBackend::initialize()
             gpu->setActive(true);
             // the output list might've changed while the device was inactive
             // note that this might delete the gpu!
-            updateOutputs();
+            updateOutputs(gpu);
         }
     });
     connect(m_session, &Session::awoke, this, [this]() {
@@ -201,8 +201,8 @@ void DrmBackend::handleUdevEvent()
                 qCWarning(KWIN_DRM) << "Received unexpected add udev event for:" << device->devNode();
                 continue;
             }
-            if (addGpu(device->devNode())) {
-                updateOutputs();
+            if (DrmGpu *gpu = addGpu(device->devNode())) {
+                updateOutputs(gpu);
             }
         } else if (device->action() == QLatin1StringView("remove")) {
             DrmGpu *gpu = findGpu(device->devNum());
@@ -213,7 +213,7 @@ void DrmBackend::handleUdevEvent()
                     return;
                 } else {
                     gpu->setRemoved();
-                    updateOutputs();
+                    updateOutputs(gpu);
                 }
             }
         } else if (device->action() == QLatin1StringView("change")) {
@@ -223,7 +223,7 @@ void DrmBackend::handleUdevEvent()
             }
             if (gpu && gpu->isActive()) {
                 qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->drmDevice()->path();
-                updateOutputs();
+                updateOutputs(gpu);
             }
         }
     }
@@ -282,12 +282,12 @@ void DrmBackend::removeOutput(DrmAbstractOutput *o)
     Q_EMIT outputRemoved(o);
 }
 
-void DrmBackend::updateOutputs()
+void DrmBackend::updateOutputs(DrmGpu *onlyUpdate)
 {
     for (auto it = m_gpus.begin(); it != m_gpus.end(); ++it) {
         if ((*it)->isRemoved()) {
             (*it)->removeOutputs();
-        } else {
+        } else if (!onlyUpdate || onlyUpdate == it->get()) {
             (*it)->updateOutputs();
         }
     }
