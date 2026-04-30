@@ -65,8 +65,6 @@ public:
 private:
     enum class MultiGpuImportMode {
         None,
-        Dmabuf,
-        LinearDmabuf,
         GpuCopy,
         DumbBuffer,
     };
