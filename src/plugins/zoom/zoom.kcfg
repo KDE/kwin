@@ -37,8 +37,8 @@
         <entry name="UsePatternUpscaler" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="PushEdgeThreshold" type="Double">
-            <default>0.01</default>
+        <entry name="FocusTrackingMargin" type="UInt">
+            <default>4</default>
         </entry>
     </group>
 </kcfg>
