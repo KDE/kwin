@@ -847,14 +847,15 @@ RectF WindowRules::checkGeometry(RectF rect, bool init) const
 
 RectF WindowRules::checkGeometrySafe(RectF rect, bool init) const
 {
-    return RectF(checkPositionSafe(rect.topLeft(), init), checkSize(rect.size(), init));
+    const auto pos = checkPositionSafe(init);
+    return RectF(pos.value_or(rect.topLeft()), checkSize(rect.size(), init));
 }
 
-QPointF WindowRules::checkPositionSafe(QPointF pos, bool init) const
+std::optional<QPointF> WindowRules::checkPositionSafe(bool init) const
 {
-    const auto ret = checkPosition(pos, init);
-    if (ret == pos || ret == invalidPoint) {
-        return ret;
+    const auto ret = checkPosition(invalidPoint, init);
+    if (ret == invalidPoint) {
+        return std::nullopt;
     }
     const auto outputs = workspace()->outputs();
     const bool inAnyOutput = std::any_of(outputs.begin(), outputs.end(), [ret](const auto output) {
@@ -863,7 +864,7 @@ QPointF WindowRules::checkPositionSafe(QPointF pos, bool init) const
     if (inAnyOutput) {
         return ret;
     } else {
-        return invalidPoint;
+        return std::nullopt;
     }
 }
 

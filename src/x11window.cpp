@@ -669,9 +669,9 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     const QSizeF constrainedClientSize = constrainClientSize(geom.size());
     resize(rules()->checkSize(clientSizeToFrameSize(constrainedClientSize), !isMapped));
 
-    QPointF forced_pos = rules()->checkPositionSafe(invalidPoint, !isMapped);
-    if (forced_pos != invalidPoint) {
-        place(forced_pos);
+    const auto forced_pos = rules()->checkPositionSafe(!isMapped);
+    if (forced_pos) {
+        place(*forced_pos);
         placementDone = true;
         // Don't keep inside workarea if the window has specially configured position
         partial_keep_in_area = true;

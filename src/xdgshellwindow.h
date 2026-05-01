@@ -229,7 +229,7 @@ private:
     void updateMaximizeMode(MaximizeMode maximizeMode);
     void updateFullScreenMode(bool set);
     void sendPing(PingReason reason);
-    QPointF initialPosition(const std::optional<XdgToplevelSessionData> &session) const;
+    std::optional<QPointF> initialPosition(const std::optional<XdgToplevelSessionData> &session) const;
     QSizeF initialSize(const std::optional<XdgToplevelSessionData> &session) const;
     bool initialKeepAbove(const std::optional<XdgToplevelSessionData> &session) const;
     bool initialKeepBelow(const std::optional<XdgToplevelSessionData> &session) const;
