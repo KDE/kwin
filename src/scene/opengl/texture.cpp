@@ -7,7 +7,10 @@
 #include "scene/opengl/texture.h"
 #include "compositor.h"
 #include "core/drm_formats.h"
+#include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/graphicsbufferview.h"
+#include "core/renderdevice.h"
 #include "core/syncobjtimeline.h"
 #include "opengl/eglbackend.h"
 #include "opengl/gltexture.h"
@@ -204,6 +207,12 @@ void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region 
 
 bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
+    RenderDevice *compat = GpuManager::self()->compatibleRenderDevice(buffer->dmabufAttributes()->device);
+    if (compat != m_backend->renderDevice()) {
+        // TODO do multi gpu copies instead
+        return false;
+    }
+
     const auto attribs = buffer->dmabufAttributes();
     if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
         std::vector<std::unique_ptr<GLTexture>> textures;
@@ -248,6 +257,12 @@ void BufferTextureOpenGL::updateDmabufTexture(GraphicsBuffer *buffer, const std:
     if (Q_UNLIKELY(m_bufferType != BufferType::DmaBuf)) {
         reset();
         attach(buffer, releasePoint);
+        return;
+    }
+
+    RenderDevice *compat = GpuManager::self()->compatibleRenderDevice(buffer->dmabufAttributes()->device);
+    if (compat != m_backend->renderDevice()) {
+        // TODO do multi gpu copies instead
         return;
     }
 
