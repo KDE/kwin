@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-29 00:47+0000\n"
-"PO-Revision-Date: 2026-04-11 18:09+0400\n"
+"PO-Revision-Date: 2026-04-30 09:09+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1785,24 +1785,22 @@ msgid "Disable Active Input Capture"
 msgstr "عطل التقاط الإدخال النشط"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Control"
+msgstr "التحكم عن بعد"
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-format
 msgctxt "@info keep '-' it's markdon"
 msgid "%1 is asking to control input devices"
-msgstr ""
+msgstr "يطلب %1 التحكم في أجهزة الإدخال"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "اسمح دائمًا للتطبيقات التي تدعي أنها %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1813,18 +1811,22 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"لا يمكن التحقق من هويات تطبيقات X11 القديمة. سيتمكن أي تطبيق يدعي أنه "
+"<application>%1</application> من التحكم في أجهزة الإدخال. يمكنك إلغاء هذا "
+"الإذن لاحقًا من صفحة «دعم تطبيقات X11 القديمة» في <application>إعدادات "
+"النظام</application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "اسمح"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "امنع"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3162,18 +3164,15 @@ msgstr "نص وسم النافذة يطابق النوع"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "لا يوجد نوافذ مفتوحة"
+msgstr "لديها نافذة أم"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
-#, fuzzy, kde-format
-#| msgid "Set window type to"
+#, kde-format
 msgid "Has parent window match type"
-msgstr "عين نوع النّافذة إلى"
+msgstr "لديها نوع مطابقة النافذة الأم"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89

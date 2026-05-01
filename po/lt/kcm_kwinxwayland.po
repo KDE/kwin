@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-29 00:47+0000\n"
-"PO-Revision-Date: 2025-12-29 21:13+0200\n"
+"PO-Revision-Date: 2026-05-01 02:10+0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: lt\n"
@@ -143,20 +143,18 @@ msgid "Control of pointer and keyboard:"
 msgstr "Rodyklės ir klaviatūros valdymas:"
 
 #: ui/main.qml:240
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "Leidžiamas"
+msgstr "Leidžiamoms programoms"
 
 #: ui/main.qml:246
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Rodyti leidžiamas programas…"
 
 #: ui/main.qml:259
 #, kde-format
@@ -165,14 +163,10 @@ msgid ""
 "Moderate security; XWayland-using apps claiming to be something on this list "
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
-msgstr ""
+msgstr "Vidutiniškai saugu; XWayland naudojančios programos"
 
 #: ui/main.qml:272
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -186,20 +180,18 @@ msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr "Nesaugiausia; visos X11 programos galės perimti kompiuterio valdymą"
 
 #: ui/main.qml:295
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Rodyklės ir klaviatūros valdymas:"
+msgstr "Programos, kurioms leidžiama valdyti pelės rodyklę ir klaviatūrą"
 
 #: ui/main.qml:315
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
+msgstr "Neleisti %1 valdyti pelės rodyklę ir klaviatūrą nepaprašius leidimo"
 
 #: ui/main.qml:329
 #, kde-format

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-24 00:45+0000\n"
-"PO-Revision-Date: 2026-02-21 01:58+0200\n"
+"PO-Revision-Date: 2026-05-01 02:10+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -59,7 +59,7 @@ msgstr "Reguliarusis reiškinys"
 #: optionsmodel.cpp:205
 #, kde-format
 msgid "Match"
-msgstr ""
+msgstr "Atitiktis"
 
 #: optionsmodel.cpp:210
 #, kde-format
@@ -246,10 +246,9 @@ msgid "Window tag"
 msgstr "Lango žymė"
 
 #: rulesmodel.cpp:446
-#, fuzzy, kde-format
-#| msgid "On main window"
+#, kde-format
 msgid "Has parent window"
-msgstr "Pagrindiniame lange"
+msgstr "Turi viršesnį langą"
 
 #: rulesmodel.cpp:452
 #, kde-format

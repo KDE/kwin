@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-29 00:47+0000\n"
-"PO-Revision-Date: 2026-04-18 18:42+0300\n"
+"PO-Revision-Date: 2026-05-01 02:08+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -50,12 +50,12 @@ msgstr "KDE Wayland kompozitorius %1"
 #: backends/wayland/wayland_output.cpp:489
 #, kde-format
 msgid "- Output disabled"
-msgstr "– Išvedimas išjungtas"
+msgstr "- Išvedimas išjungtas"
 
 #: backends/wayland/wayland_output.cpp:491
 #, kde-format
 msgid "- Output dimmed"
-msgstr "– Išvedimas pritemdytas"
+msgstr "- Išvedimas pritemdytas"
 
 #: backends/x11/x11_windowed_backend.cpp:499
 #, kde-format
@@ -1812,24 +1812,22 @@ msgid "Disable Active Input Capture"
 msgstr "Išjungti aktyvų įvesties užvaldymą"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Vald"
+msgstr "Nuotolinis valdymas"
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-format
 msgctxt "@info keep '-' it's markdon"
 msgid "%1 is asking to control input devices"
-msgstr ""
+msgstr "%1 prašo leidimo valdyti įvedimo įrenginius"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Visada leisti programas, kurios tvirtina, jog yra %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1840,18 +1838,22 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Pasenusių X11 programų tapatybė negali būti patikrinta. Bet kuri programa, "
+"tvirtinanti, jog yra <application>%1</application>, galės valdyti įvedimo "
+"įrenginius. Vėliau galite panaikinti šį leidimą <application>Sistemos "
+"nuostatų</application> „Pasenusių X11 programų palaikymas“ puslapyje."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Leisti"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Drausti"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3202,18 +3204,15 @@ msgstr "Lango žymės eilutės atitikimo tipas"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "Nėra atvertų langų"
+msgstr "Turi viršesnį langą"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
-#, fuzzy, kde-format
-#| msgid "Set window type to"
+#, kde-format
 msgid "Has parent window match type"
-msgstr "Nustatyti lango tipą į"
+msgstr "Turi viršesnio lango atitikties tipą"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89
