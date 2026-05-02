@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-23 02:42+0000\n"
-"PO-Revision-Date: 2025-12-29 19:24+0200\n"
+"PO-Revision-Date: 2026-05-01 13:00+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -44,12 +44,12 @@ msgstr "Nesvarbu"
 #: optionsmodel.cpp:199
 #, kde-format
 msgid "Exact match"
-msgstr "Tikslus atitikmuo"
+msgstr "Tiksli atitiktis"
 
 #: optionsmodel.cpp:200
 #, kde-format
 msgid "Substring match"
-msgstr "Poeilučio atitikmuo"
+msgstr "Poeilučio atitiktis"
 
 #: optionsmodel.cpp:201
 #, kde-format
@@ -617,10 +617,10 @@ msgid ""
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
 "Ši programa nepateikia lango klasės, taigi KWin negali jos naudoti, kad "
-"rastų atitikmenį ir taikytų kokias nors taisykles. Jei vis tiek norite "
-"taikyti langui kažkokias taisykles, pabandykite vietoj to, rasti kitų "
-"savybių atitikmenį, pavyzdžiui, lango pavadinimą.<nl/><nl/>Apsvarstykite "
-"galimybę pranešti apie šią klaidą programos plėtotojams."
+"rastų atitiktį ir taikytų kokias nors taisykles. Jei vis tiek norite taikyti "
+"langui kažkokias taisykles, pabandykite vietoj to, rasti kitų savybių "
+"atitiktį, pavyzdžiui, lango pavadinimą.<nl/><nl/>Apsvarstykite galimybę "
+"pranešti apie šią klaidą programos plėtotojams."
 
 #: rulesmodel.cpp:813
 #, kde-format

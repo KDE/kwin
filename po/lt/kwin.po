@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-24 02:42+0000\n"
-"PO-Revision-Date: 2026-04-30 21:21+0300\n"
+"PO-Revision-Date: 2026-05-01 13:06+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -2849,7 +2849,7 @@ msgstr "Nepaisyti susk&leistų langų"
 #: plugins/windowview/qml/Main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr "Nėra atitikmenų"
+msgstr "Nėra atitikčių"
 
 #: plugins/windowview/qml/Main.qml:107
 #, kde-format
@@ -2998,7 +2998,7 @@ msgstr "Lango klasė (programa)"
 #: rulesettings.kcfg:27
 #, kde-format
 msgid "Window class string match type"
-msgstr "Lango klasės eilutės atitikimo tipas"
+msgstr "Lango klasės eilutės atitikties tipas"
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:33
@@ -3016,7 +3016,7 @@ msgstr "Lango vaidmuo"
 #: rulesettings.kcfg:41
 #, kde-format
 msgid "Window role string match type"
-msgstr "Lango vaidmens eilutės atitikimo tipas"
+msgstr "Lango vaidmens eilutės atitikties tipas"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:48
@@ -3028,7 +3028,7 @@ msgstr "Lango antraštė"
 #: rulesettings.kcfg:51
 #, kde-format
 msgid "Window title string match type"
-msgstr "Lango antraštės eilutės atitikimo tipas"
+msgstr "Lango antraštės eilutės atitikties tipas"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:58
@@ -3040,7 +3040,7 @@ msgstr "Kompiuteris (mazgo pavadinimas)"
 #: rulesettings.kcfg:61
 #, kde-format
 msgid "Machine string match type"
-msgstr "Kompiuterio eilutės atitikimo tipas"
+msgstr "Kompiuterio eilutės atitikties tipas"
 
 #. i18n: ectx: label, entry (tag), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:68
@@ -3052,7 +3052,7 @@ msgstr "Lango žymė"
 #: rulesettings.kcfg:71
 #, kde-format
 msgid "Window tag string match type"
-msgstr "Lango žymės eilutės atitikimo tipas"
+msgstr "Lango žymės eilutės atitikties tipas"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
