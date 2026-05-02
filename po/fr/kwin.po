@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-29 00:47+0000\n"
-"PO-Revision-Date: 2026-04-25 08:03+0200\n"
+"PO-Revision-Date: 2026-04-30 08:08+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -1847,24 +1847,22 @@ msgid "Disable Active Input Capture"
 msgstr "Désactiver la capture active des entrées"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Contrôle"
+msgstr "Contrôle à distance"
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-format
 msgctxt "@info keep '-' it's markdon"
 msgid "%1 is asking to control input devices"
-msgstr ""
+msgstr "%1 demande à prendre le contrôle des périphériques d'entrée"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Toujours autoriser les applications prétendant être %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1875,18 +1873,24 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Les identités des anciennes applications X11 ne peuvent pas être vérifiées. "
+"Toute application prétendant être <application>%1</application> pourra "
+"prendre le contrôle des périphériques d'entrée. Vous pouvez révoquer cette "
+"autorisation plus tard sur la page « Prise en charge des anciennes "
+"applications sous X11 » de <application>Configuration du système</"
+"application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Autoriser"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Refuser"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
