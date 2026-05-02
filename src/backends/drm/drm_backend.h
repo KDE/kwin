@@ -64,7 +64,7 @@ public:
 
     void createLayers();
     void releaseBuffers();
-    void updateOutputs();
+    void updateOutputs(DrmGpu *onlyUpdate = nullptr);
 
     const std::vector<std::unique_ptr<DrmGpu>> &gpus() const;
 

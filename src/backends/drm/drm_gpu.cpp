@@ -855,7 +855,9 @@ void DrmGpu::doModeset()
         }
     } else {
         if (err != DrmPipeline::Error::FramePending) {
-            QTimer::singleShot(0, m_platform, &DrmBackend::updateOutputs);
+            QTimer::singleShot(0, m_platform, [backend = m_platform]() {
+                backend->updateOutputs();
+            });
         }
     }
     m_pendingModesetFrames.clear();
