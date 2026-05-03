@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-24 00:45+0000\n"
+"POT-Creation-Date: 2026-05-03 00:45+0000\n"
 "PO-Revision-Date: 2009-05-21 13:28+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -35,29 +35,35 @@ msgid "Window settings for %1"
 msgstr ""
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Unimportant"
+msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "I Parëndësishëm"
 
 #: optionsmodel.cpp:200
 #, fuzzy, kde-format
 #| msgid "Exact Match"
+msgctxt "@item:inlistbox"
 msgid "Exact match"
 msgstr "Përputhje e Drejtpërdrejtë"
 
 #: optionsmodel.cpp:201
 #, kde-format
+msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr ""
 
 #: optionsmodel.cpp:202
 #, fuzzy, kde-format
 #| msgid "Regular Expression"
+msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "Shprehje të Rregullta"
 
 #: optionsmodel.cpp:205
 #, kde-format
+msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
 msgstr ""
 

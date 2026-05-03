@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-24 00:45+0000\n"
+"POT-Creation-Date: 2026-05-03 00:45+0000\n"
 "PO-Revision-Date: 2024-09-22 16:17+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -38,27 +38,36 @@ msgid "Window settings for %1"
 msgstr "Vindaugsinnstillingar for %1"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Unimportant"
+msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "Ikkje viktig"
 
 #: optionsmodel.cpp:200
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Exact match"
+msgctxt "@item:inlistbox"
 msgid "Exact match"
 msgstr "Nøyaktig treff"
 
 #: optionsmodel.cpp:201
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Substring match"
+msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr "Treff i delstreng"
 
 #: optionsmodel.cpp:202
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Regular expression"
+msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "Regulært uttrykk"
 
 #: optionsmodel.cpp:205
 #, kde-format
+msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
 msgstr ""
 

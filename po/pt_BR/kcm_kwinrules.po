@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-24 00:45+0000\n"
+"POT-Creation-Date: 2026-05-03 00:45+0000\n"
 "PO-Revision-Date: 2026-04-24 08:55-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -42,27 +42,37 @@ msgid "Window settings for %1"
 msgstr "Configurações de janela para %1"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Unimportant"
+msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "Sem importância"
 
 #: optionsmodel.cpp:200
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Exact match"
+msgctxt "@item:inlistbox"
 msgid "Exact match"
 msgstr "Coincidência exata"
 
 #: optionsmodel.cpp:201
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Substring match"
+msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr "Combina com o subtexto"
 
 #: optionsmodel.cpp:202
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Regular expression"
+msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "Expressão regular"
 
 #: optionsmodel.cpp:205
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Match"
+msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
 msgstr "Corresponder"
 

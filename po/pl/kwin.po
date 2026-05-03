@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1735754 $
+# Version: $Revision: 1736029 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-29 00:47+0000\n"
+"POT-Creation-Date: 2026-05-03 00:45+0000\n"
 "PO-Revision-Date: 2026-03-21 06:36+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -1828,10 +1828,16 @@ msgid "Remote Control"
 msgstr "Control"
 
 #: plugins/eis/eisprompter.cpp:52
-#, kde-format
-msgctxt "@info keep '-' it's markdon"
-msgid "%1 is asking to control input devices"
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para><application>%1</application> is not responding. Do you want to "
+#| "terminate this application?</para>"
+msgctxt "@info"
+msgid "<application>%1</application> is asking to control input devices"
 msgstr ""
+"<para><application>%1</application> nie odpowiada. Czy chcesz zakończyć tę "
+"aplikację?</para>"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -4547,14 +4553,6 @@ msgstr "Xwayland wysypał się"
 
 #~ msgid "&Shade"
 #~ msgstr "&Zwiń"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para><application>%1</application> is not responding. Do you want to "
-#~ "terminate this application?</para>"
-#~ msgstr ""
-#~ "<para><application>%1</application> nie odpowiada. Czy chcesz zakończyć "
-#~ "tę aplikację?</para>"
 
 #~ msgctxt "@info \"window title\" of application name is not responding."
 #~ msgid ""

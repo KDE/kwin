@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-29 00:47+0000\n"
+"POT-Creation-Date: 2026-05-03 00:45+0000\n"
 "PO-Revision-Date: 2026-03-20 11:45+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -1832,10 +1832,16 @@ msgid "Remote Control"
 msgstr "Controllo"
 
 #: plugins/eis/eisprompter.cpp:52
-#, kde-format
-msgctxt "@info keep '-' it's markdon"
-msgid "%1 is asking to control input devices"
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para><application>%1</application> is not responding. Do you want to "
+#| "terminate this application?</para>"
+msgctxt "@info"
+msgid "<application>%1</application> is asking to control input devices"
 msgstr ""
+"<para><application>%1</application> non risponde. Vuoi terminare questa "
+"applicazione?</para>"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -4564,14 +4570,6 @@ msgstr "Xwayland è stato terminato in modo inatteso"
 
 #~ msgid "&Shade"
 #~ msgstr "Arro&tola"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para><application>%1</application> is not responding. Do you want to "
-#~ "terminate this application?</para>"
-#~ msgstr ""
-#~ "<para><application>%1</application> non risponde. Vuoi terminare questa "
-#~ "applicazione?</para>"
 
 #~ msgctxt "@info \"window title\" of application name is not responding."
 #~ msgid ""

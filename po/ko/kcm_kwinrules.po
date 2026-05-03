@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-24 00:45+0000\n"
+"POT-Creation-Date: 2026-05-03 00:45+0000\n"
 "PO-Revision-Date: 2026-04-26 21:24+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -34,27 +34,37 @@ msgid "Window settings for %1"
 msgstr "%1의 창 설정"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Unimportant"
+msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "중요하지 않음"
 
 #: optionsmodel.cpp:200
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Exact match"
+msgctxt "@item:inlistbox"
 msgid "Exact match"
 msgstr "정확한 일치"
 
 #: optionsmodel.cpp:201
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Substring match"
+msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr "부 문자열 일치"
 
 #: optionsmodel.cpp:202
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Regular expression"
+msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "정규 표현식"
 
 #: optionsmodel.cpp:205
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Match"
+msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
 msgstr "일치"
 

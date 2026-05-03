@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-24 00:45+0000\n"
+"POT-Creation-Date: 2026-05-03 00:45+0000\n"
 "PO-Revision-Date: 2010-07-11 13:40+0100\n"
 "Last-Translator: Berend Ytsma <berendy@gmail.com>\n"
 "Language-Team: Frysk <kde-i18n-fry@kde.org>\n"
@@ -34,30 +34,36 @@ msgid "Window settings for %1"
 msgstr "Finsterynstellings foar %1"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Unimportant"
+msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "Net belangryk"
 
 #: optionsmodel.cpp:200
 #, fuzzy, kde-format
 #| msgid "Exact Match"
+msgctxt "@item:inlistbox"
 msgid "Exact match"
 msgstr "Eksakte oerienkomst"
 
 #: optionsmodel.cpp:201
 #, fuzzy, kde-format
 #| msgid "Substring Match"
+msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr "Subtried oerienkomst"
 
 #: optionsmodel.cpp:202
 #, fuzzy, kde-format
 #| msgid "Regular Expression"
+msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "Reguliere ekspresje"
 
 #: optionsmodel.cpp:205
 #, kde-format
+msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
 msgstr ""
 

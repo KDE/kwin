@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-24 00:45+0000\n"
+"POT-Creation-Date: 2026-05-03 00:45+0000\n"
 "PO-Revision-Date: 2013-10-04 02:07+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -35,30 +35,36 @@ msgid "Window settings for %1"
 msgstr "%1 үшін арналған терезенің параметрлері"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Unimportant"
+msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "Бәрібір"
 
 #: optionsmodel.cpp:200
 #, fuzzy, kde-format
 #| msgid "Exact Match"
+msgctxt "@item:inlistbox"
 msgid "Exact match"
 msgstr "Нақты сәйкестік"
 
 #: optionsmodel.cpp:201
 #, fuzzy, kde-format
 #| msgid "Substring Match"
+msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr "Ішінара сәйкестік"
 
 #: optionsmodel.cpp:202
 #, fuzzy, kde-format
 #| msgid "Regular Expression"
+msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "Үлгі өрнегі"
 
 #: optionsmodel.cpp:205
 #, kde-format
+msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
 msgstr ""
 

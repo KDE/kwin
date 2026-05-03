@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-24 00:45+0000\n"
+"POT-Creation-Date: 2026-05-03 00:45+0000\n"
 "PO-Revision-Date: 2026-04-25 07:50+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -37,27 +37,37 @@ msgid "Window settings for %1"
 msgstr "הגדרות חלון עבור %1"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Unimportant"
+msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "לא חשוב"
 
 #: optionsmodel.cpp:200
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Exact match"
+msgctxt "@item:inlistbox"
 msgid "Exact match"
 msgstr "התאמה מדויקת"
 
 #: optionsmodel.cpp:201
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Substring match"
+msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr "התאמת תת־מחרוזת"
 
 #: optionsmodel.cpp:202
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Regular expression"
+msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "ביטוי רגולרי"
 
 #: optionsmodel.cpp:205
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Match"
+msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
 msgstr "התאמה"
 

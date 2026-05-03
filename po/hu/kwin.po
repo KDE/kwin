@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-29 00:47+0000\n"
+"POT-Creation-Date: 2026-05-03 00:45+0000\n"
 "PO-Revision-Date: 2025-05-30 23:12+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1870,10 +1870,16 @@ msgid "Remote Control"
 msgstr "Control"
 
 #: plugins/eis/eisprompter.cpp:52
-#, kde-format
-msgctxt "@info keep '-' it's markdon"
-msgid "%1 is asking to control input devices"
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para><application>%1</application> is not responding. Do you want to "
+#| "terminate this application?</para>"
+msgctxt "@info"
+msgid "<application>%1</application> is asking to control input devices"
 msgstr ""
+"<para>A(z) <application>%1</application> nem válaszol. Szeretné leállítani "
+"ezt az alkalmazást?</para>"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -4584,14 +4590,6 @@ msgstr "Az Xwayland összeomlott"
 
 #~ msgid "&Shade"
 #~ msgstr "Felgördíté&s"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para><application>%1</application> is not responding. Do you want to "
-#~ "terminate this application?</para>"
-#~ msgstr ""
-#~ "<para>A(z) <application>%1</application> nem válaszol. Szeretné "
-#~ "leállítani ezt az alkalmazást?</para>"
 
 #~ msgctxt "@info \"window title\" of application name is not responding."
 #~ msgid ""

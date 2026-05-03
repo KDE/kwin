@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-29 00:47+0000\n"
+"POT-Creation-Date: 2026-05-03 00:45+0000\n"
 "PO-Revision-Date: 2026-04-26 21:31+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1797,10 +1797,16 @@ msgid "Remote Control"
 msgstr "Control"
 
 #: plugins/eis/eisprompter.cpp:52
-#, kde-format
-msgctxt "@info keep '-' it's markdon"
-msgid "%1 is asking to control input devices"
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<para><application>%1</application> is not responding. Do you want to "
+#| "terminate this application?</para>"
+msgctxt "@info"
+msgid "<application>%1</application> is asking to control input devices"
 msgstr ""
+"<para><application>%1</application>이(가) 응답하지 않습니다. 이 앱을 강제 종"
+"료하시겠습니까?</para>"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -4489,14 +4495,6 @@ msgstr "Xwayland가 충돌함"
 
 #~ msgid "&Shade"
 #~ msgstr "말아 올리기(&S)"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para><application>%1</application> is not responding. Do you want to "
-#~ "terminate this application?</para>"
-#~ msgstr ""
-#~ "<para><application>%1</application>이(가) 응답하지 않습니다. 이 앱을 강제 "
-#~ "종료하시겠습니까?</para>"
 
 #~ msgctxt "@info \"window title\" of application name is not responding."
 #~ msgid ""

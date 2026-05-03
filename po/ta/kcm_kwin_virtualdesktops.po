@@ -3,21 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # ஆமாச்சு <amachu@ubuntu.com>, 2008.
-# SPDX-FileCopyrightText: 2021, 2022, 2024 Kishore G <kishore96@gmail.com>
+# SPDX-FileCopyrightText: 2021-2022, 2024, 2026 Kishore G <kishore96@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2024-04-28 17:25+0530\n"
+"PO-Revision-Date: 2026-05-02 18:40+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
-"Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
+"Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 26.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -65,9 +65,7 @@ msgid "Add Desktop"
 msgstr "பணிமேடையை சேர்"
 
 #: ui/main.qml:90
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Rename"
+#, kde-format
 msgctxt "@action:button"
 msgid "Rename"
 msgstr "மறுபெயரிடு"
@@ -79,18 +77,16 @@ msgid "Remove"
 msgstr "நீக்கு"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Confirm new name"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "புதிய பெயரை உறுதி செய்"
+msgstr "இப்பெயரை இடு"
 
 #: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "மறுபெயரிடுவதை ரத்து செய்"
 
 #: ui/main.qml:179
 #, kde-format
@@ -119,7 +115,7 @@ msgstr "உலாவல் சுற்றி ஆரம்பத்திற்�
 #: ui/main.qml:225
 #, kde-format
 msgid "Switch desktops independently for each screen"
-msgstr ""
+msgstr "அனைத்து திரைகளிலும் பணிமேடையை ஒருங்கே மாற்று"
 
 #: ui/main.qml:243
 #, kde-format

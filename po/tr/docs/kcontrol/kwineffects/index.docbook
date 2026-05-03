@@ -121,7 +121,7 @@
 >Bu tür efektler olduğunda, grafik arayüz radyo düğmeleri kullanır ve yalnızca bir tanesinin etkin olduğundan emin olur. </para>
 
 <para
->Halihazırda kullanılan bileşikleştirme arka ucu tarafından desteklenmeyen tüm efektler öntanımlı olarak gizlenir (&eg;, yazılım sunucusu kullanılırken OpenGL efektleri). </para
+>Hâlihazırda kullanılan bileşikleştirme arka ucu tarafından desteklenmeyen tüm efektler öntanımlı olarak gizlenir (&eg;, yazılım sunucusu kullanılırken OpenGL efektleri). </para
 > 
 
 <para
