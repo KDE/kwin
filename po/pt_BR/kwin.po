@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-03 00:45+0000\n"
-"PO-Revision-Date: 2026-04-28 22:51-0300\n"
-"Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
+"PO-Revision-Date: 2026-05-03 08:07-0300\n"
+"Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -1833,12 +1833,12 @@ msgid "Remote Control"
 msgstr "Controle remoto"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info keep '-' it's markdon"
-#| msgid "%1 is asking to control input devices"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
-msgstr "%1 está solicitando permissão para controlar dispositivos de entrada"
+msgstr ""
+"<application>%1</application> está solicitando para controlar dispositivos "
+"de entrada"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format

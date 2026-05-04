@@ -1,5 +1,5 @@
 # translation of kwin.po to Italian
-# SPDX-FileCopyrightText: 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Vincenzo Reale <smart2128vr@gmail.com>
+# SPDX-FileCopyrightText: 2015, 2017-2026 Vincenzo Reale <smart2128vr@gmail.com>
 # Andrea Rizzi <rizzi@kde.org>, 2003, 2004, 2005.
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011, 2012.
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-03 00:45+0000\n"
-"PO-Revision-Date: 2026-03-20 11:45+0100\n"
+"PO-Revision-Date: 2026-04-30 09:30+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.12.3\n"
+"X-Generator: Lokalize 26.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1824,12 +1824,10 @@ msgid "Disable Active Input Capture"
 msgstr "Disabilita l'acquisizione dell'immissione attiva"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Controllo"
+msgstr "Controllo remoto"
 
 #: plugins/eis/eisprompter.cpp:52
 #, fuzzy, kde-kuit-format
@@ -1847,7 +1845,7 @@ msgstr ""
 #, kde-format
 msgctxt "@option:check"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Consenti sempre alle applicazioni che dichiarano di essere %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1858,18 +1856,24 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Non è possibile verificare l'identità delle applicazioni X11 originali. "
+"Qualsiasi applicazione che affermi di essere <application>%1</application> "
+"sarà in grado di controllare i dispositivi di immissione. È possibile "
+"revocare questa autorizzazione in seguito nella pagina «Supporto per le "
+"applicazioni X11 originali» di <application>Impostazioni di sistema</"
+"application>."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Permetti"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Nega"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -2532,10 +2536,9 @@ msgid "Add Virtual Desktop"
 msgstr "Aggiungi desktop virtuale"
 
 #: plugins/overview/qml/DesktopBar.qml:262
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgid "Virtual Desktop limit reached"
-msgstr "Aggiungi desktop virtuale"
+msgstr "Limite di desktop virtuali raggiunto"
 
 #: plugins/overview/qml/Main.qml:427
 #, kde-format
@@ -3135,7 +3138,7 @@ msgstr "Descrizione della regola"
 #: rulesettings.kcfg:13
 #, kde-format
 msgid "Rule description (legacy)"
-msgstr "Descrizione della regola (obsoleta)"
+msgstr "Descrizione della regola (precedente)"
 
 #. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:16
@@ -3217,18 +3220,15 @@ msgstr "Tipo di corrispondenza della stringa dell'etichetta della finestra"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "Nessuna finestra aperta"
+msgstr "Ha una finestra principale"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
-#, fuzzy, kde-format
-#| msgid "Set window type to"
+#, kde-format
 msgid "Has parent window match type"
-msgstr "Imposta il tipo di finestra a"
+msgstr "Ha un tipo di corrispondenza finestra principale"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89

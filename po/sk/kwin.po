@@ -1821,12 +1821,10 @@ msgid "Remote Control"
 msgstr "Vzdialené ovládanie"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info keep '-' it's markdon"
-#| msgid "%1 is asking to control input devices"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
-msgstr "%1 žiada o ovládanie vstupných zariadení"
+msgstr "<application>%1</application> žiada o ovládanie vstupných zariadení"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
