@@ -118,7 +118,7 @@ void Window::unref()
     if (m_deleted) {
         workspace()->removeDeleted(this);
     }
-    deleteLater();
+    delete this;
 }
 
 QDebug operator<<(QDebug debug, const Window *window)
