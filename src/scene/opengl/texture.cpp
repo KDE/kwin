@@ -12,6 +12,10 @@
 #include "opengl/gltexture.h"
 #include "utils/common.h"
 
+#include "core/drmdevice.h"
+#include "core/renderdevice.h"
+#include "shmuploadswapchain.h"
+
 namespace KWin
 {
 
@@ -119,6 +123,9 @@ void BufferTextureOpenGL::reset()
 
 bool BufferTextureOpenGL::loadShmTexture(GraphicsBuffer *buffer)
 {
+    auto shmCopy = ShmUploadSwapchain::create(m_backend->renderDevice(), m_backend->renderDevice()->drmDevice(), buffer->shmAttributes()->format, buffer->size(), m_backend->supportedFormats());
+    qWarning() << "hmm?" << bool(shmCopy) << bool(shmCopy && shmCopy->uploadRgbBuffer(buffer, Region::infinite()));
+
     const GraphicsBufferView view(buffer);
     if (Q_UNLIKELY(view.isNull())) {
         return false;

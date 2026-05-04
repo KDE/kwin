@@ -210,6 +210,7 @@ target_sources(kwin PRIVATE
     scripting/windowthumbnailitem.cpp
     scripting/workspace_wrapper.cpp
     shadow.cpp
+    shmuploadswapchain.cpp
     sm.cpp
     tablet_input.cpp
     tabletmodemanager.cpp
@@ -226,6 +227,7 @@ target_sources(kwin PRIVATE
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp
     virtualkeyboard_dbus.cpp
+    vulkan/vulkan_buffer.cpp
     vulkan/vulkan_device.cpp
     vulkan/vulkan_logging.cpp
     vulkan/vulkan_render_time_query.cpp
@@ -527,6 +529,7 @@ install(FILES
     screenedge.h
     screenedgegestures.h
     shadow.h
+    shmuploadswapchain.h
     sm.h
     tablet_input.h
     tabletmodemanager.h
@@ -682,6 +685,7 @@ install(FILES
 )
 
 install(FILES
+    vulkan/vulkan_buffer.h
     vulkan/vulkan_device.h
     vulkan/vulkan_logging.h
     vulkan/vulkan_render_time_query.h

@@ -145,7 +145,7 @@ void ShmPool::shm_pool_resize(Resource *resource, int32_t size)
         return;
     }
 
-    auto remapping = std::make_shared<MemoryMap>(size, PROT_READ | PROT_WRITE, MAP_SHARED, fd.get(), 0);
+    auto remapping = std::make_shared<MemoryMap>(size, PROT_READ, MAP_PRIVATE, fd.get(), 0);
     if (remapping->isValid()) {
         mapping = std::move(remapping);
     } else {
@@ -321,7 +321,7 @@ void ShmClientBufferIntegrationPrivate::shm_create_pool(Resource *resource, uint
         return;
     }
 
-    auto mapping = std::make_shared<MemoryMap>(size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    auto mapping = std::make_shared<MemoryMap>(size, PROT_READ, MAP_PRIVATE, fd, 0);
     if (!mapping->isValid()) {
         wl_resource_post_error(resource->handle, error_invalid_fd, "failed to map shm pool");
         return;

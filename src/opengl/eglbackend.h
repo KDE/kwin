@@ -46,6 +46,7 @@ public:
     FormatModifierMap supportedFormats() const override;
 
     QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
+    RenderDevice *renderDevice() const;
 
     std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);

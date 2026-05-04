@@ -178,6 +178,8 @@ static constexpr std::array s_requiredVulkanExtensions = {
     // allow importing and exporting sync fds
     VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME,
     VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME,
+    // allow importing host memory as VkBuffer
+    VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME,
 };
 
 static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &instance, DrmDevice *drm)

@@ -9,6 +9,7 @@
 #include "vulkan_device.h"
 #include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
+#include "vulkan_buffer.h"
 #include "vulkan_logging.h"
 #include "vulkan_texture.h"
 
@@ -32,6 +33,8 @@ VulkanDevice::VulkanDevice(vk::raii::PhysicalDevice physicalDevice, vk::raii::De
     , m_deviceLimits(m_physical.getProperties().limits)
 {
     m_memoryProperties = physicalDevice.getMemoryProperties();
+    const auto props = physicalDevice.getProperties2<vk::PhysicalDeviceProperties2, vk::PhysicalDeviceExternalMemoryHostPropertiesEXT>();
+    m_minImportedHostPointerAlignment = props.get<vk::PhysicalDeviceExternalMemoryHostPropertiesEXT>().minImportedHostPointerAlignment;
     getQueue();
     createCommandPool();
 }
@@ -252,6 +255,79 @@ std::shared_ptr<VulkanTexture> VulkanDevice::importDmabuf(const DmaBufAttributes
     }
     return std::make_shared<VulkanTexture>(this, vk::Format(format->vulkanFormat), std::move(image),
                                            std::move(deviceMemory), QSize(attributes->width, attributes->height));
+}
+
+static vk::DeviceSize align(vk::DeviceSize size, vk::DeviceSize minimum)
+{
+    return size + (minimum - (size % minimum));
+}
+
+std::unique_ptr<VulkanShmBuffer> VulkanDevice::importShm(GraphicsBuffer *buffer, vk::BufferUsageFlags usage)
+{
+    auto type = vk::ExternalMemoryHandleTypeFlagBits::eHostAllocationEXT;
+
+    const ShmAttributes *attributes = buffer->shmAttributes();
+    const GraphicsBuffer::Map map = buffer->map(GraphicsBuffer::MapFlag::Read);
+    if (!map.data) {
+        return nullptr;
+    }
+    auto cleanup = qScopeGuard([buffer]() {
+        buffer->unmap();
+    });
+    if (uint64_t(map.data) % m_minImportedHostPointerAlignment != 0) {
+        qCWarning(KWIN_VULKAN, "Mapped shm buffer isn't aligned to driver requirements");
+        return nullptr;
+    }
+
+    vk::ExternalMemoryBufferCreateInfo externalInfo{
+        type,
+    };
+    vk::BufferCreateInfo bufferInfo{
+        vk::BufferCreateFlags{},
+        vk::DeviceSize(attributes->size.height() * attributes->stride),
+        usage,
+        vk::SharingMode::eExclusive,
+        m_queueFamilyIndex,
+        &externalInfo,
+    };
+    auto [result, vkBuffer] = m_logical.createBuffer(bufferInfo);
+    if (result != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN, "Creating Vulkan buffer for shm failed: %s", vk::to_string(result).c_str());
+        return nullptr;
+    }
+    auto [propertiesResult, properties] = m_logical.getMemoryHostPointerPropertiesEXT(type, map.data);
+    if (propertiesResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "failed to get host memory properties!" << vk::to_string(propertiesResult);
+        return nullptr;
+    }
+    const vk::MemoryRequirements2 memRequirements = m_logical.getBufferMemoryRequirements2(vk::BufferMemoryRequirementsInfo2{
+        vkBuffer,
+    });
+    const auto memoryIndex = findMemoryType(memRequirements.memoryRequirements.memoryTypeBits & properties.memoryTypeBits, {});
+    if (!memoryIndex) {
+        qCWarning(KWIN_VULKAN, "couldn't find a suitable memory type for %x & %x = %x",
+                  memRequirements.memoryRequirements.memoryTypeBits, properties.memoryTypeBits,
+                  memRequirements.memoryRequirements.memoryTypeBits & properties.memoryTypeBits);
+        return nullptr;
+    }
+    const vk::DeviceSize minAllocationSize = align(memRequirements.memoryRequirements.size, m_minImportedHostPointerAlignment);
+
+    vk::ImportMemoryHostPointerInfoEXT importInfo(type, map.data);
+    vk::MemoryAllocateInfo memoryInfo(minAllocationSize, memoryIndex.value(), &importInfo);
+    auto [allocateResult, memory] = m_logical.allocateMemory(memoryInfo);
+    if (allocateResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN, "'Allocating' memory for shm failed: %s", vk::to_string(allocateResult).c_str());
+        return nullptr;
+    }
+    vk::BindBufferMemoryInfo bindInfo{vkBuffer, memory, 0};
+    const vk::Result bindResult = m_logical.bindBufferMemory2(bindInfo);
+    if (bindResult != vk::Result::eSuccess) {
+        qCWarning(KWIN_VULKAN) << "failed to bind image to memory";
+        return nullptr;
+    }
+    // VulkanShmBuffer takes care of unmapping
+    cleanup.dismiss();
+    return std::make_unique<VulkanShmBuffer>(buffer, std::move(vkBuffer), std::move(memory));
 }
 
 FormatModifierMap VulkanDevice::queryFormats(VkImageUsageFlags flags) const
