@@ -18,8 +18,6 @@
 namespace KWin
 {
 
-InputRedirection *InputRedirection::s_self = nullptr;
-
 void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
 {
 }

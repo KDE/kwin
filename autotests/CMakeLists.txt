@@ -23,7 +23,6 @@ ecm_mark_as_test(testWindowPaintData)
 # Test VirtualDesktopManager
 ########################################################
 set(testVirtualDesktops_SRCS
-    ../src/virtualdesktops.cpp
     test_virtual_desktops.cpp
 )
 add_executable(testVirtualDesktops ${testVirtualDesktops_SRCS})

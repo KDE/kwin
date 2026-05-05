@@ -106,7 +106,7 @@ private:
  * a Pager. This grid is used for getting a desktop next to a given desktop in any direction by
  * making use of the layout information. This allows navigation like move to desktop on left.
  */
-class VirtualDesktopGrid
+class KWIN_EXPORT VirtualDesktopGrid
 {
 public:
     VirtualDesktopGrid();
