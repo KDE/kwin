@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-29 00:47+0000\n"
+"POT-Creation-Date: 2026-05-05 00:46+0000\n"
 "PO-Revision-Date: 2026-04-30 09:11+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -18,7 +18,7 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 "X-Generator: Lokalize 23.08.5\n"
 
-#: ui/main.qml:29
+#: ui/main.qml:28
 #, kde-kuit-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -32,31 +32,31 @@ msgstr ""
 "طوال الوقت.<nl/><nl/>إذا كنت تستخدم أيًا من هذه التطبيقات، يمكنك اختيار "
 "التوازن المفضل لديك بين الأمان والتوافق هنا."
 
-#: ui/main.qml:50
+#: ui/main.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
 msgstr "التنصت على ضغطات المفاتيح:"
 
-#: ui/main.qml:57
+#: ui/main.qml:52
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
 msgstr "محظور"
 
-#: ui/main.qml:73
+#: ui/main.qml:61
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr "الأكثر أماناً؛ لن تعمل الاختصارات العامة في تطبيقات X11"
 
-#: ui/main.qml:87
+#: ui/main.qml:67
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "فقط مفاتيح Meta و Control و Alt و Shift"
 
-#: ui/main.qml:103
+#: ui/main.qml:76
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -66,7 +66,7 @@ msgstr ""
 "أمان عالٍ؛ ستعمل اختصارات الضغط للتحدث وغيرها من الاختصارات العامة للمعدل فقط "
 "في تطبيقات X11"
 
-#: ui/main.qml:117
+#: ui/main.qml:81
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
@@ -76,19 +76,19 @@ msgstr ""
 "كما هو مذكور أعلاه، بالإضافة إلى أي مفتاح يستخدم أثناء الضغط على مفاتيح "
 "Control أو Alt أو Meta"
 
-#: ui/main.qml:133
+#: ui/main.qml:90
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr "حماية معتدلة؛ ستعمل جميع الاختصارات العامة في تطبيقات X11"
 
-#: ui/main.qml:147
+#: ui/main.qml:96
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
 msgstr "مسموح دائما"
 
-#: ui/main.qml:163
+#: ui/main.qml:105
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -97,7 +97,7 @@ msgid ""
 msgstr ""
 "الأقل أمانًا؛ جميع تطبيقات X11 ستكون قادرة على رؤية أي نص تكتبه في أي تطبيق"
 
-#: ui/main.qml:177
+#: ui/main.qml:111
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -108,19 +108,19 @@ msgstr ""
 "لاحظ أن استخدام هذا الإعداد سيقلل من أمان النظام ويسمح للبرامج الضارة بسرقة "
 "كلمات السر والتجسس على النص الذي تكتبه. تأكد من فهمك وقبول هذا الخطر."
 
-#: ui/main.qml:193
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
 msgstr "التنصت على أزرار الفأرة:"
 
-#: ui/main.qml:199
+#: ui/main.qml:121
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
 msgstr "مسموح"
 
-#: ui/main.qml:215
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -129,13 +129,13 @@ msgid ""
 msgstr ""
 "أمان معتدل؛ ستعمل الاختصارات العامة التي تتضمن أزرار الفأرة في تطبيقات X11"
 
-#: ui/main.qml:233
+#: ui/main.qml:141
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr "التحكم بالمؤشر ولوحة المفاتيح:"
 
-#: ui/main.qml:240
+#: ui/main.qml:146
 #, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
@@ -143,13 +143,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "التطبيقات المسموحة"
 
-#: ui/main.qml:246
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "اعرض التطبيقات المسموح بها…"
 
-#: ui/main.qml:259
+#: ui/main.qml:163
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -161,7 +161,7 @@ msgstr ""
 "هذه القائمة من السيطرة على الحاسوب، لأن هويات التطبيقات التي تستخدم XWayland "
 "لا يمكن التحقق منها"
 
-#: ui/main.qml:272
+#: ui/main.qml:169
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -169,27 +169,13 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "اسمح دون طلب الإذن"
 
-#: ui/main.qml:283
+#: ui/main.qml:174
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr "الأقل أماناً؛ ستتمكن جميع تطبيقات X11 من التحكم في الحاسوب"
 
-#: ui/main.qml:295
-#, kde-format
-msgctxt ""
-"@title:window title of the page opened by the 'See allowed applications' "
-"button"
-msgid "Applications allowed to control the pointer and keyboard"
-msgstr "التطبيقات المسموح لها بالتحكم في المؤشر ولوحة المفاتيح"
-
-#: ui/main.qml:315
-#, kde-format
-msgctxt "@info:tooltip %1 is the name of the app/binary"
-msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr "لا تسمح لـ %1 بالتحكم في المؤشر ولوحة المفاتيح دون استئذان"
-
-#: ui/main.qml:329
+#: ui/main.qml:181
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -200,6 +186,20 @@ msgstr ""
 "لاحظ أن استخدام هذا الإعداد سيقلل بشكل كبير من أمان النظام ويسمح للبرامج "
 "الضارة بالتحكم الكامل في المؤشر ولوحة المفاتيح. تأكد من فهمك وقبولك لهذه "
 "المخاطرة."
+
+#: ui/main.qml:189
+#, kde-format
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "التطبيقات المسموح لها بالتحكم في المؤشر ولوحة المفاتيح"
+
+#: ui/main.qml:209
+#, kde-format
+msgctxt "@info:tooltip %1 is the name of the app/binary"
+msgid "Do not allow %1 to control the pointer and keyboard without asking"
+msgstr "لا تسمح لـ %1 بالتحكم في المؤشر ولوحة المفاتيح دون استئذان"
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."

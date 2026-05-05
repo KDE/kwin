@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-29 00:47+0000\n"
+"POT-Creation-Date: 2026-05-05 00:46+0000\n"
 "PO-Revision-Date: 2025-06-10 23:02+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 24.12.3\n"
 
-#: ui/main.qml:29
+#: ui/main.qml:28
 #, kde-kuit-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -30,31 +30,31 @@ msgstr ""
 "X11 앱은 항상 키보드 입력을 읽을 수 있어야 합니다.<nl/><nl/>이러한 앱을 사용"
 "한다면 보안과 기능성 사이에서 선택할 수 있습니다."
 
-#: ui/main.qml:50
+#: ui/main.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
 msgstr "키보드 입력 듣기:"
 
-#: ui/main.qml:57
+#: ui/main.qml:52
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
 msgstr "금지됨"
 
-#: ui/main.qml:73
+#: ui/main.qml:61
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr "가장 안전함. X11 앱의 전역 단축키를 사용할 수 없음"
 
-#: ui/main.qml:87
+#: ui/main.qml:67
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Meta, Ctrl, Alt, Shift 키만"
 
-#: ui/main.qml:103
+#: ui/main.qml:76
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -64,7 +64,7 @@ msgstr ""
 "가장 안전함. X11 앱의 푸시-투-토크 및 다른 수정자 키만 있는 전역 단축키를 사"
 "용할 수 없음"
 
-#: ui/main.qml:117
+#: ui/main.qml:81
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
@@ -72,19 +72,19 @@ msgid ""
 "pressed"
 msgstr "위 키와 Ctrl, Alt, Meta 키를 누르고 있을 때 입력한 모든 키"
 
-#: ui/main.qml:133
+#: ui/main.qml:90
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr "중간 수준으로 안전함. X11 앱의 모든 전역 단축키를 사용할 수 있음"
 
-#: ui/main.qml:147
+#: ui/main.qml:96
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
 msgstr "항상 허용"
 
-#: ui/main.qml:163
+#: ui/main.qml:105
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -93,7 +93,7 @@ msgid ""
 msgstr ""
 "가장 안전하지 않음. 모든 X11 앱에서 임의의 앱에 입력하는 텍스트를 볼 수 있음"
 
-#: ui/main.qml:177
+#: ui/main.qml:111
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -105,19 +105,19 @@ msgstr ""
 "훔치거나 입력하는 텍스트를 엿볼 수 있습니다. 위험에 대해서 이해하는 경우에만 "
 "이 설정을 변경하십시오."
 
-#: ui/main.qml:193
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
 msgstr "마우스 단추 듣기:"
 
-#: ui/main.qml:199
+#: ui/main.qml:121
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
 msgstr "허용됨"
 
-#: ui/main.qml:215
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -127,13 +127,13 @@ msgstr ""
 "중간 수준으로 안전함. X11 앱에서 마우스 단추를 사용하는 전역 단축키를 사용할 "
 "수 있음"
 
-#: ui/main.qml:233
+#: ui/main.qml:141
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr "포인터와 키보드 제어:"
 
-#: ui/main.qml:240
+#: ui/main.qml:146
 #, fuzzy, kde-format
 #| msgctxt "@option:radio Listening for mouse buttons is allowed"
 #| msgid "Allowed"
@@ -143,13 +143,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "허용됨"
 
-#: ui/main.qml:246
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr ""
 
-#: ui/main.qml:259
+#: ui/main.qml:163
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -158,7 +158,7 @@ msgid ""
 "identities can’t be verified"
 msgstr ""
 
-#: ui/main.qml:272
+#: ui/main.qml:169
 #, fuzzy, kde-format
 #| msgctxt ""
 #| "@option:check Allow control of pointer and keyboard without asking for "
@@ -170,29 +170,13 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "권한을 묻지 않고 허용"
 
-#: ui/main.qml:283
+#: ui/main.qml:174
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr "가장 안전하지 않음. 모든 X11 앱에서 컴퓨터를 제어할 수 있음"
 
-#: ui/main.qml:295
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
-msgctxt ""
-"@title:window title of the page opened by the 'See allowed applications' "
-"button"
-msgid "Applications allowed to control the pointer and keyboard"
-msgstr "포인터와 키보드 제어:"
-
-#: ui/main.qml:315
-#, kde-format
-msgctxt "@info:tooltip %1 is the name of the app/binary"
-msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
-
-#: ui/main.qml:329
+#: ui/main.qml:181
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -203,6 +187,22 @@ msgstr ""
 "이 설정을 사용하면 시스템 보안 수준을 감소시키며, 악성 소프트웨어에서 포인터"
 "와 키보드를 완전히 제어할 수 있습니다. 위험에 대해서 이해하는 경우에만 이 설"
 "정을 변경하십시오."
+
+#: ui/main.qml:189
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Control of pointer and keyboard:"
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "포인터와 키보드 제어:"
+
+#: ui/main.qml:209
+#, kde-format
+msgctxt "@info:tooltip %1 is the name of the app/binary"
+msgid "Do not allow %1 to control the pointer and keyboard without asking"
+msgstr ""
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."

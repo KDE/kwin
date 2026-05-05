@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-29 00:47+0000\n"
+"POT-Creation-Date: 2026-05-05 00:46+0000\n"
 "PO-Revision-Date: 2026-01-01 22:04+0100\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 25.08.3\n"
 
-#: ui/main.qml:29
+#: ui/main.qml:28
 #, kde-kuit-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -37,19 +37,19 @@ msgstr ""
 "hier Ihr bevorzugtes Verhältnis zwischen Sicherheit und Kompatibilität "
 "auswählen."
 
-#: ui/main.qml:50
+#: ui/main.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
 msgstr "Erfassung von Tasteneingaben:"
 
-#: ui/main.qml:57
+#: ui/main.qml:52
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
 msgstr "Verboten"
 
-#: ui/main.qml:73
+#: ui/main.qml:61
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
@@ -57,13 +57,13 @@ msgstr ""
 "Höchste Sicherheit – Globale Kurzbefehle werden in X11-Anwendungen nicht "
 "funktionieren"
 
-#: ui/main.qml:87
+#: ui/main.qml:67
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Nur die Meta-, Strg-, Alt- und Umschalttasten"
 
-#: ui/main.qml:103
+#: ui/main.qml:76
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -73,7 +73,7 @@ msgstr ""
 "Hohe Sicherheit – „Push-to-Talk“ und andere Kurzbefehle, die ausschließlich "
 "mit Sondertasten funktionieren, werden in X11-Anwendungen funktionieren"
 
-#: ui/main.qml:117
+#: ui/main.qml:81
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
@@ -83,7 +83,7 @@ msgstr ""
 "Wie oben, einschließlich aller zusammen mit Strg, Alt oder Meta gedrückten "
 "Tasten"
 
-#: ui/main.qml:133
+#: ui/main.qml:90
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
@@ -91,13 +91,13 @@ msgstr ""
 "Mäßige Sicherheit – Alle globalen Kurzbefehle werden in X11-Anwendungen "
 "funktionieren"
 
-#: ui/main.qml:147
+#: ui/main.qml:96
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
 msgstr "Immer erlaubt"
 
-#: ui/main.qml:163
+#: ui/main.qml:105
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -107,7 +107,7 @@ msgstr ""
 "Niedrigste Sicherheit – Alle X11-Anwendungen können alle Tasteneingaben "
 "auslesen, auch wenn diese in anderen Anwendungen getätigt werden"
 
-#: ui/main.qml:177
+#: ui/main.qml:111
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -119,19 +119,19 @@ msgstr ""
 "es bösartiger Software erlaubt, Passwörter zu stehlen und von Ihnen "
 "getippten Text abzuhören. Seien Sie sich der Risiken bewusst."
 
-#: ui/main.qml:193
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
 msgstr "Maustastenerfassung:"
 
-#: ui/main.qml:199
+#: ui/main.qml:121
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
 msgstr "Erlaubt"
 
-#: ui/main.qml:215
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -141,13 +141,13 @@ msgstr ""
 "Mäßige Sicherheit – Globale Kurzbefehle mit Maustasten werden in X11-"
 "Anwendungen funktionieren"
 
-#: ui/main.qml:233
+#: ui/main.qml:141
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr "Steuerung des Zeigers und der Tastatur:"
 
-#: ui/main.qml:240
+#: ui/main.qml:146
 #, fuzzy, kde-format
 #| msgctxt "@option:radio Listening for mouse buttons is allowed"
 #| msgid "Allowed"
@@ -157,13 +157,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "Erlaubt"
 
-#: ui/main.qml:246
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr ""
 
-#: ui/main.qml:259
+#: ui/main.qml:163
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -172,7 +172,7 @@ msgid ""
 "identities can’t be verified"
 msgstr ""
 
-#: ui/main.qml:272
+#: ui/main.qml:169
 #, fuzzy, kde-format
 #| msgctxt ""
 #| "@option:check Allow control of pointer and keyboard without asking for "
@@ -184,7 +184,7 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "Erlauben, ohne um Erlaubnis zu fragen"
 
-#: ui/main.qml:283
+#: ui/main.qml:174
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
@@ -192,23 +192,7 @@ msgstr ""
 "Niedrigste Sicherheit – Alle X11-Anwendungen werden die Kontrolle über den "
 "Comuter übernehmen können"
 
-#: ui/main.qml:295
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
-msgctxt ""
-"@title:window title of the page opened by the 'See allowed applications' "
-"button"
-msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Steuerung des Zeigers und der Tastatur:"
-
-#: ui/main.qml:315
-#, kde-format
-msgctxt "@info:tooltip %1 is the name of the app/binary"
-msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
-
-#: ui/main.qml:329
+#: ui/main.qml:181
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -219,6 +203,22 @@ msgstr ""
 "Bitte beachten Sie, dass diese Einstellung die Systemsicherheit massiv "
 "schwächt und es bösartiger Software erlaubt, die vollständige Kontrolle über "
 "Maus und Tastatur zu erhalten. Seien Sie sich der Risiken bewusst."
+
+#: ui/main.qml:189
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Control of pointer and keyboard:"
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "Steuerung des Zeigers und der Tastatur:"
+
+#: ui/main.qml:209
+#, kde-format
+msgctxt "@info:tooltip %1 is the name of the app/binary"
+msgid "Do not allow %1 to control the pointer and keyboard without asking"
+msgstr ""
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."

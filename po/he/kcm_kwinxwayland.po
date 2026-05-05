@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-29 00:47+0000\n"
+"POT-Creation-Date: 2026-05-05 00:46+0000\n"
 "PO-Revision-Date: 2026-04-30 13:58+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
 
-#: ui/main.qml:29
+#: ui/main.qml:28
 #, kde-kuit-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -31,31 +31,31 @@ msgstr ""
 "צריכים לקבל הרשאה להאזין להקשות כל הזמן.<nl/><nl/>במקרה של שימוש ביישומים "
 "שכאלה, אפשר לבחור את האיזון המועדף עליך בין אבטחה ותאימות."
 
-#: ui/main.qml:50
+#: ui/main.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
 msgstr "האזנה להקשות:"
 
-#: ui/main.qml:57
+#: ui/main.qml:52
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
 msgstr "אסורה"
 
-#: ui/main.qml:73
+#: ui/main.qml:61
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr "המאובטח ביותר, קיצורי מקשים מקיפים לא יעבדו ביישומי X11"
 
-#: ui/main.qml:87
+#: ui/main.qml:67
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "רק מקשי מטא, Ctrl,‏ Alt ו־Shift"
 
-#: ui/main.qml:103
+#: ui/main.qml:76
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -65,7 +65,7 @@ msgstr ""
 "מאובטח מאוד, הקלדות קצובות וקיצורי מקשים מקיפים עם מקשי החלפה בלבד יעבדו "
 "ביישומי X11"
 
-#: ui/main.qml:117
+#: ui/main.qml:81
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
@@ -73,19 +73,19 @@ msgid ""
 "pressed"
 msgstr "כמו לעיל, בתוספת כל מקש שהוא שנלחץ יחד עם Ctrl,‏ Alt או מטא"
 
-#: ui/main.qml:133
+#: ui/main.qml:90
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr "אבטחה בינונית, כל קיצורי המקשים המקיפים יעבדו ביישומי X11"
 
-#: ui/main.qml:147
+#: ui/main.qml:96
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
 msgstr "מותר תמיד"
 
-#: ui/main.qml:163
+#: ui/main.qml:105
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -94,7 +94,7 @@ msgid ""
 msgstr ""
 "הכי פחות מאובטח, כל יישומי X11 יוכלו לראות כל טקסט שמוקלד לכל יישום שהוא"
 
-#: ui/main.qml:177
+#: ui/main.qml:111
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -106,19 +106,19 @@ msgstr ""
 "לגנוב את הסיסמאות שלך ולרגל אחרי הטקסט המוקלד. נא לוודא שהכשלים האלו ברורים "
 "לך ומוסכמים עליך."
 
-#: ui/main.qml:193
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
 msgstr "האזנה למקשי העכבר:"
 
-#: ui/main.qml:199
+#: ui/main.qml:121
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
 msgstr "מורשה"
 
-#: ui/main.qml:215
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -128,13 +128,13 @@ msgstr ""
 "אבטחה בינונית, כל קיצורי המקשים המקיפים שקשורים לכפתורי עכבר יעבדו ביישומי "
 "X11"
 
-#: ui/main.qml:233
+#: ui/main.qml:141
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr "שליטה בסמן ובמקלדת:"
 
-#: ui/main.qml:240
+#: ui/main.qml:146
 #, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
@@ -142,13 +142,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "יישומים מורשים"
 
-#: ui/main.qml:246
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr "הצגת היישומים המורשים…"
 
-#: ui/main.qml:259
+#: ui/main.qml:163
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -160,7 +160,7 @@ msgstr ""
 "מהרשימה הזאת יוכלו לשלוט במחשב, כיוון שאי אפשר לאמת זהויות של יישומים "
 "שמשתמשים ב־XWayland"
 
-#: ui/main.qml:272
+#: ui/main.qml:169
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -168,27 +168,13 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "לאפשר מבלי לבקש הרשאה"
 
-#: ui/main.qml:283
+#: ui/main.qml:174
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr "הכי פחות מאובטח, כל יישומי X11 יוכלו לשלוט על המחשב"
 
-#: ui/main.qml:295
-#, kde-format
-msgctxt ""
-"@title:window title of the page opened by the 'See allowed applications' "
-"button"
-msgid "Applications allowed to control the pointer and keyboard"
-msgstr "יישומים שמורשים לשלוט בסמן ובמקלדת"
-
-#: ui/main.qml:315
-#, kde-format
-msgctxt "@info:tooltip %1 is the name of the app/binary"
-msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr "לא להרשות ליישום %1 לשלוט בסמן ובמקלדת מבלי לשאול"
-
-#: ui/main.qml:329
+#: ui/main.qml:181
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -198,6 +184,20 @@ msgid ""
 msgstr ""
 "נא לשים לב ששימוש בהגדרה זו יערער את אבטחת המערכת וירשה לתוכנות זדוניות "
 "להשתלט על הסמן והמקלדת שלך. נא לוודא שהכשלים האלו ברורים ומוסכמים עליך."
+
+#: ui/main.qml:189
+#, kde-format
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "יישומים שמורשים לשלוט בסמן ובמקלדת"
+
+#: ui/main.qml:209
+#, kde-format
+msgctxt "@info:tooltip %1 is the name of the app/binary"
+msgid "Do not allow %1 to control the pointer and keyboard without asking"
+msgstr "לא להרשות ליישום %1 לשלוט בסמן ובמקלדת מבלי לשאול"
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."

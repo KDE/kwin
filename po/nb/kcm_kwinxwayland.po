@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-29 00:47+0000\n"
+"POT-Creation-Date: 2026-05-05 00:46+0000\n"
 "PO-Revision-Date: 2025-03-15 19:33+0100\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#: ui/main.qml:29
+#: ui/main.qml:28
 #, kde-kuit-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -28,32 +28,32 @@ msgid ""
 "balance of security and compatibility here."
 msgstr ""
 
-#: ui/main.qml:50
+#: ui/main.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
 msgstr ""
 
-#: ui/main.qml:57
+#: ui/main.qml:52
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
 msgstr ""
 
-#: ui/main.qml:73
+#: ui/main.qml:61
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr ""
 
-#: ui/main.qml:87
+#: ui/main.qml:67
 #, fuzzy, kde-format
 #| msgid "Only Meta, Control, Alt and Shift keys"
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Bare «meta»-, «Control»-, «Alt»- og «Shift»-tastene"
 
-#: ui/main.qml:103
+#: ui/main.qml:76
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -61,7 +61,7 @@ msgid ""
 "work in X11 apps"
 msgstr ""
 
-#: ui/main.qml:117
+#: ui/main.qml:81
 #, fuzzy, kde-format
 #| msgid ""
 #| "As above, plus any key typed while the Control, Alt, or Meta keys are "
@@ -73,20 +73,20 @@ msgid ""
 msgstr ""
 "Som ovenfor pluss alle tastetrykk når «Ctrl», «Alt» eller «Meta» trykkes"
 
-#: ui/main.qml:133
+#: ui/main.qml:90
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
 
-#: ui/main.qml:147
+#: ui/main.qml:96
 #, fuzzy, kde-format
 #| msgid "Always"
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
 msgstr "Alltid"
 
-#: ui/main.qml:163
+#: ui/main.qml:105
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -94,7 +94,7 @@ msgid ""
 "application"
 msgstr ""
 
-#: ui/main.qml:177
+#: ui/main.qml:111
 #, fuzzy, kde-format
 #| msgid ""
 #| "Note that using this setting will reduce system security to that of the "
@@ -111,20 +111,20 @@ msgstr ""
 "programvare å stjele passord og spionere på teksten du skriver. Se til at du "
 "er klar over denne risikoen, og godtar den."
 
-#: ui/main.qml:193
+#: ui/main.qml:118
 #, fuzzy, kde-format
 #| msgid "Additionally include mouse buttons"
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
 msgstr "Ta og med museknapper"
 
-#: ui/main.qml:199
+#: ui/main.qml:121
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
 msgstr ""
 
-#: ui/main.qml:215
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -132,13 +132,13 @@ msgid ""
 "apps"
 msgstr ""
 
-#: ui/main.qml:233
+#: ui/main.qml:141
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr ""
 
-#: ui/main.qml:240
+#: ui/main.qml:146
 #, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
@@ -146,13 +146,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr ""
 
-#: ui/main.qml:246
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr ""
 
-#: ui/main.qml:259
+#: ui/main.qml:163
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -161,7 +161,7 @@ msgid ""
 "identities can’t be verified"
 msgstr ""
 
-#: ui/main.qml:272
+#: ui/main.qml:169
 #, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
@@ -169,27 +169,13 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr ""
 
-#: ui/main.qml:283
+#: ui/main.qml:174
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr ""
 
-#: ui/main.qml:295
-#, kde-format
-msgctxt ""
-"@title:window title of the page opened by the 'See allowed applications' "
-"button"
-msgid "Applications allowed to control the pointer and keyboard"
-msgstr ""
-
-#: ui/main.qml:315
-#, kde-format
-msgctxt "@info:tooltip %1 is the name of the app/binary"
-msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
-
-#: ui/main.qml:329
+#: ui/main.qml:181
 #, fuzzy, kde-format
 #| msgid ""
 #| "Note that using this setting will reduce system security to that of the "
@@ -205,3 +191,17 @@ msgstr ""
 "ned til sikkerhetsnivået til X11-økta, og du tillater potensielt ondartede "
 "programvare å stjele passord og spionere på teksten du skriver. Se til at du "
 "er klar over denne risikoen, og godtar den."
+
+#: ui/main.qml:189
+#, kde-format
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr ""
+
+#: ui/main.qml:209
+#, kde-format
+msgctxt "@info:tooltip %1 is the name of the app/binary"
+msgid "Do not allow %1 to control the pointer and keyboard without asking"
+msgstr ""

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-29 00:47+0000\n"
+"POT-Creation-Date: 2026-05-05 00:46+0000\n"
 "PO-Revision-Date: 2025-07-19 08:45+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 "X-Generator: Lokalize 25.04.3\n"
 
-#: ui/main.qml:29
+#: ui/main.qml:28
 #, kde-kuit-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -32,32 +32,32 @@ msgstr ""
 "korzystasz z takich aplikacji, to tutaj możesz określić równowagę pomiędzy "
 "bezpieczeństwem i zgodnością."
 
-#: ui/main.qml:50
+#: ui/main.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
 msgstr "Nasłuchiwanie naciśnięć klawiszy:"
 
-#: ui/main.qml:57
+#: ui/main.qml:52
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
 msgstr "Zabronione"
 
-#: ui/main.qml:73
+#: ui/main.qml:61
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr ""
 "Najbardziej bezpieczne; skróty globalne nie będą działać w aplikacjach X11"
 
-#: ui/main.qml:87
+#: ui/main.qml:67
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "Tylko klawisze: Meta, Ctrl, Alt oraz Shift"
 
-#: ui/main.qml:103
+#: ui/main.qml:76
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -67,7 +67,7 @@ msgstr ""
 "Bardzo bezpieczne; naciśnij-aby-rozmawiać oraz inne skróty globalne tylko z "
 "klawiszem odmieniającym będą działać w aplikacjach X11 "
 
-#: ui/main.qml:117
+#: ui/main.qml:81
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
@@ -77,7 +77,7 @@ msgstr ""
 "Jak powyżej, plus dowolny klawisz naciśnięty wraz z naciśniętym klawiszem "
 "Ctrl, Alt lub Meta (zazwyczaj klawisz z logiem Windowsa)"
 
-#: ui/main.qml:133
+#: ui/main.qml:90
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
@@ -85,13 +85,13 @@ msgstr ""
 "Umiarkowanie bezpieczne; wszystkie skróty globalne będą działać w "
 "aplikacjach X11"
 
-#: ui/main.qml:147
+#: ui/main.qml:96
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
 msgstr "Cały czas dozwolone"
 
-#: ui/main.qml:163
+#: ui/main.qml:105
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -101,7 +101,7 @@ msgstr ""
 "Najmniej bezpieczne; wszystkie aplikacje X11 będą w stanie widzieć wpisywany "
 "przez ciebie tekst do dowolnej aplikacji"
 
-#: ui/main.qml:177
+#: ui/main.qml:111
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -114,19 +114,19 @@ msgstr ""
 "podglądanie tekstu, który wpisujesz. Upewnij się, że to rozumiesz i że "
 "odpowiada ci takie ryzyko."
 
-#: ui/main.qml:193
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
 msgstr "Nasłuchiwanie przycisków myszy:"
 
-#: ui/main.qml:199
+#: ui/main.qml:121
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
 msgstr "Dozwolone"
 
-#: ui/main.qml:215
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -136,13 +136,13 @@ msgstr ""
 "Umiarkowanie bezpieczne; skróty globalne związane z przyciskami myszy będą "
 "działać w aplikacjach X11"
 
-#: ui/main.qml:233
+#: ui/main.qml:141
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr "Sterowanie wskaźnikiem i klawiaturą:"
 
-#: ui/main.qml:240
+#: ui/main.qml:146
 #, fuzzy, kde-format
 #| msgctxt "@option:radio Listening for mouse buttons is allowed"
 #| msgid "Allowed"
@@ -152,13 +152,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "Dozwolone"
 
-#: ui/main.qml:246
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr ""
 
-#: ui/main.qml:259
+#: ui/main.qml:163
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -167,7 +167,7 @@ msgid ""
 "identities can’t be verified"
 msgstr ""
 
-#: ui/main.qml:272
+#: ui/main.qml:169
 #, fuzzy, kde-format
 #| msgctxt ""
 #| "@option:check Allow control of pointer and keyboard without asking for "
@@ -179,7 +179,7 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "Zezwól bez pytania o uprawnienia"
 
-#: ui/main.qml:283
+#: ui/main.qml:174
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
@@ -187,23 +187,7 @@ msgstr ""
 "Najmniej bezpieczne; wszystkie aplikacje X11 będą w stanie sterować twoim "
 "komputerem"
 
-#: ui/main.qml:295
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
-msgctxt ""
-"@title:window title of the page opened by the 'See allowed applications' "
-"button"
-msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Sterowanie wskaźnikiem i klawiaturą:"
-
-#: ui/main.qml:315
-#, kde-format
-msgctxt "@info:tooltip %1 is the name of the app/binary"
-msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
-
-#: ui/main.qml:329
+#: ui/main.qml:181
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -215,6 +199,22 @@ msgstr ""
 "bezpieczeństwa i umożliwi szkodliwym aplikacją całkowite przejęcie panowania "
 "nad twoją myszą i klawiaturą. Upewnij się, że to rozumiesz i że odpowiada ci "
 "takie ryzyko."
+
+#: ui/main.qml:189
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Control of pointer and keyboard:"
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "Sterowanie wskaźnikiem i klawiaturą:"
+
+#: ui/main.qml:209
+#, kde-format
+msgctxt "@info:tooltip %1 is the name of the app/binary"
+msgid "Do not allow %1 to control the pointer and keyboard without asking"
+msgstr ""
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."

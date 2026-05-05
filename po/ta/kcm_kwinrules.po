@@ -1,18 +1,18 @@
-# SPDX-FileCopyrightText: 2022, 2023, 2024 Kishore G <kishore96@gmail.com>
+# SPDX-FileCopyrightText: 2022-2024, 2026 Kishore G <kishore96@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-03 00:45+0000\n"
-"PO-Revision-Date: 2024-10-27 12:38+0530\n"
+"PO-Revision-Date: 2026-05-04 21:01+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
-"Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
+"Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 26.04.0\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -37,37 +37,33 @@ msgid "Unimportant"
 msgstr "முக்கியமில்லை"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Exact Match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Exact match"
-msgstr "சரியான பொருத்தம்"
+msgstr "முழு பொருத்தம்"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Substring Match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Substring match"
-msgstr "துணை சரப் பொருத்தம்"
+msgstr "பகுதியளவு பொருத்தம்"
 
 #: optionsmodel.cpp:202
-#, fuzzy, kde-format
-#| msgid "Regular Expression"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Regular expression"
-msgstr "வழக்கமான செய்கை"
+msgstr "சுருங்குறித் தொடர்"
 
 #: optionsmodel.cpp:205
 #, kde-format
 msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
-msgstr ""
+msgstr "பொருத்தம்"
 
 #: optionsmodel.cpp:210
-#, fuzzy, kde-format
-#| msgid "Apply Initially"
+#, kde-format
 msgid "Apply initially"
-msgstr "முதலில் பயன்படுத்து"
+msgstr "துவக்கத்தில் செயல்படுத்து"
 
 #: optionsmodel.cpp:211
 #, kde-format
@@ -80,8 +76,7 @@ msgstr ""
 "அதற்கு பின் அந்த மதிப்பு கட்டாயப்படுத்தப்படாது."
 
 #: optionsmodel.cpp:214
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply now"
 msgstr "இப்போது செயல்படுத்து"
 
@@ -107,12 +102,13 @@ msgid ""
 "The value of the window property will be remembered and, every time the "
 "window is created, the last remembered value will be applied."
 msgstr ""
+"சாளரத்தின் இப்பண்பு நினைவில் கொள்ளப்பட்டு, சாளரம் உருவாக்கப்படும்போது அதன் முந்தைய மதிப்பு "
+"இடப்படும்."
 
 #: optionsmodel.cpp:222
-#, fuzzy, kde-format
-#| msgid "Do Not Affect"
+#, kde-format
 msgid "Do not affect"
-msgstr "பாதிக்காது"
+msgstr "மாற்றாதே"
 
 #: optionsmodel.cpp:223
 #, kde-format
@@ -133,8 +129,7 @@ msgid "The window property will be always forced to the given value."
 msgstr ""
 
 #: optionsmodel.cpp:229
-#, fuzzy, kde-format
-#| msgid "Force Temporarily"
+#, kde-format
 msgid "Force temporarily"
 msgstr "தற்காலிகமாக கட்டாயப்படுத்து"
 
@@ -204,10 +199,9 @@ msgid "Window class (application)"
 msgstr "சாளர வகுப்பு (செயலி)"
 
 #: rulesmodel.cpp:403
-#, fuzzy, kde-format
-#| msgid "Match w&hole window class"
+#, kde-format
 msgid "Match whole window class"
-msgstr "முழுமையான சாளர வகுப்புக்கு பொருந்தும்"
+msgstr "முழு சாளர வகுப்பை பொருத்து"
 
 #: rulesmodel.cpp:410
 #, kde-format
@@ -235,16 +229,14 @@ msgid "Machine (hostname)"
 msgstr "கணினி (புரவன் பெயர்)"
 
 #: rulesmodel.cpp:440
-#, fuzzy, kde-format
-#| msgid "Window &Extra"
+#, kde-format
 msgid "Window tag"
-msgstr "உபரியான சாளரம்"
+msgstr "சாளர குறிச்சொல்"
 
 #: rulesmodel.cpp:446
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "Has parent window"
-msgstr "பிரதான சாளரத்தில்"
+msgstr "தாய்ச் சாளரம் உள்ளது"
 
 #: rulesmodel.cpp:452
 #, kde-format
@@ -275,14 +267,12 @@ msgid "Maximized vertically"
 msgstr "நெடுக்காக அதிகபட்ச பெரிதாக்கு"
 
 #: rulesmodel.cpp:477
-#, fuzzy, kde-format
-#| msgid "Virtual Desktop"
+#, kde-format
 msgid "Virtual desktop"
 msgstr "மெய்நிகர் பணிமேடை"
 
 #: rulesmodel.cpp:483
-#, fuzzy, kde-format
-#| msgid "Virtual Desktops"
+#, kde-format
 msgid "Virtual desktops"
 msgstr "மெய்நிகர் பணிமேடைகள்"
 
@@ -379,7 +369,7 @@ msgstr "பணிப்பட்டையில் காட்டாதே"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "சாளரம் பணி மேலாளியில் காட்டப்படுமா என்பதைக் கட்டுப்படுத்தும்."
 
 #: rulesmodel.cpp:593
 #, kde-format
@@ -391,7 +381,7 @@ msgstr "பணி மாற்றியில் காட்டாதே"
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr ""
+msgstr "சாளரம், பணிமேடை மேலாளியில் காட்டப்படுமா என்பதைக் கட்டுப்படுத்தும்."
 
 #: rulesmodel.cpp:599
 #, kde-format
@@ -405,6 +395,7 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"சாளரம், <shortcut>Alt+Tab</shortcut> பட்டியலில் காட்டப்படுமா என்பதைக் கட்டுப்படுத்தும்."
 
 #: rulesmodel.cpp:605
 #, kde-format
@@ -503,7 +494,7 @@ msgstr "குவியத்தை ஏற்பது"
 #: rulesmodel.cpp:690
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "சாளரத்தில் கிளிக் செய்யும்போது அது குவியத்தைப் பெறுமா என்பதைக் கட்டுப்படுத்தும்."
 
 #: rulesmodel.cpp:694
 #, kde-format
@@ -521,6 +512,11 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"சாளரம் குவியத்தில் இருக்கும்போது முழுதளாவிய விசைச்சுருக்குவழிகளை இது முடக்கும். அதே "
+"சுருக்குவழிகளை கையாளும் நிரல்களுக்கு (எ.கா. மெய்நிகர் கணினிகளுக்கும் போன்மிகளுக்கும்) "
+"இவ்வமைப்பை பயன்படுத்தலாம்.<nl/><nl/> இந்த அமைப்பு செயலிலிருக்கும்போது <shortcut>Alt"
+"+Tab</shortcut> (வேறு சாளரத்திற்கு தாவுவதற்கானது) மற்றும் <shortcut>Alt+Space</"
+"shortcut> (கேரன்னரை இயக்குவதற்கானது) போன்ற சுருக்குவழிகளைப் பயன்படுத்த முடியாது."
 
 #: rulesmodel.cpp:706
 #, kde-format
@@ -533,9 +529,9 @@ msgid "Desktop file name"
 msgstr "Desktop கோப்பின் பெயர்"
 
 #: rulesmodel.cpp:716
-#, fuzzy, kde-format
+#, kde-format
 msgid "Block compositing"
-msgstr "சாளரநிரலைத் தடு"
+msgstr "சாளரவரைவைத் தடு"
 
 #: rulesmodel.cpp:721
 #, kde-format
@@ -543,20 +539,19 @@ msgid "Layer"
 msgstr "அடுக்கு"
 
 #: rulesmodel.cpp:727
-#, fuzzy, kde-format
-#| msgid "Adaptive Sync"
+#, kde-format
 msgid "Adaptive sync"
 msgstr "சூழறி ஒத்திசைவு"
 
 #: rulesmodel.cpp:732
 #, kde-format
 msgid "Allow tearing"
-msgstr ""
+msgstr "உருக்குலைவை அனுமதி"
 
 #: rulesmodel.cpp:737
 #, kde-format
 msgid "Hide from Screencast"
-msgstr ""
+msgstr "திரைப்பகிர்விலிருந்து மறை"
 
 #: rulesmodel.cpp:790
 #, kde-format
@@ -572,35 +567,34 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"இந்த செயலி, தன் சாளர வகுப்பை குறிப்பிடவில்லை. இருந்தும் இதற்கான விதிமுறைகளை அமைக்க "
+"விரும்பினால், சாளரத்தலைப்பு போன்றவற்றை பயன்படுத்தவும்.<nl/><nl/> சாளர வகுப்பு "
+"குறிப்பிடப்படாததை இச்செயலியின் நிரலாளர்களுக்கு தெரிவிக்கவும்."
 
 #: rulesmodel.cpp:825
-#, fuzzy, kde-format
-#| msgid "All Window Types"
+#, kde-format
 msgid "All window types"
 msgstr "அனைத்து சாளர வகைகள்"
 
 #: rulesmodel.cpp:826
-#, fuzzy, kde-format
-#| msgid "Normal Window"
+#, kde-format
 msgid "Normal window"
 msgstr "இயல்பான சாளரம்"
 
 #: rulesmodel.cpp:827
-#, fuzzy, kde-format
-#| msgid "Dialog Window"
+#, kde-format
 msgid "Dialog window"
-msgstr "உரையாடல் பெட்டி சாளரம்"
+msgstr "துணை சாளரம்"
 
 #: rulesmodel.cpp:828
-#, fuzzy, kde-format
-#| msgid "Utility Window"
+#, kde-format
 msgid "Utility window"
-msgstr "பயனுள்ள சாளரம்"
+msgstr "கருவி சாளரம்"
 
 #: rulesmodel.cpp:829
 #, kde-format
 msgid "Dock (panel)"
-msgstr "டாக் (பலகம்)"
+msgstr "பலகை"
 
 #: rulesmodel.cpp:830
 #, kde-format
@@ -608,16 +602,14 @@ msgid "Toolbar"
 msgstr "கருவிப்பட்டை"
 
 #: rulesmodel.cpp:831
-#, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
+#, kde-format
 msgid "Torn-off menu"
-msgstr "`"
+msgstr "தனியான பட்டி`"
 
 #: rulesmodel.cpp:832
-#, fuzzy, kde-format
-#| msgid "Splash Screen"
+#, kde-format
 msgid "Splash screen"
-msgstr "தோன்றும் திரை"
+msgstr "துவக்கத் திரை"
 
 #: rulesmodel.cpp:833 rulesmodel.cpp:934
 #, kde-format
@@ -626,20 +618,17 @@ msgstr "பணிமேடை"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:835
-#, fuzzy, kde-format
-#| msgid "Standalone Menubar"
+#, kde-format
 msgid "Standalone menubar"
 msgstr "தனியான பட்டிப்பட்டை"
 
 #: rulesmodel.cpp:836 rulesmodel.cpp:942
-#, fuzzy, kde-format
-#| msgid "On Screen Display"
+#, kde-format
 msgid "On-screen display"
 msgstr "திரையில் காட்டப்படும் தகவல்"
 
 #: rulesmodel.cpp:846
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All desktops"
 msgstr "அனைத்து பணிமேடைகளிலும்"
 
@@ -647,11 +636,10 @@ msgstr "அனைத்து பணிமேடைகளிலும்"
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
-msgstr ""
+msgstr "சாளரத்தை அனைத்து பணிமேடைகளிலும் காட்டும்"
 
 #: rulesmodel.cpp:867
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "All activities"
 msgstr "அனைத்து செயல்பாடுகளிலும்"
 
@@ -659,7 +647,7 @@ msgstr "அனைத்து செயல்பாடுகளிலும்"
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
-msgstr ""
+msgstr "சாளரத்தை அனைத்து செயல்பாடுகளிலும் காட்டும்"
 
 #: rulesmodel.cpp:890
 #, kde-format
@@ -667,14 +655,12 @@ msgid "Default"
 msgstr "இயல்பிருப்பு"
 
 #: rulesmodel.cpp:891
-#, fuzzy, kde-format
-#| msgid "No Placement"
+#, kde-format
 msgid "No placement"
 msgstr "ஏதுமில்லை"
 
 #: rulesmodel.cpp:892
-#, fuzzy, kde-format
-#| msgid "Minimal Overlapping"
+#, kde-format
 msgid "Minimal overlapping"
 msgstr "ஒன்றன்மேல் ஒன்று இல்லாமல்"
 
@@ -694,20 +680,17 @@ msgid "Random"
 msgstr "சமவாய்ப்பாக"
 
 #: rulesmodel.cpp:896
-#, fuzzy, kde-format
-#| msgid "In Top-Left Corner"
+#, kde-format
 msgid "In top-left corner"
 msgstr "மேல்-இடது மூலையில்"
 
 #: rulesmodel.cpp:897
-#, fuzzy, kde-format
-#| msgid "Under Mouse"
+#, kde-format
 msgid "Under mouse"
 msgstr "சுட்டிக்கு அடியில்"
 
 #: rulesmodel.cpp:898
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "On main window"
 msgstr "பிரதான சாளரத்தில்"
 
@@ -757,15 +740,14 @@ msgid "Popup"
 msgstr "மேல்தோன்றுவது"
 
 #: rulesmodel.cpp:941
-#, fuzzy, kde-format
-#| msgid "Critical Notification"
+#, kde-format
 msgid "Critical notification"
 msgstr "நெருக்கடியான அறிவிப்பு"
 
 #: rulesmodel.cpp:943
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "மேல்தோன்றுவது"
 
 #: rulesmodel.cpp:968
 #, kde-format
@@ -813,12 +795,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "குறிப்பிட்ட சாளரங்களுக்கான தனிப்பட்ட விதியேதும் அமைக்கப்படவில்லை"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr "சிலவற்றை சேர்க்க, <interface>புதியதை சேர்…</interface> பட்டனை அழுத்தவும்"
+msgstr "சிலவற்றை சேர்க்க, <interface>புதியதை சேர்…</interface> என்பதை அழுத்தவும்"
 
 #: ui/main.qml:97
 #, kde-format
@@ -925,18 +905,16 @@ msgid "Add property to the rule"
 msgstr "பண்பை விதிமுறைக்கு சேர்"
 
 #: ui/RulesEditor.qml:271
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "எந்த சாளரப்பண்பும் மாற்றப்படவில்லை"
+msgstr "ஏற்கனவே சேர்த்திராத பண்பு ஏதுமில்லை"
 
 #: ui/RulesEditor.qml:273
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "எந்த சாளரப்பண்பும் மாற்றப்படவில்லை"
+msgstr "எந்த பண்பும் '%1' என்பதற்கு பொருந்தவில்லை"
 
 #: ui/RulesEditor.qml:294 ui/ValueEditor.qml:54
 #, kde-format

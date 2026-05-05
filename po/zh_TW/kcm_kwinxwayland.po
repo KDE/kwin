@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-29 00:47+0000\n"
+"POT-Creation-Date: 2026-05-05 00:46+0000\n"
 "PO-Revision-Date: 2025-06-04 07:41+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 25.07.70\n"
 
-#: ui/main.qml:29
+#: ui/main.qml:28
 #, kde-kuit-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -30,31 +30,31 @@ msgstr ""
 "供該功能。<nl/><nl/>如果您使用這種應用程式，您可以在此選擇在安全性與相容性之"
 "間您所偏好的平衡。"
 
-#: ui/main.qml:50
+#: ui/main.qml:49
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for keystrokes:"
 msgstr "聆聽按鍵事件："
 
-#: ui/main.qml:57
+#: ui/main.qml:52
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is prohibited"
 msgid "Prohibited"
 msgstr "禁止"
 
-#: ui/main.qml:73
+#: ui/main.qml:61
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Most secure; global shortcuts will not work in X11 apps"
 msgstr "最安全；X11 應用程式提供的全域快捷鍵會無法作用"
 
-#: ui/main.qml:87
+#: ui/main.qml:67
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid "Only the Meta, Control, Alt, and Shift keys"
 msgstr "僅 Meta、Control、Alt 與 Shift 鍵"
 
-#: ui/main.qml:103
+#: ui/main.qml:76
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -63,7 +63,7 @@ msgid ""
 msgstr ""
 "安全性高；X11 應用程式提供的按鍵發話等等只有修飾鍵的全域快捷鍵會能夠作用"
 
-#: ui/main.qml:117
+#: ui/main.qml:81
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is allowed for…"
 msgid ""
@@ -71,19 +71,19 @@ msgid ""
 "pressed"
 msgstr "同上，加上按下 Control、Alt 或 Meta 鍵時所按下的任何按鍵"
 
-#: ui/main.qml:133
+#: ui/main.qml:90
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr "安全性中等；所有 X11 應用程式提供的全域快捷鍵都能夠作用"
 
-#: ui/main.qml:147
+#: ui/main.qml:96
 #, kde-format
 msgctxt "@option:radio Listening for keystrokes is always allowed"
 msgid "Always allowed"
 msgstr "總是允許"
 
-#: ui/main.qml:163
+#: ui/main.qml:105
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -91,7 +91,7 @@ msgid ""
 "application"
 msgstr "最不安全；所有 X11 應用程式都能看到您輸入任何應用程式的任何文字"
 
-#: ui/main.qml:177
+#: ui/main.qml:111
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -102,19 +102,19 @@ msgstr ""
 "請注意，使用這個設定將會降低系統安全性並讓惡意軟體執行時可以監視您所輸入的文"
 "字並盜取密碼。請確保您理解並接受這個風險。"
 
-#: ui/main.qml:193
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@title:group"
 msgid "Listening for mouse buttons:"
 msgstr "聆聽滑鼠按鈕："
 
-#: ui/main.qml:199
+#: ui/main.qml:121
 #, kde-format
 msgctxt "@option:radio Listening for mouse buttons is allowed"
 msgid "Allowed"
 msgstr "允許"
 
-#: ui/main.qml:215
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -122,13 +122,13 @@ msgid ""
 "apps"
 msgstr "安全性中等；X11 應用程式提供的有使用滑鼠的全域快捷鍵會能夠作用"
 
-#: ui/main.qml:233
+#: ui/main.qml:141
 #, kde-format
 msgctxt "@title:group"
 msgid "Control of pointer and keyboard:"
 msgstr "控制滑鼠游標與鍵盤："
 
-#: ui/main.qml:240
+#: ui/main.qml:146
 #, fuzzy, kde-format
 #| msgctxt "@option:radio Listening for mouse buttons is allowed"
 #| msgid "Allowed"
@@ -138,13 +138,13 @@ msgctxt ""
 msgid "Allowed apps"
 msgstr "允許"
 
-#: ui/main.qml:246
+#: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
 msgstr ""
 
-#: ui/main.qml:259
+#: ui/main.qml:163
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -153,7 +153,7 @@ msgid ""
 "identities can’t be verified"
 msgstr ""
 
-#: ui/main.qml:272
+#: ui/main.qml:169
 #, fuzzy, kde-format
 #| msgctxt ""
 #| "@option:check Allow control of pointer and keyboard without asking for "
@@ -165,29 +165,13 @@ msgctxt ""
 msgid "Allow without asking for permission"
 msgstr "不用事先詢問權限即允許控制"
 
-#: ui/main.qml:283
+#: ui/main.qml:174
 #, kde-format
 msgctxt "@info:usagetip"
 msgid "Least secure; all X11 apps will be able to take control of the computer"
 msgstr "最不安全；所有 X11 應用程式都能直接控制電腦"
 
-#: ui/main.qml:295
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
-msgctxt ""
-"@title:window title of the page opened by the 'See allowed applications' "
-"button"
-msgid "Applications allowed to control the pointer and keyboard"
-msgstr "控制滑鼠游標與鍵盤："
-
-#: ui/main.qml:315
-#, kde-format
-msgctxt "@info:tooltip %1 is the name of the app/binary"
-msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
-
-#: ui/main.qml:329
+#: ui/main.qml:181
 #, kde-format
 msgctxt "@info:usagetip"
 msgid ""
@@ -197,6 +181,22 @@ msgid ""
 msgstr ""
 "請注意，使用這個設定將會大幅降低系統安全性，讓惡意軟體能夠完全控制您的指標和"
 "鍵盤。請確保您理解並接受這個風險。"
+
+#: ui/main.qml:189
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Control of pointer and keyboard:"
+msgctxt ""
+"@title:window title of the page opened by the 'See allowed applications' "
+"button"
+msgid "Applications allowed to control the pointer and keyboard"
+msgstr "控制滑鼠游標與鍵盤："
+
+#: ui/main.qml:209
+#, kde-format
+msgctxt "@info:tooltip %1 is the name of the app/binary"
+msgid "Do not allow %1 to control the pointer and keyboard without asking"
+msgstr ""
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."
