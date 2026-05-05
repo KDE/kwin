@@ -2628,7 +2628,6 @@ void Window::setDecoration(std::shared_ptr<KDecoration3::Decoration> decoration)
         return;
     }
     if (decoration) {
-        QMetaObject::invokeMethod(decoration.get(), QOverload<>::of(&KDecoration3::Decoration::update), Qt::QueuedConnection);
         connect(decoration.get(), &KDecoration3::Decoration::shadowChanged, this, [this]() {
             if (!isDeleted()) {
                 updateShadow();
