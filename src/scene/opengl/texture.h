@@ -19,6 +19,7 @@ class GLTexture;
 class GraphicsBuffer;
 class Region;
 class Rect;
+typedef void *EGLImageKHR;
 
 class TextureOpenGL : public Texture
 {
@@ -63,12 +64,15 @@ private:
     void updateDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
     bool loadSinglePixelTexture(GraphicsBuffer *buffer);
     void updateSinglePixelTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint);
+    bool loadUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image);
+    void updateUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image, const std::shared_ptr<SyncReleasePoint> &releasePoint);
 
     enum class BufferType {
         None,
         Shm,
         DmaBuf,
         SinglePixel,
+        UDmaBuf,
     };
 
     BufferType m_bufferType = BufferType::None;

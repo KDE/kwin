@@ -9,6 +9,7 @@
 #include "egldisplay.h"
 #include "core/drm_formats.h"
 #include "core/drmdevice.h"
+#include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
 #include "opengl/eglutils_p.h"
 #include "opengl/glutils.h"
@@ -358,14 +359,20 @@ void EglDisplay::destroyImage(EGLImageKHR image) const
 
 EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer)
 {
+    Q_ASSERT(buffer->dmabufAttributes() || buffer->shmAttributes());
+
     std::pair key(buffer, 0);
     auto it = m_importCache.constFind(key);
     if (Q_LIKELY(it != m_importCache.constEnd())) {
         return *it;
     }
 
-    Q_ASSERT(buffer->dmabufAttributes());
-    EGLImageKHR image = importDmaBufAsImage(*buffer->dmabufAttributes());
+    EGLImageKHR image = EGL_NO_IMAGE;
+    if (buffer->dmabufAttributes()) {
+        image = importDmaBufAsImage(*buffer->dmabufAttributes());
+    } else if (auto attributes = GpuManager::self()->createUdmabuf(buffer->shmAttributes())) {
+        image = importDmaBufAsImage(*attributes);
+    }
     m_importCache[key] = image;
     connect(buffer, &QObject::destroyed, this, [this, key]() {
         destroyImage(m_importCache.take(key));
@@ -375,13 +382,14 @@ EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer)
 
 EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size)
 {
+    Q_ASSERT(buffer->dmabufAttributes());
+
     std::pair key(buffer, plane);
     auto it = m_importCache.constFind(key);
     if (Q_LIKELY(it != m_importCache.constEnd())) {
         return *it;
     }
 
-    Q_ASSERT(buffer->dmabufAttributes());
     EGLImageKHR image = importDmaBufAsImage(*buffer->dmabufAttributes(), plane, format, size);
     m_importCache[key] = image;
     connect(buffer, &QObject::destroyed, this, [this, key]() {

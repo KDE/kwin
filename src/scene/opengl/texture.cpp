@@ -8,9 +8,12 @@
 #include "compositor.h"
 #include "core/drm_formats.h"
 #include "core/graphicsbufferview.h"
+#include "core/syncobjtimeline.h"
 #include "opengl/eglbackend.h"
 #include "opengl/gltexture.h"
 #include "utils/common.h"
+
+#include <QSocketNotifier>
 
 namespace KWin
 {
@@ -81,7 +84,11 @@ bool BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const std::shared_ptr<S
     if (buffer->dmabufAttributes()) {
         return loadDmabufTexture(buffer, releasePoint);
     } else if (buffer->shmAttributes()) {
-        return loadShmTexture(buffer);
+        if (EGLImageKHR image = m_backend->importBufferAsImage(buffer)) {
+            return loadUDmabufTexture(buffer, image);
+        } else {
+            return loadShmTexture(buffer);
+        }
     } else if (buffer->singlePixelAttributes()) {
         return loadSinglePixelTexture(buffer);
     } else {
@@ -95,7 +102,11 @@ void BufferTextureOpenGL::attach(GraphicsBuffer *buffer, const Region &region, c
     if (buffer->dmabufAttributes()) {
         updateDmabufTexture(buffer, releasePoint);
     } else if (buffer->shmAttributes()) {
-        updateShmTexture(buffer, region, releasePoint);
+        if (EGLImageKHR image = m_backend->importBufferAsImage(buffer)) {
+            updateUDmabufTexture(buffer, image, releasePoint);
+        } else {
+            updateShmTexture(buffer, region, releasePoint);
+        }
     } else if (buffer->singlePixelAttributes()) {
         updateSinglePixelTexture(buffer, releasePoint);
     } else {
@@ -115,6 +126,28 @@ void BufferTextureOpenGL::reset()
     m_bufferType = BufferType::None;
     m_size = QSize();
     m_releasePoint.reset();
+}
+
+static std::unique_ptr<GLTexture> createTexture(EGLImageKHR image, const QSize &size, bool isExternalOnly)
+{
+    if (Q_UNLIKELY(image == EGL_NO_IMAGE_KHR)) {
+        qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
+        return nullptr;
+    }
+
+    GLint target = isExternalOnly ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
+    auto texture = std::make_unique<GLTexture>(target);
+    texture->setSize(size);
+    if (!texture->create()) {
+        return nullptr;
+    }
+    texture->setWrapMode(GL_CLAMP_TO_EDGE);
+    texture->setFilter(GL_LINEAR);
+    texture->bind();
+    glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(image));
+    texture->unbind();
+    texture->setContentTransform(OutputTransform::FlipY);
+    return texture;
 }
 
 bool BufferTextureOpenGL::loadShmTexture(GraphicsBuffer *buffer)
@@ -171,27 +204,6 @@ void BufferTextureOpenGL::updateShmTexture(GraphicsBuffer *buffer, const Region 
 
 bool BufferTextureOpenGL::loadDmabufTexture(GraphicsBuffer *buffer, const std::shared_ptr<SyncReleasePoint> &releasePoint)
 {
-    auto createTexture = [](EGLImageKHR image, const QSize &size, bool isExternalOnly) -> std::unique_ptr<GLTexture> {
-        if (Q_UNLIKELY(image == EGL_NO_IMAGE_KHR)) {
-            qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
-            return nullptr;
-        }
-
-        GLint target = isExternalOnly ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
-        auto texture = std::make_unique<GLTexture>(target);
-        texture->setSize(size);
-        if (!texture->create()) {
-            return nullptr;
-        }
-        texture->setWrapMode(GL_CLAMP_TO_EDGE);
-        texture->setFilter(GL_LINEAR);
-        texture->bind();
-        glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(image));
-        texture->unbind();
-        texture->setContentTransform(OutputTransform::FlipY);
-        return texture;
-    };
-
     const auto attribs = buffer->dmabufAttributes();
     if (auto itConv = FormatInfo::s_drmConversions.find(buffer->dmabufAttributes()->format); itConv != FormatInfo::s_drmConversions.end()) {
         std::vector<std::unique_ptr<GLTexture>> textures;
@@ -288,6 +300,95 @@ void BufferTextureOpenGL::updateSinglePixelTexture(GraphicsBuffer *buffer, const
     }
     const GraphicsBufferView view(buffer);
     m_planes[0]->update(*view.image(), Rect(0, 0, 1, 1));
+}
+
+/**
+ * Helper class that keeps a shm buffer referenced until the GPU work
+ * accessing the buffer is completed
+ */
+class ShmReferencer
+{
+public:
+    explicit ShmReferencer(GraphicsBuffer *buffer, FileDescriptor &&syncFd)
+        : m_buffer(buffer)
+        , m_sync(std::move(syncFd))
+        , m_notifier(m_sync.get(), QSocketNotifier::Read)
+    {
+        QObject::connect(&m_notifier, &QSocketNotifier::activated, &m_notifier, [this]() {
+            delete this;
+        });
+        m_notifier.setEnabled(true);
+        if (m_sync.isReadable()) {
+            delete this;
+        }
+    }
+
+    GraphicsBufferRef m_buffer;
+    FileDescriptor m_sync;
+    QSocketNotifier m_notifier;
+};
+
+class UDmabufReleasePoint : public SyncReleasePoint
+{
+public:
+    explicit UDmabufReleasePoint(GraphicsBuffer *shmBuffer)
+        : m_buffer(shmBuffer)
+    {
+    }
+
+    ~UDmabufReleasePoint()
+    {
+        if (m_sync) {
+            new ShmReferencer(m_buffer.buffer(), std::move(m_sync));
+        }
+    }
+
+    void addReleaseFence(const FileDescriptor &fd) override
+    {
+        if (m_sync) {
+            m_sync = mergeSyncFds(m_sync, fd);
+        } else {
+            m_sync = fd.duplicate();
+        }
+    }
+
+    GraphicsBufferRef m_buffer;
+    FileDescriptor m_sync;
+};
+
+bool BufferTextureOpenGL::loadUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image)
+{
+    const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(buffer->shmAttributes()->format, DRM_FORMAT_MOD_LINEAR);
+    auto texture = createTexture(image, buffer->size(), isExternal);
+    if (!texture) {
+        return false;
+    }
+    m_planes = {texture.release()};
+    m_bufferType = BufferType::UDmaBuf;
+    m_size = buffer->size();
+    const auto info = FormatInfo::get(buffer->shmAttributes()->format);
+    m_isFloatingPoint = info && info->floatingPoint;
+    m_releasePoint = std::make_shared<UDmabufReleasePoint>(buffer);
+    return true;
+}
+
+void BufferTextureOpenGL::updateUDmabufTexture(GraphicsBuffer *buffer, EGLImageKHR image, const std::shared_ptr<SyncReleasePoint> &releasePoint)
+{
+    if (Q_UNLIKELY(m_bufferType != BufferType::UDmaBuf)) {
+        reset();
+        loadUDmabufTexture(buffer, image);
+        return;
+    }
+    const bool isExternal = m_backend->eglDisplayObject()->isExternalOnly(buffer->shmAttributes()->format, DRM_FORMAT_MOD_LINEAR);
+    const GLint target = isExternal ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
+
+    m_planes[0]->bind();
+    glEGLImageTargetTexture2DOES(target, image);
+    m_planes[0]->unbind();
+
+    const auto info = FormatInfo::get(buffer->shmAttributes()->format);
+    m_isFloatingPoint = info && info->floatingPoint;
+    m_releasePoint = std::make_shared<UDmabufReleasePoint>(buffer);
 }
 
 } // namespace KWin
