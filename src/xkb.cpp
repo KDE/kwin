@@ -1400,7 +1400,7 @@ QList<xkb_keysym_t> Xkb::textToKeySyms(const QString &inputString)
         if (ks != XKB_KEY_NoSymbol) {
             result.append(ks);
         } else {
-            qCWarning(KWIN_XKB) << "No keysym for U+" << &std::hex << (int)cp << "\n";
+            qCWarning(KWIN_XKB).nospace() << "No keysym for U+" << QString::number(cp, 16).toUpper();
         }
     }
     return result;
