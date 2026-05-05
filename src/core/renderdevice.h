@@ -16,8 +16,6 @@
 #include <memory>
 #include <vulkan/vulkan_raii.hpp>
 
-typedef void *EGLImageKHR;
-
 namespace KWin
 {
 
@@ -51,10 +49,6 @@ public:
 
     VulkanDevice *vulkanDevice() const;
 
-    // TODO move these + caching to EglDisplay?
-    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
-    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
-
     /**
      * @returns all format+modifiers that can be imported with either
      *          EGL or Vulkan
@@ -82,8 +76,6 @@ private:
     FormatModifierMap m_allImportableFormats;
     std::weak_ptr<EglContext> m_eglContext;
     bool m_inReset = false;
-
-    QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
 };
 
 }

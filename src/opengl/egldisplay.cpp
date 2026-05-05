@@ -107,6 +107,9 @@ EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions
 
 EglDisplay::~EglDisplay()
 {
+    for (const auto &image : m_importedBuffers) {
+        destroyImage(image);
+    }
     if (m_owning) {
         eglTerminate(m_handle);
     }
@@ -353,4 +356,50 @@ void EglDisplay::destroyImage(EGLImageKHR image) const
     m_functions.destroyImageKHR(m_handle, image);
 }
 
+EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer)
+{
+    std::pair key(buffer, 0);
+    auto it = m_importedBuffers.constFind(key);
+    if (Q_LIKELY(it != m_importedBuffers.constEnd())) {
+        return *it;
+    }
+
+    Q_ASSERT(buffer->dmabufAttributes());
+    EGLImageKHR image = importDmaBufAsImage(*buffer->dmabufAttributes());
+    if (image != EGL_NO_IMAGE_KHR) {
+        m_importedBuffers[key] = image;
+        connect(buffer, &QObject::destroyed, this, [this, key]() {
+            destroyImage(m_importedBuffers.take(key));
+        });
+        return image;
+    } else {
+        qCWarning(KWIN_OPENGL) << "failed to import dmabuf" << buffer;
+        return EGL_NO_IMAGE;
+    }
 }
+
+EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size)
+{
+    std::pair key(buffer, plane);
+    auto it = m_importedBuffers.constFind(key);
+    if (Q_LIKELY(it != m_importedBuffers.constEnd())) {
+        return *it;
+    }
+
+    Q_ASSERT(buffer->dmabufAttributes());
+    EGLImageKHR image = importDmaBufAsImage(*buffer->dmabufAttributes(), plane, format, size);
+    if (image != EGL_NO_IMAGE_KHR) {
+        m_importedBuffers[key] = image;
+        connect(buffer, &QObject::destroyed, this, [this, key]() {
+            destroyImage(m_importedBuffers.take(key));
+        });
+        return image;
+    } else {
+        qCWarning(KWIN_OPENGL) << "failed to import dmabuf" << buffer;
+        return EGL_NO_IMAGE;
+    }
+}
+
+}
+
+#include "moc_egldisplay.cpp"

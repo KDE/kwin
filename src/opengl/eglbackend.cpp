@@ -256,12 +256,12 @@ QList<LinuxDmaBufV1Feedback::Tranche> EglBackend::tranches() const
 
 EGLImageKHR EglBackend::importBufferAsImage(GraphicsBuffer *buffer)
 {
-    return m_renderDevice->importBufferAsImage(buffer);
+    return m_renderDevice->eglDisplay()->importBufferAsImage(buffer);
 }
 
 EGLImageKHR EglBackend::importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size)
 {
-    return m_renderDevice->importBufferAsImage(buffer, plane, format, size);
+    return m_renderDevice->eglDisplay()->importBufferAsImage(buffer, plane, format, size);
 }
 
 std::shared_ptr<GLTexture> EglBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
@@ -273,7 +273,7 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer)
 {
     const auto nonExternalOnly = m_renderDevice->eglDisplay()->nonExternalOnlySupportedDrmFormats();
     if (auto it = nonExternalOnly.find(buffer->dmabufAttributes()->format); it != nonExternalOnly.end() && it->contains(buffer->dmabufAttributes()->modifier)) {
-        return m_renderDevice->importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
+        return importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
     }
     // external_only buffers aren't used as a single EGLImage, import them separately
     const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
@@ -285,7 +285,7 @@ bool EglBackend::testImportBuffer(GraphicsBuffer *buffer)
         return false;
     }
     for (int i = 0; i < planes.size(); i++) {
-        if (!m_renderDevice->importBufferAsImage(buffer, i, planes[i].format, QSize(buffer->size().width() / planes[i].widthDivisor, buffer->size().height() / planes[i].heightDivisor))) {
+        if (!importBufferAsImage(buffer, i, planes[i].format, QSize(buffer->size().width() / planes[i].widthDivisor, buffer->size().height() / planes[i].heightDivisor))) {
             return false;
         }
     }

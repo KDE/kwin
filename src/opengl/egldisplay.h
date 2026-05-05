@@ -14,6 +14,7 @@
 #include <QByteArray>
 #include <QHash>
 #include <QList>
+#include <QObject>
 #include <QSize>
 #include <epoxy/egl.h>
 #include <sys/types.h>
@@ -23,12 +24,15 @@ namespace KWin
 
 struct DmaBufAttributes;
 class GLTexture;
+class GraphicsBuffer;
 
-class KWIN_EXPORT EglDisplay
+class KWIN_EXPORT EglDisplay : public QObject
 {
+    Q_OBJECT
+
 public:
-    EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions, bool owning = true);
-    ~EglDisplay();
+    explicit EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions, bool owning = true);
+    ~EglDisplay() override;
 
     QList<QByteArray> extensions() const;
     ::EGLDisplay handle() const;
@@ -49,6 +53,9 @@ public:
 
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf) const;
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const;
+
+    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer);
+    EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
     static bool shouldUseOpenGLES();
     static std::unique_ptr<EglDisplay> create(::EGLDisplay display, bool owning = true);
@@ -81,6 +88,8 @@ private:
         PFNEGLQUERYDMABUFFORMATSEXTPROC queryDmaBufFormatsEXT = nullptr;
         PFNEGLQUERYDMABUFMODIFIERSEXTPROC queryDmaBufModifiersEXT = nullptr;
     } m_functions;
+
+    QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
 };
 
 }
