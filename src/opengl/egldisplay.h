@@ -89,7 +89,7 @@ private:
         PFNEGLQUERYDMABUFMODIFIERSEXTPROC queryDmaBufModifiersEXT = nullptr;
     } m_functions;
 
-    QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
+    QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importCache;
 };
 
 }
