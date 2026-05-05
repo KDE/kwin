@@ -182,7 +182,7 @@ std::optional<AutoBrightnessCurve> AutoBrightnessCurve::fromArray(const QJsonArr
         static_assert(s_controlPointCount == 11);
 
         // for the first 5 points (0%, 20%, 40%, 60%, 80%) also interpolate 10%, 30%, 50%, 70%, 90%
-        for (size_t i = 0; i < array.size() - 1; i++) {
+        for (qsizetype i = 0; i < array.size() - 1; i++) {
             double low = array[i].toDouble(0.0);
             double high = array[i + 1].toDouble(0.0);
 
