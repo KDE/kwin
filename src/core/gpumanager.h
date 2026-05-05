@@ -7,8 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/graphicsbuffer.h"
 #include "kwin_export.h"
 #include "renderdevice.h"
+#include "utils/filedescriptor.h"
 
 #include <sys/types.h>
 #include <xf86drm.h>
@@ -43,6 +45,15 @@ public:
      */
     void scanForRenderDevices();
 
+    /**
+     * Creates a udmabuf based on the attributes. This import will fail
+     * if the offset or size aren't page-aligned!
+     * NOTE this doesn't do any copies, the returned dmabuf references
+     *      the exact same memory as the shm buffer. Synchronization of
+     *      both CPU and GPU side accesses is up to the importer!
+     */
+    std::optional<DmaBufAttributes> createUdmabuf(const ShmAttributes *attributes) const;
+
 Q_SIGNALS:
     void renderDeviceAdded(RenderDevice *device);
     void renderDeviceRemoved(RenderDevice *device);
@@ -52,6 +63,8 @@ private:
     void updateCompatibilityMap();
     RenderDevice *findCompatibleRenderDevice(drmDevicePtr device) const;
 
+    const FileDescriptor m_udmabuf;
+    const std::optional<dev_t> m_udmabufDevId;
     const std::unique_ptr<Udev> m_udev;
     const std::unique_ptr<UdevMonitor> m_udevMonitor;
     const std::unique_ptr<QSocketNotifier> m_udevNotifier;

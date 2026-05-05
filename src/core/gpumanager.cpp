@@ -13,7 +13,14 @@
 #include "utils/udev.h"
 
 #include <QSocketNotifier>
+#include <fcntl.h>
+#include <sys/ioctl.h>
 #include <sys/stat.h>
+#include <unistd.h>
+
+#if defined(Q_OS_LINUX)
+#include <linux/udmabuf.h>
+#endif
 
 namespace KWin
 {
@@ -25,8 +32,23 @@ GpuManager *GpuManager::self()
     return s_self.get();
 }
 
+static std::optional<dev_t> getDevId(const FileDescriptor &fd)
+{
+    if (!fd.isValid()) {
+        return std::nullopt;
+    }
+    struct stat buf;
+    if (fstat(fd.get(), &buf) == -1) {
+        qCWarning(KWIN_CORE) << "Failed to fstat udmabuf fd";
+        return std::nullopt;
+    }
+    return buf.st_rdev;
+}
+
 GpuManager::GpuManager()
-    : m_udev(std::make_unique<Udev>())
+    : m_udmabuf(::open("/dev/udmabuf", O_RDWR | O_CLOEXEC))
+    , m_udmabufDevId(getDevId(m_udmabuf))
+    , m_udev(std::make_unique<Udev>())
     , m_udevMonitor(m_udev->createMonitor())
     , m_udevNotifier(std::make_unique<QSocketNotifier>(m_udevMonitor->fd(), QSocketNotifier::Read))
 {
@@ -177,6 +199,54 @@ void GpuManager::handleUdevEvent()
             Q_EMIT renderDeviceRemoved(device.get());
         }
     }
+}
+
+static uint64_t align(uint64_t size, uint64_t minimum)
+{
+    if (auto remainder = size % minimum) {
+        return size + (minimum - remainder);
+    } else {
+        return size;
+    }
+}
+
+std::optional<DmaBufAttributes> GpuManager::createUdmabuf(const ShmAttributes *attributes) const
+{
+#if defined(Q_OS_LINUX)
+    if (!m_udmabuf.isValid() || !m_udmabufDevId) {
+        return std::nullopt;
+    }
+    if (attributes->offset % getpagesize() != 0) {
+        return std::nullopt;
+    }
+    struct udmabuf_create create{
+        .memfd = uint32_t(attributes->fd.get()),
+        .flags = UDMABUF_FLAGS_CLOEXEC,
+        .offset = uint64_t(attributes->offset),
+        .size = align(attributes->size.height() * attributes->stride, getpagesize()),
+    };
+    int dmabufFd = ioctl(m_udmabuf.get(), UDMABUF_CREATE, &create);
+    if (dmabufFd < 0) {
+        qCDebug(KWIN_CORE, "Could not create udmabuf: %s", strerror(errno));
+        return std::nullopt;
+    }
+
+    DmaBufAttributes ret;
+    ret.planeCount = 1;
+    ret.width = attributes->size.width();
+    ret.height = attributes->size.height();
+    ret.format = attributes->format;
+    ret.modifier = DRM_FORMAT_MOD_LINEAR;
+    // NOTE this may require special handling in the future,
+    // since in theory udmabuf can be imported into any device
+    ret.device = *m_udmabufDevId;
+    ret.fd[0] = FileDescriptor{dmabufFd};
+    ret.offset[0] = 0;
+    ret.pitch[0] = attributes->stride;
+    return ret;
+#else
+    return std::nullopt;
+#endif
 }
 
 }
