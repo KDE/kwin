@@ -241,9 +241,9 @@ void UserActionsMenu::init()
     m_noBorderOperation->setCheckable(true);
     m_noBorderOperation->setData(Options::NoBorderOp);
 
-    m_excludeFromCapture = advancedMenu->addAction(i18n("&Hide from Screencast"));
+    m_excludeFromCapture = advancedMenu->addAction(i18n("&Hide from Screenshots and Screen Recordings"));
     m_excludeFromCapture->setIcon(QIcon::fromTheme(QStringLiteral("view-private")));
-    setShortcut(m_excludeFromCapture, QStringLiteral("Window Exclude From Capture"));
+    setShortcut(m_excludeFromCapture, QStringLiteral("Window Exclude From Screenshots and Screen Recordings"));
     m_excludeFromCapture->setCheckable(true);
     m_excludeFromCapture->setData(Options::ExcludeFromCaptureOp);
 

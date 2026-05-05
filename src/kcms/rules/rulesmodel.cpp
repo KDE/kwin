@@ -734,7 +734,7 @@ void RulesModel::populateRuleList()
 
     addRule(new RuleItem(QLatin1StringView("excludefromcapture"),
                          RulePolicy::SetRule, RuleItem::Boolean,
-                         i18n("Hide from Screencast"), i18n("Appearance & Fixes"),
+                         i18n("Hide from screenshots and screen recordings"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme(QStringLiteral("view-private"))));
 }
 

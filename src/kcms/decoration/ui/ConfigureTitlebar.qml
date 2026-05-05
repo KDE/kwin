@@ -70,7 +70,7 @@ KCM.AbstractKCM {
 
             QQC2.CheckBox {
                 id: alwaysShowExcludeFromCaptureCheckBox
-                text: i18nc("@option:check", "Always show \"Hide from Screencast\" button")
+                text: i18nc("@option:check", "Always show \"Hide from Screenshots and Screen Recordings\" button")
                 checked: kcm.settings.alwaysShowExcludeFromCapture
                 onToggled: kcm.settings.alwaysShowExcludeFromCapture = checked
 
@@ -82,8 +82,8 @@ KCM.AbstractKCM {
             }
 
             Kirigami.ContextualHelpButton {
-                readonly property string helpText: i18nc("@info:tooltip", "When unchecked the button only appears if the window is hidden from screencast")
-                readonly property string additionalHelpText: i18nc("@info:tooltip", "To enable this option, add the \"Hide from screencast\" button to the titlebar first")
+                readonly property string helpText: i18nc("@info:tooltip", "When unchecked the button only appears if the window is hidden from screenshots and screen recordings")
+                readonly property string additionalHelpText: i18nc("@info:tooltip", "To enable this option, add the \"Hide from Screenshots and Screen Recordings\" button to the titlebar first")
                 toolTipText: alwaysShowExcludeFromCaptureCheckBox.enabled
                     ? helpText
                     : helpText + "\n\n" + additionalHelpText

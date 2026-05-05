@@ -71,7 +71,7 @@ static QString buttonToName(DecorationButtonType type)
     case DecorationButtonType::KeepAbove:
         return i18n("Keep above other windows");
     case DecorationButtonType::ExcludeFromCapture:
-        return i18n("Hide from screencast");
+        return i18n("Hide from screenshots and screen recordings");
     case DecorationButtonType::Spacer:
         return i18n("Spacer");
     default:

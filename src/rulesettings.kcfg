@@ -475,11 +475,11 @@
     </entry>
 
     <entry name="excludefromcapture" type="Bool">
-      <label>Hide from screencast</label>
+      <label>Hide from screenshots and screen recordings</label>
       <default>false</default>
     </entry>
     <entry name="excludefromcapturerule" type="Int">
-      <label>Hide from screencast rule type</label>
+      <label>Hide from screenshots and screen recordings rule type</label>
       <min code="true">Rules::UnusedSetRule</min>
       <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
       <default code="true">Rules::UnusedSetRule</default>

@@ -38,7 +38,7 @@
       <default>HIAX</default>
     </entry>
     <entry name="alwaysShowExcludeFromCapture" key="AlwaysShowExcludeFromCapture" type="Bool">
-      <label>Always show "Hide from Screencast" button, even if the window is not excluded from screencast already.</label>
+      <label>Always show "Hide from Screenshots and Screen Recordings" button, even if the window is not already excluded from screenshots and screen recordings.</label>
       <default>false</default>
     </entry>
   </group>
