@@ -36,6 +36,11 @@
 namespace KWin
 {
 
+static bool shouldFilterWindowFromCapture(Window *window, std::optional<pid_t> pidToHide)
+{
+    return window->excludeFromCapture() || (pidToHide.has_value() && window->pid() == *pidToHide);
+}
+
 static void convertFromGLImage(QImage &img, int w, int h, const OutputTransform &renderTargetTransformation)
 {
     // from QtOpenGL/qgl.cpp
@@ -125,11 +130,9 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(LogicalOutput *screen, S
         cursorView = std::make_unique<ItemTreeView>(&sceneView, kwinApp()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
         cursorView->setExclusive(true);
     }
-    if (pidToHide.has_value()) {
-        sceneView.addWindowFilter([pid = *pidToHide](Window *window) {
-            return window->pid() == pid;
-        });
-    }
+    sceneView.addWindowFilter([pidToHide](Window *window) {
+        return shouldFilterWindowFromCapture(window, pidToHide);
+    });
     const Rect fullDamage = Rect(QPoint(), target->size());
     sceneView.setViewport(screen->geometryF());
     sceneView.setScale(scale);
@@ -195,11 +198,9 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
         cursorView = std::make_unique<ItemTreeView>(&sceneView, kwinApp()->scene()->cursorItem(), workspace()->outputs().front(), nullptr, nullptr);
         cursorView->setExclusive(true);
     }
-    if (pidToHide.has_value()) {
-        sceneView.addWindowFilter([pid = *pidToHide](Window *window) {
-            return window->pid() == pid;
-        });
-    }
+    sceneView.addWindowFilter([pidToHide](Window *window) {
+        return shouldFilterWindowFromCapture(window, pidToHide);
+    });
     const Rect fullDamage = Rect(QPoint(), target->size());
     sceneView.setViewport(area);
     sceneView.setScale(scale);
@@ -222,6 +223,10 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(const Rect &area, Screen
 
 std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenShotFlags flags)
 {
+    if (window->excludeFromCapture()) {
+        return std::nullopt;
+    }
+
     const auto eglBackend = dynamic_cast<EglBackend *>(Compositor::self()->backend());
     if (!eglBackend) {
         return std::nullopt;
