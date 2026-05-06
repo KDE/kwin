@@ -1841,8 +1841,8 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const RectF &restore)
 
     if (m_requestedMaximizeMode & MaximizeHorizontal) {
         // Stretch the window vertically to fit the size of the maximize area.
-        geometry.setX(clientArea.x());
-        geometry.setWidth(clientArea.width());
+        geometry.setLeft(clientArea.left());
+        geometry.setRight(clientArea.right());
     } else if (oldMode & MaximizeHorizontal) {
         if (geometryRestore().isValid()) {
             // The window is no longer maximized horizontally and the saved geometry is valid.
@@ -1859,8 +1859,8 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const RectF &restore)
 
     if (m_requestedMaximizeMode & MaximizeVertical) {
         // Stretch the window horizontally to fit the size of the maximize area.
-        geometry.setY(clientArea.y());
-        geometry.setHeight(clientArea.height());
+        geometry.setTop(clientArea.top());
+        geometry.setBottom(clientArea.bottom());
     } else if (oldMode & MaximizeVertical) {
         if (geometryRestore().isValid()) {
             // The window is no longer maximized vertically and the saved geometry is valid.

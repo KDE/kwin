@@ -1210,8 +1210,8 @@ void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModi
                     // Quit maximized horizontally state if the window is resized horizontally.
                     if (requestedMaximizeMode() & MaximizeHorizontal) {
                         RectF originalGeometry = geometryRestore();
-                        originalGeometry.setX(nextMoveResizeGeom.x());
-                        originalGeometry.setWidth(nextMoveResizeGeom.width());
+                        originalGeometry.setLeft(nextMoveResizeGeom.left());
+                        originalGeometry.setRight(nextMoveResizeGeom.right());
                         maximize(requestedMaximizeMode() ^ MaximizeHorizontal, originalGeometry);
                         return;
                     }
@@ -1221,8 +1221,8 @@ void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModi
                     // Quit maximized vertically state if the window is resized vertically.
                     if (requestedMaximizeMode() & MaximizeVertical) {
                         RectF originalGeometry = geometryRestore();
-                        originalGeometry.setY(nextMoveResizeGeom.y());
-                        originalGeometry.setHeight(nextMoveResizeGeom.height());
+                        originalGeometry.setTop(nextMoveResizeGeom.top());
+                        originalGeometry.setBottom(nextMoveResizeGeom.bottom());
                         maximize(requestedMaximizeMode() ^ MaximizeVertical, originalGeometry);
                         return;
                     }
@@ -3531,12 +3531,12 @@ void Window::updateElectricGeometryRestore()
     m_electricGeometryRestore = geometryRestore();
     if (m_interactiveMoveResize.initialQuickTileMode == QuickTileMode(QuickTileFlag::None)) {
         if (!(requestedMaximizeMode() & MaximizeHorizontal)) {
-            m_electricGeometryRestore.setX(x());
-            m_electricGeometryRestore.setWidth(width());
+            m_electricGeometryRestore.setLeft(m_frameGeometry.left());
+            m_electricGeometryRestore.setRight(m_frameGeometry.right());
         }
         if (!(requestedMaximizeMode() & MaximizeVertical)) {
-            m_electricGeometryRestore.setY(y());
-            m_electricGeometryRestore.setHeight(height());
+            m_electricGeometryRestore.setTop(m_frameGeometry.top());
+            m_electricGeometryRestore.setBottom(m_frameGeometry.bottom());
         }
     }
 }
@@ -3894,12 +3894,12 @@ RectF Window::ensureSpecialStateGeometry(const RectF &geometry)
         const RectF maximizeArea = workspace()->clientArea(MaximizeArea, this, geometry.center());
         RectF ret = geometry;
         if (requestedMaximizeMode() & MaximizeHorizontal) {
-            ret.setX(maximizeArea.x());
-            ret.setWidth(maximizeArea.width());
+            ret.setLeft(maximizeArea.left());
+            ret.setRight(maximizeArea.right());
         }
         if (requestedMaximizeMode() & MaximizeVertical) {
-            ret.setY(maximizeArea.y());
-            ret.setHeight(maximizeArea.height());
+            ret.setTop(maximizeArea.top());
+            ret.setBottom(maximizeArea.bottom());
         }
         return keepInArea(ret, maximizeArea, false);
     } else if (requestedTile()) {
