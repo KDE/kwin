@@ -53,6 +53,7 @@ void KscreenEffect::dpmsChanged(std::chrono::milliseconds animationTime)
         break;
     }
     case Workspace::DpmsState::Off:
+    case Workspace::DpmsState::TurningOff:
         break;
     }
 }
