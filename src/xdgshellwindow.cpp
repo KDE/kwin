@@ -636,11 +636,9 @@ QSizeF XdgToplevelWindow::minSize() const
 
 QSizeF XdgToplevelWindow::maxSize() const
 {
-    // enforce the same minimum as for minSize, so that maxSize is always bigger than minSize
-    const int enforcedMinimum = m_nextDecoration ? 150 : 20;
     return rules()->checkMaxSize(QSizeF(m_maximumSize.width() > 0 ? m_maximumSize.width() : INT_MAX,
                                         m_maximumSize.height() > 0 ? m_maximumSize.height() : INT_MAX))
-        .expandedTo(QSizeF(enforcedMinimum, enforcedMinimum));
+        .expandedTo(minSize());
 }
 
 bool XdgToplevelWindow::isFullScreen() const
