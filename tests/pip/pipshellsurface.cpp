@@ -82,7 +82,11 @@ bool PipShellSurface::isExposed() const
 
 void PipShellSurface::applyConfigure()
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 13, 0)
     QSize size = window()->windowContentGeometry().size();
+#else
+    QSizeF size = window()->windowContentGeometry().size();
+#endif
     if (m_pendingSize.width() > 0) {
         size.setWidth(m_pendingSize.width());
     }
@@ -93,12 +97,30 @@ void PipShellSurface::applyConfigure()
     window()->resizeFromApplyConfigure(size);
 }
 
-void PipShellSurface::setWindowGeometry(const QRect &rect)
+#if QT_VERSION < QT_VERSION_CHECK(6, 13, 0)
+void PipShellSurface::setContentGeometry(const QRect &rect)
 {
     if (window()->isExposed()) {
         xdg_surface::set_window_geometry(rect.x(), rect.y(), rect.width(), rect.height());
     }
 }
+#else
+static inline QRect scaledAndRoundedRect(const QRectF &rect, qreal scale)
+{
+    return QRect(QPoint(std::round(rect.x() * scale),
+                        std::round(rect.y() * scale)),
+                 QPoint(std::round((rect.x() + rect.width()) * scale) - 1,
+                        std::round((rect.y() + rect.height()) * scale) - 1));
+}
+
+void PipShellSurface::setContentGeometry(const QRectF &rect)
+{
+    if (window()->isExposed()) {
+        const QRect nativeRect = scaledAndRoundedRect(rect, window()->clientToCompositorScale());
+        xdg_surface::set_window_geometry(nativeRect.x(), nativeRect.y(), nativeRect.width(), nativeRect.height());
+    }
+}
+#endif
 
 bool PipShellSurface::move(QtWaylandClient::QWaylandInputDevice *inputDevice)
 {
@@ -145,7 +167,11 @@ void PipShellSurface::xx_pip_v1_configure_bounds(int32_t width, int32_t height)
 
 void PipShellSurface::xx_pip_v1_configure_size(int32_t width, int32_t height)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 13, 0)
     m_pendingSize = QSize(width, height);
+#else
+    m_pendingSize = QSizeF(width, height) / window()->compositorToClientScale();
+#endif
 }
 
 void PipShellSurface::xx_pip_v1_closed()
