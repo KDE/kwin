@@ -1848,8 +1848,8 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const RectF &restore)
     } else if (oldMode & MaximizeHorizontal) {
         if (geometryRestore().isValid()) {
             // The window is no longer maximized horizontally and the saved geometry is valid.
-            geometry.setX(geometryRestore().x());
-            geometry.setWidth(geometryRestore().width());
+            geometry.setWidth(std::max(geometryRestore().width(), minSize().width()));
+            geometry.moveHorizontalCenter(geometryRestore().horizontalCenter());
         } else {
             // The window is no longer maximized horizontally and the saved geometry is
             // invalid. This would happen if the window had been mapped in the maximized state.
@@ -1866,8 +1866,8 @@ void XdgToplevelWindow::maximize(MaximizeMode mode, const RectF &restore)
     } else if (oldMode & MaximizeVertical) {
         if (geometryRestore().isValid()) {
             // The window is no longer maximized vertically and the saved geometry is valid.
-            geometry.setY(geometryRestore().y());
-            geometry.setHeight(geometryRestore().height());
+            geometry.setHeight(std::max(geometryRestore().height(), minSize().height()));
+            geometry.moveVerticalCenter(geometryRestore().verticalCenter());
         } else {
             // The window is no longer maximized vertically and the saved geometry is
             // invalid. This would happen if the window had been mapped in the maximized state.

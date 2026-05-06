@@ -75,6 +75,7 @@ private Q_SLOTS:
     void testInteractiveMoveUnmaximizeInitiallyFull();
     void testInteractiveMoveUnmaximizeHorizontal();
     void testInteractiveMoveUnmaximizeVertical();
+    void testRestoreWithNewMinSize();
     void testFullscreenMultipleOutputs();
     void testHidden();
     void testDesktopFileName();
@@ -626,11 +627,11 @@ void TestXdgShellWindow::testMaximizedToFullscreen()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(300, 200), Qt::blue);
     QVERIFY(window);
     QVERIFY(window->isActive());
     QVERIFY(!window->isFullScreen());
-    QCOMPARE(window->clientSize(), QSize(100, 50));
+    QCOMPARE(window->clientSize(), QSize(300, 200));
     QCOMPARE(window->isDecorated(), decoMode == Test::XdgToplevelDecorationV1::mode_server_side);
 
     QSignalSpy fullscreenChangedSpy(window, &Window::fullScreenChanged);
@@ -677,7 +678,7 @@ void TestXdgShellWindow::testMaximizedToFullscreen()
     shellSurface->unset_maximized();
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 5);
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(100, 50));
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(300, 200));
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!(states & Test::XdgToplevel::State::Maximized));
     QVERIFY(!(states & Test::XdgToplevel::State::Fullscreen));
@@ -2225,6 +2226,92 @@ void TestXdgShellWindow::testInteractiveMoveUnmaximizeVertical()
     // Finish interactive move.
     window->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+}
+
+void TestXdgShellWindow::testRestoreWithNewMinSize()
+{
+    // This test verifies that new min size hint will taken into account when restoring a window.
+
+    // Create the test window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
+
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    // Wait for the initial configure event.
+    Test::XdgToplevel::States states;
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(0, 0));
+    states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(!states.testFlag(Test::XdgToplevel::State::Activated));
+    QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
+
+    // Map the window.
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(800, 600), Qt::blue);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+    QVERIFY(window->isMaximizable());
+    QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(window->size(), QSize(800, 600));
+
+    // We should receive a configure event when the window becomes active.
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+    states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
+    QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
+
+    // Maximize the test window.
+    workspace()->slotWindowMaximize();
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(1280, 1024));
+    states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
+
+    // Draw contents of the maximized window.
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->size(), QSize(1280, 1024));
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+
+    // Set a minimum size hint bigger than the restored size.
+    shellSurface->set_min_size(1000, 900);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(Test::waylandSync());
+
+    // Restore the window.
+    workspace()->slotWindowMaximize();
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(1000, 900));
+    states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
+
+    // Draw contents of the restored window.
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), QSize(1000, 900), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->size(), QSize(1000, 900));
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+
+    // Destroy the window.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 void TestXdgShellWindow::testMaximizeAndChangeDecorationModeAfterInitialCommit()
