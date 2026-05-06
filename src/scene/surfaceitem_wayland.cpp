@@ -214,8 +214,10 @@ void SurfaceItemWayland::handleColorDescriptionChanged()
     if (m_surface->colorDescriptionType() == ColorDescriptionType::Windows) {
         // TODO also react to config changes after the image description is set?
         const auto group = kwinApp()->config()->group("Windows_HDR");
-        description = description->withReference(group.readEntry("Reference", 203.0));
-        description = description->withHdrMetadata(group.readEntry("MaxFrameAverage", 600), group.readEntry("MaxLuminance", 1'000));
+        const double reference = group.readEntry("Reference", 203.0);
+        description = description->withReference(reference);
+        // the max average is intentionally ignored, since the calibration app doesn't set it (anymore)
+        description = description->withHdrMetadata(reference, group.readEntry("MaxLuminance", 1'000));
     }
     setColorDescription(description);
     setRenderingIntent(m_surface->renderingIntent());
