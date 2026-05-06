@@ -33,32 +33,28 @@ msgid "Window settings for %1"
 msgstr "%1 的窗口设置"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, fuzzy, kde-format
-#| msgid "Unimportant"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Unimportant"
-msgstr "不重要"
+msgstr ""
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Exact match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Exact match"
-msgstr "完全匹配"
+msgstr ""
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Substring match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Substring match"
-msgstr "子串匹配"
+msgstr ""
 
 #: optionsmodel.cpp:202
-#, fuzzy, kde-format
-#| msgid "Regular expression"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Regular expression"
-msgstr "正则表达式"
+msgstr ""
 
 #: optionsmodel.cpp:205
 #, kde-format
@@ -243,7 +239,7 @@ msgstr "窗口标签"
 #: rulesmodel.cpp:446
 #, kde-format
 msgid "Has parent window"
-msgstr ""
+msgstr "有父窗口"
 
 #: rulesmodel.cpp:452
 #, kde-format

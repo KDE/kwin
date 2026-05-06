@@ -1781,12 +1781,10 @@ msgid "Disable Active Input Capture"
 msgstr "禁用活动输入捕获"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Ctrl"
+msgstr ""
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-kuit-format
@@ -3150,13 +3148,13 @@ msgstr "窗口标签字符串匹配类型"
 #: rulesettings.kcfg:78
 #, kde-format
 msgid "Has parent window"
-msgstr ""
+msgstr "有父窗口"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
 #, kde-format
 msgid "Has parent window match type"
-msgstr ""
+msgstr "有父窗口匹配类型"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89

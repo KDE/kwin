@@ -128,14 +128,12 @@ msgid "Control of pointer and keyboard:"
 msgstr "控制指针和键盘："
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "允许"
+msgstr ""
 
 #: ui/main.qml:152
 #, kde-format
@@ -153,11 +151,7 @@ msgid ""
 msgstr ""
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -182,25 +176,15 @@ msgstr ""
 "键盘。请确保您已了解并接受此风险。"
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "控制指针和键盘："
+msgstr ""
 
 #: ui/main.qml:209
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
 msgstr ""
-
-#~ msgctxt "@info"
-#~ msgid "Changes will take effect the next time you log in."
-#~ msgstr "更改将在下次登录时生效。"
-
-#~ msgctxt "@action:button"
-#~ msgid "Log Out Now"
-#~ msgstr "立即注销"
