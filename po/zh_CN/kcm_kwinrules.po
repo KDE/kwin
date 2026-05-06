@@ -35,22 +35,22 @@ msgstr "%1 的窗口设置"
 #: optionsmodel.cpp:198
 #, kde-format
 msgid "Unimportant"
-msgstr "不重要"
+msgstr ""
 
 #: optionsmodel.cpp:199
 #, kde-format
 msgid "Exact match"
-msgstr "完全匹配"
+msgstr ""
 
 #: optionsmodel.cpp:200
 #, kde-format
 msgid "Substring match"
-msgstr "子串匹配"
+msgstr ""
 
 #: optionsmodel.cpp:201
 #, kde-format
 msgid "Regular expression"
-msgstr "正则表达式"
+msgstr ""
 
 #: optionsmodel.cpp:205
 #, kde-format
