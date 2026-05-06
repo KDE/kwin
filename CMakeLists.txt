@@ -42,7 +42,6 @@ include(ECMQtDeclareLoggingCategory)
 include(ECMSetupQtPluginMacroNames)
 include(ECMSetupVersion)
 include(ECMQmlModule)
-include(ECMGenerateQmlTypes)
 include(ECMDeprecationSettings)
 include(ECMGenerateQDoc)
 
