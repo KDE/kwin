@@ -11,7 +11,6 @@
 #include "kwin_export.h"
 
 #include <QPoint>
-#include <QSize>
 
 #include <QSize>
 

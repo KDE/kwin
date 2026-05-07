@@ -22,7 +22,6 @@
 #include <KLocalizedString>
 #include <KWindowSystem>
 
-#include "kwinoptions_settings.h"
 #include "windows.h"
 #include <kwin_effects_interface.h>
 

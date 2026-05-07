@@ -31,12 +31,10 @@
 #include "outline.h"
 #include "placement.h"
 #include "pluginmanager.h"
-#include "pointer_input.h"
 #include "rules.h"
 #include "screenedge.h"
 #include "scripting/scripting.h"
 #include "syncalarmx11filter.h"
-#include "tiles/tilemanager.h"
 #include "window.h"
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"

@@ -21,7 +21,6 @@
 #include "core/session.h"
 #include "cursor.h"
 #include "cursorsource.h"
-#include "effect/effecthandler.h"
 #include "input.h"
 #include "inputmethod.h"
 #include "opengl/gltexture.h"

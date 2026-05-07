@@ -11,7 +11,6 @@
 #include "display.h"
 #include "main.h"
 #include "outputdevice_v2.h"
-#include "outputmanagement_v2.h"
 #include "utils/common.h"
 #include "utils/resource.h"
 #include "workspace.h"

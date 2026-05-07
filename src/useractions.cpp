@@ -45,7 +45,6 @@
 #endif
 #include "appmenu.h"
 
-#include <QAction>
 #include <QCheckBox>
 #include <QFileInfo>
 #include <QPushButton>
