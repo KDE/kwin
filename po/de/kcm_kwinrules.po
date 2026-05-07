@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-01-23 02:42+0000\n"
-"PO-Revision-Date: 2026-03-13 22:13+0100\n"
+"PO-Revision-Date: 2026-04-30 15:36+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -253,7 +253,7 @@ msgstr "Position"
 #: rulesmodel.cpp:549 rulesmodel.cpp:554 rulesmodel.cpp:559
 #, kde-format
 msgid "Size & Position"
-msgstr "Größe & Position"
+msgstr "Größe && Position"
 
 #: rulesmodel.cpp:453
 #, kde-format
@@ -371,7 +371,7 @@ msgstr "Fenster im Vordergrund halten"
 #: rulesmodel.cpp:594 rulesmodel.cpp:600
 #, kde-format
 msgid "Arrangement & Access"
-msgstr "Anordnung & Zugriff"
+msgstr "Anordnung && Zugriff"
 
 #: rulesmodel.cpp:577
 #, kde-format
@@ -434,7 +434,7 @@ msgstr "Ohne Titelleiste und Rahmen"
 #: rulesmodel.cpp:722 rulesmodel.cpp:727
 #, kde-format
 msgid "Appearance & Fixes"
-msgstr "Erscheinungsbild & Korrekturen"
+msgstr "Erscheinungsbild && Korrekturen"
 
 #: rulesmodel.cpp:611
 #, kde-format

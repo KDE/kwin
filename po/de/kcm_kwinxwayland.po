@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:53+0000\n"
-"PO-Revision-Date: 2026-01-01 22:04+0100\n"
+"PO-Revision-Date: 2026-05-03 21:06+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.3\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: ui/main.qml:27
 #, kde-format
@@ -100,7 +100,7 @@ msgstr ""
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
-"Mäßige Sicherheit – Alle globalen Kurzbefehle werden in X11-Anwendungen "
+"Mittlere Sicherheit – Alle globalen Kurzbefehle werden in X11-Anwendungen "
 "funktionieren"
 
 #: ui/main.qml:170
@@ -150,7 +150,7 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
-"Mäßige Sicherheit – Globale Kurzbefehle mit Maustasten werden in X11-"
+"Mittlere Sicherheit – Globale Kurzbefehle mit Maustasten werden in X11-"
 "Anwendungen funktionieren"
 
 #: ui/main.qml:252
