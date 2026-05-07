@@ -102,7 +102,7 @@ public:
 
     quint32 currentLayout() const
     {
-        return m_currentLayout;
+        return logicalLayout(m_currentLayout);
     }
 
     const auto &modifierState() const
@@ -165,7 +165,7 @@ Q_SIGNALS:
 
 private:
     void applyEnvironmentRules(xkb_rule_names &);
-    xkb_keymap *loadKeymapFromConfig();
+    xkb_keymap *loadKeymapFromConfig(std::optional<xkb_layout_index_t> requestedLayout = std::nullopt);
     xkb_keymap *loadDefaultKeymap();
     xkb_keymap *loadKeymapFromLocale1();
     xkb_keymap *createKeymapForKeysym(xkb_keycode_t newKeycode, xkb_keysym_t customSym);
@@ -173,9 +173,16 @@ private:
     void createKeymapFile();
     void updateModifiers();
     void updateConsumedModifiers(uint32_t key);
+    bool isLayoutLooping() const;
+    xkb_layout_index_t logicalLayout(xkb_layout_index_t activeLayout) const;
+    std::optional<xkb_layout_index_t> activeLayout(xkb_layout_index_t logicalLayout) const;
     xkb_context *m_context;
     xkb_keymap *m_keymap;
     QStringList m_layoutList;
+    QStringList m_configLayoutList;
+    QStringList m_configVariantList;
+    QList<xkb_layout_index_t> m_layoutIndexMap;
+    int m_layoutLoopCount = -1;
     xkb_state *m_state;
     xkb_mod_index_t m_shiftModifier;
     xkb_mod_index_t m_capsModifier;

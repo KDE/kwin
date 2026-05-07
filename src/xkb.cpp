@@ -577,15 +577,47 @@ void Xkb::applyEnvironmentRules(xkb_rule_names &ruleNames)
     }
 }
 
-xkb_keymap *Xkb::loadKeymapFromConfig()
+xkb_keymap *Xkb::loadKeymapFromConfig(std::optional<xkb_layout_index_t> requestedLayout)
 {
     // load config
     if (!m_configGroup.isValid()) {
         return nullptr;
     }
     const QByteArray model = m_configGroup.readEntry("Model", "pc104").toLatin1();
-    const QByteArray layout = m_configGroup.readEntry("LayoutList").toLatin1();
-    const QByteArray variant = m_configGroup.readEntry("VariantList").toLatin1();
+    const QString configuredLayout = m_configGroup.readEntry("LayoutList");
+    const QString configuredVariant = m_configGroup.readEntry("VariantList");
+    m_configLayoutList = configuredLayout.split(QLatin1Char(','), Qt::KeepEmptyParts);
+    m_configVariantList = configuredVariant.split(QLatin1Char(','), Qt::KeepEmptyParts);
+    m_layoutLoopCount = m_configGroup.readEntry("LayoutLoopCount", -1);
+
+    QStringList activeLayouts = m_configLayoutList;
+    QStringList activeVariants = m_configVariantList;
+    m_layoutIndexMap.clear();
+    for (int i = 0; i < activeLayouts.size(); ++i) {
+        m_layoutIndexMap.append(i);
+    }
+
+    if (isLayoutLooping()) {
+        activeLayouts = m_configLayoutList.mid(0, m_layoutLoopCount);
+        activeVariants = m_configVariantList.mid(0, m_layoutLoopCount);
+        m_layoutIndexMap.clear();
+        for (int i = 0; i < activeLayouts.size(); ++i) {
+            m_layoutIndexMap.append(i);
+        }
+
+        if (requestedLayout && *requestedLayout >= xkb_layout_index_t(m_layoutLoopCount) && *requestedLayout < xkb_layout_index_t(m_configLayoutList.size())) {
+            const int spareSlot = m_layoutLoopCount - 1;
+            activeLayouts[spareSlot] = m_configLayoutList.at(*requestedLayout);
+            while (activeVariants.size() <= spareSlot) {
+                activeVariants.append(QString());
+            }
+            activeVariants[spareSlot] = m_configVariantList.value(*requestedLayout);
+            m_layoutIndexMap[spareSlot] = *requestedLayout;
+        }
+    }
+
+    const QByteArray layout = activeLayouts.join(QLatin1Char(',')).toLatin1();
+    const QByteArray variant = activeVariants.join(QLatin1Char(',')).toLatin1();
     const QByteArray options = m_configGroup.readEntry("Options").toLatin1();
 
     xkb_rule_names ruleNames = {
@@ -612,6 +644,13 @@ xkb_keymap *Xkb::loadDefaultKeymap()
     xkb_rule_names ruleNames = {};
     applyEnvironmentRules(ruleNames);
     m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
+    m_configLayoutList = m_layoutList;
+    m_configVariantList.clear();
+    m_layoutLoopCount = -1;
+    m_layoutIndexMap.clear();
+    for (int i = 0; i < m_layoutList.size(); ++i) {
+        m_layoutIndexMap.append(i);
+    }
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
@@ -636,6 +675,13 @@ xkb_keymap *Xkb::loadKeymapFromLocale1()
     applyEnvironmentRules(ruleNames);
 
     m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
+    m_configLayoutList = m_layoutList;
+    m_configVariantList = QString::fromLatin1(ruleNames.variant).split(QLatin1Char(','), Qt::KeepEmptyParts);
+    m_layoutLoopCount = -1;
+    m_layoutIndexMap.clear();
+    for (int i = 0; i < m_layoutList.size(); ++i) {
+        m_layoutIndexMap.append(i);
+    }
 
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
@@ -869,17 +915,52 @@ QString Xkb::layoutName(xkb_layout_index_t index) const
     if (!m_keymap) {
         return QString{};
     }
-    return QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, index));
+    if (const auto active = activeLayout(index)) {
+        return QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, *active));
+    }
+    return layoutShortName(index);
 }
 
 QString Xkb::layoutName() const
 {
-    return layoutName(m_currentLayout);
+    return layoutName(logicalLayout(m_currentLayout));
 }
 
 QString Xkb::layoutShortName(int index) const
 {
+    if (isLayoutLooping()) {
+        return m_configLayoutList.value(index);
+    }
     return m_layoutList.value(index);
+}
+
+bool Xkb::isLayoutLooping() const
+{
+    return m_layoutLoopCount > 0 && m_configLayoutList.size() > m_layoutLoopCount;
+}
+
+xkb_layout_index_t Xkb::logicalLayout(xkb_layout_index_t activeLayout) const
+{
+    if (activeLayout < xkb_layout_index_t(m_layoutIndexMap.size())) {
+        return m_layoutIndexMap.at(activeLayout);
+    }
+    return activeLayout;
+}
+
+std::optional<xkb_layout_index_t> Xkb::activeLayout(xkb_layout_index_t logicalLayout) const
+{
+    if (isLayoutLooping()) {
+        const int active = m_layoutIndexMap.indexOf(logicalLayout);
+        if (active < 0) {
+            return std::nullopt;
+        }
+        return active;
+    }
+
+    if (m_keymap && logicalLayout < xkb_keymap_num_layouts(m_keymap)) {
+        return logicalLayout;
+    }
+    return std::nullopt;
 }
 
 void Xkb::updateConsumedModifiers(uint32_t key)
@@ -994,7 +1075,7 @@ void Xkb::switchToNextLayout()
     }
     const xkb_layout_index_t numLayouts = xkb_keymap_num_layouts(m_keymap);
     const xkb_layout_index_t nextLayout = (xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE) + 1) % numLayouts;
-    switchToLayout(nextLayout);
+    switchToLayout(logicalLayout(nextLayout));
 }
 
 void Xkb::switchToPreviousLayout()
@@ -1002,19 +1083,37 @@ void Xkb::switchToPreviousLayout()
     if (!m_keymap || !m_state) {
         return;
     }
-    const xkb_layout_index_t previousLayout = m_currentLayout == 0 ? numberOfLayouts() - 1 : m_currentLayout - 1;
-    switchToLayout(previousLayout);
+    const xkb_layout_index_t activeLayouts = xkb_keymap_num_layouts(m_keymap);
+    const xkb_layout_index_t previousLayout = m_currentLayout == 0 ? activeLayouts - 1 : m_currentLayout - 1;
+    switchToLayout(logicalLayout(previousLayout));
 }
 
 bool Xkb::switchToLayout(xkb_layout_index_t layout)
 {
-    if (!m_keymap || !m_state || layout >= numberOfLayouts()) {
+    if (!m_keymap || !m_state) {
         return false;
     }
+
+    std::optional<xkb_layout_index_t> active = activeLayout(layout);
+    if (isLayoutLooping() && layout < xkb_layout_index_t(m_configLayoutList.size())) {
+        if (!active) {
+            xkb_keymap *keymap = loadKeymapFromConfig(layout);
+            if (!keymap) {
+                return false;
+            }
+            updateKeymap(keymap);
+            active = activeLayout(layout);
+        }
+    }
+
+    if (!active || *active >= xkb_keymap_num_layouts(m_keymap)) {
+        return false;
+    }
+
     const xkb_mod_mask_t depressed = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED));
     const xkb_mod_mask_t latched = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED));
     const xkb_mod_mask_t locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
-    xkb_state_update_mask(m_state, depressed, latched, locked, 0, 0, layout);
+    xkb_state_update_mask(m_state, depressed, latched, locked, 0, 0, *active);
     updateModifiers();
     forwardModifiers();
     return true;
@@ -1230,6 +1329,9 @@ quint32 Xkb::numberOfLayouts() const
 {
     if (!m_keymap) {
         return 0;
+    }
+    if (isLayoutLooping()) {
+        return m_configLayoutList.size();
     }
     return xkb_keymap_num_layouts(m_keymap);
 }

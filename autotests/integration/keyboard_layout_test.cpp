@@ -56,6 +56,7 @@ private Q_SLOTS:
 
     void testReconfigure();
     void testChangeLayoutThroughDBus();
+    void testLayoutLoopCountWithSpareLayout();
     void testPerLayoutShortcut();
     void testVirtualDesktopPolicy();
     void testVirtualDesktopPolicyWithPerOutputDesktops();
@@ -248,6 +249,63 @@ void KeyboardLayoutTest::testChangeLayoutThroughDBus()
     QCOMPARE(reply.reply().arguments().first().toBool(), true);
     QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
     QVERIFY(!layoutChangedSpy.wait(1000));
+}
+
+void KeyboardLayoutTest::testLayoutLoopCountWithSpareLayout()
+{
+    enum Layout {
+        us,
+        de,
+        de_neo,
+    };
+    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de,de(neo)"), KConfig::Notify);
+    layoutGroup.writeEntry("LayoutLoopCount", 2, KConfig::Notify);
+    layoutGroup.sync();
+    reconfigureLayouts();
+
+    auto xkb = input()->keyboard()->xkb();
+    QCOMPARE(xkb->numberOfLayouts(), 3u);
+    QCOMPARE(xkb->currentLayout(), uint(Layout::us));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    xkb->switchToNextLayout();
+    QCOMPARE(xkb->currentLayout(), uint(Layout::de));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
+
+    xkb->switchToNextLayout();
+    QCOMPARE(xkb->currentLayout(), uint(Layout::us));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    auto reply = changeLayout(Layout::de_neo);
+    reply.waitForFinished();
+    QVERIFY(!reply.isError());
+    QCOMPARE(reply.reply().arguments().first().toBool(), true);
+    QCOMPARE(xkb->currentLayout(), uint(Layout::de_neo));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
+
+    xkb->switchToNextLayout();
+    QCOMPARE(xkb->currentLayout(), uint(Layout::us));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    xkb->switchToNextLayout();
+    QCOMPARE(xkb->currentLayout(), uint(Layout::de_neo));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
+
+    reply = changeLayout(Layout::de);
+    reply.waitForFinished();
+    QVERIFY(!reply.isError());
+    QCOMPARE(reply.reply().arguments().first().toBool(), true);
+    QCOMPARE(xkb->currentLayout(), uint(Layout::de));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
+
+    xkb->switchToNextLayout();
+    QCOMPARE(xkb->currentLayout(), uint(Layout::us));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+
+    layoutGroup.deleteEntry("LayoutList", KConfig::Notify);
+    layoutGroup.deleteEntry("LayoutLoopCount", KConfig::Notify);
+    layoutGroup.sync();
+    reconfigureLayouts();
 }
 
 void KeyboardLayoutTest::testPerLayoutShortcut()
