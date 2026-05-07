@@ -8,6 +8,7 @@
 #include <QTest>
 #include <QThread>
 
+#include "core/gpumanager.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/surface.h"
@@ -57,6 +58,7 @@ private:
 
 void TestViewporterInterface::initTestCase()
 {
+    GpuManager::s_self = std::make_unique<GpuManager>();
     m_display.addSocketName(qAppName());
     m_display.start();
     QVERIFY(m_display.isRunning());
@@ -128,6 +130,7 @@ TestViewporterInterface::~TestViewporterInterface()
     }
     m_connection->deleteLater();
     m_connection = nullptr;
+    KWin::GpuManager::s_self.reset();
 }
 
 void TestViewporterInterface::testCropScale()

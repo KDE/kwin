@@ -15,6 +15,7 @@
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
 // server
+#include "core/gpumanager.h"
 #include "core/graphicsbufferview.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
@@ -48,6 +49,7 @@ private:
 
 void ShadowTest::init()
 {
+    GpuManager::s_self = std::make_unique<GpuManager>();
     delete m_display;
     m_display = new KWin::Display(this);
     m_display->addSocketName(qAppName());
@@ -118,6 +120,7 @@ void ShadowTest::cleanup()
     // these are the children of the display
     m_compositorInterface = nullptr;
     m_shadowInterface = nullptr;
+    KWin::GpuManager::s_self.reset();
 }
 
 void ShadowTest::testCreateShadow()

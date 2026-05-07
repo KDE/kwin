@@ -89,6 +89,7 @@ public:
     virtual QSize size() const = 0;
     virtual bool hasAlphaChannel() const = 0;
 
+    virtual const DmaBufAttributes *udmabufAttributes() const;
     virtual const DmaBufAttributes *dmabufAttributes() const;
     virtual const ShmAttributes *shmAttributes() const;
     virtual const SinglePixelAttributes *singlePixelAttributes() const;
@@ -101,6 +102,10 @@ public:
     static bool alphaChannelFromDrmFormat(uint32_t format);
 
 Q_SIGNALS:
+    /**
+     * emitted the first time the buffer is referenced after it's created or released
+     */
+    void referenced();
     void released();
 
 protected:

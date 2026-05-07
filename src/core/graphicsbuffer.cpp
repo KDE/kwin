@@ -38,6 +38,9 @@ void GraphicsBuffer::ref()
 {
     Q_ASSERT(QCoreApplication::instance()->thread() == thread());
     ++m_refCount;
+    if (m_refCount == 1) {
+        Q_EMIT referenced();
+    }
 }
 
 void GraphicsBuffer::unref()
@@ -71,6 +74,11 @@ GraphicsBuffer::Map GraphicsBuffer::map(MapFlags flags)
 
 void GraphicsBuffer::unmap()
 {
+}
+
+const DmaBufAttributes *GraphicsBuffer::udmabufAttributes() const
+{
+    return nullptr;
 }
 
 const DmaBufAttributes *GraphicsBuffer::dmabufAttributes() const

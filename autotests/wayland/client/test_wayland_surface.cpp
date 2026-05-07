@@ -9,6 +9,7 @@
 #include <QSignalSpy>
 #include <QTest>
 // KWin
+#include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferview.h"
 #include "core/region.h"
@@ -84,6 +85,7 @@ TestWaylandSurface::TestWaylandSurface(QObject *parent)
 void TestWaylandSurface::init()
 {
     using namespace KWin;
+    GpuManager::s_self = std::make_unique<GpuManager>();
     delete m_display;
     m_display = new KWin::Display(this);
     m_display->addSocketName(qAppName());
@@ -178,6 +180,7 @@ void TestWaylandSurface::cleanup()
     // these are the children of the display
     m_compositorInterface = nullptr;
     m_idleInhibitInterface = nullptr;
+    KWin::GpuManager::s_self.reset();
 }
 
 void TestWaylandSurface::testStaticAccessor()

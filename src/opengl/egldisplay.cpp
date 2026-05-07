@@ -370,8 +370,8 @@ EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer)
     EGLImageKHR image = EGL_NO_IMAGE;
     if (buffer->dmabufAttributes()) {
         image = importDmaBufAsImage(*buffer->dmabufAttributes());
-    } else if (auto attributes = GpuManager::self()->createUdmabuf(buffer->shmAttributes())) {
-        image = importDmaBufAsImage(*attributes);
+    } else if (buffer->udmabufAttributes()) {
+        image = importDmaBufAsImage(*buffer->udmabufAttributes());
     }
     m_importCache[key] = image;
     connect(buffer, &QObject::destroyed, this, [this, key]() {

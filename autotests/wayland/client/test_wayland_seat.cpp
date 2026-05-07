@@ -8,6 +8,7 @@
 #include <QSignalSpy>
 #include <QTest>
 // KWin
+#include "core/gpumanager.h"
 #include "wayland/compositor.h"
 #include "wayland/datadevicemanager.h"
 #include "wayland/datasource.h"
@@ -154,6 +155,7 @@ TestWaylandSeat::TestWaylandSeat(QObject *parent)
 void TestWaylandSeat::init()
 {
     using namespace KWin;
+    GpuManager::s_self = std::make_unique<GpuManager>();
     delete m_display;
     m_display = new KWin::Display(this);
     m_display->addSocketName(qAppName());
@@ -276,6 +278,7 @@ void TestWaylandSeat::cleanup()
     m_subCompositorInterface = nullptr;
     m_relativePointerManagerV1Interface = nullptr;
     m_pointerGesturesV1Interface = nullptr;
+    KWin::GpuManager::s_self.reset();
 }
 
 bool TestWaylandSeat::sync()
