@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1736102 2026-05-04 01:27:59Z scripty $
+# $Id: kwin.po 1736294 2026-05-07 01:30:16Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-07 00:46+0000\n"
 "PO-Revision-Date: 2026-05-03 06:37+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -92,43 +92,43 @@ msgstr ""
 "Namizni učinki so bili znova zagnani zaradi ponovnega zagona grafičnega "
 "sistema"
 
-#: core/iccprofile.cpp:390
+#: core/iccprofile.cpp:396
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "ICC profila \"%1\" ni bilo mogoče odpreti"
 
-#: core/iccprofile.cpp:392
+#: core/iccprofile.cpp:398
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC profil \"%1\" ne obstaja"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC profil \"%1\" ni uporaben za zaslone"
 
-#: core/iccprofile.cpp:399
+#: core/iccprofile.cpp:405
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr "ICC profil \"%1\" ima nepodprt povezovalni prostor, podprt je samo XYZ"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr "ICC profil \"%1\" je pokvarjen, vhodno/izhodni barvni prostor ni RGB"
 
-#: core/iccprofile.cpp:415
+#: core/iccprofile.cpp:421
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC profil \"%1\" je pokvarjen, nima bele točke"
 
-#: core/iccprofile.cpp:418
+#: core/iccprofile.cpp:424
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "Profil ICC \"%1\" je pokvarjen, njegova bela točka je neveljavna"
 
-#: core/iccprofile.cpp:431
+#: core/iccprofile.cpp:437
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -136,7 +136,7 @@ msgstr ""
 "ICC profil \"%1\" je pokvarjen, razčlenjevanje kromatske prilagoditvene "
 "matrike ni uspelo"
 
-#: core/iccprofile.cpp:436
+#: core/iccprofile.cpp:442
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -144,33 +144,33 @@ msgstr ""
 "Profil ICC \"%1\" je pokvarjen, invertiranje kromatske prilagoditvene "
 "matrike ni uspelo"
 
-#: core/iccprofile.cpp:449
+#: core/iccprofile.cpp:455
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC profil \"%1\" je pokvarjen, nima primarnih"
 
-#: core/iccprofile.cpp:464
+#: core/iccprofile.cpp:470
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "Profil ICC \"%1\" je pokvarjen, ni bilo mogoče izračunati njegovih primarnih"
 
-#: core/iccprofile.cpp:473
+#: core/iccprofile.cpp:479
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "Profil ICC \"%1\" je pokvarjen, njegovi primarni so neveljavni"
 
-#: core/iccprofile.cpp:489
+#: core/iccprofile.cpp:495
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "Profil ICC \"%1\" samo z značkami BToD ni podprt"
 
-#: core/iccprofile.cpp:527
+#: core/iccprofile.cpp:533
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Barvni profil nima značk TRC"
 
-#: core/iccprofile.cpp:534
+#: core/iccprofile.cpp:540
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "Ni bilo mogoče invertirati tonskih krivulj ICC profila \"%1\""
@@ -4312,52 +4312,52 @@ msgstr "Preklopi na eno namizje navzdol"
 msgid "Switch to Desktop %1"
 msgstr "Preklopi na namizje %1"
 
-#: wayland/outputmanagement_v2.cpp:602
+#: wayland/outputmanagement_v2.cpp:633
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Eden od ustreznih izhodov ni več na voljo"
 
-#: wayland/outputmanagement_v2.cpp:620
+#: wayland/outputmanagement_v2.cpp:651
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Onemogočanje vseh izhodov prek sprememb konfiguracije ni dovoljeno"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:661
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 ne more zrcaliti same sebe"
 
-#: wayland/outputmanagement_v2.cpp:637
+#: wayland/outputmanagement_v2.cpp:668
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Ni mogoče dodati načina po meri s prazno velikostjo"
 
-#: wayland/outputmanagement_v2.cpp:641
+#: wayland/outputmanagement_v2.cpp:672
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Ni mogoče dodati načina po meri s hitrostjo osveževanja nič Hz"
 
-#: wayland/outputmanagement_v2.cpp:652
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "Položaj izhoda %1 je preveč negativen (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:655
+#: wayland/outputmanagement_v2.cpp:686
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "Položaj omogočenega izhoda %1 je negativen (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:659
+#: wayland/outputmanagement_v2.cpp:690
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "Položaj izhoda %1 je prevelik (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:707
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Gonilnik je zavrnil konfiguracijo izhoda"
 
-#: wayland/outputmanagement_v2.cpp:679
+#: wayland/outputmanagement_v2.cpp:710
 #, kde-format
 msgid "The session is not active"
 msgstr "Seja ni dejavna"

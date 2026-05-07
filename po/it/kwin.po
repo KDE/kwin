@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-07 00:46+0000\n"
 "PO-Revision-Date: 2026-04-30 09:30+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -80,22 +80,22 @@ msgstr ""
 "Gli effetti del desktop saranno riavviati a causa delle reimpostazioni della "
 "grafica"
 
-#: core/iccprofile.cpp:390
+#: core/iccprofile.cpp:396
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "Apertura del profilo ICC «%1» non riuscita"
 
-#: core/iccprofile.cpp:392
+#: core/iccprofile.cpp:398
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "Il profilo ICC «%1» non esiste"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "Il profilo ICC «%1» non è utilizzabile per i gli schermi"
 
-#: core/iccprofile.cpp:399
+#: core/iccprofile.cpp:405
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
@@ -103,24 +103,24 @@ msgstr ""
 "Il profilo ICC «%1» ha uno spazio di connessione non supportato, è "
 "supportato solo XYZ"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
 "Il profilo ICC «%1» è danneggiato, lo spazio colore di ingresso/uscita non è "
 "RGB"
 
-#: core/iccprofile.cpp:415
+#: core/iccprofile.cpp:421
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "Il profilo ICC «%1» è danneggiato, non ha il punto di bianco"
 
-#: core/iccprofile.cpp:418
+#: core/iccprofile.cpp:424
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "Il profilo ICC «%1» è danneggiato, il suo punto di bianco non è valido"
 
-#: core/iccprofile.cpp:431
+#: core/iccprofile.cpp:437
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -128,7 +128,7 @@ msgstr ""
 "Il profilo ICC «%1» è danneggiato, l'analisi della matrice di adattamento "
 "cromatico non è riuscita."
 
-#: core/iccprofile.cpp:436
+#: core/iccprofile.cpp:442
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -136,33 +136,33 @@ msgstr ""
 "Il profilo ICC «%1» è danneggiato, l'inversione della matrice di adattamento "
 "cromatico non è riuscita."
 
-#: core/iccprofile.cpp:449
+#: core/iccprofile.cpp:455
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "Il profilo ICC «%1» è danneggiato, non ha primari"
 
-#: core/iccprofile.cpp:464
+#: core/iccprofile.cpp:470
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "Il profilo ICC «%1» è danneggiato, impossibile calcolare i suoi primari"
 
-#: core/iccprofile.cpp:473
+#: core/iccprofile.cpp:479
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "Il profilo ICC «%1» è danneggiato, i suoi primari non sono validi"
 
-#: core/iccprofile.cpp:489
+#: core/iccprofile.cpp:495
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "Il profilo ICC «%1» solo con tag BToD non è supportato"
 
-#: core/iccprofile.cpp:527
+#: core/iccprofile.cpp:533
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Mancano i tag TRC nel profilo di colore"
 
-#: core/iccprofile.cpp:534
+#: core/iccprofile.cpp:540
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "Impossibile invertire le curve di tono del profilo ICC «%1»"
@@ -4333,57 +4333,57 @@ msgstr "Vai al desktop inferiore"
 msgid "Switch to Desktop %1"
 msgstr "Vai al desktop %1"
 
-#: wayland/outputmanagement_v2.cpp:602
+#: wayland/outputmanagement_v2.cpp:633
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Una delle uscite rilevanti non è più disponibile"
 
-#: wayland/outputmanagement_v2.cpp:620
+#: wayland/outputmanagement_v2.cpp:651
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Non è consentito disabilitare tutte le uscite tramite modifiche alla "
 "configurazione"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:661
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 non può rispecchiare se stesso"
 
-#: wayland/outputmanagement_v2.cpp:637
+#: wayland/outputmanagement_v2.cpp:668
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr ""
 "Impossibile aggiungere una modalità personalizzata con una dimensione vuota"
 
-#: wayland/outputmanagement_v2.cpp:641
+#: wayland/outputmanagement_v2.cpp:672
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "Impossibile aggiungere una modalità personalizzata con una frequenza di "
 "aggiornamento di zero Hz"
 
-#: wayland/outputmanagement_v2.cpp:652
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "La posizione dell'uscita %1 è troppo negativa (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:655
+#: wayland/outputmanagement_v2.cpp:686
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "La posizione dell'uscita abilitata %1 è negativa (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:659
+#: wayland/outputmanagement_v2.cpp:690
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "La posizione dell'uscita %1 è troppo grande (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:707
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Il driver ha rifiutato la configurazione di uscita"
 
-#: wayland/outputmanagement_v2.cpp:679
+#: wayland/outputmanagement_v2.cpp:710
 #, kde-format
 msgid "The session is not active"
 msgstr "La sessione non è attiva"

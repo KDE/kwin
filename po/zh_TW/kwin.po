@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-07 00:46+0000\n"
 "PO-Revision-Date: 2026-04-17 19:45+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -86,80 +86,80 @@ msgstr "KDE Wayland 合成器"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "桌面效果會重新啟動，因為圖形已重置"
 
-#: core/iccprofile.cpp:390
+#: core/iccprofile.cpp:396
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "無法開啟 ICC 描述檔「%1」"
 
-#: core/iccprofile.cpp:392
+#: core/iccprofile.cpp:398
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC 描述檔「%1」不存在"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC 描述檔「%1」無法供顯示器使用"
 
-#: core/iccprofile.cpp:399
+#: core/iccprofile.cpp:405
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr "ICC 描述檔「%1」有不支援的相關空間，只支援 XYZ"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr "ICC 描述檔「%1」已毀損，輸入/輸出色彩空間不是 RGB"
 
-#: core/iccprofile.cpp:415
+#: core/iccprofile.cpp:421
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC 描述檔「%1」已毀損，它沒有白點"
 
-#: core/iccprofile.cpp:418
+#: core/iccprofile.cpp:424
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC 描述檔「%1」已毀損，它的白點是無效的"
 
-#: core/iccprofile.cpp:431
+#: core/iccprofile.cpp:437
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr "ICC 描述檔「%1」已毀損，剖析色彩適應矩陣時失敗"
 
-#: core/iccprofile.cpp:436
+#: core/iccprofile.cpp:442
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr "ICC 描述檔「%1」已毀損，反轉色彩適應矩陣時失敗"
 
-#: core/iccprofile.cpp:449
+#: core/iccprofile.cpp:455
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC 描述檔「%1」已毀損，它沒有主色"
 
-#: core/iccprofile.cpp:464
+#: core/iccprofile.cpp:470
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr "ICC 描述檔「%1」已毀損，無法計算它的主色"
 
-#: core/iccprofile.cpp:473
+#: core/iccprofile.cpp:479
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC 描述檔「%1」已毀損，它的主色是無效的"
 
-#: core/iccprofile.cpp:489
+#: core/iccprofile.cpp:495
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC 描述檔「%1」不支援，因為它只有 BToD 標籤"
 
-#: core/iccprofile.cpp:527
+#: core/iccprofile.cpp:533
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "色彩描述檔缺乏 TRC 標籤"
 
-#: core/iccprofile.cpp:534
+#: core/iccprofile.cpp:540
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "無法反轉 ICC 描述檔「%1」的色調曲線"
@@ -4278,52 +4278,52 @@ msgstr "切換到下面的桌面"
 msgid "Switch to Desktop %1"
 msgstr "切換到桌面 %1"
 
-#: wayland/outputmanagement_v2.cpp:602
+#: wayland/outputmanagement_v2.cpp:633
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "有關的一個輸出已不再可用"
 
-#: wayland/outputmanagement_v2.cpp:620
+#: wayland/outputmanagement_v2.cpp:651
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "不允許透過設定值變更來停用所有輸出"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:661
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 無法鏡像自己"
 
-#: wayland/outputmanagement_v2.cpp:637
+#: wayland/outputmanagement_v2.cpp:668
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "無法新增大小是空白的自訂模式"
 
-#: wayland/outputmanagement_v2.cpp:641
+#: wayland/outputmanagement_v2.cpp:672
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "無法新增更新頻率是 0 Hz 的自訂模式"
 
-#: wayland/outputmanagement_v2.cpp:652
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "輸出 %1 的位置負到不合理 (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:655
+#: wayland/outputmanagement_v2.cpp:686
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "已啟用的輸出 %1 的位置是負的 (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:659
+#: wayland/outputmanagement_v2.cpp:690
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "輸出 %1 的位置大到不合理 (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:707
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "驅動程式回絕了提供的輸出配置"
 
-#: wayland/outputmanagement_v2.cpp:679
+#: wayland/outputmanagement_v2.cpp:710
 #, kde-format
 msgid "The session is not active"
 msgstr "工作階段並非作用中"

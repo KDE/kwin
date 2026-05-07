@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-07 00:46+0000\n"
 "PO-Revision-Date: 2026-05-03 04:16+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -75,22 +75,22 @@ msgstr "KDE Wayland კომპოზიტორი"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "სამუშაო მაგიდის ეფექტები დარესტარტდა გრაფიკის გადატვირთვის გამო"
 
-#: core/iccprofile.cpp:390
+#: core/iccprofile.cpp:396
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "ვერ გავხსენი ICC პროფილი \"%1\""
 
-#: core/iccprofile.cpp:392
+#: core/iccprofile.cpp:398
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC პროფილი \"%1\" არ არსებობს"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC პროფილი \"%1\" ეკრანებისთვის გამოყენებადი არაა"
 
-#: core/iccprofile.cpp:399
+#: core/iccprofile.cpp:405
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
@@ -98,23 +98,23 @@ msgstr ""
 "ICC პროფილს \"%1\" მხარდაუჭერელი დაკავშირების სივრცე აქვს. მხარდაჭერილია, "
 "მხოლოდ, XYX"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია. შეყვანა/გამოტანის ფერების სივრცე RGB არაა"
 
-#: core/iccprofile.cpp:415
+#: core/iccprofile.cpp:421
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მას თეთრი წერტილი არ გააჩნია"
 
-#: core/iccprofile.cpp:418
+#: core/iccprofile.cpp:424
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მისი თეთრი წერილი არასწორია"
 
-#: core/iccprofile.cpp:431
+#: core/iccprofile.cpp:437
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -122,7 +122,7 @@ msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია. ქრომატული ადაპტაციის მატრიცის დამუშავება "
 "ჩავარდა"
 
-#: core/iccprofile.cpp:436
+#: core/iccprofile.cpp:442
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -130,33 +130,33 @@ msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია. ქრომატული ადაპტაციის მატრიცის ინვერსია "
 "ჩავარდა"
 
-#: core/iccprofile.cpp:449
+#: core/iccprofile.cpp:455
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მას ძირითადები არ აქვს"
 
-#: core/iccprofile.cpp:464
+#: core/iccprofile.cpp:470
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "ICC პროფილი \"%1\" გაფუჭებულია, რადგან მისი ძირითადების გამოთვლა შეუძლებელია"
 
-#: core/iccprofile.cpp:473
+#: core/iccprofile.cpp:479
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC პროფილი \"%1\" გაფუჭებულია. მისი ძირითადები არასწორია"
 
-#: core/iccprofile.cpp:489
+#: core/iccprofile.cpp:495
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC პროფილი \"%1\", მხოლოდ, BToD ჭდეებით მხარდაჭერილი არაა"
 
-#: core/iccprofile.cpp:527
+#: core/iccprofile.cpp:533
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "ფერების პროფილს TRC ჭდეები აკლია"
 
-#: core/iccprofile.cpp:534
+#: core/iccprofile.cpp:540
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "ICC პროფილის \"%1\" ტონის მრუდების ინვერსია შეუძლებელია"
@@ -4293,53 +4293,53 @@ msgstr "ერთი სამუშაო მაგიდის დაბლა
 msgid "Switch to Desktop %1"
 msgstr "%1-ე სამუშაო მაგიდაზე გადართვა"
 
-#: wayland/outputmanagement_v2.cpp:602
+#: wayland/outputmanagement_v2.cpp:633
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "ერთ-ერთი შესაბამისი გამოტანა ხელმისაწვდომი აღარაა"
 
-#: wayland/outputmanagement_v2.cpp:620
+#: wayland/outputmanagement_v2.cpp:651
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "ყველა გამოტანს გამორთვა კონფიგურაციის ცვლილებებით დაშვებული არაა"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:661
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1-ს თავისი თავის არეკვლა არ შეუძლია"
 
-#: wayland/outputmanagement_v2.cpp:637
+#: wayland/outputmanagement_v2.cpp:668
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "ცარიელი ზომის მქონე მორგებული რეჟიმის დამატება შეუძლებელია"
 
-#: wayland/outputmanagement_v2.cpp:641
+#: wayland/outputmanagement_v2.cpp:672
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "0 ჰერცი განახლების სიხშირის მქონე მორგებული რეჟიმის დამატება შეუძლებელია"
 
-#: wayland/outputmanagement_v2.cpp:652
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "%1-ის გამოტანის მდებარეობა მეტისმეტად უარყოფითია (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:655
+#: wayland/outputmanagement_v2.cpp:686
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "%1-ის ჩართული გამოტანის მდებარეობა მეტისმეტად უარყოფითია (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:659
+#: wayland/outputmanagement_v2.cpp:690
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "%1-ის გამოტანის მდებარეობა მეტისმეტად დიდია (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:707
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "დრაივერმა უარყო გამოტანის კონფიგურაცია"
 
-#: wayland/outputmanagement_v2.cpp:679
+#: wayland/outputmanagement_v2.cpp:710
 #, kde-format
 msgid "The session is not active"
 msgstr "სესია აქტიური არაა"

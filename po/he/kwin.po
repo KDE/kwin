@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
-"PO-Revision-Date: 2026-04-30 14:00+0300\n"
+"POT-Creation-Date: 2026-05-07 00:46+0000\n"
+"PO-Revision-Date: 2026-05-03 23:12+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -87,80 +87,80 @@ msgstr "מנהל חלונאי KDE Wayland"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "אפקטים של שולחן עבודה הופעלן מחגד"
 
-#: core/iccprofile.cpp:390
+#: core/iccprofile.cpp:396
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "פתיחת פרופיל ה־ICC ‏„%1” נכשלה"
 
-#: core/iccprofile.cpp:392
+#: core/iccprofile.cpp:398
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "פרופיל ה־ICC ‏„%1” לא קיים"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "פרופיל ה־ICC ‏„%1” לא זמין לצגים"
 
-#: core/iccprofile.cpp:399
+#: core/iccprofile.cpp:405
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
 msgstr "לפרופיל ה־ICC ‏„%1” יש מרחב חיבורים לא נתמך, יש תמיכה רק ב־XYZ"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr "פרופיל ה־ICC‏ „%1” פגום, מרחב צבע קלט/פלט אינו RGB"
 
-#: core/iccprofile.cpp:415
+#: core/iccprofile.cpp:421
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "פרופיל ה־ICC‏ „%1” פגום, אין לו נקודה לבנה"
 
-#: core/iccprofile.cpp:418
+#: core/iccprofile.cpp:424
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "פרופיל ה־ICC‏ „%1” פגום, הנקודה הלבנה שלו פגומה"
 
-#: core/iccprofile.cpp:431
+#: core/iccprofile.cpp:437
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
 msgstr "פרופיל ה־ICC‏ „%1” פגום, פיענוח מטריצת ההתאמה הכרומטית נכשל"
 
-#: core/iccprofile.cpp:436
+#: core/iccprofile.cpp:442
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
 msgstr "פרופיל ה־ICC‏ „%1” פגום, היפוך מטריצת ההתאמה הכרומטית נכשל"
 
-#: core/iccprofile.cpp:449
+#: core/iccprofile.cpp:455
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "פרופיל ה־ICC‏ „%1” פגום, אין לו צבעי יסוד"
 
-#: core/iccprofile.cpp:464
+#: core/iccprofile.cpp:470
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr "פרופיל ה־ICC‏ „%1” פגום, לא ניתן לחשב את צבעי היסוד שלו"
 
-#: core/iccprofile.cpp:473
+#: core/iccprofile.cpp:479
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "פרופיל ה־ICC‏ „%1” פגום, צבעי היסוד שלו שגויים"
 
-#: core/iccprofile.cpp:489
+#: core/iccprofile.cpp:495
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "אין תמיכה בפרופיל ICC‏ „%1” עם תגיות BToD בלבד"
 
-#: core/iccprofile.cpp:527
+#: core/iccprofile.cpp:533
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "לפרופיל הצבע חסרות תגיות TRC (צבע אמיתי)"
 
-#: core/iccprofile.cpp:534
+#: core/iccprofile.cpp:540
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "לא ניתן להפוך את עקומות הגוונים של פרופיל ה־ICC ‏„%1”"
@@ -1807,12 +1807,10 @@ msgid "Remote Control"
 msgstr "שליטה מרחוק"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info keep '-' it's markdon"
-#| msgid "%1 is asking to control input devices"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
-msgstr "%1 מבקש לשלוט בהתקני הקלט שלך"
+msgstr "<application>%1</application> מבקש לשלוט בהתקני הקלט שלך"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -4285,52 +4283,52 @@ msgstr "מעבר שולחן עבודה אחד למטה"
 msgid "Switch to Desktop %1"
 msgstr "מעבר לשולחן עבודה %1"
 
-#: wayland/outputmanagement_v2.cpp:602
+#: wayland/outputmanagement_v2.cpp:633
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "אחד מצגי הפלט התואמים לא זמין עוד"
 
-#: wayland/outputmanagement_v2.cpp:620
+#: wayland/outputmanagement_v2.cpp:651
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "השבתת כל צדי הפלט דרך שינויי הגדרות אסורה"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:661
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 לא יכול להיות שיקוף של עצמו"
 
-#: wayland/outputmanagement_v2.cpp:637
+#: wayland/outputmanagement_v2.cpp:668
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "לא ניתן להוסיף מצב מותאם אישית בגודל ריק"
 
-#: wayland/outputmanagement_v2.cpp:641
+#: wayland/outputmanagement_v2.cpp:672
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "לא ניתן להוסיף מצב מותאם אישית עם קצב ריענון של אפס הרץ"
 
-#: wayland/outputmanagement_v2.cpp:652
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "המקום של הפלט %1 הוא שלילי מדי (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:655
+#: wayland/outputmanagement_v2.cpp:686
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "המקום של הפלט %1 שהופעל הוא שלילי (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:659
+#: wayland/outputmanagement_v2.cpp:690
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "המקום של הפלט %1 הוא גדול מדי (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:707
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "מנהל ההתקן דחה את הגדרות הפלט"
 
-#: wayland/outputmanagement_v2.cpp:679
+#: wayland/outputmanagement_v2.cpp:710
 #, kde-format
 msgid "The session is not active"
 msgstr "ההפעלה לא פעילה."

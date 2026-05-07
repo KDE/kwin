@@ -14,16 +14,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
-"PO-Revision-Date: 2026-04-19 21:22+0200\n"
-"Last-Translator: Alexander Becker <alex-at-kde-l10n-de@freenet.de>\n"
+"POT-Creation-Date: 2026-05-07 00:46+0000\n"
+"PO-Revision-Date: 2026-04-30 16:35+0200\n"
+"Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 26.04.0\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -83,22 +83,22 @@ msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Arbeitsflächeneffekte wurden neu gestartet wegen der zurückgesetzten Grafik"
 
-#: core/iccprofile.cpp:390
+#: core/iccprofile.cpp:396
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "ICC-Profil „%1“ kann nicht geöffnet werden"
 
-#: core/iccprofile.cpp:392
+#: core/iccprofile.cpp:398
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "ICC-Profil „%1“ existiert nicht"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "ICC-Profil „%1“ kann nicht für Bildschirme genutzt werden"
 
-#: core/iccprofile.cpp:399
+#: core/iccprofile.cpp:405
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
@@ -106,22 +106,22 @@ msgstr ""
 "ICC-Profil „%1“ hat einen nicht unterstützten Verbindungsraum, nur XYZ wird "
 "unterstützt"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr "ICC-Profil „%1“ ist beschädigt, Ein-/Ausgabefarbraum ist nicht RGB"
 
-#: core/iccprofile.cpp:415
+#: core/iccprofile.cpp:421
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "ICC-Profil „%1“ ist beschädigt, es hat keinen Weißpunkt"
 
-#: core/iccprofile.cpp:418
+#: core/iccprofile.cpp:424
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "ICC-Profil „%1“ ist beschädigt, der Weißpunkt ist ungültig"
 
-#: core/iccprofile.cpp:431
+#: core/iccprofile.cpp:437
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -129,7 +129,7 @@ msgstr ""
 "ICC-Profil „%1“ ist beschädigt, das Auslesen der chromatischen "
 "Adaptationsmatrix ist fehlgeschlagen"
 
-#: core/iccprofile.cpp:436
+#: core/iccprofile.cpp:442
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -138,34 +138,34 @@ msgstr ""
 "Adaptationsmatrix ist fehlgeschlagen"
 
 # ich weiß nicht, ob primaries sich auf Farben bezieht
-#: core/iccprofile.cpp:449
+#: core/iccprofile.cpp:455
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "ICC-Profil „%1“ ist beschädigt, es hat keine Primärfarben"
 
-#: core/iccprofile.cpp:464
+#: core/iccprofile.cpp:470
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "ICC-Profil „%1“ ist beschädigt, die Primärfarben können nicht berechnet "
 "werden"
 
-#: core/iccprofile.cpp:473
+#: core/iccprofile.cpp:479
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "ICC-Profil „%1“ ist beschädigt, die Primärfarben sind ungültig"
 
-#: core/iccprofile.cpp:489
+#: core/iccprofile.cpp:495
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "ICC-Profil „%1“ mit ausschließlich BToD-Tags wird nicht unterstützt"
 
-#: core/iccprofile.cpp:527
+#: core/iccprofile.cpp:533
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "Dem Farbprofil fehlen TRC-Tags"
 
-#: core/iccprofile.cpp:534
+#: core/iccprofile.cpp:540
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "Invertierung von Tonwertkurven des ICC-Profils „%1“ ist fehlgeschlagen"
@@ -1835,12 +1835,10 @@ msgid "Disable Active Input Capture"
 msgstr "Aktive Eingabeerfassung deaktivieren"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Strg"
+msgstr "Fernsteuerung"
 
 #: plugins/eis/eisprompter.cpp:52
 #, fuzzy, kde-kuit-format
@@ -1858,7 +1856,7 @@ msgstr ""
 #, kde-format
 msgctxt "@option:check"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Anwendungen immer erlauben, sich als %1 auszugeben"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1869,18 +1867,23 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Die Identität von alten X11-Anwendungen kann nicht überprüft werden. Jede "
+"Anwendung, die angibt, <application>%1</application> zu sein, kann "
+"Eingabegeräte steuern. Sie können diese Berechtigung später auf der Seite "
+"„Unterstützung für alte X11-Anwendungen” in den "
+"<application>Systemeinstellungen</application> widerrufen."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Zulassen"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Verweigern"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3227,11 +3230,9 @@ msgstr "Art der Übereinstimmung mit der Tag-Zeichenfolge"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "Keine offenen Fenster"
+msgstr "Hat ein übergeordnetes Fenster"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
@@ -4341,58 +4342,58 @@ msgstr "Eine Arbeitsfläche nach unten"
 msgid "Switch to Desktop %1"
 msgstr "Auf Arbeitsfläche %1 umschalten"
 
-#: wayland/outputmanagement_v2.cpp:602
+#: wayland/outputmanagement_v2.cpp:633
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Eines der relevanten Ausgabegeräte ist nicht mehr verfügbar"
 
-#: wayland/outputmanagement_v2.cpp:620
+#: wayland/outputmanagement_v2.cpp:651
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Alle Ausgabegeräte über Änderung der Einrichtung zu deaktivieren ist nicht "
 "zulässig"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:661
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 kann sich nicht selbst spiegeln"
 
-#: wayland/outputmanagement_v2.cpp:637
+#: wayland/outputmanagement_v2.cpp:668
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr ""
 "Ein benutzerdefinierter Modus mit leerer Größenangabe kann nicht hinzugefügt "
 "werden"
 
-#: wayland/outputmanagement_v2.cpp:641
+#: wayland/outputmanagement_v2.cpp:672
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "Ein benutzerdefinierter Modus mit einer Wiederholrate von 0 Hz kann nicht "
 "hinzugefügt werden"
 
-#: wayland/outputmanagement_v2.cpp:652
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "Position der Ausgabe %1 ist zu negativ (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:655
+#: wayland/outputmanagement_v2.cpp:686
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "Position der aktivierten Ausgabe %1 ist negativ (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:659
+#: wayland/outputmanagement_v2.cpp:690
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "Position der Ausgabe %1 ist zu groß (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:707
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Der Treiber hat die Ausgabeeinrichtung zurückgewiesen"
 
-#: wayland/outputmanagement_v2.cpp:679
+#: wayland/outputmanagement_v2.cpp:710
 #, kde-format
 msgid "The session is not active"
 msgstr "Die Sitzung ist nicht aktiv"

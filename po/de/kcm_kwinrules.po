@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-03 00:45+0000\n"
-"PO-Revision-Date: 2026-03-13 22:13+0100\n"
+"PO-Revision-Date: 2026-04-30 15:36+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -257,10 +257,9 @@ msgid "Window tag"
 msgstr "Fenster-Tag"
 
 #: rulesmodel.cpp:446
-#, fuzzy, kde-format
-#| msgid "On main window"
+#, kde-format
 msgid "Has parent window"
-msgstr "Auf Hauptfenster"
+msgstr "Hat ein übergeordnetes Fenster"
 
 #: rulesmodel.cpp:452
 #, kde-format
@@ -273,7 +272,7 @@ msgstr "Position"
 #: rulesmodel.cpp:554 rulesmodel.cpp:559 rulesmodel.cpp:564
 #, kde-format
 msgid "Size & Position"
-msgstr "Größe & Position"
+msgstr "Größe && Position"
 
 #: rulesmodel.cpp:458
 #, kde-format
@@ -391,7 +390,7 @@ msgstr "Fenster im Vordergrund halten"
 #: rulesmodel.cpp:599 rulesmodel.cpp:605
 #, kde-format
 msgid "Arrangement & Access"
-msgstr "Anordnung & Zugriff"
+msgstr "Anordnung && Zugriff"
 
 #: rulesmodel.cpp:582
 #, kde-format
@@ -454,7 +453,7 @@ msgstr "Ohne Titelleiste und Rahmen"
 #: rulesmodel.cpp:727 rulesmodel.cpp:732 rulesmodel.cpp:737
 #, kde-format
 msgid "Appearance & Fixes"
-msgstr "Erscheinungsbild & Korrekturen"
+msgstr "Erscheinungsbild && Korrekturen"
 
 #: rulesmodel.cpp:616
 #, kde-format

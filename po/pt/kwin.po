@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-07 00:46+0000\n"
 "PO-Revision-Date: 2026-02-11 00:16+0000\n"
 "Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
 "Language-Team: pt\n"
@@ -94,22 +94,22 @@ msgstr ""
 "Os efeitos do ambiente de trabalho foram reiniciados devido a um reinício da "
 "infra-estrutura gráfica"
 
-#: core/iccprofile.cpp:390
+#: core/iccprofile.cpp:396
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "Falha ao abrir o perfil ICC \"%1\""
 
-#: core/iccprofile.cpp:392
+#: core/iccprofile.cpp:398
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "O perfil ICC \"%1\" não existe"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "O perfil ICC \"%1\" não é utilizável em monitores"
 
-#: core/iccprofile.cpp:399
+#: core/iccprofile.cpp:405
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
@@ -117,24 +117,24 @@ msgstr ""
 "O perfil ICC \"%1\" tem um espaço de cor não suportado; apenas XYZ é "
 "suportado"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr ""
 "O perfil ICC \"%1\" está com erros; o espaço de cor de entrada/saída não é "
 "RGB"
 
-#: core/iccprofile.cpp:415
+#: core/iccprofile.cpp:421
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr "O perfil ICC \"%1\" está com erros; não tem ponto de branco"
 
-#: core/iccprofile.cpp:418
+#: core/iccprofile.cpp:424
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr "O perfil ICC \"%1\" está com erros; o seu ponto de branco é inválido"
 
-#: core/iccprofile.cpp:431
+#: core/iccprofile.cpp:437
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -142,7 +142,7 @@ msgstr ""
 "O perfil ICC \"%1\" está com erros; falha ao analisar a matriz de adaptação "
 "cromática"
 
-#: core/iccprofile.cpp:436
+#: core/iccprofile.cpp:442
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -150,34 +150,34 @@ msgstr ""
 "O perfil ICC \"%1\" está com erros; falha ao inverter a matriz de adaptação "
 "cromática"
 
-#: core/iccprofile.cpp:449
+#: core/iccprofile.cpp:455
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr "O perfil ICC \"%1\" está com erros; não tem primárias"
 
-#: core/iccprofile.cpp:464
+#: core/iccprofile.cpp:470
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "O perfil ICC \"%1\" está com erros; não foi possível calcular as suas "
 "primárias"
 
-#: core/iccprofile.cpp:473
+#: core/iccprofile.cpp:479
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr "O perfil ICC \"%1\" está com erros; as suas primárias são inválidas"
 
-#: core/iccprofile.cpp:489
+#: core/iccprofile.cpp:495
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "O perfil ICC \"%1\" apenas com etiquetas BToD não é suportado"
 
-#: core/iccprofile.cpp:527
+#: core/iccprofile.cpp:533
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "O perfil de cor não tem etiquetas TRC"
 
-#: core/iccprofile.cpp:534
+#: core/iccprofile.cpp:540
 #, fuzzy, kde-format
 #| msgid "Failed to open ICC profile \"%1\""
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
@@ -4348,59 +4348,59 @@ msgstr "Mudar para ambiente de trabalho abaixo"
 msgid "Switch to Desktop %1"
 msgstr "Mudar para o ambiente de trabalho %1"
 
-#: wayland/outputmanagement_v2.cpp:602
+#: wayland/outputmanagement_v2.cpp:633
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Um dos ecrãs relevantes já não está disponível"
 
-#: wayland/outputmanagement_v2.cpp:620
+#: wayland/outputmanagement_v2.cpp:651
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Desativar todos os ecrãs através de alterações de configuração não é "
 "permitido"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:661
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:637
+#: wayland/outputmanagement_v2.cpp:668
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Não é possível adicionar um modo personalizado com um tamanho vazio"
 
-#: wayland/outputmanagement_v2.cpp:641
+#: wayland/outputmanagement_v2.cpp:672
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "Não é possível adicionar um modo personalizado com uma taxa de atualização "
 "de zero Hz"
 
-#: wayland/outputmanagement_v2.cpp:652
+#: wayland/outputmanagement_v2.cpp:683
 #, fuzzy, kde-format
 #| msgid "Position of output %s is way too negative (%d, %d)"
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "A posição do ecrã %s é demasiado negativa (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:655
+#: wayland/outputmanagement_v2.cpp:686
 #, fuzzy, kde-format
 #| msgid "Position of enabled output %s is negative (%d, %d)"
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "A posição do ecrã ativo %s é negativa (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:659
+#: wayland/outputmanagement_v2.cpp:690
 #, fuzzy, kde-format
 #| msgid "Position of output %s is way too large (%d, %d)"
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "A posição do ecrã %s é demasiado elevada (%d, %d)"
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:707
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "O controlador rejeitou a configuração do ecrã"
 
-#: wayland/outputmanagement_v2.cpp:679
+#: wayland/outputmanagement_v2.cpp:710
 #, fuzzy, kde-format
 #| msgid "The Alt key is now active."
 msgid "The session is not active"

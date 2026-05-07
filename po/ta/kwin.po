@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-07 00:46+0000\n"
 "PO-Revision-Date: 2026-05-04 21:07+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -78,22 +78,22 @@ msgstr "கே.டீ.யீ. Wayland சாளரநிரல்"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "வரைகலை முறிவடைந்து மீட்டமைக்கப்பட்டதால் பணிமேடை அசைவூட்டங்கள் மீள்துவக்கப்பட்டன"
 
-#: core/iccprofile.cpp:390
+#: core/iccprofile.cpp:396
 #, kde-format
 msgid "Failed to open ICC profile \"%1\""
 msgstr "\"%1\" எனும் ICC பயன்முறையை திறக்க முடியவில்லை"
 
-#: core/iccprofile.cpp:392
+#: core/iccprofile.cpp:398
 #, kde-format
 msgid "ICC profile \"%1\" doesn't exist"
 msgstr "\"%1\" எனும் ICC பயன்முறை இல்லை"
 
-#: core/iccprofile.cpp:396
+#: core/iccprofile.cpp:402
 #, kde-format
 msgid "ICC profile \"%1\" is not usable for displays"
 msgstr "\"%1\" எனும் ICC பயன்முறையை திரைகளுக்கு பயன்படுத்த முடியாது"
 
-#: core/iccprofile.cpp:399
+#: core/iccprofile.cpp:405
 #, kde-format
 msgid ""
 "ICC profile \"%1\" has unsupported connection space, only XYZ is supported"
@@ -101,26 +101,26 @@ msgstr ""
 "\"%1\" எனும் ICC பயன்முறை ஆதரிக்கப்படா இணைப்புகளை குறிப்பிடுகிறுது. XYZ மட்டுமே "
 "ஆதரிக்கப்படும்"
 
-#: core/iccprofile.cpp:402
+#: core/iccprofile.cpp:408
 #, kde-format
 msgid "ICC profile \"%1\" is broken, input/output color space isn't RGB"
 msgstr "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. நிறவீச்சு RGB-யாக இல்லை"
 
-#: core/iccprofile.cpp:415
+#: core/iccprofile.cpp:421
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no whitepoint"
 msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. வெள்ளை நிறம் எது என்பதை அது "
 "குறிப்பிடவில்லை."
 
-#: core/iccprofile.cpp:418
+#: core/iccprofile.cpp:424
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its whitepoint is invalid"
 msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அது குறிப்பிடும் வெள்ளை நிறம் "
 "செல்லுபடியாகாதது."
 
-#: core/iccprofile.cpp:431
+#: core/iccprofile.cpp:437
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, parsing chromatic adaptation matrix failed"
@@ -128,7 +128,7 @@ msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் நிறமாற்ற அணியை (chromatic "
 "adaptation matrix-ஐ) புரிந்துகொள்ள முடியவில்லை."
 
-#: core/iccprofile.cpp:436
+#: core/iccprofile.cpp:442
 #, kde-format
 msgid ""
 "ICC profile \"%1\" is broken, inverting chromatic adaptation matrix failed"
@@ -136,36 +136,36 @@ msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் நிறமாற்ற அணியின் (chromatic "
 "adaptation matrix-இன்) நேர்மாறு அணியைக் கணிக்க முடியவில்லை."
 
-#: core/iccprofile.cpp:449
+#: core/iccprofile.cpp:455
 #, kde-format
 msgid "ICC profile \"%1\" is broken, it has no primaries"
 msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. முதன்மை நிரங்கள் எவை என்பதை அது "
 "குறிப்பிடவில்லை"
 
-#: core/iccprofile.cpp:464
+#: core/iccprofile.cpp:470
 #, kde-format
 msgid "ICC profile \"%1\" is broken, couldn't calculate its primaries"
 msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் முதன்மை நிரங்களை கணிக்க முடியவில்லை"
 
-#: core/iccprofile.cpp:473
+#: core/iccprofile.cpp:479
 #, kde-format
 msgid "ICC profile \"%1\" is broken, its primaries are invalid"
 msgstr ""
 "\"%1\" எனும் ICC பயன்முறை செல்லுபடியாகாதது. அதன் முதன்மை நிரங்கள் செல்லுபடியாகாதவை"
 
-#: core/iccprofile.cpp:489
+#: core/iccprofile.cpp:495
 #, kde-format
 msgid "ICC profile \"%1\" with only BToD tags isn't supported"
 msgstr "BToD குறிச்சொற்களை மட்டும் கொண்ட \"%1\" எனும் ICC பயன்முறை ஆதரிக்கப்படாதது"
 
-#: core/iccprofile.cpp:527
+#: core/iccprofile.cpp:533
 #, kde-format
 msgid "Color profile is missing TRC tags"
 msgstr "நிறப்பயன்முறையில் TRC குறிச்சொற்களை காணவில்லை."
 
-#: core/iccprofile.cpp:534
+#: core/iccprofile.cpp:540
 #, kde-format
 msgid "Couldn't invert tone curves of ICC profile \"%1\""
 msgstr "\"%1\" எனும் ICC பயன்முறையிலுள்ள tone curve தனை புரட்ட முடியவில்லை"
@@ -4311,52 +4311,52 @@ msgstr "கீழுள்ள பணிமேடைக்கு தாவு"
 msgid "Switch to Desktop %1"
 msgstr "பணிமேடை %1-க்கு தாவு"
 
-#: wayland/outputmanagement_v2.cpp:602
+#: wayland/outputmanagement_v2.cpp:633
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "ஓர் திரை இப்போது கிடைக்கவில்லை"
 
-#: wayland/outputmanagement_v2.cpp:620
+#: wayland/outputmanagement_v2.cpp:651
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "அனைத்து திரைகளையும் முடக்குவது அனுமதிக்கப்படாதது"
 
-#: wayland/outputmanagement_v2.cpp:630
+#: wayland/outputmanagement_v2.cpp:661
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 தன்னைத்தானே நகல் மூலமாக கொண்டிருக்க முடியாது"
 
-#: wayland/outputmanagement_v2.cpp:637
+#: wayland/outputmanagement_v2.cpp:668
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:641
+#: wayland/outputmanagement_v2.cpp:672
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:652
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "%1 எனும் வெளியீட்டின் இருப்பிடம் எதிர்ம எண்ணாக உள்ளது (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:655
+#: wayland/outputmanagement_v2.cpp:686
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "%1 எனும் இயக்கியுள்ள வெளியீட்டின் இருப்பிடம் எதிர்ம எண்ணாக உள்ளது (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:659
+#: wayland/outputmanagement_v2.cpp:690
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "%1 எனும் இயக்கியுள்ள வெளியீட்டின் இருப்பிடம் மிக அதிகமான எண்ணாக உள்ளது (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:707
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "சாதனநிரல் அமைப்புகளை நிராகரித்தது"
 
-#: wayland/outputmanagement_v2.cpp:679
+#: wayland/outputmanagement_v2.cpp:710
 #, kde-format
 msgid "The session is not active"
 msgstr "அமர்வு செயலிலில்லை"

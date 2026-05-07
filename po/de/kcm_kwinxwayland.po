@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-05 00:46+0000\n"
-"PO-Revision-Date: 2026-01-01 22:04+0100\n"
+"PO-Revision-Date: 2026-05-03 21:06+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.3\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: ui/main.qml:28
 #, kde-kuit-format
@@ -88,7 +88,7 @@ msgstr ""
 msgctxt "@info:usagetip"
 msgid "Moderate security; all global shortcuts will work in X11 apps"
 msgstr ""
-"Mäßige Sicherheit – Alle globalen Kurzbefehle werden in X11-Anwendungen "
+"Mittlere Sicherheit – Alle globalen Kurzbefehle werden in X11-Anwendungen "
 "funktionieren"
 
 #: ui/main.qml:96
@@ -138,7 +138,7 @@ msgid ""
 "Moderate security; global shortcuts involving mouse buttons will work in X11 "
 "apps"
 msgstr ""
-"Mäßige Sicherheit – Globale Kurzbefehle mit Maustasten werden in X11-"
+"Mittlere Sicherheit – Globale Kurzbefehle mit Maustasten werden in X11-"
 "Anwendungen funktionieren"
 
 #: ui/main.qml:141
@@ -148,20 +148,18 @@ msgid "Control of pointer and keyboard:"
 msgstr "Steuerung des Zeigers und der Tastatur:"
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "Erlaubt"
+msgstr "Erlaubte Anwendungen"
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Erlaubte Anwendungen anzeigen …"
 
 #: ui/main.qml:163
 #, kde-format
@@ -171,13 +169,12 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"Mittlere Sicherheit – XWayland-Anwendungen, die sich als etwas auf dieser "
+"Liste ausgeben, können die Kontrolle über den Computer erlangen, da die "
+"Identität dieser Anwendungen nicht verifiziert werden kann"
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -205,20 +202,19 @@ msgstr ""
 "Maus und Tastatur zu erhalten. Seien Sie sich der Risiken bewusst."
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Steuerung des Zeigers und der Tastatur:"
+msgstr "Anwendungen, die Zeiger und Tastatur steuern dürfen"
 
 #: ui/main.qml:209
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
 msgstr ""
+"%1 nicht erlauben, den Zeiger und die Tastatur ohne Nachfrage zu steuern"
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."
