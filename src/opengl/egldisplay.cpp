@@ -33,7 +33,7 @@ bool EglDisplay::shouldUseOpenGLES()
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }
 
-std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display, bool owning)
+std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display)
 {
     if (!display) {
         return nullptr;
@@ -72,7 +72,7 @@ std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display, bool owning
         }
     }
 
-    return std::make_unique<EglDisplay>(display, extensions, owning);
+    return std::make_unique<EglDisplay>(display, extensions);
 }
 
 static std::optional<dev_t> devIdForFileName(const QString &path)
@@ -86,10 +86,9 @@ static std::optional<dev_t> devIdForFileName(const QString &path)
     }
 }
 
-EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions, bool owning)
+EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions)
     : m_handle(display)
     , m_extensions(extensions)
-    , m_owning(owning)
     , m_renderNode(determineRenderNode())
     , m_renderDevNode(devIdForFileName(m_renderNode))
     , m_supportsBufferAge(extensions.contains(QByteArrayLiteral("EGL_EXT_buffer_age")) && qgetenv("KWIN_USE_BUFFER_AGE") != "0")
@@ -111,9 +110,7 @@ EglDisplay::~EglDisplay()
     for (const auto &image : m_importCache) {
         destroyImage(image);
     }
-    if (m_owning) {
-        eglTerminate(m_handle);
-    }
+    eglTerminate(m_handle);
 }
 
 QList<QByteArray> EglDisplay::extensions() const
