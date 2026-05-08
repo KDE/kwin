@@ -25,13 +25,14 @@ namespace KWin
 struct DmaBufAttributes;
 class GLTexture;
 class GraphicsBuffer;
+class DrmDevice;
 
 class KWIN_EXPORT EglDisplay : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions);
+    explicit EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions, DrmDevice *drmDevice);
     ~EglDisplay() override;
 
     QList<QByteArray> extensions() const;
@@ -58,7 +59,7 @@ public:
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
     static bool shouldUseOpenGLES();
-    static std::unique_ptr<EglDisplay> create(::EGLDisplay display);
+    static std::unique_ptr<EglDisplay> create(::EGLDisplay display, DrmDevice *drmDevice);
 
 private:
     struct Formats
@@ -73,6 +74,7 @@ private:
     const QList<QByteArray> m_extensions;
     const QString m_renderNode;
     const std::optional<dev_t> m_renderDevNode;
+    DrmDevice *const m_drmDevice;
 
     const bool m_supportsBufferAge;
     const bool m_supportsNativeFence;

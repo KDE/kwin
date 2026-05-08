@@ -43,6 +43,10 @@ public:
     drmDevice *libdrmDevice() const;
 
     std::optional<int> busType() const;
+    QByteArrayView driverName() const;
+
+    bool isNvidia() const;
+    bool isI915() const;
 
     static std::unique_ptr<DrmDevice> open(const QString &path);
     static std::unique_ptr<DrmDevice> openWithAuthentication(const QString &path, int authenticatedFd);
@@ -59,6 +63,9 @@ private:
     const std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     drmDevice *m_libdrmDevice = nullptr;
     bool m_supportsSyncObjTimelines;
+    const QByteArray m_driverName;
+    const bool m_isNvidia;
+    const bool m_isI915;
 };
 
 }

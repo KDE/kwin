@@ -290,7 +290,7 @@ std::unique_ptr<RenderDevice> RenderDevice::open(const QString &path, int authen
     if (!drmDevice) {
         return nullptr;
     }
-    auto eglDisplay = EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, drmDevice->gbmDevice(), nullptr));
+    auto eglDisplay = EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, drmDevice->gbmDevice(), nullptr), drmDevice.get());
     if (!eglDisplay) {
         return nullptr;
     }

@@ -19,12 +19,25 @@
 namespace KWin
 {
 
+static QByteArray getDriverName(const FileDescriptor &fd)
+{
+    auto version = drmGetVersion(fd.get());
+    if (version) {
+        return QByteArray(version->name, version->name_len);
+    } else {
+        return QByteArray();
+    }
+}
+
 DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_device *gbmDevice)
     : m_path(path)
     , m_id(id)
     , m_fd(std::move(fd))
     , m_gbmDevice(gbmDevice)
     , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(gbmDevice, id))
+    , m_driverName(getDriverName(m_fd))
+    , m_isNvidia(m_driverName == "nvidia-drm")
+    , m_isI915(m_driverName == "i915")
 {
     drmGetDevice2(m_fd.get(), 0, &m_libdrmDevice);
     uint64_t value = 0;
@@ -90,6 +103,21 @@ drmDevice *DrmDevice::libdrmDevice() const
 std::optional<int> DrmDevice::busType() const
 {
     return m_libdrmDevice ? m_libdrmDevice->bustype : std::optional<int>();
+}
+
+QByteArrayView DrmDevice::driverName() const
+{
+    return m_driverName;
+}
+
+bool DrmDevice::isNvidia() const
+{
+    return m_isNvidia;
+}
+
+bool DrmDevice::isI915() const
+{
+    return m_isI915;
 }
 
 std::unique_ptr<DrmDevice> DrmDevice::open(const QString &path)

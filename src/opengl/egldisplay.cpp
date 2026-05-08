@@ -14,6 +14,7 @@
 #include "opengl/eglutils_p.h"
 #include "opengl/glutils.h"
 #include "utils/common.h"
+#include "utils/envvar.h"
 
 #include <QOpenGLContext>
 #include <drm_fourcc.h>
@@ -33,7 +34,7 @@ bool EglDisplay::shouldUseOpenGLES()
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }
 
-std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display)
+std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display, DrmDevice *drmDevice)
 {
     if (!display) {
         return nullptr;
@@ -72,7 +73,7 @@ std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display)
         }
     }
 
-    return std::make_unique<EglDisplay>(display, extensions);
+    return std::make_unique<EglDisplay>(display, extensions, drmDevice);
 }
 
 static std::optional<dev_t> devIdForFileName(const QString &path)
@@ -86,11 +87,12 @@ static std::optional<dev_t> devIdForFileName(const QString &path)
     }
 }
 
-EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions)
+EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions, DrmDevice *drmDevice)
     : m_handle(display)
     , m_extensions(extensions)
     , m_renderNode(determineRenderNode())
     , m_renderDevNode(devIdForFileName(m_renderNode))
+    , m_drmDevice(drmDevice)
     , m_supportsBufferAge(extensions.contains(QByteArrayLiteral("EGL_EXT_buffer_age")) && qgetenv("KWIN_USE_BUFFER_AGE") != "0")
     , m_supportsNativeFence(extensions.contains(QByteArrayLiteral("EGL_ANDROID_native_fence_sync"))
                             && extensions.contains(QByteArrayLiteral("EGL_KHR_wait_sync")))
@@ -354,6 +356,8 @@ void EglDisplay::destroyImage(EGLImageKHR image) const
     m_functions.destroyImageKHR(m_handle, image);
 }
 
+static const auto s_disableUdmabuf = environmentVariableBoolValue("KWIN_DISABLE_UDMABUF_IMPORT");
+
 EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer)
 {
     Q_ASSERT(buffer->dmabufAttributes() || buffer->shmAttributes());
@@ -367,7 +371,9 @@ EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer)
     EGLImageKHR image = EGL_NO_IMAGE;
     if (buffer->dmabufAttributes()) {
         image = importDmaBufAsImage(*buffer->dmabufAttributes());
-    } else if (buffer->udmabufAttributes()) {
+        // On Nvidia, sampling from udmabuf just results in black,
+        // and on i915 there are glitches on some systems
+    } else if (buffer->udmabufAttributes() && m_drmDevice && !s_disableUdmabuf.value_or(m_drmDevice->isNvidia() || m_drmDevice->isI915())) {
         image = importDmaBufAsImage(*buffer->udmabufAttributes());
     }
     m_importCache[key] = image;
