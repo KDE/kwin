@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-07 00:46+0000\n"
+"POT-Creation-Date: 2026-05-08 00:46+0000\n"
 "PO-Revision-Date: 2026-03-20 21:54+0100\n"
 "Last-Translator: Rasmus Rosendahl-Kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -4353,54 +4353,59 @@ msgstr "Skift ét skrivebord nedad"
 msgid "Switch to Desktop %1"
 msgstr "Skift til skrivebord %1"
 
-#: wayland/outputmanagement_v2.cpp:633
+#: wayland/outputmanagement_v2.cpp:570
+#, kde-format
+msgid "abm level is larger than the maximum (4): %1"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:648
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "En af de relevante outputs er ikke længere tilgængelig"
 
-#: wayland/outputmanagement_v2.cpp:651
+#: wayland/outputmanagement_v2.cpp:666
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Det er ikke tilladt at deaktivere alle outputs gennem konfigurationsændringer"
 
-#: wayland/outputmanagement_v2.cpp:661
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 kan ikke spejle sig selv"
 
-#: wayland/outputmanagement_v2.cpp:668
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Kan ikke tilføle en tilpasset tilstand med tom størrelse"
 
-#: wayland/outputmanagement_v2.cpp:672
+#: wayland/outputmanagement_v2.cpp:687
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "Kan ikke tilføje en tilpasset tilstand med en genopfriskningsrate på nul Hz"
 
-#: wayland/outputmanagement_v2.cpp:683
+#: wayland/outputmanagement_v2.cpp:698
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "Placering af output %1 er alt for negativ (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:686
+#: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "Placering af aktiveret output %1 er negativ (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:690
+#: wayland/outputmanagement_v2.cpp:705
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "Placering af output %1 er alt for stor (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:707
+#: wayland/outputmanagement_v2.cpp:722
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Driveren afviste outputkonfigurationen"
 
-#: wayland/outputmanagement_v2.cpp:710
+#: wayland/outputmanagement_v2.cpp:725
 #, fuzzy, kde-format
 #| msgid "The Alt key is now active."
 msgid "The session is not active"

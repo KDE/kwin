@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1736294 2026-05-07 01:30:16Z scripty $
+# $Id: kwin.po 1736367 2026-05-08 01:28:25Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-07 00:46+0000\n"
+"POT-Creation-Date: 2026-05-08 00:46+0000\n"
 "PO-Revision-Date: 2026-05-03 06:37+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -4312,52 +4312,57 @@ msgstr "Preklopi na eno namizje navzdol"
 msgid "Switch to Desktop %1"
 msgstr "Preklopi na namizje %1"
 
-#: wayland/outputmanagement_v2.cpp:633
+#: wayland/outputmanagement_v2.cpp:570
+#, kde-format
+msgid "abm level is larger than the maximum (4): %1"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:648
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Eden od ustreznih izhodov ni več na voljo"
 
-#: wayland/outputmanagement_v2.cpp:651
+#: wayland/outputmanagement_v2.cpp:666
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "Onemogočanje vseh izhodov prek sprememb konfiguracije ni dovoljeno"
 
-#: wayland/outputmanagement_v2.cpp:661
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 ne more zrcaliti same sebe"
 
-#: wayland/outputmanagement_v2.cpp:668
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Ni mogoče dodati načina po meri s prazno velikostjo"
 
-#: wayland/outputmanagement_v2.cpp:672
+#: wayland/outputmanagement_v2.cpp:687
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Ni mogoče dodati načina po meri s hitrostjo osveževanja nič Hz"
 
-#: wayland/outputmanagement_v2.cpp:683
+#: wayland/outputmanagement_v2.cpp:698
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "Položaj izhoda %1 je preveč negativen (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:686
+#: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "Položaj omogočenega izhoda %1 je negativen (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:690
+#: wayland/outputmanagement_v2.cpp:705
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "Položaj izhoda %1 je prevelik (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:707
+#: wayland/outputmanagement_v2.cpp:722
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Gonilnik je zavrnil konfiguracijo izhoda"
 
-#: wayland/outputmanagement_v2.cpp:710
+#: wayland/outputmanagement_v2.cpp:725
 #, kde-format
 msgid "The session is not active"
 msgstr "Seja ni dejavna"

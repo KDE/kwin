@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-07 00:46+0000\n"
+"POT-Creation-Date: 2026-05-08 00:46+0000\n"
 "PO-Revision-Date: 2026-05-06 11:18+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -4307,54 +4307,59 @@ msgstr "Commuta un Scriptorio a basso"
 msgid "Switch to Desktop %1"
 msgstr "Commuta a Scriptorio %1"
 
-#: wayland/outputmanagement_v2.cpp:633
+#: wayland/outputmanagement_v2.cpp:570
+#, kde-format
+msgid "abm level is larger than the maximum (4): %1"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:648
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Un del exitos pertinente non es plus disponibile"
 
-#: wayland/outputmanagement_v2.cpp:651
+#: wayland/outputmanagement_v2.cpp:666
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Dishabilitar omne exitos per cambios de configuration non es permittite"
 
-#: wayland/outputmanagement_v2.cpp:661
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 non pote reflecter se mesme"
 
-#: wayland/outputmanagement_v2.cpp:668
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Non pote adder un modo personalisate con un grandor vacue"
 
-#: wayland/outputmanagement_v2.cpp:672
+#: wayland/outputmanagement_v2.cpp:687
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "Non pote adder un modo personalisate con unratio de refrescar de zero Hz"
 
-#: wayland/outputmanagement_v2.cpp:683
+#: wayland/outputmanagement_v2.cpp:698
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "Position de sortita %1 es troppo negative  (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:686
+#: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "Position de sortita habilitate %1 es negative  (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:690
+#: wayland/outputmanagement_v2.cpp:705
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "Position de sortita %1 es troppo grande  (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:707
+#: wayland/outputmanagement_v2.cpp:722
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Le driver refusava le configuration de exito"
 
-#: wayland/outputmanagement_v2.cpp:710
+#: wayland/outputmanagement_v2.cpp:725
 #, kde-format
 msgid "The session is not active"
 msgstr "Le session non es active"

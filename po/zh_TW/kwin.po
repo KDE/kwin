@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-07 00:46+0000\n"
+"POT-Creation-Date: 2026-05-08 00:46+0000\n"
 "PO-Revision-Date: 2026-04-17 19:45+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -4278,52 +4278,57 @@ msgstr "切換到下面的桌面"
 msgid "Switch to Desktop %1"
 msgstr "切換到桌面 %1"
 
-#: wayland/outputmanagement_v2.cpp:633
+#: wayland/outputmanagement_v2.cpp:570
+#, kde-format
+msgid "abm level is larger than the maximum (4): %1"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:648
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "有關的一個輸出已不再可用"
 
-#: wayland/outputmanagement_v2.cpp:651
+#: wayland/outputmanagement_v2.cpp:666
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "不允許透過設定值變更來停用所有輸出"
 
-#: wayland/outputmanagement_v2.cpp:661
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 無法鏡像自己"
 
-#: wayland/outputmanagement_v2.cpp:668
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "無法新增大小是空白的自訂模式"
 
-#: wayland/outputmanagement_v2.cpp:672
+#: wayland/outputmanagement_v2.cpp:687
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "無法新增更新頻率是 0 Hz 的自訂模式"
 
-#: wayland/outputmanagement_v2.cpp:683
+#: wayland/outputmanagement_v2.cpp:698
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "輸出 %1 的位置負到不合理 (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:686
+#: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "已啟用的輸出 %1 的位置是負的 (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:690
+#: wayland/outputmanagement_v2.cpp:705
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "輸出 %1 的位置大到不合理 (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:707
+#: wayland/outputmanagement_v2.cpp:722
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "驅動程式回絕了提供的輸出配置"
 
-#: wayland/outputmanagement_v2.cpp:710
+#: wayland/outputmanagement_v2.cpp:725
 #, kde-format
 msgid "The session is not active"
 msgstr "工作階段並非作用中"

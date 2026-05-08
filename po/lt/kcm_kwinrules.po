@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-03 00:45+0000\n"
-"PO-Revision-Date: 2026-05-01 13:00+0300\n"
+"PO-Revision-Date: 2026-05-07 19:31+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -37,36 +37,31 @@ msgid "Window settings for %1"
 msgstr "Lango nuostatos, skirtos %1"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, fuzzy, kde-format
-#| msgid "Unimportant"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "Nesvarbu"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Exact match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Exact match"
 msgstr "Tiksli atitiktis"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Substring match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr "Poeilučio atitiktis"
 
 #: optionsmodel.cpp:202
-#, fuzzy, kde-format
-#| msgid "Regular expression"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "Reguliarusis reiškinys"
 
 #: optionsmodel.cpp:205
-#, fuzzy, kde-format
-#| msgid "Match"
+#, kde-format
 msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
 msgstr "Atitiktis"

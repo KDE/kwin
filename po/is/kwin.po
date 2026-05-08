@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-07 00:46+0000\n"
-"PO-Revision-Date: 2026-04-13 17:28+0000\n"
+"POT-Creation-Date: 2026-05-08 00:46+0000\n"
+"PO-Revision-Date: 2026-05-07 13:32+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
 "Language: is\n"
@@ -1807,30 +1807,23 @@ msgid "Disable Active Input Capture"
 msgstr "Gera viðtöku virks inntaks óvirka."
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Ctrl"
+msgstr "Fjarstýring"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><application>%1</application> is not responding. Do you want to "
-#| "terminate this application?</para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
 msgstr ""
-"<para><application>%1</application> svarar ekki. Viltu stöðva þetta forrit "
-"alveg?</para>"
+"<application>%1</application> er að biðja um að fá að stýra inntakstækjum"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
 msgctxt "@option:check"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Alltaf leyfa forritum sem segjast vera %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1846,13 +1839,13 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Leyfa"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Hafna"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -3189,18 +3182,15 @@ msgstr "Samsvörunargerð strengs fyrir gluggamerki"
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "Engir opnir gluggar"
+msgstr "Er með yfirglugga"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
-#, fuzzy, kde-format
-#| msgid "Set window type to"
+#, kde-format
 msgid "Has parent window match type"
-msgstr "Stilla gerð glugga á"
+msgstr "Er með yfirglugga af gerðinni"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89
@@ -4299,53 +4289,58 @@ msgstr "Fara eitt skjáborð niður"
 msgid "Switch to Desktop %1"
 msgstr "Skipta yfir á skjáborð %1"
 
-#: wayland/outputmanagement_v2.cpp:633
+#: wayland/outputmanagement_v2.cpp:570
+#, kde-format
+msgid "abm level is larger than the maximum (4): %1"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:648
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Eitt af úttökunum sem á við er ekki lengur tiltækt"
 
-#: wayland/outputmanagement_v2.cpp:651
+#: wayland/outputmanagement_v2.cpp:666
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Ekki er leyfilegt að gera öll úttök óvirk með breytingum á grunnstillingum"
 
-#: wayland/outputmanagement_v2.cpp:661
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 má ekki spegla sjálfan sig"
 
-#: wayland/outputmanagement_v2.cpp:668
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Get ekki bætt við sérsniðnum ham með auðri stærð"
 
-#: wayland/outputmanagement_v2.cpp:672
+#: wayland/outputmanagement_v2.cpp:687
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "Get ekki bætt við sérsniðnum ham með uppfærslutíðni upp á núll Hz"
 
-#: wayland/outputmanagement_v2.cpp:683
+#: wayland/outputmanagement_v2.cpp:698
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "Staðsetning úttaksins %1 er allt of neikvæð (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:686
+#: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "Staðsetning virkjaða úttaksins %1 er neikvæð (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:690
+#: wayland/outputmanagement_v2.cpp:705
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "Staðsetning úttaksins %1 er allt of stór (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:707
+#: wayland/outputmanagement_v2.cpp:722
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Rekillinn hafnaði grunnstillingu úttaksins"
 
-#: wayland/outputmanagement_v2.cpp:710
+#: wayland/outputmanagement_v2.cpp:725
 #, kde-format
 msgid "The session is not active"
 msgstr "Setan er ekki virk"

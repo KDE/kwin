@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-07 00:46+0000\n"
-"PO-Revision-Date: 2026-05-01 13:06+0300\n"
+"POT-Creation-Date: 2026-05-08 00:46+0000\n"
+"PO-Revision-Date: 2026-05-07 19:30+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -1818,12 +1818,10 @@ msgid "Remote Control"
 msgstr "Nuotolinis valdymas"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info keep '-' it's markdon"
-#| msgid "%1 is asking to control input devices"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
-msgstr "%1 prašo leidimo valdyti įvedimo įrenginius"
+msgstr "<application>%1</application> prašo leidimo valdyti įvedimo įrenginius"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -4313,54 +4311,59 @@ msgstr "Perjungti vienu darbalaukiu į apačią"
 msgid "Switch to Desktop %1"
 msgstr "Perjungti į darbalaukį %1"
 
-#: wayland/outputmanagement_v2.cpp:633
+#: wayland/outputmanagement_v2.cpp:570
+#, kde-format
+msgid "abm level is larger than the maximum (4): %1"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:648
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "Vienas iš aktualių išvedimų daugiau nebeprieinamas"
 
-#: wayland/outputmanagement_v2.cpp:651
+#: wayland/outputmanagement_v2.cpp:666
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 "Visų išvedimų išjungimas per konfigūracijos pakeitimus yra neleidžiamas"
 
-#: wayland/outputmanagement_v2.cpp:661
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 negali savęs dubliuoti"
 
-#: wayland/outputmanagement_v2.cpp:668
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "Negalima pridėti tinkintos veiksenos, kurios dydis būtų tuščias"
 
-#: wayland/outputmanagement_v2.cpp:672
+#: wayland/outputmanagement_v2.cpp:687
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 "Negalima pridėti tinkintos veiksenos, kurios atnaujinimo dažnis būtų 0 Hz"
 
-#: wayland/outputmanagement_v2.cpp:683
+#: wayland/outputmanagement_v2.cpp:698
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "Išvedimo %1 pozicija yra pernelyg neigiama (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:686
+#: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "Įjungto išvedimo %1 pozicija yra neigiama (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:690
+#: wayland/outputmanagement_v2.cpp:705
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "Išvedimo %1 pozicija yra pernelyg didelė (%2, %3)"
 
-#: wayland/outputmanagement_v2.cpp:707
+#: wayland/outputmanagement_v2.cpp:722
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "Tvarkyklė atmetė išvedimo konfigūraciją"
 
-#: wayland/outputmanagement_v2.cpp:710
+#: wayland/outputmanagement_v2.cpp:725
 #, kde-format
 msgid "The session is not active"
 msgstr "Seansas nėra aktyvus"

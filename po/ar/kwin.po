@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-07 00:46+0000\n"
-"PO-Revision-Date: 2026-04-30 09:09+0400\n"
+"POT-Creation-Date: 2026-05-08 00:46+0000\n"
+"PO-Revision-Date: 2026-05-07 12:26+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1791,12 +1791,10 @@ msgid "Remote Control"
 msgstr "التحكم عن بعد"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info keep '-' it's markdon"
-#| msgid "%1 is asking to control input devices"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
-msgstr "يطلب %1 التحكم في أجهزة الإدخال"
+msgstr "<application>%1</application> يطلب التحكم في أجهزة الإدخال"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -4273,52 +4271,57 @@ msgstr "بدّل إلى سطح المكتب الأسفل"
 msgid "Switch to Desktop %1"
 msgstr "بدّل إلى سطح المكتب %1"
 
-#: wayland/outputmanagement_v2.cpp:633
+#: wayland/outputmanagement_v2.cpp:570
+#, kde-format
+msgid "abm level is larger than the maximum (4): %1"
+msgstr ""
+
+#: wayland/outputmanagement_v2.cpp:648
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "أحد المخرجات ذات الصلة لم يعد متاحًا"
 
-#: wayland/outputmanagement_v2.cpp:651
+#: wayland/outputmanagement_v2.cpp:666
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "لا يُسمح بتعطيل جميع المخرجات من خلال تغييرات الضبط"
 
-#: wayland/outputmanagement_v2.cpp:661
+#: wayland/outputmanagement_v2.cpp:676
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr "%1 لا يمكنه عكس نفسه"
 
-#: wayland/outputmanagement_v2.cpp:668
+#: wayland/outputmanagement_v2.cpp:683
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "لا يمكن إضافة وضع مخصص بحجم فارغ"
 
-#: wayland/outputmanagement_v2.cpp:672
+#: wayland/outputmanagement_v2.cpp:687
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "لا يمكن إضافة وضع مخصص بمعدل تحديث يبلغ صفر هرتز"
 
-#: wayland/outputmanagement_v2.cpp:683
+#: wayland/outputmanagement_v2.cpp:698
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "موضع الإخراج %1 سلبي للغاية (%2،‏ %3)"
 
-#: wayland/outputmanagement_v2.cpp:686
+#: wayland/outputmanagement_v2.cpp:701
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "موضع الإخراج المُمكن %1 سلبي (%2،‏ %3)"
 
-#: wayland/outputmanagement_v2.cpp:690
+#: wayland/outputmanagement_v2.cpp:705
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "موضع الإخراج %1 كبير جدًا (%2،‏ %3)"
 
-#: wayland/outputmanagement_v2.cpp:707
+#: wayland/outputmanagement_v2.cpp:722
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "رفض السائق ضبط الإخراج"
 
-#: wayland/outputmanagement_v2.cpp:710
+#: wayland/outputmanagement_v2.cpp:725
 #, kde-format
 msgid "The session is not active"
 msgstr "الجلسة ليست نشطة"
