@@ -38,6 +38,10 @@ DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_dev
     , m_driverName(getDriverName(m_fd))
     , m_isNvidia(m_driverName == "nvidia-drm")
     , m_isI915(m_driverName == "i915")
+    , m_isIntelXE(m_driverName == "xe")
+    , m_isAmdgpu(m_driverName == "amdgpu")
+    , m_isVmwgfx(m_driverName == "vmwgfx")
+    , m_isVirtualMachine(m_driverName == "virtio" || m_driverName == "qxl" || m_driverName == "vmwgfx" || m_driverName == "vboxvideo")
 {
     drmGetDevice2(m_fd.get(), 0, &m_libdrmDevice);
     uint64_t value = 0;
@@ -105,7 +109,7 @@ std::optional<int> DrmDevice::busType() const
     return m_libdrmDevice ? m_libdrmDevice->bustype : std::optional<int>();
 }
 
-QByteArrayView DrmDevice::driverName() const
+QByteArray DrmDevice::driverName() const
 {
     return m_driverName;
 }
@@ -118,6 +122,26 @@ bool DrmDevice::isNvidia() const
 bool DrmDevice::isI915() const
 {
     return m_isI915;
+}
+
+bool DrmDevice::isIntelXE() const
+{
+    return m_isIntelXE;
+}
+
+bool DrmDevice::isAmdgpu() const
+{
+    return m_isAmdgpu;
+}
+
+bool DrmDevice::isVmwgfx() const
+{
+    return m_isVmwgfx;
+}
+
+bool DrmDevice::isVirtualMachine() const
+{
+    return m_isVirtualMachine;
 }
 
 std::unique_ptr<DrmDevice> DrmDevice::open(const QString &path)

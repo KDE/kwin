@@ -54,12 +54,12 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                         m_pong.wait(lock);
                     }
                     if (m_committed) {
-                        qCCritical(KWIN_DRM, "Pageflip timed out! This is a bug in the %s kernel driver", qPrintable(m_gpu->driverName()));
-                        if (m_gpu->isAmdgpu()) {
+                        qCCritical(KWIN_DRM, "Pageflip timed out! This is a bug in the %s kernel driver", qPrintable(m_gpu->drmDevice()->driverName()));
+                        if (m_gpu->drmDevice()->isAmdgpu()) {
                             qCCritical(KWIN_DRM, "Please report this at https://gitlab.freedesktop.org/drm/amd/-/issues");
-                        } else if (m_gpu->isNVidia()) {
+                        } else if (m_gpu->drmDevice()->isNvidia()) {
                             qCCritical(KWIN_DRM, "Please report this at https://forums.developer.nvidia.com/c/gpu-graphics/linux");
-                        } else if (m_gpu->isI915()) {
+                        } else if (m_gpu->drmDevice()->isI915()) {
                             qCCritical(KWIN_DRM, "Please report this at https://gitlab.freedesktop.org/drm/i915/kernel/-/issues");
                         }
                         qCCritical(KWIN_DRM, "With the output of 'sudo dmesg' and 'journalctl --user-unit plasma-kwin_wayland --boot 0'");

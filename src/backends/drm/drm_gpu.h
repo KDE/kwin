@@ -92,15 +92,8 @@ public:
     bool forceLowBandwidthMode() const;
     bool asyncPageflipSupported() const;
     bool colorPipelineSupported() const;
-    bool isI915() const;
-    bool isIntelXE() const;
-    bool isNVidia() const;
-    bool isAmdgpu() const;
-    bool isVmwgfx() const;
-    bool isVirtualMachine() const;
     bool sharpnessSupported() const;
     std::optional<Version> nvidiaDriverVersion() const;
-    QString driverName() const;
     DrmBackend *platform() const;
     /**
      * Returns the clock from which presentation timestamps are sourced. The returned value
@@ -162,13 +155,6 @@ private:
     const std::unique_ptr<DrmDevice> m_drmDevice;
     bool m_atomicModeSetting;
     bool m_addFB2ModifiersSupported = false;
-    bool m_isNVidia;
-    bool m_isI915;
-    bool m_isIntelXE;
-    bool m_isAmdgpu;
-    bool m_isVmwgfx;
-    bool m_isVirtualMachine;
-    QString m_driverName;
     bool m_supportsCursorPlaneHotspot = false;
     bool m_asyncPageflipSupported = false;
     bool m_colorPipelineSupported = false;

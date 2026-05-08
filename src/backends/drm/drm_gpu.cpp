@@ -95,21 +95,12 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     }
 
     // find out what driver this kms device is using
-    DrmUniquePtr<drmVersion> version(drmGetVersion(fd));
-    m_isI915 = strstr(version->name, "i915");
-    m_isIntelXE = strstr(version->name, "xe");
-    m_isNVidia = strstr(version->name, "nvidia-drm");
-    m_isAmdgpu = strstr(version->name, "amdgpu");
-    m_isVmwgfx = strstr(version->name, "vmwgfx");
-    m_isVirtualMachine = strstr(version->name, "virtio") || strstr(version->name, "qxl")
-        || strstr(version->name, "vmwgfx") || strstr(version->name, "vboxvideo");
-    if (m_isNVidia) {
+    if (m_drmDevice->isNvidia()) {
         QFile moduleVersion("/sys/module/nvidia_drm/version");
         if (moduleVersion.open(QIODeviceBase::OpenModeFlag::ReadOnly)) {
             m_nvidiaDriverVersion = Version::parseString(moduleVersion.readLine(100));
         }
     }
-    m_driverName = version->name;
 
     m_socketNotifier = std::make_unique<QSocketNotifier>(fd, QSocketNotifier::Read);
     connect(m_socketNotifier.get(), &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
@@ -189,7 +180,7 @@ void DrmGpu::initDrmResources()
     if (noAMS) {
         qCWarning(KWIN_DRM) << "Atomic Mode Setting requested off via environment variable. Using legacy mode on GPU" << this;
     } else if (atomicSuccessful) {
-        if (m_isVirtualMachine) {
+        if (m_drmDevice->isVirtualMachine()) {
             // ATOMIC must be set before attempting CURSOR_PLANE_HOTSPOT
             if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT, 1) != 0) {
                 qCWarning(KWIN_DRM, "Atomic Mode Setting disabled on GPU %s because of cursor offset issues in virtual machines", qPrintable(m_drmDevice->path()));
@@ -719,36 +710,6 @@ bool DrmGpu::colorPipelineSupported() const
     return m_colorPipelineSupported;
 }
 
-bool DrmGpu::isI915() const
-{
-    return m_isI915;
-}
-
-bool DrmGpu::isIntelXE() const
-{
-    return m_isIntelXE;
-}
-
-bool DrmGpu::isNVidia() const
-{
-    return m_isNVidia;
-}
-
-bool DrmGpu::isAmdgpu() const
-{
-    return m_isAmdgpu;
-}
-
-bool DrmGpu::isVmwgfx() const
-{
-    return m_isVmwgfx;
-}
-
-bool DrmGpu::isVirtualMachine() const
-{
-    return m_isVirtualMachine;
-}
-
 std::optional<Version> DrmGpu::nvidiaDriverVersion() const
 {
     return m_nvidiaDriverVersion;
@@ -1062,11 +1023,6 @@ void DrmGpu::forgetBuffer(GraphicsBuffer *buf)
 void DrmGpu::forgetBufferObject(QObject *buf)
 {
     m_fbCache.remove(static_cast<GraphicsBuffer *>(buf));
-}
-
-QString DrmGpu::driverName() const
-{
-    return m_driverName;
 }
 
 QList<OutputLayer *> DrmGpu::compatibleOutputLayers(BackendOutput *output) const

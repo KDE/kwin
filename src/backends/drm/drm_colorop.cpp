@@ -226,7 +226,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
         commit->merge(m_cache.get());
         return true;
     }
-    if (pipeline.isIdentity() && s_disableAmdgpuWorkaround.value_or(!commit->gpu()->isAmdgpu())) {
+    if (pipeline.isIdentity() && s_disableAmdgpuWorkaround.value_or(!commit->gpu()->drmDevice()->isAmdgpu())) {
         // Applying this config is very simple and cheap, so do it directly
         // and avoid invalidating the cache
         DrmAbstractColorOp *currentOp = this;

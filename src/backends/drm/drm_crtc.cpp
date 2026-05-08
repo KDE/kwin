@@ -61,7 +61,7 @@ bool DrmCrtc::updateProperties()
             m_postBlendingColorOps.push_back(std::make_unique<DrmLutColorOp16>(next, &gammaLut, nullptr, gammaRampSize(), nullptr));
             next = m_postBlendingColorOps.back().get();
         }
-        if (!gpu()->isNVidia() && ctm.isValid()) {
+        if (!gpu()->drmDevice()->isNvidia() && ctm.isValid()) {
             m_postBlendingColorOps.push_back(std::make_unique<LegacyMatrixColorOp>(next, &ctm));
             next = m_postBlendingColorOps.back().get();
         }

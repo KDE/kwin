@@ -47,7 +47,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn, DrmPipeline *pip
     , m_connector(conn)
 {
     m_pipeline->setOutput(this);
-    if (m_gpu->atomicModeSetting() && ((!s_disableTripleBufferingSet && !m_gpu->isNVidia()) || (s_disableTripleBufferingSet && !s_disableTripleBuffering))) {
+    if (m_gpu->atomicModeSetting() && ((!s_disableTripleBufferingSet && !m_gpu->drmDevice()->isNvidia()) || (s_disableTripleBufferingSet && !s_disableTripleBuffering))) {
         m_renderLoop->setMaxPendingFrameCount(2);
     }
 
@@ -215,9 +215,9 @@ BackendOutput::Capabilities DrmOutput::computeCapabilities() const
     }
     if (m_connector->colorspace.isValid() && (m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) || m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_YCC)) && m_connector->edid()->supportsBT2020()) {
         bool allowColorspace = true;
-        if (m_gpu->isI915()) {
+        if (m_gpu->drmDevice()->isI915()) {
             allowColorspace &= s_allowColorspaceIntel || linuxKernelVersion() >= Version(6, 11);
-        } else if (m_gpu->isNVidia()) {
+        } else if (m_gpu->drmDevice()->isNvidia()) {
             allowColorspace &= s_allowColorspaceNVidia || m_gpu->nvidiaDriverVersion() >= Version(565, 57, 1);
         }
         if (allowColorspace) {
@@ -358,10 +358,10 @@ bool DrmOutput::recommendsOverlayUse() const
     // - Nvidia has more severe issues
     if (PROJECT_VERSION_PATCH >= 80) {
         // we can take some more risks in development versions.
-        return !m_gpu->isNVidia();
+        return !m_gpu->drmDevice()->isNvidia();
     } else {
         // release version: play it really safe for now, only enable on select drivers
-        return m_gpu->isI915() || m_gpu->isIntelXE();
+        return m_gpu->drmDevice()->isI915() || m_gpu->drmDevice()->isIntelXE();
     }
 }
 

@@ -301,7 +301,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
         // limited color range (16-235) when COLOR_RANGE is not explicitly
         // set, even for RGB content. This makes the desktop look washed out.
         // See https://github.com/NVIDIA/open-gpu-kernel-modules/discussions/1105
-        if (gpu()->isNVidia() && plane->colorRange.isValid()) {
+        if (gpu()->drmDevice()->isNvidia() && plane->colorRange.isValid()) {
             commit->addEnum(plane->colorRange, DrmPlane::ColorRange::Full_YCbCr);
         }
         break;
@@ -479,7 +479,7 @@ bool DrmPipeline::presentAsync(OutputLayer *layer, std::optional<std::chrono::na
     // We need to make sure that on vmwgfx software cursor is selected
     // until Broadcom fixes hw cursor issues with vmwgfx. Otherwise
     // the cursor is missing.
-    if (gpu()->isVmwgfx()) {
+    if (gpu()->drmDevice()->isVmwgfx()) {
         return false;
     }
     const auto drmLayer = static_cast<DrmPipelineLayer *>(layer);

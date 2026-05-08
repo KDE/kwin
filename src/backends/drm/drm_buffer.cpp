@@ -52,7 +52,7 @@ DrmFramebuffer::DrmFramebuffer(const std::shared_ptr<DrmFramebufferData> &data, 
     : m_data(data)
     , m_bufferRef(buffer)
 {
-    if (s_disableBufferWait.value_or(data->m_gpu->isVmwgfx())) {
+    if (s_disableBufferWait.value_or(data->m_gpu->drmDevice()->isVmwgfx())) {
         // buffer readability checks cause frames to be wrongly delayed on Virtual Machines running vmwgfx
         m_readable = true;
     }

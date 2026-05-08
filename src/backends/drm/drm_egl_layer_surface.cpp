@@ -137,7 +137,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             const QList<FormatInfo> sortedFormats = OutputLayer::filterAndSortFormats(formats, requiredAlphaBits, tradeoff);
             for (const auto format : sortedFormats) {
                 auto modifiers = formats[format.drmFormat];
-                if (format.floatingPoint && m_eglBackend->gpu()->isAmdgpu() && qEnvironmentVariableIntValue("KWIN_DRM_NO_DCC_WORKAROUND") == 0) {
+                if (format.floatingPoint && m_eglBackend->gpu()->drmDevice()->isAmdgpu() && qEnvironmentVariableIntValue("KWIN_DRM_NO_DCC_WORKAROUND") == 0) {
                     // using modifiers with DCC here causes glitches on amdgpu: https://gitlab.freedesktop.org/mesa/mesa/-/issues/10875
                     if (!modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
                         continue;
