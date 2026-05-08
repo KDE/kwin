@@ -189,33 +189,14 @@ bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt, K
 {
 #if KWIN_BUILD_GLOBALSHORTCUTS
     if (m_kglobalAccelInterface) {
-        auto check = [this](Qt::KeyboardModifiers mods, int keyQt, KeyboardKeyState keyState) {
-            bool retVal = false;
-            QMetaObject::invokeMethod(m_kglobalAccelInterface,
-                                      "checkKeyPressed",
-                                      Qt::DirectConnection,
-                                      Q_RETURN_ARG(bool, retVal),
-                                      Q_ARG(int, int(mods) | keyQt),
-                                      Q_ARG(KeyboardKeyState, keyState));
-            return retVal;
-        };
-        if (check(mods, keyQt, state)) {
-            return true;
-        } else if (keyQt == Qt::Key_Backtab) {
-            // KGlobalAccel on X11 has some workaround for Backtab
-            // see kglobalaccel/src/runtime/plugins/xcb/kglobalccel_x11.cpp method x11KeyPress
-            // Apparently KKeySequenceWidget captures Shift+Tab instead of Backtab
-            // thus if the key is backtab we should adjust to add shift again and use tab
-            // in addition KWin registers the shortcut incorrectly as Alt+Shift+Backtab
-            // this should be changed to either Alt+Backtab or Alt+Shift+Tab to match KKeySequenceWidget
-            // trying the variants
-            if (check(mods | Qt::ShiftModifier, keyQt, state)) {
-                return true;
-            }
-            if (check(mods | Qt::ShiftModifier, Qt::Key_Tab, state)) {
-                return true;
-            }
-        }
+        bool handled = false;
+        QMetaObject::invokeMethod(m_kglobalAccelInterface,
+                                  "checkKeyPressed",
+                                  Qt::DirectConnection,
+                                  Q_RETURN_ARG(bool, handled),
+                                  Q_ARG(int, int(mods) | keyQt),
+                                  Q_ARG(KeyboardKeyState, state));
+        return handled;
     }
 #endif
     return false;
