@@ -249,7 +249,7 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
         if (ret->supportedFormats().isEmpty()) {
             continue;
         }
-        qCWarning(KWIN_VULKAN, "Found Vulkan device %s for %s", deviceName, qPrintable(drm->path()));
+        qCDebug(KWIN_VULKAN, "Found Vulkan device %s for %s", deviceName, qPrintable(drm->path()));
         return ret;
     }
     qCDebug(KWIN_VULKAN, "No Vulkan device found for %s", qPrintable(drm->path()));
