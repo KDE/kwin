@@ -1,7 +1,7 @@
 # translation of kwin.po to Turkish
 # translation of kwin.po to
 # Copyright (C) 2003, 2004, 2005, 2008 Free Software Foundation, Inc.
-# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025, 2026 Emir SARI <emir_sari@icloud.com>
+# SPDX-FileCopyrightText: 2022-2026 Emir SARI <emir_sari@icloud.com>
 # Murat Sisman <muratsisman@mailcity.com>, 2000.
 # Ömer Fadıl USTA <omer_fad@hotmail.com>, 2003.
 # Görkem Çetin <gorkem@kde.org>, 2003, 2004.
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-08 00:46+0000\n"
-"PO-Revision-Date: 2026-05-03 10:19+0300\n"
+"POT-Creation-Date: 2026-05-09 00:45+0000\n"
+"PO-Revision-Date: 2026-05-08 13:09+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.12.3\n"
+"X-Generator: Lokalize 26.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -4296,6 +4296,8 @@ msgstr "%1. Masaüstüne Geç"
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
 msgstr ""
+"Uyarlanır arka ışık modülasyonu düzeyi, olabilecek en yüksek değerden daha "
+"fazla (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:648
 #, kde-format
@@ -4349,7 +4351,7 @@ msgstr "Sürücü çıktı yapılandırmasını reddetti"
 msgid "The session is not active"
 msgstr "Bu oturum etkin değil"
 
-#: window.cpp:3132
+#: window.cpp:3131
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

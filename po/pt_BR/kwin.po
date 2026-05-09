@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-08 00:46+0000\n"
-"PO-Revision-Date: 2026-05-03 08:07-0300\n"
+"POT-Creation-Date: 2026-05-09 00:45+0000\n"
+"PO-Revision-Date: 2026-05-08 05:53-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 26.04.0\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -4325,7 +4325,7 @@ msgstr "Mudar para a área de trabalho %1"
 #: wayland/outputmanagement_v2.cpp:570
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "O nível de abm é maior que o máximo (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:648
 #, kde-format
@@ -4381,7 +4381,7 @@ msgstr "O driver rejeitou a configuração de saída"
 msgid "The session is not active"
 msgstr "A sessão não está ativa"
 
-#: window.cpp:3132
+#: window.cpp:3131
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

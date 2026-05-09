@@ -133,13 +133,13 @@ msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr ""
+msgstr "允许的应用"
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "查看允许的应用程序…"
 
 #: ui/main.qml:163
 #, kde-format
@@ -149,6 +149,8 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"安全性一般；声称属于此列表的 XWayland 使用应用程序将能够控制计算机，因为 "
+"XWayland 使用应用程序的身份无法得到验证。"
 
 #: ui/main.qml:169
 #, kde-format
@@ -181,10 +183,10 @@ msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr ""
+msgstr "允许控制指针和键盘的应用程序"
 
 #: ui/main.qml:209
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
+msgstr "不允许 %1 在不询问的情况下控制指针和键盘"

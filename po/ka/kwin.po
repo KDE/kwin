@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-08 00:46+0000\n"
-"PO-Revision-Date: 2026-05-03 04:16+0200\n"
+"POT-Creation-Date: 2026-05-09 00:45+0000\n"
+"PO-Revision-Date: 2026-05-08 05:19+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -4296,7 +4296,7 @@ msgstr "%1-ე სამუშაო მაგიდაზე გადართ
 #: wayland/outputmanagement_v2.cpp:570
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "abm-ის დონე მაქსიმუმზე (4) მეტია: %1"
 
 #: wayland/outputmanagement_v2.cpp:648
 #, kde-format
@@ -4349,7 +4349,7 @@ msgstr "დრაივერმა უარყო გამოტანის 
 msgid "The session is not active"
 msgstr "სესია აქტიური არაა"
 
-#: window.cpp:3132
+#: window.cpp:3131
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

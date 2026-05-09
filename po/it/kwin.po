@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-08 00:46+0000\n"
-"PO-Revision-Date: 2026-04-30 09:30+0200\n"
+"POT-Creation-Date: 2026-05-09 00:45+0000\n"
+"PO-Revision-Date: 2026-05-08 11:22+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -1830,16 +1830,12 @@ msgid "Remote Control"
 msgstr "Controllo remoto"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><application>%1</application> is not responding. Do you want to "
-#| "terminate this application?</para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
 msgstr ""
-"<para><application>%1</application> non risponde. Vuoi terminare questa "
-"applicazione?</para>"
+"<application>%1</application> sta chiedendo di controllare i dispositivi di "
+"immissione"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -4336,7 +4332,7 @@ msgstr "Vai al desktop %1"
 #: wayland/outputmanagement_v2.cpp:570
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "Il livello di abm è maggiore del massimo (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:648
 #, kde-format
@@ -4393,7 +4389,7 @@ msgstr "Il driver ha rifiutato la configurazione di uscita"
 msgid "The session is not active"
 msgstr "La sessione non è attiva"
 
-#: window.cpp:3132
+#: window.cpp:3131
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-08 00:46+0000\n"
-"PO-Revision-Date: 2026-05-03 14:16+0100\n"
+"POT-Creation-Date: 2026-05-09 00:45+0000\n"
+"PO-Revision-Date: 2026-05-08 16:15+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -4327,7 +4327,7 @@ msgstr "Cambiar al escritorio %1"
 #: wayland/outputmanagement_v2.cpp:570
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "El nivel de ABM es mayor que el máximo (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:648
 #, kde-format
@@ -4383,7 +4383,7 @@ msgstr "El controlador ha rechazado la configuración de salida"
 msgid "The session is not active"
 msgstr "La sesión no está activa"
 
-#: window.cpp:3132
+#: window.cpp:3131
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

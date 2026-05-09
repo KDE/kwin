@@ -36,31 +36,31 @@ msgstr "%1 的窗口设置"
 #, kde-format
 msgctxt "@item:inlistbox"
 msgid "Unimportant"
-msgstr ""
+msgstr "不重要"
 
 #: optionsmodel.cpp:200
 #, kde-format
 msgctxt "@item:inlistbox"
 msgid "Exact match"
-msgstr ""
+msgstr "精确匹配"
 
 #: optionsmodel.cpp:201
 #, kde-format
 msgctxt "@item:inlistbox"
 msgid "Substring match"
-msgstr ""
+msgstr "子串匹配"
 
 #: optionsmodel.cpp:202
 #, kde-format
 msgctxt "@item:inlistbox"
 msgid "Regular expression"
-msgstr ""
+msgstr "正则表达式"
 
 #: optionsmodel.cpp:205
 #, kde-format
 msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
-msgstr ""
+msgstr "匹配"
 
 #: optionsmodel.cpp:210
 #, kde-format

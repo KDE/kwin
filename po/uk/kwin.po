@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-08 00:46+0000\n"
-"PO-Revision-Date: 2026-05-03 14:37+0300\n"
+"POT-Creation-Date: 2026-05-09 00:45+0000\n"
+"PO-Revision-Date: 2026-05-08 07:54+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -4319,7 +4319,7 @@ msgstr "Перемкнутися до стільниці %1"
 #: wayland/outputmanagement_v2.cpp:570
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "Рівень abm перевищує максимальний (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:648
 #, kde-format
@@ -4371,7 +4371,7 @@ msgstr "Драйвером відмовлено у налаштовування 
 msgid "The session is not active"
 msgstr "Сеанс не є активним"
 
-#: window.cpp:3132
+#: window.cpp:3131
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
