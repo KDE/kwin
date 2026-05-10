@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-09 00:45+0000\n"
-"PO-Revision-Date: 2026-05-03 23:12+0300\n"
+"PO-Revision-Date: 2026-05-09 07:18+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -4286,7 +4286,7 @@ msgstr "מעבר לשולחן עבודה %1"
 #: wayland/outputmanagement_v2.cpp:570
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "רמת ה־abm (אפנון תאורה אחורית מסתגלת) גדולה מהערך המרבי (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:648
 #, kde-format
