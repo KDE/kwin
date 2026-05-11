@@ -118,6 +118,9 @@ private:
     std::optional<SetupWithOutputs> findSetup(const QList<BackendOutput *> &outputs, bool lidClosed);
     std::optional<SetupWithOutputs> findPartialSetup(const QList<BackendOutput *> &outputs, bool lidClosed);
     std::optional<size_t> findOutputIndex(BackendOutput *output, const QList<BackendOutput *> &allOutputs) const;
+    bool hasGaps(const Setup &setup,
+                 const QList<BackendOutput *> &outputs,
+                 const std::unordered_map<BackendOutput *, size_t> &outputStates) const;
 
     QList<OutputState> m_outputs;
     QList<Setup> m_setups;

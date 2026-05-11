@@ -132,6 +132,7 @@ private Q_SLOTS:
     void testLaptopLidClosed();
     void testGenerateConfigs_data();
     void testGenerateConfigs();
+    void testGeneratePartialConfigs_data();
     void testGeneratePartialConfigs();
     void testAutorotate_data();
     void testAutorotate();
@@ -1598,75 +1599,315 @@ void OutputChangesTest::testGenerateConfigs()
     QCOMPARE(*outputConfig->allowDdcCi, defaultDDCValue);
 }
 
+void OutputChangesTest::testGeneratePartialConfigs_data()
+{
+    QTest::addColumn<QList<VirtualBackend::OutputInfo>>("beforeOutputs");
+    QTest::addColumn<QList<OutputChangeSet>>("beforeChanges");
+
+    QTest::addColumn<QList<VirtualBackend::OutputInfo>>("afterOutputs");
+    QTest::addColumn<QList<QPoint>>("afterPositions");
+    QTest::addColumn<QList<uint32_t>>("afterPriorities");
+
+    const auto edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin"));
+    QTest::addRow("Copy from smaller config")
+        << QList{
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
+               },
+           }
+        << QList{
+               OutputChangeSet{
+                   .pos = QPoint(0, 1080),
+                   .priority = 1,
+               },
+               OutputChangeSet{
+                   .pos = QPoint(500, 0),
+                   .priority = 0,
+               },
+           }
+        << QList{
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+               },
+           }
+        << QList{
+               // the first two should remember the same position as we set before
+               QPoint(0, 1080),
+               QPoint(500, 0),
+               // the last one should have a sane default position
+               QPoint(2420, 0),
+           }
+        << QList<uint32_t>{1, 0, 2};
+
+    QTest::addRow("Don't copy from smaller config with gaps")
+        << QList{
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-3"),
+               },
+           }
+        << QList{
+               OutputChangeSet{
+                   .pos = QPoint(0, 1080),
+                   .priority = 1,
+               },
+               OutputChangeSet{
+                   .pos = QPoint(500, 0),
+                   .priority = 0,
+               },
+               OutputChangeSet{
+                   .pos = QPoint(500 + 1920, 0),
+                   .priority = 0,
+               },
+           }
+        << QList{
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-3"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+               },
+           }
+        << QList{
+               QPoint(0, 0),
+               QPoint(1920, 0),
+               QPoint(1920 * 2, 0),
+           }
+        << QList<uint32_t>{0, 1, 2};
+
+    QTest::addRow("Copy from bigger config")
+        << QList{
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-3"),
+               },
+           }
+        << QList{
+               OutputChangeSet{
+                   .pos = QPoint(0, 1080),
+                   .priority = 1,
+               },
+               OutputChangeSet{
+                   .pos = QPoint(500, 0),
+                   .priority = 0,
+               },
+           }
+        << QList{
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
+               },
+           }
+        << QList{
+               QPoint(0, 1080),
+               QPoint(500, 0),
+           }
+        << QList<uint32_t>{1, 0};
+
+    QTest::addRow("Copy from bigger config 2")
+        << QList{
+               VirtualBackend::OutputInfo{
+                   .size = QSize(3840, 2160),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(800, 400),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(2560, 1440),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-3"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(2560, 1440),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-4"),
+               },
+           }
+        << QList{
+               OutputChangeSet{
+                   .enabled = false,
+                   .pos = QPoint(4000, 0),
+                   .priority = 4,
+               },
+               OutputChangeSet{
+                   .pos = QPoint(2560, 2560),
+                   .priority = 3,
+               },
+               OutputChangeSet{
+                   .pos = QPoint(0, 516),
+                   .priority = 2,
+               },
+               OutputChangeSet{
+                   .pos = QPoint(2560, 0),
+                   .transform = OutputTransform::Kind::Rotate270,
+                   .priority = 1,
+               },
+           }
+        << QList{
+               VirtualBackend::OutputInfo{
+                   .size = QSize(3840, 2160),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(2560, 1440),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-3"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(2560, 1440),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-4"),
+               },
+           }
+        << QList{
+               QPoint(4000, 0),
+               QPoint(0, 516),
+               QPoint(2560, 0),
+           }
+        << QList<uint32_t>{4, 2, 1};
+
+    QTest::addRow("Don't copy from bigger config with gaps")
+        << QList{
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-3"),
+               },
+           }
+        << QList{
+               OutputChangeSet{
+                   .pos = QPoint(0, 0),
+                   .priority = 1,
+               },
+               OutputChangeSet{
+                   .pos = QPoint(1920, 0),
+                   .priority = 0,
+               },
+               OutputChangeSet{
+                   .pos = QPoint(1920 * 2, 0),
+                   .priority = 0,
+               },
+           }
+        << QList{
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
+               },
+               VirtualBackend::OutputInfo{
+                   .size = QSize(1920, 1080),
+                   .edid = edid,
+                   .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-3"),
+               },
+           }
+        << QList{
+               QPoint(0, 0),
+               QPoint(1920, 0),
+           }
+        << QList<uint32_t>{0, 1};
+}
+
 void OutputChangesTest::testGeneratePartialConfigs()
 {
     // This test verifies that adding an output to an existing configuration
     // keeps some properties of that configuration (position, priority)
     // instead of generating a completely new one
 
+    QFETCH(QList<VirtualBackend::OutputInfo>, beforeOutputs);
+    QFETCH(QList<OutputChangeSet>, beforeChanges);
+    QFETCH(QList<VirtualBackend::OutputInfo>, afterOutputs);
+    QFETCH(QList<QPoint>, afterPositions);
+    QFETCH(QList<uint32_t>, afterPriorities);
+
     // TODO change test API so it's possible to add outputs without also configuring them
     const auto outputBackend = qobject_cast<VirtualBackend *>(kwinApp()->outputBackend());
-    outputBackend->setVirtualOutputs({
-        VirtualBackend::OutputInfo{
-            .size = QSize(1920, 1080),
-            .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
-            .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
-        },
-        VirtualBackend::OutputInfo{
-            .size = QSize(1920, 1080),
-            .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
-            .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
-        },
-    });
+    outputBackend->setVirtualOutputs(beforeOutputs);
     auto outputs = kwinApp()->outputBackend()->outputs();
-
-    // workspace should have the outputs configured to be next to each other,
-    // with default priority in the order of the outputs
-    QCOMPARE(outputs[0]->position(), QPoint(0, 0));
-    QCOMPARE(outputs[0]->priority(), 0);
-    QCOMPARE(outputs[1]->position(), QPoint(1920, 0));
-    QCOMPARE(outputs[1]->priority(), 1);
 
     {
         // change the priority values and positions
         OutputConfiguration config;
-        *config.changeSet(outputs[0]) = OutputChangeSet{
-            .pos = QPoint(0, 1080),
-            .priority = 1,
-        };
-        *config.changeSet(outputs[1]) = OutputChangeSet{
-            .pos = QPoint(500, 0),
-            .priority = 0,
-        };
+        for (int i = 0; i < beforeChanges.size(); i++) {
+            *config.changeSet(outputs[i]) = beforeChanges[i];
+        }
         QCOMPARE(workspace()->applyOutputConfiguration(config), OutputConfigurationError::None);
     }
 
-    // now add another output
-    outputBackend->setVirtualOutputs({
-        VirtualBackend::OutputInfo{
-            .size = QSize(1920, 1080),
-            .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
-            .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-1"),
-        },
-        VirtualBackend::OutputInfo{
-            .size = QSize(1920, 1080),
-            .edid = readEdid(QFINDTESTDATA("data/Odyssey G5.bin")),
-            .edidIdentifierOverride = QByteArrayLiteral("GeneratePartialConfigs-2"),
-        },
-        VirtualBackend::OutputInfo{
-            .size = QSize(1920, 1080),
-        },
-    });
+    // now change the set of outputs
+    outputBackend->setVirtualOutputs(afterOutputs);
     outputs = kwinApp()->outputBackend()->outputs();
 
-    // position and priority should still be what we applied before
-    QCOMPARE(outputs[0]->position(), QPoint(0, 1080));
-    QCOMPARE(outputs[0]->priority(), 1);
-    QCOMPARE(outputs[1]->position(), QPoint(500, 0));
-    QCOMPARE(outputs[1]->priority(), 0);
-    // the new output should also have sane default values
-    QCOMPARE(outputs[2]->position(), QPoint(2420, 0));
-    QCOMPARE(outputs[2]->priority(), 2);
+    for (int i = 0; i < afterPositions.size(); i++) {
+        QCOMPARE(outputs[i]->position(), afterPositions[i]);
+        QCOMPARE(outputs[i]->priority(), afterPriorities[i]);
+    }
 }
 
 void OutputChangesTest::testAutorotate_data()

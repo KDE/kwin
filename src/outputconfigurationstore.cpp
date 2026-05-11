@@ -536,6 +536,56 @@ std::optional<OutputConfiguration> OutputConfigurationStore::generateLidClosedCo
     return config;
 }
 
+bool OutputConfigurationStore::hasGaps(const Setup &setup,
+                                       const QList<BackendOutput *> &outputs,
+                                       const std::unordered_map<BackendOutput *, size_t> &outputStates) const
+{
+    QList<RectF> rects;
+    for (BackendOutput *output : outputs) {
+        QSize modeSize;
+        std::optional<double> scale;
+        auto it = outputStates.find(output);
+        if (it == outputStates.end()) {
+            continue;
+        }
+        const auto &config = m_outputs[it->second];
+        if (!config.mode || !config.scaleSetting) {
+            continue;
+        }
+        const auto setupIt = std::ranges::find_if(setup.outputs, [&it](const SetupState &state) {
+            return state.outputIndex == it->second;
+        });
+        if (setupIt == setup.outputs.end()) {
+            continue;
+        }
+        if (config.mode) {
+            modeSize = config.mode->size();
+        } else {
+            modeSize = chooseMode(output)->size();
+        }
+        if (config.scaleSetting) {
+            scale = config.scaleSetting;
+        } else {
+            scale = chooseScale(output, modeSize);
+        }
+        rects.push_back(RectF(setupIt->position, QSizeF(modeSize) / *scale));
+    }
+    const auto distance = [](const RectF &one, const RectF &two) {
+        const QPointF positionDiff = one.topLeft() - two.topLeft();
+        return std::max(std::abs(positionDiff.x()) - (one.width() + two.width()) / 2,
+                        std::abs(positionDiff.y()) - (one.height() + two.height() / 2));
+    };
+    for (auto it = rects.begin(); it != rects.end() - 1; it++) {
+        const bool ret = std::none_of(it + 1, rects.end(), [&](const RectF &other) {
+            return distance(*it, other) < 2;
+        });
+        if (ret) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::optional<OutputConfigurationStore::SetupWithOutputs> OutputConfigurationStore::findPartialSetup(const QList<BackendOutput *> &outputs, bool lidClosed)
 {
     std::unordered_map<BackendOutput *, size_t> outputStates;
@@ -544,25 +594,45 @@ std::optional<OutputConfigurationStore::SetupWithOutputs> OutputConfigurationSto
             outputStates[output] = *index;
         }
     }
-    const auto matchCount = [lidClosed, &outputStates](const Setup &setup) -> size_t {
+
+    // if setups exist that have all the connected outputs in it,
+    // choose the closest one of those
+    const auto relevantCount = [lidClosed, &outputStates](const Setup &setup) -> ssize_t {
         if (setup.lidClosed != lidClosed) {
             return 0;
         }
-        // Skip the setup if it contains outputs that aren't currently connected
-        const bool otherOutputs = std::ranges::any_of(setup.outputs, [&](const SetupState &state) {
-            return std::ranges::none_of(outputStates, [&state](const auto &outputIt) {
-                return outputIt.second == state.outputIndex;
-            });
-        });
-        if (otherOutputs) {
-            return 0;
-        }
-        // now just count how many outputs are relevant
         return std::ranges::count_if(outputStates, [&setup](const auto &outputIt) {
             return std::ranges::any_of(setup.outputs, [&outputIt](const auto &outputInfo) {
                 return outputInfo.outputIndex == outputIt.second;
             });
         });
+    };
+    const auto otherOutputCount = [&outputStates](const Setup &setup) {
+        return std::ranges::count_if(setup.outputs, [&](const SetupState &state) {
+            return std::ranges::none_of(outputStates, [&state](const auto &outputIt) {
+                return outputIt.second == state.outputIndex;
+            });
+        });
+    };
+    auto completeSetups = m_setups | std::views::filter([&relevantCount, &outputs](const Setup &setup) {
+        return relevantCount(setup) == outputs.size();
+    });
+    const auto bestCompleteSetup = std::ranges::min_element(completeSetups, [&](const auto &left, const auto &right) {
+        return otherOutputCount(left) < otherOutputCount(right);
+    });
+    if (bestCompleteSetup != completeSetups.end() && !hasGaps(*bestCompleteSetup, outputs, outputStates)) {
+        return SetupWithOutputs{
+            .setup = &*bestCompleteSetup,
+            .globalOutputIndices = outputStates,
+        };
+    }
+
+    // fall back to a setup with a subset of the outputs, and none that aren't currently connected
+    const auto matchCount = [&relevantCount, &otherOutputCount](const Setup &setup) -> ssize_t {
+        if (otherOutputCount(setup) > 0) {
+            return 0;
+        }
+        return relevantCount(setup);
     };
     const auto bestSetup = std::ranges::max_element(m_setups, [&](const auto &left, const auto &right) {
         return matchCount(left) < matchCount(right);
