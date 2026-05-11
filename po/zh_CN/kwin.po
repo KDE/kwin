@@ -4259,7 +4259,7 @@ msgstr "切换到桌面 %1"
 #: wayland/outputmanagement_v2.cpp:570
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "ABM 级别大于最大值 (4)：%1"
 
 #: wayland/outputmanagement_v2.cpp:648
 #, kde-format
