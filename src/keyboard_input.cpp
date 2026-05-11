@@ -331,9 +331,18 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
         m_filteredKeys.removeOne(key);
     }
 
-    m_xkb->forwardModifiers();
+    bool forwardModifiers = true;
+
     if (auto *inputmethod = kwinApp()->inputMethod()) {
         inputmethod->forwardModifiers(InputMethod::NoForce);
+        if (inputmethod->keyboardGrab()) {
+            // when an input grab is established, we will forward the modifier explicitly as part of the grab
+            forwardModifiers = false;
+        }
+    }
+
+    if (forwardModifiers) {
+        m_xkb->forwardModifiers();
     }
 
     if (event.modifiersRelevantForGlobalShortcuts == Qt::KeyboardModifier::NoModifier && state != KeyboardKeyState::Released) {

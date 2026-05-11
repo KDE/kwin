@@ -736,6 +736,8 @@ void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods
 {
     auto xkb = input()->keyboard()->xkb();
     xkb->updateModifiers(mods_depressed, mods_latched, mods_locked, group);
+    // explicitly forward as previous updates may have been filtered
+    xkb->forwardModifiers();
 }
 
 void InputMethod::forwardModifiers(ForwardModifiersForce force)
