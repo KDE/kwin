@@ -497,7 +497,7 @@ void ScriptedEffectsTest::testGrab()
     // the test effect should grab the test window successfully
     QCOMPARE(effectOutputSpy.count(), 1);
     QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
-    QCOMPARE(window->effectWindow()->data(WindowAddedGrabRole).value<void *>(), effect);
+    QCOMPARE(window->effectWindow()->data(WindowAddedGrabRole).value<QObject *>(), effect);
 }
 
 void ScriptedEffectsTest::testGrabAlreadyGrabbedWindow()
@@ -527,7 +527,7 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindow()
     // effect that initially held the grab should still hold the grab
     QCOMPARE(ownerOutputSpy.count(), 1);
     QCOMPARE(ownerOutputSpy.first().first(), QStringLiteral("ok"));
-    QCOMPARE(window->effectWindow()->data(WindowAddedGrabRole).value<void *>(), owner);
+    QCOMPARE(window->effectWindow()->data(WindowAddedGrabRole).value<QObject *>(), owner);
 
     // effect that tried to grab already grabbed window should fail miserably
     QCOMPARE(grabberOutputSpy.count(), 1);
@@ -565,7 +565,7 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindowForced()
     // effect that grabbed the test window forcefully should now hold the grab
     QCOMPARE(thiefOutputSpy.count(), 1);
     QCOMPARE(thiefOutputSpy.first().first(), QStringLiteral("ok"));
-    QCOMPARE(window->effectWindow()->data(WindowAddedGrabRole).value<void *>(), thief);
+    QCOMPARE(window->effectWindow()->data(WindowAddedGrabRole).value<QObject *>(), thief);
 }
 
 void ScriptedEffectsTest::testUngrab()
@@ -590,7 +590,7 @@ void ScriptedEffectsTest::testUngrab()
     // the test effect should grab the test window successfully
     QCOMPARE(effectOutputSpy.count(), 1);
     QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
-    QCOMPARE(window->effectWindow()->data(WindowAddedGrabRole).value<void *>(), effect);
+    QCOMPARE(window->effectWindow()->data(WindowAddedGrabRole).value<QObject *>(), effect);
 
     // when the test effect sees that a window was minimized, it will try to ungrab it
     effectOutputSpy.clear();
@@ -598,7 +598,7 @@ void ScriptedEffectsTest::testUngrab()
 
     QCOMPARE(effectOutputSpy.count(), 1);
     QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
-    QCOMPARE(window->effectWindow()->data(WindowAddedGrabRole).value<void *>(), nullptr);
+    QCOMPARE(window->effectWindow()->data(WindowAddedGrabRole).value<QObject *>(), nullptr);
 }
 
 void ScriptedEffectsTest::testRedirect_data()

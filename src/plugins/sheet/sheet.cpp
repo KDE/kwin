@@ -157,7 +157,7 @@ void SheetEffect::slotWindowAdded(EffectWindow *w)
         animation.parentY = parent->y();
     }
 
-    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
+    w->setData(WindowAddedGrabRole, QVariant::fromValue(this));
 
     redirect(w);
     w->addRepaintFull();
@@ -185,7 +185,7 @@ void SheetEffect::slotWindowClosed(EffectWindow *w)
         animation.parentY = parent->y();
     }
 
-    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
+    w->setData(WindowClosedGrabRole, QVariant::fromValue(this));
 
     redirect(w);
     w->addRepaintFull();

@@ -454,7 +454,7 @@ void SlidingNotificationsEffect::onWindowAdded(EffectWindow *window)
         return;
     }
 
-    window->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
+    window->setData(WindowAddedGrabRole, QVariant::fromValue(this));
 
     auto &animation = m_animations[window];
     if (!animation) {
@@ -475,7 +475,7 @@ void SlidingNotificationsEffect::onWindowClosed(EffectWindow *window)
         return;
     }
 
-    window->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
+    window->setData(WindowClosedGrabRole, QVariant::fromValue(this));
 
     auto &animation = m_animations[window];
     if (!animation) {

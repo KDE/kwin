@@ -177,11 +177,11 @@ void FallApartEffect::slotWindowClosed(EffectWindow *c)
     if (!c->isVisible()) {
         return;
     }
-    const void *e = c->data(WindowClosedGrabRole).value<void *>();
+    const auto e = c->data(WindowClosedGrabRole).value<QObject *>();
     if (e && e != this) {
         return;
     }
-    c->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
+    c->setData(WindowClosedGrabRole, QVariant::fromValue(this));
 
     FallApartAnimation &animation = windows[c];
     animation.progress = 0;

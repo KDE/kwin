@@ -197,7 +197,7 @@ void GlideEffect::windowAdded(EffectWindow *w)
         return;
     }
 
-    const void *addGrab = w->data(WindowAddedGrabRole).value<void *>();
+    const auto addGrab = w->data(WindowAddedGrabRole).value<QObject *>();
     if (addGrab) {
         return;
     }
@@ -215,7 +215,7 @@ void GlideEffect::windowAdded(EffectWindow *w)
 
 void GlideEffect::windowClosed(EffectWindow *w)
 {
-    const void *closeGrab = w->data(WindowClosedGrabRole).value<void *>();
+    const auto closeGrab = w->data(WindowClosedGrabRole).value<QObject *>();
     if (closeGrab) {
         return;
     }

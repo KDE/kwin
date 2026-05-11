@@ -585,7 +585,7 @@ bool ScriptedEffect::cancel(const QList<quint64> &animationIds)
 
 bool ScriptedEffect::isGrabbed(EffectWindow *w, ScriptedEffect::DataRole grabRole)
 {
-    void *e = w->data(static_cast<KWin::DataRole>(grabRole)).value<void *>();
+    const auto e = w->data(static_cast<KWin::DataRole>(grabRole)).value<QObject *>();
     if (e) {
         return e != this;
     } else {
@@ -595,7 +595,7 @@ bool ScriptedEffect::isGrabbed(EffectWindow *w, ScriptedEffect::DataRole grabRol
 
 bool ScriptedEffect::grab(EffectWindow *w, DataRole grabRole, bool force)
 {
-    void *grabber = w->data(grabRole).value<void *>();
+    const auto grabber = w->data(grabRole).value<QObject *>();
 
     if (grabber == this) {
         return true;
@@ -605,15 +605,14 @@ bool ScriptedEffect::grab(EffectWindow *w, DataRole grabRole, bool force)
         return false;
     }
 
-    w->setData(grabRole, QVariant::fromValue(static_cast<void *>(this)));
+    w->setData(grabRole, QVariant::fromValue(this));
 
     return true;
 }
 
 bool ScriptedEffect::ungrab(EffectWindow *w, DataRole grabRole)
 {
-    void *grabber = w->data(grabRole).value<void *>();
-
+    const auto grabber = w->data(grabRole).value<QObject *>();
     if (grabber == nullptr) {
         return true;
     }

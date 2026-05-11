@@ -288,7 +288,7 @@ void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
         : m_slideOutDuration;
 
     // Grab the window, so other windowClosed effects will ignore it
-    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
+    w->setData(WindowClosedGrabRole, QVariant::fromValue(this));
 }
 
 void SlidingPopupsEffect::slotWaylandSlideOnShowChanged(EffectWindow *w)
@@ -457,7 +457,7 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
         animation.timeLine.reset();
     }
 
-    w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
+    w->setData(WindowAddedGrabRole, QVariant::fromValue(this));
     w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     w->setData(WindowForceBlurRole, QVariant(true));
 
@@ -496,7 +496,7 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
         animation.timeLine.reset();
     }
 
-    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
+    w->setData(WindowClosedGrabRole, QVariant::fromValue(this));
     w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     w->setData(WindowForceBlurRole, QVariant(true));
 
