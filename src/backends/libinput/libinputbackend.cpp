@@ -7,6 +7,8 @@
 #include "libinputbackend.h"
 #include "connection.h"
 #include "device.h"
+#include "input.h"
+#include "keyboard_input.h"
 
 namespace KWin
 {
@@ -24,8 +26,12 @@ LibinputBackend::LibinputBackend(Session *session, QObject *parent)
         m_connection->processEvents();
     }, Qt::QueuedConnection);
 
-    connect(m_connection, &LibInput::Connection::deviceAdded,
-            this, &InputBackend::deviceAdded);
+    connect(m_connection, &LibInput::Connection::deviceAdded, this, [this](LibInput::Device *device) {
+        if (device->isKeyboard() && !device->keyboard()) {
+            device->setKeyboard(std::make_unique<KeyboardInputRedirection>(input()));
+        }
+        Q_EMIT deviceAdded(device);
+    });
     connect(m_connection, &LibInput::Connection::deviceRemoved,
             this, &InputBackend::deviceRemoved);
 }

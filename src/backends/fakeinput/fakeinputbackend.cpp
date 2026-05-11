@@ -6,6 +6,7 @@
 
 #include "fakeinputbackend.h"
 #include "fakeinputdevice.h"
+#include "input.h"
 #include "keyboard_input.h"
 #include "wayland/display.h"
 #include "xkb.h"
@@ -73,6 +74,7 @@ FakeInputBackendPrivate::FakeInputBackendPrivate(FakeInputBackend *q, Display *d
 void FakeInputBackendPrivate::org_kde_kwin_fake_input_bind_resource(Resource *resource)
 {
     auto device = new FakeInputDevice(q);
+    device->setKeyboard(std::make_unique<KeyboardInputRedirection>(input()));
     devices[resource] = std::unique_ptr<FakeInputDevice>(device);
     Q_EMIT q->deviceAdded(device);
 }

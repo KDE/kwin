@@ -19,10 +19,9 @@ namespace KWin
 namespace KeyboardLayoutSwitching
 {
 
-Policy::Policy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config)
+Policy::Policy(KeyboardLayout *layout, const KConfigGroup &config)
     : QObject(layout)
     , m_config(config)
-    , m_xkb(xkb)
     , m_layout(layout)
 {
     connect(m_layout, &KeyboardLayout::layoutsReconfigured, this, &Policy::clearCache);
@@ -33,26 +32,35 @@ Policy::~Policy() = default;
 
 void Policy::setLayout(uint index)
 {
-    const uint previousLayout = m_xkb->currentLayout();
-    m_xkb->switchToLayout(index);
-    const uint currentLayout = m_xkb->currentLayout();
+    Xkb *currentXkb = xkb();
+    if (!currentXkb) {
+        return;
+    }
+    const uint previousLayout = currentXkb->currentLayout();
+    currentXkb->switchToLayout(index);
+    const uint currentLayout = currentXkb->currentLayout();
     if (previousLayout != currentLayout) {
         Q_EMIT m_layout->layoutChanged(currentLayout);
     }
 }
 
-std::unique_ptr<Policy> Policy::create(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config, const QString &policy)
+Xkb *Policy::xkb() const
+{
+    return m_layout->xkb();
+}
+
+std::unique_ptr<Policy> Policy::create(KeyboardLayout *layout, const KConfigGroup &config, const QString &policy)
 {
     if (policy.toLower() == QLatin1StringView("desktop")) {
-        return std::make_unique<VirtualDesktopPolicy>(xkb, layout, config);
+        return std::make_unique<VirtualDesktopPolicy>(layout, config);
     }
     if (policy.toLower() == QLatin1StringView("window")) {
-        return std::make_unique<WindowPolicy>(xkb, layout);
+        return std::make_unique<WindowPolicy>(layout);
     }
     if (policy.toLower() == QLatin1StringView("winclass")) {
-        return std::make_unique<ApplicationPolicy>(xkb, layout, config);
+        return std::make_unique<ApplicationPolicy>(layout, config);
     }
-    return std::make_unique<GlobalPolicy>(xkb, layout, config);
+    return std::make_unique<GlobalPolicy>(layout, config);
 }
 
 const char Policy::defaultLayoutEntryKeyPrefix[] = "LayoutDefault";
@@ -74,18 +82,19 @@ const QString GlobalPolicy::defaultLayoutEntryKey() const
     return QLatin1StringView(defaultLayoutEntryKeyPrefix) % name();
 }
 
-GlobalPolicy::GlobalPolicy(Xkb *xkb, KeyboardLayout *_layout, const KConfigGroup &config)
-    : Policy(xkb, _layout, config)
+GlobalPolicy::GlobalPolicy(KeyboardLayout *_layout, const KConfigGroup &config)
+    : Policy(_layout, config)
 {
-    connect(workspace()->sessionManager(), &SessionManager::prepareSessionSaveRequested, this, [this, xkb](const QString &name) {
+    connect(workspace()->sessionManager(), &SessionManager::prepareSessionSaveRequested, this, [this](const QString &name) {
         clearLayouts();
-        if (const uint layout = xkb->currentLayout()) {
+        if (Xkb *currentXkb = xkb(); currentXkb && currentXkb->currentLayout()) {
+            const uint layout = currentXkb->currentLayout();
             m_config.writeEntry(defaultLayoutEntryKey(), layout);
         }
     });
 
-    connect(workspace()->sessionManager(), &SessionManager::loadSessionRequested, this, [this, xkb](const QString &name) {
-        if (xkb->numberOfLayouts() > 1) {
+    connect(workspace()->sessionManager(), &SessionManager::loadSessionRequested, this, [this](const QString &name) {
+        if (Xkb *currentXkb = xkb(); currentXkb && currentXkb->numberOfLayouts() > 1) {
             setLayout(m_config.readEntry(defaultLayoutEntryKey(), 0));
         }
     });
@@ -93,8 +102,8 @@ GlobalPolicy::GlobalPolicy(Xkb *xkb, KeyboardLayout *_layout, const KConfigGroup
 
 GlobalPolicy::~GlobalPolicy() = default;
 
-VirtualDesktopPolicy::VirtualDesktopPolicy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config)
-    : Policy(xkb, layout, config)
+VirtualDesktopPolicy::VirtualDesktopPolicy(KeyboardLayout *layout, const KConfigGroup &config)
+    : Policy(layout, config)
 {
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged,
             this, &VirtualDesktopPolicy::desktopChanged);
@@ -110,8 +119,8 @@ VirtualDesktopPolicy::VirtualDesktopPolicy(Xkb *xkb, KeyboardLayout *layout, con
         }
     });
 
-    connect(workspace()->sessionManager(), &SessionManager::loadSessionRequested, this, [this, xkb](const QString &name) {
-        if (xkb->numberOfLayouts() > 1) {
+    connect(workspace()->sessionManager(), &SessionManager::loadSessionRequested, this, [this](const QString &name) {
+        if (Xkb *currentXkb = xkb(); currentXkb && currentXkb->numberOfLayouts() > 1) {
             const auto &desktops = VirtualDesktopManager::self()->desktops();
             for (KWin::VirtualDesktop *const desktop : desktops) {
                 const uint layout = m_config.readEntry(defaultLayoutEntryKey() % desktop->id(), 0u);
@@ -179,8 +188,8 @@ void VirtualDesktopPolicy::layoutChanged(uint index)
     }
 }
 
-WindowPolicy::WindowPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layout)
-    : Policy(xkb, layout)
+WindowPolicy::WindowPolicy(KWin::KeyboardLayout *layout)
+    : Policy(layout)
 {
     connect(workspace(), &Workspace::windowActivated, this, [this](Window *window) {
         if (!window) {
@@ -228,8 +237,8 @@ void WindowPolicy::layoutChanged(uint index)
     }
 }
 
-ApplicationPolicy::ApplicationPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layout, const KConfigGroup &config)
-    : Policy(xkb, layout, config)
+ApplicationPolicy::ApplicationPolicy(KWin::KeyboardLayout *layout, const KConfigGroup &config)
+    : Policy(layout, config)
 {
     connect(workspace(), &Workspace::windowActivated, this, &ApplicationPolicy::windowActivated);
 
@@ -246,8 +255,8 @@ ApplicationPolicy::ApplicationPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layou
         }
     });
 
-    connect(workspace()->sessionManager(), &SessionManager::loadSessionRequested, this, [this, xkb](const QString &name) {
-        if (xkb->numberOfLayouts() > 1) {
+    connect(workspace()->sessionManager(), &SessionManager::loadSessionRequested, this, [this](const QString &name) {
+        if (Xkb *currentXkb = xkb(); currentXkb && currentXkb->numberOfLayouts() > 1) {
             const QString keyPrefix = defaultLayoutEntryKey();
             const QStringList keyList = m_config.keyList().filter(keyPrefix);
             for (const QString &key : keyList) {
@@ -287,7 +296,8 @@ void ApplicationPolicy::windowActivated(Window *window)
         }
     }
     setLayout(m_layoutsRestored.take(window->desktopFileName()));
-    if (const uint index = m_xkb->currentLayout()) {
+    if (Xkb *currentXkb = xkb(); currentXkb && currentXkb->currentLayout()) {
+        const uint index = currentXkb->currentLayout();
         layoutChanged(index);
     }
 }

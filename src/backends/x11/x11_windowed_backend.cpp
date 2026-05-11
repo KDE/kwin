@@ -13,6 +13,8 @@
 
 #include "core/gpumanager.h"
 #include "core/renderdevice.h"
+#include "input.h"
+#include "keyboard_input.h"
 #include "pointer_input.h"
 #include "utils/xcbutils.h"
 #include "x11_windowed_egl_backend.h"
@@ -227,6 +229,7 @@ bool X11WindowedBackend::initialize()
     m_pointerDevice->setPointer(true);
     m_keyboardDevice = std::make_unique<X11WindowedInputDevice>();
     m_keyboardDevice->setKeyboard(true);
+    m_keyboardDevice->InputDevice::setKeyboard(std::make_unique<KeyboardInputRedirection>(input()));
     if (m_hasXInput) {
         m_touchDevice = std::make_unique<X11WindowedInputDevice>();
         m_touchDevice->setTouch(true);

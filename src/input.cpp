@@ -23,6 +23,7 @@
 #include "input_event_spy.h"
 #include "inputmethod.h"
 #include "keyboard_input.h"
+#include "keyboard_layout.h"
 #include "main.h"
 #include "mousebuttons.h"
 #include "pointer_input.h"
@@ -287,6 +288,39 @@ public:
         }
         return false;
     }
+};
+
+class KeyStateChangedSpy : public InputEventSpy
+{
+public:
+    void keyboardKey(KeyboardKeyEvent *event) override
+    {
+        if (event->state == KeyboardKeyState::Repeated) {
+            return;
+        }
+        Q_EMIT input()->keyStateChanged(event->nativeScanCode, event->state);
+    }
+};
+
+class ModifiersChangedSpy : public InputEventSpy
+{
+public:
+    void keyboardKey(KeyboardKeyEvent *event) override
+    {
+        if (event->state == KeyboardKeyState::Repeated) {
+            return;
+        }
+
+        const Qt::KeyboardModifiers modifiers = event->modifiers;
+        if (modifiers == m_modifiers) {
+            return;
+        }
+        Q_EMIT input()->keyboardModifiersChanged(modifiers, m_modifiers);
+        m_modifiers = modifiers;
+    }
+
+private:
+    Qt::KeyboardModifiers m_modifiers;
 };
 
 #if KWIN_BUILD_SCREENLOCKER
@@ -2924,7 +2958,6 @@ KWIN_SINGLETON_FACTORY(InputRedirection)
 
 InputRedirection::InputRedirection(QObject *parent)
     : QObject(parent)
-    , m_keyboard(new KeyboardInputRedirection(this))
     , m_pointer(new PointerInputRedirection(this))
     , m_tablet(new TabletInputRedirection(this))
     , m_touch(new TouchInputRedirection(this))
@@ -2986,13 +3019,20 @@ void InputRedirection::setupWorkspace()
 {
     connect(workspace(), &Workspace::outputsChanged, this, &InputRedirection::updateScreens);
 
-    m_keyboard->init();
+    installInputEventSpy(new KeyStateChangedSpy);
+    installInputEventSpy(new ModifiersChangedSpy);
+    for (KeyboardInputRedirection *keyboard : keyboards()) {
+        keyboard->init();
+    }
+    m_keyboardLayout = new KeyboardLayout(this, kwinApp()->kxkbConfig());
+    m_keyboardLayout->init();
     m_pointer->init();
     m_touch->init();
     m_tablet->init();
 
-    updateLeds(m_keyboard->xkb()->leds());
-    connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, this, &InputRedirection::updateLeds);
+    if (KeyboardInputRedirection *keyboard = this->keyboard()) {
+        updateLeds(keyboard->xkb()->leds());
+    }
 
     setupInputFilters();
     updateScreens();
@@ -3024,6 +3064,41 @@ uint32_t InputRedirection::lastInteractionSerial() const
 void InputRedirection::setLastInputHandler(QObject *device)
 {
     m_lastInputDevice = device;
+}
+
+KeyboardInputRedirection *InputRedirection::keyboard() const
+{
+    if (m_lastKeyboardInputDevice && m_lastKeyboardInputDevice->keyboard()) {
+        return m_lastKeyboardInputDevice->keyboard();
+    }
+
+    for (InputDevice *device : m_inputDevices) {
+        if (device->keyboard()) {
+            return device->keyboard();
+        }
+    }
+
+    return nullptr;
+}
+
+void InputRedirection::setLastKeyboardInputDevice(InputDevice *device, std::chrono::microseconds time)
+{
+    if (!device || !device->keyboard() || device == m_lastKeyboardInputDevice) {
+        return;
+    }
+
+    KeyboardInputRedirection *oldKeyboard = keyboard();
+    m_lastKeyboardInputDevice = device;
+
+    KeyboardInputRedirection *newKeyboard = keyboard();
+    syncActiveKeyboardState(oldKeyboard, newKeyboard);
+    if (!newKeyboard) {
+        return;
+    }
+
+    waylandServer()->seat()->setTimestamp(time);
+    newKeyboard->xkb()->forwardModifiers();
+    updateLeds(newKeyboard->xkb()->leds());
 }
 
 class UserActivitySpy : public InputEventSpy
@@ -3217,7 +3292,9 @@ void InputRedirection::setupInputFilters()
 void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)
 {
     if (group.name() == QLatin1StringView("Keyboard")) {
-        m_keyboard->reconfigure();
+        for (KeyboardInputRedirection *keyboard : keyboards()) {
+            keyboard->reconfigure();
+        }
     } else if (group.name() == QLatin1String("Tablet")) {
         const KConfigGroup tabletGroup(kwinApp()->inputConfig(), QStringLiteral("Tablet"));
         m_syncTabletWithMouse = tabletGroup.readEntry(QStringLiteral("SyncWithMouse"), false);
@@ -3237,7 +3314,17 @@ void InputRedirection::updateLeds(LEDs leds)
 
 void InputRedirection::addInputDevice(InputDevice *device)
 {
-    connect(device, &InputDevice::keyChanged, m_keyboard, &KeyboardInputRedirection::processKey);
+    if (device->keyboard()) {
+        connect(device->keyboard(), &KeyboardInputRedirection::ledsChanged, this, [this, device](LEDs leds) {
+            if (keyboard() == device->keyboard()) {
+                updateLeds(leds);
+            }
+        });
+        if (workspace()) {
+            device->keyboard()->init();
+        }
+        connect(device, &InputDevice::keyChanged, device->keyboard(), &KeyboardInputRedirection::processKey);
+    }
 
     connect(device, &InputDevice::pointerMotionAbsolute,
             m_pointer, &PointerInputRedirection::processMotionAbsolute);
@@ -3312,15 +3399,65 @@ void InputRedirection::addInputDevice(InputDevice *device)
     m_inputDevices.append(device);
     Q_EMIT deviceAdded(device);
 
+    if (!m_lastKeyboardInputDevice && device->keyboard()) {
+        m_lastKeyboardInputDevice = device;
+        if (workspace()) {
+            updateLeds(device->keyboard()->xkb()->leds());
+        }
+    }
+
     updateAvailableInputDevices();
 }
 
 void InputRedirection::removeInputDevice(InputDevice *device)
 {
+    if (m_lastKeyboardInputDevice == device) {
+        m_lastKeyboardInputDevice.clear();
+    }
     m_inputDevices.removeOne(device);
     Q_EMIT deviceRemoved(device);
 
+    if (workspace()) {
+        if (KeyboardInputRedirection *activeKeyboard = keyboard()) {
+            updateLeds(activeKeyboard->xkb()->leds());
+        }
+    }
+
     updateAvailableInputDevices();
+}
+
+QList<KeyboardInputRedirection *> InputRedirection::keyboards() const
+{
+    QList<KeyboardInputRedirection *> result;
+    for (InputDevice *device : m_inputDevices) {
+        if (device->keyboard()) {
+            result.append(device->keyboard());
+        }
+    }
+    return result;
+}
+
+void InputRedirection::syncActiveKeyboardState(KeyboardInputRedirection *oldKeyboard, KeyboardInputRedirection *newKeyboard)
+{
+    if (!newKeyboard || !waylandServer()->seat()->keyboard()) {
+        return;
+    }
+
+    const QList<uint32_t> oldKeys = oldKeyboard ? oldKeyboard->unfilteredKeys() : QList<uint32_t>{};
+    const QList<uint32_t> newKeys = newKeyboard->unfilteredKeys();
+    auto seat = waylandServer()->seat();
+    const uint32_t serial = waylandServer()->display()->nextSerial();
+
+    for (uint32_t key : oldKeys) {
+        if (!newKeys.contains(key)) {
+            seat->notifyKeyboardKey(key, KeyboardKeyState::Released, serial);
+        }
+    }
+    for (uint32_t key : newKeys) {
+        if (!oldKeys.contains(key)) {
+            seat->notifyKeyboardKey(key, KeyboardKeyState::Pressed, serial);
+        }
+    }
 }
 
 void InputRedirection::updateAvailableInputDevices()
@@ -3491,12 +3628,12 @@ Window *InputRedirection::findToplevel(const QPointF &pos)
 
 Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const
 {
-    return m_keyboard->modifiers();
+    return keyboard() ? keyboard()->modifiers() : Qt::NoModifier;
 }
 
 Qt::KeyboardModifiers InputRedirection::modifiersRelevantForGlobalShortcuts() const
 {
-    return m_keyboard->modifiersRelevantForGlobalShortcuts();
+    return keyboard() ? keyboard()->modifiersRelevantForGlobalShortcuts() : Qt::NoModifier;
 }
 
 void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action)

@@ -6,6 +6,8 @@
 
 #include "inputdevice.h"
 
+#include "keyboard_input.h"
+
 namespace KWin
 {
 
@@ -18,6 +20,8 @@ InputDevice::InputDevice(QObject *parent)
     : QObject(parent)
 {
 }
+
+InputDevice::~InputDevice() = default;
 
 QString InputDevice::sysPath() const
 {
@@ -90,6 +94,16 @@ QList<InputDeviceTabletPadModeGroup> InputDevice::modeGroups() const
 bool InputDevice::tabletToolIsRelative() const
 {
     return false;
+}
+
+KeyboardInputRedirection *InputDevice::keyboard() const
+{
+    return m_keyboard.get();
+}
+
+void InputDevice::setKeyboard(std::unique_ptr<KeyboardInputRedirection> &&keyboard)
+{
+    m_keyboard = std::move(keyboard);
 }
 
 } // namespace KWin

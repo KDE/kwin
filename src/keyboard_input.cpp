@@ -40,9 +40,9 @@
 namespace KWin
 {
 
-KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
-    : QObject(parent)
-    , m_input(parent)
+KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *input, QObject *parent)
+    : QObject(parent ? parent : input)
+    , m_input(input)
     , m_xkb(new Xkb(kwinApp()->followLocale1()))
 {
     connect(m_xkb.get(), &Xkb::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
@@ -68,7 +68,7 @@ Qt::KeyboardModifiers KeyboardInputRedirection::modifiersRelevantForGlobalShortc
 
 KeyboardLayout *KeyboardInputRedirection::keyboardLayout() const
 {
-    return m_keyboardLayout;
+    return m_input->keyboardLayout();
 }
 
 QList<uint32_t> KeyboardInputRedirection::pressedKeys() const
@@ -97,54 +97,6 @@ void KeyboardInputRedirection::addFilteredKey(uint32_t key)
     }
 }
 
-class KeyStateChangedSpy : public InputEventSpy
-{
-public:
-    KeyStateChangedSpy(InputRedirection *input)
-        : m_input(input)
-    {
-    }
-
-    void keyboardKey(KeyboardKeyEvent *event) override
-    {
-        if (event->state == KeyboardKeyState::Repeated) {
-            return;
-        }
-        Q_EMIT m_input->keyStateChanged(event->nativeScanCode, event->state);
-    }
-
-private:
-    InputRedirection *m_input;
-};
-
-class ModifiersChangedSpy : public InputEventSpy
-{
-public:
-    ModifiersChangedSpy(InputRedirection *input)
-        : m_input(input)
-        , m_modifiers()
-    {
-    }
-
-    void keyboardKey(KeyboardKeyEvent *event) override
-    {
-        if (event->state == KeyboardKeyState::Repeated) {
-            return;
-        }
-
-        const Qt::KeyboardModifiers mods = event->modifiers;
-        if (mods == m_modifiers) {
-            return;
-        }
-        Q_EMIT m_input->keyboardModifiersChanged(mods, m_modifiers);
-        m_modifiers = mods;
-    }
-
-private:
-    InputRedirection *m_input;
-    Qt::KeyboardModifiers m_modifiers;
-};
-
 void KeyboardInputRedirection::init()
 {
     Q_ASSERT(!m_inited);
@@ -155,14 +107,8 @@ void KeyboardInputRedirection::init()
 
     waylandServer()->seat()->setHasKeyboard(true);
 
-    m_input->installInputEventSpy(new KeyStateChangedSpy(m_input));
-    m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);
-    m_input->installInputEventSpy(m_modifiersChangedSpy);
-    m_keyboardLayout = new KeyboardLayout(m_xkb.get(), config);
-    m_keyboardLayout->init();
-    m_input->installInputEventSpy(m_keyboardLayout);
-
     m_keyRepeatSpy = new KeyboardRepeat(m_xkb.get());
+    m_keyRepeatSpy->setParent(this);
     connect(m_keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
             std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
 
@@ -275,6 +221,9 @@ static constexpr std::array s_modifierKeys = {
 
 void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
+    if (device) {
+        m_input->setLastKeyboardInputDevice(device, time);
+    }
     input()->setLastInputHandler(this);
     if (!m_inited) {
         return;
@@ -337,7 +286,9 @@ void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, 
     }
 
     if (event.modifiersRelevantForGlobalShortcuts == Qt::KeyboardModifier::NoModifier && state != KeyboardKeyState::Released) {
-        m_keyboardLayout->checkLayoutChange(previousLayout);
+        if (KeyboardLayout *keyboardLayout = m_input->keyboardLayout()) {
+            keyboardLayout->checkLayoutChange(previousLayout);
+        }
     }
 }
 

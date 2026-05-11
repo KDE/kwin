@@ -13,6 +13,7 @@
 #include "core/gpumanager.h"
 #include "core/renderdevice.h"
 #include "input.h"
+#include "keyboard_input.h"
 #include "wayland-client/linuxdmabuf.h"
 #include "wayland_display.h"
 #include "wayland_egl_backend.h"
@@ -389,6 +390,7 @@ void WaylandSeat::destroyRelativePointer()
 void WaylandSeat::createKeyboardDevice()
 {
     m_keyboardDevice = std::make_unique<WaylandInputDevice>(m_seat->createKeyboard(), this);
+    m_keyboardDevice->setKeyboard(std::make_unique<KeyboardInputRedirection>(input()));
     Q_EMIT deviceAdded(m_keyboardDevice.get());
 }
 

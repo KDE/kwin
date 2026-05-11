@@ -35,7 +35,6 @@ class Window;
 class InputDevice;
 class InputRedirection;
 class KeyboardLayout;
-class ModifiersChangedSpy;
 class Xkb;
 class KeyboardRepeat;
 
@@ -44,7 +43,7 @@ class KWIN_EXPORT KeyboardInputRedirection : public QObject
     Q_OBJECT
 
 public:
-    explicit KeyboardInputRedirection(InputRedirection *parent);
+    explicit KeyboardInputRedirection(InputRedirection *input, QObject *parent = nullptr);
     ~KeyboardInputRedirection() override;
 
     void init();
@@ -84,8 +83,6 @@ private:
     bool m_inited = false;
     const std::unique_ptr<Xkb> m_xkb;
     QMetaObject::Connection m_activeWindowSurfaceChangedConnection;
-    ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
-    KeyboardLayout *m_keyboardLayout = nullptr;
     QList<uint32_t> m_pressedKeys;
     QList<uint32_t> m_filteredKeys;
     A11yKeyboardMonitor m_a11yKeyboardMonitor;

@@ -38,6 +38,7 @@ class GlobalShortcutsManager;
 class InputEventFilter;
 class InputEventSpy;
 class KeyboardInputRedirection;
+class KeyboardLayout;
 class PointerInputRedirection;
 class SeatInterface;
 class TabletInputRedirection;
@@ -171,9 +172,10 @@ public:
         }
     }
 
-    KeyboardInputRedirection *keyboard() const
+    KeyboardInputRedirection *keyboard() const;
+    KeyboardLayout *keyboardLayout() const
     {
-        return m_keyboard;
+        return m_keyboardLayout;
     }
     PointerInputRedirection *pointer() const
     {
@@ -192,6 +194,7 @@ public:
      * Specifies which was the device that triggered the last input event
      */
     void setLastInputHandler(QObject *device);
+    void setLastKeyboardInputDevice(InputDevice *device, std::chrono::microseconds time);
     QObject *lastInputHandler() const;
 
     void setLastInteractionSerial(uint32_t serial);
@@ -286,12 +289,15 @@ private:
     void setupWorkspace();
     void setupInputFilters();
     void updateLeds(LEDs leds);
+    QList<KeyboardInputRedirection *> keyboards() const;
+    void syncActiveKeyboardState(KeyboardInputRedirection *oldKeyboard, KeyboardInputRedirection *newKeyboard);
     void updateAvailableInputDevices();
-    KeyboardInputRedirection *m_keyboard;
+    KeyboardLayout *m_keyboardLayout = nullptr;
     PointerInputRedirection *m_pointer;
     TabletInputRedirection *m_tablet;
     TouchInputRedirection *m_touch;
     QObject *m_lastInputDevice = nullptr;
+    QPointer<InputDevice> m_lastKeyboardInputDevice;
     uint32_t m_lastInteractionSerial = 0;
 
     GlobalShortcutsManager *m_shortcuts;
