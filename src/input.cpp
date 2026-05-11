@@ -3021,7 +3021,7 @@ void InputRedirection::setupWorkspace()
 
     installInputEventSpy(new KeyStateChangedSpy);
     installInputEventSpy(new ModifiersChangedSpy);
-    for (KeyboardInputRedirection *keyboard : keyboards()) {
+    for (KeyboardInput *keyboard : keyboards()) {
         keyboard->init();
     }
     m_keyboardLayout = new KeyboardLayout(this, kwinApp()->kxkbConfig());
@@ -3030,7 +3030,7 @@ void InputRedirection::setupWorkspace()
     m_touch->init();
     m_tablet->init();
 
-    if (KeyboardInputRedirection *keyboard = this->keyboard()) {
+    if (KeyboardInput *keyboard = this->keyboard()) {
         updateLeds(keyboard->xkb()->leds());
     }
 
@@ -3066,7 +3066,7 @@ void InputRedirection::setLastInputHandler(QObject *device)
     m_lastInputDevice = device;
 }
 
-KeyboardInputRedirection *InputRedirection::keyboard() const
+KeyboardInput *InputRedirection::keyboard() const
 {
     if (m_lastKeyboardInputDevice && m_lastKeyboardInputDevice->keyboard()) {
         return m_lastKeyboardInputDevice->keyboard();
@@ -3087,10 +3087,17 @@ void InputRedirection::setLastKeyboardInputDevice(InputDevice *device, std::chro
         return;
     }
 
-    KeyboardInputRedirection *oldKeyboard = keyboard();
+    KeyboardInput *oldKeyboard = keyboard();
     m_lastKeyboardInputDevice = device;
 
-    KeyboardInputRedirection *newKeyboard = keyboard();
+    KeyboardInput *newKeyboard = keyboard();
+
+    if (oldKeyboard && newKeyboard) {
+        if (oldKeyboard->modifiers() != newKeyboard->modifiers()) {
+            Q_EMIT keyboardModifiersChanged(oldKeyboard->modifiers(), newKeyboard->modifiers());
+        }
+    }
+
     syncActiveKeyboardState(oldKeyboard, newKeyboard);
     if (!newKeyboard) {
         return;
@@ -3292,7 +3299,7 @@ void InputRedirection::setupInputFilters()
 void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)
 {
     if (group.name() == QLatin1StringView("Keyboard")) {
-        for (KeyboardInputRedirection *keyboard : keyboards()) {
+        for (KeyboardInput *keyboard : keyboards()) {
             keyboard->reconfigure();
         }
     } else if (group.name() == QLatin1String("Tablet")) {
@@ -3315,7 +3322,7 @@ void InputRedirection::updateLeds(LEDs leds)
 void InputRedirection::addInputDevice(InputDevice *device)
 {
     if (device->keyboard()) {
-        connect(device->keyboard(), &KeyboardInputRedirection::ledsChanged, this, [this, device](LEDs leds) {
+        connect(device->keyboard(), &KeyboardInput::ledsChanged, this, [this, device](LEDs leds) {
             if (keyboard() == device->keyboard()) {
                 updateLeds(leds);
             }
@@ -3323,7 +3330,7 @@ void InputRedirection::addInputDevice(InputDevice *device)
         if (workspace()) {
             device->keyboard()->init();
         }
-        connect(device, &InputDevice::keyChanged, device->keyboard(), &KeyboardInputRedirection::processKey);
+        connect(device, &InputDevice::keyChanged, device->keyboard(), &KeyboardInput::processKey);
     }
 
     connect(device, &InputDevice::pointerMotionAbsolute,
@@ -3418,7 +3425,7 @@ void InputRedirection::removeInputDevice(InputDevice *device)
     Q_EMIT deviceRemoved(device);
 
     if (workspace()) {
-        if (KeyboardInputRedirection *activeKeyboard = keyboard()) {
+        if (KeyboardInput *activeKeyboard = keyboard()) {
             updateLeds(activeKeyboard->xkb()->leds());
         }
     }
@@ -3426,9 +3433,9 @@ void InputRedirection::removeInputDevice(InputDevice *device)
     updateAvailableInputDevices();
 }
 
-QList<KeyboardInputRedirection *> InputRedirection::keyboards() const
+QList<KeyboardInput *> InputRedirection::keyboards() const
 {
-    QList<KeyboardInputRedirection *> result;
+    QList<KeyboardInput *> result;
     for (InputDevice *device : m_inputDevices) {
         if (device->keyboard()) {
             result.append(device->keyboard());
@@ -3437,7 +3444,7 @@ QList<KeyboardInputRedirection *> InputRedirection::keyboards() const
     return result;
 }
 
-void InputRedirection::syncActiveKeyboardState(KeyboardInputRedirection *oldKeyboard, KeyboardInputRedirection *newKeyboard)
+void InputRedirection::syncActiveKeyboardState(KeyboardInput *oldKeyboard, KeyboardInput *newKeyboard)
 {
     if (!newKeyboard || !waylandServer()->seat()->keyboard()) {
         return;

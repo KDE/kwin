@@ -38,13 +38,13 @@ class KeyboardLayout;
 class Xkb;
 class KeyboardRepeat;
 
-class KWIN_EXPORT KeyboardInputRedirection : public QObject
+class KWIN_EXPORT KeyboardInput : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit KeyboardInputRedirection(InputRedirection *input, QObject *parent = nullptr);
-    ~KeyboardInputRedirection() override;
+    explicit KeyboardInput(InputRedirection *input, QObject *parent = nullptr);
+    ~KeyboardInput() override;
 
     void init();
     void reconfigure();

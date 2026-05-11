@@ -37,7 +37,7 @@ class Window;
 class GlobalShortcutsManager;
 class InputEventFilter;
 class InputEventSpy;
-class KeyboardInputRedirection;
+class KeyboardInput;
 class KeyboardLayout;
 class PointerInputRedirection;
 class SeatInterface;
@@ -172,7 +172,7 @@ public:
         }
     }
 
-    KeyboardInputRedirection *keyboard() const;
+    KeyboardInput *keyboard() const;
     KeyboardLayout *keyboardLayout() const
     {
         return m_keyboardLayout;
@@ -289,8 +289,8 @@ private:
     void setupWorkspace();
     void setupInputFilters();
     void updateLeds(LEDs leds);
-    QList<KeyboardInputRedirection *> keyboards() const;
-    void syncActiveKeyboardState(KeyboardInputRedirection *oldKeyboard, KeyboardInputRedirection *newKeyboard);
+    QList<KeyboardInput *> keyboards() const;
+    void syncActiveKeyboardState(KeyboardInput *oldKeyboard, KeyboardInput *newKeyboard);
     void updateAvailableInputDevices();
     KeyboardLayout *m_keyboardLayout = nullptr;
     PointerInputRedirection *m_pointer;

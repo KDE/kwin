@@ -16,7 +16,7 @@
 namespace KWin
 {
 
-class KeyboardInputRedirection;
+class KeyboardInput;
 
 enum class PointerButtonState {
     Released,
@@ -137,8 +137,8 @@ public:
 
     virtual bool tabletToolIsRelative() const;
 
-    KeyboardInputRedirection *keyboard() const;
-    void setKeyboard(std::unique_ptr<KeyboardInputRedirection> &&keyboard);
+    KeyboardInput *keyboard() const;
+    void setKeyboard(std::unique_ptr<KeyboardInput> &&keyboard);
 
 Q_SIGNALS:
     void keyChanged(quint32 key, KeyboardKeyState, std::chrono::microseconds time, InputDevice *device);
@@ -176,7 +176,7 @@ Q_SIGNALS:
     void tabletPadDialEvent(int number, double delta, quint32 group, std::chrono::microseconds time, InputDevice *device);
 
 private:
-    std::unique_ptr<KeyboardInputRedirection> m_keyboard;
+    std::unique_ptr<KeyboardInput> m_keyboard;
 };
 
 } // namespace KWin

@@ -229,7 +229,7 @@ bool X11WindowedBackend::initialize()
     m_pointerDevice->setPointer(true);
     m_keyboardDevice = std::make_unique<X11WindowedInputDevice>();
     m_keyboardDevice->setKeyboard(true);
-    m_keyboardDevice->InputDevice::setKeyboard(std::make_unique<KeyboardInputRedirection>(input()));
+    m_keyboardDevice->InputDevice::setKeyboard(std::make_unique<KeyboardInput>(input()));
     if (m_hasXInput) {
         m_touchDevice = std::make_unique<X11WindowedInputDevice>();
         m_touchDevice->setTouch(true);

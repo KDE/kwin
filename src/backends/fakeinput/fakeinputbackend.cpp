@@ -74,7 +74,7 @@ FakeInputBackendPrivate::FakeInputBackendPrivate(FakeInputBackend *q, Display *d
 void FakeInputBackendPrivate::org_kde_kwin_fake_input_bind_resource(Resource *resource)
 {
     auto device = new FakeInputDevice(q);
-    device->setKeyboard(std::make_unique<KeyboardInputRedirection>(input()));
+    device->setKeyboard(std::make_unique<KeyboardInput>(input()));
     devices[resource] = std::unique_ptr<FakeInputDevice>(device);
     Q_EMIT q->deviceAdded(device);
 }

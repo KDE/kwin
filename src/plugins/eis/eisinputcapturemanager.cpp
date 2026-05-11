@@ -99,27 +99,30 @@ EisInputCaptureManager::EisInputCaptureManager()
     qDBusRegisterMetaType<QPair<QPoint, QPoint>>();
     qDBusRegisterMetaType<QList<QPair<QPoint, QPoint>>>();
 
-    const auto keymap = input()->keyboard()->xkb()->keymapContents();
-    if (!keymap.isEmpty()) {
-        m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
-    }
-    connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutChanged, this, [this] {
-        const auto keymap = input()->keyboard()->xkb()->keymapContents();
-        if (!keymap.isEmpty()) {
-            m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
-        } else {
-            m_keymapFile = RamFile();
-        }
-    });
+    // Make David R fix all this
+    // Or should I make a multiplexer in InputRedirection
 
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this] {
-        // This will not handle other sources of modifier changes like changing keyboard
-        // layout but should be fine for now as all input is filtered out while a capture
-        // is active
-        if (m_activeCapture) {
-            m_inputFilter->setPendingModifierChange(true);
-        }
-    });
+    // const auto keymap = input()->keyboard()->xkb()->keymapContents();
+    // if (!keymap.isEmpty()) {
+    //     m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
+    // }
+    // connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutChanged, this, [this] {
+    //     const auto keymap = input()->keyboard()->xkb()->keymapContents();
+    //     if (!keymap.isEmpty()) {
+    //         m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
+    //     } else {
+    //         m_keymapFile = RamFile();
+    //     }
+    // });
+
+    // connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this] {
+    //     // This will not handle other sources of modifier changes like changing keyboard
+    //     // layout but should be fine for now as all input is filtered out while a capture
+    //     // is active
+    //     if (m_activeCapture) {
+    //         m_inputFilter->setPendingModifierChange(true);
+    //     }
+    // });
 
     m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
     m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);

@@ -41,12 +41,12 @@ KeyNotificationPlugin::KeyNotificationPlugin()
 
 void KeyNotificationPlugin::addInputDevice(InputDevice *device)
 {
-    KeyboardInputRedirection *keyboard = device->keyboard();
+    KeyboardInput *keyboard = device->keyboard();
     if (!keyboard) {
         return;
     }
 
-    connect(keyboard, &KeyboardInputRedirection::ledsChanged, this, [this](LEDs leds) {
+    connect(keyboard, &KeyboardInput::ledsChanged, this, [this](LEDs leds) {
         ledsChanged(leds);
     });
     connect(keyboard->xkb(), &Xkb::modifierStateChanged, this, [this, keyboard]() {
@@ -58,7 +58,7 @@ void KeyNotificationPlugin::addInputDevice(InputDevice *device)
 
 void KeyNotificationPlugin::removeInputDevice(InputDevice *device)
 {
-    KeyboardInputRedirection *keyboard = device->keyboard();
+    KeyboardInput *keyboard = device->keyboard();
     if (!keyboard) {
         return;
     }
@@ -105,7 +105,7 @@ void KeyNotificationPlugin::ledsChanged(LEDs leds)
     m_currentLEDs = leds;
 }
 
-void KeyNotificationPlugin::modifiersChanged(KeyboardInputRedirection *keyboard)
+void KeyNotificationPlugin::modifiersChanged(KeyboardInput *keyboard)
 {
     const Qt::KeyboardModifiers mods = keyboard->xkb()->modifiers();
 
@@ -163,7 +163,7 @@ void KeyNotificationPlugin::loadConfig(const KConfigGroup &group)
 void KeyNotificationPlugin::updateCurrentState()
 {
     for (InputDevice *device : input()->devices()) {
-        if (KeyboardInputRedirection *keyboard = device->keyboard()) {
+        if (KeyboardInput *keyboard = device->keyboard()) {
             m_currentLEDs = keyboard->xkb()->leds();
             m_currentModifiers = keyboard->xkb()->modifiers();
             return;

@@ -28,7 +28,7 @@ LibinputBackend::LibinputBackend(Session *session, QObject *parent)
 
     connect(m_connection, &LibInput::Connection::deviceAdded, this, [this](LibInput::Device *device) {
         if (device->isKeyboard() && !device->keyboard()) {
-            device->setKeyboard(std::make_unique<KeyboardInputRedirection>(input()));
+            device->setKeyboard(std::make_unique<KeyboardInput>(input()));
         }
         Q_EMIT deviceAdded(device);
     });

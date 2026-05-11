@@ -66,7 +66,7 @@ KeyStateInterface::KeyStateInterface(Display *display, QObject *parent)
     : QObject(parent)
     , d(new KeyStateInterfacePrivate(display))
 {
-    connect(input()->keyboard(), &KeyboardInputRedirection::ledsChanged, this, [this]() {
+    connect(input()->keyboard(), &KeyboardInput::ledsChanged, this, [this]() {
         const auto resources = d->resourceMap();
         for (auto resource : resources) {
             d->org_kde_kwin_keystate_fetchStates(resource);

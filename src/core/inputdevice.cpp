@@ -96,12 +96,12 @@ bool InputDevice::tabletToolIsRelative() const
     return false;
 }
 
-KeyboardInputRedirection *InputDevice::keyboard() const
+KeyboardInput *InputDevice::keyboard() const
 {
     return m_keyboard.get();
 }
 
-void InputDevice::setKeyboard(std::unique_ptr<KeyboardInputRedirection> &&keyboard)
+void InputDevice::setKeyboard(std::unique_ptr<KeyboardInput> &&keyboard)
 {
     m_keyboard = std::move(keyboard);
 }

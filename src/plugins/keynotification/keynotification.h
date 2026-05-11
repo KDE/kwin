@@ -16,7 +16,7 @@ namespace KWin
 {
 
 class InputDevice;
-class KeyboardInputRedirection;
+class KeyboardInput;
 
 class KeyNotificationPlugin : public KWin::Plugin
 {
@@ -30,7 +30,7 @@ private:
     void removeInputDevice(InputDevice *device);
     void loadConfig(const KConfigGroup &group);
     void ledsChanged(KWin::LEDs leds);
-    void modifiersChanged(KeyboardInputRedirection *keyboard);
+    void modifiersChanged(KeyboardInput *keyboard);
     void sendNotification(const QString &eventId, const QString &text);
     void updateCurrentState();
 

@@ -390,7 +390,7 @@ void WaylandSeat::destroyRelativePointer()
 void WaylandSeat::createKeyboardDevice()
 {
     m_keyboardDevice = std::make_unique<WaylandInputDevice>(m_seat->createKeyboard(), this);
-    m_keyboardDevice->setKeyboard(std::make_unique<KeyboardInputRedirection>(input()));
+    m_keyboardDevice->setKeyboard(std::make_unique<KeyboardInput>(input()));
     Q_EMIT deviceAdded(m_keyboardDevice.get());
 }
 

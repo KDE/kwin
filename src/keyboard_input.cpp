@@ -40,48 +40,48 @@
 namespace KWin
 {
 
-KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *input, QObject *parent)
+KeyboardInput::KeyboardInput(InputRedirection *input, QObject *parent)
     : QObject(parent ? parent : input)
     , m_input(input)
     , m_xkb(new Xkb(kwinApp()->followLocale1()))
 {
-    connect(m_xkb.get(), &Xkb::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
+    connect(m_xkb.get(), &Xkb::ledsChanged, this, &KeyboardInput::ledsChanged);
     m_xkb->setSeat(waylandServer()->seat());
 }
 
-KeyboardInputRedirection::~KeyboardInputRedirection() = default;
+KeyboardInput::~KeyboardInput() = default;
 
-Xkb *KeyboardInputRedirection::xkb() const
+Xkb *KeyboardInput::xkb() const
 {
     return m_xkb.get();
 }
 
-Qt::KeyboardModifiers KeyboardInputRedirection::modifiers() const
+Qt::KeyboardModifiers KeyboardInput::modifiers() const
 {
     return m_xkb->modifiers();
 }
 
-Qt::KeyboardModifiers KeyboardInputRedirection::modifiersRelevantForGlobalShortcuts() const
+Qt::KeyboardModifiers KeyboardInput::modifiersRelevantForGlobalShortcuts() const
 {
     return m_xkb->modifiersRelevantForGlobalShortcuts();
 }
 
-KeyboardLayout *KeyboardInputRedirection::keyboardLayout() const
+KeyboardLayout *KeyboardInput::keyboardLayout() const
 {
     return m_input->keyboardLayout();
 }
 
-QList<uint32_t> KeyboardInputRedirection::pressedKeys() const
+QList<uint32_t> KeyboardInput::pressedKeys() const
 {
     return m_pressedKeys;
 }
 
-QList<uint32_t> KeyboardInputRedirection::filteredKeys() const
+QList<uint32_t> KeyboardInput::filteredKeys() const
 {
     return m_filteredKeys;
 }
 
-QList<uint32_t> KeyboardInputRedirection::unfilteredKeys() const
+QList<uint32_t> KeyboardInput::unfilteredKeys() const
 {
     QList<uint32_t> ret = m_pressedKeys;
     for (const uint32_t &key : m_filteredKeys) {
@@ -90,14 +90,14 @@ QList<uint32_t> KeyboardInputRedirection::unfilteredKeys() const
     return ret;
 }
 
-void KeyboardInputRedirection::addFilteredKey(uint32_t key)
+void KeyboardInput::addFilteredKey(uint32_t key)
 {
     if (!m_filteredKeys.contains(key)) {
         m_filteredKeys.append(key);
     }
 }
 
-void KeyboardInputRedirection::init()
+void KeyboardInput::init()
 {
     Q_ASSERT(!m_inited);
     m_inited = true;
@@ -110,7 +110,7 @@ void KeyboardInputRedirection::init()
     m_keyRepeatSpy = new KeyboardRepeat(m_xkb.get());
     m_keyRepeatSpy->setParent(this);
     connect(m_keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
-            std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
+            std::bind(&KeyboardInput::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
 
     connect(workspace(), &QObject::destroyed, this, [this] {
         m_inited = false;
@@ -121,7 +121,7 @@ void KeyboardInputRedirection::init()
     connect(workspace(), &Workspace::windowActivated, this, [this] {
         disconnect(m_activeWindowSurfaceChangedConnection);
         if (auto window = workspace()->activeWindow()) {
-            m_activeWindowSurfaceChangedConnection = connect(window, &Window::surfaceChanged, this, &KeyboardInputRedirection::update);
+            m_activeWindowSurfaceChangedConnection = connect(window, &Window::surfaceChanged, this, &KeyboardInput::update);
         } else {
             m_activeWindowSurfaceChangedConnection = QMetaObject::Connection();
         }
@@ -129,14 +129,14 @@ void KeyboardInputRedirection::init()
     });
 #if KWIN_BUILD_SCREENLOCKER
     if (kwinApp()->supportsLockScreen()) {
-        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInput::update);
     }
 #endif
 
     reconfigure();
 }
 
-void KeyboardInputRedirection::reconfigure()
+void KeyboardInput::reconfigure()
 {
     if (!m_inited) {
         return;
@@ -152,7 +152,7 @@ void KeyboardInputRedirection::reconfigure()
     }
 }
 
-Window *KeyboardInputRedirection::pickFocus() const
+Window *KeyboardInput::pickFocus() const
 {
     if (waylandServer()->isScreenLocked()) {
         const QList<Window *> &stacking = Workspace::self()->stackingOrder();
@@ -190,7 +190,7 @@ Window *KeyboardInputRedirection::pickFocus() const
     return workspace()->activeWindow();
 }
 
-void KeyboardInputRedirection::update()
+void KeyboardInput::update()
 {
     if (!m_inited) {
         return;
@@ -219,7 +219,7 @@ static constexpr std::array s_modifierKeys = {
     Qt::Key_ScrollLock,
 };
 
-void KeyboardInputRedirection::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
+void KeyboardInput::processKey(uint32_t key, KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
     if (device) {
         m_input->setLastKeyboardInputDevice(device, time);
