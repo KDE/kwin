@@ -117,7 +117,7 @@ void InputMethod::init()
     connect(m_internalContext, &InternalInputMethodContext::showInputPanelRequested, this, &InputMethod::show);
     connect(m_internalContext, &InternalInputMethodContext::hideInputPanelRequested, this, &InputMethod::hide);
 
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
+    connect(input()->keyboard(), &KeyboardInputRedirection::modifierStateChanged, this, [this]() {
         m_hasPendingModifiers = true;
     });
 }

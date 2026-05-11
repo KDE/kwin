@@ -90,7 +90,7 @@ void EisBackend::initialize()
             context->updateKeymap();
         }
     });
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this] {
+    connect(input()->keyboard(), &KeyboardInputRedirection::modifierStateChanged, this, [this] {
         const auto &modifierState = input()->keyboard()->xkb()->modifierState();
         const uint32_t currentGroup = input()->keyboard()->xkb()->currentLayout();
         for (const auto &context : m_contexts) {

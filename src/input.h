@@ -37,13 +37,16 @@ class Window;
 class GlobalShortcutsManager;
 class InputEventFilter;
 class InputEventSpy;
+class InputRedirection;
 class KeyboardInput;
+class KeyboardInputRedirection;
 class KeyboardLayout;
 class PointerInputRedirection;
 class SeatInterface;
 class TabletInputRedirection;
 class TouchInputRedirection;
 class WindowSelectorFilter;
+class Xkb;
 struct SwitchEvent;
 struct TabletToolTipEvent;
 struct TabletToolAxisEvent;
@@ -82,6 +85,33 @@ class DecoratedWindowImpl;
 
 class InputBackend;
 class InputDevice;
+
+class KWIN_EXPORT KeyboardInputRedirection : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit KeyboardInputRedirection(InputRedirection *input);
+
+    KeyboardInput *activeKeyboard() const;
+
+    Xkb *xkb() const;
+    Qt::KeyboardModifiers modifiers() const;
+    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const;
+    KeyboardLayout *keyboardLayout() const;
+    QList<uint32_t> pressedKeys() const;
+    QList<uint32_t> filteredKeys() const;
+    void addFilteredKey(uint32_t key);
+    QList<uint32_t> unfilteredKeys() const;
+    void update();
+
+Q_SIGNALS:
+    void ledsChanged(KWin::LEDs leds);
+    void modifierStateChanged();
+
+private:
+    InputRedirection *m_input;
+};
 
 /**
  * @brief This class is responsible for redirecting incoming input to the surface which currently
@@ -172,7 +202,7 @@ public:
         }
     }
 
-    KeyboardInput *keyboard() const;
+    KeyboardInputRedirection *keyboard() const;
     KeyboardLayout *keyboardLayout() const
     {
         return m_keyboardLayout;
@@ -292,6 +322,7 @@ private:
     QList<KeyboardInput *> keyboards() const;
     void syncActiveKeyboardState(KeyboardInput *oldKeyboard, KeyboardInput *newKeyboard);
     void updateAvailableInputDevices();
+    KeyboardInputRedirection *m_keyboard;
     KeyboardLayout *m_keyboardLayout = nullptr;
     PointerInputRedirection *m_pointer;
     TabletInputRedirection *m_tablet;
@@ -343,6 +374,7 @@ private:
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();
+    friend class KeyboardInputRedirection;
     friend class DecorationEventFilter;
     friend class InternalWindowEventFilter;
     friend class ForwardInputFilter;
