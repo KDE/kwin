@@ -80,7 +80,7 @@ void EisBackend::initialize()
     if (!keyMap.isEmpty()) {
         m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
     }
-    connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutsReconfigured, this, [this] {
+    connect(input()->keyboard(), &KeyboardInputRedirection::layoutChanged, this, [this] {
         const QByteArray keyMap = input()->keyboard()->xkb()->keymapContents();
         if (!keyMap.isEmpty()) {
             m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
@@ -91,7 +91,7 @@ void EisBackend::initialize()
             context->updateKeymap();
         }
     });
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this] {
+    connect(input()->keyboard(), &KeyboardInputRedirection::layoutChanged, this, [this] {
         const auto &modifierState = input()->keyboard()->xkb()->modifierState();
         const uint32_t currentGroup = input()->keyboard()->xkb()->currentLayout();
         for (const auto &context : m_contexts) {

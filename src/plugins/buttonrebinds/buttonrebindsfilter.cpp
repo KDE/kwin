@@ -514,7 +514,7 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
     std::optional<KWin::Xkb::KeyCode> code;
     // KKeyServer returns upper case syms, lower it to not confuse modifiers handling
     for (int sym : syms) {
-        code = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(sym);
+        code = m_inputDevice->keyboard()->xkb()->keycodeFromKeysym(sym);
         if (code) {
             break;
         }

@@ -15,6 +15,8 @@
 namespace KWin
 {
 
+class InputDevice;
+class KeyboardInput;
 class KeyNotificationPlugin : public KWin::Plugin
 {
     Q_OBJECT
@@ -23,10 +25,13 @@ public:
     explicit KeyNotificationPlugin();
 
 private:
+    void addInputDevice(InputDevice *device);
+    void removeInputDevice(InputDevice *device);
     void loadConfig(const KConfigGroup &group);
     void ledsChanged(KWin::LEDs leds);
-    void modifiersChanged();
+    void modifiersChanged(KeyboardInput *keyboard);
     void sendNotification(const QString &eventId, const QString &text);
+    void updateCurrentState();
 
     KConfigWatcher::Ptr m_configWatcher;
     bool m_enabled = false;

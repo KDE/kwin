@@ -116,6 +116,8 @@ target_sources(kwin PRIVATE
     internalinputmethodcontext.cpp
     internalwindow.cpp
     keyboard_input.cpp
+    keyboard_input_redirection.h
+    keyboard_input_redirection.cpp
     keyboard_layout.cpp
     keyboard_layout_switching.cpp
     keyboard_repeat.cpp

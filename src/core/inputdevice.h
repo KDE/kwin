@@ -11,9 +11,12 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <memory>
 
 namespace KWin
 {
+
+class KeyboardInput;
 
 enum class PointerButtonState {
     Released,
@@ -97,6 +100,7 @@ class KWIN_EXPORT InputDevice : public QObject
 
 public:
     explicit InputDevice(QObject *parent = nullptr);
+    ~InputDevice() override;
 
     virtual QString sysPath() const;
     virtual QString name() const = 0;
@@ -133,6 +137,9 @@ public:
 
     virtual bool tabletToolIsRelative() const;
 
+    KeyboardInput *keyboard() const;
+    void setKeyboard(std::shared_ptr<KeyboardInput> keyboard);
+
 Q_SIGNALS:
     void keyChanged(quint32 key, KeyboardKeyState, std::chrono::microseconds time, InputDevice *device);
     void pointerButtonChanged(quint32 button, PointerButtonState state, std::chrono::microseconds time, InputDevice *device);
@@ -167,6 +174,9 @@ Q_SIGNALS:
     void tabletPadStripEvent(int number, qreal position, bool isFinger, quint32 group, quint32 mode, std::chrono::microseconds time, InputDevice *device);
     void tabletPadRingEvent(int number, qreal position, bool isFinger, quint32 group, quint32 mode, std::chrono::microseconds time, InputDevice *device);
     void tabletPadDialEvent(int number, double delta, quint32 group, std::chrono::microseconds time, InputDevice *device);
+
+private:
+    std::shared_ptr<KeyboardInput> m_keyboard;
 };
 
 } // namespace KWin

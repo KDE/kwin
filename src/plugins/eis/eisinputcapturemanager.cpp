@@ -104,7 +104,7 @@ EisInputCaptureManager::EisInputCaptureManager()
     if (!keymap.isEmpty()) {
         m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
     }
-    connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutChanged, this, [this] {
+    connect(input()->keyboard(), &KeyboardInputRedirection::layoutChanged, this, [this] {
         const auto keymap = input()->keyboard()->xkb()->keymapContents();
         if (!keymap.isEmpty()) {
             m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);

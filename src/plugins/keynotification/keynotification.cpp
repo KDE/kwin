@@ -5,7 +5,9 @@
 */
 
 #include "keynotification.h"
+#include "core/inputdevice.h"
 #include "effect/effecthandler.h"
+#include "input.h"
 #include "keyboard_input.h"
 #include "xkb.h"
 
@@ -26,10 +28,44 @@ KeyNotificationPlugin::KeyNotificationPlugin()
     });
     loadConfig(m_configWatcher->config()->group(groupName));
 
-    connect(input()->keyboard(), &KeyboardInputRedirection::ledsChanged, this,
-            &KeyNotificationPlugin::ledsChanged);
+    connect(input(), &InputRedirection::deviceAdded, this, &KeyNotificationPlugin::addInputDevice);
+    connect(input(), &InputRedirection::deviceRemoved, this, &KeyNotificationPlugin::removeInputDevice);
 
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, &KeyNotificationPlugin::modifiersChanged);
+    const auto devices = input()->devices();
+    for (InputDevice *device : devices) {
+        addInputDevice(device);
+    }
+
+    updateCurrentState();
+}
+
+void KeyNotificationPlugin::addInputDevice(InputDevice *device)
+{
+    KeyboardInput *keyboard = device->keyboard();
+    if (!keyboard) {
+        return;
+    }
+
+    connect(keyboard, &KeyboardInput::ledsChanged, this, [this](LEDs leds) {
+        ledsChanged(leds);
+    });
+    connect(keyboard->xkb(), &Xkb::modifierStateChanged, this, [this, keyboard]() {
+        modifiersChanged(keyboard);
+    });
+
+    updateCurrentState();
+}
+
+void KeyNotificationPlugin::removeInputDevice(InputDevice *device)
+{
+    KeyboardInput *keyboard = device->keyboard();
+    if (!keyboard) {
+        return;
+    }
+
+    disconnect(keyboard, nullptr, this, nullptr);
+    disconnect(keyboard->xkb(), nullptr, this, nullptr);
+    updateCurrentState();
 }
 
 void KeyNotificationPlugin::ledsChanged(LEDs leds)
@@ -69,9 +105,9 @@ void KeyNotificationPlugin::ledsChanged(LEDs leds)
     m_currentLEDs = leds;
 }
 
-void KeyNotificationPlugin::modifiersChanged()
+void KeyNotificationPlugin::modifiersChanged(KeyboardInput *keyboard)
 {
-    Qt::KeyboardModifiers mods = input()->keyboard()->xkb()->modifiers();
+    const Qt::KeyboardModifiers mods = keyboard->xkb()->modifiers();
 
     if (m_enabled) {
         if (!m_currentModifiers.testFlag(Qt::ShiftModifier) && mods.testFlag(Qt::ShiftModifier)) {
@@ -107,7 +143,7 @@ void KeyNotificationPlugin::modifiersChanged()
         }
     }
 
-    m_currentModifiers = input()->keyboard()->xkb()->modifiers();
+    m_currentModifiers = mods;
 }
 
 void KeyNotificationPlugin::sendNotification(const QString &eventId, const QString &text)
@@ -124,6 +160,19 @@ void KeyNotificationPlugin::loadConfig(const KConfigGroup &group)
     m_useBellWhenLocksChange = group.readEntry("ToggleKeysBeep", false);
 }
 
+void KeyNotificationPlugin::updateCurrentState()
+{
+    for (InputDevice *device : input()->devices()) {
+        if (KeyboardInput *keyboard = device->keyboard()) {
+            m_currentLEDs = keyboard->xkb()->leds();
+            m_currentModifiers = keyboard->xkb()->modifiers();
+            return;
+        }
+    }
+
+    m_currentLEDs = {};
+    m_currentModifiers = Qt::NoModifier;
+}
 }
 
 #include "moc_keynotification.cpp"

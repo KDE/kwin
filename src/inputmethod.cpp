@@ -14,6 +14,7 @@
 #include "input.h"
 #include "inputpanelv1window.h"
 #include "keyboard_input.h"
+#include "keyboard_input_redirection.h"
 #include "utils/common.h"
 #include "virtualkeyboard_dbus.h"
 #include "wayland_server.h"
@@ -129,7 +130,7 @@ void InputMethod::init()
     connect(m_internalContext, &InternalInputMethodContext::showInputPanelRequested, this, &InputMethod::show);
     connect(m_internalContext, &InternalInputMethodContext::hideInputPanelRequested, this, &InputMethod::hide);
 
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
+    connect(input()->keyboard(), &KeyboardInputRedirection::modifierStateChanged, this, [this]() {
         m_hasPendingModifiers = true;
     });
 }

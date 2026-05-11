@@ -12,6 +12,7 @@
 #include "config-kwin.h"
 
 #include "core/inputdevice.h"
+#include "keyboard_input_redirection.h"
 #include <QObject>
 #include <QPoint>
 #include <QPointer>
@@ -37,12 +38,16 @@ class Window;
 class GlobalShortcutsManager;
 class InputEventFilter;
 class InputEventSpy;
+class InputRedirection;
+class KeyboardInput;
 class KeyboardInputRedirection;
+class KeyboardLayout;
 class PointerInputRedirection;
 class SeatInterface;
 class TabletInputRedirection;
 class TouchInputRedirection;
 class WindowSelectorFilter;
+class Xkb;
 struct SwitchEvent;
 struct TabletToolTipEvent;
 struct TabletToolAxisEvent;
@@ -171,9 +176,10 @@ public:
         }
     }
 
-    KeyboardInputRedirection *keyboard() const
+    KeyboardInputRedirection *keyboard() const;
+    KeyboardLayout *keyboardLayout() const
     {
-        return m_keyboard;
+        return m_keyboardLayout;
     }
     PointerInputRedirection *pointer() const
     {
@@ -192,6 +198,7 @@ public:
      * Specifies which was the device that triggered the last input event
      */
     void setLastInputHandler(QObject *device);
+    void setLastKeyboardInputDevice(InputDevice *device, std::chrono::microseconds time);
     QObject *lastInputHandler() const;
 
     void setLastInteractionSerial(uint32_t serial);
@@ -286,12 +293,16 @@ private:
     void setupWorkspace();
     void setupInputFilters();
     void updateLeds(LEDs leds);
+    QList<KeyboardInput *> keyboards() const;
+    void syncActiveKeyboardState(KeyboardInput *oldKeyboard, KeyboardInput *newKeyboard);
     void updateAvailableInputDevices();
     KeyboardInputRedirection *m_keyboard;
+    KeyboardLayout *m_keyboardLayout = nullptr;
     PointerInputRedirection *m_pointer;
     TabletInputRedirection *m_tablet;
     TouchInputRedirection *m_touch;
     QObject *m_lastInputDevice = nullptr;
+    QPointer<InputDevice> m_lastKeyboardInputDevice;
     uint32_t m_lastInteractionSerial = 0;
 
     GlobalShortcutsManager *m_shortcuts;
@@ -337,6 +348,7 @@ private:
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();
+    friend class KeyboardInputRedirection;
     friend class DecorationEventFilter;
     friend class InternalWindowEventFilter;
     friend class ForwardInputFilter;

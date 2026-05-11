@@ -35,23 +35,19 @@ class Window;
 class InputDevice;
 class InputRedirection;
 class KeyboardLayout;
-class ModifiersChangedSpy;
 class Xkb;
 class KeyboardRepeat;
-class KeyStateChangedSpy;
 
-class KWIN_EXPORT KeyboardInputRedirection : public QObject
+class KWIN_EXPORT KeyboardInput : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit KeyboardInputRedirection(InputRedirection *parent);
-    ~KeyboardInputRedirection() override;
+    explicit KeyboardInput(QObject *parent = nullptr);
+    ~KeyboardInput() override;
 
     void init();
     void reconfigure();
-
-    void update();
 
     /**
      * @internal
@@ -61,7 +57,6 @@ public:
     Xkb *xkb() const;
     Qt::KeyboardModifiers modifiers() const;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const;
-    KeyboardLayout *keyboardLayout() const;
     QList<uint32_t> pressedKeys() const;
 
     /**
@@ -79,15 +74,9 @@ Q_SIGNALS:
     void ledsChanged(KWin::LEDs);
 
 private:
-    Window *pickFocus() const;
-
-    InputRedirection *m_input;
     bool m_inited = false;
     const std::unique_ptr<Xkb> m_xkb;
     QMetaObject::Connection m_activeWindowSurfaceChangedConnection;
-    std::unique_ptr<KeyStateChangedSpy> m_keyStateChangedSpy;
-    std::unique_ptr<ModifiersChangedSpy> m_modifiersChangedSpy;
-    KeyboardLayout *m_keyboardLayout = nullptr;
     QList<uint32_t> m_pressedKeys;
     QList<uint32_t> m_filteredKeys;
     A11yKeyboardMonitor m_a11yKeyboardMonitor;
