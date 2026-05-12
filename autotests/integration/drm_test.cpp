@@ -53,6 +53,25 @@ private Q_SLOTS:
     void testDpms();
 };
 
+static uint32_t calculateRefreshRate(const drmModeModeInfo &info)
+{
+    uint64_t refreshRate = (info.clock * 1000000LL / info.htotal + info.vtotal / 2) / info.vtotal;
+
+    if (info.flags & DRM_MODE_FLAG_INTERLACE) {
+        refreshRate *= 2;
+    }
+
+    if (info.flags & DRM_MODE_FLAG_DBLSCAN) {
+        refreshRate /= 2;
+    }
+
+    if (info.vscan > 1) {
+        refreshRate /= info.vscan;
+    }
+
+    return refreshRate;
+}
+
 struct DrmCrtcState
 {
     bool active;
@@ -75,7 +94,7 @@ std::optional<DrmCrtcState> DrmCrtcState::read(int fd, uint32_t id)
     return DrmCrtcState{
         .active = active->second == 1,
         .modeSize = crtc->mode_valid ? QSize(crtc->mode.hdisplay, crtc->mode.vdisplay) : QSize(),
-        .refreshRateMilliHertz = crtc->mode_valid ? DrmConnector::refreshRateForMode(&crtc->mode) : 0,
+        .refreshRateMilliHertz = crtc->mode_valid ? calculateRefreshRate(crtc->mode) : 0,
     };
 }
 

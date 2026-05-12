@@ -92,7 +92,7 @@ class OutputModeListV2 : public QtWaylandServer::kde_mode_list_v2
 public:
     explicit OutputModeListV2(wl_resource *resource);
 
-    QList<CustomModeDefinition> modes;
+    QList<OutputModeline> modes;
 
 private:
     void kde_mode_list_v2_destroy_resource(Resource *resource) override;
@@ -104,7 +104,7 @@ private:
 
     std::optional<QSize> m_resolution;
     std::optional<uint32_t> m_refreshRate;
-    OutputModeline::Flags m_flags = OutputModeline::Flag::Custom;
+    bool m_reducedBlanking = false;
 };
 
 OutputManagementV2InterfacePrivate::OutputManagementV2InterfacePrivate(Display *display)
@@ -605,10 +605,9 @@ void OutputModeListV2::kde_mode_list_v2_add_mode(Resource *resource)
         wl_resource_post_error(resource->handle, error_missing_parameters, "Resolution or refresh rate were not set");
         return;
     }
-    modes.push_back(CustomModeDefinition{
-        .size = *m_resolution,
-        .refreshRate = *m_refreshRate,
-        .flags = m_flags,
+    modes.push_back(OutputModeline {
+        CvtModeline::generate(*m_resolution, *m_refreshRate, m_reducedBlanking),
+        OutputModeline::Flag::Custom | OutputModeline::Flag::Generated,
     });
 }
 
@@ -624,7 +623,7 @@ void OutputModeListV2::kde_mode_list_v2_set_refresh_rate(Resource *resource, uin
 
 void OutputModeListV2::kde_mode_list_v2_set_reduced_blanking(Resource *resource, uint32_t reduced)
 {
-    m_flags.setFlag(OutputModeline::Flag::ReducedBlanking, reduced == 1);
+    m_reducedBlanking = reduced == 1;
 }
 
 void OutputConfigurationV2Interface::sendFailure(Resource *resource, const QString &reason)
@@ -678,11 +677,11 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         }
         if (changeset->customModes.has_value()) {
             for (const auto &info : *changeset->customModes) {
-                if (info.size.isEmpty()) {
+                if (info.size().isEmpty()) {
                     sendFailure(resource, i18n("Cannot add a custom mode with an empty size"));
                     return;
                 }
-                if (info.refreshRate == 0) {
+                if (info.refreshRate() == 0) {
                     sendFailure(resource, i18n("Cannot add a custom mode with a refresh rate of zero Hz"));
                     return;
                 }

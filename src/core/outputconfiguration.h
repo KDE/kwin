@@ -26,6 +26,7 @@ class KWIN_EXPORT OutputChangeSet
 public:
     std::optional<OutputModeline> currentMode;
     std::optional<OutputModeline> desiredMode;
+    std::optional<QList<OutputModeline>> customModes;
     std::optional<bool> enabled;
     std::optional<QPoint> pos;
     std::optional<double> scale;
@@ -66,7 +67,6 @@ public:
     std::optional<double> sharpness;
     std::optional<BackendOutput::DpmsMode> dpmsMode;
     std::optional<uint32_t> priority;
-    std::optional<QList<CustomModeDefinition>> customModes;
     std::optional<QPoint> deviceOffset;
     std::optional<bool> automaticBrightness;
     std::optional<AutoBrightnessCurve> autoBrightnessCurve;

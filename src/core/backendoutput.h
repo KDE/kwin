@@ -322,7 +322,7 @@ public:
     const AutoBrightnessCurve &autoBrightnessCurve() const;
     bool automaticBrightness() const;
     BrightnessReason lastBrightnessAdjustmentReason() const;
-    QList<CustomModeDefinition> customModes() const;
+    QList<OutputModeline> customModes() const;
 
     /**
      * The setting for the scale factor, which may differ from scale
@@ -443,6 +443,7 @@ protected:
         QList<std::shared_ptr<OutputMode>> modes;
         std::shared_ptr<OutputMode> currentMode;
         OutputModeline desiredMode;
+        QList<OutputModeline> customModes;
         DpmsMode dpmsMode = DpmsMode::On;
         SubPixel subPixel = SubPixel::Unknown;
         bool enabled = false;
@@ -489,7 +490,6 @@ protected:
         EdrPolicy edrPolicy = EdrPolicy::Always;
         double sharpnessSetting = 0;
         uint32_t priority = 0;
-        QList<CustomModeDefinition> customModes;
         double scaleSetting = 1;
         QPoint deviceOffset;
         bool automaticBrightness = false;

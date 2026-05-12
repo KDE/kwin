@@ -28,6 +28,29 @@
 namespace KWin
 {
 
+std::shared_ptr<OutputMode> LegacyOutputModeline::match(const QList<std::shared_ptr<OutputMode>> &modes) const
+{
+    for (const auto &mode : modes) {
+        if (mode->isRemoved()) {
+            continue;
+        }
+        if (mode->size() == size && mode->refreshRate() == refreshRate && mode->flags() == flags) {
+            return mode;
+        }
+    }
+    return nullptr;
+}
+
+std::optional<OutputModeline> LegacyOutputModeline::match(const QList<OutputModeline> &modes) const
+{
+    for (const auto &mode : modes) {
+        if (mode.size() == size && mode.refreshRate() == refreshRate && mode.flags() == flags) {
+            return mode;
+        }
+    }
+    return std::nullopt;
+}
+
 OutputConfigurationStore::OutputConfigurationStore()
 {
     load();
@@ -396,7 +419,7 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
             // list but no matching entry in the state.customModes list.
             if (state.mode->flags() & OutputModeline::Flag::Custom) {
                 if (state.customModes) {
-                    if (state.mode->match(*state.customModes)) {
+                    if (state.customModes->contains(state.mode)) {
                         effectiveMode = state.mode;
                     }
                 }
@@ -405,6 +428,21 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
                 if (state.mode->match(availableModes)) {
                     effectiveMode = state.mode;
                 }
+            }
+        } else if (state.legacyMode) {
+            // Note that a custom mode can potentially have a matching object in the output->modes()
+            // list but no matching entry in the state.customModes list.
+            if (state.legacyMode->flags & OutputModeline::Flag::Custom) {
+                if (state.customModes) {
+                    if (const auto modeline = state.legacyMode->match(*state.customModes)) {
+                        effectiveMode = modeline;
+                    }
+                }
+            } else {
+                const auto availableModes = output->modes();
+                if (const auto mode = state.legacyMode->match(availableModes)) {
+                    effectiveMode = mode->modeline();
+                }
 
                 // This is fallback for output configs prior to 6.6.5, which didn't have flags.
                 if (!effectiveMode) {
@@ -412,7 +450,7 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
                         if (mode->isRemoved()) {
                             continue;
                         }
-                        if (state.mode->size() == mode->size() && state.mode->refreshRate() == mode->refreshRate()) {
+                        if (state.legacyMode->size == mode->size() && state.legacyMode->refreshRate == mode->refreshRate()) {
                             effectiveMode = mode->modeline();
                             break;
                         }
@@ -429,6 +467,7 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
         *ret.changeSet(output) = OutputChangeSet{
             .currentMode = effectiveMode,
             .desiredMode = state.mode,
+            .customModes = state.customModes,
             .enabled = setupState.enabled,
             .pos = setupState.position,
             .scale = state.scaleSetting,
@@ -463,7 +502,6 @@ OutputConfiguration OutputConfigurationStore::setupToConfig(Setup *setup, const 
             .edrPolicy = state.edrPolicy,
             .sharpness = state.sharpness,
             .priority = setupState.priority,
-            .customModes = state.customModes,
             .automaticBrightness = state.automaticBrightness,
             .autoBrightnessCurve = state.autoBrightnessCurve,
             .abmLevel = state.abmLevel,
@@ -626,7 +664,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             // list but no matching entry in the state.customModes list.
             if (existingData.mode->flags() & OutputModeline::Flag::Custom) {
                 if (existingData.customModes) {
-                    if (existingData.mode->match(*existingData.customModes)) {
+                    if (existingData.customModes->contains(existingData.mode)) {
                         modeline = existingData.mode;
                     }
                 }
@@ -635,6 +673,21 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
                 if (existingData.mode->match(availableModes)) {
                     modeline = existingData.mode;
                 }
+            }
+        } else if (existingData.legacyMode) {
+            // Note that a custom mode can potentially have a matching object in the output->modes()
+            // list but no matching entry in the existingData.customModes list.
+            if (existingData.legacyMode->flags & OutputModeline::Flag::Custom) {
+                if (existingData.customModes) {
+                    if (const auto match = existingData.legacyMode->match(*existingData.customModes)) {
+                        modeline = match;
+                    }
+                }
+            } else {
+                const auto availableModes = output->modes();
+                if (const auto mode = existingData.legacyMode->match(availableModes)) {
+                    modeline = mode->modeline();
+                }
 
                 // This is fallback for output configs prior to 6.6.5, which didn't have flags.
                 if (!modeline) {
@@ -642,7 +695,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
                         if (mode->isRemoved()) {
                             continue;
                         }
-                        if (existingData.mode->size() == mode->size() && existingData.mode->refreshRate() == mode->refreshRate()) {
+                        if (existingData.legacyMode->size == mode->size() && existingData.legacyMode->refreshRate == mode->refreshRate()) {
                             modeline = mode->modeline();
                             break;
                         }
@@ -665,6 +718,7 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
         *changeset = {
             .currentMode = modeline,
             .desiredMode = modeline,
+            .customModes = existingData.customModes,
             .enabled = setupState ? setupState->enabled : enable,
             .pos = setupState ? setupState->position : rightMostPosition,
             // kscreen scale is unreliable because it gets overwritten with the value 1 on Xorg,
@@ -691,7 +745,6 @@ OutputConfiguration OutputConfigurationStore::generateConfig(const QList<Backend
             .edrPolicy = existingData.edrPolicy.value_or(BackendOutput::EdrPolicy::Always),
             .sharpness = existingData.sharpness.value_or(0),
             .priority = setupState ? setupState->priority : priority,
-            .customModes = existingData.customModes,
             .automaticBrightness = existingData.automaticBrightness.value_or(false),
             // TODO generate a more fitting brightness map per screen?
             .autoBrightnessCurve = existingData.autoBrightnessCurve,
@@ -910,6 +963,157 @@ static QString profileSourceToString(BackendOutput::ColorProfileSource source)
     Q_UNREACHABLE();
 }
 
+static std::optional<LegacyOutputModeline> readLegacyMode(const QJsonObject &object)
+{
+    const int width = object["width"].toInt(0);
+    if (width <= 0) {
+        return std::nullopt;
+    }
+
+    const int height = object["height"].toInt(0);
+    if (height <= 0) {
+        return std::nullopt;
+    }
+
+    const int refreshRate = object["refreshRate"].toInt(0);
+    if (refreshRate <= 0) {
+        return std::nullopt;
+    }
+
+    const auto flags = OutputModeline::Flags(object["flags"].toInt(0));
+
+    return LegacyOutputModeline{
+        .size = QSize(width, height),
+        .refreshRate = uint32_t(refreshRate),
+        .flags = flags,
+    };
+}
+
+static QJsonObject saveLegacyMode(const LegacyOutputModeline &modeline)
+{
+    QJsonObject mode;
+    mode["width"] = modeline.size.width();
+    mode["height"] = modeline.size.height();
+    mode["refreshRate"] = int(modeline.refreshRate);
+    mode["flags"] = int(modeline.flags);
+    return mode;
+}
+
+static std::optional<OutputModeline> readLegacyCustomMode(const QJsonObject &object)
+{
+    const int width = object["width"].toInt(0);
+    if (width <= 0) {
+        return std::nullopt;
+    }
+
+    const int height = object["height"].toInt(0);
+    if (height <= 0) {
+        return std::nullopt;
+    }
+
+    const int refreshRate = object["refreshRate"].toInt(0);
+    if (refreshRate <= 0) {
+        return std::nullopt;
+    }
+
+    const auto flags = OutputModeline::Flags(object["flags"].toInt(0));
+    return OutputModeline(CvtModeline::generate(QSize(width, height), refreshRate, flags & OutputModeline::Flag::ReducedBlanking), flags);
+}
+
+static std::optional<OutputModeline> readMode(const QJsonObject &object)
+{
+    const auto modeFlags = OutputModeline::Flags(object["flags"].toInt(0));
+
+    if (const QJsonObject cvt = object["cvt"].toObject(); !cvt.isEmpty()) {
+        const int clock = cvt["clock"].toInt();
+        if (clock <= 0) {
+            return std::nullopt;
+        }
+
+        const int hdisplay = cvt["hdisplay"].toInt();
+        const int hsyncStart = cvt["hsyncStart"].toInt();
+        const int hsyncEnd = cvt["hsyncEnd"].toInt();
+        const int htotal = cvt["htotal"].toInt();
+        const int hskew = cvt["hskew"].toInt();
+        const int vdisplay = cvt["vdisplay"].toInt();
+        const int vsyncStart = cvt["vsyncStart"].toInt();
+        const int vsyncEnd = cvt["vsyncEnd"].toInt();
+        const int vtotal = cvt["vtotal"].toInt();
+        const int vscan = cvt["vscan"].toInt();
+        const int flags = cvt["flags"].toInt();
+
+        return OutputModeline(CvtModeline{
+                                  .clock = uint32_t(clock),
+                                  .hdisplay = uint16_t(hdisplay),
+                                  .hsyncStart = uint16_t(hsyncStart),
+                                  .hsyncEnd = uint16_t(hsyncEnd),
+                                  .htotal = uint16_t(htotal),
+                                  .hskew = uint16_t(hskew),
+                                  .vdisplay = uint16_t(vdisplay),
+                                  .vsyncStart = uint16_t(vsyncStart),
+                                  .vsyncEnd = uint16_t(vsyncEnd),
+                                  .vtotal = uint16_t(vtotal),
+                                  .vscan = uint16_t(vscan),
+                                  .flags = uint32_t(flags),
+                              },
+                              modeFlags);
+    } else if (const QJsonObject basic = object["basic"].toObject(); !basic.isEmpty()) {
+        const int width = basic["width"].toInt();
+        if (width <= 0) {
+            return std::nullopt;
+        }
+
+        const int height = basic["height"].toInt();
+        if (height <= 0) {
+            return std::nullopt;
+        }
+
+        const int refreshRate = basic["refreshRate"].toInt();
+        if (refreshRate <= 0) {
+            return std::nullopt;
+        }
+
+        return OutputModeline(BasicModeline{
+                                  .size = QSize(width, height),
+                                  .refreshRate = uint32_t(refreshRate),
+                              },
+                              modeFlags);
+    }
+
+    return std::nullopt;
+}
+
+static QJsonObject saveMode(const OutputModeline &modeline)
+{
+    QJsonObject object;
+    object["flags"] = QJsonValue(int(modeline.flags()));
+
+    if (const auto cvt = modeline.cvt()) {
+        object["cvt"] = QJsonObject({
+            {QStringLiteral("clock"), QJsonValue(int(cvt->clock))},
+            {QStringLiteral("hdisplay"), QJsonValue(int(cvt->hdisplay))},
+            {QStringLiteral("hsyncStart"), QJsonValue(int(cvt->hsyncStart))},
+            {QStringLiteral("hsyncEnd"), QJsonValue(int(cvt->hsyncEnd))},
+            {QStringLiteral("htotal"), QJsonValue(int(cvt->htotal))},
+            {QStringLiteral("hskew"), QJsonValue(int(cvt->hskew))},
+            {QStringLiteral("vdisplay"), QJsonValue(int(cvt->vdisplay))},
+            {QStringLiteral("vsyncStart"), QJsonValue(int(cvt->vsyncStart))},
+            {QStringLiteral("vsyncEnd"), QJsonValue(int(cvt->vsyncEnd))},
+            {QStringLiteral("vtotal"), QJsonValue(int(cvt->vtotal))},
+            {QStringLiteral("vscan"), QJsonValue(int(cvt->vscan))},
+            {QStringLiteral("flags"), QJsonValue(int(cvt->flags))},
+        });
+    } else if (const auto basic = modeline.basic()) {
+        object["basic"] = QJsonObject({
+            {QStringLiteral("width"), QJsonValue(int(basic->size.width()))},
+            {QStringLiteral("height"), QJsonValue(int(basic->size.height()))},
+            {QStringLiteral("refreshRate"), QJsonValue(int(basic->refreshRate))},
+        });
+    }
+
+    return object;
+}
+
 void OutputConfigurationStore::load()
 {
     const QString jsonPath = QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"));
@@ -994,13 +1198,12 @@ void OutputConfigurationStore::load()
         }
         if (const auto it = data.find("mode"); it != data.end()) {
             const auto obj = it->toObject();
-            const int width = obj["width"].toInt(0);
-            const int height = obj["height"].toInt(0);
-            const int refreshRate = obj["refreshRate"].toInt(0);
-            const auto flags = OutputModeline::Flags(obj["flags"].toInt(0));
-            if (width > 0 && height > 0 && refreshRate > 0) {
-                state.mode = OutputModeline(QSize(width, height), refreshRate, flags);
-                qCDebug(KWIN_OUTPUT_CONFIG, "Read mode %dx%d@%u for output %s", width, height, refreshRate, qPrintable(state.edidIdentifier));
+            if (const auto mode = readMode(obj)) {
+                state.mode = mode;
+                qCDebug(KWIN_OUTPUT_CONFIG, "Read mode %dx%d@%u for output %s", state.mode->size().width(), state.mode->size().height(), state.mode->refreshRate(), qPrintable(state.edidIdentifier));
+            } else if (const auto mode = readLegacyMode(obj)) {
+                state.legacyMode = mode;
+                qCDebug(KWIN_OUTPUT_CONFIG, "Read legacy mode %dx%d@%u for output %s", state.legacyMode->size.width(), state.legacyMode->size.height(), state.legacyMode->refreshRate, qPrintable(state.edidIdentifier));
             }
         }
         if (const auto it = data.find("scale"); it != data.end()) {
@@ -1159,19 +1362,13 @@ void OutputConfigurationStore::load()
         }
         if (const auto it = data.find("customModes"); it != data.end() && it->isArray()) {
             const auto arr = it->toArray();
-            QList<CustomModeDefinition> modes;
+            QList<OutputModeline> modes;
             for (const auto &value : arr) {
-                const auto obj = value.toObject();
-                const int width = obj["width"].toInt(0);
-                const int height = obj["height"].toInt(0);
-                const int refreshRate = obj["refreshRate"].toInt(0);
-                const int flags = obj["flags"].toInt(0);
-                if (width > 0 && height > 0 && refreshRate > 0) {
-                    modes.push_back(CustomModeDefinition{
-                        .size = QSize(width, height),
-                        .refreshRate = uint32_t(refreshRate),
-                        .flags = OutputModeline::Flags(flags),
-                    });
+                const QJsonObject object = value.toObject();
+                if (const auto modeline = readMode(object)) {
+                    modes.append(*modeline);
+                } else if (const auto modeline = readLegacyCustomMode(object)) {
+                    modes.append(*modeline);
                 }
             }
             state.customModes = modes;
@@ -1350,13 +1547,12 @@ void OutputConfigurationStore::save()
         if (!output.mstPath.isEmpty()) {
             o["mstPath"] = output.mstPath;
         }
+        // output.legacyMode will be replaced by output.mode when the corresponding output is connected.
+        // In meanwhile, the legacyMode has to be written back to avoid data loss.
         if (output.mode) {
-            QJsonObject mode;
-            mode["width"] = output.mode->size().width();
-            mode["height"] = output.mode->size().height();
-            mode["refreshRate"] = int(output.mode->refreshRate());
-            mode["flags"] = int(output.mode->flags());
-            o["mode"] = mode;
+            o["mode"] = saveMode(*output.mode);
+        } else if (output.legacyMode) {
+            o["mode"] = saveLegacyMode(*output.legacyMode);
         }
         if (output.scaleSetting) {
             o["scale"] = *output.scaleSetting;
@@ -1485,12 +1681,7 @@ void OutputConfigurationStore::save()
         if (output.customModes.has_value()) {
             QJsonArray modes;
             for (const auto &mode : *output.customModes) {
-                QJsonObject obj;
-                obj["width"] = mode.size.width();
-                obj["height"] = mode.size.height();
-                obj["refreshRate"] = int(mode.refreshRate);
-                obj["flags"] = int(mode.flags);
-                modes.append(obj);
+                modes.append(saveMode(mode));
             }
             if (!modes.isEmpty()) {
                 o["customModes"] = modes;
