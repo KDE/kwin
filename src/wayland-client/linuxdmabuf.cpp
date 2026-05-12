@@ -8,7 +8,7 @@
 #include "wayland-client/waylandclientlogging.h"
 
 // Generated in src/wayland.
-#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
+#include "wayland-linux-dmabuf-v1-client-protocol.h"
 
 #include <span>
 #include <unistd.h>

@@ -15,7 +15,7 @@
 #include "linuxdmabufv1clientbuffer.h"
 #include "utils/ramfile.h"
 
-#include "qwayland-server-linux-dmabuf-unstable-v1.h"
+#include "qwayland-server-linux-dmabuf-v1.h"
 
 #include <QDebug>
 #include <QList>

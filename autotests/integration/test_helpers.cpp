@@ -19,7 +19,7 @@
 #include "inputmethod.h"
 #include "wayland-client/linuxdmabuf.h"
 #include "wayland-client/viewporter.h"
-#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
+#include "wayland-linux-dmabuf-v1-client-protocol.h"
 #include "wayland-viewporter-client-protocol.h"
 #include "wayland-zkde-screencast-unstable-v1-client-protocol.h"
 #include "wayland/display.h"
