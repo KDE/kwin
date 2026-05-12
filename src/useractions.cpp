@@ -223,12 +223,6 @@ void UserActionsMenu::init()
     setShortcut(m_resizeOperation, QStringLiteral("Window Resize"));
     m_resizeOperation->setData(Options::ResizeOp);
 
-    m_keepAboveOperation = advancedMenu->addAction(i18n("Keep &Above Others"));
-    m_keepAboveOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-keep-above")));
-    setShortcut(m_keepAboveOperation, QStringLiteral("Window Above Other Windows"));
-    m_keepAboveOperation->setCheckable(true);
-    m_keepAboveOperation->setData(Options::KeepAboveOp);
-
     m_keepBelowOperation = advancedMenu->addAction(i18n("Keep &Below Others"));
     m_keepBelowOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-keep-below")));
     setShortcut(m_keepBelowOperation, QStringLiteral("Window Below Other Windows"));
@@ -282,6 +276,12 @@ void UserActionsMenu::init()
     m_minimizeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-minimize")));
     setShortcut(m_minimizeOperation, QStringLiteral("Window Minimize"));
     m_minimizeOperation->setData(Options::MinimizeOp);
+
+    m_keepAboveOperation = m_menu->addAction(i18n("Keep &Above Others"));
+    m_keepAboveOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-keep-above")));
+    setShortcut(m_keepAboveOperation, QStringLiteral("Window Above Other Windows"));
+    m_keepAboveOperation->setCheckable(true);
+    m_keepAboveOperation->setData(Options::KeepAboveOp);
 
     QAction *overflowAction = m_menu->addMenu(advancedMenu);
     overflowAction->setText(i18n("&More Actions"));
