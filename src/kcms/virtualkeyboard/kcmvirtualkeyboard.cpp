@@ -21,8 +21,10 @@ KcmVirtualKeyboard::KcmVirtualKeyboard(QObject *parent, const KPluginMetaData &m
     : KQuickManagedConfigModule(parent, metaData)
     , m_data(new VirtualKeyboardData(this))
     , m_model(new VirtualKeyboardsModel(this))
+    , m_dbusInterface(std::make_unique<KWinVirtualKeyboard>())
 {
     qmlRegisterAnonymousType<VirtualKeyboardSettings>("org.kde.kwin.virtualkeyboardsettings", 1);
+    qmlRegisterType<KWinVirtualKeyboard>("org.kde.kwin.virtualkeyboard", 1, 0, "KWinVirtualKeyboard");
 }
 
 KcmVirtualKeyboard::~KcmVirtualKeyboard() = default;

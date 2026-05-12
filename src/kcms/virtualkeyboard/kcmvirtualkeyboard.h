@@ -5,6 +5,7 @@
 */
 
 #pragma once
+#include "virtualkeyboard.h"
 
 #include <KQuickManagedConfigModule>
 #include <KService>
@@ -41,6 +42,7 @@ class KcmVirtualKeyboard : public KQuickManagedConfigModule
     Q_OBJECT
     Q_PROPERTY(VirtualKeyboardSettings *settings READ settings CONSTANT)
     Q_PROPERTY(QAbstractItemModel *model READ keyboardsModel CONSTANT)
+    Q_PROPERTY(KWinVirtualKeyboard *dbusInterface READ dbusInterface CONSTANT)
 
 public:
     explicit KcmVirtualKeyboard(QObject *parent, const KPluginMetaData &metaData);
@@ -52,7 +54,13 @@ public:
         return m_model;
     }
 
+    KWinVirtualKeyboard *dbusInterface() const
+    {
+        return m_dbusInterface.get();
+    }
+
 private:
     VirtualKeyboardData *m_data;
     VirtualKeyboardsModel *const m_model;
+    std::unique_ptr<KWinVirtualKeyboard> m_dbusInterface;
 };
