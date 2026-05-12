@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-09 00:45+0000\n"
+"POT-Creation-Date: 2026-05-12 00:46+0000\n"
 "PO-Revision-Date: 2026-02-17 23:24-0500\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -1527,7 +1527,7 @@ msgstr ""
 "تاللىنىدۇ.\n"
 "چاشقىنەك ئوڭ توپچىسى چېكىلسە ياكى Escape بېسىلسا ۋاز كېچىدۇ."
 
-#: main.cpp:168 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:167 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1538,77 +1538,77 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:170 main.cpp:194
+#: main.cpp:169 main.cpp:193
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE كۆزنەك باشقۇرغۇچ"
 
-#: main.cpp:172
+#: main.cpp:171
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019، KDE ئىجادىيەتچىلىرى"
 
-#: main.cpp:174
+#: main.cpp:173
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:175
+#: main.cpp:174
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:176
+#: main.cpp:175
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:177
+#: main.cpp:176
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:178
+#: main.cpp:177
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:179
+#: main.cpp:178
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:180
+#: main.cpp:179
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:181
+#: main.cpp:180
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:182
+#: main.cpp:181
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:191
+#: main.cpp:190
 #, kde-format
 msgid "Disable configuration options"
 msgstr "سەپلىمە تاللانمىسىنى چەكلەيدۇ"
 
-#: main.cpp:192
+#: main.cpp:191
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "ئەھۋالدىن مەلۇم بولۇشىچە KWin يېقىندا كۆپ قېتىم يىمىرىلدى"
 
-#: main_wayland.cpp:305
+#: main_wayland.cpp:310
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "root ئىجازىتى يوق Xwayland مۇلازىمىتىنى قوزغىتىدۇ."
 
-#: main_wayland.cpp:308
+#: main_wayland.cpp:313
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1616,49 +1616,49 @@ msgstr ""
 "ئاڭلايدىغان Wayland ئۇلاق ئىسمى. ئەگەر تەڭشەلمىگەن بولسا «wayland-0» نى "
 "ئىشلىتىدۇ."
 
-#: main_wayland.cpp:312
+#: main_wayland.cpp:317
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11 سۇپىسىدىكى كۆزنەك ھالىتى ئىشلىتىدىغان X11 كۆرسەتكۈچ."
 
-#: main_wayland.cpp:316
+#: main_wayland.cpp:321
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Wayland سۇپىسىدىكى كۆزنەك ھالىتى ئىشلىتىدىغان Wayland كۆرسەتكۈچ."
 
-#: main_wayland.cpp:318
+#: main_wayland.cpp:323
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "مەۋھۇم كاندۇك يىغلەكنى شەكىللەندۈرىدۇ."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:325
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "كۆزنەك ھالىتىنىڭ كەڭلىكى. كۆڭۈلدىكى كەڭلىكى 1024."
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:329
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "كۆزنەك ھالىتىنىڭ ئېگىزلىكى. كۆڭۈلدىكى ئېگىزلىكى 768."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:334
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr "كۆزنەك ھالىتىنى تولۇق ئېكران كۆرسىتەمدۇ يوق"
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:338
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "كۆزنەك ھالىتىنىڭ نىسبىتى. كۆڭۈلدىكى قىممىتى 1."
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:343
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 "كۆزنەك ھالىتىدە چىقىرىش سۈپىتىدە ئاچىدىغان كۆزنەك سانى. كۆڭۈلدىكى قىممىتى 1"
 
-#: main_wayland.cpp:343
+#: main_wayland.cpp:348
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1667,7 +1667,7 @@ msgstr ""
 "كىرگەن باغلىنىشقا ئىشلىتىدىغان Wayland ئۇلاق. بۇ ئۇلاق «--socket » بىلەن "
 "بىللە ئۇلاق ئىسمىغا بىرلەشتۈرۈلىدۇ"
 
-#: main_wayland.cpp:347
+#: main_wayland.cpp:352
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1676,66 +1676,66 @@ msgstr ""
 "Xwayland كىرگەن باغلىنىشقا ئىشلىتىدىغان Xwayland ئۇلاق. بۇ ئۇلاقنى كۆپ قېتىم "
 "تەڭشىگىلى بولىدۇ"
 
-#: main_wayland.cpp:351
+#: main_wayland.cpp:356
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "ئالدىن تەڭشەلگەن Xwayland كۆرسەتكۈچنىڭ ئىسمى"
 
-#: main_wayland.cpp:355
+#: main_wayland.cpp:360
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "xauthority ھۆججەتنىڭ ئىسمى"
 
-#: main_wayland.cpp:359
+#: main_wayland.cpp:364
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "بۇ ئەمەلىي مىسالدىن چېكىنىدۇ شۇڭا kwin_wayland_wrapper ئۇنى قايتا "
 "قوزغىتالايدۇ."
 
-#: main_wayland.cpp:361
+#: main_wayland.cpp:366
 #, kde-format
 msgid "Render through drm node."
 msgstr "drm نۇقتا ئارقىلىق شەكىللەندۈرىدۇ."
 
-#: main_wayland.cpp:362
+#: main_wayland.cpp:367
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "ئىشلەتكۈچى سەپلىمىسىدىن ئەمەس بەلكى locale1 دىن يەرلىك ئۇچۇرنى ئاجرىتىدۇ"
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:394
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "KWin قوزغىتىدىغان كىرگۈزگۈچ."
 
-#: main_wayland.cpp:395
+#: main_wayland.cpp:400
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "قۇلۇپلاش ھالىتىدە جەريانچاقنى قوزغىتىدۇ."
 
-#: main_wayland.cpp:399
+#: main_wayland.cpp:404
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "قۇلۇپ ئېكرانىنىڭ قوللىشى بولمىغان ھالەتتە جەريانچاقنى قوزغىتىدۇ."
 
-#: main_wayland.cpp:404
+#: main_wayland.cpp:409
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "ئومۇمىيەت تېزلەتمىنىڭ قوللىشى بولمىغان ھالەتتە جەريانچاقنى قوزغىتىدۇ."
 
-#: main_wayland.cpp:409
+#: main_wayland.cpp:414
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities توپلاشتۇرۇشنى چەكلەيدۇ."
 
-#: main_wayland.cpp:414
+#: main_wayland.cpp:419
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "KWin قوزغاتقان جەريانچاق پىروگرامما  يېپىلغاندىن كېيىن چېكىنىدۇ."
 
-#: main_wayland.cpp:419
+#: main_wayland.cpp:424
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -3806,119 +3806,119 @@ msgstr "سەزگۈر تاختا %1 غا يۆتكەلدى"
 msgid "Tablets switched outputs"
 msgstr "سەزگۈر تاختا چىقىرىش ئۈسكۈنىسىنى ئالماشتۇردى"
 
-#: useractions.cpp:217
+#: useractions.cpp:216
 #, kde-format
 msgid "&Move"
 msgstr "يۆتكە(&M)"
 
-#: useractions.cpp:222
+#: useractions.cpp:221
 #, kde-format
 msgid "&Resize"
 msgstr "چوڭلۇقىنى ئۆزگەرت(&R)"
 
-#: useractions.cpp:227
+#: useractions.cpp:226
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "ئەڭ ئۈستىدە(&A)"
 
-#: useractions.cpp:233
+#: useractions.cpp:232
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "ئەڭ ئاستىدا(&B)"
 
-#: useractions.cpp:239
+#: useractions.cpp:238
 #, kde-format
 msgid "&Fullscreen"
 msgstr "پۈتۈن ئېكران(&F)"
 
-#: useractions.cpp:245
+#: useractions.cpp:244
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "ماۋزۇ بالداق ۋە كاندۇك يوق(&N)"
 
-#: useractions.cpp:251
+#: useractions.cpp:250
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr "ئېكران تارقىتىشتىن يوشۇر(&H)"
 
-#: useractions.cpp:259
+#: useractions.cpp:258
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "كۆزنەك تېزلەتمە تەڭشىكى(&C)…"
 
-#: useractions.cpp:265
+#: useractions.cpp:264
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "ئالاھىدە كۆزنەك تەڭشىكى سەپلىمىسى(&W)…"
 
-#: useractions.cpp:270
+#: useractions.cpp:269
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "ئالاھىدە پىروگرامما تەڭشىكى سەپلىمىسى(&P)…"
 
-#: useractions.cpp:276
+#: useractions.cpp:275
 #, kde-format
 msgid "Ma&ximize"
 msgstr "چوڭايت(&X)"
 
-#: useractions.cpp:282
+#: useractions.cpp:281
 #, kde-format
 msgid "Mi&nimize"
 msgstr "كىچىكلەت(&N)"
 
-#: useractions.cpp:288
+#: useractions.cpp:287
 #, kde-format
 msgid "&More Actions"
 msgstr "تېخىمۇ كۆپ مەشغۇلات(&M)"
 
-#: useractions.cpp:293
+#: useractions.cpp:292
 #, kde-format
 msgid "&Close"
 msgstr "ياپ(&C)"
 
-#: useractions.cpp:359
+#: useractions.cpp:358
 #, kde-format
 msgid "&Extensions"
 msgstr "كېڭەيتىلمە(&E)"
 
-#: useractions.cpp:409
+#: useractions.cpp:408
 #, kde-format
 msgid "&Desktops"
 msgstr "ئۈستەلئۈستى(&D)"
 
-#: useractions.cpp:425
+#: useractions.cpp:424
 #, kde-format
 msgid "Move to &Screen"
 msgstr "ئېكرانغا يۆتكە(&S)"
 
-#: useractions.cpp:441
+#: useractions.cpp:440
 #, kde-format
 msgid "Show in &Activities"
 msgstr "پائالىيەتتە كۆرسەت(&A)"
 
-#: useractions.cpp:457
+#: useractions.cpp:456
 #, kde-format
 msgid "&All Desktops"
 msgstr "بارلىق ئۈستەلئۈستى(&A)"
 
-#: useractions.cpp:492 useractions.cpp:624
+#: useractions.cpp:491 useractions.cpp:623
 #, kde-format
 msgid "Move to %1"
 msgstr "%1 غا يۆتكە"
 
-#: useractions.cpp:506
+#: useractions.cpp:505
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "يېڭى ئۈستەلئۈستىگە قوش(&N)"
 
-#: useractions.cpp:518
+#: useractions.cpp:517
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "يېڭى ئۈستەلئۈستىگە يۆتكە"
 
-#: useractions.cpp:549
+#: useractions.cpp:548
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3926,370 +3926,370 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "ئېكران &%1 (%2)"
 
-#: useractions.cpp:576
+#: useractions.cpp:575
 #, kde-format
 msgid "&All Activities"
 msgstr "بارلىق مەشغۇلات(&A)"
 
-#: useractions.cpp:740
+#: useractions.cpp:739
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> ئاللىقاچان ئىشلىتىلىۋاتىدۇ"
 
-#: useractions.cpp:742
+#: useractions.cpp:741
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "%3 دىكى %2 تەرىپىدىن <b>%1</b> ئىشلىتىلىۋاتىدۇ"
 
-#: useractions.cpp:822
+#: useractions.cpp:821
 #, kde-format
 msgid "Window Menu"
 msgstr "كۆزنەك تىزىملىكى"
 
-#: useractions.cpp:824
+#: useractions.cpp:823
 #, kde-format
 msgid "Close Window"
 msgstr "كۆزنەك ياپ"
 
-#: useractions.cpp:826
+#: useractions.cpp:825
 #, kde-format
 msgid "Maximize Window"
 msgstr "كۆزنەكنى چوڭايت"
 
-#: useractions.cpp:828
+#: useractions.cpp:827
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "كۆزنەكنى بويىغا چوڭايت"
 
-#: useractions.cpp:830
+#: useractions.cpp:829
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "كۆزنەكنى توغرىسىغا چوڭايت"
 
-#: useractions.cpp:832
+#: useractions.cpp:831
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgid "Restore Window"
 msgstr "كۆزنەك چوڭلۇقىنى ئۆزگەرت"
 
-#: useractions.cpp:834
+#: useractions.cpp:833
 #, kde-format
 msgid "Minimize Window"
 msgstr "كۆزنەكنى كىچىكلەت"
 
-#: useractions.cpp:836
+#: useractions.cpp:835
 #, kde-format
 msgid "Move Window"
 msgstr "كۆزنەكنى يۆتكە"
 
-#: useractions.cpp:838
+#: useractions.cpp:837
 #, kde-format
 msgid "Resize Window"
 msgstr "كۆزنەك چوڭلۇقىنى ئۆزگەرت"
 
-#: useractions.cpp:840
+#: useractions.cpp:839
 #, kde-format
 msgid "Raise Window"
 msgstr "كۆزنەكنى ئۆرلەت"
 
-#: useractions.cpp:842
+#: useractions.cpp:841
 #, kde-format
 msgid "Lower Window"
 msgstr "كۆزنەكنى تۆۋەنلەت"
 
-#: useractions.cpp:844
+#: useractions.cpp:843
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "كۆزنەكنى ئۆرلەت/تۆۋەنلەتنى ئالماشتۇر"
 
-#: useractions.cpp:846
+#: useractions.cpp:845
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "كۆزنەكنى تولۇق ئېكرانغا تولدۇر"
 
-#: useractions.cpp:848
+#: useractions.cpp:847
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "كۆزنەك ماۋزۇ بالداق ۋە كاندۇكنى ئالماشتۇرىدۇ"
 
-#: useractions.cpp:850
+#: useractions.cpp:849
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "كۆزنەكنى باشقا كۆزنەكنىڭ ئۈستىدە تۇتىدۇ"
 
-#: useractions.cpp:852
+#: useractions.cpp:851
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "كۆزنەكنى باشقا كۆزنەكنىڭ ئاستىدا تۇتىدۇ"
 
-#: useractions.cpp:854
+#: useractions.cpp:853
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "كۆزنەككە دىققەت قىلىشنى ئاكتىپلايدۇ"
 
-#: useractions.cpp:856
+#: useractions.cpp:855
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "كۆزنەك تېزلەتمىسىنى تەڭشە"
 
-#: useractions.cpp:858
+#: useractions.cpp:857
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "كۆزنەكنى ئېكراننىڭ مەركىزىگە يۆتكە"
 
-#: useractions.cpp:860
+#: useractions.cpp:859
 #, kde-format
 msgid "Move Window Right"
 msgstr "كۆزنەكنى ئونغا يۆتكە"
 
-#: useractions.cpp:862
+#: useractions.cpp:861
 #, kde-format
 msgid "Move Window Left"
 msgstr "كۆزنەكنى سولغا يۆتكە"
 
-#: useractions.cpp:864
+#: useractions.cpp:863
 #, kde-format
 msgid "Move Window Up"
 msgstr "كۆزنەكنى سۈتىگە يۆتكە"
 
-#: useractions.cpp:866
+#: useractions.cpp:865
 #, kde-format
 msgid "Move Window Down"
 msgstr "كۆزنەكنى ئاستىغا يۆتكە"
 
-#: useractions.cpp:868
+#: useractions.cpp:867
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "كۆزنەكنى توغرىسىغا ياي"
 
-#: useractions.cpp:870
+#: useractions.cpp:869
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "كۆزنەكنى بويىغا ياي"
 
-#: useractions.cpp:872
+#: useractions.cpp:871
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "كۆزنەكنى توغرىسىغا يىغ"
 
-#: useractions.cpp:874
+#: useractions.cpp:873
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "كۆزنەكنى بويىغا يىغ"
 
-#: useractions.cpp:876
+#: useractions.cpp:875
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "كۆزنەكنى سولغا تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:878
+#: useractions.cpp:877
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "كۆزنەكنى ئوڭغا تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:880
+#: useractions.cpp:879
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "كۆزنەكنى ئۈستىگە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:882
+#: useractions.cpp:881
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "كۆزنەكنى ئاستىغا تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:884
+#: useractions.cpp:883
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "كۆزنەكنى ئۇستى سول تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:886
+#: useractions.cpp:885
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "كۆزنەكنى ئاستى سول تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:888
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "كۆزنەكنى ئۇستى ئوڭ تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:890
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "كۆزنەكنى ئاستى ئوڭ تەرەپكە تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:892
+#: useractions.cpp:891
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "ئۇستىدىكى كۆزنەككە ئالماش"
 
-#: useractions.cpp:894
+#: useractions.cpp:893
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "ئاستىدىكى كۆزنەككە ئالماش"
 
-#: useractions.cpp:896
+#: useractions.cpp:895
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "ئوڭ تەرەپتىكى كۆزنەككە ئالماش"
 
-#: useractions.cpp:898
+#: useractions.cpp:897
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "سول تەرەپتىكى كۆزنەككە ئالماش"
 
-#: useractions.cpp:900
+#: useractions.cpp:899
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "ئاكتىپ كۆزنەكنىڭ تۇتۇقلۇقىنى 5% غا ئۆستۈر"
 
-#: useractions.cpp:902
+#: useractions.cpp:901
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "ئاكتىپ كۆزنەكنىڭ تۇتۇقلۇقىنى 5% غا تۆۋەنلەت"
 
-#: useractions.cpp:905
+#: useractions.cpp:904
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "كۆزنەكنى بارلىق ئۈستەلئۈستىدە تۇت"
 
-#: useractions.cpp:908
+#: useractions.cpp:907
 #, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "كۆزنەكنى سولغا ئىختىيارى تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:910
+#: useractions.cpp:909
 #, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "كۆزنەكنى ئوڭغا ئىختىيارى تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:912
+#: useractions.cpp:911
 #, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "كۆزنەكنى ئۈستىگە ئىختىيارى تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:914
+#: useractions.cpp:913
 #, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "كۆزنەكنى ئاستىغا ئىختىيارى تېز ئۈستىلەپ قوي"
 
-#: useractions.cpp:925
+#: useractions.cpp:924
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "كۆزنەكتىن %1 ئۈستەلئۈستىگە"
 
-#: useractions.cpp:927
+#: useractions.cpp:926
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "كۆزنەكتىن كېيىنكى ئۈستەلئۈستىگە"
 
-#: useractions.cpp:928
+#: useractions.cpp:927
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "كۆزنەكتىن ئالدىنقى ئۈستەلئۈستىگە"
 
-#: useractions.cpp:929
+#: useractions.cpp:928
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئوڭغا"
 
-#: useractions.cpp:931
+#: useractions.cpp:930
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى سولغا"
 
-#: useractions.cpp:933
+#: useractions.cpp:932
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئۈستىگە"
 
-#: useractions.cpp:935
+#: useractions.cpp:934
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "كۆزنەكنى بىر ئۈستەلئۈستى ئاستىغا"
 
-#: useractions.cpp:939
+#: useractions.cpp:938
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "كۆزنەكنى %1-ئېكرانغا يۆتكە"
 
-#: useractions.cpp:946
+#: useractions.cpp:945
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "كۆزنەكنى كېيىنكى ئېكرانغا يۆتكە"
 
-#: useractions.cpp:948
+#: useractions.cpp:947
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "كۆزنەكنى ئالدىنقى ئېكرانغا يۆتكە"
 
-#: useractions.cpp:950
+#: useractions.cpp:949
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "كۆزنەكنى ئوڭغا بىر ئېكران يۆتكە"
 
-#: useractions.cpp:952
+#: useractions.cpp:951
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "كۆزنەكنى سولغا بىر ئېكران يۆتكە"
 
-#: useractions.cpp:954
+#: useractions.cpp:953
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "كۆزنەكنى ئۈستىگە بىر ئېكران يۆتكە"
 
-#: useractions.cpp:956
+#: useractions.cpp:955
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "كۆزنەكنى ئاستىغا بىر ئېكران يۆتكە"
 
-#: useractions.cpp:960
+#: useractions.cpp:959
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "%1-ئېكرانغا ئالماشتۇر"
 
-#: useractions.cpp:967
+#: useractions.cpp:966
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "كېيىنكى ئېكرانغا ئالماشتۇر"
 
-#: useractions.cpp:968
+#: useractions.cpp:967
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "ئالدىنقى ئېكرانغا ئالماشتۇر"
 
-#: useractions.cpp:969
+#: useractions.cpp:968
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "ئوڭدىكى ئېكرانغا ئالماشتۇر"
 
-#: useractions.cpp:971
+#: useractions.cpp:970
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "سولدىكى ئېكرانغا ئالماشتۇر"
 
-#: useractions.cpp:973
+#: useractions.cpp:972
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "ئۇستىدىكى ئېكرانغا ئالماشتۇر"
 
-#: useractions.cpp:975
+#: useractions.cpp:974
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "ئاستىدىكى ئېكرانغا ئالماشتۇر"
 
-#: useractions.cpp:978
+#: useractions.cpp:977
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "ئۈستەلئۈستى كۆرسەت"
 
-#: useractions.cpp:981
+#: useractions.cpp:980
 #, kde-format
 msgid "Kill Window"
 msgstr "كۆزنەكنى يوقات"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1045
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "كۆزنەك (%1) نى ئاكتىپلا"
@@ -4339,60 +4339,60 @@ msgstr "ئاستىدىكى ئۈستەلئۈستىگە ئالماشتۇر"
 msgid "Switch to Desktop %1"
 msgstr "ئۈستەلئۈستى %1 غا ئالماشتۇر"
 
-#: wayland/outputmanagement_v2.cpp:570
+#: wayland/outputmanagement_v2.cpp:569
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:648
+#: wayland/outputmanagement_v2.cpp:647
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr "مۇناسىۋەتلىك بىر چىقىرىشنى ئەمدى ئىشلەتكىلى بولمايدۇ"
 
-#: wayland/outputmanagement_v2.cpp:666
+#: wayland/outputmanagement_v2.cpp:665
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr "سەپلىمىنى ئۆزگەرتىپ ھەممە چىقىرىشنى چەكلەشكە يول قويمايدۇ"
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:675
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:683
+#: wayland/outputmanagement_v2.cpp:682
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr "بوش چوڭلۇقتىكى ئىختىيارى ھالەتنى قوشالمايدۇ"
 
-#: wayland/outputmanagement_v2.cpp:687
+#: wayland/outputmanagement_v2.cpp:686
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr "يېڭىلاش نىسبىتى نۆل Hz بولغان ئىختىيارى ھالەتنى قوشالمايدۇ"
 
-#: wayland/outputmanagement_v2.cpp:698
+#: wayland/outputmanagement_v2.cpp:697
 #, fuzzy, kde-format
 #| msgid "Position of output %s is way too large (%d, %d)"
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr "%s چىقىرىدىغان ئورۇن بەك چوڭ (%d، %d)"
 
-#: wayland/outputmanagement_v2.cpp:701
+#: wayland/outputmanagement_v2.cpp:700
 #, fuzzy, kde-format
 #| msgid "Position of output %s is way too large (%d, %d)"
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr "%s چىقىرىدىغان ئورۇن بەك چوڭ (%d، %d)"
 
-#: wayland/outputmanagement_v2.cpp:705
+#: wayland/outputmanagement_v2.cpp:704
 #, fuzzy, kde-format
 #| msgid "Position of output %s is way too large (%d, %d)"
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr "%s چىقىرىدىغان ئورۇن بەك چوڭ (%d، %d)"
 
-#: wayland/outputmanagement_v2.cpp:722
+#: wayland/outputmanagement_v2.cpp:721
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr "قوزغاتقۇ چىقىرىش سەپلىمىسىنى رەت قىلدى"
 
-#: wayland/outputmanagement_v2.cpp:725
+#: wayland/outputmanagement_v2.cpp:724
 #, fuzzy, kde-format
 #| msgid "The Alt key is now active."
 msgid "The session is not active"
@@ -4404,7 +4404,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "[ئىنكاس يوق]"
 
-#: workspace.cpp:1774
+#: workspace.cpp:1772
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

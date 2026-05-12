@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-09 00:45+0000\n"
+"POT-Creation-Date: 2026-05-12 00:46+0000\n"
 "PO-Revision-Date: 2024-09-22 16:22+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -1545,7 +1545,7 @@ msgstr ""
 "Vel vindauge å ta tvangslukka med klikk eller «Enter».\n"
 "Høgreklikk eller trykk «Escape» for å avbryta."
 
-#: main.cpp:168 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:167 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1556,77 +1556,77 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:170 main.cpp:194
+#: main.cpp:169 main.cpp:193
 #, kde-format
 msgid "KDE window manager"
 msgstr "Vindaugshandsamar frå KDE"
 
-#: main.cpp:172
+#: main.cpp:171
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "© 1999–2019 KDE-utviklarane"
 
-#: main.cpp:174
+#: main.cpp:173
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:175
+#: main.cpp:174
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:176
+#: main.cpp:175
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:177
+#: main.cpp:176
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:178
+#: main.cpp:177
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:179
+#: main.cpp:178
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:180
+#: main.cpp:179
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:181
+#: main.cpp:180
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:182
+#: main.cpp:181
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:191
+#: main.cpp:190
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Slå av oppsettsval"
 
-#: main.cpp:192
+#: main.cpp:191
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Viser at KWin nyleg har krasja n gongar"
 
-#: main_wayland.cpp:305
+#: main_wayland.cpp:310
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Start ein rotlaus Xwayland-tener."
 
-#: main_wayland.cpp:308
+#: main_wayland.cpp:313
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1634,49 +1634,49 @@ msgstr ""
 "Namn på Wayland-socket-en å lytta på. Viss ikkje noko er valt, vert "
 "«wayland-0» brukt."
 
-#: main_wayland.cpp:312
+#: main_wayland.cpp:317
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11-skjermbiletet som skal brukast i vindaugsmodus på X11-plattforma."
 
-#: main_wayland.cpp:316
+#: main_wayland.cpp:321
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Wayland-skjermbiletet skal brukast i vindaugsmodus på Wayland-plattforma."
 
-#: main_wayland.cpp:318
+#: main_wayland.cpp:323
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Teikn opp til virtuell biletbuffer."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:325
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Breidda for vindaugsmodus. Standardbreidda er 1024."
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:329
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Høgda for vindaugsmodus. Standardhøgda er 768."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:334
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr ""
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:338
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Skala for vindaugsmodus. Standardverdi er 1."
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:343
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "Talet på vindauge å opna for utdata i vindaugsmodus. Standard er 1."
 
-#: main_wayland.cpp:343
+#: main_wayland.cpp:348
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1685,7 +1685,7 @@ msgstr ""
 "Wayland-socket som skal brukast for innkommande tilkoplingar. Du kan "
 "kombinera dette med «--socket» for å gje socket-en namn."
 
-#: main_wayland.cpp:347
+#: main_wayland.cpp:352
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1694,65 +1694,65 @@ msgstr ""
 "Wayland-socket som skal brukast for innkommande tilkoplingar til XWayland. "
 "Kan oppgjevast fleire gongar."
 
-#: main_wayland.cpp:351
+#: main_wayland.cpp:356
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Namn på XWayland-skjerm som er sett opp på førehand"
 
-#: main_wayland.cpp:355
+#: main_wayland.cpp:360
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Namn på xauthority-fil "
 
-#: main_wayland.cpp:359
+#: main_wayland.cpp:364
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Avsluttar denne instansen, slik at du kan startast på nytt med "
 "kwin_wayland_wrapper."
 
-#: main_wayland.cpp:361
+#: main_wayland.cpp:366
 #, kde-format
 msgid "Render through drm node."
 msgstr "Teikn opp gjennom drm-node."
 
-#: main_wayland.cpp:362
+#: main_wayland.cpp:367
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "Hent lokale-informasjon frå locale1 og ikkje frå brukaroppsettet"
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:394
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Inndata-metode som KWin startar."
 
-#: main_wayland.cpp:395
+#: main_wayland.cpp:400
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Startar økta i låst modus."
 
-#: main_wayland.cpp:399
+#: main_wayland.cpp:404
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Startar økta utan støtte for skjermlås."
 
-#: main_wayland.cpp:404
+#: main_wayland.cpp:409
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Startar økta utan støtte for globale snarvegar."
 
-#: main_wayland.cpp:409
+#: main_wayland.cpp:414
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Slå av KActivities-integrasjon."
 
-#: main_wayland.cpp:414
+#: main_wayland.cpp:419
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Avslutt etter at øktprogrammet, som vert starta av KWin, vert lukka."
 
-#: main_wayland.cpp:419
+#: main_wayland.cpp:424
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Program som skal startast når Wayland og XWayland-tenar vert starta"
@@ -3820,119 +3820,119 @@ msgstr "Teikneplate flytta til %1"
 msgid "Tablets switched outputs"
 msgstr "Teikneplate fekk nye uteining"
 
-#: useractions.cpp:217
+#: useractions.cpp:216
 #, kde-format
 msgid "&Move"
 msgstr "&Flytt"
 
-#: useractions.cpp:222
+#: useractions.cpp:221
 #, kde-format
 msgid "&Resize"
 msgstr "&Endra storleik"
 
-#: useractions.cpp:227
+#: useractions.cpp:226
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Vis &over andre vindauge"
 
-#: useractions.cpp:233
+#: useractions.cpp:232
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Vis &under andre vindauge"
 
-#: useractions.cpp:239
+#: useractions.cpp:238
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&Fullskjerm"
 
-#: useractions.cpp:245
+#: useractions.cpp:244
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "&Inga tittellinje og ramme"
 
-#: useractions.cpp:251
+#: useractions.cpp:250
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr ""
 
-#: useractions.cpp:259
+#: useractions.cpp:258
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Vel vindaugs&snøggtast …"
 
-#: useractions.cpp:265
+#: useractions.cpp:264
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Set opp spesielle &vindaugsinnstillingar …"
 
-#: useractions.cpp:270
+#: useractions.cpp:269
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Set opp s&pesielle programinnstillingar …"
 
-#: useractions.cpp:276
+#: useractions.cpp:275
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Ma&ksimer"
 
-#: useractions.cpp:282
+#: useractions.cpp:281
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Mi&nimer"
 
-#: useractions.cpp:288
+#: useractions.cpp:287
 #, kde-format
 msgid "&More Actions"
 msgstr "&Fleire handlingar"
 
-#: useractions.cpp:293
+#: useractions.cpp:292
 #, kde-format
 msgid "&Close"
 msgstr "&Lukk"
 
-#: useractions.cpp:359
+#: useractions.cpp:358
 #, kde-format
 msgid "&Extensions"
 msgstr "&Utvidingar"
 
-#: useractions.cpp:409
+#: useractions.cpp:408
 #, kde-format
 msgid "&Desktops"
 msgstr "&Skrivebord"
 
-#: useractions.cpp:425
+#: useractions.cpp:424
 #, kde-format
 msgid "Move to &Screen"
 msgstr "Flytt til &skjerm"
 
-#: useractions.cpp:441
+#: useractions.cpp:440
 #, kde-format
 msgid "Show in &Activities"
 msgstr "Vis i &aktivitetar"
 
-#: useractions.cpp:457
+#: useractions.cpp:456
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Alle skrivebord"
 
-#: useractions.cpp:492 useractions.cpp:624
+#: useractions.cpp:491 useractions.cpp:623
 #, kde-format
 msgid "Move to %1"
 msgstr "Flytt til %1"
 
-#: useractions.cpp:506
+#: useractions.cpp:505
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Legg til på &nytt skrivebord"
 
-#: useractions.cpp:518
+#: useractions.cpp:517
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Flytt til nytt skrivebord"
 
-#: useractions.cpp:549
+#: useractions.cpp:548
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3940,371 +3940,371 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Skjerm &%1 (%2)"
 
-#: useractions.cpp:576
+#: useractions.cpp:575
 #, kde-format
 msgid "&All Activities"
 msgstr "&Alle aktivitetar"
 
-#: useractions.cpp:740
+#: useractions.cpp:739
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> er alt i bruk"
 
-#: useractions.cpp:742
+#: useractions.cpp:741
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> er brukt av %2 i %3"
 
-#: useractions.cpp:822
+#: useractions.cpp:821
 #, fuzzy, kde-format
 #| msgid "Window role"
 msgid "Window Menu"
 msgstr "Vindaugsrolle"
 
-#: useractions.cpp:824
+#: useractions.cpp:823
 #, kde-format
 msgid "Close Window"
 msgstr "Lukk vindauget"
 
-#: useractions.cpp:826
+#: useractions.cpp:825
 #, kde-format
 msgid "Maximize Window"
 msgstr "Maksimer vindauget"
 
-#: useractions.cpp:828
+#: useractions.cpp:827
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Maksimer vindauget loddrett"
 
-#: useractions.cpp:830
+#: useractions.cpp:829
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Maksimer vindauget vassrett"
 
-#: useractions.cpp:832
+#: useractions.cpp:831
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgid "Restore Window"
 msgstr "Endra storleiken på vindauget"
 
-#: useractions.cpp:834
+#: useractions.cpp:833
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimer vindauget"
 
-#: useractions.cpp:836
+#: useractions.cpp:835
 #, kde-format
 msgid "Move Window"
 msgstr "Flytt vindauget"
 
-#: useractions.cpp:838
+#: useractions.cpp:837
 #, kde-format
 msgid "Resize Window"
 msgstr "Endra storleiken på vindauget"
 
-#: useractions.cpp:840
+#: useractions.cpp:839
 #, kde-format
 msgid "Raise Window"
 msgstr "Hev vindauget"
 
-#: useractions.cpp:842
+#: useractions.cpp:841
 #, kde-format
 msgid "Lower Window"
 msgstr "Senk vindauget"
 
-#: useractions.cpp:844
+#: useractions.cpp:843
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Veksla mellom hev/senk vindauget"
 
-#: useractions.cpp:846
+#: useractions.cpp:845
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Gjer vindauget til fullskjerm"
 
-#: useractions.cpp:848
+#: useractions.cpp:847
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Vis/fjern tittellinje og vindaugsramme"
 
-#: useractions.cpp:850
+#: useractions.cpp:849
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Vis vindauget framfor dei andre"
 
-#: useractions.cpp:852
+#: useractions.cpp:851
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Vis vindauget bak dei andre"
 
-#: useractions.cpp:854
+#: useractions.cpp:853
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Vis vindauge som påkallar merksemd"
 
-#: useractions.cpp:856
+#: useractions.cpp:855
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Set opp vindaugssnøggtast"
 
-#: useractions.cpp:858
+#: useractions.cpp:857
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Flytt vindauget til midten"
 
-#: useractions.cpp:860
+#: useractions.cpp:859
 #, kde-format
 msgid "Move Window Right"
 msgstr "Flytt vindauget til høgre"
 
-#: useractions.cpp:862
+#: useractions.cpp:861
 #, kde-format
 msgid "Move Window Left"
 msgstr "Flytt vindauget til venstre"
 
-#: useractions.cpp:864
+#: useractions.cpp:863
 #, kde-format
 msgid "Move Window Up"
 msgstr "Flytt vindauget til toppen"
 
-#: useractions.cpp:866
+#: useractions.cpp:865
 #, kde-format
 msgid "Move Window Down"
 msgstr "Flytt vindauget til botnen"
 
-#: useractions.cpp:868
+#: useractions.cpp:867
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Utvid vindauget vassrett"
 
-#: useractions.cpp:870
+#: useractions.cpp:869
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Utvid vindauget loddrett"
 
-#: useractions.cpp:872
+#: useractions.cpp:871
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Krymp vindauget vassrett"
 
-#: useractions.cpp:874
+#: useractions.cpp:873
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Krymp vindauget loddrett"
 
-#: useractions.cpp:876
+#: useractions.cpp:875
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Legg vindauget kjapt til venstre"
 
-#: useractions.cpp:878
+#: useractions.cpp:877
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Legg vindauget kjapt til høgre"
 
-#: useractions.cpp:880
+#: useractions.cpp:879
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Legg vindauget kjapt til oppe"
 
-#: useractions.cpp:882
+#: useractions.cpp:881
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Legg vindauget kjapt til nede"
 
-#: useractions.cpp:884
+#: useractions.cpp:883
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Legg vindauget kjapt til oppe til venstre"
 
-#: useractions.cpp:886
+#: useractions.cpp:885
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Legg vindauget kjapt til nede til venstre"
 
-#: useractions.cpp:888
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Legg vindauget kjapt til oppe til høgre"
 
-#: useractions.cpp:890
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Legg vindauget kjapt til nede til høgre"
 
-#: useractions.cpp:892
+#: useractions.cpp:891
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Byt til vindauget ovanfor"
 
-#: useractions.cpp:894
+#: useractions.cpp:893
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Byt til vindauget nedanfor"
 
-#: useractions.cpp:896
+#: useractions.cpp:895
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Byt til vindauget til høgre"
 
-#: useractions.cpp:898
+#: useractions.cpp:897
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Byt til vindauget til venstre"
 
-#: useractions.cpp:900
+#: useractions.cpp:899
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Reduser gjennomsikta til vindauget med 5 %"
 
-#: useractions.cpp:902
+#: useractions.cpp:901
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Auk gjennomsikta til vindauget med 5 %"
 
-#: useractions.cpp:905
+#: useractions.cpp:904
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Vis vindauget på alle skriveborda"
 
-#: useractions.cpp:908
+#: useractions.cpp:907
 #, fuzzy, kde-format
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Legg vindauget kjapt til venstre"
 
-#: useractions.cpp:910
+#: useractions.cpp:909
 #, fuzzy, kde-format
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Legg vindauget kjapt til høgre"
 
-#: useractions.cpp:912
+#: useractions.cpp:911
 #, fuzzy, kde-format
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Legg vindauget kjapt til oppe"
 
-#: useractions.cpp:914
+#: useractions.cpp:913
 #, fuzzy, kde-format
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Legg vindauget kjapt til nede"
 
-#: useractions.cpp:925
+#: useractions.cpp:924
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Vindauge til skrivebord %1"
 
-#: useractions.cpp:927
+#: useractions.cpp:926
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Vindauge til neste skrivebord"
 
-#: useractions.cpp:928
+#: useractions.cpp:927
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Vindauge til førre skrivebord"
 
-#: useractions.cpp:929
+#: useractions.cpp:928
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Flytt vindauget eitt skrivebord til høgre"
 
-#: useractions.cpp:931
+#: useractions.cpp:930
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Flytt vindauget eitt skrivebord til venstre"
 
-#: useractions.cpp:933
+#: useractions.cpp:932
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Flytt vindauget eitt skrivebord opp"
 
-#: useractions.cpp:935
+#: useractions.cpp:934
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Flytt vindauget eitt skrivebord ned"
 
-#: useractions.cpp:939
+#: useractions.cpp:938
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Flytt vindauget til skjerm %1"
 
-#: useractions.cpp:946
+#: useractions.cpp:945
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Flytt vindauget til neste skjerm"
 
-#: useractions.cpp:948
+#: useractions.cpp:947
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Flytt vindauget til førre skjerm"
 
-#: useractions.cpp:950
+#: useractions.cpp:949
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Flytt vindauget éin skjerm til høgre"
 
-#: useractions.cpp:952
+#: useractions.cpp:951
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Flytt vindauget éin skjerm til venstre"
 
-#: useractions.cpp:954
+#: useractions.cpp:953
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Flytt vindauget éin skjerm opp"
 
-#: useractions.cpp:956
+#: useractions.cpp:955
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Flytt vindauget éin skjerm ned"
 
-#: useractions.cpp:960
+#: useractions.cpp:959
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Byt til skjerm %1"
 
-#: useractions.cpp:967
+#: useractions.cpp:966
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Byt til neste skjerm"
 
-#: useractions.cpp:968
+#: useractions.cpp:967
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Byt til førre skjerm"
 
-#: useractions.cpp:969
+#: useractions.cpp:968
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Byt til skjermen til høgre"
 
-#: useractions.cpp:971
+#: useractions.cpp:970
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Byt til skjermen til venstre"
 
-#: useractions.cpp:973
+#: useractions.cpp:972
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Byt til skjermen ovanfor"
 
-#: useractions.cpp:975
+#: useractions.cpp:974
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Byt til skjermen nedanfor"
 
-#: useractions.cpp:978
+#: useractions.cpp:977
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Kikk på skrivebordet"
 
-#: useractions.cpp:981
+#: useractions.cpp:980
 #, kde-format
 msgid "Kill Window"
 msgstr "Tvangsavslutt vindauge"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1045
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktiver vindauge (%1)"
@@ -4354,57 +4354,57 @@ msgstr "Byt til skrivebordet under"
 msgid "Switch to Desktop %1"
 msgstr "Byt til skrivebord %1"
 
-#: wayland/outputmanagement_v2.cpp:570
+#: wayland/outputmanagement_v2.cpp:569
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:648
+#: wayland/outputmanagement_v2.cpp:647
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:666
+#: wayland/outputmanagement_v2.cpp:665
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:675
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:683
+#: wayland/outputmanagement_v2.cpp:682
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:687
+#: wayland/outputmanagement_v2.cpp:686
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:698
+#: wayland/outputmanagement_v2.cpp:697
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:701
+#: wayland/outputmanagement_v2.cpp:700
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:705
+#: wayland/outputmanagement_v2.cpp:704
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:722
+#: wayland/outputmanagement_v2.cpp:721
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:725
+#: wayland/outputmanagement_v2.cpp:724
 #, fuzzy, kde-format
 #| msgid "The Alt key is now active."
 msgid "The session is not active"
@@ -4416,7 +4416,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Svarar ikkje)"
 
-#: workspace.cpp:1774
+#: workspace.cpp:1772
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

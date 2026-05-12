@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-09 00:45+0000\n"
+"POT-Creation-Date: 2026-05-12 00:46+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -1564,7 +1564,7 @@ msgstr ""
 "Επιλέξτε παράθυρο για εξαναγκασμένο κλείσιμο με αριστερό κλικ ή enter.\n"
 "Esc ή δεξί κλικ για ακύρωση."
 
-#: main.cpp:168 plugins/mouseclick/mouseclick_config.cpp:40
+#: main.cpp:167 plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
 #: plugins/overview/kcm/overvieweffectkcm.cpp:35
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:46
@@ -1575,77 +1575,77 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:170 main.cpp:194
+#: main.cpp:169 main.cpp:193
 #, kde-format
 msgid "KDE window manager"
 msgstr "Ο διαχειριστής παραθύρων του KDE"
 
-#: main.cpp:172
+#: main.cpp:171
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, οι προγραμματιστές του KDE"
 
-#: main.cpp:174
+#: main.cpp:173
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:175
+#: main.cpp:174
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:176
+#: main.cpp:175
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:177
+#: main.cpp:176
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:178
+#: main.cpp:177
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin flöser"
 
-#: main.cpp:179
+#: main.cpp:178
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:180
+#: main.cpp:179
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:181
+#: main.cpp:180
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:182
+#: main.cpp:181
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:191
+#: main.cpp:190
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Απενεργοποίηση επιλογών διαμόρφωσης"
 
-#: main.cpp:192
+#: main.cpp:191
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Υπόδειξη πρόσφατης κατάρρευσης του KWin n φορές στη σειρά"
 
-#: main_wayland.cpp:305
+#: main_wayland.cpp:310
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Εκκίνηση ενός rootless διακομιστή Xwayland."
 
-#: main_wayland.cpp:308
+#: main_wayland.cpp:313
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1653,47 +1653,47 @@ msgstr ""
 "Όνομα της υποδοχής Wayland στην οποία θα ακούει. Αν δεν καθοριστεί, θα "
 "χρησιμοποιηθεί η \"wayland-0\". "
 
-#: main_wayland.cpp:312
+#: main_wayland.cpp:317
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
 "Η οθόνη X11 που θα χρησιμοποιηθεί σε παραθυρική λειτουργία σε πλατφόρμα X11."
 
-#: main_wayland.cpp:316
+#: main_wayland.cpp:321
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Η οθόνη Wayland που θα χρησιμοποιηθεί σε παραθυρική λειτουργία σε πλατφόρμα "
 "Wayland."
 
-#: main_wayland.cpp:318
+#: main_wayland.cpp:323
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Αποτύπωση σε εικονική ενδιάμεση μνήμη πλαισίων."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:325
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr ""
 "Το πλάτος για τη λειτουργία παραθύρου. Το προκαθορισμένο πλάτος είναι 1024."
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:329
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Το ύψος για τη λειτουργία παραθύρου. Το προκαθορισμένο ύψος είναι 768."
 
-#: main_wayland.cpp:329
+#: main_wayland.cpp:334
 #, kde-format
 msgid "Whether or not to make windowed mode fullscreen"
 msgstr ""
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:338
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr ""
 "Η κλιμάκωση για τη λειτουργία παραθύρου. Η προκαθορισμένη τιμή είναι το 1."
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:343
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1701,7 +1701,7 @@ msgstr ""
 "Ο αριθμός των παραθύρων που θα ανοίξουν σαν έξοδοι σε παραθυρική λειτουργία. "
 "Η προκαθορισμένη τιμή είναι 1"
 
-#: main_wayland.cpp:343
+#: main_wayland.cpp:348
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1710,7 +1710,7 @@ msgstr ""
 "Η υποδοχή Wayland που θα χρησιμοποιείται για τις εισερχόμενες συνδέσεις. "
 "Αυτό μπορεί να συνδυαστεί με -- υποδοχή για να ονομάσετε την υποδοχή"
 
-#: main_wayland.cpp:347
+#: main_wayland.cpp:352
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1719,65 +1719,65 @@ msgstr ""
 "Η υποδοχή XWayland που θα χρησιμοποιείται για τις εισερχόμενες συνδέσεις της "
 "Xwayland. Αυτό μπορεί να οριστεί πολλές φορές"
 
-#: main_wayland.cpp:351
+#: main_wayland.cpp:356
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr ""
 
-#: main_wayland.cpp:355
+#: main_wayland.cpp:360
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr ""
 
-#: main_wayland.cpp:359
+#: main_wayland.cpp:364
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 
-#: main_wayland.cpp:361
+#: main_wayland.cpp:366
 #, kde-format
 msgid "Render through drm node."
 msgstr "Αποτύπωση μέσω λειτουργίας drm."
 
-#: main_wayland.cpp:362
+#: main_wayland.cpp:367
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:394
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Μέθοδος εισαγωγής που εκκινεί ο KWin."
 
-#: main_wayland.cpp:395
+#: main_wayland.cpp:400
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Εκκινεί τη συνεδρία σε κλειδωμένη λειτουργία."
 
-#: main_wayland.cpp:399
+#: main_wayland.cpp:404
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Εκκινεί τη συνεδρία χωρίς υποστήριξη του κλειδώματος οθόνης."
 
-#: main_wayland.cpp:404
+#: main_wayland.cpp:409
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Εκκινεί τη συνεδρία χωρίς υποστήριξη των καθολικών συντομεύσεων."
 
-#: main_wayland.cpp:409
+#: main_wayland.cpp:414
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Απενεργοποίηση της ενσωμάτωσης KActivities."
 
-#: main_wayland.cpp:414
+#: main_wayland.cpp:419
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 "Έξοδος μετά από το κλείσιμο της εφαρμογής συνεδρίας, που εκκινείται από τον "
 "KWin."
 
-#: main_wayland.cpp:419
+#: main_wayland.cpp:424
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -3909,119 +3909,119 @@ msgstr "Το tablet μετακινήθηκε στο %1"
 msgid "Tablets switched outputs"
 msgstr "Tablets με αλλαγμένες εξόδους"
 
-#: useractions.cpp:217
+#: useractions.cpp:216
 #, kde-format
 msgid "&Move"
 msgstr "&Μετακίνηση"
 
-#: useractions.cpp:222
+#: useractions.cpp:221
 #, kde-format
 msgid "&Resize"
 msgstr "Αλλαγή μεγέ&θους"
 
-#: useractions.cpp:227
+#: useractions.cpp:226
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Διατήρηση &πάνω από τα άλλα"
 
-#: useractions.cpp:233
+#: useractions.cpp:232
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Διατήρηση &κάτω από τα άλλα"
 
-#: useractions.cpp:239
+#: useractions.cpp:238
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&Πλήρης οθόνη"
 
-#: useractions.cpp:245
+#: useractions.cpp:244
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:251
+#: useractions.cpp:250
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr ""
 
-#: useractions.cpp:259
+#: useractions.cpp:258
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Ορισμός &συντόμευσης παραθύρου…"
 
-#: useractions.cpp:265
+#: useractions.cpp:264
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Διαμόρφωση ειδικών ρυθμίσεων &παραθύρου…"
 
-#: useractions.cpp:270
+#: useractions.cpp:269
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Διαμόρφωση &ειδικών ρυθμίσεων εφαρμογής…"
 
-#: useractions.cpp:276
+#: useractions.cpp:275
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Με&γιστοποίηση"
 
-#: useractions.cpp:282
+#: useractions.cpp:281
 #, kde-format
 msgid "Mi&nimize"
 msgstr "&Ελαχιστοποίηση"
 
-#: useractions.cpp:288
+#: useractions.cpp:287
 #, kde-format
 msgid "&More Actions"
 msgstr "Π&ερισσότερες ενέργειες"
 
-#: useractions.cpp:293
+#: useractions.cpp:292
 #, kde-format
 msgid "&Close"
 msgstr "&Κλείσιμο"
 
-#: useractions.cpp:359
+#: useractions.cpp:358
 #, kde-format
 msgid "&Extensions"
 msgstr "&Επεκτάσεις"
 
-#: useractions.cpp:409
+#: useractions.cpp:408
 #, kde-format
 msgid "&Desktops"
 msgstr "&Επιφάνειες εργασίας"
 
-#: useractions.cpp:425
+#: useractions.cpp:424
 #, kde-format
 msgid "Move to &Screen"
 msgstr "Μετακίνη&ση στην οθόνη"
 
-#: useractions.cpp:441
+#: useractions.cpp:440
 #, kde-format
 msgid "Show in &Activities"
 msgstr "Εμφάνιση στις &δραστηριότητες"
 
-#: useractions.cpp:457
+#: useractions.cpp:456
 #, kde-format
 msgid "&All Desktops"
 msgstr "Ό&λες τις επιφάνειες εργασίας"
 
-#: useractions.cpp:492 useractions.cpp:624
+#: useractions.cpp:491 useractions.cpp:623
 #, kde-format
 msgid "Move to %1"
 msgstr "Μετακίνη&ση σε %1"
 
-#: useractions.cpp:506
+#: useractions.cpp:505
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Προσθήκη σε &νέα επιφάνεια εργασίας"
 
-#: useractions.cpp:518
+#: useractions.cpp:517
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Μετακίνηση στην νέα επιφάνεια εργασίας"
 
-#: useractions.cpp:549
+#: useractions.cpp:548
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -4029,385 +4029,385 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Οθόνη &%1 (%2)"
 
-#: useractions.cpp:576
+#: useractions.cpp:575
 #, kde-format
 msgid "&All Activities"
 msgstr "Όλες οι δρασ&τηριότητες"
 
-#: useractions.cpp:740
+#: useractions.cpp:739
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> χρησιμοποιείται ήδη"
 
-#: useractions.cpp:742
+#: useractions.cpp:741
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> χρησιμοποιείται από την ενέργεια %2 του %3"
 
-#: useractions.cpp:822
+#: useractions.cpp:821
 #, fuzzy, kde-format
 #| msgid "Window role"
 msgid "Window Menu"
 msgstr "Ρόλος παραθύρου"
 
-#: useractions.cpp:824
+#: useractions.cpp:823
 #, kde-format
 msgid "Close Window"
 msgstr "Κλείσιμο παραθύρου"
 
-#: useractions.cpp:826
+#: useractions.cpp:825
 #, kde-format
 msgid "Maximize Window"
 msgstr "Μεγιστοποίηση παραθύρου"
 
-#: useractions.cpp:828
+#: useractions.cpp:827
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Κατακόρυφη μεγιστοποίηση παραθύρου"
 
-#: useractions.cpp:830
+#: useractions.cpp:829
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Οριζόντια μεγιστοποίηση παραθύρου"
 
-#: useractions.cpp:832
+#: useractions.cpp:831
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgid "Restore Window"
 msgstr "Αλλαγή μεγέθους παραθύρου"
 
-#: useractions.cpp:834
+#: useractions.cpp:833
 #, kde-format
 msgid "Minimize Window"
 msgstr "Ελαχιστοποίηση παραθύρου"
 
-#: useractions.cpp:836
+#: useractions.cpp:835
 #, kde-format
 msgid "Move Window"
 msgstr "Μετακίνηση παραθύρου"
 
-#: useractions.cpp:838
+#: useractions.cpp:837
 #, kde-format
 msgid "Resize Window"
 msgstr "Αλλαγή μεγέθους παραθύρου"
 
-#: useractions.cpp:840
+#: useractions.cpp:839
 #, kde-format
 msgid "Raise Window"
 msgstr "Ανύψωση παραθύρου"
 
-#: useractions.cpp:842
+#: useractions.cpp:841
 #, kde-format
 msgid "Lower Window"
 msgstr "Χαμήλωμα παραθύρου"
 
-#: useractions.cpp:844
+#: useractions.cpp:843
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Ανύψωση/Χαμήλωμα παραθύρου"
 
-#: useractions.cpp:846
+#: useractions.cpp:845
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Κάνε το παράθυρο πλήρους οθόνης"
 
-#: useractions.cpp:848
+#: useractions.cpp:847
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Απόκρυψη περιγράμματος παραθύρου"
 
-#: useractions.cpp:850
+#: useractions.cpp:849
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Διατήρηση παραθύρου πάνω από τα άλλα"
 
-#: useractions.cpp:852
+#: useractions.cpp:851
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Διατήρηση παραθύρου κάτω από τα άλλα"
 
-#: useractions.cpp:854
+#: useractions.cpp:853
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Ενεργοποίηση παραθύρου που απαιτεί προσοχή"
 
-#: useractions.cpp:856
+#: useractions.cpp:855
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Ορισμός συντόμευσης παραθύρου"
 
-#: useractions.cpp:858
+#: useractions.cpp:857
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Μετακίνηση παραθύρου στο κέντρο"
 
-#: useractions.cpp:860
+#: useractions.cpp:859
 #, kde-format
 msgid "Move Window Right"
 msgstr "Μετακίνηση παραθύρου στα δεξιά"
 
-#: useractions.cpp:862
+#: useractions.cpp:861
 #, kde-format
 msgid "Move Window Left"
 msgstr "Μετακίνηση παραθύρου στα αριστερά"
 
-#: useractions.cpp:864
+#: useractions.cpp:863
 #, kde-format
 msgid "Move Window Up"
 msgstr "Μετακίνηση παραθύρου πάνω"
 
-#: useractions.cpp:866
+#: useractions.cpp:865
 #, kde-format
 msgid "Move Window Down"
 msgstr "Μετακίνηση παραθύρου κάτω"
 
-#: useractions.cpp:868
+#: useractions.cpp:867
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Οριζόντια μεγιστοποίηση παραθύρου"
 
-#: useractions.cpp:870
+#: useractions.cpp:869
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Κατακόρυφη μεγιστοποίηση παραθύρου"
 
-#: useractions.cpp:872
+#: useractions.cpp:871
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Σμίκρυνση παραθύρου οριζόντια"
 
-#: useractions.cpp:874
+#: useractions.cpp:873
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Σμίκρυνση παραθύρου κατακόρυφα"
 
-#: useractions.cpp:876
+#: useractions.cpp:875
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Γρήγορη στοίβαξη παραθύρου στα αριστερά"
 
-#: useractions.cpp:878
+#: useractions.cpp:877
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Γρήγορη στοίβαξη παραθύρου στα δεξιά"
 
-#: useractions.cpp:880
+#: useractions.cpp:879
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Γρήγορη στοίβαξη παραθύρου στην κορυφή"
 
-#: useractions.cpp:882
+#: useractions.cpp:881
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Γρήγορη στοίβαξη παραθύρου κάτω"
 
-#: useractions.cpp:884
+#: useractions.cpp:883
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Γρήγορη στοίβαξη παραθύρου πάνω αριστερά"
 
-#: useractions.cpp:886
+#: useractions.cpp:885
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Γρήγορη στοίβαξη παραθύρου κάτω αριστερά"
 
-#: useractions.cpp:888
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Γρήγορη στοίβαξη παραθύρου πάνω δεξιά"
 
-#: useractions.cpp:890
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Γρήγορη στοίβαξη παραθύρου κάτω δεξιά"
 
-#: useractions.cpp:892
+#: useractions.cpp:891
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Εναλλαγή στο πάνω παράθυρο"
 
-#: useractions.cpp:894
+#: useractions.cpp:893
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Εναλλαγή στο κάτω παράθυρο"
 
-#: useractions.cpp:896
+#: useractions.cpp:895
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Εναλλαγή στο παράθυρο δεξιά"
 
-#: useractions.cpp:898
+#: useractions.cpp:897
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Εναλλαγή στο παράθυρο αριστερά"
 
-#: useractions.cpp:900
+#: useractions.cpp:899
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Αύξηση της αδιαφάνειας του ενεργού παραθύρου κατά 5%"
 
-#: useractions.cpp:902
+#: useractions.cpp:901
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Μείωση της αδιαφάνειας του ενεργού παραθύρου κατά 5%"
 
-#: useractions.cpp:905
+#: useractions.cpp:904
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Διατήρηση παραθύρου σε όλες τις επιφάνειες εργασίας"
 
-#: useractions.cpp:908
+#: useractions.cpp:907
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Γρήγορη στοίβαξη παραθύρου στα αριστερά"
 
-#: useractions.cpp:910
+#: useractions.cpp:909
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Γρήγορη στοίβαξη παραθύρου στα δεξιά"
 
-#: useractions.cpp:912
+#: useractions.cpp:911
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Γρήγορη στοίβαξη παραθύρου στην κορυφή"
 
-#: useractions.cpp:914
+#: useractions.cpp:913
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Γρήγορη στοίβαξη παραθύρου κάτω"
 
-#: useractions.cpp:925
+#: useractions.cpp:924
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Παράθυρο στην Επιφάνεια εργασίας %1"
 
-#: useractions.cpp:927
+#: useractions.cpp:926
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Παράθυρο στην επόμενη Επιφάνεια εργασίας"
 
-#: useractions.cpp:928
+#: useractions.cpp:927
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Παράθυρο στην προηγούμενη Επιφάνεια εργασίας"
 
-#: useractions.cpp:929
+#: useractions.cpp:928
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Μετάβαση μία επιφάνεια εργασίας δεξιά"
 
-#: useractions.cpp:931
+#: useractions.cpp:930
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Μετάβαση μία επιφάνεια εργασίας αριστερά"
 
-#: useractions.cpp:933
+#: useractions.cpp:932
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Μετάβαση μία επιφάνεια εργασίας πάνω"
 
-#: useractions.cpp:935
+#: useractions.cpp:934
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 
-#: useractions.cpp:939
+#: useractions.cpp:938
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Μετακίνηση παραθύρου στην οθόνη %1"
 
-#: useractions.cpp:946
+#: useractions.cpp:945
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Μετακίνηση παραθύρου στην επόμενη οθόνη"
 
-#: useractions.cpp:948
+#: useractions.cpp:947
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Μετακίνηση παραθύρου στην προηγούμενη οθόνη"
 
-#: useractions.cpp:950
+#: useractions.cpp:949
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Μετάβαση μία επιφάνεια εργασίας δεξιά"
 
-#: useractions.cpp:952
+#: useractions.cpp:951
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Μετάβαση μία επιφάνεια εργασίας αριστερά"
 
-#: useractions.cpp:954
+#: useractions.cpp:953
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Παράθυρο στην οθόνη 2"
 
-#: useractions.cpp:956
+#: useractions.cpp:955
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 
-#: useractions.cpp:960
+#: useractions.cpp:959
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Εναλλαγή στην οθόνη %1"
 
-#: useractions.cpp:967
+#: useractions.cpp:966
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Εναλλαγή στην επόμενη οθόνη"
 
-#: useractions.cpp:968
+#: useractions.cpp:967
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Μετάβαση στην προηγούμενη οθόνη"
 
-#: useractions.cpp:969
+#: useractions.cpp:968
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Εναλλαγή στο παράθυρο δεξιά"
 
-#: useractions.cpp:971
+#: useractions.cpp:970
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Εναλλαγή στο παράθυρο αριστερά"
 
-#: useractions.cpp:973
+#: useractions.cpp:972
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Εναλλαγή στην οθόνη από πάνω"
 
-#: useractions.cpp:975
+#: useractions.cpp:974
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Εναλλαγή στην οθόνη από κάτω"
 
-#: useractions.cpp:978
+#: useractions.cpp:977
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Peek at Desktop"
 msgstr "Στην επι&φάνεια εργασίας"
 
-#: useractions.cpp:981
+#: useractions.cpp:980
 #, kde-format
 msgid "Kill Window"
 msgstr "Σκότωμα παραθύρου"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1045
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Ενεργοποίηση παραθύρου (%1)"
@@ -4457,57 +4457,57 @@ msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 msgid "Switch to Desktop %1"
 msgstr "Εναλλαγή στην Επιφάνεια εργασίας %1"
 
-#: wayland/outputmanagement_v2.cpp:570
+#: wayland/outputmanagement_v2.cpp:569
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:648
+#: wayland/outputmanagement_v2.cpp:647
 #, kde-format
 msgid "One of the relevant outputs is no longer available"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:666
+#: wayland/outputmanagement_v2.cpp:665
 #, kde-format
 msgid "Disabling all outputs through configuration changes is not allowed"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:676
+#: wayland/outputmanagement_v2.cpp:675
 #, kde-format
 msgid "%1 cannot mirror itself"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:683
+#: wayland/outputmanagement_v2.cpp:682
 #, kde-format
 msgid "Cannot add a custom mode with an empty size"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:687
+#: wayland/outputmanagement_v2.cpp:686
 #, kde-format
 msgid "Cannot add a custom mode with a refresh rate of zero Hz"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:698
+#: wayland/outputmanagement_v2.cpp:697
 #, kde-format
 msgid "Position of output %1 is way too negative (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:701
+#: wayland/outputmanagement_v2.cpp:700
 #, kde-format
 msgid "Position of enabled output %1 is negative (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:705
+#: wayland/outputmanagement_v2.cpp:704
 #, kde-format
 msgid "Position of output %1 is way too large (%2, %3)"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:722
+#: wayland/outputmanagement_v2.cpp:721
 #, kde-format
 msgid "The driver rejected the output configuration"
 msgstr ""
 
-#: wayland/outputmanagement_v2.cpp:725
+#: wayland/outputmanagement_v2.cpp:724
 #, fuzzy, kde-format
 #| msgid "The Alt key is now active."
 msgid "The session is not active"
@@ -4519,7 +4519,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Δεν ανταποκρίνεται)"
 
-#: workspace.cpp:1774
+#: workspace.cpp:1772
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
