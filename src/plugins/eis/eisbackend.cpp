@@ -75,30 +75,57 @@ EisBackend::~EisBackend()
 
 void EisBackend::initialize()
 {
-    const QByteArray keyMap = input()->keyboard()->xkb()->keymapContents();
-    if (!keyMap.isEmpty()) {
-        m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
-    }
-    connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutsReconfigured, this, [this] {
-        const QByteArray keyMap = input()->keyboard()->xkb()->keymapContents();
+    updateKeymap();
+    connectKeyboardSignals();
+    connect(input(), &InputRedirection::hasKeyboardChanged, this, [this](bool set) {
+        if (set) {
+            connectKeyboardSignals();
+        } else {
+            updateKeymap();
+        }
+    });
+
+    QDBusConnection::sessionBus().registerObject("/org/kde/KWin/EIS/RemoteDesktop", "org.kde.KWin.EIS.RemoteDesktop", this, QDBusConnection::ExportAllInvokables);
+}
+
+void EisBackend::updateKeymap()
+{
+    if (const auto keyboard = input()->keyboard()) {
+        const QByteArray keyMap = keyboard->xkb()->keymapContents();
         if (!keyMap.isEmpty()) {
             m_keymapFile = RamFile("eis keymap", keyMap.data(), keyMap.size(), RamFile::Flag::SealWrite);
         } else {
             m_keymapFile = RamFile();
         }
-        for (const auto &context : m_contexts) {
-            context->updateKeymap();
-        }
+    } else {
+        m_keymapFile = RamFile();
+    }
+    for (const auto &context : m_contexts) {
+        context->updateKeymap();
+    }
+}
+
+void EisBackend::connectKeyboardSignals()
+{
+    const auto keyboard = input()->keyboard();
+    if (!keyboard) {
+        return;
+    }
+
+    connect(keyboard->keyboardLayout(), &KeyboardLayout::layoutsReconfigured, this, [this] {
+        updateKeymap();
     });
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this] {
-        const auto &modifierState = input()->keyboard()->xkb()->modifierState();
-        const uint32_t currentGroup = input()->keyboard()->xkb()->currentLayout();
+    connect(keyboard->xkb(), &Xkb::modifierStateChanged, this, [this] {
+        const auto keyboard = input()->keyboard();
+        if (!keyboard) {
+            return;
+        }
+        const auto &modifierState = keyboard->xkb()->modifierState();
+        const uint32_t currentGroup = keyboard->xkb()->currentLayout();
         for (const auto &context : m_contexts) {
             context->forwardModifiers(modifierState.depressed, modifierState.latched, modifierState.locked, currentGroup);
         }
     });
-
-    QDBusConnection::sessionBus().registerObject("/org/kde/KWin/EIS/RemoteDesktop", "org.kde.KWin.EIS.RemoteDesktop", this, QDBusConnection::ExportAllInvokables);
 }
 
 void EisBackend::updateScreens()

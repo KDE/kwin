@@ -52,6 +52,9 @@ public:
     void deactivate();
 
 private:
+    void updateKeymap();
+    void connectKeyboardSignals();
+
     RamFile m_keymapFile;
     QDBusServiceWatcher *m_serviceWatcher;
     std::unique_ptr<BarrierSpy> m_barrierSpy;

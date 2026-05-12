@@ -173,8 +173,10 @@ void EisInputCapture::activate(const QPointF &position)
     }
     if (m_keyboard) {
         eis_device_start_emulating(m_keyboard, m_activationId);
-        const auto modifierState = input()->keyboard()->xkb()->modifierState();
-        eis_device_keyboard_send_xkb_modifiers(m_keyboard, modifierState.depressed, modifierState.latched, modifierState.locked, input()->keyboard()->xkb()->currentLayout());
+        if (const auto keyboard = input()->keyboard()) {
+            const auto modifierState = keyboard->xkb()->modifierState();
+            eis_device_keyboard_send_xkb_modifiers(m_keyboard, modifierState.depressed, modifierState.latched, modifierState.locked, keyboard->xkb()->currentLayout());
+        }
     }
     if (m_absoluteDevice) {
         eis_device_start_emulating(m_absoluteDevice, m_activationId);

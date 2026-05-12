@@ -110,8 +110,10 @@ bool EisInputCaptureFilter::keyboardKey(KeyboardKeyEvent *event)
         eis_device_keyboard_key(keyboard, event->nativeScanCode, event->state != KeyboardKeyState::Released);
         eis_device_frame(keyboard, std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         if (m_hasPendingModifierChange) {
-            const auto modifierState = input()->keyboard()->xkb()->modifierState();
-            eis_device_keyboard_send_xkb_modifiers(keyboard, modifierState.depressed, modifierState.latched, modifierState.locked, input()->keyboard()->xkb()->currentLayout());
+            if (const auto inputKeyboard = input()->keyboard()) {
+                const auto modifierState = inputKeyboard->xkb()->modifierState();
+                eis_device_keyboard_send_xkb_modifiers(keyboard, modifierState.depressed, modifierState.latched, modifierState.locked, inputKeyboard->xkb()->currentLayout());
+            }
         }
     }
     return true;

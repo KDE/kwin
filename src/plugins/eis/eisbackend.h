@@ -47,6 +47,9 @@ public:
     eis_device *createAbsoluteDevice(eis_seat *seat);
 
 private:
+    void updateKeymap();
+    void connectKeyboardSignals();
+
     QDBusServiceWatcher *m_serviceWatcher;
     RamFile m_keymapFile;
     std::unique_ptr<XWaylandEisContext> m_xWaylandContext;

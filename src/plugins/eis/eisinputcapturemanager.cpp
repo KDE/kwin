@@ -12,6 +12,7 @@
 
 #include "core/output.h"
 #include "cursor.h"
+#include "input.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "keyboard_input.h"
@@ -99,25 +100,13 @@ EisInputCaptureManager::EisInputCaptureManager()
     qDBusRegisterMetaType<QPair<QPoint, QPoint>>();
     qDBusRegisterMetaType<QList<QPair<QPoint, QPoint>>>();
 
-    const auto keymap = input()->keyboard()->xkb()->keymapContents();
-    if (!keymap.isEmpty()) {
-        m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
-    }
-    connect(input()->keyboard()->keyboardLayout(), &KeyboardLayout::layoutChanged, this, [this] {
-        const auto keymap = input()->keyboard()->xkb()->keymapContents();
-        if (!keymap.isEmpty()) {
-            m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
+    updateKeymap();
+    connectKeyboardSignals();
+    connect(input(), &InputRedirection::hasKeyboardChanged, this, [this](bool set) {
+        if (set) {
+            connectKeyboardSignals();
         } else {
-            m_keymapFile = RamFile();
-        }
-    });
-
-    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this] {
-        // This will not handle other sources of modifier changes like changing keyboard
-        // layout but should be fine for now as all input is filtered out while a capture
-        // is active
-        if (m_activeCapture) {
-            m_inputFilter->setPendingModifierChange(true);
+            updateKeymap();
         }
     });
 
@@ -140,6 +129,39 @@ EisInputCaptureManager::EisInputCaptureManager()
     KGlobalAccel::setGlobalShortcut(m_disableCaptureAction, QKeySequence(defaultDisableKeys));
 
     QDBusConnection::sessionBus().registerObject("/org/kde/KWin/EIS/InputCapture", "org.kde.KWin.EIS.InputCaptureManager", this, QDBusConnection::ExportAllInvokables | QDBusConnection::ExportAllSignals);
+}
+
+void EisInputCaptureManager::updateKeymap()
+{
+    if (const auto keyboard = input()->keyboard()) {
+        const auto keymap = keyboard->xkb()->keymapContents();
+        if (!keymap.isEmpty()) {
+            m_keymapFile = RamFile("input capture keymap", keymap.data(), keymap.size(), RamFile::Flag::SealWrite);
+            return;
+        }
+    }
+    m_keymapFile = RamFile();
+}
+
+void EisInputCaptureManager::connectKeyboardSignals()
+{
+    const auto keyboard = input()->keyboard();
+    if (!keyboard) {
+        return;
+    }
+
+    connect(keyboard->keyboardLayout(), &KeyboardLayout::layoutChanged, this, [this] {
+        updateKeymap();
+    });
+
+    connect(keyboard->xkb(), &Xkb::modifierStateChanged, this, [this] {
+        // This will not handle other sources of modifier changes like changing keyboard
+        // layout but should be fine for now as all input is filtered out while a capture
+        // is active
+        if (m_activeCapture) {
+            m_inputFilter->setPendingModifierChange(true);
+        }
+    });
 }
 
 EisInputCaptureManager::~EisInputCaptureManager()
