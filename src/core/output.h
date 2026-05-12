@@ -32,7 +32,6 @@ namespace KWin
 class BackendOutput;
 class OutputChangeSet;
 class OutputMode;
-struct CustomModeDefinition;
 
 /**
  * The OutputTransform type is used to describe the transform applied to the output content.
@@ -112,6 +111,62 @@ private:
     Kind m_kind = Kind::Normal;
 };
 
+/**
+ * The CvtModeline represents VESA CVT standard timings modelines.
+ */
+struct KWIN_EXPORT CvtModeline
+{
+    /**
+     * Generates a CVT modeline with the specified @a size and @a refreshRate. The refresh rate
+     * is specified in milli-Hertz.
+     *
+     * If @a reducedBlanking is @c true, the modeline will be generated with a reduced blanking
+     * region. The blanking region was originally used by CRT monitors to reset the beam. With LCD
+     * screens, it's mostly irrlevant now. This flag can be set to reduce the bandwidth.
+     *
+     * @note The refresh rate of the generated mode will likely be different from the given @a refreshRate.
+     */
+    static CvtModeline generate(const QSize &size, uint32_t refreshRate, bool reducedBlanking = false);
+
+    QSize size() const;
+    uint32_t refreshRate() const;
+
+    bool operator==(const CvtModeline &other) const = default;
+
+    uint32_t clock;
+
+    uint16_t hdisplay;
+    uint16_t hsyncStart;
+    uint16_t hsyncEnd;
+    uint16_t htotal;
+    uint16_t hskew;
+
+    uint16_t vdisplay;
+    uint16_t vsyncStart;
+    uint16_t vsyncEnd;
+    uint16_t vtotal;
+    uint16_t vscan;
+
+    uint32_t flags;
+};
+
+/**
+ * The BasicModeline represents basic output mode timings.
+ */
+struct KWIN_EXPORT BasicModeline
+{
+    bool operator==(const BasicModeline &other) const = default;
+
+    QSize size;
+    uint32_t refreshRate;
+};
+
+using OutputTimings = std::variant<BasicModeline, CvtModeline>;
+
+/**
+ * The OutputModeline provides a description about an output mode. The output modeline can be used
+ * to save and restore output settings.
+ */
 class KWIN_EXPORT OutputModeline
 {
 public:
@@ -125,23 +180,24 @@ public:
 
     OutputModeline();
     OutputModeline(const QSize &size, uint32_t refreshRate, Flags flags = {});
+    OutputModeline(const OutputTimings &timings, Flags flags = {});
 
     bool operator==(const OutputModeline &other) const = default;
-    bool operator!=(const OutputModeline &other) const = default;
 
     bool isEmpty() const;
     QSize size() const;
     uint32_t refreshRate() const;
     Flags flags() const;
 
-    std::shared_ptr<OutputMode> match(const QList<std::shared_ptr<OutputMode>> &modes) const;
-    std::optional<CustomModeDefinition> match(const QList<CustomModeDefinition> &definitions) const;
+    std::optional<CvtModeline> cvt() const;
+    std::optional<BasicModeline> basic() const;
 
-    static OutputModeline custom(const CustomModeDefinition &definition);
+    OutputModeline withFlags(Flags flags) const;
+
+    std::shared_ptr<OutputMode> match(const QList<std::shared_ptr<OutputMode>> &modes) const;
 
 private:
-    QSize m_size;
-    uint32_t m_refreshRate;
+    OutputTimings m_timings;
     Flags m_flags;
 };
 
@@ -162,14 +218,6 @@ public:
 private:
     const OutputModeline m_modeline;
     bool m_removed = false;
-};
-
-// TODO: Replace it with the OutputModeline type.
-struct CustomModeDefinition
-{
-    QSize size;
-    uint32_t refreshRate;
-    OutputModeline::Flags flags;
 };
 
 /*!
@@ -484,3 +532,5 @@ inline RectF LogicalOutput::rectF() const
 KWIN_EXPORT QDebug operator<<(QDebug debug, const LogicalOutput *output);
 
 } // namespace KWin
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::OutputModeline::Flags)

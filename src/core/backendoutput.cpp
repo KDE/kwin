@@ -824,7 +824,7 @@ BackendOutput::BrightnessReason BackendOutput::lastBrightnessAdjustmentReason() 
     return m_state.lastBrightnessAdjustmentReason;
 }
 
-QList<CustomModeDefinition> BackendOutput::customModes() const
+QList<OutputModeline> BackendOutput::customModes() const
 {
     return m_state.customModes;
 }

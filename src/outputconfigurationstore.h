@@ -24,6 +24,16 @@ namespace KWin
 enum class AccelerometerOrientation;
 class OutputConfiguration;
 
+struct LegacyOutputModeline
+{
+    std::shared_ptr<OutputMode> match(const QList<std::shared_ptr<OutputMode>> &modes) const;
+    std::optional<OutputModeline> match(const QList<OutputModeline> &modelines) const;
+
+    QSize size;
+    uint32_t refreshRate;
+    OutputModeline::Flags flags;
+};
+
 class KWIN_EXPORT OutputConfigurationStore
 {
 public:
@@ -61,6 +71,7 @@ private:
         QString edidHash;
         QString mstPath;
         // actual state
+        std::optional<LegacyOutputModeline> legacyMode;
         std::optional<OutputModeline> mode;
         std::optional<double> scaleSetting;
         std::optional<OutputTransform> transform;
@@ -89,7 +100,7 @@ private:
         std::optional<uint32_t> maxBitsPerColor;
         std::optional<BackendOutput::EdrPolicy> edrPolicy;
         std::optional<double> sharpness;
-        std::optional<QList<CustomModeDefinition>> customModes;
+        std::optional<QList<OutputModeline>> customModes;
         std::optional<bool> automaticBrightness;
         std::optional<AutoBrightnessCurve> autoBrightnessCurve;
         std::optional<uint32_t> abmLevel;

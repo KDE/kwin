@@ -166,12 +166,23 @@ OutputTransform toKWinTransform(int rotation)
     }
 }
 
-std::optional<OutputModeline> parseMode(const QJsonObject &modeInfo)
+std::optional<OutputModeline> parseMode(BackendOutput *output, const QJsonObject &modeInfo)
 {
     const QJsonObject size = modeInfo["size"].toObject();
     const QSize modeSize = QSize(size["width"].toInt(), size["height"].toInt());
     const uint32_t refreshRate = std::round(modeInfo["refresh"].toDouble() * 1000);
-    return OutputModeline(modeSize, refreshRate);
+
+    const auto availableModes = output->modes();
+    for (const auto &mode : availableModes) {
+        if (mode->isRemoved()) {
+            continue;
+        }
+        if (mode->size() == modeSize && mode->refreshRate() == refreshRate) {
+            return mode->modeline();
+        }
+    }
+
+    return std::nullopt;
 }
 
 std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *> &outputs, bool isLidClosed)
@@ -230,7 +241,7 @@ std::optional<OutputConfiguration> readOutputConfig(const QList<BackendOutput *>
             }
 
             if (const QJsonObject modeInfo = globalInfo["mode"].toObject(); !modeInfo.isEmpty()) {
-                if (auto mode = KScreenIntegration::parseMode(modeInfo)) {
+                if (auto mode = KScreenIntegration::parseMode(output, modeInfo)) {
                     props->currentMode = mode;
                 }
             }

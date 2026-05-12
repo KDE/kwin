@@ -18,6 +18,7 @@
 
 #include <QJSEngine>
 
+#include <libdrm/drm_mode.h>
 #include <libxcvt/libxcvt.h>
 
 namespace KWin
@@ -44,36 +45,118 @@ QDebug operator<<(QDebug debug, const LogicalOutput *output)
     return debug;
 }
 
+CvtModeline CvtModeline::generate(const QSize &size, uint32_t refreshRate, bool reducedBlanking)
+{
+    libxcvt_mode_info *modeInfo = libxcvt_gen_mode_info(size.width(), size.height(), refreshRate / 1000.0f, reducedBlanking, false);
+
+    const CvtModeline modeline{
+        .clock = uint32_t(modeInfo->dot_clock),
+        .hdisplay = uint16_t(modeInfo->hdisplay),
+        .hsyncStart = modeInfo->hsync_start,
+        .hsyncEnd = modeInfo->hsync_end,
+        .htotal = modeInfo->htotal,
+        .hskew = 0,
+        .vdisplay = uint16_t(modeInfo->vdisplay),
+        .vsyncStart = modeInfo->vsync_start,
+        .vsyncEnd = modeInfo->vsync_end,
+        .vtotal = modeInfo->vtotal,
+        .vscan = 1,
+        .flags = modeInfo->mode_flags,
+    };
+
+    free(modeInfo);
+
+    return modeline;
+}
+
+QSize CvtModeline::size() const
+{
+    return QSize(hdisplay, vdisplay);
+}
+
+uint32_t CvtModeline::refreshRate() const
+{
+    uint64_t refreshRate = (clock * 1000000LL / htotal + vtotal / 2) / vtotal;
+
+    if (flags & DRM_MODE_FLAG_INTERLACE) {
+        refreshRate *= 2;
+    }
+
+    if (flags & DRM_MODE_FLAG_DBLSCAN) {
+        refreshRate /= 2;
+    }
+
+    if (vscan > 1) {
+        refreshRate /= vscan;
+    }
+
+    return refreshRate;
+}
+
 OutputModeline::OutputModeline()
-    : OutputModeline(QSize(), 0, {})
 {
 }
 
-OutputModeline::OutputModeline(const QSize &size, uint32_t refreshRate, OutputModeline::Flags flags)
-    : m_size(size)
-    , m_refreshRate(refreshRate)
+OutputModeline::OutputModeline(const QSize &size, uint32_t refreshRate, Flags flags)
+    : OutputModeline(BasicModeline{size, refreshRate}, flags)
+{
+}
+
+OutputModeline::OutputModeline(const OutputTimings &timings, Flags flags)
+    : m_timings(timings)
     , m_flags(flags)
 {
 }
 
 bool OutputModeline::isEmpty() const
 {
-    return m_size.isEmpty();
+    return size().isEmpty();
 }
 
 QSize OutputModeline::size() const
 {
-    return m_size;
+    if (const auto cvt = std::get_if<CvtModeline>(&m_timings)) {
+        return cvt->size();
+    } else if (const auto basic = std::get_if<BasicModeline>(&m_timings)) {
+        return basic->size;
+    }
+    return QSize();
 }
 
 uint32_t OutputModeline::refreshRate() const
 {
-    return m_refreshRate;
+    if (const auto cvt = std::get_if<CvtModeline>(&m_timings)) {
+        return cvt->refreshRate();
+    } else if (const auto basic = std::get_if<BasicModeline>(&m_timings)) {
+        return basic->refreshRate;
+    }
+    return 0;
 }
 
 OutputModeline::Flags OutputModeline::flags() const
 {
     return m_flags;
+}
+
+std::optional<CvtModeline> OutputModeline::cvt() const
+{
+    if (const auto cvt = std::get_if<CvtModeline>(&m_timings)) {
+        return *cvt;
+    }
+    return std::nullopt;
+}
+
+std::optional<BasicModeline> OutputModeline::basic() const
+{
+    if (const auto basic = std::get_if<BasicModeline>(&m_timings)) {
+        return *basic;
+    }
+    return std::nullopt;
+}
+
+OutputModeline OutputModeline::withFlags(Flags flags) const
+{
+    return OutputModeline(m_timings, m_flags | flags);
 }
 
 std::shared_ptr<OutputMode> OutputModeline::match(const QList<std::shared_ptr<OutputMode>> &modes) const
@@ -87,35 +170,6 @@ std::shared_ptr<OutputMode> OutputModeline::match(const QList<std::shared_ptr<Ou
         }
     }
     return nullptr;
-}
-
-std::optional<CustomModeDefinition> OutputModeline::match(const QList<CustomModeDefinition> &definitions) const
-{
-    for (const auto &definition : definitions) {
-        if (OutputModeline::custom(definition) == *this) {
-            return definition;
-        }
-    }
-    return std::nullopt;
-}
-
-OutputModeline OutputModeline::custom(const CustomModeDefinition &definition)
-{
-    libxcvt_mode_info *modeInfo = libxcvt_gen_mode_info(definition.size.width(),
-                                                        definition.size.height(),
-                                                        definition.refreshRate / 1000.0f,
-                                                        definition.flags & OutputModeline::Flag::ReducedBlanking,
-                                                        false);
-
-    uint64_t refreshRate = (modeInfo->dot_clock * 1000000LL / modeInfo->htotal + modeInfo->vtotal / 2) / modeInfo->vtotal;
-    if (modeInfo->mode_flags & LIBXCVT_MODE_FLAG_INTERLACE) {
-        refreshRate *= 2;
-    }
-
-    OutputModeline modeline(QSize(modeInfo->hdisplay, modeInfo->vdisplay), refreshRate, definition.flags | OutputModeline::Flag::Generated | OutputModeline::Flag::Custom);
-
-    free(modeInfo);
-    return modeline;
 }
 
 OutputMode::OutputMode(const OutputModeline &modeline)

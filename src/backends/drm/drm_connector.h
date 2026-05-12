@@ -32,7 +32,8 @@ class DrmCrtc;
 class DrmConnectorMode : public OutputMode
 {
 public:
-    DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode, OutputModeline::Flags additionalFlags);
+    DrmConnectorMode(DrmConnector *connector, drmModeModeInfo nativeMode);
+    DrmConnectorMode(DrmConnector *connector, const OutputModeline &modeline);
 
     drmModeModeInfo *nativeMode();
     std::shared_ptr<DrmBlob> blob();
@@ -72,7 +73,7 @@ public:
     QByteArray mstPath() const;
 
     QList<std::shared_ptr<DrmConnectorMode>> modes() const;
-    std::shared_ptr<DrmConnectorMode> generateMode(const QSize &size, float refreshRate, OutputModeline::Flags flags);
+    std::shared_ptr<DrmConnectorMode> generateMode(const OutputModeline &modeline);
 
     BackendOutput::SubPixel subpixel() const;
 
@@ -149,7 +150,6 @@ public:
     static OutputTransform toKWinTransform(PanelOrientation orientation);
     static BroadcastRgbOptions rgbRangeToBroadcastRgb(BackendOutput::RgbRange rgbRange);
     static BackendOutput::RgbRange broadcastRgbToRgbRange(BroadcastRgbOptions rgbRange);
-    static uint32_t refreshRateForMode(_drmModeModeInfo *m);
 
 private:
     QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes();
