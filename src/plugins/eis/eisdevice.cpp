@@ -8,6 +8,8 @@
 
 #include <libeis.h>
 
+#include <QTimer>
+
 namespace KWin
 {
 
@@ -19,24 +21,36 @@ static std::chrono::microseconds currentTime()
 EisDevice::EisDevice(eis_device *device, QObject *parent)
     : InputDevice(parent)
     , m_device(device)
+    , m_releaseTimer(std::make_unique<QTimer>())
 {
     eis_device_set_user_data(device, this);
     eis_device_add(device);
+    m_releaseTimer->setInterval(std::chrono::seconds(1));
+    m_releaseTimer->setSingleShot(true);
+    m_releaseTimer->callOnTimeout(this, &EisDevice::releasePressedAndTouches);
 }
 
 EisDevice::~EisDevice()
 {
+    releasePressedAndTouches();
+    eis_device_remove(m_device);
+    eis_device_unref(m_device);
+}
+
+void EisDevice::releasePressedAndTouches()
+{
     for (const auto button : pressedButtons) {
         Q_EMIT pointerButtonChanged(button, PointerButtonState::Released, currentTime(), this);
     }
+    pressedButtons.clear();
     for (const auto key : pressedKeys) {
         Q_EMIT keyChanged(key, KeyboardKeyState::Released, currentTime(), this);
     }
+    pressedKeys.clear();
     if (!activeTouches.empty()) {
         Q_EMIT touchCanceled(this);
     }
-    eis_device_remove(m_device);
-    eis_device_unref(m_device);
+    activeTouches.clear();
 }
 
 void EisDevice::changeDevice(eis_device *device)
@@ -49,6 +63,15 @@ void EisDevice::changeDevice(eis_device *device)
     eis_device_add(device);
     if (m_enabled) {
         eis_device_resume(device);
+    }
+}
+
+void EisDevice::setEmulating(bool emulating)
+{
+    if (emulating) {
+        m_releaseTimer->stop();
+    } else {
+        m_releaseTimer->start();
     }
 }
 
