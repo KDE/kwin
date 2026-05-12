@@ -1,5 +1,7 @@
 /*
     SPDX-FileCopyrightText: 2020 Aleix Pol Gonzalez <aleixpol@kde.org>
+    SPDX-FileCopyrightText: 2026 Xaver Hugl <xaver.hugl@kde.org>
+    SPDX-FileCopyrightText: 2026 Kristen McWilliam <kristen@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -21,8 +23,11 @@ KcmVirtualKeyboard::KcmVirtualKeyboard(QObject *parent, const KPluginMetaData &m
     : KQuickManagedConfigModule(parent, metaData)
     , m_data(new VirtualKeyboardData(this))
     , m_model(new VirtualKeyboardsModel(this))
+    , m_dbusInterface(std::make_unique<KWinVirtualKeyboard>())
+    , m_mode(static_cast<KWinVirtualKeyboard::VirtualKeyboardMode>(m_dbusInterface->mode()))
 {
     qmlRegisterAnonymousType<VirtualKeyboardSettings>("org.kde.kwin.virtualkeyboardsettings", 1);
+    qmlRegisterType<KWinVirtualKeyboard>("org.kde.kwin.virtualkeyboard", 1, 0, "KWinVirtualKeyboard");
 }
 
 KcmVirtualKeyboard::~KcmVirtualKeyboard() = default;
@@ -30,6 +35,22 @@ KcmVirtualKeyboard::~KcmVirtualKeyboard() = default;
 VirtualKeyboardSettings *KcmVirtualKeyboard::settings() const
 {
     return m_data->settings();
+}
+
+void KcmVirtualKeyboard::setMode(KWinVirtualKeyboard::VirtualKeyboardMode mode)
+{
+    if (m_mode == mode) {
+        return;
+    }
+    m_mode = mode;
+    Q_EMIT modeChanged(mode);
+    setNeedsSave(true);
+}
+
+void KcmVirtualKeyboard::save()
+{
+    KQuickManagedConfigModule::save();
+    m_dbusInterface->setMode(static_cast<int>(m_mode));
 }
 
 VirtualKeyboardsModel::VirtualKeyboardsModel(QObject *parent)
