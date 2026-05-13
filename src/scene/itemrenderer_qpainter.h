@@ -43,6 +43,7 @@ public:
     void endFrame() override;
 
     void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) override;
+    bool prepareItems(Item *item, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) override;
     void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) override;
 
 private:

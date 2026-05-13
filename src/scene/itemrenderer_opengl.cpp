@@ -202,8 +202,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, co
         });
     }
 
-    item->preprocess();
-
     RenderGeometry geometry = clipQuads(item, context);
 
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
@@ -360,6 +358,34 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
 
         glDisable(GL_SCISSOR_TEST);
     }
+}
+
+bool ItemRendererOpenGL::prepareItems(Item *item, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+{
+    bool hole = false;
+    if (filter && filter(item)) {
+        if (!holeFilter || !holeFilter(item)) {
+            return true;
+        }
+        hole = true;
+    }
+    const QList<Item *> childItems = item->childItems();
+    for (Item *childItem : childItems) {
+        if (childItem->explicitVisible()) {
+            if (!prepareItems(childItem, filter, holeFilter)) {
+                return false;
+            }
+        }
+    }
+    // skip pre-processing hols, the item won't actually be rendered.
+    // Its child items may still be rendered though!
+    if (!hole) {
+        item->preprocess();
+    }
+    // preprocess may temporarily change the OpenGL context, and
+    // changing it back can fail. In that case, we must stop rendering
+    // until the GPU reset is taken care of.
+    return EglContext::currentContext();
 }
 
 void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)

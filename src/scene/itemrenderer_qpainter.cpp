@@ -92,6 +92,21 @@ void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, co
     m_painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 }
 
+bool ItemRendererQPainter::prepareItems(Item *item, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
+{
+    if (filter && filter(item)) {
+        return true;
+    }
+    const QList<Item *> childItems = item->childItems();
+    for (Item *childItem : childItems) {
+        if (childItem->explicitVisible()) {
+            prepareItems(item, filter, holeFilter);
+        }
+    }
+    item->preprocess();
+    return true;
+}
+
 void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter)
 {
     Region effectiveRegion = deviceRegion;
@@ -140,7 +155,6 @@ void ItemRendererQPainter::renderItem(QPainter *painter, Item *item, const std::
         }
     }
 
-    item->preprocess();
     if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
         renderSurfaceItem(painter, surfaceItem);
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {

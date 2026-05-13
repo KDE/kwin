@@ -408,12 +408,16 @@ void ItemView::paint(const RenderTarget &renderTarget, const QPoint &deviceOffse
     const Region globalRegion = region == Region::infinite() ? Region::infinite() : region.translated(viewport().topLeft().toPoint());
     RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
     auto renderer = m_item->scene()->renderer();
+    const auto filter = [this](Item *toRender) {
+        return toRender != m_item;
+    };
+    if (!renderer->prepareItems(m_item, filter, {})) {
+        return;
+    }
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, globalRegion);
     WindowPaintData data;
-    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, [this](Item *toRender) {
-        return toRender != m_item;
-    }, {});
+    renderer->renderItem(renderTarget, renderViewport, m_item, 0, globalRegion, data, filter, {});
     renderer->endFrame();
 }
 
@@ -538,6 +542,9 @@ void ItemTreeView::paint(const RenderTarget &renderTarget, const QPoint &deviceO
 {
     RenderViewport renderViewport(viewport(), m_logicalOutput->scale(), renderTarget, deviceOffset);
     auto renderer = m_item->scene()->renderer();
+    if (!renderer->prepareItems(m_item, {}, {})) {
+        return;
+    }
     renderer->beginFrame(renderTarget, renderViewport);
     renderer->renderBackground(renderTarget, renderViewport, deviceRegion);
     WindowPaintData data;

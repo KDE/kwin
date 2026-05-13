@@ -255,6 +255,13 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
     RenderViewport viewport(geometry, scale, renderTarget, QPoint());
 
     WorkspaceScene *scene = kwinApp()->scene();
+    if (!scene->renderer()->prepareItems(window->windowItem(), {}, {})) {
+        return std::nullopt;
+    }
+    const bool renderCursor = (flags & ScreenShotFlag::ScreenShotIncludeCursor) && scene->cursorItem()->isVisible();
+    if (renderCursor && !scene->renderer()->prepareItems(scene->cursorItem(), {}, {})) {
+        return std::nullopt;
+    }
 
     scene->renderer()->beginFrame(renderTarget, viewport);
     glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -265,7 +272,7 @@ std::optional<QImage> ScreenShotManager::takeScreenShot(Window *window, ScreenSh
         return (!deco && item == w->decorationItem())
             || (!shadow && item == w->shadowItem());
     }, {});
-    if ((flags & ScreenShotFlag::ScreenShotIncludeCursor) && scene->cursorItem()->isVisible()) {
+    if (renderCursor) {
         scene->renderer()->renderItem(renderTarget, viewport, scene->cursorItem(), 0, Region::infinite(), WindowPaintData{}, {}, {});
     }
     scene->renderer()->endFrame();

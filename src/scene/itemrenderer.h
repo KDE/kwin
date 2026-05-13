@@ -57,6 +57,7 @@ public:
     virtual void endFrame();
 
     virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const Region &deviceRegion) = 0;
+    virtual bool prepareItems(Item *item, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) = 0;
     virtual void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const Region &deviceRegion, const WindowPaintData &data, const std::function<bool(Item *)> &filter, const std::function<bool(Item *)> &holeFilter) = 0;
 
     virtual void setLayerDebugging(bool enable);
