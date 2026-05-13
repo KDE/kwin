@@ -49,6 +49,13 @@ public:
      */
     void quit();
 
+    /**
+     * @brief Whether the prompt should be shown
+     *
+     * Returns false when the user chose "do not show again".
+     */
+    static bool shouldShow();
+
 Q_SIGNALS:
     /**
      * @brief Emitted when the user requested the action be undone

@@ -165,6 +165,10 @@ void UserActionsMenu::showUserActionPrompt(Window *window, UserActionPrompt::Pro
         dialog->quit();
     }
 
+    if (!UserActionPrompt::shouldShow()) {
+        return;
+    }
+
     dialog = new UserActionPrompt(window, prompt, window);
 
     switch (prompt) {
