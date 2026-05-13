@@ -51,6 +51,10 @@ public:
     explicit DebugConsoleModel(QObject *parent = nullptr);
     ~DebugConsoleModel() override;
 
+    enum Roles {
+        InternalIdRole = Qt::UserRole + 1,
+    };
+
     int columnCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent) const override;
@@ -112,9 +116,11 @@ protected:
 private:
     void initGLTab();
     void updateKeyboardTab();
+    void findWindow();
 
     std::unique_ptr<Ui::DebugConsole> m_ui;
     std::unique_ptr<DebugConsoleFilter> m_inputFilter;
+    bool m_interactiveWindowSelection = false;
 };
 
 class DebugConsoleFilter : public InputEventSpy

@@ -37,6 +37,16 @@
          </attribute>
         </widget>
        </item>
+       <item alignment="Qt::AlignmentFlag::AlignRight">
+        <widget class="QPushButton" name="pickWindowButton">
+         <property name="text">
+          <string comment="@action:button">Pick Window…</string>
+         </property>
+         <property name="icon">
+          <iconset theme="QIcon::ThemeIcon::EditFind"/>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="input">

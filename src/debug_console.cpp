@@ -709,6 +709,7 @@ DebugConsole::DebugConsole()
     m_ui->windowsView->sortByColumn(0, Qt::AscendingOrder);
     m_ui->windowsView->header()->setSortIndicatorShown(true);
     m_ui->windowsView->setItemDelegate(new DebugConsoleDelegate(this));
+    connect(m_ui->pickWindowButton, &QPushButton::clicked, this, &DebugConsole::findWindow);
 
     m_ui->clipboardContent->setModel(new DataSourceModel(this));
     m_ui->primaryContent->setModel(new DataSourceModel(this));
@@ -823,13 +824,37 @@ void DebugConsole::updateKeyboardTab()
     m_ui->activeModifiersLabel->setText(stateActiveComponents<xkb_mod_index_t>(state, xkb_keymap_num_mods(map), modActive, &xkb_keymap_mod_get_name));
 }
 
+void DebugConsole::findWindow()
+{
+    m_interactiveWindowSelection = true;
+    hide();
+
+    kwinApp()->startInteractiveWindowSelection([this](Window *window) {
+        m_interactiveWindowSelection = false;
+        show();
+
+        if (!window) {
+            return;
+        }
+
+        auto *windowsModel = m_ui->windowsView->model();
+        const auto indexes = windowsModel->match(windowsModel->index(0, 0), DebugConsoleModel::InternalIdRole, window->internalId(), 1, Qt::MatchExactly | Qt::MatchRecursive);
+        if (indexes.isEmpty()) {
+            return;
+        }
+
+        m_ui->windowsView->expand(indexes.first());
+        m_ui->windowsView->setCurrentIndex(indexes.first());
+    });
+}
+
 void DebugConsole::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
     // delay the connection to the show event as in ctor the windowHandle returns null
     connect(windowHandle(), &QWindow::visibleChanged, this, [this](bool visible) {
-        if (visible) {
+        if (visible || m_interactiveWindowSelection) {
             // ignore
             return;
         }
@@ -1408,6 +1433,8 @@ QVariant DebugConsoleModel::windowData(const QModelIndex &index, int role, const
         return toString(c);
     } else if (role == Qt::DecorationRole) {
         return c->icon();
+    } else if (role == InternalIdRole) {
+        return c->internalId();
     }
     return QVariant();
 }
