@@ -88,6 +88,7 @@ protected:
 private:
     void startSession();
     void refreshSettings(const KConfigGroup &group, const QByteArrayList &names);
+    void restartXwayland();
 
     QStringList m_applicationsToStart;
     QString m_inputMethodServerToStart;

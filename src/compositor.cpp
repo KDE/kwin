@@ -100,6 +100,7 @@ Compositor::Compositor(QObject *workspace)
         m_renderDevice = nullptr;
         // this will choose a new render device
         start();
+        Q_EMIT primaryGpuChanged();
     });
 }
 
