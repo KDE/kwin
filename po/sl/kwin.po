@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1736706 2026-05-12 01:29:19Z scripty $
+# $Id: kwin.po 1736759 2026-05-13 01:30:02Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:46+0000\n"
+"POT-Creation-Date: 2026-05-13 00:47+0000\n"
 "PO-Revision-Date: 2026-05-08 06:25+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -3792,53 +3792,53 @@ msgstr "Sp&remeni velikost"
 
 #: useractions.cpp:226
 #, kde-format
-msgid "Keep &Above Others"
-msgstr "Ohrani n&ad vsemi"
-
-#: useractions.cpp:232
-#, kde-format
 msgid "Keep &Below Others"
 msgstr "Ohrani pod vsemi"
 
-#: useractions.cpp:238
+#: useractions.cpp:232
 #, kde-format
 msgid "&Fullscreen"
 msgstr "Celozaslonski način"
 
-#: useractions.cpp:244
+#: useractions.cpp:238
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "Brez &naslovne letvice in okvirja"
 
-#: useractions.cpp:250
+#: useractions.cpp:244
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr "Skrij iz video posnetka zaslona"
 
-#: useractions.cpp:258
+#: useractions.cpp:252
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Nastavi bližnjico okna…"
 
-#: useractions.cpp:264
+#: useractions.cpp:258
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Posebne nastavitve oken…"
 
-#: useractions.cpp:269
+#: useractions.cpp:263
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Posebne nastavitve &programov …"
 
-#: useractions.cpp:275
+#: useractions.cpp:269
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Razpni"
 
-#: useractions.cpp:281
+#: useractions.cpp:275
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Skrči"
+
+#: useractions.cpp:280
+#, kde-format
+msgid "Keep &Above Others"
+msgstr "Ohrani n&ad vsemi"
 
 #: useractions.cpp:287
 #, kde-format

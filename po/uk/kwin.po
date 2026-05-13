@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:46+0000\n"
+"POT-Creation-Date: 2026-05-13 00:47+0000\n"
 "PO-Revision-Date: 2026-05-08 07:54+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -3796,53 +3796,53 @@ msgstr "Змінити &розмір"
 
 #: useractions.cpp:226
 #, kde-format
-msgid "Keep &Above Others"
-msgstr "Утримувати &понад іншими"
-
-#: useractions.cpp:232
-#, kde-format
 msgid "Keep &Below Others"
 msgstr "Утримувати п&ід іншими"
 
-#: useractions.cpp:238
+#: useractions.cpp:232
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&На весь екран"
 
-#: useractions.cpp:244
+#: useractions.cpp:238
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "&Без смужки заголовка і рамки"
 
-#: useractions.cpp:250
+#: useractions.cpp:244
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr "При&ховати на записі з екрана"
 
-#: useractions.cpp:258
+#: useractions.cpp:252
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Вс&тановити скорочення до вікна…"
 
-#: useractions.cpp:264
+#: useractions.cpp:258
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Налаштувати с&пеціальні параметри вікна…"
 
-#: useractions.cpp:269
+#: useractions.cpp:263
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Налаштувати сп&еціальні параметри програми…"
 
-#: useractions.cpp:275
+#: useractions.cpp:269
 #, kde-format
 msgid "Ma&ximize"
 msgstr "&Максимізувати"
 
-#: useractions.cpp:281
+#: useractions.cpp:275
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Мін&імізувати"
+
+#: useractions.cpp:280
+#, kde-format
+msgid "Keep &Above Others"
+msgstr "Утримувати &понад іншими"
 
 #: useractions.cpp:287
 #, kde-format

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin-gu\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:46+0000\n"
+"POT-Creation-Date: 2026-05-13 00:47+0000\n"
 "PO-Revision-Date: 2009-01-04 13:06+0530\n"
 "Last-Translator: Kartik Mistry <kartik.mistry@gmail.com>\n"
 "Language-Team: Gujarati <kde-i18n-doc@kde.org>\n"
@@ -3863,56 +3863,56 @@ msgstr "માપ ફેરફાર (&s)"
 
 #: useractions.cpp:226
 #, kde-format
-msgid "Keep &Above Others"
-msgstr "બીજાઓની ઉપર રાખો (&A)"
-
-#: useractions.cpp:232
-#, kde-format
 msgid "Keep &Below Others"
 msgstr "બીજાઓની નીચે રાખો (&B)"
 
-#: useractions.cpp:238
+#: useractions.cpp:232
 #, kde-format
 msgid "&Fullscreen"
 msgstr "પૂર્ણસ્ક્રિન (&F)"
 
-#: useractions.cpp:244
+#: useractions.cpp:238
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:250
+#: useractions.cpp:244
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr ""
 
-#: useractions.cpp:258
+#: useractions.cpp:252
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
 msgid "Set Window Short&cut…"
 msgstr "વિન્ડો ટૂંકાણ (&S)..."
 
-#: useractions.cpp:264
+#: useractions.cpp:258
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
 msgid "Configure Special &Window Settings…"
 msgstr "ખાસ વિન્ડો ગોઠવણીઓ (&S)..."
 
-#: useractions.cpp:269
+#: useractions.cpp:263
 #, fuzzy, kde-format
 #| msgid "&Special Application Settings..."
 msgid "Configure S&pecial Application Settings…"
 msgstr "ખાસ કાર્યક્રમ ગોઠવણીઓ (&S)..."
 
-#: useractions.cpp:275
+#: useractions.cpp:269
 #, kde-format
 msgid "Ma&ximize"
 msgstr "મહત્તમ (&x)"
 
-#: useractions.cpp:281
+#: useractions.cpp:275
 #, kde-format
 msgid "Mi&nimize"
 msgstr "ન્યૂનતમ (&n)"
+
+#: useractions.cpp:280
+#, kde-format
+msgid "Keep &Above Others"
+msgstr "બીજાઓની ઉપર રાખો (&A)"
 
 #: useractions.cpp:287
 #, kde-format

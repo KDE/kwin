@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:46+0000\n"
-"PO-Revision-Date: 2026-05-07 19:30+0300\n"
+"POT-Creation-Date: 2026-05-13 00:47+0000\n"
+"PO-Revision-Date: 2026-05-12 13:28+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -3791,53 +3791,53 @@ msgstr "Keisti &dydį"
 
 #: useractions.cpp:226
 #, kde-format
-msgid "Keep &Above Others"
-msgstr "Laikyti &virš kitų"
-
-#: useractions.cpp:232
-#, kde-format
 msgid "Keep &Below Others"
 msgstr "Laikyti &po kitais"
 
-#: useractions.cpp:238
+#: useractions.cpp:232
 #, kde-format
 msgid "&Fullscreen"
 msgstr "Visas &ekranas"
 
-#: useractions.cpp:244
+#: useractions.cpp:238
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "&Be antraštės juostos ir rėmelio"
 
-#: useractions.cpp:250
+#: useractions.cpp:244
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr "&Slėpti, kai filmuojamas ekranas"
 
-#: useractions.cpp:258
+#: useractions.cpp:252
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Nustatyti lango &spartųjį klavišą…"
 
-#: useractions.cpp:264
+#: useractions.cpp:258
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Konfigūruoti specialias lango nu&ostatas…"
 
-#: useractions.cpp:269
+#: useractions.cpp:263
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Konfigūruoti s&pecialias programos nuostatas…"
 
-#: useractions.cpp:275
+#: useractions.cpp:269
 #, kde-format
 msgid "Ma&ximize"
 msgstr "&Išskleisti"
 
-#: useractions.cpp:281
+#: useractions.cpp:275
 #, kde-format
 msgid "Mi&nimize"
 msgstr "&Suskleisti"
+
+#: useractions.cpp:280
+#, kde-format
+msgid "Keep &Above Others"
+msgstr "Laikyti &virš kitų"
 
 #: useractions.cpp:287
 #, kde-format
@@ -4314,7 +4314,7 @@ msgstr "Perjungti į darbalaukį %1"
 #: wayland/outputmanagement_v2.cpp:569
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "abm lygis yra didesnis nei maksimumas (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:647
 #, kde-format

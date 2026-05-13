@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:46+0000\n"
+"POT-Creation-Date: 2026-05-13 00:47+0000\n"
 "PO-Revision-Date: 2025-04-05 11:59+0200\n"
 "Last-Translator: Martin Hansen <mh306602@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -3842,53 +3842,53 @@ msgstr "&Endre størrelse"
 
 #: useractions.cpp:226
 #, kde-format
-msgid "Keep &Above Others"
-msgstr "Hold &over andre"
-
-#: useractions.cpp:232
-#, kde-format
 msgid "Keep &Below Others"
 msgstr "Hold &under andre"
 
-#: useractions.cpp:238
+#: useractions.cpp:232
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&Fullskjerm"
 
-#: useractions.cpp:244
+#: useractions.cpp:238
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "&Ingen tittellinje eller ramme"
 
-#: useractions.cpp:250
+#: useractions.cpp:244
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr ""
 
-#: useractions.cpp:258
+#: useractions.cpp:252
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Sett opp vindus&hurtigtast …"
 
-#: useractions.cpp:264
+#: useractions.cpp:258
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Sett opp spesielle &vindusinnstillinger …"
 
-#: useractions.cpp:269
+#: useractions.cpp:263
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Sett opp s&pesielle programinnstillinger …"
 
-#: useractions.cpp:275
+#: useractions.cpp:269
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Ma&ksimer"
 
-#: useractions.cpp:281
+#: useractions.cpp:275
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Mi&nimer"
+
+#: useractions.cpp:280
+#, kde-format
+msgid "Keep &Above Others"
+msgstr "Hold &over andre"
 
 #: useractions.cpp:287
 #, kde-format

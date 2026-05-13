@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:46+0000\n"
+"POT-Creation-Date: 2026-05-13 00:47+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -3757,53 +3757,53 @@ msgstr "വലിപ്പം &മാറ്റുക"
 
 #: useractions.cpp:226
 #, kde-format
-msgid "Keep &Above Others"
-msgstr "എല്ലാറ്റിനും &മുകളിലാക്കുക"
-
-#: useractions.cpp:232
-#, kde-format
 msgid "Keep &Below Others"
 msgstr "എല്ലാറ്റിനും &താഴെയാക്കുക"
 
-#: useractions.cpp:238
+#: useractions.cpp:232
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&സ്ക്രീന്‍ പൂര്‍ണ്ണവലിപ്പത്തിലാക്കുക"
 
-#: useractions.cpp:244
+#: useractions.cpp:238
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:250
+#: useractions.cpp:244
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr ""
 
-#: useractions.cpp:258
+#: useractions.cpp:252
 #, fuzzy, kde-format
 msgid "Set Window Short&cut…"
 msgstr "ജാലകത്തിനുള്ള &കുറുക്കുവഴി..."
 
-#: useractions.cpp:264
+#: useractions.cpp:258
 #, fuzzy, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "ജാലകത്തിനുള്ള &പ്രത്യേക സജ്ജീകരണങ്ങള്‍..."
 
-#: useractions.cpp:269
+#: useractions.cpp:263
 #, fuzzy, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "പ്രയോഗത്തിനുള്ള &പ്രത്യേക സജ്ജീകരണങ്ങള്‍..."
 
-#: useractions.cpp:275
+#: useractions.cpp:269
 #, kde-format
 msgid "Ma&ximize"
 msgstr "വലു&താക്കുക"
 
-#: useractions.cpp:281
+#: useractions.cpp:275
 #, kde-format
 msgid "Mi&nimize"
 msgstr "ചെറു&nതാക്കുക"
+
+#: useractions.cpp:280
+#, kde-format
+msgid "Keep &Above Others"
+msgstr "എല്ലാറ്റിനും &മുകളിലാക്കുക"
 
 #: useractions.cpp:287
 #, kde-format

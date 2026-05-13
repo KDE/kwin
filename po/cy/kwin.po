@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-12 00:46+0000\n"
+"POT-Creation-Date: 2026-05-13 00:47+0000\n"
 "PO-Revision-Date: 2003-12-27 10:16+0000\n"
 "Last-Translator: KD at KGyfieithu <kyfieithu@dotmon.com>\n"
 "Language-Team: Cymraeg <cy@li.org>\n"
@@ -3840,53 +3840,53 @@ msgstr "&Newid Maint"
 
 #: useractions.cpp:226
 #, kde-format
-msgid "Keep &Above Others"
-msgstr "Cadw &Uwchben y Lleill"
-
-#: useractions.cpp:232
-#, kde-format
 msgid "Keep &Below Others"
 msgstr "Cadw &Dan y Lleill"
 
-#: useractions.cpp:238
+#: useractions.cpp:232
 #, kde-format
 msgid "&Fullscreen"
 msgstr "S&grîn Llawn"
 
-#: useractions.cpp:244
+#: useractions.cpp:238
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:250
+#: useractions.cpp:244
 #, kde-format
 msgid "&Hide from Screencast"
 msgstr ""
 
-#: useractions.cpp:258
+#: useractions.cpp:252
 #, fuzzy, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Sgrînlun Ffenestr"
 
-#: useractions.cpp:264
+#: useractions.cpp:258
 #, fuzzy, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Cadw Gosodiadau Ffenest&r"
 
-#: useractions.cpp:269
+#: useractions.cpp:263
 #, fuzzy, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Cadw Gosodiadau Ffenest&r"
 
-#: useractions.cpp:275
+#: useractions.cpp:269
 #, kde-format
 msgid "Ma&ximize"
 msgstr "&Ehangu"
 
-#: useractions.cpp:281
+#: useractions.cpp:275
 #, kde-format
 msgid "Mi&nimize"
 msgstr "&Lleihau"
+
+#: useractions.cpp:280
+#, kde-format
+msgid "Keep &Above Others"
+msgstr "Cadw &Uwchben y Lleill"
 
 #: useractions.cpp:287
 #, kde-format
