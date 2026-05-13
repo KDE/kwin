@@ -49,7 +49,7 @@ public:
     {
         m_xwaylandXauthority = xauthority;
     }
-    void addExtraXWaylandEnvrionmentVariable(const QString &variable, const QString &value)
+    void addExtraXWaylandEnvironmentVariable(const QString &variable, const QString &value)
     {
         m_xwaylandExtraEnvironment.insert(variable, value);
     }

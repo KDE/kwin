@@ -54,7 +54,7 @@ EisBackend::EisBackend(QObject *parent)
     unlink(m_xWaylandContext->socketName.constData());
     if (QByteArray(kwinApp()->metaObject()->className()) == typeName(KWin::ApplicationWayland)) {
         auto appWayland = static_cast<ApplicationWayland *>(kwinApp());
-        appWayland->addExtraXWaylandEnvrionmentVariable(QStringLiteral("LIBEI_SOCKET"), QStringLiteral("/proc/self/fd/%1").arg(fd.get()));
+        appWayland->addExtraXWaylandEnvironmentVariable(QStringLiteral("LIBEI_SOCKET"), QStringLiteral("/proc/self/fd/%1").arg(fd.get()));
         appWayland->passFdToXwayland(std::move(fd));
     }
 #endif
