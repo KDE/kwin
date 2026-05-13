@@ -170,6 +170,11 @@ void ApplicationWayland::performStartup()
         m_xwayland->xwaylandLauncher()->addEnvironmentVariables(m_xwaylandExtraEnvironment);
         m_xwayland->xwaylandLauncher()->passFileDescriptors(std::move(m_xwaylandFds));
         m_xwayland->init();
+        connect(Compositor::self(), &Compositor::primaryGpuChanged, m_xwayland.get(), [this]() {
+            // Xwayland will automatically be started again
+            // once a client tries to connect to it
+            m_xwayland->xwaylandLauncher()->stop();
+        });
     }
 #endif
     startSession();

@@ -102,6 +102,7 @@ Compositor::Compositor(QObject *workspace)
         // this will choose a new render device
         start();
         qCWarning(KWIN_CORE, "Switched primary GPU to %s", qPrintable(m_renderDevice->drmDevice()->path()));
+        Q_EMIT primaryGpuChanged();
     });
 }
 
