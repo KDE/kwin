@@ -107,7 +107,7 @@ void TestWaylandOutput::testRegistry()
     fakeOutput->moveTo(QPoint(100, 50));
     fakeOutput->setPhysicalSize(QSize(200, 100));
     auto outputHandle = std::make_unique<KWin::LogicalOutput>(fakeOutput.get());
-    outputHandle->setGeometry(fakeOutput->position(), fakeOutput->modeSize(), fakeOutput->refreshRate(), fakeOutput->transform(), fakeOutput->scale());
+    outputHandle->copyInfoFrom(fakeOutput.get());
 
     auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
@@ -159,7 +159,7 @@ void TestWaylandOutput::testModeChange()
     auto fakeOutput = std::make_unique<FakeBackendOutput>();
     fakeOutput->setMode(QSize(1024, 768), 60000);
     auto outputHandle = std::make_unique<KWin::LogicalOutput>(fakeOutput.get());
-    outputHandle->setGeometry(fakeOutput->position(), fakeOutput->modeSize(), fakeOutput->refreshRate(), fakeOutput->transform(), fakeOutput->scale());
+    outputHandle->copyInfoFrom(fakeOutput.get());
 
     auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
@@ -188,7 +188,7 @@ void TestWaylandOutput::testModeChange()
 
     // change once more
     fakeOutput->setMode(QSize(1280, 1024), 90000);
-    outputHandle->setGeometry(fakeOutput->position(), fakeOutput->modeSize(), fakeOutput->refreshRate(), fakeOutput->transform(), fakeOutput->scale());
+    outputHandle->copyInfoFrom(fakeOutput.get());
     QVERIFY(outputChanged.wait());
     QCOMPARE(modeAddedSpy.count(), 2);
     QCOMPARE(modeAddedSpy.at(1).first().value<KWayland::Client::Output::Mode>().size, QSize(1280, 1024));
@@ -204,7 +204,7 @@ void TestWaylandOutput::testScaleChange()
     auto fakeOutput = std::make_unique<FakeBackendOutput>();
     fakeOutput->setMode(QSize(1024, 768), 60000);
     auto outputHandle = std::make_unique<KWin::LogicalOutput>(fakeOutput.get());
-    outputHandle->setGeometry(fakeOutput->position(), fakeOutput->modeSize(), fakeOutput->refreshRate(), fakeOutput->transform(), fakeOutput->scale());
+    outputHandle->copyInfoFrom(fakeOutput.get());
 
     auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
@@ -226,7 +226,7 @@ void TestWaylandOutput::testScaleChange()
     // change the scale
     outputChanged.clear();
     fakeOutput->setScale(2);
-    outputHandle->setGeometry(fakeOutput->position(), fakeOutput->modeSize(), fakeOutput->refreshRate(), fakeOutput->transform(), fakeOutput->scale());
+    outputHandle->copyInfoFrom(fakeOutput.get());
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 2);
     // changing to same value should not trigger
@@ -236,7 +236,7 @@ void TestWaylandOutput::testScaleChange()
     // change once more
     outputChanged.clear();
     fakeOutput->setScale(4);
-    outputHandle->setGeometry(fakeOutput->position(), fakeOutput->modeSize(), fakeOutput->refreshRate(), fakeOutput->transform(), fakeOutput->scale());
+    outputHandle->copyInfoFrom(fakeOutput.get());
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 4);
 }
@@ -261,7 +261,7 @@ void TestWaylandOutput::testSubPixel()
     fakeOutput->setMode(QSize(1024, 768), 60000);
     fakeOutput->setSubPixel(actual);
     auto outputHandle = std::make_unique<KWin::LogicalOutput>(fakeOutput.get());
-    outputHandle->setGeometry(fakeOutput->position(), fakeOutput->modeSize(), fakeOutput->refreshRate(), fakeOutput->transform(), fakeOutput->scale());
+    outputHandle->copyInfoFrom(fakeOutput.get());
 
     auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
@@ -306,7 +306,7 @@ void TestWaylandOutput::testTransform()
     fakeOutput->setMode(QSize(1024, 768), 60000);
     fakeOutput->setTransform(actual);
     auto outputHandle = std::make_unique<KWin::LogicalOutput>(fakeOutput.get());
-    outputHandle->setGeometry(fakeOutput->position(), fakeOutput->modeSize(), fakeOutput->refreshRate(), fakeOutput->transform(), fakeOutput->scale());
+    outputHandle->copyInfoFrom(fakeOutput.get());
 
     auto outputInterface = std::make_unique<KWin::OutputInterface>(m_display, outputHandle.get());
 
@@ -332,7 +332,7 @@ void TestWaylandOutput::testTransform()
     // change back to normal
     outputChanged.clear();
     fakeOutput->setTransform(KWin::OutputTransform::Normal);
-    outputHandle->setGeometry(fakeOutput->position(), fakeOutput->modeSize(), fakeOutput->refreshRate(), fakeOutput->transform(), fakeOutput->scale());
+    outputHandle->copyInfoFrom(fakeOutput.get());
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
     }

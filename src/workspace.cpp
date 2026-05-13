@@ -1307,6 +1307,40 @@ void Workspace::slotOutputBackendOutputsQueried()
 
 static const int s_dpmsTimeout = environmentVariableIntValue("KWIN_DPMS_WORKAROUND_TIMEOUT").value_or(2000);
 
+static QString generateDescription(BackendOutput *output, const QList<BackendOutput *> &relevantOutputs)
+{
+    if (output->isInternal() && std::ranges::count_if(relevantOutputs, &BackendOutput::isInternal) == 1) {
+        return i18n("Built-in Screen");
+    }
+    const bool hasModel = !output->manufacturer().isEmpty() && !output->model().isEmpty();
+    if (!hasModel) {
+        return output->name();
+    }
+    const bool shouldShowConnector = std::ranges::any_of(relevantOutputs, [output](BackendOutput *other) {
+        return other != output
+            && other->manufacturer() == output->manufacturer()
+            && other->model() == output->model()
+            && other->serialNumber() == output->serialNumber();
+    });
+    if (shouldShowConnector) {
+        return i18nc("Display label: manufacturer + model name + connector name", "%1 %2 %3",
+                     output->manufacturer(), output->model(), output->name());
+    }
+    const bool shouldShowSerialNumber = !output->serialNumber().isEmpty()
+        && std::ranges::any_of(relevantOutputs, [output](BackendOutput *other) {
+        return other != output
+            && other->manufacturer() == output->manufacturer()
+            && other->model() == output->model();
+    });
+    if (shouldShowSerialNumber) {
+        return i18nc("Display label: manufacturer + model name + serial number", "%1 %2 %3",
+                     output->manufacturer(), output->model(), output->serialNumber());
+    } else {
+        return i18nc("Display label: manufacturer + model name", "%1 %2",
+                     output->manufacturer(), output->model());
+    }
+}
+
 void Workspace::updateOutputs()
 {
     QHash<Window *, LogicalOutput *> oldMoveResizeOutputs;
@@ -1372,7 +1406,9 @@ void Workspace::updateOutputs()
             m_outputs.push_back(*existing);
         }
         // update geometry
-        m_outputs.back()->setGeometry(output->position() - topLeftMostCoordinates, output->modeSize(), output->refreshRate(), output->transform(), output->scale());
+        m_outputs.back()->setData(output->position() - topLeftMostCoordinates, output->modeSize(),
+                                  output->refreshRate(), output->transform(), output->scale(),
+                                  generateDescription(output, newBackendOutputs));
         if (existing != oldLogicalOutputs.end()) {
             Q_EMIT m_outputs.back()->changed();
         }

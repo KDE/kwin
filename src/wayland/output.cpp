@@ -33,6 +33,7 @@ public:
     void sendScale(Resource *resource);
     void sendGeometry(Resource *resource);
     void sendMode(Resource *resource);
+    void sendDescription(Resource *resource);
     void sendDone(Resource *resource);
 
     OutputInterface *q;
@@ -68,6 +69,13 @@ OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface
 void OutputInterfacePrivate::sendMode(Resource *resource)
 {
     send_mode(resource->handle, mode_current, modeSize.width(), modeSize.height(), refreshRate);
+}
+
+void OutputInterfacePrivate::sendDescription(Resource *resource)
+{
+    if (resource->version() >= WL_OUTPUT_DESCRIPTION_SINCE_VERSION) {
+        send_description(resource->handle, description);
+    }
 }
 
 void OutputInterfacePrivate::sendScale(Resource *resource)
@@ -160,10 +168,7 @@ void OutputInterfacePrivate::output_bind_resource(Resource *resource)
     if (resource->version() >= WL_OUTPUT_NAME_SINCE_VERSION) {
         send_name(resource->handle, name);
     }
-    if (resource->version() >= WL_OUTPUT_DESCRIPTION_SINCE_VERSION) {
-        send_description(resource->handle, description);
-    }
-
+    sendDescription(resource);
     sendMode(resource);
     sendScale(resource);
     sendGeometry(resource);
@@ -211,6 +216,15 @@ OutputInterface::OutputInterface(Display *display, LogicalOutput *handle, QObjec
             }
             scheduleDone();
         }
+    });
+
+    connect(handle, &LogicalOutput::descriptionChanged, this, [this]() {
+        d->description = d->handle->description();
+        const auto resources = d->resourceMap();
+        for (auto resource : resources) {
+            d->sendDescription(resource);
+        }
+        scheduleDone();
     });
 
     connect(handle, &LogicalOutput::scaleChanged, this, [this]() {

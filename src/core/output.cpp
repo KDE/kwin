@@ -513,7 +513,7 @@ QString LogicalOutput::name() const
 
 QString LogicalOutput::description() const
 {
-    return m_backendOutput->description();
+    return m_description;
 }
 
 QString LogicalOutput::manufacturer() const
@@ -566,18 +566,25 @@ uint32_t LogicalOutput::refreshRate() const
     return m_backendOutput->refreshRate();
 }
 
-void LogicalOutput::setGeometry(const QPoint logicalPosition, const QSize &modeSize, uint32_t refreshRate, OutputTransform transform, double scale)
+void LogicalOutput::setData(const QPoint logicalPosition, const QSize &modeSize,
+                            uint32_t refreshRate, OutputTransform transform, double scale,
+                            const QString &description)
 {
     const RectF newGeometry(logicalPosition, transform.map(QSizeF(modeSize)) / scale);
     const bool geometryChange = m_geometry != newGeometry;
     const bool transformChange = m_transform != transform;
     const bool scaleChange = m_scale != scale;
     const bool modeChanged = m_modeSize != modeSize || m_refreshRate != refreshRate;
+    const bool descriptionChange = m_description != description;
     m_modeSize = modeSize;
     m_refreshRate = refreshRate;
     m_geometry = newGeometry;
     m_transform = transform;
     m_scale = scale;
+    m_description = description;
+    if (descriptionChange) {
+        Q_EMIT descriptionChanged();
+    }
     if (modeChanged) {
         Q_EMIT currentModeChanged();
     }
@@ -590,6 +597,11 @@ void LogicalOutput::setGeometry(const QPoint logicalPosition, const QSize &modeS
     if (scaleChange) {
         Q_EMIT scaleChanged();
     }
+}
+
+void LogicalOutput::copyInfoFrom(BackendOutput *output)
+{
+    setData(output->position(), output->modeSize(), output->refreshRate(), output->transform(), output->scale(), output->description());
 }
 
 } // namespace KWin

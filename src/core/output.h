@@ -447,22 +447,28 @@ Q_SIGNALS:
      */
     void currentModeChanged();
 
+    void descriptionChanged();
+
 protected:
     BackendOutput *const m_backendOutput;
     int m_refCount = 1;
 
     // only Workspace is meant to change these properties
     friend class Workspace;
+    void setData(const QPoint logicalPosition, const QSize &modeSize,
+                 uint32_t refreshRate, OutputTransform transform, double scale,
+                 const QString &description);
     // and autotests... TODO make them integration tests instead!
     friend class ::TestXdgOutput;
     friend class ::TestWaylandOutput;
-    void setGeometry(const QPoint logicalPosition, const QSize &modeSize, uint32_t refreshRate, OutputTransform transform, double scale);
+    void copyInfoFrom(BackendOutput *output);
 
     RectF m_geometry;
     QSize m_modeSize;
     uint32_t m_refreshRate = 60000;
     OutputTransform m_transform;
     double m_scale = 1.0;
+    QString m_description;
 };
 
 inline Rect LogicalOutput::rect() const

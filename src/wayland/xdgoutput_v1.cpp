@@ -113,6 +113,7 @@ XdgOutputV1Interface::XdgOutputV1Interface(OutputInterface *output)
     size = handle->geometryF().size();
 
     connect(handle, &LogicalOutput::geometryChanged, this, &XdgOutputV1Interface::update);
+    connect(handle, &LogicalOutput::descriptionChanged, this, &XdgOutputV1Interface::update);
 }
 
 void XdgOutputV1Interface::update()
@@ -135,6 +136,15 @@ void XdgOutputV1Interface::update()
         size = geometry.size();
         for (auto resource : resources) {
             sendLogicalSize(resource);
+        }
+    }
+
+    if (description != output->handle()->description()) {
+        description = output->handle()->description();
+        for (auto resource : resources) {
+            if (resource->version() >= ZXDG_OUTPUT_V1_DESCRIPTION_SINCE_VERSION) {
+                send_description(resource->handle, description);
+            }
         }
     }
 
