@@ -44,16 +44,17 @@ bool UserActionPrompt::isRunning() const
     return m_process.state() == QProcess::Running;
 }
 
-void UserActionPrompt::start()
+bool UserActionPrompt::shouldShow()
 {
-    if (isRunning()) {
-        return;
-    }
-
     KConfig cfg(QStringLiteral("kwin_dialogsrc"));
     KConfigGroup dontAgainGroup(&cfg, QStringLiteral("Notification Messages"));
     const QString dontAgainKey = QStringLiteral("altf3warning");
-    if (!dontAgainGroup.readEntry(dontAgainKey, true)) {
+    return !dontAgainGroup.readEntry(dontAgainKey, true);
+}
+
+void UserActionPrompt::start()
+{
+    if (isRunning()) {
         return;
     }
 
