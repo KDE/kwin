@@ -2,8 +2,30 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Slide Plasma notifications in and out",
+        "Description[ca@valencia]": "Llisca entrant i eixint les notificacions de Plasma",
+        "Description[ca]": "Llisca entrant i sortint les notificacions del Plasma",
+        "Description[es]": "Deslizar las notificaciones de Plasma para mostrarlas y ocultarlas",
+        "Description[he]": "החלקת התראות של פלזמה פנימה והחוצה",
+        "Description[ia]": "Glissa notificationes de Plasma in e out (in e foras)",
+        "Description[ka]": "Plasma-ის გაფრთხილებების სრიალი შიგნით და გარეთ",
+        "Description[lt]": "Rodyti įslenkančius ir išslenkančius Plasma pranešimus",
+        "Description[nl]": "Schuif Plasma meldingen in en uit",
+        "Description[pt_BR]": "Deslizar notificações do Plasma",
+        "Description[sl]": "Drsaj obvestila Plasme noter in ven",
+        "Description[uk]": "Виковзування за заковзування сповіщень Плазми",
         "EnabledByDefault": true,
         "License": "GPL",
-        "Name": "Sliding notifications"
+        "Name": "Sliding notifications",
+        "Name[ca@valencia]": "Notificacions desplaçant-se",
+        "Name[ca]": "Notificacions desplaçant-se",
+        "Name[es]": "Notificaciones deslizantes",
+        "Name[he]": "התראות מחליקות",
+        "Name[ia]": "Notificationes glissante",
+        "Name[ka]": "მცურავი გაფრთხილებები",
+        "Name[lt]": "Slenkantys pranešimai",
+        "Name[nl]": "Schuivende meldingen",
+        "Name[pt_BR]": "Notificações deslizantes",
+        "Name[sl]": "Drseča obvestila",
+        "Name[uk]": "Ковзні сповіщення"
     }
 }
