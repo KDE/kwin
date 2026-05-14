@@ -168,6 +168,8 @@ public:
 
     Q_SCRIPTABLE void setUniform(uint shaderId, const QString &name, const QJSValue &value);
 
+    Q_SCRIPTABLE QEasingCurve cubicBezier(qreal x0, qreal y0, qreal x1, qreal y1) const;
+
     QHash<int, QJSValueList> &screenEdgeCallbacks()
     {
         return m_screenEdgeCallbacks;

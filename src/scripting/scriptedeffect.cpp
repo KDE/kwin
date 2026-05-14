@@ -123,6 +123,9 @@ AnimationSettings animationSettingsFromObject(const QJSValue &object)
     if (curve.isNumber()) {
         settings.curve = easingCurveFromType(curve.toInt());
         settings.set |= AnimationSettings::Curve;
+    } else if (curve.isObject()) {
+        settings.curve = curve.toVariant().toEasingCurve();
+        settings.set |= AnimationSettings::Curve;
     } else {
         settings.curve = QEasingCurve::Linear;
     }
@@ -304,6 +307,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
         QStringLiteral("cancel"),
         QStringLiteral("addShader"),
         QStringLiteral("setUniform"),
+        QStringLiteral("cubicBezier"),
     };
 
     for (const QString &propertyName : globalProperties) {
@@ -873,6 +877,13 @@ void ScriptedEffect::setUniform(uint shaderId, const QString &name, const QJSVal
     } else {
         m_engine->throwError(QStringLiteral("Invalid value provided for uniform"));
     }
+}
+
+QEasingCurve ScriptedEffect::cubicBezier(qreal x0, qreal y0, qreal x1, qreal y1) const
+{
+    QEasingCurve easingCurve(QEasingCurve::BezierSpline);
+    easingCurve.addCubicBezierSegment(QPointF(x0, y0), QPointF(x1, y1), QPointF(1, 1));
+    return easingCurve;
 }
 
 } // namespace
