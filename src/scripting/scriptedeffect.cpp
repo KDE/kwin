@@ -38,6 +38,37 @@ Q_DECLARE_METATYPE(KSharedConfigPtr)
 namespace KWin
 {
 
+static KWin::FPx2 fpx2FromScriptValue(const QJSValue &value)
+{
+    if (value.isNull()) {
+        return FPx2();
+    }
+    if (value.isNumber()) {
+        return FPx2(value.toNumber());
+    }
+    if (value.isObject()) {
+        const QJSValue value1 = value.property(QStringLiteral("value1"));
+        const QJSValue value2 = value.property(QStringLiteral("value2"));
+        if (!value1.isNumber() || !value2.isNumber()) {
+            qCDebug(KWIN_SCRIPTING) << "Cannot cast scripted FPx2 to C++";
+            return FPx2();
+        }
+        return FPx2(value1.toNumber(), value2.toNumber());
+    }
+    return FPx2();
+}
+
+static QEasingCurve easingCurveFromType(int type)
+{
+    QEasingCurve qec;
+    if (type < QEasingCurve::Custom) {
+        qec.setType(static_cast<QEasingCurve::Type>(type));
+    } else if (type == ScriptedEffect::GaussianCurve) {
+        qec.setCustomType(ScriptedEffect::qecGaussian);
+    }
+    return qec;
+}
+
 struct AnimationSettings
 {
     enum {
@@ -50,12 +81,12 @@ struct AnimationSettings
         FrozenTime = 1 << 6,
     };
     AnimationEffect::Attribute type;
-    QEasingCurve::Type curve;
-    QJSValue from;
-    QJSValue to;
+    QEasingCurve curve;
+    FPx2 from;
+    FPx2 to;
     int delay;
     qint64 frozenTime;
-    uint duration;
+    std::chrono::milliseconds duration;
     uint set;
     uint metaData;
     bool fullScreenEffect;
@@ -69,15 +100,15 @@ AnimationSettings animationSettingsFromObject(const QJSValue &object)
     settings.set = 0;
     settings.metaData = 0;
 
-    settings.to = object.property(QStringLiteral("to"));
-    settings.from = object.property(QStringLiteral("from"));
+    settings.to = fpx2FromScriptValue(object.property(QStringLiteral("to")));
+    settings.from = fpx2FromScriptValue(object.property(QStringLiteral("from")));
 
     const QJSValue duration = object.property(QStringLiteral("duration"));
     if (duration.isNumber()) {
-        settings.duration = duration.toUInt();
+        settings.duration = std::chrono::milliseconds(duration.toUInt());
         settings.set |= AnimationSettings::Duration;
     } else {
-        settings.duration = 0;
+        settings.duration = std::chrono::milliseconds::zero();
     }
 
     const QJSValue delay = object.property(QStringLiteral("delay"));
@@ -90,7 +121,7 @@ AnimationSettings animationSettingsFromObject(const QJSValue &object)
 
     const QJSValue curve = object.property(QStringLiteral("curve"));
     if (curve.isNumber()) {
-        settings.curve = static_cast<QEasingCurve::Type>(curve.toInt());
+        settings.curve = easingCurveFromType(curve.toInt());
         settings.set |= AnimationSettings::Curve;
     } else {
         settings.curve = QEasingCurve::Linear;
@@ -149,26 +180,6 @@ AnimationSettings animationSettingsFromObject(const QJSValue &object)
     }
 
     return settings;
-}
-
-static KWin::FPx2 fpx2FromScriptValue(const QJSValue &value)
-{
-    if (value.isNull()) {
-        return FPx2();
-    }
-    if (value.isNumber()) {
-        return FPx2(value.toNumber());
-    }
-    if (value.isObject()) {
-        const QJSValue value1 = value.property(QStringLiteral("value1"));
-        const QJSValue value2 = value.property(QStringLiteral("value2"));
-        if (!value1.isNumber() || !value2.isNumber()) {
-            qCDebug(KWIN_SCRIPTING) << "Cannot cast scripted FPx2 to C++";
-            return FPx2();
-        }
-        return FPx2(value1.toNumber(), value2.toNumber());
-    }
-    return FPx2();
 }
 
 ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
@@ -447,32 +458,32 @@ QJSValue ScriptedEffect::animate_helper(const QJSValue &object, AnimationType an
         const AnimationSettings &setting = settings[i];
         int animationId;
         if (animationType == AnimationType::Set) {
-            animationId = set(window,
-                              setting.type,
-                              setting.duration,
-                              setting.to,
-                              setting.from,
-                              setting.metaData,
-                              setting.curve,
-                              setting.delay,
-                              setting.fullScreenEffect,
-                              setting.keepAlive,
-                              setting.shader ? setting.shader.value() : 0u);
+            animationId = AnimationEffect::set(window,
+                                               setting.type,
+                                               setting.metaData,
+                                               setting.duration,
+                                               setting.to,
+                                               setting.curve,
+                                               setting.delay,
+                                               setting.from,
+                                               setting.fullScreenEffect,
+                                               setting.keepAlive,
+                                               setting.shader ? findShader(*setting.shader) : nullptr);
             if (setting.frozenTime >= 0) {
                 freezeInTime(animationId, setting.frozenTime);
             }
         } else {
-            animationId = animate(window,
-                                  setting.type,
-                                  setting.duration,
-                                  setting.to,
-                                  setting.from,
-                                  setting.metaData,
-                                  setting.curve,
-                                  setting.delay,
-                                  setting.fullScreenEffect,
-                                  setting.keepAlive,
-                                  setting.shader ? setting.shader.value() : 0u);
+            animationId = AnimationEffect::animate(window,
+                                                   setting.type,
+                                                   setting.metaData,
+                                                   setting.duration,
+                                                   setting.to,
+                                                   setting.curve,
+                                                   setting.delay,
+                                                   setting.from,
+                                                   setting.fullScreenEffect,
+                                                   setting.keepAlive,
+                                                   setting.shader ? findShader(*setting.shader) : nullptr);
             if (setting.frozenTime >= 0) {
                 freezeInTime(animationId, setting.frozenTime);
             }
@@ -487,13 +498,7 @@ quint64 ScriptedEffect::animate(KWin::EffectWindow *window, KWin::AnimationEffec
                                 int ms, const QJSValue &to, const QJSValue &from, uint metaData, int curve,
                                 int delay, bool fullScreen, bool keepAlive, uint shaderId)
 {
-    QEasingCurve qec;
-    if (curve < QEasingCurve::Custom) {
-        qec.setType(static_cast<QEasingCurve::Type>(curve));
-    } else if (curve == GaussianCurve) {
-        qec.setCustomType(qecGaussian);
-    }
-    return AnimationEffect::animate(window, attribute, metaData, std::chrono::milliseconds(ms), fpx2FromScriptValue(to), qec,
+    return AnimationEffect::animate(window, attribute, metaData, std::chrono::milliseconds(ms), fpx2FromScriptValue(to), easingCurveFromType(curve),
                                     delay, fpx2FromScriptValue(from), fullScreen, keepAlive, findShader(shaderId));
 }
 
@@ -506,13 +511,7 @@ quint64 ScriptedEffect::set(KWin::EffectWindow *window, KWin::AnimationEffect::A
                             int ms, const QJSValue &to, const QJSValue &from, uint metaData, int curve,
                             int delay, bool fullScreen, bool keepAlive, uint shaderId)
 {
-    QEasingCurve qec;
-    if (curve < QEasingCurve::Custom) {
-        qec.setType(static_cast<QEasingCurve::Type>(curve));
-    } else if (curve == GaussianCurve) {
-        qec.setCustomType(qecGaussian);
-    }
-    return AnimationEffect::set(window, attribute, metaData, std::chrono::milliseconds(ms), fpx2FromScriptValue(to), qec,
+    return AnimationEffect::set(window, attribute, metaData, std::chrono::milliseconds(ms), fpx2FromScriptValue(to), easingCurveFromType(curve),
                                 delay, fpx2FromScriptValue(from), fullScreen, keepAlive, findShader(shaderId));
 }
 
