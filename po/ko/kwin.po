@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-13 00:47+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-04-26 21:31+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -3624,14 +3624,16 @@ msgstr "티어링 규칙 종류"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, kde-format
-msgid "Hide from screencast"
-msgstr "스크린캐스트에서 숨기기"
+#, fuzzy, kde-format
+#| msgid "Hide from screencast rule type"
+msgid "Hide from screenshots and screen recordings"
+msgstr "스크린캐스트 규칙 형식에서 숨기기"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, kde-format
-msgid "Hide from screencast rule type"
+#, fuzzy, kde-format
+#| msgid "Hide from screencast rule type"
+msgid "Hide from screenshots and screen recordings rule type"
 msgstr "스크린캐스트 규칙 형식에서 숨기기"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
@@ -3764,8 +3766,8 @@ msgstr "제목 표시줄과 프레임 없음(&N)"
 
 #: useractions.cpp:244
 #, kde-format
-msgid "&Hide from Screencast"
-msgstr "스크린캐스트에서 숨기기(&H)"
+msgid "&Hide from Screenshots and Screen Recordings"
+msgstr ""
 
 #: useractions.cpp:252
 #, kde-format
@@ -4330,7 +4332,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(응답 없음)"
 
-#: workspace.cpp:1772
+#: workspace.cpp:1313
+#, kde-format
+msgid "Built-in Screen"
+msgstr ""
+
+#: workspace.cpp:1326
+#, kde-format
+msgctxt "Display label: manufacturer + model name + connector name"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1336
+#, kde-format
+msgctxt "Display label: manufacturer + model name + serial number"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1339
+#, kde-format
+msgctxt "Display label: manufacturer + model name"
+msgid "%1 %2"
+msgstr ""
+
+#: workspace.cpp:1808
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4357,6 +4382,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland가 충돌함"
+
+#~ msgid "Hide from screencast"
+#~ msgstr "스크린캐스트에서 숨기기"
+
+#~ msgid "&Hide from Screencast"
+#~ msgstr "스크린캐스트에서 숨기기(&H)"
 
 #~ msgctxt "@label"
 #~ msgid "Compositing"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2022-01-30 19:27+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -17,15 +17,37 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 21.12.1\n"
 
-#: kcmvirtualkeyboard.cpp:61
+#: kcmvirtualkeyboard.cpp:82
 #, kde-format
 msgid "None"
 msgstr "ஏதுமில்லை"
 
-#: kcmvirtualkeyboard.cpp:65
+#: kcmvirtualkeyboard.cpp:86
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "எந்த மெய்நிகர் விசைப்பலகையையும் பயன்படுத்தாதே"
+
+#: ui/main.qml:24
+#, fuzzy, kde-format
+#| msgid "Choose Virtual Keyboard"
+msgctxt "Selector label"
+msgid "Show Virtual Keyboard:"
+msgstr "மெய்நிகர் விசைப்பலகையை தேர்ந்தெடுங்கள்"
+
+#: ui/main.qml:32
+#, kde-format
+msgid "Never"
+msgstr ""
+
+#: ui/main.qml:33
+#, kde-format
+msgid "With Touch and Tablet"
+msgstr ""
+
+#: ui/main.qml:34
+#, kde-format
+msgid "With Touch, Tablet and Mouse"
+msgstr ""
 
 #~ msgid "This module lets you choose the virtual keyboard to use."
 #~ msgstr "பயன்படுத்த வேண்டிய மெய்நிகர் விசைப்பலகையை அமைக்க இக்கூறு உதவும்."
@@ -36,6 +58,3 @@ msgstr "எந்த மெய்நிகர் விசைப்பலகை�
 
 #~ msgid "Virtual Keyboard"
 #~ msgstr "மெய்நிகர் விசைப்பலகை"
-
-#~ msgid "Choose Virtual Keyboard"
-#~ msgstr "மெய்நிகர் விசைப்பலகையை தேர்ந்தெடுங்கள்"

@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1736759 2026-05-13 01:30:02Z scripty $
+# $Id: kwin.po 1736830 2026-05-14 01:28:46Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-13 00:47+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-05-08 06:25+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -3667,14 +3667,16 @@ msgstr "Vrsta pravila trganja"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, kde-format
-msgid "Hide from screencast"
-msgstr "Skrij iz video posnetka zaslona"
+#, fuzzy, kde-format
+#| msgid "Hide from screencast rule type"
+msgid "Hide from screenshots and screen recordings"
+msgstr "Skrij iz pravila zvrsti video posnetka zaslona"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, kde-format
-msgid "Hide from screencast rule type"
+#, fuzzy, kde-format
+#| msgid "Hide from screencast rule type"
+msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Skrij iz pravila zvrsti video posnetka zaslona"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
@@ -3807,8 +3809,8 @@ msgstr "Brez &naslovne letvice in okvirja"
 
 #: useractions.cpp:244
 #, kde-format
-msgid "&Hide from Screencast"
-msgstr "Skrij iz video posnetka zaslona"
+msgid "&Hide from Screenshots and Screen Recordings"
+msgstr ""
 
 #: useractions.cpp:252
 #, kde-format
@@ -4373,7 +4375,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(se ne odziva)"
 
-#: workspace.cpp:1772
+#: workspace.cpp:1313
+#, kde-format
+msgid "Built-in Screen"
+msgstr ""
+
+#: workspace.cpp:1326
+#, kde-format
+msgctxt "Display label: manufacturer + model name + connector name"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1336
+#, kde-format
+msgctxt "Display label: manufacturer + model name + serial number"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1339
+#, kde-format
+msgctxt "Display label: manufacturer + model name"
+msgid "%1 %2"
+msgstr ""
+
+#: workspace.cpp:1808
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4399,6 +4424,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland se je sesul"
+
+#~ msgid "Hide from screencast"
+#~ msgstr "Skrij iz video posnetka zaslona"
+
+#~ msgid "&Hide from Screencast"
+#~ msgstr "Skrij iz video posnetka zaslona"
 
 #~ msgctxt "@label"
 #~ msgid "Compositing"

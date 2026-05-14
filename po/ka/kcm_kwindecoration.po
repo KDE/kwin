@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-20 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-03-20 03:43+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -65,8 +65,8 @@ msgstr "დანარჩენი ფანჯრების ზემოთ 
 
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
-msgid "Hide from screencast"
-msgstr "დამალვა ეკრანის გადაცემიდან"
+msgid "Hide from screenshots and screen recordings"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -197,27 +197,37 @@ msgid "Show titlebar button tooltips"
 msgstr "სათაურის ქუდის ღილაკების მინიშნებების ჩვენება"
 
 #: ui/ConfigureTitlebar.qml:73
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always show \"Hide from Screencast\" button"
 msgctxt "@option:check"
-msgid "Always show \"Hide from Screencast\" button"
+msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr "ღილაკის 'ეკრანის გადაცემიდან დამალვა' ყოველთვის ჩვენება"
 
 #: ui/ConfigureTitlebar.qml:85
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "When unchecked the button only appears if the window is hidden from "
+#| "screencast"
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
-"screencast"
+"screenshots and screen recordings"
 msgstr ""
 "როცა გამორთულია, ღილაკი, მხოლოდ, მაშინ ჩანს, თუ ფანჯარა დამალულია ეკრანის "
 "გადაცემიდან"
 
 #: ui/ConfigureTitlebar.qml:86
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "To enable this option, add the \"Hide from screencast\" button to the "
+#| "titlebar first"
 msgctxt "@info:tooltip"
 msgid ""
-"To enable this option, add the \"Hide from screencast\" button to the "
-"titlebar first"
+"To enable this option, add the \"Hide from Screenshots and Screen Recordings"
+"\" button to the titlebar first"
 msgstr ""
 "ამ პარამეტრის ჩასართავად ჯერ დაამატეთ ღილაკი 'ეკრანის გადაცემიდან დამალვა' "
 "სათაურის ზოლზე"
@@ -289,6 +299,9 @@ msgstr "უსინდისოდ დიდი ფანჯრის საზ
 #, kde-format
 msgid "Oversized window borders"
 msgstr "არანორმალურად დიდი ფანჯრის საზღვრები"
+
+#~ msgid "Hide from screencast"
+#~ msgstr "დამალვა ეკრანის გადაცემიდან"
 
 #~ msgid "More actions for this window"
 #~ msgstr "მეტი ქმედება ამ ფანჯრისთვის"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-13 00:47+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2008-08-05 22:26+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (lengadocian) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
@@ -3652,13 +3652,13 @@ msgstr ""
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
 #, kde-format
-msgid "Hide from screencast"
+msgid "Hide from screenshots and screen recordings"
 msgstr ""
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
 #, kde-format
-msgid "Hide from screencast rule type"
+msgid "Hide from screenshots and screen recordings rule type"
 msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
@@ -3788,7 +3788,7 @@ msgstr ""
 
 #: useractions.cpp:244
 #, kde-format
-msgid "&Hide from Screencast"
+msgid "&Hide from Screenshots and Screen Recordings"
 msgstr ""
 
 #: useractions.cpp:252
@@ -4380,7 +4380,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1772
+#: workspace.cpp:1313
+#, kde-format
+msgid "Built-in Screen"
+msgstr ""
+
+#: workspace.cpp:1326
+#, kde-format
+msgctxt "Display label: manufacturer + model name + connector name"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1336
+#, kde-format
+msgctxt "Display label: manufacturer + model name + serial number"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1339
+#, kde-format
+msgctxt "Display label: manufacturer + model name"
+msgid "%1 %2"
+msgstr ""
+
+#: workspace.cpp:1808
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

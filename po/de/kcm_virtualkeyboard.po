@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_virtualkeyboard\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:53+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2025-09-07 19:34+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -17,15 +17,37 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 25.08.0\n"
 
-#: kcmvirtualkeyboard.cpp:61
+#: kcmvirtualkeyboard.cpp:82
 #, kde-format
 msgid "None"
 msgstr "Keine"
 
-#: kcmvirtualkeyboard.cpp:65
+#: kcmvirtualkeyboard.cpp:86
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "Keine virtuelle Tastatur verwenden"
+
+#: ui/main.qml:24
+#, fuzzy, kde-format
+#| msgid "Choose Virtual Keyboard"
+msgctxt "Selector label"
+msgid "Show Virtual Keyboard:"
+msgstr "Virtuelle Tastatur wählen"
+
+#: ui/main.qml:32
+#, kde-format
+msgid "Never"
+msgstr ""
+
+#: ui/main.qml:33
+#, kde-format
+msgid "With Touch and Tablet"
+msgstr ""
+
+#: ui/main.qml:34
+#, kde-format
+msgid "With Touch, Tablet and Mouse"
+msgstr ""
 
 #~ msgid "This module lets you choose the virtual keyboard to use."
 #~ msgstr ""
@@ -42,6 +64,3 @@ msgstr "Keine virtuelle Tastatur verwenden"
 
 #~ msgid "Virtual Keyboard"
 #~ msgstr "Virtuelle Tastatur"
-
-#~ msgid "Choose Virtual Keyboard"
-#~ msgstr "Virtuelle Tastatur wählen"

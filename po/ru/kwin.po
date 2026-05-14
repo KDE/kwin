@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-13 00:47+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-04-03 20:24+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -3702,14 +3702,16 @@ msgstr "Тип правила назначения разрыва"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, kde-format
-msgid "Hide from screencast"
-msgstr "Скрыть при записи экрана"
+#, fuzzy, kde-format
+#| msgid "Hide from screencast rule type"
+msgid "Hide from screenshots and screen recordings"
+msgstr "Тип правила сокрытия из записи экрана"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, kde-format
-msgid "Hide from screencast rule type"
+#, fuzzy, kde-format
+#| msgid "Hide from screencast rule type"
+msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Тип правила сокрытия из записи экрана"
 
 # BUGME: should not be translatable --aspotashev
@@ -3844,8 +3846,8 @@ msgstr "С&крыть заголовок и границы окна"
 
 #: useractions.cpp:244
 #, kde-format
-msgid "&Hide from Screencast"
-msgstr "&Скрыть в трансляции экрана"
+msgid "&Hide from Screenshots and Screen Recordings"
+msgstr ""
 
 #: useractions.cpp:252
 #, kde-format
@@ -4413,8 +4415,31 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(не отвечает)"
 
+#: workspace.cpp:1313
+#, kde-format
+msgid "Built-in Screen"
+msgstr ""
+
+#: workspace.cpp:1326
+#, kde-format
+msgctxt "Display label: manufacturer + model name + connector name"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1336
+#, kde-format
+msgctxt "Display label: manufacturer + model name + serial number"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1339
+#, kde-format
+msgctxt "Display label: manufacturer + model name"
+msgid "%1 %2"
+msgstr ""
+
 # BUGME: please proofread this translation, it's full of worms --aspotashev
-#: workspace.cpp:1772
+#: workspace.cpp:1808
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4441,6 +4466,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Произошло аварийное завершение Xwayland"
+
+#~ msgid "Hide from screencast"
+#~ msgstr "Скрыть при записи экрана"
+
+#~ msgid "&Hide from Screencast"
+#~ msgstr "&Скрыть в трансляции экрана"
 
 #~ msgctxt "@label"
 #~ msgid "Compositing"

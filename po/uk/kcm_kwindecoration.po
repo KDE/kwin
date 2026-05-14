@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-20 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-03-20 08:38+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -70,8 +70,8 @@ msgstr "Утримувати над іншими вікнами"
 
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
-msgid "Hide from screencast"
-msgstr "Приховати на записі з екрана"
+msgid "Hide from screenshots and screen recordings"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -204,27 +204,37 @@ msgid "Show titlebar button tooltips"
 msgstr "Показувати підказки кнопок заголовків вікон"
 
 #: ui/ConfigureTitlebar.qml:73
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always show \"Hide from Screencast\" button"
 msgctxt "@option:check"
-msgid "Always show \"Hide from Screencast\" button"
+msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr "Завжди показувати кнопку «Приховати на записі з екрана»"
 
 #: ui/ConfigureTitlebar.qml:85
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "When unchecked the button only appears if the window is hidden from "
+#| "screencast"
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
-"screencast"
+"screenshots and screen recordings"
 msgstr ""
 "Якщо не позначено, кнопку буде показано, лише якщо вікно приховано на записі "
 "з екрана"
 
 #: ui/ConfigureTitlebar.qml:86
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "To enable this option, add the \"Hide from screencast\" button to the "
+#| "titlebar first"
 msgctxt "@info:tooltip"
 msgid ""
-"To enable this option, add the \"Hide from screencast\" button to the "
-"titlebar first"
+"To enable this option, add the \"Hide from Screenshots and Screen Recordings"
+"\" button to the titlebar first"
 msgstr ""
 "Якщо позначити цей пункт, на смужку заголовка спочатку буде додано кнопку "
 "«Приховати на записі з екрана»"
@@ -296,6 +306,9 @@ msgstr "Гігантські рамки вікон"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Надмірні рамки вікон"
+
+#~ msgid "Hide from screencast"
+#~ msgstr "Приховати на записі з екрана"
 
 #~ msgid "More actions for this window"
 #~ msgstr "Додаткові дії для цього вікна"

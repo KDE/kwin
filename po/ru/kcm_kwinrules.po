@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-02-21 14:09+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -645,8 +645,8 @@ msgstr "Разрешить разрывы"
 
 #: rulesmodel.cpp:737
 #, kde-format
-msgid "Hide from Screencast"
-msgstr "Скрывать в записи экрана"
+msgid "Hide from screenshots and screen recordings"
+msgstr ""
 
 #: rulesmodel.cpp:790
 #, kde-format
@@ -1051,6 +1051,9 @@ msgstr "(%1; %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "×"
+
+#~ msgid "Hide from Screencast"
+#~ msgstr "Скрывать в записи экрана"
 
 #~ msgid "Shaded"
 #~ msgstr "Свёрнуто в заголовок"

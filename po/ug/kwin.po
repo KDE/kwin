@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-13 00:47+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-02-17 23:24-0500\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -3693,14 +3693,14 @@ msgstr "يىرتىلىش قائىدىسىنىڭ تۈرى"
 #: rulesettings.kcfg:478
 #, fuzzy, kde-format
 #| msgid "&Hide from Screencast"
-msgid "Hide from screencast"
+msgid "Hide from screenshots and screen recordings"
 msgstr "ئېكران تارقىتىشتىن يوشۇر(&H)"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
 #, fuzzy, kde-format
 #| msgid "&Hide from Screencast"
-msgid "Hide from screencast rule type"
+msgid "Hide from screenshots and screen recordings rule type"
 msgstr "ئېكران تارقىتىشتىن يوشۇر(&H)"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
@@ -3833,8 +3833,8 @@ msgstr "ماۋزۇ بالداق ۋە كاندۇك يوق(&N)"
 
 #: useractions.cpp:244
 #, kde-format
-msgid "&Hide from Screencast"
-msgstr "ئېكران تارقىتىشتىن يوشۇر(&H)"
+msgid "&Hide from Screenshots and Screen Recordings"
+msgstr ""
 
 #: useractions.cpp:252
 #, kde-format
@@ -4404,7 +4404,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "[ئىنكاس يوق]"
 
-#: workspace.cpp:1772
+#: workspace.cpp:1313
+#, kde-format
+msgid "Built-in Screen"
+msgstr ""
+
+#: workspace.cpp:1326
+#, kde-format
+msgctxt "Display label: manufacturer + model name + connector name"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1336
+#, kde-format
+msgctxt "Display label: manufacturer + model name + serial number"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1339
+#, kde-format
+msgctxt "Display label: manufacturer + model name"
+msgid "%1 %2"
+msgstr ""
+
+#: workspace.cpp:1808
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4433,6 +4456,14 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland يىمىرىلدى"
+
+#, fuzzy
+#~| msgid "&Hide from Screencast"
+#~ msgid "Hide from screencast"
+#~ msgstr "ئېكران تارقىتىشتىن يوشۇر(&H)"
+
+#~ msgid "&Hide from Screencast"
+#~ msgstr "ئېكران تارقىتىشتىن يوشۇر(&H)"
 
 #~ msgctxt "@label"
 #~ msgid "Compositing"

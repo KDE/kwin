@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2023-12-02 20:10+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -617,8 +617,8 @@ msgstr "Povoliť trhanie"
 
 #: rulesmodel.cpp:737
 #, kde-format
-msgid "Hide from Screencast"
-msgstr "Skryť pred vysielaním obrazovky"
+msgid "Hide from screenshots and screen recordings"
+msgstr ""
 
 #: rulesmodel.cpp:790
 #, kde-format
@@ -1021,6 +1021,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "Hide from Screencast"
+#~ msgstr "Skryť pred vysielaním obrazovky"
 
 #~ msgid "Shaded"
 #~ msgstr "Zabalené"

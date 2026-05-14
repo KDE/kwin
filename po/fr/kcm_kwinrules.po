@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-05-03 17:14+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
@@ -645,8 +645,8 @@ msgstr "Autoriser le déchirement"
 
 #: rulesmodel.cpp:737
 #, kde-format
-msgid "Hide from Screencast"
-msgstr "Masquer dans l'enregistrement vidéo"
+msgid "Hide from screenshots and screen recordings"
+msgstr ""
 
 #: rulesmodel.cpp:790
 #, kde-format
@@ -1050,6 +1050,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "Hide from Screencast"
+#~ msgstr "Masquer dans l'enregistrement vidéo"
 
 #~ msgid "Shaded"
 #~ msgstr "Ombrée"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2025-08-04 10:54+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -614,7 +614,7 @@ msgstr "Tillad flimmer"
 
 #: rulesmodel.cpp:737
 #, kde-format
-msgid "Hide from Screencast"
+msgid "Hide from screenshots and screen recordings"
 msgstr ""
 
 #: rulesmodel.cpp:790

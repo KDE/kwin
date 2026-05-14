@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-20 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-03-20 09:42-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -74,8 +74,8 @@ msgstr "Manter acima de outras janelas"
 
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
-msgid "Hide from screencast"
-msgstr "Ocultar da gravação de tela"
+msgid "Hide from screenshots and screen recordings"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -215,27 +215,37 @@ msgid "Show titlebar button tooltips"
 msgstr "Mostrar as dicas do botão da barra de título"
 
 #: ui/ConfigureTitlebar.qml:73
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always show \"Hide from Screencast\" button"
 msgctxt "@option:check"
-msgid "Always show \"Hide from Screencast\" button"
+msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr "Sempre mostrar o botão \"Ocultar da gravação de tela\""
 
 #: ui/ConfigureTitlebar.qml:85
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "When unchecked the button only appears if the window is hidden from "
+#| "screencast"
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
-"screencast"
+"screenshots and screen recordings"
 msgstr ""
 "Quando desmarcado, o botão só aparece se a janela estiver oculta da gravação "
 "de tela"
 
 #: ui/ConfigureTitlebar.qml:86
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "To enable this option, add the \"Hide from screencast\" button to the "
+#| "titlebar first"
 msgctxt "@info:tooltip"
 msgid ""
-"To enable this option, add the \"Hide from screencast\" button to the "
-"titlebar first"
+"To enable this option, add the \"Hide from Screenshots and Screen Recordings"
+"\" button to the titlebar first"
 msgstr ""
 "Para ativar essa opção, adicione primeiro o botão \"Ocultar da gravação de "
 "tela\" à barra de título"
@@ -307,6 +317,9 @@ msgstr "Bordas de janelas gigantes"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Bordas de janelas de tamanho extra grande "
+
+#~ msgid "Hide from screencast"
+#~ msgstr "Ocultar da gravação de tela"
 
 #~ msgid "More actions for this window"
 #~ msgstr "Mais ações para esta janela"

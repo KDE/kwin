@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-20 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-03-21 11:14+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: \n"
@@ -78,8 +78,8 @@ msgstr "Conserver au dessus des autres fenêtres"
 
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
-msgid "Hide from screencast"
-msgstr "Masquer dans l'enregistrement d'écran"
+msgid "Hide from screenshots and screen recordings"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -225,27 +225,37 @@ msgid "Show titlebar button tooltips"
 msgstr "Afficher les bulles d'aide de la barre de titre"
 
 #: ui/ConfigureTitlebar.qml:73
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always show \"Hide from Screencast\" button"
 msgctxt "@option:check"
-msgid "Always show \"Hide from Screencast\" button"
+msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr "Toujours afficher le bouton « Masquer de l'enregistrement d’écran »"
 
 #: ui/ConfigureTitlebar.qml:85
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "When unchecked the button only appears if the window is hidden from "
+#| "screencast"
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
-"screencast"
+"screenshots and screen recordings"
 msgstr ""
 "Lorsque cette option est non sélectionnée, le bouton n'apparaît que si la "
 "fenêtre est masquée lors de l'enregistrement d'écran"
 
 #: ui/ConfigureTitlebar.qml:86
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "To enable this option, add the \"Hide from screencast\" button to the "
+#| "titlebar first"
 msgctxt "@info:tooltip"
 msgid ""
-"To enable this option, add the \"Hide from screencast\" button to the "
-"titlebar first"
+"To enable this option, add the \"Hide from Screenshots and Screen Recordings"
+"\" button to the titlebar first"
 msgstr ""
 "Pour activer cette option, veuillez d'abord ajouter le bouton « Masquer de "
 "l'enregistrement d'écran » à la barre de titres"
@@ -317,6 +327,9 @@ msgstr "Bordures de fenêtre vraiment énormes"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Bordures de fenêtre sur-dimensionnées"
+
+#~ msgid "Hide from screencast"
+#~ msgstr "Masquer dans l'enregistrement d'écran"
 
 #~ msgid "More actions for this window"
 #~ msgstr "Plus d'actions pour cette fenêtre"

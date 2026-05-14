@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-13 00:47+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-05-08 09:36+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -3675,14 +3675,16 @@ msgstr "Tipus de regla d'esquinçament"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, kde-format
-msgid "Hide from screencast"
-msgstr "Oculta dels vídeos de captura de pantalla"
+#, fuzzy, kde-format
+#| msgid "Hide from screencast rule type"
+msgid "Hide from screenshots and screen recordings"
+msgstr "Oculta del tipus de regla de vídeo de captura de pantalla"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, kde-format
-msgid "Hide from screencast rule type"
+#, fuzzy, kde-format
+#| msgid "Hide from screencast rule type"
+msgid "Hide from screenshots and screen recordings rule type"
 msgstr "Oculta del tipus de regla de vídeo de captura de pantalla"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
@@ -3817,8 +3819,8 @@ msgstr "Se&nse barra de títol ni marc"
 
 #: useractions.cpp:244
 #, kde-format
-msgid "&Hide from Screencast"
-msgstr "&Oculta dels vídeos de captura de pantalla"
+msgid "&Hide from Screenshots and Screen Recordings"
+msgstr ""
 
 #: useractions.cpp:252
 #, kde-format
@@ -4386,7 +4388,30 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(No respon)"
 
-#: workspace.cpp:1772
+#: workspace.cpp:1313
+#, kde-format
+msgid "Built-in Screen"
+msgstr ""
+
+#: workspace.cpp:1326
+#, kde-format
+msgctxt "Display label: manufacturer + model name + connector name"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1336
+#, kde-format
+msgctxt "Display label: manufacturer + model name + serial number"
+msgid "%1 %2 %3"
+msgstr ""
+
+#: workspace.cpp:1339
+#, kde-format
+msgctxt "Display label: manufacturer + model name"
+msgid "%1 %2"
+msgstr ""
+
+#: workspace.cpp:1808
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4414,3 +4439,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
+
+#~ msgid "Hide from screencast"
+#~ msgstr "Oculta dels vídeos de captura de pantalla"
+
+#~ msgid "&Hide from Screencast"
+#~ msgstr "&Oculta dels vídeos de captura de pantalla"

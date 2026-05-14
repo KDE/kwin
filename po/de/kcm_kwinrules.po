@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-04-30 15:36+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -632,8 +632,8 @@ msgstr "Tearing erlauben"
 
 #: rulesmodel.cpp:737
 #, kde-format
-msgid "Hide from Screencast"
-msgstr "Vor Bildschirmaufzeichnung verbergen"
+msgid "Hide from screenshots and screen recordings"
+msgstr ""
 
 #: rulesmodel.cpp:790
 #, kde-format
@@ -1038,6 +1038,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "Hide from Screencast"
+#~ msgstr "Vor Bildschirmaufzeichnung verbergen"
 
 #~ msgid "Shaded"
 #~ msgstr "Eingefahren"

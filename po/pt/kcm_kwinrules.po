@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-02-11 00:16+0000\n"
 "Last-Translator: César A. P. Cláudio <cesarapclaudio@gmail.com>\n"
 "Language-Team: pt\n"
@@ -620,7 +620,7 @@ msgstr "Permitir desalinhamento vertical ('tearing')"
 
 #: rulesmodel.cpp:737
 #, kde-format
-msgid "Hide from Screencast"
+msgid "Hide from screenshots and screen recordings"
 msgstr ""
 
 #: rulesmodel.cpp:790

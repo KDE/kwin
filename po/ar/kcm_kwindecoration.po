@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-03-20 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-03-23 22:29+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -73,8 +73,8 @@ msgstr "أبقها أعلى النوافذ الأخرى"
 
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
-msgid "Hide from screencast"
-msgstr "أخفِ من تسجيل الشاشة"
+msgid "Hide from screenshots and screen recordings"
+msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -203,26 +203,36 @@ msgid "Show titlebar button tooltips"
 msgstr "أظهر تلميحات زر شريط العنوان"
 
 #: ui/ConfigureTitlebar.qml:73
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always show \"Hide from Screencast\" button"
 msgctxt "@option:check"
-msgid "Always show \"Hide from Screencast\" button"
+msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
 msgstr "أظهر دومًا زر ”أخفِ من تسجيل الشاشة“"
 
 #: ui/ConfigureTitlebar.qml:85
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "When unchecked the button only appears if the window is hidden from "
+#| "screencast"
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
-"screencast"
+"screenshots and screen recordings"
 msgstr ""
 "عندما لا تُحدد هذه الخانة، لا يظهر الزر إلا إذا كانت النافذة مخفية عن الشاشة."
 
 #: ui/ConfigureTitlebar.qml:86
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid ""
+#| "To enable this option, add the \"Hide from screencast\" button to the "
+#| "titlebar first"
 msgctxt "@info:tooltip"
 msgid ""
-"To enable this option, add the \"Hide from screencast\" button to the "
-"titlebar first"
+"To enable this option, add the \"Hide from Screenshots and Screen Recordings"
+"\" button to the titlebar first"
 msgstr "لتمكين هذا الخيار، أضف زر ”أخف من تسجيل الشاشة“ إلى شريط العنوان أولاً"
 
 #: ui/main.qml:29
@@ -292,6 +302,9 @@ msgstr "حدود ضخمة جداً للنوافذ"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "حدود عملاقة للنوافذ"
+
+#~ msgid "Hide from screencast"
+#~ msgstr "أخفِ من تسجيل الشاشة"
 
 #~ msgid "More actions for this window"
 #~ msgstr "إجراءات أكثر لهذه النافذة"

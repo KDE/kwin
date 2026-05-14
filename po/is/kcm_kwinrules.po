@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-03 00:45+0000\n"
+"POT-Creation-Date: 2026-05-14 00:45+0000\n"
 "PO-Revision-Date: 2026-03-23 17:17+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
@@ -624,8 +624,8 @@ msgstr "Leyfa rifgalla"
 
 #: rulesmodel.cpp:737
 #, kde-format
-msgid "Hide from Screencast"
-msgstr "Fela frá skjávörpun"
+msgid "Hide from screenshots and screen recordings"
+msgstr ""
 
 #: rulesmodel.cpp:790
 #, kde-format
@@ -1025,6 +1025,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "Hide from Screencast"
+#~ msgstr "Fela frá skjávörpun"
 
 #~ msgid "Shaded"
 #~ msgstr "Upprúllaður"
