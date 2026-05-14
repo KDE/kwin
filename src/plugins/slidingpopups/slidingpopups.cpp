@@ -32,6 +32,13 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
+static QEasingCurve cubicBezier(const QPointF &c0, const QPointF &c1)
+{
+    QEasingCurve curve(QEasingCurve::BezierSpline);
+    curve.addCubicBezierSegment(c0, c1, QPointF(1, 1));
+    return curve;
+}
+
 SlideManagerInterface *SlidingPopupsEffect::s_slideManager = nullptr;
 QTimer *SlidingPopupsEffect::s_slideManagerRemoveTimer = nullptr;
 
@@ -447,7 +454,7 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
     animation.kind = AnimationKind::In;
     animation.timeLine.setDirection(TimeLine::Forward);
     animation.timeLine.setDuration((*dataIt).slideInDuration);
-    animation.timeLine.setEasingCurve(QEasingCurve::OutCubic);
+    animation.timeLine.setEasingCurve(cubicBezier(QPointF(0, 1), QPointF(0, 1)));
     animation.windowEffect = ItemEffect(w->windowItem());
 
     // If the opposite animation (Out) was active and it had shorter duration,
@@ -486,7 +493,7 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
     animation.timeLine.setDirection(TimeLine::Backward);
     animation.timeLine.setDuration((*dataIt).slideOutDuration);
     // this is effectively InCubic because the direction is reversed
-    animation.timeLine.setEasingCurve(QEasingCurve::OutCubic);
+    animation.timeLine.setEasingCurve(cubicBezier(QPointF(0, 1), QPointF(0, 1)));
     animation.windowEffect = ItemEffect(w->windowItem());
 
     // If the opposite animation (In) was active and it had shorter duration,
