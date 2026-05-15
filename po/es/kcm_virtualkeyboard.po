@@ -1,15 +1,15 @@
 # Spanish translations for kcm_virtualkeyboard.po package.
-# Copyright (C) 2021-2025 This file is copyright:
+# Copyright (C) 2021-2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 # Automatically generated, 2021.
 #
-# SPDX-FileCopyrightText: 2021, 2025 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2021, 2025-2026 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_virtualkeyboard\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2025-05-18 15:01+0100\n"
+"PO-Revision-Date: 2026-05-14 12:05+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.04.0\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #: kcmvirtualkeyboard.cpp:82
 #, kde-format
@@ -30,23 +30,22 @@ msgid "Do not use any virtual keyboard"
 msgstr "No usar ningún teclado virtual"
 
 #: ui/main.qml:24
-#, fuzzy, kde-format
-#| msgid "Do not use any virtual keyboard"
+#, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr "No usar ningún teclado virtual"
+msgstr "Mostrar teclado virtual:"
 
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "Nunca"
 
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr ""
+msgstr "Con pantalla táctil y tableta"
 
 #: ui/main.qml:34
 #, kde-format
 msgid "With Touch, Tablet and Mouse"
-msgstr ""
+msgstr "Con pantalla táctil, tableta y ratón"

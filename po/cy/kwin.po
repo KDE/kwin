@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-05-15 00:46+0000\n"
 "PO-Revision-Date: 2003-12-27 10:16+0000\n"
 "Last-Translator: KD at KGyfieithu <kyfieithu@dotmon.com>\n"
 "Language-Team: Cymraeg <cy@li.org>\n"
@@ -3828,125 +3828,125 @@ msgstr ""
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: useractions.cpp:216
+#: useractions.cpp:220
 #, kde-format
 msgid "&Move"
 msgstr "Sy&mud"
 
-#: useractions.cpp:221
+#: useractions.cpp:225
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgid "&Resize"
 msgstr "&Newid Maint"
 
-#: useractions.cpp:226
+#: useractions.cpp:230
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Cadw &Dan y Lleill"
 
-#: useractions.cpp:232
+#: useractions.cpp:236
 #, kde-format
 msgid "&Fullscreen"
 msgstr "S&grîn Llawn"
 
-#: useractions.cpp:238
+#: useractions.cpp:242
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:244
+#: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
 msgstr ""
 
-#: useractions.cpp:252
+#: useractions.cpp:256
 #, fuzzy, kde-format
 msgid "Set Window Short&cut…"
 msgstr "Sgrînlun Ffenestr"
 
-#: useractions.cpp:258
+#: useractions.cpp:262
 #, fuzzy, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Cadw Gosodiadau Ffenest&r"
 
-#: useractions.cpp:263
+#: useractions.cpp:267
 #, fuzzy, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Cadw Gosodiadau Ffenest&r"
 
-#: useractions.cpp:269
+#: useractions.cpp:273
 #, kde-format
 msgid "Ma&ximize"
 msgstr "&Ehangu"
 
-#: useractions.cpp:275
+#: useractions.cpp:279
 #, kde-format
 msgid "Mi&nimize"
 msgstr "&Lleihau"
 
-#: useractions.cpp:280
+#: useractions.cpp:284
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Cadw &Uwchben y Lleill"
 
-#: useractions.cpp:287
+#: useractions.cpp:291
 #, kde-format
 msgid "&More Actions"
 msgstr ""
 
-#: useractions.cpp:292
+#: useractions.cpp:296
 #, kde-format
 msgid "&Close"
 msgstr ""
 
-#: useractions.cpp:358
+#: useractions.cpp:362
 #, kde-format
 msgid "&Extensions"
 msgstr ""
 
-#: useractions.cpp:408
+#: useractions.cpp:412
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "&Desktops"
 msgstr "&Pob Penbwrdd"
 
-#: useractions.cpp:424
+#: useractions.cpp:428
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to &Screen"
 msgstr "I'r Penbwr&dd"
 
-#: useractions.cpp:440
+#: useractions.cpp:444
 #, kde-format
 msgid "Show in &Activities"
 msgstr ""
 
-#: useractions.cpp:456
+#: useractions.cpp:460
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Pob Penbwrdd"
 
-#: useractions.cpp:491 useractions.cpp:623
+#: useractions.cpp:495 useractions.cpp:627
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to %1"
 msgstr "I'r Penbwr&dd"
 
-#: useractions.cpp:505
+#: useractions.cpp:509
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Newid i Benbwrdd 1"
 
-#: useractions.cpp:517
+#: useractions.cpp:521
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "I'r Penbwr&dd"
 
-#: useractions.cpp:548
+#: useractions.cpp:552
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgctxt ""
@@ -3955,410 +3955,410 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Ffenestr i Benbwrdd 1"
 
-#: useractions.cpp:575
+#: useractions.cpp:579
 #, kde-format
 msgid "&All Activities"
 msgstr ""
 
-#: useractions.cpp:739
+#: useractions.cpp:743
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr ""
 
-#: useractions.cpp:741
+#: useractions.cpp:745
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
-#: useractions.cpp:821
+#: useractions.cpp:825
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Window Menu"
 msgstr "Ffenestri"
 
-#: useractions.cpp:823
+#: useractions.cpp:827
 #, kde-format
 msgid "Close Window"
 msgstr "Cau'r Ffenestr"
 
-#: useractions.cpp:825
+#: useractions.cpp:829
 #, kde-format
 msgid "Maximize Window"
 msgstr "&Ehangu'r Ffenestr"
 
-#: useractions.cpp:827
+#: useractions.cpp:831
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Ehangu'r Ffenestr yn Fertigol"
 
-#: useractions.cpp:829
+#: useractions.cpp:833
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Ehangu'r Ffenestr yn Llorweddol"
 
-#: useractions.cpp:831
+#: useractions.cpp:835
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgid "Restore Window"
 msgstr "Newid Maint y Ffenestr"
 
-#: useractions.cpp:833
+#: useractions.cpp:837
 #, kde-format
 msgid "Minimize Window"
 msgstr "Lleihau'r Ffenestr"
 
-#: useractions.cpp:835
+#: useractions.cpp:839
 #, kde-format
 msgid "Move Window"
 msgstr "Symud y Ffenestr"
 
-#: useractions.cpp:837
+#: useractions.cpp:841
 #, kde-format
 msgid "Resize Window"
 msgstr "Newid Maint y Ffenestr"
 
-#: useractions.cpp:839
+#: useractions.cpp:843
 #, kde-format
 msgid "Raise Window"
 msgstr "Codi'r Ffenestr"
 
-#: useractions.cpp:841
+#: useractions.cpp:845
 #, kde-format
 msgid "Lower Window"
 msgstr "Gostwng y Ffenestr"
 
-#: useractions.cpp:843
+#: useractions.cpp:847
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Codi/Gostwng Ffenestr"
 
-#: useractions.cpp:845
+#: useractions.cpp:849
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Gwneud i'r Ffenestr Lenwi'r Sgrîn"
 
-#: useractions.cpp:847
+#: useractions.cpp:851
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Cuddio Ymyl y Ffenestr"
 
-#: useractions.cpp:849
+#: useractions.cpp:853
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Cadw'r Ffenestr Uwchben y Lleill"
 
-#: useractions.cpp:851
+#: useractions.cpp:855
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Cadw'r Ffenestr Dan y Lleill"
 
-#: useractions.cpp:853
+#: useractions.cpp:857
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Gweithredu'r Ffenestr sy'n Gofyn am Sylw"
 
-#: useractions.cpp:855
+#: useractions.cpp:859
 #, fuzzy, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Cadw Gosodiadau Ffenest&r"
 
-#: useractions.cpp:857
+#: useractions.cpp:861
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window to the Center"
 msgstr "Symud y Ffenestr"
 
-#: useractions.cpp:859
+#: useractions.cpp:863
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "Symud y Ffenestr"
 
-#: useractions.cpp:861
+#: useractions.cpp:865
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "Symud y Ffenestr"
 
-#: useractions.cpp:863
+#: useractions.cpp:867
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "Symud y Ffenestr"
 
-#: useractions.cpp:865
+#: useractions.cpp:869
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "Symud y Ffenestr"
 
-#: useractions.cpp:867
+#: useractions.cpp:871
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Ehangu'r Ffenestr yn Llorweddol"
 
-#: useractions.cpp:869
+#: useractions.cpp:873
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Ehangu'r Ffenestr yn Fertigol"
 
-#: useractions.cpp:871
+#: useractions.cpp:875
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "Pacio'r Ffenestr a'i Lleihau yn Llorweddol"
 
-#: useractions.cpp:873
+#: useractions.cpp:877
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "Pacio'r Ffenestr a'i Lleihau yn Fertigol"
 
-#: useractions.cpp:875
+#: useractions.cpp:879
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Left"
 msgstr "Pacio'r Ffenestr i'r Chwith"
 
-#: useractions.cpp:877
+#: useractions.cpp:881
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Right"
 msgstr "Pacio'r Ffenestr i'r Dde"
 
-#: useractions.cpp:879
+#: useractions.cpp:883
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "Pacio'r Ffenestr i'r Chwith"
 
-#: useractions.cpp:881
+#: useractions.cpp:885
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "Pacio'r Ffenestr i'r Chwith"
 
-#: useractions.cpp:883
+#: useractions.cpp:887
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "Pacio'r Ffenestr i'r Chwith"
 
-#: useractions.cpp:885
+#: useractions.cpp:889
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Pacio'r Ffenestr i'r Chwith"
 
-#: useractions.cpp:887
+#: useractions.cpp:891
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "Pacio'r Ffenestr i'r Dde"
 
-#: useractions.cpp:889
+#: useractions.cpp:893
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Pacio'r Ffenestr i'r Dde"
 
-#: useractions.cpp:891
+#: useractions.cpp:895
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 10"
 msgid "Switch to Window Above"
 msgstr "Newid i Benbwrdd 10"
 
-#: useractions.cpp:893
+#: useractions.cpp:897
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Window Below"
 msgstr "Newid i'r Penbwrdd Blaenorol"
 
-#: useractions.cpp:895
+#: useractions.cpp:899
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Switch to Window to the Right"
 msgstr "Pacio'r Ffenestr i'r Dde"
 
-#: useractions.cpp:897
+#: useractions.cpp:901
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Switch to Window to the Left"
 msgstr "Pacio'r Ffenestr i'r Chwith"
 
-#: useractions.cpp:899
+#: useractions.cpp:903
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:901
+#: useractions.cpp:905
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:904
+#: useractions.cpp:908
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Cadw'r Ffenestr ar Bob un Penbwrdd"
 
-#: useractions.cpp:907
+#: useractions.cpp:911
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "Pacio'r Ffenestr i'r Chwith"
 
-#: useractions.cpp:909
+#: useractions.cpp:913
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "Pacio'r Ffenestr i'r Dde"
 
-#: useractions.cpp:911
+#: useractions.cpp:915
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "Pacio'r Ffenestr i'r Chwith"
 
-#: useractions.cpp:913
+#: useractions.cpp:917
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "Pacio'r Ffenestr i'r Chwith"
 
-#: useractions.cpp:924
+#: useractions.cpp:928
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "Ffenestr i Benbwrdd 1"
 
-#: useractions.cpp:926
+#: useractions.cpp:930
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Ffenestr i'r Penbwrdd Nesaf"
 
-#: useractions.cpp:927
+#: useractions.cpp:931
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Ffenestr i'r Penbwrdd Blaenorol"
 
-#: useractions.cpp:928
+#: useractions.cpp:932
 #, fuzzy, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Newid Un Penbwrdd i'r Dde"
 
-#: useractions.cpp:930
+#: useractions.cpp:934
 #, fuzzy, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Newid Un Penbwrdd i'r Chwith"
 
-#: useractions.cpp:932
+#: useractions.cpp:936
 #, fuzzy, kde-format
 msgid "Window One Desktop Up"
 msgstr "Ffenestr & Penbwrdd"
 
-#: useractions.cpp:934
+#: useractions.cpp:938
 #, fuzzy, kde-format
 msgid "Window One Desktop Down"
 msgstr "Newid Un Penbwrdd i Lawr"
 
-#: useractions.cpp:938
+#: useractions.cpp:942
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Move Window to Screen %1"
 msgstr "Ffenestr i Benbwrdd 1"
 
-#: useractions.cpp:945
+#: useractions.cpp:949
 #, fuzzy, kde-format
 #| msgid "Window to Next Desktop"
 msgid "Move Window to Next Screen"
 msgstr "Ffenestr i'r Penbwrdd Nesaf"
 
-#: useractions.cpp:947
+#: useractions.cpp:951
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "Ffenestr i'r Penbwrdd Blaenorol"
 
-#: useractions.cpp:949
+#: useractions.cpp:953
 #, fuzzy, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Newid Un Penbwrdd i'r Dde"
 
-#: useractions.cpp:951
+#: useractions.cpp:955
 #, fuzzy, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Newid Un Penbwrdd i'r Chwith"
 
-#: useractions.cpp:953
+#: useractions.cpp:957
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 2"
 msgid "Move Window One Screen Up"
 msgstr "Ffenestr i Benbwrdd 2"
 
-#: useractions.cpp:955
+#: useractions.cpp:959
 #, fuzzy, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Newid Un Penbwrdd i Lawr"
 
-#: useractions.cpp:959
+#: useractions.cpp:963
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Screen %1"
 msgstr "Newid i Benbwrdd 1"
 
-#: useractions.cpp:966
+#: useractions.cpp:970
 #, fuzzy, kde-format
 #| msgid "Switch to Next Desktop"
 msgid "Switch to Next Screen"
 msgstr "Newid i'r Penbwrdd Nesaf"
 
-#: useractions.cpp:967
+#: useractions.cpp:971
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "Newid i'r Penbwrdd Blaenorol"
 
-#: useractions.cpp:968
+#: useractions.cpp:972
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Pacio'r Ffenestr i'r Dde"
 
-#: useractions.cpp:970
+#: useractions.cpp:974
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Pacio'r Ffenestr i'r Chwith"
 
-#: useractions.cpp:972
+#: useractions.cpp:976
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 10"
 msgid "Switch to Screen Above"
 msgstr "Newid i Benbwrdd 10"
 
-#: useractions.cpp:974
+#: useractions.cpp:978
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 10"
 msgid "Switch to Screen Below"
 msgstr "Newid i Benbwrdd 10"
 
-#: useractions.cpp:977
+#: useractions.cpp:981
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "I'r Penbwr&dd"
 
-#: useractions.cpp:980
+#: useractions.cpp:984
 #, kde-format
 msgid "Kill Window"
 msgstr "Lladd Ffenestr"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1049
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr ""

@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-03-20 08:38+0200\n"
+"PO-Revision-Date: 2026-05-14 08:45+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -71,7 +71,7 @@ msgstr "Утримувати над іншими вікнами"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Приховати на знімках екрана та записах з екрана"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -204,40 +204,31 @@ msgid "Show titlebar button tooltips"
 msgstr "Показувати підказки кнопок заголовків вікон"
 
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" button"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr "Завжди показувати кнопку «Приховати на записі з екрана»"
+msgstr ""
+"Завжди показувати кнопку «Приховати на знімках екрана та записах з екрана»"
 
 #: ui/ConfigureTitlebar.qml:85
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "When unchecked the button only appears if the window is hidden from "
-#| "screencast"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
-"Якщо не позначено, кнопку буде показано, лише якщо вікно приховано на записі "
-"з екрана"
+"Якщо не позначено, кнопку буде показано, лише якщо вікно приховано на "
+"знімках з екрана та записах з екрана"
 
 #: ui/ConfigureTitlebar.qml:86
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "To enable this option, add the \"Hide from screencast\" button to the "
-#| "titlebar first"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
 "Якщо позначити цей пункт, на смужку заголовка спочатку буде додано кнопку "
-"«Приховати на записі з екрана»"
+"«Приховати на знімках з екрана та записах з екрана»"
 
 #: ui/main.qml:29
 #, kde-format

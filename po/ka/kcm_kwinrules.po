@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-05-03 04:15+0200\n"
+"PO-Revision-Date: 2026-05-14 04:36+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -617,7 +617,7 @@ msgstr "ფიფქების დაშვება"
 #: rulesmodel.cpp:737
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "დამალვა ეკრანის ანაბეჭდებიდან და ეკრანის ჩანაწერებიდან"
 
 #: rulesmodel.cpp:790
 #, kde-format
@@ -1018,67 +1018,3 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
-
-#~ msgid "Hide from Screencast"
-#~ msgstr "დამალვა ეკრანის გადაცემიდან"
-
-#~ msgid "Shaded"
-#~ msgstr "დაჩრდილული"
-
-#~ msgid "OSD"
-#~ msgstr "OSD"
-
-#~ msgid "Close"
-#~ msgstr "დახურვა"
-
-#~ msgid "Set window type"
-#~ msgstr "დააყენეთ ფანჯრის ტიპი"
-
-#~ msgid "Window shall (not) appear in the taskbar."
-#~ msgstr "ფანჯარა დავალებების ზოლში (არ) უნდა გამოჩენილიყო."
-
-#~ msgid "Window shall (not) appear in the manager for virtual desktops"
-#~ msgstr ""
-#~ "ფანჯარა ვირტუალური სამუშაო მაგიდების მმართველში (არ) უნდა გამოჩენილყო"
-
-#~ msgid "Window shall (not) appear in the Alt+Tab list"
-#~ msgstr "ფანჯარა Alt+Tab-ის სიაში (არ) უნდა გამოჩენილიყო"
-
-#~ msgid "KWinRules KCM launcher"
-#~ msgstr "KWinRules KCM გამშვები"
-
-#~ msgid "KWin id of the window for special window settings."
-#~ msgstr "KWin id ფანჯრის სპეციალური პარამეტრებისთვის."
-
-#~ msgid "Whether the settings should affect all windows of the application."
-#~ msgstr "გადატარდება თუ არა ეფექტები აპლიკაციის ყველა ფანჯარაზე."
-
-#~ msgid "This helper utility is not supposed to be called directly."
-#~ msgstr "დამხმარე პროგრამა ცალკე არ უნდა გამოიძახოთ."
-
-#~ msgctxt "Window caption for the application wide rules dialog"
-#~ msgid "Edit Application-Specific Settings"
-#~ msgstr "აპლიკაციაზე-დამოკიდებული პარამეტრების მორგება"
-
-#~ msgid "Edit Window-Specific Settings"
-#~ msgstr "ფანჯარაზე-დამოკიდებული პარამეტრების მორგება"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Temuri Doghonadze"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "Temuri.doghonadze@gmail.com"
-
-#~ msgid "Window Rules"
-#~ msgstr "ფანჯრების წესები"
-
-#~ msgid "Ismael Asensio"
-#~ msgstr "Ismael Asensio"
-
-#~ msgid "Author"
-#~ msgstr "ავტორი"
-
-#~ msgid "Error"
-#~ msgstr "შეცდომა"

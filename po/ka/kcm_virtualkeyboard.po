@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2022-08-22 06:36+0200\n"
+"PO-Revision-Date: 2026-05-14 04:37+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.9\n"
 
 #: kcmvirtualkeyboard.cpp:82
 #, kde-format
@@ -29,37 +29,22 @@ msgid "Do not use any virtual keyboard"
 msgstr "არ გამოიყენო ვირტუალური კლავიატურა"
 
 #: ui/main.qml:24
-#, fuzzy, kde-format
-#| msgid "Choose Virtual Keyboard"
+#, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr "აირჩიეთ ვირტუალური კლავიატურა"
+msgstr "ვირტუალური კლავიატურის ჩვენება:"
 
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "არასდროს"
 
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr ""
+msgstr "შეხებით და ტაბლეტით"
 
 #: ui/main.qml:34
 #, kde-format
 msgid "With Touch, Tablet and Mouse"
-msgstr ""
-
-#~ msgid "This module lets you choose the virtual keyboard to use."
-#~ msgstr "ეს მოდული ვირტუალური კლავიატურის არჩევის საშუალებას გაძლევთ."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Temuri Doghonadze"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "Temuri.doghonadze@gmail.com"
-
-#~ msgid "Virtual Keyboard"
-#~ msgstr "ვირტუალური კლავიატურა"
+msgstr "შეხებით, ტაბლეტით და თაგუნათი"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-05-15 00:46+0000\n"
 "PO-Revision-Date: 2026-05-10 16:23+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-l10n-ta@kde.org>\n"
@@ -3774,119 +3774,119 @@ msgstr "வரைபலகை %1-க்கு நகர்த்தப்பட�
 msgid "Tablets switched outputs"
 msgstr "வரைபலகை வேறு திரைக்கு மாற்றப்பட்டது"
 
-#: useractions.cpp:216
+#: useractions.cpp:220
 #, kde-format
 msgid "&Move"
 msgstr "&நகர்த்து"
 
-#: useractions.cpp:221
+#: useractions.cpp:225
 #, kde-format
 msgid "&Resize"
 msgstr "&அளவுமாற்று"
 
-#: useractions.cpp:226
+#: useractions.cpp:230
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "மற்றவற்றிற்கு &கீழே வை"
 
-#: useractions.cpp:232
+#: useractions.cpp:236
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&முழுத்திரை"
 
-#: useractions.cpp:238
+#: useractions.cpp:242
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr "&விளிம்பும் தலைப்புப்பட்டையும் வேண்டாம்"
 
-#: useractions.cpp:244
+#: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
 msgstr ""
 
-#: useractions.cpp:252
+#: useractions.cpp:256
 #, kde-format
 msgid "Set Window Short&cut…"
 msgstr "சாளர சுருக்குவழி&யை அமை…"
 
-#: useractions.cpp:258
+#: useractions.cpp:262
 #, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "&சாளரத்திற்கான தனிப்பட்ட அமைப்புகளை அமை…"
 
-#: useractions.cpp:263
+#: useractions.cpp:267
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "செய&லிக்கான தனிப்பட்ட அமைப்புகளை அமை…"
 
-#: useractions.cpp:269
+#: useractions.cpp:273
 #, kde-format
 msgid "Ma&ximize"
 msgstr "அதிகபட்ச பெ&ரிதாக்கு"
 
-#: useractions.cpp:275
+#: useractions.cpp:279
 #, kde-format
 msgid "Mi&nimize"
 msgstr "&ஒதுக்கு"
 
-#: useractions.cpp:280
+#: useractions.cpp:284
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "மற்றவற்றிற்கு &மேலே வை"
 
-#: useractions.cpp:287
+#: useractions.cpp:291
 #, kde-format
 msgid "&More Actions"
 msgstr "&மேலும் செயல்கள்"
 
-#: useractions.cpp:292
+#: useractions.cpp:296
 #, kde-format
 msgid "&Close"
 msgstr "மூ&டு"
 
-#: useractions.cpp:358
+#: useractions.cpp:362
 #, kde-format
 msgid "&Extensions"
 msgstr "து&ணை நிரல்கள்"
 
-#: useractions.cpp:408
+#: useractions.cpp:412
 #, kde-format
 msgid "&Desktops"
 msgstr "&பணிமேடைகள்"
 
-#: useractions.cpp:424
+#: useractions.cpp:428
 #, kde-format
 msgid "Move to &Screen"
 msgstr "&காட்சிக் கருவிக்கு நகர்த்து"
 
-#: useractions.cpp:440
+#: useractions.cpp:444
 #, kde-format
 msgid "Show in &Activities"
 msgstr "செ&யல்பாடுகளில் காட்டு"
 
-#: useractions.cpp:456
+#: useractions.cpp:460
 #, kde-format
 msgid "&All Desktops"
 msgstr "&அனைத்து பணிமேடைகளிலும்"
 
-#: useractions.cpp:491 useractions.cpp:623
+#: useractions.cpp:495 useractions.cpp:627
 #, kde-format
 msgid "Move to %1"
 msgstr "%1-க்கு நகர்த்து"
 
-#: useractions.cpp:505
+#: useractions.cpp:509
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "&புதிய பணிமேடையிலும் காட்டு"
 
-#: useractions.cpp:517
+#: useractions.cpp:521
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "புதிய பணிமேடைக்கு நகர்த்து"
 
-#: useractions.cpp:548
+#: useractions.cpp:552
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3894,373 +3894,373 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "காட்சிக் கருவி &%1 (%2)"
 
-#: useractions.cpp:575
+#: useractions.cpp:579
 #, kde-format
 msgid "&All Activities"
 msgstr "&அனைத்து செயல்பாடுகளிலும்"
 
-#: useractions.cpp:739
+#: useractions.cpp:743
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> ஏற்கனவே பயனில் உள்ளது"
 
-#: useractions.cpp:741
+#: useractions.cpp:745
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> %2 என்பதால் %3 என்பதற்கு பயன்படுத்தப்படுகிறது"
 
-#: useractions.cpp:821
+#: useractions.cpp:825
 #, kde-format
 msgid "Window Menu"
 msgstr "சாளரப் பட்டி"
 
-#: useractions.cpp:823
+#: useractions.cpp:827
 #, kde-format
 msgid "Close Window"
 msgstr "சாளரத்தை மூடு"
 
-#: useractions.cpp:825
+#: useractions.cpp:829
 #, kde-format
 msgid "Maximize Window"
 msgstr "சாளரத்தை அதிகபட்ச பெரிதாக்கு"
 
-#: useractions.cpp:827
+#: useractions.cpp:831
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "சாளரத்தை செங்குத்தாக அதிகபட்ச பெரிதாக்கு"
 
-#: useractions.cpp:829
+#: useractions.cpp:833
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "சாளரத்தை கிடைமட்டமாக அதிகபட்ச பெரிதாக்கு"
 
-#: useractions.cpp:831
+#: useractions.cpp:835
 #, kde-format
 msgid "Restore Window"
 msgstr "சாளரத்தை மீட்டெடு"
 
-#: useractions.cpp:833
+#: useractions.cpp:837
 #, kde-format
 msgid "Minimize Window"
 msgstr "சாளரத்தை ஒதுக்கு"
 
-#: useractions.cpp:835
+#: useractions.cpp:839
 #, kde-format
 msgid "Move Window"
 msgstr "சாளரத்தை நகர்த்து"
 
-#: useractions.cpp:837
+#: useractions.cpp:841
 #, kde-format
 msgid "Resize Window"
 msgstr "சாளரத்தின் அளவை மாற்று"
 
-#: useractions.cpp:839
+#: useractions.cpp:843
 #, kde-format
 msgid "Raise Window"
 msgstr "சாளரத்தை உயர்த்து"
 
-#: useractions.cpp:841
+#: useractions.cpp:845
 #, kde-format
 msgid "Lower Window"
 msgstr "சாளரத்தை இறக்கு"
 
-#: useractions.cpp:843
+#: useractions.cpp:847
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "சாளரத்தை உயர்த்து/இறக்கு"
 
-#: useractions.cpp:845
+#: useractions.cpp:849
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "சாளரத்தை முழுத் திரையாக்கு"
 
-#: useractions.cpp:847
+#: useractions.cpp:851
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "விளிம்பையும் தலைப்புப்பட்டையையும் நிலைமாற்று"
 
-#: useractions.cpp:849
+#: useractions.cpp:853
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "சாளரத்தை மற்றவற்றிற்கு மேலே வை"
 
-#: useractions.cpp:851
+#: useractions.cpp:855
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "சாளரத்தை மற்றவற்றிற்கு கீழே வை"
 
-#: useractions.cpp:853
+#: useractions.cpp:857
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "கவனம் கோரும் சாளரத்தை செயல்படுத்து"
 
-#: useractions.cpp:855
+#: useractions.cpp:859
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "சாளர சருக்குவழியை அமை"
 
-#: useractions.cpp:857
+#: useractions.cpp:861
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "சாளரத்தை நடுப்பகுதிக்கு நகர்த்து"
 
-#: useractions.cpp:859
+#: useractions.cpp:863
 #, kde-format
 msgid "Move Window Right"
 msgstr "சாளரத்தை வலதுபுறமாக நகர்த்து"
 
-#: useractions.cpp:861
+#: useractions.cpp:865
 #, kde-format
 msgid "Move Window Left"
 msgstr "சாளரத்தை இடதுபுறமாக நகர்த்து"
 
-#: useractions.cpp:863
+#: useractions.cpp:867
 #, kde-format
 msgid "Move Window Up"
 msgstr "சாளரத்தை மேலே நகர்த்து"
 
-#: useractions.cpp:865
+#: useractions.cpp:869
 #, kde-format
 msgid "Move Window Down"
 msgstr "சாளரத்தை கீழே நகர்த்து"
 
-#: useractions.cpp:867
+#: useractions.cpp:871
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "சாளரத்தை கிடைமட்டமாக பெரிதாக்கு"
 
-#: useractions.cpp:869
+#: useractions.cpp:873
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "சாளரத்தை செங்குத்தாக பெரிதாக்கு"
 
-#: useractions.cpp:871
+#: useractions.cpp:875
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "சாளரத்தை கிடைமட்டமாக சுருக்கு"
 
-#: useractions.cpp:873
+#: useractions.cpp:877
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "சாளரத்தை செங்குத்தாக சுருக்கு"
 
-#: useractions.cpp:875
+#: useractions.cpp:879
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "சாளரத்தை இடது பாதிக்கு பொருத்து"
 
-#: useractions.cpp:877
+#: useractions.cpp:881
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "சாளரத்தை வலது பாதிக்கு பொருத்து"
 
-#: useractions.cpp:879
+#: useractions.cpp:883
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "சாளரத்தை மேல் பாதிக்கு பொருத்து"
 
-#: useractions.cpp:881
+#: useractions.cpp:885
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "சாளரத்தை கீழ் பாதிக்கு பொருத்து"
 
-#: useractions.cpp:883
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "சாளரத்தை மேல்-இடது காற்பங்குக்கு பொருத்து"
 
-#: useractions.cpp:885
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "சாளரத்தை கீழ்-இடது காற்பங்குக்கு பொருத்து"
 
-#: useractions.cpp:887
+#: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "சாளரத்தை மேல்-வலது காற்பங்குக்கு பொருத்து"
 
-#: useractions.cpp:889
+#: useractions.cpp:893
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "சாளரத்தை கீழ்-வலது காற்பங்குக்கு பொருத்து"
 
-#: useractions.cpp:891
+#: useractions.cpp:895
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "மேலுள்ள சாளரத்திற்கு தாவு"
 
-#: useractions.cpp:893
+#: useractions.cpp:897
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "கீழுள்ள சாளரத்திற்கு தாவு"
 
-#: useractions.cpp:895
+#: useractions.cpp:899
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "வலதிலுள்ள சாளரத்திற்கு தாவு"
 
-#: useractions.cpp:897
+#: useractions.cpp:901
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "இடதிலுள்ள சாளரத்திற்கு தாவு"
 
-#: useractions.cpp:899
+#: useractions.cpp:903
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "செயலிலுள்ள சாளரத்தின் ஒளிபுகுமையை 5% அதிகமாக்கு"
 
-#: useractions.cpp:901
+#: useractions.cpp:905
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "செயலிலுள்ள சாளரத்தின் ஒளிபுகுமையை 5% குறை"
 
-#: useractions.cpp:904
+#: useractions.cpp:908
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "சாளரத்தை எல்லா பணிமேடைகளிலும் வைத்திரு"
 
-#: useractions.cpp:907
+#: useractions.cpp:911
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "சாளரத்தை இடது பாதிக்கு பொருத்து"
 
-#: useractions.cpp:909
+#: useractions.cpp:913
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "சாளரத்தை வலது பாதிக்கு பொருத்து"
 
-#: useractions.cpp:911
+#: useractions.cpp:915
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "சாளரத்தை மேல் பாதிக்கு பொருத்து"
 
-#: useractions.cpp:913
+#: useractions.cpp:917
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "சாளரத்தை கீழ் பாதிக்கு பொருத்து"
 
-#: useractions.cpp:924
+#: useractions.cpp:928
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "பணிமேடை %1-க்கு சாளரத்தை அனுப்பு"
 
-#: useractions.cpp:926
+#: useractions.cpp:930
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "சாளரத்தை அடுத்த பணிமேடைக்கு அனுப்பு"
 
-#: useractions.cpp:927
+#: useractions.cpp:931
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "சாளரத்தை முந்தைய பணிமேடைக்கு அனுப்பு"
 
-#: useractions.cpp:928
+#: useractions.cpp:932
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "சாளரத்தை வலதிலுள்ள பணிமேடைக்கு அனுப்பு"
 
-#: useractions.cpp:930
+#: useractions.cpp:934
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "சாளரத்தை இடதிலுள்ள பணிமேடைக்கு அனுப்பு"
 
-#: useractions.cpp:932
+#: useractions.cpp:936
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "சாளரத்தை மேலுள்ள பணிமேடைக்கு அனுப்பு"
 
-#: useractions.cpp:934
+#: useractions.cpp:938
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "சாளரத்தை கீழுள்ள பணிமேடைக்கு அனுப்பு"
 
-#: useractions.cpp:938
+#: useractions.cpp:942
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "சாளரத்தை திரை %1-க்கு அனுப்பு"
 
-#: useractions.cpp:945
+#: useractions.cpp:949
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "சாளரத்தை அடுத்த திரைக்கு அனுப்பு"
 
-#: useractions.cpp:947
+#: useractions.cpp:951
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "சாளரத்தை முந்தைய திரைக்கு அனுப்பு"
 
-#: useractions.cpp:949
+#: useractions.cpp:953
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "சாளரத்தை வலதிலுள்ள திரைக்கு அனுப்பு"
 
-#: useractions.cpp:951
+#: useractions.cpp:955
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "சாளரத்தை இடதிலுள்ள திரைக்கு அனுப்பு"
 
-#: useractions.cpp:953
+#: useractions.cpp:957
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "சாளரத்தை மேலுள்ள திரைக்கு அனுப்பு"
 
-#: useractions.cpp:955
+#: useractions.cpp:959
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "சாளரத்தை கீழுள்ள திரைக்கு அனுப்பு"
 
-#: useractions.cpp:959
+#: useractions.cpp:963
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "திரை %1-க்கு தாவு"
 
-#: useractions.cpp:966
+#: useractions.cpp:970
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "அடுத்த காட்சிக் கருவிக்கு தாவு"
 
-#: useractions.cpp:967
+#: useractions.cpp:971
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "முந்தைய காட்சிக் கருவிக்கு தாவு"
 
-#: useractions.cpp:968
+#: useractions.cpp:972
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "வலதிலுள்ள திரைக்கு தாவு"
 
-#: useractions.cpp:970
+#: useractions.cpp:974
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "இடதிலுள்ள திரைக்கு தாவு"
 
-#: useractions.cpp:972
+#: useractions.cpp:976
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "மேலுள்ள திரைக்கு தாவு"
 
-#: useractions.cpp:974
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "கீழுள்ள திரைக்கு தாவு"
 
-#: useractions.cpp:977
+#: useractions.cpp:981
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "பணிமேடையைக் காட்டு"
 
-#: useractions.cpp:980
+#: useractions.cpp:984
 #, kde-format
 msgid "Kill Window"
 msgstr "சாளரத்தை கட்டாயமாக மூடு"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1049
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "சாளரத்தை செயல்படுத்து (%1)"

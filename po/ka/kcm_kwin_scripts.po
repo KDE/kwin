@@ -65,23 +65,3 @@ msgstr "ახლის მიღება…"
 msgctxt "@info:tooltip"
 msgid "Delete…"
 msgstr "წაშლა…"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Temuri Doghonadze"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "Temuri.doghonadze@gmail.com"
-
-#~ msgid "KWin Scripts"
-#~ msgstr "KWin-ის სკრიპტები"
-
-#~ msgid "Configure KWin scripts"
-#~ msgstr "KWin-ის სკრიპტების მორგება"
-
-#~ msgid "Tamás Krutki"
-#~ msgstr "Tamás Krutki"
-
-#~ msgid "KWin script configuration"
-#~ msgstr "KWin-ის სკრიპტის მორგება"

@@ -135,22 +135,3 @@ msgstr "%1 მწმ"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "სამუშაო მაგიდის განლაგების ინდიკატორების ჩვენება"
-
-#~ msgid "1 Row"
-#~ msgid_plural "%1 Rows"
-#~ msgstr[0] "1 მწკრივი"
-#~ msgstr[1] "%1 მწკრივი"
-
-#~ msgctxt "@action:button"
-#~ msgid "Add"
-#~ msgstr "დამატება"
-
-#~ msgid ""
-#~ "This module lets you configure the navigation, number and layout of "
-#~ "virtual desktops."
-#~ msgstr ""
-#~ "მოდული საშუალებას გაძლევთ მოირგოთ ვირტუალური სამუშაო მაგიდებს რიცხვი, "
-#~ "ნავიგაცია და განლაგება."
-
-#~ msgid "Virtual Desktops"
-#~ msgstr "ვირტუალური სამუშა მაგიდები"

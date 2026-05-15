@@ -37,7 +37,7 @@ msgstr "Nepoužívat virtuální klávesnici"
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "Nikdy"
 
 #: ui/main.qml:33
 #, kde-format

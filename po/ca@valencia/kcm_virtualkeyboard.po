@@ -1,15 +1,15 @@
 # Translation of kcm_virtualkeyboard.po to Catalan (Valencian)
-# Copyright (C) 2021 This_file_is_part_of_KDE
+# Copyright (C) 2021-2026 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# SPDX-FileCopyrightText: 2021 Josep M. Ferrer <txemaq@gmail.com>
+# SPDX-FileCopyrightText: 2021, 2026 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2021-04-27 13:10+0200\n"
+"PO-Revision-Date: 2026-05-14 10:49+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 20.12.0\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #: kcmvirtualkeyboard.cpp:82
 #, kde-format
@@ -30,23 +30,22 @@ msgid "Do not use any virtual keyboard"
 msgstr "No utilitzar cap teclat virtual"
 
 #: ui/main.qml:24
-#, fuzzy, kde-format
-#| msgid "Do not use any virtual keyboard"
+#, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr "No utilitzar cap teclat virtual"
+msgstr "Mostra el teclat virtual:"
 
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "Mai"
 
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr ""
+msgstr "Amb tàctil i tauleta"
 
 #: ui/main.qml:34
 #, kde-format
 msgid "With Touch, Tablet and Mouse"
-msgstr ""
+msgstr "Amb tàctil, tauleta i ratolí"
