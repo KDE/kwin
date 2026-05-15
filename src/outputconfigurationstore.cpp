@@ -1234,6 +1234,13 @@ void OutputConfigurationStore::load()
                     break;
                 }
                 state.position = QPoint(x->toInt(0), y->toInt(0));
+                if (state.position.x() > 1000000 || state.position.x() < -1000000
+                    || state.position.y() > 1000000 || state.position.y() < -1000000) {
+                    qCWarning(KWIN_CORE, "Found output with invalid position %d, %d", state.position.x(), state.position.y());
+                    // it's best to generate this setup from scratch
+                    fail = true;
+                    break;
+                }
             } else {
                 fail = true;
                 break;
