@@ -11,7 +11,9 @@
         "Description[lt]": "Rodyti įslenkančius ir išslenkančius Plasma pranešimus",
         "Description[nl]": "Schuif Plasma meldingen in en uit",
         "Description[pt_BR]": "Deslizar notificações do Plasma",
+        "Description[sk]": "Vysúvanie a zasúvanie upozornení Plasma",
         "Description[sl]": "Drsaj obvestila Plasme noter in ven",
+        "Description[tr]": "Plasma bildirimlerini içeri ve dışarı kaydır",
         "Description[uk]": "Виковзування за заковзування сповіщень Плазми",
         "EnabledByDefault": true,
         "License": "GPL",
@@ -25,7 +27,9 @@
         "Name[lt]": "Slenkantys pranešimai",
         "Name[nl]": "Schuivende meldingen",
         "Name[pt_BR]": "Notificações deslizantes",
+        "Name[sk]": "Vysúvanie upozornení",
         "Name[sl]": "Drseča obvestila",
+        "Name[tr]": "Kayan Bildirimler",
         "Name[uk]": "Ковзні сповіщення"
     }
 }
