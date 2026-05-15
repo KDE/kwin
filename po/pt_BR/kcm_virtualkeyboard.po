@@ -1,21 +1,22 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2021.
+# SPDX-FileCopyrightText: 2026 Marcus Gama <marcus.gama@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2021-05-15 14:37-0300\n"
-"Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
+"PO-Revision-Date: 2026-05-14 06:41-0300\n"
+"Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #: kcmvirtualkeyboard.cpp:82
 #, kde-format
@@ -28,26 +29,25 @@ msgid "Do not use any virtual keyboard"
 msgstr "Não usar nenhum teclado virtual"
 
 #: ui/main.qml:24
-#, fuzzy, kde-format
-#| msgid "Choose Virtual Keyboard"
+#, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr "Escolher teclado virtual"
+msgstr "Mostrar teclado virtual"
 
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "Nunca"
 
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr ""
+msgstr "Com tela sensível ao toque e tablet"
 
 #: ui/main.qml:34
 #, kde-format
 msgid "With Touch, Tablet and Mouse"
-msgstr ""
+msgstr "Com tela sensível ao toque, tablet e mouse"
 
 #~ msgid "This module lets you choose the virtual keyboard to use."
 #~ msgstr "Este módulo permite a você escolher o teclado virtual a usar."

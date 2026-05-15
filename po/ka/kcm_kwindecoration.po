@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-03-20 03:43+0100\n"
+"PO-Revision-Date: 2026-05-14 04:36+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -66,7 +66,7 @@ msgstr "დანარჩენი ფანჯრების ზემოთ 
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "დამალვა ეკრანის ანაბეჭდებიდან და ეკრანის ჩანაწერებიდან"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -197,40 +197,32 @@ msgid "Show titlebar button tooltips"
 msgstr "სათაურის ქუდის ღილაკების მინიშნებების ჩვენება"
 
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" button"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr "ღილაკის 'ეკრანის გადაცემიდან დამალვა' ყოველთვის ჩვენება"
+msgstr ""
+"ღილაკის 'დამალვა ეკრანის ანაბეჭდებიდან და ეკრანის ჩანაწერებიდან' ყოველთვის "
+"ჩვენება"
 
 #: ui/ConfigureTitlebar.qml:85
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "When unchecked the button only appears if the window is hidden from "
-#| "screencast"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
 "როცა გამორთულია, ღილაკი, მხოლოდ, მაშინ ჩანს, თუ ფანჯარა დამალულია ეკრანის "
-"გადაცემიდან"
+"ანაბეჭდებიდან და ეკრანის ჩანაწერებიდან"
 
 #: ui/ConfigureTitlebar.qml:86
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "To enable this option, add the \"Hide from screencast\" button to the "
-#| "titlebar first"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
-"ამ პარამეტრის ჩასართავად ჯერ დაამატეთ ღილაკი 'ეკრანის გადაცემიდან დამალვა' "
-"სათაურის ზოლზე"
+"ამ პარამეტრის ჩასართავად ჯერ დაამატეთ ღილაკი 'დამალვა ეკრანის ანაბეჭდებიდან "
+"და ეკრანის ჩანაწერებიდან' სათაურის ზოლზე"
 
 #: ui/main.qml:29
 #, kde-format
@@ -299,61 +291,3 @@ msgstr "უსინდისოდ დიდი ფანჯრის საზ
 #, kde-format
 msgid "Oversized window borders"
 msgstr "არანორმალურად დიდი ფანჯრის საზღვრები"
-
-#~ msgid "Hide from screencast"
-#~ msgstr "დამალვა ეკრანის გადაცემიდან"
-
-#~ msgid "More actions for this window"
-#~ msgstr "მეტი ქმედება ამ ფანჯრისთვის"
-
-#~ msgid "Shade"
-#~ msgstr "დაჩრდილვა"
-
-#~ msgctxt "button text"
-#~ msgid "Get New Window Decorations…"
-#~ msgstr "ფანჯრის ახალი დეკორაციების მიღება…"
-
-#~ msgid "No Borders"
-#~ msgstr "საზღვრების გარეშე"
-
-#~ msgid "Tiny"
-#~ msgstr "პაწაწინა"
-
-#~ msgid "Normal"
-#~ msgstr "ნორმალური"
-
-#~ msgid "Large"
-#~ msgstr "დიდი"
-
-#~ msgid "Very Large"
-#~ msgstr "ძალიან დიდი"
-
-#~ msgid "Huge"
-#~ msgstr "უზარმაზარი"
-
-#~ msgid "Very Huge"
-#~ msgstr "ძალიან უზარმაზარი"
-
-#~ msgid "Oversized"
-#~ msgstr "არანორმალურად დიდი"
-
-#~ msgid "This module lets you configure the window decorations."
-#~ msgstr "ეს მოდული საშუალებას გაძლევთ ფანჯრის დეკორაციები მოირგოთ."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Temuri Doghonadze"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "Temuri.doghonadze@gmail.com"
-
-#~ msgid "Valerio Pilo"
-#~ msgstr "Valerio Pilo"
-
-#~ msgid "Author"
-#~ msgstr "ავტორი"
-
-#~ msgctxt "tab label"
-#~ msgid "Theme"
-#~ msgstr "თემა"

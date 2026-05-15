@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-05-03 06:35+0200\n"
+"PO-Revision-Date: 2026-05-14 07:40+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: kcmrules.cpp:228
 #, kde-format
 msgid "Copy of %1"
-msgstr "Kopija %1"
+msgstr "Kopija od %1"
 
 #: kcmrules.cpp:426
 #, kde-format
@@ -613,7 +613,7 @@ msgstr "Dovoljuj trganje"
 #: rulesmodel.cpp:737
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Skrij iz posnetkov in video snemanj zaslona"
 
 #: rulesmodel.cpp:790
 #, kde-format

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-05-15 02:40+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -3879,116 +3879,116 @@ msgstr ""
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: useractions.cpp:216
+#: useractions.cpp:220
 #, kde-format
 msgid "&Move"
 msgstr "ផ្លាស់ទី"
 
-#: useractions.cpp:221
+#: useractions.cpp:225
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgid "&Resize"
 msgstr "ប្តូរ​ទំហំ"
 
-#: useractions.cpp:226
+#: useractions.cpp:230
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "ដាក់​ក្រោម​គេ"
 
-#: useractions.cpp:232
+#: useractions.cpp:236
 #, kde-format
 msgid "&Fullscreen"
 msgstr "ពេញ​អេក្រង់"
 
-#: useractions.cpp:238
+#: useractions.cpp:242
 #, kde-format
 msgid "&No Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:244
+#: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
 msgstr ""
 
-#: useractions.cpp:252
+#: useractions.cpp:256
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
 msgid "Set Window Short&cut…"
 msgstr "ផ្លូវ​កាត់​បង្អួច..."
 
-#: useractions.cpp:258
+#: useractions.cpp:262
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
 msgid "Configure Special &Window Settings…"
 msgstr "ការ​កំណត់​បង្អួច​ពិសេស..."
 
-#: useractions.cpp:263
+#: useractions.cpp:267
 #, fuzzy, kde-format
 #| msgid "S&pecial Application Settings..."
 msgid "Configure S&pecial Application Settings…"
 msgstr "ការ​កំណត់​កម្មវិធី​ពិសេស..."
 
-#: useractions.cpp:269
+#: useractions.cpp:273
 #, kde-format
 msgid "Ma&ximize"
 msgstr "ពង្រីក​អតិបរមា"
 
-#: useractions.cpp:275
+#: useractions.cpp:279
 #, kde-format
 msgid "Mi&nimize"
 msgstr "បង្រួម​អប្បបរមា"
 
-#: useractions.cpp:280
+#: useractions.cpp:284
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "ដាក់​លើ​គេ"
 
-#: useractions.cpp:287
+#: useractions.cpp:291
 #, fuzzy, kde-format
 #| msgid "More Actions"
 msgid "&More Actions"
 msgstr "សកម្មភាព​ផ្សេង​ទៀត"
 
-#: useractions.cpp:292
+#: useractions.cpp:296
 #, kde-format
 msgid "&Close"
 msgstr "បិទ​"
 
-#: useractions.cpp:358
+#: useractions.cpp:362
 #, kde-format
 msgid "&Extensions"
 msgstr ""
 
-#: useractions.cpp:408
+#: useractions.cpp:412
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "&Desktops"
 msgstr "ផ្ទៃតុ​ទាំងអស់"
 
-#: useractions.cpp:424
+#: useractions.cpp:428
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Move to &Screen"
 msgstr "ផ្លាស់ទី​ទៅ​ផ្ទៃតុ"
 
-#: useractions.cpp:440
+#: useractions.cpp:444
 #, fuzzy, kde-format
 #| msgid "Ac&tivities"
 msgid "Show in &Activities"
 msgstr "សកម្មភាព"
 
-#: useractions.cpp:456
+#: useractions.cpp:460
 #, kde-format
 msgid "&All Desktops"
 msgstr "ផ្ទៃតុ​ទាំងអស់"
 
-#: useractions.cpp:491 useractions.cpp:623
+#: useractions.cpp:495 useractions.cpp:627
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Move to %1"
 msgstr "ផ្លាស់ទី​ទៅ​ផ្ទៃតុ"
 
-#: useractions.cpp:505
+#: useractions.cpp:509
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -3996,14 +3996,14 @@ msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "ផ្ទៃតុ​ថ្មី"
 
-#: useractions.cpp:517
+#: useractions.cpp:521
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "ផ្លាស់ទី​ទៅ​ផ្ទៃតុ"
 
-#: useractions.cpp:548
+#: useractions.cpp:552
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgctxt ""
@@ -4012,402 +4012,402 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "បង្អួច​ទៅ​អេក្រង់ %1"
 
-#: useractions.cpp:575
+#: useractions.cpp:579
 #, kde-format
 msgid "&All Activities"
 msgstr "សកម្មភាព​ទាំងអស់"
 
-#: useractions.cpp:739
+#: useractions.cpp:743
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> កំពុង​ប្រើ​រួ​ចហើយ"
 
-#: useractions.cpp:741
+#: useractions.cpp:745
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> ត្រូ​វបានប្រើ​ដោយ %2 នៅ​ក្នុង %3"
 
-#: useractions.cpp:821
+#: useractions.cpp:825
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Window Menu"
 msgstr "បង្អួច"
 
-#: useractions.cpp:823
+#: useractions.cpp:827
 #, kde-format
 msgid "Close Window"
 msgstr "បិទ​បង្អួច"
 
-#: useractions.cpp:825
+#: useractions.cpp:829
 #, kde-format
 msgid "Maximize Window"
 msgstr "ពង្រីក​បង្អួច​អតិបរមា"
 
-#: useractions.cpp:827
+#: useractions.cpp:831
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "ពង្រីក​បង្អួចអតិបរមា បញ្ឈរ​"
 
-#: useractions.cpp:829
+#: useractions.cpp:833
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "ពង្រីក​បង្អួចអតិបរមា ផ្ដេក​"
 
-#: useractions.cpp:831
+#: useractions.cpp:835
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgid "Restore Window"
 msgstr "ប្តូរ​ទំហំ​បង្អួច"
 
-#: useractions.cpp:833
+#: useractions.cpp:837
 #, kde-format
 msgid "Minimize Window"
 msgstr "បង្រួម​បង្អួចអប្បបរមា"
 
-#: useractions.cpp:835
+#: useractions.cpp:839
 #, kde-format
 msgid "Move Window"
 msgstr "ផ្លាស់ទី​បង្អួច"
 
-#: useractions.cpp:837
+#: useractions.cpp:841
 #, kde-format
 msgid "Resize Window"
 msgstr "ប្តូរ​ទំហំ​បង្អួច"
 
-#: useractions.cpp:839
+#: useractions.cpp:843
 #, kde-format
 msgid "Raise Window"
 msgstr "លើក​បង្អួច​ឡើង​លើ"
 
-#: useractions.cpp:841
+#: useractions.cpp:845
 #, kde-format
 msgid "Lower Window"
 msgstr "បន្ទាប​បង្អួច​ចុះ​ក្រោម"
 
-#: useractions.cpp:843
+#: useractions.cpp:847
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "បិទ​បើក លើក​បង្អួច​ឡើង​លើ/បន្ទាប​បង្អួច​ចុះ​ក្រោម"
 
-#: useractions.cpp:845
+#: useractions.cpp:849
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "ធ្វើ​ឲ្យ​បង្អួច​ពេញ​អេក្រង់"
 
-#: useractions.cpp:847
+#: useractions.cpp:851
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "លាក់​ស៊ុម​បង្អួច"
 
-#: useractions.cpp:849
+#: useractions.cpp:853
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "ដាក់​បង្អួច​លើ​គេ"
 
-#: useractions.cpp:851
+#: useractions.cpp:855
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "ដាក់​បង្អួច​ក្រោម​គេ"
 
-#: useractions.cpp:853
+#: useractions.cpp:857
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "ធ្វើ​ឲ្យ​បង្អួច​ដែល​ទាមទារ​ការ​យក​ចិត្ត​ទុក​ដាក់ សកម្ម"
 
-#: useractions.cpp:855
+#: useractions.cpp:859
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "ដំឡើង​ផ្លូវ​កាត់​បង្អួច"
 
-#: useractions.cpp:857
+#: useractions.cpp:861
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Move Window to the Center"
 msgstr "ខ្ចប់​បង្អួច​ទៅ​ឆ្វេង"
 
-#: useractions.cpp:859
+#: useractions.cpp:863
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "ផ្លាស់ទី​បង្អួច"
 
-#: useractions.cpp:861
+#: useractions.cpp:865
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "ផ្លាស់ទី​បង្អួច"
 
-#: useractions.cpp:863
+#: useractions.cpp:867
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "ផ្លាស់ទី​បង្អួច"
 
-#: useractions.cpp:865
+#: useractions.cpp:869
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "ផ្លាស់ទី​បង្អួច"
 
-#: useractions.cpp:867
+#: useractions.cpp:871
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "ពង្រីក​បង្អួចអតិបរមា ផ្ដេក​"
 
-#: useractions.cpp:869
+#: useractions.cpp:873
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "ពង្រីក​បង្អួចអតិបរមា បញ្ឈរ​"
 
-#: useractions.cpp:871
+#: useractions.cpp:875
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "ខ្ចប់​បង្អួច​រួញ​ផ្ដេក"
 
-#: useractions.cpp:873
+#: useractions.cpp:877
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "ខ្ចប់​បង្អួច​រួញ​បញ្ឈរ"
 
-#: useractions.cpp:875
+#: useractions.cpp:879
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "ខ្ចប់​បង្អួច​ទៅ​ឆ្វេង​រហ័ស"
 
-#: useractions.cpp:877
+#: useractions.cpp:881
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "ខ្ចប់​បង្អួច​ទៅ​ស្ដាំ​រហ័ស"
 
-#: useractions.cpp:879
+#: useractions.cpp:883
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top Left"
 msgid "Quick Tile Window to the Top"
 msgstr "បង្អួច​រៀប​ជា​ក្រឡា​ក្បឿង​ទៅកាន់​ខាង​ឆ្វេង​ផ្នែក​ខាងលើ​រហ័ស"
 
-#: useractions.cpp:881
+#: useractions.cpp:885
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "បង្អួច​រៀប​ជា​ក្រឡា​ក្បឿង​ទៅកាន់​​ខាងឆ្វេង​ផ្នែក​ខាងក្រោម​រហ័ស​"
 
-#: useractions.cpp:883
+#: useractions.cpp:887
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "បង្អួច​រៀប​ជា​ក្រឡា​ក្បឿង​ទៅកាន់​ខាង​ឆ្វេង​ផ្នែក​ខាងលើ​រហ័ស"
 
-#: useractions.cpp:885
+#: useractions.cpp:889
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "បង្អួច​រៀប​ជា​ក្រឡា​ក្បឿង​ទៅកាន់​​ខាងឆ្វេង​ផ្នែក​ខាងក្រោម​រហ័ស​"
 
-#: useractions.cpp:887
+#: useractions.cpp:891
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "បង្អួច​រៀប​ជា​ក្រឡា​ក្បឿង​ទៅ​កាន់​ខាង​ស្ដាំ​ផ្នែក​ខាងលើ​​រហ័ស"
 
-#: useractions.cpp:889
+#: useractions.cpp:893
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "បង្អួច​រៀប​ជា​ក្រឡា​ក្បឿង​ទៅកាន់​ខាង​ស្ដាំ​ផ្នែក​ខាងក្រោម​រហ័ស​"
 
-#: useractions.cpp:891
+#: useractions.cpp:895
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "ប្ដូរ​ទៅ​បង្អួច​ខាង​លើ"
 
-#: useractions.cpp:893
+#: useractions.cpp:897
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "ប្ដូរ​ទៅបង្អួច​ខាងក្រោម"
 
-#: useractions.cpp:895
+#: useractions.cpp:899
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "ប្ដូរ​ទៅបង្អួច​ទៅ​ស្ដាំ"
 
-#: useractions.cpp:897
+#: useractions.cpp:901
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "ប្ដូរ​ទៅបង្អួច​ទៅ​ឆ្វេង"
 
-#: useractions.cpp:899
+#: useractions.cpp:903
 #, fuzzy, kde-format
 #| msgid "Increase Opacity of Active Window by 5 %"
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "បន្ថែម​ភាព​ស្រអាប់​នៃ​បង្អួច​សកម្ម​ដោយ 5 %"
 
-#: useractions.cpp:901
+#: useractions.cpp:905
 #, fuzzy, kde-format
 #| msgid "Decrease Opacity of Active Window by 5 %"
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "បន្ថយ​ភាព​ស្រអាប់​នៃ​បង្អួច​សកម្ម​ដោយ 5 %"
 
-#: useractions.cpp:904
+#: useractions.cpp:908
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "ដាក់​បង្អួច​លើ​ផ្ទៃតុ​ទាំងអស់"
 
-#: useractions.cpp:907
+#: useractions.cpp:911
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Custom Quick Tile Window to the Left"
 msgstr "ខ្ចប់​បង្អួច​ទៅ​ឆ្វេង​រហ័ស"
 
-#: useractions.cpp:909
+#: useractions.cpp:913
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Custom Quick Tile Window to the Right"
 msgstr "ខ្ចប់​បង្អួច​ទៅ​ស្ដាំ​រហ័ស"
 
-#: useractions.cpp:911
+#: useractions.cpp:915
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Top Left"
 msgid "Custom Quick Tile Window to the Top"
 msgstr "បង្អួច​រៀប​ជា​ក្រឡា​ក្បឿង​ទៅកាន់​ខាង​ឆ្វេង​ផ្នែក​ខាងលើ​រហ័ស"
 
-#: useractions.cpp:913
+#: useractions.cpp:917
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Bottom Left"
 msgid "Custom Quick Tile Window to the Bottom"
 msgstr "បង្អួច​រៀប​ជា​ក្រឡា​ក្បឿង​ទៅកាន់​​ខាងឆ្វេង​ផ្នែក​ខាងក្រោម​រហ័ស​"
 
-#: useractions.cpp:924
+#: useractions.cpp:928
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "បង្អួច​ទៅ​ផ្ទៃតុ  %1"
 
-#: useractions.cpp:926
+#: useractions.cpp:930
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "បង្អួច​ទៅ​ផ្ទៃតុ​បន្ទាប់"
 
-#: useractions.cpp:927
+#: useractions.cpp:931
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "បង្អួច​ទៅ​ផ្ទៃតុ​មុន"
 
-#: useractions.cpp:928
+#: useractions.cpp:932
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "បង្អួច​ទៅ​ស្ដាំ​មួយ​ផ្ទៃតុ"
 
-#: useractions.cpp:930
+#: useractions.cpp:934
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "បង្អួច​ទៅ​ឆ្វេង​មួយ​ផ្ទៃតុ"
 
-#: useractions.cpp:932
+#: useractions.cpp:936
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "បង្អួច​ឡើង​លើ​មួយ​ផ្ទៃតុ"
 
-#: useractions.cpp:934
+#: useractions.cpp:938
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "បង្អួច​ចុះ​ក្រោម​មួយ​ផ្ទៃតុ"
 
-#: useractions.cpp:938
+#: useractions.cpp:942
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "បង្អួច​ទៅ​អេក្រង់ %1"
 
-#: useractions.cpp:945
+#: useractions.cpp:949
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "បង្អួច​ទៅបង្អួច​បន្ទាប់​"
 
-#: useractions.cpp:947
+#: useractions.cpp:951
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "បង្អួច​ទៅ​ផ្ទៃតុ​មុន"
 
-#: useractions.cpp:949
+#: useractions.cpp:953
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "បង្អួច​ទៅ​ស្ដាំ​មួយ​ផ្ទៃតុ"
 
-#: useractions.cpp:951
+#: useractions.cpp:955
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "បង្អួច​ទៅ​ឆ្វេង​មួយ​ផ្ទៃតុ"
 
-#: useractions.cpp:953
+#: useractions.cpp:957
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window One Screen Up"
 msgstr "បង្អួច​ទៅ​អេក្រង់ %1"
 
-#: useractions.cpp:955
+#: useractions.cpp:959
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "បង្អួច​ចុះ​ក្រោម​មួយ​ផ្ទៃតុ"
 
-#: useractions.cpp:959
+#: useractions.cpp:963
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "ប្ដូរ​ទៅ​អេក្រង់ %1​"
 
-#: useractions.cpp:966
+#: useractions.cpp:970
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "ប្តូរ​ទៅ​អេក្រង់​បន្ទាប់​"
 
-#: useractions.cpp:967
+#: useractions.cpp:971
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "ប្តូរ​ទៅ​ផ្ទៃតុ​មុន"
 
-#: useractions.cpp:968
+#: useractions.cpp:972
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "ប្ដូរ​ទៅបង្អួច​ទៅ​ស្ដាំ"
 
-#: useractions.cpp:970
+#: useractions.cpp:974
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "ប្ដូរ​ទៅបង្អួច​ទៅ​ឆ្វេង"
 
-#: useractions.cpp:972
+#: useractions.cpp:976
 #, fuzzy, kde-format
 #| msgid "Switch to Screen %1"
 msgid "Switch to Screen Above"
 msgstr "ប្ដូរ​ទៅ​អេក្រង់ %1​"
 
-#: useractions.cpp:974
+#: useractions.cpp:978
 #, fuzzy, kde-format
 #| msgid "Switch to Screen %1"
 msgid "Switch to Screen Below"
 msgstr "ប្ដូរ​ទៅ​អេក្រង់ %1​"
 
-#: useractions.cpp:977
+#: useractions.cpp:981
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Peek at Desktop"
 msgstr "ផ្លាស់ទី​ទៅ​ផ្ទៃតុ"
 
-#: useractions.cpp:980
+#: useractions.cpp:984
 #, kde-format
 msgid "Kill Window"
 msgstr "សម្លាប់​បង្អួច"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1049
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "ធ្វើ​ឲ្យ​បង្អួច​សកម្ម (%1)"
