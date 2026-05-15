@@ -105,7 +105,7 @@ class ScaleEffect {
         this.setupForcedRoles(window);
         window.scaleInAnimation = animate({
             window: window,
-            curve: cubicBezier(0, 1, 0, 1),
+            curve: cubicBezier(0, 1, 0.35, 1),
             duration: this.duration,
             animations: [
                 {
@@ -140,7 +140,7 @@ class ScaleEffect {
         this.setupForcedRoles(window);
         window.scaleOutAnimation = animate({
             window: window,
-            curve: cubicBezier(1, 0, 1, 0),
+            curve: cubicBezier(0.35, 0, 1, 0),
             duration: this.duration,
             animations: [
                 {
