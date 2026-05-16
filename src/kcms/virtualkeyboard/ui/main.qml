@@ -31,7 +31,7 @@ KCM.GridViewKCM {
                     model: [
                         { label: i18n("Never"), value: KWinVirtualKeyboard.VirtualKeyboardMode.Off },
                         { label: i18n("With Touch and Tablet"), value: KWinVirtualKeyboard.VirtualKeyboardMode.TouchOnly },
-                        { label: i18n("With Touch, Tablet and Mouse"), value: KWinVirtualKeyboard.VirtualKeyboardMode.On },
+                        { label: i18n("With Touch, Tablet, and Mouse"), value: KWinVirtualKeyboard.VirtualKeyboardMode.On },
                     ]
                     textRole: "label"
                     valueRole: "value"
