@@ -263,6 +263,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-color-management-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-color-representation-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-content-type-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-ext-background-effect-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-fifo-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-kde-external-brightness-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-linux-drm-syncobj-v1.h
