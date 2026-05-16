@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf6-trunk/messages/kwin/kwin.pot\n"
-"X-Crowdin-File-ID: 43661\n"
+"X-Crowdin-File: /kf6-stable/messages/kwin/kwin.pot\n"
+"X-Crowdin-File-ID: 52930\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3611,17 +3611,15 @@ msgstr "画面撕裂规则类型"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "在录屏中隐藏规则类型"
+msgstr ""
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "在录屏中隐藏规则类型"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -4367,9 +4365,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Hide from screencast"
-#~ msgstr "在录屏中隐藏"
-
-#~ msgid "&Hide from Screencast"
-#~ msgstr "在录屏中隐藏(&H)"

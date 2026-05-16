@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf6-trunk/messages/kwin/kcm_kwinrules.pot\n"
-"X-Crowdin-File-ID: 42737\n"
+"X-Crowdin-File: /kf6-stable/messages/kwin/kcm_kwinrules.pot\n"
+"X-Crowdin-File-ID: 50382\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -980,6 +980,3 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
-
-#~ msgid "Hide from Screencast"
-#~ msgstr "在录屏中隐藏"
