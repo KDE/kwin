@@ -29,6 +29,8 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingReply>
+#include <QPainter>
+#include <QRasterWindow>
 #include <QSignalSpy>
 #include <QTest>
 
@@ -74,6 +76,7 @@ private Q_SLOTS:
     void testV3AutoCommit();
     void testSendRepeatInfo();
     void testSendRepeatInfoV10();
+    void testWindowNoIMActivation();
 
 private:
     void touchNow()
@@ -1027,6 +1030,89 @@ void InputMethodTest::testSendRepeatInfoV10()
     QVERIFY(keygrabRepeatSpy.wait());
 
     QVERIFY(!keyboardGrab->isKeyRepeatEnabled());
+}
+
+class IMQueryObject : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit IMQueryObject(bool enabled, QObject *parent = nullptr)
+        : QObject(parent)
+        , m_enabled(enabled)
+    {
+    }
+
+protected:
+    bool event(QEvent *event) override
+    {
+        if (event->type() == QEvent::InputMethodQuery) {
+            auto *query = static_cast<QInputMethodQueryEvent *>(event);
+            if (query->queries() & Qt::ImEnabled) {
+                query->setValue(Qt::ImEnabled, m_enabled);
+            }
+            return true;
+        }
+        return QObject::event(event);
+    }
+
+private:
+    bool m_enabled;
+};
+
+class WindowWithFocusObject : public QRasterWindow
+{
+    Q_OBJECT
+
+public:
+    explicit WindowWithFocusObject(bool inputMethodEnabled)
+        : QRasterWindow(nullptr)
+        , m_focusObject(new IMQueryObject(inputMethodEnabled, this))
+    {
+    }
+
+    QObject *focusObject() const override
+    {
+        return m_focusObject;
+    }
+
+private:
+    IMQueryObject *m_focusObject;
+};
+
+// Verify that a window without input method support does not cause the input method to activate
+void InputMethodTest::testWindowNoIMActivation()
+{
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    // Window without IM
+    QRasterWindow win;
+    win.setGeometry(0, 0, 200, 200);
+    win.show();
+    win.requestActivate();
+
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    // Window with a focus object that explicitly rejects IM should still not activate it
+    WindowWithFocusObject winWithoutIM(false);
+    winWithoutIM.setGeometry(0, 0, 200, 200);
+    winWithoutIM.show();
+    winWithoutIM.requestActivate();
+
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    // Window with focused IM
+    WindowWithFocusObject winWithIM(true);
+    winWithIM.setGeometry(0, 0, 200, 200);
+    winWithIM.show();
+    winWithIM.requestActivate();
+
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    // Switching back to the plain window should deactivate the IM again
+    win.requestActivate();
+
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)
