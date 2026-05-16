@@ -275,6 +275,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-color-management-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-color-representation-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-ext-background-effect-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-fifo-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-kde-external-brightness-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-linux-drm-syncobj-v1-server-protocol.h
