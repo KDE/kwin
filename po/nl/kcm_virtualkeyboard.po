@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-05-14 17:35+0200\n"
+"POT-Creation-Date: 2026-05-16 00:45+0000\n"
+"PO-Revision-Date: 2026-05-15 18:47+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -44,8 +44,9 @@ msgid "With Touch and Tablet"
 msgstr "Met aanraken en tablet"
 
 #: ui/main.qml:34
-#, kde-format
-msgid "With Touch, Tablet and Mouse"
+#, fuzzy, kde-format
+#| msgid "With Touch, Tablet and Mouse"
+msgid "With Touch, Tablet, and Mouse"
 msgstr "Met aanraken, tablet en muis"
 
 #~ msgid "This module lets you choose the virtual keyboard to use."

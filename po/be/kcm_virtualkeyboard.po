@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-05-16 00:45+0000\n"
 "PO-Revision-Date: 2024-02-11 18:54\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -51,7 +51,7 @@ msgstr ""
 
 #: ui/main.qml:34
 #, kde-format
-msgid "With Touch, Tablet and Mouse"
+msgid "With Touch, Tablet, and Mouse"
 msgstr ""
 
 #~ msgid "This module lets you choose the virtual keyboard to use."
