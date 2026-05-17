@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-05-17 02:38+0000\n"
 "PO-Revision-Date: 2021-11-19 13:06+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -46,7 +46,7 @@ msgstr ""
 
 #: ui/main.qml:34
 #, kde-format
-msgid "With Touch, Tablet and Mouse"
+msgid "With Touch, Tablet, and Mouse"
 msgstr ""
 
 #~ msgid "This module lets you choose the virtual keyboard to use."

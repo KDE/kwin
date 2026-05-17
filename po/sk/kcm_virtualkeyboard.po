@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_virtualkeyboard\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
+"POT-Creation-Date: 2026-05-17 02:38+0000\n"
 "PO-Revision-Date: 2021-05-15 16:45+0200\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.04.1\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Lokalize 21.04.1\n"
 
 #: kcmvirtualkeyboard.cpp:82
 #, kde-format
@@ -27,26 +27,26 @@ msgid "Do not use any virtual keyboard"
 msgstr "Nepoužívať žiadnu virtuálnu klávesnicu"
 
 #: ui/main.qml:24
-#, fuzzy, kde-format
-#| msgid "Choose Virtual Keyboard"
+#, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr "Vybrať virtuálnu klávesnicu"
+msgstr "Zobraziť virtuálnu klávesnicu:"
 
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "Nikdy"
 
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr ""
+msgstr "S dotykom a tabletom"
 
 #: ui/main.qml:34
-#, kde-format
-msgid "With Touch, Tablet and Mouse"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "With Touch, Tablet and Mouse"
+msgid "With Touch, Tablet, and Mouse"
+msgstr "S dotykom, tabletom a myšou"
 
 #~ msgid "This module lets you choose the virtual keyboard to use."
 #~ msgstr ""

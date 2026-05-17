@@ -70,7 +70,7 @@ msgstr "Držať nad ostatnými oknami"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Skryť pred snímkami a nahrávkami obrazovky"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -205,40 +205,31 @@ msgid "Show titlebar button tooltips"
 msgstr "Zobrazovať popisy tlačidiel záhlavia"
 
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" button"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr "Vždy zobrazovať tlačidlo \"Skryť zo Screencastu\""
+msgstr ""
+"Vždy zobrazovať tlačidlo \"Skryť pred snímkami a nahrávkami obrazovky\""
 
 #: ui/ConfigureTitlebar.qml:85
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "When unchecked the button only appears if the window is hidden from "
-#| "screencast"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
-"Ak nie je zaškrtnuté, tlačidlo sa zobrazí len v prípade, že je okno skryté z "
-"screencastu."
+"Keď nie je zaškrtnuté, tlačidlo sa zobrazí len v prípade, že je okno skryté "
+"pred snímkami a nahrávkami obrazovky."
 
 #: ui/ConfigureTitlebar.qml:86
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "To enable this option, add the \"Hide from screencast\" button to the "
-#| "titlebar first"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
-"Ak chcete túto možnosť aktivovať, najskôr pridajte tlačidlo \"Skryť zo "
-"screencastu“ do hlavného panela."
+"Ak chcete túto možnosť aktivovať, najskôr pridajte do panela titulku "
+"tlačidlo \"Skryť pred snímkami a nahrávkami obrazovky\""
 
 #: ui/main.qml:29
 #, kde-format

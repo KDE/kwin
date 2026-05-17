@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-05-14 13:06+0300\n"
+"POT-Creation-Date: 2026-05-17 02:38+0000\n"
+"PO-Revision-Date: 2026-05-16 20:27+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -25,13 +25,13 @@ msgstr "Yok"
 #: kcmvirtualkeyboard.cpp:86
 #, kde-format
 msgid "Do not use any virtual keyboard"
-msgstr "Bir sanal klavye kullanma"
+msgstr "Herhangi bir sanal klavye kullanma"
 
 #: ui/main.qml:24
 #, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr "Sanal klavyeyi göster:"
+msgstr "Sanal Klavyeyi Göster:"
 
 #: ui/main.qml:32
 #, kde-format
@@ -41,23 +41,10 @@ msgstr "Asla"
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr "Dokunmatik ve tablet ile"
+msgstr "Dokunmatik ve Tablet ile"
 
 #: ui/main.qml:34
-#, kde-format
-msgid "With Touch, Tablet and Mouse"
-msgstr "Dokunmatik, tablet ve fare ile"
-
-#~ msgid "This module lets you choose the virtual keyboard to use."
-#~ msgstr "Bu modül, istediğiniz sanal klavyeyi seçmenize izin verir."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Emir SARI"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "emir_sari@icloud.com"
-
-#~ msgid "Virtual Keyboard"
-#~ msgstr "Sanal Klavye"
+#, fuzzy, kde-format
+#| msgid "With Touch, Tablet and Mouse"
+msgid "With Touch, Tablet, and Mouse"
+msgstr "Dokunmatik, Tablet ve Fare ile"
