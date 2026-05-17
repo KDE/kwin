@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-05 00:46+0000\n"
-"PO-Revision-Date: 2026-05-09 16:01+0200\n"
+"PO-Revision-Date: 2026-05-16 13:13+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
 "Language: pl\n"
@@ -143,14 +143,12 @@ msgid "Control of pointer and keyboard:"
 msgstr "Sterowanie wskaźnikiem i klawiaturą:"
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "Dozwolone"
+msgstr "Dozwolone aplikacje"
 
 #: ui/main.qml:152
 #, kde-format
@@ -168,11 +166,7 @@ msgid ""
 msgstr ""
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -214,7 +208,7 @@ msgstr "Sterowanie wskaźnikiem i klawiaturą:"
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
+msgstr "Nie zezwalaj %1 na sterowanie wskaźnikiem i klawiaturą bez pytania"
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."

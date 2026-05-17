@@ -618,7 +618,7 @@ msgstr "Povoliť trhanie"
 #: rulesmodel.cpp:737
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Skryť pred snímkami a nahrávkami obrazovky"
 
 #: rulesmodel.cpp:790
 #, kde-format

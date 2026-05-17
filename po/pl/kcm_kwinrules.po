@@ -1,5 +1,5 @@
 # translation of kcmkwinrules.po to
-# SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
+# SPDX-FileCopyrightText: 2011-2015, 2017-2026 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Mikolaj Machowski <mikmach@wp.pl>, 2004, 2005, 2007, 2010.
 # Krzysztof Lichota <lichota@mimuw.edu.pl>, 2005, 2006.
 # Marta Rybczyńska <kde-i18n@rybczynska.net>, 2008, 2010, 2013.
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-03-21 06:15+0100\n"
+"PO-Revision-Date: 2026-05-16 13:12+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: pl\n"
 "Language: pl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 25.08.2\n"
+"X-Generator: Lokalize 26.04.0\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -35,29 +35,25 @@ msgid "Window settings for %1"
 msgstr "Ustawienia okna dla %1"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, fuzzy, kde-format
-#| msgid "Unimportant"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "Nieistotne"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Exact match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Exact match"
 msgstr "Dokładne dopasowanie"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Substring match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr "Podciąg jest równy"
 
 #: optionsmodel.cpp:202
-#, fuzzy, kde-format
-#| msgid "Regular expression"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "Wyrażenie regularne"
@@ -66,7 +62,7 @@ msgstr "Wyrażenie regularne"
 #, kde-format
 msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
-msgstr ""
+msgstr "Skojarz"
 
 #: optionsmodel.cpp:210
 #, kde-format
@@ -251,10 +247,9 @@ msgid "Window tag"
 msgstr "Znacznik okna"
 
 #: rulesmodel.cpp:446
-#, fuzzy, kde-format
-#| msgid "On main window"
+#, kde-format
 msgid "Has parent window"
-msgstr "W głównym oknie"
+msgstr "Ma okno nadrzędne"
 
 #: rulesmodel.cpp:452
 #, kde-format
@@ -622,7 +617,7 @@ msgstr "Zezwól na cięcia"
 #: rulesmodel.cpp:737
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Ukryj na zrzutach i nagraniach ekranu"
 
 #: rulesmodel.cpp:790
 #, kde-format

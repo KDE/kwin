@@ -9,7 +9,7 @@
 # Nicolas Ternisien <nicolast@libertysurf.fr>, 2005.
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2005, 2007, 2008, 2010.
 # Matthieu Robin <matthieu@macolu.org>, 2005, 2012.
-# SPDX-FileCopyrightText: 2013, 2024, 2025, 2026 Xavier Besnard <xavier.besnard@kde.org>
+# SPDX-FileCopyrightText: 2013, 2024-2026 Xavier Besnard <xavier.besnard@kde.org>
 # Bruno Patri <bruno.patri@gmail.com>, 2013.
 # Sebastien Renard <renard@kde.org>, 2015.
 # Vincent Pinon <vpinon@kde.org>, 2016, 2017.
@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-05-03 17:14+0200\n"
+"PO-Revision-Date: 2026-05-15 10:34+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 25.12.3\n"
+"X-Generator: Lokalize 26.04.1\n"
 "X-Text-Markup: kde4\n"
 
 #: kcmrules.cpp:228
@@ -646,7 +646,7 @@ msgstr "Autoriser le déchirement"
 #: rulesmodel.cpp:737
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Masquer des captures et des enregistrements d’écran"
 
 #: rulesmodel.cpp:790
 #, kde-format
