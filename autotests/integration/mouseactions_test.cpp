@@ -34,6 +34,7 @@ private Q_SLOTS:
     void testMouseActivateAndRaise();
     void testMouseActivateRaiseOnReleaseAndPassClick();
     void testMouseActivateRaiseOnReleaseAndPassClickInteractiveMoveResize();
+    void testMouseActivateRaiseOnReleaseAndPassClickModal();
 };
 
 void MouseActionsTest::initTestCase()
@@ -50,7 +51,7 @@ void MouseActionsTest::initTestCase()
 
 void MouseActionsTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection());
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::XdgDialogV1));
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
@@ -259,6 +260,69 @@ void MouseActionsTest::testMouseActivateRaiseOnReleaseAndPassClickInteractiveMov
     // Finish the interactive move operation.
     Test::pointerButtonReleased(BTN_LEFT, time++);
     QCOMPARE(workspace()->stackingOrder(), (QList{window2.m_window, window1.m_window}));
+}
+
+void MouseActionsTest::testMouseActivateRaiseOnReleaseAndPassClickModal()
+{
+    // This test verifies RaiseOnRelease in MouseActivateRaiseOnReleaseAndPassClick works correctly
+    // for a window which has a modal opened.
+
+    options->setCommandWindow1(Options::MouseActivateRaiseOnReleaseAndPassClick);
+
+    // Create a window with a modal
+    Test::XdgToplevelWindow parentWindow;
+    parentWindow.m_toplevel->set_title("parent window");
+    QVERIFY(parentWindow.show({100, 100}));
+    Test::XdgToplevelWindow childWindow([&parentWindow](Test::XdgToplevel *toplevel) {
+        toplevel->set_parent(parentWindow.m_toplevel->object());
+        toplevel->set_title("child window");
+    });
+    QVERIFY(childWindow.show({100, 100}));
+    QVERIFY(!childWindow.m_window->isModal());
+    QCOMPARE(childWindow.m_window->transientFor(), parentWindow.m_window);
+
+    auto childDialog = Test::createXdgDialogV1(childWindow.m_toplevel.get());
+    QVERIFY(Test::waylandSync());
+    QVERIFY(childDialog);
+    QVERIFY(!childWindow.m_window->isModal());
+
+    QSignalSpy childModalChangedSpy(childWindow.m_window, &Window::modalChanged);
+
+    childDialog->set_modal();
+    Test::flushWaylandConnection();
+    QVERIFY(childModalChangedSpy.wait());
+    QVERIFY(childWindow.m_window->isModal());
+
+    Workspace::self()->activateWindow(parentWindow.m_window);
+    QCOMPARE(Workspace::self()->activeWindow(), childWindow.m_window);
+
+    // Create a second window
+    Test::XdgToplevelWindow otherWindow;
+    otherWindow.m_toplevel->set_title("other window");
+    QVERIFY(otherWindow.show({100, 100}));
+    QVERIFY(otherWindow.m_window->isActive());
+
+    // Put the windows such that they don't overlap
+    parentWindow.m_window->move(QPoint(200, 200));
+    otherWindow.m_window->move(QPoint(300, 300));
+    childWindow.m_window->move(QPoint(400, 400));
+
+    workspace()->activateWindow(otherWindow.m_window);
+    workspace()->raiseWindow(otherWindow.m_window);
+    QVERIFY(otherWindow.m_window->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (QList{parentWindow.m_window, childWindow.m_window, otherWindow.m_window}));
+
+    uint32_t time = 0;
+
+    Test::pointerMotion(QPoint(250, 250), time++);
+
+    // the window should be activated on press, and raised on release
+    Test::pointerButtonPressed(BTN_LEFT, time++);
+    QVERIFY(childWindow.m_window->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (QList{parentWindow.m_window, childWindow.m_window, otherWindow.m_window}));
+    Test::pointerButtonReleased(BTN_LEFT, time++);
+    QVERIFY(childWindow.m_window->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (QList{otherWindow.m_window, parentWindow.m_window, childWindow.m_window}));
 }
 
 }

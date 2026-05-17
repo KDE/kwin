@@ -2334,6 +2334,8 @@ void Window::performDelayedRaise()
 
     if (isActive()) {
         workspace()->raiseWindow(this);
+    } else if (Window *modal = findModal(); modal && modal->isActive()) {
+        workspace()->raiseWindow(this);
     }
 }
 
