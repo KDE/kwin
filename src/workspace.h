@@ -646,8 +646,6 @@ private:
     QWidget *active_popup;
     Window *m_activePopupWindow;
 
-    void updateTabbox();
-
     QList<LogicalOutput *> m_outputs;
     LogicalOutput *m_activeOutput = nullptr;
     QList<LogicalOutput *> m_outputOrder;

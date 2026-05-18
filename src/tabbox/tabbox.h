@@ -247,6 +247,10 @@ private:
 private:
     explicit TabBox(QObject *parent);
     void loadConfig(const KConfigGroup &config, TabBoxConfig &tabBoxConfig);
+    void watchWindow(Window *window);
+    void handleWindowAdded(Window *window);
+    void handleWindowRemoved(Window *window);
+    void handleWindowClosed(Window *window);
 
     bool startKDEWalkThroughWindows(bool forward, TabBoxMode mode); // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
     void navigatingThroughWindows(bool forward, const QList<QKeySequence> &shortcut, TabBoxMode mode); // TabBoxWindowsMode | TabBoxWindowsAlternativeMode

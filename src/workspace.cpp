@@ -859,7 +859,6 @@ void Workspace::addX11Window(X11Window *window)
     window->checkActiveModal();
     checkTransients(window->window()); // SELI TODO: Does this really belong here?
     updateStackingOrder(true); // Propagatem new window
-    updateTabbox();
 }
 
 void Workspace::addUnmanaged(X11Window *window)
@@ -949,7 +948,6 @@ void Workspace::addWaylandWindow(Window *window)
             window->demandAttention();
         }
     }
-    updateTabbox();
     Q_EMIT windowAdded(window);
 }
 
@@ -986,7 +984,6 @@ void Workspace::removeWindow(Window *window)
     Q_EMIT windowRemoved(window);
 
     updateStackingOrder(true);
-    updateTabbox();
 }
 
 void Workspace::slotReloadConfig()
@@ -2154,15 +2151,6 @@ Window *Workspace::findInternal(QWindow *w) const
 void Workspace::setWasUserInteraction()
 {
     was_user_interaction = true;
-}
-
-void Workspace::updateTabbox()
-{
-#if KWIN_BUILD_TABBOX
-    // Need to reset the client model even if the task switcher is hidden otherwise there
-    // might be dangling pointers. Consider rewriting client model logic!
-    m_tabbox->reset(true);
-#endif
 }
 
 void Workspace::addInternalWindow(InternalWindow *window)

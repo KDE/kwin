@@ -321,7 +321,6 @@ void XdgSurfaceWindow::destroyWindow()
     m_configureTimer->stop();
     qDeleteAll(m_configureEvents);
     m_configureEvents.clear();
-    cleanTabBox();
     StackingUpdatesBlocker blocker(workspace());
     workspace()->rulebook()->discardUsed(this, true);
     waylandServer()->removeWindow(this);

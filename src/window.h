@@ -1802,7 +1802,6 @@ protected:
     RectF moveToArea(const RectF &geometry, const RectF &oldArea, const RectF &newArea);
     RectF ensureSpecialStateGeometry(const RectF &geometry);
 
-    void cleanTabBox();
     void maybeSendFrameCallback();
 
     void updateNextTargetScale();

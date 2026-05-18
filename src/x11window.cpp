@@ -197,7 +197,6 @@ void X11Window::releaseWindow(bool on_shutdown)
     if (isUnmanaged()) {
         workspace()->removeUnmanaged(this);
     } else {
-        cleanTabBox();
         if (isInteractiveMoveResize()) {
             Q_EMIT interactiveMoveResizeFinished();
         }
@@ -258,7 +257,6 @@ void X11Window::destroyWindow()
     if (isUnmanaged()) {
         workspace()->removeUnmanaged(this);
     } else {
-        cleanTabBox();
         if (isInteractiveMoveResize()) {
             Q_EMIT interactiveMoveResizeFinished();
         }

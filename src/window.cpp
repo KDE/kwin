@@ -29,9 +29,6 @@
 #include "scene/workspacescene.h"
 #include "screenedge.h"
 #include "shadow.h"
-#if KWIN_BUILD_TABBOX
-#include "tabbox/tabbox.h"
-#endif
 #include "tiles/tilemanager.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
@@ -4372,16 +4369,6 @@ void Window::showOnScreenEdge()
 bool Window::isPlaceable() const
 {
     return true;
-}
-
-void Window::cleanTabBox()
-{
-#if KWIN_BUILD_TABBOX
-    TabBox::TabBox *tabBox = workspace()->tabbox();
-    if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
-        tabBox->nextPrev(true);
-    }
-#endif
 }
 
 bool Window::supportsWindowRules() const

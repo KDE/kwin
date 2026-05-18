@@ -286,6 +286,11 @@ TabBox::TabBox()
     m_tabBoxMode = TabBoxWindowsMode; // init variables
     connect(&m_delayedShowTimer, &QTimer::timeout, this, &TabBox::show);
     connect(Workspace::self(), &Workspace::configChanged, this, &TabBox::reconfigure);
+    connect(Workspace::self(), &Workspace::windowAdded, this, &TabBox::handleWindowAdded);
+    connect(Workspace::self(), &Workspace::windowRemoved, this, &TabBox::handleWindowRemoved);
+    Workspace::self()->forEachWindow([this](Window *window) {
+        watchWindow(window);
+    });
 }
 
 TabBox::~TabBox() = default;
@@ -392,6 +397,31 @@ void TabBox::reset(bool partial_reset)
     }
 
     Q_EMIT tabBoxUpdated();
+}
+
+void TabBox::watchWindow(Window *window)
+{
+    connect(window, &Window::closed, this, [this, window]() {
+        handleWindowClosed(window);
+    });
+}
+
+void TabBox::handleWindowAdded(Window *window)
+{
+    watchWindow(window);
+    reset(true);
+}
+
+void TabBox::handleWindowRemoved(Window *)
+{
+    reset(true);
+}
+
+void TabBox::handleWindowClosed(Window *window)
+{
+    if (isDisplayed() && currentClient() == window) {
+        nextPrev(true);
+    }
 }
 
 void TabBox::nextPrev(bool next)
