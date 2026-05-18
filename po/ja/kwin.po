@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-15 00:46+0000\n"
-"PO-Revision-Date: 2026-03-31 10:49+0900\n"
+"PO-Revision-Date: 2026-05-10 14:14+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 25.12.3\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1793,52 +1793,45 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Strength:"
+#, kde-format
 msgid "Strength:"
-msgstr "強さ:"
+msgstr "強度:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: plugins/diminactive/diminactive_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Dim:"
+#, kde-format
 msgid "Dim:"
 msgstr "暗くする:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: plugins/diminactive/diminactive_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Docks and panels"
+#, kde-format
 msgid "Docks and panels"
 msgstr "ドックとパネル"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:57
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "すべてのデスクトップ(&A)"
+msgstr "デスクトップ"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:64
-#, fuzzy, kde-format
-#| msgid "Keep &Above Others"
+#, kde-format
 msgid "Keep above windows"
-msgstr "常に最前面に表示(&A)"
+msgstr "常に最前面に表示するウィンドウ"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:71
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "By window group"
-msgstr "ウィンドウ"
+msgstr "ウィンドウグループで"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:78
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "フルスクリーン(&F)"
+msgstr "フルスクリーンウィンドウ"
 
 #: plugins/eis/eisinputcapturemanager.cpp:139
 #, kde-format
@@ -1991,29 +1984,26 @@ msgstr "ウィンドウ操作メニュー"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "しない"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " ミリ秒"
+msgstr[0] "%1 秒"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on inactivity:"
+#, kde-format
 msgid "Hide pointer on inactivity:"
-msgstr "動いていないときカーソルを非表示:"
+msgstr "無操作状態でポインタを非表示:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide pointer on typing"
-msgstr "タイピング中カーソルを非表示"
+msgstr "タイピング中ポインタを非表示"
 
 #: plugins/invert/invert.cpp:44
 #, fuzzy, kde-format
@@ -2260,31 +2250,24 @@ msgstr "デフォルト"
 
 #: plugins/mouseclick/mouseclick.cpp:42
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "色調反転効果をオン/オフ"
+msgstr "マウスクリックアニメーションをオン/オフ"
 
 #: plugins/mouseclick/mouseclick.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "Left mouse button"
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "左"
 
 #: plugins/mouseclick/mouseclick.cpp:49
-#, fuzzy, kde-format
-#| msgctxt "Middle mouse button"
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "中"
 
 #: plugins/mouseclick/mouseclick.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "Right mouse button"
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "右"
@@ -2293,106 +2276,93 @@ msgstr "右"
 #: plugins/mouseclick/mouseclick_config.ui:21
 #, kde-format
 msgid "Basic Settings"
-msgstr ""
+msgstr "基本設定"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "Left Mouse Button Color:"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "左ボタンの色:"
+msgstr "左クリックの色:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Middle Mouse Button Color:"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "中ボタンの色:"
+msgstr "中クリックの色:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Right Mouse Button Color:"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "右ボタンの色:"
+msgstr "右クリックの色:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
-#, fuzzy, kde-format
-#| msgid "Advanced Settings"
+#, kde-format
 msgid "Advanced Settings"
-msgstr "詳細設定"
+msgstr "詳細オプション"
 
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: plugins/mouseclick/mouseclick_config.ui:97
 #, kde-format
 msgid "Rings"
-msgstr ""
+msgstr "リング"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
 #: plugins/mouseclick/mouseclick_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Line Width:"
+#, kde-format
 msgid "Line Width:"
-msgstr "線の幅:"
+msgstr "線の太さ:"
 
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: plugins/mouseclick/mouseclick_config.ui:119
 #: plugins/mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
-#| msgid " pixel"
+#, kde-format
 msgid " pixel"
 msgstr " ピクセル"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: plugins/mouseclick/mouseclick_config.ui:132
-#, fuzzy, kde-format
-#| msgid " msec"
+#, kde-format
 msgid " msec"
 msgstr " ミリ秒"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
 #: plugins/mouseclick/mouseclick_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Fading duration:"
+#, kde-format
 msgid "Ring Duration:"
-msgstr "フェードの長さ:"
+msgstr "リングの表示時間:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
 #: plugins/mouseclick/mouseclick_config.ui:155
-#, fuzzy, kde-format
-#| msgid "&Radius:"
+#, kde-format
 msgid "Ring Radius:"
-msgstr "半径(&R):"
+msgstr "リングの半径:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
 #, kde-format
 msgid "Ring Count:"
-msgstr ""
+msgstr "リングの数:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
-#, fuzzy, kde-format
-#| msgid "Text"
+#, kde-format
 msgid "Text"
 msgstr "テキスト"
 
 #. i18n: ectx: property (text), widget (QLabel, font_label)
 #: plugins/mouseclick/mouseclick_config.ui:216
-#, fuzzy, kde-format
-#| msgid "Font:"
+#, kde-format
 msgid "Font:"
 msgstr "フォント:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgctxt "Special entry in alt+tab list for minimizing all windows"
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "デスクトップを表示"
+msgstr "テキストを表示:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
@@ -2892,15 +2862,13 @@ msgstr "マウスを追跡するとき:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
-#, fuzzy, kde-format
-#| msgid "Keyboard"
+#, kde-format
 msgid "Keyboard shortcut:"
-msgstr "キーボード"
+msgstr "キーボードショートカット:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Modifier keys:"
 msgstr "修飾キー:"
 
@@ -2952,10 +2920,9 @@ msgstr "メニュー:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ExcludeFullScreen)
 #: plugins/translucency/package/contents/ui/config.ui:201
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Exclude fullscreen windows"
-msgstr "フルスクリーン(&F)"
+msgstr "フルスクリーンウィンドウを除外"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:217
@@ -3284,11 +3251,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "開いているウィンドウなし"
+msgstr "親ウィンドウが存在"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
@@ -4526,19 +4491,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#~ msgid "&Hide from Screencast"
-#~ msgstr "画面録画から消す(&H)"
-
-#, fuzzy
-#~| msgid "Suspend Compositing"
-#~ msgctxt "@label"
-#~ msgid "Compositing"
-#~ msgstr "コンポジティングを一時停止"
-
-#, fuzzy
-#~| msgctxt "@label"
-#~| msgid "Unknown"
-#~ msgctxt "@label"
-#~ msgid "Unknown"
-#~ msgstr "不明"
