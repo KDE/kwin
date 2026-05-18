@@ -23,7 +23,9 @@ static QByteArray getDriverName(const FileDescriptor &fd)
 {
     auto version = drmGetVersion(fd.get());
     if (version) {
-        return QByteArray(version->name, version->name_len);
+        auto ret = QByteArray(version->name, version->name_len);
+        drmFreeVersion(version);
+        return ret;
     } else {
         return QByteArray();
     }
