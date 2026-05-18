@@ -40,6 +40,54 @@
 namespace KWin
 {
 
+class KeyStateChangedSpy : public InputEventSpy
+{
+public:
+    KeyStateChangedSpy(InputRedirection *input)
+        : m_input(input)
+    {
+    }
+
+    void keyboardKey(KeyboardKeyEvent *event) override
+    {
+        if (event->state == KeyboardKeyState::Repeated) {
+            return;
+        }
+        Q_EMIT m_input->keyStateChanged(event->nativeScanCode, event->state);
+    }
+
+private:
+    InputRedirection *m_input;
+};
+
+class ModifiersChangedSpy : public InputEventSpy
+{
+public:
+    ModifiersChangedSpy(InputRedirection *input)
+        : m_input(input)
+        , m_modifiers()
+    {
+    }
+
+    void keyboardKey(KeyboardKeyEvent *event) override
+    {
+        if (event->state == KeyboardKeyState::Repeated) {
+            return;
+        }
+
+        const Qt::KeyboardModifiers mods = event->modifiers;
+        if (mods == m_modifiers) {
+            return;
+        }
+        Q_EMIT m_input->keyboardModifiersChanged(mods, m_modifiers);
+        m_modifiers = mods;
+    }
+
+private:
+    InputRedirection *m_input;
+    Qt::KeyboardModifiers m_modifiers;
+};
+
 KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     : QObject(parent)
     , m_input(parent)
@@ -97,54 +145,6 @@ void KeyboardInputRedirection::addFilteredKey(uint32_t key)
     }
 }
 
-class KeyStateChangedSpy : public InputEventSpy
-{
-public:
-    KeyStateChangedSpy(InputRedirection *input)
-        : m_input(input)
-    {
-    }
-
-    void keyboardKey(KeyboardKeyEvent *event) override
-    {
-        if (event->state == KeyboardKeyState::Repeated) {
-            return;
-        }
-        Q_EMIT m_input->keyStateChanged(event->nativeScanCode, event->state);
-    }
-
-private:
-    InputRedirection *m_input;
-};
-
-class ModifiersChangedSpy : public InputEventSpy
-{
-public:
-    ModifiersChangedSpy(InputRedirection *input)
-        : m_input(input)
-        , m_modifiers()
-    {
-    }
-
-    void keyboardKey(KeyboardKeyEvent *event) override
-    {
-        if (event->state == KeyboardKeyState::Repeated) {
-            return;
-        }
-
-        const Qt::KeyboardModifiers mods = event->modifiers;
-        if (mods == m_modifiers) {
-            return;
-        }
-        Q_EMIT m_input->keyboardModifiersChanged(mods, m_modifiers);
-        m_modifiers = mods;
-    }
-
-private:
-    InputRedirection *m_input;
-    Qt::KeyboardModifiers m_modifiers;
-};
-
 void KeyboardInputRedirection::init()
 {
     Q_ASSERT(!m_inited);
@@ -155,15 +155,16 @@ void KeyboardInputRedirection::init()
 
     waylandServer()->seat()->setHasKeyboard(true);
 
-    m_input->installInputEventSpy(new KeyStateChangedSpy(m_input));
-    m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);
-    m_input->installInputEventSpy(m_modifiersChangedSpy);
+    m_keyStateChangedSpy = std::make_unique<KeyStateChangedSpy>(m_input);
+    m_input->installInputEventSpy(m_keyStateChangedSpy.get());
+    m_modifiersChangedSpy = std::make_unique<ModifiersChangedSpy>(m_input);
+    m_input->installInputEventSpy(m_modifiersChangedSpy.get());
     m_keyboardLayout = new KeyboardLayout(m_xkb.get(), config);
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
 
-    m_keyRepeatSpy = new KeyboardRepeat(m_xkb.get());
-    connect(m_keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
+    m_keyRepeatSpy = std::make_unique<KeyboardRepeat>(m_xkb.get());
+    connect(m_keyRepeatSpy.get(), &KeyboardRepeat::keyRepeat, this,
             std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, KeyboardKeyState::Repeated, std::placeholders::_2, nullptr));
 
     connect(workspace(), &QObject::destroyed, this, [this] {
