@@ -74,7 +74,8 @@ void ScreenEdgeManagerV1InterfacePrivate::kde_screen_edge_manager_v1_get_auto_hi
 }
 
 ScreenEdgeManagerV1Interface::ScreenEdgeManagerV1Interface(Display *display, QObject *parent)
-    : d(new ScreenEdgeManagerV1InterfacePrivate(this, display))
+    : QObject(parent)
+    , d(new ScreenEdgeManagerV1InterfacePrivate(this, display))
 {
 }
 
