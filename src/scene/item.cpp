@@ -718,14 +718,30 @@ void Item::removeEffect()
     m_effectCount--;
 }
 
-void Item::framePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+void Item::collectItems(QList<QPointer<Item>> &list, LogicalOutput *filter)
 {
     // The visibility of the item itself is not checked here to be able to paint hidden items for
     // things like screncasts or thumbnails
-    handleFramePainted(output, frame, timestamp);
+    list.push_back(this);
     for (const auto child : std::as_const(m_childItems)) {
-        if (child->explicitVisible() && workspace()->outputAt(child->mapToScene(child->boundingRect()).center()) == output) {
-            child->framePainted(view, output, frame, timestamp);
+        if (child->explicitVisible() && workspace()->outputAt(child->mapToScene(child->boundingRect()).center()) == filter) {
+            child->collectItems(list, filter);
+        }
+    }
+}
+
+void Item::framePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp)
+{
+    // this temporary list + the nullptr checks are required
+    // because items may apply changes in framePainted that
+    // can delete other items in the list, for example unmapping
+    // of a window, applying blur changes or similar
+    QList<QPointer<Item>> list;
+    list.reserve(100);
+    collectItems(list, output);
+    for (QPointer<Item> item : list) {
+        if (item) {
+            item->handleFramePainted(output, frame, timestamp);
         }
     }
 }
