@@ -61,7 +61,7 @@ public:
     {
     }
 
-    bool operator<=>(const OutputTransform &other) const = default;
+    auto operator<=>(const OutputTransform &other) const = default;
 
     /**
      * Returns the transform kind.
