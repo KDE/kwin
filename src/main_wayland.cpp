@@ -520,7 +520,7 @@ int main(int argc, char *argv[])
     case BackendType::Kms:
         a.setSession(KWin::Session::create());
         if (!a.session()) {
-            std::cerr << "FATAl ERROR: could not acquire a session" << std::endl;
+            std::cerr << "FATAL ERROR: could not acquire a session" << std::endl;
             return 1;
         }
         a.setOutputBackend(std::make_unique<KWin::DrmBackend>(a.session()));
