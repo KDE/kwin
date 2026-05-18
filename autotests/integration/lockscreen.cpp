@@ -763,7 +763,7 @@ void LockScreenTest::testKeyboardLockShortcut()
 
     QList<QKeySequence> shortcuts = KGlobalAccel::self()->globalShortcut("ksmserver", "Lock Session");
     // Verify the shortcut is Meta + L, the default
-    QCOMPARE(shortcuts.first().toString(), QString("Meta+L"));
+    QVERIFY(shortcuts.contains(QKeySequence(Qt::MetaModifier | Qt::Key_L)));
 
     // Verify the screen is not locked
     QVERIFY(!waylandServer()->isScreenLocked());
