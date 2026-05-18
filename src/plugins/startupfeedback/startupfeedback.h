@@ -23,11 +23,9 @@
 namespace KWin
 {
 
-class GLShader;
-class GLTexture;
+class ImageItem;
 
-class StartupFeedbackEffect
-    : public Effect
+class StartupFeedbackEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(int type READ type)
@@ -38,7 +36,6 @@ public:
 
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
@@ -58,7 +55,6 @@ private Q_SLOTS:
     void gotNewStartup(const QString &id, const QIcon &icon);
     void gotRemoveStartup(const QString &id);
     void gotStartupChange(const QString &id, const QIcon &icon);
-    void slotMouseChanged(const QPointF &pos, const QPointF &oldpos, Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
     enum FeedbackType {
@@ -76,9 +72,7 @@ private:
 
     void start(const Startup &startup);
     void stop();
-    QImage scalePixmap(const QPixmap &pm, const QSize &size) const;
-    void prepareTextures(const QPixmap &pix);
-    Rect feedbackRect() const;
+    QPoint feedbackOffset() const;
     QSize feedbackIconSize() const;
 
     qreal m_bounceSizesRatio;
@@ -91,11 +85,9 @@ private:
     int m_frame;
     int m_progress;
     AnimationClock m_clock;
-    std::unique_ptr<GLTexture> m_bouncingTextures[5];
-    std::unique_ptr<GLTexture> m_texture; // for passive and blinking
+    std::unique_ptr<ImageItem> m_item;
+    std::unique_ptr<ImageItem> m_blinkItem;
     FeedbackType m_type;
-    Rect m_currentGeometry, m_dirtyRect;
-    std::unique_ptr<GLShader> m_blinkingShader;
     int m_cursorSize;
     KConfigWatcher::Ptr m_configWatcher;
     bool m_splashVisible;
