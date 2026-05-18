@@ -82,6 +82,9 @@ VirtualBackend::VirtualBackend(QObject *parent)
 
 VirtualBackend::~VirtualBackend()
 {
+    for (BackendOutput *output : m_outputs) {
+        output->unref();
+    }
 }
 
 bool VirtualBackend::initialize()
