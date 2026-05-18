@@ -9,20 +9,21 @@
 # Tomohiro Hyakutake <tomhioo@outlook.jp>, 2019.
 # R.Suga <21r.suga@gmail.com>, 2022.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2005, 2010, 2015, 2019, 2022.
+# SPDX-FileCopyrightText: 2026 Mint <5602mint@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2025-03-15 16:17+0900\n"
-"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
-"Language-Team: Japanese <kde-jp@kde.org>\n"
+"PO-Revision-Date: 2026-05-10 19:12+0900\n"
+"Last-Translator: Mint <5602mint@gmail.com>\n"
+"Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 26.04.1\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -30,7 +31,7 @@ msgstr ""
 #: declarative-plugin/buttonsmodel.cpp:56
 #, kde-format
 msgid "Window menu"
-msgstr ""
+msgstr "ウィンドウメニュー"
 
 #: declarative-plugin/buttonsmodel.cpp:58
 #, kde-format
@@ -191,12 +192,10 @@ msgid "Titlebar Buttons"
 msgstr "タイトルバーのボタン"
 
 #: ui/ConfigureTitlebar.qml:35
-#, fuzzy, kde-format
-#| msgctxt "checkbox label"
-#| msgid "Close windows by double clicking the menu button"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the window menu button"
-msgstr "メニューボタンをダブルクリックしてウィンドウを閉じる"
+msgstr "ウィンドウメニューボタンをダブルクリックしてウィンドウを閉じる"
 
 #: ui/ConfigureTitlebar.qml:52
 #, fuzzy, kde-format
@@ -301,9 +300,3 @@ msgstr "さらに大きいウィンドウの枠"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "特大のウィンドウの枠"
-
-#~ msgid "More actions for this window"
-#~ msgstr "その他のアクション"
-
-#~ msgid "Shade"
-#~ msgstr "シェード"

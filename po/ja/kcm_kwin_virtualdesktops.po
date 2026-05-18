@@ -2,14 +2,15 @@
 # Tomohiro Hyakutake <tomhioo@outlook.jp>, 2019.
 # R.Suga <21r.suga@gmail.com>, 2022.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2022.
+# SPDX-FileCopyrightText: 2026 Mint <5602mint@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2024-01-06 01:31+0900\n"
-"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
-"Language-Team: Japanese <kde-jp@kde.org>\n"
+"PO-Revision-Date: 2026-05-10 14:18+0900\n"
+"Last-Translator: Mint <5602mint@gmail.com>\n"
+"Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -55,24 +56,19 @@ msgstr "コンポジタからの情報の取得中にエラーが発生しまし
 #, kde-format
 msgctxt "@text:label Number of rows, label associated to a number input field"
 msgid "Rows:"
-msgstr ""
+msgstr "行数:"
 
 #: ui/main.qml:54
-#, fuzzy, kde-format
-#| msgctxt "A numbered name for virtual desktops"
-#| msgid "Desktop %1"
-#| msgid_plural "Desktop %1"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr "デスクトップ %1"
+msgstr "デスクトップを追加"
 
 #: ui/main.qml:90
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Rename"
+#, kde-format
 msgctxt "@action:button"
 msgid "Rename"
-msgstr "名前変更"
+msgstr "名前を変更"
 
 #: ui/main.qml:100
 #, kde-format
@@ -81,18 +77,16 @@ msgid "Remove"
 msgstr "削除"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Confirm new name"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Apply new name"
-msgstr "新しい名前を確定"
+msgstr "新しい名前を適用"
 
 #: ui/main.qml:132
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Cancel rename"
-msgstr ""
+msgstr "名前の変更をキャンセル"
 
 #: ui/main.qml:179
 #, kde-format
@@ -121,7 +115,7 @@ msgstr "ナビゲーションを循環させる"
 #: ui/main.qml:225
 #, kde-format
 msgid "Switch desktops independently for each screen"
-msgstr ""
+msgstr "デスクトップの切り替えを個別のスクリーンにする"
 
 #: ui/main.qml:243
 #, kde-format
@@ -142,11 +136,3 @@ msgstr "%1 ミリ秒"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "デスクトップ配置インジケータを表示する"
-
-#~ msgid "1 Row"
-#~ msgid_plural "%1 Rows"
-#~ msgstr[0] "%1 列"
-
-#~ msgctxt "@action:button"
-#~ msgid "Add"
-#~ msgstr "追加"

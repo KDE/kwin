@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_virtualkeyboard\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-17 02:38+0000\n"
-"PO-Revision-Date: 2026-05-15 00:12+0100\n"
+"PO-Revision-Date: 2026-05-17 11:57+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -46,7 +46,6 @@ msgid "With Touch and Tablet"
 msgstr "Con pantalla táctil y tableta"
 
 #: ui/main.qml:34
-#, fuzzy, kde-format
-#| msgid "With Touch, Tablet and Mouse"
+#, kde-format
 msgid "With Touch, Tablet, and Mouse"
 msgstr "Con pantalla táctil, tableta y ratón"

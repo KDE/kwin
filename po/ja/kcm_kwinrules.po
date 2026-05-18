@@ -13,14 +13,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-03-27 23:51+0900\n"
+"PO-Revision-Date: 2026-05-10 18:28+0900\n"
 "Last-Translator: Mint <5602mint@gmail.com>\n"
 "Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 25.12.3\n"
+"X-Generator: Lokalize 26.04.1\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -257,10 +257,9 @@ msgid "Window tag"
 msgstr "ウィンドウのタグ"
 
 #: rulesmodel.cpp:446
-#, fuzzy, kde-format
-#| msgid "On main window"
+#, kde-format
 msgid "Has parent window"
-msgstr "メインウィンドウの上"
+msgstr "親ウィンドウが存在"
 
 #: rulesmodel.cpp:452
 #, kde-format
@@ -537,6 +536,23 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"このプロパティは、現在アクティブなウィンドウのフォーカス保護レベルを制御しま"
+"す。これは、ユーザーが直接操作せずに開かれた新しいウィンドウに対して適用され"
+"るフォーカス奪取防止を上書きするために使用されます。<nl/><nl/>このプロパティ"
+"が適用されたウィンドウにフォーカスがある間、ユーザーの直接操作なしに開かれた"
+"新しいウィンドウは、フォーカス保護レベルごとに以下のように動作します。<nl/"
+"><list><item><emphasis strong='true'>なし</emphasis>: 新しく開かれたウィンド"
+"ウは常に前面に表示され、フォーカスを取得します。</item><item><emphasis "
+"strong='true'>低:</emphasis> 新しく開かれたウィンドウにフォーカス奪取防止が適"
+"用されますが、KWin が状況を曖昧と判断した場合は、そのウィンドウが前面に表示さ"
+"れ、フォーカスを取得します。</item><item><emphasis strong='true'>標準:</"
+"emphasis> 新しく開かれたウィンドウにフォーカス奪取防止が適用されますが、KWin "
+"が状況を曖昧と判断した場合でも、そのウィンドウは<emphasis>前面に表示されず</"
+"emphasis>、フォーカスも取得しません。</item><item><emphasis strong='true'>高:"
+"</emphasis> 新しく開かれたウィンドウは、現在フォーカスされているウィンドウと"
+"同じアプリに属している場合のみ、前面に表示され、フォーカスを取得します。</"
+"item><item><emphasis strong='true'>最高:</emphasis> 新しく開かれたウィンドウ"
+"は、前面に表示されたりフォーカスを取得したりしません。</item></list>"
 
 #: rulesmodel.cpp:688
 #, kde-format
@@ -564,6 +580,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"このプロパティを使用すると、ウィンドウがフォーカスされている間はグローバル"
+"キーボードショートカットを無効にできます。エミュレーターや仮想マシンなど、一"
+"部の同一ショートカットをアプリ側で処理する場合に便利です。<nl/><nl/>ただし、"
+"ウィンドウから <shortcut>Alt+Tab</shortcut> で切り替えたり、<shortcut>Alt"
+"+Space</shortcut> で KRunner を起動するなど、他のグローバルショートカットも使"
+"用できなくなります。"
 
 #: rulesmodel.cpp:706
 #, kde-format
@@ -996,6 +1018,3 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
-
-#~ msgid "Hide from Screencast"
-#~ msgstr "画面録画から消す"

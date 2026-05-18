@@ -8,15 +8,16 @@
 # Taiki Komoda <kom@kde.gr.jp>, 2010.
 # Tomohiro Hyakutake <tomhioo@outlook.jp>, 2019.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2005, 2010, 2019.
+# SPDX-FileCopyrightText: 2026 Mint <5602mint@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-12 00:46+0000\n"
-"PO-Revision-Date: 2024-02-15 12:48+0900\n"
-"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
-"Language-Team: Japanese <kde-jp@kde.org>\n"
+"PO-Revision-Date: 2026-05-10 18:21+0900\n"
+"Last-Translator: Mint <5602mint@gmail.com>\n"
+"Language-Team: Japanese <kde-i18n-doc@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
@@ -51,10 +52,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:46
-#, fuzzy, kde-format
-#| msgid "Activate and raise"
+#, kde-format
 msgid "Activate, pass click and raise on release"
-msgstr "アクティブにして前面に"
+msgstr "アクティブにしてクリックを渡し、離した後前面に"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -62,7 +62,7 @@ msgstr "アクティブにして前面に"
 #: actions.ui:51 actions.ui:91 actions.ui:131
 #, kde-format
 msgid "Activate, raise and pass click"
-msgstr "アクティブにして前面に、そしてクリックを渡す"
+msgstr "アクティブにして最前面に表示し、クリックを渡す"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -1289,54 +1289,3 @@ msgstr ""
 "クス ('Alt+Tab') はアクティブ化ポリシーに反するため機能しません。代わりに"
 "<strong>マウスに従ってフォーカス (マウス優先)</strong> を使用するべきでしょ"
 "う。"
-
-#~ msgid "Show actions menu"
-#~ msgstr "アクションメニューを表示"
-
-#~ msgid "Shade/unshade"
-#~ msgstr "シェード/シェード解除"
-
-#~ msgid "Window &unshading:"
-#~ msgstr "ウィンドウのシェード解除(&U):"
-
-#~ msgid ""
-#~ "<html><head/><body><p>If this option is enabled, a shaded window will "
-#~ "unshade automatically when the mouse pointer has been over the titlebar "
-#~ "for some time.</p></body></html>"
-#~ msgstr ""
-#~ "<html><head/><body><p>このオプションを有効にすると、タイトルバーのみに縮小"
-#~ "されたウィンドウの上にマウスポインタを一定の時間止めておくと、自動的にその"
-#~ "ウィンドウが復元されます。</p></body></html>"
-
-#~ msgid "On titlebar hover after:"
-#~ msgstr "タイトルバーへのホバー後:"
-
-#~ msgid ""
-#~ "Sets the time in milliseconds before the window unshades when the mouse "
-#~ "pointer goes over the shaded window."
-#~ msgstr ""
-#~ "タイトルのみに縮小されたウィンドウの上にマウスポインタを置いてからウィンド"
-#~ "ウが復元されるまでの時間をミリ秒単位で指定します。"
-
-#~ msgid "Shade"
-#~ msgstr "シェード"
-
-#~ msgid "&Special windows:"
-#~ msgstr "特別なウィンドウ(&S):"
-
-#~ msgid ""
-#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
-#~ "inactive applications will be hidden and will be shown only when the "
-#~ "application becomes active. Note that applications have to mark the "
-#~ "windows with the proper window type for this feature to work."
-#~ msgstr ""
-#~ "このオプションを有効にすると、アクティブではないアプリケーションのユーティ"
-#~ "リティウィンドウ (ツールウィンドウや分離したメニューなど) は、アプリケー"
-#~ "ションがアクティブになったときだけ表示されます。この機能が動作するために"
-#~ "は、アプリケーションのウィンドウに適切なウィンドウタイプが指定されている必"
-#~ "要があります。"
-
-# ACCELERATOR added by translator
-#~ msgid "Hide utility windows for inactive applications"
-#~ msgstr ""
-#~ "アクティブでないアプリケーションのユーティリティウィンドウを隠す(&Z)"
