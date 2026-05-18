@@ -142,6 +142,14 @@ set_package_properties(KWayland PROPERTIES
     TYPE REQUIRED
 )
 
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    find_package(Libcap)
+    set_package_properties(Libcap PROPERTIES
+        PURPOSE "Needed for setting CAP_SYS_NICE on kwin_wayland."
+        TYPE REQUIRED
+    )
+endif()
+
 # optional frameworks
 find_package(PlasmaActivities ${PROJECT_DEP_VERSION} CONFIG)
 set_package_properties(PlasmaActivities PROPERTIES
