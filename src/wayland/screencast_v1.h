@@ -64,10 +64,10 @@ public:
     Q_ENUM(CursorMode)
 
 Q_SIGNALS:
-    void outputScreencastRequested(ScreencastStreamV1Interface *stream, OutputInterface *output, CursorMode mode);
-    void virtualOutputScreencastRequested(ScreencastStreamV1Interface *stream, const QString &name, const QString &description, const QSize &size, double scaling, CursorMode mode);
-    void windowScreencastRequested(ScreencastStreamV1Interface *stream, const QString &winid, CursorMode mode);
-    void regionScreencastRequested(ScreencastStreamV1Interface *stream, const Rect &geometry, qreal scaling, CursorMode mode);
+    void outputScreencastRequested(KWin::ScreencastStreamV1Interface *stream, KWin::OutputInterface *output, KWin::ScreencastV1Interface::CursorMode mode);
+    void virtualOutputScreencastRequested(KWin::ScreencastStreamV1Interface *stream, const QString &name, const QString &description, const QSize &size, double scaling, KWin::ScreencastV1Interface::CursorMode mode);
+    void windowScreencastRequested(KWin::ScreencastStreamV1Interface *stream, const QString &winid, KWin::ScreencastV1Interface::CursorMode mode);
+    void regionScreencastRequested(KWin::ScreencastStreamV1Interface *stream, const KWin::Rect &geometry, qreal scaling, KWin::ScreencastV1Interface::CursorMode mode);
 
 private:
     std::unique_ptr<ScreencastV1InterfacePrivate> d;

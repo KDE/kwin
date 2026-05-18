@@ -36,8 +36,8 @@ public:
     }
 
 Q_SIGNALS:
-    void deviceAdded(InputDevice *device);
-    void deviceRemoved(InputDevice *device);
+    void deviceAdded(KWin::InputDevice *device);
+    void deviceRemoved(KWin::InputDevice *device);
 
 private:
     KSharedConfigPtr m_config;

@@ -257,7 +257,7 @@ Q_SIGNALS:
     /**
      * @see cursorRectangle
      */
-    void cursorRectangleChanged(const RectF &rect);
+    void cursorRectangleChanged(const KWin::RectF &rect);
     /**
      * Emitted when the {@link contentPurpose} and/or {@link contentHints} changes.
      * @see contentPurpose
@@ -281,7 +281,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever TextInputInterface should update the current state.
      */
-    void stateUpdated(uint32_t serial, UpdateReason reason);
+    void stateUpdated(uint32_t serial, KWin::TextInputV2Interface::UpdateReason reason);
 
 private:
     friend class TextInputManagerV2InterfacePrivate;

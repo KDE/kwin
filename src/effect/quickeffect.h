@@ -126,7 +126,7 @@ public Q_SLOTS:
     void scheduleRepaint();
 
 Q_SIGNALS:
-    void currentDesktopChanged(VirtualDesktop *newDesktop);
+    void currentDesktopChanged(KWin::VirtualDesktop *newDesktop);
 
 private:
     QuickSceneEffect *m_effect;
@@ -218,7 +218,7 @@ public:
     /*!
      * Returns the scene view on the specified screen
      */
-    Q_INVOKABLE QuickSceneView *viewForScreen(LogicalOutput *screen) const;
+    Q_INVOKABLE KWin::QuickSceneView *viewForScreen(KWin::LogicalOutput *screen) const;
 
     /*!
      * \qmlmethod SceneView QuickSceneEffect::viewAt(point pos)
@@ -228,7 +228,7 @@ public:
     /*!
      * Returns the view at the specified \a pos in the global screen coordinates.
      */
-    Q_INVOKABLE QuickSceneView *viewAt(const QPoint &pos) const;
+    Q_INVOKABLE KWin::QuickSceneView *viewAt(const QPoint &pos) const;
 
     /*!
      * \qmlmethod SceneView QuickSceneEffect::getView(Qt.Edge edge)
@@ -256,7 +256,7 @@ public:
      *
      * It will get a focusin event and all the other views will be set as inactive
      */
-    Q_INVOKABLE void activateView(QuickSceneView *view);
+    Q_INVOKABLE void activateView(KWin::QuickSceneView *view);
 
     /*!
      * Returns \c true if view caching is enabled; otherwise returns \c false.
@@ -329,8 +329,8 @@ public:
     Q_INVOKABLE void checkItemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item);
 
 Q_SIGNALS:
-    void itemDraggedOutOfScreen(QQuickItem *item, QList<LogicalOutput *> screens);
-    void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, LogicalOutput *screen);
+    void itemDraggedOutOfScreen(QQuickItem *item, QList<KWin::LogicalOutput *> screens);
+    void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, KWin::LogicalOutput *screen);
     void activeViewChanged(KWin::QuickSceneView *view);
     void delegateChanged();
     void activated();

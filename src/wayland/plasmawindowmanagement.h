@@ -97,7 +97,7 @@ public:
     void setStackingOrderUuids(const QList<QString> &stackingOrderUuids);
 
 Q_SIGNALS:
-    void requestChangeShowingDesktop(ShowingDesktopState requestedState);
+    void requestChangeShowingDesktop(KWin::PlasmaWindowManagementInterface::ShowingDesktopState requestedState);
 
 private:
     std::unique_ptr<PlasmaWindowManagementInterfacePrivate> d;

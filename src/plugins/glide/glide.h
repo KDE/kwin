@@ -78,9 +78,9 @@ protected:
     void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
 
 private Q_SLOTS:
-    void windowAdded(EffectWindow *w);
-    void windowClosed(EffectWindow *w);
-    void windowDataChanged(EffectWindow *w, int role);
+    void windowAdded(KWin::EffectWindow *w);
+    void windowClosed(KWin::EffectWindow *w);
+    void windowDataChanged(KWin::EffectWindow *w, int role);
 
 private:
     bool isGlideWindow(EffectWindow *w) const;

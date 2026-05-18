@@ -381,7 +381,7 @@ public Q_SLOTS:
      * @see currentChanged
      * @see moveTo
      */
-    bool setCurrent(uint current, LogicalOutput *output = nullptr);
+    bool setCurrent(uint current, KWin::LogicalOutput *output = nullptr);
 
     /**
      * Set the current desktop to @a current on @a output.
@@ -391,7 +391,7 @@ public Q_SLOTS:
      * @see currentChanged
      * @see moveTo
      */
-    bool setCurrent(VirtualDesktop *current, LogicalOutput *output = nullptr);
+    bool setCurrent(KWin::VirtualDesktop *current, KWin::LogicalOutput *output = nullptr);
 
     /**
      * Updates the layout to a new number of rows. The number of columns will be calculated accordingly

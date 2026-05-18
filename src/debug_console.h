@@ -58,8 +58,8 @@ public:
     QModelIndex parent(const QModelIndex &child) const override;
 
 private Q_SLOTS:
-    void handleWindowAdded(Window *window);
-    void handleWindowRemoved(Window *window);
+    void handleWindowAdded(KWin::Window *window);
+    void handleWindowRemoved(KWin::Window *window);
 
 private:
     template<class T>

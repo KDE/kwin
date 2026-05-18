@@ -148,8 +148,8 @@ public:
     void destroyRelativePointer();
 
 Q_SIGNALS:
-    void deviceAdded(WaylandInputDevice *device);
-    void deviceRemoved(WaylandInputDevice *device);
+    void deviceAdded(KWin::Wayland::WaylandInputDevice *device);
+    void deviceRemoved(KWin::Wayland::WaylandInputDevice *device);
 
 private:
     void createPointerDevice();

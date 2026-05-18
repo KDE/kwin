@@ -90,12 +90,12 @@ Q_SIGNALS:
     void preeditCursor(qint32 index);
     void deleteSurroundingText(qint32 index, quint32 length);
     void cursorPosition(qint32 index, qint32 anchor);
-    void keysym(quint32 serial, quint32 time, quint32 sym, KeyboardKeyState state, quint32 modifiers);
-    void key(quint32 serial, quint32 time, quint32 key, KeyboardKeyState state);
+    void keysym(quint32 serial, quint32 time, quint32 sym, KWin::KeyboardKeyState state, quint32 modifiers);
+    void key(quint32 serial, quint32 time, quint32 key, KWin::KeyboardKeyState state);
     void modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group);
     void language(quint32 serial, const QString &language);
     void textDirection(quint32 serial, Qt::LayoutDirection direction);
-    void keyboardGrabRequested(InputMethodGrabV1 *keyboardGrab);
+    void keyboardGrabRequested(KWin::InputMethodGrabV1 *keyboardGrab);
     void modifiersMap(const QByteArray &map);
 
 private:
@@ -117,7 +117,7 @@ public:
     ~InputPanelV1Interface() override;
 
 Q_SIGNALS:
-    void inputPanelSurfaceAdded(InputPanelSurfaceV1Interface *surface);
+    void inputPanelSurfaceAdded(KWin::InputPanelSurfaceV1Interface *surface);
 
 private:
     std::unique_ptr<InputPanelV1InterfacePrivate> d;
@@ -143,7 +143,7 @@ public:
     SurfaceInterface *surface() const;
 
 Q_SIGNALS:
-    void topLevel(OutputInterface *output, Position position);
+    void topLevel(KWin::OutputInterface *output, KWin::InputPanelSurfaceV1Interface::Position position);
     void overlayPanel();
     void aboutToBeDestroyed();
 

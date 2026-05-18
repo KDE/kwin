@@ -74,9 +74,9 @@ private Q_SLOTS:
     void timelineFrameChanged(int frame);
     void moveFocus(const QPointF &point);
     void slotMouseChanged(const QPointF &pos, const QPointF &old);
-    void slotWindowAdded(EffectWindow *w);
+    void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDamaged();
-    void slotScreenRemoved(LogicalOutput *screen);
+    void slotScreenRemoved(KWin::LogicalOutput *screen);
     void setTargetZoom(double value);
 
 private:

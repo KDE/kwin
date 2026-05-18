@@ -64,7 +64,7 @@ public:
     void releaseResources();
 
 Q_SIGNALS:
-    void damaged(const RegionF &region);
+    void damaged(const KWin::RegionF &region);
 
 private:
     QPointer<Decoration::DecoratedWindowImpl> m_client;

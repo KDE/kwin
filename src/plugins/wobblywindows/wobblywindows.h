@@ -95,7 +95,7 @@ protected:
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
-    void slotWindowStepUserMovedResized(KWin::EffectWindow *w, const RectF &geometry);
+    void slotWindowStepUserMovedResized(KWin::EffectWindow *w, const KWin::RectF &geometry);
     void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
     void slotWindowMaximizeStateChanged(KWin::EffectWindow *w, bool horizontal, bool vertical);
 

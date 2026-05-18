@@ -115,14 +115,14 @@ Q_SIGNALS:
      * This signal is emitted when a frame has been actually presented on the screen.
      * @a timestamp indicates the time when it took place.
      */
-    void framePresented(RenderLoop *loop, std::chrono::nanoseconds timestamp, PresentationMode mode);
+    void framePresented(KWin::RenderLoop *loop, std::chrono::nanoseconds timestamp, KWin::PresentationMode mode);
 
     /**
      * This signal is emitted when the render loop wants a new frame to be composited.
      *
      * The Compositor should make a connection to this signal using Qt::DirectConnection.
      */
-    void frameRequested(RenderLoop *loop);
+    void frameRequested(KWin::RenderLoop *loop);
 
 private:
     std::unique_ptr<RenderLoopPrivate> d;

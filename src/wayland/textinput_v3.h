@@ -188,7 +188,7 @@ Q_SIGNALS:
     /**
      * @see cursorRectangle
      */
-    void cursorRectangleChanged(const RectF &rect);
+    void cursorRectangleChanged(const KWin::RectF &rect);
     /**
      * Emitted when the {@link contentPurpose} and/or {@link contentHints} changes.
      * @see contentPurpose

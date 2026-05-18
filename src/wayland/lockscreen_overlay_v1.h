@@ -35,7 +35,7 @@ public:
 
 Q_SIGNALS:
     /// Notifies about the @p surface being activated
-    void allowRequested(SurfaceInterface *surface);
+    void allowRequested(KWin::SurfaceInterface *surface);
 
 private:
     friend class LockscreenOverlayV1InterfacePrivate;

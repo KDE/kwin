@@ -19,7 +19,7 @@ public:
     explicit WaylandShellIntegration(QObject *parent = nullptr);
 
 Q_SIGNALS:
-    void windowCreated(Window *window);
+    void windowCreated(KWin::Window *window);
 };
 
 } // namespace KWin

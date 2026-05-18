@@ -229,7 +229,7 @@ public Q_SLOTS:
 
     void handlerReady();
 
-    bool toggle(ElectricBorder eb);
+    bool toggle(KWin::ElectricBorder eb);
 
 Q_SIGNALS:
     void tabBoxAdded(int);

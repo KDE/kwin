@@ -231,8 +231,8 @@ public:
     }
 
 Q_SIGNALS:
-    void deviceAdded(InputDevice *device);
-    void deviceRemoved(InputDevice *device);
+    void deviceAdded(KWin::InputDevice *device);
+    void deviceRemoved(KWin::InputDevice *device);
     /**
      * @brief Emitted when the global pointer position changed
      *
@@ -245,14 +245,14 @@ Q_SIGNALS:
      * @param button The button which changed
      * @param state The new button state
      */
-    void pointerButtonStateChanged(uint32_t button, PointerButtonState state);
+    void pointerButtonStateChanged(uint32_t button, KWin::PointerButtonState state);
     /**
      * @brief Emitted when a pointer axis changed
      *
      * @param axis The axis on which the even occurred
      * @param delta The delta of the event.
      */
-    void pointerAxisChanged(PointerAxis axis, qreal delta);
+    void pointerAxisChanged(KWin::PointerAxis axis, qreal delta);
     /**
      * @brief Emitted when the modifiers changes.
      *
@@ -269,7 +269,7 @@ Q_SIGNALS:
      * @param keyCode The keycode of the key which changed
      * @param state The new key state
      */
-    void keyStateChanged(quint32 keyCode, KeyboardKeyState state);
+    void keyStateChanged(quint32 keyCode, KWin::KeyboardKeyState state);
 
     void hasKeyboardChanged(bool set);
     void hasAlphaNumericKeyboardChanged(bool set);

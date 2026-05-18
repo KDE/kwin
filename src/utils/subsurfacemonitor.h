@@ -61,7 +61,7 @@ Q_SIGNALS:
      * This signal is emitted when a sub-surface is unmapped.
      */
     void subSurfaceUnmapped();
-    void subSurfaceCommitted(SubSurfaceInterface *subSurface);
+    void subSurfaceCommitted(KWin::SubSurfaceInterface *subSurface);
 
 private:
     void registerSubSurface(SubSurfaceInterface *subSurface);

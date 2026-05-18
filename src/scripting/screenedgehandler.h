@@ -106,8 +106,8 @@ public:
 
 public Q_SLOTS:
     void setEnabled(bool enabled);
-    void setEdge(Edge edge);
-    void setMode(Mode mode);
+    void setEdge(KWin::ScreenEdgeHandler::Edge edge);
+    void setMode(KWin::ScreenEdgeHandler::Mode mode);
 
 Q_SIGNALS:
     void enabledChanged();
@@ -127,7 +127,7 @@ Q_SIGNALS:
     void activated();
 
 private Q_SLOTS:
-    bool borderActivated(ElectricBorder edge);
+    bool borderActivated(KWin::ElectricBorder edge);
 
 private:
     void enableEdge();

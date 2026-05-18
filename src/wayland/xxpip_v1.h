@@ -44,7 +44,7 @@ public:
     Display *display() const;
 
 Q_SIGNALS:
-    void pipCreated(XXPipV1Interface *pip);
+    void pipCreated(KWin::XXPipV1Interface *pip);
 
 private:
     std::unique_ptr<XXPipShellV1InterfacePrivate> d;
@@ -139,14 +139,14 @@ Q_SIGNALS:
      * This signal is emitted when the pip wants to be interactively moved. The \a seat and
      * the \a serial indicate the user action in response to which this request has been issued.
      */
-    void moveRequested(SeatInterface *seat, quint32 serial);
+    void moveRequested(KWin::SeatInterface *seat, quint32 serial);
 
     /**
      * This signal is emitted when the pip wants to be interactively resized with
      * the specified \a gravity. The \a seat and the \a serial indicate the user action
      * in response to which this request has been issued.
      */
-    void resizeRequested(SeatInterface *seat, Gravity anchor, quint32 serial);
+    void resizeRequested(KWin::SeatInterface *seat, KWin::Gravity anchor, quint32 serial);
 
     /**
      * This signal is emitted when the application id changes.

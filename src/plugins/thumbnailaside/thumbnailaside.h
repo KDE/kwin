@@ -61,7 +61,7 @@ private Q_SLOTS:
     void toggleCurrentThumbnail();
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowClosed(KWin::EffectWindow *w);
-    void slotWindowFrameGeometryChanged(KWin::EffectWindow *w, const RectF &old);
+    void slotWindowFrameGeometryChanged(KWin::EffectWindow *w, const KWin::RectF &old);
     void slotWindowDamaged(KWin::EffectWindow *w);
     void repaintAll();
 

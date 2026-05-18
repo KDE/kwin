@@ -71,7 +71,7 @@ public:
     QWindow *handle() const;
 
 Q_SIGNALS:
-    void presented(const InternalWindowFrame &frame);
+    void presented(const KWin::InternalWindowFrame &frame);
 
 protected:
     bool acceptsFocus() const override;

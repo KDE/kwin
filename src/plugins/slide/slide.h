@@ -150,11 +150,11 @@ public:
     bool slideBackground() const;
 
 private Q_SLOTS:
-    void desktopChanged(VirtualDesktop *old, VirtualDesktop *current, EffectWindow *with, LogicalOutput *output);
-    void desktopChanging(VirtualDesktop *old, QPointF desktopOffset, EffectWindow *with, LogicalOutput *output);
+    void desktopChanged(KWin::VirtualDesktop *old, KWin::VirtualDesktop *current, KWin::EffectWindow *with, KWin::LogicalOutput *output);
+    void desktopChanging(KWin::VirtualDesktop *old, QPointF desktopOffset, KWin::EffectWindow *with, KWin::LogicalOutput *output);
     void desktopChangingCancelled();
-    void windowAdded(EffectWindow *w);
-    void windowDeleted(EffectWindow *w);
+    void windowAdded(KWin::EffectWindow *w);
+    void windowDeleted(KWin::EffectWindow *w);
 
 private:
     void finishedSwitching();

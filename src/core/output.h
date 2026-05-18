@@ -421,7 +421,7 @@ Q_SIGNALS:
      *
      * Only to be used for effects
      */
-    void aboutToChange(OutputChangeSet *changeSet);
+    void aboutToChange(KWin::OutputChangeSet *changeSet);
 
     /*!
      * Notifies that the output changed based on a user interaction.

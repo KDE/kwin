@@ -415,9 +415,9 @@ Q_SIGNALS:
      * @see buffer
      * @see damage
      */
-    void damaged(const Region &);
-    void opaqueChanged(const RegionF &);
-    void inputChanged(const RegionF &);
+    void damaged(const KWin::Region &);
+    void opaqueChanged(const KWin::RegionF &);
+    void inputChanged(const KWin::RegionF &);
     /**
      * This signal is emitted when the buffer transform has changed.
      */
@@ -442,11 +442,11 @@ Q_SIGNALS:
     /**
      * Emitted whenever a new child sub-surface @p subSurface is added.
      */
-    void childSubSurfaceAdded(SubSurfaceInterface *subSurface);
+    void childSubSurfaceAdded(KWin::SubSurfaceInterface *subSurface);
     /**
      * Emitted whenever the child sub-surface @p subSurface is removed.
      */
-    void childSubSurfaceRemoved(SubSurfaceInterface *subSurface);
+    void childSubSurfaceRemoved(KWin::SubSurfaceInterface *subSurface);
     /**
      * This signal is emitted when the list of child subsurfaces changes.
      */

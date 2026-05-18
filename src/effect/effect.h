@@ -1074,7 +1074,7 @@ public Q_SLOTS:
     /*!
      * This function gets called when a reserved screen edge for \a border gets called.
      */
-    virtual bool borderActivated(ElectricBorder border);
+    virtual bool borderActivated(KWin::ElectricBorder border);
 };
 
 template<typename T>

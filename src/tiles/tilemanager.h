@@ -61,8 +61,8 @@ public:
 
 Q_SIGNALS:
     void tileRemoved(KWin::Tile *tile);
-    void rootTileChanged(CustomTile *rootTile);
-    void modelChanged(TileModel *model);
+    void rootTileChanged(KWin::CustomTile *rootTile);
+    void modelChanged(KWin::TileModel *model);
 
 private:
     void readSettings(RootTile *rootTile);

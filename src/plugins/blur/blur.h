@@ -79,7 +79,7 @@ public Q_SLOTS:
 #if KWIN_BUILD_X11
     void slotPropertyNotify(KWin::EffectWindow *w, long atom);
 #endif
-    void setupDecorationConnections(EffectWindow *w);
+    void setupDecorationConnections(KWin::EffectWindow *w);
 
 private:
     void initBlurStrengthValues();

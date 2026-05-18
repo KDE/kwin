@@ -75,7 +75,7 @@ Q_SIGNALS:
     void partialActivationFactorChanged();
     void activated();
     void deactivated();
-    void statusChanged(Status status);
+    void statusChanged(KWin::EffectTogglableState::Status status);
 
 protected:
     std::function<void(qreal progress)> progressCallback();

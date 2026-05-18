@@ -94,7 +94,7 @@ public:
 Q_SIGNALS:
     void panelChanged();
     void activeChanged(bool active);
-    void modeChanged(VirtualKeyboardVisibility mode);
+    void modeChanged(KWin::InputMethod::VirtualKeyboardVisibility mode);
     void visibleChanged();
     void availableChanged();
     void activeClientSupportsTextInputChanged();

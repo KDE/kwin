@@ -664,7 +664,7 @@ Q_SIGNALS:
     /**
      * Emitted when a drag'n'drop operation is requested by a client.
      */
-    void dragRequested(AbstractDataSource *source, SurfaceInterface *origin, quint32 serial, DragAndDropIcon *dragIcon);
+    void dragRequested(KWin::AbstractDataSource *source, KWin::SurfaceInterface *origin, quint32 serial, KWin::DragAndDropIcon *dragIcon);
     /**
      * Emitted when a drag'n'drop operation is started
      * @see dragEnded
@@ -689,7 +689,7 @@ Q_SIGNALS:
      * Emitted whenever the focused keyboard is about to change.
      * @see focusedKeyboardSurface
      */
-    void focusedKeyboardSurfaceAboutToChange(SurfaceInterface *nextSurface);
+    void focusedKeyboardSurfaceAboutToChange(KWin::SurfaceInterface *nextSurface);
 
 private:
     std::unique_ptr<SeatInterfacePrivate> d;

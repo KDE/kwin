@@ -182,7 +182,7 @@ public:
     bool isActiveFullScreenEffect() const;
 
 public Q_SLOTS:
-    bool borderActivated(ElectricBorder border) override;
+    bool borderActivated(KWin::ElectricBorder border) override;
 
 Q_SIGNALS:
     /**

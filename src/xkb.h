@@ -160,7 +160,7 @@ public Q_SLOTS:
     void reconfigure();
 
 Q_SIGNALS:
-    void ledsChanged(const LEDs &leds);
+    void ledsChanged(const KWin::LEDs &leds);
     void modifierStateChanged();
 
 private:

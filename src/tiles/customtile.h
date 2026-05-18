@@ -39,7 +39,7 @@ public:
      * Splits the current tile, either creating two children or a new sibling
      * @returns the two new tiles created by splitting this one
      */
-    Q_INVOKABLE QList<CustomTile *> split(KWin::Tile::LayoutDirection newDirection);
+    Q_INVOKABLE QList<KWin::CustomTile *> split(KWin::Tile::LayoutDirection newDirection);
 
     void setLayoutDirection(Tile::LayoutDirection dir);
     // Own direction
@@ -50,7 +50,7 @@ public:
     CustomTile *nextNonLayoutTileAt(Qt::Edge edge) const;
 
 Q_SIGNALS:
-    void layoutDirectionChanged(Tile::LayoutDirection direction);
+    void layoutDirectionChanged(KWin::Tile::LayoutDirection direction);
     void layoutModified();
 
 private:

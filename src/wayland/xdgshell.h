@@ -86,12 +86,12 @@ Q_SIGNALS:
     /**
      * This signal is emitted when a new XdgToplevelInterface object is created.
      */
-    void toplevelCreated(XdgToplevelInterface *toplevel);
+    void toplevelCreated(KWin::XdgToplevelInterface *toplevel);
 
     /**
      * This signal is emitted when a new XdgPopupInterface object is created.
      */
-    void popupCreated(XdgPopupInterface *popup);
+    void popupCreated(KWin::XdgPopupInterface *popup);
 
     /**
      * This signal is emitted when the client has responded to a ping event with serial \a serial.
@@ -192,7 +192,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the window geometry has been changed.
      */
-    void windowGeometryChanged(const RectF &rect);
+    void windowGeometryChanged(const KWin::RectF &rect);
 
     /**
      * This signal is emitted when the surface has been unmapped and its state has been reset.
@@ -591,7 +591,7 @@ Q_SIGNALS:
      * be configured. After initializing the popup, you must send a configure event.
      */
     void initializeRequested();
-    void grabRequested(SeatInterface *seat, quint32 serial);
+    void grabRequested(KWin::SeatInterface *seat, quint32 serial);
     void repositionRequested(quint32 token);
 
 private:

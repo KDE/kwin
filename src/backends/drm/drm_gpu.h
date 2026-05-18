@@ -131,8 +131,8 @@ public:
 
 Q_SIGNALS:
     void activeChanged(bool active);
-    void outputAdded(DrmAbstractOutput *output);
-    void outputRemoved(DrmAbstractOutput *output);
+    void outputAdded(KWin::DrmAbstractOutput *output);
+    void outputRemoved(KWin::DrmAbstractOutput *output);
     void renderDeviceChanged();
 
 private:

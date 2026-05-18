@@ -55,8 +55,8 @@ public:
     std::optional<DmaBufAttributes> createUdmabuf(const ShmAttributes *attributes) const;
 
 Q_SIGNALS:
-    void renderDeviceAdded(RenderDevice *device);
-    void renderDeviceRemoved(RenderDevice *device);
+    void renderDeviceAdded(KWin::RenderDevice *device);
+    void renderDeviceRemoved(KWin::RenderDevice *device);
 
 private:
     void handleUdevEvent();

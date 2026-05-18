@@ -69,8 +69,8 @@ public:
     const std::vector<std::unique_ptr<DrmGpu>> &gpus() const;
 
 Q_SIGNALS:
-    void gpuAdded(DrmGpu *gpu);
-    void gpuRemoved(DrmGpu *gpu);
+    void gpuAdded(KWin::DrmGpu *gpu);
+    void gpuRemoved(KWin::DrmGpu *gpu);
 
 protected:
     OutputConfigurationError applyOutputChanges(const OutputConfiguration &config) override;

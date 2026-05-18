@@ -92,11 +92,11 @@ Q_SIGNALS:
      * This signal is emitted when an output has been connected. The @a output is not ready
      * for compositing yet.
      */
-    void outputAdded(BackendOutput *output);
+    void outputAdded(KWin::BackendOutput *output);
     /**
      * This signal is emitted when an output has been disconnected.
      */
-    void outputRemoved(BackendOutput *output);
+    void outputRemoved(KWin::BackendOutput *output);
 
 protected:
     explicit OutputBackend(QObject *parent = nullptr);

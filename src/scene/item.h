@@ -183,8 +183,8 @@ public:
     bool hasVisibleContents() const;
 
 Q_SIGNALS:
-    void childAdded(Item *item);
-    void childRemoved(Item *item);
+    void childAdded(KWin::Item *item);
+    void childRemoved(KWin::Item *item);
     void visibleChanged();
     /**
      * This signal is emitted when the position of this item has changed.

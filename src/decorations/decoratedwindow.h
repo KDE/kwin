@@ -93,7 +93,7 @@ public:
     }
 
 private Q_SLOTS:
-    void delayedRequestToggleMaximization(Options::WindowOperation operation);
+    void delayedRequestToggleMaximization(KWin::Options::WindowOperation operation);
 
 private:
     Window *m_window;

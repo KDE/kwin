@@ -124,8 +124,8 @@ public:
 
     Q_INVOKABLE void resizeByPixels(qreal delta, Qt::Edge edge);
 
-    Q_INVOKABLE bool manage(Window *window);
-    Q_INVOKABLE bool unmanage(Window *window);
+    Q_INVOKABLE bool manage(KWin::Window *window);
+    Q_INVOKABLE bool unmanage(KWin::Window *window);
     void forget(Window *window);
     QList<KWin::Window *> windows() const;
 
@@ -158,8 +158,8 @@ Q_SIGNALS:
     void rowChanged(int row);
     void isLayoutChanged(bool isLayout);
     void childTilesChanged();
-    void windowAdded(Window *window);
-    void windowRemoved(Window *window);
+    void windowAdded(KWin::Window *window);
+    void windowRemoved(KWin::Window *window);
     void windowsChanged();
 
 protected:

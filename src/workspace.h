@@ -448,14 +448,14 @@ public:
     DpmsState dpmsState() const;
 
 public Q_SLOTS:
-    void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
+    void performWindowOperation(KWin::Window *window, KWin::Options::WindowOperation op);
     // Keybindings
     // void slotSwitchToWindow( int );
-    void slotWindowToDesktop(VirtualDesktop *desktop);
+    void slotWindowToDesktop(KWin::VirtualDesktop *desktop);
 
     // void slotWindowToListPosition( int );
-    void slotSwitchToScreen(LogicalOutput *output);
-    void slotWindowToScreen(LogicalOutput *output);
+    void slotSwitchToScreen(KWin::LogicalOutput *output);
+    void slotWindowToScreen(KWin::LogicalOutput *output);
     void slotSwitchToLeftScreen();
     void slotSwitchToRightScreen();
     void slotSwitchToAboveScreen();
@@ -531,11 +531,11 @@ private Q_SLOTS:
     void slotReloadConfig();
     void updateCurrentActivity(const QString &new_activity);
     // virtual desktop handling
-    void slotCurrentDesktopChanged(VirtualDesktop *previousDesktop, VirtualDesktop *newDesktop, LogicalOutput *output);
-    void slotCurrentDesktopChanging(VirtualDesktop *currentDesktop, QPointF delta, LogicalOutput *output);
+    void slotCurrentDesktopChanged(KWin::VirtualDesktop *previousDesktop, KWin::VirtualDesktop *newDesktop, KWin::LogicalOutput *output);
+    void slotCurrentDesktopChanging(KWin::VirtualDesktop *currentDesktop, QPointF delta, KWin::LogicalOutput *output);
     void slotCurrentDesktopChangingCancelled();
-    void slotDesktopAdded(VirtualDesktop *desktop);
-    void slotDesktopRemoved(VirtualDesktop *desktop);
+    void slotDesktopAdded(KWin::VirtualDesktop *desktop);
+    void slotDesktopRemoved(KWin::VirtualDesktop *desktop);
     void slotOutputBackendOutputsQueried();
 
 Q_SIGNALS:

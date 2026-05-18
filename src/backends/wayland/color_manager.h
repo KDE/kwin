@@ -51,7 +51,7 @@ public:
     explicit ImageDescriptionListener(wp_image_description_info_v1 *info);
 
 Q_SIGNALS:
-    void done(const std::shared_ptr<ColorDescription> &descr);
+    void done(const std::shared_ptr<KWin::ColorDescription> &descr);
 
 private:
     static const wp_image_description_info_v1_listener s_listener;

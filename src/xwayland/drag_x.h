@@ -98,7 +98,7 @@ public:
 
 Q_SIGNALS:
     void entered(const QStringList &mimeTypes);
-    void finish(WlVisit *self);
+    void finish(KWin::Xwl::WlVisit *self);
 
 private:
     bool handleEnter(xcb_client_message_event_t *event);

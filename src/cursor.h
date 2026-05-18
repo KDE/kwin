@@ -172,9 +172,9 @@ public:
     static Cursors *self();
 
 Q_SIGNALS:
-    void currentCursorChanged(Cursor *cursor);
+    void currentCursorChanged(KWin::Cursor *cursor);
     void hiddenChanged();
-    void positionChanged(Cursor *cursor, const QPointF &position);
+    void positionChanged(KWin::Cursor *cursor, const QPointF &position);
 
 private:
     void emitCurrentCursorChanged();

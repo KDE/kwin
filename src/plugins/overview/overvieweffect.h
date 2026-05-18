@@ -50,7 +50,7 @@ public:
     qreal gridPartialActivationFactor() const;
     bool gridGestureInProgress() const;
     QPointF desktopOffset() const;
-    Q_INVOKABLE QPointF desktopOffsetForScreen(LogicalOutput *screen) const;
+    Q_INVOKABLE QPointF desktopOffsetForScreen(KWin::LogicalOutput *screen) const;
 
     int requestedEffectChainPosition() const override;
     bool borderActivated(ElectricBorder border) override;

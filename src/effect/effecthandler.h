@@ -988,7 +988,7 @@ Q_SIGNALS:
      * @param geometry The geometry of the edge which is being approached
      * @since 4.11
      */
-    void screenEdgeApproaching(ElectricBorder border, qreal factor, const KWin::Rect &geometry);
+    void screenEdgeApproaching(KWin::ElectricBorder border, qreal factor, const KWin::Rect &geometry);
     /**
      * Emitted whenever the virtualScreenSize changes.
      * @see virtualScreenSize()
@@ -1064,7 +1064,7 @@ Q_SIGNALS:
 
     void inputPanelChanged();
 
-    void viewRemoved(RenderView *view);
+    void viewRemoved(KWin::RenderView *view);
 
 public Q_SLOTS:
     // slots for D-Bus interface

@@ -30,8 +30,8 @@ public:
 
     void remove();
 Q_SIGNALS:
-    void ring(ClientConnection *client);
-    void ringSurface(SurfaceInterface *surface);
+    void ring(KWin::ClientConnection *client);
+    void ringSurface(KWin::SurfaceInterface *surface);
 
 private:
     std::unique_ptr<XdgSystemBellV1InterfacePrivate> d;

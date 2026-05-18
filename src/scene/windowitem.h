@@ -76,7 +76,7 @@ private Q_SLOTS:
     void updateGeometry();
     void updateOpacity();
     void updateStackingOrder();
-    void addSurfaceItemDamageConnects(Item *item);
+    void addSurfaceItemDamageConnects(KWin::Item *item);
 
 private:
     bool computeVisibility() const;

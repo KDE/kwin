@@ -68,7 +68,7 @@ Q_SIGNALS:
      * This signal is emitted whenever the cursor surface changes. As long as there is no
      * any focused surface, the cursor cannot be changed.
      */
-    void cursorChanged(const PointerCursor &cursor);
+    void cursorChanged(const KWin::PointerCursor &cursor);
     /**
      * This signal is emitted whenever the focused pointer surface changes.
      */

@@ -88,10 +88,10 @@ protected:
     static Compositor *s_compositor;
 
 protected Q_SLOTS:
-    void composite(RenderLoop *renderLoop);
+    void composite(KWin::RenderLoop *renderLoop);
 
 private Q_SLOTS:
-    void handleFrameRequested(RenderLoop *renderLoop);
+    void handleFrameRequested(KWin::RenderLoop *renderLoop);
 
 protected:
     BackendOutput *findOutput(RenderLoop *loop) const;

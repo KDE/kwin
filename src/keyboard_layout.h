@@ -95,7 +95,7 @@ public Q_SLOTS:
     void switchToPreviousLayout();
     bool setLayout(uint index);
     uint getLayout() const;
-    QList<LayoutNames> getLayoutsList() const;
+    QList<KWin::KeyboardLayoutDBusInterface::LayoutNames> getLayoutsList() const;
 
 Q_SIGNALS:
     void layoutChanged(uint index);

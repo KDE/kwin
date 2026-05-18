@@ -39,7 +39,7 @@ public:
     }
 
 private Q_SLOTS:
-    void edgeApproaching(ElectricBorder border, qreal factor, const Rect &geometry);
+    void edgeApproaching(KWin::ElectricBorder border, qreal factor, const KWin::Rect &geometry);
     void cleanup();
 
 private:
