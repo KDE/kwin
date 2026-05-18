@@ -120,6 +120,7 @@ void GpuManager::updateCompatibilityMap()
             }
         }
     }
+    drmFreeDevices(devices.data(), devices.size());
 }
 
 RenderDevice *GpuManager::findCompatibleRenderDevice(drmDevicePtr device) const
