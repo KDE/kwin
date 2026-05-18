@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 23;
+static const quint32 s_version = 24;
 
 class OutputDeviceRegistryV2Private : public QtWaylandServer::kde_output_device_registry_v2
 {
@@ -297,9 +297,7 @@ public:
 
     OutputDeviceModeV2Interface *q;
     std::weak_ptr<OutputMode> m_handle;
-    QSize m_size;
-    int m_refreshRate = 60000;
-    OutputModeline::Flags m_flags;
+    OutputModeline m_modeline;
 
 protected:
     Resource *kde_output_device_mode_v2_allocate() override;
@@ -1278,9 +1276,7 @@ OutputDeviceModeV2InterfacePrivate::OutputDeviceModeV2InterfacePrivate(OutputDev
     : QtWaylandServer::kde_output_device_mode_v2()
     , q(q)
     , m_handle(handle)
-    , m_size(handle->size())
-    , m_refreshRate(handle->refreshRate())
-    , m_flags(handle->flags())
+    , m_modeline(handle->modeline())
 {
 }
 
@@ -1330,21 +1326,36 @@ std::weak_ptr<OutputMode> OutputDeviceModeV2Interface::handle() const
 
 void OutputDeviceModeV2InterfacePrivate::bindResource(Resource *resource)
 {
-    send_size(resource->handle, m_size.width(), m_size.height());
-    send_refresh(resource->handle, m_refreshRate);
+    send_size(resource->handle, m_modeline.size().width(), m_modeline.size().height());
+    send_refresh(resource->handle, m_modeline.refreshRate());
 
-    if (m_flags & OutputModeline::Flag::Preferred) {
+    if (m_modeline.flags() & OutputModeline::Flag::Preferred) {
         send_preferred(resource->handle);
     }
     if (resource->version() >= KDE_OUTPUT_DEVICE_MODE_V2_FLAGS_CUSTOM) {
         uint32_t flags = 0;
-        if (m_flags & OutputModeline::Flag::Custom) {
+        if (m_modeline.flags() & OutputModeline::Flag::Custom) {
             flags |= KDE_OUTPUT_DEVICE_MODE_V2_FLAGS_CUSTOM;
         }
-        if (m_flags & OutputModeline::Flag::ReducedBlanking) {
-            flags |= KDE_OUTPUT_DEVICE_MODE_V2_FLAGS_REDUCED_BLANKING;
-        }
         send_flags(resource->handle, flags);
+    }
+
+    if (resource->version() >= KDE_OUTPUT_DEVICE_MODE_V2_CVT_SINCE_VERSION) {
+        if (const auto cvt = m_modeline.cvt()) {
+            send_cvt(resource->handle,
+                     cvt->clock,
+                     cvt->hdisplay,
+                     cvt->hsyncStart,
+                     cvt->hsyncEnd,
+                     cvt->htotal,
+                     cvt->hskew,
+                     cvt->vdisplay,
+                     cvt->vsyncStart,
+                     cvt->vsyncEnd,
+                     cvt->vtotal,
+                     cvt->vscan,
+                     cvt->flags);
+        }
     }
 }
 
