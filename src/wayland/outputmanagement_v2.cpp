@@ -24,7 +24,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 21;
+static const quint32 s_version = 22;
 
 class OutputManagementV2InterfacePrivate : public QtWaylandServer::kde_output_management_v2
 {
@@ -101,6 +101,7 @@ private:
     void kde_mode_list_v2_set_resolution(Resource *resource, uint32_t width, uint32_t height) override;
     void kde_mode_list_v2_set_refresh_rate(Resource *resource, uint32_t rate) override;
     void kde_mode_list_v2_set_reduced_blanking(Resource *resource, uint32_t reduced) override;
+    void kde_mode_list_v2_add_cvt(Resource *resource, uint32_t dot_clock, uint32_t hdisplay, uint32_t hsync_start, uint32_t hsync_end, uint32_t htotal, uint32_t hskew, uint32_t vdisplay, uint32_t vsync_start, uint32_t vsync_end, uint32_t vtotal, uint32_t vscan, uint32_t flags) override;
 
     std::optional<QSize> m_resolution;
     std::optional<uint32_t> m_refreshRate;
@@ -624,6 +625,27 @@ void OutputModeListV2::kde_mode_list_v2_set_refresh_rate(Resource *resource, uin
 void OutputModeListV2::kde_mode_list_v2_set_reduced_blanking(Resource *resource, uint32_t reduced)
 {
     m_reducedBlanking = reduced == 1;
+}
+
+void OutputModeListV2::kde_mode_list_v2_add_cvt(Resource *resource, uint32_t dot_clock, uint32_t hdisplay, uint32_t hsync_start, uint32_t hsync_end, uint32_t htotal, uint32_t hskew, uint32_t vdisplay, uint32_t vsync_start, uint32_t vsync_end, uint32_t vtotal, uint32_t vscan, uint32_t flags)
+{
+    modes.push_back(OutputModeline {
+        CvtModeline {
+            .clock = dot_clock,
+            .hdisplay = uint16_t(hdisplay),
+            .hsyncStart = uint16_t(hsync_start),
+            .hsyncEnd = uint16_t(hsync_end),
+            .htotal = uint16_t(htotal),
+            .hskew = uint16_t(hskew),
+            .vdisplay = uint16_t(vdisplay),
+            .vsyncStart = uint16_t(vsync_start),
+            .vsyncEnd = uint16_t(vsync_end),
+            .vtotal = uint16_t(vtotal),
+            .vscan = uint16_t(vscan),
+            .flags = flags,
+        },
+        OutputModeline::Flag::Custom | OutputModeline::Flag::Generated,
+    });
 }
 
 void OutputConfigurationV2Interface::sendFailure(Resource *resource, const QString &reason)
