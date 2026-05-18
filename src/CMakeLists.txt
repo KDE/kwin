@@ -688,4 +688,13 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/vulkan COMPONENT Devel
 )
 
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    install(
+        CODE "execute_process(
+        COMMAND ${SETCAP_EXECUTABLE}
+        CAP_SYS_NICE=+ep
+        \$ENV{DESTDIR}${KDE_INSTALL_FULL_LIBEXECDIR}/kwin_wayland)"
+    )
+endif()
+
 ecm_generate_qdoc(kwin kwin.qdocconf)
