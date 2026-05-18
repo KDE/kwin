@@ -56,4 +56,4 @@ Options:
  cppcheck-arguments: '--enable=warning,style,performance --library=kwin-cppcheck.xml --suppress-xml=cppcheck-suppressions.xml'
  cppcheck-ignore-files:
   - autotests
- run-qmllint: False # https://qt-project.atlassian.net/browse/QTBUG-145572
+ run-qmllint: True
