@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-15 00:46+0000\n"
+"POT-Creation-Date: 2026-05-19 00:46+0000\n"
 "PO-Revision-Date: 2026-04-15 22:55+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
@@ -893,224 +893,224 @@ msgstr "Pavé tactile de tablette"
 msgid "Delta"
 msgstr "Delta"
 
-#: debug_console.cpp:719
+#: debug_console.cpp:720
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "Effets"
 
-#: debug_console.cpp:949
+#: debug_console.cpp:974
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "Aucun bouton de souris"
 
-#: debug_console.cpp:953
+#: debug_console.cpp:978
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "gauche"
 
-#: debug_console.cpp:956
+#: debug_console.cpp:981
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "droit"
 
-#: debug_console.cpp:959
+#: debug_console.cpp:984
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "milieu"
 
-#: debug_console.cpp:962
+#: debug_console.cpp:987
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "retour"
 
-#: debug_console.cpp:965
+#: debug_console.cpp:990
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "avance"
 
-#: debug_console.cpp:968
+#: debug_console.cpp:993
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "extra 1"
 
-#: debug_console.cpp:971
+#: debug_console.cpp:996
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "extra 2"
 
-#: debug_console.cpp:974
+#: debug_console.cpp:999
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "extra 3"
 
-#: debug_console.cpp:977
+#: debug_console.cpp:1002
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "extra 4"
 
-#: debug_console.cpp:980
+#: debug_console.cpp:1005
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "extra 5"
 
-#: debug_console.cpp:983
+#: debug_console.cpp:1008
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "extra 6"
 
-#: debug_console.cpp:986
+#: debug_console.cpp:1011
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "extra 7"
 
-#: debug_console.cpp:989
+#: debug_console.cpp:1014
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "extra 8"
 
-#: debug_console.cpp:992
+#: debug_console.cpp:1017
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "extra 9"
 
-#: debug_console.cpp:995
+#: debug_console.cpp:1020
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "extra 10"
 
-#: debug_console.cpp:998
+#: debug_console.cpp:1023
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "extra 11"
 
-#: debug_console.cpp:1001
+#: debug_console.cpp:1026
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "extra 12"
 
-#: debug_console.cpp:1004
+#: debug_console.cpp:1029
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "extra 13"
 
-#: debug_console.cpp:1007
+#: debug_console.cpp:1032
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "extra 14"
 
-#: debug_console.cpp:1010
+#: debug_console.cpp:1035
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "extra 15"
 
-#: debug_console.cpp:1013
+#: debug_console.cpp:1038
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "extra 16"
 
-#: debug_console.cpp:1016
+#: debug_console.cpp:1041
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "extra 17"
 
-#: debug_console.cpp:1019
+#: debug_console.cpp:1044
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "extra 18"
 
-#: debug_console.cpp:1022
+#: debug_console.cpp:1047
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "extra 19"
 
-#: debug_console.cpp:1025
+#: debug_console.cpp:1050
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "extra 20"
 
-#: debug_console.cpp:1028
+#: debug_console.cpp:1053
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "extra 21"
 
-#: debug_console.cpp:1031
+#: debug_console.cpp:1056
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "extra 22"
 
-#: debug_console.cpp:1034
+#: debug_console.cpp:1059
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "extra 23"
 
-#: debug_console.cpp:1037
+#: debug_console.cpp:1062
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "extra 24"
 
-#: debug_console.cpp:1040
+#: debug_console.cpp:1065
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "tâche"
 
-#: debug_console.cpp:1427
+#: debug_console.cpp:1454
 #, kde-format
 msgid "X11 Windows"
 msgstr "Fenêtres « X11 »"
 
-#: debug_console.cpp:1429
+#: debug_console.cpp:1456
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "Fenêtres X11 non gérées"
 
-#: debug_console.cpp:1431
+#: debug_console.cpp:1458
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Fenêtres Wayland"
 
-#: debug_console.cpp:1433
+#: debug_console.cpp:1460
 #, kde-format
 msgid "Internal Windows"
 msgstr "Fenêtres internes"
 
-#: debug_console.cpp:1790
+#: debug_console.cpp:1817
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "Décharger"
 
-#: debug_console.cpp:1794
+#: debug_console.cpp:1821
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -1128,147 +1128,155 @@ msgstr "Console de débogage"
 msgid "Windows"
 msgstr "Fenêtres"
 
+#. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
+#: debug_console.ui:43
+#, fuzzy, kde-format
+#| msgid "Pack Window Up"
+msgctxt "@action:button"
+msgid "Pick Window…"
+msgstr "Empiler une fenêtre en haut"
+
 #. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:44
+#: debug_console.ui:54
 #, kde-format
 msgid "Input Events"
 msgstr "Évènements en entrée"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:61
+#: debug_console.ui:71
 #, kde-format
 msgid "Input Devices"
 msgstr "Périphériques d'entrée"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:71
+#: debug_console.ui:81
 #, kde-format
 msgid "OpenGL"
 msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:77
+#: debug_console.ui:87
 #, kde-format
 msgid "No OpenGL compositor running"
 msgstr "Aucun compositeur OpenGL en cours d'exécution"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:105
+#: debug_console.ui:115
 #, kde-format
 msgid "OpenGL (ES) driver information"
 msgstr "Informations sur le pilote OpenGL (ES)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:111
+#: debug_console.ui:121
 #, kde-format
 msgid "Vendor:"
 msgstr "Fabricant :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:118
+#: debug_console.ui:128
 #, kde-format
 msgid "Renderer:"
 msgstr "Moteur de rendu :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:125
+#: debug_console.ui:135
 #, kde-format
 msgid "Version:"
 msgstr "Version :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:132
+#: debug_console.ui:142
 #, kde-format
 msgid "Shading Language Version:"
 msgstr "Version du langage d'ombrage :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:139
+#: debug_console.ui:149
 #, kde-format
 msgid "Driver:"
 msgstr "Pilote :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:146
+#: debug_console.ui:156
 #, kde-format
 msgid "GPU class:"
 msgstr "Classe de GPU :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:153
+#: debug_console.ui:163
 #, kde-format
 msgid "OpenGL Version:"
 msgstr "Version « OpenGL » :"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:160
+#: debug_console.ui:170
 #, kde-format
 msgid "GLSL Version:"
 msgstr "Version de GLSL :"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:226
+#: debug_console.ui:236
 #, kde-format
 msgid "Platform Extensions"
 msgstr "Extensions de plate-forme"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:242
+#: debug_console.ui:252
 #, kde-format
 msgid "OpenGL (ES) Extensions"
 msgstr "Extensions OpenGL (ES)"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:263
+#: debug_console.ui:273
 #, kde-format
 msgid "Keyboard"
 msgstr "Clavier"
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:290
+#: debug_console.ui:300
 #, kde-format
 msgid "Keymap Layouts"
 msgstr "Dispositions de clavier"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:312
+#: debug_console.ui:322
 #, kde-format
 msgid "Current Layout:"
 msgstr "Disposition actuelle :"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.ui:331
+#: debug_console.ui:341
 #, kde-format
 msgid "Modifiers"
 msgstr "Modificateurs"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:347
+#: debug_console.ui:357
 #, kde-format
 msgid "Active Modifiers"
 msgstr "Modificateurs actifs"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:363
+#: debug_console.ui:373
 #, kde-format
 msgid "LEDs"
 msgstr "Diodes"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:379
+#: debug_console.ui:389
 #, kde-format
 msgid "Active LEDs"
 msgstr "Diodes actives"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: debug_console.ui:400 debug_console.ui:420
+#: debug_console.ui:410 debug_console.ui:430
 #, kde-format
 msgid "Clipboard"
 msgstr "Presse-papier"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
-#: debug_console.ui:466
+#: debug_console.ui:476
 #, kde-format
 msgid "Primary Selection"
 msgstr "Sélection principale"
@@ -3764,36 +3772,36 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Aucune fenêtre ouverte"
 
-#: tabbox/tabbox.cpp:313
+#: tabbox/tabbox.cpp:318
 msgid "Walk Through Windows"
 msgstr "Naviguer parmi les fenêtres"
 
-#: tabbox/tabbox.cpp:314
+#: tabbox/tabbox.cpp:319
 msgid "Walk Through Windows (Reverse)"
 msgstr "Naviguer parmi les fenêtres (en ordre inverse)"
 
-#: tabbox/tabbox.cpp:315
+#: tabbox/tabbox.cpp:320
 msgid "Walk Through Windows Alternative"
 msgstr "Naviguer parmi les alternatives de fenêtres"
 
-#: tabbox/tabbox.cpp:316
+#: tabbox/tabbox.cpp:321
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Naviguer parmi les alternatives de fenêtres (en ordre inverse)"
 
-#: tabbox/tabbox.cpp:317
+#: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows of Current Application"
 msgstr "Naviguer parmi les fenêtres de l'application courante"
 
-#: tabbox/tabbox.cpp:318
+#: tabbox/tabbox.cpp:323
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr ""
 "Naviguer parmi les fenêtres de l'application courante (en ordre inverse)"
 
-#: tabbox/tabbox.cpp:319
+#: tabbox/tabbox.cpp:324
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Naviguer parmi les fenêtres de l'application alternative courante"
 
-#: tabbox/tabbox.cpp:320
+#: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Naviguer parmi les fenêtres de l'application alternative courante (en ordre "
@@ -4415,36 +4423,36 @@ msgstr "Le pilote a rejeté la configuration de sortie."
 msgid "The session is not active"
 msgstr "La session est inactive."
 
-#: window.cpp:3131
+#: window.cpp:3130
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne répond plus)"
 
-#: workspace.cpp:1313
+#: workspace.cpp:1310
 #, kde-format
 msgid "Built-in Screen"
 msgstr "Écran intégré"
 
-#: workspace.cpp:1326
+#: workspace.cpp:1323
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1336
+#: workspace.cpp:1333
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr "%1 %2 %3"
 
-#: workspace.cpp:1339
+#: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr "%1 %2"
 
-#: workspace.cpp:1808
+#: workspace.cpp:1805
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4996,9 +5004,6 @@ msgstr "XWayland s'est planté."
 
 #~ msgid "Pack Window to the Left"
 #~ msgstr "Empiler une fenêtre à gauche"
-
-#~ msgid "Pack Window Up"
-#~ msgstr "Empiler une fenêtre en haut"
 
 #~ msgid "Pack Window Down"
 #~ msgstr "Empiler une fenêtre en bas"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-15 00:46+0000\n"
+"POT-Creation-Date: 2026-05-19 00:46+0000\n"
 "PO-Revision-Date: 2026-02-17 23:24-0500\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -862,224 +862,224 @@ msgstr "سەزگۈر تاختا نومۇر بۇرىغۇچ"
 msgid "Delta"
 msgstr "دېلتا"
 
-#: debug_console.cpp:719
+#: debug_console.cpp:720
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "ئۈنۈم"
 
-#: debug_console.cpp:949
+#: debug_console.cpp:974
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "چاشقىنەك توپچىسى يوق"
 
-#: debug_console.cpp:953
+#: debug_console.cpp:978
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "سول"
 
-#: debug_console.cpp:956
+#: debug_console.cpp:981
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "ئوڭ"
 
-#: debug_console.cpp:959
+#: debug_console.cpp:984
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "ئوتتۇرا"
 
-#: debug_console.cpp:962
+#: debug_console.cpp:987
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "قايت"
 
-#: debug_console.cpp:965
+#: debug_console.cpp:990
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "ئالدىغا"
 
-#: debug_console.cpp:968
+#: debug_console.cpp:993
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "1-قوشۇمچە"
 
-#: debug_console.cpp:971
+#: debug_console.cpp:996
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "2-قوشۇمچە"
 
-#: debug_console.cpp:974
+#: debug_console.cpp:999
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "3-قوشۇمچە"
 
-#: debug_console.cpp:977
+#: debug_console.cpp:1002
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "4-قوشۇمچە"
 
-#: debug_console.cpp:980
+#: debug_console.cpp:1005
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "5-قوشۇمچە"
 
-#: debug_console.cpp:983
+#: debug_console.cpp:1008
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "6-قوشۇمچە"
 
-#: debug_console.cpp:986
+#: debug_console.cpp:1011
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "7-قوشۇمچە"
 
-#: debug_console.cpp:989
+#: debug_console.cpp:1014
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "8-قوشۇمچە"
 
-#: debug_console.cpp:992
+#: debug_console.cpp:1017
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "9-قوشۇمچە"
 
-#: debug_console.cpp:995
+#: debug_console.cpp:1020
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "10-قوشۇمچە"
 
-#: debug_console.cpp:998
+#: debug_console.cpp:1023
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "11-قوشۇمچە"
 
-#: debug_console.cpp:1001
+#: debug_console.cpp:1026
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "12-قوشۇمچە"
 
-#: debug_console.cpp:1004
+#: debug_console.cpp:1029
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "13-قوشۇمچە"
 
-#: debug_console.cpp:1007
+#: debug_console.cpp:1032
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "14-قوشۇمچە"
 
-#: debug_console.cpp:1010
+#: debug_console.cpp:1035
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "15-قوشۇمچە"
 
-#: debug_console.cpp:1013
+#: debug_console.cpp:1038
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "16-قوشۇمچە"
 
-#: debug_console.cpp:1016
+#: debug_console.cpp:1041
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "17-قوشۇمچە"
 
-#: debug_console.cpp:1019
+#: debug_console.cpp:1044
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "18-قوشۇمچە"
 
-#: debug_console.cpp:1022
+#: debug_console.cpp:1047
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "19-قوشۇمچە"
 
-#: debug_console.cpp:1025
+#: debug_console.cpp:1050
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "20-قوشۇمچە"
 
-#: debug_console.cpp:1028
+#: debug_console.cpp:1053
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "21-قوشۇمچە"
 
-#: debug_console.cpp:1031
+#: debug_console.cpp:1056
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "22-قوشۇمچە"
 
-#: debug_console.cpp:1034
+#: debug_console.cpp:1059
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "23-قوشۇمچە"
 
-#: debug_console.cpp:1037
+#: debug_console.cpp:1062
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "24-قوشۇمچە"
 
-#: debug_console.cpp:1040
+#: debug_console.cpp:1065
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "ۋەزىپە"
 
-#: debug_console.cpp:1427
+#: debug_console.cpp:1454
 #, kde-format
 msgid "X11 Windows"
 msgstr "X11 كۆزنەك"
 
-#: debug_console.cpp:1429
+#: debug_console.cpp:1456
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "X11 باشقۇرۇلمىغان كۆزنەك"
 
-#: debug_console.cpp:1431
+#: debug_console.cpp:1458
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Wayland كۆزنەك"
 
-#: debug_console.cpp:1433
+#: debug_console.cpp:1460
 #, kde-format
 msgid "Internal Windows"
 msgstr "ئىچكى كۆزنەك"
 
-#: debug_console.cpp:1790
+#: debug_console.cpp:1817
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "يۈك چۈشۈر"
 
-#: debug_console.cpp:1794
+#: debug_console.cpp:1821
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -1097,147 +1097,155 @@ msgstr "سازلاش تىزگىن سۇپىسى"
 msgid "Windows"
 msgstr "كۆزنەك"
 
+#. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
+#: debug_console.ui:43
+#, fuzzy, kde-format
+#| msgid "Pack Window Up"
+msgctxt "@action:button"
+msgid "Pick Window…"
+msgstr "كۆزنەكنى ئۈستىگە يىغىپ قوي"
+
 #. i18n: ectx: attribute (title), widget (QWidget, input)
-#: debug_console.ui:44
+#: debug_console.ui:54
 #, kde-format
 msgid "Input Events"
 msgstr "كىرگۈزۈش پائالىيىتى"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
-#: debug_console.ui:61
+#: debug_console.ui:71
 #, kde-format
 msgid "Input Devices"
 msgstr "كىرگۈزۈش ئۈسكۈنىسى"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
-#: debug_console.ui:71
+#: debug_console.ui:81
 #, kde-format
 msgid "OpenGL"
 msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
-#: debug_console.ui:77
+#: debug_console.ui:87
 #, kde-format
 msgid "No OpenGL compositor running"
 msgstr "ئىجرا قىلىنىۋاتقان OpenGL كۆرسىتىش ئۈنۈمى بىرىكتۈرگۈچ يوق"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
-#: debug_console.ui:105
+#: debug_console.ui:115
 #, kde-format
 msgid "OpenGL (ES) driver information"
 msgstr "OpenGL (ES) قوزغاتقۇ ئۇچۇرى"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: debug_console.ui:111
+#: debug_console.ui:121
 #, kde-format
 msgid "Vendor:"
 msgstr "تەمىنلىگۈچى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: debug_console.ui:118
+#: debug_console.ui:128
 #, kde-format
 msgid "Renderer:"
 msgstr "شەكىللەندۈرگۈچ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: debug_console.ui:125
+#: debug_console.ui:135
 #, kde-format
 msgid "Version:"
 msgstr "نەشرى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#: debug_console.ui:132
+#: debug_console.ui:142
 #, kde-format
 msgid "Shading Language Version:"
 msgstr "رەڭلىگۈچ تىل نەشرى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: debug_console.ui:139
+#: debug_console.ui:149
 #, kde-format
 msgid "Driver:"
 msgstr "قوزغاتقۇ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: debug_console.ui:146
+#: debug_console.ui:156
 #, kde-format
 msgid "GPU class:"
 msgstr "GPU تۈرى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: debug_console.ui:153
+#: debug_console.ui:163
 #, kde-format
 msgid "OpenGL Version:"
 msgstr "OpenGL نەشرى:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: debug_console.ui:160
+#: debug_console.ui:170
 #, kde-format
 msgid "GLSL Version:"
 msgstr "GLSL نەشرى:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
-#: debug_console.ui:226
+#: debug_console.ui:236
 #, kde-format
 msgid "Platform Extensions"
 msgstr "سۇپا كېڭەيتىلمىسى"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
-#: debug_console.ui:242
+#: debug_console.ui:252
 #, kde-format
 msgid "OpenGL (ES) Extensions"
 msgstr "OpenGL (ES) كېڭەيتىلمىسى"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
-#: debug_console.ui:263
+#: debug_console.ui:273
 #, kde-format
 msgid "Keyboard"
 msgstr "ھەرپتاختا"
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
-#: debug_console.ui:290
+#: debug_console.ui:300
 #, kde-format
 msgid "Keymap Layouts"
 msgstr "ھەرپتاختا خەرىتە جايلاشتۇرۇلۇشى"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: debug_console.ui:312
+#: debug_console.ui:322
 #, kde-format
 msgid "Current Layout:"
 msgstr "نۆۋەتتىكى جايلاشتۇرۇش:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.ui:331
+#: debug_console.ui:341
 #, kde-format
 msgid "Modifiers"
 msgstr "بىرىكمە كۇنۇپكا"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
-#: debug_console.ui:347
+#: debug_console.ui:357
 #, kde-format
 msgid "Active Modifiers"
 msgstr "ئاكتىپ بىرىكمە كۇنۇپكا"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
-#: debug_console.ui:363
+#: debug_console.ui:373
 #, kde-format
 msgid "LEDs"
 msgstr "LED"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
-#: debug_console.ui:379
+#: debug_console.ui:389
 #, kde-format
 msgid "Active LEDs"
 msgstr "ئاكتىپ LED"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: debug_console.ui:400 debug_console.ui:420
+#: debug_console.ui:410 debug_console.ui:430
 #, kde-format
 msgid "Clipboard"
 msgstr "چاپلاش تاختىسى"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
-#: debug_console.ui:466
+#: debug_console.ui:476
 #, kde-format
 msgid "Primary Selection"
 msgstr "ئاساسىي تاللاش"
@@ -3750,35 +3758,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "ئوچۇق كۆزنەك يوق"
 
-#: tabbox/tabbox.cpp:313
+#: tabbox/tabbox.cpp:318
 msgid "Walk Through Windows"
 msgstr "كۆزنەك ئارىلايدۇ"
 
-#: tabbox/tabbox.cpp:314
+#: tabbox/tabbox.cpp:319
 msgid "Walk Through Windows (Reverse)"
 msgstr "كۆزنەك ئارىلايدۇ(تەتۈر)"
 
-#: tabbox/tabbox.cpp:315
+#: tabbox/tabbox.cpp:320
 msgid "Walk Through Windows Alternative"
 msgstr "باشقىچە كۆزنەكنى ئارىلايدۇ"
 
-#: tabbox/tabbox.cpp:316
+#: tabbox/tabbox.cpp:321
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "باشقىچە كۆزنەكنى ئارىلايدۇ(تەتۈر)"
 
-#: tabbox/tabbox.cpp:317
+#: tabbox/tabbox.cpp:322
 msgid "Walk Through Windows of Current Application"
 msgstr "نۆۋەتتىكى پىروگراممىنىڭ كۆزنىكىنى ئارىلايدۇ"
 
-#: tabbox/tabbox.cpp:318
+#: tabbox/tabbox.cpp:323
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "نۆۋەتتىكى پىروگراممىنىڭ كۆزنىكىنى ئارىلايدۇ(تەتۈر)"
 
-#: tabbox/tabbox.cpp:319
+#: tabbox/tabbox.cpp:324
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "نۆۋەتتىكى پىروگراممىنىڭ باشقىچە كۆزنىكىنى ئارىلايدۇ"
 
-#: tabbox/tabbox.cpp:320
+#: tabbox/tabbox.cpp:325
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "نۆۋەتتىكى پىروگراممىنىڭ باشقىچە كۆزنىكىنى ئارىلايدۇ(تەتۈر)"
 
@@ -4398,36 +4406,36 @@ msgstr "قوزغاتقۇ چىقىرىش سەپلىمىسىنى رەت قىلدى
 msgid "The session is not active"
 msgstr "ھازىر Alt كۇنۇپكىسى ئاكتىپ."
 
-#: window.cpp:3131
+#: window.cpp:3130
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "[ئىنكاس يوق]"
 
-#: workspace.cpp:1313
+#: workspace.cpp:1310
 #, kde-format
 msgid "Built-in Screen"
 msgstr ""
 
-#: workspace.cpp:1326
+#: workspace.cpp:1323
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1336
+#: workspace.cpp:1333
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
 msgstr ""
 
-#: workspace.cpp:1339
+#: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
 msgstr ""
 
-#: workspace.cpp:1808
+#: workspace.cpp:1805
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4854,9 +4862,6 @@ msgstr "Xwayland يىمىرىلدى"
 
 #~ msgid "Pack Window to the Left"
 #~ msgstr "كۆزنەكنى سولغا يىغىپ قوي"
-
-#~ msgid "Pack Window Up"
-#~ msgstr "كۆزنەكنى ئۈستىگە يىغىپ قوي"
 
 #~ msgid "Pack Window Down"
 #~ msgstr "كۆزنەكنى ئاستىغا يىغىپ قوي"
