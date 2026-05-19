@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     icon->setPixmap(QIcon::fromTheme(QStringLiteral("krfb")).pixmap(QApplication::style()->pixelMetric(QStyle::PM_MessageBoxIconSize)));
     mainLayout.addWidget(icon);
     mainLayout.addWidget(new QLabel(text));
-    auto rememberCheckBox = new QCheckBox(i18nc("@option:check", "Always allow apps claiming to be %1", clientName));
+    auto rememberCheckBox = new QCheckBox(i18nc("@option:check, %1 is the application name. This option always allow apps claiming to be a given application name to control input devices", "Always allow apps claiming to be %1", clientName));
     rememberLayout.addWidget(rememberCheckBox);
     auto helpButton = new KContextualHelpButton(xi18nc("@info:tooltip", "Identities of legacy X11 apps cannot be verified. Any app claiming to be <application>%1</application> will be able to control input devices. You can revoke this permission later on <application>System Settings</application>’ “Legacy X11 App Support” page.", clientName), nullptr, nullptr);
     rememberLayout.addWidget(helpButton);
