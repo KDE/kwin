@@ -41,15 +41,15 @@ public:
     eis_device *keyboard() const;
     eis_device *absoluteDevice() const;
 
-    void activate(const QPointF &position);
+    void activate(uint id, const QPointF &position);
 
     Q_INVOKABLE QDBusUnixFileDescriptor connectToEIS();
-    Q_INVOKABLE void enable(const QList<QPair<QPoint, QPoint>> &barriers);
+    Q_INVOKABLE void enable(const QList<std::tuple<uint, QPoint, QPoint>> &barriers);
     Q_INVOKABLE void disable();
     Q_INVOKABLE void release(const QPointF &cursorPosition, bool applyPosition);
 Q_SIGNALS:
     void disabled();
-    void activated(uint activationId, const QPointF &cursorPosition);
+    void activated(uint activationId, uint id, const QPointF &cursorPosition);
     void deactivated(uint activationId);
 
 private:

@@ -55,7 +55,7 @@ public:
                     qCDebug(KWIN_INPUTCAPTURE) << "Activating input capture, crossing"
                                                << "barrier(" << barrier.orientation << barrier.position << "[" << barrier.start << "," << barrier.end << "])"
                                                << "at" << event->position << "with" << event->delta;
-                    manager->barrierHit(capture.get(), event->position + event->delta);
+                    manager->barrierHit(capture.get(), barrier.id, event->position + event->delta);
                     break;
                 }
             }
@@ -96,8 +96,8 @@ EisInputCaptureManager::EisInputCaptureManager()
     , m_barrierSpy(std::make_unique<BarrierSpy>(this))
     , m_inputFilter(std::make_unique<EisInputCaptureFilter>(this))
 {
-    qDBusRegisterMetaType<QPair<QPoint, QPoint>>();
-    qDBusRegisterMetaType<QList<QPair<QPoint, QPoint>>>();
+    qDBusRegisterMetaType<std::tuple<uint, QPoint, QPoint>>();
+    qDBusRegisterMetaType<QList<std::tuple<uint, QPoint, QPoint>>>();
 
     const auto keymap = input()->keyboard()->xkb()->keymapContents();
     if (!keymap.isEmpty()) {
@@ -202,13 +202,13 @@ QDBusObjectPath EisInputCaptureManager::addInputCapture(uint capabilities)
     return QDBusObjectPath(capture->dbusPath());
 }
 
-void EisInputCaptureManager::barrierHit(KWin::EisInputCapture *capture, const QPointF &position)
+void EisInputCaptureManager::barrierHit(KWin::EisInputCapture *capture, uint barrier, const QPointF &position)
 {
     if (m_activeCapture) {
         return;
     }
     m_activeCapture = capture;
-    capture->activate(position);
+    capture->activate(barrier, position);
     input()->installInputEventFilter(m_inputFilter.get());
     // Even though the input events are filtered out the cursor is updated on screen which looks weird
     Cursors::self()->hideCursor();
