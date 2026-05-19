@@ -72,7 +72,7 @@ int main(int argc, char **argv)
     QObject::connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
     QObject::connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
     QObject::connect(&dialog, &QDialog::finished, &dialog, [clientName, rememberCheckBox](int result) {
-        if (result == QDialogButtonBox::AcceptRole) {
+        if (result == QDialog::Accepted) {
             if (rememberCheckBox->isChecked()) {
                 XwaylandSettings settings;
                 settings.setXwaylandEisNoPromptApps(settings.xwaylandEisNoPromptApps() += clientName);
