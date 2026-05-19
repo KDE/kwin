@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-04-30 15:36+0200\n"
+"PO-Revision-Date: 2026-05-16 19:09+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -39,29 +39,25 @@ msgid "Window settings for %1"
 msgstr "Fenster-Einstellungen für %1"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, fuzzy, kde-format
-#| msgid "Unimportant"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "Unwichtig"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Exact match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Exact match"
 msgstr "Exakte Übereinstimmung"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Substring match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr "Übereinstimmung bei enthaltener Zeichenfolge"
 
 #: optionsmodel.cpp:202
-#, fuzzy, kde-format
-#| msgid "Regular expression"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "Regulärer Ausdruck"
@@ -70,7 +66,7 @@ msgstr "Regulärer Ausdruck"
 #, kde-format
 msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
-msgstr ""
+msgstr "Übereinstimmung"
 
 #: optionsmodel.cpp:210
 #, kde-format
@@ -374,11 +370,11 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Manche Anwendungen wie z. B. Videospieler oder Terminals können KWin "
-"auffordern sie auf ein bestimmtes Seitenverhältnis zu beschränken oder nur "
+"Manche Anwendungen, wie z. B. Videospieler oder Terminals, können KWin "
+"auffordern, sie auf ein bestimmtes Seitenverhältnis zu beschränken oder nur "
 "um Schritte größer als ein Textzeichen vergrößert zu werden. Verwenden Sie "
 "diese Eigenschaft, um solche Beschränkungen zu ignorieren und die Größe der "
-"Fenster beliebig anzupassen.<nl/><nl/>Dies kann hilfreich sein, wenn "
+"Fenster beliebig anpassen zu können.<nl/><nl/>Dies kann hilfreich sein, wenn "
 "maximierte Fenster nicht ganz in den kompletten Bildschirmbereich passen."
 
 #: rulesmodel.cpp:577
@@ -598,7 +594,7 @@ msgstr ""
 "sein, die dieselben Kurzbefehle selbst verarbeiten.<nl/><nl/>Beachten Sie, "
 "dass Sie nicht mit <shortcut>Alt+Tab</shortcut> das Fenster wechseln können "
 "oder irgendwelche anderen globalen Kurzbefehle, wie <shortcut>Alt+Leertaste</"
-"shortcut>, um Krunner zu aktivieren, benutzen können."
+"shortcut>, um KRunner zu aktivieren, verwenden können."
 
 #: rulesmodel.cpp:706
 #, kde-format
@@ -633,7 +629,7 @@ msgstr "Tearing erlauben"
 #: rulesmodel.cpp:737
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Vor Bildschirmfotos und -aufzeichnungen verbergen"
 
 #: rulesmodel.cpp:790
 #, kde-format
@@ -651,7 +647,7 @@ msgid ""
 msgstr ""
 "Diese Anwendung stellt keine Fensterklasse bereit, also kann KWin diese "
 "nicht einem Fenster zuordnen und Regeln darauf anwenden. Wenn Sie trotzdem "
-"Regeln anwenden wollen, versuchen Sie stattdessen, andere Eigenschaften wie "
+"Regeln anwenden möchten, versuchen Sie stattdessen, andere Eigenschaften wie "
 "den Fenstertitel zuzuordnen.<nl/><nl/>Ziehen Sie bitte in Erwägung, diesen "
 "Fehler an die Entwickler der Anwendung zu melden."
 

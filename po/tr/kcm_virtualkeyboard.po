@@ -44,7 +44,6 @@ msgid "With Touch and Tablet"
 msgstr "Dokunmatik ve Tablet ile"
 
 #: ui/main.qml:34
-#, fuzzy, kde-format
-#| msgid "With Touch, Tablet and Mouse"
+#, kde-format
 msgid "With Touch, Tablet, and Mouse"
 msgstr "Dokunmatik, Tablet ve Fare ile"

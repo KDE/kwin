@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-15 02:40+0000\n"
-"PO-Revision-Date: 2026-04-30 16:35+0200\n"
+"PO-Revision-Date: 2026-05-15 13:52+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -1841,16 +1841,10 @@ msgid "Remote Control"
 msgstr "Fernsteuerung"
 
 #: plugins/eis/eisprompter.cpp:52
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para><application>%1</application> is not responding. Do you want to "
-#| "terminate this application?</para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
-msgstr ""
-"<para><application>%1</application> reagiert nicht. Wollen Sie diese "
-"Anwendung beenden?</para>"
+msgstr "<application>%1</application> möchte Eingabegeräte steuern"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -3693,17 +3687,15 @@ msgstr "Regelart für Tearing"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "„Vor Bildschirmaufzeichnung verbergen“-Regelart"
+msgstr "Vor Bildschirmfotos und -aufzeichnungen verbergen"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "„Vor Bildschirmaufzeichnung verbergen“-Regelart"
+msgstr "„Vor Bildschirmfotos und -aufzeichnungen verbergen“-Regelart"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3840,7 +3832,7 @@ msgstr "Ohne &Titelleiste und Rahmen"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "Vor Bildschirmfotos und -aufzeichnungen &verbergen"
 
 #: useractions.cpp:256
 #, kde-format
@@ -4414,25 +4406,25 @@ msgstr "(Reagiert nicht)"
 #: workspace.cpp:1313
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Integrierter Bildschirm"
 
 #: workspace.cpp:1326
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1339
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1808
 #, kde-format
@@ -4449,8 +4441,8 @@ msgid ""
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
 "KWin-Unterstützungsinformationen:\n"
-"Benutzen Sie die folgenden Informationen, wenn Sie nach Unterstützung "
-"fragen, z. B. auf https://discuss.kde.org.\n"
+"Verwenden Sie die folgenden Informationen, wenn Sie nach Unterstützung "
+"fragen, z. B. auf https://discuss.kde.org.\n"
 "Sie enthalten Informationen über die momentan laufende Instanz, welche "
 "Optionen verwendet werden,\n"
 "welcher OpenGL-Treiber verwendet wird und welche Effekte laufen.\n"
