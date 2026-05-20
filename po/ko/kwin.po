@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-15 02:40+0000\n"
+"POT-Creation-Date: 2026-05-20 02:42+0000\n"
 "PO-Revision-Date: 2026-04-26 21:31+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1810,7 +1810,9 @@ msgstr ""
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
-msgctxt "@option:check"
+msgctxt ""
+"@option:check, %1 is the application name. This option always allow apps "
+"claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
 msgstr ""
 
@@ -4326,7 +4328,7 @@ msgstr "드라이버에서 출력 설정을 거부함"
 msgid "The session is not active"
 msgstr "세션이 활성화되어 있지 않음"
 
-#: window.cpp:3131
+#: window.cpp:3133
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

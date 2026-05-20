@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-15 02:40+0000\n"
+"POT-Creation-Date: 2026-05-20 02:42+0000\n"
 "PO-Revision-Date: 2026-05-08 09:36+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1838,8 +1838,12 @@ msgstr ""
 "<application>%1</application> demana controlar els dispositius d'entrada"
 
 #: plugins/eis/eisprompter.cpp:64
-#, kde-format
-msgctxt "@option:check"
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always allow apps claiming to be %1"
+msgctxt ""
+"@option:check, %1 is the application name. This option always allow apps "
+"claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
 msgstr "Permet sempre les aplicacions que afirmen ser %1"
 
@@ -4382,7 +4386,7 @@ msgstr "El controlador ha rebutjat la configuració de l'eixida"
 msgid "The session is not active"
 msgstr "La sessió no està activa"
 
-#: window.cpp:3131
+#: window.cpp:3133
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

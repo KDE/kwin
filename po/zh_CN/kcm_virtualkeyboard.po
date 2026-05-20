@@ -31,17 +31,17 @@ msgstr "不使用虚拟键盘"
 #, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr ""
+msgstr "显示虚拟键盘："
 
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "不显示"
 
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr ""
+msgstr "使用触摸屏和数位板时"
 
 #: ui/main.qml:34
 #, kde-format

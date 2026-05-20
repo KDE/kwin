@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-15 02:40+0000\n"
+"POT-Creation-Date: 2026-05-20 02:42+0000\n"
 "PO-Revision-Date: 2026-05-14 04:37+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1816,8 +1816,12 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> ითხოვს შეყვანის მოწყობილობების კონტროლს"
 
 #: plugins/eis/eisprompter.cpp:64
-#, kde-format
-msgctxt "@option:check"
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always allow apps claiming to be %1"
+msgctxt ""
+"@option:check, %1 is the application name. This option always allow apps "
+"claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
 msgstr "ყოველთვის დაშვება აპების, რომლებიც აცხადებენ, რომ არიან %1"
 
@@ -4349,7 +4353,7 @@ msgstr "დრაივერმა უარყო გამოტანის 
 msgid "The session is not active"
 msgstr "სესია აქტიური არაა"
 
-#: window.cpp:3131
+#: window.cpp:3133
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-15 02:40+0000\n"
+"POT-Creation-Date: 2026-05-20 02:42+0000\n"
 "PO-Revision-Date: 2026-05-14 08:46+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -1833,8 +1833,12 @@ msgstr ""
 "введення"
 
 #: plugins/eis/eisprompter.cpp:64
-#, kde-format
-msgctxt "@option:check"
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always allow apps claiming to be %1"
+msgctxt ""
+"@option:check, %1 is the application name. This option always allow apps "
+"claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
 msgstr "Завжди дозволяти програмам проголошувати можливість бути %1"
 
@@ -4371,7 +4375,7 @@ msgstr "Драйвером відмовлено у налаштовування 
 msgid "The session is not active"
 msgstr "Сеанс не є активним"
 
-#: window.cpp:3131
+#: window.cpp:3133
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
