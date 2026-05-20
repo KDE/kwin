@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-19 00:46+0000\n"
-"PO-Revision-Date: 2026-05-14 11:47+0200\n"
+"POT-Creation-Date: 2026-05-20 00:46+0000\n"
+"PO-Revision-Date: 2026-05-19 12:43+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -1097,11 +1097,10 @@ msgstr "Fenestras"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Pack Window Up"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "Comprime fenestra in alto"
+msgstr "Selige fenestra..."
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1835,8 +1834,12 @@ msgstr ""
 "ingresso"
 
 #: plugins/eis/eisprompter.cpp:64
-#, kde-format
-msgctxt "@option:check"
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always allow apps claiming to be %1"
+msgctxt ""
+"@option:check, %1 is the application name. This option always allow apps "
+"claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
 msgstr "Sempre permitte applicationes que pretende esser %1"
 

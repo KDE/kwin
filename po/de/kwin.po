@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-19 00:46+0000\n"
+"POT-Creation-Date: 2026-05-20 00:46+0000\n"
 "PO-Revision-Date: 2026-05-15 13:52+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -1855,8 +1855,12 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> möchte Eingabegeräte steuern"
 
 #: plugins/eis/eisprompter.cpp:64
-#, kde-format
-msgctxt "@option:check"
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always allow apps claiming to be %1"
+msgctxt ""
+"@option:check, %1 is the application name. This option always allow apps "
+"claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
 msgstr "Anwendungen immer erlauben, sich als %1 auszugeben"
 

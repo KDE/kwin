@@ -585,7 +585,7 @@ msgstr "允许画面撕裂"
 #: rulesmodel.cpp:737
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "在截图和录屏中隐藏"
 
 #: rulesmodel.cpp:790
 #, kde-format

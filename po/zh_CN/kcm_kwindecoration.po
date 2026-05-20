@@ -65,7 +65,7 @@ msgstr "保持在其他窗口之上"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "在截图和录屏中隐藏"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -195,7 +195,7 @@ msgstr "显示标题栏按钮悬停提示"
 #, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr ""
+msgstr "始终显示“在截图和录屏中隐藏”按钮"
 
 #: ui/ConfigureTitlebar.qml:85
 #, kde-format
@@ -203,7 +203,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
-msgstr ""
+msgstr "取消勾选后，该按钮仅当窗口在截图和屏幕录制中被隐藏时才会显示"
 
 #: ui/ConfigureTitlebar.qml:86
 #, kde-format
@@ -211,7 +211,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
-msgstr ""
+msgstr "要启用此选项，请先在标题栏添加“在截图和录屏中隐藏”按钮"
 
 #: ui/main.qml:29
 #, kde-format

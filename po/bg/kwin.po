@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-19 00:46+0000\n"
+"POT-Creation-Date: 2026-05-20 00:46+0000\n"
 "PO-Revision-Date: 2026-04-03 00:51+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -1831,7 +1831,9 @@ msgstr ""
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
-msgctxt "@option:check"
+msgctxt ""
+"@option:check, %1 is the application name. This option always allow apps "
+"claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
 msgstr ""
 

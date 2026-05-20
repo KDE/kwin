@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-19 00:46+0000\n"
+"POT-Creation-Date: 2026-05-20 00:46+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1087,11 +1087,10 @@ msgstr "窗口"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Filter windows…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "筛选窗口…"
+msgstr ""
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1801,8 +1800,12 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> 正在请求控制输入设备"
 
 #: plugins/eis/eisprompter.cpp:64
-#, kde-format
-msgctxt "@option:check"
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always allow apps claiming to be %1"
+msgctxt ""
+"@option:check, %1 is the application name. This option always allow apps "
+"claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
 msgstr "总是允许声称为 %1 的应用"
 
@@ -3621,13 +3624,13 @@ msgstr "画面撕裂规则类型"
 #: rulesettings.kcfg:478
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "在截图和录屏中隐藏"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
 #, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr ""
+msgstr "在截图和录屏中隐藏规则类型"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3760,7 +3763,7 @@ msgstr "无标题栏和边框(&N)"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "在截图和录屏中隐藏(&H)"
 
 #: useractions.cpp:256
 #, kde-format
@@ -4328,25 +4331,25 @@ msgstr "(没有响应)"
 #: workspace.cpp:1310
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "内置屏幕"
 
 #: workspace.cpp:1323
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1333
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1805
 #, kde-format

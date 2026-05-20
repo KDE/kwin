@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1737184 2026-05-19 01:29:23Z scripty $
+# $Id: kwin.po 1737240 2026-05-20 01:29:37Z scripty $
 # $Source$
 #
 #
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-19 00:46+0000\n"
-"PO-Revision-Date: 2026-05-14 07:49+0200\n"
+"POT-Creation-Date: 2026-05-20 00:46+0000\n"
+"PO-Revision-Date: 2026-05-19 07:15+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -1110,11 +1110,10 @@ msgstr "Okna"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Filter windows…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "Filtriraj okna …"
+msgstr "Poberi okno…"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1839,8 +1838,12 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> prosi za nadzor vhodnih naprav"
 
 #: plugins/eis/eisprompter.cpp:64
-#, kde-format
-msgctxt "@option:check"
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Always allow apps claiming to be %1"
+msgctxt ""
+"@option:check, %1 is the application name. This option always allow apps "
+"claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
 msgstr "Vedno dovoli aplikacijam, ki trdijo, da so %1"
 
