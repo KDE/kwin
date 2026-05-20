@@ -174,6 +174,7 @@ public:
     void addEffect();
     void removeEffect();
 
+    void collectItems(QList<QPointer<Item>> &list, LogicalOutput *filter);
     void framePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
     bool isAncestorOf(const Item *item) const;
