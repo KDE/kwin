@@ -46,9 +46,11 @@ public:
     QByteArray driverName() const;
 
     bool isNvidia() const;
+    bool isNouveau() const;
     bool isI915() const;
     bool isIntelXE() const;
     bool isAmdgpu() const;
+    bool isRadeon() const;
     bool isVmwgfx() const;
     bool isVirtualMachine() const;
 
@@ -69,9 +71,11 @@ private:
     bool m_supportsSyncObjTimelines;
     const QByteArray m_driverName;
     const bool m_isNvidia;
+    const bool m_isNouveau;
     const bool m_isI915;
     const bool m_isIntelXE;
     const bool m_isAmdgpu;
+    const bool m_isRadeon;
     const bool m_isVmwgfx;
     const bool m_isVirtualMachine;
 };
