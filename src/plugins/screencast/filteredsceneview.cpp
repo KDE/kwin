@@ -22,6 +22,9 @@ FilteredSceneView::FilteredSceneView(Scene *scene, LogicalOutput *output, Output
 
         return window->excludeFromCapture();
     });
+    addWindowFilter([](Window *window) {
+        return window->isLockScreen() || window->isLockScreenOverlay();
+    });
 
     auto setupRepaintOnExcludedFromCapture = [this](Window *window) {
         // When a window becomes hidden or visible from screencast
