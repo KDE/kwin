@@ -16,8 +16,6 @@
 #include "effect/effecthandler.h"
 #include "focustracker.h"
 #include "opengl/glutils.h"
-#include "scene/cursoritem.h"
-#include "scene/workspacescene.h"
 #include "textcarettracker.h"
 #include "utils/keys.h"
 #include "zoomconfig.h"
@@ -138,43 +136,8 @@ ZoomEffect::ZoomEffect()
 
 ZoomEffect::~ZoomEffect()
 {
-    // switch off and free resources
-    showCursor();
     // Save the zoom value.
     saveInitialZoom();
-}
-
-QPointF ZoomEffect::calculateCursorItemPosition() const
-{
-    return Cursors::self()->mouse()->pos() * m_zoom + QPoint(m_xTranslation, m_yTranslation);
-}
-
-void ZoomEffect::showCursor()
-{
-    if (m_cursorHidden) {
-        m_cursorItem.reset();
-        m_cursorHidden = false;
-        effects->showCursor();
-    }
-}
-
-void ZoomEffect::hideCursor()
-{
-    if (m_mouseTracking == MouseTrackingProportional && m_mousePointer == MousePointerKeep) {
-        return; // don't replace the actual cursor by a static image for no reason.
-    }
-    if (!m_cursorHidden) {
-        effects->hideCursor();
-        m_cursorHidden = true;
-
-        if (m_mousePointer == MousePointerKeep || m_mousePointer == MousePointerScale) {
-            m_cursorItem = std::make_unique<CursorItem>(effects->scene()->overlayItem());
-            m_cursorItem->setPosition(calculateCursorItemPosition());
-            connect(Cursors::self()->mouse(), &Cursor::posChanged, m_cursorItem.get(), [this]() {
-                m_cursorItem->setPosition(calculateCursorItemPosition());
-            });
-        }
-    }
 }
 
 void ZoomEffect::reconfigure(ReconfigureFlags)
@@ -184,8 +147,6 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     // On zoom-in and zoom-out change the zoom by the defined zoom-factor.
     m_zoomFactor = std::max(0.1, ZoomConfig::zoomFactor());
     m_pixelGridZoom = ZoomConfig::pixelGridZoom();
-    // Visibility of the mouse-pointer.
-    m_mousePointer = MousePointerType(ZoomConfig::mousePointer());
     // Track moving of the mouse.
     m_mouseTracking = MouseTrackingType(ZoomConfig::mouseTracking());
 
@@ -256,13 +217,6 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
 
     if (m_zoom == 1.0) {
         m_focusPoint.reset();
-
-        showCursor();
-    } else {
-        hideCursor();
-        if (m_cursorItem && m_mousePointer == MousePointerScale) {
-            m_cursorItem->setTransform(QTransform::fromScale(m_zoom, m_zoom));
-        }
     }
 
     const QSize screenSize = effects->virtualScreenSize();
@@ -349,11 +303,6 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data)
         m_yTranslation = -int(m_prevPoint.y() * (m_zoom - 1.0));
         break;
     }
-    }
-
-    if (m_cursorItem) {
-        // x and y translation are changed, update the cursor position
-        m_cursorItem->setPosition(calculateCursorItemPosition());
     }
 
     effects->prePaintScreen(data);
@@ -626,11 +575,6 @@ qreal ZoomEffect::configuredZoomFactor() const
     return m_zoomFactor;
 }
 
-int ZoomEffect::configuredMousePointer() const
-{
-    return m_mousePointer;
-}
-
 int ZoomEffect::configuredMouseTracking() const
 {
     return m_mouseTracking;
@@ -701,9 +645,6 @@ void ZoomEffect::realtimeZoom(double delta)
     setTargetZoom(m_targetZoom + delta);
     // skip the animation, we want this to be real time
     m_zoom = m_targetZoom;
-    if (m_zoom == 1.0) {
-        showCursor();
-    }
 }
 
 void ZoomEffect::trackTextCaret()

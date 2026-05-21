@@ -396,6 +396,10 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
     // as the highest priority item for an overlay, since its responsiveness
     // is especially noticeable to users.
 
+    if (effects->blocksDirectScanout()) {
+        return {containerItem()};
+    }
+
     const auto fallback = [this, maxTotalCount]() {
         QList<Item *> ret;
         if (maxTotalCount > 1
@@ -447,9 +451,7 @@ QList<Item *> WorkspaceScene::layerCandidates(ssize_t maxTotalCount) const
         }
     }
 
-    if (effects->blocksDirectScanout()) {
-        needsCompositedScene = true;
-    } else if (!result) {
+    if (!result) {
         result = findOverlayCandidates(painted_delegate, m_containerItem.get(), maxTotalCount, occupied, opaque, effected, overlays, underlays, cornerStack, needsCompositedScene);
         if (result.has_value() && !*result) {
             return fallback();
@@ -686,18 +688,6 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QPoint &devic
     effects->paintScreen(renderTarget, viewport, m_paintContext.mask, deviceRegion, painted_screen);
     m_paintScreenCount = 0;
 
-    if (m_overlayItem) {
-        const Rect bounds = viewport.mapToDeviceCoordinates(m_overlayItem->mapToScene(m_overlayItem->boundingRect())).toRect();
-        const Region deviceRepaint = deviceRegion & bounds;
-        if (!deviceRepaint.isEmpty()) {
-            m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, deviceRepaint, WindowPaintData{}, [this](Item *item) {
-                return !painted_delegate->shouldRenderItem(item);
-            }, [this](Item *item) {
-                return painted_delegate->shouldRenderHole(item);
-            });
-        }
-    }
-
     Q_EMIT frameRendered();
     m_renderer->endFrame();
 }
@@ -728,6 +718,13 @@ void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
         paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.deviceRegion);
     }
+
+    const Rect bounds = viewport.mapToDeviceCoordinates(m_overlayItem->mapToScene(m_overlayItem->boundingRect())).toRect();
+    m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, bounds, WindowPaintData{}, [this](Item *item) {
+        return !painted_delegate->shouldRenderItem(item);
+    }, [this](Item *item) {
+        return painted_delegate->shouldRenderHole(item);
+    });
 }
 
 // The optimized case without any transformations at all.
@@ -757,6 +754,16 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
         paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.deviceRegion);
+    }
+
+    const Rect bounds = viewport.mapToDeviceCoordinates(m_overlayItem->mapToScene(m_overlayItem->boundingRect())).toRect();
+    const Region deviceRepaint = deviceRegion & bounds;
+    if (!deviceRepaint.isEmpty()) {
+        m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, deviceRepaint, WindowPaintData{}, [this](Item *item) {
+            return !painted_delegate->shouldRenderItem(item);
+        }, [this](Item *item) {
+            return painted_delegate->shouldRenderHole(item);
+        });
     }
 }
 
