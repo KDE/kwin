@@ -622,7 +622,6 @@ public:
      * \value PAINT_SCREEN_REGION Paint only a region of the screen (can be optimized, cannot be used together with TRANSFORMED flags)
      * \value PAINT_SCREEN_TRANSFORMED The whole screen will be painted with transformed geometry. Forces the entire screen to be painted
      * \value PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS At least one window will be painted with transformed geometry. Forces the entire screen to be painted
-     * \value PAINT_SCREEN_BACKGROUND_FIRST Clear whole background as the very first step, without optimizing it
      */
     enum {
         PAINT_WINDOW_OPAQUE = 1 << 0,
@@ -631,7 +630,6 @@ public:
         PAINT_SCREEN_REGION = 1 << 3,
         PAINT_SCREEN_TRANSFORMED = 1 << 4,
         PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS = 1 << 5,
-        PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
     };
 
     /*!

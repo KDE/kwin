@@ -180,7 +180,7 @@ void SlideEffectScreen::prePaintScreen(ScreenPrePaintData &data)
         }
     }
 
-    data.mask |= Effect::PAINT_SCREEN_TRANSFORMED | Effect::PAINT_SCREEN_BACKGROUND_FIRST;
+    data.mask |= Effect::PAINT_SCREEN_TRANSFORMED;
 }
 
 void SlideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)

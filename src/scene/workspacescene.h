@@ -119,8 +119,6 @@ private:
     void destroyDndIconItem();
     void updateCursor();
 
-    // how many times finalPaintScreen() has been called
-    int m_paintScreenCount = 0;
     PaintContext m_paintContext;
     std::unique_ptr<Item> m_containerItem;
     std::unique_ptr<Item> m_overlayItem;
