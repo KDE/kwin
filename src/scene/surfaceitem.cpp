@@ -10,6 +10,13 @@
 #include "scene/scene.h"
 #include "scene/texture.h"
 
+#include "opengl/gltexture.h"
+#include "scene/opengl/texture.h"
+#include "scene/windowitem.h"
+#include "window.h"
+
+#include <QPainter>
+
 using namespace std::chrono_literals;
 
 namespace KWin
@@ -184,9 +191,35 @@ void SurfaceItem::preprocess()
     }
     ItemRenderer *itemRenderer = scene()->renderer();
 
+    WindowItem *windowItem = nullptr;
+    for (Item *foo = this; foo; foo = foo->parentItem()) {
+        if (auto w = qobject_cast<WindowItem *>(foo)) {
+            windowItem = w;
+            break;
+        }
+    }
+
+    static int frame = 0;
+    bool ff = false;
+    if (windowItem && windowItem->window()->caption().contains("Nightly")) {
+        ff = true;
+    }
+
     if (!m_texture || m_texture->size() != m_bufferSize) {
         m_texture = itemRenderer->createTexture(buffer(), m_bufferReleasePoint);
         if (m_texture) {
+            if (ff) {
+                auto opengltexture = static_cast<TextureOpenGL *>(m_texture.get());
+                QImage image = opengltexture->planes()[0]->toImage();
+                QPainter painter(&image);
+                painter.setPen(Qt::red);
+                painter.drawRect(bufferSourceBox().adjusted(0, 0, -1, -1));
+                painter.setPen(Qt::blue);
+                painter.drawText(0, 10, QStringLiteral("destination rect: %1,%2 %3x%4").arg(position().x()).arg(position().y()).arg(size().width()).arg(size().height()));
+                painter.drawText(0, 30, QStringLiteral("source rect: %1,%2 %3x%4").arg(bufferSourceBox().x()).arg(bufferSourceBox().y()).arg(bufferSourceBox().width()).arg(bufferSourceBox().height()));
+                painter.end();
+                image.save(QStringLiteral("/data/projects/kde/debug/%1.png").arg(frame++));
+            }
             resetDamage();
         }
         return;
@@ -195,6 +228,18 @@ void SurfaceItem::preprocess()
     const Region region = damage();
     if (!region.isEmpty()) {
         m_texture->attach(buffer(), region, m_bufferReleasePoint);
+        if (ff) {
+            auto opengltexture = static_cast<TextureOpenGL *>(m_texture.get());
+            QImage image = opengltexture->planes()[0]->toImage();
+            QPainter painter(&image);
+            painter.setPen(Qt::red);
+            painter.drawRect(bufferSourceBox().adjusted(0, 0, -1, -1));
+            painter.setPen(Qt::blue);
+            painter.drawText(0, 10, QStringLiteral("destination rect: %1,%2 %3x%4").arg(position().x()).arg(position().y()).arg(size().width()).arg(size().height()));
+            painter.drawText(0, 30, QStringLiteral("source rect: %1,%2 %3x%4").arg(bufferSourceBox().x()).arg(bufferSourceBox().y()).arg(bufferSourceBox().width()).arg(bufferSourceBox().height()));
+            painter.end();
+            image.save(QStringLiteral("/data/projects/kde/debug/%1.png").arg(frame++));
+        }
         resetDamage();
     }
 }
