@@ -686,7 +686,6 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QPoint &devic
     m_renderer->beginFrame(renderTarget, viewport);
 
     effects->paintScreen(renderTarget, viewport, m_paintContext.mask, deviceRegion, painted_screen);
-    m_paintScreenCount = 0;
 
     Q_EMIT frameRendered();
     m_renderer->endFrame();
@@ -695,7 +694,6 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QPoint &devic
 // the function that'll be eventually called by paintScreen() above
 void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
 {
-    m_paintScreenCount++;
     if (mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
         paintGenericScreen(renderTarget, viewport, mask, screen);
     } else {
@@ -707,13 +705,7 @@ void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const Re
 // It simply paints bottom-to-top.
 void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, LogicalOutput *screen)
 {
-    if (m_paintContext.mask & PAINT_SCREEN_BACKGROUND_FIRST) {
-        if (m_paintScreenCount == 1) {
-            m_renderer->renderBackground(renderTarget, viewport, Region::infinite());
-        }
-    } else {
-        m_renderer->renderBackground(renderTarget, viewport, Region::infinite());
-    }
+    m_renderer->renderBackground(renderTarget, viewport, Region::infinite());
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
         paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.deviceRegion);

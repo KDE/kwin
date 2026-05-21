@@ -218,8 +218,6 @@ public:
         PAINT_SCREEN_TRANSFORMED = 1 << 4,
         // At least one window will be painted with transformed geometry.
         PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS = 1 << 5,
-        // Clear whole background as the very first step, without optimizing it
-        PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
     };
 
     Scene();
