@@ -7,6 +7,7 @@
 #include "scene/item.h"
 #include "core/outputlayer.h"
 #include "core/pixelgrid.h"
+#include "scene/mirroritem.h"
 #include "scene/scene.h"
 #include "utils/common.h"
 #include "workspace.h"
@@ -454,33 +455,29 @@ void Item::stackAfter(Item *sibling)
 
 void Item::scheduleRepaint(const RegionF &region)
 {
-    if (isVisible()) {
-        scheduleRepaintInternal(region);
-    }
-}
-
-void Item::scheduleRepaint(RenderView *view, const RegionF &region)
-{
-    if (isVisible()) {
-        scheduleRepaintInternal(view, region);
-    }
-}
-
-void Item::scheduleRepaintInternal(const RegionF &region)
-{
     if (Q_UNLIKELY(!m_scene)) {
         return;
     }
     const QList<RenderView *> views = m_scene->views();
     for (RenderView *view : views) {
-        if (!view->shouldRenderItem(this)) {
-            continue;
-        }
+        scheduleRepaint(view, region);
+    }
+}
+
+void Item::scheduleRepaint(RenderView *view, const RegionF &region)
+{
+    if (Q_UNLIKELY(!m_scene)) {
+        return;
+    }
+    if (isVisible() && view->shouldRenderItem(this)) {
         const Region dirtyRegion = paintedDeviceArea(view, region);
         if (!dirtyRegion.isEmpty()) {
             m_deviceRepaints[view] += dirtyRegion;
             view->scheduleRepaint(this);
         }
+    }
+    for (MirrorItem *mirror : m_mirrors) {
+        mirror->scheduleRepaint(view, region);
     }
 }
 
@@ -507,39 +504,30 @@ void Item::scheduleMoveRepaint(Item *originallyMovedItem)
     for (Item *child : std::as_const(m_childItems)) {
         child->scheduleMoveRepaint(originallyMovedItem);
     }
-}
-
-void Item::scheduleRepaintInternal(RenderView *view, const RegionF &region)
-{
-    if (Q_UNLIKELY(!m_scene) || !view->shouldRenderItem(this)) {
-        return;
-    }
-    const Region dirtyRegion = paintedDeviceArea(view, region);
-    if (!dirtyRegion.isEmpty()) {
-        m_deviceRepaints[view] += dirtyRegion;
-        view->scheduleRepaint(this);
-    }
+    // mirror items will move themselves
 }
 
 bool Item::scheduleFrame()
 {
-    if (!isVisible()) {
-        return false;
-    }
     if (Q_UNLIKELY(!m_scene)) {
         return false;
     }
     bool ret = false;
-    const QList<RenderView *> views = m_scene->views();
-    for (RenderView *view : views) {
-        if (!view->shouldRenderItem(this)) {
-            continue;
+    if (isVisible()) {
+        const QList<RenderView *> views = m_scene->views();
+        for (RenderView *view : views) {
+            if (!view->shouldRenderItem(this)) {
+                continue;
+            }
+            const Rect geometry = paintedDeviceArea(view, rect());
+            if (!geometry.isEmpty()) {
+                view->scheduleRepaint(this);
+                ret = true;
+            }
         }
-        const Rect geometry = paintedDeviceArea(view, rect());
-        if (!geometry.isEmpty()) {
-            view->scheduleRepaint(this);
-            ret = true;
-        }
+    }
+    for (MirrorItem *mirror : m_mirrors) {
+        ret |= mirror->scheduleFrame();
     }
     return ret;
 }
@@ -570,6 +558,9 @@ void Item::scheduleSceneRepaintInternal(const RegionF &region)
         if (!dirtyRegion.isEmpty()) {
             m_scene->addDeviceRepaint(view, dirtyRegion);
         }
+    }
+    for (const auto &mirror : m_mirrors) {
+        mirror->scheduleSceneRepaint(region);
     }
 }
 
@@ -683,7 +674,7 @@ void Item::updateEffectiveVisibility()
     if (!m_effectiveVisible) {
         scheduleSceneRepaintInternal(boundingRect());
     } else {
-        scheduleRepaintInternal(boundingRect());
+        scheduleRepaint(boundingRect());
     }
 
     for (Item *childItem : std::as_const(m_childItems)) {
@@ -809,6 +800,16 @@ bool Item::hasVisibleContents() const
     return !m_size.isEmpty() || std::ranges::any_of(m_childItems, [](Item *item) {
         return item->hasVisibleContents();
     });
+}
+
+void Item::addMirror(MirrorItem *mirror)
+{
+    m_mirrors.push_back(mirror);
+}
+
+void Item::removeMirror(MirrorItem *mirror)
+{
+    m_mirrors.removeOne(mirror);
 }
 
 } // namespace KWin

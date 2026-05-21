@@ -14,6 +14,7 @@
 #include "opengl/eglnativefence.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
+#include "scene/mirroritem.h"
 #include "scene/opengl/atlas.h"
 #include "scene/opengl/ninepatch.h"
 #include "scene/opengl/texture.h"
@@ -139,19 +140,31 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
     const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
     const auto scale = context->renderTargetScale;
 
+    MirrorItem *mirror = qobject_cast<MirrorItem *>(item);
+    Item *toRender = mirror ? mirror->source() : item;
+
     QMatrix4x4 matrix;
     matrix.translate(roundVector(logicalPosition * scale).toVector3D());
     if (context->transformStack.size() == 1) {
         matrix *= context->rootTransform;
     }
-    if (!item->transform().isIdentity()) {
+    if (mirror && !mirror->transform().isIdentity()) {
         matrix.scale(scale, scale);
-        matrix *= item->transform();
+        matrix *= mirror->transform();
+        matrix.scale(1 / scale, 1 / scale);
+    }
+    if (!toRender->transform().isIdentity()) {
+        matrix.scale(scale, scale);
+        matrix *= toRender->transform();
         matrix.scale(1 / scale, 1 / scale);
     }
     context->transformStack.push(context->transformStack.top() * matrix);
 
-    context->opacityStack.push(context->opacityStack.top() * item->opacity());
+    double opacity = toRender->opacity();
+    if (mirror) {
+        opacity *= mirror->opacity();
+    }
+    context->opacityStack.push(context->opacityStack.top() * opacity);
 
     if (auto clip = item->globalClipRect()) {
         deviceClip &= clip->scaled(scale).translated(-context->viewportOrigin).rounded();
@@ -168,8 +181,8 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
         }
     }
 
-    if (const BorderRadius radius = item->borderRadius(); !radius.isNull()) {
-        const RectF nativeRect = item->rect().scaled(context->renderTargetScale).rounded();
+    if (const BorderRadius radius = toRender->borderRadius(); !radius.isNull()) {
+        const RectF nativeRect = toRender->rect().scaled(context->renderTargetScale).rounded();
         const BorderRadius nativeRadius = radius.scaled(context->renderTargetScale).rounded();
         context->cornerStack.push({
             .box = nativeRect,
@@ -185,14 +198,14 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
 
     // For multi-gpu copies, preprocess may change the active EGL context,
     // and switching back can fail in the case of a GPU reset.
-    item->preprocess();
+    toRender->preprocess();
     if (!EglContext::currentContext()) {
         return false;
     }
 
-    RenderGeometry geometry = getQuads(item, context);
+    RenderGeometry geometry = getQuads(toRender, context);
 
-    if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
+    if (auto shadowItem = qobject_cast<ShadowItem *>(toRender)) {
         if (!geometry.isEmpty()) {
             const auto ninePatch = static_cast<NinePatchOpenGL *>(shadowItem->ninePatch());
             if (ninePatch->texture()) {
@@ -203,8 +216,8 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = true,
-                    .colorDescription = item->colorDescription(),
-                    .renderingIntent = item->renderingIntent(),
+                    .colorDescription = toRender->colorDescription(),
+                    .renderingIntent = toRender->renderingIntent(),
                     .bufferReleasePoint = nullptr,
                     .paintHole = hole,
                     .clipRect = deviceClip,
@@ -212,7 +225,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
                 renderNode.geometry.postProcessTextureCoordinates(ninePatch->texture()->matrix(UnnormalizedCoordinates));
             }
         }
-    } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
+    } else if (auto decorationItem = qobject_cast<DecorationItem *>(toRender)) {
         if (!geometry.isEmpty()) {
             auto atlas = static_cast<const AtlasOpenGL *>(decorationItem->atlas());
             if (atlas && atlas->texture()) {
@@ -223,8 +236,8 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = true,
-                    .colorDescription = item->colorDescription(),
-                    .renderingIntent = item->renderingIntent(),
+                    .colorDescription = toRender->colorDescription(),
+                    .renderingIntent = toRender->renderingIntent(),
                     .bufferReleasePoint = nullptr,
                     .paintHole = hole,
                     .clipRect = deviceClip,
@@ -232,7 +245,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
                 renderNode.geometry.postProcessTextureCoordinates(atlas->texture()->matrix(UnnormalizedCoordinates));
             }
         }
-    } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
+    } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(toRender)) {
         auto texture = static_cast<TextureOpenGL *>(surfaceItem->texture());
         if (texture && !texture->planes().isEmpty()) {
             if (!geometry.isEmpty()) {
@@ -243,12 +256,12 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = surfaceItem->hasAlphaChannel(),
-                    .colorDescription = item->colorDescription(),
-                    .renderingIntent = item->renderingIntent(),
+                    .colorDescription = toRender->colorDescription(),
+                    .renderingIntent = toRender->renderingIntent(),
                     .bufferReleasePoint = texture->releasePoint(),
                     .paintHole = hole,
                     .hasFloatingPointColor = texture->isFloatingPoint(),
-                    .layerDebugBox = m_debug.layerEnabled ? std::optional(item->rect()) : std::nullopt,
+                    .layerDebugBox = m_debug.layerEnabled ? std::optional(toRender->rect()) : std::nullopt,
                     .clipRect = deviceClip,
                 });
                 renderNode.geometry.postProcessTextureCoordinates(texture->planes().at(0)->matrix(UnnormalizedCoordinates));
@@ -269,7 +282,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
                 }
             }
         }
-    } else if (auto imageItem = qobject_cast<ImageItem *>(item)) {
+    } else if (auto imageItem = qobject_cast<ImageItem *>(toRender)) {
         if (!geometry.isEmpty()) {
             auto texture = static_cast<TextureOpenGL *>(imageItem->texture());
             if (texture && !texture->planes().isEmpty()) {
@@ -280,8 +293,8 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = imageItem->image().hasAlphaChannel(),
-                    .colorDescription = item->colorDescription(),
-                    .renderingIntent = item->renderingIntent(),
+                    .colorDescription = toRender->colorDescription(),
+                    .renderingIntent = toRender->renderingIntent(),
                     .bufferReleasePoint = texture->releasePoint(),
                     .paintHole = hole,
                     .clipRect = deviceClip,
@@ -289,7 +302,7 @@ bool ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context, Re
                 renderNode.geometry.postProcessTextureCoordinates(texture->planes()[0]->matrix(UnnormalizedCoordinates));
             }
         }
-    } else if (auto borderItem = qobject_cast<OutlinedBorderItem *>(item)) {
+    } else if (auto borderItem = qobject_cast<OutlinedBorderItem *>(toRender)) {
         if (!geometry.isEmpty()) {
             const BorderOutline outline = borderItem->outline();
             const int thickness = std::round(outline.thickness() * context->renderTargetScale);

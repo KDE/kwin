@@ -30,6 +30,7 @@ class DrmDevice;
 class Item;
 class LogicalOutput;
 class OutputFrame;
+class MirrorItem;
 
 class KWIN_EXPORT ItemEffect
 {
@@ -186,6 +187,9 @@ public:
     void addEffect();
     void removeEffect();
 
+    void addMirror(MirrorItem *mirror);
+    void removeMirror(MirrorItem *mirror);
+
     void collectItems(QList<QPointer<Item>> &list, LogicalOutput *filter);
     void framePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
@@ -230,8 +234,6 @@ private:
     void removeChild(Item *item);
     void updateBoundingRect();
     void updateItemToSceneTransform();
-    void scheduleRepaintInternal(const RegionF &region);
-    void scheduleRepaintInternal(RenderView *delegate, const RegionF &region);
     void scheduleSceneRepaintInternal(const RegionF &region);
     void markSortedChildItemsDirty();
 
@@ -263,6 +265,7 @@ private:
     PresentationModeHint m_presentationHint = PresentationModeHint::VSync;
     int m_effectCount = 0;
     std::optional<RectF> m_clipRect;
+    QList<MirrorItem *> m_mirrors;
 
     friend class Scene;
 };

@@ -4,6 +4,7 @@
 
     SPDX-FileCopyrightText: 2007 Lubos Lunak <l.lunak@kde.org>
     SPDX-FileCopyrightText: 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
+    SPDX-FileCopyrightText: 2026 Xaver Hugl <xaver.hugl@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -17,70 +18,45 @@
 #pragma once
 
 #include "effect/effect.h"
+#include "scene/mirroritem.h"
 
 #include <QHash>
 
 namespace KWin
 {
 
-class ThumbnailAsideEffect
-    : public Effect
+class ThumbnailAsideEffect : public Effect
 {
     Q_OBJECT
-    Q_PROPERTY(int maxWidth READ configuredMaxWidth)
-    Q_PROPERTY(int spacing READ configuredSpacing)
-    Q_PROPERTY(qreal opacity READ configuredOpacity)
-    Q_PROPERTY(int screen READ configuredScreen)
 
 public:
     ThumbnailAsideEffect();
     void reconfigure(ReconfigureFlags) override;
-    bool paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen) override;
-    bool paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data) override;
 
-    // for properties
-    int configuredMaxWidth() const
-    {
-        return maxwidth;
-    }
-    int configuredSpacing() const
-    {
-        return spacing;
-    }
-    qreal configuredOpacity() const
-    {
-        return opacity;
-    }
-    int configuredScreen() const
-    {
-        return screen;
-    }
     bool isActive() const override;
 
 private Q_SLOTS:
     void toggleCurrentThumbnail();
-    void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowFrameGeometryChanged(KWin::EffectWindow *w, const RectF &old);
-    void slotWindowDamaged(KWin::EffectWindow *w);
-    void repaintAll();
+    void handleScreenLockingChanged();
 
 private:
     void addThumbnail(EffectWindow *w);
     void removeThumbnail(EffectWindow *w);
     void arrange();
+
     struct Data
     {
-        EffectWindow *window; // the same like the key in the hash (makes code simpler)
         int index;
-        Rect rect;
+        std::unique_ptr<MirrorItem> item;
     };
-    QHash<EffectWindow *, Data> windows;
-    int maxwidth;
-    int spacing;
-    double opacity;
-    int screen;
-    Region painted;
+    std::unordered_map<EffectWindow *, Data> m_windows;
+    int m_maxWidth;
+    int m_spacing;
+    double m_opacity;
+    int m_screen;
+    Region m_painted;
 };
 
 } // namespace

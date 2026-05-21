@@ -179,6 +179,7 @@ target_sources(kwin PRIVATE
     scene/itemgeometry.cpp
     scene/itemrenderer.cpp
     scene/itemrenderer_opengl.cpp
+    scene/mirroritem.cpp
     scene/ninepatch.cpp
     scene/opengl/atlas.cpp
     scene/opengl/ninepatch.cpp
@@ -663,6 +664,7 @@ install(FILES
     scene/itemgeometry.h
     scene/itemrenderer.h
     scene/itemrenderer_opengl.h
+    scene/mirroritem.h
     scene/ninepatch.h
     scene/opengl/atlas.h
     scene/opengl/ninepatch.h
