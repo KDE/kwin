@@ -10,6 +10,7 @@
 #include "effect/effect.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
+#include "scene/mirroritem.h"
 #include "scene/ninepatch.h"
 #include "scene/qpainter/atlas.h"
 #include "scene/qpainter/texture.h"
@@ -127,9 +128,16 @@ void ItemRendererQPainter::renderItem(QPainter *painter, Item *item, const std::
     }
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
+    MirrorItem *mirror = qobject_cast<MirrorItem *>(item);
+    Item *toRender = mirror ? mirror->source() : item;
+
     painter->save();
     painter->translate(item->position());
-    painter->setOpacity(painter->opacity() * item->opacity());
+    double opacity = toRender->opacity();
+    if (mirror) {
+        opacity *= mirror->opacity();
+    }
+    painter->setOpacity(painter->opacity() * opacity);
 
     for (Item *childItem : sortedChildItems) {
         if (childItem->z() >= 0) {
@@ -140,12 +148,12 @@ void ItemRendererQPainter::renderItem(QPainter *painter, Item *item, const std::
         }
     }
 
-    item->preprocess();
-    if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
+    toRender->preprocess();
+    if (auto surfaceItem = qobject_cast<SurfaceItem *>(toRender)) {
         renderSurfaceItem(painter, surfaceItem);
-    } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
+    } else if (auto decorationItem = qobject_cast<DecorationItem *>(toRender)) {
         renderDecorationItem(painter, decorationItem);
-    } else if (auto imageItem = qobject_cast<ImageItem *>(item)) {
+    } else if (auto imageItem = qobject_cast<ImageItem *>(toRender)) {
         renderImageItem(painter, imageItem);
     }
 

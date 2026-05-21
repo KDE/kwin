@@ -7,6 +7,7 @@
 #include "scene/item.h"
 #include "core/outputlayer.h"
 #include "core/pixelgrid.h"
+#include "scene/mirroritem.h"
 #include "scene/scene.h"
 #include "utils/common.h"
 #include "workspace.h"
@@ -85,6 +86,7 @@ void Item::setZ(int z)
         m_parentItem->markSortedChildItemsDirty();
     }
     scheduleSceneRepaint(boundingRect());
+    Q_EMIT zChanged();
 }
 
 Item *Item::parentItem() const
@@ -457,6 +459,11 @@ void Item::scheduleRepaintInternal(const RegionF &region)
             view->scheduleRepaint(this);
         }
     }
+    // TODO should this use a signal instead?
+    // Then Item wouldn't need to care about MirrorItem...
+    for (MirrorItem *mirror : m_mirrors) {
+        mirror->scheduleRepaint(region);
+    }
 }
 
 void Item::scheduleMoveRepaint(Item *originallyMovedItem)
@@ -486,13 +493,18 @@ void Item::scheduleMoveRepaint(Item *originallyMovedItem)
 
 void Item::scheduleRepaintInternal(RenderView *view, const RegionF &region)
 {
-    if (Q_UNLIKELY(!m_scene) || !view->shouldRenderItem(this)) {
+    if (Q_UNLIKELY(!m_scene)) {
         return;
     }
-    const Region dirtyRegion = paintedDeviceArea(view, region);
-    if (!dirtyRegion.isEmpty()) {
-        m_deviceRepaints[view] += dirtyRegion;
-        view->scheduleRepaint(this);
+    if (view->shouldRenderItem(this)) {
+        const Region dirtyRegion = paintedDeviceArea(view, region);
+        if (!dirtyRegion.isEmpty()) {
+            m_deviceRepaints[view] += dirtyRegion;
+            view->scheduleRepaint(this);
+        }
+    }
+    for (MirrorItem *mirror : m_mirrors) {
+        mirror->scheduleRepaint(view, region);
     }
 }
 
@@ -769,6 +781,16 @@ bool Item::hasVisibleContents() const
     return !m_size.isEmpty() || std::ranges::any_of(m_childItems, [](Item *item) {
         return item->hasVisibleContents();
     });
+}
+
+void Item::addMirror(MirrorItem *mirror)
+{
+    m_mirrors.push_back(mirror);
+}
+
+void Item::removeMirror(MirrorItem *mirror)
+{
+    m_mirrors.removeOne(mirror);
 }
 
 } // namespace KWin

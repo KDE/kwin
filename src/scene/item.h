@@ -30,6 +30,7 @@ class DrmDevice;
 class Item;
 class LogicalOutput;
 class OutputFrame;
+class MirrorItem;
 
 class KWIN_EXPORT ItemEffect
 {
@@ -174,6 +175,9 @@ public:
     void addEffect();
     void removeEffect();
 
+    void addMirror(MirrorItem *mirror);
+    void removeMirror(MirrorItem *mirror);
+
     void collectItems(QList<QPointer<Item>> &list, LogicalOutput *filter);
     void framePainted(RenderView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
@@ -201,6 +205,7 @@ Q_SIGNALS:
      * has changed.
      */
     void boundingRectChanged();
+    void zChanged();
 
 protected:
     virtual WindowQuadList buildQuads() const;
@@ -249,6 +254,7 @@ private:
     RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     PresentationModeHint m_presentationHint = PresentationModeHint::VSync;
     int m_effectCount = 0;
+    QList<MirrorItem *> m_mirrors;
 
     friend class Scene;
 };

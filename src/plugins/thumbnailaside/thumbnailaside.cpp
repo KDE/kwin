@@ -4,6 +4,7 @@
 
     SPDX-FileCopyrightText: 2007 Lubos Lunak <l.lunak@kde.org>
     SPDX-FileCopyrightText: 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
+    SPDX-FileCopyrightText: 2026 Xaver Hugl <xaver.hugl@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -11,6 +12,8 @@
 #include "thumbnailaside.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "scene/windowitem.h"
+#include "scene/workspacescene.h"
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
 
@@ -32,14 +35,8 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
     KGlobalAccel::self()->setGlobalShortcut(a, QKeySequence(Qt::META | Qt::CTRL | Qt::Key_T));
     connect(a, &QAction::triggered, this, &ThumbnailAsideEffect::toggleCurrentThumbnail);
 
-    connect(effects, &EffectsHandler::windowAdded, this, &ThumbnailAsideEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &ThumbnailAsideEffect::slotWindowClosed);
-    connect(effects, &EffectsHandler::screenLockingChanged, this, &ThumbnailAsideEffect::repaintAll);
-
-    const auto windows = effects->stackingOrder();
-    for (EffectWindow *window : windows) {
-        slotWindowAdded(window);
-    }
+    connect(effects, &EffectsHandler::screenLockingChanged, this, &ThumbnailAsideEffect::handleScreenLockingChanged);
 
     reconfigure(ReconfigureAll);
 }
@@ -47,63 +44,18 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
 void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
 {
     ThumbnailAsideConfig::self()->read();
-    maxwidth = ThumbnailAsideConfig::maxWidth();
-    spacing = ThumbnailAsideConfig::spacing();
-    opacity = ThumbnailAsideConfig::opacity() / 100.0;
-    screen = ThumbnailAsideConfig::screen(); // Xinerama screen TODO add gui option
+    m_maxWidth = ThumbnailAsideConfig::maxWidth();
+    m_spacing = ThumbnailAsideConfig::spacing();
+    m_opacity = ThumbnailAsideConfig::opacity() / 100.0;
+    m_screen = ThumbnailAsideConfig::screen(); // Xinerama screen TODO add gui option
     arrange();
-}
-
-void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen)
-{
-    painted = Region();
-    effects->paintScreen(renderTarget, viewport, mask, deviceRegion, screen);
-
-    for (const Data &d : std::as_const(windows)) {
-        if (painted.intersects(viewport.mapToDeviceCoordinatesAligned(d.rect))) {
-            WindowPaintData data;
-            data.multiplyOpacity(opacity);
-            Rect region;
-            setPositionTransformations(data, region, d.window, d.rect, Qt::KeepAspectRatio);
-            effects->drawWindow(renderTarget, viewport, d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED,
-                                viewport.mapToDeviceCoordinatesAligned(region), data);
-        }
-    }
-}
-
-void ThumbnailAsideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceGeometry, WindowPaintData &data)
-{
-    effects->paintWindow(renderTarget, viewport, w, mask, deviceGeometry, data);
-    painted += deviceGeometry;
-}
-
-void ThumbnailAsideEffect::slotWindowDamaged(EffectWindow *w)
-{
-    for (const Data &d : std::as_const(windows)) {
-        if (d.window == w) {
-            effects->addRepaint(d.rect);
-        }
-    }
 }
 
 void ThumbnailAsideEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const RectF &old)
 {
-    for (const Data &d : std::as_const(windows)) {
-        if (d.window == w) {
-            if (w->size() == old.size()) {
-                effects->addRepaint(d.rect);
-            } else {
-                arrange();
-            }
-            return;
-        }
+    if (w->size() != old.size()) {
+        arrange();
     }
-}
-
-void ThumbnailAsideEffect::slotWindowAdded(EffectWindow *w)
-{
-    connect(w, &EffectWindow::windowFrameGeometryChanged, this, &ThumbnailAsideEffect::slotWindowFrameGeometryChanged);
-    connect(w, &EffectWindow::windowDamaged, this, &ThumbnailAsideEffect::slotWindowDamaged);
 }
 
 void ThumbnailAsideEffect::slotWindowClosed(EffectWindow *w)
@@ -117,7 +69,7 @@ void ThumbnailAsideEffect::toggleCurrentThumbnail()
     if (active == nullptr) {
         return;
     }
-    if (windows.contains(active)) {
+    if (m_windows.contains(active)) {
         removeThumbnail(active);
     } else {
         addThumbnail(active);
@@ -126,28 +78,24 @@ void ThumbnailAsideEffect::toggleCurrentThumbnail()
 
 void ThumbnailAsideEffect::addThumbnail(EffectWindow *w)
 {
-    repaintAll(); // repaint old areas
     Data d;
-    d.window = w;
-    d.index = windows.count();
-    windows[w] = d;
+    d.index = m_windows.size();
+    d.item = std::make_unique<MirrorItem>(w->windowItem(), effects->scene()->overlayItem());
+    m_windows[w] = std::move(d);
+    connect(w, &EffectWindow::windowFrameGeometryChanged, this, &ThumbnailAsideEffect::slotWindowFrameGeometryChanged);
     arrange();
 }
 
 void ThumbnailAsideEffect::removeThumbnail(EffectWindow *w)
 {
-    if (!windows.contains(w)) {
+    if (!m_windows.contains(w)) {
         return;
     }
-    repaintAll(); // repaint old areas
-    int index = windows[w].index;
-    windows.remove(w);
-    for (QHash<EffectWindow *, Data>::Iterator it = windows.begin();
-         it != windows.end();
-         ++it) {
-        Data &d = *it;
-        if (d.index > index) {
-            --d.index;
+    int index = m_windows[w].index;
+    m_windows.erase(w);
+    for (auto &[window, data] : m_windows) {
+        if (data.index > index) {
+            --data.index;
         }
     }
     arrange();
@@ -155,52 +103,51 @@ void ThumbnailAsideEffect::removeThumbnail(EffectWindow *w)
 
 void ThumbnailAsideEffect::arrange()
 {
-    if (windows.size() == 0) {
+    if (m_windows.size() == 0) {
         return;
     }
     int height = 0;
-    QList<int> pos(windows.size());
+    QList<int> pos(m_windows.size());
     qreal mwidth = 0;
-    for (const Data &d : std::as_const(windows)) {
-        height += d.window->height();
-        mwidth = std::max(mwidth, d.window->width());
-        pos[d.index] = d.window->height();
+    for (const auto &[window, data] : std::as_const(m_windows)) {
+        height += window->height();
+        mwidth = std::max(mwidth, window->width());
+        pos[data.index] = window->height();
     }
-    LogicalOutput *effectiveScreen = effects->findScreen(screen);
+    LogicalOutput *effectiveScreen = effects->findScreen(m_screen);
     if (!effectiveScreen) {
         effectiveScreen = effects->activeScreen();
     }
     RectF area = effects->clientArea(MaximizeArea, effectiveScreen);
     double scale = area.height() / double(height);
-    scale = std::min(scale, maxwidth / double(mwidth)); // don't be wider than maxwidth pixels
+    scale = std::min(scale, m_maxWidth / double(mwidth)); // don't be wider than maxwidth pixels
     int add = 0;
-    for (int i = 0;
-         i < windows.size();
-         ++i) {
+    for (size_t i = 0; i < m_windows.size(); i++) {
         pos[i] = int(pos[i] * scale);
-        pos[i] += spacing + add; // compute offset of each item
+        pos[i] += m_spacing + add; // compute offset of each item
         add = pos[i];
     }
-    for (QHash<EffectWindow *, Data>::Iterator it = windows.begin();
-         it != windows.end();
-         ++it) {
-        Data &d = *it;
-        int width = int(d.window->width() * scale);
-        d.rect = Rect(area.right() - width, area.bottom() - pos[d.index], width, int(d.window->height() * scale));
+    for (auto &[window, data] : m_windows) {
+        int width = int(window->width() * scale);
+        const RectF rect(QPointF(area.right() - width - m_spacing, area.bottom() - pos[data.index]), window->size());
+        data.item->setGeometry(rect);
+        data.item->setOpacity(m_opacity);
+        QTransform transform;
+        transform.scale(scale, scale);
+        data.item->setTransform(transform);
     }
-    repaintAll();
 }
 
-void ThumbnailAsideEffect::repaintAll()
+void ThumbnailAsideEffect::handleScreenLockingChanged()
 {
-    for (const Data &d : std::as_const(windows)) {
-        effects->addRepaint(d.rect);
+    for (auto &[window, data] : m_windows) {
+        data.item->setVisible(!effects->isScreenLocked());
     }
 }
 
 bool ThumbnailAsideEffect::isActive() const
 {
-    return !windows.isEmpty() && !effects->isScreenLocked();
+    return !m_windows.empty() && !effects->isScreenLocked();
 }
 
 } // namespace
