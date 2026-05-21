@@ -47,6 +47,7 @@ RulesModel::RulesModel(QObject *parent)
 
 RulesModel::~RulesModel()
 {
+    qDeleteAll(m_rules);
 }
 
 QHash<int, QByteArray> RulesModel::roleNames() const
