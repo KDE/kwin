@@ -3,21 +3,21 @@
 # This file is distributed under the same license as the kwin package.
 #
 # SPDX-FileCopyrightText: 1999-2000 Boris Wesslowski <Boris@Wesslowski.com>
-# SPDX-FileCopyrightText: 2001-2002, 2003 Pablo de Vicente <vicente@oan.es>
-# SPDX-FileCopyrightText: 2003, 2005, 2007, 2008, 2009 Jaime Robles <jaime@kde.org>
-# SPDX-FileCopyrightText: 2003, 2004 Miguel Revilla Rodríguez <yo@miguelrevilla.com>
+# SPDX-FileCopyrightText: 2001-2003 Pablo de Vicente <vicente@oan.es>
+# SPDX-FileCopyrightText: 2003, 2005, 2007-2009 Jaime Robles <jaime@kde.org>
+# SPDX-FileCopyrightText: 2003-2004 Miguel Revilla Rodríguez <yo@miguelrevilla.com>
 # SPDX-FileCopyrightText: 2004 Pablo de Vicente <p.devicente@wanadoo.es>
 # SPDX-FileCopyrightText: 2005 Santiago Fernandez Sancho <santi@kde-es.org>
-# SPDX-FileCopyrightText: 2007, 2008 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
+# SPDX-FileCopyrightText: 2007-2008 Enrique Matias Sanchez (aka Quique) <cronopios@gmail.com>
 # SPDX-FileCopyrightText: 2009-2010, 2012-2026 Eloy Cuadra <ecuadra@eloihr.net>
 # SPDX-FileCopyrightText: 2010 Cristina Yenyxe González García <the.blue.valkyrie@gmail.com>
-# SPDX-FileCopyrightText: 2011, 2012 Javier Vinal <fjvinal@gmail.com>
+# SPDX-FileCopyrightText: 2011-2012 Javier Vinal <fjvinal@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-20 02:42+0000\n"
-"PO-Revision-Date: 2026-05-15 00:13+0100\n"
+"PO-Revision-Date: 2026-05-20 20:00+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -1841,14 +1841,12 @@ msgstr ""
 "entrada"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr "Permita siempre las aplicaciones que afirman ser %1"
+msgstr "Permitir siempre las aplicaciones que afirman ser %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
