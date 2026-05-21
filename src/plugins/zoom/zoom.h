@@ -22,7 +22,6 @@
 namespace KWin
 {
 
-class CursorItem;
 class GLFramebuffer;
 class GLTexture;
 class GLVertexBuffer;
@@ -34,7 +33,6 @@ class ZoomEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(qreal zoomFactor READ configuredZoomFactor)
-    Q_PROPERTY(int mousePointer READ configuredMousePointer)
     Q_PROPERTY(int mouseTracking READ configuredMouseTracking)
     Q_PROPERTY(int focusDelay READ configuredFocusDelay)
     Q_PROPERTY(qreal moveFactor READ configuredMoveFactor)
@@ -53,7 +51,6 @@ public:
 
     // for properties
     qreal configuredZoomFactor() const;
-    int configuredMousePointer() const;
     int configuredMouseTracking() const;
     int configuredFocusDelay() const;
     qreal configuredMoveFactor() const;
@@ -88,12 +85,6 @@ private:
         MouseTrackingCenteredStrict = 4,
     };
 
-    enum MousePointerType {
-        MousePointerScale = 0,
-        MousePointerKeep = 1,
-        MousePointerHide = 2,
-    };
-
     struct OffscreenData
     {
         std::unique_ptr<GLTexture> texture;
@@ -106,12 +97,7 @@ private:
     bool screenExistsAt(const QPoint &point) const;
     void realtimeZoom(double delta);
 
-    QPointF calculateCursorItemPosition() const;
-    void showCursor();
-    void hideCursor();
-    GLTexture *ensureCursorTexture();
     OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, LogicalOutput *screen);
-    void markCursorTextureDirty();
 
     GLShader *shaderForZoom(double zoom);
     void trackTextCaret();
@@ -123,12 +109,9 @@ private:
     double m_sourceZoom = 1.0;
     double m_zoomFactor = 1.25;
     MouseTrackingType m_mouseTracking = MouseTrackingProportional;
-    MousePointerType m_mousePointer = MousePointerScale;
     QPoint m_cursorPoint;
     QPoint m_prevPoint;
     QTime m_lastMouseEvent;
-    std::unique_ptr<CursorItem> m_cursorItem;
-    bool m_cursorHidden = false;
     QTimeLine m_timeline;
     int m_xMove = 0;
     int m_yMove = 0;
