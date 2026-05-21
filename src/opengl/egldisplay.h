@@ -42,6 +42,7 @@ public:
     QString renderNode() const;
     std::optional<dev_t> renderDevNode() const;
 
+    bool isSoftwareRenderer() const;
     bool supportsBufferAge() const;
     bool supportsNativeFence() const;
 
@@ -78,6 +79,7 @@ private:
 
     const bool m_supportsBufferAge;
     const bool m_supportsNativeFence;
+    const bool m_isSoftwareRenderer;
     FormatModifierMap m_nonExternalOnlyFormats;
     FormatModifierMap m_allFormats;
 

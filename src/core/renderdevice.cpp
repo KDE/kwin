@@ -297,4 +297,9 @@ std::unique_ptr<RenderDevice> RenderDevice::open(const QString &path, int authen
     return std::make_unique<RenderDevice>(std::move(drmDevice), std::move(eglDisplay));
 }
 
+bool RenderDevice::isSoftwareDevice() const
+{
+    return m_display->isSoftwareRenderer() && (!m_vulkanDevice || m_vulkanDevice->isSoftwareRenderer());
+}
+
 }

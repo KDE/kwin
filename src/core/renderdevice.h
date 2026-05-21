@@ -62,6 +62,12 @@ public:
      */
     bool isInReset() const;
 
+    /**
+     * @returns if *both* EGL and Vulkan aren't hardware
+     *          accelerated with this device
+     */
+    bool isSoftwareDevice() const;
+
     static std::unique_ptr<RenderDevice> open(const QString &path, int authenticatedFd = -1);
 
 private:
