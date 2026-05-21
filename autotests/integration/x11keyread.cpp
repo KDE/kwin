@@ -58,7 +58,7 @@ private Q_SLOTS:
     void tabBox();
 
 private:
-    QList<KeyAction> recievedX11EventsForInput(const QList<KeyAction> &keyEventsIn);
+    QList<KeyAction> receivedX11EventsForInput(const QList<KeyAction> &keyEventsIn);
 };
 
 void X11KeyReadTest::initTestCase_data()
@@ -109,7 +109,7 @@ void X11KeyReadTest::testSimpleLetter()
         {State::Press, KEY_A},
         {State::Release, KEY_A},
     };
-    auto received = recievedX11EventsForInput(keyEvents);
+    auto received = receivedX11EventsForInput(keyEvents);
 
     QList<KeyAction> expected;
     QFETCH_GLOBAL(XwaylandEavesdropsMode, operatingMode);
@@ -133,7 +133,7 @@ void X11KeyReadTest::onlyModifier()
         {State::Press, KEY_LEFTALT},
         {State::Release, KEY_LEFTALT},
     };
-    auto received = recievedX11EventsForInput(keyEvents);
+    auto received = receivedX11EventsForInput(keyEvents);
 
     QList<KeyAction> expected;
     QFETCH_GLOBAL(XwaylandEavesdropsMode, operatingMode);
@@ -159,7 +159,7 @@ void X11KeyReadTest::letterWithModifier()
         {State::Release, KEY_F},
         {State::Release, KEY_LEFTALT},
     };
-    auto received = recievedX11EventsForInput(keyEvents);
+    auto received = receivedX11EventsForInput(keyEvents);
 
     QList<KeyAction> expected;
     QFETCH_GLOBAL(XwaylandEavesdropsMode, operatingMode);
@@ -242,7 +242,7 @@ void X11KeyReadTest::tabBox()
         {State::Release, KEY_TAB},
         {State::Release, KEY_LEFTALT},
     };
-    auto received = recievedX11EventsForInput(keyEvents);
+    auto received = receivedX11EventsForInput(keyEvents);
 
     QList<KeyAction> expected;
     QFETCH_GLOBAL(XwaylandEavesdropsMode, operatingMode);
@@ -341,7 +341,7 @@ void X11EventRecorder::processXcbEvents()
     xcb_flush(m_connection);
 }
 
-QList<KeyAction> X11KeyReadTest::recievedX11EventsForInput(const QList<KeyAction> &keysIn)
+QList<KeyAction> X11KeyReadTest::receivedX11EventsForInput(const QList<KeyAction> &keysIn)
 {
     quint32 timestamp = 1;
     Test::XcbConnectionPtr c = Test::createX11Connection();
