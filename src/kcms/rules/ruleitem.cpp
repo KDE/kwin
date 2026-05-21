@@ -209,5 +209,3 @@ QVariant RuleItem::typedValue(const QVariant &value) const
 }
 
 } // namespace
-
-#include "moc_ruleitem.cpp"
