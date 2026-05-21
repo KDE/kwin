@@ -33,6 +33,7 @@ class OutputFrame;
 class SceneView;
 class ItemRenderer;
 class RenderDevice;
+class MirrorItem;
 
 class KWIN_EXPORT ItemEffect
 {
@@ -193,6 +194,9 @@ public:
     void prepareFrame(SceneView *view, LogicalOutput *output, std::chrono::nanoseconds timestamp);
     void framePainted(SceneView *view, LogicalOutput *output, OutputFrame *frame, std::chrono::milliseconds timestamp);
 
+    void addMirror(MirrorItem *mirror);
+    void removeMirror(MirrorItem *mirror);
+
     bool isAncestorOf(const Item *item) const;
     /**
      * @returns if this Item or any of its children have contents to be rendered
@@ -235,8 +239,6 @@ private:
     void removeChild(Item *item);
     void updateBoundingRect();
     void updateItemToSceneTransform();
-    void scheduleRepaintInternal(const RegionF &region);
-    void scheduleRepaintInternal(RenderView *delegate, const RegionF &region);
     void scheduleSceneRepaintInternal(const RegionF &region);
     void markSortedChildItemsDirty();
 
@@ -268,6 +270,7 @@ private:
     PresentationModeHint m_presentationHint = PresentationModeHint::VSync;
     int m_effectCount = 0;
     std::optional<RectF> m_clipRect;
+    QList<MirrorItem *> m_mirrors;
 
     friend class Scene;
 };
