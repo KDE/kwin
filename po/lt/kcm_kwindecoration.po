@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-03-20 20:55+0200\n"
+"PO-Revision-Date: 2026-05-21 14:30+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -69,7 +69,7 @@ msgstr "Laikyti aukščiau kitų langų"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Slėpti, kai daromos ekrano kopijos ir filmuojamas ekranas"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -210,40 +210,32 @@ msgid "Show titlebar button tooltips"
 msgstr "Rodyti antraštės juostos mygtukų paaiškinimus"
 
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" button"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr "Visada rodyti mygtuką „Slėpti, kai filmuojamas ekranas“"
+msgstr ""
+"Visada rodyti mygtuką „Slėpti, kai daromos ekrano kopijos ir filmuojamas "
+"ekranas“"
 
 #: ui/ConfigureTitlebar.qml:85
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "When unchecked the button only appears if the window is hidden from "
-#| "screencast"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
-"Kai nepažymėta, mygtukas rodomas tik tuo atveju, jei, filmuojant ekraną, "
-"langas yra slepiamas"
+"Kai nepažymėta, mygtukas rodomas tik tuo atveju, jei langas yra slepiamas "
+"darant ekrano kopijas ir filmuojant ekraną"
 
 #: ui/ConfigureTitlebar.qml:86
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "To enable this option, add the \"Hide from screencast\" button to the "
-#| "titlebar first"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
 "Norėdami įjungti šią parinktį, pirmiausiai, pridėkite į antraštės juostą "
-"mygtuką „Slėpti, kai filmuojamas ekranas“"
+"mygtuką „Slėpti, kai daromos ekrano kopijos ir filmuojamas ekranas“"
 
 #: ui/main.qml:29
 #, kde-format

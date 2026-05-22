@@ -3,21 +3,21 @@
 # Copyright (C) 2022 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022.
+# SPDX-FileCopyrightText: 2022, 2026 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-17 02:38+0000\n"
-"PO-Revision-Date: 2022-06-24 01:37+0900\n"
+"PO-Revision-Date: 2026-05-21 22:23+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
-"Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
+"Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 26.07.70\n"
 
 #: kcmvirtualkeyboard.cpp:82
 #, kde-format
@@ -30,26 +30,25 @@ msgid "Do not use any virtual keyboard"
 msgstr "不使用任何虛擬鍵盤"
 
 #: ui/main.qml:24
-#, fuzzy, kde-format
-#| msgid "Choose Virtual Keyboard"
+#, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr "選擇虛擬鍵盤"
+msgstr "顯示虛擬鍵盤："
 
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "永不"
 
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr ""
+msgstr "使用觸控或繪圖板時"
 
 #: ui/main.qml:34
 #, kde-format
 msgid "With Touch, Tablet, and Mouse"
-msgstr ""
+msgstr "使用觸控、繪圖板或滑鼠時"
 
 #~ msgid "This module lets you choose the virtual keyboard to use."
 #~ msgstr "本模組讓您選擇要使用的虛擬鍵盤。"
