@@ -32,6 +32,8 @@
 #include <xcb/xcb_icccm.h>
 #endif
 
+#include <unistd.h>
+
 using namespace KWin;
 
 const QString s_destination{QStringLiteral("org.kde.KWin")};
@@ -142,6 +144,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
         {QStringLiteral("layer"), NormalLayer},
         {QStringLiteral("excludeFromCapture"), false},
         {QStringLiteral("hasTransientParent"), false},
+        {QStringLiteral("pid"), getpid()},
     };
 
     // let's get the window info
@@ -284,6 +287,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
         {QStringLiteral("layer"), NormalLayer},
         {QStringLiteral("excludeFromCapture"), false},
         {QStringLiteral("hasTransientParent"), false},
+        {QStringLiteral("pid"), getpid()},
     };
 
     // let's get the window info

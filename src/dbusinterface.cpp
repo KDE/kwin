@@ -148,6 +148,7 @@ QVariantMap clientToVariantMap(const Window *c)
         {QStringLiteral("layer"), c->layer()},
         {QStringLiteral("excludeFromCapture"), c->excludeFromCapture()},
         {QStringLiteral("hasTransientParent"), bool(c->transientFor())},
+        {QStringLiteral("pid"), c->pid()},
     };
 }
 
