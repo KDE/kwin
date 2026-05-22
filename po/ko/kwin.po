@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:46+0000\n"
+"POT-Creation-Date: 2026-05-22 00:45+0000\n"
 "PO-Revision-Date: 2026-04-26 21:31+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -3038,32 +3038,32 @@ msgstr "덜 보기"
 msgid "More"
 msgstr "더 보기"
 
-#: plugins/zoom/zoom.cpp:85
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "크기 조정된 영역을 왼쪽으로 이동"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "크기 조정된 영역을 오른쪽으로 이동"
 
-#: plugins/zoom/zoom.cpp:97
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "크기 조정된 영역을 위로 이동"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:101
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "크기 조정된 영역을 아래로 이동"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "마우스를 포커스로 이동"
 
-#: plugins/zoom/zoom.cpp:116
+#: plugins/zoom/zoom.cpp:114
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "마우스를 가운데로 이동"

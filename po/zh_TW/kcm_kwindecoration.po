@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-04-08 23:27+0900\n"
+"PO-Revision-Date: 2026-05-21 22:23+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -70,7 +70,7 @@ msgstr "維持在其他視窗之上"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "從螢幕截圖和螢幕錄影當中隱藏"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -200,36 +200,26 @@ msgstr "顯示標題列按鈕的工具提示"
 # That X is 99.9% a typo, right?
 # --Kisaragi
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" button"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr "總是顯示「從螢幕錄製當中隱藏」按鈕"
+msgstr "總是顯示「從螢幕截圖和螢幕錄影當中隱藏」按鈕"
 
 #: ui/ConfigureTitlebar.qml:85
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "When unchecked the button only appears if the window is hidden from "
-#| "screencast"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
-msgstr "取消勾選時，該按鈕只有在視窗已從螢幕錄製中隱藏時才會顯示"
+msgstr "取消勾選時，該按鈕只有在視窗已從螢幕截圖和螢幕錄影當中隱藏時才會顯示"
 
 #: ui/ConfigureTitlebar.qml:86
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "To enable this option, add the \"Hide from screencast\" button to the "
-#| "titlebar first"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
-msgstr "要啟用此選項，請先將「從螢幕錄製當中隱藏」按鈕加入標題列"
+msgstr "要啟用此選項，請先將「從螢幕截圖和螢幕錄影當中隱藏」按鈕加入標題列"
 
 #: ui/main.qml:29
 #, kde-format

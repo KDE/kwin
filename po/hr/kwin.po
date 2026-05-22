@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin 0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:46+0000\n"
+"POT-Creation-Date: 2026-05-22 00:45+0000\n"
 "PO-Revision-Date: 2011-07-12 17:48+0200\n"
 "Last-Translator: Marko Dimjašević <marko@dimjasevic.net>\n"
 "Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
@@ -3183,35 +3183,35 @@ msgstr "Manje"
 msgid "More"
 msgstr "Više"
 
-#: plugins/zoom/zoom.cpp:85
+#: plugins/zoom/zoom.cpp:83
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Prebaci na radnu površinu ulijevo"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:89
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Prebaci na radnu površinu udesno"
 
-#: plugins/zoom/zoom.cpp:97
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:101
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:108
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Move Mouse to Focus"
 msgstr "Emulacija miša"
 
-#: plugins/zoom/zoom.cpp:116
+#: plugins/zoom/zoom.cpp:114
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Mouse to Center"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:46+0000\n"
+"POT-Creation-Date: 2026-05-22 00:45+0000\n"
 "PO-Revision-Date: 2010-02-21 05:14+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -3071,34 +3071,34 @@ msgstr "Më i vogël"
 msgid "More"
 msgstr "Me tepër"
 
-#: plugins/zoom/zoom.cpp:85
+#: plugins/zoom/zoom.cpp:83
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Move Zoomed Area to Left"
 msgstr "Ndrysho në Ekranin 1"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:89
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Move Zoomed Area to Right"
 msgstr "Ndrysho në Ekranin 1"
 
-#: plugins/zoom/zoom.cpp:97
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:101
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:116
+#: plugins/zoom/zoom.cpp:114
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr ""

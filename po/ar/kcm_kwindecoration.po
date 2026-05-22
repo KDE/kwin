@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-03-23 22:29+0400\n"
+"PO-Revision-Date: 2026-05-21 11:39+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -74,7 +74,7 @@ msgstr "أبقها أعلى النوافذ الأخرى"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "أخفِ من لقطات الشاشة وتسجيلات الشاشة"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -203,37 +203,30 @@ msgid "Show titlebar button tooltips"
 msgstr "أظهر تلميحات زر شريط العنوان"
 
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" button"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr "أظهر دومًا زر ”أخفِ من تسجيل الشاشة“"
+msgstr "أظهر دومًا زر ”أخفِ من لقطات الشاشة وتسجيلات الشاشة“"
 
 #: ui/ConfigureTitlebar.qml:85
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "When unchecked the button only appears if the window is hidden from "
-#| "screencast"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
-"عندما لا تُحدد هذه الخانة، لا يظهر الزر إلا إذا كانت النافذة مخفية عن الشاشة."
+"عندما لا تُحدد الزر، فإنه يظهر فقط إذا كانت النافذة مخفية عن لقطات الشاشة "
+"وتسجيلات الشاشة."
 
 #: ui/ConfigureTitlebar.qml:86
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "To enable this option, add the \"Hide from screencast\" button to the "
-#| "titlebar first"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
-msgstr "لتمكين هذا الخيار، أضف زر ”أخف من تسجيل الشاشة“ إلى شريط العنوان أولاً"
+msgstr ""
+"لتمكين هذا الخيار، أضف أولاً زر \"الإخفاء من لقطات الشاشة وتسجيلات الشاشة\" "
+"إلى شريط العنوان."
 
 #: ui/main.qml:29
 #, kde-format

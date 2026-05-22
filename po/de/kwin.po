@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:46+0000\n"
+"POT-Creation-Date: 2026-05-22 00:45+0000\n"
 "PO-Revision-Date: 2026-05-15 13:52+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -3102,32 +3102,32 @@ msgstr "Weniger"
 msgid "More"
 msgstr "Mehr"
 
-#: plugins/zoom/zoom.cpp:85
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Vergrößerten Bereich nach links verschieben"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Vergrößerten Bereich nach rechts verschieben"
 
-#: plugins/zoom/zoom.cpp:97
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Vergrößerten Bereich nach oben verschieben"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:101
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Vergrößerten Bereich nach unten verschieben"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Mauszeiger in den Fokus verschieben"
 
-#: plugins/zoom/zoom.cpp:116
+#: plugins/zoom/zoom.cpp:114
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mauszeiger zentrieren"

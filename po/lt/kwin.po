@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:46+0000\n"
-"PO-Revision-Date: 2026-05-12 13:28+0300\n"
+"POT-Creation-Date: 2026-05-22 00:45+0000\n"
+"PO-Revision-Date: 2026-05-21 14:39+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -1097,11 +1097,10 @@ msgstr "Langai"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Pack Window Up"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "Pakuoti langą aukštyn"
+msgstr "Pasirinkti langą…"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1832,9 +1831,7 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> prašo leidimo valdyti įvedimo įrenginius"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
@@ -3082,32 +3079,32 @@ msgstr "Mažiau"
 msgid "More"
 msgstr "Daugiau"
 
-#: plugins/zoom/zoom.cpp:85
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Perkelti pakeisto mastelio sritį kairėn"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Perkelti pakeisto mastelio sritį dešinėn"
 
-#: plugins/zoom/zoom.cpp:97
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Perkelti didintą sritį į viršų"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:101
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Perkelti didintą sritį į apačią"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Perkelti pelę į fokusavimą"
 
-#: plugins/zoom/zoom.cpp:116
+#: plugins/zoom/zoom.cpp:114
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Perkelti pelę į centrą"
@@ -3678,17 +3675,16 @@ msgstr "Plėšymo taisyklės tipas"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "„Slėpti, kai filmuojamas ekranas“ taisyklės tipas"
+msgstr "Slėpti, kai daromos ekrano kopijos ir filmuojamas ekranas"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "„Slėpti, kai filmuojamas ekranas“ taisyklės tipas"
+msgstr ""
+"„Slėpti, kai daromos ekrano kopijos ir filmuojamas ekranas“ taisyklės tipas"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3821,7 +3817,7 @@ msgstr "&Be antraštės juostos ir rėmelio"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "&Slėpti, kai daromos ekrano kopijos ir filmuojamas ekranas"
 
 #: useractions.cpp:256
 #, kde-format
@@ -4391,25 +4387,25 @@ msgstr "(Nereaguoja)"
 #: workspace.cpp:1310
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Įtaisytas ekranas"
 
 #: workspace.cpp:1323
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1333
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1805
 #, kde-format

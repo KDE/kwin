@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:46+0000\n"
-"PO-Revision-Date: 2026-04-15 22:55+0200\n"
+"POT-Creation-Date: 2026-05-22 00:45+0000\n"
+"PO-Revision-Date: 2026-05-20 12:17+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -1130,11 +1130,10 @@ msgstr "Fenêtres"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Pack Window Up"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "Empiler une fenêtre en haut"
+msgstr "Sélectionner une fenêtre..."
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -3121,32 +3120,32 @@ msgstr "Moins"
 msgid "More"
 msgstr "Plus"
 
-#: plugins/zoom/zoom.cpp:85
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Déplacer la zone de zoom vers la gauche"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Déplacer la zone de zoom vers la droite"
 
-#: plugins/zoom/zoom.cpp:97
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Déplacer la zone de zoom vers le haut"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:101
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Déplacer la zone de zoom vers le bas"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Déplacer la souris vers le focus"
 
-#: plugins/zoom/zoom.cpp:116
+#: plugins/zoom/zoom.cpp:114
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Déplacer la souris au centre"

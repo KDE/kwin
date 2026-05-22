@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:46+0000\n"
-"PO-Revision-Date: 2026-05-07 12:26+0400\n"
+"POT-Creation-Date: 2026-05-22 00:45+0000\n"
+"PO-Revision-Date: 2026-05-21 11:42+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1086,11 +1086,10 @@ msgstr "النوافذ"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Filter windows…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "رشّح النّوافذ…"
+msgstr "اختر نافذة…"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1805,9 +1804,7 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> يطلب التحكم في أجهزة الإدخال"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
@@ -3042,32 +3039,32 @@ msgstr "أقل"
 msgid "More"
 msgstr "أكثر"
 
-#: plugins/zoom/zoom.cpp:85
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "حرك المنطقة المكبرة لليسار"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "حرك المنطقة المكبرة لليمين"
 
-#: plugins/zoom/zoom.cpp:97
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "حرك المنطقة المكبرة للأعلى"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:101
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "حرك المنطقة المكبرة للأسفل"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "حرك الفأرة للتركيز"
 
-#: plugins/zoom/zoom.cpp:116
+#: plugins/zoom/zoom.cpp:114
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "حرك الفأرة للوسط"
@@ -3638,17 +3635,15 @@ msgstr "نوع القاعدة التمزيق"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "نوع قاعدة أخفِ من تسجيل الشاشة"
+msgstr "أخفِ من لقطات الشاشة وتسجيلات الشاشة"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "نوع قاعدة أخفِ من تسجيل الشاشة"
+msgstr "نوع قاعدة أخفِ من لقطات الشاشة وتسجيلات الشاشة"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3781,7 +3776,7 @@ msgstr "بلا &شريط العنوان والإطار"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "أ&خفِ من لقطات الشاشة وتسجيلات الشاشة"
 
 #: useractions.cpp:256
 #, kde-format
@@ -4288,7 +4283,7 @@ msgstr "بدّل إلى سطح المكتب %1"
 #: wayland/outputmanagement_v2.cpp:569
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "مستوى abm أكبر من الحد الأقصى (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:647
 #, kde-format
@@ -4349,25 +4344,25 @@ msgstr "(لا يستجيب)"
 #: workspace.cpp:1310
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "الشاشة المُدْمَجة"
 
 #: workspace.cpp:1323
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1333
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1805
 #, kde-format

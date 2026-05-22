@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 00:46+0000\n"
-"PO-Revision-Date: 2026-05-12 03:44+0900\n"
+"POT-Creation-Date: 2026-05-22 00:45+0000\n"
+"PO-Revision-Date: 2026-05-21 22:21+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -1101,11 +1101,10 @@ msgstr "視窗"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Pack Window Up"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "視窗推至上方"
+msgstr "挑選視窗…"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1815,9 +1814,7 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> 希望控制輸入裝置"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
@@ -3041,32 +3038,32 @@ msgstr "較少"
 msgid "More"
 msgstr "較多"
 
-#: plugins/zoom/zoom.cpp:85
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "將放大區域向左移動"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "將放大區域向右移動"
 
-#: plugins/zoom/zoom.cpp:97
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "將縮放區域移到上方"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:101
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "將縮放區域移到下方"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "將滑鼠移至焦點"
 
-#: plugins/zoom/zoom.cpp:116
+#: plugins/zoom/zoom.cpp:114
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "將滑鼠移至中央"
@@ -3637,17 +3634,15 @@ msgstr "撕裂規則類型"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "「從螢幕錄製當中隱藏」規則類型"
+msgstr "從螢幕截圖和螢幕錄影當中隱藏"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "「從螢幕錄製當中隱藏」規則類型"
+msgstr "「從螢幕截圖和螢幕錄影當中隱藏」規則類型"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3780,7 +3775,7 @@ msgstr "沒有標題列及框架(&N)"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "從螢幕截圖和螢幕錄影當中隱藏(&H)"
 
 #: useractions.cpp:256
 #, kde-format
@@ -4348,25 +4343,25 @@ msgstr "（沒有回應）"
 #: workspace.cpp:1310
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "內建螢幕"
 
 #: workspace.cpp:1323
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1333
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2"
 
 #: workspace.cpp:1805
 #, kde-format
