@@ -46,4 +46,4 @@ msgstr "使用触摸屏和数位板时"
 #: ui/main.qml:34
 #, kde-format
 msgid "With Touch, Tablet, and Mouse"
-msgstr ""
+msgstr "使用触摸屏、数位板和鼠标时"

@@ -1090,7 +1090,7 @@ msgstr "窗口"
 #, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr ""
+msgstr "选择窗口…"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1800,14 +1800,12 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> 正在请求控制输入设备"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr "总是允许声称为 %1 的应用"
+msgstr ""
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
