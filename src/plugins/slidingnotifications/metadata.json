@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Slide Plasma notifications in and out",
+        "Description[ar]": "حرك إشعارات بلازما للداخل والخارج",
         "Description[ca@valencia]": "Llisca entrant i eixint les notificacions de Plasma",
         "Description[ca]": "Llisca entrant i sortint les notificacions del Plasma",
         "Description[de]": "Plasma-Benachrichtigungen ein- und ausgleiten lassen",
@@ -19,9 +20,11 @@
         "Description[tr]": "Plasma bildirimlerini içeri ve dışarı kaydır",
         "Description[uk]": "Виковзування за заковзування сповіщень Плазми",
         "Description[zh_CN]": "滑动显示/隐藏 Plasma 通知",
+        "Description[zh_TW]": "讓 Plasma 通知滑進滑出",
         "EnabledByDefault": true,
         "License": "GPL",
         "Name": "Sliding notifications",
+        "Name[ar]": "انزلاق الإشعارات",
         "Name[ca@valencia]": "Notificacions desplaçant-se",
         "Name[ca]": "Notificacions desplaçant-se",
         "Name[de]": "Gleitende Benachrichtigungen",
@@ -38,6 +41,7 @@
         "Name[sl]": "Drseča obvestila",
         "Name[tr]": "Kayan Bildirimler",
         "Name[uk]": "Ковзні сповіщення",
-        "Name[zh_CN]": "滑动通知"
+        "Name[zh_CN]": "滑动通知",
+        "Name[zh_TW]": "滑入通知"
     }
 }
