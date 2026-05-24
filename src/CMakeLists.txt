@@ -30,6 +30,9 @@ target_compile_definitions(kwin PRIVATE
 target_compile_definitions(kwin PUBLIC
     -DVULKAN_HPP_NO_EXCEPTIONS=1
     -DVULKAN_HPP_ASSERT_ON_RESULT=void
+    -DVULKAN_HPP_NO_SPACESHIP_OPERATOR=1
+    -DVULKAN_HPP_TYPESAFE_CONVERSION=1
+    -DVULKAN_HPP_HANDLES_MOVE_EXCHANGE=1
 )
 
 target_sources(kwin PRIVATE
