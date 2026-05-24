@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-20 02:42+0000\n"
-"PO-Revision-Date: 2026-05-15 13:52+0200\n"
+"POT-Creation-Date: 2026-05-23 02:41+0000\n"
+"PO-Revision-Date: 2026-05-21 13:41+0200\n"
 "Last-Translator: Philipp Kiemle <l10n.daphipz@fastmail.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -1847,14 +1847,12 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> möchte Eingabegeräte steuern"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr "Anwendungen immer erlauben, sich als %1 auszugeben"
+msgstr "Anwendungen, die sich als %1 ausgeben, immer erlauben"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -3094,32 +3092,32 @@ msgstr "Weniger"
 msgid "More"
 msgstr "Mehr"
 
-#: plugins/zoom/zoom.cpp:85
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Vergrößerten Bereich nach links verschieben"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:89
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Vergrößerten Bereich nach rechts verschieben"
 
-#: plugins/zoom/zoom.cpp:97
+#: plugins/zoom/zoom.cpp:95
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Vergrößerten Bereich nach oben verschieben"
 
-#: plugins/zoom/zoom.cpp:103
+#: plugins/zoom/zoom.cpp:101
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Vergrößerten Bereich nach unten verschieben"
 
-#: plugins/zoom/zoom.cpp:110
+#: plugins/zoom/zoom.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Mauszeiger in den Fokus verschieben"
 
-#: plugins/zoom/zoom.cpp:116
+#: plugins/zoom/zoom.cpp:114
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mauszeiger zentrieren"
