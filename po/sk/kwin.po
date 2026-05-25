@@ -1827,9 +1827,7 @@ msgid "<application>%1</application> is asking to control input devices"
 msgstr "<application>%1</application> žiada o ovládanie vstupných zariadení"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"

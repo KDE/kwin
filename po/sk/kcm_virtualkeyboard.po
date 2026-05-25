@@ -43,8 +43,7 @@ msgid "With Touch and Tablet"
 msgstr "S dotykom a tabletom"
 
 #: ui/main.qml:34
-#, fuzzy, kde-format
-#| msgid "With Touch, Tablet and Mouse"
+#, kde-format
 msgid "With Touch, Tablet, and Mouse"
 msgstr "S dotykom, tabletom a myšou"
 
