@@ -14,8 +14,10 @@
 namespace KWin
 {
 
-class RuleItem
+class RuleItem : public QObject
 {
+    Q_OBJECT
+
 public:
     enum Type {
         Undefined,
