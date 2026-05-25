@@ -1805,7 +1805,7 @@ msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "总是允许声称为 %1 的应用"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
