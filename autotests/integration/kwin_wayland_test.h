@@ -1255,8 +1255,8 @@ Window *waitForWaylandWindowShown(int timeout = 5000);
 /**
  * Combination of @link{render} and @link{waitForWaylandWindowShown}.
  */
-Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
-Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
+Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32_Premultiplied, int timeout = 5000);
+Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32_Premultiplied, int timeout = 5000);
 
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QImage &img, int timeout = 5000);
 Window *renderAndWaitForShown(KWayland::Client::ShmPool *shm, KWayland::Client::Surface *surface, const QImage &img, int timeout = 5000);
