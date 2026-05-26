@@ -97,6 +97,9 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     connect(effects, &EffectsHandler::startupRemoved, this, &StartupFeedbackEffect::gotRemoveStartup);
     connect(effects, &EffectsHandler::startupChanged, this, &StartupFeedbackEffect::gotStartupChange);
 
+    connect(Cursors::self(), &Cursors::hiddenChanged, this, &StartupFeedbackEffect::maybeStartAfterCursorChange);
+    connect(Cursors::self()->mouse(), &Cursor::cursorChanged, this, &StartupFeedbackEffect::maybeStartAfterCursorChange);
+
     connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this]() {
         reconfigure(ReconfigureAll);
     });
@@ -154,7 +157,7 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data)
 {
     const int time = m_clock.tick(data.view).count();
 
-    if (m_active && effects->isCursorHidden()) {
+    if (m_active && cursorEffectivelyHidden()) {
         stop();
     }
     if (m_active) {
@@ -192,15 +195,6 @@ void StartupFeedbackEffect::postPaintScreen()
 
 void StartupFeedbackEffect::gotNewStartup(const QString &id, const QIcon &icon)
 {
-    if (Cursors::self()->isCursorHidden()) {
-        return;
-    }
-
-    const Cursor *mouse = Cursors::self()->mouse();
-    if (mouse->source() && mouse->source()->isBlank()) {
-        return;
-    }
-
     Startup &startup = m_startups[id];
     startup.icon = icon;
 
@@ -241,9 +235,30 @@ void StartupFeedbackEffect::gotStartupChange(const QString &id, const QIcon &ico
     }
 }
 
+bool StartupFeedbackEffect::cursorEffectivelyHidden() const
+{
+    if (Cursors::self()->isCursorHidden()) {
+        return true;
+    }
+
+    const Cursor *mouse = Cursors::self()->mouse();
+    if (mouse->source() && mouse->source()->isBlank()) {
+        return true;
+    }
+
+    return false;
+}
+
+void StartupFeedbackEffect::maybeStartAfterCursorChange()
+{
+    if (!m_currentStartup.isEmpty() && !cursorEffectivelyHidden()) {
+        start(m_startups[m_currentStartup]);
+    }
+}
+
 void StartupFeedbackEffect::start(const Startup &startup)
 {
-    if (m_type == NoFeedback || m_splashVisible || effects->isCursorHidden()) {
+    if (m_type == NoFeedback || m_splashVisible || cursorEffectivelyHidden()) {
         return;
     }
 

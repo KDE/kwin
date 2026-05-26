@@ -75,6 +75,9 @@ private:
     QPoint feedbackOffset() const;
     QSize feedbackIconSize() const;
 
+    bool cursorEffectivelyHidden() const;
+    void maybeStartAfterCursorChange();
+
     qreal m_bounceSizesRatio;
 #if KWIN_BUILD_X11
     KStartupInfo *m_startupInfo;
