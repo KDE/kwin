@@ -366,17 +366,14 @@ bool Edge::canActivate(const QPoint &cursorPos, const std::chrono::microseconds 
 void Edge::handle(const QPoint &cursorPos)
 {
     Window *movingClient = Workspace::self()->moveResizeWindow();
-    if ((edges()->isDesktopSwitchingMovingClients() && movingClient && !movingClient->isInteractiveResize()) || (edges()->isDesktopSwitching() && isScreenEdge())) {
-        // always switch desktops in case:
-        // moving a Client and option for switch on client move is enabled
-        // or switch on screen edge is enabled
+    // When dragging a window, desktop switching takes unconditional priority.
+    if (edges()->isDesktopSwitchingMovingClients() && movingClient && !movingClient->isInteractiveResize()) {
         switchDesktop(cursorPos);
         return;
     }
+
     if (movingClient) {
-        // if we are moving a window we don't want to trigger the actions. This just results in
-        // problems, e.g. Desktop Grid activated or screen locker activated which just cannot
-        // work as we hold a grab.
+        // Holding a grab: don't trigger actions (Desktop Grid, screen locker, etc.)
         return;
     }
 
@@ -387,12 +384,15 @@ void Edge::handle(const QPoint &cursorPos)
         return;
     }
 
+    // Registered consumers (e.g. auto-hide panels) take priority over desktop switching.
     if (handlePointerAction() || handleByCallback()) {
         pushCursorBack(cursorPos);
         return;
     }
-    if (edges()->isDesktopSwitching() && isCorner()) {
-        // try again desktop switching for the corner
+
+    // Desktop switching fires only if no registered consumer handled the event.
+    // Applies to all screen edges including corners.
+    if (edges()->isDesktopSwitching()) {
         switchDesktop(cursorPos);
     }
 }
