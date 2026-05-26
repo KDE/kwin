@@ -92,6 +92,9 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
             },
         };
         while (currentOp && !currentOp->canBeUsedFor(initialOp, false)) {
+            if (!currentOp->canBypass()) {
+                return false;
+            }
             currentOp = currentOp->next();
         }
         if (!currentOp) {
@@ -102,6 +105,9 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
     auto ops = std::span(pipeline.ops);
     while (!ops.empty()) {
         while (currentOp && !currentOp->canBeUsedFor(ops.front(), true)) {
+            if (!currentOp->canBypass()) {
+                return false;
+            }
             currentOp = currentOp->next();
         }
         if (!currentOp) {
@@ -121,6 +127,12 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
             valueScaling = 1;
         }
         ops = ops.subspan(1);
+    }
+    while (currentOp) {
+        if (!currentOp->canBypass()) {
+            return false;
+        }
+        currentOp = currentOp->next();
     }
 
     // now actually program the properties
