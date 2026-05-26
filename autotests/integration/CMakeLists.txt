@@ -194,14 +194,14 @@ qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKey
 integrationTest(NAME testVirtualKeyboardDBus SRCS test_virtualkeyboard_dbus.cpp ${DBUS_SRCS})
 
 if (KWIN_BUILD_GLOBALSHORTCUTS)
-    integrationTest(NAME testGlobalShortcuts SRCS globalshortcuts_test.cpp LIBS XCB::ICCCM KF6::GlobalAccel KF6::I18n XKB::XKB)
+    integrationTest(NAME testGlobalShortcuts SRCS globalshortcuts_test.cpp LIBS KF6::GlobalAccel KF6::I18n XKB::XKB OPTIONAL_LIBS XCB::ICCCM)
     integrationTest(NAME testKWinBindings SRCS kwinbindings_test.cpp LIBS KF6::I18n)
 endif()
 if (TARGET K::KPipeWire)
     integrationTest(NAME testScreencasting SRCS screencasting_test.cpp LIBS K::KPipeWire)
 endif()
 
-if (KWIN_BUILD_ACTIVITIES)
+if (KWIN_BUILD_ACTIVITIES AND KWIN_BUILD_X11)
     integrationTest(NAME testActivities SRCS activities_test.cpp LIBS XCB::ICCCM Plasma::Activities)
 endif()
 

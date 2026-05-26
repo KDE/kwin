@@ -16,8 +16,8 @@
 #include "wayland/keyboard.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
-#include "x11window.h"
 #include "xkb.h"
 
 #include <KWayland/Client/surface.h>
@@ -27,8 +27,12 @@
 #include <QAction>
 
 #include <linux/input.h>
+
+#if KWIN_BUILD_X11
+#include "utils/xcbutils.h"
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
+#endif
 
 using namespace KWin;
 
@@ -312,6 +316,7 @@ void GlobalShortcutsTest::testKeypad()
 
 void GlobalShortcutsTest::testX11WindowShortcut()
 {
+#if KWIN_BUILD_X11
     // create an X11 window
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
@@ -336,7 +341,7 @@ void GlobalShortcutsTest::testX11WindowShortcut()
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
     QVERIFY(windowCreatedSpy.wait());
-    X11Window *window = windowCreatedSpy.last().first().value<X11Window *>();
+    Window *window = windowCreatedSpy.last().first().value<Window *>();
     QVERIFY(window);
 
     QCOMPARE(workspace()->activeWindow(), window);
@@ -367,11 +372,12 @@ void GlobalShortcutsTest::testX11WindowShortcut()
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     // destroy window again
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
+    QSignalSpy windowClosedSpy(window, &Window::closed);
     xcb_unmap_window(c.get(), windowId);
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
     QVERIFY(windowClosedSpy.wait());
+#endif
 }
 
 void GlobalShortcutsTest::testWaylandWindowShortcut()
