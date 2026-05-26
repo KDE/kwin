@@ -1246,7 +1246,7 @@ void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModi
         if (isRequestedFullScreen()) {
             nextMoveResizeGeom = workspace()->clientArea(FullScreenArea, this, global);
         } else {
-            nextMoveResizeGeom = nextInteractiveMoveGeometry(global);
+            nextMoveResizeGeom = nextInteractiveMoveGeometry(frameGeometry());
         }
 
         if (nextMoveResizeGeom != currentMoveResizeGeom) {
@@ -1662,16 +1662,15 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
     return nextMoveResizeGeom;
 }
 
-RectF Window::nextInteractiveMoveGeometry(const QPointF &global) const
+RectF Window::nextInteractiveMoveGeometry(const RectF &rect) const
 {
-    const RectF currentMoveResizeGeom = frameGeometry();
     if (!isMovable()) {
-        return currentMoveResizeGeom;
+        return rect;
     }
 
-    RectF nextMoveResizeGeom = currentMoveResizeGeom;
-    nextMoveResizeGeom.moveTopLeft(QPointF(global.x() - interactiveMoveOffset().x() * currentMoveResizeGeom.width(),
-                                           global.y() - interactiveMoveOffset().y() * currentMoveResizeGeom.height()));
+    RectF nextMoveResizeGeom = rect;
+    nextMoveResizeGeom.moveTopLeft(QPointF(interactiveMoveResizeAnchor().x() - interactiveMoveOffset().x() * rect.width(),
+                                           interactiveMoveResizeAnchor().y() - interactiveMoveOffset().y() * rect.height()));
     nextMoveResizeGeom.moveTopLeft(workspace()->adjustWindowPosition(this, nextMoveResizeGeom.topLeft(), isUnrestrictedInteractiveMoveResize()));
 
     if (!isUnrestrictedInteractiveMoveResize()) {

@@ -1765,7 +1765,7 @@ protected:
      */
     virtual void doInteractiveResizeSync(const RectF &rect);
     qreal titlebarThickness() const;
-    RectF nextInteractiveMoveGeometry(const QPointF &global) const;
+    RectF nextInteractiveMoveGeometry(const RectF &rect) const;
     RectF nextInteractiveResizeGeometry(const QPointF &global) const;
     void dontInteractiveMoveResize();
 
