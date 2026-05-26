@@ -236,10 +236,7 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
             fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
         }
         if (!fullscreen) {
-            const QPointF anchor = interactiveMoveResizeAnchor();
-            const QPointF offset = interactiveMoveOffset();
-            frameGeometry.moveTopLeft(QPointF(anchor.x() - offset.x() * frameGeometry.width(),
-                                              anchor.y() - offset.y() * frameGeometry.height()));
+            frameGeometry = nextInteractiveMoveGeometry(frameGeometry);
         }
     }
 
