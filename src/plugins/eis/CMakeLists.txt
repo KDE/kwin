@@ -26,22 +26,25 @@ target_sources(eis PRIVATE
     eisinputcapture.cpp
     eisinputcapturemanager.cpp
     eisinputcapturefilter.cpp
-    xwaylandeiscontext.cpp
 )
 
 target_link_libraries(eis PRIVATE kwin KF6::I18n KF6::GlobalAccel KF6::ConfigGui Libeis::Libeis XKB::XKB)
 
-add_executable(kwin_eis_prompter eisprompter.cpp)
-kconfig_target_kcfg_file(kwin_eis_prompter
-    FILE ${PROJECT_SOURCE_DIR}/src/kcms/xwayland/kwinxwaylandsettings.kcfg
-    CLASS_NAME XwaylandSettings
-    MUTATORS
-    NOTIFIERS
-)
-target_link_libraries(kwin_eis_prompter PRIVATE  KF6::I18n  KF6::ConfigGui KF6::WidgetsAddons KF6::Service)
-install(TARGETS kwin_eis_prompter DESTINATION ${KDE_INSTALL_LIBEXECDIR})
+if(KWIN_BUILD_X11)
+    target_sources(eis PRIVATE xwaylandeiscontext.cpp)
 
-set(PROMPTER_BIN ${KDE_INSTALL_FULL_LIBEXECDIR}/kwin_eis_prompter)
+    add_executable(kwin_eis_prompter eisprompter.cpp)
+    kconfig_target_kcfg_file(kwin_eis_prompter
+        FILE ${PROJECT_SOURCE_DIR}/src/kcms/xwayland/kwinxwaylandsettings.kcfg
+        CLASS_NAME XwaylandSettings
+        MUTATORS
+        NOTIFIERS
+    )
+    target_link_libraries(kwin_eis_prompter PRIVATE  KF6::I18n  KF6::ConfigGui KF6::WidgetsAddons KF6::Service)
+    install(TARGETS kwin_eis_prompter DESTINATION ${KDE_INSTALL_LIBEXECDIR})
+
+    set(PROMPTER_BIN ${KDE_INSTALL_FULL_LIBEXECDIR}/kwin_eis_prompter)
+endif()
 
 if (Libeis_VERSION VERSION_GREATER_EQUAL "1.5")
     set(EIS_HAVE_GET_CLIENT_PID 1)

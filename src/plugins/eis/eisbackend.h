@@ -26,7 +26,10 @@ namespace KWin
 {
 
 class DbusEisContext;
+
+#if KWIN_BUILD_X11
 class XWaylandEisContext;
+#endif
 
 class EisBackend : public KWin::InputBackend, public QDBusContext
 {
@@ -49,7 +52,9 @@ public:
 private:
     QDBusServiceWatcher *m_serviceWatcher;
     RamFile m_keymapFile;
+#if KWIN_BUILD_X11
     std::unique_ptr<XWaylandEisContext> m_xWaylandContext;
+#endif
     std::vector<std::unique_ptr<DbusEisContext>> m_contexts;
 };
 
