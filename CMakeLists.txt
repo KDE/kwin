@@ -272,7 +272,6 @@ if (KWIN_BUILD_X11)
         TYPE RUNTIME
         PURPOSE "Needed for running kwin_wayland"
     )
-    set(HAVE_XWAYLAND_ENABLE_EI_PORTAL ${Xwayland_HAVE_ENABLE_EI_PORTAL})
 
     # for kwin internal things
     set(HAVE_X11_XCB ${X11_XCB_FOUND})
