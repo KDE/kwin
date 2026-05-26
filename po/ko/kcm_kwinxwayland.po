@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# SPDX-FileCopyrightText: 2023, 2024, 2025 Shinjo Park <kde@peremen.name>
+# SPDX-FileCopyrightText: 2023, 2024, 2025, 2026 Shinjo Park <kde@peremen.name>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-05 00:46+0000\n"
-"PO-Revision-Date: 2025-06-10 23:02+0200\n"
+"PO-Revision-Date: 2026-05-25 21:48+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: ui/main.qml:28
 #, kde-kuit-format
@@ -134,20 +134,18 @@ msgid "Control of pointer and keyboard:"
 msgstr "포인터와 키보드 제어:"
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "허용됨"
+msgstr "허용된 앱"
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "허용된 앱 보기…"
 
 #: ui/main.qml:163
 #, kde-format
@@ -157,13 +155,12 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"일반적인 보안 수준. XWayland를 사용하는 앱의 식별자를 검증할 수 없기 때문에, "
+"XWayland를 사용하는 앱 중 이 목록에 있는 앱으로 보이는 것은 컴퓨터를 제어할 "
+"수 있습니다."
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -189,20 +186,18 @@ msgstr ""
 "정을 변경하십시오."
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "포인터와 키보드 제어:"
+msgstr "포인터와 키보드 제어가 허용된 앱"
 
 #: ui/main.qml:209
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
-msgstr ""
+msgstr "%1에서 묻지 않고 포인터와 키보드 제어를 허용하지 않음"
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."
