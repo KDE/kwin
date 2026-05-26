@@ -45,7 +45,7 @@ EisBackend::EisBackend(QObject *parent)
     : KWin::InputBackend(parent)
     , m_serviceWatcher(new QDBusServiceWatcher(this))
 {
-#if KWIN_BUILD_X11 && HAVE_XWAYLAND_ENABLE_EI_PORTAL
+#if KWIN_BUILD_X11
     // Unfortunately there is no way to pass a connected socket fd to libei like WAYLAND_SOCKET
     // in libwayland so we are resorting to this hack
     // https://gitlab.freedesktop.org/libinput/libei/-/issues/63
