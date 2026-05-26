@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "config-kwin.h"
+
 #include <QFlag>
 #include <QSocketNotifier>
 #include <QString>
@@ -60,6 +62,7 @@ public:
     const QString dbusService;
 };
 
+#if KWIN_BUILD_X11
 class XWaylandEisContext : public EisContext
 {
 public:
@@ -68,5 +71,6 @@ public:
 
     const QByteArray socketName;
 };
+#endif
 
 }
