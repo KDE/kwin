@@ -180,7 +180,7 @@ bool Selection::handleSelectionRequest(xcb_selection_request_event_t *event)
         return true;
     }
 
-    if (m_window != event->owner || !m_waylandSource) {
+    if (m_window != event->owner) {
         if (event->time < m_timestamp) {
             // cancel earlier attempts at receiving a selection
             // TODO: is this for sure without problems?
@@ -188,6 +188,11 @@ bool Selection::handleSelectionRequest(xcb_selection_request_event_t *event)
             return true;
         }
         return false;
+    }
+
+    if (!m_waylandSource) {
+        sendSelectionNotify(event, false);
+        return true;
     }
 
     if (event->target == atoms->targets) {
