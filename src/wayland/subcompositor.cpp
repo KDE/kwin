@@ -51,7 +51,6 @@ void SubCompositorInterfacePrivate::subcompositor_get_subsurface(Resource *resou
     } else {
         surface->setRole(SubSurfaceInterface::role());
     }
-    surface->nextRoleGeneration();
 
     if (surface == parent) {
         wl_resource_post_error(resource->handle, error_bad_surface, "wl_surface@%d cannot be its own parent", wl_resource_get_id(surface_resource));
@@ -198,7 +197,6 @@ SubSurfaceInterface::~SubSurfaceInterface()
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
         surfacePrivate->subsurface.handle = nullptr;
         surfacePrivate->subsurface.transaction.reset();
-        d->surface->nextRoleGeneration();
     }
 }
 

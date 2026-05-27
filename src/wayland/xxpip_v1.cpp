@@ -56,7 +56,6 @@ void XXPipShellV1InterfacePrivate::xx_pip_shell_v1_get_pip(Resource *resource, u
     } else {
         xdgSurface->surface()->setRole(XXPipV1Interface::role());
     }
-    xdgSurface->surface()->nextRoleGeneration();
 
     wl_resource *pipResource = wl_resource_create(resource->client(), &xx_pip_v1_interface, resource->version(), id);
     auto pip = new XXPipV1Interface(q, xdgSurface, pipResource);
@@ -90,7 +89,6 @@ class XXPipV1InterfacePrivate : public SurfaceExtension<XXPipV1InterfacePrivate,
 {
 public:
     XXPipV1InterfacePrivate(XXPipV1Interface *q, XXPipShellV1Interface *shell, XdgSurfaceInterface *xdgSurface);
-    ~XXPipV1InterfacePrivate() override;
 
     void apply(XXPipV1Commit *commit);
     void reset();
@@ -118,13 +116,6 @@ XXPipV1InterfacePrivate::XXPipV1InterfacePrivate(XXPipV1Interface *q, XXPipShell
     , shell(shell)
     , xdgSurface(xdgSurface)
 {
-}
-
-XXPipV1InterfacePrivate::~XXPipV1InterfacePrivate()
-{
-    if (xdgSurface->surface()) {
-        xdgSurface->surface()->nextRoleGeneration();
-    }
 }
 
 void XXPipV1InterfacePrivate::apply(XXPipV1Commit *commit)
