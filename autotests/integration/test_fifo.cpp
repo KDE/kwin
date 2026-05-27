@@ -45,6 +45,7 @@ private Q_SLOTS:
     void testFifoOnSubsurfaces();
     void testBarrierNotClearedByEmptyCommit();
     void testFifoOnUnmappedSurface();
+    void testFifoOnSubsurfaceOfUnmappedToplevel_data();
     void testFifoOnSubsurfaceOfUnmappedToplevel();
     void testFifoOnSubsurfaceOfUnmappedSubsurface();
     void testFifoOnSubsurfaceOfUnmappedSubsurfaceInitiallyMapped();
@@ -447,12 +448,27 @@ void FifoTest::testFifoOnUnmappedSurface()
     QVERIFY(spy2.count() || spy2.wait());
 }
 
+void FifoTest::testFifoOnSubsurfaceOfUnmappedToplevel_data()
+{
+    QTest::addColumn<bool>("mapWindow");
+    QTest::addColumn<bool>("destroyShell");
+
+    QTest::addRow("never mapped") << false << false;
+    QTest::addRow("initially mapped") << true << false;
+    QTest::addRow("initially mapped, destroy shell") << true << true;
+}
+
 void FifoTest::testFifoOnSubsurfaceOfUnmappedToplevel()
 {
     // This test verifies that transactions on subsurfaces of a toplevel
-    // that is never mapped don't get stuck because of fifo barriers
+    // that isn't mapped don't get stuck because of fifo barriers
+    QFETCH(bool, mapWindow);
+    QFETCH(bool, destroyShell);
 
     Test::XdgToplevelWindow window;
+    if (mapWindow) {
+        QVERIFY(window.show());
+    }
 
     auto surface = Test::createSurface();
     auto subsurface = Test::createSubSurface(surface.get(), window.m_surface.get());
@@ -469,6 +485,13 @@ void FifoTest::testFifoOnSubsurfaceOfUnmappedToplevel()
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    if (destroyShell) {
+        window.m_toplevel.reset();
+        window.m_window = nullptr;
+    } else if (mapWindow) {
+        window.unmap();
+    }
 
     QSignalSpy spy0(frames[0].get(), &Test::WpPresentationFeedback::discarded);
     QSignalSpy spy1(frames[1].get(), &Test::WpPresentationFeedback::discarded);
