@@ -1528,46 +1528,75 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
     // TODO move whole group when moving its leader or when the leader is not mapped?
 
     SizeMode sizeMode = SizeModeAny;
-    auto calculateMoveResizeGeom = [&topleft, &bottomright, &orig, &nextMoveResizeGeom, &sizeMode, &gravity]() {
-        switch (gravity) {
-        case Gravity::TopLeft:
-            nextMoveResizeGeom = RectF(topleft, orig.bottomRight());
-            break;
-        case Gravity::BottomRight:
-            nextMoveResizeGeom = RectF(orig.topLeft(), bottomright);
-            break;
-        case Gravity::BottomLeft:
-            nextMoveResizeGeom = RectF(QPointF(topleft.x(), orig.y()), QPointF(orig.right(), bottomright.y()));
-            break;
-        case Gravity::TopRight:
-            nextMoveResizeGeom = RectF(QPointF(orig.x(), topleft.y()), QPointF(bottomright.x(), orig.bottom()));
-            break;
-        case Gravity::Top:
-            nextMoveResizeGeom = RectF(QPointF(orig.left(), topleft.y()), orig.bottomRight());
-            sizeMode = SizeModeFixedH; // try not to affect height
-            break;
-        case Gravity::Bottom:
-            nextMoveResizeGeom = RectF(orig.topLeft(), QPointF(orig.right(), bottomright.y()));
-            sizeMode = SizeModeFixedH;
-            break;
-        case Gravity::Left:
-            nextMoveResizeGeom = RectF(QPointF(topleft.x(), orig.top()), orig.bottomRight());
-            sizeMode = SizeModeFixedW;
-            break;
-        case Gravity::Right:
-            nextMoveResizeGeom = RectF(orig.topLeft(), QPointF(bottomright.x(), orig.bottom()));
-            sizeMode = SizeModeFixedW;
-            break;
-        case Gravity::None:
-            Q_UNREACHABLE();
-            break;
-        }
-    };
+    switch (gravity) {
+    case Gravity::TopLeft:
+        nextMoveResizeGeom = RectF(topleft, orig.bottomRight());
+        break;
+    case Gravity::BottomRight:
+        nextMoveResizeGeom = RectF(orig.topLeft(), bottomright);
+        break;
+    case Gravity::BottomLeft:
+        nextMoveResizeGeom = RectF(QPointF(topleft.x(), orig.y()), QPointF(orig.right(), bottomright.y()));
+        break;
+    case Gravity::TopRight:
+        nextMoveResizeGeom = RectF(QPointF(orig.x(), topleft.y()), QPointF(bottomright.x(), orig.bottom()));
+        break;
+    case Gravity::Top:
+        nextMoveResizeGeom = RectF(QPointF(orig.left(), topleft.y()), orig.bottomRight());
+        sizeMode = SizeModeFixedH; // try not to affect height
+        break;
+    case Gravity::Bottom:
+        nextMoveResizeGeom = RectF(orig.topLeft(), QPointF(orig.right(), bottomright.y()));
+        sizeMode = SizeModeFixedH;
+        break;
+    case Gravity::Left:
+        nextMoveResizeGeom = RectF(QPointF(topleft.x(), orig.top()), orig.bottomRight());
+        sizeMode = SizeModeFixedW;
+        break;
+    case Gravity::Right:
+        nextMoveResizeGeom = RectF(orig.topLeft(), QPointF(bottomright.x(), orig.bottom()));
+        sizeMode = SizeModeFixedW;
+        break;
+    case Gravity::None:
+        Q_UNREACHABLE();
+        break;
+    }
 
-    // first resize (without checking constrains), then snap, then check bounds, then check constrains
-    calculateMoveResizeGeom();
-    // adjust new size to snap to other windows/borders
     nextMoveResizeGeom = workspace()->adjustWindowSize(this, nextMoveResizeGeom, gravity);
+
+    const QSizeF constrainedSize = constrainFrameSize(nextMoveResizeGeom.size(), sizeMode);
+    switch (gravity) {
+    case Gravity::TopLeft:
+        nextMoveResizeGeom.setLeft(nextMoveResizeGeom.right() - constrainedSize.width());
+        nextMoveResizeGeom.setTop(nextMoveResizeGeom.bottom() - constrainedSize.height());
+        break;
+    case Gravity::Top:
+        nextMoveResizeGeom.setTop(nextMoveResizeGeom.bottom() - constrainedSize.height());
+        break;
+    case Gravity::TopRight:
+        nextMoveResizeGeom.setRight(nextMoveResizeGeom.left() + constrainedSize.width());
+        nextMoveResizeGeom.setTop(nextMoveResizeGeom.bottom() - constrainedSize.height());
+        break;
+    case Gravity::Right:
+        nextMoveResizeGeom.setRight(nextMoveResizeGeom.left() + constrainedSize.width());
+        break;
+    case Gravity::BottomRight:
+        nextMoveResizeGeom.setRight(nextMoveResizeGeom.left() + constrainedSize.width());
+        nextMoveResizeGeom.setBottom(nextMoveResizeGeom.top() + constrainedSize.height());
+        break;
+    case Gravity::Bottom:
+        nextMoveResizeGeom.setBottom(nextMoveResizeGeom.top() + constrainedSize.height());
+        break;
+    case Gravity::BottomLeft:
+        nextMoveResizeGeom.setLeft(nextMoveResizeGeom.right() - constrainedSize.width());
+        nextMoveResizeGeom.setBottom(nextMoveResizeGeom.top() + constrainedSize.height());
+        break;
+    case Gravity::Left:
+        nextMoveResizeGeom.setLeft(nextMoveResizeGeom.right() - constrainedSize.width());
+        break;
+    case Gravity::None:
+        Q_UNREACHABLE();
+    }
 
     if (!isUnrestrictedInteractiveMoveResize()) {
         if (const auto anchor = confineInteractiveResize(nextMoveResizeGeom, gravity, 100, titlebarThickness())) {
@@ -1595,28 +1624,8 @@ RectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
             default:
                 Q_UNREACHABLE();
             }
-        } else {
-            nextMoveResizeGeom = currentMoveResizeGeom;
         }
     }
-
-    // Always obey size hints, even when in "unrestricted" mode
-    QSizeF size = constrainFrameSize(nextMoveResizeGeom.size(), sizeMode);
-    // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
-    topleft = QPointF(nextMoveResizeGeom.right() - size.width(), nextMoveResizeGeom.bottom() - size.height());
-    bottomright = QPointF(nextMoveResizeGeom.left() + size.width(), nextMoveResizeGeom.top() + size.height());
-    orig = nextMoveResizeGeom;
-
-    // if aspect ratios are specified, both dimensions may change.
-    // Therefore grow to the right/bottom if needed.
-    // TODO it should probably obey gravity rather than always using right/bottom ?
-    if (sizeMode == SizeModeFixedH) {
-        orig.setRight(bottomright.x());
-    } else if (sizeMode == SizeModeFixedW) {
-        orig.setBottom(bottomright.y());
-    }
-
-    calculateMoveResizeGeom();
 
     return nextMoveResizeGeom;
 }
