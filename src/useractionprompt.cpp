@@ -49,7 +49,7 @@ bool UserActionPrompt::shouldShow()
     KConfig cfg(QStringLiteral("kwin_dialogsrc"));
     KConfigGroup dontAgainGroup(&cfg, QStringLiteral("Notification Messages"));
     const QString dontAgainKey = QStringLiteral("altf3warning");
-    return !dontAgainGroup.readEntry(dontAgainKey, true);
+    return !dontAgainGroup.readEntry(dontAgainKey, false);
 }
 
 void UserActionPrompt::start()
