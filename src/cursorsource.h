@@ -32,8 +32,6 @@ public:
     QSizeF size() const;
     QPointF hotspot() const;
 
-    virtual void frame(std::chrono::milliseconds timestamp);
-
 Q_SIGNALS:
     void changed();
 
@@ -85,8 +83,6 @@ public:
     explicit SurfaceCursorSource(QObject *parent = nullptr);
 
     SurfaceInterface *surface() const;
-
-    void frame(std::chrono::milliseconds timestamp) override;
 
 public Q_SLOTS:
     void update(SurfaceInterface *surface, const QPointF &hotspot);

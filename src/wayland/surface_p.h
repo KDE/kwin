@@ -13,6 +13,7 @@
 #include <QHash>
 #include <QList>
 #include <QPointer>
+#include <QTimer>
 // Wayland
 #include "qwayland-server-wayland.h"
 // C++
@@ -202,6 +203,7 @@ public:
     AlphaModifierSurfaceV1 *alphaModifier = nullptr;
     FifoV1Surface *fifoSurface = nullptr;
     ColorRepresentationSurfaceV1 *colorRepresentation = nullptr;
+    QTimer fifoFallbackTimer;
 
     struct
     {
