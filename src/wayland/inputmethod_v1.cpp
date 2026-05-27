@@ -434,7 +434,6 @@ public:
         } else {
             surface->setRole(InputPanelSurfaceV1Interface::role());
         }
-        surface->nextRoleGeneration();
 
         auto interface = new InputPanelSurfaceV1Interface(surface, id, nullptr);
         interface->d->init(resource->client(), id, resource->version());

@@ -100,7 +100,6 @@ struct SurfaceState
     bool fifoBarrier = false;
     bool hasFifoWaitCondition = false;
     RegionF blurRegion;
-    uint32_t mainSurfaceRoleGeneration = 0;
 
     struct
     {
@@ -162,7 +161,6 @@ public:
     CompositorInterface *compositor;
     SurfaceInterface *q;
     SurfaceRole *role = nullptr;
-    uint32_t mainSurfaceRoleGeneration = 0;
     std::unique_ptr<SurfaceState> current;
     std::unique_ptr<SurfaceState> pending;
     RectF bufferSourceBox;

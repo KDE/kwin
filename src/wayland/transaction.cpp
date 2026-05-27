@@ -61,10 +61,6 @@ bool Transaction::isReady() const
             }
         }
 
-        if (entry.surface && entry.surface->mainSurfaceRoleGeneration() > entry.state->mainSurfaceRoleGeneration) {
-            return false;
-        }
-
         return entry.state->hasFifoWaitCondition && entry.surface->hasFifoBarrier();
     });
 }
