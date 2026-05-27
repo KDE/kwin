@@ -31,10 +31,6 @@ QPointF CursorSource::hotspot() const
     return m_hotspot;
 }
 
-void CursorSource::frame(std::chrono::milliseconds timestamp)
-{
-}
-
 ShapeCursorSource::ShapeCursorSource(QObject *parent)
     : CursorSource(parent)
 {
@@ -128,17 +124,6 @@ SurfaceCursorSource::SurfaceCursorSource(QObject *parent)
 SurfaceInterface *SurfaceCursorSource::surface() const
 {
     return m_surface;
-}
-
-void SurfaceCursorSource::frame(std::chrono::milliseconds timestamp)
-{
-    if (m_surface) {
-        m_surface->traverseTree([&timestamp](SurfaceInterface *surface) {
-            surface->frameRendered(timestamp.count());
-            // FIXME also handle presentation feedback!
-            surface->clearFifoBarrier();
-        });
-    }
 }
 
 void SurfaceCursorSource::refresh()

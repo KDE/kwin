@@ -13,6 +13,7 @@
 #include <QHash>
 #include <QList>
 #include <QPointer>
+#include <QTimer>
 // Wayland
 #include "qwayland-server-wayland.h"
 // C++
@@ -205,6 +206,7 @@ public:
     ColorRepresentationSurfaceV1 *colorRepresentation = nullptr;
     ExtBlurSurfaceV1 *extBlur = nullptr;
     ExtBackgroundEffectSurfaceV1 *extBackgroundeffect = nullptr;
+    QTimer fifoFallbackTimer;
 
     struct
     {

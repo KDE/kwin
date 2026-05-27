@@ -189,21 +189,6 @@ void Transaction::apply()
             }
             entry.nextTransaction->tryApply();
         }
-        if (entry.surface && !entry.surface->isMapped()) {
-            // if the surface was unmapped, that can remove constraints from its subsurfaces
-            const auto below = entry.surface->below();
-            for (SubSurfaceInterface *child : below) {
-                if (Transaction *transaction = child->surface()->firstTransaction()) {
-                    transaction->tryApply();
-                }
-            }
-            const auto above = entry.surface->above();
-            for (SubSurfaceInterface *child : above) {
-                if (Transaction *transaction = child->surface()->firstTransaction()) {
-                    transaction->tryApply();
-                }
-            }
-        }
     }
 
     delete this;
