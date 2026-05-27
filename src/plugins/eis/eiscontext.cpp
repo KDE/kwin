@@ -91,6 +91,8 @@ EisContext::~EisContext()
             Q_EMIT m_backend->deviceRemoved(client->keyboard.get());
         }
     }
+
+    eis_unref(m_eisContext);
 }
 
 void EisContext::updateScreens()
