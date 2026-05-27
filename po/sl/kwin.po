@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1737549 2026-05-23 03:14:47Z scripty $
+# $Id: kwin.po 1737817 2026-05-27 03:15:04Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-23 02:41+0000\n"
+"POT-Creation-Date: 2026-05-27 02:42+0000\n"
 "PO-Revision-Date: 2026-05-20 08:45+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -4369,7 +4369,7 @@ msgstr "Gonilnik je zavrnil konfiguracijo izhoda"
 msgid "The session is not active"
 msgstr "Seja ni dejavna"
 
-#: window.cpp:3133
+#: window.cpp:3132
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

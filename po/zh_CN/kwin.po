@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-23 02:41+0000\n"
+"POT-Creation-Date: 2026-05-27 02:42+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -4313,7 +4313,7 @@ msgstr "驱动程序拒绝了输出配置"
 msgid "The session is not active"
 msgstr "会话不在活动状态"
 
-#: window.cpp:3133
+#: window.cpp:3132
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
