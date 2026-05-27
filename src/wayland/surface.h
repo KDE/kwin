@@ -361,11 +361,11 @@ public:
     SurfaceInterface *mainSurface();
 
     /**
-     * Should be called immediately after compositing a non-tearing frame
-     * but always at a minimum rate that guarantees forward progress for the application
-     * (for example 30Hz)
+     * Should be called immediately after compositing a non-tearing frame.
+     * If it's not called within one refreshDuration after the barrier is set,
+     * it will be cleared automatically.
      */
-    void clearFifoBarrier();
+    void clearFifoBarrier(std::optional<std::chrono::nanoseconds> refreshDuration = std::nullopt);
     bool hasFifoBarrier() const;
 
     /**
@@ -472,6 +472,8 @@ Q_SIGNALS:
     void committed();
 
 private:
+    void handleFifoFallback();
+
     std::unique_ptr<SurfaceInterfacePrivate> d;
     friend class SurfaceInterfacePrivate;
 };

@@ -71,10 +71,6 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     setRenderingIntent(surface->renderingIntent());
     setPresentationHint(surface->presentationModeHint());
     setOpacity(surface->alphaMultiplier());
-
-    m_fifoFallbackTimer.setInterval(1000 / 20);
-    m_fifoFallbackTimer.setSingleShot(true);
-    connect(&m_fifoFallbackTimer, &QTimer::timeout, this, &SurfaceItemWayland::handleFifoFallback);
 }
 
 RegionF SurfaceItemWayland::shape() const
@@ -117,9 +113,6 @@ void SurfaceItemWayland::handleBufferTransformChanged()
 
 void SurfaceItemWayland::handleSurfaceCommitted()
 {
-    if (m_surface->hasFifoBarrier()) {
-        m_fifoFallbackTimer.start();
-    }
     if (m_surface->hasFrameCallbacks() || m_surface->hasFifoBarrier() || m_surface->hasPresentationFeedback()) {
         scheduleFrame();
     }
@@ -205,7 +198,6 @@ void SurfaceItemWayland::freeze()
     }
 
     m_surface = nullptr;
-    m_fifoFallbackTimer.stop();
 }
 
 void SurfaceItemWayland::handleColorDescriptionChanged()
@@ -251,23 +243,7 @@ void SurfaceItemWayland::handleFramePainted(LogicalOutput *output, OutputFrame *
         }
     }
     // TODO only call this once per refresh cycle
-    m_surface->clearFifoBarrier();
-    if (m_fifoFallbackTimer.isActive() && output) {
-        // TODO once we can rely on frame being not-nullptr, use its refresh duration instead
-        const auto refreshDuration = std::chrono::nanoseconds(1'000'000'000'000) / output->backendOutput()->refreshRate();
-        // some games don't work properly if the refresh rate goes too low with FIFO. 30Hz is assumed to be fine here.
-        // this must still be slower than the actual screen though, or fifo behavior would be broken!
-        const auto fallbackRefreshDuration = std::max(refreshDuration * 5 / 4, std::chrono::nanoseconds(1'000'000'000) / 30);
-        // reset the timer, it should only trigger if we don't present fast enough
-        m_fifoFallbackTimer.start(std::chrono::duration_cast<std::chrono::milliseconds>(fallbackRefreshDuration));
-    }
-}
-
-void SurfaceItemWayland::handleFifoFallback()
-{
-    if (m_surface) {
-        m_surface->clearFifoBarrier();
-    }
+    m_surface->clearFifoBarrier(output ? std::optional(std::chrono::nanoseconds(1'000'000'000'000) / output->refreshRate()) : std::nullopt);
 }
 
 #if KWIN_BUILD_X11

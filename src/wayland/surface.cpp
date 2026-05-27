@@ -477,6 +477,10 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
     connect(d->client, &ClientConnection::scaleOverrideChanged, this, [this]() {
         d->serverScale = d->client->scaleOverride();
     });
+
+    d->fifoFallbackTimer.setInterval(1000 / 20);
+    d->fifoFallbackTimer.setSingleShot(true);
+    connect(&d->fifoFallbackTimer, &QTimer::timeout, this, &SurfaceInterface::handleFifoFallback);
 }
 
 SurfaceInterface::~SurfaceInterface()
@@ -730,23 +734,8 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     if (visibilityChanged) {
         updateEffectiveMapped();
     }
-    if (!q->isMapped()) {
-        // we can't present an unmapped surface
-        current->presentationFeedback.reset();
-        // fifo barriers on an unmapped surface would never be cleared
-        current->fifoBarrier = false;
-        // Since transactions get applied on child surfaces first and ancestors
-        // afterwards, we also need to apply the same on all child surfaces
-        for (SubSurfaceInterface *child : std::as_const(current->subsurface.below)) {
-            auto priv = SurfaceInterfacePrivate::get(child->surface());
-            priv->current->presentationFeedback.reset();
-            priv->current->fifoBarrier = false;
-        }
-        for (SubSurfaceInterface *child : std::as_const(current->subsurface.above)) {
-            auto priv = SurfaceInterfacePrivate::get(child->surface());
-            priv->current->presentationFeedback.reset();
-            priv->current->fifoBarrier = false;
-        }
+    if (current->fifoBarrier) {
+        fifoFallbackTimer.start();
     }
 
     if (opaqueRegionChanged) {
@@ -1321,14 +1310,28 @@ double SurfaceInterface::alphaMultiplier() const
     return d->current->alphaMultiplier;
 }
 
-void SurfaceInterface::clearFifoBarrier()
+void SurfaceInterface::clearFifoBarrier(std::optional<std::chrono::nanoseconds> refreshDuration)
 {
+    // When the barrier is cleared by the scene in time, the timer should never fire.
+    // If the next transaction sets a fifo barrier again, that will start the timer again.
+    d->fifoFallbackTimer.stop();
+    if (refreshDuration.has_value()) {
+        // some games don't work properly if the refresh rate goes too low with FIFO. 30Hz is assumed to be fine here.
+        // this must still be slower than the actual screen though, or fifo behavior would be broken!
+        const auto fallbackRefreshDuration = std::max(*refreshDuration * 5 / 4, std::chrono::nanoseconds(1'000'000'000) / 30);
+        d->fifoFallbackTimer.setInterval(std::chrono::duration_cast<std::chrono::milliseconds>(fallbackRefreshDuration));
+    }
     if (d->current->fifoBarrier) {
         d->current->fifoBarrier = false;
         if (d->firstTransaction) {
             d->firstTransaction->tryApply();
         }
     }
+}
+
+void SurfaceInterface::handleFifoFallback()
+{
+    clearFifoBarrier();
 }
 
 bool SurfaceInterface::hasFifoBarrier() const

@@ -517,7 +517,7 @@ void FifoTest::testFifoOnSubsurfaceOfUnmappedSubsurface()
 void FifoTest::testFifoOnSubsurfaceOfUnmappedSubsurfaceInitiallyMapped()
 {
     // This test verifies that transactions on subsurfaces of a subsurface
-    // that gets mapped after being mapped don't get stuck because of fifo barriers
+    // that gets unmapped after being mapped don't get stuck because of fifo barriers
 
     Test::XdgToplevelWindow window;
     QVERIFY(window.show());
@@ -542,6 +542,10 @@ void FifoTest::testFifoOnSubsurfaceOfUnmappedSubsurfaceInitiallyMapped()
         frames[i] = std::make_unique<Test::WpPresentationFeedback>(Test::presentationTime()->feedback(*surface));
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
+    fifo->set_barrier();
+    fifo->wait_barrier();
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
     // and unmap the parent surface
     parentSurface->attachBuffer((wl_buffer *)nullptr);
     parentSurface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -566,6 +570,7 @@ void FifoTest::testFifoWithExplicitReset()
 {
     // This test verifies that pending transactions with fifo barriers
     // will not be stuck when the shell surface is destroyed
+    QFETCH(bool, destroyShellFirst);
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -581,8 +586,10 @@ void FifoTest::testFifoWithExplicitReset()
         fifo->wait_barrier();
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
     }
+    fifo->set_barrier();
+    fifo->wait_barrier();
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
-    QFETCH(bool, destroyShellFirst);
     if (destroyShellFirst) {
         shellSurface.reset();
     }
@@ -597,8 +604,6 @@ void FifoTest::testFifoWithExplicitReset()
     QVERIFY(second.count() || second.wait());
 
     shellSurface = Test::createXdgToplevelSurface(surface.get());
-    fifo->set_barrier();
-    fifo->wait_barrier();
     auto window2 = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window2 && window2->isShown());
 }
