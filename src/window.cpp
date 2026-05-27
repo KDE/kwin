@@ -1055,7 +1055,6 @@ bool Window::startInteractiveMoveResize()
     m_interactiveMoveResize.initialGeometryRestore = geometryRestore();
 
     updateElectricGeometryRestore();
-    checkUnrestrictedInteractiveMoveResize();
     performDelayedRaise();
     Q_EMIT interactiveMoveResizeStarted();
     if (workspace()->screenEdges()->isDesktopSwitchingMovingClients()) {
@@ -1106,43 +1105,6 @@ void Window::finishInteractiveMoveResize(bool cancel)
 
     m_interactiveMoveResize.counter++;
     Q_EMIT interactiveMoveResizeFinished();
-}
-
-// This function checks if it actually makes sense to perform a restricted move/resize.
-// If e.g. the titlebar is already outside of the workarea, there's no point in performing
-// a restricted move resize, because then e.g. resize would also move the window (#74555).
-// NOTE: Most of it is duplicated from handleMoveResize().
-void Window::checkUnrestrictedInteractiveMoveResize()
-{
-    if (isUnrestrictedInteractiveMoveResize()) {
-        return;
-    }
-    const RectF &moveResizeGeom = moveResizeGeometry();
-    RectF desktopArea = workspace()->clientArea(WorkArea, this, moveResizeGeom.center());
-    int left_marge, right_marge, top_marge, bottom_marge;
-    // restricted move/resize - keep at least part of the titlebar always visible
-    // how much must remain visible when moved away in that direction
-    left_marge = std::min(100. + borderRight(), moveResizeGeom.width());
-    right_marge = std::min(100. + borderLeft(), moveResizeGeom.width());
-    top_marge = borderBottom();
-    bottom_marge = borderTop();
-    if (isInteractiveResize()) {
-        if (moveResizeGeom.bottom() < desktopArea.top() + top_marge) {
-            setUnrestrictedInteractiveMoveResize(true);
-        }
-        if (moveResizeGeom.top() > desktopArea.bottom() - bottom_marge) {
-            setUnrestrictedInteractiveMoveResize(true);
-        }
-        if (moveResizeGeom.right() < desktopArea.left() + left_marge) {
-            setUnrestrictedInteractiveMoveResize(true);
-        }
-        if (moveResizeGeom.left() > desktopArea.right() - right_marge) {
-            setUnrestrictedInteractiveMoveResize(true);
-        }
-        if (!isUnrestrictedInteractiveMoveResize() && moveResizeGeom.top() < desktopArea.top()) { // titlebar mustn't go out
-            setUnrestrictedInteractiveMoveResize(true);
-        }
-    }
 }
 
 // When the user pressed mouse on the titlebar, don't activate move immediately,

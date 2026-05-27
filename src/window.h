@@ -1722,7 +1722,6 @@ protected:
     {
         m_interactiveMoveResize.buttonDown = down;
     }
-    void checkUnrestrictedInteractiveMoveResize();
     /**
      * Sets an appropriate cursor shape for the logical mouse position.
      */
