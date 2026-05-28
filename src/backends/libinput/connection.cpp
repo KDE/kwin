@@ -678,14 +678,16 @@ void Connection::applyScreenToDevice(Device *device)
             if (internalOutput) {
                 // we have an internal id, so let's use that
                 deviceOutput = internalOutput;
-            } else {
+            } else if (outputs.size()) {
                 // just take first screen, we have no clue
                 deviceOutput = outputs.front();
             }
         }
     }
 
-    device->setOutput(deviceOutput);
+    if (deviceOutput) {
+        device->setOutput(deviceOutput);
+    }
 
     // TODO: this is currently non-functional even on DRM. Needs orientation() override there.
     device->setOrientation(Qt::PrimaryOrientation);
