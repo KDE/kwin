@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-27 00:47+0000\n"
+"POT-Creation-Date: 2026-05-28 00:45+0000\n"
 "PO-Revision-Date: 2026-05-14 11:29+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -4401,7 +4401,7 @@ msgstr "Il driver ha rifiutato la configurazione di uscita"
 msgid "The session is not active"
 msgstr "La sessione non è attiva"
 
-#: window.cpp:3129
+#: window.cpp:3091
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
