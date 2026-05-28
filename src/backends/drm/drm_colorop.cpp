@@ -134,6 +134,14 @@ static std::optional<Assignments> findColorPipelineAssignments(DrmAbstractColorO
     }
     if (!preference) {
         if (!hardwareOp->canBypass()) {
+            if (!previousInverseOutputScaling) {
+                if (auto alternativeBypass = hardwareOp->bypassScaling(*currentColorOp)) {
+                    auto ret = findColorPipelineAssignments(hardwareOp->next(), hardwareOp, ops, alternativeBypass->inverse);
+                    if (ret && !ret->nextInverseInputScaling) {
+                        return ret;
+                    }
+                }
+            }
             return std::nullopt;
         }
         auto ret = findColorPipelineAssignments(hardwareOp->next(), hardwareOp, ops, previousInverseOutputScaling);
@@ -1025,6 +1033,49 @@ std::optional<DrmAbstractColorOp::Scaling> DrmNamed1DLut::outputScaling(const Co
     } else {
         return std::nullopt;
     }
+}
+
+static std::optional<std::pair<TransferFunction, bool>> pickSupportedFunction(DrmEnumProperty<Named1DLutType> *property)
+{
+    // Just pick the first supported transfer function,
+    // usually there is only one anyways
+    if (property->hasEnum(Named1DLutType::PQ_125)) {
+        return std::make_pair(TransferFunction(TransferFunction::PerceptualQuantizer, 0, 10'000 / 125), false);
+    } else if (property->hasEnum(Named1DLutType::PQ_125_Inverse)) {
+        return std::make_pair(TransferFunction(TransferFunction::PerceptualQuantizer, 0, 10'000 / 125), true);
+    } else if (property->hasEnum(Named1DLutType::sRGB)) {
+        return std::make_pair(TransferFunction(TransferFunction::sRGB, 0, 80), false);
+    } else if (property->hasEnum(Named1DLutType::sRGB_Inverse)) {
+        return std::make_pair(TransferFunction(TransferFunction::sRGB, 0, 80), true);
+    } else if (property->hasEnum(Named1DLutType::gamma22)) {
+        return std::make_pair(TransferFunction(TransferFunction::gamma22, 0, 80), false);
+    } else if (property->hasEnum(Named1DLutType::gamma22_Inverse)) {
+        return std::make_pair(TransferFunction(TransferFunction::gamma22, 0, 80), true);
+    }
+    return std::nullopt;
+}
+
+std::optional<DrmAbstractColorOp::Scaling> DrmNamed1DLut::bypassScaling(const ColorOp &nextOperation) const
+{
+    const auto op = pickSupportedFunction(m_value);
+    if (!op) {
+        return std::nullopt;
+    }
+    const auto [transfer, inverse] = *op;
+    return Scaling{
+        .scaling = inverse ? ColorOp::Operation(InverseColorTransferFunction(transfer)) : ColorOp::Operation(ColorTransferFunction(transfer)),
+        .inverse = ColorOp{
+            .input = ValueRange{
+                .min = inverse ? transfer.encodedToNits(nextOperation.input.min) : transfer.nitsToEncoded(nextOperation.input.min),
+                .max = inverse ? transfer.encodedToNits(nextOperation.input.max) : transfer.nitsToEncoded(nextOperation.input.max),
+            },
+            // this could maybe be optimized, but it's probably not worth the effort
+            .inputSpace = ColorspaceType::AnyNonRGB,
+            .operation = inverse ? ColorOp::Operation(ColorTransferFunction(transfer)) : ColorOp::Operation(InverseColorTransferFunction(transfer)),
+            .output = nextOperation.input,
+            .outputSpace = nextOperation.inputSpace,
+        },
+    };
 }
 
 DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)

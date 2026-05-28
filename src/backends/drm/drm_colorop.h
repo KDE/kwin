@@ -86,6 +86,13 @@ public:
      */
     virtual std::optional<Scaling> outputScaling(const ColorOp &lastAppliedOp) const;
 
+    /**
+     * @returns if supported, an output scaling operation for effectively bypassing
+     *          this colorop, when the normal bypass feature is not supported.
+     *          If not supported, std::nullopt
+     */
+    virtual std::optional<Scaling> bypassScaling(const ColorOp &nextOperation) const;
+
     DrmAbstractColorOp *next() const;
     bool canBypass() const;
     bool supportsMultipleOps() const;
@@ -251,6 +258,7 @@ public:
     void bypass(DrmAtomicCommit *commit) override;
     std::optional<Scaling> inputScaling(const ColorOp &op) const override;
     std::optional<Scaling> outputScaling(const ColorOp &op) const override;
+    std::optional<Scaling> bypassScaling(const ColorOp &lastAppliedOp) const override;
 
 private:
     std::optional<Named1DLutType> getType(const ColorOp::Operation &op) const;
