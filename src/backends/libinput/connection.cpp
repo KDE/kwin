@@ -630,6 +630,9 @@ void Connection::applyScreenToDevice(Device *device)
 
     BackendOutput *deviceOutput = nullptr;
     const QList<BackendOutput *> outputs = kwinApp()->outputBackend()->outputs();
+    if (outputs.isEmpty()) {
+        return;
+    }
 
     // let's try to find a screen for it
     if (!device->outputUuid().isEmpty()) {
@@ -678,16 +681,14 @@ void Connection::applyScreenToDevice(Device *device)
             if (internalOutput) {
                 // we have an internal id, so let's use that
                 deviceOutput = internalOutput;
-            } else if (outputs.size()) {
+            } else {
                 // just take first screen, we have no clue
                 deviceOutput = outputs.front();
             }
         }
     }
 
-    if (deviceOutput) {
-        device->setOutput(deviceOutput);
-    }
+    device->setOutput(deviceOutput);
 
     // TODO: this is currently non-functional even on DRM. Needs orientation() override there.
     device->setOrientation(Qt::PrimaryOrientation);
