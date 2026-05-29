@@ -599,6 +599,11 @@ BrightnessDevice *BackendOutput::brightnessDevice() const
     return m_state.brightnessDevice;
 }
 
+bool BackendOutput::hasFixedBrightnessDevice() const
+{
+    return false;
+}
+
 void BackendOutput::unsetBrightnessDevice()
 {
     State next;

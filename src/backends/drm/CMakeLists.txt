@@ -1,6 +1,7 @@
 target_sources(kwin PRIVATE
     drm_backend.cpp
     drm_blob.cpp
+    drm_brightness_device.cpp
     drm_buffer.cpp
     drm_colorop.cpp
     drm_commit.cpp
