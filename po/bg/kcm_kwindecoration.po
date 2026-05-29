@@ -3,20 +3,20 @@
 #
 # Zlatko Popov <zlatkopopov@fsa-bg.org>, 2006, 2007, 2008.
 # Yasen Pramatarov <yasen@lindeas.com>, 2009, 2010.
-# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025, 2026 Mincho Kondarev <mkondarev@yahoo.de>
+# SPDX-FileCopyrightText: 2022-2026 Mincho Kondarev <mkondarev@yahoo.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-04-03 00:53+0200\n"
+"PO-Revision-Date: 2026-05-28 18:54+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.03.70\n"
+"X-Generator: Lokalize 26.04.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
@@ -67,7 +67,7 @@ msgstr "Задържане над другите прозорци"
 #: declarative-plugin/buttonsmodel.cpp:74
 #, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr ""
+msgstr "Скриване от екранни снимки и записи на екрана"
 
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
@@ -206,40 +206,31 @@ msgid "Show titlebar button tooltips"
 msgstr "Показване на подсказките за бутоните на заглавната лента"
 
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" button"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr "Винаги да се показва бутонът „Скриване при предаване на екрана“"
+msgstr ""
+"Бутонът „Скриване от екранни снимки и записи на екрана“ винаги да се показва"
 
 #: ui/ConfigureTitlebar.qml:85
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "When unchecked the button only appears if the window is hidden from "
-#| "screencast"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
-"Когато не е отметнато, бутонът се появява само ако прозорецът е скрит при "
-"предаване на екрана."
+"Когато не е отметнато, бутонът се появява само ако прозорецът е скрит за "
+"екранни снимки и записи на екрана."
 
 #: ui/ConfigureTitlebar.qml:86
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "To enable this option, add the \"Hide from screencast\" button to the "
-#| "titlebar first"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
-"За да активирате тази опция, първо добавете бутона „Скриване при предаване "
-"на екрана“ към заглавната лента"
+"За да активирате тази опция, първо добавете бутона „Скриване от екранни "
+"снимки и записи на екрана“ към заглавната лента"
 
 #: ui/main.qml:29
 #, kde-format
@@ -308,6 +299,3 @@ msgstr "Много огромни рамки на прозорци"
 #, kde-format
 msgid "Oversized window borders"
 msgstr "Извънгабаритни  рамки на прозорци"
-
-#~ msgid "Hide from screencast"
-#~ msgstr "Скриване при предаване на екрана"

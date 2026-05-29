@@ -3,20 +3,20 @@
 #
 # Zlatko Popov <zlatkopopov@fsa-bg.org>, 2006, 2007, 2008, 2009.
 # Yasen Pramatarov <yasen@lindeas.com>, 2009, 2010.
-# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025, 2026 Mincho Kondarev <mkondarev@yahoo.de>
+# SPDX-FileCopyrightText: 2022-2026 Mincho Kondarev <mkondarev@yahoo.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-28 02:37+0000\n"
-"PO-Revision-Date: 2026-04-03 00:51+0200\n"
+"PO-Revision-Date: 2026-05-28 18:25+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 26.03.70\n"
+"X-Generator: Lokalize 26.04.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -1808,18 +1808,17 @@ msgid "Disable Active Input Capture"
 msgstr "Деактивиране на улавянето на активен вход"
 
 #: plugins/eis/eisprompter.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Control"
+#, kde-format
 msgctxt "@title:window"
 msgid "Remote Control"
-msgstr "Control"
+msgstr "Отдалечен контрол"
 
 #: plugins/eis/eisprompter.cpp:52
 #, kde-kuit-format
 msgctxt "@info"
 msgid "<application>%1</application> is asking to control input devices"
 msgstr ""
+"<application>%1</application> иска да контролира устройствата за въвеждане"
 
 #: plugins/eis/eisprompter.cpp:64
 #, kde-format
@@ -1827,7 +1826,7 @@ msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
 msgid "Always allow apps claiming to be %1"
-msgstr ""
+msgstr "Винаги да се  позволява на приложения, които твърдят, че са %1"
 
 #: plugins/eis/eisprompter.cpp:66
 #, kde-kuit-format
@@ -1838,18 +1837,23 @@ msgid ""
 "revoke this permission later on <application>System Settings</application>’ "
 "“Legacy X11 App Support” page."
 msgstr ""
+"Идентичността на старите X11 приложения не може да бъде потвърдена. Всяко "
+"приложение, което твърди, че е <application>%1</application>, ще може да "
+"контролира устройствата за въвеждане. Можете да оттеглите това разрешение по-"
+"късно в <application>Системни настройки</application> на страницата "
+"„Поддръжка на стари X11 приложения“."
 
 #: plugins/eis/eisprompter.cpp:69
 #, kde-format
 msgctxt "@action:button Allow control of input devices"
 msgid "Allow"
-msgstr ""
+msgstr "Разрешаване"
 
 #: plugins/eis/eisprompter.cpp:70
 #, kde-format
 msgctxt "@action:button Deny control of input devices"
 msgid "Deny"
-msgstr ""
+msgstr "Забраняване"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -2510,10 +2514,9 @@ msgid "Add Virtual Desktop"
 msgstr "Добавяне на виртуален работен плот"
 
 #: plugins/overview/qml/DesktopBar.qml:262
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgid "Virtual Desktop limit reached"
-msgstr "Добавяне на виртуален работен плот"
+msgstr "Достигнат лимит на виртуални работни плотове"
 
 #: plugins/overview/qml/Main.qml:427
 #, kde-format
@@ -3182,18 +3185,15 @@ msgstr "Тип на съвпадение на низ от етикети на п
 
 #. i18n: ectx: label, entry (hastransientparent), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:78
-#, fuzzy, kde-format
-#| msgctxt "@info:placeholder no entries in the task switcher"
-#| msgid "No open windows"
+#, kde-format
 msgid "Has parent window"
-msgstr "Няма отворени прозорци"
+msgstr "Има родителски прозорец"
 
 #. i18n: ectx: label, entry (hastransientparentmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:82
-#, fuzzy, kde-format
-#| msgid "Machine string match type"
+#, kde-format
 msgid "Has parent window match type"
-msgstr "Тип съвпадение на машинен низ"
+msgstr "Има съвпадение с типа на родителския прозорец"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:89
@@ -3647,17 +3647,15 @@ msgstr "Тип правило за разкъсване"
 
 #. i18n: ectx: label, entry (excludefromcapture), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:478
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings"
-msgstr "Правила за скриване при предаване на екрана"
+msgstr "Скриване от екранни снимки и записи на екрана"
 
 #. i18n: ectx: label, entry (excludefromcapturerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:482
-#, fuzzy, kde-format
-#| msgid "Hide from screencast rule type"
+#, kde-format
 msgid "Hide from screenshots and screen recordings rule type"
-msgstr "Правила за скриване при предаване на екрана"
+msgstr "Правило за скриване от снимки и записи на екрана"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3791,7 +3789,7 @@ msgstr "&Без заглавна лента и рамка"
 #: useractions.cpp:248
 #, kde-format
 msgid "&Hide from Screenshots and Screen Recordings"
-msgstr ""
+msgstr "&Скриване от екранни снимки и записи на екрана"
 
 #: useractions.cpp:256
 #, kde-format
@@ -4298,7 +4296,7 @@ msgstr "Превключване към работен плот %1"
 #: wayland/outputmanagement_v2.cpp:569
 #, kde-format
 msgid "abm level is larger than the maximum (4): %1"
-msgstr ""
+msgstr "нивото на abm е по-голямо от максималното (4): %1"
 
 #: wayland/outputmanagement_v2.cpp:647
 #, kde-format
@@ -4361,25 +4359,25 @@ msgstr "(Не отговаря)"
 #: workspace.cpp:1313
 #, kde-format
 msgid "Built-in Screen"
-msgstr ""
+msgstr "Вграден екран"
 
 #: workspace.cpp:1326
 #, kde-format
 msgctxt "Display label: manufacturer + model name + connector name"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1336
 #, kde-format
 msgctxt "Display label: manufacturer + model name + serial number"
 msgid "%1 %2 %3"
-msgstr ""
+msgstr "%1 %2 %3"
 
 #: workspace.cpp:1339
 #, kde-format
 msgctxt "Display label: manufacturer + model name"
 msgid "%1 %2"
-msgstr ""
+msgstr "%1 %2```"
 
 #: workspace.cpp:1808
 #, kde-format
@@ -4409,29 +4407,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland се срина"
-
-#~ msgid "Hide from screencast"
-#~ msgstr "Скриване при предаване на екрана"
-
-#~ msgid "&Hide from Screencast"
-#~ msgstr "&Скриване от предаване на екрана"
-
-#~ msgctxt "@label"
-#~ msgid "Compositing"
-#~ msgstr "Композиране"
-
-#~ msgctxt "@label"
-#~ msgid "Unknown"
-#~ msgstr "Неизвестено"
-
-#~ msgid "Position of output %s is negative, that is not supported"
-#~ msgstr "Позицията на изхода %s е отрицателна, това не се поддържа"
-
-#~ msgid "Buttons"
-#~ msgstr "Бутони"
-
-#~ msgid "The provided output order doesn't contain all outputs"
-#~ msgstr "Предоставеният изходен ред не съдържа всички изходи"
-
-#~ msgid "The provided output order is invalid"
-#~ msgstr "Предоставеният изходен ред е невалиден"
