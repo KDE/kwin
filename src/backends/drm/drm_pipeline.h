@@ -34,6 +34,7 @@ class DrmConnectorMode;
 class DrmPipelineLayer;
 class DrmCommitThread;
 class OutputFrame;
+class DrmBrightnessDevice;
 
 class DrmPipeline
 {
@@ -94,6 +95,7 @@ public:
     BackendOutput::RgbRange rgbRange() const;
     DrmConnector::DrmContentType contentType() const;
     const std::shared_ptr<IccProfile> &iccProfile() const;
+    DrmBrightnessDevice *brightnessDevice() const;
 
     void setCrtc(DrmCrtc *crtc);
     void setMode(const std::shared_ptr<DrmConnectorMode> &mode);
@@ -108,6 +110,7 @@ public:
     void setHighDynamicRange(bool hdr);
     void setWideColorGamut(bool wcg);
     void setMaxBpc(uint32_t max);
+    void setLuminance(int value);
 
     enum class CommitMode {
         Test,
@@ -163,6 +166,7 @@ private:
         bool hdr = false;
         bool wcg = false;
         uint32_t maxBpc = 10;
+        uint32_t luminance = 0;
 
         QList<DrmPipelineLayer *> layers;
     };
@@ -171,6 +175,7 @@ private:
     // the state that will be applied at the next real atomic commit
     State m_next;
 
+    std::unique_ptr<DrmBrightnessDevice> m_drmBrightnessDevice;
     std::unique_ptr<DrmCommitThread> m_commitThread;
 };
 

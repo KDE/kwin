@@ -3,6 +3,7 @@ set(mockDRM_SRCS
     ../../src/backends/drm/drm_abstract_output.cpp
     ../../src/backends/drm/drm_backend.cpp
     ../../src/backends/drm/drm_blob.cpp
+    ../../src/backends/drm/drm_brightness_device.cpp
     ../../src/backends/drm/drm_buffer.cpp
     ../../src/backends/drm/drm_colorop.cpp
     ../../src/backends/drm/drm_commit.cpp

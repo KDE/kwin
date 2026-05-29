@@ -51,6 +51,9 @@
 #ifndef DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE
 #define DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE 7
 #endif
+#ifndef DRM_CLIENT_CAP_LUMINANCE
+#define DRM_CLIENT_CAP_LUMINANCE 8
+#endif
 
 using namespace std::chrono_literals;
 
@@ -113,7 +116,9 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
         m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
     }
 
-    m_colorPipelineSupported = s_colorPipelineEnv.value_or(!m_drmDevice->isNvidia() && !m_drmDevice->isAmdgpu()) && drmSetClientCap(fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
+    m_colorPipelineSupported = s_colorPipelineEnv.value_or(!m_drmDevice->isNvidia() && !m_drmDevice->isAmdgpu())
+        && drmSetClientCap(fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
+    drmSetClientCap(fd, DRM_CLIENT_CAP_LUMINANCE, 1);
 
     m_delayedModesetTimer.setInterval(0);
     m_delayedModesetTimer.setSingleShot(true);
