@@ -35,7 +35,7 @@ public:
     void addCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
     void setPendingCommit(std::unique_ptr<DrmLegacyCommit> &&commit);
 
-    void setModeInfo(uint32_t maximum, std::chrono::nanoseconds vblankTime);
+    void setModeInfo(uint32_t maximum, std::chrono::nanoseconds deadlineBeforeVblankEnd);
     void pageFlipped(std::chrono::nanoseconds timestamp);
     bool pageflipsPending();
     /**

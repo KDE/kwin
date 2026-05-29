@@ -361,13 +361,13 @@ void DrmCommitThread::clearDroppedCommits()
 // is actually applied. Waiting for the commit returning seems to work on Intel and AMD, but not with NVidia
 static const std::chrono::microseconds s_safetyMarginMinimum{environmentVariableIntValue("KWIN_DRM_OVERRIDE_SAFETY_MARGIN").value_or(1000)};
 
-void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vblankTime)
+void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds deadlineBeforeVblankEnd)
 {
     std::unique_lock lock(m_mutex);
     m_minVblankInterval = std::chrono::nanoseconds(1'000'000'000'000ull / maximum);
     // the kernel rejects commits that happen during vblank
     // the 1.5ms on top of that was chosen experimentally, for the time it takes to commit + scheduling inaccuracies
-    m_baseSafetyMargin = vblankTime + s_safetyMarginMinimum;
+    m_baseSafetyMargin = deadlineBeforeVblankEnd + s_safetyMarginMinimum;
     m_safetyMargin = m_baseSafetyMargin + m_additionalSafetyMargin;
 }
 
