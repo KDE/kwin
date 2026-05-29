@@ -181,6 +181,7 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                                                              QByteArrayLiteral("bias max"),
                                                                              QByteArrayLiteral("max"),
                                                                          })
+    , luminance(this, QByteArrayLiteral("LUMINANCE"))
 {
 }
 
@@ -293,6 +294,7 @@ bool DrmConnector::updateProperties()
     colorspace.update(props);
     path.update(props);
     abmLevel.update(props);
+    luminance.update(props);
 
     if (gpu()->atomicModeSetting() && !crtcId.isValid()) {
         qCWarning(KWIN_DRM) << "Failed to update the basic connector properties (CRTC_ID)";
