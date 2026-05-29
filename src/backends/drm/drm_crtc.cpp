@@ -28,6 +28,7 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryP
     , degammaLut(this, QByteArrayLiteral("DEGAMMA_LUT"))
     , degammaLutSize(this, QByteArrayLiteral("DEGAMMA_LUT_SIZE"))
     , sharpnessStrength(this, QByteArrayLiteral("SHARPNESS_STRENGTH"))
+    , colorPipeline(this, QByteArrayLiteral("COLOR_PIPELINE"))
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
     , m_primaryPlane(primaryPlane)
@@ -54,21 +55,43 @@ bool DrmCrtc::updateProperties()
     degammaLut.update(props);
     degammaLutSize.update(props);
     sharpnessStrength.update(props);
+    colorPipeline.update(props);
 
-    if (!postBlendingPipeline) {
+    if (colorPipeline.isValid() && m_colorPipelineObjects.empty()) {
+        const QList<uint64_t> possibleValues = colorPipeline.possibleEnumValues();
+        for (const uint64_t value : possibleValues) {
+            if (value == 0) {
+                // 0 is bypass
+                continue;
+            }
+            auto pipeline = std::make_unique<DrmColorOp>(gpu(), value);
+            if (!pipeline->init()) {
+                qCWarning(KWIN_DRM, "initializing color pipeline %lu failed!", value);
+                continue;
+            }
+            QList<QString> opNames;
+            auto op = pipeline->colorOp();
+            while (op) {
+                opNames.push_back(op->name());
+                op = op->next();
+            }
+            qCDebug(KWIN_DRM) << "Initialized color pipeline" << opNames;
+            m_colorPipelineObjects.push_back(std::move(pipeline));
+        }
+    } else if (!colorPipeline.isValid() && !legacyColorPipeline) {
         DrmAbstractColorOp *next = nullptr;
         if (gammaLut.isValid()) {
-            m_postBlendingColorOps.push_back(std::make_unique<DrmLutColorOp16>(next, &gammaLut, nullptr, gammaRampSize(), nullptr));
-            next = m_postBlendingColorOps.back().get();
+            m_legacyColorOps.push_back(std::make_unique<DrmLutColorOp16>(next, &gammaLut, nullptr, gammaRampSize(), nullptr));
+            next = m_legacyColorOps.back().get();
         }
         if (!gpu()->drmDevice()->isNvidia() && ctm.isValid()) {
-            m_postBlendingColorOps.push_back(std::make_unique<LegacyMatrixColorOp>(next, &ctm));
-            next = m_postBlendingColorOps.back().get();
+            m_legacyColorOps.push_back(std::make_unique<LegacyMatrixColorOp>(next, &ctm));
+            next = m_legacyColorOps.back().get();
         }
         // DEGAMMA_LUT is intentionally not part of the post blending pipeline
         // as on most hardware it actually maps to pre-blending operations,
         // and more importantly it's buggy on Intel, AMD and NVidia...
-        postBlendingPipeline = next;
+        legacyColorPipeline = next;
     }
 
     const bool ret = !gpu()->atomicModeSetting() || (modeId.isValid() && active.isValid());

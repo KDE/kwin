@@ -51,8 +51,10 @@ public:
     DrmProperty degammaLut;
     DrmProperty degammaLutSize;
     DrmProperty sharpnessStrength;
+    DrmProperty colorPipeline;
 
-    DrmAbstractColorOp *postBlendingPipeline = nullptr;
+    DrmAbstractColorOp *legacyColorPipeline = nullptr;
+    std::vector<std::unique_ptr<DrmColorOp>> m_colorPipelineObjects;
 
 private:
     DrmUniquePtr<drmModeCrtc> m_crtc;
@@ -60,7 +62,7 @@ private:
     int m_pipeIndex;
     DrmPlane *m_primaryPlane;
 
-    std::vector<std::unique_ptr<DrmAbstractColorOp>> m_postBlendingColorOps;
+    std::vector<std::unique_ptr<DrmAbstractColorOp>> m_legacyColorOps;
 };
 
 }

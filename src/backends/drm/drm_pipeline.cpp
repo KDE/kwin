@@ -213,16 +213,30 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     }
 
     const ColorPipeline &colorPipeline = m_pending.crtcColorPipeline;
-    if (!m_pending.crtc->postBlendingPipeline) {
-        if (!colorPipeline.isIdentity()) {
-            return Error::InvalidArguments;
+    if (m_pending.crtc->colorPipeline.isValid()) {
+        const auto &colorPipelines = m_pending.crtc->m_colorPipelineObjects;
+        if (colorPipeline.isIdentity()) {
+            commit->addProperty(m_pending.crtc->colorPipeline, 0);
+        } else {
+            const auto it = std::ranges::find_if(colorPipelines, [&](const auto &pipeline) {
+                return pipeline->colorOp()->matchPipeline(commit, colorPipeline);
+            });
+            if (it == colorPipelines.end()) {
+                return DrmPipeline::Error::InvalidArguments;
+            }
+            commit->addProperty(m_pending.crtc->colorPipeline, (*it)->id());
         }
     } else {
-        if (!m_pending.crtc->postBlendingPipeline->matchPipeline(commit, colorPipeline)) {
-            return Error::InvalidArguments;
+        if (!m_pending.crtc->legacyColorPipeline) {
+            if (!colorPipeline.isIdentity()) {
+                return Error::InvalidArguments;
+            }
+        } else {
+            if (!m_pending.crtc->legacyColorPipeline->matchPipeline(commit, colorPipeline)) {
+                return Error::InvalidArguments;
+            }
         }
     }
-
     return Error::None;
 }
 
