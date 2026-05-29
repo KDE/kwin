@@ -646,7 +646,7 @@ wl_buffer *WaylandBackend::importBuffer(GraphicsBuffer *graphicsBuffer)
     auto &buffer = m_buffers[graphicsBuffer];
     if (!buffer) {
         wl_buffer *handle = nullptr;
-        if (const DmaBufAttributes *attributes = graphicsBuffer->dmabufAttributes()) {
+        if (graphicsBuffer->dmabufAttributes()) {
             handle = m_display->linuxDmabuf()->importBuffer(graphicsBuffer);
         } else if (const ShmAttributes *attributes = graphicsBuffer->shmAttributes()) {
             handle = importShmBuffer(m_display.get(), attributes);
