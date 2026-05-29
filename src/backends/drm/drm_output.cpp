@@ -758,7 +758,6 @@ void DrmOutput::tryKmsColorOffloading(State &next)
     ColorPipeline colorPipeline = ColorPipeline::create(next.blendingColor, encoding, RenderingIntent::AbsoluteColorimetricNoAdaptation);
 
     const bool hdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
-    const bool wcg = next.wideColorGamut && (capabilities() & Capability::WideColorGamut);
     const auto &iccProfile = hdr ? next.hdrIccProfile : next.iccProfile;
     const ColorProfileSource profileSource = hdr ? next.hdrColorProfileSource : next.colorProfileSource;
     const bool usesICC = profileSource == ColorProfileSource::ICC && iccProfile;
