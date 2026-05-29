@@ -155,6 +155,9 @@ static std::optional<Assignments> findColorPipelineAssignments(DrmAbstractColorO
                     break;
                 }
             }
+            if (!higherPreferenceOp->canBypass()) {
+                break;
+            }
             higherPreferenceOp = higherPreferenceOp->next();
         }
     }
