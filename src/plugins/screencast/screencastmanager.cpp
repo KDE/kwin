@@ -101,6 +101,15 @@ void ScreencastManager::streamWaylandOutput(ScreencastStreamV1Interface *wayland
     streamOutput(waylandStream, output->handle(), mode);
 }
 
+static std::optional<pid_t> getPid(ScreencastStreamV1Interface *waylandStream)
+{
+    if (waylandStream->connection()->executablePath().contains("xdg-desktop-portal-kde")) {
+        // HACK to avoid the portal's windows being hidden
+        return std::nullopt;
+    }
+    return waylandStream->connection()->processId();
+}
+
 void ScreencastManager::streamOutput(ScreencastStreamV1Interface *waylandStream,
                                      LogicalOutput *streamOutput,
                                      ScreencastV1Interface::CursorMode mode)
@@ -110,7 +119,7 @@ void ScreencastManager::streamOutput(ScreencastStreamV1Interface *waylandStream,
         return;
     }
 
-    auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput, waylandStream->connection()->processId()), getPipewireConnection(), this);
+    auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput, getPid(waylandStream)), getPipewireConnection(), this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode);
 
@@ -152,7 +161,7 @@ void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream,
         scale = devicePixelRatioForRegion(geometry);
     }
 
-    auto source = new RegionScreenCastSource(geometry, scale, waylandStream->connection()->processId());
+    auto source = new RegionScreenCastSource(geometry, scale, getPid(waylandStream));
     auto stream = new ScreenCastStream(source, getPipewireConnection(), this);
     stream->setObjectName(rectToString(geometry));
     stream->setCursorMode(mode);
