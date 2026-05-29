@@ -46,6 +46,7 @@ public:
     bool present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame) override;
     void repairPresentation() override;
     bool recommendsOverlayUse() const override;
+    bool hasFixedBrightnessDevice() const override;
 
     bool queueChanges(const std::shared_ptr<OutputChangeSet> &properties);
     void applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &properties);

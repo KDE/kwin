@@ -15,6 +15,7 @@
 #include "core/iccprofile.h"
 #include "core/session.h"
 #include "drm_backend.h"
+#include "drm_brightness_device.h"
 #include "drm_buffer.h"
 #include "drm_commit.h"
 #include "drm_commit_thread.h"
@@ -39,6 +40,7 @@ namespace KWin
 
 DrmPipeline::DrmPipeline(DrmConnector *conn)
     : m_connector(conn)
+    , m_drmBrightnessDevice(m_connector->luminance.isValid() ? std::make_unique<DrmBrightnessDevice>(this) : nullptr)
     , m_commitThread(std::make_unique<DrmCommitThread>(conn->gpu(), conn->connectorName()))
 {
 }
@@ -206,6 +208,9 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     commit->setPresentationMode(m_pending.presentationMode);
     if (m_connector->contentType.isValid()) {
         commit->addEnum(m_connector->contentType, m_pending.contentType);
+    }
+    if (m_connector->luminance.isValid()) {
+        commit->addProperty(m_connector->luminance, m_pending.luminance);
     }
 
     if (m_pending.crtc->vrrEnabled.isValid()) {
@@ -622,6 +627,11 @@ const std::shared_ptr<IccProfile> &DrmPipeline::iccProfile() const
     return m_pending.iccProfile;
 }
 
+DrmBrightnessDevice *DrmPipeline::brightnessDevice() const
+{
+    return m_drmBrightnessDevice.get();
+}
+
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
     m_pending.crtc = crtc;
@@ -683,6 +693,11 @@ void DrmPipeline::setWideColorGamut(bool wcg)
 void DrmPipeline::setMaxBpc(uint32_t max)
 {
     m_pending.maxBpc = max;
+}
+
+void DrmPipeline::setLuminance(int value)
+{
+    m_pending.luminance = value;
 }
 
 void DrmPipeline::setContentType(DrmConnector::DrmContentType type)

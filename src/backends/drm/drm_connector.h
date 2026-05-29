@@ -144,6 +144,7 @@ public:
     DrmEnumProperty<Colorspace> colorspace;
     DrmProperty path;
     DrmEnumProperty<AbmLevel> abmLevel;
+    DrmProperty luminance;
 
     static DrmContentType kwinToDrmContentType(ContentType type);
     static OutputTransform toKWinTransform(PanelOrientation orientation);

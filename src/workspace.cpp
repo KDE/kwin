@@ -1509,6 +1509,9 @@ void Workspace::assignBrightnessDevices(OutputConfiguration &outputConfig)
     for (BrightnessDevice *device : devices) {
         // assign the device to the most fitting output
         const auto it = std::ranges::find_if(candidates, [device, &outputConfig](BackendOutput *output) {
+            if (output->hasFixedBrightnessDevice()) {
+                return false;
+            }
             if (output->isInternal() != device->isInternal()) {
                 return false;
             }
