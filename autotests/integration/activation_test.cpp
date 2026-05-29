@@ -52,6 +52,8 @@ private Q_SLOTS:
     void testNoDemandAttentionWithoutActivationRequest();
     void testXdgActivationBeforeInitialCommit();
     void testXdgActivationBeforeMap();
+    void testTrueStartupNotify();
+    void testFalseStartupNotify();
     void testStartupNotifyDifferentActivatedAppId();
     void testGlobalShortcutActivation();
     void testFocusMovesFromClosedDialogToParentWindow();
@@ -979,6 +981,76 @@ void ActivationTest::testXdgActivationBeforeMap()
         QVERIFY(wolfWindow->isActive());
         QVERIFY(!wolfWindow->isDemandingAttention());
     }
+}
+
+void ActivationTest::testTrueStartupNotify()
+{
+    // This test verifies that startup notifications are broadcast if the desktop file of a launched
+    // app has explicit StartupNotify=true.
+    //
+    // A startup notification will be announced when the activation token is generated and withdrawn
+    // when that activation token gets consumed.
+
+    QSignalSpy startupAddedSpy(effects, &EffectsHandler::startupAdded);
+    QSignalSpy startupRemovedSpy(effects, &EffectsHandler::startupRemoved);
+
+    // Create the launcher window.
+    auto launcherWindow = std::make_unique<Test::XdgToplevelWindow>([](Test::XdgToplevel *toplevel) {
+        toplevel->set_app_id(QStringLiteral("org.kde.launcher"));
+    });
+    launcherWindow->show();
+    QVERIFY(launcherWindow->m_window->isActive());
+
+    // Generate a token.
+    const QString activationToken = generateActivationToken(*launcherWindow, QFINDTESTDATA("data/org.kde.foo-with-startup-notify-true.desktop"));
+    QCOMPARE(startupAddedSpy.count(), 1);
+    QCOMPARE(startupAddedSpy.last().at(0).toString(), activationToken);
+    QCOMPARE(startupRemovedSpy.count(), 0);
+
+    // Consume the token.
+    auto launchedWindow = std::make_unique<Test::XdgToplevelWindow>([activationToken](Test::XdgToplevel *toplevel) {
+        toplevel->set_app_id(QFINDTESTDATA("data/org.kde.foo-with-startup-notify-true.desktop"));
+        Test::xdgActivation()->activate(activationToken, *toplevel->xdgSurface()->surface());
+    });
+    launchedWindow->show();
+    QVERIFY(launchedWindow->m_window->isActive());
+    QCOMPARE(startupAddedSpy.count(), 1);
+    QCOMPARE(startupRemovedSpy.count(), 1);
+    QCOMPARE(startupRemovedSpy.last().at(0).toString(), activationToken);
+}
+
+void ActivationTest::testFalseStartupNotify()
+{
+    // This test verifies that no startup notifications are broadcast if the desktop file of the
+    // launched app has explicit StartupNotify=false.
+    //
+    // Note that if the desktop file has no StartupNotify= at all, then it will be assumed that its
+    // value is true.
+
+    QSignalSpy startupAddedSpy(effects, &EffectsHandler::startupAdded);
+    QSignalSpy startupRemovedSpy(effects, &EffectsHandler::startupRemoved);
+
+    // Create the launcher window.
+    auto launcherWindow = std::make_unique<Test::XdgToplevelWindow>([](Test::XdgToplevel *toplevel) {
+        toplevel->set_app_id(QStringLiteral("org.kde.launcher"));
+    });
+    launcherWindow->show();
+    QVERIFY(launcherWindow->m_window->isActive());
+
+    // Generate a token.
+    const QString activationToken = generateActivationToken(*launcherWindow, QFINDTESTDATA("data/org.kde.foo-with-startup-notify-false.desktop"));
+    QCOMPARE(startupAddedSpy.count(), 0);
+    QCOMPARE(startupRemovedSpy.count(), 0);
+
+    // Consume the token.
+    auto launchedWindow = std::make_unique<Test::XdgToplevelWindow>([activationToken](Test::XdgToplevel *toplevel) {
+        toplevel->set_app_id(QFINDTESTDATA("data/org.kde.foo-with-startup-notify-false.desktop"));
+        Test::xdgActivation()->activate(activationToken, *toplevel->xdgSurface()->surface());
+    });
+    launchedWindow->show();
+    QVERIFY(launchedWindow->m_window->isActive());
+    QCOMPARE(startupAddedSpy.count(), 0);
+    QCOMPARE(startupRemovedSpy.count(), 0);
 }
 
 void ActivationTest::testStartupNotifyDifferentActivatedAppId()
