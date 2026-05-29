@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2026 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Mincho Kondarev <mkondarev@yahoo.de>, 2022.
+# SPDX-FileCopyrightText: 2022, 2026 Mincho Kondarev <mkondarev@yahoo.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-16 00:45+0000\n"
-"PO-Revision-Date: 2022-05-21 18:39+0200\n"
+"PO-Revision-Date: 2026-05-28 18:59+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.04.0\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #: kcmvirtualkeyboard.cpp:82
 #, kde-format
@@ -28,23 +28,22 @@ msgid "Do not use any virtual keyboard"
 msgstr "Да не се използва виртуална клавиатура"
 
 #: ui/main.qml:24
-#, fuzzy, kde-format
-#| msgid "Do not use any virtual keyboard"
+#, kde-format
 msgctxt "Selector label"
 msgid "Show Virtual Keyboard:"
-msgstr "Да не се използва виртуална клавиатура"
+msgstr "Показване на виртуална клавиатура:"
 
 #: ui/main.qml:32
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "Никога"
 
 #: ui/main.qml:33
 #, kde-format
 msgid "With Touch and Tablet"
-msgstr ""
+msgstr "Със сензорен екран и таблет"
 
 #: ui/main.qml:34
 #, kde-format
 msgid "With Touch, Tablet, and Mouse"
-msgstr ""
+msgstr "Със сензорен екран, таблет и мишка"

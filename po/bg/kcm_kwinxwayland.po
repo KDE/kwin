@@ -1,13 +1,13 @@
 # Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2023, 2024, 2025 Mincho Kondarev <mkondarev@yahoo.de>
+# SPDX-FileCopyrightText: 2023-2026 Mincho Kondarev <mkondarev@yahoo.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-05 00:46+0000\n"
-"PO-Revision-Date: 2025-05-31 10:45+0200\n"
+"PO-Revision-Date: 2026-05-28 18:57+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.07.70\n"
+"X-Generator: Lokalize 26.04.1\n"
 
 #: ui/main.qml:28
 #, kde-kuit-format
@@ -144,20 +144,18 @@ msgid "Control of pointer and keyboard:"
 msgstr "Контрол на показалеца и клавиатурата:"
 
 #: ui/main.qml:146
-#, fuzzy, kde-format
-#| msgctxt "@option:radio Listening for mouse buttons is allowed"
-#| msgid "Allowed"
+#, kde-format
 msgctxt ""
 "@option:check Allowed control of pointer and keyboard without asking for "
 "permissions for allowed apps"
 msgid "Allowed apps"
-msgstr "Разрешено"
+msgstr "Разрешени приложения"
 
 #: ui/main.qml:152
 #, kde-format
 msgctxt "@action:button"
 msgid "See Allowed Applications…"
-msgstr ""
+msgstr "Вижте разрешените приложения…"
 
 #: ui/main.qml:163
 #, kde-format
@@ -167,13 +165,12 @@ msgid ""
 "will be able to take control of the computer, because XWayland-using apps’ "
 "identities can’t be verified"
 msgstr ""
+"Средно ниво на сигурност; приложенията, използващи XWayland, които твърдят, "
+"че са в този списък, ще могат да поемат контрол над компютъра, тъй като "
+"тяхната идентичност не може да бъде проверена."
 
 #: ui/main.qml:169
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@option:check Allow control of pointer and keyboard without asking for "
-#| "permission"
-#| msgid "Allow without asking for permission"
+#, kde-format
 msgctxt ""
 "@option:radio Allow control of pointer and keyboard without asking for "
 "permission"
@@ -202,20 +199,19 @@ msgstr ""
 "разбирате и приемате този риск."
 
 #: ui/main.qml:189
-#, fuzzy, kde-format
-#| msgctxt "@title:group"
-#| msgid "Control of pointer and keyboard:"
+#, kde-format
 msgctxt ""
 "@title:window title of the page opened by the 'See allowed applications' "
 "button"
 msgid "Applications allowed to control the pointer and keyboard"
-msgstr "Контрол на показалеца и клавиатурата:"
+msgstr "Приложения с разрешение за контрол на показалеца и клавиатурата:"
 
 #: ui/main.qml:209
 #, kde-format
 msgctxt "@info:tooltip %1 is the name of the app/binary"
 msgid "Do not allow %1 to control the pointer and keyboard without asking"
 msgstr ""
+"Забраняване на „%1“ да контролира показалеца и клавиатурата без запитване"
 
 #~ msgctxt "@info"
 #~ msgid "Changes will take effect the next time you log in."
