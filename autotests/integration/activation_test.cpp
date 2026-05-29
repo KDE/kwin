@@ -9,6 +9,7 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
+#include "effect/effecthandler.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "pointer_input.h"
@@ -51,6 +52,7 @@ private Q_SLOTS:
     void testNoDemandAttentionWithoutActivationRequest();
     void testXdgActivationBeforeInitialCommit();
     void testXdgActivationBeforeMap();
+    void testStartupNotifyDifferentActivatedAppId();
     void testGlobalShortcutActivation();
     void testFocusMovesFromClosedDialogToParentWindow();
     void testFullAreaLayerSurfaceUnderlay_data();
@@ -977,6 +979,48 @@ void ActivationTest::testXdgActivationBeforeMap()
         QVERIFY(wolfWindow->isActive());
         QVERIFY(!wolfWindow->isDemandingAttention());
     }
+}
+
+void ActivationTest::testStartupNotifyDifferentActivatedAppId()
+{
+    // This test verifies that the startup feedback notification will be canceled if the final
+    // activated surface has a different app id from the one specified in the activation token.
+    // For example, this case can arise with apps that have Terminal=true in the desktop file. When
+    // such an app is launched, an activation token with its app id will be created and a terminal
+    // will be launched, e.g. Konsole. Konsole will consume the activation token, but its app id
+    // is obviously going to be different than the one of the launched app.
+    //
+    // This case is interesting because app ids may be used to determine whether an activation token
+    // has been consumed and the startup feedback can be withdrawn. If that logic is botched, the
+    // startup feedback notification will get stuck.
+
+    QSignalSpy startupAddedSpy(effects, &EffectsHandler::startupAdded);
+    QSignalSpy startupRemovedSpy(effects, &EffectsHandler::startupRemoved);
+
+    // Little Red Riding Hood window.
+    auto littleGirlWindow = std::make_unique<Test::XdgToplevelWindow>([](Test::XdgToplevel *toplevel) {
+        toplevel->set_app_id(QFINDTESTDATA("data/org.kde.little-red-riding-hood.desktop"));
+    });
+    littleGirlWindow->show();
+    QVERIFY(littleGirlWindow->m_window->isActive());
+
+    // Assume that Little Red Riding Hood wants to pass an activation token to the grandma.
+    const QString activationToken = generateActivationToken(*littleGirlWindow, QFINDTESTDATA("data/org.kde.grandma.desktop"));
+    QCOMPARE(startupAddedSpy.count(), 1);
+    QCOMPARE(startupAddedSpy.last().at(0).toString(), activationToken);
+    QCOMPARE(startupRemovedSpy.count(), 0);
+
+    // ... but Big Bad Wolf ate the grandma and pretends to be her. The startup notification should
+    // be removed even though app ids don't match.
+    auto bigBadWolfWindow = std::make_unique<Test::XdgToplevelWindow>([activationToken](Test::XdgToplevel *toplevel) {
+        toplevel->set_app_id(QFINDTESTDATA("data/org.kde.big-bad-wolf.desktop"));
+        Test::xdgActivation()->activate(activationToken, *toplevel->xdgSurface()->surface());
+    });
+    bigBadWolfWindow->show();
+    QVERIFY(bigBadWolfWindow->m_window->isActive());
+    QCOMPARE(startupAddedSpy.count(), 1);
+    QCOMPARE(startupRemovedSpy.count(), 1);
+    QCOMPARE(startupRemovedSpy.last().at(0).toString(), activationToken);
 }
 
 class TokenSpy : public InputEventSpy

@@ -35,6 +35,12 @@ static bool isPrivilegedInWindowManagement(const ClientConnection *client)
 XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface *activation, QObject *parent)
     : QObject(parent)
 {
+    connect(Workspace::self(), &Workspace::windowAdded, this, [this](Window *window) {
+        if (window->isActive()) {
+            clearFeedback();
+        }
+    });
+
     connect(Workspace::self(), &Workspace::windowActivated, this, [this](Window *window) {
         if (!m_activation || !window || m_lastTokenAppId != window->desktopFileName()) {
             return;
