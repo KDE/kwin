@@ -170,14 +170,14 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
         const char *typeName = (shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment");
         qCCritical(KWIN_OPENGL) << "Failed to compile" << typeName << "shader:"
                                 << "\n"
-                                << log;
+                                << log.data();
         size_t line = 0;
         const auto split = preparedSource->split('\n');
         for (const auto &l : split) {
-            qCCritical(KWIN_OPENGL).nospace() << "line " << line++ << ":" << l;
+            qCCritical(KWIN_OPENGL).nospace() << "line " << line++ << ":" << qUtf8Printable(l);
         }
     } else if (length > 0) {
-        qCDebug(KWIN_OPENGL) << "Shader compile log:" << log;
+        qCDebug(KWIN_OPENGL) << "Shader compile log:" << log.data();
     }
 
     if (status != 0) {
