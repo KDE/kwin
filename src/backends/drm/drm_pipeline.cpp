@@ -208,7 +208,23 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         commit->addEnum(m_connector->contentType, m_pending.contentType);
     }
 
-    if (m_pending.crtc->vrrEnabled.isValid()) {
+    if (m_pending.crtc->vrrMinFrameTime.isValid()
+        && m_pending.crtc->vrrMaxFrameTime.isValid()
+        && m_pending.crtc->vrrHardwareMaxFrameTime.isValid()
+        && m_pending.crtc->vrrEnabled.isValid()) {
+        // FIXME is 1 / refreshRate actually a good enough way to do this? Iow, does our calculation actually match the kernel?
+        // We might want to have a more accurate refreshDuration based on vtotal?
+        if (m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync) {
+            // effectively, enable vrr
+            commit->addProperty(m_pending.crtc->vrrMinFrameTime, 1'000'000'000'000 / m_pending.mode->refreshRate());
+            commit->addProperty(m_pending.crtc->vrrMaxFrameTime, m_pending.crtc->vrrHardwareMaxFrameTime.value());
+        } else {
+            // effectively, disable vrr
+            commit->addProperty(m_pending.crtc->vrrMinFrameTime, 1'000'000'000'000 / m_pending.mode->refreshRate());
+            commit->addProperty(m_pending.crtc->vrrMaxFrameTime, 1'000'000'000'000 / m_pending.mode->refreshRate());
+        }
+    } else if (m_pending.crtc->vrrEnabled.isValid()) {
+        // we have no vrr range control, and have to dynamically change it
         commit->setVrr(m_pending.crtc, m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
     }
 
@@ -437,6 +453,14 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         const int maxValue = m_pending.crtc->sharpnessStrength.maxValue();
         const int sharpness = std::clamp<int>(std::round(m_output->nextState().sharpnessSetting * maxValue), 0, maxValue);
         commit->addProperty(m_pending.crtc->sharpnessStrength, sharpness);
+    }
+    if (m_pending.crtc->vrrMinFrameTime.isValid()
+        && m_pending.crtc->vrrMaxFrameTime.isValid()
+        && m_pending.crtc->vrrHardwareMaxFrameTime.isValid()
+        && m_pending.crtc->vrrEnabled.isValid()) {
+        // always enable vrr, the refresh late limits will be modified at runtime
+        // instead to "fake" fixed refresh rate when needed
+        commit->addProperty(m_pending.crtc->vrrEnabled, m_output->vrrPolicy() != VrrPolicy::Never);
     }
 
     return true;

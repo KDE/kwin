@@ -51,6 +51,9 @@ public:
     DrmProperty degammaLut;
     DrmProperty degammaLutSize;
     DrmProperty sharpnessStrength;
+    DrmProperty vrrMinFrameTime;
+    DrmProperty vrrMaxFrameTime;
+    DrmProperty vrrHardwareMaxFrameTime;
 
     DrmAbstractColorOp *postBlendingPipeline = nullptr;
 

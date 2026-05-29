@@ -28,6 +28,9 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryP
     , degammaLut(this, QByteArrayLiteral("DEGAMMA_LUT"))
     , degammaLutSize(this, QByteArrayLiteral("DEGAMMA_LUT_SIZE"))
     , sharpnessStrength(this, QByteArrayLiteral("SHARPNESS_STRENGTH"))
+    , vrrMinFrameTime(this, QByteArrayLiteral("VRR_MIN_FRAME_NS"))
+    , vrrMaxFrameTime(this, QByteArrayLiteral("VRR_MAX_FRAME_NS"))
+    , vrrHardwareMaxFrameTime(this, QByteArrayLiteral("VRR_HW_MAX_FRAME_NS"))
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
     , m_primaryPlane(primaryPlane)
@@ -54,6 +57,9 @@ bool DrmCrtc::updateProperties()
     degammaLut.update(props);
     degammaLutSize.update(props);
     sharpnessStrength.update(props);
+    vrrMinFrameTime.update(props);
+    vrrMaxFrameTime.update(props);
+    vrrHardwareMaxFrameTime.update(props);
 
     if (!postBlendingPipeline) {
         DrmAbstractColorOp *next = nullptr;
