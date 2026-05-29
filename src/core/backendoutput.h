@@ -268,6 +268,7 @@ public:
     bool isDdcCiKnownBroken() const;
 
     BrightnessDevice *brightnessDevice() const;
+    virtual bool hasFixedBrightnessDevice() const;
     virtual void unsetBrightnessDevice();
     bool allowSdrSoftwareBrightness() const;
 

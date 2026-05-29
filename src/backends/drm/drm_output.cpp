@@ -21,6 +21,7 @@
 #include "core/renderloop.h"
 #include "core/renderloop_p.h"
 #include "core/session.h"
+#include "drm_brightness_device.h"
 #include "drm_layer.h"
 #include "drm_logging.h"
 #include "utils/kernel.h"
@@ -161,6 +162,9 @@ void DrmOutput::updateConnectorProperties()
 
     State next = m_state;
     populateModes(&next);
+    if (m_pipeline->brightnessDevice()) {
+        next.brightnessDevice = m_pipeline->brightnessDevice();
+    }
     setState(next);
 }
 
@@ -329,6 +333,10 @@ bool DrmOutput::testPresentation(const std::shared_ptr<OutputFrame> &frame)
 
 bool DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::shared_ptr<OutputFrame> &frame)
 {
+    // TODO we should update the color description to match this *before* rendering
+    updateBrightness(frame->brightness().value_or(m_state.currentBrightness.value_or(m_state.brightnessSetting)),
+                     frame->artificialHdrHeadroom().value_or(m_state.artificialHdrHeadroom),
+                     frame->dimmingFactor().value_or(m_state.currentDimming));
     m_desiredPresentationMode = frame->presentationMode();
     const bool needsModeset = m_gpu->needsModeset();
     bool success;
@@ -345,9 +353,6 @@ bool DrmOutput::present(const QList<OutputLayer *> &layersToUpdate, const std::s
     if (!success) {
         return false;
     }
-    updateBrightness(frame->brightness().value_or(m_state.currentBrightness.value_or(m_state.brightnessSetting)),
-                     frame->artificialHdrHeadroom().value_or(m_state.artificialHdrHeadroom),
-                     frame->dimmingFactor().value_or(m_state.currentDimming));
     return true;
 }
 
@@ -363,6 +368,11 @@ void DrmOutput::repairPresentation()
 bool DrmOutput::overlayLayersLikelyBroken() const
 {
     return m_gpu->isNVidia();
+}
+
+bool DrmOutput::hasFixedBrightnessDevice() const
+{
+    return m_pipeline->brightnessDevice() != nullptr;
 }
 
 DrmConnector *DrmOutput::connector() const
@@ -521,7 +531,11 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_nextState->allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
     m_nextState->colorPowerTradeoff = props->colorPowerTradeoff.value_or(m_state.colorPowerTradeoff);
     m_nextState->dimming = props->dimming.value_or(m_state.dimming);
-    m_nextState->brightnessDevice = props->brightnessDevice.value_or(m_state.brightnessDevice);
+    if (m_pipeline->brightnessDevice()) {
+        m_nextState->brightnessDevice = m_pipeline->brightnessDevice();
+    } else {
+        m_nextState->brightnessDevice = props->brightnessDevice.value_or(m_state.brightnessDevice);
+    }
     if (!m_nextState->highDynamicRange && m_nextState->brightnessDevice) {
         m_nextState->currentBrightness = props->currentHardwareBrightness.has_value() ? props->currentHardwareBrightness : m_state.currentBrightness;
     }
