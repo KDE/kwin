@@ -1002,14 +1002,14 @@ void ActivationTest::testTrueStartupNotify()
     QVERIFY(launcherWindow->m_window->isActive());
 
     // Generate a token.
-    const QString activationToken = generateActivationToken(*launcherWindow, QFINDTESTDATA("data/org.kde.foo-with-startup-notify-true.desktop"));
+    const QString activationToken = generateActivationToken(*launcherWindow, QFINDTESTDATA("org.kde.foo-with-startup-notify-true.desktop"));
     QCOMPARE(startupAddedSpy.count(), 1);
     QCOMPARE(startupAddedSpy.last().at(0).toString(), activationToken);
     QCOMPARE(startupRemovedSpy.count(), 0);
 
     // Consume the token.
     auto launchedWindow = std::make_unique<Test::XdgToplevelWindow>([activationToken](Test::XdgToplevel *toplevel) {
-        toplevel->set_app_id(QFINDTESTDATA("data/org.kde.foo-with-startup-notify-true.desktop"));
+        toplevel->set_app_id(QFINDTESTDATA("org.kde.foo-with-startup-notify-true.desktop"));
         Test::xdgActivation()->activate(activationToken, *toplevel->xdgSurface()->surface());
     });
     launchedWindow->show();
@@ -1038,13 +1038,13 @@ void ActivationTest::testFalseStartupNotify()
     QVERIFY(launcherWindow->m_window->isActive());
 
     // Generate a token.
-    const QString activationToken = generateActivationToken(*launcherWindow, QFINDTESTDATA("data/org.kde.foo-with-startup-notify-false.desktop"));
+    const QString activationToken = generateActivationToken(*launcherWindow, QFINDTESTDATA("org.kde.foo-with-startup-notify-false.desktop"));
     QCOMPARE(startupAddedSpy.count(), 0);
     QCOMPARE(startupRemovedSpy.count(), 0);
 
     // Consume the token.
     auto launchedWindow = std::make_unique<Test::XdgToplevelWindow>([activationToken](Test::XdgToplevel *toplevel) {
-        toplevel->set_app_id(QFINDTESTDATA("data/org.kde.foo-with-startup-notify-false.desktop"));
+        toplevel->set_app_id(QFINDTESTDATA("org.kde.foo-with-startup-notify-false.desktop"));
         Test::xdgActivation()->activate(activationToken, *toplevel->xdgSurface()->surface());
     });
     launchedWindow->show();
@@ -1071,13 +1071,13 @@ void ActivationTest::testStartupNotifyDifferentActivatedAppId()
 
     // Little Red Riding Hood window.
     auto littleGirlWindow = std::make_unique<Test::XdgToplevelWindow>([](Test::XdgToplevel *toplevel) {
-        toplevel->set_app_id(QFINDTESTDATA("data/org.kde.little-red-riding-hood.desktop"));
+        toplevel->set_app_id(QFINDTESTDATA("org.kde.little-red-riding-hood.desktop"));
     });
     littleGirlWindow->show();
     QVERIFY(littleGirlWindow->m_window->isActive());
 
     // Assume that Little Red Riding Hood wants to pass an activation token to the grandma.
-    const QString activationToken = generateActivationToken(*littleGirlWindow, QFINDTESTDATA("data/org.kde.grandma.desktop"));
+    const QString activationToken = generateActivationToken(*littleGirlWindow, QFINDTESTDATA("org.kde.grandma.desktop"));
     QCOMPARE(startupAddedSpy.count(), 1);
     QCOMPARE(startupAddedSpy.last().at(0).toString(), activationToken);
     QCOMPARE(startupRemovedSpy.count(), 0);
@@ -1085,7 +1085,7 @@ void ActivationTest::testStartupNotifyDifferentActivatedAppId()
     // ... but Big Bad Wolf ate the grandma and pretends to be her. The startup notification should
     // be removed even though app ids don't match.
     auto bigBadWolfWindow = std::make_unique<Test::XdgToplevelWindow>([activationToken](Test::XdgToplevel *toplevel) {
-        toplevel->set_app_id(QFINDTESTDATA("data/org.kde.big-bad-wolf.desktop"));
+        toplevel->set_app_id(QFINDTESTDATA("org.kde.big-bad-wolf.desktop"));
         Test::xdgActivation()->activate(activationToken, *toplevel->xdgSurface()->surface());
     });
     bigBadWolfWindow->show();
