@@ -163,7 +163,21 @@ bool DrmAtomicCommit::doCommit(uint32_t flags)
         .reserved = 0,
         .user_data = reinterpret_cast<uint64_t>(this),
     };
-    return drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
+    const auto t = std::chrono::steady_clock::now();
+    const bool ret = drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
+    const auto diff = std::chrono::steady_clock::now() - t;
+    if (diff > 250us) {
+        auto dbg = qWarning();
+        dbg << "atomic";
+        if (flags & DRM_MODE_ATOMIC_TEST_ONLY) {
+            dbg << "test-only";
+        }
+        if (flags & DRM_MODE_ATOMIC_ALLOW_MODESET) {
+            dbg << "modeset";
+        }
+        dbg << "commit took" << std::chrono::duration_cast<std::chrono::microseconds>(diff);
+    }
+    return ret;
 }
 
 void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
