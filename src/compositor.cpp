@@ -96,6 +96,11 @@ Compositor::~Compositor()
     s_compositor = nullptr;
 }
 
+void Compositor::overrideOverlayEnv(bool enableOverlays)
+{
+    m_allowOverlaysEnv = enableOverlays;
+}
+
 BackendOutput *Compositor::findOutput(RenderLoop *loop) const
 {
     const auto outputs = kwinApp()->outputBackend()->outputs();

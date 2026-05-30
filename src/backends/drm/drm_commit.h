@@ -89,6 +89,9 @@ public:
     bool isReadyFor(std::chrono::steady_clock::time_point pageflipTarget) const;
     bool isTearing() const;
 
+    static uint64_t s_commitSerial;
+    uint64_t m_planeCount = 0;
+
 private:
     bool doCommit(uint32_t flags);
 
@@ -103,6 +106,7 @@ private:
     std::unordered_map<uint32_t /* object */, std::unordered_map<uint32_t /* property */, uint64_t /* value */>> m_properties;
     bool m_modeset = false;
     PresentationMode m_mode = PresentationMode::VSync;
+    uint64_t m_commitSerial;
 };
 
 class DrmLegacyCommit : public DrmCommit

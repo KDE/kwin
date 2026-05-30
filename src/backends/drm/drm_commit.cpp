@@ -53,6 +53,7 @@ DrmAtomicCommit::DrmAtomicCommit(DrmGpu *gpu)
 DrmAtomicCommit::DrmAtomicCommit(const QList<DrmPipeline *> &pipelines)
     : DrmCommit(pipelines.front()->gpu())
     , m_pipelines(pipelines)
+    , m_commitSerial(s_commitSerial)
 {
 }
 
@@ -131,6 +132,8 @@ bool DrmAtomicCommit::commitModeset()
     return doCommit(DRM_MODE_ATOMIC_ALLOW_MODESET);
 }
 
+uint64_t DrmAtomicCommit::s_commitSerial = 0;
+
 bool DrmAtomicCommit::doCommit(uint32_t flags)
 {
     std::vector<uint32_t> objects;
@@ -163,7 +166,23 @@ bool DrmAtomicCommit::doCommit(uint32_t flags)
         .reserved = 0,
         .user_data = reinterpret_cast<uint64_t>(this),
     };
-    return drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
+    const auto t = std::chrono::steady_clock::now();
+    const bool ret = drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
+    const auto diff = std::chrono::steady_clock::now() - t;
+    auto dbg = diff > 1ms ? qCritical() : qWarning();
+    dbg << "atomic";
+    if (flags & DRM_MODE_ATOMIC_TEST_ONLY) {
+        dbg << "test-only";
+    } else {
+        dbg << "         ";
+    }
+    if (flags & DRM_MODE_ATOMIC_ALLOW_MODESET) {
+        dbg << "modeset";
+    }
+    dbg << "commit" << m_commitSerial;
+    dbg << "with" << m_planeCount << "enabled planes";
+    dbg << "took" << std::chrono::duration_cast<std::chrono::microseconds>(diff);
+    return ret;
 }
 
 void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)

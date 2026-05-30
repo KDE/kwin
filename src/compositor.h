@@ -77,6 +77,8 @@ public:
 
     void createRenderer();
 
+    void overrideOverlayEnv(bool enableOverlays);
+
 Q_SIGNALS:
     void compositingToggled(bool active);
     void aboutToDestroy();

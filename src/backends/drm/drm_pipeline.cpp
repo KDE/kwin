@@ -58,6 +58,8 @@ DrmPipeline::Error DrmPipeline::testPresent(const std::shared_ptr<OutputFrame> &
         return Error::None;
     }
     // test the full state with all planes, to take pending commits into account
+    DrmAtomicCommit::s_commitSerial++;
+    // auto lock = m_commitThread->lock();
     return DrmPipeline::commitPipelinesAtomic({this}, CommitMode::Test, frame, {});
 }
 
@@ -88,6 +90,9 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
             return Error::InvalidArguments;
         }
         m_next.needsModesetProperties = m_pending.needsModesetProperties = false;
+        partialUpdate->m_planeCount = std::ranges::count_if(m_pending.layers, [](DrmPipelineLayer *layer) {
+            return layer->isEnabled();
+        });
         m_commitThread->addCommit(std::move(partialUpdate));
         return Error::None;
     } else {
@@ -128,6 +133,9 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
         if (Error err = pipeline->prepareAtomicCommit(commit.get(), mode, frame); err != Error::None) {
             return err;
         }
+        commit->m_planeCount += std::ranges::count_if(pipeline->m_pending.layers, [](DrmPipelineLayer *layer) {
+            return layer->isEnabled();
+        });
     }
     for (DrmObject *unused : unusedObjects) {
         unused->disable(commit.get());

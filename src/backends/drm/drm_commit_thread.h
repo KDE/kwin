@@ -44,6 +44,11 @@ public:
      */
     std::chrono::nanoseconds safetyMargin() const;
 
+    auto lock()
+    {
+        return std::unique_lock(m_mutex);
+    }
+
 private:
     void clearDroppedCommits();
     TimePoint estimateNextVblank(TimePoint now) const;

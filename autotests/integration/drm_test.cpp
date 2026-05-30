@@ -277,7 +277,7 @@ public:
                 });
                 auto wlbuffer = Test::linuxDmabuf()->importBuffer(m_buffer.buffer());
                 m_surface->attachBuffer(wlbuffer);
-                m_surface->damage(QRect(QPoint(0, 0), m_buffer->size()));
+                m_surface->damageBuffer(QRect(QPoint(0, 0), m_buffer->size()));
                 m_needsRealloc = false;
                 break;
             }
@@ -630,12 +630,14 @@ void DrmTest::testOverlay()
     // be necessary to put the buffer on a drm plane
     QElapsedTimer timer;
     timer.start();
-    while (timer.durationElapsed() < 5s) {
+    while (timer.durationElapsed() < 10s) {
         window.m_surface->damageBuffer(QRect(QPoint(), planeGeometry.size()));
         QVERIFY(window.presentWait());
 
         if (findBufferOnPlane(output, window.m_buffer.buffer())) {
-            break;
+            Compositor::self()->overrideOverlayEnv(false);
+        } else {
+            Compositor::self()->overrideOverlayEnv(true);
         }
     }
     QCOMPARE_LE(timer.durationElapsed(), 5s);
