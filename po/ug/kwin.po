@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-05-28 02:37+0000\n"
+"POT-Creation-Date: 2026-05-30 02:46+0000\n"
 "PO-Revision-Date: 2026-02-17 23:24-0500\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -2615,7 +2615,7 @@ msgstr "PipeWire مەزمۇنىغا باغلىنالمىدى"
 #: plugins/screencast/screencastmanager.cpp:56
 #: plugins/screencast/screencastmanager.cpp:81
 #: plugins/screencast/screencastmanager.cpp:97
-#: plugins/screencast/screencastmanager.cpp:142
+#: plugins/screencast/screencastmanager.cpp:151
 #, kde-format
 msgid "Unsupported compositing type"
 msgstr "قوللىمايدىغان كىرىشتۈرۈش تۈرى"
@@ -2625,12 +2625,12 @@ msgstr "قوللىمايدىغان كىرىشتۈرۈش تۈرى"
 msgid "Could not find window id %1"
 msgstr "كۆزنەك كىملىكى %1 نى تاپالمىدى"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:118
 #, kde-format
 msgid "Could not find output"
 msgstr "چىقىرىشنى تاپالمىدى"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:156
 #, kde-format
 msgid "Invalid region"
 msgstr "ئىناۋەتسىز رايون"
