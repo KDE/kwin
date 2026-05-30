@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-28 00:45+0000\n"
-"PO-Revision-Date: 2026-05-14 11:29+0200\n"
+"PO-Revision-Date: 2026-05-23 07:57+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -1102,11 +1102,10 @@ msgstr "Finestre"
 
 #. i18n: ectx: property (text), widget (QPushButton, pickWindowButton)
 #: debug_console.ui:43
-#, fuzzy, kde-format
-#| msgid "Pack Window Up"
+#, kde-format
 msgctxt "@action:button"
 msgid "Pick Window…"
-msgstr "Compatta la finestra in alto"
+msgstr "Scegli la finestra..."
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:54
@@ -1846,9 +1845,7 @@ msgstr ""
 "immissione"
 
 #: plugins/eis/eisprompter.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always allow apps claiming to be %1"
+#, kde-format
 msgctxt ""
 "@option:check, %1 is the application name. This option always allow apps "
 "claiming to be a given application name to control input devices"
