@@ -70,6 +70,7 @@ protected:
     void zwp_linux_buffer_params_v1_create(Resource *resource, int32_t width, int32_t height, uint32_t format, uint32_t flags) override;
     void
     zwp_linux_buffer_params_v1_create_immed(Resource *resource, uint32_t buffer_id, int32_t width, int32_t height, uint32_t format, uint32_t flags) override;
+    void zwp_linux_buffer_params_v1_set_sampling_device(Resource *resource, wl_array *device) override;
 
 private:
     bool test(Resource *resource, uint32_t width, uint32_t height);
@@ -77,6 +78,7 @@ private:
     LinuxDmaBufV1ClientBufferIntegration *m_integration;
     DmaBufAttributes m_attrs;
     std::array<uint64_t, 4> m_modifiers;
+    std::optional<dev_t> m_targetDevice;
     bool m_isUsed = false;
 };
 

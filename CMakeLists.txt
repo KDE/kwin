@@ -211,7 +211,7 @@ if (Wayland_VERSION VERSION_GREATER_EQUAL "1.25.91")
     add_compile_definitions(HAVE_ACK_GLOBAL_REMOVE=1)
 endif()
 
-find_package(WaylandProtocols 1.48)
+find_package(WaylandProtocols 1.49)
 set_package_properties(WaylandProtocols PROPERTIES
     TYPE REQUIRED
     PURPOSE "Collection of Wayland protocols that add functionality not available in the Wayland core protocol"

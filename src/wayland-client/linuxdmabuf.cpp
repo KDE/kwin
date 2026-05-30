@@ -135,7 +135,7 @@ void LinuxDmabufFeedbackV1::tranche_flags(void *data, zwp_linux_dmabuf_feedback_
 
 LinuxDmabufV1::LinuxDmabufV1(wl_registry *registry, uint32_t name, uint32_t version)
 {
-    m_dmabuf = static_cast<zwp_linux_dmabuf_v1 *>(wl_registry_bind(registry, name, &zwp_linux_dmabuf_v1_interface, version));
+    m_dmabuf = static_cast<zwp_linux_dmabuf_v1 *>(wl_registry_bind(registry, name, &zwp_linux_dmabuf_v1_interface, std::min(4u, version)));
 
     static const struct zwp_linux_dmabuf_v1_listener dmabufListener = {
         .format = format,
