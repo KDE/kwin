@@ -96,6 +96,7 @@ public:
     void glReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
     void glGetnTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels);
     void glGetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
+    void restoreGraphicsState();
 
     void pushFramebuffer(GLFramebuffer *fbo);
     GLFramebuffer *popFramebuffer();

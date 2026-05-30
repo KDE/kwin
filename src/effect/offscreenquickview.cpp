@@ -17,6 +17,7 @@
 #include "input_event.h"
 #include "logging_p.h"
 #include "opengl/eglcontext.h"
+#include "opengl/egldisplay.h"
 #include "opengl/eglnativefence.h"
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
@@ -43,10 +44,154 @@
 #include <QQuickOpenGLUtils>
 #include <QQuickRenderTarget>
 #include <QTimer>
+#include <QtGui/private/qopenglcontext_p.h>
 #include <private/qeventpoint_p.h> // for QMutableEventPoint
+#include <qpa/qplatformopenglcontext.h>
 
 namespace KWin
 {
+
+class WrappedScenePlatformOpenGLContext : public QPlatformOpenGLContext, public QNativeInterface::QEGLContext
+{
+public:
+    WrappedScenePlatformOpenGLContext(EglContext *sceneContext, const QSurfaceFormat &requestedFormat)
+        : m_sceneContext(sceneContext)
+        , m_format(requestedFormat)
+    {
+        if (!m_sceneContext) {
+            return;
+        }
+
+        m_format.setRenderableType(m_sceneContext->isOpenGLES() ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL);
+        m_format.setMajorVersion(m_sceneContext->openglVersion().majorVersion());
+        m_format.setMinorVersion(m_sceneContext->openglVersion().minorVersion());
+        updateFormatFromContext();
+    }
+
+    bool makeCurrent(QPlatformSurface *surface) override
+    {
+        Q_UNUSED(surface)
+        return m_sceneContext && m_sceneContext->makeCurrent();
+    }
+
+    void doneCurrent() override
+    {
+        if (m_sceneContext) {
+            m_sceneContext->doneCurrent();
+        }
+    }
+
+    QSurfaceFormat format() const override
+    {
+        return m_format;
+    }
+
+    bool isValid() const override
+    {
+        return m_sceneContext && !m_markedInvalid;
+    }
+
+    bool isSharing() const override
+    {
+        return false;
+    }
+
+    GLuint defaultFramebufferObject(QPlatformSurface *surface) const override
+    {
+        Q_UNUSED(surface)
+        return 0;
+    }
+
+    QFunctionPointer getProcAddress(const char *procName) override
+    {
+        return eglGetProcAddress(procName);
+    }
+
+    void swapBuffers(QPlatformSurface *surface) override
+    {
+        Q_UNUSED(surface)
+    }
+
+    EGLContext nativeContext() const override
+    {
+        return m_sceneContext ? m_sceneContext->handle() : EGL_NO_CONTEXT;
+    }
+
+    EGLConfig config() const override
+    {
+        return m_sceneContext ? m_sceneContext->config() : EGL_NO_CONFIG_KHR;
+    }
+
+    EGLDisplay display() const override
+    {
+        return m_sceneContext ? m_sceneContext->displayObject()->handle() : EGL_NO_DISPLAY;
+    }
+
+    void invalidateContext() override
+    {
+        m_markedInvalid = true;
+    }
+
+private:
+    void updateFormatFromContext()
+    {
+        EglContext *const previousContext = EglContext::currentContext();
+        const bool contextChanged = previousContext != m_sceneContext;
+        if (contextChanged && !m_sceneContext->makeCurrent()) {
+            qCWarning(LIBKWINEFFECTS, "Failed to make the wrapped scene context current while probing its format");
+            return;
+        }
+
+        GLint value = 0;
+
+        if (!m_sceneContext->isOpenGLES() && m_format.version() >= qMakePair(3, 0)) {
+            glGetIntegerv(GL_CONTEXT_FLAGS, &value);
+            if (!(value & GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT)) {
+                m_format.setOption(QSurfaceFormat::DeprecatedFunctions);
+            }
+            if (value & GL_CONTEXT_FLAG_DEBUG_BIT) {
+                m_format.setOption(QSurfaceFormat::DebugContext);
+            }
+        } else if (!m_sceneContext->isOpenGLES()) {
+            m_format.setOption(QSurfaceFormat::DeprecatedFunctions);
+        }
+
+        if (!m_sceneContext->isOpenGLES() && m_format.version() >= qMakePair(3, 2)) {
+            glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &value);
+            if (value & GL_CONTEXT_CORE_PROFILE_BIT) {
+                m_format.setProfile(QSurfaceFormat::CoreProfile);
+            } else if (value & GL_CONTEXT_COMPATIBILITY_PROFILE_BIT) {
+                m_format.setProfile(QSurfaceFormat::CompatibilityProfile);
+            } else {
+                m_format.setProfile(QSurfaceFormat::NoProfile);
+            }
+        } else {
+            m_format.setProfile(QSurfaceFormat::NoProfile);
+        }
+
+        if (contextChanged) {
+            m_sceneContext->doneCurrent();
+            if (previousContext) {
+                previousContext->makeCurrent();
+            }
+        }
+    }
+
+    EglContext *const m_sceneContext;
+    QSurfaceFormat m_format;
+    bool m_markedInvalid = false;
+};
+
+static std::unique_ptr<QOpenGLContext> wrapSceneOpenGLContext(EglContext *sceneContext, const QSurfaceFormat &format)
+{
+    if (!sceneContext) {
+        return nullptr;
+    }
+
+    auto context = std::make_unique<QOpenGLContext>();
+    QOpenGLContextPrivate::get(context.get())->adopt(new WrappedScenePlatformOpenGLContext(sceneContext, format));
+    return context;
+}
 
 class Q_DECL_HIDDEN OffscreenQuickView::Private
 {
@@ -182,13 +327,23 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
 
         d->m_view->setFormat(format);
 
-        d->m_glcontext = std::make_unique<QOpenGLContext>();
-        d->m_glcontext->setFormat(format);
-        d->m_glcontext->create();
+        if (const auto scene = effects->scene(); scene && scene->openglContext()) {
+            const auto sceneContext = scene->openglContext();
+            d->m_glcontext = wrapSceneOpenGLContext(sceneContext, format);
+        }
+        if (!d->m_glcontext || !d->m_glcontext->isValid()) {
+            if (d->m_glcontext) {
+                d->m_glcontext.reset();
+            }
+            qCWarning(LIBKWINEFFECTS, "Falling back to creating a dedicated OpenGL context for OffscreenQuickView");
+            d->m_glcontext = std::make_unique<QOpenGLContext>();
+            d->m_glcontext->setFormat(format);
+            d->m_glcontext->create();
+        }
 
         // and the offscreen surface
         d->m_offscreenSurface = std::make_unique<QOffscreenSurface>();
-        d->m_offscreenSurface->setFormat(d->m_glcontext->format());
+        d->m_offscreenSurface->setFormat(format);
         d->m_offscreenSurface->create();
 
         d->m_glcontext->makeCurrent(d->m_offscreenSurface.get());
@@ -236,6 +391,9 @@ OffscreenQuickView::~OffscreenQuickView()
 
     d->m_view.reset();
     d->m_renderControl.reset();
+    if (auto nativeContext = d->m_glcontext ? d->m_glcontext->nativeInterface<QNativeInterface::QEGLContext>() : nullptr) {
+        nativeContext->invalidateContext();
+    }
 }
 
 bool OffscreenQuickView::automaticRepaint() const
@@ -361,6 +519,9 @@ void OffscreenQuickView::update(OutputFrame *frame)
 
     if (usingGl) {
         QQuickOpenGLUtils::resetOpenGLState();
+        if (auto context = EglContext::currentContext()) {
+            context->restoreGraphicsState();
+        }
     }
 
     if (d->m_useBlit) {

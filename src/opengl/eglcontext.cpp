@@ -660,6 +660,18 @@ void EglContext::glGetnUniformfv(GLuint program, GLint location, GLsizei bufSize
     }
 }
 
+void EglContext::restoreGraphicsState()
+{
+    if (m_vao) {
+        glBindVertexArray(m_vao);
+    }
+
+    if (const auto fbo = currentFramebuffer()) {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo->handle());
+        glViewport(0, 0, fbo->size().width(), fbo->size().height());
+    }
+}
+
 void EglContext::pushFramebuffer(GLFramebuffer *fbo)
 {
     if (fbo != currentFramebuffer()) {
