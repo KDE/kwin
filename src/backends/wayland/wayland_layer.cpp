@@ -133,5 +133,10 @@ KWayland::Client::SubSurface *WaylandLayer::subSurface() const
     return m_subSurface.get();
 }
 
+bool WaylandLayer::hasColorPipeline() const
+{
+    return m_colorSurface != nullptr;
+}
+
 }
 }

@@ -491,6 +491,13 @@ static std::optional<std::unordered_map<OutputLayer *, Item *>> assignLayers(Ren
                 continue;
             }
         }
+        if (!layer->hasColorPipeline()) {
+            const auto pipeline = ColorPipeline::create(item->colorDescription(), sceneView->backendOutput()->layerBlendingColor(), item->renderingIntent());
+            if (!pipeline.isIdentity()) {
+                layerIt++;
+                continue;
+            }
+        }
         layer->setZpos(nextZpos);
         ret[layer] = item;
         itemIt++;

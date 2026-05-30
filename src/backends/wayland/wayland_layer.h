@@ -55,6 +55,8 @@ public:
     KWayland::Client::Surface *surface() const;
     KWayland::Client::SubSurface *subSurface() const;
 
+    bool hasColorPipeline() const override;
+
 protected:
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<KWayland::Client::SubSurface> m_subSurface;

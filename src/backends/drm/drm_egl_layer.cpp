@@ -139,4 +139,9 @@ void EglGbmLayer::releaseBuffers()
     m_surface.destroyResources();
 }
 
+bool EglGbmLayer::hasColorPipeline() const
+{
+    return m_plane && !m_plane->colorPipelines().isEmpty();
+}
+
 }

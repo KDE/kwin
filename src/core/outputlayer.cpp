@@ -68,6 +68,11 @@ QList<QSize> OutputLayer::recommendedSizes() const
     return {};
 }
 
+bool OutputLayer::hasColorPipeline() const
+{
+    return false;
+}
+
 Region OutputLayer::deviceRepaints() const
 {
     return m_repaints;

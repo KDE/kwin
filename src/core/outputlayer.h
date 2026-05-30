@@ -76,6 +76,7 @@ public:
      * This returns those specific sizes, if present
      */
     virtual QList<QSize> recommendedSizes() const;
+    virtual bool hasColorPipeline() const;
 
     Region deviceRepaints() const;
     void resetRepaints();
