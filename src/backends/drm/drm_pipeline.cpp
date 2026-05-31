@@ -314,11 +314,9 @@ std::expected<void, OutputError> DrmPipeline::prepareAtomicPlane(DrmAtomicCommit
         commit->addProperty(plane->colorPipeline, (*it)->id());
     }
 
-    if (plane->colorPipeline.isValid() && layer->colorDescription()->yuvCoefficients() != YUVMatrixCoefficients::Identity) {
-        return std::unexpected(OutputError{
-            .code = OutputErrorCode::ColorPipeline,
-            .message = QStringLiteral("Color pipelines don't support YCbCr yet"),
-        });
+    if (plane->colorPipeline.isValid()) {
+        // color pipelines don't need the color encoding and color range properties
+        return {};
     }
     if (layer->colorDescription()->yuvCoefficients() == YUVMatrixCoefficients::Identity) {
         if (layer->colorDescription()->range() == EncodingRange::Limited) {
