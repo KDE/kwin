@@ -101,10 +101,21 @@ public:
     double m_maxValue;
 };
 
+class KWIN_EXPORT ColorYuvConversion
+{
+public:
+    explicit ColorYuvConversion(YUVMatrixCoefficients coefficients, EncodingRange range);
+
+    bool operator==(const ColorYuvConversion &) const = default;
+
+    YUVMatrixCoefficients m_coefficients;
+    EncodingRange m_range;
+};
+
 class KWIN_EXPORT ColorOp
 {
 public:
-    using Operation = std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper, std::shared_ptr<ColorTransformation>, std::shared_ptr<ColorLUT3D>, ColorClamp>;
+    using Operation = std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper, std::shared_ptr<ColorTransformation>, std::shared_ptr<ColorLUT3D>, ColorClamp, ColorYuvConversion>;
     ValueRange input;
     ColorspaceType inputSpace = ColorspaceType::AnyNonRGB;
     Operation operation;

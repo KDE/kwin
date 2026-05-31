@@ -287,9 +287,9 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
         commit->addProperty(plane->colorPipeline, (*it)->id());
     }
 
-    if (plane->colorPipeline.isValid() && layer->colorDescription()->yuvCoefficients() != YUVMatrixCoefficients::Identity) {
-        // color pipelines don't support the color encoding and color range properties yet
-        return Error::InvalidArguments;
+    if (plane->colorPipeline.isValid()) {
+        // color pipelines don't need the color encoding and color range properties
+        return Error::None;
     }
     DrmPlane::ColorRange range = DrmPlane::ColorRange::Limited_YCbCr;
     if (layer->colorDescription()->range() == EncodingRange::Full) {

@@ -56,11 +56,34 @@ ColorPipeline ColorPipeline::create(const std::shared_ptr<ColorDescription> &fro
     const auto range1 = getValueRange({mdBlack, mdRed, mdGreen, mdBlue, mdWhite});
     const double maxOutputLuminance = to->maxHdrLuminance().value_or(to->referenceLuminance());
     const auto rgbInputSpace = from->transferFunction().type == TransferFunction::linear ? ColorspaceType::LinearRGB : ColorspaceType::NonLinearRGB;
-    ColorPipeline ret(ValueRange{
-                          .min = from->transferFunction().nitsToEncoded(range1.min),
-                          .max = from->transferFunction().nitsToEncoded(range1.max),
-                      },
-                      rgbInputSpace);
+    const ValueRange rgbInputRange{
+        .min = from->transferFunction().nitsToEncoded(range1.min),
+        .max = from->transferFunction().nitsToEncoded(range1.max),
+    };
+
+    ColorspaceType inputSpace;
+    ValueRange inputRange;
+    if (from->yuvCoefficients() == YUVMatrixCoefficients::Identity) {
+        inputSpace = rgbInputSpace;
+        inputRange = rgbInputRange;
+    } else {
+        inputSpace = ColorspaceType::AnyNonRGB;
+        // the real range may be smaller, but calculating it isn't worth the effort
+        inputRange = ValueRange{
+            .min = -0.5,
+            .max = 1,
+        };
+    }
+    ColorPipeline ret(inputRange, inputSpace);
+    if (from->yuvCoefficients() != YUVMatrixCoefficients::Identity) {
+        ret.add(ColorOp{
+            .input = ret.currentOutputRange(),
+            .inputSpace = ret.currentOutputSpace(),
+            .operation = ColorYuvConversion{from->yuvCoefficients(), from->range()},
+            .output = rgbInputRange,
+            .outputSpace = rgbInputSpace,
+        });
+    }
     ret.addTransferFunction(from->transferFunction(), ColorspaceType::LinearRGB);
 
     const QMatrix4x4 toOther = from->toOther(*to, intent);
@@ -495,6 +518,8 @@ QVector3D ColorOp::applyOperation(const ColorOp::Operation &operation, const QVe
             std::clamp<float>(input.y(), clamp->m_minValue, clamp->m_maxValue),
             std::clamp<float>(input.z(), clamp->m_minValue, clamp->m_maxValue),
         };
+    } else if (auto yuv = std::get_if<ColorYuvConversion>(&operation)) {
+        return ColorDescription::yuvMatrix(yuv->m_coefficients, yuv->m_range) * input;
     } else {
         Q_UNREACHABLE();
     }
@@ -563,6 +588,12 @@ ColorClamp::ColorClamp(double minValue, double maxValue)
 {
 }
 
+ColorYuvConversion::ColorYuvConversion(YUVMatrixCoefficients coefficients, EncodingRange range)
+    : m_coefficients(coefficients)
+    , m_range(range)
+{
+}
+
 }
 
 QDebug operator<<(QDebug debug, const KWin::ColorOp &op)
@@ -583,6 +614,8 @@ QDebug operator<<(QDebug debug, const KWin::ColorOp &op)
         debug << "lut3d";
     } else if (auto clip = std::get_if<KWin::ColorClamp>(&op.operation)) {
         debug << "clamp(" << clip->m_minValue << clip->m_maxValue << ")";
+    } else if (std::holds_alternative<KWin::ColorYuvConversion>(op.operation)) {
+        debug << "yuv conversion";
     }
     return debug;
 }

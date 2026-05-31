@@ -259,6 +259,29 @@ private:
     DrmProperty *const m_bypass;
 };
 
+enum class FixedMatrixType {
+    YCbCr601Full,
+    YCbCr601Limited,
+    YCbCr709Full,
+    YCbCr709Limited,
+    YCbCr2020Full,
+    YCbCr2020Limited,
+};
+
+class FixedMatrix : public DrmAbstractColorOp
+{
+public:
+    explicit FixedMatrix(DrmAbstractColorOp *next, DrmEnumProperty<FixedMatrixType> *value, DrmProperty *bypass);
+
+    std::optional<Priority> colorOpPreference(const ColorOp::Operation &op) override;
+    void program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations) override;
+    void bypass(DrmAtomicCommit *commit) override;
+
+private:
+    DrmEnumProperty<FixedMatrixType> *const m_value;
+    DrmProperty *const m_bypass;
+};
+
 class DrmColorOp : public DrmObject
 {
 public:
@@ -277,6 +300,7 @@ private:
         Lut3D,
         Multiplier,
         NamedLut1D,
+        FixedMatrix,
     };
     DrmProperty m_next;
     DrmEnumProperty<Type> m_type;
@@ -287,6 +311,7 @@ private:
     DrmEnumProperty<Named1DLutType> m_1dNamedLutType;
     DrmEnumProperty<Lut1DInterpolation> m_lut1dInterpolation;
     DrmEnumProperty<Lut3DInterpolation> m_lut3dInterpolation;
+    DrmEnumProperty<FixedMatrixType> m_fixedMatrixType;
     std::unique_ptr<DrmAbstractColorOp> m_op;
     std::unique_ptr<DrmColorOp> m_nextOp;
 };

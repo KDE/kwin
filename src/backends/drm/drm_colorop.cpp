@@ -641,7 +641,7 @@ std::optional<DrmAbstractColorOp::Priority> Matrix3x4ColorOp::colorOpPreference(
         } else {
             return Priority::Normal;
         }
-    } else if (std::holds_alternative<ColorMultiplier>(op)) {
+    } else if (std::holds_alternative<ColorMultiplier>(op) || std::holds_alternative<ColorYuvConversion>(op)) {
         return Priority::Low;
     }
     return std::nullopt;
@@ -1027,6 +1027,59 @@ std::optional<DrmAbstractColorOp::Scaling> DrmNamed1DLut::outputScaling(const Co
     }
 }
 
+FixedMatrix::FixedMatrix(DrmAbstractColorOp *next, DrmEnumProperty<FixedMatrixType> *value, DrmProperty *bypass)
+    : DrmAbstractColorOp(next, bypass ? Features{Feature::Bypass} : Features{}, QStringLiteral("Fixed Matrix"))
+    , m_value(value)
+    , m_bypass(bypass)
+{
+}
+
+static std::optional<FixedMatrixType> yuvToFixed(YUVMatrixCoefficients coefficients, EncodingRange range)
+{
+    switch (coefficients) {
+    case YUVMatrixCoefficients::Identity:
+        return std::nullopt;
+    case YUVMatrixCoefficients::BT601:
+        return range == EncodingRange::Limited ? FixedMatrixType::YCbCr601Limited : FixedMatrixType::YCbCr601Full;
+    case YUVMatrixCoefficients::BT709:
+        return range == EncodingRange::Limited ? FixedMatrixType::YCbCr709Limited : FixedMatrixType::YCbCr709Full;
+    case YUVMatrixCoefficients::BT2020:
+        return range == EncodingRange::Limited ? FixedMatrixType::YCbCr2020Limited : FixedMatrixType::YCbCr2020Full;
+    }
+    Q_UNREACHABLE();
+}
+
+std::optional<DrmAbstractColorOp::Priority> FixedMatrix::colorOpPreference(const ColorOp::Operation &op)
+{
+    auto yuv = std::get_if<ColorYuvConversion>(&op);
+    if (!yuv) {
+        return std::nullopt;
+    }
+    auto type = yuvToFixed(yuv->m_coefficients, yuv->m_range);
+    if (!type) {
+        return std::nullopt;
+    }
+    if (!m_value->hasEnum(*type)) {
+        return std::nullopt;
+    }
+    return Priority::High;
+}
+
+void FixedMatrix::program(DrmAtomicCommit *commit, const std::deque<ColorOp::Operation> &operations)
+{
+    Q_ASSERT(operations.size() == 1);
+    const auto &yuv = std::get<ColorYuvConversion>(operations[0]);
+    commit->addEnum(*m_value, *yuvToFixed(yuv.m_coefficients, yuv.m_range));
+    if (m_bypass) {
+        commit->addProperty(*m_bypass, 0);
+    }
+}
+
+void FixedMatrix::bypass(DrmAtomicCommit *commit)
+{
+    commit->addProperty(*m_bypass, 1);
+}
+
 DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
     : DrmObject(gpu, objectId, DRM_MODE_OBJECT_ANY)
     , m_next(this, QByteArrayLiteral("NEXT"))
@@ -1036,6 +1089,7 @@ DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
                                                   QByteArrayLiteral("3D LUT"),
                                                   QByteArrayLiteral("Multiplier"),
                                                   QByteArrayLiteral("1D Curve"),
+                                                  QByteArrayLiteral("Fixed Matrix"),
                                               })
     , m_data(this, QByteArrayLiteral("DATA"))
     , m_size(this, QByteArrayLiteral("SIZE"))
@@ -1051,6 +1105,15 @@ DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
                                                                  })
     , m_lut1dInterpolation(this, QByteArrayLiteral("LUT1D_INTERPOLATION"), {QByteArrayLiteral("Linear")})
     , m_lut3dInterpolation(this, QByteArrayLiteral("LUT3D_INTERPOLATION"), {QByteArrayLiteral("Tetrahedal")})
+    , m_fixedMatrixType(this, QByteArrayLiteral("FIXED_MATRIX_TYPE"), {
+                                                                          QByteArrayLiteral("YCbCr 601 Full to RGB"),
+                                                                          QByteArrayLiteral("YCbCr 601 Limited to RGB"),
+                                                                          QByteArrayLiteral("YCbCr 709 Full to RGB"),
+                                                                          QByteArrayLiteral("YCbCr 709 Limited to RGB"),
+                                                                          QByteArrayLiteral("YCbCr 2020 Full to RGB NC"),
+                                                                          QByteArrayLiteral("YCbCr 2020 Limited to RGB NC"),
+
+                                                                      })
 {
 }
 
@@ -1081,6 +1144,7 @@ bool DrmColorOp::updateProperties()
     m_1dNamedLutType.update(props);
     m_lut1dInterpolation.update(props);
     m_lut3dInterpolation.update(props);
+    m_fixedMatrixType.update(props);
 
     if (!m_type.isValid()) {
         return false;
@@ -1144,6 +1208,14 @@ bool DrmColorOp::updateProperties()
             return true;
         }
         m_op = std::make_unique<DrmNamed1DLut>(next, &m_1dNamedLutType, bypassProp);
+        return true;
+    case Type::FixedMatrix:
+        if (!m_fixedMatrixType.isValid()) {
+            qCWarning(KWIN_DRM, "Skipping fixed matrix with invalid type property");
+            m_op = std::make_unique<UnknownColorOp>(next, bypassProp);
+            return true;
+        }
+        m_op = std::make_unique<FixedMatrix>(next, &m_fixedMatrixType, bypassProp);
         return true;
     }
     Q_UNREACHABLE();

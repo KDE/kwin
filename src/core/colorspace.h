@@ -251,9 +251,8 @@ public:
 
     /**
      * @returns the matrix that converts from this ColorDescription's encoding to full range RGB
-     * TODO move this to ColorPipeline, to deal with ICtCp
      */
-    QMatrix4x4 yuvMatrix() const;
+    const QMatrix4x4 &yuvMatrix() const;
 
     bool operator==(const ColorDescription &other) const = default;
 
@@ -279,6 +278,8 @@ public:
      */
     static const std::shared_ptr<ColorDescription> sRGB;
     static const std::shared_ptr<ColorDescription> BT2020PQ;
+
+    static const QMatrix4x4 &yuvMatrix(YUVMatrixCoefficients coefficients, EncodingRange range);
 
 private:
     Colorimetry m_containerColorimetry;
