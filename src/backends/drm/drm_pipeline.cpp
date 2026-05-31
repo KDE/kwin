@@ -88,6 +88,9 @@ DrmPipeline::Error DrmPipeline::present(const QList<OutputLayer *> &layersToUpda
             return Error::InvalidArguments;
         }
         m_next.needsModesetProperties = m_pending.needsModesetProperties = false;
+        if (gpu()->hasPageFlipProperty()) {
+            partialUpdate->addProperty(m_pending.crtc->pageFlipEvent, 1);
+        }
         m_commitThread->addCommit(std::move(partialUpdate));
         return Error::None;
     } else {

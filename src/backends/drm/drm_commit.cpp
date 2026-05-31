@@ -118,7 +118,10 @@ bool DrmAtomicCommit::testAllowModeset()
 
 bool DrmAtomicCommit::commit()
 {
-    uint32_t flags = DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_PAGE_FLIP_EVENT;
+    uint32_t flags = DRM_MODE_ATOMIC_NONBLOCK;
+    if (!gpu()->hasPageFlipProperty()) {
+        flags |= DRM_MODE_PAGE_FLIP_EVENT;
+    }
     if (isTearing()) {
         flags |= DRM_MODE_PAGE_FLIP_ASYNC;
     }

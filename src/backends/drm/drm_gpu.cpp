@@ -121,6 +121,9 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     m_sharpnessSupported = std::ranges::all_of(m_crtcs, [](const std::unique_ptr<DrmCrtc> &crtc) {
         return crtc->sharpnessStrength.isValid();
     });
+    m_hasPageFlipProperty = std::ranges::all_of(m_crtcs, [](const std::unique_ptr<DrmCrtc> &crtc) {
+        return crtc->pageFlipEvent.isValid();
+    });
 
     // Make sure the render device list is up to date, otherwise we may first
     // select software rendering and only later switch to the render node
@@ -703,6 +706,11 @@ bool DrmGpu::asyncPageflipSupported() const
 bool DrmGpu::sharpnessSupported() const
 {
     return m_sharpnessSupported;
+}
+
+bool DrmGpu::hasPageFlipProperty() const
+{
+    return m_hasPageFlipProperty;
 }
 
 bool DrmGpu::colorPipelineSupported() const

@@ -51,6 +51,7 @@ public:
     DrmProperty degammaLut;
     DrmProperty degammaLutSize;
     DrmProperty sharpnessStrength;
+    DrmProperty pageFlipEvent;
 
     DrmAbstractColorOp *postBlendingPipeline = nullptr;
 
