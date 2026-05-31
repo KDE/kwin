@@ -8,9 +8,11 @@
 */
 #include "gpumanager.h"
 #include "drmdevice.h"
+#include "opengl/egldisplay.h"
 #include "utils/common.h"
 #include "utils/envvar.h"
 #include "utils/udev.h"
+#include "vulkan/vulkan_device.h"
 
 #include <QSocketNotifier>
 #include <fcntl.h>
@@ -125,22 +127,46 @@ void GpuManager::updateCompatibilityMap()
 
 RenderDevice *GpuManager::findCompatibleRenderDevice(drmDevicePtr device) const
 {
-    auto matchingIt = std::ranges::find_if(m_renderDevices, [device](const auto &renderDevice) {
-        return drmDevicesEqual(device, renderDevice->drmDevice()->libdrmDevice()) == 1;
-    });
-    if (matchingIt != m_renderDevices.end()) {
-        return matchingIt->get();
-    }
-    // fallback for split display/render cases: devices with bus "platform" can be assumed to be compatible
     if (device->bustype == DRM_BUS_PLATFORM) {
-        matchingIt = std::ranges::find_if(m_renderDevices, [](const auto &renderDevice) {
+        // devices with bus "platform" can be assumed to be compatible.
+        auto candidates = m_renderDevices | std::views::filter([](const auto &renderDevice) {
             return renderDevice->drmDevice()->busType() == DRM_BUS_PLATFORM;
         });
-        if (matchingIt != m_renderDevices.end()) {
-            return matchingIt->get();
+        if (candidates.empty()) {
+            return nullptr;
         }
+        // With split display/render devices, there can be multiple
+        // render nodes, so we need to choose the most capable one
+        return std::ranges::min_element(candidates, [device](const auto &left, const auto &right) {
+            // most important: we want hardware acceleration
+            if (left->eglDisplay()->isSoftwareRenderer() != right->eglDisplay()->isSoftwareRenderer()) {
+                return !left->eglDisplay()->isSoftwareRenderer();
+            }
+            // if possible, we want Vulkan support as well
+            if (left->vulkanDevice() != right->vulkanDevice()) {
+                return bool(left->vulkanDevice());
+            }
+            // (also with hardware acceleration)
+            if (left->vulkanDevice() && right->vulkanDevice()
+                && left->vulkanDevice()->isSoftwareRenderer() != right->vulkanDevice()->isSoftwareRenderer()) {
+                return !left->vulkanDevice()->isSoftwareRenderer();
+            }
+            // if both have hardware acceleration, prefer a matching device
+            const bool sameDeviceLeft = drmDevicesEqual(device, left->drmDevice()->libdrmDevice()) == 1;
+            const bool sameDeviceRight = drmDevicesEqual(device, right->drmDevice()->libdrmDevice()) == 1;
+            if (sameDeviceLeft != sameDeviceRight) {
+                return sameDeviceLeft;
+            }
+            // fallback: if both are equally good,
+            // make sure we always get the same device
+            return left->drmDevice()->deviceId() < right->drmDevice()->deviceId();
+        })->get();
     }
-    return nullptr;
+    // "normal" GPUs have at most one render node matching the KMS node
+    const auto it = std::ranges::find_if(m_renderDevices, [device](const auto &renderDevice) {
+        return drmDevicesEqual(device, renderDevice->drmDevice()->libdrmDevice()) == 1;
+    });
+    return it != m_renderDevices.end() ? it->get() : nullptr;
 }
 
 void GpuManager::scanForRenderDevices()

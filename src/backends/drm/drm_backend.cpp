@@ -155,10 +155,11 @@ bool DrmBackend::initialize()
 
     if (m_explicitGpus.empty() && m_gpus.size() > 1) {
         std::ranges::sort(m_gpus, [](const auto &gpu1, const auto &gpu2) {
-            if (gpu1->hasRenderNode() != gpu2->hasRenderNode()) {
-                // GPUs without render nodes require software rendering,
-                // so avoid them as the primary one if possible
-                return gpu1->hasRenderNode();
+            const bool software1 = !gpu1->renderDevice() || gpu1->renderDevice()->eglDisplay()->isSoftwareRenderer();
+            const bool software2 = !gpu2->renderDevice() || gpu2->renderDevice()->eglDisplay()->isSoftwareRenderer();
+            if (software1 != software2) {
+                // avoid needing to do software rendering with the primary GPU
+                return !software1;
             }
             const size_t internalOutputs1 = std::ranges::count_if(gpu1->drmOutputs(), &BackendOutput::isInternal);
             const size_t internalOutputs2 = std::ranges::count_if(gpu2->drmOutputs(), &BackendOutput::isInternal);

@@ -445,7 +445,10 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     auto ret = std::make_unique<Surface>();
     ModifierList renderModifiers = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats()[format];
     if (importMode == MultiGpuImportMode::GpuCopy) {
-        if (!m_eglBackend->gpu()->hasRenderNode() || !m_gpu->hasRenderNode()) {
+        if (!m_eglBackend->gpu()->renderDevice()
+            || !m_gpu->renderDevice()
+            || m_eglBackend->gpu()->renderDevice()->isSoftwareDevice()
+            || m_gpu->renderDevice()->isSoftwareDevice()) {
             return nullptr;
         }
         renderModifiers.intersect(m_gpu->renderDevice()->allImportableFormats().value(format));
