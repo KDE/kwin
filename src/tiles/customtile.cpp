@@ -200,6 +200,7 @@ QList<CustomTile *> CustomTile::split(KWin::Tile::LayoutDirection newDirection)
     if (parentT && (parentT->childCount() < 2 || parentT->layoutDirection() == newDirection)) {
         // Add a new cell to the current layout
         setLayoutDirection(newDirection);
+        parentT->setLayoutDirection(newDirection);
         RectF newGeo;
         if (newDirection == LayoutDirection::Floating) {
             newGeo = RectF(relativeGeometry().left() + 0.1, relativeGeometry().top() + 0.1, 0.3, 0.2);
