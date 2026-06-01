@@ -129,9 +129,13 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, std::chro
     input()->processSpies(&InputEventSpy::touchDown, &event);
     input()->processFilters(&InputEventFilter::touchDown, &event);
     m_windowUpdatedInCycle = false;
-    input()->setLastInteractionSerial(waylandServer()->seat()->display()->serial());
+
+    const uint32_t serial = waylandServer()->seat()->display()->serial();
+    input()->setLastInteractionSerial(serial);
     if (auto f = focus()) {
-        f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+        f->setLastUsageSerial(serial);
+    } else if (auto d = decoration()) {
+        d->window()->setLastUsageSerial(serial);
     }
 }
 

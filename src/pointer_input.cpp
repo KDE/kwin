@@ -316,9 +316,12 @@ void PointerInputRedirection::processButton(uint32_t button, PointerButtonState 
     input()->processSpies(&InputEventSpy::pointerButton, &event);
     input()->processFilters(&InputEventFilter::pointerButton, &event);
     if (state == PointerButtonState::Pressed) {
-        input()->setLastInteractionSerial(waylandServer()->seat()->display()->serial());
+        const uint32_t serial = waylandServer()->seat()->display()->serial();
+        input()->setLastInteractionSerial(serial);
         if (auto f = focus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+            f->setLastUsageSerial(serial);
+        } else if (auto d = decoration()) {
+            d->window()->setLastUsageSerial(serial);
         }
     }
 
