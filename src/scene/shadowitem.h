@@ -37,6 +37,7 @@ protected:
 private Q_SLOTS:
     void handleTextureChanged();
     void updateGeometry();
+    void updateVisibility();
 
 private:
     Window *m_window;
