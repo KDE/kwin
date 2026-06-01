@@ -367,9 +367,12 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
     input()->processFilters(&InputEventFilter::tabletToolTipEvent, &ev);
     input()->setLastInputHandler(this);
     if (tipDown) {
-        input()->setLastInteractionSerial(waylandServer()->seat()->display()->serial());
+        const uint32_t serial = waylandServer()->seat()->display()->serial();
+        input()->setLastInteractionSerial(serial);
         if (auto f = focus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+            f->setLastUsageSerial(serial);
+        } else if (auto d = decoration()) {
+            d->window()->setLastUsageSerial(serial);
         }
     }
 }
@@ -392,9 +395,12 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
     input()->processFilters(&InputEventFilter::tabletToolButtonEvent, &event);
     input()->setLastInputHandler(this);
     if (isPressed) {
-        input()->setLastInteractionSerial(waylandServer()->seat()->display()->serial());
+        const uint32_t serial = waylandServer()->seat()->display()->serial();
+        input()->setLastInteractionSerial(serial);
         if (auto f = focus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+            f->setLastUsageSerial(serial);
+        } else if (auto d = decoration()) {
+            d->window()->setLastUsageSerial(serial);
         }
     }
 }
@@ -414,9 +420,12 @@ void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPres
     input()->processFilters(&InputEventFilter::tabletPadButtonEvent, &event);
     input()->setLastInputHandler(this);
     if (isPressed) {
-        input()->setLastInteractionSerial(waylandServer()->seat()->display()->serial());
+        const uint32_t serial = waylandServer()->seat()->display()->serial();
+        input()->setLastInteractionSerial(serial);
         if (auto f = focus()) {
-            f->setLastUsageSerial(waylandServer()->seat()->display()->serial());
+            f->setLastUsageSerial(serial);
+        } else if (auto d = decoration()) {
+            d->window()->setLastUsageSerial(serial);
         }
     }
 }
