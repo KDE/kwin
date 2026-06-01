@@ -589,9 +589,12 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
     if (m_activeWindow->hasTransient(window, true)) {
         return true;
     }
-    if (auto parentWindow = window->transientFor()) {
-        const bool allow = mayActivate(parentWindow, m_activationToken);
-        if (allow) {
+
+    // If a user clicks the close button in a parent window and a dialog is shown, for example asking
+    // what to do about unsaved changes, we'd like that dialog to be activated. The usage serials
+    // are used to determine whether any of the ancestor windows have been interacted with recently.
+    for (const Window *ancestor = window->transientFor(); ancestor; ancestor = ancestor->transientFor()) {
+        if (ancestor->lastUsageSerial() >= input()->lastInteractionSerial()) {
             return true;
         }
     }

@@ -1636,13 +1636,6 @@ public:
         e.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp).count());
         e.setAccepted(false);
         QCoreApplication::sendEvent(decoration->decoration(), &e);
-        if (e.isAccepted()) {
-            // if a non-active window is closed through the decoration, it should be allowed to activate itself
-            // TODO use the event serial instead, once that's plumbed through
-            const uint32_t serial = waylandServer()->display()->nextSerial();
-            const QString token = waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, serial, waylandServer()->seat(), window->desktopFileName());
-            workspace()->setActivationToken(token, serial, window->desktopFileName());
-        }
         if (!e.isAccepted() && event->state == PointerButtonState::Pressed) {
             window->processDecorationButtonPress(p, globalPos, event->button);
         }
