@@ -1425,9 +1425,38 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
         Q_UNREACHABLE();
     }
 
-    const auto clampPoint = [](const RectF &rect, const QPointF &point) {
-        return QPointF(std::clamp(point.x(), rect.left(), rect.right()),
-                       std::clamp(point.y(), rect.top(), rect.bottom()));
+    const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput());
+
+    const auto closestAllowedPoint = [&](const RectF &rect, const QPointF &point) {
+        RectF constrainedRect = rect;
+
+        switch (gravity) {
+        case Gravity::Top:
+            // Resizing from the top is handled like moving the window to avoid zero width
+            // rectangles when window width is equal to minVisibleWidth.
+            constrainedRect.setLeft(rect.left() - geometry.width() + minVisibleWidth);
+            break;
+
+        case Gravity::Left:
+        case Gravity::TopLeft:
+        case Gravity::BottomLeft:
+            // Convert top-left of visible titlebar subrect to top-left of the window.
+            constrainedRect.setLeft(availableArea.left());
+            break;
+
+        case Gravity::Right:
+        case Gravity::TopRight:
+        case Gravity::BottomRight:
+            // Convert top-right of visible titlebar subrect to top-right of the window.
+            constrainedRect.setRight(availableArea.right());
+            break;
+
+        default:
+            Q_UNREACHABLE();
+        }
+
+        return QPointF(std::clamp(point.x(), constrainedRect.left(), constrainedRect.right()),
+                       std::clamp(point.y(), constrainedRect.top(), constrainedRect.bottom()));
     };
 
     // calculate distance, considering movement constraints in the different modes of resizing
@@ -1456,56 +1485,15 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
 
     std::optional<QPointF> candidate;
     qreal bestScore;
-    const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput());
-
-    switch (gravity) {
-    case Gravity::Top:
-        // resizing from the top is handled like moving the window to avoid zero width rectangles when window width is equal to minVisibleWidth
-        for (RectF rect : visibleSubrectRegion.rects()) {
-            // convert top-left of visible titlebar subrect to top-left of the window
-            rect.setLeft(rect.left() - geometry.width() + minVisibleWidth);
-
-            const QPointF closest = clampPoint(rect, anchor);
-            const qreal score = calcDistance(anchor, closest);
-            if (!candidate || score < bestScore) {
-                candidate = closest;
-                bestScore = score;
-            }
+    for (const RectF &rect : visibleSubrectRegion.rects()) {
+        const QPointF closest = closestAllowedPoint(rect, anchor);
+        const qreal score = calcDistance(anchor, closest);
+        if (!candidate || score < bestScore) {
+            candidate = closest;
+            bestScore = score;
         }
-        break;
-    case Gravity::Left:
-    case Gravity::TopLeft:
-    case Gravity::BottomLeft:
-        for (RectF rect : visibleSubrectRegion.rects()) {
-            // convert top-left of visible titlebar subrect to top-left of the window
-            rect.setLeft(availableArea.left());
-
-            const QPointF closest = clampPoint(rect, anchor);
-            const qreal score = calcDistance(anchor, closest);
-            if (!candidate || score < bestScore) {
-                candidate = closest;
-                bestScore = score;
-            }
-        }
-        break;
-    case Gravity::Right:
-    case Gravity::TopRight:
-    case Gravity::BottomRight:
-        for (RectF rect : visibleSubrectRegion.rects()) {
-            // convert top-right of visible titlebar subrect to top-right of the window
-            rect.setRight(availableArea.right());
-
-            const QPointF closest = clampPoint(rect, anchor);
-            const qreal score = calcDistance(anchor, closest);
-            if (!candidate || score < bestScore) {
-                candidate = closest;
-                bestScore = score;
-            }
-        }
-        break;
-    default:
-        Q_UNREACHABLE();
     }
+
     return candidate;
 }
 
