@@ -1625,7 +1625,7 @@ public:
         const QPointF p = event->position - window->pos();
 
         if (event->state == PointerButtonState::Pressed) {
-            if (const auto command = windowActionForPointerButtonPress(event, window)) {
+            if (const auto command = globalWindowAction(event->button, event->modifiersRelevantForShortcuts)) {
                 if (window->performMousePressCommand(*command, event->position)) {
                     return true;
                 }
