@@ -580,6 +580,12 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
     if (!m_activeWindow) {
         return true;
     }
+
+    const FocusStealingPreventionLevel focusStealingPreventionLevel = window->rules()->checkFSP(options->focusStealingPreventionLevel());
+    if (focusStealingPreventionLevel == FocusStealingPreventionLevel::None) {
+        return true;
+    }
+
     if (m_activeWindow->hasTransient(window, true)) {
         return true;
     }
@@ -589,10 +595,7 @@ bool Workspace::mayActivate(Window *window, const QString &token) const
             return true;
         }
     }
-    const FocusStealingPreventionLevel focusStealingPreventionLevel = window->rules()->checkFSP(options->focusStealingPreventionLevel());
-    if (focusStealingPreventionLevel == FocusStealingPreventionLevel::None) {
-        return true;
-    }
+
     if (!m_activationToken.isEmpty() && token == m_activationToken && input()->lastInteractionSerial() <= m_activationTokenSerial) {
         return true;
     } else if (focusStealingPreventionLevel == FocusStealingPreventionLevel::Extreme) {
