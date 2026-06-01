@@ -1392,7 +1392,7 @@ static std::optional<QPointF> confineInteractiveMove(const RectF &geometry, int 
  *
  * See doc/moveresizerestriction for more details on algorithm.
  */
-static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gravity gravity, int minVisibleWidth, int minVisibleHeight)
+std::optional<QPointF> Window::confineInteractiveResize(const RectF &geometry, Gravity gravity, int minVisibleWidth, int minVisibleHeight) const
 {
     if (gravity == Gravity::Bottom) {
         QPointF candidate = geometry.bottomLeft();
@@ -1426,8 +1426,12 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
     }
 
     const auto availableArea = workspace()->clientArea(FullArea, workspace()->activeOutput());
+    const QSizeF minFrameSize = nextClientSizeToFrameSize(minSize());
+    const QSizeF maxFrameSize = nextClientSizeToFrameSize(maxSize());
 
-    const auto closestAllowedPoint = [&](const RectF &rect, const QPointF &point) {
+    const auto closestAllowedPoint = [&](const RectF &rect, const QPointF &point) -> std::optional<QPointF> {
+        // The input rect specifies an area where the anchor point can possibly be. Geometry
+        // constraints are implemented by applying additional restrictions to the rect.
         RectF constrainedRect = rect;
 
         switch (gravity) {
@@ -1453,6 +1457,76 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
 
         default:
             Q_UNREACHABLE();
+        }
+
+        // The minimum and the maximum height constraints are applied by moving the bottom and the top
+        // edges of the constrainedRect so there is enough space reserved for the window and that the
+        // window height doesn't exceed the maximum size.
+        //
+        // Note that after applying the height constraint, the top and the bottom edge of the constrainedRect
+        // can swap, i.e. constrainedRect.top() > constrainedRect.bottom(), which means that the anchor
+        // cannot lie in this rect. However, constrainedRect.top() == constrainedRect.bottom() is a valid
+        // case, it can arise if the min and the max sizes are the same.
+        switch (gravity) {
+        case Gravity::TopLeft:
+        case Gravity::Top:
+        case Gravity::TopRight:
+            constrainedRect.setBottom(std::min(constrainedRect.bottom(), geometry.bottom() - minFrameSize.height()));
+            constrainedRect.setTop(std::max(constrainedRect.top(), geometry.bottom() - maxFrameSize.height()));
+            break;
+
+        case Gravity::Left:
+        case Gravity::Right:
+            break;
+
+        case Gravity::BottomLeft:
+        case Gravity::Bottom:
+        case Gravity::BottomRight:
+            constrainedRect.setTop(std::max(constrainedRect.top(), geometry.top() + minFrameSize.height()));
+            constrainedRect.setBottom(std::min(constrainedRect.bottom(), geometry.top() + maxFrameSize.height()));
+            break;
+
+        case Gravity::None:
+            Q_UNREACHABLE();
+        }
+
+        if (constrainedRect.top() > constrainedRect.bottom()) {
+            return std::nullopt;
+        }
+
+        // The minimum and the maximum width constraints are applied by moving the left and the right
+        // edges of the constrainedRect so there is enough space reserved for the window and that the
+        // window width doesn't exceed the maximum size.
+        //
+        // Note that after applying the width constraint, the left and the right edge of the constrainedRect
+        // can swap, i.e. constrainedRect.left() > constrainedRect.right(), which means that the anchor
+        // cannot lie in this rect. However, constrainedRect.left() == constrainedRect.right() is a valid
+        // case, it can arise if the min and the max sizes are the same.
+        switch (gravity) {
+        case Gravity::TopLeft:
+        case Gravity::Left:
+        case Gravity::BottomLeft:
+            constrainedRect.setRight(std::min(constrainedRect.right(), geometry.right() - minFrameSize.width()));
+            constrainedRect.setLeft(std::max(constrainedRect.left(), geometry.right() - maxFrameSize.width()));
+            break;
+
+        case Gravity::Top:
+        case Gravity::Bottom:
+            break;
+
+        case Gravity::TopRight:
+        case Gravity::Right:
+        case Gravity::BottomRight:
+            constrainedRect.setLeft(std::max(constrainedRect.left(), geometry.left() + minFrameSize.width()));
+            constrainedRect.setRight(std::min(constrainedRect.right(), geometry.left() + maxFrameSize.width()));
+            break;
+
+        case Gravity::None:
+            Q_UNREACHABLE();
+        }
+
+        if (constrainedRect.left() > constrainedRect.right()) {
+            return std::nullopt;
         }
 
         return QPointF(std::clamp(point.x(), constrainedRect.left(), constrainedRect.right()),
@@ -1486,8 +1560,12 @@ static std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gr
     std::optional<QPointF> candidate;
     qreal bestScore;
     for (const RectF &rect : visibleSubrectRegion.rects()) {
-        const QPointF closest = closestAllowedPoint(rect, anchor);
-        const qreal score = calcDistance(anchor, closest);
+        const std::optional<QPointF> closest = closestAllowedPoint(rect, anchor);
+        if (!closest) {
+            continue;
+        }
+
+        const qreal score = calcDistance(anchor, *closest);
         if (!candidate || score < bestScore) {
             candidate = closest;
             bestScore = score;

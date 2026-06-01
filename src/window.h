@@ -1756,6 +1756,7 @@ protected:
     qreal titlebarThickness() const;
     RectF nextInteractiveMoveGeometry(const RectF &rect) const;
     RectF nextInteractiveResizeGeometry(const QPointF &global) const;
+    std::optional<QPointF> confineInteractiveResize(const RectF &geometry, Gravity gravity, int minVisibleWidth, int minVisibleHeight) const;
     void dontInteractiveMoveResize();
 
     virtual QSizeF resizeIncrements() const;
