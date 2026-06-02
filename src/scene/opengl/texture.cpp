@@ -302,32 +302,6 @@ void BufferTextureOpenGL::updateSinglePixelTexture(GraphicsBuffer *buffer, const
     m_planes[0]->update(*view.image(), Rect(0, 0, 1, 1));
 }
 
-/**
- * Helper class that keeps a shm buffer referenced until the GPU work
- * accessing the buffer is completed
- */
-class ShmReferencer
-{
-public:
-    explicit ShmReferencer(GraphicsBuffer *buffer, FileDescriptor &&syncFd)
-        : m_buffer(buffer)
-        , m_sync(std::move(syncFd))
-        , m_notifier(m_sync.get(), QSocketNotifier::Read)
-    {
-        QObject::connect(&m_notifier, &QSocketNotifier::activated, &m_notifier, [this]() {
-            delete this;
-        });
-        m_notifier.setEnabled(true);
-        if (m_sync.isReadable()) {
-            delete this;
-        }
-    }
-
-    GraphicsBufferRef m_buffer;
-    FileDescriptor m_sync;
-    QSocketNotifier m_notifier;
-};
-
 class UDmabufReleasePoint : public SyncReleasePoint
 {
 public:
@@ -339,7 +313,7 @@ public:
     ~UDmabufReleasePoint()
     {
         if (m_sync) {
-            new ShmReferencer(m_buffer.buffer(), std::move(m_sync));
+            new SyncReferencer(m_buffer.buffer(), std::move(m_sync));
         }
     }
 

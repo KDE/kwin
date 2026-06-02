@@ -4,9 +4,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/graphicsbuffer.h"
 #include "kwin_export.h"
 #include "utils/filedescriptor.h"
 
+#include <QSocketNotifier>
 #include <memory>
 #include <stdint.h>
 
@@ -29,6 +31,41 @@ public:
 
 protected:
     explicit SyncReleasePoint() = default;
+};
+
+/**
+ * Helper class that keeps a graphics buffer referenced until
+ * the GPU work accessing it is completed
+ */
+class KWIN_EXPORT SyncReferencer
+{
+public:
+    explicit SyncReferencer(GraphicsBuffer *buffer, FileDescriptor &&syncFd);
+
+    GraphicsBufferRef m_buffer;
+    FileDescriptor m_sync;
+    QSocketNotifier m_notifier;
+};
+
+/**
+ * Helper class to keep track of release points of a GraphicsBuffer,
+ * and ensure proper synchronization when it's deleted.
+ * To make tracking of the GraphicsBuffer's lifetime easier, the
+ * buffer reference is optional and can be set at any time.
+ */
+class KWIN_EXPORT GraphicsBufferReleasePoint : public SyncReleasePoint
+{
+public:
+    explicit GraphicsBufferReleasePoint();
+    ~GraphicsBufferReleasePoint() override;
+
+    void setBuffer(GraphicsBuffer *buffer);
+    void addReleaseFence(const FileDescriptor &fd) override;
+    const FileDescriptor &releaseFd() const;
+
+private:
+    GraphicsBufferRef m_bufferRef;
+    FileDescriptor m_releaseFd;
 };
 
 /**

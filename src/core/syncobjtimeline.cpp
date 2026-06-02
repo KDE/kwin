@@ -46,10 +46,56 @@ FileDescriptor SyncReleasePoint::mergeSyncFds(const FileDescriptor &one, const F
     }
 }
 
+SyncReferencer::SyncReferencer(GraphicsBuffer *buffer, FileDescriptor &&syncFd)
+    : m_buffer(buffer)
+    , m_sync(std::move(syncFd))
+    , m_notifier(m_sync.get(), QSocketNotifier::Read)
+{
+    QObject::connect(&m_notifier, &QSocketNotifier::activated, &m_notifier, [this]() {
+        delete this;
+    });
+    m_notifier.setEnabled(true);
+    if (m_sync.isReadable()) {
+        delete this;
+    }
+}
+
 SyncObjReleasePoint::SyncObjReleasePoint(const std::shared_ptr<SyncTimeline> &timeline, uint64_t timelinePoint)
     : m_timeline(timeline)
     , m_timelinePoint(timelinePoint)
 {
+}
+
+GraphicsBufferReleasePoint::GraphicsBufferReleasePoint()
+{
+}
+
+GraphicsBufferReleasePoint::~GraphicsBufferReleasePoint()
+{
+    if (m_bufferRef && m_releaseFd.isValid()) {
+        // the buffer needs to stay alive until the
+        // release point is signaled
+        new SyncReferencer(m_bufferRef.buffer(), std::move(m_releaseFd));
+    }
+}
+
+void GraphicsBufferReleasePoint::setBuffer(GraphicsBuffer *buffer)
+{
+    m_bufferRef = buffer;
+}
+
+void GraphicsBufferReleasePoint::addReleaseFence(const FileDescriptor &fd)
+{
+    if (m_releaseFd.isValid()) {
+        m_releaseFd = SyncReleasePoint::mergeSyncFds(fd, m_releaseFd);
+    } else {
+        m_releaseFd = fd.duplicate();
+    }
+}
+
+const FileDescriptor &GraphicsBufferReleasePoint::releaseFd() const
+{
+    return m_releaseFd;
 }
 
 SyncObjReleasePoint::~SyncObjReleasePoint()

@@ -21,35 +21,11 @@
 namespace KWin
 {
 
-class EglReleasePoint : public SyncReleasePoint
-{
-public:
-    explicit EglReleasePoint(const std::shared_ptr<EglSwapchainSlot> &slot);
-
-    void addReleaseFence(const FileDescriptor &fd) override;
-
-private:
-    std::shared_ptr<EglSwapchainSlot> m_slot;
-};
-
-EglReleasePoint::EglReleasePoint(const std::shared_ptr<EglSwapchainSlot> &slot)
-    : m_slot(slot)
-{
-}
-
-void EglReleasePoint::addReleaseFence(const FileDescriptor &fd)
-{
-    if (m_slot->m_releaseFd.isValid()) {
-        m_slot->m_releaseFd = SyncReleasePoint::mergeSyncFds(fd, m_slot->m_releaseFd);
-    } else {
-        m_slot->m_releaseFd = fd.duplicate();
-    }
-}
-
 EglSwapchainSlot::EglSwapchainSlot(GraphicsBuffer *buffer, std::unique_ptr<GLFramebuffer> &&framebuffer, const std::shared_ptr<GLTexture> &texture)
     : m_buffer(buffer)
     , m_framebuffer(std::move(framebuffer))
     , m_texture(texture)
+    , m_releasePoint(std::make_shared<GraphicsBufferReleasePoint>())
 {
 }
 
@@ -57,6 +33,7 @@ EglSwapchainSlot::~EglSwapchainSlot()
 {
     m_framebuffer.reset();
     m_texture.reset();
+    m_releasePoint->setBuffer(m_buffer);
     m_buffer->drop();
 }
 
@@ -82,22 +59,19 @@ int EglSwapchainSlot::age() const
 
 bool EglSwapchainSlot::isBusy() const
 {
-    return m_buffer->isReferenced() || (m_releaseFd.isValid() && !m_releaseFd.isReadable());
+    return m_buffer->isReferenced()
+        || m_releasePoint.use_count() > 1
+        || (m_releasePoint->releaseFd().isValid() && !m_releasePoint->releaseFd().isReadable());
 }
 
 const FileDescriptor &EglSwapchainSlot::releaseFd() const
 {
-    return m_releaseFd;
+    return m_releasePoint->releaseFd();
 }
 
 std::shared_ptr<SyncReleasePoint> EglSwapchainSlot::releasePoint()
 {
-    auto ret = m_releasePoint.lock();
-    if (!ret) {
-        ret = std::make_shared<EglReleasePoint>(shared_from_this());
-        m_releasePoint = ret;
-    }
-    return ret;
+    return m_releasePoint;
 }
 
 std::shared_ptr<EglSwapchainSlot> EglSwapchainSlot::create(EglContext *context, GraphicsBuffer *buffer)
@@ -177,7 +151,7 @@ std::shared_ptr<EglSwapchainSlot> EglSwapchain::acquire()
 
 void EglSwapchain::release(std::shared_ptr<EglSwapchainSlot> slot, FileDescriptor &&releaseFence)
 {
-    slot->m_releaseFd = std::move(releaseFence);
+    slot->m_releasePoint->addReleaseFence(std::move(releaseFence));
     for (qsizetype i = 0; i < m_slots.count(); ++i) {
         if (m_slots[i] == slot) {
             m_slots[i]->m_age = 1;
