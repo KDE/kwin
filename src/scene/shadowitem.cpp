@@ -43,8 +43,12 @@ ShadowItem::ShadowItem(Shadow *shadow, Window *window, Item *parent)
     connect(shadow, &Shadow::rectChanged, this, &ShadowItem::updateGeometry);
     connect(shadow, &Shadow::textureChanged, this, &ShadowItem::handleTextureChanged);
 
+    connect(window, &Window::maximizedChanged, this, &ShadowItem::updateVisibility);
+    connect(window, &Window::fullScreenChanged, this, &ShadowItem::updateVisibility);
+
     updateGeometry();
     handleTextureChanged();
+    updateVisibility();
 }
 
 ShadowItem::~ShadowItem()
@@ -81,6 +85,11 @@ void ShadowItem::handleTextureChanged()
     m_textureDirty = true;
 }
 
+void ShadowItem::updateVisibility()
+{
+    setVisible(m_window->wantsShadowToBeRendered());
+}
+
 static inline void distributeHorizontally(RectF &leftRect, RectF &rightRect)
 {
     if (leftRect.right() > rightRect.left()) {
@@ -106,7 +115,7 @@ static inline void distributeVertically(RectF &topRect, RectF &bottomRect)
 WindowQuadList ShadowItem::buildQuads() const
 {
     // Do not draw shadows if window width or window height is less than 5 px. 5 is an arbitrary choice.
-    if (!m_window->wantsShadowToBeRendered() || m_window->width() < 5 || m_window->height() < 5) {
+    if (m_window->width() < 5 || m_window->height() < 5) {
         return WindowQuadList();
     }
 
