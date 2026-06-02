@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-22 00:45+0000\n"
-"PO-Revision-Date: 2026-02-17 23:21-0500\n"
+"PO-Revision-Date: 2026-05-31 20:02-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -34,29 +34,25 @@ msgid "Window settings for %1"
 msgstr "%1 نىڭ كۆزنەك تەڭشىكى"
 
 #: optionsmodel.cpp:199 optionsmodel.cpp:204
-#, fuzzy, kde-format
-#| msgid "Unimportant"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Unimportant"
 msgstr "مۇھىم ئەمەس"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Exact match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Exact match"
 msgstr "دەلمۇدەل ماسلىق"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Substring match"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Substring match"
 msgstr "تارماق ھەرپ تىزىقى ماسلىق"
 
 #: optionsmodel.cpp:202
-#, fuzzy, kde-format
-#| msgid "Regular expression"
+#, kde-format
 msgctxt "@item:inlistbox"
 msgid "Regular expression"
 msgstr "مۇنتىزىم ئىپادە"
@@ -65,7 +61,7 @@ msgstr "مۇنتىزىم ئىپادە"
 #, kde-format
 msgctxt "@item:inlistbox This is a noun"
 msgid "Match"
-msgstr ""
+msgstr "مۇۋاپىق"
 
 #: optionsmodel.cpp:210
 #, kde-format
@@ -247,10 +243,9 @@ msgid "Window tag"
 msgstr "كۆزنەك بەلگىسى"
 
 #: rulesmodel.cpp:447
-#, fuzzy, kde-format
-#| msgid "On main window"
+#, kde-format
 msgid "Has parent window"
-msgstr "ئاساسى كۆزنەكتە"
+msgstr ""
 
 #: rulesmodel.cpp:453
 #, kde-format
@@ -904,7 +899,7 @@ msgstr "تەھرىر"
 #: ui/main.qml:208
 #, kde-format
 msgid "Duplicate"
-msgstr "كۆچۈر"
+msgstr "كۆپەيت"
 
 #: ui/main.qml:214
 #, kde-format

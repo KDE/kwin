@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-05-14 00:45+0000\n"
-"PO-Revision-Date: 2026-02-17 23:21-0500\n"
+"PO-Revision-Date: 2026-05-31 20:01-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
 #, kde-format
@@ -135,14 +135,10 @@ msgstr ""
 "ئىلتىماس قىلىنغان ئۆرنەك «%1» ئاللىبۇرۇن كۆزنەك بېزەك ئۆرنىكىگە تەڭشەلگەن."
 
 #: kwin-applywindowdecoration.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "Successfully applied the cursor theme %1 to your current Plasma session"
+#, kde-format
 msgid ""
 "Successfully applied the pointer theme %1 to your current Plasma session"
 msgstr ""
-"نۇر بەلگە ئۆرنىكى «%1» نۆۋەتتىكى Plasma جەريانچاققا مۇۋەپپەقىيەتلىك "
-"قوللىنىلدى"
 
 #: kwin-applywindowdecoration.cpp:105
 #, kde-format
@@ -205,40 +201,26 @@ msgid "Show titlebar button tooltips"
 msgstr "ماۋزۇ بالداق توپچە قورال ئەسكەرتىشىنى كۆرسىتىدۇ"
 
 #: ui/ConfigureTitlebar.qml:73
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Always show \"Hide from Screencast\" buttonX"
+#, kde-format
 msgctxt "@option:check"
 msgid "Always show \"Hide from Screenshots and Screen Recordings\" button"
-msgstr "«ئېكران تارقىتىشتىن يوشۇر» X توپچەنى ھەمىشە كۆرسىتىدۇ"
+msgstr ""
 
 #: ui/ConfigureTitlebar.qml:85
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "When unchecked the button only appears if the window is hidden from "
-#| "screencast"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "When unchecked the button only appears if the window is hidden from "
 "screenshots and screen recordings"
 msgstr ""
-"ئەگەر كۆزنەك ئېكران تارقىتىشتىن يوشۇرۇلغان بولسا، توپچە چېكىلمىگەندە  ئاندىن "
-"كۆرۈنىدۇ"
 
 #: ui/ConfigureTitlebar.qml:86
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid ""
-#| "To enable this option, add the \"Hide from screencast\" button to the "
-#| "titlebar first"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid ""
 "To enable this option, add the \"Hide from Screenshots and Screen Recordings"
 "\" button to the titlebar first"
 msgstr ""
-"بۇ تاللانمىنى قوزغىتىشتا، ئالدى بىلەن ماۋزۇ بالداققا «ئېكران تارقىتىشتىن "
-"يوشۇر» توپچە قوشۇلۇشى كېرەك"
 
 #: ui/main.qml:29
 #, kde-format

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-03-20 00:45+0000\n"
-"PO-Revision-Date: 2026-02-17 23:22-0500\n"
+"PO-Revision-Date: 2026-05-31 20:02-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #: main.cpp:152 touch.cpp:119
 #, kde-format
@@ -90,16 +90,11 @@ msgstr "زاپاس كۆزنەك ئالماشتۇرۇشنى ئالماشتۇرى�
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, fuzzy, kde-format
-#| msgid ""
-#| "You can trigger an action by pushing the mouse cursor against the "
-#| "corresponding screen edge or corner."
+#, kde-format
 msgid ""
 "You can trigger an action by pushing the mouse pointer against the "
 "corresponding screen edge or corner."
 msgstr ""
-"چاشقىنەك نۇر بەلگىسىنى ئېكران گىرۋىكى ياكى بۇلۇڭىغا  ئىتتىرىپ بەلگىلەنگەن "
-"مەشغۇلاتنى قوزغىتالايسىز."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -163,16 +158,11 @@ msgstr "ئېكران"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
-#, fuzzy, kde-format
-#| msgid ""
-#| "Change desktop when the mouse cursor is pushed against the edge of the "
-#| "screen"
+#, kde-format
 msgid ""
 "Change desktop when the mouse pointer is pushed against the edge of the "
 "screen"
 msgstr ""
-"چاشقىنەك نۇر بەلگىسىنى ئېكراننىڭ گىرۋىكىگە ئىتتەرگەندە مەۋھۇم ئۈستەلئۈستىنى "
-"ئالماشتۇرىدۇ"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
@@ -201,16 +191,11 @@ msgstr "ھەمىشە قوزغىتىدۇ"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
-#, fuzzy, kde-format
-#| msgid ""
-#| "Amount of time required for the mouse cursor to be pushed against the "
-#| "edge of the screen before the action is triggered"
+#, kde-format
 msgid ""
 "Amount of time required for the mouse pointer to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
-"چاشقىنەك نۇر بەلگىسىنى ئېكراننىڭ گىرۋىكىگە ئىتتەرگەندە مەشغۇلاتنى "
-"قوزغىتىشتىن ئىلگىرى كۈتىدىغان ۋاقىت"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -249,13 +234,7 @@ msgstr "بۇلۇڭ قاشاسى(&C):"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
-#, fuzzy, kde-format
-#| msgid ""
-#| "Here you can enable or disable the virtual corner barrier between "
-#| "screens. The barrier prevents the cursor from moving to another screen "
-#| "when it is already touching a screen corner. This makes it easier to "
-#| "trigger user interface elements like maximized windows' close buttons "
-#| "when using multiple screens."
+#, kde-format
 msgid ""
 "Here you can enable or disable the virtual corner barrier between screens. "
 "The barrier prevents the pointer from moving to another screen when it is "
@@ -263,20 +242,13 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
-"بۇ جايدا  كۆپ ئېكران ئارىسىدا مەۋھۇم بۇلۇڭ قاشاسىنى قوزغىتىپ ياكى "
-"چەكلىيەلەيسىز. بۇلۇڭ قاشاسى نۇر بەلگە ئېكراننىڭ بۇلۇڭىغا تەگكەندە داۋاملىشىپ "
-"باشقا ئېكرانغا يۆتكىلىدۇ. كۆپ ئېكرانلىق مۇھىتتا، بۇ ئىقتىدار ئىشلەتكۈچىنىڭ "
-"مەلۇم كۆرۈنۈش ئېلېمېنتىنى قوزغىتىشىغا قولايلىق يارىتىدۇ، مەسىلەن، كۆزنەك ئەڭ "
-"چوڭ قىلىنغاندا كۆزنەكنى تاقاش توپچىسىنى چېكىشكە ئوخشاش."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Prevents cursors from crossing at screen corners."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents the pointer from crossing at screen corners."
-msgstr "نۇر بەلگىنىڭ ئېكران بۇلۇڭىدىن ھالقىشىنىڭ ئالدىنى ئالىدۇ."
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
@@ -302,13 +274,10 @@ msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Additional distance cursor needs to travel to cross screen edges."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance the pointer needs to travel to cross screen edges."
 msgstr ""
-"نۇر بەلگە ئېكران گىرۋىكىدىن ئۆتۈشتىن ئىلگىرى يۆتكىلىدىغان قوشۇمچە مۇساپە."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306

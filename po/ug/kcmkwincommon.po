@@ -1,0 +1,104 @@
+# Uyghur translation for kcmkwincommon.
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# Abduqadir Abliz <sahranbay@gmail.com>, 2026., YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2026-03-27 00:47+0000\n"
+"PO-Revision-Date: 2026-05-31 20:02-0400\n"
+"Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
+"Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
+"Language: ug\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ئابدۇقادىر ئابلىز، غەيرەت كەنجى"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sahranbay@gmail.com, gheyret@gmail.com"
+
+#: effectsmodel.cpp:49
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Accessibility"
+msgstr "قولايلىق"
+
+#: effectsmodel.cpp:50
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Appearance"
+msgstr "قىياپەت"
+
+#: effectsmodel.cpp:51
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Focus"
+msgstr "فوكۇس"
+
+#: effectsmodel.cpp:52
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Peek at Desktop Animation"
+msgstr ""
+
+#: effectsmodel.cpp:53
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Tools"
+msgstr "قورال"
+
+#: effectsmodel.cpp:54
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Virtual Desktop Switching Animation"
+msgstr ""
+
+#: effectsmodel.cpp:55
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Window Management"
+msgstr "كۆزنەك باشقۇرۇش"
+
+#: effectsmodel.cpp:56
+#, kde-format
+msgctxt "Category of Desktop Effects, used as section header"
+msgid "Window Open/Close Animation"
+msgstr ""
+
+#: effectsmodel.cpp:232
+#, kde-format
+msgid "KWin development team"
+msgstr ""
+
+#: genericscriptedconfig.cpp:76
+#, kde-format
+msgctxt "Error message"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: genericscriptedconfig.cpp:82
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: genericscriptedconfig.cpp:88 genericscriptedconfig.cpp:94
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
+
+#: genericscriptedconfig.cpp:116
+#, kde-format
+msgid "Error loading widget from %1: %2"
+msgstr ""

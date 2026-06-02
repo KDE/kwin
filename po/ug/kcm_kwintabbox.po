@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-14 00:45+0000\n"
-"PO-Revision-Date: 2026-02-17 23:21-0500\n"
+"PO-Revision-Date: 2026-05-31 20:02-0400\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
 "Language: ug\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #: layoutpreview.cpp:28
 #, kde-format
@@ -296,13 +296,13 @@ msgstr ""
 #: main.ui:704
 #, kde-format
 msgid "Delay:"
-msgstr ""
+msgstr "كېچىكىش:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:720
 #, kde-format
 msgid " ms"
-msgstr ""
+msgstr " ms"
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_DelayTime)
 #: main.ui:735
@@ -324,17 +324,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, showScreenCombo)
 #: main.ui:762
-#, fuzzy, kde-format
-#| msgid "All other screens"
+#, kde-format
 msgid "Active screen"
-msgstr "باشقا بارلىق ئېكران"
+msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, showScreenCombo)
 #: main.ui:767
-#, fuzzy, kde-format
-#| msgid "Current screen"
+#, kde-format
 msgid "Primary screen"
-msgstr "نۆۋەتتىكى ئېكران"
+msgstr ""
 
 #: shortcutsettings.cpp:131
 #, kde-format
