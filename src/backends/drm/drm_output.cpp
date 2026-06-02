@@ -248,7 +248,7 @@ BackendOutput::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->maxBpc.isValid()) {
         capabilities |= Capability::MaxBitsPerColor;
     }
-    if (m_state.brightnessDevice && isInternal()) {
+    if (m_state.brightnessDevice && isInternal() && !(capabilities & Capability::HighDynamicRange)) {
         capabilities |= Capability::Edr;
     }
     if (m_gpu->sharpnessSupported()) {
@@ -411,7 +411,7 @@ static std::shared_ptr<ColorDescription> applyNightLight(const std::shared_ptr<C
 
 double DrmOutput::calculateMaxArtificialHdrHeadroom(const State &next) const
 {
-    if (!next.brightnessDevice || !isInternal() || next.edrPolicy == EdrPolicy::Never) {
+    if (!next.brightnessDevice || !isInternal() || next.edrPolicy == EdrPolicy::Never || !(capabilities() & Capability::Edr)) {
         return 1.0;
     }
     const bool effectiveHdr = next.highDynamicRange && (capabilities() & Capability::HighDynamicRange);
