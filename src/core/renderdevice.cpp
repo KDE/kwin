@@ -105,7 +105,7 @@ std::shared_ptr<EglContext> RenderDevice::eglContext(EglContext *shareContext)
 {
     auto ret = m_eglContext.lock();
     if (!ret || ret->isFailed()) {
-        ret = EglContext::create(m_display.get(), EGL_NO_CONFIG_KHR, shareContext ? shareContext->handle() : EGL_NO_CONTEXT);
+        ret = EglContext::create(m_display.get(), EGL_NO_CONFIG_KHR, shareContext);
         m_eglContext = ret;
     }
     return ret;

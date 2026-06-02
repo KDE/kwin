@@ -22,6 +22,7 @@ namespace KWin
 class GLTexture;
 class RenderTarget;
 class RenderViewport;
+class EglContext;
 
 // Cleans up all resources hold by the GL Context
 void KWIN_EXPORT cleanupGL();
@@ -128,6 +129,7 @@ protected:
     bool m_valid = false;
     bool m_foreign = false;
     GLTexture *const m_colorAttachment;
+    EglContext *const m_context;
 };
 
 }

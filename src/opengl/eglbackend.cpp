@@ -89,10 +89,10 @@ bool EglBackend::checkGraphicsReset()
 bool EglBackend::ensureGlobalShareContext()
 {
     if (!s_globalShareContext) {
-        s_globalShareContext = EglContext::create(m_renderDevice->eglDisplay(), EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
+        s_globalShareContext = EglContext::create(m_renderDevice->eglDisplay(), EGL_NO_CONFIG_KHR, nullptr);
     }
     if (s_globalShareContext) {
-        kwinApp()->outputBackend()->setSceneEglGlobalShareContext(s_globalShareContext->handle());
+        kwinApp()->outputBackend()->setSceneEglGlobalShareContext(s_globalShareContext.get());
         return true;
     } else {
         return false;
@@ -106,7 +106,7 @@ void EglBackend::destroyGlobalShareContext()
         return;
     }
     s_globalShareContext.reset();
-    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
+    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(nullptr);
 }
 
 void EglBackend::teardown()

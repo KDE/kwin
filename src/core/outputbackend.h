@@ -29,6 +29,7 @@ class OutputConfiguration;
 class EglDisplay;
 class Session;
 class BackendOutput;
+class EglContext;
 
 class KWIN_EXPORT OutputBackend : public QObject
 {
@@ -50,12 +51,12 @@ public:
      * Note that the returned context should never be made current. Instead, create a context
      * that shares with this one and make the new context current.
      */
-    ::EGLContext sceneEglGlobalShareContext() const;
+    EglContext *sceneEglGlobalShareContext() const;
     /**
      * Sets the global share context to @a context. This function is intended to be called only
      * by rendering backends.
      */
-    void setSceneEglGlobalShareContext(::EGLContext context);
+    void setSceneEglGlobalShareContext(EglContext *context);
 
     /**
      * The CompositingTypes supported by the Platform.
@@ -101,7 +102,7 @@ Q_SIGNALS:
 protected:
     explicit OutputBackend(QObject *parent = nullptr);
 
-    ::EGLContext m_globalShareContext = EGL_NO_CONTEXT;
+    EglContext *m_globalShareContext = nullptr;
 };
 
 } // namespace KWin

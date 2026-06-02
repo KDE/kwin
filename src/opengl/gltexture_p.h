@@ -55,6 +55,7 @@ public:
     QSizeF m_cachedSize;
     RectF m_cachedSource;
     OutputTransform m_cachedContentTransform;
+    EglContext *m_context = EglContext::currentContext();
 
     Q_DISABLE_COPY(GLTexturePrivate)
 };

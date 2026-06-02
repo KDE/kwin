@@ -308,7 +308,7 @@ void TestColorspaces::testOpenglShader()
     QFETCH(double, maxError);
 
     const auto display = EglDisplay::create(eglGetDisplay(EGL_DEFAULT_DISPLAY), nullptr);
-    const auto context = EglContext::create(display.get(), EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
+    const auto context = EglContext::create(display.get(), EGL_NO_CONFIG_KHR, nullptr);
 
     const auto src = std::make_shared<ColorDescription>(ColorDescription{
         Colorimetry::BT709,
@@ -401,7 +401,7 @@ void TestColorspaces::testIccShader_data()
 void TestColorspaces::testIccShader()
 {
     const auto display = EglDisplay::create(eglGetDisplay(EGL_DEFAULT_DISPLAY), nullptr);
-    const auto context = EglContext::create(display.get(), EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
+    const auto context = EglContext::create(display.get(), EGL_NO_CONFIG_KHR, nullptr);
 
     QImage input(255, 255, QImage::Format_RGBA8888_Premultiplied);
     for (int x = 0; x < input.width(); x++) {

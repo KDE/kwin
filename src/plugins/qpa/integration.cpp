@@ -161,7 +161,7 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
     if (!kwinApp()->outputBackend()) {
         return nullptr;
     }
-    if (kwinApp()->outputBackend()->sceneEglGlobalShareContext() == EGL_NO_CONTEXT) {
+    if (!kwinApp()->outputBackend()->sceneEglGlobalShareContext()) {
         qCWarning(KWIN_QPA) << "Attempting to create a QOpenGLContext before the scene is initialized";
         return nullptr;
     }

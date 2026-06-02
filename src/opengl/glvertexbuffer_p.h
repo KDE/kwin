@@ -17,6 +17,8 @@
 namespace KWin
 {
 
+class EglContext;
+
 class KWIN_EXPORT IndexBuffer
 {
 public:
@@ -30,6 +32,7 @@ private:
     GLuint m_buffer;
     size_t m_count = 0;
     std::vector<uint16_t> m_data;
+    EglContext *const m_context;
 };
 
 }

@@ -34,6 +34,7 @@ T align(T value, int bytes)
 }
 
 IndexBuffer::IndexBuffer()
+    : m_context(EglContext::currentContext())
 {
     // The maximum number of quads we can render with 16 bit indices is 16,384.
     // But we start with 512 and grow the buffer as needed.
@@ -45,6 +46,11 @@ IndexBuffer::~IndexBuffer()
 {
     if (!EglContext::currentContext()) {
         qCWarning(KWIN_OPENGL, "Could not delete index buffer because no context is current");
+        return;
+    }
+    Q_ASSERT(m_context->isCompatibleWith(EglContext::currentContext()));
+    if (!m_context->isCompatibleWith(EglContext::currentContext())) {
+        qCCritical(KWIN_OPENGL, "Attempted to delete an index buffer in the wrong context!");
         return;
     }
     glDeleteBuffers(1, &m_buffer);
@@ -180,6 +186,11 @@ public:
             qCWarning(KWIN_OPENGL, "Could not delete vertex buffer because no context is current");
             return;
         }
+        Q_ASSERT(m_context->isCompatibleWith(EglContext::currentContext()));
+        if (!m_context->isCompatibleWith(EglContext::currentContext())) {
+            qCCritical(KWIN_OPENGL, "Attempted to delete a vertex buffer in the wrong context!");
+            return;
+        }
         deleteAll(fences);
 
         if (buffer != 0) {
@@ -196,6 +207,7 @@ public:
     bool awaitFence(intptr_t offset);
     GLvoid *getIdleRange(size_t size);
 
+    EglContext *const m_context = EglContext::currentContext();
     GLuint buffer;
     GLenum usage;
     int vertexCount;
