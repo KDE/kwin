@@ -32,6 +32,7 @@
 #include "tiles/tilemanager.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
+#include "wayland/foreigntoplevel_v1.h"
 #include "wayland/output.h"
 #include "wayland/plasmawindowmanagement.h"
 #include "wayland/surface.h"
@@ -1873,10 +1874,80 @@ void Window::setupWindowManagementInterface()
     m_windowManagementInterface = w;
 }
 
+void Window::setupForeignToplevelManagementInterface()
+{
+    if (m_foreignToplevelHandle) {
+        return;
+    }
+    if (!waylandServer()->foreignToplevelManagement()) {
+        return;
+    }
+
+    auto *handle = waylandServer()->foreignToplevelManagement()->createToplevel(this);
+    auto updateForeignAppId = [this, handle] {
+        handle->setAppId(m_desktopFileName.isEmpty() ? resourceClass() : m_desktopFileName);
+    };
+
+    handle->setTitle(caption());
+    updateForeignAppId();
+    handle->setActive(isActive());
+    handle->setFullscreen(isFullScreen());
+    handle->setMaximized(maximizeMode() == MaximizeFull);
+    handle->setMinimized(isMinimized());
+    handle->setParent(transientFor() ? transientFor()->m_foreignToplevelHandle : nullptr);
+    handle->setOutput(waylandServer()->outputInterface(output()));
+
+    connect(this, &Window::captionChanged, handle, [handle, this] {
+        handle->setTitle(caption());
+    });
+    connect(this, &Window::windowClassChanged, handle, updateForeignAppId);
+    connect(this, &Window::desktopFileNameChanged, handle, updateForeignAppId);
+    connect(this, &Window::activeChanged, handle, [handle, this] {
+        handle->setActive(isActive());
+    });
+    connect(this, &Window::fullScreenChanged, handle, [handle, this] {
+        handle->setFullscreen(isFullScreen());
+    });
+    connect(this, &Window::minimizedChanged, handle, [handle, this] {
+        handle->setMinimized(isMinimized());
+    });
+    connect(this, &Window::maximizedChanged, handle, [handle, this]() {
+        handle->setMaximized(maximizeMode() == MaximizeFull);
+    });
+    connect(this, &Window::transientChanged, handle, [handle, this]() {
+        handle->setParent(transientFor() ? transientFor()->m_foreignToplevelHandle : nullptr);
+    });
+    connect(this, &Window::outputChanged, handle, [handle, this](LogicalOutput *oldOutput) {
+        Q_UNUSED(oldOutput)
+        handle->setOutput(waylandServer()->outputInterface(output()));
+    });
+    connect(handle, &ForeignToplevelHandleV1Interface::closeRequested, this, [this] {
+        closeWindow();
+    });
+    connect(handle, &ForeignToplevelHandleV1Interface::activateRequested, this, [this](SeatInterface *seat) {
+        Q_UNUSED(seat)
+        workspace()->activateWindow(this, true);
+    });
+    connect(handle, &ForeignToplevelHandleV1Interface::maximizeRequested, this, [this](bool set) {
+        maximize(set ? MaximizeFull : MaximizeRestore);
+    });
+    connect(handle, &ForeignToplevelHandleV1Interface::minimizeRequested, this, [this](bool set) {
+        setMinimized(set);
+    });
+    connect(handle, &ForeignToplevelHandleV1Interface::fullscreenRequested, this, [this](bool set, OutputInterface *requestedOutput) {
+        Q_UNUSED(requestedOutput)
+        setFullScreen(set);
+    });
+
+    m_foreignToplevelHandle = handle;
+}
+
 void Window::destroyWindowManagementInterface()
 {
     delete m_windowManagementInterface;
     m_windowManagementInterface = nullptr;
+    delete m_foreignToplevelHandle;
+    m_foreignToplevelHandle = nullptr;
 }
 
 std::optional<Options::MouseCommand> Window::getMousePressCommand(Qt::MouseButton button) const

@@ -890,6 +890,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     updateWindowRules(Rules::All); // Was blocked while !isManaged()
 
     setupWindowManagementInterface();
+    setupForeignToplevelManagementInterface();
 
     connect(kwinApp(), &Application::xwaylandScaleChanged, this, &X11Window::handleXwaylandScaleChanged);
     return true;

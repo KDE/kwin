@@ -1477,6 +1477,7 @@ void XdgToplevelWindow::initialize()
     updateCapabilities();
     updateIcon();
     setupWindowManagementInterface();
+    setupForeignToplevelManagementInterface();
 
     m_isInitialized = true;
 }

@@ -23,6 +23,7 @@ class CompositorInterface;
 class Display;
 class DataDeviceInterface;
 class FileDescriptor;
+class ForeignToplevelManagerV1Interface;
 class IdleInterface;
 class InputMethodV1Interface;
 class SeatInterface;
@@ -114,6 +115,14 @@ public:
     PlasmaWindowManagementInterface *windowManagement() const
     {
         return m_windowManagement;
+    }
+    ForeignToplevelManagerV1Interface *foreignToplevelManagement() const
+    {
+        return m_foreignToplevelManagement;
+    }
+    OutputInterface *outputInterface(LogicalOutput *output) const
+    {
+        return m_waylandOutputs.value(output);
     }
     ServerSideDecorationManagerInterface *decorationManager() const
     {
@@ -265,6 +274,7 @@ private:
     PlasmaShellInterface *m_plasmaShell = nullptr;
     PlasmaWindowActivationFeedbackInterface *m_plasmaActivationFeedback = nullptr;
     PlasmaWindowManagementInterface *m_windowManagement = nullptr;
+    ForeignToplevelManagerV1Interface *m_foreignToplevelManagement = nullptr;
     PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     ServerSideDecorationManagerInterface *m_decorationManager = nullptr;
     OutputManagementV2Interface *m_outputManagement = nullptr;

@@ -34,6 +34,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/zkde-screencast-unstable-v1.xml
 
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
+        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-foreign-toplevel-management-unstable-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-fractional-scale-v2.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-pip-v1.xml
 
@@ -107,6 +108,7 @@ target_sources(kwin PRIVATE
     externalbrightness_v1.cpp
     fifo_v1.cpp
     filtered_display.cpp
+    foreigntoplevel_v1.cpp
     fixes.cpp
     fractionalscale_v1.cpp
     fractionalscale_v2.cpp
@@ -198,6 +200,7 @@ install(FILES
     drmlease_v1.h
     externalbrightness_v1.h
     fifo_v1.h
+    foreigntoplevel_v1.h
     fractionalscale_v1.h
     fractionalscale_v2.h
     idle.h

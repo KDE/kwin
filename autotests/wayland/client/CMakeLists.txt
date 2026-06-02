@@ -68,6 +68,11 @@ set( testWindowmanagement_SRCS
         test_wayland_windowmanagement.cpp
     )
 add_executable(testWindowmanagement ${testWindowmanagement_SRCS})
+qt6_generate_wayland_protocol_client_sources(testWindowmanagement
+    PRIVATE_CODE
+    FILES
+        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-foreign-toplevel-management-unstable-v1.xml
+)
 target_link_libraries( testWindowmanagement Qt::Test Qt::Gui Plasma::KWaylandClient kwin Wayland::Client)
 add_test(NAME kwayland-testWindowmanagement COMMAND testWindowmanagement)
 ecm_mark_as_test(testWindowmanagement)

@@ -43,6 +43,7 @@
 #include "wayland/fifo_v1.h"
 #include "wayland/filtered_display.h"
 #include "wayland/fixes.h"
+#include "wayland/foreigntoplevel_v1.h"
 #include "wayland/fractionalscale_v1.h"
 #include "wayland/fractionalscale_v2.h"
 #include "wayland/idle.h"
@@ -456,6 +457,7 @@ bool WaylandServer::init()
         }
         workspace()->setShowingDesktop(set);
     });
+    m_foreignToplevelManagement = new ForeignToplevelManagerV1Interface(m_display, m_display);
 
     m_virtualDesktopManagement = new PlasmaVirtualDesktopManagementInterface(m_display, m_display);
     m_windowManagement->setPlasmaVirtualDesktopManagementInterface(m_virtualDesktopManagement);

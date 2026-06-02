@@ -49,6 +49,7 @@ namespace KWin
 {
 
 class PlasmaWindowInterface;
+class ForeignToplevelHandleV1Interface;
 class SurfaceInterface;
 class Group;
 class LogicalOutput;
@@ -1614,6 +1615,7 @@ protected:
     virtual void doSetPreferredColorDescription();
 
     void setupWindowManagementInterface();
+    void setupForeignToplevelManagementInterface();
     void destroyWindowManagementInterface();
     void updateColorScheme();
     void ensurePalette();
@@ -1869,6 +1871,7 @@ protected:
     static std::shared_ptr<Decoration::DecorationPalette> s_defaultPalette;
 
     PlasmaWindowInterface *m_windowManagementInterface = nullptr;
+    ForeignToplevelHandleV1Interface *m_foreignToplevelHandle = nullptr;
 
     Window *m_transientFor = nullptr;
     QList<Window *> m_transients;

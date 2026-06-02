@@ -4,14 +4,21 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 // Qt
+#include <QObject>
 #include <QSignalSpy>
 #include <QTest>
+
+#include <algorithm>
+#include <cstring>
 // KWin
 #include "wayland/compositor.h"
 #include "wayland/display.h"
+#include "wayland/foreigntoplevel_v1.h"
 #include "wayland/plasmawindowmanagement.h"
 #include "wayland/surface.h"
+#include <wayland-client-protocol.h>
 #include <wayland-plasma-window-management-client-protocol.h>
+#include <wayland-wlr-foreign-toplevel-management-unstable-v1-client-protocol.h>
 
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
@@ -27,6 +34,218 @@ typedef void (KWin::PlasmaWindowInterface::*ServerWindowBooleanSignal)(bool);
 Q_DECLARE_METATYPE(ServerWindowBooleanSignal)
 typedef void (KWayland::Client::PlasmaWindow::*ClientWindowVoidSetter)();
 Q_DECLARE_METATYPE(ClientWindowVoidSetter)
+
+class TestForeignToplevelHandle : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit TestForeignToplevelHandle(::zwlr_foreign_toplevel_handle_v1 *handle)
+        : m_handle(handle)
+    {
+        static const zwlr_foreign_toplevel_handle_v1_listener s_listener = {
+            .title = handleTitle,
+            .app_id = handleAppId,
+            .output_enter = handleOutputEnter,
+            .output_leave = handleOutputLeave,
+            .state = handleState,
+            .done = handleDone,
+            .closed = handleClosed,
+            .parent = handleParent,
+        };
+        zwlr_foreign_toplevel_handle_v1_add_listener(m_handle, &s_listener, this);
+    }
+
+    ~TestForeignToplevelHandle() override
+    {
+        if (m_handle) {
+            zwlr_foreign_toplevel_handle_v1_destroy(m_handle);
+        }
+    }
+
+    QString title() const
+    {
+        return m_title;
+    }
+
+    QString appId() const
+    {
+        return m_appId;
+    }
+
+    QSet<uint32_t> states() const
+    {
+        return m_states;
+    }
+
+    ::zwlr_foreign_toplevel_handle_v1 *handle() const
+    {
+        return m_handle;
+    }
+
+Q_SIGNALS:
+    void titleChanged();
+    void appIdChanged();
+    void stateChanged();
+    void done();
+    void closed();
+
+private:
+    static void handleTitle(void *data, ::zwlr_foreign_toplevel_handle_v1 *handle, const char *title)
+    {
+        auto *self = static_cast<TestForeignToplevelHandle *>(data);
+        self->m_title = QString::fromUtf8(title);
+        Q_EMIT self->titleChanged();
+    }
+
+    static void handleAppId(void *data, ::zwlr_foreign_toplevel_handle_v1 *handle, const char *appId)
+    {
+        auto *self = static_cast<TestForeignToplevelHandle *>(data);
+        self->m_appId = QString::fromUtf8(appId);
+        Q_EMIT self->appIdChanged();
+    }
+
+    static void handleOutputEnter(void *data, ::zwlr_foreign_toplevel_handle_v1 *handle, ::wl_output *output)
+    {
+    }
+
+    static void handleOutputLeave(void *data, ::zwlr_foreign_toplevel_handle_v1 *handle, ::wl_output *output)
+    {
+    }
+
+    static void handleState(void *data, ::zwlr_foreign_toplevel_handle_v1 *handle, ::wl_array *state)
+    {
+        auto *self = static_cast<TestForeignToplevelHandle *>(data);
+        self->m_states.clear();
+        uint32_t *entry = nullptr;
+        wl_array_for_each(entry, state)
+        {
+            self->m_states.insert(*entry);
+        }
+        Q_EMIT self->stateChanged();
+    }
+
+    static void handleDone(void *data, ::zwlr_foreign_toplevel_handle_v1 *handle)
+    {
+        auto *self = static_cast<TestForeignToplevelHandle *>(data);
+        Q_EMIT self->done();
+    }
+
+    static void handleClosed(void *data, ::zwlr_foreign_toplevel_handle_v1 *handle)
+    {
+        auto *self = static_cast<TestForeignToplevelHandle *>(data);
+        Q_EMIT self->closed();
+    }
+
+    static void handleParent(void *data, ::zwlr_foreign_toplevel_handle_v1 *handle, ::zwlr_foreign_toplevel_handle_v1 *parent)
+    {
+    }
+
+    ::zwlr_foreign_toplevel_handle_v1 *m_handle = nullptr;
+    QString m_title;
+    QString m_appId;
+    QSet<uint32_t> m_states;
+};
+
+class TestForeignToplevelManager : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit TestForeignToplevelManager(QObject *parent = nullptr)
+        : QObject(parent)
+    {
+    }
+
+    ~TestForeignToplevelManager() override
+    {
+        qDeleteAll(m_toplevels);
+        if (m_manager) {
+            zwlr_foreign_toplevel_manager_v1_destroy(m_manager);
+        }
+        if (m_seat) {
+            wl_seat_release(m_seat);
+        }
+        if (m_registry) {
+            wl_registry_destroy(m_registry);
+        }
+    }
+
+    void setup(::wl_display *display)
+    {
+        static const wl_registry_listener s_registryListener = {
+            .global = registryGlobal,
+            .global_remove = registryGlobalRemove,
+        };
+        m_registry = wl_display_get_registry(display);
+        wl_registry_add_listener(m_registry, &s_registryListener, this);
+        wl_display_flush(display);
+    }
+
+    TestForeignToplevelHandle *firstHandle() const
+    {
+        return m_toplevels.isEmpty() ? nullptr : m_toplevels.constFirst();
+    }
+
+    ::wl_seat *seat() const
+    {
+        return m_seat;
+    }
+
+    ::zwlr_foreign_toplevel_manager_v1 *manager() const
+    {
+        return m_manager;
+    }
+
+Q_SIGNALS:
+    void ready();
+    void toplevelAdded();
+    void finished();
+
+private:
+    static void registryGlobal(void *data, ::wl_registry *registry, uint32_t name, const char *interface, uint32_t version)
+    {
+        auto *self = static_cast<TestForeignToplevelManager *>(data);
+        if (strcmp(interface, zwlr_foreign_toplevel_manager_v1_interface.name) == 0) {
+            self->m_manager = static_cast<zwlr_foreign_toplevel_manager_v1 *>(wl_registry_bind(registry, name, &zwlr_foreign_toplevel_manager_v1_interface, std::min<uint32_t>(version, 3)));
+            static const zwlr_foreign_toplevel_manager_v1_listener s_listener = {
+                .toplevel = managerToplevel,
+                .finished = managerFinished,
+            };
+            zwlr_foreign_toplevel_manager_v1_add_listener(self->m_manager, &s_listener, self);
+            if (self->m_seat) {
+                Q_EMIT self->ready();
+            }
+        } else if (strcmp(interface, wl_seat_interface.name) == 0) {
+            self->m_seat = static_cast<wl_seat *>(wl_registry_bind(registry, name, &wl_seat_interface, std::min<uint32_t>(version, 1u)));
+            if (self->m_manager) {
+                Q_EMIT self->ready();
+            }
+        }
+    }
+
+    static void registryGlobalRemove(void *data, ::wl_registry *registry, uint32_t name)
+    {
+    }
+
+    static void managerToplevel(void *data, ::zwlr_foreign_toplevel_manager_v1 *manager, ::zwlr_foreign_toplevel_handle_v1 *toplevel)
+    {
+        auto *self = static_cast<TestForeignToplevelManager *>(data);
+        self->m_toplevels.push_back(new TestForeignToplevelHandle(toplevel));
+        Q_EMIT self->toplevelAdded();
+    }
+
+    static void managerFinished(void *data, ::zwlr_foreign_toplevel_manager_v1 *manager)
+    {
+        auto *self = static_cast<TestForeignToplevelManager *>(data);
+        Q_EMIT self->finished();
+    }
+
+    ::wl_registry *m_registry = nullptr;
+    ::zwlr_foreign_toplevel_manager_v1 *m_manager = nullptr;
+    ::wl_seat *m_seat = nullptr;
+    QList<TestForeignToplevelHandle *> m_toplevels;
+};
 
 class TestWindowManagement : public QObject
 {
@@ -59,6 +278,9 @@ private Q_SLOTS:
     void testIcon();
     void testPid();
     void testApplicationMenu();
+    void testForeignInitialState();
+    void testForeignRequests();
+    void testForeignStop();
 
     void cleanup();
 
@@ -67,6 +289,8 @@ private:
     KWin::CompositorInterface *m_compositorInterface;
     KWin::PlasmaWindowManagementInterface *m_windowManagementInterface;
     KWin::PlasmaWindowInterface *m_windowInterface;
+    KWin::ForeignToplevelManagerV1Interface *m_foreignToplevelManagementInterface;
+    KWin::ForeignToplevelHandleV1Interface *m_foreignToplevelHandleInterface;
     QPointer<KWin::SurfaceInterface> m_surfaceInterface;
 
     KWayland::Client::Surface *m_surface = nullptr;
@@ -75,6 +299,7 @@ private:
     KWayland::Client::EventQueue *m_queue;
     KWayland::Client::PlasmaWindowManagement *m_windowManagement;
     KWayland::Client::PlasmaWindow *m_window;
+    TestForeignToplevelManager *m_foreignToplevelManager = nullptr;
     QThread *m_thread;
     KWayland::Client::Registry *m_registry;
 };
@@ -134,6 +359,12 @@ void TestWindowManagement::init()
     m_compositor = m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
     m_windowManagementInterface = new PlasmaWindowManagementInterface(m_display, m_display);
+    m_foreignToplevelManagementInterface = new ForeignToplevelManagerV1Interface(m_display, m_display);
+    m_foreignToplevelHandleInterface = m_foreignToplevelManagementInterface->createToplevel(this);
+    m_foreignToplevelHandleInterface->setTitle(QStringLiteral("Foreign Title"));
+    m_foreignToplevelHandleInterface->setAppId(QStringLiteral("org.kde.foreign"));
+    m_foreignToplevelHandleInterface->setActive(true);
+    m_foreignToplevelHandleInterface->setMaximized(true);
 
     QVERIFY(windowManagementSpy.wait());
     m_windowManagement = m_registry->createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(),
@@ -146,6 +377,15 @@ void TestWindowManagement::init()
 
     QVERIFY(windowSpy.wait());
     m_window = windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>();
+
+    m_foreignToplevelManager = new TestForeignToplevelManager;
+    QSignalSpy foreignReadySpy(m_foreignToplevelManager, &TestForeignToplevelManager::ready);
+    QSignalSpy foreignToplevelSpy(m_foreignToplevelManager, &TestForeignToplevelManager::toplevelAdded);
+    m_foreignToplevelManager->setup(m_connection->display());
+    QVERIFY(foreignReadySpy.wait());
+    QVERIFY(foreignToplevelSpy.wait());
+    QSignalSpy foreignDoneSpy(m_foreignToplevelManager->firstHandle(), &TestForeignToplevelHandle::done);
+    QVERIFY(foreignDoneSpy.wait());
 
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWin::CompositorInterface::surfaceCreated);
     m_surface = m_compositor->createSurface(this);
@@ -211,6 +451,10 @@ void TestWindowManagement::cleanup()
         delete m_windowManagement;
         m_windowManagement = nullptr;
     }
+    if (m_foreignToplevelManager) {
+        delete m_foreignToplevelManager;
+        m_foreignToplevelManager = nullptr;
+    }
     if (m_registry) {
         delete m_registry;
         m_registry = nullptr;
@@ -237,6 +481,8 @@ void TestWindowManagement::cleanup()
     // these are the children of the display
     m_windowManagementInterface = nullptr;
     m_windowInterface = nullptr;
+    m_foreignToplevelManagementInterface = nullptr;
+    m_foreignToplevelHandleInterface = nullptr;
 }
 
 void TestWindowManagement::testUseAfterUnmap()
@@ -598,6 +844,55 @@ void TestWindowManagement::testApplicationMenu()
 
     QCOMPARE(m_window->applicationMenuServiceName(), serviceName);
     QCOMPARE(m_window->applicationMenuObjectPath(), objectPath);
+}
+
+void TestWindowManagement::testForeignInitialState()
+{
+    auto *handle = m_foreignToplevelManager->firstHandle();
+    QVERIFY(handle);
+    QCOMPARE(handle->title(), QStringLiteral("Foreign Title"));
+    QCOMPARE(handle->appId(), QStringLiteral("org.kde.foreign"));
+    QCOMPARE(handle->states(), QSet<uint32_t>({
+                                   ZWLR_FOREIGN_TOPLEVEL_HANDLE_V1_STATE_ACTIVATED,
+                                   ZWLR_FOREIGN_TOPLEVEL_HANDLE_V1_STATE_MAXIMIZED,
+                               }));
+}
+
+void TestWindowManagement::testForeignRequests()
+{
+    auto *handle = m_foreignToplevelManager->firstHandle();
+    QVERIFY(handle);
+
+    QSignalSpy maximizeSpy(m_foreignToplevelHandleInterface, &KWin::ForeignToplevelHandleV1Interface::maximizeRequested);
+    QSignalSpy minimizeSpy(m_foreignToplevelHandleInterface, &KWin::ForeignToplevelHandleV1Interface::minimizeRequested);
+    QSignalSpy activateSpy(m_foreignToplevelHandleInterface, &KWin::ForeignToplevelHandleV1Interface::activateRequested);
+    QSignalSpy fullscreenSpy(m_foreignToplevelHandleInterface, &KWin::ForeignToplevelHandleV1Interface::fullscreenRequested);
+    QSignalSpy closeSpy(m_foreignToplevelHandleInterface, &KWin::ForeignToplevelHandleV1Interface::closeRequested);
+
+    zwlr_foreign_toplevel_handle_v1_unset_maximized(handle->handle());
+    QVERIFY(maximizeSpy.wait());
+    QCOMPARE(maximizeSpy.last().first().toBool(), false);
+
+    zwlr_foreign_toplevel_handle_v1_set_minimized(handle->handle());
+    QVERIFY(minimizeSpy.wait());
+    QCOMPARE(minimizeSpy.last().first().toBool(), true);
+
+    zwlr_foreign_toplevel_handle_v1_activate(handle->handle(), m_foreignToplevelManager->seat());
+    QVERIFY(activateSpy.wait());
+
+    zwlr_foreign_toplevel_handle_v1_set_fullscreen(handle->handle(), nullptr);
+    QVERIFY(fullscreenSpy.wait());
+    QCOMPARE(fullscreenSpy.last().first().toBool(), true);
+
+    zwlr_foreign_toplevel_handle_v1_close(handle->handle());
+    QVERIFY(closeSpy.wait());
+}
+
+void TestWindowManagement::testForeignStop()
+{
+    QSignalSpy finishedSpy(m_foreignToplevelManager, &TestForeignToplevelManager::finished);
+    zwlr_foreign_toplevel_manager_v1_stop(m_foreignToplevelManager->manager());
+    QVERIFY(finishedSpy.wait());
 }
 
 QTEST_MAIN(TestWindowManagement)
