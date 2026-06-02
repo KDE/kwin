@@ -36,6 +36,11 @@ public:
     virtual ~ClientConnection();
 
     /**
+     * Whether the client runs in a sandbox.
+     */
+    bool isSandboxed() const;
+
+    /**
      * Returns @c true if the client connection is being terminated; otherwise returns @c false.
      *
      * The connection will be marked as tearing down after the aboutToBeDestroyed() signal is emitted.

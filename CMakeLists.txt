@@ -353,7 +353,12 @@ set_package_properties(QAccessibilityClient6 PROPERTIES
 )
 
 pkg_check_modules(libsystemd IMPORTED_TARGET libsystemd)
-add_feature_info(libsystemd libsystemd_FOUND "Required for setting up the service watchdog")
+add_feature_info(libsystemd libsystemd_FOUND "Required for detecting sandboxed applications")
+if (TARGET PkgConfig::libsystemd)
+    set(HAVE_SYSTEMD 1)
+else()
+    set(HAVE_SYSTEMD 0)
+endif()
 
 if(KWIN_BUILD_GLOBALSHORTCUTS)
     find_package(KGlobalAccelD REQUIRED)

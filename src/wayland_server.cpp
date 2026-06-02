@@ -146,7 +146,7 @@ public:
             return false;
         }
 
-        if (!client->securityContextAppId().isEmpty()) {
+        if (client->isSandboxed()) {
             return !restrictedInterfaces.contains(interfaceName);
         }
 

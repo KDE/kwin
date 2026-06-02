@@ -4,6 +4,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "clientconnection.h"
+
+#include "config-kwin.h"
+
 #include "display.h"
 #include "utils/executable_path.h"
 // Qt
@@ -12,8 +15,47 @@
 // Wayland
 #include <wayland-server.h>
 
+#if HAVE_SYSTEMD
+#include <systemd/sd-login.h>
+#endif
+
 namespace KWin
 {
+
+#if HAVE_SYSTEMD
+static bool startsWith(const char *string, const char *prefix)
+{
+    return strncmp(string, prefix, strlen(prefix)) == 0;
+}
+
+static bool isSandboxed(pid_t pid)
+{
+    char *userSlice = nullptr;
+    const auto freeSlice = qScopeGuard([&userSlice]() {
+        free(userSlice);
+    });
+
+    if (sd_pid_get_user_slice(pid, &userSlice) < 0) {
+        return false;
+    }
+
+    if (strcmp(userSlice, "app.slice") != 0) {
+        return false;
+    }
+
+    char *userUnit = nullptr;
+    const auto freeUnit = qScopeGuard([&userUnit]() {
+        free(userUnit);
+    });
+
+    if (sd_pid_get_user_unit(pid, &userUnit) < 0) {
+        return false;
+    }
+
+    return startsWith(userUnit, "app-flatpak-")
+        || startsWith(userUnit, "snap.");
+}
+#endif
 
 class ClientConnectionPrivate
 {
@@ -28,6 +70,7 @@ public:
     QString executablePath;
     QString securityContextAppId;
     qreal scaleOverride = 1.0;
+    bool sandboxed = false;
     bool tearingDown = false;
 
 private:
@@ -50,6 +93,10 @@ ClientConnectionPrivate::ClientConnectionPrivate(wl_client *c, Display *display,
 
     wl_client_get_credentials(client, &pid, &user, &group);
     executablePath = executablePathFromPid(pid);
+
+#if HAVE_SYSTEMD
+    sandboxed = isSandboxed(pid);
+#endif
 }
 
 void ClientConnectionPrivate::destroyListenerCallback(wl_listener *listener, void *data)
@@ -68,6 +115,11 @@ ClientConnection::ClientConnection(wl_client *c, Display *parent)
 }
 
 ClientConnection::~ClientConnection() = default;
+
+bool ClientConnection::isSandboxed() const
+{
+    return d->sandboxed;
+}
 
 bool ClientConnection::tearingDown() const
 {
@@ -139,6 +191,7 @@ qreal ClientConnection::scaleOverride() const
 void ClientConnection::setSecurityContextAppId(const QString &appId)
 {
     d->securityContextAppId = appId;
+    d->sandboxed = true;
 }
 
 QString ClientConnection::securityContextAppId() const

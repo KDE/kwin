@@ -292,6 +292,10 @@ if (TARGET K::KGlobalAccelD)
     target_link_libraries(kwin PRIVATE K::KGlobalAccelD)
 endif()
 
+if (TARGET PkgConfig::libsystemd)
+    target_link_libraries(kwin PRIVATE PkgConfig::libsystemd)
+endif()
+
 if (KWIN_BUILD_X11)
     target_sources(kwin
         PRIVATE
