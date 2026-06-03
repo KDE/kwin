@@ -69,7 +69,6 @@ private:
 
     QList<VirtualOutput *> m_outputs;
     RenderDevice *m_renderDevice = nullptr;
-    RenderDevice *m_fallbackDevice = nullptr;
 };
 
 } // namespace KWin

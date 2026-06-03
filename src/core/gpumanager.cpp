@@ -271,6 +271,11 @@ std::optional<DmaBufAttributes> GpuManager::createUdmabuf(const ShmAttributes *a
 #endif
 }
 
+const FileDescriptor &GpuManager::udmabuf() const
+{
+    return m_udmabuf;
+}
+
 void GpuManager::addDevice(std::unique_ptr<RenderDevice> &&device)
 {
     m_renderDevices.push_back(std::move(device));

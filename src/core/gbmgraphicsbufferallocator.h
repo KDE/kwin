@@ -10,22 +10,21 @@
 
 #include <sys/types.h>
 
-struct gbm_device;
-
 namespace KWin
 {
+
+class DrmDevice;
 
 class KWIN_EXPORT GbmGraphicsBufferAllocator : public GraphicsBufferAllocator
 {
 public:
-    explicit GbmGraphicsBufferAllocator(gbm_device *device, dev_t deviceId);
+    explicit GbmGraphicsBufferAllocator(DrmDevice *device);
     ~GbmGraphicsBufferAllocator() override;
 
     GraphicsBuffer *allocate(const GraphicsBufferOptions &options) override;
 
 private:
-    gbm_device *const m_gbmDevice;
-    const dev_t m_deviceId;
+    DrmDevice *const m_device;
 };
 
 } // namespace KWin

@@ -23,58 +23,12 @@
 namespace KWin
 {
 
-static std::unique_ptr<RenderDevice> openRenderDevice()
-{
-    const int deviceCount = drmGetDevices2(0, nullptr, 0);
-    if (deviceCount <= 0) {
-        return nullptr;
-    }
-
-    QList<drmDevice *> devices(deviceCount);
-    if (drmGetDevices2(0, devices.data(), devices.size()) < 0) {
-        return nullptr;
-    }
-    auto deviceCleanup = qScopeGuard([&devices]() {
-        drmFreeDevices(devices.data(), devices.size());
-    });
-
-    for (drmDevice *device : std::as_const(devices)) {
-        // If it's a vgem device, prefer the primary node because gbm will attempt to allocate
-        // dumb buffers and they can be allocated only on the primary node.
-        int nodeType = DRM_NODE_RENDER;
-        if (device->bustype == DRM_BUS_PLATFORM) {
-            if (strcmp(device->businfo.platform->fullname, "vgem") == 0) {
-                nodeType = DRM_NODE_PRIMARY;
-            }
-        }
-        if (device->bustype == DRM_BUS_FAUX) {
-            if (strcmp(device->businfo.faux->name, "vgem") == 0) {
-                nodeType = DRM_NODE_PRIMARY;
-            }
-        }
-
-        if (device->available_nodes & (1 << nodeType)) {
-            if (auto ret = RenderDevice::open(device->nodes[nodeType])) {
-                return ret;
-            }
-        }
-    }
-
-    return nullptr;
-}
-
 VirtualBackend::VirtualBackend(QObject *parent)
     : OutputBackend(parent)
 {
-    auto fallback = openRenderDevice();
-    if (fallback) {
-        if (RenderDevice *dev = GpuManager::self()->findDevice(fallback->drmDevice()->deviceId())) {
-            m_renderDevice = dev;
-        } else {
-            m_fallbackDevice = fallback.get();
-            m_renderDevice = fallback.get();
-            GpuManager::self()->addDevice(std::move(fallback));
-        }
+    const auto &devices = GpuManager::self()->renderDevices();
+    if (!devices.empty()) {
+        m_renderDevice = devices.front().get();
     }
 }
 
@@ -82,9 +36,6 @@ VirtualBackend::~VirtualBackend()
 {
     for (BackendOutput *output : m_outputs) {
         output->unref();
-    }
-    if (m_fallbackDevice) {
-        GpuManager::self()->removeDevice(m_fallbackDevice);
     }
 }
 

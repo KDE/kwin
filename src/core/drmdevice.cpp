@@ -37,7 +37,6 @@ DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_dev
     , m_id(id)
     , m_fd(std::move(fd))
     , m_gbmDevice(gbmDevice)
-    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(gbmDevice, id))
     , m_driverName(getDriverName(m_fd))
     , m_isNvidia(m_driverName == "nvidia-drm")
     , m_isNouveau(m_driverName == "nouveau")
@@ -48,6 +47,7 @@ DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_dev
     , m_isVmwgfx(m_driverName == "vmwgfx")
     , m_isVirtualMachine(m_driverName == "virtio_gpu" || m_driverName == "qxl" || m_driverName == "vmwgfx" || m_driverName == "vboxvideo")
     , m_isKMS(drmIsKMS(m_fd.get()))
+    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(this))
 {
     drmGetDevice2(m_fd.get(), 0, &m_libdrmDevice);
     uint64_t value = 0;

@@ -78,6 +78,9 @@ std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display, DrmDevice *
 
 static std::optional<dev_t> devIdForFileName(const QString &path)
 {
+    if (path.isEmpty()) {
+        return std::nullopt;
+    }
     auto device = DrmDevice::open(path);
     if (device) {
         return device->deviceId();

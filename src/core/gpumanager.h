@@ -53,6 +53,7 @@ public:
      *      both CPU and GPU side accesses is up to the importer!
      */
     std::optional<DmaBufAttributes> createUdmabuf(const ShmAttributes *attributes) const;
+    const FileDescriptor &udmabuf() const;
 
     void addDevice(std::unique_ptr<RenderDevice> &&kmsSoftwareDevice);
     void removeDevice(RenderDevice *kmsSoftwareDevice);

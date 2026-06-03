@@ -67,7 +67,6 @@ private:
     const dev_t m_id;
     const FileDescriptor m_fd;
     gbm_device *const m_gbmDevice;
-    const std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     drmDevice *m_libdrmDevice = nullptr;
     bool m_supportsSyncObjTimelines;
     const QByteArray m_driverName;
@@ -80,6 +79,7 @@ private:
     const bool m_isVmwgfx;
     const bool m_isVirtualMachine;
     const bool m_isKMS;
+    const std::unique_ptr<GraphicsBufferAllocator> m_allocator;
 };
 
 }
