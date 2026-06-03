@@ -171,11 +171,6 @@ Texture *SurfaceItem::texture() const
     return m_texture.get();
 }
 
-void SurfaceItem::destroyTexture()
-{
-    m_texture.reset();
-}
-
 void SurfaceItem::preprocess()
 {
     if (!buffer()) {

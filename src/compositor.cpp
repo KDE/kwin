@@ -388,13 +388,7 @@ static bool prepareDirectScanout(RenderView *view, LogicalOutput *logicalOutput,
     layer->setBufferTransform(candidate->bufferTransform());
     layer->setOffloadTransform(candidate->bufferTransform().combine(backendOutput->transform().inverted()));
     layer->setColor(candidate->colorDescription(), candidate->renderingIntent(), ColorPipeline::create(candidate->colorDescription(), backendOutput->layerBlendingColor(), candidate->renderingIntent()));
-    const bool ret = layer->importScanoutBuffer(candidate->buffer(), frame);
-    if (ret) {
-        candidate->resetDamage();
-        // ensure the pixmap is updated when direct scanout ends
-        candidate->destroyTexture();
-    }
-    return ret;
+    return layer->importScanoutBuffer(candidate->buffer(), frame);
 }
 
 static bool prepareRendering(RenderView *view, LogicalOutput *logicalOutput, BackendOutput *backendOutput, uint32_t requiredAlphaBits)

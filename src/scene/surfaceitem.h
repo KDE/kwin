@@ -57,8 +57,6 @@ public:
     void resetDamage();
     Region damage() const;
 
-    void destroyTexture();
-
     Texture *texture() const;
 
     virtual ContentType contentType() const;
