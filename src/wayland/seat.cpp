@@ -250,7 +250,7 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
         // but resend selection to mimic normal event flow upon cancel and not confuse the client
         // See https://github.com/swaywm/wlr-protocols/issues/92
         const bool isKlipperEmptyReplacement = dataDevice->selection() && dataDevice->selection()->mimeTypes().contains(QLatin1StringView("application/x-kde-onlyReplaceEmpty"));
-        if (isKlipperEmptyReplacement && currentSelection && !currentSelection->mimeTypes().isEmpty()) {
+        if (isKlipperEmptyReplacement && currentSelection) {
             dataDevice->selection()->cancel();
             offerSelection(dataDevice);
             return;
@@ -264,7 +264,7 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
         // but resend selection to mimic normal event flow upon cancel and not confuse the client
         // See https://github.com/swaywm/wlr-protocols/issues/92
         const bool isKlipperEmptyReplacement = dataDevice->primarySelection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1StringView("application/x-kde-onlyReplaceEmpty"));
-        if (isKlipperEmptyReplacement && currentPrimarySelection && !currentPrimarySelection->mimeTypes().isEmpty()) {
+        if (isKlipperEmptyReplacement && currentPrimarySelection) {
             dataDevice->primarySelection()->cancel();
             offerPrimarySelection(dataDevice);
             return;
