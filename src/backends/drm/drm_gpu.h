@@ -165,7 +165,7 @@ private:
     bool m_sharpnessSupported = false;
     clockid_t m_presentationClock;
     RenderDevice *m_renderDevice = nullptr;
-    std::unique_ptr<RenderDevice> m_softwareRenderDevice;
+    RenderDevice *m_kmsRenderDevice = nullptr;
     DrmBackend *const m_platform;
     std::optional<Version> m_nvidiaDriverVersion;
 

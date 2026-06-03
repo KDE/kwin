@@ -54,6 +54,9 @@ public:
      */
     std::optional<DmaBufAttributes> createUdmabuf(const ShmAttributes *attributes) const;
 
+    void addDevice(std::unique_ptr<RenderDevice> &&kmsSoftwareDevice);
+    void removeDevice(RenderDevice *kmsSoftwareDevice);
+
 Q_SIGNALS:
     void renderDeviceAdded(RenderDevice *device);
     void renderDeviceRemoved(RenderDevice *device);

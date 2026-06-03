@@ -15,6 +15,7 @@
 #include <gbm.h>
 #include <sys/stat.h>
 #include <xf86drm.h>
+#include <xf86drmMode.h>
 
 namespace KWin
 {
@@ -46,6 +47,7 @@ DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_dev
     , m_isRadeon(m_driverName == "radeon")
     , m_isVmwgfx(m_driverName == "vmwgfx")
     , m_isVirtualMachine(m_driverName == "virtio_gpu" || m_driverName == "qxl" || m_driverName == "vmwgfx" || m_driverName == "vboxvideo")
+    , m_isKMS(drmIsKMS(m_fd.get()))
 {
     drmGetDevice2(m_fd.get(), 0, &m_libdrmDevice);
     uint64_t value = 0;
@@ -156,6 +158,11 @@ bool DrmDevice::isVmwgfx() const
 bool DrmDevice::isVirtualMachine() const
 {
     return m_isVirtualMachine;
+}
+
+bool DrmDevice::isKMS() const
+{
+    return m_isKMS;
 }
 
 std::unique_ptr<DrmDevice> DrmDevice::open(const QString &path)

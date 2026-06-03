@@ -68,7 +68,8 @@ private:
     void removeOutput(VirtualOutput *output);
 
     QList<VirtualOutput *> m_outputs;
-    std::unique_ptr<RenderDevice> m_renderDevice;
+    RenderDevice *m_renderDevice = nullptr;
+    RenderDevice *m_fallbackDevice = nullptr;
 };
 
 } // namespace KWin

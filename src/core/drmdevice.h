@@ -53,6 +53,7 @@ public:
     bool isRadeon() const;
     bool isVmwgfx() const;
     bool isVirtualMachine() const;
+    bool isKMS() const;
 
     static std::unique_ptr<DrmDevice> open(const QString &path);
     static std::unique_ptr<DrmDevice> openWithAuthentication(const QString &path, int authenticatedFd);
@@ -78,6 +79,7 @@ private:
     const bool m_isRadeon;
     const bool m_isVmwgfx;
     const bool m_isVirtualMachine;
+    const bool m_isKMS;
 };
 
 }

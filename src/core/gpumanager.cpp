@@ -127,46 +127,48 @@ void GpuManager::updateCompatibilityMap()
 
 RenderDevice *GpuManager::findCompatibleRenderDevice(drmDevicePtr device) const
 {
-    if (device->bustype == DRM_BUS_PLATFORM) {
-        // devices with bus "platform" can be assumed to be compatible.
-        auto candidates = m_renderDevices | std::views::filter([](const auto &renderDevice) {
+    auto candidates = m_renderDevices | std::views::filter([device](const auto &renderDevice) {
+        if (device->bustype == DRM_BUS_PLATFORM) {
+            // devices with bus "platform" can be assumed to be compatible.
             return renderDevice->drmDevice()->busType() == DRM_BUS_PLATFORM;
-        });
-        if (candidates.empty()) {
-            return nullptr;
+        } else {
+            // "normal" GPUs are only compatible if there's a direct match
+            return drmDevicesEqual(device, renderDevice->drmDevice()->libdrmDevice()) == 1;
         }
-        // With split display/render devices, there can be multiple
-        // render nodes, so we need to choose the most capable one
-        return std::ranges::min_element(candidates, [device](const auto &left, const auto &right) {
-            // most important: we want hardware acceleration
-            if (left->eglDisplay()->isSoftwareRenderer() != right->eglDisplay()->isSoftwareRenderer()) {
-                return !left->eglDisplay()->isSoftwareRenderer();
-            }
-            // if possible, we want Vulkan support as well
-            if (left->vulkanDevice() != right->vulkanDevice()) {
-                return bool(left->vulkanDevice());
-            }
-            // (also with hardware acceleration)
-            if (left->vulkanDevice() && right->vulkanDevice()
-                && left->vulkanDevice()->isSoftwareRenderer() != right->vulkanDevice()->isSoftwareRenderer()) {
-                return !left->vulkanDevice()->isSoftwareRenderer();
-            }
-            // if both have hardware acceleration, prefer a matching device
-            const bool sameDeviceLeft = drmDevicesEqual(device, left->drmDevice()->libdrmDevice()) == 1;
-            const bool sameDeviceRight = drmDevicesEqual(device, right->drmDevice()->libdrmDevice()) == 1;
-            if (sameDeviceLeft != sameDeviceRight) {
-                return sameDeviceLeft;
-            }
-            // fallback: if both are equally good,
-            // make sure we always get the same device
-            return left->drmDevice()->deviceId() < right->drmDevice()->deviceId();
-        })->get();
-    }
-    // "normal" GPUs have at most one render node matching the KMS node
-    const auto it = std::ranges::find_if(m_renderDevices, [device](const auto &renderDevice) {
-        return drmDevicesEqual(device, renderDevice->drmDevice()->libdrmDevice()) == 1;
     });
-    return it != m_renderDevices.end() ? it->get() : nullptr;
+    if (candidates.empty()) {
+        return nullptr;
+    }
+    // With split display/render devices, there can be multiple render nodes,
+    // and with "normal" GPUs we want to avoid using the fallback KMS RenderDevice
+    return std::ranges::min_element(candidates, [device](const auto &left, const auto &right) {
+        // most important: we want hardware acceleration
+        if (left->eglDisplay()->isSoftwareRenderer() != right->eglDisplay()->isSoftwareRenderer()) {
+            return !left->eglDisplay()->isSoftwareRenderer();
+        }
+        // if possible, we want Vulkan support as well
+        if (left->vulkanDevice() != right->vulkanDevice()) {
+            return bool(left->vulkanDevice());
+        }
+        // (also with hardware acceleration)
+        if (left->vulkanDevice() && right->vulkanDevice()
+            && left->vulkanDevice()->isSoftwareRenderer() != right->vulkanDevice()->isSoftwareRenderer()) {
+            return !left->vulkanDevice()->isSoftwareRenderer();
+        }
+        // if both have hardware acceleration, prefer a matching device
+        const bool sameDeviceLeft = drmDevicesEqual(device, left->drmDevice()->libdrmDevice()) == 1;
+        const bool sameDeviceRight = drmDevicesEqual(device, right->drmDevice()->libdrmDevice()) == 1;
+        if (sameDeviceLeft != sameDeviceRight) {
+            return sameDeviceLeft;
+        }
+        // prefer render nodes over KMS nodes
+        if (left->drmDevice()->isKMS() != right->drmDevice()->isKMS()) {
+            return !left->drmDevice()->isKMS();
+        }
+        // fallback: if both are equally good,
+        // make sure we always get the same device
+        return left->drmDevice()->deviceId() < right->drmDevice()->deviceId();
+    })->get();
 }
 
 void GpuManager::scanForRenderDevices()
@@ -211,19 +213,12 @@ void GpuManager::handleUdevEvent()
             if (!device) {
                 continue;
             }
-            m_renderDevices.push_back(std::move(device));
-            updateCompatibilityMap();
-            qCDebug(KWIN_CORE, "Added render device %s", qPrintable(m_renderDevices.back()->drmDevice()->path()));
-            Q_EMIT renderDeviceAdded(m_renderDevices.back().get());
+            addDevice(std::move(device));
         } else if (udevDevice->action() == QLatin1StringView("remove")) {
             if (renderDevIt == m_renderDevices.end()) {
                 continue;
             }
-            auto device = std::move(*renderDevIt);
-            m_renderDevices.erase(renderDevIt);
-            updateCompatibilityMap();
-            qCDebug(KWIN_CORE, "Removed render device %s", qPrintable(device->drmDevice()->path()));
-            Q_EMIT renderDeviceRemoved(device.get());
+            removeDevice(renderDevIt->get());
         }
     }
 }
@@ -274,6 +269,29 @@ std::optional<DmaBufAttributes> GpuManager::createUdmabuf(const ShmAttributes *a
 #else
     return std::nullopt;
 #endif
+}
+
+void GpuManager::addDevice(std::unique_ptr<RenderDevice> &&device)
+{
+    m_renderDevices.push_back(std::move(device));
+    updateCompatibilityMap();
+    qCDebug(KWIN_CORE, "Added render device %s", qPrintable(m_renderDevices.back()->drmDevice()->path()));
+    Q_EMIT renderDeviceAdded(m_renderDevices.back().get());
+}
+
+void GpuManager::removeDevice(RenderDevice *device)
+{
+    const auto it = std::ranges::find_if(m_renderDevices, [device](const auto &dev) {
+        return dev.get() == device;
+    });
+    if (it == m_renderDevices.end()) {
+        return;
+    }
+    auto ref = std::move(*it);
+    m_renderDevices.erase(it);
+    updateCompatibilityMap();
+    qCDebug(KWIN_CORE, "Removed render device %s", qPrintable(device->drmDevice()->path()));
+    Q_EMIT renderDeviceRemoved(device);
 }
 
 }

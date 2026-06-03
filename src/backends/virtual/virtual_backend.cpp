@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static std::unique_ptr<RenderDevice> findRenderDevice()
+static std::unique_ptr<RenderDevice> openRenderDevice()
 {
     const int deviceCount = drmGetDevices2(0, nullptr, 0);
     if (deviceCount <= 0) {
@@ -65,14 +65,26 @@ static std::unique_ptr<RenderDevice> findRenderDevice()
 
 VirtualBackend::VirtualBackend(QObject *parent)
     : OutputBackend(parent)
-    , m_renderDevice(findRenderDevice())
 {
+    auto fallback = openRenderDevice();
+    if (fallback) {
+        if (RenderDevice *dev = GpuManager::self()->findDevice(fallback->drmDevice()->deviceId())) {
+            m_renderDevice = dev;
+        } else {
+            m_fallbackDevice = fallback.get();
+            m_renderDevice = fallback.get();
+            GpuManager::self()->addDevice(std::move(fallback));
+        }
+    }
 }
 
 VirtualBackend::~VirtualBackend()
 {
     for (BackendOutput *output : m_outputs) {
         output->unref();
+    }
+    if (m_fallbackDevice) {
+        GpuManager::self()->removeDevice(m_fallbackDevice);
     }
 }
 
@@ -171,7 +183,7 @@ void VirtualBackend::setVirtualOutputs(const QList<OutputInfo> &infos)
 
 RenderDevice *VirtualBackend::renderDevice() const
 {
-    return m_renderDevice.get();
+    return m_renderDevice;
 }
 
 } // namespace KWin

@@ -125,6 +125,14 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     // Make sure the render device list is up to date, otherwise we may first
     // select software rendering and only later switch to the render node
     GpuManager::self()->scanForRenderDevices();
+    // fallback for software rendering
+    auto fallbackDevice = RenderDevice::open(m_drmDevice->path(), m_fd);
+    m_kmsRenderDevice = fallbackDevice.get();
+    if (!fallbackDevice) {
+        qCWarning(KWIN_DRM, "Opening render device for %s failed", qPrintable(m_drmDevice->path()));
+    } else {
+        GpuManager::self()->addDevice(std::move(fallbackDevice));
+    }
     updateRenderDevice();
     connect(GpuManager::self(), &GpuManager::renderDeviceAdded, this, &DrmGpu::updateRenderDevice);
     connect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &DrmGpu::updateRenderDevice);
@@ -142,7 +150,11 @@ DrmGpu::~DrmGpu()
     m_connectors.clear();
     m_planes.clear();
     m_socketNotifier.reset();
-    m_softwareRenderDevice.reset();
+    if (m_kmsRenderDevice) {
+        disconnect(GpuManager::self(), &GpuManager::renderDeviceRemoved, this, &DrmGpu::updateRenderDevice);
+        GpuManager::self()->removeDevice(m_kmsRenderDevice);
+        m_kmsRenderDevice = nullptr;
+    }
     m_platform->session()->closeRestricted(m_fd);
 }
 
@@ -1053,17 +1065,10 @@ void DrmGpu::updateRenderDevice()
 {
     if (RenderDevice *renderDev = GpuManager::self()->compatibleRenderDevice(m_drmDevice.get())) {
         setRenderDevice(renderDev);
-        m_softwareRenderDevice.reset();
-        return;
+    } else {
+        qCWarning(KWIN_DRM, "Couldn't find any render device for %s", qPrintable(m_drmDevice->path()));
+        setRenderDevice(nullptr);
     }
-    // for software rendering, fall back to the primary node
-    if (!m_softwareRenderDevice) {
-        m_softwareRenderDevice = RenderDevice::open(m_drmDevice->path(), m_fd);
-        if (!m_softwareRenderDevice) {
-            qCWarning(KWIN_DRM, "Opening render device for %s failed", qPrintable(m_drmDevice->path()));
-        }
-    }
-    setRenderDevice(m_softwareRenderDevice.get());
 }
 
 DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QList<DrmOutput *> &outputs)
