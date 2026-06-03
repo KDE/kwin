@@ -178,6 +178,11 @@ DrmDevice *RenderBackend::drmDevice() const
     return nullptr;
 }
 
+RenderDevice *RenderBackend::renderDevice() const
+{
+    return nullptr;
+}
+
 bool RenderBackend::testImportBuffer(GraphicsBuffer *buffer)
 {
     return false;

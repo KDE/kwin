@@ -302,6 +302,11 @@ std::shared_ptr<EglContext> EglBackend::openglContextRef() const
     return m_context;
 }
 
+RenderDevice *EglBackend::renderDevice() const
+{
+    return m_renderDevice;
+}
+
 } // namespace KWin
 
 #include "moc_eglbackend.cpp"
