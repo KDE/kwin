@@ -103,7 +103,7 @@ RegionF BorderRadius::clip(const RegionF &region, const RectF &bounds) const
         return RegionF();
     }
 
-    RegionF clipped = region;
+    RegionF clipped = region.intersected(bounds);
 
     if (m_topLeft > 0) {
         clipped -= RectF(QPointF(bounds.left(), bounds.top()),
