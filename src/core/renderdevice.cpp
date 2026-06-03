@@ -9,9 +9,11 @@
 #include "renderdevice.h"
 
 #include "drmdevice.h"
+#include "gpumanager.h"
 #include "graphicsbuffer.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
+#include "udmabufallocator.h"
 #include "utils/common.h"
 #include "utils/envvar.h"
 #include "vulkan/vulkan_device.h"
@@ -89,6 +91,15 @@ RenderDevice::RenderDevice(std::unique_ptr<DrmDevice> &&device, std::unique_ptr<
     m_allImportableFormats = getImportFormats(m_display.get(), m_vulkanDevice.get());
 }
 
+RenderDevice::RenderDevice(std::unique_ptr<UDmabufAllocator> &&allocator, std::unique_ptr<EglDisplay> &&display, dev_t deviceId)
+    : m_udmabufAllocator(std::move(allocator))
+    , m_display(std::move(display))
+    , m_vulkanInstance(createVulkanInstance(m_vulkanContext))
+    , m_path(QStringLiteral("/dev/udmabuf"))
+    , m_deviceId(deviceId)
+{
+}
+
 RenderDevice::~RenderDevice()
 {
 }
@@ -110,7 +121,7 @@ dev_t RenderDevice::deviceId() const
 
 GraphicsBufferAllocator *RenderDevice::allocator() const
 {
-    return m_device->allocator();
+    return m_udmabufAllocator ? m_udmabufAllocator.get() : m_device->allocator();
 }
 
 EglDisplay *RenderDevice::eglDisplay() const
@@ -308,6 +319,31 @@ std::unique_ptr<RenderDevice> RenderDevice::open(const QString &path, int authen
         return nullptr;
     }
     return std::make_unique<RenderDevice>(std::move(drmDevice), std::move(eglDisplay));
+}
+
+std::unique_ptr<RenderDevice> RenderDevice::createSoftwareDevice(dev_t deviceId)
+{
+    EGLint numDevices = 0;
+    if (eglQueryDevicesEXT(0, nullptr, &numDevices) != EGL_TRUE) {
+        return nullptr;
+    }
+    QList<EGLDeviceEXT> devices;
+    devices.resize(numDevices);
+    if (eglQueryDevicesEXT(numDevices, devices.data(), &numDevices) != EGL_TRUE) {
+        return nullptr;
+    }
+    devices.resize(numDevices);
+    const auto it = std::ranges::find_if(devices, [](EGLDeviceEXT device) {
+        return QByteArrayView(eglQueryDeviceStringEXT(device, EGL_EXTENSIONS)).contains("EGL_MESA_device_software");
+    });
+    if (it == devices.end()) {
+        return nullptr;
+    }
+    auto eglDisplay = EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_DEVICE_EXT, *it, nullptr), nullptr);
+    if (!eglDisplay) {
+        return nullptr;
+    }
+    return std::make_unique<RenderDevice>(std::make_unique<UDmabufAllocator>(), std::move(eglDisplay), deviceId);
 }
 
 bool RenderDevice::isSoftwareDevice() const

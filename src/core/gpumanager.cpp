@@ -54,6 +54,12 @@ GpuManager::GpuManager()
     , m_udevMonitor(m_udev->createMonitor())
     , m_udevNotifier(std::make_unique<QSocketNotifier>(m_udevMonitor->fd(), QSocketNotifier::Read))
 {
+    if (m_udmabuf.isValid()) {
+        if (auto device = RenderDevice::createSoftwareDevice(*m_udmabufDevId)) {
+            m_softwareDevice = device.get();
+            addDevice(std::move(device));
+        }
+    }
     m_udevMonitor->filterSubsystemDevType("drm");
     connect(m_udevNotifier.get(), &QSocketNotifier::activated, this, &GpuManager::handleUdevEvent);
     m_udevMonitor->enable();
@@ -85,6 +91,11 @@ RenderDevice *GpuManager::findDevice(dev_t id) const
 {
     const auto it = std::ranges::find(m_renderDevices, id, &RenderDevice::deviceId);
     return it == m_renderDevices.end() ? nullptr : it->get();
+}
+
+RenderDevice *GpuManager::softwareDevice() const
+{
+    return m_softwareDevice;
 }
 
 void GpuManager::updateCompatibilityMap()
