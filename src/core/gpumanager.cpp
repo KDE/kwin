@@ -79,6 +79,12 @@ GpuManager::GpuManager()
     , m_udevNotifier(std::make_unique<QSocketNotifier>(m_udevMonitor->fd(), QSocketNotifier::Read))
     , m_explicitRenderNodes(qEnvironmentVariableIsSet("KWIN_RENDER_NODES") ? splitPathList(qEnvironmentVariable("KWIN_RENDER_NODES")) : std::optional<QStringList>())
 {
+    if (m_udmabuf.isValid()) {
+        if (auto device = RenderDevice::createSoftwareDevice(*m_udmabufDevId)) {
+            m_softwareDevice = device.get();
+            addDevice(std::move(device));
+        }
+    }
     m_udevMonitor->filterSubsystemDevType("drm");
     connect(m_udevNotifier.get(), &QSocketNotifier::activated, this, &GpuManager::handleUdevEvent);
     m_udevMonitor->enable();
@@ -112,9 +118,18 @@ RenderDevice *GpuManager::findDevice(dev_t id) const
     return it == m_renderDevices.end() ? nullptr : it->get();
 }
 
+RenderDevice *GpuManager::softwareDevice() const
+{
+    return m_softwareDevice;
+}
+
 void GpuManager::updateCompatibilityMap()
 {
     m_compatibleDeviceMap.clear();
+
+    if (m_udmabufDevId) {
+        m_compatibleDeviceMap[*m_udmabufDevId] = m_softwareDevice;
+    }
 
     int numberOfDevices = drmGetDevices2(0, nullptr, 0);
     if (numberOfDevices <= 0) {

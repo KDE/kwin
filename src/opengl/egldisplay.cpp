@@ -385,7 +385,7 @@ EGLImageKHR EglDisplay::importBufferAsImage(GraphicsBuffer *buffer)
         image = importDmaBufAsImage(*buffer->dmabufAttributes());
         // On Nvidia, sampling from udmabuf just results in black,
         // and on i915 there are glitches on some systems
-    } else if (buffer->udmabufAttributes() && m_drmDevice && !s_disableUdmabuf.value_or(m_drmDevice->isNvidia() || m_drmDevice->isI915())) {
+    } else if (buffer->udmabufAttributes() && (!m_drmDevice || !s_disableUdmabuf.value_or(m_drmDevice->isNvidia() || m_drmDevice->isI915()))) {
         image = importDmaBufAsImage(*buffer->udmabufAttributes());
     }
     m_importCache[key] = image;

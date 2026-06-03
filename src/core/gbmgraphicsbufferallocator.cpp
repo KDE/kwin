@@ -11,6 +11,7 @@
 #include "core/drmdevice.h"
 #include "core/gpumanager.h"
 #include "core/graphicsbuffer.h"
+#include "core/udmabufallocator.h"
 #include "utils/common.h"
 #include "utils/memorymap.h"
 
@@ -20,11 +21,6 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <xf86drm.h>
-
-#if defined(Q_OS_LINUX)
-#include <linux/dma-buf.h>
-#include <sys/ioctl.h>
-#endif
 
 namespace KWin
 {
@@ -216,90 +212,11 @@ static GraphicsBuffer *allocateDmaBuf(gbm_device *device, dev_t deviceId, const 
     return nullptr;
 }
 
-#if defined(Q_OS_LINUX)
-class UdmabufGraphicsBuffer : public GraphicsBuffer
-{
-    Q_OBJECT
-
-public:
-    explicit UdmabufGraphicsBuffer(DmaBufAttributes &&attributes, MemoryMap &&map);
-
-    Map map(MapFlags flags) override;
-    void unmap() override;
-
-    QSize size() const override;
-    bool hasAlphaChannel() const override;
-    const DmaBufAttributes *dmabufAttributes() const override;
-
-private:
-    const DmaBufAttributes m_attributes;
-    const bool m_hasAlphaChannel;
-    MemoryMap m_map;
-    uint32_t m_mapCount = 0;
-};
-
-static uint64_t align(uint64_t size, uint64_t minimum)
-{
-    if (auto remainder = size % minimum) {
-        return size + (minimum - remainder);
-    } else {
-        return size;
-    }
-}
-#endif
-
-static GraphicsBuffer *allocateUdmabuf(uint32_t drmFormat, const QSize &size)
-{
-#if HAVE_MEMFD && defined(Q_OS_LINUX)
-    if (!GpuManager::self()->udmabuf().isValid()) {
-        return nullptr;
-    }
-    auto info = FormatInfo::get(drmFormat);
-    if (!info) {
-        return nullptr;
-    }
-    const int stride = align(size.width() * info->bitsPerPixel / 8, 256);
-    const int bufferSize = align(size.height() * stride, getpagesize());
-
-    FileDescriptor fd = FileDescriptor(memfd_create("udmabuf", MFD_CLOEXEC | MFD_ALLOW_SEALING));
-    if (!fd.isValid()) {
-        return nullptr;
-    }
-
-    if (ftruncate(fd.get(), bufferSize) < 0) {
-        return nullptr;
-    }
-    if (fcntl(fd.get(), F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_SEAL) != 0) {
-        return nullptr;
-    }
-
-    MemoryMap memoryMap(stride * size.height(), PROT_READ | PROT_WRITE, MAP_SHARED, fd.get(), 0);
-    if (!memoryMap.isValid()) {
-        return nullptr;
-    }
-
-    ShmAttributes attributes{
-        .fd = std::move(fd),
-        .stride = stride,
-        .offset = 0,
-        .size = size,
-        .format = drmFormat,
-    };
-    auto dmabufAttributes = GpuManager::self()->createUdmabuf(&attributes);
-    if (!dmabufAttributes) {
-        return nullptr;
-    }
-    return new UdmabufGraphicsBuffer(std::move(*dmabufAttributes), std::move(memoryMap));
-#else
-    return nullptr;
-#endif
-}
-
 GraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions &options)
 {
     if (options.software) {
         if (!options.scanout) {
-            auto ret = allocateUdmabuf(options.format, options.size);
+            auto ret = UDmabufAllocator::allocate(options.format, options.size);
             if (ret) {
                 return ret;
             }
@@ -310,7 +227,7 @@ GraphicsBuffer *GbmGraphicsBufferAllocator::allocate(const GraphicsBufferOptions
     if (!options.scanout && m_device->busType() == DRM_BUS_FAUX && options.modifiers.contains(DRM_FORMAT_MOD_LINEAR)) {
         // With vgem, gbm attempts to allocate dumb buffers, which can't
         // actually work on the render node, so use udmabuf instead
-        return allocateUdmabuf(options.format, options.size);
+        return UDmabufAllocator::allocate(options.format, options.size);
     }
     return allocateDmaBuf(m_device->gbmDevice(), m_device->deviceId(), options);
 }
@@ -437,57 +354,6 @@ void DumbGraphicsBuffer::unmap()
         m_data = nullptr;
     }
 }
-
-#if defined(Q_OS_LINUX)
-UdmabufGraphicsBuffer::UdmabufGraphicsBuffer(DmaBufAttributes &&attributes, MemoryMap &&map)
-    : m_attributes(std::move(attributes))
-    , m_hasAlphaChannel(alphaChannelFromDrmFormat(m_attributes.format))
-    , m_map(std::move(map))
-{
-}
-
-GraphicsBuffer::Map UdmabufGraphicsBuffer::map(MapFlags flags)
-{
-    m_mapCount++;
-    if (m_mapCount == 1) {
-        struct dma_buf_sync sync = {
-            .flags = DMA_BUF_SYNC_START | DMA_BUF_SYNC_WRITE | DMA_BUF_SYNC_READ,
-        };
-        ioctl(m_attributes.fd[0].get(), DMA_BUF_IOCTL_SYNC, &sync);
-    }
-    return Map{
-        .data = m_map.data(),
-        .stride = m_attributes.pitch[0],
-    };
-}
-
-void UdmabufGraphicsBuffer::unmap()
-{
-    Q_ASSERT(m_mapCount > 0);
-    m_mapCount--;
-    if (m_mapCount == 0) {
-        struct dma_buf_sync sync = {
-            .flags = DMA_BUF_SYNC_END | DMA_BUF_SYNC_WRITE | DMA_BUF_SYNC_READ,
-        };
-        ioctl(m_attributes.fd[0].get(), DMA_BUF_IOCTL_SYNC, &sync);
-    }
-}
-
-QSize UdmabufGraphicsBuffer::size() const
-{
-    return QSize(m_attributes.width, m_attributes.height);
-}
-
-bool UdmabufGraphicsBuffer::hasAlphaChannel() const
-{
-    return m_hasAlphaChannel;
-}
-
-const DmaBufAttributes *UdmabufGraphicsBuffer::dmabufAttributes() const
-{
-    return &m_attributes;
-}
-#endif
 
 } // namespace KWin
 

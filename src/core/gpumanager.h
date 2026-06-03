@@ -39,6 +39,10 @@ public:
     RenderDevice *compatibleRenderDevice(DrmDevice *dev) const;
     RenderDevice *compatibleRenderDevice(dev_t id) const;
     RenderDevice *findDevice(dev_t id) const;
+    /**
+     * @returns a software renderdevice backed by udmabuf (and no drm device)
+     */
+    RenderDevice *softwareDevice() const;
 
     /**
      * NOTE that the list is automatically updated through
@@ -74,6 +78,7 @@ private:
     const std::unique_ptr<UdevMonitor> m_udevMonitor;
     const std::unique_ptr<QSocketNotifier> m_udevNotifier;
     const std::optional<QStringList> m_explicitRenderNodes;
+    RenderDevice *m_softwareDevice = nullptr;
     std::vector<std::unique_ptr<RenderDevice>> m_renderDevices;
     QHash<dev_t, RenderDevice *> m_compatibleDeviceMap;
 };

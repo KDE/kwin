@@ -198,7 +198,7 @@ static RenderDevice *selectRenderDevice()
         }
     }
     if (!s_drmDevicesEnv.isEmpty()) {
-        return nullptr;
+        return GpuManager::self()->softwareDevice();
     }
 
     const auto &devices = GpuManager::self()->renderDevices();
