@@ -140,12 +140,8 @@ static std::unique_ptr<VulkanDevice> openVulkanDevice(const vk::raii::Instance &
         qCWarning(KWIN_VULKAN) << "querying vulkan devices failed:" << vk::to_string(enumerateResult);
         return nullptr;
     }
-#if HAVE_LIBDRM_FAUX
     // with faux devices like vkms and vgem, we can only do software rendering
     const bool needsSoftwareDevice = drm->busType() == DRM_BUS_FAUX;
-#else
-    const bool needsSoftwareDevice = false;
-#endif
     for (const vk::raii::PhysicalDevice &physicalDevice : physicalDevices) {
         const auto basicProperties = physicalDevice.getProperties2();
         const bool isSoftwareDevice = basicProperties.properties.deviceType == vk::PhysicalDeviceType::eCpu;
