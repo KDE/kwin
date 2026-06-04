@@ -218,6 +218,7 @@ var badBadWindowsEffect = {
     },
     init: function () {
         badBadWindowsEffect.loadConfig();
+        effect.configChanged.connect(badBadWindowsEffect.loadConfig);
         effects.showingDesktopChanged.connect(badBadWindowsEffect.setShowingDesktop);
         effects.showingDesktopChanged.connect(badBadWindowsEffect.offToCorners);
         effect.animationEnded.connect(badBadWindowsEffect.animationEnded);

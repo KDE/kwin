@@ -90,6 +90,7 @@ var eyeOnScreenEffect = {
     },
     init: function () {
         eyeOnScreenEffect.loadConfig();
+        effect.configChanged.connect(eyeOnScreenEffect.loadConfig);
         effects.showingDesktopChanged.connect(eyeOnScreenEffect.slurp);
     }
 };
