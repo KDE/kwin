@@ -252,7 +252,6 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
         const bool isKlipperEmptyReplacement = dataDevice->selection() && dataDevice->selection()->mimeTypes().contains(QLatin1StringView("application/x-kde-onlyReplaceEmpty"));
         if (isKlipperEmptyReplacement && currentSelection) {
             dataDevice->selection()->cancel();
-            offerSelection(dataDevice);
             return;
         }
         q->setSelection(dataDevice->selection(), display->nextSerial());
@@ -266,7 +265,6 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
         const bool isKlipperEmptyReplacement = dataDevice->primarySelection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1StringView("application/x-kde-onlyReplaceEmpty"));
         if (isKlipperEmptyReplacement && currentPrimarySelection) {
             dataDevice->primarySelection()->cancel();
-            offerPrimarySelection(dataDevice);
             return;
         }
         q->setPrimarySelection(dataDevice->primarySelection(), display->nextSerial());
