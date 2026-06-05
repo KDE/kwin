@@ -83,9 +83,7 @@ RenderDevice *GpuManager::compatibleRenderDevice(dev_t id) const
 
 RenderDevice *GpuManager::findDevice(dev_t id) const
 {
-    const auto it = std::ranges::find_if(m_renderDevices, [id](const auto &device) {
-        return device->drmDevice()->deviceId() == id;
-    });
+    const auto it = std::ranges::find(m_renderDevices, id, &RenderDevice::deviceId);
     return it == m_renderDevices.end() ? nullptr : it->get();
 }
 
@@ -128,6 +126,9 @@ void GpuManager::updateCompatibilityMap()
 RenderDevice *GpuManager::findCompatibleRenderDevice(drmDevicePtr device) const
 {
     auto candidates = m_renderDevices | std::views::filter([device](const auto &renderDevice) {
+        if (!renderDevice->drmDevice()) {
+            return true;
+        }
         if (device->bustype == DRM_BUS_PLATFORM) {
             // devices with bus "platform" can be assumed to be compatible.
             return renderDevice->drmDevice()->busType() == DRM_BUS_PLATFORM;
@@ -182,7 +183,7 @@ void GpuManager::scanForRenderDevices()
         if (!device) {
             continue;
         }
-        qCDebug(KWIN_CORE, "Adding render device %s", qPrintable(device->drmDevice()->path()));
+        qCDebug(KWIN_CORE, "Adding render device %s", qPrintable(device->path()));
         m_renderDevices.push_back(std::move(device));
         updateCompatibilityMap();
         Q_EMIT renderDeviceAdded(m_renderDevices.back().get());
@@ -204,9 +205,7 @@ void GpuManager::handleUdevEvent()
         if (!isRenderNode) {
             continue;
         }
-        const auto renderDevIt = std::ranges::find_if(m_renderDevices, [&udevDevice](const auto &device) {
-            return udevDevice->devNum() == device->drmDevice()->deviceId();
-        });
+        const auto renderDevIt = std::ranges::find(m_renderDevices, udevDevice->devNum(), &RenderDevice::deviceId);
         if (udevDevice->action() == QLatin1StringView("add")) {
             if (renderDevIt != m_renderDevices.end()) {
                 continue;
@@ -282,7 +281,7 @@ void GpuManager::addDevice(std::unique_ptr<RenderDevice> &&device)
 {
     m_renderDevices.push_back(std::move(device));
     updateCompatibilityMap();
-    qCDebug(KWIN_CORE, "Added render device %s", qPrintable(m_renderDevices.back()->drmDevice()->path()));
+    qCDebug(KWIN_CORE, "Added render device %s", qPrintable(m_renderDevices.back()->path()));
     Q_EMIT renderDeviceAdded(m_renderDevices.back().get());
 }
 
@@ -297,7 +296,7 @@ void GpuManager::removeDevice(RenderDevice *device)
     auto ref = std::move(*it);
     m_renderDevices.erase(it);
     updateCompatibilityMap();
-    qCDebug(KWIN_CORE, "Removed render device %s", qPrintable(device->drmDevice()->path()));
+    qCDebug(KWIN_CORE, "Removed render device %s", qPrintable(device->path()));
     Q_EMIT renderDeviceRemoved(device);
 }
 

@@ -36,10 +36,12 @@ public:
 
     /**
      * the underlying drm device that can be used to allocate buffers for this render device
-     * This doesn't necessarily represent a render node!
+     * This doesn't necessarily represent a render node, and may be nullptr!
      */
     DrmDevice *drmDevice() const;
     GraphicsBufferAllocator *allocator() const;
+    QString path() const;
+    dev_t deviceId() const;
     EglDisplay *eglDisplay() const;
     /**
      * @returns an EGL context suitable for rendering with this render device,
@@ -84,6 +86,8 @@ private:
     FormatModifierMap m_allImportableFormats;
     std::weak_ptr<EglContext> m_eglContext;
     bool m_inReset = false;
+    const QString m_path;
+    const dev_t m_deviceId;
 };
 
 }

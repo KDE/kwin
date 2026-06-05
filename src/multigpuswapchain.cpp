@@ -101,7 +101,7 @@ std::unique_ptr<MultiGpuSwapchain> MultiGpuSwapchain::create(RenderDevice *copyD
         if (!formatMod) {
             return nullptr;
         }
-        auto eglSwapchain = EglSwapchain::create(copyDevice->drmDevice()->allocator(), context.get(), size, formatMod->format, formatMod->modifiers, scanout);
+        auto eglSwapchain = EglSwapchain::create(copyDevice->allocator(), context.get(), size, formatMod->format, formatMod->modifiers, scanout);
         if (eglSwapchain) {
             return std::make_unique<MultiGpuSwapchain>(copyDevice, targetDevice, context, std::move(eglSwapchain));
         }

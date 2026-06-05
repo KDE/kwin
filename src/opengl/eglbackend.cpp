@@ -99,10 +99,6 @@ void EglBackend::cleanup()
 
 void EglBackend::initWayland()
 {
-    if (!WaylandServer::self()) {
-        return;
-    }
-
     auto filterFormats = [this](std::optional<uint32_t> bpc, bool withExternalOnlyYUV) {
         FormatModifierMap set;
         const auto &allFormats = m_renderDevice->eglDisplay()->allSupportedDrmFormats();
@@ -154,26 +150,22 @@ void EglBackend::initWayland()
     };
 
     m_tranches.append({
-        .device = m_renderDevice->drmDevice()->deviceId(),
+        .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
         .formatTable = filterFormats(10, false),
     });
     m_tranches.append({
-        .device = m_renderDevice->drmDevice()->deviceId(),
+        .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
         .formatTable = filterFormats(8, false),
     });
     m_tranches.append({
-        .device = m_renderDevice->drmDevice()->deviceId(),
+        .device = m_renderDevice->deviceId(),
         .flags = LinuxDmaBufV1Feedback::TrancheFlag::Sampling,
         .formatTable = includeShaderConversions(filterFormats(std::nullopt, true)),
     });
 
-    LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
-    dmabuf->setRenderBackend(this);
-    dmabuf->setSupportedFormatsWithModifiers(m_tranches);
-
-    waylandServer()->setRenderBackend(this);
+    waylandServer()->setRenderBackend(this, m_tranches);
 }
 
 bool EglBackend::initClientExtensions()

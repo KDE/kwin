@@ -58,7 +58,7 @@ Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const F
             static ShmGraphicsBufferAllocator shmAllocator;
             allocator = &shmAllocator;
         } else {
-            allocator = Compositor::self()->backend()->renderDevice()->drmDevice()->allocator();
+            allocator = Compositor::self()->backend()->renderDevice()->allocator();
         }
 
         for (auto it = formats.begin(); it != formats.end(); it++) {

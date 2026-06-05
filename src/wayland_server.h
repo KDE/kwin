@@ -9,6 +9,7 @@
 #pragma once
 
 #include "effect/globals.h"
+#include "wayland/linuxdmabufv1clientbuffer.h"
 
 #include <QObject>
 #include <QPointer>
@@ -226,7 +227,7 @@ public:
     PointerWarpV1 *pointerWarp() const;
     ExtBackgroundEffectManagerV1 *backgroundEffectManager() const;
 
-    void setRenderBackend(RenderBackend *backend);
+    void setRenderBackend(RenderBackend *backend, const QList<LinuxDmaBufV1Feedback::Tranche> &tranches);
 
 Q_SIGNALS:
     void windowCreated(KWin::Window *);

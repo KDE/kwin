@@ -494,9 +494,6 @@ bool WaylandServer::init()
 
 LinuxDmaBufV1ClientBufferIntegration *WaylandServer::linuxDmabuf()
 {
-    if (!m_linuxDmabuf) {
-        m_linuxDmabuf = new LinuxDmaBufV1ClientBufferIntegration(m_display);
-    }
     return m_linuxDmabuf;
 }
 
@@ -815,9 +812,16 @@ ExtBackgroundEffectManagerV1 *WaylandServer::backgroundEffectManager() const
     return m_backgroundEffect;
 }
 
-void WaylandServer::setRenderBackend(RenderBackend *backend)
+void WaylandServer::setRenderBackend(RenderBackend *backend, const QList<LinuxDmaBufV1Feedback::Tranche> &tranches)
 {
-    if (backend->renderDevice()->drmDevice()->supportsSyncObjTimelines()) {
+    if (!m_linuxDmabuf) {
+        m_linuxDmabuf = new LinuxDmaBufV1ClientBufferIntegration(m_display);
+    }
+    m_linuxDmabuf->setRenderBackend(backend);
+    m_linuxDmabuf->setSupportedFormatsWithModifiers(tranches);
+
+    if (backend->renderDevice()->drmDevice()
+        && backend->renderDevice()->drmDevice()->supportsSyncObjTimelines()) {
         // ensure the DRM_IOCTL_SYNCOBJ_EVENTFD ioctl is supported
         const auto linuxVersion = linuxKernelVersion();
         if (linuxVersion.majorVersion() < 6 && linuxVersion.minorVersion() < 6) {
