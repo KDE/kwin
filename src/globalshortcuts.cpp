@@ -17,6 +17,7 @@
 #include "utils/common.h"
 // KDE
 #if KWIN_BUILD_GLOBALSHORTCUTS
+#include "kglobalaccelinterface.h"
 #include <kglobalaccel_interface.h>
 #include <kglobalacceld.h>
 #endif
@@ -95,14 +96,12 @@ GlobalShortcutsManager::~GlobalShortcutsManager()
 void GlobalShortcutsManager::init()
 {
 #if KWIN_BUILD_GLOBALSHORTCUTS
-    qputenv("KGLOBALACCELD_PLATFORM", QByteArrayLiteral("org.kde.kwin"));
-    m_kglobalAccel = std::make_unique<KGlobalAccelD>();
+    auto iface = std::make_unique<KGlobalAccelImpl>();
+    m_kglobalAccelInterface = iface.get();
+    m_kglobalAccel = std::make_unique<KGlobalAccelD>(std::move(iface));
     if (!m_kglobalAccel->init()) {
         qCDebug(KWIN_CORE) << "Init of kglobalaccel failed";
         m_kglobalAccel.reset();
-    } else {
-        m_kglobalAccelInterface = m_kglobalAccel->interface();
-        qCDebug(KWIN_CORE) << "KGlobalAcceld inited";
     }
 #endif
 }

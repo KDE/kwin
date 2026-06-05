@@ -65,8 +65,9 @@ target_link_libraries(KWinIntegrationTestFramework
 if(KWIN_BUILD_X11)
     target_link_libraries(KWinIntegrationTestFramework PRIVATE KWinXwaylandServerModule)
 endif()
-if(TARGET KF6GlobalAccelKWinPlugin)
-    target_link_libraries(KWinIntegrationTestFramework PUBLIC KF6GlobalAccelKWinPlugin)
+
+if (KWIN_BUILD_GLOBALSHORTCUTS)
+    target_link_libraries(KWinIntegrationTestFramework PUBLIC KF6::GlobalAccel)
 endif()
 
 if(TARGET PW::KScreenLocker)

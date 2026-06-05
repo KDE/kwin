@@ -17,11 +17,9 @@
 class KGlobalAccelImpl : public KGlobalAccelInterface
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID KGlobalAccelInterface_iid FILE "kwin.json")
-    Q_INTERFACES(KGlobalAccelInterface)
 
 public:
-    KGlobalAccelImpl(QObject *parent = nullptr);
+    KGlobalAccelImpl();
     ~KGlobalAccelImpl() override;
 
 public Q_SLOTS:

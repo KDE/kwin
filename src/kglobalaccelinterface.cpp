@@ -6,14 +6,14 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "kglobalaccel_plugin.h"
+#include "kglobalaccelinterface.h"
 
 #include "input.h"
 
 #include <QDebug>
 
-KGlobalAccelImpl::KGlobalAccelImpl(QObject *parent)
-    : KGlobalAccelInterface(parent)
+KGlobalAccelImpl::KGlobalAccelImpl()
+    : KGlobalAccelInterface()
 {
 }
 
@@ -48,4 +48,4 @@ void KGlobalAccelImpl::cancelModiferOnlySequence()
     resetModifierOnlyState();
 }
 
-#include "moc_kglobalaccel_plugin.cpp"
+#include "moc_kglobalaccelinterface.cpp"

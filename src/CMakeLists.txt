@@ -247,6 +247,10 @@ target_sources(kwin PRIVATE
     xxpipv1window.cpp
 )
 
+if (KWIN_BUILD_GLOBALSHORTCUTS)
+    target_sources(kwin PRIVATE kglobalaccelinterface.cpp)
+endif()
+
 target_link_libraries(kwin
     PUBLIC
         Qt::DBus
@@ -440,10 +444,6 @@ target_link_libraries(kwin_wayland
     KF6WindowSystemKWinPlugin
     KF6IdleTimeKWinPlugin
 )
-
-if (TARGET KF6GlobalAccelKWinPlugin)
-    target_link_libraries(kwin_wayland KF6GlobalAccelKWinPlugin)
-endif()
 
 add_custom_target(
     KWinDBusInterfaces
