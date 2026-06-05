@@ -6,6 +6,8 @@
 
 #include "kcmkwinxwayland.h"
 
+#include <qqml.h>
+
 #include <KConfigGroup>
 #include <KDesktopFile>
 #include <KLocalizedString>

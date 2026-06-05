@@ -8,6 +8,8 @@
 
 #include "kcmvirtualkeyboard.h"
 
+#include <qqml.h>
+
 #include <KApplicationTrader>
 #include <KConfigGroup>
 #include <KDesktopFile>
