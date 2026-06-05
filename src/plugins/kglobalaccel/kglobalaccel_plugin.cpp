@@ -19,11 +19,6 @@ KGlobalAccelImpl::KGlobalAccelImpl(QObject *parent)
 
 KGlobalAccelImpl::~KGlobalAccelImpl() = default;
 
-bool KGlobalAccelImpl::grabKey(int key, bool grab)
-{
-    return true;
-}
-
 bool KGlobalAccelImpl::checkKeyPressed(int keyQt, KWin::KeyboardKeyState state)
 {
     switch (state) {

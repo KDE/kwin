@@ -24,8 +24,6 @@ public:
     KGlobalAccelImpl(QObject *parent = nullptr);
     ~KGlobalAccelImpl() override;
 
-    bool grabKey(int key, bool grab) override;
-
 public Q_SLOTS:
     bool checkKeyPressed(int keyQt, KWin::KeyboardKeyState state);
     bool checkPointerPressed(Qt::MouseButtons buttons);
