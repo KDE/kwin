@@ -1146,7 +1146,7 @@
 ><para
 >Bir uçbirim penceresi, kabuk oturumunu sonlandırarak son kullanıcı tarafından yine de kapatılabilir; ancak klavye girişini devre dışı bırakmak için <guilabel
 >Odağı kabul et</guilabel
-> öğesinin kullanılması, pencerenin kapatılmasını daha zor hale getirecektir.</para
+> ögesinin kullanılması, pencerenin kapatılmasını daha zor hale getirecektir.</para
 ></tip>
 </para>
 <variablelist>
