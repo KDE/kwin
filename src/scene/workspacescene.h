@@ -12,6 +12,8 @@
 #include "core/renderviewport.h"
 #include "scene/scene.h"
 
+#include <stack>
+
 namespace KWin
 {
 
@@ -72,8 +74,6 @@ Q_SIGNALS:
     void frameRendered();
 
 protected:
-    void createStackingOrder();
-    void clearStackingOrder();
     friend class EffectsHandler;
     // called after all effects had their paintScreen() called
     void finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const Region &deviceRegion, LogicalOutput *screen);
@@ -115,11 +115,13 @@ protected:
     };
 
 private:
+    void createStackingOrder(PaintContext &context);
+    void clearStackingOrder(PaintContext &context);
     void createDndIconItem();
     void destroyDndIconItem();
     void updateCursor();
 
-    PaintContext m_paintContext;
+    std::stack<PaintContext> m_paintContexts;
     std::unique_ptr<Item> m_containerItem;
     std::unique_ptr<Item> m_overlayItem;
     std::unique_ptr<DragAndDropIconItem> m_dndIcon;

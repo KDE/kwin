@@ -81,6 +81,7 @@ void BlendChanges::postPaintScreen()
         }
     }
     effects->addRepaintFull();
+    effects->postPaintScreen();
 }
 
 void BlendChanges::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const Region &deviceRegion, WindowPaintData &data)
