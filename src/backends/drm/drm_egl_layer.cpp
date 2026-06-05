@@ -136,7 +136,7 @@ bool EglGbmLayer::earlyScanoutChecks()
 bool EglGbmLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     if (buffer->dmabufAttributes()->device != gpu()->drmDevice()->deviceId()
-        && (!gpu()->renderDevice() || buffer->dmabufAttributes()->device != gpu()->renderDevice()->drmDevice()->deviceId())) {
+        && (!gpu()->renderDevice() || buffer->dmabufAttributes()->device != gpu()->renderDevice()->deviceId())) {
         // Disallow direct scanout between GPUs, as
         // - there are some significant driver bugs with direct scanout from other GPUs,
         //   like https://gitlab.freedesktop.org/drm/amd/-/issues/2075

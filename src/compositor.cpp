@@ -148,7 +148,8 @@ static QVariantHash collectCrashInformation(const EglBackend *backend)
     QVariantHash gpuInformation;
     gpuInformation[QStringLiteral("api_type")] = QStringLiteral("OpenGL");
     gpuInformation[QStringLiteral("name")] = QString::fromUtf8(glPlatform->glRendererString());
-    if (const auto pciInfo = backend->renderDevice()->drmDevice()->pciDeviceInfo()) {
+    if (backend->renderDevice()->drmDevice() && backend->renderDevice()->drmDevice()->pciDeviceInfo()) {
+        const auto pciInfo = backend->renderDevice()->drmDevice()->pciDeviceInfo();
         gpuInformation[QStringLiteral("id")] = QString::number(pciInfo->device_id, 16);
         gpuInformation[QStringLiteral("vendor_id")] = QString::number(pciInfo->vendor_id, 16);
     }
@@ -249,7 +250,7 @@ bool Compositor::attemptOpenGLCompositing()
             qCWarning(KWIN_CORE, "Found no render device!");
             return false;
         }
-        qCDebug(KWIN_CORE, "Chose %s as the primary GPU", qPrintable(m_renderDevice->drmDevice()->path()));
+        qCDebug(KWIN_CORE, "Chose %s as the primary GPU", qPrintable(m_renderDevice->path()));
     }
     std::unique_ptr<EglBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend(m_renderDevice);
     if (!backend->init()) {

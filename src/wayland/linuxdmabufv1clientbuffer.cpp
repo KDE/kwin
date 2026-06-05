@@ -468,7 +468,7 @@ QList<LinuxDmaBufV1Feedback::Tranche> LinuxDmaBufV1Feedback::createScanoutTranch
         if (tranche.device != mainDevice) {
             continue;
         }
-        if (compatibleWithScanout && tranche.device != compatibleWithScanout->drmDevice()->deviceId()) {
+        if (compatibleWithScanout && tranche.device != compatibleWithScanout->deviceId()) {
             // limit scanout tranches to devices we can also sample from
             continue;
         }

@@ -817,7 +817,8 @@ ExtBackgroundEffectManagerV1 *WaylandServer::backgroundEffectManager() const
 
 void WaylandServer::setRenderBackend(RenderBackend *backend)
 {
-    if (backend->renderDevice()->drmDevice()->supportsSyncObjTimelines()) {
+    if (backend->renderDevice()->drmDevice()
+        && backend->renderDevice()->drmDevice()->supportsSyncObjTimelines()) {
         // ensure the DRM_IOCTL_SYNCOBJ_EVENTFD ioctl is supported
         const auto linuxVersion = linuxKernelVersion();
         if (linuxVersion.majorVersion() < 6 && linuxVersion.minorVersion() < 6) {
