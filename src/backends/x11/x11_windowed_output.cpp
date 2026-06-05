@@ -16,6 +16,7 @@
 #include "core/graphicsbuffer.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
+#include "core/renderdevice.h"
 #include "core/renderloop_p.h"
 
 #include <NETWM>
@@ -137,7 +138,7 @@ void X11WindowedCursor::update(const QImage &image, const QPointF &hotspot)
 }
 
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
-    : BackendOutput()
+    : BackendOutput(backend->renderDevice()->drmDevice())
     , m_backend(backend)
 {
     m_window = xcb_generate_id(m_backend->connection());

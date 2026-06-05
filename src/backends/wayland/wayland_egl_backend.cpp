@@ -11,6 +11,7 @@
 #include "wayland_egl_backend.h"
 #include "core/drmdevice.h"
 #include "core/gbmgraphicsbufferallocator.h"
+#include "core/renderdevice.h"
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
@@ -122,11 +123,6 @@ bool WaylandEglLayer::importScanoutBuffer(GraphicsBuffer *buffer, const std::sha
     return true;
 }
 
-DrmDevice *WaylandEglLayer::scanoutDevice() const
-{
-    return m_backend->drmDevice();
-}
-
 FormatModifierMap WaylandEglLayer::supportedDrmFormats() const
 {
     return m_backend->backend()->display()->linuxDmabuf()->formats();
@@ -205,11 +201,6 @@ bool WaylandEglCursorLayer::doEndFrame(const Region &renderedDeviceRegion, const
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
     m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
     return true;
-}
-
-DrmDevice *WaylandEglCursorLayer::scanoutDevice() const
-{
-    return m_backend->drmDevice();
 }
 
 FormatModifierMap WaylandEglCursorLayer::supportedDrmFormats() const

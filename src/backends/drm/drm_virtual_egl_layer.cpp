@@ -149,11 +149,6 @@ void VirtualEglGbmLayer::releaseBuffers()
     m_scanoutBuffer.reset();
 }
 
-DrmDevice *VirtualEglGbmLayer::scanoutDevice() const
-{
-    return m_eglBackend->drmDevice();
-}
-
 FormatModifierMap VirtualEglGbmLayer::supportedDrmFormats() const
 {
     return m_eglBackend->supportedFormats();

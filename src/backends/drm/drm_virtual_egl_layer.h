@@ -36,7 +36,6 @@ public:
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
     bool doEndFrame(const Region &renderedDeviceRegion, const Region &damagedDeviceRegion, OutputFrame *frame) override;
     void releaseBuffers() override;
-    DrmDevice *scanoutDevice() const override;
     FormatModifierMap supportedDrmFormats() const override;
 
 private:

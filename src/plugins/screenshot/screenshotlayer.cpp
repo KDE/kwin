@@ -14,11 +14,6 @@ ScreenshotLayer::ScreenshotLayer(LogicalOutput *output, GLFramebuffer *buffer)
 {
 }
 
-DrmDevice *ScreenshotLayer::scanoutDevice() const
-{
-    return nullptr;
-}
-
 FormatModifierMap ScreenshotLayer::supportedDrmFormats() const
 {
     return {};

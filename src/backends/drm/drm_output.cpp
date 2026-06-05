@@ -41,7 +41,8 @@ namespace KWin
 static const auto s_disableTripleBuffering = environmentVariableBoolValue("KWIN_DRM_DISABLE_TRIPLE_BUFFERING");
 
 DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn, DrmPipeline *pipeline)
-    : m_gpu(conn->gpu())
+    : BackendOutput(pipeline->gpu()->drmDevice())
+    , m_gpu(conn->gpu())
     , m_pipeline(pipeline)
     , m_connector(conn)
 {
